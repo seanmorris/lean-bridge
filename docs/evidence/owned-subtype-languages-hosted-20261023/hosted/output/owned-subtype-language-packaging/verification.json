@@ -1,0 +1,33 @@
+{
+  "kind": "owned-subtype-languages",
+  "producerCommit": "23ae28e37befcdf245e94f5f841ed50254fc869c",
+  "profiles": [
+    "python",
+    "ruby",
+    "rust"
+  ],
+  "reportSha256": "37a7414683f214e01a7be5d54d3c8b3e069a6c794b584618d8a82cae7e122724",
+  "reports": 2,
+  "retainedPackages": {
+    "routes": [
+      {
+        "archiveBytes": 160419336,
+        "archives": 3,
+        "receiptSha256": "47bf7045fcd98759c65f9fe2239d167134b578ea453c72c9c8939bd26f096d96",
+        "route": "ordinary"
+      },
+      {
+        "archiveBytes": 160431094,
+        "archives": 3,
+        "receiptSha256": "0053e74f25b47520a35bfe8cfdd28000859af56b2db76fc4c425c8488cd6e703",
+        "route": "reviewed"
+      }
+    ],
+    "schemaVersion": 1
+  },
+  "routes": [
+    "ordinary",
+    "reviewed"
+  ],
+  "schemaVersion": 1
+}

@@ -1,0 +1,33 @@
+{
+  "routes": [
+    {
+      "archiveBytes": 160419336,
+      "archives": 3,
+      "files": [
+        "archives/lean_bridge_owned_subtypes-1.0.0-x86_64-linux.gem",
+        "archives/lean_owned_subtypes-1.0.0-py3-none-manylinux_2_38_x86_64.whl",
+        "archives/owned-subtypes-1.0.0.crate",
+        "package-set-receipt.json",
+        "package-set-receipt.json.sha256"
+      ],
+      "path": "evidence/ordinary/handoff",
+      "receiptSha256": "47bf7045fcd98759c65f9fe2239d167134b578ea453c72c9c8939bd26f096d96",
+      "route": "ordinary"
+    },
+    {
+      "archiveBytes": 160431094,
+      "archives": 3,
+      "files": [
+        "archives/lean_bridge_owned_subtypes-1.0.0-x86_64-linux.gem",
+        "archives/lean_owned_subtypes-1.0.0-py3-none-manylinux_2_38_x86_64.whl",
+        "archives/owned-subtypes-1.0.0.crate",
+        "package-set-receipt.json",
+        "package-set-receipt.json.sha256"
+      ],
+      "path": "evidence/reviewed/handoff",
+      "receiptSha256": "0053e74f25b47520a35bfe8cfdd28000859af56b2db76fc4c425c8488cd6e703",
+      "route": "reviewed"
+    }
+  ],
+  "schemaVersion": 1
+}

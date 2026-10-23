@@ -1,0 +1,2214 @@
+{
+  "profile": "installed-owned-subtype-languages",
+  "reports": [
+    {
+      "compilerSelectedConstructors": true,
+      "componentReceipts": {
+        "python": {
+          "adaptersSha256": "ea08908eb9579fe3855eec479655cc7b89712182ea3a58904faa6608d4201dec",
+          "allocationGuardSha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83",
+          "bindingIrSha256": "0c877101f9a861bd3f3f36347c57fc87fabfe6ead9e5a858138455a4909d9f5a",
+          "callbackSourceSha256": "6e5453f225b4804147a1351120768d50f425a07618d3b820c3ad6c1ba9a8b48d",
+          "compiler": "cc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+          "exports": [
+            {
+              "declaration": "Owned.echoRecord",
+              "symbol": "lean_bridge_owned_c4834ab7e579c2eff02cd511_f080cb47999bb83cdc0c1"
+            },
+            {
+              "declaration": "Owned.echoRecordAlternate",
+              "symbol": "lean_bridge_owned_c4834ab7e579c2eff02cd511_f579c430cd49e7c98161f"
+            },
+            {
+              "declaration": "Owned.newTicket",
+              "symbol": "lean_bridge_owned_c4834ab7e579c2eff02cd511_f9735b5a0a586b46ce0b8"
+            },
+            {
+              "declaration": "Owned.serial",
+              "symbol": "lean_bridge_owned_c4834ab7e579c2eff02cd511_f52957d819a8a28259bf1"
+            },
+            {
+              "declaration": "Owned.transferRecord",
+              "symbol": "lean_bridge_owned_c4834ab7e579c2eff02cd511_f973a6e63b7dad7a3d147"
+            }
+          ],
+          "headerSha256": "374a2984cf5de23502d866c5fdebfed6945193632e01e7e84e4d72e56b9ce473",
+          "initializer": "initialize_LeanBridgeOwned45f2f3918ca9972a",
+          "inputTransfers": {
+            "consumption": "before-lean-call",
+            "exports": [
+              {
+                "bindingId": "lean:Owned.transferRecord",
+                "parameters": [
+                  0
+                ]
+              }
+            ],
+            "failure": "consumed-after-handoff",
+            "ownership": "whole-result-owner",
+            "schemaVersion": 1,
+            "validation": "before-consumption",
+            "viewLifetime": "until-call-returns"
+          },
+          "library": "libcomponent_df500c005a7a829ba06c.so",
+          "metadataSha256": "e2a773b3131da9f8b35fd211cc08518a5fa9af45f0111bd5d992e97b41fe0564",
+          "modelSha256": "4fece8b723861af765f23bde3e573edbfd3ed65a5325d39ccca77288800d8660",
+          "nativeLibrary": {
+            "bytes": 74600,
+            "sha256": "38f6cb8f55c11673fe0032d878015ff55736c1fee06c0d4a9de8bcf9bbeb2799"
+          },
+          "profile": "native-library-v1",
+          "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+          "schemaVersion": 4,
+          "sourceIdentity": {
+            "exportConfigurationSha256": "776df30d8b276fbbf64796a89a4f189d33f601533c60e6e20e9e73b7299a9f0e",
+            "exportConfigurationSource": "{\n  \"arities\": {},\n  \"contracts\": {\n    \"Owned.echoRecord\": {\n      \"parameters\": [\n        {\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"ownership\": \"borrow\",\n          \"refinement\": {\n            \"fields\": [\n              {\n                \"name\": \"primary\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"spare\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"peers\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"history\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"payload\",\n                \"refinement\": {\n                  \"fields\": [\n                    {\n                      \"name\": \"count\",\n                      \"refinement\": {\n                        \"constructor\": \"Owned.checkedCount\"\n                      }\n                    },\n                    {\n                      \"name\": \"bytes\",\n                      \"refinement\": null\n                    }\n                  ],\n                  \"kind\": \"record\",\n                  \"name\": \"Owned.Payload\"\n                }\n              }\n            ],\n            \"kind\": \"record\",\n            \"name\": \"Owned.Bundle\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\"\n      }\n    },\n    \"Owned.echoRecordAlternate\": {\n      \"parameters\": [\n        {\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"ownership\": \"borrow\",\n          \"refinement\": {\n            \"fields\": [\n              {\n                \"name\": \"primary\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"spare\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"peers\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"history\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"payload\",\n                \"refinement\": {\n                  \"fields\": [\n                    {\n                      \"name\": \"count\",\n                      \"refinement\": {\n                        \"constructor\": \"Owned.checkedCountAlternate\"\n                      }\n                    },\n                    {\n                      \"name\": \"bytes\",\n                      \"refinement\": null\n                    }\n                  ],\n                  \"kind\": \"record\",\n                  \"name\": \"Owned.Payload\"\n                }\n              }\n            ],\n            \"kind\": \"record\",\n            \"name\": \"Owned.Bundle\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\"\n      }\n    },\n    \"Owned.transferRecord\": {\n      \"parameters\": [\n        {\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"ownership\": \"transfer\",\n          \"refinement\": {\n            \"fields\": [\n              {\n                \"name\": \"primary\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"spare\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"peers\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"history\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"payload\",\n                \"refinement\": {\n                  \"fields\": [\n                    {\n                      \"name\": \"count\",\n                      \"refinement\": {\n                        \"constructor\": \"Owned.checkedCount\"\n                      }\n                    },\n                    {\n                      \"name\": \"bytes\",\n                      \"refinement\": null\n                    }\n                  ],\n                  \"kind\": \"record\",\n                  \"name\": \"Owned.Payload\"\n                }\n              }\n            ],\n            \"kind\": \"record\",\n            \"name\": \"Owned.Bundle\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\"\n      }\n    }\n  },\n  \"exports\": [\n    \"Owned.newTicket\",\n    \"Owned.serial\",\n    \"Owned.echoRecord\",\n    \"Owned.echoRecordAlternate\",\n    \"Owned.transferRecord\"\n  ],\n  \"modules\": [\n    \"Owned\"\n  ],\n  \"ownedAggregates\": {\n    \"cycles\": \"reject\",\n    \"disposal\": \"required\",\n    \"fallback\": \"queued-finalizer\",\n    \"ownership\": \"lease\"\n  },\n  \"package\": {\n    \"description\": \"Owned values with proof-erased checked fields.\"\n  },\n  \"resources\": [\n    \"Owned.Ticket\"\n  ],\n  \"schemaVersion\": 1,\n  \"targets\": {\n    \"cargo\": {\n      \"name\": \"owned-subtypes\",\n      \"version\": \"1.0.0\"\n    },\n    \"pypi\": {\n      \"name\": \"lean-owned-subtypes\",\n      \"version\": \"1.0.0\"\n    },\n    \"rubygems\": {\n      \"name\": \"lean_bridge_owned_subtypes\",\n      \"version\": \"1.0.0\"\n    }\n  }\n}\n",
+            "extractorSha256": "00f8ce7a3888339cdb1c36b0dce3d8bc9d4c650ea18c7a4926c2d29d4690443a",
+            "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+            "leanCompilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+            "leanVersion": "4.32.2",
+            "modules": [
+              {
+                "interface": {
+                  "bytes": 133728,
+                  "interfaceSha256": "e96653db13d9a29eeaa57cfa834874e290935f4e59dacddad919eaa34a2f1847",
+                  "sha256": "89679a92e88c9581a05442327d48a210e71a8adc37889a7204b7eafa797847b3"
+                },
+                "module": "Owned",
+                "source": {
+                  "bytes": 1126,
+                  "path": "Owned.lean",
+                  "sha256": "c0346b3446761904f3d0e1dfe5c057e2f18418929d088feca3d373488fa34042"
+                }
+              }
+            ],
+            "request": {
+              "arities": [],
+              "contracts": {
+                "Owned.echoRecord": {
+                  "parameters": [
+                    {
+                      "lifetime": {
+                        "anchor": null,
+                        "scope": "call"
+                      },
+                      "ownership": "borrow",
+                      "refinement": {
+                        "fields": [
+                          {
+                            "name": "primary",
+                            "refinement": null
+                          },
+                          {
+                            "name": "spare",
+                            "refinement": null
+                          },
+                          {
+                            "name": "peers",
+                            "refinement": null
+                          },
+                          {
+                            "name": "history",
+                            "refinement": null
+                          },
+                          {
+                            "name": "payload",
+                            "refinement": {
+                              "fields": [
+                                {
+                                  "name": "count",
+                                  "refinement": {
+                                    "constructor": "Owned.checkedCount"
+                                  }
+                                },
+                                {
+                                  "name": "bytes",
+                                  "refinement": null
+                                }
+                              ],
+                              "kind": "record",
+                              "name": "Owned.Payload"
+                            }
+                          }
+                        ],
+                        "kind": "record",
+                        "name": "Owned.Bundle"
+                      }
+                    }
+                  ],
+                  "result": {
+                    "lifetime": {
+                      "anchor": null,
+                      "scope": "explicit"
+                    },
+                    "ownership": "lease"
+                  }
+                },
+                "Owned.echoRecordAlternate": {
+                  "parameters": [
+                    {
+                      "lifetime": {
+                        "anchor": null,
+                        "scope": "call"
+                      },
+                      "ownership": "borrow",
+                      "refinement": {
+                        "fields": [
+                          {
+                            "name": "primary",
+                            "refinement": null
+                          },
+                          {
+                            "name": "spare",
+                            "refinement": null
+                          },
+                          {
+                            "name": "peers",
+                            "refinement": null
+                          },
+                          {
+                            "name": "history",
+                            "refinement": null
+                          },
+                          {
+                            "name": "payload",
+                            "refinement": {
+                              "fields": [
+                                {
+                                  "name": "count",
+                                  "refinement": {
+                                    "constructor": "Owned.checkedCountAlternate"
+                                  }
+                                },
+                                {
+                                  "name": "bytes",
+                                  "refinement": null
+                                }
+                              ],
+                              "kind": "record",
+                              "name": "Owned.Payload"
+                            }
+                          }
+                        ],
+                        "kind": "record",
+                        "name": "Owned.Bundle"
+                      }
+                    }
+                  ],
+                  "result": {
+                    "lifetime": {
+                      "anchor": null,
+                      "scope": "explicit"
+                    },
+                    "ownership": "lease"
+                  }
+                },
+                "Owned.transferRecord": {
+                  "parameters": [
+                    {
+                      "lifetime": {
+                        "anchor": null,
+                        "scope": "call"
+                      },
+                      "ownership": "transfer",
+                      "refinement": {
+                        "fields": [
+                          {
+                            "name": "primary",
+                            "refinement": null
+                          },
+                          {
+                            "name": "spare",
+                            "refinement": null
+                          },
+                          {
+                            "name": "peers",
+                            "refinement": null
+                          },
+                          {
+                            "name": "history",
+                            "refinement": null
+                          },
+                          {
+                            "name": "payload",
+                            "refinement": {
+                              "fields": [
+                                {
+                                  "name": "count",
+                                  "refinement": {
+                                    "constructor": "Owned.checkedCount"
+                                  }
+                                },
+                                {
+                                  "name": "bytes",
+                                  "refinement": null
+                                }
+                              ],
+                              "kind": "record",
+                              "name": "Owned.Payload"
+                            }
+                          }
+                        ],
+                        "kind": "record",
+                        "name": "Owned.Bundle"
+                      }
+                    }
+                  ],
+                  "result": {
+                    "lifetime": {
+                      "anchor": null,
+                      "scope": "explicit"
+                    },
+                    "ownership": "lease"
+                  }
+                }
+              },
+              "exportModules": [
+                "Owned"
+              ],
+              "exports": [
+                "Owned.newTicket",
+                "Owned.serial",
+                "Owned.echoRecord",
+                "Owned.echoRecordAlternate",
+                "Owned.transferRecord"
+              ],
+              "metadata": {
+                "invocationIdentitySha256": "98524667bd81b2a6c3df4a8e98207abccfedb832dd7b4005bb64550f2f178af8",
+                "modules": [
+                  {
+                    "interfaceSha256": "e96653db13d9a29eeaa57cfa834874e290935f4e59dacddad919eaa34a2f1847",
+                    "name": "Owned",
+                    "sourcePath": "Owned.lean",
+                    "sourceSha256": "c0346b3446761904f3d0e1dfe5c057e2f18418929d088feca3d373488fa34042"
+                  }
+                ],
+                "toolchain": "leanprover/lean4:v4.32.2"
+              },
+              "modules": [
+                "Owned"
+              ],
+              "ownedAggregates": {
+                "cycles": "reject",
+                "disposal": "required",
+                "fallback": "queued-finalizer",
+                "ownership": "lease"
+              },
+              "profile": "native-library-v1",
+              "resources": [
+                "Owned.Ticket"
+              ]
+            },
+            "sourceNoticesSha256": "9bfff4e6a474826e2c6ee22e17c2f5d3250c9c1045ad8460dddc56570d2f1ccb",
+            "sourceTreeSha256": "1aa07addc706ef5c4283547f770c516c751b9700e4bdad9f2de1261768d07643"
+          }
+        },
+        "ruby": {
+          "adaptersSha256": "ea08908eb9579fe3855eec479655cc7b89712182ea3a58904faa6608d4201dec",
+          "allocationGuardSha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83",
+          "bindingIrSha256": "0c877101f9a861bd3f3f36347c57fc87fabfe6ead9e5a858138455a4909d9f5a",
+          "callbackSourceSha256": "6e5453f225b4804147a1351120768d50f425a07618d3b820c3ad6c1ba9a8b48d",
+          "compiler": "cc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+          "exports": [
+            {
+              "declaration": "Owned.echoRecord",
+              "symbol": "lean_bridge_owned_c4834ab7e579c2eff02cd511_f080cb47999bb83cdc0c1"
+            },
+            {
+              "declaration": "Owned.echoRecordAlternate",
+              "symbol": "lean_bridge_owned_c4834ab7e579c2eff02cd511_f579c430cd49e7c98161f"
+            },
+            {
+              "declaration": "Owned.newTicket",
+              "symbol": "lean_bridge_owned_c4834ab7e579c2eff02cd511_f9735b5a0a586b46ce0b8"
+            },
+            {
+              "declaration": "Owned.serial",
+              "symbol": "lean_bridge_owned_c4834ab7e579c2eff02cd511_f52957d819a8a28259bf1"
+            },
+            {
+              "declaration": "Owned.transferRecord",
+              "symbol": "lean_bridge_owned_c4834ab7e579c2eff02cd511_f973a6e63b7dad7a3d147"
+            }
+          ],
+          "headerSha256": "374a2984cf5de23502d866c5fdebfed6945193632e01e7e84e4d72e56b9ce473",
+          "initializer": "initialize_LeanBridgeOwned45f2f3918ca9972a",
+          "inputTransfers": {
+            "consumption": "before-lean-call",
+            "exports": [
+              {
+                "bindingId": "lean:Owned.transferRecord",
+                "parameters": [
+                  0
+                ]
+              }
+            ],
+            "failure": "consumed-after-handoff",
+            "ownership": "whole-result-owner",
+            "schemaVersion": 1,
+            "validation": "before-consumption",
+            "viewLifetime": "until-call-returns"
+          },
+          "library": "libcomponent_df500c005a7a829ba06c.so",
+          "metadataSha256": "e2a773b3131da9f8b35fd211cc08518a5fa9af45f0111bd5d992e97b41fe0564",
+          "modelSha256": "4fece8b723861af765f23bde3e573edbfd3ed65a5325d39ccca77288800d8660",
+          "nativeLibrary": {
+            "bytes": 74600,
+            "sha256": "38f6cb8f55c11673fe0032d878015ff55736c1fee06c0d4a9de8bcf9bbeb2799"
+          },
+          "profile": "native-library-v1",
+          "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+          "schemaVersion": 4,
+          "sourceIdentity": {
+            "exportConfigurationSha256": "776df30d8b276fbbf64796a89a4f189d33f601533c60e6e20e9e73b7299a9f0e",
+            "exportConfigurationSource": "{\n  \"arities\": {},\n  \"contracts\": {\n    \"Owned.echoRecord\": {\n      \"parameters\": [\n        {\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"ownership\": \"borrow\",\n          \"refinement\": {\n            \"fields\": [\n              {\n                \"name\": \"primary\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"spare\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"peers\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"history\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"payload\",\n                \"refinement\": {\n                  \"fields\": [\n                    {\n                      \"name\": \"count\",\n                      \"refinement\": {\n                        \"constructor\": \"Owned.checkedCount\"\n                      }\n                    },\n                    {\n                      \"name\": \"bytes\",\n                      \"refinement\": null\n                    }\n                  ],\n                  \"kind\": \"record\",\n                  \"name\": \"Owned.Payload\"\n                }\n              }\n            ],\n            \"kind\": \"record\",\n            \"name\": \"Owned.Bundle\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\"\n      }\n    },\n    \"Owned.echoRecordAlternate\": {\n      \"parameters\": [\n        {\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"ownership\": \"borrow\",\n          \"refinement\": {\n            \"fields\": [\n              {\n                \"name\": \"primary\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"spare\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"peers\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"history\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"payload\",\n                \"refinement\": {\n                  \"fields\": [\n                    {\n                      \"name\": \"count\",\n                      \"refinement\": {\n                        \"constructor\": \"Owned.checkedCountAlternate\"\n                      }\n                    },\n                    {\n                      \"name\": \"bytes\",\n                      \"refinement\": null\n                    }\n                  ],\n                  \"kind\": \"record\",\n                  \"name\": \"Owned.Payload\"\n                }\n              }\n            ],\n            \"kind\": \"record\",\n            \"name\": \"Owned.Bundle\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\"\n      }\n    },\n    \"Owned.transferRecord\": {\n      \"parameters\": [\n        {\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"ownership\": \"transfer\",\n          \"refinement\": {\n            \"fields\": [\n              {\n                \"name\": \"primary\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"spare\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"peers\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"history\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"payload\",\n                \"refinement\": {\n                  \"fields\": [\n                    {\n                      \"name\": \"count\",\n                      \"refinement\": {\n                        \"constructor\": \"Owned.checkedCount\"\n                      }\n                    },\n                    {\n                      \"name\": \"bytes\",\n                      \"refinement\": null\n                    }\n                  ],\n                  \"kind\": \"record\",\n                  \"name\": \"Owned.Payload\"\n                }\n              }\n            ],\n            \"kind\": \"record\",\n            \"name\": \"Owned.Bundle\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\"\n      }\n    }\n  },\n  \"exports\": [\n    \"Owned.newTicket\",\n    \"Owned.serial\",\n    \"Owned.echoRecord\",\n    \"Owned.echoRecordAlternate\",\n    \"Owned.transferRecord\"\n  ],\n  \"modules\": [\n    \"Owned\"\n  ],\n  \"ownedAggregates\": {\n    \"cycles\": \"reject\",\n    \"disposal\": \"required\",\n    \"fallback\": \"queued-finalizer\",\n    \"ownership\": \"lease\"\n  },\n  \"package\": {\n    \"description\": \"Owned values with proof-erased checked fields.\"\n  },\n  \"resources\": [\n    \"Owned.Ticket\"\n  ],\n  \"schemaVersion\": 1,\n  \"targets\": {\n    \"cargo\": {\n      \"name\": \"owned-subtypes\",\n      \"version\": \"1.0.0\"\n    },\n    \"pypi\": {\n      \"name\": \"lean-owned-subtypes\",\n      \"version\": \"1.0.0\"\n    },\n    \"rubygems\": {\n      \"name\": \"lean_bridge_owned_subtypes\",\n      \"version\": \"1.0.0\"\n    }\n  }\n}\n",
+            "extractorSha256": "00f8ce7a3888339cdb1c36b0dce3d8bc9d4c650ea18c7a4926c2d29d4690443a",
+            "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+            "leanCompilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+            "leanVersion": "4.32.2",
+            "modules": [
+              {
+                "interface": {
+                  "bytes": 133728,
+                  "interfaceSha256": "e96653db13d9a29eeaa57cfa834874e290935f4e59dacddad919eaa34a2f1847",
+                  "sha256": "89679a92e88c9581a05442327d48a210e71a8adc37889a7204b7eafa797847b3"
+                },
+                "module": "Owned",
+                "source": {
+                  "bytes": 1126,
+                  "path": "Owned.lean",
+                  "sha256": "c0346b3446761904f3d0e1dfe5c057e2f18418929d088feca3d373488fa34042"
+                }
+              }
+            ],
+            "request": {
+              "arities": [],
+              "contracts": {
+                "Owned.echoRecord": {
+                  "parameters": [
+                    {
+                      "lifetime": {
+                        "anchor": null,
+                        "scope": "call"
+                      },
+                      "ownership": "borrow",
+                      "refinement": {
+                        "fields": [
+                          {
+                            "name": "primary",
+                            "refinement": null
+                          },
+                          {
+                            "name": "spare",
+                            "refinement": null
+                          },
+                          {
+                            "name": "peers",
+                            "refinement": null
+                          },
+                          {
+                            "name": "history",
+                            "refinement": null
+                          },
+                          {
+                            "name": "payload",
+                            "refinement": {
+                              "fields": [
+                                {
+                                  "name": "count",
+                                  "refinement": {
+                                    "constructor": "Owned.checkedCount"
+                                  }
+                                },
+                                {
+                                  "name": "bytes",
+                                  "refinement": null
+                                }
+                              ],
+                              "kind": "record",
+                              "name": "Owned.Payload"
+                            }
+                          }
+                        ],
+                        "kind": "record",
+                        "name": "Owned.Bundle"
+                      }
+                    }
+                  ],
+                  "result": {
+                    "lifetime": {
+                      "anchor": null,
+                      "scope": "explicit"
+                    },
+                    "ownership": "lease"
+                  }
+                },
+                "Owned.echoRecordAlternate": {
+                  "parameters": [
+                    {
+                      "lifetime": {
+                        "anchor": null,
+                        "scope": "call"
+                      },
+                      "ownership": "borrow",
+                      "refinement": {
+                        "fields": [
+                          {
+                            "name": "primary",
+                            "refinement": null
+                          },
+                          {
+                            "name": "spare",
+                            "refinement": null
+                          },
+                          {
+                            "name": "peers",
+                            "refinement": null
+                          },
+                          {
+                            "name": "history",
+                            "refinement": null
+                          },
+                          {
+                            "name": "payload",
+                            "refinement": {
+                              "fields": [
+                                {
+                                  "name": "count",
+                                  "refinement": {
+                                    "constructor": "Owned.checkedCountAlternate"
+                                  }
+                                },
+                                {
+                                  "name": "bytes",
+                                  "refinement": null
+                                }
+                              ],
+                              "kind": "record",
+                              "name": "Owned.Payload"
+                            }
+                          }
+                        ],
+                        "kind": "record",
+                        "name": "Owned.Bundle"
+                      }
+                    }
+                  ],
+                  "result": {
+                    "lifetime": {
+                      "anchor": null,
+                      "scope": "explicit"
+                    },
+                    "ownership": "lease"
+                  }
+                },
+                "Owned.transferRecord": {
+                  "parameters": [
+                    {
+                      "lifetime": {
+                        "anchor": null,
+                        "scope": "call"
+                      },
+                      "ownership": "transfer",
+                      "refinement": {
+                        "fields": [
+                          {
+                            "name": "primary",
+                            "refinement": null
+                          },
+                          {
+                            "name": "spare",
+                            "refinement": null
+                          },
+                          {
+                            "name": "peers",
+                            "refinement": null
+                          },
+                          {
+                            "name": "history",
+                            "refinement": null
+                          },
+                          {
+                            "name": "payload",
+                            "refinement": {
+                              "fields": [
+                                {
+                                  "name": "count",
+                                  "refinement": {
+                                    "constructor": "Owned.checkedCount"
+                                  }
+                                },
+                                {
+                                  "name": "bytes",
+                                  "refinement": null
+                                }
+                              ],
+                              "kind": "record",
+                              "name": "Owned.Payload"
+                            }
+                          }
+                        ],
+                        "kind": "record",
+                        "name": "Owned.Bundle"
+                      }
+                    }
+                  ],
+                  "result": {
+                    "lifetime": {
+                      "anchor": null,
+                      "scope": "explicit"
+                    },
+                    "ownership": "lease"
+                  }
+                }
+              },
+              "exportModules": [
+                "Owned"
+              ],
+              "exports": [
+                "Owned.newTicket",
+                "Owned.serial",
+                "Owned.echoRecord",
+                "Owned.echoRecordAlternate",
+                "Owned.transferRecord"
+              ],
+              "metadata": {
+                "invocationIdentitySha256": "98524667bd81b2a6c3df4a8e98207abccfedb832dd7b4005bb64550f2f178af8",
+                "modules": [
+                  {
+                    "interfaceSha256": "e96653db13d9a29eeaa57cfa834874e290935f4e59dacddad919eaa34a2f1847",
+                    "name": "Owned",
+                    "sourcePath": "Owned.lean",
+                    "sourceSha256": "c0346b3446761904f3d0e1dfe5c057e2f18418929d088feca3d373488fa34042"
+                  }
+                ],
+                "toolchain": "leanprover/lean4:v4.32.2"
+              },
+              "modules": [
+                "Owned"
+              ],
+              "ownedAggregates": {
+                "cycles": "reject",
+                "disposal": "required",
+                "fallback": "queued-finalizer",
+                "ownership": "lease"
+              },
+              "profile": "native-library-v1",
+              "resources": [
+                "Owned.Ticket"
+              ]
+            },
+            "sourceNoticesSha256": "9bfff4e6a474826e2c6ee22e17c2f5d3250c9c1045ad8460dddc56570d2f1ccb",
+            "sourceTreeSha256": "1aa07addc706ef5c4283547f770c516c751b9700e4bdad9f2de1261768d07643"
+          }
+        },
+        "rust": {
+          "adaptersSha256": "ea08908eb9579fe3855eec479655cc7b89712182ea3a58904faa6608d4201dec",
+          "allocationGuardSha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83",
+          "bindingIrSha256": "0c877101f9a861bd3f3f36347c57fc87fabfe6ead9e5a858138455a4909d9f5a",
+          "callbackSourceSha256": "6e5453f225b4804147a1351120768d50f425a07618d3b820c3ad6c1ba9a8b48d",
+          "compiler": "cc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+          "exports": [
+            {
+              "declaration": "Owned.echoRecord",
+              "symbol": "lean_bridge_owned_c4834ab7e579c2eff02cd511_f080cb47999bb83cdc0c1"
+            },
+            {
+              "declaration": "Owned.echoRecordAlternate",
+              "symbol": "lean_bridge_owned_c4834ab7e579c2eff02cd511_f579c430cd49e7c98161f"
+            },
+            {
+              "declaration": "Owned.newTicket",
+              "symbol": "lean_bridge_owned_c4834ab7e579c2eff02cd511_f9735b5a0a586b46ce0b8"
+            },
+            {
+              "declaration": "Owned.serial",
+              "symbol": "lean_bridge_owned_c4834ab7e579c2eff02cd511_f52957d819a8a28259bf1"
+            },
+            {
+              "declaration": "Owned.transferRecord",
+              "symbol": "lean_bridge_owned_c4834ab7e579c2eff02cd511_f973a6e63b7dad7a3d147"
+            }
+          ],
+          "headerSha256": "374a2984cf5de23502d866c5fdebfed6945193632e01e7e84e4d72e56b9ce473",
+          "initializer": "initialize_LeanBridgeOwned45f2f3918ca9972a",
+          "inputTransfers": {
+            "consumption": "before-lean-call",
+            "exports": [
+              {
+                "bindingId": "lean:Owned.transferRecord",
+                "parameters": [
+                  0
+                ]
+              }
+            ],
+            "failure": "consumed-after-handoff",
+            "ownership": "whole-result-owner",
+            "schemaVersion": 1,
+            "validation": "before-consumption",
+            "viewLifetime": "until-call-returns"
+          },
+          "library": "libcomponent_df500c005a7a829ba06c.so",
+          "metadataSha256": "e2a773b3131da9f8b35fd211cc08518a5fa9af45f0111bd5d992e97b41fe0564",
+          "modelSha256": "4fece8b723861af765f23bde3e573edbfd3ed65a5325d39ccca77288800d8660",
+          "nativeLibrary": {
+            "bytes": 74600,
+            "sha256": "38f6cb8f55c11673fe0032d878015ff55736c1fee06c0d4a9de8bcf9bbeb2799"
+          },
+          "profile": "native-library-v1",
+          "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+          "schemaVersion": 4,
+          "sourceIdentity": {
+            "exportConfigurationSha256": "776df30d8b276fbbf64796a89a4f189d33f601533c60e6e20e9e73b7299a9f0e",
+            "exportConfigurationSource": "{\n  \"arities\": {},\n  \"contracts\": {\n    \"Owned.echoRecord\": {\n      \"parameters\": [\n        {\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"ownership\": \"borrow\",\n          \"refinement\": {\n            \"fields\": [\n              {\n                \"name\": \"primary\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"spare\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"peers\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"history\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"payload\",\n                \"refinement\": {\n                  \"fields\": [\n                    {\n                      \"name\": \"count\",\n                      \"refinement\": {\n                        \"constructor\": \"Owned.checkedCount\"\n                      }\n                    },\n                    {\n                      \"name\": \"bytes\",\n                      \"refinement\": null\n                    }\n                  ],\n                  \"kind\": \"record\",\n                  \"name\": \"Owned.Payload\"\n                }\n              }\n            ],\n            \"kind\": \"record\",\n            \"name\": \"Owned.Bundle\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\"\n      }\n    },\n    \"Owned.echoRecordAlternate\": {\n      \"parameters\": [\n        {\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"ownership\": \"borrow\",\n          \"refinement\": {\n            \"fields\": [\n              {\n                \"name\": \"primary\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"spare\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"peers\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"history\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"payload\",\n                \"refinement\": {\n                  \"fields\": [\n                    {\n                      \"name\": \"count\",\n                      \"refinement\": {\n                        \"constructor\": \"Owned.checkedCountAlternate\"\n                      }\n                    },\n                    {\n                      \"name\": \"bytes\",\n                      \"refinement\": null\n                    }\n                  ],\n                  \"kind\": \"record\",\n                  \"name\": \"Owned.Payload\"\n                }\n              }\n            ],\n            \"kind\": \"record\",\n            \"name\": \"Owned.Bundle\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\"\n      }\n    },\n    \"Owned.transferRecord\": {\n      \"parameters\": [\n        {\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"ownership\": \"transfer\",\n          \"refinement\": {\n            \"fields\": [\n              {\n                \"name\": \"primary\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"spare\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"peers\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"history\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"payload\",\n                \"refinement\": {\n                  \"fields\": [\n                    {\n                      \"name\": \"count\",\n                      \"refinement\": {\n                        \"constructor\": \"Owned.checkedCount\"\n                      }\n                    },\n                    {\n                      \"name\": \"bytes\",\n                      \"refinement\": null\n                    }\n                  ],\n                  \"kind\": \"record\",\n                  \"name\": \"Owned.Payload\"\n                }\n              }\n            ],\n            \"kind\": \"record\",\n            \"name\": \"Owned.Bundle\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\"\n      }\n    }\n  },\n  \"exports\": [\n    \"Owned.newTicket\",\n    \"Owned.serial\",\n    \"Owned.echoRecord\",\n    \"Owned.echoRecordAlternate\",\n    \"Owned.transferRecord\"\n  ],\n  \"modules\": [\n    \"Owned\"\n  ],\n  \"ownedAggregates\": {\n    \"cycles\": \"reject\",\n    \"disposal\": \"required\",\n    \"fallback\": \"queued-finalizer\",\n    \"ownership\": \"lease\"\n  },\n  \"package\": {\n    \"description\": \"Owned values with proof-erased checked fields.\"\n  },\n  \"resources\": [\n    \"Owned.Ticket\"\n  ],\n  \"schemaVersion\": 1,\n  \"targets\": {\n    \"cargo\": {\n      \"name\": \"owned-subtypes\",\n      \"version\": \"1.0.0\"\n    },\n    \"pypi\": {\n      \"name\": \"lean-owned-subtypes\",\n      \"version\": \"1.0.0\"\n    },\n    \"rubygems\": {\n      \"name\": \"lean_bridge_owned_subtypes\",\n      \"version\": \"1.0.0\"\n    }\n  }\n}\n",
+            "extractorSha256": "00f8ce7a3888339cdb1c36b0dce3d8bc9d4c650ea18c7a4926c2d29d4690443a",
+            "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+            "leanCompilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+            "leanVersion": "4.32.2",
+            "modules": [
+              {
+                "interface": {
+                  "bytes": 133728,
+                  "interfaceSha256": "e96653db13d9a29eeaa57cfa834874e290935f4e59dacddad919eaa34a2f1847",
+                  "sha256": "89679a92e88c9581a05442327d48a210e71a8adc37889a7204b7eafa797847b3"
+                },
+                "module": "Owned",
+                "source": {
+                  "bytes": 1126,
+                  "path": "Owned.lean",
+                  "sha256": "c0346b3446761904f3d0e1dfe5c057e2f18418929d088feca3d373488fa34042"
+                }
+              }
+            ],
+            "request": {
+              "arities": [],
+              "contracts": {
+                "Owned.echoRecord": {
+                  "parameters": [
+                    {
+                      "lifetime": {
+                        "anchor": null,
+                        "scope": "call"
+                      },
+                      "ownership": "borrow",
+                      "refinement": {
+                        "fields": [
+                          {
+                            "name": "primary",
+                            "refinement": null
+                          },
+                          {
+                            "name": "spare",
+                            "refinement": null
+                          },
+                          {
+                            "name": "peers",
+                            "refinement": null
+                          },
+                          {
+                            "name": "history",
+                            "refinement": null
+                          },
+                          {
+                            "name": "payload",
+                            "refinement": {
+                              "fields": [
+                                {
+                                  "name": "count",
+                                  "refinement": {
+                                    "constructor": "Owned.checkedCount"
+                                  }
+                                },
+                                {
+                                  "name": "bytes",
+                                  "refinement": null
+                                }
+                              ],
+                              "kind": "record",
+                              "name": "Owned.Payload"
+                            }
+                          }
+                        ],
+                        "kind": "record",
+                        "name": "Owned.Bundle"
+                      }
+                    }
+                  ],
+                  "result": {
+                    "lifetime": {
+                      "anchor": null,
+                      "scope": "explicit"
+                    },
+                    "ownership": "lease"
+                  }
+                },
+                "Owned.echoRecordAlternate": {
+                  "parameters": [
+                    {
+                      "lifetime": {
+                        "anchor": null,
+                        "scope": "call"
+                      },
+                      "ownership": "borrow",
+                      "refinement": {
+                        "fields": [
+                          {
+                            "name": "primary",
+                            "refinement": null
+                          },
+                          {
+                            "name": "spare",
+                            "refinement": null
+                          },
+                          {
+                            "name": "peers",
+                            "refinement": null
+                          },
+                          {
+                            "name": "history",
+                            "refinement": null
+                          },
+                          {
+                            "name": "payload",
+                            "refinement": {
+                              "fields": [
+                                {
+                                  "name": "count",
+                                  "refinement": {
+                                    "constructor": "Owned.checkedCountAlternate"
+                                  }
+                                },
+                                {
+                                  "name": "bytes",
+                                  "refinement": null
+                                }
+                              ],
+                              "kind": "record",
+                              "name": "Owned.Payload"
+                            }
+                          }
+                        ],
+                        "kind": "record",
+                        "name": "Owned.Bundle"
+                      }
+                    }
+                  ],
+                  "result": {
+                    "lifetime": {
+                      "anchor": null,
+                      "scope": "explicit"
+                    },
+                    "ownership": "lease"
+                  }
+                },
+                "Owned.transferRecord": {
+                  "parameters": [
+                    {
+                      "lifetime": {
+                        "anchor": null,
+                        "scope": "call"
+                      },
+                      "ownership": "transfer",
+                      "refinement": {
+                        "fields": [
+                          {
+                            "name": "primary",
+                            "refinement": null
+                          },
+                          {
+                            "name": "spare",
+                            "refinement": null
+                          },
+                          {
+                            "name": "peers",
+                            "refinement": null
+                          },
+                          {
+                            "name": "history",
+                            "refinement": null
+                          },
+                          {
+                            "name": "payload",
+                            "refinement": {
+                              "fields": [
+                                {
+                                  "name": "count",
+                                  "refinement": {
+                                    "constructor": "Owned.checkedCount"
+                                  }
+                                },
+                                {
+                                  "name": "bytes",
+                                  "refinement": null
+                                }
+                              ],
+                              "kind": "record",
+                              "name": "Owned.Payload"
+                            }
+                          }
+                        ],
+                        "kind": "record",
+                        "name": "Owned.Bundle"
+                      }
+                    }
+                  ],
+                  "result": {
+                    "lifetime": {
+                      "anchor": null,
+                      "scope": "explicit"
+                    },
+                    "ownership": "lease"
+                  }
+                }
+              },
+              "exportModules": [
+                "Owned"
+              ],
+              "exports": [
+                "Owned.newTicket",
+                "Owned.serial",
+                "Owned.echoRecord",
+                "Owned.echoRecordAlternate",
+                "Owned.transferRecord"
+              ],
+              "metadata": {
+                "invocationIdentitySha256": "98524667bd81b2a6c3df4a8e98207abccfedb832dd7b4005bb64550f2f178af8",
+                "modules": [
+                  {
+                    "interfaceSha256": "e96653db13d9a29eeaa57cfa834874e290935f4e59dacddad919eaa34a2f1847",
+                    "name": "Owned",
+                    "sourcePath": "Owned.lean",
+                    "sourceSha256": "c0346b3446761904f3d0e1dfe5c057e2f18418929d088feca3d373488fa34042"
+                  }
+                ],
+                "toolchain": "leanprover/lean4:v4.32.2"
+              },
+              "modules": [
+                "Owned"
+              ],
+              "ownedAggregates": {
+                "cycles": "reject",
+                "disposal": "required",
+                "fallback": "queued-finalizer",
+                "ownership": "lease"
+              },
+              "profile": "native-library-v1",
+              "resources": [
+                "Owned.Ticket"
+              ]
+            },
+            "sourceNoticesSha256": "9bfff4e6a474826e2c6ee22e17c2f5d3250c9c1045ad8460dddc56570d2f1ccb",
+            "sourceTreeSha256": "1aa07addc706ef5c4283547f770c516c751b9700e4bdad9f2de1261768d07643"
+          }
+        }
+      },
+      "dependencies": {
+        "archive": "rust-dependencies.tar.gz",
+        "lockSha256": "763260471cb0820e05b463e6c4a6afce40db6f52b8374886b7bdb9c260834222",
+        "packages": [
+          {
+            "checksum": "f2032f911046de80f0a198e0901378627c33f59ea0ac00e363d481118bd70a53",
+            "directory": "autocfg-1.5.1",
+            "files": 22,
+            "manifestSha256": "5db7ec75093eb5d5217141d6d03fd4cfc6549e34ae8785bf7d25d8fbe60b63b5"
+          },
+          {
+            "checksum": "3078c7629b62d3f0439517fa394996acacc5cbc91c5a20d8c658e77abd503a71",
+            "directory": "block-buffer-0.10.4",
+            "files": 10,
+            "manifestSha256": "7f0f369a2ec2f88a2a4cda9a5daa97c6dfdcc2110d33b52d1e6ac4fcfa2ffa0d"
+          },
+          {
+            "checksum": "9330f8b2ff13f34540b44e946ef35111825727b38d33286ef986142615121801",
+            "directory": "cfg-if-1.0.4",
+            "files": 13,
+            "manifestSha256": "49dfe36998e233735fc07a4a7cc3df8fcdef7d09a3ae991622666d934c0a0908"
+          },
+          {
+            "checksum": "59ed5838eebb26a2bb2e58f6d5b5316989ae9d08bab10e0e6d103e656d1b0280",
+            "directory": "cpufeatures-0.2.17",
+            "files": 16,
+            "manifestSha256": "c679b6563298b498deb2b2766a7c52966bf943cd83bb42e5b937fb3d93e2faeb"
+          },
+          {
+            "checksum": "78c8292055d1c1df0cce5d180393dc8cce0abec0a7102adb6c7b1eef6016d60a",
+            "directory": "crypto-common-0.1.7",
+            "files": 9,
+            "manifestSha256": "d2d031e96935ddc30a92c30c276c90d3e27dbab3c51a55a7d56abb07660d25bd"
+          },
+          {
+            "checksum": "9ed9a281f7bc9b7576e61468ba615a66a5c8cfdff42420a70aa82701a3b1e292",
+            "directory": "digest-0.10.7",
+            "files": 21,
+            "manifestSha256": "6031e7ffa87539939ddd24756561c2eec18bde6b560cc1343689b9242c62b2f4"
+          },
+          {
+            "checksum": "85649ca51fd72272d7821adaf274ad91c288277713d9c18820d8499a7ff69e9a",
+            "directory": "generic-array-0.14.7",
+            "files": 16,
+            "manifestSha256": "87e85df9db7f5334e87c47ba6038bea9670492dbb1a81283663334aa3d2f93d6"
+          },
+          {
+            "checksum": "3eaf3ede3fee6db1a4c2ee091bf8a8b4dccdc6d17f656fb07896ee72867612f2",
+            "directory": "libc-0.2.189",
+            "files": 403,
+            "manifestSha256": "1df2768ea8b10dcfaeabbc65485b890d1b2c045f3bdc4882153ea77f0cfeaad7"
+          },
+          {
+            "checksum": "a5e44f723f1133c9deac646763579fdb3ac745e418f2a7af9cd0c431da1f20b9",
+            "directory": "num-bigint-0.4.6",
+            "files": 50,
+            "manifestSha256": "5de58f41d99fee8e7c111e8a336effccaed1b59fc9d451e9cf6150909b1e7174"
+          },
+          {
+            "checksum": "7ce2d95d4b3734dc35aa2f45e1aa22cd416814592a4f9d9205e11affd5b8e10b",
+            "directory": "num-integer-0.1.47",
+            "files": 16,
+            "manifestSha256": "d9dd70b1e3e81e5d1ee89c24fbbb5f18b1c2c4951d9a95d59497ba1cc28c464f"
+          },
+          {
+            "checksum": "071dfc062690e90b734c0b2273ce72ad0ffa95f0c74596bc250dcfd960262841",
+            "directory": "num-traits-0.2.19",
+            "files": 28,
+            "manifestSha256": "f3a71413c6fbec0b5a94a407c1d2ccc80807a6f511d1823b7204ea3627b7f27e"
+          },
+          {
+            "checksum": "a7507d819769d01a365ab707794a4084392c824f54a7a6a7862f8c3d0892b283",
+            "directory": "sha2-0.10.9",
+            "files": 31,
+            "manifestSha256": "81dc0505ebd2db4d9d588fc90442ac4d6ae4aba5a406d4b1fc14fe95643bae5a"
+          },
+          {
+            "checksum": "b6f5e870be6c3b371b77fe0ee0bafb859fa4964b4404c27de1d380043c4dda20",
+            "directory": "typenum-1.20.1",
+            "files": 24,
+            "manifestSha256": "81a4e868756286091f8200273c2ed14675b3db2daa40123f16ef51290b891531"
+          },
+          {
+            "checksum": "0b928f33d975fc6ad9f86c8f283853ad26bdd5b10b7f1542aa2fa15e2289105a",
+            "directory": "version_check-0.9.5",
+            "files": 12,
+            "manifestSha256": "2c3e69d49eb86cf8f00c5d7c94ac9611a37c674f3c1fc5658d59be75e9e15911"
+          }
+        ],
+        "sha256": "48229987e373402555e4398ebc03073472b74d3f74e13f97c928af53e59be8dd"
+      },
+      "deterministicReassembly": true,
+      "handoffRemovedBeforeRelocatedExecution": true,
+      "lifecycle": {
+        "python": {
+          "fallback": "gc-finalizer",
+          "observation": "owning-slot-baseline-restored"
+        },
+        "ruby": {
+          "fallback": "gc-finalizer",
+          "observation": "queued-owner-drained"
+        },
+        "rust": {
+          "fallback": "drop",
+          "observation": "independent-retain-survives"
+        }
+      },
+      "observations": {
+        "python": {
+          "checks": 122,
+          "consumerSha256": "0c29f50298fb4671507fa3214fe2de36c255a4a116d156464b5bbbe134834a45",
+          "relocatedChecks": 122
+        },
+        "ruby": {
+          "checks": 122,
+          "consumerSha256": "0560de2a15e2e7b805897b92c635447f0f3006a91dcb64458f836a4573a2e674",
+          "relocatedChecks": 122
+        },
+        "rust": {
+          "checks": 119,
+          "consumerSha256": "7e9b0c68e22042a6dc0d69aee524af6a0fd7d6f4865404be162b9439ef3e2b34",
+          "relocatedChecks": 119
+        }
+      },
+      "packageSetReceipt": {
+        "component": {
+          "id": "owned-subtypes@1.0.0",
+          "name": "owned-subtypes",
+          "version": "1.0.0"
+        },
+        "kind": "lean-bridge-package-set-receipt",
+        "packages": [
+          {
+            "artifacts": [
+              {
+                "bytes": 53862867,
+                "path": "archives/owned-subtypes-1.0.0.crate",
+                "sha256": "739794332a873449c131c4dfb0318943b894243cd033ff846a0721a73d00cf37"
+              }
+            ],
+            "ecosystem": "cargo",
+            "name": "owned-subtypes",
+            "profile": "native-library-v1",
+            "requires": [],
+            "role": "component",
+            "runtimeDelivery": "embedded",
+            "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+            "target": "cargo",
+            "version": "1.0.0"
+          },
+          {
+            "artifacts": [
+              {
+                "bytes": 53904949,
+                "path": "archives/lean_owned_subtypes-1.0.0-py3-none-manylinux_2_38_x86_64.whl",
+                "sha256": "d7324dc304cfe1b584e59c309db628ac972fc64526fc159d1d9f8c3594b5a9f8"
+              }
+            ],
+            "ecosystem": "pypi",
+            "name": "lean-owned-subtypes",
+            "profile": "native-library-v1",
+            "requires": [],
+            "role": "component",
+            "runtimeDelivery": "embedded",
+            "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+            "target": "pypi",
+            "version": "1.0.0"
+          },
+          {
+            "artifacts": [
+              {
+                "bytes": 52651520,
+                "path": "archives/lean_bridge_owned_subtypes-1.0.0-x86_64-linux.gem",
+                "sha256": "5997d7823b94e1bca98b1699ed82da8f094f34aacbbc933d3db1dd0ab227e4fe"
+              }
+            ],
+            "ecosystem": "rubygems",
+            "name": "lean_bridge_owned_subtypes",
+            "profile": "native-library-v1",
+            "requires": [],
+            "role": "component",
+            "runtimeDelivery": "embedded",
+            "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+            "target": "rubygems",
+            "version": "1.0.0"
+          }
+        ],
+        "profiles": [
+          {
+            "bindingIrSha256": "0c877101f9a861bd3f3f36347c57fc87fabfe6ead9e5a858138455a4909d9f5a",
+            "id": "native-library-v1",
+            "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+          }
+        ],
+        "schemaVersion": 1,
+        "source": {
+          "treeSha256": "1aa07addc706ef5c4283547f770c516c751b9700e4bdad9f2de1261768d07643"
+        }
+      },
+      "reassembled": {
+        "python": {
+          "archive": "lean_owned_subtypes-1.0.0-py3-none-manylinux_2_38_x86_64.whl",
+          "sha256": "d7324dc304cfe1b584e59c309db628ac972fc64526fc159d1d9f8c3594b5a9f8"
+        },
+        "ruby": {
+          "archive": "lean_bridge_owned_subtypes-1.0.0-x86_64-linux.gem",
+          "sha256": "5997d7823b94e1bca98b1699ed82da8f094f34aacbbc933d3db1dd0ab227e4fe"
+        },
+        "rust": {
+          "archive": "owned-subtypes-1.0.0.crate",
+          "sha256": "739794332a873449c131c4dfb0318943b894243cd033ff846a0721a73d00cf37"
+        }
+      },
+      "relocatedInstallation": true,
+      "route": "ordinary",
+      "sourceFreeInstallation": true,
+      "sourceUnchanged": true,
+      "transferredInputCheckedBeforeHandoff": true,
+      "versions": {
+        "python": "Python 3.11.17",
+        "ruby": "ruby 3.3.12 (2026-07-16 revision 0581089df9) [x86_64-linux]",
+        "rustc": "rustc 1.90.0 (1159e78c4 2025-09-14)"
+      }
+    },
+    {
+      "compilerSelectedConstructors": true,
+      "componentReceipts": {
+        "python": {
+          "adaptersSha256": "adfe7e18826f654c344791f4d1308a8baa493bbdae5c2b8f0a59dbb7290c9613",
+          "allocationGuardSha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83",
+          "bindingIrSha256": "9491ed9d31a5b831764044a8b62ef7fd7f1c38158a79d0cdd72995b956cf2d72",
+          "callbackSourceSha256": "00d5037568d8cfa434f12ea89373cf4910c3c238ad182d5c4c98cf58f6a2fc10",
+          "compiler": "cc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+          "exports": [
+            {
+              "declaration": "Owned.echoRecord",
+              "symbol": "lean_bridge_owned_4b93149f826b8908c8eb1068_f080cb47999bb83cdc0c1"
+            },
+            {
+              "declaration": "Owned.echoRecordAlternate",
+              "symbol": "lean_bridge_owned_4b93149f826b8908c8eb1068_f579c430cd49e7c98161f"
+            },
+            {
+              "declaration": "Owned.newTicket",
+              "symbol": "lean_bridge_owned_4b93149f826b8908c8eb1068_f9735b5a0a586b46ce0b8"
+            },
+            {
+              "declaration": "Owned.serial",
+              "symbol": "lean_bridge_owned_4b93149f826b8908c8eb1068_f52957d819a8a28259bf1"
+            },
+            {
+              "declaration": "Owned.transferRecord",
+              "symbol": "lean_bridge_owned_4b93149f826b8908c8eb1068_f973a6e63b7dad7a3d147"
+            }
+          ],
+          "headerSha256": "464bbd3118cf3021d604dcd933b9ca12bc38b844ad9296021042cbff0b2e798c",
+          "initializer": "initialize_LeanBridgeOwneddd368cf90fc8c4ad",
+          "inputTransfers": {
+            "consumption": "before-lean-call",
+            "exports": [
+              {
+                "bindingId": "lean:Owned.transferRecord",
+                "parameters": [
+                  0
+                ]
+              }
+            ],
+            "failure": "consumed-after-handoff",
+            "ownership": "whole-result-owner",
+            "schemaVersion": 1,
+            "validation": "before-consumption",
+            "viewLifetime": "until-call-returns"
+          },
+          "library": "libcomponent_df500c005a7a829ba06c.so",
+          "metadataSha256": "2e13a3da72b13572fd2af6f6c6a8c95fdc221928a886d001df4bbaadc299d867",
+          "modelSha256": "292f369423f4a6cd10a25779ae4d44868b87cf654f34be0ab5ea27f67e98304a",
+          "nativeLibrary": {
+            "bytes": 74600,
+            "sha256": "502475e4bdad585075fa83475b5d6096211edb15865a85e352a1a0ed711978e5"
+          },
+          "profile": "native-library-v1",
+          "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+          "schemaVersion": 4,
+          "sourceIdentity": {
+            "exportConfigurationSha256": "3e0ef7407235bea8ab72bf448321e79b4eb5ff0bc32287ac669a0c06552dff69",
+            "exportConfigurationSource": "{\n  \"modules\": [\n    \"Owned\"\n  ],\n  \"schemaVersion\": 1,\n  \"targets\": {\n    \"cargo\": {\n      \"name\": \"owned-subtypes\",\n      \"version\": \"1.0.0\"\n    },\n    \"pypi\": {\n      \"name\": \"lean-owned-subtypes\",\n      \"version\": \"1.0.0\"\n    },\n    \"rubygems\": {\n      \"name\": \"lean_bridge_owned_subtypes\",\n      \"version\": \"1.0.0\"\n    }\n  }\n}\n",
+            "extractorSha256": "00f8ce7a3888339cdb1c36b0dce3d8bc9d4c650ea18c7a4926c2d29d4690443a",
+            "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+            "leanCompilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+            "leanVersion": "4.32.2",
+            "modules": [
+              {
+                "interface": {
+                  "bytes": 133728,
+                  "interfaceSha256": "e96653db13d9a29eeaa57cfa834874e290935f4e59dacddad919eaa34a2f1847",
+                  "sha256": "89679a92e88c9581a05442327d48a210e71a8adc37889a7204b7eafa797847b3"
+                },
+                "module": "Owned",
+                "source": {
+                  "bytes": 1126,
+                  "path": "Owned.lean",
+                  "sha256": "c0346b3446761904f3d0e1dfe5c057e2f18418929d088feca3d373488fa34042"
+                }
+              }
+            ],
+            "request": {
+              "arities": [],
+              "contracts": {
+                "Owned.echoRecord": {
+                  "parameters": [
+                    {
+                      "lifetime": {
+                        "anchor": null,
+                        "scope": "call"
+                      },
+                      "ownership": "borrow",
+                      "refinement": {
+                        "fields": [
+                          {
+                            "name": "primary",
+                            "refinement": null
+                          },
+                          {
+                            "name": "spare",
+                            "refinement": null
+                          },
+                          {
+                            "name": "peers",
+                            "refinement": null
+                          },
+                          {
+                            "name": "history",
+                            "refinement": null
+                          },
+                          {
+                            "name": "payload",
+                            "refinement": {
+                              "fields": [
+                                {
+                                  "name": "count",
+                                  "refinement": {
+                                    "constructor": "Owned.checkedCount"
+                                  }
+                                },
+                                {
+                                  "name": "bytes",
+                                  "refinement": null
+                                }
+                              ],
+                              "kind": "record",
+                              "name": "Owned.Payload"
+                            }
+                          }
+                        ],
+                        "kind": "record",
+                        "name": "Owned.Bundle"
+                      }
+                    }
+                  ]
+                },
+                "Owned.echoRecordAlternate": {
+                  "parameters": [
+                    {
+                      "lifetime": {
+                        "anchor": null,
+                        "scope": "call"
+                      },
+                      "ownership": "borrow",
+                      "refinement": {
+                        "fields": [
+                          {
+                            "name": "primary",
+                            "refinement": null
+                          },
+                          {
+                            "name": "spare",
+                            "refinement": null
+                          },
+                          {
+                            "name": "peers",
+                            "refinement": null
+                          },
+                          {
+                            "name": "history",
+                            "refinement": null
+                          },
+                          {
+                            "name": "payload",
+                            "refinement": {
+                              "fields": [
+                                {
+                                  "name": "count",
+                                  "refinement": {
+                                    "constructor": "Owned.checkedCountAlternate"
+                                  }
+                                },
+                                {
+                                  "name": "bytes",
+                                  "refinement": null
+                                }
+                              ],
+                              "kind": "record",
+                              "name": "Owned.Payload"
+                            }
+                          }
+                        ],
+                        "kind": "record",
+                        "name": "Owned.Bundle"
+                      }
+                    }
+                  ]
+                },
+                "Owned.transferRecord": {
+                  "parameters": [
+                    {
+                      "lifetime": {
+                        "anchor": null,
+                        "scope": "call"
+                      },
+                      "ownership": "transfer",
+                      "refinement": {
+                        "fields": [
+                          {
+                            "name": "primary",
+                            "refinement": null
+                          },
+                          {
+                            "name": "spare",
+                            "refinement": null
+                          },
+                          {
+                            "name": "peers",
+                            "refinement": null
+                          },
+                          {
+                            "name": "history",
+                            "refinement": null
+                          },
+                          {
+                            "name": "payload",
+                            "refinement": {
+                              "fields": [
+                                {
+                                  "name": "count",
+                                  "refinement": {
+                                    "constructor": "Owned.checkedCount"
+                                  }
+                                },
+                                {
+                                  "name": "bytes",
+                                  "refinement": null
+                                }
+                              ],
+                              "kind": "record",
+                              "name": "Owned.Payload"
+                            }
+                          }
+                        ],
+                        "kind": "record",
+                        "name": "Owned.Bundle"
+                      }
+                    }
+                  ]
+                }
+              },
+              "exportModules": [
+                "Owned"
+              ],
+              "exports": [
+                "Owned.echoRecord",
+                "Owned.echoRecordAlternate",
+                "Owned.newTicket",
+                "Owned.serial",
+                "Owned.transferRecord"
+              ],
+              "metadata": {
+                "invocationIdentitySha256": "4ea59b793c904044967cc5df3ac59ca3d6209d8849e375b5bd7ae9fd336ffd61",
+                "modules": [
+                  {
+                    "interfaceSha256": "e96653db13d9a29eeaa57cfa834874e290935f4e59dacddad919eaa34a2f1847",
+                    "name": "Owned",
+                    "sourcePath": "Owned.lean",
+                    "sourceSha256": "c0346b3446761904f3d0e1dfe5c057e2f18418929d088feca3d373488fa34042"
+                  }
+                ],
+                "toolchain": "leanprover/lean4:v4.32.2"
+              },
+              "modules": [
+                "Owned"
+              ],
+              "ownedAggregates": {
+                "cycles": "reject",
+                "disposal": "required",
+                "fallback": "queued-finalizer",
+                "ownership": "lease"
+              },
+              "profile": "native-library-v1",
+              "resources": [
+                "Owned.Ticket"
+              ]
+            },
+            "reviewedBindingIr": {
+              "path": "api.binding-ir.json",
+              "schemaVersion": 1,
+              "semanticSha256": "33cd9299a3cae2b2450567eacde41dfeb0b6a926b34fb01fc53ba082cb8ad935",
+              "source": "{\n  \"aggregatePolicy\": {\n    \"cycles\": \"reject\",\n    \"disposal\": \"required\",\n    \"fallback\": \"queued-finalizer\",\n    \"ownership\": \"lease\"\n  },\n  \"assurance\": [],\n  \"capabilities\": [],\n  \"component\": {\n    \"id\": \"owned-subtypes@1.0.0\",\n    \"name\": \"owned-subtypes\",\n    \"version\": \"1.0.0\"\n  },\n  \"declarations\": [\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [\n        \"allocates\"\n      ],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:Owned.newTicket\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"newTicket\",\n      \"overloadKey\": \"Owned.newTicket\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"arg0\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        },\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"arg1\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"string\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\",\n        \"type\": {\n          \"id\": \"lean:Owned.Ticket\",\n          \"kind\": \"named\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"Owned.newTicket\",\n        \"extensions\": {},\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [\n        \"reads-resource\"\n      ],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:Owned.serial\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"serial\",\n      \"overloadKey\": \"Owned.serial\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"arg0\",\n          \"optional\": false,\n          \"ownership\": \"borrow\",\n          \"type\": {\n            \"id\": \"lean:Owned.Ticket\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"kind\": \"primitive\",\n          \"name\": \"nat\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"Owned.serial\",\n        \"extensions\": {},\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [\n        \"reads-resource\",\n        \"allocates\"\n      ],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:Owned.echoRecord\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"echoRecord\",\n      \"overloadKey\": \"Owned.echoRecord\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"arg0\",\n          \"optional\": false,\n          \"ownership\": \"borrow\",\n          \"type\": {\n            \"id\": \"lean:Owned.Bundle\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\",\n        \"type\": {\n          \"id\": \"lean:Owned.Bundle\",\n          \"kind\": \"named\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"Owned.echoRecord\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"fields\": [\n                  {\n                    \"name\": \"primary\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"spare\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"peers\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"history\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"payload\",\n                    \"refinement\": {\n                      \"fields\": [\n                        {\n                          \"name\": \"count\",\n                          \"refinement\": {\n                            \"constructor\": \"Owned.checkedCount\",\n                            \"kind\": \"subtype\"\n                          }\n                        },\n                        {\n                          \"name\": \"bytes\",\n                          \"refinement\": null\n                        }\n                      ],\n                      \"kind\": \"record\",\n                      \"name\": \"Owned.Payload\"\n                    }\n                  }\n                ],\n                \"kind\": \"record\",\n                \"name\": \"Owned.Bundle\"\n              }\n            ],\n            \"result\": {\n              \"fields\": [\n                {\n                  \"name\": \"primary\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"spare\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"peers\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"history\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"payload\",\n                  \"refinement\": {\n                    \"fields\": [\n                      {\n                        \"name\": \"count\",\n                        \"refinement\": {\n                          \"constructor\": null,\n                          \"kind\": \"subtype\"\n                        }\n                      },\n                      {\n                        \"name\": \"bytes\",\n                        \"refinement\": null\n                      }\n                    ],\n                    \"kind\": \"record\",\n                    \"name\": \"Owned.Payload\"\n                  }\n                }\n              ],\n              \"kind\": \"record\",\n              \"name\": \"Owned.Bundle\"\n            }\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [\n        \"reads-resource\",\n        \"allocates\"\n      ],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:Owned.echoRecordAlternate\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"echoRecordAlternate\",\n      \"overloadKey\": \"Owned.echoRecordAlternate\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"arg0\",\n          \"optional\": false,\n          \"ownership\": \"borrow\",\n          \"type\": {\n            \"id\": \"lean:Owned.Bundle\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\",\n        \"type\": {\n          \"id\": \"lean:Owned.Bundle\",\n          \"kind\": \"named\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"Owned.echoRecordAlternate\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"fields\": [\n                  {\n                    \"name\": \"primary\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"spare\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"peers\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"history\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"payload\",\n                    \"refinement\": {\n                      \"fields\": [\n                        {\n                          \"name\": \"count\",\n                          \"refinement\": {\n                            \"constructor\": \"Owned.checkedCountAlternate\",\n                            \"kind\": \"subtype\"\n                          }\n                        },\n                        {\n                          \"name\": \"bytes\",\n                          \"refinement\": null\n                        }\n                      ],\n                      \"kind\": \"record\",\n                      \"name\": \"Owned.Payload\"\n                    }\n                  }\n                ],\n                \"kind\": \"record\",\n                \"name\": \"Owned.Bundle\"\n              }\n            ],\n            \"result\": {\n              \"fields\": [\n                {\n                  \"name\": \"primary\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"spare\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"peers\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"history\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"payload\",\n                  \"refinement\": {\n                    \"fields\": [\n                      {\n                        \"name\": \"count\",\n                        \"refinement\": {\n                          \"constructor\": null,\n                          \"kind\": \"subtype\"\n                        }\n                      },\n                      {\n                        \"name\": \"bytes\",\n                        \"refinement\": null\n                      }\n                    ],\n                    \"kind\": \"record\",\n                    \"name\": \"Owned.Payload\"\n                  }\n                }\n              ],\n              \"kind\": \"record\",\n              \"name\": \"Owned.Bundle\"\n            }\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [\n        \"reads-resource\",\n        \"allocates\"\n      ],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:Owned.transferRecord\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"transferRecord\",\n      \"overloadKey\": \"Owned.transferRecord\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"arg0\",\n          \"optional\": false,\n          \"ownership\": \"transfer\",\n          \"type\": {\n            \"id\": \"lean:Owned.Bundle\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\",\n        \"type\": {\n          \"id\": \"lean:Owned.Bundle\",\n          \"kind\": \"named\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"Owned.transferRecord\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"fields\": [\n                  {\n                    \"name\": \"primary\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"spare\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"peers\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"history\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"payload\",\n                    \"refinement\": {\n                      \"fields\": [\n                        {\n                          \"name\": \"count\",\n                          \"refinement\": {\n                            \"constructor\": \"Owned.checkedCount\",\n                            \"kind\": \"subtype\"\n                          }\n                        },\n                        {\n                          \"name\": \"bytes\",\n                          \"refinement\": null\n                        }\n                      ],\n                      \"kind\": \"record\",\n                      \"name\": \"Owned.Payload\"\n                    }\n                  }\n                ],\n                \"kind\": \"record\",\n                \"name\": \"Owned.Bundle\"\n              }\n            ],\n            \"result\": {\n              \"fields\": [\n                {\n                  \"name\": \"primary\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"spare\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"peers\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"history\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"payload\",\n                  \"refinement\": {\n                    \"fields\": [\n                      {\n                        \"name\": \"count\",\n                        \"refinement\": {\n                          \"constructor\": null,\n                          \"kind\": \"subtype\"\n                        }\n                      },\n                      {\n                        \"name\": \"bytes\",\n                        \"refinement\": null\n                      }\n                    ],\n                    \"kind\": \"record\",\n                    \"name\": \"Owned.Payload\"\n                  }\n                }\n              ],\n              \"kind\": \"record\",\n              \"name\": \"Owned.Bundle\"\n            }\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    }\n  ],\n  \"documentation\": {\n    \"details\": \"\",\n    \"summary\": \"Independent corpus contract.\"\n  },\n  \"errors\": [],\n  \"producers\": [\n    {\n      \"adapter\": \"independent-corpus-contract\",\n      \"adapterVersion\": 1,\n      \"extensions\": {},\n      \"id\": \"corpusReview\",\n      \"tool\": \"Corpus contract review\",\n      \"toolVersion\": \"1\"\n    }\n  ],\n  \"schemaVersion\": 4,\n  \"types\": [\n    {\n      \"aggregate\": null,\n      \"assurance\": [],\n      \"callable\": null,\n      \"cases\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent owned aggregate contract.\"\n      },\n      \"fields\": [],\n      \"host\": null,\n      \"id\": \"lean:Owned.Ticket\",\n      \"kind\": \"resource\",\n      \"mutability\": \"read\",\n      \"name\": \"Ticket\",\n      \"representation\": \"identity\",\n      \"resource\": {\n        \"cycles\": \"explicit-cut\",\n        \"disposal\": \"required\",\n        \"fallback\": \"queued-finalizer\",\n        \"kindId\": \"resource:Owned.Ticket\"\n      },\n      \"source\": {\n        \"declaration\": \"Owned.Ticket\",\n        \"extensions\": {},\n        \"producer\": \"corpusReview\"\n      },\n      \"target\": null,\n      \"typeParameters\": []\n    },\n    {\n      \"aggregate\": null,\n      \"assurance\": [],\n      \"callable\": null,\n      \"cases\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent owned aggregate contract.\"\n      },\n      \"fields\": [\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent owned aggregate contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"count\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"int\"\n          }\n        },\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent owned aggregate contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"bytes\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"bytes\"\n          }\n        }\n      ],\n      \"host\": null,\n      \"id\": \"lean:Owned.Payload\",\n      \"kind\": \"record\",\n      \"mutability\": \"immutable\",\n      \"name\": \"Payload\",\n      \"representation\": \"copied\",\n      \"resource\": null,\n      \"source\": {\n        \"declaration\": \"Owned.Payload\",\n        \"extensions\": {},\n        \"producer\": \"corpusReview\"\n      },\n      \"target\": null,\n      \"typeParameters\": []\n    },\n    {\n      \"aggregate\": {\n        \"cycles\": \"reject\",\n        \"disposal\": \"required\",\n        \"fallback\": \"queued-finalizer\",\n        \"ownership\": \"lease\"\n      },\n      \"assurance\": [],\n      \"callable\": null,\n      \"cases\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent owned aggregate contract.\"\n      },\n      \"fields\": [\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent owned aggregate contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"primary\",\n          \"type\": {\n            \"id\": \"lean:Owned.Ticket\",\n            \"kind\": \"named\"\n          }\n        },\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent owned aggregate contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"spare\",\n          \"type\": {\n            \"arguments\": [\n              {\n                \"id\": \"lean:Owned.Ticket\",\n                \"kind\": \"named\"\n              }\n            ],\n            \"constructor\": \"option\",\n            \"kind\": \"apply\"\n          }\n        },\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent owned aggregate contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"peers\",\n          \"type\": {\n            \"arguments\": [\n              {\n                \"id\": \"lean:Owned.Ticket\",\n                \"kind\": \"named\"\n              }\n            ],\n            \"constructor\": \"array\",\n            \"kind\": \"apply\"\n          }\n        },\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent owned aggregate contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"history\",\n          \"type\": {\n            \"arguments\": [\n              {\n                \"id\": \"lean:Owned.Ticket\",\n                \"kind\": \"named\"\n              }\n            ],\n            \"constructor\": \"list\",\n            \"kind\": \"apply\"\n          }\n        },\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent owned aggregate contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"payload\",\n          \"type\": {\n            \"id\": \"lean:Owned.Payload\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"host\": null,\n      \"id\": \"lean:Owned.Bundle\",\n      \"kind\": \"record\",\n      \"mutability\": \"immutable\",\n      \"name\": \"Bundle\",\n      \"representation\": \"owned\",\n      \"resource\": null,\n      \"source\": {\n        \"declaration\": \"Owned.Bundle\",\n        \"extensions\": {},\n        \"producer\": \"corpusReview\"\n      },\n      \"target\": null,\n      \"typeParameters\": []\n    }\n  ]\n}\n",
+              "sourceSha256": "568a4c306e1344f2d5d8c4b0ba08f24e7b08a9e090cfd9de82b801ee522aa39c"
+            },
+            "sourceNoticesSha256": "afd0a44286160d921a59baee31843dfacac4d1180b6564f98ccebaa3e88aa71b",
+            "sourceTreeSha256": "b464924aaa4f9dda17af33f21b2fe1d4f13efc97e2a1a8e1f0c3fa9e19336e07"
+          }
+        },
+        "ruby": {
+          "adaptersSha256": "adfe7e18826f654c344791f4d1308a8baa493bbdae5c2b8f0a59dbb7290c9613",
+          "allocationGuardSha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83",
+          "bindingIrSha256": "9491ed9d31a5b831764044a8b62ef7fd7f1c38158a79d0cdd72995b956cf2d72",
+          "callbackSourceSha256": "00d5037568d8cfa434f12ea89373cf4910c3c238ad182d5c4c98cf58f6a2fc10",
+          "compiler": "cc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+          "exports": [
+            {
+              "declaration": "Owned.echoRecord",
+              "symbol": "lean_bridge_owned_4b93149f826b8908c8eb1068_f080cb47999bb83cdc0c1"
+            },
+            {
+              "declaration": "Owned.echoRecordAlternate",
+              "symbol": "lean_bridge_owned_4b93149f826b8908c8eb1068_f579c430cd49e7c98161f"
+            },
+            {
+              "declaration": "Owned.newTicket",
+              "symbol": "lean_bridge_owned_4b93149f826b8908c8eb1068_f9735b5a0a586b46ce0b8"
+            },
+            {
+              "declaration": "Owned.serial",
+              "symbol": "lean_bridge_owned_4b93149f826b8908c8eb1068_f52957d819a8a28259bf1"
+            },
+            {
+              "declaration": "Owned.transferRecord",
+              "symbol": "lean_bridge_owned_4b93149f826b8908c8eb1068_f973a6e63b7dad7a3d147"
+            }
+          ],
+          "headerSha256": "464bbd3118cf3021d604dcd933b9ca12bc38b844ad9296021042cbff0b2e798c",
+          "initializer": "initialize_LeanBridgeOwneddd368cf90fc8c4ad",
+          "inputTransfers": {
+            "consumption": "before-lean-call",
+            "exports": [
+              {
+                "bindingId": "lean:Owned.transferRecord",
+                "parameters": [
+                  0
+                ]
+              }
+            ],
+            "failure": "consumed-after-handoff",
+            "ownership": "whole-result-owner",
+            "schemaVersion": 1,
+            "validation": "before-consumption",
+            "viewLifetime": "until-call-returns"
+          },
+          "library": "libcomponent_df500c005a7a829ba06c.so",
+          "metadataSha256": "2e13a3da72b13572fd2af6f6c6a8c95fdc221928a886d001df4bbaadc299d867",
+          "modelSha256": "292f369423f4a6cd10a25779ae4d44868b87cf654f34be0ab5ea27f67e98304a",
+          "nativeLibrary": {
+            "bytes": 74600,
+            "sha256": "502475e4bdad585075fa83475b5d6096211edb15865a85e352a1a0ed711978e5"
+          },
+          "profile": "native-library-v1",
+          "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+          "schemaVersion": 4,
+          "sourceIdentity": {
+            "exportConfigurationSha256": "3e0ef7407235bea8ab72bf448321e79b4eb5ff0bc32287ac669a0c06552dff69",
+            "exportConfigurationSource": "{\n  \"modules\": [\n    \"Owned\"\n  ],\n  \"schemaVersion\": 1,\n  \"targets\": {\n    \"cargo\": {\n      \"name\": \"owned-subtypes\",\n      \"version\": \"1.0.0\"\n    },\n    \"pypi\": {\n      \"name\": \"lean-owned-subtypes\",\n      \"version\": \"1.0.0\"\n    },\n    \"rubygems\": {\n      \"name\": \"lean_bridge_owned_subtypes\",\n      \"version\": \"1.0.0\"\n    }\n  }\n}\n",
+            "extractorSha256": "00f8ce7a3888339cdb1c36b0dce3d8bc9d4c650ea18c7a4926c2d29d4690443a",
+            "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+            "leanCompilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+            "leanVersion": "4.32.2",
+            "modules": [
+              {
+                "interface": {
+                  "bytes": 133728,
+                  "interfaceSha256": "e96653db13d9a29eeaa57cfa834874e290935f4e59dacddad919eaa34a2f1847",
+                  "sha256": "89679a92e88c9581a05442327d48a210e71a8adc37889a7204b7eafa797847b3"
+                },
+                "module": "Owned",
+                "source": {
+                  "bytes": 1126,
+                  "path": "Owned.lean",
+                  "sha256": "c0346b3446761904f3d0e1dfe5c057e2f18418929d088feca3d373488fa34042"
+                }
+              }
+            ],
+            "request": {
+              "arities": [],
+              "contracts": {
+                "Owned.echoRecord": {
+                  "parameters": [
+                    {
+                      "lifetime": {
+                        "anchor": null,
+                        "scope": "call"
+                      },
+                      "ownership": "borrow",
+                      "refinement": {
+                        "fields": [
+                          {
+                            "name": "primary",
+                            "refinement": null
+                          },
+                          {
+                            "name": "spare",
+                            "refinement": null
+                          },
+                          {
+                            "name": "peers",
+                            "refinement": null
+                          },
+                          {
+                            "name": "history",
+                            "refinement": null
+                          },
+                          {
+                            "name": "payload",
+                            "refinement": {
+                              "fields": [
+                                {
+                                  "name": "count",
+                                  "refinement": {
+                                    "constructor": "Owned.checkedCount"
+                                  }
+                                },
+                                {
+                                  "name": "bytes",
+                                  "refinement": null
+                                }
+                              ],
+                              "kind": "record",
+                              "name": "Owned.Payload"
+                            }
+                          }
+                        ],
+                        "kind": "record",
+                        "name": "Owned.Bundle"
+                      }
+                    }
+                  ]
+                },
+                "Owned.echoRecordAlternate": {
+                  "parameters": [
+                    {
+                      "lifetime": {
+                        "anchor": null,
+                        "scope": "call"
+                      },
+                      "ownership": "borrow",
+                      "refinement": {
+                        "fields": [
+                          {
+                            "name": "primary",
+                            "refinement": null
+                          },
+                          {
+                            "name": "spare",
+                            "refinement": null
+                          },
+                          {
+                            "name": "peers",
+                            "refinement": null
+                          },
+                          {
+                            "name": "history",
+                            "refinement": null
+                          },
+                          {
+                            "name": "payload",
+                            "refinement": {
+                              "fields": [
+                                {
+                                  "name": "count",
+                                  "refinement": {
+                                    "constructor": "Owned.checkedCountAlternate"
+                                  }
+                                },
+                                {
+                                  "name": "bytes",
+                                  "refinement": null
+                                }
+                              ],
+                              "kind": "record",
+                              "name": "Owned.Payload"
+                            }
+                          }
+                        ],
+                        "kind": "record",
+                        "name": "Owned.Bundle"
+                      }
+                    }
+                  ]
+                },
+                "Owned.transferRecord": {
+                  "parameters": [
+                    {
+                      "lifetime": {
+                        "anchor": null,
+                        "scope": "call"
+                      },
+                      "ownership": "transfer",
+                      "refinement": {
+                        "fields": [
+                          {
+                            "name": "primary",
+                            "refinement": null
+                          },
+                          {
+                            "name": "spare",
+                            "refinement": null
+                          },
+                          {
+                            "name": "peers",
+                            "refinement": null
+                          },
+                          {
+                            "name": "history",
+                            "refinement": null
+                          },
+                          {
+                            "name": "payload",
+                            "refinement": {
+                              "fields": [
+                                {
+                                  "name": "count",
+                                  "refinement": {
+                                    "constructor": "Owned.checkedCount"
+                                  }
+                                },
+                                {
+                                  "name": "bytes",
+                                  "refinement": null
+                                }
+                              ],
+                              "kind": "record",
+                              "name": "Owned.Payload"
+                            }
+                          }
+                        ],
+                        "kind": "record",
+                        "name": "Owned.Bundle"
+                      }
+                    }
+                  ]
+                }
+              },
+              "exportModules": [
+                "Owned"
+              ],
+              "exports": [
+                "Owned.echoRecord",
+                "Owned.echoRecordAlternate",
+                "Owned.newTicket",
+                "Owned.serial",
+                "Owned.transferRecord"
+              ],
+              "metadata": {
+                "invocationIdentitySha256": "4ea59b793c904044967cc5df3ac59ca3d6209d8849e375b5bd7ae9fd336ffd61",
+                "modules": [
+                  {
+                    "interfaceSha256": "e96653db13d9a29eeaa57cfa834874e290935f4e59dacddad919eaa34a2f1847",
+                    "name": "Owned",
+                    "sourcePath": "Owned.lean",
+                    "sourceSha256": "c0346b3446761904f3d0e1dfe5c057e2f18418929d088feca3d373488fa34042"
+                  }
+                ],
+                "toolchain": "leanprover/lean4:v4.32.2"
+              },
+              "modules": [
+                "Owned"
+              ],
+              "ownedAggregates": {
+                "cycles": "reject",
+                "disposal": "required",
+                "fallback": "queued-finalizer",
+                "ownership": "lease"
+              },
+              "profile": "native-library-v1",
+              "resources": [
+                "Owned.Ticket"
+              ]
+            },
+            "reviewedBindingIr": {
+              "path": "api.binding-ir.json",
+              "schemaVersion": 1,
+              "semanticSha256": "33cd9299a3cae2b2450567eacde41dfeb0b6a926b34fb01fc53ba082cb8ad935",
+              "source": "{\n  \"aggregatePolicy\": {\n    \"cycles\": \"reject\",\n    \"disposal\": \"required\",\n    \"fallback\": \"queued-finalizer\",\n    \"ownership\": \"lease\"\n  },\n  \"assurance\": [],\n  \"capabilities\": [],\n  \"component\": {\n    \"id\": \"owned-subtypes@1.0.0\",\n    \"name\": \"owned-subtypes\",\n    \"version\": \"1.0.0\"\n  },\n  \"declarations\": [\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [\n        \"allocates\"\n      ],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:Owned.newTicket\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"newTicket\",\n      \"overloadKey\": \"Owned.newTicket\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"arg0\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        },\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"arg1\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"string\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\",\n        \"type\": {\n          \"id\": \"lean:Owned.Ticket\",\n          \"kind\": \"named\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"Owned.newTicket\",\n        \"extensions\": {},\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [\n        \"reads-resource\"\n      ],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:Owned.serial\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"serial\",\n      \"overloadKey\": \"Owned.serial\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"arg0\",\n          \"optional\": false,\n          \"ownership\": \"borrow\",\n          \"type\": {\n            \"id\": \"lean:Owned.Ticket\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"kind\": \"primitive\",\n          \"name\": \"nat\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"Owned.serial\",\n        \"extensions\": {},\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [\n        \"reads-resource\",\n        \"allocates\"\n      ],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:Owned.echoRecord\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"echoRecord\",\n      \"overloadKey\": \"Owned.echoRecord\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"arg0\",\n          \"optional\": false,\n          \"ownership\": \"borrow\",\n          \"type\": {\n            \"id\": \"lean:Owned.Bundle\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\",\n        \"type\": {\n          \"id\": \"lean:Owned.Bundle\",\n          \"kind\": \"named\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"Owned.echoRecord\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"fields\": [\n                  {\n                    \"name\": \"primary\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"spare\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"peers\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"history\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"payload\",\n                    \"refinement\": {\n                      \"fields\": [\n                        {\n                          \"name\": \"count\",\n                          \"refinement\": {\n                            \"constructor\": \"Owned.checkedCount\",\n                            \"kind\": \"subtype\"\n                          }\n                        },\n                        {\n                          \"name\": \"bytes\",\n                          \"refinement\": null\n                        }\n                      ],\n                      \"kind\": \"record\",\n                      \"name\": \"Owned.Payload\"\n                    }\n                  }\n                ],\n                \"kind\": \"record\",\n                \"name\": \"Owned.Bundle\"\n              }\n            ],\n            \"result\": {\n              \"fields\": [\n                {\n                  \"name\": \"primary\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"spare\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"peers\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"history\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"payload\",\n                  \"refinement\": {\n                    \"fields\": [\n                      {\n                        \"name\": \"count\",\n                        \"refinement\": {\n                          \"constructor\": null,\n                          \"kind\": \"subtype\"\n                        }\n                      },\n                      {\n                        \"name\": \"bytes\",\n                        \"refinement\": null\n                      }\n                    ],\n                    \"kind\": \"record\",\n                    \"name\": \"Owned.Payload\"\n                  }\n                }\n              ],\n              \"kind\": \"record\",\n              \"name\": \"Owned.Bundle\"\n            }\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [\n        \"reads-resource\",\n        \"allocates\"\n      ],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:Owned.echoRecordAlternate\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"echoRecordAlternate\",\n      \"overloadKey\": \"Owned.echoRecordAlternate\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"arg0\",\n          \"optional\": false,\n          \"ownership\": \"borrow\",\n          \"type\": {\n            \"id\": \"lean:Owned.Bundle\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\",\n        \"type\": {\n          \"id\": \"lean:Owned.Bundle\",\n          \"kind\": \"named\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"Owned.echoRecordAlternate\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"fields\": [\n                  {\n                    \"name\": \"primary\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"spare\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"peers\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"history\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"payload\",\n                    \"refinement\": {\n                      \"fields\": [\n                        {\n                          \"name\": \"count\",\n                          \"refinement\": {\n                            \"constructor\": \"Owned.checkedCountAlternate\",\n                            \"kind\": \"subtype\"\n                          }\n                        },\n                        {\n                          \"name\": \"bytes\",\n                          \"refinement\": null\n                        }\n                      ],\n                      \"kind\": \"record\",\n                      \"name\": \"Owned.Payload\"\n                    }\n                  }\n                ],\n                \"kind\": \"record\",\n                \"name\": \"Owned.Bundle\"\n              }\n            ],\n            \"result\": {\n              \"fields\": [\n                {\n                  \"name\": \"primary\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"spare\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"peers\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"history\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"payload\",\n                  \"refinement\": {\n                    \"fields\": [\n                      {\n                        \"name\": \"count\",\n                        \"refinement\": {\n                          \"constructor\": null,\n                          \"kind\": \"subtype\"\n                        }\n                      },\n                      {\n                        \"name\": \"bytes\",\n                        \"refinement\": null\n                      }\n                    ],\n                    \"kind\": \"record\",\n                    \"name\": \"Owned.Payload\"\n                  }\n                }\n              ],\n              \"kind\": \"record\",\n              \"name\": \"Owned.Bundle\"\n            }\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [\n        \"reads-resource\",\n        \"allocates\"\n      ],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:Owned.transferRecord\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"transferRecord\",\n      \"overloadKey\": \"Owned.transferRecord\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"arg0\",\n          \"optional\": false,\n          \"ownership\": \"transfer\",\n          \"type\": {\n            \"id\": \"lean:Owned.Bundle\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\",\n        \"type\": {\n          \"id\": \"lean:Owned.Bundle\",\n          \"kind\": \"named\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"Owned.transferRecord\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"fields\": [\n                  {\n                    \"name\": \"primary\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"spare\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"peers\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"history\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"payload\",\n                    \"refinement\": {\n                      \"fields\": [\n                        {\n                          \"name\": \"count\",\n                          \"refinement\": {\n                            \"constructor\": \"Owned.checkedCount\",\n                            \"kind\": \"subtype\"\n                          }\n                        },\n                        {\n                          \"name\": \"bytes\",\n                          \"refinement\": null\n                        }\n                      ],\n                      \"kind\": \"record\",\n                      \"name\": \"Owned.Payload\"\n                    }\n                  }\n                ],\n                \"kind\": \"record\",\n                \"name\": \"Owned.Bundle\"\n              }\n            ],\n            \"result\": {\n              \"fields\": [\n                {\n                  \"name\": \"primary\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"spare\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"peers\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"history\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"payload\",\n                  \"refinement\": {\n                    \"fields\": [\n                      {\n                        \"name\": \"count\",\n                        \"refinement\": {\n                          \"constructor\": null,\n                          \"kind\": \"subtype\"\n                        }\n                      },\n                      {\n                        \"name\": \"bytes\",\n                        \"refinement\": null\n                      }\n                    ],\n                    \"kind\": \"record\",\n                    \"name\": \"Owned.Payload\"\n                  }\n                }\n              ],\n              \"kind\": \"record\",\n              \"name\": \"Owned.Bundle\"\n            }\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    }\n  ],\n  \"documentation\": {\n    \"details\": \"\",\n    \"summary\": \"Independent corpus contract.\"\n  },\n  \"errors\": [],\n  \"producers\": [\n    {\n      \"adapter\": \"independent-corpus-contract\",\n      \"adapterVersion\": 1,\n      \"extensions\": {},\n      \"id\": \"corpusReview\",\n      \"tool\": \"Corpus contract review\",\n      \"toolVersion\": \"1\"\n    }\n  ],\n  \"schemaVersion\": 4,\n  \"types\": [\n    {\n      \"aggregate\": null,\n      \"assurance\": [],\n      \"callable\": null,\n      \"cases\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent owned aggregate contract.\"\n      },\n      \"fields\": [],\n      \"host\": null,\n      \"id\": \"lean:Owned.Ticket\",\n      \"kind\": \"resource\",\n      \"mutability\": \"read\",\n      \"name\": \"Ticket\",\n      \"representation\": \"identity\",\n      \"resource\": {\n        \"cycles\": \"explicit-cut\",\n        \"disposal\": \"required\",\n        \"fallback\": \"queued-finalizer\",\n        \"kindId\": \"resource:Owned.Ticket\"\n      },\n      \"source\": {\n        \"declaration\": \"Owned.Ticket\",\n        \"extensions\": {},\n        \"producer\": \"corpusReview\"\n      },\n      \"target\": null,\n      \"typeParameters\": []\n    },\n    {\n      \"aggregate\": null,\n      \"assurance\": [],\n      \"callable\": null,\n      \"cases\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent owned aggregate contract.\"\n      },\n      \"fields\": [\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent owned aggregate contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"count\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"int\"\n          }\n        },\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent owned aggregate contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"bytes\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"bytes\"\n          }\n        }\n      ],\n      \"host\": null,\n      \"id\": \"lean:Owned.Payload\",\n      \"kind\": \"record\",\n      \"mutability\": \"immutable\",\n      \"name\": \"Payload\",\n      \"representation\": \"copied\",\n      \"resource\": null,\n      \"source\": {\n        \"declaration\": \"Owned.Payload\",\n        \"extensions\": {},\n        \"producer\": \"corpusReview\"\n      },\n      \"target\": null,\n      \"typeParameters\": []\n    },\n    {\n      \"aggregate\": {\n        \"cycles\": \"reject\",\n        \"disposal\": \"required\",\n        \"fallback\": \"queued-finalizer\",\n        \"ownership\": \"lease\"\n      },\n      \"assurance\": [],\n      \"callable\": null,\n      \"cases\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent owned aggregate contract.\"\n      },\n      \"fields\": [\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent owned aggregate contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"primary\",\n          \"type\": {\n            \"id\": \"lean:Owned.Ticket\",\n            \"kind\": \"named\"\n          }\n        },\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent owned aggregate contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"spare\",\n          \"type\": {\n            \"arguments\": [\n              {\n                \"id\": \"lean:Owned.Ticket\",\n                \"kind\": \"named\"\n              }\n            ],\n            \"constructor\": \"option\",\n            \"kind\": \"apply\"\n          }\n        },\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent owned aggregate contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"peers\",\n          \"type\": {\n            \"arguments\": [\n              {\n                \"id\": \"lean:Owned.Ticket\",\n                \"kind\": \"named\"\n              }\n            ],\n            \"constructor\": \"array\",\n            \"kind\": \"apply\"\n          }\n        },\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent owned aggregate contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"history\",\n          \"type\": {\n            \"arguments\": [\n              {\n                \"id\": \"lean:Owned.Ticket\",\n                \"kind\": \"named\"\n              }\n            ],\n            \"constructor\": \"list\",\n            \"kind\": \"apply\"\n          }\n        },\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent owned aggregate contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"payload\",\n          \"type\": {\n            \"id\": \"lean:Owned.Payload\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"host\": null,\n      \"id\": \"lean:Owned.Bundle\",\n      \"kind\": \"record\",\n      \"mutability\": \"immutable\",\n      \"name\": \"Bundle\",\n      \"representation\": \"owned\",\n      \"resource\": null,\n      \"source\": {\n        \"declaration\": \"Owned.Bundle\",\n        \"extensions\": {},\n        \"producer\": \"corpusReview\"\n      },\n      \"target\": null,\n      \"typeParameters\": []\n    }\n  ]\n}\n",
+              "sourceSha256": "568a4c306e1344f2d5d8c4b0ba08f24e7b08a9e090cfd9de82b801ee522aa39c"
+            },
+            "sourceNoticesSha256": "afd0a44286160d921a59baee31843dfacac4d1180b6564f98ccebaa3e88aa71b",
+            "sourceTreeSha256": "b464924aaa4f9dda17af33f21b2fe1d4f13efc97e2a1a8e1f0c3fa9e19336e07"
+          }
+        },
+        "rust": {
+          "adaptersSha256": "adfe7e18826f654c344791f4d1308a8baa493bbdae5c2b8f0a59dbb7290c9613",
+          "allocationGuardSha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83",
+          "bindingIrSha256": "9491ed9d31a5b831764044a8b62ef7fd7f1c38158a79d0cdd72995b956cf2d72",
+          "callbackSourceSha256": "00d5037568d8cfa434f12ea89373cf4910c3c238ad182d5c4c98cf58f6a2fc10",
+          "compiler": "cc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+          "exports": [
+            {
+              "declaration": "Owned.echoRecord",
+              "symbol": "lean_bridge_owned_4b93149f826b8908c8eb1068_f080cb47999bb83cdc0c1"
+            },
+            {
+              "declaration": "Owned.echoRecordAlternate",
+              "symbol": "lean_bridge_owned_4b93149f826b8908c8eb1068_f579c430cd49e7c98161f"
+            },
+            {
+              "declaration": "Owned.newTicket",
+              "symbol": "lean_bridge_owned_4b93149f826b8908c8eb1068_f9735b5a0a586b46ce0b8"
+            },
+            {
+              "declaration": "Owned.serial",
+              "symbol": "lean_bridge_owned_4b93149f826b8908c8eb1068_f52957d819a8a28259bf1"
+            },
+            {
+              "declaration": "Owned.transferRecord",
+              "symbol": "lean_bridge_owned_4b93149f826b8908c8eb1068_f973a6e63b7dad7a3d147"
+            }
+          ],
+          "headerSha256": "464bbd3118cf3021d604dcd933b9ca12bc38b844ad9296021042cbff0b2e798c",
+          "initializer": "initialize_LeanBridgeOwneddd368cf90fc8c4ad",
+          "inputTransfers": {
+            "consumption": "before-lean-call",
+            "exports": [
+              {
+                "bindingId": "lean:Owned.transferRecord",
+                "parameters": [
+                  0
+                ]
+              }
+            ],
+            "failure": "consumed-after-handoff",
+            "ownership": "whole-result-owner",
+            "schemaVersion": 1,
+            "validation": "before-consumption",
+            "viewLifetime": "until-call-returns"
+          },
+          "library": "libcomponent_df500c005a7a829ba06c.so",
+          "metadataSha256": "2e13a3da72b13572fd2af6f6c6a8c95fdc221928a886d001df4bbaadc299d867",
+          "modelSha256": "292f369423f4a6cd10a25779ae4d44868b87cf654f34be0ab5ea27f67e98304a",
+          "nativeLibrary": {
+            "bytes": 74600,
+            "sha256": "502475e4bdad585075fa83475b5d6096211edb15865a85e352a1a0ed711978e5"
+          },
+          "profile": "native-library-v1",
+          "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+          "schemaVersion": 4,
+          "sourceIdentity": {
+            "exportConfigurationSha256": "3e0ef7407235bea8ab72bf448321e79b4eb5ff0bc32287ac669a0c06552dff69",
+            "exportConfigurationSource": "{\n  \"modules\": [\n    \"Owned\"\n  ],\n  \"schemaVersion\": 1,\n  \"targets\": {\n    \"cargo\": {\n      \"name\": \"owned-subtypes\",\n      \"version\": \"1.0.0\"\n    },\n    \"pypi\": {\n      \"name\": \"lean-owned-subtypes\",\n      \"version\": \"1.0.0\"\n    },\n    \"rubygems\": {\n      \"name\": \"lean_bridge_owned_subtypes\",\n      \"version\": \"1.0.0\"\n    }\n  }\n}\n",
+            "extractorSha256": "00f8ce7a3888339cdb1c36b0dce3d8bc9d4c650ea18c7a4926c2d29d4690443a",
+            "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+            "leanCompilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+            "leanVersion": "4.32.2",
+            "modules": [
+              {
+                "interface": {
+                  "bytes": 133728,
+                  "interfaceSha256": "e96653db13d9a29eeaa57cfa834874e290935f4e59dacddad919eaa34a2f1847",
+                  "sha256": "89679a92e88c9581a05442327d48a210e71a8adc37889a7204b7eafa797847b3"
+                },
+                "module": "Owned",
+                "source": {
+                  "bytes": 1126,
+                  "path": "Owned.lean",
+                  "sha256": "c0346b3446761904f3d0e1dfe5c057e2f18418929d088feca3d373488fa34042"
+                }
+              }
+            ],
+            "request": {
+              "arities": [],
+              "contracts": {
+                "Owned.echoRecord": {
+                  "parameters": [
+                    {
+                      "lifetime": {
+                        "anchor": null,
+                        "scope": "call"
+                      },
+                      "ownership": "borrow",
+                      "refinement": {
+                        "fields": [
+                          {
+                            "name": "primary",
+                            "refinement": null
+                          },
+                          {
+                            "name": "spare",
+                            "refinement": null
+                          },
+                          {
+                            "name": "peers",
+                            "refinement": null
+                          },
+                          {
+                            "name": "history",
+                            "refinement": null
+                          },
+                          {
+                            "name": "payload",
+                            "refinement": {
+                              "fields": [
+                                {
+                                  "name": "count",
+                                  "refinement": {
+                                    "constructor": "Owned.checkedCount"
+                                  }
+                                },
+                                {
+                                  "name": "bytes",
+                                  "refinement": null
+                                }
+                              ],
+                              "kind": "record",
+                              "name": "Owned.Payload"
+                            }
+                          }
+                        ],
+                        "kind": "record",
+                        "name": "Owned.Bundle"
+                      }
+                    }
+                  ]
+                },
+                "Owned.echoRecordAlternate": {
+                  "parameters": [
+                    {
+                      "lifetime": {
+                        "anchor": null,
+                        "scope": "call"
+                      },
+                      "ownership": "borrow",
+                      "refinement": {
+                        "fields": [
+                          {
+                            "name": "primary",
+                            "refinement": null
+                          },
+                          {
+                            "name": "spare",
+                            "refinement": null
+                          },
+                          {
+                            "name": "peers",
+                            "refinement": null
+                          },
+                          {
+                            "name": "history",
+                            "refinement": null
+                          },
+                          {
+                            "name": "payload",
+                            "refinement": {
+                              "fields": [
+                                {
+                                  "name": "count",
+                                  "refinement": {
+                                    "constructor": "Owned.checkedCountAlternate"
+                                  }
+                                },
+                                {
+                                  "name": "bytes",
+                                  "refinement": null
+                                }
+                              ],
+                              "kind": "record",
+                              "name": "Owned.Payload"
+                            }
+                          }
+                        ],
+                        "kind": "record",
+                        "name": "Owned.Bundle"
+                      }
+                    }
+                  ]
+                },
+                "Owned.transferRecord": {
+                  "parameters": [
+                    {
+                      "lifetime": {
+                        "anchor": null,
+                        "scope": "call"
+                      },
+                      "ownership": "transfer",
+                      "refinement": {
+                        "fields": [
+                          {
+                            "name": "primary",
+                            "refinement": null
+                          },
+                          {
+                            "name": "spare",
+                            "refinement": null
+                          },
+                          {
+                            "name": "peers",
+                            "refinement": null
+                          },
+                          {
+                            "name": "history",
+                            "refinement": null
+                          },
+                          {
+                            "name": "payload",
+                            "refinement": {
+                              "fields": [
+                                {
+                                  "name": "count",
+                                  "refinement": {
+                                    "constructor": "Owned.checkedCount"
+                                  }
+                                },
+                                {
+                                  "name": "bytes",
+                                  "refinement": null
+                                }
+                              ],
+                              "kind": "record",
+                              "name": "Owned.Payload"
+                            }
+                          }
+                        ],
+                        "kind": "record",
+                        "name": "Owned.Bundle"
+                      }
+                    }
+                  ]
+                }
+              },
+              "exportModules": [
+                "Owned"
+              ],
+              "exports": [
+                "Owned.echoRecord",
+                "Owned.echoRecordAlternate",
+                "Owned.newTicket",
+                "Owned.serial",
+                "Owned.transferRecord"
+              ],
+              "metadata": {
+                "invocationIdentitySha256": "4ea59b793c904044967cc5df3ac59ca3d6209d8849e375b5bd7ae9fd336ffd61",
+                "modules": [
+                  {
+                    "interfaceSha256": "e96653db13d9a29eeaa57cfa834874e290935f4e59dacddad919eaa34a2f1847",
+                    "name": "Owned",
+                    "sourcePath": "Owned.lean",
+                    "sourceSha256": "c0346b3446761904f3d0e1dfe5c057e2f18418929d088feca3d373488fa34042"
+                  }
+                ],
+                "toolchain": "leanprover/lean4:v4.32.2"
+              },
+              "modules": [
+                "Owned"
+              ],
+              "ownedAggregates": {
+                "cycles": "reject",
+                "disposal": "required",
+                "fallback": "queued-finalizer",
+                "ownership": "lease"
+              },
+              "profile": "native-library-v1",
+              "resources": [
+                "Owned.Ticket"
+              ]
+            },
+            "reviewedBindingIr": {
+              "path": "api.binding-ir.json",
+              "schemaVersion": 1,
+              "semanticSha256": "33cd9299a3cae2b2450567eacde41dfeb0b6a926b34fb01fc53ba082cb8ad935",
+              "source": "{\n  \"aggregatePolicy\": {\n    \"cycles\": \"reject\",\n    \"disposal\": \"required\",\n    \"fallback\": \"queued-finalizer\",\n    \"ownership\": \"lease\"\n  },\n  \"assurance\": [],\n  \"capabilities\": [],\n  \"component\": {\n    \"id\": \"owned-subtypes@1.0.0\",\n    \"name\": \"owned-subtypes\",\n    \"version\": \"1.0.0\"\n  },\n  \"declarations\": [\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [\n        \"allocates\"\n      ],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:Owned.newTicket\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"newTicket\",\n      \"overloadKey\": \"Owned.newTicket\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"arg0\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        },\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"arg1\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"string\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\",\n        \"type\": {\n          \"id\": \"lean:Owned.Ticket\",\n          \"kind\": \"named\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"Owned.newTicket\",\n        \"extensions\": {},\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [\n        \"reads-resource\"\n      ],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:Owned.serial\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"serial\",\n      \"overloadKey\": \"Owned.serial\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"arg0\",\n          \"optional\": false,\n          \"ownership\": \"borrow\",\n          \"type\": {\n            \"id\": \"lean:Owned.Ticket\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"kind\": \"primitive\",\n          \"name\": \"nat\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"Owned.serial\",\n        \"extensions\": {},\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [\n        \"reads-resource\",\n        \"allocates\"\n      ],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:Owned.echoRecord\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"echoRecord\",\n      \"overloadKey\": \"Owned.echoRecord\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"arg0\",\n          \"optional\": false,\n          \"ownership\": \"borrow\",\n          \"type\": {\n            \"id\": \"lean:Owned.Bundle\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\",\n        \"type\": {\n          \"id\": \"lean:Owned.Bundle\",\n          \"kind\": \"named\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"Owned.echoRecord\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"fields\": [\n                  {\n                    \"name\": \"primary\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"spare\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"peers\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"history\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"payload\",\n                    \"refinement\": {\n                      \"fields\": [\n                        {\n                          \"name\": \"count\",\n                          \"refinement\": {\n                            \"constructor\": \"Owned.checkedCount\",\n                            \"kind\": \"subtype\"\n                          }\n                        },\n                        {\n                          \"name\": \"bytes\",\n                          \"refinement\": null\n                        }\n                      ],\n                      \"kind\": \"record\",\n                      \"name\": \"Owned.Payload\"\n                    }\n                  }\n                ],\n                \"kind\": \"record\",\n                \"name\": \"Owned.Bundle\"\n              }\n            ],\n            \"result\": {\n              \"fields\": [\n                {\n                  \"name\": \"primary\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"spare\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"peers\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"history\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"payload\",\n                  \"refinement\": {\n                    \"fields\": [\n                      {\n                        \"name\": \"count\",\n                        \"refinement\": {\n                          \"constructor\": null,\n                          \"kind\": \"subtype\"\n                        }\n                      },\n                      {\n                        \"name\": \"bytes\",\n                        \"refinement\": null\n                      }\n                    ],\n                    \"kind\": \"record\",\n                    \"name\": \"Owned.Payload\"\n                  }\n                }\n              ],\n              \"kind\": \"record\",\n              \"name\": \"Owned.Bundle\"\n            }\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [\n        \"reads-resource\",\n        \"allocates\"\n      ],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:Owned.echoRecordAlternate\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"echoRecordAlternate\",\n      \"overloadKey\": \"Owned.echoRecordAlternate\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"arg0\",\n          \"optional\": false,\n          \"ownership\": \"borrow\",\n          \"type\": {\n            \"id\": \"lean:Owned.Bundle\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\",\n        \"type\": {\n          \"id\": \"lean:Owned.Bundle\",\n          \"kind\": \"named\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"Owned.echoRecordAlternate\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"fields\": [\n                  {\n                    \"name\": \"primary\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"spare\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"peers\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"history\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"payload\",\n                    \"refinement\": {\n                      \"fields\": [\n                        {\n                          \"name\": \"count\",\n                          \"refinement\": {\n                            \"constructor\": \"Owned.checkedCountAlternate\",\n                            \"kind\": \"subtype\"\n                          }\n                        },\n                        {\n                          \"name\": \"bytes\",\n                          \"refinement\": null\n                        }\n                      ],\n                      \"kind\": \"record\",\n                      \"name\": \"Owned.Payload\"\n                    }\n                  }\n                ],\n                \"kind\": \"record\",\n                \"name\": \"Owned.Bundle\"\n              }\n            ],\n            \"result\": {\n              \"fields\": [\n                {\n                  \"name\": \"primary\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"spare\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"peers\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"history\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"payload\",\n                  \"refinement\": {\n                    \"fields\": [\n                      {\n                        \"name\": \"count\",\n                        \"refinement\": {\n                          \"constructor\": null,\n                          \"kind\": \"subtype\"\n                        }\n                      },\n                      {\n                        \"name\": \"bytes\",\n                        \"refinement\": null\n                      }\n                    ],\n                    \"kind\": \"record\",\n                    \"name\": \"Owned.Payload\"\n                  }\n                }\n              ],\n              \"kind\": \"record\",\n              \"name\": \"Owned.Bundle\"\n            }\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [\n        \"reads-resource\",\n        \"allocates\"\n      ],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:Owned.transferRecord\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"transferRecord\",\n      \"overloadKey\": \"Owned.transferRecord\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"arg0\",\n          \"optional\": false,\n          \"ownership\": \"transfer\",\n          \"type\": {\n            \"id\": \"lean:Owned.Bundle\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\",\n        \"type\": {\n          \"id\": \"lean:Owned.Bundle\",\n          \"kind\": \"named\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"Owned.transferRecord\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"fields\": [\n                  {\n                    \"name\": \"primary\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"spare\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"peers\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"history\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"payload\",\n                    \"refinement\": {\n                      \"fields\": [\n                        {\n                          \"name\": \"count\",\n                          \"refinement\": {\n                            \"constructor\": \"Owned.checkedCount\",\n                            \"kind\": \"subtype\"\n                          }\n                        },\n                        {\n                          \"name\": \"bytes\",\n                          \"refinement\": null\n                        }\n                      ],\n                      \"kind\": \"record\",\n                      \"name\": \"Owned.Payload\"\n                    }\n                  }\n                ],\n                \"kind\": \"record\",\n                \"name\": \"Owned.Bundle\"\n              }\n            ],\n            \"result\": {\n              \"fields\": [\n                {\n                  \"name\": \"primary\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"spare\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"peers\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"history\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"payload\",\n                  \"refinement\": {\n                    \"fields\": [\n                      {\n                        \"name\": \"count\",\n                        \"refinement\": {\n                          \"constructor\": null,\n                          \"kind\": \"subtype\"\n                        }\n                      },\n                      {\n                        \"name\": \"bytes\",\n                        \"refinement\": null\n                      }\n                    ],\n                    \"kind\": \"record\",\n                    \"name\": \"Owned.Payload\"\n                  }\n                }\n              ],\n              \"kind\": \"record\",\n              \"name\": \"Owned.Bundle\"\n            }\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    }\n  ],\n  \"documentation\": {\n    \"details\": \"\",\n    \"summary\": \"Independent corpus contract.\"\n  },\n  \"errors\": [],\n  \"producers\": [\n    {\n      \"adapter\": \"independent-corpus-contract\",\n      \"adapterVersion\": 1,\n      \"extensions\": {},\n      \"id\": \"corpusReview\",\n      \"tool\": \"Corpus contract review\",\n      \"toolVersion\": \"1\"\n    }\n  ],\n  \"schemaVersion\": 4,\n  \"types\": [\n    {\n      \"aggregate\": null,\n      \"assurance\": [],\n      \"callable\": null,\n      \"cases\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent owned aggregate contract.\"\n      },\n      \"fields\": [],\n      \"host\": null,\n      \"id\": \"lean:Owned.Ticket\",\n      \"kind\": \"resource\",\n      \"mutability\": \"read\",\n      \"name\": \"Ticket\",\n      \"representation\": \"identity\",\n      \"resource\": {\n        \"cycles\": \"explicit-cut\",\n        \"disposal\": \"required\",\n        \"fallback\": \"queued-finalizer\",\n        \"kindId\": \"resource:Owned.Ticket\"\n      },\n      \"source\": {\n        \"declaration\": \"Owned.Ticket\",\n        \"extensions\": {},\n        \"producer\": \"corpusReview\"\n      },\n      \"target\": null,\n      \"typeParameters\": []\n    },\n    {\n      \"aggregate\": null,\n      \"assurance\": [],\n      \"callable\": null,\n      \"cases\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent owned aggregate contract.\"\n      },\n      \"fields\": [\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent owned aggregate contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"count\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"int\"\n          }\n        },\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent owned aggregate contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"bytes\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"bytes\"\n          }\n        }\n      ],\n      \"host\": null,\n      \"id\": \"lean:Owned.Payload\",\n      \"kind\": \"record\",\n      \"mutability\": \"immutable\",\n      \"name\": \"Payload\",\n      \"representation\": \"copied\",\n      \"resource\": null,\n      \"source\": {\n        \"declaration\": \"Owned.Payload\",\n        \"extensions\": {},\n        \"producer\": \"corpusReview\"\n      },\n      \"target\": null,\n      \"typeParameters\": []\n    },\n    {\n      \"aggregate\": {\n        \"cycles\": \"reject\",\n        \"disposal\": \"required\",\n        \"fallback\": \"queued-finalizer\",\n        \"ownership\": \"lease\"\n      },\n      \"assurance\": [],\n      \"callable\": null,\n      \"cases\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent owned aggregate contract.\"\n      },\n      \"fields\": [\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent owned aggregate contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"primary\",\n          \"type\": {\n            \"id\": \"lean:Owned.Ticket\",\n            \"kind\": \"named\"\n          }\n        },\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent owned aggregate contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"spare\",\n          \"type\": {\n            \"arguments\": [\n              {\n                \"id\": \"lean:Owned.Ticket\",\n                \"kind\": \"named\"\n              }\n            ],\n            \"constructor\": \"option\",\n            \"kind\": \"apply\"\n          }\n        },\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent owned aggregate contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"peers\",\n          \"type\": {\n            \"arguments\": [\n              {\n                \"id\": \"lean:Owned.Ticket\",\n                \"kind\": \"named\"\n              }\n            ],\n            \"constructor\": \"array\",\n            \"kind\": \"apply\"\n          }\n        },\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent owned aggregate contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"history\",\n          \"type\": {\n            \"arguments\": [\n              {\n                \"id\": \"lean:Owned.Ticket\",\n                \"kind\": \"named\"\n              }\n            ],\n            \"constructor\": \"list\",\n            \"kind\": \"apply\"\n          }\n        },\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent owned aggregate contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"payload\",\n          \"type\": {\n            \"id\": \"lean:Owned.Payload\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"host\": null,\n      \"id\": \"lean:Owned.Bundle\",\n      \"kind\": \"record\",\n      \"mutability\": \"immutable\",\n      \"name\": \"Bundle\",\n      \"representation\": \"owned\",\n      \"resource\": null,\n      \"source\": {\n        \"declaration\": \"Owned.Bundle\",\n        \"extensions\": {},\n        \"producer\": \"corpusReview\"\n      },\n      \"target\": null,\n      \"typeParameters\": []\n    }\n  ]\n}\n",
+              "sourceSha256": "568a4c306e1344f2d5d8c4b0ba08f24e7b08a9e090cfd9de82b801ee522aa39c"
+            },
+            "sourceNoticesSha256": "afd0a44286160d921a59baee31843dfacac4d1180b6564f98ccebaa3e88aa71b",
+            "sourceTreeSha256": "b464924aaa4f9dda17af33f21b2fe1d4f13efc97e2a1a8e1f0c3fa9e19336e07"
+          }
+        }
+      },
+      "dependencies": {
+        "archive": "rust-dependencies.tar.gz",
+        "lockSha256": "763260471cb0820e05b463e6c4a6afce40db6f52b8374886b7bdb9c260834222",
+        "packages": [
+          {
+            "checksum": "f2032f911046de80f0a198e0901378627c33f59ea0ac00e363d481118bd70a53",
+            "directory": "autocfg-1.5.1",
+            "files": 22,
+            "manifestSha256": "5db7ec75093eb5d5217141d6d03fd4cfc6549e34ae8785bf7d25d8fbe60b63b5"
+          },
+          {
+            "checksum": "3078c7629b62d3f0439517fa394996acacc5cbc91c5a20d8c658e77abd503a71",
+            "directory": "block-buffer-0.10.4",
+            "files": 10,
+            "manifestSha256": "7f0f369a2ec2f88a2a4cda9a5daa97c6dfdcc2110d33b52d1e6ac4fcfa2ffa0d"
+          },
+          {
+            "checksum": "9330f8b2ff13f34540b44e946ef35111825727b38d33286ef986142615121801",
+            "directory": "cfg-if-1.0.4",
+            "files": 13,
+            "manifestSha256": "49dfe36998e233735fc07a4a7cc3df8fcdef7d09a3ae991622666d934c0a0908"
+          },
+          {
+            "checksum": "59ed5838eebb26a2bb2e58f6d5b5316989ae9d08bab10e0e6d103e656d1b0280",
+            "directory": "cpufeatures-0.2.17",
+            "files": 16,
+            "manifestSha256": "c679b6563298b498deb2b2766a7c52966bf943cd83bb42e5b937fb3d93e2faeb"
+          },
+          {
+            "checksum": "78c8292055d1c1df0cce5d180393dc8cce0abec0a7102adb6c7b1eef6016d60a",
+            "directory": "crypto-common-0.1.7",
+            "files": 9,
+            "manifestSha256": "d2d031e96935ddc30a92c30c276c90d3e27dbab3c51a55a7d56abb07660d25bd"
+          },
+          {
+            "checksum": "9ed9a281f7bc9b7576e61468ba615a66a5c8cfdff42420a70aa82701a3b1e292",
+            "directory": "digest-0.10.7",
+            "files": 21,
+            "manifestSha256": "6031e7ffa87539939ddd24756561c2eec18bde6b560cc1343689b9242c62b2f4"
+          },
+          {
+            "checksum": "85649ca51fd72272d7821adaf274ad91c288277713d9c18820d8499a7ff69e9a",
+            "directory": "generic-array-0.14.7",
+            "files": 16,
+            "manifestSha256": "87e85df9db7f5334e87c47ba6038bea9670492dbb1a81283663334aa3d2f93d6"
+          },
+          {
+            "checksum": "3eaf3ede3fee6db1a4c2ee091bf8a8b4dccdc6d17f656fb07896ee72867612f2",
+            "directory": "libc-0.2.189",
+            "files": 403,
+            "manifestSha256": "1df2768ea8b10dcfaeabbc65485b890d1b2c045f3bdc4882153ea77f0cfeaad7"
+          },
+          {
+            "checksum": "a5e44f723f1133c9deac646763579fdb3ac745e418f2a7af9cd0c431da1f20b9",
+            "directory": "num-bigint-0.4.6",
+            "files": 50,
+            "manifestSha256": "5de58f41d99fee8e7c111e8a336effccaed1b59fc9d451e9cf6150909b1e7174"
+          },
+          {
+            "checksum": "7ce2d95d4b3734dc35aa2f45e1aa22cd416814592a4f9d9205e11affd5b8e10b",
+            "directory": "num-integer-0.1.47",
+            "files": 16,
+            "manifestSha256": "d9dd70b1e3e81e5d1ee89c24fbbb5f18b1c2c4951d9a95d59497ba1cc28c464f"
+          },
+          {
+            "checksum": "071dfc062690e90b734c0b2273ce72ad0ffa95f0c74596bc250dcfd960262841",
+            "directory": "num-traits-0.2.19",
+            "files": 28,
+            "manifestSha256": "f3a71413c6fbec0b5a94a407c1d2ccc80807a6f511d1823b7204ea3627b7f27e"
+          },
+          {
+            "checksum": "a7507d819769d01a365ab707794a4084392c824f54a7a6a7862f8c3d0892b283",
+            "directory": "sha2-0.10.9",
+            "files": 31,
+            "manifestSha256": "81dc0505ebd2db4d9d588fc90442ac4d6ae4aba5a406d4b1fc14fe95643bae5a"
+          },
+          {
+            "checksum": "b6f5e870be6c3b371b77fe0ee0bafb859fa4964b4404c27de1d380043c4dda20",
+            "directory": "typenum-1.20.1",
+            "files": 24,
+            "manifestSha256": "81a4e868756286091f8200273c2ed14675b3db2daa40123f16ef51290b891531"
+          },
+          {
+            "checksum": "0b928f33d975fc6ad9f86c8f283853ad26bdd5b10b7f1542aa2fa15e2289105a",
+            "directory": "version_check-0.9.5",
+            "files": 12,
+            "manifestSha256": "2c3e69d49eb86cf8f00c5d7c94ac9611a37c674f3c1fc5658d59be75e9e15911"
+          }
+        ],
+        "sha256": "48229987e373402555e4398ebc03073472b74d3f74e13f97c928af53e59be8dd"
+      },
+      "deterministicReassembly": true,
+      "handoffRemovedBeforeRelocatedExecution": true,
+      "lifecycle": {
+        "python": {
+          "fallback": "gc-finalizer",
+          "observation": "owning-slot-baseline-restored"
+        },
+        "ruby": {
+          "fallback": "gc-finalizer",
+          "observation": "queued-owner-drained"
+        },
+        "rust": {
+          "fallback": "drop",
+          "observation": "independent-retain-survives"
+        }
+      },
+      "observations": {
+        "python": {
+          "checks": 122,
+          "consumerSha256": "0c29f50298fb4671507fa3214fe2de36c255a4a116d156464b5bbbe134834a45",
+          "relocatedChecks": 122
+        },
+        "ruby": {
+          "checks": 122,
+          "consumerSha256": "0560de2a15e2e7b805897b92c635447f0f3006a91dcb64458f836a4573a2e674",
+          "relocatedChecks": 122
+        },
+        "rust": {
+          "checks": 119,
+          "consumerSha256": "7e9b0c68e22042a6dc0d69aee524af6a0fd7d6f4865404be162b9439ef3e2b34",
+          "relocatedChecks": 119
+        }
+      },
+      "packageSetReceipt": {
+        "component": {
+          "id": "owned-subtypes@1.0.0",
+          "name": "owned-subtypes",
+          "version": "1.0.0"
+        },
+        "kind": "lean-bridge-package-set-receipt",
+        "packages": [
+          {
+            "artifacts": [
+              {
+                "bytes": 53868747,
+                "path": "archives/owned-subtypes-1.0.0.crate",
+                "sha256": "278d9325ca672cb04f8c28af31eb4eec7b61665fc3957263a2153e3311ea5531"
+              }
+            ],
+            "ecosystem": "cargo",
+            "name": "owned-subtypes",
+            "profile": "native-library-v1",
+            "requires": [],
+            "role": "component",
+            "runtimeDelivery": "embedded",
+            "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+            "target": "cargo",
+            "version": "1.0.0"
+          },
+          {
+            "artifacts": [
+              {
+                "bytes": 53907755,
+                "path": "archives/lean_owned_subtypes-1.0.0-py3-none-manylinux_2_38_x86_64.whl",
+                "sha256": "dc7ed60437605ab9a2ee7666f78b368fb9024f4d53003f2f38d634225b363678"
+              }
+            ],
+            "ecosystem": "pypi",
+            "name": "lean-owned-subtypes",
+            "profile": "native-library-v1",
+            "requires": [],
+            "role": "component",
+            "runtimeDelivery": "embedded",
+            "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+            "target": "pypi",
+            "version": "1.0.0"
+          },
+          {
+            "artifacts": [
+              {
+                "bytes": 52654592,
+                "path": "archives/lean_bridge_owned_subtypes-1.0.0-x86_64-linux.gem",
+                "sha256": "77dccaf3464cf642103caa9caed41afcecda81dc9bdefb16a527819dd4e8504e"
+              }
+            ],
+            "ecosystem": "rubygems",
+            "name": "lean_bridge_owned_subtypes",
+            "profile": "native-library-v1",
+            "requires": [],
+            "role": "component",
+            "runtimeDelivery": "embedded",
+            "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+            "target": "rubygems",
+            "version": "1.0.0"
+          }
+        ],
+        "profiles": [
+          {
+            "bindingIrSha256": "9491ed9d31a5b831764044a8b62ef7fd7f1c38158a79d0cdd72995b956cf2d72",
+            "id": "native-library-v1",
+            "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+          }
+        ],
+        "schemaVersion": 1,
+        "source": {
+          "treeSha256": "b464924aaa4f9dda17af33f21b2fe1d4f13efc97e2a1a8e1f0c3fa9e19336e07"
+        }
+      },
+      "reassembled": {
+        "python": {
+          "archive": "lean_owned_subtypes-1.0.0-py3-none-manylinux_2_38_x86_64.whl",
+          "sha256": "dc7ed60437605ab9a2ee7666f78b368fb9024f4d53003f2f38d634225b363678"
+        },
+        "ruby": {
+          "archive": "lean_bridge_owned_subtypes-1.0.0-x86_64-linux.gem",
+          "sha256": "77dccaf3464cf642103caa9caed41afcecda81dc9bdefb16a527819dd4e8504e"
+        },
+        "rust": {
+          "archive": "owned-subtypes-1.0.0.crate",
+          "sha256": "278d9325ca672cb04f8c28af31eb4eec7b61665fc3957263a2153e3311ea5531"
+        }
+      },
+      "relocatedInstallation": true,
+      "route": "reviewed",
+      "sourceFreeInstallation": true,
+      "sourceUnchanged": true,
+      "transferredInputCheckedBeforeHandoff": true,
+      "versions": {
+        "python": "Python 3.11.17",
+        "ruby": "ruby 3.3.12 (2026-07-16 revision 0581089df9) [x86_64-linux]",
+        "rustc": "rustc 1.90.0 (1159e78c4 2025-09-14)"
+      }
+    }
+  ],
+  "schemaVersion": 1
+}
