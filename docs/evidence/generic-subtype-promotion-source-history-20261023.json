@@ -1,0 +1,117 @@
+{
+  "additions": [
+    {
+      "currentSha256": "3f9ae50222ef0c82146ed4a8e03e64c7c3d2d0fce85a7cb8495cfa85cbe7f9e5",
+      "path": "scripts/promote-generic-subtype-evidence.mjs"
+    },
+    {
+      "currentSha256": "dfb618bb8a477c36debd8bcd60468fa460e47f312a9a9c4ebd541fd7d100c0c5",
+      "path": "tests/helpers/generic-subtype-promotion-tests.mjs"
+    },
+    {
+      "currentSha256": "3b7aaa094d3acb6d8fe99d14252a109f1007c0dcabcbad4ed33c257a75527e22",
+      "path": "tests/helpers/generic-subtype-promotion.mjs"
+    },
+    {
+      "currentSha256": "55cc7d2d810bbd1cf8d6b762e3a415d6d8e1c3dd4b0d4a50bc088e610b98695b",
+      "path": "scripts/update-generic-subtype-promotion-source-history.mjs"
+    },
+    {
+      "currentSha256": "21dd36240ff5a69139c8f482cf16227ec0865744bdb4daa98732c2b68ec91237",
+      "path": "tests/helpers/generic-subtype-promotion-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "697eae5745eaf58d152041ca47b41f6bfc3fa7c5afbab8bd3264767d0cd7b00b",
+      "path": "tests/helpers/generic-subtype-promotion-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "c05f3a140241d82b965f3dc0e2998fe0d3dd66bc",
+  "integrationUpdates": [
+    {
+      "currentSha256": "94864beec761b6454a7b8716cea04d770ad23153339bea6cc10b79456baf5cf0",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"16e4296ecf193115f0c5f96cfa50a4b41a66bfc401f6b11829a40044f9a5b5c6\"\n",
+          "previous": "          \"sha256\": \"2d710b6025a477330eba538fcc4341270239acd101a2a176ba410ac054cd76cc\"\n",
+          "start": 685394
+        },
+        {
+          "current": "          \"sha256\": \"16e4296ecf193115f0c5f96cfa50a4b41a66bfc401f6b11829a40044f9a5b5c6\"\n",
+          "previous": "          \"sha256\": \"2d710b6025a477330eba538fcc4341270239acd101a2a176ba410ac054cd76cc\"\n",
+          "start": 1440962
+        },
+        {
+          "current": "          \"sha256\": \"16e4296ecf193115f0c5f96cfa50a4b41a66bfc401f6b11829a40044f9a5b5c6\"\n",
+          "previous": "          \"sha256\": \"2d710b6025a477330eba538fcc4341270239acd101a2a176ba410ac054cd76cc\"\n",
+          "start": 1447496
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "a847c39de1bf0bfb1c12a62d3f31867ccdb1920e13f93f060e171a5c00cb0509"
+    },
+    {
+      "currentSha256": "16e4296ecf193115f0c5f96cfa50a4b41a66bfc401f6b11829a40044f9a5b5c6",
+      "edits": [
+        {
+          "current": "import \"./helpers/generic-subtype-promotion-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 2085
+        }
+      ],
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "2d710b6025a477330eba538fcc4341270239acd101a2a176ba410ac054cd76cc"
+    },
+    {
+      "currentSha256": "5ff74b3a8e75f03d4969dc983e351822f74bd1eb72edcfdc321d414cb23fb2c3",
+      "edits": [
+        {
+          "current": "import \"./helpers/generic-subtype-promotion-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 338
+        }
+      ],
+      "path": "tests/generic-subtype-native-perl.test.mjs",
+      "previousSha256": "510d1643493826271acc13a2bdec9659b80430acee5ef6a90d0fcd4e46ff6293"
+    },
+    {
+      "currentSha256": "963b79b5e0b6ea72fb6a360fd40d13397b7aba74221a3113907a6d1a5a20a08e",
+      "edits": [
+        {
+          "current": "import { beforeGenericSubtypePromotionSource, genericSubtypePromotionNormalizationPaths } from \"./generic-subtype-promotion-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...genericSubtypePromotionNormalizationPaths\n\t, ...genericSubtypeHostedArchiveNormalizationPaths\n",
+          "previous": "\t...genericSubtypeHostedArchiveNormalizationPaths\n",
+          "start": 166634
+        },
+        {
+          "current": "\tlet genericSubtypePromotion = text;\n\twhile(true)\n\t{\n\t\tconst previous = beforeGenericSubtypePromotionSource(\n\t\t\tpath, genericSubtypePromotion, expected);\n\t\tif(sha256(previous) === expected) return previous;\n\t\tif(previous === genericSubtypePromotion) break;\n\t\tgenericSubtypePromotion = previous;\n\t}\n\ttext = genericSubtypePromotion;\n",
+          "previous": "",
+          "start": 204774
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "650f1fc880022ca9089f2bba736124d54bfe57071766c962606bf3adaa602947"
+    }
+  ],
+  "milestone": "generic-subtype-promotion-source-v1",
+  "predecessorCommit": "2c56a2823db0b4996ccb97e02140194d8ee9b5d3",
+  "schemaVersion": 1,
+  "scope": "Define the fail-closed twelve-lane promotion for exactly thirty-two non-PHP-Wasm closed GenericNat Subtype field cells while preserving PHP-Wasm, unrelated inventory cells and the boundary against open generic host types.",
+  "updates": [
+    {
+      "currentSha256": "510d1643493826271acc13a2bdec9659b80430acee5ef6a90d0fcd4e46ff6293",
+      "edits": [
+        {
+          "current": "import \"./helpers/generic-subtype-promotion-tests.mjs\";\n",
+          "previous": "",
+          "start": 282
+        }
+      ],
+      "path": "tests/generic-subtype-native-perl.test.mjs",
+      "previousSha256": "910d6042dcd7b098f8abf352218deb4999a7b45ea4fab2668164bdb975a2fa84"
+    }
+  ]
+}

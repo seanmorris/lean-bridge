@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeGenericSubtypePromotionSource, genericSubtypePromotionNormalizationPaths } from "./generic-subtype-promotion-source-history.mjs";
 import { beforeGenericSubtypeHostedArchiveSource, genericSubtypeHostedArchiveNormalizationPaths } from "./generic-subtype-hosted-archive-source-history.mjs";
 import { beforeRecursiveCheckedRecordDocumentationClosureSource, recursiveCheckedRecordDocumentationClosureNormalizationPaths } from "./recursive-checked-record-documentation-closure-source-history.mjs";
 import { beforeValueIndexMatrixHistoricalInventoryRepairSource, valueIndexMatrixHistoricalInventoryRepairNormalizationPaths } from "./value-index-matrix-historical-inventory-repair-source-history.mjs";
@@ -2060,7 +2061,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...genericSubtypeHostedArchiveNormalizationPaths
+	...genericSubtypePromotionNormalizationPaths
+	, ...genericSubtypeHostedArchiveNormalizationPaths
 	, ...recursiveCheckedRecordDocumentationClosureNormalizationPaths
 	, ...valueIndexMatrixHistoricalInventoryRepairNormalizationPaths
 	, ...dependentCheckedRecordDocumentationClosureNormalizationPaths
@@ -2863,6 +2865,16 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
+	let genericSubtypePromotion = text;
+	while(true)
+	{
+		const previous = beforeGenericSubtypePromotionSource(
+			path, genericSubtypePromotion, expected);
+		if(sha256(previous) === expected) return previous;
+		if(previous === genericSubtypePromotion) break;
+		genericSubtypePromotion = previous;
+	}
+	text = genericSubtypePromotion;
 	const genericSubtypeHostedArchive
 		= beforeGenericSubtypeHostedArchiveSource(path, text, expected);
 	if(sha256(genericSubtypeHostedArchive) === expected)
