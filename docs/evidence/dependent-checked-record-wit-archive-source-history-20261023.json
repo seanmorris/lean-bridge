@@ -1,0 +1,130 @@
+{
+  "additions": [
+    {
+      "currentSha256": "408710acff00ba0e0b50e14d3c8bc32425ae59078938bdeb0dd3321c6bc47b28",
+      "path": "tests/helpers/dependent-checked-record-wit-evidence-tests.mjs"
+    },
+    {
+      "currentSha256": "33d035d3b366f66f289d40ab0a716a56932b074ded21d2245d868bf5dd6a8ad1",
+      "path": "tests/helpers/dependent-checked-record-wit-evidence.mjs"
+    },
+    {
+      "currentSha256": "8db1e6756dca3746ac993673e7bbf848bfe9e5d51362292fb82cf735125be1e0",
+      "path": "scripts/update-dependent-checked-record-wit-archive-source-history.mjs"
+    },
+    {
+      "currentSha256": "35bef2870599f4d12313a2b8dff196a44e775c4d89547bc77457ac15057ea992",
+      "path": "tests/helpers/dependent-checked-record-wit-archive-source-history.mjs"
+    },
+    {
+      "currentSha256": "f9e5c069d3546c3c1f1b77a5f8617a0377e58e58a39e75956c2dbe65fbcea12f",
+      "path": "tests/helpers/dependent-checked-record-wit-archive-source-history-tests.mjs"
+    }
+  ],
+  "archive": {
+    "archiveFileCount": 1206,
+    "completedPaths": [
+      "docs/evidence/dependent-checked-record-wit-20261021/hosted/logs/toolchain.log"
+    ],
+    "indexSha256": "dad34a2e2961fb9008d02e9abe96d5bd0543f47ed2b72405ac8c345a455a109a",
+    "indexedFileCount": 1205,
+    "initialArchiveFileCount": 1205,
+    "root": "docs/evidence/dependent-checked-record-wit-20261021"
+  },
+  "archiveCommit": "57a88dd93005bbd8de2097c4aa6d49fc1bf9679a",
+  "archiveCompletionCommit": "7760fc947d882d256146b4ac5b52368570be80e2",
+  "archiveCompletionPredecessorCommit": "1a1cc8a63f8bf1440fd5c0f7ce246e65ad64bd13",
+  "archivePredecessorCommit": "0cb1ddd2c0154444c209af32e0c2181f6e6c49f8",
+  "implementationCommit": "1a1cc8a63f8bf1440fd5c0f7ce246e65ad64bd13",
+  "implementationUpdates": [
+    {
+      "currentSha256": "a97bdb1132d73a2e5b7fbfa63719df153dc02f5c0f11a099163acb7f5f237cb1",
+      "edits": [
+        {
+          "current": "\tconst artifactOnlyMembers = contract.artifactOnlyMembers ?? [];\n\tassert.ok(Array.isArray(artifactOnlyMembers));\n\tfor(const path of artifactOnlyMembers) assert.ok(safePath(path), path);\n",
+          "previous": "",
+          "start": 5628
+        },
+        {
+          "current": "\t\t, ...retainedFiles.map(file => file.artifact), ...artifactOnlyMembers\n",
+          "previous": "\t\t, ...retainedFiles.map(file => file.artifact)\n",
+          "start": 5942
+        },
+        {
+          "current": "\tlet archiveBytes = 0; const artifactParts = [];\n",
+          "previous": "\tlet archiveBytes = 0;\n",
+          "start": 6069
+        },
+        {
+          "current": "\t\tarchiveHash.update(value); artifactParts.push(value);\n\t\tarchiveBytes += value.length;\n",
+          "previous": "\t\tarchiveHash.update(value); archiveBytes += value.length;\n",
+          "start": 6455
+        },
+        {
+          "current": "\tif(contract.verifyArtifact)\n\t\tawait contract.verifyArtifact({\n\t\t\tindex, files, parts: artifactParts, api\n\t\t});\n",
+          "previous": "",
+          "start": 8941
+        }
+      ],
+      "path": "tests/helpers/zero-payload-checked-record-hosted-evidence.mjs",
+      "previousSha256": "b83f4c99578a0b6a6caeed1e7edc765d1aae7558b93acbbff4628e03e7eb7a03"
+    },
+    {
+      "currentSha256": "0a56a1d661ee462e187ae88fc121249bbe8759f93c8a3b4d4b6ae109b8945952",
+      "edits": [
+        {
+          "current": "import \"./helpers/dependent-checked-record-wit-evidence-tests.mjs\";\n",
+          "previous": "",
+          "start": 5671
+        }
+      ],
+      "path": "tests/native-subtype.test.mjs",
+      "previousSha256": "fa0fe08d5709f348c8b13e383595c1db16fc4e1af2d2d4cd7137b7d211a3266c"
+    }
+  ],
+  "integrationUpdates": [
+    {
+      "currentSha256": "7354f57b07d1015667cfc07703df43c5bb0aeaf7c3621fc7a6adb3b0a1a543fd",
+      "edits": [
+        {
+          "current": "import { beforeDependentCheckedRecordWitArchiveSource, dependentCheckedRecordWitArchiveImplementationPaths, dependentCheckedRecordWitArchiveIntegrationPaths } from \"./dependent-checked-record-wit-archive-source-history.mjs\";\n",
+          "previous": "",
+          "start": 392
+        },
+        {
+          "current": "\t...dependentCheckedRecordWitArchiveImplementationPaths\n\t, ...dependentCheckedRecordWitArchiveIntegrationPaths\n\t, ...dependentCheckedRecordBrowserPathDiagnosticRepairChangedPaths\n",
+          "previous": "\t...dependentCheckedRecordBrowserPathDiagnosticRepairChangedPaths\n",
+          "start": 153516
+        },
+        {
+          "current": "\tconst dependentCheckedRecordWitArchive\n\t\t= beforeDependentCheckedRecordWitArchiveSource(\n\t\t\tpath, text, expected\n\t\t);\n\tif(sha256(dependentCheckedRecordWitArchive) === expected)\n\t\treturn dependentCheckedRecordWitArchive;\n",
+          "previous": "",
+          "start": 188243
+        },
+        {
+          "current": "\t\t\tpath, dependentCheckedRecordWitArchive, expected\n",
+          "previous": "\t\t\tpath, text, expected\n",
+          "start": 188588
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "51e4b3bb3ece44f3c8d389913141c48084811d012dea1b02e5d206d9a208be7d"
+    },
+    {
+      "currentSha256": "e8ecb16c5c099f92be6ed604c77927af930d9d5d9fb7d0ca9eff5d6390f4a1e5",
+      "edits": [
+        {
+          "current": "import \"./helpers/dependent-checked-record-wit-archive-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 1811
+        }
+      ],
+      "path": "tests/native-subtype.test.mjs",
+      "previousSha256": "0a56a1d661ee462e187ae88fc121249bbe8759f93c8a3b4d4b6ae109b8945952"
+    }
+  ],
+  "milestone": "dependent-checked-record-wit-archive-source-v1",
+  "schemaVersion": 1,
+  "scope": "Immutable hosted WIT dependent checked-record evidence retains and independently replays all four routes, exact source roles and every byte of the original GitHub artifact, including the root tool record.",
+  "verifierPredecessorCommit": "502d8aa47cdc06e4ad00555bfb85ab19055f0d74"
+}

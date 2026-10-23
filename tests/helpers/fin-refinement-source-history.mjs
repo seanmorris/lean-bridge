@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeDependentCheckedRecordWitArchiveSource, dependentCheckedRecordWitArchiveImplementationPaths, dependentCheckedRecordWitArchiveIntegrationPaths } from "./dependent-checked-record-wit-archive-source-history.mjs";
 import { beforeDependentCheckedRecordBrowserPathDiagnosticRepairSource, dependentCheckedRecordBrowserPathDiagnosticRepairChangedPaths, dependentCheckedRecordBrowserPathDiagnosticRepairIntegrationPaths } from "./dependent-checked-record-browser-path-diagnostic-repair-source-history.mjs";
 import { beforeDependentCheckedRecordWitRetainedPkgConfigRepairSource, dependentCheckedRecordWitRetainedPkgConfigRepairChangedPaths, dependentCheckedRecordWitRetainedPkgConfigRepairIntegrationPaths } from "./dependent-checked-record-wit-retained-pkg-config-repair-source-history.mjs";
 import { beforeCallbackPhpWasmStaticQualityRepairSource, callbackPhpWasmStaticQualityRepairIntegrationPaths, callbackPhpWasmStaticQualityRepairNormalizationPaths } from "./callback-php-wasm-static-quality-repair-source-history.mjs";
@@ -1947,7 +1948,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...dependentCheckedRecordBrowserPathDiagnosticRepairChangedPaths
+	...dependentCheckedRecordWitArchiveImplementationPaths
+	, ...dependentCheckedRecordWitArchiveIntegrationPaths
+	, ...dependentCheckedRecordBrowserPathDiagnosticRepairChangedPaths
 	, ...dependentCheckedRecordBrowserPathDiagnosticRepairIntegrationPaths
 	, ...dependentCheckedRecordWitRetainedPkgConfigRepairChangedPaths
 	, ...dependentCheckedRecordWitRetainedPkgConfigRepairIntegrationPaths
@@ -2694,9 +2697,15 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 			text = exact;
 		}
 	}
+	const dependentCheckedRecordWitArchive
+		= beforeDependentCheckedRecordWitArchiveSource(
+			path, text, expected
+		);
+	if(sha256(dependentCheckedRecordWitArchive) === expected)
+		return dependentCheckedRecordWitArchive;
 	const dependentCheckedRecordBrowserPathDiagnosticRepair
 		= beforeDependentCheckedRecordBrowserPathDiagnosticRepairSource(
-			path, text, expected
+			path, dependentCheckedRecordWitArchive, expected
 		);
 	if(sha256(dependentCheckedRecordBrowserPathDiagnosticRepair) === expected)
 		return dependentCheckedRecordBrowserPathDiagnosticRepair;

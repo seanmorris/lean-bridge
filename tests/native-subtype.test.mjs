@@ -24,6 +24,7 @@ import { copiedCleanEnvironment, runCopied } from "./helpers/copied-fixture-inst
 import { perlSubtypeDispatchColumns, perlSubtypeDispatchSteps, perlSubtypeInterposer, perlSubtypePrelude } from "./helpers/perl-subtype-dispatch.mjs";
 import { prepareRustCorpusDependencies } from "./helpers/type-corpus-rust.mjs";
 import "./helpers/subtype-alias-position-source-history-tests.mjs";
+import "./helpers/dependent-checked-record-wit-archive-source-history-tests.mjs";
 import "./helpers/subtype-xs-archive-source-history-tests.mjs";
 import "./helpers/checked-record-admission-source-history-tests.mjs";
 import "./helpers/structural-subtype-extractor-tests.mjs";
