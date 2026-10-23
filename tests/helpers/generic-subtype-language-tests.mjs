@@ -4,9 +4,10 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { existsSync } from "node:fs";
 import { mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { join, resolve } from "node:path";
 import test from "node:test";
 import { runCopied } from "./copied-fixture-install.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
@@ -23,6 +24,9 @@ import {
 	, parseGenericSubtypeLanguageCiArgs
 } from "./generic-subtype-language-report.mjs";
 import { checkNominalSubtypeRustApiProbe, genericSubtypeRustInputNames } from "./nominal-subtype-rust-install.mjs";
+
+const rustc = resolve(process.env.LEAN_BRIDGE_RUSTC
+	?? ".toolchains/rust-1.90.0/bin/rustc");
 
 test("generic Subtype language selections and configurations remain closed", () => {
 	for(const language of ["python", "ruby", "rust"])
@@ -143,10 +147,9 @@ end
 	}
 });
 
-test("generic Subtype Rust caller compiles against an independent public oracle", async t => {
+test("generic Subtype Rust caller compiles against an independent public oracle", { skip: !existsSync(rustc) }, async t => {
 	const root = await mkdtemp(join(tmpdir(), "lean-generic-subtype-rust-caller-"));
 	t.after(() => rm(root, { recursive: true }));
-	const rustc = "/app/.toolchains/rust-1.90.0/bin/rustc";
 	for(const route of ["ordinary", "reviewed"])
 	{
 		const directory = join(root, route), label = route === "ordinary" ? "arg0" : "value0";
