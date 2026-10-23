@@ -126,6 +126,16 @@ export const callbackCheckedRecordHostedLanes
 	= Object.freeze(Object.keys(lanes));
 
 /**
+ * Immutable archive root for the retained-package callback acceptance rerun.
+ *
+ * @param lane - Closed hosted lane name.
+ */
+export const callbackCheckedRecordHostedEvidenceRoot = lane => {
+	assert.ok(callbackCheckedRecordHostedLanes.includes(lane));
+	return `docs/evidence/callback-checked-record-${lane}-20261023`;
+};
+
+/**
  * Select every source needed to explain one hosted artifact and its archive.
  *
  * @param lane - Closed hosted lane name.

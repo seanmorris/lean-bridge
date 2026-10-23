@@ -32,6 +32,7 @@ import {
 } from "../tests/helpers/callback-checked-record-retained-packages.mjs";
 import {
 	callbackCheckedRecordEvidenceSources
+	, callbackCheckedRecordHostedEvidenceRoot
 	, callbackCheckedRecordHostedLanes
 	, callbackCheckedRecordHostedOriginal
 } from "../tests/helpers/callback-checked-record-hosted-evidence-sources.mjs";
@@ -128,7 +129,7 @@ catch(error)
 }
 
 const config = configs[lane];
-const evidence = `docs/evidence/callback-checked-record-${lane}-20261022`;
+const evidence = callbackCheckedRecordHostedEvidenceRoot(lane);
 await assert.rejects(access(evidence), { code: "ENOENT" });
 assert.doesNotThrow(() => execFileSync(
 	"git", ["diff", "--quiet", "HEAD", "--"], { stdio: "ignore" }

@@ -9,6 +9,7 @@ import { execFileSync } from "node:child_process";
 import test from "node:test";
 import {
 	callbackCheckedRecordEvidenceSources
+	, callbackCheckedRecordHostedEvidenceRoot
 	, callbackCheckedRecordHostedLanes
 	, callbackCheckedRecordHostedOriginal
 } from "./helpers/callback-checked-record-hosted-evidence-sources.mjs";
@@ -31,6 +32,10 @@ const expected = Object.freeze({
 test("callback checked-record archive lanes retain closed source roles", () => {
 	assert.deepEqual([...callbackCheckedRecordHostedLanes].sort()
 		, Object.keys(expected).sort());
+	assert.equal(callbackCheckedRecordHostedEvidenceRoot("browser")
+		, "docs/evidence/callback-checked-record-browser-20261023");
+	assert.throws(() => callbackCheckedRecordHostedEvidenceRoot("other")
+		, assert.AssertionError);
 	for(const lane of callbackCheckedRecordHostedLanes)
 	{
 		const sources = callbackCheckedRecordEvidenceSources(lane, {

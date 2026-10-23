@@ -8,11 +8,13 @@ import test from "node:test";
 import {
 	checkCallbackCheckedRecordHostedEvidence
 } from "./helpers/callback-checked-record-hosted-evidence.mjs";
+import {
+	callbackCheckedRecordHostedEvidenceRoot
+} from "./helpers/callback-checked-record-hosted-evidence-sources.mjs";
 
 test("retained languages callback checked-record evidence replays", async () => {
 	const index = await checkCallbackCheckedRecordHostedEvidence(
-		"languages"
-		, "docs/evidence/callback-checked-record-languages-20261022"
+		"languages", callbackCheckedRecordHostedEvidenceRoot("languages")
 	);
 	assert.deepEqual(index.accepted.profiles, ["python", "ruby", "rust"]);
 	assert.deepEqual(index.accepted.routes, ["ordinary", "reviewed"]);
@@ -21,7 +23,7 @@ test("retained languages callback checked-record evidence replays", async () => 
 
 test("retained perl callback checked-record evidence replays", async () => {
 	const index = await checkCallbackCheckedRecordHostedEvidence(
-		"perl", "docs/evidence/callback-checked-record-perl-20261022"
+		"perl", callbackCheckedRecordHostedEvidenceRoot("perl")
 	);
 	assert.equal(index.accepted.interpreterCount, 4);
 	assert.deepEqual(index.accepted.modes, ["prebuilt-only", "build-xs"]);
@@ -31,7 +33,7 @@ test("retained perl callback checked-record evidence replays", async () => {
 
 test("retained native callback checked-record evidence replays", async () => {
 	const index = await checkCallbackCheckedRecordHostedEvidence(
-		"native", "docs/evidence/callback-checked-record-native-20261022"
+		"native", callbackCheckedRecordHostedEvidenceRoot("native")
 	);
 	assert.deepEqual(index.accepted.profiles, ["c", "cpp"]);
 	assert.deepEqual(index.accepted.routes, ["ordinary", "reviewed"]);
@@ -40,7 +42,7 @@ test("retained native callback checked-record evidence replays", async () => {
 
 test("retained browser callback checked-record evidence replays", async () => {
 	const index = await checkCallbackCheckedRecordHostedEvidence(
-		"browser", "docs/evidence/callback-checked-record-browser-20261022"
+		"browser", callbackCheckedRecordHostedEvidenceRoot("browser")
 	);
 	assert.equal(index.accepted.nodeAccepted, true);
 	assert.equal(index.accepted.browserAccepted, true);
@@ -57,7 +59,7 @@ for(const [lane, profiles, reports] of [
 	, ["wit-wasi", ["wit-wasi"], 2]
 ]) test(`retained ${lane} callback checked-record evidence replays`, async () => {
 	const index = await checkCallbackCheckedRecordHostedEvidence(
-		lane, `docs/evidence/callback-checked-record-${lane}-20261022`
+		lane, callbackCheckedRecordHostedEvidenceRoot(lane)
 	);
 	assert.deepEqual(index.accepted.profiles, profiles);
 	assert.deepEqual(index.accepted.routes, ["ordinary", "reviewed"]);
