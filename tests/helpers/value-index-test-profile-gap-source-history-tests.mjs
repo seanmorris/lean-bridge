@@ -87,7 +87,19 @@ test("value-index profile gaps and their live repair are exact", async () => {
 			assert.equal(transitions[index].previousSha256
 				, transitions[index + 1].currentSha256);
 	const profileTransitions = transitionsByPath.get(profilePath);
-	const live = await readFile(profilePath, "utf8");
+	// This layer reverses only its own profile transitions, so it starts from
+	// its recorded current milestone, never from the live registry, which later
+	// layers keep changing.
+	const milestone = profileTransitions[0].currentSha256;
+	const live = await sourceAtFinHistoryMilestone(profilePath, milestone);
+	assert.equal(sha256(live), milestone);
+	assert.equal(live, git(["show", `${profileTransitions[0].currentCommit}:${profilePath}`]));
+	assert.equal(beforeValueIndexTestProfileGapSource(profilePath, live, milestone), live);
+	const current = await readFile(profilePath, "utf8");
+	if(sha256(current) !== milestone)
+		assert.equal(beforeValueIndexTestProfileGapSource(profilePath, current
+			, profileTransitions.at(-1).previousSha256), current
+		, "the layer must not reverse a registry it never recorded");
 	for(const transition of profileTransitions)
 		assert.equal(beforeValueIndexTestProfileGapSource(profilePath, live
 			, transition.currentSha256), git(["show"
