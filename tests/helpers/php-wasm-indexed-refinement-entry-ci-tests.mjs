@@ -35,7 +35,7 @@ test("hosted indexed entry workflow covers every family and source route", async
 
 test("indexed entry workflow keeps exact artifacts and bounded resources", async () => {
 	const workflow = await readFile(".github/workflows/php-wasm-indexed-refinement-entry.yml", "utf8");
-	assert.match(workflow, /concurrency:\n {2}group: php-wasm-indexed-refinement-entry-\$\{\{ github\.ref \}\}/u);
+	assert.match(workflow, /concurrency:\n {2}group: php-wasm-indexed-refinement-entry-\$\{\{ github\.workflow \}\}-\$\{\{ github\.ref \}\}/u);
 	assert.match(workflow, /EMCC_CORES: "2"/u);
 	assert.match(workflow, /fetch-depth: 0/u);
 	assert.match(workflow, /persist-credentials: false/u);
