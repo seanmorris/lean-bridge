@@ -229,7 +229,7 @@ const fixtureFor = async profile => {
 		const source = `#define LEAN_BRIDGE_OWNED_SUBTYPE_NO_CALLBACK 1\n${await readFile("tests/fixtures/structured-types/owned-subtype-installed.c", "utf8")}`
 			.replace("owned-subtype-c:", "owned-subtype-wit:");
 		return { source: () => source, success: markers[profile]
-			, wit: [/resource ticket/u, /echo-record-alternate: func/u, /transfer-record: func/u]
+			, wit: [/resource identity-ticket/u, /echo-record-alternate: func/u, /transfer-record: func/u]
 			, verifyInstalledPackage: input => import("./helpers/fin-container-edge-closure.mjs")
 				.then(module => module.verifyFinContainerEdgeArchiveClosure(input)) };
 	}
