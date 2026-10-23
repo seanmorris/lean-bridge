@@ -1,0 +1,131 @@
+{
+  "additions": [
+    {
+      "currentSha256": "53971868a97cb554c48c7bd378822c64784f06f3ad3331cc0639e4e0b006089e",
+      "path": "tests/helpers/generic-subtype-documentation.mjs"
+    },
+    {
+      "currentSha256": "4f2e59f756602dbbafb166cc560765ddc7dec0df58b889f67e61efce675ea40a",
+      "path": "scripts/update-generic-subtype-documentation-source-history.mjs"
+    },
+    {
+      "currentSha256": "3042697743a38525df33f123d9895505842a016f114ba5fbe8d48b96f050671c",
+      "path": "tests/helpers/generic-subtype-documentation-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "4e98d0f7ad169e05e3c16f50a02acdab24eceb0c8c4d69635d49c1b3235b768a",
+      "path": "tests/helpers/generic-subtype-documentation-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "8a09b61ae62d8ca84a6037522c88f1ecd55ec5d4",
+  "integrationUpdates": [
+    {
+      "currentSha256": "85c0e6b35011514473bbcd41f038dfc75c356be8bc3016502141e93cc0be6773",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"9f82f47ed83fa83d3785f8f4e2ba73177342953c1acd5aff8cd6478e9df8f9ff\"\n",
+          "previous": "          \"sha256\": \"16e4296ecf193115f0c5f96cfa50a4b41a66bfc401f6b11829a40044f9a5b5c6\"\n",
+          "start": 685394
+        },
+        {
+          "current": "          \"sha256\": \"9f82f47ed83fa83d3785f8f4e2ba73177342953c1acd5aff8cd6478e9df8f9ff\"\n",
+          "previous": "          \"sha256\": \"16e4296ecf193115f0c5f96cfa50a4b41a66bfc401f6b11829a40044f9a5b5c6\"\n",
+          "start": 1440962
+        },
+        {
+          "current": "          \"sha256\": \"9f82f47ed83fa83d3785f8f4e2ba73177342953c1acd5aff8cd6478e9df8f9ff\"\n",
+          "previous": "          \"sha256\": \"16e4296ecf193115f0c5f96cfa50a4b41a66bfc401f6b11829a40044f9a5b5c6\"\n",
+          "start": 1447496
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "94864beec761b6454a7b8716cea04d770ad23153339bea6cc10b79456baf5cf0"
+    },
+    {
+      "currentSha256": "9f82f47ed83fa83d3785f8f4e2ba73177342953c1acd5aff8cd6478e9df8f9ff",
+      "edits": [
+        {
+          "current": "import \"./helpers/generic-subtype-documentation-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 2085
+        }
+      ],
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "16e4296ecf193115f0c5f96cfa50a4b41a66bfc401f6b11829a40044f9a5b5c6"
+    },
+    {
+      "currentSha256": "7375beeef70691455e596daafe5c469c8c4aebd271692d4fd960c82ff5fad803",
+      "edits": [
+        {
+          "current": "import \"./helpers/generic-subtype-documentation-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 338
+        }
+      ],
+      "path": "tests/generic-subtype-native-perl.test.mjs",
+      "previousSha256": "5ff74b3a8e75f03d4969dc983e351822f74bd1eb72edcfdc321d414cb23fb2c3"
+    },
+    {
+      "currentSha256": "010ec03e8cbdae67a480a8491c43e1b214d33374024be31b37eeb1e9e0aa7570",
+      "edits": [
+        {
+          "current": "import { beforeGenericSubtypeDocumentationSource, genericSubtypeDocumentationNormalizationPaths } from \"./generic-subtype-documentation-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...genericSubtypeDocumentationNormalizationPaths\n\t, ...genericSubtypePromotionNormalizationPaths\n",
+          "previous": "\t...genericSubtypePromotionNormalizationPaths\n",
+          "start": 166791
+        },
+        {
+          "current": "\tconst genericSubtypeDocumentation\n\t\t= beforeGenericSubtypeDocumentationSource(path, text, expected);\n\tif(sha256(genericSubtypeDocumentation) === expected)\n\t\treturn genericSubtypeDocumentation;\n\ttext = genericSubtypeDocumentation;\n",
+          "previous": "",
+          "start": 204983
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "963b79b5e0b6ea72fb6a360fd40d13397b7aba74221a3113907a6d1a5a20a08e"
+    }
+  ],
+  "milestone": "generic-subtype-documentation-source-v1",
+  "predecessorCommit": "f18361a76cc70d3f067c7d9c92459687274ba056",
+  "schemaVersion": 1,
+  "scope": "Add fail-closed manual guide rendering for the closed GenericNat Subtype field promotion across the sixteen non-PHP-Wasm profiles without widening PHP-Wasm or open generic claims.",
+  "updates": [
+    {
+      "currentSha256": "66c6c17f86dd816f6b746d5899a73353c9037b5ea9668ba9266287a4cfad7e35",
+      "edits": [
+        {
+          "current": "import {\n\tgenericSubtypeDocumentationPaths, renderGenericSubtypeDocumentation\n} from \"../tests/helpers/generic-subtype-documentation.mjs\";\n",
+          "previous": "",
+          "start": 464
+        },
+        {
+          "current": "const documentationSources = Object.fromEntries(await Promise.all(\n\tObject.entries(genericSubtypeDocumentationPaths).map(\n\t\tasync ([name, documentPath]) => [\n\t\t\tname, await readFile(documentPath, \"utf8\")\n\t\t]\n\t)\n));\nconst documentation = renderGenericSubtypeDocumentation(documentationSources);\nawait Promise.all(Object.entries(genericSubtypeDocumentationPaths)\n\t.map(([name, documentPath]) => writeFile(documentPath\n\t\t, documentation[name])));\n",
+          "previous": "",
+          "start": 1402
+        }
+      ],
+      "path": "scripts/promote-generic-subtype-evidence.mjs",
+      "previousSha256": "3f9ae50222ef0c82146ed4a8e03e64c7c3d2d0fce85a7cb8495cfa85cbe7f9e5"
+    },
+    {
+      "currentSha256": "20282aa11c25306af3fb70ae5718f1fdc5aaca4295de8f604599988855f0c898",
+      "edits": [
+        {
+          "current": "import {\n\tgenericSubtypeDocumentationPaths, renderGenericSubtypeDocumentation\n} from \"./generic-subtype-documentation.mjs\";\n",
+          "previous": "",
+          "start": 639
+        },
+        {
+          "current": "\nconst documentationSources = Object.fromEntries(await Promise.all(Object.entries(\n\tgenericSubtypeDocumentationPaths\n).map(async ([name, path]) => [name, await readFile(path, \"utf8\")])));\nconst marker = /Expected one generic-Subtype documentation marker/u;\n\ntest(\"generic Subtype promotion repairs exact manual boundaries\", () => {\n\tconst rendered = renderGenericSubtypeDocumentation(documentationSources);\n\tfor(const [name, path] of Object.entries(genericSubtypeDocumentationPaths))\n\t{\n\t\tconst source = documentationSources[name], output = rendered[name];\n\t\tconst link = path.split(\"/\").length === 2\n\t\t\t? \"evidence/generic-subtype-promotion-20261023.md\"\n\t\t\t: \"../evidence/generic-subtype-promotion-20261023.md\";\n\t\tassert.ok(!source.includes(\"generic-subtype-promotion-20261023.md\"), name);\n\t\tassert.ok(output.includes(`[hosted generic-Subtype matrix](${link})`)\n\t\t\t, name);\n\t\tassert.match(output, /closed `GenericNat` alias of `GenericCarrier Nat`/u\n\t\t\t, name);\n\t\tassert.match(output, /`plusOne` and `plusTwo`/u, name);\n\t\tassert.match(output, /PHP-Wasm, open generic host types, arbitrary type arguments or predicates, generic `Fin` fields, callback and owned positions, recursive generic graphs, dispatch cost and memory remain outside this evidence/u\n\t\t\t, name);\n\t\tassert.doesNotMatch(output, /broader\\s+generic/u, name);\n\t\t// Every byte outside the one exact marker survives the transition.\n\t\tlet prefix = 0;\n\t\twhile(source[prefix] === output[prefix]) prefix++;\n\t\tlet suffix = 0;\n\t\twhile(suffix < source.length - prefix\n\t\t\t&& source.at(-1 - suffix) === output.at(-1 - suffix)) suffix++;\n\t\tassert.ok(source.length - prefix - suffix < 400, name);\n\t\tassert.ok(output.slice(prefix, output.length - suffix)\n\t\t\t.includes(\"generic-subtype-promotion-20261023.md\"), name);\n\t}\n\tassert.match(rendered.existingPackage\n\t\t, /\\| Installed, both source routes \\| Pending \\| The \\[hosted generic-Subtype matrix\\]\\([^)]+\\) installs the closed `GenericNat` alias[^|\\n]+ \\|\\n/u);\n\tassert.match(rendered.existingPackage\n\t\t, /\\| `Subtype` inside owned callbacks, recursive owned graphs or other generic record fields \\| Rejected/u);\n\tassert.match(rendered.exportDecisions\n\t\t, /Subtype fields in other generic records remain unfinished/u);\n\tassert.match(rendered.php, /Native PHP is\\none of those profiles/u);\n});\n\ntest(\"generic Subtype documentation refuses repeated or ambiguous markers\"\n\t, () => {\n\t\tconst rendered = renderGenericSubtypeDocumentation(documentationSources);\n\t\tassert.throws(() => renderGenericSubtypeDocumentation(rendered), marker);\n\t\tfor(const name of Object.keys(genericSubtypeDocumentationPaths))\n\t\t{\n\t\t\tassert.throws(() => renderGenericSubtypeDocumentation({\n\t\t\t\t...documentationSources, [name]: rendered[name]\n\t\t\t}), marker, name);\n\t\t\tassert.throws(() => renderGenericSubtypeDocumentation({\n\t\t\t\t...documentationSources\n\t\t\t\t, [name]: documentationSources[name].repeat(2)\n\t\t\t}), marker, name);\n\t\t}\n\t\tconst { php, ...partial } = documentationSources;\n\t\tassert.ok(php);\n\t\tassert.throws(() => renderGenericSubtypeDocumentation(partial)\n\t\t\t, assert.AssertionError);\n\t}\n);\n",
+          "previous": "",
+          "start": 4639
+        }
+      ],
+      "path": "tests/helpers/generic-subtype-promotion-tests.mjs",
+      "previousSha256": "dfb618bb8a477c36debd8bcd60468fa460e47f312a9a9c4ebd541fd7d100c0c5"
+    }
+  ]
+}

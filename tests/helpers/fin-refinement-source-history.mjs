@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeGenericSubtypeDocumentationSource, genericSubtypeDocumentationNormalizationPaths } from "./generic-subtype-documentation-source-history.mjs";
 import { beforeGenericSubtypePromotionSource, genericSubtypePromotionNormalizationPaths } from "./generic-subtype-promotion-source-history.mjs";
 import { beforeGenericSubtypeHostedArchiveSource, genericSubtypeHostedArchiveNormalizationPaths } from "./generic-subtype-hosted-archive-source-history.mjs";
 import { beforeRecursiveCheckedRecordDocumentationClosureSource, recursiveCheckedRecordDocumentationClosureNormalizationPaths } from "./recursive-checked-record-documentation-closure-source-history.mjs";
@@ -2061,7 +2062,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...genericSubtypePromotionNormalizationPaths
+	...genericSubtypeDocumentationNormalizationPaths
+	, ...genericSubtypePromotionNormalizationPaths
 	, ...genericSubtypeHostedArchiveNormalizationPaths
 	, ...recursiveCheckedRecordDocumentationClosureNormalizationPaths
 	, ...valueIndexMatrixHistoricalInventoryRepairNormalizationPaths
@@ -2865,6 +2867,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
+	const genericSubtypeDocumentation
+		= beforeGenericSubtypeDocumentationSource(path, text, expected);
+	if(sha256(genericSubtypeDocumentation) === expected)
+		return genericSubtypeDocumentation;
+	text = genericSubtypeDocumentation;
 	let genericSubtypePromotion = text;
 	while(true)
 	{
