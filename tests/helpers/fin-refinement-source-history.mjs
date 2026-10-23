@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeCallbackCheckedRecordPromotionRefreshSource, callbackCheckedRecordPromotionRefreshNormalizationPaths } from "./callback-checked-record-promotion-refresh-source-history.mjs";
 import { beforeCallbackCheckedRecordArchiveCommitProvenanceSource, callbackCheckedRecordArchiveCommitProvenanceNormalizationPaths } from "./callback-checked-record-archive-commit-provenance-source-history.mjs";
 import { beforeCallbackCheckedRecordArchiveProvenanceRepairSource, callbackCheckedRecordArchiveProvenanceRepairNormalizationPaths } from "./callback-checked-record-archive-provenance-repair-source-history.mjs";
 import { beforeCallbackCheckedRecordRetainedArchiveRolloverSource, callbackCheckedRecordRetainedArchiveRolloverNormalizationPaths } from "./callback-checked-record-retained-archive-rollover-source-history.mjs";
@@ -1960,7 +1961,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...callbackCheckedRecordArchiveCommitProvenanceNormalizationPaths
+	...callbackCheckedRecordPromotionRefreshNormalizationPaths
+	, ...callbackCheckedRecordArchiveCommitProvenanceNormalizationPaths
 	, ...callbackCheckedRecordArchiveProvenanceRepairNormalizationPaths
 	, ...callbackCheckedRecordRetainedArchiveRolloverNormalizationPaths
 	, ...phpWasmCallbackEntryTracePlanRepairNormalizationPaths
@@ -2722,9 +2724,15 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 			text = exact;
 		}
 	}
+	const callbackCheckedRecordPromotionRefresh
+		= beforeCallbackCheckedRecordPromotionRefreshSource(
+			path, text, expected
+		);
+	if(sha256(callbackCheckedRecordPromotionRefresh) === expected)
+		return callbackCheckedRecordPromotionRefresh;
 	const callbackCheckedRecordArchiveCommitProvenance
 		= beforeCallbackCheckedRecordArchiveCommitProvenanceSource(
-			path, text, expected
+			path, callbackCheckedRecordPromotionRefresh, expected
 		);
 	if(sha256(callbackCheckedRecordArchiveCommitProvenance) === expected)
 		return callbackCheckedRecordArchiveCommitProvenance;

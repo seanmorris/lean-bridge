@@ -23,9 +23,14 @@ import {
 	beforeFinRefinementSource, finRefinementNormalizationPaths
 } from "./fin-refinement-source-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
+import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
 
 const git = args => execFileSync("git", args
 	, { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
+const gitBytes = args => {
+	const result = spawnSync("git", args, { maxBuffer: 512 * 1024 * 1024 });
+	return result.status === 0 ? result.stdout : undefined;
+};
 
 test("callback checked-record promotion records every first-parent transition", async () => {
 	const record = JSON.parse(await readFile(
@@ -50,7 +55,9 @@ test("callback checked-record promotion records every first-parent transition", 
 	}
 	for(const update of record.integrationUpdates)
 	{
-		const current = await readFile(update.path, "utf8");
+		const current = await sourceAtFinHistoryMilestone(update.path
+			, update.currentSha256
+			, beforeCallbackCheckedRecordPromotionSource);
 		assert.equal(reverseCallbackCheckedRecordPromotionUpdate(current, update)
 			, git(["show"
 				, `${callbackCheckedRecordPromotionImplementation}:${update.path}`])
@@ -68,10 +75,14 @@ test("callback checked-record promotion normalizes live sources and additions", 
 		const exists = spawnSync("git", ["cat-file", "-e"
 			, `${callbackCheckedRecordPromotionPredecessor}:${path}`]);
 		if(exists.status !== 0) continue;
-		const current = await readFile(path, "utf8");
 		const predecessor = git(["show"
 			, `${callbackCheckedRecordPromotionPredecessor}:${path}`]);
 		const expected = sha256(predecessor);
+		const update = record.integrationUpdates.find(item => item.path === path)
+			?? record.updates.findLast(item => item.path === path);
+		assert.ok(update, path);
+		const current = await sourceAtFinHistoryMilestone(path
+			, update.currentSha256, beforeCallbackCheckedRecordPromotionSource);
 		assert.equal(beforeCallbackCheckedRecordPromotionSource(
 			path, current, expected), predecessor, path);
 		assert.equal(beforeFinRefinementSource(path, current, expected)
@@ -79,8 +90,31 @@ test("callback checked-record promotion normalizes live sources and additions", 
 		assert.ok(finRefinementNormalizationPaths.includes(path), path);
 	}
 	for(const addition of record.additions)
-		assert.equal(sha256(await readFile(addition.path))
-			, addition.currentSha256, addition.path);
+	{
+		let authenticated = sha256(await readFile(addition.path))
+			=== addition.currentSha256;
+		if(!authenticated)
+		{
+			try
+			{
+				authenticated = sha256(await sourceAtFinHistoryMilestone(
+					addition.path, addition.currentSha256
+				)) === addition.currentSha256;
+			}
+			catch(error)
+			{
+				if(!["ENOENT", "ERR_ASSERTION"].includes(error.code)) throw error;
+			}
+		}
+		for(const { commit } of record.commits.toReversed())
+		{
+			if(authenticated) break;
+			const source = gitBytes(["show", `${commit}:${addition.path}`]);
+			if(source !== undefined)
+				authenticated = sha256(source) === addition.currentSha256;
+		}
+		assert.ok(authenticated, addition.path);
+	}
 });
 
 test("callback checked-record promotion rejects altered transitions", async () => {
