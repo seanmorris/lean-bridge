@@ -37,7 +37,9 @@ import {
 	, validateCheckedRecordValueIndexBrowserPhases
 } from "./checked-record-value-index-browser-fixture.mjs";
 import {
-	assertCheckedRecordValueIndexBrowserTap
+	assertCheckedRecordValueIndexBrowserControlsTap
+	, assertCheckedRecordValueIndexBrowserTap
+	, checkedRecordValueIndexBrowserRequiredControlNames
 	, checkCheckedRecordValueIndexBrowserCiRecords
 	, parseCheckedRecordValueIndexBrowserCiArgs
 } from "./checked-record-value-index-browser-ci-report.mjs";
@@ -108,7 +110,17 @@ const observation = (profile, route) => ({
 const tap = (tests, skipped = 0) => `TAP version 13\n${Array.from({ length: tests }
 	, (_, index) => `# Subtest: accepted ${index}\n`
 		+ `ok ${index + 1} - accepted ${index}${index >= tests - skipped ? " # SKIP" : ""}\n`
-		+ "  ---\n  duration_ms: 1\n  type: 'test'\n  ...\n").join("")}1..${tests}\n# tests ${tests}\n# suites 0\n# pass ${tests - skipped}\n# fail 0\n# cancelled 0\n# skipped ${skipped}\n# todo 0\n# duration_ms 2\n`;
+	+ "  ---\n  duration_ms: 1\n  type: 'test'\n  ...\n").join("")}1..${tests}\n# tests ${tests}\n# suites 0\n# pass ${tests - skipped}\n# fail 0\n# cancelled 0\n# skipped ${skipped}\n# todo 0\n# duration_ms 2\n`;
+const controlsTap = (
+	extra = []
+	, passed = checkedRecordValueIndexBrowserRequiredControlNames.passed
+) => {
+	const skipped = checkedRecordValueIndexBrowserRequiredControlNames.skipped;
+	const names = [...passed, ...extra, ...skipped];
+	return `TAP version 13\n${names.map((name, index) => `# Subtest: ${name}\n`
+		+ `ok ${index + 1} - ${name}${index >= names.length - skipped.length ? " # SKIP" : ""}\n`
+		+ "  ---\n  duration_ms: 1\n  type: 'test'\n  ...\n").join("")}1..${names.length}\n# tests ${names.length}\n# suites 0\n# pass ${names.length - skipped.length}\n# fail 0\n# cancelled 0\n# skipped ${skipped.length}\n# todo 0\n# duration_ms 2\n`;
+};
 const ciOptions = {
 	route: "ordinary-source", producer: "a".repeat(40)
 	, "npm-checker": "b".repeat(40), consumer: "c".repeat(40)
@@ -394,6 +406,13 @@ test("value-index hosted checker closes arguments and complete TAP streams", () 
 		, ciOptions);
 	assertCheckedRecordValueIndexBrowserTap(tap(1), 1);
 	assertCheckedRecordValueIndexBrowserTap(tap(15, 4), 15, 4);
+	assert.deepEqual(assertCheckedRecordValueIndexBrowserControlsTap(
+		controlsTap()), { fastPasses: 11, skippedInstalledRoutes: 4 });
+	assert.deepEqual(assertCheckedRecordValueIndexBrowserControlsTap(
+		controlsTap(["later authenticated reader"])
+	), { fastPasses: 11, skippedInstalledRoutes: 4 });
+	assert.throws(() => assertCheckedRecordValueIndexBrowserControlsTap(
+		controlsTap([], checkedRecordValueIndexBrowserRequiredControlNames.passed.slice(1))));
 	const paths = checkedRecordValueIndexBrowserRecordPaths({
 		package: { archive: "component.tgz" }, runtime: { archive: "runtime.tgz" }
 	});
@@ -430,7 +449,7 @@ test("value-index hosted checker closes arguments and complete TAP streams", () 
 test("value-index hosted checker rejects scope before retained-record reads", async () => {
 	let reads = 0;
 	const original = {
-		acceptanceTap: tap(1), controlsTap: tap(15, 4)
+		acceptanceTap: tap(1), controlsTap: controlsTap()
 		, runtime: { node: process.version, platform: "linux", arch: "x64" }
 		, paths: []
 		, read: async () => {
@@ -442,7 +461,9 @@ test("value-index hosted checker rejects scope before retained-record reads", as
 		{ ...ciOptions, route: "unknown" }, original), assert.AssertionError);
 	assert.equal(reads, 0);
 	await assert.rejects(checkCheckedRecordValueIndexBrowserCiRecords(
-		ciOptions, { ...original, controlsTap: tap(14, 4) }), assert.AssertionError);
+		ciOptions, { ...original, controlsTap: controlsTap([]
+			, checkedRecordValueIndexBrowserRequiredControlNames.passed.slice(1)) }
+	), assert.AssertionError);
 	assert.equal(reads, 0);
 	await assert.rejects(checkCheckedRecordValueIndexBrowserCiRecords(
 		ciOptions, original), /records required/u);

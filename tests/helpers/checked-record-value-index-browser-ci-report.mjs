@@ -14,6 +14,26 @@ import {
 
 const usage = "Usage: check-checked-record-value-index-browser-ci.mjs --route <ordinary-source|reviewed-ir|result-only-ordinary-source|result-only-reviewed-ir> --producer <commit> --npm-checker <commit> --consumer <commit> --checker <commit> --directory <records> --acceptance-tap <tap> --controls-tap <tap> --runtime <json>";
 
+export const checkedRecordValueIndexBrowserRequiredControlNames = Object.freeze({
+	passed: Object.freeze([
+		"value-index author routes preserve kind, value, constructor and result boundaries"
+		, "immutable value-index caller covers every function, rejection and recovery"
+		, "value-index snapshots distinguish proof fields, scalar kinds and mutations"
+		, "value-index browser routes close every engine and lifecycle"
+		, "value-index compiler plans keep checked inputs and constructor-free results separate"
+		, "generated full and result-only TypeScript expose payload fields only"
+		, "value-index installed gates reject partial selections and stale outputs"
+		, "value-index hosted checker closes arguments and complete TAP streams"
+		, "value-index hosted checker rejects scope before retained-record reads"
+		, "value-index hosted workflow requires every route and retains failures"
+		, "value-index onboarding fixture is self-contained and source-identifiable"
+	])
+	, skipped: Object.freeze(checkedRecordValueIndexBrowserRoutes.map(route =>
+		`installed value-index records reproduce, relocate and reach browsers for ${route}`))
+});
+
+const escapeRegExp = source => source.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&");
+
 /**
  * Require one complete terminal node:test TAP stream.
  *
@@ -30,6 +50,42 @@ export const assertCheckedRecordValueIndexBrowserTap = (
 	assert.match(source, new RegExp(
 		`\\n1\\.\\.${tests}\\n# tests ${tests}\\n# suites 0\\n# pass ${tests - skipped}\\n# fail 0\\n# cancelled 0\\n# skipped ${skipped}\\n# todo 0\\n# duration_ms [0-9]+(?:\\.[0-9]+)?\\n$`
 		, "u"));
+};
+
+/**
+ * Require the stable fast controls while accepting added authenticated readers.
+ *
+ * @param source - Complete node:test TAP stream.
+ */
+export const assertCheckedRecordValueIndexBrowserControlsTap = source => {
+	assert.equal(typeof source, "string");
+	assert.doesNotMatch(source, /^(?:not ok|Bail out!)/gmu);
+	assert.doesNotMatch(source, /^[ \t]+(?:not ok|Bail out!)/gmu);
+	const terminal = source.match(/\n1\.\.(\d+)\n# tests (\d+)\n# suites 0\n# pass (\d+)\n# fail 0\n# cancelled 0\n# skipped (\d+)\n# todo 0\n# duration_ms [0-9]+(?:\.[0-9]+)?\n$/u);
+	assert.ok(terminal, "Complete value-index browser control TAP");
+	const tests = Number(terminal[1]), declared = Number(terminal[2]);
+	const passed = Number(terminal[3]), skipped = Number(terminal[4]);
+	assert.equal(declared, tests);
+	assert.equal(skipped
+		, checkedRecordValueIndexBrowserRequiredControlNames.skipped.length);
+	assert.equal(passed + skipped, tests);
+	assert.ok(passed
+		>= checkedRecordValueIndexBrowserRequiredControlNames.passed.length);
+	const requireResult = (name, shouldSkip) => {
+		assert.equal(source.split(`# Subtest: ${name}\n`).length, 2, name);
+		const suffix = shouldSkip ? " # SKIP(?: .*)?" : "";
+		assert.match(source, new RegExp(
+			`^ok [0-9]+ - ${escapeRegExp(name)}${suffix}$`, "mu"
+		), name);
+	};
+	for(const name of checkedRecordValueIndexBrowserRequiredControlNames.passed)
+		requireResult(name, false);
+	for(const name of checkedRecordValueIndexBrowserRequiredControlNames.skipped)
+		requireResult(name, true);
+	return {
+		fastPasses: checkedRecordValueIndexBrowserRequiredControlNames.passed.length
+		, skippedInstalledRoutes: skipped
+	};
 };
 
 /**
@@ -79,7 +135,8 @@ export const checkCheckedRecordValueIndexBrowserCiRecords = async (
 	const selected = parseCheckedRecordValueIndexBrowserCiArgs(
 		Object.entries(options).flatMap(([key, value]) => [`--${key}`, value]));
 	assertCheckedRecordValueIndexBrowserTap(acceptanceTap, 1);
-	assertCheckedRecordValueIndexBrowserTap(controlsTap, 15, 4);
+	const controlCounts = assertCheckedRecordValueIndexBrowserControlsTap(
+		controlsTap);
 	assert.deepEqual(Object.keys(runtime).sort(), ["arch", "node", "platform"]);
 	const npm = JSON.parse(await read("report.json"));
 	const expectedPaths = checkedRecordValueIndexBrowserRecordPaths(npm.receipt);
@@ -108,7 +165,7 @@ export const checkCheckedRecordValueIndexBrowserCiRecords = async (
 			, consumer: selected.consumer, checker: selected.checker
 		}
 		, controls: {
-			fastPasses: 11, skippedInstalledRoutes: 4
+			...controlCounts
 			, checkedRefusalsPerExecution: 4, shapeRefusalsPerExecution: 2
 			, recoveriesPerExecution: 6
 			, provenanceMutations: controls.provenanceControls
