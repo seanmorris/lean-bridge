@@ -7,11 +7,8 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { ownedBorrowHistoricalBytes } from "./owned-borrow-history.mjs";
-import { generateOwnedPerlPackage } from "../../src/backends/perl/owned-package.mjs";
-import { generateOwnedPerlXs } from "../../src/backends/perl/owned-xs.mjs";
-import { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from "../../src/build/native-graph-model.mjs";
-import { validatePackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
-import { ownedRustTransferSource } from "./owned-rust-transfer-fixture.mjs";
+import { moduleAtProducer } from "./producer-module.mjs";
+import { bytesAtProducer } from "./producer-source.mjs";
 
 export const ownedPerlTransferCommand = "LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 npm run test:owned-perl-transfers";
 export const ownedPerlTransferScope = Object.freeze({
@@ -32,6 +29,8 @@ export const ownedPerlTransferScope = Object.freeze({
 });
 const variants = ["5.36.3-threaded", "5.36.3-unthreaded", "5.38.2-threaded", "5.38.2-unthreaded"];
 const modes = ["prebuilt-only", "build-xs"];
+const baselineCommit = "9591a41dd71d74db92a614cbfa352a712359945c";
+const producerCommit = "cb7ac24d2134c813561fd8369414935c962d0b43";
 const variant = perl => {
 	const name = perl.match(/\/perl\/([^/]+)\/bin\/perl$/u)?.[1];
 	assert.ok(variants.includes(name), perl); return name;
@@ -56,7 +55,20 @@ const block = (text, heading, language) => {
  * @param record - Frozen private, installed and documentation observations.
  */
 export const assertOwnedPerlTransferExecution = async record => {
+	const producer = Object.assign({}, ...await Promise.all([
+		"src/backends/perl/owned-package.mjs"
+		, "src/backends/perl/owned-xs.mjs"
+		, "src/build/native-graph-model.mjs"
+		, "src/release/package-set-receipt.mjs"
+		, "tests/helpers/owned-rust-transfer-fixture.mjs"
+	].map(path => moduleAtProducer(producerCommit, path))));
+	for(const name of [
+		"createCompiledNativeModel", "generateCompiledNativeLeanAdapters"
+		, "generateOwnedPerlPackage", "generateOwnedPerlXs"
+		, "validatePackageSetReceipt"
+	]) assert.equal(typeof producer[name], "function", name);
 	assert.equal(record.acceptance, "passed"); assert.deepEqual(record.scope, ownedPerlTransferScope);
+	assert.equal(record.baselineRevision, baselineCommit);
 	assert.equal(record.run.command, ownedPerlTransferCommand); assert.equal(record.run.exitCode, 0);
 	assert.equal(record.run.sha256, sha256(record.run.text));
 	for(const [name, count] of Object.entries({ tests: 9, pass: 9, fail: 0, cancelled: 0, skipped: 0, todo: 0 }))
@@ -64,9 +76,15 @@ export const assertOwnedPerlTransferExecution = async record => {
 	assert.doesNotMatch(record.run.text, /^not ok|# SKIP|# TODO/mu);
 	assert.deepEqual(record.runtime.map(item => item.mode), ["ordinary", "reviewed"]);
 	assert.deepEqual(record.consumers.map(item => item.mode), ["ordinary", "reviewed"]);
-	const lean = await readFile("tests/fixtures/onboarding/owned-aggregates/Owned.lean", "utf8") + ownedRustTransferSource;
-	const consumer = sha256(await readFile("tests/fixtures/structured-types/owned-perl-transfers.pl"));
-	const assets = sha256(await readFile("tests/fixtures/structured-types/owned-perl-installed-assets.pl"));
+	assert.equal(typeof producer.ownedRustTransferSource, "string");
+	const historical = path => bytesAtProducer(producerCommit, path);
+	const lean = historical(
+		"tests/fixtures/onboarding/owned-aggregates/Owned.lean"
+	).toString() + producer.ownedRustTransferSource;
+	const consumer = sha256(historical(
+		"tests/fixtures/structured-types/owned-perl-transfers.pl"));
+	const assets = sha256(historical(
+		"tests/fixtures/structured-types/owned-perl-installed-assets.pl"));
 	for(const item of [...record.runtime, ...record.consumers])
 	{
 		assert.equal(Boolean(item.input.sourceIdentity.reviewedBindingIr), item.mode === "reviewed");
@@ -74,10 +92,10 @@ export const assertOwnedPerlTransferExecution = async record => {
 		const extractor = "src/analyze/NativeExports.lean", expectedExtractor = item.input.sourceIdentity.extractorSha256;
 		assert.equal(sha256(ownedBorrowHistoricalBytes(extractor, await readFile(extractor), expectedExtractor)), expectedExtractor);
 		assert.equal(item.consumerSha256, consumer);
-		const model = createCompiledNativeModel(item.input, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true });
+		const model = producer.createCompiledNativeModel(item.input, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true });
 		assert.equal(model.schemaVersion, 8); assert.equal(model.exports.length, 26);
 		assert.equal(model.ownedGraph.inputTransfers.exports.length, 20);
-		const xs = generateOwnedPerlXs(model.bindingIr, "LeanBridge::OwnedProbe", { transferredInputs: true });
+		const xs = producer.generateOwnedPerlXs(model.bindingIr, "LeanBridge::OwnedProbe", { transferredInputs: true });
 		const exports = xs.functions.map(fn => fn.publicName).sort();
 		if(record.runtime.includes(item))
 		{
@@ -115,7 +133,7 @@ export const assertOwnedPerlTransferExecution = async record => {
 		const { manifest, componentReceipt: component, owned } = item;
 		assert.deepEqual(item.files, manifest.files); assert.deepEqual(owned, manifest.ownedValues);
 		assert.equal(manifest.module, "LeanBridge::OwnedProbe"); assert.equal(manifest.prebuilt.length, 4);
-		const native = generateCompiledNativeLeanAdapters(model);
+		const native = producer.generateCompiledNativeLeanAdapters(model);
 		assert.equal(component.schemaVersion, 4); assert.equal(component.profile, "native-library-v1");
 		assert.equal(component.runtimeIdentity, manifest.nativeRuntimeIdentity);
 		assert.equal(component.modelSha256, sha256(canonicalJson(model)));
@@ -131,7 +149,7 @@ export const assertOwnedPerlTransferExecution = async record => {
 		assert.equal(owned.gmpLibrary, "libgmp-lean-bridge.so.10");
 		assert.equal(component.nativeLibrary.sha256, item.files[nativePath + component.library]);
 		assert.ok(component.nativeLibrary.bytes > 0);
-		const generated = generateOwnedPerlPackage({ model
+		const generated = producer.generateOwnedPerlPackage({ model
 			, metadata: item.input.metadata
 			, receipt: { ...component, runtimeIdentity: manifest.runtimeIdentity }
 			, moduleName: manifest.module
@@ -152,7 +170,7 @@ export const assertOwnedPerlTransferExecution = async record => {
 			assert.equal(item.files[path], sha256(source), path);
 		for(const [path, hash] of Object.entries(item.files))
 		{ assert.ok(!path.startsWith("/") && !path.split("/").includes("..")); digest(hash); }
-		validatePackageSetReceipt(item.packageSetReceipt);
+		producer.validatePackageSetReceipt(item.packageSetReceipt);
 		assert.equal(item.packageSetReceipt.profiles.length, 1);
 		assert.equal(item.packageSetReceipt.profiles[0].bindingIrSha256, model.bindingIrSha256);
 		assert.equal(item.packageSetReceipt.packages.length, 2); assert.equal(item.packages.packages.length, 2);
@@ -189,14 +207,14 @@ export const assertOwnedPerlTransferExecution = async record => {
 	assert.deepEqual(documentation.mixedTargets, ["c", "cpan"]);
 	assert.equal(documentation.cliBuild.status, "ok");
 	assert.deepEqual(documentation.cliBuild.result.targets, documentation.mixedTargets);
-	validatePackageSetReceipt(documentation.packageSetReceipt);
+	producer.validatePackageSetReceipt(documentation.packageSetReceipt);
 	assert.deepEqual([...new Set(documentation.packageSetReceipt.packages.map(pkg => pkg.target))], ["c", "cpan"]);
 	assert.equal(documentation.packageSetReceipt.profiles.length, 1);
 	matrix(documentation.observations);
 	for(const observed of documentation.observations)
 	{ assert.equal(observed.stdout, "consumed\n42\n42\n"); assert.equal(observed.stderr, ""); }
-	const author = await readFile("docs/publish/cpan.md", "utf8");
-	const consumerGuide = await readFile("docs/consume/perl.md", "utf8");
+	const author = historical("docs/publish/cpan.md").toString();
+	const consumerGuide = historical("docs/consume/perl.md").toString();
 	const config = { ...JSON.parse(block(author, "## Export resource-containing values", "json"))
 		, contracts: JSON.parse(block(author, "## Transfer input ownership", "json")) };
 	assert.deepEqual(documentation.sourceHashes, {
