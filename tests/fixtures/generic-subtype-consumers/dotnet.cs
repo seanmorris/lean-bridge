@@ -39,7 +39,29 @@ static class Consumer
         Check(Snapshot(input) == before, name + " rejected input unchanged");
         rejections++;
     }
-    static void Main()
+    static int Main(string[] arguments)
+    {
+        try
+        {
+            if (arguments.Length == 1 && arguments[0] == "--runtime")
+            {
+                Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(new {
+                    version = Environment.Version.ToString(),
+                    description = System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription,
+                    directory = System.Runtime.InteropServices.RuntimeEnvironment.GetRuntimeDirectory(),
+                    command = Environment.ProcessPath,
+                    architecture = System.Runtime.InteropServices.RuntimeInformation.ProcessArchitecture.ToString(),
+                    os = System.Runtime.InteropServices.RuntimeInformation.OSDescription,
+                    littleEndian = BitConverter.IsLittleEndian
+                }));
+                return 0;
+            }
+            if (arguments.Length != 0) throw new InvalidOperationException("Unexpected caller arguments");
+            Run(); return 0;
+        }
+        catch (Exception error) { Console.Error.WriteLine(error); return 1; }
+    }
+    static void Run()
     {
         Scalar(Generic(40, 2), N(43));
         Call("echoGenericFirst", Generic(40, 2), Api.EchoGenericFirst, Generic(41, 2));
