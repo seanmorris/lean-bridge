@@ -72,6 +72,7 @@ import { beforeOwnedCheckedRecordHostedArchiversSource, ownedCheckedRecordHosted
 import { beforeZeroPayloadMatrixClosureSource, zeroPayloadMatrixClosureChangedPaths } from "./zero-payload-matrix-closure-source-history.mjs";
 import { beforeOwnedCheckedRecordPhpWasmRetainedHandoffSource, ownedCheckedRecordPhpWasmRetainedHandoffChangedPaths } from "./owned-checked-record-php-wasm-retained-handoff-source-history.mjs";
 import { beforeOwnedCheckedRecordEvidenceContractSource, ownedCheckedRecordEvidenceContractChangedPaths } from "./owned-checked-record-evidence-contract-source-history.mjs";
+import { beforeOwnedSubtypeHostedEvidenceContractSource, ownedSubtypeHostedEvidenceContractChangedPaths } from "./owned-subtype-hosted-evidence-contract-source-history.mjs";
 import { beforeCallbackSubtypeDocumentationReviewRepairSource, callbackSubtypeDocumentationReviewRepairChangedPaths } from "./callback-subtype-documentation-review-repair-source-history.mjs";
 import { beforePhpWasmRefinementEntryGeneratorClosureSource, phpWasmRefinementEntryGeneratorClosureChangedPaths } from "./php-wasm-refinement-entry-generator-closure-source-history.mjs";
 import { beforeCallbackSubtypeDocumentationReadinessSource, callbackSubtypeDocumentationReadinessChangedPaths } from "./callback-subtype-documentation-readiness-source-history.mjs";
@@ -2141,6 +2142,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...zeroPayloadMatrixClosureChangedPaths
 	, ...ownedCheckedRecordPhpWasmRetainedHandoffChangedPaths
 	, ...ownedCheckedRecordEvidenceContractChangedPaths
+	, ...ownedSubtypeHostedEvidenceContractChangedPaths
 	, ...callbackSubtypeDocumentationReviewRepairChangedPaths
 	, ...phpWasmRefinementEntryGeneratorClosureChangedPaths
 	, ...callbackSubtypeDocumentationReadinessChangedPaths
@@ -2839,6 +2841,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
+	const ownedSubtypeHostedEvidenceContract
+		= beforeOwnedSubtypeHostedEvidenceContractSource(path, text, expected);
+	if(sha256(ownedSubtypeHostedEvidenceContract) === expected)
+		return ownedSubtypeHostedEvidenceContract;
+	text = ownedSubtypeHostedEvidenceContract;
 	const callbackSubtypePromotion = beforeCallbackSubtypePromotionSource(
 		path, text, expected);
 	if(sha256(callbackSubtypePromotion) === expected)

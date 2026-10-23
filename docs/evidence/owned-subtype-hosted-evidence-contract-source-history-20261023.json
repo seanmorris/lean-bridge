@@ -1,0 +1,380 @@
+{
+  "additions": [
+    {
+      "currentSha256": "23d64785310be9c6795df850889834d70f27e375d22896c564b88cafc42b81a3",
+      "path": "scripts/update-owned-subtype-hosted-evidence-contract-source-history.mjs"
+    },
+    {
+      "currentSha256": "4a283287b746e13413659d17663b93b1ac0eb193ca690fb98344a982243263b0",
+      "path": "tests/helpers/owned-subtype-hosted-evidence-contract-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "ed7e5296e613a6e9d2a6751a0259c70e2ff546d9a068a36383b55b9455a5cfbb",
+      "path": "tests/helpers/owned-subtype-hosted-evidence-contract-source-history.mjs"
+    }
+  ],
+  "historicalAdditions": [
+    {
+      "currentSha256": "b57accca7577da0c988895204485d99ae937da99639b529784c55033bcbd97a7",
+      "path": "scripts/check-owned-subtype-ci.mjs"
+    },
+    {
+      "currentSha256": "947acf1bbb510aebb32c5695d029f5942d2b7c060286206a00ed54c0af71e25c",
+      "path": "tests/helpers/owned-subtype-hosted-ci.mjs"
+    },
+    {
+      "currentSha256": "28ea233a9067456acddd732b419230c8404a915dcbe27515896f57047a844548",
+      "path": "tests/helpers/owned-subtype-retained-packages.mjs"
+    },
+    {
+      "currentSha256": "2a1cc309fdb150652a77f3bab1942b5e4879f580ffb2febfee84cb93459ab0bc",
+      "path": "tests/owned-subtype-hosted-ci.test.mjs"
+    },
+    {
+      "currentSha256": "7234a098daa6b4dcfb02b411bd6614f7593b3799ca04820b7e1bb25fc255cd67",
+      "path": "tests/owned-subtype-retained-packages.test.mjs"
+    }
+  ],
+  "historicalUpdates": [
+    {
+      "currentSha256": "2c21e03877e59543825feafc5c1f4429461a2805826bc63736f0999962c2449f",
+      "edits": [
+        {
+          "current": "          test -s build/owned-subtype-language-packaging/retained-packages.json\n          node scripts/check-owned-subtype-ci.mjs \\\n            --lane languages --producer \"$GITHUB_SHA\" \\\n            --tap build/owned-subtype-languages-ci/acceptance.log \\\n            --report build/owned-subtype-language-packaging/report.json \\\n            | tee build/owned-subtype-language-packaging/verification.json\n          test -s build/owned-subtype-language-packaging/verification.json\n",
+          "previous": "",
+          "start": 2612
+        },
+        {
+          "current": "            build/owned-subtype-language-packaging/\n",
+          "previous": "            build/owned-subtype-language-packaging/report.json\n",
+          "start": 3342
+        }
+      ],
+      "path": ".github/workflows/owned-subtype-languages.yml",
+      "previousSha256": "e814a1325069931653f8c08b4ae01074f9266940cbf0714bc19deff5555905b4"
+    },
+    {
+      "currentSha256": "b62c78b2235b142a8ace3e2a3ebdfbc77cfc434ee965d2e1fdd20b63bfaf27bf",
+      "edits": [
+        {
+          "current": "          test -s build/owned-subtype-native-packaging/retained-packages.json\n          node scripts/check-owned-subtype-ci.mjs \\\n            --lane native --producer \"$GITHUB_SHA\" \\\n            --tap build/owned-subtype-native-ci/acceptance.log \\\n            --report build/owned-subtype-native-packaging/report.json \\\n            | tee build/owned-subtype-native-packaging/verification.json\n          test -s build/owned-subtype-native-packaging/verification.json\n",
+          "previous": "",
+          "start": 1908
+        },
+        {
+          "current": "            build/owned-subtype-native-packaging/\n",
+          "previous": "            build/owned-subtype-native-packaging/report.json\n",
+          "start": 2616
+        }
+      ],
+      "path": ".github/workflows/owned-subtype-native.yml",
+      "previousSha256": "07294679a241310dc9612f2e146bf03a81df5b3b0da0214619aa8a692c5ef9a2"
+    },
+    {
+      "currentSha256": "7dda65552acfbf912a3fa031662d00e897024a8ed5e2304001dd545efd8b1691",
+      "edits": [
+        {
+          "current": "          test -s build/owned-subtype-perl-packaging/retained-packages.json\n          node scripts/check-owned-subtype-ci.mjs \\\n            --lane perl --producer \"$GITHUB_SHA\" \\\n            --tap build/owned-subtype-perl-ci/acceptance.log \\\n            --report build/owned-subtype-perl-packaging/report.json \\\n            | tee build/owned-subtype-perl-packaging/verification.json\n          test -s build/owned-subtype-perl-packaging/verification.json\n",
+          "previous": "",
+          "start": 2405
+        },
+        {
+          "current": "            build/owned-subtype-perl-packaging/\n",
+          "previous": "            build/owned-subtype-perl-packaging/report.json\n",
+          "start": 3095
+        }
+      ],
+      "path": ".github/workflows/owned-subtype-perl.yml",
+      "previousSha256": "6d7ff87d50fd6f17ca58903b08e56c9851d5e8c6f0e1d1214f3ae31e4907baf0"
+    },
+    {
+      "currentSha256": "39a78d1136025c3b1c11b7d2daf82d8834593b44f4ceabec7850d447cf62e0db",
+      "edits": [
+        {
+          "current": "          test -s build/owned-subtype-remaining-packaging/retained-packages.json\n          node scripts/check-owned-subtype-ci.mjs \\\n            --lane \"${{ matrix.lane }}\" --producer \"$GITHUB_SHA\" \\\n            --tap build/owned-subtype-remaining-${{ matrix.lane }}.log \\\n            --report build/owned-subtype-remaining-packaging/${{ matrix.lane }}.json \\\n            | tee build/owned-subtype-remaining-packaging/verification.json\n          test -s build/owned-subtype-remaining-packaging/verification.json\n",
+          "previous": "",
+          "start": 5053
+        },
+        {
+          "current": "            build/owned-subtype-remaining-packaging/\n",
+          "previous": "            build/owned-subtype-remaining-packaging/${{ matrix.lane }}.json\n",
+          "start": 5938
+        }
+      ],
+      "path": ".github/workflows/owned-subtype-remaining.yml",
+      "previousSha256": "4956f1ec52e9955ba2a61d3fa48ae7b86def55c00f9991bfd3e149084e5fa88a"
+    },
+    {
+      "currentSha256": "e6f93983f663c23cf8af8a1200ac7905566a6b3a52bbe4dae2262ca9a8936270",
+      "edits": [
+        {
+          "current": "",
+          "previous": "my $destruction_survivor = $abandoned->retain;\n",
+          "start": 4341
+        },
+        {
+          "current": "  'fresh resource creates one native owner');\nmy $destruction_survivor = $abandoned->retain;\ncheck(LeanBridge::Runtime::_snapshot()->{live_identities} == $before_abandon + 2,\n  'independent retain creates a second native owner');\n",
+          "previous": "  'abandoned owner creates one native identity');\n",
+          "start": 4423
+        },
+        {
+          "current": "check(LeanBridge::Runtime::_snapshot()->{live_identities} == $before_abandon + 1,\n  'implicit destruction releases the original native owner');\n",
+          "previous": "",
+          "start": 4671
+        }
+      ],
+      "path": "tests/fixtures/structured-types/owned-perl-subtype.pl",
+      "previousSha256": "c2f87fbede905b616f1be18bb650a8486a591ef894197c18f5252c8de6d144c1"
+    },
+    {
+      "currentSha256": "1c11e069bb7a6234f5da0892bb8eaf205215632c0912d1da785688c14597ddc6",
+      "edits": [
+        {
+          "current": "import { dirname, join, resolve } from \"node:path\";\n",
+          "previous": "import { join, resolve } from \"node:path\";\n",
+          "start": 258
+        },
+        {
+          "current": "import {\n\tclearOwnedSubtypeRetainedPackages, retainOwnedSubtypeRoute\n\t, verifyOwnedSubtypeRetainedPackages\n\t, writeOwnedSubtypeRetainedPackages\n} from \"./helpers/owned-subtype-retained-packages.mjs\";\n",
+          "previous": "import { copyPackageSetHandoff } from \"./helpers/package-set.mjs\";\n",
+          "start": 1552
+        },
+        {
+          "current": "const retainedEntries = [];\nconst reportPath = resolve(\"build/owned-subtype-language-packaging/report.json\");\n",
+          "previous": "",
+          "start": 2271
+        },
+        {
+          "current": "if(enabled) await clearOwnedSubtypeRetainedPackages(reportPath);\n",
+          "previous": "",
+          "start": 2450
+        },
+        {
+          "current": "\t{\n\t\tconst report = {\n",
+          "previous": "\t\tawait saveLakeFile(\"build/owned-subtype-language-packaging\", \"report.json\", canonicalJson({\n",
+          "start": 2578
+        },
+        {
+          "current": "\t\t};\n\t\tawait saveLakeFile(\"build/owned-subtype-language-packaging\", \"report.json\"\n\t\t\t, canonicalJson(report));\n\t\tawait writeOwnedSubtypeRetainedPackages(reportPath, retainedEntries);\n\t\tawait verifyOwnedSubtypeRetainedPackages(dirname(reportPath), report);\n\t}\n",
+          "previous": "\t\t}));\n",
+          "start": 2753
+        },
+        {
+          "current": "\t\t, \"test -s build/owned-subtype-language-packaging/retained-packages.json\"\n",
+          "previous": "",
+          "start": 4928
+        },
+        {
+          "current": "\tassert.deepEqual(model.ownedGraph.hostCallbacks, {\n\t\tschemaVersion: 1\n\t\t, lifetime: \"call\"\n\t\t, recovery: \"typed-value-v1\"\n\t\t, signatures: []\n\t\t, trampolineSha256: sha256(await readFile(join(output\n\t\t\t, \"native/component/callbacks.c\")))\n\t});\n",
+          "previous": "\tassert.equal(model.ownedGraph.hostCallbacks, undefined);\n",
+          "start": 11111
+        },
+        {
+          "current": "\tconst { receipt, entry } = await retainOwnedSubtypeRoute({\n\t\toutput: reportPath, route, source: output, handoff });\n\tretainedEntries.push(entry);\n",
+          "previous": "\tconst receipt = await copyPackageSetHandoff(output, handoff);\n",
+          "start": 12030
+        }
+      ],
+      "path": "tests/owned-subtype-language-packaging.test.mjs",
+      "previousSha256": "52362aa7f08cba1160b747de98d56447f937d502712347f056e6b354852962f7"
+    },
+    {
+      "currentSha256": "cc9aaf34265427d7780bd147a595f2199d5a87b9ee871e049e4c0f15900208b4",
+      "edits": [
+        {
+          "current": "import { dirname, join, resolve } from \"node:path\";\n",
+          "previous": "import { join, resolve } from \"node:path\";\n",
+          "start": 248
+        },
+        {
+          "current": "",
+          "previous": "import { copyPackageSetHandoff } from \"./helpers/package-set.mjs\";\n",
+          "start": 909
+        },
+        {
+          "current": "import {\n\tclearOwnedSubtypeRetainedPackages, retainOwnedSubtypeRoute\n\t, verifyOwnedSubtypeRetainedPackages\n\t, writeOwnedSubtypeRetainedPackages\n} from \"./helpers/owned-subtype-retained-packages.mjs\";\n",
+          "previous": "",
+          "start": 1125
+        },
+        {
+          "current": "const retainedEntries = [];\nconst reportPath = resolve(\"build/owned-subtype-native-packaging/report.json\");\n",
+          "previous": "",
+          "start": 1490
+        },
+        {
+          "current": "if(enabled) await clearOwnedSubtypeRetainedPackages(reportPath);\n",
+          "previous": "",
+          "start": 1657
+        },
+        {
+          "current": "\t{\n\t\tconst report = {\n",
+          "previous": "\t\tawait saveLakeFile(\"build/owned-subtype-native-packaging\", \"report.json\", canonicalJson({\n",
+          "start": 1785
+        },
+        {
+          "current": "\t\t};\n\t\tawait saveLakeFile(\"build/owned-subtype-native-packaging\", \"report.json\"\n\t\t\t, canonicalJson(report));\n\t\tawait writeOwnedSubtypeRetainedPackages(reportPath, retainedEntries);\n\t\tawait verifyOwnedSubtypeRetainedPackages(dirname(reportPath), report);\n\t}\n",
+          "previous": "\t\t}));\n",
+          "start": 1966
+        },
+        {
+          "current": "\t\t, \"test -s build/owned-subtype-native-packaging/retained-packages.json\"\n",
+          "previous": "",
+          "start": 4444
+        },
+        {
+          "current": "\tconst route = reviewed ? \"reviewed\" : \"ordinary\";\n\tconst { receipt, entry } = await retainOwnedSubtypeRoute({\n\t\toutput: reportPath, route, source: output, handoff });\n\tretainedEntries.push(entry);\n",
+          "previous": "\tconst receipt = await copyPackageSetHandoff(output, handoff);\n",
+          "start": 10901
+        }
+      ],
+      "path": "tests/owned-subtype-native-packaging.test.mjs",
+      "previousSha256": "f8b03add237cd10140962ff790ab04777235e610bafef42d0f2c3e73cf12f9fc"
+    },
+    {
+      "currentSha256": "d2fd8d7ef6bdc07c6ca0eff193354efaeb9df6b92cd64d57b610d2f966a1c21b",
+      "edits": [
+        {
+          "current": "import { dirname, join, resolve } from \"node:path\";\n",
+          "previous": "import { join, resolve } from \"node:path\";\n",
+          "start": 263
+        },
+        {
+          "current": "import {\n\tclearOwnedSubtypeRetainedPackages, retainOwnedSubtypeRoute\n\t, verifyOwnedSubtypeRetainedPackages\n\t, writeOwnedSubtypeRetainedPackages\n} from \"./helpers/owned-subtype-retained-packages.mjs\";\n",
+          "previous": "import { copyPackageSetHandoff } from \"./helpers/package-set.mjs\";\n",
+          "start": 1224
+        },
+        {
+          "current": "const retainedEntries = [];\nconst reportPath = resolve(\"build/owned-subtype-perl-packaging/report.json\");\nif(enabled) await clearOwnedSubtypeRetainedPackages(reportPath);\n",
+          "previous": "",
+          "start": 1518
+        },
+        {
+          "current": "\t{\n\t\tconst report = {\n",
+          "previous": "\t\tawait saveLakeFile(\"build/owned-subtype-perl-packaging\", \"report.json\", canonicalJson({\n",
+          "start": 1878
+        },
+        {
+          "current": "\t\t};\n\t\tawait saveLakeFile(\"build/owned-subtype-perl-packaging\", \"report.json\"\n\t\t\t, canonicalJson(report));\n\t\tawait writeOwnedSubtypeRetainedPackages(reportPath, retainedEntries);\n\t\tawait verifyOwnedSubtypeRetainedPackages(dirname(reportPath), report);\n\t}\n",
+          "previous": "\t\t}));\n",
+          "start": 2057
+        },
+        {
+          "current": "\t\t, \"test -s build/owned-subtype-perl-packaging/retained-packages.json\"\n",
+          "previous": "",
+          "start": 4080
+        },
+        {
+          "current": "\tconst route = reviewed ? \"reviewed\" : \"ordinary\";\n\tconst { receipt, entry } = await retainOwnedSubtypeRoute({\n\t\toutput: reportPath, route, source: producer, handoff });\n\tretainedEntries.push(entry);\n",
+          "previous": "\tconst receipt = await copyPackageSetHandoff(producer, handoff);\n",
+          "start": 7673
+        }
+      ],
+      "path": "tests/owned-subtype-perl-packaging.test.mjs",
+      "previousSha256": "c18342c09ba29b49a1e6dc610222460d1e1c7cc61d9bf34d2d030034ed184ace"
+    },
+    {
+      "currentSha256": "12589344cf418bbdfe23c0659a5ec529d81ee26d3e03018bbfdaa1219d4d1832",
+      "edits": [
+        {
+          "current": "import { dirname, join, resolve } from \"node:path\";\n",
+          "previous": "import { join, resolve } from \"node:path\";\n",
+          "start": 252
+        },
+        {
+          "current": "import {\n\tclearOwnedSubtypeRetainedPackages, retainOwnedSubtypeRoute\n\t, verifyOwnedSubtypeRetainedPackages\n\t, writeOwnedSubtypeRetainedPackages\n} from \"./helpers/owned-subtype-retained-packages.mjs\";\n",
+          "previous": "import { copyPackageSetHandoff } from \"./helpers/package-set.mjs\";\n",
+          "start": 2213
+        },
+        {
+          "current": "const retainedEntries = [];\nconst reportPath = resolve(\"build/owned-subtype-remaining-packaging\"\n\t, `${selectedLane ?? \"unselected\"}.json`);\n",
+          "previous": "",
+          "start": 4142
+        },
+        {
+          "current": "if(enabled) await clearOwnedSubtypeRetainedPackages(reportPath);\n",
+          "previous": "",
+          "start": 4352
+        },
+        {
+          "current": "\t{\n\t\tconst report = {\n",
+          "previous": "\t\tawait saveLakeFile(\"build/owned-subtype-remaining-packaging\", `${selectedLane}.json`, canonicalJson({\n",
+          "start": 4480
+        },
+        {
+          "current": "\t\t};\n\t\tawait saveLakeFile(\"build/owned-subtype-remaining-packaging\"\n\t\t\t, `${selectedLane}.json`, canonicalJson(report));\n\t\tawait writeOwnedSubtypeRetainedPackages(reportPath, retainedEntries);\n\t\tawait verifyOwnedSubtypeRetainedPackages(dirname(reportPath), report);\n\t}\n",
+          "previous": "\t\t}));\n",
+          "start": 4683
+        },
+        {
+          "current": "\t\t, \"test -s build/owned-subtype-remaining-packaging/retained-packages.json\"\n",
+          "previous": "",
+          "start": 8018
+        },
+        {
+          "current": "\tconst projection = (built.projections ?? [built]).find(item =>\n\t\titem.ecosystem === specification.target);\n",
+          "previous": "\tconst projection = built.projections.find(item => item.ecosystem === specification.target);\n",
+          "start": 15906
+        },
+        {
+          "current": "\tassert.deepEqual(model.ownedGraph.hostCallbacks, {\n\t\tschemaVersion: 1\n\t\t, lifetime: \"call\"\n\t\t, recovery: \"typed-value-v1\"\n\t\t, signatures: []\n\t\t, trampolineSha256: sha256(await readFile(join(output\n\t\t\t, \"native/component/callbacks.c\")))\n\t});\n",
+          "previous": "\tassert.equal(model.ownedGraph.hostCallbacks, undefined);\n",
+          "start": 16218
+        },
+        {
+          "current": "\tconst { receipt, entry } = await retainOwnedSubtypeRoute({\n\t\toutput: reportPath, route, source: output, handoff });\n\tretainedEntries.push(entry);\n",
+          "previous": "\tconst receipt = await copyPackageSetHandoff(output, handoff);\n",
+          "start": 17159
+        }
+      ],
+      "path": "tests/owned-subtype-remaining-packaging.test.mjs",
+      "previousSha256": "38aca08bad1585c6507ad45c7fe5ec49d9f2328b31d186c07d1e8a11e5c920e7"
+    }
+  ],
+  "historyParentCommit": "3368bf94776b29ac7dbea180da69accd7b8a133f",
+  "implementationCommit": "3f038f2f9476afb391cafbbf6bff085f6a742531",
+  "implementationCommits": [
+    "ae6add6c76e00db894a7282b3ef1ad5578cd4dcd",
+    "de60446dab30d1a53bb54cd5e566135b9acad86a",
+    "3f038f2f9476afb391cafbbf6bff085f6a742531"
+  ],
+  "integrationUpdates": [
+    {
+      "currentSha256": "e2f90ccac0d3c171537a44634191b8fb4cae11ff964d28621543df2fea02d9cf",
+      "edits": [
+        {
+          "current": "import { beforeOwnedSubtypeHostedEvidenceContractSource, ownedSubtypeHostedEvidenceContractChangedPaths } from \"./owned-subtype-hosted-evidence-contract-source-history.mjs\";\n",
+          "previous": "",
+          "start": 12635
+        },
+        {
+          "current": "\t, ...ownedSubtypeHostedEvidenceContractChangedPaths\n",
+          "previous": "",
+          "start": 170135
+        },
+        {
+          "current": "\tconst ownedSubtypeHostedEvidenceContract\n\t\t= beforeOwnedSubtypeHostedEvidenceContractSource(path, text, expected);\n\tif(sha256(ownedSubtypeHostedEvidenceContract) === expected)\n\t\treturn ownedSubtypeHostedEvidenceContract;\n\ttext = ownedSubtypeHostedEvidenceContract;\n",
+          "previous": "",
+          "start": 202144
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "4b10465834dc0302b0a558129d15f15269a377460b237649b1725860b276c572"
+    },
+    {
+      "currentSha256": "207c69f68ac94617645026376c80f0e82ce5e859e25b6604c53ec036ca1c1ad0",
+      "edits": [
+        {
+          "current": "import \"./helpers/owned-subtype-hosted-evidence-contract-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 4436
+        }
+      ],
+      "path": "tests/php-wasm-fin.test.mjs",
+      "previousSha256": "06b99155247d47274442becee9cb9810c39b9fbc4dabd10d9408da8c25f606c6"
+    }
+  ],
+  "milestone": "owned-subtype-hosted-evidence-contract-v1",
+  "predecessorCommit": "8a65d441a5bc74948fb72267dddaf0a338f7189f",
+  "schemaVersion": 1,
+  "scope": "Correct the owned Subtype acceptance semantics, retain each route's exact receipt-named package set, and independently verify original TAP, semantic reports, lifecycle observations, producer identity and retained package bytes across every non-browser hosted lane."
+}
