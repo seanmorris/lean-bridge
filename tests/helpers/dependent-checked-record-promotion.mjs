@@ -41,12 +41,42 @@ export const dependentCheckedRecordPromotionPositions = Object.freeze([
 ]);
 export const dependentCheckedRecordPromotionPath
 	= "docs/evidence/dependent-checked-record-promotion.md";
+export const dependentCheckedRecordPromotionPinBaseline
+	= "44486151261f342e06f0a57290c5ac261921a621";
 
 export const dependentCheckedRecordPromotionLimit
 	= "Hosted dependent checked-record acceptance covers only the retained top-level copied DependentRecords.Dependent parameter and result sites, whose Fin bound field depends on the runtime bound field and whose proof is rebuilt by the selected mkDependent constructor. Full packages cover parameters and results; standalone result-only packages cover results only. Dependent fields of other kinds, nested or recursive dependent records, checked-record fields, callbacks, owned positions, open or opaque indices and zero-payload records remain unreviewed here. The PHP-Wasm cells are the shared result tracked by #1461 and are not inferred from native PHP. External runtimes, compilers, package managers and operating-system distributions remain trusted recorded inputs.";
 
 export const dependentCheckedRecordPromotionConversion
 	= "The proof-free host value carries bound and below as payload fields. Full packages validate each host input through the selected DependentRecords.mkDependent constructor, which rejects below >= bound before Lean code runs, preserve rejected caller values and return the exact proof-free result. Standalone result-only packages expose Lean-produced results without checked-input metadata.";
+
+/**
+ * Reconcile only the current-source paths selected by the promotion driver.
+ * Immutable archive paths are not inferred or rewritten here.
+ *
+ * @param original - Promoted type-surface inventory.
+ * @param currentDigests - Current SHA-256 by changed repository path.
+ */
+export const reconcileDependentCheckedRecordSourcePins = (
+	original, currentDigests
+) => {
+	assert.ok(currentDigests instanceof Map && currentDigests.size > 0);
+	const inventory = structuredClone(original);
+	let refreshed = 0;
+	for(const evidence of inventory.evidence)
+		for(const file of evidence.files)
+		{
+			const digest = currentDigests.get(file.path);
+			if(digest === undefined) continue;
+			assert.match(digest, /^[a-f0-9]{64}$/u, file.path);
+			if(file.sha256 !== digest)
+			{
+				file.sha256 = digest;
+				refreshed++;
+			}
+		}
+	return { inventory, refreshed };
+};
 
 const evidenceRoot = lane => `docs/evidence/dependent-checked-record-${lane}-20261021`;
 const verifierPath = lane => `tests/helpers/dependent-checked-record-${lane}-evidence.mjs`;

@@ -22,6 +22,7 @@ import {
 	, dependentCheckedRecordPromotionRoutes
 	, loadDependentCheckedRecordVerifiers
 	, promoteDependentCheckedRecords
+	, reconcileDependentCheckedRecordSourcePins
 	, renderDependentCheckedRecordPromotion
 } from "./helpers/dependent-checked-record-promotion.mjs";
 
@@ -122,6 +123,39 @@ test("dependent promotion adds evidence to exactly 68 cells and changes nothing 
 	}
 	assert.equal(changed, 68);
 	assert.throws(() => promoteDependentCheckedRecords(promoted, references), /Already promoted/u);
+});
+
+test("dependent promotion reconciles only selected current-source pins", () => {
+	const original = {
+		marker: "unchanged"
+		, evidence: [
+			{ files: [
+				{ path: "src/changed.mjs", sha256: "1".repeat(64) }
+				, { path: "docs/evidence/archive.json", sha256: "2".repeat(64) }
+			] }
+			, { files: [
+				{ path: "src/changed.mjs", sha256: "1".repeat(64) }
+				, { path: "src/current.mjs", sha256: "3".repeat(64) }
+			] }
+		]
+	};
+	const digests = new Map([
+		["src/changed.mjs", "4".repeat(64)]
+		, ["src/current.mjs", "3".repeat(64)]
+		, ["src/unreferenced.mjs", "5".repeat(64)]
+	]);
+	const result = reconcileDependentCheckedRecordSourcePins(original, digests);
+	assert.equal(result.refreshed, 2);
+	assert.equal(result.inventory.marker, "unchanged");
+	assert.deepEqual(result.inventory.evidence.flatMap(item => item.files), [
+		{ path: "src/changed.mjs", sha256: "4".repeat(64) }
+		, { path: "docs/evidence/archive.json", sha256: "2".repeat(64) }
+		, { path: "src/changed.mjs", sha256: "4".repeat(64) }
+		, { path: "src/current.mjs", sha256: "3".repeat(64) }
+	]);
+	assert.equal(original.evidence[0].files[0].sha256, "1".repeat(64));
+	assert.throws(() => reconcileDependentCheckedRecordSourcePins(original
+		, new Map([["src/changed.mjs", "invalid"]])));
 });
 
 test("dependent promotion refuses missing, reordered, duplicated and forged references", () => {
