@@ -1,5 +1,5 @@
 /**
- * Read immutable UTF-8 source bytes from an exact Git producer revision.
+ * Read immutable source bytes from an exact Git producer revision.
  *
  * Evidence verifiers use this when their recorded milestone predates the
  * complete source-history graph. A producer commit is a stronger boundary
@@ -19,41 +19,50 @@ const maxSourceBytes = 64 * 1024 * 1024;
 let retainedSourceBytes = 0;
 
 /**
- * Return one file exactly as committed by an evidence producer.
+ * Return one file's binary bytes exactly as committed by an evidence producer.
  *
  * @param revision - Full producer commit identity.
  * @param path - Safe repository-relative path.
  * @param expected - Optional recorded content SHA-256.
  */
-export const sourceAtProducer = (revision, path, expected = undefined) => {
+export const bytesAtProducer = (revision, path, expected = undefined) => {
 	assert.match(revision, revisionPattern);
 	assert.equal(posix.normalize(path), path);
 	assert.ok(!path.startsWith("/") && !path.split("/").includes(".."));
 	if(expected !== undefined) assert.match(expected, digestPattern);
 	const key = `${revision}:${path}`;
-	let source = sources.get(key);
-	if(source === undefined)
+	let bytes = sources.get(key);
+	if(bytes === undefined)
 	{
-		source = execFileSync("git", ["show", key], {
-			encoding: "utf8", maxBuffer: maxSourceBytes
+		bytes = execFileSync("git", ["show", key], {
+			maxBuffer: maxSourceBytes
 		});
-		const bytes = Buffer.byteLength(source);
-		if(bytes <= maxSourceBytes)
+		if(bytes.length <= maxSourceBytes)
 		{
-			sources.set(key, source);
-			retainedSourceBytes += bytes;
+			sources.set(key, bytes);
+			retainedSourceBytes += bytes.length;
 			while(retainedSourceBytes > maxSourceBytes)
 			{
 				const oldestKey = sources.keys().next().value;
 				const oldest = sources.get(oldestKey);
 				sources.delete(oldestKey);
-				retainedSourceBytes -= Buffer.byteLength(oldest);
+				retainedSourceBytes -= oldest.length;
 			}
 		}
 	}
-	if(expected !== undefined) assert.equal(sha256(source), expected, path);
-	return source;
+	if(expected !== undefined) assert.equal(sha256(bytes), expected, path);
+	return Buffer.from(bytes);
 };
+
+/**
+ * Return one UTF-8 file exactly as committed by an evidence producer.
+ *
+ * @param revision - Full producer commit identity.
+ * @param path - Safe repository-relative path.
+ * @param expected - Optional recorded content SHA-256.
+ */
+export const sourceAtProducer = (revision, path, expected = undefined) =>
+	bytesAtProducer(revision, path, expected).toString("utf8");
 
 /**
  * Read the independent type-surface contracts at one producer revision.

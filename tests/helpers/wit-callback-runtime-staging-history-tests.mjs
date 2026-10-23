@@ -14,8 +14,10 @@ import { beforePostPerlCallbackStaging, readPostPerlCallbackHistory } from "./po
 import { assertWitCallbackRuntimeHistory, beforeWitCallbackRuntimeStaging
 	, readWitCallbackRuntimeHistory, reverseWitCallbackRuntimeUpdate
 	, witCallbackRuntimeHistoryPath, witCallbackRuntimeHistorySha256
+	, witCallbackRuntimeProducer
 	, witCallbackRuntimeSourcePaths, witCallbackRuntimeReaderPaths
 	, witCallbackRuntimeIntroducedPaths, witCallbackRuntimeSuccessorPaths } from "./wit-callback-runtime-staging-history.mjs";
+import { sourceAtProducer } from "./producer-source.mjs";
 import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
 
 test("WIT runtime staging closes both transition categories and rejects forged history", async t => {
@@ -115,7 +117,12 @@ test("WIT runtime staging composes latest-first into post-Perl and copied reader
 	for(const path of [...witCallbackRuntimeSourcePaths, ...witCallbackRuntimeReaderPaths])
 	{
 		assert.ok(copiedFixtureReaderPaths.includes(path));
-		const current = Buffer.from(beforePhpCallbackInstalledStaging(path, await readFile(path)));
+		const update = [...history.readerUpdates, ...history.updates]
+			.find(item => item.path === path);
+		assert.ok(update, path);
+		const current = Buffer.from(sourceAtProducer(
+			witCallbackRuntimeProducer, path, update.currentSha256
+		));
 		const stage = beforeWitCallbackRuntimeStaging(path, current);
 		const old = previous.updates.find(update => update.path === path);
 		const expected = old?.previousSha256 ?? sha256(stage);

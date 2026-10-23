@@ -12,6 +12,8 @@ import { beforeWitCallbackInstalledAcceptance } from "./wit-callback-installed-a
 
 export const witCallbackRuntimeHistoryPath = "docs/evidence/wit-callback-runtime-staging-source-history-20261003.json";
 export const witCallbackRuntimeHistorySha256 = "549d27efb22d36d55249cbc01221cc441af367ef301ecdabeb3e71f6dc8b50b7";
+export const witCallbackRuntimeProducer
+	= "461fe547921095b45cf7af3b11b702e48b18c9b7";
 export const witCallbackRuntimeBaseline = "8345109d5066d0a95e917520eded18bcd574da85";
 export const witCallbackRuntimeIntegration = "7d07f9b3555ad5f4211ddf36118bb16b0cf3693c";
 export const witCallbackRuntimeLineage = Object.freeze([
