@@ -1,0 +1,176 @@
+{
+  "additions": [
+    {
+      "currentSha256": "55dbb970a6ac72ae711c519d5d9b4d7579992eb3206d26e094c8d747da31c6cc",
+      "path": "scripts/update-owned-python-borrow-producer-replay-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "7061a278cbd7c7afcbc49dbe6aa8a08ca5efef89037b70ae9b172e160dd0dd35",
+      "path": "tests/helpers/owned-python-borrow-producer-replay-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "e5854829e5be91ea73d2d7716c4a7e9748926154f6b434c0774a1dddc0108710",
+      "path": "tests/helpers/owned-python-borrow-producer-replay-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "0140e90ef36b92c5101dc40ce342fe1e430f7582",
+  "integrationUpdates": [
+    {
+      "currentSha256": "9a8d2d5c72af97f19540cd4060c8ce13c85dcd4512f3657755d036fffb809adf",
+      "edits": [
+        {
+          "current": "import { beforeOwnedPythonBorrowProducerReplayRepairSource, ownedPythonBorrowProducerReplayRepairNormalizationPaths } from \"./owned-python-borrow-producer-replay-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...ownedPythonBorrowProducerReplayRepairNormalizationPaths\n\t, ...ownedPhpProducerReplayRepairNormalizationPaths\n",
+          "previous": "\t...ownedPhpProducerReplayRepairNormalizationPaths\n",
+          "start": 162111
+        },
+        {
+          "current": "\tconst ownedPythonBorrowProducerReplayRepair\n\t\t= beforeOwnedPythonBorrowProducerReplayRepairSource(\n\t\t\tpath, text, expected\n\t\t);\n\tif(sha256(ownedPythonBorrowProducerReplayRepair) === expected)\n\t\treturn ownedPythonBorrowProducerReplayRepair;\n",
+          "previous": "",
+          "start": 198971
+        },
+        {
+          "current": "\t\t= beforeOwnedPhpProducerReplayRepairSource(\n\t\t\tpath, ownedPythonBorrowProducerReplayRepair, expected\n\t\t);\n",
+          "previous": "\t\t= beforeOwnedPhpProducerReplayRepairSource(path, text, expected);\n",
+          "start": 199248
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "5dc5d7eeb5870137837bb1bbf704dbcdb4cc9d7e10075e90a0a6fd897af6700e"
+    },
+    {
+      "currentSha256": "9e3c23360b62b861d0d91029b5449af9c242e35d95d8c324d1f5d0909f116f67",
+      "edits": [
+        {
+          "current": "import \"./helpers/owned-python-borrow-producer-replay-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 505
+        }
+      ],
+      "path": "tests/owned-python-borrow-evidence.test.mjs",
+      "previousSha256": "718f8f36a7ea561a67f398d6628784bcf565f2dad09b56cc89ddfb35bfd2f856"
+    }
+  ],
+  "milestone": "owned-python-borrow-producer-replay-repair-source-v1",
+  "predecessorCommit": "a04af88c07894caa241029caa3f725a35876f029",
+  "schemaVersion": 1,
+  "scope": "The frozen owned Python borrow and managed-close evidence is replayed with each exact producer's complete static module and source closure rather than regenerating historical observations with current compiler semantics.",
+  "updates": [
+    {
+      "currentSha256": "714297a73638287b9526bd7a87bf591e151f8b94074af7710685784ba420f764",
+      "edits": [
+        {
+          "current": "import { moduleAtProducer } from \"./producer-module.mjs\";\nimport { bytesAtProducer } from \"./producer-source.mjs\";\n",
+          "previous": "import { generateOwnedCPackage } from \"../../src/backends/c/owned-package.mjs\";\nimport { generateOwnedCppPackage } from \"../../src/backends/cpp/owned-package.mjs\";\nimport { generateOwnedRustPackage } from \"../../src/backends/rust/owned-package.mjs\";\nimport { generateOwnedPythonConversions } from \"../../src/backends/python/owned-conversions.mjs\";\nimport { generateOwnedPythonPackage } from \"../../src/backends/python/owned-package.mjs\";\nimport { ownedPythonRuntime } from \"../../src/backends/python/owned-runtime.mjs\";\nimport { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from \"../../src/build/native-graph-model.mjs\";\nimport { validatePackageSetReceipt } from \"../../src/release/package-set-receipt.mjs\";\nimport { ownedRustBorrowReviewedIr, ownedRustBorrowSource, ownedRustBorrowNativeSource } from \"./owned-rust-borrow-fixture.mjs\";\nimport { ownedPythonInstalledProbe } from \"./owned-python-installed-probes.mjs\";\nimport { pythonTypingWheels } from \"./python-wheel-install.mjs\";\nimport { beforeManagedClose } from \"./managed-close-history.mjs\";\nimport { beforeManagedCloseGenerated, historicalManagedClosePythonPackage } from \"./managed-close-generated-history.mjs\";\n",
+          "start": 334
+        },
+        {
+          "current": "const producerCommits = Object.freeze({\n\toriginal: \"62cadd853a10cdd366f0fe79044739f64e5c17da\"\n\t, repaired: \"85e684e746df8458e48f18ce2962b4a54ea3c989\"\n});\nconst producerPromises = new Map();\nconst producerAtMilestone = revision => {\n\tif(!producerPromises.has(revision)) producerPromises.set(revision\n\t\t, Promise.all([\n\t\t\t\"src/backends/c/owned-package.mjs\"\n\t\t\t, \"src/backends/cpp/owned-package.mjs\"\n\t\t\t, \"src/backends/python/owned-conversions.mjs\"\n\t\t\t, \"src/backends/python/owned-package.mjs\"\n\t\t\t, \"src/backends/python/owned-runtime.mjs\"\n\t\t\t, \"src/backends/rust/owned-package.mjs\"\n\t\t\t, \"src/build/native-graph-model.mjs\"\n\t\t\t, \"src/release/package-set-receipt.mjs\"\n\t\t\t, \"tests/helpers/owned-python-installed-probes.mjs\"\n\t\t\t, \"tests/helpers/owned-rust-borrow-fixture.mjs\"\n\t\t\t, \"tests/helpers/python-wheel-install.mjs\"\n\t\t].map(path => moduleAtProducer(revision, path))).then(modules =>\n\t\t\tObject.assign({}, ...modules)));\n\treturn producerPromises.get(revision);\n};\n",
+          "previous": "",
+          "start": 2390
+        },
+        {
+          "current": "\tconst producerCommit = repaired\n\t\t? producerCommits.repaired : producerCommits.original;\n\tconst producer = await producerAtMilestone(producerCommit);\n\tconst historical = path => bytesAtProducer(producerCommit, path);\n\tfor(const name of [\n\t\t\"createCompiledNativeModel\", \"generateCompiledNativeLeanAdapters\"\n\t\t, \"generateOwnedCPackage\", \"generateOwnedCppPackage\"\n\t\t, \"generateOwnedPythonConversions\", \"generateOwnedPythonPackage\"\n\t\t, \"generateOwnedRustPackage\", \"ownedPythonRuntime\"\n\t\t, \"ownedRustBorrowNativeSource\", \"ownedRustBorrowReviewedIr\"\n\t\t, \"validatePackageSetReceipt\"\n\t]) assert.equal(typeof producer[name], \"function\", name);\n\tassert.equal(typeof producer.ownedPythonInstalledProbe, \"string\");\n\tassert.equal(typeof producer.ownedRustBorrowSource, \"string\");\n",
+          "previous": "",
+          "start": 3840
+        },
+        {
+          "current": "\tif(!repaired) assert.equal(record.baselineRevision\n\t\t, \"e14a880886634053116c9546ced265a345281b2a\");\n",
+          "previous": "",
+          "start": 4701
+        },
+        {
+          "current": "\tconst typed = producer.generateOwnedPythonConversions(\n\t\tproducer.ownedRustBorrowReviewedIr(), options);\n",
+          "previous": "\tconst typed = generateOwnedPythonConversions(ownedRustBorrowReviewedIr(), options);\n",
+          "start": 5707
+        },
+        {
+          "current": "\tconst testSource = historical(\"tests/owned-python-borrows.test.mjs\").toString();\n",
+          "previous": "\tconst testSource = await readFile(\"tests/owned-python-borrows.test.mjs\", \"utf8\");\n",
+          "start": 5874
+        },
+        {
+          "current": "\tconst probe = historical(probePath).toString();\n\tconst consumer = historical(\n\t\t\"tests/fixtures/structured-types/owned-installed-python-borrows.py\");\n\tconst documentation = historical(\n\t\t\"tests/fixtures/documentation/consumers/python/owned-borrows.py\").toString();\n\tconst page = historical(\"docs/consume/python.md\").toString();\n",
+          "previous": "\tlet probe = await readFile(probePath, \"utf8\");\n\tif(!repaired) probe = beforeManagedClose(probePath, probe, record.sources[probePath]);\n\tconst consumer = await readFile(\"tests/fixtures/structured-types/owned-installed-python-borrows.py\");\n\tconst documentation = await readFile(\"tests/fixtures/documentation/consumers/python/owned-borrows.py\", \"utf8\");\n\tconst page = await readFile(\"docs/consume/python.md\", \"utf8\");\n",
+          "start": 6504
+        },
+        {
+          "current": "\tconst baseLean = historical(\n\t\t\"tests/fixtures/onboarding/owned-aggregates/Owned.lean\").toString();\n\tconst lean = baseLean + producer.ownedRustBorrowSource;\n\tconst loader = producer.ownedPythonInstalledProbe.replaceAll(\"compatible.serial(ticket)\", \"compatible.serial(ticket.get())\")\n",
+          "previous": "\tconst lean = await readFile(\"tests/fixtures/onboarding/owned-aggregates/Owned.lean\", \"utf8\") + ownedRustBorrowSource;\n\tconst loader = ownedPythonInstalledProbe.replaceAll(\"compatible.serial(ticket)\", \"compatible.serial(ticket.get())\")\n",
+          "start": 6940
+        },
+        {
+          "current": "\t\t\tsha256(baseLean));\n",
+          "previous": "\t\t\tsha256(await readFile(\"tests/fixtures/onboarding/owned-aggregates/Owned.lean\")));\n",
+          "start": 7932
+        },
+        {
+          "current": "\t\tconst model = producer.createCompiledNativeModel(item.input, capabilities);\n",
+          "previous": "\t\tconst model = createCompiledNativeModel(item.input, capabilities);\n",
+          "start": 8135
+        },
+        {
+          "current": "\t\tconst c = producer.generateOwnedCPackage({\n\t\t\t...item.input, hostCallbacks: true, anchoredResults: true\n\t\t});\n\t\tconst python = producer.generateOwnedPythonConversions(\n\t\t\tmodel.bindingIr, { anchoredResults: true });\n",
+          "previous": "\t\tconst c = generateOwnedCPackage({ ...item.input, hostCallbacks: true, anchoredResults: true });\n\t\tconst python = generateOwnedPythonConversions(model.bindingIr, { anchoredResults: true });\n",
+          "start": 8382
+        },
+        {
+          "current": "\t\tconst currentRuntime = producer.ownedPythonRuntime(\n\t\t\tc.values.prefix, { anchoredResults: true });\n\t\tassert.equal(item.runtimeSha256, sha256(currentRuntime));\n",
+          "previous": "\t\tconst currentRuntime = ownedPythonRuntime(c.values.prefix, { anchoredResults: true });\n\t\tassert.equal(item.runtimeSha256, sha256(repaired ? currentRuntime : beforeManagedCloseGenerated(currentRuntime, item.runtimeSha256)));\n",
+          "start": 8834
+        },
+        {
+          "current": "\t\tconst model = producer.createCompiledNativeModel(item.input, capabilities);\n",
+          "previous": "\t\tconst model = createCompiledNativeModel(item.input, capabilities);\n",
+          "start": 9714
+        },
+        {
+          "current": "\t\tconst c = producer.generateOwnedCPackage({\n\t\t\t...item.input, hostCallbacks: true, ...options\n\t\t});\n",
+          "previous": "\t\tconst c = generateOwnedCPackage({ ...item.input, hostCallbacks: true, ...options });\n",
+          "start": 10089
+        },
+        {
+          "current": "\t\t\tconst generated = producer.generateOwnedPythonConversions(\n\t\t\t\tmodel.bindingIr, options);\n\t\t\tconst runtime = producer.ownedPythonRuntime(c.values.prefix, options);\n",
+          "previous": "\t\t\tconst generated = generateOwnedPythonConversions(model.bindingIr, options);\n\t\t\tlet runtime = ownedPythonRuntime(c.values.prefix, options);\n\t\t\tif(!repaired) runtime = beforeManagedCloseGenerated(runtime, item.runtimeSha256);\n",
+          "start": 10314
+        },
+        {
+          "current": "\t\t\tassert.equal(item.nativeSha256\n\t\t\t\t, sha256(producer.ownedRustBorrowNativeSource(c)));\n",
+          "previous": "\t\t\tassert.equal(item.nativeSha256, sha256(ownedRustBorrowNativeSource(c)));\n",
+          "start": 10778
+        },
+        {
+          "current": "\t\tconst native = producer.generateCompiledNativeLeanAdapters(model);\n\t\tconst python = producer.generateOwnedPythonPackage(\n\t\t\tmodel.bindingIr, null, options);\n",
+          "previous": "\t\tconst native = generateCompiledNativeLeanAdapters(model);\n\t\tlet python = generateOwnedPythonPackage(model.bindingIr, null, options);\n\t\tif(!repaired) python = historicalManagedClosePythonPackage(python, adapter.pythonValues);\n",
+          "start": 14324
+        },
+        {
+          "current": "\t\tconst packaged = producer.generateOwnedPythonPackage(\n\t\t\tmodel.bindingIr, evidence, options);\n",
+          "previous": "\t\tlet packaged = generateOwnedPythonPackage(model.bindingIr, evidence, options);\n\t\tif(!repaired) packaged = historicalManagedClosePythonPackage(packaged, adapter.pythonValues);\n",
+          "start": 16182
+        },
+        {
+          "current": "\t\t\t\tassert.equal(observation.installation.dependency.sha256\n\t\t\t\t\t, producer.pythonTypingWheels[version]);\n",
+          "previous": "\t\t\t\tassert.equal(observation.installation.dependency.sha256, pythonTypingWheels[version]);\n",
+          "start": 16873
+        },
+        {
+          "current": "\t\tproducer.validatePackageSetReceipt(packages);\n",
+          "previous": "\t\tvalidatePackageSetReceipt(packages);\n",
+          "start": 18327
+        },
+        {
+          "current": "\t\t\tassert.deepEqual(adapter.cppValues\n\t\t\t\t, producer.generateOwnedCppPackage(model.bindingIr, options).contract);\n\t\t\tassert.deepEqual(adapter.rustValues, producer.generateOwnedRustPackage(\n\t\t\t\tmodel.bindingIr, null, {}, options).contract);\n",
+          "previous": "\t\t\tassert.deepEqual(adapter.cppValues, generateOwnedCppPackage(model.bindingIr, options).contract);\n\t\t\tassert.deepEqual(adapter.rustValues, generateOwnedRustPackage(model.bindingIr, null, {}, options).contract);\n",
+          "start": 18692
+        }
+      ],
+      "path": "tests/helpers/owned-python-borrow-evidence.mjs",
+      "previousSha256": "77c05ef4a62cae4334aa4ec479cb1b576821df3863f79d508fbcbd617c4cd3b4"
+    }
+  ]
+}

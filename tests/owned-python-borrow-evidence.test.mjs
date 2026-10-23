@@ -9,6 +9,7 @@ import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
 import { beforeOwnedRubyBorrow, ownedRubyBorrowHistoricalBytes } from "./helpers/owned-ruby-borrow-history.mjs";
 import { assertOwnedPythonBorrowExecution, assertOwnedPythonBorrowCi } from "./helpers/owned-python-borrow-evidence.mjs";
+import "./helpers/owned-python-borrow-producer-replay-repair-source-history-tests.mjs";
 import { ownedPythonBorrowPath, ownedPythonBorrowBaseline, ownedPythonBorrowPrevious
 	, ownedPythonBorrowAddedPaths, ownedPythonBorrowChangedPaths
 	, beforeOwnedPythonBorrow, reverseOwnedPythonBorrowUpdate } from "./helpers/owned-python-borrow-history.mjs";

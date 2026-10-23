@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeOwnedPythonBorrowProducerReplayRepairSource, ownedPythonBorrowProducerReplayRepairNormalizationPaths } from "./owned-python-borrow-producer-replay-repair-source-history.mjs";
 import { beforeOwnedPhpProducerReplayRepairSource, ownedPhpProducerReplayRepairNormalizationPaths } from "./owned-php-producer-replay-repair-source-history.mjs";
 import { beforeOwnedJavaScriptTransferProducerReplayRepairSource, ownedJavaScriptTransferProducerReplayRepairNormalizationPaths } from "./owned-javascript-transfer-producer-replay-repair-source-history.mjs";
 import { beforeOwnedPerlTransferProducerReplayRepairSource, ownedPerlTransferProducerReplayRepairNormalizationPaths } from "./owned-perl-transfer-producer-replay-repair-source-history.mjs";
@@ -2034,7 +2035,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...ownedPhpProducerReplayRepairNormalizationPaths
+	...ownedPythonBorrowProducerReplayRepairNormalizationPaths
+	, ...ownedPhpProducerReplayRepairNormalizationPaths
 	, ...ownedJavaScriptTransferProducerReplayRepairNormalizationPaths
 	, ...ownedPerlTransferProducerReplayRepairNormalizationPaths
 	, ...promotionDocMilestoneReplayRepairNormalizationPaths
@@ -2818,8 +2820,16 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 			text = exact;
 		}
 	}
+	const ownedPythonBorrowProducerReplayRepair
+		= beforeOwnedPythonBorrowProducerReplayRepairSource(
+			path, text, expected
+		);
+	if(sha256(ownedPythonBorrowProducerReplayRepair) === expected)
+		return ownedPythonBorrowProducerReplayRepair;
 	const ownedPhpProducerReplayRepair
-		= beforeOwnedPhpProducerReplayRepairSource(path, text, expected);
+		= beforeOwnedPhpProducerReplayRepairSource(
+			path, ownedPythonBorrowProducerReplayRepair, expected
+		);
 	if(sha256(ownedPhpProducerReplayRepair) === expected)
 		return ownedPhpProducerReplayRepair;
 	const ownedJavaScriptTransferProducerReplayRepair
