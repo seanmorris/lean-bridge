@@ -16,6 +16,7 @@ import {
 	nominalPrimitiveSubtypePhpWasmPromotionHistoryPath
 	, nominalPrimitiveSubtypePhpWasmPromotionPredecessor
 } from "./nominal-primitive-subtype-php-wasm-promotion-history.mjs";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import {
 	beforeNestedCheckedRecordNativeCorrectionPins
@@ -209,7 +210,9 @@ test("primitive-base PHP-Wasm promotion supplements six cells only", async () =>
 test("primitive-base PHP-Wasm docs name the accepted boundary", async () => {
 	for(const path of ["docs/php.md", "docs/lean/existing-package.md"
 		, "docs/lean/export-decisions.md", "docs/reference/types.md"]){
-		const source = await readFile(path, "utf8");
+		const source = sourceAtHistoryMilestone(
+			nominalPrimitiveSubtypePhpWasmPromotionHistoryPath, path
+		);
 		assert.ok(source.includes("nominal-primitive-subtype-php-wasm-20261015/index.json"), path);
 		const compiled = await compileDocumentationPage(source,
 			docPages.find(item => item.source === path)
@@ -220,7 +223,9 @@ test("primitive-base PHP-Wasm docs name the accepted boundary", async () => {
 			"https://github.com/seanmorris/lean-bridge/actions/workflows/nominal-primitive-subtype-php-wasm.yml"
 		));
 		}
-	const php = await readFile("docs/php.md", "utf8");
+	const php = sourceAtHistoryMilestone(
+		nominalPrimitiveSubtypePhpWasmPromotionHistoryPath, "docs/php.md"
+	);
 	for(const text of ["all nineteen primitive bases", "32-bit", "normalization"
 		, "wasm32 PHP 8.4.1", "Node 22.23.2", "Chromium 152.0.7977.75"
 		, "standalone result-only", "load-admission ceiling of 8"])

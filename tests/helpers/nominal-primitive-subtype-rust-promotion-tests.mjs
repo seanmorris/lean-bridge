@@ -5,7 +5,6 @@
  */
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { compileDocumentationPage } from "../../scripts/generate-site-content.mjs";
@@ -154,14 +153,18 @@ test("primitive-base Rust promotion supplements six existing Rust cells and pres
 test("primitive-base Rust docs name all nineteen bases without claiming pending host or callback matrices", async () => {
 	for(const path of ["docs/consume/rust.md", "docs/javascript-typescript.md", "docs/lean/existing-package.md", "docs/lean/export-decisions.md", "docs/reference/types.md"])
 	{
-		const source = await readFile(path, "utf8");
+		const source = sourceAtHistoryMilestone(
+			nominalPrimitiveSubtypeRustPromotionHistoryPath, path
+		);
 		assert.ok(source.includes("nominal-primitive-subtype-rust-20261015/index.json"), path);
 		const compiled = await compileDocumentationPage(source, docPages.find(item => item.source === path), { revision: nominalPrimitiveSubtypeRustPromotionPredecessor });
 		assert.ok(compiled.links.some(link => link.endsWith("nominal-primitive-subtype-rust-20261015/index.json")), path);
 		if(path === "docs/consume/rust.md")
 			assert.ok(compiled.links.includes("https://github.com/seanmorris/lean-bridge/actions/workflows/nominal-primitive-subtype-rust.yml"));
 	}
-	const rust = await readFile("docs/consume/rust.md", "utf8");
+	const rust = sourceAtHistoryMilestone(
+		nominalPrimitiveSubtypeRustPromotionHistoryPath, "docs/consume/rust.md"
+	);
 	for(const text of ["all nineteen primitive bases", "64-bit", "normalization", "Linux x64/glibc 2.36", "Rust and Cargo 1.90.0", "standalone result-only"])
 		assert.ok(rust.includes(text), text);
 	assert.doesNotMatch(rust, /cover `Nat` record and variant fields[^]*Other primitive-base nominal fixtures/u);

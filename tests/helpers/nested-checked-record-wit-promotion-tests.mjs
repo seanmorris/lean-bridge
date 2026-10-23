@@ -5,7 +5,6 @@
  */
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { readFile } from "node:fs/promises";
 import test from "node:test";
 import {
 	readTypeSurface, typeSurfaceCells, validateTypeSurface
@@ -201,7 +200,9 @@ test("nested checked-record WIT docs name the accepted boundary", async () => {
 		, "docs/lean/export-decisions.md", "docs/reference/types.md"];
 	for(const path of pages)
 	{
-		const source = await readFile(path, "utf8");
+		const source = sourceAtHistoryMilestone(
+			nestedCheckedRecordWitPromotionHistoryPath, path
+		);
 		assert.ok(source.includes(
 			"nested-checked-record-wit-20261016/index.json"
 		), path);
@@ -211,7 +212,9 @@ test("nested checked-record WIT docs name the accepted boundary", async () => {
 		assert.ok(compiled.links.some(link =>
 			link.endsWith("nested-checked-record-wit-20261016/index.json")), path);
 	}
-	const guide = await readFile("docs/consume/wit-wasi.md", "utf8");
+	const guide = sourceAtHistoryMilestone(
+		nestedCheckedRecordWitPromotionHistoryPath, "docs/consume/wit-wasi.md"
+	);
 	const prose = guide.replace(/\s+/gu, " ");
 	for(const text of ["nested `Packet`", "Wasmtime 42.0.1"
 		, "Linux x64/glibc 2.36", "two executions per selection"])

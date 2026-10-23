@@ -13,6 +13,7 @@ import { docPages } from "../../site/registry.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeNominalPrimitiveSubtypeJvmPromotionPins } from "./nominal-primitive-subtype-jvm-promotion-history.mjs";
 import { nominalPrimitiveSubtypeWitPromotionHistoryPath, nominalPrimitiveSubtypeWitPromotionPredecessor } from "./nominal-primitive-subtype-wit-promotion-history.mjs";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import { nominalPrimitiveSubtypeWitProducer } from "./nominal-primitive-subtype-wit-provenance.mjs";
 import {
 	nominalPrimitiveSubtypeWitConversion
@@ -159,14 +160,18 @@ test("primitive-base WIT promotion supplements six cells only", async () => {
 test("primitive-base WIT docs name the accepted boundary", async () => {
 	for(const path of ["docs/consume/wit-wasi.md", "docs/lean/existing-package.md", "docs/lean/export-decisions.md", "docs/reference/types.md"])
 	{
-		const source = await readFile(path, "utf8");
+		const source = sourceAtHistoryMilestone(
+			nominalPrimitiveSubtypeWitPromotionHistoryPath, path
+		);
 		assert.ok(source.includes("nominal-primitive-subtype-wit-20261015/index.json"), path);
 		const compiled = await compileDocumentationPage(source, docPages.find(item => item.source === path), { revision: nominalPrimitiveSubtypeWitPromotionPredecessor });
 		assert.ok(compiled.links.some(link => link.endsWith("nominal-primitive-subtype-wit-20261015/index.json")), path);
 		if(path === "docs/consume/wit-wasi.md")
 			assert.ok(compiled.links.includes("https://github.com/seanmorris/lean-bridge/actions/workflows/nominal-primitive-subtype-wit.yml"));
 	}
-	const wit = await readFile("docs/consume/wit-wasi.md", "utf8");
+	const wit = sourceAtHistoryMilestone(
+		nominalPrimitiveSubtypeWitPromotionHistoryPath, "docs/consume/wit-wasi.md"
+	);
 	for(const text of ["all nineteen primitive bases", "64-bit", "normalization", "Wasmtime 42.0.1", "wasm-tools 1.245.1", "Linux x64/glibc 2.36", "standalone result-only", "load-admission ceiling of 8"])
 		assert.ok(wit.includes(text), text);
 	assert.doesNotMatch(wit, /Other primitive-base nominal fixtures, refined callbacks, owned values,\nrecursive graphs and broader generic combinations remain separate work\./u);

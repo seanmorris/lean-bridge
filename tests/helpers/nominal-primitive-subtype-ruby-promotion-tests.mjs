@@ -5,7 +5,6 @@
  */
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { compileDocumentationPage } from "../../scripts/generate-site-content.mjs";
@@ -145,14 +144,18 @@ test("primitive-base Ruby promotion supplements six existing Ruby cells and pres
 test("primitive-base Ruby docs name all nineteen bases without claiming pending host or callback matrices", async () => {
 	for(const path of ["docs/consume/ruby.md", "docs/javascript-typescript.md", "docs/lean/existing-package.md", "docs/lean/export-decisions.md", "docs/reference/types.md"])
 	{
-		const source = await readFile(path, "utf8");
+		const source = sourceAtHistoryMilestone(
+			nominalPrimitiveSubtypeRubyPromotionHistoryPath, path
+		);
 		assert.ok(source.includes("nominal-primitive-subtype-ruby-20261015/index.json"), path);
 		const compiled = await compileDocumentationPage(source, docPages.find(item => item.source === path), { revision: nominalPrimitiveSubtypeRubyPromotionPredecessor });
 		assert.ok(compiled.links.some(link => link.endsWith("nominal-primitive-subtype-ruby-20261015/index.json")), path);
 		if(path === "docs/consume/ruby.md")
 			assert.ok(compiled.links.includes("https://github.com/seanmorris/lean-bridge/actions/workflows/nominal-primitive-subtype-ruby.yml"));
 	}
-	const ruby = await readFile("docs/consume/ruby.md", "utf8");
+	const ruby = sourceAtHistoryMilestone(
+		nominalPrimitiveSubtypeRubyPromotionHistoryPath, "docs/consume/ruby.md"
+	);
 	for(const text of ["all nineteen primitive bases", "64-bit", "normalization", "Linux x64/glibc 2.36", "MRI Ruby 3.3.12", "standalone result-only"])
 		assert.ok(ruby.includes(text), text);
 	assert.doesNotMatch(ruby, /cover Nat fields, aliases, mixed Fin guards and constructor-free results\. Other primitive-base/u);

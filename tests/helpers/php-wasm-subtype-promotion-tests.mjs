@@ -108,7 +108,8 @@ test("PHP-Wasm Subtype promotion refuses missing, duplicate, weakened or repeate
 });
 
 test("PHP-Wasm consumer and author guides describe installed Subtypes and retain unmeasured entry counts", async () => {
-	const consumer = await readFile("docs/php.md", "utf8"), author = await readFile("docs/lean/existing-package.md", "utf8");
+	const consumer = await promotionSource("docs/php.md")
+		, author = await promotionSource("docs/lean/existing-package.md");
 	const row = consumer.split("\n").find(line => line.startsWith("| `Subtype /"));
 	const promoted = await promotionSource("docs/php.md");
 	assert.ok(promoted.split("\n").find(line => line.startsWith("| `Subtype /")).includes(phpWasmSubtypePromotionConversion));
@@ -121,5 +122,5 @@ test("PHP-Wasm consumer and author guides describe installed Subtypes and retain
 	}
 	assert.ok(consumer.includes("Constructor and dispatch counts were not measured."));
 	assert.ok(author.includes("runtime entry counts remain unmeasured"));
-	assert.ok(author.includes("PHP-Wasm accepts the listed structural containers, acyclic nominal fields and [finite recursive copied graphs](../evidence/recursive-subtype-php-wasm-20261015.md). Refined callback and owned transports remain rejected."));
+	assert.ok(author.includes("PHP-Wasm keeps nested Subtype and packages combining refinements with graph, owned or callable transports rejected."));
 });

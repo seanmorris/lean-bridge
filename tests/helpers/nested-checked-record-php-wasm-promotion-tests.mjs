@@ -5,7 +5,6 @@
  */
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { readFile } from "node:fs/promises";
 import test from "node:test";
 import {
 	readTypeSurface, typeSurfaceCells, validateTypeSurface
@@ -201,7 +200,9 @@ test("nested checked-record PHP-Wasm docs name the accepted boundary", async () 
 		, "docs/lean/export-decisions.md", "docs/reference/types.md"];
 	for(const path of pages)
 	{
-		const source = await readFile(path, "utf8");
+		const source = sourceAtHistoryMilestone(
+			nestedCheckedRecordPhpWasmPromotionHistoryPath, path
+		);
 		assert.ok(source.includes(
 			"nested-checked-record-php-wasm-20261016/index.json"
 		), path);
@@ -211,7 +212,9 @@ test("nested checked-record PHP-Wasm docs name the accepted boundary", async () 
 		assert.ok(compiled.links.some(link =>
 			link.endsWith("nested-checked-record-php-wasm-20261016/index.json")), path);
 	}
-	const guide = await readFile("docs/php.md", "utf8");
+	const guide = sourceAtHistoryMilestone(
+		nestedCheckedRecordPhpWasmPromotionHistoryPath, "docs/php.md"
+	);
 	const prose = guide.replace(/\s+/gu, " ");
 	for(const text of ["nested `Packet`", "wasm32 PHP 8.4.1"
 		, "Node 22.23.2", "Chromium 152.0.7977.75"

@@ -5,7 +5,6 @@
  */
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { compileDocumentationPage } from "../../scripts/generate-site-content.mjs";
@@ -183,7 +182,9 @@ test("primitive-base native PHP promotion supplements six cells only", async () 
 test("primitive-base native PHP docs name the accepted boundary", async () => {
 	for(const path of ["docs/php.md", "docs/lean/existing-package.md"
 		, "docs/lean/export-decisions.md", "docs/reference/types.md"]){
-		const source = await readFile(path, "utf8");
+		const source = sourceAtHistoryMilestone(
+			nominalPrimitiveSubtypePhpPromotionHistoryPath, path
+		);
 		assert.ok(source.includes("nominal-primitive-subtype-php-20261015/index.json"), path);
 		const compiled = await compileDocumentationPage(source,
 			docPages.find(item => item.source === path)
@@ -194,7 +195,9 @@ test("primitive-base native PHP docs name the accepted boundary", async () => {
 			"https://github.com/seanmorris/lean-bridge/actions/workflows/nominal-primitive-subtype-php.yml"
 		));
 		}
-	const php = await readFile("docs/php.md", "utf8");
+	const php = sourceAtHistoryMilestone(
+		nominalPrimitiveSubtypePhpPromotionHistoryPath, "docs/php.md"
+	);
 	for(const text of ["all nineteen primitive bases", "64-bit", "normalization"
 		, "Linux x64/glibc 2.36", "PHP 8.2.33", "Composer 2.5.5"
 		, "standalone result-only"])

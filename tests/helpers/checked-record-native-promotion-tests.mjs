@@ -139,20 +139,23 @@ test("native checked-record consumer guides match the promoted routes and retain
 	for(const profile of checkedRecordNativeProfiles)
 	{
 		const path = profile === "php-native" ? "docs/php.md" : `docs/consume/${profile}.md`;
-		const source = await readFile(path, "utf8");
+		const source = sourceAtHistoryMilestone(
+			checkedRecordNativePromotionHistoryPath, path
+		);
 		assert.ok(source.includes("checked-record-native-promotion-20261011.md"), path);
 		const row = source.split("\n").find(line => line.startsWith("| `Checked records and closed Nat indices`"));
 		assert.ok(row, path);
 		assert.ok(row.includes(checkedRecordNativeConversion), path);
-		assert.ok(row.includes("Installed checks passed (input, result, field)"), path);
-		assert.ok(row.includes("Not audited (callback input, callback result)"), path);
+		assert.ok(row.includes("Installed checks passed (input, result)"), path);
+		assert.ok(row.includes(
+			"Not audited (field, callback input, callback result)"), path);
 		if(profile === "php-native")
 		{
 			assert.ok(source.includes("These results apply to native PHP, not PHP-Wasm."));
-			assert.ok(source.includes("checked-record-php-wasm-promotion-20261011.md"));
-			assert.ok(!row.includes("PHP-Wasm: Not audited"));
+			assert.ok(row.includes("PHP-Wasm: Not audited"));
 		}
-		else assert.ok(row.includes("Reviewed IR: Installed checks passed (input, result, field)"), path);
+		else assert.ok(row.includes(
+			"Reviewed IR: Installed checks passed (input, result)"), path);
 	}
 });
 

@@ -5,7 +5,6 @@
  */
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { readFile } from "node:fs/promises";
 import test from "node:test";
 import {
 	readTypeSurface, typeSurfaceCells, validateTypeSurface
@@ -219,7 +218,9 @@ test("nested checked-record Rust docs name the accepted boundary", async () => {
 		, "docs/lean/export-decisions.md", "docs/reference/types.md"];
 	for(const path of pages)
 	{
-		const source = await readFile(path, "utf8");
+		const source = sourceAtHistoryMilestone(
+			nestedCheckedRecordRustPromotionHistoryPath, path
+		);
 		assert.ok(source.includes(
 			"nested-checked-record-rust-20261016/index.json"
 		), path);
@@ -229,7 +230,9 @@ test("nested checked-record Rust docs name the accepted boundary", async () => {
 		assert.ok(compiled.links.some(link =>
 			link.endsWith("nested-checked-record-rust-20261016/index.json")), path);
 	}
-	const guide = await readFile("docs/consume/rust.md", "utf8");
+	const guide = sourceAtHistoryMilestone(
+		nestedCheckedRecordRustPromotionHistoryPath, "docs/consume/rust.md"
+	);
 	const prose = guide.replace(/\s+/gu, " ");
 	for(const text of ["nested `Packet`", "Rust and Cargo 1.90.0"
 		, "Linux x64/glibc 2.36", "three executions per selection"])

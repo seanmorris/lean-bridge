@@ -5,7 +5,6 @@
  */
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { compileDocumentationPage } from "../../scripts/generate-site-content.mjs";
@@ -140,14 +139,18 @@ test("primitive-base Perl promotion supplements six existing Perl cells and pres
 test("primitive-base Perl docs name all nineteen bases without claiming pending host or callback matrices", async () => {
 	for(const path of ["docs/consume/perl.md", "docs/javascript-typescript.md", "docs/lean/existing-package.md", "docs/lean/export-decisions.md", "docs/reference/types.md"])
 	{
-		const source = await readFile(path, "utf8");
+		const source = sourceAtHistoryMilestone(
+			nominalPrimitiveSubtypePerlPromotionHistoryPath, path
+		);
 		assert.ok(source.includes("nominal-primitive-subtype-perl-20261015/index.json"), path);
 		const compiled = await compileDocumentationPage(source, docPages.find(item => item.source === path), { revision: nominalPrimitiveSubtypePerlPromotionPredecessor });
 		assert.ok(compiled.links.some(link => link.endsWith("nominal-primitive-subtype-perl-20261015/index.json")), path);
 		if(path === "docs/consume/perl.md")
 			assert.ok(compiled.links.includes("https://github.com/seanmorris/lean-bridge/actions/workflows/nominal-primitive-subtype-perl.yml"));
 	}
-	const perl = await readFile("docs/consume/perl.md", "utf8");
+	const perl = sourceAtHistoryMilestone(
+		nominalPrimitiveSubtypePerlPromotionHistoryPath, "docs/consume/perl.md"
+	);
 	for(const text of ["nineteen primitive bases", "64-bit", "normalization", "Linux x64/glibc 2.36", "prebuilt-only and build-xs", "a consistency check between"])
 		assert.ok(perl.includes(text), text);
 	assert.doesNotMatch(perl, /These nominal runs cover Nat payloads/u);

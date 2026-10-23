@@ -5,7 +5,6 @@
  */
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { readFile } from "node:fs/promises";
 import test from "node:test";
 import {
 	readTypeSurface, typeSurfaceCells, validateTypeSurface
@@ -214,7 +213,9 @@ test("nested checked-record Perl docs name the accepted boundary", async () => {
 		, "docs/lean/export-decisions.md", "docs/reference/types.md"];
 	for(const path of pages)
 	{
-		const source = await readFile(path, "utf8");
+		const source = sourceAtHistoryMilestone(
+			nestedCheckedRecordPerlPromotionHistoryPath, path
+		);
 		assert.ok(source.includes("nested-checked-record-perl-20261016/index.json"), path);
 		const compiled = await compileDocumentationPage(source
 			, docPages.find(item => item.source === path)
@@ -224,7 +225,9 @@ test("nested checked-record Perl docs name the accepted boundary", async () => {
 		if(path === "docs/consume/perl.md") assert.ok(compiled.links.includes(
 			"https://github.com/seanmorris/lean-bridge/actions/workflows/nested-checked-record-perl.yml"));
 	}
-	const guide = await readFile("docs/consume/perl.md", "utf8");
+	const guide = sourceAtHistoryMilestone(
+		nestedCheckedRecordPerlPromotionHistoryPath, "docs/consume/perl.md"
+	);
 	for(const text of ["nested `Packet`", "Perl 5.36.3 and 5.38.2"
 		, "Linux x64/glibc 2.36", "source-free", "sixteen installed executions"])
 		assert.ok(guide.includes(text), text);

@@ -5,7 +5,6 @@
  */
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { compileDocumentationPage } from "../../scripts/generate-site-content.mjs";
@@ -123,14 +122,18 @@ test("primitive-base Python promotion supplements six existing Python cells and 
 test("primitive-base Python docs name all nineteen bases without claiming pending host or callback matrices", async () => {
 	for(const path of ["docs/consume/python.md", "docs/javascript-typescript.md", "docs/lean/existing-package.md", "docs/lean/export-decisions.md", "docs/reference/types.md"])
 	{
-		const source = await readFile(path, "utf8");
+		const source = sourceAtHistoryMilestone(
+			nominalPrimitiveSubtypePythonPromotionHistoryPath, path
+		);
 		assert.ok(source.includes("nominal-primitive-subtype-python-20261014/index.json"), path);
 		const compiled = await compileDocumentationPage(source, docPages.find(item => item.source === path), { revision: nominalPrimitiveSubtypePythonPromotionPredecessor });
 		assert.ok(compiled.links.some(link => link.endsWith("nominal-primitive-subtype-python-20261014/index.json")), path);
 		if(path === "docs/consume/python.md")
 			assert.ok(compiled.links.includes("https://github.com/seanmorris/lean-bridge/actions/workflows/nominal-primitive-subtype-python.yml"));
 	}
-	const python = await readFile("docs/consume/python.md", "utf8");
+	const python = sourceAtHistoryMilestone(
+		nominalPrimitiveSubtypePythonPromotionHistoryPath, "docs/consume/python.md"
+	);
 	for(const text of ["nineteen primitive bases", "None", "bool", "int", "float", "str", "bytes", "64-bit", "normalization", "Linux x64/glibc 2.36"])
 		assert.ok(python.includes(text), text);
 	assert.doesNotMatch(python, /Other primitive-base nominal fixtures, refined callbacks/u);

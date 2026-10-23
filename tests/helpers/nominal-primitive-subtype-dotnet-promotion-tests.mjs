@@ -5,7 +5,6 @@
  */
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { compileDocumentationPage } from "../../scripts/generate-site-content.mjs";
@@ -186,7 +185,9 @@ test("primitive-base C# docs name all nineteen bases without claiming callbacks"
 	for(const path of ["docs/consume/dotnet.md", "docs/javascript-typescript.md"
 		, "docs/lean/existing-package.md", "docs/lean/export-decisions.md"
 		, "docs/reference/types.md"]){
-		const source = await readFile(path, "utf8");
+		const source = sourceAtHistoryMilestone(
+			nominalPrimitiveSubtypeDotnetPromotionHistoryPath, path
+		);
 		assert.ok(source.includes("nominal-primitive-subtype-dotnet-20261015/index.json"), path);
 		const compiled = await compileDocumentationPage(source,
 			docPages.find(item => item.source === path)
@@ -198,7 +199,9 @@ test("primitive-base C# docs name all nineteen bases without claiming callbacks"
 				"https://github.com/seanmorris/lean-bridge/actions/workflows/nominal-primitive-subtype-dotnet.yml"
 			));
 		}
-	const dotnet = await readFile("docs/consume/dotnet.md", "utf8");
+	const dotnet = sourceAtHistoryMilestone(
+		nominalPrimitiveSubtypeDotnetPromotionHistoryPath, "docs/consume/dotnet.md"
+	);
 	for(const text of ["all nineteen primitive bases", "64-bit", "normalization"
 		, "Linux x64/glibc 2.36", ".NET SDK 8.0.424", "shared framework 8.0.30"
 		, "standalone result-only"])

@@ -118,8 +118,8 @@ test("direct PHP-Wasm promotion refuses incomplete, duplicated or repeated suppl
 });
 
 test("PHP consumer and author guides distinguish direct acceptance from the earlier nested fixtures", async () => {
-	const consumer = await readFile("docs/php.md", "utf8");
-	const author = await readFile("docs/lean/existing-package.md", "utf8");
+	const consumer = await promotionSource("docs/php.md");
+	const author = await promotionSource("docs/lean/existing-package.md");
 	const row = consumer.split("\n").find(line => line.startsWith("| `Fin n` |"));
 	assert.ok(row.includes(phpWasmDirectPromotionConversion));
 	assert.ok(!row.includes("no bare top-level Fin or direct Array/List/Option"));

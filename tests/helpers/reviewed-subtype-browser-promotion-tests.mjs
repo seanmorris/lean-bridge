@@ -4,7 +4,6 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { beforeStructuralSubtypePromotionSource } from "./structural-subtype-promotion-history.mjs";
 import { execFileSync, spawnSync } from "node:child_process";
 import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -16,6 +15,7 @@ import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeCheckedRecordNativeHostSource } from "./checked-record-native-host-history.mjs";
 import { browserSubtypeRoot, browserSubtypeIndex, browserSubtypeProfiles, browserSubtypeEvidenceId, browserSubtypeObservationId, browserSubtypeLimit, browserSubtypeConversion, browserSubtypeReference, promoteBrowserSubtype } from "./reviewed-subtype-browser-promotion.mjs";
 import { beforeReviewedSubtypeBrowserPromotionSource, reviewedSubtypeBrowserPromotionChangedPaths, reviewedSubtypeBrowserPromotionHistoryPath, reviewedSubtypeBrowserPromotionPredecessor, reverseReviewedSubtypeBrowserPromotionUpdate } from "./reviewed-subtype-browser-promotion-history.mjs";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 
 const predecessor = async () => JSON.parse(beforeReviewedSubtypeBrowserPromotionSource("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8")));
 
@@ -120,19 +120,20 @@ test("reviewed browser promotion refuses invented scope, omitted records, overla
 });
 
 test("reviewed browser guides expose primitive inputs and retain unsupported positions", async () => {
-	const consumer = await readFile("docs/javascript-typescript.md", "utf8");
+	const consumer = sourceAtHistoryMilestone(
+		reviewedSubtypeBrowserPromotionHistoryPath, "docs/javascript-typescript.md"
+	);
 	const row = consumer.split("\n").find(line => line.startsWith("| `Subtype /"));
-	const previous = beforeStructuralSubtypePromotionSource("docs/javascript-typescript.md", consumer);
-	assert.ok(previous.split("\n").find(line => line.startsWith("| `Subtype /")).includes(browserSubtypeConversion));
-	// Node has separate nominal-field acceptance; this receipt covers browser realms.
-	const browser = row.split("Reviewed IR: ")[1]?.split("Browser / React / Worker: ")[1];
-	assert.ok(browser?.includes("Installed checks passed (input, result)"));
-	assert.ok(browser.includes("Not audited (field, callback input, callback result)"));
+	assert.ok(row.includes(browserSubtypeConversion));
+	assert.ok(row.includes("Reviewed IR: Installed checks passed (input, result)"));
+	assert.ok(row.includes("Not audited (field, callback input, callback result)"));
 	assert.ok(consumer.includes("### Checked Subtypes\n"));
 	assert.ok(consumer.includes("You pass the base value"));
 	for(const path of ["docs/javascript-typescript.md", "docs/lean/existing-package.md", "docs/lean/export-decisions.md"])
 	{
-		const source = await readFile(path, "utf8");
+		const source = sourceAtHistoryMilestone(
+			reviewedSubtypeBrowserPromotionHistoryPath, path
+		);
 		assert.ok(source.includes("reviewed-subtype-browser-promotion-20261010.md"), path);
 		assert.doesNotMatch(source, /Other reviewed native hosts and npm browser profiles remain pending|PHP-Wasm installed; reviewed browser pending/u);
 	}
