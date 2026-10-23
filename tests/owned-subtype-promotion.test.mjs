@@ -20,6 +20,9 @@ import {
 	, ownedSubtypePromotionPredecessor, ownedSubtypePromotionReferences
 	, promoteOwnedSubtypes, renderOwnedSubtypePromotion
 } from "./helpers/owned-subtype-promotion.mjs";
+import {
+	ownedSubtypeDocumentationPaths, renderOwnedSubtypeDocumentation
+} from "./helpers/owned-subtype-documentation.mjs";
 
 const readJson = async path => JSON.parse(await readFile(path, "utf8"));
 const baseline = execFileSync("git", [
@@ -134,6 +137,34 @@ test("owned Subtype promotion documents every affected consumer", async () => {
 	assert.match(after.reference, evidence);
 	assert.match(after.reference, /all sixteen non-PHP-Wasm consumer profiles/u);
 	assert.match(after.reference, /PHP-Wasm retains its separately audited/u);
+});
+
+test("owned Subtype promotion removes exact stale manual boundaries", async () => {
+	const sources = Object.fromEntries(await Promise.all(Object.entries(
+		ownedSubtypeDocumentationPaths
+	).map(async ([name, path]) => [name, await readFile(path, "utf8")])));
+	const rendered = renderOwnedSubtypeDocumentation(sources);
+	for(const source of Object.values(rendered))
+	{
+		assert.match(source, /owned-subtype-promotion-20261023\.md/u);
+		assert.match(source, /tested acyclic/u);
+	}
+	assert.match(rendered.existingPackage
+		, /establishes ordinary\/reviewed packages across all seventeen profiles/u);
+	assert.doesNotMatch(rendered.existingPackage
+		, /JavaScript npm and PHP-Wasm installed[^|\n]+other hosts pending/u);
+	assert.doesNotMatch(rendered.exportDecisions
+		, /owned and recursive Subtypes/u);
+	for(const name of ["dotnet", "perl", "python", "ruby"])
+	{
+		assert.match(rendered[name], /rejection keeps ownership with the caller/u
+			, name);
+		assert.doesNotMatch(rendered[name]
+			, /owned (?:`Subtype` payloads|Subtypes) remain (?:pending|unsupported)/u
+			, name);
+	}
+	assert.throws(() => renderOwnedSubtypeDocumentation(rendered)
+		, /Expected one owned-Subtype documentation marker/u);
 });
 
 test("JavaScript owned Subtype promotion rechecks both relocated routes"
