@@ -1,0 +1,114 @@
+TAP version 13
+# Subtest: dependent generic Subtype history restores every source
+ok 1 - dependent generic Subtype history restores every source
+  ---
+  duration_ms: 27737.628996
+  type: 'test'
+  ...
+# Subtest: dependent generic Subtype history rejects altered transitions
+ok 2 - dependent generic Subtype history rejects altered transitions
+  ---
+  duration_ms: 10052.581227
+  type: 'test'
+  ...
+# Subtest: dependent generic Subtype history writer refuses unrelated checkouts
+ok 3 - dependent generic Subtype history writer refuses unrelated checkouts
+  ---
+  duration_ms: 61.383136
+  type: 'test'
+  ...
+# Subtest: nominal native metadata keeps per-use choices out of shared type definitions
+ok 4 - nominal native metadata keeps per-use choices out of shared type definitions
+  ---
+  duration_ms: 101.030999
+  type: 'test'
+  ...
+# Subtest: nominal reviewed decisions reject mismatched names, members, ownership and bounded traversal
+ok 5 - nominal reviewed decisions reject mismatched names, members, ownership and bounded traversal
+  ---
+  duration_ms: 24.59945
+  type: 'test'
+  ...
+# Subtest: nominal review reconciliation detects changed or dropped field decisions and shared bounds
+ok 6 - nominal review reconciliation detects changed or dropped field decisions and shared bounds
+  ---
+  duration_ms: 36.520671
+  type: 'test'
+  ...
+# Subtest: nominal native documentation preserves each constructor and every sibling Fin bound
+ok 7 - nominal native documentation preserves each constructor and every sibling Fin bound
+  ---
+  duration_ms: 35.718237
+  type: 'test'
+  ...
+# Subtest: nominal C and Perl guards check Fin first and only enter the active variant case
+ok 8 - nominal C and Perl guards check Fin first and only enter the active variant case
+  ---
+  duration_ms: 114.965643
+  type: 'test'
+  ...
+# Subtest: nominal selectors drop Fin-only children without losing empty cases or field order
+ok 9 - nominal selectors drop Fin-only children without losing empty cases or field order
+  ---
+  duration_ms: 7.481726
+  type: 'test'
+  ...
+# Subtest: nominal selection syntax names every field and case in source order
+ok 10 - nominal selection syntax names every field and case in source order
+  ---
+  duration_ms: 224.716888
+  type: 'test'
+  ...
+# Subtest: nominal selectors reject missing, duplicate, empty and invented members
+ok 11 - nominal selectors reject missing, duplicate, empty and invented members
+  ---
+  duration_ms: 60.985063
+  type: 'test'
+  ...
+# Subtest: nominal selector budgets include member wrappers and never invoke accessor fields
+ok 12 - nominal selector budgets include member wrappers and never invoke accessor fields
+  ---
+  duration_ms: 8.174509
+  type: 'test'
+  ...
+# Subtest: projection choices retain nominal identity and member order independently of Fin bounds
+ok 13 - projection choices retain nominal identity and member order independently of Fin bounds
+  ---
+  duration_ms: 1.590258
+  type: 'test'
+  ...
+# Subtest: nominal native admission preserves callback direction, generic Fin and nested-site gates
+ok 14 - nominal native admission preserves callback direction, generic Fin and nested-site gates
+  ---
+  duration_ms: 2.237784
+  type: 'test'
+  ...
+1..14
+# tests 14
+# suites 0
+# pass 14
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 38398.594537
+TAP version 13
+# Subtest: fresh Lean preserves nominal constructor selections and rejects false source decisions
+ok 1 - fresh Lean preserves nominal constructor selections and rejects false source decisions
+  ---
+  duration_ms: 161179.367142
+  type: 'test'
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 161311.689041
+
+> @lean-wasm/bridge-poc@0.0.0-poc typecheck
+> tsc -p jsconfig.checked.json --pretty false
+
