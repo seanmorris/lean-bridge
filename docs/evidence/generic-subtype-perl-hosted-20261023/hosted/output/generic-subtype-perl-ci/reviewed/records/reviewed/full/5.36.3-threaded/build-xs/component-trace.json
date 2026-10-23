@@ -1,0 +1,24 @@
+{
+  "ecosystem": "cpan",
+  "files": [
+    {
+      "origin": "prepared-payload",
+      "path": "LeanBridge/NominalSubtypes.pm",
+      "sha256": "58a8da23b5a0b909d8d81b9681e957529fc11fd55f5018206bb6d842dc0ccfa9"
+    },
+    {
+      "origin": "prepared-payload",
+      "path": "LeanBridge/NominalSubtypes/native/libcomponent_7f8bfe55e5831a9133c5.so",
+      "sha256": "44fcf2e793c07c8171ed24f610f8e187c314cb85aca66387ee1222228af1890a"
+    },
+    {
+      "origin": "generated-xs-only",
+      "path": "auto/LeanBridge/NominalSubtypes/NominalSubtypes.so",
+      "sha256": "2647e22a9c946cd74fce73996a2a6dd98822aad9e623fb13a0feebc032ead3b9"
+    }
+  ],
+  "nativePayloadUnchanged": true,
+  "operation": "generated-xs-only",
+  "runtimeIdentity": "6f4dbd1e2e112f4678734553d1c9bb8722fad3e6290adbff1ac46d05e5eff7dd",
+  "schemaVersion": 1
+}

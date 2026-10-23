@@ -1,0 +1,26 @@
+TAP version 13
+# Subtest: installed generic Subtype Perl compositions reproduce and relocate ordinary full
+ok 1 - installed generic Subtype Perl compositions reproduce and relocate ordinary full
+  ---
+  duration_ms: 164226.348097
+  type: 'test'
+  ...
+# ordinary full author 0: four Perl ABIs
+# ordinary full author 1: four Perl ABIs
+# Installing 5.36.3-threaded/prebuilt-only/ordinary/full
+# Installing 5.36.3-threaded/build-xs/ordinary/full
+# Installing 5.36.3-unthreaded/prebuilt-only/ordinary/full
+# Installing 5.36.3-unthreaded/build-xs/ordinary/full
+# Installing 5.38.2-threaded/prebuilt-only/ordinary/full
+# Installing 5.38.2-threaded/build-xs/ordinary/full
+# Installing 5.38.2-unthreaded/prebuilt-only/ordinary/full
+# Installing 5.38.2-unthreaded/build-xs/ordinary/full
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 164403.071299

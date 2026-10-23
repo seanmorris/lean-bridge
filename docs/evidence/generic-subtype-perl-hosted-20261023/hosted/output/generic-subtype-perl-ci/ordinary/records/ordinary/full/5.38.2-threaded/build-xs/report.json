@@ -1,0 +1,52 @@
+{
+  "arguments": [
+    "consumer.pl"
+  ],
+  "checks": 18,
+  "compilerFreeExecution": true,
+  "compilerFreeReplay": true,
+  "configuration": "5.38.2-threaded",
+  "consumerSha256": "4cac982ebbda05a449c2e024a540cc4e26f7d8c2e7582bd766e90a0eb187577d",
+  "delivery": "build-xs",
+  "dispatch": {
+    "observed": false,
+    "reason": "Separate constructor/source entry probe remains required"
+  },
+  "executableSha256": "73cc91e7e50260bcbe3628b8afad5bd9abe2ca0b9e7b07772fa8ba6ecbd4e376",
+  "extractedDistributionsRemoved": true,
+  "genericCompositions": true,
+  "identity": {
+    "archname": "x86_64-linux-thread-multi",
+    "ivsize": "8",
+    "ptrsize": "8",
+    "useithreads": "define",
+    "usemultiplicity": "define",
+    "version": "5.38.2"
+  },
+  "installationCCompilerAvailable": true,
+  "installedBytesUnchanged": true,
+  "installedFilesSha256": "558a2123c4476878015f3bb089a95373b5c5a32191023347142236173a79341a",
+  "leanCompilerUnavailable": true,
+  "mode": "full",
+  "nativePayloadUnchanged": true,
+  "offlineInstall": true,
+  "rejections": 3,
+  "relocatedInstallation": true,
+  "repeatedRuns": 2,
+  "route": "ordinary",
+  "sourceUnchangedAfterReplay": true,
+  "traces": [
+    {
+      "manifestSha256": "a942e1db92997cfbdd493188cd01a1c0442ae9f42baffbb801b1ef5b190de4ba",
+      "receiptSha256": "0be979fdc46efef949169794dac41a252e1a536aed2107002feccb7f42fa89b8",
+      "role": "runtime",
+      "traceSha256": "fa092f59c927f5cb5948350ec33d275aa67a92f48f93288a8c1ddc20f5f4f7fc"
+    },
+    {
+      "manifestSha256": "80afd90d307f658271206059fad060478960335f37fe3aa5f33d48ef985c531a",
+      "receiptSha256": "5cef48aa206159eda3c013c3f15f57fa8283b78fc322fb736e26f7b61bb39917",
+      "role": "component",
+      "traceSha256": "ff0919c380208966887e0c96fcd04b10f57323332bfc8d962f8d2df60abd3614"
+    }
+  ]
+}
