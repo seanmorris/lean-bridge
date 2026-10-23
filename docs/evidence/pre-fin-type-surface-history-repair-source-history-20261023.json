@@ -1,0 +1,213 @@
+{
+  "additions": [
+    {
+      "currentSha256": "6cc440da0728103cf92750d65833828f43a9c4b6e3ea660adcb77d417d3f8515",
+      "path": "scripts/update-pre-fin-type-surface-history-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "1e9f2c19dcaf3dc409081c68798b72520851a69b38a58db212c9a486c7351327",
+      "path": "tests/helpers/pre-fin-type-surface-history-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "0a86dddee54a893c4fc90eb60e559cd9d4498486d8f4c4f9cb36e4ea51b5c4a9",
+      "path": "tests/helpers/pre-fin-type-surface-history-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "6af7ee0a3d97e8a2d29862f08772cfe829ea8abe",
+  "integrationUpdates": [
+    {
+      "currentSha256": "4b62c7bb998007757b7d9e0b88e6ac4844bf206a142f723fa2993152867bb409",
+      "edits": [
+        {
+          "current": "import \"./helpers/pre-fin-type-surface-history-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 1837
+        }
+      ],
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "b56433d7ed58f6db46b439006e8d0a19639fca26308a83c951b60e2eb40d9a5a"
+    },
+    {
+      "currentSha256": "6b0db0c3d43333a9c3bcbe976a92e4220d596c7e6413700231a81e71e8e2aa6a",
+      "edits": [
+        {
+          "current": "import { beforePreFinTypeSurfaceHistoryRepairSource, preFinTypeSurfaceHistoryRepairNormalizationPaths } from \"./pre-fin-type-surface-history-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...preFinTypeSurfaceHistoryRepairNormalizationPaths\n\t, ...valueIndexPromotionMemoryRepairNormalizationPaths\n",
+          "previous": "\t...valueIndexPromotionMemoryRepairNormalizationPaths\n",
+          "start": 158741
+        },
+        {
+          "current": "\tconst preFinTypeSurfaceHistoryRepair\n\t\t= beforePreFinTypeSurfaceHistoryRepairSource(path, text, expected);\n\tif(sha256(preFinTypeSurfaceHistoryRepair) === expected)\n\t\treturn preFinTypeSurfaceHistoryRepair;\n",
+          "previous": "",
+          "start": 194498
+        },
+        {
+          "current": "\t\t= beforeValueIndexPromotionMemoryRepairSource(\n\t\t\tpath, preFinTypeSurfaceHistoryRepair, expected\n\t\t);\n",
+          "previous": "\t\t= beforeValueIndexPromotionMemoryRepairSource(path, text, expected);\n",
+          "start": 194743
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "5a4a64d57e88c3c761fefe9d4d785fe2ce4ab3405efffd8a2f520a97831051c9"
+    }
+  ],
+  "milestone": "pre-fin-type-surface-history-repair-source-v1",
+  "predecessorCommit": "44486151261f342e06f0a57290c5ac261921a621",
+  "schemaVersion": 1,
+  "scope": "The exact type-surface history reader traverses authenticated pre-Fin evidence formats and reconstructs the retained September milestones without replacing their immutable records.",
+  "updates": [
+    {
+      "currentSha256": "f19f4c39c9088078770de07fd5d704c709e00eace9d7127e04071276ec2f6387",
+      "edits": [
+        {
+          "current": "test(\"type-surface history reaches exact pre-Fin evidence milestones\", async () => {\n\tconst path = \"docs/type-surface.v1.json\";\n\tconst source = await readFile(path, \"utf8\");\n\tconst expected\n\t\t= \"d5daab05de270d26ea13f84100fb13dc73e7b0d75aa7b2ec6b1b7ea6087da500\";\n\tassert.equal(sha256(beforeFinRefinementSource(\n\t\tpath, source, expected\n\t)), expected);\n});\n\n",
+          "previous": "",
+          "start": 1652
+        }
+      ],
+      "path": "tests/helpers/dependent-record-constructor-authority-source-history-tests.mjs",
+      "previousSha256": "9bde23abcacae0b4fda59dd6a51b8527fa9444046dd811fa5d063e6d38b991f4"
+    },
+    {
+      "currentSha256": "5a4a64d57e88c3c761fefe9d4d785fe2ce4ab3405efffd8a2f520a97831051c9",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { createHash } from \"node:crypto\";\n",
+          "start": 297
+        },
+        {
+          "current": "import { canonicalJson } from \"../../src/capsule/node.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t\tif(!name.endsWith(\".json\")) continue;\n",
+          "previous": "\t\tif(!name.endsWith(\".json\") || !name.includes(\"history\")) continue;\n",
+          "start": 98517
+        },
+        {
+          "current": "\t// The first Fin admission predates the JSON source-history convention, but\n\t// its exact endpoints and deterministic reversal are retained below. Join\n\t// that authenticated edge to the recorded September evidence graph.\n\ttransitions.push({\n\t\tevidenceName: \"built-in Fin type-surface transition\"\n\t\t, currentSha256: currentTypeSurfaceSha256\n\t\t, previousSha256: previousTypeSurfaceSha256\n\t\t, builtInFin: true\n\t});\n",
+          "previous": "",
+          "start": 99262
+        },
+        {
+          "current": "\tassert.equal(transition.builtInFin, undefined);\n",
+          "previous": "",
+          "start": 100010
+        },
+        {
+          "current": "",
+          "previous": "\tassert.ok(reversible.length > 0\n\t\t, `${transition.evidenceName} reversible type-surface transition`);\n",
+          "start": 101037
+        },
+        {
+          "current": "const exactTypeSurfaceSpanEdit = item =>\n\tObject.keys(item).sort().join(\",\") === \"current,previous,start\";\n\nconst exactTypeSurfaceReplacementEdit = item => {\n\tconst keys = Object.keys(item).sort();\n\tif(!keys.every(key => [\n\t\t\"count\", \"current\", \"kind\", \"path\", \"previous\"\n\t].includes(key))) return false;\n\tif(typeof item.current !== \"string\" || typeof item.previous !== \"string\"\n\t\t|| item.current === item.previous) return false;\n\tif(item.count !== undefined && (!Number.isSafeInteger(item.count)\n\t\t|| item.count < 1)) return false;\n\treturn item.kind === undefined || item.kind === \"source-hash\";\n};\n\nconst exactTypeSurfaceInventoryEdit = item =>\n\texactTypeSurfaceReplacementEdit(item)\n\t|| [\"evidence\", \"observation\"].includes(item?.kind)\n\t&& typeof item.id === \"string\"\n\t&& sourceHistorySha256Pattern.test(item.currentSha256)\n\t&& Object.keys(item).sort().join(\",\") === \"currentSha256,id,kind\";\n\n",
+          "previous": "",
+          "start": 103153
+        },
+        {
+          "current": "\t&& (update.edits.every(exactTypeSurfaceSpanEdit)\n\t\t|| update.strategy === \"inventory\"\n\t\t&& update.edits.every(exactTypeSurfaceInventoryEdit)\n\t\t|| update.edits.every(exactTypeSurfaceReplacementEdit));\n",
+          "previous": "\t&& update.edits.every(item =>\n\t\tObject.keys(item).sort().join(\",\") === \"current,previous,start\"\n\t);\n",
+          "start": 104341
+        },
+        {
+          "current": "",
+          "previous": "const detachedTypeSurfaceText = source =>\n\tBuffer.from(source, \"utf8\").toString(\"utf8\");\n\n",
+          "start": 105267
+        },
+        {
+          "current": "",
+          "previous": "const typeSurfaceRangeEquals = (\n\tpieces, offsets, start, expected\n) => {\n\tif(start < 0 || start + expected.length > offsets.at(-1)) return false;\n\tlet index = typeSurfacePieceIndex(offsets, start);\n\tlet position = start, expectedOffset = 0;\n\twhile(expectedOffset < expected.length)\n\t{\n\t\tconst piece = pieces[index];\n\t\tconst pieceStart = offsets[index];\n\t\tconst localStart = piece.start + position - pieceStart;\n\t\tconst length = Math.min(piece.end - localStart\n\t\t\t, expected.length - expectedOffset);\n\t\tif(piece.text.slice(localStart, localStart + length)\n\t\t\t!== expected.slice(expectedOffset, expectedOffset + length)) return false;\n\t\tposition += length;\n\t\texpectedOffset += length;\n\t\t++index;\n\t}\n\treturn true;\n};\n\nconst sha256TypeSurfacePieces = pieces => {\n\tconst digest = createHash(\"sha256\");\n\tlet fragments = [], length = 0;\n\tconst flush = () => {\n\t\tif(fragments.length === 0) return;\n\t\tdigest.update(fragments.join(\"\"), \"utf8\");\n\t\tfragments = [];\n\t\tlength = 0;\n\t};\n\tfor(const piece of pieces)\n\t{\n\t\tfragments.push(piece.text.slice(piece.start, piece.end));\n\t\tlength += piece.end - piece.start;\n\t\tif(length >= 1024 * 1024) flush();\n\t}\n\tflush();\n\treturn digest.digest(\"hex\");\n};\n\n",
+          "start": 106312
+        },
+        {
+          "current": "const reverseExactTypeSurfaceEdits = (pieces, update) => {\n",
+          "previous": "const reverseExactTypeSurfaceEdits = (pieces, update, transition) => {\n",
+          "start": 107617
+        },
+        {
+          "current": "",
+          "previous": "\t\tassert.ok(typeSurfaceRangeEquals(\n\t\t\tpieces, offsets, edit.start, edit.current\n\t\t), transition.evidenceName);\n",
+          "start": 108134
+        },
+        {
+          "current": "\t\tappendTypeSurfacePiece(previous, edit.previous);\n",
+          "previous": "\t\tappendTypeSurfacePiece(previous\n\t\t\t, detachedTypeSurfaceText(edit.previous));\n",
+          "start": 108207
+        },
+        {
+          "current": "\tassert.ok(exactTypeSurfaceReplacementEdit(replacement));\n",
+          "previous": "\tassert.deepEqual(Object.keys(replacement).sort()\n\t\t, [\"count\", \"current\", \"previous\"]);\n",
+          "start": 108489
+        },
+        {
+          "current": "\tconst count = replacement.count ?? 1;\n\tassert.ok(Number.isSafeInteger(count) && count > 0);\n",
+          "previous": "\tassert.ok(Number.isSafeInteger(replacement.count)\n\t\t&& replacement.count > 0);\n",
+          "start": 108715
+        },
+        {
+          "current": "\tassert.equal(positions.length, count\n",
+          "previous": "\tassert.equal(positions.length, replacement.count\n",
+          "start": 108899
+        },
+        {
+          "current": "\t\tappendTypeSurfacePiece(previous, replacement.previous);\n",
+          "previous": "\t\tappendTypeSurfacePiece(previous\n\t\t\t, detachedTypeSurfaceText(replacement.previous));\n",
+          "start": 109164
+        },
+        {
+          "current": "const reverseExactTypeSurfaceReplacements = (\n\tpieces, replacements, transition, reverse = true\n) => {\n\tfor(const replacement of reverse\n\t\t? [...replacements].reverse() : replacements)\n\t\tpieces = reverseExactTypeSurfaceReplacement(\n\t\t\tpieces, replacement, transition\n\t\t);\n\treturn pieces;\n};\n\nconst reverseExactTypeSurfaceInventory = (\n\tpieces, update\n) => {\n\tconst document = JSON.parse(typeSurfacePiecesText(pieces));\n\tfor(const edit of update.edits.filter(item => item.kind !== \"source-hash\"))\n\t{\n\t\tconst collection = edit.kind === \"evidence\"\n\t\t\t? document.evidence : document.observations;\n\t\tconst index = collection.findIndex(item => item.id === edit.id);\n\t\tassert.notEqual(index, -1, edit.id);\n\t\tassert.equal(sha256(canonicalJson(collection[index]))\n\t\t\t, edit.currentSha256, edit.id);\n\t\tcollection.splice(index, 1);\n\t}\n\tfor(const edit of update.edits.filter(item => item.kind === \"source-hash\"))\n\t{\n\t\tlet count = 0;\n\t\tfor(const evidence of document.evidence)\n\t\t\tfor(const file of evidence.files)\n\t\t\t\tif(file.path === edit.path && file.sha256 === edit.current)\n\t\t\t\t{\n\t\t\t\t\tfile.sha256 = edit.previous;\n\t\t\t\t\t++count;\n\t\t\t\t}\n\t\tassert.equal(count, edit.count, edit.path);\n\t}\n\tconst previous = JSON.stringify(document, null, 2) + \"\\n\";\n\treturn [{ text: previous\n\t\t, start: 0, end: previous.length }];\n};\n\n",
+          "previous": "",
+          "start": 109373
+        },
+        {
+          "current": "\t\tpieces = reverseExactTypeSurfaceReplacements(\n\t\t\tpieces, update.replacements, transition, true\n\t\t);\n",
+          "previous": "\t\tfor(const replacement of [...update.replacements].reverse())\n\t\t\tpieces = reverseExactTypeSurfaceReplacement(\n\t\t\t\tpieces, replacement, transition\n\t\t\t);\n",
+          "start": 111114
+        },
+        {
+          "current": "\t\tif(update.strategy === \"inventory\")\n\t\t\tpieces = reverseExactTypeSurfaceInventory(pieces, update);\n\t\telse if(update.edits.every(exactTypeSurfaceSpanEdit))\n\t\t\tpieces = reverseExactTypeSurfaceEdits(pieces, update);\n\t\telse pieces = reverseExactTypeSurfaceReplacements(\n\t\t\tpieces, update.edits, transition\n\t\t\t, ![\"replace-all\", \"source-hashes\"].includes(update.strategy)\n\t\t);\n",
+          "previous": "\t\tpieces = reverseExactTypeSurfaceEdits(pieces, update, transition);\n",
+          "start": 112461
+        },
+        {
+          "current": "",
+          "previous": "\tassert.equal(sha256TypeSurfacePieces(pieces), transition.previousSha256\n\t\t, transition.evidenceName);\n",
+          "start": 112837
+        },
+        {
+          "current": "\tlet digest = initial;\n",
+          "previous": "",
+          "start": 157246
+        },
+        {
+          "current": "\t\tassert.equal(transition.currentSha256, digest\n\t\t\t, transition.evidenceName);\n\t\tif(transition.builtInFin)\n\t\t{\n\t\t\tconst current = typeSurfacePiecesText(pieces);\n\t\t\tassert.equal(sha256(current), transition.currentSha256);\n\t\t\tconst previous = beforeFinTypeSurface(current);\n\t\t\tassert.equal(sha256(previous), transition.previousSha256);\n\t\t\tpieces = [{ text: previous\n\t\t\t\t, start: 0, end: previous.length }];\n\t\t\tdigest = transition.previousSha256;\n\t\t\tcontinue;\n\t\t}\n\t\tconst candidate = exactTypeSurfaceUpdate(transition);\n\t\tif(candidate === undefined)\n\t\t{\n\t\t\tconst partial = typeSurfacePiecesText(pieces);\n\t\t\tassert.equal(sha256(partial), digest);\n\t\t\treturn partial;\n\t\t}\n\t\tconst update = selectedExactTypeSurfaceUpdate(transition, candidate);\n",
+          "previous": "\t\tconst update = selectedExactTypeSurfaceUpdate(\n\t\t\ttransition, exactTypeSurfaceUpdate(transition)\n\t\t);\n",
+          "start": 157367
+        },
+        {
+          "current": "\t\t{\n\t\t\tconst partial = typeSurfacePiecesText(pieces);\n\t\t\tassert.equal(sha256(partial), digest);\n\t\t\treturn partial;\n\t\t}\n",
+          "previous": "\t\t\treturn typeSurfacePiecesText(pieces);\n",
+          "start": 158156
+        },
+        {
+          "current": "\t\tdigest = transition.previousSha256;\n",
+          "previous": "",
+          "start": 158356
+        },
+        {
+          "current": "\tassert.equal(sha256(source), digest);\n",
+          "previous": "",
+          "start": 158438
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "0e15c657b734c1c35637465d90bfd16b90dcf40323fff78252b3725b39aedf3f"
+    }
+  ]
+}

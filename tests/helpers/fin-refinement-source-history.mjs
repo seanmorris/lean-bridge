@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforePreFinTypeSurfaceHistoryRepairSource, preFinTypeSurfaceHistoryRepairNormalizationPaths } from "./pre-fin-type-surface-history-repair-source-history.mjs";
 import { beforeValueIndexPromotionMemoryRepairSource, valueIndexPromotionMemoryRepairNormalizationPaths } from "./value-index-promotion-memory-repair-source-history.mjs";
 import { beforeNominalEntryTagRepairSource, nominalEntryTagRepairNormalizationPaths } from "./nominal-entry-tag-repair-source-history.mjs";
 import { beforeCallbackCheckedRecordPromotionRefreshSource, callbackCheckedRecordPromotionRefreshNormalizationPaths } from "./callback-checked-record-promotion-refresh-source-history.mjs";
@@ -2015,7 +2016,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...valueIndexPromotionMemoryRepairNormalizationPaths
+	...preFinTypeSurfaceHistoryRepairNormalizationPaths
+	, ...valueIndexPromotionMemoryRepairNormalizationPaths
 	, ...nominalEntryTagRepairNormalizationPaths
 	, ...callbackCheckedRecordPromotionRefreshNormalizationPaths
 	, ...callbackCheckedRecordArchiveCommitProvenanceNormalizationPaths
@@ -2780,8 +2782,14 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 			text = exact;
 		}
 	}
+	const preFinTypeSurfaceHistoryRepair
+		= beforePreFinTypeSurfaceHistoryRepairSource(path, text, expected);
+	if(sha256(preFinTypeSurfaceHistoryRepair) === expected)
+		return preFinTypeSurfaceHistoryRepair;
 	const valueIndexPromotionMemoryRepair
-		= beforeValueIndexPromotionMemoryRepairSource(path, text, expected);
+		= beforeValueIndexPromotionMemoryRepairSource(
+			path, preFinTypeSurfaceHistoryRepair, expected
+		);
 	if(sha256(valueIndexPromotionMemoryRepair) === expected)
 		return valueIndexPromotionMemoryRepair;
 	const nominalEntryTagRepair = beforeNominalEntryTagRepairSource(
