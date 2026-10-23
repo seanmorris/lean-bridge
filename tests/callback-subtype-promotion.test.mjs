@@ -11,7 +11,7 @@ import {
 	typeSurfaceCells, validateTypeSurface
 } from "../src/adoption/type-surface.mjs";
 import {
-	renderTypeDocuments
+	renderTypeDocuments, replaceTypeSection
 } from "../scripts/generate-type-docs.mjs";
 import {
 	callbackSubtypePromotionLanes
@@ -24,12 +24,15 @@ import {
 } from "./helpers/callback-subtype-documentation.mjs";
 
 const readJson = async path => JSON.parse(await readFile(path, "utf8"));
-const promotionPredecessor = "9f5f9825ff48afa0e052a204f3dcd8bcdb0c47eb";
+const promotionPredecessor = "5b9ca827d621b2bcf8e67c73f85b8d9c8a84b5f0";
 const baselineArgs = ["show"
 	, `${promotionPredecessor}:docs/type-surface.v1.json`];
 const baseline = execFileSync(
 	"git", baselineArgs, { encoding: "utf8", maxBuffer: 512 * 1024 ** 2 }
 );
+const predecessorSource = path => execFileSync("git", ["show"
+	, `${promotionPredecessor}:${path}`], { encoding: "utf8"
+	, maxBuffer: 512 * 1024 ** 2 });
 const document = JSON.parse(baseline);
 const [irSchema, consumers] = await Promise.all([
 	readJson("schema/binding-ir.schema.json")
@@ -142,10 +145,19 @@ test("callback Subtype promotion documents every affected consumer", async () =>
 		assert.match(source, /exact typed recovery wrapper/u, path);
 		assert.match(source, /prevents callback entry/u, path);
 		assert.match(source, /later valid call/u, path);
+		assert.equal(await readFile(path, "utf8"), source, path);
 	}
 	assert.doesNotMatch(before.reference, evidence);
 	assert.match(after.reference, evidence);
 	assert.match(after.reference, /sixteen non-PHP-Wasm consumer profiles/u);
+	const referenceSource = await readFile("docs/reference/types.md", "utf8");
+	const referenceStart = referenceSource.indexOf("## Full type surface\n\n")
+		+ "## Full type surface\n\n".length;
+	const referenceEnd = referenceSource.indexOf("\n## Generated host types"
+		, referenceStart);
+	assert.ok(referenceStart >= 0 && referenceEnd > referenceStart);
+	assert.equal(referenceSource.slice(referenceStart, referenceEnd).trimEnd()
+		, after.reference.trimEnd());
 	for(const source of [before.reference, after.reference])
 	{
 		assert.match(source, /28 ordinary\/reviewed routes in 26 retained artifacts/u);
@@ -155,17 +167,25 @@ test("callback Subtype promotion documents every affected consumer", async () =>
 });
 
 test("callback Subtype promotion repairs stale Lean-author and consumer boundaries", async () => {
-	const [existingPackage, exportDecisions, dotnet, java, witWasi]
-		= await Promise.all([
-		readFile("docs/lean/existing-package.md", "utf8")
-		, readFile("docs/lean/export-decisions.md", "utf8")
-		, readFile("docs/consume/dotnet.md", "utf8")
-		, readFile("docs/consume/java.md", "utf8")
-		, readFile("docs/consume/wit-wasi.md", "utf8")
-		]);
+	const paths = {
+		existingPackage: "docs/lean/existing-package.md"
+		, exportDecisions: "docs/lean/export-decisions.md"
+		, dotnet: "docs/consume/dotnet.md"
+		, java: "docs/consume/java.md"
+		, witWasi: "docs/consume/wit-wasi.md"
+	};
 	const rendered = renderCallbackSubtypeLeanAuthorDocs({
-		existingPackage, exportDecisions, dotnet, java, witWasi
+		...Object.fromEntries(Object.entries(paths).map(([name, path]) =>
+			[name, predecessorSource(path)]))
 	});
+	for(const name of ["existingPackage", "exportDecisions"])
+		assert.equal(await readFile(paths[name], "utf8"), rendered[name]
+			, paths[name]);
+	const omitTypeSection = source => replaceTypeSection(source
+		, "### Type conversions\n<!-- generated section omitted -->");
+	for(const name of ["dotnet", "java", "witWasi"])
+		assert.equal(omitTypeSection(await readFile(paths[name], "utf8"))
+			, omitTypeSection(rendered[name]), paths[name]);
 	for(const source of [rendered.existingPackage, rendered.exportDecisions])
 	{
 		assert.match(source, /callback-subtype-promotion-20261022\.md/u);

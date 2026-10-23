@@ -159,7 +159,7 @@ and execute one compiled public C caller before and after relocation.
 extends the same fields and constructor-free results to Java and Kotlin
 packages with 64-bit machine words. Both author routes and API modes reproduce
 the complete Maven package, install offline, and run Java and Kotlin callers
-after relocation and from a source-free deployment. Refined
+after relocation and from a source-free deployment. Synchronous `Fin` callbacks outside C/C++, retained or asynchronous refined
 callbacks, owned and recursive Subtypes, and Subtype fields in generic records
 remain unfinished.
 
@@ -372,6 +372,8 @@ selection in their place. Constructor-free result leaves use
 `{ "kind": "subtype", "constructor": null }`; input leaves must name a checked
 constructor. The null marker belongs to reviewed result metadata, not ordinary
 configuration syntax. Fresh Lean reconciles every member, bound and choice.
+
+For synchronous callback Subtypes, select each constructor according to who produces the value. A selected value produced by Lean crosses a host callback argument or returned-closure result as its proof-erased base value. A value produced by the host is checked by the selected Lean constructor when it is returned from a callback or passed into a returned Lean closure. Host callback replies use the target's generated exact typed recovery value. Missing or invalid recovery prevents callback entry, caller values remain unchanged and a later valid call succeeds. The [hosted synchronous callback Subtype matrix](../evidence/callback-subtype-promotion-20261022.md) establishes this directional contract in all sixteen non-PHP-Wasm profiles on ordinary-source and reviewed-IR packages. [PHP-Wasm callback Subtypes](../evidence/callback-subtype-php-wasm-local-qualification-20261022.md) have a separate local Node/Chromium qualification. Retained or asynchronous callbacks, arbitrary predicates, checked-record or owned callback positions, recursive or generic refined payloads, dispatch cost and peak memory require separate evidence.
 
 C, C++, Rust, Python, Ruby, C#, Java, Kotlin, Perl, native PHP, PHP-Wasm, JavaScript/TypeScript and WIT/WASI packages also support [parameter-anchored function results](../publish/c.md#anchor-a-result-to-an-input). The [JavaScript/TypeScript owner API](../javascript-typescript.md#borrowed-results-and-whole-value-owners) uses `LeanValue<T>`; the [WIT/WASI API](../consume/wit-wasi.md#borrowed-results) carries the original owner through the Component Model call.
 The result expires with the selected input owner; callers explicitly retain or

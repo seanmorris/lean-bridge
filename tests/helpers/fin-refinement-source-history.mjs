@@ -78,6 +78,7 @@ import { beforeCallbackSubtypeDocumentationReadinessSource, callbackSubtypeDocum
 import { beforeCallbackSubtypeTestRegistrationSource, callbackSubtypeTestRegistrationChangedPaths } from "./callback-subtype-test-registration-source-history.mjs";
 import { beforeCallbackSubtypeReviewRepairSource, callbackSubtypeReviewRepairChangedPaths } from "./callback-subtype-review-repair-source-history.mjs";
 import { beforeCallbackSubtypePromotionContractSource, callbackSubtypePromotionContractChangedPaths } from "./callback-subtype-promotion-contract-source-history.mjs";
+import { beforeCallbackSubtypePromotionSource, callbackSubtypePromotionIntegrationPaths } from "./callback-subtype-promotion-source-history.mjs";
 import { beforeCallbackSubtypeHostedArchiveFoundationSource, callbackSubtypeHostedArchiveFoundationChangedPaths } from "./callback-subtype-hosted-archive-foundation-source-history.mjs";
 import { beforePhpWasmRefinementEntryDocumentationPrecisionSource, phpWasmRefinementEntryDocumentationPrecisionChangedPaths } from "./php-wasm-refinement-entry-documentation-precision-source-history.mjs";
 import { beforePhpWasmRefinementEntryDocumentationSource, phpWasmRefinementEntryDocumentationChangedPaths } from "./php-wasm-refinement-entry-documentation-source-history.mjs";
@@ -2146,6 +2147,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...callbackSubtypeTestRegistrationChangedPaths
 	, ...callbackSubtypeReviewRepairChangedPaths
 	, ...callbackSubtypePromotionContractChangedPaths
+	, ...callbackSubtypePromotionIntegrationPaths
 	, ...callbackSubtypeHostedArchiveFoundationChangedPaths
 	, ...phpWasmRefinementEntryDocumentationPrecisionChangedPaths
 	, ...phpWasmRefinementEntryDocumentationChangedPaths
@@ -2837,6 +2839,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
+	const callbackSubtypePromotion = beforeCallbackSubtypePromotionSource(
+		path, text, expected);
+	if(sha256(callbackSubtypePromotion) === expected)
+		return callbackSubtypePromotion;
+	text = callbackSubtypePromotion;
 	const valueIndexMatrixHistoricalInventoryRepair
 		= beforeValueIndexMatrixHistoricalInventoryRepairSource(
 			path, text, expected);

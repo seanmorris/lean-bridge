@@ -74,6 +74,7 @@ import "./helpers/callback-subtype-documentation-readiness-source-history-tests.
 import "./helpers/callback-subtype-test-registration-source-history-tests.mjs";
 import "./helpers/callback-subtype-review-repair-source-history-tests.mjs";
 import "./helpers/callback-subtype-promotion-contract-source-history-tests.mjs";
+import "./helpers/callback-subtype-promotion-source-history-tests.mjs";
 import "./helpers/php-wasm-subtype-entry-tests.mjs";
 import "./helpers/php-wasm-hosted-refinements-tests.mjs";
 import "./helpers/php-wasm-hosted-refinements-history-tests.mjs";
