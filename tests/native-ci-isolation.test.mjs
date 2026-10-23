@@ -11,6 +11,7 @@ import test from "node:test";
 import { assertNativeCiIsolation, nativeCiJob, nativeCiProfiles, nativeCiRecordScript } from "./helpers/native-ci-isolation.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { runCopied } from "./helpers/copied-fixture-install.mjs";
+import "./helpers/native-budget-replay-repair-source-history-tests.mjs";
 import "./helpers/native-consumer-budget-tests.mjs";
 import "./helpers/native-consumer-partition-tests.mjs";
 import "./helpers/native-consumer-partition-history-tests.mjs";

@@ -1,0 +1,86 @@
+{
+  "additions": [
+    {
+      "currentSha256": "4fda9c5c45a42d824a8faea0655c1024470de6b575550d12800984dcf673e98b",
+      "path": "scripts/update-native-budget-replay-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "f7c342f408be57788a46780d3d535e6c891fc441d857af8d9ab4b795d1fdd17b",
+      "path": "tests/helpers/native-budget-replay-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "0b64a71b9baedf2d671577927deeae95cbc10b1933ef94a9e6c3b88dc840a886",
+      "path": "tests/helpers/native-budget-replay-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "2fc30ac89bc5178360e0a5890cea7d4c059d82a1",
+  "integrationUpdates": [
+    {
+      "currentSha256": "aed97f60bd87e13ad8cfd498847c0a83854b7e1ee63d8c436a52e50f0ffb7320",
+      "edits": [
+        {
+          "current": "import { beforeNativeBudgetReplayRepairSource, nativeBudgetReplayRepairNormalizationPaths } from \"./native-budget-replay-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...nativeBudgetReplayRepairNormalizationPaths\n\t, ...inheritedDocsReplayRepairNormalizationPaths\n",
+          "previous": "\t...inheritedDocsReplayRepairNormalizationPaths\n",
+          "start": 159593
+        },
+        {
+          "current": "\tconst nativeBudgetReplayRepair\n\t\t= beforeNativeBudgetReplayRepairSource(path, text, expected);\n\tif(sha256(nativeBudgetReplayRepair) === expected)\n\t\treturn nativeBudgetReplayRepair;\n",
+          "previous": "",
+          "start": 195629
+        },
+        {
+          "current": "\t\t= beforeInheritedDocsReplayRepairSource(\n\t\t\tpath, nativeBudgetReplayRepair, expected\n\t\t);\n",
+          "previous": "\t\t= beforeInheritedDocsReplayRepairSource(path, text, expected);\n",
+          "start": 195844
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "e10cc407a3c952da6659013f87c7a331a8bb1b516cdad1e365bd27f3d47b4670"
+    },
+    {
+      "currentSha256": "1c59d827fc9b34c7c287ac7bedb5a810a27f2631eeca5fc5a43c88665c35f02d",
+      "edits": [
+        {
+          "current": "import \"./helpers/native-budget-replay-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 563
+        }
+      ],
+      "path": "tests/native-ci-isolation.test.mjs",
+      "previousSha256": "ab574e2b93baaeb6723875572d9de3ce301b09d3eeb7ffab439dafd6beb6ac3b"
+    }
+  ],
+  "milestone": "native-budget-replay-repair-source-v1",
+  "predecessorCommit": "b5570523e9116c8bb52b89892a2dbb727a6c1849",
+  "schemaVersion": 1,
+  "scope": "The native-consumer budget guard reconstructs the exact authenticated budget milestone through the complete source-history graph instead of manually unwinding two later workflow edits.",
+  "updates": [
+    {
+      "currentSha256": "a1ee300105d01a839522afb458a69082072fa542df0c5b833bf58b7c407bad1f",
+      "edits": [
+        {
+          "current": "import { beforeFinRefinementSource } from \"./fin-refinement-source-history.mjs\";\n",
+          "previous": "import { disableFinContainerEntryWorkflow } from \"./fin-container-entry-ci.mjs\";\nimport { beforeWasmCiArraySource } from \"./wasm-ci-array-source-history.mjs\";\n",
+          "start": 379
+        },
+        {
+          "current": "const reviewedBudgetSha256\n\t= \"0c5b81683de3d568297530531e9f92626b22d43053a6bf78df38f5b56301e2a1\";\n",
+          "previous": "",
+          "start": 987
+        },
+        {
+          "current": "\tconst current = beforeFinRefinementSource(\n\t\tpath, workflow, reviewedBudgetSha256\n\t);\n\tassert.equal(sha256(current), reviewedBudgetSha256\n\t\t, \"reach the authenticated budget milestone\");\n",
+          "previous": "\tconst current = disableFinContainerEntryWorkflow(beforeWasmCiArraySource(path, workflow));\n",
+          "start": 2455
+        }
+      ],
+      "path": "tests/helpers/native-consumer-budget-tests.mjs",
+      "previousSha256": "ceeb9eb52a0763d807c4e5d56047cd13f569891abac81fbfa7f2bdd308a57528"
+    }
+  ]
+}

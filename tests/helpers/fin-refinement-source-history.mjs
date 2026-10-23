@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeNativeBudgetReplayRepairSource, nativeBudgetReplayRepairNormalizationPaths } from "./native-budget-replay-repair-source-history.mjs";
 import { beforeInheritedDocsReplayRepairSource, inheritedDocsReplayRepairNormalizationPaths } from "./inherited-docs-replay-repair-source-history.mjs";
 import { beforeValueIndexRustGeneratorReplayRepairSource, valueIndexRustGeneratorReplayRepairNormalizationPaths } from "./value-index-rust-generator-replay-repair-source-history.mjs";
 import { beforeGenericSubtypeRustOraclePathRepairSource, genericSubtypeRustOraclePathRepairNormalizationPaths } from "./generic-subtype-rust-oracle-path-repair-source-history.mjs";
@@ -2020,7 +2021,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...inheritedDocsReplayRepairNormalizationPaths
+	...nativeBudgetReplayRepairNormalizationPaths
+	, ...inheritedDocsReplayRepairNormalizationPaths
 	, ...valueIndexRustGeneratorReplayRepairNormalizationPaths
 	, ...genericSubtypeRustOraclePathRepairNormalizationPaths
 	, ...dependentRecordAuthorityReplayRepairNormalizationPaths
@@ -2790,8 +2792,14 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 			text = exact;
 		}
 	}
+	const nativeBudgetReplayRepair
+		= beforeNativeBudgetReplayRepairSource(path, text, expected);
+	if(sha256(nativeBudgetReplayRepair) === expected)
+		return nativeBudgetReplayRepair;
 	const inheritedDocsReplayRepair
-		= beforeInheritedDocsReplayRepairSource(path, text, expected);
+		= beforeInheritedDocsReplayRepairSource(
+			path, nativeBudgetReplayRepair, expected
+		);
 	if(sha256(inheritedDocsReplayRepair) === expected)
 		return inheritedDocsReplayRepair;
 	const valueIndexRustGeneratorReplayRepair
