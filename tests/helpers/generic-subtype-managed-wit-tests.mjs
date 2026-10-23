@@ -97,8 +97,10 @@ test("generic Subtype hosted controls require every host and exact TAP", async (
 		]);
 		assert.equal(selected.host, host); assert.equal(selected.route, "ordinary");
 		const label = `installed generic Subtype ${labels[host]} compositions reproduce and relocate ordinary full`;
-		const tap = `TAP version 13\n# Subtest: ${label}\nok 1 - ${label}\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 1\n`;
+		const tapOf = name => `TAP version 13\n# Subtest: ${name}\nok 1 - ${name}\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 1\n`;
+		const tap = tapOf(label.replaceAll("#", "\\#"));
 		assertGenericSubtypeManagedWitTap(tap, host, "ordinary");
+		if(label.includes("#")) assert.throws(() => assertGenericSubtypeManagedWitTap(tapOf(label), host, "ordinary"));
 		assert.throws(() => assertGenericSubtypeManagedWitTap(tap.replace("# pass 1", "# pass 0"), host, "ordinary"));
 		const runnerPath = `scripts/run-generic-subtype-${host}-ci.sh`, runner = await readFile(runnerPath, "utf8");
 		assert.ok((await stat(runnerPath)).mode & 0o111); assert.match(runner, /check-generic-subtype-managed-wit-ci\.mjs/u);

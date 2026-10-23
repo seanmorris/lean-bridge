@@ -70,7 +70,9 @@ export const assertGenericSubtypeManagedWitTap = (source, host, route) => {
 	assert.doesNotMatch(source, /^not ok |^Bail out!|# SKIP|# TODO/gmu);
 	assert.doesNotMatch(source, /^[ \t]+(?:ok |not ok |# Subtest:|Bail out!)/gmu);
 	const label = `installed generic Subtype ${labels[host]} compositions reproduce and relocate ${route} full`;
-	assert.match(source, new RegExp(`^# Subtest: ${label.replaceAll(/[.*+?^${}()|[\]\\]/gu, "\\$&")}$`, "mu"));
+	// node:test escapes backslashes and # in TAP test names (C# becomes C\#).
+	const tapName = label.replaceAll("\\", "\\\\").replaceAll("#", "\\#");
+	assert.match(source, new RegExp(`^# Subtest: ${tapName.replaceAll(/[.*+?^${}()|[\]\\]/gu, "\\$&")}$`, "mu"));
 	assert.match(source, /\n1\.\.1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms [0-9]+(?:\.[0-9]+)?\n$/u);
 };
 
