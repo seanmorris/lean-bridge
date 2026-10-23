@@ -1,0 +1,460 @@
+{
+  "additions": [
+    {
+      "currentSha256": "7985ad19cc396d7ee8713a18e769232e803aa2e571a3e9aa69dad3fda399f231",
+      "path": "scripts/update-promotion-doc-milestone-replay-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "da410d2d6eec60d63967cd0c681cfe375e5c18fc6732c04091c864e3131028e1",
+      "path": "tests/helpers/promotion-doc-milestone-replay-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "6804bb5a9c8df74e945f01b5e728b7dcf8a5c25b1dcfb57cdb7098134912aea2",
+      "path": "tests/helpers/promotion-doc-milestone-replay-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "0f1ede6171a331821e54451efbcd98d3a2b2b2ef",
+  "integrationUpdates": [
+    {
+      "currentSha256": "a40990e0d805d8d953089f51473ee33abd6f380a9349081fd8ad5027d565a428",
+      "edits": [
+        {
+          "current": "import { beforePromotionDocMilestoneReplayRepairSource, promotionDocMilestoneReplayRepairNormalizationPaths } from \"./promotion-doc-milestone-replay-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...promotionDocMilestoneReplayRepairNormalizationPaths\n\t, ...nestedPromotionDocMilestoneRepairNormalizationPaths\n",
+          "previous": "\t...nestedPromotionDocMilestoneRepairNormalizationPaths\n",
+          "start": 161361
+        },
+        {
+          "current": "\tconst promotionDocMilestoneReplayRepair\n\t\t= beforePromotionDocMilestoneReplayRepairSource(path, text, expected);\n\tif(sha256(promotionDocMilestoneReplayRepair) === expected)\n\t\treturn promotionDocMilestoneReplayRepair;\n",
+          "previous": "",
+          "start": 197976
+        },
+        {
+          "current": "\t\t= beforeNestedPromotionDocMilestoneRepairSource(\n\t\t\tpath, promotionDocMilestoneReplayRepair, expected\n\t\t);\n",
+          "previous": "\t\t= beforeNestedPromotionDocMilestoneRepairSource(path, text, expected);\n",
+          "start": 198235
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "f9d433617063f9f3026136ccc362cd76b72f9a0fd821486af993e281a4ca04fc"
+    },
+    {
+      "currentSha256": "26f653b2b216ef37d72a2c901ac51f044088ac462e6286b073df71f8ea5e40d5",
+      "edits": [
+        {
+          "current": "import \"./helpers/promotion-doc-milestone-replay-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 410
+        }
+      ],
+      "path": "tests/nested-checked-records.test.mjs",
+      "previousSha256": "bb1928bafb645b46675f1e16ef870e31b3249095324b6b98a83f46f6baae9e1f"
+    }
+  ],
+  "milestone": "promotion-doc-milestone-replay-repair-source-v1",
+  "predecessorCommit": "84dae9e40fbd3477cd7b383c97811bd7cc1b8194",
+  "schemaVersion": 1,
+  "scope": "Frozen promotion assertions now reconstruct their exact authenticated documentation milestones before checking the claims established by those promotions. Later documentation and support expansions remain valid and no public support claim changes.",
+  "updates": [
+    {
+      "currentSha256": "ed676bcb9c1b53b3054da13fdba2410b10cdcfe2cf9046e6b6bc48c6ea0a9cbd",
+      "edits": [
+        {
+          "current": "\t\tconst source = sourceAtHistoryMilestone(\n\t\t\tcheckedRecordNativePromotionHistoryPath, path\n\t\t);\n",
+          "previous": "\t\tconst source = await readFile(path, \"utf8\");\n",
+          "start": 8678
+        },
+        {
+          "current": "\t\tassert.ok(row.includes(\"Installed checks passed (input, result)\"), path);\n\t\tassert.ok(row.includes(\n\t\t\t\"Not audited (field, callback input, callback result)\"), path);\n",
+          "previous": "\t\tassert.ok(row.includes(\"Installed checks passed (input, result, field)\"), path);\n\t\tassert.ok(row.includes(\"Not audited (callback input, callback result)\"), path);\n",
+          "start": 9056
+        },
+        {
+          "current": "\t\t\tassert.ok(row.includes(\"PHP-Wasm: Not audited\"));\n",
+          "previous": "\t\t\tassert.ok(source.includes(\"checked-record-php-wasm-promotion-20261011.md\"));\n\t\t\tassert.ok(!row.includes(\"PHP-Wasm: Not audited\"));\n",
+          "start": 9343
+        },
+        {
+          "current": "\t\telse assert.ok(row.includes(\n\t\t\t\"Reviewed IR: Installed checks passed (input, result)\"), path);\n",
+          "previous": "\t\telse assert.ok(row.includes(\"Reviewed IR: Installed checks passed (input, result, field)\"), path);\n",
+          "start": 9400
+        }
+      ],
+      "path": "tests/helpers/checked-record-native-promotion-tests.mjs",
+      "previousSha256": "4ff400618cbad84fb325f4285fc1af69e5a7f3a72ac15809a20d67eb70286a18"
+    },
+    {
+      "currentSha256": "865abfc6ea5a30ce2eeeaf774a89ae4c50eca4fd0df4ce16de150a32e090fc73",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { readFile } from \"node:fs/promises\";\n",
+          "start": 182
+        },
+        {
+          "current": "\t\tconst source = sourceAtHistoryMilestone(\n\t\t\tnestedCheckedRecordPerlPromotionHistoryPath, path\n\t\t);\n",
+          "previous": "\t\tconst source = await readFile(path, \"utf8\");\n",
+          "start": 9804
+        },
+        {
+          "current": "\tconst guide = sourceAtHistoryMilestone(\n\t\tnestedCheckedRecordPerlPromotionHistoryPath, \"docs/consume/perl.md\"\n\t);\n",
+          "previous": "\tconst guide = await readFile(\"docs/consume/perl.md\", \"utf8\");\n",
+          "start": 10453
+        }
+      ],
+      "path": "tests/helpers/nested-checked-record-perl-promotion-tests.mjs",
+      "previousSha256": "8aa179667f8c66aed190b68d5ca4229398bf1708befe723076894f58c3d12d21"
+    },
+    {
+      "currentSha256": "65800ff734544f8f7d7749ef05f6ec2e808a5f7375f1570e0aa67f278c1a9bf3",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { readFile } from \"node:fs/promises\";\n",
+          "start": 188
+        },
+        {
+          "current": "\t\tconst source = sourceAtHistoryMilestone(\n\t\t\tnestedCheckedRecordPhpPromotionHistoryPath, path\n\t\t);\n",
+          "previous": "\t\tconst source = await readFile(path, \"utf8\");\n",
+          "start": 8936
+        },
+        {
+          "current": "\tconst guide = sourceAtHistoryMilestone(\n\t\tnestedCheckedRecordPhpPromotionHistoryPath, \"docs/php.md\"\n\t);\n",
+          "previous": "\tconst guide = await readFile(\"docs/php.md\", \"utf8\");\n",
+          "start": 9409
+        }
+      ],
+      "path": "tests/helpers/nested-checked-record-php-promotion-tests.mjs",
+      "previousSha256": "d503bbcf78fcf375a358d643d10f6f7eef3677ba138c5fa7d6d361c7fad88cc8"
+    },
+    {
+      "currentSha256": "4aac2211c4f60fd1b8cdd0c594a92e34ae479ee7f2d773ae8acfd148b1e72533",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { readFile } from \"node:fs/promises\";\n",
+          "start": 186
+        },
+        {
+          "current": "\t\tconst source = sourceAtHistoryMilestone(\n\t\t\tnestedCheckedRecordPhpWasmPromotionHistoryPath, path\n\t\t);\n",
+          "previous": "\t\tconst source = await readFile(path, \"utf8\");\n",
+          "start": 9361
+        },
+        {
+          "current": "\tconst guide = sourceAtHistoryMilestone(\n\t\tnestedCheckedRecordPhpWasmPromotionHistoryPath, \"docs/php.md\"\n\t);\n",
+          "previous": "\tconst guide = await readFile(\"docs/php.md\", \"utf8\");\n",
+          "start": 9859
+        }
+      ],
+      "path": "tests/helpers/nested-checked-record-php-wasm-promotion-tests.mjs",
+      "previousSha256": "58bd97bce8facb09d568c4ce0473ec0752c970af1d8b4b85ed43874c14049000"
+    },
+    {
+      "currentSha256": "a9cc8c1f9e823ed182ba15387203450716a33bd05073974fe3f84d187a153599",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { readFile } from \"node:fs/promises\";\n",
+          "start": 186
+        },
+        {
+          "current": "\t\tconst source = sourceAtHistoryMilestone(\n\t\t\tnestedCheckedRecordRubyPromotionHistoryPath, path\n\t\t);\n",
+          "previous": "\t\tconst source = await readFile(path, \"utf8\");\n",
+          "start": 9224
+        },
+        {
+          "current": "\tconst guide = sourceAtHistoryMilestone(\n\t\tnestedCheckedRecordRubyPromotionHistoryPath, \"docs/consume/ruby.md\"\n\t);\n",
+          "previous": "\tconst guide = await readFile(\"docs/consume/ruby.md\", \"utf8\");\n",
+          "start": 9708
+        }
+      ],
+      "path": "tests/helpers/nested-checked-record-ruby-promotion-tests.mjs",
+      "previousSha256": "161b160917538ec852ed5b33be8ee3c8aef4417519c17940b37a5ef2f76af113"
+    },
+    {
+      "currentSha256": "bd88187900e30e942522a72499608b18629ab150009e1359a695b5d7d5a20906",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { readFile } from \"node:fs/promises\";\n",
+          "start": 188
+        },
+        {
+          "current": "\t\tconst source = sourceAtHistoryMilestone(\n\t\t\tnestedCheckedRecordRustPromotionHistoryPath, path\n\t\t);\n",
+          "previous": "\t\tconst source = await readFile(path, \"utf8\");\n",
+          "start": 10195
+        },
+        {
+          "current": "\tconst guide = sourceAtHistoryMilestone(\n\t\tnestedCheckedRecordRustPromotionHistoryPath, \"docs/consume/rust.md\"\n\t);\n",
+          "previous": "\tconst guide = await readFile(\"docs/consume/rust.md\", \"utf8\");\n",
+          "start": 10679
+        }
+      ],
+      "path": "tests/helpers/nested-checked-record-rust-promotion-tests.mjs",
+      "previousSha256": "f0578b2b84994a4d1340139e2820bce8c35c3e39ab9e1613b3d7979ca8fb6b06"
+    },
+    {
+      "currentSha256": "1cc5af7222490b6c774bde7675c8e87f53b5c3e5bf818b2e925bee0ed970f67b",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { readFile } from \"node:fs/promises\";\n",
+          "start": 196
+        },
+        {
+          "current": "\t\tconst source = sourceAtHistoryMilestone(\n\t\t\tnestedCheckedRecordWitPromotionHistoryPath, path\n\t\t);\n",
+          "previous": "\t\tconst source = await readFile(path, \"utf8\");\n",
+          "start": 9249
+        },
+        {
+          "current": "\tconst guide = sourceAtHistoryMilestone(\n\t\tnestedCheckedRecordWitPromotionHistoryPath, \"docs/consume/wit-wasi.md\"\n\t);\n",
+          "previous": "\tconst guide = await readFile(\"docs/consume/wit-wasi.md\", \"utf8\");\n",
+          "start": 9729
+        }
+      ],
+      "path": "tests/helpers/nested-checked-record-wit-promotion-tests.mjs",
+      "previousSha256": "bf92c19e99dcaa73dbc3dddaeb2d32b24d07df1a1cdfa2ff5f8d86df520af0dc"
+    },
+    {
+      "currentSha256": "d61cf8048207fa25b493652a90a414d37e2b77da19ac95b016c8b82dab25886d",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { readFile } from \"node:fs/promises\";\n",
+          "start": 205
+        },
+        {
+          "current": "\t\tconst source = sourceAtHistoryMilestone(\n\t\t\tnominalPrimitiveSubtypeDotnetPromotionHistoryPath, path\n\t\t);\n",
+          "previous": "\t\tconst source = await readFile(path, \"utf8\");\n",
+          "start": 9558
+        },
+        {
+          "current": "\tconst dotnet = sourceAtHistoryMilestone(\n\t\tnominalPrimitiveSubtypeDotnetPromotionHistoryPath, \"docs/consume/dotnet.md\"\n\t);\n",
+          "previous": "\tconst dotnet = await readFile(\"docs/consume/dotnet.md\", \"utf8\");\n",
+          "start": 10247
+        }
+      ],
+      "path": "tests/helpers/nominal-primitive-subtype-dotnet-promotion-tests.mjs",
+      "previousSha256": "a0dc20c1b2110dd4b5970070c71b43a36e363d6aa0ef04173329d90716d4c3d7"
+    },
+    {
+      "currentSha256": "b595c6349516b2ada53ebcf6a84806166ddb0807bab3bb7422dc2975effabb53",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { readFile } from \"node:fs/promises\";\n",
+          "start": 210
+        },
+        {
+          "current": "\t\tconst source = sourceAtHistoryMilestone(\n\t\t\tnominalPrimitiveSubtypePerlPromotionHistoryPath, path\n\t\t);\n",
+          "previous": "\t\tconst source = await readFile(path, \"utf8\");\n",
+          "start": 9645
+        },
+        {
+          "current": "\tconst perl = sourceAtHistoryMilestone(\n\t\tnominalPrimitiveSubtypePerlPromotionHistoryPath, \"docs/consume/perl.md\"\n\t);\n",
+          "previous": "\tconst perl = await readFile(\"docs/consume/perl.md\", \"utf8\");\n",
+          "start": 10302
+        }
+      ],
+      "path": "tests/helpers/nominal-primitive-subtype-perl-promotion-tests.mjs",
+      "previousSha256": "f25b31c738bd65610351bf246c5a07649619c9c545a837d77dcf7e78060e8fcd"
+    },
+    {
+      "currentSha256": "97f6cad7d32ec8654e4821f2f28244d9625ef5b6904aed23b69915191fb208f6",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { readFile } from \"node:fs/promises\";\n",
+          "start": 188
+        },
+        {
+          "current": "\t\tconst source = sourceAtHistoryMilestone(\n\t\t\tnominalPrimitiveSubtypePhpPromotionHistoryPath, path\n\t\t);\n",
+          "previous": "\t\tconst source = await readFile(path, \"utf8\");\n",
+          "start": 9357
+        },
+        {
+          "current": "\tconst php = sourceAtHistoryMilestone(\n\t\tnominalPrimitiveSubtypePhpPromotionHistoryPath, \"docs/php.md\"\n\t);\n",
+          "previous": "\tconst php = await readFile(\"docs/php.md\", \"utf8\");\n",
+          "start": 10015
+        }
+      ],
+      "path": "tests/helpers/nominal-primitive-subtype-php-promotion-tests.mjs",
+      "previousSha256": "87e65c37af7a8207d2cb7ad7fc93be1f2e28d657789ba7c0ef020c7cf1252fa5"
+    },
+    {
+      "currentSha256": "172d29542fded12d3a7fd38df763d699f7822c299cd267147ddf18b2f925d667",
+      "edits": [
+        {
+          "current": "import { sourceAtHistoryMilestone } from \"./source-history-test-source.mjs\";\n",
+          "previous": "",
+          "start": 692
+        },
+        {
+          "current": "\t\tconst source = sourceAtHistoryMilestone(\n\t\t\tnominalPrimitiveSubtypePhpWasmPromotionHistoryPath, path\n\t\t);\n",
+          "previous": "\t\tconst source = await readFile(path, \"utf8\");\n",
+          "start": 10371
+        },
+        {
+          "current": "\tconst php = sourceAtHistoryMilestone(\n\t\tnominalPrimitiveSubtypePhpWasmPromotionHistoryPath, \"docs/php.md\"\n\t);\n",
+          "previous": "\tconst php = await readFile(\"docs/php.md\", \"utf8\");\n",
+          "start": 11052
+        }
+      ],
+      "path": "tests/helpers/nominal-primitive-subtype-php-wasm-promotion-tests.mjs",
+      "previousSha256": "e7bb84d92e855ce2878f545212e5955bc5a372ce70e3353952d0f295a7b323c7"
+    },
+    {
+      "currentSha256": "de6640b3f420c7118d9a310f5e81614b4c86d48258ee66c136abe66a31aa0d2d",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { readFile } from \"node:fs/promises\";\n",
+          "start": 212
+        },
+        {
+          "current": "\t\tconst source = sourceAtHistoryMilestone(\n\t\t\tnominalPrimitiveSubtypePythonPromotionHistoryPath, path\n\t\t);\n",
+          "previous": "\t\tconst source = await readFile(path, \"utf8\");\n",
+          "start": 8343
+        },
+        {
+          "current": "\tconst python = sourceAtHistoryMilestone(\n\t\tnominalPrimitiveSubtypePythonPromotionHistoryPath, \"docs/consume/python.md\"\n\t);\n",
+          "previous": "\tconst python = await readFile(\"docs/consume/python.md\", \"utf8\");\n",
+          "start": 9012
+        }
+      ],
+      "path": "tests/helpers/nominal-primitive-subtype-python-promotion-tests.mjs",
+      "previousSha256": "773fc953594cdaedf6668a4ed52d5e278ee9b387b16b12196b7246315b088310"
+    },
+    {
+      "currentSha256": "020cf97868e8753aa90ad2ad4fa59d5a13f31b003323764e42974a7374146617",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { readFile } from \"node:fs/promises\";\n",
+          "start": 210
+        },
+        {
+          "current": "\t\tconst source = sourceAtHistoryMilestone(\n\t\t\tnominalPrimitiveSubtypeRubyPromotionHistoryPath, path\n\t\t);\n",
+          "previous": "\t\tconst source = await readFile(path, \"utf8\");\n",
+          "start": 9175
+        },
+        {
+          "current": "\tconst ruby = sourceAtHistoryMilestone(\n\t\tnominalPrimitiveSubtypeRubyPromotionHistoryPath, \"docs/consume/ruby.md\"\n\t);\n",
+          "previous": "\tconst ruby = await readFile(\"docs/consume/ruby.md\", \"utf8\");\n",
+          "start": 9832
+        }
+      ],
+      "path": "tests/helpers/nominal-primitive-subtype-ruby-promotion-tests.mjs",
+      "previousSha256": "a6eee75929c2e5d4784a914f0eee3f4be6dd94774f86b84afe63cc5e68590189"
+    },
+    {
+      "currentSha256": "906ad09fc8ef48e2d4feaeb79a3becfec7128ec167e410acacd41fa6d8e8e8f2",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { readFile } from \"node:fs/promises\";\n",
+          "start": 210
+        },
+        {
+          "current": "\t\tconst source = sourceAtHistoryMilestone(\n\t\t\tnominalPrimitiveSubtypeRustPromotionHistoryPath, path\n\t\t);\n",
+          "previous": "\t\tconst source = await readFile(path, \"utf8\");\n",
+          "start": 9599
+        },
+        {
+          "current": "\tconst rust = sourceAtHistoryMilestone(\n\t\tnominalPrimitiveSubtypeRustPromotionHistoryPath, \"docs/consume/rust.md\"\n\t);\n",
+          "previous": "\tconst rust = await readFile(\"docs/consume/rust.md\", \"utf8\");\n",
+          "start": 10256
+        }
+      ],
+      "path": "tests/helpers/nominal-primitive-subtype-rust-promotion-tests.mjs",
+      "previousSha256": "8762f858a5c5722c9ad4dc6686f63f7587d38f2efc3541a46af2c08b1ebcbabb"
+    },
+    {
+      "currentSha256": "4d4368e9b95411c3e624e6c4420b16ce6330d4fac65168bb7aeed8b26ca780bb",
+      "edits": [
+        {
+          "current": "import { sourceAtHistoryMilestone } from \"./source-history-test-source.mjs\";\n",
+          "previous": "",
+          "start": 870
+        },
+        {
+          "current": "\t\tconst source = sourceAtHistoryMilestone(\n\t\t\tnominalPrimitiveSubtypeWitPromotionHistoryPath, path\n\t\t);\n",
+          "previous": "\t\tconst source = await readFile(path, \"utf8\");\n",
+          "start": 9914
+        },
+        {
+          "current": "\tconst wit = sourceAtHistoryMilestone(\n\t\tnominalPrimitiveSubtypeWitPromotionHistoryPath, \"docs/consume/wit-wasi.md\"\n\t);\n",
+          "previous": "\tconst wit = await readFile(\"docs/consume/wit-wasi.md\", \"utf8\");\n",
+          "start": 10570
+        }
+      ],
+      "path": "tests/helpers/nominal-primitive-subtype-wit-promotion-tests.mjs",
+      "previousSha256": "305d3a47c33366a4bba927b6b38075fb14c180feffd005f5245ff19f27188ff4"
+    },
+    {
+      "currentSha256": "d72dbaa31ff6ae89c6fc38ab482aa071c0a0dc2d8236589e519f16007125b9b1",
+      "edits": [
+        {
+          "current": "\tconst consumer = await promotionSource(\"docs/php.md\");\n\tconst author = await promotionSource(\"docs/lean/existing-package.md\");\n",
+          "previous": "\tconst consumer = await readFile(\"docs/php.md\", \"utf8\");\n\tconst author = await readFile(\"docs/lean/existing-package.md\", \"utf8\");\n",
+          "start": 6771
+        }
+      ],
+      "path": "tests/helpers/php-wasm-direct-fin-promotion-tests.mjs",
+      "previousSha256": "3a619a1b1bebf56b5d453ec1d9aa35fdd94075961a473b112cf274448438e2ef"
+    },
+    {
+      "currentSha256": "e8ec53b2b86999b9e55da32722357970e9918b1f94fd95625b9dd0488a3afb07",
+      "edits": [
+        {
+          "current": "\tconst consumer = await promotionSource(\"docs/php.md\")\n\t\t, author = await promotionSource(\"docs/lean/existing-package.md\");\n",
+          "previous": "\tconst consumer = await readFile(\"docs/php.md\", \"utf8\"), author = await readFile(\"docs/lean/existing-package.md\", \"utf8\");\n",
+          "start": 6558
+        },
+        {
+          "current": "\tassert.ok(author.includes(\"PHP-Wasm keeps nested Subtype and packages combining refinements with graph, owned or callable transports rejected.\"));\n",
+          "previous": "\tassert.ok(author.includes(\"PHP-Wasm accepts the listed structural containers, acyclic nominal fields and [finite recursive copied graphs](../evidence/recursive-subtype-php-wasm-20261015.md). Refined callback and owned transports remain rejected.\"));\n",
+          "start": 7471
+        }
+      ],
+      "path": "tests/helpers/php-wasm-subtype-promotion-tests.mjs",
+      "previousSha256": "5156ff61e01d0a785866f1b8e3187d5208e1f1f3866601891b49d5890897b1b1"
+    },
+    {
+      "currentSha256": "c9afb6110b199eab52ff8d9ce9dd3885822e8ac2d906da9429ef0ab992aa90ea",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { beforeStructuralSubtypePromotionSource } from \"./structural-subtype-promotion-history.mjs\";\n",
+          "start": 137
+        },
+        {
+          "current": "import { sourceAtHistoryMilestone } from \"./source-history-test-source.mjs\";\n",
+          "previous": "",
+          "start": 1278
+        },
+        {
+          "current": "\tconst consumer = sourceAtHistoryMilestone(\n\t\treviewedSubtypeBrowserPromotionHistoryPath, \"docs/javascript-typescript.md\"\n\t);\n",
+          "previous": "\tconst consumer = await readFile(\"docs/javascript-typescript.md\", \"utf8\");\n",
+          "start": 7428
+        },
+        {
+          "current": "\tassert.ok(row.includes(browserSubtypeConversion));\n\tassert.ok(row.includes(\"Reviewed IR: Installed checks passed (input, result)\"));\n\tassert.ok(row.includes(\"Not audited (field, callback input, callback result)\"));\n",
+          "previous": "\tconst previous = beforeStructuralSubtypePromotionSource(\"docs/javascript-typescript.md\", consumer);\n\tassert.ok(previous.split(\"\\n\").find(line => line.startsWith(\"| `Subtype /\")).includes(browserSubtypeConversion));\n\t// Node has separate nominal-field acceptance; this receipt covers browser realms.\n\tconst browser = row.split(\"Reviewed IR: \")[1]?.split(\"Browser / React / Worker: \")[1];\n\tassert.ok(browser?.includes(\"Installed checks passed (input, result)\"));\n\tassert.ok(browser.includes(\"Not audited (field, callback input, callback result)\"));\n",
+          "start": 7635
+        },
+        {
+          "current": "\t\tconst source = sourceAtHistoryMilestone(\n\t\t\treviewedSubtypeBrowserPromotionHistoryPath, path\n\t\t);\n",
+          "previous": "\t\tconst source = await readFile(path, \"utf8\");\n",
+          "start": 8089
+        }
+      ],
+      "path": "tests/helpers/reviewed-subtype-browser-promotion-tests.mjs",
+      "previousSha256": "70abf4539630dd50a3e6af2562f7ca9efeef27e40f2afc288e750dbc8a5d93cc"
+    }
+  ]
+}
