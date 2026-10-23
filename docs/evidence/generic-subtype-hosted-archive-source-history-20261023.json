@@ -1,0 +1,121 @@
+{
+  "additions": [
+    {
+      "currentSha256": "0b90193ab090169293b5df1fc0bb05885c4138ac455ff11618d918183538982b",
+      "path": "scripts/archive-generic-subtype-evidence.mjs"
+    },
+    {
+      "currentSha256": "7681482b0f4578aa08a6ddf2da2fd7fee10637e75cc4544196be28060327958e",
+      "path": "tests/helpers/generic-subtype-hosted-contract-tests.mjs"
+    },
+    {
+      "currentSha256": "106f1f8121ad08e558e473c2d4bcd1e730b5657f87b5f35e51fc7bd12c4c929e",
+      "path": "tests/helpers/generic-subtype-hosted-contracts.mjs"
+    },
+    {
+      "currentSha256": "9a46dd2e44ede13ee2d986678779434219ab08bcb6b8c873f415e45268b3080d",
+      "path": "tests/helpers/generic-subtype-hosted-evidence-sources.mjs"
+    },
+    {
+      "currentSha256": "2475b4f7efd78dc86ccbeb577a439369e1542ede6e901cbb821d786a254f2105",
+      "path": "tests/helpers/generic-subtype-hosted-evidence.mjs"
+    },
+    {
+      "currentSha256": "9c0faf60bc3ebd75ea878f0db2cc4ec9bc7bf1d3ba293f7c565422eb745e30d7",
+      "path": "tests/helpers/generic-subtype-hosted-output.mjs"
+    },
+    {
+      "currentSha256": "55a33ef58af9d5b1787ec092a2a414da418d5a091dba858af2c25b469db29ed4",
+      "path": "scripts/update-generic-subtype-hosted-archive-source-history.mjs"
+    },
+    {
+      "currentSha256": "6b295018a8f22e5366eb17176b2804e87c94d113bc56e9193ac881f8dac40f1c",
+      "path": "tests/helpers/generic-subtype-hosted-archive-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "b1387db525b342f749ac8678a262d95887b9974197d58fa03020b52cc9bfefcb",
+      "path": "tests/helpers/generic-subtype-hosted-archive-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "ad7f427ec71592ec886f3d3076f6fd163ed266b5",
+  "implementationCommits": [
+    "78e50bc360bb3a7194c625791605340b34819346",
+    "ad7f427ec71592ec886f3d3076f6fd163ed266b5"
+  ],
+  "integrationUpdates": [
+    {
+      "currentSha256": "a847c39de1bf0bfb1c12a62d3f31867ccdb1920e13f93f060e171a5c00cb0509",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"2d710b6025a477330eba538fcc4341270239acd101a2a176ba410ac054cd76cc\"\n",
+          "previous": "          \"sha256\": \"a52205ec33b0a77ee01f542072c74be48f9f295390974bc30b0c1931f302404d\"\n",
+          "start": 685394
+        },
+        {
+          "current": "          \"sha256\": \"2d710b6025a477330eba538fcc4341270239acd101a2a176ba410ac054cd76cc\"\n",
+          "previous": "          \"sha256\": \"a52205ec33b0a77ee01f542072c74be48f9f295390974bc30b0c1931f302404d\"\n",
+          "start": 1440962
+        },
+        {
+          "current": "          \"sha256\": \"2d710b6025a477330eba538fcc4341270239acd101a2a176ba410ac054cd76cc\"\n",
+          "previous": "          \"sha256\": \"a52205ec33b0a77ee01f542072c74be48f9f295390974bc30b0c1931f302404d\"\n",
+          "start": 1447496
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "66e2a4043a73aabdabe5fc25adb220e9c46a97b53ea8acbe4f23defaa8a6ae9b"
+    },
+    {
+      "currentSha256": "2d710b6025a477330eba538fcc4341270239acd101a2a176ba410ac054cd76cc",
+      "edits": [
+        {
+          "current": "import \"./helpers/generic-subtype-hosted-archive-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 2085
+        }
+      ],
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "a52205ec33b0a77ee01f542072c74be48f9f295390974bc30b0c1931f302404d"
+    },
+    {
+      "currentSha256": "650f1fc880022ca9089f2bba736124d54bfe57071766c962606bf3adaa602947",
+      "edits": [
+        {
+          "current": "import { beforeGenericSubtypeHostedArchiveSource, genericSubtypeHostedArchiveNormalizationPaths } from \"./generic-subtype-hosted-archive-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...genericSubtypeHostedArchiveNormalizationPaths\n\t, ...recursiveCheckedRecordDocumentationClosureNormalizationPaths\n",
+          "previous": "\t...recursiveCheckedRecordDocumentationClosureNormalizationPaths\n",
+          "start": 166489
+        },
+        {
+          "current": "\tconst genericSubtypeHostedArchive\n\t\t= beforeGenericSubtypeHostedArchiveSource(path, text, expected);\n\tif(sha256(genericSubtypeHostedArchive) === expected)\n\t\treturn genericSubtypeHostedArchive;\n\ttext = genericSubtypeHostedArchive;\n",
+          "previous": "",
+          "start": 204581
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "25a41c76e10b7cd2d06ee6293c4d07226a11ceafd502033851b51d3740dbd391"
+    }
+  ],
+  "milestone": "generic-subtype-hosted-archive-source-v1",
+  "predecessorCommit": "4164a4fd1cc2e634a5f7e228da29650cba330d94",
+  "schemaVersion": 1,
+  "scope": "Define twelve immutable generic-Subtype hosted evidence archives across every non-PHP-Wasm profile, retain exact GitHub and source bytes, and independently replay every packaged route.",
+  "updates": [
+    {
+      "currentSha256": "910d6042dcd7b098f8abf352218deb4999a7b45ea4fab2668164bdb975a2fa84",
+      "edits": [
+        {
+          "current": "import \"./helpers/generic-subtype-hosted-contract-tests.mjs\";\n",
+          "previous": "",
+          "start": 220
+        }
+      ],
+      "path": "tests/generic-subtype-native-perl.test.mjs",
+      "previousSha256": "2d2c05d787a97daffe5853ddf944ca1ec1858afafc31925f5dfc8e76da60eff6"
+    }
+  ]
+}
