@@ -1,0 +1,96 @@
+{
+  "additions": [
+    {
+      "currentSha256": "6749bba3bddae7e28beba60635b344619e3e67760236ad7de20dcd083e9c2b6a",
+      "path": "scripts/update-inherited-docs-replay-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "0d2b8c75ef12212191852fe8fea24182a31dd747648aa8065a6ea2a1bf037e19",
+      "path": "tests/helpers/inherited-docs-replay-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "a4b301148b26177d1676d3b02445d1fbc61e40a78115c25656cdd5984b102c93",
+      "path": "tests/helpers/inherited-docs-replay-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "79a2ec5f94ba40c3666e733f7b5d3c2596b5a480",
+  "integrationUpdates": [
+    {
+      "currentSha256": "e10cc407a3c952da6659013f87c7a331a8bb1b516cdad1e365bd27f3d47b4670",
+      "edits": [
+        {
+          "current": "import { beforeInheritedDocsReplayRepairSource, inheritedDocsReplayRepairNormalizationPaths } from \"./inherited-docs-replay-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...inheritedDocsReplayRepairNormalizationPaths\n\t, ...valueIndexRustGeneratorReplayRepairNormalizationPaths\n",
+          "previous": "\t...valueIndexRustGeneratorReplayRepairNormalizationPaths\n",
+          "start": 159444
+        },
+        {
+          "current": "\tconst inheritedDocsReplayRepair\n\t\t= beforeInheritedDocsReplayRepairSource(path, text, expected);\n\tif(sha256(inheritedDocsReplayRepair) === expected)\n\t\treturn inheritedDocsReplayRepair;\n",
+          "previous": "",
+          "start": 195431
+        },
+        {
+          "current": "\t\t= beforeValueIndexRustGeneratorReplayRepairSource(\n\t\t\tpath, inheritedDocsReplayRepair, expected\n\t\t);\n",
+          "previous": "\t\t= beforeValueIndexRustGeneratorReplayRepairSource(path, text, expected);\n",
+          "start": 195660
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "cbe11c02b4ed0c71354fc3dcaed7d6e2eaa7d3c66d4342fe5cfe9b98b947fa22"
+    },
+    {
+      "currentSha256": "01a08a3c816531618b57c99b3a714356bc7fde578f0ffb89b018a806dd9f9ed9",
+      "edits": [
+        {
+          "current": "import \"./helpers/inherited-docs-replay-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 370
+        }
+      ],
+      "path": "tests/lean-author-documentation.test.mjs",
+      "previousSha256": "0530f3b5e5ad1702a7b3bc35d1125902c2340f8542778ae6ed9a07db3354d4dc"
+    }
+  ],
+  "milestone": "inherited-docs-replay-repair-source-v1",
+  "predecessorCommit": "7340e71a4e16a0589f69199408b8abf6d367f8c9",
+  "schemaVersion": 1,
+  "scope": "The inherited checked-record documentation verifier reconstructs addition bytes at their authenticated milestone and accepts the same receiver-dependent limitation with or without its locally redundant inherited modifier.",
+  "updates": [
+    {
+      "currentSha256": "81fa67ebc20499503a44b8ed4a8066a8740eb8ed3e536e2ef9f68a9ebcd67622",
+      "edits": [
+        {
+          "current": "\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256\n\t\t))\n",
+          "previous": "\t\tassert.equal(sha256(await readFile(addition.path))\n",
+          "start": 3961
+        },
+        {
+          "current": "\tconst receiverBoundary\n\t\t= /value-carrying receiver-dependent (?:inherited )?fields/u;\n",
+          "previous": "",
+          "start": 5841
+        },
+        {
+          "current": "\t\tassert.match(source, receiverBoundary, path);\n",
+          "previous": "\t\tassert.match(source\n\t\t\t, /value-carrying receiver-dependent inherited fields/u, path);\n",
+          "start": 6158
+        },
+        {
+          "current": "\tassert.match(section, receiverBoundary);\n",
+          "previous": "\tassert.match(section, /value-carrying receiver-dependent inherited fields/u);\n",
+          "start": 6912
+        },
+        {
+          "current": "\tassert.match(decisions, receiverBoundary);\n",
+          "previous": "\tassert.match(decisions, /value-carrying receiver-dependent inherited fields/u);\n",
+          "start": 7232
+        }
+      ],
+      "path": "tests/helpers/inherited-checked-record-docs-closure-source-history-tests.mjs",
+      "previousSha256": "f0c71f48e589421de4094f8ba34e3b8bad3dee051d0abf601dbae21a447def06"
+    }
+  ]
+}

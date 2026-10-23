@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeInheritedDocsReplayRepairSource, inheritedDocsReplayRepairNormalizationPaths } from "./inherited-docs-replay-repair-source-history.mjs";
 import { beforeValueIndexRustGeneratorReplayRepairSource, valueIndexRustGeneratorReplayRepairNormalizationPaths } from "./value-index-rust-generator-replay-repair-source-history.mjs";
 import { beforeGenericSubtypeRustOraclePathRepairSource, genericSubtypeRustOraclePathRepairNormalizationPaths } from "./generic-subtype-rust-oracle-path-repair-source-history.mjs";
 import { beforeDependentRecordAuthorityReplayRepairSource, dependentRecordAuthorityReplayRepairNormalizationPaths } from "./dependent-record-authority-replay-repair-source-history.mjs";
@@ -2019,7 +2020,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...valueIndexRustGeneratorReplayRepairNormalizationPaths
+	...inheritedDocsReplayRepairNormalizationPaths
+	, ...valueIndexRustGeneratorReplayRepairNormalizationPaths
 	, ...genericSubtypeRustOraclePathRepairNormalizationPaths
 	, ...dependentRecordAuthorityReplayRepairNormalizationPaths
 	, ...preFinTypeSurfaceHistoryRepairNormalizationPaths
@@ -2788,8 +2790,14 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 			text = exact;
 		}
 	}
+	const inheritedDocsReplayRepair
+		= beforeInheritedDocsReplayRepairSource(path, text, expected);
+	if(sha256(inheritedDocsReplayRepair) === expected)
+		return inheritedDocsReplayRepair;
 	const valueIndexRustGeneratorReplayRepair
-		= beforeValueIndexRustGeneratorReplayRepairSource(path, text, expected);
+		= beforeValueIndexRustGeneratorReplayRepairSource(
+			path, inheritedDocsReplayRepair, expected
+		);
 	if(sha256(valueIndexRustGeneratorReplayRepair) === expected)
 		return valueIndexRustGeneratorReplayRepair;
 	const genericSubtypeRustOraclePathRepair

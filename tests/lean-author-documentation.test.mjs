@@ -8,6 +8,7 @@ import assert from "node:assert/strict";
 import "./helpers/author-refinement-docs-source-history-tests.mjs";
 import "./helpers/checked-record-perl-author-docs-history-tests.mjs";
 import "./helpers/inherited-checked-record-docs-closure-source-history-tests.mjs";
+import "./helpers/inherited-docs-replay-repair-source-history-tests.mjs";
 import { access, readFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import test from "node:test";
