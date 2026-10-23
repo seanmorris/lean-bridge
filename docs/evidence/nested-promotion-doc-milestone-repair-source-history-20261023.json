@@ -1,0 +1,103 @@
+{
+  "additions": [
+    {
+      "currentSha256": "10ce06d534b6cf1f0993fd737b1d49543469df5c46f8376587282573db81c959",
+      "path": "scripts/update-nested-promotion-doc-milestone-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "d6eac7cda07774470342a4f4519549c41bffd448b6098efbfe55d7b6cbc740ce",
+      "path": "tests/helpers/nested-promotion-doc-milestone-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "a82a9d89dc6d25b399c666bbf4441c143ed7874a874716cbd2f5ee22c2bef37d",
+      "path": "tests/helpers/nested-promotion-doc-milestone-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "91bae3d5b118e971a7124ac746639771ffe7de92",
+  "integrationUpdates": [
+    {
+      "currentSha256": "f9d433617063f9f3026136ccc362cd76b72f9a0fd821486af993e281a4ca04fc",
+      "edits": [
+        {
+          "current": "import { beforeNestedPromotionDocMilestoneRepairSource, nestedPromotionDocMilestoneRepairNormalizationPaths } from \"./nested-promotion-doc-milestone-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...nestedPromotionDocMilestoneRepairNormalizationPaths\n\t, ...workflowMilestoneReplayRepairNormalizationPaths\n",
+          "previous": "\t...workflowMilestoneReplayRepairNormalizationPaths\n",
+          "start": 161184
+        },
+        {
+          "current": "\tconst nestedPromotionDocMilestoneRepair\n\t\t= beforeNestedPromotionDocMilestoneRepairSource(path, text, expected);\n\tif(sha256(nestedPromotionDocMilestoneRepair) === expected)\n\t\treturn nestedPromotionDocMilestoneRepair;\n",
+          "previous": "",
+          "start": 197741
+        },
+        {
+          "current": "\t\t= beforeWorkflowMilestoneReplayRepairSource(\n\t\t\tpath, nestedPromotionDocMilestoneRepair, expected\n\t\t);\n",
+          "previous": "\t\t= beforeWorkflowMilestoneReplayRepairSource(path, text, expected);\n",
+          "start": 197996
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "087fba88c3489a92bb6012e089696c6c7953b5365b0fc90246c36e151434e7d4"
+    },
+    {
+      "currentSha256": "bb1928bafb645b46675f1e16ef870e31b3249095324b6b98a83f46f6baae9e1f",
+      "edits": [
+        {
+          "current": "import \"./helpers/nested-promotion-doc-milestone-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 410
+        }
+      ],
+      "path": "tests/nested-checked-records.test.mjs",
+      "previousSha256": "bc548ff63a417c42485c12361b932713f2fe1ce755d805cee3901efb5a9ea5b1"
+    }
+  ],
+  "milestone": "nested-promotion-doc-milestone-repair-source-v1",
+  "predecessorCommit": "a9f3d0f66e5eca43318aa67813768de75e4cc5b1",
+  "schemaVersion": 1,
+  "scope": "Nested checked-record browser and Python promotion tests now reconstruct their exact authenticated documentation epochs before asserting the frozen promotion wording. Later support additions remain valid and no public support claim changes.",
+  "updates": [
+    {
+      "currentSha256": "71bda4e87bfdceb145c24117d4e3862ec580ab1f7c89b604bcf8387c3a92850c",
+      "edits": [
+        {
+          "current": "\t\tconst source = sourceAtHistoryMilestone(\n\t\t\tnestedCheckedRecordBrowserPromotionHistoryPath, path\n\t\t);\n",
+          "previous": "\t\tconst source = await readFile(path, \"utf8\");\n",
+          "start": 9223
+        },
+        {
+          "current": "\tconst javascript = sourceAtHistoryMilestone(\n\t\tnestedCheckedRecordBrowserPromotionHistoryPath\n\t\t, \"docs/javascript-typescript.md\"\n\t);\n",
+          "previous": "\tconst javascript = await readFile(\"docs/javascript-typescript.md\", \"utf8\");\n",
+          "start": 9423
+        }
+      ],
+      "path": "tests/helpers/nested-checked-record-browser-promotion-tests.mjs",
+      "previousSha256": "8b112ca8b38764303eaf192362586ecefb14a3a865e164c234ece1284ca4b21f"
+    },
+    {
+      "currentSha256": "c68ca660fe846872db186c83d238cca90ed11bae631389aa15f4362c8c74e25c",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { readFile } from \"node:fs/promises\";\n",
+          "start": 190
+        },
+        {
+          "current": "\t\tconst source = sourceAtHistoryMilestone(\n\t\t\tnestedCheckedRecordPythonPromotionHistoryPath, path\n\t\t);\n",
+          "previous": "\t\tconst source = await readFile(path, \"utf8\");\n",
+          "start": 9315
+        },
+        {
+          "current": "\tconst guide = sourceAtHistoryMilestone(\n\t\tnestedCheckedRecordPythonPromotionHistoryPath, \"docs/consume/python.md\"\n\t);\n",
+          "previous": "\tconst guide = await readFile(\"docs/consume/python.md\", \"utf8\");\n",
+          "start": 9800
+        }
+      ],
+      "path": "tests/helpers/nested-checked-record-python-promotion-tests.mjs",
+      "previousSha256": "e85db975c3006c9b5899bf2e5ffbabb27491cfb7c6813d55d5ffe87c9c6d5686"
+    }
+  ]
+}

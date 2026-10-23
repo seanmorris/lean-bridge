@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeNestedPromotionDocMilestoneRepairSource, nestedPromotionDocMilestoneRepairNormalizationPaths } from "./nested-promotion-doc-milestone-repair-source-history.mjs";
 import { beforeWorkflowMilestoneReplayRepairSource, workflowMilestoneReplayRepairNormalizationPaths } from "./workflow-milestone-replay-repair-source-history.mjs";
 import { beforeCoreResidualLedgerPointerReplayRepairSource, coreResidualLedgerPointerReplayRepairNormalizationPaths } from "./core-residual-ledger-pointer-replay-repair-source-history.mjs";
 import { beforeCoreRubyModelAvailabilityRepairSource, coreRubyModelAvailabilityRepairNormalizationPaths } from "./core-ruby-model-availability-repair-source-history.mjs";
@@ -2029,7 +2030,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...workflowMilestoneReplayRepairNormalizationPaths
+	...nestedPromotionDocMilestoneRepairNormalizationPaths
+	, ...workflowMilestoneReplayRepairNormalizationPaths
 	, ...coreResidualLedgerPointerReplayRepairNormalizationPaths
 	, ...coreRubyModelAvailabilityRepairNormalizationPaths
 	, ...coreResidualProducerReplayRepairNormalizationPaths
@@ -2808,8 +2810,14 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 			text = exact;
 		}
 	}
+	const nestedPromotionDocMilestoneRepair
+		= beforeNestedPromotionDocMilestoneRepairSource(path, text, expected);
+	if(sha256(nestedPromotionDocMilestoneRepair) === expected)
+		return nestedPromotionDocMilestoneRepair;
 	const workflowMilestoneReplayRepair
-		= beforeWorkflowMilestoneReplayRepairSource(path, text, expected);
+		= beforeWorkflowMilestoneReplayRepairSource(
+			path, nestedPromotionDocMilestoneRepair, expected
+		);
 	if(sha256(workflowMilestoneReplayRepair) === expected)
 		return workflowMilestoneReplayRepair;
 	const coreResidualLedgerPointerReplayRepair

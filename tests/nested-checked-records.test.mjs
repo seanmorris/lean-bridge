@@ -9,6 +9,7 @@ import { cp, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
+import "./helpers/nested-promotion-doc-milestone-repair-source-history-tests.mjs";
 import "./helpers/nested-checked-record-npm-installed-tests.mjs";
 import "./helpers/nested-checked-record-browser-ci-tests.mjs";
 import "./helpers/nested-checked-record-browser-ci-workflow-tests.mjs";
