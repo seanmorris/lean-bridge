@@ -212,7 +212,10 @@ test("PHP-Wasm packages document each checked path, and packages without bounds 
 	const settings = { integerBits: 32, structuredCallables: true, lists: true, variants: true };
 	const readme = phpWasmFinReadme(compileCopiedPhpModel(createPhpWasmCopiedModel(finRecordCompilerInput()).bindingIr, settings));
 	assert.match(readme, /^\n## Bounded integers\n\nLean Fin n parameters and results are Brick\\Math\\BigInteger values below n\. The PHP-Wasm side module compares each argument/u);
-	assert.match(readme, /Fin inside callbacks or generic record instantiations is not supported in PHP-Wasm packages\./u);
+	assert.match(readme
+		, /Generic record instantiations remain unsupported in PHP-Wasm packages\./u);
+	assert.match(readme
+		, /Synchronous copied-value callbacks apply the same Fin checks at callback replies and returned-closure inputs\./u);
 	for(const line of ["nest_sum: $arg0.inner.digit < 5; $arg0.tag < 3", "maybe_shape: $arg0?.circle.radius < 10", "tile_except: $arg0.ok.digit < 5; $arg0.error.circle.radius < 10"])
 		assert.ok(readme.includes(`\\${line}\n`), line);
 	const plain = { ...nativeMetadataFixture(), component: { id: "sample@1.0.0", name: "sample", version: "1.0.0" } };

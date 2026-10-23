@@ -18,7 +18,7 @@ import { ownedPhpWasmReadme, ownedPhpWasmTransferReadme, ownedPhpWasmBorrowReadm
 import { phpCopiedAliases, phpAliasReadme } from "../backends/php/copied-aliases.mjs";
 import { phpVariantReadme } from "../backends/php/copied-variants.mjs";
 import { phpValueReadme } from "../backends/php/copied-equality.mjs";
-import { nativeFinContainerNote, nativeFinRefinements, nativeFinSummary, nativeRefinementReadme } from "../backends/native/fin-refinements.mjs";
+import { nativeFinBoundPaths, nativeFinContainerNote, nativeFinRefinements, nativeFinSummary, nativeRefinementReadme } from "../backends/native/fin-refinements.mjs";
 import { componentNpmIdentity } from "./component-package-receipt.mjs";
 import { createDeterministicTarGzFromFiles, tarGzipPackingIdentity } from "./deterministic-archive.mjs";
 import { createDeterministicZip } from "./deterministic-zip.mjs";
@@ -40,25 +40,66 @@ import { brickMathRequirement, bundledBrickMath } from "../backends/php/brick-ma
 const phpWasmRefinementReadme = ({ ir, namespace, functions, recursive = false }) => {
 	const types = ir.types;
 	const parameterName = parameter => typeof parameter === "string" ? parameter : parameter.name;
-	const bounds = fn => nativeFinSummary(fn.declaration, fn.parameters.map(parameter => `$${parameterName(parameter)}`), types);
-	functions = functions.filter(bounds);
-	if(!functions.length) return "";
-	const declarations = functions.map(fn => fn.declaration);
-	let description = nativeRefinementReadme(declarations, `Lean Fin n parameters and results are Brick\\Math\\BigInteger values below n. The PHP-Wasm side module compares each argument with its exact bound, including bounds wider than 64 bits, before any Lean code runs; a value at or above its bound throws LeanBridgeError with code 1 whose message names the Lean parameter and bound. Fin 0 has no values, so every call to a function taking one is rejected. Results are BigInteger values below their declared bound. ${nativeFinContainerNote(declarations, "PHP-Wasm packages", types)}`, "PHP-Wasm packages", types)
+	const names = fn => fn.parameterNames
+		?? (fn.parameters ?? []).map(parameter => parameterName(parameter));
+	const bounds = fn => nativeFinSummary(fn.declaration
+		, names(fn).map(name => `$${name}`), types);
+	const direct = functions.filter(bounds);
+	const declarations = direct.map(fn => fn.declaration);
+	let description = direct.length ? nativeRefinementReadme(declarations, `Lean Fin n parameters and results are Brick\\Math\\BigInteger values below n. The PHP-Wasm side module compares each argument with its exact bound, including bounds wider than 64 bits, before any Lean code runs; a value at or above its bound throws LeanBridgeError with code 1 whose message names the Lean parameter and bound. Fin 0 has no values, so every call to a function taking one is rejected. Results are BigInteger values below their declared bound. ${nativeFinContainerNote(declarations, "PHP-Wasm packages", types)}`, "PHP-Wasm packages", types)
 		.replace("The bundled native library runs", "The PHP-Wasm side module runs")
-		.replace("Subtype inside containers, records, variants, callbacks or reviewed Binding IR", "Subtype inside containers, records, variants or callbacks")
+		.replace("Subtype inside containers, records, variants, callbacks or reviewed Binding IR is not supported in PHP-Wasm packages.", "Subtype inside containers, records or variants is not supported in PHP-Wasm packages. Synchronous copied-value callbacks check selected Subtype values at callback replies and returned-closure inputs.")
+		.replace("Subtype inside records, variants or callbacks is not supported in PHP-Wasm packages.", "Subtype inside records or variants is not supported in PHP-Wasm packages. Synchronous copied-value callbacks check selected Subtype values at callback replies and returned-closure inputs.")
+		.replace("Fin inside callbacks or generic record instantiations is not supported in PHP-Wasm packages.", "Generic record instantiations remain unsupported in PHP-Wasm packages. Synchronous copied-value callbacks apply the same Fin checks at callback replies and returned-closure inputs.")
 		.replace(/Fin inside (?:containers, records, variants, callbacks or reviewed Binding IR|containers, records, variants or callbacks|records, variants, callbacks or reviewed Binding IR|records, variants or callbacks) is not supported in PHP-Wasm packages\./u,
-			"Fin inside callbacks or generic record instantiations is not supported in PHP-Wasm packages.");
+			"Generic record instantiations remain unsupported in PHP-Wasm packages. Synchronous copied-value callbacks apply the same Fin checks at callback replies and returned-closure inputs.")
+		.replace("Generic checked records nested inside another value, Fin-refined fields inside a generic checked record, recursive, owned and callback checked-record positions remain unsupported.", "Generic checked records nested inside another value, Fin-refined fields inside a generic checked record, recursive and owned checked-record positions remain unsupported. Synchronous copied-value callback replies and returned-closure inputs use each occurrence's selected constructor.") : "";
 	if(recursive) description = description
-		.replace("Repeated uses of one type retain their own constructor choices, and every Fin bound is checked before any constructor. Recursive, generic, owned and callback Subtype positions remain unsupported.", "Repeated uses of one type retain their own constructor choices, and every Fin bound is checked before any constructor. Recursive fields and active cases repeat those checks at every reachable occurrence; a rejection names the actual field or case path. Generic, owned and callback Subtype positions remain unsupported.");
-	const hasSubtype = refinement => refinement?.kind === "subtype"
-		|| (refinement?.arguments ?? []).some(hasSubtype)
-		|| (refinement?.cases ?? []).some(branch => branch.arguments.some(hasSubtype));
-	const subtype = declarations.some(declaration => {
-		const value = nativeFinRefinements(declaration, types);
-		return [...value.parameters, value.result].some(hasSubtype);
+		.replace("Repeated uses of one type retain their own constructor choices, and every Fin bound is checked before any constructor. Recursive, generic, owned and callback Subtype positions remain unsupported.", "Repeated uses of one type retain their own constructor choices, and every Fin bound is checked before any constructor. Recursive fields and active cases repeat those checks at every reachable occurrence; a rejection names the actual field or case path. Generic, owned and recursive-callback Subtype positions remain unsupported.");
+	const callbackSites = functions.flatMap(fn => [
+		...(fn.parameters ?? []).flatMap((parameter, index) =>
+			parameter.callback ? [{
+				fn, signature: parameter.callback, root: `$${names(fn)[index]}`
+			}] : [])
+		, ...fn.result?.callback ? [{
+			fn, signature: fn.result.callback, root: "returned closure"
+		}] : []
+	]).filter(site => site.signature.refinements !== undefined).map(site => {
+		const producedParameters = site.signature.direction === "host";
+		const producedResult = site.signature.direction === "closure";
+		const checked = site.signature.refinements;
+		const paths = checked.parameters.flatMap((tree, index) =>
+			nativeFinBoundPaths(tree, `${site.root}.arg${index}`
+				, producedParameters));
+		paths.push(...nativeFinBoundPaths(checked.result
+			, `${site.root}.result`, producedResult));
+		if(!paths.length)
+			throw new TypeError("Checked PHP-Wasm callback has no documented position");
+		return { ...site, paths };
 	});
-	return `\n## ${subtype ? "Checked refinements" : "Bounded integers"}\n\n${description}\n\n${functions.map(fn => `- ${namespace}\\${fn.publicName ?? fn.field}: ${bounds(fn)}`).join("\n")}\n`;
+	if(callbackSites.length)
+	{
+		const callbackDescription = "Checked synchronous callbacks use the same public PHP values as ordinary parameters and results. PHP-produced callback replies and returned-closure arguments are checked before Lean continues; Lean-produced host-callback arguments and returned-closure results project their proof-backed payloads. A host callback with a checked signature uses with_recovery($callback, $value); the recovery is validated before callback entry and is never successful output. A returned LeanClosure remains usable after a rejected argument.";
+		description = [description, callbackDescription].filter(Boolean).join("\n\n");
+	}
+	if(!direct.length && !callbackSites.length) return "";
+	const hasConstructed = refinement => ["subtype", "checked-record"]
+		.includes(refinement?.kind)
+		|| (refinement?.arguments ?? []).some(hasConstructed)
+		|| (refinement?.cases ?? []).some(branch =>
+			branch.arguments.some(hasConstructed));
+	const constructed = declarations.some(declaration => {
+		const value = nativeFinRefinements(declaration, types);
+		return [...value.parameters, value.result].some(hasConstructed);
+	}) || callbackSites.some(site => [
+		...site.signature.refinements.parameters
+		, site.signature.refinements.result
+	].some(hasConstructed));
+	const directBullets = direct.map(fn =>
+		`- ${namespace}\\${fn.publicName ?? fn.field}: ${bounds(fn)}`);
+	const callbackBullets = callbackSites.map(site =>
+		`- ${namespace}\\${site.fn.publicName ?? site.fn.field} ${site.signature.direction === "host" ? "host callback" : "returned Lean closure"}: ${site.paths.join("; ")}`);
+	return `\n## ${constructed ? "Checked refinements" : "Bounded integers"}\n\n${description}\n\n${[...directBullets, ...callbackBullets].join("\n")}\n`;
 };
 
 /**

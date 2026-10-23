@@ -106,6 +106,8 @@ test("recursive PHP-Wasm packages document checked graph paths", () => {
 	assert.match(readme, /\$value0\.node\.value checked by RecursiveSubtypes\.plusOne/u);
 	assert.match(readme, /\$value0\.node\.digit < 3/u);
 	assert.doesNotMatch(readme, /Recursive, generic, owned and callback Subtype positions remain unsupported/u);
+	assert.match(readme
+		, /Generic, owned and recursive-callback Subtype positions remain unsupported\./u);
 });
 
 test("recursive checked PHP-Wasm acceptance is a recurring two-route gate", async () => {
