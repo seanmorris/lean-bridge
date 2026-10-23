@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeOwnedSubtypeWasmTransferFixtureSource, ownedSubtypeWasmTransferFixtureNormalizationPaths } from "./owned-subtype-wasm-transfer-fixture-source-history.mjs";
 import { beforeOwnedCheckedRecordJavaScriptHostedRunOutcomeSource, ownedCheckedRecordJavaScriptHostedRunOutcomeNormalizationPaths } from "./owned-checked-record-javascript-hosted-run-outcome-source-history.mjs";
 import { beforeOwnedCheckedRecordJavaScriptHostedLaneSource, ownedCheckedRecordJavaScriptHostedLaneNormalizationPaths } from "./owned-checked-record-javascript-hosted-lane-source-history.mjs";
 import { beforeCoreSourceBoundaryClosureSource, coreSourceBoundaryClosureNormalizationPaths } from "./core-source-boundary-closure-source-history.mjs";
@@ -2079,7 +2080,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...ownedCheckedRecordJavaScriptHostedRunOutcomeNormalizationPaths
+	...ownedSubtypeWasmTransferFixtureNormalizationPaths
+	, ...ownedCheckedRecordJavaScriptHostedRunOutcomeNormalizationPaths
 	, ...ownedCheckedRecordJavaScriptHostedLaneNormalizationPaths
 	, ...coreSourceBoundaryClosureNormalizationPaths
 	, ...evidenceCheckoutClosureRepairNormalizationPaths
@@ -2901,6 +2903,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
+	const ownedSubtypeWasmTransferFixture
+		= beforeOwnedSubtypeWasmTransferFixtureSource(path, text, expected);
+	if(sha256(ownedSubtypeWasmTransferFixture) === expected)
+		return ownedSubtypeWasmTransferFixture;
+	text = ownedSubtypeWasmTransferFixture;
 	const ownedCheckedRecordJavaScriptHostedRunOutcome
 		= beforeOwnedCheckedRecordJavaScriptHostedRunOutcomeSource(
 			path, text, expected);

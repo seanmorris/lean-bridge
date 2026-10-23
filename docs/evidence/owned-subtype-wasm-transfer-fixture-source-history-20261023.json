@@ -1,0 +1,71 @@
+{
+  "additions": [
+    {
+      "currentSha256": "9ba5a3973744a9d5975a54f80bdf555c33b2577f16b4ccf2f627b2bdefdf09cd",
+      "path": "scripts/update-owned-subtype-wasm-transfer-fixture-source-history.mjs"
+    },
+    {
+      "currentSha256": "f48ec4909b9d7b8c4d164c9e3c3ac057997bc5b6f8b19e2b7c95a35616898b19",
+      "path": "tests/helpers/owned-subtype-wasm-transfer-fixture-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "a7aa3a2fff380d86d73e642ec536d22e2bc41907c43162e61ca50289083e9916",
+      "path": "tests/helpers/owned-subtype-wasm-transfer-fixture-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "3913bfcd32c51e2c5ce040fed6cff5b4b30eb87c",
+  "integrationUpdates": [
+    {
+      "currentSha256": "0633fa972c80aaad483921fa5fcdafaca56a742c6dd3e9c4d57ecddfde9d4d5d",
+      "edits": [
+        {
+          "current": "import { beforeOwnedSubtypeWasmTransferFixtureSource, ownedSubtypeWasmTransferFixtureNormalizationPaths } from \"./owned-subtype-wasm-transfer-fixture-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...ownedSubtypeWasmTransferFixtureNormalizationPaths\n\t, ...ownedCheckedRecordJavaScriptHostedRunOutcomeNormalizationPaths\n",
+          "previous": "\t...ownedCheckedRecordJavaScriptHostedRunOutcomeNormalizationPaths\n",
+          "start": 169951
+        },
+        {
+          "current": "\tconst ownedSubtypeWasmTransferFixture\n\t\t= beforeOwnedSubtypeWasmTransferFixtureSource(path, text, expected);\n\tif(sha256(ownedSubtypeWasmTransferFixture) === expected)\n\t\treturn ownedSubtypeWasmTransferFixture;\n\ttext = ownedSubtypeWasmTransferFixture;\n",
+          "previous": "",
+          "start": 209160
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "52a23e254588427e191f87ec70960328a80934c61dd7ad18e64d26ed0f5a3820"
+    },
+    {
+      "currentSha256": "e779e73cff8dd123bfc6634bddf43f41b9a10cd4f4d50fc34bc5ec67e84ad3db",
+      "edits": [
+        {
+          "current": "import \"./helpers/owned-subtype-wasm-transfer-fixture-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 1525
+        }
+      ],
+      "path": "tests/owned-aggregate-model.test.mjs",
+      "previousSha256": "71eca4e4683123f33f28418dc3c8cb35fc384a6830b6348d6d22e5913c8c498d"
+    }
+  ],
+  "milestone": "owned-subtype-wasm-transfer-fixture-source-v1",
+  "predecessorCommit": "9388829d67ef174bff56f51b37c84a12072ff34e",
+  "schemaVersion": 1,
+  "scope": "Compile the shared owned-subtypes fixture with transferred inputs in the wasm32 proof-erased test, because Owned.transferRecord added a transfer-ownership parameter that the lease-only layout rejects before any Wasm is built.",
+  "updates": [
+    {
+      "currentSha256": "9ad545ab5643ee2b68383bbc9602e17dcdb6b0ffd20e8cc4bbf30bb6d2e297bc",
+      "edits": [
+        {
+          "current": "\tconst { call, close, module } = await compileOwnedJavaScriptWasmFixture(t, \"owned-subtypes\", { transferredInputs: true });\n",
+          "previous": "\tconst { call, close, module } = await compileOwnedJavaScriptWasmFixture(t, \"owned-subtypes\");\n",
+          "start": 541
+        }
+      ],
+      "path": "tests/owned-javascript-wasm-native.test.mjs",
+      "previousSha256": "7a820b10d4620ffda76cc948b73d4e453eb4c09bfed23321fd56ed99d80802c1"
+    }
+  ]
+}
