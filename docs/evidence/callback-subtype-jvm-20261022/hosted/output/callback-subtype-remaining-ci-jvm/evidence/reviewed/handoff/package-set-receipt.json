@@ -1,0 +1,44 @@
+{
+  "component": {
+    "id": "callbacksubtypes@1.0.0",
+    "name": "callbacksubtypes",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51548765,
+          "path": "archives/callbacksubtypes-1.0.0.jar",
+          "sha256": "de52217844cbb4b2dd15e0421db09e88d1bd87d6a62d5e0aec2887345169e8a2"
+        },
+        {
+          "bytes": 626,
+          "path": "archives/callbacksubtypes-1.0.0.pom",
+          "sha256": "a50c73026fd2c41f796b5764dd32f5c83b92e7e31d8bdd99e38dc257ccfd0981"
+        }
+      ],
+      "ecosystem": "maven",
+      "name": "org.leanbridge:callbacksubtypes",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "maven",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "82537e64d039eba7a09ef7ebd6f8b2743162a15af5c622fcacc5076662017edd",
+      "id": "native-library-v1",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "54459e2ac7560074ae84e44fa9d4decacb386fa9d3e2d6ab34f60fbb940b9526"
+  }
+}
