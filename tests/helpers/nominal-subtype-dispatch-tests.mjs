@@ -49,6 +49,26 @@ test("nominal dispatch exports restate the fixture's own constructor selections 
 	assert.ok(nominalSubtypeDispatchExports.some(item => item.parameters.length > 1), "a multi-parameter export is measured");
 });
 
+test("nominal dispatch keeps every measured Lean source and constructor observable", () => {
+	const source = readFileSync(`${nominalSubtypeFixture}/NominalSubtypes.lean`, "utf8");
+	for(const name of [...nominalSubtypeDispatchConstructors
+		, ...nominalSubtypeDispatchExports.map(item => item.name)])
+		assert.match(source, new RegExp(`@\\[noinline\\] def ${name}(?: | :)`, "u"), name);
+	assert.deepEqual(nominalSubtypeDispatchSteps.filter(item => item.status === 0)
+		.map(item => [item.step, item.sources]), [
+			["public-valid-first", ["first"]]
+			, ["public-valid-second", ["second"]]
+			, ["public-valid-combine", ["combine"]]
+			, ["public-valid-nested", ["nested", "combine"]]
+			, ["public-inactive-event", ["eventFirst"]]
+			, ["public-active-event-box", ["eventFirst", "first"]]
+			, ["public-valid-event-choices", ["eventFirst"]]
+			, ["public-valid-echo", ["echo"]]
+			, ["public-recovery-first", ["first"]]
+		]
+	);
+});
+
 test("nominal dispatch adapter symbols hash the component identity the compiler derives from the fixture", () => {
 	const project = JSON.parse(readFileSync(`${nominalSubtypeFixture}/package.json`, "utf8"));
 	assert.equal(nominalSubtypeDispatchComponent, elaboratedComponent(project).id);
@@ -111,11 +131,13 @@ test("nominal dispatch expectations follow validation order, stop at the first r
 	assert.equal(at(earlyCombine, "validator", "combine:0_0"), 3); assert.equal(at(earlyCombine, "validator", "combine:1_0"), 2);
 	const lateNested = rows[8];
 	assert.equal(at(lateNested, "validator", "nested:0_0_0"), 2); assert.equal(at(lateNested, "validator", "nested:0_1_0"), 2); assert.equal(at(lateNested, "adapter", "nested"), 1);
+	assert.equal(at(lateNested, "source", "combine"), 2, "nested enters combine after its own adapter accepts");
 	const inactive = rows[9], box = rows[10], choices = rows[11], invalidChoices = rows[12];
 	// inactive branch: no leaf validator and no constructor, but the adapter and source still run
 	assert.equal(at(inactive, "validator", "eventFirst:0_1_0_0"), 0); assert.equal(at(inactive, "adapter", "eventFirst"), 1); assert.equal(at(inactive, "source", "eventFirst"), 1);
 	assert.equal(at(inactive, "constructor", "plusOne"), at(rows[8], "constructor", "plusOne"));
 	assert.equal(at(box, "validator", "eventFirst:0_1_0_0"), 1); assert.equal(at(box, "adapter", "eventFirst"), 2);
+	assert.equal(at(box, "source", "first"), at(inactive, "source", "first") + 1, "the active box branch enters first");
 	assert.equal(at(choices, "validator", "eventFirst:0_2_0_0_0_0"), 1); assert.equal(at(choices, "validator", "eventFirst:0_2_0_0_0_1"), 1); assert.equal(at(choices, "source", "eventFirst"), 3);
 	assert.equal(at(invalidChoices, "validator", "eventFirst:0_2_0_0_0_0"), 2); assert.equal(at(invalidChoices, "validator", "eventFirst:0_2_0_0_0_1"), 1); assert.equal(at(invalidChoices, "adapter", "eventFirst"), 3);
 	const recovery = rows.at(-1), echo = rows.at(-2);

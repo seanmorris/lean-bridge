@@ -4,10 +4,10 @@ abbrev Positive := { value : Nat // 0 < value }
 
 def scalar (value : Nat) : Positive := ⟨value + 1, Nat.zero_lt_succ value⟩
 
-def plusOne (value : Nat) : Option Positive :=
+@[noinline] def plusOne (value : Nat) : Option Positive :=
   if value < 100 then some (scalar value) else none
 
-def plusTwo (value : Nat) : Option Positive :=
+@[noinline] def plusTwo (value : Nat) : Option Positive :=
   if value < 90 then some (scalar (value + 1)) else none
 
 structure Envelope where
@@ -30,11 +30,11 @@ structure AliasPair where
   left : Group
   right : Group
 
-def first (value : Envelope) : Nat := value.payload.val
-def second (value : Envelope) : Nat := value.payload.val
-def combine (left right : Envelope) : Nat := left.payload.val * 100 + right.payload.val
-def nested (value : Pair) : Nat := combine value.left value.right
-def eventFirst : Event → Nat
+@[noinline] def first (value : Envelope) : Nat := value.payload.val
+@[noinline] def second (value : Envelope) : Nat := value.payload.val
+@[noinline] def combine (left right : Envelope) : Nat := left.payload.val * 100 + right.payload.val
+@[noinline] def nested (value : Pair) : Nat := combine value.left value.right
+@[noinline] def eventFirst : Event → Nat
   | .empty => 0
   | .box value => first value
   | .choices values => values.foldl (fun sum value => sum + match value with
@@ -42,7 +42,7 @@ def eventFirst : Event → Nat
       | some (.ok value) => value.val
       | some (.error value) => value.val) 0
 def eventSecond (value : Event) : Nat := eventFirst value
-def echo (value : Envelope) : Envelope := value
+@[noinline] def echo (value : Envelope) : Envelope := value
 def aliases (left right : Group) : Nat :=
   (left ++ right).foldl (fun sum item => sum + match item with
     | none => 0

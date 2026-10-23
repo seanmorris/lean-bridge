@@ -70,7 +70,7 @@ const observeDispatch = async ({ consumer, location, packageName, receipt, envir
 	assert.deepEqual(observed, expected);
 	assertNominalSubtypeDispatchPositiveControls(observed, columns);
 	assert.equal(sha256(await readFile(join(installed, library))), librarySha256);
-	const positiveControl = "every accepted public call increments its exported validators, their constructors twice, the adapter and the Lean source; refusals stop at the refusing validator";
+	const positiveControl = "every accepted public call increments its exported validators, their constructors twice, the adapter and every non-inline Lean source in its call graph; refusals stop at the refusing validator";
 	const unmeasured = ["C++ dispatch (it calls the same C entries)", "resident memory"];
 	const symbols = listing.stdout;
 	return { interposer: "LD_PRELOAD", library, librarySha256, symbols, symbolsSha256: sha256(symbols), columns, observed, positiveControl, unmeasured };

@@ -135,20 +135,20 @@ ${columns.map(wrapper).join("\n")}
  */
 export const nominalSubtypeDispatchSteps = Object.freeze([
 	{ step: "start" }
-	, { step: "public-valid-first", name: "first", status: 0, entered: [[0]] }
-	, { step: "public-valid-second", name: "second", status: 0, entered: [[0]] }
+	, { step: "public-valid-first", name: "first", status: 0, entered: [[0]], sources: ["first"] }
+	, { step: "public-valid-second", name: "second", status: 0, entered: [[0]], sources: ["second"] }
 	, { step: "public-invalid-first", name: "first", status: 1, entered: [[0]] }
-	, { step: "public-valid-combine", name: "combine", status: 0, entered: [[0], [0]] }
+	, { step: "public-valid-combine", name: "combine", status: 0, entered: [[0], [0]], sources: ["combine"] }
 	, { step: "public-late-combine", name: "combine", status: 1, entered: [[0], [0]] }
 	, { step: "public-early-combine", name: "combine", status: 1, entered: [[0], []] }
-	, { step: "public-valid-nested", name: "nested", status: 0, entered: [[0, 1]] }
+	, { step: "public-valid-nested", name: "nested", status: 0, entered: [[0, 1]], sources: ["nested", "combine"] }
 	, { step: "public-late-nested", name: "nested", status: 1, entered: [[0, 1]] }
-	, { step: "public-inactive-event", name: "eventFirst", status: 0, entered: [[]] }
-	, { step: "public-active-event-box", name: "eventFirst", status: 0, entered: [[0]] }
-	, { step: "public-valid-event-choices", name: "eventFirst", status: 0, entered: [[1, 2]] }
+	, { step: "public-inactive-event", name: "eventFirst", status: 0, entered: [[]], sources: ["eventFirst"] }
+	, { step: "public-active-event-box", name: "eventFirst", status: 0, entered: [[0]], sources: ["eventFirst", "first"] }
+	, { step: "public-valid-event-choices", name: "eventFirst", status: 0, entered: [[1, 2]], sources: ["eventFirst"] }
 	, { step: "public-invalid-event-choices", name: "eventFirst", status: 1, entered: [[1]] }
-	, { step: "public-valid-echo", name: "echo", status: 0, entered: [[0]] }
-	, { step: "public-recovery-first", name: "first", status: 0, entered: [[0]] }
+	, { step: "public-valid-echo", name: "echo", status: 0, entered: [[0]], sources: ["echo"] }
+	, { step: "public-recovery-first", name: "first", status: 0, entered: [[0]], sources: ["first"] }
 ]);
 
 /**
@@ -187,8 +187,10 @@ export const nominalSubtypeDispatchExpected = (columns, exports = nominalSubtype
 			{
 				bump("adapter", target.name);
 				for(const leaves of reached) for(const [, constructor] of leaves) bump("constructor", constructor);
-				bump("source", target.name);
+				assert.ok(Array.isArray(item.sources) && item.sources.length > 0);
+				for(const source of item.sources) bump("source", source);
 			}
+			else assert.equal(item.sources, undefined);
 		}
 		rows.push([item.step, item.step === "start" ? 0 : item.status, [...counts]]);
 	}
