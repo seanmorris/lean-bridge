@@ -7,6 +7,7 @@ import "./helpers/callback-fin-php-wasm-tests.mjs";
 import "./helpers/callback-checked-record-php-wasm-tests.mjs";
 import "./helpers/callback-refinements-php-wasm-ci-tests.mjs";
 import "./helpers/callback-refinements-php-wasm-hosted-archive-tests.mjs";
+import "./helpers/callback-refinements-php-wasm-hosted-evidence-tests.mjs";
 import "./helpers/callback-refinements-php-wasm-installed-tests.mjs";
 import "./helpers/callback-refinements-php-wasm-source-history-tests.mjs";
 import "./helpers/php-wasm-callback-entry-c-tests.mjs";
