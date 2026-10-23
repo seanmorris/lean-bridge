@@ -78,12 +78,14 @@ test("every repository test receives exactly one named execution profile", async
 	assert.ok(grouped.contract.includes("tests/owned-checked-record-php-wasm-packaging.test.mjs"));
 	for(const name of [
 		"owned-subtype-host-registration-history"
+		, "owned-subtype-hosted-ci"
 		, "owned-subtype-javascript-packaging"
 		, "owned-subtype-language-packaging"
 		, "owned-subtype-native-packaging"
 		, "owned-subtype-perl-packaging"
 		, "owned-subtype-php-wasm-packaging"
 		, "owned-subtype-remaining-packaging"
+		, "owned-subtype-retained-packages"
 	]) assert.ok(grouped.contract.includes(`tests/${name}.test.mjs`), name);
 	assert.ok(grouped.native.includes("tests/perl-native.test.mjs"));
 	assert.ok(grouped.native.includes("tests/lake-workspace.test.mjs"));
