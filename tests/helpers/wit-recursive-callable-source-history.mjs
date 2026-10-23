@@ -73,9 +73,11 @@ export const reverseWitRecursiveCallableUpdate = (source, update) => {
  * @param expected - Optional exact predecessor at which normalization stops.
  */
 export const beforeWitRecursiveCallables = (path, source, expected) => {
-	if(typeof source === "string" && !witRecursiveCallableChangedPaths.includes(path)) return source;
+	// Unrelated paths still traverse every later recorded transition.
+	if(!witRecursiveCallableChangedPaths.includes(path))
+		return beforeOwnedAggregates(path, source, expected);
 	let digest = sha256(source);
-	if(digest === expected || !witRecursiveCallableChangedPaths.includes(path)) return source;
+	if(digest === expected) return source;
 	const record = history ??= JSON.parse(readFileSync(witRecursiveCallableHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
 	if(update?.currentSha256 === digest)
@@ -83,6 +85,11 @@ export const beforeWitRecursiveCallables = (path, source, expected) => {
 		source = reverseWitRecursiveCallableUpdate(source, update);
 		digest = sha256(source);
 		if(expected === undefined || digest === expected) return source;
+		return beforeOwnedAggregates(path, source, expected);
 	}
-	return beforeOwnedAggregates(path, source, expected);
+	// A later source first returns through the newer layers to this milestone.
+	source = beforeOwnedAggregates(path, source, expected);
+	digest = sha256(source);
+	return digest !== expected && update?.currentSha256 === digest
+		? reverseWitRecursiveCallableUpdate(source, update) : source;
 };
