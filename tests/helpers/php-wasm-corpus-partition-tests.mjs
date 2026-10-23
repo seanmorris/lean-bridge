@@ -10,13 +10,22 @@ import test from "node:test";
 import { runInNewContext } from "node:vm";
 import { gunzipSync } from "node:zlib";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { assertPhpWasmCorpusPartition, partitionPhpWasmCorpusWorkflow, phpWasmCorpusPartitionPredecessor, phpWasmCorpusPartitionSummaryGate, phpWasmPartitionJob, phpWasmPartitionStep } from "./php-wasm-corpus-partition.mjs";
 import { assertWorkflowRunBudget, workflowRunScalars } from "./native-observation-split.mjs";
 import "./php-wasm-recursive-failure-evidence-tests.mjs";
 
 const path = ".github/workflows/consumer-matrix.yml";
+const partitionWorkflowSha256
+	= "e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d";
 const previous = () => execFileSync("git", ["show", `${phpWasmCorpusPartitionPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
-const read = () => readFile(path, "utf8");
+const read = async () => {
+	const source = beforeFinRefinementSource(
+		path, await readFile(path, "utf8"), partitionWorkflowSha256
+	);
+	assert.equal(sha256(source), partitionWorkflowSha256);
+	return source;
+};
 const jobs = ["php-wasm-consumers", "php-wasm-corpus", "php-wasm-observations"];
 const states = ["success", "failure", "cancelled", "skipped", ""];
 const expression = source => source.replace(/^always\(\) && /u, "")

@@ -8,8 +8,8 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { assertOwnedJvmEnforced } from "./owned-jvm-job.mjs";
-import { beforeDotnetDispatchIntegrationSource } from "./dotnet-dispatch-integration-source-history.mjs";
 import "./jvm-shard-source-history-tests.mjs";
 
 // The single JVM corpus step, its uploaded paths and its recorded commands before the split.
@@ -17,6 +17,8 @@ const former = Object.freeze({
 	body: "bf29cebe7487d03179c6dbd00e5b4948c5f7025e735e19c6084f5ca95718d0e3"
 	, paths: "d504f225b0488df14877fe4076111cfa2a7f5a86a1af61f27afe4fbe39a90894"
 	, record: "cd82b8d6ef120a2e58dbc8bc3659b68f5a0df00c8b76e6a912e905fedbbef3ce" });
+const jvmShardWorkflowSha256
+	= "76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3";
 // The owned block followed these lines in each former list.
 const anchors = Object.freeze({
 	body: "          test -s build/recursive-callables/jvm-mixed.json"
@@ -80,7 +82,10 @@ export const assertJvmShardContract = source => {
 	const fin = "LEAN_BRIDGE_GDB=/usr/bin/gdb LEAN_BRIDGE_JVM_FIN_TEST=1 node --test tests/jvm-fin.test.mjs";
 	for(const line of [`          ${fin}\n`, `              consumer_command="$consumer_command && ${fin}"\n`])
 		assert.equal(source.split(line).length, 2, "the live JVM Fin command retains its debugger");
-	source = beforeDotnetDispatchIntegrationSource(".github/workflows/consumer-matrix.yml", source);
+	source = beforeFinRefinementSource(
+		".github/workflows/consumer-matrix.yml", source, jvmShardWorkflowSha256
+	);
+	assert.equal(sha256(source), jvmShardWorkflowSha256);
 	const lines = source.split("\n");
 	const managed = jobLines(lines, "managed-consumers"), owned = jobLines(lines, "owned-jvm-values");
 	assert.ok(managed.includes("    timeout-minutes: 240") && owned.includes("    timeout-minutes: 240"));
