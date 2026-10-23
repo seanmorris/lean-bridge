@@ -1,0 +1,33 @@
+{
+  "routes": [
+    {
+      "archiveBytes": 152926209,
+      "archives": 3,
+      "files": [
+        "archives/callback-subtypes-1.0.0-x86_64-linux.gem",
+        "archives/callback-subtypes-1.0.0.crate",
+        "archives/callback_subtypes-1.0.0-py3-none-manylinux_2_38_x86_64.whl",
+        "package-set-receipt.json",
+        "package-set-receipt.json.sha256"
+      ],
+      "path": "evidence/ordinary/handoff",
+      "receiptSha256": "27418b2b61526fcfe0e3c2a4ad75e398ad7504cb3bceaeb49f72a254210e18b2",
+      "route": "ordinary"
+    },
+    {
+      "archiveBytes": 152941477,
+      "archives": 3,
+      "files": [
+        "archives/callback-subtypes-1.0.0-x86_64-linux.gem",
+        "archives/callback-subtypes-1.0.0.crate",
+        "archives/callback_subtypes-1.0.0-py3-none-manylinux_2_38_x86_64.whl",
+        "package-set-receipt.json",
+        "package-set-receipt.json.sha256"
+      ],
+      "path": "evidence/reviewed/handoff",
+      "receiptSha256": "4704a649f16f6365d244e5bf3579f5a0411d628379c486840cc9b5c173ca3ccc",
+      "route": "reviewed"
+    }
+  ],
+  "schemaVersion": 1
+}

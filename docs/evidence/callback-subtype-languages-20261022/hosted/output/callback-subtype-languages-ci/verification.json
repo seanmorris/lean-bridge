@@ -1,0 +1,33 @@
+{
+  "kind": "language",
+  "producerCommit": "733693e06a1461541d4d3d7a43d8496d26c2df45",
+  "profiles": [
+    "python",
+    "ruby",
+    "rust"
+  ],
+  "reportSha256": "c12e44846550d76d2cbc825844c4f5fe22b6c6099d7cf309d92f623341d0d045",
+  "reports": 6,
+  "retainedPackages": {
+    "routes": [
+      {
+        "archiveBytes": 152926209,
+        "archives": 3,
+        "receiptSha256": "27418b2b61526fcfe0e3c2a4ad75e398ad7504cb3bceaeb49f72a254210e18b2",
+        "route": "ordinary"
+      },
+      {
+        "archiveBytes": 152941477,
+        "archives": 3,
+        "receiptSha256": "4704a649f16f6365d244e5bf3579f5a0411d628379c486840cc9b5c173ca3ccc",
+        "route": "reviewed"
+      }
+    ],
+    "schemaVersion": 1
+  },
+  "routes": [
+    "ordinary",
+    "reviewed"
+  ],
+  "schemaVersion": 1
+}
