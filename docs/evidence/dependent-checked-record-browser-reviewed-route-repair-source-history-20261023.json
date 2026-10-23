@@ -1,0 +1,113 @@
+{
+  "additions": [
+    {
+      "currentSha256": "51319579e310f845086cc0f3f92c596cad4316e5b087c845c1b0f5a775c2e07c",
+      "path": "scripts/update-dependent-checked-record-browser-reviewed-route-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "48716fac433fa9f5a567af4a64f90b7a79ba3a07899b1932d07d9dc2b64a1da5",
+      "path": "tests/helpers/dependent-checked-record-browser-reviewed-route-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "6b5ecd66f32eb7b41daaac525627b721773dbd47bca26e0da286dfbc00cf1cd0",
+      "path": "tests/helpers/dependent-checked-record-browser-reviewed-route-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "f43a548e34bc1c4090c0dfc82af292e762fb835c",
+  "integrationUpdates": [
+    {
+      "currentSha256": "fa4a5f737537f73d447a1e1bc54a540aebae09c8925ccd2c2c9aa97cfc5a7df6",
+      "edits": [
+        {
+          "current": "import \"./helpers/dependent-checked-record-browser-reviewed-route-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 1837
+        }
+      ],
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "c3668c0aaebddd597ff8daf977be7a7b099361b3b3db4c5956ecbd443d4ac68d"
+    },
+    {
+      "currentSha256": "984853554065bd653071c6c5c38ceec2b3c81287c46e032e727f0ab04adaf06f",
+      "edits": [
+        {
+          "current": "import { beforeDependentCheckedRecordBrowserReviewedRouteRepairSource, dependentCheckedRecordBrowserReviewedRouteRepairNormalizationPaths } from \"./dependent-checked-record-browser-reviewed-route-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 392
+        },
+        {
+          "current": "\t...dependentCheckedRecordBrowserReviewedRouteRepairNormalizationPaths\n\t, ...structuredCallbackPublicFallbackRepairNormalizationPaths\n",
+          "previous": "\t...structuredCallbackPublicFallbackRepairNormalizationPaths\n",
+          "start": 155130
+        },
+        {
+          "current": "\tconst dependentBrowserReviewedRouteRepair\n\t\t= beforeDependentCheckedRecordBrowserReviewedRouteRepairSource(\n\t\t\tpath, text, expected\n\t\t);\n\tif(sha256(dependentBrowserReviewedRouteRepair) === expected)\n\t\treturn dependentBrowserReviewedRouteRepair;\n",
+          "previous": "",
+          "start": 190401
+        },
+        {
+          "current": "\t\t\tpath, dependentBrowserReviewedRouteRepair, expected\n",
+          "previous": "\t\t\tpath, text, expected\n",
+          "start": 190743
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "38cbbe49cafcde3a881bacf5f651b0618c7201a877a047076389be150d83585d"
+    }
+  ],
+  "milestone": "dependent-checked-record-browser-reviewed-route-repair-source-v1",
+  "predecessorCommit": "87fc26224b6456b2d16c91d538a14497ab0cf196",
+  "schemaVersion": 1,
+  "scope": "Browser consumers preserve the authenticated reviewed-IR route when selecting the exact constructor-rejection diagnostic oracle.",
+  "updates": [
+    {
+      "currentSha256": "83e5f6542aa0604d69c5ef75c07f267f5c767ce4bfd0700ec03d36824b9570c7",
+      "edits": [
+        {
+          "current": "\tconst reviewed = request.route.endsWith(\"reviewed-ir\");\n",
+          "previous": "",
+          "start": 1037
+        },
+        {
+          "current": "\t\t, ...checkDependentRecords(api, request.resultOnly, reviewed)\n",
+          "previous": "\t\t, ...checkDependentRecords(api, request.resultOnly)\n",
+          "start": 1186
+        }
+      ],
+      "path": "tests/fixtures/dependent-checked-record-browser/browser.mjs",
+      "previousSha256": "4bb3369b8affcd509b8892867ed3a06326876e255b0371e328a3629b0ff1ea56"
+    },
+    {
+      "currentSha256": "e4e9d38e49a23095076fea9db011948f636b122bbc363669236e4c71ff8287c8",
+      "edits": [
+        {
+          "current": "const reviewedModel = {\n\tdependentTotal: value => {\n\t\tchecked(value, \"dependentTotal.value0\");\n\t\treturn value.bound + value.below;\n\t}\n\t, dependentRoundtrip: value => ({\n\t\t...checked(value, \"dependentRoundtrip.value0\")\n\t})\n\t, dependentResult: model.dependentResult\n};\n",
+          "previous": "",
+          "start": 1856
+        },
+        {
+          "current": "\tassert.deepEqual(checkDependentRecords(reviewedModel, false, true)\n\t\t, dependentCheckedRecordExpected(\"reviewed-ir\"));\n",
+          "previous": "\tassert.deepEqual(checkDependentRecords({\n\t\tdependentTotal: value => {\n\t\t\tchecked(value, \"dependentTotal.value0\");\n\t\t\treturn value.bound + value.below;\n\t\t}\n\t\t, dependentRoundtrip: value => ({\n\t\t\t...checked(value, \"dependentRoundtrip.value0\")\n\t\t})\n\t\t, dependentResult: model.dependentResult\n\t}, false, true), dependentCheckedRecordExpected(\"reviewed-ir\"));\n",
+          "start": 2315
+        },
+        {
+          "current": "\t\tconst reviewed = route.endsWith(\"reviewed-ir\");\n",
+          "previous": "",
+          "start": 9344
+        },
+        {
+          "current": "\t\tconst api = resultOnly ? { dependentResult: model.dependentResult }\n\t\t\t: reviewed ? reviewedModel : model;\n",
+          "previous": "\t\tconst api = resultOnly ? { dependentResult: model.dependentResult } : model;\n",
+          "start": 9511
+        },
+        {
+          "current": "\t\tif(reviewed && !resultOnly)\n\t\t\tassert.throws(() => executeCorpus(request, model)\n\t\t\t\t, /wrong refusal: equal bound: dependentTotal\\.arg0/u);\n",
+          "previous": "",
+          "start": 9779
+        }
+      ],
+      "path": "tests/helpers/dependent-checked-record-browser-tests.mjs",
+      "previousSha256": "abb186f4e6ad34ad58e970429babe2422a2ce000bdf278ada7de746ca13a4b20"
+    }
+  ]
+}

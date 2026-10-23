@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeDependentCheckedRecordBrowserReviewedRouteRepairSource, dependentCheckedRecordBrowserReviewedRouteRepairNormalizationPaths } from "./dependent-checked-record-browser-reviewed-route-repair-source-history.mjs";
 import { beforeStructuredCallbackPublicFallbackRepairSource, structuredCallbackPublicFallbackRepairNormalizationPaths } from "./structured-callback-public-fallback-repair-source-history.mjs";
 import { beforeCallbackCheckedRecordWitDiagnosticRepairSource, callbackCheckedRecordWitDiagnosticRepairNormalizationPaths } from "./callback-checked-record-wit-diagnostic-repair-source-history.mjs";
 import { beforeValueIndexTestProfileLiveReadRepairSource, valueIndexTestProfileLiveReadRepairNormalizationPaths } from "./value-index-test-profile-live-read-repair-source-history.mjs";
@@ -1955,7 +1956,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...structuredCallbackPublicFallbackRepairNormalizationPaths
+	...dependentCheckedRecordBrowserReviewedRouteRepairNormalizationPaths
+	, ...structuredCallbackPublicFallbackRepairNormalizationPaths
 	, ...callbackCheckedRecordWitDiagnosticRepairNormalizationPaths
 	, ...valueIndexTestProfileLiveReadRepairNormalizationPaths
 	, ...phpWasmCallbackEntrySelectionRepairNormalizationPaths
@@ -2712,9 +2714,15 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 			text = exact;
 		}
 	}
+	const dependentBrowserReviewedRouteRepair
+		= beforeDependentCheckedRecordBrowserReviewedRouteRepairSource(
+			path, text, expected
+		);
+	if(sha256(dependentBrowserReviewedRouteRepair) === expected)
+		return dependentBrowserReviewedRouteRepair;
 	const structuredCallbackFallbackRepair
 		= beforeStructuredCallbackPublicFallbackRepairSource(
-			path, text, expected
+			path, dependentBrowserReviewedRouteRepair, expected
 		);
 	if(sha256(structuredCallbackFallbackRepair) === expected)
 		return structuredCallbackFallbackRepair;
