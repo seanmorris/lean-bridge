@@ -1,0 +1,266 @@
+{
+  "additions": [
+    {
+      "currentSha256": "2ce86aebecdec94bdadefb8df29bab0b16471b300cb5577f794a0e4e35ecaedd",
+      "path": "scripts/update-php-wasm-recursive-evidence-replay-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "82a41d5f11c0b5fb88560f7ddd0945e530eaa2f533868585c87062b32935af7f",
+      "path": "tests/helpers/php-wasm-recursive-evidence-replay-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "fc3fd84e80b70724a0d0c0e857d3731d58d0037c6d970896da3525e51fb11389",
+      "path": "tests/helpers/php-wasm-recursive-evidence-replay-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "2134953f3b315fbd1180968d3ae2d042392863d0",
+  "integrationUpdates": [
+    {
+      "currentSha256": "9dea15ba24213d4583eab4fa7c4b12d0530a4b60c22be043e4462d2c15c8e0e5",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"6807e1f2e3845ac2e5eb9fedd1be90ca110a77ef09e9d398df1accc066e8d2ef\"\n",
+          "previous": "          \"sha256\": \"0f070e88975d5bf1c82dc21643e414982fb0cdadeb0348f8c1627190542a3567\"\n",
+          "start": 1405137
+        },
+        {
+          "current": "          \"sha256\": \"9feaa70f02cd194630400639fe8d920af8964373fe273bdc9d8b54dc35ab240d\"\n",
+          "previous": "          \"sha256\": \"79a827c8ff7d3e49638ac0a03bd985addb7530dc924c375c77793eb8c173c059\"\n",
+          "start": 1406422
+        },
+        {
+          "current": "          \"sha256\": \"5e82e6c018352be701a4e3a9fdfd9d4519de2d6fa2fd14918e0280448218145b\"\n",
+          "previous": "          \"sha256\": \"0d4f4d19e6ca335d46c43ce68d307bcdc67ee396b27888b5ae712aceb70296c4\"\n",
+          "start": 1406605
+        },
+        {
+          "current": "          \"sha256\": \"d1eca4e2684872d7537149a8c8a382ecd0d24f088a82980550808600eaa5367e\"\n",
+          "previous": "          \"sha256\": \"fd86d95a7f2fed3783acbbc49069e2e2b06dc557537d784bcd65815b9665fb0d\"\n",
+          "start": 1406978
+        },
+        {
+          "current": "          \"sha256\": \"7f862d308a407d299da8e33987889c5499774617e764ab3ca74b839910b06bb3\"\n",
+          "previous": "          \"sha256\": \"630df599cf85df3b4b812b4050b69991774802c322ddd24e9a92edee3d60af59\"\n",
+          "start": 1411025
+        },
+        {
+          "current": "          \"sha256\": \"6807e1f2e3845ac2e5eb9fedd1be90ca110a77ef09e9d398df1accc066e8d2ef\"\n",
+          "previous": "          \"sha256\": \"0f070e88975d5bf1c82dc21643e414982fb0cdadeb0348f8c1627190542a3567\"\n",
+          "start": 1422621
+        },
+        {
+          "current": "          \"sha256\": \"d1eca4e2684872d7537149a8c8a382ecd0d24f088a82980550808600eaa5367e\"\n",
+          "previous": "          \"sha256\": \"fd86d95a7f2fed3783acbbc49069e2e2b06dc557537d784bcd65815b9665fb0d\"\n",
+          "start": 1422811
+        },
+        {
+          "current": "          \"sha256\": \"6a127ceda83e9f69e424a07916e4316de8e239b565cabba7a718780e98b83e43\"\n",
+          "previous": "          \"sha256\": \"de3bea3433e6dd17719484a03ecda017576e31bcdf482411611ef39e2b6c5d4c\"\n",
+          "start": 1424417
+        },
+        {
+          "current": "          \"sha256\": \"7f862d308a407d299da8e33987889c5499774617e764ab3ca74b839910b06bb3\"\n",
+          "previous": "          \"sha256\": \"630df599cf85df3b4b812b4050b69991774802c322ddd24e9a92edee3d60af59\"\n",
+          "start": 1425304
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "73a7e9c18b21f36a51d488a350522785e100424358848da3ef233f6193b98387"
+    },
+    {
+      "currentSha256": "552e7504b029755ff707e4ad52505da8ad862cc0dcab8f6b0214bdd23ba22753",
+      "edits": [
+        {
+          "current": "import { beforePhpWasmRecursiveEvidenceReplayRepairSource, phpWasmRecursiveEvidenceReplayRepairNormalizationPaths } from \"./php-wasm-recursive-evidence-replay-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...phpWasmRecursiveEvidenceReplayRepairNormalizationPaths\n\t, ...genericSubtypeWitHelperWarningScopeNormalizationPaths\n",
+          "previous": "\t...genericSubtypeWitHelperWarningScopeNormalizationPaths\n",
+          "start": 168589
+        },
+        {
+          "current": "\tconst phpWasmRecursiveEvidenceReplayRepair\n\t\t= beforePhpWasmRecursiveEvidenceReplayRepairSource(path, text, expected);\n\tif(sha256(phpWasmRecursiveEvidenceReplayRepair) === expected)\n\t\treturn phpWasmRecursiveEvidenceReplayRepair;\n\ttext = phpWasmRecursiveEvidenceReplayRepair;\n",
+          "previous": "",
+          "start": 207352
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "1110f77d5f50148cb35a3eb740b713e6fb88776b900ea2377b6cbf8e20e6d6d5"
+    },
+    {
+      "currentSha256": "6a127ceda83e9f69e424a07916e4316de8e239b565cabba7a718780e98b83e43",
+      "edits": [
+        {
+          "current": "import { beforePhpWasmRecursiveEvidenceReplayRepairSource } from \"./php-wasm-recursive-evidence-replay-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 235
+        },
+        {
+          "current": "\tsource = beforePhpWasmRecursiveEvidenceReplayRepairSource(\n\t\tpath, source, expected);\n\tif(sha256(source) === expected) return source;\n",
+          "previous": "",
+          "start": 3488
+        }
+      ],
+      "path": "tests/helpers/wit-recursive-callable-source-history.mjs",
+      "previousSha256": "de3bea3433e6dd17719484a03ecda017576e31bcdf482411611ef39e2b6c5d4c"
+    },
+    {
+      "currentSha256": "7f862d308a407d299da8e33987889c5499774617e764ab3ca74b839910b06bb3",
+      "edits": [
+        {
+          "current": "import \"./helpers/php-wasm-recursive-evidence-replay-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 940
+        }
+      ],
+      "path": "tests/php-wasm-recursive-callable-evidence.test.mjs",
+      "previousSha256": "6d8b34202267d11d0b4f99f4c171c60c80eb3829f03a09f7b34ad8161790460a"
+    }
+  ],
+  "milestone": "php-wasm-recursive-evidence-replay-repair-source-v1",
+  "pinCount": 9,
+  "predecessorCommit": "6617e128ad29c16d251bfb951474dca41faeba34",
+  "schemaVersion": 1,
+  "scope": "Reconstruct the complete PHP-Wasm recursive generator tree at its authenticated implementation commit, stop source readers at exact milestones, preserve the older copied-package closure, and refresh only affected live inventory pins.",
+  "updates": [
+    {
+      "currentSha256": "6807e1f2e3845ac2e5eb9fedd1be90ca110a77ef09e9d398df1accc066e8d2ef",
+      "edits": [
+        {
+          "current": "const priorSource = async (path, expected) => beforeWitRecursiveCallables(\n\tpath, await readFile(path, \"utf8\"), expected);\n",
+          "previous": "const priorSource = async path => beforeWitRecursiveCallables(path, await readFile(path, \"utf8\"));\n",
+          "start": 1261
+        },
+        {
+          "current": "\tfor(const [path, digest] of Object.entries(record.projectionSources))\n\t\tassert.equal(sha256(await priorSource(path, digest)), digest, path);\n",
+          "previous": "\tfor(const [path, digest] of Object.entries(record.projectionSources)) assert.equal(sha256(await priorSource(path)), digest, path);\n",
+          "start": 4822
+        },
+        {
+          "current": "\tfor(const path of paths) assert.equal(sha256(await priorSource(\n\t\tpath, record.sourceHashes[path])), record.sourceHashes[path], path);\n",
+          "previous": "\tfor(const path of paths) assert.equal(sha256(await priorSource(path)), record.sourceHashes[path], path);\n",
+          "start": 7195
+        },
+        {
+          "current": "\t\trestored[update.path] = reversePhpWasmRecursiveCallableUpdate(\n\t\t\tawait priorSource(update.path, update.currentSha256), update);\n",
+          "previous": "\t\trestored[update.path] = reversePhpWasmRecursiveCallableUpdate(await priorSource(update.path), update);\n",
+          "start": 7579
+        },
+        {
+          "current": "\tconst document = JSON.parse(await priorSource(\"docs/type-surface.v1.json\"\n\t\t, record.sourceHashes[\"docs/type-surface.v1.json\"]));\n",
+          "previous": "\tconst document = JSON.parse(await priorSource(\"docs/type-surface.v1.json\"));\n",
+          "start": 7989
+        }
+      ],
+      "path": "tests/helpers/php-wasm-recursive-callable-evidence.mjs",
+      "previousSha256": "0f070e88975d5bf1c82dc21643e414982fb0cdadeb0348f8c1627190542a3567"
+    },
+    {
+      "currentSha256": "9feaa70f02cd194630400639fe8d920af8964373fe273bdc9d8b54dc35ab240d",
+      "edits": [
+        {
+          "current": "import { phpWasmRecursiveGenerators } from \"./pre-owned-php-wasm-generators.mjs\";\n",
+          "previous": "import { createNativeCallableGraphDescriptor } from \"../../src/build/native-callable-graph.mjs\";\nimport { generateCompiledPhpWasmLeanAdapters } from \"../../src/build/php-wasm-graph-model.mjs\";\nimport { preOwnedPhpWasmGenerators } from \"./pre-owned-php-wasm-generators.mjs\";\n",
+          "start": 242
+        },
+        {
+          "current": "\tconst { createNativeCallableGraphDescriptor, generateCompiledPhpWasmGraph\n\t\t, generateCompiledPhpWasmLeanAdapters }\n\t\t= await phpWasmRecursiveGenerators();\n",
+          "previous": "\tconst { generateCompiledPhpWasmGraph } = await preOwnedPhpWasmGenerators();\n",
+          "start": 1603
+        }
+      ],
+      "path": "tests/helpers/php-wasm-recursive-callable-probes.mjs",
+      "previousSha256": "79a827c8ff7d3e49638ac0a03bd985addb7530dc924c375c77793eb8c173c059"
+    },
+    {
+      "currentSha256": "5e82e6c018352be701a4e3a9fdfd9d4519de2d6fa2fd14918e0280448218145b",
+      "edits": [
+        {
+          "current": "import { phpWasmRecursiveGenerators } from \"./pre-owned-php-wasm-generators.mjs\";\n",
+          "previous": "import { createCompiledPhpWasmModel, generateCompiledPhpWasmLeanAdapters } from \"../../src/build/php-wasm-graph-model.mjs\";\nimport { preOwnedPhpWasmGenerators } from \"./pre-owned-php-wasm-generators.mjs\";\n",
+          "start": 295
+        },
+        {
+          "current": "\tconst { createCompiledPhpWasmModel, generateCompiledPhpWasmGraph\n\t\t, generateCompiledPhpWasmLeanAdapters }\n\t\t= await phpWasmRecursiveGenerators();\n",
+          "previous": "\tconst { generateCompiledPhpWasmGraph } = await preOwnedPhpWasmGenerators();\n",
+          "start": 2816
+        }
+      ],
+      "path": "tests/helpers/php-wasm-recursive-callable-receipt.mjs",
+      "previousSha256": "0d4f4d19e6ca335d46c43ce68d307bcdc67ee396b27888b5ae712aceb70296c4"
+    },
+    {
+      "currentSha256": "d1eca4e2684872d7537149a8c8a382ecd0d24f088a82980550808600eaa5367e",
+      "edits": [
+        {
+          "current": "",
+          "previous": "\tsource = beforeWitRecursiveCallables(path, source, expected);\n\tif(typeof source === \"string\" && !phpWasmRecursiveCallableChangedPaths.includes(path)) return source;\n\tconst digest = sha256(source);\n\tif(digest === expected || !phpWasmRecursiveCallableChangedPaths.includes(path)) return source;\n",
+          "start": 3168
+        },
+        {
+          "current": "\tlet digest = sha256(source);\n\tif(digest === expected) return source;\n\tif(update?.currentSha256 === digest)\n\t\treturn reversePhpWasmRecursiveCallableUpdate(source, update);\n\tsource = beforeWitRecursiveCallables(path, source, expected);\n\tdigest = sha256(source);\n\treturn digest !== expected && update?.currentSha256 === digest\n\t\t? reversePhpWasmRecursiveCallableUpdate(source, update) : source;\n",
+          "previous": "\treturn update?.currentSha256 === digest ? reversePhpWasmRecursiveCallableUpdate(source, update) : source;\n",
+          "start": 3332
+        }
+      ],
+      "path": "tests/helpers/php-wasm-recursive-callable-source-history.mjs",
+      "previousSha256": "fd86d95a7f2fed3783acbbc49069e2e2b06dc557537d784bcd65815b9665fb0d"
+    },
+    {
+      "currentSha256": "2a1ad9a31bf6572df421bdb0cf519ec6e2815c1f3e7380601343716ec80cdb4f",
+      "edits": [
+        {
+          "current": "import { execFileSync } from \"node:child_process\";\n",
+          "previous": "",
+          "start": 216
+        },
+        {
+          "current": "let recursiveCached;\n\nconst selectedExports = modules => Object.freeze({\n\t...modules.get(\"src/backends/php/copied-zend.mjs\")\n\t, ...modules.get(\"src/backends/php/copied-graph-zend.mjs\")\n\t, ...modules.get(\"src/backends/php/callable-graph-zend.mjs\")\n\t, ...modules.get(\"src/build/php-wasm-graph-component.mjs\")\n});\n\nconst importHistoricalGenerators = async (\n\tselectedPaths, sources, directoryPrefix, ownedRecord\n\t, normalize = beforeFinRefinementSource\n) => {\n\tconst directory = await mkdtemp(join(tmpdir(), directoryPrefix));\n",
+          "previous": "/**\n * Import the seven-module generator closure with exact predecessor source bytes.\n * Every other dependency stays on its independently authenticated current path.\n */\nexport const preOwnedPhpWasmGenerators = () => cached ??= (async () => {\n\tconst record = JSON.parse(await readFile(ownedPhpWasmHistoryPath, \"utf8\"));\n\tconst directory = await mkdtemp(join(tmpdir(), \"lean-php-historical-generators-\"));\n",
+          "start": 1090
+        },
+        {
+          "current": "\t\tconst replacements = new Map(selectedPaths.map(path => [resolve(path)\n\t\t\t, pathToFileURL(join(directory, path)).href]));\n\t\tfor(const path of selectedPaths)\n",
+          "previous": "\t\tconst replacements = new Map(paths.map(path => [resolve(path), pathToFileURL(join(directory, path)).href]));\n\t\tfor(const path of paths)\n",
+          "start": 1622
+        },
+        {
+          "current": "\t\t\tconst target = sources[path];\n\t\t\tassert.match(target, /^[a-f0-9]{64}$/u, path);\n\t\t\tconst current = normalize(\n\t\t\t\tpath, await readFile(path, \"utf8\"), target);\n\t\t\tassert.equal(sha256(current), target, path);\n\t\t\tlet source = current, expected = target;\n\t\t\tif(ownedRecord !== undefined)\n\t\t\t{\n\t\t\t\tsource = beforeOwnedPhpWasmPackages(path, current);\n\t\t\t\texpected = ownedRecord.updates.find(\n\t\t\t\t\tupdate => update.path === path)?.previousSha256 ?? target;\n\t\t\t}\n",
+          "previous": "\t\t\tconst current = beforeFinRefinementSource(path, await readFile(path, \"utf8\"), record.sources[path]);\n\t\t\tassert.equal(sha256(current), record.sources[path], path);\n\t\t\tlet source = beforeOwnedPhpWasmPackages(path, current);\n\t\t\tconst expected = record.updates.find(update => update.path === path)?.previousSha256 ?? record.sources[path];\n",
+          "start": 1784
+        },
+        {
+          "current": "",
+          "previous": "\t\t\t// These authenticated generator modules have only static named imports.\n",
+          "start": 2356
+        },
+        {
+          "current": "\t\t\t\treturn \"from \" + JSON.stringify(replacements.get(dependency)\n\t\t\t\t\t?? pathToFileURL(dependency).href);\n",
+          "previous": "\t\t\t\treturn \"from \" + JSON.stringify(replacements.get(dependency) ?? pathToFileURL(dependency).href);\n",
+          "start": 2487
+        },
+        {
+          "current": "\t\tconst imported = new Map();\n\t\tfor(const path of selectedPaths) imported.set(path\n\t\t\t, await import(pathToFileURL(join(directory, path)).href));\n\t\treturn selectedExports(imported);\n\t}\n\tfinally\n\t{ await rm(directory, { recursive: true, force: true }); }\n};\n\n/**\n * Import the seven-module generator closure with exact predecessor source bytes.\n * Every other dependency stays on its independently authenticated current path.\n */\nexport const preOwnedPhpWasmGenerators = () => cached ??= (async () => {\n\tconst record = JSON.parse(await readFile(ownedPhpWasmHistoryPath, \"utf8\"));\n\treturn importHistoricalGenerators(paths, record.sources\n\t\t, \"lean-php-historical-generators-\", record);\n})();\n\n/**\n * Import the exact generator closure retained by the recursive PHP-Wasm\n * execution record. This is distinct from the earlier pre-owned package\n * closure used by copied-package receipts.\n */\nexport const phpWasmRecursiveGenerators = () => recursiveCached ??= (async () => {\n\tconst implementation = \"7daacb859a45f3c90ba8739bd9396fa5d970813d\";\n\tconst directory = await mkdtemp(join(resolve(\"build\")\n\t\t, \"lean-php-recursive-generators-\"));\n\ttry\n\t{\n\t\tassert.equal(execFileSync(\"git\", [\"rev-parse\", implementation]\n\t\t\t, { encoding: \"utf8\" }).trim(), implementation);\n\t\tconst archive = execFileSync(\"git\", [\"archive\", \"--format=tar\"\n\t\t\t, implementation, \"src\"], { maxBuffer: 512 * 1024 * 1024 });\n\t\texecFileSync(\"tar\", [\"-xf\", \"-\", \"-C\", directory]\n\t\t\t, { input: archive, maxBuffer: 512 * 1024 * 1024 });\n\t\tconst record = JSON.parse(await readFile(\n\t\t\t\"docs/evidence/php-wasm-recursive-callables-20260926.json\"\n\t\t\t, \"utf8\"));\n\t\tfor(const [path, digest] of Object.entries(record.projectionSources))\n\t\t\tassert.equal(sha256(await readFile(join(directory, path)))\n\t\t\t\t, digest, path);\n\t\tconst [component, model, native] = await Promise.all([\n\t\t\timport(pathToFileURL(join(directory\n\t\t\t\t, \"src/build/php-wasm-graph-component.mjs\")).href)\n\t\t\t, import(pathToFileURL(join(directory\n\t\t\t\t, \"src/build/php-wasm-graph-model.mjs\")).href)\n\t\t\t, import(pathToFileURL(join(directory\n\t\t\t\t, \"src/build/native-callable-graph.mjs\")).href)\n\t\t]);\n\t\treturn Object.freeze({ ...component, ...model, ...native });\n",
+          "previous": "\t\tconst modules = await Promise.all(paths.map(path => import(pathToFileURL(join(directory, path)).href)));\n\t\treturn Object.freeze({ ...modules[2], ...modules[3], ...modules[5], ...modules[6] });\n",
+          "start": 2652
+        }
+      ],
+      "path": "tests/helpers/pre-owned-php-wasm-generators.mjs",
+      "previousSha256": "63826cad1f61cc430ea245bc8a6cc6518079c8406a7cd8b5f70670bac2d1c750"
+    },
+    {
+      "currentSha256": "6d8b34202267d11d0b4f99f4c171c60c80eb3829f03a09f7b34ad8161790460a",
+      "edits": [
+        {
+          "current": "\t\tconst source = beforeWitRecursiveCallables(\n\t\t\tupdate.path, await readFile(update.path, \"utf8\"), update.currentSha256);\n",
+          "previous": "\t\tconst source = beforeWitRecursiveCallables(update.path, await readFile(update.path, \"utf8\"));\n",
+          "start": 6141
+        }
+      ],
+      "path": "tests/php-wasm-recursive-callable-evidence.test.mjs",
+      "previousSha256": "630df599cf85df3b4b812b4050b69991774802c322ddd24e9a92edee3d60af59"
+    }
+  ]
+}

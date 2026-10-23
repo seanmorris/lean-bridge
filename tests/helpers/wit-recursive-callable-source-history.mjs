@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforePhpWasmRecursiveEvidenceReplayRepairSource } from "./php-wasm-recursive-evidence-replay-repair-source-history.mjs";
 import { beforeOwnedAggregates } from "./owned-aggregate-source-history.mjs";
 
 export const witRecursiveCallableHistoryPath = "docs/evidence/wit-recursive-callable-integration-20260926.json";
@@ -73,6 +74,9 @@ export const reverseWitRecursiveCallableUpdate = (source, update) => {
  * @param expected - Optional exact predecessor at which normalization stops.
  */
 export const beforeWitRecursiveCallables = (path, source, expected) => {
+	source = beforePhpWasmRecursiveEvidenceReplayRepairSource(
+		path, source, expected);
+	if(sha256(source) === expected) return source;
 	// Unrelated paths still traverse every later recorded transition.
 	if(!witRecursiveCallableChangedPaths.includes(path))
 		return beforeOwnedAggregates(path, source, expected);

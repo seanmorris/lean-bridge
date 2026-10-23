@@ -12,6 +12,7 @@ import { assertPhpWasmRecursiveProbes } from "./helpers/php-wasm-recursive-calla
 import { assertPhpWasmRecursivePackages } from "./helpers/php-wasm-recursive-callable-receipt.mjs";
 import { beforePhpWasmRecursiveCallables, phpWasmRecursiveCallableHistoryPath, reversePhpWasmRecursiveCallableUpdate } from "./helpers/php-wasm-recursive-callable-source-history.mjs";
 import { beforeWitRecursiveCallables } from "./helpers/wit-recursive-callable-source-history.mjs";
+import "./helpers/php-wasm-recursive-evidence-replay-repair-source-history-tests.mjs";
 
 const json = async path => JSON.parse(await readFile(path, "utf8"));
 
