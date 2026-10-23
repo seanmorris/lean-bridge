@@ -180,7 +180,7 @@ test("every checked-record browser selection preserves constructors and result-o
 			, value => { value.privateAbi.types[0].erased = ["1proof"]; }
 			, value => { value.privateAbi.types[0].erased = [1]; }
 			, value => { value.privateAbi.types[0].erased = Array.from({ length: 1025 }, (_, index) => "proof" + index); }
-			, value => { value.privateAbi.types[0].fields = []; }
+			, value => { delete value.privateAbi.types[0].fields[0].type; }
 			, value => { value.privateAbi.types[0].proof = true; }
 			, value => { const record = value.privateAbi.types[0]; delete record.fields; record.kind = "alias"; record.target = { kind: "primitive", name: "nat" }; }
 			, value => { const record = value.privateAbi.types[0]; delete record.fields; record.kind = "variant"; record.cases = [{ name: "some", fields: [] }]; }
@@ -191,6 +191,11 @@ test("every checked-record browser selection preserves constructors and result-o
 			assert.ok(await jsonSchemaErrors("compiler-adapter-plan", changed));
 			assert.throws(() => validateCompilerAdapterPlan(changed));
 			}
+		// Proof-only checked records carry erased proofs and no payload field.
+		const proofOnly = structuredClone(plan);
+		proofOnly.privateAbi.types[0].fields = [];
+		assert.equal(await jsonSchemaErrors("compiler-adapter-plan", proofOnly), null);
+		validateCompilerAdapterPlan(proofOnly);
 		const overlap = structuredClone(plan);
 		overlap.privateAbi.types[0].erased = [overlap.privateAbi.types[0].fields[0].name];
 		// Cross-field name disjointness is a runtime semantic check, not JSON Schema syntax.
