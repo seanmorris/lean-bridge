@@ -1,0 +1,113 @@
+{
+  "additions": [
+    {
+      "currentSha256": "37726d29b30055ac79d663c3bd6d4825dc1e70df6a65ab61fb940f49ed4485da",
+      "path": "scripts/update-callback-checked-record-wit-diagnostic-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "b8730d1457b87cc94c7ebbd43f3a7dc3f8531202f2dcaeca6b6bd3efbb94538c",
+      "path": "tests/helpers/callback-checked-record-wit-diagnostic-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "f16c0069e0c27dbdc1c45d9ed2883a82fcfe82470b8f982b3eb6bb0b29f402ad",
+      "path": "tests/helpers/callback-checked-record-wit-diagnostic-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "52848edcf59a22ada4f11fd459a3ea000ef58d62",
+  "integrationUpdates": [
+    {
+      "currentSha256": "843671108efc153599fa3356cd3aad3a35af8c8295a686b10b021b453c8df6c9",
+      "edits": [
+        {
+          "current": "import \"./helpers/callback-checked-record-wit-diagnostic-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 3406
+        }
+      ],
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "c087878959357b55ea49242baa900f1392c9806ea67905c2fe8df3da7a169bcd"
+    },
+    {
+      "currentSha256": "0639d14c08c3c03161e9b63a64def4f7e72b5cd2b23035bf4d7f8e6f4bb50bd6",
+      "edits": [
+        {
+          "current": "import { beforeCallbackCheckedRecordWitDiagnosticRepairSource, callbackCheckedRecordWitDiagnosticRepairNormalizationPaths } from \"./callback-checked-record-wit-diagnostic-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 392
+        },
+        {
+          "current": "\t...callbackCheckedRecordWitDiagnosticRepairNormalizationPaths\n\t, ...valueIndexTestProfileLiveReadRepairNormalizationPaths\n",
+          "previous": "\t...valueIndexTestProfileLiveReadRepairNormalizationPaths\n",
+          "start": 154714
+        },
+        {
+          "current": "\tconst callbackWitDiagnosticRepairIntegration\n\t\t= beforeCallbackCheckedRecordWitDiagnosticRepairSource(\n\t\t\tpath, text, expected\n\t\t);\n\tif(sha256(callbackWitDiagnosticRepairIntegration) === expected)\n\t\treturn callbackWitDiagnosticRepairIntegration;\n\tconst callbackWitDiagnosticRepairImplementation\n\t\t= beforeCallbackCheckedRecordWitDiagnosticRepairSource(\n\t\t\tpath, callbackWitDiagnosticRepairIntegration, expected\n\t\t);\n\tif(sha256(callbackWitDiagnosticRepairImplementation) === expected)\n\t\treturn callbackWitDiagnosticRepairImplementation;\n",
+          "previous": "",
+          "start": 189849
+        },
+        {
+          "current": "\t\t\tpath, callbackWitDiagnosticRepairImplementation, expected\n",
+          "previous": "\t\t\tpath, text, expected\n",
+          "start": 190474
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "782ecf6af96bac2c674c8b878ade92bfc5d86dafaf12f3a1906ae253eb9bd0d8"
+    }
+  ],
+  "milestone": "callback-checked-record-wit-diagnostic-repair-source-v1",
+  "predecessorCommit": "b0f2458293a60c1b6cd5cad5eb39b4fa29bd131b",
+  "schemaVersion": 1,
+  "scope": "The WIT callback checked-record consumer authenticates the exact returned-closure constructor and field diagnostics emitted by the native Lean refinement boundary.",
+  "updates": [
+    {
+      "currentSha256": "cad48dcd8ebf3cddba6e3795eccae942739bad53b6901982e33ad7161c477064",
+      "edits": [
+        {
+          "current": "import { mkdtemp, readFile, rm } from \"node:fs/promises\";\n",
+          "previous": "import { mkdtemp, rm } from \"node:fs/promises\";\n",
+          "start": 334
+        },
+        {
+          "current": "\ntest(\"the WIT consumer expects exact returned-closure constructor diagnostics\", async () => {\n\tconst source = await readFile(\n\t\t\"tests/fixtures/callback-checked-record-consumers/wit-wasi.c\", \"utf8\"\n\t);\n\tfor(const diagnostic of [\n\t\t\"arg0 was rejected by CallbackCheckedRecords.mkInterval\"\n\t\t, \"arg1 was rejected by CallbackCheckedRecords.mkInterval\"\n\t\t, \"arg0[0]? was rejected by CallbackCheckedRecords.mkInterval\"\n\t\t, \"arg0.weight was rejected by CallbackCheckedRecords.checkedPositive\"\n\t\t, \"arg0 was rejected by CallbackCheckedRecords.mkWeighted\"\n\t]) assert.equal(source.split(diagnostic).length - 1, 1, diagnostic);\n\tassert.doesNotMatch(source, /make_(?:mixed_|container_|nested_)?closure_call\\([\\s\\S]{0,120}\"Native Lean closure call failed\"/u);\n});\n",
+          "previous": "",
+          "start": 20804
+        }
+      ],
+      "path": "tests/callback-checked-record-native.test.mjs",
+      "previousSha256": "6e5d6c53e48d4445426cdf3c2fade1e4d25d2a3d2cb8779d31e4c84cd265cadf"
+    },
+    {
+      "currentSha256": "cab5fc1c3ad013fe14e0555e0ea7ba253a3acd672489938eb616dffe47ed47d8",
+      "edits": [
+        {
+          "current": "    session, closure, &five_two, &output),\n    \"arg0 was rejected by CallbackCheckedRecords.mkInterval\");\n",
+          "previous": "    session, closure, &five_two, &output), \"Native Lean closure call failed\");\n",
+          "start": 8264
+        },
+        {
+          "current": "    session, mixed, &nine, &five_two, &interval_output),\n    \"arg1 was rejected by CallbackCheckedRecords.mkInterval\");\n",
+          "previous": "    session, mixed, &nine, &five_two, &interval_output), \"Native Lean closure call failed\");\n",
+          "start": 9346
+        },
+        {
+          "current": "    session, container, &bad_array, &option_output),\n    \"arg0[0]? was rejected by CallbackCheckedRecords.mkInterval\");\n",
+          "previous": "    session, container, &bad_array, &option_output), \"Native Lean closure call failed\");\n",
+          "start": 11674
+        },
+        {
+          "current": "    session, nested, &zero_five, &output),\n    \"arg0.weight was rejected by CallbackCheckedRecords.checkedPositive\");\n",
+          "previous": "    session, nested, &zero_five, &output), \"Native Lean closure call failed\");\n",
+          "start": 14911
+        },
+        {
+          "current": "    session, nested, &six_five, &output),\n    \"arg0 was rejected by CallbackCheckedRecords.mkWeighted\");\n",
+          "previous": "    session, nested, &six_five, &output), \"Native Lean closure call failed\");\n",
+          "start": 15157
+        }
+      ],
+      "path": "tests/fixtures/callback-checked-record-consumers/wit-wasi.c",
+      "previousSha256": "df9c25e6ac0b11a9ae0fa252324c6566b34b552caec7517041fea1d57183cdb1"
+    }
+  ]
+}

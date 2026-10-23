@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeCallbackCheckedRecordWitDiagnosticRepairSource, callbackCheckedRecordWitDiagnosticRepairNormalizationPaths } from "./callback-checked-record-wit-diagnostic-repair-source-history.mjs";
 import { beforeValueIndexTestProfileLiveReadRepairSource, valueIndexTestProfileLiveReadRepairNormalizationPaths } from "./value-index-test-profile-live-read-repair-source-history.mjs";
 import { beforePhpWasmCallbackEntrySelectionRepairSource, phpWasmCallbackEntrySelectionRepairNormalizationPaths } from "./php-wasm-callback-entry-selection-repair-source-history.mjs";
 import { beforeCallbackRefinementsPhpWasmHostedArchiveSource, callbackRefinementsPhpWasmHostedArchiveNormalizationPaths } from "./callback-refinements-php-wasm-hosted-archive-source-history.mjs";
@@ -1953,7 +1954,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...valueIndexTestProfileLiveReadRepairNormalizationPaths
+	...callbackCheckedRecordWitDiagnosticRepairNormalizationPaths
+	, ...valueIndexTestProfileLiveReadRepairNormalizationPaths
 	, ...phpWasmCallbackEntrySelectionRepairNormalizationPaths
 	, ...callbackRefinementsPhpWasmPromotionNormalizationPaths
 	, ...testProfilesRegistrationGapIntegrationPaths
@@ -2708,9 +2710,21 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 			text = exact;
 		}
 	}
+	const callbackWitDiagnosticRepairIntegration
+		= beforeCallbackCheckedRecordWitDiagnosticRepairSource(
+			path, text, expected
+		);
+	if(sha256(callbackWitDiagnosticRepairIntegration) === expected)
+		return callbackWitDiagnosticRepairIntegration;
+	const callbackWitDiagnosticRepairImplementation
+		= beforeCallbackCheckedRecordWitDiagnosticRepairSource(
+			path, callbackWitDiagnosticRepairIntegration, expected
+		);
+	if(sha256(callbackWitDiagnosticRepairImplementation) === expected)
+		return callbackWitDiagnosticRepairImplementation;
 	const valueIndexProfileReadRepair
 		= beforeValueIndexTestProfileLiveReadRepairSource(
-			path, text, expected
+			path, callbackWitDiagnosticRepairImplementation, expected
 		);
 	if(sha256(valueIndexProfileReadRepair) === expected)
 		return valueIndexProfileReadRepair;
