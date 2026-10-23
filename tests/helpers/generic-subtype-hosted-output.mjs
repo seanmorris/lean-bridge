@@ -77,7 +77,7 @@ export const assertGenericSubtypeHostedTap = (source, label) => {
 const assertFoundationTap = source => {
 	assert.equal(typeof source, "string");
 	assert.ok(source.startsWith("TAP version 13\n"));
-	assert.doesNotMatch(source, /^not ok |^Bail out!|# TODO/gmu);
+	assert.doesNotMatch(source, /^not ok |^Bail out!|# SKIP|# TODO/gmu);
 	assert.doesNotMatch(source, /^# fail [1-9][0-9]*$/gmu);
 	for(const label of [
 		"nominal selection syntax names every field and case in source order"
@@ -124,13 +124,13 @@ const replayNpm = async (root, contract, files) => {
 	return evidence.observations;
 };
 
-const replayFoundation = async (root, files) => {
+const replayFoundation = async (root, files, producerCommit) => {
 	assert.deepEqual(files, ["dependent-generic-subtype-toolchain.log"
 		, "dependent-generic-subtype.tap"]);
 	await nonempty(join(root, files[0]));
 	const tap = await readFile(join(root, files[1]), "utf8");
 	assertFoundationTap(tap);
-	return [{ kind: "dependent-generic-subtype-foundation-v1"
+	return [{ kind: "dependent-generic-subtype-foundation-v1", producerCommit
 		, tests: [...tap.matchAll(/^# tests ([0-9]+)$/gmu)]
 			.reduce((sum, match) => sum + Number(match[1]), 0) }];
 };
@@ -219,7 +219,7 @@ export const replayGenericSubtypeHostedOutput = async (
 	const accepted = contract.outputKind === "npm-browser"
 		? await replayNpm(root, contract, files)
 		: contract.outputKind === "foundation"
-			? await replayFoundation(root, files)
+			? await replayFoundation(root, files, producerCommit)
 			: contract.outputKind === "native" || contract.outputKind === "perl"
 				? await replayNativePerl(lane, root, contract, files, producerCommit)
 				: contract.outputKind === "language"

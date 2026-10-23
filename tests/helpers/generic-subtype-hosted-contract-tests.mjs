@@ -5,13 +5,16 @@
  */
 import assert from "node:assert/strict";
 import { execFileSync, spawnSync } from "node:child_process";
-import { readFile } from "node:fs/promises";
+import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import test from "node:test";
 import {
 	genericSubtypeHostedContracts, genericSubtypeHostedLaneNames
 } from "./generic-subtype-hosted-contracts.mjs";
 import {
 	assertGenericSubtypeHostedTap, genericSubtypeHostedSafePath
+	, replayGenericSubtypeHostedOutput
 } from "./generic-subtype-hosted-output.mjs";
 import {
 	assertGenericSubtypeHostedSteps
@@ -120,4 +123,25 @@ test("generic Subtype archiver refuses incomplete command lines", () => {
 		, ["scripts/archive-generic-subtype-evidence.mjs"], { encoding: "utf8" });
 	assert.equal(result.status, 2);
 	assert.match(result.stderr, /^Usage: archive-generic-subtype-evidence\.mjs/u);
+});
+
+test("generic Subtype foundation replay binds the exact producer revision", async t => {
+	const root = await mkdtemp(join(tmpdir(), "lean-generic-subtype-foundation-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
+	const labels = [
+		"nominal selection syntax names every field and case in source order"
+		, "nominal native admission preserves callback direction, generic Fin and nested-site gates"
+		, "dependent generic Subtype history restores every source"
+	];
+	const first = labels.map((label, index) =>
+		`# Subtest: ${label}\nok ${index + 1} - ${label}`).join("\n");
+	const fresh = "fresh Lean preserves nominal constructor selections and rejects false source decisions";
+	const tap = `TAP version 13\n${first}\n1..3\n# tests 3\n# suites 0\n# pass 3\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 2\nTAP version 13\n# Subtest: ${fresh}\nok 1 - ${fresh}\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 3\n`;
+	await writeFile(join(root, "dependent-generic-subtype.tap"), tap);
+	await writeFile(join(root, "dependent-generic-subtype-toolchain.log"), "Lean 4\n");
+	const revision = "a".repeat(40);
+	const replay = await replayGenericSubtypeHostedOutput(
+		"foundation", root, revision);
+	assert.equal(replay.accepted[0].producerCommit, revision);
+	assert.equal(replay.accepted[0].tests, 4);
 });
