@@ -1,0 +1,97 @@
+{
+  "additions": [
+    {
+      "currentSha256": "02a27213cd6b1feaa20007d7f29377b58cc8c76dd369699d200fd7f29a844cbf",
+      "path": "scripts/update-owned-subtype-promotion-contract-source-history.mjs"
+    },
+    {
+      "currentSha256": "b6ba5dc31f4384120afb36985dd0656fce71c9eca1a3c2fc4176ab24e9c45199",
+      "path": "tests/helpers/owned-subtype-promotion-contract-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "94cae330fcfc76210e17dda3ae77dd72d0f154ca0516934ba8ec7f22d69fc9b0",
+      "path": "tests/helpers/owned-subtype-promotion-contract-source-history.mjs"
+    }
+  ],
+  "implementationAdditions": [
+    {
+      "currentSha256": "79fca244a97b1fd46d78909a021762bc3ffb94cf253bc8103b329b36b95d4d02",
+      "path": "scripts/promote-owned-subtype-evidence.mjs"
+    },
+    {
+      "currentSha256": "a09fe0916057ce8b62299baa9bddd33e5ff69f6ed6a3058bbbf2a188116cf887",
+      "path": "tests/helpers/owned-subtype-promotion.mjs"
+    },
+    {
+      "currentSha256": "9ef9265b80b754a8fbef0bf67c58cf04c88acecb499e846de8af23fecaedb2e9",
+      "path": "tests/owned-subtype-promotion.test.mjs"
+    }
+  ],
+  "implementationCommit": "a0e7f8e10ff53e8329ae08512f41551c71a5cc92",
+  "integrationUpdates": [
+    {
+      "currentSha256": "675f70cececf8112bbc8f66c78a5e5fc22ce74d030ce3adb7c395d1c353d27c7",
+      "edits": [
+        {
+          "current": "import { beforeOwnedSubtypePromotionContractSource, ownedSubtypePromotionContractChangedPaths } from \"./owned-subtype-promotion-contract-source-history.mjs\";\n",
+          "previous": "",
+          "start": 12635
+        },
+        {
+          "current": "\t, ...ownedSubtypePromotionContractChangedPaths\n",
+          "previous": "",
+          "start": 170619
+        },
+        {
+          "current": "\tconst ownedSubtypePromotionContract\n\t\t= beforeOwnedSubtypePromotionContractSource(path, text, expected);\n\tif(sha256(ownedSubtypePromotionContract) === expected)\n\t\treturn ownedSubtypePromotionContract;\n\ttext = ownedSubtypePromotionContract;\n",
+          "previous": "",
+          "start": 202775
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "f20ceb57c20347582b88f5356593b9884f9699c689cf8cf3bf2ba0750b21cb25"
+    },
+    {
+      "currentSha256": "63aa49b8282622b07afbf042b6e530cce22b59cbacd074d50be4634259a13d75",
+      "edits": [
+        {
+          "current": "import \"./helpers/owned-subtype-promotion-contract-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 4510
+        }
+      ],
+      "path": "tests/php-wasm-fin.test.mjs",
+      "previousSha256": "c6006255483f7aa0f650571065fc61e0549b598e7047ad6b03f2e829fd95a3a1"
+    }
+  ],
+  "milestone": "owned-subtype-promotion-contract-v1",
+  "predecessorCommit": "da5bae8a9e48c3afb2f905c052cc3410f56faf86",
+  "schemaVersion": 1,
+  "scope": "Define an exact eight-lane promotion for the thirty-two non-PHP-Wasm checked-field cells, including authenticated relocated JavaScript evidence, seven independently replayed hosted archives and strict unrelated-cell preservation.",
+  "updates": [
+    {
+      "currentSha256": "a61f10d548f706386965331b76f5e7a9ca695ac867e7aaf419124aedaa397651",
+      "edits": [
+        {
+          "current": "\t\t, \"owned-subtype-promotion\"\n",
+          "previous": "",
+          "start": 2636
+        }
+      ],
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "1d091ee6d1450ddc2334ab812fbbe987c34e49f0e545773fefb0b6ae0f4f2a3b"
+    },
+    {
+      "currentSha256": "68d6109e516963f362b4413a33390783de96d55182af990dcceae0132b69cd66",
+      "edits": [
+        {
+          "current": "\t\t, \"owned-subtype-promotion\"\n",
+          "previous": "",
+          "start": 4610
+        }
+      ],
+      "path": "tests/test-profiles.test.mjs",
+      "previousSha256": "03862bec51946ec91f2e21c6a57b35bf533c12406ba177e7a43edc774ede9f60"
+    }
+  ]
+}
