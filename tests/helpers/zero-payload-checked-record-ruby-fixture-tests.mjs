@@ -5,9 +5,8 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { execFileSync } from "node:child_process";
+import { execFileSync, spawnSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
-import { resolve } from "node:path";
 import test from "node:test";
 import { generateCopiedRubyPackage } from "../../src/backends/ruby/copied-values.mjs";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
@@ -30,7 +29,10 @@ import {
 } from "./zero-payload-checked-record-ruby-ci-report.mjs";
 
 const snake = name => name.replace(/([A-Z])/gu, "_$1").toLowerCase();
-const rubyCommand = () => resolve(process.env.LEAN_BRIDGE_RUBY ?? ".toolchains/ruby33/bin/ruby");
+const rubyCommand = () => process.env.LEAN_BRIDGE_RUBY ?? "/usr/bin/ruby";
+const rubyModelAvailable = process.env.LEAN_BRIDGE_RUBY !== undefined
+	|| spawnSync(rubyCommand(), ["-e", "exit defined?(Data) ? 0 : 1"]
+		, { stdio: "ignore" }).status === 0;
 
 test("zero-payload Ruby selections retain all four author routes and both API modes", () => {
 	assert.deepEqual(zeroPayloadRubyRoutes, [
@@ -156,7 +158,10 @@ test("zero-payload Ruby package identity binds the original gem receipt to its n
 	assert.throws(() => zeroPayloadRubyNativeEvidence({ ...nativeReceipt, files: {} }, component, adapter, runtime));
 });
 
-test("independent zero-payload Ruby caller refuses faults, preserves rejected inputs and recovers", async t => {
+test("independent zero-payload Ruby caller refuses faults, preserves rejected inputs and recovers", {
+	skip: rubyModelAvailable ? false
+		: "Ruby 3.2 or newer is exercised by the installed Ruby workflow"
+}, async t => {
 	const ruby = rubyCommand();
 	const model = "tests/helpers/zero-payload-checked-record-ruby-model.rb";
 	const callerPath = "tests/fixtures/zero-payload-checked-record-ruby/ruby.rb";
