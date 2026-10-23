@@ -10,3 +10,4 @@ import "./helpers/checked-record-perl-installed-source-tests.mjs";
 import "./helpers/checked-record-perl-installed-tests.mjs";
 import "./helpers/checked-record-perl-installed-history-tests.mjs";
 import "./helpers/owned-subtype-test-profile-pin-repair-source-history-tests.mjs";
+import "./helpers/owned-subtype-live-pin-completion-source-history-tests.mjs";

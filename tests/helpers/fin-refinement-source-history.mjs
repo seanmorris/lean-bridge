@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeOwnedSubtypeLivePinCompletionSource, ownedSubtypeLivePinCompletionNormalizationPaths } from "./owned-subtype-live-pin-completion-source-history.mjs";
 import { beforePhpWasmRecursiveEvidenceReplayRepairSource, phpWasmRecursiveEvidenceReplayRepairNormalizationPaths } from "./php-wasm-recursive-evidence-replay-repair-source-history.mjs";
 import { beforeGenericSubtypeWitHelperWarningScopeSource, genericSubtypeWitHelperWarningScopeNormalizationPaths } from "./generic-subtype-wit-helper-warning-scope-source-history.mjs";
 import { beforeOwnedSubtypeTestProfilePinRepairSource, ownedSubtypeTestProfilePinRepairNormalizationPaths } from "./owned-subtype-test-profile-pin-repair-source-history.mjs";
@@ -2072,7 +2073,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...phpWasmRecursiveEvidenceReplayRepairNormalizationPaths
+	...ownedSubtypeLivePinCompletionNormalizationPaths
+	, ...phpWasmRecursiveEvidenceReplayRepairNormalizationPaths
 	, ...genericSubtypeWitHelperWarningScopeNormalizationPaths
 	, ...ownedSubtypeTestProfilePinRepairNormalizationPaths
 	, ...witRecursiveReaderTraversalRepairNormalizationPaths
@@ -2887,6 +2889,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
+	const ownedSubtypeLivePinCompletion
+		= beforeOwnedSubtypeLivePinCompletionSource(path, text, expected);
+	if(sha256(ownedSubtypeLivePinCompletion) === expected)
+		return ownedSubtypeLivePinCompletion;
+	text = ownedSubtypeLivePinCompletion;
 	const phpWasmRecursiveEvidenceReplayRepair
 		= beforePhpWasmRecursiveEvidenceReplayRepairSource(path, text, expected);
 	if(sha256(phpWasmRecursiveEvidenceReplayRepair) === expected)
