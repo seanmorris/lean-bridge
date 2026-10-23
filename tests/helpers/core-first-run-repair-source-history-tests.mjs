@@ -16,6 +16,7 @@ import {
 	, reverseCoreFirstRunRepairUpdate
 } from "./core-first-run-repair-source-history.mjs";
 import { finRefinementNormalizationPaths } from "./fin-refinement-source-history.mjs";
+import { sourceAtProducer } from "./producer-source.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
 
@@ -112,7 +113,9 @@ test("first complete Core repair authenticates stale and changed-source pins"
 			if(pin.path === "src/adoption/test-profiles.mjs")
 			{
 				assert.equal(pin.count, 94);
-				assert.equal(sha256(await readFile(pin.path)), pin.currentSha256);
+				assert.equal(sha256(sourceAtProducer(
+					coreFirstRunRepairPredecessor, pin.path, pin.currentSha256
+				)), pin.currentSha256);
 				assert.ok(!record.updates.some(update => update.path === pin.path));
 			}
 			else
