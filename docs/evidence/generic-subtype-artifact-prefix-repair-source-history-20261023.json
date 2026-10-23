@@ -1,0 +1,138 @@
+{
+  "additions": [
+    {
+      "currentSha256": "4a801d9471474defeaa55076621623d79c5ca2b69514aa78e5eba5c68f8d9d2e",
+      "path": "scripts/update-generic-subtype-artifact-prefix-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "7a48c8cbb59f35dcdf0c4316868bad6120e033fae60f5ee9860fb7050c8ec219",
+      "path": "tests/helpers/generic-subtype-artifact-prefix-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "2f54549fcd5949667db349febd1977329dc203387ef76b1a9bfc212062106114",
+      "path": "tests/helpers/generic-subtype-artifact-prefix-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "de3f6cba17e03030472569edca1d79b3c577209f",
+  "integrationUpdates": [
+    {
+      "currentSha256": "e7ed80ec61c489bb774003e4f4e87f9789f7d32935382e2c9e0db7405c831250",
+      "edits": [
+        {
+          "current": "import \"./helpers/generic-subtype-artifact-prefix-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 1924
+        }
+      ],
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "e5d6058bb6550ce692655b1dc0e57d41b888ec7c46e9605eecb976b50f1cdc4a"
+    },
+    {
+      "currentSha256": "95bdc55eb10685429fa19c45e4e760ee59d835444177052ab0f7a207bac78f12",
+      "edits": [
+        {
+          "current": "import { beforeGenericSubtypeArtifactPrefixRepairSource, genericSubtypeArtifactPrefixRepairChangedPaths } from \"./generic-subtype-artifact-prefix-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...genericSubtypeArtifactPrefixRepairChangedPaths\n\t, ...ownedSubtypeWitHostNamespaceRepairChangedPaths\n",
+          "previous": "\t...ownedSubtypeWitHostNamespaceRepairChangedPaths\n",
+          "start": 167496
+        },
+        {
+          "current": "\tlet genericSubtypeArtifactPrefixRepair = text;\n\twhile(true)\n\t{\n\t\tconst previous = beforeGenericSubtypeArtifactPrefixRepairSource(\n\t\t\tpath, genericSubtypeArtifactPrefixRepair, expected);\n\t\tif(sha256(previous) === expected) return previous;\n\t\tif(previous === genericSubtypeArtifactPrefixRepair) break;\n\t\tgenericSubtypeArtifactPrefixRepair = previous;\n\t}\n\ttext = genericSubtypeArtifactPrefixRepair;\n",
+          "previous": "",
+          "start": 205906
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "083cf2f8c7eff330ba00c1faeaeb45488613dd771f05524406771eed541fda64"
+    }
+  ],
+  "milestone": "generic-subtype-artifact-prefix-repair-v1",
+  "predecessorCommit": "9842c9c1a580a20e7e95f9916bee870a07cd88e7",
+  "schemaVersion": 1,
+  "scope": "Store generic-Subtype artifact prefixes without a trailing separator so the shared hosted verifier authenticates the exact workflow artifact names.",
+  "updates": [
+    {
+      "currentSha256": "2dab614eecb44a3affc4ef3a8bcc5aa240fa1a2d236226a1e0fd8ee6aa96fe94",
+      "edits": [
+        {
+          "current": "\t\t\t?? contract.artifactPrefix}-\\${{ github.sha }}`;\n",
+          "previous": "\t\t\t?? contract.artifactPrefix}\\${{ github.sha }}`;\n",
+          "start": 2499
+        }
+      ],
+      "path": "tests/helpers/generic-subtype-hosted-contract-tests.mjs",
+      "previousSha256": "7681482b0f4578aa08a6ddf2da2fd7fee10637e75cc4544196be28060327958e"
+    },
+    {
+      "currentSha256": "805a8ff00560e147b18cf9b46208b8199646aeb336c75494178790d6746a82d5",
+      "edits": [
+        {
+          "current": "\t\t, artifactPrefix: \"generic-subtype-npm-browser-ordinary\"\n\t\t, workflowArtifactPrefix: \"generic-subtype-npm-browser-${{ matrix.route }}\"\n",
+          "previous": "\t\t, artifactPrefix: \"generic-subtype-npm-browser-ordinary-\"\n\t\t, workflowArtifactPrefix: \"generic-subtype-npm-browser-${{ matrix.route }}-\"\n",
+          "start": 560
+        },
+        {
+          "current": "\t\t, artifactPrefix: \"generic-subtype-npm-browser-reviewed\"\n\t\t, workflowArtifactPrefix: \"generic-subtype-npm-browser-${{ matrix.route }}\"\n",
+          "previous": "\t\t, artifactPrefix: \"generic-subtype-npm-browser-reviewed-\"\n\t\t, workflowArtifactPrefix: \"generic-subtype-npm-browser-${{ matrix.route }}-\"\n",
+          "start": 1212
+        },
+        {
+          "current": "\t\t, artifactPrefix: \"dependent-generic-subtype\"\n",
+          "previous": "\t\t, artifactPrefix: \"dependent-generic-subtype-\"\n",
+          "start": 1801
+        },
+        {
+          "current": "\t\t, artifactPrefix: \"generic-subtype-native\"\n",
+          "previous": "\t\t, artifactPrefix: \"generic-subtype-native-\"\n",
+          "start": 2175
+        },
+        {
+          "current": "\t\t, artifactPrefix: \"generic-subtype-perl\"\n",
+          "previous": "\t\t, artifactPrefix: \"generic-subtype-perl-\"\n",
+          "start": 2541
+        },
+        {
+          "current": "\t\t, artifactPrefix: \"generic-subtype-python\"\n",
+          "previous": "\t\t, artifactPrefix: \"generic-subtype-python-\"\n",
+          "start": 2894
+        },
+        {
+          "current": "\t\t, artifactPrefix: \"generic-subtype-ruby\"\n",
+          "previous": "\t\t, artifactPrefix: \"generic-subtype-ruby-\"\n",
+          "start": 3243
+        },
+        {
+          "current": "\t\t, artifactPrefix: \"generic-subtype-rust\"\n",
+          "previous": "\t\t, artifactPrefix: \"generic-subtype-rust-\"\n",
+          "start": 3585
+        },
+        {
+          "current": "\t\t, artifactPrefix: \"generic-subtype-dotnet\"\n",
+          "previous": "\t\t, artifactPrefix: \"generic-subtype-dotnet-\"\n",
+          "start": 3906
+        },
+        {
+          "current": "\t\t, artifactPrefix: \"generic-subtype-jvm\"\n",
+          "previous": "\t\t, artifactPrefix: \"generic-subtype-jvm-\"\n",
+          "start": 4240
+        },
+        {
+          "current": "\t\t, artifactPrefix: \"generic-subtype-php\"\n",
+          "previous": "\t\t, artifactPrefix: \"generic-subtype-php-\"\n",
+          "start": 4579
+        },
+        {
+          "current": "\t\t, artifactPrefix: \"generic-subtype-wit\"\n",
+          "previous": "\t\t, artifactPrefix: \"generic-subtype-wit-\"\n",
+          "start": 4939
+        }
+      ],
+      "path": "tests/helpers/generic-subtype-hosted-contracts.mjs",
+      "previousSha256": "106f1f8121ad08e558e473c2d4bcd1e730b5657f87b5f35e51fc7bd12c4c929e"
+    }
+  ]
+}

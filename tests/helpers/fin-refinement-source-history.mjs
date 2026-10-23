@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeGenericSubtypeArtifactPrefixRepairSource, genericSubtypeArtifactPrefixRepairChangedPaths } from "./generic-subtype-artifact-prefix-repair-source-history.mjs";
 import { beforeOwnedSubtypeWitHostNamespaceRepairSource, ownedSubtypeWitHostNamespaceRepairChangedPaths } from "./owned-subtype-wit-host-namespace-repair-source-history.mjs";
 import { beforePhpWasmEntryStructuralEqualityRepairSource, phpWasmEntryStructuralEqualityRepairChangedPaths } from "./php-wasm-entry-structural-equality-repair-source-history.mjs";
 import { beforeOwnedSubtypePerlSourcePathRepairSource, ownedSubtypePerlSourcePathRepairNormalizationPaths } from "./owned-subtype-perl-source-path-repair-source-history.mjs";
@@ -2065,7 +2066,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...ownedSubtypeWitHostNamespaceRepairChangedPaths
+	...genericSubtypeArtifactPrefixRepairChangedPaths
+	, ...ownedSubtypeWitHostNamespaceRepairChangedPaths
 	, ...phpWasmEntryStructuralEqualityRepairChangedPaths
 	, ...ownedSubtypePerlSourcePathRepairNormalizationPaths
 	, ...genericSubtypeDocumentationNormalizationPaths
@@ -2873,6 +2875,16 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
+	let genericSubtypeArtifactPrefixRepair = text;
+	while(true)
+	{
+		const previous = beforeGenericSubtypeArtifactPrefixRepairSource(
+			path, genericSubtypeArtifactPrefixRepair, expected);
+		if(sha256(previous) === expected) return previous;
+		if(previous === genericSubtypeArtifactPrefixRepair) break;
+		genericSubtypeArtifactPrefixRepair = previous;
+	}
+	text = genericSubtypeArtifactPrefixRepair;
 	let ownedSubtypeWitHostNamespaceRepair = text;
 	while(true)
 	{
