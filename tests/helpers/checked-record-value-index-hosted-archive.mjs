@@ -78,9 +78,16 @@ const jsonObject = (bytes, label) => {
 export const inspectCheckedRecordValueIndexHostedArtifact = async (
 	selected, expected
 ) => {
+	const recordsFailure = Object.hasOwn(expected, "conclusions");
 	assert.deepEqual(Object.keys(expected).sort(), [
-		"artifactPrefix", "jobName", "workflow"
+		"artifactPrefix", ...recordsFailure ? ["conclusions"] : []
+		, "jobName", "workflow"
 	]);
+	const conclusions = recordsFailure ? expected.conclusions
+		: { run: "success", job: "success" };
+	assert.deepEqual(Object.keys(conclusions).sort(), ["job", "run"]);
+	for(const value of Object.values(conclusions))
+		assert.ok(["failure", "success"].includes(value));
 	for(const path of Object.values(selected))
 		assert.equal(await realpath(path), path, `Non-canonical hosted input: ${path}`);
 	const api = {};
@@ -96,7 +103,7 @@ export const inspectCheckedRecordValueIndexHostedArtifact = async (
 		.map(([name, item]) => [name, item.value]));
 	assert.ok(Number.isSafeInteger(run.id) && run.id > 0);
 	assert.equal(run.status, "completed");
-	assert.equal(run.conclusion, "success");
+	assert.equal(run.conclusion, conclusions.run);
 	assert.match(run.head_sha, /^[a-f0-9]{40}$/u);
 	assert.equal(run.path, expected.workflow);
 	assert.equal(run.repository?.full_name, "seanmorris/lean-bridge");
@@ -107,7 +114,7 @@ export const inspectCheckedRecordValueIndexHostedArtifact = async (
 	assert.equal(job.run_id, run.id);
 	assert.equal(job.head_sha, run.head_sha);
 	assert.equal(job.status, "completed");
-	assert.equal(job.conclusion, "success");
+	assert.equal(job.conclusion, conclusions.job);
 	assert.equal(job.name, expected.jobName);
 	assert.ok(Array.isArray(job.labels) && job.labels.includes("ubuntu-24.04"));
 	assert.ok(Number.isSafeInteger(artifact.id) && artifact.id > 0);
@@ -126,6 +133,7 @@ export const inspectCheckedRecordValueIndexHostedArtifact = async (
 		, hostedRun: {
 			repository: "seanmorris/lean-bridge", workflow: run.path
 			, runId: run.id, runAttempt: run.run_attempt, event: run.event
+			, ...recordsFailure ? { conclusions } : {}
 			, url: run.html_url, createdAt: run.created_at
 			, updatedAt: run.updated_at
 			, job: {

@@ -60,6 +60,7 @@ const hosted = await inspectDependentCheckedRecordHostedArtifact(selected, {
 	workflow: ".github/workflows/dependent-checked-record-browser.yml"
 	, jobName: "Four dependent-record routes in Node and three browsers"
 	, artifactPrefix: "dependent-checked-record-browser"
+	, conclusions: { run: "failure", job: "failure" }
 });
 const revision = hosted.revision;
 const revisions = {
