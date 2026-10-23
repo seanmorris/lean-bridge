@@ -20,6 +20,7 @@ import {
 	beforeFinRefinementSource, finRefinementNormalizationPaths
 } from "./fin-refinement-source-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
+import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
 
 const git = args => execFileSync("git", args
 	, { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
@@ -35,7 +36,8 @@ test("callback Subtype promotion records every exact integration transition", as
 		, callbackSubtypePromotionIntegrationPaths);
 	for(const update of record.integrationUpdates)
 	{
-		const current = await readFile(update.path, "utf8");
+		const current = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256);
 		const previous = git(["show"
 			, `${callbackSubtypePromotionPredecessor}:${update.path}`]);
 		assert.equal(reverseCallbackSubtypePromotionUpdate(current, update)
@@ -48,8 +50,9 @@ test("callback Subtype promotion records every exact integration transition", as
 			, update.path);
 	}
 	for(const addition of record.additions)
-		assert.equal(sha256(await readFile(addition.path))
-			, addition.currentSha256, addition.path);
+		assert.equal(sha256(await sourceAtFinHistoryMilestone(
+			addition.path, addition.currentSha256))
+		, addition.currentSha256, addition.path);
 
 	const previousInventory = JSON.parse(git(["show"
 		, `${callbackSubtypePromotionPredecessor}:docs/type-surface.v1.json`]));
@@ -91,6 +94,14 @@ test("callback Subtype promotion rejects altered transitions", async () => {
 	update.currentSha256 = sha256(current);
 	update.path = "src/not-recorded.mjs";
 	assert.throws(() => reverseCallbackSubtypePromotionUpdate(current, update));
+});
+
+test("callback Subtype promotion traverses older milestones", async () => {
+	const expected
+		= "1825f34e6589cf0629b026bfb1bae0c415932ba5fcf99cbbda81fa8620820d0f";
+	const source = await sourceAtFinHistoryMilestone(
+		"tests/helpers/fin-refinement-source-history.mjs", expected);
+	assert.equal(sha256(source), expected);
 });
 
 test("callback Subtype promotion history writer refuses unrelated checkout", async t => {

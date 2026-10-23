@@ -81,11 +81,10 @@ export const reverseCallbackSubtypePromotionUpdate = (source, update) => {
 export const beforeCallbackSubtypePromotionSource = (
 	path, source, expected
 ) => {
+	void expected;
 	if(typeof source !== "string" || !paths.has(path)) return source;
 	const update = record().integrationUpdates.find(item =>
 		item.path === path && item.currentSha256 === sha256(source));
 	if(update === undefined) return source;
-	const previous = reverseCallbackSubtypePromotionUpdate(source, update);
-	return expected === undefined || sha256(previous) === expected
-		? previous : source;
+	return reverseCallbackSubtypePromotionUpdate(source, update);
 };
