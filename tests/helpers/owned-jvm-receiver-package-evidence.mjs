@@ -4,21 +4,27 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
-import { ownedPerlReceiverHistoricalBytes } from "./owned-perl-receiver-history.mjs";
 import { basename } from "node:path";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
-import { generateOwnedCPackage } from "../../src/backends/c/owned-package.mjs";
-import { generateOwnedJvmPackage } from "../../src/backends/jvm/owned-package.mjs";
-import { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from "../../src/build/native-graph-model.mjs";
-import { ownedJvmAdapterSources } from "../../src/build/owned-jvm-artifacts.mjs";
-import { validateKotlinCompilation } from "../../src/build/compile-jvm-sources.mjs";
-import { validatePackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
-import { ownedRustReceiverSource } from "./owned-rust-receiver-fixture.mjs";
-import { ownedJvmPlainReceiverSource } from "./owned-jvm-receiver-fixture.mjs";
-import { ownedJvmReceiverInstalledFixture } from "./owned-jvm-receiver-installed.mjs";
-import { ownedJvmPlainReceiverInstalledFixture } from "./owned-jvm-plain-receiver-installed.mjs";
-import { javaCompilerOptions, kotlinCompilerOptions } from "./type-corpus-jvm-tools.mjs";
+import { moduleAtProducer } from "./producer-module.mjs";
+import { bytesAtProducer } from "./producer-source.mjs";
+
+const producerCommit = "2e9e748fc0354bfa309c2283de66ff8a917df349";
+const producerPromise = Promise.all([
+	"src/backends/c/owned-package.mjs"
+	, "src/backends/jvm/owned-package.mjs"
+	, "src/build/native-graph-model.mjs"
+	, "src/build/owned-jvm-artifacts.mjs"
+	, "src/build/compile-jvm-sources.mjs"
+	, "src/release/package-set-receipt.mjs"
+	, "tests/helpers/owned-rust-receiver-fixture.mjs"
+	, "tests/helpers/owned-jvm-receiver-fixture.mjs"
+	, "tests/helpers/owned-jvm-receiver-installed.mjs"
+	, "tests/helpers/owned-jvm-plain-receiver-installed.mjs"
+	, "tests/helpers/type-corpus-jvm-tools.mjs"
+].map(path => moduleAtProducer(producerCommit, path))).then(modules =>
+	Object.assign({}, ...modules));
+const historical = path => bytesAtProducer(producerCommit, path);
 
 const identity = source => ({ bytes: Buffer.byteLength(source), sha256: sha256(source) });
 const flags = (value, names) => { for(const name of names) assert.equal(value[name], true, name); };
@@ -34,7 +40,7 @@ const files = inventory => {
 
 const assertAssets = async (inspection, manifest, libraries, jar) => {
 	assert.equal(inspection.originalArchiveSha256, jar.sha256);
-	let probe = await readFile("tests/fixtures/structured-types/OwnedInstalledAssetsProbe.java", "utf8");
+	let probe = historical("tests/fixtures/structured-types/OwnedInstalledAssetsProbe.java").toString();
 	probe = probe.replace('        var ticketType = create.getReturnType();\n        Object ticket = create.invoke(null, BigInteger.valueOf(42), "installed");', '        Object owner = create.invoke(null, BigInteger.valueOf(42), "installed");\n        Object ticket = owner.getClass().getMethod("get").invoke(owner);\n        var ticketType = ticket.getClass();');
 	probe = probe.replace("((AutoCloseable) ticket).close();", "((AutoCloseable) owner).close();");
 	assert.equal(inspection.probeSha256, sha256(probe));
@@ -55,11 +61,11 @@ const assertAssets = async (inspection, manifest, libraries, jar) => {
 	}
 };
 
-const assertConsumers = async (item, projection, libraries, pkg, plain) => {
+const assertConsumers = async (item, projection, libraries, pkg, plain, producer) => {
 	const { manifest } = item;
 	const jar = pkg.artifacts.find(file => file.path.endsWith(".jar")), pom = pkg.artifacts.find(file => file.path.endsWith(".pom"));
-	const fixture = plain ? ownedJvmPlainReceiverInstalledFixture(projection.namespace, item.consuming)
-		: await ownedJvmReceiverInstalledFixture(projection.namespace, projection.functions.map(fn => fn.publicName));
+	const fixture = plain ? producer.ownedJvmPlainReceiverInstalledFixture(projection.namespace, item.consuming)
+		: await producer.ownedJvmReceiverInstalledFixture(projection.namespace, projection.functions.map(fn => fn.publicName));
 	assert.deepEqual(item.observations.map(run => run.profile), ["java", "kotlin"]);
 	for(const run of item.observations)
 	{
@@ -74,7 +80,7 @@ const assertConsumers = async (item, projection, libraries, pkg, plain) => {
 		assert.equal(jvm.archiveSha256, jar.sha256); assert.equal(jvm.pomSha256, pom.sha256);
 		assert.deepEqual(jvm.deployment["package.jar"], { bytes: jar.bytes, sha256: jar.sha256 });
 		assert.deepEqual(jvm.runtimeModules, ["java.base@22.0.2"]); assert.equal(jvm.javacVersion, "javac 22.0.2");
-		assert.deepEqual(jvm.compilerOptions, profile === "java" ? javaCompilerOptions : kotlinCompilerOptions);
+		assert.deepEqual(jvm.compilerOptions, profile === "java" ? producer.javaCompilerOptions : producer.kotlinCompilerOptions);
 		assert.deepEqual(jvm.nativeLibraries, libraries); assert.deepEqual(observation.nativeLibraries, libraries);
 		assert.equal(observation.nativeRootCount, 1);
 		files(jvm.deployment); files(jvm.runtimeFiles); files(jvm.dependencies.files);
@@ -115,7 +121,7 @@ const assertConsumers = async (item, projection, libraries, pkg, plain) => {
 };
 
 const assertCli = async (item, targets) => {
-	const config = JSON.parse(ownedPerlReceiverHistoricalBytes("config/cli-package.v1.json", await readFile("config/cli-package.v1.json")).toString());
+	const config = JSON.parse(historical("config/cli-package.v1.json"));
 	const { archive, inventorySha256, externalRegistryWrites, ...inventory } = item.cli;
 	assert.equal(item.cli.kind, "lean-bridge-cli-package"); assert.equal(inventorySha256, sha256(canonicalJson(inventory)));
 	assert.equal(item.cli.productionApproved, false); assert.equal(externalRegistryWrites, false);
@@ -126,7 +132,7 @@ const assertCli = async (item, targets) => {
 	for(const path of config.files)
 	{
 		const file = item.cli.files.find(value => value.path === path);
-		const bytes = Buffer.from(ownedPerlReceiverHistoricalBytes(path, await readFile(path), file?.sha256));
+		const bytes = historical(path);
 		assert.ok(file, path); assert.equal(file.bytes, bytes.length); assert.equal(file.sha256, sha256(bytes), path);
 	}
 	assert.equal(item.cliBuilds.length, 2);
@@ -144,11 +150,19 @@ const assertCli = async (item, targets) => {
  * @param options.run - Original gate log containing the consumer observations.
  */
 export const assertOwnedJvmReceiverPackage = async (item, { plain = false, run: gate } = {}) => {
-	const lean = await readFile("tests/fixtures/onboarding/owned-aggregates/Owned.lean", "utf8");
+	const producer = await producerPromise;
+	for(const name of [
+		"createCompiledNativeModel", "generateCompiledNativeLeanAdapters"
+		, "generateOwnedCPackage", "generateOwnedJvmPackage"
+		, "ownedJvmAdapterSources", "ownedJvmPlainReceiverInstalledFixture"
+		, "ownedJvmReceiverInstalledFixture", "validateKotlinCompilation"
+		, "validatePackageSetReceipt"
+	]) assert.equal(typeof producer[name], "function", name);
+	const lean = historical("tests/fixtures/onboarding/owned-aggregates/Owned.lean").toString();
 	const combined = !plain && item.mode === "reviewed";
 	const options = { receiverExports: true, hostCallbacks: !plain
 		, anchoredResults: !plain, transferredInputs: !plain || item.consuming };
-	const model = createCompiledNativeModel(item.input, { ownedGraphs: true
+	const model = producer.createCompiledNativeModel(item.input, { ownedGraphs: true
 		, ownedReceiverExports: true, ownedHostCallbacks: options.hostCallbacks
 		, ownedAnchoredResults: options.anchoredResults
 		, ownedInputTransfers: options.transferredInputs });
@@ -156,9 +170,8 @@ export const assertOwnedJvmReceiverPackage = async (item, { plain = false, run: 
 		, "sourceRemovedBeforeInstallation"
 		, "deterministicReassembly", "receiptVerifiedWithoutProducer"]);
 	assert.equal(Boolean(model.sourceIdentity.reviewedBindingIr), item.mode === "reviewed");
-	assert.equal(model.sourceIdentity.modules.find(module => module.module === "Owned").source.sha256, sha256(lean + (plain ? ownedJvmPlainReceiverSource : ownedRustReceiverSource)));
-	assert.equal(model.sourceIdentity.extractorSha256, sha256(ownedPerlReceiverHistoricalBytes(
-		"src/analyze/NativeExports.lean", await readFile("src/analyze/NativeExports.lean"))));
+	assert.equal(model.sourceIdentity.modules.find(module => module.module === "Owned").source.sha256, sha256(lean + (plain ? producer.ownedJvmPlainReceiverSource : producer.ownedRustReceiverSource)));
+	assert.equal(model.sourceIdentity.extractorSha256, sha256(historical("src/analyze/NativeExports.lean")));
 	assert.equal(model.schemaVersion, 10); assert.equal(model.ownedGraph.schemaVersion, 5);
 	assert.equal(model.exports.length, plain ? item.consuming ? 5 : 4 : 27);
 	if(plain)
@@ -184,8 +197,8 @@ export const assertOwnedJvmReceiverPackage = async (item, { plain = false, run: 
 			, "managed-lifetime", "managed-version"]);
 	}
 	const { nativeReceipt: component, adapter, runtimeReceipt: runtime, compiled, manifest, receipt } = item;
-	const native = generateCompiledNativeLeanAdapters(model), c = generateOwnedCPackage({ ...item.input, ...options });
-	const projection = generateOwnedJvmPackage(model.bindingIr, null, options);
+	const native = producer.generateCompiledNativeLeanAdapters(model), c = producer.generateOwnedCPackage({ ...item.input, ...options });
+	const projection = producer.generateOwnedJvmPackage(model.bindingIr, null, options);
 	assert.equal(component.schemaVersion, 6); assert.equal(component.modelSha256, sha256(canonicalJson(model)));
 	assert.equal(component.metadataSha256, sha256(canonicalJson(item.input.metadata)));
 	assert.equal(component.bindingIrSha256, model.bindingIrSha256); assert.deepEqual(component.sourceIdentity, model.sourceIdentity);
@@ -203,7 +216,7 @@ export const assertOwnedJvmReceiverPackage = async (item, { plain = false, run: 
 		, receiverExports: model.ownedGraph.receiverExports
 		, headerSha256: sha256(c.publicHeader), sourceSha256: sha256(c.source) });
 	assert.deepEqual(adapter.gmp, { version: "6.3.0", soname: "libgmp-lean-bridge.so.10", binding: "local-symbols" });
-	for(const [path, source] of Object.entries(ownedJvmAdapterSources(c, projection)))
+	for(const [path, source] of Object.entries(producer.ownedJvmAdapterSources(c, projection)))
 		assert.deepEqual(adapter.files[path], identity(source), path);
 	assert.equal(runtime.schemaVersion, 1); assert.equal(runtime.profile, "native-library-v1"); assert.equal(runtime.pointerBits, 64);
 	assert.equal(sha256(canonicalJson(runtime)), component.runtimeIdentity);
@@ -220,10 +233,10 @@ export const assertOwnedJvmReceiverPackage = async (item, { plain = false, run: 
 	assert.deepEqual(compiled.evidence, evidence); assert.deepEqual(compiled.ownedValues, projection.contract);
 	assert.equal(compiled.schemaVersion, 4); assert.equal(compiled.profile, "native-library-v1");
 	assert.equal(compiled.namespace, projection.namespace); assert.equal(compiled.bindingIrSha256, model.bindingIrSha256);
-	validateKotlinCompilation(compiled.kotlin, projection.namespace, { ownedValues: true });
+	producer.validateKotlinCompilation(compiled.kotlin, projection.namespace, { ownedValues: true });
 	assert.equal(compiled.compiler, "javac 22.0.2");
 	files(adapter.files); files(compiled.files); files(manifest.files);
-	const generated = generateOwnedJvmPackage(model.bindingIr, evidence, options);
+	const generated = producer.generateOwnedJvmPackage(model.bindingIr, evidence, options);
 	for(const [path, source] of Object.entries(generated.files))
 	{
 		assert.deepEqual(compiled.files[path], identity(source), path);
@@ -251,7 +264,7 @@ export const assertOwnedJvmReceiverPackage = async (item, { plain = false, run: 
 	assert.equal(Object.hasOwn(manifest.files, "META-INF/lean-bridge/component/callbacks.c"), options.hostCallbacks);
 	for(const [file, hash] of Object.entries(libraries))
 		assert.equal(manifest.files[`META-INF/lean-bridge/native/linux-x64/${file}`].sha256, hash, file);
-	validatePackageSetReceipt(receipt);
+	producer.validatePackageSetReceipt(receipt);
 	const targets = combined ? ["c", "cargo", "cpp", "maven", "nuget", "pypi", "rubygems"] : ["maven"];
 	assert.deepEqual(receipt.packages.map(value => value.target).sort(), targets);
 	assert.equal(receipt.profiles[0].bindingIrSha256, model.bindingIrSha256);
@@ -265,7 +278,7 @@ export const assertOwnedJvmReceiverPackage = async (item, { plain = false, run: 
 	assert.deepEqual(built.packages, pkg.artifacts.map(file => ({ archive: basename(file.path)
 		, bytes: file.bytes, sha256: file.sha256, compilerAccess: false
 		, name: pkg.name, version: pkg.version })));
-	await assertConsumers(item, projection, libraries, pkg, plain);
+	await assertConsumers(item, projection, libraries, pkg, plain, producer);
 	if(!plain)
 	{
 		await assertCli(item, targets);
@@ -283,7 +296,7 @@ export const assertOwnedJvmReceiverPackage = async (item, { plain = false, run: 
 				if(checks !== null) assert.equal(companion.checks, checks);
 				else assert.ok(companion.checks > 100);
 				flags(companion, ["offlineInstall", "compilerFreePath"]);
-				assert.equal(companion.consumerSha256, sha256(prefix + await readFile("tests/fixtures/structured-types/" + file, "utf8")));
+				assert.equal(companion.consumerSha256, sha256(prefix + historical("tests/fixtures/structured-types/" + file).toString()));
 			}
 			assert.equal(item.companions.python.checks, 328); assert.equal(item.companions.python.ordinaryImport, true);
 		}

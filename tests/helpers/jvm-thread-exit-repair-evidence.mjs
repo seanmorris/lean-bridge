@@ -5,11 +5,9 @@
  */
 import assert from "node:assert/strict";
 import { assertOwnedJvmEnforced, ownedJvmStep, ownedJvmUpload } from "./owned-jvm-job.mjs";
-import { readFile } from "node:fs/promises";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { generateOwnedJvmCalls } from "../../src/backends/jvm/owned-calls.mjs";
-import { ownedJvmCallNative, ownedJvmCallProbeMethods } from "./owned-jvm-call-fixture.mjs";
-import { ownedJvmThreadExitGuard, ownedJvmThreadExitSources, withoutOwnedJvmThreadExitWait } from "./owned-jvm-thread-exit.mjs";
+import { moduleAtProducer } from "./producer-module.mjs";
+import { bytesAtProducer } from "./producer-source.mjs";
 
 export const jvmThreadExitRepairCommands = {
 	gated: "LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-jvm-thread-exit.test.mjs"
@@ -25,6 +23,15 @@ const normalCounts = {
 	javaChecks: 651, kotlinChecks: 192, managedFailures: 255, nativeFailures: 121
 	, live: 0, identities: 0, threadExits: 1, threadExitErrors: 0
 };
+const producerCommit = "ff05f25488e70838b8bfa0088b10517a60f79035";
+const producerPromise = Promise.all([
+	"src/backends/jvm/owned-calls.mjs"
+	, "tests/helpers/owned-jvm-call-fixture.mjs"
+	, "tests/helpers/owned-jvm-thread-exit.mjs"
+	, "tests/helpers/jvm-thread-exit-repair-evidence.mjs"
+].map(path => moduleAtProducer(producerCommit, path))).then(modules =>
+	Object.assign({}, ...modules));
+const historical = path => bytesAtProducer(producerCommit, path);
 
 /**
  * Require an enabled test, retained reports and an enforced owned JVM job.
@@ -50,6 +57,13 @@ export const assertJvmThreadExitCi = workflow => {
  * @param record - New source-bound repair receipt.
  */
 export const assertJvmThreadExitExecution = async record => {
+	const producer = await producerPromise;
+	for(const name of [
+		"assertJvmThreadExitCi", "generateOwnedJvmCalls"
+		, "ownedJvmCallNative", "ownedJvmCallProbeMethods"
+		, "ownedJvmThreadExitGuard", "ownedJvmThreadExitSources"
+		, "withoutOwnedJvmThreadExitWait"
+	]) assert.equal(typeof producer[name], "function", name);
 	assert.deepEqual(record.scope, jvmThreadExitRepairScope);
 	assert.equal(record.acceptance, "passed");
 	assert.deepEqual(Object.keys(record.runs).sort(), ["gated", "signatures"]);
@@ -59,7 +73,7 @@ export const assertJvmThreadExitExecution = async record => {
 		, "tests/fixtures/structured-types/owned-jvm-callback-signatures.java"
 		, "tests/fixtures/structured-types/owned-kotlin-callback-signatures.kt"
 		, "tests/fixtures/onboarding/owned-dotnet-callables/Owned.lean"
-	].map(path => readFile(path, "utf8")));
+	].map(path => historical(path).toString()));
 	for(const [kind, command] of Object.entries(jvmThreadExitRepairCommands))
 	{
 		const run = record.runs[kind], gated = kind === "gated", total = gated ? 3 : 2;
@@ -90,23 +104,23 @@ export const assertJvmThreadExitExecution = async record => {
 				assert.match(report.mutation.args[4], /\/libprobe\.so$/u);
 				assert.equal(report.mutation.args.length, 5);
 			} else assert.deepEqual(report.retirement, []);
-			const native = ownedJvmCallNative(report.input), model = generateOwnedJvmCalls(native.c.layout.model.bindingIr);
+			const native = producer.ownedJvmCallNative(report.input), model = producer.generateOwnedJvmCalls(native.c.layout.model.bindingIr);
 			assert.equal(model.functions.length, 51);
 			assert.equal(report.cSourceSha256, sha256(native.implementation));
 			assert.deepEqual(report.files, Object.fromEntries(Object.entries(model.files).map(([path, source]) => [path, sha256(source)])));
 			let files, runtime;
 			if(gated)
 			{
-				({ files, runtime } = ownedJvmThreadExitSources(model, template, exercise, kotlin));
-				assert.equal(report.guardSha256, sha256(ownedJvmThreadExitGuard(native.cleanup.guardSource)));
-				assert.equal(report.mutantJavaProbeSha256, sha256(withoutOwnedJvmThreadExitWait(files["OwnedCallProbe.java"])));
+				({ files, runtime } = producer.ownedJvmThreadExitSources(model, template, exercise, kotlin));
+				assert.equal(report.guardSha256, sha256(producer.ownedJvmThreadExitGuard(native.cleanup.guardSource)));
+				assert.equal(report.mutantJavaProbeSha256, sha256(producer.withoutOwnedJvmThreadExitWait(files["OwnedCallProbe.java"])));
 			}
 			else
 			{
 				files = { ...model.files }; runtime = Object.keys(files).find(path => path.endsWith("/_OwnedRuntime.java"));
 				files[runtime] = files[runtime].replace("static void checkpoint() { }", "static void checkpoint() { OwnedCallProbe.allocation(); }");
-				files["OwnedCallProbe.java"] = template.replace("/* METHODS */", () => ownedJvmCallProbeMethods(model)).replace("/* EXERCISE */", () => exercise);
-				files["KotlinCallProbe.kt"] = kotlin.replace("/* METHODS */", () => ownedJvmCallProbeMethods(model, true));
+				files["OwnedCallProbe.java"] = template.replace("/* METHODS */", () => producer.ownedJvmCallProbeMethods(model)).replace("/* EXERCISE */", () => exercise);
+				files["KotlinCallProbe.kt"] = kotlin.replace("/* METHODS */", () => producer.ownedJvmCallProbeMethods(model, true));
 				assert.equal(report.guardSha256, sha256(native.cleanup.guardSource));
 			}
 			assert.equal(report.instrumentedRuntimeSha256, sha256(files[runtime]));
@@ -114,7 +128,7 @@ export const assertJvmThreadExitExecution = async record => {
 			assert.equal(report.kotlinProbeSha256, sha256(files["KotlinCallProbe.kt"]));
 		}
 	}
-	const original = JSON.parse(await readFile("docs/evidence/owned-jvm-calls-20260927.json", "utf8"));
+	const original = JSON.parse(historical("docs/evidence/owned-jvm-calls-20260927.json"));
 	for(const mode of ["ordinary", "reviewed"])
 	{
 		const normal = record.reports.signatures[mode], gated = record.reports.gated[mode];
@@ -127,5 +141,5 @@ export const assertJvmThreadExitExecution = async record => {
 		assert.notEqual(gated.guardSha256, normal.guardSha256);
 		assert.equal(gated.instrumentedRuntimeSha256, normal.instrumentedRuntimeSha256);
 	}
-	assertJvmThreadExitCi(await readFile(".github/workflows/consumer-matrix.yml", "utf8"));
+	producer.assertJvmThreadExitCi(historical(".github/workflows/consumer-matrix.yml").toString());
 };
