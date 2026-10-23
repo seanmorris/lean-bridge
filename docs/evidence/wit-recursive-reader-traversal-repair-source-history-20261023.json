@@ -1,0 +1,132 @@
+{
+  "additions": [
+    {
+      "currentSha256": "c5b88a3ff5aaa04fcd00869c0d85523b5dd1204dc5bc28d57182f963a0836b02",
+      "path": "scripts/update-wit-recursive-reader-traversal-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "e186ad834d1a17a4889a676019d8dc19eac7b267d411e2c47fecc84696d7796e",
+      "path": "tests/helpers/wit-recursive-reader-traversal-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "2e279a979eddd932f9bed7e4636beb214d27f4ef33c6767977e49bc8ab2ea57f",
+      "path": "tests/helpers/wit-recursive-reader-traversal-repair-source-history.mjs"
+    }
+  ],
+  "appliedCommit": "aadb26f054a2f76f71e0e04b9555c966e478d6fc",
+  "implementationCommit": "e71a7efd73d867170c2f6c794e46bed69e0353aa",
+  "integrationBaseCommit": "cfebafb26c34c4a73ce1c4d8694519d20bade130",
+  "integrationUpdates": [
+    {
+      "currentSha256": "94421f840224bcd9cb59c1f85da150099c6af15773a073abc85e999701ad27cc",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"f8000623d54199e8a8be474e599a07920fbb8e7ad5deb73ddb953356bee92330\"\n",
+          "previous": "          \"sha256\": \"7fd365f2494e2ae8c4569b566bdcd41d4f79d30c57fd17353eeeb4b818b1f39a\"\n",
+          "start": 1075224
+        },
+        {
+          "current": "          \"sha256\": \"f8000623d54199e8a8be474e599a07920fbb8e7ad5deb73ddb953356bee92330\"\n",
+          "previous": "          \"sha256\": \"7fd365f2494e2ae8c4569b566bdcd41d4f79d30c57fd17353eeeb4b818b1f39a\"\n",
+          "start": 1082476
+        },
+        {
+          "current": "          \"sha256\": \"de3bea3433e6dd17719484a03ecda017576e31bcdf482411611ef39e2b6c5d4c\"\n",
+          "previous": "          \"sha256\": \"bbfa36102df6f3d1d1afbd34c6c4cf65e79464754bfa56984c601992875449a1\"\n",
+          "start": 1424417
+        },
+        {
+          "current": "          \"sha256\": \"2b264d6bf8fe39976ca807439a3fbde80a0c163b00686f5b69f9882aab575ffd\"\n",
+          "previous": "          \"sha256\": \"66f5a1663f93e3c11e323302ceb7440c3d535d973b6b2f6135e9b365727f475c\"\n",
+          "start": 1425973
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "fb3a3668cb67f52377ee9682aff667f7252a83c0facdbdb005edb691fe022f02"
+    },
+    {
+      "currentSha256": "7f5eb7de4be392683ae15fa331ee5186cff91c1dd66efbb1fe1b4df62e7ff1c9",
+      "edits": [
+        {
+          "current": "import { beforeWitRecursiveReaderTraversalRepairSource, witRecursiveReaderTraversalRepairNormalizationPaths } from \"./wit-recursive-reader-traversal-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...witRecursiveReaderTraversalRepairNormalizationPaths\n\t, ...genericSubtypeDotnetRuntimeProbeNormalizationPaths\n",
+          "previous": "\t...genericSubtypeDotnetRuntimeProbeNormalizationPaths\n",
+          "start": 168043
+        },
+        {
+          "current": "\tconst witRecursiveReaderTraversalRepair\n\t\t= beforeWitRecursiveReaderTraversalRepairSource(path, text, expected);\n\tif(sha256(witRecursiveReaderTraversalRepair) === expected)\n\t\treturn witRecursiveReaderTraversalRepair;\n\ttext = witRecursiveReaderTraversalRepair;\n",
+          "previous": "",
+          "start": 206628
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "a31ed6c06be319cee57fee630cca8d2f1d4172a24dc7752a2d00ff923d3642b6"
+    },
+    {
+      "currentSha256": "2b264d6bf8fe39976ca807439a3fbde80a0c163b00686f5b69f9882aab575ffd",
+      "edits": [
+        {
+          "current": "import \"./helpers/wit-recursive-reader-traversal-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 1230
+        }
+      ],
+      "path": "tests/wit-recursive-callable-faults.test.mjs",
+      "previousSha256": "66f5a1663f93e3c11e323302ceb7440c3d535d973b6b2f6135e9b365727f475c"
+    }
+  ],
+  "milestone": "wit-recursive-reader-traversal-repair-source-v1",
+  "predecessorCommit": "23ae28e37befcdf245e94f5f841ed50254fc869c",
+  "schemaVersion": 1,
+  "scope": "Let the WIT recursive-callable reader return through every later authenticated layer before reversing its own transition, delegate paths outside its record to that chain, stop the C structured-callable regression at its exact milestones, and refresh the live source pins of the repaired sources.",
+  "updates": [
+    {
+      "currentSha256": "f8000623d54199e8a8be474e599a07920fbb8e7ad5deb73ddb953356bee92330",
+      "edits": [
+        {
+          "current": "\t\tconst source = beforeCppStructuredCallables(update.path, await readFile(update.path, \"utf8\"), update.currentSha256);\n",
+          "previous": "\t\tconst source = beforeCppStructuredCallables(update.path, await readFile(update.path, \"utf8\"));\n",
+          "start": 3103
+        },
+        {
+          "current": "\t\tassert.equal(sha256(beforeCStructuredCallables(update.path, source, update.previousSha256)), update.previousSha256);\n",
+          "previous": "\t\tassert.equal(sha256(beforeCStructuredCallables(update.path, source)), update.previousSha256);\n",
+          "start": 3319
+        }
+      ],
+      "path": "tests/c-structured-callable-evidence.test.mjs",
+      "previousSha256": "7fd365f2494e2ae8c4569b566bdcd41d4f79d30c57fd17353eeeb4b818b1f39a"
+    },
+    {
+      "currentSha256": "de3bea3433e6dd17719484a03ecda017576e31bcdf482411611ef39e2b6c5d4c",
+      "edits": [
+        {
+          "current": "\t// Unrelated paths still traverse every later recorded transition.\n\tif(!witRecursiveCallableChangedPaths.includes(path))\n\t\treturn beforeOwnedAggregates(path, source, expected);\n",
+          "previous": "\tif(typeof source === \"string\" && !witRecursiveCallableChangedPaths.includes(path)) return source;\n",
+          "start": 3357
+        },
+        {
+          "current": "\tif(digest === expected) return source;\n",
+          "previous": "\tif(digest === expected || !witRecursiveCallableChangedPaths.includes(path)) return source;\n",
+          "start": 3565
+        },
+        {
+          "current": "\t\treturn beforeOwnedAggregates(path, source, expected);\n",
+          "previous": "",
+          "start": 3962
+        },
+        {
+          "current": "\t// A later source first returns through the newer layers to this milestone.\n\tsource = beforeOwnedAggregates(path, source, expected);\n\tdigest = sha256(source);\n\treturn digest !== expected && update?.currentSha256 === digest\n\t\t? reverseWitRecursiveCallableUpdate(source, update) : source;\n",
+          "previous": "\treturn beforeOwnedAggregates(path, source, expected);\n",
+          "start": 4021
+        }
+      ],
+      "path": "tests/helpers/wit-recursive-callable-source-history.mjs",
+      "previousSha256": "bbfa36102df6f3d1d1afbd34c6c4cf65e79464754bfa56984c601992875449a1"
+    }
+  ]
+}
