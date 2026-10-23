@@ -4,8 +4,14 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { readFile, stat } from "node:fs/promises";
+import { spawnSync } from "node:child_process";
+import { existsSync } from "node:fs";
+import { mkdtemp, readFile, rm, stat, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join, resolve } from "node:path";
 import test from "node:test";
+import { compileCopiedWitModel } from "../../src/backends/wit/copied-model.mjs";
+import { renderWitHostHeader } from "../../src/backends/wit/copied-host.mjs";
 import {
 	genericSubtypeJvmProfiles
 	, genericSubtypeManagedWitCaller
@@ -23,6 +29,9 @@ import {
 } from "./generic-subtype-managed-wit-report.mjs";
 
 const targets = { dotnet: "nuget", jvm: "maven", php: "php-native", wit: "wit-wasi" };
+const capi = process.env.LEAN_BRIDGE_WASMTIME_C_API
+	?? resolve(".toolchains/wasmtime42");
+const cc = process.env.CC ?? "/usr/bin/cc";
 const labels = { dotnet: "C#", jvm: "JVM", php: "PHP", wit: "WIT" };
 
 test("generic Subtype managed and WIT selections preserve target constraints", () => {
@@ -102,3 +111,54 @@ test("generic Subtype hosted controls require every host and exact TAP", async (
 		assert.throws(() => genericSubtypeManagedWitSafePath(path));
 	assert.throws(() => parseGenericSubtypeManagedWitCiArgs([]));
 });
+
+const witHelpers = "../nominal-subtype-consumers/wit-values.h";
+test("generic WIT caller compiles under the hosted warning flags"
+	, { skip: !existsSync(join(capi, "include/wasmtime.h")) }, async t => {
+		const root = await mkdtemp(join(tmpdir(), "lean-generic-wit-warnings-"));
+		t.after(() => rm(root, { recursive: true, force: true }));
+		const projection = compileCopiedWitModel(genericSubtypeManagedWitReview("wit")
+			, { name: "nominalsubtypes", version: "1.0.0" }, { callables: true });
+		await writeFile(join(root, "nominalsubtypes_wasmtime.h")
+			, renderWitHostHeader(projection));
+		const compile = async source => {
+			await writeFile(join(root, "consumer.c"), source);
+			return spawnSync(cc, ["-std=c11", "-Wall", "-Wextra", "-Werror"
+				, "-UNDEBUG", `-I${join(capi, "include")}`, "-c", "consumer.c"
+				, "-o", "consumer.o"], { cwd: root, encoding: "utf8"
+				, env: { PATH: "/usr/bin:/bin", LC_ALL: "C" }, timeout: 60_000 });
+		};
+		const fixture = await readFile(
+			"tests/fixtures/generic-subtype-consumers/wit-wasi.c", "utf8");
+		const bracket = [
+			"#pragma GCC diagnostic push"
+			, "#pragma GCC diagnostic ignored \"-Wunused-function\""
+			, `#include "${witHelpers}"`
+			, "#pragma GCC diagnostic pop"
+		].join("\n");
+		assert.equal(fixture.split(bracket).length, 2);
+		assert.equal(fixture.split("#pragma GCC diagnostic").length, 4);
+		for(const route of ["ordinary", "reviewed"])
+		{
+			const caller = await genericSubtypeManagedWitCaller("wit", route);
+			const accepted = await compile(caller);
+			assert.equal(accepted.status, 0, accepted.stderr);
+			assert.equal(accepted.stderr, "");
+			// A warning outside the bracket still fails the hosted compile.
+			const outside = await compile(
+				`${caller}\nstatic int outside_bracket(void) { return 0; }\n`);
+			assert.notEqual(outside.status, 0);
+			assert.match(outside.stderr
+				, /'outside_bracket' defined but not used \[-Werror=unused-function\]/u);
+		}
+		// Without the bracket the shared helpers reproduce the hosted failure.
+		const helpers = await readFile(
+			"tests/fixtures/nominal-subtype-consumers/wit-values.h", "utf8");
+		const unbracketed = await compile(fixture.replace(bracket, helpers));
+		assert.notEqual(unbracketed.status, 0);
+		for(const name of ["nominal_snapshot_controls", "event_empty", "byte"
+			, "pair", "word", "wide"])
+			assert.match(unbracketed.stderr
+				, new RegExp(`'${name}' defined but not used`, "u"), name);
+	}
+);
