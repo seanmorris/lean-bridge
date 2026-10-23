@@ -1,0 +1,199 @@
+{
+  "additions": [
+    {
+      "currentSha256": "2ae3e202492a084293ef905e9b57736b76b81ea56efd9656647d33be7a1c7af4",
+      "path": "scripts/update-callback-staging-lineage-replay-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "4ac623cb873455f4dd645c1e03c6ca4c415fb43a238cf7c024a906ad6e0ed5d4",
+      "path": "tests/helpers/callback-staging-lineage-replay-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "ab4e2ee1070bd0867295aaa4a5cdb0363dfbd5d5e67291302196427e28298df6",
+      "path": "tests/helpers/callback-staging-lineage-replay-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "5096195e2e75a4947e88ff7f5340c9c3a1dd8569",
+  "integrationUpdates": [
+    {
+      "currentSha256": "4fbc5f23658fabaa3c2bdc84a0be8067ab3858efa3e4792476d7e055b2ff8fb1",
+      "edits": [
+        {
+          "current": "import { beforeCallbackStagingLineageReplayRepairSource, callbackStagingLineageReplayRepairNormalizationPaths } from \"./callback-staging-lineage-replay-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...callbackStagingLineageReplayRepairNormalizationPaths\n\t, ...callbackStagingProducerReplayRepairNormalizationPaths\n",
+          "previous": "\t...callbackStagingProducerReplayRepairNormalizationPaths\n",
+          "start": 160308
+        },
+        {
+          "current": "\tconst callbackStagingLineageReplayRepair\n\t\t= beforeCallbackStagingLineageReplayRepairSource(path, text, expected);\n\tif(sha256(callbackStagingLineageReplayRepair) === expected)\n\t\treturn callbackStagingLineageReplayRepair;\n",
+          "previous": "",
+          "start": 196578
+        },
+        {
+          "current": "\t\t= beforeCallbackStagingProducerReplayRepairSource(\n\t\t\tpath, callbackStagingLineageReplayRepair, expected\n\t\t);\n",
+          "previous": "\t\t= beforeCallbackStagingProducerReplayRepairSource(path, text, expected);\n",
+          "start": 196843
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "151626d8e7d8e4e54331b17f57e735375fa4310bc4e7e3798f3d66b109be0e5c"
+    },
+    {
+      "currentSha256": "a64a30ee3bedbfea235a7769b465c48272b7d6ddf80d20de89ce93ba6d4f7a7f",
+      "edits": [
+        {
+          "current": "import \"./helpers/callback-staging-lineage-replay-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 923
+        }
+      ],
+      "path": "tests/owned-jvm-callback-result-history.test.mjs",
+      "previousSha256": "ecd99bbb8bc82b98bf53bf5bdb647e99103e77f2cd9473277e2c680fab368ad2"
+    }
+  ],
+  "milestone": "callback-staging-lineage-replay-repair-source-v1",
+  "predecessorCommit": "e1efda2e67819dff48537b12c8297ae05a27c99a",
+  "schemaVersion": 1,
+  "scope": "Post-Perl and PHP-installed callback staging replay exact producer bytes without parsing duplicate 84 MB inventories; handled producer probes remain silent and immutable predecessor receipts are verified directly.",
+  "updates": [
+    {
+      "currentSha256": "37b6a89bc94d95463f49670902d2dc667897a2a21b399f648f19976f8a482a61",
+      "edits": [
+        {
+          "current": "import { perlVariantEvidencePath } from \"./owned-perl-callback-result-variant-acceptance.mjs\";\n",
+          "previous": "import { beforePhpCallbackAcceptance } from \"./php-callback-acceptance-history.mjs\";\nimport { assertPerlVariantAcceptance, perlVariantEvidencePath } from \"./owned-perl-callback-result-variant-acceptance.mjs\";\n",
+          "start": 271
+        },
+        {
+          "current": "\t, phpCallbackInstalledHistorySha256, phpCallbackInstalledProducer\n\t, phpCallbackInstalledBaseline, readPhpCallbackInstalledHistory\n",
+          "previous": "\t, phpCallbackInstalledHistorySha256, readPhpCallbackInstalledHistory\n",
+          "start": 513
+        },
+        {
+          "current": "import { bytesAtProducer } from \"./producer-source.mjs\";\n",
+          "previous": "import { sourceAtFinHistoryMilestone } from \"./source-at-fin-history-milestone.mjs\";\n",
+          "start": 737
+        },
+        {
+          "current": "\t\tconst current = bytesAtProducer(\n\t\t\tphpCallbackInstalledProducer, update.path, update.currentSha256\n\t\t);\n\t\tconst previous = reversePhpCallbackInstalledUpdate(current, update);\n",
+          "previous": "\t\tconst current = Buffer.from(await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256, beforePhpCallbackAcceptance\n\t\t));\n\t\tconst previous = beforePhpCallbackInstalledStaging(update.path, current);\n",
+          "start": 2972
+        },
+        {
+          "current": "\t\tassert.equal(beforePhpCallbackInstalledStaging(\n\t\t\tupdate.path, previous, update.previousSha256\n\t\t), previous);\n",
+          "previous": "\t\tassert.equal(beforePhpCallbackInstalledStaging(update.path, previous), previous);\n",
+          "start": 3392
+        },
+        {
+          "current": "\t\tconst current = bytesAtProducer(\n\t\t\tphpCallbackInstalledProducer, path, identity.stagedSha256\n\t\t);\n",
+          "previous": "\t\tconst current = beforePhpCallbackAcceptance(path, await readFile(path), identity.stagedSha256);\n",
+          "start": 4335
+        },
+        {
+          "current": "\tconst current = bytesAtProducer(\n\t\tphpCallbackInstalledProducer, inventoryUpdate.path\n\t\t, inventoryUpdate.currentSha256\n\t).toString(\"utf8\");\n\tconst previous = reversePhpCallbackInstalledUpdate(current, inventoryUpdate);\n\tconst withoutEvidenceIdentities = source => source.replace(\n\t\t/(?<=\"sha256\": \")[a-f0-9]{64}(?=\")/gu, \"<source-identity>\"\n\t);\n\tassert.equal(withoutEvidenceIdentities(current)\n\t\t, withoutEvidenceIdentities(previous));\n",
+          "previous": "\tconst current = beforePhpCallbackAcceptance(inventoryUpdate.path\n\t\t, await readFile(inventoryUpdate.path, \"utf8\"), inventoryUpdate.currentSha256);\n\tconst previous = beforePhpCallbackInstalledStaging(inventoryUpdate.path, current);\n\tconst currentInventory = JSON.parse(current), previousInventory = JSON.parse(previous);\n\tconst refreshes = new Map(inventoryUpdate.edits.map(edit => [edit.path, edit]));\n\tfor(const evidence of currentInventory.evidence) for(const file of evidence.files)\n\t\tif(refreshes.has(file.path))\n\t\t{\n\t\t\tconst edit = refreshes.get(file.path); assert.equal(file.sha256, edit.current);\n\t\t\tfile.sha256 = edit.previous;\n\t\t}\n\tassert.deepEqual(currentInventory, previousInventory);\n",
+          "start": 5326
+        },
+        {
+          "current": "\tconst history = readPhpCallbackInstalledHistory();\n\tassert.equal(history.completedPredecessor.path, perlVariantEvidencePath);\n\tconst baseline = bytesAtProducer(phpCallbackInstalledBaseline\n\t\t, perlVariantEvidencePath, history.completedPredecessor.sha256);\n\tconst integrated = bytesAtProducer(phpCallbackInstalledProducer\n\t\t, perlVariantEvidencePath, history.completedPredecessor.sha256);\n\tassert.deepEqual(integrated, baseline);\n\tassert.equal(sha256(await readFile(perlVariantEvidencePath))\n\t\t, history.completedPredecessor.sha256);\n\tconst record = JSON.parse(baseline);\n\tassert.equal(record.kind, \"owned-perl-callback-result-variants\");\n\tassert.equal(record.acceptance, \"passed\");\n\tassert.equal(record.scope.installedSupportPromotions, 0);\n",
+          "previous": "\tconst record = JSON.parse(await readFile(perlVariantEvidencePath, \"utf8\"));\n\tawait assertPerlVariantAcceptance(record);\n",
+          "start": 6092
+        }
+      ],
+      "path": "tests/helpers/php-callback-installed-staging-history-tests.mjs",
+      "previousSha256": "89ac6e31e77ad98f694a1a743b5e0867e312405d4c73cfcbf7ea40b2646ca535"
+    },
+    {
+      "currentSha256": "f8e3e4e1d555e8a2f0f9aff7ce49b7d768ff9d5665bddfdfe4cf46d1dc3cf456",
+      "edits": [
+        {
+          "current": "export const phpCallbackInstalledProducer = \"ad185d927673df87d1e40112ed9ccb41e299dfe3\";\n",
+          "previous": "",
+          "start": 878
+        }
+      ],
+      "path": "tests/helpers/php-callback-installed-staging-history.mjs",
+      "previousSha256": "c8df741c5059da5706fd24e7a7a5356347a9777c178a00856ccefee2901fffea"
+    },
+    {
+      "currentSha256": "c552d35b1331926a3f07c7c38eb064426a78afc51dcce10a3917976902a794fe",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { beforePhpCallbackInstalledStaging } from \"./php-callback-installed-staging-history.mjs\";\nimport { beforeWitCallbackRuntimeStaging } from \"./wit-callback-runtime-staging-history.mjs\";\nimport { beforePerlCallbackVariants } from \"./owned-perl-callback-result-variant-history.mjs\";\n",
+          "start": 270
+        },
+        {
+          "current": "\t, postPerlCallbackLineage, postPerlCallbackProducer\n",
+          "previous": "",
+          "start": 401
+        },
+        {
+          "current": "import { bytesAtProducer } from \"./producer-source.mjs\";\n\nconst producerRevisions = [postPerlCallbackProducer, ...postPerlCallbackLineage];\nconst producerSources = new Map();\nconst producerSource = (path, expected) => {\n\tconst key = `${path}:${expected}`;\n\tif(producerSources.has(key)) return Buffer.from(producerSources.get(key));\n\tfor(const revision of producerRevisions)\n\t{\n\t\tlet bytes;\n\t\ttry\n\t\t{\n\t\t\tbytes = bytesAtProducer(revision, path);\n\t\t}\n\t\tcatch\n\t\t{\n\t\t\tcontinue;\n\t\t}\n\t\tif(sha256(bytes) !== expected) continue;\n\t\tproducerSources.set(key, bytes); return Buffer.from(bytes);\n\t}\n\tassert.fail(`No post-Perl producer source for ${path} at ${expected}`);\n};\n",
+          "previous": "",
+          "start": 774
+        },
+        {
+          "current": "\t\tconst current = producerSource(update.path, update.currentSha256);\n\t\tconst prior = reversePostPerlCallbackUpdate(current, update);\n",
+          "previous": "\t\tconst source = beforePhpCallbackInstalledStaging(update.path, await readFile(update.path));\n\t\tconst current = Buffer.from(beforeWitCallbackRuntimeStaging(update.path, source));\n\t\tconst prior = beforePostPerlCallbackStaging(\n\t\t\tupdate.path, current, update.previousSha256\n\t\t);\n",
+          "start": 1870
+        },
+        {
+          "current": "\t\tconst current = producerSource(path, identity.currentSha256);\n\t\tassert.equal(sha256(current), identity.currentSha256);\n",
+          "previous": "\t\tconst source = beforePhpCallbackInstalledStaging(path, await readFile(path));\n\t\tassert.equal(sha256(beforeWitCallbackRuntimeStaging(path, source)), identity.currentSha256);\n",
+          "start": 3256
+        },
+        {
+          "current": "",
+          "previous": "\t\tconst current = Buffer.from(beforeWitCallbackRuntimeStaging(path, source));\n",
+          "start": 3444
+        },
+        {
+          "current": "\tconst update = history.updates.find(item => item.path === path);\n\tconst current = producerSource(path, update.currentSha256).toString(\"utf8\");\n\tconst prior = reversePostPerlCallbackUpdate(current, update);\n\tconst withoutEvidenceIdentities = source => source.replace(\n\t\t/(?<=\"sha256\": \")[a-f0-9]{64}(?=\")/gu, \"<source-identity>\"\n\t);\n\tassert.equal(withoutEvidenceIdentities(current)\n\t\t, withoutEvidenceIdentities(prior));\n",
+          "previous": "\tconst source = beforePhpCallbackInstalledStaging(path, await readFile(path, \"utf8\"));\n\tconst current = beforePerlCallbackVariants(path, source);\n\tconst prior = JSON.parse(beforePostPerlCallbackStaging(path, current));\n\tfor(const evidence of prior.evidence) for(const file of evidence.files)\n\t{\n\t\tconst fileSource = beforePhpCallbackInstalledStaging(file.path, await readFile(file.path));\n\t\tfile.sha256 = sha256(beforeWitCallbackRuntimeStaging(file.path, fileSource));\n\t}\n\tassert.deepEqual(JSON.parse(current), prior);\n",
+          "start": 4058
+        },
+        {
+          "current": "\tconst stagedSource = async path => bytesAtProducer(\n\t\tpostPerlCallbackLineage.at(-1), path\n\t);\n",
+          "previous": "",
+          "start": 5186
+        },
+        {
+          "current": "\t\tawait assert.rejects(() => assertOwnedPerlCallbackReport(\n\t\t\tpath, item, stagedSource\n\t\t), error => {\n",
+          "previous": "\t\tawait assert.rejects(() => assertOwnedPerlCallbackReport(path, item), error => {\n",
+          "start": 5378
+        }
+      ],
+      "path": "tests/helpers/post-perl-callback-staging-history-tests.mjs",
+      "previousSha256": "f08804a21888bf59cf08f3ca0bbfcd2bc2ec565f2617303a244771b03c7e9829"
+    },
+    {
+      "currentSha256": "81093910fd55304cc25d4cdcf9a250b07f4852507e077c070fdfdd725357e572",
+      "edits": [
+        {
+          "current": "export const postPerlCallbackProducer = \"e5f7ae3dbc9ee8e85a5fd65a4fb68743aeccb0ed\";\n",
+          "previous": "",
+          "start": 1240
+        }
+      ],
+      "path": "tests/helpers/post-perl-callback-staging-history.mjs",
+      "previousSha256": "2f9a65d89fccb879ab4f68080b14d81bca35ff8460c048d35a84dad8fd2da9f7"
+    },
+    {
+      "currentSha256": "13947a11c1204864a1fc2b55dc01671a722938a8a7cacc79f8b8fc19bd06b748",
+      "edits": [
+        {
+          "current": "\t\t\t, stdio: [\"ignore\", \"pipe\", \"pipe\"]\n",
+          "previous": "",
+          "start": 1382
+        }
+      ],
+      "path": "tests/helpers/producer-source.mjs",
+      "previousSha256": "5399739d3ee30b3811612a752d803f74066c00d6d2736ce9eaa765b1eda3e6c6"
+    }
+  ]
+}
