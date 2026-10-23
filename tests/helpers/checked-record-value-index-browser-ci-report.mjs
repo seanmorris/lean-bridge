@@ -14,9 +14,32 @@ import {
 
 const usage = "Usage: check-checked-record-value-index-browser-ci.mjs --route <ordinary-source|reviewed-ir|result-only-ordinary-source|result-only-reviewed-ir> --producer <commit> --npm-checker <commit> --consumer <commit> --checker <commit> --directory <records> --acceptance-tap <tap> --controls-tap <tap> --runtime <json>";
 
+const checkedRecordValueIndexBrowserFastControlNames = Object.freeze([
+	"value-index author routes preserve kind, value, constructor and result boundaries"
+	, "immutable value-index caller covers every function, rejection and recovery"
+	, "value-index snapshots distinguish proof fields, scalar kinds and mutations"
+	, "value-index browser routes close every engine and lifecycle"
+	, "value-index compiler plans keep checked inputs and constructor-free results separate"
+	, "generated full and result-only TypeScript expose payload fields only"
+	, "value-index installed gates reject partial selections and stale outputs"
+	, "value-index hosted checker closes arguments and complete TAP streams"
+	, "value-index hosted checker rejects scope before retained-record reads"
+	, "value-index hosted workflow requires every route and retains failures"
+	, "value-index onboarding fixture is self-contained and source-identifiable"
+]);
+
 export const checkedRecordValueIndexBrowserRequiredControlNames = Object.freeze({
-	passed: Object.freeze([
-		"value-index author routes preserve kind, value, constructor and result boundaries"
+	fast: checkedRecordValueIndexBrowserFastControlNames
+	, passed: Object.freeze([
+		"hosted value-index browser archive has one reversible lineage"
+		, "hosted value-index browser archive closes its exact committed tree"
+		, "hosted value-index browser archive closes every added source"
+		, "hosted value-index browser archive writer refuses another checkout"
+		, "hosted value-index browser promotion has one reversible lineage"
+		, "hosted value-index browser promotion closes its exact committed tree"
+		, "hosted value-index browser promotion closes every added source"
+		, "hosted value-index browser promotion writer refuses another checkout"
+		, "value-index author routes preserve kind, value, constructor and result boundaries"
 		, "immutable value-index caller covers every function, rejection and recovery"
 		, "value-index snapshots distinguish proof fields, scalar kinds and mutations"
 		, "value-index browser routes close every engine and lifecycle"
@@ -27,6 +50,12 @@ export const checkedRecordValueIndexBrowserRequiredControlNames = Object.freeze(
 		, "value-index hosted checker rejects scope before retained-record reads"
 		, "value-index hosted workflow requires every route and retains failures"
 		, "value-index onboarding fixture is self-contained and source-identifiable"
+		, "value-index browser evidence authenticates and replays every hosted route"
+		, "value-index browser evidence rejects altered hosted and replay bytes"
+		, "hosted value-index browser promotion authenticates four exact routes"
+		, "hosted value-index browser promotion rejects forged and repeated evidence"
+		, "hosted value-index browser promotion changes exactly twenty cells"
+		, "value-index browser docs name the exact prepared packages and boundary"
 	])
 	, skipped: Object.freeze(checkedRecordValueIndexBrowserRoutes.map(route =>
 		`installed value-index records reproduce, relocate and reach browsers for ${route}`))
@@ -83,7 +112,7 @@ export const assertCheckedRecordValueIndexBrowserControlsTap = source => {
 	for(const name of checkedRecordValueIndexBrowserRequiredControlNames.skipped)
 		requireResult(name, true);
 	return {
-		fastPasses: checkedRecordValueIndexBrowserRequiredControlNames.passed.length
+		fastPasses: checkedRecordValueIndexBrowserRequiredControlNames.fast.length
 		, skippedInstalledRoutes: skipped
 	};
 };

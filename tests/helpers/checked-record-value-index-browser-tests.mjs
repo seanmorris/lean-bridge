@@ -402,6 +402,8 @@ test("value-index installed gates reject partial selections and stale outputs", 
 });
 
 test("value-index hosted checker closes arguments and complete TAP streams", () => {
+	assert.equal(checkedRecordValueIndexBrowserRequiredControlNames.fast.length, 11);
+	assert.equal(checkedRecordValueIndexBrowserRequiredControlNames.passed.length, 25);
 	assert.deepEqual(parseCheckedRecordValueIndexBrowserCiArgs(ciArgs(ciOptions))
 		, ciOptions);
 	assertCheckedRecordValueIndexBrowserTap(tap(1), 1);
