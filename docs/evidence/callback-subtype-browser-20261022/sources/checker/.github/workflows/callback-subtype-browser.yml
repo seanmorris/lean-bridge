@@ -1,0 +1,89 @@
+name: Callback Subtypes in installed npm browser consumers
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: callback-subtype-browser-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  callback-subtype-browser:
+    name: Callback Subtypes in Node and three browsers
+    runs-on: ubuntu-24.04
+    timeout-minutes: 240
+    env:
+      EMCC_CORES: "2"
+      LEAN_BRIDGE_LAKE_ENGINE: build/locked-lake-engine/bin/lean-bridge-component-engine
+    steps:
+      - name: Check out the exact revision and original evidence history
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+      - name: Bound apt network waits
+        uses: ./.github/actions/bounded-apt
+        timeout-minutes: 1
+      - name: Install compiler and archive dependencies
+        timeout-minutes: 20
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake git jq libgmp-dev libuv1-dev pkg-config python3 ripgrep xz-utils zstd
+      - name: Install dependencies and pinned compiler tools
+        timeout-minutes: 30
+        run: |
+          npm ci --ignore-scripts --no-audit --no-fund
+          node --test --test-name-pattern='Nix component engine source boundary|filtered Nix engine' tests/engine-execution-request.test.mjs
+          bash scripts/bootstrap-toolchains.sh
+      - name: Install Chromium, Firefox and WebKit
+        timeout-minutes: 20
+        run: bash scripts/install-playwright-browsers.sh chromium firefox webkit
+      - name: Build the locked component engine
+        timeout-minutes: 40
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p build
+          nix build .#component-build-engine --out-link build/locked-lake-engine 2>&1 | tee build/callback-subtype-browser-engine.log
+          test -x build/locked-lake-engine/bin/lean-bridge-component-engine
+      - name: Build the pinned shared Wasm runtime
+        timeout-minutes: 60
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash scripts/build-lean-link-spike.sh 2>&1 | tee build/callback-subtype-browser-runtime.log
+          test -s build/lean-link-spike/lazy/main.wasm
+      - name: Require both routes in Node, pages, React and workers
+        id: acceptance
+        timeout-minutes: 150
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/env.sh
+          bash scripts/run-callback-subtype-browser-ci.sh "$PWD/build/lean-link-spike/lazy"
+      - name: Preserve original and partial acceptance output
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: callback-subtype-browser-${{ github.sha }}
+          path: |
+            build/callback-subtype-browser-ci/
+            build/callback-subtype-browser-engine.log
+            build/callback-subtype-browser-runtime.log
+          if-no-files-found: error
+          retention-days: 30
+      - name: Enforce callback Subtype browser acceptance
+        if: always() && steps.acceptance.outcome != 'success'
+        run: exit 1
