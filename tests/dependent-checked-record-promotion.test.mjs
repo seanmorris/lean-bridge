@@ -5,7 +5,7 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { spawnSync } from "node:child_process";
+import { execFileSync, spawnSync } from "node:child_process";
 import { access, readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
@@ -18,6 +18,7 @@ import {
 	, dependentCheckedRecordPromotionLanes
 	, dependentCheckedRecordPromotionLimit
 	, dependentCheckedRecordPromotionPath
+	, dependentCheckedRecordPromotionPinBaseline
 	, dependentCheckedRecordPromotionProfiles
 	, dependentCheckedRecordPromotionReferences
 	, dependentCheckedRecordPromotionRoutes
@@ -179,6 +180,43 @@ test("dependent promotion selects added and modified live pins but no archive"
 		inventory, new Set()));
 	}
 );
+
+test("dependent promotion baseline covers every stale live pin", async () => {
+	const changed = execFileSync("git", [
+		"diff", "--name-only", "--diff-filter=AM"
+		, dependentCheckedRecordPromotionPinBaseline, "HEAD", "--"
+	], { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 })
+		.trim().split("\n").filter(Boolean);
+	const selected = dependentCheckedRecordPromotionCurrentSourcePaths(
+		document, changed);
+	assert.ok(!selected.some(path => path.startsWith("docs/evidence/")));
+	const admitted = new Set(selected), pins = new Map();
+	for(const evidence of document.evidence)
+		for(const file of evidence.files)
+		{
+			if(file.path.startsWith("docs/evidence/")) continue;
+			if(!pins.has(file.path)) pins.set(file.path, new Set());
+			pins.get(file.path).add(file.sha256);
+		}
+	const missed = [];
+	for(const [path, expected] of pins)
+	{
+		let bytes;
+		try
+		{ bytes = await readFile(path); }
+		catch(error)
+		{
+			if(error?.code !== "ENOENT") throw error;
+			bytes = execFileSync("git", ["show", `HEAD:${path}`], {
+				maxBuffer: 512 * 1024 * 1024
+			});
+		}
+		const actual = sha256(bytes);
+		if([...expected].some(digest => digest !== actual)
+			&& !admitted.has(path)) missed.push(path);
+	}
+	assert.deepEqual(missed, []);
+});
 
 test("dependent promotion refuses missing, reordered, duplicated and forged references", () => {
 	const reject = (mutate, pattern = assert.AssertionError) => {
