@@ -5,11 +5,9 @@
  */
 import assert from "node:assert/strict";
 import { posix } from "node:path";
-import { compiledPackageMetadata } from "../../src/analyze/package-metadata.mjs";
 import { reviewedContractDifference } from "../../src/analyze/reviewed-source.mjs";
 import { hashBindingIr } from "../../src/binding-ir/canonical.mjs";
 import { validateBindingIr } from "../../src/binding-ir/contract.mjs";
-import { generateCopiedRustPackage } from "../../src/backends/rust/copied-values.mjs";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { validatePackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
 import {
@@ -37,6 +35,7 @@ import {
 import {
 	assertCheckedRecordValueIndexRustResources, checkedRecordValueIndexRustLoadCeilings
 } from "./checked-record-value-index-rust-resources.mjs";
+import { nominalSubtypeRustGenerator } from "./nominal-subtype-rust-generators.mjs";
 import { readOwnedPerlCallbackVariantTar } from "./owned-perl-callback-result-variant-archives.mjs";
 
 const digest = /^[a-f0-9]{64}$/u;
@@ -140,9 +139,10 @@ const checkModels = async options => {
  * @param options.model - Reproduced compiler model.
  * @param options.receipt - Verified package-set receipt.
  * @param options.floor - Explicit native glibc floor.
+ * @param options.producerCommit - Frozen producer revision.
  */
 const checkPackage = async options => {
-	const { read, json, model, receipt, floor } = options;
+	const { read, json, model, receipt, floor, producerCommit } = options;
 	const pkg = receipt.packages[0], crate = await json("crate.json");
 	assert.deepEqual(Object.keys(crate).sort()
 		, ["archive", "closure", "evidence", "files", "receiptSha256", "retained"]);
@@ -180,10 +180,16 @@ const checkPackage = async options => {
 	const runtime = await json("package/lean-bridge/runtime.json");
 	const evidence = checkedRecordValueIndexRustNativeEvidence(packageReceipt, component, adapter, runtime);
 	assert.deepEqual(crate.evidence, evidence);
+	const { generateCopiedRustPackage } = await nominalSubtypeRustGenerator(
+		producerCommit
+	);
+	const metadata = JSON.parse(
+		model.sourceIdentity.exportConfigurationSource
+	).package ?? {};
 	const generated = generateCopiedRustPackage(model.bindingIr, evidence, {
 		name: pkg.name
 		, version: pkg.version
-		, metadata: compiledPackageMetadata(model.sourceIdentity)
+		, metadata
 	});
 	for(const [path, source] of Object.entries(generated))
 		assert.equal((await read(`package/${path}`)).toString(), source, path);
@@ -367,7 +373,9 @@ export const checkCheckedRecordValueIndexRustReport = async (read, options) => {
 	assert.deepEqual(report.resourceChecks, resources);
 	for(const resource of resources) assertCheckedRecordValueIndexRustResources(resource, report.loadCeiling);
 	const { model, receipt } = await checkModels({ report, read, json, route, selection });
-	const { pkg, crate } = await checkPackage({ read, json, model, receipt, floor });
+	const { pkg, crate } = await checkPackage({
+		read, json, model, receipt, floor, producerCommit
+	});
 	assert.equal((await read("consumer.rs")).toString(), await checkedRecordValueIndexRustCaller());
 	const environment = await checkEnvironment({ read, json, crate, pkg, selection, toolchain });
 	assert.deepEqual(report.installation, environment.installation);
