@@ -1,0 +1,213 @@
+{
+  "additions": [
+    {
+      "currentSha256": "4a92ca5bf752946c451418404fde41a4308ca4230501141bffbac4490fdd327e",
+      "path": "scripts/update-owned-transfer-producer-replay-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "e30f42d4f8d5b20dc68526749667268a65bea99858d0e7b793d32c972a43f9f7",
+      "path": "tests/helpers/owned-transfer-producer-replay-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "02666496fcf98b4e28b6479fd71594f463380a3516ce9f555a4d689e8c359e47",
+      "path": "tests/helpers/owned-transfer-producer-replay-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "c65cc19e1209a6e879928d68836e3239e111809f",
+  "integrationUpdates": [
+    {
+      "currentSha256": "d80008a95df45cd4ad55d81bc2f4f6f8707497202c49700bfea4f00b3f70480f",
+      "edits": [
+        {
+          "current": "import { beforeOwnedTransferProducerReplayRepairSource, ownedTransferProducerReplayRepairNormalizationPaths } from \"./owned-transfer-producer-replay-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...ownedTransferProducerReplayRepairNormalizationPaths\n\t, ...ownedPythonBorrowProducerReplayRepairNormalizationPaths\n",
+          "previous": "\t...ownedPythonBorrowProducerReplayRepairNormalizationPaths\n",
+          "start": 162288
+        },
+        {
+          "current": "\tconst ownedTransferProducerReplayRepair\n\t\t= beforeOwnedTransferProducerReplayRepairSource(path, text, expected);\n\tif(sha256(ownedTransferProducerReplayRepair) === expected)\n\t\treturn ownedTransferProducerReplayRepair;\n",
+          "previous": "",
+          "start": 199206
+        },
+        {
+          "current": "\t\t\tpath, ownedTransferProducerReplayRepair, expected\n",
+          "previous": "\t\t\tpath, text, expected\n",
+          "start": 199524
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "9a8d2d5c72af97f19540cd4060c8ce13c85dcd4512f3657755d036fffb809adf"
+    },
+    {
+      "currentSha256": "758b7658e52e951c477cba1c3c2b6cd54fca067390b346fa7e702761c5150c2a",
+      "edits": [
+        {
+          "current": "import \"./helpers/owned-transfer-producer-replay-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 505
+        }
+      ],
+      "path": "tests/owned-python-transfer-evidence.test.mjs",
+      "previousSha256": "3449f8135f1a259a8aef7d370544c1d30ea938fab9726888d8c66a40ce9d5e56"
+    }
+  ],
+  "milestone": "owned-transfer-producer-replay-repair-source-v1",
+  "predecessorCommit": "f92a60c2f7b863bc79d64afb2256b63f6d016b0d",
+  "schemaVersion": 1,
+  "scope": "The frozen owned Python and WIT input-transfer evidence is replayed with each exact producer's complete static module and source closure rather than regenerating historical observations with current compiler semantics.",
+  "updates": [
+    {
+      "currentSha256": "085584f3d06333c0b1139e270e705814e79f0f25585442342dee2e7628b3d5e6",
+      "edits": [
+        {
+          "current": "import { moduleAtProducer } from \"./producer-module.mjs\";\nimport { bytesAtProducer } from \"./producer-source.mjs\";\n",
+          "previous": "import { generateOwnedPythonConversions } from \"../../src/backends/python/owned-conversions.mjs\";\nimport { generateOwnedPythonPackage } from \"../../src/backends/python/owned-package.mjs\";\nimport { ownedPythonRuntime } from \"../../src/backends/python/owned-runtime.mjs\";\nimport { generateOwnedCPackage } from \"../../src/backends/c/owned-package.mjs\";\nimport { historicalOwnedTransferPackage } from \"./owned-transfer-generated-history.mjs\";\nimport { generateOwnedCppPackage } from \"../../src/backends/cpp/owned-package.mjs\";\nimport { generateOwnedRustPackage } from \"../../src/backends/rust/owned-package.mjs\";\nimport { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from \"../../src/build/native-graph-model.mjs\";\nimport { validatePackageSetReceipt } from \"../../src/release/package-set-receipt.mjs\";\nimport { ownedPythonInstalledProbe } from \"./owned-python-installed-probes.mjs\";\nimport { pythonTypingWheels } from \"./python-wheel-install.mjs\";\nimport { ownedRustTransferSource } from \"./owned-rust-transfer-fixture.mjs\";\n",
+          "start": 327
+        },
+        {
+          "current": "const producerCommit = \"e038e5c6178e5495a0b1a7712b00b1b6998bfd59\";\nconst historical = path => bytesAtProducer(producerCommit, path);\nlet producerPromise;\nconst producerAtMilestone = () => producerPromise ??= Promise.all([\n\t\"src/backends/c/owned-package.mjs\"\n\t, \"src/backends/cpp/owned-package.mjs\"\n\t, \"src/backends/python/owned-conversions.mjs\"\n\t, \"src/backends/python/owned-package.mjs\"\n\t, \"src/backends/python/owned-runtime.mjs\"\n\t, \"src/backends/rust/owned-package.mjs\"\n\t, \"src/build/native-graph-model.mjs\"\n\t, \"src/release/package-set-receipt.mjs\"\n\t, \"tests/helpers/owned-python-installed-probes.mjs\"\n\t, \"tests/helpers/owned-rust-transfer-fixture.mjs\"\n\t, \"tests/helpers/python-wheel-install.mjs\"\n].map(path => moduleAtProducer(producerCommit, path))).then(modules =>\n\tObject.assign({}, ...modules));\n",
+          "previous": "",
+          "start": 1306
+        },
+        {
+          "current": "\tconst producer = await producerAtMilestone();\n\tfor(const name of [\n\t\t\"createCompiledNativeModel\", \"generateCompiledNativeLeanAdapters\"\n\t\t, \"generateOwnedCPackage\", \"generateOwnedCppPackage\"\n\t\t, \"generateOwnedPythonConversions\", \"generateOwnedPythonPackage\"\n\t\t, \"generateOwnedRustPackage\", \"ownedPythonRuntime\"\n\t\t, \"validatePackageSetReceipt\"\n\t]) assert.equal(typeof producer[name], \"function\", name);\n\tassert.equal(typeof producer.ownedPythonInstalledProbe, \"string\");\n\tassert.equal(typeof producer.ownedRustTransferSource, \"string\");\n",
+          "previous": "",
+          "start": 2341
+        },
+        {
+          "current": "\tassert.equal(record.baselineRevision\n\t\t, \"008b0ae88d43beaa82c27b60d8ab65c8755a602a\");\n",
+          "previous": "",
+          "start": 2979
+        },
+        {
+          "current": "\tconst probe = historical(\n\t\t\"tests/fixtures/structured-types/owned-python-transfers.py\");\n\tconst fixture = historical(\n\t\t\"tests/fixtures/structured-types/owned-installed-python-transfers.py\");\n\tconst documentation = historical(\n\t\t\"tests/fixtures/documentation/consumers/python/owned-transfers.py\");\n\tconst lean = historical(\n\t\t\"tests/fixtures/onboarding/owned-aggregates/Owned.lean\"\n\t).toString() + producer.ownedRustTransferSource;\n",
+          "previous": "\tconst probe = await readFile(\"tests/fixtures/structured-types/owned-python-transfers.py\");\n\tconst fixture = await readFile(\"tests/fixtures/structured-types/owned-installed-python-transfers.py\");\n\tconst documentation = await readFile(\"tests/fixtures/documentation/consumers/python/owned-transfers.py\");\n\tconst lean = await readFile(\"tests/fixtures/onboarding/owned-aggregates/Owned.lean\", \"utf8\") + ownedRustTransferSource;\n",
+          "start": 3656
+        },
+        {
+          "current": "\t\tconst model = producer.createCompiledNativeModel(item.input, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true });\n",
+          "previous": "\t\tconst model = createCompiledNativeModel(item.input, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true });\n",
+          "start": 4616
+        },
+        {
+          "current": "\t\t\tconst generated = producer.generateOwnedPythonConversions(\n\t\t\t\tmodel.bindingIr, { transferredInputs: true });\n",
+          "previous": "\t\t\tconst generated = generateOwnedPythonConversions(model.bindingIr, { transferredInputs: true });\n",
+          "start": 5161
+        },
+        {
+          "current": "\t\t\tassert.equal(item.runtimeSha256, sha256(producer.ownedPythonRuntime(\n\t\t\t\tgenerated.c.prefix, { transferredInputs: true })));\n",
+          "previous": "\t\t\tassert.equal(item.runtimeSha256, sha256(ownedPythonRuntime(generated.c.prefix, { transferredInputs: true })));\n",
+          "start": 5464
+        },
+        {
+          "current": "\t\tassert.equal(item.loaderProbeSha256\n\t\t\t, sha256(producer.ownedPythonInstalledProbe));\n",
+          "previous": "\t\tassert.equal(item.loaderProbeSha256, sha256(ownedPythonInstalledProbe));\n",
+          "start": 6603
+        },
+        {
+          "current": "\t\tconst native = producer.generateCompiledNativeLeanAdapters(model);\n\t\tconst c = producer.generateOwnedCPackage({\n\t\t\t...item.input, hostCallbacks: true, transferredInputs: true\n\t\t});\n\t\tconst python = producer.generateOwnedPythonPackage(\n\t\t\tmodel.bindingIr, null, { transferredInputs: true });\n",
+          "previous": "\t\tconst native = generateCompiledNativeLeanAdapters(model);\n\t\tconst c = historicalOwnedTransferPackage(generateOwnedCPackage({ ...item.input, hostCallbacks: true, transferredInputs: true }), adapter.ownedValues.sourceSha256);\n\t\tconst python = generateOwnedPythonPackage(model.bindingIr, null, { transferredInputs: true });\n",
+          "start": 6822
+        },
+        {
+          "current": "\t\tconst packaged = producer.generateOwnedPythonPackage(\n\t\t\tmodel.bindingIr, evidence, { transferredInputs: true });\n",
+          "previous": "\t\tconst packaged = generateOwnedPythonPackage(model.bindingIr, evidence, { transferredInputs: true });\n",
+          "start": 8648
+        },
+        {
+          "current": "\t\t\t\tassert.equal(observation.installation.dependency.sha256\n\t\t\t\t\t, producer.pythonTypingWheels[version]);\n",
+          "previous": "\t\t\t\tassert.equal(observation.installation.dependency.sha256, pythonTypingWheels[version]);\n",
+          "start": 9351
+        },
+        {
+          "current": "\t\tproducer.validatePackageSetReceipt(packages);\n",
+          "previous": "\t\tvalidatePackageSetReceipt(packages);\n",
+          "start": 10343
+        },
+        {
+          "current": "\t\t\tassert.deepEqual(adapter.cppValues, producer.generateOwnedCppPackage(\n\t\t\t\tmodel.bindingIr, { transferredInputs: true }).contract);\n\t\t\tassert.deepEqual(adapter.rustValues, producer.generateOwnedRustPackage(\n\t\t\t\tmodel.bindingIr, null, {}, { transferredInputs: true }).contract);\n",
+          "previous": "\t\t\tassert.deepEqual(adapter.cppValues, generateOwnedCppPackage(model.bindingIr, { transferredInputs: true }).contract);\n\t\t\tassert.deepEqual(adapter.rustValues, generateOwnedRustPackage(model.bindingIr, null, {}, { transferredInputs: true }).contract);\n",
+          "start": 10832
+        }
+      ],
+      "path": "tests/helpers/owned-python-transfer-evidence.mjs",
+      "previousSha256": "de67b9b9da70c99120e09566b27bd95bf8d16fb2557e7ceaaaeee686843555dd"
+    },
+    {
+      "currentSha256": "1a9b4333cf84bdda380cf7cc6f385e6537daf825e79e0162c56793c14547552d",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { readFile } from \"node:fs/promises\";\n",
+          "start": 141
+        },
+        {
+          "current": "import { moduleAtProducer } from \"./producer-module.mjs\";\nimport { bytesAtProducer } from \"./producer-source.mjs\";\n",
+          "previous": "import { generateOwnedWitPackage } from \"../../src/backends/wit/owned-package.mjs\";\nimport { guardOwnedWitHostSource } from \"../../src/backends/wit/owned-host-evidence.mjs\";\nimport { ownedRustTransferSource } from \"./owned-rust-transfer-fixture.mjs\";\nimport { assertOwnedWitTransferCi } from \"./wit-owned-transfer-ci.mjs\";\nimport { ownedWitTransferProbe } from \"./wit-owned-transfer-probe.mjs\";\n",
+          "start": 194
+        },
+        {
+          "current": "const producerCommit = \"2fab6b1635341d6622fc13fe8da9b3fdc947790e\";\nconst historical = path => bytesAtProducer(producerCommit, path);\nlet producerPromise;\nconst producerAtMilestone = () => producerPromise ??= Promise.all([\n\t\"src/backends/wit/owned-host-evidence.mjs\"\n\t, \"src/backends/wit/owned-package.mjs\"\n\t, \"tests/helpers/owned-rust-transfer-fixture.mjs\"\n\t, \"tests/helpers/wit-owned-transfer-ci.mjs\"\n\t, \"tests/helpers/wit-owned-transfer-probe.mjs\"\n].map(path => moduleAtProducer(producerCommit, path))).then(modules =>\n\tObject.assign({}, ...modules));\n",
+          "previous": "",
+          "start": 1537
+        },
+        {
+          "current": "\tconst producer = await producerAtMilestone();\n\tfor(const name of [\n\t\t\"assertOwnedWitTransferCi\", \"generateOwnedWitPackage\"\n\t\t, \"guardOwnedWitHostSource\", \"ownedWitTransferProbe\"\n\t]) assert.equal(typeof producer[name], \"function\", name);\n\tassert.equal(typeof producer.ownedRustTransferSource, \"string\");\n",
+          "previous": "",
+          "start": 2317
+        },
+        {
+          "current": "\tassert.equal(record.baselineRevision\n\t\t, \"3e28428f0b304f1dfed2cb2ad524b50c1fabdeef\");\n",
+          "previous": "",
+          "start": 2720
+        },
+        {
+          "current": "\tconst source = historical(\n\t\t\"tests/fixtures/onboarding/owned-aggregates/Owned.lean\"\n\t).toString() + producer.ownedRustTransferSource;\n",
+          "previous": "\tconst source = await readFile(\"tests/fixtures/onboarding/owned-aggregates/Owned.lean\", \"utf8\") + ownedRustTransferSource;\n",
+          "start": 3636
+        },
+        {
+          "current": "\t\tconst generated = producer.generateOwnedWitPackage(item.input, component);\n",
+          "previous": "\t\tconst generated = generateOwnedWitPackage(item.input, component);\n",
+          "start": 4375
+        },
+        {
+          "current": "\t\tassert.equal(item.probeSha256\n\t\t\t, sha256(await producer.ownedWitTransferProbe(generated)));\n",
+          "previous": "\t\tassert.equal(item.probeSha256, sha256(await ownedWitTransferProbe(generated)));\n",
+          "start": 4513
+        },
+        {
+          "current": "\tconst page = historical(\"docs/consume/wit-wasi.md\").toString();\n",
+          "previous": "\tconst page = await readFile(\"docs/consume/wit-wasi.md\", \"utf8\");\n",
+          "start": 5845
+        },
+        {
+          "current": "\tconst loaderSource = historical(\n\t\t\"tests/fixtures/structured-types/wit-owned-package-loader.c\");\n",
+          "previous": "\tconst loaderSource = await readFile(\"tests/fixtures/structured-types/wit-owned-package-loader.c\");\n",
+          "start": 6026
+        },
+        {
+          "current": "\t\tconst generated = producer.generateOwnedWitPackage(\n\t\t\titem.inputs, component, item.receipt.settings);\n",
+          "previous": "\t\tconst generated = generateOwnedWitPackage(item.inputs, component, item.receipt.settings);\n",
+          "start": 7233
+        },
+        {
+          "current": "\t\tassert.equal(sha256(producer.guardOwnedWitHostSource(\n\t\t\tgenerated, item.receipt.dependencies))\n\t\t, item.receipt.ownedValues.sourceSha256);\n",
+          "previous": "\t\tassert.equal(sha256(guardOwnedWitHostSource(generated, item.receipt.dependencies)), item.receipt.ownedValues.sourceSha256);\n",
+          "start": 7660
+        },
+        {
+          "current": "\tproducer.assertOwnedWitTransferCi(historical(\n\t\t\".github/workflows/consumer-matrix.yml\"\n\t).toString(), JSON.parse(historical(\"package.json\")));\n",
+          "previous": "\tassertOwnedWitTransferCi(await readFile(\".github/workflows/consumer-matrix.yml\", \"utf8\"), JSON.parse(await readFile(\"package.json\", \"utf8\")));\n",
+          "start": 10312
+        }
+      ],
+      "path": "tests/helpers/wit-owned-transfer-evidence.mjs",
+      "previousSha256": "8eb691277a1de39fb9bb1808e1e0910a95fa88135c2d7044865528eb879e8fe5"
+    }
+  ]
+}

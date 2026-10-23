@@ -9,6 +9,7 @@ import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
 import { beforeOwnedRubyTransfer, ownedRubyTransferHistoricalBytes } from "./helpers/owned-ruby-transfer-history.mjs";
 import { assertOwnedPythonTransferExecution, assertOwnedPythonTransferCi } from "./helpers/owned-python-transfer-evidence.mjs";
+import "./helpers/owned-transfer-producer-replay-repair-source-history-tests.mjs";
 import { beforeOwnedPythonTransfer, ownedPythonTransferAddedPaths, ownedPythonTransferBaseline
 	, ownedPythonTransferChangedPaths, ownedPythonTransferHistoricalBytes, ownedPythonTransferPath
 	, ownedPythonTransferPrevious, reverseOwnedPythonTransferUpdate } from "./helpers/owned-python-transfer-history.mjs";

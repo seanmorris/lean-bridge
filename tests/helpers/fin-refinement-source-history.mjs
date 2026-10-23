@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeOwnedTransferProducerReplayRepairSource, ownedTransferProducerReplayRepairNormalizationPaths } from "./owned-transfer-producer-replay-repair-source-history.mjs";
 import { beforeOwnedPythonBorrowProducerReplayRepairSource, ownedPythonBorrowProducerReplayRepairNormalizationPaths } from "./owned-python-borrow-producer-replay-repair-source-history.mjs";
 import { beforeOwnedPhpProducerReplayRepairSource, ownedPhpProducerReplayRepairNormalizationPaths } from "./owned-php-producer-replay-repair-source-history.mjs";
 import { beforeOwnedJavaScriptTransferProducerReplayRepairSource, ownedJavaScriptTransferProducerReplayRepairNormalizationPaths } from "./owned-javascript-transfer-producer-replay-repair-source-history.mjs";
@@ -2035,7 +2036,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...ownedPythonBorrowProducerReplayRepairNormalizationPaths
+	...ownedTransferProducerReplayRepairNormalizationPaths
+	, ...ownedPythonBorrowProducerReplayRepairNormalizationPaths
 	, ...ownedPhpProducerReplayRepairNormalizationPaths
 	, ...ownedJavaScriptTransferProducerReplayRepairNormalizationPaths
 	, ...ownedPerlTransferProducerReplayRepairNormalizationPaths
@@ -2820,9 +2822,13 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 			text = exact;
 		}
 	}
+	const ownedTransferProducerReplayRepair
+		= beforeOwnedTransferProducerReplayRepairSource(path, text, expected);
+	if(sha256(ownedTransferProducerReplayRepair) === expected)
+		return ownedTransferProducerReplayRepair;
 	const ownedPythonBorrowProducerReplayRepair
 		= beforeOwnedPythonBorrowProducerReplayRepairSource(
-			path, text, expected
+			path, ownedTransferProducerReplayRepair, expected
 		);
 	if(sha256(ownedPythonBorrowProducerReplayRepair) === expected)
 		return ownedPythonBorrowProducerReplayRepair;
