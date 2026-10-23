@@ -1,0 +1,96 @@
+{
+  "additions": [
+    {
+      "currentSha256": "ce6d967c152b4805b43c93dacbe2da3310cb6e93daea31b343587af3c6e1d0b5",
+      "path": "scripts/update-generic-subtype-rust-oracle-path-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "039436fc2be9b9eb14ba0ca61e007f3f2e640b95eef310e27faebbd53e4ad73e",
+      "path": "tests/helpers/generic-subtype-rust-oracle-path-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "1b7403ce33b11109961ebb7d5192245d91fc84b56f53cc31be682db111bb7a9c",
+      "path": "tests/helpers/generic-subtype-rust-oracle-path-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "70ba21c21e6b4c1b843446e8b432fb343f28eee6",
+  "integrationUpdates": [
+    {
+      "currentSha256": "4ed46294972c65caea89cc6ac41c21f7e26149797c72689f2215de89389a97b3",
+      "edits": [
+        {
+          "current": "import \"./helpers/generic-subtype-rust-oracle-path-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 85
+        }
+      ],
+      "path": "tests/generic-subtype-languages.test.mjs",
+      "previousSha256": "4aa5e8822f93d16e626be14ddf83b22782dad901620943e076c17e62192138a4"
+    },
+    {
+      "currentSha256": "7888eb745d220c1d1dd0248772bddbaecc972d14347fd25a2839b729da90cf54",
+      "edits": [
+        {
+          "current": "import { beforeGenericSubtypeRustOraclePathRepairSource, genericSubtypeRustOraclePathRepairNormalizationPaths } from \"./generic-subtype-rust-oracle-path-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...genericSubtypeRustOraclePathRepairNormalizationPaths\n\t, ...dependentRecordAuthorityReplayRepairNormalizationPaths\n",
+          "previous": "\t...dependentRecordAuthorityReplayRepairNormalizationPaths\n",
+          "start": 159108
+        },
+        {
+          "current": "\tconst genericSubtypeRustOraclePathRepair\n\t\t= beforeGenericSubtypeRustOraclePathRepairSource(path, text, expected);\n\tif(sha256(genericSubtypeRustOraclePathRepair) === expected)\n\t\treturn genericSubtypeRustOraclePathRepair;\n",
+          "previous": "",
+          "start": 194985
+        },
+        {
+          "current": "\t\t= beforeDependentRecordAuthorityReplayRepairSource(\n\t\t\tpath, genericSubtypeRustOraclePathRepair, expected\n\t\t);\n",
+          "previous": "\t\t= beforeDependentRecordAuthorityReplayRepairSource(path, text, expected);\n",
+          "start": 195251
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "fdbacdd49453b125ee4f3f38e189e1beed1bab6db5b2c660cc2a50f3f147bebc"
+    }
+  ],
+  "milestone": "generic-subtype-rust-oracle-path-repair-source-v1",
+  "predecessorCommit": "e25ac2c1e0a844d2bf4efa125f35d6e4a92405e9",
+  "schemaVersion": 1,
+  "scope": "The independent Rust oracle resolves the pinned compiler from the checkout or explicit environment and skips only where the Core profile intentionally installs no Rust toolchain; the dedicated Rust lane still executes it.",
+  "updates": [
+    {
+      "currentSha256": "b521f6d8b003db8f98b5dac148b6de341f7cc15c561cc645303f782718f6dbb5",
+      "edits": [
+        {
+          "current": "import { existsSync } from \"node:fs\";\n",
+          "previous": "",
+          "start": 129
+        },
+        {
+          "current": "import { join, resolve } from \"node:path\";\n",
+          "previous": "import { join } from \"node:path\";\n",
+          "start": 259
+        },
+        {
+          "current": "const rustc = resolve(process.env.LEAN_BRIDGE_RUSTC\n\t?? \".toolchains/rust-1.90.0/bin/rustc\");\n\n",
+          "previous": "",
+          "start": 947
+        },
+        {
+          "current": "test(\"generic Subtype Rust caller compiles against an independent public oracle\", { skip: !existsSync(rustc) }, async t => {\n",
+          "previous": "test(\"generic Subtype Rust caller compiles against an independent public oracle\", async t => {\n",
+          "start": 7668
+        },
+        {
+          "current": "",
+          "previous": "\tconst rustc = \"/app/.toolchains/rust-1.90.0/bin/rustc\";\n",
+          "start": 7922
+        }
+      ],
+      "path": "tests/helpers/generic-subtype-language-tests.mjs",
+      "previousSha256": "f07988146703698d4538e42d1e3cc3421014a148f40d3495ccb063f15c7e9f93"
+    }
+  ]
+}

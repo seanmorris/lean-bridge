@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeGenericSubtypeRustOraclePathRepairSource, genericSubtypeRustOraclePathRepairNormalizationPaths } from "./generic-subtype-rust-oracle-path-repair-source-history.mjs";
 import { beforeDependentRecordAuthorityReplayRepairSource, dependentRecordAuthorityReplayRepairNormalizationPaths } from "./dependent-record-authority-replay-repair-source-history.mjs";
 import { beforePreFinTypeSurfaceHistoryRepairSource, preFinTypeSurfaceHistoryRepairNormalizationPaths } from "./pre-fin-type-surface-history-repair-source-history.mjs";
 import { beforeValueIndexPromotionMemoryRepairSource, valueIndexPromotionMemoryRepairNormalizationPaths } from "./value-index-promotion-memory-repair-source-history.mjs";
@@ -2017,7 +2018,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...dependentRecordAuthorityReplayRepairNormalizationPaths
+	...genericSubtypeRustOraclePathRepairNormalizationPaths
+	, ...dependentRecordAuthorityReplayRepairNormalizationPaths
 	, ...preFinTypeSurfaceHistoryRepairNormalizationPaths
 	, ...valueIndexPromotionMemoryRepairNormalizationPaths
 	, ...nominalEntryTagRepairNormalizationPaths
@@ -2784,8 +2786,14 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 			text = exact;
 		}
 	}
+	const genericSubtypeRustOraclePathRepair
+		= beforeGenericSubtypeRustOraclePathRepairSource(path, text, expected);
+	if(sha256(genericSubtypeRustOraclePathRepair) === expected)
+		return genericSubtypeRustOraclePathRepair;
 	const dependentRecordAuthorityReplayRepair
-		= beforeDependentRecordAuthorityReplayRepairSource(path, text, expected);
+		= beforeDependentRecordAuthorityReplayRepairSource(
+			path, genericSubtypeRustOraclePathRepair, expected
+		);
 	if(sha256(dependentRecordAuthorityReplayRepair) === expected)
 		return dependentRecordAuthorityReplayRepair;
 	const preFinTypeSurfaceHistoryRepair
