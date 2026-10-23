@@ -13,7 +13,7 @@ const enabled = process.env.LEAN_BRIDGE_OWNED_JS_WASM_TEST === "1";
 test("proof-erased owned Subtype fields reject before resource movement on wasm32", {
 	skip: !enabled, timeout: 360000
 }, async t => {
-	const { call, close, module } = await compileOwnedJavaScriptWasmFixture(t, "owned-subtypes");
+	const { call, close, module } = await compileOwnedJavaScriptWasmFixture(t, "owned-subtypes", { transferredInputs: true });
 	const ticket = call("newTicket", 41n, "checked");
 	const value = { primary: ticket, spare: { tag: "none" }, peers: [ticket]
 		, history: [ticket]
