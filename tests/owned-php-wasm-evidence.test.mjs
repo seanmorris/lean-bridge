@@ -7,7 +7,8 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
-import { beforeOwnedJavaScriptWasm, ownedJavaScriptWasmHistoricalBytes } from "./helpers/owned-javascript-wasm-source-history.mjs";
+import { ownedJavaScriptWasmHistoricalBytes } from "./helpers/owned-javascript-wasm-source-history.mjs";
+import { sourceAtFinHistoryMilestone } from "./helpers/source-at-fin-history-milestone.mjs";
 import { generateCopiedPhpZendAdapter } from "../src/backends/php/copied-zend.mjs";
 import { generateCopiedPhpGraphZendAdapter } from "../src/backends/php/copied-graph-zend.mjs";
 import { assertOwnedPhpWasmExecution } from "./helpers/owned-php-wasm-package-evidence.mjs";
@@ -19,6 +20,13 @@ import { beforeOwnedPhpWasmPackages, ownedPhpWasmAddedPaths, ownedPhpWasmBaselin
 	, ownedPhpWasmHistoryPath, ownedPhpWasmPrevious, reverseOwnedPhpWasmUpdate } from "./helpers/owned-php-wasm-source-history.mjs";
 
 const json = async path => JSON.parse(await readFile(path, "utf8"));
+const historicalSource = (path, expected, reader) =>
+	sourceAtFinHistoryMilestone(
+		path, expected, (candidate, source, digest) => {
+			const restored = reader(candidate, Buffer.from(source), digest);
+			return Buffer.isBuffer(restored) ? restored.toString("utf8") : restored;
+		}
+	);
 
 test("historical recursive Zend receipts reject current wrappers on both execution paths", async () => {
 	const record = await json("docs/evidence/php-wasm-recursive-conversions-20260924.json");
@@ -66,17 +74,20 @@ test("PHP-Wasm ownership preserves predecessor receipts and authenticates each s
 		...Object.keys(previous.sources), ...ownedPhpWasmChangedPaths
 		, ...ownedPhpWasmAddedPaths
 	])].sort());
-	for(const [path, hash] of Object.entries(record.sources))
-		assert.equal(sha256(ownedJavaScriptWasmHistoricalBytes(path, await readFile(path), hash)), hash, path);
+	for(const [path, hash] of Object.entries(record.sources)) assert.equal(
+		sha256(await historicalSource(
+			path, hash, ownedJavaScriptWasmHistoricalBytes)), hash, path);
 	assert.deepEqual(record.updates.map(update => update.path), ownedPhpWasmChangedPaths);
 	for(const update of record.updates)
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path] ?? ownedPhpWasmBaselineSources[update.path], update.path);
 		assert.equal(update.currentSha256, record.sources[update.path], update.path);
-		const current = beforeOwnedJavaScriptWasm(update.path, await readFile(update.path, "utf8"), update.currentSha256);
-		const prior = beforeOwnedPhpWasmPackages(update.path, current);
+		const current = await historicalSource(update.path
+			, update.currentSha256, ownedJavaScriptWasmHistoricalBytes);
+		const prior = reverseOwnedPhpWasmUpdate(current, update);
 		assert.equal(sha256(prior), update.previousSha256, update.path);
-		assert.equal(beforeOwnedPhpWasmPackages(update.path, prior), prior);
+		assert.equal(beforeOwnedPhpWasmPackages(
+			update.path, prior, update.previousSha256), prior);
 		assert.equal(beforeOwnedPhpWasmPackages(update.path, current, update.currentSha256), current);
 		const unknown = current + "\n/* unrecorded PHP-Wasm edit */\n";
 		assert.equal(beforeOwnedPhpWasmPackages(update.path, unknown), unknown);
@@ -88,9 +99,13 @@ test("PHP-Wasm ownership preserves predecessor receipts and authenticates each s
 	const binary = Buffer.from([0, 255, 192, 128]);
 	assert.equal(ownedPhpWasmHistoricalBytes("unknown.bin", binary), binary);
 	const inventoryPath = "docs/type-surface.v1.json";
-	const current = ownedJavaScriptWasmHistoricalBytes(inventoryPath, await readFile(inventoryPath)
-		, record.sources[inventoryPath]).toString("utf8");
-	const prior = JSON.parse(beforeOwnedPhpWasmPackages("docs/type-surface.v1.json", current));
+	const current = await historicalSource(inventoryPath
+		, record.sources[inventoryPath], ownedJavaScriptWasmHistoricalBytes);
+	const inventoryUpdate = record.updates.find(
+		update => update.path === inventoryPath);
+	assert.ok(inventoryUpdate);
+	const prior = JSON.parse(reverseOwnedPhpWasmUpdate(
+		current, inventoryUpdate));
 	for(const evidence of prior.evidence) for(const file of evidence.files)
 		if(record.sources[file.path]) file.sha256 = record.sources[file.path];
 	assert.deepEqual(JSON.parse(current), prior);

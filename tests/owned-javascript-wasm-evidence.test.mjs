@@ -10,7 +10,8 @@ import "./helpers/ci-dependency-timeout-source-history-tests.mjs";
 import { assertOwnedJavaScriptWasmCi } from "./helpers/owned-javascript-wasm-ci.mjs";
 import { sha256 } from "../src/capsule/node.mjs";
 import { assertOwnedJavaScriptWasmExecution } from "./helpers/owned-javascript-wasm-evidence.mjs";
-import { beforeOwnedJavaScriptNpm, ownedJavaScriptNpmHistoricalBytes } from "./helpers/owned-javascript-npm-source-history.mjs";
+import { ownedJavaScriptNpmHistoricalBytes } from "./helpers/owned-javascript-npm-source-history.mjs";
+import { sourceAtFinHistoryMilestone } from "./helpers/source-at-fin-history-milestone.mjs";
 import { beforeOwnedJavaScriptWasm, ownedJavaScriptWasmAddedPaths
 	, ownedJavaScriptWasmAdditionalSources, ownedJavaScriptWasmBaseline
 	, ownedJavaScriptWasmBaselineSources, ownedJavaScriptWasmChangedPaths
@@ -18,6 +19,13 @@ import { beforeOwnedJavaScriptWasm, ownedJavaScriptWasmAddedPaths
 	, ownedJavaScriptWasmPrevious, reverseOwnedJavaScriptWasmUpdate } from "./helpers/owned-javascript-wasm-source-history.mjs";
 
 const json = async path => JSON.parse(await readFile(path, "utf8"));
+const historicalSource = (path, expected, reader) =>
+	sourceAtFinHistoryMilestone(
+		path, expected, (candidate, source, digest) => {
+			const restored = reader(candidate, Buffer.from(source), digest);
+			return Buffer.isBuffer(restored) ? restored.toString("utf8") : restored;
+		}
+	);
 
 test("owned browser dependency timeout is mandatory without weakening execution", async () => {
 	const source = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
@@ -56,15 +64,20 @@ test("JavaScript ownership authenticates every source change without rewriting P
 		...Object.keys(previous.sources), ...ownedJavaScriptWasmChangedPaths
 		, ...ownedJavaScriptWasmAddedPaths, ...ownedJavaScriptWasmAdditionalSources
 	])].sort());
-	for(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(ownedJavaScriptNpmHistoricalBytes(path, await readFile(path), hash)), hash, path);
+	for(const [path, hash] of Object.entries(record.sources)) assert.equal(
+		sha256(await historicalSource(
+			path, hash, ownedJavaScriptNpmHistoricalBytes)), hash, path);
 	assert.deepEqual(record.updates.map(update => update.path), ownedJavaScriptWasmChangedPaths);
 	for(const update of record.updates)
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path] ?? ownedJavaScriptWasmBaselineSources[update.path], update.path);
 		assert.equal(update.currentSha256, record.sources[update.path], update.path);
-		const current = beforeOwnedJavaScriptNpm(update.path, await readFile(update.path, "utf8"), update.currentSha256), prior = beforeOwnedJavaScriptWasm(update.path, current);
+		const current = await historicalSource(update.path
+			, update.currentSha256, ownedJavaScriptNpmHistoricalBytes);
+		const prior = reverseOwnedJavaScriptWasmUpdate(current, update);
 		assert.equal(sha256(prior), update.previousSha256, update.path);
-		assert.equal(beforeOwnedJavaScriptWasm(update.path, prior), prior);
+		assert.equal(beforeOwnedJavaScriptWasm(
+			update.path, prior, update.previousSha256), prior);
 		assert.equal(beforeOwnedJavaScriptWasm(update.path, current, update.currentSha256), current);
 		const unknown = current + "\n/* unrecorded JavaScript/Wasm edit */\n";
 		assert.equal(beforeOwnedJavaScriptWasm(update.path, unknown), unknown);
@@ -76,9 +89,13 @@ test("JavaScript ownership authenticates every source change without rewriting P
 	const binary = Buffer.from([0, 255, 192, 128]);
 	assert.equal(ownedJavaScriptWasmHistoricalBytes("unknown.bin", binary), binary);
 	const inventoryPath = "docs/type-surface.v1.json";
-	const current = ownedJavaScriptNpmHistoricalBytes(inventoryPath, await readFile(inventoryPath)
-		, record.sources[inventoryPath]).toString("utf8");
-	const prior = JSON.parse(beforeOwnedJavaScriptWasm("docs/type-surface.v1.json", current));
+	const current = await historicalSource(inventoryPath
+		, record.sources[inventoryPath], ownedJavaScriptNpmHistoricalBytes);
+	const inventoryUpdate = record.updates.find(
+		update => update.path === inventoryPath);
+	assert.ok(inventoryUpdate);
+	const prior = JSON.parse(reverseOwnedJavaScriptWasmUpdate(
+		current, inventoryUpdate));
 	for(const evidence of prior.evidence) for(const file of evidence.files)
 		if(record.sources[file.path]) file.sha256 = record.sources[file.path];
 	assert.deepEqual(JSON.parse(current), prior, "Only source hashes change; support classifications stay unchanged");

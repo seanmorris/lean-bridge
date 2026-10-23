@@ -4,14 +4,13 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
+import { execFileSync } from "node:child_process";
+import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { pathToFileURL } from "node:url";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { sourceApiIdentity } from "../../src/analyze/semantic-model.mjs";
-import { createOwnedPhpWasmModel, generateOwnedPhpWasmLeanAdapters } from "../../src/build/php-wasm-owned-model.mjs";
-import { generateCompiledPhpWasmOwned } from "../../src/build/php-wasm-owned-component.mjs";
-import { generateOwnedNativeValueAdapters } from "../../src/backends/native/owned-value-adapters.mjs";
-import { generateOwnedPhpZendExtension } from "../../src/backends/php/owned-zend-extension.mjs";
-import { ownedZendGeneratedProbe } from "./owned-php-zend-generated-probe.mjs";
 import { assertOwnedPhpWasmCi, ownedPhpWasmCiCommands } from "./owned-php-wasm-ci.mjs";
 import { assertOwnedPhpCi } from "./owned-php-ci.mjs";
 import { ownedPhpWasmCoexistenceProgram } from "./owned-php-wasm-coexistence.mjs";
@@ -31,10 +30,44 @@ export const ownedPhpWasmEvidenceCommands = {
 const hash = value => sha256(canonicalJson(value));
 const digest = value => assert.match(value, /^[a-f0-9]{64}$/u);
 const flags = (value, names) => { for(const name of names) assert.equal(value[name], true, name); };
+const evidenceImplementation = "4c13a5ffdb133cfda841a965e0c858e20300e5ba";
+let historicalGenerators;
+
+const ownedPhpWasmHistoricalGenerators = () => historicalGenerators ??= (async () => {
+	const directory = await mkdtemp(join(
+		tmpdir(), "lean-owned-php-wasm-generators-"
+	));
+	try
+	{
+		const archive = execFileSync("git", ["archive", "--format=tar"
+			, evidenceImplementation, "src"
+			, "tests/helpers/owned-php-zend-generated-probe.mjs"
+			, "tests/helpers/owned-php-zend-output-probe.mjs"
+		], { maxBuffer: 512 * 1024 * 1024 });
+		execFileSync("tar", ["-xf", "-", "-C", directory], {
+			input: archive, maxBuffer: 512 * 1024 * 1024
+		});
+		const modules = await Promise.all([
+			"src/analyze/semantic-model.mjs"
+			, "src/build/php-wasm-owned-model.mjs"
+			, "src/build/php-wasm-owned-component.mjs"
+			, "src/backends/native/owned-value-adapters.mjs"
+			, "src/backends/php/owned-zend-extension.mjs"
+			, "tests/helpers/owned-php-zend-generated-probe.mjs"
+		].map(path => import(pathToFileURL(join(directory, path)).href)));
+		return Object.freeze(Object.assign({}, ...modules));
+	}
+	finally
+	{
+		await rm(directory, { recursive: true, force: true });
+	}
+})();
 const modelSummary = model => ({
 	pointerBits: model.pointerBits, schemaVersion: model.schemaVersion
 	, bindingIrSha256: model.bindingIrSha256, modelSha256: hash(model)
-	, sourceApiSha256: sourceApiIdentity(model.bindingIr, { ownedGraphs: true }).sha256
+	, sourceApiSha256: sourceApiIdentity(
+		model.bindingIr, { ownedGraphs: true }
+	).sha256
 	, exports: model.exports.map(fn => fn.bindingId)
 });
 
@@ -90,16 +123,20 @@ const browserCases = browser => {
 		}
 	}
 };
-const packageObservation = async observation => {
+const packageObservation = async (observation, generators) => {
 	flags(observation, ["authorRemoved", "sourceUnchanged"
 		, "deterministicReassembly", "independentlyRebuiltExactly"
 		, "receiptVerifiedWithoutProducer"]);
-	const model = createOwnedPhpWasmModel(observation.inputs), adapters = generateOwnedPhpWasmLeanAdapters(model);
-	const generated = generateCompiledPhpWasmOwned(model, observation.inputs.metadata, adapters);
+	const model = generators.createOwnedPhpWasmModel(observation.inputs);
+	const adapters = generators.generateOwnedPhpWasmLeanAdapters(model);
+	const generated = generators.generateCompiledPhpWasmOwned(
+		model, observation.inputs.metadata, adapters
+	);
 	assert.equal(model.pointerBits, 32); assert.equal(model.schemaVersion, 7);
 	assert.equal(model.exports.length, 51);
 	assert.equal(Boolean(model.sourceIdentity.reviewedBindingIr), observation.reviewed);
-	assert.equal(observation.modelSha256, hash(model)); assert.equal(observation.receipt.modelSha256, hash(model));
+	assert.equal(observation.modelSha256, hash(model));
+	assert.equal(observation.receipt.modelSha256, hash(model));
 	assert.equal(observation.receipt.metadataSha256, hash(observation.inputs.metadata));
 	assert.equal(observation.receipt.adaptersSha256, sha256(adapters.leanSource));
 	assert.equal(observation.receipt.headerSha256, sha256(adapters.header));
@@ -191,14 +228,27 @@ export const assertOwnedPhpWasmExecution = async record => {
 	const { reports } = record;
 	assert.deepEqual(Object.keys(reports).sort(), ["documentation", "fibers", "generated", "generatedReviewed", "lifetime", "multi", "packages", "values"]);
 	assert.deepEqual(Object.keys(record.reportFiles).sort(), Object.keys(reports).sort());
-	for(const file of Object.values(record.reportFiles))
-	{ digest(file.sha256); assert.ok(file.bytes > 0); }
+	for(const [name, file] of Object.entries(record.reportFiles))
+	{
+		digest(file.sha256); assert.ok(file.bytes > 0);
+		// packages and multi deliberately omit reconstructible model bodies. The
+		// other retained reports are byte-complete and must still bind exactly to
+		// the immutable file receipt before their semantics are inspected below.
+		if(!["multi", "packages"].includes(name))
+		{
+			const bytes = canonicalJson(reports[name]);
+			assert.equal(Buffer.byteLength(bytes), file.bytes, name);
+			assert.equal(sha256(bytes), file.sha256, name);
+		}
+	}
 	const packages = reports.packages;
 	flags(packages, ["compiledLean", "installedPackage", "cliAdmission"]);
 	assert.equal(packages.runtimeSupplied, false); assert.equal(packages.runtimeIdentity, hash(packages.runtimeManifest));
 	assert.deepEqual(packages.observations.map(observation => observation.reviewed), [false, true]);
+	const generators = await ownedPhpWasmHistoricalGenerators();
 	const models = [];
-	for(const observation of packages.observations) models.push(await packageObservation(observation));
+	for(const observation of packages.observations)
+		models.push(await packageObservation(observation, generators));
 	for(const report of [packages, reports.multi, reports.documentation])
 	{
 		assert.equal(report.runtimeSupplied, false); assert.equal(report.installedCli.packagingSourceRemoved, true);
@@ -216,7 +266,9 @@ export const assertOwnedPhpWasmExecution = async record => {
 		{
 			const model = item[name]; assert.equal(model.pointerBits, bits); assert.equal(model.schemaVersion, 7);
 			assert.equal(model.bindingIrSha256, item.nativeModel.bindingIrSha256);
-			assert.equal(model.sourceApiSha256, sourceApiIdentity(models[index].bindingIr, { ownedGraphs: true }).sha256);
+			assert.equal(model.sourceApiSha256, generators.sourceApiIdentity(
+				models[index].bindingIr, { ownedGraphs: true }
+			).sha256);
 			assert.equal(model.sourceApiSha256, item.build.result.sourceApiSha256);
 			assert.deepEqual(model.exports, models[index].exports.map(fn => fn.bindingId)); digest(model.modelSha256);
 		}
@@ -240,10 +292,16 @@ export const assertOwnedPhpWasmExecution = async record => {
 	{
 		assert.equal(report.compiledLean, true); assert.equal(report.installedPackage, false);
 		assert.equal(report.inputs.wordBits, 32); assert.equal(report.inputs.hostCallbacks, true);
-		const generated = generateOwnedPhpZendExtension(generateOwnedNativeValueAdapters(report.inputs));
+		const generated = generators.generateOwnedPhpZendExtension(
+			generators.generateOwnedNativeValueAdapters(report.inputs)
+		);
 		assert.equal(generated.model.functions.length, 51); assert.equal(generated.model.callbacks.length, 27);
 		assert.equal(report.sourceSha256, sha256(generated.source));
-		assert.equal(report.files["extension.c"], sha256(ownedZendGeneratedProbe(generated.source, generated.model)));
+		assert.equal(report.files["extension.c"], sha256(
+			generators.ownedZendGeneratedProbe(
+				generated.source, generated.model
+			)
+		));
 		assert.equal(report.observations.length, 2);
 		for(const item of report.observations)
 		{
