@@ -57,9 +57,21 @@ test("WIT acceptance reverses exact edits and retains unrelated source changes",
 	{
 		const source = beforeCStructuredCallables(update.path, await readFile(update.path, "utf8"), update.currentSha256);
 		assert.equal(sha256(reverseWitAcceptanceUpdate(source, update)), update.previousSha256);
-		assert.equal(sha256(beforeWitAcceptance(update.path, source)), update.previousSha256);
+		assert.equal(sha256(beforeWitAcceptance(update.path, source, update.previousSha256)), update.previousSha256);
 		assert.notEqual(sha256(beforeWitAcceptance(update.path, source + "\n// unrelated\n")), update.previousSha256);
 		assert.throws(() => reverseWitAcceptanceUpdate(source + "\n// unrelated\n", update));
+	}
+});
+
+test("WIT acceptance restores each predecessor from the live source through later layers", async () => {
+	const record = await json(witAcceptancePath);
+	for(const update of record.updates)
+	{
+		const live = await readFile(update.path, "utf8");
+		// Every later recorded transition is reversed before this one, and the
+		// explicit stop keeps the exhaustive inventory chain at this milestone.
+		assert.equal(sha256(beforeWitAcceptance(update.path, live, update.currentSha256)), update.currentSha256, update.path);
+		assert.equal(sha256(beforeWitAcceptance(update.path, live, update.previousSha256)), update.previousSha256, update.path);
 	}
 });
 
