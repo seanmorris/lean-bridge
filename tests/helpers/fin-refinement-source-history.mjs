@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeCallbackCheckedRecordArchiveCommitProvenanceSource, callbackCheckedRecordArchiveCommitProvenanceNormalizationPaths } from "./callback-checked-record-archive-commit-provenance-source-history.mjs";
 import { beforeCallbackCheckedRecordArchiveProvenanceRepairSource, callbackCheckedRecordArchiveProvenanceRepairNormalizationPaths } from "./callback-checked-record-archive-provenance-repair-source-history.mjs";
 import { beforeCallbackCheckedRecordRetainedArchiveRolloverSource, callbackCheckedRecordRetainedArchiveRolloverNormalizationPaths } from "./callback-checked-record-retained-archive-rollover-source-history.mjs";
 import { beforePhpWasmCallbackEntryTracePlanRepairSource, phpWasmCallbackEntryTracePlanRepairNormalizationPaths } from "./php-wasm-callback-entry-trace-plan-repair-source-history.mjs";
@@ -1959,7 +1960,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...callbackCheckedRecordArchiveProvenanceRepairNormalizationPaths
+	...callbackCheckedRecordArchiveCommitProvenanceNormalizationPaths
+	, ...callbackCheckedRecordArchiveProvenanceRepairNormalizationPaths
 	, ...callbackCheckedRecordRetainedArchiveRolloverNormalizationPaths
 	, ...phpWasmCallbackEntryTracePlanRepairNormalizationPaths
 	, ...dependentCheckedRecordBrowserReviewedRouteRepairNormalizationPaths
@@ -2720,9 +2722,15 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 			text = exact;
 		}
 	}
+	const callbackCheckedRecordArchiveCommitProvenance
+		= beforeCallbackCheckedRecordArchiveCommitProvenanceSource(
+			path, text, expected
+		);
+	if(sha256(callbackCheckedRecordArchiveCommitProvenance) === expected)
+		return callbackCheckedRecordArchiveCommitProvenance;
 	const callbackCheckedRecordArchiveProvenanceRepair
 		= beforeCallbackCheckedRecordArchiveProvenanceRepairSource(
-			path, text, expected
+			path, callbackCheckedRecordArchiveCommitProvenance, expected
 		);
 	if(sha256(callbackCheckedRecordArchiveProvenanceRepair) === expected)
 		return callbackCheckedRecordArchiveProvenanceRepair;

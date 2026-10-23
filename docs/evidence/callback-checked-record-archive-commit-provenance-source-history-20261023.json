@@ -1,0 +1,137 @@
+{
+  "additions": [
+    {
+      "currentSha256": "0131ad1ff2a2fd4fc3a8b76c4ce1cefa7a116bd6cd956aeceeb64e532f8a200b",
+      "path": "scripts/update-callback-checked-record-archive-commit-provenance-source-history.mjs"
+    },
+    {
+      "currentSha256": "f134bc74ff81e9b501f63a0e495808ccf40ccca6cacb9b305bf0065b409770d0",
+      "path": "tests/helpers/callback-checked-record-archive-commit-provenance-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "5905fc937ec7d2746b8590a9403d77b66ed330b4ed22d85fdd0f00b310781c9b",
+      "path": "tests/helpers/callback-checked-record-archive-commit-provenance-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "2c3727842468db1f5720aabd7512aff1f88f759e",
+  "integrationUpdates": [
+    {
+      "currentSha256": "dfe6cff553f851d9568386749f82ba2216b4c69da7979466e4fe7482ce7a7879",
+      "edits": [
+        {
+          "current": "import \"./helpers/callback-checked-record-archive-commit-provenance-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 1837
+        }
+      ],
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "4e9e6d8a3d618e2f3b34144e2461f7983d7f7bba7f652352d6cb5c5eee74dbb5"
+    },
+    {
+      "currentSha256": "edb84cfb41c7ebef3689bcf75daad68a9f571ec06871d77b9299cb3aeb84d76d",
+      "edits": [
+        {
+          "current": "import { beforeCallbackCheckedRecordArchiveCommitProvenanceSource, callbackCheckedRecordArchiveCommitProvenanceNormalizationPaths } from \"./callback-checked-record-archive-commit-provenance-source-history.mjs\";\n",
+          "previous": "",
+          "start": 392
+        },
+        {
+          "current": "\t...callbackCheckedRecordArchiveCommitProvenanceNormalizationPaths\n\t, ...callbackCheckedRecordArchiveProvenanceRepairNormalizationPaths\n",
+          "previous": "\t...callbackCheckedRecordArchiveProvenanceRepairNormalizationPaths\n",
+          "start": 155948
+        },
+        {
+          "current": "\tconst callbackCheckedRecordArchiveCommitProvenance\n\t\t= beforeCallbackCheckedRecordArchiveCommitProvenanceSource(\n\t\t\tpath, text, expected\n\t\t);\n\tif(sha256(callbackCheckedRecordArchiveCommitProvenance) === expected)\n\t\treturn callbackCheckedRecordArchiveCommitProvenance;\n",
+          "previous": "",
+          "start": 191486
+        },
+        {
+          "current": "\t\t\tpath, callbackCheckedRecordArchiveCommitProvenance, expected\n",
+          "previous": "\t\t\tpath, text, expected\n",
+          "start": 191869
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "1c0df71744e2684cb5594dfc9f1fc8a43fff98dbe3d9c5de9e3f49682ff55578"
+    }
+  ],
+  "milestone": "callback-checked-record-archive-commit-provenance-source-v1",
+  "predecessorCommit": "154de928fb1a23f9920767a3f77a6132fccd7878",
+  "schemaVersion": 1,
+  "scope": "Archive indexes bind hosted producer and consumer revisions separately from the exact independent checker and archiver revision.",
+  "updates": [
+    {
+      "currentSha256": "b330628eec3f68903ba134e2b0d2c6736967f1d98db4c4d3bd866d400a3641e7",
+      "edits": [
+        {
+          "current": "\tcallbackCheckedRecordArchiveIndexCommits\n\t, callbackCheckedRecordArchiveRevisions\n",
+          "previous": "\tcallbackCheckedRecordArchiveRevisions\n",
+          "start": 1210
+        },
+        {
+          "current": "\t\t, ...callbackCheckedRecordArchiveIndexCommits(revisions)\n\t\t, accepted\n",
+          "previous": "\t\t, producerCommit: revision, consumerCommit: revision\n\t\t, checkerCommit: revision, archiveCommit, accepted\n",
+          "start": 10462
+        }
+      ],
+      "path": "scripts/archive-callback-checked-record-evidence.mjs",
+      "previousSha256": "8007e1a09946dda38f061262af7e3362d4c877075183bde9ee7cf8b7b9a86dba"
+    },
+    {
+      "currentSha256": "39a76fe5a82186abfeef1d0a9e5bb9f927892ab497f717edf387eb3e6031fa1b",
+      "edits": [
+        {
+          "current": "\tcallbackCheckedRecordArchiveIndexCommits\n\t, callbackCheckedRecordArchiveRevisions\n",
+          "previous": "\tcallbackCheckedRecordArchiveRevisions\n",
+          "start": 282
+        },
+        {
+          "current": "\tconst revisions = callbackCheckedRecordArchiveRevisions(\n\t\thostedRevision, revision);\n\tassert.deepEqual(revisions, {\n",
+          "previous": "\tassert.deepEqual(callbackCheckedRecordArchiveRevisions(\n\t\thostedRevision, revision\n\t), {\n",
+          "start": 2638
+        },
+        {
+          "current": "\tassert.deepEqual(callbackCheckedRecordArchiveIndexCommits(revisions), {\n\t\tproducerCommit: hostedRevision, consumerCommit: hostedRevision\n\t\t, checkerCommit: revision, archiveCommit: revision\n\t});\n\tassert.throws(() => callbackCheckedRecordArchiveIndexCommits({\n\t\tproducer: hostedRevision, consumer: hostedRevision\n\t\t, checker: \"HEAD\", archiver: revision\n\t}), assert.AssertionError);\n",
+          "previous": "",
+          "start": 2856
+        }
+      ],
+      "path": "tests/callback-checked-record-hosted-archive.test.mjs",
+      "previousSha256": "8c315f7530a6ba63118941a49d3c8ec6aa4c33c6c1e9c3341594be3119a821f7"
+    },
+    {
+      "currentSha256": "f9bdd99a727fca97f2d9c9623c5c2e5db8681519d9e61b5e7e04dc7df80dc044",
+      "edits": [
+        {
+          "current": "/**\n * Map replay roles to the public commit fields written into an archive index.\n *\n * @param value - Producer/consumer/checker/archiver revisions.\n */\nexport const callbackCheckedRecordArchiveIndexCommits = value => {\n\tassert.deepEqual(Object.keys(value).sort(), [\n\t\t\"archiver\", \"checker\", \"consumer\", \"producer\"\n\t]);\n\tfor(const revision of Object.values(value))\n\t\tassert.match(revision, /^[a-f0-9]{40}$/u);\n\treturn Object.freeze({\n\t\tproducerCommit: value.producer\n\t\t, consumerCommit: value.consumer\n\t\t, checkerCommit: value.checker\n\t\t, archiveCommit: value.archiver\n\t});\n};\n\n",
+          "previous": "",
+          "start": 5645
+        }
+      ],
+      "path": "tests/helpers/callback-checked-record-hosted-evidence-sources.mjs",
+      "previousSha256": "0e933a37923d4897f100c80030dbf134a691ee599bd826c338ea496878180d67"
+    },
+    {
+      "currentSha256": "45e253ef5973131dbd3119e374088f57187c4afd4946b5841c35c10edce53044",
+      "edits": [
+        {
+          "current": "\tcallbackCheckedRecordArchiveIndexCommits\n\t, callbackCheckedRecordArchiveRevisions\n\t, callbackCheckedRecordEvidenceSources\n",
+          "previous": "\tcallbackCheckedRecordEvidenceSources\n",
+          "start": 976
+        },
+        {
+          "current": "\tconst revisions = callbackCheckedRecordArchiveRevisions(\n\t\tindex.producerCommit, index.archiveCommit);\n\tassert.deepEqual(Object.fromEntries([\n\t\t\"producerCommit\", \"consumerCommit\", \"checkerCommit\", \"archiveCommit\"\n\t].map(key => [key, index[key]]))\n\t, callbackCheckedRecordArchiveIndexCommits(revisions));\n",
+          "previous": "\tassert.equal(index.producerCommit, index.consumerCommit);\n\tassert.equal(index.producerCommit, index.checkerCommit);\n",
+          "start": 6698
+        },
+        {
+          "current": "",
+          "previous": "\tconst revisions = {\n\t\tproducer: index.producerCommit, consumer: index.consumerCommit\n\t\t, checker: index.checkerCommit, archiver: index.archiveCommit\n\t};\n",
+          "start": 7613
+        }
+      ],
+      "path": "tests/helpers/callback-checked-record-hosted-evidence.mjs",
+      "previousSha256": "0874d1e4658264d4ddd0174dc73669b8b7ce74b1831302d4ed8cf752367feb59"
+    }
+  ]
+}
