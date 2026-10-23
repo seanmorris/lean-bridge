@@ -14,6 +14,7 @@ import {
 } from "../src/adoption/type-surface.mjs";
 import {
 	assertDependentCheckedRecordPromotionReferences
+	, dependentCheckedRecordPromotionCurrentSourcePaths
 	, dependentCheckedRecordPromotionLanes
 	, dependentCheckedRecordPromotionLimit
 	, dependentCheckedRecordPromotionPath
@@ -157,6 +158,27 @@ test("dependent promotion reconciles only selected current-source pins", () => {
 	assert.throws(() => reconcileDependentCheckedRecordSourcePins(original
 		, new Map([["src/changed.mjs", "invalid"]])));
 });
+
+test("dependent promotion selects added and modified live pins but no archive"
+	, () => {
+	const inventory = { evidence: [{ files: [
+		{ path: "src/modified.mjs", sha256: "1".repeat(64) }
+		, { path: "tests/added.test.mjs", sha256: "2".repeat(64) }
+		, { path: "docs/evidence/immutable/index.json"
+			, sha256: "3".repeat(64) }
+	] }] };
+	assert.deepEqual(
+		dependentCheckedRecordPromotionCurrentSourcePaths(inventory, [
+			"src/modified.mjs", "tests/added.test.mjs"
+			, "docs/evidence/immutable/index.json", "src/unpinned.mjs"
+			, "src/modified.mjs"
+		])
+		, ["src/modified.mjs", "tests/added.test.mjs"]
+	);
+	assert.throws(() => dependentCheckedRecordPromotionCurrentSourcePaths(
+		inventory, new Set()));
+	}
+);
 
 test("dependent promotion refuses missing, reordered, duplicated and forged references", () => {
 	const reject = (mutate, pattern = assert.AssertionError) => {

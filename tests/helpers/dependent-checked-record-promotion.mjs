@@ -42,13 +42,32 @@ export const dependentCheckedRecordPromotionPositions = Object.freeze([
 export const dependentCheckedRecordPromotionPath
 	= "docs/evidence/dependent-checked-record-promotion.md";
 export const dependentCheckedRecordPromotionPinBaseline
-	= "44486151261f342e06f0a57290c5ac261921a621";
+	= "250f73d8b2bed5380e7fb7c55b8f1f6ffd746e58";
 
 export const dependentCheckedRecordPromotionLimit
 	= "Hosted dependent checked-record acceptance covers only the retained top-level copied DependentRecords.Dependent parameter and result sites, whose Fin bound field depends on the runtime bound field and whose proof is rebuilt by the selected mkDependent constructor. Full packages cover parameters and results; standalone result-only packages cover results only. Dependent fields of other kinds, nested or recursive dependent records, checked-record fields, callbacks, owned positions, open or opaque indices and zero-payload records remain unreviewed here. The PHP-Wasm cells are the shared result tracked by #1461 and are not inferred from native PHP. External runtimes, compilers, package managers and operating-system distributions remain trusted recorded inputs.";
 
 export const dependentCheckedRecordPromotionConversion
 	= "The proof-free host value carries bound and below as payload fields. Full packages validate each host input through the selected DependentRecords.mkDependent constructor, which rejects below >= bound before Lean code runs, preserve rejected caller values and return the exact proof-free result. Standalone result-only packages expose Lean-produced results without checked-input metadata.";
+
+/**
+ * Select changed live sources that are already pinned by the inventory.
+ * Immutable archives under docs/evidence are never reconciled from current
+ * bytes; their dedicated verifiers and source histories own those digests.
+ *
+ * @param inventory - Current or promoted type-surface inventory.
+ * @param changedPaths - Added or modified paths since the last clean baseline.
+ */
+export const dependentCheckedRecordPromotionCurrentSourcePaths = (
+	inventory, changedPaths
+) => {
+	assert.ok(Array.isArray(changedPaths));
+	const pinned = new Set(inventory.evidence.flatMap(evidence =>
+		evidence.files.map(file => file.path)));
+	return [...new Set(changedPaths)].filter(path =>
+		typeof path === "string" && pinned.has(path)
+		&& !path.startsWith("docs/evidence/"));
+};
 
 /**
  * Reconcile only the current-source paths selected by the promotion driver.

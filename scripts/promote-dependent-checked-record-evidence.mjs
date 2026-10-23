@@ -13,6 +13,7 @@ import { sha256 } from "../src/capsule/node.mjs";
 import {
 	dependentCheckedRecordPromotionPath
 	, dependentCheckedRecordPromotionPinBaseline
+	, dependentCheckedRecordPromotionCurrentSourcePaths
 	, dependentCheckedRecordPromotionReferences
 	, loadDependentCheckedRecordVerifiers
 	, promoteDependentCheckedRecords
@@ -36,11 +37,14 @@ assert.doesNotThrow(
 	, { stdio: "ignore" })
 	, "Dependent promotion pin baseline is not an ancestor of HEAD"
 );
-const changedPaths = git(["diff", "--name-only", "--diff-filter=M"
+const changedPaths = git(["diff", "--name-only", "--diff-filter=AM"
 	, dependentCheckedRecordPromotionPinBaseline, "--"])
 	.trim().split("\n").filter(Boolean);
+const currentSourcePaths
+	= dependentCheckedRecordPromotionCurrentSourcePaths(
+		promoted, changedPaths);
 const currentDigests = new Map();
-for(const changedPath of changedPaths)
+for(const changedPath of currentSourcePaths)
 {
 	let bytes;
 	try
