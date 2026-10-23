@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeValueIndexMatrixHistoricalInventoryRepairSource, valueIndexMatrixHistoricalInventoryRepairNormalizationPaths } from "./value-index-matrix-historical-inventory-repair-source-history.mjs";
 import { beforeCheckedRefinementGateRepairSource, checkedRefinementGateRepairNormalizationPaths } from "./checked-refinement-gate-repair-source-history.mjs";
 import { beforeDependentCheckedRecordPromotionSource, dependentCheckedRecordPromotionChangedPaths } from "./dependent-checked-record-promotion-source-history.mjs";
 import { beforeDependentCheckedRecordDocumentationClosureSource, dependentCheckedRecordDocumentationClosureNormalizationPaths } from "./dependent-checked-record-documentation-closure-source-history.mjs";
@@ -2046,7 +2047,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...dependentCheckedRecordDocumentationClosureNormalizationPaths
+	...valueIndexMatrixHistoricalInventoryRepairNormalizationPaths
+	, ...dependentCheckedRecordDocumentationClosureNormalizationPaths
 	, ...dependentCheckedRecordPromotionChangedPaths
 	, ...checkedRefinementGateRepairNormalizationPaths
 	, ...dependentCheckedRecordBrowserArchiveImplementationPaths
@@ -2835,6 +2837,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
+	const valueIndexMatrixHistoricalInventoryRepair
+		= beforeValueIndexMatrixHistoricalInventoryRepairSource(
+			path, text, expected);
+	if(sha256(valueIndexMatrixHistoricalInventoryRepair) === expected)
+		return valueIndexMatrixHistoricalInventoryRepair;
+	text = valueIndexMatrixHistoricalInventoryRepair;
 	const dependentCheckedRecordDocumentationClosure
 		= beforeDependentCheckedRecordDocumentationClosureSource(
 			path, text, expected);

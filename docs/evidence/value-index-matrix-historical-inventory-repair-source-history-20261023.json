@@ -1,0 +1,98 @@
+{
+  "additions": [
+    {
+      "currentSha256": "41244d46ed5f3d2a4255582d15e4cf7e02dd8e7b36418912c17a4fb51d8e36c3",
+      "path": "scripts/update-value-index-matrix-historical-inventory-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "e49dc91fb9aec21659a52a603e07ff40d867737845465e1903f8b016023225f2",
+      "path": "tests/helpers/value-index-matrix-historical-inventory-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "44edf09701027b6f03784e79c8277b5b9a1785e35de4506c550793a584b0d822",
+      "path": "tests/helpers/value-index-matrix-historical-inventory-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "2b8b73c9d635e13f6407d00909870689cde40431",
+  "integrationUpdates": [
+    {
+      "currentSha256": "4544de3c6a65d71d6ecc42cfefb83d79a534ed5a727dd6a40bb10a9d82234d3d",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"56ca7263cbc368a3e354970554e51cbeda251fc45caa2203e2bf270870e16592\"\n",
+          "previous": "          \"sha256\": \"2fd3c273a3298ef88e6f532f419db85ea72edecf9140e958eaa051ba6d7d53f4\"\n",
+          "start": 685394
+        },
+        {
+          "current": "          \"sha256\": \"56ca7263cbc368a3e354970554e51cbeda251fc45caa2203e2bf270870e16592\"\n",
+          "previous": "          \"sha256\": \"2fd3c273a3298ef88e6f532f419db85ea72edecf9140e958eaa051ba6d7d53f4\"\n",
+          "start": 1440962
+        },
+        {
+          "current": "          \"sha256\": \"56ca7263cbc368a3e354970554e51cbeda251fc45caa2203e2bf270870e16592\"\n",
+          "previous": "          \"sha256\": \"2fd3c273a3298ef88e6f532f419db85ea72edecf9140e958eaa051ba6d7d53f4\"\n",
+          "start": 1447496
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "ccc3f37f8fb4f0b38bff070ebf28681ed0ddcdf36aa84b786ae37607e1e8cb46"
+    },
+    {
+      "currentSha256": "56ca7263cbc368a3e354970554e51cbeda251fc45caa2203e2bf270870e16592",
+      "edits": [
+        {
+          "current": "import \"./helpers/value-index-matrix-historical-inventory-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 1913
+        }
+      ],
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "2fd3c273a3298ef88e6f532f419db85ea72edecf9140e958eaa051ba6d7d53f4"
+    },
+    {
+      "currentSha256": "0241002f54883ce76bf2c7604e7a6112141983d7896ce1e221ceedd6bae0784f",
+      "edits": [
+        {
+          "current": "import { beforeValueIndexMatrixHistoricalInventoryRepairSource, valueIndexMatrixHistoricalInventoryRepairNormalizationPaths } from \"./value-index-matrix-historical-inventory-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...valueIndexMatrixHistoricalInventoryRepairNormalizationPaths\n\t, ...dependentCheckedRecordDocumentationClosureNormalizationPaths\n",
+          "previous": "\t...dependentCheckedRecordDocumentationClosureNormalizationPaths\n",
+          "start": 164307
+        },
+        {
+          "current": "\tconst valueIndexMatrixHistoricalInventoryRepair\n\t\t= beforeValueIndexMatrixHistoricalInventoryRepairSource(\n\t\t\tpath, text, expected);\n\tif(sha256(valueIndexMatrixHistoricalInventoryRepair) === expected)\n\t\treturn valueIndexMatrixHistoricalInventoryRepair;\n\ttext = valueIndexMatrixHistoricalInventoryRepair;\n",
+          "previous": "",
+          "start": 201724
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "c2429c04bdd56e628bf317de66c792747902bf05548db902115b5016e601b35d"
+    }
+  ],
+  "milestone": "value-index-matrix-historical-inventory-repair-source-v1",
+  "predecessorCommit": "1b94f2be1f511c9dbcabd27abb8b169c4a358b3e",
+  "schemaVersion": 1,
+  "scope": "Reconstruct the value-index pin repair's authenticated inventory before checking its original ninety-four source pins, while separately retaining every later live reference.",
+  "updates": [
+    {
+      "currentSha256": "7bd0340cbb6e9c36cd9737dc77833c9cd3929bbaa71030f74c02dc183bf3bb49",
+      "edits": [
+        {
+          "current": "\tconst inventoryUpdate = record.updates.find(update =>\n\t\tupdate.path === \"docs/type-surface.v1.json\");\n\tassert.ok(inventoryUpdate);\n\tconst inventory = JSON.parse(await sourceAtFinHistoryMilestone(\n\t\tinventoryUpdate.path, inventoryUpdate.currentSha256\n\t\t, beforeCheckedRecordValueIndexMatrixPinRepairSource\n\t));\n\tconst liveInventory = JSON.parse(await readFile(\n",
+          "previous": "\tconst inventory = JSON.parse(await readFile(\n",
+          "start": 3995
+        },
+        {
+          "current": "\t\t\t, pin.path);\n\t\tconst liveMatches = liveInventory.evidence\n\t\t\t.flatMap(evidence => evidence.files)\n\t\t\t.filter(file => file.path === pin.path);\n\t\tassert.ok(liveMatches.length >= matches.length, pin.path);\n\t\tconst liveSha256 = sha256(await readFile(pin.path, \"utf8\"));\n\t\tassert.ok(liveMatches.every(file => file.sha256 === liveSha256)\n",
+          "previous": "",
+          "start": 4703
+        }
+      ],
+      "path": "tests/helpers/checked-record-value-index-matrix-pin-repair-source-history-tests.mjs",
+      "previousSha256": "aba65ededb48e3da5e81fc4aff71d0da342dafc65697c745251afe2f488886ea"
+    }
+  ]
+}
