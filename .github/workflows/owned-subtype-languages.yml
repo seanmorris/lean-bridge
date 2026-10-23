@@ -71,6 +71,12 @@ jobs:
           rg '^# skipped 0$' build/owned-subtype-languages-ci/acceptance.log
           test -s build/owned-subtype-language-packaging/report.json
           test -s build/owned-subtype-language-packaging/retained-packages.json
+          node scripts/check-owned-subtype-ci.mjs \
+            --lane languages --producer "$GITHUB_SHA" \
+            --tap build/owned-subtype-languages-ci/acceptance.log \
+            --report build/owned-subtype-language-packaging/report.json \
+            | tee build/owned-subtype-language-packaging/verification.json
+          test -s build/owned-subtype-language-packaging/verification.json
       - name: Preserve language acceptance evidence
         if: always()
         uses: actions/upload-artifact@v7

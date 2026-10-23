@@ -57,6 +57,12 @@ jobs:
           rg '^# skipped 0$' build/owned-subtype-native-ci/acceptance.log
           test -s build/owned-subtype-native-packaging/report.json
           test -s build/owned-subtype-native-packaging/retained-packages.json
+          node scripts/check-owned-subtype-ci.mjs \
+            --lane native --producer "$GITHUB_SHA" \
+            --tap build/owned-subtype-native-ci/acceptance.log \
+            --report build/owned-subtype-native-packaging/report.json \
+            | tee build/owned-subtype-native-packaging/verification.json
+          test -s build/owned-subtype-native-packaging/verification.json
       - name: Preserve native acceptance evidence
         if: always()
         uses: actions/upload-artifact@v7

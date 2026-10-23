@@ -121,6 +121,9 @@ test("owned Subtype workflows upload retained package directories", async () => 
 			, "utf8");
 		assert.ok(source.includes(`test -s build/${root}/retained-packages.json`)
 			, workflow);
+		assert.ok(source.includes("node scripts/check-owned-subtype-ci.mjs")
+			, workflow);
+		assert.ok(source.includes(`build/${root}/verification.json`), workflow);
 		assert.ok(source.includes(`build/${root}/`), workflow);
 	}
 	for(const path of [

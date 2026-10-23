@@ -66,6 +66,12 @@ jobs:
           rg '^# skipped 0$' build/owned-subtype-perl-ci/acceptance.log
           test -s build/owned-subtype-perl-packaging/report.json
           test -s build/owned-subtype-perl-packaging/retained-packages.json
+          node scripts/check-owned-subtype-ci.mjs \
+            --lane perl --producer "$GITHUB_SHA" \
+            --tap build/owned-subtype-perl-ci/acceptance.log \
+            --report build/owned-subtype-perl-packaging/report.json \
+            | tee build/owned-subtype-perl-packaging/verification.json
+          test -s build/owned-subtype-perl-packaging/verification.json
       - name: Preserve Perl acceptance evidence
         if: always()
         uses: actions/upload-artifact@v7

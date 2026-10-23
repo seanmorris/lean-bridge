@@ -126,6 +126,12 @@ jobs:
           rg '^# skipped 0$' build/owned-subtype-remaining-${{ matrix.lane }}.log
           test -s build/owned-subtype-remaining-packaging/${{ matrix.lane }}.json
           test -s build/owned-subtype-remaining-packaging/retained-packages.json
+          node scripts/check-owned-subtype-ci.mjs \
+            --lane "${{ matrix.lane }}" --producer "$GITHUB_SHA" \
+            --tap build/owned-subtype-remaining-${{ matrix.lane }}.log \
+            --report build/owned-subtype-remaining-packaging/${{ matrix.lane }}.json \
+            | tee build/owned-subtype-remaining-packaging/verification.json
+          test -s build/owned-subtype-remaining-packaging/verification.json
       - name: Preserve original and partial installed records
         if: always()
         uses: actions/upload-artifact@v7
