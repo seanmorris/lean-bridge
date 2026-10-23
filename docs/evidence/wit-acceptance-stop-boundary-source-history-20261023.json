@@ -1,0 +1,98 @@
+{
+  "additions": [
+    {
+      "currentSha256": "0bfcbb87f6accf0230bee1fa1ed4046e4144c31351b046a35815054fe8477c1c",
+      "path": "scripts/update-wit-acceptance-stop-boundary-source-history.mjs"
+    },
+    {
+      "currentSha256": "35eb27a2f38617796266deb41b7c04fdb77b21f6c47b9005b7138f1324887e4a",
+      "path": "tests/helpers/wit-acceptance-stop-boundary-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "dba15c3d0f2dc94c6704fcba230e02b1478cacef9fc55ff10e09efbbe45dd0d7",
+      "path": "tests/helpers/wit-acceptance-stop-boundary-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "20c1141f93abee6dd5d22ddf9819ccb0c9ca2cbf",
+  "integrationUpdates": [
+    {
+      "currentSha256": "a5b2985c95d649e9019b2b1db4d02f105f9a2502f908b4943e2dc5ca2ed45d15",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"77a9dcf0db06b80235e04aff4b59f34889371b48617c1c3996f3b55c2850b705\"\n",
+          "previous": "          \"sha256\": \"5ca2dae9bf7af4a3b60999d02f588c3b6cf9c1c582c5955eff5592bc2a14a650\"\n",
+          "start": 1070952
+        },
+        {
+          "current": "          \"sha256\": \"77a9dcf0db06b80235e04aff4b59f34889371b48617c1c3996f3b55c2850b705\"\n",
+          "previous": "          \"sha256\": \"5ca2dae9bf7af4a3b60999d02f588c3b6cf9c1c582c5955eff5592bc2a14a650\"\n",
+          "start": 1078384
+        },
+        {
+          "current": "          \"sha256\": \"81765229d2771fad07e43f0b5ab7cf46e54f6fbb006e304e7220b2ba89ba9fff\"\n",
+          "previous": "          \"sha256\": \"2b264d6bf8fe39976ca807439a3fbde80a0c163b00686f5b69f9882aab575ffd\"\n",
+          "start": 1425973
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "69f245b3e20d6772a5f95ca16fc1af1619fee4876d103f8eba5cfab6a0e6886e"
+    },
+    {
+      "currentSha256": "39ad42dda7bb0adf87d890b1ae56523d1d0a534b7e1cf36d531927f7675fadbf",
+      "edits": [
+        {
+          "current": "import { beforeWitAcceptanceStopBoundarySource, witAcceptanceStopBoundaryNormalizationPaths } from \"./wit-acceptance-stop-boundary-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...witAcceptanceStopBoundaryNormalizationPaths\n\t, ...ownedJvmLazyKotlinFactoryNormalizationPaths\n",
+          "previous": "\t...ownedJvmLazyKotlinFactoryNormalizationPaths\n",
+          "start": 169059
+        },
+        {
+          "current": "\tconst witAcceptanceStopBoundary\n\t\t= beforeWitAcceptanceStopBoundarySource(path, text, expected);\n\tif(sha256(witAcceptanceStopBoundary) === expected)\n\t\treturn witAcceptanceStopBoundary;\n\ttext = witAcceptanceStopBoundary;\n",
+          "previous": "",
+          "start": 207976
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "bcf82a7f5de38800db2ab428efac3ec67bbb359011cde4a4bbd41d70c8bcddf3"
+    },
+    {
+      "currentSha256": "81765229d2771fad07e43f0b5ab7cf46e54f6fbb006e304e7220b2ba89ba9fff",
+      "edits": [
+        {
+          "current": "import \"./helpers/wit-acceptance-stop-boundary-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 1313
+        }
+      ],
+      "path": "tests/wit-recursive-callable-faults.test.mjs",
+      "previousSha256": "2b264d6bf8fe39976ca807439a3fbde80a0c163b00686f5b69f9882aab575ffd"
+    }
+  ],
+  "milestone": "wit-acceptance-stop-boundary-source-v1",
+  "predecessorCommit": "b329d7416f8aa6f67ca3a86d5ecabb814e428bc4",
+  "schemaVersion": 1,
+  "scope": "Stop the WIT acceptance regression at its recorded predecessor so the exhaustive type-surface chain cannot overshoot it, prove milestone and predecessor restoration from every live source through later layers, and refresh the live source pins of the changed regressions.",
+  "updates": [
+    {
+      "currentSha256": "77a9dcf0db06b80235e04aff4b59f34889371b48617c1c3996f3b55c2850b705",
+      "edits": [
+        {
+          "current": "\t\tassert.equal(sha256(beforeWitAcceptance(update.path, source, update.previousSha256)), update.previousSha256);\n",
+          "previous": "\t\tassert.equal(sha256(beforeWitAcceptance(update.path, source)), update.previousSha256);\n",
+          "start": 2918
+        },
+        {
+          "current": "\t}\n});\n\ntest(\"WIT acceptance restores each predecessor from the live source through later layers\", async () => {\n\tconst record = await json(witAcceptancePath);\n\tfor(const update of record.updates)\n\t{\n\t\tconst live = await readFile(update.path, \"utf8\");\n\t\t// Every later recorded transition is reversed before this one, and the\n\t\t// explicit stop keeps the exhaustive inventory chain at this milestone.\n\t\tassert.equal(sha256(beforeWitAcceptance(update.path, live, update.currentSha256)), update.currentSha256, update.path);\n\t\tassert.equal(sha256(beforeWitAcceptance(update.path, live, update.previousSha256)), update.previousSha256, update.path);\n",
+          "previous": "",
+          "start": 3231
+        }
+      ],
+      "path": "tests/wit-recursive-acceptance.test.mjs",
+      "previousSha256": "5ca2dae9bf7af4a3b60999d02f588c3b6cf9c1c582c5955eff5592bc2a14a650"
+    }
+  ]
+}

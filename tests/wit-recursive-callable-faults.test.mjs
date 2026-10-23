@@ -20,6 +20,7 @@ import { runCopied } from "./helpers/copied-fixture-install.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import "./helpers/wit-recursive-producer-replay-repair-source-history-tests.mjs";
 import "./helpers/wit-recursive-reader-traversal-repair-source-history-tests.mjs";
+import "./helpers/wit-acceptance-stop-boundary-source-history-tests.mjs";
 
 test("recursive WIT callback arenas release every failed allocation and preserve reply owners", {
 	skip: process.env.LEAN_BRIDGE_WIT_RECURSIVE_CALLABLE_FAULT_TEST !== "1"

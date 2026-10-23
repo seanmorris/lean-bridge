@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeWitAcceptanceStopBoundarySource, witAcceptanceStopBoundaryNormalizationPaths } from "./wit-acceptance-stop-boundary-source-history.mjs";
 import { beforeOwnedJvmLazyKotlinFactorySource, ownedJvmLazyKotlinFactoryNormalizationPaths } from "./owned-jvm-lazy-kotlin-factory-source-history.mjs";
 import { beforeOwnedSubtypeLivePinCompletionSource, ownedSubtypeLivePinCompletionNormalizationPaths } from "./owned-subtype-live-pin-completion-source-history.mjs";
 import { beforePhpWasmRecursiveEvidenceReplayRepairSource, phpWasmRecursiveEvidenceReplayRepairNormalizationPaths } from "./php-wasm-recursive-evidence-replay-repair-source-history.mjs";
@@ -2074,7 +2075,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...ownedJvmLazyKotlinFactoryNormalizationPaths
+	...witAcceptanceStopBoundaryNormalizationPaths
+	, ...ownedJvmLazyKotlinFactoryNormalizationPaths
 	, ...ownedSubtypeLivePinCompletionNormalizationPaths
 	, ...phpWasmRecursiveEvidenceReplayRepairNormalizationPaths
 	, ...genericSubtypeWitHelperWarningScopeNormalizationPaths
@@ -2891,6 +2893,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
+	const witAcceptanceStopBoundary
+		= beforeWitAcceptanceStopBoundarySource(path, text, expected);
+	if(sha256(witAcceptanceStopBoundary) === expected)
+		return witAcceptanceStopBoundary;
+	text = witAcceptanceStopBoundary;
 	const ownedJvmLazyKotlinFactory
 		= beforeOwnedJvmLazyKotlinFactorySource(path, text, expected);
 	if(sha256(ownedJvmLazyKotlinFactory) === expected)
