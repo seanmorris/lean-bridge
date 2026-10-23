@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "callbackcheckedrecords@1.0.0",
+    "name": "callbackcheckedrecords",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 59342730,
+          "path": "archives/callback-checked-records-1.0.0-wit-wasi.tar.gz",
+          "sha256": "7ae053d925cc1a8d4370e943ca02afcef810ef9e6770658e28f3faf3c0a395f3"
+        }
+      ],
+      "ecosystem": "wit-wasi",
+      "name": "callback-checked-records",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "wit-wasi",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "7fd0d99dc4cba6a24e5f2af10085b989c79d8001abff8e1210cc0d40f85d5878",
+      "id": "native-library-v1",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "1481e0ec1b5ae326fc45d5e67e25b3bb2d70fced7ca198c188640c92f61358a5"
+  }
+}
