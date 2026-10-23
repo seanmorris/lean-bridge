@@ -1,0 +1,31 @@
+{
+  "routes": [
+    {
+      "archiveBytes": 105709220,
+      "archives": 2,
+      "files": [
+        "archives/callbacksubtypes-1.0.0-c.tar.gz",
+        "archives/callbacksubtypes-1.0.0-cpp.tar.gz",
+        "package-set-receipt.json",
+        "package-set-receipt.json.sha256"
+      ],
+      "path": "evidence/ordinary/handoff",
+      "receiptSha256": "71b0ef51d8f48e1e9cf162a569fa15d87092323eeecc5420cbab7e99155b8536",
+      "route": "ordinary"
+    },
+    {
+      "archiveBytes": 105715447,
+      "archives": 2,
+      "files": [
+        "archives/callbacksubtypes-1.0.0-c.tar.gz",
+        "archives/callbacksubtypes-1.0.0-cpp.tar.gz",
+        "package-set-receipt.json",
+        "package-set-receipt.json.sha256"
+      ],
+      "path": "evidence/reviewed/handoff",
+      "receiptSha256": "c344a160fc50e8893720b3b3f36f94685832044463db3edfa04bccd145ccb16b",
+      "route": "reviewed"
+    }
+  ],
+  "schemaVersion": 1
+}

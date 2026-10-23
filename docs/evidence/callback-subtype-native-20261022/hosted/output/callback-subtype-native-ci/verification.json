@@ -1,0 +1,32 @@
+{
+  "kind": "native",
+  "producerCommit": "733693e06a1461541d4d3d7a43d8496d26c2df45",
+  "profiles": [
+    "c",
+    "cpp"
+  ],
+  "reportSha256": "c30951d142847750fb42b5f37ffae137bd118193f53f75b2ff47bab4e949743b",
+  "reports": 4,
+  "retainedPackages": {
+    "routes": [
+      {
+        "archiveBytes": 105709220,
+        "archives": 2,
+        "receiptSha256": "71b0ef51d8f48e1e9cf162a569fa15d87092323eeecc5420cbab7e99155b8536",
+        "route": "ordinary"
+      },
+      {
+        "archiveBytes": 105715447,
+        "archives": 2,
+        "receiptSha256": "c344a160fc50e8893720b3b3f36f94685832044463db3edfa04bccd145ccb16b",
+        "route": "reviewed"
+      }
+    ],
+    "schemaVersion": 1
+  },
+  "routes": [
+    "ordinary",
+    "reviewed"
+  ],
+  "schemaVersion": 1
+}

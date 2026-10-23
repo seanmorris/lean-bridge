@@ -1,0 +1,57 @@
+{
+  "component": {
+    "id": "callbacksubtypes@1.0.0",
+    "name": "callbacksubtypes",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 53904652,
+          "path": "archives/callbacksubtypes-1.0.0-c.tar.gz",
+          "sha256": "3f28e778af5de66f4f972639fce5682f7d61d99da48dccabdd28b77f2068de85"
+        }
+      ],
+      "ecosystem": "c",
+      "name": "callbacksubtypes",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "c",
+      "version": "1.0.0"
+    },
+    {
+      "artifacts": [
+        {
+          "bytes": 51810795,
+          "path": "archives/callbacksubtypes-1.0.0-cpp.tar.gz",
+          "sha256": "306b07723b1197e2ef6e311a6883484d90642c0d5d7c941e392072ed8fd7a607"
+        }
+      ],
+      "ecosystem": "cpp",
+      "name": "callbacksubtypes",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "cpp",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "378fc34a110198a0ade5c2d34caef8f73b007b9d7a5de6f9195aacc97612e733",
+      "id": "native-library-v1",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "64b3f7d23802e5ace3e3cd4a14afbcac41fd7656b12a2cd184f476864bc1aac3"
+  }
+}
