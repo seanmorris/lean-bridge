@@ -227,6 +227,8 @@ const fixtureFor = async profile => {
 	if(profile === "wit-wasi")
 	{
 		const source = `#define LEAN_BRIDGE_OWNED_SUBTYPE_NO_CALLBACK 1\n${await readFile("tests/fixtures/structured-types/owned-subtype-installed.c", "utf8")}`
+			.replaceAll("owned_subtypes", "owned_subtypes_wasmtime")
+			.replaceAll("OWNED_SUBTYPES", "OWNED_SUBTYPES_WASMTIME")
 			.replace("owned-subtype-c:", "owned-subtype-wit:");
 		return { source: () => source, success: markers[profile]
 			, wit: [/resource identity-ticket/u, /echo-record-alternate: func/u, /transfer-record: func/u]
@@ -243,6 +245,28 @@ const fixtureFor = async profile => {
 		, receiptKind: "lean-bridge-owned-php-package", receiptSchemaVersion: 1 });
 	return fixture;
 };
+
+test("owned Subtype WIT consumer names the installed host API", async t => {
+	const source = (await fixtureFor("wit-wasi")).source();
+	assert.match(source, /#include "owned_subtypes_wasmtime\.h"/u);
+	assert.match(source, /owned_subtypes_wasmtime_session_open/u);
+	assert.match(source, /OWNED_SUBTYPES_WASMTIME_INVALID_ARGUMENT/u);
+	assert.doesNotMatch(source, /\bowned_subtypes_session_open\b/u);
+	const generated = generateOwnedCppPackage(ownedSubtypePackageReviewedIr(), {
+		transferredInputs: true, hostCallbacks: false
+	});
+	const prefix = `${generated.c.prefix}_wasmtime`;
+	const header = generated.c.header
+		.replaceAll(generated.c.prefix, prefix)
+		.replaceAll(generated.c.prefix.toUpperCase(), prefix.toUpperCase());
+	const directory = await mkdtemp(join(tmpdir(), "lean-owned-subtype-wit-consumer-"));
+	t.after(() => rm(directory, { recursive: true, force: true }));
+	await saveLakeFile(directory, `include/${prefix}.h`, header);
+	await saveLakeFile(directory, "consumer.c", source);
+	await runCopied("/usr/bin/cc", ["-std=c11", "-Wall", "-Wextra", "-Werror"
+		, "-I", "include", "-fsyntax-only", "consumer.c"], directory
+	, { PATH: "/usr/bin:/bin" });
+});
 
 const relocate = async ({ lane, root, consumers, observations, packages, witReceiptBytes }) => {
 	const repeated = {};
