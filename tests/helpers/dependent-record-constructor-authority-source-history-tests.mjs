@@ -40,6 +40,16 @@ test("type-surface history streams linear, integration and merge evidence", () =
 	assert.equal(statistics.branchedTransitions, 1);
 });
 
+test("type-surface history reaches exact pre-Fin evidence milestones", async () => {
+	const path = "docs/type-surface.v1.json";
+	const source = await readFile(path, "utf8");
+	const expected
+		= "d5daab05de270d26ea13f84100fb13dc73e7b0d75aa7b2ec6b1b7ea6087da500";
+	assert.equal(sha256(beforeFinRefinementSource(
+		path, source, expected
+	)), expected);
+});
+
 test("dependent-record constructor authority restores every exact source"
 	, async () => {
 		const record = JSON.parse(await readFile(

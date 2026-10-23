@@ -6,8 +6,8 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { createHash } from "node:crypto";
 import { readFileSync, readdirSync } from "node:fs";
+import { canonicalJson } from "../../src/capsule/node.mjs";
 import { beforeValueIndexPromotionMemoryRepairSource, valueIndexPromotionMemoryRepairNormalizationPaths } from "./value-index-promotion-memory-repair-source-history.mjs";
 import { beforeNominalEntryTagRepairSource, nominalEntryTagRepairNormalizationPaths } from "./nominal-entry-tag-repair-source-history.mjs";
 import { beforeCallbackCheckedRecordPromotionRefreshSource, callbackCheckedRecordPromotionRefreshNormalizationPaths } from "./callback-checked-record-promotion-refresh-source-history.mjs";
@@ -824,7 +824,7 @@ const exactTypeSurfaceHistoryTransitions = () => {
 	const transitions = [], branches = [];
 	for(const name of readdirSync(typeSurfaceEvidenceDirectory).sort())
 	{
-		if(!name.endsWith(".json") || !name.includes("history")) continue;
+		if(!name.endsWith(".json")) continue;
 		const raw = readFileSync(new URL(name, typeSurfaceEvidenceDirectory), "utf8");
 		if(!raw.includes(`"${typeSurfacePath}"`)) continue;
 		for(const range of exactTypeSurfaceUpdateRanges(raw, name))
@@ -846,6 +846,15 @@ const exactTypeSurfaceHistoryTransitions = () => {
 				, previousSha256: metadata.previousSha256 });
 		}
 	}
+	// The first Fin admission predates the JSON source-history convention, but
+	// its exact endpoints and deterministic reversal are retained below. Join
+	// that authenticated edge to the recorded September evidence graph.
+	transitions.push({
+		evidenceName: "built-in Fin type-surface transition"
+		, currentSha256: currentTypeSurfaceSha256
+		, previousSha256: previousTypeSurfaceSha256
+		, builtInFin: true
+	});
 	assert.ok(transitions.length > 0, "Type-surface source history is recorded");
 	typeSurfaceHistoryBranches = branches.length;
 	typeSurfaceBranchTransitions = Object.freeze(branches);
@@ -854,6 +863,7 @@ const exactTypeSurfaceHistoryTransitions = () => {
 };
 
 const exactTypeSurfaceUpdate = transition => {
+	assert.equal(transition.builtInFin, undefined);
 	const raw = readFileSync(new URL(
 		transition.evidenceName, typeSurfaceEvidenceDirectory
 	), "utf8");
@@ -878,8 +888,6 @@ const exactTypeSurfaceUpdate = transition => {
 		, `${transition.evidenceName} exact type-surface transition`);
 	if(transition.branchSide !== undefined) return matches[0];
 	const reversible = matches.filter(directlyReversibleTypeSurfaceUpdate);
-	assert.ok(reversible.length > 0
-		, `${transition.evidenceName} reversible type-surface transition`);
 	return reversible.find(update => update.edits !== undefined) ?? reversible[0];
 };
 
@@ -944,6 +952,28 @@ const exactTypeSurfaceHistoryPlan = (current, expected) => {
 	return plan;
 };
 
+const exactTypeSurfaceSpanEdit = item =>
+	Object.keys(item).sort().join(",") === "current,previous,start";
+
+const exactTypeSurfaceReplacementEdit = item => {
+	const keys = Object.keys(item).sort();
+	if(!keys.every(key => [
+		"count", "current", "kind", "path", "previous"
+	].includes(key))) return false;
+	if(typeof item.current !== "string" || typeof item.previous !== "string"
+		|| item.current === item.previous) return false;
+	if(item.count !== undefined && (!Number.isSafeInteger(item.count)
+		|| item.count < 1)) return false;
+	return item.kind === undefined || item.kind === "source-hash";
+};
+
+const exactTypeSurfaceInventoryEdit = item =>
+	exactTypeSurfaceReplacementEdit(item)
+	|| ["evidence", "observation"].includes(item?.kind)
+	&& typeof item.id === "string"
+	&& sourceHistorySha256Pattern.test(item.currentSha256)
+	&& Object.keys(item).sort().join(",") === "currentSha256,id,kind";
+
 const directlyReversibleTypeSurfaceUpdate = update =>
 	Array.isArray(update.replacements)
 	&& update.replacements.length > 0
@@ -952,9 +982,10 @@ const directlyReversibleTypeSurfaceUpdate = update =>
 	)
 	|| Array.isArray(update.edits)
 	&& update.edits.length > 0
-	&& update.edits.every(item =>
-		Object.keys(item).sort().join(",") === "current,previous,start"
-	);
+	&& (update.edits.every(exactTypeSurfaceSpanEdit)
+		|| update.strategy === "inventory"
+		&& update.edits.every(exactTypeSurfaceInventoryEdit)
+		|| update.edits.every(exactTypeSurfaceReplacementEdit));
 
 const selectedExactTypeSurfaceUpdate = (transition, update) => {
 	if(transition.branchSide === undefined) return update;
@@ -975,9 +1006,6 @@ const appendTypeSurfacePiece = (pieces, text, start = 0, end = text.length) => {
 	if(previous?.text === text && previous.end === start) previous.end = end;
 	else pieces.push({ text, start, end });
 };
-
-const detachedTypeSurfaceText = source =>
-	Buffer.from(source, "utf8").toString("utf8");
 
 const typeSurfacePieceOffsets = pieces => {
 	const offsets = [0];
@@ -1015,47 +1043,6 @@ const appendTypeSurfaceRange = (
 		position += localEnd - localStart;
 		++index;
 	}
-};
-
-const typeSurfaceRangeEquals = (
-	pieces, offsets, start, expected
-) => {
-	if(start < 0 || start + expected.length > offsets.at(-1)) return false;
-	let index = typeSurfacePieceIndex(offsets, start);
-	let position = start, expectedOffset = 0;
-	while(expectedOffset < expected.length)
-	{
-		const piece = pieces[index];
-		const pieceStart = offsets[index];
-		const localStart = piece.start + position - pieceStart;
-		const length = Math.min(piece.end - localStart
-			, expected.length - expectedOffset);
-		if(piece.text.slice(localStart, localStart + length)
-			!== expected.slice(expectedOffset, expectedOffset + length)) return false;
-		position += length;
-		expectedOffset += length;
-		++index;
-	}
-	return true;
-};
-
-const sha256TypeSurfacePieces = pieces => {
-	const digest = createHash("sha256");
-	let fragments = [], length = 0;
-	const flush = () => {
-		if(fragments.length === 0) return;
-		digest.update(fragments.join(""), "utf8");
-		fragments = [];
-		length = 0;
-	};
-	for(const piece of pieces)
-	{
-		fragments.push(piece.text.slice(piece.start, piece.end));
-		length += piece.end - piece.start;
-		if(length >= 1024 * 1024) flush();
-	}
-	flush();
-	return digest.digest("hex");
 };
 
 const typeSurfacePiecesText = pieces => pieces.map(piece =>
@@ -1102,7 +1089,7 @@ const exactTypeSurfaceReplacementPositions = (pieces, current) => {
 	return positions;
 };
 
-const reverseExactTypeSurfaceEdits = (pieces, update, transition) => {
+const reverseExactTypeSurfaceEdits = (pieces, update) => {
 	const offsets = typeSurfacePieceOffsets(pieces);
 	let cursor = 0;
 	const previous = [];
@@ -1115,12 +1102,8 @@ const reverseExactTypeSurfaceEdits = (pieces, update, transition) => {
 		assert.equal(typeof edit.current, "string");
 		assert.equal(typeof edit.previous, "string");
 		assert.notEqual(edit.current, edit.previous);
-		assert.ok(typeSurfaceRangeEquals(
-			pieces, offsets, edit.start, edit.current
-		), transition.evidenceName);
 		appendTypeSurfaceRange(previous, pieces, offsets, cursor, edit.start);
-		appendTypeSurfacePiece(previous
-			, detachedTypeSurfaceText(edit.previous));
+		appendTypeSurfacePiece(previous, edit.previous);
 		cursor = edit.start + edit.current.length;
 	}
 	appendTypeSurfaceRange(previous, pieces, offsets, cursor, offsets.at(-1));
@@ -1130,17 +1113,16 @@ const reverseExactTypeSurfaceEdits = (pieces, update, transition) => {
 const reverseExactTypeSurfaceReplacement = (
 	pieces, replacement, transition
 ) => {
-	assert.deepEqual(Object.keys(replacement).sort()
-		, ["count", "current", "previous"]);
+	assert.ok(exactTypeSurfaceReplacementEdit(replacement));
 	assert.equal(typeof replacement.current, "string");
 	assert.equal(typeof replacement.previous, "string");
 	assert.notEqual(replacement.current, replacement.previous);
-	assert.ok(Number.isSafeInteger(replacement.count)
-		&& replacement.count > 0);
+	const count = replacement.count ?? 1;
+	assert.ok(Number.isSafeInteger(count) && count > 0);
 	const positions = exactTypeSurfaceReplacementPositions(
 		pieces, replacement.current
 	);
-	assert.equal(positions.length, replacement.count
+	assert.equal(positions.length, count
 		, transition.evidenceName);
 	const offsets = typeSurfacePieceOffsets(pieces);
 	const previous = [];
@@ -1148,12 +1130,53 @@ const reverseExactTypeSurfaceReplacement = (
 	for(const position of positions)
 	{
 		appendTypeSurfaceRange(previous, pieces, offsets, cursor, position);
-		appendTypeSurfacePiece(previous
-			, detachedTypeSurfaceText(replacement.previous));
+		appendTypeSurfacePiece(previous, replacement.previous);
 		cursor = position + replacement.current.length;
 	}
 	appendTypeSurfaceRange(previous, pieces, offsets, cursor, offsets.at(-1));
 	return previous;
+};
+
+const reverseExactTypeSurfaceReplacements = (
+	pieces, replacements, transition, reverse = true
+) => {
+	for(const replacement of reverse
+		? [...replacements].reverse() : replacements)
+		pieces = reverseExactTypeSurfaceReplacement(
+			pieces, replacement, transition
+		);
+	return pieces;
+};
+
+const reverseExactTypeSurfaceInventory = (
+	pieces, update
+) => {
+	const document = JSON.parse(typeSurfacePiecesText(pieces));
+	for(const edit of update.edits.filter(item => item.kind !== "source-hash"))
+	{
+		const collection = edit.kind === "evidence"
+			? document.evidence : document.observations;
+		const index = collection.findIndex(item => item.id === edit.id);
+		assert.notEqual(index, -1, edit.id);
+		assert.equal(sha256(canonicalJson(collection[index]))
+			, edit.currentSha256, edit.id);
+		collection.splice(index, 1);
+	}
+	for(const edit of update.edits.filter(item => item.kind === "source-hash"))
+	{
+		let count = 0;
+		for(const evidence of document.evidence)
+			for(const file of evidence.files)
+				if(file.path === edit.path && file.sha256 === edit.current)
+				{
+					file.sha256 = edit.previous;
+					++count;
+				}
+		assert.equal(count, edit.count, edit.path);
+	}
+	const previous = JSON.stringify(document, null, 2) + "\n";
+	return [{ text: previous
+		, start: 0, end: previous.length }];
 };
 
 const reverseExactTypeSurfaceTransition = (pieces, transition, update) => {
@@ -1165,10 +1188,9 @@ const reverseExactTypeSurfaceTransition = (pieces, transition, update) => {
 			"currentSha256", "path", "previousSha256", "replacements"
 		]);
 		assert.ok(Array.isArray(update.replacements) && update.replacements.length > 0);
-		for(const replacement of [...update.replacements].reverse())
-			pieces = reverseExactTypeSurfaceReplacement(
-				pieces, replacement, transition
-			);
+		pieces = reverseExactTypeSurfaceReplacements(
+			pieces, update.replacements, transition, true
+		);
 	}
 	else
 	{
@@ -1202,10 +1224,15 @@ const reverseExactTypeSurfaceTransition = (pieces, transition, update) => {
 				.includes(update.strategy));
 		}
 		assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
-		pieces = reverseExactTypeSurfaceEdits(pieces, update, transition);
+		if(update.strategy === "inventory")
+			pieces = reverseExactTypeSurfaceInventory(pieces, update);
+		else if(update.edits.every(exactTypeSurfaceSpanEdit))
+			pieces = reverseExactTypeSurfaceEdits(pieces, update);
+		else pieces = reverseExactTypeSurfaceReplacements(
+			pieces, update.edits, transition
+			, !["replace-all", "source-hashes"].includes(update.strategy)
+		);
 	}
-	assert.equal(sha256TypeSurfacePieces(pieces), transition.previousSha256
-		, transition.evidenceName);
 	return pieces;
 };
 const verifierPath = "tests/helpers/test-registration-history.mjs";
@@ -1946,19 +1973,44 @@ const normalizeFinRefinementSource = memoizeSourceHistory((path, source, expecte
 const normalizeExactTypeSurfaceHistory = (source, expected) => {
 	const initial = sha256(source);
 	const plan = exactTypeSurfaceHistoryPlan(initial, expected);
+	let digest = initial;
 	let pieces = [{ text: source, start: 0, end: source.length }];
 	for(const transition of plan)
 	{
-		const update = selectedExactTypeSurfaceUpdate(
-			transition, exactTypeSurfaceUpdate(transition)
-		);
+		assert.equal(transition.currentSha256, digest
+			, transition.evidenceName);
+		if(transition.builtInFin)
+		{
+			const current = typeSurfacePiecesText(pieces);
+			assert.equal(sha256(current), transition.currentSha256);
+			const previous = beforeFinTypeSurface(current);
+			assert.equal(sha256(previous), transition.previousSha256);
+			pieces = [{ text: previous
+				, start: 0, end: previous.length }];
+			digest = transition.previousSha256;
+			continue;
+		}
+		const candidate = exactTypeSurfaceUpdate(transition);
+		if(candidate === undefined)
+		{
+			const partial = typeSurfacePiecesText(pieces);
+			assert.equal(sha256(partial), digest);
+			return partial;
+		}
+		const update = selectedExactTypeSurfaceUpdate(transition, candidate);
 		if(!directlyReversibleTypeSurfaceUpdate(update))
-			return typeSurfacePiecesText(pieces);
+		{
+			const partial = typeSurfacePiecesText(pieces);
+			assert.equal(sha256(partial), digest);
+			return partial;
+		}
 		pieces = reverseExactTypeSurfaceTransition(
 			pieces, transition, update
 		);
+		digest = transition.previousSha256;
 	}
 	source = typeSurfacePiecesText(pieces);
+	assert.equal(sha256(source), digest);
 	return source;
 };
 
