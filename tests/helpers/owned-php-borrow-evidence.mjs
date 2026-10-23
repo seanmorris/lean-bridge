@@ -7,15 +7,9 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { ownedReceiverHistoricalBytes } from "./owned-receiver-history.mjs";
-import { generateOwnedCPackage } from "../../src/backends/c/owned-package.mjs";
-import { generateOwnedPhpCalls } from "../../src/backends/php/owned-calls.mjs";
-import { generateOwnedPhpPackage } from "../../src/backends/php/owned-package.mjs";
-import { ownedPhpAdapterSources } from "../../src/build/owned-php-artifacts.mjs";
-import { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from "../../src/build/native-graph-model.mjs";
-import { validatePackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
-import { validateBrickMathInstall } from "./brick-math.mjs";
-import { ownedRustBorrowSource } from "./owned-rust-borrow-fixture.mjs";
 import { assertOwnedPhpCi } from "./owned-php-ci.mjs";
+import { moduleAtProducer } from "./producer-module.mjs";
+import { bytesAtProducer } from "./producer-source.mjs";
 
 export const ownedPhpBorrowCommand = "npm run test:owned-php-borrows";
 export const ownedPhpBorrowScope = Object.freeze({
@@ -37,6 +31,21 @@ export const ownedPhpBorrowScope = Object.freeze({
 	, docker: false, otherConsumerBindings: false, installedSupportPromotions: 0
 });
 const capabilities = { transferredInputs: true, anchoredResults: true };
+const producerCommit = "3da93d67603c56529d9b4dce76f53ae60a8fdf51";
+const historical = path => bytesAtProducer(producerCommit, path);
+let producerPromise;
+const producerAtMilestone = () => producerPromise ??= Promise.all([
+	"src/backends/c/owned-package.mjs"
+	, "src/backends/php/owned-calls.mjs"
+	, "src/backends/php/owned-package.mjs"
+	, "src/build/native-graph-model.mjs"
+	, "src/build/owned-php-artifacts.mjs"
+	, "src/release/package-set-receipt.mjs"
+	, "tests/helpers/brick-math.mjs"
+	, "tests/helpers/owned-php-ci.mjs"
+	, "tests/helpers/owned-rust-borrow-fixture.mjs"
+].map(path => moduleAtProducer(producerCommit, path))).then(modules =>
+	Object.assign({}, ...modules));
 const flags = (value, names) => { for(const name of names) assert.equal(value[name], true, name); };
 const hashes = files => Object.fromEntries(Object.entries(files).map(([path, source]) => [path, sha256(source)]));
 const block = (text, heading, language) => {
@@ -82,12 +91,14 @@ size_t owned_test_identities(void) {
  *
  * @param item - One source path's complete runtime report.
  * @param model - Compiler-authenticated native model.
+ * @param producer - Immutable producer module closure.
  */
-const runtime = async (item, model) => {
+const runtime = async (item, model, producer) => {
 	assert.equal(item.actualLean, true); assert.equal(item.installedPackage, false);
-	const calls = generateOwnedPhpCalls(model.bindingIr, capabilities);
-	const c = generateOwnedCPackage({ ...item.input, hostCallbacks: true, ...capabilities });
-	assert.equal(item.consumerSha256, sha256(await readFile("tests/fixtures/structured-types/owned-php-borrows.php")));
+	const calls = producer.generateOwnedPhpCalls(model.bindingIr, capabilities);
+	const c = producer.generateOwnedCPackage({ ...item.input, hostCallbacks: true, ...capabilities });
+	assert.equal(item.consumerSha256, sha256(historical(
+		"tests/fixtures/structured-types/owned-php-borrows.php")));
 	assert.equal(item.nativeSourceSha256, sha256(nativeProbe(c, calls, true)));
 	assert.equal(item.publicHeaderSha256, sha256(c.publicHeader));
 	assert.deepEqual(item.generated, hashes(calls.files));
@@ -118,16 +129,26 @@ const runtime = async (item, model) => {
  * @param record - Reports from ordinary and reviewed builds and installations.
  */
 export const assertOwnedPhpBorrowArtifacts = async record => {
+	const producer = await producerAtMilestone();
+	for(const name of [
+		"assertOwnedPhpCi", "createCompiledNativeModel"
+		, "generateCompiledNativeLeanAdapters", "generateOwnedCPackage"
+		, "generateOwnedPhpCalls", "generateOwnedPhpPackage"
+		, "ownedPhpAdapterSources", "validateBrickMathInstall"
+		, "validatePackageSetReceipt"
+	]) assert.equal(typeof producer[name], "function", name);
+	assert.equal(typeof producer.ownedRustBorrowSource, "string");
 	assert.deepEqual(record.runtime.map(item => item.mode), ["ordinary", "reviewed"]);
 	assert.deepEqual(record.packages.map(item => item.mode), ["ordinary", "reviewed"]);
-	const lean = await readFile("tests/fixtures/onboarding/owned-aggregates/Owned.lean", "utf8");
+	const lean = historical(
+		"tests/fixtures/onboarding/owned-aggregates/Owned.lean").toString();
 	const extractor = sha256(ownedReceiverHistoricalBytes("src/analyze/NativeExports.lean", await readFile("src/analyze/NativeExports.lean")));
 	for(const item of [...record.runtime, ...record.packages])
 	{
 		assert.equal(Boolean(item.input.sourceIdentity.reviewedBindingIr), item.mode === "reviewed");
-		assert.equal(item.input.sourceIdentity.modules.find(module => module.module === "Owned").source.sha256, sha256(lean + ownedRustBorrowSource));
+		assert.equal(item.input.sourceIdentity.modules.find(module => module.module === "Owned").source.sha256, sha256(lean + producer.ownedRustBorrowSource));
 		assert.equal(item.input.sourceIdentity.extractorSha256, extractor);
-		const model = createCompiledNativeModel(item.input, {
+		const model = producer.createCompiledNativeModel(item.input, {
 			ownedGraphs: true, ownedHostCallbacks: true
 			, ownedInputTransfers: true, ownedAnchoredResults: true
 		});
@@ -136,18 +157,21 @@ export const assertOwnedPhpBorrowArtifacts = async record => {
 		assert.equal(model.ownedGraph.inputTransfers.exports.length, 4);
 		if(record.runtime.includes(item))
 		{
-			await runtime(item, model); continue;
+			await runtime(item, model, producer); continue;
 		}
 		flags(item, ["compiledLean", "installedPackage", "sourceUnchanged"
 			, "sourceFreeInstallation", "sourceFreeRelocatedExecution", "handoffRemoved"
 			, "deterministicReassembly", "cliAdmission"
 			, "receiptVerifiedWithoutProducer"]);
-		assert.equal(item.sourceSha256, sha256(await readFile("tests/fixtures/structured-types/owned-installed-php-borrows.php")));
-		assert.equal(item.loaderSourceSha256, sha256(await readFile("tests/fixtures/structured-types/owned-installed-php-loader.php")));
+		assert.equal(item.sourceSha256, sha256(historical(
+			"tests/fixtures/structured-types/owned-installed-php-borrows.php")));
+		assert.equal(item.loaderSourceSha256, sha256(historical(
+			"tests/fixtures/structured-types/owned-installed-php-loader.php")));
 		assert.equal(item.cliBuild.status, "ok"); assert.equal(item.verification.status, "ok");
 		assert.equal(item.verification.result.verificationType, "local-package-set");
-		validatePackageSetReceipt(item.packageSetReceipt);
-		const component = item.componentReceipt, native = generateCompiledNativeLeanAdapters(model);
+		producer.validatePackageSetReceipt(item.packageSetReceipt);
+		const component = item.componentReceipt;
+		const native = producer.generateCompiledNativeLeanAdapters(model);
 		assert.equal(component.schemaVersion, 5);
 		assert.equal(component.modelSha256, sha256(canonicalJson(model)));
 		assert.equal(component.bindingIrSha256, model.bindingIrSha256);
@@ -161,10 +185,14 @@ export const assertOwnedPhpBorrowArtifacts = async record => {
 		assert.equal(item.adapterReceipt.schemaVersion, 3);
 		assert.deepEqual(item.adapterReceipt.ownedValues.resultAnchors, model.ownedGraph.resultAnchors);
 		assert.deepEqual(item.adapterReceipt.ownedValues.inputTransfers, model.ownedGraph.inputTransfers);
-		const php = generateOwnedPhpPackage(model.bindingIr, null, capabilities);
-		const c = generateOwnedCPackage({ ...item.input, hostCallbacks: true, ...capabilities });
+		const php = producer.generateOwnedPhpPackage(
+			model.bindingIr, null, capabilities);
+		const c = producer.generateOwnedCPackage({
+			...item.input, hostCallbacks: true, ...capabilities
+		});
 		assert.deepEqual(item.adapterReceipt.phpValues, php.contract);
-		for(const [path, source] of Object.entries(ownedPhpAdapterSources(c, php)))
+		for(const [path, source] of Object.entries(
+			producer.ownedPhpAdapterSources(c, php)))
 			assert.deepEqual(item.adapterReceipt.files[path], { bytes: Buffer.byteLength(source), sha256: sha256(source) });
 		const receipt = item.installation.receipt;
 		const libraries = Object.fromEntries(Object.entries(receipt.files)
@@ -176,7 +204,8 @@ export const assertOwnedPhpBorrowArtifacts = async record => {
 			, componentReceiptSha256: sha256(canonicalJson(component))
 			, ownedValues: php.contract
 			, library: item.adapterReceipt.library, libraries };
-		const packageFiles = generateOwnedPhpPackage(model.bindingIr, evidence, capabilities).files;
+		const packageFiles = producer.generateOwnedPhpPackage(
+			model.bindingIr, evidence, capabilities).files;
 		for(const [path, source] of Object.entries(packageFiles))
 			assert.deepEqual(receipt.files[path], { bytes: Buffer.byteLength(source), sha256: sha256(source) }, path);
 		assert.deepEqual(item.observations.map(value => value.caller), ["weak", "strict"]);
@@ -195,7 +224,8 @@ export const assertOwnedPhpBorrowArtifacts = async record => {
 			"emptyHome", "emptyCache", "offline", "lockedInstall"
 			, "scriptsDisabled", "pluginsDisabled", "composerProjectRemoved"
 			, "relocated", "compilerFree", "iniDisabled"]);
-		validateBrickMathInstall(item.installation, item.installation.deployment);
+		producer.validateBrickMathInstall(
+			item.installation, item.installation.deployment);
 		assert.deepEqual(receipt.ownedValues, php.contract);
 		assert.equal(item.installation.archiveSha256, item.built.packages[0].sha256);
 		for(const [path, identity] of Object.entries(receipt.files))
@@ -204,7 +234,7 @@ export const assertOwnedPhpBorrowArtifacts = async record => {
 	const borrow = record.borrowOnly;
 	assert.equal(borrow.actualLean, true);
 	assert.deepEqual(borrow.observations.map(item => item.mode), ["ordinary", "reviewed"]);
-	const testSource = await readFile("tests/owned-php-borrows.test.mjs", "utf8");
+	const testSource = historical("tests/owned-php-borrows.test.mjs").toString();
 	const probe = testSource.match(/const source = `([^]*?)`;/u)?.[1].replaceAll("\\\\", "\\"); assert.ok(probe);
 	for(const item of borrow.observations)
 	{
@@ -213,17 +243,21 @@ export const assertOwnedPhpBorrowArtifacts = async record => {
 		assert.equal(item.sourceIdentity.modules.find(module => module.module === "Owned").source.sha256, sha256(lean));
 		assert.equal(item.sourceIdentity.extractorSha256, extractor);
 		const input = { metadata: item.metadata, sourceIdentity: item.sourceIdentity, component: item.component };
-		const model = createCompiledNativeModel(input, { ownedGraphs: true, ownedHostCallbacks: true, ownedAnchoredResults: true });
+		const model = producer.createCompiledNativeModel(input, { ownedGraphs: true, ownedHostCallbacks: true, ownedAnchoredResults: true });
 		assert.equal(model.exports.length, 22); assert.equal(model.ownedGraph.inputTransfers, undefined);
 		assert.equal(model.ownedGraph.resultAnchors.exports.length, 18);
-		const calls = generateOwnedPhpCalls(model.bindingIr, { anchoredResults: true });
-		const c = generateOwnedCPackage({ ...input, hostCallbacks: true, anchoredResults: true });
+		const calls = producer.generateOwnedPhpCalls(
+			model.bindingIr, { anchoredResults: true });
+		const c = producer.generateOwnedCPackage({
+			...input, hostCallbacks: true, anchoredResults: true
+		});
 		assert.equal(item.nativeSourceSha256, sha256(nativeProbe(c, calls, false)));
 		assert.equal(item.publicHeaderSha256, sha256(c.publicHeader));
 		assert.deepEqual(item.generated, hashes(calls.files));
 		assert.deepEqual(item.observed, { checks: 7, live: 0, identities: 0 });
 	}
-	const author = await readFile("docs/publish/php.md", "utf8"), consumer = await readFile("docs/php.md", "utf8");
+	const author = historical("docs/publish/php.md").toString();
+	const consumer = historical("docs/php.md").toString();
 	const config = canonicalJson({ ...JSON.parse(block(author, "### Export resource-containing values", "json"))
 		, ...JSON.parse(block(author, "### Anchor a result to an input", "json")) });
 	const doc = record.documentation;
@@ -233,8 +267,9 @@ export const assertOwnedPhpBorrowArtifacts = async record => {
 		, config: sha256(config)
 		, example: sha256(block(consumer, "### Owner-anchored results", "php")) });
 	assert.deepEqual(doc.observed, { code: 0, stdout: "42\nexpired\n42\n", stderr: "" });
-	validatePackageSetReceipt(doc.packageSetReceipt); assert.equal(doc.verification.status, "ok");
-	validateBrickMathInstall(doc.installation, doc.installation.deployment);
+	producer.validatePackageSetReceipt(doc.packageSetReceipt);
+	assert.equal(doc.verification.status, "ok");
+	producer.validateBrickMathInstall(doc.installation, doc.installation.deployment);
 };
 
 /**
@@ -243,14 +278,18 @@ export const assertOwnedPhpBorrowArtifacts = async record => {
  * @param record - Complete milestone receipt.
  */
 export const assertOwnedPhpBorrowExecution = async record => {
+	const producer = await producerAtMilestone();
 	assert.equal(record.acceptance, "passed"); assert.deepEqual(record.scope, ownedPhpBorrowScope);
+	assert.equal(record.baselineRevision
+		, "25745d5f3683a3919b40bbc8ce64f6140e615e39");
 	assert.equal(record.run.command, ownedPhpBorrowCommand); assert.equal(record.run.exitCode, 0);
 	assert.equal(record.run.sha256, sha256(record.run.text));
 	for(const [key, value] of Object.entries({ tests: 10, pass: 10, fail: 0, skipped: 0, cancelled: 0, todo: 0 }))
 		assert.match(record.run.text, new RegExp("^# " + key + " " + value + "$", "mu"));
 	assert.doesNotMatch(record.run.text, /^not ok|# SKIP|# TODO/mu);
 	await assertOwnedPhpBorrowArtifacts(record);
-	assertOwnedPhpCi(await readFile(".github/workflows/consumer-matrix.yml", "utf8"));
+	producer.assertOwnedPhpCi(historical(
+		".github/workflows/consumer-matrix.yml").toString());
 };
 
 /**

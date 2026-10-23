@@ -6,12 +6,8 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
-import { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from "../../src/build/native-graph-model.mjs";
-import { generateOwnedCPackage } from "../../src/backends/c/owned-package.mjs";
-import { generateOwnedPhpPackage } from "../../src/backends/php/owned-package.mjs";
-import { ownedPhpAdapterSources } from "../../src/build/owned-php-artifacts.mjs";
-import { validateBrickMathInstall } from "./brick-math.mjs";
-import { assertOwnedPhpCi } from "./owned-php-ci.mjs";
+import { moduleAtProducer } from "./producer-module.mjs";
+import { bytesAtProducer } from "./producer-source.mjs";
 import { ownedPhpWasmHistoricalBytes } from "./owned-php-wasm-source-history.mjs";
 
 export const ownedPhpScope = {
@@ -31,6 +27,18 @@ export const ownedPhpCommands = {
 	, legacy: "node --test tests/php-recursive-callable-contract.test.mjs"
 };
 const identity = source => ({ bytes: Buffer.byteLength(source), sha256: sha256(source) });
+const producerCommit = "76856dbb3954bdc7592493cf8bd1269576e3770e";
+const historical = path => bytesAtProducer(producerCommit, path);
+let producerPromise;
+const producerAtMilestone = () => producerPromise ??= Promise.all([
+	"src/backends/c/owned-package.mjs"
+	, "src/backends/php/owned-package.mjs"
+	, "src/build/native-graph-model.mjs"
+	, "src/build/owned-php-artifacts.mjs"
+	, "tests/helpers/brick-math.mjs"
+	, "tests/helpers/owned-php-ci.mjs"
+].map(path => moduleAtProducer(producerCommit, path))).then(modules =>
+	Object.assign({}, ...modules));
 const digest = hash => assert.match(hash, /^[a-f0-9]{64}$/u);
 const flags = (record, names) => { for(const name of names) assert.equal(record[name], true, name); };
 const passing = (run, name, count) => {
@@ -43,14 +51,14 @@ const passing = (run, name, count) => {
 	assert.deepEqual(run.text.split("\n").filter(line => /^ok .* # SKIP/u.test(line)), skipped
 		? ["ok 4 - owned PHP values execute in the actual 32-bit PHP-Wasm interpreter # SKIP"] : []);
 };
-const installation = report => {
+const installation = (report, producer) => {
 	flags(report, ["emptyHome", "emptyCache", "offline", "lockedInstall"
 		, "scriptsDisabled", "pluginsDisabled", "composerProjectRemoved"
 		, "relocated", "compilerFree", "iniDisabled"]);
 	assert.match(report.version, /^8\.[2-9]\.\d+$/u);
 	assert.match(report.composerVersion, /^Composer version 2\./u);
 	for(const hash of [report.hostSha256, report.composerSha256, report.lockSha256, report.archiveSha256]) digest(hash);
-	validateBrickMathInstall(report, report.deployment);
+	producer.validateBrickMathInstall(report, report.deployment);
 	for(const receipt of report.receipts)
 	{
 		assert.equal(receipt.ecosystem, "composer");
@@ -64,7 +72,7 @@ const installation = report => {
 		assert.equal(locked.scripts, undefined);
 	}
 };
-const packageSet = (report, targets) => {
+const packageSet = (report, targets, producer) => {
 	assert.equal(report.cliBuild.status, "ok");
 	assert.deepEqual(report.cliBuild.result.targets, targets);
 	assert.deepEqual([...new Set(report.packageSetReceipt.packages.map(pkg => pkg.target))], targets);
@@ -81,35 +89,43 @@ const packageSet = (report, targets) => {
 	assert.equal(report.installation.archiveSha256, pkg.sha256);
 	assert.equal(report.installation.receipt.name, pkg.name);
 	assert.equal(report.installation.receipt.version, pkg.version);
-	installation(report.installation);
+	installation(report.installation, producer);
 };
-const packageReport = async (report, mode) => {
+const packageReport = async (report, mode, producer) => {
 	flags(report, ["cliAdmission", "compiledLean", "installedPackage"
 		, "sourceUnchanged"
 		, "sourceFreeInstallation", "sourceFreeRelocatedExecution", "handoffRemoved"
 		, "deterministicReassembly", "receiptVerifiedWithoutProducer"]);
-	assert.equal(report.mode, mode); packageSet(report, ["php-native"]);
-	const model = createCompiledNativeModel(report.input, { ownedGraphs: true, ownedHostCallbacks: true });
+	assert.equal(report.mode, mode);
+	packageSet(report, ["php-native"], producer);
+	const model = producer.createCompiledNativeModel(
+		report.input, { ownedGraphs: true, ownedHostCallbacks: true });
 	assert.equal(model.exports.length, 51);
 	assert.equal(Boolean(model.sourceIdentity.reviewedBindingIr), mode === "reviewed");
-	assert.equal(model.sourceIdentity.modules[0].source.sha256, sha256(await readFile("tests/fixtures/onboarding/owned-dotnet-callables/Owned.lean")));
+	assert.equal(model.sourceIdentity.modules[0].source.sha256, sha256(historical(
+		"tests/fixtures/onboarding/owned-dotnet-callables/Owned.lean")));
 	assert.equal(model.sourceIdentity.extractorSha256, sha256(ownedPhpWasmHistoricalBytes(
 		"src/analyze/NativeExports.lean", await readFile("src/analyze/NativeExports.lean"), model.sourceIdentity.extractorSha256)));
-	const native = generateCompiledNativeLeanAdapters(model), component = report.componentReceipt;
+	const native = producer.generateCompiledNativeLeanAdapters(model);
+	const component = report.componentReceipt;
 	assert.equal(component.modelSha256, sha256(canonicalJson(model)));
 	assert.equal(component.metadataSha256, sha256(canonicalJson(report.input.metadata)));
 	assert.equal(component.headerSha256, sha256(native.header));
 	assert.equal(component.adaptersSha256, sha256(native.leanSource));
 	assert.equal(component.callbackSourceSha256, sha256(native.callbackSource));
-	const c = generateOwnedCPackage({ ...report.input, hostCallbacks: true });
-	const php = generateOwnedPhpPackage(model.bindingIr), adapter = report.adapterReceipt;
+	const c = producer.generateOwnedCPackage({
+		...report.input, hostCallbacks: true
+	});
+	const php = producer.generateOwnedPhpPackage(model.bindingIr);
+	const adapter = report.adapterReceipt;
 	assert.deepEqual(adapter.phpValues, php.contract);
 	assert.equal(adapter.componentReceiptSha256, sha256(canonicalJson(component)));
 	assert.deepEqual(adapter.ownedValues, { schemaVersion: 2
 		, hostCallbacks: model.ownedGraph.hostCallbacks
 		, headerSha256: sha256(c.publicHeader), sourceSha256: sha256(c.source) });
 	assert.deepEqual(adapter.gmp, { version: "6.3.0", soname: "libgmp-lean-bridge.so.10", binding: "local-symbols" });
-	for(const [path, source] of Object.entries(ownedPhpAdapterSources(c, php)))
+	for(const [path, source] of Object.entries(
+		producer.ownedPhpAdapterSources(c, php)))
 		assert.deepEqual(adapter.files[path], identity(source), path);
 	const receipt = report.installation.receipt;
 	assert.equal(receipt.kind, "lean-bridge-owned-php-package");
@@ -122,7 +138,7 @@ const packageReport = async (report, mode) => {
 	assert.equal(libraries[component.library], component.nativeLibrary.sha256);
 	assert.equal(libraries[adapter.library], adapter.files["lib/" + adapter.library].sha256);
 	assert.equal(libraries[adapter.gmp.soname], adapter.files["gmp/lib/" + adapter.gmp.soname].sha256);
-	const compiled = generateOwnedPhpPackage(model.bindingIr, {
+	const compiled = producer.generateOwnedPhpPackage(model.bindingIr, {
 		componentId: model.component.id
 		, componentReceiptSha256: sha256(canonicalJson(component))
 		, libraries, library: adapter.library, ownedValues: php.contract
@@ -130,8 +146,10 @@ const packageReport = async (report, mode) => {
 	});
 	for(const [path, source] of Object.entries(compiled.files)) assert.deepEqual(receipt.files[path], identity(source), path);
 	assert.deepEqual(report.needed, [adapter.gmp.soname, component.library, "liblean_bridge_native.so", "libleanshared.so", "libc.so.6", "ld-linux-x86-64.so.2"]);
-	assert.equal(report.sourceSha256, sha256(await readFile("tests/fixtures/structured-types/owned-installed-php.php")));
-	assert.equal(report.loaderSourceSha256, sha256(await readFile("tests/fixtures/structured-types/owned-installed-php-loader.php")));
+	assert.equal(report.sourceSha256, sha256(historical(
+		"tests/fixtures/structured-types/owned-installed-php.php")));
+	assert.equal(report.loaderSourceSha256, sha256(historical(
+		"tests/fixtures/structured-types/owned-installed-php-loader.php")));
 	assert.deepEqual(report.observations.map(item => item.caller), ["weak", "strict"]);
 	for(const { observed } of report.observations)
 	{
@@ -161,7 +179,16 @@ const packageReport = async (report, mode) => {
  * @param record - Complete native PHP package integration receipt.
  */
 export const assertOwnedPhpExecution = async record => {
+	const producer = await producerAtMilestone();
+	for(const name of [
+		"assertOwnedPhpCi", "createCompiledNativeModel"
+		, "generateCompiledNativeLeanAdapters", "generateOwnedCPackage"
+		, "generateOwnedPhpPackage", "ownedPhpAdapterSources"
+		, "validateBrickMathInstall"
+	]) assert.equal(typeof producer[name], "function", name);
 	assert.deepEqual(record.scope, ownedPhpScope); assert.equal(record.acceptance, "passed");
+	assert.equal(record.baselineRevision
+		, "629557e8179e9e91ba2ecb3fe75a8dcac107c6ce");
 	assert.deepEqual(Object.keys(record.runs).sort(), Object.keys(ownedPhpCommands).sort());
 	for(const [name, count] of Object.entries({ values: 3, core: 18, packages: 2, documentation: 1, coexistence: 1, cli: 5, legacy: 9 }))
 		passing(record.runs[name], name, count);
@@ -181,10 +208,11 @@ export const assertOwnedPhpExecution = async record => {
 	assert.deepEqual(Object.keys(record.conversions).sort(), ["composition-ordinary", "composition-reviewed", "scalars-ordinary", "scalars-reviewed"]);
 	for(const mode of ["ordinary", "reviewed"])
 	{
-		await packageReport(record.packages[mode], mode);
+		await packageReport(record.packages[mode], mode, producer);
 		const runtime = record.runtime[mode];
 		assert.equal(runtime.compiledLean, true); assert.equal(runtime.installedPackage, false);
-		assert.equal(runtime.probeSha256, sha256(await readFile("tests/fixtures/structured-types/owned-php-runtime.php")));
+		assert.equal(runtime.probeSha256, sha256(historical(
+			"tests/fixtures/structured-types/owned-php-runtime.php")));
 		assert.equal(runtime.observations.length, 33);
 		assert.deepEqual(runtime.observations[0], { mode: "normal"
 			, observation: { checks: 301, identities: 0, live: 0, nativeFailures: 4, phpFailures: 6 } });
@@ -206,11 +234,12 @@ export const assertOwnedPhpExecution = async record => {
 			, primitives: 19, reentries: 63, scalarCalls: 19 });
 		assert.deepEqual(report.weak, report.observation);
 		assert.deepEqual(report.retirement, { checks: 8, identities: 0, live: 0 });
-		assert.equal(report.probeSha256, sha256(await readFile("tests/fixtures/structured-types/owned-php-calls.php")));
+		assert.equal(report.probeSha256, sha256(historical(
+			"tests/fixtures/structured-types/owned-php-calls.php")));
 	}
 	const docs = record.documentation;
 	flags(docs, ["cliIntegrated", "producerRemoved", "handoffRemoved", "sourceUnchanged", "relocated"]);
-	packageSet(docs, ["c", "php-native"]);
+	packageSet(docs, ["c", "php-native"], producer);
 	assert.equal(docs.observed.stdout, "42\n42\n"); assert.equal(docs.observed.stderr, "");
 	for(const [name, path, heading, language] of [
 		["lean", "publish/php", "### Export resource-containing values", "lean"]
@@ -227,7 +256,8 @@ export const assertOwnedPhpExecution = async record => {
 	assert.equal(coexist.reproduced.independentNativeCompilation, true);
 	assert.deepEqual(coexist.reproduced.pkg, coexist.releases[0].pkg);
 	assert.equal(coexist.reproduced.cliBuild.status, "ok");
-	assert.equal(coexist.releases.length, 3); installation(coexist.installation);
+	assert.equal(coexist.releases.length, 3);
+	installation(coexist.installation, producer);
 	for(const item of coexist.releases)
 	{
 		assert.equal(item.cliBuild.status, "ok");
@@ -241,6 +271,8 @@ export const assertOwnedPhpExecution = async record => {
 		assert.equal(observed.foreignRejections, 64); assert.equal(observed.liveIdentities, 0);
 		assert.equal(observed.runtimeInitializations, 1); assert.equal(observed.componentInitializations, 3);
 	}
-	assert.equal(coexist.consumerSha256, sha256(await readFile("tests/fixtures/structured-types/owned-php-coexistence.php")));
-	assertOwnedPhpCi(await readFile(".github/workflows/consumer-matrix.yml", "utf8"));
+	assert.equal(coexist.consumerSha256, sha256(historical(
+		"tests/fixtures/structured-types/owned-php-coexistence.php")));
+	producer.assertOwnedPhpCi(historical(
+		".github/workflows/consumer-matrix.yml").toString());
 };
