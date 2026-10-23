@@ -4,15 +4,9 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
-import { generateOwnedNativeValueAdapters } from "../../src/backends/native/owned-value-adapters.mjs";
-import { generateOwnedWasmComponent } from "../../src/backends/javascript/owned-wasm-component.mjs";
-import { generateOwnedJavaScriptWasmLeanAdapters } from "../../src/build/javascript-wasm-owned-model.mjs";
-import { assertComponentOwnedWasmBindings } from "../../src/abi/component-owned-wasm.mjs";
-import { ownedJavaScriptWasmNativeProbe } from "./owned-javascript-wasm-native.mjs";
-import { ownedRustTransferSource } from "./owned-rust-transfer-fixture.mjs";
-import { assertOwnedJavaScriptTransferCi } from "./owned-javascript-transfer-ci.mjs";
+import { moduleAtProducer } from "./producer-module.mjs";
+import { bytesAtProducer } from "./producer-source.mjs";
 
 export const ownedJavaScriptTransferCommand = "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 npm run test:owned-javascript-transfers";
 export const ownedJavaScriptTransferScope = Object.freeze({
@@ -33,6 +27,7 @@ export const ownedJavaScriptTransferScope = Object.freeze({
 });
 const digest = value => assert.match(value, /^[a-f0-9]{64}$/u);
 const flags = (value, names) => { for(const name of names) assert.equal(value[name], true, name); };
+const producerCommit = "3e28428f0b304f1dfed2cb2ad524b50c1fabdeef";
 
 /**
  * Authenticate the execution scope without inflating frozen support claims.
@@ -40,24 +35,46 @@ const flags = (value, names) => { for(const name of names) assert.equal(value[na
  * @param record - Recorded enabled executions, sources and installed inventories.
  */
 export const assertOwnedJavaScriptTransferExecution = async record => {
+	const producer = Object.assign({}, ...await Promise.all([
+		"src/abi/component-owned-wasm.mjs"
+		, "src/backends/javascript/owned-wasm-component.mjs"
+		, "src/backends/native/owned-value-adapters.mjs"
+		, "src/build/javascript-wasm-owned-model.mjs"
+		, "tests/helpers/owned-javascript-transfer-ci.mjs"
+		, "tests/helpers/owned-javascript-wasm-native.mjs"
+		, "tests/helpers/owned-rust-transfer-fixture.mjs"
+	].map(path => moduleAtProducer(producerCommit, path))));
+	for(const name of [
+		"assertComponentOwnedWasmBindings"
+		, "assertOwnedJavaScriptTransferCi"
+		, "generateOwnedJavaScriptWasmLeanAdapters"
+		, "generateOwnedNativeValueAdapters", "generateOwnedWasmComponent"
+		, "ownedJavaScriptWasmNativeProbe"
+	]) assert.equal(typeof producer[name], "function", name);
+	assert.equal(typeof producer.ownedRustTransferSource, "string");
+	const historical = path => bytesAtProducer(producerCommit, path);
 	assert.equal(record.acceptance, "passed"); assert.deepEqual(record.scope, ownedJavaScriptTransferScope);
+	assert.equal(record.baselineRevision
+		, "10463a29b72d47b01e11cc799d97589f2ca594fe");
 	assert.equal(record.run.command, ownedJavaScriptTransferCommand); assert.equal(record.run.exitCode, 0);
 	assert.equal(record.run.sha256, sha256(record.run.text));
 	for(const [key, value] of Object.entries({ tests: 6, pass: 6, fail: 0, skipped: 0, cancelled: 0, todo: 0 }))
 		assert.match(record.run.text, new RegExp("^# " + key + " " + value + "$", "mu"));
 	assert.doesNotMatch(record.run.text, /^not ok|# SKIP|# TODO/mu);
 	assert.deepEqual(record.runtime.map(item => item.mode), ["ordinary", "reviewed"]);
-	const lean = await readFile("tests/fixtures/onboarding/owned-aggregates/Owned.lean", "utf8") + ownedRustTransferSource;
+	const lean = historical(
+		"tests/fixtures/onboarding/owned-aggregates/Owned.lean"
+	).toString() + producer.ownedRustTransferSource;
 	for(const item of record.runtime)
 	{
 		assert.equal(item.schemaVersion, 1); assert.equal(item.profile, "owned-javascript-input-transfers");
 		assert.equal(Boolean(item.input.sourceIdentity.reviewedBindingIr), item.mode === "reviewed");
 		assert.equal(item.input.sourceIdentity.modules.find(module => module.module === "Owned").source.sha256, sha256(lean));
-		const native = generateOwnedNativeValueAdapters({ ...item.input, wordBits: 32, hostCallbacks: true, transferredInputs: true });
-		const component = generateOwnedWasmComponent(native);
+		const native = producer.generateOwnedNativeValueAdapters({ ...item.input, wordBits: 32, hostCallbacks: true, transferredInputs: true });
+		const component = producer.generateOwnedWasmComponent(native);
 		assert.deepEqual(item.privateAbi, component.privateAbi);
-		assert.equal(item.sourceSha256, sha256(ownedJavaScriptWasmNativeProbe(component))); digest(item.binarySha256);
-		assert.equal(assertComponentOwnedWasmBindings(item.privateAbi, native.layout.model.bindingIr), component.metadataHash);
+		assert.equal(item.sourceSha256, sha256(producer.ownedJavaScriptWasmNativeProbe(component))); digest(item.binarySha256);
+		assert.equal(producer.assertComponentOwnedWasmBindings(item.privateAbi, native.layout.model.bindingIr), component.metadataHash);
 		assert.deepEqual(item.exports, native.layout.functions.map(fn => fn.name).sort());
 		assert.equal(item.exports.length, 26); assert.equal(item.privateAbi.inputTransfers.exports.length, 20);
 		for(const kind of ["nativeFaults", "hostFaults"]) for(const phase of ["before", "after"])
@@ -69,7 +86,8 @@ export const assertOwnedJavaScriptTransferExecution = async record => {
 	assert.equal(packages.schemaVersion, 1); assert.equal(packages.profile, "installed-owned-javascript-transfers");
 	digest(packages.compilerInputsIdentity);
 	assert.deepEqual(packages.reports.map(item => item.reviewed), [false, true]);
-	const doc = (await readFile("docs/javascript-typescript.md", "utf8")).split("### Consuming inputs\n")[1].split("### Type conversions\n")[0];
+	const doc = historical("docs/javascript-typescript.md").toString()
+		.split("### Consuming inputs\n")[1].split("### Type conversions\n")[0];
 	const example = doc.match(/```js\n([^]*?)\n```/u)[1];
 	const runtimes = new Set();
 	for(const item of packages.reports)
@@ -81,7 +99,7 @@ export const assertOwnedJavaScriptTransferExecution = async record => {
 		assert.deepEqual(item.receipt.ownedGraph.inputTransfers, item.model.ownedGraph.inputTransfers);
 		assert.equal(item.model.ownedGraph.inputTransfers.exports.length, 20);
 		assert.equal(sha256(canonicalJson(item.model)), item.receipt.modelSha256);
-		generateOwnedJavaScriptWasmLeanAdapters(item.model);
+		producer.generateOwnedJavaScriptWasmLeanAdapters(item.model);
 		assert.equal(Boolean(item.model.sourceIdentity.reviewedBindingIr), item.reviewed);
 		assert.equal(item.packages.length, 2);
 		const runtime = item.packages.find(entry => entry.role === "runtime"), component = item.packages.find(entry => entry.role === "component");
@@ -113,5 +131,7 @@ export const assertOwnedJavaScriptTransferExecution = async record => {
 		}
 	}
 	assert.equal(runtimes.size, 1);
-	assertOwnedJavaScriptTransferCi(await readFile(".github/workflows/consumer-matrix.yml", "utf8"), JSON.parse(await readFile("package.json", "utf8")));
+	producer.assertOwnedJavaScriptTransferCi(historical(
+		".github/workflows/consumer-matrix.yml"
+	).toString(), JSON.parse(historical("package.json")));
 };

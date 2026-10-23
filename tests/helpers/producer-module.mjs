@@ -15,7 +15,7 @@ import { saveLakeFile } from "./lake-workspace.mjs";
 const modules = new Map();
 const revisionPattern = /^[a-f0-9]{40}$/u;
 const modulePathPattern = /^(?:scripts|site|src|tests)\/(?:[^/]+\/)*[^/]+\.mjs$/u;
-const sourcePathPattern = /^(?:scripts|site|src|tests)\/(?:[^/]+\/)*[^/]+\.(?:json|mjs)$/u;
+const sourcePathPattern = /^(?:poc|scripts|site|src|tests)\/(?:[^/]+\/)*[^/]+\.(?:json|mjs)$/u;
 
 /**
  * Import one immutable producer module without consulting current source.
