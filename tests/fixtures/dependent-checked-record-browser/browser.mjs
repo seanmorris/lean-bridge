@@ -23,9 +23,10 @@ export const executeCorpus = (request, api) => {
 		, "result-only-reviewed-ir"].includes(request.route)
 		|| request.resultOnly !== request.route.startsWith("result-only-"))
 		throw new Error("Wrong dependent checked-record author selection");
+	const reviewed = request.route.endsWith("reviewed-ir");
 	return {
 		module: request.module, route: request.route
 		, resultOnly: request.resultOnly
-		, ...checkDependentRecords(api, request.resultOnly)
+		, ...checkDependentRecords(api, request.resultOnly, reviewed)
 	};
 };

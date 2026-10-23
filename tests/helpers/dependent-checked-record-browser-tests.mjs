@@ -50,20 +50,22 @@ const model = {
 	})
 	, dependentResult: seed => ({ bound: seed + 1n, below: seed })
 };
+const reviewedModel = {
+	dependentTotal: value => {
+		checked(value, "dependentTotal.value0");
+		return value.bound + value.below;
+	}
+	, dependentRoundtrip: value => ({
+		...checked(value, "dependentRoundtrip.value0")
+	})
+	, dependentResult: model.dependentResult
+};
 
 test("the dependent checked-record caller covers bounds, recovery and results", () => {
 	assert.deepEqual(checkDependentRecords(model)
 		, dependentCheckedRecordExpected("ordinary-source"));
-	assert.deepEqual(checkDependentRecords({
-		dependentTotal: value => {
-			checked(value, "dependentTotal.value0");
-			return value.bound + value.below;
-		}
-		, dependentRoundtrip: value => ({
-			...checked(value, "dependentRoundtrip.value0")
-		})
-		, dependentResult: model.dependentResult
-	}, false, true), dependentCheckedRecordExpected("reviewed-ir"));
+	assert.deepEqual(checkDependentRecords(reviewedModel, false, true)
+		, dependentCheckedRecordExpected("reviewed-ir"));
 	assert.deepEqual(checkDependentRecords({
 		dependentResult: model.dependentResult
 	}, true), dependentCheckedRecordExpected("result-only-reviewed-ir"));
@@ -243,15 +245,20 @@ test("the browser wrapper delegates only exact dependent package requests", asyn
 	for(const route of dependentCheckedRecordRoutes)
 	{
 		const resultOnly = route.startsWith("result-only-");
+		const reviewed = route.endsWith("reviewed-ir");
 		const request = {
 			module: dependentCheckedRecordName, profile: "browser-javascript"
 			, route, resultOnly
 		};
-		const api = resultOnly ? { dependentResult: model.dependentResult } : model;
+		const api = resultOnly ? { dependentResult: model.dependentResult }
+			: reviewed ? reviewedModel : model;
 		assert.deepEqual(executeCorpus(request, api), {
 			module: dependentCheckedRecordName, route, resultOnly
 			, ...dependentCheckedRecordExpected(route)
 		});
+		if(reviewed && !resultOnly)
+			assert.throws(() => executeCorpus(request, model)
+				, /wrong refusal: equal bound: dependentTotal\.arg0/u);
 		for(const change of [
 			{ module: "other" }, { profile: "node-javascript" }
 			, { route: "wrong" }, { resultOnly: !resultOnly }
