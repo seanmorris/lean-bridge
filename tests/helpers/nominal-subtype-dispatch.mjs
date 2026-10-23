@@ -233,7 +233,7 @@ static void report(const char *step, nominalsubtypes_status status) {
   printf("\\n");
 }
 static void box(nominalsubtypes_envelope *value, unsigned long payload) { mpz_set_ui(value->payload, payload); mpz_set_ui(value->digit, 2); }
-static void select_case(nominalsubtypes_event *event, nominalsubtypes_event_kind kind) {
+static void select_case(nominalsubtypes_event *event, nominalsubtypes_event_tag kind) {
   if (nominalsubtypes_event_select(event, kind) != NOMINALSUBTYPES_STATUS_OK) { fprintf(stderr, "event case selection failed\\n"); exit(1); }
 }
 /* [none, some (ok payload), some (error 40)]: the ok leaf is walked first, so an invalid payload refuses there. */

@@ -143,6 +143,8 @@ test("nominal dispatch probe drives every step through the public API and the re
 	assert.equal(probe.match(/report\("/gu).length, nominalSubtypeDispatchSteps.length);
 	assert.ok(probe.includes(`i < ${columns.length}; ++i`));
 	assert.ok(probe.includes(`dlsym(RTLD_DEFAULT, "nominal_subtype_dispatch_count")`));
+	assert.ok(probe.includes("nominalsubtypes_event_tag kind"));
+	assert.ok(!probe.includes("nominalsubtypes_event_kind kind"));
 	for(const item of nominalSubtypeDispatchExports) assert.ok(probe.includes(`${item.entry}(`), item.entry);
 	assert.ok(!probe.includes("lb_"), "the probe reaches Lean only through public entries");
 	const observed = nominalSubtypeDispatchExpected(columns);
