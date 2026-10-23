@@ -37,10 +37,42 @@ export const coreFirstRunResidualRepairAddedPaths = Object.freeze([
 	, "tests/helpers/core-first-run-residual-repair-source-history.mjs"
 ]);
 let history;
+const recordPointerLayers = Object.freeze([
+	Object.freeze({
+		currentContainerSha256: "cb730ea6e649ab204029b862a75deaa2e4b9948ef06c43fd4c8d7b7def05c034"
+		, current: "b8c33a3a21da3f38ed8647fc8984be7815ec8ca6b6be8f78b224136811c3ff7d"
+		, previous: "dce5bd7367d8764c2b2f5a93a69baba56e724a5db623d033707d39bea24b547d"
+		, previousContainerSha256: "c27ea39d9f5592a961009c252618390137a9d6085cdde36d4fa0820d7f453a2d"
+	})
+	, Object.freeze({
+		currentContainerSha256: "c27ea39d9f5592a961009c252618390137a9d6085cdde36d4fa0820d7f453a2d"
+		, current: "dce5bd7367d8764c2b2f5a93a69baba56e724a5db623d033707d39bea24b547d"
+		, previous: "3331489dcab7a9b9dda3450440438c2444405a48009a086be465ca428c878b2f"
+		, previousContainerSha256: "8c2eda9fbf01fef2c5ab7e6bbd8758a8f0441cf6f0ca022ffbd3dd388bee005e"
+	})
+]);
 
-const record = () => history ??= JSON.parse(readFileSync(
-	coreFirstRunResidualRepairHistoryPath, "utf8"
-));
+/** Restore the immutable repair ledger before interpreting its edit offsets. */
+const originalRecordSource = () => {
+	let source = readFileSync(coreFirstRunResidualRepairHistoryPath, "utf8");
+	for(const layer of recordPointerLayers)
+	{
+		assert.equal(sha256(source), layer.currentContainerSha256
+			, coreFirstRunResidualRepairHistoryPath);
+		assert.equal(source.split(layer.current).length - 1, 1
+			, coreFirstRunResidualRepairHistoryPath);
+		source = source.replace(layer.current, layer.previous);
+		assert.equal(sha256(source), layer.previousContainerSha256
+			, coreFirstRunResidualRepairHistoryPath);
+	}
+	return source;
+};
+
+const record = () => history ??= JSON.parse(originalRecordSource());
+
+/** Return an isolated copy of the authenticated original ledger. */
+export const coreFirstRunResidualRepairRecord = () =>
+	structuredClone(record());
 
 /**
  * Reverse one exact residual-repair transition.

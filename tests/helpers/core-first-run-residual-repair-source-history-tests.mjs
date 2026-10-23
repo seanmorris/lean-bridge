@@ -5,7 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { execFileSync, spawnSync } from "node:child_process";
-import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
+import { mkdtemp, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
@@ -13,8 +13,8 @@ import {
 	beforeCoreFirstRunResidualRepairSource
 	, coreFirstRunResidualRepairAddedPaths
 	, coreFirstRunResidualRepairChangedPaths
-	, coreFirstRunResidualRepairHistoryPath
 	, coreFirstRunResidualRepairPredecessor
+	, coreFirstRunResidualRepairRecord
 	, reverseCoreFirstRunResidualRepairUpdate
 } from "./core-first-run-residual-repair-source-history.mjs";
 import { finRefinementNormalizationPaths } from "./fin-refinement-source-history.mjs";
@@ -26,9 +26,7 @@ const git = args => execFileSync("git", args, {
 });
 
 test("Core first-run residual repair has one exact reversible lineage", async () => {
-	const record = JSON.parse(await readFile(
-		coreFirstRunResidualRepairHistoryPath, "utf8"
-	));
+	const record = coreFirstRunResidualRepairRecord();
 	assert.equal(record.schemaVersion, 1);
 	assert.equal(record.milestone, "core-first-run-residual-repair-v1");
 	assert.equal(record.predecessorCommit
@@ -63,12 +61,11 @@ test("Core first-run residual repair has one exact reversible lineage", async ()
 });
 
 test("Core first-run residual repair closes additions and every refreshed pin", async () => {
-	const record = JSON.parse(await readFile(
-		coreFirstRunResidualRepairHistoryPath, "utf8"
-	));
+	const record = coreFirstRunResidualRepairRecord();
 	for(const addition of record.additions)
 	{
-		assert.equal(sha256(await readFile(addition.path))
+		assert.equal(sha256(await sourceAtFinHistoryMilestone(
+			addition.path, addition.currentSha256))
 			, addition.currentSha256, addition.path);
 		assert.notEqual(spawnSync("git", ["cat-file", "-e"
 			, `${coreFirstRunResidualRepairPredecessor}:${addition.path}`]
@@ -107,9 +104,7 @@ test("Core first-run residual repair closes additions and every refreshed pin", 
 });
 
 test("Core first-run residual repair rejects forged transitions", async () => {
-	const record = JSON.parse(await readFile(
-		coreFirstRunResidualRepairHistoryPath, "utf8"
-	));
+	const record = coreFirstRunResidualRepairRecord();
 	for(const update of record.updates)
 	{
 		const current = await sourceAtFinHistoryMilestone(
