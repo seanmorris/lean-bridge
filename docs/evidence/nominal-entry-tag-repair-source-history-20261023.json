@@ -1,0 +1,88 @@
+{
+  "additions": [
+    {
+      "currentSha256": "451b566cb856a0c8d2dc84238707a6730b01cf7de13ff87e15e321dc6584d31c",
+      "path": "scripts/update-nominal-entry-tag-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "ed3161d77d57c6e81432b4adf8d53eff126c1de9f4b6a7d656695277b6ebb9dc",
+      "path": "tests/helpers/nominal-entry-tag-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "a685766033be2b53af0d34f67fb907d9c1a90bec6ac12c6139ed76b35ad8b5aa",
+      "path": "tests/helpers/nominal-entry-tag-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "07587f92b0c1c6289b41c6b05f2debbc699bb20b",
+  "integrationUpdates": [
+    {
+      "currentSha256": "75f494606ce552da84f53f1d18c7ffa5b147fa48a471dd2b73fdfb82f927ce09",
+      "edits": [
+        {
+          "current": "import \"./nominal-entry-tag-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 2098
+        }
+      ],
+      "path": "tests/helpers/component-nominal-subtype-tests.mjs",
+      "previousSha256": "9d5271ba5529b8e9768ffd4415bf10cd49b27bd6ca126d832ad2bf165b67f087"
+    },
+    {
+      "currentSha256": "d07b70f78e98b9012293e3e4469c7b3fef0e0c0ca0311753850daa751a066d87",
+      "edits": [
+        {
+          "current": "import { beforeNominalEntryTagRepairSource, nominalEntryTagRepairNormalizationPaths } from \"./nominal-entry-tag-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 392
+        },
+        {
+          "current": "\t...nominalEntryTagRepairNormalizationPaths\n\t, ...callbackCheckedRecordPromotionRefreshNormalizationPaths\n",
+          "previous": "\t...callbackCheckedRecordPromotionRefreshNormalizationPaths\n",
+          "start": 156277
+        },
+        {
+          "current": "\tconst nominalEntryTagRepair = beforeNominalEntryTagRepairSource(\n\t\tpath, text, expected\n\t);\n\tif(sha256(nominalEntryTagRepair) === expected) return nominalEntryTagRepair;\n",
+          "previous": "",
+          "start": 191923
+        },
+        {
+          "current": "\t\t\tpath, nominalEntryTagRepair, expected\n",
+          "previous": "\t\t\tpath, text, expected\n",
+          "start": 192194
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "399f006ae92fe93e1ea555e25d25e7091187b991d3f5b57108d1a837c60ac03a"
+    }
+  ],
+  "milestone": "nominal-entry-tag-repair-source-v1",
+  "predecessorCommit": "59fca2ffcb2222b88f9760502d75103c03b5dd5c",
+  "schemaVersion": 1,
+  "scope": "The installed C nominal Subtype dispatch probe uses the generated variant tag typedef accepted by the public event selector; the regression control rejects the obsolete kind typedef.",
+  "updates": [
+    {
+      "currentSha256": "4fab3e6a3c994f4197a57f6a8d8f9e3d1bfdfefcec57a72f27dd6fa18c24adc5",
+      "edits": [
+        {
+          "current": "\tassert.ok(probe.includes(\"nominalsubtypes_event_tag kind\"));\n\tassert.ok(!probe.includes(\"nominalsubtypes_event_kind kind\"));\n",
+          "previous": "",
+          "start": 12883
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-dispatch-tests.mjs",
+      "previousSha256": "eab3d612072e29b4c6ce87c6f9586cd925941b653b3b32e344f72571ce7d61b6"
+    },
+    {
+      "currentSha256": "4e3a4109b435c027040a23bc2b9e7bca5b28690c2fbc5bc54bded60f40549a5b",
+      "edits": [
+        {
+          "current": "static void select_case(nominalsubtypes_event *event, nominalsubtypes_event_tag kind) {\n",
+          "previous": "static void select_case(nominalsubtypes_event *event, nominalsubtypes_event_kind kind) {\n",
+          "start": 13917
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-dispatch.mjs",
+      "previousSha256": "b00753e95b18174b1b006b9447fdf1e1956f05712619bda45d47331c58b36947"
+    }
+  ]
+}

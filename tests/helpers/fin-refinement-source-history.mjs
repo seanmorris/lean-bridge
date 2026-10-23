@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeNominalEntryTagRepairSource, nominalEntryTagRepairNormalizationPaths } from "./nominal-entry-tag-repair-source-history.mjs";
 import { beforeCallbackCheckedRecordPromotionRefreshSource, callbackCheckedRecordPromotionRefreshNormalizationPaths } from "./callback-checked-record-promotion-refresh-source-history.mjs";
 import { beforeCallbackCheckedRecordArchiveCommitProvenanceSource, callbackCheckedRecordArchiveCommitProvenanceNormalizationPaths } from "./callback-checked-record-archive-commit-provenance-source-history.mjs";
 import { beforeCallbackCheckedRecordArchiveProvenanceRepairSource, callbackCheckedRecordArchiveProvenanceRepairNormalizationPaths } from "./callback-checked-record-archive-provenance-repair-source-history.mjs";
@@ -1961,7 +1962,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...callbackCheckedRecordPromotionRefreshNormalizationPaths
+	...nominalEntryTagRepairNormalizationPaths
+	, ...callbackCheckedRecordPromotionRefreshNormalizationPaths
 	, ...callbackCheckedRecordArchiveCommitProvenanceNormalizationPaths
 	, ...callbackCheckedRecordArchiveProvenanceRepairNormalizationPaths
 	, ...callbackCheckedRecordRetainedArchiveRolloverNormalizationPaths
@@ -2724,9 +2726,13 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 			text = exact;
 		}
 	}
+	const nominalEntryTagRepair = beforeNominalEntryTagRepairSource(
+		path, text, expected
+	);
+	if(sha256(nominalEntryTagRepair) === expected) return nominalEntryTagRepair;
 	const callbackCheckedRecordPromotionRefresh
 		= beforeCallbackCheckedRecordPromotionRefreshSource(
-			path, text, expected
+			path, nominalEntryTagRepair, expected
 		);
 	if(sha256(callbackCheckedRecordPromotionRefresh) === expected)
 		return callbackCheckedRecordPromotionRefresh;
