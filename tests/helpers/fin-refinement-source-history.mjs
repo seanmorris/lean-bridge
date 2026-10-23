@@ -219,6 +219,7 @@ import { beforeCheckedRecordValueIndexPerlArchiveSource, checkedRecordValueIndex
 import { beforeCheckedRecordValueIndexPhpPromotionSource, checkedRecordValueIndexPhpPromotionChangedPaths } from "./checked-record-value-index-php-promotion-source-history.mjs";
 import { beforeCheckedRecordValueIndexPhpArchiveSource, checkedRecordValueIndexPhpArchiveChangedPaths } from "./checked-record-value-index-php-archive-source-history.mjs";
 import { beforeValueIndexTestProfileGapSource, valueIndexTestProfileGapChangedPaths, valueIndexTestProfileGapHistoricalPaths } from "./value-index-test-profile-gap-source-history.mjs";
+import { beforeTestProfilesRegistrationGapHistoricalSource, beforeTestProfilesRegistrationGapSource, testProfilesRegistrationGapHistoricalPaths, testProfilesRegistrationGapIntegrationPaths } from "./test-profiles-registration-gap-source-history.mjs";
 import { beforeCheckedRecordValueIndexRubySource, checkedRecordValueIndexRubyChangedPaths } from "./checked-record-value-index-ruby-source-history.mjs";
 import { beforeCheckedRecordValueIndexRustSource, checkedRecordValueIndexRustChangedPaths } from "./checked-record-value-index-rust-source-history.mjs";
 import { beforeCheckedRecordValueIndexRustAcceptanceSource, checkedRecordValueIndexRustAcceptanceChangedPaths } from "./checked-record-value-index-rust-acceptance-source-history.mjs";
@@ -1949,7 +1950,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...callbackRefinementsPhpWasmHostedArchiveNormalizationPaths
+	...testProfilesRegistrationGapIntegrationPaths
+	, ...testProfilesRegistrationGapHistoricalPaths
+	, ...callbackRefinementsPhpWasmHostedArchiveNormalizationPaths
 	, ...dependentCheckedRecordWitArchiveImplementationPaths
 	, ...dependentCheckedRecordWitArchiveIntegrationPaths
 	, ...dependentCheckedRecordBrowserPathDiagnosticRepairChangedPaths
@@ -2699,9 +2702,13 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 			text = exact;
 		}
 	}
+	const testProfilesRegistrationGap
+		= beforeTestProfilesRegistrationGapSource(path, text, expected);
+	if(sha256(testProfilesRegistrationGap) === expected)
+		return testProfilesRegistrationGap;
 	const callbackRefinementsPhpWasmHostedArchive
 		= beforeCallbackRefinementsPhpWasmHostedArchiveSource(
-			path, text, expected
+			path, testProfilesRegistrationGap, expected
 		);
 	if(sha256(callbackRefinementsPhpWasmHostedArchive) === expected)
 		return callbackRefinementsPhpWasmHostedArchive;
@@ -3757,6 +3764,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	previous = beforeCheckedRecordValueIndexRubySource(path, previous, expected);
 	if(sha256(previous) === expected) return previous;
 	previous = beforeValueIndexTestProfileGapSource(
+		path, previous, expected
+	);
+	if(sha256(previous) === expected) return previous;
+	// The two omitted 10-19 test-profile states sit beside the value-index gap,
+	// after the 10-20 matrix registration has produced the 656a415 source.
+	previous = beforeTestProfilesRegistrationGapHistoricalSource(
 		path, previous, expected
 	);
 	if(sha256(previous) === expected) return previous;

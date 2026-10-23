@@ -44,6 +44,7 @@ import "./helpers/cli-package-config-history-tests.mjs";
 import "./helpers/diagnostic-followup-source-history-tests.mjs";
 import "./helpers/combined-lineage-source-history-tests.mjs";
 import "./helpers/test-profile-registration-source-history-tests.mjs";
+import "./helpers/test-profiles-registration-gap-source-history-tests.mjs";
 import "./helpers/runtime-receipt-source-history-tests.mjs";
 import "./helpers/cpan-cli-control-source-history-tests.mjs";
 import "./helpers/python-fin-source-history-tests.mjs";

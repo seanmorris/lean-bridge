@@ -1,0 +1,96 @@
+{
+  "additions": [
+    {
+      "currentSha256": "76be2d9d9860943b405707c7c92f25d8ef69a3a84e23d85f7c5cba217269477b",
+      "path": "scripts/update-test-profiles-registration-gap-source-history.mjs"
+    },
+    {
+      "currentSha256": "f7d5c7f1ca2476c8cbb68a22ad1ba31a04ab9549a5a7b189c3f7660189bce81c",
+      "path": "tests/helpers/test-profiles-registration-gap-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "e4a9c62f43358b57f261bebc8d181fe3ffe464abd143259c5dd57874c037e912",
+      "path": "tests/helpers/test-profiles-registration-gap-source-history.mjs"
+    }
+  ],
+  "historicalTransitions": [
+    {
+      "currentCommit": "656a41590a2cb583cf1207483c19bfa5051040bd",
+      "currentSha256": "e733695a23b638f96139fa43b1637621e431e5d9b223a588e38edda20f42c6c3",
+      "edits": [
+        {
+          "current": "\t\t, \"checked-record-value-index-php\"\n",
+          "previous": "",
+          "start": 1916
+        }
+      ],
+      "path": "tests/test-profiles.test.mjs",
+      "previousCommit": "c8f51dbbe2cfd679087372aeb24f0b9b8f762a19",
+      "previousSha256": "ca2578702f2b497e5d7f27f75e507b480a765348c4b8cd5dc23249e68cc8dd59"
+    },
+    {
+      "currentCommit": "c8f51dbbe2cfd679087372aeb24f0b9b8f762a19",
+      "currentSha256": "ca2578702f2b497e5d7f27f75e507b480a765348c4b8cd5dc23249e68cc8dd59",
+      "edits": [
+        {
+          "current": "\tfor(const name of [\"checked-record-value-index-jvm-evidence\"\n\t\t, \"checked-record-value-index-native-evidence\"\n\t\t, \"checked-record-value-index-python\"])\n\t\tassert.ok(grouped.contract.includes(`tests/${name}.test.mjs`), name);\n",
+          "previous": "",
+          "start": 1805
+        }
+      ],
+      "path": "tests/test-profiles.test.mjs",
+      "previousCommit": "b51d6f6378ca9df40f528f2b2fe5bd0d8e97cc5f",
+      "previousSha256": "11838692c215b00028c96565cbbbb4a547f863ec4e37dcbc4d378bfdd0a1d2f3"
+    }
+  ],
+  "integrationUpdates": [
+    {
+      "currentSha256": "148871ea6f697ae35fe1eef2d14bccfaa3dd33dcc29bd7ebe8cb81bf763cf88c",
+      "edits": [
+        {
+          "current": "import \"./helpers/test-profiles-registration-gap-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 3243
+        }
+      ],
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "9b37e6813b76ae3dc7fefafa62bdde9b4764ea5c08ae4e273153ec76dcc01f04"
+    },
+    {
+      "currentSha256": "1d739d7eb386b5664e71d794e92ec7740c62a045e01c5edb265be9d450be3f58",
+      "edits": [
+        {
+          "current": "import { beforeTestProfilesRegistrationGapHistoricalSource, beforeTestProfilesRegistrationGapSource, testProfilesRegistrationGapHistoricalPaths, testProfilesRegistrationGapIntegrationPaths } from \"./test-profiles-registration-gap-source-history.mjs\";\n",
+          "previous": "",
+          "start": 40278
+        },
+        {
+          "current": "\t...testProfilesRegistrationGapIntegrationPaths\n\t, ...testProfilesRegistrationGapHistoricalPaths\n\t, ...callbackRefinementsPhpWasmHostedArchiveNormalizationPaths\n",
+          "previous": "\t...callbackRefinementsPhpWasmHostedArchiveNormalizationPaths\n",
+          "start": 153963
+        },
+        {
+          "current": "\tconst testProfilesRegistrationGap\n\t\t= beforeTestProfilesRegistrationGapSource(path, text, expected);\n\tif(sha256(testProfilesRegistrationGap) === expected)\n\t\treturn testProfilesRegistrationGap;\n",
+          "previous": "",
+          "start": 188853
+        },
+        {
+          "current": "\t\t\tpath, testProfilesRegistrationGap, expected\n",
+          "previous": "\t\t\tpath, text, expected\n",
+          "start": 189151
+        },
+        {
+          "current": "\t// The two omitted 10-19 test-profile states sit beside the value-index gap,\n\t// after the 10-20 matrix registration has produced the 656a415 source.\n\tprevious = beforeTestProfilesRegistrationGapHistoricalSource(\n\t\tpath, previous, expected\n\t);\n\tif(sha256(previous) === expected) return previous;\n",
+          "previous": "",
+          "start": 234603
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "db44175335681b7aa14c5bac8c4f6a5fd10606f72fa51dc65946ca8e32065984"
+    }
+  ],
+  "milestone": "test-profiles-registration-gap-v1",
+  "predecessorCommit": "7e86a3542847eafca7389032dbb977cc0eeb7682",
+  "schemaVersion": 1,
+  "scope": "Record the two 2026-10-19 tests/test-profiles.test.mjs transitions (b51d6f6 -> c8f51db -> 656a415) that no history layer recorded, so the 2026-10-06 test-profile registration milestone is reachable again, plus this repair's own registration and hub integration."
+}
