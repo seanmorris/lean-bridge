@@ -4,11 +4,22 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
+import { readFile } from "node:fs/promises";
 import test from "node:test";
 import {
 	assertOwnedSubtypeHostedTap, ownedSubtypeHostedLanes
 	, ownedSubtypeHostedVerification, parseOwnedSubtypeHostedCiArgs
 } from "./helpers/owned-subtype-hosted-ci.mjs";
+import {
+	ownedSubtypeHostedContracts, ownedSubtypeHostedLaneNames
+} from "./helpers/owned-subtype-hosted-contracts.mjs";
+import {
+	assertOwnedSubtypeHostedSteps
+} from "./helpers/owned-subtype-hosted-evidence.mjs";
+import {
+	ownedSubtypeEvidenceSources
+} from "./helpers/owned-subtype-hosted-evidence-sources.mjs";
 
 const producer = "a".repeat(40), digest = value => value.repeat(64);
 const specifications = Object.freeze({
@@ -199,4 +210,60 @@ test("owned Subtype hosted checker accepts only closed invocations", () => {
 		, ["--lane", "native", "--producer", "HEAD", "--tap", "x", "--report", "y"]
 		, ["--lane", "native", "--producer", producer, "--tap", "x", "--tap", "y"]
 	]) assert.throws(() => parseOwnedSubtypeHostedCiArgs(args), /Usage:/u);
+});
+
+test("owned Subtype archive contracts close all seven hosted lanes", async () => {
+	assert.deepEqual(ownedSubtypeHostedLaneNames, ["native", "perl"
+		, "languages", "dotnet", "jvm", "php-native", "wit-wasi"]);
+	assert.deepEqual(ownedSubtypeHostedLaneNames
+		, [...ownedSubtypeHostedLanes]);
+	const profiles = ownedSubtypeHostedLaneNames.flatMap(lane =>
+		ownedSubtypeHostedContracts[lane].profiles).toSorted();
+	assert.deepEqual(profiles, ["c", "cpp", "dotnet", "java", "kotlin"
+		, "perl", "php-native", "python", "ruby", "rust", "wit-wasi"]);
+	for(const lane of ownedSubtypeHostedLaneNames)
+	{
+		const contract = ownedSubtypeHostedContracts[lane];
+		const workflow = await readFile(contract.workflow, "utf8");
+		const matrix = value => contract.ci === null
+			? value.replaceAll(lane, "${{ matrix.lane }}") : value;
+		for(const value of [matrix(contract.job), matrix(contract.prefix)
+			, contract.acceptanceStep
+			, contract.enforceStep, matrix(contract.tap), matrix(contract.toolchain)
+			, `${contract.packaging}/`])
+			assert.ok(workflow.includes(value), `${lane}: ${value}`);
+		const steps = [{ number: 1, name: contract.acceptanceStep
+			, status: "completed", conclusion: "success" }
+		, { number: 2, name: contract.enforceStep
+			, status: "completed", conclusion: "skipped" }];
+		assertOwnedSubtypeHostedSteps(contract, Buffer.from(JSON.stringify({ steps })));
+		assert.throws(() => assertOwnedSubtypeHostedSteps(contract
+			, Buffer.from(JSON.stringify({ steps: steps.map(step => ({ ...step
+				, conclusion: "success" })) }))));
+	}
+});
+
+test("owned Subtype archives retain exact four-role source closures", () => {
+	const revision = execFileSync("git", ["rev-parse", "HEAD"]
+		, { encoding: "utf8" }).trim();
+	for(const lane of ownedSubtypeHostedLaneNames)
+	{
+		const sources = ownedSubtypeEvidenceSources(lane, {
+			producer: revision, consumer: revision
+			, checker: revision, archiver: revision
+		});
+		assert.deepEqual([...new Set(sources.map(source => source.role))]
+			, ["producer", "consumer", "checker", "archiver"]);
+		assert.equal(new Set(sources.map(source =>
+			`${source.role}/${source.path}`)).size, sources.length);
+		const contract = ownedSubtypeHostedContracts[lane];
+		assert.ok(sources.some(source => source.role === "producer"
+			&& source.path === contract.workflow));
+		assert.ok(sources.some(source => source.role === "producer"
+			&& source.path === contract.test));
+		assert.ok(sources.some(source => source.role === "checker"
+			&& source.path === "tests/helpers/owned-subtype-hosted-output.mjs"));
+		assert.ok(sources.some(source => source.role === "archiver"
+			&& source.path === "scripts/archive-owned-subtype-evidence.mjs"));
+	}
 });
