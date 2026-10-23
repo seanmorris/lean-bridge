@@ -55,7 +55,7 @@ test("every generic Subtype archive identity is present exactly once in its work
 			assert.equal(exactLine("      - name: ", step), 1
 				, `${contract.lane}: ${step}`);
 		const artifactName = `${contract.workflowArtifactPrefix
-			?? contract.artifactPrefix}\${{ github.sha }}`;
+			?? contract.artifactPrefix}-\${{ github.sha }}`;
 		assert.equal(exactLine("          name: ", artifactName)
 			, 1, `${contract.lane}: ${artifactName}`);
 		assert.match(source, /uses: actions\/checkout@v6\n\s+with:\n\s+fetch-depth: 0\n\s+persist-credentials: false/u);
