@@ -760,6 +760,8 @@ that only return checked records. They test `Interval`, `Sized 3` and
 `Bounded 0 101`. Nested records, callbacks, owned values and general dependent
 payloads are not included.
 
+The [recursive checked-record acceptance](../evidence/recursive-checked-record-promotion-20261018.md) separately covers the tested finite self-recursive `Packet` and mutually recursive `Envelope`/`Step` graphs in Kotlin on both source routes. The retained full and result-only Maven packages preserve aliases, arrays, options and active sealed variants; validate checked `Nat` and `Fin 3` fields; erase proofs; preserve rejected values; recover on the next valid call; and return constructor-free copied results. Other recursive graph shapes, generic checked records, value-carrying receiver-dependent fields, other index kinds, open dependent or zero-payload combinations, callbacks, owned forms, retained identity and cyclic host objects remain separate work.
+
 A proof-only checked record remains a real nominal object. Construct the
 generated zero-property class, such as `Witness()`, rather than treating it as
 Kotlin `Unit`, `null`, an omitted argument or another empty class. A record

@@ -738,10 +738,9 @@ boundary checks. The [dedicated workflow](https://github.com/seanmorris/lean-bri
 rebuilds all four selections on Ubuntu 24.04 with the glibc 2.38 floor.
 
 [Inherited checked-record acceptance](../evidence/inherited-checked-record-promotion-20261018.md)
-separately covers the tested proof-free `Span → Ticket → Stamped` chain. Generic
-or recursive checked records, value-carrying receiver-dependent inherited fields,
-other index kinds, open dependent or zero-payload records, callbacks and owned
-positions remain unfinished.
+separately covers the tested proof-free `Span → Ticket → Stamped` chain.
+
+The [recursive checked-record acceptance](../evidence/recursive-checked-record-promotion-20261018.md) separately covers the tested finite self-recursive `Packet` and mutually recursive `Envelope`/`Step` graphs in Perl on both source routes. The retained full and result-only CPAN packages preserve aliases, arrays, options and active variants on all four pinned ABIs; validate checked `Nat` and `Fin 3` fields; erase proofs; preserve rejected values; recover on the next valid call; and return constructor-free copied results. Other recursive graph shapes, generic checked records, value-carrying receiver-dependent fields, other index kinds, open dependent or zero-payload combinations, callbacks, owned positions, retained identity and cyclic host objects remain unfinished.
 
 ## Values and cleanup
 

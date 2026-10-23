@@ -729,11 +729,9 @@ graph, and a later valid call succeeds. The
 [dedicated workflow](https://github.com/seanmorris/lean-bridge/actions/workflows/nested-checked-record-rust.yml)
 owns the pending Ubuntu 24.04/glibc 2.38 release-floor check. [Inherited
 checked-record acceptance](../evidence/inherited-checked-record-promotion-20261018.md)
-separately covers the tested proof-free `Span → Ticket → Stamped` chain. Generic
-or recursive checked records, value-carrying receiver-dependent inherited fields,
-other index kinds, open dependent or zero-payload records, and owned
-positions remain separate work. Constructor dispatch and peak memory were not
-measured.
+separately covers the tested proof-free `Span → Ticket → Stamped` chain.
+
+The [recursive checked-record acceptance](../evidence/recursive-checked-record-promotion-20261018.md) separately covers the tested finite self-recursive `Packet` and mutually recursive `Envelope`/`Step` graphs in Rust on both source routes. The retained full and result-only crates preserve aliases, vectors, options and active enums; validate checked `Nat` and `Fin 3` fields; erase proofs; preserve rejected values; recover on the next valid call; and return constructor-free typed values. Other recursive graph shapes, generic checked records, value-carrying receiver-dependent fields, other index kinds, open dependent or zero-payload combinations, callbacks, owned positions, retained identity and cyclic host objects remain separate work. Constructor dispatch and peak memory were not measured.
 
 The [hosted zero-payload archive](../evidence/zero-payload-checked-record-rust-20261021.md) adds proof-only `Witness`, Unit-bearing `Token`, plain empty `Marker`, options, vectors and both `Mark` branches in all four ordinary/reviewed full/result-only Cargo routes. `Witness` is a nominal empty Rust struct, distinct from `()`, absence and the other empty records. Full crates run the selected nullary constructor, preserve rejected values and recover on the next call; result-only crates project the same proof-erased carriers without constructor metadata.
 

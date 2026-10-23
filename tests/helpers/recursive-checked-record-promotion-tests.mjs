@@ -39,6 +39,21 @@ const expectedProfiles = [
 	, "dotnet", "java", "kotlin", "node-javascript", "node-typescript"
 	, "perl", "php-native", "php-wasm", "python", "ruby", "rust", "wit-wasi"
 ];
+const recursiveDocumentation = [
+	["docs/javascript-typescript.md"
+		, "(evidence/recursive-checked-record-promotion-20261018.md)"]
+	, ["docs/php.md"
+		, "(evidence/recursive-checked-record-promotion-20261018.md)"]
+	, ...["c", "cpp", "dotnet", "java", "kotlin", "perl", "python", "ruby"
+		, "rust", "wit-wasi"].map(name => [
+		`docs/consume/${name}.md`
+		, "(../evidence/recursive-checked-record-promotion-20261018.md)"
+		])
+	, ["docs/lean/existing-package.md"
+		, "(../evidence/recursive-checked-record-promotion-20261018.md)"]
+	, ["docs/reference/types.md"
+		, "(../evidence/recursive-checked-record-promotion-20261018.md)"]
+];
 
 test("recursive native archive index names exactly the tracked files", async () => {
 	const index = JSON.parse(await readFile(
@@ -63,6 +78,20 @@ test("recursive promotion lanes partition all seventeen profiles and 36 selectio
 	]);
 	assert.equal(recursiveCheckedRecordPromotionLanes.reduce((sum, lane) =>
 		sum + lane.fixtures.length * 2, 0), 36);
+});
+
+test("recursive checked-record documentation names the accepted graph and boundary", async () => {
+	for(const [path, link] of recursiveDocumentation)
+	{
+		const source = await readFile(path, "utf8");
+		assert.ok(source.includes(link), `${path} links the acceptance record`);
+		for(const name of ["Packet", "Envelope", "Step"])
+			assert.match(source, new RegExp(`\\b${name}\\b`, "u"), `${path} names ${name}`);
+		for(const boundary of ["callback", "cyclic host"])
+			assert.ok(source.includes(boundary), `${path} retains the ${boundary} boundary`);
+		assert.doesNotMatch(source
+			, /Recursive checked-record combinations remain separate work\./u);
+	}
 });
 
 test("recursive promotion remains closed until native hosted evidence is pinned", {

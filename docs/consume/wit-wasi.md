@@ -1026,10 +1026,9 @@ x64/glibc 2.36. Invalid nested fields preserve the complete Component Model
 value tree and output sentinel, and a later valid call succeeds. The component
 requires its packaged native Lean host; it is not a standalone WASI command.
 [Inherited checked-record acceptance](../evidence/inherited-checked-record-promotion-20261018.md)
-separately covers the tested proof-free `Span → Ticket → Stamped` chain. Generic
-or recursive checked records, value-carrying receiver-dependent inherited fields,
-other index kinds, open dependent or zero-payload records, callbacks and owned
-positions remain separate work.
+separately covers the tested proof-free `Span → Ticket → Stamped` chain.
+
+The [recursive checked-record acceptance](../evidence/recursive-checked-record-promotion-20261018.md) separately covers the tested finite self-recursive `Packet` and mutually recursive `Envelope`/`Step` graphs through WIT/WASI on both source routes. The retained full and result-only components preserve aliases, lists, options and active variants; validate checked `Nat` and `Fin 3` fields; erase proofs; preserve rejected value trees and output sentinels; recover on the next valid call; and return constructor-free copied values. Other recursive graph shapes, generic checked records, value-carrying receiver-dependent fields, other index kinds, open dependent or zero-payload combinations, callbacks, owned positions, retained identity and cyclic host objects remain separate work.
 The [recurring workflow](https://github.com/seanmorris/lean-bridge/actions/workflows/nested-checked-record-wit.yml)
 rebuilds all four selections through the pinned Wasmtime host on Ubuntu 24.04.
 

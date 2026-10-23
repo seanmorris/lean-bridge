@@ -950,10 +950,9 @@ weak and strict callers before and after relocation, for four executions per
 selection. The retained local runs use PHP 8.2.33 and Composer 2.5.5 on Linux
 x64/glibc 2.36. Invalid nested fields preserve the complete PHP object graph,
 and a later valid call succeeds. [Inherited checked-record acceptance](evidence/inherited-checked-record-promotion-20261018.md)
-separately covers the tested proof-free `Span → Ticket → Stamped` chain. Generic
-or recursive checked records, value-carrying receiver-dependent inherited fields,
-other index kinds, open dependent or zero-payload records, callbacks and owned
-positions remain separate work. Consumer PHP source remains required at runtime.
+separately covers the tested proof-free `Span → Ticket → Stamped` chain.
+
+The [recursive checked-record acceptance](evidence/recursive-checked-record-promotion-20261018.md) separately covers the tested finite self-recursive `Packet` and mutually recursive `Envelope`/`Step` graphs in native PHP on both source routes. The retained full and result-only Composer packages preserve aliases, arrays, options and active variants; validate checked `Nat` and `Fin 3` fields; erase proofs; preserve rejected values; recover on the next valid call; and return constructor-free readonly objects. Other recursive graph shapes, generic checked records, value-carrying receiver-dependent fields, other index kinds, open dependent or zero-payload combinations, callbacks, owned positions, retained identity and cyclic host objects remain separate work. Consumer PHP source remains required at runtime.
 These results apply to native PHP, not PHP-Wasm.
 The [native PHP recurring workflow](https://github.com/seanmorris/lean-bridge/actions/workflows/nested-checked-record-php.yml)
 rebuilds all four selections on Ubuntu 24.04.
@@ -1004,10 +1003,9 @@ use wasm32 PHP 8.4.1, Node 22.23.2 and Chromium 152.0.7977.75. Invalid nested
 fields preserve the complete caller graph, and a later valid call succeeds.
 Consumer PHP source remains required at runtime. [Inherited checked-record
 acceptance](evidence/inherited-checked-record-promotion-20261018.md) separately
-covers the tested proof-free `Span → Ticket → Stamped` chain. Generic or recursive
-checked records, value-carrying receiver-dependent inherited fields, other index
-kinds, open dependent or zero-payload records, callbacks and owned positions
-remain separate work. These runs do not establish other PHP or browser versions.
+covers the tested proof-free `Span → Ticket → Stamped` chain.
+
+The [recursive checked-record acceptance](evidence/recursive-checked-record-promotion-20261018.md) separately covers the tested finite self-recursive `Packet` and mutually recursive `Envelope`/`Step` graphs in PHP-Wasm on both source routes. The retained full and result-only Composer, component and shared-runtime packages preserve aliases, arrays, options and active variants; validate checked `Nat` and `Fin 3` fields; erase proofs; preserve rejected values; recover on the next valid call; and return constructor-free readonly objects. Other recursive graph shapes, generic checked records, value-carrying receiver-dependent fields, other index kinds, open dependent or zero-payload combinations, callbacks, owned positions, retained identity and cyclic host objects remain separate work. These runs do not establish other PHP or browser versions.
 The [PHP-Wasm recurring workflow](https://github.com/seanmorris/lean-bridge/actions/workflows/nested-checked-record-php-wasm.yml)
 rebuilds all four Node/Chromium selections on Ubuntu 24.04.
 
@@ -1686,10 +1684,10 @@ Both routes reproduce all three packages and run the twelve Node and Chromium
 loading, installation and strictness arrangements after offline installation
 and relocation on wasm32 PHP 8.4.1.
 
-Selected synchronous callback Subtypes have installed native and PHP-Wasm
-acceptance. Owned, dependent, broader generic and recursive refined-callback
-positions remain separate profiles. Recursive checked-record combinations also
-remain separate work. The local PHP-Wasm checks do not measure
+Selected synchronous callback Subtypes and the tested finite recursive
+checked-record graphs have installed native and PHP-Wasm acceptance. Recursive
+refined-callback payloads, recursive owned graphs and broader generic or
+dependent combinations remain separate profiles. The local PHP-Wasm checks do not measure
 constructor/source entry counts or dispatch.
 
 ### Type conversions

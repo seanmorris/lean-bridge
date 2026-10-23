@@ -216,9 +216,11 @@ The [top-level runs](../evidence/checked-records-20261008/receipt.json) cover th
 
 All four ordinary/reviewed and full/result-only selections reproduce complete packages from two author roots, install offline after author removal and replay the independent C++20 caller unchanged after physical relocation. Invalid graphs preserve caller values before a later valid call proves recovery. The local runs used Linux x64/glibc 2.36 and do not establish execution at the glibc 2.38 release floor. The [recurring workflow](https://github.com/seanmorris/lean-bridge/actions/workflows/nested-checked-record-native.yml) requires the same four selections at that floor. [Inherited checked-record acceptance](../evidence/inherited-checked-record-promotion-20261018.md) separately covers the tested proof-free `Span → Ticket → Stamped` chain.
 
+The [recursive checked-record acceptance](../evidence/recursive-checked-record-promotion-20261018.md) separately covers the tested finite self-recursive `Packet` and mutually recursive `Envelope`/`Step` graphs in C++ on both source routes. The retained full and result-only packages preserve aliases, vectors, options and active variants; validate checked `Nat` and `Fin 3` fields; erase proofs; preserve rejected values; recover on the next valid call; and return constructor-free copied results.
+
 The [hosted zero-payload archive](../evidence/zero-payload-checked-record-native-20261021.md) covers proof-only `Witness`, Unit-bearing `Token`, plain empty `Marker`, options, arrays and active/inactive variant branches at copied parameters and results. C++ exposes `Witness` and `Marker` as distinct nominal empty structures; `Token` still carries its Unit field. Full packages run the selected nullary Lean constructor, preserve rejected inputs and recover; result-only packages return the same proof-erased carriers without input-constructor metadata. The run passed on glibc 2.39 with a glibc 2.38 package floor.
 
-Generic checked records, value-carrying receiver-dependent inherited fields, other index kinds, open dependent records, zero-payload callback forms, owned positions and other zero-payload shapes remain unreviewed.
+Other recursive graph shapes, generic checked records, value-carrying receiver-dependent inherited fields, other index kinds, open dependent records, zero-payload callback forms, other recursive callback positions, owned positions, retained identity, cyclic host objects and other zero-payload shapes remain unreviewed.
 
 ### Structured callbacks and closures
 

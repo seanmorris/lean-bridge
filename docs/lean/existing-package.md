@@ -457,7 +457,13 @@ Nested support is established only for the archived acyclic `Packet`, `Holder`, 
 
 [Installed inherited checked-record acceptance](../evidence/inherited-checked-record-promotion-20261018.md) covers the exact acyclic `Span → Ticket → Stamped` chain in all seventeen consumer profiles. Keep every parent as its named nested subobject. At each public input site, select the outer record constructor and mirror the parent hierarchy under `refinement.fields`, selecting each checked parent and refined payload constructor independently. The adapter applies those constructors in dependency order, then the outer constructor; a rejection preserves the caller's complete value, and a later valid call can recover. Repeated parameters may select different constructor trees. Lean-produced `Ticket` and `Stamped` results carry their own proofs, so result-only packages project the same proof-free payload hierarchy without input-constructor metadata. The [ordinary configuration fixture](../../tests/helpers/inherited-checked-record-fixture.mjs) and [Lean fixture](../../tests/fixtures/onboarding/inherited-checked-records/InheritedCheckedRecords.lean) show the complete contract.
 
-That acceptance does not cover generic or recursive checked records, value-carrying receiver-dependent inherited fields, other index kinds, open value-dependent or zero-payload records, callbacks or owned positions.
+That inherited-record acceptance does not establish generic checked records, value-carrying receiver-dependent inherited fields, other index kinds, open value-dependent or zero-payload records, callbacks or owned positions. Recursive checked records use the separate finite-graph contract below.
+
+#### Export a finite recursive checked-record graph
+
+The [installed recursive checked-record acceptance](../evidence/recursive-checked-record-promotion-20261018.md) covers a self-recursive `Packet` and a mutually recursive `Envelope`/`Step` record-and-variant pair across all seventeen consumer profiles and both author routes. Keep every recursive nominal definition and transparent alias in the reviewed graph. Select the checked constructor independently at each public input site, retain closed `Fin` bounds and checked nested fields, and generate a proof-free host carrier only after the complete finite graph has been validated. Lean-produced results project the same graph without input-constructor metadata.
+
+The accepted packages retain `Array` and `Option` carriers, active branches, rejection without caller mutation, later-call recovery, source-free offline installation and relocation where each host permits them. This contract does not establish arbitrary recursive graph shapes, generic recursive records, value-carrying receiver-dependent fields, other index kinds, open dependent or zero-payload combinations, callbacks, owned positions, retained object identity or cyclic host-object inputs.
 
 #### Export a proof-only checked record
 
