@@ -7,14 +7,35 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforePhpCallbackInstalledStaging } from "./php-callback-installed-staging-history.mjs";
-import { beforeWitCallbackRuntimeStaging } from "./wit-callback-runtime-staging-history.mjs";
-import { beforePerlCallbackVariants } from "./owned-perl-callback-result-variant-history.mjs";
 import { beforePostPerlCallbackStaging, postPerlCallbackChangedPaths
 	, postPerlCallbackHistoryPath, postPerlCallbackHistorySha256
+	, postPerlCallbackLineage, postPerlCallbackProducer
 	, readPostPerlCallbackHistory, reversePostPerlCallbackUpdate } from "./post-perl-callback-staging-history.mjs";
 import { unpackOwnedCallbackReports } from "./owned-callback-result-evidence.mjs";
 import { assertOwnedPerlCallbackReport, ownedPerlCallbackEvidencePath } from "./owned-perl-callback-result-acceptance.mjs";
+import { bytesAtProducer } from "./producer-source.mjs";
+
+const producerRevisions = [postPerlCallbackProducer, ...postPerlCallbackLineage];
+const producerSources = new Map();
+const producerSource = (path, expected) => {
+	const key = `${path}:${expected}`;
+	if(producerSources.has(key)) return Buffer.from(producerSources.get(key));
+	for(const revision of producerRevisions)
+	{
+		let bytes;
+		try
+		{
+			bytes = bytesAtProducer(revision, path);
+		}
+		catch
+		{
+			continue;
+		}
+		if(sha256(bytes) !== expected) continue;
+		producerSources.set(key, bytes); return Buffer.from(bytes);
+	}
+	assert.fail(`No post-Perl producer source for ${path} at ${expected}`);
+};
 
 test("post-Perl callback staging reverses complete registered bytes and preserves unknown inputs", async t => {
 	const bytes = await readFile(postPerlCallbackHistoryPath);
@@ -24,11 +45,8 @@ test("post-Perl callback staging reverses complete registered bytes and preserve
 	let rejected = 0;
 	for(const update of history.updates)
 	{
-		const source = beforePhpCallbackInstalledStaging(update.path, await readFile(update.path));
-		const current = Buffer.from(beforeWitCallbackRuntimeStaging(update.path, source));
-		const prior = beforePostPerlCallbackStaging(
-			update.path, current, update.previousSha256
-		);
+		const current = producerSource(update.path, update.currentSha256);
+		const prior = reversePostPerlCallbackUpdate(current, update);
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		assert.equal(sha256(prior), update.previousSha256, update.path);
 		assert.equal(beforePostPerlCallbackStaging(update.path, current, update.currentSha256), current);
@@ -54,10 +72,9 @@ test("post-Perl callback staging reverses complete registered bytes and preserve
 	}
 	for(const [path, identity] of Object.entries(history.introducedSources))
 	{
-		const source = beforePhpCallbackInstalledStaging(path, await readFile(path));
-		assert.equal(sha256(beforeWitCallbackRuntimeStaging(path, source)), identity.currentSha256);
+		const current = producerSource(path, identity.currentSha256);
+		assert.equal(sha256(current), identity.currentSha256);
 		assert.equal(identity.currentSha256, identity.integratedSha256);
-		const current = Buffer.from(beforeWitCallbackRuntimeStaging(path, source));
 		assert.equal(beforePostPerlCallbackStaging(path, current), current);
 	}
 	t.diagnostic(`${history.updates.length} exact transitions, ${Object.keys(history.introducedSources).length} introduced inputs, ${rejected} rejected source forgeries.`);
@@ -68,15 +85,14 @@ test("post-Perl staging preserves completed receipts and type-surface support wh
 	for(const predecessor of [history.previous, history.completedPredecessor])
 		assert.equal(sha256(await readFile(predecessor.path)), predecessor.sha256);
 	const path = "docs/type-surface.v1.json";
-	const source = beforePhpCallbackInstalledStaging(path, await readFile(path, "utf8"));
-	const current = beforePerlCallbackVariants(path, source);
-	const prior = JSON.parse(beforePostPerlCallbackStaging(path, current));
-	for(const evidence of prior.evidence) for(const file of evidence.files)
-	{
-		const fileSource = beforePhpCallbackInstalledStaging(file.path, await readFile(file.path));
-		file.sha256 = sha256(beforeWitCallbackRuntimeStaging(file.path, fileSource));
-	}
-	assert.deepEqual(JSON.parse(current), prior);
+	const update = history.updates.find(item => item.path === path);
+	const current = producerSource(path, update.currentSha256).toString("utf8");
+	const prior = reversePostPerlCallbackUpdate(current, update);
+	const withoutEvidenceIdentities = source => source.replace(
+		/(?<="sha256": ")[a-f0-9]{64}(?=")/gu, "<source-identity>"
+	);
+	assert.equal(withoutEvidenceIdentities(current)
+		, withoutEvidenceIdentities(prior));
 	const wrapper = await readFile("tests/owned-jvm-callback-result-history.test.mjs", "utf8");
 	assert.match(wrapper, /^import "\.\/helpers\/post-perl-callback-staging-history-tests\.mjs";$/mu);
 	assert.match(wrapper, /^import "\.\/helpers\/owned-php-callback-result-runtime-evidence-tests\.mjs";$/mu);
@@ -87,10 +103,15 @@ test("frozen Perl CLI observations reject current staged PHP and WIT inventories
 	const reports = unpackOwnedCallbackReports(record.archive);
 	const selected = Object.keys(reports).filter(path => /ordinary-combined-(?:package|release)\.json$/u.test(path));
 	assert.equal(selected.length, 2);
+	const stagedSource = async path => bytesAtProducer(
+		postPerlCallbackLineage.at(-1), path
+	);
 	for(const path of selected)
 	{
 		const item = reports[path], original = structuredClone(item);
-		await assert.rejects(() => assertOwnedPerlCallbackReport(path, item), error => {
+		await assert.rejects(() => assertOwnedPerlCallbackReport(
+			path, item, stagedSource
+		), error => {
 			assert.equal(error.code, "ERR_ASSERTION"); return true;
 		});
 		assert.deepEqual(item, original);

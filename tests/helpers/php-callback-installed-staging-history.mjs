@@ -13,6 +13,7 @@ import { beforePhpCallbackAcceptance } from "./php-callback-acceptance-history.m
 export const phpCallbackInstalledHistoryPath = "docs/evidence/php-callback-installed-staging-source-history-20261003.json";
 export const phpCallbackInstalledHistorySha256 = "8712e0d0b0e5f4fe0d16db89eb4e6beeecc92550c4b7ba833b69d6290826c3b3";
 export const phpCallbackInstalledBaseline = "fa51434d712136f38b6b0f88d9361494a32eda3a";
+export const phpCallbackInstalledProducer = "ad185d927673df87d1e40112ed9ccb41e299dfe3";
 export const phpCallbackInstalledIntegration = "07959423074d1b5d82ebab6f6d810b3358304baa";
 export const phpCallbackInstalledLineage = Object.freeze([
 	"1e635cf05a418c6169fd8002f0976ee2608afaa4"

@@ -19,6 +19,7 @@ import { beforeWitCallbackRuntimeStaging
 export const postPerlCallbackHistoryPath = "docs/evidence/post-perl-callback-staging-source-history-20261003.json";
 export const postPerlCallbackHistorySha256 = "710955098bb7ee148093d5e7f9c266f27be334d642d6ad06d9020202825850f4";
 export const postPerlCallbackBaseline = "1459c08d3a54340b9980dd62dc7145e01efb3280";
+export const postPerlCallbackProducer = "e5f7ae3dbc9ee8e85a5fd65a4fb68743aeccb0ed";
 export const postPerlCallbackLineage = Object.freeze([
 	"68e24c2e0cfc65b5d1c68eb0c9a6ae5feb4f0938"
 	, "c2c9f9ad1d2428cfb0f8459860c6d4ed1c806ba9"

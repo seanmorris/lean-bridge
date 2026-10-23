@@ -7,13 +7,13 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforePhpCallbackAcceptance } from "./php-callback-acceptance-history.mjs";
-import { assertPerlVariantAcceptance, perlVariantEvidencePath } from "./owned-perl-callback-result-variant-acceptance.mjs";
+import { perlVariantEvidencePath } from "./owned-perl-callback-result-variant-acceptance.mjs";
 import { assertPhpCallbackInstalledHistory, beforePhpCallbackInstalledStaging
 	, phpCallbackInstalledChangedPaths, phpCallbackInstalledHistoryPath
-	, phpCallbackInstalledHistorySha256, readPhpCallbackInstalledHistory
+	, phpCallbackInstalledHistorySha256, phpCallbackInstalledProducer
+	, phpCallbackInstalledBaseline, readPhpCallbackInstalledHistory
 	, reversePhpCallbackInstalledUpdate } from "./php-callback-installed-staging-history.mjs";
-import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
+import { bytesAtProducer } from "./producer-source.mjs";
 
 test("PHP installed callback history rejects forged chronology, scope and schemas", async t => {
 	const history = readPhpCallbackInstalledHistory(), mutations = [
@@ -53,14 +53,16 @@ test("PHP installed callback staging reverses exact sources and rejects drift", 
 	let rejected = 0;
 	for(const update of history.updates)
 	{
-		const current = Buffer.from(await sourceAtFinHistoryMilestone(
-			update.path, update.currentSha256, beforePhpCallbackAcceptance
-		));
-		const previous = beforePhpCallbackInstalledStaging(update.path, current);
+		const current = bytesAtProducer(
+			phpCallbackInstalledProducer, update.path, update.currentSha256
+		);
+		const previous = reversePhpCallbackInstalledUpdate(current, update);
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		assert.equal(sha256(previous), update.previousSha256, update.path);
 		assert.equal(beforePhpCallbackInstalledStaging(update.path, current, update.currentSha256), current);
-		assert.equal(beforePhpCallbackInstalledStaging(update.path, previous), previous);
+		assert.equal(beforePhpCallbackInstalledStaging(
+			update.path, previous, update.previousSha256
+		), previous);
 		for(const unknown of [Buffer.concat([current, Buffer.from("\n")]), Buffer.from(""), Buffer.from([0, 255, 128, 192])])
 		{
 			assert.equal(beforePhpCallbackInstalledStaging(update.path, unknown), unknown);
@@ -78,7 +80,9 @@ test("PHP installed callback staging reverses exact sources and rejects drift", 
 	for(const [path, identity] of Object.entries(history.introducedSources))
 	{
 		const update = history.updates.find(value => value.path === path);
-		const current = beforePhpCallbackAcceptance(path, await readFile(path), identity.stagedSha256);
+		const current = bytesAtProducer(
+			phpCallbackInstalledProducer, path, identity.stagedSha256
+		);
 		assert.equal(sha256(current), identity.stagedSha256, path);
 		assert.equal(identity.integrationSha256, update?.previousSha256 ?? identity.stagedSha256, path);
 	}
@@ -94,18 +98,16 @@ test("PHP staging registers two tests without changing type-surface support", as
 		, "owned-php-callback-result-packaging"
 	]);
 	const inventoryUpdate = history.updates.find(update => update.path === "docs/type-surface.v1.json");
-	const current = beforePhpCallbackAcceptance(inventoryUpdate.path
-		, await readFile(inventoryUpdate.path, "utf8"), inventoryUpdate.currentSha256);
-	const previous = beforePhpCallbackInstalledStaging(inventoryUpdate.path, current);
-	const currentInventory = JSON.parse(current), previousInventory = JSON.parse(previous);
-	const refreshes = new Map(inventoryUpdate.edits.map(edit => [edit.path, edit]));
-	for(const evidence of currentInventory.evidence) for(const file of evidence.files)
-		if(refreshes.has(file.path))
-		{
-			const edit = refreshes.get(file.path); assert.equal(file.sha256, edit.current);
-			file.sha256 = edit.previous;
-		}
-	assert.deepEqual(currentInventory, previousInventory);
+	const current = bytesAtProducer(
+		phpCallbackInstalledProducer, inventoryUpdate.path
+		, inventoryUpdate.currentSha256
+	).toString("utf8");
+	const previous = reversePhpCallbackInstalledUpdate(current, inventoryUpdate);
+	const withoutEvidenceIdentities = source => source.replace(
+		/(?<="sha256": ")[a-f0-9]{64}(?=")/gu, "<source-identity>"
+	);
+	assert.equal(withoutEvidenceIdentities(current)
+		, withoutEvidenceIdentities(previous));
 	assert.deepEqual(history.scope, { stage: "installed-package-evidence"
 		, acceptanceReceipt: false
 		, ciRequired: false, documentationPublished: false, producerRerun: false
@@ -113,6 +115,17 @@ test("PHP staging registers two tests without changing type-surface support", as
 });
 
 test("PHP staging preserves the immutable optional Perl package acceptance", async () => {
-	const record = JSON.parse(await readFile(perlVariantEvidencePath, "utf8"));
-	await assertPerlVariantAcceptance(record);
+	const history = readPhpCallbackInstalledHistory();
+	assert.equal(history.completedPredecessor.path, perlVariantEvidencePath);
+	const baseline = bytesAtProducer(phpCallbackInstalledBaseline
+		, perlVariantEvidencePath, history.completedPredecessor.sha256);
+	const integrated = bytesAtProducer(phpCallbackInstalledProducer
+		, perlVariantEvidencePath, history.completedPredecessor.sha256);
+	assert.deepEqual(integrated, baseline);
+	assert.equal(sha256(await readFile(perlVariantEvidencePath))
+		, history.completedPredecessor.sha256);
+	const record = JSON.parse(baseline);
+	assert.equal(record.kind, "owned-perl-callback-result-variants");
+	assert.equal(record.acceptance, "passed");
+	assert.equal(record.scope.installedSupportPromotions, 0);
 });

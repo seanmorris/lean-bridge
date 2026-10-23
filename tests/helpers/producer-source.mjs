@@ -36,6 +36,7 @@ export const bytesAtProducer = (revision, path, expected = undefined) => {
 	{
 		bytes = execFileSync("git", ["show", key], {
 			maxBuffer: maxSourceBytes
+			, stdio: ["ignore", "pipe", "pipe"]
 		});
 		if(bytes.length <= maxSourceBytes)
 		{
