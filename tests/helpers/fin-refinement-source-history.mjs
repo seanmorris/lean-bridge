@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeOwnedSubtypePerlSourcePathRepairSource, ownedSubtypePerlSourcePathRepairNormalizationPaths } from "./owned-subtype-perl-source-path-repair-source-history.mjs";
 import { beforeGenericSubtypeDocumentationSource, genericSubtypeDocumentationNormalizationPaths } from "./generic-subtype-documentation-source-history.mjs";
 import { beforeGenericSubtypePromotionSource, genericSubtypePromotionNormalizationPaths } from "./generic-subtype-promotion-source-history.mjs";
 import { beforeGenericSubtypeHostedArchiveSource, genericSubtypeHostedArchiveNormalizationPaths } from "./generic-subtype-hosted-archive-source-history.mjs";
@@ -2062,7 +2063,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...genericSubtypeDocumentationNormalizationPaths
+	...ownedSubtypePerlSourcePathRepairNormalizationPaths
+	, ...genericSubtypeDocumentationNormalizationPaths
 	, ...genericSubtypePromotionNormalizationPaths
 	, ...genericSubtypeHostedArchiveNormalizationPaths
 	, ...recursiveCheckedRecordDocumentationClosureNormalizationPaths
@@ -2867,6 +2869,16 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
+	let ownedSubtypePerlSourcePathRepair = text;
+	while(true)
+	{
+		const previous = beforeOwnedSubtypePerlSourcePathRepairSource(
+			path, ownedSubtypePerlSourcePathRepair, expected);
+		if(sha256(previous) === expected) return previous;
+		if(previous === ownedSubtypePerlSourcePathRepair) break;
+		ownedSubtypePerlSourcePathRepair = previous;
+	}
+	text = ownedSubtypePerlSourcePathRepair;
 	const genericSubtypeDocumentation
 		= beforeGenericSubtypeDocumentationSource(path, text, expected);
 	if(sha256(genericSubtypeDocumentation) === expected)

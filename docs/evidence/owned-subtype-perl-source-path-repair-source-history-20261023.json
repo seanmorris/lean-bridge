@@ -1,0 +1,117 @@
+{
+  "additions": [
+    {
+      "currentSha256": "b60cc9feab89c95e25be5c863542cf1c7c739b261068bb92d969a605842d8b53",
+      "path": "scripts/update-owned-subtype-perl-source-path-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "589d8c7e3838db36b13f2184add7a476f8b8d9d953997ee615f1ad68df808053",
+      "path": "tests/helpers/owned-subtype-perl-source-path-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "f0961063d7f99b1eca53566bcc3de8232a0fc3cab30c2349f93b9ca83eb066fc",
+      "path": "tests/helpers/owned-subtype-perl-source-path-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "6a0be732bef0b931eea4f47005e1a3ae4a021023",
+  "integrationUpdates": [
+    {
+      "currentSha256": "fb3a3668cb67f52377ee9682aff667f7252a83c0facdbdb005edb691fe022f02",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"5704f28e197b2182b9a5e9eb86cf59347b0461fbfab07ae5ea9296d335aa222f\"\n",
+          "previous": "          \"sha256\": \"9f82f47ed83fa83d3785f8f4e2ba73177342953c1acd5aff8cd6478e9df8f9ff\"\n",
+          "start": 685394
+        },
+        {
+          "current": "          \"sha256\": \"5704f28e197b2182b9a5e9eb86cf59347b0461fbfab07ae5ea9296d335aa222f\"\n",
+          "previous": "          \"sha256\": \"9f82f47ed83fa83d3785f8f4e2ba73177342953c1acd5aff8cd6478e9df8f9ff\"\n",
+          "start": 1440962
+        },
+        {
+          "current": "          \"sha256\": \"5704f28e197b2182b9a5e9eb86cf59347b0461fbfab07ae5ea9296d335aa222f\"\n",
+          "previous": "          \"sha256\": \"9f82f47ed83fa83d3785f8f4e2ba73177342953c1acd5aff8cd6478e9df8f9ff\"\n",
+          "start": 1447496
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "85c0e6b35011514473bbcd41f038dfc75c356be8bc3016502141e93cc0be6773"
+    },
+    {
+      "currentSha256": "5704f28e197b2182b9a5e9eb86cf59347b0461fbfab07ae5ea9296d335aa222f",
+      "edits": [
+        {
+          "current": "import \"./helpers/owned-subtype-perl-source-path-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 2085
+        }
+      ],
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "9f82f47ed83fa83d3785f8f4e2ba73177342953c1acd5aff8cd6478e9df8f9ff"
+    },
+    {
+      "currentSha256": "26457268ab362566c399ff6c2266b3e0963507b860b305684a9e09f7365982cf",
+      "edits": [
+        {
+          "current": "import { beforeOwnedSubtypePerlSourcePathRepairSource, ownedSubtypePerlSourcePathRepairNormalizationPaths } from \"./owned-subtype-perl-source-path-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...ownedSubtypePerlSourcePathRepairNormalizationPaths\n\t, ...genericSubtypeDocumentationNormalizationPaths\n",
+          "previous": "\t...genericSubtypeDocumentationNormalizationPaths\n",
+          "start": 166966
+        },
+        {
+          "current": "\tlet ownedSubtypePerlSourcePathRepair = text;\n\twhile(true)\n\t{\n\t\tconst previous = beforeOwnedSubtypePerlSourcePathRepairSource(\n\t\t\tpath, ownedSubtypePerlSourcePathRepair, expected);\n\t\tif(sha256(previous) === expected) return previous;\n\t\tif(previous === ownedSubtypePerlSourcePathRepair) break;\n\t\townedSubtypePerlSourcePathRepair = previous;\n\t}\n\ttext = ownedSubtypePerlSourcePathRepair;\n",
+          "previous": "",
+          "start": 205215
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "010ec03e8cbdae67a480a8491c43e1b214d33374024be31b37eeb1e9e0aa7570"
+    },
+    {
+      "currentSha256": "0cd10325624a94f99a7d5ea99c0da2d23f1f5cf4e32fb1dd8012e2644ff7db1a",
+      "edits": [
+        {
+          "current": "import \"./helpers/owned-subtype-perl-source-path-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 828
+        }
+      ],
+      "path": "tests/owned-subtype-hosted-ci.test.mjs",
+      "previousSha256": "63261c3ad9b8f160af0687cff8ebc06ca5fca08260c968930dc175b10fa50e9d"
+    }
+  ],
+  "milestone": "owned-subtype-perl-source-path-repair-v1",
+  "predecessorCommit": "a07f85b3bbb884225bb82c09ec143dbebbac8d7e",
+  "schemaVersion": 1,
+  "scope": "Correct the frozen owned-Subtype Perl consumer path to the actual committed installed fixture and require every declared archive source role to exist in Git.",
+  "updates": [
+    {
+      "currentSha256": "a570b8c936460611cd705208a2174be12fca79054edcc36708ec61eded11bc80",
+      "edits": [
+        {
+          "current": "\t, perl: [\"owned-perl-subtype.pl\"]\n",
+          "previous": "\t, perl: [\"owned-subtype-installed.pl\"]\n",
+          "start": 1903
+        }
+      ],
+      "path": "tests/helpers/owned-subtype-hosted-evidence-sources.mjs",
+      "previousSha256": "7c09710b857698b3dc89852e03e878efd0ff7f6da133344f995840f4ddc24df5"
+    },
+    {
+      "currentSha256": "63261c3ad9b8f160af0687cff8ebc06ca5fca08260c968930dc175b10fa50e9d",
+      "edits": [
+        {
+          "current": "\t\tfor(const source of sources)\n\t\t\tassert.doesNotThrow(() => execFileSync(\"git\", [\"cat-file\", \"-e\"\n\t\t\t\t, `${source.revision}:${source.path}`], { stdio: \"ignore\" })\n\t\t\t, `${lane}: ${source.role}/${source.path}`);\n",
+          "previous": "",
+          "start": 11578
+        }
+      ],
+      "path": "tests/owned-subtype-hosted-ci.test.mjs",
+      "previousSha256": "7730e6976efa286457b6706d56435c370d402bfa75bfb94b233471da0f093148"
+    }
+  ]
+}
