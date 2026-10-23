@@ -11,6 +11,7 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
+import "./helpers/evidence-checkout-closure-repair-source-history-tests.mjs";
 
 const trackedFiles = () => new Set(execFileSync("git", ["ls-files", "--cached", "-z"], {
 	encoding: "utf8", maxBuffer: 32 * 1024 * 1024

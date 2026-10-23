@@ -1,0 +1,213 @@
+{
+  "additions": [
+    {
+      "currentSha256": "4054ab641642c49fe10396ef1ab13a9be782a90b4e3918ae7edf1579f146f56a",
+      "path": "scripts/update-evidence-checkout-closure-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "2140abe32ff17cc013a64d2e8e6609f52bb6e6f84e5c7300b7f277b97f2b10e0",
+      "path": "tests/helpers/evidence-checkout-closure-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "642b1252f5792f2f34ed0fd74e2bccb7fe2b3278c3bcd0c2747a5e537fa19d7d",
+      "path": "tests/helpers/evidence-checkout-closure-repair-source-history.mjs"
+    }
+  ],
+  "implementationAdditions": [
+    {
+      "currentSha256": "1cb80306172e60266a85aa726ff8b76b5c04f761464631c4d810672ae9dac5a4",
+      "path": "docs/evidence/callback-checked-record-browser-20261023/hosted/output/callback-checked-record-browser-engine.log"
+    },
+    {
+      "currentSha256": "4a06bb24ecfadc53b4db2fde27b0557e31689b335932c4f6436b2ba8ff6c0e42",
+      "path": "docs/evidence/callback-checked-record-browser-20261023/hosted/output/callback-checked-record-browser-runtime.log"
+    },
+    {
+      "currentSha256": "7926b41a9740600f0a09dd86fc8c25997da414d88981a2fe93d35c2d5e65efe9",
+      "path": "docs/evidence/callback-checked-record-dotnet-20261023/hosted/output/callback-checked-record-remaining-dotnet-toolchain.log"
+    },
+    {
+      "currentSha256": "7926b41a9740600f0a09dd86fc8c25997da414d88981a2fe93d35c2d5e65efe9",
+      "path": "docs/evidence/callback-checked-record-jvm-20261023/hosted/output/callback-checked-record-remaining-jvm-toolchain.log"
+    },
+    {
+      "currentSha256": "8097c0d51858be34d5e7f33668c2b1db4d8ace81525b7f9d61c76059ac1f0bf2",
+      "path": "docs/evidence/callback-checked-record-languages-20261023/hosted/output/callback-checked-record-languages-toolchain.log"
+    },
+    {
+      "currentSha256": "7926b41a9740600f0a09dd86fc8c25997da414d88981a2fe93d35c2d5e65efe9",
+      "path": "docs/evidence/callback-checked-record-native-20261023/hosted/output/callback-checked-record-native-toolchain.log"
+    },
+    {
+      "currentSha256": "7926b41a9740600f0a09dd86fc8c25997da414d88981a2fe93d35c2d5e65efe9",
+      "path": "docs/evidence/callback-checked-record-php-native-20261023/hosted/output/callback-checked-record-remaining-php-native-toolchain.log"
+    },
+    {
+      "currentSha256": "8ad2e4dd97d31c887c28fc590e080011c2ec83c06d5a447606eb0e62488f3851",
+      "path": "docs/evidence/callback-checked-record-wit-wasi-20261023/hosted/output/callback-checked-record-remaining-wit-wasi-toolchain.log"
+    },
+    {
+      "currentSha256": "7926b41a9740600f0a09dd86fc8c25997da414d88981a2fe93d35c2d5e65efe9",
+      "path": "docs/evidence/callback-subtype-dotnet-20261022/hosted/output/callback-subtype-remaining-dotnet-toolchain.log"
+    },
+    {
+      "currentSha256": "7926b41a9740600f0a09dd86fc8c25997da414d88981a2fe93d35c2d5e65efe9",
+      "path": "docs/evidence/callback-subtype-jvm-20261022/hosted/output/callback-subtype-remaining-jvm-toolchain.log"
+    },
+    {
+      "currentSha256": "c903a6cb26c5341c166282ddebbda1a1363f5eedb3ca4db1f742d169d4704376",
+      "path": "docs/evidence/callback-subtype-languages-20261022/hosted/output/callback-subtype-languages-toolchain.log"
+    },
+    {
+      "currentSha256": "7926b41a9740600f0a09dd86fc8c25997da414d88981a2fe93d35c2d5e65efe9",
+      "path": "docs/evidence/callback-subtype-native-20261022/hosted/output/callback-subtype-native-toolchain.log"
+    },
+    {
+      "currentSha256": "7926b41a9740600f0a09dd86fc8c25997da414d88981a2fe93d35c2d5e65efe9",
+      "path": "docs/evidence/callback-subtype-php-native-20261022/hosted/output/callback-subtype-remaining-php-native-toolchain.log"
+    },
+    {
+      "currentSha256": "8ad2e4dd97d31c887c28fc590e080011c2ec83c06d5a447606eb0e62488f3851",
+      "path": "docs/evidence/callback-subtype-wit-wasi-20261022/hosted/output/callback-subtype-remaining-wit-wasi-toolchain.log"
+    },
+    {
+      "currentSha256": "7926b41a9740600f0a09dd86fc8c25997da414d88981a2fe93d35c2d5e65efe9",
+      "path": "docs/evidence/generic-subtype-foundation-hosted-20261023/hosted/output/dependent-generic-subtype-toolchain.log"
+    },
+    {
+      "currentSha256": "7926b41a9740600f0a09dd86fc8c25997da414d88981a2fe93d35c2d5e65efe9",
+      "path": "docs/evidence/generic-subtype-native-hosted-20261023/hosted/output/generic-subtype-native-toolchain.log"
+    },
+    {
+      "currentSha256": "31e11fb4fae893dbd4a7f367cdb5468c530b1eecc191b5191cbb5351902d4bee",
+      "path": "docs/evidence/generic-subtype-npm-ordinary-hosted-20261023/hosted/output/generic-subtype-engine-ordinary.log"
+    },
+    {
+      "currentSha256": "f5a974ae75ce34af1c9133db00dab167ebb1b7ad87f434a977e8eac02d0b4cb2",
+      "path": "docs/evidence/generic-subtype-npm-ordinary-hosted-20261023/hosted/output/generic-subtype-runtime-ordinary.log"
+    },
+    {
+      "currentSha256": "b3bbfe47954784bc3d6a62370ff5aebc100ae4192548a24ebf4b527816414644",
+      "path": "docs/evidence/generic-subtype-npm-reviewed-hosted-20261023/hosted/output/generic-subtype-engine-reviewed.log"
+    },
+    {
+      "currentSha256": "c79417d291c3ac388824eb9a92f210407c0d02db08e5f59d3935541c667693f6",
+      "path": "docs/evidence/generic-subtype-npm-reviewed-hosted-20261023/hosted/output/generic-subtype-runtime-reviewed.log"
+    },
+    {
+      "currentSha256": "7926b41a9740600f0a09dd86fc8c25997da414d88981a2fe93d35c2d5e65efe9",
+      "path": "docs/evidence/generic-subtype-perl-hosted-20261023/hosted/output/generic-subtype-perl-toolchain.log"
+    },
+    {
+      "currentSha256": "7926b41a9740600f0a09dd86fc8c25997da414d88981a2fe93d35c2d5e65efe9",
+      "path": "docs/evidence/generic-subtype-python-hosted-20261023/hosted/output/generic-subtype-python-toolchain.log"
+    },
+    {
+      "currentSha256": "7926b41a9740600f0a09dd86fc8c25997da414d88981a2fe93d35c2d5e65efe9",
+      "path": "docs/evidence/generic-subtype-ruby-hosted-20261023/hosted/output/generic-subtype-ruby-toolchain.log"
+    },
+    {
+      "currentSha256": "aec860425b9f7e226fa2d075173ff1197b7d295adc93b10a6acba8ab4232b13b",
+      "path": "docs/evidence/generic-subtype-rust-hosted-20261023/hosted/output/generic-subtype-rust-toolchain.log"
+    },
+    {
+      "currentSha256": "f3f979da08be06c8bcfd0923f41928b373b74b40e177b4f0579353ca110551af",
+      "path": "docs/evidence/owned-subtype-languages-hosted-20261023/hosted/output/owned-subtype-languages-ci/acceptance.log"
+    },
+    {
+      "currentSha256": "01f6f5539aaf5f47c01f021477f5832da33086e2018b72660b98cfa2f2f78b15",
+      "path": "docs/evidence/owned-subtype-languages-hosted-20261023/hosted/output/owned-subtype-languages-ci/toolchain.log"
+    },
+    {
+      "currentSha256": "122cad6fdcd8c0c505cdd8b49404306395dfae0ddfbcb5e9aeb50fe008e6b949",
+      "path": "docs/evidence/owned-subtype-native-hosted-20261023/hosted/output/owned-subtype-native-ci/acceptance.log"
+    },
+    {
+      "currentSha256": "7926b41a9740600f0a09dd86fc8c25997da414d88981a2fe93d35c2d5e65efe9",
+      "path": "docs/evidence/owned-subtype-native-hosted-20261023/hosted/output/owned-subtype-native-ci/toolchain.log"
+    },
+    {
+      "currentSha256": "fd79bd4f47f4d881ccc3ec7c3ceb68ed42073141a114a521898dcb5dbf6fd437",
+      "path": "docs/evidence/owned-subtype-perl-hosted-20261023/hosted/output/owned-subtype-perl-ci/acceptance.log"
+    },
+    {
+      "currentSha256": "7926b41a9740600f0a09dd86fc8c25997da414d88981a2fe93d35c2d5e65efe9",
+      "path": "docs/evidence/owned-subtype-perl-hosted-20261023/hosted/output/owned-subtype-perl-ci/toolchain.log"
+    },
+    {
+      "currentSha256": "67b30dfc94e7dcf4920c41b8f6394a7b00e578b5fd59b185a166aab598421ec9",
+      "path": "tests/type-surface-evidence-tracked.test.mjs"
+    }
+  ],
+  "implementationCommit": "f31a1afb2e502ae684387c43faf9bf10fb776bab",
+  "implementationCommits": [
+    "05e9200cadb55763be4b3094151cd121b0faf409",
+    "f31a1afb2e502ae684387c43faf9bf10fb776bab"
+  ],
+  "integrationUpdates": [
+    {
+      "currentSha256": "b020dbf2aed0013648e1321edb1277d857c1102d64847c8f704bddfb22ac08ac",
+      "edits": [
+        {
+          "current": "import { beforeEvidenceCheckoutClosureRepairSource, evidenceCheckoutClosureRepairNormalizationPaths } from \"./evidence-checkout-closure-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...evidenceCheckoutClosureRepairNormalizationPaths\n\t, ...witAcceptanceStopBoundaryNormalizationPaths\n",
+          "previous": "\t...witAcceptanceStopBoundaryNormalizationPaths\n",
+          "start": 169223
+        },
+        {
+          "current": "\tconst evidenceCheckoutClosureRepair\n\t\t= beforeEvidenceCheckoutClosureRepairSource(path, text, expected);\n\tif(sha256(evidenceCheckoutClosureRepair) === expected)\n\t\treturn evidenceCheckoutClosureRepair;\n\ttext = evidenceCheckoutClosureRepair;\n",
+          "previous": "",
+          "start": 208194
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "39ad42dda7bb0adf87d890b1ae56523d1d0a534b7e1cf36d531927f7675fadbf"
+    },
+    {
+      "currentSha256": "620d5a675823f8b906c714b9c93358a946e45a8ce2e8db98579fa3de49f8e871",
+      "edits": [
+        {
+          "current": "import \"./helpers/evidence-checkout-closure-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 418
+        }
+      ],
+      "path": "tests/type-surface-evidence-tracked.test.mjs",
+      "previousSha256": "67b30dfc94e7dcf4920c41b8f6394a7b00e578b5fd59b185a166aab598421ec9"
+    }
+  ],
+  "milestone": "evidence-checkout-closure-repair-v1",
+  "predecessorCommit": "bea28eba41d4caf7a27d65a2b50d1fd3ede5115e",
+  "schemaVersion": 1,
+  "scope": "Keep every indexed evidence log in Git, prevent ignored local artifacts from masking incomplete checkouts, and inspect the npm entry probe at the published internal/wasm package location.",
+  "updates": [
+    {
+      "currentSha256": "8e8f3f20917a37c6e6619fc944392f47642a064c4d19c601a3dcbdb717524f7c",
+      "edits": [
+        {
+          "current": "!docs/evidence/**/*.log\n",
+          "previous": "",
+          "start": 134
+        }
+      ],
+      "path": ".gitignore",
+      "previousSha256": "52ea568bb1386e2158ffb362446797510e3206d563596cd8c5ba8518b6cb0d37"
+    },
+    {
+      "currentSha256": "d3c2170aa8e1409202dee0a21da42d9625122ce75b35e9c2c86f790bd439183d",
+      "edits": [
+        {
+          "current": "\tconst packageRoot = join(consumer, \"node_modules\", nominalSubtypeName), wasmRoot = join(packageRoot, \"internal\", \"wasm\");\n",
+          "previous": "\tconst packageRoot = join(consumer, \"node_modules\", nominalSubtypeName), wasmRoot = join(packageRoot, \"wasm\");\n",
+          "start": 7673
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-entry-npm.mjs",
+      "previousSha256": "ed0ea856c91decebb39efaf15692d963d1348e29c3f23bd2d15f6949d512f188"
+    }
+  ]
+}
