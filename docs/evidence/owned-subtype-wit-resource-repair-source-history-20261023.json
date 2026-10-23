@@ -1,0 +1,71 @@
+{
+  "additions": [
+    {
+      "currentSha256": "cfd87ed87610eb77eb79206fa4b1c949c28dbada842913da341ecd0918355506",
+      "path": "scripts/update-owned-subtype-wit-resource-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "29fdfaf45fde67c1459be2f48f7de7d4221441d402023a68ef4a8af4fe2f04d0",
+      "path": "tests/helpers/owned-subtype-wit-resource-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "871cdf3c73c50fb249c1f23da73cc7e5c9074cbc1b3dfef55f511c5924beb5e1",
+      "path": "tests/helpers/owned-subtype-wit-resource-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "0df326f300311a8e0a6c7d02af58911debf2bb5b",
+  "integrationUpdates": [
+    {
+      "currentSha256": "ffb3a4cb311ea1ab4c2f0e872fe027d46e09bd62df7eabd01b1525a6c89b3cca",
+      "edits": [
+        {
+          "current": "import { beforeOwnedSubtypeWitResourceRepairSource, ownedSubtypeWitResourceRepairChangedPaths } from \"./owned-subtype-wit-resource-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 12635
+        },
+        {
+          "current": "\t, ...ownedSubtypeWitResourceRepairChangedPaths\n",
+          "previous": "",
+          "start": 170937
+        },
+        {
+          "current": "\tconst ownedSubtypeWitResourceRepair\n\t\t= beforeOwnedSubtypeWitResourceRepairSource(path, text, expected);\n\tif(sha256(ownedSubtypeWitResourceRepair) === expected)\n\t\treturn ownedSubtypeWitResourceRepair;\n\ttext = ownedSubtypeWitResourceRepair;\n",
+          "previous": "",
+          "start": 203189
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "00a2163e28f0cec92cf20711fd69970de2f7e07a18cd438dd2db19c6be7fef20"
+    },
+    {
+      "currentSha256": "8f96c0e6b513d24e37290fe5051e6fff68a82f2f2fb0f1a0ee9d9bf7c41ea3f9",
+      "edits": [
+        {
+          "current": "import \"./helpers/owned-subtype-wit-resource-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 4510
+        }
+      ],
+      "path": "tests/php-wasm-fin.test.mjs",
+      "previousSha256": "e1ed101994633401c3ac749b4cb135320bca44c443f93968ea9ff9929226714d"
+    }
+  ],
+  "milestone": "owned-subtype-wit-resource-repair-v1",
+  "predecessorCommit": "61bc1e0d998dbf467ddb1fc130159f7f6f1566bb",
+  "schemaVersion": 1,
+  "scope": "Require the exact identity-ticket resource emitted by the installed owned-Subtype WIT component on both author routes without weakening component validation or the public C consumer contract.",
+  "updates": [
+    {
+      "currentSha256": "5669550a4a0e599925b282aecc55fae02ce16cfa0d6dce2f349e8df34179f086",
+      "edits": [
+        {
+          "current": "\t\t\t, wit: [/resource identity-ticket/u, /echo-record-alternate: func/u, /transfer-record: func/u]\n",
+          "previous": "\t\t\t, wit: [/resource ticket/u, /echo-record-alternate: func/u, /transfer-record: func/u]\n",
+          "start": 11486
+        }
+      ],
+      "path": "tests/owned-subtype-remaining-packaging.test.mjs",
+      "previousSha256": "d85820d67c07a9b794bcdc1e46a3a9cf57a2e6c2b376cbad9414f24874783ac9"
+    }
+  ]
+}

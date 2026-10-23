@@ -64,6 +64,7 @@ import "./helpers/owned-checked-record-javascript-retention-source-history-tests
 import "./helpers/callback-subtype-hosted-archive-foundation-source-history-tests.mjs";
 import "./helpers/owned-checked-record-evidence-contract-source-history-tests.mjs";
 import "./helpers/owned-subtype-hosted-archive-source-history-tests.mjs";
+import "./helpers/owned-subtype-wit-resource-repair-source-history-tests.mjs";
 import "./helpers/owned-subtype-jvm-filename-repair-source-history-tests.mjs";
 import "./helpers/owned-subtype-promotion-contract-source-history-tests.mjs";
 import "./helpers/owned-subtype-evidence-test-registration-source-history-tests.mjs";

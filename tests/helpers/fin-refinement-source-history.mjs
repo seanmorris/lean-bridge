@@ -72,6 +72,7 @@ import { beforeOwnedCheckedRecordHostedArchiversSource, ownedCheckedRecordHosted
 import { beforeZeroPayloadMatrixClosureSource, zeroPayloadMatrixClosureChangedPaths } from "./zero-payload-matrix-closure-source-history.mjs";
 import { beforeOwnedCheckedRecordPhpWasmRetainedHandoffSource, ownedCheckedRecordPhpWasmRetainedHandoffChangedPaths } from "./owned-checked-record-php-wasm-retained-handoff-source-history.mjs";
 import { beforeOwnedCheckedRecordEvidenceContractSource, ownedCheckedRecordEvidenceContractChangedPaths } from "./owned-checked-record-evidence-contract-source-history.mjs";
+import { beforeOwnedSubtypeWitResourceRepairSource, ownedSubtypeWitResourceRepairChangedPaths } from "./owned-subtype-wit-resource-repair-source-history.mjs";
 import { beforeOwnedSubtypeJvmFilenameRepairSource, ownedSubtypeJvmFilenameRepairChangedPaths } from "./owned-subtype-jvm-filename-repair-source-history.mjs";
 import { beforeOwnedSubtypePromotionContractSource, ownedSubtypePromotionContractChangedPaths } from "./owned-subtype-promotion-contract-source-history.mjs";
 import { beforeOwnedSubtypeHostedArchiveSource, ownedSubtypeHostedArchiveChangedPaths } from "./owned-subtype-hosted-archive-source-history.mjs";
@@ -2146,6 +2147,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...zeroPayloadMatrixClosureChangedPaths
 	, ...ownedCheckedRecordPhpWasmRetainedHandoffChangedPaths
 	, ...ownedCheckedRecordEvidenceContractChangedPaths
+	, ...ownedSubtypeWitResourceRepairChangedPaths
 	, ...ownedSubtypeJvmFilenameRepairChangedPaths
 	, ...ownedSubtypePromotionContractChangedPaths
 	, ...ownedSubtypeHostedArchiveChangedPaths
@@ -2849,6 +2851,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
+	const ownedSubtypeWitResourceRepair
+		= beforeOwnedSubtypeWitResourceRepairSource(path, text, expected);
+	if(sha256(ownedSubtypeWitResourceRepair) === expected)
+		return ownedSubtypeWitResourceRepair;
+	text = ownedSubtypeWitResourceRepair;
 	const ownedSubtypeJvmFilenameRepair
 		= beforeOwnedSubtypeJvmFilenameRepairSource(path, text, expected);
 	if(sha256(ownedSubtypeJvmFilenameRepair) === expected)
