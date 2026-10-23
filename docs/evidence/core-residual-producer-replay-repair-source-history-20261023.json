@@ -1,0 +1,204 @@
+{
+  "additions": [
+    {
+      "currentSha256": "00b53633b36d86b2444752973d3e313ff46e40fd3fb526984c4cd7262cf8bde9",
+      "path": "tests/helpers/producer-module.mjs"
+    },
+    {
+      "currentSha256": "0ad24e9fc9ecd4ecf56335891650a1156cda5e8e62d5b4046e84c014c155c840",
+      "path": "scripts/update-core-residual-producer-replay-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "f11fe6a5c04a7d8cc34cb59b4a1bc8f581ca0aae76db64fc5a005dd4ea8e2325",
+      "path": "tests/helpers/core-residual-producer-replay-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "0bab5dff007b7297fb128ac78ed10964c486c80b2c73a476b12b4e96f7521db8",
+      "path": "tests/helpers/core-residual-producer-replay-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "a7c64325cdfd42927b5cea4d51be4fd6240cf394",
+  "integrationUpdates": [
+    {
+      "currentSha256": "3d335e9a7dab2b4cce0a958d191b98542b527df6be14a6d04add4514ce2d0ccb",
+      "edits": [
+        {
+          "current": "import { beforeCoreResidualProducerReplayRepairSource, coreResidualProducerReplayRepairNormalizationPaths } from \"./core-residual-producer-replay-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...coreResidualProducerReplayRepairNormalizationPaths\n\t, ...callbackStagingLineageReplayRepairNormalizationPaths\n",
+          "previous": "\t...callbackStagingLineageReplayRepairNormalizationPaths\n",
+          "start": 160482
+        },
+        {
+          "current": "\tconst coreResidualProducerReplayRepair\n\t\t= beforeCoreResidualProducerReplayRepairSource(path, text, expected);\n\tif(sha256(coreResidualProducerReplayRepair) === expected)\n\t\treturn coreResidualProducerReplayRepair;\n",
+          "previous": "",
+          "start": 196809
+        },
+        {
+          "current": "\t\t= beforeCallbackStagingLineageReplayRepairSource(\n\t\t\tpath, coreResidualProducerReplayRepair, expected\n\t\t);\n",
+          "previous": "\t\t= beforeCallbackStagingLineageReplayRepairSource(path, text, expected);\n",
+          "start": 197065
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "4fbc5f23658fabaa3c2bdc84a0be8067ab3858efa3e4792476d7e055b2ff8fb1"
+    },
+    {
+      "currentSha256": "6910edeef19b4b9f22aca23a51cc9cde7f700895a30e6d574bb164f8ecd02986",
+      "edits": [
+        {
+          "current": "import \"./helpers/core-residual-producer-replay-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 818
+        }
+      ],
+      "path": "tests/owned-jvm-borrow-evidence.test.mjs",
+      "previousSha256": "6043d3e4b36c78a7de0df7ff51652830e2f6b3118021014ad3e305d13759bfc6"
+    }
+  ],
+  "milestone": "core-residual-producer-replay-repair-source-v1",
+  "predecessorCommit": "d0397e913fab755ce13843f098eddcd182a9b26e",
+  "schemaVersion": 1,
+  "scope": "Residual Core checks authenticate the current CPAN checked-record capability, the partitioned PHP-Wasm evidence gate and frozen JVM borrow output reconstructed from the producer's complete static module closures.",
+  "updates": [
+    {
+      "currentSha256": "646c519562ed4fbae7a150dc10af444597266bae569bc392538a8f4c3482f652",
+      "edits": [
+        {
+          "current": "test(\"Perl checked-record package reader enables constructors for every package mode\", async () => {\n",
+          "previous": "test(\"Perl checked-record package reader enables only the copied transport\", async () => {\n",
+          "start": 4392
+        },
+        {
+          "current": "\tassert.ok(source.includes(\"nativeCheckedRecords: true\"));\n\tfor(const capability of [\n\t\t\"ownedGraphs\", \"ownedHostCallbacks\", \"ownedInputTransfers\"\n\t\t, \"ownedAnchoredResults\", \"ownedReceiverExports\"\n\t\t, \"ownedCallbackResultAnchors\"\n\t]) assert.ok(source.includes(`${capability}: isOwned`), capability);\n",
+          "previous": "\tassert.ok(source.includes(\"nativeCheckedRecords: !isOwned\"));\n",
+          "start": 4565
+        }
+      ],
+      "path": "tests/helpers/checked-record-perl-source-tests.mjs",
+      "previousSha256": "a6f3c8e42fa41f5e1443340a8c1235671145a7c69a08441046e849aa0cadc801"
+    },
+    {
+      "currentSha256": "e3f40bb36b6814a4801f91c06fe80936a68a9e0ba6602a7e0cbca2a34eaae4e4",
+      "edits": [
+        {
+          "current": "import { moduleAtProducer } from \"./producer-module.mjs\";\n",
+          "previous": "import { generateOwnedCPackage } from \"../../src/backends/c/owned-package.mjs\";\nimport { generateOwnedJvmCalls } from \"../../src/backends/jvm/owned-calls.mjs\";\nimport { generateOwnedJvmPackage } from \"../../src/backends/jvm/owned-package.mjs\";\nimport { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from \"../../src/build/native-graph-model.mjs\";\nimport { ownedJvmAdapterSources } from \"../../src/build/owned-jvm-artifacts.mjs\";\nimport { validateKotlinCompilation } from \"../../src/build/compile-jvm-sources.mjs\";\nimport { validatePackageSetReceipt } from \"../../src/release/package-set-receipt.mjs\";\nimport { ownedJvmCallNative, ownedJvmCallProbeMethods } from \"./owned-jvm-call-fixture.mjs\";\nimport { ownedJvmBorrowInstalledFixture } from \"./owned-jvm-borrow-installed.mjs\";\nimport { ownedBorrowSource } from \"./owned-borrow-fixture.mjs\";\nimport { ownedRustBorrowSource } from \"./owned-rust-borrow-fixture.mjs\";\nimport { javaCompilerOptions, kotlinCompilerOptions } from \"./type-corpus-jvm-tools.mjs\";\n",
+          "start": 465
+        },
+        {
+          "current": "const producerCommit = \"f5cde9256639f3989464822f8cf711015d518b31\";\n",
+          "previous": "",
+          "start": 2114
+        },
+        {
+          "current": "\tconst producer = Object.assign({}, ...await Promise.all([\n\t\t\"src/backends/c/owned-package.mjs\"\n\t\t, \"src/backends/jvm/owned-calls.mjs\"\n\t\t, \"src/backends/jvm/owned-package.mjs\"\n\t\t, \"src/build/compile-jvm-sources.mjs\"\n\t\t, \"src/build/native-graph-model.mjs\"\n\t\t, \"src/build/owned-jvm-artifacts.mjs\"\n\t\t, \"src/release/package-set-receipt.mjs\"\n\t\t, \"tests/helpers/owned-borrow-fixture.mjs\"\n\t\t, \"tests/helpers/owned-jvm-borrow-installed.mjs\"\n\t\t, \"tests/helpers/owned-jvm-call-fixture.mjs\"\n\t\t, \"tests/helpers/owned-rust-borrow-fixture.mjs\"\n\t\t, \"tests/helpers/type-corpus-jvm-tools.mjs\"\n\t].map(path => moduleAtProducer(producerCommit, path))));\n\tfor(const name of [\n\t\t\"createCompiledNativeModel\", \"generateCompiledNativeLeanAdapters\"\n\t\t, \"generateOwnedCPackage\", \"generateOwnedJvmCalls\"\n\t\t, \"generateOwnedJvmPackage\", \"ownedJvmAdapterSources\"\n\t\t, \"ownedJvmBorrowInstalledFixture\", \"ownedJvmCallNative\"\n\t\t, \"ownedJvmCallProbeMethods\", \"validateKotlinCompilation\"\n\t\t, \"validatePackageSetReceipt\"\n\t]) assert.equal(typeof producer[name], \"function\", name);\n",
+          "previous": "",
+          "start": 3070
+        },
+        {
+          "current": "\t\treturn producer.createCompiledNativeModel(item.input, capabilities);\n",
+          "previous": "\t\treturn createCompiledNativeModel(item.input, capabilities);\n",
+          "start": 5375
+        },
+        {
+          "current": "\t\tconst model = checkInput(item, producer.ownedBorrowSource);\n",
+          "previous": "\t\tconst model = checkInput(item, ownedBorrowSource);\n",
+          "start": 5872
+        },
+        {
+          "current": "\t\tconst generated = producer.generateOwnedJvmCalls(\n\t\t\tmodel.bindingIr, { anchoredResults: true }\n\t\t);\n\t\tconst native = producer.ownedJvmCallNative(item.input);\n",
+          "previous": "\t\tconst generated = generateOwnedJvmCalls(model.bindingIr, { anchoredResults: true });\n\t\tconst native = ownedJvmCallNative(item.input);\n",
+          "start": 6101
+        },
+        {
+          "current": "\t\tconst model = checkInput(item, producer.ownedRustBorrowSource);\n",
+          "previous": "\t\tconst model = checkInput(item, ownedRustBorrowSource);\n",
+          "start": 7189
+        },
+        {
+          "current": "\t\t\tconst generated = producer.generateOwnedJvmCalls(\n\t\t\t\tmodel.bindingIr, options\n\t\t\t);\n",
+          "previous": "\t\t\tconst generated = generateOwnedJvmCalls(model.bindingIr, options);\n",
+          "start": 7593
+        },
+        {
+          "current": "\t\t\t\tassert.equal(item[field], sha256(source.replace(\n\t\t\t\t\t\"/* METHODS */\"\n\t\t\t\t\t, () => producer.ownedJvmCallProbeMethods(generated, kotlin)\n\t\t\t\t)));\n",
+          "previous": "\t\t\t\tassert.equal(item[field], sha256(source.replace(\"/* METHODS */\", () => ownedJvmCallProbeMethods(generated, kotlin))));\n",
+          "start": 8759
+        },
+        {
+          "current": "\t\t\tconst native = producer.ownedJvmCallNative(item.input);\n",
+          "previous": "\t\t\tconst native = ownedJvmCallNative(item.input);\n",
+          "start": 8913
+        },
+        {
+          "current": "\t\tconst native = producer.generateCompiledNativeLeanAdapters(model);\n\t\tconst c = producer.generateOwnedCPackage({\n\t\t\t...item.input, hostCallbacks: true, ...options\n\t\t});\n\t\tconst projection = producer.generateOwnedJvmPackage(\n\t\t\tmodel.bindingIr, null, options\n\t\t);\n",
+          "previous": "\t\tconst native = generateCompiledNativeLeanAdapters(model);\n\t\tconst c = generateOwnedCPackage({ ...item.input, hostCallbacks: true, ...options });\n\t\tconst projection = generateOwnedJvmPackage(model.bindingIr, null, options);\n",
+          "start": 11394
+        },
+        {
+          "current": "\t\tfor(const [path, source] of Object.entries(\n\t\t\tproducer.ownedJvmAdapterSources(c, projection)\n\t\t))\n",
+          "previous": "\t\tfor(const [path, source] of Object.entries(ownedJvmAdapterSources(c, projection)))\n",
+          "start": 13078
+        },
+        {
+          "current": "\t\tproducer.validateKotlinCompilation(\n\t\t\tcompiled.kotlin, projection.namespace, { ownedValues: true }\n\t\t);\n",
+          "previous": "\t\tvalidateKotlinCompilation(compiled.kotlin, projection.namespace, { ownedValues: true });\n",
+          "start": 14467
+        },
+        {
+          "current": "\t\tconst generated = producer.generateOwnedJvmPackage(\n\t\t\tmodel.bindingIr, evidence, options\n\t\t);\n",
+          "previous": "\t\tconst generated = generateOwnedJvmPackage(model.bindingIr, evidence, options);\n",
+          "start": 14695
+        },
+        {
+          "current": "\t\tproducer.validatePackageSetReceipt(receipt);\n\t\tassert.equal(receipt.packages.length, 1);\n",
+          "previous": "\t\tvalidatePackageSetReceipt(receipt); assert.equal(receipt.packages.length, 1);\n",
+          "start": 16778
+        },
+        {
+          "current": "\t\tconst fixture = await producer.ownedJvmBorrowInstalledFixture(\n\t\t\tprojection.namespace, projection.functions.map(fn => fn.publicName)\n\t\t);\n",
+          "previous": "\t\tconst fixture = await ownedJvmBorrowInstalledFixture(projection.namespace, projection.functions.map(fn => fn.publicName));\n",
+          "start": 18207
+        },
+        {
+          "current": "\t\t\tassert.deepEqual(jvm.compilerOptions, profile === \"java\"\n\t\t\t\t? producer.javaCompilerOptions : producer.kotlinCompilerOptions);\n",
+          "previous": "\t\t\tassert.deepEqual(jvm.compilerOptions, profile === \"java\" ? javaCompilerOptions : kotlinCompilerOptions);\n",
+          "start": 19253
+        }
+      ],
+      "path": "tests/helpers/owned-jvm-borrow-evidence.mjs",
+      "previousSha256": "6e311199ced1875a51f2b52fc041d682229b388ea6315abd5be22298874922b6"
+    },
+    {
+      "currentSha256": "a36cf94fa9ea19250205e7f55cb247ef3eb454a4c5c88058d9411f17e4d81e8d",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { beforePhpWasmCorpusPartitionSource } from \"./php-wasm-corpus-partition-history.mjs\";\n",
+          "start": 141
+        },
+        {
+          "current": "",
+          "previous": "\tworkflow = beforePhpWasmCorpusPartitionSource(\".github/workflows/consumer-matrix.yml\", workflow);\n",
+          "start": 1958
+        },
+        {
+          "current": "\tassert.ok(upload?.includes(\n\t\t\"        if: always() && matrix.profile == 'values'\\n\"\n\t));\n",
+          "previous": "\tassert.ok(upload?.includes(\"        if: always()\\n\"));\n",
+          "start": 2416
+        },
+        {
+          "current": "\tconst corpus = workflow.split(\"\\n  php-wasm-corpus:\\n\")[1]\n\t\t?.split(\"\\n  php-wasm-observations:\\n\")[0];\n\tassert.ok(corpus?.includes(\n\t\t\"steps.type_corpus_php_wasm.outcome != 'success'\"\n\t));\n\tconst observations = workflow.split(\"\\n  php-wasm-observations:\\n\")[1]\n\t\t?.split(/\\n {2}[a-z][a-z0-9-]*:\\n/u)[0];\n\tassert.ok(observations?.includes(\n\t\t\"needs: [php-wasm-consumers, php-wasm-corpus]\"\n\t));\n\tfor(const prerequisite of [\n\t\t\"needs.php-wasm-consumers.result\", \"needs.php-wasm-corpus.result\"\n\t\t, \"steps.performance.outcome\"\n\t]) assert.ok(observations.includes(`\\${{ ${prerequisite} }}\" = success`)\n\t\t, prerequisite);\n",
+          "previous": "\tassert.ok(workflow.includes('[ \"${{ steps.type_corpus_php_wasm.outcome }}\" != success ]; then\\n            wasm_result=failed'));\n\t// The PHP-Wasm job enforces its own corpus outcome.\n\tconst wasmJob = workflow.split(\"\\n  php-wasm-consumers:\\n\")[1]?.split(/\\n {2}[a-z][a-z0-9-]*:\\n/u)[0];\n\tconst enforcement = wasmJob?.split(\"      - name: Enforce PHP support\\n\")[1]?.split(\"\\n\\n\")[0];\n\tassert.ok(enforcement?.includes(\"steps.type_corpus_php_wasm.outcome != 'success'\"));\n",
+          "start": 2880
+        }
+      ],
+      "path": "tests/helpers/owned-wasm32-evidence.mjs",
+      "previousSha256": "0ed114256870901bc4dcb51f38cd33b75c34919abd9df08ff45c4f4105d07c19"
+    }
+  ]
+}

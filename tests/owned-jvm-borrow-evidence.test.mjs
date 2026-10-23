@@ -13,6 +13,7 @@ import { assertOwnedJvmBorrowExecution, assertOwnedJvmBorrowCi } from "./helpers
 import { ownedJvmBorrowPath, ownedJvmBorrowBaseline, ownedJvmBorrowPrevious
 	, ownedJvmBorrowAddedPaths, ownedJvmBorrowChangedPaths
 	, beforeOwnedJvmBorrow, reverseOwnedJvmBorrowUpdate } from "./helpers/owned-jvm-borrow-history.mjs";
+import "./helpers/core-residual-producer-replay-repair-source-history-tests.mjs";
 
 const read = async () => JSON.parse(await readFile(ownedJvmBorrowPath, "utf8"));
 

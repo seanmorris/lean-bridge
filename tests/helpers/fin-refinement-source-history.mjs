@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeCoreResidualProducerReplayRepairSource, coreResidualProducerReplayRepairNormalizationPaths } from "./core-residual-producer-replay-repair-source-history.mjs";
 import { beforeCallbackStagingLineageReplayRepairSource, callbackStagingLineageReplayRepairNormalizationPaths } from "./callback-staging-lineage-replay-repair-source-history.mjs";
 import { beforeCallbackStagingProducerReplayRepairSource, callbackStagingProducerReplayRepairNormalizationPaths } from "./callback-staging-producer-replay-repair-source-history.mjs";
 import { beforeCoreFirstRunPinReplayRepairSource, coreFirstRunPinReplayRepairNormalizationPaths } from "./core-first-run-pin-replay-repair-source-history.mjs";
@@ -2025,7 +2026,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...callbackStagingLineageReplayRepairNormalizationPaths
+	...coreResidualProducerReplayRepairNormalizationPaths
+	, ...callbackStagingLineageReplayRepairNormalizationPaths
 	, ...callbackStagingProducerReplayRepairNormalizationPaths
 	, ...coreFirstRunPinReplayRepairNormalizationPaths
 	, ...structuredCallableProducerReplayRepairNormalizationPaths
@@ -2800,8 +2802,14 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 			text = exact;
 		}
 	}
+	const coreResidualProducerReplayRepair
+		= beforeCoreResidualProducerReplayRepairSource(path, text, expected);
+	if(sha256(coreResidualProducerReplayRepair) === expected)
+		return coreResidualProducerReplayRepair;
 	const callbackStagingLineageReplayRepair
-		= beforeCallbackStagingLineageReplayRepairSource(path, text, expected);
+		= beforeCallbackStagingLineageReplayRepairSource(
+			path, coreResidualProducerReplayRepair, expected
+		);
 	if(sha256(callbackStagingLineageReplayRepair) === expected)
 		return callbackStagingLineageReplayRepair;
 	const callbackStagingProducerReplayRepair
