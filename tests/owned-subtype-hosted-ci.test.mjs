@@ -5,6 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
+import { readdirSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import {
@@ -15,7 +16,7 @@ import {
 	ownedSubtypeHostedContracts, ownedSubtypeHostedLaneNames
 } from "./helpers/owned-subtype-hosted-contracts.mjs";
 import {
-	assertOwnedSubtypeHostedSteps
+	assertOwnedSubtypeHostedSteps, checkOwnedSubtypeHostedEvidence
 } from "./helpers/owned-subtype-hosted-evidence.mjs";
 import {
 	ownedSubtypeEvidenceSources
@@ -267,3 +268,19 @@ test("owned Subtype archives retain exact four-role source closures", () => {
 			&& source.path === "scripts/archive-owned-subtype-evidence.mjs"));
 	}
 });
+
+const evidenceDirectories = readdirSync("docs/evidence", {
+	withFileTypes: true
+}).filter(entry => entry.isDirectory()).map(entry => entry.name);
+
+for(const lane of ownedSubtypeHostedLaneNames)
+{
+	const roots = evidenceDirectories.filter(name => new RegExp(
+		`^owned-subtype-${lane}-hosted-\\d{8}$`, "u").test(name));
+	test(`retained ${lane} owned Subtype hosted evidence replays`, {
+		skip: roots.length === 0, timeout: 600_000
+	}, async () => {
+		for(const root of roots)
+			await checkOwnedSubtypeHostedEvidence(lane, `docs/evidence/${root}`);
+	});
+}
