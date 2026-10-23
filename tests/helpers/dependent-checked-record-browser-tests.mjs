@@ -28,7 +28,8 @@ import {
 	, validateDependentCheckedRecordPhases
 } from "./dependent-checked-record-browser-fixture.mjs";
 import {
-	assertDependentCheckedRecordNodeResult
+	assertDependentCheckedRecordNodeResult, dependentBrowserHandoffSpecifier
+	, parseExactPackageJson
 } from "./dependent-checked-record-browser-report.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
 import { checkDependentRecords } from "../fixtures/dependent-checked-record-browser/javascript.mjs";
@@ -78,6 +79,33 @@ test("dependent Node observations compare JSON values independently of member or
 		, { code: 0, stderr: "", stdout: JSON.stringify(expected) + "\n\n" }
 	]) assert.throws(() => assertDependentCheckedRecordNodeResult(
 		result, expected));
+});
+
+test("npm package snapshots preserve formatting, not member order"
+	, () => {
+	const expected = { version: "1.0.0", name: "dependentrecords"
+		, exports: { ".": { import: "./index.mjs", browser: "./index.mjs" } } };
+	const reordered = { exports: expected.exports, name: expected.name
+		, version: expected.version };
+	const bytes = Buffer.from(JSON.stringify(reordered, null, 2) + "\n");
+	assert.deepEqual(parseExactPackageJson(bytes), reordered);
+	for(const source of [
+		JSON.stringify(reordered) + "\n"
+		, JSON.stringify(reordered, null, "\t") + "\n"
+		, JSON.stringify(reordered, null, 2)
+		, JSON.stringify(reordered, null, 2) + "\n\n"
+	]) assert.throws(() => parseExactPackageJson(Buffer.from(source)));
+	const duplicate = Buffer.from(
+		'{\n  "name": "one",\n  "name": "two"\n}\n'
+	);
+	assert.throws(() => parseExactPackageJson(duplicate));
+	}
+);
+
+test("browser package dependencies retain the two-level handoff path", () => {
+	for(const profile of dependentCheckedRecordProfiles)
+		assert.equal(dependentBrowserHandoffSpecifier(profile, "component.tgz")
+			, "file:../../handoff/component.tgz");
 });
 
 test("the dependent checked-record caller covers bounds, recovery and results", () => {

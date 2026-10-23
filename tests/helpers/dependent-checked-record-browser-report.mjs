@@ -7,6 +7,7 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
+import { posix } from "node:path";
 import { reviewedContractDifference } from "../../src/analyze/reviewed-source.mjs";
 import { hashBindingIr } from "../../src/binding-ir/canonical.mjs";
 import { validateBindingIr } from "../../src/binding-ir/contract.mjs";
@@ -54,6 +55,32 @@ const canonical = async (read, path) => {
 	assert.equal(bytes.toString(), canonicalJson(value), path);
 	return value;
 };
+
+/**
+ * Parse a retained package snapshot while requiring npm's exact two-space JSON
+ * representation. Package member order is not semantic and generated package
+ * manifests intentionally preserve their construction order.
+ *
+ * @param bytes - Retained package.json bytes.
+ * @param path - Evidence path used in assertion diagnostics.
+ */
+export const parseExactPackageJson = (bytes, path = "package.json") => {
+	const source = bytes.toString(), value = JSON.parse(source);
+	assert.equal(source, JSON.stringify(value, null, 2) + "\n", path);
+	return value;
+};
+
+/**
+ * Reconstruct the file dependency written while the browser consumer lived at
+ * `browsers/<profile>` beside the shared `handoff` directory.
+ *
+ * @param profile - Browser consumer profile directory.
+ * @param archive - Validated npm archive name.
+ */
+export const dependentBrowserHandoffSpecifier = (profile, archive) =>
+	"file:" + posix.relative(
+		posix.join("browsers", profile), posix.join("handoff", archive)
+	);
 
 /**
  * Require one successful compact-JSON Node observation. JSON object member order
@@ -482,7 +509,10 @@ const checkBrowserPackages = async ({ item, npm, read, json, original }) => {
 		, sha256(canonicalJson(basis)));
 	assert.equal(`${runtime.name}@${runtime.version}`
 		, npm.receipt.runtime.package);
-	const component = await json(prefix + "installed-component-package.json");
+	const componentPath = prefix + "installed-component-package.json";
+	const component = parseExactPackageJson(
+		await read(componentPath), componentPath
+	);
 	assert.equal(`${component.name}@${component.version}`
 		, npm.receipt.package.package);
 	assert.deepEqual(component.dependencies
@@ -493,8 +523,12 @@ const checkBrowserPackages = async ({ item, npm, read, json, original }) => {
 		, componentIdentitySha256: npm.receipt.componentIdentitySha256
 		, bindingIrSha256: npm.bindingIrSha256, sharedRuntime: true
 	});
-	const manifest = await json(prefix + "package.json");
-	const lock = await json(prefix + "package-lock.json");
+	const manifestPath = prefix + "package.json";
+	const lockPath = prefix + "package-lock.json";
+	const manifest = parseExactPackageJson(
+		await read(manifestPath), manifestPath
+	);
+	const lock = parseExactPackageJson(await read(lockPath), lockPath);
 	assert.deepEqual(manifest
 		, { private: true, type: "module", dependencies: manifest.dependencies });
 	assert.equal(lock.lockfileVersion, 3);
@@ -513,7 +547,8 @@ const checkBrowserPackages = async ({ item, npm, read, json, original }) => {
 	]) {
 		const dependency = lock.packages[`node_modules/${metadata.name}`];
 		assert.equal(dependency.version, metadata.version);
-		assert.equal(dependency.resolved, `file:../handoff/${archive}`);
+		assert.equal(dependency.resolved
+			, dependentBrowserHandoffSpecifier(profile, archive));
 		assert.equal(manifest.dependencies[metadata.name], dependency.resolved);
 		assert.equal(dependency.integrity, "sha512-" + createHash("sha512")
 			.update(await read(`handoff/${archive}`)).digest("base64"));
