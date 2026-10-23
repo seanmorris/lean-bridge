@@ -1,0 +1,39 @@
+{
+  "version": "1.0.0",
+  "type": "module",
+  "sideEffects": false,
+  "types": "./index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.mjs",
+      "default": "./index.mjs",
+      "browser": "./index.mjs"
+    }
+  },
+  "files": [
+    "index.mjs",
+    "index.d.ts",
+    "README.md",
+    "binding-manifest.json",
+    "internal",
+    "notices",
+    "LICENSE"
+  ],
+  "name": "dependentrecords",
+  "license": "MIT",
+  "description": "Compiler-checked exports for dependentrecords.",
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "@lean-bridge/runtime": "0.0.0-abi2.61c8e5f1e7381182f2d9cac436e1a247efd41cb856443534a238e31515708de1"
+  },
+  "leanBridge": {
+    "component": "dependentrecords@1.0.0",
+    "componentBundleSha256": "2eb692ed3554c4593d046011bc7f9c15147bf48d82b057c30d50ab4ddaf87327",
+    "componentIdentitySha256": "27f966bc3cf6e1326a336845e80dfd8e50f90ce0f51f470d929ad87a0dfeb908",
+    "bindingIrSha256": "836074ffcb70109ff3fe1d2fad5e51618e05d9ad2b8e33a767058f37bfe7580a",
+    "sharedRuntime": true
+  }
+}

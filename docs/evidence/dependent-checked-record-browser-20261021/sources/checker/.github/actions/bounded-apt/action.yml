@@ -1,0 +1,10 @@
+name: Bound apt network waits
+description: Apply download timeouts and finite retries, including apt invoked by Playwright.
+runs:
+  using: composite
+  steps:
+    - name: Configure apt network limits
+      shell: bash
+      run: |
+        sudo install -m 0644 "${{ github.action_path }}/apt-network.conf" /etc/apt/apt.conf.d/99lean-bridge-network
+        apt-config dump

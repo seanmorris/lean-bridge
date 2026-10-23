@@ -1,0 +1,256 @@
+{
+  "files": [
+    {
+      "mode": 420,
+      "path": "index.mjs",
+      "sha256": "6efcbfb1a03a8844ce69fa2694501761375219b965234776f9498f8d5e5a9d4e"
+    },
+    {
+      "mode": 420,
+      "path": "internal/binding-ir/canonical.mjs",
+      "sha256": "28e22e614fc532a99baeeb34ee9d054f3bc6db82239fa89059a9518cb06d3d20"
+    },
+    {
+      "mode": 420,
+      "path": "internal/binding-ir/contract.mjs",
+      "sha256": "51f39115f198cadb22edcee1bc09d9205024c1ba622f86588056bca7aac6faf6"
+    },
+    {
+      "mode": 420,
+      "path": "internal/binding-ir/sha256.mjs",
+      "sha256": "f9bcbce580e88f31c3a63e8aa0d1d834228afa796a74a4c2f708da68e99a15ac"
+    },
+    {
+      "mode": 420,
+      "path": "internal/component-callable-runtime.mjs",
+      "sha256": "b07e7c94ac03024cb646b145f5dc8676d4764d55a83bf87335d13d7b71e62833"
+    },
+    {
+      "mode": 420,
+      "path": "internal/component-callables.mjs",
+      "sha256": "abb7093a48c6bfaf7cf3f5510d0e26816af5639718659a3d87397f96a5e7bafe"
+    },
+    {
+      "mode": 420,
+      "path": "internal/component-copied-codec.mjs",
+      "sha256": "06385bc88bc1359fb8bcbfbdb0bf01d79b372a2a6cbfd8f539f6d05c04b5f1a4"
+    },
+    {
+      "mode": 420,
+      "path": "internal/component-copied-runtime.mjs",
+      "sha256": "2c192e719f34b180ed0cd10c156b8395f873dcaae5a42d347458de53e43bc3c2"
+    },
+    {
+      "mode": 420,
+      "path": "internal/component-copied.mjs",
+      "sha256": "c06dc4bf621d1a0d255478b62d4d03cd77fed580cd37ff058bbe061c6145d599"
+    },
+    {
+      "mode": 420,
+      "path": "internal/component-owned-wasm.mjs",
+      "sha256": "d010d30b13af35cc1a5409c65cffe7dd2f3fdbd23e8627e70089b51b6bbac211"
+    },
+    {
+      "mode": 420,
+      "path": "internal/component-records.mjs",
+      "sha256": "c24c4216667ce99e0a1e5b0e56fa02ab266114128e92760bd2aa1d65a6c99ff2"
+    },
+    {
+      "mode": 420,
+      "path": "internal/component-recursive-abi.mjs",
+      "sha256": "2c6313445c66f51c504044f948139f7e576db534cffcbaf507f2c300ec57eee4"
+    },
+    {
+      "mode": 420,
+      "path": "internal/component-recursive-codec.mjs",
+      "sha256": "ee698c1f12c5da59aa51ed907656d72f84a687c1ee0ef80001c4f541833e0b8c"
+    },
+    {
+      "mode": 420,
+      "path": "internal/component-recursive-ownership.mjs",
+      "sha256": "7c363357647ea821e6d977ad524d5473ecfa2951e6759d03fcb46e5a19012e7a"
+    },
+    {
+      "mode": 420,
+      "path": "internal/component-recursive.mjs",
+      "sha256": "56bb060235becf659a9f31480be67ce4f095eba2e87af0833e4a3b899f72841f"
+    },
+    {
+      "mode": 420,
+      "path": "internal/component-runtime.mjs",
+      "sha256": "3c525383e5cde9342882f47b143362bfb5a17e7b37c5cb810d14b4b1eb4ab9fd"
+    },
+    {
+      "mode": 420,
+      "path": "internal/component-scalar-codec.mjs",
+      "sha256": "24c8d8430545ec0ab4b767b7cbe70a411e55ce3b39cd9ecef76975e39b1e3416"
+    },
+    {
+      "mode": 420,
+      "path": "internal/component-scalars.mjs",
+      "sha256": "ebca23ac97c23624cc6a1879a52dee1a79062ba97a549187970c95b2faec2a57"
+    },
+    {
+      "mode": 420,
+      "path": "internal/component-structured-callable-runtime.mjs",
+      "sha256": "390f620cf1006396954f294c50fc7c37441e617bea1a68b46eea28b9961d750f"
+    },
+    {
+      "mode": 420,
+      "path": "internal/component-structured-callables.mjs",
+      "sha256": "652368511f5018308d8b5544fb6543b4e6a36ea3a25d722951c02458d0c28a15"
+    },
+    {
+      "mode": 420,
+      "path": "internal/main.mjs",
+      "sha256": "8b791a4711e58876e29b5e0a7c3fcbab500b02d7550fe6f7c3321020a736be02"
+    },
+    {
+      "mode": 420,
+      "path": "internal/main.wasm",
+      "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b"
+    },
+    {
+      "mode": 420,
+      "path": "internal/owned-wasm-bindings.mjs",
+      "sha256": "cd74f944785fae8d45b64ab1c18e714acdfd4c0a328e64021794d8c816827e1b"
+    },
+    {
+      "mode": 420,
+      "path": "internal/owned-wasm-borrow-registry.mjs",
+      "sha256": "3d2b6c3b1956ebd66c813359a8bb18a54f162f4316bdb83d26fec226915a05fd"
+    },
+    {
+      "mode": 420,
+      "path": "internal/owned-wasm-callbacks.mjs",
+      "sha256": "14d28bc1b0d92191bb7567f7fb3a6eca35c57e9fdf824666b39318ef51ddc7ab"
+    },
+    {
+      "mode": 420,
+      "path": "internal/owned-wasm-calls.mjs",
+      "sha256": "af3671bee249f9a49f50160e4cf3f24e217e6727b1af1849fde39065dd94814c"
+    },
+    {
+      "mode": 420,
+      "path": "internal/owned-wasm-component-runtime.mjs",
+      "sha256": "c0153f72184053c526168b87236a74a8f12251d05d0b0be28deadb1b2ba08531"
+    },
+    {
+      "mode": 420,
+      "path": "internal/owned-wasm-control.mjs",
+      "sha256": "9e05a5b7653dd1409220a233d26492adf916789169896b59940b8c60c87fbb6f"
+    },
+    {
+      "mode": 420,
+      "path": "internal/owned-wasm-registry.mjs",
+      "sha256": "ea549d40212cf3e423c03763e09af19e41614662df74cf604a070b9c0ab34717"
+    },
+    {
+      "mode": 420,
+      "path": "internal/owned-wasm-scalars.mjs",
+      "sha256": "f187769507e97821b931a1a61321a9fc9bca085a56404481d025d4541e051aab"
+    },
+    {
+      "mode": 420,
+      "path": "internal/owned-wasm-values.mjs",
+      "sha256": "12e10dbd344900de88beb96af2ab1c72a9be433e296b85fd6974f26a5397aebe"
+    },
+    {
+      "mode": 420,
+      "path": "internal/refinements.mjs",
+      "sha256": "c78ac91ba4eda4c54544fbd4e10ffc3ff50eccc611e38a494a600a3cb3bc4deb"
+    },
+    {
+      "mode": 420,
+      "path": "LICENSE",
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    {
+      "mode": 420,
+      "path": "notices/emscripten.txt",
+      "sha256": "51aea7641f81d560eb039bc97ce35e2517e2656fe8731eb49ce6a18498eb22fe"
+    },
+    {
+      "mode": 420,
+      "path": "notices/lean-bundled.txt",
+      "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+    },
+    {
+      "mode": 420,
+      "path": "notices/lean.txt",
+      "sha256": "7ef159fd8db5a7a9e8051aac48997353f26d744e25f730a0594a806c126d2114"
+    },
+    {
+      "mode": 420,
+      "path": "notices/libuv.txt",
+      "sha256": "16de0c32b265cb7d46a6d3bd614f259dd4d693a5e26b3407b04aae8d73041f0c"
+    },
+    {
+      "mode": 420,
+      "path": "notices/llvm.txt",
+      "sha256": "539dd7aed86e8a4f12cbdd0e6c50c189c7d74847e4fecc64ce2c6ee3a01da38b"
+    },
+    {
+      "mode": 420,
+      "path": "notices/musl.txt",
+      "sha256": "b870108ec5e7790e9f9919064f1b9421d62d5f9b0e6c230c6adf7ea2da62e97b"
+    },
+    {
+      "mode": 420,
+      "path": "notices/NOTICE.txt",
+      "sha256": "2b3402d0d98f7ad752153038319af37135f57552b434b286f9b0633403490117"
+    }
+  ],
+  "metadata": {
+    "description": "Shared Lean WebAssembly runtime for generated Lean Bridge packages.",
+    "engines": {
+      "node": ">=22"
+    },
+    "exports": {
+      ".": {
+        "browser": "./index.mjs",
+        "default": "./index.mjs",
+        "import": "./index.mjs"
+      }
+    },
+    "files": [
+      "index.mjs",
+      "internal",
+      "LICENSE",
+      "notices",
+      "runtime-identity.json"
+    ],
+    "leanBridge": {
+      "abiVersion": 1,
+      "artifactIncluded": false,
+      "componentScalarAbi": 2,
+      "kind": "content-addressed-peer",
+      "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+      "patchSetSha256": "743765bf566f43ec2f7b4eb84a85686880b3797efe83bf244d6fc7281e4f85a3",
+      "profile": "side-lazy",
+      "requiredImports": [
+        "memory",
+        "__indirect_function_table"
+      ],
+      "shared": true,
+      "sharedRuntime": true
+    },
+    "license": "MIT",
+    "name": "@lean-bridge/runtime",
+    "sideEffects": true,
+    "type": "module"
+  },
+  "packagingImplementationSha256": "f7c4e8196814cdb6dafe16173740f762c9bf2208b6fa10650be8855f12b1b3c4",
+  "packing": {
+    "architecture": "x64",
+    "archiveRoot": "package",
+    "collationLocale": "en-US",
+    "icuVersion": "78.3",
+    "implementationSha256": "cb8a2db8a3679fa14405ebfd8e374932321c8053060359828f2be870a04b8235",
+    "nodeVersion": "22.23.3",
+    "platform": "linux",
+    "sourceDateEpoch": 1,
+    "zlibVersion": "1.3.1-e00f703"
+  },
+  "schemaVersion": 1
+}

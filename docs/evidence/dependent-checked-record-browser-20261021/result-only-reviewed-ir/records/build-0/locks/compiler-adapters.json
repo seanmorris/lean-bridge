@@ -1,0 +1,112 @@
+{
+  "component": "dependentrecords@1.0.0",
+  "componentPlanSha256": "246478ce5c7dca0e3487c421ae3c90fd7da9c6d913210f2bcb504434d77a28fa",
+  "exports": [
+    {
+      "bindingId": "lean:DependentRecords.dependentResult",
+      "leanEffect": null,
+      "leanResultType": "DependentRecords.Dependent",
+      "parameters": [
+        {
+          "leanType": "_root_.Nat",
+          "name": "value0"
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          null
+        ],
+        "result": {
+          "constructor": null,
+          "fields": [
+            {
+              "name": "bound",
+              "refinement": null
+            },
+            {
+              "name": "below",
+              "refinement": {
+                "field": "bound",
+                "kind": "fin-field"
+              }
+            }
+          ],
+          "kind": "checked-record",
+          "name": "DependentRecords.Dependent"
+        }
+      },
+      "resultMode": "value",
+      "sourceDeclaration": "DependentRecords.dependentResult",
+      "sourceModule": "DependentRecords",
+      "symbol": "lean_bridge_68fd7c7ce1ca8d8cb404c0e1",
+      "wrapper": "export_3b4647038835dc4c9892"
+    }
+  ],
+  "imports": [
+    "DependentRecords"
+  ],
+  "leanSourceSha256": "c2a9fb0b124161e44522705aa934648278485d65389beeebaaffe18867255d5d",
+  "module": "LeanBridgeGeneratedca8ca903379eb247",
+  "nominalRefinements": [
+    {
+      "id": "lean:DependentRecords.Dependent",
+      "refinement": {
+        "fields": [
+          null,
+          {
+            "field": "bound",
+            "kind": "fin-field"
+          }
+        ],
+        "kind": "record"
+      }
+    }
+  ],
+  "privateAbi": {
+    "dispatch": "copied-graph-frame-v1",
+    "exports": [
+      {
+        "bindingId": "lean:DependentRecords.dependentResult",
+        "parameters": [
+          {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        ],
+        "result": {
+          "id": "lean:DependentRecords.Dependent",
+          "kind": "named"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_68fd7c7ce1ca8d8cb404c0e1"
+      }
+    ],
+    "types": [
+      {
+        "erased": [
+          "valid"
+        ],
+        "fields": [
+          {
+            "name": "bound",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          },
+          {
+            "name": "below",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          }
+        ],
+        "id": "lean:DependentRecords.Dependent",
+        "kind": "record"
+      }
+    ],
+    "version": 8
+  },
+  "schemaVersion": 1
+}

@@ -76,6 +76,7 @@ import "./helpers/dependent-checked-record-php-evidence-tests.mjs";
 import "./helpers/dependent-checked-record-php-archive-source-history-tests.mjs";
 import "./helpers/dependent-checked-record-browser-path-diagnostic-repair-source-history-tests.mjs";
 import "./helpers/dependent-checked-record-browser-diagnostic-repair-source-history-tests.mjs";
+import "./helpers/dependent-checked-record-browser-evidence-tests.mjs";
 import "./helpers/dependent-checked-record-wit-export-count-repair-source-history-tests.mjs";
 import "./helpers/dependent-checked-record-wit-source-history-tests.mjs";
 import "./helpers/dependent-checked-record-wit-evidence-tests.mjs";

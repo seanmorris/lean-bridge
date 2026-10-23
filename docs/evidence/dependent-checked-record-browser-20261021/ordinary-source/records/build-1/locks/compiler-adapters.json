@@ -1,0 +1,237 @@
+{
+  "component": "dependentrecords@1.0.0",
+  "componentPlanSha256": "65a1a91aaa403643672ce70e1729c5b7f69da70b66a8493113116feeac230760",
+  "exports": [
+    {
+      "bindingId": "lean:DependentRecords.dependentResult",
+      "leanEffect": null,
+      "leanResultType": "DependentRecords.Dependent",
+      "parameters": [
+        {
+          "leanType": "_root_.Nat",
+          "name": "arg0"
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          null
+        ],
+        "result": {
+          "constructor": null,
+          "fields": [
+            {
+              "name": "bound",
+              "refinement": null
+            },
+            {
+              "name": "below",
+              "refinement": {
+                "field": "bound",
+                "kind": "fin-field"
+              }
+            }
+          ],
+          "kind": "checked-record",
+          "name": "DependentRecords.Dependent"
+        }
+      },
+      "resultMode": "value",
+      "sourceDeclaration": "DependentRecords.dependentResult",
+      "sourceModule": "DependentRecords",
+      "symbol": "lean_bridge_68fd7c7ce1ca8d8cb404c0e1",
+      "wrapper": "export_3b4647038835dc4c9892"
+    },
+    {
+      "bindingId": "lean:DependentRecords.dependentRoundtrip",
+      "leanEffect": null,
+      "leanResultType": "DependentRecords.Dependent",
+      "parameters": [
+        {
+          "leanType": "DependentRecords.Dependent",
+          "name": "arg0"
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "constructor": "DependentRecords.mkDependent",
+            "fields": [
+              {
+                "name": "bound",
+                "refinement": null
+              },
+              {
+                "name": "below",
+                "refinement": {
+                  "field": "bound",
+                  "kind": "fin-field"
+                }
+              }
+            ],
+            "kind": "checked-record",
+            "name": "DependentRecords.Dependent"
+          }
+        ],
+        "result": {
+          "constructor": null,
+          "fields": [
+            {
+              "name": "bound",
+              "refinement": null
+            },
+            {
+              "name": "below",
+              "refinement": {
+                "field": "bound",
+                "kind": "fin-field"
+              }
+            }
+          ],
+          "kind": "checked-record",
+          "name": "DependentRecords.Dependent"
+        }
+      },
+      "resultMode": "value",
+      "sourceDeclaration": "DependentRecords.dependentRoundtrip",
+      "sourceModule": "DependentRecords",
+      "symbol": "lean_bridge_30b2b148bb72f3b660b0fce1",
+      "wrapper": "export_ea7da5eb35ac82e283b7"
+    },
+    {
+      "bindingId": "lean:DependentRecords.dependentTotal",
+      "leanEffect": null,
+      "leanResultType": "_root_.Nat",
+      "parameters": [
+        {
+          "leanType": "DependentRecords.Dependent",
+          "name": "arg0"
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "constructor": "DependentRecords.mkDependent",
+            "fields": [
+              {
+                "name": "bound",
+                "refinement": null
+              },
+              {
+                "name": "below",
+                "refinement": {
+                  "field": "bound",
+                  "kind": "fin-field"
+                }
+              }
+            ],
+            "kind": "checked-record",
+            "name": "DependentRecords.Dependent"
+          }
+        ],
+        "result": null
+      },
+      "resultMode": "value",
+      "sourceDeclaration": "DependentRecords.dependentTotal",
+      "sourceModule": "DependentRecords",
+      "symbol": "lean_bridge_491413f7f1957f539674a9dc",
+      "wrapper": "export_813d703263f6e8ecc8e9"
+    }
+  ],
+  "imports": [
+    "DependentRecords"
+  ],
+  "leanSourceSha256": "c4f22c2c86f873558b93c0e88e8604c16f40664b7146ae97f6ede01b0c6a7676",
+  "module": "LeanBridgeGeneratedca8ca903379eb247",
+  "nominalRefinements": [
+    {
+      "id": "lean:DependentRecords.Dependent",
+      "refinement": {
+        "fields": [
+          null,
+          {
+            "field": "bound",
+            "kind": "fin-field"
+          }
+        ],
+        "kind": "record"
+      }
+    }
+  ],
+  "privateAbi": {
+    "dispatch": "copied-graph-frame-v1",
+    "exports": [
+      {
+        "bindingId": "lean:DependentRecords.dependentResult",
+        "parameters": [
+          {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        ],
+        "result": {
+          "id": "lean:DependentRecords.Dependent",
+          "kind": "named"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_68fd7c7ce1ca8d8cb404c0e1"
+      },
+      {
+        "bindingId": "lean:DependentRecords.dependentRoundtrip",
+        "parameters": [
+          {
+            "id": "lean:DependentRecords.Dependent",
+            "kind": "named"
+          }
+        ],
+        "result": {
+          "id": "lean:DependentRecords.Dependent",
+          "kind": "named"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_30b2b148bb72f3b660b0fce1"
+      },
+      {
+        "bindingId": "lean:DependentRecords.dependentTotal",
+        "parameters": [
+          {
+            "id": "lean:DependentRecords.Dependent",
+            "kind": "named"
+          }
+        ],
+        "result": {
+          "kind": "primitive",
+          "name": "nat"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_491413f7f1957f539674a9dc"
+      }
+    ],
+    "types": [
+      {
+        "erased": [
+          "valid"
+        ],
+        "fields": [
+          {
+            "name": "bound",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          },
+          {
+            "name": "below",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          }
+        ],
+        "id": "lean:DependentRecords.Dependent",
+        "kind": "record"
+      }
+    ],
+    "version": 8
+  },
+  "schemaVersion": 1
+}

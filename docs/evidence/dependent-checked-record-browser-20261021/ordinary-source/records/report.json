@@ -1,0 +1,268 @@
+{
+  "authorInputsUnchanged": true,
+  "builds": [
+    {
+      "authorInputsSha256": "caab1c42fcfcc94054bed7ecdc6c69073bfe3983817d5d751e7c8b60a64fe038",
+      "bindingIrFileSha256": "6446956127240dfbff7ebbf106210ea5b34b31bb4b7db15682eed5152b942633",
+      "bindingIrSha256": "2bba7e14f88b28a3039a49136afbed8b85a306281c6853344a3d8519ac4ec6de",
+      "componentArchiveSha256": "b97b15ac2d20aec49af87be0cd20d7a4f52edf2edcf1d0cf7d6ea4cf9b4a24c5",
+      "receiptSha256": "0e5c7c75b292ee8cc05351da61d4242fecb3f27b9df93724e0e028e23e21e703",
+      "runtimeArchiveSha256": "2d0542b611e1eb34730711e0feb87ab26e3e9cea6f364acd6fc648d0d5976d6a"
+    },
+    {
+      "authorInputsSha256": "caab1c42fcfcc94054bed7ecdc6c69073bfe3983817d5d751e7c8b60a64fe038",
+      "bindingIrFileSha256": "6446956127240dfbff7ebbf106210ea5b34b31bb4b7db15682eed5152b942633",
+      "bindingIrSha256": "2bba7e14f88b28a3039a49136afbed8b85a306281c6853344a3d8519ac4ec6de",
+      "componentArchiveSha256": "b97b15ac2d20aec49af87be0cd20d7a4f52edf2edcf1d0cf7d6ea4cf9b4a24c5",
+      "receiptSha256": "0e5c7c75b292ee8cc05351da61d4242fecb3f27b9df93724e0e028e23e21e703",
+      "runtimeArchiveSha256": "2d0542b611e1eb34730711e0feb87ab26e3e9cea6f364acd6fc648d0d5976d6a"
+    }
+  ],
+  "callers": {
+    "check.mjs": "234fc5ce6b41bac2f42a3ae0be354fd88cbade23c34dd55ce9482214635623bf",
+    "index.mjs": "a70345fa3405a5c9e4eb365772cde1bff4692d61156ffe6356d60282c7fdcc22",
+    "index.mts": "a2e62b5c2aea094d365c898df9ed24000a742fb43a5f10d1c19dbdc748a11c66"
+  },
+  "compilerFreePath": true,
+  "configuration": {
+    "contracts": {
+      "DependentRecords.dependentResult": {
+        "parameters": [
+          {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        ],
+        "result": {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      },
+      "DependentRecords.dependentRoundtrip": {
+        "parameters": [
+          {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "constructor": "DependentRecords.mkDependent",
+              "fields": [
+                {
+                  "name": "bound",
+                  "refinement": null
+                },
+                {
+                  "name": "below",
+                  "refinement": null
+                }
+              ],
+              "kind": "checked-record",
+              "name": "DependentRecords.Dependent"
+            }
+          }
+        ],
+        "result": {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      },
+      "DependentRecords.dependentTotal": {
+        "parameters": [
+          {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "constructor": "DependentRecords.mkDependent",
+              "fields": [
+                {
+                  "name": "bound",
+                  "refinement": null
+                },
+                {
+                  "name": "below",
+                  "refinement": null
+                }
+              ],
+              "kind": "checked-record",
+              "name": "DependentRecords.Dependent"
+            }
+          }
+        ],
+        "result": {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      }
+    },
+    "exports": [
+      "DependentRecords.dependentTotal",
+      "DependentRecords.dependentRoundtrip",
+      "DependentRecords.dependentResult"
+    ],
+    "modules": [
+      "DependentRecords"
+    ],
+    "schemaVersion": 1,
+    "targets": {
+      "npm": {
+        "name": "dependentrecords",
+        "version": "1.0.0"
+      }
+    }
+  },
+  "consumerProfiles": [
+    "node-javascript",
+    "node-typescript"
+  ],
+  "expected": {
+    "calls": 1036,
+    "checks": 777,
+    "recoveries": 260,
+    "rejections": 260,
+    "snapshots": 258
+  },
+  "expectedBindingIrSha256": "7545422156ec73246f01154f09b0262990640f2f27649ae3b7ec7504f226c99f",
+  "independentBuilds": 2,
+  "observations": [
+    {
+      "relocated": false,
+      "result": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"checks\":777,\"rejections\":260,\"calls\":1036,\"snapshots\":258,\"recoveries\":260}\n"
+      },
+      "typescript": {
+        "code": 0,
+        "stderr": "",
+        "stdout": ""
+      }
+    },
+    {
+      "relocated": true,
+      "result": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"checks\":777,\"rejections\":260,\"calls\":1036,\"snapshots\":258,\"recoveries\":260}\n"
+      },
+      "typescript": {
+        "code": 0,
+        "stderr": "",
+        "stdout": ""
+      }
+    }
+  ],
+  "offlineInstall": true,
+  "producerCommit": "733693e06a1461541d4d3d7a43d8496d26c2df45",
+  "receipt": {
+    "bindingIrSha256": "2bba7e14f88b28a3039a49136afbed8b85a306281c6853344a3d8519ac4ec6de",
+    "component": {
+      "id": "dependentrecords@1.0.0",
+      "name": "dependentrecords",
+      "version": "1.0.0"
+    },
+    "componentArtifactSha256": "7b1bedb24df5de5f6e0f7efddaf6dd7dc065a855db6cfeba8f6fa0a6630d29dd",
+    "componentBundleSha256": "044a15ffdbc85f57d7078e6f3618c3e5ff596b0d2a97eeafb6b7ded3faa35af2",
+    "componentIdentitySha256": "ff19555ec2bb25d8dee7401e4677c9b496093d5880587a649eda747592982d81",
+    "kind": "lean-bridge-component-package-receipt",
+    "package": {
+      "archive": "dependentrecords-1.0.0.tgz",
+      "package": "dependentrecords@1.0.0",
+      "sha256": "b97b15ac2d20aec49af87be0cd20d7a4f52edf2edcf1d0cf7d6ea4cf9b4a24c5"
+    },
+    "policies": {
+      "componentCompiledOnce": true,
+      "nativeCallablesOnly": true,
+      "runtimeBinaryInComponent": false,
+      "runtimeShared": true
+    },
+    "provenanceSha256": "fd0c2cf8ad6f8f280ce1160a0d1f41b3192a11a7c4a2680b14952a9af5bcc7fc",
+    "runtime": {
+      "archive": "lean-bridge-runtime-0.0.0-abi2.61c8e5f1e7381182f2d9cac436e1a247efd41cb856443534a238e31515708de1.tgz",
+      "package": "@lean-bridge/runtime@0.0.0-abi2.61c8e5f1e7381182f2d9cac436e1a247efd41cb856443534a238e31515708de1",
+      "sha256": "2d0542b611e1eb34730711e0feb87ab26e3e9cea6f364acd6fc648d0d5976d6a"
+    },
+    "runtimeRequirementSha256": "b3df4a35c4c5b68c496f066bf4bab0bbc6307a760420d02ae275cc94a6c0e4b9",
+    "schemaVersion": 1,
+    "source": {
+      "treeSha256": "da1ed4c13462b568382c902a50924238f4f590689edf9f3a7f44466adcea1a6d"
+    },
+    "verificationCommand": "node verify-component-package-receipt.mjs --receipt component-package-receipt.json"
+  },
+  "relation": "below < bound",
+  "relocatedInstallation": true,
+  "reproducible": true,
+  "route": "ordinary-source",
+  "schemaVersion": 1,
+  "sourceCommitClean": true,
+  "sourceRemovedBeforeInstallation": true,
+  "trees": {
+    "@lean-bridge/runtime": {
+      "LICENSE": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996",
+      "index.mjs": "6efcbfb1a03a8844ce69fa2694501761375219b965234776f9498f8d5e5a9d4e",
+      "internal/binding-ir/canonical.mjs": "28e22e614fc532a99baeeb34ee9d054f3bc6db82239fa89059a9518cb06d3d20",
+      "internal/binding-ir/contract.mjs": "51f39115f198cadb22edcee1bc09d9205024c1ba622f86588056bca7aac6faf6",
+      "internal/binding-ir/sha256.mjs": "f9bcbce580e88f31c3a63e8aa0d1d834228afa796a74a4c2f708da68e99a15ac",
+      "internal/component-callable-runtime.mjs": "b07e7c94ac03024cb646b145f5dc8676d4764d55a83bf87335d13d7b71e62833",
+      "internal/component-callables.mjs": "abb7093a48c6bfaf7cf3f5510d0e26816af5639718659a3d87397f96a5e7bafe",
+      "internal/component-copied-codec.mjs": "06385bc88bc1359fb8bcbfbdb0bf01d79b372a2a6cbfd8f539f6d05c04b5f1a4",
+      "internal/component-copied-runtime.mjs": "2c192e719f34b180ed0cd10c156b8395f873dcaae5a42d347458de53e43bc3c2",
+      "internal/component-copied.mjs": "c06dc4bf621d1a0d255478b62d4d03cd77fed580cd37ff058bbe061c6145d599",
+      "internal/component-owned-wasm.mjs": "d010d30b13af35cc1a5409c65cffe7dd2f3fdbd23e8627e70089b51b6bbac211",
+      "internal/component-records.mjs": "c24c4216667ce99e0a1e5b0e56fa02ab266114128e92760bd2aa1d65a6c99ff2",
+      "internal/component-recursive-abi.mjs": "2c6313445c66f51c504044f948139f7e576db534cffcbaf507f2c300ec57eee4",
+      "internal/component-recursive-codec.mjs": "ee698c1f12c5da59aa51ed907656d72f84a687c1ee0ef80001c4f541833e0b8c",
+      "internal/component-recursive-ownership.mjs": "7c363357647ea821e6d977ad524d5473ecfa2951e6759d03fcb46e5a19012e7a",
+      "internal/component-recursive.mjs": "56bb060235becf659a9f31480be67ce4f095eba2e87af0833e4a3b899f72841f",
+      "internal/component-runtime.mjs": "3c525383e5cde9342882f47b143362bfb5a17e7b37c5cb810d14b4b1eb4ab9fd",
+      "internal/component-scalar-codec.mjs": "24c8d8430545ec0ab4b767b7cbe70a411e55ce3b39cd9ecef76975e39b1e3416",
+      "internal/component-scalars.mjs": "ebca23ac97c23624cc6a1879a52dee1a79062ba97a549187970c95b2faec2a57",
+      "internal/component-structured-callable-runtime.mjs": "390f620cf1006396954f294c50fc7c37441e617bea1a68b46eea28b9961d750f",
+      "internal/component-structured-callables.mjs": "652368511f5018308d8b5544fb6543b4e6a36ea3a25d722951c02458d0c28a15",
+      "internal/main.mjs": "8b791a4711e58876e29b5e0a7c3fcbab500b02d7550fe6f7c3321020a736be02",
+      "internal/main.wasm": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+      "internal/owned-wasm-bindings.mjs": "cd74f944785fae8d45b64ab1c18e714acdfd4c0a328e64021794d8c816827e1b",
+      "internal/owned-wasm-borrow-registry.mjs": "3d2b6c3b1956ebd66c813359a8bb18a54f162f4316bdb83d26fec226915a05fd",
+      "internal/owned-wasm-callbacks.mjs": "14d28bc1b0d92191bb7567f7fb3a6eca35c57e9fdf824666b39318ef51ddc7ab",
+      "internal/owned-wasm-calls.mjs": "af3671bee249f9a49f50160e4cf3f24e217e6727b1af1849fde39065dd94814c",
+      "internal/owned-wasm-component-runtime.mjs": "c0153f72184053c526168b87236a74a8f12251d05d0b0be28deadb1b2ba08531",
+      "internal/owned-wasm-control.mjs": "9e05a5b7653dd1409220a233d26492adf916789169896b59940b8c60c87fbb6f",
+      "internal/owned-wasm-registry.mjs": "ea549d40212cf3e423c03763e09af19e41614662df74cf604a070b9c0ab34717",
+      "internal/owned-wasm-scalars.mjs": "f187769507e97821b931a1a61321a9fc9bca085a56404481d025d4541e051aab",
+      "internal/owned-wasm-values.mjs": "12e10dbd344900de88beb96af2ab1c72a9be433e296b85fd6974f26a5397aebe",
+      "internal/refinements.mjs": "c78ac91ba4eda4c54544fbd4e10ffc3ff50eccc611e38a494a600a3cb3bc4deb",
+      "notices/NOTICE.txt": "2b3402d0d98f7ad752153038319af37135f57552b434b286f9b0633403490117",
+      "notices/emscripten.txt": "51aea7641f81d560eb039bc97ce35e2517e2656fe8731eb49ce6a18498eb22fe",
+      "notices/lean-bundled.txt": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce",
+      "notices/lean.txt": "7ef159fd8db5a7a9e8051aac48997353f26d744e25f730a0594a806c126d2114",
+      "notices/libuv.txt": "16de0c32b265cb7d46a6d3bd614f259dd4d693a5e26b3407b04aae8d73041f0c",
+      "notices/llvm.txt": "539dd7aed86e8a4f12cbdd0e6c50c189c7d74847e4fecc64ce2c6ee3a01da38b",
+      "notices/musl.txt": "b870108ec5e7790e9f9919064f1b9421d62d5f9b0e6c230c6adf7ea2da62e97b",
+      "package.json": "f03021efc780af9fb3cd131eb1f3e3c0b59bb3797848c835e3ed7bdca9d578b0",
+      "runtime-identity.json": "61c8e5f1e7381182f2d9cac436e1a247efd41cb856443534a238e31515708de1"
+    },
+    "dependentrecords": {
+      "LICENSE": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996",
+      "README.md": "5beeffabaa07d516910b255389e0af38defe1da0d02bdb60d5e2095809be563c",
+      "binding-manifest.json": "42fdc37f02e74cbf57994d54af059e3bdb79b988316f5e4bbce7ffea55c72572",
+      "index.d.ts": "4861c744eee869ef1b45689c93d4a4ef76d1a4319e69a924a7b3ee1a46859287",
+      "index.mjs": "14b3c330366cbe3a5e9890f5fec8876cd281b9826637fcf451da406327184bcc",
+      "internal/descriptor.mjs": "2b097417334c7ec0001d70de67799f4bdc000137a8fd10b1e7fefdfc167b4760",
+      "internal/runtime.mjs": "796a86405ac3d463f1af06a4c056b2ee440a36934f9957cff2058402fac39358",
+      "internal/validators.mjs": "dc1b41e5fb9b009b50d7c9869b9952f58e54ff5e389a80621627f5a29c619adc",
+      "internal/wasm/dependentrecords-ca8ca903379eb247.so.wasm": "7b1bedb24df5de5f6e0f7efddaf6dd7dc065a855db6cfeba8f6fa0a6630d29dd",
+      "metadata/assurance.json": "5f097a7cc69070af15b5cd42c1eaf6729b9858e91c978ee0d94878aa46716e20",
+      "metadata/binding-ir.json": "6446956127240dfbff7ebbf106210ea5b34b31bb4b7db15682eed5152b942633",
+      "metadata/component-release-bundle.json": "044a15ffdbc85f57d7078e6f3618c3e5ff596b0d2a97eeafb6b7ded3faa35af2",
+      "metadata/lean-bridge.exports.json": "839b782a79dccb6e343e35da7cbbac9156c334c55b7d1f7b7890f1d2a41f5ae5",
+      "metadata/provenance.json": "fd0c2cf8ad6f8f280ce1160a0d1f41b3192a11a7c4a2680b14952a9af5bcc7fc",
+      "metadata/runtime-requirement.json": "b3df4a35c4c5b68c496f066bf4bab0bbc6307a760420d02ae275cc94a6c0e4b9",
+      "metadata/sbom.json": "da91fd3d73fdfd0e5baf21e82f3ab104905758262acedb7547a835b25beca56c",
+      "package.json": "68ba194d9ce542385eb052233144a01d8e555a2559b26bdea7c6022b8c391d00"
+    }
+  },
+  "typescript": {
+    "declarationsSha256": "4861c744eee869ef1b45689c93d4a4ef76d1a4319e69a924a7b3ee1a46859287",
+    "skipLibCheck": false,
+    "sourceSha256": "a2e62b5c2aea094d365c898df9ed24000a742fb43a5f10d1c19dbdc748a11c66",
+    "strict": true
+  }
+}
