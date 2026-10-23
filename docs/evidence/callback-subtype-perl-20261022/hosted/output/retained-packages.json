@@ -1,0 +1,31 @@
+{
+  "routes": [
+    {
+      "archiveBytes": 51642162,
+      "archives": 2,
+      "files": [
+        "archives/LeanBridge-CallbackSubtypes-1.000.tar.gz",
+        "archives/LeanBridge-Runtime-0.0020130180835253351074425099676719723942806298898514237203907626409680523998624031.tar.gz",
+        "package-set-receipt.json",
+        "package-set-receipt.json.sha256"
+      ],
+      "path": "evidence/ordinary/handoff",
+      "receiptSha256": "b8aec8891b710ef45e4a1f0e20387b14ee70a461681649e796381aa5e2f25940",
+      "route": "ordinary"
+    },
+    {
+      "archiveBytes": 51646122,
+      "archives": 2,
+      "files": [
+        "archives/LeanBridge-CallbackSubtypes-1.000.tar.gz",
+        "archives/LeanBridge-Runtime-0.0020130180835253351074425099676719723942806298898514237203907626409680523998624031.tar.gz",
+        "package-set-receipt.json",
+        "package-set-receipt.json.sha256"
+      ],
+      "path": "evidence/reviewed/handoff",
+      "receiptSha256": "d9f16570a07c07dd1078e84630c74d439ed53bda64cb7e701b1ebe7bbdf5c179",
+      "route": "reviewed"
+    }
+  ],
+  "schemaVersion": 1
+}
