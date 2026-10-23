@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeCoreSourceBoundaryClosureSource, coreSourceBoundaryClosureNormalizationPaths } from "./core-source-boundary-closure-source-history.mjs";
 import { beforeEvidenceCheckoutClosureRepairSource, evidenceCheckoutClosureRepairNormalizationPaths } from "./evidence-checkout-closure-repair-source-history.mjs";
 import { beforeWitAcceptanceStopBoundarySource, witAcceptanceStopBoundaryNormalizationPaths } from "./wit-acceptance-stop-boundary-source-history.mjs";
 import { beforeOwnedJvmLazyKotlinFactorySource, ownedJvmLazyKotlinFactoryNormalizationPaths } from "./owned-jvm-lazy-kotlin-factory-source-history.mjs";
@@ -2076,7 +2077,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...evidenceCheckoutClosureRepairNormalizationPaths
+	...coreSourceBoundaryClosureNormalizationPaths
+	, ...evidenceCheckoutClosureRepairNormalizationPaths
 	, ...witAcceptanceStopBoundaryNormalizationPaths
 	, ...ownedJvmLazyKotlinFactoryNormalizationPaths
 	, ...ownedSubtypeLivePinCompletionNormalizationPaths
@@ -2895,6 +2897,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
+	const coreSourceBoundaryClosure
+		= beforeCoreSourceBoundaryClosureSource(path, text, expected);
+	if(sha256(coreSourceBoundaryClosure) === expected)
+		return coreSourceBoundaryClosure;
+	text = coreSourceBoundaryClosure;
 	const evidenceCheckoutClosureRepair
 		= beforeEvidenceCheckoutClosureRepairSource(path, text, expected);
 	if(sha256(evidenceCheckoutClosureRepair) === expected)

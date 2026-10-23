@@ -1,0 +1,101 @@
+{
+  "additions": [
+    {
+      "currentSha256": "51b991539aa658ce61f6c486b5e544cd5d90edec4e0b3b81395422755ac74ad5",
+      "path": "scripts/update-core-source-boundary-closure-source-history.mjs"
+    },
+    {
+      "currentSha256": "1e556dabcc9e76f1cc8670bdcf9fed7c69159b6bf80c07eada011f5cbda18b2e",
+      "path": "tests/helpers/core-source-boundary-closure-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "7112a4d8258cc0e14125e34c8d2b9d6bf805f001a016bc9ec22dd93b6a1ebcac",
+      "path": "tests/helpers/core-source-boundary-closure-source-history.mjs"
+    }
+  ],
+  "implementationAdditions": [
+    {
+      "currentSha256": "941691e4425dc6fd2932f57623b55d400fc80681f2f5426bc3af7e867554b9a2",
+      "path": "tests/helpers/core-source-boundary-closure-tests.mjs"
+    }
+  ],
+  "implementationCommit": "c7c9fa036debad642a2a4899f56559e1f2e50c07",
+  "integrationUpdates": [
+    {
+      "currentSha256": "519120318dfcb103d30c67e076b9711fdf41d601dd37f19c8ada6c496bb48f4b",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"825da0c8a2b3332b75010c4f75674b2cbbd969d87d17e93a7ca2d9c642ec8b93\"\n",
+          "previous": "          \"sha256\": \"9b76fd8ac645f695b205f5dd805a7a5c97eff261329cf101b65dcfe34fb01b5d\"\n",
+          "start": 136758
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "a5b2985c95d649e9019b2b1db4d02f105f9a2502f908b4943e2dc5ca2ed45d15"
+    },
+    {
+      "currentSha256": "9c4f230a2fce1ea2e2d710f1e93cf897e79454485448ce8ab380306531c010c6",
+      "edits": [
+        {
+          "current": "import { beforeCoreSourceBoundaryClosureSource, coreSourceBoundaryClosureNormalizationPaths } from \"./core-source-boundary-closure-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...coreSourceBoundaryClosureNormalizationPaths\n\t, ...evidenceCheckoutClosureRepairNormalizationPaths\n",
+          "previous": "\t...evidenceCheckoutClosureRepairNormalizationPaths\n",
+          "start": 169375
+        },
+        {
+          "current": "\tconst coreSourceBoundaryClosure\n\t\t= beforeCoreSourceBoundaryClosureSource(path, text, expected);\n\tif(sha256(coreSourceBoundaryClosure) === expected)\n\t\treturn coreSourceBoundaryClosure;\n\ttext = coreSourceBoundaryClosure;\n",
+          "previous": "",
+          "start": 208396
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "b020dbf2aed0013648e1321edb1277d857c1102d64847c8f704bddfb22ac08ac"
+    },
+    {
+      "currentSha256": "9a11d6f67d20bcec32595560574d05081e0ce1c37a48149a5474f05162b134d5",
+      "edits": [
+        {
+          "current": "import \"./helpers/core-source-boundary-closure-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 413
+        }
+      ],
+      "path": "tests/toolchain-preflight.test.mjs",
+      "previousSha256": "cfbb70967f5858c0b1a962c200107b1f9be7a5195b0726e4d49806d6a105bfd9"
+    }
+  ],
+  "milestone": "core-source-boundary-closure-source-v1",
+  "predecessorCommit": "f3fa0f1895e96d84ebfac3ae589cc2c39d40fc42",
+  "schemaVersion": 1,
+  "scope": "Carry src/abi/owned-refinement-model.mjs in the filtered universal-core source so scripts/generate-lean-link-projection.mjs resolves its full module graph, prove the boundary closes every core script root with an omitted-model control and a filtered-copy import, and refresh the live source pins of the changed files.",
+  "updates": [
+    {
+      "currentSha256": "825da0c8a2b3332b75010c4f75674b2cbbd969d87d17e93a7ca2d9c642ec8b93",
+      "edits": [
+        {
+          "current": "    \"src/abi/owned-refinement-model.mjs\",\n",
+          "previous": "",
+          "start": 1455
+        }
+      ],
+      "path": "nix/core-source-boundary.json",
+      "previousSha256": "9b76fd8ac645f695b205f5dd805a7a5c97eff261329cf101b65dcfe34fb01b5d"
+    },
+    {
+      "currentSha256": "df2d1b43a80f73884311705a6a3af5e2f4b5304a77db07f3869762dce2b38908",
+      "edits": [
+        {
+          "current": "import \"./helpers/core-source-boundary-closure-tests.mjs\";\n",
+          "previous": "",
+          "start": 534
+        }
+      ],
+      "path": "tests/engine-execution-request.test.mjs",
+      "previousSha256": "cf2d9b7b507e08856442cfd6fa4730c1ceffe11f850236996c7f956e096f212a"
+    }
+  ]
+}

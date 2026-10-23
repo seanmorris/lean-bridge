@@ -11,6 +11,7 @@ import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import test from "node:test";
 import { promisify } from "node:util";
+import "./helpers/core-source-boundary-closure-source-history-tests.mjs";
 
 import { collectToolchainPreflight, renderToolchainPreflight, toolchainPreflightProfiles } from "../src/adoption/toolchain-preflight.mjs";
 
