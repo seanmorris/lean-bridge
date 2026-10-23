@@ -94,6 +94,7 @@ import "./helpers/callback-subtype-remaining-runtime-repair-source-history-tests
 import "./helpers/core-quality-budget-history-tests.mjs";
 import "./helpers/core-quality-sharding-source-history-tests.mjs";
 import "./helpers/core-first-run-repair-source-history-tests.mjs";
+import "./helpers/core-first-run-pin-replay-repair-source-history-tests.mjs";
 import "./helpers/core-first-run-residual-repair-source-history-tests.mjs";
 import "./helpers/core-second-run-residual-repair-source-history-tests.mjs";
 import "./helpers/core-third-run-residual-repair-source-history-tests.mjs";

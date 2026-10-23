@@ -1,0 +1,81 @@
+{
+  "additions": [
+    {
+      "currentSha256": "21f09663a2347bae1ae9a154fa18df8c01f218a0ab40499c7b09b8e44aa3691c",
+      "path": "scripts/update-core-first-run-pin-replay-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "eefd554ffa1b9c6613edb7b021982b48fa172b77bea2e161998a431432505bc8",
+      "path": "tests/helpers/core-first-run-pin-replay-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "ce6f08898a3c241a0acf2b05f5855a7c90923f7ddcbd6b4dcfe51b9da4097d46",
+      "path": "tests/helpers/core-first-run-pin-replay-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "b50d2504ee19f7ec438a1550aa7d99740723d90d",
+  "integrationUpdates": [
+    {
+      "currentSha256": "b3315e17a16b30923387adfe32ba1c7e189916d70a1217df1507d1245a0c8c42",
+      "edits": [
+        {
+          "current": "import \"./helpers/core-first-run-pin-replay-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 6767
+        }
+      ],
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "2147cfab24e3c0d171121e2f4f702da5e1c6e17dbfd67f5eacaf10bf0fd415cf"
+    },
+    {
+      "currentSha256": "7d9de2a101103cf03de14d92ded5c17d8e276f9ae97fc547726fe0b79dd8ba9f",
+      "edits": [
+        {
+          "current": "import { beforeCoreFirstRunPinReplayRepairSource, coreFirstRunPinReplayRepairNormalizationPaths } from \"./core-first-run-pin-replay-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...coreFirstRunPinReplayRepairNormalizationPaths\n\t, ...structuredCallableProducerReplayRepairNormalizationPaths\n",
+          "previous": "\t...structuredCallableProducerReplayRepairNormalizationPaths\n",
+          "start": 159945
+        },
+        {
+          "current": "\tconst coreFirstRunPinReplayRepair\n\t\t= beforeCoreFirstRunPinReplayRepairSource(path, text, expected);\n\tif(sha256(coreFirstRunPinReplayRepair) === expected)\n\t\treturn coreFirstRunPinReplayRepair;\n",
+          "previous": "",
+          "start": 196096
+        },
+        {
+          "current": "\t\t\tpath, coreFirstRunPinReplayRepair, expected\n",
+          "previous": "\t\t\tpath, text, expected\n",
+          "start": 196392
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "f398c614d9b2b5901158ad3600b9255cbedaf66f63d9778dae62a89750b4a0f7"
+    }
+  ],
+  "milestone": "core-first-run-pin-replay-repair-source-v1",
+  "predecessorCommit": "e0c582f64143a47a80548cd949909a5047f712a0",
+  "schemaVersion": 1,
+  "scope": "The first complete Core repair authenticates its unchanged test-profile source pin from the recorded predecessor commit instead of today's live source tree.",
+  "updates": [
+    {
+      "currentSha256": "2aed90824517bd05ab1a15468cb3dc6a01d9b0c7966b5d4e998243dc94abf6f6",
+      "edits": [
+        {
+          "current": "import { sourceAtProducer } from \"./producer-source.mjs\";\n",
+          "previous": "",
+          "start": 749
+        },
+        {
+          "current": "\t\t\t\tassert.equal(sha256(sourceAtProducer(\n\t\t\t\t\tcoreFirstRunRepairPredecessor, pin.path, pin.currentSha256\n\t\t\t\t)), pin.currentSha256);\n",
+          "previous": "\t\t\t\tassert.equal(sha256(await readFile(pin.path)), pin.currentSha256);\n",
+          "start": 4566
+        }
+      ],
+      "path": "tests/helpers/core-first-run-repair-source-history-tests.mjs",
+      "previousSha256": "6c627d7204a89c7a615b7d1c67072fc0f9855ebb6695aac4529e3097a27dfa4f"
+    }
+  ]
+}

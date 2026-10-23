@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeCoreFirstRunPinReplayRepairSource, coreFirstRunPinReplayRepairNormalizationPaths } from "./core-first-run-pin-replay-repair-source-history.mjs";
 import { beforeStructuredCallableProducerReplayRepairSource, structuredCallableProducerReplayRepairNormalizationPaths } from "./structured-callable-producer-replay-repair-source-history.mjs";
 import { beforeNativeBudgetReplayRepairSource, nativeBudgetReplayRepairNormalizationPaths } from "./native-budget-replay-repair-source-history.mjs";
 import { beforeInheritedDocsReplayRepairSource, inheritedDocsReplayRepairNormalizationPaths } from "./inherited-docs-replay-repair-source-history.mjs";
@@ -2022,7 +2023,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...structuredCallableProducerReplayRepairNormalizationPaths
+	...coreFirstRunPinReplayRepairNormalizationPaths
+	, ...structuredCallableProducerReplayRepairNormalizationPaths
 	, ...nativeBudgetReplayRepairNormalizationPaths
 	, ...inheritedDocsReplayRepairNormalizationPaths
 	, ...valueIndexRustGeneratorReplayRepairNormalizationPaths
@@ -2794,9 +2796,13 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 			text = exact;
 		}
 	}
+	const coreFirstRunPinReplayRepair
+		= beforeCoreFirstRunPinReplayRepairSource(path, text, expected);
+	if(sha256(coreFirstRunPinReplayRepair) === expected)
+		return coreFirstRunPinReplayRepair;
 	const structuredCallableProducerReplayRepair
 		= beforeStructuredCallableProducerReplayRepairSource(
-			path, text, expected
+			path, coreFirstRunPinReplayRepair, expected
 		);
 	if(sha256(structuredCallableProducerReplayRepair) === expected)
 		return structuredCallableProducerReplayRepair;
