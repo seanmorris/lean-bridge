@@ -24,6 +24,7 @@ import { corpusReviewedIr } from "./helpers/type-corpus-reviewed-ir.mjs";
 import { beforeNestedFinSource, reverseNestedFinUpdate, nestedFinChangedPaths, nestedFinHistoryPath } from "./helpers/nested-fin-source-history.mjs";
 import { beforeRefinementClosureSource } from "./helpers/refinement-closure-source-history.mjs";
 import { sourceAtFinHistoryMilestone } from "./helpers/source-at-fin-history-milestone.mjs";
+import "./helpers/core-residual-ledger-pointer-replay-repair-source-history-tests.mjs";
 import "./helpers/dependent-record-authority-replay-repair-source-history-tests.mjs";
 import "./helpers/pre-fin-type-surface-history-repair-source-history-tests.mjs";
 import "./helpers/value-index-promotion-memory-repair-source-history-tests.mjs";

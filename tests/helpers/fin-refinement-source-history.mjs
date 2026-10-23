@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeCoreResidualLedgerPointerReplayRepairSource, coreResidualLedgerPointerReplayRepairNormalizationPaths } from "./core-residual-ledger-pointer-replay-repair-source-history.mjs";
 import { beforeCoreRubyModelAvailabilityRepairSource, coreRubyModelAvailabilityRepairNormalizationPaths } from "./core-ruby-model-availability-repair-source-history.mjs";
 import { beforeCoreResidualProducerReplayRepairSource, coreResidualProducerReplayRepairNormalizationPaths } from "./core-residual-producer-replay-repair-source-history.mjs";
 import { beforeCallbackStagingLineageReplayRepairSource, callbackStagingLineageReplayRepairNormalizationPaths } from "./callback-staging-lineage-replay-repair-source-history.mjs";
@@ -2027,7 +2028,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...coreRubyModelAvailabilityRepairNormalizationPaths
+	...coreResidualLedgerPointerReplayRepairNormalizationPaths
+	, ...coreRubyModelAvailabilityRepairNormalizationPaths
 	, ...coreResidualProducerReplayRepairNormalizationPaths
 	, ...callbackStagingLineageReplayRepairNormalizationPaths
 	, ...callbackStagingProducerReplayRepairNormalizationPaths
@@ -2804,8 +2806,16 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 			text = exact;
 		}
 	}
+	const coreResidualLedgerPointerReplayRepair
+		= beforeCoreResidualLedgerPointerReplayRepairSource(
+			path, text, expected
+		);
+	if(sha256(coreResidualLedgerPointerReplayRepair) === expected)
+		return coreResidualLedgerPointerReplayRepair;
 	const coreRubyModelAvailabilityRepair
-		= beforeCoreRubyModelAvailabilityRepairSource(path, text, expected);
+		= beforeCoreRubyModelAvailabilityRepairSource(
+			path, coreResidualLedgerPointerReplayRepair, expected
+		);
 	if(sha256(coreRubyModelAvailabilityRepair) === expected)
 		return coreRubyModelAvailabilityRepair;
 	const coreResidualProducerReplayRepair

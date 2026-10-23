@@ -1,0 +1,123 @@
+{
+  "additions": [
+    {
+      "currentSha256": "8824b6f0106e3b4a893bc4d3ed31028cb56e2ff4c6b27bec2a842d8496008ed2",
+      "path": "scripts/update-core-residual-ledger-pointer-replay-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "12b1562ef282fc7a8911b203db0fd309fb407c1c49df75752f81ec38d3be2c77",
+      "path": "tests/helpers/core-residual-ledger-pointer-replay-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "581922eb8ac960b594f17c0f4db22238e83af0bea860a30b4793fc6c4f48f393",
+      "path": "tests/helpers/core-residual-ledger-pointer-replay-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "a2e52a6fb835be86c7ad797535059f4419e229f8",
+  "integrationUpdates": [
+    {
+      "currentSha256": "eb4caf484500a629c137d148e393cc88df89bf07d578b7c84fceb393692c816c",
+      "edits": [
+        {
+          "current": "import \"./helpers/core-residual-ledger-pointer-replay-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 1837
+        }
+      ],
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "b3315e17a16b30923387adfe32ba1c7e189916d70a1217df1507d1245a0c8c42"
+    },
+    {
+      "currentSha256": "2b58cb01fa73cd5bc5dc2febdae5bd8f98f15b28de47735a802d1890b6a958ce",
+      "edits": [
+        {
+          "current": "import { beforeCoreResidualLedgerPointerReplayRepairSource, coreResidualLedgerPointerReplayRepairNormalizationPaths } from \"./core-residual-ledger-pointer-replay-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...coreResidualLedgerPointerReplayRepairNormalizationPaths\n\t, ...coreRubyModelAvailabilityRepairNormalizationPaths\n",
+          "previous": "\t...coreRubyModelAvailabilityRepairNormalizationPaths\n",
+          "start": 160843
+        },
+        {
+          "current": "\tconst coreResidualLedgerPointerReplayRepair\n\t\t= beforeCoreResidualLedgerPointerReplayRepairSource(\n\t\t\tpath, text, expected\n\t\t);\n\tif(sha256(coreResidualLedgerPointerReplayRepair) === expected)\n\t\treturn coreResidualLedgerPointerReplayRepair;\n",
+          "previous": "",
+          "start": 197288
+        },
+        {
+          "current": "\t\t= beforeCoreRubyModelAvailabilityRepairSource(\n\t\t\tpath, coreResidualLedgerPointerReplayRepair, expected\n\t\t);\n",
+          "previous": "\t\t= beforeCoreRubyModelAvailabilityRepairSource(path, text, expected);\n",
+          "start": 197568
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "38358a4a752558710b679dadb0e6f8a010ec774adc33d32ef25ab87db34b67a9"
+    }
+  ],
+  "milestone": "core-residual-ledger-pointer-replay-repair-source-v1",
+  "predecessorCommit": "cc75d3ca37f867291d9ef064978304ee184bce2b",
+  "schemaVersion": 1,
+  "scope": "The residual-Core source-history reader now authenticates and reverses both later pointer-only ledger layers before interpreting the original edit offsets; its own addition checks reconstruct exact milestone bytes through the shared history hub.",
+  "updates": [
+    {
+      "currentSha256": "002c4eddec4a612b0c59a838933cd92306cd4d93e2c7f9f4b602508ab4703315",
+      "edits": [
+        {
+          "current": "import { mkdtemp, readdir, rm } from \"node:fs/promises\";\n",
+          "previous": "import { mkdtemp, readFile, readdir, rm } from \"node:fs/promises\";\n",
+          "start": 200
+        },
+        {
+          "current": "",
+          "previous": "\t, coreFirstRunResidualRepairHistoryPath\n",
+          "start": 495
+        },
+        {
+          "current": "\t, coreFirstRunResidualRepairRecord\n",
+          "previous": "",
+          "start": 536
+        },
+        {
+          "current": "\tconst record = coreFirstRunResidualRepairRecord();\n",
+          "previous": "\tconst record = JSON.parse(await readFile(\n\t\tcoreFirstRunResidualRepairHistoryPath, \"utf8\"\n\t));\n",
+          "start": 1091
+        },
+        {
+          "current": "\tconst record = coreFirstRunResidualRepairRecord();\n",
+          "previous": "\tconst record = JSON.parse(await readFile(\n\t\tcoreFirstRunResidualRepairHistoryPath, \"utf8\"\n\t));\n",
+          "start": 2637
+        },
+        {
+          "current": "\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256))\n",
+          "previous": "\t\tassert.equal(sha256(await readFile(addition.path))\n",
+          "start": 2733
+        },
+        {
+          "current": "\tconst record = coreFirstRunResidualRepairRecord();\n",
+          "previous": "\tconst record = JSON.parse(await readFile(\n\t\tcoreFirstRunResidualRepairHistoryPath, \"utf8\"\n\t));\n",
+          "start": 4227
+        }
+      ],
+      "path": "tests/helpers/core-first-run-residual-repair-source-history-tests.mjs",
+      "previousSha256": "ff1e1562c3414e66d46f146b093aada704e205904ab117f5023a886f38905d87"
+    },
+    {
+      "currentSha256": "dfb39c7548a07ab7d16d27eec5431c2ac5cf58f2a1f1c6bc48511110befe29ed",
+      "edits": [
+        {
+          "current": "const recordPointerLayers = Object.freeze([\n\tObject.freeze({\n\t\tcurrentContainerSha256: \"cb730ea6e649ab204029b862a75deaa2e4b9948ef06c43fd4c8d7b7def05c034\"\n\t\t, current: \"b8c33a3a21da3f38ed8647fc8984be7815ec8ca6b6be8f78b224136811c3ff7d\"\n\t\t, previous: \"dce5bd7367d8764c2b2f5a93a69baba56e724a5db623d033707d39bea24b547d\"\n\t\t, previousContainerSha256: \"c27ea39d9f5592a961009c252618390137a9d6085cdde36d4fa0820d7f453a2d\"\n\t})\n\t, Object.freeze({\n\t\tcurrentContainerSha256: \"c27ea39d9f5592a961009c252618390137a9d6085cdde36d4fa0820d7f453a2d\"\n\t\t, current: \"dce5bd7367d8764c2b2f5a93a69baba56e724a5db623d033707d39bea24b547d\"\n\t\t, previous: \"3331489dcab7a9b9dda3450440438c2444405a48009a086be465ca428c878b2f\"\n\t\t, previousContainerSha256: \"8c2eda9fbf01fef2c5ab7e6bbd8758a8f0441cf6f0ca022ffbd3dd388bee005e\"\n\t})\n]);\n",
+          "previous": "",
+          "start": 1802
+        },
+        {
+          "current": "/** Restore the immutable repair ledger before interpreting its edit offsets. */\nconst originalRecordSource = () => {\n\tlet source = readFileSync(coreFirstRunResidualRepairHistoryPath, \"utf8\");\n\tfor(const layer of recordPointerLayers)\n\t{\n\t\tassert.equal(sha256(source), layer.currentContainerSha256\n\t\t\t, coreFirstRunResidualRepairHistoryPath);\n\t\tassert.equal(source.split(layer.current).length - 1, 1\n\t\t\t, coreFirstRunResidualRepairHistoryPath);\n\t\tsource = source.replace(layer.current, layer.previous);\n\t\tassert.equal(sha256(source), layer.previousContainerSha256\n\t\t\t, coreFirstRunResidualRepairHistoryPath);\n\t}\n\treturn source;\n};\n\nconst record = () => history ??= JSON.parse(originalRecordSource());\n\n/** Return an isolated copy of the authenticated original ledger. */\nexport const coreFirstRunResidualRepairRecord = () =>\n\tstructuredClone(record());\n",
+          "previous": "const record = () => history ??= JSON.parse(readFileSync(\n\tcoreFirstRunResidualRepairHistoryPath, \"utf8\"\n));\n",
+          "start": 2595
+        }
+      ],
+      "path": "tests/helpers/core-first-run-residual-repair-source-history.mjs",
+      "previousSha256": "5f315a94b221b23aa61135d64521f74aa2c30a6ab48254aeaa28212a7f03540c"
+    }
+  ]
+}
