@@ -1,0 +1,504 @@
+{
+  "additions": [
+    {
+      "currentSha256": "1691c7a965d371f980341d1f31979ded63d1d8139871b5d5a7fea410d627677b",
+      "path": ".github/workflows/dependent-checked-record-matrix.yml"
+    },
+    {
+      "currentSha256": "9665042255445dd77206014b006ff936666414b206735b02040d784e7039f78e",
+      "path": "tests/dependent-checked-record-matrix-inventory.test.mjs"
+    },
+    {
+      "currentSha256": "7c6babe7e225ebddeb416e67edf85413dc913c7e05c668cb5b37477529f3d3c7",
+      "path": "tests/dependent-checked-record-matrix.test.mjs"
+    },
+    {
+      "currentSha256": "14aed5d856ecb67c5d33f3e453e5389ba5a31ea7ef31e8f593a00c735055f8e1",
+      "path": "tests/helpers/dependent-checked-record-matrix-ci-tests.mjs"
+    },
+    {
+      "currentSha256": "9c25a7dc5ada477b789965eef8c374245f0f3d63e83213ec4f3c0cb2ba1a28c2",
+      "path": "scripts/update-checked-refinement-gate-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "03b4025471a9d05291a3af5d6f9cbbbd90ab4570adce7472112352e690283987",
+      "path": "tests/helpers/checked-refinement-gate-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "baf1a27da8fe110e7721052d988180dd0792900bd3e3a638a3fd7770ae0d91ad",
+      "path": "tests/helpers/checked-refinement-gate-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "2ff31b0bdedc91edb5b3cf0debc7ec00ff82c8e9",
+  "implementationCommits": [
+    "6880c46cbf77b66393dc1ea22bd41a910280e604",
+    "e71d906ab592b838a1c60fe96c77a9f8df56c673",
+    "551aa394301ab9bd8c4272f8651379ba395695fb",
+    "21cba0ef268a5ec21757d0f7354933652a2306a1",
+    "34346df94500c3eb99c40635e3dc020735d10832",
+    "bfbcee921abd17f5e814149f9d882f482d4a78f3",
+    "2cb047df2225c27f2bbc2d7d192baccbee3b0582",
+    "6f6b092b6e32be5e211611bd459fe3d5af73cb57",
+    "b840e3c26d615139d4ff5cef93de90d234539eb5",
+    "6d69d2e7b8e9735f334012b59f45351eedbdb04a",
+    "d3c3a340be2ce0ea76832a3c24b9459923ad6ef2",
+    "2ff31b0bdedc91edb5b3cf0debc7ec00ff82c8e9"
+  ],
+  "integrationUpdates": [
+    {
+      "currentSha256": "a658951d75bc0b4b3d4953bbbbe3371d90920cf378d04ebbf1e699524a69165b",
+      "edits": [
+        {
+          "current": "import \"./helpers/checked-refinement-gate-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 1837
+        }
+      ],
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "5c10620875dd5088605dd74d0bb1d6266105664f2df1ef8e1c5be900ad0ac343"
+    },
+    {
+      "currentSha256": "e297ac8e735683c9ca240f13dee2075d97544707e94415b578dcfb34c3a5ae11",
+      "edits": [
+        {
+          "current": "import { beforeCheckedRefinementGateRepairSource, checkedRefinementGateRepairNormalizationPaths } from \"./checked-refinement-gate-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...checkedRefinementGateRepairNormalizationPaths\n\t, ...dependentCheckedRecordBrowserArchiveImplementationPaths\n",
+          "previous": "\t...dependentCheckedRecordBrowserArchiveImplementationPaths\n",
+          "start": 163737
+        },
+        {
+          "current": "\tconst input = text;\n",
+          "previous": "",
+          "start": 200878
+        },
+        {
+          "current": "\tconst checkedRefinementGateRepair\n\t\t= beforeCheckedRefinementGateRepairSource(path, text, expected);\n\tif(sha256(checkedRefinementGateRepair) === expected)\n\t\treturn checkedRefinementGateRepair;\n\ttext = checkedRefinementGateRepair;\n",
+          "previous": "",
+          "start": 200971
+        },
+        {
+          "current": "\tif(previous === text) return text === input ? source : text;\n",
+          "previous": "\tif(previous === text) return source;\n",
+          "start": 260656
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "f06bab34d90d89174336eeb3106e5733e8a1b6c5b5b5b0a096e9d84c6eddcaff"
+    }
+  ],
+  "milestone": "checked-refinement-gate-repair-source-v1",
+  "predecessorCommit": "e85b0d2e90bb15d878e51e4e04a7e5e2e12e307d",
+  "schemaVersion": 1,
+  "scope": "Close the dependent checked-record recurring matrix and repair exact-head PHP-Wasm concurrency, owned-native count, nominal-source call-graph and value-index browser TAP contracts without weakening hosted evidence.",
+  "updates": [
+    {
+      "currentSha256": "e35049ca4d975b8ce33b08bb5468256fe803f686b8b066f3a288267ff063fbd2",
+      "edits": [
+        {
+          "current": "import { execFileSync } from \"node:child_process\";\n",
+          "previous": "",
+          "start": 291
+        },
+        {
+          "current": "import { sha256 } from \"../src/capsule/node.mjs\";\n",
+          "previous": "",
+          "start": 398
+        },
+        {
+          "current": "\t, dependentCheckedRecordPromotionPinBaseline\n\t, dependentCheckedRecordPromotionCurrentSourcePaths\n",
+          "previous": "",
+          "start": 494
+        },
+        {
+          "current": "\t, reconcileDependentCheckedRecordSourcePins\n",
+          "previous": "",
+          "start": 711
+        },
+        {
+          "current": "const git = arguments_ => execFileSync(\"git\", arguments_, {\n\tencoding: \"utf8\", maxBuffer: 512 * 1024 * 1024\n});\nfor(const arguments_ of [\n\t[\"diff\", \"--quiet\", \"HEAD\", \"--\"]\n\t, [\"diff\", \"--cached\", \"--quiet\", \"HEAD\", \"--\"]\n]) assert.doesNotThrow(() => execFileSync(\"git\", arguments_\n\t, { stdio: \"ignore\" }), \"Dependent promotion requires a clean tracked tree\");\nassert.doesNotThrow(\n\t() => execFileSync(\"git\", [\"merge-base\", \"--is-ancestor\"\n\t\t, dependentCheckedRecordPromotionPinBaseline, \"HEAD\"]\n\t, { stdio: \"ignore\" })\n\t, \"Dependent promotion pin baseline is not an ancestor of HEAD\"\n);\nassert.equal(git([\"diff\", \"--name-status\", \"--find-renames\"\n\t, \"--diff-filter=RD\", dependentCheckedRecordPromotionPinBaseline\n\t, \"HEAD\", \"--\"]).trim(), \"\"\n, \"Dependent promotion refuses renamed or deleted baseline paths\");\nconst changedPaths = git([\"diff\", \"--name-only\", \"--diff-filter=AM\"\n\t, dependentCheckedRecordPromotionPinBaseline, \"HEAD\", \"--\"])\n\t.trim().split(\"\\n\").filter(Boolean);\nconst currentSourcePaths\n\t= dependentCheckedRecordPromotionCurrentSourcePaths(\n\t\tpromoted, changedPaths);\nconst currentDigests = new Map();\nfor(const changedPath of currentSourcePaths)\n{\n\tlet bytes;\n\ttry\n\t{ bytes = await readFile(changedPath); }\n\tcatch(error)\n\t{\n\t\tif(error?.code !== \"ENOENT\") throw error;\n\t\tbytes = execFileSync(\"git\", [\"show\", `HEAD:${changedPath}`], {\n\t\t\tmaxBuffer: 512 * 1024 * 1024\n\t\t});\n\t}\n\tcurrentDigests.set(changedPath, sha256(bytes));\n}\nconst reconciled = reconcileDependentCheckedRecordSourcePins(\n\tpromoted, currentDigests);\nassert.ok(reconciled.refreshed > 0\n\t, \"Dependent promotion must reconcile changed current-source pins\");\n",
+          "previous": "",
+          "start": 1332
+        },
+        {
+          "current": "\twriteFile(path, JSON.stringify(reconciled.inventory, null, 2) + \"\\n\")\n",
+          "previous": "\twriteFile(path, JSON.stringify(promoted, null, 2) + \"\\n\")\n",
+          "start": 2990
+        },
+        {
+          "current": "process.stdout.write(`Added hosted evidence to 68 dependent checked-record cells from eleven immutable archives and reconciled ${reconciled.refreshed} current-source pins.\\n`);\n",
+          "previous": "process.stdout.write(\"Added hosted evidence to 68 dependent checked-record cells from eleven immutable archives.\\n\");\n",
+          "start": 3124
+        }
+      ],
+      "path": "scripts/promote-dependent-checked-record-evidence.mjs",
+      "previousSha256": "c580330590241f10e822323537bb822f0c91db5eb538d1c44f2cb1788ecc5d12"
+    },
+    {
+      "currentSha256": "1755656b9eb9339ea58f6fbc1d9cb2364d5b1a6e869ea49b23998e4abd138b12",
+      "edits": [
+        {
+          "current": "\t\t, \"dependent-checked-record-matrix\"\n\t\t, \"dependent-checked-record-matrix-inventory\"\n",
+          "previous": "",
+          "start": 14207
+        }
+      ],
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "7c62011c87b56f4f3f05bf39bac69c349fb654f012aa14ee17c33a080b36c98d"
+    },
+    {
+      "currentSha256": "ef6333c17a36b132f02bacdb813dca9ce2f85ed885c294809a1878ba8566caff",
+      "edits": [
+        {
+          "current": "import { execFileSync, spawnSync } from \"node:child_process\";\n",
+          "previous": "import { spawnSync } from \"node:child_process\";\n",
+          "start": 179
+        },
+        {
+          "current": "\t, dependentCheckedRecordPromotionCurrentSourcePaths\n",
+          "previous": "",
+          "start": 523
+        },
+        {
+          "current": "\t, dependentCheckedRecordPromotionPinBaseline\n",
+          "previous": "",
+          "start": 695
+        },
+        {
+          "current": "\t, reconcileDependentCheckedRecordSourcePins\n",
+          "previous": "",
+          "start": 943
+        },
+        {
+          "current": "test(\"dependent promotion reconciles only selected current-source pins\", () => {\n\tconst original = {\n\t\tmarker: \"unchanged\"\n\t\t, evidence: [\n\t\t\t{ files: [\n\t\t\t\t{ path: \"src/changed.mjs\", sha256: \"1\".repeat(64) }\n\t\t\t\t, { path: \"docs/evidence/archive.json\", sha256: \"2\".repeat(64) }\n\t\t\t] }\n\t\t\t, { files: [\n\t\t\t\t{ path: \"src/changed.mjs\", sha256: \"1\".repeat(64) }\n\t\t\t\t, { path: \"src/current.mjs\", sha256: \"3\".repeat(64) }\n\t\t\t] }\n\t\t]\n\t};\n\tconst digests = new Map([\n\t\t[\"src/changed.mjs\", \"4\".repeat(64)]\n\t\t, [\"src/current.mjs\", \"3\".repeat(64)]\n\t\t, [\"src/unreferenced.mjs\", \"5\".repeat(64)]\n\t]);\n\tconst result = reconcileDependentCheckedRecordSourcePins(original, digests);\n\tassert.equal(result.refreshed, 2);\n\tassert.equal(result.inventory.marker, \"unchanged\");\n\tassert.deepEqual(result.inventory.evidence.flatMap(item => item.files), [\n\t\t{ path: \"src/changed.mjs\", sha256: \"4\".repeat(64) }\n\t\t, { path: \"docs/evidence/archive.json\", sha256: \"2\".repeat(64) }\n\t\t, { path: \"src/changed.mjs\", sha256: \"4\".repeat(64) }\n\t\t, { path: \"src/current.mjs\", sha256: \"3\".repeat(64) }\n\t]);\n\tassert.equal(original.evidence[0].files[0].sha256, \"1\".repeat(64));\n\tassert.throws(() => reconcileDependentCheckedRecordSourcePins(original\n\t\t, new Map([[\"src/changed.mjs\", \"invalid\"]])));\n});\n\ntest(\"dependent promotion selects added and modified live pins but no archive\"\n\t, () => {\n\tconst inventory = { evidence: [{ files: [\n\t\t{ path: \"src/modified.mjs\", sha256: \"1\".repeat(64) }\n\t\t, { path: \"tests/added.test.mjs\", sha256: \"2\".repeat(64) }\n\t\t, { path: \"docs/evidence/immutable/index.json\"\n\t\t\t, sha256: \"3\".repeat(64) }\n\t] }] };\n\tassert.deepEqual(\n\t\tdependentCheckedRecordPromotionCurrentSourcePaths(inventory, [\n\t\t\t\"src/modified.mjs\", \"tests/added.test.mjs\"\n\t\t\t, \"docs/evidence/immutable/index.json\", \"src/unpinned.mjs\"\n\t\t\t, \"src/modified.mjs\"\n\t\t])\n\t\t, [\"src/modified.mjs\", \"tests/added.test.mjs\"]\n\t);\n\tassert.throws(() => dependentCheckedRecordPromotionCurrentSourcePaths(\n\t\tinventory, new Set()));\n\t}\n);\n\ntest(\"dependent promotion baseline covers every stale live pin\", async () => {\n\tconst changed = execFileSync(\"git\", [\n\t\t\"diff\", \"--name-only\", \"--diff-filter=AM\"\n\t\t, dependentCheckedRecordPromotionPinBaseline, \"HEAD\", \"--\"\n\t], { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 })\n\t\t.trim().split(\"\\n\").filter(Boolean);\n\tconst selected = dependentCheckedRecordPromotionCurrentSourcePaths(\n\t\tdocument, changed);\n\tassert.ok(!selected.some(path => path.startsWith(\"docs/evidence/\")));\n\tconst admitted = new Set(selected), pins = new Map();\n\tfor(const evidence of document.evidence)\n\t\tfor(const file of evidence.files)\n\t\t{\n\t\t\tif(file.path.startsWith(\"docs/evidence/\")) continue;\n\t\t\tif(!pins.has(file.path)) pins.set(file.path, new Set());\n\t\t\tpins.get(file.path).add(file.sha256);\n\t\t}\n\tconst missed = [];\n\tfor(const [path, expected] of pins)\n\t{\n\t\tlet bytes;\n\t\ttry\n\t\t{ bytes = await readFile(path); }\n\t\tcatch(error)\n\t\t{\n\t\t\tif(error?.code !== \"ENOENT\") throw error;\n\t\t\tbytes = execFileSync(\"git\", [\"show\", `HEAD:${path}`], {\n\t\t\t\tmaxBuffer: 512 * 1024 * 1024\n\t\t\t});\n\t\t}\n\t\tconst actual = sha256(bytes);\n\t\tif([...expected].some(digest => digest !== actual)\n\t\t\t&& !admitted.has(path)) missed.push(path);\n\t}\n\tassert.deepEqual(missed, []);\n});\n\ntest(\"dependent promotion reads only a clean committed range\", async () => {\n\tconst source = await readFile(\n\t\t\"scripts/promote-dependent-checked-record-evidence.mjs\", \"utf8\");\n\tassert.match(source\n\t\t, /\\[\"diff\", \"--quiet\", \"HEAD\", \"--\"\\]/u);\n\tassert.match(source\n\t\t, /\\[\"diff\", \"--cached\", \"--quiet\", \"HEAD\", \"--\"\\]/u);\n\tassert.match(source\n\t\t, /\"--diff-filter=RD\", dependentCheckedRecordPromotionPinBaseline\\s*, \"HEAD\", \"--\"/u);\n\tassert.match(source\n\t\t, /\"--diff-filter=AM\"\\s*, dependentCheckedRecordPromotionPinBaseline, \"HEAD\", \"--\"/u);\n});\n\n",
+          "previous": "",
+          "start": 5970
+        }
+      ],
+      "path": "tests/dependent-checked-record-promotion.test.mjs",
+      "previousSha256": "4a5061a7bec175cf41f81f97fb9b5672a31648bcc1329163e1766ee59146f055"
+    },
+    {
+      "currentSha256": "63571aff275da41b12e622cd1cb0183c41419f4502eb913ac6721a3e8ceec58d",
+      "edits": [
+        {
+          "current": "@[noinline] def plusOne (value : Nat) : Option Positive :=\n",
+          "previous": "def plusOne (value : Nat) : Option Positive :=\n",
+          "start": 152
+        },
+        {
+          "current": "@[noinline] def plusTwo (value : Nat) : Option Positive :=\n",
+          "previous": "def plusTwo (value : Nat) : Option Positive :=\n",
+          "start": 264
+        },
+        {
+          "current": "@[noinline] def first (value : Envelope) : Nat := value.payload.val\n@[noinline] def second (value : Envelope) : Nat := value.payload.val\n@[noinline] def combine (left right : Envelope) : Nat := left.payload.val * 100 + right.payload.val\n@[noinline] def nested (value : Pair) : Nat := combine value.left value.right\n@[noinline] def eventFirst : Event → Nat\n",
+          "previous": "def first (value : Envelope) : Nat := value.payload.val\ndef second (value : Envelope) : Nat := value.payload.val\ndef combine (left right : Envelope) : Nat := left.payload.val * 100 + right.payload.val\ndef nested (value : Pair) : Nat := combine value.left value.right\ndef eventFirst : Event → Nat\n",
+          "start": 765
+        },
+        {
+          "current": "@[noinline] def echo (value : Envelope) : Envelope := value\n",
+          "previous": "def echo (value : Envelope) : Envelope := value\n",
+          "start": 1402
+        }
+      ],
+      "path": "tests/fixtures/onboarding/nominal-subtypes/NominalSubtypes.lean",
+      "previousSha256": "a6a8860e98d12739ef16ea0b92b003a9e752326f39517dfe7eeb9d8b53ef3108"
+    },
+    {
+      "currentSha256": "039fddc40bebf4a35a6f3ca0c66c7521e6c5ca2de56bb0d8882fc90613718ef1",
+      "edits": [
+        {
+          "current": "const checkedRecordValueIndexBrowserFastControlNames = Object.freeze([\n\t\"value-index author routes preserve kind, value, constructor and result boundaries\"\n\t, \"immutable value-index caller covers every function, rejection and recovery\"\n\t, \"value-index snapshots distinguish proof fields, scalar kinds and mutations\"\n\t, \"value-index browser routes close every engine and lifecycle\"\n\t, \"value-index compiler plans keep checked inputs and constructor-free results separate\"\n\t, \"generated full and result-only TypeScript expose payload fields only\"\n\t, \"value-index installed gates reject partial selections and stale outputs\"\n\t, \"value-index hosted checker closes arguments and complete TAP streams\"\n\t, \"value-index hosted checker rejects scope before retained-record reads\"\n\t, \"value-index hosted workflow requires every route and retains failures\"\n\t, \"value-index onboarding fixture is self-contained and source-identifiable\"\n]);\n\nexport const checkedRecordValueIndexBrowserRequiredControlNames = Object.freeze({\n\tfast: checkedRecordValueIndexBrowserFastControlNames\n\t, passed: Object.freeze([\n\t\t\"hosted value-index browser archive has one reversible lineage\"\n\t\t, \"hosted value-index browser archive closes its exact committed tree\"\n\t\t, \"hosted value-index browser archive closes every added source\"\n\t\t, \"hosted value-index browser archive writer refuses another checkout\"\n\t\t, \"hosted value-index browser promotion has one reversible lineage\"\n\t\t, \"hosted value-index browser promotion closes its exact committed tree\"\n\t\t, \"hosted value-index browser promotion closes every added source\"\n\t\t, \"hosted value-index browser promotion writer refuses another checkout\"\n\t\t, \"value-index author routes preserve kind, value, constructor and result boundaries\"\n\t\t, \"immutable value-index caller covers every function, rejection and recovery\"\n\t\t, \"value-index snapshots distinguish proof fields, scalar kinds and mutations\"\n\t\t, \"value-index browser routes close every engine and lifecycle\"\n\t\t, \"value-index compiler plans keep checked inputs and constructor-free results separate\"\n\t\t, \"generated full and result-only TypeScript expose payload fields only\"\n\t\t, \"value-index installed gates reject partial selections and stale outputs\"\n\t\t, \"value-index hosted checker closes arguments and complete TAP streams\"\n\t\t, \"value-index hosted checker rejects scope before retained-record reads\"\n\t\t, \"value-index hosted workflow requires every route and retains failures\"\n\t\t, \"value-index onboarding fixture is self-contained and source-identifiable\"\n\t\t, \"value-index browser evidence authenticates and replays every hosted route\"\n\t\t, \"value-index browser evidence rejects altered hosted and replay bytes\"\n\t\t, \"hosted value-index browser promotion authenticates four exact routes\"\n\t\t, \"hosted value-index browser promotion rejects forged and repeated evidence\"\n\t\t, \"hosted value-index browser promotion changes exactly twenty cells\"\n\t\t, \"value-index browser docs name the exact prepared packages and boundary\"\n\t])\n\t, skipped: Object.freeze(checkedRecordValueIndexBrowserRoutes.map(route =>\n\t\t`installed value-index records reproduce, relocate and reach browsers for ${route}`))\n});\n\nconst escapeRegExp = source => source.replace(/[.*+?^${}()|[\\]\\\\]/gu, \"\\\\$&\");\n\n",
+          "previous": "",
+          "start": 715
+        },
+        {
+          "current": "/**\n * Require the stable fast controls while accepting added authenticated readers.\n *\n * @param source - Complete node:test TAP stream.\n */\nexport const assertCheckedRecordValueIndexBrowserControlsTap = source => {\n\tassert.equal(typeof source, \"string\");\n\tassert.doesNotMatch(source, /^(?:not ok|Bail out!)/gmu);\n\tassert.doesNotMatch(source, /^[ \\t]+(?:not ok|Bail out!)/gmu);\n\tconst terminal = source.match(/\\n1\\.\\.(\\d+)\\n# tests (\\d+)\\n# suites 0\\n# pass (\\d+)\\n# fail 0\\n# cancelled 0\\n# skipped (\\d+)\\n# todo 0\\n# duration_ms [0-9]+(?:\\.[0-9]+)?\\n$/u);\n\tassert.ok(terminal, \"Complete value-index browser control TAP\");\n\tconst tests = Number(terminal[1]), declared = Number(terminal[2]);\n\tconst passed = Number(terminal[3]), skipped = Number(terminal[4]);\n\tassert.equal(declared, tests);\n\tassert.equal(skipped\n\t\t, checkedRecordValueIndexBrowserRequiredControlNames.skipped.length);\n\tassert.equal(passed + skipped, tests);\n\tassert.ok(passed\n\t\t>= checkedRecordValueIndexBrowserRequiredControlNames.passed.length);\n\tconst requireResult = (name, shouldSkip) => {\n\t\tassert.equal(source.split(`# Subtest: ${name}\\n`).length, 2, name);\n\t\tconst suffix = shouldSkip ? \" # SKIP(?: .*)?\" : \"\";\n\t\tassert.match(source, new RegExp(\n\t\t\t`^ok [0-9]+ - ${escapeRegExp(name)}${suffix}$`, \"mu\"\n\t\t), name);\n\t};\n\tfor(const name of checkedRecordValueIndexBrowserRequiredControlNames.passed)\n\t\trequireResult(name, false);\n\tfor(const name of checkedRecordValueIndexBrowserRequiredControlNames.skipped)\n\t\trequireResult(name, true);\n\treturn {\n\t\tfastPasses: checkedRecordValueIndexBrowserRequiredControlNames.fast.length\n\t\t, skippedInstalledRoutes: skipped\n\t};\n};\n\n",
+          "previous": "",
+          "start": 4622
+        },
+        {
+          "current": "\tconst controlCounts = assertCheckedRecordValueIndexBrowserControlsTap(\n\t\tcontrolsTap);\n",
+          "previous": "\tassertCheckedRecordValueIndexBrowserTap(controlsTap, 15, 4);\n",
+          "start": 8281
+        },
+        {
+          "current": "\t\t\t...controlCounts\n",
+          "previous": "\t\t\tfastPasses: 11, skippedInstalledRoutes: 4\n",
+          "start": 9663
+        }
+      ],
+      "path": "tests/helpers/checked-record-value-index-browser-ci-report.mjs",
+      "previousSha256": "49596597e178a5973dd3a392ea248026e5598ced99376053509b844d7b932f45"
+    },
+    {
+      "currentSha256": "0cc614684bb677fbebb4e10ac2fca04fca5ef893521605687e7599714a719c46",
+      "edits": [
+        {
+          "current": "\tassertCheckedRecordValueIndexBrowserControlsTap\n\t, assertCheckedRecordValueIndexBrowserTap\n\t, checkedRecordValueIndexBrowserRequiredControlNames\n",
+          "previous": "\tassertCheckedRecordValueIndexBrowserTap\n",
+          "start": 1582
+        },
+        {
+          "current": "\t+ \"  ---\\n  duration_ms: 1\\n  type: 'test'\\n  ...\\n\").join(\"\")}1..${tests}\\n# tests ${tests}\\n# suites 0\\n# pass ${tests - skipped}\\n# fail 0\\n# cancelled 0\\n# skipped ${skipped}\\n# todo 0\\n# duration_ms 2\\n`;\nconst controlsTap = (\n\textra = []\n\t, passed = checkedRecordValueIndexBrowserRequiredControlNames.passed\n) => {\n\tconst skipped = checkedRecordValueIndexBrowserRequiredControlNames.skipped;\n\tconst names = [...passed, ...extra, ...skipped];\n\treturn `TAP version 13\\n${names.map((name, index) => `# Subtest: ${name}\\n`\n\t\t+ `ok ${index + 1} - ${name}${index >= names.length - skipped.length ? \" # SKIP\" : \"\"}\\n`\n\t\t+ \"  ---\\n  duration_ms: 1\\n  type: 'test'\\n  ...\\n\").join(\"\")}1..${names.length}\\n# tests ${names.length}\\n# suites 0\\n# pass ${names.length - skipped.length}\\n# fail 0\\n# cancelled 0\\n# skipped ${skipped.length}\\n# todo 0\\n# duration_ms 2\\n`;\n};\n",
+          "previous": "\t\t+ \"  ---\\n  duration_ms: 1\\n  type: 'test'\\n  ...\\n\").join(\"\")}1..${tests}\\n# tests ${tests}\\n# suites 0\\n# pass ${tests - skipped}\\n# fail 0\\n# cancelled 0\\n# skipped ${skipped}\\n# todo 0\\n# duration_ms 2\\n`;\n",
+          "start": 4320
+        },
+        {
+          "current": "\tassert.equal(checkedRecordValueIndexBrowserRequiredControlNames.fast.length, 11);\n\tassert.equal(checkedRecordValueIndexBrowserRequiredControlNames.passed.length, 25);\n",
+          "previous": "",
+          "start": 17803
+        },
+        {
+          "current": "\tassert.deepEqual(assertCheckedRecordValueIndexBrowserControlsTap(\n\t\tcontrolsTap()), { fastPasses: 11, skippedInstalledRoutes: 4 });\n\tassert.deepEqual(assertCheckedRecordValueIndexBrowserControlsTap(\n\t\tcontrolsTap([\"later authenticated reader\"])\n\t), { fastPasses: 11, skippedInstalledRoutes: 4 });\n\tassert.throws(() => assertCheckedRecordValueIndexBrowserControlsTap(\n\t\tcontrolsTap([], checkedRecordValueIndexBrowserRequiredControlNames.passed.slice(1))));\n",
+          "previous": "",
+          "start": 18180
+        },
+        {
+          "current": "\t\tacceptanceTap: tap(1), controlsTap: controlsTap()\n",
+          "previous": "\t\tacceptanceTap: tap(1), controlsTap: tap(15, 4)\n",
+          "start": 20168
+        },
+        {
+          "current": "\t\tciOptions, { ...original, controlsTap: controlsTap([]\n\t\t\t, checkedRecordValueIndexBrowserRequiredControlNames.passed.slice(1)) }\n\t), assert.AssertionError);\n",
+          "previous": "\t\tciOptions, { ...original, controlsTap: tap(14, 4) }), assert.AssertionError);\n",
+          "start": 20623
+        }
+      ],
+      "path": "tests/helpers/checked-record-value-index-browser-tests.mjs",
+      "previousSha256": "d38eaef0a38dab80c420a2b67f8e3e8f501e29aa0a7816299a48981d4df59163"
+    },
+    {
+      "currentSha256": "f6d1ebfd5bdaaae57e6725a1e59b4e0dc61ea5f67303646d48d6c00db94f92ac",
+      "edits": [
+        {
+          "current": "export const dependentCheckedRecordPromotionPinBaseline\n\t= \"250f73d8b2bed5380e7fb7c55b8f1f6ffd746e58\";\n",
+          "previous": "",
+          "start": 1987
+        },
+        {
+          "current": "/**\n * Select changed live sources that are already pinned by the inventory.\n * Immutable archives under docs/evidence are never reconciled from current\n * bytes; their dedicated verifiers and source histories own those digests.\n *\n * @param inventory - Current or promoted type-surface inventory.\n * @param changedPaths - Added or modified paths since the last clean baseline.\n */\nexport const dependentCheckedRecordPromotionCurrentSourcePaths = (\n\tinventory, changedPaths\n) => {\n\tassert.ok(Array.isArray(changedPaths));\n\tconst pinned = new Set(inventory.evidence.flatMap(evidence =>\n\t\tevidence.files.map(file => file.path)));\n\treturn [...new Set(changedPaths)].filter(path =>\n\t\ttypeof path === \"string\" && pinned.has(path)\n\t\t&& !path.startsWith(\"docs/evidence/\"));\n};\n\n/**\n * Reconcile only the current-source paths selected by the promotion driver.\n * Immutable archive paths are not inferred or rewritten here.\n *\n * @param original - Promoted type-surface inventory.\n * @param currentDigests - Current SHA-256 by changed repository path.\n */\nexport const reconcileDependentCheckedRecordSourcePins = (\n\toriginal, currentDigests\n) => {\n\tassert.ok(currentDigests instanceof Map && currentDigests.size > 0);\n\tconst inventory = structuredClone(original);\n\tlet refreshed = 0;\n\tfor(const evidence of inventory.evidence)\n\t\tfor(const file of evidence.files)\n\t\t{\n\t\t\tconst digest = currentDigests.get(file.path);\n\t\t\tif(digest === undefined) continue;\n\t\t\tassert.match(digest, /^[a-f0-9]{64}$/u, file.path);\n\t\t\tif(file.sha256 !== digest)\n\t\t\t{\n\t\t\t\tfile.sha256 = digest;\n\t\t\t\trefreshed++;\n\t\t\t}\n\t\t}\n\treturn { inventory, refreshed };\n};\n\n",
+          "previous": "",
+          "start": 3364
+        }
+      ],
+      "path": "tests/helpers/dependent-checked-record-promotion.mjs",
+      "previousSha256": "31029a55e5824a7532196c14413299505516c83b56323bbc25fd41aac1c59881"
+    },
+    {
+      "currentSha256": "3ed3b478d12994b8bfb6a04312a21a550fab55773d2be54cdfad80032731fc01",
+      "edits": [
+        {
+          "current": "test(\"nominal dispatch keeps every measured Lean source and constructor observable\", () => {\n\tconst source = readFileSync(`${nominalSubtypeFixture}/NominalSubtypes.lean`, \"utf8\");\n\tfor(const name of [...nominalSubtypeDispatchConstructors\n\t\t, ...nominalSubtypeDispatchExports.map(item => item.name)])\n\t\tassert.match(source, new RegExp(`@\\\\[noinline\\\\] def ${name}(?: | :)`, \"u\"), name);\n\tassert.deepEqual(nominalSubtypeDispatchSteps.filter(item => item.status === 0)\n\t\t.map(item => [item.step, item.sources]), [\n\t\t\t[\"public-valid-first\", [\"first\"]]\n\t\t\t, [\"public-valid-second\", [\"second\"]]\n\t\t\t, [\"public-valid-combine\", [\"combine\"]]\n\t\t\t, [\"public-valid-nested\", [\"nested\", \"combine\"]]\n\t\t\t, [\"public-inactive-event\", [\"eventFirst\"]]\n\t\t\t, [\"public-active-event-box\", [\"eventFirst\", \"first\"]]\n\t\t\t, [\"public-valid-event-choices\", [\"eventFirst\"]]\n\t\t\t, [\"public-valid-echo\", [\"echo\"]]\n\t\t\t, [\"public-recovery-first\", [\"first\"]]\n\t\t]\n\t);\n});\n\n",
+          "previous": "",
+          "start": 3539
+        },
+        {
+          "current": "\tassert.equal(at(lateNested, \"source\", \"combine\"), 2, \"nested enters combine after its own adapter accepts\");\n",
+          "previous": "",
+          "start": 10692
+        },
+        {
+          "current": "\tassert.equal(at(box, \"source\", \"first\"), at(inactive, \"source\", \"first\") + 1, \"the active box branch enters first\");\n",
+          "previous": "",
+          "start": 11373
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-dispatch-tests.mjs",
+      "previousSha256": "4fab3e6a3c994f4197a57f6a8d8f9e3d1bfdfefcec57a72f27dd6fa18c24adc5"
+    },
+    {
+      "currentSha256": "1ad34356b22ae7a8a6fc825c8ec8b41a694a7910e7f9e815eeb5e6e02c0ec69a",
+      "edits": [
+        {
+          "current": "\t, { step: \"public-valid-first\", name: \"first\", status: 0, entered: [[0]], sources: [\"first\"] }\n\t, { step: \"public-valid-second\", name: \"second\", status: 0, entered: [[0]], sources: [\"second\"] }\n",
+          "previous": "\t, { step: \"public-valid-first\", name: \"first\", status: 0, entered: [[0]] }\n\t, { step: \"public-valid-second\", name: \"second\", status: 0, entered: [[0]] }\n",
+          "start": 7030
+        },
+        {
+          "current": "\t, { step: \"public-valid-combine\", name: \"combine\", status: 0, entered: [[0], [0]], sources: [\"combine\"] }\n",
+          "previous": "\t, { step: \"public-valid-combine\", name: \"combine\", status: 0, entered: [[0], [0]] }\n",
+          "start": 7303
+        },
+        {
+          "current": "\t, { step: \"public-valid-nested\", name: \"nested\", status: 0, entered: [[0, 1]], sources: [\"nested\", \"combine\"] }\n",
+          "previous": "\t, { step: \"public-valid-nested\", name: \"nested\", status: 0, entered: [[0, 1]] }\n",
+          "start": 7578
+        },
+        {
+          "current": "\t, { step: \"public-inactive-event\", name: \"eventFirst\", status: 0, entered: [[]], sources: [\"eventFirst\"] }\n\t, { step: \"public-active-event-box\", name: \"eventFirst\", status: 0, entered: [[0]], sources: [\"eventFirst\", \"first\"] }\n\t, { step: \"public-valid-event-choices\", name: \"eventFirst\", status: 0, entered: [[1, 2]], sources: [\"eventFirst\"] }\n",
+          "previous": "\t, { step: \"public-inactive-event\", name: \"eventFirst\", status: 0, entered: [[]] }\n\t, { step: \"public-active-event-box\", name: \"eventFirst\", status: 0, entered: [[0]] }\n\t, { step: \"public-valid-event-choices\", name: \"eventFirst\", status: 0, entered: [[1, 2]] }\n",
+          "start": 7771
+        },
+        {
+          "current": "\t, { step: \"public-valid-echo\", name: \"echo\", status: 0, entered: [[0]], sources: [\"echo\"] }\n\t, { step: \"public-recovery-first\", name: \"first\", status: 0, entered: [[0]], sources: [\"first\"] }\n",
+          "previous": "\t, { step: \"public-valid-echo\", name: \"echo\", status: 0, entered: [[0]] }\n\t, { step: \"public-recovery-first\", name: \"first\", status: 0, entered: [[0]] }\n",
+          "start": 8207
+        },
+        {
+          "current": "\t\t\t\tassert.ok(Array.isArray(item.sources) && item.sources.length > 0);\n\t\t\t\tfor(const source of item.sources) bump(\"source\", source);\n",
+          "previous": "\t\t\t\tbump(\"source\", target.name);\n",
+          "start": 10675
+        },
+        {
+          "current": "\t\t\telse assert.equal(item.sources, undefined);\n",
+          "previous": "",
+          "start": 10813
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-dispatch.mjs",
+      "previousSha256": "4e3a4109b435c027040a23bc2b9e7bca5b28690c2fbc5bc54bded60f40549a5b"
+    },
+    {
+      "currentSha256": "da5ea9f6286882379ae9d2fe22921efc40c4465a3778e2ef8975f9aacceda396",
+      "edits": [
+        {
+          "current": "\tassert.ok(probe.includes('@[noinline] def plusOne') && probe.includes('@[noinline] def first'));\n",
+          "previous": "",
+          "start": 2066
+        },
+        {
+          "current": "\tassert.ok(probe.includes('      | some (.error value) => value.val) 0\\n@[noinline] def eventFirst (value : Event) : Nat := dbgTrace \"lean-bridge-nominal-entry source eventFirst\" fun _ => eventFirstBody value\\ndef eventSecond (value : Event) : Nat := eventFirst value'));\n",
+          "previous": "\tassert.ok(probe.includes('      | some (.error value) => value.val) 0\\ndef eventFirst (value : Event) : Nat := dbgTrace \"lean-bridge-nominal-entry source eventFirst\" fun _ => eventFirstBody value\\ndef eventSecond (value : Event) : Nat := eventFirst value'));\n",
+          "start": 2345
+        },
+        {
+          "current": "test(\"nominal entry expectations require validator and adapter constructor passes plus the source call graph\", () => {\n",
+          "previous": "test(\"nominal entry expectations follow the shared step list with one constructor per entered leaf\", () => {\n",
+          "start": 3604
+        },
+        {
+          "current": "\tassert.deepEqual(at(\"public-valid-first\").entries, [\"constructor plusOne\", \"constructor plusOne\", \"source first\"]);\n\tassert.deepEqual(at(\"public-valid-second\").entries, [\"constructor plusTwo\", \"constructor plusTwo\", \"source second\"]);\n",
+          "previous": "\tassert.deepEqual(at(\"public-valid-first\").entries, [\"constructor plusOne\", \"source first\"]);\n\tassert.deepEqual(at(\"public-valid-second\").entries, [\"constructor plusTwo\", \"source second\"]);\n",
+          "start": 3948
+        },
+        {
+          "current": "\tassert.deepEqual(at(\"public-valid-nested\").entries, [\"constructor plusOne\", \"constructor plusTwo\", \"constructor plusOne\", \"constructor plusTwo\", \"source nested\", \"source combine\"]);\n",
+          "previous": "",
+          "start": 4593
+        },
+        {
+          "current": "\tassert.deepEqual(at(\"public-active-event-box\").entries, [\"constructor plusOne\", \"constructor plusOne\", \"source eventFirst\", \"source first\"]);\n\tassert.deepEqual(at(\"public-valid-event-choices\").entries, [\"constructor plusOne\", \"constructor plusTwo\", \"constructor plusOne\", \"constructor plusTwo\", \"source eventFirst\"]);\n",
+          "previous": "\tassert.deepEqual(at(\"public-active-event-box\").entries, [\"constructor plusOne\", \"source eventFirst\"]);\n\tassert.deepEqual(at(\"public-valid-event-choices\").entries, [\"constructor plusOne\", \"constructor plusTwo\", \"source eventFirst\"]);\n",
+          "start": 4855
+        },
+        {
+          "current": "\tassert.deepEqual(at(\"public-recovery-first\").entries, [\"constructor plusOne\", \"constructor plusOne\", \"source first\"]);\n",
+          "previous": "\tassert.deepEqual(at(\"public-recovery-first\").entries, [\"constructor plusOne\", \"source first\"]);\n",
+          "start": 5262
+        },
+        {
+          "current": "\tassert.equal(counts[\"source first\"], 3); assert.equal(counts[\"constructor plusTwo\"], 10); assert.equal(counts[\"constructor plusOne\"], 19);\n",
+          "previous": "\tassert.equal(counts[\"source first\"], 2); assert.equal(counts[\"constructor plusTwo\"], 6); assert.equal(counts[\"constructor plusOne\"], 12);\n",
+          "start": 7203
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-entry-tests.mjs",
+      "previousSha256": "e2f31177de4e59f83f73030fff1f4fdb5d223e658c43a1d5a14f27d642f82735"
+    },
+    {
+      "currentSha256": "b05bd5300acd3328b5b628debc251815454da9ca72ffbac513b2ef524688a392",
+      "edits": [
+        {
+          "current": " * side-module entry first runs each selected constructor through its exported carrier validator. An\n * accepted call then runs the constructors again inside the `_lean` adapter guard before entering the\n * complete Lean source call graph; a refused call stops in the validator pass. Package JavaScript does\n * not call the validator exports directly. Probe packages are instrumented builds; they are not the\n * unmodified packages the acceptance suites install.\n",
+          "previous": " * selected constructors run once per entered leaf inside the `_lean` adapter guard, in walk order, and\n * the exported carrier validators are not called by the JavaScript runtime. Probe packages are\n * instrumented builds; they are not the unmodified packages the acceptance suites install.\n",
+          "start": 424
+        },
+        {
+          "current": "\t\tconst definition = new RegExp(`^(?:@\\\\[[^\\\\]\\\\n]+\\\\] )?def ${name}(?: | :)`, \"u\");\n\t\tconst index = lines.findIndex(line => definition.test(line));\n",
+          "previous": "\t\tconst index = lines.findIndex(line => line.startsWith(`def ${name} `) || line.startsWith(`def ${name} :`));\n",
+          "start": 2371
+        },
+        {
+          "current": "\t\t\tconst header = /^(?<attribute>@\\[[^\\]\\n]+\\] )?def (?<name>\\w+) : (?<input>\\S+) → (?<result>\\S+)$/u.exec(line);\n",
+          "previous": "\t\t\tconst header = /^def (\\w+) : (\\S+) → (\\S+)$/u.exec(line);\n",
+          "start": 2821
+        },
+        {
+          "current": "\t\t\t// Keep source-level attributes such as `noinline` on the marked definition being\n\t\t\t// measured. The renamed equation body is private probe scaffolding.\n",
+          "previous": "",
+          "start": 3010
+        },
+        {
+          "current": "\t\t\tlines[index] = `def ${name}Body : ${header.groups.input} → ${header.groups.result}`;\n",
+          "previous": "\t\t\tlines[index] = `def ${name}Body : ${header[2]} → ${header[3]}`;\n",
+          "start": 3351
+        },
+        {
+          "current": "\t\t\tlines.splice(end < 0 ? lines.length : end, 0, `${header.groups.attribute ?? \"\"}def ${name} (value : ${header.groups.input}) : ${header.groups.result} := ${marker(role, name)} ${name}Body value`);\n",
+          "previous": "\t\t\tlines.splice(end < 0 ? lines.length : end, 0, `def ${name} (value : ${header[2]}) : ${header[3]} := ${marker(role, name)} ${name}Body value`);\n",
+          "start": 3532
+        },
+        {
+          "current": " * The entries one step must produce, derived from the same step list, leaf table and source call graph\n * as the native lane. Every reached leaf enters its constructor once in the carrier validator. An\n * accepted call repeats those constructors in the `_lean` adapter and then enters every measured source\n * in call order; a refused call has neither the adapter pass nor a source entry.\n",
+          "previous": " * The entries one step must produce: the constructor of every entered leaf in walk order, then the\n * measured source when the call is accepted. Derived from the same step list and leaf table as the\n * native lane, with no validator pass and each constructor once.\n",
+          "start": 3772
+        },
+        {
+          "current": "\tconst validated = target.parameters.flatMap((leaves, index) => item.entered[index].map(leaf => `constructor ${leaves[leaf][1]}`));\n\tconst entries = [...validated];\n\tif(item.status === 0)\n\t{\n\t\tassert.ok(Array.isArray(item.sources) && item.sources.length > 0, item.step);\n\t\tentries.push(...validated, ...item.sources.map(source => `source ${source}`));\n\t}\n\telse assert.equal(item.sources, undefined, item.step);\n",
+          "previous": "\tconst entries = target.parameters.flatMap((leaves, index) => item.entered[index].map(leaf => `constructor ${leaves[leaf][1]}`));\n\tif(item.status === 0) entries.push(`source ${target.name}`);\n",
+          "start": 4485
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-entry.mjs",
+      "previousSha256": "111000c8cad8150db449ca4b20caf9bfbf4c9fc13854359d40ad66f9a4c4d0d7"
+    },
+    {
+      "currentSha256": "fe2e9a4fc73607cba4295c3a3d513876cfc3ad7babb8ce5c845ddf95ae39f3cd",
+      "edits": [
+        {
+          "current": "\tconst positiveControl = \"every accepted public call increments its exported validators, their constructors twice, the adapter and every non-inline Lean source in its call graph; refusals stop at the refusing validator\";\n",
+          "previous": "\tconst positiveControl = \"every accepted public call increments its exported validators, their constructors twice, the adapter and the Lean source; refusals stop at the refusing validator\";\n",
+          "start": 5642
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-native-installed-tests.mjs",
+      "previousSha256": "cb48b119d8773bc8a05a182a6136bcf8c2aede9b95ad1d62dbd97c5c4bb27502"
+    },
+    {
+      "currentSha256": "9cb0b55c8fb0dd5c24e6d760e446335fe80e5e6d21e13580bf2cc431f676f390",
+      "edits": [
+        {
+          "current": "\tassert.match(workflow, /concurrency:\\n {2}group: php-wasm-indexed-refinement-entry-\\$\\{\\{ github\\.workflow \\}\\}-\\$\\{\\{ github\\.ref \\}\\}/u);\n",
+          "previous": "\tassert.match(workflow, /concurrency:\\n {2}group: php-wasm-indexed-refinement-entry-\\$\\{\\{ github\\.ref \\}\\}/u);\n",
+          "start": 2094
+        }
+      ],
+      "path": "tests/helpers/php-wasm-indexed-refinement-entry-ci-tests.mjs",
+      "previousSha256": "953fe3bcd59d9569c6d46614e193800ccfcad3c92dc73eef2ca0168ab35b6188"
+    },
+    {
+      "currentSha256": "f8b03add237cd10140962ff790ab04777235e610bafef42d0f2c3e73cf12f9fc",
+      "edits": [
+        {
+          "current": "const expectedChecks = Object.freeze({ c: 149, cpp: 79 });\n",
+          "previous": "",
+          "start": 1348
+        },
+        {
+          "current": "\t\t\t, fixture: {\n\t\t\t\tsource: () => sources[profile], success: `owned-subtype-${profile}`\n\t\t\t\t, expectedChecks: expectedChecks[profile]\n\t\t\t}\n\t\t});\n",
+          "previous": "\t\t\t, fixture: { source: () => sources[profile], success: `owned-subtype-${profile}` } });\n",
+          "start": 11137
+        }
+      ],
+      "path": "tests/owned-subtype-native-packaging.test.mjs",
+      "previousSha256": "f87bcd31de57388781be0185de1a0eb3ad5dd9a6f96386da2203b98f72a9f8e7"
+    },
+    {
+      "currentSha256": "b409e7198ad5c3f21066f4f453beda16fd77fc6e0b419ff6a8b30049fe653caa",
+      "edits": [
+        {
+          "current": "\t\t, \"dependent-checked-record-matrix\"\n\t\t, \"dependent-checked-record-matrix-inventory\"\n",
+          "previous": "",
+          "start": 3087
+        }
+      ],
+      "path": "tests/test-profiles.test.mjs",
+      "previousSha256": "8fcf7890181330cecb5985da7a2da0f991d7f506133e0a6657c5f25ee5f24e37"
+    }
+  ]
+}

@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeCheckedRefinementGateRepairSource, checkedRefinementGateRepairNormalizationPaths } from "./checked-refinement-gate-repair-source-history.mjs";
 import { beforeValueIndexBrowserPromotionClosureRepairSource, valueIndexBrowserPromotionClosureRepairNormalizationPaths } from "./value-index-browser-promotion-closure-repair-source-history.mjs";
 import { beforeDependentCheckedRecordBrowserArchiveSource, dependentCheckedRecordBrowserArchiveImplementationPaths, dependentCheckedRecordBrowserArchiveIntegrationPaths } from "./dependent-checked-record-browser-archive-source-history.mjs";
 import { beforeStagedPhpProducerReplayRepairSource, stagedPhpProducerReplayRepairNormalizationPaths } from "./staged-php-producer-replay-repair-source-history.mjs";
@@ -2043,7 +2044,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...dependentCheckedRecordBrowserArchiveImplementationPaths
+	...checkedRefinementGateRepairNormalizationPaths
+	, ...dependentCheckedRecordBrowserArchiveImplementationPaths
 	, ...dependentCheckedRecordBrowserArchiveIntegrationPaths
 	, ...valueIndexBrowserPromotionClosureRepairNormalizationPaths
 	, ...stagedPhpProducerReplayRepairNormalizationPaths
@@ -2827,7 +2829,13 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	let text = source.toString();
+	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
+	const checkedRefinementGateRepair
+		= beforeCheckedRefinementGateRepairSource(path, text, expected);
+	if(sha256(checkedRefinementGateRepair) === expected)
+		return checkedRefinementGateRepair;
+	text = checkedRefinementGateRepair;
 	const dependentCheckedRecordBrowserArchive
 		= beforeDependentCheckedRecordBrowserArchiveSource(path, text, expected);
 	if(sha256(dependentCheckedRecordBrowserArchive) === expected)
@@ -4219,7 +4227,7 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	previous = beforeCoreTerminalReachabilitySource(
 		path, previous, expected
 	);
-	if(previous === text) return source;
+	if(previous === text) return text === input ? source : text;
 	return expected !== undefined && sha256(previous) !== expected
 		? beforeFinRefinementSource(path, previous, expected)
 		: previous;
