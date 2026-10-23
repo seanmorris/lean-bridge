@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeStructuredCallbackPublicFallbackRepairSource, structuredCallbackPublicFallbackRepairNormalizationPaths } from "./structured-callback-public-fallback-repair-source-history.mjs";
 import { beforeCallbackCheckedRecordWitDiagnosticRepairSource, callbackCheckedRecordWitDiagnosticRepairNormalizationPaths } from "./callback-checked-record-wit-diagnostic-repair-source-history.mjs";
 import { beforeValueIndexTestProfileLiveReadRepairSource, valueIndexTestProfileLiveReadRepairNormalizationPaths } from "./value-index-test-profile-live-read-repair-source-history.mjs";
 import { beforePhpWasmCallbackEntrySelectionRepairSource, phpWasmCallbackEntrySelectionRepairNormalizationPaths } from "./php-wasm-callback-entry-selection-repair-source-history.mjs";
@@ -1954,7 +1955,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...callbackCheckedRecordWitDiagnosticRepairNormalizationPaths
+	...structuredCallbackPublicFallbackRepairNormalizationPaths
+	, ...callbackCheckedRecordWitDiagnosticRepairNormalizationPaths
 	, ...valueIndexTestProfileLiveReadRepairNormalizationPaths
 	, ...phpWasmCallbackEntrySelectionRepairNormalizationPaths
 	, ...callbackRefinementsPhpWasmPromotionNormalizationPaths
@@ -2710,9 +2712,15 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 			text = exact;
 		}
 	}
+	const structuredCallbackFallbackRepair
+		= beforeStructuredCallbackPublicFallbackRepairSource(
+			path, text, expected
+		);
+	if(sha256(structuredCallbackFallbackRepair) === expected)
+		return structuredCallbackFallbackRepair;
 	const callbackWitDiagnosticRepairIntegration
 		= beforeCallbackCheckedRecordWitDiagnosticRepairSource(
-			path, text, expected
+			path, structuredCallbackFallbackRepair, expected
 		);
 	if(sha256(callbackWitDiagnosticRepairIntegration) === expected)
 		return callbackWitDiagnosticRepairIntegration;

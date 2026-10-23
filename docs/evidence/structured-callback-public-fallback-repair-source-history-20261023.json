@@ -1,0 +1,88 @@
+{
+  "additions": [
+    {
+      "currentSha256": "ed7089b094b930c0618d2c7ebdd355ac93fde61f0d54c70c3296e4714f1b4786",
+      "path": "scripts/update-structured-callback-public-fallback-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "b7406fbffc30e47749bdd978a01023a2292c1691a2878b0cd87f652258ffbb28",
+      "path": "tests/helpers/structured-callback-public-fallback-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "8f3b3b383405065a3a9c8b8baef921a1d030b723dc66c3d6c4e3f32f1939b0e1",
+      "path": "tests/helpers/structured-callback-public-fallback-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "a9fbf709ce2d5689e913021e8737d36c4214ead9",
+  "integrationUpdates": [
+    {
+      "currentSha256": "c3668c0aaebddd597ff8daf977be7a7b099361b3b3db4c5956ecbd443d4ac68d",
+      "edits": [
+        {
+          "current": "import \"./helpers/structured-callback-public-fallback-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 3497
+        }
+      ],
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "843671108efc153599fa3356cd3aad3a35af8c8295a686b10b021b453c8df6c9"
+    },
+    {
+      "currentSha256": "38cbbe49cafcde3a881bacf5f651b0618c7201a877a047076389be150d83585d",
+      "edits": [
+        {
+          "current": "import { beforeStructuredCallbackPublicFallbackRepairSource, structuredCallbackPublicFallbackRepairNormalizationPaths } from \"./structured-callback-public-fallback-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 392
+        },
+        {
+          "current": "\t...structuredCallbackPublicFallbackRepairNormalizationPaths\n\t, ...callbackCheckedRecordWitDiagnosticRepairNormalizationPaths\n",
+          "previous": "\t...callbackCheckedRecordWitDiagnosticRepairNormalizationPaths\n",
+          "start": 154906
+        },
+        {
+          "current": "\tconst structuredCallbackFallbackRepair\n\t\t= beforeStructuredCallbackPublicFallbackRepairSource(\n\t\t\tpath, text, expected\n\t\t);\n\tif(sha256(structuredCallbackFallbackRepair) === expected)\n\t\treturn structuredCallbackFallbackRepair;\n",
+          "previous": "",
+          "start": 190104
+        },
+        {
+          "current": "\t\t\tpath, structuredCallbackFallbackRepair, expected\n",
+          "previous": "\t\t\tpath, text, expected\n",
+          "start": 190435
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "0639d14c08c3c03161e9b63a64def4f7e72b5cd2b23035bf4d7f8e6f4bb50bd6"
+    }
+  ],
+  "milestone": "structured-callback-public-fallback-repair-source-v1",
+  "predecessorCommit": "e7d2c268684889dca3c1dae480584a03082c9380",
+  "schemaVersion": 1,
+  "scope": "Structured callback recovery defaults use the public refinement tree while invocation validators retain the compiler-normalized erased mirror tree.",
+  "updates": [
+    {
+      "currentSha256": "3447b892756e074a6cd1d8b326d7135970d65e914bcab157b8ed728889be4583",
+      "edits": [
+        {
+          "current": "\t\tconst fallback = defaults.expression(\n\t\t\tsignature.result\n\t\t\t, runtimeRefinements(signature, signature.refinements)?.result\n\t\t);\n",
+          "previous": "\t\tconst fallback = defaults.expression(signature.result, refinements?.result);\n",
+          "start": 17691
+        }
+      ],
+      "path": "src/build/component-structured-callable-lean.mjs",
+      "previousSha256": "b3631800c37fce635ce1a22a047c553d682bf548b2d004a85ced59119ddce883"
+    },
+    {
+      "currentSha256": "c9c06af016ec73bf8ea52bf9fa9f2e8141106bd4f97b6657da28de9528f0d180",
+      "edits": [
+        {
+          "current": "\tconst lean = generated.files[\"LeanBridgeGenerated.lean\"];\n\tconst key = abi.callbacks.find(type => type.id === callback.id).key;\n\t// Recovery is a public refined value, while wire validators keep using the\n\t// compiler-normalized erased mirror selected for this callback signature.\n\tassert.match(lean, /def callbackDefault_[a-f0-9]+ : LbErased\\.Structured\\.Payload := \\{[\\s\\S]*«count» := \\(⟨0, by decide⟩ : _root_\\.Fin 3\\)/u);\n\tassert.match(lean, new RegExp(`def checked_${key}_result_refinement_0[\\\\s\\\\S]*LbErased\\\\.Structured\\\\.Payload\\\\.check`, \"u\"));\n\tassert.match(lean, new RegExp(`def wrap_${key}[\\\\s\\\\S]*\\\\| \\\\.none => callbackDefault_[a-f0-9]+`, \"u\"));\n\tassert.doesNotMatch(lean, /LbErased\\.undefined/u);\n",
+          "previous": "\tassert.doesNotMatch(generated.files[\"LeanBridgeGenerated.lean\"], /LbErased\\.undefined/u);\n",
+          "start": 8684
+        }
+      ],
+      "path": "tests/component-structured-callable-contract.test.mjs",
+      "previousSha256": "185cce9aa9f3919402b5293516d68ee12bb35a5dbaa335315b73012d5aa0e36f"
+    }
+  ]
+}

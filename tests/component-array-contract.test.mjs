@@ -47,6 +47,7 @@ import "./helpers/test-profile-registration-source-history-tests.mjs";
 import "./helpers/test-profiles-registration-gap-source-history-tests.mjs";
 import "./helpers/value-index-test-profile-live-read-repair-source-history-tests.mjs";
 import "./helpers/callback-checked-record-wit-diagnostic-repair-source-history-tests.mjs";
+import "./helpers/structured-callback-public-fallback-repair-source-history-tests.mjs";
 import "./helpers/runtime-receipt-source-history-tests.mjs";
 import "./helpers/cpan-cli-control-source-history-tests.mjs";
 import "./helpers/python-fin-source-history-tests.mjs";
