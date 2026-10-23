@@ -1,0 +1,73 @@
+{
+  "additions": [
+    {
+      "currentSha256": "dad4bbe7c5ca6a1348d95ab8b94b3ee0464e9f7eecc1cde3d9089281672cdc04",
+      "path": "scripts/update-generic-subtype-dotnet-runtime-probe-source-history.mjs"
+    },
+    {
+      "currentSha256": "d88782c8d3eb8e185d0a4672606ac0b086b0e3f3454c996039d400aa96eac1b9",
+      "path": "tests/helpers/generic-subtype-dotnet-runtime-probe-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "65891ef0ecec21cbed56ddb327bc4e03fdde6850d4fc7ac60b8bdd9f774414e9",
+      "path": "tests/helpers/generic-subtype-dotnet-runtime-probe-source-history.mjs"
+    }
+  ],
+  "appliedCommit": "48983aa13ef6852a1866647a1cd4da5293fd56af",
+  "implementationCommit": "a032f45a3c86ca84eaedf9ee0a13679a5ebc8532",
+  "integrationBaseCommit": "bdbea979e2c9ffc27b3603c6f3c7f9008f3f5cbd",
+  "integrationUpdates": [
+    {
+      "currentSha256": "57a7f14b55730176fe5c67a7ab935e582ff90ba0b4e21539f0940786607fa107",
+      "edits": [
+        {
+          "current": "import \"./helpers/generic-subtype-dotnet-runtime-probe-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 293
+        }
+      ],
+      "path": "tests/generic-subtype-managed-wit.test.mjs",
+      "previousSha256": "930c82cf21b4033e310bd289fc6287ff6d831da858f3a86010568d06180f7b4f"
+    },
+    {
+      "currentSha256": "a31ed6c06be319cee57fee630cca8d2f1d4172a24dc7752a2d00ff923d3642b6",
+      "edits": [
+        {
+          "current": "import { beforeGenericSubtypeDotnetRuntimeProbeSource, genericSubtypeDotnetRuntimeProbeNormalizationPaths } from \"./generic-subtype-dotnet-runtime-probe-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...genericSubtypeDotnetRuntimeProbeNormalizationPaths\n\t, ...genericSubtypeEvidenceSourceClosureRepairChangedPaths\n",
+          "previous": "\t...genericSubtypeEvidenceSourceClosureRepairChangedPaths\n",
+          "start": 167866
+        },
+        {
+          "current": "\tconst genericSubtypeDotnetRuntimeProbe\n\t\t= beforeGenericSubtypeDotnetRuntimeProbeSource(path, text, expected);\n\tif(sha256(genericSubtypeDotnetRuntimeProbe) === expected)\n\t\treturn genericSubtypeDotnetRuntimeProbe;\n\ttext = genericSubtypeDotnetRuntimeProbe;\n",
+          "previous": "",
+          "start": 206393
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "2f9d2c7faaddc8e913efac1dc2693029250522fbe812a1a7a56d06b3e0bb06ee"
+    }
+  ],
+  "milestone": "generic-subtype-dotnet-runtime-probe-source-v1",
+  "predecessorCommit": "23ae28e37befcdf245e94f5f841ed50254fc869c",
+  "schemaVersion": 1,
+  "scope": "Answer the installed .NET harness runtime probe from the generic Subtype C# caller and reject any other caller argument, without changing its checked compositions or result.",
+  "updates": [
+    {
+      "currentSha256": "9741b53623da95d35e86f8546c6a9e4893fb42f30e00d90635634265cca44a56",
+      "edits": [
+        {
+          "current": "    static int Main(string[] arguments)\n    {\n        try\n        {\n            if (arguments.Length == 1 && arguments[0] == \"--runtime\")\n            {\n                Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(new {\n                    version = Environment.Version.ToString(),\n                    description = System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription,\n                    directory = System.Runtime.InteropServices.RuntimeEnvironment.GetRuntimeDirectory(),\n                    command = Environment.ProcessPath,\n                    architecture = System.Runtime.InteropServices.RuntimeInformation.ProcessArchitecture.ToString(),\n                    os = System.Runtime.InteropServices.RuntimeInformation.OSDescription,\n                    littleEndian = BitConverter.IsLittleEndian\n                }));\n                return 0;\n            }\n            if (arguments.Length != 0) throw new InvalidOperationException(\"Unexpected caller arguments\");\n            Run(); return 0;\n        }\n        catch (Exception error) { Console.Error.WriteLine(error); return 1; }\n    }\n    static void Run()\n",
+          "previous": "    static void Main()\n",
+          "start": 1827
+        }
+      ],
+      "path": "tests/fixtures/generic-subtype-consumers/dotnet.cs",
+      "previousSha256": "435203bc8f91bc841fbc7b25ffa2ee5e51f609618c726b114d8723aea955c440"
+    }
+  ]
+}
