@@ -22,6 +22,7 @@ import {
 	ownedSubtypeEvidenceSources
 } from "./helpers/owned-subtype-hosted-evidence-sources.mjs";
 import "./helpers/owned-subtype-perl-source-path-repair-source-history-tests.mjs";
+import "./helpers/owned-jvm-lazy-kotlin-factory-source-history-tests.mjs";
 
 const producer = "a".repeat(40), digest = value => value.repeat(64);
 const specifications = Object.freeze({

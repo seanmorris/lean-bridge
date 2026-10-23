@@ -1,0 +1,127 @@
+{
+  "additions": [
+    {
+      "currentSha256": "3a174c1d944cc946390e909354d049c1681800a637ba5dab44df9e1f0040de60",
+      "path": "scripts/update-owned-jvm-lazy-kotlin-factory-source-history.mjs"
+    },
+    {
+      "currentSha256": "eca920a208b107c26b715dff1ed75fffebbc107e0494addd3167516ffccd318e",
+      "path": "tests/helpers/owned-jvm-lazy-kotlin-factory-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "7c6872e0ccfaf2cc2d7b58783a5d61533846e2fed9ba9eaea2a94da98f399e1e",
+      "path": "tests/helpers/owned-jvm-lazy-kotlin-factory-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "293a6a3234b22c507d60956f7cb9176dee36fb81",
+  "integrationUpdates": [
+    {
+      "currentSha256": "bcf82a7f5de38800db2ab428efac3ec67bbb359011cde4a4bbd41d70c8bcddf3",
+      "edits": [
+        {
+          "current": "import { beforeOwnedJvmLazyKotlinFactorySource, ownedJvmLazyKotlinFactoryNormalizationPaths } from \"./owned-jvm-lazy-kotlin-factory-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...ownedJvmLazyKotlinFactoryNormalizationPaths\n\t, ...ownedSubtypeLivePinCompletionNormalizationPaths\n",
+          "previous": "\t...ownedSubtypeLivePinCompletionNormalizationPaths\n",
+          "start": 168907
+        },
+        {
+          "current": "\tconst ownedJvmLazyKotlinFactory\n\t\t= beforeOwnedJvmLazyKotlinFactorySource(path, text, expected);\n\tif(sha256(ownedJvmLazyKotlinFactory) === expected)\n\t\treturn ownedJvmLazyKotlinFactory;\n\ttext = ownedJvmLazyKotlinFactory;\n",
+          "previous": "",
+          "start": 207774
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "9bf79aee1b93cbe8c33388dd47eb2e29f2081ce2cf8234c83e5206c56a827fa4"
+    },
+    {
+      "currentSha256": "36cffa2f8976dd098cff6244599f151be90dbcdb9ccfecd29d9ef7e8ca086278",
+      "edits": [
+        {
+          "current": "import \"./helpers/owned-jvm-lazy-kotlin-factory-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 911
+        }
+      ],
+      "path": "tests/owned-subtype-hosted-ci.test.mjs",
+      "previousSha256": "0cd10325624a94f99a7d5ea99c0da2d23f1f5cf4e32fb1dd8012e2644ff7db1a"
+    }
+  ],
+  "milestone": "owned-jvm-lazy-kotlin-factory-source-v1",
+  "predecessorCommit": "1f03f11561542c44c3ae52edafe957342a9b70d6",
+  "schemaVersion": 1,
+  "scope": "Construct the owned JVM Kotlin factories lazily and thread-safely on first Kotlin use, so Java callers construct owned bindings without the Kotlin runtime, and prove the generated accessor and a Java-only class path without kotlin-stdlib.",
+  "updates": [
+    {
+      "currentSha256": "48172c1197984c0f169621f90dac0f39b9295ed6d79b575b16962763421474df",
+      "edits": [
+        {
+          "current": "\tconst factory = kotlin ? \"kotlinFactory()\" : \"javaFactory\";\n",
+          "previous": "\tconst factory = kotlin ? \"kotlinFactory\" : \"javaFactory\";\n",
+          "start": 7475
+        }
+      ],
+      "path": "src/backends/jvm/owned-borrows.mjs",
+      "previousSha256": "99d5d28f24e5c13a1042e75ae6ba15994fb176442d8b9e9629d9d675fcc94fbc"
+    },
+    {
+      "currentSha256": "aeffe335193817cdd32309dd7e60d3a47cb3134df3283c1c3b9045ef4d0b02d6",
+      "edits": [
+        {
+          "current": "\t\tconst factory = kotlin ? \"kotlinFactory()\" : \"javaFactory\";\n",
+          "previous": "\t\tconst factory = kotlin ? \"kotlinFactory\" : \"javaFactory\";\n",
+          "start": 3711
+        }
+      ],
+      "path": "src/backends/jvm/owned-callables.mjs",
+      "previousSha256": "256c23521755fa3a278b34a68285e8a39381e5f0e7bd0da594d712f2c47e90a7"
+    },
+    {
+      "currentSha256": "eb258d621e3c0136906dacf248c6291f3a084951e25439b8e258e18a591a4c69",
+      "edits": [
+        {
+          "current": "\t\tconst factory = k ? \"kotlinFactory()\" : \"javaFactory\";\n",
+          "previous": "\t\tconst factory = k ? \"kotlinFactory\" : \"javaFactory\";\n",
+          "start": 5291
+        },
+        {
+          "current": "    private volatile _OwnedConvert.Factory kotlinFactory;\n",
+          "previous": "    private final _OwnedConvert.Factory kotlinFactory = new _KotlinOwnedFactories(this);\n",
+          "start": 11562
+        },
+        {
+          "current": "    }\n    // Kotlin factories need the Kotlin runtime, so Java callers never load them.\n    _OwnedConvert.Factory kotlinFactory() {\n        var factory = kotlinFactory;\n        if (factory == null) synchronized (this) {\n            factory = kotlinFactory;\n            if (factory == null) kotlinFactory = factory = new _KotlinOwnedFactories(this);\n        }\n        return factory;\n",
+          "previous": "",
+          "start": 13024
+        }
+      ],
+      "path": "src/backends/jvm/owned-calls.mjs",
+      "previousSha256": "36ba6b1b76f79185e85f9c6f683c5b21ddc350343ef11c70e3f6e285f8d95cbd"
+    },
+    {
+      "currentSha256": "4a88f99ec124bb84d74cf699eb60ce979d689b14df2ad2352d00e7b8cc839c17",
+      "edits": [
+        {
+          "current": "import { compileJvmSources } from \"../src/build/compile-jvm-sources.mjs\";\n",
+          "previous": "",
+          "start": 738
+        },
+        {
+          "current": "\t// Java consumers carry no Kotlin runtime, so only the lazy accessor may\n\t// construct the Kotlin factories.\n\tconst bindings = Object.entries(generated.jvm.files).find(([path]) =>\n\t\tpath.endsWith(\"/_OwnedBindings.java\"))[1];\n\tassert.equal(bindings.split(\"new _KotlinOwnedFactories(\").length, 2);\n\tassert.match(bindings, /private volatile _OwnedConvert\\.Factory kotlinFactory;\\n/u);\n\tassert.match(bindings, /_OwnedConvert\\.Factory kotlinFactory\\(\\) \\{\\n[^}]+new _KotlinOwnedFactories\\(this\\)/u);\n\tassert.doesNotMatch(bindings, /^\\s+private final [^\\n]*_Kotlin/mu);\n",
+          "previous": "",
+          "start": 5991
+        },
+        {
+          "current": "\nconst jvmTools = [\"LEAN_BRIDGE_JAVAC\", \"LEAN_BRIDGE_KOTLINC\"]\n\t.every(name => process.env[name] !== undefined);\ntest(\"Java callers construct owned bindings without the Kotlin runtime\"\n\t, { skip: !jvmTools, timeout: 300_000 }, async t => {\n\t\tconst root = await mkdtemp(join(tmpdir(), \"lean-owned-jvm-java-only-\"));\n\t\tt.after(() => rm(root, { recursive: true, force: true }));\n\t\tconst { files } = generateOwnedJvmPackage(ownedSubtypePackageReviewedIr(), null\n\t\t\t, { transferredInputs: true, hostCallbacks: false });\n\t\tfor(const [path, source] of Object.entries(files))\n\t\t\tawait saveLakeFile(root, path, source);\n\t\tconst environment = { PATH: process.env.PATH\n\t\t\t, LEAN_BRIDGE_JAVAC: process.env.LEAN_BRIDGE_JAVAC\n\t\t\t, LEAN_BRIDGE_KOTLINC: process.env.LEAN_BRIDGE_KOTLINC\n\t\t\t, ...process.env.LEAN_BRIDGE_JAVA ? { LEAN_BRIDGE_JAVA: process.env.LEAN_BRIDGE_JAVA } : {} };\n\t\tawait compileJvmSources({ root, files, environment });\n\t\tconst bindings = Object.keys(files).find(path => path.endsWith(\"/_OwnedBindings.java\"));\n\t\tconst namespace = files[bindings].match(/^package ([\\w.]+);$/mu)[1];\n\t\tconst probe = `probe/${namespace.replaceAll(\".\", \"/\")}/Probe.java`;\n\t\tawait saveLakeFile(root, probe, `package ${namespace};\npublic final class Probe {\n    public static void main(String[] args) {\n        try { new _OwnedBindings(name -> java.util.Optional.empty(), () -> { }); }\n        catch (Throwable error) { System.out.println(error.getClass().getName()); }\n    }\n}\n`);\n\t\tconst javac = process.env.LEAN_BRIDGE_JAVAC;\n\t\tconst java = process.env.LEAN_BRIDGE_JAVA ?? join(dirname(javac), \"java\");\n\t\tawait runCopied(javac, [\"--release\", \"22\", \"-proc:none\", \"-classpath\"\n\t\t\t, \"classes\", \"-d\", \"probe-classes\", probe], root);\n\t\t// The class path omits kotlin-stdlib: constructing the bindings must\n\t\t// reach the native symbol lookup without loading any Kotlin class.\n\t\tconst run = await runCopied(java, [\"--enable-native-access=ALL-UNNAMED\"\n\t\t\t, \"-classpath\", \"probe-classes:classes\", `${namespace}.Probe`], root);\n\t\tassert.equal(run.stdout, \"java.util.NoSuchElementException\\n\");\n\t}\n);\n",
+          "previous": "",
+          "start": 6560
+        }
+      ],
+      "path": "tests/owned-subtype-remaining-packaging.test.mjs",
+      "previousSha256": "bedc5497db82417097b879e16426c4d3eac66dfaac421ce7f225c3576e98dfad"
+    }
+  ]
+}
