@@ -23,13 +23,8 @@ import {
 	beforeFinRefinementSource, exactTypeSurfaceSourceHistoryStatistics
 	, finRefinementNormalizationPaths
 } from "./fin-refinement-source-history.mjs";
-import {
-	beforeOwnedCheckedRecordCallableSource
-} from "./owned-checked-record-callable-source-history.mjs";
-import {
-	beforeOwnedCheckedRecordFoundationSource
-} from "./owned-checked-record-foundation-source-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
+import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
 
 const git = args => execFileSync("git", args
 	, { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
@@ -71,12 +66,9 @@ test("dependent-record constructor authority restores every exact source"
 		assert.ok(record.repairedTypeSurfacePointers > 0);
 		for(const update of [...record.updates, ...record.integrationUpdates])
 		{
-			const current = await readFile(update.path, "utf8");
-			const callable = beforeOwnedCheckedRecordCallableSource(
-				update.path, current, update.currentSha256
-			);
-			const milestone = beforeOwnedCheckedRecordFoundationSource(
-				update.path, callable, update.currentSha256
+			const milestone = await sourceAtFinHistoryMilestone(
+				update.path, update.currentSha256
+				, beforeDependentRecordConstructorAuthoritySource
 			);
 			const previous = reverseDependentRecordConstructorAuthorityUpdate(
 				milestone, update
@@ -85,22 +77,15 @@ test("dependent-record constructor authority restores every exact source"
 			assert.equal(beforeDependentRecordConstructorAuthoritySource(
 				update.path, milestone, update.previousSha256), previous, update.path);
 			assert.equal(beforeFinRefinementSource(
-				update.path, current, update.previousSha256), previous, update.path);
+				update.path, milestone, update.previousSha256), previous, update.path);
 			assert.ok(finRefinementNormalizationPaths.includes(update.path)
 				, update.path);
 		}
 		for(const addition of record.additions)
-		{
-			const current = await readFile(addition.path, "utf8");
-			const callable = beforeOwnedCheckedRecordCallableSource(
-				addition.path, current, addition.currentSha256
-			);
-			const milestone = beforeOwnedCheckedRecordFoundationSource(
-				addition.path, callable, addition.currentSha256
-			);
-			assert.equal(sha256(milestone)
+			assert.equal(sha256(await sourceAtFinHistoryMilestone(
+				addition.path, addition.currentSha256
+			))
 				, addition.currentSha256, addition.path);
-		}
 	}
 );
 
