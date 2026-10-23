@@ -1,0 +1,30 @@
+{
+  "browserAccepted": true,
+  "engines": [
+    "chromium",
+    "firefox",
+    "webkit"
+  ],
+  "nodeAccepted": true,
+  "producerCommit": "9687cccc00a3c0f546925aaa5bcf6c8b6040d367",
+  "profiles": [
+    "browser-javascript",
+    "browser-react",
+    "browser-worker"
+  ],
+  "records": {
+    "archiveCount": 4,
+    "browserReportCount": 6,
+    "reportSha256": "29eb5c950b614e7599dc46b8f25889f3c5a449858dc215559a811ac63ab6970f"
+  },
+  "routes": [
+    "ordinary",
+    "reviewed"
+  ],
+  "runtime": {
+    "arch": "x64",
+    "node": "v22.23.3",
+    "platform": "linux"
+  },
+  "schemaVersion": 1
+}
