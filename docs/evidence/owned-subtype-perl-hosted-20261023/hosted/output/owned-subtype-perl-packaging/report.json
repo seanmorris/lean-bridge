@@ -1,0 +1,1778 @@
+{
+  "profile": "installed-owned-subtype-perl",
+  "reports": [
+    {
+      "callbackCoexistence": true,
+      "compilerSelectedConstructors": true,
+      "componentReceipt": {
+        "adaptersSha256": "5550b80145915fbdd238e7b1ce659aa573a464853009f362ddd23b90abf7562d",
+        "allocationGuardSha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83",
+        "bindingIrSha256": "1d643ee3fbc2aa924d28254cefebb32fc15c0b7a73f6497160b340c9387b0205",
+        "callbackSourceSha256": "3275af79dc4fb1c91510d4404a0984e86722c754c5670400458b2e24f717d959",
+        "compiler": "cc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+        "exports": [
+          {
+            "declaration": "Owned.callbackRecord",
+            "symbol": "lean_bridge_owned_48d801817da6928541ff452a_f0838f7ed39f0edac01d9"
+          },
+          {
+            "declaration": "Owned.echoRecord",
+            "symbol": "lean_bridge_owned_48d801817da6928541ff452a_f080cb47999bb83cdc0c1"
+          },
+          {
+            "declaration": "Owned.echoRecordAlternate",
+            "symbol": "lean_bridge_owned_48d801817da6928541ff452a_f579c430cd49e7c98161f"
+          },
+          {
+            "declaration": "Owned.newTicket",
+            "symbol": "lean_bridge_owned_48d801817da6928541ff452a_f9735b5a0a586b46ce0b8"
+          },
+          {
+            "declaration": "Owned.serial",
+            "symbol": "lean_bridge_owned_48d801817da6928541ff452a_f52957d819a8a28259bf1"
+          },
+          {
+            "declaration": "Owned.transferRecord",
+            "symbol": "lean_bridge_owned_48d801817da6928541ff452a_f973a6e63b7dad7a3d147"
+          }
+        ],
+        "headerSha256": "64ebaf852ad60d71fe83eae807d6bf277ee34b0967315374bc568f9525b6a762",
+        "initializer": "initialize_LeanBridgeOwned20815341f7ffc5e1",
+        "inputTransfers": {
+          "consumption": "before-lean-call",
+          "exports": [
+            {
+              "bindingId": "lean:Owned.transferRecord",
+              "parameters": [
+                0
+              ]
+            }
+          ],
+          "failure": "consumed-after-handoff",
+          "ownership": "whole-result-owner",
+          "schemaVersion": 1,
+          "validation": "before-consumption",
+          "viewLifetime": "until-call-returns"
+        },
+        "library": "libcomponent_df500c005a7a829ba06c.so",
+        "metadataSha256": "a70e0805833012dae4e91ea6741390651f7e1d6c0c30181d2bbcb0fed057f392",
+        "modelSha256": "ef7f42e80390ee8101f567c6eb9d4e215d379c9c92235e8b5110e96a6f32538c",
+        "nativeLibrary": {
+          "bytes": 89360,
+          "sha256": "ecd68381fa1bf6b87e96a4783a8b1c81363470251e7c5d717b07b2955ad5d1cb"
+        },
+        "profile": "native-library-v1",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+        "schemaVersion": 4,
+        "sourceIdentity": {
+          "exportConfigurationSha256": "9f10f50c3e95811d2bfa1393d4980b6654c96f4e14c0b8a14e62bde63af1264c",
+          "exportConfigurationSource": "{\n  \"arities\": {},\n  \"contracts\": {\n    \"Owned.echoRecord\": {\n      \"parameters\": [\n        {\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"ownership\": \"borrow\",\n          \"refinement\": {\n            \"fields\": [\n              {\n                \"name\": \"primary\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"spare\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"peers\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"history\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"payload\",\n                \"refinement\": {\n                  \"fields\": [\n                    {\n                      \"name\": \"count\",\n                      \"refinement\": {\n                        \"constructor\": \"Owned.checkedCount\"\n                      }\n                    },\n                    {\n                      \"name\": \"bytes\",\n                      \"refinement\": null\n                    }\n                  ],\n                  \"kind\": \"record\",\n                  \"name\": \"Owned.Payload\"\n                }\n              }\n            ],\n            \"kind\": \"record\",\n            \"name\": \"Owned.Bundle\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\"\n      }\n    },\n    \"Owned.echoRecordAlternate\": {\n      \"parameters\": [\n        {\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"ownership\": \"borrow\",\n          \"refinement\": {\n            \"fields\": [\n              {\n                \"name\": \"primary\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"spare\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"peers\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"history\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"payload\",\n                \"refinement\": {\n                  \"fields\": [\n                    {\n                      \"name\": \"count\",\n                      \"refinement\": {\n                        \"constructor\": \"Owned.checkedCountAlternate\"\n                      }\n                    },\n                    {\n                      \"name\": \"bytes\",\n                      \"refinement\": null\n                    }\n                  ],\n                  \"kind\": \"record\",\n                  \"name\": \"Owned.Payload\"\n                }\n              }\n            ],\n            \"kind\": \"record\",\n            \"name\": \"Owned.Bundle\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\"\n      }\n    },\n    \"Owned.transferRecord\": {\n      \"parameters\": [\n        {\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"ownership\": \"transfer\",\n          \"refinement\": {\n            \"fields\": [\n              {\n                \"name\": \"primary\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"spare\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"peers\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"history\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"payload\",\n                \"refinement\": {\n                  \"fields\": [\n                    {\n                      \"name\": \"count\",\n                      \"refinement\": {\n                        \"constructor\": \"Owned.checkedCount\"\n                      }\n                    },\n                    {\n                      \"name\": \"bytes\",\n                      \"refinement\": null\n                    }\n                  ],\n                  \"kind\": \"record\",\n                  \"name\": \"Owned.Payload\"\n                }\n              }\n            ],\n            \"kind\": \"record\",\n            \"name\": \"Owned.Bundle\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\"\n      }\n    }\n  },\n  \"exports\": [\n    \"Owned.newTicket\",\n    \"Owned.serial\",\n    \"Owned.echoRecord\",\n    \"Owned.echoRecordAlternate\",\n    \"Owned.transferRecord\",\n    \"Owned.callbackRecord\"\n  ],\n  \"modules\": [\n    \"Owned\"\n  ],\n  \"ownedAggregates\": {\n    \"cycles\": \"reject\",\n    \"disposal\": \"required\",\n    \"fallback\": \"queued-finalizer\",\n    \"ownership\": \"lease\"\n  },\n  \"package\": {\n    \"description\": \"Owned values with proof-erased checked fields.\"\n  },\n  \"resources\": [\n    \"Owned.Ticket\"\n  ],\n  \"schemaVersion\": 1,\n  \"targets\": {\n    \"cpan\": {\n      \"module\": \"LeanBridge::OwnedProbe\",\n      \"version\": \"0.010\"\n    }\n  }\n}\n",
+          "extractorSha256": "00f8ce7a3888339cdb1c36b0dce3d8bc9d4c650ea18c7a4926c2d29d4690443a",
+          "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+          "leanCompilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+          "leanVersion": "4.32.2",
+          "modules": [
+            {
+              "interface": {
+                "bytes": 133728,
+                "interfaceSha256": "e96653db13d9a29eeaa57cfa834874e290935f4e59dacddad919eaa34a2f1847",
+                "sha256": "89679a92e88c9581a05442327d48a210e71a8adc37889a7204b7eafa797847b3"
+              },
+              "module": "Owned",
+              "source": {
+                "bytes": 1126,
+                "path": "Owned.lean",
+                "sha256": "c0346b3446761904f3d0e1dfe5c057e2f18418929d088feca3d373488fa34042"
+              }
+            }
+          ],
+          "request": {
+            "arities": [],
+            "contracts": {
+              "Owned.echoRecord": {
+                "parameters": [
+                  {
+                    "lifetime": {
+                      "anchor": null,
+                      "scope": "call"
+                    },
+                    "ownership": "borrow",
+                    "refinement": {
+                      "fields": [
+                        {
+                          "name": "primary",
+                          "refinement": null
+                        },
+                        {
+                          "name": "spare",
+                          "refinement": null
+                        },
+                        {
+                          "name": "peers",
+                          "refinement": null
+                        },
+                        {
+                          "name": "history",
+                          "refinement": null
+                        },
+                        {
+                          "name": "payload",
+                          "refinement": {
+                            "fields": [
+                              {
+                                "name": "count",
+                                "refinement": {
+                                  "constructor": "Owned.checkedCount"
+                                }
+                              },
+                              {
+                                "name": "bytes",
+                                "refinement": null
+                              }
+                            ],
+                            "kind": "record",
+                            "name": "Owned.Payload"
+                          }
+                        }
+                      ],
+                      "kind": "record",
+                      "name": "Owned.Bundle"
+                    }
+                  }
+                ],
+                "result": {
+                  "lifetime": {
+                    "anchor": null,
+                    "scope": "explicit"
+                  },
+                  "ownership": "lease"
+                }
+              },
+              "Owned.echoRecordAlternate": {
+                "parameters": [
+                  {
+                    "lifetime": {
+                      "anchor": null,
+                      "scope": "call"
+                    },
+                    "ownership": "borrow",
+                    "refinement": {
+                      "fields": [
+                        {
+                          "name": "primary",
+                          "refinement": null
+                        },
+                        {
+                          "name": "spare",
+                          "refinement": null
+                        },
+                        {
+                          "name": "peers",
+                          "refinement": null
+                        },
+                        {
+                          "name": "history",
+                          "refinement": null
+                        },
+                        {
+                          "name": "payload",
+                          "refinement": {
+                            "fields": [
+                              {
+                                "name": "count",
+                                "refinement": {
+                                  "constructor": "Owned.checkedCountAlternate"
+                                }
+                              },
+                              {
+                                "name": "bytes",
+                                "refinement": null
+                              }
+                            ],
+                            "kind": "record",
+                            "name": "Owned.Payload"
+                          }
+                        }
+                      ],
+                      "kind": "record",
+                      "name": "Owned.Bundle"
+                    }
+                  }
+                ],
+                "result": {
+                  "lifetime": {
+                    "anchor": null,
+                    "scope": "explicit"
+                  },
+                  "ownership": "lease"
+                }
+              },
+              "Owned.transferRecord": {
+                "parameters": [
+                  {
+                    "lifetime": {
+                      "anchor": null,
+                      "scope": "call"
+                    },
+                    "ownership": "transfer",
+                    "refinement": {
+                      "fields": [
+                        {
+                          "name": "primary",
+                          "refinement": null
+                        },
+                        {
+                          "name": "spare",
+                          "refinement": null
+                        },
+                        {
+                          "name": "peers",
+                          "refinement": null
+                        },
+                        {
+                          "name": "history",
+                          "refinement": null
+                        },
+                        {
+                          "name": "payload",
+                          "refinement": {
+                            "fields": [
+                              {
+                                "name": "count",
+                                "refinement": {
+                                  "constructor": "Owned.checkedCount"
+                                }
+                              },
+                              {
+                                "name": "bytes",
+                                "refinement": null
+                              }
+                            ],
+                            "kind": "record",
+                            "name": "Owned.Payload"
+                          }
+                        }
+                      ],
+                      "kind": "record",
+                      "name": "Owned.Bundle"
+                    }
+                  }
+                ],
+                "result": {
+                  "lifetime": {
+                    "anchor": null,
+                    "scope": "explicit"
+                  },
+                  "ownership": "lease"
+                }
+              }
+            },
+            "exportModules": [
+              "Owned"
+            ],
+            "exports": [
+              "Owned.newTicket",
+              "Owned.serial",
+              "Owned.echoRecord",
+              "Owned.echoRecordAlternate",
+              "Owned.transferRecord",
+              "Owned.callbackRecord"
+            ],
+            "metadata": {
+              "invocationIdentitySha256": "b62c3aa96e543ea02831bc5508635860bfaf3bbb7c74dfdfba95aa74a153754b",
+              "modules": [
+                {
+                  "interfaceSha256": "e96653db13d9a29eeaa57cfa834874e290935f4e59dacddad919eaa34a2f1847",
+                  "name": "Owned",
+                  "sourcePath": "Owned.lean",
+                  "sourceSha256": "c0346b3446761904f3d0e1dfe5c057e2f18418929d088feca3d373488fa34042"
+                }
+              ],
+              "toolchain": "leanprover/lean4:v4.32.2"
+            },
+            "modules": [
+              "Owned"
+            ],
+            "ownedAggregates": {
+              "cycles": "reject",
+              "disposal": "required",
+              "fallback": "queued-finalizer",
+              "ownership": "lease"
+            },
+            "profile": "native-library-v1",
+            "resources": [
+              "Owned.Ticket"
+            ]
+          },
+          "sourceNoticesSha256": "acb1af42fbaafeafaf39f83048edf410d3fc7c400e22b89c0fa9bb1c75323ec3",
+          "sourceTreeSha256": "52fae84f828e0ffdf06fcd16274799d0c54585cabb596beeb2a3837a15a5524b"
+        }
+      },
+      "consumerSha256": "40a3c09650b62e2aaf2d6c43c10840a0c54f751d98ae8b564d30d5bf45aea1bb",
+      "deterministicReassembly": true,
+      "lifecycle": {
+        "fallback": "perl-destruction",
+        "observation": "native-identity-baseline-restored"
+      },
+      "observations": [
+        {
+          "assets": {
+            "observations": [
+              {
+                "asset": "OwnedProbe.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "5d7e3082d866c4f100a0894fe9aa24bbf4070827d9ec81145acb3d948beb5d26"
+              },
+              {
+                "asset": "OwnedProbe.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "5d7e3082d866c4f100a0894fe9aa24bbf4070827d9ec81145acb3d948beb5d26"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libcomponent_df500c005a7a829ba06c.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "ecd68381fa1bf6b87e96a4783a8b1c81363470251e7c5d717b07b2955ad5d1cb"
+              },
+              {
+                "asset": "libcomponent_df500c005a7a829ba06c.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "ecd68381fa1bf6b87e96a4783a8b1c81363470251e7c5d717b07b2955ad5d1cb"
+              }
+            ],
+            "sourceSha256": "c19aeddf9e5acfa8415ef583ab2513a13a9eaf59f4916fc68e3e60c804bfb152"
+          },
+          "mode": "prebuilt-only",
+          "observed": {
+            "borrowed_rejection_preserved": true,
+            "checks": 74,
+            "implicit_destruction_released": true,
+            "live_identities": 1,
+            "successful_transfer_consumed": true,
+            "transfer_rejection_preserved": true
+          },
+          "perl": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-threaded/bin/perl",
+          "runtimeOnlyRuns": 2
+        },
+        {
+          "assets": {
+            "observations": [
+              {
+                "asset": "OwnedProbe.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "153677bd7b73b47036bf87598a6b73d553d7ee5cd4eca2d54502c804b0a62646"
+              },
+              {
+                "asset": "OwnedProbe.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "153677bd7b73b47036bf87598a6b73d553d7ee5cd4eca2d54502c804b0a62646"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libcomponent_df500c005a7a829ba06c.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "ecd68381fa1bf6b87e96a4783a8b1c81363470251e7c5d717b07b2955ad5d1cb"
+              },
+              {
+                "asset": "libcomponent_df500c005a7a829ba06c.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "ecd68381fa1bf6b87e96a4783a8b1c81363470251e7c5d717b07b2955ad5d1cb"
+              }
+            ],
+            "sourceSha256": "c19aeddf9e5acfa8415ef583ab2513a13a9eaf59f4916fc68e3e60c804bfb152"
+          },
+          "mode": "build-xs",
+          "observed": {
+            "borrowed_rejection_preserved": true,
+            "checks": 74,
+            "implicit_destruction_released": true,
+            "live_identities": 1,
+            "successful_transfer_consumed": true,
+            "transfer_rejection_preserved": true
+          },
+          "perl": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-threaded/bin/perl",
+          "runtimeOnlyRuns": 2
+        },
+        {
+          "assets": {
+            "observations": [
+              {
+                "asset": "OwnedProbe.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "c58e6a1703b79416759d0a6aea035281a1df8fe099e296a1573ba27e96a65874"
+              },
+              {
+                "asset": "OwnedProbe.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "c58e6a1703b79416759d0a6aea035281a1df8fe099e296a1573ba27e96a65874"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libcomponent_df500c005a7a829ba06c.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "ecd68381fa1bf6b87e96a4783a8b1c81363470251e7c5d717b07b2955ad5d1cb"
+              },
+              {
+                "asset": "libcomponent_df500c005a7a829ba06c.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "ecd68381fa1bf6b87e96a4783a8b1c81363470251e7c5d717b07b2955ad5d1cb"
+              }
+            ],
+            "sourceSha256": "c19aeddf9e5acfa8415ef583ab2513a13a9eaf59f4916fc68e3e60c804bfb152"
+          },
+          "mode": "prebuilt-only",
+          "observed": {
+            "borrowed_rejection_preserved": true,
+            "checks": 74,
+            "implicit_destruction_released": true,
+            "live_identities": 1,
+            "successful_transfer_consumed": true,
+            "transfer_rejection_preserved": true
+          },
+          "perl": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-unthreaded/bin/perl",
+          "runtimeOnlyRuns": 2
+        },
+        {
+          "assets": {
+            "observations": [
+              {
+                "asset": "OwnedProbe.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "450bc8420892d25ef6e2a44c6ab7350ed18f4f166af6f92eb770d5e0f1dbb0a1"
+              },
+              {
+                "asset": "OwnedProbe.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "450bc8420892d25ef6e2a44c6ab7350ed18f4f166af6f92eb770d5e0f1dbb0a1"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libcomponent_df500c005a7a829ba06c.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "ecd68381fa1bf6b87e96a4783a8b1c81363470251e7c5d717b07b2955ad5d1cb"
+              },
+              {
+                "asset": "libcomponent_df500c005a7a829ba06c.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "ecd68381fa1bf6b87e96a4783a8b1c81363470251e7c5d717b07b2955ad5d1cb"
+              }
+            ],
+            "sourceSha256": "c19aeddf9e5acfa8415ef583ab2513a13a9eaf59f4916fc68e3e60c804bfb152"
+          },
+          "mode": "build-xs",
+          "observed": {
+            "borrowed_rejection_preserved": true,
+            "checks": 74,
+            "implicit_destruction_released": true,
+            "live_identities": 1,
+            "successful_transfer_consumed": true,
+            "transfer_rejection_preserved": true
+          },
+          "perl": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-unthreaded/bin/perl",
+          "runtimeOnlyRuns": 2
+        },
+        {
+          "assets": {
+            "observations": [
+              {
+                "asset": "OwnedProbe.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "eef42ea71b35317279fe6259a714f2fca7c937346541261b283a0a6dc49250e0"
+              },
+              {
+                "asset": "OwnedProbe.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "eef42ea71b35317279fe6259a714f2fca7c937346541261b283a0a6dc49250e0"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libcomponent_df500c005a7a829ba06c.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "ecd68381fa1bf6b87e96a4783a8b1c81363470251e7c5d717b07b2955ad5d1cb"
+              },
+              {
+                "asset": "libcomponent_df500c005a7a829ba06c.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "ecd68381fa1bf6b87e96a4783a8b1c81363470251e7c5d717b07b2955ad5d1cb"
+              }
+            ],
+            "sourceSha256": "c19aeddf9e5acfa8415ef583ab2513a13a9eaf59f4916fc68e3e60c804bfb152"
+          },
+          "mode": "prebuilt-only",
+          "observed": {
+            "borrowed_rejection_preserved": true,
+            "checks": 74,
+            "implicit_destruction_released": true,
+            "live_identities": 1,
+            "successful_transfer_consumed": true,
+            "transfer_rejection_preserved": true
+          },
+          "perl": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-threaded/bin/perl",
+          "runtimeOnlyRuns": 2
+        },
+        {
+          "assets": {
+            "observations": [
+              {
+                "asset": "OwnedProbe.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "665cf997a09998942c60d336f4bd1c61bb763e63e9ff360995c1806ff3c5c03f"
+              },
+              {
+                "asset": "OwnedProbe.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "665cf997a09998942c60d336f4bd1c61bb763e63e9ff360995c1806ff3c5c03f"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libcomponent_df500c005a7a829ba06c.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "ecd68381fa1bf6b87e96a4783a8b1c81363470251e7c5d717b07b2955ad5d1cb"
+              },
+              {
+                "asset": "libcomponent_df500c005a7a829ba06c.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "ecd68381fa1bf6b87e96a4783a8b1c81363470251e7c5d717b07b2955ad5d1cb"
+              }
+            ],
+            "sourceSha256": "c19aeddf9e5acfa8415ef583ab2513a13a9eaf59f4916fc68e3e60c804bfb152"
+          },
+          "mode": "build-xs",
+          "observed": {
+            "borrowed_rejection_preserved": true,
+            "checks": 74,
+            "implicit_destruction_released": true,
+            "live_identities": 1,
+            "successful_transfer_consumed": true,
+            "transfer_rejection_preserved": true
+          },
+          "perl": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-threaded/bin/perl",
+          "runtimeOnlyRuns": 2
+        },
+        {
+          "assets": {
+            "observations": [
+              {
+                "asset": "OwnedProbe.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "41871742ce515285f92a44a1da870f8370d14c986996ff5725040a20e70a53ef"
+              },
+              {
+                "asset": "OwnedProbe.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "41871742ce515285f92a44a1da870f8370d14c986996ff5725040a20e70a53ef"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libcomponent_df500c005a7a829ba06c.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "ecd68381fa1bf6b87e96a4783a8b1c81363470251e7c5d717b07b2955ad5d1cb"
+              },
+              {
+                "asset": "libcomponent_df500c005a7a829ba06c.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "ecd68381fa1bf6b87e96a4783a8b1c81363470251e7c5d717b07b2955ad5d1cb"
+              }
+            ],
+            "sourceSha256": "c19aeddf9e5acfa8415ef583ab2513a13a9eaf59f4916fc68e3e60c804bfb152"
+          },
+          "mode": "prebuilt-only",
+          "observed": {
+            "borrowed_rejection_preserved": true,
+            "checks": 74,
+            "implicit_destruction_released": true,
+            "live_identities": 1,
+            "successful_transfer_consumed": true,
+            "transfer_rejection_preserved": true
+          },
+          "perl": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-unthreaded/bin/perl",
+          "runtimeOnlyRuns": 2
+        },
+        {
+          "assets": {
+            "observations": [
+              {
+                "asset": "OwnedProbe.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "dafcf0e964595a1ccbc1e4a6d698947bf7a9960570c5ed6e0fa5fa49d5a0db98"
+              },
+              {
+                "asset": "OwnedProbe.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "dafcf0e964595a1ccbc1e4a6d698947bf7a9960570c5ed6e0fa5fa49d5a0db98"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libcomponent_df500c005a7a829ba06c.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "ecd68381fa1bf6b87e96a4783a8b1c81363470251e7c5d717b07b2955ad5d1cb"
+              },
+              {
+                "asset": "libcomponent_df500c005a7a829ba06c.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "ecd68381fa1bf6b87e96a4783a8b1c81363470251e7c5d717b07b2955ad5d1cb"
+              }
+            ],
+            "sourceSha256": "c19aeddf9e5acfa8415ef583ab2513a13a9eaf59f4916fc68e3e60c804bfb152"
+          },
+          "mode": "build-xs",
+          "observed": {
+            "borrowed_rejection_preserved": true,
+            "checks": 74,
+            "implicit_destruction_released": true,
+            "live_identities": 1,
+            "successful_transfer_consumed": true,
+            "transfer_rejection_preserved": true
+          },
+          "perl": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-unthreaded/bin/perl",
+          "runtimeOnlyRuns": 2
+        }
+      ],
+      "owned": {
+        "bindingIrSha256": "1d643ee3fbc2aa924d28254cefebb32fc15c0b7a73f6497160b340c9387b0205",
+        "componentLibrary": "libcomponent_df500c005a7a829ba06c.so",
+        "gmpLibrary": "libgmp-lean-bridge.so.10",
+        "inputTransfers": {
+          "aliases": "shared-lease",
+          "arguments": "ordinary-values",
+          "borrowedInputs": "reject",
+          "consumption": "before-lean-call",
+          "exports": [
+            {
+              "bindingId": "lean:Owned.transferRecord",
+              "parameters": [
+                0
+              ]
+            }
+          ],
+          "failure": "consumed-after-handoff",
+          "independentRetains": "preserved",
+          "ownership": "whole-result-owner",
+          "schemaVersion": 1,
+          "validation": "before-consumption",
+          "viewLifetime": "until-call-returns"
+        },
+        "prefix": "owned_subtypes",
+        "publicHeaderSha256": "bb4057ae02c961a95c14336ce140c76c7a341a6e06896ce9a1668e2a3d79470d",
+        "publicSourceSha256": "bc55c1dce50db040c5b27d733e0d83462f6a102e682bbc457b192ed8e7b20a4e",
+        "schemaVersion": 2
+      },
+      "packageSetReceipt": {
+        "component": {
+          "id": "owned-subtypes@1.0.0",
+          "name": "owned-subtypes",
+          "version": "1.0.0"
+        },
+        "kind": "lean-bridge-package-set-receipt",
+        "packages": [
+          {
+            "artifacts": [
+              {
+                "bytes": 3179959,
+                "path": "archives/LeanBridge-OwnedProbe-0.010.tar.gz",
+                "sha256": "d6fac4541ca0f38acac94d8ab398245c8373dabb8881be82bc179f27f027bbf7"
+              }
+            ],
+            "ecosystem": "cpan",
+            "name": "LeanBridge-OwnedProbe",
+            "profile": "native-library-v1",
+            "requires": [
+              {
+                "ecosystem": "cpan",
+                "name": "LeanBridge-Runtime",
+                "version": "0.0020130180835253351074425099676719723942806298898514237203907626409680523998624031"
+              }
+            ],
+            "role": "component",
+            "runtimeDelivery": "dependency",
+            "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+            "target": "cpan",
+            "version": "0.010"
+          },
+          {
+            "artifacts": [
+              {
+                "bytes": 51397607,
+                "path": "archives/LeanBridge-Runtime-0.0020130180835253351074425099676719723942806298898514237203907626409680523998624031.tar.gz",
+                "sha256": "c228af9110ba0b81d73a1fdf58d4435a68ab6c6ab0913382435ce0a2ee22de80"
+              }
+            ],
+            "ecosystem": "cpan",
+            "name": "LeanBridge-Runtime",
+            "profile": "native-library-v1",
+            "requires": [],
+            "role": "runtime",
+            "runtimeDelivery": "provided",
+            "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+            "target": "cpan",
+            "version": "0.0020130180835253351074425099676719723942806298898514237203907626409680523998624031"
+          }
+        ],
+        "profiles": [
+          {
+            "bindingIrSha256": "1d643ee3fbc2aa924d28254cefebb32fc15c0b7a73f6497160b340c9387b0205",
+            "id": "native-library-v1",
+            "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+          }
+        ],
+        "schemaVersion": 1,
+        "source": {
+          "treeSha256": "52fae84f828e0ffdf06fcd16274799d0c54585cabb596beeb2a3837a15a5524b"
+        }
+      },
+      "relocatedInstallation": true,
+      "reviewed": false,
+      "sourceFreeInstallation": true,
+      "sourceUnchanged": true,
+      "transferredInputCheckedBeforeHandoff": true
+    },
+    {
+      "callbackCoexistence": true,
+      "compilerSelectedConstructors": true,
+      "componentReceipt": {
+        "adaptersSha256": "bdb9d0bdc2cee56f43308727c51b9cf9fe69fe7b818082fc1271a6c1241bfb67",
+        "allocationGuardSha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83",
+        "bindingIrSha256": "27b5ca5aeca678a59ac4a0a5f35fba18cdd3495cfb713b9225cee684f536633c",
+        "callbackSourceSha256": "4c7df3dc6aaa0a65018656ffd1c47a91a44c7a1da6e452d731719b95e39afea9",
+        "compiler": "cc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+        "exports": [
+          {
+            "declaration": "Owned.callbackRecord",
+            "symbol": "lean_bridge_owned_09b5a73d7788c7206a768477_f0838f7ed39f0edac01d9"
+          },
+          {
+            "declaration": "Owned.echoRecord",
+            "symbol": "lean_bridge_owned_09b5a73d7788c7206a768477_f080cb47999bb83cdc0c1"
+          },
+          {
+            "declaration": "Owned.echoRecordAlternate",
+            "symbol": "lean_bridge_owned_09b5a73d7788c7206a768477_f579c430cd49e7c98161f"
+          },
+          {
+            "declaration": "Owned.newTicket",
+            "symbol": "lean_bridge_owned_09b5a73d7788c7206a768477_f9735b5a0a586b46ce0b8"
+          },
+          {
+            "declaration": "Owned.serial",
+            "symbol": "lean_bridge_owned_09b5a73d7788c7206a768477_f52957d819a8a28259bf1"
+          },
+          {
+            "declaration": "Owned.transferRecord",
+            "symbol": "lean_bridge_owned_09b5a73d7788c7206a768477_f973a6e63b7dad7a3d147"
+          }
+        ],
+        "headerSha256": "47d589ae530f98af64989b99abefb0c8da49e8c5b3b2b84c7633bd4e7154e7ad",
+        "initializer": "initialize_LeanBridgeOwnedd140aa3731b2905f",
+        "inputTransfers": {
+          "consumption": "before-lean-call",
+          "exports": [
+            {
+              "bindingId": "lean:Owned.transferRecord",
+              "parameters": [
+                0
+              ]
+            }
+          ],
+          "failure": "consumed-after-handoff",
+          "ownership": "whole-result-owner",
+          "schemaVersion": 1,
+          "validation": "before-consumption",
+          "viewLifetime": "until-call-returns"
+        },
+        "library": "libcomponent_df500c005a7a829ba06c.so",
+        "metadataSha256": "a6cc691ad1e4a516a159b48bf27b01341ebe2083395f45b92c3b40513a2721b9",
+        "modelSha256": "4060e00fbe9c451f4c85500040342d882f6c599f56222eb7988f224ecea46491",
+        "nativeLibrary": {
+          "bytes": 89360,
+          "sha256": "7baf7525088e171e39bc6436d128993d9c5b889fc1e6c58bfdd1eef98977f673"
+        },
+        "profile": "native-library-v1",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+        "schemaVersion": 4,
+        "sourceIdentity": {
+          "exportConfigurationSha256": "6bc9e8b569b06b1bf5e6445b6a9c04a0372a8df929cbc55a472056774c8bb298",
+          "exportConfigurationSource": "{\n  \"modules\": [\n    \"Owned\"\n  ],\n  \"schemaVersion\": 1,\n  \"targets\": {\n    \"cpan\": {\n      \"module\": \"LeanBridge::OwnedProbe\",\n      \"version\": \"0.010\"\n    }\n  }\n}\n",
+          "extractorSha256": "00f8ce7a3888339cdb1c36b0dce3d8bc9d4c650ea18c7a4926c2d29d4690443a",
+          "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+          "leanCompilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+          "leanVersion": "4.32.2",
+          "modules": [
+            {
+              "interface": {
+                "bytes": 133728,
+                "interfaceSha256": "e96653db13d9a29eeaa57cfa834874e290935f4e59dacddad919eaa34a2f1847",
+                "sha256": "89679a92e88c9581a05442327d48a210e71a8adc37889a7204b7eafa797847b3"
+              },
+              "module": "Owned",
+              "source": {
+                "bytes": 1126,
+                "path": "Owned.lean",
+                "sha256": "c0346b3446761904f3d0e1dfe5c057e2f18418929d088feca3d373488fa34042"
+              }
+            }
+          ],
+          "request": {
+            "arities": [],
+            "contracts": {
+              "Owned.echoRecord": {
+                "parameters": [
+                  {
+                    "lifetime": {
+                      "anchor": null,
+                      "scope": "call"
+                    },
+                    "ownership": "borrow",
+                    "refinement": {
+                      "fields": [
+                        {
+                          "name": "primary",
+                          "refinement": null
+                        },
+                        {
+                          "name": "spare",
+                          "refinement": null
+                        },
+                        {
+                          "name": "peers",
+                          "refinement": null
+                        },
+                        {
+                          "name": "history",
+                          "refinement": null
+                        },
+                        {
+                          "name": "payload",
+                          "refinement": {
+                            "fields": [
+                              {
+                                "name": "count",
+                                "refinement": {
+                                  "constructor": "Owned.checkedCount"
+                                }
+                              },
+                              {
+                                "name": "bytes",
+                                "refinement": null
+                              }
+                            ],
+                            "kind": "record",
+                            "name": "Owned.Payload"
+                          }
+                        }
+                      ],
+                      "kind": "record",
+                      "name": "Owned.Bundle"
+                    }
+                  }
+                ]
+              },
+              "Owned.echoRecordAlternate": {
+                "parameters": [
+                  {
+                    "lifetime": {
+                      "anchor": null,
+                      "scope": "call"
+                    },
+                    "ownership": "borrow",
+                    "refinement": {
+                      "fields": [
+                        {
+                          "name": "primary",
+                          "refinement": null
+                        },
+                        {
+                          "name": "spare",
+                          "refinement": null
+                        },
+                        {
+                          "name": "peers",
+                          "refinement": null
+                        },
+                        {
+                          "name": "history",
+                          "refinement": null
+                        },
+                        {
+                          "name": "payload",
+                          "refinement": {
+                            "fields": [
+                              {
+                                "name": "count",
+                                "refinement": {
+                                  "constructor": "Owned.checkedCountAlternate"
+                                }
+                              },
+                              {
+                                "name": "bytes",
+                                "refinement": null
+                              }
+                            ],
+                            "kind": "record",
+                            "name": "Owned.Payload"
+                          }
+                        }
+                      ],
+                      "kind": "record",
+                      "name": "Owned.Bundle"
+                    }
+                  }
+                ]
+              },
+              "Owned.transferRecord": {
+                "parameters": [
+                  {
+                    "lifetime": {
+                      "anchor": null,
+                      "scope": "call"
+                    },
+                    "ownership": "transfer",
+                    "refinement": {
+                      "fields": [
+                        {
+                          "name": "primary",
+                          "refinement": null
+                        },
+                        {
+                          "name": "spare",
+                          "refinement": null
+                        },
+                        {
+                          "name": "peers",
+                          "refinement": null
+                        },
+                        {
+                          "name": "history",
+                          "refinement": null
+                        },
+                        {
+                          "name": "payload",
+                          "refinement": {
+                            "fields": [
+                              {
+                                "name": "count",
+                                "refinement": {
+                                  "constructor": "Owned.checkedCount"
+                                }
+                              },
+                              {
+                                "name": "bytes",
+                                "refinement": null
+                              }
+                            ],
+                            "kind": "record",
+                            "name": "Owned.Payload"
+                          }
+                        }
+                      ],
+                      "kind": "record",
+                      "name": "Owned.Bundle"
+                    }
+                  }
+                ]
+              }
+            },
+            "exportModules": [
+              "Owned"
+            ],
+            "exports": [
+              "Owned.callbackRecord",
+              "Owned.echoRecord",
+              "Owned.echoRecordAlternate",
+              "Owned.newTicket",
+              "Owned.serial",
+              "Owned.transferRecord"
+            ],
+            "metadata": {
+              "invocationIdentitySha256": "e7a858c9da78804bc22b6da80c710b2e2cfc7a92736d363069e0880d9cfdf36c",
+              "modules": [
+                {
+                  "interfaceSha256": "e96653db13d9a29eeaa57cfa834874e290935f4e59dacddad919eaa34a2f1847",
+                  "name": "Owned",
+                  "sourcePath": "Owned.lean",
+                  "sourceSha256": "c0346b3446761904f3d0e1dfe5c057e2f18418929d088feca3d373488fa34042"
+                }
+              ],
+              "toolchain": "leanprover/lean4:v4.32.2"
+            },
+            "modules": [
+              "Owned"
+            ],
+            "ownedAggregates": {
+              "cycles": "reject",
+              "disposal": "required",
+              "fallback": "queued-finalizer",
+              "ownership": "lease"
+            },
+            "profile": "native-library-v1",
+            "resources": [
+              "Owned.Ticket"
+            ]
+          },
+          "reviewedBindingIr": {
+            "path": "api.binding-ir.json",
+            "schemaVersion": 1,
+            "semanticSha256": "f53acdf41261671264522e6c8386c70dbf3f8d47556ddde7a8cdd1ca28eebd54",
+            "source": "{\n  \"aggregatePolicy\": {\n    \"cycles\": \"reject\",\n    \"disposal\": \"required\",\n    \"fallback\": \"queued-finalizer\",\n    \"ownership\": \"lease\"\n  },\n  \"assurance\": [],\n  \"capabilities\": [],\n  \"component\": {\n    \"id\": \"owned-subtypes@1.0.0\",\n    \"name\": \"owned-subtypes\",\n    \"version\": \"1.0.0\"\n  },\n  \"declarations\": [\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [\n        \"allocates\"\n      ],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:Owned.newTicket\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"newTicket\",\n      \"overloadKey\": \"Owned.newTicket\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"arg0\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        },\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"arg1\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"string\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\",\n        \"type\": {\n          \"id\": \"lean:Owned.Ticket\",\n          \"kind\": \"named\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"Owned.newTicket\",\n        \"extensions\": {},\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [\n        \"reads-resource\"\n      ],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:Owned.serial\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"serial\",\n      \"overloadKey\": \"Owned.serial\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"arg0\",\n          \"optional\": false,\n          \"ownership\": \"borrow\",\n          \"type\": {\n            \"id\": \"lean:Owned.Ticket\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"kind\": \"primitive\",\n          \"name\": \"nat\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"Owned.serial\",\n        \"extensions\": {},\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [\n        \"reads-resource\",\n        \"allocates\"\n      ],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:Owned.echoRecord\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"echoRecord\",\n      \"overloadKey\": \"Owned.echoRecord\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"arg0\",\n          \"optional\": false,\n          \"ownership\": \"borrow\",\n          \"type\": {\n            \"id\": \"lean:Owned.Bundle\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\",\n        \"type\": {\n          \"id\": \"lean:Owned.Bundle\",\n          \"kind\": \"named\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"Owned.echoRecord\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"fields\": [\n                  {\n                    \"name\": \"primary\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"spare\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"peers\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"history\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"payload\",\n                    \"refinement\": {\n                      \"fields\": [\n                        {\n                          \"name\": \"count\",\n                          \"refinement\": {\n                            \"constructor\": \"Owned.checkedCount\",\n                            \"kind\": \"subtype\"\n                          }\n                        },\n                        {\n                          \"name\": \"bytes\",\n                          \"refinement\": null\n                        }\n                      ],\n                      \"kind\": \"record\",\n                      \"name\": \"Owned.Payload\"\n                    }\n                  }\n                ],\n                \"kind\": \"record\",\n                \"name\": \"Owned.Bundle\"\n              }\n            ],\n            \"result\": {\n              \"fields\": [\n                {\n                  \"name\": \"primary\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"spare\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"peers\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"history\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"payload\",\n                  \"refinement\": {\n                    \"fields\": [\n                      {\n                        \"name\": \"count\",\n                        \"refinement\": {\n                          \"constructor\": null,\n                          \"kind\": \"subtype\"\n                        }\n                      },\n                      {\n                        \"name\": \"bytes\",\n                        \"refinement\": null\n                      }\n                    ],\n                    \"kind\": \"record\",\n                    \"name\": \"Owned.Payload\"\n                  }\n                }\n              ],\n              \"kind\": \"record\",\n              \"name\": \"Owned.Bundle\"\n            }\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [\n        \"reads-resource\",\n        \"allocates\"\n      ],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:Owned.echoRecordAlternate\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"echoRecordAlternate\",\n      \"overloadKey\": \"Owned.echoRecordAlternate\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"arg0\",\n          \"optional\": false,\n          \"ownership\": \"borrow\",\n          \"type\": {\n            \"id\": \"lean:Owned.Bundle\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\",\n        \"type\": {\n          \"id\": \"lean:Owned.Bundle\",\n          \"kind\": \"named\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"Owned.echoRecordAlternate\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"fields\": [\n                  {\n                    \"name\": \"primary\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"spare\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"peers\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"history\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"payload\",\n                    \"refinement\": {\n                      \"fields\": [\n                        {\n                          \"name\": \"count\",\n                          \"refinement\": {\n                            \"constructor\": \"Owned.checkedCountAlternate\",\n                            \"kind\": \"subtype\"\n                          }\n                        },\n                        {\n                          \"name\": \"bytes\",\n                          \"refinement\": null\n                        }\n                      ],\n                      \"kind\": \"record\",\n                      \"name\": \"Owned.Payload\"\n                    }\n                  }\n                ],\n                \"kind\": \"record\",\n                \"name\": \"Owned.Bundle\"\n              }\n            ],\n            \"result\": {\n              \"fields\": [\n                {\n                  \"name\": \"primary\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"spare\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"peers\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"history\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"payload\",\n                  \"refinement\": {\n                    \"fields\": [\n                      {\n                        \"name\": \"count\",\n                        \"refinement\": {\n                          \"constructor\": null,\n                          \"kind\": \"subtype\"\n                        }\n                      },\n                      {\n                        \"name\": \"bytes\",\n                        \"refinement\": null\n                      }\n                    ],\n                    \"kind\": \"record\",\n                    \"name\": \"Owned.Payload\"\n                  }\n                }\n              ],\n              \"kind\": \"record\",\n              \"name\": \"Owned.Bundle\"\n            }\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [\n        \"reads-resource\",\n        \"allocates\"\n      ],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:Owned.transferRecord\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"transferRecord\",\n      \"overloadKey\": \"Owned.transferRecord\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"arg0\",\n          \"optional\": false,\n          \"ownership\": \"transfer\",\n          \"type\": {\n            \"id\": \"lean:Owned.Bundle\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\",\n        \"type\": {\n          \"id\": \"lean:Owned.Bundle\",\n          \"kind\": \"named\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"Owned.transferRecord\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"fields\": [\n                  {\n                    \"name\": \"primary\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"spare\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"peers\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"history\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"payload\",\n                    \"refinement\": {\n                      \"fields\": [\n                        {\n                          \"name\": \"count\",\n                          \"refinement\": {\n                            \"constructor\": \"Owned.checkedCount\",\n                            \"kind\": \"subtype\"\n                          }\n                        },\n                        {\n                          \"name\": \"bytes\",\n                          \"refinement\": null\n                        }\n                      ],\n                      \"kind\": \"record\",\n                      \"name\": \"Owned.Payload\"\n                    }\n                  }\n                ],\n                \"kind\": \"record\",\n                \"name\": \"Owned.Bundle\"\n              }\n            ],\n            \"result\": {\n              \"fields\": [\n                {\n                  \"name\": \"primary\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"spare\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"peers\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"history\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"payload\",\n                  \"refinement\": {\n                    \"fields\": [\n                      {\n                        \"name\": \"count\",\n                        \"refinement\": {\n                          \"constructor\": null,\n                          \"kind\": \"subtype\"\n                        }\n                      },\n                      {\n                        \"name\": \"bytes\",\n                        \"refinement\": null\n                      }\n                    ],\n                    \"kind\": \"record\",\n                    \"name\": \"Owned.Payload\"\n                  }\n                }\n              ],\n              \"kind\": \"record\",\n              \"name\": \"Owned.Bundle\"\n            }\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [\n        \"reads-resource\",\n        \"allocates\",\n        \"host-call\",\n        \"fails\"\n      ],\n      \"failure\": {\n        \"errors\": [\n          \"error:native-callback\"\n        ],\n        \"mode\": \"declared\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:Owned.callbackRecord\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"callbackRecord\",\n      \"overloadKey\": \"Owned.callbackRecord\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"arg0\",\n          \"optional\": false,\n          \"ownership\": \"borrow\",\n          \"type\": {\n            \"id\": \"lean:Owned.CallbackBundle\",\n            \"kind\": \"named\"\n          }\n        },\n        {\n          \"default\": null,\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"arg1\",\n          \"optional\": false,\n          \"ownership\": \"borrow\",\n          \"type\": {\n            \"id\": \"bridge:Callback40c82bf938a942cf2402\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\",\n        \"type\": {\n          \"id\": \"lean:Owned.CallbackBundle\",\n          \"kind\": \"named\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"Owned.callbackRecord\",\n        \"extensions\": {},\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    }\n  ],\n  \"documentation\": {\n    \"details\": \"\",\n    \"summary\": \"Independent corpus contract.\"\n  },\n  \"errors\": [\n    {\n      \"category\": \"boundary\",\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent owned aggregate contract.\"\n      },\n      \"id\": \"error:native-callback\",\n      \"name\": \"NativeCallbackFailure\",\n      \"payload\": null\n    }\n  ],\n  \"producers\": [\n    {\n      \"adapter\": \"independent-corpus-contract\",\n      \"adapterVersion\": 1,\n      \"extensions\": {},\n      \"id\": \"corpusReview\",\n      \"tool\": \"Corpus contract review\",\n      \"toolVersion\": \"1\"\n    }\n  ],\n  \"schemaVersion\": 4,\n  \"types\": [\n    {\n      \"aggregate\": null,\n      \"assurance\": [],\n      \"callable\": null,\n      \"cases\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent owned aggregate contract.\"\n      },\n      \"fields\": [],\n      \"host\": null,\n      \"id\": \"lean:Owned.Ticket\",\n      \"kind\": \"resource\",\n      \"mutability\": \"read\",\n      \"name\": \"Ticket\",\n      \"representation\": \"identity\",\n      \"resource\": {\n        \"cycles\": \"explicit-cut\",\n        \"disposal\": \"required\",\n        \"fallback\": \"queued-finalizer\",\n        \"kindId\": \"resource:Owned.Ticket\"\n      },\n      \"source\": {\n        \"declaration\": \"Owned.Ticket\",\n        \"extensions\": {},\n        \"producer\": \"corpusReview\"\n      },\n      \"target\": null,\n      \"typeParameters\": []\n    },\n    {\n      \"aggregate\": null,\n      \"assurance\": [],\n      \"callable\": null,\n      \"cases\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent owned aggregate contract.\"\n      },\n      \"fields\": [\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent owned aggregate contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"count\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"int\"\n          }\n        },\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent owned aggregate contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"bytes\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"bytes\"\n          }\n        }\n      ],\n      \"host\": null,\n      \"id\": \"lean:Owned.Payload\",\n      \"kind\": \"record\",\n      \"mutability\": \"immutable\",\n      \"name\": \"Payload\",\n      \"representation\": \"copied\",\n      \"resource\": null,\n      \"source\": {\n        \"declaration\": \"Owned.Payload\",\n        \"extensions\": {},\n        \"producer\": \"corpusReview\"\n      },\n      \"target\": null,\n      \"typeParameters\": []\n    },\n    {\n      \"aggregate\": {\n        \"cycles\": \"reject\",\n        \"disposal\": \"required\",\n        \"fallback\": \"queued-finalizer\",\n        \"ownership\": \"lease\"\n      },\n      \"assurance\": [],\n      \"callable\": null,\n      \"cases\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent owned aggregate contract.\"\n      },\n      \"fields\": [\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent owned aggregate contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"primary\",\n          \"type\": {\n            \"id\": \"lean:Owned.Ticket\",\n            \"kind\": \"named\"\n          }\n        },\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent owned aggregate contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"spare\",\n          \"type\": {\n            \"arguments\": [\n              {\n                \"id\": \"lean:Owned.Ticket\",\n                \"kind\": \"named\"\n              }\n            ],\n            \"constructor\": \"option\",\n            \"kind\": \"apply\"\n          }\n        },\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent owned aggregate contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"peers\",\n          \"type\": {\n            \"arguments\": [\n              {\n                \"id\": \"lean:Owned.Ticket\",\n                \"kind\": \"named\"\n              }\n            ],\n            \"constructor\": \"array\",\n            \"kind\": \"apply\"\n          }\n        },\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent owned aggregate contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"history\",\n          \"type\": {\n            \"arguments\": [\n              {\n                \"id\": \"lean:Owned.Ticket\",\n                \"kind\": \"named\"\n              }\n            ],\n            \"constructor\": \"list\",\n            \"kind\": \"apply\"\n          }\n        },\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent owned aggregate contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"payload\",\n          \"type\": {\n            \"id\": \"lean:Owned.Payload\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"host\": null,\n      \"id\": \"lean:Owned.Bundle\",\n      \"kind\": \"record\",\n      \"mutability\": \"immutable\",\n      \"name\": \"Bundle\",\n      \"representation\": \"owned\",\n      \"resource\": null,\n      \"source\": {\n        \"declaration\": \"Owned.Bundle\",\n        \"extensions\": {},\n        \"producer\": \"corpusReview\"\n      },\n      \"target\": null,\n      \"typeParameters\": []\n    },\n    {\n      \"aggregate\": null,\n      \"assurance\": [],\n      \"callable\": null,\n      \"cases\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent owned aggregate contract.\"\n      },\n      \"fields\": [\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent owned aggregate contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"count\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"int\"\n          }\n        },\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent owned aggregate contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"bytes\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"bytes\"\n          }\n        }\n      ],\n      \"host\": null,\n      \"id\": \"lean:Owned.CallbackPayload\",\n      \"kind\": \"record\",\n      \"mutability\": \"immutable\",\n      \"name\": \"CallbackPayload\",\n      \"representation\": \"copied\",\n      \"resource\": null,\n      \"source\": {\n        \"declaration\": \"Owned.CallbackPayload\",\n        \"extensions\": {},\n        \"producer\": \"corpusReview\"\n      },\n      \"target\": null,\n      \"typeParameters\": []\n    },\n    {\n      \"aggregate\": {\n        \"cycles\": \"reject\",\n        \"disposal\": \"required\",\n        \"fallback\": \"queued-finalizer\",\n        \"ownership\": \"lease\"\n      },\n      \"assurance\": [],\n      \"callable\": null,\n      \"cases\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent owned aggregate contract.\"\n      },\n      \"fields\": [\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent owned aggregate contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"primary\",\n          \"type\": {\n            \"id\": \"lean:Owned.Ticket\",\n            \"kind\": \"named\"\n          }\n        },\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent owned aggregate contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"payload\",\n          \"type\": {\n            \"id\": \"lean:Owned.CallbackPayload\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"host\": null,\n      \"id\": \"lean:Owned.CallbackBundle\",\n      \"kind\": \"record\",\n      \"mutability\": \"immutable\",\n      \"name\": \"CallbackBundle\",\n      \"representation\": \"owned\",\n      \"resource\": null,\n      \"source\": {\n        \"declaration\": \"Owned.CallbackBundle\",\n        \"extensions\": {},\n        \"producer\": \"corpusReview\"\n      },\n      \"target\": null,\n      \"typeParameters\": []\n    },\n    {\n      \"aggregate\": null,\n      \"assurance\": [],\n      \"callable\": {\n        \"effects\": [\n          \"host-call\",\n          \"fails\"\n        ],\n        \"failure\": {\n          \"errors\": [\n            \"error:native-callback\"\n          ],\n          \"mode\": \"declared\",\n          \"unexpected\": \"poison-runtime\"\n        },\n        \"invocation\": \"many\",\n        \"parameters\": [\n          {\n            \"default\": null,\n            \"lifetime\": {\n              \"anchor\": null,\n              \"scope\": \"call\"\n            },\n            \"mutability\": \"immutable\",\n            \"name\": \"arg0\",\n            \"optional\": false,\n            \"ownership\": \"borrow\",\n            \"type\": {\n              \"id\": \"lean:Owned.CallbackBundle\",\n              \"kind\": \"named\"\n            }\n          }\n        ],\n        \"reentry\": \"same-agent\",\n        \"result\": {\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"explicit\"\n          },\n          \"ownership\": \"lease\",\n          \"type\": {\n            \"id\": \"lean:Owned.CallbackBundle\",\n            \"kind\": \"named\"\n          }\n        },\n        \"resultMode\": \"value\",\n        \"selfDisposal\": \"defer\"\n      },\n      \"cases\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent owned aggregate contract.\"\n      },\n      \"fields\": [],\n      \"host\": null,\n      \"id\": \"bridge:Callback40c82bf938a942cf2402\",\n      \"kind\": \"callback\",\n      \"mutability\": \"immutable\",\n      \"name\": \"Callback40c82bf938a942cf2402\",\n      \"representation\": \"identity\",\n      \"resource\": null,\n      \"source\": {\n        \"declaration\": \"Callback40c82bf938a942cf2402\",\n        \"extensions\": {},\n        \"producer\": \"corpusReview\"\n      },\n      \"target\": null,\n      \"typeParameters\": []\n    }\n  ]\n}\n",
+            "sourceSha256": "7a0872de1971f9253633b2c7d521fd7781840a85a7b5a81cc549664e12a1d3ce"
+          },
+          "sourceNoticesSha256": "75f25fa5febdf43e36e2de83f15151117cfe89f8aff7ec282d46b8c6699a36f8",
+          "sourceTreeSha256": "0480ba530d9376c4ceb9a88c067ace9f80aa7511709d509c50095920502830fb"
+        }
+      },
+      "consumerSha256": "40a3c09650b62e2aaf2d6c43c10840a0c54f751d98ae8b564d30d5bf45aea1bb",
+      "deterministicReassembly": true,
+      "lifecycle": {
+        "fallback": "perl-destruction",
+        "observation": "native-identity-baseline-restored"
+      },
+      "observations": [
+        {
+          "assets": {
+            "observations": [
+              {
+                "asset": "OwnedProbe.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "3c8d3f48ae0ac5b08bd6d65be6f5711fb039979027976dbf87e5fe816308777d"
+              },
+              {
+                "asset": "OwnedProbe.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "3c8d3f48ae0ac5b08bd6d65be6f5711fb039979027976dbf87e5fe816308777d"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libcomponent_df500c005a7a829ba06c.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "7baf7525088e171e39bc6436d128993d9c5b889fc1e6c58bfdd1eef98977f673"
+              },
+              {
+                "asset": "libcomponent_df500c005a7a829ba06c.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "7baf7525088e171e39bc6436d128993d9c5b889fc1e6c58bfdd1eef98977f673"
+              }
+            ],
+            "sourceSha256": "c19aeddf9e5acfa8415ef583ab2513a13a9eaf59f4916fc68e3e60c804bfb152"
+          },
+          "mode": "prebuilt-only",
+          "observed": {
+            "borrowed_rejection_preserved": true,
+            "checks": 74,
+            "implicit_destruction_released": true,
+            "live_identities": 1,
+            "successful_transfer_consumed": true,
+            "transfer_rejection_preserved": true
+          },
+          "perl": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-threaded/bin/perl",
+          "runtimeOnlyRuns": 2
+        },
+        {
+          "assets": {
+            "observations": [
+              {
+                "asset": "OwnedProbe.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "f87b8e0896fff34e7d76954e82e9a0f4317077bc5a2a09ebce3420bc12440e69"
+              },
+              {
+                "asset": "OwnedProbe.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "f87b8e0896fff34e7d76954e82e9a0f4317077bc5a2a09ebce3420bc12440e69"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libcomponent_df500c005a7a829ba06c.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "7baf7525088e171e39bc6436d128993d9c5b889fc1e6c58bfdd1eef98977f673"
+              },
+              {
+                "asset": "libcomponent_df500c005a7a829ba06c.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "7baf7525088e171e39bc6436d128993d9c5b889fc1e6c58bfdd1eef98977f673"
+              }
+            ],
+            "sourceSha256": "c19aeddf9e5acfa8415ef583ab2513a13a9eaf59f4916fc68e3e60c804bfb152"
+          },
+          "mode": "build-xs",
+          "observed": {
+            "borrowed_rejection_preserved": true,
+            "checks": 74,
+            "implicit_destruction_released": true,
+            "live_identities": 1,
+            "successful_transfer_consumed": true,
+            "transfer_rejection_preserved": true
+          },
+          "perl": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-threaded/bin/perl",
+          "runtimeOnlyRuns": 2
+        },
+        {
+          "assets": {
+            "observations": [
+              {
+                "asset": "OwnedProbe.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "bc47c104cb2000260e5e17906616999a7d6b4fa85c8ff5d81b0ed0554d76b9e9"
+              },
+              {
+                "asset": "OwnedProbe.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "bc47c104cb2000260e5e17906616999a7d6b4fa85c8ff5d81b0ed0554d76b9e9"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libcomponent_df500c005a7a829ba06c.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "7baf7525088e171e39bc6436d128993d9c5b889fc1e6c58bfdd1eef98977f673"
+              },
+              {
+                "asset": "libcomponent_df500c005a7a829ba06c.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "7baf7525088e171e39bc6436d128993d9c5b889fc1e6c58bfdd1eef98977f673"
+              }
+            ],
+            "sourceSha256": "c19aeddf9e5acfa8415ef583ab2513a13a9eaf59f4916fc68e3e60c804bfb152"
+          },
+          "mode": "prebuilt-only",
+          "observed": {
+            "borrowed_rejection_preserved": true,
+            "checks": 74,
+            "implicit_destruction_released": true,
+            "live_identities": 1,
+            "successful_transfer_consumed": true,
+            "transfer_rejection_preserved": true
+          },
+          "perl": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-unthreaded/bin/perl",
+          "runtimeOnlyRuns": 2
+        },
+        {
+          "assets": {
+            "observations": [
+              {
+                "asset": "OwnedProbe.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "49f549435d07004ea7c205cf96b0aa05f407f3103f403db7aad69f881b69335b"
+              },
+              {
+                "asset": "OwnedProbe.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "49f549435d07004ea7c205cf96b0aa05f407f3103f403db7aad69f881b69335b"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libcomponent_df500c005a7a829ba06c.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "7baf7525088e171e39bc6436d128993d9c5b889fc1e6c58bfdd1eef98977f673"
+              },
+              {
+                "asset": "libcomponent_df500c005a7a829ba06c.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "7baf7525088e171e39bc6436d128993d9c5b889fc1e6c58bfdd1eef98977f673"
+              }
+            ],
+            "sourceSha256": "c19aeddf9e5acfa8415ef583ab2513a13a9eaf59f4916fc68e3e60c804bfb152"
+          },
+          "mode": "build-xs",
+          "observed": {
+            "borrowed_rejection_preserved": true,
+            "checks": 74,
+            "implicit_destruction_released": true,
+            "live_identities": 1,
+            "successful_transfer_consumed": true,
+            "transfer_rejection_preserved": true
+          },
+          "perl": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-unthreaded/bin/perl",
+          "runtimeOnlyRuns": 2
+        },
+        {
+          "assets": {
+            "observations": [
+              {
+                "asset": "OwnedProbe.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "128f5fc29be37b15f871e878748db05483194ce85669b88867c8f11ee9366be3"
+              },
+              {
+                "asset": "OwnedProbe.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "128f5fc29be37b15f871e878748db05483194ce85669b88867c8f11ee9366be3"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libcomponent_df500c005a7a829ba06c.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "7baf7525088e171e39bc6436d128993d9c5b889fc1e6c58bfdd1eef98977f673"
+              },
+              {
+                "asset": "libcomponent_df500c005a7a829ba06c.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "7baf7525088e171e39bc6436d128993d9c5b889fc1e6c58bfdd1eef98977f673"
+              }
+            ],
+            "sourceSha256": "c19aeddf9e5acfa8415ef583ab2513a13a9eaf59f4916fc68e3e60c804bfb152"
+          },
+          "mode": "prebuilt-only",
+          "observed": {
+            "borrowed_rejection_preserved": true,
+            "checks": 74,
+            "implicit_destruction_released": true,
+            "live_identities": 1,
+            "successful_transfer_consumed": true,
+            "transfer_rejection_preserved": true
+          },
+          "perl": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-threaded/bin/perl",
+          "runtimeOnlyRuns": 2
+        },
+        {
+          "assets": {
+            "observations": [
+              {
+                "asset": "OwnedProbe.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "f2941c0101cd94c988a49a70457cb1d1b91b828659558ebaf5a4860f8ca89a20"
+              },
+              {
+                "asset": "OwnedProbe.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "f2941c0101cd94c988a49a70457cb1d1b91b828659558ebaf5a4860f8ca89a20"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libcomponent_df500c005a7a829ba06c.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "7baf7525088e171e39bc6436d128993d9c5b889fc1e6c58bfdd1eef98977f673"
+              },
+              {
+                "asset": "libcomponent_df500c005a7a829ba06c.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "7baf7525088e171e39bc6436d128993d9c5b889fc1e6c58bfdd1eef98977f673"
+              }
+            ],
+            "sourceSha256": "c19aeddf9e5acfa8415ef583ab2513a13a9eaf59f4916fc68e3e60c804bfb152"
+          },
+          "mode": "build-xs",
+          "observed": {
+            "borrowed_rejection_preserved": true,
+            "checks": 74,
+            "implicit_destruction_released": true,
+            "live_identities": 1,
+            "successful_transfer_consumed": true,
+            "transfer_rejection_preserved": true
+          },
+          "perl": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-threaded/bin/perl",
+          "runtimeOnlyRuns": 2
+        },
+        {
+          "assets": {
+            "observations": [
+              {
+                "asset": "OwnedProbe.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "438a584cbc08302b3e141e5d2945e1eff8ae0a40c9de39dda66bdfa45406db22"
+              },
+              {
+                "asset": "OwnedProbe.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "438a584cbc08302b3e141e5d2945e1eff8ae0a40c9de39dda66bdfa45406db22"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libcomponent_df500c005a7a829ba06c.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "7baf7525088e171e39bc6436d128993d9c5b889fc1e6c58bfdd1eef98977f673"
+              },
+              {
+                "asset": "libcomponent_df500c005a7a829ba06c.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "7baf7525088e171e39bc6436d128993d9c5b889fc1e6c58bfdd1eef98977f673"
+              }
+            ],
+            "sourceSha256": "c19aeddf9e5acfa8415ef583ab2513a13a9eaf59f4916fc68e3e60c804bfb152"
+          },
+          "mode": "prebuilt-only",
+          "observed": {
+            "borrowed_rejection_preserved": true,
+            "checks": 74,
+            "implicit_destruction_released": true,
+            "live_identities": 1,
+            "successful_transfer_consumed": true,
+            "transfer_rejection_preserved": true
+          },
+          "perl": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-unthreaded/bin/perl",
+          "runtimeOnlyRuns": 2
+        },
+        {
+          "assets": {
+            "observations": [
+              {
+                "asset": "OwnedProbe.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "cbd16f2df5b4f59748b67304d166e0672007d8b67b7c3a2d798c14c17224c6e7"
+              },
+              {
+                "asset": "OwnedProbe.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "cbd16f2df5b4f59748b67304d166e0672007d8b67b7c3a2d798c14c17224c6e7"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libcomponent_df500c005a7a829ba06c.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "7baf7525088e171e39bc6436d128993d9c5b889fc1e6c58bfdd1eef98977f673"
+              },
+              {
+                "asset": "libcomponent_df500c005a7a829ba06c.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "7baf7525088e171e39bc6436d128993d9c5b889fc1e6c58bfdd1eef98977f673"
+              }
+            ],
+            "sourceSha256": "c19aeddf9e5acfa8415ef583ab2513a13a9eaf59f4916fc68e3e60c804bfb152"
+          },
+          "mode": "build-xs",
+          "observed": {
+            "borrowed_rejection_preserved": true,
+            "checks": 74,
+            "implicit_destruction_released": true,
+            "live_identities": 1,
+            "successful_transfer_consumed": true,
+            "transfer_rejection_preserved": true
+          },
+          "perl": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-unthreaded/bin/perl",
+          "runtimeOnlyRuns": 2
+        }
+      ],
+      "owned": {
+        "bindingIrSha256": "27b5ca5aeca678a59ac4a0a5f35fba18cdd3495cfb713b9225cee684f536633c",
+        "componentLibrary": "libcomponent_df500c005a7a829ba06c.so",
+        "gmpLibrary": "libgmp-lean-bridge.so.10",
+        "inputTransfers": {
+          "aliases": "shared-lease",
+          "arguments": "ordinary-values",
+          "borrowedInputs": "reject",
+          "consumption": "before-lean-call",
+          "exports": [
+            {
+              "bindingId": "lean:Owned.transferRecord",
+              "parameters": [
+                0
+              ]
+            }
+          ],
+          "failure": "consumed-after-handoff",
+          "independentRetains": "preserved",
+          "ownership": "whole-result-owner",
+          "schemaVersion": 1,
+          "validation": "before-consumption",
+          "viewLifetime": "until-call-returns"
+        },
+        "prefix": "owned_subtypes",
+        "publicHeaderSha256": "bb4057ae02c961a95c14336ce140c76c7a341a6e06896ce9a1668e2a3d79470d",
+        "publicSourceSha256": "144229fddcaecd770e082a241f7498d7e266339fad832b6169fac63a52ba66e4",
+        "schemaVersion": 2
+      },
+      "packageSetReceipt": {
+        "component": {
+          "id": "owned-subtypes@1.0.0",
+          "name": "owned-subtypes",
+          "version": "1.0.0"
+        },
+        "kind": "lean-bridge-package-set-receipt",
+        "packages": [
+          {
+            "artifacts": [
+              {
+                "bytes": 3183033,
+                "path": "archives/LeanBridge-OwnedProbe-0.010.tar.gz",
+                "sha256": "f6a7597c88d8376b7d95798de748d089bc78045ae3cc37a3fa84be7536586c8d"
+              }
+            ],
+            "ecosystem": "cpan",
+            "name": "LeanBridge-OwnedProbe",
+            "profile": "native-library-v1",
+            "requires": [
+              {
+                "ecosystem": "cpan",
+                "name": "LeanBridge-Runtime",
+                "version": "0.0020130180835253351074425099676719723942806298898514237203907626409680523998624031"
+              }
+            ],
+            "role": "component",
+            "runtimeDelivery": "dependency",
+            "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+            "target": "cpan",
+            "version": "0.010"
+          },
+          {
+            "artifacts": [
+              {
+                "bytes": 51397607,
+                "path": "archives/LeanBridge-Runtime-0.0020130180835253351074425099676719723942806298898514237203907626409680523998624031.tar.gz",
+                "sha256": "c228af9110ba0b81d73a1fdf58d4435a68ab6c6ab0913382435ce0a2ee22de80"
+              }
+            ],
+            "ecosystem": "cpan",
+            "name": "LeanBridge-Runtime",
+            "profile": "native-library-v1",
+            "requires": [],
+            "role": "runtime",
+            "runtimeDelivery": "provided",
+            "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+            "target": "cpan",
+            "version": "0.0020130180835253351074425099676719723942806298898514237203907626409680523998624031"
+          }
+        ],
+        "profiles": [
+          {
+            "bindingIrSha256": "27b5ca5aeca678a59ac4a0a5f35fba18cdd3495cfb713b9225cee684f536633c",
+            "id": "native-library-v1",
+            "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+          }
+        ],
+        "schemaVersion": 1,
+        "source": {
+          "treeSha256": "0480ba530d9376c4ceb9a88c067ace9f80aa7511709d509c50095920502830fb"
+        }
+      },
+      "relocatedInstallation": true,
+      "reviewed": true,
+      "sourceFreeInstallation": true,
+      "sourceUnchanged": true,
+      "transferredInputCheckedBeforeHandoff": true
+    }
+  ],
+  "schemaVersion": 1
+}

@@ -1,0 +1,31 @@
+{
+  "kind": "owned-subtype-perl",
+  "producerCommit": "23ae28e37befcdf245e94f5f841ed50254fc869c",
+  "profiles": [
+    "perl"
+  ],
+  "reportSha256": "08795e303c1ee4751e0613ffaf9782d514d65a6b25da38fa434324ff61730a7c",
+  "reports": 2,
+  "retainedPackages": {
+    "routes": [
+      {
+        "archiveBytes": 54577566,
+        "archives": 2,
+        "receiptSha256": "81927b15063b85d96558b36cbb09bc1dff7b7ca945859e52db81d34caa8ab58f",
+        "route": "ordinary"
+      },
+      {
+        "archiveBytes": 54580640,
+        "archives": 2,
+        "receiptSha256": "d51c247e381cfc1d6d5ad3cc505582b61ac31f8089416d99c025d4a97e1177d9",
+        "route": "reviewed"
+      }
+    ],
+    "schemaVersion": 1
+  },
+  "routes": [
+    "ordinary",
+    "reviewed"
+  ],
+  "schemaVersion": 1
+}
