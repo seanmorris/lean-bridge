@@ -16,14 +16,18 @@ test("dependent checked-record matrix replays evidence and inventory weekly"
 	for(const source of [
 		workflowPath
 		, "docs/evidence/dependent-checked-record-*/**"
+		, "docs/consumer-support.v1.json"
 		, "docs/type-surface.v1.json"
-		, "scripts/promote-dependent-checked-record-evidence.mjs"
+		, "package-lock.json"
+		, "package.json"
+		, "schema/binding-ir.schema.json"
+		, "scripts/*dependent-checked-record*.mjs"
+		, "src/adoption/type-surface.mjs"
+		, "src/capsule/node.mjs"
 		, "tests/dependent-checked-record-matrix.test.mjs"
 		, "tests/dependent-checked-record-matrix-inventory.test.mjs"
 		, "tests/dependent-checked-record-promotion.test.mjs"
-		, "tests/helpers/dependent-checked-record-*-evidence.mjs"
-		, "tests/helpers/dependent-checked-record-matrix-ci-tests.mjs"
-		, "tests/helpers/dependent-checked-record-promotion.mjs"
+		, "tests/helpers/dependent-checked-record-*.mjs"
 	]) assert.ok(workflow.includes(`      - "${source}"\n`), source);
 	assert.match(workflow, /schedule:\n {4}- cron: "41 7 \* \* 1"/u);
 	assert.match(workflow, /concurrency:\n {2}group: dependent-checked-record-matrix-\$\{\{ github\.ref \}\}\n {2}cancel-in-progress: false/u);
