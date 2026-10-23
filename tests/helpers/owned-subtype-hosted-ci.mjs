@@ -77,9 +77,12 @@ export const parseOwnedSubtypeHostedCiArgs = args => {
 };
 
 const tapSpec = lane => terminalTests[lane] ?? {
-	count: 5
+	count: lane === "jvm" ? 7 : 6
 	, names: [
-		`installed ordinary checked owned Subtypes execute in ${lane}`
+		"owned Subtype WIT consumer names the installed host API"
+		, ...lane === "jvm"
+			? ["Java callers construct owned bindings without the Kotlin runtime"] : []
+		, `installed ordinary checked owned Subtypes execute in ${lane}`
 		, `installed reviewed checked owned Subtypes execute in ${lane}`
 	]
 };

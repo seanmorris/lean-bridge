@@ -132,7 +132,8 @@ test("remaining hosts generate callback-free checked transfer copies", () => {
 
 const jvmTools = ["LEAN_BRIDGE_JAVAC", "LEAN_BRIDGE_KOTLINC"]
 	.every(name => process.env[name] !== undefined);
-test("Java callers construct owned bindings without the Kotlin runtime"
+// Hosted lanes require zero skips, so only the jvm lane registers this test.
+if(selectedLane === undefined || selectedLane === "jvm") test("Java callers construct owned bindings without the Kotlin runtime"
 	, { skip: !jvmTools, timeout: 300_000 }, async t => {
 		const root = await mkdtemp(join(tmpdir(), "lean-owned-jvm-java-only-"));
 		t.after(() => rm(root, { recursive: true, force: true }));

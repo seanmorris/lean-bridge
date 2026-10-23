@@ -44,27 +44,32 @@ const specifications = Object.freeze({
 			, "installed reviewed owned Subtypes execute through wheel, gem and crate archives"
 		]
 	}
-	, dotnet: { count: 5
+	, dotnet: { count: 6
 		, names: [
-			"installed ordinary checked owned Subtypes execute in dotnet"
+			"owned Subtype WIT consumer names the installed host API"
+			, "installed ordinary checked owned Subtypes execute in dotnet"
 			, "installed reviewed checked owned Subtypes execute in dotnet"
 		]
 	}
-	, jvm: { count: 5
+	, jvm: { count: 7
 		, names: [
-			"installed ordinary checked owned Subtypes execute in jvm"
+			"owned Subtype WIT consumer names the installed host API"
+			, "Java callers construct owned bindings without the Kotlin runtime"
+			, "installed ordinary checked owned Subtypes execute in jvm"
 			, "installed reviewed checked owned Subtypes execute in jvm"
 		]
 	}
-	, "php-native": { count: 5
+	, "php-native": { count: 6
 		, names: [
-			"installed ordinary checked owned Subtypes execute in php-native"
+			"owned Subtype WIT consumer names the installed host API"
+			, "installed ordinary checked owned Subtypes execute in php-native"
 			, "installed reviewed checked owned Subtypes execute in php-native"
 		]
 	}
-	, "wit-wasi": { count: 5
+	, "wit-wasi": { count: 6
 		, names: [
-			"installed ordinary checked owned Subtypes execute in wit-wasi"
+			"owned Subtype WIT consumer names the installed host API"
+			, "installed ordinary checked owned Subtypes execute in wit-wasi"
 			, "installed reviewed checked owned Subtypes execute in wit-wasi"
 		]
 	}
@@ -183,6 +188,11 @@ test("owned Subtype hosted checker rejects incomplete or skipped TAP", () => {
 		source.replace("ok 2 -", "not ok 2 -"), "native"), /not ok/u);
 	assert.throws(() => assertOwnedSubtypeHostedTap(
 		source.replace(specifications.native.names[1], "different route"), "native"));
+	const java = "Java callers construct owned bindings without the Kotlin runtime";
+	assert.throws(() => assertOwnedSubtypeHostedTap(
+		tapFor("jvm").replaceAll(java, "different prerequisite"), "jvm"));
+	assert.throws(() => assertOwnedSubtypeHostedTap(tapFor("jvm"), "dotnet"));
+	assert.throws(() => assertOwnedSubtypeHostedTap(tapFor("dotnet"), "jvm"));
 });
 
 test("owned Subtype hosted checker rejects semantic report mutations", () => {
