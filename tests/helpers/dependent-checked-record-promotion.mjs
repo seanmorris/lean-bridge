@@ -41,6 +41,8 @@ export const dependentCheckedRecordPromotionPositions = Object.freeze([
 ]);
 export const dependentCheckedRecordPromotionPath
 	= "docs/evidence/dependent-checked-record-promotion.md";
+export const dependentCheckedRecordPromotionPredecessor
+	= "d34c296f5aadcfcc0c64086f8d8ecfee54a64ecc";
 export const dependentCheckedRecordPromotionPinBaseline
 	= "250f73d8b2bed5380e7fb7c55b8f1f6ffd746e58";
 
@@ -324,7 +326,7 @@ Eleven immutable hosted archives establish proof-free dependent checked records 
 | --- | --- | --- | --- | --- | --- |
 ${rows.join("\n")}
 
-The support inventory gains evidence for exactly 68 cells: seventeen profiles, two author paths and two positions. Each parameter cell cites its full route; each result cell cites its full and result-only routes. \`DependentRecords.Dependent\` carries \`bound\` and \`below : Fin bound\` as proof-free host fields. A host input is rebuilt only through \`DependentRecords.mkDependent\`, which rejects \`below >= bound\` before Lean code runs; rejected caller values are preserved and the next valid call succeeds.
+The support inventory gains evidence for exactly 68 cells: seventeen profiles, two author paths and two positions. Each parameter cell cites its full route; each result cell cites its full and result-only routes. These are value-carrying dependent records: \`DependentRecords.Dependent\` carries \`bound\` and \`below : Fin bound\` as proof-free host fields. A host input is rebuilt only through \`DependentRecords.mkDependent\`, which rejects \`below >= bound\` before Lean code runs; rejected caller values are preserved and the next valid call succeeds.
 
 PHP-Wasm is the shared result tracked by #1461 and is not inferred from native PHP. This promotion does not cover other dependent field kinds, nested or recursive dependent records, checked-record fields, callbacks, owned positions, open or opaque indices or zero-payload records. External runtimes, compilers, package managers and operating-system distributions remain trusted recorded inputs.
 `;

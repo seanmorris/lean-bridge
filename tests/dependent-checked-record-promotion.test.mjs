@@ -19,6 +19,7 @@ import {
 	, dependentCheckedRecordPromotionLimit
 	, dependentCheckedRecordPromotionPath
 	, dependentCheckedRecordPromotionPinBaseline
+	, dependentCheckedRecordPromotionPredecessor
 	, dependentCheckedRecordPromotionProfiles
 	, dependentCheckedRecordPromotionReferences
 	, dependentCheckedRecordPromotionRoutes
@@ -63,10 +64,13 @@ const synthetic = () => dependentCheckedRecordPromotionLanes.flatMap((definition
 	}))
 );
 
-const [document, irSchema, consumers] = await Promise.all([
-	readJson(inventoryPath), readJson("schema/binding-ir.schema.json")
+const [irSchema, consumers] = await Promise.all([
+	readJson("schema/binding-ir.schema.json")
 	, readJson("docs/consumer-support.v1.json")
 ]);
+const document = JSON.parse(execFileSync("git", ["show"
+	, `${dependentCheckedRecordPromotionPredecessor}:${inventoryPath}`]
+, { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 }));
 const contracts = { irSchema, consumers };
 const target = new Set(dependentCheckedRecordPromotionProfiles.flatMap(profile =>
 	["ordinary-source", "reviewed-ir"].flatMap(path =>
