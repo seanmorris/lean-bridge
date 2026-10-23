@@ -9,18 +9,7 @@ import { readFile } from "node:fs/promises";
 import { basename } from "node:path";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { ownedReceiverHistoricalBytes } from "./owned-receiver-history.mjs";
-import { generateOwnedCPackage } from "../../src/backends/c/owned-package.mjs";
-import { generateOwnedJvmCalls } from "../../src/backends/jvm/owned-calls.mjs";
-import { generateOwnedJvmPackage } from "../../src/backends/jvm/owned-package.mjs";
-import { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from "../../src/build/native-graph-model.mjs";
-import { ownedJvmAdapterSources } from "../../src/build/owned-jvm-artifacts.mjs";
-import { validateKotlinCompilation } from "../../src/build/compile-jvm-sources.mjs";
-import { validatePackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
-import { ownedJvmCallNative, ownedJvmCallProbeMethods } from "./owned-jvm-call-fixture.mjs";
-import { ownedJvmBorrowInstalledFixture } from "./owned-jvm-borrow-installed.mjs";
-import { ownedBorrowSource } from "./owned-borrow-fixture.mjs";
-import { ownedRustBorrowSource } from "./owned-rust-borrow-fixture.mjs";
-import { javaCompilerOptions, kotlinCompilerOptions } from "./type-corpus-jvm-tools.mjs";
+import { moduleAtProducer } from "./producer-module.mjs";
 
 export const ownedJvmBorrowScript = "LEAN_BRIDGE_OWNED_JVM_BORROW_TEST=1 node --test --test-concurrency=1 tests/owned-jvm-borrows.test.mjs tests/owned-jvm-borrow-packaging.test.mjs";
 export const ownedJvmBorrowCommand = "npm run test:owned-jvm-borrows";
@@ -46,6 +35,7 @@ export const ownedJvmBorrowScope = Object.freeze({
 });
 const capabilities = { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true };
 const options = { transferredInputs: true, anchoredResults: true };
+const producerCommit = "f5cde9256639f3989464822f8cf711015d518b31";
 const identity = source => ({ bytes: Buffer.byteLength(source), sha256: sha256(source) });
 const hashes = files => Object.fromEntries(Object.entries(files).map(([path, source]) => [path, sha256(source)]));
 const flags = (value, names) => { for(const name of names) assert.equal(value[name], true, name); };
@@ -65,6 +55,28 @@ const files = inventory => {
  * @param record - Frozen source-bound execution observations.
  */
 export const assertOwnedJvmBorrowExecution = async record => {
+	const producer = Object.assign({}, ...await Promise.all([
+		"src/backends/c/owned-package.mjs"
+		, "src/backends/jvm/owned-calls.mjs"
+		, "src/backends/jvm/owned-package.mjs"
+		, "src/build/compile-jvm-sources.mjs"
+		, "src/build/native-graph-model.mjs"
+		, "src/build/owned-jvm-artifacts.mjs"
+		, "src/release/package-set-receipt.mjs"
+		, "tests/helpers/owned-borrow-fixture.mjs"
+		, "tests/helpers/owned-jvm-borrow-installed.mjs"
+		, "tests/helpers/owned-jvm-call-fixture.mjs"
+		, "tests/helpers/owned-rust-borrow-fixture.mjs"
+		, "tests/helpers/type-corpus-jvm-tools.mjs"
+	].map(path => moduleAtProducer(producerCommit, path))));
+	for(const name of [
+		"createCompiledNativeModel", "generateCompiledNativeLeanAdapters"
+		, "generateOwnedCPackage", "generateOwnedJvmCalls"
+		, "generateOwnedJvmPackage", "ownedJvmAdapterSources"
+		, "ownedJvmBorrowInstalledFixture", "ownedJvmCallNative"
+		, "ownedJvmCallProbeMethods", "validateKotlinCompilation"
+		, "validatePackageSetReceipt"
+	]) assert.equal(typeof producer[name], "function", name);
 	assert.equal(record.acceptance, "passed"); assert.deepEqual(record.scope, ownedJvmBorrowScope);
 	assert.equal(record.run.command, ownedJvmBorrowCommand); assert.equal(record.run.exitCode, 0);
 	assert.equal(record.run.sha256, sha256(record.run.text));
@@ -79,7 +91,7 @@ export const assertOwnedJvmBorrowExecution = async record => {
 		assert.equal(Boolean(item.input.sourceIdentity.reviewedBindingIr), item.mode === "reviewed");
 		assert.equal(item.input.sourceIdentity.modules.find(module => module.module === "Owned").source.sha256, sha256(baseLean + suffix));
 		assert.equal(item.input.sourceIdentity.extractorSha256, extractor);
-		return createCompiledNativeModel(item.input, capabilities);
+		return producer.createCompiledNativeModel(item.input, capabilities);
 	};
 	assert.equal(record.borrowOnly.actualLean, true); assert.equal(record.borrowOnly.inputTransfers, false);
 	assert.deepEqual(record.borrowOnly.observations.map(item => item.mode), ["ordinary", "reviewed"]);
@@ -87,11 +99,13 @@ export const assertOwnedJvmBorrowExecution = async record => {
 	assert.ok(probeTemplate);
 	for(const item of record.borrowOnly.observations)
 	{
-		const model = checkInput(item, ownedBorrowSource);
+		const model = checkInput(item, producer.ownedBorrowSource);
 		assert.equal(model.exports.length, 22); assert.equal(model.ownedGraph.inputTransfers, undefined);
 		assert.equal(model.ownedGraph.resultAnchors.exports.length, 18);
-		const generated = generateOwnedJvmCalls(model.bindingIr, { anchoredResults: true });
-		const native = ownedJvmCallNative(item.input);
+		const generated = producer.generateOwnedJvmCalls(
+			model.bindingIr, { anchoredResults: true }
+		);
+		const native = producer.ownedJvmCallNative(item.input);
 		assert.deepEqual(item.generated, hashes(generated.files));
 		assert.equal(item.nativeProbeSha256, sha256(native.implementation));
 		const copy = generated.wholeCopies.find(fn => fn.publicName === "copyEchoArrayResult");
@@ -108,14 +122,16 @@ export const assertOwnedJvmBorrowExecution = async record => {
 	}
 	for(const item of [...record.runtime, ...record.packages])
 	{
-		const model = checkInput(item, ownedRustBorrowSource);
+		const model = checkInput(item, producer.ownedRustBorrowSource);
 		assert.equal(model.schemaVersion, 9); assert.equal(model.exports.length, 26);
 		assert.equal(model.ownedGraph.inputTransfers.exports.length, 4);
 		assert.equal(model.ownedGraph.resultAnchors.exports.length, 19);
 		if(record.runtime.includes(item))
 		{
 			assert.equal(item.actualLean, true); assert.equal(item.installedPackage, false);
-			const generated = generateOwnedJvmCalls(model.bindingIr, options);
+			const generated = producer.generateOwnedJvmCalls(
+				model.bindingIr, options
+			);
 			assert.deepEqual(item.generated, hashes(generated.files));
 			const runtime = Object.keys(generated.files).find(path => path.endsWith("/_OwnedRuntime.java"));
 			const instrumented = { ...generated.files };
@@ -128,9 +144,12 @@ export const assertOwnedJvmBorrowExecution = async record => {
 			{
 				const source = await readFile("tests/fixtures/structured-types/" + file, "utf8");
 				assert.equal(source.split("/* METHODS */").length, 2);
-				assert.equal(item[field], sha256(source.replace("/* METHODS */", () => ownedJvmCallProbeMethods(generated, kotlin))));
+				assert.equal(item[field], sha256(source.replace(
+					"/* METHODS */"
+					, () => producer.ownedJvmCallProbeMethods(generated, kotlin)
+				)));
 			}
-			const native = ownedJvmCallNative(item.input);
+			const native = producer.ownedJvmCallNative(item.input);
 			assert.equal(item.nativeProbeSha256, sha256(native.implementation));
 			assert.equal(item.guardSha256, sha256(native.cleanup.guardSource));
 			const values = Object.keys(instrumented).find(path => path.endsWith("/Ticket.java"));
@@ -168,9 +187,13 @@ export const assertOwnedJvmBorrowExecution = async record => {
 			, "gmp-receipt", "gmp-source", "library", "unrecorded", "managed-source"
 			, "compiler-options", "managed-lifetime", "managed-version"]);
 		const { nativeReceipt: component, adapter, runtimeReceipt: runtime, compiled, manifest, receipt } = item;
-		const native = generateCompiledNativeLeanAdapters(model);
-		const c = generateOwnedCPackage({ ...item.input, hostCallbacks: true, ...options });
-		const projection = generateOwnedJvmPackage(model.bindingIr, null, options);
+		const native = producer.generateCompiledNativeLeanAdapters(model);
+		const c = producer.generateOwnedCPackage({
+			...item.input, hostCallbacks: true, ...options
+		});
+		const projection = producer.generateOwnedJvmPackage(
+			model.bindingIr, null, options
+		);
 		assert.equal(component.schemaVersion, 5); assert.equal(component.modelSha256, sha256(canonicalJson(model)));
 		assert.equal(component.metadataSha256, sha256(canonicalJson(item.input.metadata)));
 		assert.equal(component.bindingIrSha256, model.bindingIrSha256); assert.deepEqual(component.sourceIdentity, item.input.sourceIdentity);
@@ -187,7 +210,9 @@ export const assertOwnedJvmBorrowExecution = async record => {
 			, resultAnchors: model.ownedGraph.resultAnchors
 			, headerSha256: sha256(c.publicHeader), sourceSha256: sha256(c.source) });
 		assert.deepEqual(adapter.gmp, { version: "6.3.0", soname: "libgmp-lean-bridge.so.10", binding: "local-symbols" });
-		for(const [path, source] of Object.entries(ownedJvmAdapterSources(c, projection)))
+		for(const [path, source] of Object.entries(
+			producer.ownedJvmAdapterSources(c, projection)
+		))
 			assert.deepEqual(adapter.files[path], identity(source), path);
 		assert.equal(runtime.schemaVersion, 1); assert.equal(runtime.profile, "native-library-v1"); assert.equal(runtime.pointerBits, 64);
 		assert.equal(sha256(canonicalJson(runtime)), component.runtimeIdentity);
@@ -204,10 +229,14 @@ export const assertOwnedJvmBorrowExecution = async record => {
 		assert.deepEqual(compiled.evidence, evidence); assert.deepEqual(compiled.ownedValues, projection.contract);
 		assert.equal(compiled.schemaVersion, 3); assert.equal(compiled.profile, "native-library-v1");
 		assert.equal(compiled.namespace, projection.namespace); assert.equal(compiled.bindingIrSha256, model.bindingIrSha256);
-		validateKotlinCompilation(compiled.kotlin, projection.namespace, { ownedValues: true });
+		producer.validateKotlinCompilation(
+			compiled.kotlin, projection.namespace, { ownedValues: true }
+		);
 		assert.equal(compiled.compiler, "javac 22.0.2");
 		files(adapter.files); files(compiled.files); files(manifest.files);
-		const generated = generateOwnedJvmPackage(model.bindingIr, evidence, options);
+		const generated = producer.generateOwnedJvmPackage(
+			model.bindingIr, evidence, options
+		);
 		for(const [path, source] of Object.entries(generated.files))
 		{
 			assert.deepEqual(compiled.files[path], identity(source), path);
@@ -233,7 +262,8 @@ export const assertOwnedJvmBorrowExecution = async record => {
 			assert.deepEqual(manifest.files["META-INF/lean-bridge/component/" + path], identity(source), path);
 		for(const [file, hash] of Object.entries(libraries))
 			assert.equal(manifest.files[`META-INF/lean-bridge/native/linux-x64/${file}`].sha256, hash, file);
-		validatePackageSetReceipt(receipt); assert.equal(receipt.packages.length, 1);
+		producer.validatePackageSetReceipt(receipt);
+		assert.equal(receipt.packages.length, 1);
 		assert.equal(receipt.profiles[0].bindingIrSha256, model.bindingIrSha256);
 		const pkg = receipt.packages[0], cli = item.built;
 		assert.equal(cli.backend, "owned-jvm-v3"); assert.deepEqual(cli.targets, ["maven"]);
@@ -250,7 +280,9 @@ export const assertOwnedJvmBorrowExecution = async record => {
 			, bytes: file.bytes, sha256: file.sha256, compilerAccess: false
 			, name: pkg.name, version: pkg.version })));
 		const jar = pkg.artifacts.find(file => file.path.endsWith(".jar")), pom = pkg.artifacts.find(file => file.path.endsWith(".pom"));
-		const fixture = await ownedJvmBorrowInstalledFixture(projection.namespace, projection.functions.map(fn => fn.publicName));
+		const fixture = await producer.ownedJvmBorrowInstalledFixture(
+			projection.namespace, projection.functions.map(fn => fn.publicName)
+		);
 		assert.deepEqual(item.observations.map(run => run.profile), ["java", "kotlin"]);
 		for(const run of item.observations)
 		{
@@ -265,7 +297,8 @@ export const assertOwnedJvmBorrowExecution = async record => {
 			assert.equal(jvm.archiveSha256, jar.sha256); assert.equal(jvm.pomSha256, pom.sha256);
 			assert.deepEqual(jvm.deployment["package.jar"], { bytes: jar.bytes, sha256: jar.sha256 });
 			assert.deepEqual(jvm.runtimeModules, ["java.base@22.0.2"]); assert.equal(jvm.javacVersion, "javac 22.0.2");
-			assert.deepEqual(jvm.compilerOptions, profile === "java" ? javaCompilerOptions : kotlinCompilerOptions);
+			assert.deepEqual(jvm.compilerOptions, profile === "java"
+				? producer.javaCompilerOptions : producer.kotlinCompilerOptions);
 			assert.deepEqual(jvm.nativeLibraries, libraries); assert.deepEqual(observation.nativeLibraries, libraries);
 			assert.equal(observation.nativeRootCount, 1);
 			files(jvm.deployment); files(jvm.runtimeFiles); files(jvm.dependencies.files);

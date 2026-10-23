@@ -4,7 +4,6 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { beforePhpWasmCorpusPartitionSource } from "./php-wasm-corpus-partition-history.mjs";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { generateOwnedNativeValueAdapters } from "../../src/backends/native/owned-value-adapters.mjs";
@@ -38,24 +37,35 @@ const passing = (run, command) => {
  * @param workflow - Complete consumer-matrix workflow text.
  */
 export const assertOwnedWasm32Ci = workflow => {
-	workflow = beforePhpWasmCorpusPartitionSource(".github/workflows/consumer-matrix.yml", workflow);
 	const step = workflow.split("        id: type_corpus_php_wasm\n")[1]?.split("      - name:")[0];
 	assert.ok(step);
 	assert.ok(step.includes("          " + ownedWasm32Commands.wasm + "\n"));
 	for(const fixture of ["owned-scalars", "owned-aggregates"])
 		assert.ok(step.includes(`          test -s build/owned-wasm32/${fixture}.json\n`));
 	const upload = workflow.split("      - name: Upload owned wasm32 transport evidence\n")[1]?.split("      - name:")[0];
-	assert.ok(upload?.includes("        if: always()\n"));
+	assert.ok(upload?.includes(
+		"        if: always() && matrix.profile == 'values'\n"
+	));
 	for(const fixture of ["owned-scalars", "owned-aggregates"])
 		assert.ok(upload.includes(`            build/owned-wasm32/${fixture}.json\n`));
 	assert.ok(upload.includes("          if-no-files-found: error\n"));
 	const observation = workflow.split("\n").find(line => line.includes("record --consumer php-wasm"));
 	assert.ok(observation.includes(ownedWasm32Commands.wasm));
-	assert.ok(workflow.includes('[ "${{ steps.type_corpus_php_wasm.outcome }}" != success ]; then\n            wasm_result=failed'));
-	// The PHP-Wasm job enforces its own corpus outcome.
-	const wasmJob = workflow.split("\n  php-wasm-consumers:\n")[1]?.split(/\n {2}[a-z][a-z0-9-]*:\n/u)[0];
-	const enforcement = wasmJob?.split("      - name: Enforce PHP support\n")[1]?.split("\n\n")[0];
-	assert.ok(enforcement?.includes("steps.type_corpus_php_wasm.outcome != 'success'"));
+	const corpus = workflow.split("\n  php-wasm-corpus:\n")[1]
+		?.split("\n  php-wasm-observations:\n")[0];
+	assert.ok(corpus?.includes(
+		"steps.type_corpus_php_wasm.outcome != 'success'"
+	));
+	const observations = workflow.split("\n  php-wasm-observations:\n")[1]
+		?.split(/\n {2}[a-z][a-z0-9-]*:\n/u)[0];
+	assert.ok(observations?.includes(
+		"needs: [php-wasm-consumers, php-wasm-corpus]"
+	));
+	for(const prerequisite of [
+		"needs.php-wasm-consumers.result", "needs.php-wasm-corpus.result"
+		, "steps.performance.outcome"
+	]) assert.ok(observations.includes(`\${{ ${prerequisite} }}" = success`)
+		, prerequisite);
 };
 
 /**

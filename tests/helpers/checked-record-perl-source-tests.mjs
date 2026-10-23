@@ -81,9 +81,14 @@ for(const route of ["ordinary-source", "reviewed-ir", "result-only-ordinary-sour
 		}
 	});
 
-test("Perl checked-record package reader enables only the copied transport", async () => {
+test("Perl checked-record package reader enables constructors for every package mode", async () => {
 	const source = await readFile("src/release/cpan-package.mjs", "utf8");
-	assert.ok(source.includes("nativeCheckedRecords: !isOwned"));
+	assert.ok(source.includes("nativeCheckedRecords: true"));
+	for(const capability of [
+		"ownedGraphs", "ownedHostCallbacks", "ownedInputTransfers"
+		, "ownedAnchoredResults", "ownedReceiverExports"
+		, "ownedCallbackResultAnchors"
+	]) assert.ok(source.includes(`${capability}: isOwned`), capability);
 	assert.doesNotMatch(source, /nativeCallbackRefinements: true/u);
 });
 
