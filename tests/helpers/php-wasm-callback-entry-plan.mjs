@@ -28,17 +28,32 @@ export const phpWasmCallbackEntryPlan = (family, selected) => {
 		assert.equal(values.length, 1, `${kind}/${label}`);
 		return { kind, label };
 	};
+	const findPrefix = (kind, prefix) => {
+		const values = selected.filter(
+			item => item.kind === kind && item.label.startsWith(prefix)
+		);
+		assert.equal(values.length, 1, `${kind}/${prefix}*`);
+		return { kind, label: values[0].label };
+	};
 	const call = (publicName, entries) => ({ publicName, entries, counts: counts(entries) });
 	const top = (name, middle = []) => call(name, [
 		find("adapter", `${name}:native`), find("adapter", `${name}:lean`)
 		, ...middle, find("cleanup", `${name}:cleanup`)
 	]);
-	const maker = name => top(name, [find("source", name)]);
-	const closure = (name, constructors = []) => call(`${name}:invoke`, [
+	const maker = name => top(name);
+	const closure = (
+		name, constructors = [], includeSource = true, includeBody = true
+	) => call(`${name}:invoke`, [
+		find("adapter", `${name}:closure:native`)
+		, find("adapter", `${name}:closure:lean`)
+		, ...includeSource ? [find("source", name)] : [], ...constructors
+		, ...includeBody ? [find("closure", `${name}:body`)] : []
+		, find("cleanup", `${name}:invoke:cleanup`)
+	]);
+	const closureRefusal = (name, constructors = []) => call(`${name}:invoke`, [
 		find("adapter", `${name}:closure:native`)
 		, find("adapter", `${name}:closure:lean`)
 		, ...constructors
-		, find("closure", `${name}:body`)
 		, find("cleanup", `${name}:invoke:cleanup`)
 	]);
 	const constructor = (namespace, name) => find("constructor", `${namespace}.${name}`);
@@ -58,10 +73,17 @@ export const phpWasmCallbackEntryPlan = (family, selected) => {
 		if(rejected) entries.push(
 			find("rejection", `${name}:rejection:lean`)
 			, find("rejection", `${name}:rejection:native`)
+			, ...recovery
 		);
 		entries.push(find("cleanup", `${name}:cleanup`));
 		return call(name, entries);
 	};
+	const recoveryRefusal = (name, recovery = []) => call(name, [
+		find("adapter", `${name}:native`), find("adapter", `${name}:lean`)
+		, find("recovery", `${name}:recovery:lean`)
+		, find("recovery", `${name}:recovery:native`)
+		, ...recovery, find("cleanup", `${name}:cleanup`)
+	]);
 	let cases;
 	if(family === "callback-fin")
 	{
@@ -72,14 +94,16 @@ export const phpWasmCallbackEntryPlan = (family, selected) => {
 		cases = [
 			{ control: "closure-input", outcome: "accepted"
 				, calls: [maker(scaler), closure(scaler)] }
-			, { control: "closure-input-refusal", outcome: "refused", calls: [] }
+			, { control: "closure-input-refusal", outcome: "refused"
+				, calls: [closureRefusal(scaler)] }
 			, { control: "closure-input-recovery", outcome: "accepted"
 				, calls: [closure(scaler)] }
 			, { control: "closure-result", outcome: "accepted"
 				, calls: [maker(counter), closure(counter)] }
 			, { control: "host-arguments", outcome: "accepted"
 				, calls: [callback(visit, { calls: 5 })] }
-			, { control: "invalid-recovery", outcome: "refused", calls: [] }
+			, { control: "invalid-recovery", outcome: "refused"
+				, calls: [recoveryRefusal(three)] }
 			, { control: "actual-reply-rejection", outcome: "refused"
 				, calls: [callback(three, { rejected: true })] }
 			, { control: "later-call-recovery", outcome: "accepted"
@@ -97,12 +121,17 @@ export const phpWasmCallbackEntryPlan = (family, selected) => {
 		const closureName = `${namespace}.makeClosure`;
 		const mixedClosure = `${namespace}.makeMixedClosure`;
 		const nestedClosure = `${namespace}.makeNestedClosure`;
+		const closureValidator = findPrefix(
+			"validator", `${closureName}:callback_validator:closure_graph_refinement_`
+		);
 		cases = [
 			{ control: "host-reply", outcome: "accepted"
 				, calls: [callback(host, { recovery: interval, reply: interval })] }
-			, { control: "invalid-recovery", outcome: "refused", calls: [] }
+			, { control: "invalid-recovery", outcome: "refused"
+				, calls: [recoveryRefusal(host, interval)] }
 			, { control: "actual-reply-rejection", outcome: "refused"
-				, calls: [callback(host, { recovery: interval, rejected: true })] }
+				, calls: [callback(host, { recovery: interval
+					, reply: interval, rejected: true })] }
 			, { control: "later-call-recovery", outcome: "accepted"
 				, calls: [callback(host, { recovery: interval, reply: interval })] }
 			, { control: "mixed-host", outcome: "accepted"
@@ -110,18 +139,26 @@ export const phpWasmCallbackEntryPlan = (family, selected) => {
 			, { control: "nested-subtype", outcome: "accepted"
 				, calls: [callback(nestedHost, { recovery: weighted, reply: weighted })] }
 			, { control: "closure-input", outcome: "accepted"
-				, calls: [maker(closureName), closure(closureName, interval)] }
-			, { control: "closure-input-refusal", outcome: "refused", calls: [] }
+				, calls: [maker(closureName), closure(closureName, interval, false)] }
+			, { control: "closure-input-refusal", outcome: "refused"
+				, calls: [
+					closureRefusal(closureName, [
+						...interval, closureValidator, ...interval
+					])
+				]
+			}
 			, { control: "closure-input-recovery", outcome: "accepted"
-				, calls: [closure(closureName, interval)] }
+				, calls: [closure(closureName, interval, false)] }
 			, { control: "mixed-closure", outcome: "accepted"
-				, calls: [maker(mixedClosure), closure(mixedClosure, interval)] }
+				, calls: [maker(mixedClosure)
+					, closure(mixedClosure, interval, false, false)] }
 			, { control: "nested-closure", outcome: "accepted"
-				, calls: [maker(nestedClosure), closure(nestedClosure, weighted)] }
+				, calls: [maker(nestedClosure), closure(nestedClosure, weighted, false)] }
 		];
 	}
-	assert.ok(cases.some(item => item.outcome === "refused" && item.calls.length === 0));
-	assert.ok(cases.some(item => item.outcome === "refused" && item.calls.length > 0));
+	assert.ok(cases.some(item => item.outcome === "refused"));
+	assert.ok(cases.filter(item => item.outcome === "refused")
+		.every(item => item.calls.length > 0));
 	assert.ok(cases.some(item => item.calls.some(value => value.counts.callback > 0)));
 	assert.ok(cases.some(item => item.calls.some(value => value.counts.closure > 0)));
 	assert.ok(cases.every(item => item.calls.every(value => value.counts.cleanup === 1)));

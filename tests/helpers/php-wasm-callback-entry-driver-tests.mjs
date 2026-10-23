@@ -160,3 +160,26 @@ test("callback entry driver refuses protocol, outcome and trace drift", async t 
 			, autoload: "/absolute.php", entryProbe: plan }) }
 	]) await assert.rejects(() => execute({ ...options, ...changed, Php: fakeHost() }));
 });
+
+test("callback entry trace drift reports the parsed actual and expected calls"
+	, async t => {
+	const execute = await loadDriver(t);
+	const changed = acceptedTrace.replace(
+		"LB_CALLBACK_ENTRY_V1 enter source Probe.call\n", ""
+	);
+	await assert.rejects(() => execute({
+		Php: fakeHost({ trace: changed })
+		, api: { extensions: {}, lazy: { extensions: {} } }
+		, loading: "startup", mode: "weak", request: request()
+		, source: "synthetic caller"
+	}), error => {
+		assert.match(error.message, /callback trace differs: accepted/u);
+		const difference = JSON.parse(error.message.slice(
+			error.message.indexOf("{")
+		));
+		assert.equal(difference.actual[0].counts.source, 0);
+		assert.equal(difference.expected[0].counts.source, 1);
+		return true;
+	});
+	}
+);

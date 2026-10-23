@@ -105,7 +105,8 @@ export const executePhpWasmCorpus = async options => {
 		require(result.control === planned.control && result.outcome === planned.outcome
 			, "callback control outcome differs");
 		const calls = parsePhpWasmCallbackEntryTrace(trace, input.entryProbe.selected);
-		require(same(calls, planned.calls), `callback trace differs: ${planned.control}`);
+		require(same(calls, planned.calls), `callback trace differs: ${planned.control}: `
+			+ JSON.stringify({ actual: calls, expected: planned.calls }));
 		cases.push({ control: planned.control, outcome: planned.outcome, trace, calls });
 	}
 	const observation = { controls: cases.length

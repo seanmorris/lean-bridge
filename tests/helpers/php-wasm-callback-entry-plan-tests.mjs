@@ -33,7 +33,19 @@ test("Fin callback plan separates preflight refusal, reply rejection and recover
 		, "closure-result", "host-arguments", "invalid-recovery"
 		, "actual-reply-rejection", "later-call-recovery"
 	]);
-	assert.deepEqual(plan.cases.find(item => item.control === "invalid-recovery").calls, []);
+	assert.deepEqual(plan.cases.find(
+		item => item.control === "invalid-recovery"
+	).calls[0].entries.map(item => item.kind)
+	, ["adapter", "adapter", "recovery", "recovery", "cleanup"]);
+	const closureInput = plan.cases.find(item => item.control === "closure-input");
+	assert.equal(closureInput.calls[0].counts.source, 0);
+	assert.deepEqual(closureInput.calls[1].entries.slice(0, 4).map(
+		item => item.kind
+	), ["adapter", "adapter", "source", "closure"]);
+	assert.deepEqual(plan.cases.find(
+		item => item.control === "closure-input-refusal"
+	).calls[0].entries.map(item => item.kind)
+	, ["adapter", "adapter", "cleanup"]);
 	const rejection = plan.cases.find(item => item.control === "actual-reply-rejection")
 		.calls[0].entries.map(item => item.kind);
 	assert.deepEqual(rejection.slice(-3), ["rejection", "rejection", "cleanup"]);
@@ -66,6 +78,11 @@ test("checked-record callback plan keeps Subtype-before-record constructor order
 			, ["adapter", `${base}:closure:native`], ["adapter", `${base}:closure:lean`]
 			, ["cleanup", `${base}:invoke:cleanup`]);
 	}
+	labels.push([
+		"validator"
+		, "CallbackCheckedRecords.makeClosure:callback_validator:"
+			+ "closure_graph_refinement_0_test"
+	]);
 	const selected = labels.map(([kind, label], index) => ({
 		symbol: `probe_${index}`, kind, label
 	}));
@@ -78,5 +95,38 @@ test("checked-record callback plan keeps Subtype-before-record constructor order
 		, "CallbackCheckedRecords.checkedPositive"
 		, "CallbackCheckedRecords.mkWeighted"
 	]);
-	assert.deepEqual(plan.cases.find(item => item.control === "closure-input-refusal").calls, []);
+	const closureRefusal = plan.cases.find(
+		item => item.control === "closure-input-refusal"
+	).calls[0];
+	assert.deepEqual(closureRefusal.entries.map(item => item.kind)
+		, ["adapter", "adapter", "constructor", "validator", "constructor", "cleanup"]);
+	assert.equal(closureRefusal.entries[3].label
+		, "CallbackCheckedRecords.makeClosure:callback_validator:"
+			+ "closure_graph_refinement_0_test");
+	assert.deepEqual(closureRefusal.entries.filter(item => item.kind === "constructor")
+		.map(item => item.label), [
+			"CallbackCheckedRecords.mkInterval", "CallbackCheckedRecords.mkInterval"
+		]
+	);
+	assert.deepEqual(plan.cases.find(
+		item => item.control === "invalid-recovery"
+	).calls[0].entries.map(item => item.kind)
+	, ["adapter", "adapter", "recovery", "recovery", "constructor", "cleanup"]);
+	const rejected = plan.cases.find(
+		item => item.control === "actual-reply-rejection"
+	).calls[0];
+	assert.equal(rejected.counts.constructor, 3);
+	assert.deepEqual(rejected.entries.slice(-5).map(item => item.kind)
+		, ["constructor", "rejection", "rejection", "constructor", "cleanup"]);
+	const closureInput = plan.cases.find(item => item.control === "closure-input");
+	assert.equal(closureInput.calls[0].counts.source, 0);
+	assert.deepEqual(closureInput.calls[1].entries.slice(0, 5).map(
+		item => item.kind
+	), ["adapter", "adapter", "constructor", "closure", "cleanup"]);
+	assert.deepEqual(plan.cases.find(item => item.control === "mixed-closure")
+		.calls[1].entries.map(item => item.kind)
+		, ["adapter", "adapter", "constructor", "cleanup"]);
+	assert.deepEqual(plan.cases.find(item => item.control === "nested-closure")
+		.calls[1].entries.map(item => item.kind)
+		, ["adapter", "adapter", "constructor", "constructor", "closure", "cleanup"]);
 });
