@@ -266,6 +266,10 @@ test("owned Subtype archives retain exact four-role source closures", () => {
 			&& source.path === "tests/helpers/owned-subtype-hosted-output.mjs"));
 		assert.ok(sources.some(source => source.role === "archiver"
 			&& source.path === "scripts/archive-owned-subtype-evidence.mjs"));
+		for(const source of sources)
+			assert.doesNotThrow(() => execFileSync("git", ["cat-file", "-e"
+				, `${source.revision}:${source.path}`], { stdio: "ignore" })
+			, `${lane}: ${source.role}/${source.path}`);
 	}
 });
 

@@ -52,7 +52,7 @@ const perlTemplates = ["Build.pm", "BuildCallbackResults.pm", "OwnedAssets.pm"
 const structured = path => `tests/fixtures/structured-types/${path}`;
 const consumers = Object.freeze({
 	native: ["owned-subtype-installed.c", "owned-subtype-installed.cpp"]
-	, perl: ["owned-subtype-installed.pl"]
+	, perl: ["owned-perl-subtype.pl"]
 	, languages: ["owned-subtype-python.py", "owned-subtype-ruby.rb"
 		, "owned-subtype-rust.rs"]
 	, dotnet: ["owned-subtype-dotnet.cs"]
