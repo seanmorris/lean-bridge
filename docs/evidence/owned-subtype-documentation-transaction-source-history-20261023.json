@@ -1,0 +1,153 @@
+{
+  "additions": [
+    {
+      "currentSha256": "543d4d9d417312d97f092b086b8619342dd6de1a78cd47d612a45dd8044f812e",
+      "path": "scripts/update-owned-subtype-documentation-transaction-source-history.mjs"
+    },
+    {
+      "currentSha256": "f3c4639d90b731a4349fef63b20e506c5cfd72912da69434842f460b9d9568e0",
+      "path": "tests/helpers/owned-subtype-documentation-transaction-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "d1db682d826a001fd7a499eca851c978fcab35591d41a006e5849c8d3e1f79a7",
+      "path": "tests/helpers/owned-subtype-documentation-transaction-source-history.mjs"
+    }
+  ],
+  "gateCommit": "61bc1e0d998dbf467ddb1fc130159f7f6f1566bb",
+  "gatePredecessorCommit": "34cfe11dbdf2764aa793e241ee93d9c9a1533b07",
+  "gateUpdates": [
+    {
+      "currentSha256": "ce489a8e337a7be13b7e5546333e60df14d3d2d2d8f8ecf05cb8416eef04fa43",
+      "edits": [
+        {
+          "current": "const ownedSubtypeHostedEvidenceIds = Object.freeze([\n\t\"owned-subtype-javascript-local-installed\"\n\t, \"owned-subtype-native-hosted-installed\"\n\t, \"owned-subtype-perl-hosted-installed\"\n\t, \"owned-subtype-languages-hosted-installed\"\n\t, \"owned-subtype-dotnet-hosted-installed\"\n\t, \"owned-subtype-jvm-hosted-installed\"\n\t, \"owned-subtype-php-native-hosted-installed\"\n\t, \"owned-subtype-wit-wasi-hosted-installed\"\n]);\nconst ownedSubtypeHostedProfiles = new Set([\n\t\"node-javascript\", \"node-typescript\", \"browser-javascript\"\n\t, \"browser-react\", \"browser-worker\", \"c\", \"cpp\", \"python\", \"ruby\"\n\t, \"rust\", \"perl\", \"dotnet\", \"java\", \"kotlin\", \"php-native\", \"wit-wasi\"\n]);\nconst hasOwnedSubtypeHostedEvidence = document =>\n\townedSubtypeHostedEvidenceIds.every(id =>\n\t\tdocument.evidence.some(item => item.id === id));\nconst ownedSubtypeHostedReference = \"[Hosted owned Subtype acceptance](../evidence/owned-subtype-promotion-20261023.md) establishes one proof-erased selected Nat Subtype field in the tested acyclic `Bundle` owner across all sixteen non-PHP-Wasm consumer profiles and both source routes. Host values are validated before a successful ownership transfer; rejection leaves ownership with the caller. Leased or retained results preserve their owner lifetime, explicit close or release performs cleanup, and later valid calls recover. Recursive owned graphs, owned checked-record fields, owned callback positions, arbitrary predicates, dispatch cost and peak memory remain separate work. PHP-Wasm retains its separately audited owned-Subtype boundary.\";\n",
+          "previous": "",
+          "start": 8863
+        },
+        {
+          "current": "const ownedSubtypeHostedGuide = (document, profiles, reference) => {\n\tif(!hasOwnedSubtypeHostedEvidence(document)) return null;\n\tconst selected = profiles.filter(profile =>\n\t\townedSubtypeHostedProfiles.has(profile));\n\tif(selected.length === 0) return null;\n\tconst evidence = reference.replace(/reference\\/types\\.md$/u\n\t\t, \"evidence/owned-subtype-promotion-20261023.md\");\n\treturn `[Hosted owned Subtype acceptance](${evidence}) covers ${selected.map(profile => names[profile]).join(\", \")} on ordinary-source and reviewed-IR packages. The tested acyclic Bundle carries one selected Nat Subtype field beside explicit resource identities. Its constructor validates host input before a successful ownership transfer; rejection leaves ownership with the caller. Leased or retained results preserve their owner lifetime, explicit close or release performs cleanup, and later valid calls recover. Recursive owned graphs, owned checked-record fields, owned callback positions, arbitrary predicates, dispatch cost and peak memory remain outside this evidence. PHP-Wasm keeps its separately audited owned-Subtype boundary.`;\n};\n",
+          "previous": "",
+          "start": 15649
+        },
+        {
+          "current": "\tconst ownedSubtype = ownedSubtypeHostedGuide(\n\t\tdocument, profiles, reference);\n",
+          "previous": "",
+          "start": 33396
+        },
+        {
+          "current": "\t\t, ...(ownedSubtype ? [\"\", ownedSubtype] : [])\n",
+          "previous": "",
+          "start": 34450
+        },
+        {
+          "current": "\t\t\t\t`${primitiveNominalDotnet} ${primitiveNominalPhp} ${primitiveNominalPhpWasm} ${recursiveSubtypePhpWasm} ${primitiveNominalWit} ${primitiveNominalJvm} ${primitiveNominalPending}\\n\\n${ownedSubtypePhpWasm}${hasOwnedSubtypeHostedEvidence(document) ? ` ${ownedSubtypeHostedReference}` : \"\"} ${callbackSubtypePhpWasm}${hasCallbackSubtypeHostedEvidence(document) ? ` ${callbackSubtypeHostedReference}` : \"\"}`)\n",
+          "previous": "\t\t\t\t`${primitiveNominalDotnet} ${primitiveNominalPhp} ${primitiveNominalPhpWasm} ${recursiveSubtypePhpWasm} ${primitiveNominalWit} ${primitiveNominalJvm} ${primitiveNominalPending}\\n\\n${ownedSubtypePhpWasm} ${callbackSubtypePhpWasm}${hasCallbackSubtypeHostedEvidence(document) ? ` ${callbackSubtypeHostedReference}` : \"\"}`)\n",
+          "start": 59168
+        }
+      ],
+      "path": "scripts/generate-type-docs.mjs",
+      "previousSha256": "4e7cf136ab8e8b6ff974cda5b5e03c3b433fd3794bb4acafda22885b8e9cdbd9"
+    },
+    {
+      "currentSha256": "83277aef37c9cd955e8ad1fb519cf0c3d49adbf4093d2ed8e6a6cbe59d176cc7",
+      "edits": [
+        {
+          "current": "import {\n\trenderTypeDocuments\n} from \"../scripts/generate-type-docs.mjs\";\n",
+          "previous": "",
+          "start": 385
+        },
+        {
+          "current": "test(\"owned Subtype promotion documents every affected consumer\", async () => {\n\tconst before = await renderTypeDocuments({\n\t\troot: \".\", inventory: { document, ...contracts }\n\t});\n\tconst promoted = promoteOwnedSubtypes(document, references);\n\tconst after = await renderTypeDocuments({\n\t\troot: \".\", inventory: { document: promoted, ...contracts }\n\t});\n\tconst evidence = /owned-subtype-promotion-20261023\\.md/u;\n\tfor(const [path, source] of Object.entries(after.documents))\n\t{\n\t\tassert.doesNotMatch(before.documents[path], evidence, path);\n\t\tassert.match(source, evidence, path);\n\t\tassert.match(source, /validates host input before a successful ownership transfer/u\n\t\t\t, path);\n\t\tassert.match(source, /rejection leaves ownership with the caller/u, path);\n\t\tassert.match(source, /explicit close or release performs cleanup/u, path);\n\t\tassert.match(source, /PHP-Wasm keeps its separately audited/u, path);\n\t}\n\tassert.doesNotMatch(before.reference, evidence);\n\tassert.match(after.reference, evidence);\n\tassert.match(after.reference, /all sixteen non-PHP-Wasm consumer profiles/u);\n\tassert.match(after.reference, /PHP-Wasm retains its separately audited/u);\n});\n\n",
+          "previous": "",
+          "start": 4434
+        }
+      ],
+      "path": "tests/owned-subtype-promotion.test.mjs",
+      "previousSha256": "9ef9265b80b754a8fbef0bf67c58cf04c88acecb499e846de8af23fecaedb2e9"
+    }
+  ],
+  "implementationAdditions": [
+    {
+      "currentSha256": "3660571a2bec968a0a66721102f46100d9a440a193ebd21207f37034919e14f3",
+      "path": "tests/helpers/owned-subtype-documentation.mjs"
+    }
+  ],
+  "implementationCommit": "55fd7fda672e0782c2ac71ca40af076952cc03ba",
+  "integrationBaseCommit": "c18899436eb5c9c9e874a4b762a9af5d744cb11c",
+  "integrationUpdates": [
+    {
+      "currentSha256": "9bd9f0411b6ea629e052f269dc99dacd4315b1ada18aac43c4ac4240832ff0c4",
+      "edits": [
+        {
+          "current": "import { beforeOwnedSubtypeDocumentationTransactionSource, ownedSubtypeDocumentationTransactionChangedPaths } from \"./owned-subtype-documentation-transaction-source-history.mjs\";\n",
+          "previous": "",
+          "start": 12635
+        },
+        {
+          "current": "\t, ...ownedSubtypeDocumentationTransactionChangedPaths\n",
+          "previous": "",
+          "start": 171461
+        },
+        {
+          "current": "\tconst ownedSubtypeDocumentationTransaction\n\t\t= beforeOwnedSubtypeDocumentationTransactionSource(\n\t\t\tpath, text, expected);\n\tif(sha256(ownedSubtypeDocumentationTransaction) === expected)\n\t\treturn ownedSubtypeDocumentationTransaction;\n\ttext = ownedSubtypeDocumentationTransaction;\n",
+          "previous": "",
+          "start": 203873
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "a9fd4c466172d2428644969fc88a6d77986fda5632f32c098bd9d68507914ca9"
+    },
+    {
+      "currentSha256": "92782d7e2f40008a464bb13eed04343c545fb2e9a7908ce670575d661561778c",
+      "edits": [
+        {
+          "current": "import \"./helpers/owned-subtype-documentation-transaction-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 4510
+        }
+      ],
+      "path": "tests/php-wasm-fin.test.mjs",
+      "previousSha256": "716fd5fb363ab50d9553ef319bb8a575a2edefab1e8d7922addebfc38b99e842"
+    }
+  ],
+  "milestone": "owned-subtype-documentation-transaction-v1",
+  "predecessorCommit": "c45d40dd29bb095587208f878003993c420a0258",
+  "schemaVersion": 1,
+  "scope": "Authenticate the consumer-documentation gate and apply the generated owned-Subtype documentation plus exact manual boundary replacements only after all eight evidence lanes are present.",
+  "updates": [
+    {
+      "currentSha256": "f84b0f73093291e539e5c6c20062e0db04181c709036e593ab45d305f1e180eb",
+      "edits": [
+        {
+          "current": "import {\n\townedSubtypeDocumentationPaths, renderOwnedSubtypeDocumentation\n} from \"../tests/helpers/owned-subtype-documentation.mjs\";\n",
+          "previous": "",
+          "start": 459
+        },
+        {
+          "current": "const documentationSources = Object.fromEntries(await Promise.all(\n\tObject.entries(ownedSubtypeDocumentationPaths).map(\n\t\tasync ([name, documentPath]) => [\n\t\t\tname, await readFile(documentPath, \"utf8\")\n\t\t]\n\t)\n));\nconst documentation = renderOwnedSubtypeDocumentation(documentationSources);\nawait Promise.all(Object.entries(ownedSubtypeDocumentationPaths)\n\t.map(([name, documentPath]) => writeFile(documentPath\n\t\t, documentation[name])));\n",
+          "previous": "",
+          "start": 1381
+        }
+      ],
+      "path": "scripts/promote-owned-subtype-evidence.mjs",
+      "previousSha256": "79fca244a97b1fd46d78909a021762bc3ffb94cf253bc8103b329b36b95d4d02"
+    },
+    {
+      "currentSha256": "8a123e2544db80f724704d68a7ee522d8a2458d56c445b10f3ac1b754014b1d6",
+      "edits": [
+        {
+          "current": "import {\n\townedSubtypeDocumentationPaths, renderOwnedSubtypeDocumentation\n} from \"./helpers/owned-subtype-documentation.mjs\";\n",
+          "previous": "",
+          "start": 738
+        },
+        {
+          "current": "test(\"owned Subtype promotion removes exact stale manual boundaries\", async () => {\n\tconst sources = Object.fromEntries(await Promise.all(Object.entries(\n\t\townedSubtypeDocumentationPaths\n\t).map(async ([name, path]) => [name, await readFile(path, \"utf8\")])));\n\tconst rendered = renderOwnedSubtypeDocumentation(sources);\n\tfor(const source of Object.values(rendered))\n\t{\n\t\tassert.match(source, /owned-subtype-promotion-20261023\\.md/u);\n\t\tassert.match(source, /tested acyclic/u);\n\t}\n\tassert.match(rendered.existingPackage\n\t\t, /establishes ordinary\\/reviewed packages across all seventeen profiles/u);\n\tassert.doesNotMatch(rendered.existingPackage\n\t\t, /JavaScript npm and PHP-Wasm installed[^|\\n]+other hosts pending/u);\n\tassert.doesNotMatch(rendered.exportDecisions\n\t\t, /owned and recursive Subtypes/u);\n\tfor(const name of [\"dotnet\", \"perl\", \"python\", \"ruby\"])\n\t{\n\t\tassert.match(rendered[name], /rejection keeps ownership with the caller/u\n\t\t\t, name);\n\t\tassert.doesNotMatch(rendered[name]\n\t\t\t, /owned (?:`Subtype` payloads|Subtypes) remain (?:pending|unsupported)/u\n\t\t\t, name);\n\t}\n\tassert.throws(() => renderOwnedSubtypeDocumentation(rendered)\n\t\t, /Expected one owned-Subtype documentation marker/u);\n});\n\n",
+          "previous": "",
+          "start": 5717
+        }
+      ],
+      "path": "tests/owned-subtype-promotion.test.mjs",
+      "previousSha256": "83277aef37c9cd955e8ad1fb519cf0c3d49adbf4093d2ed8e6a6cbe59d176cc7"
+    }
+  ]
+}
