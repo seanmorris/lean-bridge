@@ -1,0 +1,105 @@
+{
+  "additions": [
+    {
+      "currentSha256": "ed288de124459fd46079a18d7b9491301b9a8ffa7b7019ad768b9b9cb2421547",
+      "path": "scripts/update-generic-subtype-wit-helper-warning-scope-source-history.mjs"
+    },
+    {
+      "currentSha256": "969b3d3157481262a4a83f014e0f06be9307a5f08db9ef26a0d9566e0a57b6fc",
+      "path": "tests/helpers/generic-subtype-wit-helper-warning-scope-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "58d6477409e439364af90ce50bdecc6bb4d703eb4f6746d8d517c3bea562f096",
+      "path": "tests/helpers/generic-subtype-wit-helper-warning-scope-source-history.mjs"
+    }
+  ],
+  "appliedCommit": "cf0384dfb9b1b7fc003966fae45ed75ebe5545a4",
+  "implementationCommit": "6b80b80c207b77dc665b08a27eaa8130f76e4bed",
+  "integrationBaseCommit": "3b4773cac07396a611d5b817631cf72467ea5562",
+  "integrationUpdates": [
+    {
+      "currentSha256": "172a7a094bcf44eca7745bd1e4393768a0020d4341345e79e1539df8736b50a1",
+      "edits": [
+        {
+          "current": "import \"./helpers/generic-subtype-wit-helper-warning-scope-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 375
+        }
+      ],
+      "path": "tests/generic-subtype-managed-wit.test.mjs",
+      "previousSha256": "57a7f14b55730176fe5c67a7ab935e582ff90ba0b4e21539f0940786607fa107"
+    },
+    {
+      "currentSha256": "1110f77d5f50148cb35a3eb740b713e6fb88776b900ea2377b6cbf8e20e6d6d5",
+      "edits": [
+        {
+          "current": "import { beforeGenericSubtypeWitHelperWarningScopeSource, genericSubtypeWitHelperWarningScopeNormalizationPaths } from \"./generic-subtype-wit-helper-warning-scope-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...genericSubtypeWitHelperWarningScopeNormalizationPaths\n\t, ...ownedSubtypeTestProfilePinRepairNormalizationPaths\n",
+          "previous": "\t...ownedSubtypeTestProfilePinRepairNormalizationPaths\n",
+          "start": 168402
+        },
+        {
+          "current": "\tconst genericSubtypeWitHelperWarningScope\n\t\t= beforeGenericSubtypeWitHelperWarningScopeSource(path, text, expected);\n\tif(sha256(genericSubtypeWitHelperWarningScope) === expected)\n\t\treturn genericSubtypeWitHelperWarningScope;\n\ttext = genericSubtypeWitHelperWarningScope;\n",
+          "previous": "",
+          "start": 207104
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "3ac526b8029f9d20b09e7c8ce0b23afa84f63da2da518057650659861439b050"
+    }
+  ],
+  "milestone": "generic-subtype-wit-helper-warning-scope-source-v1",
+  "predecessorCommit": "23ae28e37befcdf245e94f5f841ed50254fc869c",
+  "schemaVersion": 1,
+  "scope": "Exempt only the generic WIT caller's inclusion of the shared nominal value helpers from -Wunused-function, keep every other warning fatal under the hosted -Wall -Wextra -Werror compile, and prove both behaviours against the WIT host header.",
+  "updates": [
+    {
+      "currentSha256": "33142b7875ceb7a58c6bc0b933cd3a307e2cd45529cd8aa0155409ab5c7d588e",
+      "edits": [
+        {
+          "current": "/* The shared value helpers serve the nominal caller too; only their unused\n   definitions are exempt, so warnings in this caller still fail. */\n#pragma GCC diagnostic push\n#pragma GCC diagnostic ignored \"-Wunused-function\"\n",
+          "previous": "",
+          "start": 38
+        },
+        {
+          "current": "#pragma GCC diagnostic pop\n",
+          "previous": "",
+          "start": 315
+        }
+      ],
+      "path": "tests/fixtures/generic-subtype-consumers/wit-wasi.c",
+      "previousSha256": "105e3ab4f365b82dd8ffeef3692e0daa9d5b37b96aa55fa8ae4e428d2e3e57b6"
+    },
+    {
+      "currentSha256": "76e000b9f0d27e575a605287b04f1082ef2e1e431318387af53ae454851188f4",
+      "edits": [
+        {
+          "current": "import { spawnSync } from \"node:child_process\";\nimport { existsSync } from \"node:fs\";\nimport { mkdtemp, readFile, rm, stat, writeFile } from \"node:fs/promises\";\nimport { tmpdir } from \"node:os\";\nimport { join, resolve } from \"node:path\";\n",
+          "previous": "import { readFile, stat } from \"node:fs/promises\";\n",
+          "start": 135
+        },
+        {
+          "current": "import { compileCopiedWitModel } from \"../../src/backends/wit/copied-model.mjs\";\nimport { renderWitHostHeader } from \"../../src/backends/wit/copied-host.mjs\";\n",
+          "previous": "",
+          "start": 403
+        },
+        {
+          "current": "const capi = process.env.LEAN_BRIDGE_WASMTIME_C_API\n\t?? resolve(\".toolchains/wasmtime42\");\nconst cc = process.env.CC ?? \"/usr/bin/cc\";\n",
+          "previous": "",
+          "start": 1154
+        },
+        {
+          "current": "\nconst witHelpers = \"../nominal-subtype-consumers/wit-values.h\";\ntest(\"generic WIT caller compiles under the hosted warning flags\"\n\t, { skip: !existsSync(join(capi, \"include/wasmtime.h\")) }, async t => {\n\t\tconst root = await mkdtemp(join(tmpdir(), \"lean-generic-wit-warnings-\"));\n\t\tt.after(() => rm(root, { recursive: true, force: true }));\n\t\tconst projection = compileCopiedWitModel(genericSubtypeManagedWitReview(\"wit\")\n\t\t\t, { name: \"nominalsubtypes\", version: \"1.0.0\" }, { callables: true });\n\t\tawait writeFile(join(root, \"nominalsubtypes_wasmtime.h\")\n\t\t\t, renderWitHostHeader(projection));\n\t\tconst compile = async source => {\n\t\t\tawait writeFile(join(root, \"consumer.c\"), source);\n\t\t\treturn spawnSync(cc, [\"-std=c11\", \"-Wall\", \"-Wextra\", \"-Werror\"\n\t\t\t\t, \"-UNDEBUG\", `-I${join(capi, \"include\")}`, \"-c\", \"consumer.c\"\n\t\t\t\t, \"-o\", \"consumer.o\"], { cwd: root, encoding: \"utf8\"\n\t\t\t\t, env: { PATH: \"/usr/bin:/bin\", LC_ALL: \"C\" }, timeout: 60_000 });\n\t\t};\n\t\tconst fixture = await readFile(\n\t\t\t\"tests/fixtures/generic-subtype-consumers/wit-wasi.c\", \"utf8\");\n\t\tconst bracket = [\n\t\t\t\"#pragma GCC diagnostic push\"\n\t\t\t, \"#pragma GCC diagnostic ignored \\\"-Wunused-function\\\"\"\n\t\t\t, `#include \"${witHelpers}\"`\n\t\t\t, \"#pragma GCC diagnostic pop\"\n\t\t].join(\"\\n\");\n\t\tassert.equal(fixture.split(bracket).length, 2);\n\t\tassert.equal(fixture.split(\"#pragma GCC diagnostic\").length, 4);\n\t\tfor(const route of [\"ordinary\", \"reviewed\"])\n\t\t{\n\t\t\tconst caller = await genericSubtypeManagedWitCaller(\"wit\", route);\n\t\t\tconst accepted = await compile(caller);\n\t\t\tassert.equal(accepted.status, 0, accepted.stderr);\n\t\t\tassert.equal(accepted.stderr, \"\");\n\t\t\t// A warning outside the bracket still fails the hosted compile.\n\t\t\tconst outside = await compile(\n\t\t\t\t`${caller}\\nstatic int outside_bracket(void) { return 0; }\\n`);\n\t\t\tassert.notEqual(outside.status, 0);\n\t\t\tassert.match(outside.stderr\n\t\t\t\t, /'outside_bracket' defined but not used \\[-Werror=unused-function\\]/u);\n\t\t}\n\t\t// Without the bracket the shared helpers reproduce the hosted failure.\n\t\tconst helpers = await readFile(\n\t\t\t\"tests/fixtures/nominal-subtype-consumers/wit-values.h\", \"utf8\");\n\t\tconst unbracketed = await compile(fixture.replace(bracket, helpers));\n\t\tassert.notEqual(unbracketed.status, 0);\n\t\tfor(const name of [\"nominal_snapshot_controls\", \"event_empty\", \"byte\"\n\t\t\t, \"pair\", \"word\", \"wide\"])\n\t\t\tassert.match(unbracketed.stderr\n\t\t\t\t, new RegExp(`'${name}' defined but not used`, \"u\"), name);\n\t}\n);\n",
+          "previous": "",
+          "start": 6090
+        }
+      ],
+      "path": "tests/helpers/generic-subtype-managed-wit-tests.mjs",
+      "previousSha256": "bb2f39f9fe09fc75c7237d22c88fd97f79207e5834bcfbe49d0f7497989f8a45"
+    }
+  ]
+}
