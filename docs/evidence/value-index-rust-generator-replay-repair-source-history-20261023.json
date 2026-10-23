@@ -1,0 +1,111 @@
+{
+  "additions": [
+    {
+      "currentSha256": "457c8d4c2abd9e8096f475c86969798ce18986cc50c3d44d0b7415adc22d187e",
+      "path": "scripts/update-value-index-rust-generator-replay-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "4553cd90d1e5f268edec9125413509cffca6fb88dfd2e8d4e17e26c11d2b4b0c",
+      "path": "tests/helpers/value-index-rust-generator-replay-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "b984ed9a99aa7edf34a08b8067c3eddcb1d70637358150148b2d4c6801d6a904",
+      "path": "tests/helpers/value-index-rust-generator-replay-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "fe53b845d5570558daa2e327a5ef1ec370e057d7",
+  "integrationUpdates": [
+    {
+      "currentSha256": "b09f157495b87bbbf704349bd622b18de71b86c34ce6d672dc5641e850dfbe16",
+      "edits": [
+        {
+          "current": "import \"./helpers/value-index-rust-generator-replay-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-record-value-index-rust.test.mjs",
+      "previousSha256": "ff83107f4f4f27e785acb3d96dbdab2952bbe45795e46cb7b9c963208e249b9f"
+    },
+    {
+      "currentSha256": "cbe11c02b4ed0c71354fc3dcaed7d6e2eaa7d3c66d4342fe5cfe9b98b947fa22",
+      "edits": [
+        {
+          "current": "import { beforeValueIndexRustGeneratorReplayRepairSource, valueIndexRustGeneratorReplayRepairNormalizationPaths } from \"./value-index-rust-generator-replay-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...valueIndexRustGeneratorReplayRepairNormalizationPaths\n\t, ...genericSubtypeRustOraclePathRepairNormalizationPaths\n",
+          "previous": "\t...genericSubtypeRustOraclePathRepairNormalizationPaths\n",
+          "start": 159292
+        },
+        {
+          "current": "\tconst valueIndexRustGeneratorReplayRepair\n\t\t= beforeValueIndexRustGeneratorReplayRepairSource(path, text, expected);\n\tif(sha256(valueIndexRustGeneratorReplayRepair) === expected)\n\t\treturn valueIndexRustGeneratorReplayRepair;\n",
+          "previous": "",
+          "start": 195229
+        },
+        {
+          "current": "\t\t= beforeGenericSubtypeRustOraclePathRepairSource(\n\t\t\tpath, valueIndexRustGeneratorReplayRepair, expected\n\t\t);\n",
+          "previous": "\t\t= beforeGenericSubtypeRustOraclePathRepairSource(path, text, expected);\n",
+          "start": 195497
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "7888eb745d220c1d1dd0248772bddbaecc972d14347fd25a2839b729da90cf54"
+    }
+  ],
+  "milestone": "value-index-rust-generator-replay-repair-source-v1",
+  "predecessorCommit": "c2c306eb32b4e55191050e3f3fc3ec57697a8029",
+  "schemaVersion": 1,
+  "scope": "The retained Rust value-index crate is regenerated through its complete frozen producer generator closure and producer metadata rather than current package prose.",
+  "updates": [
+    {
+      "currentSha256": "f51fd29f18f57afc91270cf9c9ac28181bc899971c12078231cf893e8d911bf1",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { compiledPackageMetadata } from \"../../src/analyze/package-metadata.mjs\";\n",
+          "start": 174
+        },
+        {
+          "current": "",
+          "previous": "import { generateCopiedRustPackage } from \"../../src/backends/rust/copied-values.mjs\";\n",
+          "start": 397
+        },
+        {
+          "current": "import { nominalSubtypeRustGenerator } from \"./nominal-subtype-rust-generators.mjs\";\n",
+          "previous": "",
+          "start": 1768
+        },
+        {
+          "current": " * @param options.producerCommit - Frozen producer revision.\n",
+          "previous": "",
+          "start": 7436
+        },
+        {
+          "current": "\tconst { read, json, model, receipt, floor, producerCommit } = options;\n",
+          "previous": "\tconst { read, json, model, receipt, floor } = options;\n",
+          "start": 7541
+        },
+        {
+          "current": "\tconst { generateCopiedRustPackage } = await nominalSubtypeRustGenerator(\n\t\tproducerCommit\n\t);\n\tconst metadata = JSON.parse(\n\t\tmodel.sourceIdentity.exportConfigurationSource\n\t).package ?? {};\n",
+          "previous": "",
+          "start": 10079
+        },
+        {
+          "current": "\t\t, metadata\n",
+          "previous": "\t\t, metadata: compiledPackageMetadata(model.sourceIdentity)\n",
+          "start": 10387
+        },
+        {
+          "current": "\tconst { pkg, crate } = await checkPackage({\n\t\tread, json, model, receipt, floor, producerCommit\n\t});\n",
+          "previous": "\tconst { pkg, crate } = await checkPackage({ read, json, model, receipt, floor });\n",
+          "start": 19655
+        }
+      ],
+      "path": "tests/helpers/checked-record-value-index-rust-report.mjs",
+      "previousSha256": "a4d3e53b9ee7eb6927d5512b8e4269bc78c1dbf36aff3aa44f6fed59208c9b5c"
+    }
+  ]
+}

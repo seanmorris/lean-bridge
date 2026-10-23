@@ -3,6 +3,7 @@
  *
  * @file
  */
+import "./helpers/value-index-rust-generator-replay-repair-source-history-tests.mjs";
 import "./helpers/checked-record-value-index-rust-fixture-tests.mjs";
 import "./helpers/checked-record-value-index-rust-ci-policy-tests.mjs";
 import "./helpers/checked-record-value-index-rust-installed-tests.mjs";
