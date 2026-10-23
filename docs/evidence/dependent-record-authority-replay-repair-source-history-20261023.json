@@ -1,0 +1,101 @@
+{
+  "additions": [
+    {
+      "currentSha256": "fea79693ac6beae38d614f0326ae17cedff3fb3e1218f89b05ceb88eedb31cb8",
+      "path": "scripts/update-dependent-record-authority-replay-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "80a9448ad8c7a103d90ae4a36a1fd28b485fbf3292a9d9215a3bb061c04ee701",
+      "path": "tests/helpers/dependent-record-authority-replay-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "a9eb743f4eb85c171b41ffe99206b39fe76c01f3f88fd51cd1a312695f568754",
+      "path": "tests/helpers/dependent-record-authority-replay-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "4caae9c2c98203b6235ec30c57f6b5f7b8846461",
+  "integrationUpdates": [
+    {
+      "currentSha256": "2147cfab24e3c0d171121e2f4f702da5e1c6e17dbfd67f5eacaf10bf0fd415cf",
+      "edits": [
+        {
+          "current": "import \"./helpers/dependent-record-authority-replay-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 1837
+        }
+      ],
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "4b62c7bb998007757b7d9e0b88e6ac4844bf206a142f723fa2993152867bb409"
+    },
+    {
+      "currentSha256": "fdbacdd49453b125ee4f3f38e189e1beed1bab6db5b2c660cc2a50f3f147bebc",
+      "edits": [
+        {
+          "current": "import { beforeDependentRecordAuthorityReplayRepairSource, dependentRecordAuthorityReplayRepairNormalizationPaths } from \"./dependent-record-authority-replay-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...dependentRecordAuthorityReplayRepairNormalizationPaths\n\t, ...preFinTypeSurfaceHistoryRepairNormalizationPaths\n",
+          "previous": "\t...preFinTypeSurfaceHistoryRepairNormalizationPaths\n",
+          "start": 158927
+        },
+        {
+          "current": "\tconst dependentRecordAuthorityReplayRepair\n\t\t= beforeDependentRecordAuthorityReplayRepairSource(path, text, expected);\n\tif(sha256(dependentRecordAuthorityReplayRepair) === expected)\n\t\treturn dependentRecordAuthorityReplayRepair;\n",
+          "previous": "",
+          "start": 194745
+        },
+        {
+          "current": "\t\t= beforePreFinTypeSurfaceHistoryRepairSource(\n\t\t\tpath, dependentRecordAuthorityReplayRepair, expected\n\t\t);\n",
+          "previous": "\t\t= beforePreFinTypeSurfaceHistoryRepairSource(path, text, expected);\n",
+          "start": 195013
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "6b0db0c3d43333a9c3bcbe976a92e4220d596c7e6413700231a81e71e8e2aa6a"
+    }
+  ],
+  "milestone": "dependent-record-authority-replay-repair-source-v1",
+  "predecessorCommit": "6b786277d9c9c50be21a43efc42204c76e11d22f",
+  "schemaVersion": 1,
+  "scope": "The constructor-authority verifier reconstructs each exact source milestone through the complete authenticated history graph instead of a stale hand-selected prefix.",
+  "updates": [
+    {
+      "currentSha256": "b3a21a5f67dce749a03149c8af06140b7a629a01d8dddbb6aaad3d027dac9bcf",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import {\n\tbeforeOwnedCheckedRecordCallableSource\n} from \"./owned-checked-record-callable-source-history.mjs\";\nimport {\n\tbeforeOwnedCheckedRecordFoundationSource\n} from \"./owned-checked-record-foundation-source-history.mjs\";\n",
+          "start": 1021
+        },
+        {
+          "current": "import { sourceAtFinHistoryMilestone } from \"./source-at-fin-history-milestone.mjs\";\n",
+          "previous": "",
+          "start": 1075
+        },
+        {
+          "current": "\t\t\tconst milestone = await sourceAtFinHistoryMilestone(\n\t\t\t\tupdate.path, update.currentSha256\n\t\t\t\t, beforeDependentRecordConstructorAuthoritySource\n",
+          "previous": "\t\t\tconst current = await readFile(update.path, \"utf8\");\n\t\t\tconst callable = beforeOwnedCheckedRecordCallableSource(\n\t\t\t\tupdate.path, current, update.currentSha256\n\t\t\t);\n\t\t\tconst milestone = beforeOwnedCheckedRecordFoundationSource(\n\t\t\t\tupdate.path, callable, update.currentSha256\n",
+          "start": 2877
+        },
+        {
+          "current": "\t\t\t\tupdate.path, milestone, update.previousSha256), previous, update.path);\n",
+          "previous": "\t\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n",
+          "start": 3384
+        },
+        {
+          "current": "\t\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\t\taddition.path, addition.currentSha256\n\t\t\t))\n",
+          "previous": "\t\t{\n\t\t\tconst current = await readFile(addition.path, \"utf8\");\n\t\t\tconst callable = beforeOwnedCheckedRecordCallableSource(\n\t\t\t\taddition.path, current, addition.currentSha256\n\t\t\t);\n\t\t\tconst milestone = beforeOwnedCheckedRecordFoundationSource(\n\t\t\t\taddition.path, callable, addition.currentSha256\n\t\t\t);\n\t\t\tassert.equal(sha256(milestone)\n",
+          "start": 3593
+        },
+        {
+          "current": "",
+          "previous": "\t\t}\n",
+          "start": 3745
+        }
+      ],
+      "path": "tests/helpers/dependent-record-constructor-authority-source-history-tests.mjs",
+      "previousSha256": "f19f4c39c9088078770de07fd5d704c709e00eace9d7127e04071276ec2f6387"
+    }
+  ]
+}
