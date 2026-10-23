@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeRecursiveCheckedRecordDocumentationClosureSource, recursiveCheckedRecordDocumentationClosureNormalizationPaths } from "./recursive-checked-record-documentation-closure-source-history.mjs";
 import { beforeValueIndexMatrixHistoricalInventoryRepairSource, valueIndexMatrixHistoricalInventoryRepairNormalizationPaths } from "./value-index-matrix-historical-inventory-repair-source-history.mjs";
 import { beforeCheckedRefinementGateRepairSource, checkedRefinementGateRepairNormalizationPaths } from "./checked-refinement-gate-repair-source-history.mjs";
 import { beforeDependentCheckedRecordPromotionSource, dependentCheckedRecordPromotionChangedPaths } from "./dependent-checked-record-promotion-source-history.mjs";
@@ -2058,7 +2059,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...valueIndexMatrixHistoricalInventoryRepairNormalizationPaths
+	...recursiveCheckedRecordDocumentationClosureNormalizationPaths
+	, ...valueIndexMatrixHistoricalInventoryRepairNormalizationPaths
 	, ...dependentCheckedRecordDocumentationClosureNormalizationPaths
 	, ...dependentCheckedRecordPromotionChangedPaths
 	, ...checkedRefinementGateRepairNormalizationPaths
@@ -2859,6 +2861,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
+	const recursiveCheckedRecordDocumentationClosure
+		= beforeRecursiveCheckedRecordDocumentationClosureSource(
+			path, text, expected);
+	if(sha256(recursiveCheckedRecordDocumentationClosure) === expected)
+		return recursiveCheckedRecordDocumentationClosure;
+	text = recursiveCheckedRecordDocumentationClosure;
 	const ownedSubtypePythonDependencyRepair
 		= beforeOwnedSubtypePythonDependencyRepairSource(path, text, expected);
 	if(sha256(ownedSubtypePythonDependencyRepair) === expected)

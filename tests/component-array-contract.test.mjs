@@ -27,6 +27,7 @@ import { sourceAtFinHistoryMilestone } from "./helpers/source-at-fin-history-mil
 import "./helpers/checked-refinement-gate-repair-source-history-tests.mjs";
 import "./helpers/value-index-matrix-historical-inventory-repair-source-history-tests.mjs";
 import "./helpers/dependent-checked-record-promotion-source-history-tests.mjs";
+import "./helpers/recursive-checked-record-documentation-closure-source-history-tests.mjs";
 import "./helpers/dependent-checked-record-documentation-closure-source-history-tests.mjs";
 import "./helpers/value-index-browser-promotion-closure-repair-source-history-tests.mjs";
 import "./helpers/core-residual-ledger-pointer-replay-repair-source-history-tests.mjs";

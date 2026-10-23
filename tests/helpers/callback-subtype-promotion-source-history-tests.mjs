@@ -56,8 +56,14 @@ test("callback Subtype promotion records every exact integration transition", as
 
 	const previousInventory = JSON.parse(git(["show"
 		, `${callbackSubtypePromotionPredecessor}:docs/type-surface.v1.json`]));
-	const currentInventory = JSON.parse(await readFile(
-		"docs/type-surface.v1.json", "utf8"));
+	// Read this promotion's own inventory milestone; later pin layers keep
+	// advancing the live inventory.
+	const inventoryUpdate = record.integrationUpdates.find(update =>
+		update.path === "docs/type-surface.v1.json");
+	const currentInventory = JSON.parse(await sourceAtFinHistoryMilestone(
+		inventoryUpdate.path, inventoryUpdate.currentSha256));
+	const milestoneDigests = new Map(record.integrationUpdates.map(update =>
+		[update.path, update.currentSha256]));
 	const previousPins = new Map(previousInventory.evidence.flatMap(evidence =>
 		evidence.files.map(file => [
 			`${evidence.id}\0${file.path}`, file.sha256
@@ -80,7 +86,7 @@ test("callback Subtype promotion records every exact integration transition", as
 	{
 		assert.ok(callbackSubtypePromotionIntegrationPaths.includes(file.path)
 			, file.path);
-		assert.equal(sha256(await readFile(file.path)), file.sha256, file.path);
+		assert.equal(file.sha256, milestoneDigests.get(file.path), file.path);
 	}
 });
 
