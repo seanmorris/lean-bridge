@@ -1,0 +1,76 @@
+{
+  "additions": [
+    {
+      "currentSha256": "59a9d1108c346ad1a4d1bdc7d4c5f19724579b73ecd17daf8a0208a7993be6cc",
+      "path": "scripts/update-owned-subtype-wit-host-namespace-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "663424d4a072c117a1588b9c3bfc28802bfaaea4430383fe7bfda3a88e911251",
+      "path": "tests/helpers/owned-subtype-wit-host-namespace-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "fe98feedfb33a78358413365854333adc0dad6f7768c3a2f71dbc27004455821",
+      "path": "tests/helpers/owned-subtype-wit-host-namespace-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "06c822a733b04480830cfea69df52d7063ad49fc",
+  "integrationUpdates": [
+    {
+      "currentSha256": "e5d6058bb6550ce692655b1dc0e57d41b888ec7c46e9605eecb976b50f1cdc4a",
+      "edits": [
+        {
+          "current": "import \"./helpers/owned-subtype-wit-host-namespace-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 1924
+        }
+      ],
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "b5c71613f48e62a9f47a45daa5d65d0096bacd054c01bade898f8821e67f015d"
+    },
+    {
+      "currentSha256": "083cf2f8c7eff330ba00c1faeaeb45488613dd771f05524406771eed541fda64",
+      "edits": [
+        {
+          "current": "import { beforeOwnedSubtypeWitHostNamespaceRepairSource, ownedSubtypeWitHostNamespaceRepairChangedPaths } from \"./owned-subtype-wit-host-namespace-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...ownedSubtypeWitHostNamespaceRepairChangedPaths\n\t, ...phpWasmEntryStructuralEqualityRepairChangedPaths\n",
+          "previous": "\t...phpWasmEntryStructuralEqualityRepairChangedPaths\n",
+          "start": 167322
+        },
+        {
+          "current": "\tlet ownedSubtypeWitHostNamespaceRepair = text;\n\twhile(true)\n\t{\n\t\tconst previous = beforeOwnedSubtypeWitHostNamespaceRepairSource(\n\t\t\tpath, ownedSubtypeWitHostNamespaceRepair, expected);\n\t\tif(sha256(previous) === expected) return previous;\n\t\tif(previous === ownedSubtypeWitHostNamespaceRepair) break;\n\t\townedSubtypeWitHostNamespaceRepair = previous;\n\t}\n\ttext = ownedSubtypeWitHostNamespaceRepair;\n",
+          "previous": "",
+          "start": 205679
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "2c09f831e11d7f2be2eaa5fae7e7a656ba95d5984f9d24ea7087d63be886356c"
+    }
+  ],
+  "milestone": "owned-subtype-wit-host-namespace-repair-v1",
+  "predecessorCommit": "ea2ae7a4166358c1daffdf53026e3d247864ba95",
+  "schemaVersion": 1,
+  "scope": "Compile the installed owned-Subtype WIT consumer against the authenticated _wasmtime host namespace instead of the native C namespace.",
+  "updates": [
+    {
+      "currentSha256": "bedc5497db82417097b879e16426c4d3eac66dfaac421ce7f225c3576e98dfad",
+      "edits": [
+        {
+          "current": "\t\t\t.replaceAll(\"owned_subtypes\", \"owned_subtypes_wasmtime\")\n\t\t\t.replaceAll(\"OWNED_SUBTYPES\", \"OWNED_SUBTYPES_WASMTIME\")\n",
+          "previous": "",
+          "start": 11372
+        },
+        {
+          "current": "\ntest(\"owned Subtype WIT consumer names the installed host API\", async t => {\n\tconst source = (await fixtureFor(\"wit-wasi\")).source();\n\tassert.match(source, /#include \"owned_subtypes_wasmtime\\.h\"/u);\n\tassert.match(source, /owned_subtypes_wasmtime_session_open/u);\n\tassert.match(source, /OWNED_SUBTYPES_WASMTIME_INVALID_ARGUMENT/u);\n\tassert.doesNotMatch(source, /\\bowned_subtypes_session_open\\b/u);\n\tconst generated = generateOwnedCppPackage(ownedSubtypePackageReviewedIr(), {\n\t\ttransferredInputs: true, hostCallbacks: false\n\t});\n\tconst prefix = `${generated.c.prefix}_wasmtime`;\n\tconst header = generated.c.header\n\t\t.replaceAll(generated.c.prefix, prefix)\n\t\t.replaceAll(generated.c.prefix.toUpperCase(), prefix.toUpperCase());\n\tconst directory = await mkdtemp(join(tmpdir(), \"lean-owned-subtype-wit-consumer-\"));\n\tt.after(() => rm(directory, { recursive: true, force: true }));\n\tawait saveLakeFile(directory, `include/${prefix}.h`, header);\n\tawait saveLakeFile(directory, \"consumer.c\", source);\n\tawait runCopied(\"/usr/bin/cc\", [\"-std=c11\", \"-Wall\", \"-Wextra\", \"-Werror\"\n\t\t, \"-I\", \"include\", \"-fsyntax-only\", \"consumer.c\"], directory\n\t, { PATH: \"/usr/bin:/bin\" });\n});\n",
+          "previous": "",
+          "start": 12633
+        }
+      ],
+      "path": "tests/owned-subtype-remaining-packaging.test.mjs",
+      "previousSha256": "5669550a4a0e599925b282aecc55fae02ce16cfa0d6dce2f349e8df34179f086"
+    }
+  ]
+}

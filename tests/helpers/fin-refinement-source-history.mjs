@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeOwnedSubtypeWitHostNamespaceRepairSource, ownedSubtypeWitHostNamespaceRepairChangedPaths } from "./owned-subtype-wit-host-namespace-repair-source-history.mjs";
 import { beforePhpWasmEntryStructuralEqualityRepairSource, phpWasmEntryStructuralEqualityRepairChangedPaths } from "./php-wasm-entry-structural-equality-repair-source-history.mjs";
 import { beforeOwnedSubtypePerlSourcePathRepairSource, ownedSubtypePerlSourcePathRepairNormalizationPaths } from "./owned-subtype-perl-source-path-repair-source-history.mjs";
 import { beforeGenericSubtypeDocumentationSource, genericSubtypeDocumentationNormalizationPaths } from "./generic-subtype-documentation-source-history.mjs";
@@ -2064,7 +2065,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...phpWasmEntryStructuralEqualityRepairChangedPaths
+	...ownedSubtypeWitHostNamespaceRepairChangedPaths
+	, ...phpWasmEntryStructuralEqualityRepairChangedPaths
 	, ...ownedSubtypePerlSourcePathRepairNormalizationPaths
 	, ...genericSubtypeDocumentationNormalizationPaths
 	, ...genericSubtypePromotionNormalizationPaths
@@ -2871,6 +2873,16 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
+	let ownedSubtypeWitHostNamespaceRepair = text;
+	while(true)
+	{
+		const previous = beforeOwnedSubtypeWitHostNamespaceRepairSource(
+			path, ownedSubtypeWitHostNamespaceRepair, expected);
+		if(sha256(previous) === expected) return previous;
+		if(previous === ownedSubtypeWitHostNamespaceRepair) break;
+		ownedSubtypeWitHostNamespaceRepair = previous;
+	}
+	text = ownedSubtypeWitHostNamespaceRepair;
 	let phpWasmEntryStructuralEqualityRepair = text;
 	while(true)
 	{
