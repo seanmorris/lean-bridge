@@ -12,6 +12,7 @@ import { classifyRepositoryTest } from "../src/adoption/test-profiles.mjs";
 import { assertOwnedJvmReceiverExecution } from "./helpers/owned-jvm-receiver-evidence.mjs";
 import { assertOwnedJvmReceiverCi, ownedJvmReceiverReports } from "./helpers/owned-jvm-receiver-ci.mjs";
 import "./helpers/jvm-shard-ci-tests.mjs";
+import "./helpers/jvm-producer-replay-repair-source-history-tests.mjs";
 import { ownedJvmReceiverPath, ownedJvmReceiverBaseline, ownedJvmReceiverPrevious
 	, ownedJvmReceiverChangedPaths, ownedJvmReceiverAddedPaths
 	, beforeOwnedJvmReceiver, reverseOwnedJvmReceiverUpdate } from "./helpers/owned-jvm-receiver-history.mjs";

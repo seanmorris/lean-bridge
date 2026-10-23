@@ -1,0 +1,325 @@
+{
+  "additions": [
+    {
+      "currentSha256": "f49c08521e9559b3f9b6b6b72446e6312440df3220c9e937c6f50ac030c35e2b",
+      "path": "scripts/update-jvm-producer-replay-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "e2a687a8fb6d4b04e18984d7e53c908aa706890e4c9142e7f9ef036384640275",
+      "path": "tests/helpers/jvm-producer-replay-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "c94cbd96af68134d015c14ca4b4d7d9c048e39a80990b90fd67b75ca4ca4e118",
+      "path": "tests/helpers/jvm-producer-replay-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "b14f59def04ef4d45c72792c026066d840acd4f6",
+  "integrationUpdates": [
+    {
+      "currentSha256": "a8f2c90e3b595dcdd7d2eac85a813c7fa01136a89e9ed3279ec65deb82166a79",
+      "edits": [
+        {
+          "current": "import { beforeJvmProducerReplayRepairSource, jvmProducerReplayRepairNormalizationPaths } from \"./jvm-producer-replay-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...jvmProducerReplayRepairNormalizationPaths\n\t, ...ownedReceiverProducerReplayRepairNormalizationPaths\n",
+          "previous": "\t...ownedReceiverProducerReplayRepairNormalizationPaths\n",
+          "start": 162611
+        },
+        {
+          "current": "\tconst jvmProducerReplayRepair\n\t\t= beforeJvmProducerReplayRepairSource(path, text, expected);\n\tif(sha256(jvmProducerReplayRepair) === expected)\n\t\treturn jvmProducerReplayRepair;\n",
+          "previous": "",
+          "start": 199635
+        },
+        {
+          "current": "\t\t= beforeOwnedReceiverProducerReplayRepairSource(\n\t\t\tpath, jvmProducerReplayRepair, expected\n\t\t);\n",
+          "previous": "\t\t= beforeOwnedReceiverProducerReplayRepairSource(path, text, expected);\n",
+          "start": 199854
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "e74bf3240251d4aade40e4ee37ae30d56985066d6befcd3cfeb783b4eb353195"
+    },
+    {
+      "currentSha256": "04b1849f799c7c812520ad9ac353f54026dec8cb5f524e585ba537e1dc592a31",
+      "edits": [
+        {
+          "current": "import \"./helpers/jvm-producer-replay-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 705
+        }
+      ],
+      "path": "tests/owned-jvm-receiver-evidence.test.mjs",
+      "previousSha256": "ec972c2b2f475b86518701583525f2159af95456dbcc5b07410d775e482b38fa"
+    }
+  ],
+  "milestone": "jvm-producer-replay-repair-source-v1",
+  "predecessorCommit": "30ebc230b993a038f1eb59a046d85ed599a3a779",
+  "schemaVersion": 1,
+  "scope": "The frozen JVM cleanup and receiver evidence is replayed with each exact producer's complete static module and source closure rather than regenerating historical observations with current compiler semantics.",
+  "updates": [
+    {
+      "currentSha256": "cde0d2199f8fc642e1414bb042e6c27bd8c6a550ad5b0117c7caa1d412dca916",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { readFile } from \"node:fs/promises\";\n",
+          "start": 230
+        },
+        {
+          "current": "import { moduleAtProducer } from \"./producer-module.mjs\";\nimport { bytesAtProducer } from \"./producer-source.mjs\";\n",
+          "previous": "import { generateOwnedJvmCalls } from \"../../src/backends/jvm/owned-calls.mjs\";\nimport { ownedJvmCallNative, ownedJvmCallProbeMethods } from \"./owned-jvm-call-fixture.mjs\";\nimport { ownedJvmThreadExitGuard, ownedJvmThreadExitSources, withoutOwnedJvmThreadExitWait } from \"./owned-jvm-thread-exit.mjs\";\n",
+          "start": 283
+        },
+        {
+          "current": "const producerCommit = \"ff05f25488e70838b8bfa0088b10517a60f79035\";\nconst producerPromise = Promise.all([\n\t\"src/backends/jvm/owned-calls.mjs\"\n\t, \"tests/helpers/owned-jvm-call-fixture.mjs\"\n\t, \"tests/helpers/owned-jvm-thread-exit.mjs\"\n\t, \"tests/helpers/jvm-thread-exit-repair-evidence.mjs\"\n].map(path => moduleAtProducer(producerCommit, path))).then(modules =>\n\tObject.assign({}, ...modules));\nconst historical = path => bytesAtProducer(producerCommit, path);\n",
+          "previous": "",
+          "start": 1131
+        },
+        {
+          "current": "\tconst producer = await producerPromise;\n\tfor(const name of [\n\t\t\"assertJvmThreadExitCi\", \"generateOwnedJvmCalls\"\n\t\t, \"ownedJvmCallNative\", \"ownedJvmCallProbeMethods\"\n\t\t, \"ownedJvmThreadExitGuard\", \"ownedJvmThreadExitSources\"\n\t\t, \"withoutOwnedJvmThreadExitWait\"\n\t]) assert.equal(typeof producer[name], \"function\", name);\n",
+          "previous": "",
+          "start": 2681
+        },
+        {
+          "current": "\t].map(path => historical(path).toString()));\n",
+          "previous": "\t].map(path => readFile(path, \"utf8\")));\n",
+          "start": 3595
+        },
+        {
+          "current": "\t\t\tconst native = producer.ownedJvmCallNative(report.input), model = producer.generateOwnedJvmCalls(native.c.layout.model.bindingIr);\n",
+          "previous": "\t\t\tconst native = ownedJvmCallNative(report.input), model = generateOwnedJvmCalls(native.c.layout.model.bindingIr);\n",
+          "start": 5688
+        },
+        {
+          "current": "\t\t\t\t({ files, runtime } = producer.ownedJvmThreadExitSources(model, template, exercise, kotlin));\n\t\t\t\tassert.equal(report.guardSha256, sha256(producer.ownedJvmThreadExitGuard(native.cleanup.guardSource)));\n\t\t\t\tassert.equal(report.mutantJavaProbeSha256, sha256(producer.withoutOwnedJvmThreadExitWait(files[\"OwnedCallProbe.java\"])));\n",
+          "previous": "\t\t\t\t({ files, runtime } = ownedJvmThreadExitSources(model, template, exercise, kotlin));\n\t\t\t\tassert.equal(report.guardSha256, sha256(ownedJvmThreadExitGuard(native.cleanup.guardSource)));\n\t\t\t\tassert.equal(report.mutantJavaProbeSha256, sha256(withoutOwnedJvmThreadExitWait(files[\"OwnedCallProbe.java\"])));\n",
+          "start": 6110
+        },
+        {
+          "current": "\t\t\t\tfiles[\"OwnedCallProbe.java\"] = template.replace(\"/* METHODS */\", () => producer.ownedJvmCallProbeMethods(model)).replace(\"/* EXERCISE */\", () => exercise);\n\t\t\t\tfiles[\"KotlinCallProbe.kt\"] = kotlin.replace(\"/* METHODS */\", () => producer.ownedJvmCallProbeMethods(model, true));\n",
+          "previous": "\t\t\t\tfiles[\"OwnedCallProbe.java\"] = template.replace(\"/* METHODS */\", () => ownedJvmCallProbeMethods(model)).replace(\"/* EXERCISE */\", () => exercise);\n\t\t\t\tfiles[\"KotlinCallProbe.kt\"] = kotlin.replace(\"/* METHODS */\", () => ownedJvmCallProbeMethods(model, true));\n",
+          "start": 6711
+        },
+        {
+          "current": "\tconst original = JSON.parse(historical(\"docs/evidence/owned-jvm-calls-20260927.json\"));\n",
+          "previous": "\tconst original = JSON.parse(await readFile(\"docs/evidence/owned-jvm-calls-20260927.json\", \"utf8\"));\n",
+          "start": 7312
+        },
+        {
+          "current": "\tproducer.assertJvmThreadExitCi(historical(\".github/workflows/consumer-matrix.yml\").toString());\n",
+          "previous": "\tassertJvmThreadExitCi(await readFile(\".github/workflows/consumer-matrix.yml\", \"utf8\"));\n",
+          "start": 8026
+        }
+      ],
+      "path": "tests/helpers/jvm-thread-exit-repair-evidence.mjs",
+      "previousSha256": "ca3f17a27c932bf5cde6905318faf8155674479ee8e7d1cb9a7d64242346b55a"
+    },
+    {
+      "currentSha256": "5ab8645a87af1f76f23758269d844e79f909cb13e14d0f7b06135076d2a142f6",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { readFile } from \"node:fs/promises\";\n",
+          "start": 138
+        },
+        {
+          "current": "",
+          "previous": "import { generateOwnedJvmPackage } from \"../../src/backends/jvm/owned-package.mjs\";\nimport { createCompiledNativeModel } from \"../../src/build/native-graph-model.mjs\";\nimport { ownedJvmCallNative, ownedJvmCallProbeMethods } from \"./owned-jvm-call-fixture.mjs\";\nimport { ownedRustReceiverSource } from \"./owned-rust-receiver-fixture.mjs\";\nimport { ownedJvmPlainReceiverSource, ownedJvmPlainReceiverProbe, ownedKotlinPlainReceiverProbe } from \"./owned-jvm-receiver-fixture.mjs\";\nimport { ownedJvmReceiverRejections } from \"./owned-jvm-receiver-rejections.mjs\";\n",
+          "start": 191
+        },
+        {
+          "current": "import { moduleAtProducer } from \"./producer-module.mjs\";\nimport { bytesAtProducer } from \"./producer-source.mjs\";\n",
+          "previous": "",
+          "start": 283
+        },
+        {
+          "current": "const producerCommit = \"2e9e748fc0354bfa309c2283de66ff8a917df349\";\nconst producerPromise = Promise.all([\n\t\"src/backends/jvm/owned-package.mjs\"\n\t, \"src/build/native-graph-model.mjs\"\n\t, \"tests/helpers/owned-jvm-call-fixture.mjs\"\n\t, \"tests/helpers/owned-rust-receiver-fixture.mjs\"\n\t, \"tests/helpers/owned-jvm-receiver-fixture.mjs\"\n\t, \"tests/helpers/owned-jvm-receiver-rejections.mjs\"\n].map(path => moduleAtProducer(producerCommit, path))).then(modules =>\n\tObject.assign({}, ...modules));\nconst historical = path => bytesAtProducer(producerCommit, path);\n",
+          "previous": "",
+          "start": 2233
+        },
+        {
+          "current": "\tconst producer = await producerPromise;\n",
+          "previous": "",
+          "start": 3280
+        },
+        {
+          "current": "\tawait assertOwnedJvmReceiverInputs(record, producer);\n",
+          "previous": "\tawait assertOwnedJvmReceiverInputs(record);\n",
+          "start": 3841
+        },
+        {
+          "current": " * @param exactProducer - Optional already-loaded immutable producer closure.\n",
+          "previous": "",
+          "start": 4125
+        },
+        {
+          "current": "export const assertOwnedJvmReceiverInputs = async (record, exactProducer) => {\n\tconst producer = exactProducer || await producerPromise;\n\tfor(const name of [\n\t\t\"createCompiledNativeModel\", \"generateOwnedJvmPackage\"\n\t\t, \"ownedJvmCallNative\", \"ownedJvmCallProbeMethods\"\n\t\t, \"ownedJvmPlainReceiverProbe\", \"ownedJvmReceiverRejections\"\n\t\t, \"ownedKotlinPlainReceiverProbe\"\n\t]) assert.equal(typeof producer[name], \"function\", name);\n",
+          "previous": "export const assertOwnedJvmReceiverInputs = async record => {\n",
+          "start": 4207
+        },
+        {
+          "current": "\tconst lean = historical(\"tests/fixtures/onboarding/owned-aggregates/Owned.lean\").toString();\n",
+          "previous": "\tconst lean = await readFile(\"tests/fixtures/onboarding/owned-aggregates/Owned.lean\", \"utf8\");\n",
+          "start": 4970
+        },
+        {
+          "current": "\t\tconst model = producer.createCompiledNativeModel(item.input, { ...capabilities\n",
+          "previous": "\t\tconst model = createCompiledNativeModel(item.input, { ...capabilities\n",
+          "start": 5190
+        },
+        {
+          "current": "\t\tconst generated = producer.generateOwnedJvmPackage(model.bindingIr, null, config);\n",
+          "previous": "\t\tconst generated = generateOwnedJvmPackage(model.bindingIr, null, config);\n",
+          "start": 5746
+        },
+        {
+          "current": "\t\tassert.equal(item.nativeProbeSha256, sha256(producer.ownedJvmCallNative(item.input).implementation));\n",
+          "previous": "\t\tassert.equal(item.nativeProbeSha256, sha256(ownedJvmCallNative(item.input).implementation));\n",
+          "start": 5892
+        },
+        {
+          "current": "\t\tconst { model, generated } = input(item, producer.ownedRustReceiverSource, options);\n",
+          "previous": "\t\tconst { model, generated } = input(item, ownedRustReceiverSource, options);\n",
+          "start": 6069
+        },
+        {
+          "current": "\t\t\tlet source = historical(`tests/fixtures/structured-types/${file}`).toString();\n\t\t\tconst members = historical(`tests/fixtures/structured-types/${kotlin ? \"owned-kotlin-receiver-members.kt\" : \"owned-jvm-receiver-members.java\"}`).toString();\n",
+          "previous": "\t\t\tlet source = await readFile(`tests/fixtures/structured-types/${file}`, \"utf8\");\n\t\t\tconst members = await readFile(`tests/fixtures/structured-types/${kotlin ? \"owned-kotlin-receiver-members.kt\" : \"owned-jvm-receiver-members.java\"}`, \"utf8\");\n",
+          "start": 7168
+        },
+        {
+          "current": "\t\t\t\t.replace(\"/* METHODS */\", () => producer.ownedJvmCallProbeMethods(generated, kotlin));\n",
+          "previous": "\t\t\t\t.replace(\"/* METHODS */\", () => ownedJvmCallProbeMethods(generated, kotlin));\n",
+          "start": 7735
+        },
+        {
+          "current": "\t\tassert.deepEqual(item.compileRejections, Object.entries(producer.ownedJvmReceiverRejections(generated.namespace)).flatMap(([profile, examples]) =>\n",
+          "previous": "\t\tassert.deepEqual(item.compileRejections, Object.entries(ownedJvmReceiverRejections(generated.namespace)).flatMap(([profile, examples]) =>\n",
+          "start": 8015
+        },
+        {
+          "current": "\t\tconst { model, generated } = input(item, producer.ownedJvmPlainReceiverSource, {\n",
+          "previous": "\t\tconst { model, generated } = input(item, ownedJvmPlainReceiverSource, {\n",
+          "start": 9542
+        },
+        {
+          "current": "\t\tassert.equal(item.javaProbeSha256, sha256(producer.ownedJvmPlainReceiverProbe(item.consuming)));\n\t\tassert.equal(item.kotlinProbeSha256, sha256(producer.ownedKotlinPlainReceiverProbe(item.consuming)));\n",
+          "previous": "\t\tassert.equal(item.javaProbeSha256, sha256(ownedJvmPlainReceiverProbe(item.consuming)));\n\t\tassert.equal(item.kotlinProbeSha256, sha256(ownedKotlinPlainReceiverProbe(item.consuming)));\n",
+          "start": 10014
+        },
+        {
+          "current": "\t\tconst { model, generated } = input(item, producer.ownedRustReceiverSource, { ...options, anchoredResults: false });\n",
+          "previous": "\t\tconst { model, generated } = input(item, ownedRustReceiverSource, { ...options, anchoredResults: false });\n",
+          "start": 10608
+        },
+        {
+          "current": "\t\t\tassert.equal(item[field], sha256(historical(\"tests/fixtures/structured-types/\" + file)));\n",
+          "previous": "\t\t\tassert.equal(item[field], sha256(await readFile(\"tests/fixtures/structured-types/\" + file)));\n",
+          "start": 11166
+        }
+      ],
+      "path": "tests/helpers/owned-jvm-receiver-evidence.mjs",
+      "previousSha256": "b91655f3a7f47918af51802810b8187d72524e874a9229d6101a2d03016622d8"
+    },
+    {
+      "currentSha256": "305778c5a956e1d1b0f5af696890fe7959e2d65cb0d2886e5332d5f5569444cf",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { readFile } from \"node:fs/promises\";\nimport { ownedPerlReceiverHistoricalBytes } from \"./owned-perl-receiver-history.mjs\";\n",
+          "start": 142
+        },
+        {
+          "current": "import { moduleAtProducer } from \"./producer-module.mjs\";\nimport { bytesAtProducer } from \"./producer-source.mjs\";\n\nconst producerCommit = \"2e9e748fc0354bfa309c2283de66ff8a917df349\";\nconst producerPromise = Promise.all([\n\t\"src/backends/c/owned-package.mjs\"\n\t, \"src/backends/jvm/owned-package.mjs\"\n\t, \"src/build/native-graph-model.mjs\"\n\t, \"src/build/owned-jvm-artifacts.mjs\"\n\t, \"src/build/compile-jvm-sources.mjs\"\n\t, \"src/release/package-set-receipt.mjs\"\n\t, \"tests/helpers/owned-rust-receiver-fixture.mjs\"\n\t, \"tests/helpers/owned-jvm-receiver-fixture.mjs\"\n\t, \"tests/helpers/owned-jvm-receiver-installed.mjs\"\n\t, \"tests/helpers/owned-jvm-plain-receiver-installed.mjs\"\n\t, \"tests/helpers/type-corpus-jvm-tools.mjs\"\n].map(path => moduleAtProducer(producerCommit, path))).then(modules =>\n\tObject.assign({}, ...modules));\nconst historical = path => bytesAtProducer(producerCommit, path);\n",
+          "previous": "import { generateOwnedCPackage } from \"../../src/backends/c/owned-package.mjs\";\nimport { generateOwnedJvmPackage } from \"../../src/backends/jvm/owned-package.mjs\";\nimport { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from \"../../src/build/native-graph-model.mjs\";\nimport { ownedJvmAdapterSources } from \"../../src/build/owned-jvm-artifacts.mjs\";\nimport { validateKotlinCompilation } from \"../../src/build/compile-jvm-sources.mjs\";\nimport { validatePackageSetReceipt } from \"../../src/release/package-set-receipt.mjs\";\nimport { ownedRustReceiverSource } from \"./owned-rust-receiver-fixture.mjs\";\nimport { ownedJvmPlainReceiverSource } from \"./owned-jvm-receiver-fixture.mjs\";\nimport { ownedJvmReceiverInstalledFixture } from \"./owned-jvm-receiver-installed.mjs\";\nimport { ownedJvmPlainReceiverInstalledFixture } from \"./owned-jvm-plain-receiver-installed.mjs\";\nimport { javaCompilerOptions, kotlinCompilerOptions } from \"./type-corpus-jvm-tools.mjs\";\n",
+          "start": 248
+        },
+        {
+          "current": "\tlet probe = historical(\"tests/fixtures/structured-types/OwnedInstalledAssetsProbe.java\").toString();\n",
+          "previous": "\tlet probe = await readFile(\"tests/fixtures/structured-types/OwnedInstalledAssetsProbe.java\", \"utf8\");\n",
+          "start": 1815
+        },
+        {
+          "current": "const assertConsumers = async (item, projection, libraries, pkg, plain, producer) => {\n",
+          "previous": "const assertConsumers = async (item, projection, libraries, pkg, plain) => {\n",
+          "start": 3564
+        },
+        {
+          "current": "\tconst fixture = plain ? producer.ownedJvmPlainReceiverInstalledFixture(projection.namespace, item.consuming)\n\t\t: await producer.ownedJvmReceiverInstalledFixture(projection.namespace, projection.functions.map(fn => fn.publicName));\n",
+          "previous": "\tconst fixture = plain ? ownedJvmPlainReceiverInstalledFixture(projection.namespace, item.consuming)\n\t\t: await ownedJvmReceiverInstalledFixture(projection.namespace, projection.functions.map(fn => fn.publicName));\n",
+          "start": 3810
+        },
+        {
+          "current": "\t\tassert.deepEqual(jvm.compilerOptions, profile === \"java\" ? producer.javaCompilerOptions : producer.kotlinCompilerOptions);\n",
+          "previous": "\t\tassert.deepEqual(jvm.compilerOptions, profile === \"java\" ? javaCompilerOptions : kotlinCompilerOptions);\n",
+          "start": 4933
+        },
+        {
+          "current": "\tconst config = JSON.parse(historical(\"config/cli-package.v1.json\"));\n",
+          "previous": "\tconst config = JSON.parse(ownedPerlReceiverHistoricalBytes(\"config/cli-package.v1.json\", await readFile(\"config/cli-package.v1.json\")).toString());\n",
+          "start": 7411
+        },
+        {
+          "current": "\t\tconst bytes = historical(path);\n",
+          "previous": "\t\tconst bytes = Buffer.from(ownedPerlReceiverHistoricalBytes(path, await readFile(path), file?.sha256));\n",
+          "start": 8215
+        },
+        {
+          "current": "\tconst producer = await producerPromise;\n\tfor(const name of [\n\t\t\"createCompiledNativeModel\", \"generateCompiledNativeLeanAdapters\"\n\t\t, \"generateOwnedCPackage\", \"generateOwnedJvmPackage\"\n\t\t, \"ownedJvmAdapterSources\", \"ownedJvmPlainReceiverInstalledFixture\"\n\t\t, \"ownedJvmReceiverInstalledFixture\", \"validateKotlinCompilation\"\n\t\t, \"validatePackageSetReceipt\"\n\t]) assert.equal(typeof producer[name], \"function\", name);\n\tconst lean = historical(\"tests/fixtures/onboarding/owned-aggregates/Owned.lean\").toString();\n",
+          "previous": "\tconst lean = await readFile(\"tests/fixtures/onboarding/owned-aggregates/Owned.lean\", \"utf8\");\n",
+          "start": 9140
+        },
+        {
+          "current": "\tconst model = producer.createCompiledNativeModel(item.input, { ownedGraphs: true\n",
+          "previous": "\tconst model = createCompiledNativeModel(item.input, { ownedGraphs: true\n",
+          "start": 9842
+        },
+        {
+          "current": "\tassert.equal(model.sourceIdentity.modules.find(module => module.module === \"Owned\").source.sha256, sha256(lean + (plain ? producer.ownedJvmPlainReceiverSource : producer.ownedRustReceiverSource)));\n\tassert.equal(model.sourceIdentity.extractorSha256, sha256(historical(\"src/analyze/NativeExports.lean\")));\n",
+          "previous": "\tassert.equal(model.sourceIdentity.modules.find(module => module.module === \"Owned\").source.sha256, sha256(lean + (plain ? ownedJvmPlainReceiverSource : ownedRustReceiverSource)));\n\tassert.equal(model.sourceIdentity.extractorSha256, sha256(ownedPerlReceiverHistoricalBytes(\n\t\t\"src/analyze/NativeExports.lean\", await readFile(\"src/analyze/NativeExports.lean\"))));\n",
+          "start": 10364
+        },
+        {
+          "current": "\tconst native = producer.generateCompiledNativeLeanAdapters(model), c = producer.generateOwnedCPackage({ ...item.input, ...options });\n\tconst projection = producer.generateOwnedJvmPackage(model.bindingIr, null, options);\n",
+          "previous": "\tconst native = generateCompiledNativeLeanAdapters(model), c = generateOwnedCPackage({ ...item.input, ...options });\n\tconst projection = generateOwnedJvmPackage(model.bindingIr, null, options);\n",
+          "start": 12175
+        },
+        {
+          "current": "\tfor(const [path, source] of Object.entries(producer.ownedJvmAdapterSources(c, projection)))\n",
+          "previous": "\tfor(const [path, source] of Object.entries(ownedJvmAdapterSources(c, projection)))\n",
+          "start": 13984
+        },
+        {
+          "current": "\tproducer.validateKotlinCompilation(compiled.kotlin, projection.namespace, { ownedValues: true });\n",
+          "previous": "\tvalidateKotlinCompilation(compiled.kotlin, projection.namespace, { ownedValues: true });\n",
+          "start": 15349
+        },
+        {
+          "current": "\tconst generated = producer.generateOwnedJvmPackage(model.bindingIr, evidence, options);\n",
+          "previous": "\tconst generated = generateOwnedJvmPackage(model.bindingIr, evidence, options);\n",
+          "start": 15567
+        },
+        {
+          "current": "\tproducer.validatePackageSetReceipt(receipt);\n",
+          "previous": "\tvalidatePackageSetReceipt(receipt);\n",
+          "start": 17820
+        },
+        {
+          "current": "\tawait assertConsumers(item, projection, libraries, pkg, plain, producer);\n",
+          "previous": "\tawait assertConsumers(item, projection, libraries, pkg, plain);\n",
+          "start": 19014
+        },
+        {
+          "current": "\t\t\t\tassert.equal(companion.consumerSha256, sha256(prefix + historical(\"tests/fixtures/structured-types/\" + file).toString()));\n",
+          "previous": "\t\t\t\tassert.equal(companion.consumerSha256, sha256(prefix + await readFile(\"tests/fixtures/structured-types/\" + file, \"utf8\")));\n",
+          "start": 19860
+        }
+      ],
+      "path": "tests/helpers/owned-jvm-receiver-package-evidence.mjs",
+      "previousSha256": "2cff98954134ec2e85731b23913d267d95d8fdd1da7b83002d1e2767f48b5d76"
+    }
+  ]
+}

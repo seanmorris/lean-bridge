@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeJvmProducerReplayRepairSource, jvmProducerReplayRepairNormalizationPaths } from "./jvm-producer-replay-repair-source-history.mjs";
 import { beforeOwnedReceiverProducerReplayRepairSource, ownedReceiverProducerReplayRepairNormalizationPaths } from "./owned-receiver-producer-replay-repair-source-history.mjs";
 import { beforeOwnedTransferProducerReplayRepairSource, ownedTransferProducerReplayRepairNormalizationPaths } from "./owned-transfer-producer-replay-repair-source-history.mjs";
 import { beforeOwnedPythonBorrowProducerReplayRepairSource, ownedPythonBorrowProducerReplayRepairNormalizationPaths } from "./owned-python-borrow-producer-replay-repair-source-history.mjs";
@@ -2037,7 +2038,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...ownedReceiverProducerReplayRepairNormalizationPaths
+	...jvmProducerReplayRepairNormalizationPaths
+	, ...ownedReceiverProducerReplayRepairNormalizationPaths
 	, ...ownedTransferProducerReplayRepairNormalizationPaths
 	, ...ownedPythonBorrowProducerReplayRepairNormalizationPaths
 	, ...ownedPhpProducerReplayRepairNormalizationPaths
@@ -2824,8 +2826,14 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 			text = exact;
 		}
 	}
+	const jvmProducerReplayRepair
+		= beforeJvmProducerReplayRepairSource(path, text, expected);
+	if(sha256(jvmProducerReplayRepair) === expected)
+		return jvmProducerReplayRepair;
 	const ownedReceiverProducerReplayRepair
-		= beforeOwnedReceiverProducerReplayRepairSource(path, text, expected);
+		= beforeOwnedReceiverProducerReplayRepairSource(
+			path, jvmProducerReplayRepair, expected
+		);
 	if(sha256(ownedReceiverProducerReplayRepair) === expected)
 		return ownedReceiverProducerReplayRepair;
 	const ownedTransferProducerReplayRepair
