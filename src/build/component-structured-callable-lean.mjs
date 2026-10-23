@@ -319,7 +319,10 @@ export const componentStructuredCallableLeanSource = (abi, sourceExports, { finD
 				refusal, index, tree, signature.parameters[index], definitions, refusals.cycles, carrier)));
 			continue;
 		}
-		const fallback = defaults.expression(signature.result, refinements?.result);
+		const fallback = defaults.expression(
+			signature.result
+			, runtimeRefinements(signature, signature.refinements)?.result
+		);
 		const validators = (symbol, parameters, selected) => componentCarrierRefinementValidators({
 			symbol
 			, wrapper: `checked_${key}_${symbol.endsWith("result") ? "result" : "frame"}`

@@ -134,7 +134,14 @@ test("source-level nominal Fin trees share the structured callback ABI", () => {
 		, callback.source.extensions["lean-lang.org/refinements"]);
 	assert.equal(abi.nominalRefinements.length, 1);
 	assertComponentStructuredCallableBindings(abi, ir);
-	assert.doesNotMatch(generated.files["LeanBridgeGenerated.lean"], /LbErased\.undefined/u);
+	const lean = generated.files["LeanBridgeGenerated.lean"];
+	const key = abi.callbacks.find(type => type.id === callback.id).key;
+	// Recovery is a public refined value, while wire validators keep using the
+	// compiler-normalized erased mirror selected for this callback signature.
+	assert.match(lean, /def callbackDefault_[a-f0-9]+ : LbErased\.Structured\.Payload := \{[\s\S]*«count» := \(⟨0, by decide⟩ : _root_\.Fin 3\)/u);
+	assert.match(lean, new RegExp(`def checked_${key}_result_refinement_0[\\s\\S]*LbErased\\.Structured\\.Payload\\.check`, "u"));
+	assert.match(lean, new RegExp(`def wrap_${key}[\\s\\S]*\\| \\.none => callbackDefault_[a-f0-9]+`, "u"));
+	assert.doesNotMatch(lean, /LbErased\.undefined/u);
 	assert.match(generateJavaScriptPackage(ir)["internal/validators.mjs"], /refinement\.kind === 'record'/u);
 	const c = generateComponentStructuredCallableAdapters(abi, generated.plan.exports);
 	const symbol = abi.exports.find(item => item.bindingId === declaration.id).symbol;
