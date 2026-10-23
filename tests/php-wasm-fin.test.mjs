@@ -64,6 +64,7 @@ import "./helpers/owned-checked-record-javascript-retention-source-history-tests
 import "./helpers/callback-subtype-hosted-archive-foundation-source-history-tests.mjs";
 import "./helpers/owned-checked-record-evidence-contract-source-history-tests.mjs";
 import "./helpers/owned-subtype-hosted-archive-source-history-tests.mjs";
+import "./helpers/owned-subtype-python-dependency-repair-source-history-tests.mjs";
 import "./helpers/owned-subtype-documentation-transaction-source-history-tests.mjs";
 import "./helpers/callback-subtype-history-traversal-repair-source-history-tests.mjs";
 import "./helpers/owned-subtype-perl-identity-repair-source-history-tests.mjs";

@@ -1,0 +1,103 @@
+{
+  "additions": [
+    {
+      "currentSha256": "d749151204c4a3147390372262fa00da68dc6f387e060d279f557d2dda7bc36f",
+      "path": "scripts/update-owned-subtype-python-dependency-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "bd417a9dff6bf1cb7d592e6ad253aeacafbe1b12755b89bb87c08961ca48cd36",
+      "path": "tests/helpers/owned-subtype-python-dependency-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "8e259480387a2f636255b4fc2cb8c016e181c69d691e8ea80ada6245389c5b5a",
+      "path": "tests/helpers/owned-subtype-python-dependency-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "3eea5ff29e9389e694f77f63cc6822293666d131",
+  "integrationUpdates": [
+    {
+      "currentSha256": "12e84674d586712a046d5e674106242a7b83f198a60f3a62e551afaa6bed7f2a",
+      "edits": [
+        {
+          "current": "import { beforeOwnedSubtypePythonDependencyRepairSource, ownedSubtypePythonDependencyRepairChangedPaths } from \"./owned-subtype-python-dependency-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 12635
+        },
+        {
+          "current": "\t, ...ownedSubtypePythonDependencyRepairChangedPaths\n",
+          "previous": "",
+          "start": 171635
+        },
+        {
+          "current": "\tconst ownedSubtypePythonDependencyRepair\n\t\t= beforeOwnedSubtypePythonDependencyRepairSource(path, text, expected);\n\tif(sha256(ownedSubtypePythonDependencyRepair) === expected)\n\t\treturn ownedSubtypePythonDependencyRepair;\n\ttext = ownedSubtypePythonDependencyRepair;\n",
+          "previous": "",
+          "start": 204100
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "9bd9f0411b6ea629e052f269dc99dacd4315b1ada18aac43c4ac4240832ff0c4"
+    },
+    {
+      "currentSha256": "e00604127e64eaef9f8056cb8abc0de7dc86e5484b4c5975f61d373f4af32a24",
+      "edits": [
+        {
+          "current": "import \"./helpers/owned-subtype-python-dependency-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 4510
+        }
+      ],
+      "path": "tests/php-wasm-fin.test.mjs",
+      "previousSha256": "92782d7e2f40008a464bb13eed04343c545fb2e9a7908ce670575d661561778c"
+    }
+  ],
+  "milestone": "owned-subtype-python-dependency-repair-v1",
+  "predecessorCommit": "38fbc3ed4588d3bb0de7b416c6047489ebbb8874",
+  "schemaVersion": 1,
+  "scope": "Resolve the owned-Subtype Python wheel's declared typing_extensions dependency from a pinned offline feed before source-free execution.",
+  "updates": [
+    {
+      "currentSha256": "a0b5d139369c166054286289a8a2c49cf71de6046a09e268cf69f7086e179bd0",
+      "edits": [
+        {
+          "current": "      - name: Prepare the reviewed Python 3.11 dependency wheel\n        timeout-minutes: 5\n        shell: bash\n        run: |\n          set -euo pipefail\n          mkdir -p build/python-typing-wheels/4.16.0\n          python -m pip download --disable-pip-version-check --no-deps --only-binary=:all: \\\n            --dest build/python-typing-wheels/4.16.0 typing_extensions==4.16.0\n",
+          "previous": "",
+          "start": 1776
+        }
+      ],
+      "path": ".github/workflows/owned-subtype-languages.yml",
+      "previousSha256": "2c21e03877e59543825feafc5c1f4429461a2805826bc63736f0999962c2449f"
+    },
+    {
+      "currentSha256": "e7561b30c2b2a940d4fd82af8aed18837e43809df37bcf96b3d9414b5ba51680",
+      "edits": [
+        {
+          "current": "import { installPythonWheel } from \"./helpers/python-wheel-install.mjs\";\n",
+          "previous": "",
+          "start": 1752
+        },
+        {
+          "current": "const installPython = async ({ baseCommand, root, archive }) => {\n\tconst { command, ...context } = await installPythonWheel({\n\t\troot, archive, python: baseCommand\n\t});\n\treturn { context\n\t\t, run: (args, cwd, environment) => runCopied(command\n\t\t\t, [\"-I\", \"-B\", ...args], cwd, environment) };\n};\n",
+          "previous": "",
+          "start": 2523
+        },
+        {
+          "current": "\tassert.equal(generated.python.requiresTypeAliases, true);\n",
+          "previous": "",
+          "start": 3796
+        },
+        {
+          "current": "\t\t, \"typing_extensions==4.16.0\"\n\t\t, \"build/python-typing-wheels/4.16.0\"\n",
+          "previous": "",
+          "start": 5429
+        },
+        {
+          "current": "\t\t\t, fixture: {\n\t\t\t\tsource: () => sources[profile]\n\t\t\t\t, success: `owned-subtype-${profile}`\n\t\t\t\t, ...(profile === \"python\" ? { installPython } : {})\n\t\t\t}\n\t\t};\n",
+          "previous": "\t\t\t, fixture: { source: () => sources[profile], success: `owned-subtype-${profile}` } };\n",
+          "start": 13726
+        }
+      ],
+      "path": "tests/owned-subtype-language-packaging.test.mjs",
+      "previousSha256": "1c11e069bb7a6234f5da0892bb8eaf205215632c0912d1da785688c14597ddc6"
+    }
+  ]
+}
