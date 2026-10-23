@@ -902,6 +902,7 @@ const profileManifest = Object.freeze({
 		, "type-corpus-reviewed-native"
 		, "type-corpus-reviewed-wasm"
 		, "type-surface-docs"
+		, "type-surface-evidence-tracked"
 		, "test-profiles"
 		, "time-to-package"
 		, "toolchain-preflight"
