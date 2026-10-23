@@ -105,7 +105,7 @@ export const observeNominalSubtypeEntryNpm = async ({ directory, output, route, 
 	const rows = JSON.parse(run.stdout);
 	const expectedEntries = nominalSubtypeEntryExpected();
 	const { observed, counts } = accountNominalSubtypeEntry(run.stderr, rows, expectedEntries);
-	const packageRoot = join(consumer, "node_modules", nominalSubtypeName), wasmRoot = join(packageRoot, "wasm");
+	const packageRoot = join(consumer, "node_modules", nominalSubtypeName), wasmRoot = join(packageRoot, "internal", "wasm");
 	const wasmNames = (await readdir(wasmRoot)).filter(name => name.endsWith(".wasm"));
 	assert.equal(wasmNames.length, 1, "one installed side module");
 	const wasmBytes = await readFile(join(wasmRoot, wasmNames[0]));
