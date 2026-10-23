@@ -93,6 +93,29 @@ const hasZeroPayloadMatrixEvidence = document =>
 	zeroPayloadMatrixEvidenceIds.every(id =>
 		document.evidence.some(item => item.id === id));
 const zeroPayloadMatrixReference = "[Hosted zero-payload checked-record acceptance](../evidence/zero-payload-checked-record-matrix-closure-20261022.md) covers all seventeen consumer profiles through eleven independently retained host archives and all four ordinary/reviewed full/result-only routes. The exact copied parameter and result cells distinguish proof-only Witness, Unit-bearing Token, plain empty Marker, Option presence, arrays and active or inactive Mark branches. The matrix contains 44 route evidence identities and promotes 68 profile/path/position cells. It does not promote fields, callbacks, owned positions or other zero-payload shapes, and it never infers one host from another.";
+const dependentCheckedRecordMatrixLanes = Object.freeze([
+	"browser", "native", "dotnet", "jvm", "php", "php-wasm"
+	, "python", "ruby", "rust", "perl", "wit"
+]);
+const dependentCheckedRecordMatrixRoutes = Object.freeze([
+	"ordinary-source", "reviewed-ir"
+	, "result-only-ordinary-source", "result-only-reviewed-ir"
+]);
+export const dependentCheckedRecordMatrixEvidenceIds = Object.freeze(
+	dependentCheckedRecordMatrixLanes.flatMap(lane =>
+		dependentCheckedRecordMatrixRoutes.map(route =>
+			`dependent-checked-record-${lane}-${route}-hosted-installed`))
+);
+export const dependentCheckedRecordMatrixProfiles = Object.freeze([
+	"node-javascript", "node-typescript", "browser-javascript"
+	, "browser-react", "browser-worker", "c", "cpp", "dotnet", "java"
+	, "kotlin", "php-native", "php-wasm", "python", "ruby", "rust"
+	, "perl", "wit-wasi"
+]);
+const hasDependentCheckedRecordMatrixEvidence = document =>
+	dependentCheckedRecordMatrixEvidenceIds.every(id =>
+		document.evidence.some(item => item.id === id));
+const dependentCheckedRecordMatrixReference = "[Hosted dependent checked-record acceptance](../evidence/dependent-checked-record-promotion.md) covers top-level copied parameters and results in all seventeen consumer profiles through eleven independently retained host archives and all four ordinary/reviewed full/result-only routes. The proof-free host value carries `bound` and `below : Fin bound` as payload fields. Full packages rebuild host inputs through `DependentRecords.mkDependent`, reject `below >= bound` before Lean code runs, preserve rejected caller values and recover on a later valid call. Fields, callbacks, owned positions, other dependent field kinds, nested or recursive dependent records and open or opaque indices remain separate work.";
 const phpWasmRefinementEntryBoundary = `PHP-Wasm refinement support is established by unmodified prepared packages.
 The separate entry-measurement probes instrument fixture packages only: their
 24 copied, owned and indexed routes count validator, constructor, adapter and
@@ -121,6 +144,17 @@ const zeroPayloadMatrixGuide = (document, profiles, reference) => {
 		, "evidence/zero-payload-checked-record-matrix-closure-20261022.md");
 	return `[Hosted zero-payload checked-record acceptance](${evidence}) covers ${selected.map(profile => names[profile]).join(", ")} in all four ordinary/reviewed full/result-only package routes from the independently retained host archives that name those profiles. The tested copied parameters and results distinguish proof-only Witness, Unit-bearing Token, plain empty Marker, Option presence, arrays and both Mark branches. Fields, callback positions, owned positions and other zero-payload shapes remain outside this evidence.`;
 };
+const dependentCheckedRecordMatrixGuide = (
+	document, profiles, reference
+) => {
+	if(!hasDependentCheckedRecordMatrixEvidence(document)) return null;
+	const selected = profiles.filter(profile =>
+		dependentCheckedRecordMatrixProfiles.includes(profile));
+	if(selected.length === 0) return null;
+	const evidence = reference.replace(/reference\/types\.md$/u
+		, "evidence/dependent-checked-record-promotion.md");
+	return `[Hosted dependent checked-record acceptance](${evidence}) covers ${selected.map(profile => names[profile]).join(", ")} in all four ordinary/reviewed full/result-only package routes from the independently retained host archives that name those profiles. The proof-free host value carries the tested runtime bound and bounded value. Full packages validate inputs with the selected dependent constructor before Lean execution; standalone result-only packages expose Lean-produced values without checked-input metadata. Fields, callbacks, owned positions, other dependent field kinds, nested or recursive dependent records and open or opaque indices remain outside this evidence.`;
+};
 const nestedCheckedRecordPerlMarker = "[PHP-Wasm checked-record packages]";
 const zeroPayloadNativeMarker = "[Checked-record browser packages]";
 const nestedCheckedRecordPerlPending = "targets other than npm, C, C++, .NET, Java and Kotlin need separate nested acceptance";
@@ -148,7 +182,7 @@ const inheritedCheckedRecord = "[Inherited checked-record acceptance](../evidenc
 const recursiveCheckedRecordMarker = inheritedCheckedRecord;
 const recursiveCheckedRecord = `${inheritedCheckedRecord} [Recursive checked-record acceptance](../evidence/recursive-checked-record-promotion-20261018.md) covers finite self-recursive Packet and mutually recursive Envelope/Step graphs across all seventeen profiles and both author routes. The retained packages preserve nominal identities and aliases, Array/Option carriers and active branches; validate selected checked fields and Fin bounds; erase proofs; preserve rejected inputs; recover on later valid calls; and return constructor-free copied results. Other recursive graph shapes, value-carrying receiver-dependent fields, other index kinds, open dependent or zero-payload records, callbacks, owned positions, retained identity and cyclic host-object inputs remain separate work.`;
 const checkedRecordValueIndexBrowserMarker = "[Nested checked-record npm/browser packages]";
-const checkedRecordValueIndexBrowser = "[Hosted npm/browser checked-record value-index acceptance](../evidence/checked-record-value-index-browser-promotion-20261019.md) adds closed Bool, String and Nat indices at top-level copied parameters and results across Node JavaScript, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers on both source routes. Full and standalone result-only packages are retained. The [complete hosted value-index matrix](../evidence/checked-record-value-index-matrix-promotion-20261020.md) establishes the same boundary in all 17 consumer profiles. Open or opaque indices, other index kinds, fields, callbacks, owned positions, value-carrying dependent payloads and zero-payload checked records remain separate work.";
+const checkedRecordValueIndexBrowser = "[Hosted npm/browser checked-record value-index acceptance](../evidence/checked-record-value-index-browser-promotion-20261019.md) adds closed Bool, String and Nat indices at top-level copied parameters and results across Node JavaScript, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers on both source routes. Full and standalone result-only packages are retained. The [complete hosted value-index matrix](../evidence/checked-record-value-index-matrix-promotion-20261020.md) establishes the same boundary in all 17 consumer profiles. Open or opaque indices, other index kinds, fields, callbacks and owned positions remain separate work.";
 const callbackCheckedRecordMarker = "All seventeen profiles have separate installed acceptance for this tested nested copied boundary.";
 const callbackCheckedRecord = "[Hosted synchronous callback checked-record acceptance](../evidence/callback-checked-record-promotion-20261023.md) adds proof-free host callback arguments and replies and returned Lean closure inputs and results in all sixteen non-PHP-Wasm profiles on both source routes. Host-produced values run the selected nested-field and record constructors with exact typed recovery; Lean-produced values project payloads without proof fields. [Hosted copied PHP-Wasm acceptance](../evidence/callback-refinements-php-wasm-promotion-20261023.md) establishes Interval and Weighted callbacks in twelve Node and Chromium arrangements per route; its companion Fin corpus covers all four callback and returned-closure directions. [Local owned PHP-Wasm acceptance](../evidence/owned-checked-record-php-wasm-local-qualification-20261022.md) establishes the tested owned `Claim` callback and returned closure on both source routes, including rejection of invalid explicit recovery before callback entry. Retained or asynchronous callbacks, recursive owned records and unarchived indexed or recursive callback combinations remain separate work.";
 
@@ -243,6 +277,8 @@ export function renderTypeTable({ document, ...contracts }, profiles, reference)
 		document, profiles, reference);
 	const zeroPayloadMatrix = zeroPayloadMatrixGuide(
 		document, profiles, reference);
+	const dependentCheckedRecordMatrix = dependentCheckedRecordMatrixGuide(
+		document, profiles, reference);
 	return [
 		"### Type conversions"
 		, ""
@@ -250,6 +286,8 @@ export function renderTypeTable({ document, ...contracts }, profiles, reference)
 		, ""
 		, `The [conversion rules](${reference}#full-type-surface) cover ranges, copying, ownership, nulls and errors. The [audit inventory](${reference.replace(/reference\/types\.md$/u, "type-surface.v1.json")}) records commands, source hashes, limitations and implementation owners.`
 		, ...(zeroPayloadMatrix ? ["", zeroPayloadMatrix] : [])
+		, ...(dependentCheckedRecordMatrix
+			? ["", dependentCheckedRecordMatrix] : [])
 		, ...(callbackSubtype ? ["", callbackSubtype] : [])
 		, ""
 		, table(["Lean type or source form", "Host representation", "Current evidence", "Conversion rules"], rows)
@@ -327,7 +365,7 @@ export async function renderTypeDocuments({ root, inventory = null })
 			.replace(zeroPayloadNativeMarker
 				, `${hasZeroPayloadMatrixEvidence(document) ? `${zeroPayloadMatrixReference} ` : ""}${zeroPayloadNativeMarker}`)
 			.replace(checkedRecordValueIndexBrowserMarker
-				, `${checkedRecordValueIndexBrowser} ${checkedRecordValueIndexBrowserMarker}`)
+				, `${checkedRecordValueIndexBrowser} ${hasDependentCheckedRecordMatrixEvidence(document) ? `${dependentCheckedRecordMatrixReference} ` : ""}${checkedRecordValueIndexBrowserMarker}`)
 			.replace(nestedCheckedRecordPerlMarker
 				, `${nestedCheckedRecordPerl} ${nestedCheckedRecordPerlMarker}`)
 			.replace(nestedCheckedRecordPerlPending

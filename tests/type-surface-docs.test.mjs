@@ -13,10 +13,15 @@ import test from "node:test";
 import { docPages } from "../site/registry.mjs";
 import { readTypeSurface, typeSurfaceCells } from "../src/adoption/type-surface.mjs";
 import {
-	cellTypeCoverage, renderTypeDocuments, renderTypeTable, replaceTypeSection
+	cellTypeCoverage, dependentCheckedRecordMatrixEvidenceIds
+	, dependentCheckedRecordMatrixProfiles, renderTypeDocuments
+	, renderTypeTable, replaceTypeSection
 	, typeGuideProfiles, zeroPayloadMatrixEvidenceIds
 	, zeroPayloadMatrixProfiles
 } from "../scripts/generate-type-docs.mjs";
+import {
+	auditTypeSurfaceArchivePins, reconcileTypeSurfaceArchivePins
+} from "./helpers/type-surface-archive-pins.mjs";
 import { alpha } from "../poc/lean-link-spike/descriptors.mjs";
 import { generatePhpBindingPackage } from "../src/backends/php/generate.mjs";
 import { generateRustBindingPackage } from "../src/backends/rust/generate.mjs";
@@ -69,8 +74,27 @@ const callbackCheckedRecordLanes = Object.freeze({
 	, "wit-wasi": ["wit-wasi"]
 });
 
+test("immutable archive pins agree with their retained indices", async () => {
+	assert.deepEqual(await auditTypeSurfaceArchivePins(document), []);
+	const candidate = structuredClone(document);
+	const archivePath
+		= "docs/evidence/zero-payload-checked-record-native-20261021/sources/archiver/src/analyze/owned-metadata-graph.mjs";
+	const evidence = candidate.evidence.find(item => item.files.some(file =>
+		file.path === archivePath));
+	const file = evidence.files.find(item => item.path === archivePath);
+	file.sha256 = "0".repeat(64);
+	const mismatches = await auditTypeSurfaceArchivePins(candidate, {
+		paths: [archivePath]
+	});
+	assert.equal(mismatches.length, 1);
+	assert.equal(mismatches[0].path, file.path);
+	assert.equal(mismatches[0].authenticatedByIndex, true);
+	const repaired = reconcileTypeSurfaceArchivePins(candidate, mismatches);
+	assert.deepEqual(repaired.inventory, document);
+});
+
 test("every consumer table is generated and includes all 48 source forms exactly once", async () => {
-	const rendered = await renderTypeDocuments({ root });
+	const rendered = await renderTypeDocuments({ root, inventory });
 	const reference = await readFile(path.join(root, "docs/reference/types.md"), "utf8");
 	assert.match(reference, /^# Types and values\n/u);
 	assert.equal(reference.split("## Full type surface\n\n")[1]?.split("\n\n## Generated host types\n")[0], rendered.reference);
@@ -179,7 +203,53 @@ test("zero-payload matrix closure binds every lane, route and documented boundar
 	}
 });
 
-test("checked records close copied positions and hosted callbacks outside PHP-Wasm", async () => {
+test("dependent checked-record matrix binds every route and documented boundary"
+	, async () => {
+	assert.equal(dependentCheckedRecordMatrixEvidenceIds.length, 44);
+	assert.equal(new Set(dependentCheckedRecordMatrixEvidenceIds).size, 44);
+	assert.equal(dependentCheckedRecordMatrixProfiles.length, 17);
+	assert.deepEqual(new Set(dependentCheckedRecordMatrixProfiles)
+		, new Set(document.profiles.map(profile => profile.id)));
+	assert.ok(dependentCheckedRecordMatrixEvidenceIds.every(id =>
+		document.evidence.some(item => item.id === id)));
+	const evidence = new Set(dependentCheckedRecordMatrixEvidenceIds);
+	const promoted = cells.filter(cell => Object.values(cell.stages)
+		.some(stage => stage.evidence.some(id => evidence.has(id))));
+	assert.equal(promoted.length, 68);
+	assert.deepEqual(new Set(promoted.map(cell => cell.shape))
+		, new Set(["checked-record"]));
+	assert.deepEqual(new Set(promoted.map(cell => cell.position))
+		, new Set(["parameter", "result"]));
+	assert.deepEqual(new Set(promoted.map(cell => cell.profile))
+		, new Set(dependentCheckedRecordMatrixProfiles));
+	const rendered = await renderTypeDocuments({ root, inventory });
+	const link = /dependent-checked-record-promotion\.md/u;
+	for(const [path, source] of Object.entries(rendered.documents))
+	{
+		assert.match(source, link, path);
+		assert.match(source
+			, /Fields, callbacks, owned positions, other dependent field kinds/u
+			, path);
+	}
+	assert.match(rendered.reference, link);
+	assert.match(rendered.reference, /all seventeen consumer profiles/u);
+	assert.doesNotMatch(rendered.reference
+		, /value-carrying dependent payloads.*remain separate work/u);
+	const incomplete = {
+		document: structuredClone(document), ...contracts
+	};
+	const omitted = dependentCheckedRecordMatrixEvidenceIds[0];
+	const replacement = `${omitted}-omitted`;
+	incomplete.document = JSON.parse(JSON.stringify(incomplete.document)
+		.replaceAll(`"${omitted}"`, `"${replacement}"`));
+	const refused = await renderTypeDocuments({ root, inventory: incomplete });
+	assert.doesNotMatch(refused.reference, link);
+	for(const source of Object.values(refused.documents))
+		assert.doesNotMatch(source, link);
+	}
+);
+
+test("checked records close copied positions and hosted callbacks", async () => {
 	const laneEntries = Object.entries(nestedCheckedRecordLanes);
 	const profiles = laneEntries.flatMap(([, values]) => values);
 	assert.equal(new Set(profiles).size, 17);
@@ -229,8 +299,9 @@ test("checked records close copied positions and hosted callbacks outside PHP-Wa
 	{
 		if(cell.profile === "php-wasm")
 		{
-			assert.equal(stage.state, "unreviewed", cell.id);
-			assert.deepEqual(stage.evidence, [], cell.id);
+			assert.equal(stage.state, "passed", `${cell.id} ${stage.note}`);
+			assert.ok(stage.evidence.includes(
+				"callback-refinements-php-wasm-hosted-installed"), cell.id);
 			continue;
 		}
 		const lane = callbackLaneByProfile.get(cell.profile);
@@ -270,25 +341,19 @@ test("checked records close copied positions and hosted callbacks outside PHP-Wa
 			assert.ok(guide.includes(
 				`nested-checked-record-${lane}-20261016/index.json`), guidePath);
 			assert.ok(guide.includes(
-				`actions/workflows/nested-checked-record-${lane}.yml`), guidePath);
+					`actions/workflows/nested-checked-record-${lane}.yml`), guidePath);
 			const mapping = row(guide, "Checked records and closed Nat indices");
-			if(guidePath === "docs/php.md")
-			{
-				assert.match(mapping, /Native PHP: Installed checks passed/u);
-				assert.match(mapping, /PHP-Wasm: Installed checks passed \(input, result, field\); Not audited \(callback input, callback result\)/u);
-			}
-			else
-			{
-				assert.match(mapping, /Installed checks passed/u, guidePath);
-				assert.doesNotMatch(mapping
-					, /Not audited \(callback input, callback result\)/u, guidePath);
-			}
+			assert.match(mapping, /Installed checks passed/u, guidePath);
+			assert.doesNotMatch(mapping
+				, /Not audited \(callback input, callback result\)/u, guidePath);
 		}
 	}
 	const reference = await readFile("docs/reference/types.md", "utf8");
 	assert.match(reference
 		, /callback checked-record acceptance.*all sixteen non-PHP-Wasm profiles/su);
 	assert.match(reference
+		, /Hosted copied PHP-Wasm acceptance.*establishes Interval and Weighted callbacks/su);
+	assert.doesNotMatch(reference
 		, /PHP-Wasm callback positions.*remain separate work/su);
 });
 

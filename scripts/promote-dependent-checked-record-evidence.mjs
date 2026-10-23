@@ -10,6 +10,7 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { readFile, writeFile } from "node:fs/promises";
 import { sha256 } from "../src/capsule/node.mjs";
+import { generateReferenceDocs } from "./generate-reference-docs.mjs";
 import {
 	dependentCheckedRecordPromotionPath
 	, dependentCheckedRecordPromotionPinBaseline
@@ -25,7 +26,11 @@ assert.equal(process.argv.length, 2, "This promotion command accepts no argument
 const verifiers = await loadDependentCheckedRecordVerifiers();
 const references = await dependentCheckedRecordPromotionReferences(verifiers);
 const path = "docs/type-surface.v1.json";
-const inventory = JSON.parse(await readFile(path, "utf8"));
+const [inventory, irSchema, consumers] = await Promise.all([
+	readFile(path, "utf8").then(JSON.parse)
+	, readFile("schema/binding-ir.schema.json", "utf8").then(JSON.parse)
+	, readFile("docs/consumer-support.v1.json", "utf8").then(JSON.parse)
+]);
 const promoted = promoteDependentCheckedRecords(inventory, references);
 const summary = renderDependentCheckedRecordPromotion(references);
 const git = arguments_ => execFileSync("git", arguments_, {
@@ -75,4 +80,8 @@ await Promise.all([
 	writeFile(path, JSON.stringify(reconciled.inventory, null, 2) + "\n")
 	, writeFile(dependentCheckedRecordPromotionPath, summary)
 ]);
+await generateReferenceDocs({
+	root: process.cwd(), write: true
+	, inventory: { document: reconciled.inventory, irSchema, consumers }
+});
 process.stdout.write(`Added hosted evidence to 68 dependent checked-record cells from eleven immutable archives and reconciled ${reconciled.refreshed} current-source pins.\n`);
