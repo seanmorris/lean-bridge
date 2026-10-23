@@ -123,18 +123,21 @@ export const generateComponentStructuredCallableAdapters = (abi, exports = []) =
 				, `    bridge_callable_dispatch((uint32_t)token, "${signature.key}", frame);`, "  }");
 		}
 		lines.push("  bridge_recursive_frame_clear(frame);", "  return result;", "}", "");
-		if(direction === "host") lines.push(`lean_object *${symbol}_recovery(size_t token) {`
-			, `  struct { uint32_t version, bytes, status, argc; bridge_scalar_slot result, args[${signature.parameters.length}]; } storage = {0};`
-			, "  bridge_scalar_frame *frame = (bridge_scalar_frame *)&storage;"
-			, `  frame->version = 8; frame->bytes = sizeof(storage); frame->argc = ${signature.parameters.length};`
-			, budget, "  uint32_t status = bridge_recursive_arena_open(frame, &budget.owner);"
-			, `  frame->status = status ? status : ${componentStructuredCallableRecoveryStatus};`
-			, `  uint32_t dispatched = bridge_callable_dispatch((uint32_t)token, "${signature.key}", frame);`
-			, "  if (!status) status = dispatched ? dispatched : frame->status;"
-			, "  if (!status) status = " + walker(signature.result) + "_validate(&frame->result, 0, &budget);"
-			, `  lean_object *result = status ? lean_alloc_array(0, 0) : ${walker(signature.result)}_decode(&frame->result);`);
-		if(constrained) lines.push("  if (!status && (!lean_is_array(result) || lean_array_size(result) != 1)) { lean_dec(result); result = lean_alloc_array(0, 0); status = 5; }");
-		lines.push("  bridge_recursive_frame_clear(frame);", "  return result;", "}", "");
+		if(direction === "host")
+		{
+			lines.push(`lean_object *${symbol}_recovery(size_t token) {`
+				, `  struct { uint32_t version, bytes, status, argc; bridge_scalar_slot result, args[${signature.parameters.length}]; } storage = {0};`
+				, "  bridge_scalar_frame *frame = (bridge_scalar_frame *)&storage;"
+				, `  frame->version = 8; frame->bytes = sizeof(storage); frame->argc = ${signature.parameters.length};`
+				, budget, "  uint32_t status = bridge_recursive_arena_open(frame, &budget.owner);"
+				, `  frame->status = status ? status : ${componentStructuredCallableRecoveryStatus};`
+				, `  uint32_t dispatched = bridge_callable_dispatch((uint32_t)token, "${signature.key}", frame);`
+				, "  if (!status) status = dispatched ? dispatched : frame->status;"
+				, "  if (!status) status = " + walker(signature.result) + "_validate(&frame->result, 0, &budget);"
+				, `  lean_object *result = status ? lean_alloc_array(0, 0) : ${walker(signature.result)}_decode(&frame->result);`);
+			if(constrained) lines.push("  if (!status && (!lean_is_array(result) || lean_array_size(result) != 1)) { lean_dec(result); result = lean_alloc_array(0, 0); status = 5; }");
+			lines.push("  bridge_recursive_frame_clear(frame);", "  return result;", "}", "");
+		}
 		if(direction === "host") lines.push(`lean_object *${symbol}_reject(size_t token, lean_object *recovery) {`
 			, `  struct { uint32_t version, bytes, status, argc; bridge_scalar_slot result, args[${signature.parameters.length}]; } storage = {0};`
 			, "  bridge_scalar_frame *frame = (bridge_scalar_frame *)&storage;"

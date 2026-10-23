@@ -194,6 +194,14 @@ test("structured compiler admission matches independent acyclic, recursive and m
 		assert.doesNotMatch(generated.files["LeanBridgeGenerated.lean"], /ClosureCarry|unsafe|sorry|panic!/);
 		const c = generateComponentStructuredCallableAdapters(abi);
 		assert.doesNotMatch(c, /lean_ctor_get|lean_ctor_set|lean_alloc_ctor|lean_apply_/);
+		let depth = 0;
+		for(const character of c)
+		{
+			depth += character === "{" ? 1 : character === "}" ? -1 : 0;
+			assert.ok(depth >= 0, "generated C closes no more braces than it opens");
+		}
+		assert.equal(depth, 0);
+		assert.doesNotMatch(c, /^\}\n\n {2}bridge_recursive_frame_clear\(frame\);/mu);
 		assert.match(c, /frame->version = 8/);
 		assert.match(c, /frame->status = status;\n +bridge_callable_dispatch/);
 		for(const item of abi.exports)
