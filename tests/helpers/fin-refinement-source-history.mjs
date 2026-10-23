@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeWitRecursiveProducerReplayRepairSource, witRecursiveProducerReplayRepairNormalizationPaths } from "./wit-recursive-producer-replay-repair-source-history.mjs";
 import { beforeJvmProducerReplayRepairSource, jvmProducerReplayRepairNormalizationPaths } from "./jvm-producer-replay-repair-source-history.mjs";
 import { beforeOwnedReceiverProducerReplayRepairSource, ownedReceiverProducerReplayRepairNormalizationPaths } from "./owned-receiver-producer-replay-repair-source-history.mjs";
 import { beforeOwnedTransferProducerReplayRepairSource, ownedTransferProducerReplayRepairNormalizationPaths } from "./owned-transfer-producer-replay-repair-source-history.mjs";
@@ -2038,7 +2039,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...jvmProducerReplayRepairNormalizationPaths
+	...witRecursiveProducerReplayRepairNormalizationPaths
+	, ...jvmProducerReplayRepairNormalizationPaths
 	, ...ownedReceiverProducerReplayRepairNormalizationPaths
 	, ...ownedTransferProducerReplayRepairNormalizationPaths
 	, ...ownedPythonBorrowProducerReplayRepairNormalizationPaths
@@ -2826,8 +2828,14 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 			text = exact;
 		}
 	}
+	const witRecursiveProducerReplayRepair
+		= beforeWitRecursiveProducerReplayRepairSource(path, text, expected);
+	if(sha256(witRecursiveProducerReplayRepair) === expected)
+		return witRecursiveProducerReplayRepair;
 	const jvmProducerReplayRepair
-		= beforeJvmProducerReplayRepairSource(path, text, expected);
+		= beforeJvmProducerReplayRepairSource(
+			path, witRecursiveProducerReplayRepair, expected
+		);
 	if(sha256(jvmProducerReplayRepair) === expected)
 		return jvmProducerReplayRepair;
 	const ownedReceiverProducerReplayRepair

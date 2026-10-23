@@ -1,0 +1,381 @@
+{
+  "additions": [
+    {
+      "currentSha256": "b0c3e4ff8e54b6420a1b84516d3bf3c10e15cb6b5eb1c7fc95d2281361c04e0c",
+      "path": "scripts/update-wit-recursive-producer-replay-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "72dce9410c98daf42689781825c0e95c77198094a14b253dada16490f7bc0a40",
+      "path": "tests/helpers/wit-recursive-producer-replay-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "7d199bf2a26a02435ee5199a8f0f6e985c18441cc6b46ec3efd1c1a3dd341f3d",
+      "path": "tests/helpers/wit-recursive-producer-replay-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "55e300ac3cf1c93c3d160bbea64653719174f36e",
+  "integrationUpdates": [
+    {
+      "currentSha256": "c4541a60de18300ab97b1fe8987019db132789bfe2951f9ec40e9c6aa243d46b",
+      "edits": [
+        {
+          "current": "import { beforeWitRecursiveProducerReplayRepairSource, witRecursiveProducerReplayRepairNormalizationPaths } from \"./wit-recursive-producer-replay-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...witRecursiveProducerReplayRepairNormalizationPaths\n\t, ...jvmProducerReplayRepairNormalizationPaths\n",
+          "previous": "\t...jvmProducerReplayRepairNormalizationPaths\n",
+          "start": 162785
+        },
+        {
+          "current": "\tconst witRecursiveProducerReplayRepair\n\t\t= beforeWitRecursiveProducerReplayRepairSource(path, text, expected);\n\tif(sha256(witRecursiveProducerReplayRepair) === expected)\n\t\treturn witRecursiveProducerReplayRepair;\n",
+          "previous": "",
+          "start": 199866
+        },
+        {
+          "current": "\t\t= beforeJvmProducerReplayRepairSource(\n\t\t\tpath, witRecursiveProducerReplayRepair, expected\n\t\t);\n",
+          "previous": "\t\t= beforeJvmProducerReplayRepairSource(path, text, expected);\n",
+          "start": 200111
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "a8f2c90e3b595dcdd7d2eac85a813c7fa01136a89e9ed3279ec65deb82166a79"
+    },
+    {
+      "currentSha256": "66f5a1663f93e3c11e323302ceb7440c3d535d973b6b2f6135e9b365727f475c",
+      "edits": [
+        {
+          "current": "import \"./helpers/wit-recursive-producer-replay-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 1148
+        }
+      ],
+      "path": "tests/wit-recursive-callable-faults.test.mjs",
+      "previousSha256": "0e4e5aa3a1c3a85376fa88e059eafc2da10fbba2ac4bb0d785022ae4f74854f8"
+    }
+  ],
+  "milestone": "wit-recursive-producer-replay-repair-source-v1",
+  "predecessorCommit": "7f0583c5d17f806d22ae5d758509cf2757ddf2a3",
+  "schemaVersion": 1,
+  "scope": "The frozen recursive WIT execution, package, probe and predecessor evidence is replayed with the exact producer modules, repository reads and fixture bytes rather than current compiler semantics.",
+  "updates": [
+    {
+      "currentSha256": "c75f9a85965094028c30e2694d7ddddbb378e14d73c7a9f26c895d3c741a6af4",
+      "edits": [
+        {
+          "current": "import { rmSync } from \"node:fs\";\nimport { mkdir, mkdtemp, writeFile } from \"node:fs/promises\";\n",
+          "previous": "import { mkdir, mkdtemp, rm } from \"node:fs/promises\";\n",
+          "start": 160
+        },
+        {
+          "current": "import ts from \"typescript\";\n",
+          "previous": "",
+          "start": 348
+        },
+        {
+          "current": "const moduleDirectories = new Set();\nprocess.once(\"exit\", () => {\n\tfor(const directory of moduleDirectories)\n\t\trmSync(directory, { recursive: true, force: true });\n});\n",
+          "previous": "",
+          "start": 572
+        },
+        {
+          "current": "const sourcePathPattern = /^(?:config|docs|nix|poc|schema|scripts|site|src|tests)\\/(?:[^/]+\\/)*[^/]+\\.(?:json|mjs)$/u;\nconst producerReadShims = new Map([\n\t[\"node:fs\", \".producer-source-read-sync.mjs\"]\n\t, [\"node:fs/promises\", \".producer-source-read.mjs\"]\n]);\nconst relativeSpecifier = (from, to) => {\n\tconst path = posix.relative(posix.dirname(from), to);\n\treturn path.startsWith(\".\") ? path : `./${path}`;\n};\nconst redirectSourceReads = (source, path) => {\n\tconst file = ts.createSourceFile(path, source, ts.ScriptTarget.Latest, true, ts.ScriptKind.JS);\n\tconst edits = [];\n\tconst visit = node => {\n\t\tif(ts.isImportDeclaration(node)\n\t\t\t&& ts.isStringLiteralLike(node.moduleSpecifier)\n\t\t\t&& producerReadShims.has(node.moduleSpecifier.text)) edits.push({\n\t\t\t\tstart: node.moduleSpecifier.getStart(file)\n\t\t\t\t, end: node.moduleSpecifier.getEnd()\n\t\t\t\t, replacement: JSON.stringify(relativeSpecifier(\n\t\t\t\t\tpath, producerReadShims.get(node.moduleSpecifier.text)\n\t\t\t\t))\n\t\t\t});\n\t\tts.forEachChild(node, visit);\n\t};\n\tvisit(file);\n\tfor(const edit of edits.sort((left, right) => right.start - left.start))\n\t\tsource = source.slice(0, edit.start) + edit.replacement + source.slice(edit.end);\n\treturn source;\n};\nconst sourceReadSyncShim = (revision, root, directory) => `\nimport { execFileSync } from \"node:child_process\";\nimport { readFileSync as liveReadFileSync, realpathSync as liveRealpathSync } from \"node:fs\";\nexport * from \"node:fs\";\nimport { isAbsolute, relative, sep } from \"node:path\";\nimport { fileURLToPath } from \"node:url\";\nconst revision = ${JSON.stringify(revision)};\nconst root = ${JSON.stringify(root)};\nconst directory = ${JSON.stringify(directory)};\nconst sources = new Map();\nconst prefixes = new Set([\".github\", \"config\", \"docs\", \"nix\", \"poc\", \"schema\", \"scripts\", \"site\", \"src\", \"tests\"]);\nconst repositoryPath = input => {\n\tlet path;\n\tif(input instanceof URL && input.protocol === \"file:\") path = fileURLToPath(input);\n\telse if(typeof input === \"string\") path = input;\n\telse return null;\n\tif(isAbsolute(path)) {\n\t\tconst base = path === directory || path.startsWith(directory + sep)\n\t\t\t? directory : path === root || path.startsWith(root + sep) ? root : null;\n\t\tif(base === null) return null;\n\t\tpath = relative(base, path);\n\t}\n\tpath = path.split(sep).join(\"/\");\n\tif(path === \"package.json\" || path === \"flake.nix\" || path === \"lakefile.lean\" || path === \"lean-toolchain\") return path;\n\tconst parts = path.split(\"/\");\n\tif(!prefixes.has(parts[0]) || parts.some(part => !part || part === \".\" || part === \"..\")) return null;\n\treturn path;\n};\nexport const readFileSync = (input, options) => {\n\tconst path = repositoryPath(input);\n\tif(path === null) return liveReadFileSync(input, options);\n\tif(!sources.has(path)) sources.set(path, execFileSync(\n\t\t\"git\", [\"show\", revision + \":\" + path], {\n\t\t\tcwd: root, maxBuffer: 512 * 1024 * 1024\n\t\t}\n\t));\n\tconst bytes = sources.get(path);\n\tconst encoding = typeof options === \"string\" ? options : options?.encoding;\n\treturn encoding ? bytes.toString(encoding) : Buffer.from(bytes);\n};\nexport const realpathSync = input => {\n\tconst path = input instanceof URL && input.protocol === \"file:\"\n\t\t? fileURLToPath(input) : input;\n\tif(typeof path === \"string\" && isAbsolute(path)\n\t\t&& (path === directory || path.startsWith(directory + sep))) return path;\n\treturn liveRealpathSync(input);\n};\n`;\nconst sourceReadShim = (revision, root, directory) => `\nimport { execFileSync } from \"node:child_process\";\nimport { readFile as liveReadFile, realpath as liveRealpath } from \"node:fs/promises\";\nexport * from \"node:fs/promises\";\nimport { isAbsolute, relative, sep } from \"node:path\";\nimport { fileURLToPath } from \"node:url\";\nconst revision = ${JSON.stringify(revision)};\nconst root = ${JSON.stringify(root)};\nconst directory = ${JSON.stringify(directory)};\nconst sources = new Map();\nconst prefixes = new Set([\".github\", \"config\", \"docs\", \"nix\", \"poc\", \"schema\", \"scripts\", \"site\", \"src\", \"tests\"]);\nconst repositoryPath = input => {\n\tlet path;\n\tif(input instanceof URL && input.protocol === \"file:\") path = fileURLToPath(input);\n\telse if(typeof input === \"string\") path = input;\n\telse return null;\n\tif(isAbsolute(path)) {\n\t\tconst base = path === directory || path.startsWith(directory + sep)\n\t\t\t? directory : path === root || path.startsWith(root + sep) ? root : null;\n\t\tif(base === null) return null;\n\t\tpath = relative(base, path);\n\t}\n\tpath = path.split(sep).join(\"/\");\n\tif(path === \"package.json\" || path === \"flake.nix\" || path === \"lakefile.lean\" || path === \"lean-toolchain\") return path;\n\tconst parts = path.split(\"/\");\n\tif(!prefixes.has(parts[0]) || parts.some(part => !part || part === \".\" || part === \"..\")) return null;\n\treturn path;\n};\nexport const readFile = async (input, options) => {\n\tconst path = repositoryPath(input);\n\tif(path === null) return liveReadFile(input, options);\n\tif(!sources.has(path)) sources.set(path, execFileSync(\n\t\t\"git\", [\"show\", revision + \":\" + path], {\n\t\t\tcwd: root, maxBuffer: 512 * 1024 * 1024\n\t\t}\n\t));\n\tconst bytes = sources.get(path);\n\tconst encoding = typeof options === \"string\" ? options : options?.encoding;\n\treturn encoding ? bytes.toString(encoding) : Buffer.from(bytes);\n};\nexport const realpath = async input => {\n\tconst path = input instanceof URL && input.protocol === \"file:\"\n\t\t? fileURLToPath(input) : input;\n\tif(typeof path === \"string\" && isAbsolute(path)\n\t\t&& (path === directory || path.startsWith(directory + sep))) return path;\n\treturn liveRealpath(input);\n};\n`;\n",
+          "previous": "const sourcePathPattern = /^(?:poc|scripts|site|src|tests)\\/(?:[^/]+\\/)*[^/]+\\.(?:json|mjs)$/u;\n",
+          "start": 866
+        },
+        {
+          "current": "const moduleAtProducerMode = (revision, entry, sourceReads) => {\n",
+          "previous": "/**\n * Import one immutable producer module without consulting current source.\n *\n * @param revision - Full producer commit identity.\n * @param entry - Repository-relative module entry point.\n */\nexport const moduleAtProducer = (revision, entry) => {\n",
+          "start": 6318
+        },
+        {
+          "current": "\tconst key = `${revision}:${entry}:${sourceReads ? \"source-reads\" : \"module-only\"}`;\n",
+          "previous": "\tconst key = `${revision}:${entry}`;\n",
+          "start": 6512
+        },
+        {
+          "current": "\t\tmoduleDirectories.add(directory);\n",
+          "previous": "",
+          "start": 7389
+        },
+        {
+          "current": "\t\t\t\tawait saveLakeFile(directory, path, sourceReads && path.endsWith(\".mjs\")\n\t\t\t\t\t? Buffer.from(redirectSourceReads(bytes.toString(\"utf8\"), path))\n\t\t\t\t\t: bytes);\n\t\t\tif(sourceReads)\n\t\t\t{\n\t\t\t\tawait writeFile(join(directory, producerReadShims.get(\"node:fs/promises\"))\n\t\t\t\t\t, sourceReadShim(revision, resolve(\".\"), directory));\n\t\t\t\tawait writeFile(join(directory, producerReadShims.get(\"node:fs\"))\n\t\t\t\t\t, sourceReadSyncShim(revision, resolve(\".\"), directory));\n\t\t\t}\n",
+          "previous": "\t\t\t\tawait saveLakeFile(directory, path, bytes);\n",
+          "start": 7474
+        },
+        {
+          "current": "\t\tcatch(error)\n",
+          "previous": "\t\tfinally\n",
+          "start": 8008
+        },
+        {
+          "current": "\t\t\tmoduleDirectories.delete(directory);\n\t\t\trmSync(directory, { recursive: true, force: true });\n\t\t\tthrow error;\n",
+          "previous": "\t\t\tawait rm(directory, { recursive: true, force: true });\n",
+          "start": 8027
+        },
+        {
+          "current": "\n/**\n * Import one immutable producer module without consulting current source.\n *\n * @param revision - Full producer commit identity.\n * @param entry - Repository-relative module entry point.\n */\nexport const moduleAtProducer = (revision, entry) => {\n\treturn moduleAtProducerMode(revision, entry, false);\n};\n\n/**\n * Import an immutable producer module whose deferred repository reads must\n * resolve against the same producer revision rather than the live checkout.\n *\n * @param revision - Full producer commit identity.\n * @param entry - Repository-relative module entry point.\n */\nexport const moduleAtProducerWithSourceReads = (revision, entry) =>\n\tmoduleAtProducerMode(revision, entry, true);\n",
+          "previous": "",
+          "start": 8180
+        }
+      ],
+      "path": "tests/helpers/producer-module.mjs",
+      "previousSha256": "fb1c44faa3b143b84db0783ac69fb440bcfdcb7c30dee35b2e1f18782bbfa62b"
+    },
+    {
+      "currentSha256": "57635af94c3a0f016100d459c79b95a69835696f8a86dafd377409729b197cce",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { readFile } from \"node:fs/promises\";\n",
+          "start": 143
+        },
+        {
+          "current": "",
+          "previous": "import { readTypeSurface } from \"../../src/adoption/type-surface.mjs\";\n",
+          "start": 211
+        },
+        {
+          "current": "",
+          "previous": "import { assertWitStructuredCallableExecution, witStructuredCallableExecutionPath } from \"./wit-structured-callable-evidence.mjs\";\nimport { assertPhpWasmRecursiveCallableIntegration } from \"./php-wasm-recursive-callable-evidence.mjs\";\n",
+          "start": 521
+        },
+        {
+          "current": "import { witRecursiveCallableChangedPaths } from \"./wit-recursive-callable-source-history.mjs\";\nimport { phpWasmRecursiveCallableProducer, witRecursiveCallableProducer, witRecursiveCallableProducerSource } from \"./wit-recursive-callable-producer.mjs\";\n",
+          "previous": "import { witRecursiveCallableChangedPaths, reverseWitRecursiveCallableUpdate } from \"./wit-recursive-callable-source-history.mjs\";\nimport { beforeOwnedAggregates, ownedAggregateChangedPaths } from \"./owned-aggregate-source-history.mjs\";\nimport { ownedCChangedPaths } from \"./owned-c-source-history.mjs\";\nimport { ownedReviewedChangedPaths } from \"./owned-reviewed-source-history.mjs\";\nimport { ownedPackageChangedPaths } from \"./owned-package-source-history.mjs\";\nimport { ownedHostChangedPaths } from \"./owned-host-source-history.mjs\";\nimport { ownedCiChangedPaths } from \"./owned-ci-source-history.mjs\";\nimport { ownedCppChangedPaths } from \"./owned-cpp-source-history.mjs\";\nimport { ownedRustChangedPaths } from \"./owned-rust-source-history.mjs\";\nimport { ownedPythonChangedPaths } from \"./owned-python-source-history.mjs\";\nimport { ownedRubyChangedPaths } from \"./owned-ruby-source-history.mjs\";\nimport { ownedDotnetNormalizationPaths } from \"./owned-dotnet-source-history.mjs\";\n",
+          "start": 625
+        },
+        {
+          "current": "\tconst value = witRecursiveCallableProducerSource(path);\n",
+          "previous": "\tconst bytes = await readFile(path);\n\tconst value = ownedAggregateChangedPaths.includes(path) || ownedCChangedPaths.includes(path) || ownedReviewedChangedPaths.includes(path) || ownedPackageChangedPaths.includes(path) || ownedHostChangedPaths.includes(path) || ownedCiChangedPaths.includes(path) || ownedCppChangedPaths.includes(path) || ownedRustChangedPaths.includes(path) || ownedPythonChangedPaths.includes(path) || ownedRubyChangedPaths.includes(path) || ownedDotnetNormalizationPaths.includes(path)\n\t\t? beforeOwnedAggregates(path, bytes.toString(\"utf8\")) : bytes;\n",
+          "start": 935
+        },
+        {
+          "current": "\tassert.equal(entry.path, path); const bytes = witRecursiveCallableProducerSource(path);\n",
+          "previous": "\tassert.equal(entry.path, path); const bytes = await readFile(path);\n",
+          "start": 3086
+        },
+        {
+          "current": "\t\t\tassert.equal(installed.probes[name].sourceSha256, sha256(witRecursiveCallableProducerSource(`tests/fixtures/recursive-consumers/${fixture}.c`)));\n",
+          "previous": "\t\t\tassert.equal(installed.probes[name].sourceSha256, sha256(await readFile(`tests/fixtures/recursive-consumers/${fixture}.c`)));\n",
+          "start": 5356
+        },
+        {
+          "current": "\tconst producer = await witRecursiveCallableProducer();\n",
+          "previous": "",
+          "start": 6110
+        },
+        {
+          "current": "\tconst previous = await authenticated(record.previousStructured, producer.witStructuredCallableExecutionPath);\n\tawait producer.assertWitStructuredCallableExecution({ ...previous\n",
+          "previous": "\tconst previous = await authenticated(record.previousStructured, witStructuredCallableExecutionPath);\n\tawait assertWitStructuredCallableExecution({ ...previous\n",
+          "start": 7404
+        },
+        {
+          "current": "\tconst producer = await witRecursiveCallableProducer();\n\tconst phpWasmProducer = await phpWasmRecursiveCallableProducer();\n\tfor(const name of [\n\t\t\"assertWitStructuredCallableExecution\", \"readTypeSurface\"\n\t\t, \"reverseWitRecursiveCallableUpdate\"\n\t]) assert.equal(typeof producer[name], \"function\", name);\n\tassert.equal(typeof phpWasmProducer.assertPhpWasmRecursiveCallableIntegration\n\t\t, \"function\");\n",
+          "previous": "",
+          "start": 7974
+        },
+        {
+          "current": "\tassert.deepEqual(record.updates.map(update => update.path).sort(), producer.witRecursiveCallableChangedPaths);\n",
+          "previous": "\tassert.deepEqual(record.updates.map(update => update.path).sort(), witRecursiveCallableChangedPaths);\n",
+          "start": 9030
+        },
+        {
+          "current": "\tconst paths = [...new Set([...Object.keys(previous.sourceHashes), ...producer.witRecursiveCallableChangedPaths, ...witRecursiveCallableAddedPaths])].sort();\n",
+          "previous": "\tconst paths = [...new Set([...Object.keys(previous.sourceHashes), ...witRecursiveCallableChangedPaths, ...witRecursiveCallableAddedPaths])].sort();\n",
+          "start": 9231
+        },
+        {
+          "current": "\t\trestored[update.path] = producer.reverseWitRecursiveCallableUpdate(await historicalSource(update.path, true), update);\n",
+          "previous": "\t\trestored[update.path] = reverseWitRecursiveCallableUpdate(await historicalSource(update.path, true), update);\n",
+          "start": 9815
+        },
+        {
+          "current": "\tconst { irSchema, consumers } = await producer.readTypeSurface(), contracts = { irSchema, consumers };\n",
+          "previous": "\tconst { irSchema, consumers } = await readTypeSurface(), contracts = { irSchema, consumers };\n",
+          "start": 10051
+        },
+        {
+          "current": "\tawait phpWasmProducer.assertPhpWasmRecursiveCallableIntegration(previous);\n",
+          "previous": "\tawait assertPhpWasmRecursiveCallableIntegration(previous);\n",
+          "start": 12182
+        }
+      ],
+      "path": "tests/helpers/wit-recursive-callable-evidence.mjs",
+      "previousSha256": "48b419417623a2e53c4ae93566465d0683c5af9072b7f945af26f197f85cfc73"
+    },
+    {
+      "currentSha256": "a2a0268e01488798df741ff9d5518aea9692585c106af4ac203e5e273f91af25",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { readFile } from \"node:fs/promises\";\n",
+          "start": 137
+        },
+        {
+          "current": "",
+          "previous": "import { compileCallableWitGraphModel } from \"../../src/backends/wit/callable-graph-model.mjs\";\nimport { renderWitGraphCallableHostSource } from \"../../src/backends/wit/callable-graph-host.mjs\";\nimport { nativeRecursiveCallableReviewedIr } from \"./native-recursive-callable-fixture.mjs\";\nimport { witRecursiveCallableValues } from \"./wit-recursive-callable-values.mjs\";\nimport { witRecursiveCallableFaults } from \"./wit-recursive-callable-faults.mjs\";\n",
+          "start": 190
+        },
+        {
+          "current": "import { witRecursiveCallableProducer, witRecursiveCallableProducerSource } from \"./wit-recursive-callable-producer.mjs\";\n\nconst producer = await witRecursiveCallableProducer();\nfor(const name of [\n\t\"compileCallableWitGraphModel\", \"nativeRecursiveCallableReviewedIr\"\n\t, \"renderWitGraphCallableHostSource\", \"witRecursiveCallableFaults\"\n\t, \"witRecursiveCallableValues\"\n]) assert.equal(typeof producer[name], \"function\", name);\n",
+          "previous": "",
+          "start": 340
+        },
+        {
+          "current": "\tconst raw = witRecursiveCallableProducerSource(\"tests/fixtures/structured-callable-consumers/wit-recursive-native.c\").toString();\n\tconst typed = witRecursiveCallableProducerSource(\"tests/fixtures/structured-callable-consumers/wit-recursive-typed.c\").toString();\n",
+          "previous": "\tconst raw = await readFile(\"tests/fixtures/structured-callable-consumers/wit-recursive-native.c\", \"utf8\");\n\tconst typed = await readFile(\"tests/fixtures/structured-callable-consumers/wit-recursive-typed.c\", \"utf8\");\n",
+          "start": 2345
+        },
+        {
+          "current": "\t\tassertWitRecursiveCompilerReceipt(run, producer);\n\t\tconst model = producer.compileCallableWitGraphModel(run.model.bindingIr);\n",
+          "previous": "\t\tassertWitRecursiveCompilerReceipt(run);\n\t\tconst model = compileCallableWitGraphModel(run.model.bindingIr);\n",
+          "start": 2858
+        },
+        {
+          "current": "\t\tassert.equal(run.hostSourceSha256, sha256(producer.renderWitGraphCallableHostSource(model, component)));\n",
+          "previous": "\t\tassert.equal(run.hostSourceSha256, sha256(renderWitGraphCallableHostSource(model, component)));\n",
+          "start": 3465
+        },
+        {
+          "current": "\t\tassert.equal(run.values.sourceSha256, sha256(producer.witRecursiveCallableValues(model)));\n",
+          "previous": "\t\tassert.equal(run.values.sourceSha256, sha256(witRecursiveCallableValues(model)));\n",
+          "start": 4731
+        },
+        {
+          "current": "\tconst model = producer.compileCallableWitGraphModel(producer.nativeRecursiveCallableReviewedIr());\n\tconst host = producer.renderWitGraphCallableHostSource(model, new Uint8Array([0]));\n\tassert.equal(record.hostSha256, sha256(host)); assert.equal(record.probeSha256, sha256(producer.witRecursiveCallableFaults(model)));\n",
+          "previous": "\tconst model = compileCallableWitGraphModel(nativeRecursiveCallableReviewedIr());\n\tconst host = renderWitGraphCallableHostSource(model, new Uint8Array([0]));\n\tassert.equal(record.hostSha256, sha256(host)); assert.equal(record.probeSha256, sha256(witRecursiveCallableFaults(model)));\n",
+          "start": 5458
+        }
+      ],
+      "path": "tests/helpers/wit-recursive-callable-probes.mjs",
+      "previousSha256": "0f693bcef9175b9f4b49d48b7675f2856d0ec7ef5cbba146578ffac413ee92da"
+    },
+    {
+      "currentSha256": "2fe4567a3c280120314528ed2527bf9bad396b341116cfda908d2e56d51fad71",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { readFile } from \"node:fs/promises\";\n",
+          "start": 144
+        },
+        {
+          "current": "import { witRecursiveCallableProducer, witRecursiveCallableProducerSource } from \"./wit-recursive-callable-producer.mjs\";\n",
+          "previous": "import { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from \"../../src/build/native-graph-model.mjs\";\nimport { nativeGraphProjectionSources } from \"../../src/build/native-graph-sources.mjs\";\nimport { wasmtimeCapiIdentity } from \"../../src/build/native-wit-artifacts.mjs\";\nimport { compileCallableWitGraphPackageModel } from \"../../src/backends/wit/callable-graph-package.mjs\";\nimport { renderWitGraphCallableHostSource } from \"../../src/backends/wit/callable-graph-host.mjs\";\nimport { guardWitHostSource, witHostDependencies } from \"../../src/backends/wit/host-evidence.mjs\";\nimport { witRecursiveCallableDocumentation } from \"./wit-recursive-callable-docs.mjs\";\nimport { witRecursiveMixedFixture, witRecursivePrimitiveConsumer } from \"./wit-recursive-callable-mixed.mjs\";\nimport { witRecursiveCallableValues } from \"./wit-recursive-callable-values.mjs\";\nimport { witRecursiveCallableMalformed, witRecursiveResultFaultModes } from \"./wit-recursive-callable-malformed.mjs\";\n",
+          "start": 212
+        },
+        {
+          "current": " * @param producer - Exact immutable recursive WIT producer closure.\n",
+          "previous": "",
+          "start": 1631
+        },
+        {
+          "current": "export const assertWitRecursiveCompilerReceipt = (run, producer) => {\n",
+          "previous": "export const assertWitRecursiveCompilerReceipt = run => {\n",
+          "start": 1704
+        },
+        {
+          "current": "\tassert.deepEqual(model, producer.createCompiledNativeModel({ metadata, component: model.component, moduleName: model.moduleName, sourceIdentity: receipt.sourceIdentity }));\n",
+          "previous": "\tassert.deepEqual(model, createCompiledNativeModel({ metadata, component: model.component, moduleName: model.moduleName, sourceIdentity: receipt.sourceIdentity }));\n",
+          "start": 1817
+        },
+        {
+          "current": "\tconst adapters = producer.generateCompiledNativeLeanAdapters(model);\n",
+          "previous": "\tconst adapters = generateCompiledNativeLeanAdapters(model);\n",
+          "start": 2285
+        },
+        {
+          "current": "\tconst producer = await witRecursiveCallableProducer();\n\tfor(const name of [\n\t\t\"compileCallableWitGraphPackageModel\", \"createCompiledNativeModel\"\n\t\t, \"generateCompiledNativeLeanAdapters\", \"guardWitHostSource\"\n\t\t, \"nativeGraphProjectionSources\", \"renderWitGraphCallableHostSource\"\n\t\t, \"witHostDependencies\", \"witRecursiveCallableDocumentation\"\n\t\t, \"witRecursiveCallableMalformed\", \"witRecursiveCallableValues\"\n\t\t, \"witRecursiveMixedFixture\", \"witRecursivePrimitiveConsumer\"\n\t]) assert.equal(typeof producer[name], \"function\", name);\n",
+          "previous": "",
+          "start": 2912
+        },
+        {
+          "current": "\tconst documentation = await producer.witRecursiveCallableDocumentation();\n\tconst source = mixed ? (await producer.witRecursiveMixedFixture(documentation.source)).source : documentation.source;\n\tconst fixture = witRecursiveCallableProducerSource(\"tests/fixtures/structured-callable-consumers/wit-recursive-typed.c\").toString();\n",
+          "previous": "\tconst documentation = await witRecursiveCallableDocumentation();\n\tconst source = mixed ? (await witRecursiveMixedFixture(documentation.source)).source : documentation.source;\n\tconst fixture = await readFile(\"tests/fixtures/structured-callable-consumers/wit-recursive-typed.c\", \"utf8\");\n",
+          "start": 3653
+        },
+        {
+          "current": "\t\tconst lean = assertWitRecursiveCompilerReceipt(run, producer);\n",
+          "previous": "\t\tconst lean = assertWitRecursiveCompilerReceipt(run);\n",
+          "start": 4994
+        },
+        {
+          "current": "\t\tconst projection = producer.compileCallableWitGraphPackageModel(model.bindingIr, { name: \"structured\", version: \"1.0.0\" });\n",
+          "previous": "\t\tconst projection = compileCallableWitGraphPackageModel(model.bindingIr, { name: \"structured\", version: \"1.0.0\" });\n",
+          "start": 5562
+        },
+        {
+          "current": "\t\tfor(const [path, text] of Object.entries(producer.nativeGraphProjectionSources(model, receipt))) assert.deepEqual(adapter.files[path], identity(text), path);\n",
+          "previous": "\t\tfor(const [path, text] of Object.entries(nativeGraphProjectionSources(model, receipt))) assert.deepEqual(adapter.files[path], identity(text), path);\n",
+          "start": 6251
+        },
+        {
+          "current": "\t\tassert.deepEqual(Object.fromEntries(Object.keys(producer.wasmtimeCapiIdentity).map(key => [key, compiled.wasmtime[key]])), producer.wasmtimeCapiIdentity);\n\t\tassert.equal(sha256(canonicalJson(compiled.wasmtime.files)), producer.wasmtimeCapiIdentity.filesSha256);\n",
+          "previous": "\t\tassert.deepEqual(Object.fromEntries(Object.keys(wasmtimeCapiIdentity).map(key => [key, compiled.wasmtime[key]])), wasmtimeCapiIdentity);\n\t\tassert.equal(sha256(canonicalJson(compiled.wasmtime.files)), wasmtimeCapiIdentity.filesSha256);\n",
+          "start": 7789
+        },
+        {
+          "current": "\t\t\t, \"src/structured_wasmtime.c\": producer.guardWitHostSource(producer.renderWitGraphCallableHostSource(projection, component), projection.prefix, producer.witHostDependencies(run, compiled.wasmtime.files))\n",
+          "previous": "\t\t\t, \"src/structured_wasmtime.c\": guardWitHostSource(renderWitGraphCallableHostSource(projection, component), projection.prefix, witHostDependencies(run, compiled.wasmtime.files))\n",
+          "start": 8644
+        },
+        {
+          "current": "\t\t\t, values: producer.witRecursiveCallableValues(projection)\n",
+          "previous": "\t\t\t, values: witRecursiveCallableValues(projection)\n",
+          "start": 11853
+        },
+        {
+          "current": "\t\t\t, boundary: producer.witRecursiveCallableMalformed(projection)\n\t\t\t, \"boundary.so\": producer.witRecursiveCallableMalformed(projection)\n\t\t\t, ...mixed ? { primitives: await producer.witRecursivePrimitiveConsumer(projection) } : {} };\n",
+          "previous": "\t\t\t, boundary: witRecursiveCallableMalformed(projection)\n\t\t\t, \"boundary.so\": witRecursiveCallableMalformed(projection)\n\t\t\t, ...mixed ? { primitives: await witRecursivePrimitiveConsumer(projection) } : {} };\n",
+          "start": 11963
+        },
+        {
+          "current": "\t\tassert.deepEqual(installed.resultFaults, producer.witRecursiveResultFaultModes.map(mode => ({\n",
+          "previous": "\t\tassert.deepEqual(installed.resultFaults, witRecursiveResultFaultModes.map(mode => ({\n",
+          "start": 12746
+        }
+      ],
+      "path": "tests/helpers/wit-recursive-callable-receipt.mjs",
+      "previousSha256": "b171c0035be1dd2f3c055b3d8cc4b470997372a8a0de994a3a4bdf634abd3df9"
+    },
+    {
+      "currentSha256": "bbfa36102df6f3d1d1afbd34c6c4cf65e79464754bfa56984c601992875449a1",
+      "edits": [
+        {
+          "current": "",
+          "previous": "\tsource = beforeOwnedAggregates(path, source, expected);\n",
+          "start": 3357
+        },
+        {
+          "current": "\tlet digest = sha256(source);\n",
+          "previous": "\tconst digest = sha256(source);\n",
+          "start": 3456
+        },
+        {
+          "current": "\tif(update?.currentSha256 === digest)\n\t{\n\t\tsource = reverseWitRecursiveCallableUpdate(source, update);\n\t\tdigest = sha256(source);\n\t\tif(expected === undefined || digest === expected) return source;\n\t}\n\treturn beforeOwnedAggregates(path, source, expected);\n",
+          "previous": "\treturn update?.currentSha256 === digest ? reverseWitRecursiveCallableUpdate(source, update) : source;\n",
+          "start": 3738
+        }
+      ],
+      "path": "tests/helpers/wit-recursive-callable-source-history.mjs",
+      "previousSha256": "9d226dd49b1442ee957d8a7927e4a1ff05fa52eec590715a41b21630a4b376e2"
+    },
+    {
+      "currentSha256": "0560dc220f45f5ddbab8c93ac3abba1f0260c2915daebdb105e894821e5745bf",
+      "edits": [
+        {
+          "current": "import { witRecursiveCallableProducerSource } from \"./helpers/wit-recursive-callable-producer.mjs\";\n",
+          "previous": "import { beforeOwnedAggregates } from \"./helpers/owned-aggregate-source-history.mjs\";\n",
+          "start": 829
+        },
+        {
+          "current": "\t\tconst source = witRecursiveCallableProducerSource(update.path).toString();\n\t\tassert.equal(sha256(source), update.currentSha256);\n",
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n\t\tconst source = beforeOwnedAggregates(update.path, current);\n\t\tassert.equal(sha256(beforeWitRecursiveCallables(update.path, current)), update.previousSha256);\n",
+          "start": 5478
+        }
+      ],
+      "path": "tests/wit-recursive-callable-evidence.test.mjs",
+      "previousSha256": "742bebb4cf60360bd6e3920cd29b83f1bab2027c6feda8806686c1d20918f5d1"
+    }
+  ]
+}
