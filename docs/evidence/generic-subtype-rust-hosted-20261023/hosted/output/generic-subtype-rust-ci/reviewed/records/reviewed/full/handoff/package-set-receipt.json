@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "nominalsubtypes@1.0.0",
+    "name": "nominalsubtypes",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51455831,
+          "path": "archives/nominalsubtypes-1.0.0.crate",
+          "sha256": "029e6cd9d6993d42eb9e73e31efe891f22cd48da1378592d5d62c81271bd78b3"
+        }
+      ],
+      "ecosystem": "cargo",
+      "name": "nominalsubtypes",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "cargo",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "ed978140e232c71bc6919361c3422a47955ec594d472efce026b154ebb6e084e",
+      "id": "native-library-v1",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "85e28ae3da29f71554084c750b3d3090d7fb8fadd939a14d4eef165e45f8b84f"
+  }
+}
