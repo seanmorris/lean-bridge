@@ -1,0 +1,118 @@
+{
+  "additions": [
+    {
+      "currentSha256": "63131bed98b5f4ebe4c3194509433f19afc96639e14547f1dc70aeca336766fb",
+      "path": "scripts/archive-callback-refinements-php-wasm-evidence.mjs"
+    },
+    {
+      "currentSha256": "540e5777e0c90727c8a5795bf354bd1ef4f0bb671e8ce27426d2d77c14154137",
+      "path": "tests/helpers/callback-refinements-php-wasm-hosted-archive-tests.mjs"
+    },
+    {
+      "currentSha256": "4346f03c289b91b057a05e38700306f5b06d2e8f8d6dfa0dd93b8517a69c15a2",
+      "path": "tests/helpers/callback-refinements-php-wasm-hosted-evidence-sources.mjs"
+    },
+    {
+      "currentSha256": "96ffc3c970e7182fe3800d47bdb62330a7273d6cc59c8fc3400a764795ae8a9a",
+      "path": "tests/helpers/callback-refinements-php-wasm-hosted-evidence-tests.mjs"
+    },
+    {
+      "currentSha256": "bfff332ebce08d197a3e0537d82ea5a5b908fdec86bdb8e67e712982ffd146ae",
+      "path": "tests/helpers/callback-refinements-php-wasm-hosted-evidence.mjs"
+    },
+    {
+      "currentSha256": "b34f4e7187f11def2a99d6a8b6ee3590c23ccefcde24af9f5bed947b9ae4b6b6",
+      "path": "scripts/update-callback-refinements-php-wasm-hosted-archive-source-history.mjs"
+    },
+    {
+      "currentSha256": "89c41c1dc396ecaad8418dde3430e566ef4914f60087d468a8ce3004a883a211",
+      "path": "tests/helpers/callback-refinements-php-wasm-hosted-archive-source-history.mjs"
+    },
+    {
+      "currentSha256": "36c4a575e5c8afe757931257c883cbd506cc33cb529971c992d490af319c9f0e",
+      "path": "tests/helpers/callback-refinements-php-wasm-hosted-archive-source-history-tests.mjs"
+    }
+  ],
+  "archive": {
+    "archiveFileCount": 2349,
+    "indexSha256": "297895d119c12fd4dde45763fc18271774a62a6de1130de070528145f7a11208",
+    "indexedFileCount": 2348,
+    "root": "docs/evidence/callback-refinements-php-wasm-20261023"
+  },
+  "archiveCommit": "d09cbad0eda402ef75d3479a4177be007b073f7a",
+  "foundationCommit": "b419c5c84ef45c678bdc14bbb42f7115966f7d3a",
+  "foundationUpdates": [
+    {
+      "currentSha256": "30cca76c2ba5159eb593271cc3b913b2fcb76461d9bfe03806d0723310caaa75",
+      "edits": [
+        {
+          "current": "import \"./helpers/callback-refinements-php-wasm-hosted-archive-tests.mjs\";\n",
+          "previous": "",
+          "start": 247
+        }
+      ],
+      "path": "tests/callback-refinements-php-wasm.test.mjs",
+      "previousSha256": "3beff45d125b4d89907973c2f805a52f80beb042e699f57c18080b16cf8a95c8"
+    }
+  ],
+  "integrationUpdates": [
+    {
+      "currentSha256": "db44175335681b7aa14c5bac8c4f6a5fd10606f72fa51dc65946ca8e32065984",
+      "edits": [
+        {
+          "current": "import { beforeCallbackRefinementsPhpWasmHostedArchiveSource, callbackRefinementsPhpWasmHostedArchiveNormalizationPaths } from \"./callback-refinements-php-wasm-hosted-archive-source-history.mjs\";\n",
+          "previous": "",
+          "start": 392
+        },
+        {
+          "current": "\t...callbackRefinementsPhpWasmHostedArchiveNormalizationPaths\n\t, ...dependentCheckedRecordWitArchiveImplementationPaths\n",
+          "previous": "\t...dependentCheckedRecordWitArchiveImplementationPaths\n",
+          "start": 153712
+        },
+        {
+          "current": "\tconst callbackRefinementsPhpWasmHostedArchive\n\t\t= beforeCallbackRefinementsPhpWasmHostedArchiveSource(\n\t\t\tpath, text, expected\n\t\t);\n\tif(sha256(callbackRefinementsPhpWasmHostedArchive) === expected)\n\t\treturn callbackRefinementsPhpWasmHostedArchive;\n",
+          "previous": "",
+          "start": 188503
+        },
+        {
+          "current": "\t\t\tpath, callbackRefinementsPhpWasmHostedArchive, expected\n",
+          "previous": "\t\t\tpath, text, expected\n",
+          "start": 188842
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "7354f57b07d1015667cfc07703df43c5bb0aeaf7c3621fc7a6adb3b0a1a543fd"
+    },
+    {
+      "currentSha256": "61a113936d542fbfb61c5dd79be109e4050a7f66d983e5a9e9e4227f75a40cf5",
+      "edits": [
+        {
+          "current": "import \"./helpers/callback-refinements-php-wasm-hosted-archive-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 1893
+        }
+      ],
+      "path": "tests/native-subtype.test.mjs",
+      "previousSha256": "e8ecb16c5c099f92be6ed604c77927af930d9d5d9fb7d0ca9eff5d6390f4a1e5"
+    }
+  ],
+  "milestone": "callback-refinements-php-wasm-hosted-archive-v1",
+  "predecessorCommit": "9a6effe9e4fac64f222997e00d5b87c0c50f409a",
+  "schemaVersion": 1,
+  "scope": "Immutable hosted PHP-Wasm evidence retains and independently replays ordinary and reviewed Fin and checked-record callback routes, complete package handoffs, exact source roles and every byte of the original GitHub artifact.",
+  "verifierCommit": "7d31b523986a3e897241861f73074229b0206d42",
+  "verifierUpdates": [
+    {
+      "currentSha256": "90959c66c458993d0449b4a18d6cdff7b4d4ce4022265e3a81f81106cb45d25c",
+      "edits": [
+        {
+          "current": "import \"./helpers/callback-refinements-php-wasm-hosted-evidence-tests.mjs\";\n",
+          "previous": "",
+          "start": 322
+        }
+      ],
+      "path": "tests/callback-refinements-php-wasm.test.mjs",
+      "previousSha256": "30cca76c2ba5159eb593271cc3b913b2fcb76461d9bfe03806d0723310caaa75"
+    }
+  ]
+}

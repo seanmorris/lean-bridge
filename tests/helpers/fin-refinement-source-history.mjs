@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeCallbackRefinementsPhpWasmHostedArchiveSource, callbackRefinementsPhpWasmHostedArchiveNormalizationPaths } from "./callback-refinements-php-wasm-hosted-archive-source-history.mjs";
 import { beforeDependentCheckedRecordWitArchiveSource, dependentCheckedRecordWitArchiveImplementationPaths, dependentCheckedRecordWitArchiveIntegrationPaths } from "./dependent-checked-record-wit-archive-source-history.mjs";
 import { beforeDependentCheckedRecordBrowserPathDiagnosticRepairSource, dependentCheckedRecordBrowserPathDiagnosticRepairChangedPaths, dependentCheckedRecordBrowserPathDiagnosticRepairIntegrationPaths } from "./dependent-checked-record-browser-path-diagnostic-repair-source-history.mjs";
 import { beforeDependentCheckedRecordWitRetainedPkgConfigRepairSource, dependentCheckedRecordWitRetainedPkgConfigRepairChangedPaths, dependentCheckedRecordWitRetainedPkgConfigRepairIntegrationPaths } from "./dependent-checked-record-wit-retained-pkg-config-repair-source-history.mjs";
@@ -1948,7 +1949,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...dependentCheckedRecordWitArchiveImplementationPaths
+	...callbackRefinementsPhpWasmHostedArchiveNormalizationPaths
+	, ...dependentCheckedRecordWitArchiveImplementationPaths
 	, ...dependentCheckedRecordWitArchiveIntegrationPaths
 	, ...dependentCheckedRecordBrowserPathDiagnosticRepairChangedPaths
 	, ...dependentCheckedRecordBrowserPathDiagnosticRepairIntegrationPaths
@@ -2697,9 +2699,15 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 			text = exact;
 		}
 	}
+	const callbackRefinementsPhpWasmHostedArchive
+		= beforeCallbackRefinementsPhpWasmHostedArchiveSource(
+			path, text, expected
+		);
+	if(sha256(callbackRefinementsPhpWasmHostedArchive) === expected)
+		return callbackRefinementsPhpWasmHostedArchive;
 	const dependentCheckedRecordWitArchive
 		= beforeDependentCheckedRecordWitArchiveSource(
-			path, text, expected
+			path, callbackRefinementsPhpWasmHostedArchive, expected
 		);
 	if(sha256(dependentCheckedRecordWitArchive) === expected)
 		return dependentCheckedRecordWitArchive;

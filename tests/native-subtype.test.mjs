@@ -25,6 +25,7 @@ import { perlSubtypeDispatchColumns, perlSubtypeDispatchSteps, perlSubtypeInterp
 import { prepareRustCorpusDependencies } from "./helpers/type-corpus-rust.mjs";
 import "./helpers/subtype-alias-position-source-history-tests.mjs";
 import "./helpers/dependent-checked-record-wit-archive-source-history-tests.mjs";
+import "./helpers/callback-refinements-php-wasm-hosted-archive-source-history-tests.mjs";
 import "./helpers/subtype-xs-archive-source-history-tests.mjs";
 import "./helpers/checked-record-admission-source-history-tests.mjs";
 import "./helpers/structural-subtype-extractor-tests.mjs";
