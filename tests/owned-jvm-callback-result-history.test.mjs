@@ -14,6 +14,7 @@ import { beforeOwnedPerlCallbackResults } from "./helpers/owned-perl-callback-re
 import { ownedJvmCallbackHistoryPath, ownedJvmCallbackHistorySha256
 	, ownedJvmCallbackBaseline, ownedJvmCallbackChangedPaths
 	, beforeOwnedJvmCallbackResults, reverseOwnedJvmCallbackUpdate } from "./helpers/owned-jvm-callback-result-history.mjs";
+import "./helpers/staged-php-producer-replay-repair-source-history-tests.mjs";
 import "./helpers/callback-staging-lineage-replay-repair-source-history-tests.mjs";
 import "./helpers/callback-staging-producer-replay-repair-source-history-tests.mjs";
 import "./helpers/owned-jvm-callback-result-acceptance-tests.mjs";

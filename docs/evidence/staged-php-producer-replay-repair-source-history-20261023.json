@@ -1,0 +1,96 @@
+{
+  "additions": [
+    {
+      "currentSha256": "d05f6a9f8e08a03e1a2efb42a0988dffe78af6d8ec33dec2f500a1c10993ef22",
+      "path": "scripts/update-staged-php-producer-replay-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "dec1d94bddc08fea942cf3c9d7394cffbcd1b361b92959bceec9185dcf16dcc1",
+      "path": "tests/helpers/staged-php-producer-replay-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "a4a526394ca25a163c24eef57af5545855d040a2b31b1d107ad794c65f8340a5",
+      "path": "tests/helpers/staged-php-producer-replay-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "94cb6c19fdd806e0ca9cdb26c5259099e9fb3fe6",
+  "integrationUpdates": [
+    {
+      "currentSha256": "34e18dc3814c4a73cf65269cd6e6b8ac51b739ce4ea6192bb5b9b121fb5fe526",
+      "edits": [
+        {
+          "current": "import { beforeStagedPhpProducerReplayRepairSource, stagedPhpProducerReplayRepairNormalizationPaths } from \"./staged-php-producer-replay-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...stagedPhpProducerReplayRepairNormalizationPaths\n\t, ...dependentBrowserHandoffRetentionRepairNormalizationPaths\n",
+          "previous": "\t...dependentBrowserHandoffRetentionRepairNormalizationPaths\n",
+          "start": 163142
+        },
+        {
+          "current": "\tconst stagedPhpProducerReplayRepair\n\t\t= beforeStagedPhpProducerReplayRepairSource(path, text, expected);\n\tif(sha256(stagedPhpProducerReplayRepair) === expected)\n\t\treturn stagedPhpProducerReplayRepair;\n",
+          "previous": "",
+          "start": 200340
+        },
+        {
+          "current": "\t\t\tpath, stagedPhpProducerReplayRepair, expected\n",
+          "previous": "\t\t\tpath, text, expected\n",
+          "start": 200644
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "2d490b35fb9278cef6978c81525e9e9f3dac63da166fcfff897de0d86cf7384d"
+    },
+    {
+      "currentSha256": "05d6ce967a81919ddf51dfa8916476e9d413b24a62e849ec03dc4f8381285042",
+      "edits": [
+        {
+          "current": "import \"./helpers/staged-php-producer-replay-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 923
+        }
+      ],
+      "path": "tests/owned-jvm-callback-result-history.test.mjs",
+      "previousSha256": "a64a30ee3bedbfea235a7769b465c48272b7d6ddf80d20de89ce93ba6d4f7a7f"
+    }
+  ],
+  "milestone": "staged-php-producer-replay-repair-source-v1",
+  "predecessorCommit": "74da75c77d7003edb4a8cb05eacb1d936cf5f716",
+  "schemaVersion": 1,
+  "scope": "Frozen direct PHP callback observations are reconstructed with the exact staging producer modules and repository source bytes rather than current generator semantics.",
+  "updates": [
+    {
+      "currentSha256": "189c2d696358a89a762a8f290b88b6e7062bdeb3d970805f2c8611d371807e89",
+      "edits": [
+        {
+          "current": " * Reconstruct PHP callback sources with the exact producer implementation.\n",
+          "previous": " * Reconstruct PHP callback sources; opaque compiler products remain observations.\n",
+          "start": 4
+        },
+        {
+          "current": "import { postPerlCallbackProducer } from \"./post-perl-callback-staging-history.mjs\";\nimport { moduleAtProducerWithSourceReads } from \"./producer-module.mjs\";\n",
+          "previous": "import assert from \"node:assert/strict\";\nimport { beforeFinRefinementSource } from \"./fin-refinement-source-history.mjs\";\nimport { readFile } from \"node:fs/promises\";\nimport { canonicalJson, sha256 } from \"../../src/capsule/node.mjs\";\nimport { generateOwnedCPackage } from \"../../src/backends/c/owned-package.mjs\";\nimport { generateOwnedPhpCalls } from \"../../src/backends/php/owned-calls.mjs\";\nimport { generateOwnedAggregateCarriers } from \"../../src/build/owned-aggregate-carriers.mjs\";\nimport { ownedDotnetCallbackResultConfiguration, ownedDotnetCallbackResultReviewedIr\n\t, ownedDotnetCallbackResultSource, ownedDotnetCallbackResultCombinedConfiguration\n\t, ownedDotnetCallbackResultCombinedReviewedIr\n\t, ownedDotnetCallbackResultCombinedSource } from \"./owned-dotnet-callback-result-fixture.mjs\";\n",
+          "start": 96
+        },
+        {
+          "current": "const producer = moduleAtProducerWithSourceReads(\n\tpostPerlCallbackProducer\n\t, \"tests/helpers/owned-php-callback-result-runtime-sources.mjs\"\n);\n",
+          "previous": "const hash = value => sha256(canonicalJson(value));\nconst witness = `import Owned\n@[export owned_test_record_identity]\ndef recordIdentity (_ : Unit) : Array (Owned.Bundle → Owned.Bundle) := #[fun value => value]\n@[export owned_test_tree_identity]\ndef treeIdentity (_ : Unit) : Array (Owned.Tree → Owned.Tree) := #[fun value => value]\n`;\nconst nativeProbe = (c, model, transferred) => {\n\tconst handoff = \"static inline void oc_transfer_consume(void *context) {\";\n\tif(transferred) assert.equal(c.source.split(handoff).length, 2);\n\treturn `#include <stdlib.h>\n#include <stddef.h>\nstatic size_t live = 0; static ptrdiff_t fail_after = -1;${transferred ? \"\\nstatic size_t handoffs = 0;\" : \"\"}\nstatic void *allocate(size_t size) {\n  if (fail_after == 0) return NULL;\n  if (fail_after > 0) --fail_after;\n  void *value = malloc(size); if (value) ++live; return value;\n}\nstatic void deallocate(void *value) { if (value) { --live; free(value); } }\n#define LB_OWNED_ALLOC allocate\n#define LB_OWNED_FREE deallocate\n${transferred ? c.source.replace(handoff, handoff + \"\\n  ++handoffs;\") : c.source}\n${model.nativeSource}\nsize_t owned_test_live(void) { return live; }\n${transferred ? \"size_t owned_test_handoffs(void) { return handoffs; }\\n\" : \"\"}\\\nvoid owned_test_fail_after(ptrdiff_t value) { fail_after = value; }\nsize_t owned_test_identities(void) {\n  lean_bridge_native_snapshot snapshot; lean_bridge_native_snapshot_read(&snapshot); return snapshot.live_identities;\n}\n`;\n};\nconst reconstructed = new Map();\n",
+          "start": 255
+        },
+        {
+          "current": " * Bind observed compiler identities to the authored inputs and adapters at the\n * immutable staging producer. Historical reports must not be reconstructed\n * with today's generators or fixture bytes.\n",
+          "previous": " * Bind observed compiler identities to authored inputs and regenerate adapters.\n",
+          "start": 404
+        },
+        {
+          "current": "export const assertOwnedPhpCallbackRuntimeSources = async (mode, variant, item, baseline) =>\n\t(await producer).assertOwnedPhpCallbackRuntimeSources(mode, variant, item, baseline);\n",
+          "previous": "export const assertOwnedPhpCallbackRuntimeSources = async (mode, variant, item, baseline) => {\n\tconst combined = variant === \"combined\", hostCallbacks = variant !== \"no-host\";\n\tconst options = { hostCallbacks, callbackResultAnchors: true\n\t\t, transferredInputs: combined, anchoredResults: combined\n\t\t, receiverExports: combined };\n\tassert.deepEqual(item.options, options);\n\tconst { metadata, sourceIdentity: identity, component, ...extra } = item.input;\n\tassert.deepEqual(extra, {});\n\tassert.deepEqual(component, { id: \"owned-aggregates@1.0.0\", name: \"owned-aggregates\", version: \"1.0.0\" });\n\t// These compiler/extractor output baselines are authenticated observations,\n\t// not claims that this reader reruns Lean, C compilation or linking.\n\tassert.equal(hash(metadata), hash(baseline.input.metadata));\n\tassert.equal(hash(identity), hash(baseline.input.sourceIdentity));\n\tassert.equal(identity.leanVersion, \"4.32.2\");\n\tassert.equal(identity.leanCommit, \"f3b06c705e6c85f5314019d5d3baab0fec5b580c\");\n\tassert.equal(identity.leanCompilerSha256, \"e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550\");\n\tassert.equal(identity.extractorSha256, sha256(beforeFinRefinementSource(\"src/analyze/NativeExports.lean\", await readFile(\"src/analyze/NativeExports.lean\"), identity.extractorSha256)));\n\tconst lean = await readFile(\"tests/fixtures/onboarding/owned-aggregates/Owned.lean\", \"utf8\")\n\t\t+ (combined ? ownedDotnetCallbackResultCombinedSource : ownedDotnetCallbackResultSource);\n\tassert.equal(identity.sourceTreeSha256, sha256(lean));\n\tassert.equal(identity.modules.length, 1); assert.equal(identity.modules[0].module, \"Owned\");\n\tassert.deepEqual(identity.modules[0].source, { path: \"Owned.lean\", sha256: sha256(lean) });\n\tconst configuration = mode === \"ordinary\"\n\t\t? await (combined ? ownedDotnetCallbackResultCombinedConfiguration : ownedDotnetCallbackResultConfiguration)()\n\t\t: { schemaVersion: 1, modules: [\"Owned\"] };\n\tassert.equal(identity.exportConfigurationSource, canonicalJson(configuration));\n\tassert.equal(identity.exportConfigurationSha256, hash(configuration));\n\tassert.equal(Boolean(identity.reviewedBindingIr), mode === \"reviewed\");\n\tif(mode === \"reviewed\")\n\t{\n\t\tconst reviewed = (combined ? ownedDotnetCallbackResultCombinedReviewedIr : ownedDotnetCallbackResultReviewedIr)();\n\t\tassert.equal(identity.reviewedBindingIr.source, canonicalJson(reviewed));\n\t\tassert.equal(identity.reviewedBindingIr.sourceSha256, hash(reviewed));\n\t}\n\tconst key = hash({ input: item.input, options });\n\tif(!reconstructed.has(key))\n\t{\n\t\tconst c = generateOwnedCPackage({ ...item.input, ...options, valueCopies: true, identityEquality: combined });\n\t\tconst model = generateOwnedPhpCalls(c.values.native.model.bindingIr, options);\n\t\tassert.equal(model.c.callbacks.filter(callback => callback.anchor !== undefined).length, 4);\n\t\tassert.equal(model.functions.filter(fn => fn.receiver === 0).length, combined ? 5 : 0);\n\t\tassert.equal(model.functions.filter(fn => fn.transfers?.length).length, combined ? 2 : 0);\n\t\tassert.equal(model.c.copies.length, 20);\n\t\tconst carriers = generateOwnedAggregateCarriers({ ...item.input, hostCallbacks });\n\t\tlet helpers = await readFile(\"tests/fixtures/structured-types/owned-php-calls-probe.php\", \"utf8\");\n\t\tif(combined) helpers = helpers\n\t\t\t.replace(\"size_t owned_test_live(void);\", \"size_t owned_test_live(void);\\\\nsize_t owned_test_handoffs(void);\")\n\t\t\t.replace(\"global $model;\", \"global $model, $visited; $visited[$name] = true;\");\n\t\thelpers = helpers.replace(\"$item instanceof Resource\", \"$item instanceof Resource || $item instanceof LeanOwnedAggregates\\\\Value\");\n\t\treconstructed.set(key, { c, model, carriers, helpers, native: nativeProbe(c, model, combined) });\n\t}\n\tconst generated = reconstructed.get(key);\n\tassert.deepEqual(item.generated, Object.fromEntries(Object.entries(generated.model.files).map(([path, text]) => [path, sha256(text)])));\n\tassert.equal(item.nativeSourceSha256, sha256(generated.native));\n\tassert.equal(item.publicHeaderSha256, sha256(generated.model.c.header));\n\tassert.equal(item.helpersSha256, sha256(generated.helpers));\n\tassert.equal(item.compiledInputs[\"Owned.lean\"], sha256(lean));\n\tassert.equal(item.compiledInputs[\"Witness.lean\"], sha256(witness));\n\tassert.equal(item.compiledInputs[\"public-api.c\"], sha256(generated.native));\n\tif(hostCallbacks) assert.equal(item.compiledInputs[\"Callbacks.c\"], sha256(generated.carriers.callbackSource));\n\treturn generated;\n};\n",
+          "start": 864
+        }
+      ],
+      "path": "tests/helpers/owned-php-callback-result-runtime-sources.mjs",
+      "previousSha256": "773884d20cb09f809d3031508886d71719fb9d78692a13927c84f777bed7e126"
+    }
+  ]
+}

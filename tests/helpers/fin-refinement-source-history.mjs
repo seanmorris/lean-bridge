@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeStagedPhpProducerReplayRepairSource, stagedPhpProducerReplayRepairNormalizationPaths } from "./staged-php-producer-replay-repair-source-history.mjs";
 import { beforeDependentBrowserHandoffRetentionRepairSource, dependentBrowserHandoffRetentionRepairNormalizationPaths } from "./dependent-browser-handoff-retention-repair-source-history.mjs";
 import { beforeWitRecursiveProducerReplayRepairSource, witRecursiveProducerReplayRepairNormalizationPaths } from "./wit-recursive-producer-replay-repair-source-history.mjs";
 import { beforeJvmProducerReplayRepairSource, jvmProducerReplayRepairNormalizationPaths } from "./jvm-producer-replay-repair-source-history.mjs";
@@ -2040,7 +2041,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...dependentBrowserHandoffRetentionRepairNormalizationPaths
+	...stagedPhpProducerReplayRepairNormalizationPaths
+	, ...dependentBrowserHandoffRetentionRepairNormalizationPaths
 	, ...witRecursiveProducerReplayRepairNormalizationPaths
 	, ...jvmProducerReplayRepairNormalizationPaths
 	, ...ownedReceiverProducerReplayRepairNormalizationPaths
@@ -2830,9 +2832,13 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 			text = exact;
 		}
 	}
+	const stagedPhpProducerReplayRepair
+		= beforeStagedPhpProducerReplayRepairSource(path, text, expected);
+	if(sha256(stagedPhpProducerReplayRepair) === expected)
+		return stagedPhpProducerReplayRepair;
 	const dependentBrowserHandoffRetentionRepair
 		= beforeDependentBrowserHandoffRetentionRepairSource(
-			path, text, expected
+			path, stagedPhpProducerReplayRepair, expected
 		);
 	if(sha256(dependentBrowserHandoffRetentionRepair) === expected)
 		return dependentBrowserHandoffRetentionRepair;
