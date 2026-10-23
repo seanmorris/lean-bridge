@@ -93,6 +93,9 @@ test("generic Subtype hosted source roles resolve at the exact current revision"
 		for(const role of ["producer", "checker", "archiver"])
 			assert.ok(sources.some(source => source.role === role)
 				, `${lane}: ${role}`);
+		assert.ok(!sources.some(source => source.path
+			=== "tests/fixtures/onboarding/nominal-subtypes/lean-bridge.exports.json")
+		, `${lane}: generated configuration is not repository source`);
 		assert.ok(!sources.some(source => source.path.startsWith("docs/evidence/")));
 	}
 });

@@ -35,7 +35,6 @@ const closure = (revision, entries) => {
 
 const fixture = [
 	"NominalSubtypes.lean", "lakefile.toml", "lean-toolchain"
-	, "lean-bridge.exports.json"
 ].map(path => `tests/fixtures/onboarding/nominal-subtypes/${path}`);
 const common = [
 	...fixture
