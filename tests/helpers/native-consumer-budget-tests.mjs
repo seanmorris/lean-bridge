@@ -8,14 +8,15 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { disableFinContainerEntryWorkflow } from "./fin-container-entry-ci.mjs";
-import { beforeWasmCiArraySource } from "./wasm-ci-array-source-history.mjs";
+import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 
 const path = ".github/workflows/consumer-matrix.yml";
 const oldBudget = "    timeout-minutes: 240\n";
 const newBudget = "    # Run 37873560469 cut the c-family Compare step off at 240 minutes while it was still\n    # passing tests. Python and Rust keep their 240-minute budget.\n    timeout-minutes: ${{ matrix.profile == 'c-family' && 360 || 240 }}\n";
 // The authenticated pre-fix workflow (d6070cb) and its unchanged native steps.
 const previousSha256 = "1e7839d9b11cf76a009d5a2440f0daf87cde5e5733da70f9169249042324bc84";
+const reviewedBudgetSha256
+	= "0c5b81683de3d568297530531e9f92626b22d43053a6bf78df38f5b56301e2a1";
 const stepsSha256 = "2ccbafde74289fbc06688d9a851b3a3d597cd2b58db2bf45147e40deb834d812";
 const nativeJob = workflow => /^ {2}native-consumers:\n[\s\S]*?(?=^ {2}[a-z][a-z0-9-]*:\n)/mu.exec(workflow)?.[0];
 
@@ -41,7 +42,11 @@ export const nativeConsumerBudgets = job => {
  * @param workflow - Complete workflow being checked.
  */
 export const assertNativeConsumerBudget = workflow => {
-	const current = disableFinContainerEntryWorkflow(beforeWasmCiArraySource(path, workflow));
+	const current = beforeFinRefinementSource(
+		path, workflow, reviewedBudgetSha256
+	);
+	assert.equal(sha256(current), reviewedBudgetSha256
+		, "reach the authenticated budget milestone");
 	assert.equal(current.split(newBudget).length, 2, "the reviewed budget appears once");
 	assert.equal(sha256(current.replace(newBudget, oldBudget)), previousSha256, "preserve every native step, report gate, upload, enforcement and other job");
 	const job = nativeJob(current); assert.ok(job);
