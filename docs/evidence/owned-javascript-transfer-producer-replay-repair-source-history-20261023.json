@@ -1,0 +1,138 @@
+{
+  "additions": [
+    {
+      "currentSha256": "51ec85db6def2e64e1240b54ce45ff9d3035194efe2106ea79ba5e6f67ae51a3",
+      "path": "scripts/update-owned-javascript-transfer-producer-replay-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "87c9cc6df65f5dd1e4ae82578a2e2705cf91ba2785ad5b1675f0da48acad07bf",
+      "path": "tests/helpers/owned-javascript-transfer-producer-replay-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "c16fb6aef640b85a6ab33cc6e29e7c22cffb6df8db842e14be467f0346bdc51a",
+      "path": "tests/helpers/owned-javascript-transfer-producer-replay-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "f53fac928cb08d35880eb14510e085043e9513f9",
+  "integrationUpdates": [
+    {
+      "currentSha256": "a628baee70136d8120d4d2ddd50a147ba58ac9c93107bb86530f7c248e3129d2",
+      "edits": [
+        {
+          "current": "import { beforeOwnedJavaScriptTransferProducerReplayRepairSource, ownedJavaScriptTransferProducerReplayRepairNormalizationPaths } from \"./owned-javascript-transfer-producer-replay-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...ownedJavaScriptTransferProducerReplayRepairNormalizationPaths\n\t, ...ownedPerlTransferProducerReplayRepairNormalizationPaths\n",
+          "previous": "\t...ownedPerlTransferProducerReplayRepairNormalizationPaths\n",
+          "start": 161759
+        },
+        {
+          "current": "\tconst ownedJavaScriptTransferProducerReplayRepair\n\t\t= beforeOwnedJavaScriptTransferProducerReplayRepairSource(\n\t\t\tpath, text, expected\n\t\t);\n\tif(sha256(ownedJavaScriptTransferProducerReplayRepair) === expected)\n\t\treturn ownedJavaScriptTransferProducerReplayRepair;\n",
+          "previous": "",
+          "start": 198504
+        },
+        {
+          "current": "\t\t\tpath, ownedJavaScriptTransferProducerReplayRepair, expected\n",
+          "previous": "\t\t\tpath, text, expected\n",
+          "start": 198869
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "6a2eb9df8a2a4a4596772b2910e456e2778d36bcbcf913447306c01ba20042e1"
+    },
+    {
+      "currentSha256": "f9a458cbf2c9e72d98a4888dcf2537ba011455bc2d5343b806fea30fd603aa3b",
+      "edits": [
+        {
+          "current": "import \"./helpers/owned-javascript-transfer-producer-replay-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 800
+        }
+      ],
+      "path": "tests/owned-javascript-transfer-evidence.test.mjs",
+      "previousSha256": "b4a694141bc11515b6456cc88f99e31690440b11c6b20e3710eae04bd20301c3"
+    }
+  ],
+  "milestone": "owned-javascript-transfer-producer-replay-repair-source-v1",
+  "predecessorCommit": "04840d09e3d5d39ec799b5147103dc3196ac7f7e",
+  "schemaVersion": 1,
+  "scope": "The frozen owned JavaScript transfer evidence is replayed with the exact producer's complete static module and source closure, including historical proof-of-concept descriptors, rather than regenerating historical observations with current compiler semantics.",
+  "updates": [
+    {
+      "currentSha256": "ddfaa5af0ff0954dfdab02691f68fe7d7bc9a3a7b5279270899f8560e0486e26",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { readFile } from \"node:fs/promises\";\n",
+          "start": 143
+        },
+        {
+          "current": "import { moduleAtProducer } from \"./producer-module.mjs\";\nimport { bytesAtProducer } from \"./producer-source.mjs\";\n",
+          "previous": "import { generateOwnedNativeValueAdapters } from \"../../src/backends/native/owned-value-adapters.mjs\";\nimport { generateOwnedWasmComponent } from \"../../src/backends/javascript/owned-wasm-component.mjs\";\nimport { generateOwnedJavaScriptWasmLeanAdapters } from \"../../src/build/javascript-wasm-owned-model.mjs\";\nimport { assertComponentOwnedWasmBindings } from \"../../src/abi/component-owned-wasm.mjs\";\nimport { ownedJavaScriptWasmNativeProbe } from \"./owned-javascript-wasm-native.mjs\";\nimport { ownedRustTransferSource } from \"./owned-rust-transfer-fixture.mjs\";\nimport { assertOwnedJavaScriptTransferCi } from \"./owned-javascript-transfer-ci.mjs\";\n",
+          "start": 211
+        },
+        {
+          "current": "const producerCommit = \"3e28428f0b304f1dfed2cb2ad524b50c1fabdeef\";\n",
+          "previous": "",
+          "start": 1522
+        },
+        {
+          "current": "\tconst producer = Object.assign({}, ...await Promise.all([\n\t\t\"src/abi/component-owned-wasm.mjs\"\n\t\t, \"src/backends/javascript/owned-wasm-component.mjs\"\n\t\t, \"src/backends/native/owned-value-adapters.mjs\"\n\t\t, \"src/build/javascript-wasm-owned-model.mjs\"\n\t\t, \"tests/helpers/owned-javascript-transfer-ci.mjs\"\n\t\t, \"tests/helpers/owned-javascript-wasm-native.mjs\"\n\t\t, \"tests/helpers/owned-rust-transfer-fixture.mjs\"\n\t].map(path => moduleAtProducer(producerCommit, path))));\n\tfor(const name of [\n\t\t\"assertComponentOwnedWasmBindings\"\n\t\t, \"assertOwnedJavaScriptTransferCi\"\n\t\t, \"generateOwnedJavaScriptWasmLeanAdapters\"\n\t\t, \"generateOwnedNativeValueAdapters\", \"generateOwnedWasmComponent\"\n\t\t, \"ownedJavaScriptWasmNativeProbe\"\n\t]) assert.equal(typeof producer[name], \"function\", name);\n\tassert.equal(typeof producer.ownedRustTransferSource, \"string\");\n\tconst historical = path => bytesAtProducer(producerCommit, path);\n",
+          "previous": "",
+          "start": 1833
+        },
+        {
+          "current": "\tassert.equal(record.baselineRevision\n\t\t, \"10463a29b72d47b01e11cc799d97589f2ca594fe\");\n",
+          "previous": "",
+          "start": 2845
+        },
+        {
+          "current": "\tconst lean = historical(\n\t\t\"tests/fixtures/onboarding/owned-aggregates/Owned.lean\"\n\t).toString() + producer.ownedRustTransferSource;\n",
+          "previous": "\tconst lean = await readFile(\"tests/fixtures/onboarding/owned-aggregates/Owned.lean\", \"utf8\") + ownedRustTransferSource;\n",
+          "start": 3440
+        },
+        {
+          "current": "\t\tconst native = producer.generateOwnedNativeValueAdapters({ ...item.input, wordBits: 32, hostCallbacks: true, transferredInputs: true });\n\t\tconst component = producer.generateOwnedWasmComponent(native);\n",
+          "previous": "\t\tconst native = generateOwnedNativeValueAdapters({ ...item.input, wordBits: 32, hostCallbacks: true, transferredInputs: true });\n\t\tconst component = generateOwnedWasmComponent(native);\n",
+          "start": 3932
+        },
+        {
+          "current": "\t\tassert.equal(item.sourceSha256, sha256(producer.ownedJavaScriptWasmNativeProbe(component))); digest(item.binarySha256);\n\t\tassert.equal(producer.assertComponentOwnedWasmBindings(item.privateAbi, native.layout.model.bindingIr), component.metadataHash);\n",
+          "previous": "\t\tassert.equal(item.sourceSha256, sha256(ownedJavaScriptWasmNativeProbe(component))); digest(item.binarySha256);\n\t\tassert.equal(assertComponentOwnedWasmBindings(item.privateAbi, native.layout.model.bindingIr), component.metadataHash);\n",
+          "start": 4195
+        },
+        {
+          "current": "\tconst doc = historical(\"docs/javascript-typescript.md\").toString()\n\t\t.split(\"### Consuming inputs\\n\")[1].split(\"### Type conversions\\n\")[0];\n",
+          "previous": "\tconst doc = (await readFile(\"docs/javascript-typescript.md\", \"utf8\")).split(\"### Consuming inputs\\n\")[1].split(\"### Type conversions\\n\")[0];\n",
+          "start": 5237
+        },
+        {
+          "current": "\t\tproducer.generateOwnedJavaScriptWasmLeanAdapters(item.model);\n",
+          "previous": "\t\tgenerateOwnedJavaScriptWasmLeanAdapters(item.model);\n",
+          "start": 6094
+        },
+        {
+          "current": "\tproducer.assertOwnedJavaScriptTransferCi(historical(\n\t\t\".github/workflows/consumer-matrix.yml\"\n\t).toString(), JSON.parse(historical(\"package.json\")));\n",
+          "previous": "\tassertOwnedJavaScriptTransferCi(await readFile(\".github/workflows/consumer-matrix.yml\", \"utf8\"), JSON.parse(await readFile(\"package.json\", \"utf8\")));\n",
+          "start": 8323
+        }
+      ],
+      "path": "tests/helpers/owned-javascript-transfer-evidence.mjs",
+      "previousSha256": "084dd3c0ed7cee1042ec1a730ee095b8ae290c73ceed4d9eacba333f127465aa"
+    },
+    {
+      "currentSha256": "fb1c44faa3b143b84db0783ac69fb440bcfdcb7c30dee35b2e1f18782bbfa62b",
+      "edits": [
+        {
+          "current": "const sourcePathPattern = /^(?:poc|scripts|site|src|tests)\\/(?:[^/]+\\/)*[^/]+\\.(?:json|mjs)$/u;\n",
+          "previous": "const sourcePathPattern = /^(?:scripts|site|src|tests)\\/(?:[^/]+\\/)*[^/]+\\.(?:json|mjs)$/u;\n",
+          "start": 628
+        }
+      ],
+      "path": "tests/helpers/producer-module.mjs",
+      "previousSha256": "00b53633b36d86b2444752973d3e313ff46e40fd3fb526984c4cd7262cf8bde9"
+    }
+  ]
+}

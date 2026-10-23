@@ -12,6 +12,7 @@ import { beforeOwnedWitTransfer, ownedWitTransferHistoricalBytes } from "./helpe
 import { beforeOwnedJavaScriptTransfer, ownedJavaScriptTransferAddedPaths, ownedJavaScriptTransferBaseline
 	, ownedJavaScriptTransferChangedPaths, ownedJavaScriptTransferPath, ownedJavaScriptTransferPrevious
 	, reverseOwnedJavaScriptTransferUpdate } from "./helpers/owned-javascript-transfer-history.mjs";
+import "./helpers/owned-javascript-transfer-producer-replay-repair-source-history-tests.mjs";
 
 const read = async () => JSON.parse(await readFile(ownedJavaScriptTransferPath, "utf8"));
 
