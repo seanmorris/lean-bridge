@@ -1,0 +1,104 @@
+name: Generic Subtypes in npm and browsers
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: generic-subtype-npm-browser-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  installed:
+    name: ${{ matrix.route }} generic Subtypes in Node and browsers
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    strategy:
+      fail-fast: false
+      matrix:
+        route: [ordinary, reviewed]
+    env:
+      EMCC_CORES: "2"
+      LEAN_BRIDGE_LAKE_ENGINE: build/locked-lake-engine/bin/lean-bridge-component-engine
+      LEAN_BRIDGE_LAKE_RUNTIME_ROOT: build/lean-link-spike/lazy
+    steps:
+      - name: Free hosted runner disk before checkout
+        shell: bash
+        run: |
+          set -euo pipefail
+          df -h /
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/.ghcup /opt/hostedtoolcache/CodeQL
+          df -h /
+      - name: Check out the exact revision and evidence history
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+      - name: Bound apt network waits
+        uses: ./.github/actions/bounded-apt
+        timeout-minutes: 1
+      - name: Install compiler and archive dependencies
+        timeout-minutes: 20
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake git jq libgmp-dev libuv1-dev pkg-config python3 ripgrep xz-utils zstd
+      - name: Install dependencies and pinned compiler tools
+        timeout-minutes: 30
+        run: |
+          npm ci --ignore-scripts --no-audit --no-fund
+          bash scripts/bootstrap-toolchains.sh
+      - name: Install Chromium, Firefox and WebKit
+        timeout-minutes: 20
+        run: bash scripts/install-playwright-browsers.sh chromium firefox webkit
+      - name: Build the locked component engine
+        timeout-minutes: 40
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p build
+          nix build .#component-build-engine --out-link build/locked-lake-engine 2>&1 | tee build/generic-subtype-engine-${{ matrix.route }}.log
+          test -x build/locked-lake-engine/bin/lean-bridge-component-engine
+      - name: Build the pinned shared Wasm runtime
+        timeout-minutes: 60
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash scripts/build-lean-link-spike.sh 2>&1 | tee build/generic-subtype-runtime-${{ matrix.route }}.log
+          test -s build/lean-link-spike/lazy/main.wasm
+      - name: Install and exercise the selected generic Subtype route
+        id: acceptance
+        timeout-minutes: 90
+        env:
+          LEAN_BRIDGE_GENERIC_SUBTYPE_NPM_BROWSER_TEST: "1"
+          LEAN_BRIDGE_GENERIC_SUBTYPE_ROUTES: ${{ matrix.route }}
+          LEAN_BRIDGE_GENERIC_SUBTYPE_NPM_BROWSER_OUTPUT: build/generic-subtype-npm-browser/${{ matrix.route }}.json
+          LEAN_BRIDGE_TYPE_CORPUS_BROWSERS: chromium,firefox,webkit
+        run: |
+          source scripts/env.sh
+          node --test --test-concurrency=1 tests/generic-subtype-npm-browser.test.mjs
+          test -s build/generic-subtype-npm-browser/${{ matrix.route }}.json
+      - name: Preserve complete and partial acceptance records
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: generic-subtype-npm-browser-${{ matrix.route }}-${{ github.sha }}
+          path: |
+            build/generic-subtype-npm-browser/${{ matrix.route }}.json
+            build/generic-subtype-engine-${{ matrix.route }}.log
+            build/generic-subtype-runtime-${{ matrix.route }}.log
+          if-no-files-found: error
+          retention-days: 30
+      - name: Enforce generic Subtype acceptance
+        if: always() && steps.acceptance.outcome != 'success'
+        run: exit 1
