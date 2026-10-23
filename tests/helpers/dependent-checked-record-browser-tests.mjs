@@ -27,6 +27,9 @@ import {
 	, validateDependentCheckedRecordObservation
 	, validateDependentCheckedRecordPhases
 } from "./dependent-checked-record-browser-fixture.mjs";
+import {
+	assertDependentCheckedRecordNodeResult
+} from "./dependent-checked-record-browser-report.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
 import { checkDependentRecords } from "../fixtures/dependent-checked-record-browser/javascript.mjs";
 
@@ -60,6 +63,22 @@ const reviewedModel = {
 	})
 	, dependentResult: model.dependentResult
 };
+
+test("dependent Node observations compare JSON values independently of member order", () => {
+	const expected = dependentCheckedRecordExpected("ordinary-source");
+	const reversed = Object.fromEntries(Object.entries(expected).reverse());
+	assert.doesNotThrow(() => assertDependentCheckedRecordNodeResult({
+		code: 0, stderr: "", stdout: JSON.stringify(reversed) + "\n"
+	}, expected));
+	for(const result of [
+		{ code: 1, stderr: "", stdout: JSON.stringify(expected) + "\n" }
+		, { code: 0, stderr: "noise", stdout: JSON.stringify(expected) + "\n" }
+		, { code: 0, stderr: "", stdout: JSON.stringify({ ...expected, calls: 0 }) + "\n" }
+		, { code: 0, stderr: "", stdout: JSON.stringify(expected, null, 2) + "\n" }
+		, { code: 0, stderr: "", stdout: JSON.stringify(expected) + "\n\n" }
+	]) assert.throws(() => assertDependentCheckedRecordNodeResult(
+		result, expected));
+});
 
 test("the dependent checked-record caller covers bounds, recovery and results", () => {
 	assert.deepEqual(checkDependentRecords(model)

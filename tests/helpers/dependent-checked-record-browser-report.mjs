@@ -54,6 +54,24 @@ const canonical = async (read, path) => {
 	assert.equal(bytes.toString(), canonicalJson(value), path);
 	return value;
 };
+
+/**
+ * Require one successful compact-JSON Node observation. JSON object member order
+ * is not semantic: canonical report serialization sorts `expected`, while the
+ * installed caller preserves the fixture's construction order.
+ *
+ * @param result - Captured process result.
+ * @param expected - Exact counter object the caller must report.
+ */
+export const assertDependentCheckedRecordNodeResult = (result, expected) => {
+	exactKeys(result, ["code", "stderr", "stdout"]);
+	assert.deepEqual({ code: result.code, stderr: result.stderr }
+		, { code: 0, stderr: "" });
+	assert.match(result.stdout, /^[^\n]*\n$/u);
+	const observed = JSON.parse(result.stdout.slice(0, -1));
+	assert.equal(result.stdout, JSON.stringify(observed) + "\n");
+	assert.deepEqual(observed, expected);
+};
 const profilePaths = profile => {
 	const entry = {
 		"browser-javascript": "plain", "browser-react": "react"
@@ -372,10 +390,8 @@ export const checkDependentCheckedRecordNpmReport = async (
 		assert.deepEqual(report.observations[index_], observation);
 		exactKeys(observation, ["relocated", "result", "typescript"]);
 		assert.equal(observation.relocated, index_ === 1);
-		assert.deepEqual(observation.result, {
-			code: 0
-			, stdout: JSON.stringify(report.expected) + "\n", stderr: ""
-		});
+		assertDependentCheckedRecordNodeResult(
+			observation.result, report.expected);
 		assert.deepEqual(observation.typescript
 			, { code: 0, stdout: "", stderr: "" });
 	}
