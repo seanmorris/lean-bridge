@@ -25,6 +25,7 @@ import { beforeNestedFinSource, reverseNestedFinUpdate, nestedFinChangedPaths, n
 import { beforeRefinementClosureSource } from "./helpers/refinement-closure-source-history.mjs";
 import { sourceAtFinHistoryMilestone } from "./helpers/source-at-fin-history-milestone.mjs";
 import "./helpers/php-wasm-entry-structural-equality-repair-source-history-tests.mjs";
+import "./helpers/generic-subtype-evidence-source-closure-repair-source-history-tests.mjs";
 import "./helpers/generic-subtype-artifact-prefix-repair-source-history-tests.mjs";
 import "./helpers/owned-subtype-wit-host-namespace-repair-source-history-tests.mjs";
 import "./helpers/checked-refinement-gate-repair-source-history-tests.mjs";
