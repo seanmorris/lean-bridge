@@ -9,6 +9,7 @@ import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
 import { beforeValueIndexBrowserPromotionClosureRepairSource, valueIndexBrowserPromotionClosureRepairNormalizationPaths } from "./value-index-browser-promotion-closure-repair-source-history.mjs";
+import { beforeDependentCheckedRecordBrowserArchiveSource, dependentCheckedRecordBrowserArchiveImplementationPaths, dependentCheckedRecordBrowserArchiveIntegrationPaths } from "./dependent-checked-record-browser-archive-source-history.mjs";
 import { beforeStagedPhpProducerReplayRepairSource, stagedPhpProducerReplayRepairNormalizationPaths } from "./staged-php-producer-replay-repair-source-history.mjs";
 import { beforeDependentBrowserHandoffRetentionRepairSource, dependentBrowserHandoffRetentionRepairNormalizationPaths } from "./dependent-browser-handoff-retention-repair-source-history.mjs";
 import { beforeWitRecursiveProducerReplayRepairSource, witRecursiveProducerReplayRepairNormalizationPaths } from "./wit-recursive-producer-replay-repair-source-history.mjs";
@@ -2042,7 +2043,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...valueIndexBrowserPromotionClosureRepairNormalizationPaths
+	...dependentCheckedRecordBrowserArchiveImplementationPaths
+	, ...dependentCheckedRecordBrowserArchiveIntegrationPaths
+	, ...valueIndexBrowserPromotionClosureRepairNormalizationPaths
 	, ...stagedPhpProducerReplayRepairNormalizationPaths
 	, ...dependentBrowserHandoffRetentionRepairNormalizationPaths
 	, ...witRecursiveProducerReplayRepairNormalizationPaths
@@ -2825,6 +2828,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	let text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
+	const dependentCheckedRecordBrowserArchive
+		= beforeDependentCheckedRecordBrowserArchiveSource(path, text, expected);
+	if(sha256(dependentCheckedRecordBrowserArchive) === expected)
+		return dependentCheckedRecordBrowserArchive;
+	text = dependentCheckedRecordBrowserArchive;
 	const valueIndexBrowserPromotionClosureRepair
 		= beforeValueIndexBrowserPromotionClosureRepairSource(
 			path, text, expected

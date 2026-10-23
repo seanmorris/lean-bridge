@@ -1,0 +1,237 @@
+{
+  "additions": [
+    {
+      "currentSha256": "1c0d5e182b3c9c59b89c07f86f880404d9c21bcfdee875596ce48e3eb0f3ac94",
+      "path": "tests/helpers/dependent-checked-record-browser-evidence-tests.mjs"
+    },
+    {
+      "currentSha256": "0a0e52e10c4fed7c7e09d2096daba0a1b89dc747479deefed8bfd9be11952e07",
+      "path": "tests/helpers/dependent-checked-record-browser-evidence.mjs"
+    },
+    {
+      "currentSha256": "21c8d6f12ce0182db4ca70ac2986c3f847d4461e744cb80d56f11fbf6bd72393",
+      "path": "scripts/update-dependent-checked-record-browser-archive-source-history.mjs"
+    },
+    {
+      "currentSha256": "10f3d423e731ea65f2861f2451a95921081fb43e4f29f2a7c5205496f735e07d",
+      "path": "tests/helpers/dependent-checked-record-browser-archive-source-history.mjs"
+    },
+    {
+      "currentSha256": "1bc0f4d8f3814a8fb0db37736fbc24ece6e0327d64bab3b69b55df6ac1a5a8eb",
+      "path": "tests/helpers/dependent-checked-record-browser-archive-source-history-tests.mjs"
+    }
+  ],
+  "archive": {
+    "addedFileCount": 1214,
+    "archiveFileCount": 1212,
+    "indexSha256": "1575ac337535956d04054fe650ff7204cac9b8f05b06f1428fa788743e8ceca9",
+    "indexedFileCount": 1211,
+    "root": "docs/evidence/dependent-checked-record-browser-20261021"
+  },
+  "implementationCommit": "16bc5930257df69fb9611992339024274b4c7d14",
+  "implementationUpdates": [
+    {
+      "currentSha256": "96cea2ead9aee87591850ee119b9adcfc9d4fec38d0bbf5bef9b5810d28c53e7",
+      "edits": [
+        {
+          "current": "\t, conclusions: { run: \"failure\", job: \"failure\" }\n",
+          "previous": "",
+          "start": 2565
+        }
+      ],
+      "path": "scripts/archive-dependent-checked-record-browser-evidence.mjs",
+      "previousSha256": "9b14f431e123e20ff858ceb61243bd2b2e8345abdade43089a954c031a76e606"
+    },
+    {
+      "currentSha256": "9e1778cc99573da5c259a9e2b14e8709e4dde03face6016ca795264299356699",
+      "edits": [
+        {
+          "current": "\tconst recordsFailure = Object.hasOwn(expected, \"conclusions\");\n",
+          "previous": "",
+          "start": 2612
+        },
+        {
+          "current": "\t\t\"artifactPrefix\", ...recordsFailure ? [\"conclusions\"] : []\n\t\t, \"jobName\", \"workflow\"\n",
+          "previous": "\t\t\"artifactPrefix\", \"jobName\", \"workflow\"\n",
+          "start": 2726
+        },
+        {
+          "current": "\tconst conclusions = recordsFailure ? expected.conclusions\n\t\t: { run: \"success\", job: \"success\" };\n\tassert.deepEqual(Object.keys(conclusions).sort(), [\"job\", \"run\"]);\n\tfor(const value of Object.values(conclusions))\n\t\tassert.ok([\"failure\", \"success\"].includes(value));\n",
+          "previous": "",
+          "start": 2818
+        },
+        {
+          "current": "\tassert.equal(run.conclusion, conclusions.run);\n",
+          "previous": "\tassert.equal(run.conclusion, \"success\");\n",
+          "start": 3660
+        },
+        {
+          "current": "\tassert.equal(job.conclusion, conclusions.job);\n",
+          "previous": "\tassert.equal(job.conclusion, \"success\");\n",
+          "start": 4252
+        },
+        {
+          "current": "\t\t\t, ...recordsFailure ? { conclusions } : {}\n",
+          "previous": "",
+          "start": 5228
+        }
+      ],
+      "path": "tests/helpers/checked-record-value-index-hosted-archive.mjs",
+      "previousSha256": "316d8069e715d91e25182b71a8a67557df6730206c312b1c96e27e68d86d1aac"
+    },
+    {
+      "currentSha256": "b2ee2f20233dc1dce7a74e18c0e47f94f0c47f49553dd6eff1fe01a846448fdc",
+      "edits": [
+        {
+          "current": "import { posix } from \"node:path\";\n",
+          "previous": "",
+          "start": 296
+        },
+        {
+          "current": "\n/**\n * Parse a retained package snapshot while requiring npm's exact two-space JSON\n * representation. Package member order is not semantic and generated package\n * manifests intentionally preserve their construction order.\n *\n * @param bytes - Retained package.json bytes.\n * @param path - Evidence path used in assertion diagnostics.\n */\nexport const parseExactPackageJson = (bytes, path = \"package.json\") => {\n\tconst source = bytes.toString(), value = JSON.parse(source);\n\tassert.equal(source, JSON.stringify(value, null, 2) + \"\\n\", path);\n\treturn value;\n};\n\n/**\n * Reconstruct the file dependency written while the browser consumer lived at\n * `browsers/<profile>` beside the shared `handoff` directory.\n *\n * @param profile - Browser consumer profile directory.\n * @param archive - Validated npm archive name.\n */\nexport const dependentBrowserHandoffSpecifier = (profile, archive) =>\n\t\"file:\" + posix.relative(\n\t\tposix.join(\"browsers\", profile), posix.join(\"handoff\", archive)\n\t);\n\n/**\n * Require one successful compact-JSON Node observation. JSON object member order\n * is not semantic: canonical report serialization sorts `expected`, while the\n * installed caller preserves the fixture's construction order.\n *\n * @param result - Captured process result.\n * @param expected - Exact counter object the caller must report.\n */\nexport const assertDependentCheckedRecordNodeResult = (result, expected) => {\n\texactKeys(result, [\"code\", \"stderr\", \"stdout\"]);\n\tassert.deepEqual({ code: result.code, stderr: result.stderr }\n\t\t, { code: 0, stderr: \"\" });\n\tassert.match(result.stdout, /^[^\\n]*\\n$/u);\n\tconst observed = JSON.parse(result.stdout.slice(0, -1));\n\tassert.equal(result.stdout, JSON.stringify(observed) + \"\\n\");\n\tassert.deepEqual(observed, expected);\n};\n",
+          "previous": "",
+          "start": 2519
+        },
+        {
+          "current": "\t\tassertDependentCheckedRecordNodeResult(\n\t\t\tobservation.result, report.expected);\n",
+          "previous": "\t\tassert.deepEqual(observation.result, {\n\t\t\tcode: 0\n\t\t\t, stdout: JSON.stringify(report.expected) + \"\\n\", stderr: \"\"\n\t\t});\n",
+          "start": 16854
+        },
+        {
+          "current": "\tconst componentPath = prefix + \"installed-component-package.json\";\n\tconst component = parseExactPackageJson(\n\t\tawait read(componentPath), componentPath\n\t);\n",
+          "previous": "\tconst component = await json(prefix + \"installed-component-package.json\");\n",
+          "start": 20880
+        },
+        {
+          "current": "\tconst manifestPath = prefix + \"package.json\";\n\tconst lockPath = prefix + \"package-lock.json\";\n\tconst manifest = parseExactPackageJson(\n\t\tawait read(manifestPath), manifestPath\n\t);\n\tconst lock = parseExactPackageJson(await read(lockPath), lockPath);\n",
+          "previous": "\tconst manifest = await json(prefix + \"package.json\");\n\tconst lock = await json(prefix + \"package-lock.json\");\n",
+          "start": 21493
+        },
+        {
+          "current": "\t\tassert.equal(dependency.resolved\n\t\t\t, dependentBrowserHandoffSpecifier(profile, archive));\n",
+          "previous": "\t\tassert.equal(dependency.resolved, `file:../handoff/${archive}`);\n",
+          "start": 22476
+        }
+      ],
+      "path": "tests/helpers/dependent-checked-record-browser-report.mjs",
+      "previousSha256": "9ff74df8619d75862070052ecbbcacbc43b242b26da25a42bd2d9d9d77e6c5d6"
+    },
+    {
+      "currentSha256": "3f56f7b004068db120132553cb839e5635215e083987246e5b92432d51804e14",
+      "edits": [
+        {
+          "current": "import {\n\tassertDependentCheckedRecordNodeResult, dependentBrowserHandoffSpecifier\n\t, parseExactPackageJson\n} from \"./dependent-checked-record-browser-report.mjs\";\n",
+          "previous": "",
+          "start": 1104
+        },
+        {
+          "current": "test(\"dependent Node observations compare JSON values independently of member order\", () => {\n\tconst expected = dependentCheckedRecordExpected(\"ordinary-source\");\n\tconst reversed = Object.fromEntries(Object.entries(expected).reverse());\n\tassert.doesNotThrow(() => assertDependentCheckedRecordNodeResult({\n\t\tcode: 0, stderr: \"\", stdout: JSON.stringify(reversed) + \"\\n\"\n\t}, expected));\n\tfor(const result of [\n\t\t{ code: 1, stderr: \"\", stdout: JSON.stringify(expected) + \"\\n\" }\n\t\t, { code: 0, stderr: \"noise\", stdout: JSON.stringify(expected) + \"\\n\" }\n\t\t, { code: 0, stderr: \"\", stdout: JSON.stringify({ ...expected, calls: 0 }) + \"\\n\" }\n\t\t, { code: 0, stderr: \"\", stdout: JSON.stringify(expected, null, 2) + \"\\n\" }\n\t\t, { code: 0, stderr: \"\", stdout: JSON.stringify(expected) + \"\\n\\n\" }\n\t]) assert.throws(() => assertDependentCheckedRecordNodeResult(\n\t\tresult, expected));\n});\n\ntest(\"npm package snapshots preserve formatting, not member order\"\n\t, () => {\n\tconst expected = { version: \"1.0.0\", name: \"dependentrecords\"\n\t\t, exports: { \".\": { import: \"./index.mjs\", browser: \"./index.mjs\" } } };\n\tconst reordered = { exports: expected.exports, name: expected.name\n\t\t, version: expected.version };\n\tconst bytes = Buffer.from(JSON.stringify(reordered, null, 2) + \"\\n\");\n\tassert.deepEqual(parseExactPackageJson(bytes), reordered);\n\tfor(const source of [\n\t\tJSON.stringify(reordered) + \"\\n\"\n\t\t, JSON.stringify(reordered, null, \"\\t\") + \"\\n\"\n\t\t, JSON.stringify(reordered, null, 2)\n\t\t, JSON.stringify(reordered, null, 2) + \"\\n\\n\"\n\t]) assert.throws(() => parseExactPackageJson(Buffer.from(source)));\n\tconst duplicate = Buffer.from(\n\t\t'{\\n  \"name\": \"one\",\\n  \"name\": \"two\"\\n}\\n'\n\t);\n\tassert.throws(() => parseExactPackageJson(duplicate));\n\t}\n);\n\ntest(\"browser package dependencies retain the two-level handoff path\", () => {\n\tfor(const profile of dependentCheckedRecordProfiles)\n\t\tassert.equal(dependentBrowserHandoffSpecifier(profile, \"component.tgz\")\n\t\t\t, \"file:../../handoff/component.tgz\");\n});\n\n",
+          "previous": "",
+          "start": 2288
+        }
+      ],
+      "path": "tests/helpers/dependent-checked-record-browser-tests.mjs",
+      "previousSha256": "5dc5ad8d71cca0200d986a3bb7f2e8623f6aa32e11c6eeedf27dcff292092a00"
+    },
+    {
+      "currentSha256": "551a93b2df5bb901dd843e6f384df1d14159a599ea0d6fe6de4fd4f08e3648be",
+      "edits": [
+        {
+          "current": "import \"./helpers/dependent-checked-record-browser-evidence-tests.mjs\";\n",
+          "previous": "",
+          "start": 5675
+        }
+      ],
+      "path": "tests/native-subtype.test.mjs",
+      "previousSha256": "61a113936d542fbfb61c5dd79be109e4050a7f66d983e5a9e9e4227f75a40cf5"
+    }
+  ],
+  "integrationUpdates": [
+    {
+      "currentSha256": "6053df50683671fac9ffaa648f3e5d4b1e5c47465229964e37f365694f91246f",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"0482517dcdd62abdb77c3d20686c58fd33fbc6303325b1cb9a7cd9dc16f5c958\"\n",
+          "previous": "          \"sha256\": \"1de161670a1816473401fcb0b9dbfe84b408012cb9047219b228e0ef01427eb4\"\n",
+          "start": 44637
+        },
+        {
+          "current": "          \"sha256\": \"0482517dcdd62abdb77c3d20686c58fd33fbc6303325b1cb9a7cd9dc16f5c958\"\n",
+          "previous": "          \"sha256\": \"1de161670a1816473401fcb0b9dbfe84b408012cb9047219b228e0ef01427eb4\"\n",
+          "start": 1545373
+        },
+        {
+          "current": "          \"sha256\": \"0482517dcdd62abdb77c3d20686c58fd33fbc6303325b1cb9a7cd9dc16f5c958\"\n",
+          "previous": "          \"sha256\": \"1de161670a1816473401fcb0b9dbfe84b408012cb9047219b228e0ef01427eb4\"\n",
+          "start": 1549505
+        },
+        {
+          "current": "          \"sha256\": \"0482517dcdd62abdb77c3d20686c58fd33fbc6303325b1cb9a7cd9dc16f5c958\"\n",
+          "previous": "          \"sha256\": \"1de161670a1816473401fcb0b9dbfe84b408012cb9047219b228e0ef01427eb4\"\n",
+          "start": 1553149
+        },
+        {
+          "current": "          \"sha256\": \"0482517dcdd62abdb77c3d20686c58fd33fbc6303325b1cb9a7cd9dc16f5c958\"\n",
+          "previous": "          \"sha256\": \"1de161670a1816473401fcb0b9dbfe84b408012cb9047219b228e0ef01427eb4\"\n",
+          "start": 1557145
+        },
+        {
+          "current": "          \"sha256\": \"0482517dcdd62abdb77c3d20686c58fd33fbc6303325b1cb9a7cd9dc16f5c958\"\n",
+          "previous": "          \"sha256\": \"1de161670a1816473401fcb0b9dbfe84b408012cb9047219b228e0ef01427eb4\"\n",
+          "start": 1560762
+        },
+        {
+          "current": "          \"sha256\": \"0482517dcdd62abdb77c3d20686c58fd33fbc6303325b1cb9a7cd9dc16f5c958\"\n",
+          "previous": "          \"sha256\": \"1de161670a1816473401fcb0b9dbfe84b408012cb9047219b228e0ef01427eb4\"\n",
+          "start": 1564384
+        },
+        {
+          "current": "          \"sha256\": \"0482517dcdd62abdb77c3d20686c58fd33fbc6303325b1cb9a7cd9dc16f5c958\"\n",
+          "previous": "          \"sha256\": \"1de161670a1816473401fcb0b9dbfe84b408012cb9047219b228e0ef01427eb4\"\n",
+          "start": 1568010
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "c43f98045313923e150a06e46780c2c6580428f871680a3a1fd71c222c3c2f64"
+    },
+    {
+      "currentSha256": "f06bab34d90d89174336eeb3106e5733e8a1b6c5b5b5b0a096e9d84c6eddcaff",
+      "edits": [
+        {
+          "current": "import { beforeDependentCheckedRecordBrowserArchiveSource, dependentCheckedRecordBrowserArchiveImplementationPaths, dependentCheckedRecordBrowserArchiveIntegrationPaths } from \"./dependent-checked-record-browser-archive-source-history.mjs\";\n",
+          "previous": "",
+          "start": 606
+        },
+        {
+          "current": "\t...dependentCheckedRecordBrowserArchiveImplementationPaths\n\t, ...dependentCheckedRecordBrowserArchiveIntegrationPaths\n\t, ...valueIndexBrowserPromotionClosureRepairNormalizationPaths\n",
+          "previous": "\t...valueIndexBrowserPromotionClosureRepairNormalizationPaths\n",
+          "start": 163579
+        },
+        {
+          "current": "\tconst dependentCheckedRecordBrowserArchive\n\t\t= beforeDependentCheckedRecordBrowserArchiveSource(path, text, expected);\n\tif(sha256(dependentCheckedRecordBrowserArchive) === expected)\n\t\treturn dependentCheckedRecordBrowserArchive;\n\ttext = dependentCheckedRecordBrowserArchive;\n",
+          "previous": "",
+          "start": 200740
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "2b987ef600ea03413eb4ce915e8af5cd859c3374f1441936f5cb692c7407da57"
+    },
+    {
+      "currentSha256": "0482517dcdd62abdb77c3d20686c58fd33fbc6303325b1cb9a7cd9dc16f5c958",
+      "edits": [
+        {
+          "current": "import \"./helpers/dependent-checked-record-browser-archive-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 5747
+        }
+      ],
+      "path": "tests/native-subtype.test.mjs",
+      "previousSha256": "551a93b2df5bb901dd843e6f384df1d14159a599ea0d6fe6de4fd4f08e3648be"
+    }
+  ],
+  "milestone": "dependent-checked-record-browser-archive-source-v1",
+  "predecessorCommit": "733693e06a1461541d4d3d7a43d8496d26c2df45",
+  "reconciledTypeSurfacePointers": 8,
+  "schemaVersion": 1,
+  "scope": "Immutable hosted npm/browser dependent checked-record evidence retains all four routes, Node plus three browser engines, exact source roles, independent replay and the original GitHub artifact bytes."
+}
