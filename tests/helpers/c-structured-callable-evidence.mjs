@@ -6,14 +6,16 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { readTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { historicalTypeSurfaceCells as typeSurfaceCells } from "./historical-type-surface-cells.mjs";
 import { structuredCallableExports } from "./structured-callable-fixture.mjs";
 import { structuredCallableCConsumer, structuredCallableCFaultConsumer } from "./structured-callable-c-consumer.mjs";
 import { witAcceptancePath } from "./wit-acceptance-source-history.mjs";
 import { assertWitRecursiveAcceptance } from "./wit-recursive-acceptance.mjs";
 import { cStructuredCallableChangedPaths, reverseCStructuredCallableUpdate } from "./c-structured-callable-source-history.mjs";
-import { beforeCppStructuredCallables } from "./cpp-structured-callable-source-history.mjs";
+import { sourceAtProducer, typeSurfaceContractsAtProducer } from "./producer-source.mjs";
+
+export const cStructuredCallableProducer
+	= "9e6eb510535a6907c37d63f89ecbe0ac66927c32";
 
 export const cStructuredCallableExecutionPath = "docs/evidence/c-structured-callables-20260924.json";
 export const cStructuredCallableAddedPaths = [
@@ -94,7 +96,9 @@ export const assertCStructuredCallableExecution = record => {
  * @param record - Recorded implementation changes and acceptance index.
  */
 export const assertCStructuredCallableIntegration = async record => {
-	const priorSource = async path => beforeCppStructuredCallables(path, await readFile(path, "utf8"));
+	const priorSource = (path, expected) => sourceAtProducer(
+		cStructuredCallableProducer, path, expected
+	);
 	assert.equal(record.schemaVersion, 1); assert.equal(record.planNode, 1219);
 	assert.equal(record.kind, "c-structured-callable-integration");
 	assert.equal(record.baselineRevision, "ef6ff9ff0e03a659ffe1e9d12b821453399bff9d");
@@ -110,18 +114,19 @@ export const assertCStructuredCallableIntegration = async record => {
 	assert.deepEqual(Object.keys(record.additions).sort(), cStructuredCallableAddedPaths);
 	const paths = [...new Set([...Object.keys(previous.sourceHashes), ...cStructuredCallableChangedPaths, ...cStructuredCallableAddedPaths])].sort();
 	assert.deepEqual(Object.keys(record.sourceHashes).sort(), paths);
-	for(const path of paths) assert.equal(sha256(await priorSource(path)), record.sourceHashes[path], path);
+	for(const path of paths) assert.equal(sha256(await priorSource(path, record.sourceHashes[path])), record.sourceHashes[path], path);
 	const restored = {};
 	for(const update of record.updates)
 	{
 		assert.equal(update.currentSha256, record.sourceHashes[update.path]);
-		restored[update.path] = reverseCStructuredCallableUpdate(await priorSource(update.path), update);
+		restored[update.path] = reverseCStructuredCallableUpdate(await priorSource(update.path, update.currentSha256), update);
 		if(previous.sourceHashes[update.path]) assert.equal(update.previousSha256, previous.sourceHashes[update.path]);
 	}
 	for(const [path, expected] of Object.entries(record.additions)) assert.equal(expected, record.sourceHashes[path]);
-	const { document: current, ...contracts } = await readTypeSurface();
-	assert.ok(current.contractVersion);
-	const document = JSON.parse(await priorSource("docs/type-surface.v1.json"));
+	const contracts = typeSurfaceContractsAtProducer(
+		cStructuredCallableProducer
+	);
+	const document = JSON.parse(await priorSource("docs/type-surface.v1.json", record.sourceHashes["docs/type-surface.v1.json"]));
 	const oldDocument = JSON.parse(restored["docs/type-surface.v1.json"]);
 	assert.equal(document.contractVersion, record.inventory.version); assert.equal(oldDocument.contractVersion, record.inventory.previousVersion);
 	const cells = typeSurfaceCells(document, contracts), oldCells = typeSurfaceCells(oldDocument, contracts);

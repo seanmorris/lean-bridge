@@ -6,7 +6,6 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { readTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { historicalTypeSurfaceCells as typeSurfaceCells } from "./historical-type-surface-cells.mjs";
 import { structuredCallableExports } from "./structured-callable-fixture.mjs";
 import { rustCallableSignatures } from "./rust-callable-fixture.mjs";
@@ -14,9 +13,13 @@ import { assertRustStructuredCodegenRegression } from "./rust-structured-callabl
 import { cppStructuredCallableHistoryPath } from "./cpp-structured-callable-source-history.mjs";
 import { assertCppStructuredCallableIntegration } from "./cpp-structured-callable-evidence.mjs";
 import { rustStructuredCallableChangedPaths, reverseRustStructuredCallableUpdate } from "./rust-structured-callable-source-history.mjs";
-import { beforePythonStructuredCallables } from "./python-structured-callable-source-history.mjs";
+import { sourceAtProducer, typeSurfaceContractsAtProducer } from "./producer-source.mjs";
 
-const priorSource = async path => beforePythonStructuredCallables(path, await readFile(path, "utf8"));
+export const rustStructuredCallableProducer
+	= "8f17be5ad5262670b8853d96736f19333fdebe39";
+const priorSource = (path, expected) => sourceAtProducer(
+	rustStructuredCallableProducer, path, expected
+);
 
 export const rustStructuredCallableExecutionPath = "docs/evidence/rust-structured-callables-20260924.json";
 export const rustStructuredCodegenPath = "docs/evidence/rust-structured-codegen-regression-20260924.json";
@@ -131,12 +134,12 @@ export const assertRustStructuredCallableIntegration = async record => {
 	assert.deepEqual(Object.keys(record.additions).sort(), rustStructuredCallableAddedPaths);
 	const paths = [...new Set([...Object.keys(previous.sourceHashes), ...rustStructuredCallableChangedPaths, ...rustStructuredCallableAddedPaths])].sort();
 	assert.deepEqual(Object.keys(record.sourceHashes).sort(), paths);
-	for(const path of paths) assert.equal(sha256(await priorSource(path)), record.sourceHashes[path], path);
+	for(const path of paths) assert.equal(sha256(await priorSource(path, record.sourceHashes[path])), record.sourceHashes[path], path);
 	const restored = {};
 	for(const update of record.updates)
 	{
 		assert.equal(update.currentSha256, record.sourceHashes[update.path]);
-		restored[update.path] = reverseRustStructuredCallableUpdate(await priorSource(update.path), update);
+		restored[update.path] = reverseRustStructuredCallableUpdate(await priorSource(update.path, update.currentSha256), update);
 		if(previous.sourceHashes[update.path]) assert.equal(update.previousSha256, previous.sourceHashes[update.path]);
 	}
 	for(const [path, expected] of Object.entries(record.additions)) assert.equal(expected, record.sourceHashes[path]);
@@ -145,9 +148,10 @@ export const assertRustStructuredCallableIntegration = async record => {
 		assert.equal(expected, sha256(restored[path]));
 		assert.equal(codegen.sourceHashes[path], record.sourceHashes[path]);
 	}
-	const { document: current, ...contracts } = await readTypeSurface();
-	assert.ok(current.contractVersion);
-	const document = JSON.parse(await priorSource("docs/type-surface.v1.json"));
+	const contracts = typeSurfaceContractsAtProducer(
+		rustStructuredCallableProducer
+	);
+	const document = JSON.parse(await priorSource("docs/type-surface.v1.json", record.sourceHashes["docs/type-surface.v1.json"]));
 	const oldDocument = JSON.parse(restored["docs/type-surface.v1.json"]);
 	assert.equal(document.contractVersion, record.inventory.version); assert.equal(oldDocument.contractVersion, record.inventory.previousVersion);
 	const cells = typeSurfaceCells(document, contracts), oldCells = typeSurfaceCells(oldDocument, contracts);

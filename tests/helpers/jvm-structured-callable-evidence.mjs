@@ -6,7 +6,6 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { readTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { historicalTypeSurfaceCells as typeSurfaceCells } from "./historical-type-surface-cells.mjs";
 import { structuredCallableReviewedIr } from "./structured-callable-fixture.mjs";
 import { jvmCallableSignatures, jvmCallableConsumer, jvmCallablePublicChecks, jvmCallableRejections } from "./jvm-callable-fixture.mjs";
@@ -16,9 +15,13 @@ import { assertJvmStructuredFaults } from "./jvm-structured-callable-faults.mjs"
 import { dotnetStructuredCallableHistoryPath } from "./dotnet-structured-callable-source-history.mjs";
 import { assertDotnetStructuredCallableIntegration } from "./dotnet-structured-callable-evidence.mjs";
 import { jvmStructuredCallableChangedPaths, reverseJvmStructuredCallableUpdate } from "./jvm-structured-callable-source-history.mjs";
-import { beforePerlStructuredCallables } from "./perl-structured-callable-source-history.mjs";
+import { sourceAtProducer, typeSurfaceContractsAtProducer } from "./producer-source.mjs";
 
-const priorSource = async path => beforePerlStructuredCallables(path, await readFile(path, "utf8"));
+export const jvmStructuredCallableProducer
+	= "aecdcd13d9caffed826aa79ae09af006803da650";
+const priorSource = (path, expected) => sourceAtProducer(
+	jvmStructuredCallableProducer, path, expected
+);
 
 export const jvmStructuredCallableExecutionPath = "docs/evidence/jvm-structured-callables-20260925.json";
 export const jvmStructuredCodegenPath = "docs/evidence/jvm-structured-codegen-regression-20260924.json";
@@ -66,17 +69,18 @@ export const assertJvmStructuredCallableIntegration = async record => {
 	const execution = JSON.parse(bytes); await assertJvmStructuredCallableExecution(execution);
 	assert.equal(record.codegen.path, jvmStructuredCodegenPath);
 	const codegenBytes = await readFile(record.codegen.path); assert.equal(sha256(codegenBytes), record.codegen.sha256);
-	const codegen = JSON.parse(codegenBytes); assertJvmStructuredCodegenRegression(codegen);
+	const codegen = JSON.parse(codegenBytes);
+	await assertJvmStructuredCodegenRegression(codegen);
 	assert.deepEqual(record.updates.map(update => update.path).sort(), jvmStructuredCallableChangedPaths);
 	assert.deepEqual(Object.keys(record.additions).sort(), jvmStructuredCallableAddedPaths);
 	const paths = [...new Set([...Object.keys(previous.sourceHashes), ...jvmStructuredCallableChangedPaths, ...jvmStructuredCallableAddedPaths])].sort();
 	assert.deepEqual(Object.keys(record.sourceHashes).sort(), paths);
-	for(const path of paths) assert.equal(sha256(await priorSource(path)), record.sourceHashes[path], path);
+	for(const path of paths) assert.equal(sha256(await priorSource(path, record.sourceHashes[path])), record.sourceHashes[path], path);
 	const restored = {};
 	for(const update of record.updates)
 	{
 		assert.equal(update.currentSha256, record.sourceHashes[update.path]);
-		restored[update.path] = reverseJvmStructuredCallableUpdate(await priorSource(update.path), update);
+		restored[update.path] = reverseJvmStructuredCallableUpdate(await priorSource(update.path, update.currentSha256), update);
 		if(previous.sourceHashes[update.path]) assert.equal(update.previousSha256, previous.sourceHashes[update.path]);
 	}
 	for(const [path, expected] of Object.entries(record.additions)) assert.equal(expected, record.sourceHashes[path]);
@@ -85,8 +89,10 @@ export const assertJvmStructuredCallableIntegration = async record => {
 		assert.equal(expected, sha256(restored[path]));
 		assert.equal(codegen.sourceHashes[path], record.sourceHashes[path]);
 	}
-	const { document: current, ...contracts } = await readTypeSurface(); void current;
-	const document = JSON.parse(await priorSource("docs/type-surface.v1.json"));
+	const contracts = typeSurfaceContractsAtProducer(
+		jvmStructuredCallableProducer
+	);
+	const document = JSON.parse(await priorSource("docs/type-surface.v1.json", record.sourceHashes["docs/type-surface.v1.json"]));
 	const oldDocument = JSON.parse(restored["docs/type-surface.v1.json"]);
 	assert.equal(document.contractVersion, record.inventory.version); assert.equal(oldDocument.contractVersion, record.inventory.previousVersion);
 	const cells = typeSurfaceCells(document, contracts), oldCells = typeSurfaceCells(oldDocument, contracts);

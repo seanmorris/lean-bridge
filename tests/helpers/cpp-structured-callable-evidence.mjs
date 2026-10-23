@@ -6,7 +6,6 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { readTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { historicalTypeSurfaceCells as typeSurfaceCells } from "./historical-type-surface-cells.mjs";
 import { boostIdentity } from "../../src/backends/cpp/boost.mjs";
 import { structuredCallableExports } from "./structured-callable-fixture.mjs";
@@ -16,7 +15,10 @@ import { assertCppStructuredCodegenRegression } from "./cpp-structured-callable-
 import { cStructuredCallableHistoryPath } from "./c-structured-callable-source-history.mjs";
 import { assertCStructuredCallableIntegration } from "./c-structured-callable-evidence.mjs";
 import { cppStructuredCallableChangedPaths, reverseCppStructuredCallableUpdate } from "./cpp-structured-callable-source-history.mjs";
-import { beforeRustStructuredCallables } from "./rust-structured-callable-source-history.mjs";
+import { sourceAtProducer, typeSurfaceContractsAtProducer } from "./producer-source.mjs";
+
+export const cppStructuredCallableProducer
+	= "646aceda428705779adc34a2b96a0c0dcd7356b5";
 
 export const cppStructuredCallableExecutionPath = "docs/evidence/cpp-structured-callables-20260924.json";
 export const cppStructuredCodegenPath = "docs/evidence/cpp-structured-codegen-regression-20260924.json";
@@ -107,7 +109,9 @@ export const assertCppStructuredCallableExecution = async record => {
  * @param record - Current implementation, inventory delta and original receipts.
  */
 export const assertCppStructuredCallableIntegration = async record => {
-	const priorSource = async path => beforeRustStructuredCallables(path, await readFile(path, "utf8"));
+	const priorSource = (path, expected) => sourceAtProducer(
+		cppStructuredCallableProducer, path, expected
+	);
 	assert.equal(record.schemaVersion, 1); assert.equal(record.planNode, 1219);
 	assert.equal(record.kind, "cpp-structured-callable-integration");
 	assert.equal(record.baselineRevision, "9e6eb510535a6907c37d63f89ecbe0ac66927c32");
@@ -126,12 +130,12 @@ export const assertCppStructuredCallableIntegration = async record => {
 	assert.deepEqual(Object.keys(record.additions).sort(), cppStructuredCallableAddedPaths);
 	const paths = [...new Set([...Object.keys(previous.sourceHashes), ...cppStructuredCallableChangedPaths, ...cppStructuredCallableAddedPaths])].sort();
 	assert.deepEqual(Object.keys(record.sourceHashes).sort(), paths);
-	for(const path of paths) assert.equal(sha256(await priorSource(path)), record.sourceHashes[path], path);
+	for(const path of paths) assert.equal(sha256(await priorSource(path, record.sourceHashes[path])), record.sourceHashes[path], path);
 	const restored = {};
 	for(const update of record.updates)
 	{
 		assert.equal(update.currentSha256, record.sourceHashes[update.path]);
-		restored[update.path] = reverseCppStructuredCallableUpdate(await priorSource(update.path), update);
+		restored[update.path] = reverseCppStructuredCallableUpdate(await priorSource(update.path, update.currentSha256), update);
 		if(previous.sourceHashes[update.path]) assert.equal(update.previousSha256, previous.sourceHashes[update.path]);
 	}
 	for(const [path, expected] of Object.entries(record.additions)) assert.equal(expected, record.sourceHashes[path]);
@@ -140,9 +144,10 @@ export const assertCppStructuredCallableIntegration = async record => {
 		assert.equal(expected, sha256(restored[path]));
 		assert.equal(codegen.sourceHashes[path], record.sourceHashes[path]);
 	}
-	const { document: current, ...contracts } = await readTypeSurface();
-	assert.ok(current.contractVersion);
-	const document = JSON.parse(await priorSource("docs/type-surface.v1.json"));
+	const contracts = typeSurfaceContractsAtProducer(
+		cppStructuredCallableProducer
+	);
+	const document = JSON.parse(await priorSource("docs/type-surface.v1.json", record.sourceHashes["docs/type-surface.v1.json"]));
 	const oldDocument = JSON.parse(restored["docs/type-surface.v1.json"]);
 	assert.equal(document.contractVersion, record.inventory.version); assert.equal(oldDocument.contractVersion, record.inventory.previousVersion);
 	const cells = typeSurfaceCells(document, contracts), oldCells = typeSurfaceCells(oldDocument, contracts);

@@ -19,10 +19,10 @@ test("structured JVM callbacks preserve every older Java and Kotlin generated fi
 	const record = JSON.parse(await readFile("docs/evidence/jvm-structured-codegen-regression-20260924.json"));
 	for(const [path, hash] of Object.entries(record.sourceHashes))
 		assert.equal(sha256(ownedJvmHistoricalBytes(path, await readFile(path), hash)), hash, path);
-	assertJvmStructuredCodegenRegression(record);
+	await assertJvmStructuredCodegenRegression(record);
 	const altered = structuredClone(record);
 	Object.values(altered.fixtures[0].files)[0].sha256 = "0".repeat(64);
-	assert.throws(() => assertJvmStructuredCodegenRegression(altered));
+	await assert.rejects(assertJvmStructuredCodegenRegression(altered));
 });
 
 test("structured JVM callbacks keep Kotlin values distinct and share closure leases", () => {
