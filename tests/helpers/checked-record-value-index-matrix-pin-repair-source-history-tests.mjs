@@ -89,7 +89,14 @@ test("value-index matrix pin repair closes pins and added sources", async () => 
 	assert.equal(record.pinCount, 94);
 	assert.deepEqual(record.pinUpdates
 		, checkedRecordValueIndexMatrixPinRepairPins);
-	const inventory = JSON.parse(await readFile(
+	const inventoryUpdate = record.updates.find(update =>
+		update.path === "docs/type-surface.v1.json");
+	assert.ok(inventoryUpdate);
+	const inventory = JSON.parse(await sourceAtFinHistoryMilestone(
+		inventoryUpdate.path, inventoryUpdate.currentSha256
+		, beforeCheckedRecordValueIndexMatrixPinRepairSource
+	));
+	const liveInventory = JSON.parse(await readFile(
 		"docs/type-surface.v1.json", "utf8"
 	));
 	for(const pin of checkedRecordValueIndexMatrixPinRepairPins)
@@ -98,6 +105,13 @@ test("value-index matrix pin repair closes pins and added sources", async () => 
 			.filter(file => file.path === pin.path);
 		assert.equal(matches.length, pin.count, pin.path);
 		assert.ok(matches.every(file => file.sha256 === pin.currentSha256)
+			, pin.path);
+		const liveMatches = liveInventory.evidence
+			.flatMap(evidence => evidence.files)
+			.filter(file => file.path === pin.path);
+		assert.ok(liveMatches.length >= matches.length, pin.path);
+		const liveSha256 = sha256(await readFile(pin.path, "utf8"));
+		assert.ok(liveMatches.every(file => file.sha256 === liveSha256)
 			, pin.path);
 	}
 	for(const addition of record.additions)
