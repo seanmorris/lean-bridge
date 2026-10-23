@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeValueIndexPromotionMemoryRepairSource, valueIndexPromotionMemoryRepairNormalizationPaths } from "./value-index-promotion-memory-repair-source-history.mjs";
 import { beforeNominalEntryTagRepairSource, nominalEntryTagRepairNormalizationPaths } from "./nominal-entry-tag-repair-source-history.mjs";
 import { beforeCallbackCheckedRecordPromotionRefreshSource, callbackCheckedRecordPromotionRefreshNormalizationPaths } from "./callback-checked-record-promotion-refresh-source-history.mjs";
 import { beforeCallbackCheckedRecordArchiveCommitProvenanceSource, callbackCheckedRecordArchiveCommitProvenanceNormalizationPaths } from "./callback-checked-record-archive-commit-provenance-source-history.mjs";
@@ -1962,7 +1963,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...nominalEntryTagRepairNormalizationPaths
+	...valueIndexPromotionMemoryRepairNormalizationPaths
+	, ...nominalEntryTagRepairNormalizationPaths
 	, ...callbackCheckedRecordPromotionRefreshNormalizationPaths
 	, ...callbackCheckedRecordArchiveCommitProvenanceNormalizationPaths
 	, ...callbackCheckedRecordArchiveProvenanceRepairNormalizationPaths
@@ -2726,8 +2728,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 			text = exact;
 		}
 	}
+	const valueIndexPromotionMemoryRepair
+		= beforeValueIndexPromotionMemoryRepairSource(path, text, expected);
+	if(sha256(valueIndexPromotionMemoryRepair) === expected)
+		return valueIndexPromotionMemoryRepair;
 	const nominalEntryTagRepair = beforeNominalEntryTagRepairSource(
-		path, text, expected
+		path, valueIndexPromotionMemoryRepair, expected
 	);
 	if(sha256(nominalEntryTagRepair) === expected) return nominalEntryTagRepair;
 	const callbackCheckedRecordPromotionRefresh
