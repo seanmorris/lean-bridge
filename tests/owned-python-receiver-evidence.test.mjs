@@ -9,6 +9,7 @@ import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
 import { classifyRepositoryTest } from "../src/adoption/test-profiles.mjs";
 import { assertOwnedPythonReceiverExecution } from "./helpers/owned-python-receiver-evidence.mjs";
+import "./helpers/owned-receiver-producer-replay-repair-source-history-tests.mjs";
 import { beforeOwnedRubyReceiver, ownedRubyReceiverHistoricalBytes } from "./helpers/owned-ruby-receiver-history.mjs";
 import { ownedPythonReceiverPath, ownedPythonReceiverBaseline, ownedPythonReceiverPrevious
 	, ownedPythonReceiverChangedPaths, ownedPythonReceiverAddedPaths

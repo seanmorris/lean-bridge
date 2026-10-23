@@ -1,0 +1,338 @@
+{
+  "additions": [
+    {
+      "currentSha256": "4fa39f35504f7fe3b72e4f18f6fb4f193323b42154fc37da76191c3b7a601a0d",
+      "path": "scripts/update-owned-receiver-producer-replay-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "90281aec34fc5eb1c13d7c42abb53ef409353f1f457d0936fe0b19dae098d9e9",
+      "path": "tests/helpers/owned-receiver-producer-replay-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "5d083ae172c12162f48b4165d2048a4429c862089b9fbd30985001a611f097ce",
+      "path": "tests/helpers/owned-receiver-producer-replay-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "0e8e2bd4806d2b09e5c8bc88ce765da885e2a6cd",
+  "integrationUpdates": [
+    {
+      "currentSha256": "e74bf3240251d4aade40e4ee37ae30d56985066d6befcd3cfeb783b4eb353195",
+      "edits": [
+        {
+          "current": "import { beforeOwnedReceiverProducerReplayRepairSource, ownedReceiverProducerReplayRepairNormalizationPaths } from \"./owned-receiver-producer-replay-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...ownedReceiverProducerReplayRepairNormalizationPaths\n\t, ...ownedTransferProducerReplayRepairNormalizationPaths\n",
+          "previous": "\t...ownedTransferProducerReplayRepairNormalizationPaths\n",
+          "start": 162465
+        },
+        {
+          "current": "\tconst ownedReceiverProducerReplayRepair\n\t\t= beforeOwnedReceiverProducerReplayRepairSource(path, text, expected);\n\tif(sha256(ownedReceiverProducerReplayRepair) === expected)\n\t\treturn ownedReceiverProducerReplayRepair;\n",
+          "previous": "",
+          "start": 199441
+        },
+        {
+          "current": "\t\t= beforeOwnedTransferProducerReplayRepairSource(\n\t\t\tpath, ownedReceiverProducerReplayRepair, expected\n\t\t);\n",
+          "previous": "\t\t= beforeOwnedTransferProducerReplayRepairSource(path, text, expected);\n",
+          "start": 199700
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "d80008a95df45cd4ad55d81bc2f4f6f8707497202c49700bfea4f00b3f70480f"
+    },
+    {
+      "currentSha256": "b0bfd9bfbf2a7e0ef1375546ba6a202d6096b37bcd87a1d647f6e3810f85f2c4",
+      "edits": [
+        {
+          "current": "import \"./helpers/owned-receiver-producer-replay-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 443
+        }
+      ],
+      "path": "tests/owned-python-receiver-evidence.test.mjs",
+      "previousSha256": "d8e049dca7b48cd5ba256b9c25080000a6ec6c95244fce183b1c7ef3631c2fa4"
+    }
+  ],
+  "milestone": "owned-receiver-producer-replay-repair-source-v1",
+  "predecessorCommit": "065fa4db04b295892ab15b755eddbb71377967c7",
+  "schemaVersion": 1,
+  "scope": "The frozen owned Python and Ruby receiver evidence is replayed with each exact producer's complete static module and source closure rather than regenerating historical observations with current compiler semantics.",
+  "updates": [
+    {
+      "currentSha256": "185eea50233bdc2903e6c720af40b9c76f9f756be82b73b97dd125ba4b0a635d",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { readFile } from \"node:fs/promises\";\n",
+          "start": 142
+        },
+        {
+          "current": "import { moduleAtProducer } from \"./producer-module.mjs\";\nimport { bytesAtProducer } from \"./producer-source.mjs\";\n",
+          "previous": "import { ownedRubyReceiverHistoricalBytes } from \"./owned-ruby-receiver-history.mjs\";\nimport { generateOwnedCPackage } from \"../../src/backends/c/owned-package.mjs\";\nimport { generateOwnedCppPackage } from \"../../src/backends/cpp/owned-package.mjs\";\nimport { generateOwnedRustPackage } from \"../../src/backends/rust/owned-package.mjs\";\nimport { generateOwnedPythonPackage } from \"../../src/backends/python/owned-package.mjs\";\nimport { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from \"../../src/build/native-graph-model.mjs\";\nimport { validatePackageSetReceipt } from \"../../src/release/package-set-receipt.mjs\";\nimport { ownedRustBorrowNativeSource } from \"./owned-rust-borrow-fixture.mjs\";\nimport { ownedReceiverSource } from \"./owned-receiver-fixture.mjs\";\nimport { ownedPythonReceiverSource, ownedPythonReceiverReviewedIr, ownedPythonReceiverProbe\n\t, ownedPythonPlainReceiverProbe, ownedPythonInstalledReceiverProbe } from \"./owned-python-receiver-fixture.mjs\";\nimport { ownedCppReceiverProbe } from \"./owned-cpp-receiver-fixture.mjs\";\nimport { ownedRustReceiverProbe } from \"./owned-rust-receiver-fixture.mjs\";\nimport { ownedPythonInstalledProbe } from \"./owned-python-installed-probes.mjs\";\nimport { pythonTypingWheels } from \"./python-wheel-install.mjs\";\nimport { assertOwnedPythonReceiverCi } from \"./owned-python-receiver-ci.mjs\";\n",
+          "start": 210
+        },
+        {
+          "current": "const producerCommit = \"5271f6b8c74d3e4295e6607cd13bd1271204a63e\";\nconst producerPromise = Promise.all([\n\t\"src/backends/c/owned-package.mjs\"\n\t, \"src/backends/cpp/owned-package.mjs\"\n\t, \"src/backends/python/owned-package.mjs\"\n\t, \"src/backends/rust/owned-package.mjs\"\n\t, \"src/build/native-graph-model.mjs\"\n\t, \"src/release/package-set-receipt.mjs\"\n\t, \"tests/helpers/owned-rust-borrow-fixture.mjs\"\n\t, \"tests/helpers/owned-receiver-fixture.mjs\"\n\t, \"tests/helpers/owned-python-receiver-fixture.mjs\"\n\t, \"tests/helpers/owned-cpp-receiver-fixture.mjs\"\n\t, \"tests/helpers/owned-rust-receiver-fixture.mjs\"\n\t, \"tests/helpers/owned-python-installed-probes.mjs\"\n\t, \"tests/helpers/python-wheel-install.mjs\"\n\t, \"tests/helpers/owned-python-receiver-ci.mjs\"\n].map(path => moduleAtProducer(producerCommit, path))).then(modules =>\n\tObject.assign({}, ...modules));\nconst historical = path => bytesAtProducer(producerCommit, path);\n",
+          "previous": "",
+          "start": 2005
+        },
+        {
+          "current": "const mixed = (input, producer) => {\n",
+          "previous": "const mixed = input => {\n",
+          "start": 3024
+        },
+        {
+          "current": "\tconst model = producer.createCompiledNativeModel(input, capabilities);\n",
+          "previous": "\tconst model = createCompiledNativeModel(input, capabilities);\n",
+          "start": 3159
+        },
+        {
+          "current": "\treturn { model, c: producer.generateOwnedCPackage(input), python: producer.generateOwnedPythonPackage(model.bindingIr, null, options) };\n",
+          "previous": "\treturn { model, c: generateOwnedCPackage(input), python: generateOwnedPythonPackage(model.bindingIr, null, options) };\n",
+          "start": 3733
+        },
+        {
+          "current": " * @param exactProducer - Optional already-loaded immutable producer closure.\n",
+          "previous": "",
+          "start": 4299
+        },
+        {
+          "current": "export const assertOwnedPythonReceiverInputs = async (record, exactProducer) => {\n\tconst producer = exactProducer || await producerPromise;\n",
+          "previous": "export const assertOwnedPythonReceiverInputs = async record => {\n",
+          "start": 4381
+        },
+        {
+          "current": "\tconst lean = historical(\"tests/fixtures/onboarding/owned-aggregates/Owned.lean\").toString();\n\tconst borrowedProbe = historical(\"tests/fixtures/structured-types/owned-python-borrows.py\").toString();\n\tconst receiverProbe = historical(\"tests/fixtures/structured-types/owned-python-receivers.py\").toString();\n\tconst marker = \"def owners():\";\n\tassert.equal(borrowedProbe.split(marker).length, 2);\n\tconst probe = borrowedProbe.replace(marker, receiverProbe + \"\\nreceiver_members()\\n\\n\" + marker);\n",
+          "previous": "\tconst lean = await readFile(\"tests/fixtures/onboarding/owned-aggregates/Owned.lean\", \"utf8\");\n\tconst probe = await ownedPythonReceiverProbe();\n",
+          "start": 4771
+        },
+        {
+          "current": "\t\tsourceIdentity(item.input, item.mode, lean + producer.ownedPythonReceiverSource);\n\t\tconst { c, python } = mixed(item.input, producer), runtime = python.files[`${python.packageDir}/_owned.py`];\n",
+          "previous": "\t\tsourceIdentity(item.input, item.mode, lean + ownedPythonReceiverSource);\n\t\tconst { c, python } = mixed(item.input), runtime = python.files[`${python.packageDir}/_owned.py`];\n",
+          "start": 5301
+        },
+        {
+          "current": "\t\tassert.equal(item.nativeSha256, sha256(producer.ownedRustBorrowNativeSource(c))); assert.equal(item.probeSha256, sha256(probe));\n",
+          "previous": "\t\tassert.equal(item.nativeSha256, sha256(ownedRustBorrowNativeSource(c))); assert.equal(item.probeSha256, sha256(probe));\n",
+          "start": 5809
+        },
+        {
+          "current": "\t\tsourceIdentity(item.input, item.mode, lean + producer.ownedReceiverSource);\n\t\tconst model = producer.createCompiledNativeModel(item.input, { ownedGraphs: true, ownedReceiverExports: true, ownedInputTransfers: item.consuming });\n",
+          "previous": "\t\tsourceIdentity(item.input, item.mode, lean + ownedReceiverSource);\n\t\tconst model = createCompiledNativeModel(item.input, { ownedGraphs: true, ownedReceiverExports: true, ownedInputTransfers: item.consuming });\n",
+          "start": 7555
+        },
+        {
+          "current": "\t\tconst python = producer.generateOwnedPythonPackage(model.bindingIr, null, { receiverExports: true, transferredInputs: item.consuming, hostCallbacks: false });\n\t\tassert.deepEqual(item.contract, python.contract); assert.equal(item.sourceSha256, sha256(producer.generateOwnedCPackage(item.input).source));\n\t\tassert.equal(item.probe, producer.ownedPythonPlainReceiverProbe(item.consuming)); assert.equal(item.probeSha256, sha256(item.probe));\n",
+          "previous": "\t\tconst python = generateOwnedPythonPackage(model.bindingIr, null, { receiverExports: true, transferredInputs: item.consuming, hostCallbacks: false });\n\t\tassert.deepEqual(item.contract, python.contract); assert.equal(item.sourceSha256, sha256(generateOwnedCPackage(item.input).source));\n\t\tassert.equal(item.probe, ownedPythonPlainReceiverProbe(item.consuming)); assert.equal(item.probeSha256, sha256(item.probe));\n",
+          "start": 8169
+        },
+        {
+          "current": "\tconst typed = producer.generateOwnedPythonPackage(producer.ownedPythonReceiverReviewedIr(), null, options);\n",
+          "previous": "\tconst typed = generateOwnedPythonPackage(ownedPythonReceiverReviewedIr(), null, options);\n",
+          "start": 8781
+        },
+        {
+          "current": "\tconst testSource = historical(\"tests/owned-python-receivers.test.mjs\").toString();\n",
+          "previous": "\tconst testSource = await readFile(\"tests/owned-python-receivers.test.mjs\", \"utf8\");\n",
+          "start": 8951
+        },
+        {
+          "current": "\tconst producer = await producerPromise;\n\tfor(const name of [\n\t\t\"assertOwnedPythonReceiverCi\", \"createCompiledNativeModel\"\n\t\t, \"generateCompiledNativeLeanAdapters\", \"generateOwnedCPackage\"\n\t\t, \"generateOwnedCppPackage\", \"generateOwnedPythonPackage\"\n\t\t, \"generateOwnedRustPackage\", \"ownedPythonPlainReceiverProbe\"\n\t\t, \"ownedPythonReceiverReviewedIr\", \"ownedRustBorrowNativeSource\"\n\t\t, \"validatePackageSetReceipt\"\n\t]) assert.equal(typeof producer[name], \"function\", name);\n\tassert.equal(typeof producer.ownedPythonInstalledProbe, \"string\");\n",
+          "previous": "",
+          "start": 9668
+        },
+        {
+          "current": "\tawait assertOwnedPythonReceiverInputs(record, producer);\n",
+          "previous": "\tawait assertOwnedPythonReceiverInputs(record);\n",
+          "start": 10731
+        },
+        {
+          "current": "\tconst lean = historical(\"tests/fixtures/onboarding/owned-aggregates/Owned.lean\").toString();\n\tconst installedBorrow = historical(\"tests/fixtures/structured-types/owned-installed-python-borrows.py\").toString();\n\tconst receiverMembers = historical(\"tests/fixtures/structured-types/owned-python-receivers.py\").toString()\n\t\t.replaceAll(\"r.LeanBridgeError\", \"api.LeanBridgeError\").replaceAll(\"data()\", \"payload()\");\n\tconst receiverMarker = \"def owners():\";\n\tassert.equal(installedBorrow.split(receiverMarker).length, 2);\n\tconst consumer = installedBorrow.replace(receiverMarker,\n\t\treceiverMembers + \"\\nreceiver_members()\\n\\n\" + receiverMarker);\n\tconst example = historical(\"tests/fixtures/documentation/consumers/python/owned-receivers.py\").toString();\n\tassert.equal(historical(\"docs/consume/python.md\").toString().match(/```python file=python\\/owned-receivers\\.py\\n([\\s\\S]*?)```/u)?.[1], example);\n\tconst loader = producer.ownedPythonInstalledProbe.replaceAll(\"compatible.serial(ticket)\", \"compatible.serial(ticket.get())\")\n",
+          "previous": "\tconst lean = await readFile(\"tests/fixtures/onboarding/owned-aggregates/Owned.lean\", \"utf8\");\n\tconst consumer = await ownedPythonInstalledReceiverProbe();\n\tconst example = await readFile(\"tests/fixtures/documentation/consumers/python/owned-receivers.py\", \"utf8\");\n\tassert.equal((await readFile(\"docs/consume/python.md\", \"utf8\")).match(/```python file=python\\/owned-receivers\\.py\\n([\\s\\S]*?)```/u)?.[1], example);\n\tconst loader = ownedPythonInstalledProbe.replaceAll(\"compatible.serial(ticket)\", \"compatible.serial(ticket.get())\")\n",
+          "start": 11248
+        },
+        {
+          "current": "\tconst cliConfig = JSON.parse(historical(\"config/cli-package.v1.json\"));\n",
+          "previous": "\tconst cliConfig = JSON.parse(ownedRubyReceiverHistoricalBytes(\"config/cli-package.v1.json\", await readFile(\"config/cli-package.v1.json\"), record.sources[\"config/cli-package.v1.json\"]).toString());\n",
+          "start": 12399
+        },
+        {
+          "current": "\t\tsourceIdentity(input, item.mode, lean + producer.ownedPythonReceiverSource);\n\t\tconst { model, c, python } = mixed(input, producer), native = producer.generateCompiledNativeLeanAdapters(model);\n",
+          "previous": "\t\tsourceIdentity(input, item.mode, lean + ownedPythonReceiverSource);\n\t\tconst { model, c, python } = mixed(input), native = generateCompiledNativeLeanAdapters(model);\n",
+          "start": 12913
+        },
+        {
+          "current": "\t\tconst packaged = producer.generateOwnedPythonPackage(model.bindingIr, evidence, options);\n",
+          "previous": "\t\tconst packaged = generateOwnedPythonPackage(model.bindingIr, evidence, options);\n",
+          "start": 15053
+        },
+        {
+          "current": "\t\t\t\tassert.equal(value.installation.dependency.version, version); assert.equal(value.installation.dependency.sha256, producer.pythonTypingWheels[version]);\n",
+          "previous": "\t\t\t\tassert.equal(value.installation.dependency.version, version); assert.equal(value.installation.dependency.sha256, pythonTypingWheels[version]);\n",
+          "start": 15872
+        },
+        {
+          "current": "\t\tproducer.validatePackageSetReceipt(packages);\n",
+          "previous": "\t\tvalidatePackageSetReceipt(packages);\n",
+          "start": 17563
+        },
+        {
+          "current": "\t\t\tassert.deepEqual(adapter.cppValues, producer.generateOwnedCppPackage(model.bindingIr, options).contract);\n\t\t\tassert.deepEqual(adapter.rustValues, producer.generateOwnedRustPackage(model.bindingIr, null, {}, options).contract);\n\t\t\tconst cpp = historical(\"tests/fixtures/structured-types/owned-cpp-borrows.cpp\").toString()\n\t\t\t\t.replace(\"int main() {\", historical(\"tests/fixtures/structured-types/owned-cpp-receivers.cpp\").toString() + \"\\nint main() {\")\n\t\t\t\t.replace(\"  test_owners(); check_clean();\", \"  test_receiver_members(); check_clean();\\n  test_owners(); check_clean();\")\n\t\t\t\t.replaceAll(\"owned-cpp-borrows-installed\", \"owned-cpp-receivers-installed\");\n\t\t\tconst rust = historical(\"tests/fixtures/structured-types/owned-rust-borrows.rs\").toString()\n\t\t\t\t.replace(\"fn main() {\", historical(\"tests/fixtures/structured-types/owned-rust-receivers.rs\").toString() + \"\\nfn main() {\")\n\t\t\t\t.replace(\"[owners, shapes, transfers, depth, callbacks, fork_guard]\", \"[receiver_members, owners, shapes, transfers, depth, callbacks, fork_guard]\")\n\t\t\t\t.replaceAll(\"owned-rust-borrows:\", \"owned-rust-receivers:\");\n\t\t\tfor(const [name, source] of [[\"cpp\", \"#define OWNED_BORROW_INSTALLED 1\\n\" + cpp], [\"rust\", \"use owned_receivers::*;\\n\" + rust]])\n",
+          "previous": "\t\t\tassert.deepEqual(adapter.cppValues, generateOwnedCppPackage(model.bindingIr, options).contract);\n\t\t\tassert.deepEqual(adapter.rustValues, generateOwnedRustPackage(model.bindingIr, null, {}, options).contract);\n\t\t\tfor(const [name, source] of [[\"cpp\", \"#define OWNED_BORROW_INSTALLED 1\\n\" + await ownedCppReceiverProbe()], [\"rust\", \"use owned_receivers::*;\\n\" + await ownedRustReceiverProbe()]])\n",
+          "start": 17890
+        },
+        {
+          "current": "\t\t\tconst bytes = historical(path);\n",
+          "previous": "\t\t\tconst bytes = Buffer.from(ownedRubyReceiverHistoricalBytes(path, await readFile(path), file?.sha256));\n",
+          "start": 20066
+        },
+        {
+          "current": "\tproducer.assertOwnedPythonReceiverCi(historical(\".github/workflows/consumer-matrix.yml\").toString(), JSON.parse(historical(\"package.json\")));\n",
+          "previous": "\tassertOwnedPythonReceiverCi(await readFile(\".github/workflows/consumer-matrix.yml\", \"utf8\"), JSON.parse(await readFile(\"package.json\", \"utf8\")));\n",
+          "start": 20589
+        }
+      ],
+      "path": "tests/helpers/owned-python-receiver-evidence.mjs",
+      "previousSha256": "86cce9095a41bf7be2f28ba15016b17c358d7060c7d8182995f2e79b93f09eb8"
+    },
+    {
+      "currentSha256": "e036925d39f53da9e933cf78d4560d2c86bfe9411b783bbf6d7d4bec2c25e51c",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { readFile } from \"node:fs/promises\";\n",
+          "start": 141
+        },
+        {
+          "current": "import { moduleAtProducer } from \"./producer-module.mjs\";\nimport { bytesAtProducer } from \"./producer-source.mjs\";\n",
+          "previous": "import { ownedDotnetReceiverHistoricalBytes } from \"./owned-dotnet-receiver-history.mjs\";\nimport { generateOwnedCPackage } from \"../../src/backends/c/owned-package.mjs\";\nimport { historicalOwnedRubyCallbackPackage as generateOwnedRubyPackage } from \"./owned-ruby-callback-generated-history.mjs\";\nimport { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from \"../../src/build/native-graph-model.mjs\";\nimport { ownedRubyAdapterSources } from \"../../src/build/owned-ruby-artifacts.mjs\";\nimport { validatePackageSetReceipt } from \"../../src/release/package-set-receipt.mjs\";\nimport { ownedRustBorrowNativeSource } from \"./owned-rust-borrow-fixture.mjs\";\nimport { ownedReceiverSource } from \"./owned-receiver-fixture.mjs\";\nimport { ownedRubyReceiverSource, ownedRubyReceiverProbe, ownedRubyPlainReceiverProbe } from \"./owned-ruby-receiver-fixture.mjs\";\nimport { ownedRubyInstalledReceiverProbe } from \"./owned-ruby-receiver-installed.mjs\";\nimport { ownedCppReceiverProbe } from \"./owned-cpp-receiver-fixture.mjs\";\nimport { ownedRustReceiverProbe } from \"./owned-rust-receiver-fixture.mjs\";\nimport { pythonTypingWheels } from \"./python-wheel-install.mjs\";\n",
+          "start": 209
+        },
+        {
+          "current": "const producerCommit = \"7f1a432b5cffb9a0cddfa2fef30440f9847afc39\";\nconst producerPromise = Promise.all([\n\t\"src/backends/c/owned-package.mjs\"\n\t, \"src/backends/ruby/owned-package.mjs\"\n\t, \"src/build/native-graph-model.mjs\"\n\t, \"src/build/owned-ruby-artifacts.mjs\"\n\t, \"src/release/package-set-receipt.mjs\"\n\t, \"tests/helpers/owned-rust-borrow-fixture.mjs\"\n\t, \"tests/helpers/owned-receiver-fixture.mjs\"\n\t, \"tests/helpers/owned-ruby-receiver-fixture.mjs\"\n\t, \"tests/helpers/owned-ruby-receiver-installed.mjs\"\n\t, \"tests/helpers/owned-cpp-receiver-fixture.mjs\"\n\t, \"tests/helpers/owned-rust-receiver-fixture.mjs\"\n\t, \"tests/helpers/owned-python-receiver-fixture.mjs\"\n\t, \"tests/helpers/python-wheel-install.mjs\"\n\t, \"tests/helpers/owned-ruby-receiver-ci.mjs\"\n].map(path => moduleAtProducer(producerCommit, path))).then(modules =>\n\tObject.assign({}, ...modules));\nconst historical = path => bytesAtProducer(producerCommit, path);\n",
+          "previous": "",
+          "start": 1841
+        },
+        {
+          "current": "const mixed = (input, producer) => {\n",
+          "previous": "const mixed = input => {\n",
+          "start": 2866
+        },
+        {
+          "current": "\tconst model = producer.createCompiledNativeModel(input, capabilities);\n",
+          "previous": "\tconst model = createCompiledNativeModel(input, capabilities);\n",
+          "start": 3001
+        },
+        {
+          "current": "\treturn { model, c: producer.generateOwnedCPackage(input), ruby: producer.generateOwnedRubyPackage(model.bindingIr, null, options) };\n",
+          "previous": "\treturn { model, c: generateOwnedCPackage(input), ruby: generateOwnedRubyPackage(model.bindingIr, null, options) };\n",
+          "start": 3575
+        },
+        {
+          "current": " * @param exactProducer - Optional already-loaded immutable producer closure.\n",
+          "previous": "",
+          "start": 4135
+        },
+        {
+          "current": "export const assertOwnedRubyReceiverInputs = async (record, exactProducer) => {\n\tconst producer = exactProducer || await producerPromise;\n",
+          "previous": "export const assertOwnedRubyReceiverInputs = async record => {\n",
+          "start": 4217
+        },
+        {
+          "current": "\tconst lean = historical(\"tests/fixtures/onboarding/owned-aggregates/Owned.lean\").toString();\n\tconst borrowedProbe = historical(\"tests/fixtures/structured-types/owned-ruby-borrows.rb\").toString();\n\tconst receiverProbe = historical(\"tests/fixtures/structured-types/owned-ruby-receivers.rb\").toString();\n\tconst marker = \"  state\\n  empty_counts = counts\\n\";\n\tassert.equal(borrowedProbe.split(marker).length, 2);\n\tconst probe = borrowedProbe.replace(marker, receiverProbe + marker);\n\tconst helpers = historical(\"tests/fixtures/structured-types/owned-ruby-probe.rb\");\n",
+          "previous": "\tconst lean = await readFile(\"tests/fixtures/onboarding/owned-aggregates/Owned.lean\", \"utf8\");\n\tconst probe = await ownedRubyReceiverProbe(), helpers = await readFile(\"tests/fixtures/structured-types/owned-ruby-probe.rb\");\n",
+          "start": 4605
+        },
+        {
+          "current": "\t\tsourceIdentity(item.input, item.mode, lean + producer.ownedRubyReceiverSource);\n\t\tconst { c, ruby } = mixed(item.input, producer), runtime = ruby.files[`lib/${ruby.requirePath}/owned.rb`];\n",
+          "previous": "\t\tsourceIdentity(item.input, item.mode, lean + ownedRubyReceiverSource);\n\t\tconst { c, ruby } = mixed(item.input), runtime = ruby.files[`lib/${ruby.requirePath}/owned.rb`];\n",
+          "start": 5207
+        },
+        {
+          "current": "\t\tassert.equal(item.nativeSha256, sha256(producer.ownedRustBorrowNativeSource(c) + ruby.cSource));\n",
+          "previous": "\t\tassert.equal(item.nativeSha256, sha256(ownedRustBorrowNativeSource(c) + ruby.cSource));\n",
+          "start": 5712
+        },
+        {
+          "current": "\t\tsourceIdentity(item.input, item.mode, lean + producer.ownedReceiverSource);\n\t\tconst model = producer.createCompiledNativeModel(item.input, { ownedGraphs: true, ownedReceiverExports: true, ownedInputTransfers: item.consuming });\n",
+          "previous": "\t\tsourceIdentity(item.input, item.mode, lean + ownedReceiverSource);\n\t\tconst model = createCompiledNativeModel(item.input, { ownedGraphs: true, ownedReceiverExports: true, ownedInputTransfers: item.consuming });\n",
+          "start": 7166
+        },
+        {
+          "current": "\t\tconst ruby = producer.generateOwnedRubyPackage(model.bindingIr, null, { receiverExports: true, transferredInputs: item.consuming, hostCallbacks: false });\n\t\tconst implementation = producer.generateOwnedCPackage(item.input).source + ruby.cSource + `\n",
+          "previous": "\t\tconst ruby = generateOwnedRubyPackage(model.bindingIr, null, { receiverExports: true, transferredInputs: item.consuming, hostCallbacks: false });\n\t\tconst implementation = generateOwnedCPackage(item.input).source + ruby.cSource + `\n",
+          "start": 7780
+        },
+        {
+          "current": "\t\tassert.equal(item.probeSha256, sha256(producer.ownedRubyPlainReceiverProbe(item.consuming)));\n",
+          "previous": "\t\tassert.equal(item.probeSha256, sha256(ownedRubyPlainReceiverProbe(item.consuming)));\n",
+          "start": 8515
+        },
+        {
+          "current": "\tconst producer = await producerPromise;\n\tfor(const name of [\n\t\t\"assertOwnedRubyReceiverCi\", \"createCompiledNativeModel\"\n\t\t, \"generateCompiledNativeLeanAdapters\", \"generateOwnedCPackage\"\n\t\t, \"generateOwnedRubyPackage\", \"ownedRubyAdapterSources\"\n\t\t, \"ownedRubyPlainReceiverProbe\", \"ownedRustBorrowNativeSource\"\n\t\t, \"validatePackageSetReceipt\"\n\t]) assert.equal(typeof producer[name], \"function\", name);\n",
+          "previous": "",
+          "start": 8946
+        },
+        {
+          "current": "\tawait assertOwnedRubyReceiverInputs(record, producer);\n",
+          "previous": "\tawait assertOwnedRubyReceiverInputs(record);\n\tconst { ownedPythonInstalledReceiverProbe } = await import(\"./owned-python-receiver-fixture.mjs\");\n",
+          "start": 9867
+        },
+        {
+          "current": "\tconst lean = historical(\"tests/fixtures/onboarding/owned-aggregates/Owned.lean\").toString();\n\tconst installedBorrow = historical(\"tests/fixtures/structured-types/owned-installed-ruby-borrows.rb\").toString();\n\tconst receiverMembers = historical(\"tests/fixtures/structured-types/owned-ruby-receivers.rb\").toString();\n\tconst receiverMarker = \"  root = ticket\\n\";\n\tassert.equal(installedBorrow.split(receiverMarker).length, 2);\n\tconst consumer = installedBorrow.replace(receiverMarker, receiverMembers + receiverMarker);\n\tconst example = historical(\"tests/fixtures/documentation/consumers/ruby/owned-receivers.rb\").toString();\n\tassert.equal(historical(\"docs/consume/ruby.md\").toString().match(/```ruby file=ruby\\/owned-receivers\\.rb\\n([\\s\\S]*?)```/u)?.[1], example);\n\tconst loader = historical(\"tests/fixtures/structured-types/owned-ruby-installed-loader.rb\");\n\tconst cliConfig = JSON.parse(historical(\"config/cli-package.v1.json\"));\n",
+          "previous": "\tconst lean = await readFile(\"tests/fixtures/onboarding/owned-aggregates/Owned.lean\", \"utf8\");\n\tconst consumer = await ownedRubyInstalledReceiverProbe();\n\tconst example = await readFile(\"tests/fixtures/documentation/consumers/ruby/owned-receivers.rb\", \"utf8\");\n\tassert.equal((await readFile(\"docs/consume/ruby.md\", \"utf8\")).match(/```ruby file=ruby\\/owned-receivers\\.rb\\n([\\s\\S]*?)```/u)?.[1], example);\n\tconst loader = await readFile(\"tests/fixtures/structured-types/owned-ruby-installed-loader.rb\");\n\tconst cliConfig = JSON.parse(ownedDotnetReceiverHistoricalBytes(\"config/cli-package.v1.json\", await readFile(\"config/cli-package.v1.json\"), record.sources[\"config/cli-package.v1.json\"]).toString());\n",
+          "start": 10395
+        },
+        {
+          "current": "\t\tsourceIdentity(input, item.mode, lean + producer.ownedRubyReceiverSource);\n\t\tconst { model, c, ruby } = mixed(input, producer), native = producer.generateCompiledNativeLeanAdapters(model);\n",
+          "previous": "\t\tsourceIdentity(input, item.mode, lean + ownedRubyReceiverSource);\n\t\tconst { model, c, ruby } = mixed(input), native = generateCompiledNativeLeanAdapters(model);\n",
+          "start": 11786
+        },
+        {
+          "current": "\t\tfor(const [path, source] of Object.entries(producer.ownedRubyAdapterSources(c, ruby)))\n",
+          "previous": "\t\tfor(const [path, source] of Object.entries(ownedRubyAdapterSources(c, ruby)))\n",
+          "start": 13173
+        },
+        {
+          "current": "\t\tconst packaged = producer.generateOwnedRubyPackage(model.bindingIr, evidence, options);\n",
+          "previous": "\t\tconst packaged = generateOwnedRubyPackage(model.bindingIr, evidence, options);\n",
+          "start": 14421
+        },
+        {
+          "current": "\t\tproducer.validatePackageSetReceipt(packages);\n",
+          "previous": "\t\tvalidatePackageSetReceipt(packages);\n",
+          "start": 16261
+        },
+        {
+          "current": "\t\t\tconst cpp = historical(\"tests/fixtures/structured-types/owned-cpp-borrows.cpp\").toString()\n\t\t\t\t.replace(\"int main() {\", historical(\"tests/fixtures/structured-types/owned-cpp-receivers.cpp\").toString() + \"\\nint main() {\")\n\t\t\t\t.replace(\"  test_owners(); check_clean();\", \"  test_receiver_members(); check_clean();\\n  test_owners(); check_clean();\")\n\t\t\t\t.replaceAll(\"owned-cpp-borrows-installed\", \"owned-cpp-receivers-installed\");\n\t\t\tconst rust = historical(\"tests/fixtures/structured-types/owned-rust-borrows.rs\").toString()\n\t\t\t\t.replace(\"fn main() {\", historical(\"tests/fixtures/structured-types/owned-rust-receivers.rs\").toString() + \"\\nfn main() {\")\n\t\t\t\t.replace(\"[owners, shapes, transfers, depth, callbacks, fork_guard]\", \"[receiver_members, owners, shapes, transfers, depth, callbacks, fork_guard]\")\n\t\t\t\t.replaceAll(\"owned-rust-borrows:\", \"owned-rust-receivers:\");\n\t\t\tconst installedPython = historical(\"tests/fixtures/structured-types/owned-installed-python-borrows.py\").toString();\n\t\t\tconst pythonMembers = historical(\"tests/fixtures/structured-types/owned-python-receivers.py\").toString()\n\t\t\t\t.replaceAll(\"r.LeanBridgeError\", \"api.LeanBridgeError\").replaceAll(\"data()\", \"payload()\");\n\t\t\tconst pythonMarker = \"def owners():\";\n\t\t\tassert.equal(installedPython.split(pythonMarker).length, 2);\n\t\t\tconst python = installedPython.replace(pythonMarker,\n\t\t\t\tpythonMembers + \"\\nreceiver_members()\\n\\n\" + pythonMarker);\n",
+          "previous": "",
+          "start": 16604
+        },
+        {
+          "current": "\t\t\t\t[\"cpp\", \"#define OWNED_BORROW_INSTALLED 1\\n\" + cpp]\n\t\t\t\t, [\"rust\", \"use owned_receivers::*;\\n\" + rust]\n\t\t\t\t, [\"python\", python]\n",
+          "previous": "\t\t\t\t[\"cpp\", \"#define OWNED_BORROW_INSTALLED 1\\n\" + await ownedCppReceiverProbe()]\n\t\t\t\t, [\"rust\", \"use owned_receivers::*;\\n\" + await ownedRustReceiverProbe()]\n\t\t\t\t, [\"python\", await ownedPythonInstalledReceiverProbe()]\n",
+          "start": 18056
+        },
+        {
+          "current": "\t\t\tassert.equal(installation.dependency.sha256, producer.pythonTypingWheels[\"4.6.0\"]);\n",
+          "previous": "\t\t\tassert.equal(installation.dependency.sha256, pythonTypingWheels[\"4.6.0\"]);\n",
+          "start": 18480
+        },
+        {
+          "current": "\t\t\tconst bytes = historical(path);\n",
+          "previous": "\t\t\tconst bytes = Buffer.from(ownedDotnetReceiverHistoricalBytes(path, await readFile(path), file?.sha256));\n",
+          "start": 19390
+        },
+        {
+          "current": "\tproducer.assertOwnedRubyReceiverCi(historical(\".github/workflows/consumer-matrix.yml\").toString(), JSON.parse(historical(\"package.json\")));\n",
+          "previous": "\tconst { assertOwnedRubyReceiverCi } = await import(\"./owned-ruby-receiver-ci.mjs\");\n\tassertOwnedRubyReceiverCi(await readFile(\".github/workflows/consumer-matrix.yml\", \"utf8\"), JSON.parse(await readFile(\"package.json\", \"utf8\")));\n",
+          "start": 19913
+        }
+      ],
+      "path": "tests/helpers/owned-ruby-receiver-evidence.mjs",
+      "previousSha256": "fefd9958523d63acb6605454260ddfe528a76c5484be88fb0ba20d345c2ec844"
+    }
+  ]
+}

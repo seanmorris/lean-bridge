@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeOwnedReceiverProducerReplayRepairSource, ownedReceiverProducerReplayRepairNormalizationPaths } from "./owned-receiver-producer-replay-repair-source-history.mjs";
 import { beforeOwnedTransferProducerReplayRepairSource, ownedTransferProducerReplayRepairNormalizationPaths } from "./owned-transfer-producer-replay-repair-source-history.mjs";
 import { beforeOwnedPythonBorrowProducerReplayRepairSource, ownedPythonBorrowProducerReplayRepairNormalizationPaths } from "./owned-python-borrow-producer-replay-repair-source-history.mjs";
 import { beforeOwnedPhpProducerReplayRepairSource, ownedPhpProducerReplayRepairNormalizationPaths } from "./owned-php-producer-replay-repair-source-history.mjs";
@@ -2036,7 +2037,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...ownedTransferProducerReplayRepairNormalizationPaths
+	...ownedReceiverProducerReplayRepairNormalizationPaths
+	, ...ownedTransferProducerReplayRepairNormalizationPaths
 	, ...ownedPythonBorrowProducerReplayRepairNormalizationPaths
 	, ...ownedPhpProducerReplayRepairNormalizationPaths
 	, ...ownedJavaScriptTransferProducerReplayRepairNormalizationPaths
@@ -2822,8 +2824,14 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 			text = exact;
 		}
 	}
+	const ownedReceiverProducerReplayRepair
+		= beforeOwnedReceiverProducerReplayRepairSource(path, text, expected);
+	if(sha256(ownedReceiverProducerReplayRepair) === expected)
+		return ownedReceiverProducerReplayRepair;
 	const ownedTransferProducerReplayRepair
-		= beforeOwnedTransferProducerReplayRepairSource(path, text, expected);
+		= beforeOwnedTransferProducerReplayRepairSource(
+			path, ownedReceiverProducerReplayRepair, expected
+		);
 	if(sha256(ownedTransferProducerReplayRepair) === expected)
 		return ownedTransferProducerReplayRepair;
 	const ownedPythonBorrowProducerReplayRepair
