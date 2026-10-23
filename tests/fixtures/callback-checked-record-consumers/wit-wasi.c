@@ -169,7 +169,8 @@ int main(void) {
   callbackcheckedrecords_scalar_nat_t_clear(&output);
   interval_t five_two = interval(&five_value, &two_value);
   rejected(callbackcheckedrecords_wasmtime_make_closure_call(
-    session, closure, &five_two, &output), "Native Lean closure call failed");
+    session, closure, &five_two, &output),
+    "arg0 was rejected by CallbackCheckedRecords.mkInterval");
   check(!output._bridge_owner, "closure rejects invalid interval cleanly");
   interval_t three_three = interval(&three_value, &three_value);
   ok(callbackcheckedrecords_wasmtime_make_closure_call(session, closure, &three_three, &output));
@@ -187,7 +188,8 @@ int main(void) {
   check(equal_interval(&interval_output, 2, 5), "mixed closure result");
   callbackcheckedrecords_interval_t_clear(&interval_output);
   rejected(callbackcheckedrecords_wasmtime_make_mixed_closure_call(
-    session, mixed, &nine, &five_two, &interval_output), "Native Lean closure call failed");
+    session, mixed, &nine, &five_two, &interval_output),
+    "arg1 was rejected by CallbackCheckedRecords.mkInterval");
   check(!interval_output._bridge_owner, "mixed closure rejects invalid interval cleanly");
   ok(callbackcheckedrecords_wasmtime_make_mixed_closure_call(
     session, mixed, &nine, &valid, &interval_output));
@@ -221,7 +223,8 @@ int main(void) {
   option_interval_t bad_option = {.has_value = 1, .value = five_two};
   interval_array_t bad_array = {.data = &bad_option, .length = 1};
   rejected(callbackcheckedrecords_wasmtime_make_container_closure_call(
-    session, container, &bad_array, &option_output), "Native Lean closure call failed");
+    session, container, &bad_array, &option_output),
+    "arg0[0]? was rejected by CallbackCheckedRecords.mkInterval");
   interval_array_t empty = {0};
   ok(callbackcheckedrecords_wasmtime_make_container_closure_call(session, container, &empty, &option_output));
   check(!option_output.has_value, "container closure recovers");
@@ -272,10 +275,12 @@ int main(void) {
   callbackcheckedrecords_scalar_nat_t_clear(&output);
   weighted_t zero_five = weighted(NULL, &five_value);
   rejected(callbackcheckedrecords_wasmtime_make_nested_closure_call(
-    session, nested, &zero_five, &output), "Native Lean closure call failed");
+    session, nested, &zero_five, &output),
+    "arg0.weight was rejected by CallbackCheckedRecords.checkedPositive");
   weighted_t six_five = weighted(&six_value, &five_value);
   rejected(callbackcheckedrecords_wasmtime_make_nested_closure_call(
-    session, nested, &six_five, &output), "Native Lean closure call failed");
+    session, nested, &six_five, &output),
+    "arg0 was rejected by CallbackCheckedRecords.mkWeighted");
   weighted_t five_five = weighted(&five_value, &five_value);
   ok(callbackcheckedrecords_wasmtime_make_nested_closure_call(
     session, nested, &five_five, &output));

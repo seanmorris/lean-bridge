@@ -7,7 +7,7 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { mkdtemp, rm } from "node:fs/promises";
+import { mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
@@ -288,4 +288,18 @@ test("managed, PHP and WIT callable packages expose proof-free checked-record re
 	assert.doesNotMatch(wit.hostHeader, /ordered/iu);
 	assert.match(witCallableGraphPackageReadme(wit, "2.38")
 		, /checked Lean Subtype or checked record/u);
+});
+
+test("the WIT consumer expects exact returned-closure constructor diagnostics", async () => {
+	const source = await readFile(
+		"tests/fixtures/callback-checked-record-consumers/wit-wasi.c", "utf8"
+	);
+	for(const diagnostic of [
+		"arg0 was rejected by CallbackCheckedRecords.mkInterval"
+		, "arg1 was rejected by CallbackCheckedRecords.mkInterval"
+		, "arg0[0]? was rejected by CallbackCheckedRecords.mkInterval"
+		, "arg0.weight was rejected by CallbackCheckedRecords.checkedPositive"
+		, "arg0 was rejected by CallbackCheckedRecords.mkWeighted"
+	]) assert.equal(source.split(diagnostic).length - 1, 1, diagnostic);
+	assert.doesNotMatch(source, /make_(?:mixed_|container_|nested_)?closure_call\([\s\S]{0,120}"Native Lean closure call failed"/u);
 });
