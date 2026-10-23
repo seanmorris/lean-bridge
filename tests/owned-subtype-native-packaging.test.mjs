@@ -22,6 +22,7 @@ import { lakeInputState, saveLakeFile } from "./helpers/lake-workspace.mjs";
 const enabled = process.env.LEAN_BRIDGE_OWNED_SUBTYPE_NATIVE_TEST === "1";
 const json = async path => JSON.parse(await readFile(path, "utf8"));
 const reports = [];
+const expectedChecks = Object.freeze({ c: 149, cpp: 79 });
 
 test.after(async () => {
 	if(enabled && reports.length === 2)
@@ -194,7 +195,11 @@ for(const reviewed of [false, true]) test(`installed ${reviewed ? "reviewed" : "
 		const packages = receipt.packages.filter(item => item.target === profile);
 		observed[profile] = await installCopiedConsumer({ profile, consumer, handoff
 			, packages, environment
-			, fixture: { source: () => sources[profile], success: `owned-subtype-${profile}` } });
+			, fixture: {
+				source: () => sources[profile], success: `owned-subtype-${profile}`
+				, expectedChecks: expectedChecks[profile]
+			}
+		});
 	}
 	await rm(handoff, { recursive: true }); await assert.rejects(access(handoff), { code: "ENOENT" });
 	const relocated = {};
