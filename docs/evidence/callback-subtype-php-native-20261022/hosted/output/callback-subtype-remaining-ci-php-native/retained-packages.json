@@ -1,0 +1,29 @@
+{
+  "routes": [
+    {
+      "archiveBytes": 51417383,
+      "archives": 1,
+      "files": [
+        "archives/lean-bridge-callbacksubtypes-1.0.0-linux-x86_64.zip",
+        "package-set-receipt.json",
+        "package-set-receipt.json.sha256"
+      ],
+      "path": "evidence/ordinary/handoff",
+      "receiptSha256": "8e4908e645b11a57f59cf10a63df877d549553ffc77f8e7f2ad8ca8b95789312",
+      "route": "ordinary"
+    },
+    {
+      "archiveBytes": 51421697,
+      "archives": 1,
+      "files": [
+        "archives/lean-bridge-callbacksubtypes-1.0.0-linux-x86_64.zip",
+        "package-set-receipt.json",
+        "package-set-receipt.json.sha256"
+      ],
+      "path": "evidence/reviewed/handoff",
+      "receiptSha256": "d9c5da392eba9c557ad7098dc6ce6693ef07a5deb2e25fe439e62b614627bb30",
+      "route": "reviewed"
+    }
+  ],
+  "schemaVersion": 1
+}

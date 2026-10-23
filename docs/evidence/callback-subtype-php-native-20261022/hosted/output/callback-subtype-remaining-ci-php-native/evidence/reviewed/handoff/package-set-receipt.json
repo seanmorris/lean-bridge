@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "callbacksubtypes@1.0.0",
+    "name": "callbacksubtypes",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51421697,
+          "path": "archives/lean-bridge-callbacksubtypes-1.0.0-linux-x86_64.zip",
+          "sha256": "6a72ac4e7d0bdf2982c8b4d6a7d5fe0dda08c087275984962e441d104e13f19b"
+        }
+      ],
+      "ecosystem": "composer",
+      "name": "lean-bridge/callbacksubtypes",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "php-native",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "c83962d9a93cbc992a8f8986bf8a4842af100c0d828675d25176e89621e22ad5",
+      "id": "native-library-v1",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "9647f05187ea18052d78718375f1612d4d1e34b098ace1fb30089e0fb41387e0"
+  }
+}

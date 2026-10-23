@@ -1,0 +1,31 @@
+{
+  "kind": "callback-subtype-remaining",
+  "producerCommit": "733693e06a1461541d4d3d7a43d8496d26c2df45",
+  "profiles": [
+    "php-native"
+  ],
+  "reportSha256": "e65553e9a43c21dedef40cb2c8679f5fd888e2fbbe192564c4d7b46c2c850821",
+  "reports": 2,
+  "retainedPackages": {
+    "routes": [
+      {
+        "archiveBytes": 51417383,
+        "archives": 1,
+        "receiptSha256": "8e4908e645b11a57f59cf10a63df877d549553ffc77f8e7f2ad8ca8b95789312",
+        "route": "ordinary"
+      },
+      {
+        "archiveBytes": 51421697,
+        "archives": 1,
+        "receiptSha256": "d9c5da392eba9c557ad7098dc6ce6693ef07a5deb2e25fe439e62b614627bb30",
+        "route": "reviewed"
+      }
+    ],
+    "schemaVersion": 1
+  },
+  "routes": [
+    "ordinary",
+    "reviewed"
+  ],
+  "schemaVersion": 1
+}
