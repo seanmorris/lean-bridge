@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeWorkflowMilestoneReplayRepairSource, workflowMilestoneReplayRepairNormalizationPaths } from "./workflow-milestone-replay-repair-source-history.mjs";
 import { beforeCoreResidualLedgerPointerReplayRepairSource, coreResidualLedgerPointerReplayRepairNormalizationPaths } from "./core-residual-ledger-pointer-replay-repair-source-history.mjs";
 import { beforeCoreRubyModelAvailabilityRepairSource, coreRubyModelAvailabilityRepairNormalizationPaths } from "./core-ruby-model-availability-repair-source-history.mjs";
 import { beforeCoreResidualProducerReplayRepairSource, coreResidualProducerReplayRepairNormalizationPaths } from "./core-residual-producer-replay-repair-source-history.mjs";
@@ -2028,7 +2029,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...coreResidualLedgerPointerReplayRepairNormalizationPaths
+	...workflowMilestoneReplayRepairNormalizationPaths
+	, ...coreResidualLedgerPointerReplayRepairNormalizationPaths
 	, ...coreRubyModelAvailabilityRepairNormalizationPaths
 	, ...coreResidualProducerReplayRepairNormalizationPaths
 	, ...callbackStagingLineageReplayRepairNormalizationPaths
@@ -2806,9 +2808,13 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 			text = exact;
 		}
 	}
+	const workflowMilestoneReplayRepair
+		= beforeWorkflowMilestoneReplayRepairSource(path, text, expected);
+	if(sha256(workflowMilestoneReplayRepair) === expected)
+		return workflowMilestoneReplayRepair;
 	const coreResidualLedgerPointerReplayRepair
 		= beforeCoreResidualLedgerPointerReplayRepairSource(
-			path, text, expected
+			path, workflowMilestoneReplayRepair, expected
 		);
 	if(sha256(coreResidualLedgerPointerReplayRepair) === expected)
 		return coreResidualLedgerPointerReplayRepair;

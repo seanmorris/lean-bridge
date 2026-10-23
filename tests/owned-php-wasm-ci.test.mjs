@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { assertOwnedPhpWasmCi, ownedPhpWasmCiCommands, ownedPhpWasmCiReports } from "./helpers/owned-php-wasm-ci.mjs";
+import "./helpers/workflow-milestone-replay-repair-source-history-tests.mjs";
 import "./helpers/php-shard-ci-tests.mjs";
 import "./helpers/php-shard-source-history-tests.mjs";
 import "./helpers/php-wasm-corpus-partition-tests.mjs";

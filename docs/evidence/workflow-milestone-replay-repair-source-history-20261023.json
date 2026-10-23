@@ -1,0 +1,113 @@
+{
+  "additions": [
+    {
+      "currentSha256": "892122f694bbf85cfaae18b8574f8eab3ccce83436ec4c98c3143e063acfd2ff",
+      "path": "scripts/update-workflow-milestone-replay-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "1f668238bb868a0d66367c39746c7ccdf50b00871c9ea138c846122fa1ff396c",
+      "path": "tests/helpers/workflow-milestone-replay-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "1be1d84479758948affad0f0228be6fe43f131a87a98eb1134cbf1b833bcd59f",
+      "path": "tests/helpers/workflow-milestone-replay-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "a918f53b32daac340473c122c3854d13c0398820",
+  "integrationUpdates": [
+    {
+      "currentSha256": "087fba88c3489a92bb6012e089696c6c7953b5365b0fc90246c36e151434e7d4",
+      "edits": [
+        {
+          "current": "import { beforeWorkflowMilestoneReplayRepairSource, workflowMilestoneReplayRepairNormalizationPaths } from \"./workflow-milestone-replay-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...workflowMilestoneReplayRepairNormalizationPaths\n\t, ...coreResidualLedgerPointerReplayRepairNormalizationPaths\n",
+          "previous": "\t...coreResidualLedgerPointerReplayRepairNormalizationPaths\n",
+          "start": 161007
+        },
+        {
+          "current": "\tconst workflowMilestoneReplayRepair\n\t\t= beforeWorkflowMilestoneReplayRepairSource(path, text, expected);\n\tif(sha256(workflowMilestoneReplayRepair) === expected)\n\t\treturn workflowMilestoneReplayRepair;\n",
+          "previous": "",
+          "start": 197506
+        },
+        {
+          "current": "\t\t\tpath, workflowMilestoneReplayRepair, expected\n",
+          "previous": "\t\t\tpath, text, expected\n",
+          "start": 197808
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "2b58cb01fa73cd5bc5dc2febdae5bd8f98f15b28de47735a802d1890b6a958ce"
+    },
+    {
+      "currentSha256": "4d5d16681cff68d848c240c43f3589d4a96725ab2201364550385b987b4febb3",
+      "edits": [
+        {
+          "current": "import \"./helpers/workflow-milestone-replay-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 335
+        }
+      ],
+      "path": "tests/owned-php-wasm-ci.test.mjs",
+      "previousSha256": "060c40d68af689867f7794e96dd96a28130b15ac846cdcb15d513c046b574574"
+    }
+  ],
+  "milestone": "workflow-milestone-replay-repair-source-v1",
+  "predecessorCommit": "e1294bf2a053c88b72317a46dd57b31ea84f5819",
+  "schemaVersion": 1,
+  "scope": "The JVM split and PHP-Wasm corpus-partition contracts now reconstruct their exact authenticated workflow epochs through the shared source-history hub instead of comparing later unrelated workflow additions with frozen milestone content. Separate live-workflow enforcement remains unchanged.",
+  "updates": [
+    {
+      "currentSha256": "8bfb22110da3281c1fcda814e72c07e4b0caf2201d8663fe290d5b50b7e5ad50",
+      "edits": [
+        {
+          "current": "import { beforeFinRefinementSource } from \"./fin-refinement-source-history.mjs\";\n",
+          "previous": "",
+          "start": 364
+        },
+        {
+          "current": "",
+          "previous": "import { beforeDotnetDispatchIntegrationSource } from \"./dotnet-dispatch-integration-source-history.mjs\";\n",
+          "start": 507
+        },
+        {
+          "current": "const jvmShardWorkflowSha256\n\t= \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\";\n",
+          "previous": "",
+          "start": 913
+        },
+        {
+          "current": "\tsource = beforeFinRefinementSource(\n\t\t\".github/workflows/consumer-matrix.yml\", source, jvmShardWorkflowSha256\n\t);\n\tassert.equal(sha256(source), jvmShardWorkflowSha256);\n",
+          "previous": "\tsource = beforeDotnetDispatchIntegrationSource(\".github/workflows/consumer-matrix.yml\", source);\n",
+          "start": 3748
+        }
+      ],
+      "path": "tests/helpers/jvm-shard-ci-tests.mjs",
+      "previousSha256": "8b1fc13c342c7b05f982d50dd32074e9f201725bc3457e65cf49f7fd0aedbabc"
+    },
+    {
+      "currentSha256": "8048d13f50cfe7f01ac136dd7981957db273ee6c6d05233f0bc2083474b0b2f2",
+      "edits": [
+        {
+          "current": "import { beforeFinRefinementSource } from \"./fin-refinement-source-history.mjs\";\n",
+          "previous": "",
+          "start": 399
+        },
+        {
+          "current": "const partitionWorkflowSha256\n\t= \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\";\n",
+          "previous": "",
+          "start": 912
+        },
+        {
+          "current": "const read = async () => {\n\tconst source = beforeFinRefinementSource(\n\t\tpath, await readFile(path, \"utf8\"), partitionWorkflowSha256\n\t);\n\tassert.equal(sha256(source), partitionWorkflowSha256);\n\treturn source;\n};\n",
+          "previous": "const read = () => readFile(path, \"utf8\");\n",
+          "start": 1166
+        }
+      ],
+      "path": "tests/helpers/php-wasm-corpus-partition-tests.mjs",
+      "previousSha256": "e21f241c8ff720b7152cb2f5fcbf3d64f26f63cd0e6c32daa29421388d3c23b3"
+    }
+  ]
+}
