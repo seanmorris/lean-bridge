@@ -1,5 +1,5 @@
 import java.math.BigInteger;
-import static org.leanbridge.owned_checked_records_result_only.Api.*;
+import static org.leanbridge.owned_checked_records.Api.*;
 
 final class Consumer {
     public static void main(String[] args) {

@@ -1,5 +1,5 @@
 import java.math.BigInteger
-import org.leanbridge.owned_checked_records_result_only.kotlin.Api
+import org.leanbridge.owned_checked_records.kotlin.Api
 
 fun main() {
     var checks = 0

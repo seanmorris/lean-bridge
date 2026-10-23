@@ -215,7 +215,8 @@ const fixtureFor = async (profile, resultOnly) => {
 		return { source: () => source, success: successName(profile, resultOnly)
 			, wit: [/resource identity-ticket/u, /claim-for: func/u
 				, ...resultOnly ? [] : [/with-claim-callback: func/u
-					, /claim-closure: func/u]] };
+					, /claim-closure: func/u]]
+			, ...resultOnly ? { expectedChecks: 14 } : {} };
 	}
 	const sourceProfile = profile === "php-native" ? "php" : profile;
 	const source = await readFile(`tests/fixtures/structured-types/owned-checked-record-${resultOnly

@@ -3,7 +3,7 @@ declare(strict_types=0);
 require __DIR__ . '/vendor/autoload.php';
 
 use Brick\Math\BigInteger as Big;
-use function LeanOwnedCheckedRecordsResultOnly\{claim_for, new_ticket, serial};
+use function LeanOwnedCheckedRecords\{claim_for, new_ticket, serial};
 
 $checks = 0; $ticket = new_ticket(Big::of(17), 'result-only');
 if (!serial($ticket)->isEqualTo(17)) throw new RuntimeException('serial'); $checks++;
