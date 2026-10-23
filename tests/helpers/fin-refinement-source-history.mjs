@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeStructuredCallableProducerReplayRepairSource, structuredCallableProducerReplayRepairNormalizationPaths } from "./structured-callable-producer-replay-repair-source-history.mjs";
 import { beforeNativeBudgetReplayRepairSource, nativeBudgetReplayRepairNormalizationPaths } from "./native-budget-replay-repair-source-history.mjs";
 import { beforeInheritedDocsReplayRepairSource, inheritedDocsReplayRepairNormalizationPaths } from "./inherited-docs-replay-repair-source-history.mjs";
 import { beforeValueIndexRustGeneratorReplayRepairSource, valueIndexRustGeneratorReplayRepairNormalizationPaths } from "./value-index-rust-generator-replay-repair-source-history.mjs";
@@ -2021,7 +2022,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...nativeBudgetReplayRepairNormalizationPaths
+	...structuredCallableProducerReplayRepairNormalizationPaths
+	, ...nativeBudgetReplayRepairNormalizationPaths
 	, ...inheritedDocsReplayRepairNormalizationPaths
 	, ...valueIndexRustGeneratorReplayRepairNormalizationPaths
 	, ...genericSubtypeRustOraclePathRepairNormalizationPaths
@@ -2792,8 +2794,15 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 			text = exact;
 		}
 	}
-	const nativeBudgetReplayRepair
-		= beforeNativeBudgetReplayRepairSource(path, text, expected);
+	const structuredCallableProducerReplayRepair
+		= beforeStructuredCallableProducerReplayRepairSource(
+			path, text, expected
+		);
+	if(sha256(structuredCallableProducerReplayRepair) === expected)
+		return structuredCallableProducerReplayRepair;
+	const nativeBudgetReplayRepair = beforeNativeBudgetReplayRepairSource(
+		path, structuredCallableProducerReplayRepair, expected
+	);
 	if(sha256(nativeBudgetReplayRepair) === expected)
 		return nativeBudgetReplayRepair;
 	const inheritedDocsReplayRepair

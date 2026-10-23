@@ -8,6 +8,7 @@ import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
 import { jvmCallableConsumer, jvmCallableSignatures, jvmCallableRejections } from "./helpers/jvm-callable-fixture.mjs";
 import { assertJvmHistoricalSource, readJvmHistoricalEvidence } from "./helpers/jvm-source-history.mjs";
+import "./helpers/structured-callable-producer-replay-repair-source-history-tests.mjs";
 
 test("JVM callable evidence binds both languages and source paths to runtime-only installations", async () => {
 	const record = await readJvmHistoricalEvidence("jvm-callables-20260919");
