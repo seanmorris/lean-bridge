@@ -13,6 +13,7 @@ import { generateOwnedJvmPackage } from "../src/backends/jvm/owned-package.mjs";
 import { generateOwnedPhpPackage } from "../src/backends/php/owned-package.mjs";
 import { generateOwnedCppPackage } from "../src/backends/cpp/owned-package.mjs";
 import { buildCanonicalProject } from "../src/build/canonical-build.mjs";
+import { compileJvmSources } from "../src/build/compile-jvm-sources.mjs";
 import { ownedDotnetEvidence } from "../src/build/owned-dotnet-artifacts.mjs";
 import { ownedJvmEvidence } from "../src/build/owned-jvm-artifacts.mjs";
 import { ownedPhpEvidence } from "../src/build/owned-php-artifacts.mjs";
@@ -119,7 +120,53 @@ test("remaining hosts generate callback-free checked transfer copies", () => {
 			"newTicket", "serial", "echoRecord", "echoRecordAlternate", "transferRecord"
 		], profile);
 	}
+	// Java consumers carry no Kotlin runtime, so only the lazy accessor may
+	// construct the Kotlin factories.
+	const bindings = Object.entries(generated.jvm.files).find(([path]) =>
+		path.endsWith("/_OwnedBindings.java"))[1];
+	assert.equal(bindings.split("new _KotlinOwnedFactories(").length, 2);
+	assert.match(bindings, /private volatile _OwnedConvert\.Factory kotlinFactory;\n/u);
+	assert.match(bindings, /_OwnedConvert\.Factory kotlinFactory\(\) \{\n[^}]+new _KotlinOwnedFactories\(this\)/u);
+	assert.doesNotMatch(bindings, /^\s+private final [^\n]*_Kotlin/mu);
 });
+
+const jvmTools = ["LEAN_BRIDGE_JAVAC", "LEAN_BRIDGE_KOTLINC"]
+	.every(name => process.env[name] !== undefined);
+test("Java callers construct owned bindings without the Kotlin runtime"
+	, { skip: !jvmTools, timeout: 300_000 }, async t => {
+		const root = await mkdtemp(join(tmpdir(), "lean-owned-jvm-java-only-"));
+		t.after(() => rm(root, { recursive: true, force: true }));
+		const { files } = generateOwnedJvmPackage(ownedSubtypePackageReviewedIr(), null
+			, { transferredInputs: true, hostCallbacks: false });
+		for(const [path, source] of Object.entries(files))
+			await saveLakeFile(root, path, source);
+		const environment = { PATH: process.env.PATH
+			, LEAN_BRIDGE_JAVAC: process.env.LEAN_BRIDGE_JAVAC
+			, LEAN_BRIDGE_KOTLINC: process.env.LEAN_BRIDGE_KOTLINC
+			, ...process.env.LEAN_BRIDGE_JAVA ? { LEAN_BRIDGE_JAVA: process.env.LEAN_BRIDGE_JAVA } : {} };
+		await compileJvmSources({ root, files, environment });
+		const bindings = Object.keys(files).find(path => path.endsWith("/_OwnedBindings.java"));
+		const namespace = files[bindings].match(/^package ([\w.]+);$/mu)[1];
+		const probe = `probe/${namespace.replaceAll(".", "/")}/Probe.java`;
+		await saveLakeFile(root, probe, `package ${namespace};
+public final class Probe {
+    public static void main(String[] args) {
+        try { new _OwnedBindings(name -> java.util.Optional.empty(), () -> { }); }
+        catch (Throwable error) { System.out.println(error.getClass().getName()); }
+    }
+}
+`);
+		const javac = process.env.LEAN_BRIDGE_JAVAC;
+		const java = process.env.LEAN_BRIDGE_JAVA ?? join(dirname(javac), "java");
+		await runCopied(javac, ["--release", "22", "-proc:none", "-classpath"
+			, "classes", "-d", "probe-classes", probe], root);
+		// The class path omits kotlin-stdlib: constructing the bindings must
+		// reach the native symbol lookup without loading any Kotlin class.
+		const run = await runCopied(java, ["--enable-native-access=ALL-UNNAMED"
+			, "-classpath", "probe-classes:classes", `${namespace}.Probe`], root);
+		assert.equal(run.stdout, "java.util.NoSuchElementException\n");
+	}
+);
 
 test("callback-free WIT consumer matches the checked native header", async t => {
 	const directory = await mkdtemp(join(tmpdir(), "lean-owned-subtype-wit-header-"));

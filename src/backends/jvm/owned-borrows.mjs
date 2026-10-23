@@ -164,7 +164,7 @@ export const ownedJvmAnchoredCall = (context, fn, index, kotlin) => {
 	const { model, nodes, calls, type, parameterType, returnType, name } = context;
 	const { c } = model, family = kotlin ? "Kotlin" : "Java";
 	const catalog = kotlin ? "_KotlinOwnedTypes.CATALOG" : "_OwnedTypes.CATALOG";
-	const factory = kotlin ? "kotlinFactory" : "javaFactory";
+	const factory = kotlin ? "kotlinFactory()" : "javaFactory";
 	const equality = kotlin ? "_KotlinOwnedValues" : "GraphValues";
 	const parameters = fn.parameters.map(id => nodes.get(id)), result = nodes.get(fn.result);
 	const moving = fn.transfers ?? [], wraps = i => moving.includes(i) || fn.anchor === i;

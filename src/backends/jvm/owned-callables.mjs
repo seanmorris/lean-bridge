@@ -65,7 +65,7 @@ export const ownedJvmCallables = (model, calls, type) => {
 		const replyType = borrowed ? `${model.namespace}.CallbackResult<${boxes[resultType] ?? resultType}>` : resultType;
 		const returnType = unit ? "void" : replyType;
 		const catalog = kotlin ? "_KotlinOwnedTypes.CATALOG" : "_OwnedTypes.CATALOG";
-		const factory = kotlin ? "kotlinFactory" : "javaFactory";
+		const factory = kotlin ? "kotlinFactory()" : "javaFactory";
 		const signature = parameters.map((param, i) => `${type(param.id, kotlin)} arg${i}`).join(", ");
 		const arguments_ = parameters.map((_, i) => `arg${i}`).join(", ");
 		const rawSignature = parameters.map((param, i) => `${param.raw} arg${i}`).join(", ");

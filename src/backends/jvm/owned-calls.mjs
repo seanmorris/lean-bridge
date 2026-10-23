@@ -84,7 +84,7 @@ export const generateOwnedJvmCalls = (ir, options = {}) => {
 			continue;
 		}
 		const family = k ? "Kotlin" : "Java", catalog = k ? "_KotlinOwnedTypes.CATALOG" : "_OwnedTypes.CATALOG";
-		const factory = k ? "kotlinFactory" : "javaFactory";
+		const factory = k ? "kotlinFactory()" : "javaFactory";
 		const parameters = fn.parameters.map(id => nodes.get(id)), result = nodes.get(fn.result);
 		const moving = fn.transfers ?? [];
 		const write = (node, i, scope, check) => fn.handle && i === 0
@@ -167,7 +167,7 @@ final class _OwnedBindings {
     private final MethodHandle ready, retired;
     private final MemorySegment component = Arena.ofAuto().allocateFrom(${JSON.stringify(model.c.native.model.component.id)});
     private final _OwnedConvert.Factory javaFactory = this::factoryJava;
-    private final _OwnedConvert.Factory kotlinFactory = new _KotlinOwnedFactories(this);
+    private volatile _OwnedConvert.Factory kotlinFactory;
     _OwnedBindings(SymbolLookup symbols, Runnable before) {
         runtime = new _OwnedRuntime(symbols, before); runtime.ensureProcess();
         var linker = Linker.nativeLinker();
@@ -186,6 +186,15 @@ ${canonicalEquality ? `        equality = new MethodHandle[] {\n${identities.map
     private void retire() {
         runtime.ensureProcess();
         try { retired.invokeExact(); } catch (Throwable error) { throw _OwnedRuntime.rethrow(error); }
+    }
+    // Kotlin factories need the Kotlin runtime, so Java callers never load them.
+    _OwnedConvert.Factory kotlinFactory() {
+        var factory = kotlinFactory;
+        if (factory == null) synchronized (this) {
+            factory = kotlinFactory;
+            if (factory == null) kotlinFactory = factory = new _KotlinOwnedFactories(this);
+        }
+        return factory;
     }
     private Object factoryJava(int type, _OwnedRuntime.Handle handle) {
         return switch (type) {
