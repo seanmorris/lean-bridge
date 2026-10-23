@@ -1,0 +1,54 @@
+
+> @lean-wasm/bridge-poc@0.0.0-poc test:owned-subtype-perl
+> LEAN_BRIDGE_OWNED_SUBTYPE_PERL_TEST=1 node --test --test-concurrency=1 tests/owned-subtype-perl-packaging.test.mjs
+
+TAP version 13
+# Subtest: owned Subtype Perl transfers coexist with host callbacks
+ok 1 - owned Subtype Perl transfers coexist with host callbacks
+  ---
+  duration_ms: 24.521179
+  type: 'test'
+  ...
+# Subtest: owned Subtype Perl acceptance is a required recurring workflow
+ok 2 - owned Subtype Perl acceptance is a required recurring workflow
+  ---
+  duration_ms: 18.226009
+  type: 'test'
+  ...
+# Subtest: installed ordinary owned Subtypes execute through CPAN archives
+ok 3 - installed ordinary owned Subtypes execute through CPAN archives
+  ---
+  duration_ms: 278434.003946
+  type: 'test'
+  ...
+# {"reviewed":false,"perl":"/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-threaded/bin/perl","mode":"prebuilt-only","checks":74,"assetChecks":6}
+# {"reviewed":false,"perl":"/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-threaded/bin/perl","mode":"build-xs","checks":74,"assetChecks":6}
+# {"reviewed":false,"perl":"/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-unthreaded/bin/perl","mode":"prebuilt-only","checks":74,"assetChecks":6}
+# {"reviewed":false,"perl":"/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-unthreaded/bin/perl","mode":"build-xs","checks":74,"assetChecks":6}
+# {"reviewed":false,"perl":"/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-threaded/bin/perl","mode":"prebuilt-only","checks":74,"assetChecks":6}
+# {"reviewed":false,"perl":"/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-threaded/bin/perl","mode":"build-xs","checks":74,"assetChecks":6}
+# {"reviewed":false,"perl":"/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-unthreaded/bin/perl","mode":"prebuilt-only","checks":74,"assetChecks":6}
+# {"reviewed":false,"perl":"/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-unthreaded/bin/perl","mode":"build-xs","checks":74,"assetChecks":6}
+# Subtest: installed reviewed owned Subtypes execute through CPAN archives
+ok 4 - installed reviewed owned Subtypes execute through CPAN archives
+  ---
+  duration_ms: 224735.337419
+  type: 'test'
+  ...
+# {"reviewed":true,"perl":"/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-threaded/bin/perl","mode":"prebuilt-only","checks":74,"assetChecks":6}
+# {"reviewed":true,"perl":"/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-threaded/bin/perl","mode":"build-xs","checks":74,"assetChecks":6}
+# {"reviewed":true,"perl":"/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-unthreaded/bin/perl","mode":"prebuilt-only","checks":74,"assetChecks":6}
+# {"reviewed":true,"perl":"/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-unthreaded/bin/perl","mode":"build-xs","checks":74,"assetChecks":6}
+# {"reviewed":true,"perl":"/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-threaded/bin/perl","mode":"prebuilt-only","checks":74,"assetChecks":6}
+# {"reviewed":true,"perl":"/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-threaded/bin/perl","mode":"build-xs","checks":74,"assetChecks":6}
+# {"reviewed":true,"perl":"/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-unthreaded/bin/perl","mode":"prebuilt-only","checks":74,"assetChecks":6}
+# {"reviewed":true,"perl":"/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-unthreaded/bin/perl","mode":"build-xs","checks":74,"assetChecks":6}
+1..4
+# tests 4
+# suites 0
+# pass 4
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 503401.514935

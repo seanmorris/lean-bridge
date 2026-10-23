@@ -1,0 +1,42 @@
+
+> @lean-wasm/bridge-poc@0.0.0-poc test:owned-subtype-languages
+> LEAN_BRIDGE_OWNED_SUBTYPE_LANGUAGE_TEST=1 node --test --test-concurrency=1 tests/owned-subtype-language-packaging.test.mjs
+
+TAP version 13
+# Subtest: Python, Ruby and Rust generate callback-free checked transfer copies
+ok 1 - Python, Ruby and Rust generate callback-free checked transfer copies
+  ---
+  duration_ms: 60.100991
+  type: 'test'
+  ...
+# Subtest: owned Subtype language consumers and required workflow stay registered
+ok 2 - owned Subtype language consumers and required workflow stay registered
+  ---
+  duration_ms: 6.301745
+  type: 'test'
+  ...
+# Subtest: installed ordinary owned Subtypes execute through wheel, gem and crate archives
+ok 3 - installed ordinary owned Subtypes execute through wheel, gem and crate archives
+  ---
+  duration_ms: 336430.471627
+  type: 'test'
+  ...
+# ordinary: Compiling checked native Lean exports
+# ordinary: python=122, ruby=122, rust=119
+# Subtest: installed reviewed owned Subtypes execute through wheel, gem and crate archives
+ok 4 - installed reviewed owned Subtypes execute through wheel, gem and crate archives
+  ---
+  duration_ms: 319957.411608
+  type: 'test'
+  ...
+# reviewed: Compiling checked native Lean exports
+# reviewed: python=122, ruby=122, rust=119
+1..4
+# tests 4
+# suites 0
+# pass 4
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 657213.938253
