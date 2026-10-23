@@ -4,13 +4,9 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { generateOwnedWitPackage } from "../../src/backends/wit/owned-package.mjs";
-import { guardOwnedWitHostSource } from "../../src/backends/wit/owned-host-evidence.mjs";
-import { ownedRustTransferSource } from "./owned-rust-transfer-fixture.mjs";
-import { assertOwnedWitTransferCi } from "./wit-owned-transfer-ci.mjs";
-import { ownedWitTransferProbe } from "./wit-owned-transfer-probe.mjs";
+import { moduleAtProducer } from "./producer-module.mjs";
+import { bytesAtProducer } from "./producer-source.mjs";
 
 export const ownedWitTransferCommand = "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 npm run test:owned-wit-transfers";
 export const ownedWitTransferScope = Object.freeze({
@@ -31,6 +27,17 @@ export const ownedWitTransferScope = Object.freeze({
 });
 const digest = value => assert.match(value, /^[a-f0-9]{64}$/u);
 const flags = (value, names) => { for(const name of names) assert.equal(value[name], true, name); };
+const producerCommit = "2fab6b1635341d6622fc13fe8da9b3fdc947790e";
+const historical = path => bytesAtProducer(producerCommit, path);
+let producerPromise;
+const producerAtMilestone = () => producerPromise ??= Promise.all([
+	"src/backends/wit/owned-host-evidence.mjs"
+	, "src/backends/wit/owned-package.mjs"
+	, "tests/helpers/owned-rust-transfer-fixture.mjs"
+	, "tests/helpers/wit-owned-transfer-ci.mjs"
+	, "tests/helpers/wit-owned-transfer-probe.mjs"
+].map(path => moduleAtProducer(producerCommit, path))).then(modules =>
+	Object.assign({}, ...modules));
 
 /**
  * Regenerate the recorded adapters and check every claimed execution path.
@@ -38,7 +45,15 @@ const flags = (value, names) => { for(const name of names) assert.equal(value[na
  * @param record - Source-bound runtime and installed execution receipt.
  */
 export const assertOwnedWitTransferExecution = async record => {
+	const producer = await producerAtMilestone();
+	for(const name of [
+		"assertOwnedWitTransferCi", "generateOwnedWitPackage"
+		, "guardOwnedWitHostSource", "ownedWitTransferProbe"
+	]) assert.equal(typeof producer[name], "function", name);
+	assert.equal(typeof producer.ownedRustTransferSource, "string");
 	assert.equal(record.acceptance, "passed"); assert.deepEqual(record.scope, ownedWitTransferScope);
+	assert.equal(record.baselineRevision
+		, "3e28428f0b304f1dfed2cb2ad524b50c1fabdeef");
 	assert.equal(record.run.command, ownedWitTransferCommand); assert.equal(record.run.exitCode, 0);
 	assert.equal(record.run.sha256, sha256(record.run.text));
 	for(const [key, count] of Object.entries({ tests: 5, pass: 5, fail: 0, skipped: 0, cancelled: 0, todo: 0 }))
@@ -48,7 +63,9 @@ export const assertOwnedWitTransferExecution = async record => {
 	assert.deepEqual(record.packages.map(item => item.mode), ["ordinary", "reviewed"]);
 	const diagnostics = record.run.text.split("\n").filter(line => line.startsWith("# {")).map(line => JSON.parse(line.slice(2)));
 	assert.deepEqual(diagnostics, record.runtime.map(item => ({ mode: item.mode, ...item.report, ...item.counts })));
-	const source = await readFile("tests/fixtures/onboarding/owned-aggregates/Owned.lean", "utf8") + ownedRustTransferSource;
+	const source = historical(
+		"tests/fixtures/onboarding/owned-aggregates/Owned.lean"
+	).toString() + producer.ownedRustTransferSource;
 	const checkInputs = (input, mode) => {
 		flags(input, ["hostCallbacks", "transferredInputs"]);
 		assert.equal(Boolean(input.sourceIdentity.reviewedBindingIr), mode === "reviewed");
@@ -60,9 +77,10 @@ export const assertOwnedWitTransferExecution = async record => {
 		const component = Buffer.from(item.componentBase64, "base64");
 		assert.equal(component.toString("base64"), item.componentBase64);
 		assert.equal(sha256(component), item.componentSha256);
-		const generated = generateOwnedWitPackage(item.input, component);
+		const generated = producer.generateOwnedWitPackage(item.input, component);
 		assert.equal(item.sourceSha256, sha256(generated.source));
-		assert.equal(item.probeSha256, sha256(await ownedWitTransferProbe(generated)));
+		assert.equal(item.probeSha256
+			, sha256(await producer.ownedWitTransferProbe(generated)));
 		assert.deepEqual(item.manifest, generated.model.manifest);
 		assert.equal(generated.layout.functions.length, 26);
 		assert.equal(item.manifest.graph.inputTransfers.length, 20);
@@ -83,10 +101,11 @@ export const assertOwnedWitTransferExecution = async record => {
 		] : []);
 		for(const mutation of item.rejectedMutations) assert.ok(record.run.text.includes("rejected mutation: " + mutation));
 	}
-	const page = await readFile("docs/consume/wit-wasi.md", "utf8");
+	const page = historical("docs/consume/wit-wasi.md").toString();
 	const example = page.split("### Consuming inputs\n")[1]?.split("```c\n")[1]?.split("```")[0];
 	assert.ok(example);
-	const loaderSource = await readFile("tests/fixtures/structured-types/wit-owned-package-loader.c");
+	const loaderSource = historical(
+		"tests/fixtures/structured-types/wit-owned-package-loader.c");
 	for(const item of record.packages)
 	{
 		assert.equal(item.schemaVersion, 1); checkInputs(item.inputs, item.mode);
@@ -103,12 +122,15 @@ export const assertOwnedWitTransferExecution = async record => {
 		const component = Buffer.from(item.componentBase64, "base64");
 		assert.equal(component.toString("base64"), item.componentBase64);
 		assert.equal(sha256(component), item.manifest.componentSha256);
-		const generated = generateOwnedWitPackage(item.inputs, component, item.receipt.settings);
+		const generated = producer.generateOwnedWitPackage(
+			item.inputs, component, item.receipt.settings);
 		assert.equal(generated.layout.model.bindingIrSha256, item.model.bindingIrSha256);
 		assert.deepEqual(generated.layout.model.bindingIr, item.model.bindingIr);
 		assert.deepEqual(item.inputs.sourceIdentity, item.model.sourceIdentity);
 		assert.equal(sha256(generated.publicHeader), item.receipt.ownedValues.headerSha256);
-		assert.equal(sha256(guardOwnedWitHostSource(generated, item.receipt.dependencies)), item.receipt.ownedValues.sourceSha256);
+		assert.equal(sha256(producer.guardOwnedWitHostSource(
+			generated, item.receipt.dependencies))
+		, item.receipt.ownedValues.sourceSha256);
 		assert.ok(Object.keys(item.manifest.files).length > 30);
 		for(const file of Object.values(item.manifest.files))
 		{ digest(file.sha256); assert.ok(Number.isSafeInteger(file.bytes) && file.bytes >= 0); }
@@ -143,5 +165,7 @@ export const assertOwnedWitTransferExecution = async record => {
 			}
 		}
 	}
-	assertOwnedWitTransferCi(await readFile(".github/workflows/consumer-matrix.yml", "utf8"), JSON.parse(await readFile("package.json", "utf8")));
+	producer.assertOwnedWitTransferCi(historical(
+		".github/workflows/consumer-matrix.yml"
+	).toString(), JSON.parse(historical("package.json")));
 };
