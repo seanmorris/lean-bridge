@@ -31,14 +31,23 @@ const summary = renderDependentCheckedRecordPromotion(references);
 const git = arguments_ => execFileSync("git", arguments_, {
 	encoding: "utf8", maxBuffer: 512 * 1024 * 1024
 });
+for(const arguments_ of [
+	["diff", "--quiet", "HEAD", "--"]
+	, ["diff", "--cached", "--quiet", "HEAD", "--"]
+]) assert.doesNotThrow(() => execFileSync("git", arguments_
+	, { stdio: "ignore" }), "Dependent promotion requires a clean tracked tree");
 assert.doesNotThrow(
 	() => execFileSync("git", ["merge-base", "--is-ancestor"
 		, dependentCheckedRecordPromotionPinBaseline, "HEAD"]
 	, { stdio: "ignore" })
 	, "Dependent promotion pin baseline is not an ancestor of HEAD"
 );
+assert.equal(git(["diff", "--name-status", "--find-renames"
+	, "--diff-filter=RD", dependentCheckedRecordPromotionPinBaseline
+	, "HEAD", "--"]).trim(), ""
+, "Dependent promotion refuses renamed or deleted baseline paths");
 const changedPaths = git(["diff", "--name-only", "--diff-filter=AM"
-	, dependentCheckedRecordPromotionPinBaseline, "--"])
+	, dependentCheckedRecordPromotionPinBaseline, "HEAD", "--"])
 	.trim().split("\n").filter(Boolean);
 const currentSourcePaths
 	= dependentCheckedRecordPromotionCurrentSourcePaths(

@@ -218,6 +218,19 @@ test("dependent promotion baseline covers every stale live pin", async () => {
 	assert.deepEqual(missed, []);
 });
 
+test("dependent promotion reads only a clean committed range", async () => {
+	const source = await readFile(
+		"scripts/promote-dependent-checked-record-evidence.mjs", "utf8");
+	assert.match(source
+		, /\["diff", "--quiet", "HEAD", "--"\]/u);
+	assert.match(source
+		, /\["diff", "--cached", "--quiet", "HEAD", "--"\]/u);
+	assert.match(source
+		, /"--diff-filter=RD", dependentCheckedRecordPromotionPinBaseline\s*, "HEAD", "--"/u);
+	assert.match(source
+		, /"--diff-filter=AM"\s*, dependentCheckedRecordPromotionPinBaseline, "HEAD", "--"/u);
+});
+
 test("dependent promotion refuses missing, reordered, duplicated and forged references", () => {
 	const reject = (mutate, pattern = assert.AssertionError) => {
 		const references = synthetic();
