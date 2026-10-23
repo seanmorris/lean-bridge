@@ -1,0 +1,97 @@
+{
+  "additions": [
+    {
+      "currentSha256": "17b5a006e3fb3e987adcc7727336244d78d1464d4e58f5ea107ce9d60a72e463",
+      "path": "scripts/update-owned-subtype-evidence-test-registration-source-history.mjs"
+    },
+    {
+      "currentSha256": "4066dbab925f76250af62a38403c2775034550678dd0b08547ed23488e53d77e",
+      "path": "tests/helpers/owned-subtype-evidence-test-registration-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "8dad32f0c46c80d7665cd4eb8d0450351deda7188ef1fedea64c3d07172746de",
+      "path": "tests/helpers/owned-subtype-evidence-test-registration-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "ea744dc862af089586252e2bb537cc1dc74f2bd8",
+  "integrationUpdates": [
+    {
+      "currentSha256": "2d583a2c843e0990dac2ca64e867b44a31243eb2639114057aaf4886feedd9c0",
+      "edits": [
+        {
+          "current": "import { beforeOwnedSubtypeEvidenceTestRegistrationSource, ownedSubtypeEvidenceTestRegistrationChangedPaths } from \"./owned-subtype-evidence-test-registration-source-history.mjs\";\n",
+          "previous": "",
+          "start": 12635
+        },
+        {
+          "current": "\t, ...ownedSubtypeEvidenceTestRegistrationChangedPaths\n",
+          "previous": "",
+          "start": 170315
+        },
+        {
+          "current": "\tconst ownedSubtypeEvidenceTestRegistration\n\t\t= beforeOwnedSubtypeEvidenceTestRegistrationSource(\n\t\t\tpath, text, expected);\n\tif(sha256(ownedSubtypeEvidenceTestRegistration) === expected)\n\t\treturn ownedSubtypeEvidenceTestRegistration;\n\ttext = ownedSubtypeEvidenceTestRegistration;\n",
+          "previous": "",
+          "start": 202379
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "e2f90ccac0d3c171537a44634191b8fb4cae11ff964d28621543df2fea02d9cf"
+    },
+    {
+      "currentSha256": "d7bf585432026e4d30515e5f8ec8dcd43c8b5a09d0981e7af72a8a22e0bb6ccf",
+      "edits": [
+        {
+          "current": "import \"./helpers/owned-subtype-evidence-test-registration-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 4436
+        }
+      ],
+      "path": "tests/php-wasm-fin.test.mjs",
+      "previousSha256": "207c69f68ac94617645026376c80f0e82ce5e859e25b6604c53ec036ca1c1ad0"
+    }
+  ],
+  "milestone": "owned-subtype-evidence-test-registration-v1",
+  "predecessorCommit": "c70a657c69b64d4ca53c28e2c9b84cae31dc1c8e",
+  "schemaVersion": 1,
+  "scope": "Register both owned-Subtype retained-package and hosted-verifier gates in the closed Core contract profile.",
+  "updates": [
+    {
+      "addedTests": [
+        "owned-subtype-hosted-ci",
+        "owned-subtype-retained-packages"
+      ],
+      "currentSha256": "1d091ee6d1450ddc2334ab812fbbe987c34e49f0e545773fefb0b6ae0f4f2a3b",
+      "edits": [
+        {
+          "current": "\t\t, \"owned-subtype-hosted-ci\"\n",
+          "previous": "",
+          "start": 2415
+        },
+        {
+          "current": "\t\t, \"owned-subtype-retained-packages\"\n",
+          "previous": "",
+          "start": 2676
+        }
+      ],
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "1755656b9eb9339ea58f6fbc1d9cb2364d5b1a6e869ea49b23998e4abd138b12"
+    },
+    {
+      "currentSha256": "03862bec51946ec91f2e21c6a57b35bf533c12406ba177e7a43edc774ede9f60",
+      "edits": [
+        {
+          "current": "\t\t, \"owned-subtype-hosted-ci\"\n",
+          "previous": "",
+          "start": 4311
+        },
+        {
+          "current": "\t\t, \"owned-subtype-retained-packages\"\n",
+          "previous": "",
+          "start": 4572
+        }
+      ],
+      "path": "tests/test-profiles.test.mjs",
+      "previousSha256": "b409e7198ad5c3f21066f4f453beda16fd77fc6e0b419ff6a8b30049fe653caa"
+    }
+  ]
+}

@@ -63,6 +63,7 @@ import "./helpers/callback-subtype-retained-packages-source-history-tests.mjs";
 import "./helpers/owned-checked-record-javascript-retention-source-history-tests.mjs";
 import "./helpers/callback-subtype-hosted-archive-foundation-source-history-tests.mjs";
 import "./helpers/owned-checked-record-evidence-contract-source-history-tests.mjs";
+import "./helpers/owned-subtype-evidence-test-registration-source-history-tests.mjs";
 import "./helpers/owned-subtype-hosted-evidence-contract-source-history-tests.mjs";
 import "./helpers/recursive-php-wasm-evidence-replay-repair-source-history-tests.mjs";
 import "./helpers/callback-checked-record-retained-packages-source-history-tests.mjs";
