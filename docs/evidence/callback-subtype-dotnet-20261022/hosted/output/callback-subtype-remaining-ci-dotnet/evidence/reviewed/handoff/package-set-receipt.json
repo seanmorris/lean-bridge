@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "callbacksubtypes@1.0.0",
+    "name": "callbacksubtypes",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51430024,
+          "path": "archives/LeanBridge.Callbacksubtypes.1.0.0.nupkg",
+          "sha256": "da5ac73b4a992646a3ec5d34025c22dc8ae8d54901376d6315f582fba08540de"
+        }
+      ],
+      "ecosystem": "nuget",
+      "name": "LeanBridge.Callbacksubtypes",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "nuget",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "c968d4cf71be3a837db98dd2dcc3d72768601c418e5cef501c6af063a236e2e7",
+      "id": "native-library-v1",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "2b732964b1547ab5b14cd2fb1dd057633eccd9c7dd823867534ff884053411af"
+  }
+}
