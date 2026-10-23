@@ -26,6 +26,9 @@ import {
 	assertOwnedCheckedRecordHostedSteps, checkOwnedCheckedRecordHostedEvidence
 	, writeOwnedCheckedRecordHostedEvidence
 } from "./helpers/owned-checked-record-hosted-evidence.mjs";
+import {
+	verifyOwnedCheckedRecordJavaScriptEvidence
+} from "./helpers/owned-checked-record-javascript-evidence.mjs";
 import { ownedCheckedRecordEvidenceSources } from "./helpers/owned-checked-record-hosted-evidence-sources.mjs";
 import {
 	parseOwnedCheckedRecordTap, replayOwnedCheckedRecordHostedOutput
@@ -57,8 +60,10 @@ const consumerDigest = (lane, profile, resultOnly) => {
 };
 
 const writePackageSet = async (root, lane, route) => {
-	const abi = { id: "native-library-v1", bindingIrSha256: "1".repeat(64)
-		, runtimeIdentity: "2".repeat(64) };
+	const abi = { id: lane.kind === "javascript"
+		? "javascript-wasm-owned-v1" : "native-library-v1"
+	, bindingIrSha256: "1".repeat(64)
+	, runtimeIdentity: "2".repeat(64) };
 	const packages = [];
 	const add = async (target, name, role = "component", requires = []) => {
 		const path = `archives/${target}/${name}-${route}.fixture`;
@@ -75,7 +80,13 @@ const writePackageSet = async (root, lane, route) => {
 	};
 	for(const target of lane.targets)
 	{
-		if(target === "cpan")
+		if(target === "npm")
+		{
+			const runtime = await add(target, "@lean-bridge/runtime", "runtime");
+			await add(target, "@example/owned-checked-records", "component"
+				, [runtime]);
+		}
+		else if(target === "cpan")
 		{
 			const runtime = await add(target, "LeanBridge-Runtime", "runtime");
 			await add(target, "LeanBridge-OwnedCheckedRecords", "component", [runtime]);
@@ -151,6 +162,37 @@ const synthesizeOutput = async (root, laneName) => {
 				, consumerSha256: consumerDigest(lane, "perl", resultOnly)
 				, componentReceipt: { synthetic: true }, observations });
 		}
+		else if(lane.kind === "javascript")
+		{
+			const executions = [];
+			for(const engine of ["chromium", "firefox", "webkit"])
+				for(const profile of ["page", "react", "worker"])
+					executions.push({ engine, profile, version: `${engine}-1`
+						, reruns: 2, checks: resultOnly ? 7 : 30
+						, assets: [sha256(`${route}/${engine}/${profile}/a`)
+							, sha256(`${route}/${engine}/${profile}/b`)] });
+			Object.assign(entry, {
+				bindingIrSha256: "3".repeat(64)
+				, componentIdentity: "4".repeat(64)
+				, sourceIdentity: "5".repeat(64)
+				, packageSetReceipt: receipt
+				, archives: Object.fromEntries(receipt.packages.map(pkg =>
+					[pkg.role, pkg.artifacts[0].sha256]))
+				, observed: resultOnly ? {
+					checks: 7, produced: true, fullApiOmitted: true
+					, retained: true, disposed: true
+				} : {
+					checks: 30, claimRejected: true, bookingRejected: true
+					, lateRejected: true, retainedRejected: true
+					, transferRejected: true, callbackRejected: true
+					, callbackThrown: true, closureRejected: true
+					, transferred: true, callbackCalls: 1
+				}
+				, browser: { externalNetworkBlocked: true
+					, installedSourcesRemoved: true, executions }
+				, wasm: { bytes: 4096, sha256: "6".repeat(64) }
+			});
+		}
 		else
 		{
 			const checks = Object.fromEntries(lane.profiles.map(profile => [profile
@@ -192,8 +234,18 @@ const synthesizeOutput = async (root, laneName) => {
 		, `1..${names.length}`, `# tests ${names.length}`, "# suites 0"
 		, `# pass ${names.length}`, "# fail 0", "# cancelled 0", "# skipped 0"
 		, "# todo 0", "# duration_ms 12.5", ""].join("\n");
-	await saveLakeFile(root, `${lane.ci}/acceptance.log`, tap);
-	await saveLakeFile(root, `${lane.ci}/toolchain.log`, "pinned toolchains\n");
+	if(lane.kind === "javascript")
+	{
+		await saveLakeFile(root, lane.acceptance, tap);
+		const verified = await verifyOwnedCheckedRecordJavaScriptEvidence(
+			join(root, lane.packaging, lane.report));
+		await saveLakeFile(root, lane.verification, canonicalJson(verified));
+	}
+	else
+	{
+		await saveLakeFile(root, `${lane.ci}/acceptance.log`, tap);
+		await saveLakeFile(root, `${lane.ci}/toolchain.log`, "pinned toolchains\n");
+	}
 	return { lane, report };
 };
 
@@ -213,11 +265,12 @@ const replay = (laneName, root) =>
 
 test("owned checked-record hosted contracts name every non-PHP-Wasm lane exactly", async () => {
 	assert.deepEqual(ownedCheckedRecordHostedLaneNames, ["native", "perl"
-		, "python", "ruby", "rust", "dotnet", "jvm", "php", "wit"]);
+		, "python", "ruby", "rust", "dotnet", "jvm", "php", "wit"
+		, "javascript"]);
 	const targets = ownedCheckedRecordHostedLaneNames.flatMap(name =>
 		ownedCheckedRecordHostedLanes[name].targets).toSorted();
-	assert.deepEqual(targets, ["c", "cargo", "cpan", "cpp", "maven", "nuget"
-		, "php-native", "pypi", "rubygems", "wit-wasi"]);
+	assert.deepEqual(targets, ["c", "cargo", "cpan", "cpp", "maven", "npm"
+		, "nuget", "php-native", "pypi", "rubygems", "wit-wasi"]);
 	for(const name of ownedCheckedRecordHostedLaneNames)
 	{
 		const lane = ownedCheckedRecordHostedLanes[name];
@@ -227,15 +280,18 @@ test("owned checked-record hosted contracts name every non-PHP-Wasm lane exactly
 			, lane.kind === "language" ? "${{ matrix.profile }}" : "${{ matrix.group }}");
 		for(const required of [`name: ${matrix(lane.job)}`
 			, `name: ${matrix(lane.prefix)}-\${{ github.sha }}`
-			, `- name: ${lane.acceptanceStep}`, `- name: ${lane.enforceStep}`
-			, `build/${lane.ci}/\n`, `build/${lane.packaging}/\n`])
+			, `- name: ${lane.acceptanceStep}`
+			, `- name: ${lane.enforceStep ?? lane.archiveStep}`
+			, `build/${lane.packaging}/\n`
+			, ...lane.ci ? [`build/${lane.ci}/\n`] : []])
 			assert.ok(workflow.includes(required), `${name}: ${required}`);
 		for(const title of lane.staticTests)
 			assert.ok(source.includes(`test("${title}"`), `${name}: ${title}`);
 		const routeTitle = lane.routeTest.replace("{route}", "${route}")
 			.replace(lane.group ?? "\0", "${group}");
 		assert.ok(source.includes(`test(\`${routeTitle}\``), `${name}: route test`);
-		assert.equal(ownedCheckedRecordHostedTestNames(lane).length, 6);
+		assert.equal(ownedCheckedRecordHostedTestNames(lane).length
+			, lane.kind === "javascript" ? 5 : 6);
 	}
 });
 
@@ -276,7 +332,7 @@ test("every owned checked-record lane replays a synthetic retained hosted output
 		const accepted = await replay(name, root);
 		assert.equal(accepted.lane, name);
 		assert.equal(accepted.producerCommit, revision);
-		assert.equal(accepted.tests, 6);
+		assert.equal(accepted.tests, name === "javascript" ? 5 : 6);
 		assert.deepEqual(accepted.routes.map(route => route.route)
 			, ownedCheckedRecordHostedRoutes);
 		for(const route of accepted.routes)
@@ -336,6 +392,9 @@ test("owned checked-record hosted output replay rejects every tampered retention
 	await tampered(t, "wit", ({ rewrite }) => rewrite(report => {
 		report.reports[2].unexpected = true;
 	}), /exact report fields/u);
+	await tampered(t, "javascript", ({ rewrite }) => rewrite(report => {
+		report.reports[0].browser.executions.pop();
+	}), /8 !== 9|Expected values to be strictly equal/u);
 	await tampered(t, "native", ({ root, lane, report }) => writeFile(join(root
 		, lane.packaging, lane.report), JSON.stringify(report))
 	, /must be canonical/u);
@@ -369,7 +428,8 @@ const archiveInputs = async (t, laneName, { enforce = "skipped" } = {}) => {
 	const { root, lane } = await synthesize(t, laneName);
 	const inputs = await temporary(t, `lean-owned-hosted-inputs-${laneName}-`);
 	const zip = join(inputs, "artifact.zip");
-	execFileSync("/usr/bin/zip", ["-X", "-r", "-q", zip, lane.ci, lane.packaging]
+	const roots = lane.ci ? [lane.ci, lane.packaging] : [lane.packaging];
+	execFileSync("/usr/bin/zip", ["-X", "-r", "-q", zip, ...roots]
 		, { cwd: root });
 	const bytes = await readFile(zip);
 	const run = { id: 4242, status: "completed", conclusion: "success"
@@ -379,6 +439,13 @@ const archiveInputs = async (t, laneName, { enforce = "skipped" } = {}) => {
 		, run_attempt: 1, event: "push"
 		, html_url: "https://github.com/seanmorris/lean-bridge/actions/runs/4242"
 		, created_at: "2026-10-23T01:02:03Z", updated_at: "2026-10-23T02:03:04Z" };
+	const accepted = { name: lane.acceptanceStep, status: "completed"
+		, conclusion: "success", number: 7 };
+	const terminal = lane.enforceStep
+		? { name: lane.enforceStep, status: "completed", conclusion: enforce
+			, number: 9 }
+		: { name: lane.archiveStep, status: "completed", conclusion: "success"
+			, number: 9 };
 	const job = { id: 4343, run_id: run.id, head_sha: revision
 		, status: "completed", conclusion: "success", name: lane.job
 		, labels: ["ubuntu-24.04"], runner_name: "GitHub Actions 1"
@@ -386,10 +453,7 @@ const archiveInputs = async (t, laneName, { enforce = "skipped" } = {}) => {
 		, started_at: "2026-10-23T01:05:00Z", completed_at: "2026-10-23T02:00:00Z"
 		, steps: [{ name: "Check out the exact revision", status: "completed"
 			, conclusion: "success", number: 1 }
-		, { name: lane.acceptanceStep, status: "completed", conclusion: "success"
-			, number: 7 }
-		, { name: lane.enforceStep, status: "completed", conclusion: enforce
-			, number: 9 }] };
+		, accepted, terminal] };
 	const artifact = { id: 4444, name: `${lane.prefix}-${revision}`
 		, expired: false, workflow_run: { id: run.id, head_sha: revision }
 		, size_in_bytes: bytes.length, digest: `sha256:${sha256(bytes)}`
@@ -404,7 +468,7 @@ const archiveInputs = async (t, laneName, { enforce = "skipped" } = {}) => {
 };
 
 test("owned checked-record hosted archives authenticate, retain and replay originals", async t => {
-	for(const name of ["native", "jvm"])
+	for(const name of ["native", "jvm", "javascript"])
 	{
 		const { selected, inputs } = await archiveInputs(t, name);
 		const destination = join(inputs, "evidence");
@@ -419,7 +483,7 @@ test("owned checked-record hosted archives authenticate, retain and replay origi
 			, selected, destination, archiveCommit: revision }), /must be new/u);
 		const indexPath = join(destination, "index.json");
 		const changed = structuredClone(index);
-		changed.accepted.routes[0].checks = { forged: 1 };
+		changed.accepted.routes[0].archiveBytes += 1;
 		await writeFile(indexPath, canonicalJson(changed));
 		await assert.rejects(checkOwnedCheckedRecordHostedEvidence(name, destination));
 		await writeFile(indexPath, canonicalJson(index));
@@ -456,6 +520,15 @@ test("owned checked-record hosted steps require acceptance and skipped enforceme
 		, job([accepted, { ...skipped, number: 3 }])));
 	assert.throws(() => assertOwnedCheckedRecordHostedSteps(lane
 		, job([accepted, skipped, { name: "Other", conclusion: "cancelled", number: 10 }])));
+	const javascript = ownedCheckedRecordHostedLanes.javascript;
+	const javascriptAccepted = { name: javascript.acceptanceStep
+		, status: "completed", conclusion: "success", number: 7 };
+	const archive = { name: javascript.archiveStep, status: "completed"
+		, conclusion: "success", number: 9 };
+	assert.doesNotThrow(() => assertOwnedCheckedRecordHostedSteps(
+		javascript, job([javascriptAccepted, archive])));
+	assert.throws(() => assertOwnedCheckedRecordHostedSteps(javascript
+		, job([javascriptAccepted, { ...archive, conclusion: "skipped" }])));
 });
 
 test("owned checked-record source roles retain workflow inputs and unreachable assets", () => {

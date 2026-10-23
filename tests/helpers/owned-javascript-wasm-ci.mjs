@@ -19,9 +19,12 @@ export const ownedJavaScriptWasmTestCommand = "node --test --test-concurrency=2 
 export const ownedJavaScriptNpmCiTests = ["owned-javascript-wasm-model"
 	, "javascript-wasm-compiler-inputs", "owned-javascript-cli"
 	, "owned-javascript-wasm-build", "owned-subtype-javascript-packaging"
-	, "owned-checked-record-javascript-packaging"
 ].map(name => `tests/${name}.test.mjs`);
 export const ownedJavaScriptNpmTestCommand = "node --test --test-concurrency=1 " + ownedJavaScriptNpmCiTests.join(" ");
+export const ownedCheckedRecordJavaScriptTestCommand
+	= "node --test --test-concurrency=1 tests/owned-checked-record-javascript-packaging.test.mjs";
+export const ownedCheckedRecordJavaScriptAcceptanceLog
+	= "build/owned-checked-record-javascript-packaging/acceptance.log";
 export const ownedJavaScriptInstalledReports = [
 	"build/owned-subtype-javascript-packaging/report.json"
 	, "build/owned-checked-record-javascript-packaging/report.json"
@@ -109,7 +112,16 @@ export const assertOwnedJavaScriptWasmCi = workflow => {
 		, "test -s " + ownedJavaScriptWasmCiLogs[2]
 		, "rg '^# fail 0$' " + ownedJavaScriptWasmCiLogs[2]
 		, "rg '^# skipped 0$' " + ownedJavaScriptWasmCiLogs[2]
-		, ...ownedJavaScriptInstalledReports.map(path => "test -s " + path)
+		, "test -s " + ownedJavaScriptInstalledReports[0]
+		, ownedCheckedRecordJavaScriptTestCommand + " 2>&1 | tee "
+			+ ownedCheckedRecordJavaScriptAcceptanceLog
+		, "test -s " + ownedCheckedRecordJavaScriptAcceptanceLog
+		, "rg '^# fail 0$' " + ownedCheckedRecordJavaScriptAcceptanceLog
+		, "rg '^# skipped 0$' " + ownedCheckedRecordJavaScriptAcceptanceLog
+		, "test -s " + ownedJavaScriptInstalledReports[1]
+		, "for route in ordinary-full ordinary-result-only reviewed-full reviewed-result-only; do\n test -s \"build/owned-checked-record-javascript-packaging/evidence/$route/handoff/package-set-receipt.json\"\n test -s \"build/owned-checked-record-javascript-packaging/evidence/$route/handoff/package-set-receipt.json.sha256\"\ndone"
+		, "node scripts/check-owned-checked-record-javascript-ci.mjs --report build/owned-checked-record-javascript-packaging/report.json > build/owned-checked-record-javascript-packaging/verification.json"
+		, "test -s build/owned-checked-record-javascript-packaging/verification.json"
 	].join("\n"));
 	assert.equal(script(requiredStep(job, executeName)), [
 		"set -euo pipefail"
@@ -159,13 +171,15 @@ export const assertOwnedJavaScriptWasmCi = workflow => {
 	assert.match(upload, /^ {8}uses: actions\/upload-artifact@v7$/mu);
 	assert.match(upload, /^ {10}if-no-files-found: error$/mu);
 	for(const path of ownedJavaScriptWasmCiLogs) assert.ok(upload.includes("            " + path + "\n"));
-	for(const path of ownedJavaScriptInstalledReports) assert.ok(upload.includes("            " + path + "\n"));
+	assert.ok(upload.includes("            "
+		+ ownedJavaScriptInstalledReports[0] + "\n"));
+	assert.ok(upload.includes("            build/owned-checked-record-javascript-packaging/\n"));
 	const summary = workflow.split("  support-summary:\n")[1]; assert.ok(summary);
 	assert.ok(summary.split("    runs-on:")[0].includes("      - owned-javascript-wasm\n"));
 	const enforce = requiredStep(summary, "Enforce owned JavaScript and Wasm execution");
 	assert.equal(enforce.trim(), "if: needs.owned-javascript-wasm.result != 'success'\n        run: exit 1");
 	return { testFiles: ownedJavaScriptWasmCiTests.length
-		, installedTestFiles: ownedJavaScriptNpmCiTests.length
+		, installedTestFiles: ownedJavaScriptNpmCiTests.length + 1
 		, coexistenceTestFiles: ownedJavaScriptCoexistenceCiTests.length
 		, analysisTestFiles: ownedAnalysisCiTests.length
 		, engineTestFiles: ownedJavaScriptEngineCiTests.length

@@ -6,7 +6,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
-import { assertOwnedJavaScriptWasmCi, ownedJavaScriptWasmCiLogs, ownedJavaScriptWasmCiTests, ownedJavaScriptNpmCiTests, ownedJavaScriptInstalledReports, ownedJavaScriptCoexistenceCiTests, ownedAnalysisCiTests, ownedJavaScriptEngineCiTests, ownedJavaScriptPublicationCiTests } from "./helpers/owned-javascript-wasm-ci.mjs";
+import { assertOwnedJavaScriptWasmCi, ownedJavaScriptWasmCiLogs, ownedJavaScriptWasmCiTests, ownedJavaScriptNpmCiTests, ownedJavaScriptInstalledReports, ownedJavaScriptCoexistenceCiTests, ownedAnalysisCiTests, ownedJavaScriptEngineCiTests, ownedJavaScriptPublicationCiTests, ownedCheckedRecordJavaScriptAcceptanceLog } from "./helpers/owned-javascript-wasm-ci.mjs";
 
 test("owned JavaScript CI builds production Wasm and executes every generated API layer", async () => {
 	assert.deepEqual(assertOwnedJavaScriptWasmCi(await readFile(".github/workflows/consumer-matrix.yml", "utf8")), {
@@ -28,8 +28,12 @@ test("owned JavaScript CI rejects disabled execution, missing observations and s
 		, ...ownedAnalysisCiTests.map(path => [path, ""])
 		, ...ownedJavaScriptEngineCiTests.map(path => [path, ""])
 		, ...ownedJavaScriptPublicationCiTests.map(path => [path, ""])
+		, ["tests/owned-checked-record-javascript-packaging.test.mjs", ""]
 		, ...ownedJavaScriptWasmCiLogs.map(path => ["            " + path + "\n", ""])
-		, ...ownedJavaScriptInstalledReports.map(path => ["            " + path + "\n", ""])
+		, ["            " + ownedJavaScriptInstalledReports[0] + "\n", ""]
+		, ["            build/owned-checked-record-javascript-packaging/\n", ""]
+		, ["tee " + ownedCheckedRecordJavaScriptAcceptanceLog + "\n"
+			, "tee " + ownedCheckedRecordJavaScriptAcceptanceLog + " || true\n"]
 		, ["  owned-javascript-wasm:\n", "  owned-javascript-wasm:\n    if: false\n"]
 		, ["      LEAN_BRIDGE_OWNED_JS_WASM_TEST: \"1\"", "      LEAN_BRIDGE_OWNED_JS_WASM_TEST: \"0\""]
 		, ["      LEAN_BRIDGE_OWNED_JS_WASM_PREPARED_TEST: \"1\"", "      LEAN_BRIDGE_OWNED_JS_WASM_PREPARED_TEST: \"0\""]

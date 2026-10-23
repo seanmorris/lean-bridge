@@ -170,12 +170,17 @@ jobs:
             tests/owned-javascript-cli.test.mjs \
             tests/owned-javascript-wasm-build.test.mjs \
             tests/owned-subtype-javascript-packaging.test.mjs \
-            tests/owned-checked-record-javascript-packaging.test.mjs \
             2>&1 | tee build/owned-javascript-wasm/installed.log
           test -s build/owned-javascript-wasm/installed.log
           rg '^# fail 0$' build/owned-javascript-wasm/installed.log
           rg '^# skipped 0$' build/owned-javascript-wasm/installed.log
           test -s build/owned-subtype-javascript-packaging/report.json
+          node --test --test-concurrency=1 \
+            tests/owned-checked-record-javascript-packaging.test.mjs \
+            2>&1 | tee build/owned-checked-record-javascript-packaging/acceptance.log
+          test -s build/owned-checked-record-javascript-packaging/acceptance.log
+          rg '^# fail 0$' build/owned-checked-record-javascript-packaging/acceptance.log
+          rg '^# skipped 0$' build/owned-checked-record-javascript-packaging/acceptance.log
           test -s build/owned-checked-record-javascript-packaging/report.json
           for route in ordinary-full ordinary-result-only reviewed-full reviewed-result-only; do
             test -s "build/owned-checked-record-javascript-packaging/evidence/$route/handoff/package-set-receipt.json"

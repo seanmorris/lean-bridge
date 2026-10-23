@@ -60,12 +60,22 @@ export const assertOwnedCheckedRecordHostedSteps = (lane, jobBytes) => {
 		return steps[0];
 	};
 	const acceptance = named(lane.acceptanceStep);
-	const enforce = named(lane.enforceStep);
 	assert.equal(acceptance.status, "completed", lane.acceptanceStep);
 	assert.equal(acceptance.conclusion, "success", lane.acceptanceStep);
-	assert.equal(enforce.conclusion, "skipped", lane.enforceStep);
-	assert.ok(enforce.number > acceptance.number
-		, "Enforcement must follow acceptance");
+	if(lane.enforceStep)
+	{
+		const enforce = named(lane.enforceStep);
+		assert.equal(enforce.conclusion, "skipped", lane.enforceStep);
+		assert.ok(enforce.number > acceptance.number
+			, "Enforcement must follow acceptance");
+	}
+	else
+	{
+		const archive = named(lane.archiveStep);
+		assert.equal(archive.conclusion, "success", lane.archiveStep);
+		assert.ok(archive.number > acceptance.number
+			, "Artifact upload must follow acceptance");
+	}
 	for(const step of job.steps)
 		assert.ok(["success", "skipped"].includes(step.conclusion)
 			, `Hosted step did not succeed: ${step.name}`);
@@ -86,6 +96,10 @@ const regularFiles = async (root, prefix = "") => {
 	}
 	return files.toSorted();
 };
+
+const retainedOutputPaths = (lane, paths) => lane.retainedRoots
+	? paths.filter(path => lane.retainedRoots.some(root => path.startsWith(root)))
+	: paths;
 
 /**
  * Authenticate, replay and write one immutable hosted evidence directory.
@@ -135,7 +149,10 @@ export const writeOwnedCheckedRecordHostedEvidence = async ({
 	{
 		const accepted = await replayOwnedCheckedRecordHostedOutput(
 			laneName, extracted.root, revision);
-		for(const path of await regularFiles(extracted.root))
+		const outputPaths = retainedOutputPaths(
+			lane, await regularFiles(extracted.root));
+		assert.ok(outputPaths.length > 0, "Hosted artifact retained no lane output");
+		for(const path of outputPaths)
 			await putFile(`hosted/output/${path}`, join(extracted.root, path));
 		for(const [name, item] of Object.entries(hosted.api))
 			putBytes(`hosted/api/${name}.json`, item.bytes);
@@ -277,7 +294,8 @@ export const checkOwnedCheckedRecordHostedEvidence = async (
 		assertOwnedCheckedRecordHostedSteps(lane, hosted.api.job.bytes);
 		extracted = await extractCallbackSubtypeHostedArtifact(zip);
 		assert.deepEqual(extracted.entries, index.hostedRun.artifact.members);
-		const extractedPaths = await regularFiles(extracted.root);
+		const extractedPaths = retainedOutputPaths(
+			lane, await regularFiles(extracted.root));
 		assertCallbackSubtypeHostedOutputSet(index, extractedPaths);
 		for(const path of extractedPaths)
 			assert.deepEqual(await readFile(join(extracted.root, path))

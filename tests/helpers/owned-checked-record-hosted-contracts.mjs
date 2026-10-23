@@ -164,6 +164,36 @@ const managedLane = group => freeze({
 	, fullOnly: []
 });
 
+const javascriptLane = freeze({
+	kind: "javascript"
+	, workflow: ".github/workflows/consumer-matrix.yml"
+	, job: "Owned JavaScript and production Wasm runtime"
+	, prefix: "owned-javascript-wasm"
+	, acceptanceStep: "Build and install owned npm packages through the standalone CLI"
+	, archiveStep: "Preserve owned JavaScript and runtime execution logs"
+	, test: "tests/owned-checked-record-javascript-packaging.test.mjs"
+	, packaging: "owned-checked-record-javascript-packaging"
+	, report: "report.json"
+	, reportProfile: "installed-owned-checked-record-javascript"
+	, evidence: "evidence"
+	, acceptance: "owned-checked-record-javascript-packaging/acceptance.log"
+	, verification: "owned-checked-record-javascript-packaging/verification.json"
+	, retainedRoots: ["owned-checked-record-javascript-packaging/"]
+	, targets: ["npm"]
+	, staticTests: [
+		"ordinary and reviewed JavaScript authors select the same full and result-only boundaries"
+	]
+	, routeTest: "installed {route} owned checked records execute from source-free npm archives"
+	, keys: ["archiveReproduction", "archives", "authorRoute"
+		, "bindingIrSha256", "browser", "componentIdentity", "installedNode"
+		, "installedTypeScript", "mode", "observed", "packageSetReceipt"
+		, "relocatedInstallation", "retainedPackageSet", "route"
+		, "sourceIdentity", "sourceRemovedBeforeInstall", "wasm"]
+	, always: ["archiveReproduction", "installedNode", "installedTypeScript"
+		, "relocatedInstallation", "sourceRemovedBeforeInstall"]
+	, fullOnly: []
+});
+
 export const ownedCheckedRecordHostedLanes = Object.freeze({
 	native: nativeLane
 	, perl: perlLane
@@ -174,6 +204,7 @@ export const ownedCheckedRecordHostedLanes = Object.freeze({
 	, jvm: managedLane("jvm")
 	, php: managedLane("php")
 	, wit: managedLane("wit")
+	, javascript: javascriptLane
 });
 
 export const ownedCheckedRecordHostedLaneNames

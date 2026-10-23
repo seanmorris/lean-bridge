@@ -54,6 +54,8 @@ const managedConsumers = {
 };
 
 const consumers = lane => {
+	if(lane.kind === "javascript")
+		return ["tests/owned-checked-record-javascript-packaging.test.mjs"];
 	if(lane.kind === "native")
 		return ["installed.c", "installed.cpp", "result-only.c", "result-only.cpp"]
 			.map(name => structured(`owned-checked-record-${name}`));
@@ -107,9 +109,15 @@ export const ownedCheckedRecordEvidenceSources = (laneName, value) => {
 					, "src/backends/rust/dependencies.lock"] : []
 				, ...lane.group === "wit"
 					? ["flake.lock", "flake.nix", "nix/wasm-toolchain.nix"] : []
+				, ...lane.kind === "javascript" ? [
+					"scripts/build-lean-link-spike.sh"
+					, "scripts/install-playwright-browsers.sh"
+				] : []
 			]
 		}
-		, { role: "consumer", revision: value.consumer, paths: selectedConsumers }
+		, { role: "consumer", revision: value.consumer
+			, paths: lane.kind === "javascript"
+				? closure(value.consumer, selectedConsumers) : selectedConsumers }
 		, {
 			role: "checker", revision: value.checker
 			, paths: closure(value.checker, [

@@ -21,6 +21,9 @@ import {
 	ownedCheckedRecordHostedLanes, ownedCheckedRecordHostedRoutes
 	, ownedCheckedRecordHostedTestNames
 } from "./owned-checked-record-hosted-contracts.mjs";
+import {
+	verifyOwnedCheckedRecordJavaScriptEvidence
+} from "./owned-checked-record-javascript-evidence.mjs";
 
 const summaryKeys = Object.freeze(["tests", "suites", "pass", "fail"
 	, "cancelled", "skipped", "todo"]);
@@ -143,6 +146,40 @@ const consumerSource = (original, lane, profile, resultOnly) => {
 };
 
 const positive = value => Number.isSafeInteger(value) && value > 0;
+
+const replayJavaScript = async (lane, root, producer) => {
+	const packagingRoot = join(root, lane.packaging);
+	const reportPath = join(packagingRoot, lane.report);
+	const reportBytes = await readFile(reportPath);
+	const report = JSON.parse(reportBytes);
+	assert.equal(reportBytes.toString("utf8"), canonicalJson(report)
+		, "Hosted report must be canonical");
+	const accepted = await verifyOwnedCheckedRecordJavaScriptEvidence(reportPath);
+	const acceptance = await readFile(join(root, lane.acceptance), "utf8");
+	const tap = parseOwnedCheckedRecordTap(acceptance);
+	assert.deepEqual(tap.tests, ownedCheckedRecordHostedTestNames(lane)
+		, "Acceptance TAP must contain exactly the JavaScript lane tests in order");
+	const verificationBytes = await readFile(join(root, lane.verification));
+	const verification = JSON.parse(verificationBytes);
+	assert.equal(verificationBytes.toString("utf8"), canonicalJson(verification)
+		, "Hosted JavaScript verification must be canonical");
+	assert.deepEqual(verification, accepted
+		, "Hosted JavaScript verification must equal independent replay");
+	const members = [lane.report, lane.acceptance.slice(lane.packaging.length + 1)
+		, lane.verification.slice(lane.packaging.length + 1)];
+	for(const entry of report.reports)
+		members.push(...entry.retainedPackageSet.files.map(file =>
+			`${entry.retainedPackageSet.path}/${file}`));
+	assert.deepEqual(await regularFiles(packagingRoot), members.toSorted()
+		, "Hosted JavaScript output must contain exactly the retained package evidence");
+	return {
+		schemaVersion: 1, kind: "owned-checked-record-hosted-replay"
+		, lane: "javascript", producerCommit: producer
+		, reportSha256: sha256(reportBytes)
+		, acceptanceLogSha256: sha256(Buffer.from(acceptance))
+		, tests: tap.tests.length, routes: accepted.routes
+	};
+};
 
 const checkObservations = ({ lane, entry, shape, diagnostics, source }) => {
 	const route = entry.route;
@@ -280,6 +317,8 @@ export const replayOwnedCheckedRecordHostedOutput = async (
 	assert.ok(Object.hasOwn(ownedCheckedRecordHostedLanes, laneName), laneName);
 	assert.match(producer, /^[a-f0-9]{40}$/u);
 	const lane = ownedCheckedRecordHostedLanes[laneName];
+	if(lane.kind === "javascript")
+		return replayJavaScript(lane, root, producer);
 	const packagingRoot = join(root, lane.packaging);
 	const reportPath = `${lane.packaging}/${lane.report}`;
 	const reportBytes = await readFile(join(root, reportPath));
