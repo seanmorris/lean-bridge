@@ -179,11 +179,16 @@ test("nested checked-record documentation names exact shapes, engines and remain
 	];
 	for(const path of paths)
 	{
-		const source = await readFile(path, "utf8");
+		const source = sourceAtHistoryMilestone(
+			nestedCheckedRecordBrowserPromotionHistoryPath, path
+		);
 		assert.ok(source.includes("nested-checked-record-browser-20261016/index.json")
 			, path);
 	}
-	const javascript = await readFile("docs/javascript-typescript.md", "utf8");
+	const javascript = sourceAtHistoryMilestone(
+		nestedCheckedRecordBrowserPromotionHistoryPath
+		, "docs/javascript-typescript.md"
+	);
 	for(const text of ["Fin 10", "checked `Nat` subtype", "Array", "List"
 		, "Option", "products", "Except", "enclosing record field"
 		, "active variant field", "Chromium", "Firefox", "WebKit"])
