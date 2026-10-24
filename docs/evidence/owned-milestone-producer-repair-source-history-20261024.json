@@ -1,0 +1,242 @@
+{
+  "additions": [
+    {
+      "currentSha256": "8fc86f50a82ff4660e9e77cc2a8352ac79e1c38d435c215d0879cccaa4f25851",
+      "path": "scripts/update-owned-milestone-producer-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "e007ef5e99dd33706872e2c285468977f8d2440e4b78ba67f9204eefa2beec8f",
+      "path": "tests/helpers/owned-milestone-producer-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "50c4f518040d88b01fff00011b79a0d7f516e37076045bbec873b97b32354963",
+      "path": "tests/helpers/owned-milestone-producer-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "a0b746c57304e6573fec15a5e270bb6ffaa59188",
+  "integrationBaseCommit": "a0b746c57304e6573fec15a5e270bb6ffaa59188",
+  "integrationUpdates": [
+    {
+      "currentSha256": "8c23bc102aeb34189141f5f5abc4370428f177ab2b115607b4a7f47d4a21de84",
+      "edits": [
+        {
+          "current": "import { beforeOwnedMilestoneProducerRepairSource, ownedMilestoneProducerRepairNormalizationPaths } from \"./owned-milestone-producer-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 2640
+        },
+        {
+          "current": "\t...ownedMilestoneProducerRepairNormalizationPaths\n\t, ...ownedJavaScriptTransferNixProducerRepairNormalizationPaths\n",
+          "previous": "\t...ownedJavaScriptTransferNixProducerRepairNormalizationPaths\n",
+          "start": 175840
+        },
+        {
+          "current": "\t\t= beforeOwnedMilestoneProducerRepairSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "",
+          "start": 216985
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "5c733d5502ce6a08771b9775a27142439629524d1f161438ae75e3842c766350"
+    },
+    {
+      "currentSha256": "8bde42cfe2f4a7eed68d3ac30b8139402d080065d24ffaa082898c3ff5f90ffe",
+      "edits": [
+        {
+          "current": "import \"./helpers/owned-milestone-producer-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 1584
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "332c9ccdb85ecdf3fb386cf7612a06ee8ef94ac3eaa66716ca6ace161f26858e"
+    }
+  ],
+  "milestone": "owned-milestone-producer-repair-source-v1",
+  "predecessorCommit": "b037e571bbfa382fe8e81a2eede2416383d889ac",
+  "schemaVersion": 1,
+  "scope": "Verify historical JVM callback acceptance, core-history performance evidence, and nested checked-record Perl promotion using their exact authenticated producer sources. Preserve unrecorded live JVM payload reads, live CI checks, default promotion writer reads, mutation controls, explicit digest stops, and immutable installed observations. No inventory or runtime-support changes.",
+  "updates": [
+    {
+      "currentSha256": "fb89fbbf8d006b6e206e85a35189bac550730beb3d7f3b6b16d4ad4760b28dce",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { beforeOwnedWitProjection, ownedWitProjectionHistoricalBytes } from \"./helpers/wit-owned-projection-history.mjs\";\n",
+          "start": 269
+        },
+        {
+          "current": "import { bytesAtProducer, sourceAtProducer } from \"./helpers/producer-source.mjs\";\n",
+          "previous": "",
+          "start": 501
+        },
+        {
+          "current": "/** The commit whose complete source tree every digest in the history performance record names. */\nconst coreHistoryProducer = \"4103db9893bd8addb0715cd74f856b3c961bafe9\";\n",
+          "previous": "",
+          "start": 585
+        },
+        {
+          "current": "\t// Every recorded digest names the producer tree; later owned and Fin layers never reach back this far.\n\tfor(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(bytesAtProducer(coreHistoryProducer, path)), digest, path);\n",
+          "previous": "\tfor(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(ownedWitProjectionHistoricalBytes(path, await readFile(path), digest)), digest, path);\n",
+          "start": 1505
+        },
+        {
+          "current": "\t\tconst current = sourceAtProducer(coreHistoryProducer, update.path, update.currentSha256);\n\t\tassert.equal(sha256(beforeCoreHistoryPerformance(update.path, current, update.previousSha256)), update.previousSha256);\n",
+          "previous": "\t\tconst current = beforeOwnedWitProjection(update.path, await readFile(update.path, \"utf8\"));\n\t\tassert.equal(sha256(beforeCoreHistoryPerformance(update.path, current)), update.previousSha256);\n",
+          "start": 2129
+        },
+        {
+          "current": "\tconst path = \"docs/type-surface.v1.json\", transition = record.updates.find(update => update.path === path);\n\tassert.ok(transition, path);\n\tconst current = sourceAtProducer(coreHistoryProducer, path, record.sources[path]);\n\tconst prior = JSON.parse(beforeCoreHistoryPerformance(path, current, transition.previousSha256));\n\tfor(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = record.sources[file.path] ?? sha256(bytesAtProducer(coreHistoryProducer, file.path));\n",
+          "previous": "\tconst current = beforeOwnedWitProjection(\"docs/type-surface.v1.json\", await readFile(\"docs/type-surface.v1.json\", \"utf8\"));\n\tconst prior = JSON.parse(beforeCoreHistoryPerformance(\"docs/type-surface.v1.json\", current));\n\tfor(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedWitProjectionHistoricalBytes(file.path, await readFile(file.path)));\n",
+          "start": 2445
+        },
+        {
+          "current": "\t\tconst current = sourceAtProducer(coreHistoryProducer, update.path, update.currentSha256), unknown = current + \"\\n/* unrelated */\\n\";\n",
+          "previous": "\t\tconst current = beforeOwnedWitProjection(update.path, await readFile(update.path, \"utf8\")), unknown = current + \"\\n/* unrelated */\\n\";\n",
+          "start": 3173
+        }
+      ],
+      "path": "tests/core-history-performance-evidence.test.mjs",
+      "previousSha256": "7f57871c1c4e66617392ad0729778f0f5933b29dfbac07e172a1b4c0a4377eaf"
+    },
+    {
+      "currentSha256": "c31b52e4feb94d59585f8f973111a3003661b5043b8e5206b8248e263c5922b7",
+      "edits": [
+        {
+          "current": "\t, nestedCheckedRecordPerlPromotionCommit\n",
+          "previous": "",
+          "start": 949
+        },
+        {
+          "current": "import { bytesAtProducer } from \"./producer-source.mjs\";\n",
+          "previous": "",
+          "start": 1242
+        },
+        {
+          "current": "\t\t, path => bytesAtProducer(nestedCheckedRecordPerlPromotionCommit, path)\n",
+          "previous": "",
+          "start": 3819
+        }
+      ],
+      "path": "tests/helpers/nested-checked-record-perl-promotion-history-tests.mjs",
+      "previousSha256": "16846d74135b62f79a2dffd84721bceb1c1c2deb0150d7133668711c31b0665d"
+    },
+    {
+      "currentSha256": "f89f67263d131e3fec68f30ec3854083dd07fe01c7856e9ab9d11adcaa974c33",
+      "edits": [
+        {
+          "current": "/** The promotion commit: its generator and all 17 validators equal the bytes its inventory pins. */\nexport const nestedCheckedRecordPerlPromotionCommit\n\t= \"36e2782eca1f2f24aa67d10abbb78173f5f63c66\";\n",
+          "previous": "",
+          "start": 731
+        }
+      ],
+      "path": "tests/helpers/nested-checked-record-perl-promotion-history.mjs",
+      "previousSha256": "47da4cc13ebb1967c7e869792a8a3d0330d3cb2e3e48fcc841fab3be53bf586d"
+    },
+    {
+      "currentSha256": "99df049c52cf1741807243a8030ae8410ae0de39b5a971f351947af43e29ceca",
+      "edits": [
+        {
+          "current": "\tnestedCheckedRecordPerlPromotionCommit\n\t, nestedCheckedRecordPerlPromotionHistoryPath\n",
+          "previous": "\tnestedCheckedRecordPerlPromotionHistoryPath\n",
+          "start": 576
+        },
+        {
+          "current": "import { bytesAtProducer } from \"./producer-source.mjs\";\n",
+          "previous": "",
+          "start": 771
+        },
+        {
+          "current": "// The generator and validators exactly as the promotion commit pinned them.\nconst milestone = path => bytesAtProducer(nestedCheckedRecordPerlPromotionCommit, path);\n",
+          "previous": "",
+          "start": 1688
+        },
+        {
+          "current": "\t\tawait assert.rejects(promoteNestedCheckedRecordPerl(original, changed, milestone));\n",
+          "previous": "\t\tawait assert.rejects(promoteNestedCheckedRecordPerl(original, changed));\n",
+          "start": 4188
+        },
+        {
+          "current": "\t\tawait assert.rejects(promoteNestedCheckedRecordPerl(original, changed, milestone));\n",
+          "previous": "\t\tawait assert.rejects(promoteNestedCheckedRecordPerl(original, changed));\n",
+          "start": 4860
+        },
+        {
+          "current": "\tconst promoted = await promoteNestedCheckedRecordPerl(original, references, milestone);\n\tawait assert.rejects(promoteNestedCheckedRecordPerl(promoted, references, milestone)\n",
+          "previous": "\tconst promoted = await promoteNestedCheckedRecordPerl(original, references);\n\tawait assert.rejects(promoteNestedCheckedRecordPerl(promoted, references)\n",
+          "start": 4949
+        },
+        {
+          "current": "\t\tawait assert.rejects(promoteNestedCheckedRecordPerl(changed, references, milestone)\n",
+          "previous": "\t\tawait assert.rejects(promoteNestedCheckedRecordPerl(changed, references)\n",
+          "start": 5562
+        },
+        {
+          "current": "\t\t, await promoteNestedCheckedRecordPerl(original, references, milestone)\n",
+          "previous": "\t\t, await promoteNestedCheckedRecordPerl(original, references)\n",
+          "start": 6004
+        }
+      ],
+      "path": "tests/helpers/nested-checked-record-perl-promotion-tests.mjs",
+      "previousSha256": "865abfc6ea5a30ce2eeeaf774a89ae4c50eca4fd0df4ce16de150a32e090fc73"
+    },
+    {
+      "currentSha256": "7512373db9050663c7b89621895119f76ce03298c035696d0a89ab510446a563",
+      "edits": [
+        {
+          "current": " * @param read - Generator and validator source reader; historical checks pass the promotion commit.\n",
+          "previous": "",
+          "start": 8824
+        },
+        {
+          "current": "export const promoteNestedCheckedRecordPerl = async (original, references, read = readFile) => {\n",
+          "previous": "export const promoteNestedCheckedRecordPerl = async (original, references) => {\n",
+          "start": 8929
+        },
+        {
+          "current": "\tassert.equal(sha256(await read(nestedCheckedRecordPerlGeneratorPath))\n",
+          "previous": "\tassert.equal(sha256(await readFile(nestedCheckedRecordPerlGeneratorPath))\n",
+          "start": 9296
+        },
+        {
+          "current": "\t\tpath, sha256: sha256(await read(path))\n",
+          "previous": "\t\tpath, sha256: sha256(await readFile(path))\n",
+          "start": 9879
+        }
+      ],
+      "path": "tests/helpers/nested-checked-record-perl-promotion.mjs",
+      "previousSha256": "16fde47048456825d3e4d4440fc989531aff5218540f4f75b69bcbf186e7b990"
+    },
+    {
+      "currentSha256": "f87817bc6c75cd7f2c89371fcf69cc361e66db2eb3feb62afd123fd84ea5d13f",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { beforeOwnedPerlCallbackResults } from \"./owned-perl-callback-result-history.mjs\";\n",
+          "start": 240
+        },
+        {
+          "current": "import { bytesAtProducer } from \"./producer-source.mjs\";\n",
+          "previous": "",
+          "start": 859
+        },
+        {
+          "current": "/** The commit whose complete source tree every digest in the JVM callback acceptance record names. */\nexport const ownedJvmCallbackProducer = \"95978558fed7e305833175f36a93a140ff84be9e\";\n",
+          "previous": "",
+          "start": 1350
+        },
+        {
+          "current": "\t\t// Recorded sources name the producer tree; later owned and Fin layers never reach back this far.\n",
+          "previous": "",
+          "start": 13323
+        },
+        {
+          "current": "\t\tconst source = bytesAtProducer(ownedJvmCallbackProducer, path, digest);\n",
+          "previous": "\t\tconst source = beforeOwnedPerlCallbackResults(path, await readFile(path), digest);\n",
+          "start": 13462
+        }
+      ],
+      "path": "tests/helpers/owned-jvm-callback-result-acceptance.mjs",
+      "previousSha256": "00044faae3d3c02918bfb4dc08e32e601736ff62ffb7301d84127ce8aceda720"
+    }
+  ]
+}
