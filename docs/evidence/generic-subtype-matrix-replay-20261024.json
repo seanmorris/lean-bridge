@@ -1,0 +1,204 @@
+{
+  "attempts": [
+    {
+      "outcome": "incomplete",
+      "reason": "Sparse checkout had indexes but omitted archive files; failed before accepting any lane."
+    },
+    {
+      "completedLanes": [
+        "npm-ordinary",
+        "npm-reviewed",
+        "foundation",
+        "native",
+        "perl",
+        "python",
+        "ruby",
+        "rust",
+        "dotnet",
+        "jvm"
+      ],
+      "limitSeconds": 120,
+      "outcome": "time-bounded"
+    },
+    {
+      "completedLanes": [
+        "php-native",
+        "wit-wasi"
+      ],
+      "limitSeconds": 60,
+      "outcome": "completed"
+    }
+  ],
+  "kind": "generic-subtype-complete-archive-replay-v1",
+  "lanes": [
+    {
+      "archive": "docs/evidence/generic-subtype-npm-ordinary-hosted-20261023",
+      "artifact": 12514092250,
+      "elapsedMs": 11303,
+      "files": 1734,
+      "indexSha256": "5fcb0771a183c8912c5fc4d7d9b70ef7307c540f5264b039d8b32cd883f5f370",
+      "job": 120453791022,
+      "lane": "npm-ordinary",
+      "producer": "23ae28e37befcdf245e94f5f841ed50254fc869c",
+      "run": 39965390162
+    },
+    {
+      "archive": "docs/evidence/generic-subtype-npm-reviewed-hosted-20261023",
+      "artifact": 12511516203,
+      "elapsedMs": 6915,
+      "files": 1734,
+      "indexSha256": "644327c9eca507fd2837ef7ef6bb6a609e164c872c5cbd345fdc8068eef95677",
+      "job": 120453790553,
+      "lane": "npm-reviewed",
+      "producer": "23ae28e37befcdf245e94f5f841ed50254fc869c",
+      "run": 39965390162
+    },
+    {
+      "archive": "docs/evidence/generic-subtype-foundation-hosted-20261023",
+      "artifact": 12516024335,
+      "elapsedMs": 15537,
+      "files": 2010,
+      "indexSha256": "71ca38b5d3eaa2d20914a8dab479bfccac8c3c337ef7fd2bbbe4cb4e05496b6c",
+      "job": 120453798327,
+      "lane": "foundation",
+      "producer": "23ae28e37befcdf245e94f5f841ed50254fc869c",
+      "run": 39965392535
+    },
+    {
+      "archive": "docs/evidence/generic-subtype-native-hosted-20261023",
+      "artifact": 12515636019,
+      "elapsedMs": 7971,
+      "files": 1766,
+      "indexSha256": "772841cfc5e65b7bfc16cc2cd0d806aaef742d4c176b020635eeb4c5e59d026b",
+      "job": 120453798597,
+      "lane": "native",
+      "producer": "23ae28e37befcdf245e94f5f841ed50254fc869c",
+      "run": 39965392535
+    },
+    {
+      "archive": "docs/evidence/generic-subtype-perl-hosted-20261023",
+      "artifact": 12511212767,
+      "elapsedMs": 7647,
+      "files": 1978,
+      "indexSha256": "b0bef68a6b700734efd16b93dd12225f6e366032d98da2cd2e51519003c95911",
+      "job": 120453798039,
+      "lane": "perl",
+      "producer": "23ae28e37befcdf245e94f5f841ed50254fc869c",
+      "run": 39965392535
+    },
+    {
+      "archive": "docs/evidence/generic-subtype-python-hosted-20261023",
+      "artifact": 12516035968,
+      "elapsedMs": 10998,
+      "files": 1846,
+      "indexSha256": "acdf759eb36a2c0176bd2aa149a14ab164faec6c1aecda8f7c6ffda34c7f8ef3",
+      "job": 120453797387,
+      "lane": "python",
+      "producer": "23ae28e37befcdf245e94f5f841ed50254fc869c",
+      "run": 39965391657
+    },
+    {
+      "archive": "docs/evidence/generic-subtype-ruby-hosted-20261023",
+      "artifact": 12511265942,
+      "elapsedMs": 11256,
+      "files": 1810,
+      "indexSha256": "8cbd7df8a5fe1756f95005868762ff5f18ec8e4d2a1404ae6b5f4cb73c751615",
+      "job": 120453796734,
+      "lane": "ruby",
+      "producer": "23ae28e37befcdf245e94f5f841ed50254fc869c",
+      "run": 39965391657
+    },
+    {
+      "archive": "docs/evidence/generic-subtype-rust-hosted-20261023",
+      "artifact": 12514279363,
+      "elapsedMs": 11515,
+      "files": 1837,
+      "indexSha256": "affb8819eaebcb5ce1099ded9fad3f65701f02aab9541d1ca028fe3f1f17095b",
+      "job": 120453797124,
+      "lane": "rust",
+      "producer": "23ae28e37befcdf245e94f5f841ed50254fc869c",
+      "run": 39965391657
+    },
+    {
+      "archive": "docs/evidence/generic-subtype-dotnet-hosted-20261024",
+      "artifact": 12545556775,
+      "elapsedMs": 15048,
+      "files": 1870,
+      "indexSha256": "34e30097433b43562990c23086db27449af1f331115182f5ff98d979f94d2bf1",
+      "job": 120732735805,
+      "lane": "dotnet",
+      "producer": "390ae18d3a2607bc73463767a33fea0cfb9350b0",
+      "run": 40047586181
+    },
+    {
+      "archive": "docs/evidence/generic-subtype-jvm-hosted-20261024",
+      "artifact": 12543630418,
+      "elapsedMs": 11085,
+      "files": 1806,
+      "indexSha256": "abed0cf5126bb70b352aeb772ac2f085d1b9b0ce886b210217d2699847eff8b9",
+      "job": 120732735785,
+      "lane": "jvm",
+      "producer": "390ae18d3a2607bc73463767a33fea0cfb9350b0",
+      "run": 40047586181
+    },
+    {
+      "archive": "docs/evidence/generic-subtype-php-native-hosted-20261024",
+      "artifact": 12546017784,
+      "elapsedMs": 14744,
+      "files": 1850,
+      "indexSha256": "36715765a38902461f8270a35e8e23307535c4193d3c68644c7f20cd3cfdb9ae",
+      "job": 120732735793,
+      "lane": "php-native",
+      "producer": "390ae18d3a2607bc73463767a33fea0cfb9350b0",
+      "run": 40047586181
+    },
+    {
+      "archive": "docs/evidence/generic-subtype-wit-wasi-hosted-20261024",
+      "artifact": 12544318334,
+      "elapsedMs": 14778,
+      "files": 1902,
+      "indexSha256": "3ac222f2bcec706d4e9e531dcda7b8ce8aac2b90adb79c113d2d44721c91a215",
+      "job": 120732735916,
+      "lane": "wit-wasi",
+      "producer": "390ae18d3a2607bc73463767a33fea0cfb9350b0",
+      "run": 40047586181
+    }
+  ],
+  "method": {
+    "cpuLimit": 1,
+    "export": "checkGenericSubtypeHostedEvidence",
+    "mode": "Serialized read-only replay; no compiler or package producer",
+    "module": "tests/helpers/generic-subtype-hosted-evidence.mjs",
+    "nodeHeapMiB": 512,
+    "sources": [
+      {
+        "path": "tests/helpers/generic-subtype-hosted-evidence.mjs",
+        "sha256": "2475b4f7efd78dc86ccbeb577a439369e1542ede6e901cbb821d786a254f2105"
+      },
+      {
+        "path": "tests/helpers/generic-subtype-hosted-output.mjs",
+        "sha256": "30d551efc6d423077e7f002c728b3ce2d935422e8f7d1095ec735457ae63fb03"
+      },
+      {
+        "path": "tests/helpers/generic-subtype-hosted-evidence-sources.mjs",
+        "sha256": "84c365108667b6b7a5b8cedeef8e9fa49175efd9c1b07328d2125df80d07e109"
+      },
+      {
+        "path": "tests/helpers/generic-subtype-promotion.mjs",
+        "sha256": "b906a0808073a5eb4e1525c930aa7ee6616943b73445dfc466acdf4a5cd4b400"
+      }
+    ]
+  },
+  "preflight": {
+    "currentInventoryBytes": 101777720,
+    "documentationMarkersValid": true,
+    "existingProjectionAdditionalEvidenceBytes": 5381535,
+    "existingProjectionMinimumBytes": 107159255,
+    "handwrittenDocumentationPages": 14
+  },
+  "retainedFiles": 22143,
+  "schemaVersion": 1,
+  "scope": "All twelve original archives were independently replayed at one unchanged clean verification revision. This authenticates their recorded producer observations, not a fresh hosted execution at the verification revision. The foundation is compiler/review evidence, not an installed consumer. No inventory or documentation promotion is included.",
+  "supportPromoted": false,
+  "verificationRevision": "fa50708c91bfafe7c42a871aec232c10a4edb123"
+}
