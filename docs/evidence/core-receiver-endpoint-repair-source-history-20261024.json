@@ -1,0 +1,128 @@
+{
+  "additions": [
+    {
+      "currentSha256": "648c034d5f9ba1c3f7a91256d23fab2afadf9335f308c2645bf25045682a9510",
+      "path": "tests/helpers/core-receiver-endpoint-tests.mjs"
+    },
+    {
+      "currentSha256": "e37f8e39b65f6d85a665cf2562b0e26627a37d143acc345b24e6b6678019edd0",
+      "path": "scripts/update-core-receiver-endpoint-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "6c0d688e3565de206bf1a4091f872e04e88dfdb554a43fb07c584681b6cfd83b",
+      "path": "tests/helpers/core-receiver-endpoint-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "f535a1cf6500c072012c6ae7871607d55ad0993e9de565fa74a6ece0fcbdc5f1",
+      "path": "tests/helpers/core-receiver-endpoint-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "80c0242f64f458f4bda4e4531e1ade36fe2262a4",
+  "implementationCommits": [
+    "80c0242f64f458f4bda4e4531e1ade36fe2262a4"
+  ],
+  "integrationBaseCommit": "80c0242f64f458f4bda4e4531e1ade36fe2262a4",
+  "integrationUpdates": [
+    {
+      "currentSha256": "49694ec3f59c8a307fb5e3715de62d8d301eda2346413e1220ee38876f77e48f",
+      "edits": [
+        {
+          "current": "import { beforeCoreReceiverEndpointRepairSource, coreReceiverEndpointRepairNormalizationPaths } from \"./core-receiver-endpoint-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 7827
+        },
+        {
+          "current": "\t...coreReceiverEndpointRepairNormalizationPaths\n\t, ...phpWasmCallbackProducerReplayNormalizationPaths\n",
+          "previous": "\t...phpWasmCallbackProducerReplayNormalizationPaths\n",
+          "start": 181021
+        },
+        {
+          "current": "\tlet stage = beforeCoreReceiverEndpointRepairSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforePhpWasmCallbackProducerReplaySource(path, text, expected);\n",
+          "previous": "\tlet stage\n\t\t= beforePhpWasmCallbackProducerReplaySource(path, text, expected);\n",
+          "start": 223848
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "1465797e65bdc9dcf834f495daddce96b2f3922937cae749279dcda3c1dbcdeb"
+    },
+    {
+      "currentSha256": "42abbdec9819fb0c2c5e1893716bc0ea17251374b239eca1d41e37c606e29177",
+      "edits": [
+        {
+          "current": "import \"./helpers/core-receiver-endpoint-tests.mjs\";\nimport \"./helpers/core-receiver-endpoint-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 4969
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "6d2f82c51bdc301b25b13cd59d1a292ac500d6e0ea71f4fd96a619221a33e282"
+    }
+  ],
+  "milestone": "core-receiver-endpoint-repair-source-v1",
+  "predecessorCommit": "85aaf3013592421b8abe27d53b4b4510fce58f3e",
+  "schemaVersion": 1,
+  "scope": "Bind all nine Ruby, Rust and JavaScript receiver reconstruction, idempotence and inventory callers to their exact recorded predecessor digests. Reproduce the Ruby hash mismatch from Core run 40120957309 job 120952182546 on the original 3.6 MB snapshot, preserving the assertion and every original receipt. Verify three original inventories, strict source-pin-only changes, unknown source refusal and forged transition rejection without loading the current large inventory. Register bounded snapshot and caller tests in the recurring Core contract. Preserve all current support cells, inventory bytes, runtime and package code. Core shard 4 also received a runner shutdown; this repair does not establish a passing hosted run or cure runner loss. Final current-head Core remains required.",
+  "updates": [
+    {
+      "currentSha256": "0d392c5c0e273c455994088842923e815acc17afe5da08f46ab7abd9e6f1eba8",
+      "edits": [
+        {
+          "current": "\t\tconst prior = beforeOwnedJavaScriptReceiver(update.path, source, update.previousSha256);\n",
+          "previous": "\t\tconst prior = beforeOwnedJavaScriptReceiver(update.path, source);\n",
+          "start": 2300
+        },
+        {
+          "current": "\t\tassert.equal(beforeOwnedJavaScriptReceiver(update.path, prior, update.previousSha256), prior);\n",
+          "previous": "\t\tassert.equal(beforeOwnedJavaScriptReceiver(update.path, prior), prior);\n",
+          "start": 2445
+        },
+        {
+          "current": "\tconst prior = JSON.parse(beforeOwnedJavaScriptReceiver(path, current, previous.sources[path]));\n",
+          "previous": "\tconst prior = JSON.parse(beforeOwnedJavaScriptReceiver(path, current));\n",
+          "start": 3242
+        }
+      ],
+      "path": "tests/owned-javascript-receiver-evidence.test.mjs",
+      "previousSha256": "847bd6601af0bbbd972748faca69c22fe91316d1dc42388c09a946674e4e18a2"
+    },
+    {
+      "currentSha256": "f1aec5ecdaad3adf7f34245651d9c37ab69f5593e6d26dc0d09a441234ad19d9",
+      "edits": [
+        {
+          "current": "\t\tconst prior = beforeOwnedRubyReceiver(update.path, source, update.previousSha256);\n\t\tassert.equal(sha256(prior), update.previousSha256); assert.equal(beforeOwnedRubyReceiver(update.path, prior, update.previousSha256), prior);\n",
+          "previous": "\t\tconst prior = beforeOwnedRubyReceiver(update.path, source);\n\t\tassert.equal(sha256(prior), update.previousSha256); assert.equal(beforeOwnedRubyReceiver(update.path, prior), prior);\n",
+          "start": 2172
+        },
+        {
+          "current": "\tconst prior = JSON.parse(beforeOwnedRubyReceiver(path, current, previous.sources[path]));\n",
+          "previous": "\tconst prior = JSON.parse(beforeOwnedRubyReceiver(path, current));\n",
+          "start": 3081
+        }
+      ],
+      "path": "tests/owned-ruby-receiver-evidence.test.mjs",
+      "previousSha256": "617825d14756d8b46238ac2e36abee7a6bca44f2bb42338b86c0d47bacf13d9a"
+    },
+    {
+      "currentSha256": "a874f09cf0cd8b2dea2bdb3fc06c25c4ccd0138fc7def347b7fbad4cd6d25c72",
+      "edits": [
+        {
+          "current": "\t\tconst prior = beforeOwnedRustReceiver(update.path, source, update.previousSha256);\n",
+          "previous": "\t\tconst prior = beforeOwnedRustReceiver(update.path, source);\n",
+          "start": 2160
+        },
+        {
+          "current": "\t\tassert.equal(beforeOwnedRustReceiver(update.path, prior, update.previousSha256), prior);\n",
+          "previous": "\t\tassert.equal(beforeOwnedRustReceiver(update.path, prior), prior);\n",
+          "start": 2299
+        },
+        {
+          "current": "\tconst prior = JSON.parse(beforeOwnedRustReceiver(path, current, previous.sources[path]));\n",
+          "previous": "\tconst prior = JSON.parse(beforeOwnedRustReceiver(path, current));\n",
+          "start": 3083
+        }
+      ],
+      "path": "tests/owned-rust-receiver-evidence.test.mjs",
+      "previousSha256": "2d62867c451edbbc04edd682300e076445aee8159a24ec1239f83c8801e96f27"
+    }
+  ]
+}
