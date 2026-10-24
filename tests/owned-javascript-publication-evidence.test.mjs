@@ -33,9 +33,11 @@ test("owned publication binds exact source changes without rewriting engine evid
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path] ?? ownedJavaScriptPublicationBaselineSources[update.path], update.path);
 		assert.equal(update.currentSha256, record.sources[update.path], update.path);
-		const current = beforeCoreHistoryPerformance(update.path, await readFile(update.path, "utf8")), prior = beforeOwnedJavaScriptPublication(update.path, current);
+		// The hub reverses every recognized state, so live reads and predecessor reads name their stops.
+		const current = beforeCoreHistoryPerformance(update.path, await readFile(update.path, "utf8"), update.currentSha256)
+			, prior = beforeOwnedJavaScriptPublication(update.path, current, update.previousSha256);
 		assert.equal(sha256(prior), update.previousSha256);
-		assert.equal(beforeOwnedJavaScriptPublication(update.path, prior), prior);
+		assert.equal(beforeOwnedJavaScriptPublication(update.path, prior, update.previousSha256), prior);
 		assert.equal(beforeOwnedJavaScriptPublication(update.path, current, update.currentSha256), current);
 		const unknown = current + "\n/* unrecorded publication change */\n";
 		assert.equal(beforeOwnedJavaScriptPublication(update.path, unknown), unknown);
@@ -43,9 +45,22 @@ test("owned publication binds exact source changes without rewriting engine evid
 		for(const changed of [{ ...update, previousSha256: "0".repeat(64) }, { ...update, path: "unknown.mjs" }, { ...update, edits: [...update.edits, update.edits[0]] }])
 			assert.throws(() => reverseOwnedJavaScriptPublicationUpdate(current, changed));
 	}
-	const current = beforeCoreHistoryPerformance("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8"));
-	const prior = JSON.parse(beforeOwnedJavaScriptPublication("docs/type-surface.v1.json", current));
-	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(coreHistoryHistoricalBytes(file.path, await readFile(file.path)));
+	const path = "docs/type-surface.v1.json", transition = record.updates.find(update => update.path === path);
+	assert.ok(transition, "Publication records an explicit type-surface predecessor");
+	const current = beforeCoreHistoryPerformance(path, await readFile(path, "utf8"), transition.currentSha256);
+	const prior = JSON.parse(beforeOwnedJavaScriptPublication(path, current, transition.previousSha256));
+	// Source pins compare against the milestone inventory's own pins, never later live bytes.
+	const pins = new Map();
+	for(const evidence of JSON.parse(current).evidence) for(const file of evidence.files)
+	{
+		assert.ok(!pins.has(file.path) || pins.get(file.path) === file.sha256, file.path);
+		pins.set(file.path, file.sha256);
+	}
+	for(const evidence of prior.evidence) for(const file of evidence.files)
+	{
+		assert.ok(pins.has(file.path), file.path);
+		file.sha256 = pins.get(file.path);
+	}
 	assert.deepEqual(JSON.parse(current), prior, "Publication must not promote unverified isolated or cross-language support");
 });
 
