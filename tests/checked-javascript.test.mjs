@@ -20,6 +20,7 @@ import "./helpers/owned-subtype-delegation-repair-source-history-tests.mjs";
 import "./helpers/native-fork-transfer-producer-repair-source-history-tests.mjs";
 import "./helpers/fin-history-rolling-repair-source-history-tests.mjs";
 import "./helpers/fin-history-rolling-stage-tests.mjs";
+import "./helpers/perl-callback-admission-repair-source-history-tests.mjs";
 
 const root = resolve(".");
 

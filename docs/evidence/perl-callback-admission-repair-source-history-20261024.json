@@ -1,0 +1,109 @@
+{
+  "additions": [
+    {
+      "currentSha256": "738cd87e149f1aa5365e92b58cb8f65f7258114a88b93deabbd2c90a4e9b72c1",
+      "path": "scripts/update-perl-callback-admission-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "7b870c382297ff94649523a997094102af7a4316f84f0041fccd480399ca5815",
+      "path": "tests/helpers/perl-callback-admission-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "5605167cf1ce0f998a4071ccc059a74f9e5b48d411bed7e3b3187e2d1ef9aa62",
+      "path": "tests/helpers/perl-callback-admission-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "b0a2af6fbac8d64772670f1845dcf80f3af2f746",
+  "integrationBaseCommit": "c1dbd5dc7efb79397076acdfe25f6164f57ada57",
+  "integrationUpdates": [
+    {
+      "currentSha256": "a779b330223aa8de0d07ef30ad217bf96dbcede717d2f1f12c2b358a33b938e1",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"0bd28ddff12df265f5036d6a5618f3db18f4a5b525794d98cb3649dcee76476d\"\n",
+          "previous": "          \"sha256\": \"bcfe4a217e19bf48a4505ef8be96f4838e7ae28f70591f1d096c8450a7d85eba\"\n",
+          "start": 1320289
+        },
+        {
+          "current": "          \"sha256\": \"0bd28ddff12df265f5036d6a5618f3db18f4a5b525794d98cb3649dcee76476d\"\n",
+          "previous": "          \"sha256\": \"bcfe4a217e19bf48a4505ef8be96f4838e7ae28f70591f1d096c8450a7d85eba\"\n",
+          "start": 1347851
+        },
+        {
+          "current": "          \"sha256\": \"0bd28ddff12df265f5036d6a5618f3db18f4a5b525794d98cb3649dcee76476d\"\n",
+          "previous": "          \"sha256\": \"bcfe4a217e19bf48a4505ef8be96f4838e7ae28f70591f1d096c8450a7d85eba\"\n",
+          "start": 1370586
+        },
+        {
+          "current": "          \"sha256\": \"0bd28ddff12df265f5036d6a5618f3db18f4a5b525794d98cb3649dcee76476d\"\n",
+          "previous": "          \"sha256\": \"bcfe4a217e19bf48a4505ef8be96f4838e7ae28f70591f1d096c8450a7d85eba\"\n",
+          "start": 1388609
+        },
+        {
+          "current": "          \"sha256\": \"0bd28ddff12df265f5036d6a5618f3db18f4a5b525794d98cb3649dcee76476d\"\n",
+          "previous": "          \"sha256\": \"bcfe4a217e19bf48a4505ef8be96f4838e7ae28f70591f1d096c8450a7d85eba\"\n",
+          "start": 1424947
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "516c1a3911139328a73e57a61b0cbfcbf4b413fb91648fa5854114916e16a37f"
+    },
+    {
+      "currentSha256": "268df23465d94602e61d4feedd666de87acab770828bbc701111b2da4184e428",
+      "edits": [
+        {
+          "current": "import { beforePerlCallbackAdmissionRepairSource, perlCallbackAdmissionRepairNormalizationPaths } from \"./perl-callback-admission-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 1631
+        },
+        {
+          "current": "\t...perlCallbackAdmissionRepairNormalizationPaths\n\t, ...finHistoryRollingRepairNormalizationPaths\n",
+          "previous": "\t...finHistoryRollingRepairNormalizationPaths\n",
+          "start": 174828
+        },
+        {
+          "current": "\t\t= beforePerlCallbackAdmissionRepairSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "",
+          "start": 215642
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "d59ce5150f8e5c512b71dae11c99e70d352348616fb16f3ead7dd61fb56adc0f"
+    },
+    {
+      "currentSha256": "b844cd22d129298db983962375f1a47950c43b96b3a2086bf33d7a63b8c9ceaf",
+      "edits": [
+        {
+          "current": "import \"./helpers/perl-callback-admission-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 1103
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "260e0dbd42fbd02623753981f73106de12fd911918874898a09636d343361df4"
+    }
+  ],
+  "milestone": "perl-callback-admission-repair-source-v1",
+  "predecessorCommit": "93e431dd1adb1f1dd39e4cebebc6028a25823ed8",
+  "schemaVersion": 1,
+  "scope": "Replace stale native callback Subtype rejection assertions with CPAN cross-target layout agreement while retaining invalid target and namespace refusals. Refresh only the five matching current-source inventory pins. Preserve the original source commit, reversible history, support claims, production gates, and all installed observations.",
+  "updates": [
+    {
+      "currentSha256": "0bd28ddff12df265f5036d6a5618f3db18f4a5b525794d98cb3649dcee76476d",
+      "edits": [
+        {
+          "current": "\t// Every native graph target admits callback Subtypes, and CPAN shares each target's layout.\n\tconst layout = compileNativeGraphProjection(ir, [\"cpan\"], moduleName).layoutSha256;\n",
+          "previous": "",
+          "start": 8211
+        },
+        {
+          "current": "\t\tassert.equal(compileNativeGraphProjection(ir, [\"cpan\", target], moduleName).layoutSha256, layout, target);\n\tfor(const targets of [[], [\"cpan\", \"cpan\"], [\"cpan\", \"php-wasm\"], [\"unknown\"]])\n\t\tassert.throws(() => compileNativeGraphProjection(ir, targets, moduleName), { code: \"native-graph-projection-unavailable\" });\n\tassert.throws(() => compileNativeGraphProjection(ir, [\"cpan\"]), { code: \"native-graph-projection-unavailable\" });\n",
+          "previous": "\t\tassert.throws(() => compileNativeGraphProjection(ir, [target], moduleName), { code: \"native-graph-projection-unavailable\" });\n",
+          "start": 8486
+        }
+      ],
+      "path": "tests/perl-recursive-callable-contract.test.mjs",
+      "previousSha256": "bcfe4a217e19bf48a4505ef8be96f4838e7ae28f70591f1d096c8450a7d85eba"
+    }
+  ]
+}

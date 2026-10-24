@@ -16,6 +16,7 @@ import { beforeOwnedJavaScriptProducerRepairSource, ownedJavaScriptProducerRepai
 import { beforeOwnedSubtypeDelegationRepairSource, ownedSubtypeDelegationRepairNormalizationPaths } from "./owned-subtype-delegation-repair-source-history.mjs";
 import { beforeNativeForkTransferProducerRepairSource, nativeForkTransferProducerRepairNormalizationPaths } from "./native-fork-transfer-producer-repair-source-history.mjs";
 import { beforeFinHistoryRollingRepairSource, finHistoryRollingRepairNormalizationPaths } from "./fin-history-rolling-repair-source-history.mjs";
+import { beforePerlCallbackAdmissionRepairSource, perlCallbackAdmissionRepairNormalizationPaths } from "./perl-callback-admission-repair-source-history.mjs";
 import { beforeCoreEvidenceMemoryRepairSource, coreEvidenceMemoryRepairNormalizationPaths } from "./core-evidence-memory-repair-source-history.mjs";
 import { beforeValueIndexPromotionMilestoneRepairSource, valueIndexPromotionMilestoneRepairNormalizationPaths } from "./value-index-promotion-milestone-repair-source-history.mjs";
 import { beforeCoreMilestoneReplayRepairSource, coreMilestoneReplayRepairNormalizationPaths } from "./core-milestone-replay-repair-source-history.mjs";
@@ -2109,7 +2110,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...finHistoryRollingRepairNormalizationPaths
+	...perlCallbackAdmissionRepairNormalizationPaths
+	, ...finHistoryRollingRepairNormalizationPaths
 	, ...nativeForkTransferProducerRepairNormalizationPaths
 	, ...ownedSubtypeDelegationRepairNormalizationPaths
 	, ...ownedJavaScriptProducerRepairNormalizationPaths
@@ -2962,6 +2964,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
 	let stage
+		= beforePerlCallbackAdmissionRepairSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage
 		= beforeFinHistoryRollingRepairSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
