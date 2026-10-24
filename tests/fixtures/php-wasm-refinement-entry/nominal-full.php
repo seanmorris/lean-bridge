@@ -14,8 +14,8 @@ $n = fn($value) => BigInteger::of($value);
 $fields = function (array $changes = []) use ($n): array {
     return array_replace([
         'unitValue' => null, 'boolValue' => true,
-        'uint8Value' => 42, 'uint16Value' => 42, 'uint32Value' => 42, 'uint64Value' => $n(42),
-        'int8Value' => -42, 'int16Value' => -42, 'int32Value' => -42, 'int64Value' => -42,
+        'uint8Value' => 42, 'uint16Value' => 42, 'uint32Value' => $n(42), 'uint64Value' => $n(42),
+        'int8Value' => -42, 'int16Value' => -42, 'int32Value' => -42, 'int64Value' => $n(-42),
         'natValue' => $n(42), 'intValue' => $n(-42), 'float32Value' => 1.5, 'float64Value' => 1.5,
         'textValue' => 'a', 'bytesValue' => Bytes::fromString("\x00\x80\xff"), 'charValue' => 'a',
         'usizeValue' => $n(42), 'isizeValue' => -42, 'digit' => $n(2),
