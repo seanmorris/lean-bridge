@@ -21,6 +21,7 @@ import { beforeOwnedJvmTransferProducerRepairSource, ownedJvmTransferProducerRep
 import { beforeOwnedCReceiverProducerRepairSource, ownedCReceiverProducerRepairNormalizationPaths } from "./owned-c-receiver-producer-repair-source-history.mjs";
 import { beforePhpWasmCallbackSubtypeEntrySource, phpWasmCallbackSubtypeEntryNormalizationPaths } from "./php-wasm-callback-subtype-entry-source-history.mjs";
 import { beforePhpWasmCallbackFinMixedEntrySource, phpWasmCallbackFinMixedEntryNormalizationPaths } from "./php-wasm-callback-fin-mixed-entry-source-history.mjs";
+import { beforeOwnedJavaScriptTransferNixProducerRepairSource, ownedJavaScriptTransferNixProducerRepairNormalizationPaths } from "./owned-javascript-transfer-nix-producer-repair-source-history.mjs";
 import { beforeCoreEvidenceMemoryRepairSource, coreEvidenceMemoryRepairNormalizationPaths } from "./core-evidence-memory-repair-source-history.mjs";
 import { beforeValueIndexPromotionMilestoneRepairSource, valueIndexPromotionMilestoneRepairNormalizationPaths } from "./value-index-promotion-milestone-repair-source-history.mjs";
 import { beforeCoreMilestoneReplayRepairSource, coreMilestoneReplayRepairNormalizationPaths } from "./core-milestone-replay-repair-source-history.mjs";
@@ -2114,7 +2115,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...phpWasmCallbackFinMixedEntryNormalizationPaths
+	...ownedJavaScriptTransferNixProducerRepairNormalizationPaths
+	, ...phpWasmCallbackFinMixedEntryNormalizationPaths
 	, ...phpWasmCallbackSubtypeEntryNormalizationPaths
 	, ...ownedCReceiverProducerRepairNormalizationPaths
 	, ...ownedJvmTransferProducerRepairNormalizationPaths
@@ -2972,6 +2974,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
 	let stage
+		= beforeOwnedJavaScriptTransferNixProducerRepairSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage
 		= beforePhpWasmCallbackFinMixedEntrySource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;

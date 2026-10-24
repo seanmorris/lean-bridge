@@ -37,7 +37,9 @@ test("real Nix successor authenticates every change without promoting type cover
 		assert.equal(beforeOwnedJavaScriptNix(update.path, current, update.currentSha256), current);
 	}
 	const path = "docs/type-surface.v1.json", current = sourceAtProducer(ownedJavaScriptNixProducer, path, record.sources[path]);
-	const prior = JSON.parse(beforeOwnedJavaScriptNix(path, current, record.updates.find(update => update.path === path)?.previousSha256));
+	const transition = record.updates.find(update => update.path === path);
+	assert.ok(transition, "Nix evidence records an explicit type-surface predecessor");
+	const prior = JSON.parse(beforeOwnedJavaScriptNix(path, current, transition.previousSha256));
 	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = record.sources[file.path] ?? sha256(bytesAtProducer(ownedJavaScriptNixProducer, file.path));
 	assert.deepEqual(JSON.parse(current), prior);
 });

@@ -1,0 +1,197 @@
+{
+  "additions": [
+    {
+      "currentSha256": "f8526bcd9a7de89c5f6a32afe8b389eb2bff97914531f060c74aa9f4be451223",
+      "path": "scripts/update-owned-javascript-transfer-nix-producer-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "fd62a6d3bb54821568b9d7e416610e0a3d0c6f36c7a80e0601bf9c223f3b7f31",
+      "path": "tests/helpers/owned-javascript-transfer-nix-producer-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "d4a4c56477a46d161dedcfb90472fa5e3bc5e75e90630927c7fc7b2ce3d731be",
+      "path": "tests/helpers/owned-javascript-transfer-nix-producer-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "b9dc0a5f8354509e5d3acd81cc03249f4b08a38d",
+  "integrationBaseCommit": "b9dc0a5f8354509e5d3acd81cc03249f4b08a38d",
+  "integrationUpdates": [
+    {
+      "currentSha256": "5c733d5502ce6a08771b9775a27142439629524d1f161438ae75e3842c766350",
+      "edits": [
+        {
+          "current": "import { beforeOwnedJavaScriptTransferNixProducerRepairSource, ownedJavaScriptTransferNixProducerRepairNormalizationPaths } from \"./owned-javascript-transfer-nix-producer-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 2441
+        },
+        {
+          "current": "\t...ownedJavaScriptTransferNixProducerRepairNormalizationPaths\n\t, ...phpWasmCallbackFinMixedEntryNormalizationPaths\n",
+          "previous": "\t...phpWasmCallbackFinMixedEntryNormalizationPaths\n",
+          "start": 175679
+        },
+        {
+          "current": "\t\t= beforeOwnedJavaScriptTransferNixProducerRepairSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "",
+          "start": 216771
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "b0a5f8c0e6ab73e7a27604031d8c30a45cf8b1dc8a91859d1b4a7cc18c314692"
+    },
+    {
+      "currentSha256": "332c9ccdb85ecdf3fb386cf7612a06ee8ef94ac3eaa66716ca6ace161f26858e",
+      "edits": [
+        {
+          "current": "import \"./helpers/owned-javascript-transfer-nix-producer-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 1493
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "f1aa762156b4b58964f9b5594b0839254ba02918ad2ff85c84b15c49170abcff"
+    },
+    {
+      "currentSha256": "b4f4bdcc4ba32d93b87996deaf8315a5174311829cdda29b45e2d48c41420e50",
+      "edits": [
+        {
+          "current": "\tconst transition = record.updates.find(update => update.path === path);\n\tassert.ok(transition, \"Nix evidence records an explicit type-surface predecessor\");\n\tconst prior = JSON.parse(beforeOwnedJavaScriptNix(path, current, transition.previousSha256));\n",
+          "previous": "\tconst prior = JSON.parse(beforeOwnedJavaScriptNix(path, current, record.updates.find(update => update.path === path)?.previousSha256));\n",
+          "start": 2549
+        }
+      ],
+      "path": "tests/owned-javascript-nix-evidence.test.mjs",
+      "previousSha256": "429156290f8ce919428ec79d61be4f7b65e0e35ab26fb71753a03c9adac0b1b2"
+    },
+    {
+      "currentSha256": "c898b717931c158b91a4f8ef294486d18402ebf277215414846a53ddf15267ac",
+      "edits": [
+        {
+          "current": "\tconst transition = record.updates.find(update => update.path === path);\n\tassert.ok(transition, \"JavaScript transfer evidence records an explicit type-surface predecessor\");\n\tconst prior = JSON.parse(beforeOwnedJavaScriptTransfer(path, current, transition.previousSha256));\n",
+          "previous": "\tconst prior = JSON.parse(beforeOwnedJavaScriptTransfer(path, current, record.updates.find(update => update.path === path)?.previousSha256));\n",
+          "start": 2759
+        }
+      ],
+      "path": "tests/owned-javascript-transfer-evidence.test.mjs",
+      "previousSha256": "2e7099432718553fe84d9bee743c6137af79340d6d071c611ef199e639d94194"
+    }
+  ],
+  "milestone": "owned-javascript-transfer-nix-producer-repair-source-v1",
+  "predecessorCommit": "aaa70f358563117cae3f57ac5477d78dcfb8547d",
+  "schemaVersion": 1,
+  "scope": "Authenticate historical JavaScript transfer and Nix source receipts against their exact original producer commits and explicit predecessor stops. Require recorded type-surface transitions, preserve unknown-source/digest/span checks, and start mutation controls from authentic producer bytes. Preserve execution/mutation expectations, current CI enforcement, all observations and type-support states. No inventory or documentation changes. Local source-history validation is partial under the fixed budget; full transfer and runtime verification remain hosted.",
+  "updates": [
+    {
+      "currentSha256": "c9d593bac7fa6a5e50b057e6fb7d533b5fab1dc149539d94c302aa71ece46fad",
+      "edits": [
+        {
+          "current": "/** The commit whose complete source tree every digest in the real Nix record names. */\nexport const ownedJavaScriptNixProducer = \"9a2ab9091d501e6d4aac5d668496de2bd6a40579\";\n",
+          "previous": "",
+          "start": 196
+        }
+      ],
+      "path": "tests/helpers/owned-javascript-nix-evidence.mjs",
+      "previousSha256": "331e3ead031c5d7dcf2af4aadc53d223399ea7280224fa237b516597cca8b39d"
+    },
+    {
+      "currentSha256": "25b0399c44d323945d63decbd9152c24f17596b37c4bb98407c3bdcfecfabbf5",
+      "edits": [
+        {
+          "current": "/** The commit whose complete source tree every digest in the JavaScript transfer record names. */\nexport const ownedJavaScriptTransferProducer = \"3e28428f0b304f1dfed2cb2ad524b50c1fabdeef\";\n",
+          "previous": "const producerCommit = \"3e28428f0b304f1dfed2cb2ad524b50c1fabdeef\";\n",
+          "start": 1522
+        },
+        {
+          "current": "\t].map(path => moduleAtProducer(ownedJavaScriptTransferProducer, path))));\n",
+          "previous": "\t].map(path => moduleAtProducer(producerCommit, path))));\n",
+          "start": 2364
+        },
+        {
+          "current": "\tconst historical = path => bytesAtProducer(ownedJavaScriptTransferProducer, path);\n",
+          "previous": "\tconst historical = path => bytesAtProducer(producerCommit, path);\n",
+          "start": 2812
+        }
+      ],
+      "path": "tests/helpers/owned-javascript-transfer-evidence.mjs",
+      "previousSha256": "ddfaa5af0ff0954dfdab02691f68fe7d7bc9a3a7b5279270899f8560e0486e26"
+    },
+    {
+      "currentSha256": "429156290f8ce919428ec79d61be4f7b65e0e35ab26fb71753a03c9adac0b1b2",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { beforeOwnedWitNative, ownedWitNativeHistoricalBytes } from \"./helpers/wit-owned-native-history.mjs\";\n",
+          "start": 267
+        },
+        {
+          "current": "\t, ownedJavaScriptNixProducer, ownedJavaScriptNixTests } from \"./helpers/owned-javascript-nix-evidence.mjs\";\n",
+          "previous": "\t, ownedJavaScriptNixTests } from \"./helpers/owned-javascript-nix-evidence.mjs\";\n",
+          "start": 338
+        },
+        {
+          "current": "import { bytesAtProducer, sourceAtProducer } from \"./helpers/producer-source.mjs\";\n",
+          "previous": "",
+          "start": 715
+        },
+        {
+          "current": "\t// Every recorded digest names the producer tree; later owned and Fin layers never reach back this far.\n\tfor(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(bytesAtProducer(ownedJavaScriptNixProducer, path)), digest, path);\n",
+          "previous": "\tfor(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(ownedWitNativeHistoricalBytes(path, await readFile(path), digest)), digest, path);\n",
+          "start": 1557
+        },
+        {
+          "current": "\t\tconst current = sourceAtProducer(ownedJavaScriptNixProducer, update.path, update.currentSha256);\n\t\tassert.equal(sha256(beforeOwnedJavaScriptNix(update.path, current, update.previousSha256)), update.previousSha256);\n",
+          "previous": "\t\tconst current = beforeOwnedWitNative(update.path, await readFile(update.path, \"utf8\"));\n\t\tassert.equal(sha256(beforeOwnedJavaScriptNix(update.path, current)), update.previousSha256);\n",
+          "start": 2107
+        },
+        {
+          "current": "\tconst path = \"docs/type-surface.v1.json\", current = sourceAtProducer(ownedJavaScriptNixProducer, path, record.sources[path]);\n\tconst prior = JSON.parse(beforeOwnedJavaScriptNix(path, current, record.updates.find(update => update.path === path)?.previousSha256));\n\tfor(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = record.sources[file.path] ?? sha256(bytesAtProducer(ownedJavaScriptNixProducer, file.path));\n",
+          "previous": "\tconst current = beforeOwnedWitNative(\"docs/type-surface.v1.json\", await readFile(\"docs/type-surface.v1.json\", \"utf8\"));\n\tconst prior = JSON.parse(beforeOwnedJavaScriptNix(\"docs/type-surface.v1.json\", current));\n\tfor(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedWitNativeHistoricalBytes(file.path, await readFile(file.path)));\n",
+          "start": 2422
+        },
+        {
+          "current": "\t\tconst current = sourceAtProducer(ownedJavaScriptNixProducer, update.path, update.currentSha256), unknown = current + \"\\n/* unrelated */\\n\";\n",
+          "previous": "\t\tconst current = beforeOwnedWitNative(update.path, await readFile(update.path, \"utf8\")), unknown = current + \"\\n/* unrelated */\\n\";\n",
+          "start": 3070
+        }
+      ],
+      "path": "tests/owned-javascript-nix-evidence.test.mjs",
+      "previousSha256": "a7759ff467840d897e7ba23e2cde2536ba84d7cf0b21ceb1360127cc4fa1d0dd"
+    },
+    {
+      "currentSha256": "2e7099432718553fe84d9bee743c6137af79340d6d071c611ef199e639d94194",
+      "edits": [
+        {
+          "current": "import { assertOwnedJavaScriptTransferExecution, ownedJavaScriptTransferProducer } from \"./helpers/owned-javascript-transfer-evidence.mjs\";\n",
+          "previous": "import { assertOwnedJavaScriptTransferExecution } from \"./helpers/owned-javascript-transfer-evidence.mjs\";\nimport { beforeOwnedWitTransfer, ownedWitTransferHistoricalBytes } from \"./helpers/wit-owned-transfer-history.mjs\";\n",
+          "start": 271
+        },
+        {
+          "current": "import { bytesAtProducer, sourceAtProducer } from \"./helpers/producer-source.mjs\";\n",
+          "previous": "",
+          "start": 811
+        },
+        {
+          "current": "\t// Every recorded digest names the producer tree; later owned and Fin layers never reach back this far.\n\tfor(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(bytesAtProducer(ownedJavaScriptTransferProducer, path)), hash, path);\n",
+          "previous": "\tfor(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(ownedWitTransferHistoricalBytes(path, await readFile(path), hash)), hash, path);\n",
+          "start": 1674
+        },
+        {
+          "current": "\t\tconst source = sourceAtProducer(ownedJavaScriptTransferProducer, update.path, update.currentSha256);\n\t\tconst prior = beforeOwnedJavaScriptTransfer(update.path, source, update.previousSha256);\n",
+          "previous": "\t\tconst source = beforeOwnedWitTransfer(update.path, await readFile(update.path, \"utf8\"));\n\t\tconst prior = beforeOwnedJavaScriptTransfer(update.path, source);\n",
+          "start": 2204
+        },
+        {
+          "current": "\tconst path = \"docs/type-surface.v1.json\", current = sourceAtProducer(ownedJavaScriptTransferProducer, path, record.sources[path]);\n\tconst prior = JSON.parse(beforeOwnedJavaScriptTransfer(path, current, record.updates.find(update => update.path === path)?.previousSha256));\n\tfor(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = record.sources[file.path] ?? sha256(bytesAtProducer(ownedJavaScriptTransferProducer, file.path));\n",
+          "previous": "\tconst current = beforeOwnedWitTransfer(\"docs/type-surface.v1.json\", await readFile(\"docs/type-surface.v1.json\", \"utf8\"));\n\tconst prior = JSON.parse(beforeOwnedJavaScriptTransfer(\"docs/type-surface.v1.json\", current));\n\tfor(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedWitTransferHistoricalBytes(file.path, await readFile(file.path)));\n",
+          "start": 2627
+        },
+        {
+          "current": "\t\tconst source = sourceAtProducer(ownedJavaScriptTransferProducer, update.path, update.currentSha256), unknown = source + \"\\n/* unrelated */\\n\";\n",
+          "previous": "\t\tconst source = beforeOwnedWitTransfer(update.path, await readFile(update.path, \"utf8\")), unknown = source + \"\\n/* unrelated */\\n\";\n",
+          "start": 3282
+        }
+      ],
+      "path": "tests/owned-javascript-transfer-evidence.test.mjs",
+      "previousSha256": "f9a458cbf2c9e72d98a4888dcf2537ba011455bc2d5343b806fea30fd603aa3b"
+    }
+  ]
+}

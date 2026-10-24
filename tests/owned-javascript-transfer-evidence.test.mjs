@@ -38,7 +38,9 @@ test("JavaScript transfers preserve prior receipts without promoting unrelated s
 		assert.equal(beforeOwnedJavaScriptTransfer(update.path, source, update.currentSha256), source);
 	}
 	const path = "docs/type-surface.v1.json", current = sourceAtProducer(ownedJavaScriptTransferProducer, path, record.sources[path]);
-	const prior = JSON.parse(beforeOwnedJavaScriptTransfer(path, current, record.updates.find(update => update.path === path)?.previousSha256));
+	const transition = record.updates.find(update => update.path === path);
+	assert.ok(transition, "JavaScript transfer evidence records an explicit type-surface predecessor");
+	const prior = JSON.parse(beforeOwnedJavaScriptTransfer(path, current, transition.previousSha256));
 	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = record.sources[file.path] ?? sha256(bytesAtProducer(ownedJavaScriptTransferProducer, file.path));
 	assert.deepEqual(JSON.parse(current), prior);
 });
