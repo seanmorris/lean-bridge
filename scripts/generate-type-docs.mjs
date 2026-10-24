@@ -135,11 +135,11 @@ const hasDependentCheckedRecordMatrixEvidence = document =>
 	dependentCheckedRecordMatrixEvidenceIds.every(id =>
 		document.evidence.some(item => item.id === id));
 const dependentCheckedRecordMatrixReference = "[Hosted dependent checked-record acceptance](../evidence/dependent-checked-record-promotion.md) covers top-level copied parameters and results in all seventeen consumer profiles through eleven independently retained host archives and all four ordinary/reviewed full/result-only routes. The proof-free host value carries `bound` and `below : Fin bound` as payload fields. Full packages rebuild host inputs through `DependentRecords.mkDependent`, reject `below >= bound` before Lean code runs, preserve rejected caller values and recover on a later valid call. Fields, callbacks, owned positions, other dependent field kinds, nested or recursive dependent records and open or opaque indices remain separate work.";
-const phpWasmRefinementEntryBoundary = `PHP-Wasm refinement support is established by unmodified prepared packages.
+export const phpWasmRefinementEntryBoundary = `PHP-Wasm refinement support is established by unmodified prepared packages.
 The separate entry-measurement probes instrument fixture packages only: their
 24 copied, owned and indexed routes count validator, constructor, adapter and
-Lean-source entries, while four callback routes record callback control totals.
-Together they form 28 ordinary/reviewed routes in 26 retained artifacts and do
+Lean-source entries, while six callback routes record callback control totals.
+Together they form 30 ordinary/reviewed routes in 27 retained artifacts and do
 not widen any type-support cell. The configured [promotion
 workflow](https://github.com/seanmorris/lean-bridge/actions/workflows/php-wasm-refinement-entry-promotion.yml)
 is not a hosted result; entry counts become hosted evidence only when a

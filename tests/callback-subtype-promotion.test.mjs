@@ -171,9 +171,11 @@ test("callback Subtype promotion documents every affected consumer", async () =>
 	assert.ok(referenceStart >= 0 && referenceEnd > referenceStart);
 	assert.equal(referenceSource.slice(referenceStart, referenceEnd).trimEnd()
 		, current.reference.trimEnd());
-	for(const source of [before.reference, after.reference])
+	// These are rendered with today's documentation generator. The configured
+	// measurement topology is independent of the historical support observations.
+	for(const source of [before.reference, after.reference, current.reference])
 	{
-		assert.match(source, /28 ordinary\/reviewed routes in 26 retained artifacts/u);
+		assert.match(source, /30 ordinary\/reviewed routes in 27 retained artifacts/u);
 		assert.match(source, /do\s+not widen any type-support cell/u);
 		assert.match(source, /is not a hosted result/u);
 	}

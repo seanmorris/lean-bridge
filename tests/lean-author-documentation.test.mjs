@@ -186,7 +186,7 @@ test("checked-record guidance uses the tested payload and per-site constructor c
 test("the checked-record author table agrees with all seventeen installed consumer profiles", async () => {
 	const document = await readFile("docs/lean/existing-package.md", "utf8");
 	const row = document.split("\n").find(line => line.startsWith("| Record with erased proof fields"));
-	assert.equal(row, "| Record with erased proof fields and a checked input constructor | Node, browser, React and worker installed for the archived nested fields/containers, both source routes | C/C++, Python, Rust, Ruby, .NET, Java, Kotlin, native PHP and WIT/WASI installed for the archived nested fields/containers, both source routes | Installed for the archived nested fields/containers, both source routes on four ABIs | Installed for the archived nested fields/containers in Node/Chromium, both source routes | All seventeen profiles have installed nested parameter/result/field checks for the archived acyclic forms; callback/owned and unarchived combinations remain unfinished |");
+	assert.equal(row, "| Record with erased proof fields and a checked input constructor | Node, browser, React and worker installed for the archived nested fields/containers, both source routes | C/C++, Python, Rust, Ruby, .NET, Java, Kotlin, native PHP and WIT/WASI installed for the archived nested fields/containers, both source routes | Installed for the archived nested fields/containers, both source routes on four ABIs | Installed for the archived nested fields/containers in Node/Chromium, both source routes | All seventeen profiles have installed nested parameter/result/field checks for the archived acyclic forms; separately archived synchronous callback parameter/result checks cover all seventeen profiles on both source routes; owned and unarchived combinations remain separate |");
 	const python = await readCheckedRecordPythonArchive();
 	assert.equal(python.reports.length, 8);
 	assert.deepEqual([...new Set(python.index.runs.map(run => run.floor))], ["3.11", "3.12"]);
@@ -292,7 +292,7 @@ test("callback guidance separates installed browser and reviewed directions from
 	assert.match(document, /Node and browser installed/);
 	assert.match(document, /C\/C\+\+ execute closure inputs, Lean-produced results and arguments sent to host callbacks/);
 	assert.match(document, /Node R2 fixture additionally checks a host-produced `Fin 3` reply/);
-	assert.match(document, /Reviewed browser execution, native host-produced replies, `Fin 0` and wider bounds need separate reviewed acceptance/);
+	assert.match(document, /The reviewed Fin archive does not establish reviewed-browser execution, native host-produced replies, `Fin 0` or wider bounds/);
 	assert.doesNotMatch(document, /browser profiles are not yet audited for refined callbacks|Native callbacks with refined signatures are not yet supported|Fresh-Lean and installed reviewed callback acceptance are pending/);
 	const replies = JSON.parse(await readFile("docs/evidence/native-fin-replies-20261008/receipt.json"));
 	assert.equal(replies.scope.sourcePath, "ordinary-source"); assert.equal(replies.scope.reviewedContracts, false);
