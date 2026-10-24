@@ -36,6 +36,17 @@ test("compact copied-entry callers are syntax-valid and differ only by strictnes
 	}
 });
 
+test("the compact nominal caller uses the exact wasm32 integer representations", async () => {
+	const source = await phpWasmRefinementEntryCaller("nominal-full", "weak");
+	for(const field of [
+		"'uint32Value' => $n(42)", "'uint64Value' => $n(42)"
+		, "'int64Value' => $n(-42)", "'natValue' => $n(42)"
+		, "'intValue' => $n(-42)", "'usizeValue' => $n(42)", "'digit' => $n(2)"
+	]) assert.ok(source.includes(field), field);
+	assert.ok(source.includes("'int32Value' => -42"));
+	assert.ok(source.includes("'isizeValue' => -42"));
+});
+
 test("compact copied-entry requests close arrangement, operation and call plan", () => {
 	for(const family of families)
 	{
