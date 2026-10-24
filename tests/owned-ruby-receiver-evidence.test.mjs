@@ -30,8 +30,8 @@ test("Ruby receiver evidence binds exact sources without changing historical rec
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path]); assert.equal(update.currentSha256, record.sources[update.path]);
 		const source = beforeOwnedDotnetReceiver(update.path, await readFile(update.path, "utf8"), update.currentSha256);
-		const prior = beforeOwnedRubyReceiver(update.path, source);
-		assert.equal(sha256(prior), update.previousSha256); assert.equal(beforeOwnedRubyReceiver(update.path, prior), prior);
+		const prior = beforeOwnedRubyReceiver(update.path, source, update.previousSha256);
+		assert.equal(sha256(prior), update.previousSha256); assert.equal(beforeOwnedRubyReceiver(update.path, prior, update.previousSha256), prior);
 		assert.equal(beforeOwnedRubyReceiver(update.path, source, update.currentSha256), source);
 		const unknown = source + "\n/* unrelated edit */\n";
 		assert.equal(beforeOwnedRubyReceiver(update.path, unknown), unknown);
@@ -42,7 +42,7 @@ test("Ruby receiver evidence binds exact sources without changing historical rec
 			assert.throws(() => reverseOwnedRubyReceiverUpdate(source, changed));
 	}
 	const path = "docs/type-surface.v1.json", current = beforeOwnedDotnetReceiver(path, await readFile(path, "utf8"), record.sources[path]);
-	const prior = JSON.parse(beforeOwnedRubyReceiver(path, current));
+	const prior = JSON.parse(beforeOwnedRubyReceiver(path, current, previous.sources[path]));
 	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedDotnetReceiverHistoricalBytes(file.path, await readFile(file.path), record.sources[file.path]));
 	assert.deepEqual(JSON.parse(current), prior);
 	for(const name of ["owned-ruby-receivers", "owned-ruby-receiver-packaging"
