@@ -1,0 +1,149 @@
+{
+  "additions": [
+    {
+      "currentSha256": "144abd389f59b564f59cf7a5a4085ae95c59a237b9c64bc61c4289ec1d6bdebc",
+      "path": "scripts/update-php-wasm-entry-flat-position-source-history.mjs"
+    },
+    {
+      "currentSha256": "5bac7b0e6407cd0c6a8c6f097296f4ba354b95221e36874093cfdedef8be8a34",
+      "path": "tests/helpers/php-wasm-entry-flat-position-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "08370a758b0496dc37a2ee160c27e42a4e83c88a60bc1a46754bdfdaeb0ef7ef",
+      "path": "tests/helpers/php-wasm-entry-flat-position-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "7618ba333ff167fcc11e1efbf2a295650263a196",
+  "integrationUpdates": [
+    {
+      "currentSha256": "bef5cf205dd0119696e0c678b438aa9daf1b47f41c6e81da5000d16213aa38e9",
+      "edits": [
+        {
+          "current": "import \"./helpers/php-wasm-entry-flat-position-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 8088
+        }
+      ],
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "88a0c29af1465108665df15b8e1406e2d1fcc4e60a74b0f6fce6e238a3fad5ec"
+    },
+    {
+      "currentSha256": "d70b120ad2b1755c77108ef71c790ad60331a26cb93d501c4c269fb79f04b163",
+      "edits": [
+        {
+          "current": "import { beforePhpWasmEntryFlatPositionSource, phpWasmEntryFlatPositionNormalizationPaths } from \"./php-wasm-entry-flat-position-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...phpWasmEntryFlatPositionNormalizationPaths\n\t, ...phpWasmEntryUnreachedSourceNormalizationPaths\n",
+          "previous": "\t...phpWasmEntryUnreachedSourceNormalizationPaths\n",
+          "start": 172178
+        },
+        {
+          "current": "\tconst phpWasmEntryFlatPosition\n\t\t= beforePhpWasmEntryFlatPositionSource(path, text, expected);\n\tif(sha256(phpWasmEntryFlatPosition) === expected)\n\t\treturn phpWasmEntryFlatPosition;\n\ttext = phpWasmEntryFlatPosition;\n",
+          "previous": "",
+          "start": 212115
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "626eb6a4a69bc467e44768f2afb108d05e77a2e95dda913f2a33f5185c936a71"
+    }
+  ],
+  "milestone": "php-wasm-entry-flat-position-source-v1",
+  "predecessorCommit": "365fc25becae54113f6fde7678ed3dbeb3526446",
+  "schemaVersion": 1,
+  "scope": "Plan flat nominal PHP-Wasm entry calls per refined field position, pass wasm32 nominal callers' uint32 and int64 fields as Brick integers, and compare owned source probes with their retained fixture identity.",
+  "updates": [
+    {
+      "currentSha256": "385e54d64058098c8c5408da72396549776ddca64bd19e58798435c2c4237771",
+      "edits": [
+        {
+          "current": "        'uint8Value' => 42, 'uint16Value' => 42, 'uint32Value' => $n(42), 'uint64Value' => $n(42),\n        'int8Value' => -42, 'int16Value' => -42, 'int32Value' => -42, 'int64Value' => $n(-42),\n",
+          "previous": "        'uint8Value' => 42, 'uint16Value' => 42, 'uint32Value' => 42, 'uint64Value' => $n(42),\n        'int8Value' => -42, 'int16Value' => -42, 'int32Value' => -42, 'int64Value' => -42,\n",
+          "start": 585
+        }
+      ],
+      "path": "tests/fixtures/php-wasm-refinement-entry/nominal-full.php",
+      "previousSha256": "d24151de774846fc84925f2a28d93a0a7e908c820f87f09a0db4f881d1400f7e"
+    },
+    {
+      "currentSha256": "27502ed9f25b1c1da962cfcc19bfb085159a6d7c03341df52b5e656f31752d53",
+      "edits": [
+        {
+          "current": "        'uint8Value' => 42, 'uint16Value' => 42, 'uint32Value' => $n(42), 'uint64Value' => $n(42),\n        'int8Value' => -42, 'int16Value' => -42, 'int32Value' => -42, 'int64Value' => $n(-42),\n",
+          "previous": "        'uint8Value' => 42, 'uint16Value' => 42, 'uint32Value' => 42, 'uint64Value' => $n(42),\n        'int8Value' => -42, 'int16Value' => -42, 'int32Value' => -42, 'int64Value' => -42,\n",
+          "start": 536
+        }
+      ],
+      "path": "tests/fixtures/php-wasm-refinement-entry/nominal-result-only.php",
+      "previousSha256": "e46cf811a2969b63adc0a2e4738373b3ec4b056dc90298e26b7395404c00086a"
+    },
+    {
+      "currentSha256": "d94fa7862c84cae4b9f94932fca7a8f4234831ef4a3c128a9ef4528fca36f914",
+      "edits": [
+        {
+          "current": "import { nominalPrimitiveSubtypeFields } from \"./nominal-primitive-subtype-fixture.mjs\";\n",
+          "previous": "",
+          "start": 244
+        },
+        {
+          "current": "// The installed nominal package is flat: one validator per refined field position.\nconst nominalPositions = Object.freeze({\n\techoA: [[\"0\", \"A\"]]\n\t, combine: [[\"0\", \"A\"], [\"1\", \"B\"]]\n\t, echoEventA: [[\"0_1_0\", \"A\"]]\n});\nconst nominalPlanSelection = sourceEntries => {\n\tconst selected = structuredClone(sourceEntries), lean = [];\n\tconst exports = [\"echoA\", \"combine\", \"echoEventA\", \"produce\", \"producePair\", \"produceGroup\", \"wordBits\"];\n\tfor(const [index, name] of exports.entries())\n\t{\n\t\tconst adapter = `lb_nominal_adapter_${index}`;\n\t\tselected.push({ symbol: `lb_call${index}`, kind: \"public\", label: name }\n\t\t\t, { symbol: adapter, kind: \"adapter\", label: `NominalPrimitiveSubtypes.${name}` });\n\t\tlean.push(`@[export ${adapter}]`, `def adapter${index} := _root_.NominalPrimitiveSubtypes.${name}`);\n\t\tfor(const [prefix, suffix] of nominalPositions[name] ?? [])\n\t\t\tfor(const [field, item] of nominalPrimitiveSubtypeFields.entries())\n\t\t\t{\n\t\t\t\tconst symbol = `${adapter}_refinement_${prefix}_${field}`;\n\t\t\t\tselected.push({ symbol, kind: \"validator\"\n\t\t\t\t\t, label: `NominalPrimitiveSubtypes.${name}:refinement_${prefix}_${field}` });\n\t\t\t\tlean.push(`@[export ${symbol}]`\n\t\t\t\t\t, `def check${index}_${prefix}_${field} := _root_.NominalPrimitiveSubtypes.${item.constructor}${suffix}`);\n\t\t\t}\n\t}\n\treturn { selected, generated: { leanSource: lean.join(\"\\n\") + \"\\n\" } };\n};\n\n",
+          "previous": "",
+          "start": 4555
+        },
+        {
+          "current": "\t\t: family.startsWith(\"nominal-\") ? nominalPlanSelection(source.entries)\n\t\t\t: phpWasmGraphRefinementEntrySelection(fixtureModel(family), source.entries);\n",
+          "previous": "\t\t: phpWasmGraphRefinementEntrySelection(fixtureModel(family), source.entries);\n",
+          "start": 6220
+        },
+        {
+          "current": "\tconst nominalMarker = phpWasmRefinementEntrySourceFixture(\"nominal-result-only\");\n\tconst nominalSelection = nominalPlanSelection(phpWasmRefinementEntrySource(\n\t\tawait readFile(nominalMarker.path, \"utf8\"), nominalMarker).entries);\n",
+          "previous": "\tconst nominalSelection = await graphSelection(\"nominal-result-only\");\n",
+          "start": 16794
+        },
+        {
+          "current": "});\n\ntest(\"flat nominal plans check every authored field at its own position\", async () => {\n\tconst value = Object.fromEntries((await plan(\"nominal-full\")).cases.map(item => [item.control, item]));\n\tconst fields = nominalPrimitiveSubtypeFields.length;\n\tassert.equal(value.direct.call.counts.validator, fields);\n\tassert.deepEqual(value.direct.call.entries.slice(0, 4).map(entry => entry.label), [\n\t\t\"NominalPrimitiveSubtypes.echoA:refinement_0_0\"\n\t\t, \"NominalPrimitiveSubtypes.unitA\"\n\t\t, \"NominalPrimitiveSubtypes.echoA:refinement_0_1\"\n\t\t, \"NominalPrimitiveSubtypes.boolA\"\n\t]);\n\tassert.equal(value[\"repeated-fields\"].call.counts.validator, 2 * fields);\n\tassert.equal(value[\"first-refusal\"].call.entries.at(-1).label, \"NominalPrimitiveSubtypes.isizeA\");\n\tassert.equal(value[\"active-branch\"].call.entries[0].label\n\t\t, \"NominalPrimitiveSubtypes.echoEventA:refinement_0_1_0_0\");\n\tassert.equal(value[\"inactive-branch\"].call.counts.validator, 0);\n\tconst marker = phpWasmRefinementEntrySourceFixture(\"nominal-full\");\n\tconst selection = nominalPlanSelection(phpWasmRefinementEntrySource(await readFile(marker.path, \"utf8\"), marker).entries);\n\tconst drop = selection.selected.filter(item => item.label !== \"NominalPrimitiveSubtypes.echoA:refinement_0_3\");\n\tconst crossed = selection.generated.leanSource.replace(\"_root_.NominalPrimitiveSubtypes.boolA\\n\"\n\t\t, \"_root_.NominalPrimitiveSubtypes.unitA\\n\");\n\tfor(const [label, selected, lean] of [\n\t\t[\"missing position\", drop, selection.generated.leanSource]\n\t\t, [\"validator checks another field\", selection.selected, crossed]\n\t]) assert.throws(() => phpWasmRefinementEntryPlan(\"nominal-full\", selected, lean), label);\n",
+          "previous": "",
+          "start": 18741
+        }
+      ],
+      "path": "tests/helpers/php-wasm-refinement-entry-plan-tests.mjs",
+      "previousSha256": "3d7d3f50494eb53d9e78112e75057de16e38c724db4446b83d422d444ea56754"
+    },
+    {
+      "currentSha256": "0d6423a7e7946d6775ba169ab2b3b00af7dd000f05428994f7addf52c1cb69af",
+      "edits": [
+        {
+          "current": "\t// A flat provider checks every refined field at its own position, in field order.\n\tconst positions = (name, prefix, constructorNames) => {\n\t\tassert.ok(!graphCarried, `${family} positions belong to a flat selection`);\n\t\tconst pattern = new RegExp(`^${escaped(`${namespace}.${name}:refinement_${prefix}_`)}(\\\\d+)$`, \"u\");\n\t\tconst validators = selected.filter(entry => entry.kind === \"validator\" && pattern.test(entry.label))\n\t\t\t.map(entry => ({ entry, index: Number(pattern.exec(entry.label)[1]) }))\n\t\t\t.sort((left, right) => left.index - right.index);\n\t\tassert.deepEqual(validators.map(item => item.index), constructorNames.map((_, index) => index)\n\t\t\t, `${name} position ${prefix} validates every authored field once`);\n\t\treturn validators.map(({ entry }, index) => {\n\t\t\tconst block = exportBlock(entry.symbol);\n\t\t\tconst checked = selected.filter(item => item.kind === \"constructor\" && new RegExp(\n\t\t\t\t`_root_\\\\.${escaped(item.label)}(?![A-Za-z0-9_])`, \"u\").test(block));\n\t\t\tassert.deepEqual(checked.map(item => item.label), [`${namespace}.${constructorNames[index]}`]\n\t\t\t\t, `${entry.label} checks only its authored field constructor`);\n\t\t\treturn [{ kind: \"validator\", label: entry.label }, constructor(constructorNames[index])];\n\t\t});\n\t};\n\tconst positionalAccepted = (control, name, groups = []) => {\n\t\tconst checks = groups.flatMap(([prefix, names]) => positions(name, prefix, names));\n\t\treturn item(control, \"accepted\", name, [\n\t\t\t...checks.flat(), adapter(name)\n\t\t\t, ...checks.map(([, built]) => built), source(name)\n\t\t]);\n\t};\n\tconst positionalRefused = (control, name, groups, refusingConstructor) => {\n\t\tconst checks = groups.flatMap(([prefix, names]) => positions(name, prefix, names));\n\t\tconst refusing = checks.findIndex(([, built]) => built.label === `${namespace}.${refusingConstructor}`);\n\t\tassert.ok(refusing >= 0, `${control} refuses at a planned position`);\n\t\treturn item(control, \"refused\", name, checks.slice(0, refusing + 1).flat());\n\t};\n",
+          "previous": "",
+          "start": 14616
+        },
+        {
+          "current": "\t\t// Position prefixes name the parameter and active branch path of each authored record.\n",
+          "previous": "",
+          "start": 16778
+        },
+        {
+          "current": "\t\t\tpositionalAccepted(\"direct\", \"echoA\", [[\"0\", a]])\n\t\t\t, positionalRefused(\"first-refusal\", \"echoA\", [[\"0\", a]], \"isizeA\")\n\t\t\t, positionalAccepted(\"recovery\", \"echoA\", [[\"0\", a]])\n\t\t\t, positionalAccepted(\"repeated-fields\", \"combine\", [[\"0\", a], [\"1\", b]])\n\t\t\t, positionalAccepted(\"inactive-branch\", \"echoEventA\")\n\t\t\t, positionalAccepted(\"active-branch\", \"echoEventA\", [[\"0_1_0\", a]])\n",
+          "previous": "\t\t\taccepted(\"direct\", \"echoA\", a)\n\t\t\t, refused(\"first-refusal\", \"echoA\", a)\n\t\t\t, accepted(\"recovery\", \"echoA\", a)\n\t\t\t, accepted(\"repeated-fields\", \"combine\", [...a, ...b])\n\t\t\t, accepted(\"inactive-branch\", \"echoEventA\")\n\t\t\t, accepted(\"active-branch\", \"echoEventA\", a)\n",
+          "start": 16880
+        }
+      ],
+      "path": "tests/helpers/php-wasm-refinement-entry-plan.mjs",
+      "previousSha256": "a39042f307f02f6efbe457d37bcd7281f853a2a10ffaa005d3c6a63459140147"
+    },
+    {
+      "currentSha256": "da80dd01c4af330d1bbe389134f5dc43f5a96da3c023231c5edb58fb015e72dc",
+      "edits": [
+        {
+          "current": "\t\t// Owned builds retain the fixture identity beside the instrumented source.\n\t\tassert.deepEqual(await json(prefix + \"source-probe.json\"), ownedFamily(family)\n\t\t\t? { family, path: marker.path, ...sourceProbe } : sourceProbe);\n",
+          "previous": "\t\tassert.deepEqual(await json(prefix + \"source-probe.json\"), sourceProbe);\n",
+          "start": 8254
+        }
+      ],
+      "path": "tests/helpers/php-wasm-refinement-entry-report.mjs",
+      "previousSha256": "04cc0ab13068f1ae9c7e987fd3d10a5eeac8695403d545237f3fc655f2d64794"
+    }
+  ]
+}

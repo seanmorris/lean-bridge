@@ -1,0 +1,211 @@
+{
+  "additions": [
+    {
+      "currentSha256": "30540f6e1560e32d5f5f3385fb8c2d7e132e9877b372d7d382d60e15876b5351",
+      "path": "scripts/update-php-wasm-entry-unreached-source-source-history.mjs"
+    },
+    {
+      "currentSha256": "fd953c3f4840cc253fa0fbc82dd8b31a025c26e03992b117a738c227290c426d",
+      "path": "tests/helpers/php-wasm-entry-unreached-source-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "10df84d56527f21474ffb0ad902edb428b56597cd6916a8d4033133bf4128047",
+      "path": "tests/helpers/php-wasm-entry-unreached-source-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "47a0fd204242fff0cc115c5018330ba3b19457f9",
+  "integrationUpdates": [
+    {
+      "currentSha256": "88a0c29af1465108665df15b8e1406e2d1fcc4e60a74b0f6fce6e238a3fad5ec",
+      "edits": [
+        {
+          "current": "import \"./helpers/php-wasm-entry-unreached-source-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 8011
+        }
+      ],
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "36e88adee8c4ec2fb15aa138454e457b5ba3793e6f8fc9868cea798bdf8cb2f8"
+    },
+    {
+      "currentSha256": "626eb6a4a69bc467e44768f2afb108d05e77a2e95dda913f2a33f5185c936a71",
+      "edits": [
+        {
+          "current": "import { beforePhpWasmEntryUnreachedSourceSource, phpWasmEntryUnreachedSourceNormalizationPaths } from \"./php-wasm-entry-unreached-source-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...phpWasmEntryUnreachedSourceNormalizationPaths\n\t, ...phpWasmEntryCallPathNormalizationPaths\n",
+          "previous": "\t...phpWasmEntryCallPathNormalizationPaths\n",
+          "start": 172028
+        },
+        {
+          "current": "\tconst phpWasmEntryUnreachedSource\n\t\t= beforePhpWasmEntryUnreachedSourceSource(path, text, expected);\n\tif(sha256(phpWasmEntryUnreachedSource) === expected)\n\t\treturn phpWasmEntryUnreachedSource;\n\ttext = phpWasmEntryUnreachedSource;\n",
+          "previous": "",
+          "start": 211916
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "88ec9cfcaa2c335f96a0b2218d4299120f5ec4bed47aee154df17c68cec1794e"
+    }
+  ],
+  "milestone": "php-wasm-entry-unreached-source-source-v1",
+  "predecessorCommit": "1ba0883951de08d2ce06644d083f33765ef2b7b8",
+  "schemaVersion": 1,
+  "scope": "Classify PHP-Wasm entry sources whose compiled wrapper no call reaches and that delegate to no reduced-arity implementation, and refuse accepted planned calls that would need them.",
+  "updates": [
+    {
+      "currentSha256": "d7961e40a23d20831bd944768b9719063e295314c349055cb62bf45874850bb7",
+      "edits": [
+        {
+          "current": " * Classify each selected source that no compiled call path reaches by its marked wrapper.\n * A reduced-arity source runs in the `___redArg` implementation that adapters call\n * directly. An unreached source has no caller at all, so no planned call may need it.\n",
+          "previous": " * Return each selected source whose only compiled call target is a reduced-arity implementation.\n",
+          "start": 2628
+        },
+        {
+          "current": "export const phpWasmSourceCallTargets = (inputs, selected, { globalDefinitions = [] } = {}) => {\n",
+          "previous": "export const phpWasmReducedArityTargets = (inputs, selected, { globalDefinitions = [] } = {}) => {\n",
+          "start": 3209
+        },
+        {
+          "current": "\tconst reducedArity = [], unreachedSources = [];\n",
+          "previous": "\tconst targets = [];\n",
+          "start": 3883
+        },
+        {
+          "current": "\t\tif(delegated.length === 0)\n\t\t{\n\t\t\tunreachedSources.push({ symbol: item.symbol, kind: item.kind, label: item.label });\n\t\t\tcontinue;\n\t\t}\n",
+          "previous": "",
+          "start": 4454
+        },
+        {
+          "current": "\t\treducedArity.push({ symbol: item.symbol, kind: item.kind, label: item.label, target: implementation });\n",
+          "previous": "\t\ttargets.push({ symbol: item.symbol, kind: item.kind, label: item.label, target: implementation });\n",
+          "start": 5258
+        },
+        {
+          "current": "\treturn { reducedArity, unreachedSources };\n",
+          "previous": "\treturn targets;\n",
+          "start": 5367
+        },
+        {
+          "current": " * Return each selected source whose only compiled call target is a reduced-arity implementation.\n *\n * @param inputs - Retained original compiler inputs as `{ name, text }`.\n * @param selected - Complete entry selection compiled from those inputs.\n * @param options - Already classified module-initialized entries.\n */\nexport const phpWasmReducedArityTargets = (inputs, selected, options) =>\n\tphpWasmSourceCallTargets(inputs, selected, options).reducedArity;\n\n/**\n",
+          "previous": "",
+          "start": 5419
+        },
+        {
+          "current": "\t\t, ...phpWasmSourceCallTargets(inputs, observation.selected, { globalDefinitions })\n",
+          "previous": "\t\t, reducedArity: phpWasmReducedArityTargets(inputs, observation.selected, { globalDefinitions })\n",
+          "start": 6591
+        }
+      ],
+      "path": "tests/helpers/php-wasm-entry-call-targets.mjs",
+      "previousSha256": "f908a1dd06770f2c1a58de2f3a19f6d408eafa227be1607a2b9b6f6ca4e14f70"
+    },
+    {
+      "currentSha256": "47880f7f80fd8e2f204c9791ba4bfdc292bd65ed6a66df67a9953f02d6086a20",
+      "edits": [
+        {
+          "current": "import { phpWasmReducedArityTargets, phpWasmSourceCallTargets } from \"./php-wasm-entry-call-targets.mjs\";\n",
+          "previous": "import { phpWasmReducedArityTargets } from \"./php-wasm-entry-call-targets.mjs\";\n",
+          "start": 256
+        },
+        {
+          "current": "\t\t\"target without an adapter caller\": () => [probe(module), glue(swap(adapter, call, \"v_r = v_b;\"))]\n",
+          "previous": "\t\t\"wrapper with no reduced-arity delegate\": () => [probe(swap(module, delegate, \"v_r = v_x;\")), glue(adapter)]\n\t\t, \"target without an adapter caller\": () => [probe(module), glue(swap(adapter, call, \"v_r = v_b;\"))]\n",
+          "start": 10239
+        },
+        {
+          "current": "\tconst constant = probe(swap(module, delegate, \"v_r = lean_unsigned_to_nat(0u);\"));\n\tassert.deepEqual(phpWasmSourceCallTargets([constant, glue(adapter)], selected), {\n\t\treducedArity: [], unreachedSources: [source]\n\t}, \"an uncalled wrapper with no delegate is unreached, never reduced-arity\");\n\tassert.deepEqual(phpWasmSourceCallTargets([probe(module), glue(adapter)], selected).unreachedSources, []);\n});\n\ntest(\"owned plans refuse an accepted call that needs an unreached source\", async () => {\n\tconst { selected, lean } = await fixture(\"owned-checked-record\");\n\tconst pair = selected.find(item => item.kind === \"source\" && item.label === \"OwnedCheckedRecords.pairClaim\");\n\tassert.throws(() => phpWasmOwnedRefinementEntryPlan(\"owned-checked-record\", selected, lean\n\t\t, { unreachedSources: [pair] }), /no compiled call reaches/u);\n\tfor(const unreachedSources of [[{ ...pair, kind: \"adapter\" }], [{ ...pair, symbol: \"missing\" }]])\n\t\tassert.throws(() => phpWasmOwnedRefinementEntryPlan(\"owned-checked-record\", selected, lean\n\t\t\t, { unreachedSources }));\n",
+          "previous": "",
+          "start": 11752
+        }
+      ],
+      "path": "tests/helpers/php-wasm-owned-refinement-entry-plan-tests.mjs",
+      "previousSha256": "491cfa1a8e33e1a326665cc39032c557959ab6418986ad20555b37d5a05c0695"
+    },
+    {
+      "currentSha256": "28f787c74bf8b8abf39478ff97511a71ec5815fd71b6993dbaed29ac5cee894f",
+      "edits": [
+        {
+          "current": " * @param options.unreachedSources - Authored sources no compiled call reaches.\n",
+          "previous": "",
+          "start": 1272
+        }
+      ],
+      "path": "tests/helpers/php-wasm-owned-refinement-entry-plan.mjs",
+      "previousSha256": "3b5bfc0a89824b695d9e6a5070276f3e7c76c44cf418887bff4375e98a1729b4"
+    },
+    {
+      "currentSha256": "3d7d3f50494eb53d9e78112e75057de16e38c724db4446b83d422d444ea56754",
+      "edits": [
+        {
+          "current": "\ntest(\"a refused-only source no compiled call reaches leaves the plan unchanged\", async () => {\n\tconst family = \"zero-payload-full\", marker = phpWasmRefinementEntrySourceFixture(family);\n\tconst source = phpWasmRefinementEntrySource(await readFile(marker.path, \"utf8\"), marker);\n\tconst selection = flatPlanSelection(family, source.entries);\n\tconst absent = selection.selected.find(item => item.kind === \"source\" && item.label.endsWith(\".absentCount\"));\n\tconst witness = selection.selected.find(item => item.kind === \"source\" && item.label.endsWith(\".witnessCount\"));\n\tconst plan = options => phpWasmRefinementEntryPlan(family, selection.selected\n\t\t, selection.generated.leanSource, options);\n\tassert.deepEqual(plan({ unreachedSources: [absent] }), plan());\n\tassert.throws(() => plan({ unreachedSources: [witness] }), /no compiled call reaches/u);\n\tconst reduced = { ...absent, target: \"l_ZeroPayloadCheckedRecords_absentCount___redArg\" };\n\tassert.throws(() => plan({ unreachedSources: [absent], reducedArity: [reduced] })\n\t\t, /one classification/u);\n});\n",
+          "previous": "",
+          "start": 16007
+        }
+      ],
+      "path": "tests/helpers/php-wasm-refinement-entry-plan-tests.mjs",
+      "previousSha256": "54089d68bb905b28f0fd90aecc91254a81c1580c93041650d92a04d13085e6ca"
+    },
+    {
+      "currentSha256": "a39042f307f02f6efbe457d37bcd7281f853a2a10ffaa005d3c6a63459140147",
+      "edits": [
+        {
+          "current": " * @param options.unreachedSources - Authored sources no compiled call reaches.\n",
+          "previous": "",
+          "start": 1179
+        },
+        {
+          "current": "export const phpWasmUnmarkedEntries = (selected, {\n\tglobalDefinitions = [], reducedArity = [], unreachedSources = []\n} = {}) => {\n\tassert.ok(Array.isArray(globalDefinitions) && Array.isArray(reducedArity) && Array.isArray(unreachedSources));\n",
+          "previous": "export const phpWasmUnmarkedEntries = (selected, { globalDefinitions = [], reducedArity = [] } = {}) => {\n\tassert.ok(Array.isArray(globalDefinitions) && Array.isArray(reducedArity));\n",
+          "start": 1263
+        },
+        {
+          "current": "\tconst unreached = new Set(closeItems(unreachedSources, [\"source\"], [\"symbol\", \"kind\", \"label\"])\n\t\t.map(item => `${item.kind}/${item.label}`));\n\tconst symbols = [...globals, ...reduced, ...unreachedSources].map(item => item.symbol);\n",
+          "previous": "\tconst symbols = [...globals, ...reduced].map(item => item.symbol);\n",
+          "start": 2244
+        },
+        {
+          "current": "\t\tassert.ok(!planned.some(entry => unreached.has(`${entry.kind}/${entry.label}`))\n\t\t\t, `${control} cannot plan a source no compiled call reaches`);\n",
+          "previous": "",
+          "start": 2803
+        },
+        {
+          "current": " * @param options.unreachedSources - Authored sources no compiled call reaches.\n",
+          "previous": "",
+          "start": 5011
+        },
+        {
+          "current": "export const phpWasmRefinementEntryPlan = (family, selected, generatedLeanSource, options = {}) => {\n",
+          "previous": "export const phpWasmRefinementEntryPlan = (family, selected, generatedLeanSource, {\n\tglobalDefinitions = [], reducedArity = []\n} = {}) => {\n",
+          "start": 5095
+        },
+        {
+          "current": "\tconst { unmarked, close } = phpWasmUnmarkedEntries(selected, options);\n",
+          "previous": "\tconst { unmarked, close } = phpWasmUnmarkedEntries(selected, { globalDefinitions, reducedArity });\n",
+          "start": 5290
+        }
+      ],
+      "path": "tests/helpers/php-wasm-refinement-entry-plan.mjs",
+      "previousSha256": "ff9ca6d90823915ffad6f5b6683883d699d0fb997914df9384091edf2fd42631"
+    },
+    {
+      "currentSha256": "04cc0ab13068f1ae9c7e987fd3d10a5eeac8695403d545237f3fc655f2d64794",
+      "edits": [
+        {
+          "current": "import { phpWasmSourceCallTargets } from \"./php-wasm-entry-call-targets.mjs\";\n",
+          "previous": "import { phpWasmReducedArityTargets } from \"./php-wasm-entry-call-targets.mjs\";\n",
+          "start": 1688
+        },
+        {
+          "current": "\t\t\t, ...phpWasmSourceCallTargets(inputs, observation.selected, { globalDefinitions })\n",
+          "previous": "\t\t\t, reducedArity: phpWasmReducedArityTargets(inputs, observation.selected, { globalDefinitions })\n",
+          "start": 12655
+        }
+      ],
+      "path": "tests/helpers/php-wasm-refinement-entry-report.mjs",
+      "previousSha256": "b938f87685ac8fff22467aa089528137e2f973ff62c6bed1a821fce44142f6c5"
+    }
+  ]
+}

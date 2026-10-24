@@ -130,8 +130,10 @@ test("failed PHP-Wasm deployments are retained without the pinned host package",
 			, "request-embedded.json", "vendor/autoload.php"
 		]);
 		assert.deepEqual(JSON.parse(await readFile(join(target, "failure.json"), "utf8")), {
-			schemaVersion: 1, ...failure
-			, stderr: { characters: 15, tail: "Error: differs\n" }, stdout: { characters: 0, tail: "" }
+			schemaVersion: 1
+			, ...failure
+			, stderr: { characters: 15, tail: "Error: differs\n" }
+			, stdout: { characters: 0, tail: "" }
 			, omitted: ["deployment/node_modules/php-wasm"]
 		});
 		const large = { ...failure, stderr: "head-" + "e".repeat(9000) + "-tail", stdout: "o".repeat(5000) };
@@ -140,8 +142,10 @@ test("failed PHP-Wasm deployments are retained without the pinned host package",
 		assert.deepEqual(record.stderr, { characters: large.stderr.length, tail: large.stderr.slice(-4096) });
 		assert.deepEqual(record.stdout, { characters: 5000, tail: "o".repeat(4096) });
 		assert.ok(!JSON.stringify(record).includes("head-"));
-		await assert.rejects(retainFailedPhpWasmDeployment({ root, name: "missing-stream", deployment
-			, failure: { ...failure, stdout: undefined } }));
+		const missing = { ...failure, stdout: undefined };
+		await assert.rejects(retainFailedPhpWasmDeployment({
+			root, name: "missing-stream", deployment, failure: missing
+		}));
 		assert.deepEqual(await phpWasmInventory(deployment), before, "retention only reads the failed deployment");
 		await assert.rejects(retainFailedPhpWasmDeployment({ root, name: "probe-embedded-startup-weak", deployment, failure }));
 		for(const name of ["", "../escape", "a/b", ".hidden"])

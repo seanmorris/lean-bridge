@@ -6,11 +6,11 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { componentRecordDefinitions } from "../../src/abi/component-records.mjs";
+import { nominalPrimitiveSubtypeFields } from "./nominal-primitive-subtype-fixture.mjs";
 import { sha256 } from "../../src/capsule/node.mjs";
 import {
 	nominalPrimitiveSubtypePhpWasmReview
 } from "./nominal-primitive-subtype-php-wasm-fixture.mjs";
-import { nominalPrimitiveSubtypeFields } from "./nominal-primitive-subtype-fixture.mjs";
 import {
 	recursiveCheckedRecordPhpWasmReview
 } from "./recursive-checked-record-php-wasm-fixture.mjs";
@@ -90,12 +90,41 @@ const flatPlanSelection = (family, sourceEntries) => {
 	return { selected, generated: { leanSource: lean.join("\n") + "\n" } };
 };
 
+// The installed nominal package is flat: one validator per refined field position.
+const nominalPositions = Object.freeze({
+	echoA: [["0", "A"]]
+	, combine: [["0", "A"], ["1", "B"]]
+	, echoEventA: [["0_1_0", "A"]]
+});
+const nominalPlanSelection = sourceEntries => {
+	const selected = structuredClone(sourceEntries), lean = [];
+	const exports = ["echoA", "combine", "echoEventA", "produce", "producePair", "produceGroup", "wordBits"];
+	for(const [index, name] of exports.entries())
+	{
+		const adapter = `lb_nominal_adapter_${index}`;
+		selected.push({ symbol: `lb_call${index}`, kind: "public", label: name }
+			, { symbol: adapter, kind: "adapter", label: `NominalPrimitiveSubtypes.${name}` });
+		lean.push(`@[export ${adapter}]`, `def adapter${index} := _root_.NominalPrimitiveSubtypes.${name}`);
+		for(const [prefix, suffix] of nominalPositions[name] ?? [])
+			for(const [field, item] of nominalPrimitiveSubtypeFields.entries())
+			{
+				const symbol = `${adapter}_refinement_${prefix}_${field}`;
+				selected.push({ symbol, kind: "validator"
+					, label: `NominalPrimitiveSubtypes.${name}:refinement_${prefix}_${field}` });
+				lean.push(`@[export ${symbol}]`
+					, `def check${index}_${prefix}_${field} := _root_.NominalPrimitiveSubtypes.${item.constructor}${suffix}`);
+			}
+	}
+	return { selected, generated: { leanSource: lean.join("\n") + "\n" } };
+};
+
 const plan = async family => {
 	const marker = phpWasmRefinementEntrySourceFixture(family);
 	const source = phpWasmRefinementEntrySource(await readFile(marker.path, "utf8"), marker);
 	const selection = phpWasmIndexedRefinementEntryFamilies.includes(family)
 		? flatPlanSelection(family, source.entries)
-		: phpWasmGraphRefinementEntrySelection(fixtureModel(family), source.entries);
+		: family.startsWith("nominal-") ? nominalPlanSelection(source.entries)
+			: phpWasmGraphRefinementEntrySelection(fixtureModel(family), source.entries);
 	return phpWasmRefinementEntryPlan(family, selection.selected, selection.generated.leanSource);
 };
 
@@ -184,12 +213,14 @@ const graphSelection = async family => {
 const labels = item => item.call.entries.map(entry => `${entry.kind}:${entry.label.replace(/_[a-f0-9]{20}$/u, "")}`);
 
 const nestedNominalEventSelection = async () => {
-	const selection = await graphSelection("nominal-full");
+	const marker = phpWasmRefinementEntrySourceFixture("nominal-full");
+	const selection = nominalPlanSelection(phpWasmRefinementEntrySource(
+		await readFile(marker.path, "utf8"), marker).entries);
 	const base = "NominalPrimitiveSubtypes.echoEventA:refinement_0";
-	const selected = selection.selected.filter(item => item.label !== base);
+	const selected = [...selection.selected];
 	const source = [selection.generated.leanSource];
 	const constructors = nominalPrimitiveSubtypeFields.map(item => item.constructor + "A");
-	for(const [branch, path] of [["box", "1_0"], ["choices", "2_0_0_0_0"]])
+	for(const [branch, path] of [["choices", "2_0_0_0_0"]])
 		constructors.forEach((constructor, index) => {
 			const symbol = `lb_plan_echo_event_a_${branch}_${index}`;
 			selected.push({ symbol, kind: "validator", label: `${base}_${path}_${index}` });
@@ -308,7 +339,9 @@ test("module-initialized authored entries leave the per-call trace", async () =>
 		, direct.call.counts.constructor + 2);
 	const nominal = await plan("nominal-result-only");
 	const wordBits = nominal.selected.find(item => item.kind === "source" && item.label.endsWith(".wordBits"));
-	const nominalSelection = await graphSelection("nominal-result-only");
+	const nominalMarker = phpWasmRefinementEntrySourceFixture("nominal-result-only");
+	const nominalSelection = nominalPlanSelection(phpWasmRefinementEntrySource(
+		await readFile(nominalMarker.path, "utf8"), nominalMarker).entries);
 	const free = phpWasmRefinementEntryPlan("nominal-result-only", nominalSelection.selected
 		, nominalSelection.generated.leanSource, { globalDefinitions: [wordBits] })
 		.cases.find(item => item.control === "constructor-free");
@@ -331,4 +364,45 @@ test("nominal result-only calls follow the compiled shared-result sequence", asy
 		, "source:NominalPrimitiveSubtypes.produceGroup"
 		, "source:NominalPrimitiveSubtypes.produce"
 	]);
+});
+
+test("a refused-only source no compiled call reaches leaves the plan unchanged", async () => {
+	const family = "zero-payload-full", marker = phpWasmRefinementEntrySourceFixture(family);
+	const source = phpWasmRefinementEntrySource(await readFile(marker.path, "utf8"), marker);
+	const selection = flatPlanSelection(family, source.entries);
+	const absent = selection.selected.find(item => item.kind === "source" && item.label.endsWith(".absentCount"));
+	const witness = selection.selected.find(item => item.kind === "source" && item.label.endsWith(".witnessCount"));
+	const plan = options => phpWasmRefinementEntryPlan(family, selection.selected
+		, selection.generated.leanSource, options);
+	assert.deepEqual(plan({ unreachedSources: [absent] }), plan());
+	assert.throws(() => plan({ unreachedSources: [witness] }), /no compiled call reaches/u);
+	const reduced = { ...absent, target: "l_ZeroPayloadCheckedRecords_absentCount___redArg" };
+	assert.throws(() => plan({ unreachedSources: [absent], reducedArity: [reduced] })
+		, /one classification/u);
+});
+
+test("flat nominal plans check every authored field at its own position", async () => {
+	const value = Object.fromEntries((await plan("nominal-full")).cases.map(item => [item.control, item]));
+	const fields = nominalPrimitiveSubtypeFields.length;
+	assert.equal(value.direct.call.counts.validator, fields);
+	assert.deepEqual(value.direct.call.entries.slice(0, 4).map(entry => entry.label), [
+		"NominalPrimitiveSubtypes.echoA:refinement_0_0"
+		, "NominalPrimitiveSubtypes.unitA"
+		, "NominalPrimitiveSubtypes.echoA:refinement_0_1"
+		, "NominalPrimitiveSubtypes.boolA"
+	]);
+	assert.equal(value["repeated-fields"].call.counts.validator, 2 * fields);
+	assert.equal(value["first-refusal"].call.entries.at(-1).label, "NominalPrimitiveSubtypes.isizeA");
+	assert.equal(value["active-branch"].call.entries[0].label
+		, "NominalPrimitiveSubtypes.echoEventA:refinement_0_1_0_0");
+	assert.equal(value["inactive-branch"].call.counts.validator, 0);
+	const marker = phpWasmRefinementEntrySourceFixture("nominal-full");
+	const selection = nominalPlanSelection(phpWasmRefinementEntrySource(await readFile(marker.path, "utf8"), marker).entries);
+	const drop = selection.selected.filter(item => item.label !== "NominalPrimitiveSubtypes.echoA:refinement_0_3");
+	const crossed = selection.generated.leanSource.replace("_root_.NominalPrimitiveSubtypes.boolA\n"
+		, "_root_.NominalPrimitiveSubtypes.unitA\n");
+	for(const [label, selected, lean] of [
+		["missing position", drop, selection.generated.leanSource]
+		, ["validator checks another field", selection.selected, crossed]
+	]) assert.throws(() => phpWasmRefinementEntryPlan("nominal-full", selected, lean), label);
 });

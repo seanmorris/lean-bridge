@@ -24,9 +24,12 @@ const escaped = text => text.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&");
  * @param options - Classified globals and reduced-arity call targets.
  * @param options.globalDefinitions - Authored entries compiled as module-initialized values.
  * @param options.reducedArity - Authored sources reached only through a reduced-arity target.
+ * @param options.unreachedSources - Authored sources no compiled call reaches.
  */
-export const phpWasmUnmarkedEntries = (selected, { globalDefinitions = [], reducedArity = [] } = {}) => {
-	assert.ok(Array.isArray(globalDefinitions) && Array.isArray(reducedArity));
+export const phpWasmUnmarkedEntries = (selected, {
+	globalDefinitions = [], reducedArity = [], unreachedSources = []
+} = {}) => {
+	assert.ok(Array.isArray(globalDefinitions) && Array.isArray(reducedArity) && Array.isArray(unreachedSources));
 	const closeItems = (items, kinds, fields) => items.map(item => {
 		assert.deepEqual(Object.keys(item ?? {}).sort(), [...fields].sort());
 		assert.ok(kinds.includes(item.kind), `${item.symbol} cannot be unmarked`);
@@ -37,12 +40,16 @@ export const phpWasmUnmarkedEntries = (selected, { globalDefinitions = [], reduc
 	const globals = closeItems(globalDefinitions, ["constructor", "source"], ["symbol", "kind", "label"]);
 	const reduced = closeItems(reducedArity, ["source"], ["symbol", "kind", "label", "target"]);
 	for(const item of reduced) assert.equal(item.target, `l_${item.label.replaceAll(".", "_")}___redArg`);
-	const symbols = [...globals, ...reduced].map(item => item.symbol);
+	const unreached = new Set(closeItems(unreachedSources, ["source"], ["symbol", "kind", "label"])
+		.map(item => `${item.kind}/${item.label}`));
+	const symbols = [...globals, ...reduced, ...unreachedSources].map(item => item.symbol);
 	assert.equal(new Set(symbols).size, symbols.length, "one classification per entry");
 	const classes = [["moduleInitialized", globals], ["reducedArity", reduced]].map(([key, items]) => [
 		key, new Set(items.map(item => `${item.kind}/${item.label}`))
 	]);
 	const unmarked = (control, outcome, publicName, planned, count) => {
+		assert.ok(!planned.some(entry => unreached.has(`${entry.kind}/${entry.label}`))
+			, `${control} cannot plan a source no compiled call reaches`);
 		const declared = Object.fromEntries(classes.map(([key, values]) => [key
 			, [...new Set(planned.filter(entry => values.has(`${entry.kind}/${entry.label}`)).map(entry => entry.label))].sort()]));
 		const entries = planned.filter(entry => !classes.some(([, values]) => values.has(`${entry.kind}/${entry.label}`)));
@@ -74,12 +81,11 @@ export const phpWasmUnmarkedEntries = (selected, { globalDefinitions = [], reduc
  * @param options - Compiler-classified entry forms and call targets.
  * @param options.globalDefinitions - Authored entries compiled as module-initialized values.
  * @param options.reducedArity - Authored sources reached only through a reduced-arity target.
+ * @param options.unreachedSources - Authored sources no compiled call reaches.
  */
-export const phpWasmRefinementEntryPlan = (family, selected, generatedLeanSource, {
-	globalDefinitions = [], reducedArity = []
-} = {}) => {
+export const phpWasmRefinementEntryPlan = (family, selected, generatedLeanSource, options = {}) => {
 	validateSubtypeEntrySelection(selected); assert.equal(typeof generatedLeanSource, "string");
-	const { unmarked, close } = phpWasmUnmarkedEntries(selected, { globalDefinitions, reducedArity });
+	const { unmarked, close } = phpWasmUnmarkedEntries(selected, options);
 	const namespace = family.startsWith("nominal-") ? "NominalPrimitiveSubtypes"
 		: family === "recursive-subtype" ? "RecursiveSubtypes"
 			: family === "recursive-checked-record" ? "RecursiveCheckedRecords"
@@ -99,44 +105,23 @@ export const phpWasmRefinementEntryPlan = (family, selected, generatedLeanSource
 	const source = name => find("source", `${namespace}.${name}`);
 	const adapter = name => find("adapter", `${namespace}.${name}`);
 	const fin = name => optional("validator", `${namespace}.${name}:fin_guard_0`);
-	const refinementBlock = item => {
-		const start = generatedLeanSource.indexOf(`@[export ${item.symbol}]`);
-		assert.ok(start >= 0, item.symbol);
-		const next = generatedLeanSource.indexOf("\n@[export ", start + 9);
-		return generatedLeanSource.slice(start, next < 0 ? undefined : next);
-	};
-	const refinementChecks = (name, constructorNames = [], path = null) => {
-		const refinements = selected.filter(item => item.kind === "validator"
-			&& item.label.startsWith(`${namespace}.${name}:refinement_`)
+	const refinement = (name, constructorName = null) => {
+		const candidates = selected.filter(item => item.kind === "validator"
+			&& item.label.startsWith(`${namespace}.${name}:refinement_0`)
 			&& !item.label.includes(":graph_refinement_"));
-		// Flat transports name every nested leaf and every parameter position. The
-		// graph-only unit fixture retains one whole-value validator per parameter;
-		// keep its established first-parameter abstraction separate from flat order.
-		const nested = refinements.some(item => !new RegExp(
-			`^${escaped(namespace)}\\.${escaped(name)}:refinement_[0-9]+$`, "u"
-		).test(item.label));
-		const candidates = nested ? refinements : refinements.filter(item =>
-			item.label === `${namespace}.${name}:refinement_0`);
-		if(constructorNames.length === 0) return candidates
+		if(constructorName === null) return candidates
 			.filter(item => item.label === `${namespace}.${name}:refinement_0`)
 			.map(item => ({ kind: item.kind, label: item.label }));
-		// Graph carriers expose one validator for a complete value. Flat copied transports
-		// expose one validator per selected leaf, and each validator calls that leaf's
-		// constructor before the adapter reconstructs the value a second time.
-		if(candidates.length <= 1) return [
-			...candidates.map(item => ({ kind: item.kind, label: item.label }))
-			, ...constructors(constructorNames)
-		];
-		return constructorNames.flatMap((constructorName, index) => {
-			const expected = path === null ? null : `${namespace}.${name}:${path}_${index}`;
-			const matches = candidates.filter(item => expected === null
-				? refinementBlock(item).includes(`_root_.${namespace}.${constructorName}`)
-				: item.label === expected);
-			assert.equal(matches.length, 1, `${name} refinement validator for ${constructorName}`);
-			assert.ok(refinementBlock(matches[0]).includes(`_root_.${namespace}.${constructorName}`)
-				, `${matches[0].label} selects ${constructorName}`);
-			return [{ kind: "validator", label: matches[0].label }, constructor(constructorName)];
+		if(candidates.length <= 1) return candidates.map(item => ({ kind: item.kind, label: item.label }));
+		const matches = candidates.filter(item => {
+			const start = generatedLeanSource.indexOf(`@[export ${item.symbol}]`);
+			assert.ok(start >= 0, item.symbol);
+			const next = generatedLeanSource.indexOf("\n@[export ", start + 9);
+			return generatedLeanSource.slice(start, next < 0 ? undefined : next)
+				.includes(`_root_.${namespace}.${constructorName}`);
 		});
+		assert.equal(matches.length, 1, `${name} refinement validator for ${constructorName}`);
+		return [{ kind: "validator", label: matches[0].label }];
 	};
 	const graph = (name, constructorName) => {
 		const candidates = selected.filter(item => item.kind === "validator"
@@ -166,15 +151,15 @@ export const phpWasmRefinementEntryPlan = (family, selected, generatedLeanSource
 	};
 	const constructors = names => names.map(constructor);
 	const item = (control, outcome, publicName, planned) => unmarked(control, outcome, publicName, planned, counts);
-	const accepted = (control, name, names = [], sourceNames = [name], refinementPath = null) => {
+	const accepted = (control, name, names = [], sourceNames = [name]) => {
 		const values = constructors(names);
 		return item(control, "accepted", name, [
-			...fin(name), ...refinementChecks(name, names, refinementPath)
+			...fin(name), ...refinement(name, names[0] ?? null), ...values
 			, adapter(name), ...values, ...sourceNames.map(source)
 		]);
 	};
 	const refused = (control, name, names, diagnosis = []) => item(control, "refused", name, [
-		...fin(name), ...refinementChecks(name, names)
+		...fin(name), ...refinement(name, names[0] ?? null), ...constructors(names)
 		, ...diagnosis.flatMap(constructorName => graph(name, constructorName))
 	]);
 	const graphCarried = selected.some(entry => entry.kind === "public" && /^lg_call\d+$/u.test(entry.symbol));
@@ -258,18 +243,50 @@ export const phpWasmRefinementEntryPlan = (family, selected, generatedLeanSource
 		return item(control, "refused", name, checks.slice(0, refusingVisit + 1).flat());
 	};
 	const node = (tail = null) => ({ tail });
+	// A flat provider checks every refined field at its own position, in field order.
+	const positions = (name, prefix, constructorNames) => {
+		assert.ok(!graphCarried, `${family} positions belong to a flat selection`);
+		const pattern = new RegExp(`^${escaped(`${namespace}.${name}:refinement_${prefix}_`)}(\\d+)$`, "u");
+		const validators = selected.filter(entry => entry.kind === "validator" && pattern.test(entry.label))
+			.map(entry => ({ entry, index: Number(pattern.exec(entry.label)[1]) }))
+			.sort((left, right) => left.index - right.index);
+		assert.deepEqual(validators.map(item => item.index), constructorNames.map((_, index) => index)
+			, `${name} position ${prefix} validates every authored field once`);
+		return validators.map(({ entry }, index) => {
+			const block = exportBlock(entry.symbol);
+			const checked = selected.filter(item => item.kind === "constructor" && new RegExp(
+				`_root_\\.${escaped(item.label)}(?![A-Za-z0-9_])`, "u").test(block));
+			assert.deepEqual(checked.map(item => item.label), [`${namespace}.${constructorNames[index]}`]
+				, `${entry.label} checks only its authored field constructor`);
+			return [{ kind: "validator", label: entry.label }, constructor(constructorNames[index])];
+		});
+	};
+	const positionalAccepted = (control, name, groups = []) => {
+		const checks = groups.flatMap(([prefix, names]) => positions(name, prefix, names));
+		return item(control, "accepted", name, [
+			...checks.flat(), adapter(name)
+			, ...checks.map(([, built]) => built), source(name)
+		]);
+	};
+	const positionalRefused = (control, name, groups, refusingConstructor) => {
+		const checks = groups.flatMap(([prefix, names]) => positions(name, prefix, names));
+		const refusing = checks.findIndex(([, built]) => built.label === `${namespace}.${refusingConstructor}`);
+		assert.ok(refusing >= 0, `${control} refuses at a planned position`);
+		return item(control, "refused", name, checks.slice(0, refusing + 1).flat());
+	};
 	let cases;
 	if(family === "nominal-full")
 	{
 		const a = nominalPrimitiveSubtypeFields.map(item => item.constructor + "A");
 		const b = nominalPrimitiveSubtypeFields.map(item => item.constructor + "B");
+		// Position prefixes name the parameter and active branch path of each authored record.
 		cases = [
-			accepted("direct", "echoA", a)
-			, refused("first-refusal", "echoA", a)
-			, accepted("recovery", "echoA", a)
-			, accepted("repeated-fields", "combine", [...a, ...b])
-			, accepted("inactive-branch", "echoEventA")
-			, accepted("active-branch", "echoEventA", a, ["echoEventA"], "refinement_0_1_0")
+			positionalAccepted("direct", "echoA", [["0", a]])
+			, positionalRefused("first-refusal", "echoA", [["0", a]], "isizeA")
+			, positionalAccepted("recovery", "echoA", [["0", a]])
+			, positionalAccepted("repeated-fields", "combine", [["0", a], ["1", b]])
+			, positionalAccepted("inactive-branch", "echoEventA")
+			, positionalAccepted("active-branch", "echoEventA", [["0_1_0", a]])
 			, accepted("constructor-free", "produce")
 		];
 	}

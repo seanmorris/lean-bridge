@@ -10,6 +10,9 @@ import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
 import { beforePhpWasmEntryOracleRepairSource, phpWasmEntryOracleRepairNormalizationPaths } from "./php-wasm-entry-oracle-repair-source-history.mjs";
 import { beforePhpWasmEntryOracleClosureSource, phpWasmEntryOracleClosureNormalizationPaths } from "./php-wasm-entry-oracle-closure-source-history.mjs";
+import { beforePhpWasmEntryFlatPositionSource, phpWasmEntryFlatPositionNormalizationPaths } from "./php-wasm-entry-flat-position-source-history.mjs";
+import { beforePhpWasmEntryUnreachedSourceSource, phpWasmEntryUnreachedSourceNormalizationPaths } from "./php-wasm-entry-unreached-source-source-history.mjs";
+import { beforePhpWasmEntryCallPathSource, phpWasmEntryCallPathNormalizationPaths } from "./php-wasm-entry-call-path-source-history.mjs";
 import { beforeNominalSubtypeEntryReportLinkSource, nominalSubtypeEntryReportLinkNormalizationPaths } from "./nominal-subtype-entry-report-link-source-history.mjs";
 import { beforeNominalSubtypeEntryExportSurfaceSource, nominalSubtypeEntryExportSurfaceNormalizationPaths } from "./nominal-subtype-entry-export-surface-source-history.mjs";
 import { beforePhpWasmNullaryEntryFormSource, phpWasmNullaryEntryFormNormalizationPaths } from "./php-wasm-nullary-entry-form-source-history.mjs";
@@ -2094,6 +2097,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	...phpWasmEntryOracleRepairNormalizationPaths
 	, ...phpWasmEntryOracleClosureNormalizationPaths
+	, ...phpWasmEntryFlatPositionNormalizationPaths
+	, ...phpWasmEntryUnreachedSourceNormalizationPaths
+	, ...phpWasmEntryCallPathNormalizationPaths
 	, ...nominalSubtypeEntryReportLinkNormalizationPaths
 	, ...nominalSubtypeEntryExportSurfaceNormalizationPaths
 	, ...phpWasmNullaryEntryFormNormalizationPaths
@@ -2937,6 +2943,21 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(sha256(phpWasmEntryOracleClosure) === expected)
 		return phpWasmEntryOracleClosure;
 	text = phpWasmEntryOracleClosure;
+	const phpWasmEntryFlatPosition
+		= beforePhpWasmEntryFlatPositionSource(path, text, expected);
+	if(sha256(phpWasmEntryFlatPosition) === expected)
+		return phpWasmEntryFlatPosition;
+	text = phpWasmEntryFlatPosition;
+	const phpWasmEntryUnreachedSource
+		= beforePhpWasmEntryUnreachedSourceSource(path, text, expected);
+	if(sha256(phpWasmEntryUnreachedSource) === expected)
+		return phpWasmEntryUnreachedSource;
+	text = phpWasmEntryUnreachedSource;
+	const phpWasmEntryCallPath
+		= beforePhpWasmEntryCallPathSource(path, text, expected);
+	if(sha256(phpWasmEntryCallPath) === expected)
+		return phpWasmEntryCallPath;
+	text = phpWasmEntryCallPath;
 	const nominalSubtypeEntryReportLink
 		= beforeNominalSubtypeEntryReportLinkSource(path, text, expected);
 	if(sha256(nominalSubtypeEntryReportLink) === expected)

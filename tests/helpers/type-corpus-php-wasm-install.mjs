@@ -73,7 +73,10 @@ export const retainFailedPhpWasmDeployment = async ({ root, name, deployment, fa
 		, filter: path => path !== host && !path.startsWith(host + sep)
 	});
 	await saveLakeFile(target, "failure.json", canonicalJson({
-		schemaVersion: 1, ...failure, ...streams, omitted: ["deployment/node_modules/php-wasm"]
+		schemaVersion: 1
+		, ...failure
+		, ...streams
+		, omitted: ["deployment/node_modules/php-wasm"]
 	}));
 	return target;
 };

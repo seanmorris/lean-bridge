@@ -6,7 +6,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { phpWasmOwnedRefinementEntryPlan } from "./php-wasm-owned-refinement-entry-plan.mjs";
-import { phpWasmReducedArityTargets } from "./php-wasm-entry-call-targets.mjs";
+import { phpWasmReducedArityTargets, phpWasmSourceCallTargets } from "./php-wasm-entry-call-targets.mjs";
 import { phpWasmOwnedRefinementEntrySourceFixture } from "./php-wasm-owned-refinement-entry-source-fixtures.mjs";
 
 const transferHooks = [
@@ -226,8 +226,7 @@ return ${target}(v_x);
 `;
 	assert.deepEqual(classify(probe(boxed), glue(adapter)), expected, "Lean's boxed target wrapper is classified");
 	const faults = {
-		"wrapper with no reduced-arity delegate": () => [probe(swap(module, delegate, "v_r = v_x;")), glue(adapter)]
-		, "target without an adapter caller": () => [probe(module), glue(swap(adapter, call, "v_r = v_b;"))]
+		"target without an adapter caller": () => [probe(module), glue(swap(adapter, call, "v_r = v_b;"))]
 		, "delegate to another declaration": () => [
 			probe(swap(module, delegate, "v_r = l_Probe_other___redArg(v_x);"))
 			, glue(adapter)
@@ -258,4 +257,19 @@ return ${target}(v_x);
 	};
 	for(const [label, inputs] of Object.entries(faults))
 		assert.throws(() => phpWasmReducedArityTargets(inputs(), selected), label);
+	const constant = probe(swap(module, delegate, "v_r = lean_unsigned_to_nat(0u);"));
+	assert.deepEqual(phpWasmSourceCallTargets([constant, glue(adapter)], selected), {
+		reducedArity: [], unreachedSources: [source]
+	}, "an uncalled wrapper with no delegate is unreached, never reduced-arity");
+	assert.deepEqual(phpWasmSourceCallTargets([probe(module), glue(adapter)], selected).unreachedSources, []);
+});
+
+test("owned plans refuse an accepted call that needs an unreached source", async () => {
+	const { selected, lean } = await fixture("owned-checked-record");
+	const pair = selected.find(item => item.kind === "source" && item.label === "OwnedCheckedRecords.pairClaim");
+	assert.throws(() => phpWasmOwnedRefinementEntryPlan("owned-checked-record", selected, lean
+		, { unreachedSources: [pair] }), /no compiled call reaches/u);
+	for(const unreachedSources of [[{ ...pair, kind: "adapter" }], [{ ...pair, symbol: "missing" }]])
+		assert.throws(() => phpWasmOwnedRefinementEntryPlan("owned-checked-record", selected, lean
+			, { unreachedSources }));
 });

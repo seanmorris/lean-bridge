@@ -25,6 +25,7 @@ const counts = entries => Object.fromEntries(kinds.map(kind => [
  * @param options - Compiler-classified entry forms and call targets.
  * @param options.globalDefinitions - Authored entries compiled as module-initialized values.
  * @param options.reducedArity - Authored sources reached only through a reduced-arity target.
+ * @param options.unreachedSources - Authored sources no compiled call reaches.
  */
 export const phpWasmOwnedRefinementEntryPlan = (family, selected, generatedLeanSource, options = {}) => {
 	validateSubtypeEntrySelection(selected); assert.equal(typeof generatedLeanSource, "string");
