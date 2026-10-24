@@ -42,9 +42,9 @@ assert.ok(routes.length && routes.every(route =>
 	ownedCheckedRecordJavaScriptRoutes.includes(route)
 ));
 const target = resolve(process.env.LEAN_BRIDGE_JS_TARGET_RUNTIME
-	?? "/app/build/lean-runtime/f3b06c705e6c85f5314019d5d3baab0fec5b580c-743765bf566f43ec2f7b4eb84a85686880b3797efe83bf244d6fc7281e4f85a3-browser");
+	?? "build/lean-runtime/f3b06c705e6c85f5314019d5d3baab0fec5b580c-743765bf566f43ec2f7b4eb84a85686880b3797efe83bf244d6fc7281e4f85a3-browser");
 const prepared = resolve(process.env.LEAN_BRIDGE_OWNED_JS_WASM_PREPARED_ROOT
-	?? "/app/build/lean-link-spike", "lazy");
+	?? "build/lean-link-spike", "lazy");
 const packagingRoot = resolve("build/owned-checked-record-javascript-packaging");
 const reports = [];
 

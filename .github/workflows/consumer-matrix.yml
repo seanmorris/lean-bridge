@@ -175,9 +175,14 @@ jobs:
           rg '^# fail 0$' build/owned-javascript-wasm/installed.log
           rg '^# skipped 0$' build/owned-javascript-wasm/installed.log
           test -s build/owned-subtype-javascript-packaging/report.json
+          checked_record_log=build/owned-javascript-wasm/checked-record-acceptance.log
+          checked_record_status=0
           node --test --test-concurrency=1 \
             tests/owned-checked-record-javascript-packaging.test.mjs \
-            2>&1 | tee build/owned-checked-record-javascript-packaging/acceptance.log
+            2>&1 | tee "$checked_record_log" || checked_record_status=$?
+          mkdir -p build/owned-checked-record-javascript-packaging
+          mv "$checked_record_log" build/owned-checked-record-javascript-packaging/acceptance.log
+          if (( checked_record_status != 0 )); then exit "$checked_record_status"; fi
           test -s build/owned-checked-record-javascript-packaging/acceptance.log
           rg '^# fail 0$' build/owned-checked-record-javascript-packaging/acceptance.log
           rg '^# skipped 0$' build/owned-checked-record-javascript-packaging/acceptance.log

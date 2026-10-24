@@ -113,8 +113,13 @@ export const assertOwnedJavaScriptWasmCi = workflow => {
 		, "rg '^# fail 0$' " + ownedJavaScriptWasmCiLogs[2]
 		, "rg '^# skipped 0$' " + ownedJavaScriptWasmCiLogs[2]
 		, "test -s " + ownedJavaScriptInstalledReports[0]
-		, ownedCheckedRecordJavaScriptTestCommand + " 2>&1 | tee "
-			+ ownedCheckedRecordJavaScriptAcceptanceLog
+		, "checked_record_log=build/owned-javascript-wasm/checked-record-acceptance.log"
+		, "checked_record_status=0"
+		, ownedCheckedRecordJavaScriptTestCommand
+			+ ' 2>&1 | tee "$checked_record_log" || checked_record_status=$?'
+		, "mkdir -p build/owned-checked-record-javascript-packaging"
+		, 'mv "$checked_record_log" ' + ownedCheckedRecordJavaScriptAcceptanceLog
+		, 'if (( checked_record_status != 0 )); then exit "$checked_record_status"; fi'
 		, "test -s " + ownedCheckedRecordJavaScriptAcceptanceLog
 		, "rg '^# fail 0$' " + ownedCheckedRecordJavaScriptAcceptanceLog
 		, "rg '^# skipped 0$' " + ownedCheckedRecordJavaScriptAcceptanceLog
