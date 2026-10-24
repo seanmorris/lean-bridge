@@ -1,0 +1,203 @@
+{
+  "schemaVersion": 1,
+  "kind": "generic-subtype-complete-promotion-preflight-v1",
+  "verificationCommit": "6d5f926512919c6660dc369c9e36697da5dd5d3b",
+  "command": "timeout 300s nice -n 15 taskset -c 2 node --max-old-space-size=512 scripts/promote-generic-subtype-evidence.mjs --check",
+  "exitCode": 0,
+  "supportPromoted": false,
+  "repositoryFilesChanged": false,
+  "newHostedExecution": false,
+  "validation": {
+    "completeArchiveReplays": 12,
+    "retainedFiles": 22143,
+    "targetCells": 32,
+    "targetObservations": 22,
+    "manualDocumentationPages": 14,
+    "stagedFiles": 17,
+    "sourceAndTargetPreconditions": "clean tracked HEAD; full input byte identity; complete schema and semantic validation; every old evidence entry retained",
+    "limits": {
+      "localCpuAffinity": 2,
+      "nice": 15,
+      "nodeHeapMiB": 512,
+      "commandTimeoutSeconds": 300,
+      "maximumInventoryBytes": 104857600
+    }
+  },
+  "inputInventory": {
+    "bytes": 101777720,
+    "sha256": "27ec707f67caf68401d3843ecb00fb5c3e8165f7463cd3d12924de248846a43f"
+  },
+  "candidateInventory": {
+    "bytes": 101896921,
+    "sha256": "f3e428f551ef5ed98244953958351a381570c1a2d45e7f9a10cd97f415990880"
+  },
+  "stagedFiles": [
+    "docs/type-surface.v1.json",
+    "docs/javascript-typescript.md",
+    "docs/php.md",
+    "docs/consume/dotnet.md",
+    "docs/consume/java.md",
+    "docs/consume/kotlin.md",
+    "docs/consume/ruby.md",
+    "docs/consume/perl.md",
+    "docs/consume/python.md",
+    "docs/consume/rust.md",
+    "docs/consume/c.md",
+    "docs/consume/cpp.md",
+    "docs/consume/wit-wasi.md",
+    "docs/reference/types.md",
+    "docs/lean/existing-package.md",
+    "docs/lean/export-decisions.md",
+    "docs/evidence/generic-subtype-promotion-20261023.md"
+  ],
+  "archiveIndexes": [
+    {
+      "lane": "npm-ordinary",
+      "path": "docs/evidence/generic-subtype-npm-ordinary-hosted-20261023/index.json",
+      "sha256": "5fcb0771a183c8912c5fc4d7d9b70ef7307c540f5264b039d8b32cd883f5f370",
+      "runId": 39965390162,
+      "jobId": 120453791022,
+      "artifactId": 12514092250,
+      "retainedFiles": 1734
+    },
+    {
+      "lane": "npm-reviewed",
+      "path": "docs/evidence/generic-subtype-npm-reviewed-hosted-20261023/index.json",
+      "sha256": "644327c9eca507fd2837ef7ef6bb6a609e164c872c5cbd345fdc8068eef95677",
+      "runId": 39965390162,
+      "jobId": 120453790553,
+      "artifactId": 12511516203,
+      "retainedFiles": 1734
+    },
+    {
+      "lane": "foundation",
+      "path": "docs/evidence/generic-subtype-foundation-hosted-20261023/index.json",
+      "sha256": "71ca38b5d3eaa2d20914a8dab479bfccac8c3c337ef7fd2bbbe4cb4e05496b6c",
+      "runId": 39965392535,
+      "jobId": 120453798327,
+      "artifactId": 12516024335,
+      "retainedFiles": 2010
+    },
+    {
+      "lane": "native",
+      "path": "docs/evidence/generic-subtype-native-hosted-20261023/index.json",
+      "sha256": "772841cfc5e65b7bfc16cc2cd0d806aaef742d4c176b020635eeb4c5e59d026b",
+      "runId": 39965392535,
+      "jobId": 120453798597,
+      "artifactId": 12515636019,
+      "retainedFiles": 1766
+    },
+    {
+      "lane": "perl",
+      "path": "docs/evidence/generic-subtype-perl-hosted-20261023/index.json",
+      "sha256": "b0bef68a6b700734efd16b93dd12225f6e366032d98da2cd2e51519003c95911",
+      "runId": 39965392535,
+      "jobId": 120453798039,
+      "artifactId": 12511212767,
+      "retainedFiles": 1978
+    },
+    {
+      "lane": "python",
+      "path": "docs/evidence/generic-subtype-python-hosted-20261023/index.json",
+      "sha256": "acdf759eb36a2c0176bd2aa149a14ab164faec6c1aecda8f7c6ffda34c7f8ef3",
+      "runId": 39965391657,
+      "jobId": 120453797387,
+      "artifactId": 12516035968,
+      "retainedFiles": 1846
+    },
+    {
+      "lane": "ruby",
+      "path": "docs/evidence/generic-subtype-ruby-hosted-20261023/index.json",
+      "sha256": "8cbd7df8a5fe1756f95005868762ff5f18ec8e4d2a1404ae6b5f4cb73c751615",
+      "runId": 39965391657,
+      "jobId": 120453796734,
+      "artifactId": 12511265942,
+      "retainedFiles": 1810
+    },
+    {
+      "lane": "rust",
+      "path": "docs/evidence/generic-subtype-rust-hosted-20261023/index.json",
+      "sha256": "affb8819eaebcb5ce1099ded9fad3f65701f02aab9541d1ca028fe3f1f17095b",
+      "runId": 39965391657,
+      "jobId": 120453797124,
+      "artifactId": 12514279363,
+      "retainedFiles": 1837
+    },
+    {
+      "lane": "dotnet",
+      "path": "docs/evidence/generic-subtype-dotnet-hosted-20261024/index.json",
+      "sha256": "34e30097433b43562990c23086db27449af1f331115182f5ff98d979f94d2bf1",
+      "runId": 40047586181,
+      "jobId": 120732735805,
+      "artifactId": 12545556775,
+      "retainedFiles": 1870
+    },
+    {
+      "lane": "jvm",
+      "path": "docs/evidence/generic-subtype-jvm-hosted-20261024/index.json",
+      "sha256": "abed0cf5126bb70b352aeb772ac2f085d1b9b0ce886b210217d2699847eff8b9",
+      "runId": 40047586181,
+      "jobId": 120732735785,
+      "artifactId": 12543630418,
+      "retainedFiles": 1806
+    },
+    {
+      "lane": "php-native",
+      "path": "docs/evidence/generic-subtype-php-native-hosted-20261024/index.json",
+      "sha256": "36715765a38902461f8270a35e8e23307535c4193d3c68644c7f20cd3cfdb9ae",
+      "runId": 40047586181,
+      "jobId": 120732735793,
+      "artifactId": 12546017784,
+      "retainedFiles": 1850
+    },
+    {
+      "lane": "wit-wasi",
+      "path": "docs/evidence/generic-subtype-wit-wasi-hosted-20261024/index.json",
+      "sha256": "3ac222f2bcec706d4e9e531dcda7b8ce8aac2b90adb79c113d2d44721c91a215",
+      "runId": 40047586181,
+      "jobId": 120732735916,
+      "artifactId": 12544318334,
+      "retainedFiles": 1902
+    }
+  ],
+  "liveSources": [
+    {
+      "path": "scripts/promote-generic-subtype-evidence.mjs",
+      "sha256": "4a0370847aa3714b8b7e197c7546914d2f938992b88c08b5bf1354f394e394e3"
+    },
+    {
+      "path": "scripts/generate-type-docs.mjs",
+      "sha256": "be538dbe92fd5698d7b5e1f3fb3238ffae521e93b009e0a4c78f13c94fd8bbbc"
+    },
+    {
+      "path": "scripts/generate-reference-docs.mjs",
+      "sha256": "b690854ece6e2042f890a6aa80b94a63830dc2ee0c6aba9b8f3fdd5659412a83"
+    },
+    {
+      "path": "tests/helpers/generic-subtype-promotion.mjs",
+      "sha256": "2b55e10555ea06dd2015c9804d1d7c70b8076e92e845eafda662af2a9a7a4a7c"
+    },
+    {
+      "path": "tests/helpers/generic-subtype-documentation.mjs",
+      "sha256": "53971868a97cb554c48c7bd378822c64784f06f3ad3331cc0639e4e0b006089e"
+    },
+    {
+      "path": "tests/helpers/type-surface-promotion-io.mjs",
+      "sha256": "1ec4c3f0f1038e65310636b322a5c669edeb43585c04fd68209191b7f66520e1"
+    },
+    {
+      "path": "tests/helpers/promotion-file-transaction.mjs",
+      "sha256": "00181a5537d811a32ed39ff61093356b7f9af72a774026c3860e70b551a2df72"
+    },
+    {
+      "path": "tests/helpers/generic-subtype-hosted-evidence.mjs",
+      "sha256": "2475b4f7efd78dc86ccbeb577a439369e1542ede6e901cbb821d786a254f2105"
+    }
+  ],
+  "limitations": [
+    "This replays retained producer observations; it is not new hosted execution at the verification commit.",
+    "The candidate inventory and documentation were staged, checked and removed without installation. The tracked worktree remained clean.",
+    "Actual support promotion still requires baseline-aware regressions, an authenticated inventory/documentation history transition, and final-revision Core and required hosted gates.",
+    "This does not close #1702 or the remaining original scope of #1220."
+  ]
+}
