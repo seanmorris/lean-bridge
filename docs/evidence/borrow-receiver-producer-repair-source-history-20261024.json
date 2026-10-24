@@ -1,0 +1,698 @@
+{
+  "additions": [
+    {
+      "currentSha256": "a36e734f7a5a6a025c324a2813ce0f1d89a30b03c2311d13529cc7468a871f4a",
+      "path": "scripts/update-borrow-receiver-producer-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "2e59dfbd56c8b5a39f0ec9d675733279e48319ca91a29926fa50501f1df230c7",
+      "path": "tests/helpers/borrow-receiver-producer-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "4333f6102fa50f739639b2525df6041ac366d3eb52a6df69d7405eb9b62af172",
+      "path": "tests/helpers/borrow-receiver-producer-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "b83841bee3e3f78deb2d9e9e1bef5f546271b1af8506541e1a07e16aa09a3116",
+      "path": "tests/helpers/borrow-receiver-producer-binding-tests.mjs"
+    }
+  ],
+  "implementationCommit": "aa59633ee322d38dc924687e5fd4389be4a0bdba",
+  "implementationCommits": [
+    "335cbe5cc9e49dc9a2912a3005d6c8b3764d653f",
+    "8c6dfa31bb61d16306e1c000eafbd5889a235493",
+    "aa59633ee322d38dc924687e5fd4389be4a0bdba"
+  ],
+  "integrationBaseCommit": "aa59633ee322d38dc924687e5fd4389be4a0bdba",
+  "integrationUpdates": [
+    {
+      "currentSha256": "37987ddf07a63d6fd666d8191aca7ff70a25885191a9d2c6654816b764fb25af",
+      "edits": [
+        {
+          "current": "import { beforeBorrowReceiverProducerRepairSource, borrowReceiverProducerRepairNormalizationPaths } from \"./borrow-receiver-producer-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 3733
+        },
+        {
+          "current": "\t...borrowReceiverProducerRepairNormalizationPaths\n\t, ...admissionArchiveProducerRepairNormalizationPaths\n",
+          "previous": "\t...admissionArchiveProducerRepairNormalizationPaths\n",
+          "start": 176933
+        },
+        {
+          "current": "\t\t= beforeBorrowReceiverProducerRepairSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "",
+          "start": 218433
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "44ee7609a1ffcdba76098415b8240468d27d98f2895254143d34d07f8d4bb4d2"
+    },
+    {
+      "currentSha256": "6b84eab0e83e0dca74ceb3d059fff47c5572fb8354ff2e76da613df94d85572e",
+      "edits": [
+        {
+          "current": "import \"./helpers/borrow-receiver-producer-binding-tests.mjs\";\nimport \"./helpers/borrow-receiver-producer-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 2235
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "113b8d6c940027e6fd9e118efc1294b2323b4647035260541aab5a4223772129"
+    }
+  ],
+  "milestone": "borrow-receiver-producer-repair-source-v1",
+  "predecessorCommit": "b46fac281e7f9154c05e7e1153ff771f1cbd9629",
+  "schemaVersion": 1,
+  "scope": "Bind the remaining observed borrow, transfer and receiver receipt regenerations to their authenticated producer modules, including downstream package and documentation checks. Keep shared Perl observations and the PHP current-model caller live. Select independent PHP-Wasm borrow/receiver and Ruby borrow/managed-close producers per call. Pin Ruby profile reversals to their recorded current endpoints. Preserve frozen receipt hashes, installed observations, contracts, mutation checks and live CI gates. Record the exact three-commit source range and small producer/endpoint controls. No inventory or runtime implementation changes; full archive, generator and installed acceptance remain hosted gates.",
+  "updates": [
+    {
+      "currentSha256": "ad35aeb2ffd2dc5d02b2f829a467d1234cdb96c161e9380a745f597be27046aa",
+      "edits": [
+        {
+          "current": "import { assertOwnedRubyBorrowExecution, assertOwnedRubyBorrowCi, ownedRubyCloseProducer } from \"./owned-ruby-borrow-evidence.mjs\";\n",
+          "previous": "import { assertOwnedRubyBorrowExecution, assertOwnedRubyBorrowCi } from \"./owned-ruby-borrow-evidence.mjs\";\n",
+          "start": 253
+        },
+        {
+          "current": "\tawait assertOwnedRubyBorrowExecution(record.ruby, ownedRubyCloseProducer);\n",
+          "previous": "\tawait assertOwnedRubyBorrowExecution(record.ruby);\n",
+          "start": 1504
+        }
+      ],
+      "path": "tests/helpers/managed-close-evidence.mjs",
+      "previousSha256": "9fbcead3479ec9d18af3f7cd3cef0c26ed995da626e1f278b25f96eaf1168131"
+    },
+    {
+      "currentSha256": "bbc0dd26d9ec930e209146d5fb192ec38378ccf9853ec8df84e54f2f25ff6eb6",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { generateOwnedCPackage } from \"../../src/backends/c/owned-package.mjs\";\nimport { generateOwnedCppPackage } from \"../../src/backends/cpp/owned-package.mjs\";\nimport { createCompiledNativeModel } from \"../../src/build/native-graph-model.mjs\";\nimport { ownedCppReceiverSource, ownedCppReceiverProbe, ownedCppPlainReceiverProbe } from \"./owned-cpp-receiver-fixture.mjs\";\nimport { ownedReceiverSource } from \"./owned-receiver-fixture.mjs\";\n",
+          "start": 253
+        },
+        {
+          "current": "import { moduleAtProducerWithSourceReads } from \"./producer-module.mjs\";\n",
+          "previous": "",
+          "start": 411
+        },
+        {
+          "current": "/** The commit whose complete source tree every digest in the C++ receiver record names. */\nexport const ownedCppReceiverProducer = \"86f54487bfa6c6a2a75b9a78afbe0aae5c883f67\";\nlet producerPromise;\n// Packages, models and probes are regenerated with the producer's generators and fixtures; later changes never reach back.\nconst producerModules = () => producerPromise ??= Promise.all([\n\t\"src/backends/c/owned-package.mjs\"\n\t, \"src/backends/cpp/owned-package.mjs\"\n\t, \"src/build/native-graph-model.mjs\"\n\t, \"tests/helpers/owned-cpp-receiver-fixture.mjs\"\n\t, \"tests/helpers/owned-receiver-fixture.mjs\"\n].map(path => moduleAtProducerWithSourceReads(ownedCppReceiverProducer, path)))\n\t.then(modules => Object.assign({}, ...modules));\n",
+          "previous": "",
+          "start": 601
+        },
+        {
+          "current": "\tconst {\n\t\tgenerateOwnedCPackage, generateOwnedCppPackage, createCompiledNativeModel\n\t\t, ownedCppReceiverSource, ownedCppReceiverProbe, ownedCppPlainReceiverProbe\n\t\t, ownedReceiverSource\n\t} = await producerModules();\n",
+          "previous": "",
+          "start": 3423
+        }
+      ],
+      "path": "tests/helpers/owned-cpp-receiver-evidence.mjs",
+      "previousSha256": "dbd8dd0a341c04fa0015a13d10801e9d307a81eaa910016c96063ee64a7415d9"
+    },
+    {
+      "currentSha256": "6073ddbcb6dcb76f7f20d76b110665186e449a73fe34b9e6b17a84e44080b486",
+      "edits": [
+        {
+          "current": "import { assertOwnedDotnetReceiverPackages, ownedDotnetReceiverProducerModules } from \"./owned-dotnet-receiver-package-evidence.mjs\";\n",
+          "previous": "import { generateOwnedCPackage } from \"../../src/backends/c/owned-package.mjs\";\nimport { generateOwnedDotnetCalls } from \"../../src/backends/dotnet/owned-calls.mjs\";\nimport { createCompiledNativeModel } from \"../../src/build/native-graph-model.mjs\";\nimport { ownedRustReceiverSource } from \"./owned-rust-receiver-fixture.mjs\";\nimport { ownedDotnetNativeProbe, ownedDotnetProbeLoader } from \"./owned-dotnet-native.mjs\";\nimport { instrumentOwnedDotnetReceivers, ownedDotnetReceiverProbe, ownedDotnetReceiverProject\n\t, ownedDotnetPlainReceiverProbe, ownedDotnetPlainReceiverSource } from \"./owned-dotnet-receiver-fixture.mjs\";\nimport { assertOwnedDotnetReceiverPackages } from \"./owned-dotnet-receiver-package-evidence.mjs\";\n",
+          "start": 253
+        },
+        {
+          "current": "const compareFiles = (item, generated, { ownedDotnetProbeLoader, ownedDotnetReceiverProject }) => {\n",
+          "previous": "const compareFiles = (item, generated) => {\n",
+          "start": 2104
+        },
+        {
+          "current": "\tconst modules = await ownedDotnetReceiverProducerModules();\n\tconst {\n\t\tgenerateOwnedCPackage, generateOwnedDotnetCalls, createCompiledNativeModel\n\t\t, ownedRustReceiverSource, ownedDotnetNativeProbe\n\t\t, instrumentOwnedDotnetReceivers\n\t\t, ownedDotnetReceiverProbe, ownedDotnetReceiverProject\n\t\t, ownedDotnetPlainReceiverProbe, ownedDotnetPlainReceiverSource\n\t} = modules;\n",
+          "previous": "",
+          "start": 3004
+        },
+        {
+          "current": "\t\tcompareFiles(item, generated, modules);\n",
+          "previous": "\t\tcompareFiles(item, generated);\n",
+          "start": 4636
+        },
+        {
+          "current": "\t\tcompareFiles(item, generated, modules);\n",
+          "previous": "\t\tcompareFiles(item, generated);\n",
+          "start": 7400
+        }
+      ],
+      "path": "tests/helpers/owned-dotnet-receiver-evidence.mjs",
+      "previousSha256": "192c2db0565dc5d316f4ce2d73991efdbcdb89aa77c1b12e80ef95910a6a9719"
+    },
+    {
+      "currentSha256": "5092f8b2b39e4a83e6a2b6aa170539a2a01fcd9274132608ac04a286cf2b48e2",
+      "edits": [
+        {
+          "current": "import { moduleAtProducerWithSourceReads } from \"./producer-module.mjs\";\n",
+          "previous": "import { generateOwnedCPackage } from \"../../src/backends/c/owned-package.mjs\";\nimport { generateOwnedDotnetPackage } from \"../../src/backends/dotnet/owned-package.mjs\";\nimport { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from \"../../src/build/native-graph-model.mjs\";\nimport { ownedDotnetAdapterSources } from \"../../src/build/owned-dotnet-artifacts.mjs\";\nimport { validatePackageSetReceipt } from \"../../src/release/package-set-receipt.mjs\";\nimport { ownedRustReceiverSource } from \"./owned-rust-receiver-fixture.mjs\";\nimport { ownedDotnetInstalledReceiverProbe, ownedDotnetReceiverInvalidPrograms } from \"./owned-dotnet-receiver-installed.mjs\";\n",
+          "start": 339
+        },
+        {
+          "current": "/** The commit whose complete source tree every digest in the .NET receiver record names. */\nexport const ownedDotnetReceiverProducer = \"58750ab55e52114fa1d48715216fc5c049f4d683\";\nlet producerPromise;\n/**\n * Load the producer's generators, probes and fixtures; later changes never reach back.\n *\n * @returns {Promise<object>} Every export of the receiver record's producer modules.\n */\nexport const ownedDotnetReceiverProducerModules = () => producerPromise ??= Promise.all([\n\t\"src/backends/c/owned-package.mjs\"\n\t, \"src/backends/dotnet/owned-calls.mjs\"\n\t, \"src/backends/dotnet/owned-package.mjs\"\n\t, \"src/build/native-graph-model.mjs\"\n\t, \"src/build/owned-dotnet-artifacts.mjs\"\n\t, \"src/release/package-set-receipt.mjs\"\n\t, \"tests/helpers/owned-dotnet-native.mjs\"\n\t, \"tests/helpers/owned-dotnet-receiver-fixture.mjs\"\n\t, \"tests/helpers/owned-dotnet-receiver-installed.mjs\"\n\t, \"tests/helpers/owned-rust-receiver-fixture.mjs\"\n].map(path => moduleAtProducerWithSourceReads(ownedDotnetReceiverProducer, path)))\n\t.then(modules => Object.assign({}, ...modules));\n",
+          "previous": "",
+          "start": 413
+        },
+        {
+          "current": "\tconst {\n\t\tgenerateOwnedCPackage, generateOwnedDotnetPackage\n\t\t, createCompiledNativeModel, generateCompiledNativeLeanAdapters\n\t\t, ownedDotnetAdapterSources, validatePackageSetReceipt\n\t\t, ownedRustReceiverSource\n\t\t, ownedDotnetInstalledReceiverProbe, ownedDotnetReceiverInvalidPrograms\n\t} = await ownedDotnetReceiverProducerModules();\n",
+          "previous": "",
+          "start": 2065
+        }
+      ],
+      "path": "tests/helpers/owned-dotnet-receiver-package-evidence.mjs",
+      "previousSha256": "a7020bdae2ca2e617a8807dd785e4ca4dc286f2a9c76816a600953f1557f7141"
+    },
+    {
+      "currentSha256": "e0eed59d843b175e5677e0caa738d664c87edddc73618019a9873c9d0737dc64",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { generateOwnedNativeValueAdapters } from \"../../src/backends/native/owned-value-adapters.mjs\";\nimport { ownedAggregateTransferRuntime } from \"../../src/backends/native/owned-aggregate-transfers.mjs\";\nimport { generateOwnedWasmComponent } from \"../../src/backends/javascript/owned-wasm-component.mjs\";\nimport { generateJavaScriptPackage } from \"../../src/backends/javascript/generate.mjs\";\nimport { createOwnedJavaScriptWasmModel, generateOwnedJavaScriptWasmLeanAdapters } from \"../../src/build/javascript-wasm-owned-model.mjs\";\nimport { generateCompiledJavaScriptWasmOwned } from \"../../src/build/javascript-wasm-owned-sources.mjs\";\nimport { assertComponentOwnedWasmBindings } from \"../../src/abi/component-owned-wasm.mjs\";\nimport { ownedJavaScriptWasmNativeProbe } from \"./owned-javascript-wasm-native.mjs\";\n",
+          "start": 255
+        },
+        {
+          "current": "",
+          "previous": "import { ownedRustReceiverSource } from \"./owned-rust-receiver-fixture.mjs\";\nimport { ownedJvmPlainReceiverSource } from \"./owned-jvm-receiver-fixture.mjs\";\n",
+          "start": 433
+        },
+        {
+          "current": "import { moduleAtProducerWithSourceReads } from \"./producer-module.mjs\";\n",
+          "previous": "",
+          "start": 515
+        },
+        {
+          "current": "/** The commit whose complete source tree every digest in the JavaScript receiver record names. */\nexport const ownedJavaScriptReceiverProducer = \"3195b47fc2ef224a6b4d92501e0dadefb3b9a1f0\";\nlet producerPromise;\n// Components, models, packages and probes are regenerated with the producer's generators; later changes never reach back.\nconst producerModules = () => producerPromise ??= Promise.all([\n\t\"src/backends/native/owned-value-adapters.mjs\"\n\t, \"src/backends/native/owned-aggregate-transfers.mjs\"\n\t, \"src/backends/javascript/owned-wasm-component.mjs\"\n\t, \"src/backends/javascript/generate.mjs\"\n\t, \"src/build/javascript-wasm-owned-model.mjs\"\n\t, \"src/build/javascript-wasm-owned-sources.mjs\"\n\t, \"src/abi/component-owned-wasm.mjs\"\n\t, \"tests/helpers/owned-javascript-wasm-native.mjs\"\n\t, \"tests/helpers/owned-rust-receiver-fixture.mjs\"\n\t, \"tests/helpers/owned-jvm-receiver-fixture.mjs\"\n].map(path => moduleAtProducerWithSourceReads(ownedJavaScriptReceiverProducer, path)))\n\t.then(modules => Object.assign({}, ...modules));\n",
+          "previous": "",
+          "start": 719
+        },
+        {
+          "current": "const compile = (modules, item, lean, kind = \"full\", probe = true) => {\n\tconst { generateOwnedNativeValueAdapters, generateOwnedWasmComponent\n\t\t, assertComponentOwnedWasmBindings\n\t\t, ownedJavaScriptWasmNativeProbe } = modules;\n",
+          "previous": "const compile = (item, lean, kind = \"full\", probe = true) => {\n",
+          "start": 3869
+        },
+        {
+          "current": "const installed = async (modules, item, name, lean, kind = \"full\") => {\n\tconst { createOwnedJavaScriptWasmModel, generateOwnedJavaScriptWasmLeanAdapters\n\t\t, generateCompiledJavaScriptWasmOwned, generateJavaScriptPackage } = modules;\n",
+          "previous": "const installed = async (item, name, lean, kind = \"full\") => {\n",
+          "start": 5904
+        },
+        {
+          "current": "\tconst modules = await producerModules();\n\tconst { ownedAggregateTransferRuntime, ownedJavaScriptWasmNativeProbe\n\t\t, ownedRustReceiverSource, ownedJvmPlainReceiverSource } = modules;\n",
+          "previous": "",
+          "start": 10132
+        },
+        {
+          "current": "\t\tassert.equal(item.profile, \"owned-javascript-receivers\"); compile(modules, item, lean);\n",
+          "previous": "\t\tassert.equal(item.profile, \"owned-javascript-receivers\"); compile(item, lean);\n",
+          "start": 10579
+        },
+        {
+          "current": "\t\tcompile(modules, item, unanchored ? lean : plainLean, unanchored ? \"unanchored\" : item.consuming ? \"consuming\" : \"plain\");\n",
+          "previous": "\t\tcompile(item, unanchored ? lean : plainLean, unanchored ? \"unanchored\" : item.consuming ? \"consuming\" : \"plain\");\n",
+          "start": 12287
+        },
+        {
+          "current": "\t\tassert.equal(item.profile, \"owned-javascript-receiver-gc\"); compile(modules, item, lean); drained(item);\n",
+          "previous": "\t\tassert.equal(item.profile, \"owned-javascript-receiver-gc\"); compile(item, lean); drained(item);\n",
+          "start": 12670
+        },
+        {
+          "current": "\t\tconst component = compile(modules, item, lean), source = ownedJavaScriptWasmNativeProbe(component);\n",
+          "previous": "\t\tconst component = compile(item, lean), source = ownedJavaScriptWasmNativeProbe(component);\n",
+          "start": 13093
+        },
+        {
+          "current": "\t\tassert.equal(item.profile, \"owned-javascript-receiver-coexistence\"); compile(modules, item, lean, \"full\", false);\n",
+          "previous": "\t\tassert.equal(item.profile, \"owned-javascript-receiver-coexistence\"); compile(item, lean, \"full\", false);\n",
+          "start": 14200
+        },
+        {
+          "current": "\t\tconst checked = await installed(modules, item, name, lean);\n",
+          "previous": "\t\tconst checked = await installed(item, name, lean);\n",
+          "start": 15525
+        },
+        {
+          "current": "\t\tconst checked = await installed(modules, item, name, unanchored ? lean : plainLean, item.kind);\n",
+          "previous": "\t\tconst checked = await installed(item, name, unanchored ? lean : plainLean, item.kind);\n",
+          "start": 16601
+        }
+      ],
+      "path": "tests/helpers/owned-javascript-receiver-evidence.mjs",
+      "previousSha256": "f53d37a168ed43b8dcf5dfe6885398fcfdec64b099e4300fb769fcf01a467708"
+    },
+    {
+      "currentSha256": "bc7ad9382e18f2ed49ae710dbc017ecf777f86c401244afefa2fdf31b1cd2640",
+      "edits": [
+        {
+          "current": "import { moduleAtProducerWithSourceReads } from \"./producer-module.mjs\";\nimport { bytesAtProducer } from \"./producer-source.mjs\";\n",
+          "previous": "import { generateOwnedCPackage } from \"../../src/backends/c/owned-package.mjs\";\nimport { generateOwnedPerlPackage } from \"../../src/backends/perl/owned-package.mjs\";\nimport { generateOwnedPerlXs } from \"../../src/backends/perl/owned-xs.mjs\";\nimport { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from \"../../src/build/native-graph-model.mjs\";\nimport { validatePackageSetReceipt } from \"../../src/release/package-set-receipt.mjs\";\nimport { ownedRustBorrowSource } from \"./owned-rust-borrow-fixture.mjs\";\n",
+          "start": 350
+        },
+        {
+          "current": "/** The commit whose complete source tree every digest in the Perl borrow record names. */\nexport const ownedPerlBorrowProducer = \"25745d5f3683a3919b40bbc8ce64f6140e615e39\";\nlet producerPromise;\n// Models, XS, packages and fixtures for the frozen receipt come from the producer; later changes never reach back.\nconst producerModules = () => producerPromise ??= Promise.all([\n\t\"src/backends/c/owned-package.mjs\"\n\t, \"src/backends/perl/owned-package.mjs\"\n\t, \"src/backends/perl/owned-xs.mjs\"\n\t, \"src/build/native-graph-model.mjs\"\n\t, \"src/release/package-set-receipt.mjs\"\n\t, \"tests/helpers/owned-rust-borrow-fixture.mjs\"\n].map(path => moduleAtProducerWithSourceReads(ownedPerlBorrowProducer, path)))\n\t.then(modules => Object.assign({}, ...modules));\n",
+          "previous": "",
+          "start": 900
+        },
+        {
+          "current": "\tconst { generateOwnedCPackage } = await producerModules();\n",
+          "previous": "",
+          "start": 6709
+        },
+        {
+          "current": "\tconst { createCompiledNativeModel, generateOwnedCPackage, generateOwnedPerlXs } = await producerModules();\n",
+          "previous": "",
+          "start": 9597
+        },
+        {
+          "current": "\tconst {\n\t\tcreateCompiledNativeModel, generateCompiledNativeLeanAdapters\n\t\t, generateOwnedPerlPackage\n\t\t, generateOwnedPerlXs, validatePackageSetReceipt, ownedRustBorrowSource\n\t} = await producerModules();\n",
+          "previous": "",
+          "start": 12911
+        },
+        {
+          "current": "\tconst assets = sha256(bytesAtProducer(ownedPerlBorrowProducer, \"tests/fixtures/structured-types/owned-perl-installed-assets.pl\"));\n",
+          "previous": "\tconst assets = sha256(await readFile(\"tests/fixtures/structured-types/owned-perl-installed-assets.pl\"));\n",
+          "start": 13335
+        }
+      ],
+      "path": "tests/helpers/owned-perl-borrow-evidence.mjs",
+      "previousSha256": "32d159ff6a8c2baed3c0fa8f3b44772304e1fd6aa2fc958bb62cfcb55f4bed55"
+    },
+    {
+      "currentSha256": "7d2b02987e432dcc2bbc867fdf852230d4f642f51b456a7e534b2cbfaaed3de9",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { createCompiledNativeModel } from \"../../src/build/native-graph-model.mjs\";\nimport { generateOwnedCPackage } from \"../../src/backends/c/owned-package.mjs\";\nimport { generateOwnedPerlXs } from \"../../src/backends/perl/owned-xs.mjs\";\nimport { ownedReceiverSource } from \"./owned-receiver-fixture.mjs\";\nimport { ownedRustReceiverSource } from \"./owned-rust-receiver-fixture.mjs\";\n",
+          "start": 239
+        },
+        {
+          "current": "import { moduleAtProducerWithSourceReads } from \"./producer-module.mjs\";\n",
+          "previous": "import { ownedPerlReceiverProbe, ownedPerlPlainReceiverProbe, ownedPerlUnanchoredReceiverProbe } from \"./owned-perl-receiver-fixture.mjs\";\n",
+          "start": 326
+        },
+        {
+          "current": "/** The commit whose complete source tree every digest in the Perl receiver record names. */\nexport const ownedPerlReceiverProducer = \"ffc4b5d9c881be809a17649c545be8bbb24a0110\";\nlet producerPromise;\n/**\n * Load the producer's generators, probes and fixtures; later changes never reach back.\n *\n * @returns {Promise<object>} Every export of the receiver record's producer modules.\n */\nexport const ownedPerlReceiverProducerModules = () => producerPromise ??= Promise.all([\n\t\"src/backends/c/owned-package.mjs\"\n\t, \"src/backends/perl/owned-package.mjs\"\n\t, \"src/backends/perl/owned-xs.mjs\"\n\t, \"src/build/native-graph-model.mjs\"\n\t, \"src/release/package-set-receipt.mjs\"\n\t, \"tests/helpers/owned-perl-receiver-fixture.mjs\"\n\t, \"tests/helpers/owned-receiver-fixture.mjs\"\n\t, \"tests/helpers/owned-rust-receiver-fixture.mjs\"\n].map(path => moduleAtProducerWithSourceReads(ownedPerlReceiverProducer, path)))\n\t.then(modules => Object.assign({}, ...modules));\n",
+          "previous": "",
+          "start": 680
+        },
+        {
+          "current": "\tconst {\n\t\tcreateCompiledNativeModel, generateOwnedCPackage, generateOwnedPerlXs\n\t\t, ownedReceiverSource, ownedRustReceiverSource, ownedPerlReceiverProbe\n\t\t, ownedPerlPlainReceiverProbe, ownedPerlUnanchoredReceiverProbe\n\t} = await ownedPerlReceiverProducerModules();\n",
+          "previous": "",
+          "start": 5761
+        }
+      ],
+      "path": "tests/helpers/owned-perl-receiver-evidence.mjs",
+      "previousSha256": "602a2cca0244646b31c103aeeb9de4406c45269427b68f1370dad044188b0432"
+    },
+    {
+      "currentSha256": "e47355b289a8ef6c4cabf08ffdec434aceb6753d5d41dc80e65fa9337644bba8",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { generateOwnedPerlPackage } from \"../../src/backends/perl/owned-package.mjs\";\nimport { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from \"../../src/build/native-graph-model.mjs\";\nimport { validatePackageSetReceipt } from \"../../src/release/package-set-receipt.mjs\";\nimport { ownedReceiverSource } from \"./owned-receiver-fixture.mjs\";\nimport { ownedRustReceiverSource } from \"./owned-rust-receiver-fixture.mjs\";\nimport { ownedPerlReceiverProbe, ownedPerlPlainReceiverProbe } from \"./owned-perl-receiver-fixture.mjs\";\n",
+          "start": 331
+        },
+        {
+          "current": "\t, ownedPerlReceiverCommand, ownedPerlReceiverProducer, ownedPerlReceiverProducerModules\n\t, ownedPerlReceiverVariant } from \"./owned-perl-receiver-evidence.mjs\";\nimport { bytesAtProducer } from \"./producer-source.mjs\";\n",
+          "previous": "\t, ownedPerlReceiverCommand, ownedPerlReceiverVariant } from \"./owned-perl-receiver-evidence.mjs\";\n",
+          "start": 437
+        },
+        {
+          "current": "\tconst {\n\t\tcreateCompiledNativeModel, generateCompiledNativeLeanAdapters\n\t\t, generateOwnedPerlPackage\n\t\t, validatePackageSetReceipt, ownedReceiverSource, ownedRustReceiverSource\n\t\t, ownedPerlReceiverProbe, ownedPerlPlainReceiverProbe\n\t} = await ownedPerlReceiverProducerModules();\n",
+          "previous": "",
+          "start": 4308
+        },
+        {
+          "current": "\tconst assets = sha256(bytesAtProducer(ownedPerlReceiverProducer, \"tests/fixtures/structured-types/owned-perl-installed-assets.pl\"));\n",
+          "previous": "\tconst assets = sha256(await readFile(\"tests/fixtures/structured-types/owned-perl-installed-assets.pl\"));\n",
+          "start": 9833
+        },
+        {
+          "current": "\tconst { validatePackageSetReceipt } = await ownedPerlReceiverProducerModules();\n",
+          "previous": "",
+          "start": 12791
+        }
+      ],
+      "path": "tests/helpers/owned-perl-receiver-package-evidence.mjs",
+      "previousSha256": "e852fed1d778099afbe15e80f9c6be1d2d9073db4eb1552c5d799f76fd0378fe"
+    },
+    {
+      "currentSha256": "01376fe34d81c6d22b35c28156b3032364013e0bfdff55bc0c8d967dbc33b193",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { generateOwnedCPackage } from \"../../src/backends/c/owned-package.mjs\";\nimport { generateOwnedPhpCalls } from \"../../src/backends/php/owned-calls.mjs\";\n",
+          "start": 326
+        },
+        {
+          "current": "",
+          "previous": "import { ownedPhpReceiverProbe, ownedPhpPlainReceiverProbe, ownedPhpRetiredIdentityProbe, ownedPhpUnanchoredReceiverProbe } from \"./owned-php-receiver-fixture.mjs\";\n",
+          "start": 483
+        },
+        {
+          "current": "import { moduleAtProducerWithSourceReads } from \"./producer-module.mjs\";\n",
+          "previous": "",
+          "start": 576
+        },
+        {
+          "current": "/** The commit whose complete source tree every digest in the native PHP receiver record names. */\nexport const ownedPhpReceiverProducer = \"16fadc8add3769e83852c51d6ad89e6dedfb6c06\";\nlet producerPromise;\n/**\n * Load the producer's generators, probes and fixtures; later changes never reach back.\n *\n * @returns {Promise<object>} Every export of the receiver record's producer modules.\n */\nexport const ownedPhpReceiverProducerModules = () => producerPromise ??= Promise.all([\n\t\"src/backends/c/owned-package.mjs\"\n\t, \"src/backends/php/owned-calls.mjs\"\n\t, \"src/backends/php/owned-package.mjs\"\n\t, \"src/build/native-graph-model.mjs\"\n\t, \"src/build/owned-php-artifacts.mjs\"\n\t, \"src/release/package-set-receipt.mjs\"\n\t, \"tests/helpers/owned-jvm-receiver-fixture.mjs\"\n\t, \"tests/helpers/owned-php-receiver-fixture.mjs\"\n\t, \"tests/helpers/owned-rust-receiver-fixture.mjs\"\n].map(path => moduleAtProducerWithSourceReads(ownedPhpReceiverProducer, path)))\n\t.then(modules => Object.assign({}, ...modules));\nconst liveModelModules = { createCompiledNativeModel, ownedJvmPlainReceiverSource, ownedRustReceiverSource };\n",
+          "previous": "",
+          "start": 725
+        },
+        {
+          "current": " * @param modules - Model builder and fixture sources; frozen receipts pass their producer's.\n",
+          "previous": "",
+          "start": 3526
+        },
+        {
+          "current": "export const ownedPhpReceiverModel = async (item, { plain = false, unanchored = false, consuming = true } = {}, modules = liveModelModules) => {\n\tconst { createCompiledNativeModel: createModel\n\t\t, ownedJvmPlainReceiverSource: plainSource\n\t\t, ownedRustReceiverSource: anchoredSource } = modules;\n",
+          "previous": "export const ownedPhpReceiverModel = async (item, { plain = false, unanchored = false, consuming = true } = {}) => {\n",
+          "start": 3624
+        },
+        {
+          "current": "\t\t, sha256(lean + (plain ? plainSource : anchoredSource)));\n",
+          "previous": "\t\t, sha256(lean + (plain ? ownedJvmPlainReceiverSource : ownedRustReceiverSource)));\n",
+          "start": 4271
+        },
+        {
+          "current": "\tconst model = createModel(item.input, {\n",
+          "previous": "\tconst model = createCompiledNativeModel(item.input, {\n",
+          "start": 4666
+        },
+        {
+          "current": "\tconst modules = await ownedPhpReceiverProducerModules();\n\tconst {\n\t\tgenerateOwnedCPackage, generateOwnedPhpCalls, ownedPhpReceiverProbe\n\t\t, ownedPhpPlainReceiverProbe, ownedPhpRetiredIdentityProbe\n\t\t, ownedPhpUnanchoredReceiverProbe\n\t} = modules;\n",
+          "previous": "",
+          "start": 8625
+        },
+        {
+          "current": "\t\tconst { model, capabilities } = await ownedPhpReceiverModel(item, { plain, unanchored, consuming }, modules);\n",
+          "previous": "\t\tconst { model, capabilities } = await ownedPhpReceiverModel(item, { plain, unanchored, consuming });\n",
+          "start": 9098
+        }
+      ],
+      "path": "tests/helpers/owned-php-receiver-evidence.mjs",
+      "previousSha256": "ebcce547371c027fcad3ae1eb889e80698736cf9efe55fd05824c9254cab0472"
+    },
+    {
+      "currentSha256": "3a6dd09f70828360c08d91209b0492ed83dd14540b0e3c4c52bdf989ae1c776c",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { generateCompiledNativeLeanAdapters } from \"../../src/build/native-graph-model.mjs\";\nimport { generateOwnedCPackage } from \"../../src/backends/c/owned-package.mjs\";\nimport { generateOwnedPhpPackage } from \"../../src/backends/php/owned-package.mjs\";\nimport { ownedPhpAdapterSources } from \"../../src/build/owned-php-artifacts.mjs\";\nimport { validatePackageSetReceipt } from \"../../src/release/package-set-receipt.mjs\";\n",
+          "start": 252
+        },
+        {
+          "current": "import { ownedPhpReceiverCommand, ownedPhpReceiverScope, ownedPhpReceiverModel\n\t, ownedPhpReceiverProducerModules, assertOwnedPhpReceiverRuntime } from \"./owned-php-receiver-evidence.mjs\";\n",
+          "previous": "import { ownedPhpReceiverCommand, ownedPhpReceiverScope, ownedPhpReceiverModel, assertOwnedPhpReceiverRuntime } from \"./owned-php-receiver-evidence.mjs\";\nimport { ownedPhpInstalledReceiverProbe, ownedPhpPlainInstalledReceiverProbe } from \"./owned-php-receiver-fixture.mjs\";\n",
+          "start": 313
+        },
+        {
+          "current": "\tconst modules = await ownedPhpReceiverProducerModules();\n\tconst {\n\t\tgenerateCompiledNativeLeanAdapters, generateOwnedCPackage\n\t\t, generateOwnedPhpPackage\n\t\t, ownedPhpAdapterSources, validatePackageSetReceipt\n\t\t, ownedPhpInstalledReceiverProbe, ownedPhpPlainInstalledReceiverProbe\n\t} = modules;\n\tconst { model, capabilities } = await ownedPhpReceiverModel(item, { plain, consuming }, modules);\n",
+          "previous": "\tconst { model, capabilities } = await ownedPhpReceiverModel(item, { plain, consuming });\n",
+          "start": 3809
+        },
+        {
+          "current": "\tconst { validatePackageSetReceipt } = await ownedPhpReceiverProducerModules();\n",
+          "previous": "",
+          "start": 13065
+        }
+      ],
+      "path": "tests/helpers/owned-php-receiver-package-evidence.mjs",
+      "previousSha256": "26cf52c3f2b71381606bcd9604eab4e529bec2ff4b98773bc4fdda38cfe4af45"
+    },
+    {
+      "currentSha256": "8c4be76dbca43db70be55e9cedc37535c8ecc6c3a994dbc302da4873fc85c56c",
+      "edits": [
+        {
+          "current": "import { moduleAtProducerWithSourceReads } from \"./producer-module.mjs\";\n",
+          "previous": "import { generateOwnedNativeValueAdapters } from \"../../src/backends/native/owned-value-adapters.mjs\";\nimport { ownedAggregateTransferRuntime } from \"../../src/backends/native/owned-aggregate-transfers.mjs\";\nimport { ownedAggregateLeaseRuntime } from \"../../src/backends/native/owned-aggregate-leases.mjs\";\nimport { generateOwnedPhpZendExtension } from \"../../src/backends/php/owned-zend-extension.mjs\";\nimport { generateOwnedPhpZendPhp } from \"../../src/backends/php/owned-zend-php.mjs\";\nimport { compileOwnedPhpZendModel } from \"../../src/backends/php/owned-zend-model.mjs\";\nimport { bundledBrickMath } from \"../../src/backends/php/brick-math.mjs\";\nimport { nativeAllocationGuardHeader } from \"../../src/build/native-allocation-guard.mjs\";\nimport { createCompiledPhpWasmModel, generateCompiledPhpWasmLeanAdapters } from \"../../src/build/php-wasm-graph-model.mjs\";\nimport { generateCompiledPhpWasmOwned } from \"../../src/build/php-wasm-owned-component.mjs\";\nimport { phpWasmCopiedPins } from \"../../src/build/php-wasm-copied-artifacts.mjs\";\nimport { validatePackageSetReceipt } from \"../../src/release/package-set-receipt.mjs\";\n",
+          "start": 333
+        },
+        {
+          "current": "",
+          "previous": "import { ownedPhpWasmTransferProbe } from \"./owned-php-wasm-transfer-probe.mjs\";\n",
+          "start": 479
+        },
+        {
+          "current": "",
+          "previous": "import { ownedPhpInstalledReceiverProbe } from \"./owned-php-receiver-fixture.mjs\";\nimport { ownedPhpWasmInstalledHost } from \"./owned-php-wasm-packages.mjs\";\n",
+          "start": 617
+        },
+        {
+          "current": "export const ownedPhpWasmBorrowProducer = \"49555c6612107ef8e6a3f8f7576312a5c32da894\";\nconst producerPromises = new Map();\nconst producerModules = producer => {\n\tassert.match(producer, /^[a-f0-9]{40}$/u);\n\tif(!producerPromises.has(producer)) producerPromises.set(producer, Promise.all([\n\t\t\"src/backends/native/owned-value-adapters.mjs\"\n\t\t, \"src/backends/native/owned-aggregate-transfers.mjs\"\n\t\t, \"src/backends/native/owned-aggregate-leases.mjs\"\n\t\t, \"src/backends/php/owned-zend-extension.mjs\"\n\t\t, \"src/backends/php/owned-zend-php.mjs\"\n\t\t, \"src/backends/php/owned-zend-model.mjs\"\n\t\t, \"src/backends/php/brick-math.mjs\"\n\t\t, \"src/build/native-allocation-guard.mjs\"\n\t\t, \"src/build/php-wasm-graph-model.mjs\"\n\t\t, \"src/build/php-wasm-owned-component.mjs\"\n\t\t, \"src/build/php-wasm-copied-artifacts.mjs\"\n\t\t, \"src/release/package-set-receipt.mjs\"\n\t\t, \"tests/helpers/owned-php-wasm-transfer-probe.mjs\"\n\t].map(path => moduleAtProducerWithSourceReads(producer, path)))\n\t\t.then(modules => Object.assign({}, ...modules)));\n\treturn producerPromises.get(producer);\n};\n",
+          "previous": "",
+          "start": 832
+        },
+        {
+          "current": " * @param producer - Exact generator revision for this receipt's family.\n",
+          "previous": "",
+          "start": 2181
+        },
+        {
+          "current": "export const assertOwnedPhpWasmBorrowPackages = async (packages, lean, receiverExports = false, producer = ownedPhpWasmBorrowProducer) => {\n\tconst {\n\t\tphpWasmCopiedPins, createCompiledPhpWasmModel\n\t\t, generateCompiledPhpWasmLeanAdapters, generateCompiledPhpWasmOwned\n\t\t, validatePackageSetReceipt, compileOwnedPhpZendModel\n\t} = await producerModules(producer);\n\tconst receiver = receiverExports ? Object.assign({}, ...await Promise.all([\n\t\t\"tests/helpers/owned-php-receiver-fixture.mjs\"\n\t\t, \"tests/helpers/owned-php-wasm-packages.mjs\"\n\t].map(path => moduleAtProducerWithSourceReads(producer, path)))) : null;\n",
+          "previous": "export const assertOwnedPhpWasmBorrowPackages = async (packages, lean, receiverExports = false) => {\n",
+          "start": 2258
+        },
+        {
+          "current": "\t\tconst consumer = (receiverExports ? await receiver.ownedPhpInstalledReceiverProbe() : await fixture(\"owned-installed-php-borrows\"))\n",
+          "previous": "\t\tconst consumer = (receiverExports ? await ownedPhpInstalledReceiverProbe() : await fixture(\"owned-installed-php-borrows\"))\n",
+          "start": 5704
+        },
+        {
+          "current": "\t\tif(receiverExports) assert.equal(item.runnerSha256, sha256(receiver.ownedPhpWasmInstalledHost(item.packageReceipt.npmSettings.name, true)));\n",
+          "previous": "\t\tif(receiverExports) assert.equal(item.runnerSha256, sha256(ownedPhpWasmInstalledHost(item.packageReceipt.npmSettings.name, true)));\n",
+          "start": 6135
+        },
+        {
+          "current": " * @param producer - Exact generator revision for this receipt's family.\n",
+          "previous": "",
+          "start": 11971
+        },
+        {
+          "current": "export const assertOwnedPhpWasmBorrowRuntime = async (item, receiverExports = false, producer = ownedPhpWasmBorrowProducer) => {\n\tconst {\n\t\tgenerateOwnedNativeValueAdapters, generateOwnedPhpZendExtension\n\t\t, generateOwnedPhpZendPhp, bundledBrickMath\n\t\t, ownedAggregateLeaseRuntime, ownedAggregateTransferRuntime\n\t\t, nativeAllocationGuardHeader, ownedPhpWasmTransferProbe\n\t} = await producerModules(producer);\n",
+          "previous": "export const assertOwnedPhpWasmBorrowRuntime = async (item, receiverExports = false) => {\n",
+          "start": 12048
+        },
+        {
+          "current": " * @param producer - Exact generator revision for this receipt's family.\n",
+          "previous": "",
+          "start": 18628
+        },
+        {
+          "current": "export const assertOwnedPhpWasmBorrowFibers = async (item, receiverExports = false, producer = ownedPhpWasmBorrowProducer) => {\n\tconst {\n\t\tgenerateOwnedNativeValueAdapters, generateOwnedPhpZendExtension\n\t\t, generateOwnedPhpZendPhp, bundledBrickMath\n\t\t, ownedAggregateTransferRuntime, ownedPhpWasmTransferProbe\n\t} = await producerModules(producer);\n",
+          "previous": "export const assertOwnedPhpWasmBorrowFibers = async (item, receiverExports = false) => {\n",
+          "start": 18705
+        },
+        {
+          "current": "\tconst { validatePackageSetReceipt } = await producerModules(ownedPhpWasmBorrowProducer);\n",
+          "previous": "",
+          "start": 21990
+        }
+      ],
+      "path": "tests/helpers/owned-php-wasm-borrow-evidence.mjs",
+      "previousSha256": "eb17ae94a237b98769b9b0f0300d9fed15d0db611092214bc6da1d037592eeb2"
+    },
+    {
+      "currentSha256": "00c7da6545eb54d8f3d10babc59884bd1a82219aa27181971b2a2f6488362284",
+      "edits": [
+        {
+          "current": "import { moduleAtProducerWithSourceReads } from \"./producer-module.mjs\";\n",
+          "previous": "import { createCompiledPhpWasmModel, generateCompiledPhpWasmLeanAdapters } from \"../../src/build/php-wasm-graph-model.mjs\";\nimport { generateCompiledPhpWasmOwned } from \"../../src/build/php-wasm-owned-component.mjs\";\nimport { phpWasmCopiedPins } from \"../../src/build/php-wasm-copied-artifacts.mjs\";\nimport { validatePackageSetReceipt } from \"../../src/release/package-set-receipt.mjs\";\n",
+          "start": 252
+        },
+        {
+          "current": "",
+          "previous": "import { ownedPhpPlainInstalledReceiverProbe, ownedPhpUnanchoredReceiverProbe } from \"./owned-php-receiver-fixture.mjs\";\nimport { ownedPhpWasmInstalledHost } from \"./owned-php-wasm-packages.mjs\";\n",
+          "start": 482
+        },
+        {
+          "current": "export const ownedPhpWasmReceiverProducer = \"a56a39a7e959067643b545800b7d5e95082beafd\";\nlet producerPromise;\nconst producerModules = () => producerPromise ??= Promise.all([\n\t\"src/build/php-wasm-graph-model.mjs\"\n\t, \"src/build/php-wasm-owned-component.mjs\"\n\t, \"src/build/php-wasm-copied-artifacts.mjs\"\n\t, \"src/release/package-set-receipt.mjs\"\n\t, \"tests/helpers/owned-php-receiver-fixture.mjs\"\n\t, \"tests/helpers/owned-php-wasm-packages.mjs\"\n].map(path => moduleAtProducerWithSourceReads(ownedPhpWasmReceiverProducer, path)))\n\t.then(modules => Object.assign({}, ...modules));\n",
+          "previous": "",
+          "start": 904
+        },
+        {
+          "current": "const resourceConsumer = async (consuming, unanchored, installed) => {\n\tconst { ownedPhpPlainInstalledReceiverProbe, ownedPhpUnanchoredReceiverProbe } = await producerModules();\n",
+          "previous": "const resourceConsumer = (consuming, unanchored, installed) => {\n",
+          "start": 3513
+        },
+        {
+          "current": "export const assertOwnedPhpWasmReceiverResource = async (item, lean, installed = false) => {\n\tconst {\n\t\tcreateCompiledPhpWasmModel, generateCompiledPhpWasmLeanAdapters\n\t\t, generateCompiledPhpWasmOwned, phpWasmCopiedPins, ownedPhpWasmInstalledHost\n\t} = await producerModules();\n",
+          "previous": "export const assertOwnedPhpWasmReceiverResource = (item, lean, installed = false) => {\n",
+          "start": 5198
+        },
+        {
+          "current": "\tassert.equal(item.consumerSha256, sha256(await resourceConsumer(consuming, unanchored, installed)));\n",
+          "previous": "\tassert.equal(item.consumerSha256, sha256(resourceConsumer(consuming, unanchored, installed)));\n",
+          "start": 7383
+        },
+        {
+          "current": "\tconst { validatePackageSetReceipt } = await producerModules();\n",
+          "previous": "",
+          "start": 11047
+        },
+        {
+          "current": "\t\tawait assertOwnedPhpWasmBorrowRuntime(item, true, ownedPhpWasmReceiverProducer);\n",
+          "previous": "\t\tawait assertOwnedPhpWasmBorrowRuntime(item, true);\n",
+          "start": 12429
+        },
+        {
+          "current": "\tawait assertOwnedPhpWasmBorrowFibers(record.nativeFibers, true, ownedPhpWasmReceiverProducer);\n\tawait assertOwnedPhpWasmBorrowPackages(record.packages, lean + ownedRustReceiverSource, true, ownedPhpWasmReceiverProducer);\n",
+          "previous": "\tawait assertOwnedPhpWasmBorrowFibers(record.nativeFibers, true);\n\tawait assertOwnedPhpWasmBorrowPackages(record.packages, lean + ownedRustReceiverSource, true);\n",
+          "start": 12586
+        },
+        {
+          "current": "\t\tawait assertOwnedPhpWasmReceiverResource(item, lean, record.resourcePackages.includes(item));\n",
+          "previous": "\t\tassertOwnedPhpWasmReceiverResource(item, lean, record.resourcePackages.includes(item));\n",
+          "start": 12881
+        }
+      ],
+      "path": "tests/helpers/owned-php-wasm-receiver-evidence.mjs",
+      "previousSha256": "2382c0cacbbbcf139c2a9c31689730deb1b5583332449812f48749968b96fd3e"
+    },
+    {
+      "currentSha256": "afefc2f9a608809e6aeb88b627e83a94b4b6c347f951fbafd922842ffbe5fff7",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { createCompiledPhpWasmModel, generateCompiledPhpWasmLeanAdapters } from \"../../src/build/php-wasm-graph-model.mjs\";\nimport { generateCompiledPhpWasmOwned } from \"../../src/build/php-wasm-owned-component.mjs\";\nimport { phpWasmCopiedPins } from \"../../src/build/php-wasm-copied-artifacts.mjs\";\nimport { compileOwnedPhpZendModel } from \"../../src/backends/php/owned-zend-model.mjs\";\nimport { generateOwnedNativeValueAdapters } from \"../../src/backends/native/owned-value-adapters.mjs\";\nimport { generateOwnedPhpZendExtension } from \"../../src/backends/php/owned-zend-extension.mjs\";\nimport { validatePackageSetReceipt } from \"../../src/release/package-set-receipt.mjs\";\nimport { ownedRustTransferSource } from \"./owned-rust-transfer-fixture.mjs\";\nimport { ownedPhpWasmTransferProbe } from \"./owned-php-wasm-transfer-probe.mjs\";\n",
+          "start": 251
+        },
+        {
+          "current": "import { moduleAtProducerWithSourceReads } from \"./producer-module.mjs\";\nimport { sourceAtProducer } from \"./producer-source.mjs\";\n",
+          "previous": "",
+          "start": 393
+        },
+        {
+          "current": "/** The commit whose complete source tree every digest in the PHP-Wasm transfer record names. */\nexport const ownedPhpWasmTransferProducer = \"10463a29b72d47b01e11cc799d97589f2ca594fe\";\nlet producerPromise;\n// Models, packages, pins, probes and documentation come from the producer; later changes never reach back.\nconst producerModules = () => producerPromise ??= Promise.all([\n\t\"src/build/php-wasm-graph-model.mjs\"\n\t, \"src/build/php-wasm-owned-component.mjs\"\n\t, \"src/build/php-wasm-copied-artifacts.mjs\"\n\t, \"src/backends/php/owned-zend-model.mjs\"\n\t, \"src/backends/native/owned-value-adapters.mjs\"\n\t, \"src/backends/php/owned-zend-extension.mjs\"\n\t, \"src/release/package-set-receipt.mjs\"\n\t, \"tests/helpers/owned-rust-transfer-fixture.mjs\"\n\t, \"tests/helpers/owned-php-wasm-transfer-probe.mjs\"\n].map(path => moduleAtProducerWithSourceReads(ownedPhpWasmTransferProducer, path)))\n\t.then(modules => Object.assign({}, ...modules));\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\tconst {\n\t\tcreateCompiledPhpWasmModel, generateCompiledPhpWasmLeanAdapters\n\t\t, generateCompiledPhpWasmOwned\n\t\t, phpWasmCopiedPins, compileOwnedPhpZendModel\n\t\t, generateOwnedNativeValueAdapters\n\t\t, generateOwnedPhpZendExtension, validatePackageSetReceipt\n\t\t, ownedRustTransferSource, ownedPhpWasmTransferProbe\n\t} = await producerModules();\n",
+          "previous": "",
+          "start": 3988
+        },
+        {
+          "current": "\tconst author = sourceAtProducer(ownedPhpWasmTransferProducer, \"docs/publish/php.md\");\n\tconst consumer = sourceAtProducer(ownedPhpWasmTransferProducer, \"docs/php.md\");\n",
+          "previous": "\tconst author = await readFile(\"docs/publish/php.md\", \"utf8\"), consumer = await readFile(\"docs/php.md\", \"utf8\");\n",
+          "start": 11610
+        }
+      ],
+      "path": "tests/helpers/owned-php-wasm-transfer-evidence.mjs",
+      "previousSha256": "7375f06a53c3012987ec197f95c05e5de68b8f392a97bc647a38fefa8d08d04c"
+    },
+    {
+      "currentSha256": "0407dfab24edb5e8342ad929814e2506f9a04292fecb326bb23828c822e9c1bb",
+      "edits": [
+        {
+          "current": "import { moduleAtProducerWithSourceReads } from \"./producer-module.mjs\";\nimport { ownedRustBorrowSource } from \"./owned-rust-borrow-fixture.mjs\";\n",
+          "previous": "import { generateOwnedCPackage } from \"../../src/backends/c/owned-package.mjs\";\nimport { generateOwnedRubyConversions } from \"../../src/backends/ruby/owned-conversions.mjs\";\nimport { historicalOwnedRubyCallbackPackage as generateOwnedRubyPackage\n\t, historicalOwnedRubyCallbackRuntime as ownedRubyRuntime } from \"./owned-ruby-callback-generated-history.mjs\";\nimport { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from \"../../src/build/native-graph-model.mjs\";\nimport { ownedRubyAdapterSources } from \"../../src/build/owned-ruby-artifacts.mjs\";\nimport { validatePackageSetReceipt } from \"../../src/release/package-set-receipt.mjs\";\nimport { ownedRustBorrowSource, ownedRustBorrowNativeSource } from \"./owned-rust-borrow-fixture.mjs\";\n",
+          "start": 328
+        },
+        {
+          "current": "export const ownedRubyBorrowProducer = \"fbdcc20287f8491dbe6435be003a08733fa717c4\";\nexport const ownedRubyCloseProducer = \"85e684e746df8458e48f18ce2962b4a54ea3c989\";\nconst producerPromises = new Map();\nconst producerModules = producer => {\n\tif(!producerPromises.has(producer)) producerPromises.set(producer, Promise.all([\n\t\t\"src/backends/c/owned-package.mjs\"\n\t\t, \"src/backends/ruby/owned-conversions.mjs\"\n\t\t, \"src/backends/ruby/owned-package.mjs\"\n\t\t, \"src/backends/ruby/owned-runtime.mjs\"\n\t\t, \"src/build/native-graph-model.mjs\"\n\t\t, \"src/build/owned-ruby-artifacts.mjs\"\n\t\t, \"src/release/package-set-receipt.mjs\"\n\t\t, \"tests/helpers/owned-rust-borrow-fixture.mjs\"\n\t].map(path => moduleAtProducerWithSourceReads(producer, path)))\n\t\t.then(modules => Object.assign({}, ...modules)));\n\treturn producerPromises.get(producer);\n};\n",
+          "previous": "",
+          "start": 962
+        },
+        {
+          "current": " * @param producer - Original borrow or managed-close generator revision.\n",
+          "previous": "",
+          "start": 3643
+        },
+        {
+          "current": "export const assertOwnedRubyBorrowExecution = async (record, producer = ownedRubyBorrowProducer) => {\n",
+          "previous": "export const assertOwnedRubyBorrowExecution = async record => {\n",
+          "start": 3721
+        },
+        {
+          "current": "\tassert.equal(producer, repaired ? ownedRubyCloseProducer : ownedRubyBorrowProducer);\n",
+          "previous": "",
+          "start": 3973
+        },
+        {
+          "current": "\tconst {\n\t\tgenerateOwnedCPackage, generateOwnedRubyConversions, generateOwnedRubyPackage\n\t\t, ownedRubyRuntime, createCompiledNativeModel\n\t\t, generateCompiledNativeLeanAdapters, ownedRubyAdapterSources\n\t\t, validatePackageSetReceipt, ownedRustBorrowNativeSource\n\t} = await producerModules(producer);\n",
+          "previous": "",
+          "start": 4633
+        }
+      ],
+      "path": "tests/helpers/owned-ruby-borrow-evidence.mjs",
+      "previousSha256": "7bc2363c5f4a7eeb9770a6d3d25d934ae0d43dac939854bc2afc51a86a4369ee"
+    },
+    {
+      "currentSha256": "df05148a88459f43d8c1a4a1fe8cb80b390d7e961dbae11254fee3e6aab7bcdf",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { generateOwnedRubyConversions } from \"../../src/backends/ruby/owned-conversions.mjs\";\nimport { historicalOwnedRubyCallbackPackage as generateOwnedRubyPackage\n\t, historicalOwnedRubyCallbackRuntime as ownedRubyRuntime } from \"./owned-ruby-callback-generated-history.mjs\";\nimport { generateOwnedCPackage } from \"../../src/backends/c/owned-package.mjs\";\n",
+          "start": 328
+        },
+        {
+          "current": "import { moduleAtProducerWithSourceReads } from \"./producer-module.mjs\";\n",
+          "previous": "import { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from \"../../src/build/native-graph-model.mjs\";\nimport { ownedRubyAdapterSources } from \"../../src/build/owned-ruby-artifacts.mjs\";\nimport { validatePackageSetReceipt } from \"../../src/release/package-set-receipt.mjs\";\nimport { ownedRustTransferSource } from \"./owned-rust-transfer-fixture.mjs\";\n",
+          "start": 417
+        },
+        {
+          "current": "/** The commit whose complete source tree every digest in the Ruby transfer record names. */\nexport const ownedRubyTransferProducer = \"ea7759886937d82bc6c8c2c90f867b99e8ea10e0\";\nlet producerPromise;\n// Conversions, runtime, packages and adapters are regenerated with the producer's generators; later changes never reach back.\nconst producerModules = () => producerPromise ??= Promise.all([\n\t\"src/backends/ruby/owned-conversions.mjs\"\n\t, \"src/backends/ruby/owned-package.mjs\"\n\t, \"src/backends/ruby/owned-runtime.mjs\"\n\t, \"src/backends/c/owned-package.mjs\"\n\t, \"src/build/native-graph-model.mjs\"\n\t, \"src/build/owned-ruby-artifacts.mjs\"\n\t, \"src/release/package-set-receipt.mjs\"\n\t, \"tests/helpers/owned-rust-transfer-fixture.mjs\"\n].map(path => moduleAtProducerWithSourceReads(ownedRubyTransferProducer, path)))\n\t.then(modules => Object.assign({}, ...modules));\n",
+          "previous": "",
+          "start": 609
+        },
+        {
+          "current": "\tconst {\n\t\tgenerateOwnedRubyConversions, generateOwnedRubyPackage, ownedRubyRuntime\n\t\t, generateOwnedCPackage, createCompiledNativeModel\n\t\t, generateCompiledNativeLeanAdapters\n\t\t, ownedRubyAdapterSources, validatePackageSetReceipt, ownedRustTransferSource\n\t} = await producerModules();\n",
+          "previous": "",
+          "start": 3091
+        }
+      ],
+      "path": "tests/helpers/owned-ruby-transfer-evidence.mjs",
+      "previousSha256": "a2446f4e1850ec4c93848e71341797813f0ad43718adfecef2790a09a1a14d72"
+    },
+    {
+      "currentSha256": "e45c256709cc52db765dc467c7f0cd3c7105b50e0023068868bfcaa5c4c9cabd",
+      "edits": [
+        {
+          "current": "import { moduleAtProducerWithSourceReads } from \"./producer-module.mjs\";\n",
+          "previous": "import { generateOwnedCPackage } from \"../../src/backends/c/owned-package.mjs\";\nimport { generateOwnedCppPackage } from \"../../src/backends/cpp/owned-package.mjs\";\nimport { generateOwnedRustCallables } from \"../../src/backends/rust/owned-callables.mjs\";\nimport { generateOwnedRustPackage } from \"../../src/backends/rust/owned-package.mjs\";\nimport { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from \"../../src/build/native-graph-model.mjs\";\nimport { validatePackageSetReceipt } from \"../../src/release/package-set-receipt.mjs\";\nimport { ownedRustBorrowSource, ownedRustBorrowNativeSource } from \"./owned-rust-borrow-fixture.mjs\";\n",
+          "start": 333
+        },
+        {
+          "current": "/** The commit whose complete source tree every digest in the Rust borrow record names. */\nexport const ownedRustBorrowProducer = \"e14a880886634053116c9546ced265a345281b2a\";\nlet producerPromise;\n// Callables, packages and native probes are regenerated with the producer's generators; later changes never reach back.\nconst producerModules = () => producerPromise ??= Promise.all([\n\t\"src/backends/c/owned-package.mjs\"\n\t, \"src/backends/cpp/owned-package.mjs\"\n\t, \"src/backends/rust/owned-callables.mjs\"\n\t, \"src/backends/rust/owned-package.mjs\"\n\t, \"src/build/native-graph-model.mjs\"\n\t, \"src/release/package-set-receipt.mjs\"\n\t, \"tests/helpers/owned-rust-borrow-fixture.mjs\"\n].map(path => moduleAtProducerWithSourceReads(ownedRustBorrowProducer, path)))\n\t.then(modules => Object.assign({}, ...modules));\n",
+          "previous": "",
+          "start": 594
+        },
+        {
+          "current": "\tconst {\n\t\tgenerateOwnedCPackage, generateOwnedCppPackage, generateOwnedRustCallables\n\t\t, generateOwnedRustPackage\n\t\t, createCompiledNativeModel, generateCompiledNativeLeanAdapters\n\t\t, validatePackageSetReceipt\n\t\t, ownedRustBorrowSource, ownedRustBorrowNativeSource\n\t} = await producerModules();\n",
+          "previous": "",
+          "start": 3752
+        }
+      ],
+      "path": "tests/helpers/owned-rust-borrow-evidence.mjs",
+      "previousSha256": "08888a5c8880053757229d0abbda47638fdf69c25764efdfe6d1b11a2c9dae46"
+    },
+    {
+      "currentSha256": "1196aae5cc7b2e8646bc8a47fdc61bf445bb8e174cbe5d42f4fb773330dfb542",
+      "edits": [
+        {
+          "current": "\t\tassert.equal(sha256(reverseOwnedRubyBorrowCiUpdate(beforeOwnedDotnetBorrow(update.path, await readFile(update.path, \"utf8\"), update.currentSha256), update)), update.previousSha256);\n",
+          "previous": "\t\tassert.equal(sha256(reverseOwnedRubyBorrowCiUpdate(beforeOwnedDotnetBorrow(update.path, await readFile(update.path, \"utf8\")), update)), update.previousSha256);\n",
+          "start": 5545
+        },
+        {
+          "current": "\tconst path = \"src/adoption/test-profiles.mjs\", source = beforeOwnedDotnetBorrow(path, await readFile(path, \"utf8\"), record.sources[path]);\n",
+          "previous": "\tconst path = \"src/adoption/test-profiles.mjs\", source = beforeOwnedDotnetBorrow(path, await readFile(path, \"utf8\"));\n",
+          "start": 5732
+        },
+        {
+          "current": "\tconst indexPath = \"docs/type-surface.v1.json\", current = beforeOwnedDotnetBorrow(indexPath, await readFile(indexPath, \"utf8\"), record.sources[indexPath]);\n",
+          "previous": "\tconst indexPath = \"docs/type-surface.v1.json\", current = beforeOwnedDotnetBorrow(indexPath, await readFile(indexPath, \"utf8\"));\n",
+          "start": 6230
+        },
+        {
+          "current": "\t\tconst source = beforeOwnedDotnetBorrow(update.path, await readFile(update.path, \"utf8\"), update.currentSha256), unknown = source + \"\\n/* unrecorded */\\n\";\n",
+          "previous": "\t\tconst source = beforeOwnedDotnetBorrow(update.path, await readFile(update.path, \"utf8\")), unknown = source + \"\\n/* unrecorded */\\n\";\n",
+          "start": 6981
+        }
+      ],
+      "path": "tests/owned-ruby-borrow-evidence.test.mjs",
+      "previousSha256": "3cb934a0cea58fb98b5419e6f03fcb9c97e106104d0d2fe6b28650ba059b2b1a"
+    }
+  ]
+}
