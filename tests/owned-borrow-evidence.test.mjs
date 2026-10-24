@@ -37,7 +37,7 @@ test("C result-anchor evidence preserves immutable predecessors and binds curren
 		assert.equal(update.currentSha256, record.sources[update.path]);
 		const source = sourceAtProducer(ownedBorrowProducer, update.path, update.currentSha256), prior = beforeOwnedBorrow(update.path, source, update.previousSha256);
 		assert.equal(sha256(prior), update.previousSha256);
-		assert.equal(beforeOwnedBorrow(update.path, prior), prior);
+		assert.equal(beforeOwnedBorrow(update.path, prior, update.previousSha256), prior);
 		assert.equal(beforeOwnedBorrow(update.path, source, update.currentSha256), source);
 		const unknown = source + "\n/* unrelated */\n";
 		assert.equal(beforeOwnedBorrow(update.path, unknown), unknown);

@@ -36,7 +36,7 @@ test("C# lifetime repair authenticates exact source transitions without rewritin
 		const source = sourceAtProducer(ownedDotnetLifetimeProducer, update.path, update.currentSha256);
 		const prior = beforeOwnedDotnetLifetime(update.path, source, update.previousSha256);
 		assert.equal(sha256(prior), update.previousSha256);
-		assert.equal(beforeOwnedDotnetLifetime(update.path, prior), prior);
+		assert.equal(beforeOwnedDotnetLifetime(update.path, prior, update.previousSha256), prior);
 		assert.equal(beforeOwnedDotnetLifetime(update.path, source, update.currentSha256), source);
 		const unknown = source + "\n/* unrecorded change */\n";
 		assert.equal(beforeOwnedDotnetLifetime(update.path, unknown), unknown);
