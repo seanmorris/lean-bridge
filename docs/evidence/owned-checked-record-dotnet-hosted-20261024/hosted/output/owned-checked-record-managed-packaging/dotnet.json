@@ -1,0 +1,199 @@
+{
+  "group": "dotnet",
+  "profile": "installed-owned-checked-record-managed",
+  "reports": [
+    {
+      "authorRoute": "ordinary",
+      "deterministicReassembly": true,
+      "group": "dotnet",
+      "handoffRemovedBeforeRelocatedExecution": true,
+      "immutableInstalledInputs": true,
+      "mode": "full",
+      "observations": {
+        "dotnet": {
+          "checks": 130,
+          "consumerSha256": "0213927e6ae1640024f94b26db6294ba096071a42f95c8e49d96bd93bf468058"
+        }
+      },
+      "packageSetReceiptSha256": "53da8d1ba0d5fb8b30da760f60e388717702949dff79cf93d1ec145973c02e20",
+      "profiles": [
+        "dotnet"
+      ],
+      "reassembled": {
+        "componentReceiptSha256": "fc0430986f33e64f17a1a40767bee4b437491d712bdea63092926971dd78cc04",
+        "packages": [
+          {
+            "archive": "LeanBridge.OwnedCheckedRecords.1.0.0.nupkg",
+            "sha256": "b8b5d46cf9759cc81895f2a822a5b5b74e6ee969f0a670f2fcaea238725e88d1"
+          }
+        ]
+      },
+      "relocatedInstallation": true,
+      "repeated": {
+        "dotnet": {
+          "checks": 130,
+          "stdout": "owned-checked-record-dotnet:130\n"
+        }
+      },
+      "retainedPackageSet": {
+        "archiveBytes": 53982469,
+        "archives": 1,
+        "files": [
+          "archives/LeanBridge.OwnedCheckedRecords.1.0.0.nupkg",
+          "package-set-receipt.json",
+          "package-set-receipt.json.sha256"
+        ],
+        "path": "evidence/dotnet/ordinary-full/handoff",
+        "receiptSha256": "53da8d1ba0d5fb8b30da760f60e388717702949dff79cf93d1ec145973c02e20"
+      },
+      "route": "ordinary-full",
+      "sourceFreeInstallation": true,
+      "sourceUnchanged": true
+    },
+    {
+      "authorRoute": "ordinary",
+      "deterministicReassembly": true,
+      "group": "dotnet",
+      "handoffRemovedBeforeRelocatedExecution": true,
+      "immutableInstalledInputs": true,
+      "mode": "result-only",
+      "observations": {
+        "dotnet": {
+          "checks": 4,
+          "consumerSha256": "499f93bc714b3d30fabc7b76feea7aaf357585328f7130babccf12222fd16f01"
+        }
+      },
+      "packageSetReceiptSha256": "f37979a14edc387517e01a630383d07753f405d55695939ed333e4196c1e69e9",
+      "profiles": [
+        "dotnet"
+      ],
+      "reassembled": {
+        "componentReceiptSha256": "4ef6d45443701428588adbd000b5ce9332dc56183655eb47d272397cde25d958",
+        "packages": [
+          {
+            "archive": "LeanBridge.OwnedCheckedRecords.ResultOnly.1.0.0.nupkg",
+            "sha256": "dbfc38c443d3ef1824f0e7b28d7435ed1071444e998a820653a6f4aba9f9fd0c"
+          }
+        ]
+      },
+      "relocatedInstallation": true,
+      "repeated": {
+        "dotnet": {
+          "checks": 4,
+          "stdout": "owned-checked-record-result-only-dotnet:4\n"
+        }
+      },
+      "retainedPackageSet": {
+        "archiveBytes": 53911505,
+        "archives": 1,
+        "files": [
+          "archives/LeanBridge.OwnedCheckedRecords.ResultOnly.1.0.0.nupkg",
+          "package-set-receipt.json",
+          "package-set-receipt.json.sha256"
+        ],
+        "path": "evidence/dotnet/ordinary-result-only/handoff",
+        "receiptSha256": "f37979a14edc387517e01a630383d07753f405d55695939ed333e4196c1e69e9"
+      },
+      "route": "ordinary-result-only",
+      "sourceFreeInstallation": true,
+      "sourceUnchanged": true
+    },
+    {
+      "authorRoute": "reviewed",
+      "deterministicReassembly": true,
+      "group": "dotnet",
+      "handoffRemovedBeforeRelocatedExecution": true,
+      "immutableInstalledInputs": true,
+      "mode": "full",
+      "observations": {
+        "dotnet": {
+          "checks": 130,
+          "consumerSha256": "0213927e6ae1640024f94b26db6294ba096071a42f95c8e49d96bd93bf468058"
+        }
+      },
+      "packageSetReceiptSha256": "1b860ed63989eb1c0d3a7efebe33d4ea05a887c47a7164234b0cc26e7be84e5b",
+      "profiles": [
+        "dotnet"
+      ],
+      "reassembled": {
+        "componentReceiptSha256": "2360a7199ea1efb8df5f7da7088483a5e3ac219e82bb71a9025f87216aeee492",
+        "packages": [
+          {
+            "archive": "LeanBridge.OwnedCheckedRecords.1.0.0.nupkg",
+            "sha256": "d06fc3789a4a80c595da2b33b915d434ace89d2385617eea0f3fdd1b96daa7a4"
+          }
+        ]
+      },
+      "relocatedInstallation": true,
+      "repeated": {
+        "dotnet": {
+          "checks": 130,
+          "stdout": "owned-checked-record-dotnet:130\n"
+        }
+      },
+      "retainedPackageSet": {
+        "archiveBytes": 53985997,
+        "archives": 1,
+        "files": [
+          "archives/LeanBridge.OwnedCheckedRecords.1.0.0.nupkg",
+          "package-set-receipt.json",
+          "package-set-receipt.json.sha256"
+        ],
+        "path": "evidence/dotnet/reviewed-full/handoff",
+        "receiptSha256": "1b860ed63989eb1c0d3a7efebe33d4ea05a887c47a7164234b0cc26e7be84e5b"
+      },
+      "route": "reviewed-full",
+      "sourceFreeInstallation": true,
+      "sourceUnchanged": true
+    },
+    {
+      "authorRoute": "reviewed",
+      "deterministicReassembly": true,
+      "group": "dotnet",
+      "handoffRemovedBeforeRelocatedExecution": true,
+      "immutableInstalledInputs": true,
+      "mode": "result-only",
+      "observations": {
+        "dotnet": {
+          "checks": 4,
+          "consumerSha256": "499f93bc714b3d30fabc7b76feea7aaf357585328f7130babccf12222fd16f01"
+        }
+      },
+      "packageSetReceiptSha256": "16fa5b5cd0e1e1c3e1ae0dbdf614fac50d99b82939c9ab04efc43668b97d3a78",
+      "profiles": [
+        "dotnet"
+      ],
+      "reassembled": {
+        "componentReceiptSha256": "91e96622648e31b22e83e5315726e66e02ec8b53dcce780b69e0bdb229aa72da",
+        "packages": [
+          {
+            "archive": "LeanBridge.OwnedCheckedRecords.ResultOnly.1.0.0.nupkg",
+            "sha256": "627e1f8ce0bbb915fdf461f1d653d973844cb9e0abec3361521c953c25c354d5"
+          }
+        ]
+      },
+      "relocatedInstallation": true,
+      "repeated": {
+        "dotnet": {
+          "checks": 4,
+          "stdout": "owned-checked-record-result-only-dotnet:4\n"
+        }
+      },
+      "retainedPackageSet": {
+        "archiveBytes": 53914725,
+        "archives": 1,
+        "files": [
+          "archives/LeanBridge.OwnedCheckedRecords.ResultOnly.1.0.0.nupkg",
+          "package-set-receipt.json",
+          "package-set-receipt.json.sha256"
+        ],
+        "path": "evidence/dotnet/reviewed-result-only/handoff",
+        "receiptSha256": "16fa5b5cd0e1e1c3e1ae0dbdf614fac50d99b82939c9ab04efc43668b97d3a78"
+      },
+      "route": "reviewed-result-only",
+      "sourceFreeInstallation": true,
+      "sourceUnchanged": true
+    }
+  ],
+  "schemaVersion": 1
+}
