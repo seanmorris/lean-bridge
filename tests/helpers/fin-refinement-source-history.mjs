@@ -67,6 +67,7 @@ import { beforeGenericSubtypeCompactReferenceSource, genericSubtypeCompactRefere
 import { beforeGenericSubtypePromotionTransactionSource, genericSubtypePromotionTransactionNormalizationPaths } from "./generic-subtype-promotion-transaction-source-history.mjs";
 import { beforeGenericSubtypePromotionBaselineSource, genericSubtypePromotionBaselineNormalizationPaths } from "./generic-subtype-promotion-baseline-source-history.mjs";
 import { beforeOwnedNpmHistoryCheckoutSource, ownedNpmHistoryCheckoutNormalizationPaths } from "./owned-npm-history-checkout-source-history.mjs";
+import { beforeGenericSubtypeMatrixPublicationSource, genericSubtypeMatrixPublicationNormalizationPaths } from "./generic-subtype-matrix-publication-source-history.mjs";
 import { beforeCoreEvidenceMemoryRepairSource, coreEvidenceMemoryRepairNormalizationPaths } from "./core-evidence-memory-repair-source-history.mjs";
 import { beforeValueIndexPromotionMilestoneRepairSource, valueIndexPromotionMilestoneRepairNormalizationPaths } from "./value-index-promotion-milestone-repair-source-history.mjs";
 import { beforeCoreMilestoneReplayRepairSource, coreMilestoneReplayRepairNormalizationPaths } from "./core-milestone-replay-repair-source-history.mjs";
@@ -2160,7 +2161,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...ownedNpmHistoryCheckoutNormalizationPaths
+	...genericSubtypeMatrixPublicationNormalizationPaths
+	, ...ownedNpmHistoryCheckoutNormalizationPaths
 	, ...genericSubtypePromotionBaselineNormalizationPaths
 	, ...genericSubtypePromotionTransactionNormalizationPaths
 	, ...genericSubtypeCompactReferenceNormalizationPaths
@@ -3063,7 +3065,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeOwnedNpmHistoryCheckoutSource(path, text, expected);
+	let stage = beforeGenericSubtypeMatrixPublicationSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeOwnedNpmHistoryCheckoutSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;
