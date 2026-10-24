@@ -6,7 +6,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { assertOwnedJavaScriptWasmCi, ownedJavaScriptNpmTestCommand } from "./owned-javascript-wasm-ci.mjs";
+import { assertOwnedJavaScriptWasmCi } from "./owned-javascript-wasm-ci.mjs";
 
 export const ownedJavaScriptNpmScope = Object.freeze({
 	target: "wasm32", privateAbi: 10
@@ -19,8 +19,15 @@ export const ownedJavaScriptNpmScope = Object.freeze({
 	, nixDockerBuilds: false, signedPublication: false
 	, transferredInputs: false, anchoredResults: false, promotedCells: 0
 });
+export const ownedJavaScriptNpmEvidenceProducer = "239fd61ea7664dbfd8191207c6396975e6345726";
+// The archived run predates the separate Subtype packaging case. Keep its exact
+// command frozen while assertOwnedJavaScriptWasmCi still checks today's workflow.
+const ownedJavaScriptNpmMilestoneCommand = "node --test --test-concurrency=1 "
+	+ ["owned-javascript-wasm-model", "javascript-wasm-compiler-inputs"
+		, "owned-javascript-cli", "owned-javascript-wasm-build"]
+		.map(name => `tests/${name}.test.mjs`).join(" ");
 export const ownedJavaScriptNpmEvidenceCommands = Object.freeze({
-	execution: "LEAN_BRIDGE_OWNED_JS_WASM_BUILD_TEST=1 LEAN_BRIDGE_OWNED_JS_WASM_BROWSER_TEST=1 LEAN_BRIDGE_OWNED_JS_WASM_PREPARED_ROOT=/app/build/lean-link-spike-owned-20260928 EMCC_CORES=2 " + ownedJavaScriptNpmTestCommand
+	execution: "LEAN_BRIDGE_OWNED_JS_WASM_BUILD_TEST=1 LEAN_BRIDGE_OWNED_JS_WASM_BROWSER_TEST=1 LEAN_BRIDGE_OWNED_JS_WASM_PREPARED_ROOT=/app/build/lean-link-spike-owned-20260928 EMCC_CORES=2 " + ownedJavaScriptNpmMilestoneCommand
 	, ci: "node --test tests/owned-javascript-wasm-ci.test.mjs tests/owned-php-wasm-ci.test.mjs"
 });
 

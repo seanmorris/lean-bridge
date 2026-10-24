@@ -6,13 +6,19 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { generateOwnedJvmConversions } from "../../src/backends/jvm/owned-conversions.mjs";
-import { ownedJvmConversionNative } from "./owned-jvm-conversion-native.mjs";
-import { ownedJvmConversionProbeSource } from "./owned-jvm-conversion-calls.mjs";
+import { moduleAtProducerWithSourceReads } from "./producer-module.mjs";
 import { assertOwnedJvmRuntime, ownedJvmRuntimeReceipt } from "./owned-jvm-runtime-evidence.mjs";
 import { ownedJvmTransferHistoricalBytes } from "./owned-jvm-transfer-history.mjs";
 
 export const ownedJvmConversionReceipt = "docs/evidence/owned-jvm-conversions-20260927.json";
+export const ownedJvmConversionProducer = "b28ff217cc2b35ff9c8feb8cd262e32f8a5e05c9";
+let producerPromise;
+const producerModules = () => producerPromise ??= Promise.all([
+	"src/backends/jvm/owned-conversions.mjs"
+	, "tests/helpers/owned-jvm-conversion-native.mjs"
+	, "tests/helpers/owned-jvm-conversion-calls.mjs"
+].map(path => moduleAtProducerWithSourceReads(ownedJvmConversionProducer, path)))
+	.then(modules => Object.assign({}, ...modules));
 export const ownedJvmConversionCommand = "LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-jvm-conversions.test.mjs";
 export const ownedJvmConversionScope = {
 	compiledLean: true, ordinaryAndReviewed: true, scalarKinds: 19
@@ -60,6 +66,8 @@ export const assertOwnedJvmConversions = async record => {
 		assert.match(record.run.text, new RegExp("^# " + name + " " + count + "$", "mu"));
 	assert.doesNotMatch(record.run.text, /^not ok/mu);
 	assert.deepEqual(Object.keys(record.reports).sort(), ["ordinary", "reviewed", "scalars-ordinary", "scalars-reviewed"]);
+	const { generateOwnedJvmConversions, ownedJvmConversionNative
+		, ownedJvmConversionProbeSource } = await producerModules();
 	const template = await readFile("tests/fixtures/structured-types/owned-jvm-conversions.java", "utf8");
 	for(const [mode, report] of Object.entries(record.reports))
 	{

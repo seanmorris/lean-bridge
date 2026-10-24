@@ -6,14 +6,20 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { generateOwnedJvmCalls } from "../../src/backends/jvm/owned-calls.mjs";
-import { ownedJvmCallNative, ownedJvmCallProbeMethods } from "./owned-jvm-call-fixture.mjs";
+import { moduleAtProducerWithSourceReads } from "./producer-module.mjs";
 import { assertOwnedJvmConversions, ownedJvmConversionReceipt } from "./owned-jvm-conversion-evidence.mjs";
 import { jvmThreadExitHistoricalBytes } from "./jvm-thread-exit-repair-history.mjs";
 
 const historicalSource = async (path, expected) => jvmThreadExitHistoricalBytes(path, await readFile(path), expected);
 
 export const ownedJvmCallReceipt = "docs/evidence/owned-jvm-calls-20260927.json";
+export const ownedJvmCallProducer = "5b4bda6e479314eebf944848a2b4b24ae77a540a";
+let producerPromise;
+const producerModules = () => producerPromise ??= Promise.all([
+	"src/backends/jvm/owned-calls.mjs"
+	, "tests/helpers/owned-jvm-call-fixture.mjs"
+].map(path => moduleAtProducerWithSourceReads(ownedJvmCallProducer, path)))
+	.then(modules => Object.assign({}, ...modules));
 export const ownedJvmCallCommand = "LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-jvm-calls.test.mjs";
 export const ownedJvmCallScope = {
 	compiledLean: true, ordinaryAndReviewed: true, scalarKinds: 19
@@ -67,6 +73,8 @@ export const assertOwnedJvmCalls = async record => {
 	assert.doesNotMatch(record.run.text, /^not ok/mu);
 	const modes = ["values", "scalars", "signatures"].flatMap(kind => [kind + "-ordinary", kind + "-reviewed"]).sort();
 	assert.deepEqual(Object.keys(record.reports).sort(), modes);
+	const { generateOwnedJvmCalls, ownedJvmCallNative, ownedJvmCallProbeMethods }
+		= await producerModules();
 	const template = await readFile("tests/fixtures/structured-types/owned-jvm-calls.java", "utf8");
 	for(const [mode, report] of Object.entries(record.reports))
 	{
