@@ -15,6 +15,17 @@ import { ownedPythonCallbackNativeSource } from "./owned-python-callback-result-
 import { ownedPythonCallbackMutations } from "./owned-python-callback-result-mutations.mjs";
 import { normalizeOwnedPythonSanitizer } from "./owned-python-callback-result-sanitizers.mjs";
 
+const current = {
+	generateOwnedCPackage
+	, generateOwnedPythonPackage
+	, createCompiledNativeModel
+	, ownedPythonCallbackResultSource
+	, ownedPythonCallbackResultCombinedSource
+	, ownedPythonCallbackNativeSource
+	, ownedPythonCallbackMutations
+	, readSource: path => readFile(path, "utf8")
+};
+
 const faults = (hostCallbacks, combined) => [
 	["native-record", 42, 40], ["native-empty", 14, 5], ["retain", 41, 37]
 	, ...hostCallbacks ? [
@@ -35,8 +46,19 @@ const faults = (hostCallbacks, combined) => [
  * Rebuild generated code and require all three interpreter configurations.
  *
  * @param item - Complete executed runtime report.
+ * @param replay - Optional authenticated producer dependencies.
  */
-export const assertOwnedPythonCallbackRuntime = async item => {
+export const assertOwnedPythonCallbackRuntime = async (item, replay) => {
+	const {
+		generateOwnedCPackage
+		, generateOwnedPythonPackage
+		, createCompiledNativeModel
+		, ownedPythonCallbackResultSource
+		, ownedPythonCallbackResultCombinedSource
+		, ownedPythonCallbackNativeSource
+		, ownedPythonCallbackMutations
+		, readSource
+	} = replay ?? current;
 	assert.ok(["ordinary", "reviewed"].includes(item.mode));
 	assert.ok(["no-host", "host", "combined"].includes(item.name));
 	const combined = item.name === "combined", hostCallbacks = item.name !== "no-host";
@@ -55,8 +77,8 @@ export const assertOwnedPythonCallbackRuntime = async item => {
 	for(const key of ["resultAnchors", "inputTransfers", "receiverExports"])
 		assert.equal(Boolean(model.ownedGraph[key]), combined, key);
 	assert.equal(Boolean(item.input.sourceIdentity.reviewedBindingIr), item.mode === "reviewed");
-	assert.equal(item.input.sourceIdentity.extractorSha256, sha256(beforeFinRefinementSource("src/analyze/NativeExports.lean", await readFile("src/analyze/NativeExports.lean"), item.input.sourceIdentity.extractorSha256)));
-	const source = await readFile("tests/fixtures/onboarding/owned-aggregates/Owned.lean", "utf8");
+	assert.equal(item.input.sourceIdentity.extractorSha256, sha256(beforeFinRefinementSource("src/analyze/NativeExports.lean", await readSource("src/analyze/NativeExports.lean"), item.input.sourceIdentity.extractorSha256)));
+	const source = await readSource("tests/fixtures/onboarding/owned-aggregates/Owned.lean");
 	assert.equal(item.input.sourceIdentity.modules.find(value => value.module === "Owned").source.sha256
 		, sha256(source + (combined ? ownedPythonCallbackResultCombinedSource : ownedPythonCallbackResultSource)));
 	const c = generateOwnedCPackage(item.input);
@@ -69,7 +91,7 @@ export const assertOwnedPythonCallbackRuntime = async item => {
 		, ["runtimeSha256", generated.files[`${generated.packageDir}/_owned.py`]]
 	]) assert.equal(item[field], sha256(text), field);
 	const prefix = `HOST_CALLBACKS = ${hostCallbacks ? "True" : "False"}\nCOMBINED = ${combined ? "True" : "False"}\nINSTALLED = False\n`;
-	assert.equal(item.probeSha256, sha256(prefix + await readFile("tests/fixtures/structured-types/owned-python-callback-results.py", "utf8")));
+	assert.equal(item.probeSha256, sha256(prefix + await readSource("tests/fixtures/structured-types/owned-python-callback-results.py")));
 	assert.deepEqual(item.contract, generated.contract); assert.equal(item.contract.schemaVersion, 5);
 	assert.equal(item.actualLean, true); assert.equal(item.installedPackage, false);
 	assert.deepEqual(item.observations.map(({ name, typing }) => ({ name, typing })), [

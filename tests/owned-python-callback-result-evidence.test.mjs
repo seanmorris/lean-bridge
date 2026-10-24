@@ -12,6 +12,8 @@ import { unpackOwnedCallbackReports } from "./helpers/owned-callback-result-evid
 import { ownedPythonCallbackEvidencePath, assertOwnedPythonCallbackAcceptance
 	, assertOwnedPythonCallbackReport } from "./helpers/owned-python-callback-result-acceptance.mjs";
 import { ownedPythonCallbackReportMutations } from "./helpers/owned-python-callback-result-report-mutations.mjs";
+import { ownedPythonCallbackReplay } from "./helpers/owned-python-callback-result-replay.mjs";
+import "./helpers/owned-python-callback-result-replay-tests.mjs";
 
 const read = async () => JSON.parse(await readFile(ownedPythonCallbackEvidencePath, "utf8"));
 
@@ -41,12 +43,34 @@ test("Python callback acceptance rejects partial execution, substituted sources 
 	}
 });
 
-test("Python callback reports reject forged lifetime, fault, package and browser outcomes", async () => {
-	const reports = unpackOwnedCallbackReports((await read()).archive);
-	for(const [name, mutate] of ownedPythonCallbackReportMutations())
+let retained;
+const retainedReports = async () => {
+	if(retained) return retained;
+	const record = await read();
+	retained = { reports: unpackOwnedCallbackReports(record.archive)
+		, replay: await ownedPythonCallbackReplay(record.sources) };
+	return retained;
+};
+const groups = new Map();
+for(const [name, mutate] of ownedPythonCallbackReportMutations())
+{
+	if(!groups.has(name)) groups.set(name, []);
+	groups.get(name).push(mutate);
+}
+for(const [name, mutations] of groups)
+	for(let start = 0; start < mutations.length; start += 3)
 	{
-		const path = `build/owned-python-callback-results/${name}.json`;
-		const item = structuredClone(reports[path]); mutate(item);
-		await assert.rejects(() => assertOwnedPythonCallbackReport(path, item), undefined, name + ": " + mutate.toString());
+		const chunk = mutations.slice(start, start + 3);
+		test("Python callback report mutations: " + name + " " + (1 + start / 3), async () => {
+			const { reports, replay } = await retainedReports();
+			const path = `build/owned-python-callback-results/${name}.json`;
+			// A valid original must pass before its forged variants are rejected.
+			await assertOwnedPythonCallbackReport(path, reports[path], replay);
+			for(const mutate of chunk)
+			{
+				const item = structuredClone(reports[path]); mutate(item);
+				await assert.rejects(() => assertOwnedPythonCallbackReport(path, item, replay)
+					, undefined, name + ": " + mutate.toString());
+			}
+		});
 	}
-});

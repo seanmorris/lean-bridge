@@ -21,6 +21,7 @@ import { ownedPythonCallbackResultSource as ownedCallbackResultSource
 import { generateOwnedPythonPackage } from "../../src/backends/python/owned-package.mjs";
 import { pythonPackageMetadata } from "../../src/analyze/package-metadata.mjs";
 import { assertOwnedPythonCallbackResultCi, ownedPythonCallbackResultReports } from "./owned-python-callback-result-ci.mjs";
+import { ownedPythonCallbackReplay } from "./owned-python-callback-result-replay.mjs";
 import { assertOwnedPythonCallbackRuntime } from "./owned-python-callback-result-evidence.mjs";
 import { ownedPythonCallbackResultReviewedIr, ownedPythonCallbackResultCombinedReviewedIr } from "./owned-python-callback-result-fixture.mjs";
 import { ownedPythonCallbackTyping } from "./owned-python-callback-result-typing.mjs";
@@ -607,7 +608,7 @@ const pythonReportChecker = replay => {
 		if(name.startsWith("runtime-"))
 		{
 			assert.equal(name, `runtime-${item.mode}-${item.name}`);
-			return assertOwnedPythonCallbackRuntime(item);
+			return assertOwnedPythonCallbackRuntime(item, replay);
 		}
 		const mode = name.startsWith("ordinary-") ? "ordinary" : "reviewed";
 		const variant = name.slice(mode.length + 1);
@@ -661,6 +662,7 @@ export const assertOwnedPythonCallbackAcceptance = async record => {
 	assert.doesNotMatch(record.run.text, /^not ok|# SKIP|# TODO/mu);
 	const reports = unpackOwnedCallbackReports(record.archive);
 	assert.deepEqual(Object.keys(reports).sort(), [...ownedPythonCallbackResultReports].sort());
-	for(const [path, item] of Object.entries(reports)) await assertOwnedPythonCallbackReport(path, item);
+	const replay = await ownedPythonCallbackReplay(record.sources);
+	for(const [path, item] of Object.entries(reports)) await assertOwnedPythonCallbackReport(path, item, replay);
 	assertOwnedPythonCallbackResultCi(await readFile(".github/workflows/consumer-matrix.yml", "utf8"), JSON.parse(await readFile("package.json", "utf8")));
 };
