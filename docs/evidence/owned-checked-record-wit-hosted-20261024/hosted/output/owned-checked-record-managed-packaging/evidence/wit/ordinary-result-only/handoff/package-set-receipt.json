@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "owned-checked-records@1.0.0",
+    "name": "owned-checked-records",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 61753328,
+          "path": "archives/owned-checked-records-result-only-1.0.0-wit-wasi.tar.gz",
+          "sha256": "649621f38e0d0428401276237f9648f8fff6d99331da7bc02060eac28c0c7ab4"
+        }
+      ],
+      "ecosystem": "wit-wasi",
+      "name": "owned-checked-records-result-only",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "wit-wasi",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "ac77c4cfe87b7cbcbb00f601e8493e162585f06c8d026261c3374def2f47ad20",
+      "id": "native-library-v1",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "99e45a60db1c7c2971bc96a31c22aa1339b4d68853fd7664bf06d3424e8dfc68"
+  }
+}
