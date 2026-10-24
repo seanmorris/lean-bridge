@@ -76,8 +76,9 @@ export const reverseCStructuredCallableUpdate = (source, update) => {
 export const beforeCStructuredCallables = (path, source, expected) => {
 	source = beforeCppStructuredCallables(path, source, expected);
 	if(typeof source === "string" && !cStructuredCallableChangedPaths.includes(path)) return source;
-	if(sha256(source) === expected || !cStructuredCallableChangedPaths.includes(path)) return source;
+	const digest = sha256(source);
+	if(digest === expected || !cStructuredCallableChangedPaths.includes(path)) return source;
 	const record = history ??= JSON.parse(readFileSync(cStructuredCallableHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
-	return update ? reverse(source, update) : source;
+	return update?.currentSha256 === digest ? reverseCStructuredCallableUpdate(source, update) : source;
 };

@@ -76,8 +76,9 @@ export const reverseDotnetStructuredCallableUpdate = (source, update) => {
 export const beforeDotnetStructuredCallables = (path, source, expected) => {
 	source = beforeJvmStructuredCallables(path, source, expected);
 	if(typeof source === "string" && !dotnetStructuredCallableChangedPaths.includes(path)) return source;
-	if(sha256(source) === expected || !dotnetStructuredCallableChangedPaths.includes(path)) return source;
+	const digest = sha256(source);
+	if(digest === expected || !dotnetStructuredCallableChangedPaths.includes(path)) return source;
 	const record = history ??= JSON.parse(readFileSync(dotnetStructuredCallableHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
-	return update ? reverse(source, update) : source;
+	return update?.currentSha256 === digest ? reverseDotnetStructuredCallableUpdate(source, update) : source;
 };

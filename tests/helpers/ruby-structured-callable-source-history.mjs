@@ -76,8 +76,9 @@ export const reverseRubyStructuredCallableUpdate = (source, update) => {
 export const beforeRubyStructuredCallables = (path, source, expected) => {
 	source = beforeDotnetStructuredCallables(path, source, expected);
 	if(typeof source === "string" && !rubyStructuredCallableChangedPaths.includes(path)) return source;
-	if(sha256(source) === expected || !rubyStructuredCallableChangedPaths.includes(path)) return source;
+	const digest = sha256(source);
+	if(digest === expected || !rubyStructuredCallableChangedPaths.includes(path)) return source;
 	const record = history ??= JSON.parse(readFileSync(rubyStructuredCallableHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
-	return update ? reverse(source, update) : source;
+	return update?.currentSha256 === digest ? reverseRubyStructuredCallableUpdate(source, update) : source;
 };

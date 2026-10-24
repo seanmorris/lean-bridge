@@ -63,9 +63,9 @@ test("C# structured source history preserves unrelated source drift", async () =
 	const record = await json(dotnetStructuredCallableHistoryPath);
 	for(const update of record.updates)
 	{
-		const source = beforeJvmStructuredCallables(update.path, await readFile(update.path, "utf8"));
+		const source = beforeJvmStructuredCallables(update.path, await readFile(update.path, "utf8"), update.currentSha256);
 		assert.equal(sha256(reverseDotnetStructuredCallableUpdate(source, update)), update.previousSha256);
-		assert.equal(sha256(beforeDotnetStructuredCallables(update.path, source)), update.previousSha256);
+		assert.equal(sha256(beforeDotnetStructuredCallables(update.path, source, update.previousSha256)), update.previousSha256);
 		assert.notEqual(sha256(beforeDotnetStructuredCallables(update.path, source + "\n// unrelated\n")), update.previousSha256);
 		assert.throws(() => reverseDotnetStructuredCallableUpdate(source + "\n// unrelated\n", update));
 	}

@@ -58,9 +58,9 @@ test("Rust structured source history never erases unrelated source drift", async
 	const record = await json(rustStructuredCallableHistoryPath);
 	for(const update of record.updates)
 	{
-		const source = beforePythonStructuredCallables(update.path, await readFile(update.path, "utf8"));
+		const source = beforePythonStructuredCallables(update.path, await readFile(update.path, "utf8"), update.currentSha256);
 		assert.equal(sha256(reverseRustStructuredCallableUpdate(source, update)), update.previousSha256);
-		assert.equal(sha256(beforeRustStructuredCallables(update.path, source)), update.previousSha256);
+		assert.equal(sha256(beforeRustStructuredCallables(update.path, source, update.previousSha256)), update.previousSha256);
 		assert.notEqual(sha256(beforeRustStructuredCallables(update.path, source + "\n// unrelated\n")), update.previousSha256);
 		assert.throws(() => reverseRustStructuredCallableUpdate(source + "\n// unrelated\n", update));
 	}

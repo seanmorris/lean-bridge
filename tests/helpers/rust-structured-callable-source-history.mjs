@@ -76,8 +76,9 @@ export const reverseRustStructuredCallableUpdate = (source, update) => {
 export const beforeRustStructuredCallables = (path, source, expected) => {
 	source = beforePythonStructuredCallables(path, source, expected);
 	if(typeof source === "string" && !rustStructuredCallableChangedPaths.includes(path)) return source;
-	if(sha256(source) === expected || !rustStructuredCallableChangedPaths.includes(path)) return source;
+	const digest = sha256(source);
+	if(digest === expected || !rustStructuredCallableChangedPaths.includes(path)) return source;
 	const record = history ??= JSON.parse(readFileSync(rustStructuredCallableHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
-	return update ? reverse(source, update) : source;
+	return update?.currentSha256 === digest ? reverseRustStructuredCallableUpdate(source, update) : source;
 };

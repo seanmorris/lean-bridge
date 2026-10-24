@@ -80,8 +80,9 @@ export const reverseJvmStructuredCallableUpdate = (source, update) => {
 export const beforeJvmStructuredCallables = (path, source, expected) => {
 	source = beforePerlStructuredCallables(path, source, expected);
 	if(typeof source === "string" && !jvmStructuredCallableChangedPaths.includes(path)) return source;
-	if(sha256(source) === expected || !jvmStructuredCallableChangedPaths.includes(path)) return source;
+	const digest = sha256(source);
+	if(digest === expected || !jvmStructuredCallableChangedPaths.includes(path)) return source;
 	const record = history ??= JSON.parse(readFileSync(jvmStructuredCallableHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
-	return update ? reverse(source, update) : source;
+	return update?.currentSha256 === digest ? reverseJvmStructuredCallableUpdate(source, update) : source;
 };

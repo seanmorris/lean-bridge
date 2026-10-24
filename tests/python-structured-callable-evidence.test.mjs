@@ -59,9 +59,9 @@ test("Python structured source history preserves unrelated source drift", async 
 	const record = await json(pythonStructuredCallableHistoryPath);
 	for(const update of record.updates)
 	{
-		const source = beforeRubyStructuredCallables(update.path, await readFile(update.path, "utf8"));
+		const source = beforeRubyStructuredCallables(update.path, await readFile(update.path, "utf8"), update.currentSha256);
 		assert.equal(sha256(reversePythonStructuredCallableUpdate(source, update)), update.previousSha256);
-		assert.equal(sha256(beforePythonStructuredCallables(update.path, source)), update.previousSha256);
+		assert.equal(sha256(beforePythonStructuredCallables(update.path, source, update.previousSha256)), update.previousSha256);
 		assert.notEqual(sha256(beforePythonStructuredCallables(update.path, source + "\n// unrelated\n")), update.previousSha256);
 		assert.throws(() => reversePythonStructuredCallableUpdate(source + "\n// unrelated\n", update));
 	}
