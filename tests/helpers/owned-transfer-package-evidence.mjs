@@ -4,14 +4,11 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
 import { assertNativeOwnedGate } from "./native-owned-gate.mjs";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
-import { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from "../../src/build/native-graph-model.mjs";
-import { generateOwnedCPackage } from "../../src/backends/c/owned-package.mjs";
 import { historicalOwnedTransferPackage } from "./owned-transfer-generated-history.mjs";
-import { validatePackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
-import { ownedTransferConfiguration, ownedTransferSource } from "./owned-transfer-fixture.mjs";
+import { moduleAtProducerWithSourceReads } from "./producer-module.mjs";
+import { bytesAtProducer, sourceAtProducer } from "./producer-source.mjs";
 
 export const ownedTransferPackageCommand = "npm run test:owned-transfer-packages";
 export const ownedTransferPackageScope = Object.freeze({
@@ -22,6 +19,16 @@ export const ownedTransferPackageScope = Object.freeze({
 	, otherConsumerBindings: false, anchoredBorrowedResults: false
 	, docker: false, installedSupportPromotions: 0
 });
+/** The commit whose complete source tree every digest in the installed transfer record names. */
+export const ownedTransferPackageProducer = "2a0329ae6819dfa3c2387e1bdda628c21df8e62b";
+let producerPromise;
+const producerModules = () => producerPromise ??= Promise.all([
+	"src/build/native-graph-model.mjs"
+	, "src/backends/c/owned-package.mjs"
+	, "src/release/package-set-receipt.mjs"
+	, "tests/helpers/owned-transfer-fixture.mjs"
+].map(path => moduleAtProducerWithSourceReads(ownedTransferPackageProducer, path)))
+	.then(modules => Object.assign({}, ...modules));
 
 /**
  * Reconstruct compiler contracts and generated APIs from captured execution inputs.
@@ -39,6 +46,11 @@ export const assertOwnedTransferPackageExecution = async record => {
 	assert.doesNotMatch(record.run.text, /^not ok|# SKIP|# TODO/mu);
 	assert.deepEqual(record.consumers.map(item => item.mode), ["ordinary", "reviewed"]);
 	assert.deepEqual(record.analyses.map(item => item.mode), ["ordinary", "reviewed"]);
+	const {
+		createCompiledNativeModel, generateCompiledNativeLeanAdapters
+		, generateOwnedCPackage, validatePackageSetReceipt
+		, ownedTransferConfiguration, ownedTransferSource
+	} = await producerModules();
 	const contracts = (await ownedTransferConfiguration()).contracts;
 	for(const item of record.analyses)
 	{
@@ -53,8 +65,8 @@ export const assertOwnedTransferPackageExecution = async record => {
 		assert.ok(item.observed.some(args => args.includes("--metadata")));
 		assert.ok(item.observed.every(args => !args.includes("-c")));
 	}
-	const fixture = await readFile("tests/fixtures/structured-types/owned-installed-transfers.c");
-	const lean = (await readFile("tests/fixtures/onboarding/owned-aggregates/Owned.lean", "utf8")) + ownedTransferSource;
+	const fixture = bytesAtProducer(ownedTransferPackageProducer, "tests/fixtures/structured-types/owned-installed-transfers.c");
+	const lean = sourceAtProducer(ownedTransferPackageProducer, "tests/fixtures/onboarding/owned-aggregates/Owned.lean") + ownedTransferSource;
 	for(const item of record.consumers)
 	{
 		for(const key of ["compiledLean", "installedPackage", "sourceUnchanged"
