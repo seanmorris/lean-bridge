@@ -28,6 +28,7 @@ import "./helpers/php-wasm-callback-fin-mixed-entry-source-history-tests.mjs";
 import "./helpers/owned-javascript-transfer-nix-producer-repair-source-history-tests.mjs";
 import "./helpers/owned-milestone-producer-repair-source-history-tests.mjs";
 import "./helpers/php-wasm-callback-tiles-trace-repair-source-history-tests.mjs";
+import "./helpers/wit-transfer-copy-gap-source-history-tests.mjs";
 
 const root = resolve(".");
 
