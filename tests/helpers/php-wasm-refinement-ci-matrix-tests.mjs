@@ -23,7 +23,7 @@ test("the PHP-Wasm refinement CI matrix names every dedicated admitted lane", as
 		, phpWasmRefinementCiMatrix.length);
 	assert.deepEqual(phpWasmRefinementCiBudget(), {
 		workflows: 18, acceptanceWorkflows: 14, measurementWorkflows: 4
-		, measurementCells: 26, maximumConcurrentJobs: 22
+		, measurementCells: 27, maximumConcurrentJobs: 22
 	});
 	const owners = [...new Set(phpWasmRefinementCiMatrix
 		.flatMap(lane => lane.ownerNodes))].toSorted((left, right) => left - right);
@@ -105,6 +105,9 @@ test("the PHP-Wasm refinement CI audit rejects policy suppression", async t => {
 				, "      matrix:\n        exclude:\n          - family: nominal-full\n"));
 			const first = Object.values(lane.axes)[0][0];
 			mutations.push(source.replace(`          - ${first}\n`, ""));
+			mutations.push(source.replace(`            build/${lane.id}-failed-deployments/\n`, ""));
+			mutations.push(source.replace(
+				`          LEAN_BRIDGE_PHP_WASM_FAILED_DEPLOYMENTS: build/${lane.id}-failed-deployments\n`, ""));
 		}
 		for(const [index, changed] of mutations.entries())
 		{
@@ -114,6 +117,6 @@ test("the PHP-Wasm refinement CI audit rejects policy suppression", async t => {
 			controls++;
 		}
 	}
-	assert.equal(controls, 470);
+	assert.equal(controls, 478);
 	t.diagnostic(`${controls} workflow suppression controls`);
 });

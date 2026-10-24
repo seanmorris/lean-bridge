@@ -47,7 +47,7 @@ const exactProducer = producer => `  ${producer.id}:\n`
 
 /**
  * Require the exact schedule, bounded producer topology and same-run artifact
- * verifier used to promote all 28 logical entry routes.
+ * verifier used to promote all 30 logical entry routes.
  *
  * @param source - Complete workflow source.
  */
@@ -85,7 +85,7 @@ jobs:
 	}
 	const promote = jobs.at(-1).source;
 	assert.ok(promote.startsWith(`  promote:
-    name: Authenticate all 28 refinement entry routes
+    name: Authenticate all 30 refinement entry routes
     needs:
       - copied
       - owned
@@ -144,6 +144,6 @@ jobs:
         run: exit 1`));
 	return Object.freeze({
 		schedule: "17 5 1 * *", producers: 4, maximumProducerJobs: 4
-		, cells: 26, artifacts: 26, logicalRoutes: 28
+		, cells: 27, artifacts: 27, logicalRoutes: 30
 	});
 };

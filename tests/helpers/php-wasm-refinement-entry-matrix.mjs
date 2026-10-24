@@ -171,7 +171,7 @@ export const checkPhpWasmRefinementEntryMatrix = (
 		records += item.result.records; executions += item.result.executions;
 		artifacts.add(item.artifact); workflows.add(item.workflow);
 	}
-	assert.equal(artifacts.size, 26
+	assert.equal(artifacts.size, 27
 		, "callback routes intentionally share one family artifact");
 	assert.equal(workflows.size, 4);
 	return Object.freeze({

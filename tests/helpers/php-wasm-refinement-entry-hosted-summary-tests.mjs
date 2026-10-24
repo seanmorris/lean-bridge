@@ -132,14 +132,14 @@ test("hosted PHP-Wasm entry promotion rechecks the complete closed artifact matr
 	assert.equal(summary.kind, "php-wasm-refinement-entry-hosted-v1");
 	assert.equal(summary.producerCommit, producer);
 	assert.deepEqual(summary.verification, verification);
-	assert.equal(summary.artifacts.length, 26);
-	assert.equal(summary.artifacts.reduce((sum, item) => sum + item.cells, 0), 28);
+	assert.equal(summary.artifacts.length, 27);
+	assert.equal(summary.artifacts.reduce((sum, item) => sum + item.cells, 0), 30);
 	assert.ok(summary.artifacts.every(item => item.files > 0
 		&& /^[a-f0-9]{64}$/u.test(item.tapSha256)));
 	assert.deepEqual(summary.matrix, {
 		schemaVersion: 1, scope: "separate-instrumented-probe"
-		, producerCommit: producer, cells: 28, artifacts: 26, workflows: 4
-		, records: 28, executions: 336, calls: 48, controls: 12
+		, producerCommit: producer, cells: 30, artifacts: 27, workflows: 4
+		, records: 30, executions: 360, calls: 48, controls: 18
 	});
 });
 

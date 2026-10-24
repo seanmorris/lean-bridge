@@ -25,8 +25,8 @@ ship validator, constructor, adapter or Lean-source entry counters.
 
 Lean Bridge uses separate instrumented fixture packages for measurement. The
 24 copied, owned and indexed routes count validator, constructor, adapter and
-Lean-source entries; the four callback routes record callback control totals.
-Together they form 28 ordinary/reviewed routes in 26 retained artifacts. The
+Lean-source entries; the six callback routes record callback control totals.
+Together they form 30 ordinary/reviewed routes in 27 retained artifacts. The
 matrix does not widen the prepared-package type surface or become part of a
 consumer release. The [promotion
 workflow](https://github.com/seanmorris/lean-bridge/actions/workflows/php-wasm-refinement-entry-promotion.yml)

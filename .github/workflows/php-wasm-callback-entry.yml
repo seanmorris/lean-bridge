@@ -25,6 +25,7 @@ jobs:
         family:
           - callback-fin
           - callback-checked-record
+          - callback-subtype
     env:
       EMCC_CORES: "2"
       LEAN_WASM_RUNTIME_PROFILE: browser

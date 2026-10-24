@@ -29,9 +29,9 @@ const observation = cell => ({
 });
 const observations = () => phpWasmRefinementEntryMatrix.map(observation);
 
-test("the complete PHP-Wasm refinement entry topology has 28 exact route cells", () => {
-	assert.equal(phpWasmRefinementEntryMatrix.length, 28);
-	assert.equal(new Set(phpWasmRefinementEntryMatrix.map(cell => cell.id)).size, 28);
+test("the complete PHP-Wasm refinement entry topology has 30 exact route cells", () => {
+	assert.equal(phpWasmRefinementEntryMatrix.length, 30);
+	assert.equal(new Set(phpWasmRefinementEntryMatrix.map(cell => cell.id)).size, 30);
 	const byKind = Object.fromEntries(
 		["copied", "owned", "callback", "indexed"].map(kind => [
 			kind
@@ -39,7 +39,7 @@ test("the complete PHP-Wasm refinement entry topology has 28 exact route cells",
 		])
 	);
 	assert.deepEqual(byKind, {
-		copied: 8, owned: 4, callback: 4, indexed: 12
+		copied: 8, owned: 4, callback: 6, indexed: 12
 	});
 	assert.deepEqual([...new Set(phpWasmRefinementEntryMatrix
 		.map(cell => cell.ownerNode))], [1824, 1825, 1826, 1827]);
@@ -100,8 +100,8 @@ test("the entry topology is pinned to workflow matrices, artifacts and run layou
 test("the complete PHP-Wasm refinement entry matrix accepts one closed verifier set", () => {
 	assert.deepEqual(checkPhpWasmRefinementEntryMatrix(revision, observations()), {
 		schemaVersion: 1, scope: "separate-instrumented-probe"
-		, producerCommit: revision, cells: 28, artifacts: 26, workflows: 4
-		, records: 860, executions: 336, calls: 216, controls: 28
+		, producerCommit: revision, cells: 30, artifacts: 27, workflows: 4
+		, records: 918, executions: 360, calls: 216, controls: 42
 	});
 });
 
@@ -144,6 +144,6 @@ test("the complete PHP-Wasm refinement entry matrix rejects structural forgery",
 	widened[0].result.unverified = true; mutations.push(widened);
 	for(const changed of mutations)
 		assert.throws(() => checkPhpWasmRefinementEntryMatrix(revision, changed));
-	assert.equal(mutations.length, 74);
+	assert.equal(mutations.length, 78);
 	t.diagnostic(`${mutations.length} missing, duplicate, reordered and forged controls`);
 });

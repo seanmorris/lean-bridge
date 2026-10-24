@@ -13,6 +13,7 @@ const genericPaths = (id, kind) => Object.freeze([
 	, `build/${id}-host.log`
 	, `build/${id}-runtime.log`
 	, `build/${id}-input/php-wasm-runtime/runtime.json`
+	, ...(kind === "measurement" ? [`build/${id}-failed-deployments/`] : [])
 ]);
 const workflow = (id, title, ownerNodes, timeoutMinutes, options = {}) =>
 	Object.freeze({
@@ -156,8 +157,8 @@ export const phpWasmRefinementCiMatrix = Object.freeze([
 	, workflow("php-wasm-callback-entry"
 		, "synchronous callback dispatch", [1826], 240
 		, { job: "callback-entry-probe", kind: "measurement"
-			, cells: 2, maxParallel: 2
-			, axes: { family: ["callback-fin", "callback-checked-record"] }
+			, cells: 3, maxParallel: 2
+			, axes: { family: ["callback-fin", "callback-checked-record", "callback-subtype"] }
 			, acceptanceRun: "source scripts/env.sh\nbash scripts/run-php-wasm-callback-entry-ci.sh\n"
 			, acceptanceCommand: "bash scripts/run-php-wasm-callback-entry-ci.sh"
 			, artifactName: "php-wasm-callback-entry-${{ matrix.family }}-${{ github.sha }}"
@@ -282,6 +283,8 @@ export const assertPhpWasmRefinementCiWorkflow = (lane, source) => {
 		assert.deepEqual(axes, lane.axes);
 		assert.equal(Object.values(axes)
 			.reduce((product, values) => product * values.length, 1), lane.cells);
+		assert.equal(count(job, new RegExp("^ {10}LEAN_BRIDGE_PHP_WASM_FAILED_DEPLOYMENTS: "
+			+ escape(`build/${lane.id}-failed-deployments`) + "$", "gmu")), 1);
 	}
 	else
 	{

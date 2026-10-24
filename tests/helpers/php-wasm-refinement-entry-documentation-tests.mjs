@@ -14,9 +14,9 @@ import {
 } from "./php-wasm-refinement-entry-matrix.mjs";
 
 const evidenceId = "php-wasm-refinement-entry-instrumented-probe-contract";
-const matrixBoundary = /28\s+ordinary\/reviewed routes in 26 retained artifacts/u;
+const matrixBoundary = /30\s+ordinary\/reviewed routes in 27 retained artifacts/u;
 const copiedBoundary = /24\s+copied,\s*owned\s+and\s+indexed\s+routes[\s\S]{0,180}(?:count|use)[\s\S]{0,180}validator,\s*constructor,\s*adapter\s+and\s+Lean-source\s+entries/iu;
-const callbackBoundary = /four\s+callback\s+routes\s+record\s+callback\s+control\s+totals/iu;
+const callbackBoundary = /six\s+callback\s+routes\s+record\s+callback\s+control\s+totals/iu;
 const pages = Object.freeze([
 	Object.freeze({ path: "docs/php.md", heading: "### Refinement support and entry measurements" })
 	, Object.freeze({ path: "docs/publish/php.md", heading: "## Refinement checks and measurement probes" })
@@ -63,6 +63,6 @@ test("the type surface records probes without widening installed support", async
 		Object.values(observation.stages).flatMap(stage => stage.evidence)
 	).filter(id => id === evidenceId), []
 	, "probe evidence must not establish a prepared-package support stage");
-	assert.equal(phpWasmRefinementEntryMatrix.length, 28);
-	assert.equal(phpWasmRefinementEntryArtifactNames("a".repeat(40)).length, 26);
+	assert.equal(phpWasmRefinementEntryMatrix.length, 30);
+	assert.equal(phpWasmRefinementEntryArtifactNames("a".repeat(40)).length, 27);
 });

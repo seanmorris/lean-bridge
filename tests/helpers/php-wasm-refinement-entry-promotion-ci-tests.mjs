@@ -18,14 +18,14 @@ test("the recurring PHP-Wasm entry promotion has one bounded same-run topology",
 	const source = await readFile(phpWasmRefinementEntryPromotionPath, "utf8");
 	assert.deepEqual(assertPhpWasmRefinementEntryPromotionWorkflow(source), {
 		schedule: "17 5 1 * *", producers: 4, maximumProducerJobs: 4
-		, cells: 26, artifacts: 26, logicalRoutes: 28
+		, cells: 27, artifacts: 27, logicalRoutes: 30
 	});
 	const revision = "a".repeat(40);
 	const pattern = `php-wasm-*-entry-*-${revision}`;
 	const expression = new RegExp("^" + pattern.replace(/[.+?^${}()|[\]\\]/gu, "\\$&")
 		.replaceAll("*", ".*") + "$", "u");
 	const artifacts = phpWasmRefinementEntryArtifactNames(revision);
-	assert.equal(artifacts.length, 26);
+	assert.equal(artifacts.length, 27);
 	assert.ok(artifacts.every(name => expression.test(name)));
 	assert.doesNotMatch(`complete-php-wasm-refinement-entry-promotion-${revision}`
 		, expression);

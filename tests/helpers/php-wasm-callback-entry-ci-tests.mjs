@@ -7,11 +7,14 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 
-test("hosted callback-entry workflow covers both families and ordered routes", async () => {
+test("hosted callback-entry workflow covers all three families and ordered routes", async () => {
 	const workflow = await readFile(".github/workflows/php-wasm-callback-entry.yml", "utf8");
 	const shell = await readFile("scripts/run-php-wasm-callback-entry-ci.sh", "utf8");
-	for(const family of ["callback-fin", "callback-checked-record"])
+	for(const family of ["callback-fin", "callback-checked-record", "callback-subtype"])
+	{
 		assert.ok(workflow.includes(`          - ${family}\n`), family);
+		assert.ok(shell.includes(family), `${family} shell admission`);
+	}
 	assert.match(workflow, /max-parallel: 2/u);
 	assert.match(workflow, /timeout-minutes: 240/u);
 	assert.match(workflow, /run: bash scripts\/install-playwright-browsers\.sh chromium/u);

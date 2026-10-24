@@ -1,0 +1,795 @@
+{
+  "additions": [
+    {
+      "currentSha256": "4218c595f6df8bcf06de7dcc2c594f186a116a1342b844575986f4e6880c8a4c",
+      "path": "scripts/update-php-wasm-callback-subtype-entry-source-history.mjs"
+    },
+    {
+      "currentSha256": "c0f4aaf16941acbecfaa51655bc0537ff961d7a0522d80188684a7ccf29f418f",
+      "path": "tests/helpers/php-wasm-callback-subtype-entry-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "de30bbacae34130e137feb31e3215a08c1483065d4c33253dafa57ac05d4a73e",
+      "path": "tests/helpers/php-wasm-callback-subtype-entry-source-history.mjs"
+    }
+  ],
+  "implementationAdditions": [
+    {
+      "currentSha256": "30f9f6142206f15fc464624d579eac4c06085d243fea65617d8ca578d7e39b67",
+      "path": "tests/fixtures/php-wasm-callback-entry/analyzer/callback-subtype-ordinary.identity.json"
+    },
+    {
+      "currentSha256": "d2b323b74fabfb5c545e6300e7b68ad235d3c383d172b3cd168ef32db4fb5aef",
+      "path": "tests/fixtures/php-wasm-callback-entry/analyzer/callback-subtype-ordinary.model.json"
+    },
+    {
+      "currentSha256": "002b92bf8939459b585f0cef7feb366b22792fda9618d44d298fe5ebe7b18515",
+      "path": "tests/fixtures/php-wasm-callback-entry/callback-subtype.php"
+    }
+  ],
+  "implementationCommit": "a0536e1ed272588a1702a9fe4b16445ded6f971d",
+  "integrationBaseCommit": "3f1c6a29e34eef6c61747398cff23349f8249cd3",
+  "integrationUpdates": [
+    {
+      "currentSha256": "7becde77e51c4735a5915de4c24d6af332bc578acec9f4898c42866b63baec73",
+      "edits": [
+        {
+          "current": "          - callback-subtype\n",
+          "previous": "",
+          "start": 552
+        }
+      ],
+      "path": ".github/workflows/php-wasm-callback-entry.yml",
+      "previousSha256": "9aae9ef4aaec4a036f85b373e6a7586c04ad3d9cc7437b4410b044e30bbf6857"
+    },
+    {
+      "currentSha256": "6ed959da50824a3c2d8465a255710bf52ae267fde2487df025d11a6dd43a0167",
+      "edits": [
+        {
+          "current": "    name: Authenticate all 30 refinement entry routes\n",
+          "previous": "    name: Authenticate all 28 refinement entry routes\n",
+          "start": 835
+        }
+      ],
+      "path": ".github/workflows/php-wasm-refinement-entry-promotion.yml",
+      "previousSha256": "e3921d7f1dde5b9056e15da772b7b8afd0e3d0ec93b82d94a667b46b7145dcc8"
+    },
+    {
+      "currentSha256": "e54176cef7f70ca437b55c82f54746f30a82af648e5ab3c56adf8014a153f3c5",
+      "edits": [
+        {
+          "current": "Native source rejections name the declaration in `native-elaboration-unsupported`. Readers without a checked adapter reject refined metadata with `native-refinements-unsupported`. PHP-Wasm's [installed Subtype checks](../evidence/php-wasm-subtype-installed-20261010.md) cover ordinary and reviewed top-level parameters and results: twelve exports, twelve Node/Chromium configurations per route, and 2,024 checks per execution. Constructors and adapters compile with fresh Lean. Those unmodified prepared packages do not contain runtime entry counters. Separate instrumented fixture packages use 24 copied, owned and indexed routes to count named validator, constructor, adapter and Lean-source entries; six callback routes record callback control totals. Together they form 30 ordinary/reviewed routes in 27 retained artifacts without widening the consumer type surface. The [promotion workflow](https://github.com/seanmorris/lean-bridge/actions/workflows/php-wasm-refinement-entry-promotion.yml) is configured to rebuild that matrix at one revision, but no hosted count claim exists until a completed run publishes its verified summary. PHP-Wasm accepts the listed structural containers, acyclic nominal fields, [finite recursive copied graphs](../evidence/recursive-subtype-php-wasm-20261015.md), and the tested [acyclic owned record](../evidence/owned-subtype-php-wasm-local-qualification-20261022.md). The owned-record checks preserve exact constructor choices, reject an invalid transferred value before moving its resources, exercise explicit and fallback cleanup, and recover on later requests across both source routes. Synchronous Fin, selected Subtype and checked-record callbacks use the separately documented installed-package paths. Retained/asynchronous refined callbacks and recursive owned graphs remain rejected. A consumer that does not declare checked support cannot read a verified refined component (`native-refinements-unavailable`). Python's [installed CI reports](../evidence/python-refinements-20261007/receipt.json) cover scalar and container `Fin`, top-level checked `Subtype`, and finite function specializations. Local acceptance does not establish a hosted CI result for a later revision.\n",
+          "previous": "Native source rejections name the declaration in `native-elaboration-unsupported`. Readers without a checked adapter reject refined metadata with `native-refinements-unsupported`. PHP-Wasm's [installed Subtype checks](../evidence/php-wasm-subtype-installed-20261010.md) cover ordinary and reviewed top-level parameters and results: twelve exports, twelve Node/Chromium configurations per route, and 2,024 checks per execution. Constructors and adapters compile with fresh Lean. Those unmodified prepared packages do not contain runtime entry counters. Separate instrumented fixture packages use 24 copied, owned and indexed routes to count named validator, constructor, adapter and Lean-source entries; four callback routes record callback control totals. Together they form 28 ordinary/reviewed routes in 26 retained artifacts without widening the consumer type surface. The [promotion workflow](https://github.com/seanmorris/lean-bridge/actions/workflows/php-wasm-refinement-entry-promotion.yml) is configured to rebuild that matrix at one revision, but no hosted count claim exists until a completed run publishes its verified summary. PHP-Wasm accepts the listed structural containers, acyclic nominal fields, [finite recursive copied graphs](../evidence/recursive-subtype-php-wasm-20261015.md), and the tested [acyclic owned record](../evidence/owned-subtype-php-wasm-local-qualification-20261022.md). The owned-record checks preserve exact constructor choices, reject an invalid transferred value before moving its resources, exercise explicit and fallback cleanup, and recover on later requests across both source routes. Refined PHP-Wasm callbacks and recursive owned graphs remain rejected. A consumer that does not declare checked support cannot read a verified refined component (`native-refinements-unavailable`). Python's [installed CI reports](../evidence/python-refinements-20261007/receipt.json) cover scalar and container `Fin`, top-level checked `Subtype`, and finite function specializations. Local acceptance does not establish a hosted CI result for a later revision.\n",
+          "start": 105962
+        }
+      ],
+      "path": "docs/lean/existing-package.md",
+      "previousSha256": "36c2c9b3310496053c208332ead5abd8b486f4c463f9b4d158a733f2aad9e019"
+    },
+    {
+      "currentSha256": "0ae02f0ef9e568e5bdf469de62b17c0f675333b1c7ea50d86e46d04a21ca0b77",
+      "edits": [
+        {
+          "current": "Lean-source entries; the six callback routes record callback control totals.\nThe callback routes cover Fin, selected Subtype and checked-record families.\nTogether they form 30 ordinary/reviewed routes in 27 retained artifacts. These\n",
+          "previous": "Lean-source entries; the four callback routes record callback control totals.\nTogether they form 28 ordinary/reviewed routes in 26 retained artifacts. These\n",
+          "start": 44011
+        }
+      ],
+      "path": "docs/php.md",
+      "previousSha256": "5defddea3ef8c9b3697d37217a7ffdca83c8114245cc6100410e14b274be32a3"
+    },
+    {
+      "currentSha256": "abfe3b5f9567dd722a2a4bea61efb7526f5c23283c43d9de558aed026ffe9fb2",
+      "edits": [
+        {
+          "current": "Lean-source entries; the six callback routes record callback control totals.\nTogether they form 30 ordinary/reviewed routes in 27 retained artifacts. The\n",
+          "previous": "Lean-source entries; the four callback routes record callback control totals.\nTogether they form 28 ordinary/reviewed routes in 26 retained artifacts. The\n",
+          "start": 2453
+        }
+      ],
+      "path": "docs/publish/php.md",
+      "previousSha256": "80cb4f58343d8414fdb8b7aeb1edd69c325df0cd68a89025d68aea76f1f2579c"
+    },
+    {
+      "currentSha256": "37853d3b6403211ae9cab2b66ffa4c5682f8a94ac3042ce7146839f21e19ccc1",
+      "edits": [
+        {
+          "current": "Lean-source entries, while six callback routes record callback control totals.\nTogether they form 30 ordinary/reviewed routes in 27 retained artifacts and do\n",
+          "previous": "Lean-source entries, while four callback routes record callback control totals.\nTogether they form 28 ordinary/reviewed routes in 26 retained artifacts and do\n",
+          "start": 50641
+        }
+      ],
+      "path": "docs/reference/types.md",
+      "previousSha256": "16889449fff1364a6b71a637323aa5fab8fd96567fee7d13f3a6e36c2d0d8e88"
+    },
+    {
+      "currentSha256": "a33958ad6e6e7d87628b0328998e90b200d3e2621f6a838ef7389c1c62917feb",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"0ae02f0ef9e568e5bdf469de62b17c0f675333b1c7ea50d86e46d04a21ca0b77\"\n",
+          "previous": "          \"sha256\": \"5defddea3ef8c9b3697d37217a7ffdca83c8114245cc6100410e14b274be32a3\"\n",
+          "start": 49820
+        },
+        {
+          "current": "          \"sha256\": \"0ae02f0ef9e568e5bdf469de62b17c0f675333b1c7ea50d86e46d04a21ca0b77\"\n",
+          "previous": "          \"sha256\": \"5defddea3ef8c9b3697d37217a7ffdca83c8114245cc6100410e14b274be32a3\"\n",
+          "start": 182032
+        },
+        {
+          "current": "          \"sha256\": \"0ae02f0ef9e568e5bdf469de62b17c0f675333b1c7ea50d86e46d04a21ca0b77\"\n",
+          "previous": "          \"sha256\": \"5defddea3ef8c9b3697d37217a7ffdca83c8114245cc6100410e14b274be32a3\"\n",
+          "start": 196931
+        },
+        {
+          "current": "          \"sha256\": \"e54176cef7f70ca437b55c82f54746f30a82af648e5ab3c56adf8014a153f3c5\"\n",
+          "previous": "          \"sha256\": \"36c2c9b3310496053c208332ead5abd8b486f4c463f9b4d158a733f2aad9e019\"\n",
+          "start": 1072789
+        },
+        {
+          "current": "          \"sha256\": \"e54176cef7f70ca437b55c82f54746f30a82af648e5ab3c56adf8014a153f3c5\"\n",
+          "previous": "          \"sha256\": \"36c2c9b3310496053c208332ead5abd8b486f4c463f9b4d158a733f2aad9e019\"\n",
+          "start": 1080378
+        },
+        {
+          "current": "          \"sha256\": \"e54176cef7f70ca437b55c82f54746f30a82af648e5ab3c56adf8014a153f3c5\"\n",
+          "previous": "          \"sha256\": \"36c2c9b3310496053c208332ead5abd8b486f4c463f9b4d158a733f2aad9e019\"\n",
+          "start": 1086979
+        },
+        {
+          "current": "          \"sha256\": \"e54176cef7f70ca437b55c82f54746f30a82af648e5ab3c56adf8014a153f3c5\"\n",
+          "previous": "          \"sha256\": \"36c2c9b3310496053c208332ead5abd8b486f4c463f9b4d158a733f2aad9e019\"\n",
+          "start": 1094087
+        },
+        {
+          "current": "          \"sha256\": \"e54176cef7f70ca437b55c82f54746f30a82af648e5ab3c56adf8014a153f3c5\"\n",
+          "previous": "          \"sha256\": \"36c2c9b3310496053c208332ead5abd8b486f4c463f9b4d158a733f2aad9e019\"\n",
+          "start": 1101581
+        },
+        {
+          "current": "          \"sha256\": \"e54176cef7f70ca437b55c82f54746f30a82af648e5ab3c56adf8014a153f3c5\"\n",
+          "previous": "          \"sha256\": \"36c2c9b3310496053c208332ead5abd8b486f4c463f9b4d158a733f2aad9e019\"\n",
+          "start": 1108637
+        },
+        {
+          "current": "          \"sha256\": \"e54176cef7f70ca437b55c82f54746f30a82af648e5ab3c56adf8014a153f3c5\"\n",
+          "previous": "          \"sha256\": \"36c2c9b3310496053c208332ead5abd8b486f4c463f9b4d158a733f2aad9e019\"\n",
+          "start": 1116238
+        },
+        {
+          "current": "          \"sha256\": \"e54176cef7f70ca437b55c82f54746f30a82af648e5ab3c56adf8014a153f3c5\"\n",
+          "previous": "          \"sha256\": \"36c2c9b3310496053c208332ead5abd8b486f4c463f9b4d158a733f2aad9e019\"\n",
+          "start": 1126519
+        },
+        {
+          "current": "          \"sha256\": \"e54176cef7f70ca437b55c82f54746f30a82af648e5ab3c56adf8014a153f3c5\"\n",
+          "previous": "          \"sha256\": \"36c2c9b3310496053c208332ead5abd8b486f4c463f9b4d158a733f2aad9e019\"\n",
+          "start": 1138852
+        },
+        {
+          "current": "          \"sha256\": \"abfe3b5f9567dd722a2a4bea61efb7526f5c23283c43d9de558aed026ffe9fb2\"\n",
+          "previous": "          \"sha256\": \"80cb4f58343d8414fdb8b7aeb1edd69c325df0cd68a89025d68aea76f1f2579c\"\n",
+          "start": 1150248
+        },
+        {
+          "current": "          \"sha256\": \"abfe3b5f9567dd722a2a4bea61efb7526f5c23283c43d9de558aed026ffe9fb2\"\n",
+          "previous": "          \"sha256\": \"80cb4f58343d8414fdb8b7aeb1edd69c325df0cd68a89025d68aea76f1f2579c\"\n",
+          "start": 1158134
+        },
+        {
+          "current": "          \"sha256\": \"e54176cef7f70ca437b55c82f54746f30a82af648e5ab3c56adf8014a153f3c5\"\n",
+          "previous": "          \"sha256\": \"36c2c9b3310496053c208332ead5abd8b486f4c463f9b4d158a733f2aad9e019\"\n",
+          "start": 1192311
+        },
+        {
+          "current": "          \"sha256\": \"e54176cef7f70ca437b55c82f54746f30a82af648e5ab3c56adf8014a153f3c5\"\n",
+          "previous": "          \"sha256\": \"36c2c9b3310496053c208332ead5abd8b486f4c463f9b4d158a733f2aad9e019\"\n",
+          "start": 1224854
+        },
+        {
+          "current": "          \"sha256\": \"e54176cef7f70ca437b55c82f54746f30a82af648e5ab3c56adf8014a153f3c5\"\n",
+          "previous": "          \"sha256\": \"36c2c9b3310496053c208332ead5abd8b486f4c463f9b4d158a733f2aad9e019\"\n",
+          "start": 1255133
+        },
+        {
+          "current": "          \"sha256\": \"e54176cef7f70ca437b55c82f54746f30a82af648e5ab3c56adf8014a153f3c5\"\n",
+          "previous": "          \"sha256\": \"36c2c9b3310496053c208332ead5abd8b486f4c463f9b4d158a733f2aad9e019\"\n",
+          "start": 1288100
+        },
+        {
+          "current": "          \"sha256\": \"e54176cef7f70ca437b55c82f54746f30a82af648e5ab3c56adf8014a153f3c5\"\n",
+          "previous": "          \"sha256\": \"36c2c9b3310496053c208332ead5abd8b486f4c463f9b4d158a733f2aad9e019\"\n",
+          "start": 1329510
+        },
+        {
+          "current": "          \"sha256\": \"0ae02f0ef9e568e5bdf469de62b17c0f675333b1c7ea50d86e46d04a21ca0b77\"\n",
+          "previous": "          \"sha256\": \"5defddea3ef8c9b3697d37217a7ffdca83c8114245cc6100410e14b274be32a3\"\n",
+          "start": 1329810
+        },
+        {
+          "current": "          \"sha256\": \"e54176cef7f70ca437b55c82f54746f30a82af648e5ab3c56adf8014a153f3c5\"\n",
+          "previous": "          \"sha256\": \"36c2c9b3310496053c208332ead5abd8b486f4c463f9b4d158a733f2aad9e019\"\n",
+          "start": 1355358
+        },
+        {
+          "current": "          \"sha256\": \"0ae02f0ef9e568e5bdf469de62b17c0f675333b1c7ea50d86e46d04a21ca0b77\"\n",
+          "previous": "          \"sha256\": \"5defddea3ef8c9b3697d37217a7ffdca83c8114245cc6100410e14b274be32a3\"\n",
+          "start": 1355658
+        },
+        {
+          "current": "          \"sha256\": \"e54176cef7f70ca437b55c82f54746f30a82af648e5ab3c56adf8014a153f3c5\"\n",
+          "previous": "          \"sha256\": \"36c2c9b3310496053c208332ead5abd8b486f4c463f9b4d158a733f2aad9e019\"\n",
+          "start": 1378038
+        },
+        {
+          "current": "          \"sha256\": \"abfe3b5f9567dd722a2a4bea61efb7526f5c23283c43d9de558aed026ffe9fb2\"\n",
+          "previous": "          \"sha256\": \"80cb4f58343d8414fdb8b7aeb1edd69c325df0cd68a89025d68aea76f1f2579c\"\n",
+          "start": 1378346
+        },
+        {
+          "current": "          \"sha256\": \"e54176cef7f70ca437b55c82f54746f30a82af648e5ab3c56adf8014a153f3c5\"\n",
+          "previous": "          \"sha256\": \"36c2c9b3310496053c208332ead5abd8b486f4c463f9b4d158a733f2aad9e019\"\n",
+          "start": 1397730
+        },
+        {
+          "current": "          \"sha256\": \"abfe3b5f9567dd722a2a4bea61efb7526f5c23283c43d9de558aed026ffe9fb2\"\n",
+          "previous": "          \"sha256\": \"80cb4f58343d8414fdb8b7aeb1edd69c325df0cd68a89025d68aea76f1f2579c\"\n",
+          "start": 1398038
+        },
+        {
+          "current": "          \"sha256\": \"e54176cef7f70ca437b55c82f54746f30a82af648e5ab3c56adf8014a153f3c5\"\n",
+          "previous": "          \"sha256\": \"36c2c9b3310496053c208332ead5abd8b486f4c463f9b4d158a733f2aad9e019\"\n",
+          "start": 1418215
+        },
+        {
+          "current": "          \"sha256\": \"0ae02f0ef9e568e5bdf469de62b17c0f675333b1c7ea50d86e46d04a21ca0b77\"\n",
+          "previous": "          \"sha256\": \"5defddea3ef8c9b3697d37217a7ffdca83c8114245cc6100410e14b274be32a3\"\n",
+          "start": 1429038
+        },
+        {
+          "current": "          \"sha256\": \"abfe3b5f9567dd722a2a4bea61efb7526f5c23283c43d9de558aed026ffe9fb2\"\n",
+          "previous": "          \"sha256\": \"80cb4f58343d8414fdb8b7aeb1edd69c325df0cd68a89025d68aea76f1f2579c\"\n",
+          "start": 1429187
+        },
+        {
+          "current": "      \"scope\": \"This is a source-level contract for separate instrumented PHP-Wasm fixture packages, not installed consumer-package evidence. The closed promotion topology expects 30 ordinary/reviewed routes in 27 retained artifacts at one revision and reruns their exact verifiers. It does not change the support states established by unmodified prepared packages and does not claim hosted entry counts until a completed promotion run publishes a verified summary.\",\n",
+          "previous": "      \"scope\": \"This is a source-level contract for separate instrumented PHP-Wasm fixture packages, not installed consumer-package evidence. The closed promotion topology expects 28 ordinary/reviewed routes in 26 retained artifacts at one revision and reruns their exact verifiers. It does not change the support states established by unmodified prepared packages and does not claim hosted entry counts until a completed promotion run publishes a verified summary.\",\n",
+          "start": 75739645
+        },
+        {
+          "current": "          \"sha256\": \"6ed959da50824a3c2d8465a255710bf52ae267fde2487df025d11a6dd43a0167\"\n",
+          "previous": "          \"sha256\": \"e3921d7f1dde5b9056e15da772b7b8afd0e3d0ec93b82d94a667b46b7145dcc8\"\n",
+          "start": 75740219
+        },
+        {
+          "current": "          \"sha256\": \"82574a7d1c976d90bb65300665d2f42c67695f4dc783101b0f05cf22f5893f71\"\n",
+          "previous": "          \"sha256\": \"feb9a25749a40c63f5e79d716039d26e7bf439f9b17a659ff56aa0a2583599ab\"\n",
+          "start": 75740399
+        },
+        {
+          "current": "          \"sha256\": \"68d01f9fb2aad641fe92b426b7f86f2c1183dd0199ce6d75e0150afc8f91de3c\"\n",
+          "previous": "          \"sha256\": \"eeb2eaf1f5b5caffea67bfa83a7f03c0b9ec906ca0f058f171755ace62b5cbeb\"\n",
+          "start": 75740773
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "a779b330223aa8de0d07ef30ad217bf96dbcede717d2f1f12c2b358a33b938e1"
+    },
+    {
+      "currentSha256": "674a8b794460bd1be66db03ea1b6cfb0a4e21270b84600c8c19e0ae492790ad1",
+      "edits": [
+        {
+          "current": "  callback-fin|callback-checked-record|callback-subtype) ;;\n",
+          "previous": "  callback-fin|callback-checked-record) ;;\n",
+          "start": 637
+        }
+      ],
+      "path": "scripts/run-php-wasm-callback-entry-ci.sh",
+      "previousSha256": "06e37756d504137e9f3aee4940a3aeb46099c6b6fc4c511b8f3720bda77d8b11"
+    },
+    {
+      "currentSha256": "a51fb58b869a3d2cdf9b8eedb2ab2a739b47b7772568dd05e2536e0ed4fb66ea",
+      "edits": [
+        {
+          "current": "import \"./helpers/php-wasm-callback-subtype-entry-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 1337
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "bb3f063e09c8b2b85c7a37c666d0a53e77bb42c8534b28a0015de0dfa3b10c1b"
+    },
+    {
+      "currentSha256": "40357268e13a3dc315758bf976b862c841f799140206a10ff3770649ddc3d9c1",
+      "edits": [
+        {
+          "current": "import { beforePhpWasmCallbackSubtypeEntrySource, phpWasmCallbackSubtypeEntryNormalizationPaths } from \"./php-wasm-callback-subtype-entry-source-history.mjs\";\n",
+          "previous": "",
+          "start": 2119
+        },
+        {
+          "current": "\t...phpWasmCallbackSubtypeEntryNormalizationPaths\n\t, ...ownedCReceiverProducerRepairNormalizationPaths\n",
+          "previous": "\t...ownedCReceiverProducerRepairNormalizationPaths\n",
+          "start": 175317
+        },
+        {
+          "current": "\t\t= beforePhpWasmCallbackSubtypeEntrySource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "",
+          "start": 216291
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "d6b982f5f6f9a201514c62651f999032c77b7dcd18955caeddab413bf46dc0da"
+    },
+    {
+      "currentSha256": "e5e2e180b5a81a2f25fee2c2a760ca61470762d590ee8bb436b76bdd8946b975",
+      "edits": [
+        {
+          "current": "test(\"hosted callback-entry workflow covers all three families and ordered routes\", async () => {\n",
+          "previous": "test(\"hosted callback-entry workflow covers both families and ordered routes\", async () => {\n",
+          "start": 206
+        },
+        {
+          "current": "\tfor(const family of [\"callback-fin\", \"callback-checked-record\", \"callback-subtype\"])\n\t{\n",
+          "previous": "\tfor(const family of [\"callback-fin\", \"callback-checked-record\"])\n",
+          "start": 479
+        },
+        {
+          "current": "\t\tassert.ok(shell.includes(family), `${family} shell admission`);\n\t}\n",
+          "previous": "",
+          "start": 635
+        }
+      ],
+      "path": "tests/helpers/php-wasm-callback-entry-ci-tests.mjs",
+      "previousSha256": "14dc10453475ba52786bc13747100558fe7a15c82e7a3872db030d93db709919"
+    },
+    {
+      "currentSha256": "73e5ab464e24cdb3f84b3b8d6eb94dd4700be71346abe3fc1722b33d2094ef34",
+      "edits": [
+        {
+          "current": "\t\t, measurementCells: 27, maximumConcurrentJobs: 22\n",
+          "previous": "\t\t, measurementCells: 26, maximumConcurrentJobs: 22\n",
+          "start": 1057
+        },
+        {
+          "current": "\t\t\tmutations.push(source.replace(`            build/${lane.id}-failed-deployments/\\n`, \"\"));\n\t\t\tmutations.push(source.replace(\n\t\t\t\t`          LEAN_BRIDGE_PHP_WASM_FAILED_DEPLOYMENTS: build/${lane.id}-failed-deployments\\n`, \"\"));\n",
+          "previous": "",
+          "start": 4839
+        },
+        {
+          "current": "\tassert.equal(controls, 478);\n",
+          "previous": "\tassert.equal(controls, 470);\n",
+          "start": 5342
+        }
+      ],
+      "path": "tests/helpers/php-wasm-refinement-ci-matrix-tests.mjs",
+      "previousSha256": "37f86b22bcd32fc3201ae538186f2eedcf3d228250b00b561f5493e66b60b8c8"
+    },
+    {
+      "currentSha256": "771e1d549d0f39f04c4dc677d28d32674944c7723061529f289aaa628cdec4a9",
+      "edits": [
+        {
+          "current": "\t, ...(kind === \"measurement\" ? [`build/${id}-failed-deployments/`] : [])\n",
+          "previous": "",
+          "start": 476
+        },
+        {
+          "current": "\t\t\t, cells: 3, maxParallel: 2\n\t\t\t, axes: { family: [\"callback-fin\", \"callback-checked-record\", \"callback-subtype\"] }\n",
+          "previous": "\t\t\t, cells: 2, maxParallel: 2\n\t\t\t, axes: { family: [\"callback-fin\", \"callback-checked-record\"] }\n",
+          "start": 8010
+        },
+        {
+          "current": "\t\tassert.equal(count(job, new RegExp(\"^ {10}LEAN_BRIDGE_PHP_WASM_FAILED_DEPLOYMENTS: \"\n\t\t\t+ escape(`build/${lane.id}-failed-deployments`) + \"$\", \"gmu\")), 1);\n",
+          "previous": "",
+          "start": 13097
+        }
+      ],
+      "path": "tests/helpers/php-wasm-refinement-ci-matrix.mjs",
+      "previousSha256": "8b5a74886981aad556e04e301d4ed66bb1edfe2c973b91d200664c7fe8269f64"
+    },
+    {
+      "currentSha256": "fa0990065a082e402f5c706f7dc89c5c37d7f2cf328189fa7cf28d9e98a7a974",
+      "edits": [
+        {
+          "current": "const matrixBoundary = /30\\s+ordinary\\/reviewed routes in 27 retained artifacts/u;\n",
+          "previous": "const matrixBoundary = /28\\s+ordinary\\/reviewed routes in 26 retained artifacts/u;\n",
+          "start": 481
+        },
+        {
+          "current": "const callbackBoundary = /six\\s+callback\\s+routes\\s+record\\s+callback\\s+control\\s+totals/iu;\n",
+          "previous": "const callbackBoundary = /four\\s+callback\\s+routes\\s+record\\s+callback\\s+control\\s+totals/iu;\n",
+          "start": 742
+        },
+        {
+          "current": "\tassert.equal(phpWasmRefinementEntryMatrix.length, 30);\n\tassert.equal(phpWasmRefinementEntryArtifactNames(\"a\".repeat(40)).length, 27);\n",
+          "previous": "\tassert.equal(phpWasmRefinementEntryMatrix.length, 28);\n\tassert.equal(phpWasmRefinementEntryArtifactNames(\"a\".repeat(40)).length, 26);\n",
+          "start": 3200
+        }
+      ],
+      "path": "tests/helpers/php-wasm-refinement-entry-documentation-tests.mjs",
+      "previousSha256": "e54a7f5387bfdc045842918dd2997466b749d9021f68acfa9561cd0bf37c2c52"
+    },
+    {
+      "currentSha256": "fe5e2e2abff3c6c81d295d6a6085083070835e076c2e5dd76fa210a3a25c6f25",
+      "edits": [
+        {
+          "current": "\tassert.equal(summary.artifacts.length, 27);\n\tassert.equal(summary.artifacts.reduce((sum, item) => sum + item.cells, 0), 30);\n",
+          "previous": "\tassert.equal(summary.artifacts.length, 26);\n\tassert.equal(summary.artifacts.reduce((sum, item) => sum + item.cells, 0), 28);\n",
+          "start": 5920
+        },
+        {
+          "current": "\t\t, producerCommit: producer, cells: 30, artifacts: 27, workflows: 4\n\t\t, records: 30, executions: 360, calls: 48, controls: 18\n",
+          "previous": "\t\t, producerCommit: producer, cells: 28, artifacts: 26, workflows: 4\n\t\t, records: 28, executions: 336, calls: 48, controls: 12\n",
+          "start": 6244
+        }
+      ],
+      "path": "tests/helpers/php-wasm-refinement-entry-hosted-summary-tests.mjs",
+      "previousSha256": "db03ebd38a0b4ffbe9637f0e55d06a7d4dc556e24d8de1a51531c5281a0667ca"
+    },
+    {
+      "currentSha256": "5c2940d6f51370f12ef5abdb0872504a1224a422b22ca5de50cfa3998512336e",
+      "edits": [
+        {
+          "current": "test(\"the complete PHP-Wasm refinement entry topology has 30 exact route cells\", () => {\n\tassert.equal(phpWasmRefinementEntryMatrix.length, 30);\n\tassert.equal(new Set(phpWasmRefinementEntryMatrix.map(cell => cell.id)).size, 30);\n",
+          "previous": "test(\"the complete PHP-Wasm refinement entry topology has 28 exact route cells\", () => {\n\tassert.equal(phpWasmRefinementEntryMatrix.length, 28);\n\tassert.equal(new Set(phpWasmRefinementEntryMatrix.map(cell => cell.id)).size, 28);\n",
+          "start": 1076
+        },
+        {
+          "current": "\t\tcopied: 8, owned: 4, callback: 6, indexed: 12\n",
+          "previous": "\t\tcopied: 8, owned: 4, callback: 4, indexed: 12\n",
+          "start": 1521
+        },
+        {
+          "current": "\t\t, producerCommit: revision, cells: 30, artifacts: 27, workflows: 4\n\t\t, records: 918, executions: 360, calls: 216, controls: 42\n",
+          "previous": "\t\t, producerCommit: revision, cells: 28, artifacts: 26, workflows: 4\n\t\t, records: 860, executions: 336, calls: 216, controls: 28\n",
+          "start": 4895
+        },
+        {
+          "current": "\tassert.equal(mutations.length, 78);\n",
+          "previous": "\tassert.equal(mutations.length, 74);\n",
+          "start": 6659
+        }
+      ],
+      "path": "tests/helpers/php-wasm-refinement-entry-matrix-tests.mjs",
+      "previousSha256": "ea7f192724717135df3d9ebf975dc35410ee09801808e075231935167460dc3d"
+    },
+    {
+      "currentSha256": "82574a7d1c976d90bb65300665d2f42c67695f4dc783101b0f05cf22f5893f71",
+      "edits": [
+        {
+          "current": "\tassert.equal(artifacts.size, 27\n",
+          "previous": "\tassert.equal(artifacts.size, 26\n",
+          "start": 6586
+        }
+      ],
+      "path": "tests/helpers/php-wasm-refinement-entry-matrix.mjs",
+      "previousSha256": "feb9a25749a40c63f5e79d716039d26e7bf439f9b17a659ff56aa0a2583599ab"
+    },
+    {
+      "currentSha256": "bb5870977cd32e8be06cd271c526862f5db4d99e8f056b998ce9aa9d31c30a37",
+      "edits": [
+        {
+          "current": "\t\t, cells: 27, artifacts: 27, logicalRoutes: 30\n",
+          "previous": "\t\t, cells: 26, artifacts: 26, logicalRoutes: 28\n",
+          "start": 775
+        },
+        {
+          "current": "\tassert.equal(artifacts.length, 27);\n",
+          "previous": "\tassert.equal(artifacts.length, 26);\n",
+          "start": 1101
+        }
+      ],
+      "path": "tests/helpers/php-wasm-refinement-entry-promotion-ci-tests.mjs",
+      "previousSha256": "7a71acb0955dd6277b031cd408ba39441025d9cb1ff422d8d95ea3759b0b1e94"
+    },
+    {
+      "currentSha256": "68d01f9fb2aad641fe92b426b7f86f2c1183dd0199ce6d75e0150afc8f91de3c",
+      "edits": [
+        {
+          "current": " * verifier used to promote all 30 logical entry routes.\n",
+          "previous": " * verifier used to promote all 28 logical entry routes.\n",
+          "start": 1716
+        },
+        {
+          "current": "    name: Authenticate all 30 refinement entry routes\n",
+          "previous": "    name: Authenticate all 28 refinement entry routes\n",
+          "start": 2904
+        },
+        {
+          "current": "\t\t, cells: 27, artifacts: 27, logicalRoutes: 30\n",
+          "previous": "\t\t, cells: 26, artifacts: 26, logicalRoutes: 28\n",
+          "start": 5647
+        }
+      ],
+      "path": "tests/helpers/php-wasm-refinement-entry-promotion-ci.mjs",
+      "previousSha256": "eeb2eaf1f5b5caffea67bfa83a7f03c0b9ec906ca0f058f171755ace62b5cbeb"
+    }
+  ],
+  "milestone": "php-wasm-callback-subtype-entry-source-v1",
+  "predecessorCommit": "ea29b1dc91b182f4a07885806e32f95e6300cb41",
+  "schemaVersion": 1,
+  "scope": "Add standalone selected-Subtype callback entry probes and nested Subtype-first checked-record refusals on unchanged admitted fixtures, with analyzer-only source/configuration/compiler/model bindings. Expand recurring workflow and independent promotion topology to 30 routes in 27 artifacts, preserving bounded concurrency. Update current documentation references and source-contract pins only; retain all installed observations, support states, historical producer bytes and artifacts. Installed trace order remains subject to hosted validation.",
+  "updates": [
+    {
+      "currentSha256": "c95bf00249017537c47aae5f0c49d39d92dd36d570d24bb305ca07c86375f072",
+      "edits": [
+        {
+          "current": "        'nested-invalid-recovery', 'nested-reply-rejection', 'nested-closure-refusal',\n",
+          "previous": "",
+          "start": 1174
+        },
+        {
+          "current": "                $leanBridgeCallbackProbeState['nested'] = make_nested_closure($n(0));\n                if (!$leanBridgeCallbackProbeState['nested']($weighted(2, 5))->isEqualTo($n(3)))\n",
+          "previous": "                $closure = make_nested_closure($n(0));\n                if (!$closure($weighted(2, 5))->isEqualTo($n(3)))\n",
+          "start": 3745
+        },
+        {
+          "current": "                break;\n            case 'nested-invalid-recovery':\n                call_host_nested(with_recovery(fn(Weighted $value) => $value, $weighted(0, 2)));\n                break;\n            case 'nested-reply-rejection':\n                call_host_nested(with_recovery(\n                    fn(Weighted $_value) => $weighted(0, 5), $weighted(1, 2)\n                ));\n                break;\n            case 'nested-closure-refusal':\n                try {\n                    $leanBridgeCallbackProbeState['nested']($weighted(0, 5));\n                } finally {\n                    $leanBridgeCallbackProbeState['nested']->close();\n                }\n",
+          "previous": "                $closure->close();\n",
+          "start": 3994
+        }
+      ],
+      "path": "tests/fixtures/php-wasm-callback-entry/callback-checked-record.php",
+      "previousSha256": "e483dce730a065baf546004c1f7acb1f1f1309343199f28340c74ef32cb64db6"
+    },
+    {
+      "currentSha256": "8a1e5c8d7ee2cb61d5c21a0aa81e38005ca3564848731b0e52ac77b213922888",
+      "edits": [
+        {
+          "current": "\trequire([\"callback-fin\", \"callback-checked-record\", \"callback-subtype\"].includes(plan.family)\n",
+          "previous": "\trequire([\"callback-fin\", \"callback-checked-record\"].includes(plan.family)\n",
+          "start": 778
+        }
+      ],
+      "path": "tests/fixtures/php-wasm-callback-entry/driver.mjs",
+      "previousSha256": "2b8818baa25505a7feb7a9e6421e678896d91ba17170ddf308fe4a9bf0745967"
+    },
+    {
+      "currentSha256": "840e77c856cfed47f8b0d52f97c280c337b0c68b750884cea18ed43d800234e8",
+      "edits": [
+        {
+          "current": "\tfor(const family of [\"callback-fin\", \"callback-checked-record\", \"callback-subtype\"])\n",
+          "previous": "\tfor(const family of [\"callback-fin\", \"callback-checked-record\"])\n",
+          "start": 338
+        },
+        {
+          "current": "\tconst subtype = JSON.parse(phpWasmCallbackEntryRequest(\n\t\t\"callback-subtype\", \"embedded\", { ...entryProbe, family: \"callback-subtype\" }\n\t));\n\tassert.equal(subtype.module, \"LeanCallbacksubtypes\");\n\tassert.deepEqual(subtype.operations, { probe: \"call_host\" });\n\tassert.equal(subtype.autoload, \"vendor/lean-bridge-callbacksubtypes/wasm/bootstrap.php\");\n\tassert.throws(() => phpWasmCallbackEntryRequest(\"callback-container\", \"embedded\", entryProbe));\n",
+          "previous": "",
+          "start": 1423
+        }
+      ],
+      "path": "tests/helpers/php-wasm-callback-entry-fixtures-tests.mjs",
+      "previousSha256": "dadbb62181a68c5d9d3bd43f9e9a8c356d6a08f5eaf0b692e7d1da2123a9c2c3"
+    },
+    {
+      "currentSha256": "8399360149fc06d6120e38fbb7848f149b6815d01d605e3c14ca4e427bcec43d",
+      "edits": [
+        {
+          "current": "import { callbackSubtypeReviewedIr } from \"./callback-subtype-fixture.mjs\";\nimport {\n\tcallbackSubtypePhpWasmConfiguration, callbackSubtypePhpWasmSettings\n\t, checkCallbackSubtypePhpWasmModel\n} from \"./callback-subtype-php-wasm-fixture.mjs\";\n",
+          "previous": "",
+          "start": 631
+        },
+        {
+          "current": "\t, \"callback-subtype\": Object.freeze({\n\t\troot: \"tests/fixtures/onboarding/callback-subtypes\"\n\t\t, leanModule: \"CallbackSubtypes\"\n\t\t, caller: \"tests/fixtures/php-wasm-callback-entry/callback-subtype.php\"\n\t\t, settings: callbackSubtypePhpWasmSettings\n\t\t, module: \"LeanCallbacksubtypes\", probe: \"call_host\"\n\t})\n});\nconst reviewed = Object.freeze({\n\t\"callback-checked-record\": Object.freeze({\n\t\tconfiguration: callbackCheckedRecordPhpWasmConfiguration\n\t\t, review: callbackCheckedRecordReviewedIr\n\t\t, check: checkCallbackCheckedRecordPhpWasmModel\n\t})\n\t, \"callback-subtype\": Object.freeze({\n\t\tconfiguration: callbackSubtypePhpWasmConfiguration\n\t\t, review: callbackSubtypeReviewedIr\n\t\t, check: checkCallbackSubtypePhpWasmModel\n\t})\n",
+          "previous": "",
+          "start": 1647
+        },
+        {
+          "current": " * @param ordinaryIr - Ordinary checked-record or Subtype IR used to derive the review.\n",
+          "previous": " * @param ordinaryIr - Ordinary checked-record IR used to derive the review.\n",
+          "start": 2542
+        },
+        {
+          "current": "\t// Checked-record and Subtype reviews are derived from the ordinary extraction of the same source.\n\tconst author = reviewed[family];\n\tconst review = ordinaryIr === null ? null : author.review(ordinaryIr);\n",
+          "previous": "\tconst review = ordinaryIr === null ? null : callbackCheckedRecordReviewedIr(ordinaryIr);\n",
+          "start": 3132
+        },
+        {
+          "current": "\t\t...spec, configuration: author.configuration(route)\n",
+          "previous": "\t\t...spec, configuration: callbackCheckedRecordPhpWasmConfiguration(route)\n",
+          "start": 3348
+        },
+        {
+          "current": "\t\t\tconst selected = route === \"ordinary\" ? author.review(model.bindingIr) : review;\n\t\t\tauthor.check(model, selected, route);\n",
+          "previous": "\t\t\tconst selected = route === \"ordinary\" ? callbackCheckedRecordReviewedIr(model.bindingIr) : review;\n\t\t\tcheckCallbackCheckedRecordPhpWasmModel(model, selected, route);\n",
+          "start": 3436
+        }
+      ],
+      "path": "tests/helpers/php-wasm-callback-entry-fixtures.mjs",
+      "previousSha256": "d4785879d2a3c33e808d361c55d1ab7977b25f76010c9133133d14b2e5bd9c6f"
+    },
+    {
+      "currentSha256": "5bbcfe1f92c3ea63176f6c187dd5097c0c8e2c217a8e5088775867920ea3bf52",
+      "edits": [
+        {
+          "current": "\t\tif(family !== \"callback-fin\" && hosted.routes.includes(\"reviewed\"))\n",
+          "previous": "\t\tif(family === \"callback-checked-record\" && hosted.routes.includes(\"reviewed\"))\n",
+          "start": 3544
+        },
+        {
+          "current": "\t\t\t\t, `${family} reviewed entry probes require ordinary extraction first`);\n",
+          "previous": "\t\t\t\t, \"checked-record reviewed entry probes require ordinary extraction first\");\n",
+          "start": 3659
+        },
+        {
+          "current": "\t\t\tconst entryPlan = phpWasmCallbackEntryPlan(family, selection.selected\n\t\t\t\t, selection.validatorConstructors);\n",
+          "previous": "\t\t\tconst entryPlan = phpWasmCallbackEntryPlan(family, selection.selected);\n",
+          "start": 6625
+        }
+      ],
+      "path": "tests/helpers/php-wasm-callback-entry-installed-tests.mjs",
+      "previousSha256": "40ed2853fc0a1dc5ba5aa5db8b372318380ebea653f3bc9c8c43253485efad3d"
+    },
+    {
+      "currentSha256": "556fccb7519495bd5eb165f0745a9f78d8e0b4711eccc11862cc0165c1b64356",
+      "edits": [
+        {
+          "current": "import { readFile } from \"node:fs/promises\";\n",
+          "previous": "",
+          "start": 54
+        },
+        {
+          "current": "import { canonicalJson, sha256 } from \"../../src/capsule/node.mjs\";\n",
+          "previous": "",
+          "start": 129
+        },
+        {
+          "current": "import { phpWasmCallbackEntryFixture } from \"./php-wasm-callback-entry-fixtures.mjs\";\n",
+          "previous": "",
+          "start": 374
+        },
+        {
+          "current": "\tconst nestedValidator = key => \"CallbackCheckedRecords.makeNestedClosure:callback_validator:\"\n\t\t+ `closure_graph_refinement_0_${key}`;\n",
+          "previous": "",
+          "start": 4293
+        },
+        {
+          "current": "\t], [\"validator\", nestedValidator(\"weighted\")], [\"validator\", nestedValidator(\"positive\")]);\n",
+          "previous": "\t]);\n",
+          "start": 4558
+        },
+        {
+          "current": "\tconst validatorConstructors = {\n\t\t[nestedValidator(\"weighted\")]: \"CallbackCheckedRecords.mkWeighted\"\n\t\t, [nestedValidator(\"positive\")]: \"CallbackCheckedRecords.checkedPositive\"\n\t};\n\tassert.throws(() => phpWasmCallbackEntryPlan(\"callback-checked-record\", selected)\n\t\t, /validator\\/CallbackCheckedRecords\\.makeNestedClosure\\/CallbackCheckedRecords\\.checkedPositive/u);\n\tconst plan = phpWasmCallbackEntryPlan(\"callback-checked-record\", selected\n\t\t, validatorConstructors);\n",
+          "previous": "\tconst plan = phpWasmCallbackEntryPlan(\"callback-checked-record\", selected);\n",
+          "start": 4755
+        },
+        {
+          "current": "\t// The selected Subtype payload field is the first refusal; its record constructor never runs.\n\tconst positiveOnly = call => call.entries.filter(item => item.kind === \"constructor\")\n\t\t.map(item => item.label.split(\".\").at(-1));\n\tconst nestedRecovery = plan.cases.find(item => item.control === \"nested-invalid-recovery\");\n\tassert.equal(nestedRecovery.outcome, \"refused\");\n\tassert.deepEqual(nestedRecovery.calls[0].entries.map(item => item.kind)\n\t\t, [\"adapter\", \"adapter\", \"recovery\", \"recovery\", \"constructor\", \"cleanup\"]);\n\tassert.deepEqual(positiveOnly(nestedRecovery.calls[0]), [\"checkedPositive\"]);\n\tconst nestedReply = plan.cases.find(item => item.control === \"nested-reply-rejection\").calls[0];\n\tassert.deepEqual(positiveOnly(nestedReply), [\n\t\t\"checkedPositive\", \"mkWeighted\", \"checkedPositive\"\n\t\t, \"checkedPositive\", \"mkWeighted\"\n\t]);\n\tassert.deepEqual(nestedReply.entries.slice(-6).map(item => item.kind)\n\t\t, [\"constructor\", \"rejection\", \"rejection\", \"constructor\", \"constructor\", \"cleanup\"]);\n\tconst nestedClosure = plan.cases.find(item => item.control === \"nested-closure-refusal\").calls[0];\n\tassert.deepEqual(nestedClosure.entries.map(item => item.kind)\n\t\t, [\"adapter\", \"adapter\", \"constructor\", \"validator\", \"constructor\", \"cleanup\"]);\n\tassert.equal(nestedClosure.entries[3].label, nestedValidator(\"positive\"));\n\tassert.deepEqual(positiveOnly(nestedClosure), [\"checkedPositive\", \"checkedPositive\"]);\n});\n\ntest(\"selected-Subtype callback plan follows the analyzer-authenticated compiler model\", async () => {\n\tconst directory = \"tests/fixtures/php-wasm-callback-entry/analyzer\";\n\tconst modelBytes = await readFile(`${directory}/callback-subtype-ordinary.model.json`);\n\tconst identity = JSON.parse(await readFile(`${directory}/callback-subtype-ordinary.identity.json`));\n\tassert.equal(identity.scope, \"analyzer-only-compiler-model\");\n\tassert.equal(sha256(modelBytes), identity.modelSha256);\n\tconst source = await phpWasmCallbackEntrySourceFixture(\"callback-subtype\");\n\tassert.equal(source.probeSha256, identity.probeSha256, \"analyzer model binds the current probe source\");\n\tassert.equal(source.originalSha256, identity.fixtureLeanSha256, \"admitted fixture source is unchanged\");\n\tconst model = JSON.parse(modelBytes);\n\tconst configuration = phpWasmCallbackEntryFixture(\"callback-subtype\", \"ordinary\").configuration;\n\tassert.equal(sha256(canonicalJson(configuration)), identity.configurationSha256);\n\tassert.equal(model.sourceIdentity.exportConfigurationSha256, identity.configurationSha256);\n\tassert.equal(model.sourceIdentity.leanCompilerSha256, identity.leanCompilerSha256);\n\tassert.equal(model.sourceIdentity.modules.find(item => item.module === \"CallbackSubtypes\")\n\t\t.source.sha256, identity.probeSha256, \"the model was elaborated from the probe source\");\n\tconst selection = phpWasmCallbackEntrySelection(model, source.entries);\n\tconst positive = \"CallbackSubtypes.checkedPositive\";\n\tassert.throws(() => phpWasmCallbackEntryPlan(\"callback-subtype\", selection.selected)\n\t\t, /validator\\/CallbackSubtypes\\.makeClosure\\/CallbackSubtypes\\.checkedPositive/u);\n\tconst plan = phpWasmCallbackEntryPlan(\"callback-subtype\", selection.selected\n\t\t, selection.validatorConstructors);\n\tassert.deepEqual(plan.cases.map(item => [item.control, item.outcome]), [\n\t\t[\"host-reply\", \"accepted\"], [\"invalid-recovery\", \"refused\"]\n\t\t, [\"actual-reply-rejection\", \"refused\"], [\"later-call-recovery\", \"accepted\"]\n\t\t, [\"mixed-host\", \"accepted\"], [\"closure-input\", \"accepted\"]\n\t\t, [\"closure-input-refusal\", \"refused\"], [\"closure-input-recovery\", \"accepted\"]\n\t\t, [\"mixed-closure\", \"accepted\"], [\"mixed-closure-refusal\", \"refused\"]\n\t]);\n\tconst kinds = control => plan.cases.find(item => item.control === control)\n\t\t.calls.map(call => call.entries.map(item => item.kind));\n\tassert.deepEqual(kinds(\"invalid-recovery\")\n\t\t, [[\"adapter\", \"adapter\", \"recovery\", \"recovery\", \"constructor\", \"cleanup\"]]);\n\tassert.deepEqual(kinds(\"host-reply\")[0], [\n\t\t\"adapter\", \"adapter\", \"recovery\", \"recovery\", \"constructor\", \"source\"\n\t\t, \"callback\", \"callback\", \"callback\", \"constructor\", \"cleanup\"\n\t]);\n\tassert.deepEqual(kinds(\"actual-reply-rejection\")[0].slice(-5)\n\t\t, [\"constructor\", \"rejection\", \"rejection\", \"constructor\", \"cleanup\"]);\n\tassert.deepEqual(kinds(\"closure-input\")[1]\n\t\t, [\"adapter\", \"adapter\", \"constructor\", \"closure\", \"cleanup\"]);\n\tassert.deepEqual(kinds(\"mixed-closure\")[1], [\"adapter\", \"adapter\", \"constructor\", \"cleanup\"]);\n\tfor(const control of [\"closure-input-refusal\", \"mixed-closure-refusal\"])\n\t{\n\t\tassert.deepEqual(kinds(control)\n\t\t\t, [[\"adapter\", \"adapter\", \"constructor\", \"validator\", \"constructor\", \"cleanup\"]]);\n\t\tconst validator = plan.cases.find(item => item.control === control).calls[0].entries[3];\n\t\tassert.equal(selection.validatorConstructors[validator.label], positive);\n\t}\n\tassert.match(plan.cases.find(item => item.control === \"mixed-closure-refusal\")\n\t\t.calls[0].entries[3].label, /makeMixedClosure:callback_validator:closure_graph_refinement_1_/u);\n\tassert.ok(selection.selected.every(item => !/Container/u.test(item.label))\n\t\t, \"container exports stay compiled but unselected\");\n",
+          "previous": "",
+          "start": 7376
+        }
+      ],
+      "path": "tests/helpers/php-wasm-callback-entry-plan-tests.mjs",
+      "previousSha256": "8ce36b22ec4f8244178f0b746bd297512cad10523fbdf36873a4b3a60fbeb8d4"
+    },
+    {
+      "currentSha256": "07c2ac3476f4397404be85941bd2576fd075a25fe3bb6b69fbc9d4539a622489",
+      "edits": [
+        {
+          "current": " * @param family - Fin, checked-record or Subtype callback family.\n",
+          "previous": " * @param family - Fin or checked-record callback family.\n",
+          "start": 657
+        },
+        {
+          "current": " * @param validatorConstructors - Compiler-derived constructor of each closure refusal validator.\n",
+          "previous": "",
+          "start": 786
+        },
+        {
+          "current": "export const phpWasmCallbackEntryPlan = (family, selected, validatorConstructors = {}) => {\n",
+          "previous": "export const phpWasmCallbackEntryPlan = (family, selected) => {\n",
+          "start": 888
+        },
+        {
+          "current": "\t// A closure with several checked leaves has one refusal validator per leaf; the native walker\n\t// reaches them in field order, so a refusal names the validator of the leaf that refused.\n\tconst leafValidator = (name, constructor) => {\n\t\tconst values = selected.filter(item => item.kind === \"validator\"\n\t\t\t&& item.label.startsWith(`${name}:callback_validator:closure_graph_refinement_`)\n\t\t\t&& validatorConstructors[item.label] === constructor);\n\t\tassert.equal(values.length, 1, `validator/${name}/${constructor}`);\n\t\treturn { kind: \"validator\", label: values[0].label };\n\t};\n",
+          "previous": "",
+          "start": 1537
+        },
+        {
+          "current": "\telse if(family === \"callback-checked-record\")\n",
+          "previous": "\telse\n",
+          "start": 5225
+        },
+        {
+          "current": "\t\tconst positive = constructor(namespace, \"checkedPositive\");\n",
+          "previous": "",
+          "start": 5380
+        },
+        {
+          "current": "\t\t\t// The selected Subtype payload field refuses before its enclosing record constructor runs.\n\t\t\t, { control: \"nested-invalid-recovery\", outcome: \"refused\"\n\t\t\t\t, calls: [recoveryRefusal(nestedHost, [positive])] }\n\t\t\t, { control: \"nested-reply-rejection\", outcome: \"refused\"\n\t\t\t\t, calls: [callback(nestedHost, { recovery: weighted\n\t\t\t\t\t, reply: [positive], rejected: true })] }\n\t\t\t, { control: \"nested-closure-refusal\", outcome: \"refused\"\n\t\t\t\t, calls: [\n\t\t\t\t\tclosureRefusal(nestedClosure, [\n\t\t\t\t\t\tpositive\n\t\t\t\t\t\t, leafValidator(nestedClosure, `${namespace}.checkedPositive`)\n\t\t\t\t\t\t, positive\n\t\t\t\t\t])\n\t\t\t\t]\n\t\t\t}\n\t\t];\n\t}\n\telse\n\t{\n\t\tconst namespace = \"CallbackSubtypes\";\n\t\tconst positive = [constructor(namespace, \"checkedPositive\")];\n\t\tconst host = `${namespace}.callHost`, mixedHost = `${namespace}.callHostMixed`;\n\t\tconst closureName = `${namespace}.makeClosure`;\n\t\tconst mixedClosure = `${namespace}.makeMixedClosure`;\n\t\tconst refusal = name => closureRefusal(name, [\n\t\t\t...positive, leafValidator(name, `${namespace}.checkedPositive`), ...positive\n\t\t]);\n\t\tcases = [\n\t\t\t{ control: \"host-reply\", outcome: \"accepted\"\n\t\t\t\t, calls: [callback(host, { recovery: positive, reply: positive })] }\n\t\t\t, { control: \"invalid-recovery\", outcome: \"refused\"\n\t\t\t\t, calls: [recoveryRefusal(host, positive)] }\n\t\t\t, { control: \"actual-reply-rejection\", outcome: \"refused\"\n\t\t\t\t, calls: [callback(host, { recovery: positive\n\t\t\t\t\t, reply: positive, rejected: true })] }\n\t\t\t, { control: \"later-call-recovery\", outcome: \"accepted\"\n\t\t\t\t, calls: [callback(host, { recovery: positive, reply: positive })] }\n\t\t\t, { control: \"mixed-host\", outcome: \"accepted\"\n\t\t\t\t, calls: [callback(mixedHost, { recovery: positive, reply: positive })] }\n\t\t\t, { control: \"closure-input\", outcome: \"accepted\"\n\t\t\t\t, calls: [maker(closureName), closure(closureName, positive, false)] }\n\t\t\t, { control: \"closure-input-refusal\", outcome: \"refused\"\n\t\t\t\t, calls: [refusal(closureName)] }\n\t\t\t, { control: \"closure-input-recovery\", outcome: \"accepted\"\n\t\t\t\t, calls: [closure(closureName, positive, false)] }\n\t\t\t// Lean drops the unused marker, so the mixed closure applies its reduced body\n\t\t\t// rather than the exported probe body, as the checked-record mixed closure does.\n\t\t\t, { control: \"mixed-closure\", outcome: \"accepted\"\n\t\t\t\t, calls: [maker(mixedClosure)\n\t\t\t\t\t, closure(mixedClosure, positive, false, false)] }\n\t\t\t, { control: \"mixed-closure-refusal\", outcome: \"refused\"\n\t\t\t\t, calls: [refusal(mixedClosure)] }\n",
+          "previous": "",
+          "start": 7453
+        }
+      ],
+      "path": "tests/helpers/php-wasm-callback-entry-plan.mjs",
+      "previousSha256": "4b30b3991bbaa5fa53ecf83cd8a5bd59d5ef3b7df753d3d5a8994ae5ba6e0d82"
+    },
+    {
+      "currentSha256": "a0a9089cf27bf6bbbed4b36faeb50a79bcb0c5ae7e7708fa925a0138cc052f91",
+      "edits": [
+        {
+          "current": "import { callbackSubtypeReviewedIr } from \"./callback-subtype-fixture.mjs\";\nimport {\n\tcallbackSubtypePhpWasmConfiguration, checkCallbackSubtypePhpWasmModel\n} from \"./callback-subtype-php-wasm-fixture.mjs\";\n",
+          "previous": "",
+          "start": 957
+        },
+        {
+          "current": "const authors = Object.freeze({\n\t\"callback-fin\": Object.freeze({\n\t\tconfiguration: callbackFinPhpWasmConfiguration\n\t\t, review: () => callbackFinPhpWasmReview()\n\t\t, check: checkCallbackFinPhpWasmModel\n\t})\n\t, \"callback-checked-record\": Object.freeze({\n\t\tconfiguration: callbackCheckedRecordPhpWasmConfiguration\n\t\t, review: callbackCheckedRecordReviewedIr\n\t\t, check: checkCallbackCheckedRecordPhpWasmModel\n\t})\n\t, \"callback-subtype\": Object.freeze({\n\t\tconfiguration: callbackSubtypePhpWasmConfiguration\n\t\t, review: callbackSubtypeReviewedIr\n\t\t, check: checkCallbackSubtypePhpWasmModel\n\t})\n});\nconst configurationFor = (family, route) => authors[family].configuration(route);\n",
+          "previous": "const configurationFor = (family, route) => family === \"callback-fin\"\n\t? callbackFinPhpWasmConfiguration(route)\n\t: callbackCheckedRecordPhpWasmConfiguration(route);\n",
+          "start": 2734
+        },
+        {
+          "current": "\t\tconst review = family === \"callback-fin\" ? authors[family].review()\n\t\t\t: route === \"reviewed\" ? retainedReview : authors[family].review(model.bindingIr);\n\t\tauthors[family].check(model, review, route);\n",
+          "previous": "\t\tconst review = family === \"callback-fin\" ? callbackFinPhpWasmReview()\n\t\t\t: route === \"reviewed\" ? retainedReview : callbackCheckedRecordReviewedIr(model.bindingIr);\n\t\tif(family === \"callback-fin\") checkCallbackFinPhpWasmModel(model, review, route);\n\t\telse checkCallbackCheckedRecordPhpWasmModel(model, review, route);\n",
+          "start": 7699
+        },
+        {
+          "current": "\t\tconst plan = phpWasmCallbackEntryPlan(family, selected.selected, selected.validatorConstructors);\n",
+          "previous": "\t\tconst plan = phpWasmCallbackEntryPlan(family, selected.selected);\n",
+          "start": 8055
+        }
+      ],
+      "path": "tests/helpers/php-wasm-callback-entry-report.mjs",
+      "previousSha256": "4fdcfa5166481e0231fb29e1750c7a62e7dd0d2ed732e56e87e6d78d7eddd871"
+    },
+    {
+      "currentSha256": "7f28263abe2300c3e243a079d24b87d150bfb1b50e39149369ce8bde3d7eeb4d",
+      "edits": [
+        {
+          "current": "test(\"callback selection names the constructor of each closure refusal validator\", async () => {\n\tconst model = JSON.parse(await readFile(\n\t\t`${callbackRefinementsPhpWasmHostedEvidence}/hosted/output/records/checked-record/reviewed/build-0/model.json`\n\t));\n\tconst fixture = await phpWasmCallbackEntrySourceFixture(\"callback-checked-record\");\n\tconst { selected, validatorConstructors } = phpWasmCallbackEntrySelection(model, fixture.entries);\n\tconst nested = selected.filter(item => item.kind === \"validator\"\n\t\t&& item.label.startsWith(\"CallbackCheckedRecords.makeNestedClosure:callback_validator:\"));\n\tassert.equal(nested.length, 2);\n\tassert.deepEqual(nested.map(item => validatorConstructors[item.label]).sort()\n\t\t, [\"CallbackCheckedRecords.checkedPositive\", \"CallbackCheckedRecords.mkWeighted\"]);\n\tfor(const label of Object.keys(validatorConstructors))\n\t\tassert.ok(selected.some(item => item.kind === \"validator\" && item.label === label), label);\n\tassert.ok(Object.keys(validatorConstructors).every(label => label.includes(\":callback_validator:closure_\")));\n});\n\ntest(\"callback selection derives every selected-Subtype entry from the analyzer model\", async () => {\n\tconst model = JSON.parse(await readFile(\n\t\t\"tests/fixtures/php-wasm-callback-entry/analyzer/callback-subtype-ordinary.model.json\"));\n\tconst fixture = await phpWasmCallbackEntrySourceFixture(\"callback-subtype\");\n\tconst { selected, validatorConstructors } = phpWasmCallbackEntrySelection(model, fixture.entries);\n\tfor(const kind of [\"public\", \"adapter\", \"validator\", \"recovery\", \"callback\"\n\t\t, \"rejection\", \"closure\", \"cleanup\", \"source\", \"constructor\"])\n\t\tassert.ok(selected.some(item => item.kind === kind), kind);\n\tfor(const name of [\"callHost\", \"callHostMixed\"])\n\t\tassert.ok(selected.some(item => item.label === `CallbackSubtypes.${name}:recovery:native`), name);\n\tfor(const name of [\"makeClosure\", \"makeMixedClosure\"])\n\t\tassert.ok(selected.some(item => item.label === `CallbackSubtypes.${name}:closure:lean`), name);\n\tassert.deepEqual(Object.values(validatorConstructors)\n\t\t, [\"CallbackSubtypes.checkedPositive\", \"CallbackSubtypes.checkedPositive\"]);\n\tassert.ok(selected.every(item => !/Container/u.test(item.label)));\n\tassert.throws(() => phpWasmCallbackEntrySelection(model, [\n\t\t...fixture.entries\n\t\t, { symbol: \"invented_constructor\", kind: \"constructor\", label: \"CallbackSubtypes.invented\" }\n\t]), /constructor is absent from compiler refinements/u);\n});\n\n",
+          "previous": "",
+          "start": 4189
+        }
+      ],
+      "path": "tests/helpers/php-wasm-callback-entry-selection-tests.mjs",
+      "previousSha256": "493ed8229d50a143e84a7613e2629516331336e65eb8c46a951c19100f292ee6"
+    },
+    {
+      "currentSha256": "3388f0f3570c3f145464cfda5204434612cedb4fb811da9fc5587826d0ec9fec",
+      "edits": [
+        {
+          "current": "import { componentRecursiveRefinementLeaves } from \"../../src/build/component-refinements.mjs\";\nimport {\n\tcomponentStructuredCallablePrefix, componentStructuredClosureRefusals\n} from \"../../src/build/component-structured-callable-lean.mjs\";\n",
+          "previous": "import { componentStructuredCallablePrefix } from \"../../src/build/component-structured-callable-lean.mjs\";\n",
+          "start": 358
+        },
+        {
+          "current": "/**\n * Name the constructor each per-leaf closure refusal validator checks, from the same refusal\n * sites and leaf identities the PHP-Wasm adapter generator uses.\n *\n * @param abi - Authenticated copied-payload callable descriptor.\n */\nconst closureValidatorConstructors = abi => {\n\tconst refusals = componentStructuredClosureRefusals(abi, { finDirections: true });\n\tconst definitions = new Map(abi.types.map(type => [type.id, type]));\n\tconst constructors = new Map();\n\tfor(const site of refusals?.sites ?? []) site.refinements.parameters.forEach((tree, index) => {\n\t\tconst leaves = componentRecursiveRefinementLeaves(\n\t\t\ttree, site.signature.parameters[index], definitions, refusals.cycles);\n\t\tfor(const leaf of leaves)\n\t\t{\n\t\t\tconst constructor = leaf.refinement.constructor;\n\t\t\tassert.equal(typeof constructor, \"string\", \"closure refusal leaf names its constructor\");\n\t\t\tconstructors.set(`${site.symbol}_graph_refinement_${index}_${leaf.key}`, constructor);\n\t\t}\n\t});\n\treturn constructors;\n};\n\n",
+          "previous": "",
+          "start": 1686
+        },
+        {
+          "current": "\tconst leafConstructors = closureValidatorConstructors(abi);\n\tconst validatorConstructors = {};\n",
+          "previous": "",
+          "start": 3921
+        },
+        {
+          "current": "\t\tconst validators = [...annotations]\n\t\t\t.filter(value => refinementSymbol(value, prefix + \"_\")).sort();\n\t\tfor(const symbol of validators)\n\t\t{\n\t\t\tconst validatorLabel = `${label}:callback_validator:${symbol.slice(prefix.length + 1)}`;\n\t\t\tselected.push({ symbol, kind: \"validator\", label: validatorLabel });\n\t\t\tif(leafConstructors.has(symbol))\n\t\t\t\tvalidatorConstructors[validatorLabel] = leafConstructors.get(symbol);\n\t\t}\n",
+          "previous": "\t\tfor(const symbol of [...annotations]\n\t\t\t.filter(value => refinementSymbol(value, prefix + \"_\")).sort())\n\t\t\tselected.push({ symbol, kind: \"validator\"\n\t\t\t\t, label: `${label}:callback_validator:${symbol.slice(prefix.length + 1)}` });\n",
+          "start": 6712
+        },
+        {
+          "current": "\treturn { selected, generated, zend, abi, validatorConstructors };\n",
+          "previous": "\treturn { selected, generated, zend, abi };\n",
+          "start": 8487
+        }
+      ],
+      "path": "tests/helpers/php-wasm-callback-entry-selection.mjs",
+      "previousSha256": "36194ecd43f1b75fa968d72cb1bffcb756cb63d3b47060a5ed7879b1eac05008"
+    },
+    {
+      "currentSha256": "7b0991884ab4312bd2868bd6468626830e70c87202a5e7c8cff5ae63d7e72adb",
+      "edits": [
+        {
+          "current": "\t\"callback-fin\", \"callback-checked-record\", \"callback-subtype\"\n",
+          "previous": "\t\"callback-fin\", \"callback-checked-record\"\n",
+          "start": 478
+        },
+        {
+          "current": "\t// The admitted standalone selected-Subtype corpus. Its container exports stay compiled in the\n\t// package but are deliberately not selected: this family measures direct Subtype positions.\n\t, \"callback-subtype\": Object.freeze({\n\t\tpath: \"tests/fixtures/onboarding/callback-subtypes/CallbackSubtypes.lean\"\n\t\t, namespace: \"CallbackSubtypes\", prefix: \"lb_callback_subtype_probe\"\n\t\t, constructors: Object.freeze([\"checkedPositive\"])\n\t\t, sources: Object.freeze([\n\t\t\t\"callHost\", \"callHostMixed\", \"makeClosure\", \"makeMixedClosure\"\n\t\t])\n\t\t, closures: Object.freeze([\n\t\t\tObject.freeze({\n\t\t\t\tname: \"makeClosure\", body: \"makeClosureProbeBody\"\n\t\t\t\t, previous: `def makeClosure (_seed : Nat) : Positive → Positive :=\n  fun value => value`\n\t\t\t\t, current: `@[noinline, export lb_callback_subtype_closure_makeClosure]\ndef makeClosureProbeBody (value : Positive) : Positive := value\n\ndef makeClosure (_seed : Nat) : Positive → Positive := makeClosureProbeBody`\n\t\t\t})\n\t\t\t, Object.freeze({\n\t\t\t\tname: \"makeMixedClosure\", body: \"makeMixedClosureProbeBody\"\n\t\t\t\t, previous: `def makeMixedClosure (_seed : Nat) : Nat → Positive → Positive :=\n  fun _marker value => value`\n\t\t\t\t, current: `@[noinline, export lb_callback_subtype_closure_makeMixedClosure]\ndef makeMixedClosureProbeBody (_marker : Nat) (value : Positive) : Positive := value\n\ndef makeMixedClosure (_seed : Nat) : Nat → Positive → Positive := makeMixedClosureProbeBody`\n\t\t\t})\n\t\t])\n\t})\n",
+          "previous": "",
+          "start": 3612
+        }
+      ],
+      "path": "tests/helpers/php-wasm-callback-entry-source-fixtures.mjs",
+      "previousSha256": "3632c2ad7f43b974b4497be510fa5b5dab5d7ac29f268e1eceea7b9357d3e388"
+    }
+  ]
+}

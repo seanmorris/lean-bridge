@@ -18,7 +18,7 @@ if [[ $LEAN_BRIDGE_CALLBACK_ENTRY_PHP_WASM_TEST != 1 ]]; then
   exit 2
 fi
 case "$LEAN_BRIDGE_CALLBACK_ENTRY_PHP_WASM_FAMILIES" in
-  callback-fin|callback-checked-record) ;;
+  callback-fin|callback-checked-record|callback-subtype) ;;
   *) printf '%s\n' 'Select exactly one known callback-entry family.' >&2; exit 2 ;;
 esac
 if [[ $LEAN_BRIDGE_CALLBACK_ENTRY_PHP_WASM_ROUTES != ordinary,reviewed ]]; then

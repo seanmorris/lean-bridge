@@ -33,7 +33,7 @@ jobs:
     uses: ./.github/workflows/php-wasm-indexed-refinement-entry.yml
 
   promote:
-    name: Authenticate all 28 refinement entry routes
+    name: Authenticate all 30 refinement entry routes
     needs:
       - copied
       - owned
