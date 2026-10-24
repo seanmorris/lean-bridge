@@ -1,0 +1,155 @@
+{
+  "additions": [
+    {
+      "currentSha256": "6f511183a07d6a65c79909d29becf99bbb6ff1ba573e172380e0cb1cabd5f0f2",
+      "path": "scripts/update-entry-fixture-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "0614c917cedf6d3fa8a91bedc827433c70e9ff215820042a16af328f0b4b3bef",
+      "path": "tests/helpers/entry-fixture-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "2704a5c9b84c83b7476c54e74263db61055600a748d312cecb83e769e3afc461",
+      "path": "tests/helpers/entry-fixture-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "aa25d9b715db519a80282c3a7b9e91e85a8cc430",
+  "integrationBaseCommit": "e2190c8a5829e6b4155094e5ecead80cbe30888e",
+  "integrationUpdates": [
+    {
+      "currentSha256": "a8eb4fed28265256bb1d5729cd64207623451a8408f2685c8a280f16edc79efa",
+      "edits": [
+        {
+          "current": "import { beforeEntryFixtureRepairSource, entryFixtureRepairNormalizationPaths } from \"./entry-fixture-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...entryFixtureRepairNormalizationPaths\n\t, ...coreEvidenceMemoryRepairNormalizationPaths\n",
+          "previous": "\t...coreEvidenceMemoryRepairNormalizationPaths\n",
+          "start": 173579
+        },
+        {
+          "current": "\tconst entryFixtureRepair\n\t\t= beforeEntryFixtureRepairSource(path, text, expected);\n\tif(sha256(entryFixtureRepair) === expected)\n\t\treturn entryFixtureRepair;\n\ttext = entryFixtureRepair;\n",
+          "previous": "",
+          "start": 213971
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "753995311eb9239ba8a0cc4c5329c7a25958a309577feb960026a21f90861954"
+    },
+    {
+      "currentSha256": "98798057361b31ec954335119881cd79f4f29cf701875960a0f439c87746ba9d",
+      "edits": [
+        {
+          "current": "import \"./helpers/entry-fixture-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 454
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "ab893b9ca773c8429e9391379cbd2deb04e59d10d700b82052dffefba9544256"
+    }
+  ],
+  "milestone": "entry-fixture-repair-source-v1",
+  "predecessorCommit": "f8c8ccf028e8039962a303ea86b22335c55d1514",
+  "schemaVersion": 1,
+  "scope": "Classify only the exact Firefox legacy-EH warning while retaining the complete console, use the valid ordinary Grant refinement configuration, and canonicalize fixture effect-set order. Keep unexpected console lines and reviewed-contract differences fatal. No inventory or installed observation changes.",
+  "updates": [
+    {
+      "currentSha256": "d4a6607504ef7984083a2531ec3f9360627bc14100b33da703806eea35b6a5f4",
+      "edits": [
+        {
+          "current": "import { accountNominalSubtypeEntry, nominalSubtypeEntryConsumer, nominalSubtypeEntryExpected, splitNominalSubtypeEntryConsole } from \"./nominal-subtype-entry.mjs\";\n",
+          "previous": "import { accountNominalSubtypeEntry, nominalSubtypeEntryConsumer, nominalSubtypeEntryExpected } from \"./nominal-subtype-entry.mjs\";\n",
+          "start": 914
+        },
+        {
+          "current": "\t\t\t\t// The record keeps the complete console stream; only exact allowed engine warnings leave the trace.\n\t\t\t\tawait saveLakeFile(output, `entry/browser/${engine}.console.txt`, lines.map(line => line + \"\\n\").join(\"\"));\n\t\t\t\tconst { trace: traceLines, warnings } = splitNominalSubtypeEntryConsole(engine, lines);\n\t\t\t\tconst trace = traceLines.map(line => line + \"\\n\").join(\"\");\n",
+          "previous": "\t\t\t\tconst trace = lines.map(line => line + \"\\n\").join(\"\");\n\t\t\t\tawait saveLakeFile(output, `entry/browser/${engine}.console.txt`, trace);\n",
+          "start": 4151
+        },
+        {
+          "current": "\t\t\t\tengines.push({ engine, hostVersion: browser.version(), rows, observed, counts, errors, warnings, consoleLines: lines.length });\n",
+          "previous": "\t\t\t\tengines.push({ engine, hostVersion: browser.version(), rows, observed, counts, errors, consoleLines: lines.length });\n",
+          "start": 4681
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-entry-browser.mjs",
+      "previousSha256": "b495f44227a286f2e28876ac96c62bbd70dc01e6e7cb2bf6079695de1f1a183d"
+    },
+    {
+      "currentSha256": "a55843b709805c9c528f3403e7c8f2e6a69d71b1e0334359ba4375d7aaae99b4",
+      "edits": [
+        {
+          "current": "import { accountNominalSubtypeEntry, assertNominalSubtypeEntryReport, instrumentNominalSubtypeLean, nominalSubtypeEntryBegin, nominalSubtypeEntryConsumer, nominalSubtypeEntryEnd, nominalSubtypeEntryExpected, nominalSubtypeEntryBrowserWarnings, nominalSubtypeEntryInstrumentation, nominalSubtypeEntryMarker, splitNominalSubtypeEntryConsole } from \"./nominal-subtype-entry.mjs\";\n",
+          "previous": "import { accountNominalSubtypeEntry, assertNominalSubtypeEntryReport, instrumentNominalSubtypeLean, nominalSubtypeEntryBegin, nominalSubtypeEntryConsumer, nominalSubtypeEntryEnd, nominalSubtypeEntryExpected, nominalSubtypeEntryInstrumentation, nominalSubtypeEntryMarker } from \"./nominal-subtype-entry.mjs\";\n",
+          "start": 498
+        },
+        {
+          "current": "\tconst engine = { engine: \"chromium\", hostVersion: \"1.0\", rows: rows(expected), observed: expected, counts, errors: [], warnings: [], consoleLines: 1 };\n",
+          "previous": "\tconst engine = { engine: \"chromium\", hostVersion: \"1.0\", rows: rows(expected), observed: expected, counts, errors: [], consoleLines: 1 };\n",
+          "start": 12291
+        },
+        {
+          "current": "\tconst [firefoxWarning] = nominalSubtypeEntryBrowserWarnings.firefox;\n\tconst firefox = { ...engine, engine: \"firefox\", warnings: [firefoxWarning] };\n\tassert.deepEqual(assertNominalSubtypeEntryReport({ ...entry, browser: { ...browser, engines: [firefox] } }), counts);\n\tassert.throws(() => assertNominalSubtypeEntryReport({ ...entry, browser: { ...browser, engines: [{ ...engine, warnings: undefined }] } }), /warnings/u);\n\tassert.throws(() => assertNominalSubtypeEntryReport({ ...entry, browser: { ...browser, engines: [{ ...engine, warnings: [firefoxWarning] }] } }), /chromium warnings/u);\n\tassert.throws(() => assertNominalSubtypeEntryReport({ ...entry, browser: { ...browser, engines: [{ ...firefox, warnings: [firefoxWarning + \" \"] }] } }), /firefox warnings/u);\n});\n\ntest(\"nominal entry browser console keeps every line but the exact Firefox exception-handling warning in the trace\", () => {\n\tconst expected = nominalSubtypeEntryExpected();\n\tconst lines = trace(expected).split(\"\\n\").slice(0, -1);\n\tconst [warning] = nominalSubtypeEntryBrowserWarnings.firefox;\n\tassert.match(warning, /WebAssembly exception handling 'try' instruction is deprecated/u);\n\tconst firefox = splitNominalSubtypeEntryConsole(\"firefox\", [warning, ...lines, warning]);\n\tassert.deepEqual(firefox, { trace: lines, warnings: [warning, warning] });\n\tassert.deepEqual(accountNominalSubtypeEntry(firefox.trace.map(line => line + \"\\n\").join(\"\"), rows(expected), expected).observed, expected);\n\t// The same text from another engine, a near miss or any other line stays in the trace and fails accounting.\n\tconst noise = [[\"chromium\", warning], [\"webkit\", warning], [\"firefox\", warning.replace(\"try_table\", \"try-table\")]];\n\tnoise.push([\"firefox\", \"[JavaScript Warning: \\\"unrelated\\\"]\"]);\n\tfor(const [engine, extra] of noise)\n\t{\n\t\tconst split = splitNominalSubtypeEntryConsole(engine, [extra, ...lines]);\n\t\tassert.deepEqual(split.warnings, []);\n\t\tassert.throws(() => accountNominalSubtypeEntry(split.trace.map(line => line + \"\\n\").join(\"\"), rows(expected), expected)\n\t\t\t, /unexpected stderr line/u);\n\t}\n\tassert.ok(Object.isFrozen(nominalSubtypeEntryBrowserWarnings) && Object.isFrozen(nominalSubtypeEntryBrowserWarnings.firefox));\n\tassert.deepEqual(Object.keys(nominalSubtypeEntryBrowserWarnings), [\"firefox\"]);\n",
+          "previous": "",
+          "start": 13223
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-entry-tests.mjs",
+      "previousSha256": "b0525e4594ecc03edc87290f87c8872e9574470015902b17b1fe391be852f188"
+    },
+    {
+      "currentSha256": "39b3c5c55c40a4b25aa7971337c71ee320c65f8fda16e577c78749df2a21403d",
+      "edits": [
+        {
+          "current": "/**\n * Exact console lines an engine may add beside the entry trace. Firefox warns that the legacy\n * WebAssembly exception-handling encoding of the Lean runtime is deprecated; nothing else is allowed.\n */\nexport const nominalSubtypeEntryBrowserWarnings = Object.freeze({\n\tfirefox: Object.freeze([\n\t\t\"[JavaScript Warning: \\\"The WebAssembly exception handling 'try' instruction is deprecated and should no longer be used. Please recompile to use the 'try_table' instruction instead.\\\"]\"\n\t])\n});\n\n/**\n * Move only the exact allowed engine warnings out of a page console stream; every other line stays\n * in the trace, so unexpected noise still fails the accounting.\n *\n * @param engine - Browser engine name.\n * @param lines - Page console lines in arrival order.\n */\nexport const splitNominalSubtypeEntryConsole = (engine, lines) => {\n\tconst allowed = nominalSubtypeEntryBrowserWarnings[engine] ?? [];\n\treturn { trace: lines.filter(line => !allowed.includes(line))\n\t\t, warnings: lines.filter(line => allowed.includes(line)) };\n};\n",
+          "previous": "",
+          "start": 1302
+        },
+        {
+          "current": "\t\t\tconst allowed = nominalSubtypeEntryBrowserWarnings[engine.engine] ?? [];\n\t\t\tassert.ok(Array.isArray(engine.warnings) && engine.warnings.every(line => allowed.includes(line))\n\t\t\t\t, `${engine.engine} warnings`);\n",
+          "previous": "",
+          "start": 14801
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-entry.mjs",
+      "previousSha256": "e4f52dce3fa47bbeff1a97bb829e3c25b9920067b7fd74971d662454bf5c80f6"
+    },
+    {
+      "currentSha256": "63a193d3c801cf11a3ee1100fbe67903eef2500ce82d91c2bf11eb2d742d578c",
+      "edits": [
+        {
+          "current": "import { validateExportConfiguration } from \"../../src/analyze/export-configuration.mjs\";\nimport { reviewedContractDifference } from \"../../src/analyze/reviewed-source.mjs\";\nimport { ownedCheckedRecordTrees } from \"./owned-checked-record-fixture.mjs\";\nimport { ownedSubtypePackageReviewedIr } from \"./owned-aggregate-fixture.mjs\";\n",
+          "previous": "",
+          "start": 168
+        },
+        {
+          "current": "test(\"owned entry reviews list effects in compiler order and the hosted difference is only that order\", async () => {\n\tfor(const family of phpWasmOwnedRefinementEntryFamilies)\n\t\tfor(const route of phpWasmOwnedRefinementEntryRoutes)\n\t\t{\n\t\t\tconst fixture = await phpWasmOwnedRefinementEntryFixture(family, route);\n\t\t\tfor(const declaration of fixture.review.declarations)\n\t\t\t\tassert.deepEqual(declaration.effects, declaration.effects.toSorted(), declaration.id);\n\t\t\tfixture.verify({ bindingIr: structuredClone(fixture.review) });\n\t\t}\n\t// Hosted 390ae18 jobs 120732738114/120732738274 failed at exactly this path.\n\tconst fixture = await phpWasmOwnedRefinementEntryFixture(\"owned-subtype\", \"ordinary\");\n\tconst shared = ownedSubtypePackageReviewedIr();\n\tassert.deepEqual(shared.declarations.find(item => item.name === \"echoRecord\").effects\n\t\t, [\"reads-resource\", \"allocates\"]);\n\tassert.equal(reviewedContractDifference(shared, fixture.review)\n\t\t, \"bindingIr.declarations[0].effects[0]\");\n\tconst reordered = structuredClone(fixture.review);\n\treordered.declarations.find(item => item.name === \"echoRecord\").effects.reverse();\n\tassert.throws(() => fixture.verify({ bindingIr: reordered }));\n\tconst missing = structuredClone(fixture.review);\n\tmissing.declarations.find(item => item.name === \"newTicket\").effects = [];\n\tassert.throws(() => fixture.verify({ bindingIr: missing }));\n});\n\ntest(\"owned checked-record ordinary configuration names the Grant weight Subtype by constructor\", async () => {\n\tconst fixture = await phpWasmOwnedRefinementEntryFixture(\"owned-checked-record\", \"ordinary\");\n\tvalidateExportConfiguration(fixture.configuration);\n\tconst grant = fixture.configuration.contracts[\"OwnedCheckedRecords.echoGrant\"];\n\tassert.deepEqual(grant.parameters[0].refinement, {\n\t\tkind: \"checked-record\", name: \"OwnedCheckedRecords.Grant\"\n\t\t, constructor: \"OwnedCheckedRecords.mkGrant\"\n\t\t, fields: [{ name: \"holder\", refinement: null }\n\t\t\t, { name: \"weight\", refinement: { constructor: \"OwnedCheckedRecords.checkedPositive\" } }\n\t\t\t, { name: \"limit\", refinement: null }]\n\t});\n\t// Hosted 390ae18 job 120732738323 failed on the reviewed-IR tree used as author configuration.\n\tconst tagged = structuredClone(fixture.configuration);\n\ttagged.contracts[\"OwnedCheckedRecords.echoGrant\"].parameters[0].refinement\n\t\t= ownedCheckedRecordTrees.grant(\"OwnedCheckedRecords.mkGrant\", \"OwnedCheckedRecords.checkedPositive\");\n\tassert.throws(() => validateExportConfiguration(tagged)\n\t\t, /Contract OwnedCheckedRecords\\.echoGrant: Invalid checked refinement selection/u);\n});\n\n",
+          "previous": "",
+          "start": 1982
+        }
+      ],
+      "path": "tests/helpers/php-wasm-owned-refinement-entry-fixtures-tests.mjs",
+      "previousSha256": "e7bf7c9660fb87ef128059c12189271115a7642d02cf386950b390fb8c3cc787"
+    },
+    {
+      "currentSha256": "6b05a853f457ee9a4f4a162154232187be8c14731bd51489de0a35bb357a9753",
+      "edits": [
+        {
+          "current": "\t// The reviewed IR tags the nested Subtype with `kind`; author configuration names it by constructor alone.\n\tconst tree = ownedCheckedRecordTrees.grant(q(\"mkGrant\"), q(\"checkedPositive\"));\n\tgrant.parameters[0].refinement = { ...tree, fields: tree.fields.map(field =>\n\t\tfield.refinement?.kind === \"subtype\"\n\t\t\t? { name: field.name, refinement: { constructor: field.refinement.constructor } }\n\t\t\t: field) };\n",
+          "previous": "\tgrant.parameters[0].refinement = ownedCheckedRecordTrees.grant(q(\"mkGrant\"), q(\"checkedPositive\"));\n",
+          "start": 3415
+        },
+        {
+          "current": "\t// Effects are a set: the compiler emits each sorted, while the shared owned\n\t// Subtype fixture lists them in derivation order.\n\tfor(const declaration of review.declarations)\n\t\tdeclaration.effects = declaration.effects.toSorted();\n",
+          "previous": "",
+          "start": 5881
+        }
+      ],
+      "path": "tests/helpers/php-wasm-owned-refinement-entry-fixtures.mjs",
+      "previousSha256": "d7822cf376b524dd5e400197e90499cbc069321f211a5226b378f7510cb51d56"
+    }
+  ]
+}
