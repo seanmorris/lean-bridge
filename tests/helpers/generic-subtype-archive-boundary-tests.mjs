@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
+import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import {
 	checkedRecordValueIndexHostedSafeZipPath
 } from "./checked-record-value-index-hosted-archive.mjs";
@@ -15,7 +16,7 @@ import {
 } from "./generic-subtype-hosted-contracts.mjs";
 import {
 	genericSubtypePromotionReferences, genericSubtypePromotionRoots
-	, renderGenericSubtypePromotion
+	, genericSubtypePromotionArchiveReferences, renderGenericSubtypePromotion
 } from "./generic-subtype-promotion.mjs";
 
 test("generic archive paths accept only the literal NuGet metadata basename", () => {
@@ -60,18 +61,98 @@ test("generic archive promotion selects twelve exact dated roots", () => {
 
 const fixture = lane => {
 	const contract = genericSubtypeHostedContracts[lane];
+	const apiRecords = Object.fromEntries(["run", "job", "artifact"].map(
+		name => [name, { bytes: 10, sha256: sha256(`Synthetic ${name}`) }]
+	));
+	const part = { path: "hosted/artifact.zip.parts/0000.part"
+		, bytes: 20, offset: 0, sha256: "3".repeat(64) };
 	return {
 		lane, profiles: [...contract.profiles], routes: [...contract.routes]
 		, accepted: { profiles: [...contract.profiles], routes: [...contract.routes] }
 		, producerCommit: "1".repeat(40)
-		, files: [{ path: "report.json", sha256: "2".repeat(64) }]
-		, hostedRun: { runId: 1, job: { id: 2 }
-			, artifact: { id: 3
-				, parts: [{ path: "artifact.zip.parts/0000.part", sha256: "3".repeat(64) }] } }
+		, files: [{ path: "report.json", bytes: 10, sha256: "2".repeat(64) }
+			, ...Object.entries(apiRecords).map(([name, record]) => ({
+				path: `hosted/api/${name}.json`, ...record
+			}))
+			, { path: part.path, bytes: part.bytes, sha256: part.sha256 }]
+		, hostedRun: { runId: 1, job: { id: 2 }, apiRecords
+			, artifact: { id: 3, bytes: part.bytes, parts: [part] } }
 		, limitations: ["Synthetic metadata for orchestration tests only."]
 	};
 };
-const read = async path => Buffer.from(`Synthetic bytes for ${path}.`);
+const read = async path => {
+	const lane = genericSubtypeHostedLaneNames.find(name =>
+		path === `${genericSubtypePromotionRoots[name]}/index.json`);
+	return Buffer.from(lane ? canonicalJson(fixture(lane))
+		: `Synthetic bytes for ${path}.`);
+};
+
+test("generic archive promotion binds a compact complete-manifest index", () => {
+	const index = fixture("native"), root = genericSubtypePromotionRoots.native;
+	for(let number = 0; number < 2_000; number++) index.files.push({
+		path: `sources/producer/source-${number}.mjs`
+		, bytes: 10, sha256: "4".repeat(64)
+	});
+	const bytes = Buffer.from(canonicalJson(index));
+	const result = genericSubtypePromotionArchiveReferences(index, root, bytes);
+	assert.equal(result.files.length, 5);
+	assert.deepEqual(result.files[0]
+		, { path: `${root}/index.json`, sha256: sha256(bytes) });
+	assert.deepEqual(result.files.slice(1).map(file => file.path), [
+		`${root}/hosted/api/artifact.json`, `${root}/hosted/api/job.json`
+		, `${root}/hosted/api/run.json`
+		, `${root}/hosted/artifact.zip.parts/0000.part`
+	]);
+	assert.deepEqual(result.artifacts, result.files.slice(-1));
+	assert.ok(JSON.stringify(result).length < 1_500);
+	assert.equal(index.files.length, 2_005);
+});
+
+test("generic archive promotion rejects substituted post-replay index bytes", async () => {
+	const index = fixture("native"), root = genericSubtypePromotionRoots.native;
+	const bytes = Buffer.from(canonicalJson(index));
+	index.files[0].sha256 = "5".repeat(64);
+	assert.throws(() => genericSubtypePromotionArchiveReferences(index, root, bytes)
+		, /changed after replay/u);
+	await assert.rejects(genericSubtypePromotionReferences(async lane => fixture(lane)
+		, async path => path.endsWith("/index.json")
+			? Buffer.from(canonicalJson(index)) : read(path)), /changed after replay/u);
+});
+
+test("generic archive compact references reject missing and forged manifest bindings", () => {
+	const mutations = [
+		index => { index.files.pop(); }
+		, index => { index.files.push(index.files[0]); }
+		, index => { index.files[0].path = "../escape"; }
+		, index => { index.files[0].sha256 = "not-a-digest"; }
+		, index => { index.files[0].bytes = -1; }
+		, index => { index.files[0].path = "index.json"; }
+		, index => { delete index.hostedRun.apiRecords.run; }
+		, index => { index.hostedRun.apiRecords.extra = index.hostedRun.apiRecords.run; }
+		, index => { index.hostedRun.apiRecords.run.sha256 = "6".repeat(64); }
+		, index => { index.hostedRun.apiRecords.job.bytes++; }
+		, index => { index.files = index.files.filter(file => file.path !== "hosted/api/job.json"); }
+		, index => { index.hostedRun.artifact.parts = []; }
+		, index => { index.hostedRun.artifact.parts.push(index.hostedRun.artifact.parts[0]); }
+		, index => { index.hostedRun.artifact.parts[0].path = "../../escape"; }
+		, index => { index.hostedRun.artifact.parts[0].sha256 = "7".repeat(64); }
+		, index => { index.hostedRun.artifact.parts[0].bytes++; }
+		, index => { index.hostedRun.artifact.parts[0].offset++; }
+		, index => { index.hostedRun.artifact.bytes++; }
+	];
+	for(const mutate of mutations)
+	{
+		const index = fixture("native");
+		mutate(index);
+		assert.throws(() => genericSubtypePromotionArchiveReferences(index
+			, genericSubtypePromotionRoots.native, Buffer.from(canonicalJson(index)))
+		, assert.AssertionError, String(mutate));
+	}
+	const index = fixture("native");
+	assert.throws(() => genericSubtypePromotionArchiveReferences(index
+		, genericSubtypePromotionRoots.perl, Buffer.from(canonicalJson(index)))
+	, assert.AssertionError);
+});
 
 test("generic archive promotion replays one lane at a time in closed order", async () => {
 	let active = 0, maximum = 0;

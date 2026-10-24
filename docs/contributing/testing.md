@@ -4100,3 +4100,24 @@ the public type surface:
 ```sh
 node scripts/promote-callback-checked-record-evidence.mjs
 ```
+
+### Closed generic-Subtype archive references
+
+Generic-Subtype promotion replays all twelve retained lanes serially before
+constructing support references. Each reference pins the complete archive index,
+the three original GitHub API records, every ZIP part and the live validator
+sources. The index authenticates the full file manifest; the replay still checks
+every retained output and producer, consumer, checker and archiver source. The
+inventory does not repeat that complete manifest a second time.
+
+The projection rejects an index changed after replay, missing or duplicate
+manifest entries, unsafe paths, API or ZIP hash/size substitutions and broken
+ZIP part ordering. Its lightweight controls require no compiler or hosted build:
+
+```sh
+node --test tests/helpers/generic-subtype-archive-boundary-tests.mjs
+```
+
+These controls test reference construction, not installed package acceptance.
+Public support promotion still requires the complete retained archive replay,
+the exact field-cell and documentation update, and the required hosted gates.

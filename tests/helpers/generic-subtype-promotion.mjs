@@ -6,13 +6,14 @@
  */
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
-import { sha256 } from "../../src/capsule/node.mjs";
+import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import {
 	genericSubtypeHostedContracts, genericSubtypeHostedLaneNames
 } from "./generic-subtype-hosted-contracts.mjs";
 import {
 	checkGenericSubtypeHostedEvidence
 } from "./generic-subtype-hosted-evidence.mjs";
+import { genericSubtypeHostedSafePath } from "./generic-subtype-hosted-output.mjs";
 
 export const genericSubtypePromotionPath
 	= "docs/evidence/generic-subtype-promotion-20261023.md";
@@ -101,6 +102,58 @@ const validateReference = reference => {
 };
 
 /**
+ * Project a fully replayed archive without duplicating its entire file list.
+ * The exact index digest authenticates the complete retained manifest; the live
+ * checker still hashes and replays every file before this projection is used.
+ *
+ * @param index - Index returned by the complete archive replay.
+ * @param root - Exact dated lane root.
+ * @param indexBytes - Original index bytes re-read after that replay.
+ */
+export const genericSubtypePromotionArchiveReferences = (index, root, indexBytes) => {
+	assert.equal(root, hostedRoot(index.lane));
+	assert.equal(indexBytes.toString(), canonicalJson(index)
+		, "Generic Subtype archive index changed after replay");
+	const manifest = new Map();
+	for(const file of index.files)
+	{
+		genericSubtypeHostedSafePath(file.path);
+		assert.notEqual(file.path, "index.json");
+		assert.ok(!manifest.has(file.path), `Duplicate archive file: ${file.path}`);
+		assert.match(file.sha256, /^[a-f0-9]{64}$/u);
+		assert.ok(Number.isSafeInteger(file.bytes) && file.bytes >= 0);
+		manifest.set(file.path, file);
+	}
+	const boundFile = (path, record) => {
+		const file = manifest.get(path);
+		assert.ok(file, `Missing archive manifest binding: ${path}`);
+		assert.equal(record.sha256, file.sha256, path);
+		assert.equal(record.bytes, file.bytes, path);
+		return { path: `${root}/${path}`, sha256: file.sha256 };
+	};
+	const { apiRecords, artifact } = index.hostedRun;
+	assert.deepEqual(Object.keys(apiRecords).toSorted(), ["artifact", "job", "run"]);
+	const files = [
+		{ path: `${root}/index.json`, sha256: sha256(indexBytes) }
+		, ...["artifact", "job", "run"].map(name =>
+			boundFile(`hosted/api/${name}.json`, apiRecords[name]))
+	];
+	assert.ok(artifact.parts.length > 0);
+	let offset = 0;
+	const artifacts = artifact.parts.map((part, number) => {
+		assert.equal(part.path
+			, `hosted/artifact.zip.parts/${String(number).padStart(4, "0")}.part`);
+		assert.equal(part.offset, offset);
+		assert.ok(Number.isSafeInteger(part.bytes) && part.bytes > 0);
+		offset += part.bytes;
+		assert.ok(Number.isSafeInteger(offset));
+		return boundFile(part.path, part);
+	});
+	assert.equal(offset, artifact.bytes);
+	return { files: [...files, ...artifacts], artifacts };
+};
+
+/**
  * Replay every immutable hosted archive and derive exact inventory references.
  *
  * @param check - Archive replay function, injectable for focused tests.
@@ -123,19 +176,16 @@ export const genericSubtypePromotionReferences = async (
 		assert.deepEqual(index.accepted.profiles, contract.profiles);
 		assert.deepEqual(index.accepted.routes, contract.routes);
 		const indexPath = `${root}/index.json`;
+		const compact = genericSubtypePromotionArchiveReferences(
+			index, root, await read(indexPath));
 		const files = [
-			{ path: indexPath, sha256: sha256(await read(indexPath)) }
-			, ...index.files.map(file => ({
-				path: `${root}/${file.path}`, sha256: file.sha256
-			}))
+			...compact.files
 			, ...await Promise.all(validators.map(async path => ({
 				path, sha256: sha256(await read(path))
 			})))
 		];
 		assert.equal(new Set(files.map(file => file.path)).size, files.length);
-		const artifacts = index.hostedRun.artifact.parts.map(part => ({
-			path: `${root}/${part.path}`, sha256: part.sha256
-		}));
+		const artifacts = compact.artifacts;
 		const reference = {
 			lane, profiles: [...contract.profiles], routes: [...contract.routes]
 			, id: evidenceId(lane)
