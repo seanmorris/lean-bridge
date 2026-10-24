@@ -31,13 +31,13 @@ test("C# transfers bind current sources without promoting unrelated type cells",
 		assert.equal(update.previousSha256, previous.sources[update.path]);
 		assert.equal(update.currentSha256, record.sources[update.path]);
 		const current = beforeOwnedJvmTransfer(update.path, await readFile(update.path, "utf8"), update.currentSha256);
-		const prior = beforeOwnedDotnetTransfer(update.path, current);
+		const prior = beforeOwnedDotnetTransfer(update.path, current, update.previousSha256);
 		assert.equal(sha256(prior), update.previousSha256);
-		assert.equal(beforeOwnedDotnetTransfer(update.path, prior), prior);
+		assert.equal(beforeOwnedDotnetTransfer(update.path, prior, update.previousSha256), prior);
 		assert.equal(beforeOwnedDotnetTransfer(update.path, current, update.currentSha256), current);
 	}
-	const current = beforeOwnedJvmTransfer("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8"));
-	const previousIndex = JSON.parse(beforeOwnedDotnetTransfer("docs/type-surface.v1.json", current));
+	const current = beforeOwnedJvmTransfer("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8"), record.sources["docs/type-surface.v1.json"]);
+	const previousIndex = JSON.parse(beforeOwnedDotnetTransfer("docs/type-surface.v1.json", current, previous.sources["docs/type-surface.v1.json"]));
 	for(const evidence of previousIndex.evidence) for(const file of evidence.files)
 		file.sha256 = sha256(ownedJvmTransferHistoricalBytes(file.path, await readFile(file.path), record.sources[file.path]));
 	assert.deepEqual(JSON.parse(current), previousIndex);

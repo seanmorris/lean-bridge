@@ -51,21 +51,21 @@ test("Perl transfers bind current sources without promoting unrelated type cells
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path] ?? ownedPerlTransferRegisteredSources[update.path]);
 		assert.equal(update.currentSha256, record.sources[update.path]);
-		const current = beforeOwnedPerlProfile(update.path, await readFile(update.path, "utf8")), prior = beforeOwnedPerlTransfer(update.path, current);
+		const current = beforeOwnedPerlProfile(update.path, await readFile(update.path, "utf8"), update.currentSha256), prior = beforeOwnedPerlTransfer(update.path, current, update.previousSha256);
 		assert.equal(sha256(prior), update.previousSha256);
-		assert.equal(beforeOwnedPerlTransfer(update.path, prior), prior);
+		assert.equal(beforeOwnedPerlTransfer(update.path, prior, update.previousSha256), prior);
 		assert.equal(beforeOwnedPerlTransfer(update.path, current, update.currentSha256), current);
 	}
-	const current = beforeOwnedPerlProfile("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8"));
-	const prior = JSON.parse(beforeOwnedPerlTransfer("docs/type-surface.v1.json", current));
-	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedPerlProfileHistoricalBytes(file.path, await readFile(file.path)));
+	const current = beforeOwnedPerlProfile("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8"), record.sources["docs/type-surface.v1.json"]);
+	const prior = JSON.parse(beforeOwnedPerlTransfer("docs/type-surface.v1.json", current, previous.sources["docs/type-surface.v1.json"]));
+	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedPerlProfileHistoricalBytes(file.path, await readFile(file.path), record.sources[file.path]));
 	assert.deepEqual(JSON.parse(current), prior);
 });
 
 test("Perl transfer history rejects unrelated edits and invalid reversal spans", async () => {
 	for(const update of (await read()).updates)
 	{
-		const source = beforeOwnedPerlProfile(update.path, await readFile(update.path, "utf8")), unknown = source + "\n/* unrelated */\n";
+		const source = beforeOwnedPerlProfile(update.path, await readFile(update.path, "utf8"), update.currentSha256), unknown = source + "\n/* unrelated */\n";
 		assert.equal(beforeOwnedPerlTransfer(update.path, unknown), unknown);
 		assert.throws(() => reverseOwnedPerlTransferUpdate(unknown, update));
 		for(const changed of [{ ...update, previousSha256: "0".repeat(64) }
@@ -165,14 +165,14 @@ test("Perl transfer profile repair changes only checked registration bookkeeping
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path]);
 		assert.equal(update.currentSha256, record.sources[update.path]);
-		const source = beforeOwnedPerlCi(update.path, await readFile(update.path, "utf8")), unknown = source + "\n/* unrelated */\n";
-		assert.equal(sha256(beforeOwnedPerlProfile(update.path, source)), update.previousSha256);
+		const source = beforeOwnedPerlCi(update.path, await readFile(update.path, "utf8"), update.currentSha256), unknown = source + "\n/* unrelated */\n";
+		assert.equal(sha256(beforeOwnedPerlProfile(update.path, source, update.previousSha256)), update.previousSha256);
 		assert.equal(beforeOwnedPerlProfile(update.path, source, update.currentSha256), source);
 		assert.equal(beforeOwnedPerlProfile(update.path, unknown), unknown);
 		assert.throws(() => reverseOwnedPerlProfileUpdate(unknown, update));
 		assert.throws(() => reverseOwnedPerlProfileUpdate(source, { ...update, previousSha256: "0".repeat(64) }));
 	}
-	const manifest = beforeOwnedPhpTransfer("src/adoption/test-profiles.mjs", await readFile("src/adoption/test-profiles.mjs", "utf8"));
+	const manifest = beforeOwnedPhpTransfer("src/adoption/test-profiles.mjs", await readFile("src/adoption/test-profiles.mjs", "utf8"), record.sources["src/adoption/test-profiles.mjs"]);
 	const registration = '\t\t, "owned-perl-transfer-evidence"\n';
 	assert.equal(manifest.split(registration).length, 2);
 	assert.equal(sha256(manifest.replace(registration, "")), previous.sources["src/adoption/test-profiles.mjs"]);
@@ -205,8 +205,8 @@ test("Perl CI repair follows npm scripts without changing frozen execution recei
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path]);
 		assert.equal(update.currentSha256, record.sources[update.path]);
-		const source = beforeOwnedCiFollowup(update.path, await readFile(update.path, "utf8")), unknown = source + "\n/* unrelated */\n";
-		assert.equal(sha256(beforeOwnedPerlCi(update.path, source)), update.previousSha256);
+		const source = beforeOwnedCiFollowup(update.path, await readFile(update.path, "utf8"), update.currentSha256), unknown = source + "\n/* unrelated */\n";
+		assert.equal(sha256(beforeOwnedPerlCi(update.path, source, update.previousSha256)), update.previousSha256);
 		assert.equal(beforeOwnedPerlCi(update.path, source, update.currentSha256), source);
 		assert.equal(beforeOwnedPerlCi(update.path, unknown), unknown);
 		assert.throws(() => reverseOwnedPerlCiUpdate(unknown, update));
@@ -238,8 +238,8 @@ test("CI follow-up keeps dependency checks and original Nix source identities au
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path]);
 		assert.equal(update.currentSha256, record.sources[update.path]);
-		const source = beforeOwnedPhpTransfer(update.path, await readFile(update.path, "utf8")), unknown = source + "\n/* unrelated */\n";
-		assert.equal(sha256(beforeOwnedCiFollowup(update.path, source)), update.previousSha256);
+		const source = beforeOwnedPhpTransfer(update.path, await readFile(update.path, "utf8"), update.currentSha256), unknown = source + "\n/* unrelated */\n";
+		assert.equal(sha256(beforeOwnedCiFollowup(update.path, source, update.previousSha256)), update.previousSha256);
 		assert.equal(beforeOwnedCiFollowup(update.path, source, update.currentSha256), source);
 		assert.equal(beforeOwnedCiFollowup(update.path, unknown), unknown);
 		assert.throws(() => reverseOwnedCiFollowupUpdate(unknown, update));

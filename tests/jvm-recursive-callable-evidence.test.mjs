@@ -90,9 +90,9 @@ test('recursive JVM probes require every fault path, ownership mutation and life
 test('recursive JVM source transitions reject unrelated bytes and substituted predecessors', async () => {
 	for(const update of(await json(jvmRecursiveCallableHistoryPath)).updates)
 	{
-		const source = beforePhpRecursiveCallables(update.path, await readFile(update.path, 'utf8'));
+		const source = beforePhpRecursiveCallables(update.path, await readFile(update.path, 'utf8'), update.currentSha256);
 		assert.equal(sha256(reverseJvmRecursiveCallableUpdate(source, update)), update.previousSha256);
-		assert.equal(sha256(beforeJvmRecursiveCallables(update.path, source)), update.previousSha256);
+		assert.equal(sha256(beforeJvmRecursiveCallables(update.path, source, update.previousSha256)), update.previousSha256);
 		assert.equal(beforeJvmRecursiveCallables(update.path, source, update.currentSha256), source);
 		const unrelated = source + '\n/* unrelated */\n';
 		assert.equal(beforeJvmRecursiveCallables(update.path, unrelated), unrelated);

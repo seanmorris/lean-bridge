@@ -32,9 +32,9 @@ test("managed close repair preserves exact complete predecessor source versions"
 		assert.equal(update.previousSha256, previous.sources[update.path]);
 		assert.equal(update.currentSha256, record.sources[update.path]);
 		const source = beforeOwnedPerlBorrow(update.path, await readFile(update.path, "utf8"), update.currentSha256);
-		const prior = beforeManagedClose(update.path, source);
+		const prior = beforeManagedClose(update.path, source, update.previousSha256);
 		assert.equal(sha256(prior), update.previousSha256);
-		assert.equal(beforeManagedClose(update.path, prior), prior);
+		assert.equal(beforeManagedClose(update.path, prior, update.previousSha256), prior);
 		assert.equal(beforeManagedClose(update.path, source, update.currentSha256), source);
 		const unknown = source + "\n/* unrecorded change */\n";
 		assert.equal(beforeManagedClose(update.path, unknown), unknown);
@@ -46,7 +46,7 @@ test("managed close repair preserves exact complete predecessor source versions"
 	}
 	const path = "docs/type-surface.v1.json";
 	const current = beforeOwnedPerlBorrow(path, await readFile(path, "utf8"), record.sources[path]);
-	const prior = JSON.parse(beforeManagedClose(path, current));
+	const prior = JSON.parse(beforeManagedClose(path, current, previous.sources[path]));
 	for(const evidence of prior.evidence) for(const file of evidence.files)
 		file.sha256 = sha256(ownedPerlBorrowHistoricalBytes(file.path, await readFile(file.path), record.sources[file.path]));
 	assert.deepEqual(JSON.parse(current), prior);

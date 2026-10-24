@@ -43,7 +43,7 @@ export const assertOwnedCppBorrowCiRepair = async record => {
 	assert.equal(configuration.files.filter(path => path === module).length, 1);
 	const disposition = JSON.parse(await readFile("config/checked-javascript.json", "utf8"));
 	assert.equal(disposition.deferred.filter(item => item.path === module && item.classification === "strict-migration-backlog").length, 1);
-	const index = "docs/type-surface.v1.json", source = beforeOwnedRustBorrow(index, await readFile(index, "utf8")), current = JSON.parse(source);
+	const index = "docs/type-surface.v1.json", source = beforeOwnedRustBorrow(index, await readFile(index, "utf8"), record.sources[index]), current = JSON.parse(source);
 	const prior = JSON.parse(reverseOwnedCppBorrowCiUpdate(source, record.updates.find(item => item.path === index)));
 	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedRustBorrowHistoricalBytes(file.path, await readFile(file.path), record.sources[file.path]));
 	assert.deepEqual(current, prior);

@@ -30,10 +30,10 @@ test("Python borrow evidence authenticates complete source changes without rewri
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path]);
 		assert.equal(update.currentSha256, record.sources[update.path]);
-		const source = beforeOwnedRubyBorrow(update.path, await readFile(update.path, "utf8"));
-		const prior = beforeOwnedPythonBorrow(update.path, source);
+		const source = beforeOwnedRubyBorrow(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const prior = beforeOwnedPythonBorrow(update.path, source, update.previousSha256);
 		assert.equal(sha256(prior), update.previousSha256);
-		assert.equal(beforeOwnedPythonBorrow(update.path, prior), prior);
+		assert.equal(beforeOwnedPythonBorrow(update.path, prior, update.previousSha256), prior);
 		assert.equal(beforeOwnedPythonBorrow(update.path, source, update.currentSha256), source);
 		const unknown = source + "\n/* unrecorded change */\n";
 		assert.equal(beforeOwnedPythonBorrow(update.path, unknown), unknown);
@@ -43,9 +43,9 @@ test("Python borrow evidence authenticates complete source changes without rewri
 			, { ...update, edits: [...update.edits, update.edits[0]] }])
 			assert.throws(() => reverseOwnedPythonBorrowUpdate(source, changed));
 	}
-	const path = "docs/type-surface.v1.json", current = beforeOwnedRubyBorrow(path, await readFile(path, "utf8"));
-	const prior = JSON.parse(beforeOwnedPythonBorrow(path, current));
-	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedRubyBorrowHistoricalBytes(file.path, await readFile(file.path)));
+	const path = "docs/type-surface.v1.json", current = beforeOwnedRubyBorrow(path, await readFile(path, "utf8"), record.sources[path]);
+	const prior = JSON.parse(beforeOwnedPythonBorrow(path, current, previous.sources[path]));
+	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedRubyBorrowHistoricalBytes(file.path, await readFile(file.path), record.sources[file.path]));
 	assert.deepEqual(JSON.parse(current), prior);
 	const module = "src/backends/python/owned-borrows.mjs";
 	const files = JSON.parse(await readFile("config/cli-package.v1.json", "utf8")).files;

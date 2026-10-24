@@ -14,7 +14,7 @@ import { beforeOwnedCppTransfer, ownedCppTransferAddedPaths, ownedCppTransferBas
 	, ownedCppTransferPrevious, reverseOwnedCppTransferUpdate } from "./helpers/owned-cpp-transfer-history.mjs";
 
 const read = async () => JSON.parse(await readFile(ownedCppTransferPath, "utf8"));
-const historical = async path => ownedRustTransferHistoricalBytes(path, await readFile(path));
+const historical = async (path, expected) => ownedRustTransferHistoricalBytes(path, await readFile(path), expected);
 
 test("C++ transfer acceptance authenticates all sources without changing earlier claims", async () => {
 	const record = await read();
@@ -24,27 +24,27 @@ test("C++ transfer acceptance authenticates all sources without changing earlier
 	const previousBytes = await readFile(record.previous.path), previous = JSON.parse(previousBytes);
 	assert.equal(sha256(previousBytes), record.previous.sha256);
 	assert.deepEqual(Object.keys(record.sources).sort(), [...new Set([...Object.keys(previous.sources), ...ownedCppTransferAddedPaths])].sort());
-	for(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(await historical(path)), digest, path);
+	for(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(await historical(path, digest)), digest, path);
 	assert.deepEqual(record.updates.map(update => update.path), ownedCppTransferChangedPaths);
 	for(const update of record.updates)
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path], update.path);
 		assert.equal(update.currentSha256, record.sources[update.path], update.path);
-		const current = (await historical(update.path)).toString(), prior = beforeOwnedCppTransfer(update.path, current);
+		const current = (await historical(update.path, update.currentSha256)).toString(), prior = beforeOwnedCppTransfer(update.path, current, update.previousSha256);
 		assert.equal(sha256(prior), update.previousSha256);
-		assert.equal(beforeOwnedCppTransfer(update.path, prior), prior);
+		assert.equal(beforeOwnedCppTransfer(update.path, prior, update.previousSha256), prior);
 		assert.equal(beforeOwnedCppTransfer(update.path, current, update.currentSha256), current);
 	}
-	const current = (await historical("docs/type-surface.v1.json")).toString();
-	const previousIndex = JSON.parse(beforeOwnedCppTransfer("docs/type-surface.v1.json", current));
-	for(const evidence of previousIndex.evidence) for(const file of evidence.files) file.sha256 = sha256(await historical(file.path));
+	const current = (await historical("docs/type-surface.v1.json", record.sources["docs/type-surface.v1.json"])).toString();
+	const previousIndex = JSON.parse(beforeOwnedCppTransfer("docs/type-surface.v1.json", current, previous.sources["docs/type-surface.v1.json"]));
+	for(const evidence of previousIndex.evidence) for(const file of evidence.files) file.sha256 = sha256(await historical(file.path, record.sources[file.path]));
 	assert.deepEqual(JSON.parse(current), previousIndex, "C++ transfers do not promote unrelated type-table cells");
 });
 
 test("C++ transfer history rejects unknown changes and invalid reversal spans", async () => {
 	for(const update of (await read()).updates)
 	{
-		const source = (await historical(update.path)).toString(), unknown = source + "\n/* unrelated change */\n";
+		const source = (await historical(update.path, update.currentSha256)).toString(), unknown = source + "\n/* unrelated change */\n";
 		assert.equal(beforeOwnedCppTransfer(update.path, unknown), unknown);
 		assert.throws(() => reverseOwnedCppTransferUpdate(unknown, update));
 		for(const changed of [{ ...update, previousSha256: "0".repeat(64) }

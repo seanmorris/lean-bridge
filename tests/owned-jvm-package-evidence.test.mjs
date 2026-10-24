@@ -32,15 +32,15 @@ test("recursive JVM probe repair preserves every published predecessor and rejec
 		assert.ok(record.acceptance.output.split("\n").includes(line), line);
 	assert.deepEqual(record.updates.map(update => update.path).sort(), jvmProbeRepairChangedPaths);
 	for(const [path, hash] of Object.entries(record.sources))
-		assert.equal(sha256(ownedPerlHistoricalBytes(path, await readFile(path))), hash, path);
+		assert.equal(sha256(ownedPerlHistoricalBytes(path, await readFile(path), hash)), hash, path);
 	for(const update of record.updates)
 	{
-		const current = beforeOwnedPerlPackages(update.path, await readFile(update.path, "utf8"));
+		const current = beforeOwnedPerlPackages(update.path, await readFile(update.path, "utf8"), update.currentSha256);
 		assert.equal(sha256(current), update.currentSha256);
 		assert.equal(update.previousSha256, previous.sources[update.path]);
-		const old = beforeJvmProbeRepair(update.path, current);
+		const old = beforeJvmProbeRepair(update.path, current, update.previousSha256);
 		assert.equal(sha256(old), update.previousSha256);
-		assert.equal(beforeJvmProbeRepair(update.path, old), old);
+		assert.equal(beforeJvmProbeRepair(update.path, old, update.previousSha256), old);
 		assert.equal(beforeJvmProbeRepair(update.path, current, update.currentSha256), current);
 		const drift = current + "\nunknown repair drift\n";
 		assert.equal(beforeJvmProbeRepair(update.path, drift), drift);
@@ -101,9 +101,9 @@ test("owned JVM source history reverses exact edits and preserves unknown bytes"
 	for(const update of (await json(ownedJvmHistoryPath)).updates)
 	{
 		const latest = await readFile(update.path, "utf8");
-		const current = beforeJvmProbeRepair(update.path, latest);
+		const current = beforeJvmProbeRepair(update.path, latest, update.currentSha256);
 		assert.equal(sha256(reverseOwnedJvmUpdate(current, update)), update.previousSha256);
-		assert.equal(sha256(beforeOwnedJvmPackages(update.path, latest)), update.previousSha256);
+		assert.equal(sha256(beforeOwnedJvmPackages(update.path, latest, update.previousSha256)), update.previousSha256);
 		assert.equal(beforeOwnedJvmPackages(update.path, latest, update.currentSha256), current);
 		assert.equal(sha256(ownedJvmHistoricalBytes(update.path, Buffer.from(current), update.previousSha256)), update.previousSha256);
 		const unknown = current + "\n/* unrecorded */\n";

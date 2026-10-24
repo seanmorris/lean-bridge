@@ -348,7 +348,7 @@ export const assertOwnedJvmPackageExecution = async (record, replay = true) => {
 	assert.deepEqual(record.scope, ownedJvmPackageScope);
 	assert.deepEqual(Object.keys(record.sources).sort(), ownedJvmExecutionSources);
 	for(const [path, hash] of Object.entries(record.sources))
-		assert.equal(sha256(jvmProbeRepairBytes(path, await readFile(path))), hash, path);
+		assert.equal(sha256(jvmProbeRepairBytes(path, await readFile(path), hash)), hash, path);
 	assert.deepEqual(record.previous, { path: ownedJvmCallReceipt, sha256: "87b8d27a6d0a0cc4cd9b7a193a323fa574ec0043eea69b2afaef6bda803471e3" });
 	const previous = await readFile(record.previous.path); assert.equal(sha256(previous), record.previous.sha256);
 	for(const [name, count] of Object.entries({ packages: 4, coexistence: 1, documentation: 1, loaders: 2, ci: 7, copied: 5 }))
@@ -412,7 +412,7 @@ export const assertOwnedJvmPackageIntegration = async record => {
 	const updates = new Map(record.updates.map(item => [item.path, item]));
 	for(const path of paths)
 	{
-		const bytes = jvmProbeRepairBytes(path, await readFile(path));
+		const bytes = jvmProbeRepairBytes(path, await readFile(path), record.sources[path]);
 		assert.equal(sha256(bytes), record.sources[path], path);
 		const update = updates.get(path);
 		if(update)
@@ -423,7 +423,7 @@ export const assertOwnedJvmPackageIntegration = async record => {
 		else if(previous.sources[path]) assert.equal(record.sources[path], previous.sources[path], path);
 	}
 	const { irSchema, consumers } = await readTypeSurface(), contracts = { irSchema, consumers };
-	const source = jvmProbeRepairBytes("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json")).toString("utf8");
+	const source = jvmProbeRepairBytes("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json"), record.sources["docs/type-surface.v1.json"]).toString("utf8");
 	const document = JSON.parse(source);
 	const old = JSON.parse(reverseOwnedJvmUpdate(source, updates.get("docs/type-surface.v1.json")));
 	const expected = structuredClone(old);

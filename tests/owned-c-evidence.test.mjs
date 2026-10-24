@@ -47,9 +47,9 @@ test("public C evidence rejects source drift, missing controls and broader suppo
 test("public C source history rejects unknown text and ambiguous reverse edits", async () => {
 	for(const update of (await json(ownedCHistoryPath)).updates)
 	{
-		const source = beforeOwnedReviewed(update.path, await readFile(update.path, "utf8"));
+		const source = beforeOwnedReviewed(update.path, await readFile(update.path, "utf8"), update.currentSha256);
 		assert.equal(sha256(reverseOwnedCUpdate(source, update)), update.previousSha256);
-		assert.equal(sha256(beforeOwnedC(update.path, source)), update.previousSha256);
+		assert.equal(sha256(beforeOwnedC(update.path, source, update.previousSha256)), update.previousSha256);
 		assert.equal(beforeOwnedC(update.path, source, update.currentSha256), source);
 		const unknown = source + "\n/* unrelated */\n";
 		assert.equal(beforeOwnedC(update.path, unknown), unknown);

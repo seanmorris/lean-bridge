@@ -32,9 +32,9 @@ test("C++ borrow evidence authenticates unchanged predecessors and complete curr
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path]);
 		assert.equal(update.currentSha256, record.sources[update.path]);
-		const source = beforeOwnedCppBorrowCi(update.path, await readFile(update.path, "utf8"), update.currentSha256), prior = beforeOwnedCppBorrow(update.path, source);
+		const source = beforeOwnedCppBorrowCi(update.path, await readFile(update.path, "utf8"), update.currentSha256), prior = beforeOwnedCppBorrow(update.path, source, update.previousSha256);
 		assert.equal(sha256(prior), update.previousSha256);
-		assert.equal(beforeOwnedCppBorrow(update.path, prior), prior);
+		assert.equal(beforeOwnedCppBorrow(update.path, prior, update.previousSha256), prior);
 		assert.equal(beforeOwnedCppBorrow(update.path, source, update.currentSha256), source);
 		const unknown = source + "\n/* unrecorded change */\n";
 		assert.equal(beforeOwnedCppBorrow(update.path, unknown), unknown);
@@ -44,8 +44,8 @@ test("C++ borrow evidence authenticates unchanged predecessors and complete curr
 			, { ...update, edits: [...update.edits, update.edits[0]] }])
 			assert.throws(() => reverseOwnedCppBorrowUpdate(source, changed));
 	}
-	const current = beforeOwnedCppBorrowCi("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8"));
-	const prior = JSON.parse(beforeOwnedCppBorrow("docs/type-surface.v1.json", current));
+	const current = beforeOwnedCppBorrowCi("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8"), record.sources["docs/type-surface.v1.json"]);
+	const prior = JSON.parse(beforeOwnedCppBorrow("docs/type-surface.v1.json", current, previous.sources["docs/type-surface.v1.json"]));
 	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedCppBorrowCiHistoricalBytes(file.path, await readFile(file.path), record.sources[file.path]));
 	assert.deepEqual(JSON.parse(current), prior);
 });

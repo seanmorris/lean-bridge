@@ -39,9 +39,9 @@ test("owned PHP preserves complete predecessor identities and rejects unrecorded
 		assert.equal(update.previousSha256, baseline[update.path], update.path);
 		assert.equal(update.currentSha256, record.sources[update.path], update.path);
 		const current = (await source(update.path, update.currentSha256)).toString();
-		const prior = beforeOwnedPhpPackages(update.path, current);
+		const prior = beforeOwnedPhpPackages(update.path, current, update.previousSha256);
 		assert.equal(sha256(prior), update.previousSha256, update.path);
-		assert.equal(beforeOwnedPhpPackages(update.path, prior), prior);
+		assert.equal(beforeOwnedPhpPackages(update.path, prior, update.previousSha256), prior);
 		assert.equal(beforeOwnedPhpPackages(update.path, current, update.currentSha256), current);
 		const unknown = current + "\n/* unrecorded PHP edit */\n";
 		assert.equal(beforeOwnedPhpPackages(update.path, unknown), unknown);
@@ -53,7 +53,7 @@ test("owned PHP preserves complete predecessor identities and rejects unrecorded
 	const binary = Buffer.from([0, 255, 192, 128]);
 	assert.equal(ownedPhpHistoricalBytes("unknown.bin", binary), binary);
 	const current = (await source("docs/type-surface.v1.json", record.sources["docs/type-surface.v1.json"])).toString();
-	const prior = JSON.parse(beforeOwnedPhpPackages("docs/type-surface.v1.json", current));
+	const prior = JSON.parse(beforeOwnedPhpPackages("docs/type-surface.v1.json", current, baseline["docs/type-surface.v1.json"]));
 	for(const evidence of prior.evidence) for(const file of evidence.files)
 		file.sha256 = sha256(await source(file.path, record.sources[file.path]));
 	assert.deepEqual(JSON.parse(current), prior);

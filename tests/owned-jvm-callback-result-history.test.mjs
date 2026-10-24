@@ -7,9 +7,6 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
-import { beforePhpCallbackInstalledStaging } from "./helpers/php-callback-installed-staging-history.mjs";
-import { beforeWitCallbackRuntimeStaging } from "./helpers/wit-callback-runtime-staging-history.mjs";
-import { beforePerlCallbackVariants } from "./helpers/owned-perl-callback-result-variant-history.mjs";
 import { beforeOwnedPerlCallbackResults } from "./helpers/owned-perl-callback-result-history.mjs";
 import { ownedJvmCallbackHistoryPath, ownedJvmCallbackHistorySha256
 	, ownedJvmCallbackBaseline, ownedJvmCallbackChangedPaths
@@ -41,7 +38,7 @@ test("JVM callback source history authenticates complete transitions and rejects
 	assert.equal(history.acceptance, undefined); assert.equal(history.scope, undefined);
 	for(const update of history.updates)
 	{
-		const current = Buffer.from(beforeOwnedPerlCallbackResults(update.path, await readFile(update.path)));
+		const current = Buffer.from(beforeOwnedPerlCallbackResults(update.path, await readFile(update.path), update.currentSha256));
 		const prior = beforeOwnedJvmCallbackResults(
 			update.path, current, update.previousSha256
 		);
@@ -68,14 +65,16 @@ test("JVM callback source history authenticates complete transitions and rejects
 });
 
 test("staged JVM source identities do not promote type-surface support", async () => {
+	const history = JSON.parse(await readFile(ownedJvmCallbackHistoryPath, "utf8"));
+	const updates = new Map(history.updates.map(update => [update.path, update]));
 	const path = "docs/type-surface.v1.json";
-	const source = beforePhpCallbackInstalledStaging(path, await readFile(path, "utf8"));
-	const current = beforePerlCallbackVariants(path, source);
-	const previous = JSON.parse(beforeOwnedJvmCallbackResults(path, current));
+	const update = updates.get(path);
+	const current = beforeOwnedPerlCallbackResults(path, await readFile(path, "utf8"), update.currentSha256);
+	const previous = JSON.parse(beforeOwnedJvmCallbackResults(path, current, update.previousSha256));
 	for(const evidence of previous.evidence) for(const file of evidence.files)
 	{
-		const fileSource = beforePhpCallbackInstalledStaging(file.path, await readFile(file.path));
-		file.sha256 = sha256(beforeWitCallbackRuntimeStaging(file.path, fileSource));
+		const expected = updates.get(file.path)?.currentSha256 ?? file.sha256;
+		file.sha256 = sha256(beforeOwnedPerlCallbackResults(file.path, await readFile(file.path), expected));
 	}
 	assert.deepEqual(JSON.parse(current), previous);
 });

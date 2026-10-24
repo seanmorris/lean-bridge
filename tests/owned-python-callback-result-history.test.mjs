@@ -21,12 +21,12 @@ test("Python callback history authenticates exact source transitions and rejects
 	assert.deepEqual(history.updates.map(update => update.path), ownedPythonCallbackChangedPaths);
 	for(const update of history.updates)
 	{
-		const current = Buffer.from(beforeOwnedRubyCallbackResults(update.path, await readFile(update.path)));
-		const prior = beforeOwnedPythonCallbackResults(update.path, current);
+		const current = Buffer.from(beforeOwnedRubyCallbackResults(update.path, await readFile(update.path), update.currentSha256));
+		const prior = beforeOwnedPythonCallbackResults(update.path, current, update.previousSha256);
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		assert.equal(sha256(prior), update.previousSha256, update.path);
 		assert.equal(beforeOwnedPythonCallbackResults(update.path, current, update.currentSha256), current);
-		assert.equal(beforeOwnedPythonCallbackResults(update.path, prior), prior);
+		assert.equal(beforeOwnedPythonCallbackResults(update.path, prior, update.previousSha256), prior);
 		for(const unknown of [current + "\n", current + current, ""])
 		{
 			assert.equal(beforeOwnedPythonCallbackResults(update.path, unknown), unknown);
@@ -42,10 +42,17 @@ test("Python callback history authenticates exact source transitions and rejects
 });
 
 test("Python callback source identities do not promote unrelated type-surface cells", async () => {
-	const path = "docs/type-surface.v1.json", current = beforeOwnedRubyCallbackResults(path, await readFile(path, "utf8"));
-	const previous = JSON.parse(beforeOwnedPythonCallbackResults(path, current));
+	const history = JSON.parse(await readFile(ownedPythonCallbackHistoryPath, "utf8"));
+	const updates = new Map(history.updates.map(update => [update.path, update]));
+	const path = "docs/type-surface.v1.json";
+	const update = updates.get(path);
+	const current = beforeOwnedRubyCallbackResults(path, await readFile(path, "utf8"), update.currentSha256);
+	const previous = JSON.parse(beforeOwnedPythonCallbackResults(path, current, update.previousSha256));
 	for(const evidence of previous.evidence) for(const file of evidence.files)
-		file.sha256 = sha256(beforeOwnedRubyCallbackResults(file.path, await readFile(file.path)));
+	{
+		const expected = updates.get(file.path)?.currentSha256 ?? file.sha256;
+		file.sha256 = sha256(beforeOwnedRubyCallbackResults(file.path, await readFile(file.path), expected));
+	}
 	assert.deepEqual(JSON.parse(current), previous);
 	const binary = Buffer.from([0, 255, 128, 192]);
 	assert.equal(beforeOwnedPythonCallbackResults("unrelated.bin", binary), binary);
