@@ -1,0 +1,545 @@
+{
+  "additions": [
+    {
+      "currentSha256": "f908a1dd06770f2c1a58de2f3a19f6d408eafa227be1607a2b9b6f6ca4e14f70",
+      "path": "tests/helpers/php-wasm-entry-call-targets.mjs"
+    },
+    {
+      "currentSha256": "813d1b5406785558e72898043d156f533aed48e14a37b2b9f658379fd2aed782",
+      "path": "scripts/update-php-wasm-entry-oracle-closure-source-history.mjs"
+    },
+    {
+      "currentSha256": "a74de35da5b01f3ad01367a3cfa2a5c51300ec7f5e1f702d1c9ddd5296eac4cc",
+      "path": "tests/helpers/php-wasm-entry-oracle-closure-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "7f7e57c21b306d8582bc491d951358096e30121451b4b1e2e5dc4253ae3f4f06",
+      "path": "tests/helpers/php-wasm-entry-oracle-closure-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "1ddd6d1cef103d6826f18720dc8c2fad26a09c74",
+  "integrationUpdates": [
+    {
+      "currentSha256": "f973ea5351791820c4c867abd595a3fe90593b53f5f182ce9a03278a5bdf3de9",
+      "edits": [
+        {
+          "current": "import \"./helpers/php-wasm-entry-oracle-closure-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 1837
+        }
+      ],
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "a4bc718d424ba8d1207813a362e0feae9a18f94433355249020167997189ea2a"
+    },
+    {
+      "currentSha256": "a26c8dfacc79a5b6ba40186e51594284b02ae9af58b15bcdce29889ca575f270",
+      "edits": [
+        {
+          "current": "import { beforePhpWasmEntryOracleClosureSource, phpWasmEntryOracleClosureNormalizationPaths } from \"./php-wasm-entry-oracle-closure-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...phpWasmEntryOracleClosureNormalizationPaths\n\t, ...nominalSubtypeEntryReportLinkNormalizationPaths\n",
+          "previous": "\t...nominalSubtypeEntryReportLinkNormalizationPaths\n",
+          "start": 171884
+        },
+        {
+          "current": "\tconst phpWasmEntryOracleClosure\n\t\t= beforePhpWasmEntryOracleClosureSource(path, text, expected);\n\tif(sha256(phpWasmEntryOracleClosure) === expected)\n\t\treturn phpWasmEntryOracleClosure;\n\ttext = phpWasmEntryOracleClosure;\n",
+          "previous": "",
+          "start": 211725
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "72322eea87d701aaa70ce26afdbb872983facaf0ca7f1703dfc93f45a17e43b1"
+    }
+  ],
+  "milestone": "php-wasm-entry-oracle-closure-source-v1",
+  "predecessorCommit": "390ae18d3a2607bc73463767a33fea0cfb9350b0",
+  "schemaVersion": 1,
+  "scope": "PHP-Wasm refinement entry plans derive graph order, module-initialized entries, reduced-arity call targets, owned transfer completion, and bounded failure diagnostics from authenticated compiler and deployment inputs.",
+  "updates": [
+    {
+      "currentSha256": "9aae9ef4aaec4a036f85b373e6a7586c04ad3d9cc7437b4410b044e30bbf6857",
+      "edits": [
+        {
+          "current": "          LEAN_BRIDGE_PHP_WASM_FAILED_DEPLOYMENTS: build/php-wasm-callback-entry-failed-deployments\n",
+          "previous": "",
+          "start": 4827
+        },
+        {
+          "current": "            build/php-wasm-callback-entry-failed-deployments/\n",
+          "previous": "",
+          "start": 5549
+        }
+      ],
+      "path": ".github/workflows/php-wasm-callback-entry.yml",
+      "previousSha256": "a5f53db37bf431948d7d7067ed5594744826c389922af8a8ab3182f8ef4bfdc1"
+    },
+    {
+      "currentSha256": "25b7f5678ea722ba363e9ef09bca242522f95990de49c55f8e77f53346aef1a1",
+      "edits": [
+        {
+          "current": "          LEAN_BRIDGE_PHP_WASM_FAILED_DEPLOYMENTS: build/php-wasm-indexed-refinement-entry-failed-deployments\n",
+          "previous": "",
+          "start": 5050
+        },
+        {
+          "current": "            build/php-wasm-indexed-refinement-entry-failed-deployments/\n",
+          "previous": "",
+          "start": 5864
+        }
+      ],
+      "path": ".github/workflows/php-wasm-indexed-refinement-entry.yml",
+      "previousSha256": "915c76ea02c0f0ccd6dc6410e098277bde3be89776e76bd257c1e579a37e1198"
+    },
+    {
+      "currentSha256": "880a03428bab1224391c324eb1a87838311d82a38f3b256ee6a563dcfc14b857",
+      "edits": [
+        {
+          "current": "          LEAN_BRIDGE_PHP_WASM_FAILED_DEPLOYMENTS: build/php-wasm-owned-refinement-entry-failed-deployments\n",
+          "previous": "",
+          "start": 4959
+        },
+        {
+          "current": "            build/php-wasm-owned-refinement-entry-failed-deployments/\n",
+          "previous": "",
+          "start": 5765
+        }
+      ],
+      "path": ".github/workflows/php-wasm-owned-refinement-entry.yml",
+      "previousSha256": "4ca5ee4073047e12feafec0f712837e2c9d34f1166ee9e026dacaf3b6ee3053f"
+    },
+    {
+      "currentSha256": "03ce90ac49bf13713446a8cd9fa137cf6514ae392b702bb194fee876888ddfe3",
+      "edits": [
+        {
+          "current": "          LEAN_BRIDGE_PHP_WASM_FAILED_DEPLOYMENTS: build/php-wasm-refinement-entry-failed-deployments\n",
+          "previous": "",
+          "start": 4915
+        },
+        {
+          "current": "            build/php-wasm-refinement-entry-failed-deployments/\n",
+          "previous": "",
+          "start": 5673
+        }
+      ],
+      "path": ".github/workflows/php-wasm-refinement-entry.yml",
+      "previousSha256": "391c84616a1c327491fd497af3351194609103af2435f0966c2955451968a659"
+    },
+    {
+      "currentSha256": "b9ee397582d81ad59d644eecb2d33e1a5420ab35bbf2466f1ced97505e99d874",
+      "edits": [
+        {
+          "current": "const optionalKeys = (value, required, optional) => [\n\t...required, ...optional.filter(key => value && Object.hasOwn(value, key))\n];\n// Compiler-classified entries that cannot carry a per-call marker.\nconst unmarked = (plan, key, kinds, fields) => {\n\tconst values = new Map();\n\tif(!Object.hasOwn(plan, key)) return values;\n\trequire(Array.isArray(plan[key]) && plan[key].length > 0, `entry plan ${key}`);\n\tfor(const item of plan[key])\n\t{\n\t\texact(item, fields, `entry plan ${key} item`);\n\t\trequire(kinds.includes(item.kind), `${key} entry kind`);\n\t\trequire(plan.selected.filter(entry => entry.symbol === item.symbol && entry.kind === item.kind\n\t\t\t&& entry.label === item.label).length === 1, `${key} entry is selected`);\n\t\trequire(!values.has(item.label), `${key} entry identity`);\n\t\tif(key === \"reducedArity\")\n\t\t\trequire(/^l_[A-Za-z0-9_]+___redArg$/u.test(item.target), \"reduced-arity call target\");\n\t\tvalues.set(item.label, item);\n\t}\n\treturn values;\n};\n\n",
+          "previous": "",
+          "start": 844
+        },
+        {
+          "current": "\texact(plan, optionalKeys(plan, [\"scope\", \"family\", \"selected\", \"cases\"], [\"globals\", \"reducedArity\"]), \"entry plan\");\n",
+          "previous": "\texact(plan, [\"scope\", \"family\", \"selected\", \"cases\"], \"entry plan\");\n",
+          "start": 1829
+        },
+        {
+          "current": "\tconst globals = unmarked(plan, \"globals\", [\"constructor\", \"source\"], [\"symbol\", \"kind\", \"label\"]);\n\tconst reduced = unmarked(plan, \"reducedArity\", [\"source\"], [\"symbol\", \"kind\", \"label\", \"target\"]);\n",
+          "previous": "",
+          "start": 2547
+        },
+        {
+          "current": "\t\texact(item, optionalKeys(item, [\"control\", \"outcome\", \"call\"], [\"moduleInitialized\", \"reducedArity\"]), \"entry case\");\n\t\tconst declared = (key, values) => {\n\t\t\tif(!Object.hasOwn(item, key)) return [];\n\t\t\trequire(Array.isArray(item[key]) && item[key].length > 0\n\t\t\t\t&& same(item[key], [...new Set(item[key])].sort()), `entry case ${key}`);\n\t\t\tfor(const label of item[key]) require(values.has(label), `${key} names a classified entry`);\n\t\t\treturn item[key].map(label => values.get(label));\n\t\t};\n\t\tconst unmarkedEntries = [...declared(\"moduleInitialized\", globals), ...declared(\"reducedArity\", reduced)];\n\t\trequire(Array.isArray(item.call?.entries) && !item.call.entries.some(entry => [...globals.values(), ...reduced.values()]\n\t\t\t.some(value => value.kind === entry.kind && value.label === entry.label))\n\t\t, \"unmarked entries cannot appear in a trace plan\");\n\t\tconst unmarkedSource = unmarkedEntries.some(value => value.kind === \"source\");\n",
+          "previous": "\t\texact(item, [\"control\", \"outcome\", \"call\"], \"entry case\");\n",
+          "start": 2810
+        },
+        {
+          "current": "\t\t\trequire(item.call.counts.source > 0 || unmarkedSource, \"accepted entry reaches its source\");\n",
+          "previous": "\t\t\trequire(item.call.counts.source > 0, \"accepted entry reaches its source\");\n",
+          "start": 4564
+        },
+        {
+          "current": "\t\t\trequire(item.call.counts.source === 0 && !unmarkedSource, \"refused entry stops before its source\");\n",
+          "previous": "\t\t\trequire(item.call.counts.source === 0, \"refused entry stops before its source\");\n",
+          "start": 5136
+        },
+        {
+          "current": "\tfor(const [key, values] of [[\"moduleInitialized\", globals], [\"reducedArity\", reduced]])\n\t\tfor(const label of values.keys())\n\t\t\trequire(plan.cases.some(item => item[key]?.includes(label)), `${label} classification is exercised`);\n",
+          "previous": "",
+          "start": 5709
+        }
+      ],
+      "path": "tests/fixtures/php-wasm-refinement-entry/driver.mjs",
+      "previousSha256": "c2d1b52f212f3c0a932f578c590a0ac6b35d015d07e29be88e6ea7a9adfc24cb"
+    },
+    {
+      "currentSha256": "a9cb127eeec48d1c331b5172ad22ea336ed8dfd5d899f9533c9cab142dc1779c",
+      "edits": [
+        {
+          "current": "import { mkdtemp, readFile, rm } from \"node:fs/promises\";\nimport { tmpdir } from \"node:os\";\nimport { join } from \"node:path\";\n",
+          "previous": "",
+          "start": 135
+        },
+        {
+          "current": "import { CanonicalBuildError } from \"../../src/build/build-error.mjs\";\nimport { processBuildRunner } from \"../../src/build/process-runner.mjs\";\nimport { saveLakeFile } from \"./lake-workspace.mjs\";\nimport {\n\tphpWasmEntryProbeDeploymentFiles, phpWasmInventory\n\t, reportPhpWasmCaptureFailure, retainFailedPhpWasmDeployment\n} from \"./type-corpus-php-wasm-install.mjs\";\n\nconst recorder = () => {\n\tconst lines = [];\n\treturn { lines, t: { diagnostic: line => { lines.push(line); } } };\n};\n",
+          "previous": "import { phpWasmEntryProbeDeploymentFiles } from \"./type-corpus-php-wasm-install.mjs\";\n",
+          "start": 291
+        },
+        {
+          "current": "\ntest(\"failed PHP-Wasm consumer captures surface their own stderr and stdout\", async () => {\n\tconst failure = await processBuildRunner.capture({\n\t\tcommand: process.execPath\n\t\t, args: [\"-e\", \"process.stdout.write('partial'); console.error('Error: probe entry sequence differs'); process.exit(3);\"]\n\t\t, cwd: tmpdir(), env: {}, timeoutMs: 30_000\n\t}).then(() => assert.fail(\"expected the consumer to fail\"), error => error);\n\tassert.equal(failure.name, \"CanonicalBuildError\");\n\tconst { lines, t } = recorder();\n\tassert.equal(reportPhpWasmCaptureFailure(t, \"probe: PHP-Wasm Node embedded/startup/weak\", failure), true);\n\tassert.deepEqual(lines, [\n\t\t\"probe: PHP-Wasm Node embedded/startup/weak: build-command-failed (exit 3)\"\n\t\t, `probe: PHP-Wasm Node embedded/startup/weak stderr: ${JSON.stringify(\"Error: probe entry sequence differs\\n\")}`\n\t\t, `probe: PHP-Wasm Node embedded/startup/weak stdout: ${JSON.stringify(\"partial\")}`\n\t]);\n});\n\ntest(\"PHP-Wasm capture diagnostics keep only a bounded tail\", () => {\n\tconst stderr = \"head-\" + \"x\".repeat(5000) + \"-tail\";\n\tconst error = new CanonicalBuildError(\"build-command-failed\", \"node exited with status 1\"\n\t\t, { details: { exitCode: 1, signal: null, stderr, stdout: \"\" } });\n\tconst { lines, t } = recorder();\n\treportPhpWasmCaptureFailure(t, \"probe\", error);\n\tassert.equal(lines[1], `probe stderr (last 4096 of ${stderr.length} retained characters): ${JSON.stringify(stderr.slice(-4096))}`);\n\tassert.ok(!lines[1].includes(\"head-\") && lines[1].endsWith('-tail\"'));\n\tconst signalled = recorder();\n\treportPhpWasmCaptureFailure(signalled.t, \"probe\", new CanonicalBuildError(\"build-command-failed\", \"killed\"\n\t\t, { details: { exitCode: null, signal: \"SIGKILL\", stderr: \"\", stdout: \"\" } }));\n\tassert.equal(signalled.lines[0], \"probe: build-command-failed (signal SIGKILL)\");\n});\n\ntest(\"PHP-Wasm capture diagnostics ignore failures without captured process details\", () => {\n\tfor(const error of [\n\t\tnew Error(\"plain\"), new assert.AssertionError({ message: \"differs\" }), null\n\t\t, Object.assign(new Error(\"lookalike\"), { details: { stderr: \"x\" } })\n\t\t, new CanonicalBuildError(\"build-command-failed\", \"malformed\", { details: [\"stderr\"] })\n\t]) {\n\t\tconst { lines, t } = recorder();\n\t\tassert.equal(reportPhpWasmCaptureFailure(t, \"probe\", error), false);\n\t\tassert.deepEqual(lines, []);\n\t}\n});\n\ntest(\"failed PHP-Wasm deployments are retained without the pinned host package\", async () => {\n\tconst scratch = await mkdtemp(join(tmpdir(), \"lean-bridge-php-wasm-retention-\"));\n\ttry\n\t{\n\t\tconst deployment = join(scratch, \"relocated\"), root = join(scratch, \"retained\");\n\t\tfor(const [path, text] of [\n\t\t\t[\"node.mjs\", \"node\"], [\"driver.mjs\", \"driver\"]\n\t\t\t, [\"request-embedded.json\", \"{}\"]\n\t\t\t, [\"node_modules/php-wasm/php-node.wasm\", \"host\"]\n\t\t\t, [\"node_modules/php-wasm/package.json\", \"{}\"]\n\t\t\t, [\"node_modules/php-wasm-sibling/index.mjs\", \"sibling\"]\n\t\t\t, [\"node_modules/component/compiled/component.json\", \"component\"]\n\t\t\t, [\"vendor/autoload.php\", \"<?php\"]\n\t\t]) await saveLakeFile(deployment, path, text);\n\t\tconst before = await phpWasmInventory(deployment);\n\t\tconst failure = {\n\t\t\tlabel: \"probe\", command: \"node\", args: [\"node.mjs\"]\n\t\t\t, code: \"build-command-failed\", exitCode: 1, signal: null\n\t\t\t, stderr: \"Error: differs\\n\", stdout: \"\"\n\t\t};\n\t\tconst target = await retainFailedPhpWasmDeployment({ root, name: \"probe-embedded-startup-weak\", deployment, failure });\n\t\tassert.equal(target, join(root, \"probe-embedded-startup-weak\"));\n\t\tassert.deepEqual(Object.keys(await phpWasmInventory(join(target, \"deployment\"))).sort(), [\n\t\t\t\"driver.mjs\", \"node.mjs\"\n\t\t\t, \"node_modules/component/compiled/component.json\"\n\t\t\t, \"node_modules/php-wasm-sibling/index.mjs\"\n\t\t\t, \"request-embedded.json\", \"vendor/autoload.php\"\n\t\t]);\n\t\tassert.deepEqual(JSON.parse(await readFile(join(target, \"failure.json\"), \"utf8\")), {\n\t\t\tschemaVersion: 1, ...failure\n\t\t\t, stderr: { characters: 15, tail: \"Error: differs\\n\" }, stdout: { characters: 0, tail: \"\" }\n\t\t\t, omitted: [\"deployment/node_modules/php-wasm\"]\n\t\t});\n\t\tconst large = { ...failure, stderr: \"head-\" + \"e\".repeat(9000) + \"-tail\", stdout: \"o\".repeat(5000) };\n\t\tconst bounded = await retainFailedPhpWasmDeployment({ root, name: \"large-output\", deployment, failure: large });\n\t\tconst record = JSON.parse(await readFile(join(bounded, \"failure.json\"), \"utf8\"));\n\t\tassert.deepEqual(record.stderr, { characters: large.stderr.length, tail: large.stderr.slice(-4096) });\n\t\tassert.deepEqual(record.stdout, { characters: 5000, tail: \"o\".repeat(4096) });\n\t\tassert.ok(!JSON.stringify(record).includes(\"head-\"));\n\t\tawait assert.rejects(retainFailedPhpWasmDeployment({ root, name: \"missing-stream\", deployment\n\t\t\t, failure: { ...failure, stdout: undefined } }));\n\t\tassert.deepEqual(await phpWasmInventory(deployment), before, \"retention only reads the failed deployment\");\n\t\tawait assert.rejects(retainFailedPhpWasmDeployment({ root, name: \"probe-embedded-startup-weak\", deployment, failure }));\n\t\tfor(const name of [\"\", \"../escape\", \"a/b\", \".hidden\"])\n\t\t\tawait assert.rejects(retainFailedPhpWasmDeployment({ root, name, deployment, failure }));\n\t\tawait assert.rejects(retainFailedPhpWasmDeployment({ root: \"\", name: \"other\", deployment, failure }));\n\t}\n\tfinally\n\t{ await rm(scratch, { recursive: true, force: true }); }\n});\n\ntest(\"hosted PHP-Wasm entry probes upload a retained failed deployment\", async () => {\n\tfor(const prefix of [\n\t\t\"php-wasm-refinement-entry\", \"php-wasm-indexed-refinement-entry\"\n\t\t, \"php-wasm-owned-refinement-entry\", \"php-wasm-callback-entry\"\n\t]) {\n\t\tconst workflow = await readFile(`.github/workflows/${prefix}.yml`, \"utf8\");\n\t\tconst root = `build/${prefix}-failed-deployments`;\n\t\tconst acceptance = workflow.slice(workflow.indexOf(\"        id: acceptance\\n\"));\n\t\tconst step = acceptance.slice(0, acceptance.indexOf(\"\\n      - name: \"));\n\t\tassert.ok(step.includes(`\\n          LEAN_BRIDGE_PHP_WASM_FAILED_DEPLOYMENTS: ${root}\\n`), prefix);\n\t\tconst upload = acceptance.slice(acceptance.indexOf(\"uses: actions/upload-artifact@v7\"));\n\t\tconst paths = upload.slice(upload.indexOf(\"path: |\\n\"), upload.indexOf(\"if-no-files-found:\"));\n\t\tassert.ok(paths.includes(`\\n            ${root}/\\n`), prefix);\n\t\tassert.equal(workflow.split(\"LEAN_BRIDGE_PHP_WASM_FAILED_DEPLOYMENTS\").length, 2, prefix);\n\t}\n});\n",
+          "previous": "",
+          "start": 2536
+        }
+      ],
+      "path": "tests/helpers/php-wasm-entry-probe-deployment-tests.mjs",
+      "previousSha256": "018ffcf6433b35187c949a5f786ab86a2d7bbe65ec943466790b3ba479534357"
+    },
+    {
+      "currentSha256": "2430c3031289064450c668ba78766ba7b22db0f9dfbaef7808169b0970d500ad",
+      "edits": [
+        {
+          "current": "import { phpWasmEntryBuildClassifications } from \"./php-wasm-entry-call-targets.mjs\";\n",
+          "previous": "",
+          "start": 747
+        },
+        {
+          "current": "\tconst classifications = await Promise.all([0, 1].map(index =>\n\t\tphpWasmEntryBuildClassifications(join(output, `build-${index}`), builds[index].observation)));\n\tassert.deepEqual(classifications[1], classifications[0], \"independent builds classify one call surface\");\n\tconst entryPlan = phpWasmOwnedRefinementEntryPlan(family, selection.selected, selection.adapters.leanSource, classifications[0]);\n",
+          "previous": "\tconst entryPlan = phpWasmOwnedRefinementEntryPlan(family, selection.selected, selection.adapters.leanSource);\n",
+          "start": 5289
+        }
+      ],
+      "path": "tests/helpers/php-wasm-owned-refinement-entry-installed-tests.mjs",
+      "previousSha256": "433af6e498bd6f72973aa45cc0e25232302fc71e6822f9b7ef0edb4517fa3f21"
+    },
+    {
+      "currentSha256": "491cfa1a8e33e1a326665cc39032c557959ab6418986ad20555b37d5a05c0695",
+      "edits": [
+        {
+          "current": "import { phpWasmReducedArityTargets } from \"./php-wasm-entry-call-targets.mjs\";\n",
+          "previous": "",
+          "start": 256
+        },
+        {
+          "current": "\t\t, \"transfer.finish\"\n",
+          "previous": "",
+          "start": 3135
+        },
+        {
+          "current": "\t\t, \"owned:refine_claim\", \"OwnedCheckedRecords.mkClaim\", \"transfer.finish\"\n",
+          "previous": "\t\t, \"owned:refine_claim\", \"OwnedCheckedRecords.mkClaim\"\n",
+          "start": 4534
+        },
+        {
+          "current": "\t\t, \"OwnedCheckedRecords.checkedPositive\", \"transfer.finish\"\n",
+          "previous": "\t\t, \"OwnedCheckedRecords.checkedPositive\"\n",
+          "start": 4774
+        },
+        {
+          "current": "\tassert.deepEqual(labels(plan.cases.find(value => value.control === \"grant-record-refusal\")).slice(-3), [\n",
+          "previous": "\tassert.deepEqual(labels(plan.cases.find(value => value.control === \"grant-record-refusal\")).slice(-2), [\n",
+          "start": 4840
+        },
+        {
+          "current": "\t\t, \"transfer.finish\"\n",
+          "previous": "",
+          "start": 5017
+        },
+        {
+          "current": "\tfor(const value of plan.cases)\n\t\tassert.equal(labels(value).filter(label => label === \"transfer.finish\").length, 1, value.control);\n\tfor(const value of plan.cases)\n\t\tassert.equal(labels(value).at(-1), \"transfer.finish\", `${value.control} closes its input leases`);\n});\n\ntest(\"owned plans omit only an authenticated reduced-arity source marker\", async () => {\n\tconst { plan, selected, lean } = await fixture(\"owned-checked-record\");\n\tconst pair = selected.find(item => item.kind === \"source\" && item.label === \"OwnedCheckedRecords.pairClaim\");\n\tconst target = { ...pair, target: \"l_OwnedCheckedRecords_pairClaim___redArg\" };\n\tconst reduced = phpWasmOwnedRefinementEntryPlan(\"owned-checked-record\", selected, lean, { reducedArity: [target] });\n\tassert.deepEqual(reduced.reducedArity, [target]);\n\tconst valid = reduced.cases.find(value => value.control === \"pair-valid\");\n\tassert.deepEqual(valid.reducedArity, [pair.label]);\n\tassert.deepEqual(labels(valid), labels(plan.cases.find(value => value.control === \"pair-valid\"))\n\t\t.filter(label => label !== pair.label));\n\tassert.equal(valid.call.counts.source, 0);\n\tassert.equal(Object.hasOwn(reduced.cases.find(value => value.control === \"pair-second-refusal\"), \"reducedArity\"), false);\n\tassert.ok(reduced.cases.filter(value => value.control !== \"pair-valid\").every(value => !Object.hasOwn(value, \"reducedArity\")));\n\tfor(const reducedArity of [\n\t\t[{ ...target, target: \"l_OwnedCheckedRecords_echoClaim___redArg\" }]\n\t\t, [{ ...target, target: \"l_OwnedCheckedRecords_pairClaim\" }]\n\t\t, [{ ...target, kind: \"constructor\" }], [{ ...target, symbol: \"missing\" }]\n\t\t, [target, target]\n\t\t, [{ ...pair }]\n\t]) assert.throws(() => phpWasmOwnedRefinementEntryPlan(\"owned-checked-record\", selected, lean, { reducedArity }));\n\tassert.throws(() => phpWasmOwnedRefinementEntryPlan(\"owned-checked-record\", selected, lean\n\t\t, { reducedArity: [target], globalDefinitions: [pair] }), /one classification/u);\n",
+          "previous": "",
+          "start": 5383
+        },
+        {
+          "current": "\ntest(\"reduced-arity call targets are classified from compiled adapter and wrapper call sites\", () => {\n\tconst source = { symbol: \"lb_source_pair\", kind: \"source\", label: \"Probe.pair\" };\n\tconst direct = { symbol: \"lb_source_echo\", kind: \"source\", label: \"Probe.echo\" };\n\tconst selected = [\n\t\t{ symbol: \"lgo_call0\", kind: \"public\", label: \"pair\" }\n\t\t, { symbol: \"lean_bridge_adapter_lean\", kind: \"adapter\", label: \"pair:lean\" }\n\t\t, source, direct\n\t];\n\tconst target = \"l_Probe_pair___redArg\", delegate = `v_r = ${target}(v_x);`, call = `v_r = ${target}(v_b);`;\n\tconst module = `LEAN_EXPORT lean_object* ${target}(lean_object* v_x){\n_start:\n{\nreturn v_x;\n}\n}\nLEAN_EXPORT lean_object* lb_source_pair(lean_object* v_unused, lean_object* v_x){\n_start:\n{\nlean_object* v_r;\n${delegate}\nreturn v_r;\n}\n}\nLEAN_EXPORT lean_object* lb_source_echo(lean_object* v_x){\n_start:\n{\nreturn v_x;\n}\n}\n`;\n\tconst adapter = `lean_object* ${target}(lean_object*);\nlean_object* lb_source_echo(lean_object*);\nLEAN_EXPORT lean_object* lean_bridge_adapter_lean(lean_object* v_a, lean_object* v_b){\n_start:\n{\nlean_object* v_r;\n${call}\nv_r = lb_source_echo(v_r);\n/* lb_source_pair(v_a, v_b); */ return v_r;\n}\n}\n`;\n\tconst swap = (text, from, to) => {\n\t\tassert.ok(text.includes(from), from); return text.replace(from, to);\n\t};\n\tconst probe = text => ({ name: \"1-Probe.c\", text }), glue = text => ({ name: \"2-adapter.c\", text });\n\tconst classify = (lean, generated, options) => phpWasmReducedArityTargets([lean, generated], selected, options);\n\tconst expected = [{ ...source, target }];\n\tassert.deepEqual(classify(probe(module), glue(adapter)), expected);\n\tfor(const caller of [\n\t\t\"v_r = lb_source_pair(v_a, v_b);\"\n\t\t, \"v_r = consume(lb_source_pair(v_a, v_b));\"\n\t\t, \"if (lb_source_pair(v_a, v_b)) v_r = v_b;\"\n\t\t, \"v_r = (lean_object*)lb_source_pair(v_a, v_b);\"\n\t\t, \"v_r = lean_apply(&lb_source_pair, v_b);\"\n\t]) assert.deepEqual(classify(probe(module), glue(swap(adapter, call, caller))), [], caller);\n\tconst valued = module.replace(/LEAN_EXPORT lean_object\\* lb_source_echo[^]*$/u\n\t\t, \"LEAN_EXPORT lean_object* lb_source_echo;\\n\");\n\tassert.deepEqual(classify(probe(valued), glue(adapter), { globalDefinitions: [direct] }), expected);\n\tconst boxed = `${module}LEAN_EXPORT lean_object* ${target}___boxed(lean_object* v_x){\nreturn ${target}(v_x);\n}\n`;\n\tassert.deepEqual(classify(probe(boxed), glue(adapter)), expected, \"Lean's boxed target wrapper is classified\");\n\tconst faults = {\n\t\t\"wrapper with no reduced-arity delegate\": () => [probe(swap(module, delegate, \"v_r = v_x;\")), glue(adapter)]\n\t\t, \"target without an adapter caller\": () => [probe(module), glue(swap(adapter, call, \"v_r = v_b;\"))]\n\t\t, \"delegate to another declaration\": () => [\n\t\t\tprobe(swap(module, delegate, \"v_r = l_Probe_other___redArg(v_x);\"))\n\t\t\t, glue(adapter)\n\t\t]\n\t\t, \"duplicate marked definition\": () => [\n\t\t\tprobe(module), glue(adapter)\n\t\t\t, { name: \"3-copy.c\", text: \"LEAN_EXPORT lean_object* lb_source_pair(lean_object* v_x){ return v_x; }\\n\" }\n\t\t]\n\t\t, \"missing reduced-arity definition\": () => [\n\t\t\tprobe(swap(module, `LEAN_EXPORT lean_object* ${target}(lean_object* v_x){`, \"static int unused(void){\"))\n\t\t\t, glue(adapter)\n\t\t]\n\t\t, \"unnamed input\": () => [{ name: \"Probe.c\", text: module }, glue(adapter)]\n\t\t, \"unclassified same-file target caller\": () => [\n\t\t\tprobe(`${module}lean_object* other(lean_object* v_x){ return ${target}(v_x); }\\n`)\n\t\t\t, glue(adapter)\n\t\t]\n\t\t, \"suffix lookalike adapter call\": () => [probe(module), glue(swap(adapter, call, `v_r = ${target}X(v_b);`))]\n\t\t, \"prefix lookalike adapter call\": () => [probe(module), glue(swap(adapter, call, `v_r = x${target}(v_b);`))]\n\t\t, \"multiple specialized delegates\": () => [\n\t\t\tprobe(swap(module, delegate, `v_r = ${target}(l_Probe_pair___lambda(v_x));`))\n\t\t\t, glue(adapter)\n\t\t]\n\t\t, \"target called outside a selected adapter\": () => [\n\t\t\tprobe(module)\n\t\t\t, glue(swap(adapter, \"lean_bridge_adapter_lean(\", \"unselected_adapter(\"))\n\t\t]\n\t};\n\tfor(const [label, inputs] of Object.entries(faults))\n\t\tassert.throws(() => phpWasmReducedArityTargets(inputs(), selected), label);\n});\n",
+          "previous": "",
+          "start": 7768
+        }
+      ],
+      "path": "tests/helpers/php-wasm-owned-refinement-entry-plan-tests.mjs",
+      "previousSha256": "537b5e781f8ca42596a26069063122284c3ae180a2b6e235f3010d801ed5cf38"
+    },
+    {
+      "currentSha256": "3b5bfc0a89824b695d9e6a5070276f3e7c76c44cf418887bff4375e98a1729b4",
+      "edits": [
+        {
+          "current": "import { phpWasmUnmarkedEntries } from \"./php-wasm-refinement-entry-plan.mjs\";\n",
+          "previous": "",
+          "start": 216
+        },
+        {
+          "current": " * @param options - Compiler-classified entry forms and call targets.\n * @param options.globalDefinitions - Authored entries compiled as module-initialized values.\n * @param options.reducedArity - Authored sources reached only through a reduced-arity target.\n",
+          "previous": "",
+          "start": 1013
+        },
+        {
+          "current": "export const phpWasmOwnedRefinementEntryPlan = (family, selected, generatedLeanSource, options = {}) => {\n",
+          "previous": "export const phpWasmOwnedRefinementEntryPlan = (family, selected, generatedLeanSource) => {\n",
+          "start": 1276
+        },
+        {
+          "current": "\tconst { unmarked, close } = phpWasmUnmarkedEntries(selected, options);\n",
+          "previous": "",
+          "start": 1476
+        },
+        {
+          "current": "\t// Every owned call closes its input leases, refused or accepted.\n\tconst item = (control, outcome, publicName, entries) => unmarked(control, outcome, publicName\n\t\t, [...entries, hook(\"transfer.finish\")], counts);\n",
+          "previous": "\tconst call = (publicName, entries) => ({ publicName, entries, counts: counts(entries) });\n\tconst item = (control, outcome, publicName, entries) => ({\n\t\tcontrol, outcome, call: call(publicName, entries)\n\t});\n",
+          "start": 3077
+        },
+        {
+          "current": "\t\t] : prefix;\n",
+          "previous": "\t\t\t, hook(\"transfer.finish\")\n\t\t] : [...prefix, hook(\"transfer.finish\")];\n",
+          "start": 4513
+        },
+        {
+          "current": "\tconst { globals, reduced } = close(cases);\n",
+          "previous": "",
+          "start": 7340
+        },
+        {
+          "current": "\t\t, selected: structuredClone(selected), cases\n\t\t, ...globals.length ? { globals } : {}, ...reduced.length ? { reducedArity: reduced } : {} };\n",
+          "previous": "\t\t, selected: structuredClone(selected), cases };\n",
+          "start": 7439
+        }
+      ],
+      "path": "tests/helpers/php-wasm-owned-refinement-entry-plan.mjs",
+      "previousSha256": "52d4cc0a43220bf538aff92c0a65384fc2a816e2b0e8f858020e98d2188375e5"
+    },
+    {
+      "currentSha256": "f9c081b80e678f090a1afc32ee6826fe26a9d162166ce587e0c48af573f4d722",
+      "edits": [
+        {
+          "current": "\ntest(\"entry driver admits only declared unmarked sources and refuses their markers\", async () => {\n\tconst unmarkedSelected = [...selected\n\t\t, { symbol: \"value\", kind: \"source\", label: \"Probe.value\" }\n\t\t, { symbol: \"redirected\", kind: \"source\", label: \"Probe.redirected\" }];\n\tconst sourceless = { publicName: \"first\"\n\t\t, entries: call.entries.slice(0, 2)\n\t\t, counts: { validator: 1, constructor: 0, adapter: 1, source: 0 } };\n\tconst sourcelessTrace = trace.replace(\"LB_SUBTYPE_ENTRY_V1 enter source Probe.first\\n\", \"\");\n\tconst globals = [unmarkedSelected[4]];\n\tconst reducedArity = [{ ...unmarkedSelected[5], target: \"l_Probe_redirected___redArg\" }];\n\tconst base = { ...plan, selected: unmarkedSelected, globals, reducedArity };\n\tfor(const [key, label] of [[\"moduleInitialized\", \"Probe.value\"], [\"reducedArity\", \"Probe.redirected\"]])\n\t{\n\t\tconst other = key === \"moduleInitialized\" ? \"reducedArity\" : \"globals\";\n\t\tconst direct = { control: \"direct\", outcome: \"accepted\", call: sourceless, [key]: [label] };\n\t\tconst accepted = { ...base, cases: [direct] };\n\t\tdelete accepted[other];\n\t\tconst { value } = await driver({ plan: accepted, trace: sourcelessTrace });\n\t\tassert.equal(value.entryProbe.counts.source, 0, key);\n\t\tfor(const faults of [\n\t\t\t{ plan: { ...accepted, cases: [{ ...accepted.cases[0], [key]: undefined }] } }\n\t\t\t, { plan: { ...accepted, cases: [{ control: \"direct\", outcome: \"accepted\", call: sourceless }] } }\n\t\t\t, { plan: { ...accepted, cases: [{ ...accepted.cases[0], [key]: [\"Probe.first\"] }] } }\n\t\t\t, { plan: { ...accepted, cases: [{ ...accepted.cases[0], [key]: [label, label] }] } }\n\t\t\t, { plan: { ...accepted, cases: [{ ...accepted.cases[0], outcome: \"refused\" }] } }\n\t\t\t, { plan: { ...accepted, cases: [{ ...accepted.cases[0], call: { publicName: \"first\"\n\t\t\t\t, entries: [...sourceless.entries, { kind: \"source\", label }]\n\t\t\t\t, counts: { ...sourceless.counts, source: 1 } } }] }\n\t\t\t, trace: sourcelessTrace.replace(\"LB_SUBTYPE_ENTRY_V1 end\", `LB_SUBTYPE_ENTRY_V1 enter source ${label}\\nLB_SUBTYPE_ENTRY_V1 end`) }\n\t\t]) await assert.rejects(driver({ trace: sourcelessTrace, ...faults }), key);\n\t}\n\tconst declared = { control: \"direct\", outcome: \"accepted\", call: sourceless, moduleInitialized: [\"Probe.value\"] };\n\tconst second = { control: \"second\", outcome: \"accepted\", call: sourceless, reducedArity: [\"Probe.redirected\"] };\n\tconst both = { ...base, cases: [declared, second] };\n\tassert.equal((await driver({ plan: both, trace: sourcelessTrace + sourcelessTrace })).value.entryProbe.calls, 2);\n\tawait assert.rejects(driver({ plan: { ...base, cases: [declared] }, trace: sourcelessTrace })\n\t\t, /Probe\\.redirected classification is exercised/u);\n\tconst onlyGlobals = { ...plan, selected: unmarkedSelected, globals, cases: [declared] };\n\tassert.equal((await driver({ plan: onlyGlobals, trace: sourcelessTrace })).value.entryProbe.calls, 1);\n\tconst redirected = { control: \"direct\", outcome: \"accepted\", call: sourceless, reducedArity: [\"Probe.redirected\"] };\n\tconst onlyReduced = { ...plan, selected: unmarkedSelected, reducedArity, cases: [redirected] };\n\tassert.equal((await driver({ plan: onlyReduced, trace: sourcelessTrace })).value.entryProbe.calls, 1);\n\tfor(const value of [\n\t\t{ ...onlyGlobals, globals: [] }\n\t\t, { ...onlyGlobals, globals: [{ symbol: \"missing\", kind: \"source\", label: \"Probe.value\" }] }\n\t\t, { ...onlyGlobals, globals: [{ ...globals[0], kind: \"adapter\" }] }\n\t\t, { ...onlyGlobals, globals: [globals[0], globals[0]] }\n\t\t, { ...onlyReduced, reducedArity: [{ ...reducedArity[0], target: \"l_Probe_redirected\" }] }\n\t\t, { ...onlyReduced, reducedArity: [{ ...reducedArity[0], target: undefined }] }\n\t]) await assert.rejects(driver({ plan: value, trace: sourcelessTrace }));\n});\n",
+          "previous": "",
+          "start": 6657
+        }
+      ],
+      "path": "tests/helpers/php-wasm-refinement-entry-driver-tests.mjs",
+      "previousSha256": "e3e373d566ef8c507434266e7b08793d71c193c5313b12b94bdd8bf5154402f3"
+    },
+    {
+      "currentSha256": "0df67476cf268a750eb3755ee8a51fe20f64a636e0cc77f9efde5c7fa49371c3",
+      "edits": [
+        {
+          "current": "import { phpWasmEntryBuildClassifications } from \"./php-wasm-entry-call-targets.mjs\";\n",
+          "previous": "",
+          "start": 2431
+        },
+        {
+          "current": "\tassert.deepEqual(builds[1].observation.globalDefinitions, builds[0].observation.globalDefinitions);\n",
+          "previous": "",
+          "start": 8136
+        },
+        {
+          "current": "\tconst classifications = await Promise.all([0, 1].map(index =>\n\t\tphpWasmEntryBuildClassifications(join(output, `build-${index}`), builds[index].observation)));\n\tassert.deepEqual(classifications[1], classifications[0], \"independent builds classify one call surface\");\n\tconst entryPlan = phpWasmRefinementEntryPlan(family, selection.selected, selection.generated.leanSource, classifications[0]);\n",
+          "previous": "\tconst entryPlan = phpWasmRefinementEntryPlan(family, selection.selected, selection.generated.leanSource);\n",
+          "start": 8398
+        }
+      ],
+      "path": "tests/helpers/php-wasm-refinement-entry-installed-tests.mjs",
+      "previousSha256": "8cac2f77b6c94924f79322470bcc3139bc536ebdee89322623f752bfcd107350"
+    },
+    {
+      "currentSha256": "54089d68bb905b28f0fd90aecc91254a81c1580c93041650d92a04d13085e6ca",
+      "edits": [
+        {
+          "current": "\nconst graphSelection = async family => {\n\tconst marker = phpWasmRefinementEntrySourceFixture(family);\n\tconst source = phpWasmRefinementEntrySource(await readFile(marker.path, \"utf8\"), marker);\n\treturn phpWasmGraphRefinementEntrySelection(fixtureModel(family), source.entries);\n};\nconst labels = item => item.call.entries.map(entry => `${entry.kind}:${entry.label.replace(/_[a-f0-9]{20}$/u, \"\")}`);\n\ntest(\"graph-carried recursive plans follow the generated per-position validation order\", async () => {\n\tconst subtype = await plan(\"recursive-subtype\");\n\tconst byControl = Object.fromEntries(subtype.cases.map(item => [item.control, item]));\n\tconst check = \"validator:RecursiveSubtypes.first:graph_refinement_0\";\n\tassert.deepEqual(labels(byControl.direct), [\n\t\tcheck, \"constructor:RecursiveSubtypes.plusOne\"\n\t\t, check, \"constructor:RecursiveSubtypes.plusOne\"\n\t\t, \"adapter:RecursiveSubtypes.first\", \"constructor:RecursiveSubtypes.plusOne\"\n\t\t, \"constructor:RecursiveSubtypes.plusOne\", \"source:RecursiveSubtypes.first\"\n\t]);\n\tassert.deepEqual(labels(byControl[\"first-refusal\"]), labels(byControl.direct).slice(0, 4));\n\tassert.deepEqual(labels(byControl[\"inactive-branch\"]), [\"adapter:RecursiveSubtypes.echo\", \"source:RecursiveSubtypes.echo\"]);\n\tassert.deepEqual(labels(byControl[\"constructor-free\"]), [\"adapter:RecursiveSubtypes.produce\", \"source:RecursiveSubtypes.produce\"]);\n\tassert.ok(subtype.cases.every(item => !item.call.entries.some(entry =>\n\t\t/:(?:fin_guard|refinement)_0$/u.test(entry.label))), \"graph transports never reach flat validators\");\n\tconst record = Object.fromEntries((await plan(\"recursive-checked-record\")).cases.map(item => [item.control, item]));\n\tconst [leaf, packet] = [labels(record.direct)[0], labels(record.direct)[2]];\n\tassert.notEqual(record.direct.call.entries[0].label, record.direct.call.entries[2].label);\n\tassert.deepEqual(labels(record.direct), [\n\t\tleaf, \"constructor:RecursiveCheckedRecords.plusOne\"\n\t\t, packet, \"constructor:RecursiveCheckedRecords.plusOne\"\n\t\t, \"constructor:RecursiveCheckedRecords.mkPacket\"\n\t\t, \"adapter:RecursiveCheckedRecords.first\"\n\t\t, \"constructor:RecursiveCheckedRecords.plusOne\"\n\t\t, \"constructor:RecursiveCheckedRecords.mkPacket\"\n\t\t, \"source:RecursiveCheckedRecords.first\"\n\t]);\n\tassert.deepEqual(labels(record[\"first-refusal\"]), [\n\t\tleaf, \"constructor:RecursiveCheckedRecords.plusOne\"\n\t\t, leaf, \"constructor:RecursiveCheckedRecords.plusOne\"\n\t]);\n\tassert.deepEqual(labels(record[\"record-refusal\"]), labels(record.direct).slice(0, 5));\n\tassert.deepEqual(labels(record[\"inactive-branch\"]), [\"adapter:RecursiveCheckedRecords.groups\", \"source:RecursiveCheckedRecords.groups\"]);\n});\n\ntest(\"graph-carried plans refuse flat selections and generated conversion drift\", async () => {\n\tfor(const family of [\"recursive-subtype\", \"recursive-checked-record\"])\n\t{\n\t\tconst selection = await graphSelection(family), source = selection.generated.leanSource;\n\t\tconst namespace = family === \"recursive-subtype\" ? \"RecursiveSubtypes\" : \"RecursiveCheckedRecords\";\n\t\tconst adapter = selection.selected.find(item => item.kind === \"adapter\" && item.label === `${namespace}.first`);\n\t\tconst block = source.slice(source.indexOf(`@[export ${adapter.symbol}]`));\n\t\tconst flat = selection.selected.map(item => item.kind === \"public\"\n\t\t\t? { ...item, symbol: item.symbol.replace(/^lg_/u, \"lb_\") } : item);\n\t\tconst via = block.match(/\\b(LbErased\\.[A-Za-z0-9_.]+\\.via_[a-f0-9]+)\\b/u)[1];\n\t\tconst header = source.indexOf(`def ${via} `), end = source.indexOf(\"\\ndef \", header + 4);\n\t\tconst unrecursive = source.slice(0, header) + source.slice(header, end)\n\t\t\t.replace(new RegExp(`(:=[^]*)${via.replaceAll(\".\", \"\\\\.\")}`, \"u\"), \"$1id\")\n\t\t\t+ source.slice(end);\n\t\tassert.notEqual(unrecursive, source);\n\t\tfor(const [label, selected, lean] of [\n\t\t\t[\"flat public entries\", flat, source]\n\t\t\t, [\"missing graph validators\", selection.selected.filter(item => !item.label.includes(\":graph_refinement_\")), source]\n\t\t\t, [\"conversion without recursion\", selection.selected, unrecursive]\n\t\t\t, [\"conversion without a selected constructor\", selection.selected\n\t\t\t\t, source.replaceAll(family === \"recursive-subtype\" ? \"_root_.RecursiveSubtypes.plusOne \" : \"_root_.RecursiveCheckedRecords.mkPacket \"\n\t\t\t\t\t, \"_root_.changed \")]\n\t\t]) assert.throws(() => phpWasmRefinementEntryPlan(family, selected, lean), label);\n\t}\n});\n\ntest(\"module-initialized authored entries leave the per-call trace\", async () => {\n\tconst family = \"zero-payload-full\", marker = phpWasmRefinementEntrySourceFixture(family);\n\tconst source = phpWasmRefinementEntrySource(await readFile(marker.path, \"utf8\"), marker);\n\tconst selection = flatPlanSelection(family, source.entries);\n\tconst witness = selection.selected.find(item => item.kind === \"constructor\" && item.label.endsWith(\".mkWitness\"));\n\tconst value = phpWasmRefinementEntryPlan(family, selection.selected, selection.generated.leanSource\n\t\t, { globalDefinitions: [witness] });\n\tassert.deepEqual(value.globals, [witness]);\n\tconst direct = value.cases.find(item => item.control === \"direct\");\n\tassert.deepEqual(direct.moduleInitialized, [witness.label]);\n\tassert.ok(value.cases.every(item => !item.call.entries.some(entry => entry.label === witness.label)));\n\tassert.ok(value.cases.some(item => !Object.hasOwn(item, \"moduleInitialized\")));\n\tconst baseline = phpWasmRefinementEntryPlan(family, selection.selected, selection.generated.leanSource);\n\tassert.equal(Object.hasOwn(baseline, \"globals\"), false);\n\tassert.equal(baseline.cases.find(item => item.control === \"direct\").call.counts.constructor\n\t\t, direct.call.counts.constructor + 2);\n\tconst nominal = await plan(\"nominal-result-only\");\n\tconst wordBits = nominal.selected.find(item => item.kind === \"source\" && item.label.endsWith(\".wordBits\"));\n\tconst nominalSelection = await graphSelection(\"nominal-result-only\");\n\tconst free = phpWasmRefinementEntryPlan(\"nominal-result-only\", nominalSelection.selected\n\t\t, nominalSelection.generated.leanSource, { globalDefinitions: [wordBits] })\n\t\t.cases.find(item => item.control === \"constructor-free\");\n\tassert.deepEqual(free.moduleInitialized, [wordBits.label]);\n\tassert.equal(free.call.counts.source, 0);\n\tfor(const globals of [\n\t\t[{ ...witness, symbol: \"missing\" }], [{ ...witness, kind: \"adapter\" }]\n\t\t, [witness, witness]\n\t\t, [selection.selected.find(item => item.kind === \"adapter\")]\n\t]) assert.throws(() => phpWasmRefinementEntryPlan(family, selection.selected, selection.generated.leanSource\n\t\t, { globalDefinitions: globals }));\n});\n",
+          "previous": "",
+          "start": 9545
+        }
+      ],
+      "path": "tests/helpers/php-wasm-refinement-entry-plan-tests.mjs",
+      "previousSha256": "6fe65599a8d720bf33bfff0a3631794bb40c9e578c0409f79d484d8db8f4e039"
+    },
+    {
+      "currentSha256": "ff9ca6d90823915ffad6f5b6683883d699d0fb997914df9384091edf2fd42631",
+      "edits": [
+        {
+          "current": "const escaped = text => text.replace(/[.*+?^${}()|[\\]\\\\]/gu, \"\\\\$&\");\n\n/**\n * Close compiler-classified entries that cannot carry a per-call marker.\n * Module-initialized values are read, not called; a reduced-arity source runs\n * in an implementation the marked wrapper only delegates to.\n *\n * @param selected - Complete entry selection.\n * @param options - Classified globals and reduced-arity call targets.\n * @param options.globalDefinitions - Authored entries compiled as module-initialized values.\n * @param options.reducedArity - Authored sources reached only through a reduced-arity target.\n */\nexport const phpWasmUnmarkedEntries = (selected, { globalDefinitions = [], reducedArity = [] } = {}) => {\n\tassert.ok(Array.isArray(globalDefinitions) && Array.isArray(reducedArity));\n\tconst closeItems = (items, kinds, fields) => items.map(item => {\n\t\tassert.deepEqual(Object.keys(item ?? {}).sort(), [...fields].sort());\n\t\tassert.ok(kinds.includes(item.kind), `${item.symbol} cannot be unmarked`);\n\t\tassert.equal(selected.filter(value => value.symbol === item.symbol && value.kind === item.kind\n\t\t\t&& value.label === item.label).length, 1, `selected unmarked entry ${item.symbol}`);\n\t\treturn structuredClone(item);\n\t});\n\tconst globals = closeItems(globalDefinitions, [\"constructor\", \"source\"], [\"symbol\", \"kind\", \"label\"]);\n\tconst reduced = closeItems(reducedArity, [\"source\"], [\"symbol\", \"kind\", \"label\", \"target\"]);\n\tfor(const item of reduced) assert.equal(item.target, `l_${item.label.replaceAll(\".\", \"_\")}___redArg`);\n\tconst symbols = [...globals, ...reduced].map(item => item.symbol);\n\tassert.equal(new Set(symbols).size, symbols.length, \"one classification per entry\");\n\tconst classes = [[\"moduleInitialized\", globals], [\"reducedArity\", reduced]].map(([key, items]) => [\n\t\tkey, new Set(items.map(item => `${item.kind}/${item.label}`))\n\t]);\n\tconst unmarked = (control, outcome, publicName, planned, count) => {\n\t\tconst declared = Object.fromEntries(classes.map(([key, values]) => [key\n\t\t\t, [...new Set(planned.filter(entry => values.has(`${entry.kind}/${entry.label}`)).map(entry => entry.label))].sort()]));\n\t\tconst entries = planned.filter(entry => !classes.some(([, values]) => values.has(`${entry.kind}/${entry.label}`)));\n\t\tconst call = { publicName, entries, counts: count(entries) };\n\t\treturn { control, outcome, call\n\t\t\t, ...Object.fromEntries(Object.entries(declared).filter(([, labels]) => labels.length)) };\n\t};\n\tconst sources = new Set([...globals, ...reduced].filter(item => item.kind === \"source\").map(item => item.label));\n\t// A source is covered by its marker or by an authenticated unmarked classification.\n\tconst reachesSource = value => value.call.counts.source > 0\n\t\t|| [...value.moduleInitialized ?? [], ...value.reducedArity ?? []].some(label => sources.has(label));\n\t// The plan carries only classifications its own calls exercise; the rest are inert module facts.\n\tconst close = cases => {\n\t\tassert.ok(cases.some(reachesSource), \"some planned call reaches its source\");\n\t\tconst exercised = (key, items) => items.filter(value => cases.some(item => item[key]?.includes(value.label)));\n\t\treturn { globals: exercised(\"moduleInitialized\", globals), reduced: exercised(\"reducedArity\", reduced) };\n\t};\n\treturn { unmarked, reachesSource, close };\n};\n\n",
+          "previous": "",
+          "start": 579
+        },
+        {
+          "current": " * Graph-carried selections validate each refined position through its own\n * generated graph validator; their order follows the generated conversions.\n",
+          "previous": "",
+          "start": 3936
+        },
+        {
+          "current": " * @param options - Compiler-classified entry forms and call targets.\n * @param options.globalDefinitions - Authored entries compiled as module-initialized values.\n * @param options.reducedArity - Authored sources reached only through a reduced-arity target.\n",
+          "previous": "",
+          "start": 4300
+        },
+        {
+          "current": "export const phpWasmRefinementEntryPlan = (family, selected, generatedLeanSource, {\n\tglobalDefinitions = [], reducedArity = []\n} = {}) => {\n",
+          "previous": "export const phpWasmRefinementEntryPlan = (family, selected, generatedLeanSource) => {\n",
+          "start": 4563
+        },
+        {
+          "current": "\tconst { unmarked, close } = phpWasmUnmarkedEntries(selected, { globalDefinitions, reducedArity });\n",
+          "previous": "",
+          "start": 4797
+        },
+        {
+          "current": "\tconst item = (control, outcome, publicName, planned) => unmarked(control, outcome, publicName, planned, counts);\n",
+          "previous": "\tconst call = (publicName, entries) => ({ publicName, entries, counts: counts(entries) });\n",
+          "start": 8626
+        },
+        {
+          "current": "\t\treturn item(control, \"accepted\", name, [\n",
+          "previous": "\t\tconst entries = [\n",
+          "start": 8851
+        },
+        {
+          "current": "\t\t]);\n",
+          "previous": "\t\t];\n\t\treturn { control, outcome: \"accepted\", call: call(name, entries) };\n",
+          "start": 9018
+        },
+        {
+          "current": "\tconst refused = (control, name, names, diagnosis = []) => item(control, \"refused\", name, [\n\t\t...fin(name), ...refinement(name, names[0] ?? null), ...constructors(names)\n\t\t, ...diagnosis.flatMap(constructorName => graph(name, constructorName))\n\t]);\n\tconst graphCarried = selected.some(entry => entry.kind === \"public\" && /^lg_call\\d+$/u.test(entry.symbol));\n\tconst exportBlock = symbol => {\n\t\tconst annotation = `@[export ${symbol}]`, start = generatedLeanSource.indexOf(annotation);\n\t\tassert.ok(start >= 0, annotation);\n\t\tassert.equal(generatedLeanSource.indexOf(annotation, start + 1), -1, `unique ${annotation}`);\n\t\tconst next = generatedLeanSource.indexOf(\"\\n@[export \", start + annotation.length);\n\t\treturn generatedLeanSource.slice(start, next < 0 ? undefined : next);\n",
+          "previous": "\tconst refused = (control, name, names, diagnosis = []) => {\n\t\tconst entries = [\n\t\t\t...fin(name), ...refinement(name, names[0] ?? null), ...constructors(names)\n\t\t\t, ...diagnosis.flatMap(constructorName => graph(name, constructorName))\n\t\t];\n\t\treturn { control, outcome: \"refused\", call: call(name, entries) };\n",
+          "start": 9028
+        },
+        {
+          "current": "\tconst viaReferences = block => [...new Set([...block.matchAll(/\\b(LbErased\\.[A-Za-z0-9_.]+\\.via_[a-f0-9]+)\\b/gu)]\n\t\t.map(match => match[1]))];\n\t// One generated conversion: ordered selected constructors and self-recursion steps.\n\tconst viaSteps = via => {\n\t\tconst header = `def ${via} `, start = generatedLeanSource.indexOf(header);\n\t\tassert.ok(start >= 0, header);\n\t\tconst ends = [\"\\ndef \", \"\\n@[export \"].map(token => generatedLeanSource.indexOf(token, start + header.length))\n\t\t\t.filter(index => index >= 0);\n\t\tconst definition = generatedLeanSource.slice(start, ends.length ? Math.min(...ends) : undefined);\n\t\tconst body = definition.slice(definition.indexOf(\":=\") + 2);\n\t\tconst pattern = new RegExp(`(${escaped(via)})\\\\b|_root_\\\\.${escaped(namespace)}\\\\.([A-Za-z_][A-Za-z0-9_]*)\\\\b`, \"gu\");\n\t\tconst steps = [...body.matchAll(pattern)].flatMap(match => match[1] ? [{ recurse: true }]\n\t\t\t: selected.some(entry => entry.kind === \"constructor\" && entry.label === `${namespace}.${match[2]}`)\n\t\t\t\t? [{ constructor: match[2] }] : []);\n\t\tassert.equal(steps.filter(step => step.recurse).length, 1, `${via} recurses once`);\n\t\tassert.ok(steps.some(step => step.constructor), `${via} constructs a selected refinement`);\n\t\treturn steps;\n\t};\n\tconst conversion = name => {\n\t\tconst adapters = selected.filter(entry => entry.kind === \"adapter\" && entry.label === `${namespace}.${name}`);\n\t\tassert.equal(adapters.length, 1, `${name} Lean adapter`);\n\t\tconst references = viaReferences(exportBlock(adapters[0].symbol));\n\t\tassert.equal(references.length, 1, `${name} converts one recursive graph type`);\n\t\treturn viaSteps(references[0]);\n\t};\n\t// A leaf validator calls its constructor; a checked-record validator rebuilds its value.\n\tconst graphValidator = (name, constructorName) => {\n\t\tconst blocks = selected.filter(entry => entry.kind === \"validator\"\n\t\t\t&& entry.label.startsWith(`${namespace}.${name}:graph_refinement_0_`))\n\t\t\t.map(entry => ({ entry, block: exportBlock(entry.symbol) }));\n\t\tconst direct = blocks.filter(({ block }) => new RegExp(`_root_\\\\.${escaped(namespace)}\\\\.${escaped(constructorName)}\\\\b`, \"u\").test(block));\n\t\tif(direct.length)\n\t\t{\n\t\t\tassert.equal(direct.length, 1, `${name} leaf validator for ${constructorName}`);\n\t\t\tassert.deepEqual(viaReferences(direct[0].block), [], `${name} leaf validator converts no graph`);\n\t\t\treturn { label: direct[0].entry.label, via: null };\n\t\t}\n\t\tconst records = blocks.flatMap(({ entry, block }) => viaReferences(block)\n\t\t\t.filter(via => viaSteps(via).at(-1)?.constructor === constructorName).map(via => ({ entry, via })));\n\t\tassert.equal(records.length, 1, `${name} record validator for ${constructorName}`);\n\t\treturn { label: records[0].entry.label, via: records[0].via };\n\t};\n\tconst construct = (steps, node) => steps.flatMap(step => step.recurse\n\t\t? node.tail ? construct(steps, node.tail) : [] : [constructor(step.constructor)]);\n\t// The transport walks the conversion order, checking each refined position before the Lean adapter.\n\tconst visits = (name, steps, node) => steps.flatMap(step => {\n\t\tif(step.recurse) return node.tail ? visits(name, steps, node.tail) : [];\n\t\tconst validator = graphValidator(name, step.constructor);\n\t\treturn [[{ kind: \"validator\", label: validator.label }\n\t\t\t, ...validator.via ? construct(viaSteps(validator.via), node) : [constructor(step.constructor)]]];\n\t});\n\tconst graphCall = (name, roots) => {\n\t\tassert.ok(graphCarried, `${family} requires a graph-carried selection`);\n\t\tassert.ok(Array.isArray(roots));\n\t\tconst steps = roots.length ? conversion(name) : [];\n\t\treturn {\n\t\t\tchecks: roots.flatMap(root => visits(name, steps, root))\n\t\t\t, converted: roots.flatMap(root => construct(steps, root))\n\t\t};\n\t};\n\tconst graphAccepted = (control, name, roots = [], sourceNames = [name]) => {\n\t\tconst { checks, converted } = graphCall(name, roots);\n\t\treturn item(control, \"accepted\", name, [\n\t\t\t...checks.flat(), adapter(name), ...converted, ...sourceNames.map(source)\n\t\t]);\n\t};\n\tconst graphRefused = (control, name, roots, refusingVisit) => {\n\t\tconst { checks } = graphCall(name, roots);\n\t\tassert.ok(Number.isSafeInteger(refusingVisit) && refusingVisit >= 0 && refusingVisit < checks.length\n\t\t\t, `${control} refuses at a planned visit`);\n\t\treturn item(control, \"refused\", name, checks.slice(0, refusingVisit + 1).flat());\n\t};\n\tconst node = (tail = null) => ({ tail });\n",
+          "previous": "",
+          "start": 9807
+        },
+        {
+          "current": "\t// Recursive callers author only value shapes: one root per present argument value.\n",
+          "previous": "",
+          "start": 14999
+        },
+        {
+          "current": "\t\tgraphAccepted(\"direct\", \"first\", [node(node())])\n\t\t, graphRefused(\"first-refusal\", \"first\", [node(node())], 1)\n\t\t, graphAccepted(\"recovery\", \"first\", [node()])\n\t\t, graphAccepted(\"repeated-fields\", \"groups\", [node(), node()])\n\t\t, graphAccepted(\"inactive-branch\", \"echo\", [])\n\t\t, graphAccepted(\"active-branch\", \"echo\", [node()])\n\t\t, graphAccepted(\"constructor-free\", \"produce\")\n\t];\n\telse if(family === \"recursive-checked-record\") cases = [\n\t\tgraphAccepted(\"direct\", \"first\", [node()])\n\t\t, graphRefused(\"first-refusal\", \"first\", [node(node())], 1)\n\t\t, graphRefused(\"record-refusal\", \"first\", [node()], 1)\n\t\t, graphAccepted(\"recovery\", \"first\", [node()])\n\t\t, graphAccepted(\"repeated-fields\", \"groups\", [node(), node()])\n\t\t, graphAccepted(\"inactive-branch\", \"groups\", [])\n\t\t, graphAccepted(\"constructor-free\", \"produce\")\n",
+          "previous": "\t\taccepted(\"direct\", \"first\", [\"plusOne\", \"plusOne\"])\n\t\t, refused(\"first-refusal\", \"first\", [\"plusOne\", \"plusOne\"])\n\t\t, accepted(\"recovery\", \"first\", [\"plusOne\"])\n\t\t, accepted(\"repeated-fields\", \"groups\", [\"plusOne\", \"plusOne\"])\n\t\t, accepted(\"inactive-branch\", \"echo\")\n\t\t, accepted(\"active-branch\", \"echo\", [\"plusOne\"])\n\t\t, accepted(\"constructor-free\", \"produce\")\n",
+          "start": 15135
+        },
+        {
+          "current": "",
+          "previous": "\telse if(family === \"recursive-checked-record\")\n\t{\n\t\tcases = [\n\t\t\taccepted(\"direct\", \"first\", [\"plusOne\", \"mkPacket\"])\n\t\t\t, refused(\"first-refusal\", \"first\", [\"plusOne\", \"plusOne\"], [\"plusOne\", \"plusOne\"])\n\t\t\t, refused(\"record-refusal\", \"first\", [\"plusOne\", \"mkPacket\"], [\"plusOne\", \"mkPacket\"])\n\t\t\t, accepted(\"recovery\", \"first\", [\"plusOne\", \"mkPacket\"])\n\t\t\t, accepted(\"repeated-fields\", \"groups\", [\"plusOne\", \"mkPacket\", \"plusOne\", \"mkPacket\"])\n\t\t\t, accepted(\"inactive-branch\", \"groups\")\n\t\t\t, accepted(\"constructor-free\", \"produce\")\n\t\t];\n\t}\n",
+          "start": 15957
+        },
+        {
+          "current": "\tconst { globals, reduced } = close(cases);\n",
+          "previous": "\tassert.ok(cases.some(item => item.call.counts.source > 0));\n",
+          "start": 18677
+        },
+        {
+          "current": "\t\t, selected: structuredClone(selected), cases\n\t\t, ...globals.length ? { globals } : {}, ...reduced.length ? { reducedArity: reduced } : {} };\n",
+          "previous": "\t\t, selected: structuredClone(selected), cases };\n",
+          "start": 18852
+        }
+      ],
+      "path": "tests/helpers/php-wasm-refinement-entry-plan.mjs",
+      "previousSha256": "88e01f9e62bf10fac330f2a14956349caef596453528ee6a2fc83a8c1a21d95a"
+    },
+    {
+      "currentSha256": "7e7529d6d785714a29b622b3f91a543a2ea8400fbe5b78b1eb24b702fe73238d",
+      "edits": [
+        {
+          "current": "\tconst globalDefinitions = sourceProbe.entries.filter(item => sourceProbe.entryForms[item.symbol] === \"global\");\n\tconst global = new Set(globalDefinitions.map(item => item.symbol));\n\tconst plan = phpWasmRefinementEntryPlan(family, selection.selected, selection.generated.leanSource\n\t\t, { globalDefinitions });\n\tconst sources = selection.selected.filter(item => item.kind === \"source\" && !global.has(item.symbol))\n\t\t.map(item => `&${item.symbol}`);\n\tconst cInput = [...selection.selected.map(item => item.kind === \"public\"\n",
+          "previous": "\tconst plan = phpWasmRefinementEntryPlan(family, selection.selected, selection.generated.leanSource);\n\tconst cInput = selection.selected.map(item => item.kind === \"public\"\n",
+          "start": 5803
+        },
+        {
+          "current": "\t\t: global.has(item.symbol) ? `LEAN_EXPORT lean_object* ${item.symbol};`\n\t\t\t: `lean_object *${item.symbol}(lean_object *value) { return value; }`)\n\t, `static void *const probe_sources[] = { ${sources.join(\", \")} };`].join(\"\\n\") + \"\\n\";\n",
+          "previous": "\t\t: `lean_object *${item.symbol}(lean_object *value) { return value; }`).join(\"\\n\") + \"\\n\";\n",
+          "start": 6387
+        },
+        {
+          "current": "\t\t\t, ...globalDefinitions.length ? { globalDefinitions } : {}\n",
+          "previous": "",
+          "start": 8081
+        },
+        {
+          "current": "\t\t\t, ...globalDefinitions.length ? { globalDefinitions } : {}\n",
+          "previous": "",
+          "start": 8544
+        },
+        {
+          "current": "\ntest(\"installed report derives unmarked entries from retained compiler forms only\", async () => {\n\tconst fixture = await makeRecords(\"zero-payload-full\");\n\tconst report = JSON.parse(fixture.files.get(\"report.json\"));\n\tassert.ok(report.entryPlan.globals.length > 0);\n\tassert.ok(report.entryPlan.cases.some(item => item.moduleInitialized?.length));\n\tconst withoutGlobals = files => {\n\t\tfor(const index of [0, 1])\n\t\t\tfor(const path of [`build-${index}/observation.json`, `build-${index}/commands.json`])\n\t\t\t\tmutateJson(files, path, value => { delete value.globalDefinitions; });\n\t};\n\tconst mutations = [\n\t\twithoutGlobals\n\t\t, files => mutateJson(files, \"build-0/observation.json\", value => {\n\t\t\tvalue.globalDefinitions.push(value.selected.find(item => item.kind === \"source\"\n\t\t\t\t&& !value.globalDefinitions.some(global => global.symbol === item.symbol)));\n\t\t})\n\t\t, files => mutateJson(files, \"report.json\", value => {\n\t\t\tdelete value.entryPlan.cases.find(item => item.moduleInitialized).moduleInitialized;\n\t\t})\n\t\t, files => mutateJson(files, \"report.json\", value => { delete value.entryPlan.globals; })\n\t\t, files => mutateJson(files, \"report.json\", value => {\n\t\t\tvalue.entryPlan.reducedArity = [{ ...value.entryPlan.selected.find(item => item.kind === \"source\")\n\t\t\t\t, target: \"l_ZeroPayloadCheckedRecords_witnessCount___redArg\" }];\n\t\t})\n\t];\n\tfor(const mutate of mutations)\n\t{\n\t\tconst value = await makeRecords(\"zero-payload-full\"); mutate(value.files);\n\t\tawait assert.rejects(checkPhpWasmRefinementEntryReport(value.records(), value.options));\n\t}\n});\n",
+          "previous": "",
+          "start": 15737
+        }
+      ],
+      "path": "tests/helpers/php-wasm-refinement-entry-report-tests.mjs",
+      "previousSha256": "83a50d7e52a0e8b23ff1e3eb28060a81fec47616e3cd8260001c4b000f026d1b"
+    },
+    {
+      "currentSha256": "b938f87685ac8fff22467aa089528137e2f973ff62c6bed1a821fce44142f6c5",
+      "edits": [
+        {
+          "current": "import { phpWasmReducedArityTargets } from \"./php-wasm-entry-call-targets.mjs\";\n",
+          "previous": "",
+          "start": 1688
+        },
+        {
+          "current": "const planEntries = (family, selection, classifications) => ownedFamily(family)\n\t? phpWasmOwnedRefinementEntryPlan(family, selection.selected, selection.adapters.leanSource, classifications)\n\t: phpWasmRefinementEntryPlan(family, selection.selected, selection.generated.leanSource, classifications);\n",
+          "previous": "const planEntries = (family, selection) => ownedFamily(family)\n\t? phpWasmOwnedRefinementEntryPlan(family, selection.selected, selection.adapters.leanSource)\n\t: phpWasmRefinementEntryPlan(family, selection.selected, selection.generated.leanSource);\n",
+          "start": 3259
+        },
+        {
+          "current": "\t\t\t, ...Object.hasOwn(observation, \"globalDefinitions\") ? [\"globalDefinitions\"] : []\n",
+          "previous": "",
+          "start": 8765
+        },
+        {
+          "current": "",
+          "previous": "\t\tconst plan = planEntries(family, selected);\n\t\tassert.deepEqual(report.entryPlan, plan);\n",
+          "start": 9336
+        },
+        {
+          "current": "\t\t\t, ...Object.hasOwn(observation, \"globalDefinitions\") ? { globalDefinitions: observation.globalDefinitions } : {}\n",
+          "previous": "",
+          "start": 9626
+        },
+        {
+          "current": "\t\tconst inputs = [], forms = new Map(observation.selected.map(item => [item.symbol, []]));\n",
+          "previous": "",
+          "start": 9902
+        },
+        {
+          "current": "\t\t\tassert.deepEqual(compiled.definitions, reconstructed.receipt.definitions);\n\t\t\tfor(const item of reconstructed.receipt.definitions) forms.get(item.symbol).push(item.form);\n\t\t\tinputs.push({ name: compiled.name, text: input.toString() });\n",
+          "previous": "",
+          "start": 10698
+        },
+        {
+          "current": "\t\t\tassert.deepEqual(header.definitions, reconstructed.receipt.definitions);\n\t\t\tfor(const item of reconstructed.receipt.definitions) forms.get(item.symbol).push(item.form);\n",
+          "previous": "",
+          "start": 11820
+        },
+        {
+          "current": "\t\t// Retained compiler inputs, not the trace, decide which entries cannot carry markers.\n\t\tfor(const [symbol, values] of forms) assert.equal(values.length, 1, `${symbol}: one retained compiled definition`);\n\t\tconst globalDefinitions = observation.selected.filter(item => forms.get(item.symbol)[0] === \"global\");\n\t\tassert.deepEqual(observation.globalDefinitions ?? [], globalDefinitions);\n\t\tassert.equal(Object.hasOwn(observation, \"globalDefinitions\"), globalDefinitions.length > 0);\n\t\tassert.deepEqual(globalDefinitions, sourceProbe.entries\n\t\t\t.filter(item => sourceProbe.entryForms[item.symbol] === \"global\"));\n\t\tconst classifications = {\n\t\t\tglobalDefinitions\n\t\t\t, reducedArity: phpWasmReducedArityTargets(inputs, observation.selected, { globalDefinitions })\n\t\t};\n\t\tconst plan = planEntries(family, selected, classifications);\n\t\tassert.deepEqual(report.entryPlan, plan);\n",
+          "previous": "",
+          "start": 11996
+        }
+      ],
+      "path": "tests/helpers/php-wasm-refinement-entry-report.mjs",
+      "previousSha256": "354676331ea2f44055e38f7c61e3469b0e967235016086161038caf2f1e46508"
+    },
+    {
+      "currentSha256": "78607a2df0d2e8168de6bc8b2f85abbbc62323c74c6d34c155b0aa98cfeade29",
+      "edits": [
+        {
+          "current": "import { access, cp, mkdir, readFile, readdir, realpath, rename, rm, symlink } from \"node:fs/promises\";\nimport { join, resolve, sep } from \"node:path\";\n",
+          "previous": "import { cp, mkdir, readFile, readdir, realpath, rename, rm, symlink } from \"node:fs/promises\";\nimport { join, resolve } from \"node:path\";\n",
+          "start": 173
+        },
+        {
+          "current": "const captureTail = 4096;\n\n/**\n * Surface a failed captured process through bounded TAP diagnostics.\n * The node:test reporter serializes only an error's message, code and stack,\n * so the stdout and stderr held in CanonicalBuildError details are otherwise lost.\n *\n * @param t - Test context that receives the diagnostics.\n * @param label - Stable execution identity.\n * @param error - Rejection from the process runner.\n */\nexport const reportPhpWasmCaptureFailure = (t, label, error) => {\n\tconst details = error?.name === \"CanonicalBuildError\" ? error.details : null;\n\tif(!details || typeof details !== \"object\" || Array.isArray(details)) return false;\n\tconst status = details.signal ? `signal ${details.signal}` : `exit ${details.exitCode ?? \"none\"}`;\n\tt.diagnostic(`${label}: ${error.code} (${status})`);\n\tfor(const stream of [\"stderr\", \"stdout\"])\n\t{\n\t\tconst text = typeof details[stream] === \"string\" ? details[stream] : \"\";\n\t\tconst bound = text.length > captureTail ? ` (last ${captureTail} of ${text.length} retained characters)` : \"\";\n\t\tt.diagnostic(`${label} ${stream}${bound}: ${JSON.stringify(text.slice(-captureTail))}`);\n\t}\n\treturn true;\n};\n\n/**\n * Copy one failed consumer deployment into an explicit upload root.\n * The pinned public host package is omitted; its identity is already part of\n * the installed evidence and its 180 MiB would dominate every failure artifact.\n *\n * @param options - Retention root, execution identity, deployment and failure record.\n * @param options.root - Explicit retention directory supplied by the workflow.\n * @param options.name - Directory name for this execution.\n * @param options.deployment - Relocated deployment that failed.\n * @param options.failure - JSON-serializable failure record; streams keep a bounded tail.\n */\nexport const retainFailedPhpWasmDeployment = async ({ root, name, deployment, failure }) => {\n\tassert.equal(typeof root, \"string\"); assert.ok(root.length > 0);\n\tassert.match(name, /^[A-Za-z0-9][A-Za-z0-9._-]*$/u);\n\tconst streams = Object.fromEntries([\"stderr\", \"stdout\"].map(stream => {\n\t\tassert.equal(typeof failure?.[stream], \"string\", stream);\n\t\treturn [stream, { characters: failure[stream].length, tail: failure[stream].slice(-captureTail) }];\n\t}));\n\tconst target = join(resolve(root), name), host = join(deployment, \"node_modules\", \"php-wasm\");\n\tawait assert.rejects(access(target), { code: \"ENOENT\" });\n\tawait cp(deployment, join(target, \"deployment\"), {\n\t\trecursive: true, verbatimSymlinks: true, errorOnExist: true, force: false\n\t\t, filter: path => path !== host && !path.startsWith(host + sep)\n\t});\n\tawait saveLakeFile(target, \"failure.json\", canonicalJson({\n\t\tschemaVersion: 1, ...failure, ...streams, omitted: [\"deployment/node_modules/php-wasm\"]\n\t}));\n\treturn target;\n};\n",
+          "previous": "",
+          "start": 1368
+        },
+        {
+          "current": "\t\tconst label = library.id + \": PHP-Wasm Node \" + [arrangement, loading, mode].join(\"/\");\n\t\tt.diagnostic(label);\n",
+          "previous": "\t\tt.diagnostic(library.id + \": PHP-Wasm Node \" + [arrangement, loading, mode].join(\"/\"));\n",
+          "start": 18428
+        },
+        {
+          "current": "\t\t\tconst args = [\"node.mjs\", arrangement, loading, mode, settings.npm.name];\n\t\t\tconst result = await run(process.execPath, args, deployment, clean).catch(async error => {\n\t\t\t\tconst root = process.env.LEAN_BRIDGE_PHP_WASM_FAILED_DEPLOYMENTS;\n\t\t\t\tif(reportPhpWasmCaptureFailure(t, label, error) && root)\n\t\t\t\t{\n\t\t\t\t\tconst { exitCode = null, signal = null, stderr = \"\", stdout = \"\" } = error.details;\n\t\t\t\t\ttry\n\t\t\t\t\t{\n\t\t\t\t\t\tconst retained = await retainFailedPhpWasmDeployment({\n\t\t\t\t\t\t\troot, deployment\n\t\t\t\t\t\t\t, name: [library.id, arrangement, loading, mode].join(\"-\")\n\t\t\t\t\t\t\t, failure: {\n\t\t\t\t\t\t\t\tlabel, command: \"node\", args, code: error.code\n\t\t\t\t\t\t\t\t, exitCode, signal, stderr, stdout\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t});\n\t\t\t\t\t\tt.diagnostic(`${label}: retained failed deployment ${retained}`);\n\t\t\t\t\t}\n\t\t\t\t\tcatch(retention)\n\t\t\t\t\t{ t.diagnostic(`${label}: failed deployment was not retained: ${retention.message}`); }\n\t\t\t\t}\n\t\t\t\tthrow error;\n\t\t\t});\n",
+          "previous": "\t\t\tconst result = await run(process.execPath, [\"node.mjs\", arrangement, loading, mode, settings.npm.name], deployment, clean);\n",
+          "start": 18573
+        }
+      ],
+      "path": "tests/helpers/type-corpus-php-wasm-install.mjs",
+      "previousSha256": "f4edf1e0ab1de52a9943d01f52d969cee162bda3f03b9cedc13bc303a10c77b9"
+    }
+  ]
+}
