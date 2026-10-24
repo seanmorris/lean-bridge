@@ -1,0 +1,58 @@
+
+> @lean-wasm/bridge-poc@0.0.0-poc test:owned-checked-record-managed
+> LEAN_BRIDGE_OWNED_CHECKED_RECORD_MANAGED_TEST=1 node --test --test-concurrency=1 tests/owned-checked-record-managed-packaging.test.mjs
+
+TAP version 13
+# Subtest: managed owned checked-record generators preserve exact API modes
+ok 1 - managed owned checked-record generators preserve exact API modes
+  ---
+  duration_ms: 117.474048
+  type: 'test'
+  ...
+# Subtest: managed owned checked-record consumers are independently authored
+ok 2 - managed owned checked-record consumers are independently authored
+  ---
+  duration_ms: 24.218958
+  type: 'test'
+  ...
+# Subtest: installed ordinary-full owned checked records execute through jvm packages
+ok 3 - installed ordinary-full owned checked records execute through jvm packages
+  ---
+  duration_ms: 173508.433566
+  type: 'test'
+  ...
+# jvm/ordinary-full: Compiling checked native Lean exports
+# jvm/ordinary-full: java=121, kotlin=119
+# Subtest: installed ordinary-result-only owned checked records execute through jvm packages
+ok 4 - installed ordinary-result-only owned checked records execute through jvm packages
+  ---
+  duration_ms: 159663.127838
+  type: 'test'
+  ...
+# jvm/ordinary-result-only: Compiling checked native Lean exports
+# jvm/ordinary-result-only: java=4, kotlin=4
+# Subtest: installed reviewed-full owned checked records execute through jvm packages
+ok 5 - installed reviewed-full owned checked records execute through jvm packages
+  ---
+  duration_ms: 162353.709152
+  type: 'test'
+  ...
+# jvm/reviewed-full: Compiling checked native Lean exports
+# jvm/reviewed-full: java=121, kotlin=119
+# Subtest: installed reviewed-result-only owned checked records execute through jvm packages
+ok 6 - installed reviewed-result-only owned checked records execute through jvm packages
+  ---
+  duration_ms: 156766.81858
+  type: 'test'
+  ...
+# jvm/reviewed-result-only: Compiling checked native Lean exports
+# jvm/reviewed-result-only: java=4, kotlin=4
+1..6
+# tests 6
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 652773.339294
