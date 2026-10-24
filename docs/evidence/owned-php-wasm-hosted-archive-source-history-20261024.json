@@ -1,0 +1,218 @@
+{
+  "additions": [
+    {
+      "currentSha256": "4f2ec03d4d29bd16270eaf13a20235d4973e732d4d207c23eb5017b7b786bf3a",
+      "path": "tests/helpers/owned-checked-record-php-wasm-hosted-tests.mjs"
+    },
+    {
+      "currentSha256": "91b2c97311311c76b14c37fcdb53ad90e0bb5307b0c868f7110fe5e711759557",
+      "path": "scripts/update-owned-php-wasm-hosted-archive-source-history.mjs"
+    },
+    {
+      "currentSha256": "63f62f39c136546c05c4fd837c7c5a26869237d972997960fbf505a284d81072",
+      "path": "tests/helpers/owned-php-wasm-hosted-archive-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "68b2bb0b24cd187bbabfde04c41152697eacf0bf013064fa3a7d50ebbb9da366",
+      "path": "tests/helpers/owned-php-wasm-hosted-archive-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "f16c95bed5da9ad51baaf2c63a3ba8590cb1ee3d",
+  "integrationUpdates": [
+    {
+      "currentSha256": "467f24205353d42e268bc2d7308aa9559252cf9b54b7a1d4f5b904acf095afb1",
+      "edits": [
+        {
+          "current": "import { beforeOwnedPhpWasmHostedArchiveSource, ownedPhpWasmHostedArchiveNormalizationPaths } from \"./owned-php-wasm-hosted-archive-source-history.mjs\";\n",
+          "previous": "",
+          "start": 6435
+        },
+        {
+          "current": "\t...ownedPhpWasmHostedArchiveNormalizationPaths\n\t, ...ownedLifetimeReplayNormalizationPaths\n",
+          "previous": "\t...ownedLifetimeReplayNormalizationPaths\n",
+          "start": 179627
+        },
+        {
+          "current": "\t\t= beforeOwnedPhpWasmHostedArchiveSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeOwnedLifetimeReplaySource(path, text, expected);\n",
+          "previous": "\t\t= beforeOwnedLifetimeReplaySource(path, text, expected);\n",
+          "start": 222007
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "7202451d175e75ded29dc0f9186c36be9db800d4b5393d9fcfc5b07ca91d534e"
+    },
+    {
+      "currentSha256": "7ede2df18ec63a9f6bd474ad65d1160f33305d4d56226c8fe87c8b3bff625c72",
+      "edits": [
+        {
+          "current": "import \"./helpers/owned-php-wasm-hosted-archive-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 4176
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "d9dc0064e77f1f2dafca9553e09faac256ddd1ba556b0a1b28bc71508c755938"
+    }
+  ],
+  "milestone": "owned-php-wasm-hosted-archive-source-v1",
+  "predecessorCommit": "7bffd0771c915435d19978770a59e00b0cd32fa1",
+  "schemaVersion": 1,
+  "scope": "Add independent PHP-Wasm owned checked-record hosted archiving with exact per-mode reports, four retained package sets, Node and Chromium execution cells, pinned runtime manifests, original API and ZIP bytes, and producer/consumer/checker/archiver source roles. Bind reported component, binding IR and runtime identities to retained npm and Composer package receipts. Preserve native PHP separation, all older evidence, and live inventory pins. Actual hosted capture and matrix promotion remain separate milestones.",
+  "updates": [
+    {
+      "currentSha256": "b2408654898cdec8ad85da8e55e9c295816e7a2117760a87d786a114780400d6",
+      "edits": [
+        {
+          "current": " * Closed hosted contracts for the owned checked-record lanes.\n",
+          "previous": " * Closed hosted contracts for the non-PHP-Wasm owned checked-record lanes.\n",
+          "start": 4
+        },
+        {
+          "current": " * every route or only on full routes. The PHP-Wasm lane has its own\n * per-mode report layout and is never inferred from native PHP.\n",
+          "previous": " * every route or only on full routes.\n",
+          "start": 291
+        },
+        {
+          "current": "const phpWasmLane = freeze({\n\tkind: \"php-wasm\"\n\t, workflow: \".github/workflows/owned-checked-record-php-wasm.yml\"\n\t, job: \"Owned checked records in PHP-Wasm\"\n\t, prefix: \"owned-checked-record-php-wasm\"\n\t, acceptanceStep: \"Require ordinary and reviewed full and result-only packages\"\n\t, enforceStep: \"Enforce installed owned checked-record acceptance\"\n\t, test: \"tests/owned-checked-record-php-wasm-packaging.test.mjs\"\n\t, packaging: \"owned-checked-record-php-wasm\"\n\t, report: \"packages.json\"\n\t, reportProfile: \"installed-owned-checked-record-php-wasm\"\n\t, evidence: \"evidence\"\n\t, acceptance: \"owned-checked-record-php-wasm.log\"\n\t, logs: [\"owned-checked-record-php-wasm-host.log\"\n\t\t, \"owned-checked-record-php-wasm-runtime.log\"]\n\t, uploads: [\"owned-checked-record-php-wasm.log\"\n\t\t, \"owned-checked-record-php-wasm-host.log\"\n\t\t, \"owned-checked-record-php-wasm-runtime.log\"\n\t\t, \"owned-checked-record-php-wasm/packages.json\"\n\t\t, \"owned-checked-record-php-wasm/full.json\"\n\t\t, \"owned-checked-record-php-wasm/result-only.json\"\n\t\t, \"owned-checked-record-php-wasm/evidence\"]\n\t, modes: [\"full\", \"result-only\"]\n\t, targets: [\"php-wasm\"]\n\t, modeTest: \"installed PHP-Wasm {mode} owned checked records execute in Node and Chromium\"\n\t, staticTests: [\n\t\t\"owned checked-record PHP-Wasm acceptance remains a separate recurring gate\"\n\t\t, \"PHP-Wasm receipt handoff binds exactly the verified archive bytes\"\n\t\t, \"owned PHP-Wasm consumers install the same receipt-only bytes that are retained\"\n\t]\n});\n\n",
+          "previous": "",
+          "start": 9371
+        },
+        {
+          "current": "\t, \"php-wasm\": phpWasmLane\n",
+          "previous": "",
+          "start": 11182
+        },
+        {
+          "current": "export const ownedCheckedRecordHostedTestNames = lane => lane.modeTest ? [\n\t...lane.modes.map(mode => lane.modeTest.replace(\"{mode}\", mode))\n\t, ...lane.staticTests\n] : [\n",
+          "previous": "export const ownedCheckedRecordHostedTestNames = lane => [\n",
+          "start": 11449
+        }
+      ],
+      "path": "tests/helpers/owned-checked-record-hosted-contracts.mjs",
+      "previousSha256": "10405a82eb9cd27071a564321e2f173e2018ff3b8a1e2147779292f82daac1a1"
+    },
+    {
+      "currentSha256": "49db798a6cd470e701de5984f3830a06d406700a8d63b0b7c56e63dd8becda98",
+      "edits": [
+        {
+          "current": "const phpWasmWorkflowInputs = [\"config/cli-package.v1.json\", \"flake.lock\"\n\t, \"poc/lean-link-spike/bindings/php-wasm.package.json\"\n\t, \"scripts/bootstrap-php-wasm-ci.sh\", \"scripts/build-lean-runtime.sh\"\n\t, \"scripts/install-playwright-browsers.sh\", \"scripts/lean-runtime-config.sh\"\n\t, \"tests/helpers/owned-php-wasm-runtime.mjs\"];\n\n",
+          "previous": "",
+          "start": 2286
+        },
+        {
+          "current": "\tif(lane.kind === \"php-wasm\")\n\t\treturn [\"php-wasm.php\", \"result-only-php-wasm.php\"]\n\t\t\t.map(name => structured(`owned-checked-record-${name}`));\n",
+          "previous": "",
+          "start": 2642
+        },
+        {
+          "current": "\t\t\t\t, ...lane.kind === \"php-wasm\" ? phpWasmWorkflowInputs : []\n",
+          "previous": "",
+          "start": 5171
+        }
+      ],
+      "path": "tests/helpers/owned-checked-record-hosted-evidence-sources.mjs",
+      "previousSha256": "3aad38b56ff1663d281171e9aea3981b960bc7cf174671b14fbf1cfc77ca1ab5"
+    },
+    {
+      "currentSha256": "be7da49114ce33f03dfeb8370c22c84d316a48dbb8e5ab835925d3357a5c4e3b",
+      "edits": [
+        {
+          "current": "const phpWasmLimitations = Object.freeze([\n\t\"The fixture covers the tested owned Ticket, Booking and Claim records with checked Window and Claim payloads on four ordinary/reviewed full/result-only routes; full routes add a transferred input, two synchronous host callbacks and returned Lean closures, while result-only routes admit only Lean-produced checked results.\"\n\t, \"Every route retains the exact receipt-named npm and Composer archives that the source-free installations executed in Node (embedded and Composer arrangements, startup and lazy loading, weak and strict callers) and in Chromium; the receipt, sidecar, closed file set and every archive byte are independently verified.\"\n\t, \"The original artifact ZIP, GitHub API records, complete hosted output and exact producer, consumer, checker and archiver source closures are retained byte-for-byte and independently replayed.\"\n\t, \"This is PHP-Wasm evidence only and establishes nothing for native PHP; recursive owned graphs, retained or asynchronous callbacks, arbitrary predicates, dispatch cost and peak memory remain separate work.\"\n\t, \"The pinned PHP-Wasm runtime, Emscripten SDK, PHP source, Chromium and other external toolchains remain trusted inputs represented by recorded identities rather than copied toolchains.\"\n]);\nconst limitationsFor = lane => lane.kind === \"php-wasm\"\n\t? phpWasmLimitations : limitations;\n",
+          "previous": "",
+          "start": 2649
+        },
+        {
+          "current": "\t\t\t, selectedSources, files, limitations: limitationsFor(lane)\n",
+          "previous": "\t\t\t, selectedSources, files, limitations\n",
+          "start": 10271
+        },
+        {
+          "current": "\tassert.deepEqual(index.limitations, limitationsFor(lane));\n",
+          "previous": "\tassert.deepEqual(index.limitations, limitations);\n",
+          "start": 12174
+        }
+      ],
+      "path": "tests/helpers/owned-checked-record-hosted-evidence.mjs",
+      "previousSha256": "50466961782845265fb8fa550897ea2d14b35ee9bea4e64bf291ea6f8df85fdb"
+    },
+    {
+      "currentSha256": "bbe381f19f70166312731bf151f21da56c8374857c7c7d9cb1098ce56f0e44c0",
+      "edits": [
+        {
+          "current": " * for every route. The PHP-Wasm lane instead retains its acceptance and\n * runtime logs beside per-mode reports and one handoff per mode and author. Nothing here trusts the producer's own gates; the Node TAP,\n",
+          "previous": " * for every route. Nothing here trusts the producer's own gates; the Node TAP,\n",
+          "start": 231
+        },
+        {
+          "current": "import { moduleAtProducerWithSourceReads } from \"./producer-module.mjs\";\n",
+          "previous": "",
+          "start": 1251
+        },
+        {
+          "current": "const digestPattern = /^[a-f0-9]{64}$/u;\nconst phpWasmReportKeys = Object.freeze([\"cliAdmission\", \"compiledLean\"\n\t, \"installedCli\", \"installedPackage\", \"mode\", \"observations\", \"profile\"\n\t, \"runtimeIdentity\", \"runtimeManifest\", \"runtimeSupplied\", \"schemaVersion\"]);\nconst phpWasmObservationKeys = Object.freeze([\"authorRemoved\", \"browser\"\n\t, \"cliBuild\", \"consumerSha256\", \"deterministicReassembly\", \"executions\"\n\t, \"handoffRemoved\", \"independentlyRebuiltExactly\", \"inputs\", \"installed\"\n\t, \"model\", \"observer\", \"packageReceipt\", \"packageSetReceipt\", \"receipt\"\n\t, \"receiptVerifiedWithoutProducer\", \"rejected\", \"repeatedCliBuild\"\n\t, \"reproducedArchives\", \"reviewed\", \"runnerSha256\", \"sourceFreeInstallation\"\n\t, \"sourceUnchanged\", \"verification\"]);\nconst phpWasmFlags = Object.freeze([\"authorRemoved\", \"deterministicReassembly\"\n\t, \"handoffRemoved\", \"independentlyRebuiltExactly\"\n\t, \"receiptVerifiedWithoutProducer\", \"sourceFreeInstallation\"\n\t, \"sourceUnchanged\"]);\nconst phpWasmArrangements = Object.freeze([\"embedded\", \"composer\"]);\nconst phpWasmChromiumCells = Object.freeze([\"startup\", \"lazy\"]\n\t.flatMap(loading => [\"weak\", \"strict\"]\n\t\t.map(mode => `chromium/bundled/${loading}/${mode}`)));\nconst phpWasmRuntimeKeys = Object.freeze([\"compiler\", \"files\", \"inputs\"\n\t, \"library\", \"pins\", \"pointerBits\", \"profile\", \"schemaVersion\"]);\nconst phpWasmNodeCells = Object.freeze(phpWasmArrangements.flatMap(arrangement =>\n\t[\"startup\", \"lazy\"].flatMap(loading => [0, 1].map(strict =>\n\t\t`${arrangement}/${loading}/${strict}`))));\nconst phpWasmArchives = \"packages/php-wasm/archives\";\n\n/**\n * Check one installed PHP-Wasm execution against its mode's exact claims.\n *\n * @param label - Mode, author and cell used in diagnostics.\n * @param run - One Node or Chromium execution record.\n * @param mode - Full or result-only owned checked-record mode.\n */\nconst checkPhpWasmRun = (label, run, mode) => {\n\tassert.equal(run.observed.ownedCheckedRecord, true, label);\n\tassert.equal(run.observed.mode, mode, label);\n\tif(mode === \"full\") assert.equal(run.observed.heldOriginalError, true, label);\n\tassert.equal(run.observed.phpBits, 32, label);\n\tassert.ok(Number.isSafeInteger(run.observed.checks)\n\t\t&& run.observed.checks >= (mode === \"full\" ? 101 : 4), label);\n\tassert.equal(run.requestRecovery, true, label);\n\tfor(const state of [run.cleaned, run.refreshed])\n\t{\n\t\tassert.equal(state.liveIdentities, 0, label);\n\t\tassert.equal(state.runtimeInitRuns, 1, label);\n\t}\n\treturn run.observed.checks;\n};\n\n/**\n * Require the compiled PHP-Wasm model each author actually installed.\n *\n * @param label - Mode and author used in diagnostics.\n * @param observation - One author's installed observation.\n * @param mode - Full or result-only owned checked-record mode.\n * @param lean - Original Lean fixture bytes at the producer revision.\n */\nconst checkPhpWasmModel = (label, observation, mode, lean) => {\n\tconst { model, inputs } = observation;\n\tconst resultOnly = mode === \"result-only\";\n\tassert.equal(model.pointerBits, 32, label);\n\tassert.equal(model.schemaVersion, resultOnly ? 6 : 8, label);\n\tassert.equal(model.ownedGraph.transport, \"owned-zend-v1\", label);\n\tassert.equal(model.exports.length, resultOnly ? 3 : 9, label);\n\tif(resultOnly)\n\t{\n\t\tassert.equal(model.ownedGraph.inputTransfers, undefined, label);\n\t\tassert.equal(model.ownedGraph.hostCallbacks, undefined, label);\n\t}\n\telse\n\t{\n\t\tassert.equal(model.ownedGraph.inputTransfers.exports.length, 1, label);\n\t\tassert.equal(model.ownedGraph.hostCallbacks.signatures.length, 2, label);\n\t}\n\tassert.equal(Boolean(model.sourceIdentity.reviewedBindingIr)\n\t\t, observation.reviewed, label);\n\tassert.deepEqual(inputs.sourceIdentity, model.sourceIdentity, label);\n\tassert.deepEqual(inputs.component, model.component, label);\n\tassert.equal(inputs.sourceIdentity.modules.find(module =>\n\t\tmodule.module === \"OwnedCheckedRecords\")?.source.sha256, sha256(lean)\n\t, `${label}: compiled Lean source`);\n};\n\n/**\n * Verify one retained PHP-Wasm handoff against the observation that names it.\n *\n * @param lane - PHP-Wasm hosted lane contract.\n * @param packagingRoot - Extracted packaging directory.\n * @param mode - Full or result-only owned checked-record mode.\n * @param observation - One author's installed observation.\n */\nconst checkPhpWasmPackageSet = async (lane, packagingRoot, mode, observation) => {\n\tconst author = observation.reviewed ? \"reviewed\" : \"ordinary\";\n\tconst label = `${mode}/${author}`;\n\tconst path = `${lane.evidence}/${mode}/${author}/handoff`;\n\tconst root = join(packagingRoot, path);\n\tconst { receipt, result } = await readVerifiedPackageSetReceipt({\n\t\treceiptPath: join(root, packageSetReceiptName)\n\t});\n\tconst artifacts = receipt.packages.flatMap(pkg => pkg.artifacts);\n\tconst files = [packageSetReceiptName, `${packageSetReceiptName}.sha256`\n\t\t, ...artifacts.map(artifact => artifact.path)].toSorted();\n\tassert.deepEqual(await regularFiles(root), files\n\t\t, `${label}: retained evidence must be exactly the receipt-named set`);\n\tassert.deepEqual([...new Set(receipt.packages.map(pkg => pkg.target))]\n\t\t, [...lane.targets], `${label}: package targets`);\n\tassert.deepEqual(observation.packageSetReceipt, receipt\n\t\t, `${label}: installed receipt`);\n\tassert.deepEqual(receipt.component, observation.model.component\n\t\t, `${label}: installed component identity`);\n\tconst profile = { id: \"php-wasm-copied-v1\"\n\t\t, bindingIrSha256: observation.model.bindingIrSha256\n\t\t, runtimeIdentity: observation.receipt.runtimeIdentity };\n\tassert.deepEqual(receipt.profiles, [profile]\n\t\t, `${label}: installed runtime profile`);\n\tassert.deepEqual(receipt.packages.map(pkg =>\n\t\t`${pkg.ecosystem}/${pkg.role}`).toSorted()\n\t, [\"composer/api\", \"npm/component\", \"npm/runtime\"]\n\t, `${label}: installed npm and Composer roles`);\n\tfor(const pkg of receipt.packages)\n\t{\n\t\tassert.equal(pkg.profile, profile.id, `${label}: package profile`);\n\t\tassert.equal(pkg.runtimeIdentity, profile.runtimeIdentity\n\t\t\t, `${label}: package runtime`);\n\t}\n\tconst archives = observation.packageReceipt.archives;\n\tassert.ok(Array.isArray(archives) && archives.length > 0, label);\n\tassert.deepEqual(artifacts.map(artifact => artifact.path).toSorted()\n\t\t, archives.map(item => `${phpWasmArchives}/${item.archive}`).toSorted()\n\t\t, `${label}: receipt must name exactly the verified package archives`);\n\tfor(const item of archives)\n\t{\n\t\tconst artifact = artifacts.find(entry =>\n\t\t\tentry.path === `${phpWasmArchives}/${item.archive}`);\n\t\tassert.deepEqual({ bytes: artifact.bytes, sha256: artifact.sha256 }\n\t\t\t, { bytes: item.bytes, sha256: item.sha256 }, `${label}: ${item.archive}`);\n\t}\n\tassert.deepEqual(observation.reproducedArchives, archives\n\t\t, `${label}: independent rebuild must reproduce every archive`);\n\tconst archiveBytes = artifacts.reduce((total, artifact) =>\n\t\ttotal + artifact.bytes, 0);\n\treturn { path, receiptSha256: result.receiptSha256\n\t\t, archives: result.archives, archiveBytes, packages: result.packages\n\t\t, files };\n};\n\n/**\n * Check every Node cell and Chromium arrangement one author executed.\n *\n * @param label - Mode and author used in diagnostics.\n * @param observation - One author's installed observation.\n * @param mode - Full or result-only owned checked-record mode.\n */\nconst checkPhpWasmExecutions = (label, observation, mode) => {\n\tassert.deepEqual(observation.executions.map(run =>\n\t\t`${run.arrangement}/${run.loading}/${run.strict}`), [...phpWasmNodeCells]\n\t, `${label}: every installed Node cell in order`);\n\tconst node = observation.executions.map(run => {\n\t\tconst cell = `${label}/${run.arrangement}/${run.loading}/${run.strict}`;\n\t\tassert.equal(run.invalidStayedCold, true, cell);\n\t\tassert.equal(run.libraries.length, 2, cell);\n\t\tassert.equal(new Set(run.libraries).size, 2, cell);\n\t\treturn checkPhpWasmRun(cell, run, mode);\n\t});\n\tconst { browser } = observation;\n\tassert.match(browser.bundleSha256, digestPattern, label);\n\tassert.deepEqual(browser.observations.map(item => item.arrangement)\n\t\t, [...phpWasmArrangements], `${label}: both Chromium arrangements`);\n\tassert.equal(new Set(browser.observations.map(item =>\n\t\t`${item.version}/${item.executableSha256}`)).size, 1\n\t, `${label}: one Chromium build for both arrangements`);\n\tconst chromium = browser.observations.flatMap(item => {\n\t\tassert.match(item.sourceSha256, digestPattern, label);\n\t\tassert.ok(typeof item.version === \"string\" && item.version.length > 0, label);\n\t\tassert.match(item.executableSha256, digestPattern, label);\n\t\tassert.deepEqual(item.executions.map(run =>\n\t\t\t`${run.realm}/${run.arrangement}/${run.loading}/${run.mode}`)\n\t\t, [...phpWasmChromiumCells]\n\t\t, `${label}/${item.arrangement}: every Chromium cell in order`);\n\t\treturn item.executions.map(run => {\n\t\t\tconst cell = `${label}/chromium/${item.arrangement}/${run.loading}/${run.mode}`;\n\t\t\tassert.deepEqual(run.phases.map(phase => phase.stage)\n\t\t\t\t, [\"ready\", \"autoload\", \"invalid\", \"complete\", \"recovered\"], cell);\n\t\t\tassert.deepEqual(run.phases.map(phase => phase.libraries.length)\n\t\t\t\t, run.loading === \"lazy\" ? [0, 0, 0, 2, 2] : [2, 2, 2, 2, 2], cell);\n\t\t\treturn checkPhpWasmRun(cell, run, mode);\n\t\t});\n\t});\n\treturn { node, chromium };\n};\n\nconst phpWasmFileIdentity = value => value && typeof value === \"object\"\n\t&& !Array.isArray(value)\n\t&& canonicalJson(Object.keys(value).toSorted()) === canonicalJson([\"bytes\", \"sha256\"])\n\t&& Number.isSafeInteger(value.bytes) && value.bytes >= 0\n\t&& typeof value.sha256 === \"string\" && digestPattern.test(value.sha256);\nconst phpWasmRuntimeHeaders = Object.freeze([\"lean.h\", \"lean_gmp.h\"\n\t, \"lean_libuv.h\", \"config.h\", \"version.h\"]);\nconst phpWasmRuntimeMembers = Object.freeze([\"include/lean/lean.h\"\n\t, \"include/lean/config.h\", \"include/lean_bridge_native_runtime.h\"]);\nconst phpWasmRuntimeInputMembers = Object.freeze([\"cmake/lib/lean/libInit.a\"\n\t, \"cmake/lib/lean/libleanrt.a\", \"source/.lean-wasm-patched\"]);\n\n/**\n * Require exactly the runtime manifest record that the producer's\n * copied-runtime reader accepts, and bind its identity to the exact\n * manifest bytes. Only the recorded manifest is validated; no retained\n * runtime path is opened and nothing is rebuilt.\n *\n * @param identity - Reported runtime identity.\n * @param manifest - Reported runtime manifest.\n * @param producer - Full producer revision supplying profile, pins and compiler files.\n */\nconst checkPhpWasmRuntime = async (identity, manifest, producer) => {\n\tconst artifacts = \"src/build/php-wasm-copied-artifacts.mjs\";\n\tconst { phpWasmCopiedCompilerFiles, phpWasmCopiedPins, phpWasmCopiedProfile }\n\t\t= await moduleAtProducerWithSourceReads(producer, artifacts);\n\tassert.match(identity, digestPattern, \"PHP-Wasm runtime identity\");\n\tassert.equal(identity, sha256(canonicalJson(manifest))\n\t\t, \"PHP-Wasm runtime identity must hash its exact manifest\");\n\tassert.deepEqual(Object.keys(manifest).toSorted(), [...phpWasmRuntimeKeys]\n\t\t, \"PHP-Wasm runtime manifest fields\");\n\tassert.equal(manifest.schemaVersion, 1);\n\tassert.equal(manifest.profile, phpWasmCopiedProfile, \"PHP-Wasm runtime profile\");\n\tassert.equal(manifest.pointerBits, 32, \"PHP-Wasm runtime pointer width\");\n\tassert.deepEqual(manifest.pins, phpWasmCopiedPins, \"PHP-Wasm runtime pins\");\n\tconst { profile, pins, compiler, inputs } = manifest;\n\tassert.deepEqual(Object.keys(compiler).toSorted()\n\t\t, [\"emsdkCommit\", \"files\", \"version\"], \"PHP-Wasm compiler identity fields\");\n\tassert.equal(compiler.emsdkCommit, phpWasmCopiedPins.emsdkCommit\n\t\t, \"PHP-Wasm compiler emsdk commit\");\n\tconst release = ` ${phpWasmCopiedPins.emscriptenVersion} (${phpWasmCopiedPins.emscriptenCommit})`;\n\tassert.ok(typeof compiler.version === \"string\"\n\t\t&& compiler.version.endsWith(release), \"PHP-Wasm compiler version\");\n\tassert.deepEqual(Object.keys(compiler.files).toSorted()\n\t\t, [...phpWasmCopiedCompilerFiles].toSorted(), \"PHP-Wasm compiler files\");\n\tfor(const [path, item] of Object.entries(compiler.files))\n\t\tassert.ok(phpWasmFileIdentity(item) && item.bytes > 0\n\t\t\t, `PHP-Wasm compiler file identity: ${path}`);\n\tassert.deepEqual(Object.keys(inputs).toSorted()\n\t\t, [\"brokerSha256\", \"files\", \"libuvSha256\"], \"PHP-Wasm runtime inputs\");\n\tfor(const key of [\"brokerSha256\", \"libuvSha256\"])\n\t\tassert.match(inputs[key], digestPattern, `PHP-Wasm runtime input ${key}`);\n\tassert.ok(inputs.files && typeof inputs.files === \"object\"\n\t\t&& !Array.isArray(inputs.files), \"PHP-Wasm runtime input files\");\n\tfor(const [path, item] of Object.entries(inputs.files))\n\t\tassert.ok(phpWasmFileIdentity(item)\n\t\t\t, `PHP-Wasm runtime input identity: ${path}`);\n\tconst key = sha256(canonicalJson({ profile, pins, compiler, inputs }))\n\t\t.slice(0, 20);\n\tassert.equal(manifest.library, `lib/liblean_bridge_php_wasm_copied_${key}.so`\n\t\t, \"PHP-Wasm runtime library must name its build inputs\");\n\tfor(const [path, item] of Object.entries(manifest.files))\n\t\tassert.ok(phpWasmFileIdentity(item), `PHP-Wasm runtime file identity: ${path}`);\n\tfor(const path of [manifest.library, ...phpWasmRuntimeMembers])\n\t\tassert.ok(Object.hasOwn(manifest.files, path)\n\t\t\t, `PHP-Wasm runtime member: ${path}`);\n\tfor(const name of phpWasmRuntimeHeaders)\n\t\tassert.deepEqual(manifest.files[`include/lean/${name}`]\n\t\t\t, inputs.files[`cmake/include/lean/${name}`]\n\t\t\t, `PHP-Wasm runtime header ${name} must match its target build`);\n\tfor(const path of phpWasmRuntimeInputMembers)\n\t\tassert.ok(Object.hasOwn(inputs.files, path)\n\t\t\t, `PHP-Wasm runtime input member: ${path}`);\n};\n\n/**\n * Replay the PHP-Wasm lane: one acceptance log, two runtime logs, the\n * aggregate and per-mode reports, and one retained handoff per mode and\n * author. Nothing here is inferred from native PHP evidence.\n *\n * @param lane - PHP-Wasm hosted lane contract.\n * @param root - Extracted original artifact root.\n * @param producer - Full producer revision named by the hosted run.\n * @param original - Reader of committed source bytes at `producer`.\n */\nconst replayPhpWasm = async (lane, root, producer, original) => {\n\tconst packagingRoot = join(root, lane.packaging);\n\tconst reportPath = `${lane.packaging}/${lane.report}`;\n\tconst reportBytes = await readFile(join(root, reportPath));\n\tconst report = JSON.parse(reportBytes);\n\tassert.equal(reportBytes.toString(\"utf8\"), canonicalJson(report)\n\t\t, \"Hosted report must be canonical\");\n\tassert.deepEqual(Object.keys(report).toSorted()\n\t\t, [\"profile\", \"reports\", \"schemaVersion\"]);\n\tassert.equal(report.schemaVersion, 1);\n\tassert.equal(report.profile, lane.reportProfile);\n\tassert.deepEqual(report.reports.map(entry => entry.mode), [...lane.modes]);\n\tconst acceptance = await readFile(join(root, lane.acceptance), \"utf8\");\n\tconst tap = parseOwnedCheckedRecordTap(acceptance);\n\tassert.deepEqual(tap.tests, ownedCheckedRecordHostedTestNames(lane)\n\t\t, \"Acceptance TAP must contain exactly the PHP-Wasm lane tests in order\");\n\tconst lean = original(\n\t\t\"tests/fixtures/onboarding/owned-checked-records/OwnedCheckedRecords.lean\");\n\tfor(const log of lane.logs)\n\t{\n\t\tconst text = await readFile(join(root, log), \"utf8\").catch(error =>\n\t\t\tassert.fail(`${log} is a required hosted log (${error.code})`));\n\t\tassert.ok(text.trim().length > 0, `${log} must retain the hosted build output`);\n\t}\n\tconst members = [lane.acceptance, ...lane.logs, reportPath];\n\tconst routes = new Map(), runtimes = new Set();\n\tfor(const [index, mode] of lane.modes.entries())\n\t{\n\t\tconst modePath = `${lane.packaging}/${mode}.json`;\n\t\tconst modeBytes = await readFile(join(root, modePath));\n\t\tconst entry = JSON.parse(modeBytes);\n\t\tassert.equal(modeBytes.toString(\"utf8\"), canonicalJson(entry)\n\t\t\t, `${mode}: report must be canonical`);\n\t\tassert.deepEqual(report.reports[index], entry\n\t\t\t, `${mode}: aggregate must equal the per-mode report`);\n\t\tmembers.push(modePath);\n\t\tassert.deepEqual(Object.keys(entry).toSorted(), [...phpWasmReportKeys]\n\t\t\t, `${mode}: exact report fields`);\n\t\tassert.equal(entry.schemaVersion, 1);\n\t\tassert.equal(entry.profile, `${lane.reportProfile}-${mode}`);\n\t\tfor(const key of [\"cliAdmission\", \"compiledLean\", \"installedPackage\", \"runtimeSupplied\"])\n\t\t\tassert.equal(entry[key], true, `${mode}: ${key}`);\n\t\tassert.equal(entry.installedCli.packagingSourceRemoved, true, mode);\n\t\tawait checkPhpWasmRuntime(entry.runtimeIdentity, entry.runtimeManifest\n\t\t\t, producer);\n\t\truntimes.add(canonicalJson({ identity: entry.runtimeIdentity\n\t\t\t, manifest: entry.runtimeManifest }));\n\t\tassert.deepEqual(entry.observations.map(item => item.reviewed)\n\t\t\t, [false, true], `${mode}: ordinary then reviewed authors`);\n\t\tconst consumer = sha256(original(\"tests/fixtures/structured-types/\"\n\t\t\t+ `owned-checked-record-${mode === \"result-only\" ? \"result-only-\" : \"\"}php-wasm.php`));\n\t\tconst runners = new Set();\n\t\tfor(const observation of entry.observations)\n\t\t{\n\t\t\tconst author = observation.reviewed ? \"reviewed\" : \"ordinary\";\n\t\t\tconst label = `${mode}/${author}`;\n\t\t\tassert.deepEqual(Object.keys(observation).toSorted()\n\t\t\t\t, [...phpWasmObservationKeys], `${label}: exact observation fields`);\n\t\t\tfor(const key of phpWasmFlags)\n\t\t\t\tassert.equal(observation[key], true, `${label}: ${key}`);\n\t\t\tassert.equal(observation.consumerSha256, consumer\n\t\t\t\t, `${label}: consumer source`);\n\t\t\tassert.match(observation.runnerSha256, digestPattern, label);\n\t\t\trunners.add(observation.runnerSha256);\n\t\t\tcheckPhpWasmModel(label, observation, mode, lean);\n\t\t\tassert.equal(observation.receipt.runtimeIdentity, entry.runtimeIdentity\n\t\t\t\t, `${label}: component receipt runtime`);\n\t\t\tfor(const build of [observation.cliBuild, observation.repeatedCliBuild])\n\t\t\t{\n\t\t\t\tassert.equal(build.status, \"ok\", label);\n\t\t\t\tassert.deepEqual(build.result.targets, [...lane.targets], label);\n\t\t\t}\n\t\t\tassert.equal(observation.verification.status, \"ok\", label);\n\t\t\tassert.equal(observation.verification.result.verificationType\n\t\t\t\t, \"local-package-set\", label);\n\t\t\tassert.ok(Array.isArray(observation.rejected)\n\t\t\t\t&& observation.rejected.length > 0, `${label}: drift controls`);\n\t\t\tconst { files, ...retained } = await checkPhpWasmPackageSet(\n\t\t\t\tlane, packagingRoot, mode, observation);\n\t\t\tmembers.push(...files.map(file =>\n\t\t\t\t`${lane.packaging}/${retained.path}/${file}`));\n\t\t\troutes.set(`${author}-${mode}`, { route: `${author}-${mode}`\n\t\t\t\t, ...retained, checks: checkPhpWasmExecutions(label, observation, mode) });\n\t\t}\n\t\tassert.equal(runners.size, 1, `${mode}: one installed runner for both authors`);\n\t}\n\tassert.equal(runtimes.size, 1\n\t\t, \"Both modes must execute the same pinned PHP-Wasm runtime\");\n\tassert.deepEqual(await regularFiles(root), members.toSorted()\n\t\t, \"Hosted PHP-Wasm output must contain exactly the logs, reports and retained package sets\");\n\treturn {\n\t\tschemaVersion: 1, kind: \"owned-checked-record-hosted-replay\"\n\t\t, lane: \"php-wasm\", producerCommit: producer\n\t\t, reportSha256: sha256(reportBytes)\n\t\t, acceptanceLogSha256: sha256(Buffer.from(acceptance))\n\t\t, tests: tap.tests.length\n\t\t, routes: ownedCheckedRecordHostedRoutes.map(route => routes.get(route))\n\t};\n};\n\n",
+          "previous": "",
+          "start": 7805
+        },
+        {
+          "current": "\tif(lane.kind === \"php-wasm\")\n\t\treturn replayPhpWasm(lane, root, producer, original);\n",
+          "previous": "",
+          "start": 33085
+        }
+      ],
+      "path": "tests/helpers/owned-checked-record-hosted-output.mjs",
+      "previousSha256": "fc6381f642342b1f3ce293c8340a461662ceaafa282bfd4df8ad325419c51cc0"
+    },
+    {
+      "currentSha256": "a247fe886a7fa8f8f42ce63d4e6615ba7fcecdaebabb4e95f7f895aed4ccaa28",
+      "edits": [
+        {
+          "current": "import \"./helpers/owned-checked-record-php-wasm-hosted-tests.mjs\";\n",
+          "previous": "",
+          "start": 583
+        },
+        {
+          "current": "test(\"owned checked-record hosted contracts name every lane exactly\", async () => {\n",
+          "previous": "test(\"owned checked-record hosted contracts name every non-PHP-Wasm lane exactly\", async () => {\n",
+          "start": 11921
+        },
+        {
+          "current": "\t\t, \"javascript\", \"php-wasm\"]);\n",
+          "previous": "\t\t, \"javascript\"]);\n",
+          "start": 12136
+        },
+        {
+          "current": "\t\t, \"nuget\", \"php-native\", \"php-wasm\", \"pypi\", \"rubygems\", \"wit-wasi\"]);\n",
+          "previous": "\t\t, \"nuget\", \"php-native\", \"pypi\", \"rubygems\", \"wit-wasi\"]);\n",
+          "start": 12366
+        },
+        {
+          "current": "\t\t\t, ...lane.uploads ? lane.uploads.map(path => `build/${path}\\n`)\n\t\t\t\t: [`build/${lane.packaging}/\\n`]\n",
+          "previous": "\t\t\t, `build/${lane.packaging}/\\n`\n",
+          "start": 13016
+        },
+        {
+          "current": "\t\tconst routeTitle = lane.modeTest\n\t\t\t? lane.modeTest.replace(\"{mode}\", \"${mode}\")\n\t\t\t: lane.routeTest.replace(\"{route}\", \"${route}\")\n\t\t\t\t.replace(lane.group ?? \"\\0\", \"${group}\");\n",
+          "previous": "\t\tconst routeTitle = lane.routeTest.replace(\"{route}\", \"${route}\")\n\t\t\t.replace(lane.group ?? \"\\0\", \"${group}\");\n",
+          "start": 13346
+        },
+        {
+          "current": "\t\t\t, [\"javascript\", \"php-wasm\"].includes(lane.kind) ? 5 : 6);\n",
+          "previous": "\t\t\t, lane.kind === \"javascript\" ? 5 : 6);\n",
+          "start": 13667
+        },
+        {
+          "current": "\t// The PHP-Wasm lane has its own per-mode layout and synthetic controls.\n\tfor(const name of ownedCheckedRecordHostedLaneNames.filter(item => item !== \"php-wasm\"))\n",
+          "previous": "\tfor(const name of ownedCheckedRecordHostedLaneNames)\n",
+          "start": 15489
+        },
+        {
+          "current": "\tassert.throws(() => ownedCheckedRecordEvidenceSources(\"php-native\", revisions));\n",
+          "previous": "\tassert.throws(() => ownedCheckedRecordEvidenceSources(\"php-wasm\", revisions));\n",
+          "start": 28502
+        }
+      ],
+      "path": "tests/owned-checked-record-hosted-archive.test.mjs",
+      "previousSha256": "2a74b5994b184f428de60860835d91263b6bed5ac5c5593b555e746956153747"
+    }
+  ]
+}
