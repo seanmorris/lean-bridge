@@ -52,9 +52,10 @@ test("owned callback evidence rejects altered runs, recovery, lifetimes and cove
 test("owned callback source history rejects unknown text and overlapping edits", async () => {
 	for(const update of (await json(ownedHostHistoryPath)).updates)
 	{
-		const source = beforeOwnedCi(update.path, await readFile(update.path, "utf8"));
+		// The hub reverses every recognized state, so live reads and predecessor reads name their stops.
+		const source = beforeOwnedCi(update.path, await readFile(update.path, "utf8"), update.currentSha256);
 		assert.equal(sha256(reverseOwnedHostUpdate(source, update)), update.previousSha256);
-		assert.equal(sha256(beforeOwnedHost(update.path, source)), update.previousSha256);
+		assert.equal(sha256(beforeOwnedHost(update.path, source, update.previousSha256)), update.previousSha256);
 		assert.equal(beforeOwnedHost(update.path, source, update.currentSha256), source);
 		const unknown = source + "\n/* unrecorded */\n";
 		assert.equal(beforeOwnedHost(update.path, unknown), unknown);
@@ -74,12 +75,13 @@ test("owned CI repairs retain exact predecessors and passing contract executions
 	assert.equal(sha256(await readFile(record.previous.path)), record.previous.sha256);
 	const helper = "tests/helpers/owned-ci-source-history.mjs";
 	assert.deepEqual(Object.keys(record.additions), [helper]);
-	assert.equal(record.additions[helper], sha256(beforeOwnedCpp(helper, await readFile(helper, "utf8"))));
+	assert.equal(record.additions[helper], sha256(beforeOwnedCpp(helper, await readFile(helper, "utf8"), record.additions[helper])));
 	for(const update of record.updates)
 	{
-		const source = beforeOwnedCpp(update.path, await readFile(update.path, "utf8")), previous = reverseOwnedCiUpdate(source, update);
+		// The hub reverses every recognized state, so live reads and predecessor reads name their stops.
+		const source = beforeOwnedCpp(update.path, await readFile(update.path, "utf8"), update.currentSha256), previous = reverseOwnedCiUpdate(source, update);
 		assert.equal(sha256(previous), update.previousSha256);
-		assert.equal(beforeOwnedCi(update.path, source), previous);
+		assert.equal(beforeOwnedCi(update.path, source, update.previousSha256), previous);
 		assert.equal(beforeOwnedCi(update.path, source, update.currentSha256), source);
 		const unknown = source + "\n/* unrecorded */\n";
 		assert.equal(beforeOwnedCi(update.path, unknown), unknown);

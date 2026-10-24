@@ -67,7 +67,8 @@ test("C# source history restores only recorded identities and preserves binary f
 	{
 		const source = beforeOwnedDotnetProcess(update.path, await readFile(update.path, "utf8"), update.currentSha256);
 		assert.equal(sha256(reverseOwnedDotnetUpdate(source, update)), update.previousSha256);
-		assert.equal(sha256(beforeOwnedDotnet(update.path, source)), update.previousSha256);
+		// The hub reverses every recognized state, so each predecessor read names its stop.
+		assert.equal(sha256(beforeOwnedDotnet(update.path, source, update.previousSha256)), update.previousSha256);
 		assert.equal(beforeOwnedDotnet(update.path, source, update.currentSha256), source);
 		const unknown = source + "\n/* unrecorded */\n";
 		assert.equal(beforeOwnedDotnet(update.path, unknown), unknown);

@@ -35,9 +35,10 @@ test("owned wasm32 history preserves the exact native PHP receipt and all source
 		assert.equal(update.previousSha256, previous.sources[update.path], update.path);
 		assert.equal(update.currentSha256, record.sources[update.path], update.path);
 		const current = (await source(update.path, update.currentSha256)).toString();
-		const prior = beforeOwnedWasm32(update.path, current);
+		// The hub reverses every recognized state, so each predecessor read names its stop.
+		const prior = beforeOwnedWasm32(update.path, current, update.previousSha256);
 		assert.equal(sha256(prior), update.previousSha256, update.path);
-		assert.equal(beforeOwnedWasm32(update.path, prior), prior);
+		assert.equal(beforeOwnedWasm32(update.path, prior, update.previousSha256), prior);
 		assert.equal(beforeOwnedWasm32(update.path, current, update.currentSha256), current);
 		const unknown = current + "\n/* unrecorded wasm32 edit */\n";
 		assert.equal(beforeOwnedWasm32(update.path, unknown), unknown);
@@ -49,8 +50,21 @@ test("owned wasm32 history preserves the exact native PHP receipt and all source
 	const binary = Buffer.from([0, 255, 192, 128]);
 	assert.equal(ownedWasm32HistoricalBytes("unknown.bin", binary), binary);
 	const current = (await source("docs/type-surface.v1.json", record.sources["docs/type-surface.v1.json"])).toString();
-	const prior = JSON.parse(beforeOwnedWasm32("docs/type-surface.v1.json", current));
-	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(await source(file.path, record.sources[file.path]));
+	const transition = record.updates.find(update => update.path === "docs/type-surface.v1.json");
+	assert.ok(transition, "wasm32 evidence records an explicit type-surface predecessor");
+	const prior = JSON.parse(beforeOwnedWasm32("docs/type-surface.v1.json", current, transition.previousSha256));
+	// Source pins compare against the milestone inventory's own pins, never later live bytes.
+	const pins = new Map();
+	for(const evidence of JSON.parse(current).evidence) for(const file of evidence.files)
+	{
+		assert.ok(!pins.has(file.path) || pins.get(file.path) === file.sha256, file.path);
+		pins.set(file.path, file.sha256);
+	}
+	for(const evidence of prior.evidence) for(const file of evidence.files)
+	{
+		assert.ok(pins.has(file.path), file.path);
+		file.sha256 = pins.get(file.path);
+	}
 	assert.deepEqual(JSON.parse(current), prior);
 });
 
