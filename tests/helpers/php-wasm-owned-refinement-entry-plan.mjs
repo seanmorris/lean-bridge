@@ -9,6 +9,12 @@ import { phpWasmUnmarkedEntries } from "./php-wasm-refinement-entry-plan.mjs";
 import { validateSubtypeEntrySelection } from "./php-wasm-subtype-entry-c.mjs";
 
 const kinds = ["validator", "constructor", "adapter", "source"];
+/**
+ * Owned.lean defines checkedCountAlternate as checkedCount, so each alternate
+ * constructor entry encloses exactly one checkedCount entry.
+ */
+export const phpWasmOwnedSubtypeAlternateConstructors
+	= Object.freeze(["checkedCountAlternate", "checkedCount"]);
 const counts = entries => Object.fromEntries(kinds.map(kind => [
 	kind, entries.filter(item => item.kind === kind).length
 ]));
@@ -95,9 +101,9 @@ export const phpWasmOwnedRefinementEntryPlan = (family, selected, generatedLeanS
 		, refused("borrow-refusal", "echoRecord", ["checkedCount"], ["checkedCount"])
 		, accepted("borrow-recovery", "echoRecord", ["checkedCount"], ["checkedCount"])
 		, accepted("alternate-valid", "echoRecordAlternate"
-			, ["checkedCountAlternate"], ["checkedCountAlternate"])
+			, ["checkedCountAlternate"], phpWasmOwnedSubtypeAlternateConstructors)
 		, refused("alternate-refusal", "echoRecordAlternate"
-			, ["checkedCountAlternate"], ["checkedCountAlternate"])
+			, ["checkedCountAlternate"], phpWasmOwnedSubtypeAlternateConstructors)
 		, { ...setup("newTicket"), control: "setup-transfer-owner" }
 		, transfer("transfer-refusal", "refused", "transferRecord"
 			, ["checkedCount"], ["checkedCount"])
