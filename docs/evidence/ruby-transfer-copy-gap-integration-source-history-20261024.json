@@ -1,0 +1,95 @@
+{
+  "additions": [
+    {
+      "currentSha256": "de3ac3d18ac18bfd7468fb5ad4b3649192bde252f8c6127237102f009c3bd51b",
+      "path": "docs/evidence/ruby-transfer-copy-gap-source-history-20261024.json"
+    },
+    {
+      "currentSha256": "19647b076c465559cd63635969d5e8db8facbd7efef6d6af34bc4e2160ed0ee1",
+      "path": "scripts/update-ruby-transfer-copy-gap-source-history.mjs"
+    },
+    {
+      "currentSha256": "456a3556f71a1e41a1b21b80c6fc7e49b2dc0a1b1d17f032f79c780a3ccefb41",
+      "path": "tests/helpers/ruby-transfer-copy-gap-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "8fd927b2b198bc8e7c20ee4894d7d3a125d23af83f1377e88ce51576968f9a05",
+      "path": "tests/helpers/ruby-transfer-copy-gap-source-history.mjs"
+    },
+    {
+      "currentSha256": "6b1a334087ae1e069a8855c726cb9d4867e129739856f5311d7baf9545d2ed11",
+      "path": "scripts/update-ruby-transfer-copy-gap-integration-source-history.mjs"
+    },
+    {
+      "currentSha256": "36705ba0985095d62289b77ba146ad2a1cf92b850a4e74956fb0cf1405d0c55d",
+      "path": "tests/helpers/ruby-transfer-copy-gap-integration-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "0ab3ff67561df69b5de17c336585f51bed73192fe3b83cf0ccec3425ea9f4e4b",
+      "path": "tests/helpers/ruby-transfer-copy-gap-integration-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "d6e2adf84fc014a7b1dfe4952d7dfd8be504bdee",
+  "implementationCommits": [
+    "d6e2adf84fc014a7b1dfe4952d7dfd8be504bdee"
+  ],
+  "integrationBaseCommit": "d6e2adf84fc014a7b1dfe4952d7dfd8be504bdee",
+  "integrationUpdates": [
+    {
+      "currentSha256": "901e1c19ada27cc5e59c9b45c8e04a3e9ae82468d124d57318bd3dd13b7e15a3",
+      "edits": [
+        {
+          "current": "import { beforeRubyTransferCopyGapSource, rubyTransferCopyGapNormalizationPaths } from \"./ruby-transfer-copy-gap-source-history.mjs\";\nimport { beforeRubyTransferCopyGapIntegrationSource, rubyTransferCopyGapIntegrationNormalizationPaths } from \"./ruby-transfer-copy-gap-integration-source-history.mjs\";\n",
+          "previous": "",
+          "start": 4211
+        },
+        {
+          "current": "\t...rubyTransferCopyGapIntegrationNormalizationPaths\n\t, ...rubyTransferCopyGapNormalizationPaths\n\t, ...coreProducerLivePinRepairNormalizationPaths\n",
+          "previous": "\t...coreProducerLivePinRepairNormalizationPaths\n",
+          "start": 177552
+        },
+        {
+          "current": "\t\t= beforeRubyTransferCopyGapIntegrationSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeRubyTransferCopyGapSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "",
+          "start": 219255
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "fe33a4491e43362f1750129334543b4dc0749a076bcbbbf692b865ccc7943e1d"
+    },
+    {
+      "currentSha256": "e0e71800ec607d94d50defb23a27432adb26c5c2b919cc4b32365ee1ad53b45e",
+      "edits": [
+        {
+          "current": "import \"./helpers/ruby-transfer-copy-gap-source-history-tests.mjs\";\nimport \"./helpers/ruby-transfer-copy-gap-integration-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 2591
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "ef62d5b771793ecb505e81efc5273013396057b5a36f06dab3dbdd400628a2a4"
+    },
+    {
+      "currentSha256": "19647b076c465559cd63635969d5e8db8facbd7efef6d6af34bc4e2160ed0ee1",
+      "edits": [
+        {
+          "current": "\t\tpath\n\t\t, ...commits\n",
+          "previous": "\t\tpath, ...commits\n",
+          "start": 3865
+        },
+        {
+          "current": "\t\t\t, source(historicalPredecessor, path), source(historicalCommit, path)\n\t\t\t, {\n",
+          "previous": "\t\t\t, source(historicalPredecessor, path), source(historicalCommit, path), {\n",
+          "start": 4255
+        }
+      ],
+      "path": "scripts/update-ruby-transfer-copy-gap-source-history.mjs",
+      "previousSha256": "8ecf4185ce7f14f01f6f4e4742bda9cdadb5f4c7e9edc06318efdf602f931d92"
+    }
+  ],
+  "milestone": "ruby-transfer-copy-gap-integration-source-v1",
+  "predecessorCommit": "af8232b140605a598b128fdea9562649a8ba94d5",
+  "schemaVersion": 1,
+  "scope": "Integrate the independently retained two omitted Ruby transfer-copy test transitions from 3c22d43 into the current source-history hub and checked-JavaScript registration. Preserve every original gap receipt and source byte, authenticate the exact ordered integration and test requested historical boundaries without regenerating packages, rewriting observations or promoting support.",
+  "updates": []
+}

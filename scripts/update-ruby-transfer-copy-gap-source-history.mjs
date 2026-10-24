@@ -92,7 +92,8 @@ const transition = async (path, previous, current, commits) => {
 		};
 	});
 	const update = {
-		path, ...commits
+		path
+		, ...commits
 		, previousSha256: sha256(previous), currentSha256: sha256(current)
 		, edits
 	};
@@ -106,7 +107,8 @@ try
 	const historicalTransitions = [];
 	for(const path of rubyTransferCopyGapHistoricalPaths)
 		historicalTransitions.push(await transition(path
-			, source(historicalPredecessor, path), source(historicalCommit, path), {
+			, source(historicalPredecessor, path), source(historicalCommit, path)
+			, {
 				previousCommit: historicalPredecessor, currentCommit: historicalCommit
 			}
 		));

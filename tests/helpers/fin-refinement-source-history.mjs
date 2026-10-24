@@ -32,6 +32,8 @@ import { beforeAdmissionArchiveProducerRepairSource, admissionArchiveProducerRep
 import { beforeBorrowReceiverProducerRepairSource, borrowReceiverProducerRepairNormalizationPaths } from "./borrow-receiver-producer-repair-source-history.mjs";
 import { beforeGenericSubtypeArchiveBoundarySource, genericSubtypeArchiveBoundaryNormalizationPaths } from "./generic-subtype-archive-boundary-source-history.mjs";
 import { beforeCoreProducerLivePinRepairSource, coreProducerLivePinRepairNormalizationPaths } from "./core-producer-live-pin-repair-source-history.mjs";
+import { beforeRubyTransferCopyGapSource, rubyTransferCopyGapNormalizationPaths } from "./ruby-transfer-copy-gap-source-history.mjs";
+import { beforeRubyTransferCopyGapIntegrationSource, rubyTransferCopyGapIntegrationNormalizationPaths } from "./ruby-transfer-copy-gap-integration-source-history.mjs";
 import { beforeCoreEvidenceMemoryRepairSource, coreEvidenceMemoryRepairNormalizationPaths } from "./core-evidence-memory-repair-source-history.mjs";
 import { beforeValueIndexPromotionMilestoneRepairSource, valueIndexPromotionMilestoneRepairNormalizationPaths } from "./value-index-promotion-milestone-repair-source-history.mjs";
 import { beforeCoreMilestoneReplayRepairSource, coreMilestoneReplayRepairNormalizationPaths } from "./core-milestone-replay-repair-source-history.mjs";
@@ -2125,7 +2127,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...coreProducerLivePinRepairNormalizationPaths
+	...rubyTransferCopyGapIntegrationNormalizationPaths
+	, ...rubyTransferCopyGapNormalizationPaths
+	, ...coreProducerLivePinRepairNormalizationPaths
 	, ...genericSubtypeArchiveBoundaryNormalizationPaths
 	, ...borrowReceiverProducerRepairNormalizationPaths
 	, ...admissionArchiveProducerRepairNormalizationPaths
@@ -2994,6 +2998,15 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
 	let stage
+		= beforeRubyTransferCopyGapIntegrationSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeRubyTransferCopyGapSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage
 		= beforeCoreProducerLivePinRepairSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
