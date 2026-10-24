@@ -1,0 +1,99 @@
+{
+  "additions": [
+    {
+      "currentSha256": "ac3cc853d3c2fe2e1dc3c51698f9f73f28d7416dc516480cf71a946a72d908a0",
+      "path": "scripts/update-php-wasm-callback-tiles-trace-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "46eb298b89e940bd2343751edfbd1e0958c2854ed3ea60e6def7409bc2ab139f",
+      "path": "tests/helpers/php-wasm-callback-tiles-trace-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "798243a35192e75dfd03985a585fa57b2ab045da8e301a09fa6f82f28978cab0",
+      "path": "tests/helpers/php-wasm-callback-tiles-trace-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "58924bc64024fd80f1f4640d42d09a1f65f429c5",
+  "integrationBaseCommit": "96ba23f482637f6dd76f2086a2fe93b677ccb057",
+  "integrationUpdates": [
+    {
+      "currentSha256": "ec821dceb826734dfb50e48562f126128005baf90daff8c81166edc581d1843d",
+      "edits": [
+        {
+          "current": "import { beforePhpWasmCallbackTilesTraceRepairSource, phpWasmCallbackTilesTraceRepairNormalizationPaths } from \"./php-wasm-callback-tiles-trace-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 2801
+        },
+        {
+          "current": "\t...phpWasmCallbackTilesTraceRepairNormalizationPaths\n\t, ...ownedMilestoneProducerRepairNormalizationPaths\n",
+          "previous": "\t...ownedMilestoneProducerRepairNormalizationPaths\n",
+          "start": 176012
+        },
+        {
+          "current": "\t\t= beforePhpWasmCallbackTilesTraceRepairSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "",
+          "start": 217213
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "8c23bc102aeb34189141f5f5abc4370428f177ab2b115607b4a7f47d4a21de84"
+    },
+    {
+      "currentSha256": "f0b88f27faffa3482d629b36a80ec8cafab89fba050987fe8810911a28a1c145",
+      "edits": [
+        {
+          "current": "import \"./helpers/php-wasm-callback-tiles-trace-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 1661
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "8bde42cfe2f4a7eed68d3ac30b8139402d080065d24ffaa082898c3ff5f90ffe"
+    }
+  ],
+  "milestone": "php-wasm-callback-tiles-trace-repair-source-v1",
+  "predecessorCommit": "a0b746c57304e6573fec15a5e270bb6ffaa59188",
+  "schemaVersion": 1,
+  "scope": "Correct the Fin mixed-input closure trace expectation to include the source entry observed in hosted run 40074446890, job 120814700514. Preserve the unchanged maker, pre-entry refusal, cleanup and mixed-result expectations. No runtime implementation, source admission, inventory or installed support changes; hosted replay of the corrected controls remains required.",
+  "updates": [
+    {
+      "currentSha256": "c773fd33bea4711207baa346f3bf2ab0f79d2a204fe15a0756fc9e85b07648ca",
+      "edits": [
+        {
+          "current": "\t\t, [\"adapter\", \"adapter\", \"source\", \"closure\", \"cleanup\"]\n",
+          "previous": "\t\t, [\"adapter\", \"adapter\", \"closure\", \"cleanup\"]\n",
+          "start": 2446
+        },
+        {
+          "current": "\t\t, [[\"adapter\", \"adapter\", \"source\", \"closure\", \"cleanup\"]]);\n",
+          "previous": "\t\t, [[\"adapter\", \"adapter\", \"closure\", \"cleanup\"]]);\n",
+          "start": 2818
+        }
+      ],
+      "path": "tests/helpers/php-wasm-callback-entry-plan-tests.mjs",
+      "previousSha256": "0b363f262375a3c386088164de0df5b5bcf22f05d50120420d59df172205d454"
+    },
+    {
+      "currentSha256": "531f1b4142da76affd3d726df64f45fa60803c891fd033f5f11ee0aa4ab75ff0",
+      "edits": [
+        {
+          "current": "\t\t\t// Tile values mix a checked Fin field with a plain Nat field. Building the closure\n\t\t\t// runs no source, but the hosted trace shows each accepted invocation of the Unit-\n\t\t\t// argument tiles running its marked source before the body; the Fin field refuses\n\t\t\t// in the closure adapter, before either runs.\n",
+          "previous": "\t\t\t// Tile values mix a checked Fin field with a plain Nat field. The maker ignores its\n\t\t\t// Unit argument, so like the checked-record makers it builds the closure without\n\t\t\t// running its marked source; the Fin field refuses before the closure body runs.\n",
+          "start": 5303
+        },
+        {
+          "current": "\t\t\t\t, calls: [maker(tiles), closure(tiles)] }\n",
+          "previous": "\t\t\t\t, calls: [maker(tiles), closure(tiles, [], false)] }\n",
+          "start": 5672
+        },
+        {
+          "current": "\t\t\t\t, calls: [closure(tiles)] }\n",
+          "previous": "\t\t\t\t, calls: [closure(tiles, [], false)] }\n",
+          "start": 5891
+        }
+      ],
+      "path": "tests/helpers/php-wasm-callback-entry-plan.mjs",
+      "previousSha256": "9c2929d25cf798624da11ee8cbe1c1aeab4893c90b4d7c3418857a3080f13873"
+    }
+  ]
+}
