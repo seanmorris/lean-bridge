@@ -99,23 +99,44 @@ export const phpWasmRefinementEntryPlan = (family, selected, generatedLeanSource
 	const source = name => find("source", `${namespace}.${name}`);
 	const adapter = name => find("adapter", `${namespace}.${name}`);
 	const fin = name => optional("validator", `${namespace}.${name}:fin_guard_0`);
-	const refinement = (name, constructorName = null) => {
-		const candidates = selected.filter(item => item.kind === "validator"
-			&& item.label.startsWith(`${namespace}.${name}:refinement_0`)
+	const refinementBlock = item => {
+		const start = generatedLeanSource.indexOf(`@[export ${item.symbol}]`);
+		assert.ok(start >= 0, item.symbol);
+		const next = generatedLeanSource.indexOf("\n@[export ", start + 9);
+		return generatedLeanSource.slice(start, next < 0 ? undefined : next);
+	};
+	const refinementChecks = (name, constructorNames = [], path = null) => {
+		const refinements = selected.filter(item => item.kind === "validator"
+			&& item.label.startsWith(`${namespace}.${name}:refinement_`)
 			&& !item.label.includes(":graph_refinement_"));
-		if(constructorName === null) return candidates
+		// Flat transports name every nested leaf and every parameter position. The
+		// graph-only unit fixture retains one whole-value validator per parameter;
+		// keep its established first-parameter abstraction separate from flat order.
+		const nested = refinements.some(item => !new RegExp(
+			`^${escaped(namespace)}\\.${escaped(name)}:refinement_[0-9]+$`, "u"
+		).test(item.label));
+		const candidates = nested ? refinements : refinements.filter(item =>
+			item.label === `${namespace}.${name}:refinement_0`);
+		if(constructorNames.length === 0) return candidates
 			.filter(item => item.label === `${namespace}.${name}:refinement_0`)
 			.map(item => ({ kind: item.kind, label: item.label }));
-		if(candidates.length <= 1) return candidates.map(item => ({ kind: item.kind, label: item.label }));
-		const matches = candidates.filter(item => {
-			const start = generatedLeanSource.indexOf(`@[export ${item.symbol}]`);
-			assert.ok(start >= 0, item.symbol);
-			const next = generatedLeanSource.indexOf("\n@[export ", start + 9);
-			return generatedLeanSource.slice(start, next < 0 ? undefined : next)
-				.includes(`_root_.${namespace}.${constructorName}`);
+		// Graph carriers expose one validator for a complete value. Flat copied transports
+		// expose one validator per selected leaf, and each validator calls that leaf's
+		// constructor before the adapter reconstructs the value a second time.
+		if(candidates.length <= 1) return [
+			...candidates.map(item => ({ kind: item.kind, label: item.label }))
+			, ...constructors(constructorNames)
+		];
+		return constructorNames.flatMap((constructorName, index) => {
+			const expected = path === null ? null : `${namespace}.${name}:${path}_${index}`;
+			const matches = candidates.filter(item => expected === null
+				? refinementBlock(item).includes(`_root_.${namespace}.${constructorName}`)
+				: item.label === expected);
+			assert.equal(matches.length, 1, `${name} refinement validator for ${constructorName}`);
+			assert.ok(refinementBlock(matches[0]).includes(`_root_.${namespace}.${constructorName}`)
+				, `${matches[0].label} selects ${constructorName}`);
+			return [{ kind: "validator", label: matches[0].label }, constructor(constructorName)];
 		});
-		assert.equal(matches.length, 1, `${name} refinement validator for ${constructorName}`);
-		return [{ kind: "validator", label: matches[0].label }];
 	};
 	const graph = (name, constructorName) => {
 		const candidates = selected.filter(item => item.kind === "validator"
@@ -145,15 +166,15 @@ export const phpWasmRefinementEntryPlan = (family, selected, generatedLeanSource
 	};
 	const constructors = names => names.map(constructor);
 	const item = (control, outcome, publicName, planned) => unmarked(control, outcome, publicName, planned, counts);
-	const accepted = (control, name, names = [], sourceNames = [name]) => {
+	const accepted = (control, name, names = [], sourceNames = [name], refinementPath = null) => {
 		const values = constructors(names);
 		return item(control, "accepted", name, [
-			...fin(name), ...refinement(name, names[0] ?? null), ...values
+			...fin(name), ...refinementChecks(name, names, refinementPath)
 			, adapter(name), ...values, ...sourceNames.map(source)
 		]);
 	};
 	const refused = (control, name, names, diagnosis = []) => item(control, "refused", name, [
-		...fin(name), ...refinement(name, names[0] ?? null), ...constructors(names)
+		...fin(name), ...refinementChecks(name, names)
 		, ...diagnosis.flatMap(constructorName => graph(name, constructorName))
 	]);
 	const graphCarried = selected.some(entry => entry.kind === "public" && /^lg_call\d+$/u.test(entry.symbol));
@@ -248,7 +269,7 @@ export const phpWasmRefinementEntryPlan = (family, selected, generatedLeanSource
 			, accepted("recovery", "echoA", a)
 			, accepted("repeated-fields", "combine", [...a, ...b])
 			, accepted("inactive-branch", "echoEventA")
-			, accepted("active-branch", "echoEventA", a)
+			, accepted("active-branch", "echoEventA", a, ["echoEventA"], "refinement_0_1_0")
 			, accepted("constructor-free", "produce")
 		];
 	}
