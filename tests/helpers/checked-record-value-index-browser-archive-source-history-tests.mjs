@@ -127,7 +127,8 @@ test("hosted value-index browser archive closes every added source", async () =>
 	));
 	for(const addition of record.additions)
 	{
-		assert.equal(sha256(await readFile(addition.path))
+		assert.equal(sha256(await sourceAtFinHistoryMilestone(
+			addition.path, addition.currentSha256))
 			, addition.currentSha256, addition.path);
 		assert.notEqual(spawnSync("git", ["cat-file", "-e"
 			, `${checkedRecordValueIndexBrowserArchivePredecessor}:${addition.path}`]

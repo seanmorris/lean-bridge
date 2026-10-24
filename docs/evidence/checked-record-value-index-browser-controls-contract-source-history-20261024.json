@@ -1,0 +1,226 @@
+{
+  "additions": [
+    {
+      "currentSha256": "dad63852b6a47ffde32c950f8cf3fe6d1c999b4243826879081cf05fae161988",
+      "path": "scripts/update-checked-record-value-index-browser-controls-contract-source-history.mjs"
+    },
+    {
+      "currentSha256": "5f7f5dc8a9b51ceafe2642983f4aea3aed3128dfdab267a50111c2ee14c5fb5d",
+      "path": "tests/helpers/checked-record-value-index-browser-controls-contract-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "0bf163744a732c6772e3f1c0ff104c47626e0172d00938e3a6d995abf6bcd9cd",
+      "path": "tests/helpers/checked-record-value-index-browser-controls-contract-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "db270b36999019f0d78120ba17605f32b01d048f",
+  "integrationUpdates": [
+    {
+      "currentSha256": "6a9ff8bec75f1a13b367a9ed4341a9c6d7719ba6bb94c51b7b258d91894c40bb",
+      "edits": [
+        {
+          "current": "import \"./helpers/checked-record-value-index-browser-controls-contract-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 561
+        }
+      ],
+      "path": "tests/checked-record-value-index-browser.test.mjs",
+      "previousSha256": "a682459b0c132d968531da5807090c78c7a50d4386c68ba3b8f0623a3d4ffd4a"
+    },
+    {
+      "currentSha256": "fc2b020d06fd7b2882c7597f7b1600f6cb7991210c0f4ad7bf52ff38f7a9a68e",
+      "edits": [
+        {
+          "current": "\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256))\n",
+          "previous": "\t\tassert.equal(sha256(await readFile(addition.path))\n",
+          "start": 5784
+        }
+      ],
+      "path": "tests/helpers/checked-record-value-index-browser-archive-source-history-tests.mjs",
+      "previousSha256": "b16e8bb7a6685afac23a577caf5ed9eba7921a5a8e7006f57d2a205b2cc7687d"
+    },
+    {
+      "currentSha256": "09136d9788c1c3e49cfb1ce285515aaf51010c9be7cdcfc2603ba44aad35b7e2",
+      "edits": [
+        {
+          "current": "import { beforeCheckedRecordValueIndexBrowserControlsContractSource, checkedRecordValueIndexBrowserControlsContractNormalizationPaths } from \"./checked-record-value-index-browser-controls-contract-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...checkedRecordValueIndexBrowserControlsContractNormalizationPaths\n\t, ...ownedTransferCopyReplayRepairNormalizationPaths\n",
+          "previous": "\t...ownedTransferCopyReplayRepairNormalizationPaths\n",
+          "start": 170334
+        },
+        {
+          "current": "\tconst checkedRecordValueIndexBrowserControlsContract\n\t\t= beforeCheckedRecordValueIndexBrowserControlsContractSource(\n\t\t\tpath, text, expected);\n\tif(sha256(checkedRecordValueIndexBrowserControlsContract) === expected)\n\t\treturn checkedRecordValueIndexBrowserControlsContract;\n\ttext = checkedRecordValueIndexBrowserControlsContract;\n",
+          "previous": "",
+          "start": 209668
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "06b54d36ef9d74f5f4b8f1d09d815f03cbfdf31215cc9509425e61a716c9ae47"
+    }
+  ],
+  "milestone": "checked-record-value-index-browser-controls-contract-source-v1",
+  "predecessorCommit": "73353dd7e6c92f9a5be833af88161197235cc99b",
+  "schemaVersion": 1,
+  "scope": "Keep new value-index browser producers and checkers on the complete live controls contract while replaying the immutable 2026-10-19 archive against its exact historical controls contract.",
+  "updates": [
+    {
+      "currentSha256": "ce275245ab47cc31ff5d9bf0ac5bdcf9d884fc2fdf92d5044fd4f92e5ef50016",
+      "edits": [
+        {
+          "current": "\t, checkedRecordValueIndexBrowserControlContracts\n",
+          "previous": "",
+          "start": 735
+        },
+        {
+          "current": "\t\t\t}, checkedRecordValueIndexBrowserControlContracts.live\n",
+          "previous": "\t\t\t}\n",
+          "start": 5529
+        }
+      ],
+      "path": "scripts/archive-checked-record-value-index-browser-evidence.mjs",
+      "previousSha256": "f76eefd4f058d056abaaef31f087623325be45775b8797de74700af6e0a8b76f"
+    },
+    {
+      "currentSha256": "9211f3d3f70d236deab902c22c759c8eaa227d28d5412aae76f7cd8cbd8099d2",
+      "edits": [
+        {
+          "current": "\t, checkedRecordValueIndexBrowserControlContracts\n",
+          "previous": "",
+          "start": 414
+        },
+        {
+          "current": "}, checkedRecordValueIndexBrowserControlContracts.live);\n",
+          "previous": "});\n",
+          "start": 1210
+        }
+      ],
+      "path": "scripts/check-checked-record-value-index-browser-ci.mjs",
+      "previousSha256": "86ddec57b703caacaba1f4ca54a5c07fc9f2aed5deebe8dc7173d04f3e49d329"
+    },
+    {
+      "currentSha256": "4f38f50a3fe8fe45a9245d58933d262e73f1c041d2f0b1b56de890ed032051da",
+      "edits": [
+        {
+          "current": "/**\n * Explicit control contracts. The live producer, checker and archiver require\n * every current control; the immutable 2026-10-19 archive is replayed against\n * the exact fast set its hosted run executed, never inferred from the TAP.\n */\nexport const checkedRecordValueIndexBrowserControlContracts = Object.freeze({\n\tlive: Object.freeze({\n\t\tname: \"live\"\n\t\t, passed: checkedRecordValueIndexBrowserRequiredControlNames.passed\n\t\t, exactTests: null\n\t})\n\t, archived20261019: Object.freeze({\n\t\tname: \"archived-2026-10-19\"\n\t\t, passed: checkedRecordValueIndexBrowserRequiredControlNames.fast\n\t\t, exactTests: checkedRecordValueIndexBrowserRequiredControlNames.fast.length\n\t\t\t+ checkedRecordValueIndexBrowserRequiredControlNames.skipped.length\n\t})\n});\n\n",
+          "previous": "",
+          "start": 3873
+        },
+        {
+          "current": " * Require one explicit control contract. The live contract accepts added\n * authenticated readers; an archived contract requires its exact control set.\n",
+          "previous": " * Require the stable fast controls while accepting added authenticated readers.\n",
+          "start": 5373
+        },
+        {
+          "current": " * @param contract - One of checkedRecordValueIndexBrowserControlContracts.\n",
+          "previous": "",
+          "start": 5579
+        },
+        {
+          "current": "export const assertCheckedRecordValueIndexBrowserControlsTap = (source, contract) => {\n\tassert.ok(Object.values(checkedRecordValueIndexBrowserControlContracts)\n\t\t.includes(contract), \"Explicit value-index browser control contract\");\n",
+          "previous": "export const assertCheckedRecordValueIndexBrowserControlsTap = source => {\n",
+          "start": 5659
+        },
+        {
+          "current": "\tif(contract.exactTests === null)\n\t\tassert.ok(passed >= contract.passed.length);\n\telse\n\t{\n\t\tassert.equal(tests, contract.exactTests, contract.name);\n\t\tassert.equal(passed, contract.passed.length, contract.name);\n\t}\n",
+          "previous": "\tassert.ok(passed\n\t\t>= checkedRecordValueIndexBrowserRequiredControlNames.passed.length);\n",
+          "start": 6602
+        },
+        {
+          "current": "\tfor(const name of contract.passed) requireResult(name, false);\n",
+          "previous": "\tfor(const name of checkedRecordValueIndexBrowserRequiredControlNames.passed)\n\t\trequireResult(name, false);\n",
+          "start": 7095
+        },
+        {
+          "current": " * @param controlContract - Explicit control contract for controlsTap.\n",
+          "previous": "",
+          "start": 9049
+        },
+        {
+          "current": "\toptions, original, controlContract\n",
+          "previous": "\toptions, original\n",
+          "start": 9192
+        },
+        {
+          "current": "\t\tcontrolsTap, controlContract);\n",
+          "previous": "\t\tcontrolsTap);\n",
+          "start": 9575
+        }
+      ],
+      "path": "tests/helpers/checked-record-value-index-browser-ci-report.mjs",
+      "previousSha256": "039fddc40bebf4a35a6f3ca0c66c7521e6c5ca2de56bb0d8882fc90613718ef1"
+    },
+    {
+      "currentSha256": "d847a104220034ba611c27de8484454b1efbf5043a04c8815de4bedee5c3f22a",
+      "edits": [
+        {
+          "current": "\t, checkedRecordValueIndexBrowserControlContracts\n",
+          "previous": "",
+          "start": 473
+        },
+        {
+          "current": "\t\t\t}, checkedRecordValueIndexBrowserControlContracts.archived20261019);\n",
+          "previous": "\t\t\t});\n",
+          "start": 8173
+        }
+      ],
+      "path": "tests/helpers/checked-record-value-index-browser-evidence.mjs",
+      "previousSha256": "8d6e20b89bde40f63780e08c8889d8226ece1fe5e08eed217719770fdcdf0824"
+    },
+    {
+      "currentSha256": "f465074f245a88921d3705f9277dd794b6361de9c060722f7264f6e891bc9ef7",
+      "edits": [
+        {
+          "current": "\t, checkedRecordValueIndexBrowserControlContracts\n",
+          "previous": "",
+          "start": 1631
+        },
+        {
+          "current": "\tconst { live, archived20261019: archived }\n\t\t= checkedRecordValueIndexBrowserControlContracts;\n\tconst { fast, passed } = checkedRecordValueIndexBrowserRequiredControlNames;\n\tconst counts = { fastPasses: 11, skippedInstalledRoutes: 4 };\n",
+          "previous": "",
+          "start": 18230
+        },
+        {
+          "current": "\t\tcontrolsTap(), live), counts);\n",
+          "previous": "\t\tcontrolsTap()), { fastPasses: 11, skippedInstalledRoutes: 4 });\n",
+          "start": 18534
+        },
+        {
+          "current": "\t\tcontrolsTap([\"later authenticated reader\"]), live), counts);\n",
+          "previous": "\t\tcontrolsTap([\"later authenticated reader\"])\n\t), { fastPasses: 11, skippedInstalledRoutes: 4 });\n",
+          "start": 18634
+        },
+        {
+          "current": "\t\tcontrolsTap([], passed.slice(1)), live));\n\tfor(const contract of [undefined, { ...live }, { ...archived }])\n\t\tassert.throws(() => assertCheckedRecordValueIndexBrowserControlsTap(\n\t\t\tcontrolsTap(), contract), /Explicit value-index browser control contract/u);\n\tassert.equal(archived.exactTests, 15);\n\tassert.deepEqual(assertCheckedRecordValueIndexBrowserControlsTap(\n\t\tcontrolsTap([], fast), archived), counts);\n\tassert.throws(() => assertCheckedRecordValueIndexBrowserControlsTap(\n\t\tcontrolsTap([], fast), live));\n\tfor(const changed of [\n\t\tcontrolsTap(), controlsTap([\"later authenticated reader\"], fast)\n\t\t, controlsTap([], fast.slice(1))\n\t\t, controlsTap([], [...fast.slice(1), passed.find(name => !fast.includes(name))])\n\t]) assert.throws(() => assertCheckedRecordValueIndexBrowserControlsTap(\n\t\tchanged, archived));\n",
+          "previous": "\t\tcontrolsTap([], checkedRecordValueIndexBrowserRequiredControlNames.passed.slice(1))));\n",
+          "start": 18767
+        },
+        {
+          "current": "\tconst { live, archived20261019: archived }\n\t\t= checkedRecordValueIndexBrowserControlContracts;\n",
+          "previous": "",
+          "start": 21340
+        },
+        {
+          "current": "\t\t{ ...ciOptions, route: \"unknown\" }, original, live), assert.AssertionError);\n",
+          "previous": "\t\t{ ...ciOptions, route: \"unknown\" }, original), assert.AssertionError);\n",
+          "start": 21504
+        },
+        {
+          "current": "\t\t, live), assert.AssertionError);\n\tawait assert.rejects(checkCheckedRecordValueIndexBrowserCiRecords(\n\t\tciOptions, original), /Explicit value-index browser control contract/u);\n\tawait assert.rejects(checkCheckedRecordValueIndexBrowserCiRecords(\n\t\tciOptions, original, archived), assert.AssertionError);\n",
+          "previous": "\t), assert.AssertionError);\n",
+          "start": 21807
+        },
+        {
+          "current": "\t\tciOptions, original, live), /records required/u);\n",
+          "previous": "\t\tciOptions, original), /records required/u);\n",
+          "start": 22204
+        }
+      ],
+      "path": "tests/helpers/checked-record-value-index-browser-tests.mjs",
+      "previousSha256": "0cc614684bb677fbebb4e10ac2fca04fca5ef893521605687e7599714a719c46"
+    }
+  ]
+}

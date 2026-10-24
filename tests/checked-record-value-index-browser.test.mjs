@@ -9,3 +9,4 @@ import "./helpers/checked-record-value-index-browser-evidence-tests.mjs";
 import "./helpers/checked-record-value-index-browser-archive-source-history-tests.mjs";
 import "./helpers/checked-record-value-index-browser-promotion-tests.mjs";
 import "./helpers/checked-record-value-index-browser-promotion-source-history-tests.mjs";
+import "./helpers/checked-record-value-index-browser-controls-contract-source-history-tests.mjs";
