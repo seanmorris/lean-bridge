@@ -109,6 +109,7 @@ jobs:
           LEAN_BRIDGE_OWNED_REFINEMENT_ENTRY_PHP_WASM_FAMILIES: ${{ matrix.family }}
           LEAN_BRIDGE_OWNED_REFINEMENT_ENTRY_PHP_WASM_ROUTES: ${{ matrix.route }}
           LEAN_BRIDGE_OWNED_REFINEMENT_ENTRY_PHP_WASM_OUTPUT: build/php-wasm-owned-refinement-entry-ci
+          LEAN_BRIDGE_PHP_WASM_FAILED_DEPLOYMENTS: build/php-wasm-owned-refinement-entry-failed-deployments
         run: |
           source scripts/env.sh
           bash scripts/run-php-wasm-owned-refinement-entry-ci.sh
@@ -123,6 +124,7 @@ jobs:
             build/php-wasm-owned-refinement-entry-host.log
             build/php-wasm-owned-refinement-entry-runtime.log
             build/php-wasm-owned-refinement-entry-input/php-wasm-runtime/runtime.json
+            build/php-wasm-owned-refinement-entry-failed-deployments/
           if-no-files-found: error
           retention-days: 30
       - name: Enforce owned entry production
