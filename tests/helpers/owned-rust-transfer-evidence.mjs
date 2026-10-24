@@ -7,15 +7,23 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { ownedBorrowHistoricalBytes } from "./owned-borrow-history.mjs";
-import { generateOwnedRustCallables } from "../../src/backends/rust/owned-callables.mjs";
-import { generateOwnedRustPackage } from "../../src/backends/rust/owned-package.mjs";
-import { generateOwnedCPackage } from "../../src/backends/c/owned-package.mjs";
 import { historicalOwnedTransferPackage } from "./owned-transfer-generated-history.mjs";
-import { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from "../../src/build/native-graph-model.mjs";
-import { validatePackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
+import { moduleAtProducerWithSourceReads } from "./producer-module.mjs";
 import { ownedRustTransferSource } from "./owned-rust-transfer-fixture.mjs";
 
 export const ownedRustTransferCommand = "npm run test:owned-rust-transfers";
+/** The commit whose complete source tree every digest in the Rust transfer record names. */
+export const ownedRustTransferProducer = "23dbfd68ae4a1e8593f99f97aa3d2717b4632ca9";
+let producerPromise;
+// Contracts and packages are regenerated with the producer's generators; later changes never reach back.
+const producerModules = () => producerPromise ??= Promise.all([
+	"src/build/native-graph-model.mjs"
+	, "src/backends/rust/owned-callables.mjs"
+	, "src/backends/rust/owned-package.mjs"
+	, "src/backends/c/owned-package.mjs"
+	, "src/release/package-set-receipt.mjs"
+].map(path => moduleAtProducerWithSourceReads(ownedRustTransferProducer, path)))
+	.then(modules => Object.assign({}, ...modules));
 export const ownedRustTransferScope = Object.freeze({
 	ordinaryCompiler: true, reviewedCompiler: true, installedRust: true
 	, transferredInputs: true, hostAssembledGraphs: true, boxedRecursion: true
@@ -41,6 +49,11 @@ export const assertOwnedRustTransferExecution = async record => {
 	assert.doesNotMatch(record.run.text, /^not ok|# SKIP|# TODO/mu);
 	assert.deepEqual(record.runtime.map(item => item.mode), ["ordinary", "reviewed"]);
 	assert.deepEqual(record.consumers.map(item => item.mode), ["ordinary", "reviewed"]);
+	const {
+		createCompiledNativeModel, generateCompiledNativeLeanAdapters
+		, generateOwnedRustCallables, generateOwnedRustPackage
+		, generateOwnedCPackage, validatePackageSetReceipt
+	} = await producerModules();
 	const fixture = await readFile("tests/fixtures/structured-types/owned-rust-transfers.rs");
 	const documentation = await readFile("tests/fixtures/documentation/consumers/rust/owned-transfers.rs");
 	const lean = await readFile("tests/fixtures/onboarding/owned-aggregates/Owned.lean", "utf8") + ownedRustTransferSource;
