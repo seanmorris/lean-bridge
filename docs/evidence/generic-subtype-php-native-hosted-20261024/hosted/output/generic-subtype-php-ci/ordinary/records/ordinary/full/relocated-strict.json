@@ -1,0 +1,31 @@
+{
+  "args": [
+    "-n",
+    "-d",
+    "extension=/usr/lib/php/20230831/ffi.so",
+    "-d",
+    "ffi.enable=1",
+    "strict.php"
+  ],
+  "closure": {
+    "dependencyFilesSha256": "ff3be281223b1221b476ac57c55a474e75bd3732388d057d1f9cb659c4cdf32c",
+    "generatedFilesSha256": "ce386552360f6d043d3c59aaa9c3963e167595f54396f22d38e7250ad30293f2",
+    "packageFileSetSha256": "3ab8d17af0bd8e3a506389bc0f9ea405f94e5d25d92702865f54f1b3c277e198",
+    "receiptSha256": "9e6f72e963cbd954a850ee51763317f3a48ac07b6c822d46dac58328eba74258",
+    "toolsSha256": "a30625ebe058f79dd53e7c2531f4dcea280fb9e030ff126134ad131af262c1f7",
+    "vendorFilesSha256": "42fee9ad3e64595132e0f86926fbf7986a8e1542cead8d3656ba2fb78fd8be62"
+  },
+  "command": "/usr/bin/php8.3",
+  "counts": {
+    "checks": 18,
+    "rejections": 3
+  },
+  "cwd": "/tmp/lean-bridge-nominal-php-installed-uq7ONs/consumer-relocated",
+  "relocated": true,
+  "run": {
+    "code": 0,
+    "stderr": "",
+    "stdout": "{\"checks\":18,\"rejections\":3}\n"
+  },
+  "strictness": "strict"
+}
