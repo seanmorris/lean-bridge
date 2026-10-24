@@ -55,9 +55,9 @@ test("PHP-Wasm structured source history rejects unrelated edits and changed pre
 	const record = await json(phpWasmStructuredCallableHistoryPath);
 	for(const update of record.updates)
 	{
-		const source = beforeWitStructuredCallables(update.path, await readFile(update.path, "utf8"));
+		const source = beforeWitStructuredCallables(update.path, await readFile(update.path, "utf8"), update.currentSha256);
 		assert.equal(sha256(reversePhpWasmStructuredCallableUpdate(source, update)), update.previousSha256);
-		assert.equal(sha256(beforePhpWasmStructuredCallables(update.path, source)), update.previousSha256);
+		assert.equal(sha256(beforePhpWasmStructuredCallables(update.path, source, update.previousSha256)), update.previousSha256);
 		const altered = source + "\n// unrelated\n";
 		assert.equal(beforePhpWasmStructuredCallables(update.path, altered), altered);
 		assert.throws(() => reversePhpWasmStructuredCallableUpdate(altered, update));

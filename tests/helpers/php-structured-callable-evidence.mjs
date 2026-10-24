@@ -41,7 +41,7 @@ export const phpStructuredCallableAddedPaths = [
 ].sort();
 const hash = value => assert.match(value, /^[a-f0-9]{64}$/u);
 const shapes = ["array", "list", "option", "result", "tuple", "record", "variant", "alias"];
-const priorSource = async path => beforePhpWasmStructuredCallables(path, await readFile(path, "utf8"));
+const priorSource = async (path, expected) => beforePhpWasmStructuredCallables(path, await readFile(path, "utf8"), expected);
 const signatures = ir => {
 	const type = ref => {
 		if(ref.kind === "primitive") return ref;
@@ -115,7 +115,7 @@ export const assertPhpStructuredCallableExecution = async (record, { probeSource
 	assert.equal(record.report.schemaVersion, 1);
 	assert.deepEqual(record.report.reports.map(run => run.path), phpStructuredCallableScope.paths);
 	const source = await readFile("tests/fixtures/structured-callable-consumers/php.php", "utf8");
-	const probe = probeSource ?? await priorSource("tests/fixtures/structured-callable-consumers/php-faults.php");
+	const probe = probeSource ?? await priorSource("tests/fixtures/structured-callable-consumers/php-faults.php", record.report.reports[0].faults.sourceSha256);
 	assert.equal(typeof probe, "string");
 	const documented = (await readFile("docs/php.md", "utf8")).match(/### Structured callback values\n[\s\S]*?```php\n([\s\S]*?)\n```/u)?.[1];
 	const publisher = (await readFile("docs/publish/php.md", "utf8")).match(/### Export structured callbacks\n[\s\S]*?```lean\n([\s\S]*?)\n```/u)?.[1];
@@ -190,19 +190,19 @@ export const assertPhpStructuredCallableIntegration = async record => {
 	assert.deepEqual(Object.keys(record.additions).sort(), phpStructuredCallableAddedPaths);
 	const paths = [...new Set([...Object.keys(previous.sourceHashes), ...phpStructuredCallableChangedPaths, ...phpStructuredCallableAddedPaths])].sort();
 	assert.deepEqual(Object.keys(record.sourceHashes).sort(), paths);
-	for(const path of paths) assert.equal(sha256(await priorSource(path)), record.sourceHashes[path], path);
+	for(const path of paths) assert.equal(sha256(await priorSource(path, record.sourceHashes[path])), record.sourceHashes[path], path);
 	const restored = {};
 	for(const update of record.updates)
 	{
 		assert.equal(update.currentSha256, record.sourceHashes[update.path]);
-		restored[update.path] = reversePhpStructuredCallableUpdate(await priorSource(update.path), update);
+		restored[update.path] = reversePhpStructuredCallableUpdate(await priorSource(update.path, update.currentSha256), update);
 		if(previous.sourceHashes[update.path]) assert.equal(update.previousSha256, previous.sourceHashes[update.path]);
 	}
 	for(const [path, digest] of Object.entries(record.additions)) assert.equal(digest, record.sourceHashes[path]);
 	for(const [path, digest] of Object.entries(codegen.predecessors))
 	{ assert.equal(digest, sha256(restored[path])); assert.equal(codegen.sourceHashes[path], record.sourceHashes[path]); }
 	const { document, ...contracts } = { ...await readTypeSurface()
-		, document: JSON.parse(await priorSource("docs/type-surface.v1.json")) };
+		, document: JSON.parse(await priorSource("docs/type-surface.v1.json", record.sourceHashes["docs/type-surface.v1.json"])) };
 	const old = JSON.parse(restored["docs/type-surface.v1.json"]);
 	assert.equal(document.contractVersion, record.inventory.version); assert.equal(old.contractVersion, record.inventory.previousVersion);
 	const cells = typeSurfaceCells(document, contracts), oldCells = typeSurfaceCells(old, contracts);

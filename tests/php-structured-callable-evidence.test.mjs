@@ -52,9 +52,9 @@ test("native PHP structured source history rejects unrelated edits and changed p
 	const record = await json(phpStructuredCallableHistoryPath);
 	for(const update of record.updates)
 	{
-		const source = beforePhpWasmStructuredCallables(update.path, await readFile(update.path, "utf8"));
+		const source = beforePhpWasmStructuredCallables(update.path, await readFile(update.path, "utf8"), update.currentSha256);
 		assert.equal(sha256(reversePhpStructuredCallableUpdate(source, update)), update.previousSha256);
-		assert.equal(sha256(beforePhpStructuredCallables(update.path, source)), update.previousSha256);
+		assert.equal(sha256(beforePhpStructuredCallables(update.path, source, update.previousSha256)), update.previousSha256);
 		const altered = source + "\n// unrelated\n";
 		assert.equal(beforePhpStructuredCallables(update.path, altered), altered);
 		assert.throws(() => reversePhpStructuredCallableUpdate(altered, update));
