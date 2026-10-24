@@ -1,0 +1,316 @@
+{
+  "additions": [
+    {
+      "currentSha256": "42791bcce707b5262768a561240720f3019b789892e0c7527c8aa63cc8e3781d",
+      "path": "scripts/update-owned-c-producer-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "0ddf36e7a4d34bfab1045b18bc95e3899c786f7b9f95056092b0b95a81c1d5a9",
+      "path": "tests/helpers/owned-c-producer-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "2e9ad65d1114fc2b46404211c24cdfd27c54cab2a6ff3eb0c41df33367860318",
+      "path": "tests/helpers/owned-c-producer-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "14990193fa2d2e211b327f0f730afa85477a769f",
+  "integrationBaseCommit": "4393c5bad5c7bbf195cbf8a8685eb0334810edd3",
+  "integrationUpdates": [
+    {
+      "currentSha256": "d6a31eaf4a5d90a3211ceead98c6ed00f3d746f1b14b38e9e49ce9881752aec8",
+      "edits": [
+        {
+          "current": "import { beforeOwnedCProducerRepairSource, ownedCProducerRepairNormalizationPaths } from \"./owned-c-producer-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 540
+        },
+        {
+          "current": "\t...ownedCProducerRepairNormalizationPaths\n\t, ...entryFixtureRepairNormalizationPaths\n",
+          "previous": "\t...entryFixtureRepairNormalizationPaths\n",
+          "start": 173716
+        },
+        {
+          "current": "\tconst ownedCProducerRepair\n\t\t= beforeOwnedCProducerRepairSource(path, text, expected);\n\tif(sha256(ownedCProducerRepair) === expected)\n\t\treturn ownedCProducerRepair;\n\ttext = ownedCProducerRepair;\n",
+          "previous": "",
+          "start": 214153
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "a8eb4fed28265256bb1d5729cd64207623451a8408f2685c8a280f16edc79efa"
+    },
+    {
+      "currentSha256": "a8d1f801cc25f48a72603a7c43a8de3ba912ab7ca5467be69a361005fcbd1e02",
+      "edits": [
+        {
+          "current": "import \"./helpers/owned-c-producer-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 520
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "98798057361b31ec954335119881cd79f4f29cf701875960a0f439c87746ba9d"
+    }
+  ],
+  "milestone": "owned-c-producer-repair-source-v1",
+  "predecessorCommit": "18788f75277f468b143346188a93c9bce62cd0fd",
+  "schemaVersion": 1,
+  "scope": "Verify frozen owned C, aggregate, reviewed, package, borrow, and extractor-repair evidence using their authenticated producer trees and historical generator contracts. Preserve exact digest checks, unknown-source refusals, transfer receipts, and live CI requirements. No inventory or installed observation changes.",
+  "updates": [
+    {
+      "currentSha256": "9e311cdfa2e2aa8bb0bece961e19b15c50f43ec47eb26494c775ae4f36640c2f",
+      "edits": [
+        {
+          "current": "import { moduleAtProducer } from \"./producer-module.mjs\";\nimport { bytesAtProducer, sourceAtProducer, typeSurfaceContractsAtProducer } from \"./producer-source.mjs\";\n",
+          "previous": "import { readTypeSurface } from \"../../src/adoption/type-surface.mjs\";\nimport { historicalTypeSurfaceCells as typeSurfaceCells } from \"./historical-type-surface-cells.mjs\";\n",
+          "start": 255
+        },
+        {
+          "current": "import { beforeOwnedC } from \"./owned-c-source-history.mjs\";\n",
+          "previous": "import { beforeOwnedC, ownedCChangedPaths } from \"./owned-c-source-history.mjs\";\nimport { ownedReviewedChangedPaths } from \"./owned-reviewed-source-history.mjs\";\nimport { ownedPackageChangedPaths } from \"./owned-package-source-history.mjs\";\nimport { ownedHostChangedPaths } from \"./owned-host-source-history.mjs\";\nimport { ownedCiChangedPaths } from \"./owned-ci-source-history.mjs\";\nimport { ownedCppChangedPaths } from \"./owned-cpp-source-history.mjs\";\nimport { ownedRustChangedPaths } from \"./owned-rust-source-history.mjs\";\nimport { ownedPythonChangedPaths } from \"./owned-python-source-history.mjs\";\nimport { ownedRubyChangedPaths } from \"./owned-ruby-source-history.mjs\";\nimport { ownedDotnetNormalizationPaths } from \"./owned-dotnet-source-history.mjs\";\n",
+          "start": 809
+        },
+        {
+          "current": "/** The commit whose complete source tree every digest in the owned aggregate records names. */\nexport const ownedAggregateProducer = \"a2dc55fd307491e20d54731e5ad8da59e4cfc501\";\n",
+          "previous": "",
+          "start": 871
+        },
+        {
+          "current": "\t\tconst current = bytesAtProducer(ownedAggregateProducer, path); assert.equal(sha256(current), record.sourceHashes[path], path);\n",
+          "previous": "\t\tconst bytes = await readFile(path);\n\t\tconst current = ownedCChangedPaths.includes(path) || ownedReviewedChangedPaths.includes(path) || ownedPackageChangedPaths.includes(path) || ownedHostChangedPaths.includes(path) || ownedCiChangedPaths.includes(path) || ownedCppChangedPaths.includes(path) || ownedRustChangedPaths.includes(path) || ownedPythonChangedPaths.includes(path) || ownedRubyChangedPaths.includes(path) || ownedDotnetNormalizationPaths.includes(path)\n\t\t\t? beforeOwnedC(path, bytes.toString(\"utf8\")) : bytes;\n\t\tassert.equal(sha256(current), record.sourceHashes[path], path);\n",
+          "start": 9486
+        },
+        {
+          "current": "\t// Classify both inventories exactly as the producer did, with its own contracts.\n\tconst contracts = typeSurfaceContractsAtProducer(ownedAggregateProducer);\n\tconst { typeSurfaceCells } = await moduleAtProducer(ownedAggregateProducer, \"src/adoption/type-surface.mjs\");\n\tconst document = JSON.parse(sourceAtProducer(ownedAggregateProducer, \"docs/type-surface.v1.json\", record.sourceHashes[\"docs/type-surface.v1.json\"]));\n",
+          "previous": "\tconst { irSchema, consumers } = await readTypeSurface(), contracts = { irSchema, consumers };\n\tconst document = JSON.parse(await source(\"docs/type-surface.v1.json\"));\n",
+          "start": 10042
+        }
+      ],
+      "path": "tests/helpers/owned-aggregate-evidence.mjs",
+      "previousSha256": "41931669b6573831ddb3dbc7cda4954b745f53052c7b410832006757653b2885"
+    },
+    {
+      "currentSha256": "20732853f7bcd4238412f51a1226b59570bf1d9d4c4452cb2877b41c94fab900",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { beforeFinRefinementSource } from \"./fin-refinement-source-history.mjs\";\n",
+          "start": 238
+        },
+        {
+          "current": "import { bytesAtProducer, sourceAtProducer } from \"./producer-source.mjs\";\n",
+          "previous": "import { ownedCppBorrowHistoricalBytes } from \"./owned-cpp-borrow-history.mjs\";\n",
+          "start": 311
+        },
+        {
+          "current": "/** The commit whose complete source tree every digest in the extractor repair names. */\nexport const ownedBorrowCiProducer = \"2e422bde5449fd6578af0d4c27256e7110ec3c48\";\n",
+          "previous": "",
+          "start": 661
+        },
+        {
+          "current": "\tfor(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(bytesAtProducer(ownedBorrowCiProducer, path)), hash, path);\n",
+          "previous": "\tfor(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(ownedCppBorrowHistoricalBytes(path, await readFile(path), hash)), hash, path);\n",
+          "start": 1889
+        },
+        {
+          "current": "\t\tconst current = sourceAtProducer(ownedBorrowCiProducer, update.path, update.currentSha256);\n",
+          "previous": "\t\tconst current = beforeFinRefinementSource(\n\t\t\tupdate.path, await readFile(update.path, \"utf8\"), update.currentSha256\n\t\t);\n",
+          "start": 2294
+        },
+        {
+          "current": "\tconst extractor = \"src/analyze/NativeExports.lean\";\n\tconst bytes = bytesAtProducer(ownedBorrowCiProducer, extractor), currentExtractor = bytes;\n",
+          "previous": "\tconst extractor = \"src/analyze/NativeExports.lean\", currentExtractor = await readFile(extractor);\n\tconst bytes = Buffer.from(ownedCppBorrowHistoricalBytes(extractor, currentExtractor, record.extractor.currentSha256));\n",
+          "start": 2590
+        }
+      ],
+      "path": "tests/helpers/owned-borrow-ci-evidence.mjs",
+      "previousSha256": "e35bf8b556a0bee3758ad4dc1f1f2fbb7c9f2dd71144b5fab27585fb807e5dc7"
+    },
+    {
+      "currentSha256": "92bf829b605fd67253007a96945b513865f7fee7fd56d1ea3da49e61a8dbe872",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { readFile } from \"node:fs/promises\";\n",
+          "start": 139
+        },
+        {
+          "current": "",
+          "previous": "import { generateOwnedCPackage } from \"../../src/backends/c/owned-package.mjs\";\nimport { ownedAggregateTransferRuntime } from \"../../src/backends/native/owned-aggregate-transfers.mjs\";\nimport { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from \"../../src/build/native-graph-model.mjs\";\nimport { ownedBorrowSource } from \"./owned-borrow-fixture.mjs\";\n",
+          "start": 207
+        },
+        {
+          "current": "import { moduleAtProducer } from \"./producer-module.mjs\";\nimport { sourceAtProducer } from \"./producer-source.mjs\";\n",
+          "previous": "",
+          "start": 282
+        },
+        {
+          "current": "/** The commit whose complete source tree every digest in the result-anchor record names. */\nexport const ownedBorrowProducer = \"dffda6f46065692b8ce52bdb05e79b2d7ab8343b\";\nlet producerPromise;\nconst producerModules = () => producerPromise ??= Promise.all([\n\t\"src/backends/c/owned-package.mjs\"\n\t, \"src/backends/native/owned-aggregate-transfers.mjs\"\n\t, \"src/build/native-graph-model.mjs\"\n\t, \"tests/helpers/owned-borrow-fixture.mjs\"\n].map(path => moduleAtProducer(ownedBorrowProducer, path))).then(modules =>\n\tObject.assign({}, ...modules));\nconst historical = path => sourceAtProducer(ownedBorrowProducer, path);\n",
+          "previous": "",
+          "start": 1657
+        },
+        {
+          "current": "\tconst {\n\t\tcreateCompiledNativeModel, generateCompiledNativeLeanAdapters\n\t\t, generateOwnedCPackage, ownedAggregateTransferRuntime, ownedBorrowSource\n\t} = await producerModules();\n",
+          "previous": "",
+          "start": 3144
+        },
+        {
+          "current": "\tassert.equal(native.probeSha256, sha256(historical(\"tests/fixtures/structured-types/owned-aggregate-borrows.c\")));\n",
+          "previous": "\tassert.equal(native.probeSha256, sha256(await readFile(\"tests/fixtures/structured-types/owned-aggregate-borrows.c\")));\n",
+          "start": 4217
+        },
+        {
+          "current": "\tconst page = historical(\"docs/consume/c.md\");\n",
+          "previous": "\tconst page = await readFile(\"docs/consume/c.md\", \"utf8\");\n",
+          "start": 4581
+        },
+        {
+          "current": "\tconst source = historical(\"tests/fixtures/onboarding/owned-aggregates/Owned.lean\");\n\tconst probe = historical(\"tests/fixtures/structured-types/owned-public-borrows.c\");\n",
+          "previous": "\tconst source = await readFile(\"tests/fixtures/onboarding/owned-aggregates/Owned.lean\", \"utf8\");\n\tconst probe = await readFile(\"tests/fixtures/structured-types/owned-public-borrows.c\", \"utf8\");\n",
+          "start": 4744
+        }
+      ],
+      "path": "tests/helpers/owned-borrow-evidence.mjs",
+      "previousSha256": "ef6f19584f6a0fdd8a70a78e48254fa66434215893e5bc682d8336a4d840a948"
+    },
+    {
+      "currentSha256": "a41ee9eb73b91212c4b9ff385c2a152f92ff382c8fe3d36d7aa561c62ea86ee6",
+      "edits": [
+        {
+          "current": "import { moduleAtProducer } from \"./producer-module.mjs\";\nimport { bytesAtProducer, sourceAtProducer, typeSurfaceContractsAtProducer } from \"./producer-source.mjs\";\n",
+          "previous": "import { readTypeSurface } from \"../../src/adoption/type-surface.mjs\";\nimport { historicalTypeSurfaceCells as typeSurfaceCells } from \"./historical-type-surface-cells.mjs\";\n",
+          "start": 335
+        },
+        {
+          "current": "/** The commit whose complete source tree every digest in the public owned C projection records names. */\nexport const ownedCProducer = \"ca016c0a04d9329a861d6a40cd34d95926cbcce4\";\n",
+          "previous": "",
+          "start": 1821
+        },
+        {
+          "current": "\t\tconst current = bytesAtProducer(ownedCProducer, path); assert.equal(sha256(current), record.sourceHashes[path], path);\n",
+          "previous": "\t\tconst current = await historicalBytes(path); assert.equal(sha256(current), record.sourceHashes[path], path);\n",
+          "start": 11291
+        },
+        {
+          "current": "\t// Classify both inventories exactly as the producer did, with its own contracts.\n\tconst contracts = typeSurfaceContractsAtProducer(ownedCProducer);\n\tconst { typeSurfaceCells } = await moduleAtProducer(ownedCProducer, \"src/adoption/type-surface.mjs\");\n\tconst document = JSON.parse(sourceAtProducer(ownedCProducer, \"docs/type-surface.v1.json\", record.sourceHashes[\"docs/type-surface.v1.json\"]));\n",
+          "previous": "\tconst { document: currentDocument, ...contracts } = await readTypeSurface();\n\tassert.ok(currentDocument);\n\tconst document = JSON.parse(await source(\"docs/type-surface.v1.json\"));\n",
+          "start": 11831
+        }
+      ],
+      "path": "tests/helpers/owned-c-evidence.mjs",
+      "previousSha256": "19cd2f8bdec4719a450fde87c220c6df3a821bd0fb08f3e4a2e9b98b521a9739"
+    },
+    {
+      "currentSha256": "a3a603eab9c158d5abe9344172e4b55f3d808ee7046ed7adc5fb04d65f402399",
+      "edits": [
+        {
+          "current": "import { moduleAtProducer } from \"./producer-module.mjs\";\nimport { bytesAtProducer, sourceAtProducer, typeSurfaceContractsAtProducer } from \"./producer-source.mjs\";\n",
+          "previous": "import { readTypeSurface } from \"../../src/adoption/type-surface.mjs\";\nimport { historicalTypeSurfaceCells as typeSurfaceCells } from \"./historical-type-surface-cells.mjs\";\n",
+          "start": 254
+        },
+        {
+          "current": "/** The commit whose complete source tree every digest in the owned C package records names. */\nexport const ownedPackageProducer = \"b74df10a50bbdc277f6e111718ddeb5af5006c72\";\n",
+          "previous": "",
+          "start": 1526
+        },
+        {
+          "current": "\t\tconst current = bytesAtProducer(ownedPackageProducer, path); assert.equal(sha256(current), record.sourceHashes[path], path);\n",
+          "previous": "\t\tconst current = await historicalBytes(path); assert.equal(sha256(current), record.sourceHashes[path], path);\n",
+          "start": 10584
+        },
+        {
+          "current": "\t// Classify both inventories exactly as the producer did, with its own contracts.\n\tconst contracts = typeSurfaceContractsAtProducer(ownedPackageProducer);\n\tconst { typeSurfaceCells } = await moduleAtProducer(ownedPackageProducer, \"src/adoption/type-surface.mjs\");\n\tconst document = JSON.parse(sourceAtProducer(ownedPackageProducer, \"docs/type-surface.v1.json\", record.sourceHashes[\"docs/type-surface.v1.json\"]));\n",
+          "previous": "\tconst { irSchema, consumers } = await readTypeSurface(), contracts = { irSchema, consumers };\n\tconst document = JSON.parse(await source(\"docs/type-surface.v1.json\"));\n",
+          "start": 11136
+        }
+      ],
+      "path": "tests/helpers/owned-package-evidence.mjs",
+      "previousSha256": "b948f4418b034eece32d7afcbb0af99948e44b95a6decde12959c84afbe188c2"
+    },
+    {
+      "currentSha256": "20390419ef51a2a4e33a981bda994eec58b0dc3b36b5d269f05bc9e8b262a5e3",
+      "edits": [
+        {
+          "current": "import { moduleAtProducer } from \"./producer-module.mjs\";\nimport { bytesAtProducer, sourceAtProducer, typeSurfaceContractsAtProducer } from \"./producer-source.mjs\";\n",
+          "previous": "import { readTypeSurface } from \"../../src/adoption/type-surface.mjs\";\nimport { historicalTypeSurfaceCells as typeSurfaceCells } from \"./historical-type-surface-cells.mjs\";\n",
+          "start": 257
+        },
+        {
+          "current": "/** The commit whose complete source tree every digest in the reviewed owned projection records names. */\nexport const ownedReviewedProducer = \"b1f4d2d8eaa626e1e6084d9ae777a98feecf5c0e\";\n",
+          "previous": "",
+          "start": 1648
+        },
+        {
+          "current": "\t\tconst current = bytesAtProducer(ownedReviewedProducer, path); assert.equal(sha256(current), record.sourceHashes[path], path);\n",
+          "previous": "\t\tconst current = await historicalBytes(path); assert.equal(sha256(current), record.sourceHashes[path], path);\n",
+          "start": 9368
+        },
+        {
+          "current": "\t// Classify both inventories exactly as the producer did, with its own contracts.\n\tconst contracts = typeSurfaceContractsAtProducer(ownedReviewedProducer);\n\tconst { typeSurfaceCells } = await moduleAtProducer(ownedReviewedProducer, \"src/adoption/type-surface.mjs\");\n\tconst document = JSON.parse(sourceAtProducer(ownedReviewedProducer, \"docs/type-surface.v1.json\", record.sourceHashes[\"docs/type-surface.v1.json\"]));\n",
+          "previous": "\tconst { document: currentDocument, ...contracts } = await readTypeSurface();\n\tassert.ok(currentDocument);\n\tconst document = JSON.parse(await source(\"docs/type-surface.v1.json\"));\n",
+          "start": 9922
+        }
+      ],
+      "path": "tests/helpers/owned-reviewed-evidence.mjs",
+      "previousSha256": "aafc3953e229149caac9ac19f82dd80e642ee5264fc6e0c8af1a0a18ccd05f9a"
+    },
+    {
+      "currentSha256": "f40da50caf85af7fb968e6afbb1e8f16154b9c456d732b759b4f0e72f563882d",
+      "edits": [
+        {
+          "current": "import { beforeOwnedBorrowCi, ownedBorrowCiBaseline, ownedBorrowCiPath\n",
+          "previous": "import { beforeOwnedBorrowCi, ownedBorrowCiHistoricalBytes, ownedBorrowCiPath\n",
+          "start": 431
+        },
+        {
+          "current": "import { assertOwnedBorrowExecution, assertOwnedBorrowCi, ownedBorrowProducer } from \"./helpers/owned-borrow-evidence.mjs\";\nimport { bytesAtProducer, sourceAtProducer } from \"./helpers/producer-source.mjs\";\n",
+          "previous": "import { assertOwnedBorrowExecution, assertOwnedBorrowCi } from \"./helpers/owned-borrow-evidence.mjs\";\n",
+          "start": 580
+        },
+        {
+          "current": "\t// Every recorded digest names the producer tree; later owned and Fin layers never reach back this far.\n\tassert.equal(ownedBorrowProducer, ownedBorrowCiBaseline);\n\tfor(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(bytesAtProducer(ownedBorrowProducer, path)), hash, path);\n",
+          "previous": "\tfor(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(ownedBorrowCiHistoricalBytes(path, await readFile(path), hash)), hash, path);\n",
+          "start": 1718
+        },
+        {
+          "current": "\t\tconst source = sourceAtProducer(ownedBorrowProducer, update.path, update.currentSha256), prior = beforeOwnedBorrow(update.path, source, update.previousSha256);\n",
+          "previous": "\t\tconst source = beforeOwnedBorrowCi(update.path, await readFile(update.path, \"utf8\"), update.currentSha256), prior = beforeOwnedBorrow(update.path, source);\n",
+          "start": 2283
+        },
+        {
+          "current": "\tconst current = sourceAtProducer(ownedBorrowProducer, \"docs/type-surface.v1.json\", record.sources[\"docs/type-surface.v1.json\"]);\n\tconst inventoryUpdate = record.updates.find(update => update.path === \"docs/type-surface.v1.json\");\n\tconst prior = JSON.parse(beforeOwnedBorrow(\"docs/type-surface.v1.json\", current, inventoryUpdate.previousSha256));\n\tfor(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = record.sources[file.path] ?? sha256(bytesAtProducer(ownedBorrowProducer, file.path));\n",
+          "previous": "\tconst current = beforeOwnedBorrowCi(\"docs/type-surface.v1.json\", await readFile(\"docs/type-surface.v1.json\", \"utf8\"));\n\tconst prior = JSON.parse(beforeOwnedBorrow(\"docs/type-surface.v1.json\", current));\n\tfor(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedBorrowCiHistoricalBytes(file.path, await readFile(file.path), record.sources[file.path]));\n",
+          "start": 3073
+        }
+      ],
+      "path": "tests/owned-borrow-evidence.test.mjs",
+      "previousSha256": "3c362779b6ffba2fe4a3f3e090a0840de269ab966d7943112e8d56820f471140"
+    },
+    {
+      "currentSha256": "a0773161e34afe08cb07d367c4984aa0f806d07b5d8d97e44f1bec69a7637ccb",
+      "edits": [
+        {
+          "current": "import { assertOwnedPackageExecution, assertOwnedPackageIntegration, ownedPackageProducer } from \"./helpers/owned-package-evidence.mjs\";\n",
+          "previous": "import { assertOwnedPackageExecution, assertOwnedPackageIntegration } from \"./helpers/owned-package-evidence.mjs\";\n",
+          "start": 264
+        },
+        {
+          "current": "import { sourceAtProducer } from \"./helpers/producer-source.mjs\";\n",
+          "previous": "import { beforeOwnedHost } from \"./helpers/owned-host-source-history.mjs\";\n",
+          "start": 561
+        },
+        {
+          "current": "\t\tconst source = sourceAtProducer(ownedPackageProducer, update.path, update.currentSha256);\n",
+          "previous": "\t\tconst source = beforeOwnedHost(update.path, await readFile(update.path, \"utf8\"));\n",
+          "start": 2521
+        },
+        {
+          "current": "\t\tassert.equal(sha256(beforeOwnedPackage(update.path, source, update.previousSha256)), update.previousSha256);\n",
+          "previous": "\t\tassert.equal(sha256(beforeOwnedPackage(update.path, source)), update.previousSha256);\n",
+          "start": 2703
+        }
+      ],
+      "path": "tests/owned-package-evidence.test.mjs",
+      "previousSha256": "8eda26d014c35bd26ce1b070c1807306489d373e5087a951d89eee1a029f802a"
+    }
+  ]
+}

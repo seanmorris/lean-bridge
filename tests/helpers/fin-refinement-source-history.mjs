@@ -9,6 +9,7 @@ import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
 import { beforeEntryFixtureRepairSource, entryFixtureRepairNormalizationPaths } from "./entry-fixture-repair-source-history.mjs";
+import { beforeOwnedCProducerRepairSource, ownedCProducerRepairNormalizationPaths } from "./owned-c-producer-repair-source-history.mjs";
 import { beforeCoreEvidenceMemoryRepairSource, coreEvidenceMemoryRepairNormalizationPaths } from "./core-evidence-memory-repair-source-history.mjs";
 import { beforeValueIndexPromotionMilestoneRepairSource, valueIndexPromotionMilestoneRepairNormalizationPaths } from "./value-index-promotion-milestone-repair-source-history.mjs";
 import { beforeCoreMilestoneReplayRepairSource, coreMilestoneReplayRepairNormalizationPaths } from "./core-milestone-replay-repair-source-history.mjs";
@@ -2102,7 +2103,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...entryFixtureRepairNormalizationPaths
+	...ownedCProducerRepairNormalizationPaths
+	, ...entryFixtureRepairNormalizationPaths
 	, ...coreEvidenceMemoryRepairNormalizationPaths
 	, ...valueIndexPromotionMilestoneRepairNormalizationPaths
 	, ...coreMilestoneReplayRepairNormalizationPaths
@@ -2947,6 +2949,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
+	const ownedCProducerRepair
+		= beforeOwnedCProducerRepairSource(path, text, expected);
+	if(sha256(ownedCProducerRepair) === expected)
+		return ownedCProducerRepair;
+	text = ownedCProducerRepair;
 	const entryFixtureRepair
 		= beforeEntryFixtureRepairSource(path, text, expected);
 	if(sha256(entryFixtureRepair) === expected)
