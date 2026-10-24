@@ -84,6 +84,8 @@ import "./helpers/core-php-structured-endpoint-tests.mjs";
 import "./helpers/core-php-structured-endpoint-repair-source-history-tests.mjs";
 import "./helpers/owned-checked-record-hosted-matrix-tests.mjs";
 import "./helpers/owned-checked-record-matrix-gate-source-history-tests.mjs";
+import "./helpers/core-structured-history-endpoint-tests.mjs";
+import "./helpers/core-structured-history-repair-source-history-tests.mjs";
 
 const root = resolve(".");
 

@@ -1,0 +1,461 @@
+{
+  "additions": [
+    {
+      "currentSha256": "fd2ca0420141ac00c7f572f56340ecf6fff6b528d906c70ae5295ae8d0fd4543",
+      "path": "tests/helpers/core-structured-history-endpoint-tests.mjs"
+    },
+    {
+      "currentSha256": "51e850a20f43cf78645a8063d61ea14cbc0c2c5fc16e8fced55e6301ac4ed97f",
+      "path": "scripts/update-core-structured-history-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "089a8e18341ed7ce8e1a71372ce2970fd8f213b5f971d5bfc452a5b06c807ca4",
+      "path": "tests/helpers/core-structured-history-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "68de1959005694f8440a94303dd5c57e118766bd9850e61c37b5f69ff8d77676",
+      "path": "tests/helpers/core-structured-history-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "869ce1b3d829bd7a29eae79e5be2def7f54f62c0",
+  "implementationCommits": [
+    "869ce1b3d829bd7a29eae79e5be2def7f54f62c0"
+  ],
+  "integrationBaseCommit": "869ce1b3d829bd7a29eae79e5be2def7f54f62c0",
+  "integrationUpdates": [
+    {
+      "currentSha256": "29b0de01834fa0db8c0b26e7db1c66f08ce7be886efa86f442873da66bb52281",
+      "edits": [
+        {
+          "current": "import { beforeCoreStructuredHistoryRepairSource, coreStructuredHistoryRepairNormalizationPaths } from \"./core-structured-history-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 8626
+        },
+        {
+          "current": "\t...coreStructuredHistoryRepairNormalizationPaths\n\t, ...ownedCheckedRecordMatrixGateNormalizationPaths\n",
+          "previous": "\t...ownedCheckedRecordMatrixGateNormalizationPaths\n",
+          "start": 181823
+        },
+        {
+          "current": "\tlet stage = beforeCoreStructuredHistoryRepairSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeOwnedCheckedRecordMatrixGateSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeOwnedCheckedRecordMatrixGateSource(path, text, expected);\n",
+          "start": 224913
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "cfbca4196981501da8cae9753b5a409aaa415a9a804c59cc013ce54e0c9c00d7"
+    },
+    {
+      "currentSha256": "25e5b7c95c282abb8cbf353c74c16b70c3a4eb8b6ceeb4b6e4d97f01544b92a7",
+      "edits": [
+        {
+          "current": "import \"./helpers/core-structured-history-endpoint-tests.mjs\";\nimport \"./helpers/core-structured-history-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 5653
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "2cc339dc86c4ddac4eb37311622257170a403e5679b6949f04ece88d664b0020"
+    }
+  ],
+  "milestone": "core-structured-history-repair-source-v1",
+  "predecessorCommit": "399cdc48765cad3482ef260addd6a8145c07ff60",
+  "schemaVersion": 1,
+  "scope": "Supply eight exact current and predecessor stop hashes in Rust, Python, .NET and Perl structured history tests. Require whole-source authentication before seven structured history readers reverse any edits: C, C++, Rust, Python, Ruby, .NET and JVM. Nine focused controls audit sixteen caller endpoints and authenticate eight unchanged Git-backed inventories, preserving unknown source bytes and rejecting forged transitions. Refresh exactly forty live source hashes across eleven files; preserve every other inventory byte. Original receipts, archives, runtime behavior, supported cells and installed acceptance claims do not change. Complete historical acceptance remains a hosted Core gate.",
+  "updates": [
+    {
+      "currentSha256": "9010c6fc911841e2a88cf18f75c363658a80afc79e659d87526209ff5f4982d9",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"73810e936e9a2a2d00dd649ba4cfb47ac076be13322c0458be6c82703b5b5c5e\"\n",
+          "previous": "          \"sha256\": \"5aa086b13b14c9a8f913a8abaee3493f83614447760b07edd2b657c154415434\"\n",
+          "start": 1076849
+        },
+        {
+          "current": "          \"sha256\": \"73810e936e9a2a2d00dd649ba4cfb47ac076be13322c0458be6c82703b5b5c5e\"\n",
+          "previous": "          \"sha256\": \"5aa086b13b14c9a8f913a8abaee3493f83614447760b07edd2b657c154415434\"\n",
+          "start": 1083867
+        },
+        {
+          "current": "          \"sha256\": \"45c5de727ddf74beb7c5a7def6c0591bde2a03f0bccc402e58cf04f5aadb1f08\"\n",
+          "previous": "          \"sha256\": \"6481e917f517d8ed19c0d6e3c2e4b8098282bf9d7dff97c489fbec5924999323\"\n",
+          "start": 1084594
+        },
+        {
+          "current": "          \"sha256\": \"45c5de727ddf74beb7c5a7def6c0591bde2a03f0bccc402e58cf04f5aadb1f08\"\n",
+          "previous": "          \"sha256\": \"6481e917f517d8ed19c0d6e3c2e4b8098282bf9d7dff97c489fbec5924999323\"\n",
+          "start": 1089492
+        },
+        {
+          "current": "          \"sha256\": \"7e97cd12d80e97cfa4d47e94f65debf84c77df5748c7c822a617cf1210c7cf78\"\n",
+          "previous": "          \"sha256\": \"0e6c734e48d9e6c8ba16af4c8bb0450fbb5d266d3b866744141062201bd1b48c\"\n",
+          "start": 1090405
+        },
+        {
+          "current": "          \"sha256\": \"e133b82999727edabe745fdc8136cd3e8c188b3384a9dcc010f11d829ffb53f3\"\n",
+          "previous": "          \"sha256\": \"f30598b0c2ea842aadc212908c88e165c16e32ee3105a9d68638ee7136720a2b\"\n",
+          "start": 1091427
+        },
+        {
+          "current": "          \"sha256\": \"155e53a8f39615ec9d75e48fd39a2353595b26dc4e51c7bdea091df73dd82c3d\"\n",
+          "previous": "          \"sha256\": \"8e6c37008124386b48a89558676c1e3917d361018890b645eeda14accc358951\"\n",
+          "start": 1097351
+        },
+        {
+          "current": "          \"sha256\": \"7e97cd12d80e97cfa4d47e94f65debf84c77df5748c7c822a617cf1210c7cf78\"\n",
+          "previous": "          \"sha256\": \"0e6c734e48d9e6c8ba16af4c8bb0450fbb5d266d3b866744141062201bd1b48c\"\n",
+          "start": 1097719
+        },
+        {
+          "current": "          \"sha256\": \"d4606c7087e32c8d44b75faa7cf290de7c66d091f0d72dd2367e138802aa4192\"\n",
+          "previous": "          \"sha256\": \"090721b8e6c6dfcc612e2d41e744b757f7281c5eea8a1f13957ad05cb220de1b\"\n",
+          "start": 1098753
+        },
+        {
+          "current": "          \"sha256\": \"e133b82999727edabe745fdc8136cd3e8c188b3384a9dcc010f11d829ffb53f3\"\n",
+          "previous": "          \"sha256\": \"f30598b0c2ea842aadc212908c88e165c16e32ee3105a9d68638ee7136720a2b\"\n",
+          "start": 1099103
+        },
+        {
+          "current": "          \"sha256\": \"155e53a8f39615ec9d75e48fd39a2353595b26dc4e51c7bdea091df73dd82c3d\"\n",
+          "previous": "          \"sha256\": \"8e6c37008124386b48a89558676c1e3917d361018890b645eeda14accc358951\"\n",
+          "start": 1103954
+        },
+        {
+          "current": "          \"sha256\": \"d9f53a35b1706a4b5b34ca2c304efa262d7d14ab833304b8731f917c1a6294df\"\n",
+          "previous": "          \"sha256\": \"f4f83cecc9386f9c143dfb4caf7219669705a0abaf1aca198aef52869c8dc914\"\n",
+          "start": 1104685
+        },
+        {
+          "current": "          \"sha256\": \"d4606c7087e32c8d44b75faa7cf290de7c66d091f0d72dd2367e138802aa4192\"\n",
+          "previous": "          \"sha256\": \"090721b8e6c6dfcc612e2d41e744b757f7281c5eea8a1f13957ad05cb220de1b\"\n",
+          "start": 1104865
+        },
+        {
+          "current": "          \"sha256\": \"e1150ac10ff796c4b31bbb11ca283735f524c08e4b6b905a418cb18238d5b052\"\n",
+          "previous": "          \"sha256\": \"8490f69cc0c0a4fd581edd0f902d9cf064b5c95074f57aee078944d652522474\"\n",
+          "start": 1111113
+        },
+        {
+          "current": "          \"sha256\": \"cdc4ab13184ed984087d013cd311e9fbd24facaa489a0b044caa7143d786b30d\"\n",
+          "previous": "          \"sha256\": \"42f5299f12d08b9d0cba843ff1862f34d198651a318c4a8a22062d4bfb172f01\"\n",
+          "start": 1112965
+        },
+        {
+          "current": "          \"sha256\": \"d9f53a35b1706a4b5b34ca2c304efa262d7d14ab833304b8731f917c1a6294df\"\n",
+          "previous": "          \"sha256\": \"f4f83cecc9386f9c143dfb4caf7219669705a0abaf1aca198aef52869c8dc914\"\n",
+          "start": 1113513
+        },
+        {
+          "current": "          \"sha256\": \"e1150ac10ff796c4b31bbb11ca283735f524c08e4b6b905a418cb18238d5b052\"\n",
+          "previous": "          \"sha256\": \"8490f69cc0c0a4fd581edd0f902d9cf064b5c95074f57aee078944d652522474\"\n",
+          "start": 1118511
+        },
+        {
+          "current": "          \"sha256\": \"cdc4ab13184ed984087d013cd311e9fbd24facaa489a0b044caa7143d786b30d\"\n",
+          "previous": "          \"sha256\": \"42f5299f12d08b9d0cba843ff1862f34d198651a318c4a8a22062d4bfb172f01\"\n",
+          "start": 1120012
+        },
+        {
+          "current": "          \"sha256\": \"df3bd795625b9d2a85dc9770caa32d1e5e09ca2466c47fb4c550b59c18900eb0\"\n",
+          "previous": "          \"sha256\": \"b1dee59328b15fdd8d0cd01e324d168223a49d46fa1ef67ddc91087703a94d45\"\n",
+          "start": 1121083
+        },
+        {
+          "current": "          \"sha256\": \"df3bd795625b9d2a85dc9770caa32d1e5e09ca2466c47fb4c550b59c18900eb0\"\n",
+          "previous": "          \"sha256\": \"b1dee59328b15fdd8d0cd01e324d168223a49d46fa1ef67ddc91087703a94d45\"\n",
+          "start": 1129249
+        },
+        {
+          "current": "          \"sha256\": \"f420c8a7c55bbc001df1c8eb92f012378621e99d151eded5cc4dc202ef3c933d\"\n",
+          "previous": "          \"sha256\": \"febf6e1e50728662066119ecf98037b980b9c6c27704d206418d830ed8d44fff\"\n",
+          "start": 1131554
+        },
+        {
+          "current": "          \"sha256\": \"f420c8a7c55bbc001df1c8eb92f012378621e99d151eded5cc4dc202ef3c933d\"\n",
+          "previous": "          \"sha256\": \"febf6e1e50728662066119ecf98037b980b9c6c27704d206418d830ed8d44fff\"\n",
+          "start": 1146991
+        },
+        {
+          "current": "          \"sha256\": \"155e53a8f39615ec9d75e48fd39a2353595b26dc4e51c7bdea091df73dd82c3d\"\n",
+          "previous": "          \"sha256\": \"8e6c37008124386b48a89558676c1e3917d361018890b645eeda14accc358951\"\n",
+          "start": 1215181
+        },
+        {
+          "current": "          \"sha256\": \"7e97cd12d80e97cfa4d47e94f65debf84c77df5748c7c822a617cf1210c7cf78\"\n",
+          "previous": "          \"sha256\": \"0e6c734e48d9e6c8ba16af4c8bb0450fbb5d266d3b866744141062201bd1b48c\"\n",
+          "start": 1215882
+        },
+        {
+          "current": "          \"sha256\": \"d4606c7087e32c8d44b75faa7cf290de7c66d091f0d72dd2367e138802aa4192\"\n",
+          "previous": "          \"sha256\": \"090721b8e6c6dfcc612e2d41e744b757f7281c5eea8a1f13957ad05cb220de1b\"\n",
+          "start": 1219186
+        },
+        {
+          "current": "          \"sha256\": \"e133b82999727edabe745fdc8136cd3e8c188b3384a9dcc010f11d829ffb53f3\"\n",
+          "previous": "          \"sha256\": \"f30598b0c2ea842aadc212908c88e165c16e32ee3105a9d68638ee7136720a2b\"\n",
+          "start": 1219536
+        },
+        {
+          "current": "          \"sha256\": \"45c5de727ddf74beb7c5a7def6c0591bde2a03f0bccc402e58cf04f5aadb1f08\"\n",
+          "previous": "          \"sha256\": \"6481e917f517d8ed19c0d6e3c2e4b8098282bf9d7dff97c489fbec5924999323\"\n",
+          "start": 1241005
+        },
+        {
+          "current": "          \"sha256\": \"7e97cd12d80e97cfa4d47e94f65debf84c77df5748c7c822a617cf1210c7cf78\"\n",
+          "previous": "          \"sha256\": \"0e6c734e48d9e6c8ba16af4c8bb0450fbb5d266d3b866744141062201bd1b48c\"\n",
+          "start": 1245460
+        },
+        {
+          "current": "          \"sha256\": \"e133b82999727edabe745fdc8136cd3e8c188b3384a9dcc010f11d829ffb53f3\"\n",
+          "previous": "          \"sha256\": \"f30598b0c2ea842aadc212908c88e165c16e32ee3105a9d68638ee7136720a2b\"\n",
+          "start": 1249438
+        },
+        {
+          "current": "          \"sha256\": \"155e53a8f39615ec9d75e48fd39a2353595b26dc4e51c7bdea091df73dd82c3d\"\n",
+          "previous": "          \"sha256\": \"8e6c37008124386b48a89558676c1e3917d361018890b645eeda14accc358951\"\n",
+          "start": 1276749
+        },
+        {
+          "current": "          \"sha256\": \"d9f53a35b1706a4b5b34ca2c304efa262d7d14ab833304b8731f917c1a6294df\"\n",
+          "previous": "          \"sha256\": \"f4f83cecc9386f9c143dfb4caf7219669705a0abaf1aca198aef52869c8dc914\"\n",
+          "start": 1278533
+        },
+        {
+          "current": "          \"sha256\": \"d4606c7087e32c8d44b75faa7cf290de7c66d091f0d72dd2367e138802aa4192\"\n",
+          "previous": "          \"sha256\": \"090721b8e6c6dfcc612e2d41e744b757f7281c5eea8a1f13957ad05cb220de1b\"\n",
+          "start": 1280484
+        },
+        {
+          "current": "          \"sha256\": \"df3bd795625b9d2a85dc9770caa32d1e5e09ca2466c47fb4c550b59c18900eb0\"\n",
+          "previous": "          \"sha256\": \"b1dee59328b15fdd8d0cd01e324d168223a49d46fa1ef67ddc91087703a94d45\"\n",
+          "start": 1310986
+        },
+        {
+          "current": "          \"sha256\": \"f420c8a7c55bbc001df1c8eb92f012378621e99d151eded5cc4dc202ef3c933d\"\n",
+          "previous": "          \"sha256\": \"febf6e1e50728662066119ecf98037b980b9c6c27704d206418d830ed8d44fff\"\n",
+          "start": 1320991
+        },
+        {
+          "current": "          \"sha256\": \"e1150ac10ff796c4b31bbb11ca283735f524c08e4b6b905a418cb18238d5b052\"\n",
+          "previous": "          \"sha256\": \"8490f69cc0c0a4fd581edd0f902d9cf064b5c95074f57aee078944d652522474\"\n",
+          "start": 1338009
+        },
+        {
+          "current": "          \"sha256\": \"cdc4ab13184ed984087d013cd311e9fbd24facaa489a0b044caa7143d786b30d\"\n",
+          "previous": "          \"sha256\": \"42f5299f12d08b9d0cba843ff1862f34d198651a318c4a8a22062d4bfb172f01\"\n",
+          "start": 1343905
+        },
+        {
+          "current": "          \"sha256\": \"d9f53a35b1706a4b5b34ca2c304efa262d7d14ab833304b8731f917c1a6294df\"\n",
+          "previous": "          \"sha256\": \"f4f83cecc9386f9c143dfb4caf7219669705a0abaf1aca198aef52869c8dc914\"\n",
+          "start": 1346270
+        },
+        {
+          "current": "          \"sha256\": \"e1150ac10ff796c4b31bbb11ca283735f524c08e4b6b905a418cb18238d5b052\"\n",
+          "previous": "          \"sha256\": \"8490f69cc0c0a4fd581edd0f902d9cf064b5c95074f57aee078944d652522474\"\n",
+          "start": 1360281
+        },
+        {
+          "current": "          \"sha256\": \"cdc4ab13184ed984087d013cd311e9fbd24facaa489a0b044caa7143d786b30d\"\n",
+          "previous": "          \"sha256\": \"42f5299f12d08b9d0cba843ff1862f34d198651a318c4a8a22062d4bfb172f01\"\n",
+          "start": 1363948
+        },
+        {
+          "current": "          \"sha256\": \"df3bd795625b9d2a85dc9770caa32d1e5e09ca2466c47fb4c550b59c18900eb0\"\n",
+          "previous": "          \"sha256\": \"b1dee59328b15fdd8d0cd01e324d168223a49d46fa1ef67ddc91087703a94d45\"\n",
+          "start": 1367340
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "085140631c70383281dce1f2a25d9932b42cb73288d17d40cc640c1d05580a1f"
+    },
+    {
+      "currentSha256": "73810e936e9a2a2d00dd649ba4cfb47ac076be13322c0458be6c82703b5b5c5e",
+      "edits": [
+        {
+          "current": "\tconst digest = sha256(source);\n\tif(digest === expected || !cStructuredCallableChangedPaths.includes(path)) return source;\n",
+          "previous": "\tif(sha256(source) === expected || !cStructuredCallableChangedPaths.includes(path)) return source;\n",
+          "start": 3428
+        },
+        {
+          "current": "\treturn update?.currentSha256 === digest ? reverseCStructuredCallableUpdate(source, update) : source;\n",
+          "previous": "\treturn update ? reverse(source, update) : source;\n",
+          "start": 3710
+        }
+      ],
+      "path": "tests/helpers/c-structured-callable-source-history.mjs",
+      "previousSha256": "5aa086b13b14c9a8f913a8abaee3493f83614447760b07edd2b657c154415434"
+    },
+    {
+      "currentSha256": "45c5de727ddf74beb7c5a7def6c0591bde2a03f0bccc402e58cf04f5aadb1f08",
+      "edits": [
+        {
+          "current": "\tconst digest = sha256(source);\n\tif(digest === expected || !cppStructuredCallableChangedPaths.includes(path)) return source;\n",
+          "previous": "\tif(sha256(source) === expected || !cppStructuredCallableChangedPaths.includes(path)) return source;\n",
+          "start": 3340
+        },
+        {
+          "current": "\treturn update?.currentSha256 === digest ? reverseCppStructuredCallableUpdate(source, update) : source;\n",
+          "previous": "\treturn update ? reverse(source, update) : source;\n",
+          "start": 3626
+        }
+      ],
+      "path": "tests/helpers/cpp-structured-callable-source-history.mjs",
+      "previousSha256": "6481e917f517d8ed19c0d6e3c2e4b8098282bf9d7dff97c489fbec5924999323"
+    },
+    {
+      "currentSha256": "7e97cd12d80e97cfa4d47e94f65debf84c77df5748c7c822a617cf1210c7cf78",
+      "edits": [
+        {
+          "current": "\tconst digest = sha256(source);\n\tif(digest === expected || !rustStructuredCallableChangedPaths.includes(path)) return source;\n",
+          "previous": "\tif(sha256(source) === expected || !rustStructuredCallableChangedPaths.includes(path)) return source;\n",
+          "start": 3436
+        },
+        {
+          "current": "\treturn update?.currentSha256 === digest ? reverseRustStructuredCallableUpdate(source, update) : source;\n",
+          "previous": "\treturn update ? reverse(source, update) : source;\n",
+          "start": 3724
+        }
+      ],
+      "path": "tests/helpers/rust-structured-callable-source-history.mjs",
+      "previousSha256": "0e6c734e48d9e6c8ba16af4c8bb0450fbb5d266d3b866744141062201bd1b48c"
+    },
+    {
+      "currentSha256": "155e53a8f39615ec9d75e48fd39a2353595b26dc4e51c7bdea091df73dd82c3d",
+      "edits": [
+        {
+          "current": "\tconst digest = sha256(source);\n\tif(digest === expected || !pythonStructuredCallableChangedPaths.includes(path)) return source;\n",
+          "previous": "\tif(sha256(source) === expected || !pythonStructuredCallableChangedPaths.includes(path)) return source;\n",
+          "start": 3432
+        },
+        {
+          "current": "\treturn update?.currentSha256 === digest ? reversePythonStructuredCallableUpdate(source, update) : source;\n",
+          "previous": "\treturn update ? reverse(source, update) : source;\n",
+          "start": 3724
+        }
+      ],
+      "path": "tests/helpers/python-structured-callable-source-history.mjs",
+      "previousSha256": "8e6c37008124386b48a89558676c1e3917d361018890b645eeda14accc358951"
+    },
+    {
+      "currentSha256": "d9f53a35b1706a4b5b34ca2c304efa262d7d14ab833304b8731f917c1a6294df",
+      "edits": [
+        {
+          "current": "\tconst digest = sha256(source);\n\tif(digest === expected || !rubyStructuredCallableChangedPaths.includes(path)) return source;\n",
+          "previous": "\tif(sha256(source) === expected || !rubyStructuredCallableChangedPaths.includes(path)) return source;\n",
+          "start": 3365
+        },
+        {
+          "current": "\treturn update?.currentSha256 === digest ? reverseRubyStructuredCallableUpdate(source, update) : source;\n",
+          "previous": "\treturn update ? reverse(source, update) : source;\n",
+          "start": 3653
+        }
+      ],
+      "path": "tests/helpers/ruby-structured-callable-source-history.mjs",
+      "previousSha256": "f4f83cecc9386f9c143dfb4caf7219669705a0abaf1aca198aef52869c8dc914"
+    },
+    {
+      "currentSha256": "cdc4ab13184ed984087d013cd311e9fbd24facaa489a0b044caa7143d786b30d",
+      "edits": [
+        {
+          "current": "\tconst digest = sha256(source);\n\tif(digest === expected || !dotnetStructuredCallableChangedPaths.includes(path)) return source;\n",
+          "previous": "\tif(sha256(source) === expected || !dotnetStructuredCallableChangedPaths.includes(path)) return source;\n",
+          "start": 3371
+        },
+        {
+          "current": "\treturn update?.currentSha256 === digest ? reverseDotnetStructuredCallableUpdate(source, update) : source;\n",
+          "previous": "\treturn update ? reverse(source, update) : source;\n",
+          "start": 3663
+        }
+      ],
+      "path": "tests/helpers/dotnet-structured-callable-source-history.mjs",
+      "previousSha256": "42f5299f12d08b9d0cba843ff1862f34d198651a318c4a8a22062d4bfb172f01"
+    },
+    {
+      "currentSha256": "df3bd795625b9d2a85dc9770caa32d1e5e09ca2466c47fb4c550b59c18900eb0",
+      "edits": [
+        {
+          "current": "\tconst digest = sha256(source);\n\tif(digest === expected || !jvmStructuredCallableChangedPaths.includes(path)) return source;\n",
+          "previous": "\tif(sha256(source) === expected || !jvmStructuredCallableChangedPaths.includes(path)) return source;\n",
+          "start": 3725
+        },
+        {
+          "current": "\treturn update?.currentSha256 === digest ? reverseJvmStructuredCallableUpdate(source, update) : source;\n",
+          "previous": "\treturn update ? reverse(source, update) : source;\n",
+          "start": 4011
+        }
+      ],
+      "path": "tests/helpers/jvm-structured-callable-source-history.mjs",
+      "previousSha256": "b1dee59328b15fdd8d0cd01e324d168223a49d46fa1ef67ddc91087703a94d45"
+    },
+    {
+      "currentSha256": "e133b82999727edabe745fdc8136cd3e8c188b3384a9dcc010f11d829ffb53f3",
+      "edits": [
+        {
+          "current": "\t\tconst source = beforePythonStructuredCallables(update.path, await readFile(update.path, \"utf8\"), update.currentSha256);\n",
+          "previous": "\t\tconst source = beforePythonStructuredCallables(update.path, await readFile(update.path, \"utf8\"));\n",
+          "start": 3214
+        },
+        {
+          "current": "\t\tassert.equal(sha256(beforeRustStructuredCallables(update.path, source, update.previousSha256)), update.previousSha256);\n",
+          "previous": "\t\tassert.equal(sha256(beforeRustStructuredCallables(update.path, source)), update.previousSha256);\n",
+          "start": 3436
+        }
+      ],
+      "path": "tests/rust-structured-callable-evidence.test.mjs",
+      "previousSha256": "f30598b0c2ea842aadc212908c88e165c16e32ee3105a9d68638ee7136720a2b"
+    },
+    {
+      "currentSha256": "d4606c7087e32c8d44b75faa7cf290de7c66d091f0d72dd2367e138802aa4192",
+      "edits": [
+        {
+          "current": "\t\tconst source = beforeRubyStructuredCallables(update.path, await readFile(update.path, \"utf8\"), update.currentSha256);\n",
+          "previous": "\t\tconst source = beforeRubyStructuredCallables(update.path, await readFile(update.path, \"utf8\"));\n",
+          "start": 3328
+        },
+        {
+          "current": "\t\tassert.equal(sha256(beforePythonStructuredCallables(update.path, source, update.previousSha256)), update.previousSha256);\n",
+          "previous": "\t\tassert.equal(sha256(beforePythonStructuredCallables(update.path, source)), update.previousSha256);\n",
+          "start": 3550
+        }
+      ],
+      "path": "tests/python-structured-callable-evidence.test.mjs",
+      "previousSha256": "090721b8e6c6dfcc612e2d41e744b757f7281c5eea8a1f13957ad05cb220de1b"
+    },
+    {
+      "currentSha256": "e1150ac10ff796c4b31bbb11ca283735f524c08e4b6b905a418cb18238d5b052",
+      "edits": [
+        {
+          "current": "\t\tconst source = beforeJvmStructuredCallables(update.path, await readFile(update.path, \"utf8\"), update.currentSha256);\n",
+          "previous": "\t\tconst source = beforeJvmStructuredCallables(update.path, await readFile(update.path, \"utf8\"));\n",
+          "start": 3691
+        },
+        {
+          "current": "\t\tassert.equal(sha256(beforeDotnetStructuredCallables(update.path, source, update.previousSha256)), update.previousSha256);\n",
+          "previous": "\t\tassert.equal(sha256(beforeDotnetStructuredCallables(update.path, source)), update.previousSha256);\n",
+          "start": 3912
+        }
+      ],
+      "path": "tests/dotnet-structured-callable-evidence.test.mjs",
+      "previousSha256": "8490f69cc0c0a4fd581edd0f902d9cf064b5c95074f57aee078944d652522474"
+    },
+    {
+      "currentSha256": "f420c8a7c55bbc001df1c8eb92f012378621e99d151eded5cc4dc202ef3c933d",
+      "edits": [
+        {
+          "current": "\t\tconst source = beforeNpmStructuredCallables(update.path, await readFile(update.path, \"utf8\"), update.currentSha256);\n",
+          "previous": "\t\tconst source = beforeNpmStructuredCallables(update.path, await readFile(update.path, \"utf8\"));\n",
+          "start": 3978
+        },
+        {
+          "current": "\t\tassert.equal(sha256(beforePerlStructuredCallables(update.path, source, update.previousSha256)), update.previousSha256);\n",
+          "previous": "\t\tassert.equal(sha256(beforePerlStructuredCallables(update.path, source)), update.previousSha256);\n",
+          "start": 4197
+        }
+      ],
+      "path": "tests/perl-structured-callable-evidence.test.mjs",
+      "previousSha256": "febf6e1e50728662066119ecf98037b980b9c6c27704d206418d830ed8d44fff"
+    }
+  ]
+}
