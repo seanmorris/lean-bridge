@@ -39,6 +39,7 @@ import "./helpers/borrow-receiver-producer-binding-tests.mjs";
 import "./helpers/borrow-receiver-producer-repair-source-history-tests.mjs";
 import "./helpers/generic-subtype-archive-boundary-tests.mjs";
 import "./helpers/generic-subtype-archive-boundary-source-history-tests.mjs";
+import "./helpers/core-producer-live-pin-repair-source-history-tests.mjs";
 
 const root = resolve(".");
 
