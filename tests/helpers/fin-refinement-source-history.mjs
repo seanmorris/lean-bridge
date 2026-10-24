@@ -18,6 +18,7 @@ import { beforeNativeForkTransferProducerRepairSource, nativeForkTransferProduce
 import { beforeFinHistoryRollingRepairSource, finHistoryRollingRepairNormalizationPaths } from "./fin-history-rolling-repair-source-history.mjs";
 import { beforePerlCallbackAdmissionRepairSource, perlCallbackAdmissionRepairNormalizationPaths } from "./perl-callback-admission-repair-source-history.mjs";
 import { beforeOwnedJvmTransferProducerRepairSource, ownedJvmTransferProducerRepairNormalizationPaths } from "./owned-jvm-transfer-producer-repair-source-history.mjs";
+import { beforeOwnedCReceiverProducerRepairSource, ownedCReceiverProducerRepairNormalizationPaths } from "./owned-c-receiver-producer-repair-source-history.mjs";
 import { beforeCoreEvidenceMemoryRepairSource, coreEvidenceMemoryRepairNormalizationPaths } from "./core-evidence-memory-repair-source-history.mjs";
 import { beforeValueIndexPromotionMilestoneRepairSource, valueIndexPromotionMilestoneRepairNormalizationPaths } from "./value-index-promotion-milestone-repair-source-history.mjs";
 import { beforeCoreMilestoneReplayRepairSource, coreMilestoneReplayRepairNormalizationPaths } from "./core-milestone-replay-repair-source-history.mjs";
@@ -2111,7 +2112,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...ownedJvmTransferProducerRepairNormalizationPaths
+	...ownedCReceiverProducerRepairNormalizationPaths
+	, ...ownedJvmTransferProducerRepairNormalizationPaths
 	, ...perlCallbackAdmissionRepairNormalizationPaths
 	, ...finHistoryRollingRepairNormalizationPaths
 	, ...nativeForkTransferProducerRepairNormalizationPaths
@@ -2966,6 +2968,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
 	let stage
+		= beforeOwnedCReceiverProducerRepairSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage
 		= beforeOwnedJvmTransferProducerRepairSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;

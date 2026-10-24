@@ -1,0 +1,149 @@
+{
+  "additions": [
+    {
+      "currentSha256": "2fbf60d55e70ae692f0c9322e3f6a7f3cbb1bef67ff07efab624980479b53bbf",
+      "path": "scripts/update-owned-c-receiver-producer-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "86c9079e8fc0c86b3907dec752eef6b3a9afbc814502b04bc8cc2eb144bc0832",
+      "path": "tests/helpers/owned-c-receiver-producer-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "9cf902f8f2eb85238c0a3a13344a3ef8043791442c2a77bbe98817a8b6caef93",
+      "path": "tests/helpers/owned-c-receiver-producer-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "2fc39d72aaa0983753943cec19158d3a7336c51b",
+  "integrationBaseCommit": "2fc39d72aaa0983753943cec19158d3a7336c51b",
+  "integrationUpdates": [
+    {
+      "currentSha256": "d6b982f5f6f9a201514c62651f999032c77b7dcd18955caeddab413bf46dc0da",
+      "edits": [
+        {
+          "current": "import { beforeOwnedCReceiverProducerRepairSource, ownedCReceiverProducerRepairNormalizationPaths } from \"./owned-c-receiver-producer-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 1957
+        },
+        {
+          "current": "\t...ownedCReceiverProducerRepairNormalizationPaths\n\t, ...ownedJvmTransferProducerRepairNormalizationPaths\n",
+          "previous": "\t...ownedJvmTransferProducerRepairNormalizationPaths\n",
+          "start": 175158
+        },
+        {
+          "current": "\t\t= beforeOwnedCReceiverProducerRepairSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "",
+          "start": 216080
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "73b7745641056f3b0ac27a34c534424f9dce992de23ecf2e19d8ffea3e2b470c"
+    },
+    {
+      "currentSha256": "bb3f063e09c8b2b85c7a37c666d0a53e77bb42c8534b28a0015de0dfa3b10c1b",
+      "edits": [
+        {
+          "current": "import \"./helpers/owned-c-receiver-producer-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 1259
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "3339c9f9242a319eeb373a4a54c35ef237951b545bc8f606d1df1a307a58d049"
+    }
+  ],
+  "milestone": "owned-c-receiver-producer-repair-source-v1",
+  "predecessorCommit": "ea29b1dc91b182f4a07885806e32f95e6300cb41",
+  "schemaVersion": 1,
+  "scope": "Verify the original C receiver receipt against its complete authenticated producer tree, generators, deferred fixture reads, CLI package bytes, documentation and explicit predecessor stops. Preserve all recorded observations, exact digest and unknown-source checks, receiver ownership assertions, mutation controls and current CI enforcement. No inventory or support changes.",
+  "updates": [
+    {
+      "currentSha256": "56db702067d67baa36d9e6b5fd0e1eef6bd462087a5709723a52da6ac246aa0a",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { generateOwnedCPackage } from \"../../src/backends/c/owned-package.mjs\";\nimport { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from \"../../src/build/native-graph-model.mjs\";\nimport { ownedReceiverKinds, ownedReceiverSource, ownedReceiverProbe, ownedReceiverCopyMacros } from \"./owned-receiver-fixture.mjs\";\nimport { ownedReceiverMutants } from \"./owned-receiver-mutants.mjs\";\n",
+          "start": 254
+        },
+        {
+          "current": "import { moduleAtProducerWithSourceReads } from \"./producer-module.mjs\";\nimport { bytesAtProducer, sourceAtProducer } from \"./producer-source.mjs\";\n",
+          "previous": "import { ownedCppReceiverHistoricalBytes } from \"./owned-cpp-receiver-history.mjs\";\n",
+          "start": 319
+        },
+        {
+          "current": "/** The complete source tree authenticated by the original C receiver receipt. */\nexport const ownedReceiverProducer = \"a514c3516343740ea8b3ef9335fb82f2251b3435\";\nlet producerPromise;\nconst producerModules = () => producerPromise ??= Promise.all([\n\t\"src/backends/c/owned-package.mjs\"\n\t, \"src/build/native-graph-model.mjs\"\n\t, \"tests/helpers/owned-receiver-fixture.mjs\"\n\t, \"tests/helpers/owned-receiver-mutants.mjs\"\n].map(path => moduleAtProducerWithSourceReads(ownedReceiverProducer, path)))\n\t.then(modules => Object.assign({}, ...modules));\nconst historical = (path, expected = undefined) => sourceAtProducer(ownedReceiverProducer, path, expected);\n",
+          "previous": "",
+          "start": 1561
+        },
+        {
+          "current": " * Check producer generators against the archived source and execution evidence.\n",
+          "previous": " * Check current generators against the archived source and execution evidence.\n",
+          "start": 2532
+        },
+        {
+          "current": "\tconst {\n\t\tgenerateOwnedCPackage, createCompiledNativeModel\n\t\t, generateCompiledNativeLeanAdapters, ownedReceiverKinds\n\t\t, ownedReceiverSource, ownedReceiverProbe, ownedReceiverCopyMacros\n\t\t, ownedReceiverMutants\n\t} = await producerModules();\n\tconst base = historical(\"tests/fixtures/onboarding/owned-aggregates/Owned.lean\");\n",
+          "previous": "\tconst base = await readFile(\"tests/fixtures/onboarding/owned-aggregates/Owned.lean\", \"utf8\");\n",
+          "start": 3736
+        },
+        {
+          "current": "\tconst plainProbe = bytesAtProducer(ownedReceiverProducer, \"tests/fixtures/structured-types/owned-receiver-plain.c\");\n",
+          "previous": "\tconst plainProbe = await readFile(\"tests/fixtures/structured-types/owned-receiver-plain.c\");\n",
+          "start": 4105
+        },
+        {
+          "current": "\tconst page = historical(\"docs/consume/c.md\");\n",
+          "previous": "\tconst page = await readFile(\"docs/consume/c.md\", \"utf8\");\n",
+          "start": 8164
+        },
+        {
+          "current": "\tconst cliConfig = JSON.parse(historical(\"config/cli-package.v1.json\", record.sources[\"config/cli-package.v1.json\"]));\n",
+          "previous": "\tconst cliConfig = JSON.parse(ownedCppReceiverHistoricalBytes(\"config/cli-package.v1.json\", await readFile(\"config/cli-package.v1.json\"), record.sources[\"config/cli-package.v1.json\"]).toString());\n",
+          "start": 8333
+        },
+        {
+          "current": "\t\t\tassert.ok(file, path);\n\t\t\tconst bytes = bytesAtProducer(ownedReceiverProducer, path, file.sha256);\n\t\t\tassert.equal(file.bytes, bytes.length); assert.equal(file.sha256, sha256(bytes), path);\n",
+          "previous": "\t\t\tconst bytes = Buffer.from(ownedCppReceiverHistoricalBytes(path, await readFile(path), file?.sha256));\n\t\t\tassert.ok(file, path); assert.equal(file.bytes, bytes.length); assert.equal(file.sha256, sha256(bytes), path);\n",
+          "start": 12144
+        }
+      ],
+      "path": "tests/helpers/owned-receiver-evidence.mjs",
+      "previousSha256": "9ae09efc4b3e16a0c4c0bd03b14c0b420c24809b983771f15b857780091053eb"
+    },
+    {
+      "currentSha256": "5db109c35c67306212c3b7795d9b8bb8491034523a0215c416f7e6ccf75d2154",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { ownedCppReceiverHistoricalBytes } from \"./helpers/owned-cpp-receiver-history.mjs\";\n",
+          "start": 266
+        },
+        {
+          "current": "import { assertOwnedReceiverExecution, ownedReceiverProducer } from \"./helpers/owned-receiver-evidence.mjs\";\nimport { bytesAtProducer } from \"./helpers/producer-source.mjs\";\n",
+          "previous": "import { assertOwnedReceiverExecution } from \"./helpers/owned-receiver-evidence.mjs\";\n",
+          "start": 342
+        },
+        {
+          "current": "const sourceAtReceiver = path => bytesAtProducer(ownedReceiverProducer, path);\n",
+          "previous": "const sourceAtReceiver = async path => ownedCppReceiverHistoricalBytes(path, await readFile(path));\n",
+          "start": 917
+        },
+        {
+          "current": "\t\tconst source = (await sourceAtReceiver(update.path)).toString(\"utf8\");\n\t\tconst prior = beforeOwnedReceiver(update.path, source, update.previousSha256);\n",
+          "previous": "\t\tconst source = (await sourceAtReceiver(update.path)).toString(\"utf8\"), prior = beforeOwnedReceiver(update.path, source);\n",
+          "start": 2034
+        },
+        {
+          "current": "\t\tassert.equal(beforeOwnedReceiver(update.path, prior, update.previousSha256), prior);\n",
+          "previous": "\t\tassert.equal(beforeOwnedReceiver(update.path, prior), prior);\n",
+          "start": 2242
+        },
+        {
+          "current": "\tconst update = record.updates.find(item => item.path === path);\n\tassert.ok(update, \"receiver inventory transition is retained\");\n\tconst prior = JSON.parse(beforeOwnedReceiver(path, current, update.previousSha256));\n\tfor(const evidence of prior.evidence) for(const file of evidence.files)\n\t\tfile.sha256 = record.sources[file.path] ?? sha256(await sourceAtReceiver(file.path));\n",
+          "previous": "\tconst prior = JSON.parse(beforeOwnedReceiver(path, current));\n\tfor(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(await sourceAtReceiver(file.path));\n",
+          "start": 2958
+        }
+      ],
+      "path": "tests/owned-receiver-evidence.test.mjs",
+      "previousSha256": "a1cf9a9fc603145a1e358afd4b694845ca7666bbd11e319aae3d17702a0d4bf1"
+    }
+  ]
+}
