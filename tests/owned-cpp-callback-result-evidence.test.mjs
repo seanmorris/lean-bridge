@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
+import "./helpers/owned-cpp-callback-result-replay-tests.mjs";
 import { sha256 } from "../src/capsule/node.mjs";
 import { classifyRepositoryTest } from "../src/adoption/test-profiles.mjs";
 import { unpackOwnedCallbackReports } from "./helpers/owned-callback-result-evidence.mjs";
@@ -41,7 +42,9 @@ test("C++ callback acceptance rejects incomplete execution or expanded support c
 });
 
 test("C++ callback evidence rejects rehashed reports with weakened ownership or installation checks", async () => {
-	const reports = unpackOwnedCallbackReports((await read()).archive);
+	const record = await read();
+	const reports = unpackOwnedCallbackReports(record.archive);
+	const checked = new Set();
 	for(const [name, mutate] of [
 		["ordinary-base-nohost", value => { value.result.identities++; }]
 		, ["ordinary-base-nohost", value => { value.contract.callbackResultAnchors.signatures[0].parameter++; }]
@@ -70,7 +73,12 @@ test("C++ callback evidence rejects rehashed reports with weakened ownership or 
 		, ["reviewed-combined-release", value => { value.installedTypeScript = false; }]
 	]) {
 		const path = `build/owned-cpp-callback-results/${name}.json`;
+		if(!checked.has(path))
+		{
+			await assertOwnedCppCallbackReport(path, reports[path], record.sources);
+			checked.add(path);
+		}
 		const item = structuredClone(reports[path]); mutate(item);
-		await assert.rejects(() => assertOwnedCppCallbackReport(path, item), undefined, name + ": " + mutate.toString());
+		await assert.rejects(() => assertOwnedCppCallbackReport(path, item, record.sources), undefined, name + ": " + mutate.toString());
 	}
 });

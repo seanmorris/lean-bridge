@@ -17,6 +17,8 @@ import { readTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { historicalTypeSurfaceCells as typeSurfaceCells } from "./historical-type-surface-cells.mjs";
 import { beforeCallbackFinSource } from "./callback-fin-source-history.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { assertCallbackFinCoverage } from "./callback-fin-coverage.mjs";
+import "./callback-fin-coverage-tests.mjs";
 import "./callback-coverage-repair-source-history-tests.mjs";
 
 const fin = bound => ({ kind: "fin", bound });
@@ -123,34 +125,6 @@ test("nominal Fin installed evidence promotes only the two ordinary Node field c
 	for(const cell of cells.filter(cell => cell.path === "reviewed-ir" || cell.position.startsWith("callback-") && !["node-javascript", "node-typescript"].includes(cell.profile)))
 		assert.equal(cell.stages.installedExecution.state, "unreviewed", cell.id);
 });
-
-const callbackFinCoverage = [
-	[["node-javascript", "node-typescript"], "ordinary-source", ["npm-callback-fin-installed"]]
-	, [["node-javascript", "node-typescript"], "reviewed-ir", ["reviewed-callback-fin-npm-r1-installed", "reviewed-callback-fin-npm-r2-installed"]]
-	, [["browser-javascript", "browser-react", "browser-worker"], "ordinary-source", ["browser-callback-fin-ordinary-installed"]]
-	, [["c", "cpp"], "ordinary-source", ["native-callback-fin-ordinary-installed", "native-callback-fin-host-replies-installed"]]
-	, [["c", "cpp"], "reviewed-ir", ["reviewed-callback-fin-c-cpp-installed"]]
-];
-
-/**
- * Check each observed host, source route, position and stage against the recorded evidence.
- *
- * @param cells - Installed callback-Fin cells from the current inventory.
- */
-const assertCallbackFinCoverage = cells => {
-	const expected = new Map(callbackFinCoverage.flatMap(([profiles, path, evidence]) => profiles.flatMap(profile =>
-		["callback-parameter", "callback-result"].map(position => [`${profile}/fin/${path}/${position}`, evidence]))));
-	assert.deepEqual(cells.map(cell => cell.id).sort(), [...expected.keys()].sort());
-	for(const cell of cells)
-	{
-		assert.equal(cell.id, `${cell.profile}/${cell.shape}/${cell.path}/${cell.position}`);
-		for(const stage of Object.values(cell.stages))
-		{
-			assert.equal(stage.state, "passed", cell.id);
-			assert.deepEqual(stage.evidence, expected.get(cell.id), cell.id);
-		}
-	}
-};
 
 const installedCallbackFinCells = async () => {
 	const { document, irSchema, consumers } = await readTypeSurface();
