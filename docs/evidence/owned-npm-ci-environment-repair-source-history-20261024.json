@@ -1,0 +1,603 @@
+{
+  "additions": [
+    {
+      "currentSha256": "7e3d259de1ce173a8bacd9102ba791fae548bf3a11e12fea15ee054df6a19482",
+      "path": "scripts/update-owned-npm-ci-environment-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "4295e7a3c2641a8cb79f3ce3dbb2a91447a616afae6cd0cab07dc3bdee7add08",
+      "path": "tests/helpers/owned-npm-ci-environment-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "b65689ff92b8bb4727aac72abe306c1707d45dc3e4c2c5a05d24052fd3bf76a0",
+      "path": "tests/helpers/owned-npm-ci-environment-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "8bd1fc399109b157914c6d04ba3655f964f30db3",
+  "implementationCommits": [
+    "8bd1fc399109b157914c6d04ba3655f964f30db3"
+  ],
+  "integrationBaseCommit": "8bd1fc399109b157914c6d04ba3655f964f30db3",
+  "integrationUpdates": [
+    {
+      "currentSha256": "daf6ce9bc3d99dcc8f7d8016cb2834bacb993203557255044bc778ae14e66dc2",
+      "edits": [
+        {
+          "current": "import { beforeOwnedNpmCiEnvironmentRepairSource, ownedNpmCiEnvironmentRepairNormalizationPaths } from \"./owned-npm-ci-environment-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 6588
+        },
+        {
+          "current": "\t...ownedNpmCiEnvironmentRepairNormalizationPaths\n\t, ...ownedPhpWasmHostedArchiveNormalizationPaths\n",
+          "previous": "\t...ownedPhpWasmHostedArchiveNormalizationPaths\n",
+          "start": 179786
+        },
+        {
+          "current": "\t\t= beforeOwnedNpmCiEnvironmentRepairSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeOwnedPhpWasmHostedArchiveSource(path, text, expected);\n",
+          "previous": "\t\t= beforeOwnedPhpWasmHostedArchiveSource(path, text, expected);\n",
+          "start": 222218
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "467f24205353d42e268bc2d7308aa9559252cf9b54b7a1d4f5b904acf095afb1"
+    },
+    {
+      "currentSha256": "c5df9ee75a27e26ae6b36000fea8034a268f0d3c588d280f4eab7c4edea156c9",
+      "edits": [
+        {
+          "current": "import \"./helpers/owned-npm-ci-environment-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 4251
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "7ede2df18ec63a9f6bd474ad65d1160f33305d4d56226c8fe87c8b3bff625c72"
+    }
+  ],
+  "milestone": "owned-npm-ci-environment-repair-source-v1",
+  "predecessorCommit": "19a7bb147c84023dd0bb9603d808cef57f27f7cd",
+  "schemaVersion": 1,
+  "scope": "Repair npm/browser hosted acceptance defaults to resolve relative to the checkout while honoring explicit runtime overrides. Retain TAP outside the test-reset output directory, restore the acceptance log on success and failure, and propagate the exact failed producer status. Reproduce both observed bugs without installed builds and preserve fail-closed workflow controls. Refresh exactly 92 consumer-workflow live source pins; preserve every other inventory byte, original receipt, archive, support claim and execution record. Hosted installed acceptance remains required.",
+  "updates": [
+    {
+      "currentSha256": "56a74680c4c38a7ea05390c0d8d24c0d5e32b8375775e1b73ad8184de5cb61c3",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 78013
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 95208
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 111509
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 126277
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 135559
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 145184
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 168568
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 181537
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 196432
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 209216
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 222436
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 230969
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 239399
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 248416
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 256790
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 276070
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 285909
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 298044
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 316642
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 325938
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 338621
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 347876
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 357159
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 366292
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 375151
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 382538
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 390462
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 401108
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 415214
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 422312
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 432541
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 440285
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 446659
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 452822
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 458919
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 465440
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 473106
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 482400
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 493622
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 503319
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 524454
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 533019
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 544027
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 575912
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 582541
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 592800
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 613673
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 622196
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 633146
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 664664
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 673883
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 681223
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 693506
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 700366
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 709394
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 723420
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 734462
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 748510
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 759256
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 771327
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 782615
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 791198
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 797656
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 806042
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 823632
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 844628
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 899969
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 1012031
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 1072272
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 1079666
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 1086264
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 1093366
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 1100866
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 1107916
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 1115526
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 1137500
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 1149387
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 1157258
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 1167223
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 1177337
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 1189098
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 1221659
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 1251938
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 1284924
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 1324725
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 1351301
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 1373838
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 1393505
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 1416893
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 1428521
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 1451667
+        },
+        {
+          "current": "          \"sha256\": \"0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381\"\n",
+          "previous": "          \"sha256\": \"2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d\"\n",
+          "start": 1951804
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "0efa662c6ed68133e61b21d8c555e0fad7a05a0c902dd4e590d77306bbfe39b9"
+    },
+    {
+      "currentSha256": "0f6003f09e04290081de9e09c52952b54a18b89253f17a843e14ce75e2734381",
+      "edits": [
+        {
+          "current": "          checked_record_log=build/owned-javascript-wasm/checked-record-acceptance.log\n          checked_record_status=0\n",
+          "previous": "",
+          "start": 6956
+        },
+        {
+          "current": "            2>&1 | tee \"$checked_record_log\" || checked_record_status=$?\n          mkdir -p build/owned-checked-record-javascript-packaging\n          mv \"$checked_record_log\" build/owned-checked-record-javascript-packaging/acceptance.log\n          if (( checked_record_status != 0 )); then exit \"$checked_record_status\"; fi\n",
+          "previous": "            2>&1 | tee build/owned-checked-record-javascript-packaging/acceptance.log\n",
+          "start": 7193
+        }
+      ],
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previousSha256": "2abf9dda4c8125e4083e186ab76ba36edfaaf886c5ad150300da758758876a2d"
+    },
+    {
+      "currentSha256": "8df476378563489b7be3e77101d0e52deea1041d63fb4a0194b320b5e1a14080",
+      "edits": [
+        {
+          "current": "\t\t, \"checked_record_log=build/owned-javascript-wasm/checked-record-acceptance.log\"\n\t\t, \"checked_record_status=0\"\n\t\t, ownedCheckedRecordJavaScriptTestCommand\n\t\t\t+ ' 2>&1 | tee \"$checked_record_log\" || checked_record_status=$?'\n\t\t, \"mkdir -p build/owned-checked-record-javascript-packaging\"\n\t\t, 'mv \"$checked_record_log\" ' + ownedCheckedRecordJavaScriptAcceptanceLog\n\t\t, 'if (( checked_record_status != 0 )); then exit \"$checked_record_status\"; fi'\n",
+          "previous": "\t\t, ownedCheckedRecordJavaScriptTestCommand + \" 2>&1 | tee \"\n\t\t\t+ ownedCheckedRecordJavaScriptAcceptanceLog\n",
+          "start": 7301
+        }
+      ],
+      "path": "tests/helpers/owned-javascript-wasm-ci.mjs",
+      "previousSha256": "1821db27d9aaecf6d657d531471ca6db13a59182c407518eefe016125bf1d666"
+    },
+    {
+      "currentSha256": "8d827b98284e7472337314c6712d2ac892874f7c373c0383f4908c5398c5029c",
+      "edits": [
+        {
+          "current": "\t?? \"build/lean-runtime/f3b06c705e6c85f5314019d5d3baab0fec5b580c-743765bf566f43ec2f7b4eb84a85686880b3797efe83bf244d6fc7281e4f85a3-browser\");\n",
+          "previous": "\t?? \"/app/build/lean-runtime/f3b06c705e6c85f5314019d5d3baab0fec5b580c-743765bf566f43ec2f7b4eb84a85686880b3797efe83bf244d6fc7281e4f85a3-browser\");\n",
+          "start": 2240
+        },
+        {
+          "current": "\t?? \"build/lean-link-spike\", \"lazy\");\n",
+          "previous": "\t?? \"/app/build/lean-link-spike\", \"lazy\");\n",
+          "start": 2458
+        }
+      ],
+      "path": "tests/owned-checked-record-javascript-packaging.test.mjs",
+      "previousSha256": "c38363930348a9683983633aeadebdef4874d8ffaa654bcffb835d7e77413066"
+    },
+    {
+      "currentSha256": "e64148f1f892068cc50cac6b4146a2fdbd0e7a69f8036afaeed2616340985e59",
+      "edits": [
+        {
+          "current": "import { spawnSync } from \"node:child_process\";\nimport { mkdir, mkdtemp, readFile, rm } from \"node:fs/promises\";\nimport { tmpdir } from \"node:os\";\nimport { join, resolve } from \"node:path\";\n",
+          "previous": "import { readFile } from \"node:fs/promises\";\n",
+          "start": 134
+        },
+        {
+          "current": "import { runInNewContext } from \"node:vm\";\n",
+          "previous": "",
+          "start": 354
+        },
+        {
+          "current": "test(\"owned checked-record npm runtime defaults follow the checkout and honor overrides\", async () => {\n\tconst source = await readFile(\"tests/owned-checked-record-javascript-packaging.test.mjs\", \"utf8\");\n\tconst definitions = source.slice(source.indexOf(\"const target = \")\n\t\t, source.indexOf(\"const packagingRoot = \"));\n\tassert.ok(definitions.startsWith(\"const target = \"));\n\tconst checkout = \"/home/runner/work/lean-bridge/lean-bridge\";\n\tconst evaluate = env => JSON.parse(runInNewContext(\n\t\tdefinitions + \"\\nJSON.stringify({target, prepared});\", {\n\t\t\tprocess: { env }, resolve: (...parts) => resolve(checkout, ...parts)\n\t\t}, { timeout: 1000 }));\n\tconst runtime = \"build/lean-runtime/f3b06c705e6c85f5314019d5d3baab0fec5b580c-743765bf566f43ec2f7b4eb84a85686880b3797efe83bf244d6fc7281e4f85a3-browser\";\n\tassert.deepEqual(evaluate({}), {\n\t\ttarget: resolve(checkout, runtime)\n\t\t, prepared: resolve(checkout, \"build/lean-link-spike/lazy\")\n\t});\n\tassert.deepEqual(evaluate({\n\t\tLEAN_BRIDGE_JS_TARGET_RUNTIME: \"/custom/runtime\"\n\t\t, LEAN_BRIDGE_OWNED_JS_WASM_PREPARED_ROOT: \"/custom/prepared\"\n\t}), { target: \"/custom/runtime\", prepared: \"/custom/prepared/lazy\" });\n});\n\ntest(\"owned checked-record npm CI retains TAP across output reset and preserves failures\", async t => {\n\tconst source = await readFile(\".github/workflows/consumer-matrix.yml\", \"utf8\");\n\tconst marker = \"          test -s build/owned-subtype-javascript-packaging/report.json\\n\";\n\tconst capture = source.split(marker)[1]?.split(\n\t\t\"          test -s \" + ownedCheckedRecordJavaScriptAcceptanceLog + \"\\n\"\n\t)[0]?.replace(/^ {10}/gmu, \"\");\n\tassert.ok(capture?.includes(\"tests/owned-checked-record-javascript-packaging.test.mjs\"));\n\tconst scenarios = [\n\t\t{ status: 0, existing: false }, { status: 0, existing: true }\n\t\t, { status: 23, existing: false }, { status: 23, existing: true }\n\t];\n\tfor(const { status, existing } of scenarios)\n\t{\n\t\tconst root = await mkdtemp(join(tmpdir(), \"lean-owned-record-log-\"));\n\t\tt.after(() => rm(root, { recursive: true, force: true }));\n\t\tawait mkdir(join(root, \"build/owned-javascript-wasm\"), { recursive: true });\n\t\tif(existing) await mkdir(join(root, \"build/owned-checked-record-javascript-packaging\"));\n\t\t// Model the installed test's before hook without building any packages.\n\t\tconst stub = [\n\t\t\t\"set -euo pipefail\", \"node() {\"\n\t\t\t, \"  if [[ -d build/owned-checked-record-javascript-packaging ]]; then\"\n\t\t\t, \"    rm -r -- build/owned-checked-record-javascript-packaging\"\n\t\t\t, \"  fi\"\n\t\t\t, \"  printf '%s\\\\n' 'TAP version 13' 'fixture output'\"\n\t\t\t, \"  printf '%s\\\\n' 'fixture diagnostic' >&2\"\n\t\t\t, `  return ${status}`, \"}\", capture, \"printf '%s\\\\n' continued\"\n\t\t].join(\"\\n\");\n\t\tconst result = spawnSync(\"bash\", [\"-c\", stub], {\n\t\t\tcwd: root, encoding: \"utf8\", timeout: 10000, maxBuffer: 64 * 1024\n\t\t});\n\t\tassert.equal(result.error, undefined);\n\t\tassert.equal(result.status, status, result.stderr);\n\t\tassert.equal(await readFile(join(root, ownedCheckedRecordJavaScriptAcceptanceLog), \"utf8\")\n\t\t\t, \"TAP version 13\\nfixture output\\nfixture diagnostic\\n\");\n\t\tassert.equal(result.stdout.includes(\"continued\"), status === 0);\n\t}\n});\n\n",
+          "previous": "",
+          "start": 764
+        },
+        {
+          "current": "\t\t, ['tee \"$checked_record_log\" || checked_record_status=$?'\n\t\t\t, 'tee \"$checked_record_log\" || true']\n\t\t, [\"          mkdir -p build/owned-checked-record-javascript-packaging\\n\", \"\"]\n\t\t, ['          mv \"$checked_record_log\" ' + ownedCheckedRecordJavaScriptAcceptanceLog + \"\\n\", \"\"]\n\t\t, ['          if (( checked_record_status != 0 )); then exit \"$checked_record_status\"; fi\\n', \"\"]\n",
+          "previous": "\t\t, [\"tee \" + ownedCheckedRecordJavaScriptAcceptanceLog + \"\\n\"\n\t\t\t, \"tee \" + ownedCheckedRecordJavaScriptAcceptanceLog + \" || true\\n\"]\n",
+          "start": 5251
+        }
+      ],
+      "path": "tests/owned-javascript-wasm-ci.test.mjs",
+      "previousSha256": "d3ad423f933eab4cfec1dc80327a125436a0a2890571f39d25718f40fa1c4314"
+    }
+  ]
+}

@@ -64,6 +64,7 @@ import "./helpers/owned-lifetime-producer-tests.mjs";
 import "./helpers/owned-lifetime-replay-control-tests.mjs";
 import "./helpers/owned-lifetime-producer-replay-source-history-tests.mjs";
 import "./helpers/owned-php-wasm-hosted-archive-source-history-tests.mjs";
+import "./helpers/owned-npm-ci-environment-repair-source-history-tests.mjs";
 
 const root = resolve(".");
 
