@@ -1,0 +1,44 @@
+{
+  "component": {
+    "id": "owned-checked-records@1.0.0",
+    "name": "owned-checked-records",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 54150031,
+          "path": "archives/owned-checked-records-1.0.0.jar",
+          "sha256": "49d1dd5222c2cea6fd4b253e51b4ba123f6871b3391514590f38959e04aa321c"
+        },
+        {
+          "bytes": 597,
+          "path": "archives/owned-checked-records-1.0.0.pom",
+          "sha256": "5d51fa437372d63161a44500d61f6d177e164f0008a21d00d818082914b2cc2f"
+        }
+      ],
+      "ecosystem": "maven",
+      "name": "org.leanbridge:owned-checked-records",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "maven",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "0c23a55e0f6fdad2fc586b45bb35e850f98a7c2f320a0f5e93c9882e22b5ae30",
+      "id": "native-library-v1",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "31066be71d8a4e8cbaed0a901d16407ffc4059d708c4868725fd8eb5ae6ec1bc"
+  }
+}
