@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforePhpWasmEntryOracleIntegrationSource, phpWasmEntryOracleIntegrationChangedPaths } from "./php-wasm-entry-oracle-integration-source-history.mjs";
 import { beforePhpWasmEntryOracleRepairSource, phpWasmEntryOracleRepairNormalizationPaths } from "./php-wasm-entry-oracle-repair-source-history.mjs";
 import { beforePhpWasmEntryOracleClosureSource, phpWasmEntryOracleClosureNormalizationPaths } from "./php-wasm-entry-oracle-closure-source-history.mjs";
 import { beforePhpWasmEntryFlatPositionSource, phpWasmEntryFlatPositionNormalizationPaths } from "./php-wasm-entry-flat-position-source-history.mjs";
@@ -2095,7 +2096,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...phpWasmEntryOracleRepairNormalizationPaths
+	...phpWasmEntryOracleIntegrationChangedPaths
+	, ...phpWasmEntryOracleRepairNormalizationPaths
 	, ...phpWasmEntryOracleClosureNormalizationPaths
 	, ...phpWasmEntryFlatPositionNormalizationPaths
 	, ...phpWasmEntryUnreachedSourceNormalizationPaths
@@ -2933,6 +2935,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
+	const phpWasmEntryOracleIntegration
+		= beforePhpWasmEntryOracleIntegrationSource(path, text, expected);
+	if(sha256(phpWasmEntryOracleIntegration) === expected)
+		return phpWasmEntryOracleIntegration;
+	text = phpWasmEntryOracleIntegration;
 	const phpWasmEntryOracleRepair
 		= beforePhpWasmEntryOracleRepairSource(path, text, expected);
 	if(sha256(phpWasmEntryOracleRepair) === expected)
