@@ -55,9 +55,9 @@ test("C++ ownership evidence rejects changed claims, sources, execution and pack
 test("C++ ownership source history rejects unknown text and overlapping edits", async () => {
 	for(const update of (await json(ownedCppHistoryPath)).updates)
 	{
-		const source = beforeOwnedCppOrder(update.path, await readFile(update.path, "utf8"));
+		const source = beforeOwnedCppOrder(update.path, await readFile(update.path, "utf8"), update.currentSha256);
 		assert.equal(sha256(reverseOwnedCppUpdate(source, update)), update.previousSha256);
-		assert.equal(sha256(beforeOwnedCpp(update.path, source)), update.previousSha256);
+		assert.equal(sha256(beforeOwnedCpp(update.path, source, update.previousSha256)), update.previousSha256);
 		assert.equal(beforeOwnedCpp(update.path, source, update.currentSha256), source);
 		const unknown = source + "\n/* unrecorded */\n";
 		assert.equal(beforeOwnedCpp(update.path, unknown), unknown);
@@ -74,12 +74,12 @@ test("C++ inventory repair preserves membership, original receipts and exact sou
 	assert.deepEqual(record.updates.map(update => update.path), ownedCppOrderPaths);
 	for(const update of record.updates)
 	{
-		const source = beforeOwnedRust(update.path, await readFile(update.path, "utf8"));
+		const source = beforeOwnedRust(update.path, await readFile(update.path, "utf8"), update.currentSha256);
 		assert.equal(sha256(source), update.currentSha256);
-		const previous = beforeOwnedCppOrder(update.path, source);
+		const previous = beforeOwnedCppOrder(update.path, source, update.previousSha256);
 		assert.equal(sha256(previous), update.previousSha256);
 		assert.equal(beforeOwnedCppOrder(update.path, source, update.currentSha256), source);
-		assert.equal(beforeOwnedCppOrder(update.path, previous), previous);
+		assert.equal(beforeOwnedCppOrder(update.path, previous, update.previousSha256), previous);
 		const unknown = source + "\n/* unrecorded */\n";
 		assert.equal(beforeOwnedCppOrder(update.path, unknown), unknown);
 		if(update.path === "package.json" || update.path === "config/cli-package.v1.json")
@@ -92,6 +92,6 @@ test("C++ inventory repair preserves membership, original receipts and exact sou
 	assert.deepEqual(Object.keys(record.receipts).sort(), [ownedCppExecutionPath, ownedCppHistoryPath].sort());
 	for(const [path, digest] of Object.entries(record.receipts)) assert.equal(sha256(await readFile(path)), digest);
 	assert.deepEqual(Object.keys(record.additions), ["tests/helpers/owned-cpp-order-history.mjs"]);
-	for(const [path, digest] of Object.entries(record.additions)) assert.equal(sha256(beforeOwnedRust(path, await readFile(path, "utf8"))), digest);
+	for(const [path, digest] of Object.entries(record.additions)) assert.equal(sha256(beforeOwnedRust(path, await readFile(path, "utf8"), digest)), digest);
 	assert.equal(beforeOwnedCppOrder("src/build/native-project.mjs", "unrecorded"), "unrecorded");
 });

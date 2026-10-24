@@ -21,8 +21,10 @@ import {
 	, promoteNestedCheckedRecordNative
 } from "./nested-checked-record-native-promotion.mjs";
 import {
-	nestedCheckedRecordNativePromotionPredecessor
+	nestedCheckedRecordNativePromotionHistoryPath
+	, nestedCheckedRecordNativePromotionPredecessor
 } from "./nested-checked-record-native-promotion-history.mjs";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import {
 	nestedCheckedRecordNativeArchiveSha256
 } from "./nested-checked-record-native-archive.mjs";
@@ -203,9 +205,13 @@ test("nested native checked-record docs state the accepted and open boundary", a
 			assert.ok(source.includes(text), `${path}: ${text}`);
 		assert.ok(source.includes(
 			"actions/workflows/nested-checked-record-native.yml"), path);
-		const row = source.split("\n").find(line =>
-			line.startsWith("| `Checked records and closed Nat indices`"));
+		// Keep the original copied-position claim separate from later callbacks.
+		const milestone = sourceAtHistoryMilestone(
+			nestedCheckedRecordNativePromotionHistoryPath, path);
+		const row = milestone.split("\n").find(line =>
+			line.startsWith("| `Checked record"));
 		assert.ok(row.includes("Installed checks passed (input, result, field)"));
 		assert.ok(row.includes(nestedCheckedRecordNativeConversion));
+		assert.ok(source.includes(nestedCheckedRecordNativeConversion));
 	}
 });

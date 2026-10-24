@@ -135,7 +135,7 @@ export const assertOwnedCppExecution = async record => {
 	for(const [name, count] of Object.entries({ core: 13, packages: 5, cPackages: 8, contracts: 55 }))
 		passing(record.runs[name], ownedCppCommands[name], count);
 	assert.deepEqual(Object.keys(record.sources).sort(), ownedCppExecutionSources);
-	for(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(ownedCppOrderHistoricalBytes(path, await readFile(path))), digest, path);
+	for(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(ownedCppOrderHistoricalBytes(path, await readFile(path), digest)), digest, path);
 	for(const collection of [record.runtime, record.packages, record.cPackages.aggregates, record.cPackages.callbacks])
 		assert.deepEqual(Object.keys(collection).sort(), ["ordinary", "reviewed"]);
 	assert.deepEqual(Object.keys(record.inputs).sort(), ["owned-aggregates", "owned-host-callbacks"]);
@@ -200,7 +200,7 @@ export const assertOwnedCppIntegration = async record => {
 	const updates = new Map(record.updates.map(update => [update.path, update])), restored = {};
 	for(const path of paths)
 	{
-		const current = ownedCppOrderHistoricalBytes(path, await readFile(path)); assert.equal(sha256(current), record.sourceHashes[path], path);
+		const current = ownedCppOrderHistoricalBytes(path, await readFile(path), record.sourceHashes[path]); assert.equal(sha256(current), record.sourceHashes[path], path);
 		const update = updates.get(path);
 		if(update)
 		{
@@ -211,7 +211,7 @@ export const assertOwnedCppIntegration = async record => {
 		if(record.additions[path]) assert.equal(record.additions[path], record.sourceHashes[path], path);
 	}
 	const { irSchema, consumers } = await readTypeSurface(), contracts = { irSchema, consumers };
-	const document = JSON.parse(ownedCppOrderHistoricalBytes("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json")));
+	const document = JSON.parse(ownedCppOrderHistoricalBytes("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json"), record.sourceHashes["docs/type-surface.v1.json"]));
 	const previousDocument = JSON.parse(restored["docs/type-surface.v1.json"]);
 	const expected = structuredClone(previousDocument);
 	for(const evidence of expected.evidence) for(const file of evidence.files)

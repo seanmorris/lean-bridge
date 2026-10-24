@@ -29,21 +29,21 @@ test("PHP-Wasm transfers preserve frozen receipts without promoting unrelated ty
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path]);
 		assert.equal(update.currentSha256, record.sources[update.path]);
-		const source = beforeOwnedJavaScriptTransfer(update.path, await readFile(update.path, "utf8")), prior = beforeOwnedPhpWasmTransfer(update.path, source);
+		const source = beforeOwnedJavaScriptTransfer(update.path, await readFile(update.path, "utf8"), update.currentSha256), prior = beforeOwnedPhpWasmTransfer(update.path, source, update.previousSha256);
 		assert.equal(sha256(prior), update.previousSha256);
-		assert.equal(beforeOwnedPhpWasmTransfer(update.path, prior), prior);
+		assert.equal(beforeOwnedPhpWasmTransfer(update.path, prior, update.previousSha256), prior);
 		assert.equal(beforeOwnedPhpWasmTransfer(update.path, source, update.currentSha256), source);
 	}
-	const current = beforeOwnedJavaScriptTransfer("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8"));
-	const prior = JSON.parse(beforeOwnedPhpWasmTransfer("docs/type-surface.v1.json", current));
-	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedJavaScriptTransferHistoricalBytes(file.path, await readFile(file.path)));
+	const current = beforeOwnedJavaScriptTransfer("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8"), record.sources["docs/type-surface.v1.json"]);
+	const prior = JSON.parse(beforeOwnedPhpWasmTransfer("docs/type-surface.v1.json", current, previous.sources["docs/type-surface.v1.json"]));
+	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedJavaScriptTransferHistoricalBytes(file.path, await readFile(file.path), record.sources[file.path]));
 	assert.deepEqual(JSON.parse(current), prior);
 });
 
 test("PHP-Wasm transfer history rejects unknown edits and forged reversal spans", async () => {
 	for(const update of (await read()).updates)
 	{
-		const source = beforeOwnedJavaScriptTransfer(update.path, await readFile(update.path, "utf8")), unknown = source + "\n/* unrelated */\n";
+		const source = beforeOwnedJavaScriptTransfer(update.path, await readFile(update.path, "utf8"), update.currentSha256), unknown = source + "\n/* unrelated */\n";
 		assert.equal(beforeOwnedPhpWasmTransfer(update.path, unknown), unknown);
 		assert.throws(() => reverseOwnedPhpWasmTransferUpdate(unknown, update));
 		for(const changed of [{ ...update, previousSha256: "0".repeat(64) }

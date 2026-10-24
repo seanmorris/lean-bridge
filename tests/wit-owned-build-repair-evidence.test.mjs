@@ -30,21 +30,21 @@ test("owned WIT build repair authenticates sources without changing earlier inst
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path], update.path);
 		assert.equal(update.currentSha256, record.sources[update.path], update.path);
-		const current = beforeOwnedTransferC(update.path, await readFile(update.path, "utf8")), prior = beforeOwnedWitBuildRepair(update.path, current);
+		const current = beforeOwnedTransferC(update.path, await readFile(update.path, "utf8"), update.currentSha256), prior = beforeOwnedWitBuildRepair(update.path, current, update.previousSha256);
 		assert.equal(sha256(prior), update.previousSha256);
-		assert.equal(beforeOwnedWitBuildRepair(update.path, prior), prior);
+		assert.equal(beforeOwnedWitBuildRepair(update.path, prior, update.previousSha256), prior);
 		assert.equal(beforeOwnedWitBuildRepair(update.path, current, update.currentSha256), current);
 	}
-	const current = beforeOwnedTransferC("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8"));
-	const prior = JSON.parse(beforeOwnedWitBuildRepair("docs/type-surface.v1.json", current));
-	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedTransferCHistoricalBytes(file.path, await readFile(file.path)));
+	const current = beforeOwnedTransferC("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8"), record.sources["docs/type-surface.v1.json"]);
+	const prior = JSON.parse(beforeOwnedWitBuildRepair("docs/type-surface.v1.json", current, previous.sources["docs/type-surface.v1.json"]));
+	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedTransferCHistoricalBytes(file.path, await readFile(file.path), record.sources[file.path]));
 	assert.deepEqual(JSON.parse(current), prior, "Regression repair does not promote installed support");
 });
 
 test("owned WIT build repair history rejects unknown text, forged ancestors and overlapping spans", async () => {
 	for(const update of (await read()).updates)
 	{
-		const current = beforeOwnedTransferC(update.path, await readFile(update.path, "utf8")), unknown = current + "\n/* unrelated */\n";
+		const current = beforeOwnedTransferC(update.path, await readFile(update.path, "utf8"), update.currentSha256), unknown = current + "\n/* unrelated */\n";
 		assert.equal(beforeOwnedWitBuildRepair(update.path, unknown), unknown);
 		assert.throws(() => reverseOwnedWitBuildRepairUpdate(unknown, update));
 		for(const changed of [{ ...update, previousSha256: "0".repeat(64) }

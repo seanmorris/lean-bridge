@@ -47,7 +47,7 @@ test("managed CI history authenticates whole files through every recent evidence
 	for(const update of (await receipt()).updates)
 	{
 		const current = beforeOwnedJvmPackages(update.path, await readFile(update.path, "utf8"), update.currentSha256);
-		assert.equal(sha256(beforeManagedCiIsolation(update.path, current)), update.previousSha256);
+		assert.equal(sha256(beforeManagedCiIsolation(update.path, current, update.previousSha256)), update.previousSha256);
 		assert.equal(beforeManagedCiIsolation(update.path, current, update.currentSha256), current);
 		for(const historicalBytes of [managedCiIsolationHistoricalBytes, nativeForkRepairHistoricalBytes, ownedDotnetHistoricalBytes, ownedRubyHistoricalBytes])
 		{

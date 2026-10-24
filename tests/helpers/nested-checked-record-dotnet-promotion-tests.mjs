@@ -216,11 +216,17 @@ test("nested checked-record C# docs state the installed and open boundary", asyn
 		, "Linux x64/glibc 2.36", ".NET SDK 8.0.424", "shared framework 8.0.30"
 		, "standalone result-only"])
 		assert.ok(dotnet.includes(text), text);
-	const row = dotnet.split("\n").find(line =>
-		line.startsWith("| `Checked records and closed Nat indices`"));
+	// Later callback promotions broaden the live row. Keep this milestone's
+	// three-position boundary tied to its authenticated documentation.
+	const milestone = sourceAtHistoryMilestone(
+		nestedCheckedRecordDotnetPromotionHistoryPath, "docs/consume/dotnet.md");
+	const row = milestone.split("\n").find(line =>
+		line.startsWith("| `Checked record"));
 	assert.ok(row.includes(nestedCheckedRecordDotnetField));
 	for(const route of ["Ordinary source", "Reviewed IR"])
 		assert.ok(row.includes(`${route}: Installed checks passed (input, result, field)`));
 	assert.ok(row.includes("Not audited (callback input, callback result)"));
 	assert.ok(row.includes(nestedCheckedRecordDotnetConversion));
+	assert.ok(dotnet.includes(nestedCheckedRecordDotnetConversion));
+	assert.ok(dotnet.includes(nestedCheckedRecordDotnetField));
 });

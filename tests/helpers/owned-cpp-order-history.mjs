@@ -55,6 +55,7 @@ export const beforeOwnedCppOrder = (path, source, expected) => {
  *
  * @param path - Repository-relative source path.
  * @param bytes - Complete file contents.
+ * @param expected - Optional exact stopping identity.
  */
-export const ownedCppOrderHistoricalBytes = (path, bytes) => ownedCppOrderPaths.includes(path) || ownedRustChangedPaths.includes(path) || ownedPythonChangedPaths.includes(path) || ownedRubyChangedPaths.includes(path) || ownedDotnetNormalizationPaths.includes(path)
-	? beforeOwnedCppOrder(path, bytes.toString("utf8")) : bytes;
+export const ownedCppOrderHistoricalBytes = (path, bytes, expected) => ownedCppOrderPaths.includes(path) || ownedRustChangedPaths.includes(path) || ownedPythonChangedPaths.includes(path) || ownedRubyChangedPaths.includes(path) || ownedDotnetNormalizationPaths.includes(path)
+	? beforeOwnedCppOrder(path, bytes.toString("utf8"), expected) : bytes;

@@ -42,7 +42,7 @@ export const phpWasmStructuredCallableAddedPaths = [
 	, "tests/helpers/php-wasm-structured-callable-source-history.mjs"
 ].sort();
 const hash = value => assert.match(value, /^[a-f0-9]{64}$/u);
-const priorSource = async path => beforeWitStructuredCallables(path, await readFile(path, "utf8"));
+const priorSource = async (path, expected) => beforeWitStructuredCallables(path, await readFile(path, "utf8"), expected);
 const signatures = ir => {
 	const type = ref => {
 		if(ref.kind === "primitive") return ref;
@@ -198,19 +198,19 @@ export const assertPhpWasmStructuredCallableIntegration = async record => {
 	assert.deepEqual(Object.keys(record.additions).sort(), phpWasmStructuredCallableAddedPaths);
 	const paths = [...new Set([...Object.keys(previous.sourceHashes), ...phpWasmStructuredCallableChangedPaths, ...phpWasmStructuredCallableAddedPaths])].sort();
 	assert.deepEqual(Object.keys(record.sourceHashes).sort(), paths);
-	for(const path of paths) assert.equal(sha256(await priorSource(path)), record.sourceHashes[path], path);
+	for(const path of paths) assert.equal(sha256(await priorSource(path, record.sourceHashes[path])), record.sourceHashes[path], path);
 	const restored = {};
 	for(const update of record.updates)
 	{
 		assert.equal(update.currentSha256, record.sourceHashes[update.path]);
-		restored[update.path] = reversePhpWasmStructuredCallableUpdate(await priorSource(update.path), update);
+		restored[update.path] = reversePhpWasmStructuredCallableUpdate(await priorSource(update.path, update.currentSha256), update);
 		if(previous.sourceHashes[update.path]) assert.equal(update.previousSha256, previous.sourceHashes[update.path]);
 	}
 	for(const [path, digest] of Object.entries(record.additions)) assert.equal(digest, record.sourceHashes[path]);
 	for(const [path, digest] of Object.entries(codegen.predecessors))
 	{ assert.equal(digest, sha256(restored[path])); assert.equal(codegen.sourceHashes[path], record.sourceHashes[path]); }
 	const { document, ...contracts } = { ...await readTypeSurface()
-		, document: JSON.parse(await priorSource("docs/type-surface.v1.json")) };
+		, document: JSON.parse(await priorSource("docs/type-surface.v1.json", record.sourceHashes["docs/type-surface.v1.json"])) };
 	const old = JSON.parse(restored["docs/type-surface.v1.json"]);
 	assert.equal(document.contractVersion, record.inventory.version); assert.equal(old.contractVersion, record.inventory.previousVersion);
 	const cells = typeSurfaceCells(document, contracts), oldCells = typeSurfaceCells(old, contracts);

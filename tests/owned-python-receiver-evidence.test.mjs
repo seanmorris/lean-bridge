@@ -30,8 +30,8 @@ test("Python receiver evidence binds exact sources without changing historical r
 	for(const update of record.updates)
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path]); assert.equal(update.currentSha256, record.sources[update.path]);
-		const source = beforeOwnedRubyReceiver(update.path, await readFile(update.path, "utf8"), update.currentSha256), prior = beforeOwnedPythonReceiver(update.path, source);
-		assert.equal(sha256(prior), update.previousSha256); assert.equal(beforeOwnedPythonReceiver(update.path, prior), prior);
+		const source = beforeOwnedRubyReceiver(update.path, await readFile(update.path, "utf8"), update.currentSha256), prior = beforeOwnedPythonReceiver(update.path, source, update.previousSha256);
+		assert.equal(sha256(prior), update.previousSha256); assert.equal(beforeOwnedPythonReceiver(update.path, prior, update.previousSha256), prior);
 		assert.equal(beforeOwnedPythonReceiver(update.path, source, update.currentSha256), source);
 		const unknown = source + "\n/* unrelated edit */\n";
 		assert.equal(beforeOwnedPythonReceiver(update.path, unknown), unknown);
@@ -42,7 +42,7 @@ test("Python receiver evidence binds exact sources without changing historical r
 			assert.throws(() => reverseOwnedPythonReceiverUpdate(source, changed));
 	}
 	const path = "docs/type-surface.v1.json", current = beforeOwnedRubyReceiver(path, await readFile(path, "utf8"), record.sources[path]);
-	const prior = JSON.parse(beforeOwnedPythonReceiver(path, current));
+	const prior = JSON.parse(beforeOwnedPythonReceiver(path, current, previous.sources[path]));
 	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedRubyReceiverHistoricalBytes(file.path, await readFile(file.path), record.sources[file.path]));
 	assert.deepEqual(JSON.parse(current), prior);
 	for(const name of ["owned-python-receivers", "owned-python-receiver-packaging"

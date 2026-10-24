@@ -34,9 +34,9 @@ test("Ruby borrow evidence authenticates complete source changes without rewriti
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path]);
 		assert.equal(update.currentSha256, record.sources[update.path]);
-		const source = beforeOwnedRubyBorrowCi(update.path, await readFile(update.path, "utf8"), update.currentSha256), prior = beforeOwnedRubyBorrow(update.path, source);
+		const source = beforeOwnedRubyBorrowCi(update.path, await readFile(update.path, "utf8"), update.currentSha256), prior = beforeOwnedRubyBorrow(update.path, source, update.previousSha256);
 		assert.equal(sha256(prior), update.previousSha256);
-		assert.equal(beforeOwnedRubyBorrow(update.path, prior), prior);
+		assert.equal(beforeOwnedRubyBorrow(update.path, prior, update.previousSha256), prior);
 		assert.equal(beforeOwnedRubyBorrow(update.path, source, update.currentSha256), source);
 		const unknown = source + "\n/* unrecorded change */\n";
 		assert.equal(beforeOwnedRubyBorrow(update.path, unknown), unknown);
@@ -46,8 +46,8 @@ test("Ruby borrow evidence authenticates complete source changes without rewriti
 			, { ...update, edits: [...update.edits, update.edits[0]] }])
 			assert.throws(() => reverseOwnedRubyBorrowUpdate(source, changed));
 	}
-	const path = "docs/type-surface.v1.json", current = beforeOwnedRubyBorrowCi(path, await readFile(path, "utf8"));
-	const prior = JSON.parse(beforeOwnedRubyBorrow(path, current));
+	const path = "docs/type-surface.v1.json", current = beforeOwnedRubyBorrowCi(path, await readFile(path, "utf8"), record.sources[path]);
+	const prior = JSON.parse(beforeOwnedRubyBorrow(path, current, previous.sources[path]));
 	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedRubyBorrowCiHistoricalBytes(file.path, await readFile(file.path), record.sources[file.path]));
 	assert.deepEqual(JSON.parse(current), prior);
 	const module = "src/backends/ruby/owned-borrows.mjs";

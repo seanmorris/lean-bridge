@@ -29,21 +29,21 @@ test("Ruby transfers bind current sources without promoting unrelated type cells
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path]);
 		assert.equal(update.currentSha256, record.sources[update.path]);
-		const current = beforeOwnedDotnetTransfer(update.path, await readFile(update.path, "utf8")), prior = beforeOwnedRubyTransfer(update.path, current);
+		const current = beforeOwnedDotnetTransfer(update.path, await readFile(update.path, "utf8"), update.currentSha256), prior = beforeOwnedRubyTransfer(update.path, current, update.previousSha256);
 		assert.equal(sha256(prior), update.previousSha256);
-		assert.equal(beforeOwnedRubyTransfer(update.path, prior), prior);
+		assert.equal(beforeOwnedRubyTransfer(update.path, prior, update.previousSha256), prior);
 		assert.equal(beforeOwnedRubyTransfer(update.path, current, update.currentSha256), current);
 	}
-	const current = beforeOwnedDotnetTransfer("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8"));
-	const previousIndex = JSON.parse(beforeOwnedRubyTransfer("docs/type-surface.v1.json", current));
-	for(const evidence of previousIndex.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedDotnetTransferHistoricalBytes(file.path, await readFile(file.path)));
+	const current = beforeOwnedDotnetTransfer("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8"), record.sources["docs/type-surface.v1.json"]);
+	const previousIndex = JSON.parse(beforeOwnedRubyTransfer("docs/type-surface.v1.json", current, previous.sources["docs/type-surface.v1.json"]));
+	for(const evidence of previousIndex.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedDotnetTransferHistoricalBytes(file.path, await readFile(file.path), record.sources[file.path]));
 	assert.deepEqual(JSON.parse(current), previousIndex);
 });
 
 test("Ruby transfer history rejects unrelated edits and invalid reversal spans", async () => {
 	for(const update of (await read()).updates)
 	{
-		const source = beforeOwnedDotnetTransfer(update.path, await readFile(update.path, "utf8")), unknown = source + "\n/* unrelated */\n";
+		const source = beforeOwnedDotnetTransfer(update.path, await readFile(update.path, "utf8"), update.currentSha256), unknown = source + "\n/* unrelated */\n";
 		assert.equal(beforeOwnedRubyTransfer(update.path, unknown), unknown);
 		assert.throws(() => reverseOwnedRubyTransferUpdate(unknown, update));
 		for(const changed of [{ ...update, previousSha256: "0".repeat(64) }
