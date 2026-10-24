@@ -17,8 +17,30 @@ const exact = (value, keys, label) => {
 	require(same(Object.keys(value).sort(), [...keys].sort()), `open ${label}`);
 };
 
+const optionalKeys = (value, required, optional) => [
+	...required, ...optional.filter(key => value && Object.hasOwn(value, key))
+];
+// Compiler-classified entries that cannot carry a per-call marker.
+const unmarked = (plan, key, kinds, fields) => {
+	const values = new Map();
+	if(!Object.hasOwn(plan, key)) return values;
+	require(Array.isArray(plan[key]) && plan[key].length > 0, `entry plan ${key}`);
+	for(const item of plan[key])
+	{
+		exact(item, fields, `entry plan ${key} item`);
+		require(kinds.includes(item.kind), `${key} entry kind`);
+		require(plan.selected.filter(entry => entry.symbol === item.symbol && entry.kind === item.kind
+			&& entry.label === item.label).length === 1, `${key} entry is selected`);
+		require(!values.has(item.label), `${key} entry identity`);
+		if(key === "reducedArity")
+			require(/^l_[A-Za-z0-9_]+___redArg$/u.test(item.target), "reduced-arity call target");
+		values.set(item.label, item);
+	}
+	return values;
+};
+
 const validatePlan = plan => {
-	exact(plan, ["scope", "family", "selected", "cases"], "entry plan");
+	exact(plan, optionalKeys(plan, ["scope", "family", "selected", "cases"], ["globals", "reducedArity"]), "entry plan");
 	require(plan.scope === "separate-instrumented-probe", "entry plan scope");
 	require([
 		"nominal-full"
@@ -32,10 +54,24 @@ const validatePlan = plan => {
 	].includes(plan.family), "entry plan family");
 	require(Array.isArray(plan.selected) && plan.selected.length > 0, "entry plan selection");
 	require(Array.isArray(plan.cases) && plan.cases.length > 0, "entry plan cases");
+	const globals = unmarked(plan, "globals", ["constructor", "source"], ["symbol", "kind", "label"]);
+	const reduced = unmarked(plan, "reducedArity", ["source"], ["symbol", "kind", "label", "target"]);
 	const controls = new Set();
 	for(const item of plan.cases)
 	{
-		exact(item, ["control", "outcome", "call"], "entry case");
+		exact(item, optionalKeys(item, ["control", "outcome", "call"], ["moduleInitialized", "reducedArity"]), "entry case");
+		const declared = (key, values) => {
+			if(!Object.hasOwn(item, key)) return [];
+			require(Array.isArray(item[key]) && item[key].length > 0
+				&& same(item[key], [...new Set(item[key])].sort()), `entry case ${key}`);
+			for(const label of item[key]) require(values.has(label), `${key} names a classified entry`);
+			return item[key].map(label => values.get(label));
+		};
+		const unmarkedEntries = [...declared("moduleInitialized", globals), ...declared("reducedArity", reduced)];
+		require(Array.isArray(item.call?.entries) && !item.call.entries.some(entry => [...globals.values(), ...reduced.values()]
+			.some(value => value.kind === entry.kind && value.label === entry.label))
+		, "unmarked entries cannot appear in a trace plan");
+		const unmarkedSource = unmarkedEntries.some(value => value.kind === "source");
 		require(/^[a-z][a-z0-9-]*$/u.test(item.control) && !controls.has(item.control), "entry control identity");
 		controls.add(item.control);
 		require(["accepted", "refused"].includes(item.outcome), "entry case outcome");
@@ -48,7 +84,7 @@ const validatePlan = plan => {
 		const owned = plan.family.startsWith("owned-");
 		if(item.outcome === "accepted")
 		{
-			require(item.call.counts.source > 0, "accepted entry reaches its source");
+			require(item.call.counts.source > 0 || unmarkedSource, "accepted entry reaches its source");
 			if(owned)
 			{
 				require(item.call.entries.some(entry => entry.kind === "adapter"
@@ -60,7 +96,7 @@ const validatePlan = plan => {
 		}
 		else
 		{
-			require(item.call.counts.source === 0, "refused entry stops before its source");
+			require(item.call.counts.source === 0 && !unmarkedSource, "refused entry stops before its source");
 			if(owned)
 			{
 				require(item.call.entries.some(entry => entry.kind === "adapter"
@@ -71,6 +107,9 @@ const validatePlan = plan => {
 			else require(item.call.counts.adapter === 0, "copied refusal stops before its adapter");
 		}
 	}
+	for(const [key, values] of [["moduleInitialized", globals], ["reducedArity", reduced]])
+		for(const label of values.keys())
+			require(plan.cases.some(item => item[key]?.includes(label)), `${label} classification is exercised`);
 	return [...controls];
 };
 

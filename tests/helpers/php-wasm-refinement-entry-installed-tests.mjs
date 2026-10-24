@@ -48,6 +48,7 @@ import { phpWasmRefinementEntrySource } from "./php-wasm-refinement-entry-source
 import {
 	phpWasmRefinementEntryHostedSelection, phpWasmRefinementEntrySourceFixture
 } from "./php-wasm-refinement-entry-source-fixtures.mjs";
+import { phpWasmEntryBuildClassifications } from "./php-wasm-entry-call-targets.mjs";
 import { phpWasmExecutionTuples } from "./php-wasm-fin-fixtures.mjs";
 import { copyPackageSetHandoff } from "./package-set.mjs";
 import { installedPhpWasmCorpus } from "./type-corpus-php-wasm-install.mjs";
@@ -152,9 +153,13 @@ test(`instrumented PHP-Wasm copied package closes ${family} ${route} compiler en
 	assert.deepEqual(builds[1].observation.library, builds[0].observation.library);
 	assert.deepEqual(builds[1].observation.selected, builds[0].observation.selected);
 	assert.deepEqual(builds[1].observation.definitionCounts, builds[0].observation.definitionCounts);
+	assert.deepEqual(builds[1].observation.globalDefinitions, builds[0].observation.globalDefinitions);
 	const selection = phpWasmRefinementEntrySelection(builds[0].model, sourceProbe.entries);
 	assert.deepEqual(selection.selected, builds[0].observation.selected);
-	const entryPlan = phpWasmRefinementEntryPlan(family, selection.selected, selection.generated.leanSource);
+	const classifications = await Promise.all([0, 1].map(index =>
+		phpWasmEntryBuildClassifications(join(output, `build-${index}`), builds[index].observation)));
+	assert.deepEqual(classifications[1], classifications[0], "independent builds classify one call surface");
+	const entryPlan = phpWasmRefinementEntryPlan(family, selection.selected, selection.generated.leanSource, classifications[0]);
 	const sources = Object.fromEntries(await Promise.all(["weak", "strict"].map(async mode => [
 		mode, await phpWasmRefinementEntryCaller(family, mode)
 	])));

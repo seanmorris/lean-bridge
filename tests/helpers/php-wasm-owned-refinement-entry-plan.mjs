@@ -5,6 +5,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { phpWasmUnmarkedEntries } from "./php-wasm-refinement-entry-plan.mjs";
 import { validateSubtypeEntrySelection } from "./php-wasm-subtype-entry-c.mjs";
 
 const kinds = ["validator", "constructor", "adapter", "source"];
@@ -21,9 +22,13 @@ const counts = entries => Object.fromEntries(kinds.map(kind => [
  * @param family - One explicit #1825 owned refinement family.
  * @param selected - Compiler-derived plus authored marker identities.
  * @param generatedLeanSource - Exact generated owned adapter source.
+ * @param options - Compiler-classified entry forms and call targets.
+ * @param options.globalDefinitions - Authored entries compiled as module-initialized values.
+ * @param options.reducedArity - Authored sources reached only through a reduced-arity target.
  */
-export const phpWasmOwnedRefinementEntryPlan = (family, selected, generatedLeanSource) => {
+export const phpWasmOwnedRefinementEntryPlan = (family, selected, generatedLeanSource, options = {}) => {
 	validateSubtypeEntrySelection(selected); assert.equal(typeof generatedLeanSource, "string");
+	const { unmarked, close } = phpWasmUnmarkedEntries(selected, options);
 	assert.ok(["owned-subtype", "owned-checked-record"].includes(family));
 	const namespace = family === "owned-subtype" ? "Owned" : "OwnedCheckedRecords";
 	const find = (kind, label) => {
@@ -52,10 +57,9 @@ export const phpWasmOwnedRefinementEntryPlan = (family, selected, generatedLeanS
 	};
 	const constructors = names => names.map(constructor);
 	const borrowed = count => Array.from({ length: count }, () => hook("identity.borrow"));
-	const call = (publicName, entries) => ({ publicName, entries, counts: counts(entries) });
-	const item = (control, outcome, publicName, entries) => ({
-		control, outcome, call: call(publicName, entries)
-	});
+	// Every owned call closes its input leases, refused or accepted.
+	const item = (control, outcome, publicName, entries) => unmarked(control, outcome, publicName
+		, [...entries, hook("transfer.finish")], counts);
 	const setup = name => item(`setup-${name === "newTicket" ? "owner" : name}`
 		, "accepted", name, [adapter(name, "native"), adapter(name, "lean"), source(name)]);
 	const accepted = (control, name, validatorNames, constructorNames, borrowCount = 1) => item(
@@ -80,8 +84,7 @@ export const phpWasmOwnedRefinementEntryPlan = (family, selected, generatedLeanS
 		const entries = outcome === "accepted" ? [
 			...prefix, hook("owner.move"), hook("owner.consume")
 			, adapter(name, "lean"), ...constructors(constructorNames), source(name)
-			, hook("transfer.finish")
-		] : [...prefix, hook("transfer.finish")];
+		] : prefix;
 		return item(control, outcome, name, entries);
 	};
 	let cases;
@@ -139,6 +142,8 @@ export const phpWasmOwnedRefinementEntryPlan = (family, selected, generatedLeanS
 	assert.equal(new Set(cases.map(value => value.control)).size, cases.length);
 	assert.ok(cases.some(value => value.call.entries.some(entry => entry.label === "owner.move")));
 	assert.ok(cases.some(value => value.outcome === "refused"));
+	const { globals, reduced } = close(cases);
 	return { scope: "separate-instrumented-probe", family
-		, selected: structuredClone(selected), cases };
+		, selected: structuredClone(selected), cases
+		, ...globals.length ? { globals } : {}, ...reduced.length ? { reducedArity: reduced } : {} };
 };

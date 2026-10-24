@@ -124,10 +124,17 @@ const makeRecords = async (family = "recursive-subtype", route = "ordinary") => 
 	const selection = model.copiedGraph
 		? phpWasmGraphRefinementEntrySelection(model, sourceProbe.entries)
 		: phpWasmRefinementEntrySelection(model, sourceProbe.entries);
-	const plan = phpWasmRefinementEntryPlan(family, selection.selected, selection.generated.leanSource);
-	const cInput = selection.selected.map(item => item.kind === "public"
+	const globalDefinitions = sourceProbe.entries.filter(item => sourceProbe.entryForms[item.symbol] === "global");
+	const global = new Set(globalDefinitions.map(item => item.symbol));
+	const plan = phpWasmRefinementEntryPlan(family, selection.selected, selection.generated.leanSource
+		, { globalDefinitions });
+	const sources = selection.selected.filter(item => item.kind === "source" && !global.has(item.symbol))
+		.map(item => `&${item.symbol}`);
+	const cInput = [...selection.selected.map(item => item.kind === "public"
 		? `static ZEND_FUNCTION(${item.symbol}) { RETURN_NULL(); }`
-		: `lean_object *${item.symbol}(lean_object *value) { return value; }`).join("\n") + "\n";
+		: global.has(item.symbol) ? `LEAN_EXPORT lean_object* ${item.symbol};`
+			: `lean_object *${item.symbol}(lean_object *value) { return value; }`)
+	, `static void *const probe_sources[] = { ${sources.join(", ")} };`].join("\n") + "\n";
 	const instrumented = instrumentSubtypeCEntries(cInput, selection.selected);
 	const library = identity("probe-wasm"), modelBytes = Buffer.from(canonicalJson(model));
 	const packageReceipt = receipt(model), packageSetSha256 = sha256(canonicalJson(packageReceipt));
@@ -164,6 +171,7 @@ const makeRecords = async (family = "recursive-subtype", route = "ordinary") => 
 			, modelSha256: sha256(modelBytes)
 			, component: { id: "component", wasmLibrary: library }
 			, library, packageSetSha256
+			, ...globalDefinitions.length ? { globalDefinitions } : {}
 		};
 		const prefix = `build-${index}/`;
 		save(prefix + "source-probe.json", canonicalJson(sourceProbe));
@@ -173,6 +181,7 @@ const makeRecords = async (family = "recursive-subtype", route = "ordinary") => 
 			selected: observation.selected
 			, definitionCounts: observation.definitionCounts
 			, compiled, headers: [], commands, linked: true
+			, ...globalDefinitions.length ? { globalDefinitions } : {}
 		}));
 		save(prefix + "c-inputs/1-probe.c", cInput);
 		save(prefix + "c-probes/1-probe.c", instrumented.source);
@@ -318,4 +327,36 @@ test("installed graph-entry report refuses substituted claims and incomplete rec
 		controls++;
 	}
 	assert.equal(controls, mutations.length); t.diagnostic(`${controls} substituted or incomplete controls`);
+});
+
+test("installed report derives unmarked entries from retained compiler forms only", async () => {
+	const fixture = await makeRecords("zero-payload-full");
+	const report = JSON.parse(fixture.files.get("report.json"));
+	assert.ok(report.entryPlan.globals.length > 0);
+	assert.ok(report.entryPlan.cases.some(item => item.moduleInitialized?.length));
+	const withoutGlobals = files => {
+		for(const index of [0, 1])
+			for(const path of [`build-${index}/observation.json`, `build-${index}/commands.json`])
+				mutateJson(files, path, value => { delete value.globalDefinitions; });
+	};
+	const mutations = [
+		withoutGlobals
+		, files => mutateJson(files, "build-0/observation.json", value => {
+			value.globalDefinitions.push(value.selected.find(item => item.kind === "source"
+				&& !value.globalDefinitions.some(global => global.symbol === item.symbol)));
+		})
+		, files => mutateJson(files, "report.json", value => {
+			delete value.entryPlan.cases.find(item => item.moduleInitialized).moduleInitialized;
+		})
+		, files => mutateJson(files, "report.json", value => { delete value.entryPlan.globals; })
+		, files => mutateJson(files, "report.json", value => {
+			value.entryPlan.reducedArity = [{ ...value.entryPlan.selected.find(item => item.kind === "source")
+				, target: "l_ZeroPayloadCheckedRecords_witnessCount___redArg" }];
+		})
+	];
+	for(const mutate of mutations)
+	{
+		const value = await makeRecords("zero-payload-full"); mutate(value.files);
+		await assert.rejects(checkPhpWasmRefinementEntryReport(value.records(), value.options));
+	}
 });

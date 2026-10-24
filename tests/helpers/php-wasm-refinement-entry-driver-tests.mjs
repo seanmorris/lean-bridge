@@ -159,3 +159,55 @@ test("entry driver admits owned native/Lean layers while preserving refusal boun
 		, outcome: "refused" }] }
 		, trace: ownedTrace }));
 });
+
+test("entry driver admits only declared unmarked sources and refuses their markers", async () => {
+	const unmarkedSelected = [...selected
+		, { symbol: "value", kind: "source", label: "Probe.value" }
+		, { symbol: "redirected", kind: "source", label: "Probe.redirected" }];
+	const sourceless = { publicName: "first"
+		, entries: call.entries.slice(0, 2)
+		, counts: { validator: 1, constructor: 0, adapter: 1, source: 0 } };
+	const sourcelessTrace = trace.replace("LB_SUBTYPE_ENTRY_V1 enter source Probe.first\n", "");
+	const globals = [unmarkedSelected[4]];
+	const reducedArity = [{ ...unmarkedSelected[5], target: "l_Probe_redirected___redArg" }];
+	const base = { ...plan, selected: unmarkedSelected, globals, reducedArity };
+	for(const [key, label] of [["moduleInitialized", "Probe.value"], ["reducedArity", "Probe.redirected"]])
+	{
+		const other = key === "moduleInitialized" ? "reducedArity" : "globals";
+		const direct = { control: "direct", outcome: "accepted", call: sourceless, [key]: [label] };
+		const accepted = { ...base, cases: [direct] };
+		delete accepted[other];
+		const { value } = await driver({ plan: accepted, trace: sourcelessTrace });
+		assert.equal(value.entryProbe.counts.source, 0, key);
+		for(const faults of [
+			{ plan: { ...accepted, cases: [{ ...accepted.cases[0], [key]: undefined }] } }
+			, { plan: { ...accepted, cases: [{ control: "direct", outcome: "accepted", call: sourceless }] } }
+			, { plan: { ...accepted, cases: [{ ...accepted.cases[0], [key]: ["Probe.first"] }] } }
+			, { plan: { ...accepted, cases: [{ ...accepted.cases[0], [key]: [label, label] }] } }
+			, { plan: { ...accepted, cases: [{ ...accepted.cases[0], outcome: "refused" }] } }
+			, { plan: { ...accepted, cases: [{ ...accepted.cases[0], call: { publicName: "first"
+				, entries: [...sourceless.entries, { kind: "source", label }]
+				, counts: { ...sourceless.counts, source: 1 } } }] }
+			, trace: sourcelessTrace.replace("LB_SUBTYPE_ENTRY_V1 end", `LB_SUBTYPE_ENTRY_V1 enter source ${label}\nLB_SUBTYPE_ENTRY_V1 end`) }
+		]) await assert.rejects(driver({ trace: sourcelessTrace, ...faults }), key);
+	}
+	const declared = { control: "direct", outcome: "accepted", call: sourceless, moduleInitialized: ["Probe.value"] };
+	const second = { control: "second", outcome: "accepted", call: sourceless, reducedArity: ["Probe.redirected"] };
+	const both = { ...base, cases: [declared, second] };
+	assert.equal((await driver({ plan: both, trace: sourcelessTrace + sourcelessTrace })).value.entryProbe.calls, 2);
+	await assert.rejects(driver({ plan: { ...base, cases: [declared] }, trace: sourcelessTrace })
+		, /Probe\.redirected classification is exercised/u);
+	const onlyGlobals = { ...plan, selected: unmarkedSelected, globals, cases: [declared] };
+	assert.equal((await driver({ plan: onlyGlobals, trace: sourcelessTrace })).value.entryProbe.calls, 1);
+	const redirected = { control: "direct", outcome: "accepted", call: sourceless, reducedArity: ["Probe.redirected"] };
+	const onlyReduced = { ...plan, selected: unmarkedSelected, reducedArity, cases: [redirected] };
+	assert.equal((await driver({ plan: onlyReduced, trace: sourcelessTrace })).value.entryProbe.calls, 1);
+	for(const value of [
+		{ ...onlyGlobals, globals: [] }
+		, { ...onlyGlobals, globals: [{ symbol: "missing", kind: "source", label: "Probe.value" }] }
+		, { ...onlyGlobals, globals: [{ ...globals[0], kind: "adapter" }] }
+		, { ...onlyGlobals, globals: [globals[0], globals[0]] }
+		, { ...onlyReduced, reducedArity: [{ ...reducedArity[0], target: "l_Probe_redirected" }] }
+		, { ...onlyReduced, reducedArity: [{ ...reducedArity[0], target: undefined }] }
+	]) await assert.rejects(driver({ plan: value, trace: sourcelessTrace }));
+});

@@ -5,8 +5,8 @@
  */
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import { cp, mkdir, readFile, readdir, realpath, rename, rm, symlink } from "node:fs/promises";
-import { join, resolve } from "node:path";
+import { access, cp, mkdir, readFile, readdir, realpath, rename, rm, symlink } from "node:fs/promises";
+import { join, resolve, sep } from "node:path";
 import { pathToFileURL } from "node:url";
 import { build as buildVite } from "vite";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
@@ -23,6 +23,60 @@ const repository = resolve(import.meta.dirname, "../..");
 const run = (command, args, cwd, env) => processBuildRunner.capture({ command, args, cwd, env, timeoutMs: 180_000 });
 const json = async path => JSON.parse(await readFile(path, "utf8"));
 const digest = async path => sha256(await readFile(path));
+const captureTail = 4096;
+
+/**
+ * Surface a failed captured process through bounded TAP diagnostics.
+ * The node:test reporter serializes only an error's message, code and stack,
+ * so the stdout and stderr held in CanonicalBuildError details are otherwise lost.
+ *
+ * @param t - Test context that receives the diagnostics.
+ * @param label - Stable execution identity.
+ * @param error - Rejection from the process runner.
+ */
+export const reportPhpWasmCaptureFailure = (t, label, error) => {
+	const details = error?.name === "CanonicalBuildError" ? error.details : null;
+	if(!details || typeof details !== "object" || Array.isArray(details)) return false;
+	const status = details.signal ? `signal ${details.signal}` : `exit ${details.exitCode ?? "none"}`;
+	t.diagnostic(`${label}: ${error.code} (${status})`);
+	for(const stream of ["stderr", "stdout"])
+	{
+		const text = typeof details[stream] === "string" ? details[stream] : "";
+		const bound = text.length > captureTail ? ` (last ${captureTail} of ${text.length} retained characters)` : "";
+		t.diagnostic(`${label} ${stream}${bound}: ${JSON.stringify(text.slice(-captureTail))}`);
+	}
+	return true;
+};
+
+/**
+ * Copy one failed consumer deployment into an explicit upload root.
+ * The pinned public host package is omitted; its identity is already part of
+ * the installed evidence and its 180 MiB would dominate every failure artifact.
+ *
+ * @param options - Retention root, execution identity, deployment and failure record.
+ * @param options.root - Explicit retention directory supplied by the workflow.
+ * @param options.name - Directory name for this execution.
+ * @param options.deployment - Relocated deployment that failed.
+ * @param options.failure - JSON-serializable failure record; streams keep a bounded tail.
+ */
+export const retainFailedPhpWasmDeployment = async ({ root, name, deployment, failure }) => {
+	assert.equal(typeof root, "string"); assert.ok(root.length > 0);
+	assert.match(name, /^[A-Za-z0-9][A-Za-z0-9._-]*$/u);
+	const streams = Object.fromEntries(["stderr", "stdout"].map(stream => {
+		assert.equal(typeof failure?.[stream], "string", stream);
+		return [stream, { characters: failure[stream].length, tail: failure[stream].slice(-captureTail) }];
+	}));
+	const target = join(resolve(root), name), host = join(deployment, "node_modules", "php-wasm");
+	await assert.rejects(access(target), { code: "ENOENT" });
+	await cp(deployment, join(target, "deployment"), {
+		recursive: true, verbatimSymlinks: true, errorOnExist: true, force: false
+		, filter: path => path !== host && !path.startsWith(host + sep)
+	});
+	await saveLakeFile(target, "failure.json", canonicalJson({
+		schemaVersion: 1, ...failure, ...streams, omitted: ["deployment/node_modules/php-wasm"]
+	}));
+	return target;
+};
 
 const legacyEntryProbeFiles = Object.freeze([
 	Object.freeze({ source: "tests/fixtures/php-wasm-subtype-entry/driver.mjs", destination: "driver.mjs" })
@@ -236,9 +290,32 @@ export const installedPhpWasmCorpus = async options => {
 	for(const loading of ["startup", "lazy"])
 	for(const mode of ["weak", "strict"])
 	{
-		t.diagnostic(library.id + ": PHP-Wasm Node " + [arrangement, loading, mode].join("/"));
+		const label = library.id + ": PHP-Wasm Node " + [arrangement, loading, mode].join("/");
+		t.diagnostic(label);
 		const observe = async () => {
-			const result = await run(process.execPath, ["node.mjs", arrangement, loading, mode, settings.npm.name], deployment, clean);
+			const args = ["node.mjs", arrangement, loading, mode, settings.npm.name];
+			const result = await run(process.execPath, args, deployment, clean).catch(async error => {
+				const root = process.env.LEAN_BRIDGE_PHP_WASM_FAILED_DEPLOYMENTS;
+				if(reportPhpWasmCaptureFailure(t, label, error) && root)
+				{
+					const { exitCode = null, signal = null, stderr = "", stdout = "" } = error.details;
+					try
+					{
+						const retained = await retainFailedPhpWasmDeployment({
+							root, deployment
+							, name: [library.id, arrangement, loading, mode].join("-")
+							, failure: {
+								label, command: "node", args, code: error.code
+								, exitCode, signal, stderr, stdout
+							}
+						});
+						t.diagnostic(`${label}: retained failed deployment ${retained}`);
+					}
+					catch(retention)
+					{ t.diagnostic(`${label}: failed deployment was not retained: ${retention.message}`); }
+				}
+				throw error;
+			});
 			assert.equal(result.stderr, "");
 			return JSON.parse(result.stdout);
 		};
