@@ -7,15 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { beforeCallbackInventoryRepair } from "./owned-callback-inventory-history.mjs";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
-import { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from "../../src/build/native-graph-model.mjs";
-import { generateOwnedCPackage } from "../../src/backends/c/owned-package.mjs";
-import { generateOwnedNativeValueAdapters } from "../../src/backends/native/owned-value-adapters.mjs";
-import { generateOwnedWasmComponent } from "../../src/backends/javascript/owned-wasm-component.mjs";
-import { generateJavaScriptPackage } from "../../src/backends/javascript/generate.mjs";
-import { createOwnedJavaScriptWasmModel, generateOwnedJavaScriptWasmLeanAdapters } from "../../src/build/javascript-wasm-owned-model.mjs";
-import { generateCompiledJavaScriptWasmOwned } from "../../src/build/javascript-wasm-owned-sources.mjs";
-import { ownedJavaScriptWasmNativeProbe } from "./owned-javascript-wasm-native.mjs";
-import { ownedCallbackResultSource, ownedCallbackResultCombinedSource } from "./owned-callback-result-fixture.mjs";
+import { ownedCallbackResultReplay } from "./owned-callback-result-producer.mjs";
 import { assertOwnedCallbackResultCi, ownedCallbackResultReports, ownedCallbackResultTestNames } from "./owned-callback-result-ci.mjs";
 import { ownedCallbackResultBaseline, ownedCallbackResultChangedPaths
 	, ownedCallbackResultHistoryPath, ownedCallbackResultHistorySha256 } from "./owned-callback-result-history.mjs";
@@ -137,11 +129,11 @@ const nativeOptions = (hostCallbacks = true, combined = false) => ({
 	, ownedAnchoredResults: combined, ownedReceiverExports: combined
 	, ownedInputTransfers: combined
 });
-const source = async (input, mode, combined = false) => {
+const source = async (replay, input, mode, combined = false) => {
 	assert.equal(Boolean(input.sourceIdentity.reviewedBindingIr), mode === "reviewed");
-	const lean = await readFile("tests/fixtures/onboarding/owned-aggregates/Owned.lean", "utf8");
+	const lean = await replay.readSource("tests/fixtures/onboarding/owned-aggregates/Owned.lean");
 	assert.equal(input.sourceIdentity.modules.find(item => item.module === "Owned").source.sha256
-		, sha256(lean + (combined ? ownedCallbackResultCombinedSource : ownedCallbackResultSource)));
+		, sha256(lean + (combined ? replay.ownedCallbackResultCombinedSource : replay.ownedCallbackResultSource)));
 };
 const graph = (model, combined = false) => {
 	assert.equal(model.schemaVersion, 11); assert.equal(model.ownedGraph.schemaVersion, 6);
@@ -153,12 +145,12 @@ const graph = (model, combined = false) => {
 		if(combined) assert.equal(model.ownedGraph[key].exports.length, count);
 		else assert.equal(model.ownedGraph[key], undefined);
 };
-const wasm = (item, hostCallbacks = true, combined = false) => {
-	const native = generateOwnedNativeValueAdapters({ ...item.input, wordBits: 32, ...options(hostCallbacks, combined) });
-	const component = generateOwnedWasmComponent(native);
+const wasm = (replay, item, hostCallbacks = true, combined = false) => {
+	const native = replay.generateOwnedNativeValueAdapters({ ...item.input, wordBits: 32, ...options(hostCallbacks, combined) });
+	const component = replay.generateOwnedWasmComponent(native);
 	assert.deepEqual(item.privateAbi, component.privateAbi);
 	assert.equal(item.privateAbi.version, 14);
-	if(item.sourceSha256) assert.equal(item.sourceSha256, sha256(ownedJavaScriptWasmNativeProbe(component)));
+	if(item.sourceSha256) assert.equal(item.sourceSha256, sha256(replay.ownedJavaScriptWasmNativeProbe(component)));
 	return { native, component };
 };
 const browser = (item, name, checks) => {
@@ -221,14 +213,14 @@ export const assertOwnedCallbackRuntimeInventory = async (inventory, sources, re
 	}
 };
 
-const installedWasm = async (item, combined = false, sources) => {
-	const model = createOwnedJavaScriptWasmModel({ ...item.input, ...options(true, combined) });
+const installedWasm = async (replay, item, combined = false, sources) => {
+	const model = replay.createOwnedJavaScriptWasmModel({ ...item.input, ...options(true, combined) });
 	assert.deepEqual(item.model, model); graph(model, combined); assert.equal(model.pointerBits, 32);
-	const generated = generateCompiledJavaScriptWasmOwned(model, item.input.metadata, generateOwnedJavaScriptWasmLeanAdapters(model));
+	const generated = replay.generateCompiledJavaScriptWasmOwned(model, item.input.metadata, replay.generateOwnedJavaScriptWasmLeanAdapters(model));
 	assert.deepEqual(item.receipt.ownedGraph, generated.receipt);
 	assert.equal(item.receipt.modelSha256, hash(model));
 	assert.equal(item.receipt.metadataSha256, hash(item.input.metadata));
-	const publicFiles = generateJavaScriptPackage(model.bindingIr);
+	const publicFiles = replay.generateJavaScriptPackage(model.bindingIr);
 	const name = item.name;
 	assert.ok(Object.keys(item.inventory).length > 50);
 	for(const entry of Object.values(item.inventory))
@@ -243,12 +235,12 @@ const installedWasm = async (item, combined = false, sources) => {
 	await assertOwnedCallbackRuntimeInventory(item.inventory, sources);
 };
 
-const installedC = async (item, input, model, combined = false) => {
-	await source(input, item.mode, combined);
-	assert.deepEqual(model, createCompiledNativeModel({ ...input, moduleName: model.moduleName }, nativeOptions(true, combined)));
+const installedC = async (replay, item, input, model, combined = false) => {
+	await source(replay, input, item.mode, combined);
+	assert.deepEqual(model, replay.createCompiledNativeModel({ ...input, moduleName: model.moduleName }, nativeOptions(true, combined)));
 	graph(model, combined); assert.equal(model.pointerBits, 64);
 	const receipt = combined ? item.native.receipt : item.receipt;
-	const adapters = generateCompiledNativeLeanAdapters(model);
+	const adapters = replay.generateCompiledNativeLeanAdapters(model);
 	assert.equal(receipt.schemaVersion, 7);
 	assert.equal(receipt.modelSha256, hash(model));
 	assert.equal(receipt.metadataSha256, hash(input.metadata));
@@ -263,7 +255,7 @@ const installedC = async (item, input, model, combined = false) => {
 	assert.deepEqual(item.manifest.files["lib/" + receipt.library], receipt.nativeLibrary);
 	for(const key of ["callbackResultAnchors", "receiverExports", "resultAnchors", "inputTransfers"])
 		assert.deepEqual(receipt[key], model.ownedGraph[key]);
-	const generated = generateOwnedCPackage({ ...input, ...options(true, combined) });
+	const generated = replay.generateOwnedCPackage({ ...input, ...options(true, combined) });
 	assert.equal(item.manifest.schemaVersion, 7); assert.equal(item.manifest.ownedValues.schemaVersion, 6);
 	for(const key of ["callbackResultAnchors", "hostCallbacks", "receiverExports", "resultAnchors", "inputTransfers"])
 		assert.deepEqual(item.manifest.ownedValues[key], model.ownedGraph[key]);
@@ -306,64 +298,65 @@ const wasmMutations = [
  * Rebuild checked models and generated sources for every recorded execution.
  *
  * @param reports - Expanded, complete installed and runtime reports.
- * @param sources - Optional authenticated source hashes for historical runtime inventories.
+ * @param sources - Optional authenticated source hashes selecting historical generation and runtime inventories.
  */
 export const assertOwnedCallbackReportData = async (reports, sources) => {
 	assert.deepEqual(Object.keys(reports).sort(), [...ownedCallbackResultReports].sort());
+	const replay = await ownedCallbackResultReplay(sources);
 	const get = path => reports["build/owned-callback-results/" + path];
-	const cProbe = await readFile("tests/fixtures/structured-types/owned-installed-callback-results.c", "utf8");
-	const extraC = await readFile("tests/fixtures/structured-types/owned-installed-callback-combinations.c", "utf8");
+	const cProbe = await replay.readSource("tests/fixtures/structured-types/owned-installed-callback-results.c");
+	const extraC = await replay.readSource("tests/fixtures/structured-types/owned-installed-callback-combinations.c");
 	const combinedC = cProbe.replace("int main(void) {", extraC + "\nint main(void) {")
 		.replace("  clear(&supplied_owner); clear(&first_owner); clear(&second_owner);", "  clear(&supplied_owner); clear(&first_owner); clear(&second_owner);\n  callback_combinations(session);");
-	const guide = await readFile("docs/javascript-typescript.md", "utf8");
+	const guide = await replay.readSource("docs/javascript-typescript.md");
 	const example = guide.split("### Borrowed callback results\n")[1].split("### Methods and properties\n")[0].match(/```js\n([\s\S]*?)\n```/u)[1];
 	for(const mode of ["ordinary", "reviewed"])
 	{
-		const metadata = get(`metadata-${mode}.json`); await source(metadata.input, mode);
+		const metadata = get(`metadata-${mode}.json`); await source(replay, metadata.input, mode);
 		assert.equal(metadata.models.length, 2);
 		for(const [index, model] of metadata.models.entries())
 		{
-			assert.deepEqual(model, createCompiledNativeModel(metadata.input, nativeOptions(Boolean(index))));
+			assert.deepEqual(model, replay.createCompiledNativeModel(metadata.input, nativeOptions(Boolean(index))));
 			graph(model); assert.equal(Boolean(model.ownedGraph.hostCallbacks), Boolean(index));
 		}
 		for(const hostCallbacks of [false, true])
 		{
 			const item = get(`runtime-${mode}-${hostCallbacks}.json`);
 			assert.equal(item.mode, mode); assert.equal(item.hostCallbacks, hostCallbacks);
-			await source(item.input, mode);
-			const generated = generateOwnedCPackage(item.input);
+			await source(replay, item.input, mode);
+			const generated = replay.generateOwnedCPackage(item.input);
 			assert.equal(item.sourceSha256, sha256(generated.source));
 			assert.deepEqual(item.result, { checks: hostCallbacks ? 1846 : 627
 				, allocationFailures: hostCallbacks ? 62 : 21, identities: 0, live: 0 });
 			assert.deepEqual(item.restored, item.result);
 			assert.equal(item.sanitizer, "address,undefined");
 			assert.doesNotMatch(item.startupLeakBaseline, /ERROR: AddressSanitizer|runtime error:/u);
-			const probe = `#define HOST_CALLBACKS ${Number(hostCallbacks)}\n` + await readFile("tests/fixtures/structured-types/owned-callback-results.c", "utf8");
+			const probe = `#define HOST_CALLBACKS ${Number(hostCallbacks)}\n` + await replay.readSource("tests/fixtures/structured-types/owned-callback-results.c");
 			assert.equal(item.probeSha256, sha256(probe));
 			assert.deepEqual(item.mutations, cMutations(generated, hostCallbacks));
-			const runtime = get(`wasm-${mode}-${hostCallbacks}.json`); await source(runtime.input, mode);
+			const runtime = get(`wasm-${mode}-${hostCallbacks}.json`); await source(replay, runtime.input, mode);
 			assert.equal(runtime.mode, mode); assert.equal(runtime.hostCallbacks, hostCallbacks);
-			wasm(runtime, hostCallbacks); digest(runtime.binarySha256);
+			wasm(replay, runtime, hostCallbacks); digest(runtime.binarySha256);
 			assert.deepEqual(runtime.faultCounts, { native: 9, host: 10 });
 			assert.deepEqual(runtime.live, [0, 0, 0, 0]);
 		}
 		for(const alphaFirst of [false, true])
 		{
-			const item = get(`coexistence-${mode}-${alphaFirst}.json`); await source(item.input, mode);
-			assert.equal(item.mode, mode); assert.equal(item.alphaFirst, alphaFirst); wasm(item);
+			const item = get(`coexistence-${mode}-${alphaFirst}.json`); await source(replay, item.input, mode);
+			assert.equal(item.mode, mode); assert.equal(item.alphaFirst, alphaFirst); wasm(replay, item);
 			assert.equal(item.runtimeInitializations, 1); assert.equal(item.libraryInitializations, 2);
 			for(const key of ["liveComponents", "liveIdentities", "liveLegacyHandles"]) assert.equal(item[key], 0);
 			for(const key of ["alphaSha256", "componentSha256", "runtimeSha256"]) digest(item[key]);
 		}
-		const mutations = get(`wasm-${mode}-mutants.json`); await source(mutations.input, mode);
+		const mutations = get(`wasm-${mode}-mutants.json`); await source(replay, mutations.input, mode);
 		assert.equal(mutations.mode, mode); assert.deepEqual(mutations.baseline, { checks: 6 });
 		assert.deepEqual(mutations.restored, mutations.baseline); digest(mutations.binarySha256);
-		assert.equal(mutations.probeSha256, sha256(await readFile("tests/fixtures/structured-types/owned-callback-result-wasm-semantic.mjs")));
-		const native = generateOwnedNativeValueAdapters({ ...mutations.input, wordBits: 32, ...options() });
+		assert.equal(mutations.probeSha256, sha256(await replay.readSource("tests/fixtures/structured-types/owned-callback-result-wasm-semantic.mjs")));
+		const native = replay.generateOwnedNativeValueAdapters({ ...mutations.input, wordBits: 32, ...options() });
 		const expected = [];
 		for(const [name, path, before, after] of wasmMutations)
 		{
-			const original = path === "owned-values-codec.h" ? native.source : await readFile(path, "utf8");
+			const original = path === "owned-values-codec.h" ? native.source : await replay.readSource(path);
 			assert.ok(original.includes(before), name);
 			expected.push({ name, path
 				, sourceSha256: sha256(original.replaceAll(before, after))
@@ -371,14 +364,14 @@ export const assertOwnedCallbackReportData = async (reports, sources) => {
 				, semanticRejection: true });
 		}
 		assert.deepEqual(mutations.observations, expected);
-		const composition = get(`wasm-${mode}-combinations.json`); await source(composition.input, mode, true);
-		assert.equal(composition.mode, mode); wasm(composition, true, true);
+		const composition = get(`wasm-${mode}-combinations.json`); await source(replay, composition.input, mode, true);
+		assert.equal(composition.mode, mode); wasm(replay, composition, true, true);
 		assert.equal(composition.methods, 4); assert.equal(composition.callbackAnchors, 4);
 		assert.equal(composition.callbackCalls, 1); assert.deepEqual(composition.live, [0, 0, 0, 0]);
 		flags(composition, ["transferredReceiver", "nestedExpiration", "failedTransferConsumesOwner", "borrowedTransferRejected"]);
 		const c = get(`${mode}-c-package.json`); assert.equal(c.mode, mode);
 		await cli(c.cli); assert.equal(c.cliFilesVerified, c.cli.files.length);
-		await installedC(c, { metadata: c.metadata, sourceIdentity: c.model.sourceIdentity, component: c.model.component }, c.model);
+		await installedC(replay, c, { metadata: c.metadata, sourceIdentity: c.model.sourceIdentity, component: c.model.component }, c.model);
 		flags(c, ["relocated", "sourceRemovedBeforeInstall", "cliRemovedBeforeConsumerInstall", "independentRebuild", "deterministicReassembly"]);
 		assert.equal(c.rejected, 12); assert.equal(c.builds.length, 2);
 		for(const build of c.builds) assert.equal(build.status, "ok");
@@ -387,10 +380,10 @@ export const assertOwnedCallbackReportData = async (reports, sources) => {
 		const combined = get(`${mode}-combined-package.json`); assert.equal(combined.mode, mode);
 		await cli(combined.cli); assert.equal(combined.cliFilesVerified, combined.cli.files.length);
 		flags(combined, ["sourceUnchanged", "producerAndCliRemovedBeforeInstall", "compilerFreeConsumerEnvironment", "installedTypeScript"]);
-		await installedC(combined, combined.nativeInput, combined.native.model, true);
-		await source(combined.wasmInput, mode, true);
+		await installedC(replay, combined, combined.nativeInput, combined.native.model, true);
+		await source(replay, combined.wasmInput, mode, true);
 		const name = `@owned/${mode}-callback-combinations`;
-		await installedWasm({ ...combined.wasm, input: combined.wasmInput, inventory: combined.inventory, name }, true, sources);
+		await installedWasm(replay, { ...combined.wasm, input: combined.wasmInput, inventory: combined.inventory, name }, true, sources);
 		for(const key of ["callbackResultAnchors", "receiverExports", "resultAnchors", "inputTransfers"])
 			assert.deepEqual(combined.native.model.ownedGraph[key], combined.wasm.model.ownedGraph[key]);
 		assert.deepEqual(combined.observed, { checks: 40, receiverMethods: true
@@ -399,7 +392,7 @@ export const assertOwnedCallbackReportData = async (reports, sources) => {
 		browser(combined, name, 40);
 		assert.equal(combined.cProbeSha256, sha256(combinedC));
 		assert.equal(combined.installedC.consumerSha256, sha256(combinedC));
-		assert.equal(combined.jsProbeSha256, sha256(await readFile("tests/fixtures/structured-types/owned-installed-javascript-callback-combinations.mjs")));
+		assert.equal(combined.jsProbeSha256, sha256(await replay.readSource("tests/fixtures/structured-types/owned-installed-javascript-callback-combinations.mjs")));
 		assert.deepEqual(combined.documentation, { sourceSha256: sha256(example), output: "42n\ntrue\n42n\n" });
 		assert.equal(combined.receipt.packages.length, 3);
 	}
@@ -409,11 +402,11 @@ export const assertOwnedCallbackReportData = async (reports, sources) => {
 	for(const item of npm.reports)
 	{
 		const mode = item.reviewed ? "reviewed" : "ordinary", name = `@owned/${mode}-callback-results`;
-		await source(item.input, mode); await installedWasm({ ...item, name }, false, sources);
+		await source(replay, item.input, mode); await installedWasm(replay, { ...item, name }, false, sources);
 		flags(item, ["sourceRemovedBeforeInstall", "compilerFreeConsumerEnvironment", "installedCli", "installedTypeScript", "deterministicReassembly", "independentRebuild"]);
 		assert.equal(item.rejected, 17); assert.equal(item.packages.length, 2);
 		assert.deepEqual(item.observed, { checks: 43, borrowedResults: true, transitiveExpiration: true, hostReplyHandoff: true });
-		assert.equal(item.probeSha256, sha256(await readFile("tests/fixtures/structured-types/owned-installed-javascript-callback-results.mjs")));
+		assert.equal(item.probeSha256, sha256(await replay.readSource("tests/fixtures/structured-types/owned-installed-javascript-callback-results.mjs")));
 		browser(item, name, 43);
 	}
 };

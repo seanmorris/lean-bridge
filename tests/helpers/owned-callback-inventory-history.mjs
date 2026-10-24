@@ -34,16 +34,16 @@ export const readCallbackInventoryHistory = () => {
 export const callbackInventoryRepairPaths = Object.freeze(readCallbackInventoryHistory().updates.map(update => update.path));
 
 /**
- * Reverse only the exact registered transition, preserving unrelated changes.
+ * Reverse one exact registered transition after authenticating both endpoints.
  *
  * @param path - Repository-relative source path.
- * @param source - Complete current or historical source bytes.
- * @param expected - Optional stopping digest.
+ * @param source - Complete source at the recorded current endpoint.
+ * @param update - Exact transition from the authenticated repair record.
  */
-export const beforeCallbackInventoryRepair = (path, source, expected) => {
-	source = beforeOwnedCppCallbackResults(path, source, expected);
-	const update = readCallbackInventoryHistory().updates.find(item => item.path === path);
-	if(!update || sha256(source) === expected || sha256(source) !== update.currentSha256) return source;
+export const reverseCallbackInventoryUpdate = (path, source, update) => {
+	assert.ok(callbackInventoryRepairPaths.includes(path));
+	assert.equal(update.path, path);
+	assert.equal(sha256(source), update.currentSha256, path);
 	if(update.strategy === "replacements")
 	{
 		let previous = source.toString();
@@ -68,4 +68,18 @@ export const beforeCallbackInventoryRepair = (path, source, expected) => {
 	}
 	parts.push(text.slice(end)); const previous = parts.join("");
 	assert.equal(sha256(previous), update.previousSha256, path); return previous;
+};
+
+/**
+ * Reverse only the exact registered transition, preserving unrelated changes.
+ *
+ * @param path - Repository-relative source path.
+ * @param source - Complete current or historical source bytes.
+ * @param expected - Optional stopping digest.
+ */
+export const beforeCallbackInventoryRepair = (path, source, expected) => {
+	source = beforeOwnedCppCallbackResults(path, source, expected);
+	const update = readCallbackInventoryHistory().updates.find(item => item.path === path);
+	if(!update || sha256(source) === expected || sha256(source) !== update.currentSha256) return source;
+	return reverseCallbackInventoryUpdate(path, source, update);
 };

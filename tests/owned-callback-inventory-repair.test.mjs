@@ -9,7 +9,8 @@ import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
 import { beforeOwnedCppCallbackResults } from "./helpers/owned-cpp-callback-result-history.mjs";
 import { callbackInventoryHistoryPath, callbackInventoryHistorySha256
-	, readCallbackInventoryHistory, beforeCallbackInventoryRepair } from "./helpers/owned-callback-inventory-history.mjs";
+	, readCallbackInventoryHistory, beforeCallbackInventoryRepair
+	, reverseCallbackInventoryUpdate } from "./helpers/owned-callback-inventory-history.mjs";
 import { ownedPhpReceiverModel } from "./helpers/owned-php-receiver-evidence.mjs";
 import { assertOwnedJvmReceiverPackage } from "./helpers/owned-jvm-receiver-package-evidence.mjs";
 
@@ -31,34 +32,38 @@ test("callback inventory repair preserves complete source and acceptance identit
 	]);
 	for(const update of history.updates)
 	{
-		const current = beforeOwnedCppCallbackResults(update.path, await readFile(update.path)), prior = beforeCallbackInventoryRepair(update.path, current);
+		const current = beforeOwnedCppCallbackResults(update.path, await readFile(update.path), update.currentSha256);
+		const prior = beforeCallbackInventoryRepair(update.path, current, update.previousSha256);
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		assert.equal(sha256(prior), update.previousSha256, update.path);
 		assert.equal(update.previousSha256, accepted.sources[update.path], update.path);
 		assert.equal(beforeCallbackInventoryRepair(update.path, current, update.currentSha256), current);
-		assert.equal(beforeCallbackInventoryRepair(update.path, prior), prior);
+		assert.equal(beforeCallbackInventoryRepair(update.path, prior, update.previousSha256), prior);
 		assert.equal(beforeCallbackInventoryRepair(update.path, current + "\n"), current + "\n");
-		const digest = update.previousSha256;
-		try
-		{
-			update.previousSha256 = "0".repeat(64);
-			assert.throws(() => beforeCallbackInventoryRepair(update.path, current));
-		}
-		finally
-		{ update.previousSha256 = digest; }
+		assert.equal(reverseCallbackInventoryUpdate(update.path, current, update), prior);
+		assert.throws(() => reverseCallbackInventoryUpdate(update.path, current, {
+			...update, previousSha256: "0".repeat(64)
+		}));
 	}
-	const current = JSON.parse(beforeOwnedCppCallbackResults("package.json", await readFile("package.json")));
-	const prior = JSON.parse(beforeCallbackInventoryRepair("package.json", await readFile("package.json")));
+	const packageUpdate = history.updates.find(update => update.path === "package.json");
+	const current = JSON.parse(beforeOwnedCppCallbackResults("package.json", await readFile("package.json"), packageUpdate.currentSha256));
+	const prior = JSON.parse(beforeCallbackInventoryRepair("package.json", await readFile("package.json"), packageUpdate.previousSha256));
 	prior.files.push("src/analyze/callback-signature.mjs"); prior.files.sort();
 	assert.deepEqual(current, prior);
-	const configuration = beforeOwnedCppCallbackResults("config/cli-package.v1.json", await readFile("config/cli-package.v1.json"));
+	const configuration = beforeOwnedCppCallbackResults("config/cli-package.v1.json", await readFile("config/cli-package.v1.json"), accepted.sources["config/cli-package.v1.json"]);
 	assert.deepEqual(current.files, JSON.parse(configuration).files);
 });
 
 test("callback inventory repair refreshes source identities without changing support claims", async () => {
-	const path = "docs/type-surface.v1.json", current = beforeOwnedCppCallbackResults(path, await readFile(path, "utf8"));
-	const prior = JSON.parse(beforeCallbackInventoryRepair(path, current));
-	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(beforeOwnedCppCallbackResults(file.path, await readFile(file.path)));
+	const path = "docs/type-surface.v1.json", history = readCallbackInventoryHistory();
+	const update = history.updates.find(item => item.path === path);
+	const current = beforeOwnedCppCallbackResults(path, await readFile(path, "utf8"), update.currentSha256);
+	const prior = JSON.parse(beforeCallbackInventoryRepair(path, current, update.previousSha256));
+	for(const evidence of prior.evidence) for(const file of evidence.files)
+	{
+		const expected = history.updates.find(item => item.path === file.path)?.currentSha256 ?? file.sha256;
+		file.sha256 = sha256(beforeOwnedCppCallbackResults(file.path, await readFile(file.path), expected));
+	}
 	assert.deepEqual(JSON.parse(current), prior);
 });
 
