@@ -7,11 +7,12 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
-import { beforeOwnedPerlTransfer, ownedPerlTransferHistoricalBytes } from "./helpers/owned-perl-transfer-history.mjs";
-import { assertOwnedJvmTransferExecution, assertOwnedJvmTransferCi } from "./helpers/owned-jvm-transfer-evidence.mjs";
+import { beforeOwnedPerlTransfer } from "./helpers/owned-perl-transfer-history.mjs";
+import { assertOwnedJvmTransferExecution, assertOwnedJvmTransferCi, ownedJvmTransferProducer } from "./helpers/owned-jvm-transfer-evidence.mjs";
 import { beforeOwnedJvmTransfer, ownedJvmTransferAddedPaths, ownedJvmTransferBaseline
 	, ownedJvmTransferChangedPaths, ownedJvmTransferHistoricalBytes, ownedJvmTransferPath
 	, ownedJvmTransferPrevious, reverseOwnedJvmTransferUpdate } from "./helpers/owned-jvm-transfer-history.mjs";
+import { bytesAtProducer, sourceAtProducer } from "./helpers/producer-source.mjs";
 
 const read = async () => JSON.parse(await readFile(ownedJvmTransferPath, "utf8"));
 
@@ -23,20 +24,21 @@ test("Java/Kotlin transfers bind current sources without promoting unrelated typ
 	const bytes = await readFile(record.previous.path), previous = JSON.parse(bytes);
 	assert.equal(sha256(bytes), record.previous.sha256);
 	assert.deepEqual(Object.keys(record.sources).sort(), [...new Set([...Object.keys(previous.sources), ...ownedJvmTransferAddedPaths])].sort());
-	for(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(ownedPerlTransferHistoricalBytes(path, await readFile(path), digest)), digest, path);
+	// Every recorded digest names the producer tree; later owned and Fin layers never reach back this far.
+	for(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(bytesAtProducer(ownedJvmTransferProducer, path)), digest, path);
 	assert.deepEqual(record.updates.map(update => update.path), ownedJvmTransferChangedPaths);
 	for(const update of record.updates)
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path]);
 		assert.equal(update.currentSha256, record.sources[update.path]);
-		const current = beforeOwnedPerlTransfer(update.path, await readFile(update.path, "utf8")), prior = beforeOwnedJvmTransfer(update.path, current);
+		const current = sourceAtProducer(ownedJvmTransferProducer, update.path, update.currentSha256), prior = beforeOwnedJvmTransfer(update.path, current, update.previousSha256);
 		assert.equal(sha256(prior), update.previousSha256);
-		assert.equal(beforeOwnedJvmTransfer(update.path, prior), prior);
+		assert.equal(beforeOwnedJvmTransfer(update.path, prior, update.previousSha256), prior);
 		assert.equal(beforeOwnedJvmTransfer(update.path, current, update.currentSha256), current);
 	}
-	const current = beforeOwnedPerlTransfer("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8"));
-	const previousIndex = JSON.parse(beforeOwnedJvmTransfer("docs/type-surface.v1.json", current));
-	for(const evidence of previousIndex.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedPerlTransferHistoricalBytes(file.path, await readFile(file.path)));
+	const path = "docs/type-surface.v1.json", current = sourceAtProducer(ownedJvmTransferProducer, path, record.sources[path]);
+	const previousIndex = JSON.parse(beforeOwnedJvmTransfer(path, current, record.updates.find(update => update.path === path)?.previousSha256));
+	for(const evidence of previousIndex.evidence) for(const file of evidence.files) file.sha256 = record.sources[file.path] ?? sha256(bytesAtProducer(ownedJvmTransferProducer, file.path));
 	assert.deepEqual(JSON.parse(current), previousIndex);
 });
 

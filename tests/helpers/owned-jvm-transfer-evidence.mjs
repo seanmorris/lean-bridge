@@ -5,21 +5,11 @@
  */
 import assert from "node:assert/strict";
 import { assertOwnedJvmEnforced, ownedJvmStep, ownedJvmUpload } from "./owned-jvm-job.mjs";
-import { readFile } from "node:fs/promises";
 import { basename } from "node:path";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
-import { ownedBorrowHistoricalBytes } from "./owned-borrow-history.mjs";
-import { generateOwnedCPackage } from "../../src/backends/c/owned-package.mjs";
 import { beforeOwnedTransferBatchInitialization, historicalOwnedTransferPackage } from "./owned-transfer-generated-history.mjs";
-import { generateOwnedJvmCalls } from "../../src/backends/jvm/owned-calls.mjs";
-import { generateOwnedJvmPackage } from "../../src/backends/jvm/owned-package.mjs";
-import { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from "../../src/build/native-graph-model.mjs";
-import { ownedJvmAdapterSources } from "../../src/build/owned-jvm-artifacts.mjs";
-import { validateKotlinCompilation } from "../../src/build/compile-jvm-sources.mjs";
-import { validatePackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
-import { ownedJvmCallNative, ownedJvmCallProbeMethods } from "./owned-jvm-call-fixture.mjs";
-import { ownedJvmTransferInstalledFixture } from "./owned-jvm-transfer-installed.mjs";
-import { ownedRustTransferSource } from "./owned-rust-transfer-fixture.mjs";
+import { moduleAtProducerWithSourceReads } from "./producer-module.mjs";
+import { bytesAtProducer, sourceAtProducer } from "./producer-source.mjs";
 
 export const ownedJvmTransferCommand = "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 npm run test:owned-jvm-transfers";
 export const ownedJvmTransferScope = Object.freeze({
@@ -37,6 +27,23 @@ export const ownedJvmTransferScope = Object.freeze({
 	, otherConsumerBindings: false, anchoredBorrowedResults: false
 	, docker: false, installedSupportPromotions: 0
 });
+/** The commit whose complete source tree every digest in the Java/Kotlin transfer record names. */
+export const ownedJvmTransferProducer = "9591a41dd71d74db92a614cbfa352a712359945c";
+let producerPromise;
+const producerModules = () => producerPromise ??= Promise.all([
+	"src/backends/c/owned-package.mjs"
+	, "src/backends/jvm/owned-calls.mjs"
+	, "src/backends/jvm/owned-package.mjs"
+	, "src/build/native-graph-model.mjs"
+	, "src/build/owned-jvm-artifacts.mjs"
+	, "src/build/compile-jvm-sources.mjs"
+	, "src/release/package-set-receipt.mjs"
+	, "tests/helpers/owned-jvm-call-fixture.mjs"
+	, "tests/helpers/owned-jvm-transfer-installed.mjs"
+	, "tests/helpers/owned-rust-transfer-fixture.mjs"
+].map(path => moduleAtProducerWithSourceReads(ownedJvmTransferProducer, path)))
+	.then(modules => Object.assign({}, ...modules));
+const historical = path => sourceAtProducer(ownedJvmTransferProducer, path);
 const identity = bytes => ({ bytes: Buffer.byteLength(bytes), sha256: sha256(bytes) });
 const digest = value => assert.match(value, /^[a-f0-9]{64}$/u);
 const flags = (value, names) => {
@@ -65,13 +72,20 @@ export const assertOwnedJvmTransferExecution = async record => {
 	assert.doesNotMatch(record.run.text, /^not ok|# SKIP|# TODO/mu);
 	assert.deepEqual(record.runtime.map(item => item.mode), ["ordinary", "reviewed"]);
 	assert.deepEqual(record.consumers.map(item => item.mode), ["ordinary", "reviewed"]);
-	const lean = await readFile("tests/fixtures/onboarding/owned-aggregates/Owned.lean", "utf8") + ownedRustTransferSource;
+	const {
+		generateOwnedCPackage, generateOwnedJvmCalls, generateOwnedJvmPackage
+		, createCompiledNativeModel, generateCompiledNativeLeanAdapters
+		, ownedJvmAdapterSources, validateKotlinCompilation, validatePackageSetReceipt
+		, ownedJvmCallNative, ownedJvmCallProbeMethods
+		, ownedJvmTransferInstalledFixture, ownedRustTransferSource
+	} = await producerModules();
+	const lean = historical("tests/fixtures/onboarding/owned-aggregates/Owned.lean") + ownedRustTransferSource;
 	for(const item of [...record.runtime, ...record.consumers])
 	{
 		assert.equal(Boolean(item.input.sourceIdentity.reviewedBindingIr), item.mode === "reviewed");
 		assert.equal(item.input.sourceIdentity.modules.find(module => module.module === "Owned").source.sha256, sha256(lean));
 		const extractor = "src/analyze/NativeExports.lean", expectedExtractor = item.input.sourceIdentity.extractorSha256;
-		assert.equal(sha256(ownedBorrowHistoricalBytes(extractor, await readFile(extractor), expectedExtractor)), expectedExtractor);
+		assert.equal(sha256(bytesAtProducer(ownedJvmTransferProducer, extractor)), expectedExtractor);
 		const model = createCompiledNativeModel(item.input, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true });
 		assert.equal(model.schemaVersion, 8); assert.equal(model.exports.length, 26);
 		assert.equal(model.ownedGraph.inputTransfers.exports.length, 20);
@@ -85,7 +99,7 @@ export const assertOwnedJvmTransferExecution = async record => {
 			assert.equal(item.instrumentedRuntimeSha256, sha256(runtime.replace("static void checkpoint() { }", "static void checkpoint() { OwnedTransferProbe.allocation(); }")));
 			for(const [file, field, kotlin] of [["owned-jvm-transfers.java", "javaProbeSha256", false], ["owned-kotlin-transfers.kt", "kotlinProbeSha256", true]])
 			{
-				const source = await readFile("tests/fixtures/structured-types/" + file, "utf8");
+				const source = historical("tests/fixtures/structured-types/" + file);
 				assert.equal(source.split("/* METHODS */").length, 2);
 				assert.equal(item[field], sha256(source.replace("/* METHODS */", () => ownedJvmCallProbeMethods(generated, kotlin))));
 			}
@@ -244,7 +258,7 @@ export const assertOwnedJvmTransferExecution = async record => {
 		}
 		const inspection = item.observations[0].jvm.inspection;
 		assert.equal(inspection.originalArchiveSha256, jar.sha256);
-		assert.equal(inspection.probeSha256, sha256(await readFile("tests/fixtures/structured-types/OwnedInstalledAssetsProbe.java")));
+		assert.equal(inspection.probeSha256, sha256(bytesAtProducer(ownedJvmTransferProducer, "tests/fixtures/structured-types/OwnedInstalledAssetsProbe.java")));
 		flags(inspection, ["recomputedMutableReceipt", "runtimeOnlyExecution", "normalExitCleanup"]);
 		const paths = Object.keys(manifest.files).filter(path => path.startsWith("META-INF/lean-bridge/native/linux-x64/"));
 		assert.equal(inspection.scenarios.length, 40);
