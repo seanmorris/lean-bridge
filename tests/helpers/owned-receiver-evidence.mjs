@@ -6,12 +6,9 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
-import { generateOwnedCPackage } from "../../src/backends/c/owned-package.mjs";
-import { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from "../../src/build/native-graph-model.mjs";
-import { ownedReceiverKinds, ownedReceiverSource, ownedReceiverProbe, ownedReceiverCopyMacros } from "./owned-receiver-fixture.mjs";
-import { ownedReceiverMutants } from "./owned-receiver-mutants.mjs";
 import { assertOwnedReceiverCi } from "./owned-receiver-ci.mjs";
-import { ownedCppReceiverHistoricalBytes } from "./owned-cpp-receiver-history.mjs";
+import { moduleAtProducerWithSourceReads } from "./producer-module.mjs";
+import { bytesAtProducer, sourceAtProducer } from "./producer-source.mjs";
 
 export const ownedReceiverCommand = "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 npm run test:owned-receivers";
 export const ownedReceiverScope = Object.freeze({
@@ -31,6 +28,17 @@ export const ownedReceiverScope = Object.freeze({
 	, otherReceiverProjections: false, callbackResultAnchors: false
 	, docker: false, installedSupportPromotions: 0
 });
+/** The complete source tree authenticated by the original C receiver receipt. */
+export const ownedReceiverProducer = "a514c3516343740ea8b3ef9335fb82f2251b3435";
+let producerPromise;
+const producerModules = () => producerPromise ??= Promise.all([
+	"src/backends/c/owned-package.mjs"
+	, "src/build/native-graph-model.mjs"
+	, "tests/helpers/owned-receiver-fixture.mjs"
+	, "tests/helpers/owned-receiver-mutants.mjs"
+].map(path => moduleAtProducerWithSourceReads(ownedReceiverProducer, path)))
+	.then(modules => Object.assign({}, ...modules));
+const historical = (path, expected = undefined) => sourceAtProducer(ownedReceiverProducer, path, expected);
 const capabilities = { ownedGraphs: true, ownedHostCallbacks: true
 	, ownedInputTransfers: true, ownedAnchoredResults: true
 	, ownedReceiverExports: true };
@@ -38,7 +46,7 @@ const digest = value => assert.match(value, /^[a-f0-9]{64}$/u);
 const flags = (value, keys) => { for(const key of keys) assert.equal(value[key], true, key); };
 
 /**
- * Check current generators against the archived source and execution evidence.
+ * Check producer generators against the archived source and execution evidence.
  *
  * @param record - Complete source-bound receipt for both receiver source paths.
  */
@@ -58,9 +66,15 @@ export const assertOwnedReceiverExecution = async record => {
 		...record.runtime.map(item => ({ mode: item.mode, ...item.result }))
 		, ...record.plain.map(item => ({ mode: item.mode, plain: true, ...item.result }))
 	]);
-	const base = await readFile("tests/fixtures/onboarding/owned-aggregates/Owned.lean", "utf8");
+	const {
+		generateOwnedCPackage, createCompiledNativeModel
+		, generateCompiledNativeLeanAdapters, ownedReceiverKinds
+		, ownedReceiverSource, ownedReceiverProbe, ownedReceiverCopyMacros
+		, ownedReceiverMutants
+	} = await producerModules();
+	const base = historical("tests/fixtures/onboarding/owned-aggregates/Owned.lean");
 	const probe = await ownedReceiverProbe();
-	const plainProbe = await readFile("tests/fixtures/structured-types/owned-receiver-plain.c");
+	const plainProbe = bytesAtProducer(ownedReceiverProducer, "tests/fixtures/structured-types/owned-receiver-plain.c");
 	for(const item of record.plain)
 	{
 		assert.equal(item.input.receiverExports, true);
@@ -117,10 +131,10 @@ export const assertOwnedReceiverExecution = async record => {
 		for(const rejected of item.rejected)
 		{ assert.equal(rejected.projection.status, "unsupported"); assert.equal(rejected.projection.reason, "export-contract-mismatch"); }
 	}
-	const page = await readFile("docs/consume/c.md", "utf8");
+	const page = historical("docs/consume/c.md");
 	const example = page.split("### Methods and properties\n")[1]?.split("```c\n")[1]?.split("```")[0];
 	assert.ok(example);
-	const cliConfig = JSON.parse(ownedCppReceiverHistoricalBytes("config/cli-package.v1.json", await readFile("config/cli-package.v1.json"), record.sources["config/cli-package.v1.json"]).toString());
+	const cliConfig = JSON.parse(historical("config/cli-package.v1.json", record.sources["config/cli-package.v1.json"]));
 	for(const item of record.packages)
 	{
 		flags(item, ["sourceRemovedBeforeInstall", "cliRemovedBeforeConsumerInstall"
@@ -172,8 +186,9 @@ export const assertOwnedReceiverExecution = async record => {
 		for(const path of cliConfig.files)
 		{
 			const file = item.cli.files.find(entry => entry.path === path);
-			const bytes = Buffer.from(ownedCppReceiverHistoricalBytes(path, await readFile(path), file?.sha256));
-			assert.ok(file, path); assert.equal(file.bytes, bytes.length); assert.equal(file.sha256, sha256(bytes), path);
+			assert.ok(file, path);
+			const bytes = bytesAtProducer(ownedReceiverProducer, path, file.sha256);
+			assert.equal(file.bytes, bytes.length); assert.equal(file.sha256, sha256(bytes), path);
 		}
 		assert.equal(item.builds.length, 2);
 		for(const build of item.builds)

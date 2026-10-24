@@ -7,16 +7,16 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
-import { ownedCppReceiverHistoricalBytes } from "./helpers/owned-cpp-receiver-history.mjs";
 import { classifyRepositoryTest } from "../src/adoption/test-profiles.mjs";
-import { assertOwnedReceiverExecution } from "./helpers/owned-receiver-evidence.mjs";
+import { assertOwnedReceiverExecution, ownedReceiverProducer } from "./helpers/owned-receiver-evidence.mjs";
+import { bytesAtProducer } from "./helpers/producer-source.mjs";
 import { assertOwnedReceiverCi, ownedReceiverReports } from "./helpers/owned-receiver-ci.mjs";
 import { ownedReceiverPath, ownedReceiverBaseline, ownedReceiverPrevious
 	, ownedReceiverChangedPaths, ownedReceiverAddedPaths
 	, beforeOwnedReceiver, reverseOwnedReceiverUpdate } from "./helpers/owned-receiver-history.mjs";
 
 const read = async () => JSON.parse(await readFile(ownedReceiverPath, "utf8"));
-const sourceAtReceiver = async path => ownedCppReceiverHistoricalBytes(path, await readFile(path));
+const sourceAtReceiver = path => bytesAtProducer(ownedReceiverProducer, path);
 
 test("receiver evidence preserves immutable source history without support promotions", async () => {
 	const record = await read();
@@ -32,9 +32,10 @@ test("receiver evidence preserves immutable source history without support promo
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path]);
 		assert.equal(update.currentSha256, record.sources[update.path]);
-		const source = (await sourceAtReceiver(update.path)).toString("utf8"), prior = beforeOwnedReceiver(update.path, source);
+		const source = (await sourceAtReceiver(update.path)).toString("utf8");
+		const prior = beforeOwnedReceiver(update.path, source, update.previousSha256);
 		assert.equal(sha256(prior), update.previousSha256);
-		assert.equal(beforeOwnedReceiver(update.path, prior), prior);
+		assert.equal(beforeOwnedReceiver(update.path, prior, update.previousSha256), prior);
 		assert.equal(beforeOwnedReceiver(update.path, source, update.currentSha256), source);
 		const unknown = source + "\n/* unrelated edit */\n";
 		assert.equal(beforeOwnedReceiver(update.path, unknown), unknown);
@@ -45,8 +46,11 @@ test("receiver evidence preserves immutable source history without support promo
 			assert.throws(() => reverseOwnedReceiverUpdate(source, altered));
 	}
 	const path = "docs/type-surface.v1.json", current = (await sourceAtReceiver(path)).toString("utf8");
-	const prior = JSON.parse(beforeOwnedReceiver(path, current));
-	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(await sourceAtReceiver(file.path));
+	const update = record.updates.find(item => item.path === path);
+	assert.ok(update, "receiver inventory transition is retained");
+	const prior = JSON.parse(beforeOwnedReceiver(path, current, update.previousSha256));
+	for(const evidence of prior.evidence) for(const file of evidence.files)
+		file.sha256 = record.sources[file.path] ?? sha256(await sourceAtReceiver(file.path));
 	assert.deepEqual(JSON.parse(current), prior);
 	for(const name of ["owned-receiver-analysis", "owned-receiver-packaging", "owned-receiver-plain", "owned-receiver-evidence"])
 		assert.equal(classifyRepositoryTest(`tests/${name}.test.mjs`), "contract");
