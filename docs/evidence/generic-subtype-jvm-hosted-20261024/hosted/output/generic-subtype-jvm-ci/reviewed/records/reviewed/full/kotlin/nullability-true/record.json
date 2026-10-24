@@ -1,0 +1,34 @@
+{
+  "archiveSha256": "bb611a6942bc3b0acc99d9d8e03aba5ffc561b582e68e080cd5fd8860edb8dc0",
+  "args": [
+    "-Werror",
+    "-jvm-target",
+    "22",
+    "-Xrender-internal-diagnostic-names",
+    "-cp",
+    "component.jar",
+    "NullProbe.kt",
+    "-d",
+    "classes"
+  ],
+  "command": "/home/runner/work/lean-bridge/lean-bridge/build/kotlin-tools/kotlinc/bin/kotlinc",
+  "cwd": "/tmp/lean-bridge-nominal-jvm-installed-RiJbCr/probes/nullability-true",
+  "environment": {
+    "CC": "/unavailable/compiler",
+    "CXX": "/unavailable/compiler",
+    "JAVA_HOME": "/opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/22.0.2-9/x64",
+    "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+    "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+    "PATH": "/usr/bin:/bin"
+  },
+  "invalid": true,
+  "mode": "full",
+  "outputs": {},
+  "run": {
+    "code": 1,
+    "stderr": "NullProbe.kt:2:27: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'BigInteger'.\nfun scalar() = Api.scalar(null)\n                          ^^^^\nNullProbe.kt:3:25: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'Envelope'.\nfun first() = Api.first(null)\n                        ^^^^\nNullProbe.kt:4:35: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'Array<Option<Envelope>>'.\nfun echoGroups() = Api.echoGroups(null)\n                                  ^^^^\nNullProbe.kt:5:35: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'Event'.\nfun eventFirst() = Api.eventFirst(null)\n                                  ^^^^\n",
+    "stdout": ""
+  },
+  "source": "import org.leanbridge.nominalsubtypes.kotlin.*\nfun scalar() = Api.scalar(null)\nfun first() = Api.first(null)\nfun echoGroups() = Api.echoGroups(null)\nfun eventFirst() = Api.eventFirst(null)\n",
+  "sourceSha256": "2755b0a3321507342ad234737c6d388788b637f7c4d0eccc9edf770057bab26b"
+}

@@ -1,0 +1,44 @@
+{
+  "component": {
+    "id": "nominalsubtypes@1.0.0",
+    "name": "nominalsubtypes",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51553807,
+          "path": "archives/nominalsubtypes-1.0.0.jar",
+          "sha256": "57b444cb92ee8ba01f423c79af9631d7b0a7e11419bfd664a112504365ba2b80"
+        },
+        {
+          "bytes": 625,
+          "path": "archives/nominalsubtypes-1.0.0.pom",
+          "sha256": "e933e3c6e2f975a63ddfd5badbd3faaf18a4d9202fa5b54f0a749545117a0eb7"
+        }
+      ],
+      "ecosystem": "maven",
+      "name": "org.leanbridge:nominalsubtypes",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "maven",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "637fec15649ef2f3de5ea24acf80802b3350c8c1f56ff657826547cb7489e011",
+      "id": "native-library-v1",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "72d267e73d0cc8595d777fe738c3b84de59d2d3124647d095233a56727d3cdd8"
+  }
+}
