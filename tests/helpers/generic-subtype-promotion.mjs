@@ -31,8 +31,23 @@ const validators = Object.freeze([
 	, "tests/helpers/generic-subtype-promotion.mjs"
 ]);
 const evidenceId = lane => `generic-subtype-${lane}-hosted-installed`;
-const hostedRoot = lane =>
-	`docs/evidence/generic-subtype-${lane}-hosted-20261023`;
+export const genericSubtypePromotionRoots = Object.freeze({
+	"npm-ordinary": "docs/evidence/generic-subtype-npm-ordinary-hosted-20261023"
+	, "npm-reviewed": "docs/evidence/generic-subtype-npm-reviewed-hosted-20261023"
+	, foundation: "docs/evidence/generic-subtype-foundation-hosted-20261023"
+	, native: "docs/evidence/generic-subtype-native-hosted-20261023"
+	, perl: "docs/evidence/generic-subtype-perl-hosted-20261023"
+	, python: "docs/evidence/generic-subtype-python-hosted-20261023"
+	, ruby: "docs/evidence/generic-subtype-ruby-hosted-20261023"
+	, rust: "docs/evidence/generic-subtype-rust-hosted-20261023"
+	, dotnet: "docs/evidence/generic-subtype-dotnet-hosted-20261024"
+	, jvm: "docs/evidence/generic-subtype-jvm-hosted-20261024"
+	, "php-native": "docs/evidence/generic-subtype-php-native-hosted-20261024"
+	, "wit-wasi": "docs/evidence/generic-subtype-wit-wasi-hosted-20261024"
+});
+assert.deepEqual(Object.keys(genericSubtypePromotionRoots)
+	, genericSubtypeHostedLaneNames);
+const hostedRoot = lane => genericSubtypePromotionRoots[lane];
 
 const groups = Object.freeze([
 	{ prefix: "nominal-subtype-npm-fields"
@@ -89,44 +104,52 @@ const validateReference = reference => {
  * Replay every immutable hosted archive and derive exact inventory references.
  *
  * @param check - Archive replay function, injectable for focused tests.
+ * @param read - Byte reader, injectable for focused tests.
  */
 export const genericSubtypePromotionReferences = async (
 	check = checkGenericSubtypeHostedEvidence
-) => Promise.all(genericSubtypeHostedLaneNames.map(async lane => {
-	const contract = genericSubtypeHostedContracts[lane];
-	const root = hostedRoot(lane);
-	const index = await check(lane, root);
-	assert.equal(index.lane, lane);
-	assert.deepEqual(index.profiles, contract.profiles);
-	assert.deepEqual(index.routes, contract.routes);
-	assert.deepEqual(index.accepted.profiles, contract.profiles);
-	assert.deepEqual(index.accepted.routes, contract.routes);
-	const indexPath = `${root}/index.json`;
-	const files = [
-		{ path: indexPath, sha256: sha256(await readFile(indexPath)) }
-		, ...index.files.map(file => ({
-			path: `${root}/${file.path}`, sha256: file.sha256
-		}))
-		, ...await Promise.all(validators.map(async path => ({
-			path, sha256: sha256(await readFile(path))
-		})))
-	];
-	assert.equal(new Set(files.map(file => file.path)).size, files.length);
-	const artifacts = index.hostedRun.artifact.parts.map(part => ({
-		path: `${root}/${part.path}`, sha256: part.sha256
-	}));
-	const reference = {
-		lane, profiles: [...contract.profiles], routes: [...contract.routes]
-		, id: evidenceId(lane)
-		, kind: lane === foundationLane ? "test" : "installed"
-		, revision: index.producerCommit
-		, command: "node --test --test-name-pattern='^retained generic Subtype archives replay for promotion$' tests/generic-subtype-native-perl.test.mjs"
-		, scope: `GitHub Actions run ${index.hostedRun.runId}, job ${index.hostedRun.job.id}, artifact ${index.hostedRun.artifact.id} retains and independently replays the ${lane} generic-Subtype contract. ${index.limitations.join(" ")}`
-		, files, artifacts
-	};
-	validateReference(reference);
-	return reference;
-}));
+	, read = readFile
+) => {
+	const references = [];
+	// Each replay reconstructs a complete ZIP and source closure. Keep them serial.
+	for(const lane of genericSubtypeHostedLaneNames)
+	{
+		const contract = genericSubtypeHostedContracts[lane];
+		const root = hostedRoot(lane);
+		const index = await check(lane, root);
+		assert.equal(index.lane, lane);
+		assert.deepEqual(index.profiles, contract.profiles);
+		assert.deepEqual(index.routes, contract.routes);
+		assert.deepEqual(index.accepted.profiles, contract.profiles);
+		assert.deepEqual(index.accepted.routes, contract.routes);
+		const indexPath = `${root}/index.json`;
+		const files = [
+			{ path: indexPath, sha256: sha256(await read(indexPath)) }
+			, ...index.files.map(file => ({
+				path: `${root}/${file.path}`, sha256: file.sha256
+			}))
+			, ...await Promise.all(validators.map(async path => ({
+				path, sha256: sha256(await read(path))
+			})))
+		];
+		assert.equal(new Set(files.map(file => file.path)).size, files.length);
+		const artifacts = index.hostedRun.artifact.parts.map(part => ({
+			path: `${root}/${part.path}`, sha256: part.sha256
+		}));
+		const reference = {
+			lane, profiles: [...contract.profiles], routes: [...contract.routes]
+			, id: evidenceId(lane)
+			, kind: lane === foundationLane ? "test" : "installed"
+			, revision: index.producerCommit
+			, command: "node --test --test-name-pattern='^retained generic Subtype archives replay for promotion$' tests/generic-subtype-native-perl.test.mjs"
+			, scope: `GitHub Actions run ${index.hostedRun.runId}, job ${index.hostedRun.job.id}, artifact ${index.hostedRun.artifact.id} retains and independently replays the ${lane} generic-Subtype contract. ${index.limitations.join(" ")}`
+			, files, artifacts
+		};
+		validateReference(reference);
+		references.push(reference);
+	}
+	return references;
+};
 
 /**
  * Promote exactly the thirty-two non-PHP-Wasm closed generic-Subtype field
@@ -190,7 +213,7 @@ export const renderGenericSubtypePromotion = references => {
 		, genericSubtypeHostedLaneNames);
 	for(const reference of references) validateReference(reference);
 	const rows = references.map(reference =>
-		`| ${reference.lane} | ${reference.profiles.join(", ") || "compiler/review foundation"} | ${reference.routes.join(", ")} | [archive index](generic-subtype-${reference.lane}-hosted-20261023/index.json) | \`${reference.revision}\` |`
+		`| ${reference.lane} | ${reference.profiles.join(", ") || "compiler/review foundation"} | ${reference.routes.join(", ")} | [archive index](${hostedRoot(reference.lane).slice("docs/evidence/".length)}/index.json) | \`${reference.revision}\` |`
 	);
 	return `# Closed generic Subtype compositions
 

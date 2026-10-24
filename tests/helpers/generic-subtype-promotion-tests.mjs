@@ -15,6 +15,7 @@ import {
 } from "./generic-subtype-hosted-contracts.mjs";
 import {
 	genericSubtypePromotionLimit, genericSubtypePromotionReferences
+	, genericSubtypePromotionRoots
 	, promoteGenericSubtypes, renderGenericSubtypePromotion
 } from "./generic-subtype-promotion.mjs";
 import {
@@ -105,8 +106,8 @@ test("generic Subtype promotion renders its exact closed boundary", () => {
 	assert.match(summary, /does not expose an open generic host type/u);
 	assert.match(summary, /does not cover.*PHP-Wasm/u);
 	for(const lane of genericSubtypeHostedLaneNames)
-		assert.match(summary, new RegExp(
-			`generic-subtype-${lane}-hosted-20261023/index\\.json`, "u"));
+		assert.ok(summary.includes(`${genericSubtypePromotionRoots[lane]
+			.slice("docs/evidence/".length)}/index.json`), lane);
 });
 
 const documentationSources = Object.fromEntries(await Promise.all(Object.entries(
@@ -172,7 +173,7 @@ test("generic Subtype documentation refuses repeated or ambiguous markers"
 );
 
 const hostedAvailable = genericSubtypeHostedLaneNames.every(lane =>
-	existsSync(`docs/evidence/generic-subtype-${lane}-hosted-20261023/index.json`));
+	existsSync(`${genericSubtypePromotionRoots[lane]}/index.json`));
 test("retained generic Subtype archives replay for promotion"
 	, { skip: !hostedAvailable }, async () => {
 		const actual = await genericSubtypePromotionReferences();

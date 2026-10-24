@@ -158,7 +158,10 @@ export const inspectCheckedRecordValueIndexHostedArtifact = async (
  */
 export const checkedRecordValueIndexHostedSafeZipPath = path => {
 	const value = path.endsWith("/") ? path.slice(0, -1) : path;
-	return value.length > 0 && /^[A-Za-z0-9_$@.+/-]+$/u.test(value)
+	// NuGet retains this literal metadata filename, never a directory or glob.
+	return value.length > 0
+		&& /^(?:[A-Za-z0-9_$@.+-]+\/)*(?:[A-Za-z0-9_$@.+-]+|\[Content_Types\]\.xml)$/u.test(value)
+		&& !path.endsWith("[Content_Types].xml/")
 		&& !value.startsWith("/") && value.split("/").every(part =>
 		part.length > 0 && part !== "." && part !== "..");
 };

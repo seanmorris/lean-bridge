@@ -36,7 +36,7 @@ const routes = Object.freeze(["ordinary", "reviewed"]);
  * @param path - Artifact-relative path.
  */
 export const genericSubtypeHostedSafePath = path => {
-	assert.match(path, /^(?:[A-Za-z0-9_@.+-]+\/)*[A-Za-z0-9_@.+-]+$/u);
+	assert.match(path, /^(?:[A-Za-z0-9_@.+-]+\/)*(?:[A-Za-z0-9_@.+-]+|\[Content_Types\]\.xml)$/u);
 	assert.ok(path.split("/").every(part => part !== "." && part !== ".."));
 	return path;
 };
