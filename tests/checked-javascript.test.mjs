@@ -67,6 +67,8 @@ import "./helpers/owned-php-wasm-hosted-archive-source-history-tests.mjs";
 import "./helpers/owned-npm-ci-environment-repair-source-history-tests.mjs";
 import "./helpers/core-inventory-endpoint-tests.mjs";
 import "./helpers/core-inventory-endpoint-repair-source-history-tests.mjs";
+import "./helpers/core-inventory-followup-endpoint-tests.mjs";
+import "./helpers/core-inventory-followup-repair-source-history-tests.mjs";
 
 const root = resolve(".");
 

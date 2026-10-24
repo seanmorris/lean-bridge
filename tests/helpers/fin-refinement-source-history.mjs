@@ -50,6 +50,7 @@ import { beforeOwnedLifetimeReplaySource, ownedLifetimeReplayNormalizationPaths 
 import { beforeOwnedPhpWasmHostedArchiveSource, ownedPhpWasmHostedArchiveNormalizationPaths } from "./owned-php-wasm-hosted-archive-source-history.mjs";
 import { beforeOwnedNpmCiEnvironmentRepairSource, ownedNpmCiEnvironmentRepairNormalizationPaths } from "./owned-npm-ci-environment-repair-source-history.mjs";
 import { beforeCoreInventoryEndpointRepairSource, coreInventoryEndpointRepairNormalizationPaths } from "./core-inventory-endpoint-repair-source-history.mjs";
+import { beforeCoreInventoryFollowupRepairSource, coreInventoryFollowupRepairNormalizationPaths } from "./core-inventory-followup-repair-source-history.mjs";
 import { beforeCoreEvidenceMemoryRepairSource, coreEvidenceMemoryRepairNormalizationPaths } from "./core-evidence-memory-repair-source-history.mjs";
 import { beforeValueIndexPromotionMilestoneRepairSource, valueIndexPromotionMilestoneRepairNormalizationPaths } from "./value-index-promotion-milestone-repair-source-history.mjs";
 import { beforeCoreMilestoneReplayRepairSource, coreMilestoneReplayRepairNormalizationPaths } from "./core-milestone-replay-repair-source-history.mjs";
@@ -2143,7 +2144,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...coreInventoryEndpointRepairNormalizationPaths
+	...coreInventoryFollowupRepairNormalizationPaths
+	, ...coreInventoryEndpointRepairNormalizationPaths
 	, ...ownedNpmCiEnvironmentRepairNormalizationPaths
 	, ...ownedPhpWasmHostedArchiveNormalizationPaths
 	, ...ownedLifetimeReplayNormalizationPaths
@@ -3030,7 +3032,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
 	let stage
-		= beforeCoreInventoryEndpointRepairSource(path, text, expected);
+		= beforeCoreInventoryFollowupRepairSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeCoreInventoryEndpointRepairSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;
