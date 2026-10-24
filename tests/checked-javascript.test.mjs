@@ -58,6 +58,8 @@ import "./helpers/zero-payload-rust-producer-replay-source-history-tests.mjs";
 import "./helpers/owned-callback-result-producer-tests.mjs";
 import "./helpers/owned-callback-inventory-endpoint-tests.mjs";
 import "./helpers/callback-producer-replay-source-history-tests.mjs";
+import "./helpers/owned-transfer-borrow-producer-tests.mjs";
+import "./helpers/transfer-borrow-producer-replay-source-history-tests.mjs";
 
 const root = resolve(".");
 

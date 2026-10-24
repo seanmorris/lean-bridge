@@ -1,0 +1,148 @@
+{
+  "additions": [
+    {
+      "currentSha256": "f0743838b4b9c3ad7c9e4cfaec92f4210472dd63f2d5f11f07b3f7e7bb726c2c",
+      "path": "tests/helpers/owned-transfer-borrow-producer-tests.mjs"
+    },
+    {
+      "currentSha256": "1e602bbdb83f1d81e7492a23b9b43babceeeb0092bf63a4db5d05e96c0b9ca9a",
+      "path": "tests/helpers/owned-transfer-borrow-producers.mjs"
+    },
+    {
+      "currentSha256": "2e073b7c6121f10d1f5819803bd044ec0083917cd2b850d2006c37144e65ab46",
+      "path": "scripts/update-transfer-borrow-producer-replay-source-history.mjs"
+    },
+    {
+      "currentSha256": "bb02743ddb6171b260282fcfa903c0b4a9a8095b0cf32937a679b9d0f1979e95",
+      "path": "tests/helpers/transfer-borrow-producer-replay-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "f62f9f3c7e7349294bacbf5922727ad955df25fffc5f89ac6c968650be8edfa7",
+      "path": "tests/helpers/transfer-borrow-producer-replay-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "37ecef8f267435ecb1ce001d389acd1694d59e49",
+  "integrationUpdates": [
+    {
+      "currentSha256": "eabe8ecdd7be42a67c36571d823bc9823682a6684994fc41bfec4a398682535d",
+      "edits": [
+        {
+          "current": "import { beforeTransferBorrowProducerReplaySource, transferBorrowProducerReplayNormalizationPaths } from \"./transfer-borrow-producer-replay-source-history.mjs\";\n",
+          "previous": "",
+          "start": 6132
+        },
+        {
+          "current": "\t...transferBorrowProducerReplayNormalizationPaths\n\t, ...callbackProducerReplayNormalizationPaths\n",
+          "previous": "\t...callbackProducerReplayNormalizationPaths\n",
+          "start": 179332
+        },
+        {
+          "current": "\t\t= beforeTransferBorrowProducerReplaySource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCallbackProducerReplaySource(path, text, expected);\n",
+          "previous": "\t\t= beforeCallbackProducerReplaySource(path, text, expected);\n",
+          "start": 221618
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "7622717b2acca55ebc93f676a3db4825b27761809667d5f068165d4872785e88"
+    },
+    {
+      "currentSha256": "92ba91ed84b80a3644d8c8007f1ad909e7e5b22d68ad1f3d2a0f6e04d88bb5eb",
+      "edits": [
+        {
+          "current": "import \"./helpers/owned-transfer-borrow-producer-tests.mjs\";\nimport \"./helpers/transfer-borrow-producer-replay-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 3848
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "306af83a8698bc45ad10740549f9fd6292c503823be0b3c272310b834cbd0eef"
+    }
+  ],
+  "milestone": "transfer-borrow-producer-replay-source-v1",
+  "predecessorCommit": "bda04cf67dbe423e5be4f1b452fc73d8b011f8b0",
+  "schemaVersion": 1,
+  "scope": "Reproduce C++ transfer (5384a754), .NET transfer (7dd8a21a) and WIT borrow (1e6f7f5f) execution receipts with their exact producer modules and source-bound closures of 69, 78 and 67 files. The C++ closure includes one explicit producer-Git-bound Boost payload omitted from its unchanged original source list. Authenticate all three deferred WIT probe inputs and replay installed CLI files from the same producer with recorded hashes and lengths, including files absent from sparse checkouts. Preserve lifetime, installation, mutation, documentation and enabled-gate assertions. Original receipt bytes, native implementations, type inventory and support claims are unchanged. Full history/inventory replay and remaining Core coverage stay hosted gates.",
+  "updates": [
+    {
+      "currentSha256": "9bcbaef4971248e41c5ee6467cdc8d4839755caca53af502881da02619c83ed9",
+      "edits": [
+        {
+          "current": "import { ownedTransferBorrowReplay } from \"./owned-transfer-borrow-producers.mjs\";\n",
+          "previous": "import { generateOwnedCPackage } from \"../../src/backends/c/owned-package.mjs\";\nimport { historicalOwnedTransferPackage } from \"./owned-transfer-generated-history.mjs\";\nimport { generateOwnedCppPackage } from \"../../src/backends/cpp/owned-package.mjs\";\nimport { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from \"../../src/build/native-graph-model.mjs\";\nimport { validatePackageSetReceipt } from \"../../src/release/package-set-receipt.mjs\";\n",
+          "start": 316
+        },
+        {
+          "current": "\tconst { generateOwnedCPackage, generateOwnedCppPackage\n\t\t, createCompiledNativeModel, generateCompiledNativeLeanAdapters\n\t\t, validatePackageSetReceipt }\n\t\t= await ownedTransferBorrowReplay(\"cpp\", record.sources);\n",
+          "previous": "",
+          "start": 2112
+        },
+        {
+          "current": "\t\tconst c = generateOwnedCPackage({ ...item.input, hostCallbacks: true, transferredInputs: true });\n",
+          "previous": "\t\tconst c = historicalOwnedTransferPackage(generateOwnedCPackage({ ...item.input, hostCallbacks: true, transferredInputs: true }), item.sourceSha256 ?? item.adapterReceipt?.ownedValues.sourceSha256);\n",
+          "start": 3564
+        }
+      ],
+      "path": "tests/helpers/owned-cpp-transfer-evidence.mjs",
+      "previousSha256": "e32cb5bc9de9b7c6a10b54bfd9bce9dd52c08a01fde21b7bb816927c6b3b121f"
+    },
+    {
+      "currentSha256": "9404764cd6176d5295fe14321cd4a0b0c6fc313b3a98de7b8ba37d9811264065",
+      "edits": [
+        {
+          "current": "import { ownedTransferBorrowReplay } from \"./owned-transfer-borrow-producers.mjs\";\n",
+          "previous": "import { generateOwnedDotnetCalls } from \"../../src/backends/dotnet/owned-calls.mjs\";\nimport { generateOwnedDotnetPackage } from \"../../src/backends/dotnet/owned-package.mjs\";\nimport { generateOwnedCPackage } from \"../../src/backends/c/owned-package.mjs\";\nimport { historicalOwnedTransferPackage } from \"./owned-transfer-generated-history.mjs\";\nimport { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from \"../../src/build/native-graph-model.mjs\";\nimport { ownedDotnetAdapterSources } from \"../../src/build/owned-dotnet-artifacts.mjs\";\nimport { validatePackageSetReceipt } from \"../../src/release/package-set-receipt.mjs\";\n",
+          "start": 328
+        },
+        {
+          "current": "\tconst { generateOwnedDotnetCalls, generateOwnedDotnetPackage\n\t\t, generateOwnedCPackage, createCompiledNativeModel\n\t\t, generateCompiledNativeLeanAdapters\n\t\t, ownedDotnetAdapterSources, validatePackageSetReceipt }\n\t\t= await ownedTransferBorrowReplay(\"dotnet\", record.sources);\n",
+          "previous": "",
+          "start": 2334
+        },
+        {
+          "current": "\t\tconst c = generateOwnedCPackage({ ...item.input, hostCallbacks: true, transferredInputs: true });\n",
+          "previous": "\t\tconst c = historicalOwnedTransferPackage(generateOwnedCPackage({ ...item.input, hostCallbacks: true, transferredInputs: true }), adapter.ownedValues.sourceSha256);\n",
+          "start": 6508
+        }
+      ],
+      "path": "tests/helpers/owned-dotnet-transfer-evidence.mjs",
+      "previousSha256": "12d2aeb467e79486fb807f8ff74256d15fc2ab5add556bc30e1bf1048185e5a4"
+    },
+    {
+      "currentSha256": "570f93081b7808431040385b6a1c7b6220916db89c3e5b1be3e8a763ba1ecae4",
+      "edits": [
+        {
+          "current": "import { ownedTransferBorrowProducers, ownedTransferBorrowReplay } from \"./owned-transfer-borrow-producers.mjs\";\nimport { bytesAtProducer } from \"./producer-source.mjs\";\n",
+          "previous": "import { generateOwnedWitPackage } from \"../../src/backends/wit/owned-package.mjs\";\nimport { guardOwnedWitHostSource } from \"../../src/backends/wit/owned-host-evidence.mjs\";\n",
+          "start": 255
+        },
+        {
+          "current": "",
+          "previous": "import { ownedWitBorrowProbe, ownedWitBorrowNativeSource } from \"./wit-owned-borrow-probe.mjs\";\n",
+          "start": 498
+        },
+        {
+          "current": "",
+          "previous": "import { ownedReceiverHistoricalBytes } from \"./owned-receiver-history.mjs\";\n",
+          "start": 640
+        },
+        {
+          "current": "\tconst { generateOwnedWitPackage, guardOwnedWitHostSource\n\t\t, ownedWitBorrowProbe, ownedWitBorrowNativeSource }\n\t\t= await ownedTransferBorrowReplay(\"wit\", record.sources);\n",
+          "previous": "",
+          "start": 2881
+        },
+        {
+          "current": "\t\tconst producer = ownedTransferBorrowProducers.wit.revision;\n\t\tdigest(record.sources[\"config/cli-package.v1.json\"]);\n\t\tconst cliConfig = JSON.parse(bytesAtProducer(producer, \"config/cli-package.v1.json\", record.sources[\"config/cli-package.v1.json\"]));\n",
+          "previous": "\t\tconst cliConfig = JSON.parse(ownedReceiverHistoricalBytes(\"config/cli-package.v1.json\", await readFile(\"config/cli-package.v1.json\"), record.sources[\"config/cli-package.v1.json\"]).toString());\n",
+          "start": 7106
+        },
+        {
+          "current": "\t\t\tconst bytes = bytesAtProducer(producer, path, file.sha256);\n\t\t\tassert.ok(file, path); assert.equal(file.bytes, bytes.length, path); assert.equal(file.sha256, sha256(bytes), path);\n",
+          "previous": "\t\t\tconst bytes = Buffer.from(ownedReceiverHistoricalBytes(path, await readFile(path), file.sha256));\n\t\t\tassert.ok(file, path); assert.equal(file.bytes, bytes.length); assert.equal(file.sha256, sha256(bytes), path);\n",
+          "start": 7734
+        }
+      ],
+      "path": "tests/helpers/wit-owned-borrow-evidence.mjs",
+      "previousSha256": "099130b2b415daf30e518868a688daf6ada2027c1bdf783a2a648308f610570a"
+    }
+  ]
+}

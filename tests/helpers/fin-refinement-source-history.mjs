@@ -45,6 +45,7 @@ import { beforeMilestoneControlRepairSource, milestoneControlRepairNormalization
 import { beforePhpRecursiveReplaySource, phpRecursiveReplayNormalizationPaths } from "./php-recursive-replay-source-history.mjs";
 import { beforeZeroPayloadRustReplaySource, zeroPayloadRustReplayNormalizationPaths } from "./zero-payload-rust-producer-replay-source-history.mjs";
 import { beforeCallbackProducerReplaySource, callbackProducerReplayNormalizationPaths } from "./callback-producer-replay-source-history.mjs";
+import { beforeTransferBorrowProducerReplaySource, transferBorrowProducerReplayNormalizationPaths } from "./transfer-borrow-producer-replay-source-history.mjs";
 import { beforeCoreEvidenceMemoryRepairSource, coreEvidenceMemoryRepairNormalizationPaths } from "./core-evidence-memory-repair-source-history.mjs";
 import { beforeValueIndexPromotionMilestoneRepairSource, valueIndexPromotionMilestoneRepairNormalizationPaths } from "./value-index-promotion-milestone-repair-source-history.mjs";
 import { beforeCoreMilestoneReplayRepairSource, coreMilestoneReplayRepairNormalizationPaths } from "./core-milestone-replay-repair-source-history.mjs";
@@ -2138,7 +2139,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...callbackProducerReplayNormalizationPaths
+	...transferBorrowProducerReplayNormalizationPaths
+	, ...callbackProducerReplayNormalizationPaths
 	, ...zeroPayloadRustReplayNormalizationPaths
 	, ...phpRecursiveReplayNormalizationPaths
 	, ...milestoneControlRepairNormalizationPaths
@@ -3020,7 +3022,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
 	let stage
-		= beforeCallbackProducerReplaySource(path, text, expected);
+		= beforeTransferBorrowProducerReplaySource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeCallbackProducerReplaySource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;
