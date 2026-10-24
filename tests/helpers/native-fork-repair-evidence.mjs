@@ -6,14 +6,13 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { readTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { historicalTypeSurfaceCells as typeSurfaceCells } from "./historical-type-surface-cells.mjs";
-import { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from "../../src/build/native-graph-model.mjs";
-import { nativeRecursiveCallableCallsProbe } from "./native-recursive-callable-calls-probe.mjs";
-import { assertOwnedDotnetProcess } from "./owned-dotnet-process-evidence.mjs";
 import { ownedDotnetProcessPath } from "./owned-dotnet-process-history.mjs";
 import { nativeForkRepairBaseline, nativeForkRepairChangedPaths, nativeForkRepairAddedPaths, reverseNativeForkRepair } from "./native-fork-repair-history.mjs";
-import { beforeManagedCiIsolation, managedCiIsolationHistoricalBytes } from "./managed-ci-isolation-history.mjs";
+import { bytesAtProducer, sourceAtProducer, typeSurfaceContractsAtProducer } from "./producer-source.mjs";
+import { moduleAtProducerWithSourceReads } from "./producer-module.mjs";
+
+export const nativeForkRepairProducer = "733bd5a289841309c3ed0b6a99e322cdcb361a09";
 
 export const nativeForkRepairCommand = "LEAN_BRIDGE_NATIVE_RECURSIVE_CALLABLE_TEST=1 node --test tests/native-recursive-callable-compile.test.mjs";
 export const nativeForkRepairScope = {
@@ -58,7 +57,7 @@ export const assertNativeForkRepair = async (record, replay = true) => {
 	const updates = new Map(record.updates.map(item => [item.path, item]));
 	for(const path of paths)
 	{
-		const bytes = managedCiIsolationHistoricalBytes(path, await readFile(path), record.sources[path]);
+		const bytes = bytesAtProducer(nativeForkRepairProducer, path, record.sources[path]);
 		assert.equal(sha256(bytes), record.sources[path], path);
 		const update = updates.get(path);
 		if(update)
@@ -78,6 +77,10 @@ export const assertNativeForkRepair = async (record, replay = true) => {
 		.map(line => JSON.parse(line.slice(2).replaceAll("\\\\", "\\"))).filter(item => item.input);
 	assert.deepEqual(record.transport.reports, diagnostics);
 	assert.deepEqual(record.transport.reports.map(item => item.path), nativeForkRepairScope.paths);
+	const { createCompiledNativeModel, generateCompiledNativeLeanAdapters }
+		= await moduleAtProducerWithSourceReads(nativeForkRepairProducer, "src/build/native-graph-model.mjs");
+	const { nativeRecursiveCallableCallsProbe }
+		= await moduleAtProducerWithSourceReads(nativeForkRepairProducer, "tests/helpers/native-recursive-callable-calls-probe.mjs");
 	for(const [index, report] of record.transport.reports.entries())
 	{
 		const model = createCompiledNativeModel(report.input);
@@ -101,8 +104,8 @@ export const assertNativeForkRepair = async (record, replay = true) => {
 	assert.notEqual(record.transport.reports[0].bindingIrSha256, record.transport.reports[1].bindingIrSha256);
 	assert.deepEqual(record.transport.reports[0].nativeLibrary, record.transport.reports[1].nativeLibrary);
 	assert.deepEqual(record.inventory, previous.inventory); assert.equal(record.inventory.promoted, 0);
-	const { irSchema, consumers } = await readTypeSurface(), contracts = { irSchema, consumers };
-	const inventory = beforeManagedCiIsolation("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8"), record.sources["docs/type-surface.v1.json"]);
+	const contracts = typeSurfaceContractsAtProducer(nativeForkRepairProducer);
+	const inventory = sourceAtProducer(nativeForkRepairProducer, "docs/type-surface.v1.json", record.sources["docs/type-surface.v1.json"]);
 	const document = JSON.parse(inventory);
 	const old = JSON.parse(reverseNativeForkRepair(inventory, updates.get("docs/type-surface.v1.json")));
 	const expected = structuredClone(old);
@@ -114,5 +117,10 @@ export const assertNativeForkRepair = async (record, replay = true) => {
 	}
 	assert.deepEqual(document, expected);
 	assert.deepEqual(typeSurfaceCells(document, contracts), typeSurfaceCells(old, contracts));
-	if(replay) await assertOwnedDotnetProcess(previous);
+	if(replay)
+	{
+		const { assertOwnedDotnetProcess } = await moduleAtProducerWithSourceReads(
+			nativeForkRepairProducer, "tests/helpers/owned-dotnet-process-evidence.mjs");
+		await assertOwnedDotnetProcess(previous);
+	}
 };

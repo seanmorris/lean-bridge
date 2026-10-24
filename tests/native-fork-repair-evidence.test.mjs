@@ -7,11 +7,11 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
-import { assertNativeForkRepair } from "./helpers/native-fork-repair-evidence.mjs";
+import { assertNativeForkRepair, nativeForkRepairProducer } from "./helpers/native-fork-repair-evidence.mjs";
 import { beforeNativeForkRepair, nativeForkRepairHistoricalBytes, nativeForkRepairPath, reverseNativeForkRepair } from "./helpers/native-fork-repair-history.mjs";
 import { ownedDotnetHistoricalBytes, ownedDotnetNormalizationPaths } from "./helpers/owned-dotnet-source-history.mjs";
 import { ownedRubyHistoricalBytes } from "./helpers/owned-ruby-source-history.mjs";
-import { beforeManagedCiIsolation } from "./helpers/managed-ci-isolation-history.mjs";
+import { sourceAtProducer } from "./helpers/producer-source.mjs";
 
 const receipt = async () => JSON.parse(await readFile(nativeForkRepairPath, "utf8"));
 
@@ -52,8 +52,10 @@ test("native fork repair evidence rejects changed statuses, execution and source
 test("native fork repair history preserves unknown files and authenticates complete transitions", async () => {
 	for(const update of (await receipt()).updates)
 	{
-		const current = beforeManagedCiIsolation(update.path, await readFile(update.path, "utf8"), update.currentSha256);
-		assert.equal(sha256(beforeNativeForkRepair(update.path, current)), update.previousSha256);
+		const current = sourceAtProducer(nativeForkRepairProducer, update.path, update.currentSha256);
+		const previous = beforeNativeForkRepair(update.path, current, update.previousSha256);
+		assert.equal(sha256(previous), update.previousSha256);
+		assert.equal(beforeNativeForkRepair(update.path, previous, update.previousSha256), previous);
 		assert.equal(beforeNativeForkRepair(update.path, current, update.currentSha256), current);
 		assert.ok(ownedDotnetNormalizationPaths.includes(update.path));
 		for(const historicalBytes of [nativeForkRepairHistoricalBytes, ownedDotnetHistoricalBytes, ownedRubyHistoricalBytes])
