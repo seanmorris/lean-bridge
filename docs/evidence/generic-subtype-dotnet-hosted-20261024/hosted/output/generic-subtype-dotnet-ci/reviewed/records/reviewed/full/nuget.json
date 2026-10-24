@@ -1,0 +1,248 @@
+{
+  "archive": {
+    "bytes": 51483546,
+    "path": "archives/Nominalsubtypes.Api.1.0.0.nupkg",
+    "sha256": "2fb19371dc34c031da8cef33af8ec849dc55321422c19fb705696d929b68d2b2"
+  },
+  "closure": {
+    "buildInputsSha256": "95c875726aa62c6fa62fe275bda5ab189b1c08a5f001be038ff7e494db914da7",
+    "cacheFilesSha256": "d4959817742b88f01fcacdf6b274bdd7a4fe4b44351e7cb6b85004d25b913a7f",
+    "deployedFilesSha256": "a4a652d5ed188e844dbba38a90504779efd777c91f13c9e9256cb480b6c61842",
+    "interpreterSha256": "8b3d902364f618e31e029d4eba077d52c141dd641e375f4555715604806e44b6",
+    "packageFileSetSha256": "13eb2ce816ee2428f38df23eea12bc1564e2b1726888f894de88affb858448bd",
+    "receiptSha256": "c37f402b855b17445be8491f19c6789a1170be1acf206f3bda0b98d5cacdace8"
+  },
+  "compiled": {
+    "assembly": "LeanBridge.Nominalsubtypes",
+    "bindingIrSha256": "b71165d2505722e2fdb751645075cd14a1b445031b5131b1a70b4785a523049f",
+    "evidence": {
+      "componentId": "nominalsubtypes@1.0.0",
+      "componentReceiptSha256": "efe9799c3e56de235205a4790aeb237ad3d76ed948cf6876edc0591711c21660",
+      "libraries": {
+        "libcomponent_7f8bfe55e5831a9133c5.so": "44fcf2e793c07c8171ed24f610f8e187c314cb85aca66387ee1222228af1890a",
+        "liblean_bridge_native.so": "459fcd2098d4b646ab6ae0f4cdccd1f222908cb162562bfc3940a533cd4e4e21",
+        "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+        "libnominalsubtypes.so": "eea40351970265180b2ff97a710bf541bea03396f5f59536810821339877477d"
+      },
+      "library": "libnominalsubtypes.so",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    },
+    "files": {
+      "NuGet.Config": {
+        "bytes": 74,
+        "sha256": "9508cae5f76364f56e80eb97cb16493977243cf38e5cca6284e3d74f83b20a2c"
+      },
+      "README.md": {
+        "bytes": 11423,
+        "sha256": "94644895428728cb5d8d30de07887799426c4751790f34dbf757cf5ba3fb3b12"
+      },
+      "binding-manifest.json": {
+        "bytes": 1480,
+        "sha256": "f0008a7908c7efd481d777be943993ead9898bcf23bcffbc219fa472bed4d4ba"
+      },
+      "global.json": {
+        "bytes": 104,
+        "sha256": "d4e6e7df1a6d56e08602d954df0d6f0ed938e95b4924eb4348603f5db82e29bc"
+      },
+      "lib/net8.0/LeanBridge.Nominalsubtypes.deps.json": {
+        "bytes": 448,
+        "sha256": "120a80165bc9d0ea5d4cdc9a62072affcd77209b6533e5a88ef99ae8e1a44295"
+      },
+      "lib/net8.0/LeanBridge.Nominalsubtypes.dll": {
+        "bytes": 43520,
+        "sha256": "bf6639825d68fdc7a503ee21c7354d8b869aa3e38ea37fc64fdae07bae3ce9e9"
+      },
+      "lib/net8.0/LeanBridge.Nominalsubtypes.xml": {
+        "bytes": 20465,
+        "sha256": "ef5f5ef2a3c929170fe8d43279cb3868a90d3b26e2612b0c6f125ef95c01f0f9"
+      },
+      "src/LeanBridge.Nominalsubtypes/Api.cs": {
+        "bytes": 22268,
+        "sha256": "f5fd5a33225d854a89e99f4fb0f5672a97a43aecff2f1a15e16dc3ca612d4b24"
+      },
+      "src/LeanBridge.Nominalsubtypes/LeanBridge.Nominalsubtypes.csproj": {
+        "bytes": 611,
+        "sha256": "642174ac6dfe52d1edc06682e750be4e82b136b6a912bd44e2fbe97d1806704b"
+      },
+      "src/LeanBridge.Nominalsubtypes/Runtime.cs": {
+        "bytes": 50308,
+        "sha256": "0dd261beab7824da211563c2fdacad1cf74313f6be3e47672939d2b329ceb077"
+      }
+    },
+    "profile": "native-library-v1",
+    "schemaVersion": 1,
+    "sdk": "8.0.424"
+  },
+  "evidence": {
+    "componentId": "nominalsubtypes@1.0.0",
+    "componentReceiptSha256": "efe9799c3e56de235205a4790aeb237ad3d76ed948cf6876edc0591711c21660",
+    "libraries": {
+      "libcomponent_7f8bfe55e5831a9133c5.so": "44fcf2e793c07c8171ed24f610f8e187c314cb85aca66387ee1222228af1890a",
+      "liblean_bridge_native.so": "459fcd2098d4b646ab6ae0f4cdccd1f222908cb162562bfc3940a533cd4e4e21",
+      "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+      "libnominalsubtypes.so": "eea40351970265180b2ff97a710bf541bea03396f5f59536810821339877477d"
+    },
+    "library": "libnominalsubtypes.so",
+    "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+  },
+  "files": {
+    "Nominalsubtypes.Api.nuspec": {
+      "bytes": 477,
+      "sha256": "71d4d82df0eadd9ce05068e8a94de5baed72bea5c23d4a88817d6afb5a694fdb"
+    },
+    "README.md": {
+      "bytes": 11755,
+      "sha256": "71fd7496f19956a0be536227d353e7da78795e9fe9308745692a4511cc5fbb3c"
+    },
+    "[Content_Types].xml": {
+      "bytes": 939,
+      "sha256": "f40a2ae0edf63af7046ff54e97e247dd6b2cf07e5d650a8b6d9c51370378b42b"
+    },
+    "_rels/.rels": {
+      "bytes": 263,
+      "sha256": "c9b42c33fe88344e9d5c5c48873732ec1da2fc7b15ceb2ef7fc65d096042f5ec"
+    },
+    "lean-bridge/component/allocation-guard.h": {
+      "bytes": 1309,
+      "sha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83"
+    },
+    "lean-bridge/component/artifacts.json": {
+      "bytes": 1537,
+      "sha256": "9255ecf252245e8cc0d5216c5f34ddf4b91c5aceaca5233819aa7d1472bbe0f9"
+    },
+    "lean-bridge/component/binding-ir.json": {
+      "bytes": 129879,
+      "sha256": "5cd525d1daea75950b3c63038d789c9840c9ca9dacf90b93d914932c76f6901c"
+    },
+    "lean-bridge/component/component.h": {
+      "bytes": 6743,
+      "sha256": "3b342873233582a7dff9472e7086dfc16f885d5a15114d9d67a46629a3d8ae60"
+    },
+    "lean-bridge/component/generated.lean": {
+      "bytes": 34895,
+      "sha256": "776fcdef3e42c306d9da3d8371d561c58ccfce6b9ab3d2c7f082f8af2624880e"
+    },
+    "lean-bridge/component/metadata.json": {
+      "bytes": 213933,
+      "sha256": "9986ad18b479a111cab7520d9051217eb4ee1d4d753fa3981b0ec5cff3b94ac6"
+    },
+    "lean-bridge/component/model.json": {
+      "bytes": 446024,
+      "sha256": "7999427cd5c4c1299e545ead69c322333480400509a27184bd0c6fdbb89bff11"
+    },
+    "lean-bridge/component/native-component.json": {
+      "bytes": 140499,
+      "sha256": "efe9799c3e56de235205a4790aeb237ad3d76ed948cf6876edc0591711c21660"
+    },
+    "lean-bridge/dotnet/binding-manifest.json": {
+      "bytes": 1480,
+      "sha256": "f0008a7908c7efd481d777be943993ead9898bcf23bcffbc219fa472bed4d4ba"
+    },
+    "lean-bridge/dotnet/global.json": {
+      "bytes": 104,
+      "sha256": "d4e6e7df1a6d56e08602d954df0d6f0ed938e95b4924eb4348603f5db82e29bc"
+    },
+    "lean-bridge/dotnet/src/LeanBridge.Nominalsubtypes/Api.cs": {
+      "bytes": 22268,
+      "sha256": "f5fd5a33225d854a89e99f4fb0f5672a97a43aecff2f1a15e16dc3ca612d4b24"
+    },
+    "lean-bridge/dotnet/src/LeanBridge.Nominalsubtypes/LeanBridge.Nominalsubtypes.csproj": {
+      "bytes": 611,
+      "sha256": "642174ac6dfe52d1edc06682e750be4e82b136b6a912bd44e2fbe97d1806704b"
+    },
+    "lean-bridge/dotnet/src/LeanBridge.Nominalsubtypes/Runtime.cs": {
+      "bytes": 50308,
+      "sha256": "0dd261beab7824da211563c2fdacad1cf74313f6be3e47672939d2b329ceb077"
+    },
+    "lean-bridge/licenses/Lean-LICENSE": {
+      "bytes": 9160,
+      "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+    },
+    "lean-bridge/licenses/Lean-LICENSES": {
+      "bytes": 81854,
+      "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+    },
+    "lean-bridge/licenses/LeanBridge-LICENSE": {
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    "lean-bridge/licenses/source-notices.json": {
+      "bytes": 2344,
+      "sha256": "9f4a73f4813b7718c8c56c259d62e394843f08a5b3976bd35a181fd19b6db4d6"
+    },
+    "lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt": {
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    "lean-bridge/native-c-adapter.json": {
+      "bytes": 1386,
+      "sha256": "8d4c17c360b1ac39ee0bf59b99f426ace4140788030af5f1abbc7e03c9851fc7"
+    },
+    "lean-bridge/native-dotnet.json": {
+      "bytes": 2490,
+      "sha256": "7fe3cf4816a61f10138aba7f2fdd8a996f71c14ea49d7426f6d71fdd3de1c143"
+    },
+    "lean-bridge/package-receipt.json": {
+      "bytes": 141958,
+      "sha256": "c37f402b855b17445be8491f19c6789a1170be1acf206f3bda0b98d5cacdace8"
+    },
+    "lean-bridge/runtime.json": {
+      "bytes": 1466,
+      "sha256": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    },
+    "lib/net8.0/LeanBridge.Nominalsubtypes.dll": {
+      "bytes": 43520,
+      "sha256": "bf6639825d68fdc7a503ee21c7354d8b869aa3e38ea37fc64fdae07bae3ce9e9"
+    },
+    "lib/net8.0/LeanBridge.Nominalsubtypes.xml": {
+      "bytes": 20465,
+      "sha256": "ef5f5ef2a3c929170fe8d43279cb3868a90d3b26e2612b0c6f125ef95c01f0f9"
+    },
+    "runtimes/linux-x64/native/libcomponent_7f8bfe55e5831a9133c5.so": {
+      "bytes": 159440,
+      "sha256": "44fcf2e793c07c8171ed24f610f8e187c314cb85aca66387ee1222228af1890a"
+    },
+    "runtimes/linux-x64/native/liblean_bridge_native.so": {
+      "bytes": 21632,
+      "sha256": "459fcd2098d4b646ab6ae0f4cdccd1f222908cb162562bfc3940a533cd4e4e21"
+    },
+    "runtimes/linux-x64/native/libleanshared.so": {
+      "bytes": 158401256,
+      "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+    },
+    "runtimes/linux-x64/native/libnominalsubtypes.so": {
+      "bytes": 123272,
+      "sha256": "eea40351970265180b2ff97a710bf541bea03396f5f59536810821339877477d"
+    }
+  },
+  "receiptSha256": "c37f402b855b17445be8491f19c6789a1170be1acf206f3bda0b98d5cacdace8",
+  "retained": [
+    "Nominalsubtypes.Api.nuspec",
+    "README.md",
+    "[Content_Types].xml",
+    "_rels/.rels",
+    "lean-bridge/component/allocation-guard.h",
+    "lean-bridge/component/artifacts.json",
+    "lean-bridge/component/binding-ir.json",
+    "lean-bridge/component/component.h",
+    "lean-bridge/component/generated.lean",
+    "lean-bridge/component/metadata.json",
+    "lean-bridge/component/model.json",
+    "lean-bridge/component/native-component.json",
+    "lean-bridge/dotnet/binding-manifest.json",
+    "lean-bridge/dotnet/global.json",
+    "lean-bridge/dotnet/src/LeanBridge.Nominalsubtypes/Api.cs",
+    "lean-bridge/dotnet/src/LeanBridge.Nominalsubtypes/LeanBridge.Nominalsubtypes.csproj",
+    "lean-bridge/dotnet/src/LeanBridge.Nominalsubtypes/Runtime.cs",
+    "lean-bridge/licenses/Lean-LICENSE",
+    "lean-bridge/licenses/Lean-LICENSES",
+    "lean-bridge/licenses/LeanBridge-LICENSE",
+    "lean-bridge/licenses/source-notices.json",
+    "lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt",
+    "lean-bridge/native-c-adapter.json",
+    "lean-bridge/native-dotnet.json",
+    "lean-bridge/package-receipt.json",
+    "lean-bridge/runtime.json",
+    "lib/net8.0/LeanBridge.Nominalsubtypes.xml"
+  ]
+}

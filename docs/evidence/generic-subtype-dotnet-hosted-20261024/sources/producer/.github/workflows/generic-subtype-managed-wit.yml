@@ -1,0 +1,257 @@
+name: Generic Subtypes in .NET, JVM, native PHP and WIT
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: generic-subtype-managed-wit-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  dotnet:
+    name: Generic Subtypes in .NET
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    steps:
+      - name: Check out the exact revision
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Bound apt network waits
+        uses: ./.github/actions/bounded-apt
+        timeout-minutes: 1
+      - name: Install compiler and archive dependencies
+        timeout-minutes: 20
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake git jq libgmp-dev libuv1-dev m4 pkg-config ripgrep xz-utils zstd
+      - name: Install dependencies and the pinned Lean compiler
+        timeout-minutes: 30
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm ci --ignore-scripts --no-audit --no-fund
+          mkdir -p build
+          bash scripts/bootstrap-toolchains.sh --lean-only 2>&1 | tee build/generic-subtype-dotnet-toolchain.log
+      - name: Install the isolated pinned .NET SDK
+        timeout-minutes: 20
+        uses: actions/setup-dotnet@v6
+        env:
+          DOTNET_INSTALL_DIR: ${{ runner.temp }}/lean-bridge-generic-subtype-dotnet-8.0.424
+        with:
+          dotnet-version: '8.0.424'
+      - name: Execute installed .NET acceptance
+        id: acceptance
+        timeout-minutes: 125
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/env.sh
+          bash scripts/run-generic-subtype-dotnet-ci.sh "$RUNNER_TEMP/lean-bridge-generic-subtype-dotnet-8.0.424/dotnet"
+      - name: Preserve complete and partial .NET records
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: generic-subtype-dotnet-${{ github.sha }}
+          path: |
+            build/generic-subtype-dotnet-ci/
+            build/generic-subtype-dotnet-toolchain.log
+          if-no-files-found: error
+          retention-days: 30
+      - name: Enforce installed .NET acceptance
+        if: always() && steps.acceptance.outcome != 'success'
+        run: exit 1
+
+  jvm:
+    name: Generic Subtypes in Java and Kotlin
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    steps:
+      - name: Check out the exact revision
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Bound apt network waits
+        uses: ./.github/actions/bounded-apt
+        timeout-minutes: 1
+      - name: Install compiler and archive dependencies
+        timeout-minutes: 20
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake git jq libgmp-dev libuv1-dev m4 pkg-config ripgrep unzip xz-utils zstd
+      - name: Install dependencies and the pinned Lean compiler
+        timeout-minutes: 30
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm ci --ignore-scripts --no-audit --no-fund
+          mkdir -p build
+          bash scripts/bootstrap-toolchains.sh --lean-only 2>&1 | tee build/generic-subtype-jvm-toolchain.log
+      - name: Select Java 22
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '22.0.2'
+      - name: Install the checksummed Kotlin 2.2.0 compiler
+        timeout-minutes: 10
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fL --retry 3 --output build/kotlin-compiler.zip https://github.com/JetBrains/kotlin/releases/download/v2.2.0/kotlin-compiler-2.2.0.zip
+          echo '1adb6f1a5845ba0aa5a59e412e44c8e405236b957de1a9683619f1dca3b16932  build/kotlin-compiler.zip' | sha256sum --check
+          unzip -q build/kotlin-compiler.zip -d build/kotlin-tools
+      - name: Execute installed JVM acceptance
+        id: acceptance
+        timeout-minutes: 125
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/env.sh
+          bash scripts/run-generic-subtype-jvm-ci.sh "$JAVA_HOME/bin/java" "$JAVA_HOME/bin/javac" "$PWD/build/kotlin-tools/kotlinc/bin/kotlinc"
+      - name: Preserve complete and partial JVM records
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: generic-subtype-jvm-${{ github.sha }}
+          path: |
+            build/generic-subtype-jvm-ci/
+            build/generic-subtype-jvm-toolchain.log
+          if-no-files-found: error
+          retention-days: 30
+      - name: Enforce installed JVM acceptance
+        if: always() && steps.acceptance.outcome != 'success'
+        run: exit 1
+
+  php:
+    name: Generic Subtypes in native PHP
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    steps:
+      - name: Check out the exact revision
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Bound apt network waits
+        uses: ./.github/actions/bounded-apt
+        timeout-minutes: 1
+      - name: Install compiler, PHP, Composer, and archive dependencies
+        timeout-minutes: 20
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake composer git jq libgmp-dev libuv1-dev m4 php-cli php-common php-dev php-mbstring php-zip pkg-config ripgrep xz-utils zstd
+      - name: Install dependencies and the pinned Lean compiler
+        timeout-minutes: 30
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm ci --ignore-scripts --no-audit --no-fund
+          mkdir -p build
+          bash scripts/bootstrap-toolchains.sh --lean-only 2>&1 | tee build/generic-subtype-php-toolchain.log
+      - name: Execute installed native PHP acceptance
+        id: acceptance
+        timeout-minutes: 125
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/env.sh
+          bash scripts/run-generic-subtype-php-ci.sh "$(command -v php)" "$(command -v composer)"
+      - name: Preserve complete and partial PHP records
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: generic-subtype-php-${{ github.sha }}
+          path: |
+            build/generic-subtype-php-ci/
+            build/generic-subtype-php-toolchain.log
+          if-no-files-found: error
+          retention-days: 30
+      - name: Enforce installed native PHP acceptance
+        if: always() && steps.acceptance.outcome != 'success'
+        run: exit 1
+
+  wit:
+    name: Generic Subtypes in WIT and WASI components
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    steps:
+      - name: Check out the exact revision
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Bound apt network waits
+        uses: ./.github/actions/bounded-apt
+        timeout-minutes: 1
+      - name: Install compiler and archive dependencies
+        timeout-minutes: 20
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake git jq libgmp-dev libuv1-dev m4 pkg-config ripgrep xz-utils zstd
+      - name: Install the documented Nix CLI
+        uses: cachix/install-nix-action@v31
+        with:
+          install_url: https://releases.nixos.org/nix/nix-2.24.11/install
+      - name: Install dependencies, the pinned Lean compiler and wasm-tools
+        timeout-minutes: 30
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm ci --ignore-scripts --no-audit --no-fund
+          mkdir -p build
+          bash scripts/bootstrap-toolchains.sh --lean-only 2>&1 | tee build/generic-subtype-wit-toolchain.log
+          bash scripts/bootstrap-toolchains.sh --wasm-tools-only 2>&1 | tee -a build/generic-subtype-wit-toolchain.log
+      - name: Build the pinned Wasmtime C API
+        timeout-minutes: 30
+        shell: bash
+        run: |
+          set -euo pipefail
+          nix build .#wasmtime-c-api --out-link build/wasmtime-c-api
+      - name: Execute installed WIT acceptance
+        id: acceptance
+        timeout-minutes: 125
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/env.sh
+          bash scripts/run-generic-subtype-wit-ci.sh "/usr/bin/cc" "$PWD/.toolchains/wasm-tools/bin/wasm-tools" "$PWD/build/wasmtime-c-api"
+      - name: Preserve complete and partial WIT records
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: generic-subtype-wit-${{ github.sha }}
+          path: |
+            build/generic-subtype-wit-ci/
+            build/generic-subtype-wit-toolchain.log
+          if-no-files-found: error
+          retention-days: 30
+      - name: Enforce installed WIT acceptance
+        if: always() && steps.acceptance.outcome != 'success'
+        run: exit 1

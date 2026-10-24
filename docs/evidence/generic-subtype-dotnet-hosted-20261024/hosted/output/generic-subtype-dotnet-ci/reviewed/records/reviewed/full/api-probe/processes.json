@@ -1,0 +1,64 @@
+{
+  "commands": [
+    {
+      "args": [
+        "restore",
+        "--configfile",
+        "NuGet.Config",
+        "-noAutoResponse",
+        "-p:ImportDirectoryBuildProps=false",
+        "-p:ImportDirectoryBuildTargets=false",
+        "-p:ImportDirectoryPackagesProps=false",
+        "-p:MSBuildEnableWorkloadResolver=false",
+        "-m:1"
+      ],
+      "command": "/home/runner/work/_temp/lean-bridge-generic-subtype-dotnet-8.0.424/dotnet",
+      "cwd": "/tmp/lean-bridge-nominal-subtype-dotnet-MnEuak/api-probe",
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "  Determining projects to restore...\n  Restored /tmp/lean-bridge-nominal-subtype-dotnet-MnEuak/api-probe/Probe.csproj (in 60 ms).\n"
+      }
+    },
+    {
+      "args": [
+        "build",
+        "--no-restore",
+        "--disable-build-servers",
+        "-p:UseSharedCompilation=false",
+        "-o",
+        "out",
+        "-noAutoResponse",
+        "-p:ImportDirectoryBuildProps=false",
+        "-p:ImportDirectoryBuildTargets=false",
+        "-p:ImportDirectoryPackagesProps=false",
+        "-p:MSBuildEnableWorkloadResolver=false",
+        "-m:1"
+      ],
+      "command": "/home/runner/work/_temp/lean-bridge-generic-subtype-dotnet-8.0.424/dotnet",
+      "cwd": "/tmp/lean-bridge-nominal-subtype-dotnet-MnEuak/api-probe",
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "  Probe -> /tmp/lean-bridge-nominal-subtype-dotnet-MnEuak/api-probe/out/Probe.dll\n\nBuild succeeded.\n    0 Warning(s)\n    0 Error(s)\n\nTime Elapsed 00:00:01.82\n"
+      }
+    }
+  ],
+  "environment": {
+    "CC": "/unavailable/compiler",
+    "CXX": "/unavailable/compiler",
+    "DOTNET_CLI_HOME": "/tmp/lean-bridge-nominal-subtype-dotnet-MnEuak/api-probe/dotnet-home",
+    "DOTNET_CLI_TELEMETRY_OPTOUT": "1",
+    "DOTNET_CLI_WORKLOAD_UPDATE_NOTIFY_DISABLE": "1",
+    "DOTNET_MULTILEVEL_LOOKUP": "0",
+    "DOTNET_NOLOGO": "1",
+    "DOTNET_ROOT": "/home/runner/work/_temp/lean-bridge-generic-subtype-dotnet-8.0.424",
+    "DOTNET_SKIP_FIRST_TIME_EXPERIENCE": "1",
+    "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+    "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+    "MSBUILDDISABLENODEREUSE": "1",
+    "NUGET_HTTP_CACHE_PATH": "/tmp/lean-bridge-nominal-subtype-dotnet-MnEuak/api-probe/http-cache",
+    "NUGET_PACKAGES": "/tmp/lean-bridge-nominal-subtype-dotnet-MnEuak/api-probe/packages",
+    "PATH": "/unavailable"
+  }
+}

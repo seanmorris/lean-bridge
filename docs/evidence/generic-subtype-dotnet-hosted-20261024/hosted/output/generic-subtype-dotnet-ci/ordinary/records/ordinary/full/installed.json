@@ -1,0 +1,53 @@
+{
+  "closure": {
+    "buildInputsSha256": "dd78c332d4d7d75a05736f0c9f6389fac333809638bba4a076ddb2d137d3f799",
+    "cacheFilesSha256": "eb77ddbc3c4ac9370cbad2fc5ff5ef6f65849dc8a0215b149c24a7289d14664f",
+    "deployedFilesSha256": "54fd177dabdb35c9b769a67695f475ccf7a4c05d0b77dc05d72782ec134cc59b",
+    "interpreterSha256": "8b3d902364f618e31e029d4eba077d52c141dd641e375f4555715604806e44b6",
+    "packageFileSetSha256": "13eb2ce816ee2428f38df23eea12bc1564e2b1726888f894de88affb858448bd",
+    "receiptSha256": "62a138fb3c88e17157021e96e83802ffea2cca30034935e44ededbcff60a4ed2"
+  },
+  "counts": {
+    "checks": 18,
+    "rejections": 3
+  },
+  "cwd": "/tmp/lean-bridge-nominal-subtype-dotnet-qqdxhf/consumer",
+  "framework": {
+    "args": [
+      "out/Consumer.dll",
+      "--runtime"
+    ],
+    "command": "/home/runner/work/_temp/lean-bridge-generic-subtype-dotnet-8.0.424/dotnet",
+    "cwd": "/tmp/lean-bridge-nominal-subtype-dotnet-qqdxhf/consumer",
+    "facts": {
+      "architecture": "X64",
+      "command": "/home/runner/work/_temp/lean-bridge-generic-subtype-dotnet-8.0.424/dotnet",
+      "description": ".NET 8.0.30",
+      "directory": "/home/runner/work/_temp/lean-bridge-generic-subtype-dotnet-8.0.424/shared/Microsoft.NETCore.App/8.0.30/",
+      "littleEndian": true,
+      "os": "Ubuntu 24.04.5 LTS",
+      "version": "8.0.30"
+    },
+    "run": {
+      "code": 0,
+      "stderr": "",
+      "stdout": "{\"version\":\"8.0.30\",\"description\":\".NET 8.0.30\",\"directory\":\"/home/runner/work/_temp/lean-bridge-generic-subtype-dotnet-8.0.424/shared/Microsoft.NETCore.App/8.0.30/\",\"command\":\"/home/runner/work/_temp/lean-bridge-generic-subtype-dotnet-8.0.424/dotnet\",\"architecture\":\"X64\",\"os\":\"Ubuntu 24.04.5 LTS\",\"littleEndian\":true}\n"
+    },
+    "runtimeFiles": {
+      "System.Private.CoreLib.dll": {
+        "bytes": 12773888,
+        "sha256": "dd6ad973741639a428e367669fd8e32db5ea2b6b20b8805beaa0dd372748e0a8"
+      },
+      "libcoreclr.so": {
+        "bytes": 6906008,
+        "sha256": "fedf4074258e14b425cd3b4209bedc3e102765623445cc1bcfe8361f6193231c"
+      }
+    }
+  },
+  "run": {
+    "code": 0,
+    "stderr": "",
+    "stdout": "{\"checks\":18,\"rejections\":3}\n"
+  },
+  "stage": "installed"
+}

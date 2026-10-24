@@ -1,0 +1,64 @@
+{
+  "kind": "lean-bridge-source-notices",
+  "packages": [
+    {
+      "configurationSource": "{\n  \"modules\": [\n    \"NominalSubtypes\",\n    \"NominalSubtypes.GenericCompositions\"\n  ],\n  \"schemaVersion\": 1,\n  \"targets\": {\n    \"nuget\": {\n      \"name\": \"Nominalsubtypes.Api\",\n      \"version\": \"1.0.0\"\n    }\n  }\n}\n",
+      "name": "nominalsubtypes",
+      "notices": [
+        {
+          "bytes": 1093,
+          "path": "LICENSE",
+          "payload": "source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt",
+          "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+        }
+      ],
+      "source": {
+        "inputs": [
+          {
+            "bytes": 96715,
+            "path": "api.binding-ir.json",
+            "sha256": "412ff46e508cce0633333729b46b9b72cd87d50b22907a1f17c34e7d3d546865"
+          },
+          {
+            "bytes": 81,
+            "path": "lakefile.toml",
+            "sha256": "c29eeed5f6f853d55bb7100b160d0ec0224fd7375f5b05c87381326b60112d29"
+          },
+          {
+            "bytes": 213,
+            "path": "lean-bridge.exports.json",
+            "sha256": "9af35869d74bbc4faefe022f4fbe12d53a1392ede6f9e1eddfb38f906246b4ad"
+          },
+          {
+            "bytes": 25,
+            "path": "lean-toolchain",
+            "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+          },
+          {
+            "bytes": 1093,
+            "path": "LICENSE",
+            "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+          },
+          {
+            "bytes": 3101,
+            "path": "NominalSubtypes.lean",
+            "sha256": "63571aff275da41b12e622cd1cb0183c41419f4502eb913ac6721a3e8ceec58d"
+          },
+          {
+            "bytes": 472,
+            "path": "NominalSubtypes/GenericCompositions.lean",
+            "sha256": "daf27bd294ab4011f8c5b34fcb015f3d3a87d5019ad59dc61ecf6649d563143c"
+          },
+          {
+            "bytes": 61,
+            "path": "package.json",
+            "sha256": "9662c63237f11b189dddbbdf22ed631a7804aae99235d3f595e4b3ed5ebda9f0"
+          }
+        ],
+        "kind": "root",
+        "sourceTreeSha256": "247a87133309c501398e13ee09d0a07deb70f7aff0c21da96c62525ab03145ac"
+      }
+    }
+  ],
+  "schemaVersion": 2
+}
