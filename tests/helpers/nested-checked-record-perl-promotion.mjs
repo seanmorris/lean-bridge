@@ -137,14 +137,15 @@ const updateText = (source, addition) => source.split(checkedRecordPerlLimit)
  *
  * @param original - Exact inventory before this promotion.
  * @param references - Four independently authenticated installed selections.
+ * @param read - Generator and validator source reader; historical checks pass the promotion commit.
  */
-export const promoteNestedCheckedRecordPerl = async (original, references) => {
+export const promoteNestedCheckedRecordPerl = async (original, references, read = readFile) => {
 	assert.deepEqual(references, await nestedCheckedRecordPerlReferences());
 	const inventory = structuredClone(original);
 	for(const reference of references)
 		assert.ok(!inventory.evidence.some(item => item.id === reference.id)
 			, "Already promoted: " + reference.id);
-	assert.equal(sha256(await readFile(nestedCheckedRecordPerlGeneratorPath))
+	assert.equal(sha256(await read(nestedCheckedRecordPerlGeneratorPath))
 		, nestedCheckedRecordPerlGeneratorAfter);
 	let refreshedGeneratorPins = 0;
 	for(const entry of inventory.evidence) for(const file of entry.files)
@@ -156,7 +157,7 @@ export const promoteNestedCheckedRecordPerl = async (original, references) => {
 		}
 	assert.equal(refreshedGeneratorPins, nestedCheckedRecordPerlGeneratorPins);
 	const sources = await Promise.all(validators.map(async path => ({
-		path, sha256: sha256(await readFile(path))
+		path, sha256: sha256(await read(path))
 	})));
 	for(const reference of references)
 	{

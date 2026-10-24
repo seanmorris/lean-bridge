@@ -6,13 +6,13 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeOwnedPerlCallbackResults } from "./owned-perl-callback-result-history.mjs";
 import { unpackOwnedCallbackReports } from "./owned-callback-result-evidence.mjs";
 import { assertOwnedJvmCallbackRuntime } from "./owned-jvm-callback-result-runtime-evidence.mjs";
 import { assertOwnedJvmCallbackPackageExecution } from "./owned-jvm-callback-result-package-evidence.mjs";
 import { assertOwnedJvmCallbackLifetimeEvidence } from "./owned-jvm-callback-result-lifetime-evidence.mjs";
 import { assertOwnedJvmCallbackCombinedRelease } from "./owned-jvm-callback-result-combined-evidence.mjs";
 import { assertOwnedJvmCallbackResultCi, ownedJvmCallbackResultReports } from "./owned-jvm-callback-result-ci.mjs";
+import { bytesAtProducer } from "./producer-source.mjs";
 import { ownedJvmCallbackBaseline, ownedJvmCallbackChangedPaths
 	, ownedJvmCallbackHistoryPath, ownedJvmCallbackHistorySha256 } from "./owned-jvm-callback-result-history.mjs";
 
@@ -22,6 +22,8 @@ const frozen = value => {
 };
 const keys = (value, names) => assert.deepEqual(Object.keys(value).sort(), names.split(" ").sort());
 
+/** The commit whose complete source tree every digest in the JVM callback acceptance record names. */
+export const ownedJvmCallbackProducer = "95978558fed7e305833175f36a93a140ff84be9e";
 export const ownedJvmCallbackEvidencePath = "docs/evidence/owned-jvm-callback-results-20261003.json";
 export const ownedJvmCallbackPrevious = frozen({
 	path: "docs/evidence/owned-dotnet-callback-results-20261002.json"
@@ -222,8 +224,9 @@ export const assertOwnedJvmCallbackAcceptance = async record => {
 		// Other CLI payload files, such as LICENSE, retain their current-byte
 		// checks against the original report inventory. Never reverse those.
 		if(!Object.hasOwn(record.sources, path)) return readFile(path);
+		// Recorded sources name the producer tree; later owned and Fin layers never reach back this far.
 		const digest = record.sources[path];
-		const source = beforeOwnedPerlCallbackResults(path, await readFile(path), digest);
+		const source = bytesAtProducer(ownedJvmCallbackProducer, path, digest);
 		assert.equal(sha256(source), digest, path);
 		return source;
 	};

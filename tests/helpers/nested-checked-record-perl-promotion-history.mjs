@@ -17,6 +17,9 @@ export const nestedCheckedRecordPerlPromotionPredecessor
 	= "3bb253425cd6bced5dd8fec93a3cf9d25e7f6327";
 export const nestedCheckedRecordPerlPromotionDraftParent
 	= nestedCheckedRecordPerlPromotionPredecessor;
+/** The promotion commit: its generator and all 17 validators equal the bytes its inventory pins. */
+export const nestedCheckedRecordPerlPromotionCommit
+	= "36e2782eca1f2f24aa67d10abbb78173f5f63c66";
 export const nestedCheckedRecordPerlGeneratorPredecessor
 	= "9a169c38cb02b2a5395893eef5c6afc3b2493d47";
 export const nestedCheckedRecordPerlPromotionChangedPaths = [

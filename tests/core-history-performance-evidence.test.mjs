@@ -7,11 +7,13 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
-import { beforeOwnedWitProjection, ownedWitProjectionHistoricalBytes } from "./helpers/wit-owned-projection-history.mjs";
 import { beforeCoreHistoryPerformance, coreHistoryAddedPaths, coreHistoryBaseline
 	, coreHistoryChangedPaths, coreHistoryPath, coreHistoryPrevious
 	, reverseCoreHistoryUpdate } from "./helpers/core-history-performance-history.mjs";
+import { bytesAtProducer, sourceAtProducer } from "./helpers/producer-source.mjs";
 
+/** The commit whose complete source tree every digest in the history performance record names. */
+const coreHistoryProducer = "4103db9893bd8addb0715cd74f856b3c961bafe9";
 const read = async () => JSON.parse(await readFile(coreHistoryPath, "utf8"));
 
 test("history optimization authenticates every verifier edit and keeps installed support unchanged", async () => {
@@ -22,20 +24,23 @@ test("history optimization authenticates every verifier edit and keeps installed
 	const bytes = await readFile(record.previous.path), previous = JSON.parse(bytes);
 	assert.equal(sha256(bytes), record.previous.sha256);
 	assert.deepEqual(Object.keys(record.sources).sort(), [...new Set([...Object.keys(previous.sources), ...coreHistoryAddedPaths])].sort());
-	for(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(ownedWitProjectionHistoricalBytes(path, await readFile(path), digest)), digest, path);
+	// Every recorded digest names the producer tree; later owned and Fin layers never reach back this far.
+	for(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(bytesAtProducer(coreHistoryProducer, path)), digest, path);
 	assert.deepEqual(record.updates.map(update => update.path), coreHistoryChangedPaths);
 	for(const update of record.updates)
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path], update.path);
 		assert.equal(update.currentSha256, record.sources[update.path], update.path);
 		assert.match(update.path, /^(?:tests\/|docs\/|src\/adoption\/test-profiles\.mjs$)/u);
-		const current = beforeOwnedWitProjection(update.path, await readFile(update.path, "utf8"));
-		assert.equal(sha256(beforeCoreHistoryPerformance(update.path, current)), update.previousSha256);
+		const current = sourceAtProducer(coreHistoryProducer, update.path, update.currentSha256);
+		assert.equal(sha256(beforeCoreHistoryPerformance(update.path, current, update.previousSha256)), update.previousSha256);
 		assert.equal(beforeCoreHistoryPerformance(update.path, current, update.currentSha256), current);
 	}
-	const current = beforeOwnedWitProjection("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8"));
-	const prior = JSON.parse(beforeCoreHistoryPerformance("docs/type-surface.v1.json", current));
-	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedWitProjectionHistoricalBytes(file.path, await readFile(file.path)));
+	const path = "docs/type-surface.v1.json", transition = record.updates.find(update => update.path === path);
+	assert.ok(transition, path);
+	const current = sourceAtProducer(coreHistoryProducer, path, record.sources[path]);
+	const prior = JSON.parse(beforeCoreHistoryPerformance(path, current, transition.previousSha256));
+	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = record.sources[file.path] ?? sha256(bytesAtProducer(coreHistoryProducer, file.path));
 	assert.deepEqual(JSON.parse(current), prior);
 });
 
@@ -43,7 +48,7 @@ test("optimized history still rejects unknown text, altered predecessors and ove
 	const record = await read();
 	for(const update of record.updates)
 	{
-		const current = beforeOwnedWitProjection(update.path, await readFile(update.path, "utf8")), unknown = current + "\n/* unrelated */\n";
+		const current = sourceAtProducer(coreHistoryProducer, update.path, update.currentSha256), unknown = current + "\n/* unrelated */\n";
 		assert.equal(beforeCoreHistoryPerformance(update.path, unknown), unknown);
 		assert.throws(() => reverseCoreHistoryUpdate(unknown, update));
 		for(const changed of [{ ...update, previousSha256: "0".repeat(64) }

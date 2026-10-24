@@ -23,11 +23,13 @@ import {
 	beforeNestedCheckedRecordPerlPromotionSource
 	, nestedCheckedRecordPerlGeneratorPredecessor
 	, nestedCheckedRecordPerlPromotionChangedPaths
+	, nestedCheckedRecordPerlPromotionCommit
 	, nestedCheckedRecordPerlPromotionDraftParent
 	, nestedCheckedRecordPerlPromotionHistoryPath
 	, nestedCheckedRecordPerlPromotionPredecessor
 	, reverseNestedCheckedRecordPerlPromotionUpdate
 } from "./nested-checked-record-perl-promotion-history.mjs";
+import { bytesAtProducer } from "./producer-source.mjs";
 
 test("nested Perl promotion history authenticates every source transition", async t => {
 	const record = JSON.parse(await readFile(
@@ -83,6 +85,7 @@ test("nested Perl promotion history authenticates every source transition", asyn
 	const expected = await promoteNestedCheckedRecordPerl(
 		JSON.parse(original(inventoryPath))
 		, await nestedCheckedRecordPerlReferences()
+		, path => bytesAtProducer(nestedCheckedRecordPerlPromotionCommit, path)
 	);
 	const checkpoint = await sourceAtHistoryMilestone(
 		nestedCheckedRecordPerlPromotionHistoryPath, inventoryPath

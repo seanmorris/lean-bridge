@@ -15,9 +15,11 @@ import {
 	checkedRecordPerlConversion, checkedRecordPerlLimit
 } from "./checked-record-perl-promotion.mjs";
 import {
-	nestedCheckedRecordPerlPromotionHistoryPath
+	nestedCheckedRecordPerlPromotionCommit
+	, nestedCheckedRecordPerlPromotionHistoryPath
 	, nestedCheckedRecordPerlPromotionPredecessor
 } from "./nested-checked-record-perl-promotion-history.mjs";
+import { bytesAtProducer } from "./producer-source.mjs";
 import {
 	sourceAtHistoryMilestone, withHistoryMilestoneSourcePins
 	, withHistorySourcePins
@@ -39,6 +41,8 @@ import {
 const predecessor = () => JSON.parse(execFileSync("git", ["show"
 	, `${nestedCheckedRecordPerlPromotionPredecessor}:docs/type-surface.v1.json`]
 , { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 }));
+// The generator and validators exactly as the promotion commit pinned them.
+const milestone = path => bytesAtProducer(nestedCheckedRecordPerlPromotionCommit, path);
 
 test("nested checked-record Perl promotion authenticates four installed selections", async () => {
 	const references = await nestedCheckedRecordPerlReferences();
@@ -85,7 +89,7 @@ test("nested checked-record Perl promotion rejects narrowed references and overl
 	const original = predecessor(), references = await nestedCheckedRecordPerlReferences();
 	for(const changed of [references.slice(1), references.slice().reverse()
 		, [...references, references[0]]])
-		await assert.rejects(promoteNestedCheckedRecordPerl(original, changed));
+		await assert.rejects(promoteNestedCheckedRecordPerl(original, changed, milestone));
 	for(const mutate of [
 		item => { item.profiles.push("c"); }
 		, item => { item.route = "reviewed"; }
@@ -100,10 +104,10 @@ test("nested checked-record Perl promotion rejects narrowed references and overl
 		, item => { item.artifacts.pop(); }
 	]) {
 		const changed = structuredClone(references); mutate(changed[0]);
-		await assert.rejects(promoteNestedCheckedRecordPerl(original, changed));
+		await assert.rejects(promoteNestedCheckedRecordPerl(original, changed, milestone));
 	}
-	const promoted = await promoteNestedCheckedRecordPerl(original, references);
-	await assert.rejects(promoteNestedCheckedRecordPerl(promoted, references)
+	const promoted = await promoteNestedCheckedRecordPerl(original, references, milestone);
+	await assert.rejects(promoteNestedCheckedRecordPerl(promoted, references, milestone)
 		, /Already promoted/u);
 	for(const extra of [false, true])
 	{
@@ -115,7 +119,7 @@ test("nested checked-record Perl promotion rejects narrowed references and overl
 			...structuredClone(changed.observations[position]), id: "overlapping-parameter"
 		});
 		else changed.observations.splice(position, 1);
-		await assert.rejects(promoteNestedCheckedRecordPerl(changed, references)
+		await assert.rejects(promoteNestedCheckedRecordPerl(changed, references, milestone)
 			, /Missing or overlapping/u);
 	}
 	assert.deepEqual(original, predecessor());
@@ -125,7 +129,7 @@ test("nested checked-record Perl promotion supplements six cells only", async ()
 	const original = predecessor(), references = await nestedCheckedRecordPerlReferences();
 	const proposed = withHistoryMilestoneSourcePins(
 		nestedCheckedRecordPerlPromotionHistoryPath
-		, await promoteNestedCheckedRecordPerl(original, references)
+		, await promoteNestedCheckedRecordPerl(original, references, milestone)
 	);
 	const { document: live, ...contracts } = await readTypeSurface();
 	const document = JSON.parse(sourceAtHistoryMilestone(
