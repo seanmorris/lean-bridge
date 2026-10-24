@@ -32,7 +32,7 @@ test("Dotnet borrow evidence authenticates complete source changes without rewri
 		assert.equal(update.currentSha256, record.sources[update.path]);
 		const source = sourceAtProducer(ownedDotnetBorrowProducer, update.path, update.currentSha256), prior = beforeOwnedDotnetBorrow(update.path, source, update.previousSha256);
 		assert.equal(sha256(prior), update.previousSha256);
-		assert.equal(beforeOwnedDotnetBorrow(update.path, prior), prior);
+		assert.equal(beforeOwnedDotnetBorrow(update.path, prior, update.previousSha256), prior);
 		assert.equal(beforeOwnedDotnetBorrow(update.path, source, update.currentSha256), source);
 		const unknown = source + "\n/* unrecorded change */\n";
 		assert.equal(beforeOwnedDotnetBorrow(update.path, unknown), unknown);

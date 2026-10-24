@@ -29,7 +29,8 @@ test("Dotnet callback history authenticates exact source transitions and rejects
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		assert.equal(sha256(prior), update.previousSha256, update.path);
 		assert.equal(beforeOwnedDotnetCallbackResults(update.path, current, update.currentSha256), current);
-		assert.equal(beforeOwnedDotnetCallbackResults(update.path, prior), prior);
+		// Later layers wired older callback histories behind this reader, so the stop is explicit.
+		assert.equal(beforeOwnedDotnetCallbackResults(update.path, prior, update.previousSha256), prior);
 		for(const unknown of [current + "\n", current + current, ""])
 		{
 			assert.equal(beforeOwnedDotnetCallbackResults(update.path, unknown), unknown);

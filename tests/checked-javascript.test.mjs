@@ -13,6 +13,7 @@ import "./helpers/checked-javascript-disposition-history-tests.mjs";
 import "./helpers/core-evidence-memory-repair-source-history-tests.mjs";
 import "./helpers/entry-fixture-repair-source-history-tests.mjs";
 import "./helpers/owned-c-producer-repair-source-history-tests.mjs";
+import "./helpers/owned-dotnet-producer-repair-source-history-tests.mjs";
 
 const root = resolve(".");
 

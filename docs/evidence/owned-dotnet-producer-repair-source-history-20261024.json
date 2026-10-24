@@ -1,0 +1,242 @@
+{
+  "additions": [
+    {
+      "currentSha256": "677a723e9a8cb8ff7c9c9e1f775c7b4f251612e09ca4691d75f8922f30b4c29f",
+      "path": "scripts/update-owned-dotnet-producer-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "3cb059de8d4f2178b7171e7dde74f3695a2c0415b571878c6cb1a0ecc0430992",
+      "path": "tests/helpers/owned-dotnet-producer-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "942f6ee30e5f1377e8fb6bead37c010702b97b89ec8db56b6fba6f2ed37b4ad8",
+      "path": "tests/helpers/owned-dotnet-producer-repair-source-history.mjs"
+    }
+  ],
+  "followupImplementationCommit": "7707d0980bbbeba18c0dcebd6f0e7977e92ad9e5",
+  "implementationCommit": "103717bac784d79b6a05ef87b3d448375f321314",
+  "integrationBaseCommit": "62512ba20176d6186c34df896003972aa3b55706",
+  "integrationUpdates": [
+    {
+      "currentSha256": "1623fd8cef596b29cd20f9a9b6f10466952ad383275c3940739c9c7312619274",
+      "edits": [
+        {
+          "current": "import { beforeOwnedDotnetProducerRepairSource, ownedDotnetProducerRepairNormalizationPaths } from \"./owned-dotnet-producer-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 677
+        },
+        {
+          "current": "\t...ownedDotnetProducerRepairNormalizationPaths\n\t, ...ownedCProducerRepairNormalizationPaths\n",
+          "previous": "\t...ownedCProducerRepairNormalizationPaths\n",
+          "start": 173868
+        },
+        {
+          "current": "\tconst ownedDotnetProducerRepair\n\t\t= beforeOwnedDotnetProducerRepairSource(path, text, expected);\n\tif(sha256(ownedDotnetProducerRepair) === expected)\n\t\treturn ownedDotnetProducerRepair;\n\ttext = ownedDotnetProducerRepair;\n",
+          "previous": "",
+          "start": 214355
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "d6a31eaf4a5d90a3211ceead98c6ed00f3d746f1b14b38e9e49ce9881752aec8"
+    },
+    {
+      "currentSha256": "dea062e5fee7f422bb627c97802f8e6eb0eb34565f543c1899bc2258fcf2666c",
+      "edits": [
+        {
+          "current": "import \"./helpers/owned-dotnet-producer-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 589
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "a8d1f801cc25f48a72603a7c43a8de3ba912ab7ca5467be69a361005fcbd1e02"
+    },
+    {
+      "currentSha256": "8929aa794b72ba41b53b1940989c0a49eaac5b308d3e087e8c514a7e065e2aae",
+      "edits": [
+        {
+          "current": "\t\tassert.equal(beforeOwnedBorrow(update.path, prior, update.previousSha256), prior);\n",
+          "previous": "\t\tassert.equal(beforeOwnedBorrow(update.path, prior), prior);\n",
+          "start": 2499
+        }
+      ],
+      "path": "tests/owned-borrow-evidence.test.mjs",
+      "previousSha256": "f40da50caf85af7fb968e6afbb1e8f16154b9c456d732b759b4f0e72f563882d"
+    },
+    {
+      "currentSha256": "913e69a841f834496a0001fc2f7cbf8652896bb45a3e9b77947b41fbb6276d0e",
+      "edits": [
+        {
+          "current": "\t\tassert.equal(beforeOwnedDotnetBorrow(update.path, prior, update.previousSha256), prior);\n",
+          "previous": "\t\tassert.equal(beforeOwnedDotnetBorrow(update.path, prior), prior);\n",
+          "start": 2257
+        }
+      ],
+      "path": "tests/owned-dotnet-borrow-evidence.test.mjs",
+      "previousSha256": "ca56599ee7b425eed347d90e990d68bdfe52ad50d7cee04e426d3a333d593614"
+    },
+    {
+      "currentSha256": "0b00ae1150e9239f3f422c3cf9b0e3e55796502113387d8d7b6213db8cd2f065",
+      "edits": [
+        {
+          "current": "\t\t// Later layers wired older callback histories behind this reader, so the stop is explicit.\n\t\tassert.equal(beforeOwnedDotnetCallbackResults(update.path, prior, update.previousSha256), prior);\n",
+          "previous": "\t\tassert.equal(beforeOwnedDotnetCallbackResults(update.path, prior), prior);\n",
+          "start": 1750
+        }
+      ],
+      "path": "tests/owned-dotnet-callback-result-history.test.mjs",
+      "previousSha256": "0d338e501c42017fec2323e3e732dc5db81e022f36da68fafcb94c1eeb6ffd87"
+    },
+    {
+      "currentSha256": "7bd2ac556218ffac9b4ee796bd6eedcee2d21d4ab9e01ae142f867068e75b896",
+      "edits": [
+        {
+          "current": "\t\tassert.equal(beforeOwnedDotnetLifetime(update.path, prior, update.previousSha256), prior);\n",
+          "previous": "\t\tassert.equal(beforeOwnedDotnetLifetime(update.path, prior), prior);\n",
+          "start": 2450
+        }
+      ],
+      "path": "tests/owned-dotnet-lifetime-evidence.test.mjs",
+      "previousSha256": "4fe2a5caecc8cd6fa459abae318c6fde90c0cb10181889b63910d56325df0cf3"
+    }
+  ],
+  "milestone": "owned-dotnet-producer-repair-source-v1",
+  "predecessorCommit": "4393c5bad5c7bbf195cbf8a8685eb0334810edd3",
+  "schemaVersion": 1,
+  "scope": "Verify frozen owned .NET borrow, lifetime-repair, and callback-result evidence using their authenticated producer trees, generator closures, and deferred source reads. Preserve exact digest checks, read-race reconstruction, forged-source refusals, mutation controls, and live CI requirements. Record exact stopping hashes in the C and .NET predecessor controls. No inventory or installed observation changes.",
+  "updates": [
+    {
+      "currentSha256": "854bb488784c079dcd7956545b28a7f0a7e30710190223e43abebad783ccd0c6",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { readFile } from \"node:fs/promises\";\n",
+          "start": 145
+        },
+        {
+          "current": "import { moduleAtProducerWithSourceReads } from \"./producer-module.mjs\";\nimport { sourceAtProducer } from \"./producer-source.mjs\";\n",
+          "previous": "import { ownedReceiverHistoricalBytes } from \"./owned-receiver-history.mjs\";\nimport { generateOwnedDotnetCalls } from \"../../src/backends/dotnet/owned-calls.mjs\";\nimport { generateOwnedDotnetPackage } from \"../../src/backends/dotnet/owned-package.mjs\";\nimport { generateOwnedCPackage } from \"../../src/backends/c/owned-package.mjs\";\nimport { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from \"../../src/build/native-graph-model.mjs\";\nimport { ownedDotnetAdapterSources } from \"../../src/build/owned-dotnet-artifacts.mjs\";\nimport { validatePackageSetReceipt } from \"../../src/release/package-set-receipt.mjs\";\nimport { ownedDotnetNativeProbe, ownedDotnetProbeLoader } from \"./owned-dotnet-native.mjs\";\nimport { ownedDotnetBorrowInvalidPrograms } from \"./owned-dotnet-borrow-installed.mjs\";\nimport { ownedRustBorrowSource } from \"./owned-rust-borrow-fixture.mjs\";\n",
+          "start": 213
+        },
+        {
+          "current": "/** The commits whose complete source trees the borrow and lifetime-repair records name. */\nexport const ownedDotnetBorrowProducer = \"444cace8fed766606caf7bb70e68a9a0badf3ec1\";\nexport const ownedDotnetLifetimeProducer = \"f88043186b944a3f3bd0133d5e49efd5ff034c69\";\nconst producerModules = new Map();\nconst producerClosure = revision => {\n\tif(!producerModules.has(revision)) producerModules.set(revision, Promise.all([\n\t\t\"src/backends/dotnet/owned-calls.mjs\"\n\t\t, \"src/backends/dotnet/owned-package.mjs\"\n\t\t, \"src/backends/c/owned-package.mjs\"\n\t\t, \"src/build/native-graph-model.mjs\"\n\t\t, \"src/build/owned-dotnet-artifacts.mjs\"\n\t\t, \"src/release/package-set-receipt.mjs\"\n\t\t, \"tests/helpers/owned-dotnet-native.mjs\"\n\t\t, \"tests/helpers/owned-dotnet-borrow-installed.mjs\"\n\t\t, \"tests/helpers/owned-rust-borrow-fixture.mjs\"\n\t].map(path => moduleAtProducerWithSourceReads(revision, path))).then(modules =>\n\t\tObject.assign({}, ...modules)));\n\treturn producerModules.get(revision);\n};\n",
+          "previous": "",
+          "start": 2284
+        },
+        {
+          "current": "\tconst producer = repaired ? ownedDotnetLifetimeProducer : ownedDotnetBorrowProducer;\n\tconst historical = path => sourceAtProducer(producer, path);\n\tconst {\n\t\tcreateCompiledNativeModel, generateCompiledNativeLeanAdapters\n\t\t, generateOwnedCPackage, generateOwnedDotnetCalls, generateOwnedDotnetPackage\n\t\t, ownedDotnetAdapterSources, ownedDotnetBorrowInvalidPrograms\n\t\t, ownedDotnetNativeProbe, ownedDotnetProbeLoader, ownedRustBorrowSource\n\t\t, validatePackageSetReceipt\n\t} = await producerClosure(producer);\n",
+          "previous": "",
+          "start": 4041
+        },
+        {
+          "current": "\tlet probe = historical(probePath);\n",
+          "previous": "\tlet probe = await readFile(probePath, \"utf8\");\n",
+          "start": 5391
+        },
+        {
+          "current": "\tconst testSource = historical(\"tests/owned-dotnet-borrows.test.mjs\");\n\tconst fixture = historical(\"tests/fixtures/structured-types/owned-installed-dotnet-borrows.cs\");\n\tconst documentation = historical(\"tests/fixtures/documentation/consumers/dotnet/owned-borrows.cs\");\n\tconst baseLean = historical(\"tests/fixtures/onboarding/owned-aggregates/Owned.lean\");\n",
+          "previous": "\tconst testSource = await readFile(\"tests/owned-dotnet-borrows.test.mjs\", \"utf8\");\n\tconst fixture = await readFile(\"tests/fixtures/structured-types/owned-installed-dotnet-borrows.cs\");\n\tconst documentation = await readFile(\"tests/fixtures/documentation/consumers/dotnet/owned-borrows.cs\");\n\tconst baseLean = await readFile(\"tests/fixtures/onboarding/owned-aggregates/Owned.lean\", \"utf8\");\n",
+          "start": 5522
+        },
+        {
+          "current": "\tconst extractor = sha256(historical(\"src/analyze/NativeExports.lean\"));\n\tassert.equal(historical(\"docs/consume/dotnet.md\").match(/\\x60\\x60\\x60csharp file=dotnet\\/owned-borrows\\.cs\\n([\\s\\S]*?)\\x60\\x60\\x60/u)?.[1], documentation);\n",
+          "previous": "\tconst extractor = sha256(ownedReceiverHistoricalBytes(\"src/analyze/NativeExports.lean\", await readFile(\"src/analyze/NativeExports.lean\")));\n\tassert.equal((await readFile(\"docs/consume/dotnet.md\", \"utf8\")).match(/\\x60\\x60\\x60csharp file=dotnet\\/owned-borrows\\.cs\\n([\\s\\S]*?)\\x60\\x60\\x60/u)?.[1], documentation.toString(\"utf8\"));\n",
+          "start": 5927
+        },
+        {
+          "current": "\tassert.ok(testSource.includes(record.borrowOnly.probe));\n",
+          "previous": "\tassert.ok((await readFile(\"tests/owned-dotnet-borrows.test.mjs\", \"utf8\")).includes(record.borrowOnly.probe));\n",
+          "start": 6236
+        }
+      ],
+      "path": "tests/helpers/owned-dotnet-borrow-evidence.mjs",
+      "previousSha256": "79685915a9173c8ef17f3c22bdddc09977c6fd4a57bb59d817d4fbd06a65a107"
+    },
+    {
+      "currentSha256": "ca56599ee7b425eed347d90e990d68bdfe52ad50d7cee04e426d3a333d593614",
+      "edits": [
+        {
+          "current": "import { assertOwnedDotnetBorrowExecution, assertOwnedDotnetBorrowCi, ownedDotnetBorrowProducer } from \"./helpers/owned-dotnet-borrow-evidence.mjs\";\nimport { bytesAtProducer, sourceAtProducer } from \"./helpers/producer-source.mjs\";\n",
+          "previous": "import { beforeOwnedJvmBorrow, ownedJvmBorrowHistoricalBytes } from \"./helpers/owned-jvm-borrow-history.mjs\";\nimport { assertOwnedDotnetBorrowExecution, assertOwnedDotnetBorrowCi } from \"./helpers/owned-dotnet-borrow-evidence.mjs\";\n",
+          "start": 266
+        },
+        {
+          "current": "\t// Every recorded digest names the producer tree; later owned and Fin layers never reach back this far.\n\tfor(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(bytesAtProducer(ownedDotnetBorrowProducer, path)), hash, path);\n",
+          "previous": "\tfor(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(ownedJvmBorrowHistoricalBytes(path, await readFile(path), hash)), hash, path);\n",
+          "start": 1511
+        },
+        {
+          "current": "\t\tconst source = sourceAtProducer(ownedDotnetBorrowProducer, update.path, update.currentSha256), prior = beforeOwnedDotnetBorrow(update.path, source, update.previousSha256);\n",
+          "previous": "\t\tconst source = beforeOwnedJvmBorrow(update.path, await readFile(update.path, \"utf8\"), update.currentSha256), prior = beforeOwnedDotnetBorrow(update.path, source);\n",
+          "start": 2029
+        },
+        {
+          "current": "\tconst path = \"docs/type-surface.v1.json\", current = sourceAtProducer(ownedDotnetBorrowProducer, path, record.sources[path]);\n\tconst prior = JSON.parse(beforeOwnedDotnetBorrow(path, current, record.updates.find(update => update.path === path)?.previousSha256));\n\tfor(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = record.sources[file.path] ?? sha256(bytesAtProducer(ownedDotnetBorrowProducer, file.path));\n",
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", current = beforeOwnedJvmBorrow(path, await readFile(path, \"utf8\"));\n\tconst prior = JSON.parse(beforeOwnedDotnetBorrow(path, current));\n\tfor(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedJvmBorrowHistoricalBytes(file.path, await readFile(file.path), record.sources[file.path]));\n",
+          "start": 2871
+        }
+      ],
+      "path": "tests/owned-dotnet-borrow-evidence.test.mjs",
+      "previousSha256": "2015c686bcc73356d668201e1dc2f92471bd2f51a320e8c70e0b1f47682c371f"
+    },
+    {
+      "currentSha256": "0d338e501c42017fec2323e3e732dc5db81e022f36da68fafcb94c1eeb6ffd87",
+      "edits": [
+        {
+          "current": "import { bytesAtProducer } from \"./helpers/producer-source.mjs\";\n",
+          "previous": "import { beforeOwnedJvmCallbackResults } from \"./helpers/owned-jvm-callback-result-history.mjs\";\n",
+          "start": 269
+        },
+        {
+          "current": "/** The commit that recorded this history; each update's current side is that tree. */\nconst ownedDotnetCallbackProducer = \"72d123d69917f1145ec03d8624b6a08c3b2be6bc\";\n\n",
+          "previous": "",
+          "start": 604
+        },
+        {
+          "current": "\t\tconst current = bytesAtProducer(ownedDotnetCallbackProducer, update.path);\n\t\tconst prior = beforeOwnedDotnetCallbackResults(update.path, current, update.previousSha256);\n",
+          "previous": "\t\tconst current = Buffer.from(beforeOwnedJvmCallbackResults(update.path, await readFile(update.path)));\n\t\tconst prior = beforeOwnedDotnetCallbackResults(update.path, current);\n",
+          "start": 1340
+        }
+      ],
+      "path": "tests/owned-dotnet-callback-result-history.test.mjs",
+      "previousSha256": "f330c4140056e9e5fdf5a4caafc955f9a59096ea57cfd52f64c9da19ea87771a"
+    },
+    {
+      "currentSha256": "4fe2a5caecc8cd6fa459abae318c6fde90c0cb10181889b63910d56325df0cf3",
+      "edits": [
+        {
+          "current": "import { assertOwnedDotnetBorrowExecution, assertOwnedDotnetBorrowCi, ownedDotnetLifetimeProducer } from \"./helpers/owned-dotnet-borrow-evidence.mjs\";\nimport { moduleAtProducer } from \"./helpers/producer-module.mjs\";\nimport { bytesAtProducer, sourceAtProducer } from \"./helpers/producer-source.mjs\";\n",
+          "previous": "import { generateOwnedDotnetCalls } from \"../src/backends/dotnet/owned-calls.mjs\";\nimport { createCompiledNativeModel } from \"../src/build/native-graph-model.mjs\";\nimport { assertOwnedDotnetBorrowExecution, assertOwnedDotnetBorrowCi } from \"./helpers/owned-dotnet-borrow-evidence.mjs\";\nimport { beforeOwnedDotnetReadRaceGenerated } from \"./helpers/owned-dotnet-read-race-generated.mjs\";\nimport { beforeStructuredDocsCi, structuredDocsCiHistoricalBytes } from \"./helpers/structured-docs-ci-history.mjs\";\n",
+          "start": 344
+        },
+        {
+          "current": "\t// Every recorded digest names the producer tree; later owned and Fin layers never reach back this far.\n\tfor(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(bytesAtProducer(ownedDotnetLifetimeProducer, path)), hash, path);\n",
+          "previous": "\tfor(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(structuredDocsCiHistoricalBytes(path, await readFile(path), hash)), hash, path);\n",
+          "start": 1688
+        },
+        {
+          "current": "\t\tconst source = sourceAtProducer(ownedDotnetLifetimeProducer, update.path, update.currentSha256);\n\t\tconst prior = beforeOwnedDotnetLifetime(update.path, source, update.previousSha256);\n",
+          "previous": "\t\tconst source = beforeStructuredDocsCi(update.path, await readFile(update.path, \"utf8\"), update.currentSha256);\n\t\tconst prior = beforeOwnedDotnetLifetime(update.path, source);\n",
+          "start": 2210
+        },
+        {
+          "current": "\tconst path = \"docs/type-surface.v1.json\", current = sourceAtProducer(ownedDotnetLifetimeProducer, path, record.sources[path]);\n\tconst prior = JSON.parse(beforeOwnedDotnetLifetime(path, current, record.updates.find(update => update.path === path)?.previousSha256));\n",
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", current = beforeStructuredDocsCi(path, await readFile(path, \"utf8\"), record.sources[path]);\n\tconst prior = JSON.parse(beforeOwnedDotnetLifetime(path, current));\n",
+          "start": 3074
+        },
+        {
+          "current": "\t\tfile.sha256 = record.sources[file.path] ?? sha256(bytesAtProducer(ownedDotnetLifetimeProducer, file.path));\n",
+          "previous": "\t\tfile.sha256 = sha256(structuredDocsCiHistoricalBytes(file.path, await readFile(file.path), record.sources[file.path]));\n",
+          "start": 3413
+        },
+        {
+          "current": "\t// The repaired generator and its read-race reverser exactly as the lifetime producer shipped them.\n\tconst [{ createCompiledNativeModel }, { generateOwnedDotnetCalls }, { beforeOwnedDotnetReadRaceGenerated }] = await Promise.all([\n\t\t\"src/build/native-graph-model.mjs\", \"src/backends/dotnet/owned-calls.mjs\"\n\t\t, \"tests/helpers/owned-dotnet-read-race-generated.mjs\"\n\t].map(entry => moduleAtProducer(ownedDotnetLifetimeProducer, entry)));\n",
+          "previous": "",
+          "start": 6983
+        }
+      ],
+      "path": "tests/owned-dotnet-lifetime-evidence.test.mjs",
+      "previousSha256": "f72ff23ee8416444e459e289496ee97609e138bdf93c1bc5d6c7ae37f74a2a03"
+    }
+  ]
+}
