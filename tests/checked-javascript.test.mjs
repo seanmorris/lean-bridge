@@ -51,6 +51,8 @@ import "./helpers/php-recursive-milestone-stop-tests.mjs";
 import "./helpers/owned-history-followup-source-history-tests.mjs";
 import "./helpers/perl-callback-contract-gap-source-history-tests.mjs";
 import "./helpers/milestone-control-repair-source-history-tests.mjs";
+import "./helpers/php-recursive-producer-replay-tests.mjs";
+import "./helpers/php-recursive-replay-source-history-tests.mjs";
 
 const root = resolve(".");
 

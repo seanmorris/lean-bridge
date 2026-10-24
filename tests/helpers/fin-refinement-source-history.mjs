@@ -42,6 +42,7 @@ import { beforeOwnedProducerReplaySource, ownedProducerReplayNormalizationPaths 
 import { beforeOwnedHistoryFollowupSource, ownedHistoryFollowupNormalizationPaths } from "./owned-history-followup-source-history.mjs";
 import { beforePerlCallbackContractGapSource, perlCallbackContractGapNormalizationPaths } from "./perl-callback-contract-gap-source-history.mjs";
 import { beforeMilestoneControlRepairSource, milestoneControlRepairNormalizationPaths } from "./milestone-control-repair-source-history.mjs";
+import { beforePhpRecursiveReplaySource, phpRecursiveReplayNormalizationPaths } from "./php-recursive-replay-source-history.mjs";
 import { beforeCoreEvidenceMemoryRepairSource, coreEvidenceMemoryRepairNormalizationPaths } from "./core-evidence-memory-repair-source-history.mjs";
 import { beforeValueIndexPromotionMilestoneRepairSource, valueIndexPromotionMilestoneRepairNormalizationPaths } from "./value-index-promotion-milestone-repair-source-history.mjs";
 import { beforeCoreMilestoneReplayRepairSource, coreMilestoneReplayRepairNormalizationPaths } from "./core-milestone-replay-repair-source-history.mjs";
@@ -2135,7 +2136,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...milestoneControlRepairNormalizationPaths
+	...phpRecursiveReplayNormalizationPaths
+	, ...milestoneControlRepairNormalizationPaths
 	, ...perlCallbackContractGapNormalizationPaths
 	, ...ownedHistoryFollowupNormalizationPaths
 	, ...ownedProducerReplayNormalizationPaths
@@ -3014,6 +3016,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
 	let stage
+		= beforePhpRecursiveReplaySource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage
 		= beforeMilestoneControlRepairSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;

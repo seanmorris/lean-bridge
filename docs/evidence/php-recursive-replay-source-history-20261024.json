@@ -1,0 +1,168 @@
+{
+  "additions": [
+    {
+      "currentSha256": "2e77e615ce5d7d75450df2e49ba62142683c8f4400129a121388d86cc750010e",
+      "path": "tests/helpers/php-recursive-producer-replay-tests.mjs"
+    },
+    {
+      "currentSha256": "f83ae6303831e1411ef636340860c984ddd1c1add2c8417c2588ef6313ce1c8e",
+      "path": "scripts/update-php-recursive-replay-source-history.mjs"
+    },
+    {
+      "currentSha256": "6c69bd344633654c903dbbe202cf12030cba52491524c325fbd5bf8a601b3df3",
+      "path": "tests/helpers/php-recursive-replay-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "879e07406950ab4f530f7d694684d1efda282b3cc6a97b2e43bb594b0fca9acd",
+      "path": "tests/helpers/php-recursive-replay-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "e61cfe73fe0bcfb1936fe7c179488e5d77be98ad",
+  "implementationCommits": [
+    "e61cfe73fe0bcfb1936fe7c179488e5d77be98ad"
+  ],
+  "integrationBaseCommit": "e61cfe73fe0bcfb1936fe7c179488e5d77be98ad",
+  "integrationUpdates": [
+    {
+      "currentSha256": "0292181872ad92d6bcdb5a0223d1aec6c9c6c8671583d3d90eb5a007f61d861f",
+      "edits": [
+        {
+          "current": "import { beforePhpRecursiveReplaySource, phpRecursiveReplayNormalizationPaths } from \"./php-recursive-replay-source-history.mjs\";\n",
+          "previous": "",
+          "start": 5711
+        },
+        {
+          "current": "\t...phpRecursiveReplayNormalizationPaths\n\t, ...milestoneControlRepairNormalizationPaths\n",
+          "previous": "\t...milestoneControlRepairNormalizationPaths\n",
+          "start": 178880
+        },
+        {
+          "current": "\t\t= beforePhpRecursiveReplaySource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "",
+          "start": 221020
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "da11d69ed31364b01aa8ab34200a2f115bc908f5a122108db8a70536c4f07122"
+    },
+    {
+      "currentSha256": "c7c2450dba8f427530e89c0a2594ad30662afd226510cb914f088f64275635bc",
+      "edits": [
+        {
+          "current": "import \"./helpers/php-recursive-producer-replay-tests.mjs\";\nimport \"./helpers/php-recursive-replay-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 3384
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "6420c87614082a2379abe92d0cc25b289102bf3c4e17ca4ecde0b39eb9126a8c"
+    }
+  ],
+  "milestone": "php-recursive-replay-source-v1",
+  "predecessorCommit": "0fa2f8b26fff8fa518dadb5fbc1e64980830dcde",
+  "schemaVersion": 1,
+  "scope": "Replay recursive PHP package and probe generation at exact producer 0af020b, authenticating all 38 relative generator dependencies against the immutable integration source hashes. Select each recorded current or predecessor source endpoint explicitly instead of unwinding past it. Refresh exactly five live source pins and preserve every other inventory byte. Retain every installed package, probe, mutation, source identity and support claim; production generators and original receipts are unchanged.",
+  "updates": [
+    {
+      "currentSha256": "0efa662c6ed68133e61b21d8c555e0fad7a05a0c902dd4e590d77306bbfe39b9",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"7d2853b2576b68bce66703bee7f6707e3741373fdc54efe377143fba074d8cad\"\n",
+          "previous": "          \"sha256\": \"3df4b00e72d62cf08e202f2b366e6a23a30c7f46925b56f57cb6a27ff3a244da\"\n",
+          "start": 1385758
+        },
+        {
+          "current": "          \"sha256\": \"e7a0e9de9d9d644c5eb349252c6a300994f80fc2366b00a98f51ea0e176cb179\"\n",
+          "previous": "          \"sha256\": \"827c0e09e618426fc4d88acb4337d064d699bb37b5ac3b86fa8abeb92f168976\"\n",
+          "start": 1389457
+        },
+        {
+          "current": "          \"sha256\": \"7d2853b2576b68bce66703bee7f6707e3741373fdc54efe377143fba074d8cad\"\n",
+          "previous": "          \"sha256\": \"3df4b00e72d62cf08e202f2b366e6a23a30c7f46925b56f57cb6a27ff3a244da\"\n",
+          "start": 1404057
+        },
+        {
+          "current": "          \"sha256\": \"e7a0e9de9d9d644c5eb349252c6a300994f80fc2366b00a98f51ea0e176cb179\"\n",
+          "previous": "          \"sha256\": \"827c0e09e618426fc4d88acb4337d064d699bb37b5ac3b86fa8abeb92f168976\"\n",
+          "start": 1409131
+        },
+        {
+          "current": "          \"sha256\": \"7d2853b2576b68bce66703bee7f6707e3741373fdc54efe377143fba074d8cad\"\n",
+          "previous": "          \"sha256\": \"3df4b00e72d62cf08e202f2b366e6a23a30c7f46925b56f57cb6a27ff3a244da\"\n",
+          "start": 1422437
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "f583e257b4ad50a2c75bb9d8534dd02c76f00b51ffae59c64113314ef2da17dd"
+    },
+    {
+      "currentSha256": "7d2853b2576b68bce66703bee7f6707e3741373fdc54efe377143fba074d8cad",
+      "edits": [
+        {
+          "current": "import { posix } from 'node:path';\n",
+          "previous": "",
+          "start": 229
+        },
+        {
+          "current": "import { moduleSpecifiers } from './module-closure.mjs';\nimport { moduleAtProducer } from './producer-module.mjs';\nimport { bytesAtProducer } from './producer-source.mjs';\n",
+          "previous": "import { generateCallablePhpGraphPackage } from '../../src/backends/php/callable-graph-package.mjs';\nimport { compileCallablePhpGraphPackageModel } from '../../src/backends/php/callable-graph-model.mjs';\n",
+          "start": 573
+        },
+        {
+          "current": "const priorSource = async (path, expected) => beforePhpWasmRecursiveCallables(path, await readFile(path, 'utf8'), expected);\n",
+          "previous": "const priorSource = async path => beforePhpWasmRecursiveCallables(path, await readFile(path, 'utf8'));\n",
+          "start": 1948
+        },
+        {
+          "current": "// The integration records every relative import used by these producer modules.\nexport const phpRecursiveCallableProducer = '0af020b28bc69bb97f678a814b7b567eac13c559';\nexport const phpRecursiveCallableProducerEntries = Object.freeze([\n\t'src/backends/php/callable-graph-package.mjs'\n\t, 'src/backends/php/callable-graph-model.mjs'\n]);\n\n/**\n * Bind the complete generator closure to the integration's recorded sources.\n *\n * @param sources - Exact source identities from the immutable integration.\n */\nexport const phpRecursiveCallableProducerClosure = sources => {\n\tconst paths = new Set();\n\tconst visit = path => {\n\t\tif(paths.has(path)) return;\n\t\tpaths.add(path);\n\t\tassert.match(sources[path] ?? '', /^[a-f0-9]{64}$/u, path);\n\t\tconst bytes = bytesAtProducer(phpRecursiveCallableProducer, path, sources[path]);\n\t\tif(!path.endsWith('.mjs')) return;\n\t\tfor(const specifier of moduleSpecifiers(bytes.toString('utf8'), path))\n\t\t{\n\t\t\tconst joined = posix.normalize(posix.join(posix.dirname(path), specifier));\n\t\t\tvisit(posix.extname(joined) === '' ? `${joined}.mjs` : joined);\n\t\t}\n\t};\n\tfor(const entry of phpRecursiveCallableProducerEntries) visit(entry);\n\treturn [...paths].sort();\n};\n\nlet producerModules;\nconst recursiveProducerModules = () => {\n\tif(producerModules === undefined)\n\t{\n\t\tconst record = JSON.parse(readFileSync(phpRecursiveCallableHistoryPath, 'utf8'));\n\t\tphpRecursiveCallableProducerClosure(record.sourceHashes);\n\t\tproducerModules = Promise.all(phpRecursiveCallableProducerEntries\n\t\t\t.map(entry => moduleAtProducer(phpRecursiveCallableProducer, entry)));\n\t}\n\treturn producerModules;\n};\n\n",
+          "previous": "",
+          "start": 2095
+        },
+        {
+          "current": "\tconst [{ generateCallablePhpGraphPackage }] = await recursiveProducerModules();\n",
+          "previous": "",
+          "start": 7342
+        },
+        {
+          "current": "\tconst [{ generateCallablePhpGraphPackage }, { compileCallablePhpGraphPackageModel }]\n\t\t= await recursiveProducerModules();\n",
+          "previous": "",
+          "start": 11018
+        },
+        {
+          "current": "\tfor(const [path, digest] of Object.entries(regressions.projectionSources)) assert.equal(sha256(await priorSource(path, digest)), digest, path);\n",
+          "previous": "\tfor(const [path, digest] of Object.entries(regressions.projectionSources)) assert.equal(sha256(await priorSource(path)), digest, path);\n",
+          "start": 12504
+        },
+        {
+          "current": "\tfor(const path of paths) assert.equal(sha256(await priorSource(path, record.sourceHashes[path])), record.sourceHashes[path], path);\n",
+          "previous": "\tfor(const path of paths) assert.equal(sha256(await priorSource(path)), record.sourceHashes[path], path);\n",
+          "start": 19967
+        },
+        {
+          "current": "\t\trestored[update.path] = reversePhpRecursiveCallableUpdate(await priorSource(update.path, update.currentSha256), update);\n",
+          "previous": "\t\trestored[update.path] = reversePhpRecursiveCallableUpdate(await priorSource(update.path), update);\n",
+          "start": 20348
+        }
+      ],
+      "path": "tests/helpers/php-recursive-callable-evidence.mjs",
+      "previousSha256": "3df4b00e72d62cf08e202f2b366e6a23a30c7f46925b56f57cb6a27ff3a244da"
+    },
+    {
+      "currentSha256": "e7a0e9de9d9d644c5eb349252c6a300994f80fc2366b00a98f51ea0e176cb179",
+      "edits": [
+        {
+          "current": "\t\tconst source = beforePhpWasmRecursiveCallables(update.path, await readFile(update.path, 'utf8'), update.currentSha256);\n",
+          "previous": "\t\tconst source = beforePhpWasmRecursiveCallables(update.path, await readFile(update.path, 'utf8'));\n",
+          "start": 6136
+        },
+        {
+          "current": "\t\tassert.equal(sha256(beforePhpRecursiveCallables(update.path, source, update.previousSha256)), update.previousSha256);\n",
+          "previous": "\t\tassert.equal(sha256(beforePhpRecursiveCallables(update.path, source)), update.previousSha256);\n",
+          "start": 6356
+        }
+      ],
+      "path": "tests/php-recursive-callable-evidence.test.mjs",
+      "previousSha256": "827c0e09e618426fc4d88acb4337d064d699bb37b5ac3b86fa8abeb92f168976"
+    }
+  ]
+}
