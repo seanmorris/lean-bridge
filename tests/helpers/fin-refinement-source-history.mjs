@@ -24,6 +24,7 @@ import { beforePhpWasmCallbackFinMixedEntrySource, phpWasmCallbackFinMixedEntryN
 import { beforeOwnedJavaScriptTransferNixProducerRepairSource, ownedJavaScriptTransferNixProducerRepairNormalizationPaths } from "./owned-javascript-transfer-nix-producer-repair-source-history.mjs";
 import { beforeOwnedMilestoneProducerRepairSource, ownedMilestoneProducerRepairNormalizationPaths } from "./owned-milestone-producer-repair-source-history.mjs";
 import { beforePhpWasmCallbackTilesTraceRepairSource, phpWasmCallbackTilesTraceRepairNormalizationPaths } from "./php-wasm-callback-tiles-trace-repair-source-history.mjs";
+import { beforeAuthorRefinementGuidanceRepairSource, authorRefinementGuidanceRepairNormalizationPaths } from "./author-refinement-guidance-repair-source-history.mjs";
 import { beforeCoreEvidenceMemoryRepairSource, coreEvidenceMemoryRepairNormalizationPaths } from "./core-evidence-memory-repair-source-history.mjs";
 import { beforeValueIndexPromotionMilestoneRepairSource, valueIndexPromotionMilestoneRepairNormalizationPaths } from "./value-index-promotion-milestone-repair-source-history.mjs";
 import { beforeCoreMilestoneReplayRepairSource, coreMilestoneReplayRepairNormalizationPaths } from "./core-milestone-replay-repair-source-history.mjs";
@@ -2117,7 +2118,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...phpWasmCallbackTilesTraceRepairNormalizationPaths
+	...authorRefinementGuidanceRepairNormalizationPaths
+	, ...phpWasmCallbackTilesTraceRepairNormalizationPaths
 	, ...ownedMilestoneProducerRepairNormalizationPaths
 	, ...ownedJavaScriptTransferNixProducerRepairNormalizationPaths
 	, ...phpWasmCallbackFinMixedEntryNormalizationPaths
@@ -2978,6 +2980,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
 	let stage
+		= beforeAuthorRefinementGuidanceRepairSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage
 		= beforePhpWasmCallbackTilesTraceRepairSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
