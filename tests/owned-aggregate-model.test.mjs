@@ -24,6 +24,7 @@ import "./helpers/owned-refinement-carriers-source-history-tests.mjs";
 import "./helpers/owned-refinement-model-source-history-tests.mjs";
 import "./helpers/owned-subtype-analysis-source-history-tests.mjs";
 import "./helpers/owned-subtype-wasm-transfer-fixture-source-history-tests.mjs";
+import "./helpers/owned-transfer-copy-replay-repair-source-history-tests.mjs";
 
 test("owned models preserve complete contracts and exact copied-versus-retained field decisions", () => {
 	const ir = ownedAggregateReviewedIr(), before = structuredClone(ir);

@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeOwnedTransferCopyReplayRepairSource, ownedTransferCopyReplayRepairNormalizationPaths } from "./owned-transfer-copy-replay-repair-source-history.mjs";
 import { beforeOwnedSubtypeWasmTransferFixtureSource, ownedSubtypeWasmTransferFixtureNormalizationPaths } from "./owned-subtype-wasm-transfer-fixture-source-history.mjs";
 import { beforeOwnedCheckedRecordJavaScriptHostedRunOutcomeSource, ownedCheckedRecordJavaScriptHostedRunOutcomeNormalizationPaths } from "./owned-checked-record-javascript-hosted-run-outcome-source-history.mjs";
 import { beforeOwnedCheckedRecordJavaScriptHostedLaneSource, ownedCheckedRecordJavaScriptHostedLaneNormalizationPaths } from "./owned-checked-record-javascript-hosted-lane-source-history.mjs";
@@ -2080,7 +2081,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...ownedSubtypeWasmTransferFixtureNormalizationPaths
+	...ownedTransferCopyReplayRepairNormalizationPaths
+	, ...ownedSubtypeWasmTransferFixtureNormalizationPaths
 	, ...ownedCheckedRecordJavaScriptHostedRunOutcomeNormalizationPaths
 	, ...ownedCheckedRecordJavaScriptHostedLaneNormalizationPaths
 	, ...coreSourceBoundaryClosureNormalizationPaths
@@ -2903,6 +2905,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
+	const ownedTransferCopyReplayRepair
+		= beforeOwnedTransferCopyReplayRepairSource(path, text, expected);
+	if(sha256(ownedTransferCopyReplayRepair) === expected)
+		return ownedTransferCopyReplayRepair;
+	text = ownedTransferCopyReplayRepair;
 	const ownedSubtypeWasmTransferFixture
 		= beforeOwnedSubtypeWasmTransferFixtureSource(path, text, expected);
 	if(sha256(ownedSubtypeWasmTransferFixture) === expected)

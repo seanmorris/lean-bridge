@@ -1,0 +1,793 @@
+{
+  "additions": [
+    {
+      "currentSha256": "2d38a0f3d26b15fffe3d664a1a703c65dba2e266f2b91cd552c628a6b328bf9b",
+      "path": "scripts/update-owned-transfer-copy-replay-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "9889e142ab65d29684f4b7313b5c8ccfd30615b03482e5017bf74130991b668f",
+      "path": "tests/helpers/owned-transfer-copy-replay-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "849da0ffded6859651fc14275effb328cd6e92cfdc834b950cbb296dda27292a",
+      "path": "tests/helpers/owned-transfer-copy-replay-repair-source-history.mjs"
+    }
+  ],
+  "historicalCommit": "06f7c43bc5fb87d2acd22dc866ba7d034bb148c8",
+  "historicalPredecessorCommit": "8722c9ee9b25257ea132ed1be7310a833ede9893",
+  "historicalTransitions": [
+    {
+      "currentCommit": "1b77979abe846c67f5b3b19693012ed0a238f8ea",
+      "currentSha256": "0ea85ff928aedeb66a3d196145563ce180a4f5ea3ed57fcd2010cc8d434d2c72",
+      "edits": [
+        {
+          "current": "import { generateOwnedCValues, ownedCProjectionRequiresValueCopies } from \"../c/owned-values.mjs\";\n",
+          "previous": "import { generateOwnedCValues } from \"../c/owned-values.mjs\";\n",
+          "start": 82
+        },
+        {
+          "current": "\tconst options = { hostCallbacks, transferredInputs, anchoredResults\n\t\t, receiverExports, callbackResultAnchors };\n\tlet c = generateOwnedCValues(ir, options);\n\tif(!c.copies && ownedCProjectionRequiresValueCopies(c))\n\t\tc = generateOwnedCValues(ir, { ...options, valueCopies: true });\n",
+          "previous": "\tconst valueCopies = callbackResultAnchors && ir.types.some(type => type.kind === \"callback\" && type.callable.result.ownership === \"borrow\");\n\tconst c = generateOwnedCValues(ir, { hostCallbacks, valueCopies, transferredInputs, anchoredResults, receiverExports, callbackResultAnchors });\n",
+          "start": 1529
+        }
+      ],
+      "path": "src/backends/dotnet/owned-layout.mjs",
+      "previousCommit": "72d123d69917f1145ec03d8624b6a08c3b2be6bc",
+      "previousSha256": "1051ba3c8178e1ec15dec2f516d2a08607086c6a6b28a74e5860098de18f81df"
+    },
+    {
+      "currentCommit": "1b77979abe846c67f5b3b19693012ed0a238f8ea",
+      "currentSha256": "b8600e5050727c3fd565f955b42ba9da62558b5e6724eb31440d520497b9dcef",
+      "edits": [
+        {
+          "current": "import { generateOwnedCValues, ownedCProjectionRequiresValueCopies } from \"../c/owned-values.mjs\";\n",
+          "previous": "import { generateOwnedCValues } from \"../c/owned-values.mjs\";\n",
+          "start": 91
+        },
+        {
+          "current": "\tconst options = { hostCallbacks, transferredInputs, anchoredResults\n\t\t, receiverExports, callbackResultAnchors };\n\tlet c = generateOwnedCValues(ir, options);\n\tif(!c.copies && ownedCProjectionRequiresValueCopies(c))\n\t\tc = generateOwnedCValues(ir, { ...options, valueCopies: true });\n",
+          "previous": "\tconst valueCopies = callbackResultAnchors && ir.types.some(type => type.kind === \"callback\" && type.callable.result.ownership === \"borrow\");\n\tconst c = generateOwnedCValues(ir, { hostCallbacks, valueCopies, transferredInputs, anchoredResults, receiverExports, callbackResultAnchors });\n",
+          "start": 1767
+        }
+      ],
+      "path": "src/backends/jvm/owned-layout.mjs",
+      "previousCommit": "cf5fc6d93904ea22740150cde00a27b2435b38b2",
+      "previousSha256": "165253e1bec52a32be6a546ed5e80e8dd1bbb3729c77feefb07e1e032a788c89"
+    },
+    {
+      "currentCommit": "1b77979abe846c67f5b3b19693012ed0a238f8ea",
+      "currentSha256": "cab0e771df62db585f0cf2cab856b937eb12fdb71a7a821bb2aeeb69597c87b0",
+      "edits": [
+        {
+          "current": "import { generateOwnedCValues, ownedCProjectionRequiresValueCopies } from \"../c/owned-values.mjs\";\n",
+          "previous": "import { generateOwnedCValues } from \"../c/owned-values.mjs\";\n",
+          "start": 95
+        },
+        {
+          "current": "\tconst options = { hostCallbacks, transferredInputs, anchoredResults\n\t\t, receiverExports, callbackResultAnchors, identityEquality };\n\tlet c = generateOwnedCValues(ir, options);\n\tif(!c.copies && ownedCProjectionRequiresValueCopies(c))\n\t\tc = generateOwnedCValues(ir, { ...options, valueCopies: true });\n\tconst namespace = `Lean${pascal(c.prefix)}`;\n",
+          "previous": "\tconst valueCopies = callbackResultAnchors && ir.types.some(type => type.kind === \"callback\" && type.callable.result.ownership === \"borrow\");\n\tconst c = generateOwnedCValues(ir, { hostCallbacks, valueCopies, transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, identityEquality }), namespace = `Lean${pascal(c.prefix)}`;\n",
+          "start": 2554
+        }
+      ],
+      "path": "src/backends/php/owned-values.mjs",
+      "previousCommit": "68e24c2e0cfc65b5d1c68eb0c9a6ae5feb4f0938",
+      "previousSha256": "1d4f1cb2e0ed34c6fb9590f8d74ce2c45eaa630afc104f7cfc45be90b25db4f3"
+    },
+    {
+      "currentCommit": "1b77979abe846c67f5b3b19693012ed0a238f8ea",
+      "currentSha256": "6eaeb767144de5320fa4e3a87d1571319038989317f0e5e12fc05f093b208554",
+      "edits": [
+        {
+          "current": "\tconst { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true, ownedReceiverExports: true, ownedCallbackResultAnchors: true, nativeRefinements: true, nativeCheckedRecords: true });\n\tif(!model.ownedGraph?.hostCallbacks && !model.ownedGraph?.inputTransfers && !model.ownedGraph?.receiverExports && !model.ownedGraph?.callbackResultAnchors) throw new TypeError(\"Owned C# requires authenticated callback/copy, transfer, receiver or callback-result support\");\n",
+          "previous": "\tconst { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true, ownedReceiverExports: true, ownedCallbackResultAnchors: true });\n\tif(!model.ownedGraph?.hostCallbacks && !model.ownedGraph?.receiverExports && !model.ownedGraph?.callbackResultAnchors) throw new TypeError(\"Owned C# requires authenticated callback/copy, receiver or callback-result support\");\n",
+          "start": 1588
+        },
+        {
+          "current": "\tconst projection = generateOwnedDotnetPackage(model.bindingIr, null, capabilities);\n\tconst cOptions = { metadata, sourceIdentity: model.sourceIdentity\n\t\t, component: model.component\n\t\t, valueCopies: Boolean(projection.c.copies?.length), ...capabilities };\n\tconst c = generateOwnedCPackage(cOptions);\n\tconst prefix = c.values.prefix;\n",
+          "previous": "\tconst c = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component, valueCopies: callbackResultAnchors, ...capabilities });\n\tconst projection = generateOwnedDotnetPackage(model.bindingIr, null, capabilities), prefix = c.values.prefix;\n",
+          "start": 2712
+        }
+      ],
+      "path": "src/build/owned-dotnet-artifacts.mjs",
+      "previousCommit": "72d123d69917f1145ec03d8624b6a08c3b2be6bc",
+      "previousSha256": "5439794c1cae9f57911e1163bec949dca48e0a4773f957fb7225f333fb0cff42"
+    },
+    {
+      "currentCommit": "1b77979abe846c67f5b3b19693012ed0a238f8ea",
+      "currentSha256": "083a9fd38a6154f94d310e4aafd3b71d1b673df7309c93949fef9a95fad313f5",
+      "edits": [
+        {
+          "current": "\tconst { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true, ownedReceiverExports: true, ownedCallbackResultAnchors: true, nativeRefinements: true, nativeCheckedRecords: true });\n\tif(!model.ownedGraph?.hostCallbacks && !model.ownedGraph?.inputTransfers && !model.ownedGraph?.receiverExports && !model.ownedGraph?.callbackResultAnchors) throw new TypeError(\"Owned C# requires authenticated callback/copy, transfer, receiver or callback-result support\");\n",
+          "previous": "\tconst { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true, ownedReceiverExports: true, ownedCallbackResultAnchors: true });\n\tif(!model.ownedGraph?.hostCallbacks && !model.ownedGraph?.receiverExports && !model.ownedGraph?.callbackResultAnchors) throw new TypeError(\"Owned C# requires authenticated callback/copy, receiver or callback-result support\");\n",
+          "start": 1200
+        },
+        {
+          "current": "\tconst projection = generateOwnedDotnetPackage(model.bindingIr, null, capabilities);\n\tconst cOptions = { metadata, sourceIdentity: model.sourceIdentity\n\t\t, component: model.component\n\t\t, valueCopies: Boolean(projection.c.copies?.length), ...capabilities };\n\tconst c = generateOwnedCPackage(cOptions);\n\tconst prefix = c.values.prefix;\n",
+          "previous": "\tconst c = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component, valueCopies: callbackResultAnchors, ...capabilities });\n\tconst projection = generateOwnedDotnetPackage(model.bindingIr, null, capabilities), prefix = c.values.prefix;\n",
+          "start": 2324
+        }
+      ],
+      "path": "src/build/owned-dotnet-projection.mjs",
+      "previousCommit": "72d123d69917f1145ec03d8624b6a08c3b2be6bc",
+      "previousSha256": "72bf9421dd11c3df7576cd1f631b563d78f43c83a56273613ea9e79634197fe9"
+    },
+    {
+      "currentCommit": "1b77979abe846c67f5b3b19693012ed0a238f8ea",
+      "currentSha256": "d665f1c9784413dabb06fbe566188274295b4e14c0bfc005bf6023b2d96e0d18",
+      "edits": [
+        {
+          "current": "\tconst { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true, ownedReceiverExports: true, ownedCallbackResultAnchors: true, nativeRefinements: true, nativeCheckedRecords: true });\n\tif(!model.ownedGraph?.hostCallbacks && !model.ownedGraph?.inputTransfers && !model.ownedGraph?.receiverExports && !model.ownedGraph?.callbackResultAnchors) throw new TypeError(\"Owned JVM requires authenticated callback/copy, transfer, receiver or callback-result support\");\n",
+          "previous": "\tconst { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true, ownedReceiverExports: true, ownedCallbackResultAnchors: true });\n\tif(!model.ownedGraph?.hostCallbacks && !model.ownedGraph?.receiverExports && !model.ownedGraph?.callbackResultAnchors) throw new TypeError(\"Owned JVM requires authenticated callback/copy, receiver or callback-result support\");\n",
+          "start": 1560
+        },
+        {
+          "current": "\tconst projection = generateOwnedJvmPackage(model.bindingIr, null, capabilities);\n\tconst cOptions = { metadata, sourceIdentity: model.sourceIdentity\n\t\t, component: model.component\n\t\t, valueCopies: Boolean(projection.c.copies?.length), ...capabilities };\n\tconst c = generateOwnedCPackage(cOptions);\n\tconst prefix = c.values.prefix;\n",
+          "previous": "\tconst c = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component, valueCopies: callbackResultAnchors, ...capabilities });\n\tconst projection = generateOwnedJvmPackage(model.bindingIr, null, capabilities), prefix = c.values.prefix;\n",
+          "start": 2685
+        }
+      ],
+      "path": "src/build/owned-jvm-artifacts.mjs",
+      "previousCommit": "cf5fc6d93904ea22740150cde00a27b2435b38b2",
+      "previousSha256": "a565cc9b2d2c42a73f940aaea3f3a306c92c239533394d6c0973fc8e3d5fc23e"
+    },
+    {
+      "currentCommit": "1b77979abe846c67f5b3b19693012ed0a238f8ea",
+      "currentSha256": "980d2c70b265c1feaf877c2caf6ab029edff0135249b81cd6158c4772d571e30",
+      "edits": [
+        {
+          "current": "\tconst { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true, ownedReceiverExports: true, ownedCallbackResultAnchors: true, nativeRefinements: true, nativeCheckedRecords: true });\n\tif(!model.ownedGraph?.hostCallbacks && !model.ownedGraph?.inputTransfers && !model.ownedGraph?.receiverExports && !model.ownedGraph?.callbackResultAnchors) throw new TypeError(\"Owned JVM requires authenticated callback/copy, transfer, receiver or callback-result support\");\n",
+          "previous": "\tconst { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true, ownedReceiverExports: true, ownedCallbackResultAnchors: true });\n\tif(!model.ownedGraph?.hostCallbacks && !model.ownedGraph?.receiverExports && !model.ownedGraph?.callbackResultAnchors) throw new TypeError(\"Owned JVM requires authenticated callback/copy, receiver or callback-result support\");\n",
+          "start": 1243
+        },
+        {
+          "current": "\tconst projection = generateOwnedJvmPackage(model.bindingIr, null, capabilities);\n\tconst cOptions = { metadata, sourceIdentity: model.sourceIdentity\n\t\t, component: model.component\n\t\t, valueCopies: Boolean(projection.c.copies?.length), ...capabilities };\n\tconst c = generateOwnedCPackage(cOptions);\n\tconst prefix = c.values.prefix;\n",
+          "previous": "\tconst c = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component, valueCopies: callbackResultAnchors, ...capabilities });\n\tconst projection = generateOwnedJvmPackage(model.bindingIr, null, capabilities), prefix = c.values.prefix;\n",
+          "start": 2368
+        }
+      ],
+      "path": "src/build/owned-jvm-projection.mjs",
+      "previousCommit": "cf5fc6d93904ea22740150cde00a27b2435b38b2",
+      "previousSha256": "e9e1b07dec2e40d88ed36eafb03b999470b8ab9f6a7d0f15db1be31d91e8a055"
+    },
+    {
+      "currentCommit": "1b77979abe846c67f5b3b19693012ed0a238f8ea",
+      "currentSha256": "eff2fe2b4a2cc16c381d146187789875e6941e944bcd4686409bae06eb40ec58",
+      "edits": [
+        {
+          "current": "\tconst { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true, ownedReceiverExports: true, ownedCallbackResultAnchors: true, nativeRefinements: true, nativeCheckedRecords: true });\n",
+          "previous": "\tconst { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true, ownedReceiverExports: true, ownedCallbackResultAnchors: true });\n",
+          "start": 1419
+        },
+        {
+          "current": "\tconst php = generateOwnedPhpPackage(model.bindingIr, null, capabilities);\n\tconst cOptions = { metadata, sourceIdentity: model.sourceIdentity\n\t\t, component: model.component\n\t\t, ...capabilities\n\t\t, valueCopies: Boolean(php.c.copies?.length)\n\t\t, identityEquality: receiverExports };\n\tconst c = generateOwnedCPackage(cOptions);\n\tconst prefix = c.values.prefix;\n",
+          "previous": "\tconst c = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component, ...capabilities, valueCopies: callbackResultAnchors, identityEquality: receiverExports });\n\tconst php = generateOwnedPhpPackage(model.bindingIr, null, capabilities), prefix = c.values.prefix;\n",
+          "start": 2368
+        }
+      ],
+      "path": "src/build/owned-php-artifacts.mjs",
+      "previousCommit": "68e24c2e0cfc65b5d1c68eb0c9a6ae5feb4f0938",
+      "previousSha256": "4a355fed42a9280a452dd993b68c034d7ab6b084705b93f329774c47190259b7"
+    },
+    {
+      "currentCommit": "1b77979abe846c67f5b3b19693012ed0a238f8ea",
+      "currentSha256": "d2ee2e337b64006e051d2c98a7c7c9b7f37a5fd75779387fce17173c9f54aa0a",
+      "edits": [
+        {
+          "current": "\tconst { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true, ownedReceiverExports: true, ownedCallbackResultAnchors: true, nativeRefinements: true, nativeCheckedRecords: true });\n",
+          "previous": "\tconst { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true, ownedReceiverExports: true, ownedCallbackResultAnchors: true });\n",
+          "start": 1156
+        },
+        {
+          "current": "\tconst php = generateOwnedPhpPackage(model.bindingIr, null, capabilities);\n\tconst cOptions = { metadata, sourceIdentity: model.sourceIdentity\n\t\t, component: model.component\n\t\t, ...capabilities\n\t\t, valueCopies: Boolean(php.c.copies?.length)\n\t\t, identityEquality: receiverExports };\n\tconst c = generateOwnedCPackage(cOptions);\n\tconst prefix = c.values.prefix;\n",
+          "previous": "\tconst c = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component, ...capabilities, valueCopies: callbackResultAnchors, identityEquality: receiverExports });\n\tconst php = generateOwnedPhpPackage(model.bindingIr, null, capabilities), prefix = c.values.prefix;\n",
+          "start": 2105
+        }
+      ],
+      "path": "src/build/owned-php-projection.mjs",
+      "previousCommit": "68e24c2e0cfc65b5d1c68eb0c9a6ae5feb4f0938",
+      "previousSha256": "ffd32e0fae87bf832c52ad5e405ef6d089e0be606b383273c3bc3113b84669fc"
+    },
+    {
+      "currentCommit": "18804049b371cfe17eaec867c0365fb4b47b8152",
+      "currentSha256": "af6441f73dc39e23533bbdf075183c66c6b09d64b48bfccdf100ca0119e26ab5",
+      "edits": [
+        {
+          "current": "\tconst generated = generateOwnedPerlXs(model.bindingIr, moduleName, { transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks });\n",
+          "previous": "",
+          "start": 1607
+        },
+        {
+          "current": "\t\t, callbackResultAnchors, valueCopies: Boolean(generated.c.copies?.length) });\n",
+          "previous": "\t\t, callbackResultAnchors, valueCopies: callbackResultAnchors });\n",
+          "start": 1955
+        },
+        {
+          "current": "",
+          "previous": "\tconst generated = generateOwnedPerlXs(model.bindingIr, moduleName, { transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks });\n",
+          "start": 2197
+        }
+      ],
+      "path": "src/backends/perl/owned-package.mjs",
+      "previousCommit": "e794b895095ef996a4b959cdabb2ef3f5c8f432f",
+      "previousSha256": "ffa23868f0090eee7a9f520b3ebbf0fbeb0e0603b21465bff57b288c4468ed41"
+    },
+    {
+      "currentCommit": "18804049b371cfe17eaec867c0365fb4b47b8152",
+      "currentSha256": "3fe37d472ae3066ccaab89bd248344726a0d057b9419044cb5924aa6ec7598b6",
+      "edits": [
+        {
+          "current": "import { generateOwnedCValues, ownedCProjectionRequiresValueCopies } from \"../c/owned-values.mjs\";\n",
+          "previous": "import { generateOwnedCValues } from \"../c/owned-values.mjs\";\n",
+          "start": 100
+        },
+        {
+          "current": "\tconst options = { hostCallbacks, transferredInputs, anchoredResults, receiverExports, callbackResultAnchors };\n\tlet c = generateOwnedCValues(ir, options);\n\tif(!c.copies && ownedCProjectionRequiresValueCopies(c))\n\t\tc = generateOwnedCValues(ir, { ...options, valueCopies: true });\n",
+          "previous": "\tconst valueCopies = callbackResultAnchors && ir.types.some(type => type.kind === \"callback\" && type.callable.result.ownership === \"borrow\");\n\tconst c = generateOwnedCValues(ir, { hostCallbacks, valueCopies, transferredInputs, anchoredResults, receiverExports, callbackResultAnchors });\n",
+          "start": 3206
+        }
+      ],
+      "path": "src/backends/perl/owned-values.mjs",
+      "previousCommit": "b316c354161e0b34576dfd63f12621e9e2122b65",
+      "previousSha256": "363a4c86bcb5d349b95a4e3c0d3b59692a09e13488b8a803de1b5889432b65e2"
+    },
+    {
+      "currentCommit": "18804049b371cfe17eaec867c0365fb4b47b8152",
+      "currentSha256": "a8467820bd43553e80f5f8b235145bc42853ef34b8836935f66223d8aaf0df75",
+      "edits": [
+        {
+          "current": "\tconst { model } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true, ownedReceiverExports: true, ownedCallbackResultAnchors: true, nativeRefinements: true, nativeCheckedRecords: true });\n",
+          "previous": "\tconst { model } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true, ownedReceiverExports: true, ownedCallbackResultAnchors: true });\n",
+          "start": 1380
+        }
+      ],
+      "path": "src/build/owned-perl-projection.mjs",
+      "previousCommit": "e794b895095ef996a4b959cdabb2ef3f5c8f432f",
+      "previousSha256": "2950f93c4b34f643e74f5125fb05d45ee97e091ebcecdf0f136fd02a43cd25e1"
+    },
+    {
+      "currentCommit": "3c22d43fa73c646b9a2472e4b6aada674c0a564e",
+      "currentSha256": "1e19c750f16ffa67e33bd5226d5d0963c499e6f88e4b6596f5574498b731ae07",
+      "edits": [
+        {
+          "current": "import { generateOwnedCValues, ownedCProjectionRequiresValueCopies } from \"../c/owned-values.mjs\";\n",
+          "previous": "import { generateOwnedCValues } from \"../c/owned-values.mjs\";\n",
+          "start": 87
+        },
+        {
+          "current": "\tconst options = { hostCallbacks, transferredInputs, anchoredResults, receiverExports, callbackResultAnchors };\n\tlet c = generateOwnedCValues(ir, options);\n\tif(!c.copies && ownedCProjectionRequiresValueCopies(c))\n\t\tc = generateOwnedCValues(ir, { ...options, valueCopies: true });\n",
+          "previous": "\tconst valueCopies = callbackResultAnchors && ir.types.some(type => type.kind === \"callback\" && type.callable.result.ownership === \"borrow\");\n\tconst c = generateOwnedCValues(ir, { hostCallbacks, valueCopies, transferredInputs, anchoredResults, receiverExports, callbackResultAnchors });\n",
+          "start": 3956
+        }
+      ],
+      "path": "src/backends/ruby/owned-values.mjs",
+      "previousCommit": "2dae24728fa2ac81677f6c76b674dbe5c3be3f73",
+      "previousSha256": "74733aa68286ebf837147b89706922be5db4bd6b3f1bba2c584b9cfe731762d3"
+    },
+    {
+      "currentCommit": "3c22d43fa73c646b9a2472e4b6aada674c0a564e",
+      "currentSha256": "b1402e7db64802ce7be361de1d574d99c375540687a188164e2a82a343664349",
+      "edits": [
+        {
+          "current": "\tconst { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true, ownedReceiverExports: true, ownedCallbackResultAnchors: true, nativeRefinements: true, nativeCheckedRecords: true });\n\tif(!model.ownedGraph?.hostCallbacks && !model.ownedGraph?.inputTransfers && !model.ownedGraph?.receiverExports && !model.ownedGraph?.callbackResultAnchors) throw new TypeError(\"Owned Ruby requires authenticated callback/copy, transfer, receiver or callback-result support\");\n",
+          "previous": "\tconst { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true, ownedReceiverExports: true, ownedCallbackResultAnchors: true });\n\tif(!model.ownedGraph?.hostCallbacks && !model.ownedGraph?.receiverExports && !model.ownedGraph?.callbackResultAnchors) throw new TypeError(\"Owned Ruby requires authenticated callback/copy, receiver or callback-result support\");\n",
+          "start": 1509
+        },
+        {
+          "current": "\tconst options = { transferredInputs, anchoredResults, receiverExports, hostCallbacks, callbackResultAnchors };\n\tconst ruby = generateOwnedRubyPackage(model.bindingIr, null, options);\n\tconst c = generateOwnedCPackage({\n\t\tmetadata, sourceIdentity: model.sourceIdentity\n\t\t, component: model.component\n\t\t, ...options\n\t\t, valueCopies: Boolean(ruby.c.copies?.length)\n\t});\n\tconst prefix = c.values.prefix;\n",
+          "previous": "\tconst options = { transferredInputs, anchoredResults, receiverExports, hostCallbacks, callbackResultAnchors, valueCopies: callbackResultAnchors };\n\tconst c = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component, ...options });\n\tconst ruby = generateOwnedRubyPackage(model.bindingIr, null, options), prefix = c.values.prefix;\n",
+          "start": 2518
+        }
+      ],
+      "path": "src/build/owned-ruby-artifacts.mjs",
+      "previousCommit": "2dae24728fa2ac81677f6c76b674dbe5c3be3f73",
+      "previousSha256": "f33b7afa279370e05c4a89f5718b77db3e9f44feee82b1492b5915a176e869f1"
+    },
+    {
+      "currentCommit": "3c22d43fa73c646b9a2472e4b6aada674c0a564e",
+      "currentSha256": "154e156f43e16328f26e1d529e65c489b099b86a01f958b18578d46696cf665f",
+      "edits": [
+        {
+          "current": "\tconst { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true, ownedReceiverExports: true, ownedCallbackResultAnchors: true, nativeRefinements: true, nativeCheckedRecords: true });\n\tif(!model.ownedGraph?.hostCallbacks && !model.ownedGraph?.inputTransfers && !model.ownedGraph?.receiverExports && !model.ownedGraph?.callbackResultAnchors) throw new TypeError(\"Owned Ruby requires authenticated callback/copy, transfer, receiver or callback-result support\");\n",
+          "previous": "\tconst { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true, ownedReceiverExports: true, ownedCallbackResultAnchors: true });\n\tif(!model.ownedGraph?.hostCallbacks && !model.ownedGraph?.receiverExports && !model.ownedGraph?.callbackResultAnchors) throw new TypeError(\"Owned Ruby requires authenticated callback/copy, receiver or callback-result support\");\n",
+          "start": 1168
+        },
+        {
+          "current": "\tconst contractOptions = { transferredInputs, anchoredResults, receiverExports, hostCallbacks, callbackResultAnchors };\n\tconst ruby = generateOwnedRubyPackage(model.bindingIr, null, contractOptions);\n\tconst c = generateOwnedCPackage({\n\t\tmetadata, sourceIdentity: model.sourceIdentity\n\t\t, component: model.component\n\t\t, ...contractOptions\n\t\t, valueCopies: Boolean(ruby.c.copies?.length)\n\t});\n\tconst prefix = c.values.prefix;\n",
+          "previous": "\tconst contractOptions = { transferredInputs, anchoredResults, receiverExports, hostCallbacks, callbackResultAnchors, valueCopies: callbackResultAnchors };\n\tconst c = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component, ...contractOptions });\n\tconst ruby = generateOwnedRubyPackage(model.bindingIr, null, contractOptions), prefix = c.values.prefix;\n",
+          "start": 2177
+        }
+      ],
+      "path": "src/build/owned-ruby-projection.mjs",
+      "previousCommit": "2dae24728fa2ac81677f6c76b674dbe5c3be3f73",
+      "previousSha256": "fc2ea34c5a2a051a25462e304b254fab028b648929f04d6ce36406878dd0400b"
+    },
+    {
+      "currentCommit": "cf5062772b63ee7483d0a30c2f9df3c01d358157",
+      "currentSha256": "c2be0d524a18beaf695ee44931663ec63b0f359f153df49067a16e49539151a6",
+      "edits": [
+        {
+          "current": "\tconst { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true, ownedReceiverExports: true, ownedCallbackResultAnchors: true, nativeRefinements: true, nativeCheckedRecords: true });\n\tif(!model.ownedGraph?.hostCallbacks && !model.ownedGraph?.inputTransfers && !model.ownedGraph?.receiverExports && !model.ownedGraph?.callbackResultAnchors) throw new TypeError(\"Owned Python requires authenticated callback/copy, transfer, receiver or callback-result support\");\n",
+          "previous": "\tconst { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true, ownedReceiverExports: true, ownedCallbackResultAnchors: true });\n\tif(!model.ownedGraph?.hostCallbacks && !model.ownedGraph?.receiverExports && !model.ownedGraph?.callbackResultAnchors) throw new TypeError(\"Owned Python requires authenticated callback/copy, receiver or callback-result support\");\n",
+          "start": 1220
+        },
+        {
+          "current": "\tconst python = generateOwnedPythonPackage(model.bindingIr, null, options);\n\tconst cOptions = { metadata, sourceIdentity: model.sourceIdentity\n\t\t, component: model.component\n\t\t, valueCopies: Boolean(python.c.copies?.length), ...options };\n\tconst c = generateOwnedCPackage(cOptions);\n\tconst prefix = c.values.prefix;\n",
+          "previous": "\tconst c = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component, valueCopies: callbackResultAnchors, ...options });\n\tconst python = generateOwnedPythonPackage(model.bindingIr, null, options), prefix = c.values.prefix;\n",
+          "start": 2343
+        }
+      ],
+      "path": "src/build/owned-python-artifacts.mjs",
+      "previousCommit": "0fc33e4fd17f3347d845847f284709208ada1c9e",
+      "previousSha256": "3870d4325b33abca2f9fa938f625454e983407bc4128439e7d5e7a0699bab861"
+    },
+    {
+      "currentCommit": "cf5062772b63ee7483d0a30c2f9df3c01d358157",
+      "currentSha256": "d06d1b521888cf22afba60eba88cc9b648175b2a86c4b6bb207812b25f01ff14",
+      "edits": [
+        {
+          "current": "\tconst { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true, ownedReceiverExports: true, ownedCallbackResultAnchors: true, nativeRefinements: true, nativeCheckedRecords: true });\n\tif(!model.ownedGraph?.hostCallbacks && !model.ownedGraph?.inputTransfers && !model.ownedGraph?.receiverExports && !model.ownedGraph?.callbackResultAnchors) throw new TypeError(\"Owned Rust requires authenticated callback/copy, transfer, receiver or callback-result support\");\n",
+          "previous": "\tconst { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true, ownedReceiverExports: true, ownedCallbackResultAnchors: true });\n\tif(!model.ownedGraph?.hostCallbacks && !model.ownedGraph?.receiverExports && !model.ownedGraph?.callbackResultAnchors) throw new TypeError(\"Owned Rust requires authenticated callback/copy, receiver or callback-result support\");\n",
+          "start": 1198
+        },
+        {
+          "current": "\tconst capabilities = { transferredInputs, anchoredResults, receiverExports\n\t\t, callbackResultAnchors, hostCallbacks };\n\tconst rust = generateOwnedRustPackage(model.bindingIr, null, {}, capabilities);\n\tconst cOptions = { metadata, sourceIdentity: model.sourceIdentity\n\t\t, component: model.component, valueCopies: Boolean(rust.c.copies?.length)\n\t\t, ...capabilities };\n\tconst c = generateOwnedCPackage(cOptions);\n\tconst prefix = c.values.prefix;\n",
+          "previous": "\tconst c = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component, hostCallbacks, valueCopies: callbackResultAnchors, transferredInputs, anchoredResults, receiverExports, callbackResultAnchors });\n\tconst rust = generateOwnedRustPackage(model.bindingIr, null, {}, { transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks }), prefix = c.values.prefix;\n",
+          "start": 2207
+        },
+        {
+          "current": "\tconst cpp = adapter.cppValues ? generateOwnedCppPackage(model.bindingIr, capabilities) : null;\n\tconst python = adapter.pythonValues ? generateOwnedPythonPackage(model.bindingIr, null, capabilities) : null;\n",
+          "previous": "\tconst cpp = adapter.cppValues ? generateOwnedCppPackage(model.bindingIr, { transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks }) : null;\n\tconst python = adapter.pythonValues ? generateOwnedPythonPackage(model.bindingIr, null, { transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks }) : null;\n",
+          "start": 2748
+        }
+      ],
+      "path": "src/build/owned-rust-artifacts.mjs",
+      "previousCommit": "0fc33e4fd17f3347d845847f284709208ada1c9e",
+      "previousSha256": "f8c9e99a50179a27a2272c97bb1b6b68e095d4b2a84a0fd64e70f28a7957f383"
+    },
+    {
+      "currentCommit": "06f7c43bc5fb87d2acd22dc866ba7d034bb148c8",
+      "currentSha256": "4b3838ca4507eb6713cc3ba42d3e419da3defe213beee29599443e4f4143948b",
+      "edits": [
+        {
+          "current": " * Decide whether a typed host projection needs public value-copy entry points.\n * Whole-owner APIs can retain identities directly but must copy aggregate\n * carriers; transfer-only APIs snapshot aggregates into the move transaction.\n *\n * @param values - Generated C value model without assumed copy entry points.\n */\nexport const ownedCProjectionRequiresValueCopies = values => {\n\tconst nodes = new Map(values.nodes.map(node => [node.id, node]));\n\tconst retains = new Set(values.retains.map(item => item.id));\n\tconst wholeOwners = [...values.functions, ...values.callbacks].some(item => item.anchor !== undefined)\n\t\t|| values.functions.some(item => item.receiver === 0);\n\tif(wholeOwners && values.nodes.some(node => node.representation !== \"copied\" && !retains.has(node.id))) return true;\n\treturn !wholeOwners && values.functions.some(fn => fn.transfers?.some(index => !nodes.get(fn.parameters[index])?.identity));\n};\n\n/**\n",
+          "previous": "",
+          "start": 856
+        }
+      ],
+      "path": "src/backends/c/owned-values.mjs",
+      "previousCommit": "8722c9ee9b25257ea132ed1be7310a833ede9893",
+      "previousSha256": "3798132db63f50302474af8d04e2ecc3c3462f7c33a6b5aa555d94feafa2ccb7"
+    },
+    {
+      "currentCommit": "06f7c43bc5fb87d2acd22dc866ba7d034bb148c8",
+      "currentSha256": "ec232288e195f486ef8c41eab793dbea99e132e99becbd60751ba71fc0f89c84",
+      "edits": [
+        {
+          "current": "\tconst copyFor = (node, purpose) => {\n\t\tconst copy = [...c.retains, ...c.copies ?? []].find(item => item.id === node.id);\n\t\tif(!copy) throw new TypeError(`Owned C++ ${purpose} requires authenticated copy support for ${node.id}`);\n\t\treturn copy;\n\t};\n",
+          "previous": "",
+          "start": 2153
+        },
+        {
+          "current": "\t\tconst copy = copyFor(result, \"callback result\");\n",
+          "previous": "\t\tconst copy = [...c.retains, ...c.copies].find(item => item.id === result.id);\n",
+          "start": 3084
+        },
+        {
+          "current": "\t\t\t\tconst node = sig.params[parameter], copy = copyFor(node, \"input transfer\");\n",
+          "previous": "\t\t\t\tconst node = sig.params[parameter], copy = [...c.retains, ...c.copies].find(candidate => candidate.id === node.id);\n",
+          "start": 9182
+        }
+      ],
+      "path": "src/backends/cpp/owned-callables.mjs",
+      "previousCommit": "8722c9ee9b25257ea132ed1be7310a833ede9893",
+      "previousSha256": "a757d5d81ca335bab16116c81b2f53731807600fd99b9ed99ac083a164cdc68f"
+    },
+    {
+      "currentCommit": "06f7c43bc5fb87d2acd22dc866ba7d034bb148c8",
+      "currentSha256": "16ae3f7d401076f1f34488f23d7cf7298934b821aa8633903f679bbcfe7ddf44",
+      "edits": [
+        {
+          "current": "import { generateOwnedCValues, ownedCProjectionRequiresValueCopies } from \"../c/owned-values.mjs\";\n",
+          "previous": "import { generateOwnedCValues } from \"../c/owned-values.mjs\";\n",
+          "start": 351
+        },
+        {
+          "current": "\tconst options = { hostCallbacks, transferredInputs, anchoredResults, receiverExports, callbackResultAnchors };\n\tlet c = generateOwnedCValues(ir, options);\n\tif(!c.copies && ownedCProjectionRequiresValueCopies(c))\n\t\tc = generateOwnedCValues(ir, { ...options, valueCopies: true });\n",
+          "previous": "\tconst valueCopies = callbackResultAnchors && ir.types.some(type => type.kind === \"callback\" && type.callable.result.ownership === \"borrow\");\n\tconst c = generateOwnedCValues(ir, { hostCallbacks, valueCopies, transferredInputs, anchoredResults, receiverExports, callbackResultAnchors });\n",
+          "start": 2045
+        }
+      ],
+      "path": "src/backends/cpp/owned-values.mjs",
+      "previousCommit": "8722c9ee9b25257ea132ed1be7310a833ede9893",
+      "previousSha256": "621a2c428cf79dcc471802fd2f22770a170d613f2e0f076bdafa645992c388ce"
+    },
+    {
+      "currentCommit": "06f7c43bc5fb87d2acd22dc866ba7d034bb148c8",
+      "currentSha256": "67da157599d1228164179cfd5cca1d627dda03511313239f671945a3de57533a",
+      "edits": [
+        {
+          "current": "import { generateOwnedCValues, ownedCProjectionRequiresValueCopies } from \"../c/owned-values.mjs\";\n",
+          "previous": "import { generateOwnedCValues } from \"../c/owned-values.mjs\";\n",
+          "start": 95
+        },
+        {
+          "current": "\tconst options = { hostCallbacks, transferredInputs, anchoredResults, receiverExports, callbackResultAnchors };\n\tlet c = generateOwnedCValues(ir, options);\n\tif(!c.copies && ownedCProjectionRequiresValueCopies(c))\n\t\tc = generateOwnedCValues(ir, { ...options, valueCopies: true });\n",
+          "previous": "\tconst valueCopies = callbackResultAnchors && ir.types.some(type => type.kind === \"callback\" && type.callable.result.ownership === \"borrow\");\n\tconst c = generateOwnedCValues(ir, { hostCallbacks, valueCopies, transferredInputs, anchoredResults, receiverExports, callbackResultAnchors });\n",
+          "start": 2176
+        }
+      ],
+      "path": "src/backends/python/owned-values.mjs",
+      "previousCommit": "8722c9ee9b25257ea132ed1be7310a833ede9893",
+      "previousSha256": "e0422b76ab5d80aa28dfb5dadb21c1bdaec7e336be05531bf15c25748f1ce202"
+    },
+    {
+      "currentCommit": "06f7c43bc5fb87d2acd22dc866ba7d034bb148c8",
+      "currentSha256": "95f02fae193dc3e97559a477b14bf8dbcf6b0dd4719b99c702c9f0c3cd61af34",
+      "edits": [
+        {
+          "current": "import { generateOwnedCValues, ownedCProjectionRequiresValueCopies } from \"../c/owned-values.mjs\";\n",
+          "previous": "import { generateOwnedCValues } from \"../c/owned-values.mjs\";\n",
+          "start": 214
+        },
+        {
+          "current": "\tconst cOptions = { hostCallbacks: options.hostCallbacks ?? true\n\t\t, callbackResultAnchors\n",
+          "previous": "\tconst valueCopies = callbackResultAnchors && ir.types.some(type => type.kind === \"callback\" && type.callable.result.ownership === \"borrow\");\n\tconst c = generateOwnedCValues(ir, { hostCallbacks: options.hostCallbacks ?? true\n\t\t, valueCopies, callbackResultAnchors\n",
+          "start": 1863
+        },
+        {
+          "current": "\t\t, receiverExports: options.receiverExports ?? false };\n\tlet c = generateOwnedCValues(ir, cOptions);\n\tif(!c.copies && ownedCProjectionRequiresValueCopies(c))\n\t\tc = generateOwnedCValues(ir, { ...cOptions, valueCopies: true });\n",
+          "previous": "\t\t, receiverExports: options.receiverExports ?? false });\n",
+          "start": 2066
+        }
+      ],
+      "path": "src/backends/rust/owned-values.mjs",
+      "previousCommit": "8722c9ee9b25257ea132ed1be7310a833ede9893",
+      "previousSha256": "02f9e8292656e740cfbf8600b77b50361797eaf3787f92c653fbb4cfb81ec6e6"
+    },
+    {
+      "currentCommit": "308fc6a50dfb37e00e2f97f61c2a7d43efdb68c5",
+      "currentSha256": "36073954899d7d29e9a2d971fcd8c6b5e225adf627a6b3a733148bba6d6be879",
+      "edits": [
+        {
+          "current": "\tconst { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\"].includes(target)), ownedAnchoredResults: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\"].includes(target)), ownedReceiverExports: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\"].includes(target)), ownedCallbackResultAnchors: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\"].includes(target)), nativeRefinements: true, nativeCallbackRefinements: targets.every(target => [\"c\", \"cpp\"].includes(target)), nativeCheckedRecords: true });\n",
+          "previous": "\tconst { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\"].includes(target)), ownedAnchoredResults: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\"].includes(target)), ownedReceiverExports: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\"].includes(target)), ownedCallbackResultAnchors: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\"].includes(target)) });\n",
+          "start": 2247
+        }
+      ],
+      "path": "src/build/owned-c-projection.mjs",
+      "previousCommit": "06f7c43bc5fb87d2acd22dc866ba7d034bb148c8",
+      "previousSha256": "08cd09586fc690d60b87a201fc4cef3e4770a745d6ad83202e9cc88ee4751bd3"
+    },
+    {
+      "currentCommit": "06f7c43bc5fb87d2acd22dc866ba7d034bb148c8",
+      "currentSha256": "08cd09586fc690d60b87a201fc4cef3e4770a745d6ad83202e9cc88ee4751bd3",
+      "edits": [
+        {
+          "current": "",
+          "previous": "\tif(targets.includes(\"cpp\") && !hostCallbacks && !receiverExports && !callbackResultAnchors) throw new TypeError(\"Owned C++ projection requires authenticated callback/copy support\");\n\tconst valueCopies = targets.some(target => [\"cpp\", \"cargo\", \"pypi\"].includes(target)) && callbackResultAnchors;\n\tconst generated = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component, hostCallbacks, valueCopies, transferredInputs, anchoredResults, receiverExports, callbackResultAnchors });\n",
+          "start": 3299
+        },
+        {
+          "current": "",
+          "previous": "\tif(rust && !hostCallbacks && !receiverExports && !callbackResultAnchors) throw new TypeError(\"Owned Rust projection requires authenticated callback/copy support\");\n",
+          "start": 3679
+        },
+        {
+          "current": "\tif(cpp && !hostCallbacks && !receiverExports && !callbackResultAnchors && !transferredInputs) throw new TypeError(\"Owned C++ projection requires authenticated callback/copy support\");\n\tif(rust && !hostCallbacks && !receiverExports && !callbackResultAnchors && !transferredInputs) throw new TypeError(\"Owned Rust projection requires authenticated callback/copy support\");\n\tif(python && !hostCallbacks && !receiverExports && !callbackResultAnchors && !transferredInputs) throw new TypeError(\"Owned Python projection requires authenticated callback/copy, receiver or callback-result support\");\n\tconst valueCopies = [cpp, rust, python].some(adapter => adapter?.c.copies?.length);\n\tconst generated = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component, hostCallbacks, valueCopies, transferredInputs, anchoredResults, receiverExports, callbackResultAnchors });\n",
+          "previous": "\tif(python && !hostCallbacks && !receiverExports && !callbackResultAnchors) throw new TypeError(\"Owned Python projection requires authenticated callback/copy, receiver or callback-result support\");\n",
+          "start": 3875
+        }
+      ],
+      "path": "src/build/owned-c-projection.mjs",
+      "previousCommit": "8722c9ee9b25257ea132ed1be7310a833ede9893",
+      "previousSha256": "e62cfa5d080085ab513ac7350f5aec4bb458656c97c446e6fb361446eab4f42f"
+    },
+    {
+      "currentCommit": "308fc6a50dfb37e00e2f97f61c2a7d43efdb68c5",
+      "currentSha256": "29b3b67e8e668041d5bed1c4565bd6a803f72e3e0cadf37bbe59dbef04c7d089",
+      "edits": [
+        {
+          "current": "\tconst { model, receipt } = await readVerifiedNativeComponent(nativeRoot, runtimeIdentity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true, ownedReceiverExports: true, ownedCallbackResultAnchors: true, nativeRefinements: true, nativeCallbackRefinements: true, nativeCheckedRecords: true });\n",
+          "previous": "\tconst { model, receipt } = await readVerifiedNativeComponent(nativeRoot, runtimeIdentity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true, ownedReceiverExports: true, ownedCallbackResultAnchors: true });\n",
+          "start": 2218
+        }
+      ],
+      "path": "src/release/owned-c-package.mjs",
+      "previousCommit": "06f7c43bc5fb87d2acd22dc866ba7d034bb148c8",
+      "previousSha256": "18fb23a3b2072c4f928760f4216de7272d8ebb0d8ecf7215f9b8c63537ea1804"
+    },
+    {
+      "currentCommit": "06f7c43bc5fb87d2acd22dc866ba7d034bb148c8",
+      "currentSha256": "18fb23a3b2072c4f928760f4216de7272d8ebb0d8ecf7215f9b8c63537ea1804",
+      "edits": [
+        {
+          "current": "",
+          "previous": "\tconst valueCopies = Boolean(adapter.cppValues || adapter.rustValues || adapter.pythonValues) && callbackResultAnchors;\n\tconst generated = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component, hostCallbacks, valueCopies, transferredInputs, anchoredResults, receiverExports, callbackResultAnchors });\n\tconst p = generated.values.prefix;\n",
+          "start": 3105
+        },
+        {
+          "current": "\tconst valueCopies = [cpp, rust, python].some(target => target?.c.copies?.length);\n\tconst generated = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component, hostCallbacks, valueCopies, transferredInputs, anchoredResults, receiverExports, callbackResultAnchors });\n\tconst p = generated.values.prefix;\n",
+          "previous": "",
+          "start": 3664
+        },
+        {
+          "current": "\tif((target === \"cpp\" && !cpp) || (cpp && !hostCallbacks && !receiverExports && !callbackResultAnchors && !transferredInputs) || canonicalJson(adapter.cppValues ?? null) !== canonicalJson(cpp?.contract ?? null))\n",
+          "previous": "\tif((target === \"cpp\" && !cpp) || (cpp && !hostCallbacks && !receiverExports && !callbackResultAnchors) || canonicalJson(adapter.cppValues ?? null) !== canonicalJson(cpp?.contract ?? null))\n",
+          "start": 4395
+        }
+      ],
+      "path": "src/release/owned-c-package.mjs",
+      "previousCommit": "8722c9ee9b25257ea132ed1be7310a833ede9893",
+      "previousSha256": "1ee621075db2d4e2713f26bc4001b4c9c77bf95ffb4416aed33e1b1cfcedf9ba"
+    },
+    {
+      "currentCommit": "06f7c43bc5fb87d2acd22dc866ba7d034bb148c8",
+      "currentSha256": "784c24993962aba1849b298027d3e48ac60806d259d14075dbe325efd7bf1c51",
+      "edits": [
+        {
+          "current": "import { ownedAggregateReviewedIr, ownedSubtypePackageReviewedIr } from \"./helpers/owned-aggregate-fixture.mjs\";\n",
+          "previous": "import { ownedAggregateReviewedIr } from \"./helpers/owned-aggregate-fixture.mjs\";\n",
+          "start": 526
+        },
+        {
+          "current": "\tawait runCopied(\"/usr/bin/c++\", [\"-std=c++20\", \"-Wall\", \"-Wextra\", \"-Werror\", \"-pthread\", \"-I\", \"include\", \"-fsyntax-only\", \"consumer.cpp\"], directory, { PATH: \"/usr/bin:/bin\" });\n});\n\ntest(\"C++ snapshots transferred owned Subtype aggregates without callback support\", async t => {\n\tconst ir = ownedSubtypePackageReviewedIr(), before = structuredClone(ir);\n\tconst generated = generateOwnedCppPackage(ir, {\n\t\ttransferredInputs: true, anchoredResults: true, hostCallbacks: false\n\t});\n\tassert.deepEqual(ir, before);\n\tassert.equal(generated.c.callbacks.length, 0);\n\tassert.ok(generated.c.copies?.some(copy => copy.id === \"lean:Owned.Bundle\"));\n\tassert.doesNotMatch(generated.header, /_host\\b/u);\n\tassert.match(generated.header, /transfer_record\\(Bundle&& a0\\)/u);\n\tconst validation = generated.header.indexOf(\"owned_check3(a0\");\n\tconst arm = generated.header.indexOf(\"moves.arm();\", validation);\n\tassert.ok(validation >= 0 && arm > validation, \"validation precedes transfer arming\");\n\tconst reversed = structuredClone(ir); reversed.types.reverse();\n\tassert.deepEqual(generateOwnedCppPackage(reversed, {\n\t\ttransferredInputs: true, anchoredResults: true, hostCallbacks: false\n\t}).files, generated.files);\n\tconst directory = await mkdtemp(join(tmpdir(), \"lean-bridge-cpp-subtype-transfer-\"));\n\tt.after(() => rm(directory, { recursive: true, force: true }));\n\tawait writeHeaders(directory, generated);\n\tawait saveLakeFile(directory, \"consumer.cpp\", `#include \"owned_subtypes.hpp\"\n#include <utility>\nnamespace api = lean_bridge::owned_subtypes;\nvoid consume(api::Bundle value) { (void)api::transfer_record(std::move(value)); }\n`);\n",
+          "previous": "",
+          "start": 2526
+        }
+      ],
+      "path": "tests/owned-cpp-transfers.test.mjs",
+      "previousCommit": "8722c9ee9b25257ea132ed1be7310a833ede9893",
+      "previousSha256": "146bca45325d915b2a987485f48fedac31df6abaabd913e9e4ffc8fd2c9b07ca"
+    },
+    {
+      "currentCommit": "06f7c43bc5fb87d2acd22dc866ba7d034bb148c8",
+      "currentSha256": "812ba894933eec03bd45a898438806549e50cfc4f0cf97ad3fc02271810e04d2",
+      "edits": [
+        {
+          "current": "import { ownedAggregateReviewedIr, ownedSubtypePackageReviewedIr } from \"./helpers/owned-aggregate-fixture.mjs\";\n",
+          "previous": "import { ownedAggregateReviewedIr } from \"./helpers/owned-aggregate-fixture.mjs\";\n",
+          "start": 658
+        },
+        {
+          "current": "\tconst refined = generateOwnedPythonConversions(ownedSubtypePackageReviewedIr(), {\n\t\ttransferredInputs: true, anchoredResults: true, hostCallbacks: false\n\t});\n\tassert.ok(refined.c.copies?.some(copy => copy.id === \"lean:Owned.Bundle\"));\n\tassert.equal(refined.c.callbacks.length, 0);\n",
+          "previous": "",
+          "start": 2604
+        }
+      ],
+      "path": "tests/owned-python-transfers.test.mjs",
+      "previousCommit": "8722c9ee9b25257ea132ed1be7310a833ede9893",
+      "previousSha256": "6aacb013feacfbe77d7e3d4f8c78428e93c0f4f275e2f80c1d8877fd5e0c3c6f"
+    },
+    {
+      "currentCommit": "06f7c43bc5fb87d2acd22dc866ba7d034bb148c8",
+      "currentSha256": "08e63daba0a8b868520d48e8b81c07589c02e273cfa9110d15a5be13bc8f8016",
+      "edits": [
+        {
+          "current": "import { ownedAggregateReviewedIr, ownedSubtypePackageReviewedIr } from \"./helpers/owned-aggregate-fixture.mjs\";\n",
+          "previous": "import { ownedAggregateReviewedIr } from \"./helpers/owned-aggregate-fixture.mjs\";\n",
+          "start": 475
+        },
+        {
+          "current": "\tconst refined = generateOwnedRustCallables(ownedSubtypePackageReviewedIr(), {\n\t\ttransferredInputs: true, anchoredResults: true, hostCallbacks: false\n\t});\n\tassert.ok(refined.c.copies?.some(copy => copy.id === \"lean:Owned.Bundle\"));\n\tassert.equal(refined.c.callbacks.length, 0);\n",
+          "previous": "",
+          "start": 2086
+        }
+      ],
+      "path": "tests/owned-rust-transfers.test.mjs",
+      "previousCommit": "8722c9ee9b25257ea132ed1be7310a833ede9893",
+      "previousSha256": "da3de5a1c00d25454355622bed7c87a9216fa96b1bbda74de953632e99e49296"
+    }
+  ],
+  "implementationCommit": "6e5fb4c867be17d12c156619b4281e986a9f2642",
+  "integrationUpdates": [
+    {
+      "currentSha256": "06b54d36ef9d74f5f4b8f1d09d815f03cbfdf31215cc9509425e61a716c9ae47",
+      "edits": [
+        {
+          "current": "import { beforeOwnedTransferCopyReplayRepairSource, ownedTransferCopyReplayRepairNormalizationPaths } from \"./owned-transfer-copy-replay-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...ownedTransferCopyReplayRepairNormalizationPaths\n\t, ...ownedSubtypeWasmTransferFixtureNormalizationPaths\n",
+          "previous": "\t...ownedSubtypeWasmTransferFixtureNormalizationPaths\n",
+          "start": 170116
+        },
+        {
+          "current": "\tconst ownedTransferCopyReplayRepair\n\t\t= beforeOwnedTransferCopyReplayRepairSource(path, text, expected);\n\tif(sha256(ownedTransferCopyReplayRepair) === expected)\n\t\treturn ownedTransferCopyReplayRepair;\n\ttext = ownedTransferCopyReplayRepair;\n",
+          "previous": "",
+          "start": 209379
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "0633fa972c80aaad483921fa5fcdafaca56a742c6dd3e9c4d57ecddfde9d4d5d"
+    },
+    {
+      "currentSha256": "a0872ba20f6eb0e66e45b14af7815dfbeac1e475b3b8bc091b79e64c74f5d193",
+      "edits": [
+        {
+          "current": "import \"./helpers/owned-transfer-copy-replay-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 1606
+        }
+      ],
+      "path": "tests/owned-aggregate-model.test.mjs",
+      "previousSha256": "e779e73cff8dd123bfc6634bddf43f41b9a10cd4f4d50fc34bc5ec67e84ad3db"
+    }
+  ],
+  "milestone": "owned-transfer-copy-replay-repair-source-v1",
+  "nativeFollowupCommit": "308fc6a50dfb37e00e2f97f61c2a7d43efdb68c5",
+  "predecessorCommit": "91516a2d4f6894d4b2537dd281b0a1d53309ec5c",
+  "schemaVersion": 1,
+  "scope": "Authenticate frozen owned JavaScript and PHP-Wasm evidence through the complete history hub, replay byte receipts at their recorded generator epoch, and restore the omitted transfer-copy and owned-Subtype source transitions exposed by the full historical walk without rewriting evidence.",
+  "updates": [
+    {
+      "currentSha256": "54273e98b2f682f913227956347182199409ef8b84f2840d691d9dba6614f59b",
+      "edits": [
+        {
+          "current": "import { readFileSync } from \"node:fs\";\nimport { beforeFinRefinementSource } from \"./fin-refinement-source-history.mjs\";\nimport {\n\tbeforePhpWasmCorpusPartitionSource\n\t, phpWasmCorpusPartitionHistoryPath\n} from \"./php-wasm-corpus-partition-history.mjs\";\n",
+          "previous": "import { beforePhpWasmCorpusPartitionSource } from \"./php-wasm-corpus-partition-history.mjs\";\n",
+          "start": 141
+        },
+        {
+          "current": "const workflowPath = \".github/workflows/consumer-matrix.yml\";\nlet partitionWorkflowSha256;\n\nconst partitionWorkflowDigest = () => partitionWorkflowSha256 ??= JSON.parse(\n\treadFileSync(phpWasmCorpusPartitionHistoryPath, \"utf8\")\n).updates.find(update => update.path === workflowPath).currentSha256;\n",
+          "previous": "",
+          "start": 1531
+        },
+        {
+          "current": "\t// Later workflow shards retain independent current-source gates. Reconstruct\n\t// this checker's authenticated partition milestone before reversing its one\n\t// local transition, rather than applying a 2026-10-14 reader to live bytes.\n\tworkflow = beforeFinRefinementSource(\n\t\tworkflowPath, workflow, partitionWorkflowDigest()\n\t);\n\tworkflow = beforePhpWasmCorpusPartitionSource(workflowPath, workflow);\n",
+          "previous": "\t// The partition has independent current-source gates; retain this exact historical ownership contract.\n\tworkflow = beforePhpWasmCorpusPartitionSource(\".github/workflows/consumer-matrix.yml\", workflow);\n",
+          "start": 2033
+        }
+      ],
+      "path": "tests/helpers/owned-php-wasm-ci.mjs",
+      "previousSha256": "6ed2b61ed28ddb6101d8dccf9e88bcdb449bd0038d4db30565298f3eea894f7a"
+    },
+    {
+      "currentSha256": "9d7755e6d81e7fa0792dc5eba820e0a0814d0b4c4deb57c33084640d9ade7262",
+      "edits": [
+        {
+          "current": "import { execFileSync } from \"node:child_process\";\nimport { mkdtemp, readFile, rm } from \"node:fs/promises\";\nimport { tmpdir } from \"node:os\";\nimport { join } from \"node:path\";\nimport { pathToFileURL } from \"node:url\";\n",
+          "previous": "import { readFile } from \"node:fs/promises\";\n",
+          "start": 142
+        },
+        {
+          "current": "",
+          "previous": "import { createOwnedPhpWasmModel, generateOwnedPhpWasmLeanAdapters } from \"../../src/build/php-wasm-owned-model.mjs\";\nimport { generateCompiledPhpWasmOwned } from \"../../src/build/php-wasm-owned-component.mjs\";\nimport { generateOwnedNativeValueAdapters } from \"../../src/backends/native/owned-value-adapters.mjs\";\nimport { generateOwnedPhpZendExtension } from \"../../src/backends/php/owned-zend-extension.mjs\";\nimport { ownedZendGeneratedProbe } from \"./owned-php-zend-generated-probe.mjs\";\n",
+          "start": 503
+        },
+        {
+          "current": "const evidenceImplementation = \"4c13a5ffdb133cfda841a965e0c858e20300e5ba\";\nlet historicalGenerators;\n\nconst ownedPhpWasmHistoricalGenerators = () => historicalGenerators ??= (async () => {\n\tconst directory = await mkdtemp(join(\n\t\ttmpdir(), \"lean-owned-php-wasm-generators-\"\n\t));\n\ttry\n\t{\n\t\tconst archive = execFileSync(\"git\", [\"archive\", \"--format=tar\"\n\t\t\t, evidenceImplementation, \"src\"\n\t\t\t, \"tests/helpers/owned-php-zend-generated-probe.mjs\"\n\t\t\t, \"tests/helpers/owned-php-zend-output-probe.mjs\"\n\t\t], { maxBuffer: 512 * 1024 * 1024 });\n\t\texecFileSync(\"tar\", [\"-xf\", \"-\", \"-C\", directory], {\n\t\t\tinput: archive, maxBuffer: 512 * 1024 * 1024\n\t\t});\n\t\tconst modules = await Promise.all([\n\t\t\t\"src/analyze/semantic-model.mjs\"\n\t\t\t, \"src/build/php-wasm-owned-model.mjs\"\n\t\t\t, \"src/build/php-wasm-owned-component.mjs\"\n\t\t\t, \"src/backends/native/owned-value-adapters.mjs\"\n\t\t\t, \"src/backends/php/owned-zend-extension.mjs\"\n\t\t\t, \"tests/helpers/owned-php-zend-generated-probe.mjs\"\n\t\t].map(path => import(pathToFileURL(join(directory, path)).href)));\n\t\treturn Object.freeze(Object.assign({}, ...modules));\n\t}\n\tfinally\n\t{\n\t\tawait rm(directory, { recursive: true, force: true });\n\t}\n})();\n",
+          "previous": "",
+          "start": 1732
+        },
+        {
+          "current": "\t, sourceApiSha256: sourceApiIdentity(\n\t\tmodel.bindingIr, { ownedGraphs: true }\n\t).sha256\n",
+          "previous": "\t, sourceApiSha256: sourceApiIdentity(model.bindingIr, { ownedGraphs: true }).sha256\n",
+          "start": 3070
+        },
+        {
+          "current": "const packageObservation = async (observation, generators) => {\n",
+          "previous": "const packageObservation = async observation => {\n",
+          "start": 5708
+        },
+        {
+          "current": "\tconst model = generators.createOwnedPhpWasmModel(observation.inputs);\n\tconst adapters = generators.generateOwnedPhpWasmLeanAdapters(model);\n\tconst generated = generators.generateCompiledPhpWasmOwned(\n\t\tmodel, observation.inputs.metadata, adapters\n\t);\n",
+          "previous": "\tconst model = createOwnedPhpWasmModel(observation.inputs), adapters = generateOwnedPhpWasmLeanAdapters(model);\n\tconst generated = generateCompiledPhpWasmOwned(model, observation.inputs.metadata, adapters);\n",
+          "start": 5929
+        },
+        {
+          "current": "\tassert.equal(observation.modelSha256, hash(model));\n\tassert.equal(observation.receipt.modelSha256, hash(model));\n",
+          "previous": "\tassert.equal(observation.modelSha256, hash(model)); assert.equal(observation.receipt.modelSha256, hash(model));\n",
+          "start": 6384
+        },
+        {
+          "current": "\tfor(const [name, file] of Object.entries(record.reportFiles))\n\t{\n\t\tdigest(file.sha256); assert.ok(file.bytes > 0);\n\t\t// packages and multi deliberately omit reconstructible model bodies. The\n\t\t// other retained reports are byte-complete and must still bind exactly to\n\t\t// the immutable file receipt before their semantics are inspected below.\n\t\tif(![\"multi\", \"packages\"].includes(name))\n\t\t{\n\t\t\tconst bytes = canonicalJson(reports[name]);\n\t\t\tassert.equal(Buffer.byteLength(bytes), file.bytes, name);\n\t\t\tassert.equal(sha256(bytes), file.sha256, name);\n\t\t}\n\t}\n",
+          "previous": "\tfor(const file of Object.values(record.reportFiles))\n\t{ digest(file.sha256); assert.ok(file.bytes > 0); }\n",
+          "start": 12496
+        },
+        {
+          "current": "\tconst generators = await ownedPhpWasmHistoricalGenerators();\n",
+          "previous": "",
+          "start": 13381
+        },
+        {
+          "current": "\tfor(const observation of packages.observations)\n\t\tmodels.push(await packageObservation(observation, generators));\n",
+          "previous": "\tfor(const observation of packages.observations) models.push(await packageObservation(observation));\n",
+          "start": 13463
+        },
+        {
+          "current": "\t\t\tassert.equal(model.sourceApiSha256, generators.sourceApiIdentity(\n\t\t\t\tmodels[index].bindingIr, { ownedGraphs: true }\n\t\t\t).sha256);\n",
+          "previous": "\t\t\tassert.equal(model.sourceApiSha256, sourceApiIdentity(models[index].bindingIr, { ownedGraphs: true }).sha256);\n",
+          "start": 14638
+        },
+        {
+          "current": "\t\tconst generated = generators.generateOwnedPhpZendExtension(\n\t\t\tgenerators.generateOwnedNativeValueAdapters(report.inputs)\n\t\t);\n",
+          "previous": "\t\tconst generated = generateOwnedPhpZendExtension(generateOwnedNativeValueAdapters(report.inputs));\n",
+          "start": 16277
+        },
+        {
+          "current": "\t\tassert.equal(report.files[\"extension.c\"], sha256(\n\t\t\tgenerators.ownedZendGeneratedProbe(\n\t\t\t\tgenerated.source, generated.model\n\t\t\t)\n\t\t));\n",
+          "previous": "\t\tassert.equal(report.files[\"extension.c\"], sha256(ownedZendGeneratedProbe(generated.source, generated.model)));\n",
+          "start": 16575
+        }
+      ],
+      "path": "tests/helpers/owned-php-wasm-package-evidence.mjs",
+      "previousSha256": "df0e296c0779de31ed9d493d59d2c2d759eeee5002d55c7b6e240f5dded2689d"
+    },
+    {
+      "currentSha256": "ac46eff9d89986004d4763ca1132efd2f613a009264bff209314a60b2601eff4",
+      "edits": [
+        {
+          "current": "import { ownedJavaScriptNpmHistoricalBytes } from \"./helpers/owned-javascript-npm-source-history.mjs\";\nimport { sourceAtFinHistoryMilestone } from \"./helpers/source-at-fin-history-milestone.mjs\";\n",
+          "previous": "import { beforeOwnedJavaScriptNpm, ownedJavaScriptNpmHistoricalBytes } from \"./helpers/owned-javascript-npm-source-history.mjs\";\n",
+          "start": 518
+        },
+        {
+          "current": "const historicalSource = (path, expected, reader) =>\n\tsourceAtFinHistoryMilestone(\n\t\tpath, expected, (candidate, source, digest) => {\n\t\t\tconst restored = reader(candidate, Buffer.from(source), digest);\n\t\t\treturn Buffer.isBuffer(restored) ? restored.toString(\"utf8\") : restored;\n\t\t}\n\t);\n",
+          "previous": "",
+          "start": 1186
+        },
+        {
+          "current": "\tfor(const [path, hash] of Object.entries(record.sources)) assert.equal(\n\t\tsha256(await historicalSource(\n\t\t\tpath, hash, ownedJavaScriptNpmHistoricalBytes)), hash, path);\n",
+          "previous": "\tfor(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(ownedJavaScriptNpmHistoricalBytes(path, await readFile(path), hash)), hash, path);\n",
+          "start": 3519
+        },
+        {
+          "current": "\t\tconst current = await historicalSource(update.path\n\t\t\t, update.currentSha256, ownedJavaScriptNpmHistoricalBytes);\n\t\tconst prior = reverseOwnedJavaScriptWasmUpdate(current, update);\n",
+          "previous": "\t\tconst current = beforeOwnedJavaScriptNpm(update.path, await readFile(update.path, \"utf8\"), update.currentSha256), prior = beforeOwnedJavaScriptWasm(update.path, current);\n",
+          "start": 4039
+        },
+        {
+          "current": "\t\tassert.equal(beforeOwnedJavaScriptWasm(\n\t\t\tupdate.path, prior, update.previousSha256), prior);\n",
+          "previous": "\t\tassert.equal(beforeOwnedJavaScriptWasm(update.path, prior), prior);\n",
+          "start": 4289
+        },
+        {
+          "current": "\tconst current = await historicalSource(inventoryPath\n\t\t, record.sources[inventoryPath], ownedJavaScriptNpmHistoricalBytes);\n\tconst inventoryUpdate = record.updates.find(\n\t\tupdate => update.path === inventoryPath);\n\tassert.ok(inventoryUpdate);\n\tconst prior = JSON.parse(reverseOwnedJavaScriptWasmUpdate(\n\t\tcurrent, inventoryUpdate));\n",
+          "previous": "\tconst current = ownedJavaScriptNpmHistoricalBytes(inventoryPath, await readFile(inventoryPath)\n\t\t, record.sources[inventoryPath]).toString(\"utf8\");\n\tconst prior = JSON.parse(beforeOwnedJavaScriptWasm(\"docs/type-surface.v1.json\", current));\n",
+          "start": 5228
+        }
+      ],
+      "path": "tests/owned-javascript-wasm-evidence.test.mjs",
+      "previousSha256": "8c87f5a09577dfd28657fa14f2ed1e29bf7584d8396ff9abda72323460517d6d"
+    },
+    {
+      "currentSha256": "3a355cbf63a029931349463081956e1322db03b0b1e081b83e7fafb428c4f349",
+      "edits": [
+        {
+          "current": "import { ownedJavaScriptWasmHistoricalBytes } from \"./helpers/owned-javascript-wasm-source-history.mjs\";\nimport { sourceAtFinHistoryMilestone } from \"./helpers/source-at-fin-history-milestone.mjs\";\n",
+          "previous": "import { beforeOwnedJavaScriptWasm, ownedJavaScriptWasmHistoricalBytes } from \"./helpers/owned-javascript-wasm-source-history.mjs\";\n",
+          "start": 278
+        },
+        {
+          "current": "const historicalSource = (path, expected, reader) =>\n\tsourceAtFinHistoryMilestone(\n\t\tpath, expected, (candidate, source, digest) => {\n\t\t\tconst restored = reader(candidate, Buffer.from(source), digest);\n\t\t\treturn Buffer.isBuffer(restored) ? restored.toString(\"utf8\") : restored;\n\t\t}\n\t);\n",
+          "previous": "",
+          "start": 1413
+        },
+        {
+          "current": "\tfor(const [path, hash] of Object.entries(record.sources)) assert.equal(\n\t\tsha256(await historicalSource(\n\t\t\tpath, hash, ownedJavaScriptWasmHistoricalBytes)), hash, path);\n",
+          "previous": "\tfor(const [path, hash] of Object.entries(record.sources))\n\t\tassert.equal(sha256(ownedJavaScriptWasmHistoricalBytes(path, await readFile(path), hash)), hash, path);\n",
+          "start": 4459
+        },
+        {
+          "current": "\t\tconst current = await historicalSource(update.path\n\t\t\t, update.currentSha256, ownedJavaScriptWasmHistoricalBytes);\n\t\tconst prior = reverseOwnedPhpWasmUpdate(current, update);\n",
+          "previous": "\t\tconst current = beforeOwnedJavaScriptWasm(update.path, await readFile(update.path, \"utf8\"), update.currentSha256);\n\t\tconst prior = beforeOwnedPhpWasmPackages(update.path, current);\n",
+          "start": 4966
+        },
+        {
+          "current": "\t\tassert.equal(beforeOwnedPhpWasmPackages(\n\t\t\tupdate.path, prior, update.previousSha256), prior);\n",
+          "previous": "\t\tassert.equal(beforeOwnedPhpWasmPackages(update.path, prior), prior);\n",
+          "start": 5210
+        },
+        {
+          "current": "\tconst current = await historicalSource(inventoryPath\n\t\t, record.sources[inventoryPath], ownedJavaScriptWasmHistoricalBytes);\n\tconst inventoryUpdate = record.updates.find(\n\t\tupdate => update.path === inventoryPath);\n\tassert.ok(inventoryUpdate);\n\tconst prior = JSON.parse(reverseOwnedPhpWasmUpdate(\n\t\tcurrent, inventoryUpdate));\n",
+          "previous": "\tconst current = ownedJavaScriptWasmHistoricalBytes(inventoryPath, await readFile(inventoryPath)\n\t\t, record.sources[inventoryPath]).toString(\"utf8\");\n\tconst prior = JSON.parse(beforeOwnedPhpWasmPackages(\"docs/type-surface.v1.json\", current));\n",
+          "start": 6110
+        }
+      ],
+      "path": "tests/owned-php-wasm-evidence.test.mjs",
+      "previousSha256": "b57fbf52ebb728888e3381e654fa42cc5641e6f779239dd686ac65f196ff7047"
+    }
+  ]
+}
