@@ -40,6 +40,8 @@ import { beforeZeroPayloadDotnetArchiveGapSource, zeroPayloadDotnetArchiveGapNor
 import { beforeCoreHistoryEndpointIntegrationSource, coreHistoryEndpointIntegrationNormalizationPaths } from "./core-history-endpoint-integration-source-history.mjs";
 import { beforeOwnedProducerReplaySource, ownedProducerReplayNormalizationPaths } from "./owned-producer-replay-source-history.mjs";
 import { beforeOwnedHistoryFollowupSource, ownedHistoryFollowupNormalizationPaths } from "./owned-history-followup-source-history.mjs";
+import { beforePerlCallbackContractGapSource, perlCallbackContractGapNormalizationPaths } from "./perl-callback-contract-gap-source-history.mjs";
+import { beforeMilestoneControlRepairSource, milestoneControlRepairNormalizationPaths } from "./milestone-control-repair-source-history.mjs";
 import { beforeCoreEvidenceMemoryRepairSource, coreEvidenceMemoryRepairNormalizationPaths } from "./core-evidence-memory-repair-source-history.mjs";
 import { beforeValueIndexPromotionMilestoneRepairSource, valueIndexPromotionMilestoneRepairNormalizationPaths } from "./value-index-promotion-milestone-repair-source-history.mjs";
 import { beforeCoreMilestoneReplayRepairSource, coreMilestoneReplayRepairNormalizationPaths } from "./core-milestone-replay-repair-source-history.mjs";
@@ -2133,7 +2135,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...ownedHistoryFollowupNormalizationPaths
+	...milestoneControlRepairNormalizationPaths
+	, ...perlCallbackContractGapNormalizationPaths
+	, ...ownedHistoryFollowupNormalizationPaths
 	, ...ownedProducerReplayNormalizationPaths
 	, ...coreHistoryEndpointIntegrationNormalizationPaths
 	, ...zeroPayloadDotnetArchiveGapNormalizationPaths
@@ -3010,6 +3014,15 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
 	let stage
+		= beforeMilestoneControlRepairSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforePerlCallbackContractGapSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage
 		= beforeOwnedHistoryFollowupSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;

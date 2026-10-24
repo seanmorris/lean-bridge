@@ -1,0 +1,146 @@
+{
+  "additions": [
+    {
+      "currentSha256": "d1e1d93a274ea298668e11cf85fb4bc68837ff23bd743dfce8482d38b10a5cde",
+      "path": "docs/evidence/perl-callback-contract-gap-source-history-20261024.json"
+    },
+    {
+      "currentSha256": "5ade8b07199f846b92c101d43592c7eef0f4675fe98d197cfe723c8b264d0c5a",
+      "path": "scripts/update-perl-callback-contract-gap-source-history.mjs"
+    },
+    {
+      "currentSha256": "dd150f09850d46ed9fdec02dffa43940c86cc8b9c4f00644012a0af9d98b55fc",
+      "path": "tests/helpers/perl-callback-contract-gap-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "bc693ecfbe6e528ec7a180bbf2ac88b3e854089d4400ce6709e9caa2e6fdf3ba",
+      "path": "tests/helpers/perl-callback-contract-gap-source-history.mjs"
+    },
+    {
+      "currentSha256": "175804ec44164895d9bb9bc01401f42347e3a44ed74b7edad1ff07978c3f2cf2",
+      "path": "scripts/update-milestone-control-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "b4ce87331c44b0c9dd9489b858326696315eb5eb289f9a246c7f61a93856c8e0",
+      "path": "tests/helpers/milestone-control-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "071dbaf7728ce420316dba87b52cfa7a118435cc2595955e1dc742c5132eab21",
+      "path": "tests/helpers/milestone-control-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "b5fdb4a3a04b9e20dd4a413284199139a830d207",
+  "implementationCommits": [
+    "016f031cf5a178423f522688c4495aafe7b567c6",
+    "b5fdb4a3a04b9e20dd4a413284199139a830d207"
+  ],
+  "integrationBaseCommit": "b5fdb4a3a04b9e20dd4a413284199139a830d207",
+  "integrationUpdates": [
+    {
+      "currentSha256": "da11d69ed31364b01aa8ab34200a2f115bc908f5a122108db8a70536c4f07122",
+      "edits": [
+        {
+          "current": "import { beforePerlCallbackContractGapSource, perlCallbackContractGapNormalizationPaths } from \"./perl-callback-contract-gap-source-history.mjs\";\nimport { beforeMilestoneControlRepairSource, milestoneControlRepairNormalizationPaths } from \"./milestone-control-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 5423
+        },
+        {
+          "current": "\t...milestoneControlRepairNormalizationPaths\n\t, ...perlCallbackContractGapNormalizationPaths\n\t, ...ownedHistoryFollowupNormalizationPaths\n",
+          "previous": "\t...ownedHistoryFollowupNormalizationPaths\n",
+          "start": 178750
+        },
+        {
+          "current": "\t\t= beforeMilestoneControlRepairSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforePerlCallbackContractGapSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "",
+          "start": 220847
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "75da755256c6eb9ae01773cf76e601d74a0c433a87909bacd0db8698aa2319aa"
+    },
+    {
+      "currentSha256": "6420c87614082a2379abe92d0cc25b289102bf3c4e17ca4ecde0b39eb9126a8c",
+      "edits": [
+        {
+          "current": "import \"./helpers/perl-callback-contract-gap-source-history-tests.mjs\";\nimport \"./helpers/milestone-control-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 3242
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "cd443498e2b861a558e32ebe6cc22e4202da2179fb59e87161e1663361317da0"
+    }
+  ],
+  "milestone": "milestone-control-repair-source-v1",
+  "predecessorCommit": "ffb893c7e1ab6e1b90f5c8aab323c58947dd985c",
+  "schemaVersion": 1,
+  "scope": "Integrate the exact omitted Perl callback contract transition from 18804049, retain current JVM documentation links and scope while authenticating its original three-position row at its promotion milestone, and make the reviewed Fin mismatch controls supply structurally valid Subtype facts at both input and result sites. Refresh exactly six live source pins and preserve every other inventory byte. No original receipt, installed observation, support claim or production acceptance rule changes.",
+  "updates": [
+    {
+      "currentSha256": "f583e257b4ad50a2c75bb9d8534dd02c76f00b51ffae59c64113314ef2da17dd",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"ad91fbd4f78c50fcec012f5458cd38d5392ab131cd2658c1ac6994b62d710e04\"\n",
+          "previous": "          \"sha256\": \"2462c63780a61515874e9efa051e8ce358fc68b4d35d6544e70fdee6f2d67f92\"\n",
+          "start": 25610
+        },
+        {
+          "current": "          \"sha256\": \"ad91fbd4f78c50fcec012f5458cd38d5392ab131cd2658c1ac6994b62d710e04\"\n",
+          "previous": "          \"sha256\": \"2462c63780a61515874e9efa051e8ce358fc68b4d35d6544e70fdee6f2d67f92\"\n",
+          "start": 28981
+        },
+        {
+          "current": "          \"sha256\": \"4ea7ce2521340273f1bf6a2cce9ecde54d24e3010f6346ab61dadeb9d39eabb9\"\n",
+          "previous": "          \"sha256\": \"67576791547b299f1c45138a49c581668e3ca27d2342b0400e3eb8aceeb89dae\"\n",
+          "start": 11978995
+        },
+        {
+          "current": "          \"sha256\": \"4ea7ce2521340273f1bf6a2cce9ecde54d24e3010f6346ab61dadeb9d39eabb9\"\n",
+          "previous": "          \"sha256\": \"67576791547b299f1c45138a49c581668e3ca27d2342b0400e3eb8aceeb89dae\"\n",
+          "start": 12147236
+        },
+        {
+          "current": "          \"sha256\": \"4ea7ce2521340273f1bf6a2cce9ecde54d24e3010f6346ab61dadeb9d39eabb9\"\n",
+          "previous": "          \"sha256\": \"67576791547b299f1c45138a49c581668e3ca27d2342b0400e3eb8aceeb89dae\"\n",
+          "start": 12308391
+        },
+        {
+          "current": "          \"sha256\": \"4ea7ce2521340273f1bf6a2cce9ecde54d24e3010f6346ab61dadeb9d39eabb9\"\n",
+          "previous": "          \"sha256\": \"67576791547b299f1c45138a49c581668e3ca27d2342b0400e3eb8aceeb89dae\"\n",
+          "start": 12477088
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "9e900631a144858000bcd91d910200151e1c623aba505be4c0a21719ecbc51e0"
+    },
+    {
+      "currentSha256": "4ea7ce2521340273f1bf6a2cce9ecde54d24e3010f6346ab61dadeb9d39eabb9",
+      "edits": [
+        {
+          "current": "\t\t// Later callback promotions broaden the live row. Check this milestone's\n\t\t// exact three-position claim against its authenticated documentation.\n\t\tconst milestone = sourceAtHistoryMilestone(\n\t\t\tnestedCheckedRecordJvmPromotionHistoryPath, path);\n\t\tconst row = milestone.split(\"\\n\").find(line => line.startsWith(\"| `Checked record\"));\n",
+          "previous": "\t\tconst row = guide.split(\"\\n\").find(line => line.startsWith(\"| `Checked record\"));\n",
+          "start": 10749
+        },
+        {
+          "current": "\t\tassert.ok(guide.includes(nestedCheckedRecordJvmConversion), path);\n",
+          "previous": "",
+          "start": 11236
+        }
+      ],
+      "path": "tests/helpers/nested-checked-record-jvm-promotion-tests.mjs",
+      "previousSha256": "67576791547b299f1c45138a49c581668e3ca27d2342b0400e3eb8aceeb89dae"
+    },
+    {
+      "currentSha256": "ad91fbd4f78c50fcec012f5458cd38d5392ab131cd2658c1ac6994b62d710e04",
+      "edits": [
+        {
+          "current": "\tconst producedSubtype = { ...subtype, predicate: { kind: \"subtype\", constructor: null } };\n\t// Both compiler facts are structurally valid. Fin review must reject the\n\t// different predicate at either site rather than failing type validation.\n\tfor(const [parameter, result] of [[subtype, nativeFin(\"10\")], [nativeFin(\"10\"), producedSubtype]])\n\t\tassert.throws(() => createNativeModel(nativeFixture(document(), parameter, result), { refinements: true })\n\t\t\t, { code: \"reviewed-ir-source-mismatch\" });\n",
+          "previous": "\tassert.throws(() => createNativeModel(nativeFixture(document(), subtype), { refinements: true }), { code: \"reviewed-ir-source-mismatch\" });\n",
+          "start": 13707
+        }
+      ],
+      "path": "tests/helpers/reviewed-fin-tests.mjs",
+      "previousSha256": "2462c63780a61515874e9efa051e8ce358fc68b4d35d6544e70fdee6f2d67f92"
+    }
+  ]
+}
