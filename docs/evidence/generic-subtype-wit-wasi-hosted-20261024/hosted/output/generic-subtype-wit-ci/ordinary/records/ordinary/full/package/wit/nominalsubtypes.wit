@@ -1,0 +1,91 @@
+package lean-bridge:nominalsubtypes@1.0.0;
+
+interface native {
+  type bridge-value-0 = list<u32>;
+  record generic-nat { value: bridge-value-0, marker: bridge-value-0 }
+  record envelope { payload: bridge-value-0, digit: bridge-value-0 }
+  type bridge-value-3 = option<envelope>;
+  type bridge-value-4 = list<bridge-value-3>;
+  type bridge-value-5 = list<bridge-value-0>;
+  type bridge-value-6 = result<bridge-value-0, bridge-value-0>;
+  type bridge-value-7 = option<bridge-value-6>;
+  type bridge-value-8 = list<bridge-value-7>;
+  record event-box-fields { value: envelope }
+  record event-choices-fields { values: bridge-value-8 }
+  variant event { empty, box(event-box-fields), choices(event-choices-fields) }
+  type envelope-alias = envelope;
+  type bridge-alias-value-16 = option<envelope-alias>;
+  type bridge-alias-value-17 = list<bridge-alias-value-16>;
+  record alias-pair { left: bridge-alias-value-17, right: bridge-alias-value-17 }
+  type bridge-value-11 = list<bridge-value-0>;
+  record pair { left: envelope, right: envelope }
+  type bridge-value-13 = option<bridge-value-0>;
+  type bridge-value-14 = tuple<bridge-value-0, bridge-value-0>;
+  echo-generic-first: func(arg0: generic-nat) -> generic-nat;
+  echo-generic-second: func(arg0: generic-nat) -> generic-nat;
+  generic-use: func(arg0: generic-nat) -> bridge-value-0;
+  aliases: func(arg0: bridge-alias-value-17, arg1: bridge-alias-value-17) -> bridge-value-0;
+  array-values: func(arg0: bridge-value-0) -> bridge-value-5;
+  branch: func(arg0: bridge-value-0) -> bridge-value-6;
+  combine: func(arg0: envelope, arg1: envelope) -> bridge-value-0;
+  echo: func(arg0: envelope) -> envelope;
+  echo-event: func(arg0: event) -> event;
+  echo-groups: func(arg0: bridge-alias-value-17) -> bridge-alias-value-17;
+  echo-pair: func(arg0: alias-pair) -> alias-pair;
+  event-choices: func(arg0: bridge-value-0) -> event;
+  event-empty: func(arg0: bridge-value-0) -> event;
+  event-first: func(arg0: event) -> bridge-value-0;
+  event-second: func(arg0: event) -> bridge-value-0;
+  event-value: func(arg0: bridge-value-0) -> event;
+  first: func(arg0: envelope) -> bridge-value-0;
+  group-values: func(arg0: bridge-value-0) -> bridge-alias-value-17;
+  inspect-alias-pair: func(arg0: alias-pair) -> bridge-value-0;
+  list-values: func(arg0: bridge-value-0) -> bridge-value-11;
+  nested: func(arg0: pair) -> bridge-value-0;
+  no-items: func(arg0: bridge-value-0) -> bridge-value-5;
+  optional: func(arg0: bridge-value-0) -> bridge-value-13;
+  pair-values: func(arg0: bridge-value-0) -> alias-pair;
+  plain-fin: func(arg0: bridge-value-0) -> bridge-value-0;
+  produce-envelope: func(arg0: bridge-value-0) -> envelope;
+  product: func(arg0: bridge-value-0) -> bridge-value-14;
+  scalar: func(arg0: bridge-value-0) -> bridge-value-0;
+  second: func(arg0: envelope) -> bridge-value-0;
+}
+
+interface api {
+  use native.{bridge-value-0, generic-nat, envelope, bridge-value-3, bridge-value-4, bridge-value-5, bridge-value-6, bridge-value-7, bridge-value-8, event-box-fields, event-choices-fields, event, envelope-alias, bridge-alias-value-16, bridge-alias-value-17, alias-pair, bridge-value-11, pair, bridge-value-13, bridge-value-14};
+  echo-generic-first: func(arg0: generic-nat) -> generic-nat;
+  echo-generic-second: func(arg0: generic-nat) -> generic-nat;
+  generic-use: func(arg0: generic-nat) -> bridge-value-0;
+  aliases: func(arg0: bridge-alias-value-17, arg1: bridge-alias-value-17) -> bridge-value-0;
+  array-values: func(arg0: bridge-value-0) -> bridge-value-5;
+  branch: func(arg0: bridge-value-0) -> bridge-value-6;
+  combine: func(arg0: envelope, arg1: envelope) -> bridge-value-0;
+  echo: func(arg0: envelope) -> envelope;
+  echo-event: func(arg0: event) -> event;
+  echo-groups: func(arg0: bridge-alias-value-17) -> bridge-alias-value-17;
+  echo-pair: func(arg0: alias-pair) -> alias-pair;
+  event-choices: func(arg0: bridge-value-0) -> event;
+  event-empty: func(arg0: bridge-value-0) -> event;
+  event-first: func(arg0: event) -> bridge-value-0;
+  event-second: func(arg0: event) -> bridge-value-0;
+  event-value: func(arg0: bridge-value-0) -> event;
+  first: func(arg0: envelope) -> bridge-value-0;
+  group-values: func(arg0: bridge-value-0) -> bridge-alias-value-17;
+  inspect-alias-pair: func(arg0: alias-pair) -> bridge-value-0;
+  list-values: func(arg0: bridge-value-0) -> bridge-value-11;
+  nested: func(arg0: pair) -> bridge-value-0;
+  no-items: func(arg0: bridge-value-0) -> bridge-value-5;
+  optional: func(arg0: bridge-value-0) -> bridge-value-13;
+  pair-values: func(arg0: bridge-value-0) -> alias-pair;
+  plain-fin: func(arg0: bridge-value-0) -> bridge-value-0;
+  produce-envelope: func(arg0: bridge-value-0) -> envelope;
+  product: func(arg0: bridge-value-0) -> bridge-value-14;
+  scalar: func(arg0: bridge-value-0) -> bridge-value-0;
+  second: func(arg0: envelope) -> bridge-value-0;
+}
+
+world nominalsubtypes {
+  import native;
+  export api;
+}
