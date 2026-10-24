@@ -4110,6 +4110,15 @@ node scripts/promote-callback-checked-record-evidence.mjs
 
 ### Closed generic-Subtype archive references
 
+The [published generic-Subtype matrix](../evidence/generic-subtype-promotion-20261023.md)
+binds twelve archives to 32 field cells across sixteen consumer profiles and
+both author routes. Check today's inventory, all fourteen guides and generated
+references with:
+
+```sh
+node --max-old-space-size=512 --test tests/helpers/generic-subtype-published-matrix-tests.mjs
+```
+
 Generic-Subtype promotion replays all twelve retained lanes serially before
 constructing support references. Each reference pins the complete archive index,
 the three original GitHub API records, every ZIP part and the live validator
@@ -4132,9 +4141,10 @@ the exact field-cell and documentation update, and the required hosted gates.
 The promotion command validates the inventory one complete evidence entry at a
 time. It keeps a semantic projection for rendering, but preserves every old
 evidence byte in the staged inventory. It renders the manual prose and generated
-tables together before changing any repository file. To replay all twelve
-archives and validate the complete staged update without installing it, start
-from a clean tracked tree with every archive materialized and run:
+tables together before changing any repository file. The one-time promotion
+command refuses an already-promoted inventory. When preparing a promotion from
+an unpromoted baseline, start from a clean tracked tree with every archive
+materialized. Replay all twelve archives and stage without installing with:
 
 ```sh
 node --max-old-space-size=512 scripts/promote-generic-subtype-evidence.mjs --check

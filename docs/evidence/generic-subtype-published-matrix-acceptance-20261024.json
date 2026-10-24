@@ -1,0 +1,380 @@
+{
+  "schemaVersion": 1,
+  "kind": "generic-subtype-published-matrix-acceptance-v1",
+  "sourceCommit": "10cc8859e6ef7124c52b147aebcdae92e69a2957",
+  "command": "node --max-old-space-size=512 scripts/promote-generic-subtype-evidence.mjs",
+  "localLimits": {
+    "cpus": 1,
+    "nice": 15,
+    "maxOldSpaceMiB": 512
+  },
+  "before": {
+    "bytes": 101777720,
+    "sha256": "22a82b2170e67f1b404ba865b218b54d8a2d85295e418bc3953a97e347b61fc7"
+  },
+  "staged": {
+    "bytes": 101896921,
+    "sha256": "4fc406e01220b9f2b5d28ed8a034fcfbfcbf54f3a3e1d6a1798dfe282575c986"
+  },
+  "published": {
+    "bytes": 101896921,
+    "sha256": "504880b9a31eccb1132de1303f24669c9b4d34da032f5ed4f96534e54e922cd5"
+  },
+  "coverage": {
+    "archives": 12,
+    "profiles": 16,
+    "cells": 32,
+    "changedObservations": 22,
+    "totalObservations": 655,
+    "evidenceBefore": 857,
+    "evidenceAfter": 869,
+    "retainedFiles": 22143,
+    "projectedFiles": 163
+  },
+  "archives": [
+    {
+      "lane": "npm-ordinary",
+      "profiles": [
+        "node-javascript",
+        "node-typescript",
+        "browser-javascript",
+        "browser-react",
+        "browser-worker"
+      ],
+      "routes": [
+        "ordinary"
+      ],
+      "producerCommit": "23ae28e37befcdf245e94f5f841ed50254fc869c",
+      "index": {
+        "path": "docs/evidence/generic-subtype-npm-ordinary-hosted-20261023/index.json",
+        "bytes": 689320,
+        "sha256": "5fcb0771a183c8912c5fc4d7d9b70ef7307c540f5264b039d8b32cd883f5f370"
+      },
+      "runId": 39965390162,
+      "jobId": 120453791022,
+      "artifactId": 12514092250,
+      "retainedFiles": 1734
+    },
+    {
+      "lane": "npm-reviewed",
+      "profiles": [
+        "node-javascript",
+        "node-typescript",
+        "browser-javascript",
+        "browser-react",
+        "browser-worker"
+      ],
+      "routes": [
+        "reviewed"
+      ],
+      "producerCommit": "23ae28e37befcdf245e94f5f841ed50254fc869c",
+      "index": {
+        "path": "docs/evidence/generic-subtype-npm-reviewed-hosted-20261023/index.json",
+        "bytes": 660165,
+        "sha256": "644327c9eca507fd2837ef7ef6bb6a609e164c872c5cbd345fdc8068eef95677"
+      },
+      "runId": 39965390162,
+      "jobId": 120453790553,
+      "artifactId": 12511516203,
+      "retainedFiles": 1734
+    },
+    {
+      "lane": "foundation",
+      "profiles": [],
+      "routes": [
+        "ordinary",
+        "reviewed"
+      ],
+      "producerCommit": "23ae28e37befcdf245e94f5f841ed50254fc869c",
+      "index": {
+        "path": "docs/evidence/generic-subtype-foundation-hosted-20261023/index.json",
+        "bytes": 726437,
+        "sha256": "71ca38b5d3eaa2d20914a8dab479bfccac8c3c337ef7fd2bbbe4cb4e05496b6c"
+      },
+      "runId": 39965392535,
+      "jobId": 120453798327,
+      "artifactId": 12516024335,
+      "retainedFiles": 2010
+    },
+    {
+      "lane": "native",
+      "profiles": [
+        "c",
+        "cpp"
+      ],
+      "routes": [
+        "ordinary",
+        "reviewed"
+      ],
+      "producerCommit": "23ae28e37befcdf245e94f5f841ed50254fc869c",
+      "index": {
+        "path": "docs/evidence/generic-subtype-native-hosted-20261023/index.json",
+        "bytes": 614042,
+        "sha256": "772841cfc5e65b7bfc16cc2cd0d806aaef742d4c176b020635eeb4c5e59d026b"
+      },
+      "runId": 39965392535,
+      "jobId": 120453798597,
+      "artifactId": 12515636019,
+      "retainedFiles": 1766
+    },
+    {
+      "lane": "perl",
+      "profiles": [
+        "perl"
+      ],
+      "routes": [
+        "ordinary",
+        "reviewed"
+      ],
+      "producerCommit": "23ae28e37befcdf245e94f5f841ed50254fc869c",
+      "index": {
+        "path": "docs/evidence/generic-subtype-perl-hosted-20261023/index.json",
+        "bytes": 716363,
+        "sha256": "b0bef68a6b700734efd16b93dd12225f6e366032d98da2cd2e51519003c95911"
+      },
+      "runId": 39965392535,
+      "jobId": 120453798039,
+      "artifactId": 12511212767,
+      "retainedFiles": 1978
+    },
+    {
+      "lane": "python",
+      "profiles": [
+        "python"
+      ],
+      "routes": [
+        "ordinary",
+        "reviewed"
+      ],
+      "producerCommit": "23ae28e37befcdf245e94f5f841ed50254fc869c",
+      "index": {
+        "path": "docs/evidence/generic-subtype-python-hosted-20261023/index.json",
+        "bytes": 653861,
+        "sha256": "acdf759eb36a2c0176bd2aa149a14ab164faec6c1aecda8f7c6ffda34c7f8ef3"
+      },
+      "runId": 39965391657,
+      "jobId": 120453797387,
+      "artifactId": 12516035968,
+      "retainedFiles": 1846
+    },
+    {
+      "lane": "ruby",
+      "profiles": [
+        "ruby"
+      ],
+      "routes": [
+        "ordinary",
+        "reviewed"
+      ],
+      "producerCommit": "23ae28e37befcdf245e94f5f841ed50254fc869c",
+      "index": {
+        "path": "docs/evidence/generic-subtype-ruby-hosted-20261023/index.json",
+        "bytes": 635077,
+        "sha256": "8cbd7df8a5fe1756f95005868762ff5f18ec8e4d2a1404ae6b5f4cb73c751615"
+      },
+      "runId": 39965391657,
+      "jobId": 120453796734,
+      "artifactId": 12511265942,
+      "retainedFiles": 1810
+    },
+    {
+      "lane": "rust",
+      "profiles": [
+        "rust"
+      ],
+      "routes": [
+        "ordinary",
+        "reviewed"
+      ],
+      "producerCommit": "23ae28e37befcdf245e94f5f841ed50254fc869c",
+      "index": {
+        "path": "docs/evidence/generic-subtype-rust-hosted-20261023/index.json",
+        "bytes": 645149,
+        "sha256": "affb8819eaebcb5ce1099ded9fad3f65701f02aab9541d1ca028fe3f1f17095b"
+      },
+      "runId": 39965391657,
+      "jobId": 120453797124,
+      "artifactId": 12514279363,
+      "retainedFiles": 1837
+    },
+    {
+      "lane": "dotnet",
+      "profiles": [
+        "dotnet"
+      ],
+      "routes": [
+        "ordinary",
+        "reviewed"
+      ],
+      "producerCommit": "390ae18d3a2607bc73463767a33fea0cfb9350b0",
+      "index": {
+        "path": "docs/evidence/generic-subtype-dotnet-hosted-20261024/index.json",
+        "bytes": 663417,
+        "sha256": "34e30097433b43562990c23086db27449af1f331115182f5ff98d979f94d2bf1"
+      },
+      "runId": 40047586181,
+      "jobId": 120732735805,
+      "artifactId": 12545556775,
+      "retainedFiles": 1870
+    },
+    {
+      "lane": "jvm",
+      "profiles": [
+        "java",
+        "kotlin"
+      ],
+      "routes": [
+        "ordinary",
+        "reviewed"
+      ],
+      "producerCommit": "390ae18d3a2607bc73463767a33fea0cfb9350b0",
+      "index": {
+        "path": "docs/evidence/generic-subtype-jvm-hosted-20261024/index.json",
+        "bytes": 631432,
+        "sha256": "abed0cf5126bb70b352aeb772ac2f085d1b9b0ce886b210217d2699847eff8b9"
+      },
+      "runId": 40047586181,
+      "jobId": 120732735785,
+      "artifactId": 12543630418,
+      "retainedFiles": 1806
+    },
+    {
+      "lane": "php-native",
+      "profiles": [
+        "php-native"
+      ],
+      "routes": [
+        "ordinary",
+        "reviewed"
+      ],
+      "producerCommit": "390ae18d3a2607bc73463767a33fea0cfb9350b0",
+      "index": {
+        "path": "docs/evidence/generic-subtype-php-native-hosted-20261024/index.json",
+        "bytes": 651948,
+        "sha256": "36715765a38902461f8270a35e8e23307535c4193d3c68644c7f20cd3cfdb9ae"
+      },
+      "runId": 40047586181,
+      "jobId": 120732735793,
+      "artifactId": 12546017784,
+      "retainedFiles": 1850
+    },
+    {
+      "lane": "wit-wasi",
+      "profiles": [
+        "wit-wasi"
+      ],
+      "routes": [
+        "ordinary",
+        "reviewed"
+      ],
+      "producerCommit": "390ae18d3a2607bc73463767a33fea0cfb9350b0",
+      "index": {
+        "path": "docs/evidence/generic-subtype-wit-wasi-hosted-20261024/index.json",
+        "bytes": 674868,
+        "sha256": "3ac222f2bcec706d4e9e531dcda7b8ce8aac2b90adb79c113d2d44721c91a215"
+      },
+      "runId": 40047586181,
+      "jobId": 120732735916,
+      "artifactId": 12544318334,
+      "retainedFiles": 1902
+    }
+  ],
+  "sourcePins": [
+    {
+      "path": "docs/consume/c.md",
+      "currentSha256": "932ba66959bd577f00b329b2589c596ba69269b45dadb754d6fb29053fe25b24",
+      "count": 1,
+      "previousSha256": "d3a4b5e803e616a45272279f08fd20ad26d62c1edd45e1496640391158e48ed8"
+    },
+    {
+      "path": "docs/consume/cpp.md",
+      "currentSha256": "e9910cb2953cc784f7381061e571fe5ca186f05bfd4a9dec882d1f2326cfd715",
+      "count": 1,
+      "previousSha256": "290f12160ecc47a5c7576c3c1e0fcb32bbe513fcf6439bfb04ba03db605dc226"
+    },
+    {
+      "path": "docs/consume/dotnet.md",
+      "currentSha256": "203dbbc63ca4935350adae9bd4249fcbdba0a0c8abda80f3886d2ee171bb184d",
+      "count": 5,
+      "previousSha256": "1901ae9d397d2e86b97a7a971ff934c2cbeb7fa692de67da674a50a17628b52a"
+    },
+    {
+      "path": "docs/consume/java.md",
+      "currentSha256": "03163737fd1229f2be5199655743cabc05dc37655db060596dd1c2fb2d886233",
+      "count": 5,
+      "previousSha256": "19d846902d96414385962ca9ae576b151324bd62183a0d957b134820d2adc079"
+    },
+    {
+      "path": "docs/consume/kotlin.md",
+      "currentSha256": "170fb62db75dc66d32b130af966b0bf2c3756db24ded7764f1a94dd71250dece",
+      "count": 6,
+      "previousSha256": "036587b5be4f107cb1cde06748dd9b40e272fd955b8a1508dc5e592d6001a3ff"
+    },
+    {
+      "path": "docs/consume/perl.md",
+      "currentSha256": "2318e2d83c77b754624b01387c1edde90133498f5b5a112a755e28990b1c929d",
+      "count": 1,
+      "previousSha256": "6427af60a3b07ecbf2c5264de135c50b45c9277e4cbb73a72e3c6f6c9e4855ab"
+    },
+    {
+      "path": "docs/consume/python.md",
+      "currentSha256": "b5550a5e3b1706a4b3bb3d7ee86364e1fd630cc3065a155267cd178dcfd050de",
+      "count": 1,
+      "previousSha256": "6a9dcae8ab71e84ffd4f672dd1cf0284935289725c9c57ae2392a1856e885b9a"
+    },
+    {
+      "path": "docs/consume/ruby.md",
+      "currentSha256": "929347299d8b9c77d68c51d0e4d5fb2b3e11cc3123ccbc81ce4db2967d8726ea",
+      "count": 1,
+      "previousSha256": "683734efbf8660180650f4eef6e4f2f69fa7e5f981166afe0b8965e3fccd1a15"
+    },
+    {
+      "path": "docs/consume/rust.md",
+      "currentSha256": "7e560000ca4c1f6c381ff4fa690cf4a44706fa4408fe7a4d37c9200027ace47a",
+      "count": 1,
+      "previousSha256": "bbc5fa01ae6746756a17bb54fe16c42980ea590abfac5d2ec9cb7e77b0a8b208"
+    },
+    {
+      "path": "docs/consume/wit-wasi.md",
+      "currentSha256": "80ac2db0997df9d6d00748bf3c64f123a1cef1d7bbe14b5716926f1cafed95b6",
+      "count": 2,
+      "previousSha256": "6cbdf1e47494792a2cfd695e01010033fe2fc2061942ff0ca7339f239f401654"
+    },
+    {
+      "path": "docs/contributing/testing.md",
+      "currentSha256": "3f5ec39ca01c9c0ef813ac2517b503146daa062aad49b608df1e3e1a3d875ae5",
+      "count": 11,
+      "previousSha256": "48077b7f415b4391e798bdede3a0201c0f92101037b65f9825a6ee6e7d4497a4"
+    },
+    {
+      "path": "docs/lean/existing-package.md",
+      "currentSha256": "ddcb45ff701b2e1ea398ca40ee5d452db5097c917a560d691bfec44cbc6b3eda",
+      "count": 18,
+      "previousSha256": "7a8f09901de0d46638cb793d86f2bc050d68a8720494631b20d3f0c288a0e4b0"
+    },
+    {
+      "path": "docs/lean/export-decisions.md",
+      "currentSha256": "37d1a95e47bf11aefd561b38554819ff4c8e10465d116f8b0f7dbdaa67f614b3",
+      "count": 22,
+      "previousSha256": "6364b4725e177eaa25079b14f2ffb7b3156f0fb8bb9ed89a67027832554563a7"
+    },
+    {
+      "path": "docs/php.md",
+      "currentSha256": "d1264958fab471cb3e64242ac012d96249cd28349b4ee2e1b4d0460050149efd",
+      "count": 6,
+      "previousSha256": "0ae02f0ef9e568e5bdf469de62b17c0f675333b1c7ea50d86e46d04a21ca0b77"
+    }
+  ],
+  "validation": {
+    "completeArchivesReplayed": true,
+    "semanticDeltaMatchesPromotion": true,
+    "allOtherObservationsUnchanged": true,
+    "sourcePinInverseMatchesStagedInventory": true,
+    "currentInventoryAndDocumentationTests": 3,
+    "currentGuides": 14,
+    "liveSourcePins": 15906,
+    "uniqueLiveSources": 2539,
+    "staleEntries": 0
+  },
+  "boundary": "This records replay of the original hosted archives and the installed support/documentation update, not new hosted execution. Final-head Core and required hosted acceptance remain separate. Dependent checked-record composition remains tracked by VO #1481 and does not establish dependent Subtype host coverage."
+}
