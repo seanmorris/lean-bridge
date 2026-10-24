@@ -1,0 +1,149 @@
+{
+  "additions": [
+    {
+      "currentSha256": "a1313774f8a44ea29f09566b37fc6b6d778a1b93ab1803b8c45a82fd3cf2053f",
+      "path": "scripts/check-owned-checked-record-matrix.mjs"
+    },
+    {
+      "currentSha256": "484c06ad5ca07ec0a56c4e26d49a738f8ef4e9bf17aef7432ff04e7020037400",
+      "path": "tests/helpers/owned-checked-record-hosted-matrix.mjs"
+    },
+    {
+      "currentSha256": "df5b0068a99dc33f8b1ae56eb47d8ae6a89c3c0c0919ef068a8315b61a4ae036",
+      "path": "tests/helpers/owned-checked-record-hosted-matrix-tests.mjs"
+    },
+    {
+      "currentSha256": "310fbc2fc423e0e836beb2dfc91147bc8ca3d84008c944c11ee799527d3a53dc",
+      "path": "scripts/update-owned-checked-record-matrix-gate-source-history.mjs"
+    },
+    {
+      "currentSha256": "8bba832c77644a77894bec9163c429f2d4b7a7be5a0d54579d2ad04ad580956c",
+      "path": "tests/helpers/owned-checked-record-matrix-gate-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "1caac0c711b6feb35226a7e4c58518300ba3ecbcfeb824bc353515ae0d370bcb",
+      "path": "tests/helpers/owned-checked-record-matrix-gate-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "a35aa8462d39403310ad8027d0867d53bc21a912",
+  "implementationCommits": [
+    "a35aa8462d39403310ad8027d0867d53bc21a912"
+  ],
+  "integrationBaseCommit": "a35aa8462d39403310ad8027d0867d53bc21a912",
+  "integrationUpdates": [
+    {
+      "currentSha256": "cfbca4196981501da8cae9753b5a409aaa415a9a804c59cc013ce54e0c9c00d7",
+      "edits": [
+        {
+          "current": "import { beforeOwnedCheckedRecordMatrixGateSource, ownedCheckedRecordMatrixGateNormalizationPaths } from \"./owned-checked-record-matrix-gate-source-history.mjs\";\n",
+          "previous": "",
+          "start": 8464
+        },
+        {
+          "current": "\t...ownedCheckedRecordMatrixGateNormalizationPaths\n\t, ...corePhpStructuredEndpointRepairNormalizationPaths\n",
+          "previous": "\t...corePhpStructuredEndpointRepairNormalizationPaths\n",
+          "start": 181665
+        },
+        {
+          "current": "\tlet stage = beforeOwnedCheckedRecordMatrixGateSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCorePhpStructuredEndpointRepairSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeCorePhpStructuredEndpointRepairSource(path, text, expected);\n",
+          "start": 224703
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "c7a1545d520efbe26e5d52b558aa26802c583096a8fb72ffcc2d0c406afcb199"
+    },
+    {
+      "currentSha256": "2cc339dc86c4ddac4eb37311622257170a403e5679b6949f04ece88d664b0020",
+      "edits": [
+        {
+          "current": "import \"./helpers/owned-checked-record-hosted-matrix-tests.mjs\";\nimport \"./helpers/owned-checked-record-matrix-gate-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 5510
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "25a503fa8410c55a4ae781df387c7cc5e14352aad6bcf141757b00d6186637f6"
+    }
+  ],
+  "milestone": "owned-checked-record-matrix-gate-source-v1",
+  "predecessorCommit": "9bd04e4818deb256a85c15c6e90d26bc31a48fa9",
+  "schemaVersion": 1,
+  "scope": "Add the complete eleven-lane, forty-four-route owned checked-record hosted matrix gate. Require explicit canonical capture-index identities, one shared native/managed producer, independent npm and PHP-Wasm provenance, an exact committed Git file set and streamed byte authentication, and independent replay of every retained archive before emitting a receipt. Document the maintainer command and register rejection and Git-audit tests. Refresh exactly eleven live documentation hashes and preserve every other inventory byte. This prepares verification only: no support cells, prior evidence, archives, runtime implementation or installed-support claims change. The actual complete matrix gate still requires the final npm/browser capture and a successful eleven-lane replay.",
+  "updates": [
+    {
+      "currentSha256": "085140631c70383281dce1f2a25d9932b42cb73288d17d40cc640c1d05580a1f",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"c83070b2b2160ebced563fd46a4e6e849c7690143472954b87d0c936f96a9929\"\n",
+          "previous": "          \"sha256\": \"6c1a59dbc2731390baa936c5776b2418c29f78678e7b9f7633fc97252919e1b1\"\n",
+          "start": 1167697
+        },
+        {
+          "current": "          \"sha256\": \"c83070b2b2160ebced563fd46a4e6e849c7690143472954b87d0c936f96a9929\"\n",
+          "previous": "          \"sha256\": \"6c1a59dbc2731390baa936c5776b2418c29f78678e7b9f7633fc97252919e1b1\"\n",
+          "start": 1177811
+        },
+        {
+          "current": "          \"sha256\": \"c83070b2b2160ebced563fd46a4e6e849c7690143472954b87d0c936f96a9929\"\n",
+          "previous": "          \"sha256\": \"6c1a59dbc2731390baa936c5776b2418c29f78678e7b9f7633fc97252919e1b1\"\n",
+          "start": 1189747
+        },
+        {
+          "current": "          \"sha256\": \"c83070b2b2160ebced563fd46a4e6e849c7690143472954b87d0c936f96a9929\"\n",
+          "previous": "          \"sha256\": \"6c1a59dbc2731390baa936c5776b2418c29f78678e7b9f7633fc97252919e1b1\"\n",
+          "start": 1222308
+        },
+        {
+          "current": "          \"sha256\": \"c83070b2b2160ebced563fd46a4e6e849c7690143472954b87d0c936f96a9929\"\n",
+          "previous": "          \"sha256\": \"6c1a59dbc2731390baa936c5776b2418c29f78678e7b9f7633fc97252919e1b1\"\n",
+          "start": 1252587
+        },
+        {
+          "current": "          \"sha256\": \"c83070b2b2160ebced563fd46a4e6e849c7690143472954b87d0c936f96a9929\"\n",
+          "previous": "          \"sha256\": \"6c1a59dbc2731390baa936c5776b2418c29f78678e7b9f7633fc97252919e1b1\"\n",
+          "start": 1285738
+        },
+        {
+          "current": "          \"sha256\": \"c83070b2b2160ebced563fd46a4e6e849c7690143472954b87d0c936f96a9929\"\n",
+          "previous": "          \"sha256\": \"6c1a59dbc2731390baa936c5776b2418c29f78678e7b9f7633fc97252919e1b1\"\n",
+          "start": 1325841
+        },
+        {
+          "current": "          \"sha256\": \"c83070b2b2160ebced563fd46a4e6e849c7690143472954b87d0c936f96a9929\"\n",
+          "previous": "          \"sha256\": \"6c1a59dbc2731390baa936c5776b2418c29f78678e7b9f7633fc97252919e1b1\"\n",
+          "start": 1352261
+        },
+        {
+          "current": "          \"sha256\": \"c83070b2b2160ebced563fd46a4e6e849c7690143472954b87d0c936f96a9929\"\n",
+          "previous": "          \"sha256\": \"6c1a59dbc2731390baa936c5776b2418c29f78678e7b9f7633fc97252919e1b1\"\n",
+          "start": 1374941
+        },
+        {
+          "current": "          \"sha256\": \"c83070b2b2160ebced563fd46a4e6e849c7690143472954b87d0c936f96a9929\"\n",
+          "previous": "          \"sha256\": \"6c1a59dbc2731390baa936c5776b2418c29f78678e7b9f7633fc97252919e1b1\"\n",
+          "start": 1394608
+        },
+        {
+          "current": "          \"sha256\": \"c83070b2b2160ebced563fd46a4e6e849c7690143472954b87d0c936f96a9929\"\n",
+          "previous": "          \"sha256\": \"6c1a59dbc2731390baa936c5776b2418c29f78678e7b9f7633fc97252919e1b1\"\n",
+          "start": 1417696
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "b184c25cf415faa86275eea6e8530cec83aa621a9ebfbb92fc2e66c54a8a1bc6"
+    },
+    {
+      "currentSha256": "c83070b2b2160ebced563fd46a4e6e849c7690143472954b87d0c936f96a9929",
+      "edits": [
+        {
+          "current": "### Verify the complete owned checked-record matrix\n\nCommit all eleven captures before preparing a support promotion. Save an explicit\nselection file with `schemaVersion: 1`,\n`kind: \"owned-checked-record-matrix-selection\"`, and an `archives` array.\nEach entry names its `lane` and an `index` object containing the repository-relative\n`path` and SHA-256 of that capture's original `index.json`. Use the hosted lane\ncontract order: `native`, `perl`, `python`, `ruby`, `rust`, `dotnet`, `jvm`, `php`,\n`wit`, `javascript`, `php-wasm`. Do not substitute a local qualification report\nor an expiring Actions artifact for a committed capture.\n\nFrom a clean checkout, run:\n\n```sh\nnode scripts/check-owned-checked-record-matrix.mjs \\\n  --selection /absolute/path/to/matrix-selection.json \\\n  > build/owned-checked-record-matrix-verification.json\n```\n\nThe checker rejects partial selections before replay, checks every indexed byte\nagainst the fixed Git revision, and independently replays all forty-four routes.\nThe nine native/managed lanes must share their authenticated producer revision;\nnpm/browser and PHP-Wasm keep their independent producer identities. Progress goes\nto stderr, and the verification receipt appears on stdout only after every lane\npasses. This command runs no compilers and changes no support claims or archives.\n\n",
+          "previous": "",
+          "start": 3690
+        }
+      ],
+      "path": "docs/contributing/testing.md",
+      "previousSha256": "6c1a59dbc2731390baa936c5776b2418c29f78678e7b9f7633fc97252919e1b1"
+    }
+  ]
+}

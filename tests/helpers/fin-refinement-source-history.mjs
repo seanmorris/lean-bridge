@@ -60,6 +60,7 @@ import { beforeCoreReceiverEndpointRepairSource, coreReceiverEndpointRepairNorma
 import { beforeCorePerlConsumerEndpointRepairSource, corePerlConsumerEndpointRepairNormalizationPaths } from "./core-perl-consumer-endpoint-repair-source-history.mjs";
 import { beforeOwnedNpmScopedProducerSource, ownedNpmScopedProducerNormalizationPaths } from "./owned-npm-scoped-producer-source-history.mjs";
 import { beforeCorePhpStructuredEndpointRepairSource, corePhpStructuredEndpointRepairNormalizationPaths } from "./core-php-structured-endpoint-repair-source-history.mjs";
+import { beforeOwnedCheckedRecordMatrixGateSource, ownedCheckedRecordMatrixGateNormalizationPaths } from "./owned-checked-record-matrix-gate-source-history.mjs";
 import { beforeCoreEvidenceMemoryRepairSource, coreEvidenceMemoryRepairNormalizationPaths } from "./core-evidence-memory-repair-source-history.mjs";
 import { beforeValueIndexPromotionMilestoneRepairSource, valueIndexPromotionMilestoneRepairNormalizationPaths } from "./value-index-promotion-milestone-repair-source-history.mjs";
 import { beforeCoreMilestoneReplayRepairSource, coreMilestoneReplayRepairNormalizationPaths } from "./core-milestone-replay-repair-source-history.mjs";
@@ -2153,7 +2154,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...corePhpStructuredEndpointRepairNormalizationPaths
+	...ownedCheckedRecordMatrixGateNormalizationPaths
+	, ...corePhpStructuredEndpointRepairNormalizationPaths
 	, ...ownedNpmScopedProducerNormalizationPaths
 	, ...corePerlConsumerEndpointRepairNormalizationPaths
 	, ...coreReceiverEndpointRepairNormalizationPaths
@@ -3049,7 +3051,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeCorePhpStructuredEndpointRepairSource(path, text, expected);
+	let stage = beforeOwnedCheckedRecordMatrixGateSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeCorePhpStructuredEndpointRepairSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;
