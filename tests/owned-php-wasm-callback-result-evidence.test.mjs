@@ -10,15 +10,22 @@ import { assertOwnedPhpWasmCallbackResultEvidence, ownedPhpWasmCallbackResultEvi
 	packOwnedPhpWasmCallbackResultReports,
 	unpackOwnedPhpWasmCallbackResultReports } from "./helpers/owned-php-wasm-callback-result-evidence.mjs";
 import "./helpers/php-wasm-callback-result-acceptance-history-tests.mjs";
+import "./helpers/owned-php-wasm-callback-result-replay-tests.mjs";
+import { ownedPhpWasmCallbackReplay } from "./helpers/owned-php-wasm-callback-result-replay.mjs";
 
 const read = async () => JSON.parse(await readFile(ownedPhpWasmCallbackResultEvidencePath, "utf8"));
+let replay;
+const verify = async record => {
+	replay ??= ownedPhpWasmCallbackReplay((await read()).sources);
+	return assertOwnedPhpWasmCallbackResultEvidence(record, await replay);
+};
 
 test("PHP-Wasm callback-result evidence reconstructs all installed packages and executions", async () => {
-	await assertOwnedPhpWasmCallbackResultEvidence(await read());
+	await verify(await read());
 });
 
 test("PHP-Wasm callback-result evidence rejects partial runs and overstated guarantees", async () => {
-	const record = await read(); await assertOwnedPhpWasmCallbackResultEvidence(record);
+	const record = await read(); await verify(record);
 	for(const mutate of [
 		value => { value.acceptance = "pending"; }
 		, value => { value.scope.asynchronousCallbacks = true; }
@@ -28,12 +35,13 @@ test("PHP-Wasm callback-result evidence rejects partial runs and overstated guar
 		, value => { delete value.reports["combined-packages.json"]; }
 	]) {
 		const changed = structuredClone(record); mutate(changed);
-		await assert.rejects(() => assertOwnedPhpWasmCallbackResultEvidence(changed));
+		await assert.rejects(() => verify(changed));
 	}
 });
 
 test("PHP-Wasm callback-result report payloads reject execution and ownership mutations", async () => {
-	const record = await read(); const reports = unpackOwnedPhpWasmCallbackResultReports(record.reports);
+	const record = await read(); await verify(record);
+	const reports = unpackOwnedPhpWasmCallbackResultReports(record.reports);
 	for(const mutate of [
 		value => { value.observations[0].executions.pop(); }
 		, value => { value.observations[1].executions[0].observed.checks--; }
@@ -44,6 +52,6 @@ test("PHP-Wasm callback-result report payloads reject execution and ownership mu
 		const changed = structuredClone(reports["combined-packages.json"]); mutate(changed);
 		const replaced = structuredClone(record); const bytes = Buffer.from(JSON.stringify(changed));
 		replaced.reports["combined-packages.json"] = packOwnedPhpWasmCallbackResultReports({ changed: bytes }).changed;
-		await assert.rejects(() => assertOwnedPhpWasmCallbackResultEvidence(replaced));
+		await assert.rejects(() => verify(replaced));
 	}
 });

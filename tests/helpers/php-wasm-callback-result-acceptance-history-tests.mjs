@@ -48,7 +48,7 @@ test("PHP-Wasm callback-result history binds introduced sources and preserves un
 	const record = readPhpWasmCallbackResultHistory();
 	for(const [path, identity] of Object.entries(record.introducedSources))
 	{
-		const source = await readFile(path);
+		const source = beforeFinRefinementSource(path, await readFile(path), identity.currentSha256);
 		assert.equal(sha256(source), identity.currentSha256, path);
 		const integrated = beforePhpWasmCallbackResultAcceptance(path
 			, source, identity.integrationSha256);
