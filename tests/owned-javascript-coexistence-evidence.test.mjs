@@ -12,6 +12,10 @@ import { beforeOwnedJavaScriptCoexistence, ownedJavaScriptCoexistenceAddedPaths
 	, ownedJavaScriptCoexistenceBaseline, ownedJavaScriptCoexistenceChangedPaths
 	, ownedJavaScriptCoexistenceHistoryPath, ownedJavaScriptCoexistenceHistoricalBytes
 	, ownedJavaScriptCoexistencePrevious, reverseOwnedJavaScriptCoexistenceUpdate } from "./helpers/owned-javascript-coexistence-source-history.mjs";
+import { sourceAtProducer } from "./helpers/producer-source.mjs";
+
+/** The commit whose complete source tree every digest in the coexistence record names. */
+const ownedJavaScriptCoexistenceProducer = "caeec400c8c5848ee2e31da702dbb3345e106aa1";
 
 const json = async path => JSON.parse(await readFile(path, "utf8"));
 
@@ -29,10 +33,10 @@ test("coexistence receipt binds every current source without rewriting installed
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path], update.path);
 		assert.equal(update.currentSha256, record.sources[update.path], update.path);
-		const current = beforeOwnedJavaScriptCoexistence(update.path, await readFile(update.path, "utf8"), update.currentSha256);
-		const prior = beforeOwnedJavaScriptCoexistence(update.path, current);
+		const current = sourceAtProducer(ownedJavaScriptCoexistenceProducer, update.path, update.currentSha256);
+		const prior = beforeOwnedJavaScriptCoexistence(update.path, current, update.previousSha256);
 		assert.equal(sha256(prior), update.previousSha256);
-		assert.equal(beforeOwnedJavaScriptCoexistence(update.path, prior), prior);
+		assert.equal(beforeOwnedJavaScriptCoexistence(update.path, prior, update.previousSha256), prior);
 		assert.equal(beforeOwnedJavaScriptCoexistence(update.path, current, update.currentSha256), current);
 		const unknown = current + "\n/* unrecorded coexistence change */\n";
 		assert.equal(beforeOwnedJavaScriptCoexistence(update.path, unknown), unknown);
@@ -45,7 +49,8 @@ test("coexistence receipt binds every current source without rewriting installed
 	const inventoryPath = "docs/type-surface.v1.json";
 	const current = ownedJavaScriptCoexistenceHistoricalBytes(inventoryPath, await readFile(inventoryPath)
 		, record.sources[inventoryPath]).toString("utf8");
-	const prior = JSON.parse(beforeOwnedJavaScriptCoexistence("docs/type-surface.v1.json", current));
+	const prior = JSON.parse(beforeOwnedJavaScriptCoexistence("docs/type-surface.v1.json", current
+		, record.updates.find(update => update.path === inventoryPath)?.previousSha256));
 	for(const evidence of prior.evidence) for(const file of evidence.files)
 		if(record.sources[file.path]) file.sha256 = record.sources[file.path];
 	assert.deepEqual(JSON.parse(current), prior, "No type-surface support cells are promoted");

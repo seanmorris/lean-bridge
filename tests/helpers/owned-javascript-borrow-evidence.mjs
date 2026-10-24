@@ -6,18 +6,9 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
-import { generateOwnedNativeValueAdapters } from "../../src/backends/native/owned-value-adapters.mjs";
-import { ownedAggregateTransferRuntime } from "../../src/backends/native/owned-aggregate-transfers.mjs";
-import { generateOwnedWasmComponent } from "../../src/backends/javascript/owned-wasm-component.mjs";
-import { generateJavaScriptPackage } from "../../src/backends/javascript/generate.mjs";
-import { createOwnedJavaScriptWasmModel, generateOwnedJavaScriptWasmLeanAdapters } from "../../src/build/javascript-wasm-owned-model.mjs";
-import { generateCompiledJavaScriptWasmOwned } from "../../src/build/javascript-wasm-owned-sources.mjs";
-import { assertComponentOwnedWasmBindings } from "../../src/abi/component-owned-wasm.mjs";
-import { ownedJavaScriptWasmNativeProbe } from "./owned-javascript-wasm-native.mjs";
-import { ownedJavaScriptBorrowMutations } from "./owned-javascript-borrow-mutants.mjs";
 import { assertOwnedJavaScriptBorrowCi } from "./owned-javascript-borrow-ci.mjs";
-import { ownedRustBorrowSource } from "./owned-rust-borrow-fixture.mjs";
-import { beforeOwnedJavaScriptReceiver } from "./owned-javascript-receiver-history.mjs";
+import { moduleAtProducerWithSourceReads } from "./producer-module.mjs";
+import { sourceAtProducer } from "./producer-source.mjs";
 
 export const ownedJavaScriptBorrowCommand = "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 npm run test:owned-javascript-borrows";
 export const ownedJavaScriptBorrowScope = Object.freeze({
@@ -41,6 +32,23 @@ export const ownedJavaScriptBorrowScope = Object.freeze({
 	, receiverAnchors: false, callbackResultAnchors: false
 	, docker: false, installedSupportPromotions: 0
 });
+/** The commit whose complete source tree every digest in the borrowed-result record names. */
+export const ownedJavaScriptBorrowProducer = "3701d0880be3195b249ed17caac6975dea7283f6";
+let producerPromise;
+const producerModules = () => producerPromise ??= Promise.all([
+	"src/backends/native/owned-value-adapters.mjs"
+	, "src/backends/native/owned-aggregate-transfers.mjs"
+	, "src/backends/javascript/owned-wasm-component.mjs"
+	, "src/backends/javascript/generate.mjs"
+	, "src/build/javascript-wasm-owned-model.mjs"
+	, "src/build/javascript-wasm-owned-sources.mjs"
+	, "src/abi/component-owned-wasm.mjs"
+	, "tests/helpers/owned-javascript-wasm-native.mjs"
+	, "tests/helpers/owned-javascript-borrow-mutants.mjs"
+	, "tests/helpers/owned-rust-borrow-fixture.mjs"
+].map(path => moduleAtProducerWithSourceReads(ownedJavaScriptBorrowProducer, path)))
+	.then(modules => Object.assign({}, ...modules));
+const historical = path => sourceAtProducer(ownedJavaScriptBorrowProducer, path);
 const hash = value => sha256(canonicalJson(value));
 const digest = value => assert.match(value, /^[a-f0-9]{64}$/u);
 const flags = (value, names) => { for(const name of names) assert.equal(value[name], true, name); };
@@ -48,7 +56,9 @@ const drained = value => {
 	for(const key of ["liveOwners", "liveAllocations", "liveIdentities"]) assert.equal(value[key], 0, key);
 };
 const observed = value => assert.deepEqual(value, { checks: 232, exports: 26, borrowedResults: true });
-const compile = (item, lean, borrowOnly = false) => {
+const compile = (producer, item, lean, borrowOnly = false) => {
+	const { assertComponentOwnedWasmBindings, generateOwnedNativeValueAdapters
+		, generateOwnedWasmComponent } = producer;
 	assert.equal(item.schemaVersion, 1);
 	assert.equal(Boolean(item.input.sourceIdentity.reviewedBindingIr), item.mode === "reviewed");
 	assert.equal(item.input.sourceIdentity.modules.find(module => module.module === "Owned").source.sha256, sha256(lean));
@@ -73,20 +83,27 @@ const compile = (item, lean, borrowOnly = false) => {
  * @param record - Complete enabled gate, captured inputs and package inventories.
  */
 export const assertOwnedJavaScriptBorrowExecution = async record => {
+	const producer = await producerModules();
+	const {
+		createOwnedJavaScriptWasmModel, generateCompiledJavaScriptWasmOwned
+		, generateJavaScriptPackage, generateOwnedJavaScriptWasmLeanAdapters
+		, ownedAggregateTransferRuntime, ownedJavaScriptBorrowMutations
+		, ownedJavaScriptWasmNativeProbe, ownedRustBorrowSource
+	} = producer;
 	assert.equal(record.acceptance, "passed"); assert.deepEqual(record.scope, ownedJavaScriptBorrowScope);
 	assert.equal(record.run.command, ownedJavaScriptBorrowCommand); assert.equal(record.run.exitCode, 0);
 	assert.equal(record.run.sha256, sha256(record.run.text));
 	for(const [key, value] of Object.entries({ tests: 25, pass: 25, fail: 0, skipped: 0, cancelled: 0, todo: 0 }))
 		assert.match(record.run.text, new RegExp("^# " + key + " " + value + "$", "mu"));
 	assert.doesNotMatch(record.run.text, /^not ok|# SKIP|# TODO/mu);
-	const base = await readFile("tests/fixtures/onboarding/owned-aggregates/Owned.lean", "utf8");
+	const base = historical("tests/fixtures/onboarding/owned-aggregates/Owned.lean");
 	const lean = base + ownedRustBorrowSource;
 	for(const field of ["runtime", "borrowOnly", "mutants"])
 		assert.deepEqual(record[field].map(item => item.mode), ["ordinary", "reviewed"]);
 	for(const item of record.runtime)
 	{
 		assert.equal(item.profile, "owned-javascript-borrows");
-		const component = compile(item, lean);
+		const component = compile(producer, item, lean);
 		assert.equal(item.sourceSha256, sha256(ownedJavaScriptWasmNativeProbe(component))); digest(item.binarySha256);
 		observed(item.observed); drained(item);
 		assert.deepEqual(item.limits, { borrowDepth: 128, hostWrappers: 4096 });
@@ -104,22 +121,22 @@ export const assertOwnedJavaScriptBorrowExecution = async record => {
 	for(const item of record.borrowOnly)
 	{
 		assert.equal(item.profile, "owned-javascript-borrow-only");
-		const component = compile(item, base, true);
+		const component = compile(producer, item, base, true);
 		assert.equal(item.sourceSha256, sha256(ownedJavaScriptWasmNativeProbe(component))); digest(item.binarySha256);
 		assert.equal(item.emptyShapes, 4); drained(item);
 	}
 	for(const item of record.mutants)
 	{
 		assert.equal(item.profile, "owned-javascript-borrow-mutants");
-		const component = compile(item, lean), source = ownedJavaScriptWasmNativeProbe(component);
+		const component = compile(producer, item, lean), source = ownedJavaScriptWasmNativeProbe(component);
 		assert.equal(item.sourceSha256, sha256(source)); digest(item.binarySha256);
 		assert.equal(item.baselineChecks, 8);
-		assert.equal(item.probeSha256, sha256(await readFile("tests/fixtures/structured-types/owned-javascript-borrow-semantic.mjs")));
+		assert.equal(item.probeSha256, sha256(historical("tests/fixtures/structured-types/owned-javascript-borrow-semantic.mjs")));
 		const expected = [];
 		for(const [name, path, before, after] of ownedJavaScriptBorrowMutations)
 		{
 			const original = path === "probe.c" ? source : path === "owned-leases.h"
-				? ownedAggregateTransferRuntime({ anchoredResults: true }) : beforeOwnedJavaScriptReceiver(path, await readFile(path, "utf8"));
+				? ownedAggregateTransferRuntime({ anchoredResults: true }) : historical(path);
 			assert.equal(original.split(before).length, 2, name);
 			expected.push({ name, path, sourceSha256: sha256(original.replace(before, after)), parsed: true, semanticRejection: true });
 		}
@@ -130,7 +147,7 @@ export const assertOwnedJavaScriptBorrowExecution = async record => {
 	const runtimes = new Set(), alphas = new Set();
 	for(const item of record.coexistence)
 	{
-		assert.equal(item.profile, "owned-javascript-borrow-coexistence"); compile(item, lean); observed(item.observed);
+		assert.equal(item.profile, "owned-javascript-borrow-coexistence"); compile(producer, item, lean); observed(item.observed);
 		for(const key of ["componentSha256", "runtimeSha256", "alphaSha256"]) digest(item[key]);
 		runtimes.add(item.runtimeSha256); alphas.add(item.alphaSha256);
 		assert.equal(item.runtimeInitializations, 1); assert.equal(item.libraryInitializations, 2);
@@ -142,7 +159,7 @@ export const assertOwnedJavaScriptBorrowExecution = async record => {
 	assert.equal(packages.schemaVersion, 1); assert.equal(packages.profile, "installed-owned-javascript-borrows");
 	digest(packages.compilerInputsIdentity);
 	assert.deepEqual(packages.reports.map(item => item.reviewed), [false, true]);
-	const doc = (await readFile("docs/javascript-typescript.md", "utf8")).split("### Borrowed results and whole-value owners\n")[1].split("### Consuming inputs\n")[0];
+	const doc = historical("docs/javascript-typescript.md").split("### Borrowed results and whole-value owners\n")[1].split("### Consuming inputs\n")[0];
 	const example = doc.match(/```js\n([^]*?)\n```/u)[1], archives = new Set();
 	for(const item of packages.reports)
 	{
@@ -175,7 +192,7 @@ export const assertOwnedJavaScriptBorrowExecution = async record => {
 		for(const name of ["calls", "borrow-registry"])
 		{
 			const path = `src/release/owned-wasm-${name}.mjs`;
-			assert.equal(item.inventory[`@lean-bridge/runtime/internal/owned-wasm-${name}.mjs`].sha256, sha256(beforeOwnedJavaScriptReceiver(path, await readFile(path, "utf8"))));
+			assert.equal(item.inventory[`@lean-bridge/runtime/internal/owned-wasm-${name}.mjs`].sha256, sha256(historical(path)));
 		}
 		observed(item.observed);
 		assert.deepEqual(item.documentation, { sourceSha256: sha256(example), output: "42n\nexpired\n42n\n" });
