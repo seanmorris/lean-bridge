@@ -30,6 +30,7 @@ import "./helpers/owned-milestone-producer-repair-source-history-tests.mjs";
 import "./helpers/php-wasm-callback-tiles-trace-repair-source-history-tests.mjs";
 import "./helpers/author-refinement-guidance-repair-source-history-tests.mjs";
 import "./helpers/wit-transfer-copy-gap-source-history-tests.mjs";
+import "./helpers/core-evidence-repair-integration-source-history-tests.mjs";
 
 const root = resolve(".");
 

@@ -1,0 +1,1036 @@
+{
+  "additions": [
+    {
+      "currentSha256": "fe392c0f5f1a884011df2a1a2847ac088a63afdd08bb278edb85ed08a891284d",
+      "path": "scripts/update-core-evidence-repair-integration-source-history.mjs"
+    },
+    {
+      "currentSha256": "392a0ccbfdb5461a864e2b720e862db8f74c57814a47e3b0039bb11fe6d1e0e3",
+      "path": "tests/helpers/core-evidence-repair-integration-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "0f136992ce380f06e302ac63f9689ef330d0037f71f57d2a83862d691422fb94",
+      "path": "tests/helpers/core-evidence-repair-integration-source-history.mjs"
+    }
+  ],
+  "forkCommit": "3298c7461ce704c058d6eadf98871a3db1b61680",
+  "integrationCommit": "60230d8d5ae3fe33084dc1b6d282c525cb74b6b9",
+  "milestone": "core-evidence-repair-integration-source-v1",
+  "parents": [
+    "89b8bcc6072491094f22b53f826dadcbc246d227",
+    "da24819c68be266459dfc78b4f3c4cdb8ea2f7b8"
+  ],
+  "retainedHistory": {
+    "path": "docs/evidence/author-refinement-guidance-repair-source-history-20261024.json",
+    "sha256": "81d360a15ba6f264b2b89f6fd1d13b08fb52189970a72100ed29ee6b41ffc36c"
+  },
+  "retainedPaths": [
+    "docs/lean/existing-package.md",
+    "docs/type-surface.v1.json",
+    "scripts/generate-type-docs.mjs",
+    "tests/callback-subtype-promotion.test.mjs",
+    "tests/lean-author-documentation.test.mjs"
+  ],
+  "rightHistoryRecords": [
+    "docs/evidence/wit-transfer-copy-gap-source-history-20261024.json"
+  ],
+  "schemaVersion": 1,
+  "scope": "Preserve both exact parents while combining the six missing WIT transfer-copy transitions, explicit digest stops, historical addition checks and producer-bound .NET/process/host generators with the reviewed author documentation. Right-parent-only milestone digests select that branch; shared ancestry follows the documentation parent. Archived evidence and support observations remain unchanged. Runtime acceptance requires hosted validation.",
+  "updates": [
+    {
+      "currentSha256": "dc2e0735161115e5441a953cff5ec527a99079cb1c26af7e6fd3449faed8fb2b",
+      "left": {
+        "edits": [
+          {
+            "current": "import \"./helpers/wit-transfer-copy-gap-source-history-tests.mjs\";\nimport \"./helpers/core-evidence-repair-integration-source-history-tests.mjs\";\n",
+            "previous": "",
+            "start": 1822
+          }
+        ],
+        "previousSha256": "0c577600cdcf6848b0c29dc31765e3c018350ace96429844011a62896cae1619"
+      },
+      "path": "tests/checked-javascript.test.mjs",
+      "right": {
+        "edits": [
+          {
+            "current": "import \"./helpers/author-refinement-guidance-repair-source-history-tests.mjs\";\n",
+            "previous": "",
+            "start": 1743
+          },
+          {
+            "current": "import \"./helpers/core-evidence-repair-integration-source-history-tests.mjs\";\n",
+            "previous": "",
+            "start": 1889
+          }
+        ],
+        "previousSha256": "8dae9da246e9b138dd37bbf042e764b352f2dab8dc43b1f623d620b31149bf7b"
+      },
+      "rightExpectedSha256": [
+        "8dae9da246e9b138dd37bbf042e764b352f2dab8dc43b1f623d620b31149bf7b",
+        "f0b88f27faffa3482d629b36a80ec8cafab89fba050987fe8810911a28a1c145"
+      ]
+    },
+    {
+      "currentSha256": "e57efcc3815f511e8a07ca1cffc2ef4169585bd34734c9a6785fe9ae0107f172",
+      "left": {
+        "edits": [
+          {
+            "current": "\t\t// The hub reverses every recognized state, so live reads and predecessor reads name their stops.\n\t\tconst source = beforePhpStructuredCallables(update.path, await readFile(update.path, \"utf8\"), update.currentSha256);\n",
+            "previous": "\t\tconst source = beforePhpStructuredCallables(update.path, await readFile(update.path, \"utf8\"));\n",
+            "start": 3357
+          },
+          {
+            "current": "\t\tassert.equal(sha256(beforeNpmStructuredCallables(update.path, source, update.previousSha256)), update.previousSha256);\n",
+            "previous": "\t\tassert.equal(sha256(beforeNpmStructuredCallables(update.path, source)), update.previousSha256);\n",
+            "start": 3675
+          }
+        ],
+        "previousSha256": "75e290cb1e4d4753cb63d0143d573958bf4ffdccde9ac48b09141d916bb80c5e"
+      },
+      "path": "tests/component-structured-callable-evidence.test.mjs",
+      "right": {
+        "edits": [],
+        "previousSha256": "e57efcc3815f511e8a07ca1cffc2ef4169585bd34734c9a6785fe9ae0107f172"
+      },
+      "rightExpectedSha256": [
+        "e57efcc3815f511e8a07ca1cffc2ef4169585bd34734c9a6785fe9ae0107f172"
+      ]
+    },
+    {
+      "currentSha256": "9548a3e2bac638fa0916c6d0eb2d825a2d52322e60958553eb1b7416b2625053",
+      "left": {
+        "edits": [
+          {
+            "current": "\t\t// The hub reverses every recognized state, so each predecessor read names its stop.\n\t\tconst prior = beforeCopiedFixtureReaders(update.path, current, update.previousSha256);\n",
+            "previous": "\t\tconst prior = beforeCopiedFixtureReaders(update.path, current);\n",
+            "start": 3107
+          },
+          {
+            "current": "",
+            "previous": "\t\tassert.equal(beforeCopiedFixtureReaders(update.path, prior), prior);\n",
+            "start": 3609
+          },
+          {
+            "current": "\tconst previous = JSON.parse(beforeCopiedFixtureReaders(path, currentSource, update.previousSha256));\n",
+            "previous": "\tconst previous = JSON.parse(beforeCopiedFixtureReaders(path, currentSource));\n",
+            "start": 5905
+          }
+        ],
+        "previousSha256": "b97e33388a2e8256cc0196d86f8cff3f742162e36818f1d72ee60f3fe5c14c26"
+      },
+      "path": "tests/copied-fixture-source-history.test.mjs",
+      "right": {
+        "edits": [],
+        "previousSha256": "9548a3e2bac638fa0916c6d0eb2d825a2d52322e60958553eb1b7416b2625053"
+      },
+      "rightExpectedSha256": [
+        "9548a3e2bac638fa0916c6d0eb2d825a2d52322e60958553eb1b7416b2625053"
+      ]
+    },
+    {
+      "currentSha256": "a5432e0b6fe3a5bb9471bca3d9e05e9cf7af45e173939786d805d05c0c6d395a",
+      "left": {
+        "edits": [
+          {
+            "current": "\t\t// The hub reverses every recognized state, so live reads and predecessor reads name their stops.\n\t\tconst source = beforeJvmRecursiveCallables(update.path, await readFile(update.path, \"utf8\"), update.currentSha256);\n",
+            "previous": "\t\tconst source = beforeJvmRecursiveCallables(update.path, await readFile(update.path, \"utf8\"));\n",
+            "start": 5883
+          },
+          {
+            "current": "\t\tassert.equal(sha256(beforeDotnetRecursiveCallables(update.path, source, update.previousSha256)), update.previousSha256);\n",
+            "previous": "\t\tassert.equal(sha256(beforeDotnetRecursiveCallables(update.path, source)), update.previousSha256);\n",
+            "start": 6202
+          }
+        ],
+        "previousSha256": "54fe434a560013528d25ca61c6d35806b50667e6c4e9a935cf7a2a95a189e495"
+      },
+      "path": "tests/dotnet-recursive-callable-evidence.test.mjs",
+      "right": {
+        "edits": [],
+        "previousSha256": "a5432e0b6fe3a5bb9471bca3d9e05e9cf7af45e173939786d805d05c0c6d395a"
+      },
+      "rightExpectedSha256": [
+        "a5432e0b6fe3a5bb9471bca3d9e05e9cf7af45e173939786d805d05c0c6d395a"
+      ]
+    },
+    {
+      "currentSha256": "0aa4452fcd2157c3c9063cfd096936e9e7e4733d2fccf49a53e8b0f6a88be8cf",
+      "left": {
+        "edits": [
+          {
+            "current": "\t\t// Later layers may edit an addition; reconstruct its recorded milestone bytes.\n",
+            "previous": "",
+            "start": 5169
+          },
+          {
+            "current": "\t\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\t\taddition.path, addition.currentSha256))\n",
+            "previous": "\t\t\tassert.equal(sha256(await readFile(addition.path))\n",
+            "start": 5297
+          }
+        ],
+        "previousSha256": "703ea5ce4e6649e55076384aafdad39c5e4467099efb8095fc1177409211fa68"
+      },
+      "path": "tests/helpers/checked-record-value-index-php-wasm-promotion-source-history-tests.mjs",
+      "right": {
+        "edits": [],
+        "previousSha256": "0aa4452fcd2157c3c9063cfd096936e9e7e4733d2fccf49a53e8b0f6a88be8cf"
+      },
+      "rightExpectedSha256": [
+        "0aa4452fcd2157c3c9063cfd096936e9e7e4733d2fccf49a53e8b0f6a88be8cf"
+      ]
+    },
+    {
+      "currentSha256": "6ae3642c3188af475e2d6d5b63d67f525a18b6be3247535b9e742aa0e710be1a",
+      "left": {
+        "edits": [
+          {
+            "current": "\t\t// Later layers may edit an addition; reconstruct its recorded milestone bytes.\n",
+            "previous": "",
+            "start": 5032
+          },
+          {
+            "current": "\t\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\t\taddition.path, addition.currentSha256))\n",
+            "previous": "\t\t\tassert.equal(sha256(await readFile(addition.path))\n",
+            "start": 5160
+          }
+        ],
+        "previousSha256": "3bcf7ce8ef5eb9d84e0efc94fe9f97cb854b8eeb9b304ee91ac62598b5bfcca7"
+      },
+      "path": "tests/helpers/checked-record-value-index-wit-promotion-source-history-tests.mjs",
+      "right": {
+        "edits": [],
+        "previousSha256": "6ae3642c3188af475e2d6d5b63d67f525a18b6be3247535b9e742aa0e710be1a"
+      },
+      "rightExpectedSha256": [
+        "6ae3642c3188af475e2d6d5b63d67f525a18b6be3247535b9e742aa0e710be1a"
+      ]
+    },
+    {
+      "currentSha256": "9a760536b0d599d2cb686edccd35989072b6ee5e7b5581c205ce8b3b6291a9c2",
+      "left": {
+        "edits": [
+          {
+            "current": "// The hub reverses every recognized state, so each read names the milestone digest it stops at.\nconst priorSource = async (path, expected) => beforeJvmRecursiveCallables(path, await readFile(path, \"utf8\"), expected);\n",
+            "previous": "const priorSource = async path => beforeJvmRecursiveCallables(path, await readFile(path, \"utf8\"));\n",
+            "start": 1322
+          },
+          {
+            "current": "\tfor(const path of paths) assert.equal(sha256(await priorSource(path, record.sourceHashes[path])), record.sourceHashes[path], path);\n",
+            "previous": "\tfor(const path of paths) assert.equal(sha256(await priorSource(path)), record.sourceHashes[path], path);\n",
+            "start": 4178
+          },
+          {
+            "current": "\t\trestored[update.path] = reverseDotnetRecursiveCallableUpdate(await priorSource(update.path, update.currentSha256), update);\n",
+            "previous": "\t\trestored[update.path] = reverseDotnetRecursiveCallableUpdate(await priorSource(update.path), update);\n",
+            "start": 4559
+          },
+          {
+            "current": "\tconst document = JSON.parse(await priorSource(\"docs/type-surface.v1.json\", record.sourceHashes[\"docs/type-surface.v1.json\"])), old = JSON.parse(restored[\"docs/type-surface.v1.json\"]);\n",
+            "previous": "\tconst document = JSON.parse(await priorSource(\"docs/type-surface.v1.json\")), old = JSON.parse(restored[\"docs/type-surface.v1.json\"]);\n",
+            "start": 4880
+          },
+          {
+            "current": "\tfor(const [path, hash] of Object.entries(regressions.projectionSources)) assert.equal(sha256(await priorSource(path, hash)), hash, path);\n",
+            "previous": "\tfor(const [path, hash] of Object.entries(regressions.projectionSources)) assert.equal(sha256(await priorSource(path)), hash, path);\n",
+            "start": 9334
+          }
+        ],
+        "previousSha256": "8b1706f88991634cf9a88c1e5222805a9066e6505f4381fdcd9f71b8347359f7"
+      },
+      "path": "tests/helpers/dotnet-recursive-callable-evidence.mjs",
+      "right": {
+        "edits": [],
+        "previousSha256": "9a760536b0d599d2cb686edccd35989072b6ee5e7b5581c205ce8b3b6291a9c2"
+      },
+      "rightExpectedSha256": [
+        "9a760536b0d599d2cb686edccd35989072b6ee5e7b5581c205ce8b3b6291a9c2"
+      ]
+    },
+    {
+      "currentSha256": "e22e97e5ea953c1d31b08efdac1b83c48635483180e84f5bf5e46770c77fa50e",
+      "left": {
+        "edits": [
+          {
+            "current": "import { beforeWitTransferCopyGapSource, witTransferCopyGapNormalizationPaths } from \"./wit-transfer-copy-gap-source-history.mjs\";\nimport { beforeCoreEvidenceRepairIntegrationSource, coreEvidenceRepairIntegrationChangedPaths } from \"./core-evidence-repair-integration-source-history.mjs\";\n",
+            "previous": "",
+            "start": 3140
+          },
+          {
+            "current": "\t...coreEvidenceRepairIntegrationChangedPaths\n\t, ...authorRefinementGuidanceRepairNormalizationPaths\n\t, ...witTransferCopyGapNormalizationPaths\n",
+            "previous": "\t...authorRefinementGuidanceRepairNormalizationPaths\n",
+            "start": 176468
+          },
+          {
+            "current": "\t\t= beforeCoreEvidenceRepairIntegrationSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+            "previous": "",
+            "start": 217815
+          },
+          {
+            "current": "\tstage\n\t\t= beforeWitTransferCopyGapSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n",
+            "previous": "",
+            "start": 218139
+          }
+        ],
+        "previousSha256": "0ae836dc7c4a4c701525b8ca624a92c606ee7c214adb0c039228c9cb5fe0a629"
+      },
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "right": {
+        "edits": [
+          {
+            "current": "import { beforeAuthorRefinementGuidanceRepairSource, authorRefinementGuidanceRepairNormalizationPaths } from \"./author-refinement-guidance-repair-source-history.mjs\";\n",
+            "previous": "",
+            "start": 2973
+          },
+          {
+            "current": "import { beforeCoreEvidenceRepairIntegrationSource, coreEvidenceRepairIntegrationChangedPaths } from \"./core-evidence-repair-integration-source-history.mjs\";\n",
+            "previous": "",
+            "start": 3271
+          },
+          {
+            "current": "\t...coreEvidenceRepairIntegrationChangedPaths\n\t, ...authorRefinementGuidanceRepairNormalizationPaths\n\t, ...witTransferCopyGapNormalizationPaths\n",
+            "previous": "\t...witTransferCopyGapNormalizationPaths\n",
+            "start": 176468
+          },
+          {
+            "current": "\t\t= beforeCoreEvidenceRepairIntegrationSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n\t\t= beforeAuthorRefinementGuidanceRepairSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+            "previous": "",
+            "start": 217815
+          }
+        ],
+        "previousSha256": "dc9bc4d8679addb142521b02f8e232ee38021824eb578b4c4cddc3ada84154eb"
+      },
+      "rightExpectedSha256": [
+        "dc9bc4d8679addb142521b02f8e232ee38021824eb578b4c4cddc3ada84154eb",
+        "ec821dceb826734dfb50e48562f126128005baf90daff8c81166edc581d1843d"
+      ]
+    },
+    {
+      "currentSha256": "2c36d8a24a6a99c7448a70344d6491919fb61a233137ee48471b5bfe9b8608aa",
+      "left": {
+        "edits": [
+          {
+            "current": "// The hub reverses every recognized state, so each read names the milestone digest it stops at.\nconst priorSource = async (path, expected) => beforePhpStructuredCallables(path, await readFile(path, \"utf8\"), expected);\n",
+            "previous": "const priorSource = async path => beforePhpStructuredCallables(path, await readFile(path, \"utf8\"));\n",
+            "start": 986
+          },
+          {
+            "current": "\tfor(const path of paths) assert.equal(sha256(await priorSource(path, record.sourceHashes[path])), record.sourceHashes[path], path);\n",
+            "previous": "\tfor(const path of paths) assert.equal(sha256(await priorSource(path)), record.sourceHashes[path], path);\n",
+            "start": 10807
+          },
+          {
+            "current": "\t\trestored[update.path] = reverseNpmStructuredCallableUpdate(await priorSource(update.path, update.currentSha256), update);\n",
+            "previous": "\t\trestored[update.path] = reverseNpmStructuredCallableUpdate(await priorSource(update.path), update);\n",
+            "start": 11074
+          },
+          {
+            "current": "\t\t, document: JSON.parse(await priorSource(\"docs/type-surface.v1.json\", record.sourceHashes[\"docs/type-surface.v1.json\"])) };\n",
+            "previous": "\t\t, document: JSON.parse(await priorSource(\"docs/type-surface.v1.json\")) };\n",
+            "start": 11492
+          }
+        ],
+        "previousSha256": "acc5277b49f1704885384293fb452b1614e4e055ddedf580f7d4ffcef468a7ff"
+      },
+      "path": "tests/helpers/npm-structured-callable-evidence.mjs",
+      "right": {
+        "edits": [],
+        "previousSha256": "2c36d8a24a6a99c7448a70344d6491919fb61a233137ee48471b5bfe9b8608aa"
+      },
+      "rightExpectedSha256": [
+        "2c36d8a24a6a99c7448a70344d6491919fb61a233137ee48471b5bfe9b8608aa"
+      ]
+    },
+    {
+      "currentSha256": "ca4a10499a85b25cc4457b487b9b2782f86e8bc6c1c593749b6c6910e5c7e044",
+      "left": {
+        "edits": [
+          {
+            "current": "import { sourceAtFinHistoryMilestone } from \"./source-at-fin-history-milestone.mjs\";\n",
+            "previous": "",
+            "start": 757
+          },
+          {
+            "current": "\t\t// Later layers edit these sources; reconstruct the recorded milestone bytes.\n\t\tconst current = await sourceAtFinHistoryMilestone(update.path, update.currentSha256);\n",
+            "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+            "start": 1842
+          },
+          {
+            "current": "\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256))\n",
+            "previous": "\t\tassert.equal(sha256(await readFile(addition.path))\n",
+            "start": 2547
+          }
+        ],
+        "previousSha256": "b2ca7c245db647d59e20b3affe4a35f27a215b2e75a1061066ecfdda156e1a05"
+      },
+      "path": "tests/helpers/owned-checked-record-php-wasm-source-history-tests.mjs",
+      "right": {
+        "edits": [],
+        "previousSha256": "ca4a10499a85b25cc4457b487b9b2782f86e8bc6c1c593749b6c6910e5c7e044"
+      },
+      "rightExpectedSha256": [
+        "ca4a10499a85b25cc4457b487b9b2782f86e8bc6c1c593749b6c6910e5c7e044"
+      ]
+    },
+    {
+      "currentSha256": "d1e9e7bbb71be44a9c7d46494ef7d0fffcbddeca9ddb357d5f90eb40889c7b58",
+      "left": {
+        "edits": [
+          {
+            "current": "import { moduleAtProducerWithSourceReads } from \"./producer-module.mjs\";\n",
+            "previous": "import { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from \"../../src/build/native-graph-model.mjs\";\nimport { generateOwnedCPackage } from \"../../src/backends/c/owned-package.mjs\";\nimport { generateOwnedDotnetPackage } from \"../../src/backends/dotnet/owned-package.mjs\";\nimport { ownedDotnetAdapterSources } from \"../../src/build/owned-dotnet-artifacts.mjs\";\n",
+            "start": 427
+          },
+          {
+            "current": "/** The commit whose complete source tree every digest in the .NET execution record names. */\nexport const ownedDotnetExecutionProducer = \"02d067429ab3b2b72d38270ea9c491c81017fe2f\";\nconst producerModules = new Map();\n// Reports are regenerated with their producer's generators; later generator changes never reach back.\nconst producerGenerators = revision => {\n\tassert.match(revision, /^[a-f0-9]{40}$/u);\n\tif(!producerModules.has(revision)) producerModules.set(revision, Promise.all([\n\t\t\"src/build/native-graph-model.mjs\"\n\t\t, \"src/backends/c/owned-package.mjs\"\n\t\t, \"src/backends/dotnet/owned-package.mjs\"\n\t\t, \"src/build/owned-dotnet-artifacts.mjs\"\n\t].map(path => moduleAtProducerWithSourceReads(revision, path))).then(modules =>\n\t\tObject.assign({}, ...modules)));\n\treturn producerModules.get(revision);\n};\n",
+            "previous": "",
+            "start": 4125
+          },
+          {
+            "current": " * @param producer - Commit whose complete source tree the record names.\n",
+            "previous": "",
+            "start": 5697
+          },
+          {
+            "current": "export const assertOwnedDotnetPackageReport = async (report, mode, scalar, sources, producer) => {\n\tconst {\n\t\tcreateCompiledNativeModel, generateCompiledNativeLeanAdapters\n\t\t, generateOwnedCPackage, generateOwnedDotnetPackage\n\t\t, ownedDotnetAdapterSources\n\t} = await producerGenerators(producer);\n",
+            "previous": "export const assertOwnedDotnetPackageReport = async (report, mode, scalar, sources) => {\n",
+            "start": 5774
+          },
+          {
+            "current": "\tawait assertOwnedDotnetReports(record, ownedDotnetExecutionProducer);\n",
+            "previous": "\tawait assertOwnedDotnetReports(record);\n",
+            "start": 17699
+          },
+          {
+            "current": " * @param producer - Commit whose complete source tree the record names.\n",
+            "previous": "",
+            "start": 17943
+          },
+          {
+            "current": "export const assertOwnedDotnetReports = async (record, producer) => {\n\tassert.match(producer, /^[a-f0-9]{40}$/u, \"Every report set names its own producer\");\n",
+            "previous": "export const assertOwnedDotnetReports = async record => {\n",
+            "start": 18020
+          },
+          {
+            "current": "\t\tawait assertOwnedDotnetPackageReport(record.packages[mode], mode, false, record.sources, producer);\n\t\tawait assertOwnedDotnetPackageReport(record.scalarPackages[mode], mode, true, record.sources, producer);\n",
+            "previous": "\t\tawait assertOwnedDotnetPackageReport(record.packages[mode], mode, false, record.sources);\n\t\tawait assertOwnedDotnetPackageReport(record.scalarPackages[mode], mode, true, record.sources);\n",
+            "start": 18358
+          }
+        ],
+        "previousSha256": "fff7f772be2be50fa5d15425b709fd16abfa45ccde32844d4ad19caa3ae12c01"
+      },
+      "path": "tests/helpers/owned-dotnet-evidence.mjs",
+      "right": {
+        "edits": [],
+        "previousSha256": "d1e9e7bbb71be44a9c7d46494ef7d0fffcbddeca9ddb357d5f90eb40889c7b58"
+      },
+      "rightExpectedSha256": [
+        "d1e9e7bbb71be44a9c7d46494ef7d0fffcbddeca9ddb357d5f90eb40889c7b58"
+      ]
+    },
+    {
+      "currentSha256": "47a9c5dc39f683ead12c3276d05c1b5d36cee88a5708a041cb6a4d9b2858102f",
+      "left": {
+        "edits": [
+          {
+            "current": "/** The commit whose complete source tree every digest in the process-origin record names. */\nexport const ownedDotnetProcessProducer = \"6e73096a2e309bca71106924a5276e0a2ddb0c8c\";\n",
+            "previous": "",
+            "start": 2762
+          },
+          {
+            "current": "\tawait assertOwnedDotnetReports(record, ownedDotnetProcessProducer);\n",
+            "previous": "\tawait assertOwnedDotnetReports(record);\n",
+            "start": 11227
+          }
+        ],
+        "previousSha256": "bd15e167f9d2fc2aa3e418a1203b28a57abd9232b2239d270dcb875f47065a70"
+      },
+      "path": "tests/helpers/owned-dotnet-process-evidence.mjs",
+      "right": {
+        "edits": [],
+        "previousSha256": "47a9c5dc39f683ead12c3276d05c1b5d36cee88a5708a041cb6a4d9b2858102f"
+      },
+      "rightExpectedSha256": [
+        "47a9c5dc39f683ead12c3276d05c1b5d36cee88a5708a041cb6a4d9b2858102f"
+      ]
+    },
+    {
+      "currentSha256": "558f1ccbe62f44bd220149f7d6981af46bd0075047fec2513a90e9c119992be6",
+      "left": {
+        "edits": [
+          {
+            "current": "import { moduleAtProducerWithSourceReads } from \"./producer-module.mjs\";\n",
+            "previous": "import { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from \"../../src/build/native-graph-model.mjs\";\nimport { generateOwnedCPackage } from \"../../src/backends/c/owned-package.mjs\";\n",
+            "start": 430
+          },
+          {
+            "current": "/** The commit whose complete source tree every digest in the host-callback execution record names. */\nexport const ownedHostProducer = \"650641c1274543a334aa7d50c43c70de945984a0\";\n\n",
+            "previous": "",
+            "start": 2462
+          },
+          {
+            "current": "\tconst [{ createCompiledNativeModel, generateCompiledNativeLeanAdapters }, { generateOwnedCPackage }] = await Promise.all([\n\t\t\"src/build/native-graph-model.mjs\", \"src/backends/c/owned-package.mjs\"\n\t].map(path => moduleAtProducerWithSourceReads(ownedHostProducer, path)));\n",
+            "previous": "",
+            "start": 2874
+          }
+        ],
+        "previousSha256": "64862719e62e419713f338abb160eecd02697ff40e7cd98ba7ef7c89cc32b290"
+      },
+      "path": "tests/helpers/owned-host-evidence.mjs",
+      "right": {
+        "edits": [],
+        "previousSha256": "558f1ccbe62f44bd220149f7d6981af46bd0075047fec2513a90e9c119992be6"
+      },
+      "rightExpectedSha256": [
+        "558f1ccbe62f44bd220149f7d6981af46bd0075047fec2513a90e9c119992be6"
+      ]
+    },
+    {
+      "currentSha256": "234a0d67693a9d7788513222ab7427ae1321f20cee68fca96bcab150ad23d55d",
+      "left": {
+        "edits": [
+          {
+            "current": "// The hub reverses every recognized state, so each read names the milestone digest it stops at.\nconst priorSource = async (path, expected) => beforeNativeRecursiveCallables(path, await readFile(path, \"utf8\"), expected);\n",
+            "previous": "const priorSource = async path => beforeNativeRecursiveCallables(path, await readFile(path, \"utf8\"));\n",
+            "start": 1632
+          },
+          {
+            "current": "\tfor(const path of paths) assert.equal(sha256(await priorSource(path, record.sourceHashes[path])), record.sourceHashes[path], path);\n",
+            "previous": "\tfor(const path of paths) assert.equal(sha256(await priorSource(path)), record.sourceHashes[path], path);\n",
+            "start": 12221
+          },
+          {
+            "current": "\t\trestored[update.path] = reverseWitStructuredCallableUpdate(await priorSource(update.path, update.currentSha256), update);\n",
+            "previous": "\t\trestored[update.path] = reverseWitStructuredCallableUpdate(await priorSource(update.path), update);\n",
+            "start": 12488
+          },
+          {
+            "current": "\tconst document = JSON.parse(await priorSource(\"docs/type-surface.v1.json\", record.sourceHashes[\"docs/type-surface.v1.json\"]));\n",
+            "previous": "\tconst document = JSON.parse(await priorSource(\"docs/type-surface.v1.json\"));\n",
+            "start": 13072
+          }
+        ],
+        "previousSha256": "866a2f793fa673dbe1ecb5c104a6e0bc17db8696c0070f8a83211e354e58d90d"
+      },
+      "path": "tests/helpers/wit-structured-callable-evidence.mjs",
+      "right": {
+        "edits": [],
+        "previousSha256": "234a0d67693a9d7788513222ab7427ae1321f20cee68fca96bcab150ad23d55d"
+      },
+      "rightExpectedSha256": [
+        "234a0d67693a9d7788513222ab7427ae1321f20cee68fca96bcab150ad23d55d"
+      ]
+    },
+    {
+      "currentSha256": "6c3fbf17633f1752ba889b08b6cb76fee94931daafad076ed76f75f87896ce3a",
+      "left": {
+        "edits": [
+          {
+            "current": "\t\t// The hub reverses every recognized state, so live reads and predecessor reads name their stops.\n\t\tconst source = beforeOwnedC(update.path, await readFile(update.path, \"utf8\"), update.currentSha256);\n",
+            "previous": "\t\tconst source = beforeOwnedC(update.path, await readFile(update.path, \"utf8\"));\n",
+            "start": 2375
+          },
+          {
+            "current": "\t\tassert.equal(sha256(beforeOwnedAggregates(update.path, source, update.previousSha256)), update.previousSha256);\n",
+            "previous": "\t\tassert.equal(sha256(beforeOwnedAggregates(update.path, source)), update.previousSha256);\n",
+            "start": 2670
+          }
+        ],
+        "previousSha256": "7cf163edecfd53dcb36bd3a5d63bf25186ce1c535c8e8d98ff1b5d214222bc84"
+      },
+      "path": "tests/owned-aggregate-evidence.test.mjs",
+      "right": {
+        "edits": [],
+        "previousSha256": "6c3fbf17633f1752ba889b08b6cb76fee94931daafad076ed76f75f87896ce3a"
+      },
+      "rightExpectedSha256": [
+        "6c3fbf17633f1752ba889b08b6cb76fee94931daafad076ed76f75f87896ce3a"
+      ]
+    },
+    {
+      "currentSha256": "8838663b77b0ac1b73d4cdbcea63b28c92e38546ddb227e91f56e7b1cc7f70ce",
+      "left": {
+        "edits": [
+          {
+            "current": "\t\t// The hub reverses every recognized state, so each predecessor read names its stop.\n\t\tconst prior = beforeOwnedAnalysis(update.path, current, update.previousSha256);\n",
+            "previous": "\t\tconst prior = beforeOwnedAnalysis(update.path, current);\n",
+            "start": 2242
+          },
+          {
+            "current": "\t\tassert.equal(beforeOwnedAnalysis(update.path, prior, update.previousSha256), prior);\n",
+            "previous": "\t\tassert.equal(beforeOwnedAnalysis(update.path, prior), prior);\n",
+            "start": 2465
+          },
+          {
+            "current": "\tconst transition = record.updates.find(update => update.path === inventoryPath);\n\tassert.ok(transition, \"Compiler analysis records an explicit type-surface predecessor\");\n\tconst prior = JSON.parse(beforeOwnedAnalysis(inventoryPath, current, transition.previousSha256));\n",
+            "previous": "\tconst prior = JSON.parse(beforeOwnedAnalysis(\"docs/type-surface.v1.json\", current));\n",
+            "start": 3284
+          }
+        ],
+        "previousSha256": "13858ca8a3c9e2522f174bc3239e5574f84aeed18976a4554918c56352014b22"
+      },
+      "path": "tests/owned-analysis-evidence.test.mjs",
+      "right": {
+        "edits": [],
+        "previousSha256": "8838663b77b0ac1b73d4cdbcea63b28c92e38546ddb227e91f56e7b1cc7f70ce"
+      },
+      "rightExpectedSha256": [
+        "8838663b77b0ac1b73d4cdbcea63b28c92e38546ddb227e91f56e7b1cc7f70ce"
+      ]
+    },
+    {
+      "currentSha256": "3d759c9b7ff8b6ee1694c6c93af13cfd1299f5640cd47921665886c2b18c2d01",
+      "left": {
+        "edits": [
+          {
+            "current": "\t\t// The hub reverses every recognized state, so live reads and predecessor reads name their stops.\n\t\tconst current = beforeCallbackInventoryRepair(update.path, await readFile(update.path), update.currentSha256)\n\t\t\t, prior = beforeOwnedCallbackResults(update.path, current, update.previousSha256);\n",
+            "previous": "\t\tconst current = beforeCallbackInventoryRepair(update.path, await readFile(update.path)), prior = beforeOwnedCallbackResults(update.path, current);\n",
+            "start": 1167
+          },
+          {
+            "current": "",
+            "previous": "\t\tassert.equal(beforeOwnedCallbackResults(update.path, prior), prior);\n",
+            "start": 1791
+          },
+          {
+            "current": "\tconst path = \"docs/type-surface.v1.json\", history = JSON.parse(await readFile(ownedCallbackResultHistoryPath, \"utf8\"));\n\tconst transition = history.updates.find(update => update.path === path);\n\tassert.ok(transition, \"Callback result history records an explicit type-surface predecessor\");\n\tconst current = beforeCallbackInventoryRepair(path, await readFile(path, \"utf8\"), transition.currentSha256);\n\tconst previous = JSON.parse(beforeOwnedCallbackResults(path, current, transition.previousSha256));\n\t// Source pins compare against the milestone inventory's own pins, never later live bytes.\n\tconst pins = new Map();\n\tfor(const evidence of JSON.parse(current).evidence) for(const file of evidence.files)\n\t{\n\t\tassert.ok(!pins.has(file.path) || pins.get(file.path) === file.sha256, file.path);\n\t\tpins.set(file.path, file.sha256);\n\t}\n",
+            "previous": "\tconst path = \"docs/type-surface.v1.json\", current = beforeCallbackInventoryRepair(path, await readFile(path, \"utf8\"));\n\tconst previous = JSON.parse(beforeOwnedCallbackResults(path, current));\n",
+            "start": 2586
+          },
+          {
+            "current": "\t{\n\t\tassert.ok(pins.has(file.path), file.path);\n\t\tfile.sha256 = pins.get(file.path);\n\t}\n",
+            "previous": "\t\tfile.sha256 = sha256(beforeCallbackInventoryRepair(file.path, await readFile(file.path)));\n",
+            "start": 3494
+          }
+        ],
+        "previousSha256": "7f1a8322e30a0d003fb3a612fbcb54eb4384f3cae3ef6bdb2e34cc1fcf18003a"
+      },
+      "path": "tests/owned-callback-result-history.test.mjs",
+      "right": {
+        "edits": [],
+        "previousSha256": "3d759c9b7ff8b6ee1694c6c93af13cfd1299f5640cd47921665886c2b18c2d01"
+      },
+      "rightExpectedSha256": [
+        "3d759c9b7ff8b6ee1694c6c93af13cfd1299f5640cd47921665886c2b18c2d01"
+      ]
+    },
+    {
+      "currentSha256": "43f525ed2845a05348c716978d1a427b1ff1aa99029fda1bdb4fdbed6b7cea70",
+      "left": {
+        "edits": [
+          {
+            "current": "\t\t// The hub reverses every recognized state, so live reads and predecessor reads name their stops.\n\t\tconst current = beforeOwnedRustCallbackResults(update.path, await readFile(update.path), update.currentSha256)\n\t\t\t, prior = beforeOwnedCppCallbackResults(update.path, current, update.previousSha256);\n",
+            "previous": "\t\tconst current = beforeOwnedRustCallbackResults(update.path, await readFile(update.path)), prior = beforeOwnedCppCallbackResults(update.path, current);\n",
+            "start": 1167
+          },
+          {
+            "current": "\t\tassert.equal(beforeOwnedCppCallbackResults(update.path, prior, update.previousSha256), prior);\n",
+            "previous": "\t\tassert.equal(beforeOwnedCppCallbackResults(update.path, prior), prior);\n",
+            "start": 1704
+          },
+          {
+            "current": "\tconst path = \"docs/type-surface.v1.json\", history = JSON.parse(await readFile(ownedCppCallbackHistoryPath, \"utf8\"));\n\tconst transition = history.updates.find(update => update.path === path);\n\tassert.ok(transition, \"C++ callback history records an explicit type-surface predecessor\");\n\tconst current = beforeOwnedRustCallbackResults(path, await readFile(path, \"utf8\"), transition.currentSha256);\n\tconst previous = JSON.parse(beforeOwnedCppCallbackResults(path, current, transition.previousSha256));\n\t// Source pins compare against the milestone inventory's own pins, never later live bytes.\n\tconst pins = new Map();\n\tfor(const evidence of JSON.parse(current).evidence) for(const file of evidence.files)\n\t{\n\t\tassert.ok(!pins.has(file.path) || pins.get(file.path) === file.sha256, file.path);\n\t\tpins.set(file.path, file.sha256);\n\t}\n",
+            "previous": "\tconst path = \"docs/type-surface.v1.json\", current = beforeOwnedRustCallbackResults(path, await readFile(path, \"utf8\"));\n\tconst previous = JSON.parse(beforeOwnedCppCallbackResults(path, current));\n",
+            "start": 2532
+          },
+          {
+            "current": "\t{\n\t\tassert.ok(pins.has(file.path), file.path);\n\t\tfile.sha256 = pins.get(file.path);\n\t}\n",
+            "previous": "\t\tfile.sha256 = sha256(beforeOwnedRustCallbackResults(file.path, await readFile(file.path)));\n",
+            "start": 3438
+          }
+        ],
+        "previousSha256": "b3fd58c086599c6ce388a128d14b6e76eccd0ff42b8089d71db1328b51cf32ae"
+      },
+      "path": "tests/owned-cpp-callback-result-history.test.mjs",
+      "right": {
+        "edits": [],
+        "previousSha256": "43f525ed2845a05348c716978d1a427b1ff1aa99029fda1bdb4fdbed6b7cea70"
+      },
+      "rightExpectedSha256": [
+        "43f525ed2845a05348c716978d1a427b1ff1aa99029fda1bdb4fdbed6b7cea70"
+      ]
+    },
+    {
+      "currentSha256": "017d0dc66cc195fbe59f4029b7a860d29bc2fecb152f83442b0c6cbf515ddbf6",
+      "left": {
+        "edits": [
+          {
+            "current": "\t\t// The hub reverses every recognized state, so each predecessor read names its stop.\n\t\tassert.equal(sha256(beforeOwnedDotnet(update.path, source, update.previousSha256)), update.previousSha256);\n",
+            "previous": "\t\tassert.equal(sha256(beforeOwnedDotnet(update.path, source)), update.previousSha256);\n",
+            "start": 4283
+          }
+        ],
+        "previousSha256": "3f566f720aee3db6b6dc5429984a3da8ce1dd3d0c8673059529b1b7360e6208b"
+      },
+      "path": "tests/owned-dotnet-evidence.test.mjs",
+      "right": {
+        "edits": [],
+        "previousSha256": "017d0dc66cc195fbe59f4029b7a860d29bc2fecb152f83442b0c6cbf515ddbf6"
+      },
+      "rightExpectedSha256": [
+        "017d0dc66cc195fbe59f4029b7a860d29bc2fecb152f83442b0c6cbf515ddbf6"
+      ]
+    },
+    {
+      "currentSha256": "517243a89b4968e134c5a8c1503ad2a112ebcd93f47ab632aba87211c56b2f71",
+      "left": {
+        "edits": [
+          {
+            "current": "\t\t// The hub reverses every recognized state, so each predecessor read names its stop.\n\t\tassert.equal(sha256(beforeOwnedDotnetProcess(update.path, current, update.previousSha256)), update.previousSha256);\n",
+            "previous": "\t\tassert.equal(sha256(beforeOwnedDotnetProcess(update.path, current)), update.previousSha256);\n",
+            "start": 3405
+          }
+        ],
+        "previousSha256": "40a7699b57ed9d8e03776a0650016878ee86511bb171c26d5d401aa5a21b1e28"
+      },
+      "path": "tests/owned-dotnet-process-evidence.test.mjs",
+      "right": {
+        "edits": [],
+        "previousSha256": "517243a89b4968e134c5a8c1503ad2a112ebcd93f47ab632aba87211c56b2f71"
+      },
+      "rightExpectedSha256": [
+        "517243a89b4968e134c5a8c1503ad2a112ebcd93f47ab632aba87211c56b2f71"
+      ]
+    },
+    {
+      "currentSha256": "0aa37c32e1e3875a5093c4269f5ea5f43608a5b4f7d2a605517a4f25b7869fac",
+      "left": {
+        "edits": [
+          {
+            "current": "\t\t// The hub reverses every recognized state, so live reads and predecessor reads name their stops.\n\t\tconst source = beforeOwnedCi(update.path, await readFile(update.path, \"utf8\"), update.currentSha256);\n",
+            "previous": "\t\tconst source = beforeOwnedCi(update.path, await readFile(update.path, \"utf8\"));\n",
+            "start": 3137
+          },
+          {
+            "current": "\t\tassert.equal(sha256(beforeOwnedHost(update.path, source, update.previousSha256)), update.previousSha256);\n",
+            "previous": "\t\tassert.equal(sha256(beforeOwnedHost(update.path, source)), update.previousSha256);\n",
+            "start": 3428
+          },
+          {
+            "current": "\tassert.equal(record.additions[helper], sha256(beforeOwnedCpp(helper, await readFile(helper, \"utf8\"), record.additions[helper])));\n",
+            "previous": "\tassert.equal(record.additions[helper], sha256(beforeOwnedCpp(helper, await readFile(helper, \"utf8\"))));\n",
+            "start": 4792
+          },
+          {
+            "current": "\t\t// The hub reverses every recognized state, so live reads and predecessor reads name their stops.\n\t\tconst source = beforeOwnedCpp(update.path, await readFile(update.path, \"utf8\"), update.currentSha256), previous = reverseOwnedCiUpdate(source, update);\n",
+            "previous": "\t\tconst source = beforeOwnedCpp(update.path, await readFile(update.path, \"utf8\")), previous = reverseOwnedCiUpdate(source, update);\n",
+            "start": 4963
+          },
+          {
+            "current": "\t\tassert.equal(beforeOwnedCi(update.path, source, update.previousSha256), previous);\n",
+            "previous": "\t\tassert.equal(beforeOwnedCi(update.path, source), previous);\n",
+            "start": 5274
+          }
+        ],
+        "previousSha256": "cca97e4f06e73bda017fa7178d44f1679c39b4dbfee7bc228dedf26538ef73a6"
+      },
+      "path": "tests/owned-host-evidence.test.mjs",
+      "right": {
+        "edits": [],
+        "previousSha256": "0aa37c32e1e3875a5093c4269f5ea5f43608a5b4f7d2a605517a4f25b7869fac"
+      },
+      "rightExpectedSha256": [
+        "0aa37c32e1e3875a5093c4269f5ea5f43608a5b4f7d2a605517a4f25b7869fac"
+      ]
+    },
+    {
+      "currentSha256": "16c2c971864e0bd442927b8213300b0655a7af03abf4857cd317e600ad5e6cd4",
+      "left": {
+        "edits": [
+          {
+            "current": "\t\t// The hub reverses every recognized state, so each predecessor read names its stop.\n\t\tconst current = beforeOwnedJavaScriptCoexistence(update.path, await readFile(update.path, \"utf8\"), update.currentSha256)\n\t\t\t, prior = beforeOwnedJavaScriptNpm(update.path, current, update.previousSha256);\n",
+            "previous": "\t\tconst current = beforeOwnedJavaScriptCoexistence(update.path, await readFile(update.path, \"utf8\"), update.currentSha256), prior = beforeOwnedJavaScriptNpm(update.path, current);\n",
+            "start": 2311
+          },
+          {
+            "current": "\t\tassert.equal(beforeOwnedJavaScriptNpm(update.path, prior, update.previousSha256), prior);\n",
+            "previous": "\t\tassert.equal(beforeOwnedJavaScriptNpm(update.path, prior), prior);\n",
+            "start": 2672
+          },
+          {
+            "current": "\tconst transition = record.updates.find(update => update.path === inventoryPath);\n\tassert.ok(transition, \"Installed npm evidence records an explicit type-surface predecessor\");\n\tconst prior = JSON.parse(beforeOwnedJavaScriptNpm(inventoryPath, current, transition.previousSha256));\n",
+            "previous": "\tconst prior = JSON.parse(beforeOwnedJavaScriptNpm(\"docs/type-surface.v1.json\", current));\n",
+            "start": 3653
+          }
+        ],
+        "previousSha256": "524bd272ad3ea8469e7364ff520383c2681875863ce0659c3a0c0fc64f84aa87"
+      },
+      "path": "tests/owned-javascript-npm-evidence.test.mjs",
+      "right": {
+        "edits": [],
+        "previousSha256": "16c2c971864e0bd442927b8213300b0655a7af03abf4857cd317e600ad5e6cd4"
+      },
+      "rightExpectedSha256": [
+        "16c2c971864e0bd442927b8213300b0655a7af03abf4857cd317e600ad5e6cd4"
+      ]
+    },
+    {
+      "currentSha256": "58fdfd51564a11c6e2707234ea1a584a6e8dc30ea1c143af0f93c81451c9b333",
+      "left": {
+        "edits": [
+          {
+            "current": "\t\t// The hub reverses every recognized state, so live reads and predecessor reads name their stops.\n\t\tconst current = beforeCoreHistoryPerformance(update.path, await readFile(update.path, \"utf8\"), update.currentSha256)\n\t\t\t, prior = beforeOwnedJavaScriptPublication(update.path, current, update.previousSha256);\n",
+            "previous": "\t\tconst current = beforeCoreHistoryPerformance(update.path, await readFile(update.path, \"utf8\")), prior = beforeOwnedJavaScriptPublication(update.path, current);\n",
+            "start": 2362
+          },
+          {
+            "current": "\t\tassert.equal(beforeOwnedJavaScriptPublication(update.path, prior, update.previousSha256), prior);\n",
+            "previous": "\t\tassert.equal(beforeOwnedJavaScriptPublication(update.path, prior), prior);\n",
+            "start": 2727
+          },
+          {
+            "current": "\tconst path = \"docs/type-surface.v1.json\", transition = record.updates.find(update => update.path === path);\n\tassert.ok(transition, \"Publication records an explicit type-surface predecessor\");\n\tconst current = beforeCoreHistoryPerformance(path, await readFile(path, \"utf8\"), transition.currentSha256);\n\tconst prior = JSON.parse(beforeOwnedJavaScriptPublication(path, current, transition.previousSha256));\n\t// Source pins compare against the milestone inventory's own pins, never later live bytes.\n\tconst pins = new Map();\n\tfor(const evidence of JSON.parse(current).evidence) for(const file of evidence.files)\n\t{\n\t\tassert.ok(!pins.has(file.path) || pins.get(file.path) === file.sha256, file.path);\n\t\tpins.set(file.path, file.sha256);\n\t}\n\tfor(const evidence of prior.evidence) for(const file of evidence.files)\n\t{\n\t\tassert.ok(pins.has(file.path), file.path);\n\t\tfile.sha256 = pins.get(file.path);\n\t}\n",
+            "previous": "\tconst current = beforeCoreHistoryPerformance(\"docs/type-surface.v1.json\", await readFile(\"docs/type-surface.v1.json\", \"utf8\"));\n\tconst prior = JSON.parse(beforeOwnedJavaScriptPublication(\"docs/type-surface.v1.json\", current));\n\tfor(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(coreHistoryHistoricalBytes(file.path, await readFile(file.path)));\n",
+            "start": 3415
+          }
+        ],
+        "previousSha256": "4518132b5f80a3ac5790ff1499d18cfb9da70c8e28db274bb40c10da60514e1d"
+      },
+      "path": "tests/owned-javascript-publication-evidence.test.mjs",
+      "right": {
+        "edits": [],
+        "previousSha256": "58fdfd51564a11c6e2707234ea1a584a6e8dc30ea1c143af0f93c81451c9b333"
+      },
+      "rightExpectedSha256": [
+        "58fdfd51564a11c6e2707234ea1a584a6e8dc30ea1c143af0f93c81451c9b333"
+      ]
+    },
+    {
+      "currentSha256": "355403ad1648b4a438f9db0245351a07967012122fd38dae02ad1178bcfff600",
+      "left": {
+        "edits": [
+          {
+            "current": "\t\tassert.equal(beforeOwnedJavaScriptTransfer(update.path, prior, update.previousSha256), prior);\n",
+            "previous": "\t\tassert.equal(beforeOwnedJavaScriptTransfer(update.path, prior), prior);\n",
+            "start": 2452
+          }
+        ],
+        "previousSha256": "c898b717931c158b91a4f8ef294486d18402ebf277215414846a53ddf15267ac"
+      },
+      "path": "tests/owned-javascript-transfer-evidence.test.mjs",
+      "right": {
+        "edits": [],
+        "previousSha256": "355403ad1648b4a438f9db0245351a07967012122fd38dae02ad1178bcfff600"
+      },
+      "rightExpectedSha256": [
+        "355403ad1648b4a438f9db0245351a07967012122fd38dae02ad1178bcfff600"
+      ]
+    },
+    {
+      "currentSha256": "ec82e1e517684944b0eb6e12ac20d188c278262c947222754adcdfaef9bc49fe",
+      "left": {
+        "edits": [
+          {
+            "current": "\t\t// The hub reverses every recognized state, so each predecessor read names its stop.\n\t\tconst prior = beforeOwnedPerlPackages(update.path, current, update.previousSha256);\n",
+            "previous": "\t\tconst prior = beforeOwnedPerlPackages(update.path, current);\n",
+            "start": 2014
+          },
+          {
+            "current": "\t\tassert.equal(beforeOwnedPerlPackages(update.path, prior, update.previousSha256), prior);\n",
+            "previous": "\t\tassert.equal(beforeOwnedPerlPackages(update.path, prior), prior);\n",
+            "start": 2254
+          },
+          {
+            "current": "\tconst transition = record.updates.find(update => update.path === inventoryPath);\n\tassert.ok(transition, \"Owned Perl records an explicit type-surface predecessor\");\n\tconst expected = JSON.parse(beforeOwnedPerlPackages(inventoryPath, current, transition.previousSha256));\n",
+            "previous": "\tconst expected = JSON.parse(beforeOwnedPerlPackages(\"docs/type-surface.v1.json\", current));\n",
+            "start": 3173
+          }
+        ],
+        "previousSha256": "9c8f2ad00bf5d12c3f0bc638b9b4bd4169e41f1313e16bcabe61a654a16d1825"
+      },
+      "path": "tests/owned-perl-package-evidence.test.mjs",
+      "right": {
+        "edits": [],
+        "previousSha256": "ec82e1e517684944b0eb6e12ac20d188c278262c947222754adcdfaef9bc49fe"
+      },
+      "rightExpectedSha256": [
+        "ec82e1e517684944b0eb6e12ac20d188c278262c947222754adcdfaef9bc49fe"
+      ]
+    },
+    {
+      "currentSha256": "b937eb016f76d11fddd3602a146c467b30db509fc6045343212708b967216e9a",
+      "left": {
+        "edits": [
+          {
+            "current": "\t\t// The hub reverses every recognized state, so live reads and predecessor reads name their stops.\n\t\tconst current = Buffer.from(beforeOwnedDotnetCallbackResults(update.path, await readFile(update.path), update.currentSha256));\n\t\tconst prior = beforeOwnedRubyCallbackResults(update.path, current, update.previousSha256);\n",
+            "previous": "\t\tconst current = Buffer.from(beforeOwnedDotnetCallbackResults(update.path, await readFile(update.path)));\n\t\tconst prior = beforeOwnedRubyCallbackResults(update.path, current);\n",
+            "start": 1557
+          },
+          {
+            "current": "\t\tassert.equal(beforeOwnedRubyCallbackResults(update.path, prior, update.previousSha256), prior);\n",
+            "previous": "\t\tassert.equal(beforeOwnedRubyCallbackResults(update.path, prior), prior);\n",
+            "start": 2115
+          },
+          {
+            "current": "\tconst path = \"docs/type-surface.v1.json\", history = JSON.parse(await readFile(ownedRubyCallbackHistoryPath, \"utf8\"));\n\tconst transition = history.updates.find(update => update.path === path);\n\tassert.ok(transition, \"Ruby callback history records an explicit type-surface predecessor\");\n\tconst current = beforeOwnedDotnetCallbackResults(path, await readFile(path, \"utf8\"), transition.currentSha256);\n\tconst previous = JSON.parse(beforeOwnedRubyCallbackResults(path, current, transition.previousSha256));\n\t// Source pins compare against the milestone inventory's own pins, never later live bytes.\n\tconst pins = new Map();\n\tfor(const evidence of JSON.parse(current).evidence) for(const file of evidence.files)\n\t{\n\t\tassert.ok(!pins.has(file.path) || pins.get(file.path) === file.sha256, file.path);\n\t\tpins.set(file.path, file.sha256);\n\t}\n",
+            "previous": "\tconst path = \"docs/type-surface.v1.json\", current = beforeOwnedDotnetCallbackResults(path, await readFile(path, \"utf8\"));\n\tconst previous = JSON.parse(beforeOwnedRubyCallbackResults(path, current));\n",
+            "start": 3997
+          },
+          {
+            "current": "\t{\n\t\tassert.ok(pins.has(file.path), file.path);\n\t\tfile.sha256 = pins.get(file.path);\n\t}\n",
+            "previous": "\t\tfile.sha256 = sha256(beforeOwnedDotnetCallbackResults(file.path, await readFile(file.path)));\n",
+            "start": 4908
+          }
+        ],
+        "previousSha256": "a64d4a1906103448957885bc58ff998eeb5a72189c6398fed909bf7e8f7fabc2"
+      },
+      "path": "tests/owned-ruby-callback-result-history.test.mjs",
+      "right": {
+        "edits": [],
+        "previousSha256": "b937eb016f76d11fddd3602a146c467b30db509fc6045343212708b967216e9a"
+      },
+      "rightExpectedSha256": [
+        "b937eb016f76d11fddd3602a146c467b30db509fc6045343212708b967216e9a"
+      ]
+    },
+    {
+      "currentSha256": "56a2c4548202f22c1a6c9fea3f5ca3631731c2c0bbbe72d653ab71f2c8cd965e",
+      "left": {
+        "edits": [
+          {
+            "current": "\t\t// The hub reverses every recognized state, so live reads and predecessor reads name their stops.\n\t\tconst current = Buffer.from(beforeOwnedPythonCallbackResults(update.path, await readFile(update.path), update.currentSha256));\n\t\tconst prior = beforeOwnedRustCallbackResults(update.path, current, update.previousSha256);\n",
+            "previous": "\t\tconst current = Buffer.from(beforeOwnedPythonCallbackResults(update.path, await readFile(update.path)));\n\t\tconst prior = beforeOwnedRustCallbackResults(update.path, current);\n",
+            "start": 1184
+          },
+          {
+            "current": "\t\tassert.equal(beforeOwnedRustCallbackResults(update.path, prior, update.previousSha256), prior);\n",
+            "previous": "\t\tassert.equal(beforeOwnedRustCallbackResults(update.path, prior), prior);\n",
+            "start": 1742
+          },
+          {
+            "current": "\tconst path = \"docs/type-surface.v1.json\", history = JSON.parse(await readFile(ownedRustCallbackHistoryPath, \"utf8\"));\n\tconst transition = history.updates.find(update => update.path === path);\n\tassert.ok(transition, \"Rust callback history records an explicit type-surface predecessor\");\n\tconst current = beforeOwnedPythonCallbackResults(path, await readFile(path, \"utf8\"), transition.currentSha256);\n\tconst previous = JSON.parse(beforeOwnedRustCallbackResults(path, current, transition.previousSha256));\n\t// Source pins compare against the milestone inventory's own pins, never later live bytes.\n\tconst pins = new Map();\n\tfor(const evidence of JSON.parse(current).evidence) for(const file of evidence.files)\n\t{\n\t\tassert.ok(!pins.has(file.path) || pins.get(file.path) === file.sha256, file.path);\n\t\tpins.set(file.path, file.sha256);\n\t}\n",
+            "previous": "\tconst path = \"docs/type-surface.v1.json\", current = beforeOwnedPythonCallbackResults(path, await readFile(path, \"utf8\"));\n\tconst previous = JSON.parse(beforeOwnedRustCallbackResults(path, current));\n",
+            "start": 2576
+          },
+          {
+            "current": "\t{\n\t\tassert.ok(pins.has(file.path), file.path);\n\t\tfile.sha256 = pins.get(file.path);\n\t}\n",
+            "previous": "\t\tfile.sha256 = sha256(beforeOwnedPythonCallbackResults(file.path, await readFile(file.path)));\n",
+            "start": 3487
+          }
+        ],
+        "previousSha256": "811e0317444b87f6399723376f5a1eda8e2ba92b866b50fa1086c3085147ef85"
+      },
+      "path": "tests/owned-rust-callback-result-history.test.mjs",
+      "right": {
+        "edits": [],
+        "previousSha256": "56a2c4548202f22c1a6c9fea3f5ca3631731c2c0bbbe72d653ab71f2c8cd965e"
+      },
+      "rightExpectedSha256": [
+        "56a2c4548202f22c1a6c9fea3f5ca3631731c2c0bbbe72d653ab71f2c8cd965e"
+      ]
+    },
+    {
+      "currentSha256": "144423c0adc5272f58defda7589d0d73c47ee9089454ee765e574e4cebb36b61",
+      "left": {
+        "edits": [
+          {
+            "current": "\t\t// The hub reverses every recognized state, so each predecessor read names its stop.\n\t\tconst prior = beforeOwnedWasm32(update.path, current, update.previousSha256);\n",
+            "previous": "\t\tconst prior = beforeOwnedWasm32(update.path, current);\n",
+            "start": 2122
+          },
+          {
+            "current": "\t\tassert.equal(beforeOwnedWasm32(update.path, prior, update.previousSha256), prior);\n",
+            "previous": "\t\tassert.equal(beforeOwnedWasm32(update.path, prior), prior);\n",
+            "start": 2356
+          },
+          {
+            "current": "\tconst transition = record.updates.find(update => update.path === \"docs/type-surface.v1.json\");\n\tassert.ok(transition, \"wasm32 evidence records an explicit type-surface predecessor\");\n\tconst prior = JSON.parse(beforeOwnedWasm32(\"docs/type-surface.v1.json\", current, transition.previousSha256));\n\t// Source pins compare against the milestone inventory's own pins, never later live bytes.\n\tconst pins = new Map();\n\tfor(const evidence of JSON.parse(current).evidence) for(const file of evidence.files)\n\t{\n\t\tassert.ok(!pins.has(file.path) || pins.get(file.path) === file.sha256, file.path);\n\t\tpins.set(file.path, file.sha256);\n\t}\n\tfor(const evidence of prior.evidence) for(const file of evidence.files)\n\t{\n\t\tassert.ok(pins.has(file.path), file.path);\n\t\tfile.sha256 = pins.get(file.path);\n\t}\n",
+            "previous": "\tconst prior = JSON.parse(beforeOwnedWasm32(\"docs/type-surface.v1.json\", current));\n\tfor(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(await source(file.path, record.sources[file.path]));\n",
+            "start": 3284
+          }
+        ],
+        "previousSha256": "2541f284fa8be016402afe424361895d0b6312e16366c490f7b6ae16b433a1f4"
+      },
+      "path": "tests/owned-wasm32-evidence.test.mjs",
+      "right": {
+        "edits": [],
+        "previousSha256": "144423c0adc5272f58defda7589d0d73c47ee9089454ee765e574e4cebb36b61"
+      },
+      "rightExpectedSha256": [
+        "144423c0adc5272f58defda7589d0d73c47ee9089454ee765e574e4cebb36b61"
+      ]
+    },
+    {
+      "currentSha256": "d8457a604e251f9e98fc8b8b3ea07e270939b14c0dab93d438ee93a6ec1811ee",
+      "left": {
+        "edits": [
+          {
+            "current": "\t\t// The hub reverses every recognized state, so each predecessor read names its stop.\n\t\tconst current = beforeOwnedJavaScriptEngine(update.path, await readFile(update.path, \"utf8\"), update.currentSha256)\n\t\t\t, prior = beforeOwnedZendBailoutRepair(update.path, current, update.previousSha256);\n",
+            "previous": "\t\tconst current = beforeOwnedJavaScriptEngine(update.path, await readFile(update.path, \"utf8\"), update.currentSha256), prior = beforeOwnedZendBailoutRepair(update.path, current);\n",
+            "start": 2006
+          },
+          {
+            "current": "\t\tassert.equal(beforeOwnedZendBailoutRepair(update.path, prior, update.previousSha256), prior);\n",
+            "previous": "\t\tassert.equal(beforeOwnedZendBailoutRepair(update.path, prior), prior);\n",
+            "start": 2353
+          },
+          {
+            "current": "\tconst transition = record.updates.find(update => update.path === \"docs/type-surface.v1.json\");\n\tassert.ok(transition, \"The bailout repair records an explicit type-surface predecessor\");\n\tconst prior = JSON.parse(beforeOwnedZendBailoutRepair(\"docs/type-surface.v1.json\", current, transition.previousSha256));\n\t// Source pins compare against the milestone inventory's own pins, never later live bytes.\n\tconst pins = new Map();\n\tfor(const evidence of JSON.parse(current).evidence) for(const file of evidence.files)\n\t{\n\t\tassert.ok(!pins.has(file.path) || pins.get(file.path) === file.sha256, file.path);\n\t\tpins.set(file.path, file.sha256);\n\t}\n\tfor(const evidence of prior.evidence) for(const file of evidence.files)\n\t{\n\t\tassert.ok(pins.has(file.path), file.path);\n\t\tfile.sha256 = pins.get(file.path);\n\t}\n",
+            "previous": "\tconst prior = JSON.parse(beforeOwnedZendBailoutRepair(\"docs/type-surface.v1.json\", current));\n\tfor(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedJavaScriptEngineHistoricalBytes(file.path, await readFile(file.path), record.sources[file.path]));\n",
+            "start": 3409
+          }
+        ],
+        "previousSha256": "8768c9de3617409259b95b33752ac01e1d98a9332a0a43c5e34028bb76c2c0c5"
+      },
+      "path": "tests/owned-zend-bailout-repair.test.mjs",
+      "right": {
+        "edits": [],
+        "previousSha256": "d8457a604e251f9e98fc8b8b3ea07e270939b14c0dab93d438ee93a6ec1811ee"
+      },
+      "rightExpectedSha256": [
+        "d8457a604e251f9e98fc8b8b3ea07e270939b14c0dab93d438ee93a6ec1811ee"
+      ]
+    },
+    {
+      "currentSha256": "3a1d2a7d73e8e526d6e748bf8b8bc64a1f6bb30ae83e9d75b9b4b4ad1e1e6b35",
+      "left": {
+        "edits": [
+          {
+            "current": "\t\t// The hub reverses every recognized state, so live reads and predecessor reads name their stops.\n\t\tconst source = beforeDotnetStructuredCallables(update.path, await readFile(update.path, \"utf8\"), update.currentSha256);\n",
+            "previous": "\t\tconst source = beforeDotnetStructuredCallables(update.path, await readFile(update.path, \"utf8\"));\n",
+            "start": 3272
+          },
+          {
+            "current": "\t\tassert.equal(sha256(beforeRubyStructuredCallables(update.path, source, update.previousSha256)), update.previousSha256);\n",
+            "previous": "\t\tassert.equal(sha256(beforeRubyStructuredCallables(update.path, source)), update.previousSha256);\n",
+            "start": 3594
+          }
+        ],
+        "previousSha256": "47b94cee79cb38217f583932f406bb1ad22e7b0782122eb5127a77783f374897"
+      },
+      "path": "tests/ruby-structured-callable-evidence.test.mjs",
+      "right": {
+        "edits": [],
+        "previousSha256": "3a1d2a7d73e8e526d6e748bf8b8bc64a1f6bb30ae83e9d75b9b4b4ad1e1e6b35"
+      },
+      "rightExpectedSha256": [
+        "3a1d2a7d73e8e526d6e748bf8b8bc64a1f6bb30ae83e9d75b9b4b4ad1e1e6b35"
+      ]
+    },
+    {
+      "currentSha256": "9737727d328986af5bfd6dc2ec8e770af1f7908b2adc4cd70b69417c9b4049f7",
+      "left": {
+        "edits": [
+          {
+            "current": "\t\t// The hub reverses every recognized state, so live reads and predecessor reads name their stops.\n\t\tconst source = beforeNativeRecursiveCallables(update.path, await readFile(update.path, \"utf8\"), update.currentSha256);\n",
+            "previous": "\t\tconst source = beforeNativeRecursiveCallables(update.path, await readFile(update.path, \"utf8\"));\n",
+            "start": 3724
+          },
+          {
+            "current": "\t\tassert.equal(sha256(beforeWitStructuredCallables(update.path, source, update.previousSha256)), update.previousSha256);\n",
+            "previous": "\t\tassert.equal(sha256(beforeWitStructuredCallables(update.path, source)), update.previousSha256);\n",
+            "start": 4044
+          }
+        ],
+        "previousSha256": "de01bf98b10acd4f4fbeefc99e7bf66746d97303881e3ed791de6b7a88bd6820"
+      },
+      "path": "tests/wit-structured-callable-evidence.test.mjs",
+      "right": {
+        "edits": [],
+        "previousSha256": "9737727d328986af5bfd6dc2ec8e770af1f7908b2adc4cd70b69417c9b4049f7"
+      },
+      "rightExpectedSha256": [
+        "9737727d328986af5bfd6dc2ec8e770af1f7908b2adc4cd70b69417c9b4049f7"
+      ]
+    }
+  ]
+}
