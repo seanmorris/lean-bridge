@@ -243,18 +243,50 @@ export const phpWasmRefinementEntryPlan = (family, selected, generatedLeanSource
 		return item(control, "refused", name, checks.slice(0, refusingVisit + 1).flat());
 	};
 	const node = (tail = null) => ({ tail });
+	// A flat provider checks every refined field at its own position, in field order.
+	const positions = (name, prefix, constructorNames) => {
+		assert.ok(!graphCarried, `${family} positions belong to a flat selection`);
+		const pattern = new RegExp(`^${escaped(`${namespace}.${name}:refinement_${prefix}_`)}(\\d+)$`, "u");
+		const validators = selected.filter(entry => entry.kind === "validator" && pattern.test(entry.label))
+			.map(entry => ({ entry, index: Number(pattern.exec(entry.label)[1]) }))
+			.sort((left, right) => left.index - right.index);
+		assert.deepEqual(validators.map(item => item.index), constructorNames.map((_, index) => index)
+			, `${name} position ${prefix} validates every authored field once`);
+		return validators.map(({ entry }, index) => {
+			const block = exportBlock(entry.symbol);
+			const checked = selected.filter(item => item.kind === "constructor" && new RegExp(
+				`_root_\\.${escaped(item.label)}(?![A-Za-z0-9_])`, "u").test(block));
+			assert.deepEqual(checked.map(item => item.label), [`${namespace}.${constructorNames[index]}`]
+				, `${entry.label} checks only its authored field constructor`);
+			return [{ kind: "validator", label: entry.label }, constructor(constructorNames[index])];
+		});
+	};
+	const positionalAccepted = (control, name, groups = []) => {
+		const checks = groups.flatMap(([prefix, names]) => positions(name, prefix, names));
+		return item(control, "accepted", name, [
+			...checks.flat(), adapter(name)
+			, ...checks.map(([, built]) => built), source(name)
+		]);
+	};
+	const positionalRefused = (control, name, groups, refusingConstructor) => {
+		const checks = groups.flatMap(([prefix, names]) => positions(name, prefix, names));
+		const refusing = checks.findIndex(([, built]) => built.label === `${namespace}.${refusingConstructor}`);
+		assert.ok(refusing >= 0, `${control} refuses at a planned position`);
+		return item(control, "refused", name, checks.slice(0, refusing + 1).flat());
+	};
 	let cases;
 	if(family === "nominal-full")
 	{
 		const a = nominalPrimitiveSubtypeFields.map(item => item.constructor + "A");
 		const b = nominalPrimitiveSubtypeFields.map(item => item.constructor + "B");
+		// Position prefixes name the parameter and active branch path of each authored record.
 		cases = [
-			accepted("direct", "echoA", a)
-			, refused("first-refusal", "echoA", a)
-			, accepted("recovery", "echoA", a)
-			, accepted("repeated-fields", "combine", [...a, ...b])
-			, accepted("inactive-branch", "echoEventA")
-			, accepted("active-branch", "echoEventA", a)
+			positionalAccepted("direct", "echoA", [["0", a]])
+			, positionalRefused("first-refusal", "echoA", [["0", a]], "isizeA")
+			, positionalAccepted("recovery", "echoA", [["0", a]])
+			, positionalAccepted("repeated-fields", "combine", [["0", a], ["1", b]])
+			, positionalAccepted("inactive-branch", "echoEventA")
+			, positionalAccepted("active-branch", "echoEventA", [["0_1_0", a]])
 			, accepted("constructor-free", "produce")
 		];
 	}

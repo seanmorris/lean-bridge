@@ -160,7 +160,9 @@ export const checkPhpWasmRefinementEntryReport = async (records, {
 		const prefix = `build-${index}/`;
 		for(const path of ["source-probe.json", "observation.json", "model.json", "commands.json"])
 			expectedPaths.add(prefix + path);
-		assert.deepEqual(await json(prefix + "source-probe.json"), sourceProbe);
+		// Owned builds retain the fixture identity beside the instrumented source.
+		assert.deepEqual(await json(prefix + "source-probe.json"), ownedFamily(family)
+			? { family, path: marker.path, ...sourceProbe } : sourceProbe);
 		const modelBytes = await bytes(prefix + "model.json");
 		const model = JSON.parse(modelBytes); assert.equal(modelBytes.toString(), canonicalJson(model));
 		const observation = await json(prefix + "observation.json");
