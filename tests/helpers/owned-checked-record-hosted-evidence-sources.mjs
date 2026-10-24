@@ -15,6 +15,9 @@ import { callbackSubtypeHostedOriginal } from "./callback-subtype-hosted-evidenc
 import {
 	ownedCheckedRecordHostedLaneNames, ownedCheckedRecordHostedLanes
 } from "./owned-checked-record-hosted-contracts.mjs";
+import {
+	assertOwnedCheckedRecordNpmProducer, selectOwnedCheckedRecordWorkflow
+} from "./owned-checked-record-npm-producer.mjs";
 
 export const ownedCheckedRecordHostedOriginal = callbackSubtypeHostedOriginal;
 
@@ -95,8 +98,9 @@ const freeze = roles => Object.freeze(roles.flatMap(
  *
  * @param laneName - Owned checked-record hosted lane.
  * @param value - Producer, consumer, checker and archiver revisions.
+ * @param workflow - Exact recurring or scoped producer workflow.
  */
-export const ownedCheckedRecordEvidenceSources = (laneName, value) => {
+export const ownedCheckedRecordEvidenceSources = (laneName, value, workflow) => {
 	assert.ok(ownedCheckedRecordHostedLaneNames.includes(laneName), laneName);
 	assert.deepEqual(Object.keys(value).sort(), [
 		"archiver", "checker", "consumer", "producer"
@@ -104,6 +108,12 @@ export const ownedCheckedRecordEvidenceSources = (laneName, value) => {
 	for(const revision of Object.values(value))
 		assert.match(revision, /^[a-f0-9]{40}$/u);
 	const lane = ownedCheckedRecordHostedLanes[laneName];
+	const selectedWorkflow = selectOwnedCheckedRecordWorkflow(lane, workflow);
+	if(selectedWorkflow !== lane.workflow)
+		assertOwnedCheckedRecordNpmProducer(
+			ownedCheckedRecordHostedOriginal(value.producer, selectedWorkflow).toString("utf8")
+			, ownedCheckedRecordHostedOriginal(value.producer, lane.workflow).toString("utf8")
+		);
 	const selectedConsumers = consumers(lane);
 	return freeze([
 		{
@@ -113,6 +123,7 @@ export const ownedCheckedRecordEvidenceSources = (laneName, value) => {
 					, ...lane.kind === "perl"
 						? ["scripts/build-perl-toolchains.mjs"] : []])
 				, ...common, ...selectedConsumers, lane.workflow, ...workflowCommon
+				, ...selectedWorkflow === lane.workflow ? [] : [selectedWorkflow]
 				, ...lane.kind === "perl" ? perlTemplates : []
 				, ...lane.profile === "rust" ? ["scripts/bootstrap-rust-ci.sh"
 					, "src/backends/rust/dependencies.lock"] : []

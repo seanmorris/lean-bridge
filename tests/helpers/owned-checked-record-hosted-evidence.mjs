@@ -35,6 +35,10 @@ import {
 	ownedCheckedRecordEvidenceSources, ownedCheckedRecordHostedOriginal
 } from "./owned-checked-record-hosted-evidence-sources.mjs";
 import { replayOwnedCheckedRecordHostedOutput } from "./owned-checked-record-hosted-output.mjs";
+import {
+	ownedCheckedRecordNpmTagPrefix, ownedCheckedRecordNpmWorkflow
+	, selectOwnedCheckedRecordWorkflow
+} from "./owned-checked-record-npm-producer.mjs";
 
 const limitations = Object.freeze([
 	"The fixture covers the tested owned Ticket, Booking and Claim records with checked Window and Claim payloads, transferred inputs, host callbacks and returned Lean closures on four ordinary/reviewed full/result-only routes."
@@ -110,20 +114,37 @@ const retainedOutputPaths = (lane, paths) => lane.retainedRoots
 	? paths.filter(path => lane.retainedRoots.some(root => path.startsWith(root)))
 	: paths;
 
-const hostedContract = (lane, selected, retainedConclusions) => {
-	const expected = { workflow: lane.workflow, jobName: lane.job
+/**
+ * Bind a run to one closed workflow identity and its eligible conclusions.
+ *
+ * @param lane - Closed hosted lane contract.
+ * @param run - Original GitHub run API record.
+ * @param retainedConclusions - Optional previously recorded terminal states.
+ */
+export const ownedCheckedRecordHostedWorkflowContract = (lane, run, retainedConclusions) => {
+	assert.equal(typeof run.path, "string", "The run must name its workflow");
+	assert.equal(run.status, "completed", "The producer must be terminal");
+	const workflow = selectOwnedCheckedRecordWorkflow(lane, run.path);
+	const expected = { workflow, jobName: lane.job
 		, artifactPrefix: lane.prefix };
 	if(!lane.runConclusions) return expected;
-	const conclusions = retainedConclusions ?? (() => {
-		const run = JSON.parse(readFileSync(selected["run-json"], "utf8"));
-		return { run: run.conclusion, job: "success" };
-	})();
+	const conclusions = retainedConclusions ?? { run: run.conclusion, job: "success" };
 	assert.deepEqual(Object.keys(conclusions).sort(), ["job", "run"]);
 	assert.ok(lane.runConclusions.includes(conclusions.run)
 		, `Ineligible hosted run conclusion: ${conclusions.run}`);
 	assert.equal(conclusions.job, "success");
+	assert.equal(conclusions.run, run.conclusion, "Retained conclusion must match the run API");
+	if(workflow === ownedCheckedRecordNpmWorkflow)
+	{
+		assert.equal(conclusions.run, "success", "The scoped producer must succeed");
+		expected.createTagPrefix = ownedCheckedRecordNpmTagPrefix;
+	}
 	return { ...expected, conclusions };
 };
+
+const hostedContract = (lane, selected, retainedConclusions) =>
+	ownedCheckedRecordHostedWorkflowContract(lane
+		, JSON.parse(readFileSync(selected["run-json"], "utf8")), retainedConclusions);
 
 /**
  * Authenticate, replay and write one immutable hosted evidence directory.
@@ -184,7 +205,7 @@ export const writeOwnedCheckedRecordHostedEvidence = async ({
 		for(const part of parts)
 			await putFile(`hosted/artifact.zip.parts/${part.name}`, part.path);
 		const selectedSources = ownedCheckedRecordEvidenceSources(
-			laneName, revisions);
+			laneName, revisions, hosted.hostedRun.workflow);
 		for(const source of selectedSources)
 			putBytes(`sources/${source.role}/${source.path}`
 				, ownedCheckedRecordHostedOriginal(source.revision, source.path));
@@ -282,7 +303,7 @@ export const checkOwnedCheckedRecordHostedEvidence = async (
 		, checker: index.checkerCommit, archiver: index.archiveCommit
 	};
 	assert.deepEqual(index.selectedSources
-		, ownedCheckedRecordEvidenceSources(laneName, revisions));
+		, ownedCheckedRecordEvidenceSources(laneName, revisions, index.hostedRun.workflow));
 	for(const source of index.selectedSources)
 		assert.deepEqual(await readFile(join(
 			root, `sources/${source.role}/${source.path}`))

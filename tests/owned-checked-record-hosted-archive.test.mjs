@@ -32,6 +32,9 @@ import {
 } from "./helpers/owned-checked-record-javascript-evidence.mjs";
 import { ownedCheckedRecordEvidenceSources } from "./helpers/owned-checked-record-hosted-evidence-sources.mjs";
 import {
+	ownedCheckedRecordNpmTagPrefix, ownedCheckedRecordNpmWorkflow
+} from "./helpers/owned-checked-record-npm-producer.mjs";
+import {
 	parseOwnedCheckedRecordTap, replayOwnedCheckedRecordHostedOutput
 } from "./helpers/owned-checked-record-hosted-output.mjs";
 
@@ -430,7 +433,7 @@ test("owned checked-record hosted output replay rejects every tampered retention
 });
 
 const archiveInputs = async (t, laneName, {
-	enforce = "skipped", runConclusion = "success"
+	enforce = "skipped", runConclusion = "success", workflow, event = "push"
 } = {}) => {
 	const { root, lane } = await synthesize(t, laneName);
 	const inputs = await temporary(t, `lean-owned-hosted-inputs-${laneName}-`);
@@ -440,10 +443,11 @@ const archiveInputs = async (t, laneName, {
 		, { cwd: root });
 	const bytes = await readFile(zip);
 	const run = { id: 4242, status: "completed", conclusion: runConclusion
-		, head_sha: revision, path: lane.workflow
+		, head_sha: revision, path: workflow ?? lane.workflow
+		, ...event === "create" ? { head_branch: ownedCheckedRecordNpmTagPrefix + revision } : {}
 		, repository: { full_name: "seanmorris/lean-bridge" }
 		, head_repository: { full_name: "seanmorris/lean-bridge" }
-		, run_attempt: 1, event: "push"
+		, run_attempt: 1, event
 		, html_url: "https://github.com/seanmorris/lean-bridge/actions/runs/4242"
 		, created_at: "2026-10-23T01:02:03Z", updated_at: "2026-10-23T02:03:04Z" };
 	const accepted = { name: lane.acceptanceStep, status: "completed"
@@ -525,6 +529,32 @@ test("owned checked-record hosted archives authenticate, retain and replay origi
 		, destination: join(cancelledMatrix.inputs, "evidence")
 		, archiveCommit: revision
 	}), /Ineligible hosted run conclusion/u);
+});
+
+test("scoped npm hosted archive binds the create tag and both workflow sources", async t => {
+	const { selected, inputs } = await archiveInputs(t, "javascript"
+		, { workflow: ownedCheckedRecordNpmWorkflow, event: "create" });
+	const destination = join(inputs, "evidence");
+	const index = await writeOwnedCheckedRecordHostedEvidence({ lane: "javascript"
+		, selected, destination, archiveCommit: revision });
+	assert.equal(index.hostedRun.event, "create");
+	assert.equal(index.hostedRun.workflow, ownedCheckedRecordNpmWorkflow);
+	for(const path of [ownedCheckedRecordNpmWorkflow, ".github/workflows/consumer-matrix.yml"])
+		assert.ok(index.selectedSources.some(source => source.role === "producer" && source.path === path));
+	assert.deepEqual(await checkOwnedCheckedRecordHostedEvidence("javascript", destination), index);
+	const path = selected["run-json"], original = JSON.parse(await readFile(path, "utf8"));
+	for(const change of [{ head_branch: ownedCheckedRecordNpmTagPrefix + "0".repeat(40) }
+		, { head_branch: "master" }, { event: "push" }, { event: "pull_request" }
+		, { path: ".github/workflows/unrelated.yml" }
+		, { status: "in_progress" }, { conclusion: "failure" }
+		, { conclusion: "cancelled" }]) {
+		await writeFile(path, canonicalJson({ ...original, ...change }));
+		const refused = join(inputs, "refused");
+		await assert.rejects(writeOwnedCheckedRecordHostedEvidence({ lane: "javascript"
+			, selected, destination: refused, archiveCommit: revision }));
+		await assert.rejects(readFile(join(refused, "index.json")), { code: "ENOENT" });
+		}
+	await writeFile(path, canonicalJson(original));
 });
 
 test("owned checked-record hosted steps require acceptance and skipped enforcement", () => {

@@ -1,0 +1,240 @@
+name: Owned checked-record npm and browser producer
+
+on:
+  create:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: owned-checked-record-npm-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  NODE_VERSION: "22"
+  LEAN_BRIDGE_CONSUMER_PERFORMANCE_DIR: build/consumer-ci/performance
+
+jobs:
+  owned-javascript-wasm:
+    if: ${{ github.event_name == 'workflow_dispatch' || (github.event_name == 'create' && github.event.ref_type == 'tag' && github.event.ref == format('ci/owned-checked-record-npm/{0}', github.sha)) }}
+    name: Owned JavaScript and production Wasm runtime
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    env:
+      LEAN_BRIDGE_OWNED_JS_WASM_TEST: "1"
+      LEAN_BRIDGE_OWNED_JS_WASM_PREPARED_TEST: "1"
+      LEAN_BRIDGE_OWNED_JS_WASM_BUILD_TEST: "1"
+      LEAN_BRIDGE_OWNED_JS_WASM_BROWSER_TEST: "1"
+      LEAN_BRIDGE_OWNED_SUBTYPE_JS_TEST: "1"
+      LEAN_BRIDGE_OWNED_SUBTYPE_BROWSER_TEST: "1"
+      LEAN_BRIDGE_OWNED_CHECKED_RECORD_JS_TEST: "1"
+      LEAN_BRIDGE_OWNED_CHECKED_RECORD_BROWSER_TEST: "1"
+      LEAN_BRIDGE_COMPILER_ANALYSIS_TEST: "1"
+      EMCC_CORES: "2"
+    steps:
+      - name: Check out the exact revision
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - name: Bound apt network waits
+        uses: ./.github/actions/bounded-apt
+        timeout-minutes: 1
+      - name: Install apt dependencies for Install dependencies and pinned Lean and Wasm toolchains
+        timeout-minutes: 20
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake git jq libgmp-dev libuv1-dev pkg-config python3 ripgrep zstd
+      - name: Install dependencies and pinned Lean and Wasm toolchains
+        run: |
+          npm ci --ignore-scripts
+          bash scripts/bootstrap-toolchains.sh
+      - name: Install owned npm browser engines
+        timeout-minutes: 20
+        run: bash scripts/install-playwright-browsers.sh chromium firefox webkit
+      - name: Build the production runtime with the shared ownership broker
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p build/owned-javascript-wasm
+          bash scripts/build-lean-link-spike.sh 2>&1 | tee build/owned-javascript-wasm/runtime.log
+          test -s build/lean-link-spike/lazy/main.wasm
+          test -s build/lean-link-spike/startup/main.wasm
+          test -s build/lean-link-spike/final-static/main.wasm
+      - name: Execute owned JavaScript values and generated public APIs
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --test --test-concurrency=2 \
+            tests/owned-javascript-package.test.mjs \
+            tests/owned-javascript-wasm-layout.test.mjs \
+            tests/owned-javascript-wasm-component.test.mjs \
+            tests/owned-javascript-wasm-loader.test.mjs \
+            tests/owned-wasm-scalars.test.mjs tests/owned-wasm-values.test.mjs \
+            tests/owned-wasm-registry.test.mjs tests/owned-wasm-calls.test.mjs \
+            tests/owned-wasm-bindings.test.mjs \
+            tests/owned-javascript-wasm-native.test.mjs \
+            tests/owned-javascript-wasm-callbacks.test.mjs \
+            tests/owned-javascript-wasm-shared.test.mjs \
+            tests/owned-javascript-wasm-prepared.test.mjs \
+            tests/component-runtime.test.mjs tests/component-callable-runtime.test.mjs \
+            tests/javascript-generator.test.mjs tests/javascript-coverage.test.mjs \
+            2>&1 | tee build/owned-javascript-wasm/execution.log
+          test -s build/owned-javascript-wasm/execution.log
+          rg '^# fail 0$' build/owned-javascript-wasm/execution.log
+          rg '^# skipped 0$' build/owned-javascript-wasm/execution.log
+      - name: Build and install owned npm packages through the standalone CLI
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/env.sh
+          node --test --test-concurrency=1 \
+            tests/owned-javascript-wasm-model.test.mjs \
+            tests/javascript-wasm-compiler-inputs.test.mjs \
+            tests/owned-javascript-cli.test.mjs \
+            tests/owned-javascript-wasm-build.test.mjs \
+            tests/owned-subtype-javascript-packaging.test.mjs \
+            2>&1 | tee build/owned-javascript-wasm/installed.log
+          test -s build/owned-javascript-wasm/installed.log
+          rg '^# fail 0$' build/owned-javascript-wasm/installed.log
+          rg '^# skipped 0$' build/owned-javascript-wasm/installed.log
+          test -s build/owned-subtype-javascript-packaging/report.json
+          checked_record_log=build/owned-javascript-wasm/checked-record-acceptance.log
+          checked_record_status=0
+          node --test --test-concurrency=1 \
+            tests/owned-checked-record-javascript-packaging.test.mjs \
+            2>&1 | tee "$checked_record_log" || checked_record_status=$?
+          mkdir -p build/owned-checked-record-javascript-packaging
+          mv "$checked_record_log" build/owned-checked-record-javascript-packaging/acceptance.log
+          if (( checked_record_status != 0 )); then exit "$checked_record_status"; fi
+          test -s build/owned-checked-record-javascript-packaging/acceptance.log
+          rg '^# fail 0$' build/owned-checked-record-javascript-packaging/acceptance.log
+          rg '^# skipped 0$' build/owned-checked-record-javascript-packaging/acceptance.log
+          test -s build/owned-checked-record-javascript-packaging/report.json
+          for route in ordinary-full ordinary-result-only reviewed-full reviewed-result-only; do
+            test -s "build/owned-checked-record-javascript-packaging/evidence/$route/handoff/package-set-receipt.json"
+            test -s "build/owned-checked-record-javascript-packaging/evidence/$route/handoff/package-set-receipt.json.sha256"
+          done
+          node scripts/check-owned-checked-record-javascript-ci.mjs \
+            --report build/owned-checked-record-javascript-packaging/report.json \
+            > build/owned-checked-record-javascript-packaging/verification.json
+          test -s build/owned-checked-record-javascript-packaging/verification.json
+      - name: Verify consuming JavaScript input ownership
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/env.sh
+          npm run test:owned-javascript-transfers 2>&1 | tee build/owned-javascript-wasm/transfers.log
+          rg '^# fail 0$' build/owned-javascript-wasm/transfers.log
+          rg '^# skipped 0$' build/owned-javascript-wasm/transfers.log
+          test -s build/owned-javascript-transfers/ordinary.json
+          test -s build/owned-javascript-transfers/reviewed.json
+          test -s build/owned-javascript-transfer-packaging/report.json
+      - name: Verify owner-anchored JavaScript results
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/env.sh
+          npm run test:owned-javascript-borrows 2>&1 | tee build/owned-javascript-wasm/borrows.log
+          rg '^# tests 25$' build/owned-javascript-wasm/borrows.log
+          rg '^# fail 0$' build/owned-javascript-wasm/borrows.log
+          rg '^# cancelled 0$' build/owned-javascript-wasm/borrows.log
+          rg '^# skipped 0$' build/owned-javascript-wasm/borrows.log
+          test -s build/owned-javascript-borrows/ordinary.json
+          test -s build/owned-javascript-borrows/ordinary-borrow-only.json
+          test -s build/owned-javascript-borrows/ordinary-mutants.json
+          test -s build/owned-javascript-borrows/ordinary-owned-first.json
+          test -s build/owned-javascript-borrows/ordinary-copied-first.json
+          test -s build/owned-javascript-borrows/reviewed.json
+          test -s build/owned-javascript-borrows/reviewed-borrow-only.json
+          test -s build/owned-javascript-borrows/reviewed-mutants.json
+          test -s build/owned-javascript-borrows/reviewed-owned-first.json
+          test -s build/owned-javascript-borrows/reviewed-copied-first.json
+          test -s build/owned-javascript-borrow-packaging/report.json
+      - name: Verify installed copied and owned npm coexistence
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/env.sh
+          node --test --test-concurrency=1 \
+            tests/component-runtime-package-identity.test.mjs \
+            tests/owned-javascript-npm-coexistence.test.mjs \
+            2>&1 | tee build/owned-javascript-wasm/coexistence.log
+          test -s build/owned-javascript-wasm/coexistence.log
+          rg '^# fail 0$' build/owned-javascript-wasm/coexistence.log
+          rg '^# skipped 0$' build/owned-javascript-wasm/coexistence.log
+      - name: Compare ownership analysis with compiled APIs
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/env.sh
+          node --test --test-concurrency=1 \
+            tests/owned-compiler-analysis.test.mjs \
+            tests/owned-analysis-build-parity.test.mjs \
+            2>&1 | tee build/owned-javascript-wasm/analysis.log
+          test -s build/owned-javascript-wasm/analysis.log
+          rg '^# fail 0$' build/owned-javascript-wasm/analysis.log
+          rg '^# skipped 0$' build/owned-javascript-wasm/analysis.log
+      - name: Verify owned JavaScript engine and archive SDK contracts
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/env.sh
+          node --test --test-concurrency=1 \
+            tests/javascript-wasm-toolchain.test.mjs \
+            tests/owned-javascript-archive-sdk.test.mjs \
+            tests/owned-javascript-engine-request.test.mjs \
+            tests/owned-javascript-engine.test.mjs \
+            tests/owned-javascript-isolated-project.test.mjs \
+            2>&1 | tee build/owned-javascript-wasm/engine.log
+          test -s build/owned-javascript-wasm/engine.log
+          rg '^# fail 0$' build/owned-javascript-wasm/engine.log
+          rg '^# skipped 0$' build/owned-javascript-wasm/engine.log
+      - name: Verify reproducible signed owned npm publication
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/env.sh
+          node --test --test-concurrency=1 tests/owned-javascript-publication.test.mjs \
+            2>&1 | tee build/owned-javascript-wasm/publication.log
+          test -s build/owned-javascript-wasm/publication.log
+          rg '^# fail 0$' build/owned-javascript-wasm/publication.log
+          rg '^# skipped 0$' build/owned-javascript-wasm/publication.log
+      - name: Preserve owned JavaScript and runtime execution logs
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: owned-javascript-wasm-${{ github.sha }}
+          path: |
+            build/owned-javascript-wasm/runtime.log
+            build/owned-javascript-wasm/execution.log
+            build/owned-javascript-wasm/installed.log
+            build/owned-subtype-javascript-packaging/report.json
+            build/owned-checked-record-javascript-packaging/
+            build/owned-javascript-wasm/transfers.log
+            build/owned-javascript-transfers/ordinary.json
+            build/owned-javascript-transfers/reviewed.json
+            build/owned-javascript-transfer-packaging/report.json
+            build/owned-javascript-wasm/borrows.log
+            build/owned-javascript-borrows/ordinary.json
+            build/owned-javascript-borrows/ordinary-borrow-only.json
+            build/owned-javascript-borrows/ordinary-mutants.json
+            build/owned-javascript-borrows/ordinary-owned-first.json
+            build/owned-javascript-borrows/ordinary-copied-first.json
+            build/owned-javascript-borrows/reviewed.json
+            build/owned-javascript-borrows/reviewed-borrow-only.json
+            build/owned-javascript-borrows/reviewed-mutants.json
+            build/owned-javascript-borrows/reviewed-owned-first.json
+            build/owned-javascript-borrows/reviewed-copied-first.json
+            build/owned-javascript-borrow-packaging/report.json
+            build/owned-javascript-wasm/coexistence.log
+            build/owned-javascript-wasm/analysis.log
+            build/owned-javascript-wasm/engine.log
+            build/owned-javascript-wasm/publication.log
+          if-no-files-found: error
+          retention-days: 30

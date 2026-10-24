@@ -79,10 +79,13 @@ export const inspectCheckedRecordValueIndexHostedArtifact = async (
 	selected, expected
 ) => {
 	const recordsFailure = Object.hasOwn(expected, "conclusions");
+	const scopedCreate = Object.hasOwn(expected, "createTagPrefix");
 	assert.deepEqual(Object.keys(expected).sort(), [
 		"artifactPrefix", ...recordsFailure ? ["conclusions"] : []
+		, ...scopedCreate ? ["createTagPrefix"] : []
 		, "jobName", "workflow"
 	]);
+	if(scopedCreate) assert.match(expected.createTagPrefix, /^ci\/[a-z0-9-]+\/$/u);
 	const conclusions = recordsFailure ? expected.conclusions
 		: { run: "success", job: "success" };
 	assert.deepEqual(Object.keys(conclusions).sort(), ["job", "run"]);
@@ -109,7 +112,11 @@ export const inspectCheckedRecordValueIndexHostedArtifact = async (
 	assert.equal(run.repository?.full_name, "seanmorris/lean-bridge");
 	assert.equal(run.head_repository?.full_name, "seanmorris/lean-bridge");
 	assert.ok(Number.isSafeInteger(run.run_attempt) && run.run_attempt > 0);
-	assert.ok(["push", "workflow_dispatch"].includes(run.event));
+	assert.ok((scopedCreate ? ["create", "workflow_dispatch"]
+		: ["push", "workflow_dispatch"]).includes(run.event));
+	if(run.event === "create")
+		assert.equal(run.head_branch, expected.createTagPrefix + run.head_sha
+			, "Scoped producer tag must name its exact commit");
 	assert.ok(Number.isSafeInteger(job.id) && job.id > 0);
 	assert.equal(job.run_id, run.id);
 	assert.equal(job.head_sha, run.head_sha);

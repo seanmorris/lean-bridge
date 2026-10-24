@@ -23,6 +23,57 @@ predecessor, with a 64 MiB string budget and at most 1,024 entries. Changed text
 is checked again. Unknown text and failed checks are not cached. Verifiers still
 authenticate every recorded source transition and installed execution receipt.
 
+## Capture owned checked-record npm and browser evidence
+
+The `Owned checked-record npm and browser producer` workflow runs the complete
+JavaScript/Wasm job from the recurring Consumer Matrix. It builds the production
+runtime, exercises ordinary and reviewed full/result-only npm packages, and
+retains the Node, TypeScript, Chromium, Firefox and WebKit observations. A
+contract test rejects differences between the two jobs. This scoped run does
+not replace the full Consumer Matrix or its support summary.
+
+Once GitHub has registered the workflow, run it against a pushed branch:
+
+```sh
+gh workflow run owned-checked-record-npm-browser.yml --ref YOUR_BRANCH
+```
+
+Before the workflow reaches the default branch, its first run can use a
+non-release CI tag. Start from a clean, pushed commit whose message includes
+`[skip ci]`. That marker suppresses unrelated push workflows; the `create`
+trigger accepts only a tag named for the exact commit. Check the status and
+commit message before creating it:
+
+```sh
+git status --short
+git show -s --format=%B HEAD
+LEAN_BRIDGE_CI_REVISION=$(git rev-parse HEAD)
+git push origin "$LEAN_BRIDGE_CI_REVISION:refs/tags/ci/owned-checked-record-npm/$LEAN_BRIDGE_CI_REVISION"
+```
+
+Do not force-update an existing CI tag. Follow the original run to completion;
+rerunning that run keeps its original source revision. A corrected producer
+needs a new pushed commit and a new tag or dispatch.
+
+After a successful producer, download its original artifact ZIP and the exact
+GitHub run, job and artifact API records. Archive them from a clean checkout:
+
+```sh
+node scripts/archive-owned-checked-record-evidence.mjs \
+  --lane javascript \
+  --artifact-zip /absolute/path/to/artifact.zip \
+  --run-json /absolute/path/to/run.json \
+  --job-json /absolute/path/to/job.json \
+  --artifact-json /absolute/path/to/artifact.json
+```
+
+The archiver authenticates either the original Consumer Matrix workflow or this
+exact scoped producer. For the scoped producer it requires a successful run,
+verifies both workflow sources at the producer commit, and retains both in the
+source closure. Every route must retain the package archives actually installed
+and executed. Cancelled, incomplete or failed scoped runs cannot establish
+acceptance. Archive capture alone does not promote type support.
+
 ## Build the example artifacts as a maintainer
 
 Build the universal Alpha bundle, then project its Python, Rust, C, and C++ packages:
