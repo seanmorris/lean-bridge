@@ -17,6 +17,8 @@ import { assertOwnedDotnetCallbackPackageInputs } from "./owned-dotnet-callback-
 import { assertOwnedDotnetCallbackInstalledExecution } from "./owned-dotnet-callback-result-package-execution.mjs";
 import { assertOwnedJvmCallbackPackageInputs, assertOwnedJvmCallbackInstalledExecution } from "./owned-jvm-callback-result-package-evidence.mjs";
 
+const current = { javascriptWasmOwnedPins, javascriptWasmTargetHeaders, javascriptWasmOwnedProfile };
+
 const hash = value => sha256(canonicalJson(value));
 const identity = bytes => ({ bytes: Buffer.byteLength(bytes), sha256: sha256(bytes) });
 const digest = value => { assert.match(value, /^[a-f0-9]{64}$/u); assert.notEqual(value, "0".repeat(64)); };
@@ -32,22 +34,34 @@ export const combinedCliBundleExtras = Object.freeze([
 	, "runtime/wasm/main.wasm"
 	, ...bundledInputs
 ]);
-const cli = async (report, readSource) => {
+const cli = async (report, readSource, replay) => {
+	const { javascriptWasmOwnedPins, javascriptWasmTargetHeaders, javascriptWasmOwnedProfile } = replay ?? current;
+	const inputPaths = ["source/.lean-wasm-patched", "source/LICENSE"
+		, ...javascriptWasmTargetHeaders.map(name => `cmake/include/lean/${name}`)];
+	const extras = [
+		"README.md"
+		, "package.json"
+		, "runtime/wasm/main.mjs"
+		, "runtime/wasm/main.wasm"
+		, ...[...inputPaths, manifestName, manifestName + ".sha256"].map(path => `runtime/javascript-wasm/${path}`)
+	];
+
 	const { archive, inventorySha256, externalRegistryWrites, ...inventory } = report;
 	assert.equal(report.schemaVersion, 1); assert.equal(report.kind, "lean-bridge-cli-package");
 	assert.equal(report.productionApproved, false); assert.equal(externalRegistryWrites, false);
 	assert.equal(inventorySha256, hash(inventory)); digest(archive.sha256); assert.ok(archive.bytes > 0);
 	assert.equal(report.runtimeIncluded, true); assert.equal(report.javascriptWasmInputsIncluded, true);
 	assert.equal(report.phpWasmInputsIncluded, false);
-	const config = await selectCliPackageConfig(report, readSource, { extras: combinedCliBundleExtras });
+	const config = await selectCliPackageConfig(report, readSource, { extras });
 	assert.deepEqual(report.package, { name: config.name, version: config.version });
 	assert.equal(report.sourceDateEpoch, config.sourceDateEpoch);
-	assert.deepEqual(report.files.map(file => file.path).sort(), [...config.files, ...combinedCliBundleExtras].sort());
+	assert.deepEqual(report.files.map(file => file.path).sort(), [...config.files, ...extras].sort());
 	for(const path of config.files)
 	{
 		const mode = ["scripts/lean-bridge.mjs", "scripts/create-publication-signer-policy.mjs"].includes(path) ? 0o755 : 0o644;
 		const file = report.files.find(file => file.path === path);
-		assert.deepEqual(file, { path, mode, ...identity(beforeFinRefinementSource(path, await readSource(path), file.sha256)) }, path);
+		const bytes = replay ? await replay.readBytes(path, file.sha256) : await readSource(path);
+		assert.deepEqual(file, { path, mode, ...identity(beforeFinRefinementSource(path, bytes, file.sha256)) }, path);
 	}
 	for(const file of report.files)
 	{ digest(file.sha256); assert.ok(Number.isSafeInteger(file.bytes) && file.bytes >= 0); }
@@ -84,8 +98,9 @@ const fixture = {
  * @param item - Original eight-target release report after producer removal.
  * @param readSource - Current source reader, or authenticated frozen source bytes.
  * @param options - Explicit CPAN participation and independent-build requirement.
+ * @param replay - Optional authenticated producer dependencies.
  */
-export const assertOwnedJvmCallbackCombinedRelease = async (item, readSource = readFile, options = {}) => {
+export const assertOwnedJvmCallbackCombinedRelease = async (item, readSource = readFile, options = {}, replay) => {
 	const { cpan = false, independentRebuild = true } = options;
 	assert.equal(typeof cpan, "boolean"); assert.equal(typeof independentRebuild, "boolean");
 	assert.equal(item.independentProducerBuild, independentRebuild);
@@ -93,8 +108,10 @@ export const assertOwnedJvmCallbackCombinedRelease = async (item, readSource = r
 		for(const field of ["independentBuild", "independentPackageSetReceipt"])
 			assert.equal(Object.hasOwn(item, field), false, field);
 	assert.ok(["ordinary", "reviewed"].includes(item.mode));
-	const readCli = report => cli(report, readSource);
-	await assertOwnedRubyCallbackCombinedRelease(item, item.mode, ["nuget", "maven", ...cpan ? ["cpan", "cpan"] : []], { ...fixture, cli: readCli });
+	const readCli = report => cli(report, readSource, replay);
+	await assertOwnedRubyCallbackCombinedRelease(item, item.mode, ["nuget", "maven", ...cpan ? ["cpan", "cpan"] : []], { ...fixture
+		, source: replay ? replay.ownedDotnetCallbackResultCombinedSource : fixture.source
+		, cli: readCli }, replay);
 	assert.equal(await readCli(item.cli), item.compilerInputsIdentity);
 	for(const name of ["main.mjs", "main.wasm"])
 		assert.equal(item.cli.files.find(file => file.path === `runtime/wasm/${name}`).sha256, item.inventory[`@lean-bridge/runtime/internal/${name}`].sha256);
@@ -117,13 +134,13 @@ export const assertOwnedJvmCallbackCombinedRelease = async (item, readSource = r
 	const managed = await assertOwnedDotnetCallbackPackageInputs({ ...shared
 		, adapterReceipt: dotnet.adapterReceipt
 		, compiledProjection: dotnet.compiledProjection
-		, manifest: dotnet.manifest }, targets);
-	await assertOwnedDotnetCallbackInstalledExecution(dotnet, managed.projection, true);
+		, manifest: dotnet.manifest }, targets, replay);
+	await assertOwnedDotnetCallbackInstalledExecution(dotnet, managed.projection, true, replay);
 	assert.equal(dotnet.checks, 57); assert.equal(dotnet.relocatedChecks, 57);
 	for(const name of ["cliRemovedBeforeConsumerInstall", "offlineInstall", "handoffRemovedBeforeRelocatedExecution"])
 		assert.equal(dotnet[name], true, name);
 	const jvm = { ...shared, ...item.installedJvm };
-	const { model, projection, libraries, pom } = await assertOwnedJvmCallbackPackageInputs(jvm, targets);
+	const { model, projection, libraries, pom } = await assertOwnedJvmCallbackPackageInputs(jvm, targets, replay);
 	assert.deepEqual(model, item.native.model);
 	validatePackageSetReceipt(item.receipt);
 	if(independentRebuild)
@@ -178,6 +195,6 @@ export const assertOwnedJvmCallbackCombinedRelease = async (item, readSource = r
 		const { output: secondOutput, ...second } = item.independentBuild.result;
 		assert.notEqual(firstOutput, secondOutput); assert.deepEqual(first, second);
 	}
-	await assertOwnedJvmCallbackInstalledExecution(jvm, projection, libraries, pkg);
+	await assertOwnedJvmCallbackInstalledExecution(jvm, projection, libraries, pkg, replay);
 	return { model, targets };
 };

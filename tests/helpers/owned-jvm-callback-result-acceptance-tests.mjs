@@ -6,6 +6,9 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
+import "./owned-jvm-callback-result-replay-tests.mjs";
+import { ownedJvmCallbackReplay } from "./owned-jvm-callback-result-replay.mjs";
+import { ownedJvmCallbackResultReports } from "./owned-jvm-callback-result-ci.mjs";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { classifyRepositoryTest } from "../../src/adoption/test-profiles.mjs";
 import { packOwnedCallbackReports, unpackOwnedCallbackReports } from "./owned-callback-result-evidence.mjs";
@@ -87,15 +90,21 @@ test("JVM acceptance rejects incomplete runs, substituted sources and inflated s
 	t.diagnostic(`${changes.length} false acceptance claims rejected`);
 });
 
-test("JVM acceptance binds every matrix slot to its source mode and lifetime boundary", async t => {
-	const reports = unpackOwnedCallbackReports((await read()).archive);
-	let rejected = 0;
-	for(const [path, report] of Object.entries(reports))
-	{
+let retained;
+const retainedReports = async () => {
+	if(retained) return retained;
+	const record = await read();
+	retained = { reports: unpackOwnedCallbackReports(record.archive)
+		, replay: await ownedJvmCallbackReplay(record.sources) };
+	return retained;
+};
+for(const path of ownedJvmCallbackResultReports)
+	test("JVM report mutations: " + path, async t => {
+		const { reports, replay } = await retainedReports(), report = reports[path];
+		await assertOwnedJvmCallbackReport(path, report, replay.readBytes, replay);
 		const wrongMode = structuredClone(report);
 		wrongMode.mode = report.mode === "ordinary" ? "reviewed" : "ordinary";
-		await assert.rejects(() => assertOwnedJvmCallbackReport(path, wrongMode), undefined, path);
-		rejected++;
+		await assert.rejects(() => assertOwnedJvmCallbackReport(path, wrongMode, replay.readBytes, replay), undefined, path);
 		const changed = structuredClone(report);
 		if(path.endsWith("-combined-release.json")) changed.installedJvm.observations[0].jvm.documentation.pop();
 		else if(path.endsWith("-package.json")) changed.observations[0].jvm.runtimeExecutions.pop();
@@ -104,11 +113,13 @@ test("JVM acceptance binds every matrix slot to its source mode and lifetime bou
 		else if(path.endsWith("-sanitizers.json")) changed.leanRuntimeInstrumented = true;
 		else if(path.includes("-gc/")) changed.installedPackage = true;
 		else changed.observed.identities++;
-		await assert.rejects(() => assertOwnedJvmCallbackReport(path, changed), undefined, path);
-		rejected++;
-	}
-	await assert.rejects(() => assertOwnedJvmCallbackReport("build/unrecorded.json", Object.values(reports)[0]));
-	assert.equal(rejected, 48); t.diagnostic(`${rejected + 1} false matrix or scope claims rejected`);
+		await assert.rejects(() => assertOwnedJvmCallbackReport(path, changed, replay.readBytes, replay), undefined, path);
+		t.diagnostic("Valid original passed; two false matrix or scope claims rejected");
+	});
+test("JVM report mutations reject an unrecorded path", async () => {
+	const { reports, replay } = await retainedReports();
+	await assert.rejects(() => assertOwnedJvmCallbackReport(
+		"build/unrecorded.json", Object.values(reports)[0], replay.readBytes, replay));
 });
 
 test("JVM acceptance rejects coherently repacked duplicate and substituted reports", async () => {

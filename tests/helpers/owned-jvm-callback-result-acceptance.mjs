@@ -12,7 +12,8 @@ import { assertOwnedJvmCallbackPackageExecution } from "./owned-jvm-callback-res
 import { assertOwnedJvmCallbackLifetimeEvidence } from "./owned-jvm-callback-result-lifetime-evidence.mjs";
 import { assertOwnedJvmCallbackCombinedRelease } from "./owned-jvm-callback-result-combined-evidence.mjs";
 import { assertOwnedJvmCallbackResultCi, ownedJvmCallbackResultReports } from "./owned-jvm-callback-result-ci.mjs";
-import { bytesAtProducer } from "./producer-source.mjs";
+import { ownedJvmCallbackReplay } from "./owned-jvm-callback-result-replay.mjs";
+export { ownedJvmCallbackProducer } from "./owned-jvm-callback-result-replay.mjs";
 import { ownedJvmCallbackBaseline, ownedJvmCallbackChangedPaths
 	, ownedJvmCallbackHistoryPath, ownedJvmCallbackHistorySha256 } from "./owned-jvm-callback-result-history.mjs";
 
@@ -22,8 +23,6 @@ const frozen = value => {
 };
 const keys = (value, names) => assert.deepEqual(Object.keys(value).sort(), names.split(" ").sort());
 
-/** The commit whose complete source tree every digest in the JVM callback acceptance record names. */
-export const ownedJvmCallbackProducer = "95978558fed7e305833175f36a93a140ff84be9e";
 export const ownedJvmCallbackEvidencePath = "docs/evidence/owned-jvm-callback-results-20261003.json";
 export const ownedJvmCallbackPrevious = frozen({
 	path: "docs/evidence/owned-dotnet-callback-results-20261002.json"
@@ -187,22 +186,23 @@ const passed = (run, tests, titles) => {
  * @param path - Required complete report path from the CI inventory.
  * @param item - Original unpacked producer JSON, not a synthesized summary.
  * @param readSource - Current source reader, or authenticated frozen source bytes.
+ * @param replay - Optional authenticated producer dependencies.
  */
-export const assertOwnedJvmCallbackReport = async (path, item, readSource = readFile) => {
+export const assertOwnedJvmCallbackReport = async (path, item, readSource = readFile, replay) => {
 	assert.ok(ownedJvmCallbackResultReports.includes(path), path);
 	const name = path.split("/").at(-1);
 	assert.equal(item.mode, name.startsWith("ordinary") ? "ordinary" : "reviewed");
-	if(name.endsWith("-combined-release.json")) return assertOwnedJvmCallbackCombinedRelease(item, readSource);
+	if(name.endsWith("-combined-release.json")) return assertOwnedJvmCallbackCombinedRelease(item, readSource, {}, replay);
 	if(name.endsWith("-package.json"))
 	{
 		assert.equal(item.combined, name.includes("-combined-"));
-		return assertOwnedJvmCallbackPackageExecution(item, readSource);
+		return assertOwnedJvmCallbackPackageExecution(item, readSource, replay);
 	}
-	if(name.endsWith("-runtime.json")) return assertOwnedJvmCallbackRuntime(name, item);
+	if(name.endsWith("-runtime.json")) return assertOwnedJvmCallbackRuntime(name, item, replay);
 	const kind = path.startsWith("build/owned-jvm-callback-result-gc/") ? "gc"
 		: path.startsWith("build/owned-jvm-callback-result-faults/") ? "faults"
 			: name.endsWith("-process.json") ? "process" : "sanitizers";
-	return assertOwnedJvmCallbackLifetimeEvidence(kind, name, item);
+	return assertOwnedJvmCallbackLifetimeEvidence(kind, name, item, replay);
 };
 
 /**
@@ -220,16 +220,8 @@ export const assertOwnedJvmCallbackAcceptance = async record => {
 	assert.deepEqual(record.sourceHistory, { path: ownedJvmCallbackHistoryPath, sha256: ownedJvmCallbackHistorySha256 });
 	assert.equal(sha256(await readFile(record.sourceHistory.path)), record.sourceHistory.sha256);
 	assert.deepEqual(Object.keys(record.sources).sort(), await ownedJvmCallbackSourcePaths());
-	const readSource = async path => {
-		// Other CLI payload files, such as LICENSE, retain their current-byte
-		// checks against the original report inventory. Never reverse those.
-		if(!Object.hasOwn(record.sources, path)) return readFile(path);
-		// Recorded sources name the producer tree; later owned and Fin layers never reach back this far.
-		const digest = record.sources[path];
-		const source = bytesAtProducer(ownedJvmCallbackProducer, path, digest);
-		assert.equal(sha256(source), digest, path);
-		return source;
-	};
+	const replay = await ownedJvmCallbackReplay(record.sources);
+	const readSource = replay.readBytes;
 	for(const path of Object.keys(record.sources)) await readSource(path);
 	assert.deepEqual(record.runs.map(({ name, tests }) => ({ name, tests })), ownedJvmCallbackRuns);
 	for(const run of record.runs)
@@ -244,6 +236,6 @@ export const assertOwnedJvmCallbackAcceptance = async record => {
 	const reports = unpackOwnedCallbackReports(record.archive);
 	assert.equal(Object.keys(reports).length, 24);
 	assert.deepEqual(Object.keys(reports).sort(), [...ownedJvmCallbackResultReports].sort());
-	for(const [path, item] of Object.entries(reports)) await assertOwnedJvmCallbackReport(path, item, readSource);
+	for(const [path, item] of Object.entries(reports)) await assertOwnedJvmCallbackReport(path, item, readSource, replay);
 	assertOwnedJvmCallbackResultCi(await readFile(".github/workflows/consumer-matrix.yml", "utf8"), JSON.parse(await readFile("package.json", "utf8")));
 };
