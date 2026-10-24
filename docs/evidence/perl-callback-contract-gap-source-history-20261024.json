@@ -1,0 +1,38 @@
+{
+  "additions": [
+    {
+      "currentSha256": "5ade8b07199f846b92c101d43592c7eef0f4675fe98d197cfe723c8b264d0c5a",
+      "path": "scripts/update-perl-callback-contract-gap-source-history.mjs"
+    },
+    {
+      "currentSha256": "dd150f09850d46ed9fdec02dffa43940c86cc8b9c4f00644012a0af9d98b55fc",
+      "path": "tests/helpers/perl-callback-contract-gap-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "bc693ecfbe6e528ec7a180bbf2ac88b3e854089d4400ce6709e9caa2e6fdf3ba",
+      "path": "tests/helpers/perl-callback-contract-gap-source-history.mjs"
+    }
+  ],
+  "historicalCommit": "18804049b371cfe17eaec867c0365fb4b47b8152",
+  "historicalPredecessorCommit": "308fc6a50dfb37e00e2f97f61c2a7d43efdb68c5",
+  "historicalTransitions": [
+    {
+      "currentCommit": "18804049b371cfe17eaec867c0365fb4b47b8152",
+      "currentSha256": "fd949517a10a5ef4c13395118dc08adfefd4e2253547b0dda9b72216712c866e",
+      "edits": [
+        {
+          "current": "",
+          "previous": "\t\t\t\tif(!hostCallbacks) assert.equal(Object.hasOwn(enabledC, \"copies\"), false);\n",
+          "start": 8807
+        }
+      ],
+      "path": "tests/helpers/owned-perl-callback-result-contract-tests.mjs",
+      "previousCommit": "308fc6a50dfb37e00e2f97f61c2a7d43efdb68c5",
+      "previousSha256": "24e2cb2e445d76ac43f80854717992192b61342729d03c8651d48b51ebe8e326"
+    }
+  ],
+  "milestone": "perl-callback-contract-gap-source-v1",
+  "predecessorCommit": "ffb893c7e1ab6e1b90f5c8aab323c58947dd985c",
+  "schemaVersion": 1,
+  "scope": "Restore the Perl callback contract transition from 18804049 that no history record carried, so hub-routed readers restore the exact helper bytes pinned by the completed and optional-install Perl callback receipts; no evidence, observation or support claim changes. Hub and registration integration are recorded by the integrating seal."
+}
