@@ -35,7 +35,26 @@ test("Fin callback plan separates preflight refusal, reply rejection and recover
 		"closure-input", "closure-input-refusal", "closure-input-recovery"
 		, "closure-result", "host-arguments", "invalid-recovery"
 		, "actual-reply-rejection", "later-call-recovery"
+		, "mixed-closure-input", "mixed-closure-input-refusal"
+		, "mixed-closure-input-recovery", "mixed-closure-result"
 	]);
+	const mixed = control => plan.cases.find(item => item.control === control);
+	const kinds = call => call.entries.map(item => item.kind);
+	assert.deepEqual(mixed("mixed-closure-input").calls.map(kinds), [
+		["adapter", "adapter", "cleanup"]
+		, ["adapter", "adapter", "closure", "cleanup"]
+	]);
+	assert.equal(mixed("mixed-closure-input-refusal").outcome, "refused");
+	assert.deepEqual(mixed("mixed-closure-input-refusal").calls.map(kinds)
+		, [["adapter", "adapter", "cleanup"]], "the Fin field refuses before the closure body");
+	assert.deepEqual(mixed("mixed-closure-input-recovery").calls.map(kinds)
+		, [["adapter", "adapter", "closure", "cleanup"]]);
+	assert.deepEqual(mixed("mixed-closure-result").calls.map(kinds), [
+		["adapter", "adapter", "cleanup"]
+		, ["adapter", "adapter", "source", "closure", "cleanup"]
+	]);
+	assert.equal(mixed("mixed-closure-result").calls[1].entries[3].label
+		, "ReviewedCallbacks.tileMaker:body");
 	assert.deepEqual(plan.cases.find(
 		item => item.control === "invalid-recovery"
 	).calls[0].entries.map(item => item.kind)

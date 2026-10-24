@@ -126,7 +126,8 @@ export const phpWasmCallbackEntrySelection = (model, sourceEntries) => {
 		{
 			if(!site.callback) continue;
 			const owners = callbackOwners.get(site.callback.id) ?? [];
-			owners.push({ label, callback: site.callback }); callbackOwners.set(site.callback.id, owners);
+			owners.push({ label, callback: site.callback, role: site === fn.result ? "closure" : "host" });
+			callbackOwners.set(site.callback.id, owners);
 		}
 	}
 	assert.deepEqual([...matchedSources].sort(), [...selectedSources].sort()
@@ -136,11 +137,16 @@ export const phpWasmCallbackEntrySelection = (model, sourceEntries) => {
 		const owners = callbackOwners.get(signature.id);
 		if(!owners) continue;
 		assert.equal(owners.length, 1, `one selected owner for ${signature.id}`);
-		const { label, callback } = owners[0];
+		const { label, callback, role: exported } = owners[0];
 		assert.equal(callback.key, signature.key);
 		const prefix = componentStructuredCallablePrefix(abi, signature);
 		const direction = componentStructuredCallbackDirection(abi, signature, true);
 		assert.equal(direction, callback.direction);
+		// A callback checked only by nominal types (a record field such as Tile.digit : Fin 5)
+		// carries no callback refinement, so it stays bidirectional. Measure it only in the
+		// returned-closure role its export authenticates, through its generated apply.
+		const role = direction ?? (exported === "closure" && annotations.has(`${prefix}_apply`)
+			? "closure" : null);
 		const validators = [...annotations]
 			.filter(value => refinementSymbol(value, prefix + "_")).sort();
 		for(const symbol of validators)
@@ -150,7 +156,7 @@ export const phpWasmCallbackEntrySelection = (model, sourceEntries) => {
 			if(leafConstructors.has(symbol))
 				validatorConstructors[validatorLabel] = leafConstructors.get(symbol);
 		}
-		if(direction === "host")
+		if(role === "host")
 		{
 			selected.push(
 				{ symbol: `${prefix}_recovery`, kind: "recovery", label: `${label}:recovery:lean` }
@@ -162,9 +168,10 @@ export const phpWasmCallbackEntrySelection = (model, sourceEntries) => {
 				, { symbol: `ng_reject_${signature.key}`, kind: "rejection", label: `${label}:rejection:native` }
 			);
 		}
-		else if(direction === "closure")
+		else if(role === "closure")
 		{
 			assert.ok(annotations.has(`${prefix}_apply`));
+			assert.equal(typeof callback.call, "string", `closure call symbol for ${label}`);
 			selected.push(
 				{ symbol: `lgc_invoke${callback.index}`, kind: "public", label: `${label}:invoke` }
 				, { symbol: callback.call, kind: "adapter", label: `${label}:closure:native` }

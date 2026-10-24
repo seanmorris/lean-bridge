@@ -101,6 +101,7 @@ export const phpWasmCallbackEntryPlan = (family, selected, validatorConstructors
 		const counter = "ReviewedCallbacks.counter";
 		const visit = "ReviewedCallbacks.visit";
 		const three = "ReviewedCallbacks.three";
+		const tiles = "ReviewedCallbacks.tiles", tileMaker = "ReviewedCallbacks.tileMaker";
 		cases = [
 			{ control: "closure-input", outcome: "accepted"
 				, calls: [maker(scaler), closure(scaler)] }
@@ -118,6 +119,18 @@ export const phpWasmCallbackEntryPlan = (family, selected, validatorConstructors
 				, calls: [callback(three, { rejected: true })] }
 			, { control: "later-call-recovery", outcome: "accepted"
 				, calls: [callback(three)] }
+			// Tile values mix a checked Fin field with a plain Nat field. The maker ignores its
+			// Unit argument, so like the checked-record makers it builds the closure without
+			// running its marked source; the Fin field refuses before the closure body runs.
+			, { control: "mixed-closure-input", outcome: "accepted"
+				, calls: [maker(tiles), closure(tiles, [], false)] }
+			, { control: "mixed-closure-input-refusal", outcome: "refused"
+				, calls: [closureRefusal(tiles)] }
+			, { control: "mixed-closure-input-recovery", outcome: "accepted"
+				, calls: [closure(tiles, [], false)] }
+			// Like counter, tileMaker binds its start argument and runs its source on application.
+			, { control: "mixed-closure-result", outcome: "accepted"
+				, calls: [maker(tileMaker), closure(tileMaker)] }
 		];
 	}
 	else if(family === "callback-checked-record")
