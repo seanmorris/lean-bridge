@@ -1,0 +1,115 @@
+{
+  "additions": [
+    {
+      "currentSha256": "346e98eaa41941bcebd57d2953814d81a94e8b1607f9efc102ba12eab74128c8",
+      "path": "tests/helpers/zero-payload-rust-producer-replay-tests.mjs"
+    },
+    {
+      "currentSha256": "c3c3f4414aeeefc9bd4bdc1a56b940da11aeb6f75494e204f973e852ab21f2cc",
+      "path": "scripts/update-zero-payload-rust-producer-replay-source-history.mjs"
+    },
+    {
+      "currentSha256": "1d15047d75bef97bd058fcd836aaddc0174263650e59fa473421e523b5aa7339",
+      "path": "tests/helpers/zero-payload-rust-producer-replay-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "0403d4661a2c86cf7ef31dbe04fc1568f32818c3555069edf1be0c4d60ef9ed4",
+      "path": "tests/helpers/zero-payload-rust-producer-replay-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "ff0895e642289d7af66de90222b5a58ff0076f26",
+  "integrationUpdates": [
+    {
+      "currentSha256": "8415f44235f3a569d40dfd710cbffbecab45dbafee06b98875d2d6099cad4b74",
+      "edits": [
+        {
+          "current": "import { beforeZeroPayloadRustReplaySource, zeroPayloadRustReplayNormalizationPaths } from \"./zero-payload-rust-producer-replay-source-history.mjs\";\n",
+          "previous": "",
+          "start": 5841
+        },
+        {
+          "current": "\t...zeroPayloadRustReplayNormalizationPaths\n\t, ...phpRecursiveReplayNormalizationPaths\n",
+          "previous": "\t...phpRecursiveReplayNormalizationPaths\n",
+          "start": 179029
+        },
+        {
+          "current": "\t\t= beforeZeroPayloadRustReplaySource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforePhpRecursiveReplaySource(path, text, expected);\n",
+          "previous": "\t\t= beforePhpRecursiveReplaySource(path, text, expected);\n",
+          "start": 221215
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "0292181872ad92d6bcdb5a0223d1aec6c9c6c8671583d3d90eb5a007f61d861f"
+    },
+    {
+      "currentSha256": "29723168cdeadefdfd609b3b7dacb5de3bb60b5acbea85eef16a38e1a60c23e5",
+      "edits": [
+        {
+          "current": "import \"./helpers/zero-payload-rust-producer-replay-tests.mjs\";\nimport \"./helpers/zero-payload-rust-producer-replay-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 3510
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "c7c2450dba8f427530e89c0a2594ad30662afd226510cb914f088f64275635bc"
+    }
+  ],
+  "milestone": "zero-payload-rust-producer-replay-source-v1",
+  "predecessorCommit": "ebd4d7e73417939efb973688a5fb434651a6f2c9",
+  "schemaVersion": 1,
+  "scope": "Verify every generated Rust public source at the report's independently selected producer revision. Authenticate both generator entry points and their complete imported closure against the unchanged hosted archive, reproduce all four original author routes, and reject altered generated files or a different producer. Keep current installed-package generation, all original archive/model/runtime/installation assertions, and all retained evidence bytes unchanged. Full archive replay remains a hosted gate.",
+  "updates": [
+    {
+      "currentSha256": "0fcffa831e849d36c2f76c13214d0c2bf414050224d052c4c867810c9e77d75c",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { compiledPackageMetadata } from \"../../src/analyze/package-metadata.mjs\";\n",
+          "start": 175
+        },
+        {
+          "current": "",
+          "previous": "import { generateCopiedRustPackage } from \"../../src/backends/rust/copied-values.mjs\";\n",
+          "start": 398
+        },
+        {
+          "current": "import { moduleAtProducer } from \"./producer-module.mjs\";\n\nexport const zeroPayloadRustGeneratorEntries = Object.freeze([\n\t\"src/backends/rust/copied-values.mjs\"\n\t, \"src/analyze/package-metadata.mjs\"\n]);\n",
+          "previous": "",
+          "start": 1710
+        },
+        {
+          "current": "/**\n * Compare retained public sources with the exact recorded producer's output.\n * The hosted archive authenticates this producer's complete source closure.\n * Fresh installed-package inspection still uses the current generators.\n *\n * @param read - Selection-relative original byte reader.\n * @param options - Authenticated producer model and package identities.\n * @param options.producerCommit - Independently selected full producer revision.\n * @param options.model - Reproduced compiler model.\n * @param options.evidence - Verified native loader identities.\n * @param options.pkg - Verified package-set entry.\n */\nexport const checkZeroPayloadRustGeneratedSources = async (read, options) => {\n\tconst { producerCommit, model, evidence, pkg } = options;\n\tconst [generator, metadata] = await Promise.all(zeroPayloadRustGeneratorEntries\n\t\t.map(entry => moduleAtProducer(producerCommit, entry)));\n\tconst generated = generator.generateCopiedRustPackage(model.bindingIr, evidence, {\n\t\tname: pkg.name\n\t\t, version: pkg.version\n\t\t, metadata: metadata.compiledPackageMetadata(model.sourceIdentity)\n\t});\n\tfor(const [path, source] of Object.entries(generated))\n\t\tassert.equal((await read(`package/${path}`)).toString(), source, path);\n};\n\n",
+          "previous": "",
+          "start": 2544
+        },
+        {
+          "current": " * @param options.producerCommit - Independently selected full producer revision.\n",
+          "previous": "",
+          "start": 8621
+        },
+        {
+          "current": "\tconst { read, json, model, receipt, floor, producerCommit } = options;\n",
+          "previous": "\tconst { read, json, model, receipt, floor } = options;\n",
+          "start": 8747
+        },
+        {
+          "current": "\tawait checkZeroPayloadRustGeneratedSources(read, {\n\t\tproducerCommit, model, evidence, pkg\n",
+          "previous": "\tconst generated = generateCopiedRustPackage(model.bindingIr, evidence, {\n\t\tname: pkg.name\n\t\t, version: pkg.version\n\t\t, metadata: compiledPackageMetadata(model.sourceIdentity)\n",
+          "start": 11213
+        },
+        {
+          "current": "",
+          "previous": "\tfor(const [path, source] of Object.entries(generated))\n\t\tassert.equal((await read(`package/${path}`)).toString(), source, path);\n",
+          "start": 11309
+        },
+        {
+          "current": "\tconst { pkg, crate } = await checkPackage({ read, json, model, receipt, floor, producerCommit });\n",
+          "previous": "\tconst { pkg, crate } = await checkPackage({ read, json, model, receipt, floor });\n",
+          "start": 20278
+        }
+      ],
+      "path": "tests/helpers/zero-payload-checked-record-rust-report.mjs",
+      "previousSha256": "925b72eb657fc67f0b4ceeba42aa49fda87643cd73bf032ebad15b56232f8764"
+    }
+  ]
+}
