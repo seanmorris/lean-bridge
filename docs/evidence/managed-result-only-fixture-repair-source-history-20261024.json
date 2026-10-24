@@ -1,0 +1,107 @@
+{
+  "additions": [
+    {
+      "currentSha256": "ff7e86ab74a9b329966f1c1bb923558ca02a93f43951d5c949527ac896bfeb0f",
+      "path": "scripts/update-managed-result-only-fixture-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "4083a5bd1f5db827f973e4e9b056bd16633c3b8e4ab2b7a81fcedfdae7f4c2d0",
+      "path": "tests/helpers/managed-result-only-fixture-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "4b10271ab25286e06aafc4d59f6bd41cb7894c8fcf5bce21bcaa5bd682e2b79b",
+      "path": "tests/helpers/managed-result-only-fixture-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "cfd00775833587ed165385b2257f861be1911f41",
+  "integrationUpdates": [
+    {
+      "currentSha256": "1df5caf1d368af7f60ee0bbd79ce62ca2e41e5522192110c618f6af8c72c4712",
+      "edits": [
+        {
+          "current": "import \"./helpers/managed-result-only-fixture-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 7627
+        }
+      ],
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "bde529c5f5a4e461782c0afc79dd9aaa91e00b52b8b057d90bb24811dec13a3b"
+    },
+    {
+      "currentSha256": "ffbbe5ca3a814892e66524035a514a3f88a40f017bef6ed0bffd11017fdec3c5",
+      "edits": [
+        {
+          "current": "import { beforeManagedResultOnlyFixtureRepairSource, managedResultOnlyFixtureRepairNormalizationPaths } from \"./managed-result-only-fixture-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...managedResultOnlyFixtureRepairNormalizationPaths\n\t, ...genericSubtypeManagedTapEscapeRepairNormalizationPaths\n",
+          "previous": "\t...genericSubtypeManagedTapEscapeRepairNormalizationPaths\n",
+          "start": 171245
+        },
+        {
+          "current": "\tconst managedResultOnlyFixtureRepair\n\t\t= beforeManagedResultOnlyFixtureRepairSource(path, text, expected);\n\tif(sha256(managedResultOnlyFixtureRepair) === expected)\n\t\treturn managedResultOnlyFixtureRepair;\n\ttext = managedResultOnlyFixtureRepair;\n",
+          "previous": "",
+          "start": 210877
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "5f49f3877e5f68303fca203d5917da58555095e19710b38266160405d1bdbe9a"
+    }
+  ],
+  "milestone": "managed-result-only-fixture-repair-source-v1",
+  "predecessorCommit": "1013044a183122c8276940020df1b3484b1dc6f8",
+  "schemaVersion": 1,
+  "scope": "Address result-only JVM and PHP fixtures by their component namespace and require the exact 14-check WIT result-only observation.",
+  "updates": [
+    {
+      "currentSha256": "e6c60a630d3b1f8a34af86278c6ce33d90bb0d542c3e0f18291baa77987d15f5",
+      "edits": [
+        {
+          "current": "import static org.leanbridge.owned_checked_records.Api.*;\n",
+          "previous": "import static org.leanbridge.owned_checked_records_result_only.Api.*;\n",
+          "start": 29
+        }
+      ],
+      "path": "tests/fixtures/structured-types/owned-checked-record-result-only-java.java",
+      "previousSha256": "49b5416c459c113422abe6944d68274382c8a4c55894b9e0defed11aaa7b7149"
+    },
+    {
+      "currentSha256": "a8d9668b5c41009adfe3660b12da37f064f714b4a2f4e6ccdde77f95b860e296",
+      "edits": [
+        {
+          "current": "import org.leanbridge.owned_checked_records.kotlin.Api\n",
+          "previous": "import org.leanbridge.owned_checked_records_result_only.kotlin.Api\n",
+          "start": 28
+        }
+      ],
+      "path": "tests/fixtures/structured-types/owned-checked-record-result-only-kotlin.kt",
+      "previousSha256": "d7c940b178fa48dff021a9eb05c3b7f2ea615dd63b728a1228fc63f54e598669"
+    },
+    {
+      "currentSha256": "4f7d9e2170138cc2edcced6498174af61e1d1cc1942da8d37e4434d23b4a8bdb",
+      "edits": [
+        {
+          "current": "use function LeanOwnedCheckedRecords\\{claim_for, new_ticket, serial};\n",
+          "previous": "use function LeanOwnedCheckedRecordsResultOnly\\{claim_for, new_ticket, serial};\n",
+          "start": 108
+        }
+      ],
+      "path": "tests/fixtures/structured-types/owned-checked-record-result-only-php.php",
+      "previousSha256": "383c5cd88f02b9f9142bc4a2479def5e782f1783a448cbec1df64d6099c1a502"
+    },
+    {
+      "currentSha256": "f1c1e5ca6acb44602921703f2cc9ab029ad026c3cc83b7aef081d25e270ad8cc",
+      "edits": [
+        {
+          "current": "\t\t\t\t\t, /claim-closure: func/u]]\n\t\t\t, ...resultOnly ? { expectedChecks: 14 } : {} };\n",
+          "previous": "\t\t\t\t\t, /claim-closure: func/u]] };\n",
+          "start": 10179
+        }
+      ],
+      "path": "tests/owned-checked-record-managed-packaging.test.mjs",
+      "previousSha256": "b3c363b07b8a9711c3e9e02bd74c4e3f2d1780dd0ec6bc2f8977db6153b52548"
+    }
+  ]
+}

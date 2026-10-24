@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeManagedResultOnlyFixtureRepairSource, managedResultOnlyFixtureRepairNormalizationPaths } from "./managed-result-only-fixture-repair-source-history.mjs";
 import { beforeGenericSubtypeManagedTapEscapeRepairSource, genericSubtypeManagedTapEscapeRepairNormalizationPaths } from "./generic-subtype-managed-tap-escape-repair-source-history.mjs";
 import { beforeStructuredCallableRecoveryGateRepairSource, structuredCallableRecoveryGateRepairNormalizationPaths } from "./structured-callable-recovery-gate-repair-source-history.mjs";
 import { beforeOwnedSubtypeRemainingHostsTapRepairSource, ownedSubtypeRemainingHostsTapRepairNormalizationPaths } from "./owned-subtype-remaining-hosts-tap-repair-source-history.mjs";
@@ -2086,7 +2087,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...genericSubtypeManagedTapEscapeRepairNormalizationPaths
+	...managedResultOnlyFixtureRepairNormalizationPaths
+	, ...genericSubtypeManagedTapEscapeRepairNormalizationPaths
 	, ...structuredCallableRecoveryGateRepairNormalizationPaths
 	, ...ownedSubtypeRemainingHostsTapRepairNormalizationPaths
 	, ...coreEvidenceTrackingTestRegistrationNormalizationPaths
@@ -2915,6 +2917,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
+	const managedResultOnlyFixtureRepair
+		= beforeManagedResultOnlyFixtureRepairSource(path, text, expected);
+	if(sha256(managedResultOnlyFixtureRepair) === expected)
+		return managedResultOnlyFixtureRepair;
+	text = managedResultOnlyFixtureRepair;
 	const genericSubtypeManagedTapEscapeRepair
 		= beforeGenericSubtypeManagedTapEscapeRepairSource(
 			path, text, expected);
