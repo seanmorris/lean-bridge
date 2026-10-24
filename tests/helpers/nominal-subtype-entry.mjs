@@ -193,13 +193,28 @@ export const assertNominalSubtypeEntryReport = entry => {
 	assert.deepEqual(entry.rows, expected.map(item => [item.step, item.status]));
 	assert.deepEqual(entry.observed, expected);
 	assert.deepEqual(entry.counts, accountNominalSubtypeEntry(entry.observed.map(item => [`${nominalSubtypeEntryBegin} ${item.step}`, ...item.entries.map(value => `${nominalSubtypeEntryMarker} ${value}`), `${nominalSubtypeEntryEnd} ${item.step}`].join("\n")).join("\n") + "\n", entry.rows, expected).counts);
+	const manifestExports = entry.probe.linkManifest.exports;
+	assert.deepEqual(Object.keys(manifestExports ?? {}).sort()
+		, ["directSymbols", "initializer", "internalInitializer"]);
+	const directSymbols = [...manifestExports.directSymbols].sort();
+	const initializers = [manifestExports.initializer
+		, manifestExports.internalInitializer].sort();
+	const emscriptenInternals = [
+		"__wasm_apply_data_relocs", "__wasm_call_ctors"
+	];
 	assert.ok(Array.isArray(entry.sideModuleExports.adapters.exported)
 		&& entry.sideModuleExports.adapters.exported.length > 0
 	, "direct adapter exports are listed");
+	assert.deepEqual(entry.sideModuleExports.adapters.exported, directSymbols);
 	assert.deepEqual(entry.sideModuleExports.adapters.referencedByPackageJavaScript
-		, entry.sideModuleExports.adapters.exported);
+		, directSymbols);
+	assert.deepEqual(entry.sideModuleExports.initializers, initializers);
+	assert.deepEqual(entry.sideModuleExports.emscriptenInternals
+		, emscriptenInternals);
 	assert.deepEqual(entry.sideModuleExports.validators
 		, { exported: [], referencedByPackageJavaScript: [] });
+	assert.equal(entry.sideModuleExports.exports
+		, directSymbols.length + initializers.length + emscriptenInternals.length);
 	assert.equal(entry.validatorExportsPrivate, true);
 	// A browser section repeats the same rows and entries per engine through the page console stream.
 	if(entry.browser !== undefined)

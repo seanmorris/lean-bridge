@@ -100,7 +100,18 @@ test("nominal entry report checker requires distinct probe identities, exact row
 	const digest = "a".repeat(64), sideModule = { name: "x.wasm", sha256: digest };
 	const entry = { instrumentation: nominalSubtypeEntryInstrumentation, consumerSha256: digest, install: { status: 0 } };
 	entry.fixture = { originalSha256: digest, probeSha256: "b".repeat(64) };
-	entry.probe = { receiptSha256: digest, packageSha256: digest, runtimeSha256: digest, bindingIrSha256: digest, linkManifest: {}, sideModule };
+	entry.probe = {
+		receiptSha256: digest, packageSha256: digest
+		, runtimeSha256: digest, bindingIrSha256: digest
+		, linkManifest: {
+			exports: {
+				directSymbols: ["lean_bridge_a"]
+				, initializer: "initialize_A"
+				, internalInitializer: "lean_bridge_internal_initialize_a"
+			}
+		}
+		, sideModule
+	};
 	entry.rows = rows(expected); entry.observed = expected; entry.counts = counts;
 	entry.sideModuleExports = { exports: 5
 		, adapters: { exported: ["lean_bridge_a"]
@@ -125,6 +136,28 @@ test("nominal entry report checker requires distinct probe identities, exact row
 		, sideModuleExports: { ...entry.sideModuleExports
 			, adapters: { exported: []
 				, referencedByPackageJavaScript: [] } } }), /listed/u);
+	assert.throws(() => assertNominalSubtypeEntryReport({
+		...entry
+		, probe: {
+			...entry.probe
+			, linkManifest: {
+				exports: {
+					directSymbols: ["lean_bridge_other"]
+					, initializer: "initialize_A"
+					, internalInitializer: "lean_bridge_internal_initialize_a"
+				}
+			}
+		}
+	}));
+	assert.throws(() => assertNominalSubtypeEntryReport({ ...entry
+		, sideModuleExports: { ...entry.sideModuleExports, exports: 6 } }));
+	assert.throws(() => assertNominalSubtypeEntryReport({ ...entry
+		, sideModuleExports: { ...entry.sideModuleExports
+			, initializers: ["initialize_other"
+				, "lean_bridge_internal_initialize_a"] } }));
+	assert.throws(() => assertNominalSubtypeEntryReport({ ...entry
+		, sideModuleExports: { ...entry.sideModuleExports
+			, emscriptenInternals: ["__wasm_call_ctors"] } }));
 	const engine = { engine: "chromium", hostVersion: "1.0", rows: rows(expected), observed: expected, counts, errors: [], consoleLines: 1 };
 	const browser = { deployment: { sha256: digest, viteVersion: "1" }, pageSha256: digest, engines: [engine], externalNetworkBlocked: true };
 	assert.deepEqual(assertNominalSubtypeEntryReport({ ...entry, browser }), counts);
