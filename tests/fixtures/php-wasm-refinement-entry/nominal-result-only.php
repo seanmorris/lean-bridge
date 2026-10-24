@@ -26,7 +26,7 @@ $raw = function (array $changes = []) use ($n): RawPacket {
 $check(produce($raw()) !== null, 'present result');
 $check(produce($raw(['boolValue' => false])) === null, 'absent result');
 $check(produce_pair($raw()) !== null, 'repeated result');
-$check(word_bits() === 32, 'constructor-free scalar');
+$check(word_bits()->isEqualTo(32), 'constructor-free scalar');
 
 echo json_encode([
     'checks' => $checks, 'family' => 'nominal-result-only',

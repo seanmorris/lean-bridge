@@ -48,6 +48,8 @@ test("the compact nominal callers use the exact wasm32 integer representations",
 		assert.ok(source.includes("'int32Value' => -42"), family);
 		assert.ok(source.includes("'isizeValue' => -42"), family);
 	}
+	const resultOnly = await phpWasmRefinementEntryCaller("nominal-result-only", "weak");
+	assert.ok(resultOnly.includes("word_bits()->isEqualTo(32)"));
 });
 
 test("compact copied-entry requests close arrangement, operation and call plan", () => {
