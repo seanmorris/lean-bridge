@@ -6,14 +6,21 @@
 import assert from "node:assert/strict";
 import { beforePhpWasmCorpusPartitionSource } from "./php-wasm-corpus-partition-history.mjs";
 import { readFile } from "node:fs/promises";
+import { posix } from "node:path";
 import { assertNativeOwnedGate } from "./native-owned-gate.mjs";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
-import { generateOwnedCPackage } from "../../src/backends/c/owned-package.mjs";
-import { ownedAggregateTransferLeaseSource } from "../../src/backends/native/owned-aggregate-transfers.mjs";
+import { moduleSpecifiers } from "./module-closure.mjs";
+import { moduleAtProducer } from "./producer-module.mjs";
+import { bytesAtProducer } from "./producer-source.mjs";
 import { ownedTransferSource } from "./owned-transfer-fixture.mjs";
-import { historicalOwnedTransferPackage } from "./owned-transfer-generated-history.mjs";
 
 export const ownedTransferCCommand = "npm run test:owned-transfers";
+// The receipt's complete source inventory is exactly this commit's tree.
+export const ownedTransferCProducer = "27e0eac89682a498537f7a2c5861ac3a53f3b3f1";
+export const ownedTransferCProducerEntries = Object.freeze([
+	"src/backends/c/owned-package.mjs"
+	, "src/backends/native/owned-aggregate-transfers.mjs"
+]);
 export const ownedTransferCScope = Object.freeze({
 	ordinaryCompiler: true, reviewedCompiler: true, nativeLedger: true
 	, publicCProjection: true, transferredInputs: true, atomicOwnerSet: true
@@ -24,11 +31,40 @@ export const ownedTransferCScope = Object.freeze({
 });
 
 /**
+ * Bind every producer module and JSON file the replayed generator loads to this
+ * receipt's recorded source identity.
+ *
+ * @param sources - Receipt source identities by repository-relative path.
+ */
+export const ownedTransferCProducerClosure = sources => {
+	const paths = new Set();
+	const visit = path => {
+		if(paths.has(path)) return;
+		paths.add(path);
+		assert.match(sources[path] ?? "", /^[a-f0-9]{64}$/u, path);
+		const bytes = bytesAtProducer(ownedTransferCProducer, path, sources[path]);
+		if(!path.endsWith(".mjs")) return;
+		for(const specifier of moduleSpecifiers(bytes.toString("utf8"), path))
+		{
+			const joined = posix.normalize(posix.join(posix.dirname(path), specifier));
+			visit(posix.extname(joined) === "" ? `${joined}.mjs` : joined);
+		}
+	};
+	for(const entry of ownedTransferCProducerEntries) visit(entry);
+	return [...paths].sort();
+};
+
+/**
  * Require actual Lean observations, their source identities and mutation controls.
+ * Generated C is replayed with the receipt's own producer modules; present-day
+ * generator behavior is covered by the current transfer suites.
  *
  * @param record - Source-bound staged execution receipt.
  */
 export const assertOwnedTransferCExecution = async record => {
+	ownedTransferCProducerClosure(record.sources);
+	const [{ generateOwnedCPackage }, { ownedAggregateTransferLeaseSource }] = await Promise.all(
+		ownedTransferCProducerEntries.map(entry => moduleAtProducer(ownedTransferCProducer, entry)));
 	assert.equal(record.acceptance, "passed"); assert.deepEqual(record.scope, ownedTransferCScope);
 	assert.equal(record.run.command, ownedTransferCCommand); assert.equal(record.run.exitCode, 0);
 	assert.equal(sha256(record.run.text), record.run.sha256);
@@ -54,7 +90,7 @@ export const assertOwnedTransferCExecution = async record => {
 		assert.equal(Boolean(input.sourceIdentity.reviewedBindingIr), consumer.path === "reviewed");
 		assert.equal(report.sourceIdentitySha256, sha256(canonicalJson(input.sourceIdentity)));
 		assert.equal(report.probeSha256, sha256(await readFile("tests/fixtures/structured-types/owned-public-transfers.c")));
-		const generated = historicalOwnedTransferPackage(generateOwnedCPackage({ ...input, hostCallbacks: true, transferredInputs: true }), report.sourceSha256);
+		const generated = generateOwnedCPackage({ ...input, hostCallbacks: true, transferredInputs: true });
 		assert.equal(report.bindingIrSha256, generated.layout.model.bindingIrSha256);
 		assert.equal(report.headerSha256, sha256(generated.publicHeader));
 		assert.equal(report.sourceSha256, sha256(generated.source));
