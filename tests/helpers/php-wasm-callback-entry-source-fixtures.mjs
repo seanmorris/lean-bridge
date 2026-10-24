@@ -10,7 +10,7 @@ import { validatePhpWasmCallbackEntrySelection } from "./php-wasm-callback-entry
 import { phpWasmRefinementEntrySource } from "./php-wasm-refinement-entry-source.mjs";
 
 export const phpWasmCallbackEntryFamilies = Object.freeze([
-	"callback-fin", "callback-checked-record"
+	"callback-fin", "callback-checked-record", "callback-subtype"
 ]);
 export const phpWasmCallbackEntryRoutes = Object.freeze(["ordinary", "reviewed"]);
 
@@ -75,6 +75,36 @@ def makeMixedClosure (_seed : Nat) : Nat → Interval → Interval := makeMixedC
 def makeNestedClosureProbeBody (value : Weighted) : Nat := value.limit - value.weight.val
 
 def makeNestedClosure (_seed : Nat) : Weighted → Nat := makeNestedClosureProbeBody`
+			})
+		])
+	})
+	// The admitted standalone selected-Subtype corpus. Its container exports stay compiled in the
+	// package but are deliberately not selected: this family measures direct Subtype positions.
+	, "callback-subtype": Object.freeze({
+		path: "tests/fixtures/onboarding/callback-subtypes/CallbackSubtypes.lean"
+		, namespace: "CallbackSubtypes", prefix: "lb_callback_subtype_probe"
+		, constructors: Object.freeze(["checkedPositive"])
+		, sources: Object.freeze([
+			"callHost", "callHostMixed", "makeClosure", "makeMixedClosure"
+		])
+		, closures: Object.freeze([
+			Object.freeze({
+				name: "makeClosure", body: "makeClosureProbeBody"
+				, previous: `def makeClosure (_seed : Nat) : Positive → Positive :=
+  fun value => value`
+				, current: `@[noinline, export lb_callback_subtype_closure_makeClosure]
+def makeClosureProbeBody (value : Positive) : Positive := value
+
+def makeClosure (_seed : Nat) : Positive → Positive := makeClosureProbeBody`
+			})
+			, Object.freeze({
+				name: "makeMixedClosure", body: "makeMixedClosureProbeBody"
+				, previous: `def makeMixedClosure (_seed : Nat) : Nat → Positive → Positive :=
+  fun _marker value => value`
+				, current: `@[noinline, export lb_callback_subtype_closure_makeMixedClosure]
+def makeMixedClosureProbeBody (_marker : Nat) (value : Positive) : Positive := value
+
+def makeMixedClosure (_seed : Nat) : Nat → Positive → Positive := makeMixedClosureProbeBody`
 			})
 		])
 	})

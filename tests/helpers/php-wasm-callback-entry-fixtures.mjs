@@ -14,6 +14,11 @@ import {
 	callbackFinPhpWasmConfiguration, callbackFinPhpWasmReview
 	, callbackFinPhpWasmSettings, checkCallbackFinPhpWasmModel
 } from "./callback-fin-php-wasm-fixture.mjs";
+import { callbackSubtypeReviewedIr } from "./callback-subtype-fixture.mjs";
+import {
+	callbackSubtypePhpWasmConfiguration, callbackSubtypePhpWasmSettings
+	, checkCallbackSubtypePhpWasmModel
+} from "./callback-subtype-php-wasm-fixture.mjs";
 import { phpWasmCallbackEntryFamilies } from "./php-wasm-callback-entry-source-fixtures.mjs";
 
 const specifications = Object.freeze({
@@ -32,6 +37,25 @@ const specifications = Object.freeze({
 		, settings: callbackCheckedRecordPhpWasmSettings
 		, module: "LeanCallbackcheckedrecords", probe: "call_host"
 	})
+	, "callback-subtype": Object.freeze({
+		root: "tests/fixtures/onboarding/callback-subtypes"
+		, leanModule: "CallbackSubtypes"
+		, caller: "tests/fixtures/php-wasm-callback-entry/callback-subtype.php"
+		, settings: callbackSubtypePhpWasmSettings
+		, module: "LeanCallbacksubtypes", probe: "call_host"
+	})
+});
+const reviewed = Object.freeze({
+	"callback-checked-record": Object.freeze({
+		configuration: callbackCheckedRecordPhpWasmConfiguration
+		, review: callbackCheckedRecordReviewedIr
+		, check: checkCallbackCheckedRecordPhpWasmModel
+	})
+	, "callback-subtype": Object.freeze({
+		configuration: callbackSubtypePhpWasmConfiguration
+		, review: callbackSubtypeReviewedIr
+		, check: checkCallbackSubtypePhpWasmModel
+	})
 });
 
 /**
@@ -39,7 +63,7 @@ const specifications = Object.freeze({
  *
  * @param family - Callback family under test.
  * @param route - Ordinary or reviewed author route.
- * @param ordinaryIr - Ordinary checked-record IR used to derive the review.
+ * @param ordinaryIr - Ordinary checked-record or Subtype IR used to derive the review.
  */
 export const phpWasmCallbackEntryFixture = (family, route, ordinaryIr = null) => {
 	assert.ok(phpWasmCallbackEntryFamilies.includes(family));
@@ -53,13 +77,15 @@ export const phpWasmCallbackEntryFixture = (family, route, ordinaryIr = null) =>
 			, review
 			, verify: model => checkCallbackFinPhpWasmModel(model, review, route) };
 	}
-	const review = ordinaryIr === null ? null : callbackCheckedRecordReviewedIr(ordinaryIr);
+	// Checked-record and Subtype reviews are derived from the ordinary extraction of the same source.
+	const author = reviewed[family];
+	const review = ordinaryIr === null ? null : author.review(ordinaryIr);
 	return {
-		...spec, configuration: callbackCheckedRecordPhpWasmConfiguration(route)
+		...spec, configuration: author.configuration(route)
 		, review
 		, verify: model => {
-			const selected = route === "ordinary" ? callbackCheckedRecordReviewedIr(model.bindingIr) : review;
-			checkCallbackCheckedRecordPhpWasmModel(model, selected, route);
+			const selected = route === "ordinary" ? author.review(model.bindingIr) : review;
+			author.check(model, selected, route);
 		}
 	};
 };

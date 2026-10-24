@@ -17,7 +17,7 @@ const exact = (value, keys, label) => {
 const validatePlan = plan => {
 	exact(plan, ["scope", "family", "selected", "cases"], "callback entry plan");
 	require(plan.scope === "separate-instrumented-probe", "callback entry scope");
-	require(["callback-fin", "callback-checked-record"].includes(plan.family)
+	require(["callback-fin", "callback-checked-record", "callback-subtype"].includes(plan.family)
 		, "callback entry family");
 	require(Array.isArray(plan.selected) && plan.selected.length > 0
 		, "callback entry selection");

@@ -18,6 +18,10 @@ import {
 	callbackFinPhpWasmConfiguration, callbackFinPhpWasmReview
 	, checkCallbackFinPhpWasmModel
 } from "./callback-fin-php-wasm-fixture.mjs";
+import { callbackSubtypeReviewedIr } from "./callback-subtype-fixture.mjs";
+import {
+	callbackSubtypePhpWasmConfiguration, checkCallbackSubtypePhpWasmModel
+} from "./callback-subtype-php-wasm-fixture.mjs";
 import {
 	phpWasmCallbackEntryCaller, phpWasmCallbackEntryCallerPath
 	, phpWasmCallbackEntryExpected, phpWasmCallbackEntryRequest
@@ -47,9 +51,24 @@ const safePath = path => typeof path === "string" && path.length > 0
 const originalAt = (producerCommit, path) => execFileSync(
 	"git", ["show", `${producerCommit}:${path}`], { maxBuffer: 32 * 1024 * 1024 }
 );
-const configurationFor = (family, route) => family === "callback-fin"
-	? callbackFinPhpWasmConfiguration(route)
-	: callbackCheckedRecordPhpWasmConfiguration(route);
+const authors = Object.freeze({
+	"callback-fin": Object.freeze({
+		configuration: callbackFinPhpWasmConfiguration
+		, review: () => callbackFinPhpWasmReview()
+		, check: checkCallbackFinPhpWasmModel
+	})
+	, "callback-checked-record": Object.freeze({
+		configuration: callbackCheckedRecordPhpWasmConfiguration
+		, review: callbackCheckedRecordReviewedIr
+		, check: checkCallbackCheckedRecordPhpWasmModel
+	})
+	, "callback-subtype": Object.freeze({
+		configuration: callbackSubtypePhpWasmConfiguration
+		, review: callbackSubtypeReviewedIr
+		, check: checkCallbackSubtypePhpWasmModel
+	})
+});
+const configurationFor = (family, route) => authors[family].configuration(route);
 
 /**
  * Parse one exact report-checker CLI selection.
@@ -139,13 +158,12 @@ export const checkPhpWasmCallbackEntryReport = async (records, selection) => {
 		assert.deepEqual(await json(prefix + "source-probe.json"), sourceProbe);
 		const modelBytes = await bytes(prefix + "model.json");
 		const model = JSON.parse(modelBytes); assert.equal(modelBytes.toString(), canonicalJson(model));
-		const review = family === "callback-fin" ? callbackFinPhpWasmReview()
-			: route === "reviewed" ? retainedReview : callbackCheckedRecordReviewedIr(model.bindingIr);
-		if(family === "callback-fin") checkCallbackFinPhpWasmModel(model, review, route);
-		else checkCallbackCheckedRecordPhpWasmModel(model, review, route);
+		const review = family === "callback-fin" ? authors[family].review()
+			: route === "reviewed" ? retainedReview : authors[family].review(model.bindingIr);
+		authors[family].check(model, review, route);
 		assert.equal(reviewedContractDifference(review, model.bindingIr), null);
 		const selected = phpWasmCallbackEntrySelection(model, sourceProbe.entries);
-		const plan = phpWasmCallbackEntryPlan(family, selected.selected);
+		const plan = phpWasmCallbackEntryPlan(family, selected.selected, selected.validatorConstructors);
 		assert.deepEqual(report.entryPlan, plan);
 		const observation = await json(prefix + "observation.json");
 		exact(observation, [

@@ -17,10 +17,11 @@ const counts = entries => Object.fromEntries(phpWasmCallbackEntryKinds.map(kind 
 /**
  * Build one exact expected control matrix from authenticated identities.
  *
- * @param family - Fin or checked-record callback family.
+ * @param family - Fin, checked-record or Subtype callback family.
  * @param selected - Compiler-authenticated entry identities.
+ * @param validatorConstructors - Compiler-derived constructor of each closure refusal validator.
  */
-export const phpWasmCallbackEntryPlan = (family, selected) => {
+export const phpWasmCallbackEntryPlan = (family, selected, validatorConstructors = {}) => {
 	assert.ok(phpWasmCallbackEntryFamilies.includes(family));
 	validatePhpWasmCallbackEntrySelection(selected);
 	const find = (kind, label) => {
@@ -34,6 +35,15 @@ export const phpWasmCallbackEntryPlan = (family, selected) => {
 		);
 		assert.equal(values.length, 1, `${kind}/${prefix}*`);
 		return { kind, label: values[0].label };
+	};
+	// A closure with several checked leaves has one refusal validator per leaf; the native walker
+	// reaches them in field order, so a refusal names the validator of the leaf that refused.
+	const leafValidator = (name, constructor) => {
+		const values = selected.filter(item => item.kind === "validator"
+			&& item.label.startsWith(`${name}:callback_validator:closure_graph_refinement_`)
+			&& validatorConstructors[item.label] === constructor);
+		assert.equal(values.length, 1, `validator/${name}/${constructor}`);
+		return { kind: "validator", label: values[0].label };
 	};
 	const call = (publicName, entries) => ({ publicName, entries, counts: counts(entries) });
 	const top = (name, middle = []) => call(name, [
@@ -110,10 +120,11 @@ export const phpWasmCallbackEntryPlan = (family, selected) => {
 				, calls: [callback(three)] }
 		];
 	}
-	else
+	else if(family === "callback-checked-record")
 	{
 		const namespace = "CallbackCheckedRecords";
 		const interval = [constructor(namespace, "mkInterval")];
+		const positive = constructor(namespace, "checkedPositive");
 		const weighted = [constructor(namespace, "checkedPositive")
 			, constructor(namespace, "mkWeighted")];
 		const host = `${namespace}.callHost`, mixedHost = `${namespace}.callHostMixed`;
@@ -154,6 +165,58 @@ export const phpWasmCallbackEntryPlan = (family, selected) => {
 					, closure(mixedClosure, interval, false, false)] }
 			, { control: "nested-closure", outcome: "accepted"
 				, calls: [maker(nestedClosure), closure(nestedClosure, weighted, false)] }
+			// The selected Subtype payload field refuses before its enclosing record constructor runs.
+			, { control: "nested-invalid-recovery", outcome: "refused"
+				, calls: [recoveryRefusal(nestedHost, [positive])] }
+			, { control: "nested-reply-rejection", outcome: "refused"
+				, calls: [callback(nestedHost, { recovery: weighted
+					, reply: [positive], rejected: true })] }
+			, { control: "nested-closure-refusal", outcome: "refused"
+				, calls: [
+					closureRefusal(nestedClosure, [
+						positive
+						, leafValidator(nestedClosure, `${namespace}.checkedPositive`)
+						, positive
+					])
+				]
+			}
+		];
+	}
+	else
+	{
+		const namespace = "CallbackSubtypes";
+		const positive = [constructor(namespace, "checkedPositive")];
+		const host = `${namespace}.callHost`, mixedHost = `${namespace}.callHostMixed`;
+		const closureName = `${namespace}.makeClosure`;
+		const mixedClosure = `${namespace}.makeMixedClosure`;
+		const refusal = name => closureRefusal(name, [
+			...positive, leafValidator(name, `${namespace}.checkedPositive`), ...positive
+		]);
+		cases = [
+			{ control: "host-reply", outcome: "accepted"
+				, calls: [callback(host, { recovery: positive, reply: positive })] }
+			, { control: "invalid-recovery", outcome: "refused"
+				, calls: [recoveryRefusal(host, positive)] }
+			, { control: "actual-reply-rejection", outcome: "refused"
+				, calls: [callback(host, { recovery: positive
+					, reply: positive, rejected: true })] }
+			, { control: "later-call-recovery", outcome: "accepted"
+				, calls: [callback(host, { recovery: positive, reply: positive })] }
+			, { control: "mixed-host", outcome: "accepted"
+				, calls: [callback(mixedHost, { recovery: positive, reply: positive })] }
+			, { control: "closure-input", outcome: "accepted"
+				, calls: [maker(closureName), closure(closureName, positive, false)] }
+			, { control: "closure-input-refusal", outcome: "refused"
+				, calls: [refusal(closureName)] }
+			, { control: "closure-input-recovery", outcome: "accepted"
+				, calls: [closure(closureName, positive, false)] }
+			// Lean drops the unused marker, so the mixed closure applies its reduced body
+			// rather than the exported probe body, as the checked-record mixed closure does.
+			, { control: "mixed-closure", outcome: "accepted"
+				, calls: [maker(mixedClosure)
+					, closure(mixedClosure, positive, false, false)] }
+			, { control: "mixed-closure-refusal", outcome: "refused"
+				, calls: [refusal(mixedClosure)] }
 		];
 	}
 	assert.ok(cases.some(item => item.outcome === "refused"));

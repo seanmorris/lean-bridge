@@ -80,6 +80,43 @@ test("callback selection keeps checked-record validator labels in the trace gram
 		.every(item => !item.label.includes(":validator:structured_")));
 });
 
+test("callback selection names the constructor of each closure refusal validator", async () => {
+	const model = JSON.parse(await readFile(
+		`${callbackRefinementsPhpWasmHostedEvidence}/hosted/output/records/checked-record/reviewed/build-0/model.json`
+	));
+	const fixture = await phpWasmCallbackEntrySourceFixture("callback-checked-record");
+	const { selected, validatorConstructors } = phpWasmCallbackEntrySelection(model, fixture.entries);
+	const nested = selected.filter(item => item.kind === "validator"
+		&& item.label.startsWith("CallbackCheckedRecords.makeNestedClosure:callback_validator:"));
+	assert.equal(nested.length, 2);
+	assert.deepEqual(nested.map(item => validatorConstructors[item.label]).sort()
+		, ["CallbackCheckedRecords.checkedPositive", "CallbackCheckedRecords.mkWeighted"]);
+	for(const label of Object.keys(validatorConstructors))
+		assert.ok(selected.some(item => item.kind === "validator" && item.label === label), label);
+	assert.ok(Object.keys(validatorConstructors).every(label => label.includes(":callback_validator:closure_")));
+});
+
+test("callback selection derives every selected-Subtype entry from the analyzer model", async () => {
+	const model = JSON.parse(await readFile(
+		"tests/fixtures/php-wasm-callback-entry/analyzer/callback-subtype-ordinary.model.json"));
+	const fixture = await phpWasmCallbackEntrySourceFixture("callback-subtype");
+	const { selected, validatorConstructors } = phpWasmCallbackEntrySelection(model, fixture.entries);
+	for(const kind of ["public", "adapter", "validator", "recovery", "callback"
+		, "rejection", "closure", "cleanup", "source", "constructor"])
+		assert.ok(selected.some(item => item.kind === kind), kind);
+	for(const name of ["callHost", "callHostMixed"])
+		assert.ok(selected.some(item => item.label === `CallbackSubtypes.${name}:recovery:native`), name);
+	for(const name of ["makeClosure", "makeMixedClosure"])
+		assert.ok(selected.some(item => item.label === `CallbackSubtypes.${name}:closure:lean`), name);
+	assert.deepEqual(Object.values(validatorConstructors)
+		, ["CallbackSubtypes.checkedPositive", "CallbackSubtypes.checkedPositive"]);
+	assert.ok(selected.every(item => !/Container/u.test(item.label)));
+	assert.throws(() => phpWasmCallbackEntrySelection(model, [
+		...fixture.entries
+		, { symbol: "invented_constructor", kind: "constructor", label: "CallbackSubtypes.invented" }
+	]), /constructor is absent from compiler refinements/u);
+});
+
 test("callback selection refuses authored identities outside the compiler model", async () => {
 	const fixture = await phpWasmCallbackEntrySourceFixture("callback-fin");
 	const model = modelFromReview(callbackFinPhpWasmReview());
