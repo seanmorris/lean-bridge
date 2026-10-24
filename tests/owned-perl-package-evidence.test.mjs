@@ -34,9 +34,10 @@ test("owned Perl preserves published sources and rejects unrecorded edits", asyn
 	for(const update of record.updates)
 	{
 		const current = beforePerlContractRepair(update.path, await readFile(update.path, "utf8"), update.currentSha256);
-		const prior = beforeOwnedPerlPackages(update.path, current);
+		// The hub reverses every recognized state, so each predecessor read names its stop.
+		const prior = beforeOwnedPerlPackages(update.path, current, update.previousSha256);
 		assert.equal(sha256(prior), update.previousSha256, update.path);
-		assert.equal(beforeOwnedPerlPackages(update.path, prior), prior);
+		assert.equal(beforeOwnedPerlPackages(update.path, prior, update.previousSha256), prior);
 		assert.equal(beforeOwnedPerlPackages(update.path, current, update.currentSha256), current);
 		const unknown = current + "\n/* unrecorded Perl change */\n";
 		assert.equal(beforeOwnedPerlPackages(update.path, unknown), unknown);
@@ -49,7 +50,9 @@ test("owned Perl preserves published sources and rejects unrecorded edits", asyn
 	const inventoryPath = "docs/type-surface.v1.json";
 	const current = perlContractRepairBytes(inventoryPath, await readFile(inventoryPath)
 		, record.sources[inventoryPath]).toString("utf8");
-	const expected = JSON.parse(beforeOwnedPerlPackages("docs/type-surface.v1.json", current));
+	const transition = record.updates.find(update => update.path === inventoryPath);
+	assert.ok(transition, "Owned Perl records an explicit type-surface predecessor");
+	const expected = JSON.parse(beforeOwnedPerlPackages(inventoryPath, current, transition.previousSha256));
 	for(const evidence of expected.evidence) for(const file of evidence.files)
 		if(record.sources[file.path]) file.sha256 = record.sources[file.path];
 	assert.deepEqual(JSON.parse(current), expected);

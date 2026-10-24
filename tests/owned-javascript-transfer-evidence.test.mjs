@@ -34,7 +34,7 @@ test("JavaScript transfers preserve prior receipts without promoting unrelated s
 		const source = sourceAtProducer(ownedJavaScriptTransferProducer, update.path, update.currentSha256);
 		const prior = beforeOwnedJavaScriptTransfer(update.path, source, update.previousSha256);
 		assert.equal(sha256(prior), update.previousSha256);
-		assert.equal(beforeOwnedJavaScriptTransfer(update.path, prior), prior);
+		assert.equal(beforeOwnedJavaScriptTransfer(update.path, prior, update.previousSha256), prior);
 		assert.equal(beforeOwnedJavaScriptTransfer(update.path, source, update.currentSha256), source);
 	}
 	const path = "docs/type-surface.v1.json", current = sourceAtProducer(ownedJavaScriptTransferProducer, path, record.sources[path]);

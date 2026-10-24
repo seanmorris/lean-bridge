@@ -43,9 +43,10 @@ test("owned execution rejects unexecuted support, source drift and missing clean
 test("owned source history rejects unknown text, wrong predecessors and overlapping edits", async () => {
 	for(const update of (await json(ownedAggregateHistoryPath)).updates)
 	{
-		const source = beforeOwnedC(update.path, await readFile(update.path, "utf8"));
+		// The hub reverses every recognized state, so live reads and predecessor reads name their stops.
+		const source = beforeOwnedC(update.path, await readFile(update.path, "utf8"), update.currentSha256);
 		assert.equal(sha256(reverseOwnedAggregateUpdate(source, update)), update.previousSha256);
-		assert.equal(sha256(beforeOwnedAggregates(update.path, source)), update.previousSha256);
+		assert.equal(sha256(beforeOwnedAggregates(update.path, source, update.previousSha256)), update.previousSha256);
 		assert.equal(beforeOwnedAggregates(update.path, source, update.currentSha256), source);
 		const unknown = source + "\n/* unrelated */\n";
 		assert.equal(beforeOwnedAggregates(update.path, unknown), unknown);

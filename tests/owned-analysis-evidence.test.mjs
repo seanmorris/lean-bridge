@@ -32,9 +32,10 @@ test("ownership analysis receipt binds current sources and preserves earlier pac
 		assert.equal(update.previousSha256, previous.sources[update.path] ?? ownedAnalysisBaselineSources[update.path], update.path);
 		assert.equal(update.currentSha256, record.sources[update.path], update.path);
 		const current = ownedZendBailoutHistoricalBytes(update.path, await readFile(update.path), update.currentSha256).toString();
-		const prior = beforeOwnedAnalysis(update.path, current);
+		// The hub reverses every recognized state, so each predecessor read names its stop.
+		const prior = beforeOwnedAnalysis(update.path, current, update.previousSha256);
 		assert.equal(sha256(prior), update.previousSha256);
-		assert.equal(beforeOwnedAnalysis(update.path, prior), prior);
+		assert.equal(beforeOwnedAnalysis(update.path, prior, update.previousSha256), prior);
 		assert.equal(beforeOwnedAnalysis(update.path, current, update.currentSha256), current);
 		const unknown = current + "\n/* unrecorded analysis change */\n";
 		assert.equal(beforeOwnedAnalysis(update.path, unknown), unknown);
@@ -45,7 +46,9 @@ test("ownership analysis receipt binds current sources and preserves earlier pac
 	const inventoryPath = "docs/type-surface.v1.json";
 	const current = ownedZendBailoutHistoricalBytes(inventoryPath, await readFile(inventoryPath)
 		, record.sources[inventoryPath]).toString("utf8");
-	const prior = JSON.parse(beforeOwnedAnalysis("docs/type-surface.v1.json", current));
+	const transition = record.updates.find(update => update.path === inventoryPath);
+	assert.ok(transition, "Compiler analysis records an explicit type-surface predecessor");
+	const prior = JSON.parse(beforeOwnedAnalysis(inventoryPath, current, transition.previousSha256));
 	for(const evidence of prior.evidence) for(const file of evidence.files)
 		if(record.sources[file.path]) file.sha256 = record.sources[file.path];
 	assert.deepEqual(JSON.parse(current), prior, "Compiler analysis must not promote untested installed support");

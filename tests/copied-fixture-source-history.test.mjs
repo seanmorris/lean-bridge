@@ -52,12 +52,12 @@ test("copied fixture readers reconstruct exact predecessor bytes and reject drif
 	for(const update of record.updates)
 	{
 		const current = beforeOwnedCallbackResults(update.path, await readFile(update.path), update.currentSha256);
-		const prior = beforeCopiedFixtureReaders(update.path, current);
+		// The hub reverses every recognized state, so each predecessor read names its stop.
+		const prior = beforeCopiedFixtureReaders(update.path, current, update.previousSha256);
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		assert.equal(sha256(prior), update.previousSha256, update.path);
 		assert.equal(beforeCopiedFixtureReaders(update.path, current, update.currentSha256), current);
 		assert.equal(beforeCopiedFixtureReaders(update.path, prior, update.previousSha256), prior);
-		assert.equal(beforeCopiedFixtureReaders(update.path, prior), prior);
 		for(const changed of [current + "\n", current + current, ""
 			, current.toString().replace(update.edits[0].current, update.edits[0].previous) + "\n"
 		]) {
@@ -99,7 +99,7 @@ test("the reader repair refreshes source identities without changing support cla
 	const currentSource = beforeOwnedCallbackResults(path, await readFile(path), update.currentSha256);
 	assert.equal(sha256(currentSource), update.currentSha256);
 	const current = JSON.parse(currentSource);
-	const previous = JSON.parse(beforeCopiedFixtureReaders(path, currentSource));
+	const previous = JSON.parse(beforeCopiedFixtureReaders(path, currentSource, update.previousSha256));
 	assert.equal(current.evidence.length, previous.evidence.length);
 	for(let evidenceIndex = 0; evidenceIndex < previous.evidence.length; evidenceIndex++)
 	{
