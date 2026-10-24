@@ -36,7 +36,14 @@ jobs:
       - name: Check out the exact revision
         uses: actions/checkout@v6
         with:
+          fetch-depth: 0
           persist-credentials: false
+      - name: Require source history before owned JavaScript builds
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse --is-shallow-repository)" = false
+          git cat-file -e 3701d0880be3195b249ed17caac6975dea7283f6:src/backends/native/owned-value-adapters.mjs
       - name: Install Node.js
         uses: actions/setup-node@v6
         with:

@@ -4,8 +4,11 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { execFileSync } from "node:child_process";
-import { readFile } from "node:fs/promises";
+import { execFileSync, spawnSync } from "node:child_process";
+import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { pathToFileURL } from "node:url";
 import test from "node:test";
 import { runInNewContext } from "node:vm";
 import {
@@ -21,6 +24,80 @@ import { assertOwnedJavaScriptWasmCi } from "./owned-javascript-wasm-ci.mjs";
 const read = async () => ({
 	scoped: await readFile(ownedCheckedRecordNpmWorkflow, "utf8")
 	, recurring: await readFile(".github/workflows/consumer-matrix.yml", "utf8")
+});
+
+const ownedJob = source => source.match(/^ {2}owned-javascript-wasm:\n[\s\S]*?(?=^ {2}[a-z][a-z0-9-]*:\n|(?![\s\S]))/mu)?.[0];
+const historyStepName = "Require source history before owned JavaScript builds";
+const borrowProducer = "3701d0880be3195b249ed17caac6975dea7283f6";
+const borrowSource = "src/backends/native/owned-value-adapters.mjs";
+
+test("both npm producers require original Git history before toolchain work", async () => {
+	const sources = await read();
+	for(const source of Object.values(sources))
+	{
+		const job = ownedJob(source);
+		assert.ok(job);
+		assert.match(job, /uses: actions\/checkout@v6\n {8}with:\n {10}fetch-depth: 0\n {10}persist-credentials: false/u);
+		assert.ok(job.indexOf(historyStepName) > job.indexOf("Check out the exact revision"));
+		assert.ok(job.indexOf(historyStepName) < job.indexOf("Install Node.js"));
+		assert.ok(job.includes(`git cat-file -e ${borrowProducer}:${borrowSource}`));
+	}
+	const testSource = await readFile("tests/owned-javascript-borrow-package.test.mjs", "utf8");
+	assert.ok(testSource.includes(`const javaScriptBorrowAdmissionProducer = "${borrowProducer}";`));
+});
+
+test("live npm policy rejects missing, shallow or bypassed history prerequisites", async () => {
+	const { recurring } = await read();
+	const job = ownedJob(recurring);
+	const step = job.split(`      - name: ${historyStepName}\n`)[1]?.split("      - name: ")[0];
+	assert.ok(step);
+	const completeStep = `      - name: ${historyStepName}\n${step}`;
+	for(const [before, after] of [
+		["          fetch-depth: 0\n", ""]
+		, ["          fetch-depth: 0\n", "          fetch-depth: 1\n"]
+		, [completeStep, ""]
+		, [completeStep, completeStep.replace("        shell: bash", "        if: false\n        shell: bash")]
+		, [completeStep, completeStep.replace("        shell: bash", "        continue-on-error: true\n        shell: bash")]
+		, ['--is-shallow-repository)" = false', '--is-shallow-repository)" = true']
+		, [`git cat-file -e ${borrowProducer}:${borrowSource}`, "true"]
+		, [`git cat-file -e ${borrowProducer}:${borrowSource}`, `git cat-file -e ${borrowProducer}:${borrowSource} || true`]
+	]) {
+		const changed = job.replace(before, after);
+		assert.notEqual(changed, job);
+		assert.throws(() => assertOwnedJavaScriptWasmCi(recurring.replace(job, changed)));
+	}
+	const moved = job.replace(completeStep, "").replace("      - name: Build the production runtime", completeStep + "      - name: Build the production runtime");
+	assert.throws(() => assertOwnedJavaScriptWasmCi(recurring.replace(job, moved)));
+});
+
+test("shallow Git checkout reproduces absent producer and full history restores exact bytes", async t => {
+	const directory = await mkdtemp(join(tmpdir(), "lean-owned-npm-history-"));
+	t.after(() => rm(directory, { recursive: true, force: true }));
+	const original = join(directory, "original"), checkout = join(directory, "checkout");
+	await mkdir(join(original, "src/backends/native"), { recursive: true });
+	const env = Object.fromEntries(Object.entries(process.env).filter(([key]) => !key.startsWith("GIT_")));
+	const git = (cwd, args) => execFileSync("git", args, { cwd, env, encoding: "utf8", stdio: "pipe" });
+	git(original, ["init", "--quiet"]);
+	const bytes = "export const immutableProducer = true;\n";
+	await writeFile(join(original, borrowSource), bytes);
+	const commit = () => {
+		git(original, ["add", "."]);
+		git(original, ["-c", "user.name=Test", "-c", "user.email=test@example.invalid"
+			, "-c", "commit.gpgsign=false", "commit", "--quiet", "-m", "fixture"]);
+		return git(original, ["rev-parse", "HEAD"]).trim();
+	};
+	const producer = commit();
+	await writeFile(join(original, "current.txt"), "Current checkout still contains the file.\n");
+	commit();
+	git(directory, ["clone", "--quiet", "--no-local", "--depth=1", pathToFileURL(original).href, checkout]);
+	assert.equal(git(checkout, ["rev-parse", "--is-shallow-repository"]).trim(), "true");
+	assert.equal(await readFile(join(checkout, borrowSource), "utf8"), bytes);
+	const absent = spawnSync("git", ["show", `${producer}:${borrowSource}`], { cwd: checkout, env, encoding: "utf8" });
+	assert.notEqual(absent.status, 0);
+	assert.match(absent.stderr, /exists on disk, but not in/u);
+	git(checkout, ["fetch", "--quiet", "--unshallow", "origin"]);
+	assert.equal(git(checkout, ["rev-parse", "--is-shallow-repository"]).trim(), "false");
+	assert.equal(git(checkout, ["show", `${producer}:${borrowSource}`]), bytes);
 });
 
 test("scoped npm producer retains the complete recurring job", async () => {

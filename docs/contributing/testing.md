@@ -32,6 +32,13 @@ retains the Node, TypeScript, Chromium, Firefox and WebKit observations. A
 contract test rejects differences between the two jobs. This scoped run does
 not replace the full Consumer Matrix or its support summary.
 
+Both jobs fetch complete Git history. Before installing toolchains, they reject
+a shallow checkout and check that the original borrowed-result producer is
+available. Historical byte-compatibility checks need that exact source tree;
+having the same file in today's checkout is not enough. Current generators,
+installed packages and browser executions are checked separately and remain
+required.
+
 The report checker compares each structured source identity with compiler metadata
 inside its retained npm archive. It binds the compiled IR, component receipt,
 package coordinates, shared runtime and browser Wasm assets to that package set.

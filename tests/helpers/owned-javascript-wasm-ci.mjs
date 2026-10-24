@@ -81,6 +81,19 @@ export const assertOwnedJavaScriptWasmCi = workflow => {
 	assert.match(job, /^ {6}LEAN_BRIDGE_OWNED_CHECKED_RECORD_BROWSER_TEST: "1"$/mu);
 	assert.match(job, /^ {6}LEAN_BRIDGE_COMPILER_ANALYSIS_TEST: "1"$/mu);
 	assert.match(job, /^ {6}EMCC_CORES: "2"$/mu);
+	const checkout = requiredStep(job, "Check out the exact revision");
+	assert.equal(checkout.trim(), [
+		"uses: actions/checkout@v6", "        with:"
+		, "          fetch-depth: 0", "          persist-credentials: false"
+	].join("\n"));
+	const historyName = "Require source history before owned JavaScript builds";
+	assert.equal(script(requiredStep(job, historyName)), [
+		"set -euo pipefail"
+		, 'test "$(git rev-parse --is-shallow-repository)" = false'
+		, "git cat-file -e 3701d0880be3195b249ed17caac6975dea7283f6:src/backends/native/owned-value-adapters.mjs"
+	].join("\n"));
+	assert.ok(job.indexOf(historyName) > job.indexOf("Check out the exact revision"));
+	assert.ok(job.indexOf(historyName) < job.indexOf("Install Node.js"));
 	const dependencyName = "Install apt dependencies for Install dependencies and pinned Lean and Wasm toolchains";
 	const dependencies = requiredStep(job, dependencyName);
 	assert.doesNotMatch(dependencies, /^ {8}(?:if|continue-on-error):/mu);
