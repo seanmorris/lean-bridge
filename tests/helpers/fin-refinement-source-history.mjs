@@ -44,6 +44,7 @@ import { beforePerlCallbackContractGapSource, perlCallbackContractGapNormalizati
 import { beforeMilestoneControlRepairSource, milestoneControlRepairNormalizationPaths } from "./milestone-control-repair-source-history.mjs";
 import { beforePhpRecursiveReplaySource, phpRecursiveReplayNormalizationPaths } from "./php-recursive-replay-source-history.mjs";
 import { beforeZeroPayloadRustReplaySource, zeroPayloadRustReplayNormalizationPaths } from "./zero-payload-rust-producer-replay-source-history.mjs";
+import { beforeCallbackProducerReplaySource, callbackProducerReplayNormalizationPaths } from "./callback-producer-replay-source-history.mjs";
 import { beforeCoreEvidenceMemoryRepairSource, coreEvidenceMemoryRepairNormalizationPaths } from "./core-evidence-memory-repair-source-history.mjs";
 import { beforeValueIndexPromotionMilestoneRepairSource, valueIndexPromotionMilestoneRepairNormalizationPaths } from "./value-index-promotion-milestone-repair-source-history.mjs";
 import { beforeCoreMilestoneReplayRepairSource, coreMilestoneReplayRepairNormalizationPaths } from "./core-milestone-replay-repair-source-history.mjs";
@@ -2137,7 +2138,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...zeroPayloadRustReplayNormalizationPaths
+	...callbackProducerReplayNormalizationPaths
+	, ...zeroPayloadRustReplayNormalizationPaths
 	, ...phpRecursiveReplayNormalizationPaths
 	, ...milestoneControlRepairNormalizationPaths
 	, ...perlCallbackContractGapNormalizationPaths
@@ -3018,7 +3020,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
 	let stage
-		= beforeZeroPayloadRustReplaySource(path, text, expected);
+		= beforeCallbackProducerReplaySource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeZeroPayloadRustReplaySource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;

@@ -1,0 +1,312 @@
+{
+  "additions": [
+    {
+      "currentSha256": "98807df19834791ff4cce0d7c0a0ec1c7e394c9fcbf148ee76f21692db0edc9f",
+      "path": "tests/helpers/owned-callback-inventory-endpoint-tests.mjs"
+    },
+    {
+      "currentSha256": "9999d90eb97b3580da9b91e98f2281d8e7d48bcee93dabae203b0ded65709964",
+      "path": "tests/helpers/owned-callback-result-producer-tests.mjs"
+    },
+    {
+      "currentSha256": "c432d771bd8f4c2b0e9f4183916c722f51569b9471e3c07f8d3d20da67d27097",
+      "path": "tests/helpers/owned-callback-result-producer.mjs"
+    },
+    {
+      "currentSha256": "69563f42eb680cb696b239c2c8381a2275e83323df473c4751518b0717ed5284",
+      "path": "scripts/update-callback-producer-replay-source-history.mjs"
+    },
+    {
+      "currentSha256": "16b1a5743bed17ceec552dca152d0598b3e90ac0e26742905318034a1b635e5d",
+      "path": "tests/helpers/callback-producer-replay-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "7ec0ab768cb9863d1512ecf75bc6b6becf4909f0d03ca578a853b591c69bee5e",
+      "path": "tests/helpers/callback-producer-replay-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "a3c856c6cb29c1de5b6bb65c681b80939f032ab9",
+  "integrationUpdates": [
+    {
+      "currentSha256": "7622717b2acca55ebc93f676a3db4825b27761809667d5f068165d4872785e88",
+      "edits": [
+        {
+          "current": "import { beforeCallbackProducerReplaySource, callbackProducerReplayNormalizationPaths } from \"./callback-producer-replay-source-history.mjs\";\n",
+          "previous": "",
+          "start": 5990
+        },
+        {
+          "current": "\t...callbackProducerReplayNormalizationPaths\n\t, ...zeroPayloadRustReplayNormalizationPaths\n",
+          "previous": "\t...zeroPayloadRustReplayNormalizationPaths\n",
+          "start": 179171
+        },
+        {
+          "current": "\t\t= beforeCallbackProducerReplaySource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeZeroPayloadRustReplaySource(path, text, expected);\n",
+          "previous": "\t\t= beforeZeroPayloadRustReplaySource(path, text, expected);\n",
+          "start": 221404
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "8415f44235f3a569d40dfd710cbffbecab45dbafee06b98875d2d6099cad4b74"
+    },
+    {
+      "currentSha256": "306af83a8698bc45ad10740549f9fd6292c503823be0b3c272310b834cbd0eef",
+      "edits": [
+        {
+          "current": "import \"./helpers/owned-callback-result-producer-tests.mjs\";\nimport \"./helpers/owned-callback-inventory-endpoint-tests.mjs\";\nimport \"./helpers/callback-producer-replay-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 3653
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "29723168cdeadefdfd609b3b7dacb5de3bb60b5acbea85eef16a38e1a60c23e5"
+    }
+  ],
+  "milestone": "callback-producer-replay-source-v1",
+  "predecessorCommit": "e3e15ee9ca01c6462c2538177357327c7fa1dc23",
+  "schemaVersion": 1,
+  "scope": "Reproduce callback-result models, native/Wasm adapters, public packages, fixtures and semantic-mutant inputs with the unchanged receipt's 44c6789c producer and its complete authenticated 138-file module closure. Keep fresh generators and fresh runtime-inventory validation live, and preserve every original lifetime/install/report assertion. Repair callback inventory tests to request their exact recorded current and previous endpoints, with direct authenticated reversal controls for forged transitions. No original receipt, archive, inventory, execution or support claim changes. Full historical acceptance and its rehashed report mutation suite remain hosted gates.",
+  "updates": [
+    {
+      "currentSha256": "ee87e2a19a3264de15565f79f50c156e3bce04f9c6f4aced9dd59249d747bbe0",
+      "edits": [
+        {
+          "current": " * Reverse one exact registered transition after authenticating both endpoints.\n",
+          "previous": " * Reverse only the exact registered transition, preserving unrelated changes.\n",
+          "start": 1599
+        },
+        {
+          "current": " * @param source - Complete source at the recorded current endpoint.\n * @param update - Exact transition from the authenticated repair record.\n",
+          "previous": " * @param source - Complete current or historical source bytes.\n * @param expected - Optional stopping digest.\n",
+          "start": 1732
+        },
+        {
+          "current": "export const reverseCallbackInventoryUpdate = (path, source, update) => {\n\tassert.ok(callbackInventoryRepairPaths.includes(path));\n\tassert.equal(update.path, path);\n\tassert.equal(sha256(source), update.currentSha256, path);\n",
+          "previous": "export const beforeCallbackInventoryRepair = (path, source, expected) => {\n\tsource = beforeOwnedCppCallbackResults(path, source, expected);\n\tconst update = readCallbackInventoryHistory().updates.find(item => item.path === path);\n\tif(!update || sha256(source) === expected || sha256(source) !== update.currentSha256) return source;\n",
+          "start": 1879
+        },
+        {
+          "current": "\n/**\n * Reverse only the exact registered transition, preserving unrelated changes.\n *\n * @param path - Repository-relative source path.\n * @param source - Complete current or historical source bytes.\n * @param expected - Optional stopping digest.\n */\nexport const beforeCallbackInventoryRepair = (path, source, expected) => {\n\tsource = beforeOwnedCppCallbackResults(path, source, expected);\n\tconst update = readCallbackInventoryHistory().updates.find(item => item.path === path);\n\tif(!update || sha256(source) === expected || sha256(source) !== update.currentSha256) return source;\n\treturn reverseCallbackInventoryUpdate(path, source, update);\n};\n",
+          "previous": "",
+          "start": 3292
+        }
+      ],
+      "path": "tests/helpers/owned-callback-inventory-history.mjs",
+      "previousSha256": "f4073dbe5b60401995aafe5fbd23b08fe5aa36b40d55c93e5d92f0c9e90d3de2"
+    },
+    {
+      "currentSha256": "887792f0edb8ddb14921c5c82b95e72e6ca3a2eecc224d1d1811c6f710320d88",
+      "edits": [
+        {
+          "current": "import { ownedCallbackResultReplay } from \"./owned-callback-result-producer.mjs\";\n",
+          "previous": "import { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from \"../../src/build/native-graph-model.mjs\";\nimport { generateOwnedCPackage } from \"../../src/backends/c/owned-package.mjs\";\nimport { generateOwnedNativeValueAdapters } from \"../../src/backends/native/owned-value-adapters.mjs\";\nimport { generateOwnedWasmComponent } from \"../../src/backends/javascript/owned-wasm-component.mjs\";\nimport { generateJavaScriptPackage } from \"../../src/backends/javascript/generate.mjs\";\nimport { createOwnedJavaScriptWasmModel, generateOwnedJavaScriptWasmLeanAdapters } from \"../../src/build/javascript-wasm-owned-model.mjs\";\nimport { generateCompiledJavaScriptWasmOwned } from \"../../src/build/javascript-wasm-owned-sources.mjs\";\nimport { ownedJavaScriptWasmNativeProbe } from \"./owned-javascript-wasm-native.mjs\";\nimport { ownedCallbackResultSource, ownedCallbackResultCombinedSource } from \"./owned-callback-result-fixture.mjs\";\n",
+          "start": 341
+        },
+        {
+          "current": "const source = async (replay, input, mode, combined = false) => {\n",
+          "previous": "const source = async (input, mode, combined = false) => {\n",
+          "start": 6717
+        },
+        {
+          "current": "\tconst lean = await replay.readSource(\"tests/fixtures/onboarding/owned-aggregates/Owned.lean\");\n",
+          "previous": "\tconst lean = await readFile(\"tests/fixtures/onboarding/owned-aggregates/Owned.lean\", \"utf8\");\n",
+          "start": 6868
+        },
+        {
+          "current": "\t\t, sha256(lean + (combined ? replay.ownedCallbackResultCombinedSource : replay.ownedCallbackResultSource)));\n",
+          "previous": "\t\t, sha256(lean + (combined ? ownedCallbackResultCombinedSource : ownedCallbackResultSource)));\n",
+          "start": 7059
+        },
+        {
+          "current": "const wasm = (replay, item, hostCallbacks = true, combined = false) => {\n\tconst native = replay.generateOwnedNativeValueAdapters({ ...item.input, wordBits: 32, ...options(hostCallbacks, combined) });\n\tconst component = replay.generateOwnedWasmComponent(native);\n",
+          "previous": "const wasm = (item, hostCallbacks = true, combined = false) => {\n\tconst native = generateOwnedNativeValueAdapters({ ...item.input, wordBits: 32, ...options(hostCallbacks, combined) });\n\tconst component = generateOwnedWasmComponent(native);\n",
+          "start": 7868
+        },
+        {
+          "current": "\tif(item.sourceSha256) assert.equal(item.sourceSha256, sha256(replay.ownedJavaScriptWasmNativeProbe(component)));\n",
+          "previous": "\tif(item.sourceSha256) assert.equal(item.sourceSha256, sha256(ownedJavaScriptWasmNativeProbe(component)));\n",
+          "start": 8232
+        },
+        {
+          "current": "const installedWasm = async (replay, item, combined = false, sources) => {\n\tconst model = replay.createOwnedJavaScriptWasmModel({ ...item.input, ...options(true, combined) });\n",
+          "previous": "const installedWasm = async (item, combined = false, sources) => {\n\tconst model = createOwnedJavaScriptWasmModel({ ...item.input, ...options(true, combined) });\n",
+          "start": 11732
+        },
+        {
+          "current": "\tconst generated = replay.generateCompiledJavaScriptWasmOwned(model, item.input.metadata, replay.generateOwnedJavaScriptWasmLeanAdapters(model));\n",
+          "previous": "\tconst generated = generateCompiledJavaScriptWasmOwned(model, item.input.metadata, generateOwnedJavaScriptWasmLeanAdapters(model));\n",
+          "start": 12007
+        },
+        {
+          "current": "\tconst publicFiles = replay.generateJavaScriptPackage(model.bindingIr);\n",
+          "previous": "\tconst publicFiles = generateJavaScriptPackage(model.bindingIr);\n",
+          "start": 12341
+        },
+        {
+          "current": "const installedC = async (replay, item, input, model, combined = false) => {\n\tawait source(replay, input, item.mode, combined);\n\tassert.deepEqual(model, replay.createCompiledNativeModel({ ...input, moduleName: model.moduleName }, nativeOptions(true, combined)));\n",
+          "previous": "const installedC = async (item, input, model, combined = false) => {\n\tawait source(input, item.mode, combined);\n\tassert.deepEqual(model, createCompiledNativeModel({ ...input, moduleName: model.moduleName }, nativeOptions(true, combined)));\n",
+          "start": 13313
+        },
+        {
+          "current": "\tconst adapters = replay.generateCompiledNativeLeanAdapters(model);\n",
+          "previous": "\tconst adapters = generateCompiledNativeLeanAdapters(model);\n",
+          "start": 13702
+        },
+        {
+          "current": "\tconst generated = replay.generateOwnedCPackage({ ...input, ...options(true, combined) });\n",
+          "previous": "\tconst generated = generateOwnedCPackage({ ...input, ...options(true, combined) });\n",
+          "start": 14832
+        },
+        {
+          "current": " * @param sources - Optional authenticated source hashes selecting historical generation and runtime inventories.\n",
+          "previous": " * @param sources - Optional authenticated source hashes for historical runtime inventories.\n",
+          "start": 17762
+        },
+        {
+          "current": "\tconst replay = await ownedCallbackResultReplay(sources);\n",
+          "previous": "",
+          "start": 18043
+        },
+        {
+          "current": "\tconst cProbe = await replay.readSource(\"tests/fixtures/structured-types/owned-installed-callback-results.c\");\n\tconst extraC = await replay.readSource(\"tests/fixtures/structured-types/owned-installed-callback-combinations.c\");\n",
+          "previous": "\tconst cProbe = await readFile(\"tests/fixtures/structured-types/owned-installed-callback-results.c\", \"utf8\");\n\tconst extraC = await readFile(\"tests/fixtures/structured-types/owned-installed-callback-combinations.c\", \"utf8\");\n",
+          "start": 18171
+        },
+        {
+          "current": "\tconst guide = await replay.readSource(\"docs/javascript-typescript.md\");\n",
+          "previous": "\tconst guide = await readFile(\"docs/javascript-typescript.md\", \"utf8\");\n",
+          "start": 18674
+        },
+        {
+          "current": "\t\tconst metadata = get(`metadata-${mode}.json`); await source(replay, metadata.input, mode);\n",
+          "previous": "\t\tconst metadata = get(`metadata-${mode}.json`); await source(metadata.input, mode);\n",
+          "start": 18940
+        },
+        {
+          "current": "\t\t\tassert.deepEqual(model, replay.createCompiledNativeModel(metadata.input, nativeOptions(Boolean(index))));\n",
+          "previous": "\t\t\tassert.deepEqual(model, createCompiledNativeModel(metadata.input, nativeOptions(Boolean(index))));\n",
+          "start": 19137
+        },
+        {
+          "current": "\t\t\tawait source(replay, item.input, mode);\n\t\t\tconst generated = replay.generateOwnedCPackage(item.input);\n",
+          "previous": "\t\t\tawait source(item.input, mode);\n\t\t\tconst generated = generateOwnedCPackage(item.input);\n",
+          "start": 19531
+        },
+        {
+          "current": "\t\t\tconst probe = `#define HOST_CALLBACKS ${Number(hostCallbacks)}\\n` + await replay.readSource(\"tests/fixtures/structured-types/owned-callback-results.c\");\n",
+          "previous": "\t\t\tconst probe = `#define HOST_CALLBACKS ${Number(hostCallbacks)}\\n` + await readFile(\"tests/fixtures/structured-types/owned-callback-results.c\", \"utf8\");\n",
+          "start": 20043
+        },
+        {
+          "current": "\t\t\tconst runtime = get(`wasm-${mode}-${hostCallbacks}.json`); await source(replay, runtime.input, mode);\n",
+          "previous": "\t\t\tconst runtime = get(`wasm-${mode}-${hostCallbacks}.json`); await source(runtime.input, mode);\n",
+          "start": 20324
+        },
+        {
+          "current": "\t\t\twasm(replay, runtime, hostCallbacks); digest(runtime.binarySha256);\n",
+          "previous": "\t\t\twasm(runtime, hostCallbacks); digest(runtime.binarySha256);\n",
+          "start": 20518
+        },
+        {
+          "current": "\t\t\tconst item = get(`coexistence-${mode}-${alphaFirst}.json`); await source(replay, item.input, mode);\n\t\t\tassert.equal(item.mode, mode); assert.equal(item.alphaFirst, alphaFirst); wasm(replay, item);\n",
+          "previous": "\t\t\tconst item = get(`coexistence-${mode}-${alphaFirst}.json`); await source(item.input, mode);\n\t\t\tassert.equal(item.mode, mode); assert.equal(item.alphaFirst, alphaFirst); wasm(item);\n",
+          "start": 20754
+        },
+        {
+          "current": "\t\tconst mutations = get(`wasm-${mode}-mutants.json`); await source(replay, mutations.input, mode);\n",
+          "previous": "\t\tconst mutations = get(`wasm-${mode}-mutants.json`); await source(mutations.input, mode);\n",
+          "start": 21252
+        },
+        {
+          "current": "\t\tassert.equal(mutations.probeSha256, sha256(await replay.readSource(\"tests/fixtures/structured-types/owned-callback-result-wasm-semantic.mjs\")));\n\t\tconst native = replay.generateOwnedNativeValueAdapters({ ...mutations.input, wordBits: 32, ...options() });\n",
+          "previous": "\t\tassert.equal(mutations.probeSha256, sha256(await readFile(\"tests/fixtures/structured-types/owned-callback-result-wasm-semantic.mjs\")));\n\t\tconst native = generateOwnedNativeValueAdapters({ ...mutations.input, wordBits: 32, ...options() });\n",
+          "start": 21534
+        },
+        {
+          "current": "\t\t\tconst original = path === \"owned-values-codec.h\" ? native.source : await replay.readSource(path);\n",
+          "previous": "\t\t\tconst original = path === \"owned-values-codec.h\" ? native.source : await readFile(path, \"utf8\");\n",
+          "start": 21876
+        },
+        {
+          "current": "\t\tconst composition = get(`wasm-${mode}-combinations.json`); await source(replay, composition.input, mode, true);\n\t\tassert.equal(composition.mode, mode); wasm(replay, composition, true, true);\n",
+          "previous": "\t\tconst composition = get(`wasm-${mode}-combinations.json`); await source(composition.input, mode, true);\n\t\tassert.equal(composition.mode, mode); wasm(composition, true, true);\n",
+          "start": 22271
+        },
+        {
+          "current": "\t\tawait installedC(replay, c, { metadata: c.metadata, sourceIdentity: c.model.sourceIdentity, component: c.model.component }, c.model);\n",
+          "previous": "\t\tawait installedC(c, { metadata: c.metadata, sourceIdentity: c.model.sourceIdentity, component: c.model.component }, c.model);\n",
+          "start": 22917
+        },
+        {
+          "current": "\t\tawait installedC(replay, combined, combined.nativeInput, combined.native.model, true);\n\t\tawait source(replay, combined.wasmInput, mode, true);\n",
+          "previous": "\t\tawait installedC(combined, combined.nativeInput, combined.native.model, true);\n\t\tawait source(combined.wasmInput, mode, true);\n",
+          "start": 23820
+        },
+        {
+          "current": "\t\tawait installedWasm(replay, { ...combined.wasm, input: combined.wasmInput, inventory: combined.inventory, name }, true, sources);\n",
+          "previous": "\t\tawait installedWasm({ ...combined.wasm, input: combined.wasmInput, inventory: combined.inventory, name }, true, sources);\n",
+          "start": 24020
+        },
+        {
+          "current": "\t\tassert.equal(combined.jsProbeSha256, sha256(await replay.readSource(\"tests/fixtures/structured-types/owned-installed-javascript-callback-combinations.mjs\")));\n",
+          "previous": "\t\tassert.equal(combined.jsProbeSha256, sha256(await readFile(\"tests/fixtures/structured-types/owned-installed-javascript-callback-combinations.mjs\")));\n",
+          "start": 24679
+        },
+        {
+          "current": "\t\tawait source(replay, item.input, mode); await installedWasm(replay, { ...item, name }, false, sources);\n",
+          "previous": "\t\tawait source(item.input, mode); await installedWasm({ ...item, name }, false, sources);\n",
+          "start": 25404
+        },
+        {
+          "current": "\t\tassert.equal(item.probeSha256, sha256(await replay.readSource(\"tests/fixtures/structured-types/owned-installed-javascript-callback-results.mjs\")));\n",
+          "previous": "\t\tassert.equal(item.probeSha256, sha256(await readFile(\"tests/fixtures/structured-types/owned-installed-javascript-callback-results.mjs\")));\n",
+          "start": 25880
+        }
+      ],
+      "path": "tests/helpers/owned-callback-result-evidence.mjs",
+      "previousSha256": "f024e801a03dd2ceaf687a176ad1e275da2c2ad9d2fe24b455f7542674174700"
+    },
+    {
+      "currentSha256": "57a319546b457a301bd16f6b81e05214d80cc9b23dc420bdd6e8c9f02cdfa38f",
+      "edits": [
+        {
+          "current": "\t, readCallbackInventoryHistory, beforeCallbackInventoryRepair\n\t, reverseCallbackInventoryUpdate } from \"./helpers/owned-callback-inventory-history.mjs\";\n",
+          "previous": "\t, readCallbackInventoryHistory, beforeCallbackInventoryRepair } from \"./helpers/owned-callback-inventory-history.mjs\";\n",
+          "start": 435
+        },
+        {
+          "current": "\t\tconst current = beforeOwnedCppCallbackResults(update.path, await readFile(update.path), update.currentSha256);\n\t\tconst prior = beforeCallbackInventoryRepair(update.path, current, update.previousSha256);\n",
+          "previous": "\t\tconst current = beforeOwnedCppCallbackResults(update.path, await readFile(update.path)), prior = beforeCallbackInventoryRepair(update.path, current);\n",
+          "start": 1741
+        },
+        {
+          "current": "\t\tassert.equal(beforeCallbackInventoryRepair(update.path, prior, update.previousSha256), prior);\n",
+          "previous": "\t\tassert.equal(beforeCallbackInventoryRepair(update.path, prior), prior);\n",
+          "start": 2264
+        },
+        {
+          "current": "\t\tassert.equal(reverseCallbackInventoryUpdate(update.path, current, update), prior);\n\t\tassert.throws(() => reverseCallbackInventoryUpdate(update.path, current, {\n\t\t\t...update, previousSha256: \"0\".repeat(64)\n\t\t}));\n",
+          "previous": "\t\tconst digest = update.previousSha256;\n\t\ttry\n\t\t{\n\t\t\tupdate.previousSha256 = \"0\".repeat(64);\n\t\t\tassert.throws(() => beforeCallbackInventoryRepair(update.path, current));\n\t\t}\n\t\tfinally\n\t\t{ update.previousSha256 = digest; }\n",
+          "start": 2453
+        },
+        {
+          "current": "\tconst packageUpdate = history.updates.find(update => update.path === \"package.json\");\n\tconst current = JSON.parse(beforeOwnedCppCallbackResults(\"package.json\", await readFile(\"package.json\"), packageUpdate.currentSha256));\n\tconst prior = JSON.parse(beforeCallbackInventoryRepair(\"package.json\", await readFile(\"package.json\"), packageUpdate.previousSha256));\n",
+          "previous": "\tconst current = JSON.parse(beforeOwnedCppCallbackResults(\"package.json\", await readFile(\"package.json\")));\n\tconst prior = JSON.parse(beforeCallbackInventoryRepair(\"package.json\", await readFile(\"package.json\")));\n",
+          "start": 2670
+        },
+        {
+          "current": "\tconst configuration = beforeOwnedCppCallbackResults(\"config/cli-package.v1.json\", await readFile(\"config/cli-package.v1.json\"), accepted.sources[\"config/cli-package.v1.json\"]);\n",
+          "previous": "\tconst configuration = beforeOwnedCppCallbackResults(\"config/cli-package.v1.json\", await readFile(\"config/cli-package.v1.json\"));\n",
+          "start": 3142
+        },
+        {
+          "current": "\tconst path = \"docs/type-surface.v1.json\", history = readCallbackInventoryHistory();\n\tconst update = history.updates.find(item => item.path === path);\n\tconst current = beforeOwnedCppCallbackResults(path, await readFile(path, \"utf8\"), update.currentSha256);\n\tconst prior = JSON.parse(beforeCallbackInventoryRepair(path, current, update.previousSha256));\n\tfor(const evidence of prior.evidence) for(const file of evidence.files)\n\t{\n\t\tconst expected = history.updates.find(item => item.path === file.path)?.currentSha256 ?? file.sha256;\n\t\tfile.sha256 = sha256(beforeOwnedCppCallbackResults(file.path, await readFile(file.path), expected));\n\t}\n",
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", current = beforeOwnedCppCallbackResults(path, await readFile(path, \"utf8\"));\n\tconst prior = JSON.parse(beforeCallbackInventoryRepair(path, current));\n\tfor(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(beforeOwnedCppCallbackResults(file.path, await readFile(file.path)));\n",
+          "start": 3500
+        }
+      ],
+      "path": "tests/owned-callback-inventory-repair.test.mjs",
+      "previousSha256": "a5c574f9f20a76ec5201aced5d57971eeaf5c425b41d4c0117e34df812a04d03"
+    }
+  ]
+}

@@ -55,6 +55,9 @@ import "./helpers/php-recursive-producer-replay-tests.mjs";
 import "./helpers/php-recursive-replay-source-history-tests.mjs";
 import "./helpers/zero-payload-rust-producer-replay-tests.mjs";
 import "./helpers/zero-payload-rust-producer-replay-source-history-tests.mjs";
+import "./helpers/owned-callback-result-producer-tests.mjs";
+import "./helpers/owned-callback-inventory-endpoint-tests.mjs";
+import "./helpers/callback-producer-replay-source-history-tests.mjs";
 
 const root = resolve(".");
 
