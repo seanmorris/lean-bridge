@@ -80,6 +80,22 @@ test("callback selection keeps checked-record validator labels in the trace gram
 		.every(item => !item.label.includes(":validator:structured_")));
 });
 
+test("callback selection measures nominal-only callbacks only as returned closures", async () => {
+	const fixture = await phpWasmCallbackEntrySourceFixture("callback-fin");
+	const model = modelFromReview(callbackFinPhpWasmReview());
+	const { selected } = phpWasmCallbackEntrySelection(model, fixture.entries);
+	for(const name of ["tiles", "tileMaker"])
+	{
+		assert.ok(selected.some(item => item.label === `ReviewedCallbacks.${name}:closure:lean`), name);
+		assert.ok(!selected.some(item => item.label === `ReviewedCallbacks.${name}:recovery:lean`), name);
+	}
+	// The unrefined host callback of apply has no admitted role to measure.
+	const visit = fixture.entries.find(item => item.label === "ReviewedCallbacks.visit");
+	const apply = { ...visit, symbol: `${visit.symbol}_apply`, label: "ReviewedCallbacks.apply" };
+	assert.throws(() => phpWasmCallbackEntrySelection(model, [...fixture.entries, apply])
+		, /Selected callback has no admitted direction: ReviewedCallbacks\.apply/u);
+});
+
 test("callback selection names the constructor of each closure refusal validator", async () => {
 	const model = JSON.parse(await readFile(
 		`${callbackRefinementsPhpWasmHostedEvidence}/hosted/output/records/checked-record/reviewed/build-0/model.json`

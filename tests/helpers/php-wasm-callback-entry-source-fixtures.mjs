@@ -19,7 +19,7 @@ const definitions = Object.freeze({
 		path: "tests/fixtures/onboarding/reviewed-callback-fin/ReviewedCallbacks.lean"
 		, namespace: "ReviewedCallbacks", prefix: "lb_callback_fin_probe"
 		, constructors: Object.freeze([])
-		, sources: Object.freeze(["scaler", "counter", "visit", "three"])
+		, sources: Object.freeze(["scaler", "counter", "visit", "three", "tiles", "tileMaker"])
 		, closures: Object.freeze([
 			Object.freeze({
 				name: "scaler", body: "scalerProbeBody"
@@ -37,6 +37,25 @@ def counterProbeBody (start step : Nat) : Fin 10 :=
   ⟨(start + step) % 10, Nat.mod_lt _ (by decide)⟩
 
 def counter (start : Nat) : Nat → Fin 10 := counterProbeBody start`
+			})
+			// Tile mixes a checked Fin field with a plain Nat field in both closure directions.
+			, Object.freeze({
+				name: "tiles", body: "tilesProbeBody"
+				, previous: "def tiles (_ : Unit) : List Tile → Nat := fun values => values.foldl (fun acc tile => acc + tile.digit.val * 100 + tile.count) 0"
+				, current: `@[noinline, export lb_callback_fin_closure_tiles]
+def tilesProbeBody (values : List Tile) : Nat :=
+  values.foldl (fun acc tile => acc + tile.digit.val * 100 + tile.count) 0
+
+def tiles (_ : Unit) : List Tile → Nat := tilesProbeBody`
+			})
+			, Object.freeze({
+				name: "tileMaker", body: "tileMakerProbeBody"
+				, previous: "def tileMaker (start : Nat) : Nat → Tile := fun n => ⟨⟨(start + n) % 5, Nat.mod_lt _ (by decide)⟩, n⟩"
+				, current: `@[noinline, export lb_callback_fin_closure_tileMaker]
+def tileMakerProbeBody (start n : Nat) : Tile :=
+  ⟨⟨(start + n) % 5, Nat.mod_lt _ (by decide)⟩, n⟩
+
+def tileMaker (start : Nat) : Nat → Tile := tileMakerProbeBody start`
 			})
 		])
 	})

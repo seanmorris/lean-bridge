@@ -4,9 +4,12 @@ declare(strict_types=0);
 
 use Brick\Math\BigInteger;
 use LeanReviewedcallbacks\LeanBridgeError;
+use LeanReviewedcallbacks\Tile;
 use function LeanReviewedcallbacks\counter;
 use function LeanReviewedcallbacks\scaler;
 use function LeanReviewedcallbacks\three;
+use function LeanReviewedcallbacks\tile_maker;
+use function LeanReviewedcallbacks\tiles;
 use function LeanReviewedcallbacks\visit;
 use function LeanReviewedcallbacks\with_recovery;
 
@@ -16,8 +19,10 @@ function lean_bridge_callback_probe(string $control): array
 {
     global $leanBridgeCallbackProbeState;
     $n = fn(int $value): BigInteger => BigInteger::of($value);
+    $tile = fn(int $digit, int $count): Tile => new Tile($n($digit), $n($count));
     $refused = in_array($control, [
         'closure-input-refusal', 'invalid-recovery', 'actual-reply-rejection',
+        'mixed-closure-input-refusal',
     ], true);
     $outcome = 'accepted';
     try {
@@ -59,6 +64,25 @@ function lean_bridge_callback_probe(string $control): array
             case 'later-call-recovery':
                 if (!three(with_recovery(fn(BigInteger $value) => $value, $n(0)), $n(1))->isEqualTo($n(1)))
                     throw new RuntimeException('host Fin later recovery');
+                break;
+            case 'mixed-closure-input':
+                $leanBridgeCallbackProbeState['tiles'] = tiles(null);
+                if (!$leanBridgeCallbackProbeState['tiles']([$tile(2, 5), $tile(4, 1)])->isEqualTo($n(606)))
+                    throw new RuntimeException('mixed closure Fin input');
+                break;
+            case 'mixed-closure-input-refusal':
+                $leanBridgeCallbackProbeState['tiles']([$tile(5, 1)]);
+                break;
+            case 'mixed-closure-input-recovery':
+                if (!$leanBridgeCallbackProbeState['tiles']([$tile(1, 7)])->isEqualTo($n(107)))
+                    throw new RuntimeException('mixed closure Fin recovery');
+                $leanBridgeCallbackProbeState['tiles']->close();
+                break;
+            case 'mixed-closure-result':
+                $closure = tile_maker($n(4));
+                if (!$closure($n(3))->equals($tile(2, 3)))
+                    throw new RuntimeException('mixed closure Fin result');
+                $closure->close();
                 break;
             default:
                 throw new InvalidArgumentException('unknown Fin callback probe control');
