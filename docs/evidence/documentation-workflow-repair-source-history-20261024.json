@@ -1,0 +1,229 @@
+{
+  "additions": [
+    {
+      "currentSha256": "1552c1c5c769981a757d1d3ecdba73aae349dd3227ff722f021a7a8497b95217",
+      "path": "scripts/update-documentation-workflow-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "bde8abe6858fb476f18d87119170960ccff0654b7d37df1184722abc7577ac4e",
+      "path": "tests/helpers/documentation-workflow-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "b56cfcb30dc45af502459c9cc2d5d98a8bee3a63632f0ba6b127c982b5faaa32",
+      "path": "tests/helpers/documentation-workflow-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "1ee0a157b82f2b12430e61676b939fe38a6dd2b1",
+  "integrationBaseCommit": "1ee0a157b82f2b12430e61676b939fe38a6dd2b1",
+  "integrationUpdates": [
+    {
+      "currentSha256": "516c1a3911139328a73e57a61b0cbfcbf4b413fb91648fa5854114916e16a37f",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"653d29f1f9e64355953abd8325dd27bef7d422036bbb9873d4d8d7727e89d6e3\"\n",
+          "previous": "          \"sha256\": \"a5203cebe7a6a99df06ba9e274131afd94b76d6c11af5b4467e7ca0387d58ef5\"\n",
+          "start": 813850
+        },
+        {
+          "current": "          \"sha256\": \"653d29f1f9e64355953abd8325dd27bef7d422036bbb9873d4d8d7727e89d6e3\"\n",
+          "previous": "          \"sha256\": \"a5203cebe7a6a99df06ba9e274131afd94b76d6c11af5b4467e7ca0387d58ef5\"\n",
+          "start": 832225
+        },
+        {
+          "current": "          \"sha256\": \"653d29f1f9e64355953abd8325dd27bef7d422036bbb9873d4d8d7727e89d6e3\"\n",
+          "previous": "          \"sha256\": \"a5203cebe7a6a99df06ba9e274131afd94b76d6c11af5b4467e7ca0387d58ef5\"\n",
+          "start": 1058432
+        },
+        {
+          "current": "          \"sha256\": \"653d29f1f9e64355953abd8325dd27bef7d422036bbb9873d4d8d7727e89d6e3\"\n",
+          "previous": "          \"sha256\": \"a5203cebe7a6a99df06ba9e274131afd94b76d6c11af5b4467e7ca0387d58ef5\"\n",
+          "start": 1075549
+        },
+        {
+          "current": "          \"sha256\": \"653d29f1f9e64355953abd8325dd27bef7d422036bbb9873d4d8d7727e89d6e3\"\n",
+          "previous": "          \"sha256\": \"a5203cebe7a6a99df06ba9e274131afd94b76d6c11af5b4467e7ca0387d58ef5\"\n",
+          "start": 1083323
+        },
+        {
+          "current": "          \"sha256\": \"653d29f1f9e64355953abd8325dd27bef7d422036bbb9873d4d8d7727e89d6e3\"\n",
+          "previous": "          \"sha256\": \"a5203cebe7a6a99df06ba9e274131afd94b76d6c11af5b4467e7ca0387d58ef5\"\n",
+          "start": 1088755
+        },
+        {
+          "current": "          \"sha256\": \"653d29f1f9e64355953abd8325dd27bef7d422036bbb9873d4d8d7727e89d6e3\"\n",
+          "previous": "          \"sha256\": \"a5203cebe7a6a99df06ba9e274131afd94b76d6c11af5b4467e7ca0387d58ef5\"\n",
+          "start": 1095856
+        },
+        {
+          "current": "          \"sha256\": \"653d29f1f9e64355953abd8325dd27bef7d422036bbb9873d4d8d7727e89d6e3\"\n",
+          "previous": "          \"sha256\": \"a5203cebe7a6a99df06ba9e274131afd94b76d6c11af5b4467e7ca0387d58ef5\"\n",
+          "start": 1103022
+        },
+        {
+          "current": "          \"sha256\": \"653d29f1f9e64355953abd8325dd27bef7d422036bbb9873d4d8d7727e89d6e3\"\n",
+          "previous": "          \"sha256\": \"a5203cebe7a6a99df06ba9e274131afd94b76d6c11af5b4467e7ca0387d58ef5\"\n",
+          "start": 1110079
+        },
+        {
+          "current": "          \"sha256\": \"653d29f1f9e64355953abd8325dd27bef7d422036bbb9873d4d8d7727e89d6e3\"\n",
+          "previous": "          \"sha256\": \"a5203cebe7a6a99df06ba9e274131afd94b76d6c11af5b4467e7ca0387d58ef5\"\n",
+          "start": 1118331
+        },
+        {
+          "current": "          \"sha256\": \"653d29f1f9e64355953abd8325dd27bef7d422036bbb9873d4d8d7727e89d6e3\"\n",
+          "previous": "          \"sha256\": \"a5203cebe7a6a99df06ba9e274131afd94b76d6c11af5b4467e7ca0387d58ef5\"\n",
+          "start": 1127794
+        },
+        {
+          "current": "          \"sha256\": \"653d29f1f9e64355953abd8325dd27bef7d422036bbb9873d4d8d7727e89d6e3\"\n",
+          "previous": "          \"sha256\": \"a5203cebe7a6a99df06ba9e274131afd94b76d6c11af5b4467e7ca0387d58ef5\"\n",
+          "start": 1144805
+        },
+        {
+          "current": "          \"sha256\": \"653d29f1f9e64355953abd8325dd27bef7d422036bbb9873d4d8d7727e89d6e3\"\n",
+          "previous": "          \"sha256\": \"a5203cebe7a6a99df06ba9e274131afd94b76d6c11af5b4467e7ca0387d58ef5\"\n",
+          "start": 1151880
+        },
+        {
+          "current": "          \"sha256\": \"653d29f1f9e64355953abd8325dd27bef7d422036bbb9873d4d8d7727e89d6e3\"\n",
+          "previous": "          \"sha256\": \"a5203cebe7a6a99df06ba9e274131afd94b76d6c11af5b4467e7ca0387d58ef5\"\n",
+          "start": 1159777
+        },
+        {
+          "current": "          \"sha256\": \"653d29f1f9e64355953abd8325dd27bef7d422036bbb9873d4d8d7727e89d6e3\"\n",
+          "previous": "          \"sha256\": \"a5203cebe7a6a99df06ba9e274131afd94b76d6c11af5b4467e7ca0387d58ef5\"\n",
+          "start": 1170657
+        },
+        {
+          "current": "          \"sha256\": \"653d29f1f9e64355953abd8325dd27bef7d422036bbb9873d4d8d7727e89d6e3\"\n",
+          "previous": "          \"sha256\": \"a5203cebe7a6a99df06ba9e274131afd94b76d6c11af5b4467e7ca0387d58ef5\"\n",
+          "start": 1182819
+        },
+        {
+          "current": "          \"sha256\": \"653d29f1f9e64355953abd8325dd27bef7d422036bbb9873d4d8d7727e89d6e3\"\n",
+          "previous": "          \"sha256\": \"a5203cebe7a6a99df06ba9e274131afd94b76d6c11af5b4467e7ca0387d58ef5\"\n",
+          "start": 1206345
+        },
+        {
+          "current": "          \"sha256\": \"653d29f1f9e64355953abd8325dd27bef7d422036bbb9873d4d8d7727e89d6e3\"\n",
+          "previous": "          \"sha256\": \"a5203cebe7a6a99df06ba9e274131afd94b76d6c11af5b4467e7ca0387d58ef5\"\n",
+          "start": 1237700
+        },
+        {
+          "current": "          \"sha256\": \"653d29f1f9e64355953abd8325dd27bef7d422036bbb9873d4d8d7727e89d6e3\"\n",
+          "previous": "          \"sha256\": \"a5203cebe7a6a99df06ba9e274131afd94b76d6c11af5b4467e7ca0387d58ef5\"\n",
+          "start": 1270500
+        },
+        {
+          "current": "          \"sha256\": \"653d29f1f9e64355953abd8325dd27bef7d422036bbb9873d4d8d7727e89d6e3\"\n",
+          "previous": "          \"sha256\": \"a5203cebe7a6a99df06ba9e274131afd94b76d6c11af5b4467e7ca0387d58ef5\"\n",
+          "start": 1305600
+        },
+        {
+          "current": "          \"sha256\": \"653d29f1f9e64355953abd8325dd27bef7d422036bbb9873d4d8d7727e89d6e3\"\n",
+          "previous": "          \"sha256\": \"a5203cebe7a6a99df06ba9e274131afd94b76d6c11af5b4467e7ca0387d58ef5\"\n",
+          "start": 1336446
+        },
+        {
+          "current": "          \"sha256\": \"653d29f1f9e64355953abd8325dd27bef7d422036bbb9873d4d8d7727e89d6e3\"\n",
+          "previous": "          \"sha256\": \"a5203cebe7a6a99df06ba9e274131afd94b76d6c11af5b4467e7ca0387d58ef5\"\n",
+          "start": 1359743
+        },
+        {
+          "current": "          \"sha256\": \"653d29f1f9e64355953abd8325dd27bef7d422036bbb9873d4d8d7727e89d6e3\"\n",
+          "previous": "          \"sha256\": \"a5203cebe7a6a99df06ba9e274131afd94b76d6c11af5b4467e7ca0387d58ef5\"\n",
+          "start": 1381634
+        },
+        {
+          "current": "          \"sha256\": \"653d29f1f9e64355953abd8325dd27bef7d422036bbb9873d4d8d7727e89d6e3\"\n",
+          "previous": "          \"sha256\": \"a5203cebe7a6a99df06ba9e274131afd94b76d6c11af5b4467e7ca0387d58ef5\"\n",
+          "start": 1401707
+        },
+        {
+          "current": "          \"sha256\": \"653d29f1f9e64355953abd8325dd27bef7d422036bbb9873d4d8d7727e89d6e3\"\n",
+          "previous": "          \"sha256\": \"a5203cebe7a6a99df06ba9e274131afd94b76d6c11af5b4467e7ca0387d58ef5\"\n",
+          "start": 1421487
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "94e7852395c758016f895d14c257a342179962cc1e21fee3a21c79947ff7fd6e"
+    },
+    {
+      "currentSha256": "4b1a14d47908029f09cb558fb1efc6b1c1a80057e5db6078820b3a615342869d",
+      "edits": [
+        {
+          "current": "import { beforeDocumentationWorkflowRepairSource, documentationWorkflowRepairNormalizationPaths } from \"./documentation-workflow-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 829
+        },
+        {
+          "current": "\t...documentationWorkflowRepairNormalizationPaths\n\t, ...ownedDotnetProducerRepairNormalizationPaths\n",
+          "previous": "\t...ownedDotnetProducerRepairNormalizationPaths\n",
+          "start": 174025
+        },
+        {
+          "current": "\tconst documentationWorkflowRepair\n\t\t= beforeDocumentationWorkflowRepairSource(path, text, expected);\n\tif(sha256(documentationWorkflowRepair) === expected)\n\t\treturn documentationWorkflowRepair;\n\ttext = documentationWorkflowRepair;\n",
+          "previous": "",
+          "start": 214564
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "1623fd8cef596b29cd20f9a9b6f10466952ad383275c3940739c9c7312619274"
+    },
+    {
+      "currentSha256": "ce872f4ec0e77d09154a9a5d43f20c5b43572f32c875a351a0836cfa2e46975d",
+      "edits": [
+        {
+          "current": "import \"./helpers/documentation-workflow-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 663
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "dea062e5fee7f422bb627c97802f8e6eb0eb34565f543c1899bc2258fcf2666c"
+    }
+  ],
+  "milestone": "documentation-workflow-repair-source-v1",
+  "predecessorCommit": "a2cf82a85c1b36bc6f215022821b09da980a459a",
+  "schemaVersion": 1,
+  "scope": "Separate live consumer workflow gate checks from authenticated historical partition comparisons. Preserve the complete earlier consumer checks, authenticate the current workflow through recorded transitions, and reject live producer omissions and unrecorded specialization removals. Refresh only 25 source digests; no support claims or installed observations change.",
+  "updates": [
+    {
+      "currentSha256": "653d29f1f9e64355953abd8325dd27bef7d422036bbb9873d4d8d7727e89d6e3",
+      "edits": [
+        {
+          "current": "import { beforePhpWasmCorpusPartitionSource, phpWasmCorpusPartitionHistoryPath } from \"./helpers/php-wasm-corpus-partition-history.mjs\";\nimport { assertPhpWasmCorpusPartition, phpWasmCorpusPartitionSha256 } from \"./helpers/php-wasm-corpus-partition.mjs\";\n",
+          "previous": "import { beforePhpWasmCorpusPartitionSource } from \"./helpers/php-wasm-corpus-partition-history.mjs\";\nimport { assertPhpWasmCorpusPartition } from \"./helpers/php-wasm-corpus-partition.mjs\";\n",
+          "start": 1544
+        },
+        {
+          "current": "import { assertNativeConsumerPartition, extendPerlCompilerBudget, nativeConsumerPartitionBaseline, nativeConsumerPartitionSha256 } from \"./helpers/native-consumer-partition.mjs\";\nimport { sourceAtProducer } from \"./helpers/producer-source.mjs\";\nimport { sourceAtHistoryMilestone } from \"./helpers/source-history-test-source.mjs\";\nimport { beforeFinRefinementSource } from \"./helpers/fin-refinement-source-history.mjs\";\nimport { sha256 } from \"./helpers/source-history-digest.mjs\";\n",
+          "previous": "import { assertNativeConsumerPartition, extendPerlCompilerBudget } from \"./helpers/native-consumer-partition.mjs\";\nimport { beforeNativeConsumerPartitionSource } from \"./helpers/native-consumer-partition-history.mjs\";\n",
+          "start": 2499
+        },
+        {
+          "current": "test(\"live downstream workflows retain their required refinement gates\", async () => {\n  const [workflow, perlWorkflow] = await Promise.all([\n",
+          "previous": "test(\"dedicated CI covers every consumer with Node 22 and pinned build paths\", async () => {\n  const [liveWorkflow, packageDocument, livePerlWorkflow, toolchainBootstrap] = await Promise.all([\n",
+          "start": 35193
+        },
+        {
+          "current": "    , readFile(\".github/workflows/perl-consumer.yml\", \"utf8\")\n  ]);\n  assertNominalSubtypeJvmWorkflow(workflow);\n  assertNominalSubtypePhpWorkflow(workflow);\n  assertNominalSubtypeWitWorkflow(workflow);\n  assertStructuralSubtypeWorkflow(workflow, \"consumer-matrix.yml\");\n  assertStructuralSubtypeWorkflow(perlWorkflow, \"perl-consumer.yml\");\n  assertWorkflowRunBudget(workflow);\n  // These guards must reject missing producers in the live files, not accept a frozen copy.\n  for(const [source, script, check] of [\n    [workflow, \"run-nominal-subtype-jvm-ci.sh\", assertNominalSubtypeJvmWorkflow]\n    , [workflow, \"run-nominal-subtype-php-ci.sh\", assertNominalSubtypePhpWorkflow]\n    , [workflow, \"run-nominal-subtype-wit-ci.sh\", assertNominalSubtypeWitWorkflow]\n    , [workflow, \"run-structural-subtype-ci.sh\", value => assertStructuralSubtypeWorkflow(value, \"consumer-matrix.yml\")]\n    , [perlWorkflow, \"run-structural-subtype-ci.sh\", value => assertStructuralSubtypeWorkflow(value, \"perl-consumer.yml\")]\n  ]) {\n    assert.ok(source.includes(script), script);\n    assert.throws(() => check(source.replaceAll(script, \"missing-required-producer.sh\")), script);\n  }\n});\n\ntest(\"consumer CI history preserves every consumer and pinned build path\", async () => {\n  const [packageDocument, livePerlWorkflow, toolchainBootstrap] = await Promise.all([\n    readFile(\"package.json\", \"utf8\").then(JSON.parse)\n",
+          "previous": "    , readFile(\"package.json\", \"utf8\").then(JSON.parse)\n",
+          "start": 35397
+        },
+        {
+          "current": "  // Partition transforms authenticate their own epochs; later workflow additions are checked above.\n  const path = \".github/workflows/consumer-matrix.yml\";\n  const partitionWorkflow = sourceAtHistoryMilestone(phpWasmCorpusPartitionHistoryPath, path);\n  const partitionSha256 = sha256(partitionWorkflow);\n  const liveWorkflow = await readFile(path, \"utf8\");\n  assert.equal(sha256(beforeFinRefinementSource(path, liveWorkflow, partitionSha256)), partitionSha256);\n  const missingSpecializations = liveWorkflow.replace(\"LEAN_BRIDGE_SPECIALIZATION_PROFILES=c,cpp node --test tests/native-specializations.test.mjs\", \"true\");\n  assert.notEqual(missingSpecializations, liveWorkflow);\n  assert.notEqual(sha256(beforeFinRefinementSource(path, missingSpecializations, partitionSha256)), partitionSha256);\n  const beforePhpPartition = beforePhpWasmCorpusPartitionSource(path, partitionWorkflow, phpWasmCorpusPartitionSha256);\n  assertPhpWasmCorpusPartition(beforePhpPartition, partitionWorkflow);\n  const structuralWorkflow = sourceAtProducer(nativeConsumerPartitionBaseline, path, nativeConsumerPartitionSha256);\n  const structuralPerlWorkflow = sourceAtProducer(nativeConsumerPartitionBaseline, \".github/workflows/perl-consumer.yml\");\n",
+          "previous": "  const beforePhpPartition = beforePhpWasmCorpusPartitionSource(\".github/workflows/consumer-matrix.yml\", liveWorkflow);\n  assertPhpWasmCorpusPartition(beforePhpPartition, liveWorkflow);\n  const structuralWorkflow = beforeNativeConsumerPartitionSource(\".github/workflows/consumer-matrix.yml\", liveWorkflow);\n  const structuralPerlWorkflow = beforeNativeConsumerPartitionSource(\".github/workflows/perl-consumer.yml\", livePerlWorkflow);\n  assertNominalSubtypeJvmWorkflow(liveWorkflow);\n  assertNominalSubtypePhpWorkflow(liveWorkflow);\n  assertNominalSubtypeWitWorkflow(liveWorkflow);\n",
+          "start": 36918
+        },
+        {
+          "current": "",
+          "previous": "  assertStructuralSubtypeWorkflow(liveWorkflow, \"consumer-matrix.yml\");\n  assertStructuralSubtypeWorkflow(livePerlWorkflow, \"perl-consumer.yml\");\n  assertWorkflowRunBudget(liveWorkflow);\n",
+          "start": 38404
+        }
+      ],
+      "path": "tests/documentation.test.mjs",
+      "previousSha256": "a5203cebe7a6a99df06ba9e274131afd94b76d6c11af5b4467e7ca0387d58ef5"
+    }
+  ]
+}
