@@ -6,13 +6,11 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
-import { generateOwnedWitPackage } from "../../src/backends/wit/owned-package.mjs";
-import { guardOwnedWitHostSource } from "../../src/backends/wit/owned-host-evidence.mjs";
+import { ownedTransferBorrowProducers, ownedTransferBorrowReplay } from "./owned-transfer-borrow-producers.mjs";
+import { bytesAtProducer } from "./producer-source.mjs";
 import { ownedRustBorrowSource } from "./owned-rust-borrow-fixture.mjs";
-import { ownedWitBorrowProbe, ownedWitBorrowNativeSource } from "./wit-owned-borrow-probe.mjs";
 import { ownedWitBorrowMutations } from "./wit-owned-borrow-mutants.mjs";
 import { assertOwnedWitBorrowCi } from "./wit-owned-borrow-ci.mjs";
-import { ownedReceiverHistoricalBytes } from "./owned-receiver-history.mjs";
 
 export const ownedWitBorrowCommand = "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 npm run test:owned-wit-borrows";
 export const ownedWitBorrowScope = Object.freeze({
@@ -51,6 +49,9 @@ export const assertOwnedWitBorrowExecution = async record => {
 	assert.doesNotMatch(record.run.text, /^not ok|# SKIP|# TODO/mu);
 	for(const field of ["runtime", "borrowOnly", "packages"])
 		assert.deepEqual(record[field].map(item => item.mode), ["ordinary", "reviewed"]);
+	const { generateOwnedWitPackage, guardOwnedWitHostSource
+		, ownedWitBorrowProbe, ownedWitBorrowNativeSource }
+		= await ownedTransferBorrowReplay("wit", record.sources);
 	const base = await readFile("tests/fixtures/onboarding/owned-aggregates/Owned.lean", "utf8");
 	const checkInput = (input, mode, borrowOnly = false) => {
 		flags(input, ["hostCallbacks", "anchoredResults"]);
@@ -111,7 +112,9 @@ export const assertOwnedWitBorrowExecution = async record => {
 		assert.equal(inventorySha256, sha256(canonicalJson(inventory)));
 		digest(cliArchive.sha256); assert.ok(cliArchive.bytes > 0);
 		assert.equal(item.installedCli.filesVerified, report.files.length);
-		const cliConfig = JSON.parse(ownedReceiverHistoricalBytes("config/cli-package.v1.json", await readFile("config/cli-package.v1.json"), record.sources["config/cli-package.v1.json"]).toString());
+		const producer = ownedTransferBorrowProducers.wit.revision;
+		digest(record.sources["config/cli-package.v1.json"]);
+		const cliConfig = JSON.parse(bytesAtProducer(producer, "config/cli-package.v1.json", record.sources["config/cli-package.v1.json"]));
 		assert.deepEqual(report.package, { name: cliConfig.name, version: cliConfig.version });
 		assert.equal(report.files.length, cliConfig.files.length + 2);
 		assert.equal(new Set(report.files.map(file => file.path)).size, report.files.length);
@@ -119,8 +122,8 @@ export const assertOwnedWitBorrowExecution = async record => {
 		{
 			const file = report.files.find(entry => entry.path === path);
 			assert.ok(file, path);
-			const bytes = Buffer.from(ownedReceiverHistoricalBytes(path, await readFile(path), file.sha256));
-			assert.ok(file, path); assert.equal(file.bytes, bytes.length); assert.equal(file.sha256, sha256(bytes), path);
+			const bytes = bytesAtProducer(producer, path, file.sha256);
+			assert.ok(file, path); assert.equal(file.bytes, bytes.length, path); assert.equal(file.sha256, sha256(bytes), path);
 		}
 		assert.equal(item.cliBuilds.length, 2);
 		for(const build of item.cliBuilds)

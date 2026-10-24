@@ -7,11 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { assertNativeOwnedGate } from "./native-owned-gate.mjs";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
-import { generateOwnedCPackage } from "../../src/backends/c/owned-package.mjs";
-import { historicalOwnedTransferPackage } from "./owned-transfer-generated-history.mjs";
-import { generateOwnedCppPackage } from "../../src/backends/cpp/owned-package.mjs";
-import { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from "../../src/build/native-graph-model.mjs";
-import { validatePackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
+import { ownedTransferBorrowReplay } from "./owned-transfer-borrow-producers.mjs";
 import { ownedTransferSource } from "./owned-transfer-fixture.mjs";
 import { ownedCppTransferHistoricalBytes } from "./owned-cpp-transfer-history.mjs";
 
@@ -41,6 +37,10 @@ export const assertOwnedCppTransferExecution = async record => {
 	assert.doesNotMatch(record.run.text, /^not ok|# SKIP|# TODO/mu);
 	assert.deepEqual(record.runtime.map(item => item.mode), ["ordinary", "reviewed"]);
 	assert.deepEqual(record.consumers.map(item => item.mode), ["ordinary", "reviewed"]);
+	const { generateOwnedCPackage, generateOwnedCppPackage
+		, createCompiledNativeModel, generateCompiledNativeLeanAdapters
+		, validatePackageSetReceipt }
+		= await ownedTransferBorrowReplay("cpp", record.sources);
 	const fixture = await readFile("tests/fixtures/structured-types/owned-cpp-transfers.cpp");
 	const documentation = await readFile("tests/fixtures/documentation/consumers/cpp/owned-transfers.cpp");
 	const lean = (await readFile("tests/fixtures/onboarding/owned-aggregates/Owned.lean", "utf8")) + ownedTransferSource;
@@ -55,7 +55,7 @@ export const assertOwnedCppTransferExecution = async record => {
 		assert.equal(model.schemaVersion, 8); assert.equal(model.ownedGraph.inputTransfers.exports.length, 18);
 		const cpp = generateOwnedCppPackage(model.bindingIr, { transferredInputs: true });
 		assert.equal(cpp.contract.schemaVersion, 2);
-		const c = historicalOwnedTransferPackage(generateOwnedCPackage({ ...item.input, hostCallbacks: true, transferredInputs: true }), item.sourceSha256 ?? item.adapterReceipt?.ownedValues.sourceSha256);
+		const c = generateOwnedCPackage({ ...item.input, hostCallbacks: true, transferredInputs: true });
 		if(record.runtime.includes(item))
 		{
 			assert.equal(item.actualLean, true); assert.equal(item.installedPackage, false);

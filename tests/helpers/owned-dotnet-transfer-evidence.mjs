@@ -7,13 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { ownedBorrowHistoricalBytes } from "./owned-borrow-history.mjs";
-import { generateOwnedDotnetCalls } from "../../src/backends/dotnet/owned-calls.mjs";
-import { generateOwnedDotnetPackage } from "../../src/backends/dotnet/owned-package.mjs";
-import { generateOwnedCPackage } from "../../src/backends/c/owned-package.mjs";
-import { historicalOwnedTransferPackage } from "./owned-transfer-generated-history.mjs";
-import { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from "../../src/build/native-graph-model.mjs";
-import { ownedDotnetAdapterSources } from "../../src/build/owned-dotnet-artifacts.mjs";
-import { validatePackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
+import { ownedTransferBorrowReplay } from "./owned-transfer-borrow-producers.mjs";
 import { ownedRustTransferSource } from "./owned-rust-transfer-fixture.mjs";
 
 export const ownedDotnetTransferCommand = "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 npm run test:owned-dotnet-transfers";
@@ -45,6 +39,11 @@ export const assertOwnedDotnetTransferExecution = async record => {
 	assert.doesNotMatch(record.run.text, /^not ok|# SKIP|# TODO/mu);
 	assert.deepEqual(record.runtime.map(item => item.mode), ["ordinary", "reviewed"]);
 	assert.deepEqual(record.consumers.map(item => item.mode), ["ordinary", "reviewed"]);
+	const { generateOwnedDotnetCalls, generateOwnedDotnetPackage
+		, generateOwnedCPackage, createCompiledNativeModel
+		, generateCompiledNativeLeanAdapters
+		, ownedDotnetAdapterSources, validatePackageSetReceipt }
+		= await ownedTransferBorrowReplay("dotnet", record.sources);
 	const probe = await readFile("tests/fixtures/structured-types/owned-dotnet-transfers.cs");
 	const fixture = await readFile("tests/fixtures/structured-types/owned-installed-dotnet-transfers.cs");
 	const documentation = await readFile("tests/fixtures/documentation/consumers/dotnet/owned-transfers.cs");
@@ -99,7 +98,7 @@ export const assertOwnedDotnetTransferExecution = async record => {
 			, runtimeReceipt: runtime, packageSetReceipt: packages
 			, compiledProjection: compiled, manifest } = item;
 		const native = generateCompiledNativeLeanAdapters(model);
-		const c = historicalOwnedTransferPackage(generateOwnedCPackage({ ...item.input, hostCallbacks: true, transferredInputs: true }), adapter.ownedValues.sourceSha256);
+		const c = generateOwnedCPackage({ ...item.input, hostCallbacks: true, transferredInputs: true });
 		const dotnet = generateOwnedDotnetPackage(model.bindingIr, null, { transferredInputs: true });
 		assert.equal(component.schemaVersion, 4); assert.equal(adapter.schemaVersion, 2);
 		assert.equal(adapter.ownedValues.schemaVersion, 3); assert.deepEqual(adapter.dotnetValues, dotnet.contract);
