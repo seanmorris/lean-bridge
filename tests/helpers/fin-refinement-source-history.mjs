@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeGenericSubtypeManagedTapEscapeRepairSource, genericSubtypeManagedTapEscapeRepairNormalizationPaths } from "./generic-subtype-managed-tap-escape-repair-source-history.mjs";
 import { beforeStructuredCallableRecoveryGateRepairSource, structuredCallableRecoveryGateRepairNormalizationPaths } from "./structured-callable-recovery-gate-repair-source-history.mjs";
 import { beforeOwnedSubtypeRemainingHostsTapRepairSource, ownedSubtypeRemainingHostsTapRepairNormalizationPaths } from "./owned-subtype-remaining-hosts-tap-repair-source-history.mjs";
 import { beforeCoreEvidenceTrackingTestRegistrationSource, coreEvidenceTrackingTestRegistrationNormalizationPaths } from "./core-evidence-tracking-test-registration-source-history.mjs";
@@ -2085,7 +2086,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...structuredCallableRecoveryGateRepairNormalizationPaths
+	...genericSubtypeManagedTapEscapeRepairNormalizationPaths
+	, ...structuredCallableRecoveryGateRepairNormalizationPaths
 	, ...ownedSubtypeRemainingHostsTapRepairNormalizationPaths
 	, ...coreEvidenceTrackingTestRegistrationNormalizationPaths
 	, ...checkedRecordValueIndexBrowserControlsContractNormalizationPaths
@@ -2913,6 +2915,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
+	const genericSubtypeManagedTapEscapeRepair
+		= beforeGenericSubtypeManagedTapEscapeRepairSource(
+			path, text, expected);
+	if(sha256(genericSubtypeManagedTapEscapeRepair) === expected)
+		return genericSubtypeManagedTapEscapeRepair;
+	text = genericSubtypeManagedTapEscapeRepair;
 	const structuredCallableRecoveryGateRepair
 		= beforeStructuredCallableRecoveryGateRepairSource(
 			path, text, expected);

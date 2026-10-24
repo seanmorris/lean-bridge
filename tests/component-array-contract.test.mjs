@@ -102,6 +102,7 @@ import "./helpers/core-quality-budget-tests.mjs";
 import "./helpers/core-evidence-tracking-test-registration-source-history-tests.mjs";
 import "./helpers/owned-subtype-remaining-hosts-tap-repair-source-history-tests.mjs";
 import "./helpers/structured-callable-recovery-gate-repair-source-history-tests.mjs";
+import "./helpers/generic-subtype-managed-tap-escape-repair-source-history-tests.mjs";
 import "./helpers/core-runner-headroom-source-history-tests.mjs";
 import "./helpers/generic-subtype-npm-browser-source-history-tests.mjs";
 import "./helpers/structural-subtype-partition-validator-source-history-tests.mjs";

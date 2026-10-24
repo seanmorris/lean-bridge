@@ -1,0 +1,88 @@
+{
+  "additions": [
+    {
+      "currentSha256": "4c81fdaa872fa4f8974a1942cfa3418ad608f0c5ecd19934102cc34c129a9063",
+      "path": "scripts/update-generic-subtype-managed-tap-escape-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "92e8858c5662ab715d3a2a1390600651c660eb9df7fcf0c79a0c314324bc002e",
+      "path": "tests/helpers/generic-subtype-managed-tap-escape-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "bee84a41c29be2b908dce211746da128ce0bdda683f5b151e17260d5c7532ab8",
+      "path": "tests/helpers/generic-subtype-managed-tap-escape-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "be59a48e636f91d67874a831559e881fadf4a1f2",
+  "integrationUpdates": [
+    {
+      "currentSha256": "bde529c5f5a4e461782c0afc79dd9aaa91e00b52b8b057d90bb24811dec13a3b",
+      "edits": [
+        {
+          "current": "import \"./helpers/generic-subtype-managed-tap-escape-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 7540
+        }
+      ],
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "ab75601a224de02dfc75474964b513323ebaba80637d59a2d741205c4b2106a5"
+    },
+    {
+      "currentSha256": "5f49f3877e5f68303fca203d5917da58555095e19710b38266160405d1bdbe9a",
+      "edits": [
+        {
+          "current": "import { beforeGenericSubtypeManagedTapEscapeRepairSource, genericSubtypeManagedTapEscapeRepairNormalizationPaths } from \"./generic-subtype-managed-tap-escape-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...genericSubtypeManagedTapEscapeRepairNormalizationPaths\n\t, ...structuredCallableRecoveryGateRepairNormalizationPaths\n",
+          "previous": "\t...structuredCallableRecoveryGateRepairNormalizationPaths\n",
+          "start": 171077
+        },
+        {
+          "current": "\tconst genericSubtypeManagedTapEscapeRepair\n\t\t= beforeGenericSubtypeManagedTapEscapeRepairSource(\n\t\t\tpath, text, expected);\n\tif(sha256(genericSubtypeManagedTapEscapeRepair) === expected)\n\t\treturn genericSubtypeManagedTapEscapeRepair;\n\ttext = genericSubtypeManagedTapEscapeRepair;\n",
+          "previous": "",
+          "start": 210654
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "e8a4fdc7326334591e0e54749d5abaa52fa743341b4e80459871603d470543ea"
+    }
+  ],
+  "milestone": "generic-subtype-managed-tap-escape-repair-source-v1",
+  "predecessorCommit": "aeea35aee8eccaafa115de62b124f2aa711e16b5",
+  "schemaVersion": 1,
+  "scope": "Match Node's escaped TAP rendering of C# without accepting unescaped or incomplete managed-host evidence.",
+  "updates": [
+    {
+      "currentSha256": "b1c598b594db55626d7dda026a4ec7233daa08fe0f1ff9cd18151e6942a21beb",
+      "edits": [
+        {
+          "current": "\t// node:test escapes backslashes and # in TAP test names (C# becomes C\\#).\n\tconst tapName = label.replaceAll(\"\\\\\", \"\\\\\\\\\").replaceAll(\"#\", \"\\\\#\");\n\tassert.match(source, new RegExp(`^# Subtest: ${tapName.replaceAll(/[.*+?^${}()|[\\]\\\\]/gu, \"\\\\$&\")}$`, \"mu\"));\n",
+          "previous": "\tassert.match(source, new RegExp(`^# Subtest: ${label.replaceAll(/[.*+?^${}()|[\\]\\\\]/gu, \"\\\\$&\")}$`, \"mu\"));\n",
+          "start": 3244
+        }
+      ],
+      "path": "tests/helpers/generic-subtype-managed-wit-report.mjs",
+      "previousSha256": "ef5c740cc4e8a4333ae989d59a786076e44dd64e09ce8198f745bfe6095800cd"
+    },
+    {
+      "currentSha256": "f533cece46f0efcec7ee6d34244526dc92d68c816bf8c848879f4bd61d25df92",
+      "edits": [
+        {
+          "current": "\t\tconst tapOf = name => `TAP version 13\\n# Subtest: ${name}\\nok 1 - ${name}\\n1..1\\n# tests 1\\n# suites 0\\n# pass 1\\n# fail 0\\n# cancelled 0\\n# skipped 0\\n# todo 0\\n# duration_ms 1\\n`;\n\t\tconst tap = tapOf(label.replaceAll(\"#\", \"\\\\#\"));\n",
+          "previous": "\t\tconst tap = `TAP version 13\\n# Subtest: ${label}\\nok 1 - ${label}\\n1..1\\n# tests 1\\n# suites 0\\n# pass 1\\n# fail 0\\n# cancelled 0\\n# skipped 0\\n# todo 0\\n# duration_ms 1\\n`;\n",
+          "start": 4974
+        },
+        {
+          "current": "\t\tif(label.includes(\"#\")) assert.throws(() => assertGenericSubtypeManagedWitTap(tapOf(label), host, \"ordinary\"));\n",
+          "previous": "",
+          "start": 5269
+        }
+      ],
+      "path": "tests/helpers/generic-subtype-managed-wit-tests.mjs",
+      "previousSha256": "76e000b9f0d27e575a605287b04f1082ef2e1e431318387af53ae454851188f4"
+    }
+  ]
+}
