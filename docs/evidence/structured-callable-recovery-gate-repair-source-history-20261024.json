@@ -1,0 +1,83 @@
+{
+  "additions": [
+    {
+      "currentSha256": "4e0fd28d2c0996d276d8dcbeeeaa02d64ce46b42a322971a3aeb934fb2b4db18",
+      "path": "scripts/update-structured-callable-recovery-gate-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "959cf7cc04ce63bf0729dfc18875ae21d2ee6f18dd81cb5b253f595be26df9d9",
+      "path": "tests/helpers/structured-callable-recovery-gate-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "8117cdd5c2df24efac1fcfbe6084935285393c6b8cdc212b70e97f7458ecde13",
+      "path": "tests/helpers/structured-callable-recovery-gate-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "11a83d9fb72fa6310fbf41baf01e5ef62fd366b7",
+  "integrationUpdates": [
+    {
+      "currentSha256": "ab75601a224de02dfc75474964b513323ebaba80637d59a2d741205c4b2106a5",
+      "edits": [
+        {
+          "current": "import \"./helpers/structured-callable-recovery-gate-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 7454
+        }
+      ],
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "924ab35ee96b197ee12bbd2464f3dd716682d03c68f29e5164f687af20d338a2"
+    },
+    {
+      "currentSha256": "e8a4fdc7326334591e0e54749d5abaa52fa743341b4e80459871603d470543ea",
+      "edits": [
+        {
+          "current": "import { beforeStructuredCallableRecoveryGateRepairSource, structuredCallableRecoveryGateRepairNormalizationPaths } from \"./structured-callable-recovery-gate-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...structuredCallableRecoveryGateRepairNormalizationPaths\n\t, ...ownedSubtypeRemainingHostsTapRepairNormalizationPaths\n",
+          "previous": "\t...ownedSubtypeRemainingHostsTapRepairNormalizationPaths\n",
+          "start": 170890
+        },
+        {
+          "current": "\tconst structuredCallableRecoveryGateRepair\n\t\t= beforeStructuredCallableRecoveryGateRepairSource(\n\t\t\tpath, text, expected);\n\tif(sha256(structuredCallableRecoveryGateRepair) === expected)\n\t\treturn structuredCallableRecoveryGateRepair;\n\ttext = structuredCallableRecoveryGateRepair;\n",
+          "previous": "",
+          "start": 210406
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "1d9170bc65af678972b532fcf437359e4a452f29d256170fe062de597462e777"
+    }
+  ],
+  "milestone": "structured-callable-recovery-gate-repair-source-v1",
+  "predecessorCommit": "886d98fedb8ed157dc2cf8a0f5420b2efa3a3719",
+  "schemaVersion": 1,
+  "scope": "Emit structured callback recovery functions only for host-directed callbacks and prove every generated C translation unit keeps balanced lexical scope.",
+  "updates": [
+    {
+      "currentSha256": "90a83b2c26cd0cf6a59aac9824bcc12e0535db07ef80aaf79ff8e8b0588d704f",
+      "edits": [
+        {
+          "current": "\t\tif(direction === \"host\")\n\t\t{\n\t\t\tlines.push(`lean_object *${symbol}_recovery(size_t token) {`\n\t\t\t\t, `  struct { uint32_t version, bytes, status, argc; bridge_scalar_slot result, args[${signature.parameters.length}]; } storage = {0};`\n\t\t\t\t, \"  bridge_scalar_frame *frame = (bridge_scalar_frame *)&storage;\"\n\t\t\t\t, `  frame->version = 8; frame->bytes = sizeof(storage); frame->argc = ${signature.parameters.length};`\n\t\t\t\t, budget, \"  uint32_t status = bridge_recursive_arena_open(frame, &budget.owner);\"\n\t\t\t\t, `  frame->status = status ? status : ${componentStructuredCallableRecoveryStatus};`\n\t\t\t\t, `  uint32_t dispatched = bridge_callable_dispatch((uint32_t)token, \"${signature.key}\", frame);`\n\t\t\t\t, \"  if (!status) status = dispatched ? dispatched : frame->status;\"\n\t\t\t\t, \"  if (!status) status = \" + walker(signature.result) + \"_validate(&frame->result, 0, &budget);\"\n\t\t\t\t, `  lean_object *result = status ? lean_alloc_array(0, 0) : ${walker(signature.result)}_decode(&frame->result);`);\n\t\t\tif(constrained) lines.push(\"  if (!status && (!lean_is_array(result) || lean_array_size(result) != 1)) { lean_dec(result); result = lean_alloc_array(0, 0); status = 5; }\");\n\t\t\tlines.push(\"  bridge_recursive_frame_clear(frame);\", \"  return result;\", \"}\", \"\");\n\t\t}\n",
+          "previous": "\t\tif(direction === \"host\") lines.push(`lean_object *${symbol}_recovery(size_t token) {`\n\t\t\t, `  struct { uint32_t version, bytes, status, argc; bridge_scalar_slot result, args[${signature.parameters.length}]; } storage = {0};`\n\t\t\t, \"  bridge_scalar_frame *frame = (bridge_scalar_frame *)&storage;\"\n\t\t\t, `  frame->version = 8; frame->bytes = sizeof(storage); frame->argc = ${signature.parameters.length};`\n\t\t\t, budget, \"  uint32_t status = bridge_recursive_arena_open(frame, &budget.owner);\"\n\t\t\t, `  frame->status = status ? status : ${componentStructuredCallableRecoveryStatus};`\n\t\t\t, `  uint32_t dispatched = bridge_callable_dispatch((uint32_t)token, \"${signature.key}\", frame);`\n\t\t\t, \"  if (!status) status = dispatched ? dispatched : frame->status;\"\n\t\t\t, \"  if (!status) status = \" + walker(signature.result) + \"_validate(&frame->result, 0, &budget);\"\n\t\t\t, `  lean_object *result = status ? lean_alloc_array(0, 0) : ${walker(signature.result)}_decode(&frame->result);`);\n\t\tif(constrained) lines.push(\"  if (!status && (!lean_is_array(result) || lean_array_size(result) != 1)) { lean_dec(result); result = lean_alloc_array(0, 0); status = 5; }\");\n\t\tlines.push(\"  bridge_recursive_frame_clear(frame);\", \"  return result;\", \"}\", \"\");\n",
+          "start": 9237
+        }
+      ],
+      "path": "src/build/component-structured-callable-adapters.mjs",
+      "previousSha256": "3f9d3fdcda0de3b24b740d24cb56de38996e015d16d07a472f509723a7779a04"
+    },
+    {
+      "currentSha256": "04ffa1818c588cf6a7e1eb5b37c6c5ffa5cc3332966a329d96f4f2ad716823ac",
+      "edits": [
+        {
+          "current": "\t\tlet depth = 0;\n\t\tfor(const character of c)\n\t\t{\n\t\t\tdepth += character === \"{\" ? 1 : character === \"}\" ? -1 : 0;\n\t\t\tassert.ok(depth >= 0, \"generated C closes no more braces than it opens\");\n\t\t}\n\t\tassert.equal(depth, 0);\n\t\tassert.doesNotMatch(c, /^\\}\\n\\n {2}bridge_recursive_frame_clear\\(frame\\);/mu);\n",
+          "previous": "",
+          "start": 12574
+        }
+      ],
+      "path": "tests/component-structured-callable-contract.test.mjs",
+      "previousSha256": "c9c06af016ec73bf8ea52bf9fa9f2e8141106bd4f97b6657da28de9528f0d180"
+    }
+  ]
+}
