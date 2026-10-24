@@ -1,0 +1,152 @@
+{
+  "additions": [
+    {
+      "currentSha256": "b5e63b034f8e6c435974fbc6ea130ad00ef25641c5f73fd03ce9276b90645054",
+      "path": "tests/helpers/owned-python-callback-result-replay-tests.mjs"
+    },
+    {
+      "currentSha256": "ab5650f689dca89a63500791a90c02e9cb3c90e7ef0bf107fd9f7c8dea811f56",
+      "path": "tests/helpers/owned-python-callback-result-replay.mjs"
+    },
+    {
+      "currentSha256": "aa21392a79b628194b49dcc3e357148e5d23645c35fb4745787fd27fbca75c08",
+      "path": "scripts/update-python-callback-producer-replay-source-history.mjs"
+    },
+    {
+      "currentSha256": "d34c482fe8d2b7e0108ed5a229ef77c9397f7454d38a5cdbd66c069df042d6ba",
+      "path": "tests/helpers/python-callback-producer-replay-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "99d87f095699638b318cd97d158b235d7dfc904f74de22573b39852126b0cc54",
+      "path": "tests/helpers/python-callback-producer-replay-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "8b31a971448971541f04b8a60f9fbf3602ac9447",
+  "implementationCommits": [
+    "8b31a971448971541f04b8a60f9fbf3602ac9447"
+  ],
+  "integrationBaseCommit": "8b31a971448971541f04b8a60f9fbf3602ac9447",
+  "integrationUpdates": [
+    {
+      "currentSha256": "6cbc02eafa275d3cc684d1abd8924440ca19e1b7742e59d6e38c01dcb571ff67",
+      "edits": [
+        {
+          "current": "import { beforePythonCallbackProducerReplaySource, pythonCallbackProducerReplayNormalizationPaths } from \"./python-callback-producer-replay-source-history.mjs\";\n",
+          "previous": "",
+          "start": 7349
+        },
+        {
+          "current": "\t...pythonCallbackProducerReplayNormalizationPaths\n\t, ...dotnetCallbackProducerReplayNormalizationPaths\n",
+          "previous": "\t...dotnetCallbackProducerReplayNormalizationPaths\n",
+          "start": 180549
+        },
+        {
+          "current": "\t\t= beforePythonCallbackProducerReplaySource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeDotnetCallbackProducerReplaySource(path, text, expected);\n",
+          "previous": "\t\t= beforeDotnetCallbackProducerReplaySource(path, text, expected);\n",
+          "start": 223232
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "32f9410dc2bb977c1280ed43c67dde09eb03fec26531e3f60d29e6b5893483a1"
+    },
+    {
+      "currentSha256": "145fa6b7f3e92dc2d3b8eb9f6994ab0963ea15a5a31edae521f6d712520ff4fe",
+      "edits": [
+        {
+          "current": "import \"./helpers/python-callback-producer-replay-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 4739
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "e9ce9e5b8cf717ccffd763805864c64b675679d1ff55d4eb236ba65f1152335d"
+    }
+  ],
+  "milestone": "python-callback-producer-replay-source-v1",
+  "predecessorCommit": "3548c0fa6108c5f8d3c5dff62dceff7fa377d3af",
+  "schemaVersion": 1,
+  "scope": "Bind all 13 archived Python callback reports to producer 0fc33e4fd17f3347d845847f284709208ada1c9e, including six runtime reports, four standalone PyPI packages, both C/C++/Cargo/PyPI/npm combined releases and typing. Authenticate 135 imports from 17 entry modules, preserve deferred reads at that producer, and pin omitted Boost data and license bytes separately. Keep current verifiers and every ownership, execution, packaging, sanitizer, typing, relocation and browser assertion. Preserve live generators for fresh runs and check valid controls before all 41 original report mutations. No inventory, original receipt, archive, runtime implementation or support claim changes. Full historical source acceptance and final Core remain hosted gates. JVM and PHP-Wasm replay repairs remain separate.",
+  "updates": [
+    {
+      "currentSha256": "2e6d42088397a48e2cf8924461b15ef5a28cf8e4a8c5cd1aabb927b81a82a04f",
+      "edits": [
+        {
+          "current": "import { ownedPythonCallbackReplay } from \"./owned-python-callback-result-replay.mjs\";\n",
+          "previous": "",
+          "start": 1688
+        },
+        {
+          "current": "\t\t\treturn assertOwnedPythonCallbackRuntime(item, replay);\n",
+          "previous": "\t\t\treturn assertOwnedPythonCallbackRuntime(item);\n",
+          "start": 40771
+        },
+        {
+          "current": "\tconst replay = await ownedPythonCallbackReplay(record.sources);\n\tfor(const [path, item] of Object.entries(reports)) await assertOwnedPythonCallbackReport(path, item, replay);\n",
+          "previous": "\tfor(const [path, item] of Object.entries(reports)) await assertOwnedPythonCallbackReport(path, item);\n",
+          "start": 43810
+        }
+      ],
+      "path": "tests/helpers/owned-python-callback-result-acceptance.mjs",
+      "previousSha256": "786c5082f2d41712d34c2d344dbb372baa6c474b755c3062d7f3095b18749513"
+    },
+    {
+      "currentSha256": "4f318c6c7261d4569f914d3aa2301b5710403882df433351f8188b0d60ae8251",
+      "edits": [
+        {
+          "current": "const current = {\n\tgenerateOwnedCPackage\n\t, generateOwnedPythonPackage\n\t, createCompiledNativeModel\n\t, ownedPythonCallbackResultSource\n\t, ownedPythonCallbackResultCombinedSource\n\t, ownedPythonCallbackNativeSource\n\t, ownedPythonCallbackMutations\n\t, readSource: path => readFile(path, \"utf8\")\n};\n\n",
+          "previous": "",
+          "start": 992
+        },
+        {
+          "current": " * @param replay - Optional authenticated producer dependencies.\n",
+          "previous": "",
+          "start": 2100
+        },
+        {
+          "current": "export const assertOwnedPythonCallbackRuntime = async (item, replay) => {\n\tconst {\n\t\tgenerateOwnedCPackage\n\t\t, generateOwnedPythonPackage\n\t\t, createCompiledNativeModel\n\t\t, ownedPythonCallbackResultSource\n\t\t, ownedPythonCallbackResultCombinedSource\n\t\t, ownedPythonCallbackNativeSource\n\t\t, ownedPythonCallbackMutations\n\t\t, readSource\n\t} = replay ?? current;\n",
+          "previous": "export const assertOwnedPythonCallbackRuntime = async item => {\n",
+          "start": 2169
+        },
+        {
+          "current": "\tassert.equal(item.input.sourceIdentity.extractorSha256, sha256(beforeFinRefinementSource(\"src/analyze/NativeExports.lean\", await readSource(\"src/analyze/NativeExports.lean\"), item.input.sourceIdentity.extractorSha256)));\n\tconst source = await readSource(\"tests/fixtures/onboarding/owned-aggregates/Owned.lean\");\n",
+          "previous": "\tassert.equal(item.input.sourceIdentity.extractorSha256, sha256(beforeFinRefinementSource(\"src/analyze/NativeExports.lean\", await readFile(\"src/analyze/NativeExports.lean\"), item.input.sourceIdentity.extractorSha256)));\n\tconst source = await readFile(\"tests/fixtures/onboarding/owned-aggregates/Owned.lean\", \"utf8\");\n",
+          "start": 3737
+        },
+        {
+          "current": "\tassert.equal(item.probeSha256, sha256(prefix + await readSource(\"tests/fixtures/structured-types/owned-python-callback-results.py\")));\n",
+          "previous": "\tassert.equal(item.probeSha256, sha256(prefix + await readFile(\"tests/fixtures/structured-types/owned-python-callback-results.py\", \"utf8\")));\n",
+          "start": 4948
+        }
+      ],
+      "path": "tests/helpers/owned-python-callback-result-evidence.mjs",
+      "previousSha256": "cb399424415828a4c66e9baa1e3209170a0d5b542252a1767e2c9346dd7331e0"
+    },
+    {
+      "currentSha256": "d9b16c00b0d376e94916552e0f5f95dfe123ff09e6156c35f8d3d8bbdf4b8aeb",
+      "edits": [
+        {
+          "current": "import { ownedPythonCallbackReplay } from \"./helpers/owned-python-callback-result-replay.mjs\";\nimport \"./helpers/owned-python-callback-result-replay-tests.mjs\";\n",
+          "previous": "",
+          "start": 718
+        },
+        {
+          "current": "let retained;\nconst retainedReports = async () => {\n\tif(retained) return retained;\n\tconst record = await read();\n\tretained = { reports: unpackOwnedCallbackReports(record.archive)\n\t\t, replay: await ownedPythonCallbackReplay(record.sources) };\n\treturn retained;\n};\nconst groups = new Map();\nfor(const [name, mutate] of ownedPythonCallbackReportMutations())\n{\n\tif(!groups.has(name)) groups.set(name, []);\n\tgroups.get(name).push(mutate);\n}\nfor(const [name, mutations] of groups)\n\tfor(let start = 0; start < mutations.length; start += 3)\n",
+          "previous": "test(\"Python callback reports reject forged lifetime, fault, package and browser outcomes\", async () => {\n\tconst reports = unpackOwnedCallbackReports((await read()).archive);\n\tfor(const [name, mutate] of ownedPythonCallbackReportMutations())\n",
+          "start": 2516
+        },
+        {
+          "current": "\t\tconst chunk = mutations.slice(start, start + 3);\n\t\ttest(\"Python callback report mutations: \" + name + \" \" + (1 + start / 3), async () => {\n\t\t\tconst { reports, replay } = await retainedReports();\n\t\t\tconst path = `build/owned-python-callback-results/${name}.json`;\n\t\t\t// A valid original must pass before its forged variants are rejected.\n\t\t\tawait assertOwnedPythonCallbackReport(path, reports[path], replay);\n\t\t\tfor(const mutate of chunk)\n\t\t\t{\n\t\t\t\tconst item = structuredClone(reports[path]); mutate(item);\n\t\t\t\tawait assert.rejects(() => assertOwnedPythonCallbackReport(path, item, replay)\n\t\t\t\t\t, undefined, name + \": \" + mutate.toString());\n\t\t\t}\n\t\t});\n",
+          "previous": "\t\tconst path = `build/owned-python-callback-results/${name}.json`;\n\t\tconst item = structuredClone(reports[path]); mutate(item);\n\t\tawait assert.rejects(() => assertOwnedPythonCallbackReport(path, item), undefined, name + \": \" + mutate.toString());\n",
+          "start": 3052
+        },
+        {
+          "current": "",
+          "previous": "});\n",
+          "start": 3709
+        }
+      ],
+      "path": "tests/owned-python-callback-result-evidence.test.mjs",
+      "previousSha256": "ac6c11c640fdb2f719480188240e442872f93d30a58e4725e47183c16d173674"
+    }
+  ]
+}
