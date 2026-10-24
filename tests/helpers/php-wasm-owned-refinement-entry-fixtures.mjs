@@ -75,7 +75,12 @@ const checkedOrdinaryConfiguration = spec => {
 	const base = structuredClone(ownedCheckedRecordJavaScriptConfiguration("ordinary"));
 	const claim = base.contracts[q("echoClaim")];
 	const grant = structuredClone(claim);
-	grant.parameters[0].refinement = ownedCheckedRecordTrees.grant(q("mkGrant"), q("checkedPositive"));
+	// The reviewed IR tags the nested Subtype with `kind`; author configuration names it by constructor alone.
+	const tree = ownedCheckedRecordTrees.grant(q("mkGrant"), q("checkedPositive"));
+	grant.parameters[0].refinement = { ...tree, fields: tree.fields.map(field =>
+		field.refinement?.kind === "subtype"
+			? { name: field.name, refinement: { constructor: field.refinement.constructor } }
+			: field) };
 	base.exports = checkedNames.map(q);
 	base.arities = {};
 	base.contracts = Object.fromEntries([
@@ -124,6 +129,10 @@ export const phpWasmOwnedRefinementEntryFixture = async (family, route) => {
 				, targets: { "php-wasm": { ...spec.settings, hostCallbacks: false } } };
 		review = checkedReview();
 	}
+	// Effects are a set: the compiler emits each sorted, while the shared owned
+	// Subtype fixture lists them in derivation order.
+	for(const declaration of review.declarations)
+		declaration.effects = declaration.effects.toSorted();
 	return { ...spec, family, route, configuration, review
 		, verify: model => assert.equal(reviewedContractDifference(review, model.bindingIr), null) };
 };

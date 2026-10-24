@@ -17,6 +17,28 @@ import { nominalSubtypeDispatchConstructors, nominalSubtypeDispatchExports, nomi
 export const nominalSubtypeEntryMarker = "lean-bridge-nominal-entry";
 export const nominalSubtypeEntryBegin = "lean-bridge-nominal-begin";
 export const nominalSubtypeEntryEnd = "lean-bridge-nominal-end";
+/**
+ * Exact console lines an engine may add beside the entry trace. Firefox warns that the legacy
+ * WebAssembly exception-handling encoding of the Lean runtime is deprecated; nothing else is allowed.
+ */
+export const nominalSubtypeEntryBrowserWarnings = Object.freeze({
+	firefox: Object.freeze([
+		"[JavaScript Warning: \"The WebAssembly exception handling 'try' instruction is deprecated and should no longer be used. Please recompile to use the 'try_table' instruction instead.\"]"
+	])
+});
+
+/**
+ * Move only the exact allowed engine warnings out of a page console stream; every other line stays
+ * in the trace, so unexpected noise still fails the accounting.
+ *
+ * @param engine - Browser engine name.
+ * @param lines - Page console lines in arrival order.
+ */
+export const splitNominalSubtypeEntryConsole = (engine, lines) => {
+	const allowed = nominalSubtypeEntryBrowserWarnings[engine] ?? [];
+	return { trace: lines.filter(line => !allowed.includes(line))
+		, warnings: lines.filter(line => allowed.includes(line)) };
+};
 export const nominalSubtypeEntryInstrumentation = "probe build: dbgTrace markers on the selected constructors and measured sources of the fixture, call brackets in the consumer; not the unmodified packages of the acceptance suites";
 const measuredSources = nominalSubtypeDispatchExports.map(item => item.name);
 
@@ -226,6 +248,9 @@ export const assertNominalSubtypeEntryReport = entry => {
 			assert.match(engine.engine, /^(chromium|firefox|webkit)$/u); assert.ok(typeof engine.hostVersion === "string" && engine.hostVersion.length > 0);
 			assert.deepEqual(engine.rows, entry.rows, engine.engine); assert.deepEqual(engine.observed, expected, engine.engine);
 			assert.deepEqual(engine.counts, entry.counts, engine.engine); assert.deepEqual(engine.errors, [], engine.engine);
+			const allowed = nominalSubtypeEntryBrowserWarnings[engine.engine] ?? [];
+			assert.ok(Array.isArray(engine.warnings) && engine.warnings.every(line => allowed.includes(line))
+				, `${engine.engine} warnings`);
 		}
 	}
 	return entry.counts;

@@ -5,6 +5,10 @@
  */
 import assert from "node:assert/strict";
 import test from "node:test";
+import { validateExportConfiguration } from "../../src/analyze/export-configuration.mjs";
+import { reviewedContractDifference } from "../../src/analyze/reviewed-source.mjs";
+import { ownedCheckedRecordTrees } from "./owned-checked-record-fixture.mjs";
+import { ownedSubtypePackageReviewedIr } from "./owned-aggregate-fixture.mjs";
 import {
 	phpWasmOwnedRefinementEntryCaller, phpWasmOwnedRefinementEntryExpected
 	, phpWasmOwnedRefinementEntryFamilies, phpWasmOwnedRefinementEntryFixture
@@ -33,6 +37,49 @@ test("owned entry fixtures close ordinary and reviewed author selections", async
 				assert.equal(fixture.review.types.some(item => item.kind === "callback"), false);
 			}
 		}
+});
+
+test("owned entry reviews list effects in compiler order and the hosted difference is only that order", async () => {
+	for(const family of phpWasmOwnedRefinementEntryFamilies)
+		for(const route of phpWasmOwnedRefinementEntryRoutes)
+		{
+			const fixture = await phpWasmOwnedRefinementEntryFixture(family, route);
+			for(const declaration of fixture.review.declarations)
+				assert.deepEqual(declaration.effects, declaration.effects.toSorted(), declaration.id);
+			fixture.verify({ bindingIr: structuredClone(fixture.review) });
+		}
+	// Hosted 390ae18 jobs 120732738114/120732738274 failed at exactly this path.
+	const fixture = await phpWasmOwnedRefinementEntryFixture("owned-subtype", "ordinary");
+	const shared = ownedSubtypePackageReviewedIr();
+	assert.deepEqual(shared.declarations.find(item => item.name === "echoRecord").effects
+		, ["reads-resource", "allocates"]);
+	assert.equal(reviewedContractDifference(shared, fixture.review)
+		, "bindingIr.declarations[0].effects[0]");
+	const reordered = structuredClone(fixture.review);
+	reordered.declarations.find(item => item.name === "echoRecord").effects.reverse();
+	assert.throws(() => fixture.verify({ bindingIr: reordered }));
+	const missing = structuredClone(fixture.review);
+	missing.declarations.find(item => item.name === "newTicket").effects = [];
+	assert.throws(() => fixture.verify({ bindingIr: missing }));
+});
+
+test("owned checked-record ordinary configuration names the Grant weight Subtype by constructor", async () => {
+	const fixture = await phpWasmOwnedRefinementEntryFixture("owned-checked-record", "ordinary");
+	validateExportConfiguration(fixture.configuration);
+	const grant = fixture.configuration.contracts["OwnedCheckedRecords.echoGrant"];
+	assert.deepEqual(grant.parameters[0].refinement, {
+		kind: "checked-record", name: "OwnedCheckedRecords.Grant"
+		, constructor: "OwnedCheckedRecords.mkGrant"
+		, fields: [{ name: "holder", refinement: null }
+			, { name: "weight", refinement: { constructor: "OwnedCheckedRecords.checkedPositive" } }
+			, { name: "limit", refinement: null }]
+	});
+	// Hosted 390ae18 job 120732738323 failed on the reviewed-IR tree used as author configuration.
+	const tagged = structuredClone(fixture.configuration);
+	tagged.contracts["OwnedCheckedRecords.echoGrant"].parameters[0].refinement
+		= ownedCheckedRecordTrees.grant("OwnedCheckedRecords.mkGrant", "OwnedCheckedRecords.checkedPositive");
+	assert.throws(() => validateExportConfiguration(tagged)
+		, /Contract OwnedCheckedRecords\.echoGrant: Invalid checked refinement selection/u);
 });
 
 test("owned entry callers vary only lexical strictness and bind a closed request", async () => {
