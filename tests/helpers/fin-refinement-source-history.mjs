@@ -2959,386 +2959,386 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	const nativeForkTransferProducerRepair
+	let stage
 		= beforeNativeForkTransferProducerRepairSource(path, text, expected);
-	if(sha256(nativeForkTransferProducerRepair) === expected)
-		return nativeForkTransferProducerRepair;
-	text = nativeForkTransferProducerRepair;
-	const ownedSubtypeDelegationRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage
 		= beforeOwnedSubtypeDelegationRepairSource(path, text, expected);
-	if(sha256(ownedSubtypeDelegationRepair) === expected)
-		return ownedSubtypeDelegationRepair;
-	text = ownedSubtypeDelegationRepair;
-	const ownedJavaScriptProducerRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage
 		= beforeOwnedJavaScriptProducerRepairSource(path, text, expected);
-	if(sha256(ownedJavaScriptProducerRepair) === expected)
-		return ownedJavaScriptProducerRepair;
-	text = ownedJavaScriptProducerRepair;
-	const documentationWorkflowRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage
 		= beforeDocumentationWorkflowRepairSource(path, text, expected);
-	if(sha256(documentationWorkflowRepair) === expected)
-		return documentationWorkflowRepair;
-	text = documentationWorkflowRepair;
-	const ownedDotnetProducerRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage
 		= beforeOwnedDotnetProducerRepairSource(path, text, expected);
-	if(sha256(ownedDotnetProducerRepair) === expected)
-		return ownedDotnetProducerRepair;
-	text = ownedDotnetProducerRepair;
-	const ownedCProducerRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage
 		= beforeOwnedCProducerRepairSource(path, text, expected);
-	if(sha256(ownedCProducerRepair) === expected)
-		return ownedCProducerRepair;
-	text = ownedCProducerRepair;
-	const entryFixtureRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage
 		= beforeEntryFixtureRepairSource(path, text, expected);
-	if(sha256(entryFixtureRepair) === expected)
-		return entryFixtureRepair;
-	text = entryFixtureRepair;
-	const coreEvidenceMemoryRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage
 		= beforeCoreEvidenceMemoryRepairSource(path, text, expected);
-	if(sha256(coreEvidenceMemoryRepair) === expected)
-		return coreEvidenceMemoryRepair;
-	text = coreEvidenceMemoryRepair;
-	const valueIndexPromotionMilestoneRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage
 		= beforeValueIndexPromotionMilestoneRepairSource(path, text, expected);
-	if(sha256(valueIndexPromotionMilestoneRepair) === expected)
-		return valueIndexPromotionMilestoneRepair;
-	text = valueIndexPromotionMilestoneRepair;
-	const coreMilestoneReplayRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage
 		= beforeCoreMilestoneReplayRepairSource(path, text, expected);
-	if(sha256(coreMilestoneReplayRepair) === expected)
-		return coreMilestoneReplayRepair;
-	text = coreMilestoneReplayRepair;
-	const typeSurfaceCurrentPinRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage
 		= beforeTypeSurfaceCurrentPinRepairSource(path, text, expected);
-	if(sha256(typeSurfaceCurrentPinRepair) === expected)
-		return typeSurfaceCurrentPinRepair;
-	text = typeSurfaceCurrentPinRepair;
-	const phpWasmCallbackEntryFormRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage
 		= beforePhpWasmCallbackEntryFormRepairSource(path, text, expected);
-	if(sha256(phpWasmCallbackEntryFormRepair) === expected)
-		return phpWasmCallbackEntryFormRepair;
-	text = phpWasmCallbackEntryFormRepair;
-	const phpWasmEntryOracleIntegration
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage
 		= beforePhpWasmEntryOracleIntegrationSource(path, text, expected);
-	if(sha256(phpWasmEntryOracleIntegration) === expected)
-		return phpWasmEntryOracleIntegration;
-	text = phpWasmEntryOracleIntegration;
-	const phpWasmEntryOracleRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage
 		= beforePhpWasmEntryOracleRepairSource(path, text, expected);
-	if(sha256(phpWasmEntryOracleRepair) === expected)
-		return phpWasmEntryOracleRepair;
-	text = phpWasmEntryOracleRepair;
-	const phpWasmEntryOracleClosure
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage
 		= beforePhpWasmEntryOracleClosureSource(path, text, expected);
-	if(sha256(phpWasmEntryOracleClosure) === expected)
-		return phpWasmEntryOracleClosure;
-	text = phpWasmEntryOracleClosure;
-	const phpWasmEntryFlatPosition
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage
 		= beforePhpWasmEntryFlatPositionSource(path, text, expected);
-	if(sha256(phpWasmEntryFlatPosition) === expected)
-		return phpWasmEntryFlatPosition;
-	text = phpWasmEntryFlatPosition;
-	const phpWasmEntryUnreachedSource
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage
 		= beforePhpWasmEntryUnreachedSourceSource(path, text, expected);
-	if(sha256(phpWasmEntryUnreachedSource) === expected)
-		return phpWasmEntryUnreachedSource;
-	text = phpWasmEntryUnreachedSource;
-	const phpWasmEntryCallPath
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage
 		= beforePhpWasmEntryCallPathSource(path, text, expected);
-	if(sha256(phpWasmEntryCallPath) === expected)
-		return phpWasmEntryCallPath;
-	text = phpWasmEntryCallPath;
-	const nominalSubtypeEntryReportLink
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage
 		= beforeNominalSubtypeEntryReportLinkSource(path, text, expected);
-	if(sha256(nominalSubtypeEntryReportLink) === expected)
-		return nominalSubtypeEntryReportLink;
-	text = nominalSubtypeEntryReportLink;
-	const nominalSubtypeEntryExportSurface
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage
 		= beforeNominalSubtypeEntryExportSurfaceSource(path, text, expected);
-	if(sha256(nominalSubtypeEntryExportSurface) === expected)
-		return nominalSubtypeEntryExportSurface;
-	text = nominalSubtypeEntryExportSurface;
-	const phpWasmNullaryEntryForm
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage
 		= beforePhpWasmNullaryEntryFormSource(path, text, expected);
-	if(sha256(phpWasmNullaryEntryForm) === expected)
-		return phpWasmNullaryEntryForm;
-	text = phpWasmNullaryEntryForm;
-	const managedResultOnlyFixtureRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage
 		= beforeManagedResultOnlyFixtureRepairSource(path, text, expected);
-	if(sha256(managedResultOnlyFixtureRepair) === expected)
-		return managedResultOnlyFixtureRepair;
-	text = managedResultOnlyFixtureRepair;
-	const genericSubtypeManagedTapEscapeRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage
 		= beforeGenericSubtypeManagedTapEscapeRepairSource(
 			path, text, expected);
-	if(sha256(genericSubtypeManagedTapEscapeRepair) === expected)
-		return genericSubtypeManagedTapEscapeRepair;
-	text = genericSubtypeManagedTapEscapeRepair;
-	const structuredCallableRecoveryGateRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage
 		= beforeStructuredCallableRecoveryGateRepairSource(
 			path, text, expected);
-	if(sha256(structuredCallableRecoveryGateRepair) === expected)
-		return structuredCallableRecoveryGateRepair;
-	text = structuredCallableRecoveryGateRepair;
-	const ownedSubtypeRemainingHostsTapRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage
 		= beforeOwnedSubtypeRemainingHostsTapRepairSource(
 			path, text, expected);
-	if(sha256(ownedSubtypeRemainingHostsTapRepair) === expected)
-		return ownedSubtypeRemainingHostsTapRepair;
-	text = ownedSubtypeRemainingHostsTapRepair;
-	const coreEvidenceTrackingTestRegistration
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage
 		= beforeCoreEvidenceTrackingTestRegistrationSource(
 			path, text, expected);
-	if(sha256(coreEvidenceTrackingTestRegistration) === expected)
-		return coreEvidenceTrackingTestRegistration;
-	text = coreEvidenceTrackingTestRegistration;
-	const checkedRecordValueIndexBrowserControlsContract
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage
 		= beforeCheckedRecordValueIndexBrowserControlsContractSource(
 			path, text, expected);
-	if(sha256(checkedRecordValueIndexBrowserControlsContract) === expected)
-		return checkedRecordValueIndexBrowserControlsContract;
-	text = checkedRecordValueIndexBrowserControlsContract;
-	const ownedTransferCopyReplayRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage
 		= beforeOwnedTransferCopyReplayRepairSource(path, text, expected);
-	if(sha256(ownedTransferCopyReplayRepair) === expected)
-		return ownedTransferCopyReplayRepair;
-	text = ownedTransferCopyReplayRepair;
-	const ownedSubtypeWasmTransferFixture
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage
 		= beforeOwnedSubtypeWasmTransferFixtureSource(path, text, expected);
-	if(sha256(ownedSubtypeWasmTransferFixture) === expected)
-		return ownedSubtypeWasmTransferFixture;
-	text = ownedSubtypeWasmTransferFixture;
-	const ownedCheckedRecordJavaScriptHostedRunOutcome
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage
 		= beforeOwnedCheckedRecordJavaScriptHostedRunOutcomeSource(
 			path, text, expected);
-	if(sha256(ownedCheckedRecordJavaScriptHostedRunOutcome) === expected)
-		return ownedCheckedRecordJavaScriptHostedRunOutcome;
-	text = ownedCheckedRecordJavaScriptHostedRunOutcome;
-	const ownedCheckedRecordJavaScriptHostedLane
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage
 		= beforeOwnedCheckedRecordJavaScriptHostedLaneSource(
 			path, text, expected);
-	if(sha256(ownedCheckedRecordJavaScriptHostedLane) === expected)
-		return ownedCheckedRecordJavaScriptHostedLane;
-	text = ownedCheckedRecordJavaScriptHostedLane;
-	const coreSourceBoundaryClosure
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage
 		= beforeCoreSourceBoundaryClosureSource(path, text, expected);
-	if(sha256(coreSourceBoundaryClosure) === expected)
-		return coreSourceBoundaryClosure;
-	text = coreSourceBoundaryClosure;
-	const evidenceCheckoutClosureRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage
 		= beforeEvidenceCheckoutClosureRepairSource(path, text, expected);
-	if(sha256(evidenceCheckoutClosureRepair) === expected)
-		return evidenceCheckoutClosureRepair;
-	text = evidenceCheckoutClosureRepair;
-	const witAcceptanceStopBoundary
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage
 		= beforeWitAcceptanceStopBoundarySource(path, text, expected);
-	if(sha256(witAcceptanceStopBoundary) === expected)
-		return witAcceptanceStopBoundary;
-	text = witAcceptanceStopBoundary;
-	const ownedJvmLazyKotlinFactory
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage
 		= beforeOwnedJvmLazyKotlinFactorySource(path, text, expected);
-	if(sha256(ownedJvmLazyKotlinFactory) === expected)
-		return ownedJvmLazyKotlinFactory;
-	text = ownedJvmLazyKotlinFactory;
-	const ownedSubtypeLivePinCompletion
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage
 		= beforeOwnedSubtypeLivePinCompletionSource(path, text, expected);
-	if(sha256(ownedSubtypeLivePinCompletion) === expected)
-		return ownedSubtypeLivePinCompletion;
-	text = ownedSubtypeLivePinCompletion;
-	const phpWasmRecursiveEvidenceReplayRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage
 		= beforePhpWasmRecursiveEvidenceReplayRepairSource(path, text, expected);
-	if(sha256(phpWasmRecursiveEvidenceReplayRepair) === expected)
-		return phpWasmRecursiveEvidenceReplayRepair;
-	text = phpWasmRecursiveEvidenceReplayRepair;
-	const genericSubtypeWitHelperWarningScope
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage
 		= beforeGenericSubtypeWitHelperWarningScopeSource(path, text, expected);
-	if(sha256(genericSubtypeWitHelperWarningScope) === expected)
-		return genericSubtypeWitHelperWarningScope;
-	text = genericSubtypeWitHelperWarningScope;
-	const ownedSubtypeTestProfilePinRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage
 		= beforeOwnedSubtypeTestProfilePinRepairSource(path, text, expected);
-	if(sha256(ownedSubtypeTestProfilePinRepair) === expected)
-		return ownedSubtypeTestProfilePinRepair;
-	text = ownedSubtypeTestProfilePinRepair;
-	const witRecursiveReaderTraversalRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage
 		= beforeWitRecursiveReaderTraversalRepairSource(path, text, expected);
-	if(sha256(witRecursiveReaderTraversalRepair) === expected)
-		return witRecursiveReaderTraversalRepair;
-	text = witRecursiveReaderTraversalRepair;
-	const genericSubtypeDotnetRuntimeProbe
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage
 		= beforeGenericSubtypeDotnetRuntimeProbeSource(path, text, expected);
-	if(sha256(genericSubtypeDotnetRuntimeProbe) === expected)
-		return genericSubtypeDotnetRuntimeProbe;
-	text = genericSubtypeDotnetRuntimeProbe;
-	let genericSubtypeEvidenceSourceClosureRepair = text;
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = text;
 	while(true)
 	{
 		const previous = beforeGenericSubtypeEvidenceSourceClosureRepairSource(
-			path, genericSubtypeEvidenceSourceClosureRepair, expected);
+			path, stage, expected);
 		if(sha256(previous) === expected) return previous;
-		if(previous === genericSubtypeEvidenceSourceClosureRepair) break;
-		genericSubtypeEvidenceSourceClosureRepair = previous;
+		if(previous === stage) break;
+		stage = previous;
 	}
-	text = genericSubtypeEvidenceSourceClosureRepair;
-	let genericSubtypeArtifactPrefixRepair = text;
+	text = stage;
+	stage = text;
 	while(true)
 	{
 		const previous = beforeGenericSubtypeArtifactPrefixRepairSource(
-			path, genericSubtypeArtifactPrefixRepair, expected);
+			path, stage, expected);
 		if(sha256(previous) === expected) return previous;
-		if(previous === genericSubtypeArtifactPrefixRepair) break;
-		genericSubtypeArtifactPrefixRepair = previous;
+		if(previous === stage) break;
+		stage = previous;
 	}
-	text = genericSubtypeArtifactPrefixRepair;
-	let ownedSubtypeWitHostNamespaceRepair = text;
+	text = stage;
+	stage = text;
 	while(true)
 	{
 		const previous = beforeOwnedSubtypeWitHostNamespaceRepairSource(
-			path, ownedSubtypeWitHostNamespaceRepair, expected);
+			path, stage, expected);
 		if(sha256(previous) === expected) return previous;
-		if(previous === ownedSubtypeWitHostNamespaceRepair) break;
-		ownedSubtypeWitHostNamespaceRepair = previous;
+		if(previous === stage) break;
+		stage = previous;
 	}
-	text = ownedSubtypeWitHostNamespaceRepair;
-	let phpWasmEntryStructuralEqualityRepair = text;
+	text = stage;
+	stage = text;
 	while(true)
 	{
 		const previous = beforePhpWasmEntryStructuralEqualityRepairSource(
-			path, phpWasmEntryStructuralEqualityRepair, expected);
+			path, stage, expected);
 		if(sha256(previous) === expected) return previous;
-		if(previous === phpWasmEntryStructuralEqualityRepair) break;
-		phpWasmEntryStructuralEqualityRepair = previous;
+		if(previous === stage) break;
+		stage = previous;
 	}
-	text = phpWasmEntryStructuralEqualityRepair;
-	let ownedSubtypePerlSourcePathRepair = text;
+	text = stage;
+	stage = text;
 	while(true)
 	{
 		const previous = beforeOwnedSubtypePerlSourcePathRepairSource(
-			path, ownedSubtypePerlSourcePathRepair, expected);
+			path, stage, expected);
 		if(sha256(previous) === expected) return previous;
-		if(previous === ownedSubtypePerlSourcePathRepair) break;
-		ownedSubtypePerlSourcePathRepair = previous;
+		if(previous === stage) break;
+		stage = previous;
 	}
-	text = ownedSubtypePerlSourcePathRepair;
-	const genericSubtypeDocumentation
+	text = stage;
+	stage
 		= beforeGenericSubtypeDocumentationSource(path, text, expected);
-	if(sha256(genericSubtypeDocumentation) === expected)
-		return genericSubtypeDocumentation;
-	text = genericSubtypeDocumentation;
-	let genericSubtypePromotion = text;
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = text;
 	while(true)
 	{
 		const previous = beforeGenericSubtypePromotionSource(
-			path, genericSubtypePromotion, expected);
+			path, stage, expected);
 		if(sha256(previous) === expected) return previous;
-		if(previous === genericSubtypePromotion) break;
-		genericSubtypePromotion = previous;
+		if(previous === stage) break;
+		stage = previous;
 	}
-	text = genericSubtypePromotion;
-	const genericSubtypeHostedArchive
+	text = stage;
+	stage
 		= beforeGenericSubtypeHostedArchiveSource(path, text, expected);
-	if(sha256(genericSubtypeHostedArchive) === expected)
-		return genericSubtypeHostedArchive;
-	text = genericSubtypeHostedArchive;
-	const recursiveCheckedRecordDocumentationClosure
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage
 		= beforeRecursiveCheckedRecordDocumentationClosureSource(
 			path, text, expected);
-	if(sha256(recursiveCheckedRecordDocumentationClosure) === expected)
-		return recursiveCheckedRecordDocumentationClosure;
-	text = recursiveCheckedRecordDocumentationClosure;
-	const ownedSubtypePythonDependencyRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage
 		= beforeOwnedSubtypePythonDependencyRepairSource(path, text, expected);
-	if(sha256(ownedSubtypePythonDependencyRepair) === expected)
-		return ownedSubtypePythonDependencyRepair;
-	text = ownedSubtypePythonDependencyRepair;
-	const ownedSubtypeDocumentationTransaction
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage
 		= beforeOwnedSubtypeDocumentationTransactionSource(
 			path, text, expected);
-	if(sha256(ownedSubtypeDocumentationTransaction) === expected)
-		return ownedSubtypeDocumentationTransaction;
-	text = ownedSubtypeDocumentationTransaction;
-	const callbackSubtypeHistoryTraversalRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage
 		= beforeCallbackSubtypeHistoryTraversalRepairSource(
 			path, text, expected);
-	if(sha256(callbackSubtypeHistoryTraversalRepair) === expected)
-		return callbackSubtypeHistoryTraversalRepair;
-	text = callbackSubtypeHistoryTraversalRepair;
-	const ownedSubtypePerlIdentityRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage
 		= beforeOwnedSubtypePerlIdentityRepairSource(path, text, expected);
-	if(sha256(ownedSubtypePerlIdentityRepair) === expected)
-		return ownedSubtypePerlIdentityRepair;
-	text = ownedSubtypePerlIdentityRepair;
-	const ownedSubtypeWitResourceRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage
 		= beforeOwnedSubtypeWitResourceRepairSource(path, text, expected);
-	if(sha256(ownedSubtypeWitResourceRepair) === expected)
-		return ownedSubtypeWitResourceRepair;
-	text = ownedSubtypeWitResourceRepair;
-	const ownedSubtypeJvmFilenameRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage
 		= beforeOwnedSubtypeJvmFilenameRepairSource(path, text, expected);
-	if(sha256(ownedSubtypeJvmFilenameRepair) === expected)
-		return ownedSubtypeJvmFilenameRepair;
-	text = ownedSubtypeJvmFilenameRepair;
-	const ownedSubtypePromotionContract
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage
 		= beforeOwnedSubtypePromotionContractSource(path, text, expected);
-	if(sha256(ownedSubtypePromotionContract) === expected)
-		return ownedSubtypePromotionContract;
-	text = ownedSubtypePromotionContract;
-	const ownedSubtypeHostedArchive = beforeOwnedSubtypeHostedArchiveSource(
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeOwnedSubtypeHostedArchiveSource(
 		path, text, expected);
-	if(sha256(ownedSubtypeHostedArchive) === expected)
-		return ownedSubtypeHostedArchive;
-	text = ownedSubtypeHostedArchive;
-	const ownedSubtypeEvidenceTestRegistration
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage
 		= beforeOwnedSubtypeEvidenceTestRegistrationSource(
 			path, text, expected);
-	if(sha256(ownedSubtypeEvidenceTestRegistration) === expected)
-		return ownedSubtypeEvidenceTestRegistration;
-	text = ownedSubtypeEvidenceTestRegistration;
-	const ownedSubtypeHostedEvidenceContract
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage
 		= beforeOwnedSubtypeHostedEvidenceContractSource(path, text, expected);
-	if(sha256(ownedSubtypeHostedEvidenceContract) === expected)
-		return ownedSubtypeHostedEvidenceContract;
-	text = ownedSubtypeHostedEvidenceContract;
-	const callbackSubtypePromotion = beforeCallbackSubtypePromotionSource(
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeCallbackSubtypePromotionSource(
 		path, text, expected);
-	if(sha256(callbackSubtypePromotion) === expected)
-		return callbackSubtypePromotion;
-	text = callbackSubtypePromotion;
-	const valueIndexMatrixHistoricalInventoryRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage
 		= beforeValueIndexMatrixHistoricalInventoryRepairSource(
 			path, text, expected);
-	if(sha256(valueIndexMatrixHistoricalInventoryRepair) === expected)
-		return valueIndexMatrixHistoricalInventoryRepair;
-	text = valueIndexMatrixHistoricalInventoryRepair;
-	const dependentCheckedRecordDocumentationClosure
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage
 		= beforeDependentCheckedRecordDocumentationClosureSource(
 			path, text, expected);
-	if(sha256(dependentCheckedRecordDocumentationClosure) === expected)
-		return dependentCheckedRecordDocumentationClosure;
-	text = dependentCheckedRecordDocumentationClosure;
-	const dependentCheckedRecordPromotion
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage
 		= beforeDependentCheckedRecordPromotionSource(path, text, expected);
-	if(sha256(dependentCheckedRecordPromotion) === expected)
-		return dependentCheckedRecordPromotion;
-	text = dependentCheckedRecordPromotion;
-	const checkedRefinementGateRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage
 		= beforeCheckedRefinementGateRepairSource(path, text, expected);
-	if(sha256(checkedRefinementGateRepair) === expected)
-		return checkedRefinementGateRepair;
-	text = checkedRefinementGateRepair;
-	const dependentCheckedRecordBrowserArchive
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage
 		= beforeDependentCheckedRecordBrowserArchiveSource(path, text, expected);
-	if(sha256(dependentCheckedRecordBrowserArchive) === expected)
-		return dependentCheckedRecordBrowserArchive;
-	text = dependentCheckedRecordBrowserArchive;
-	const valueIndexBrowserPromotionClosureRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage
 		= beforeValueIndexBrowserPromotionClosureRepairSource(
 			path, text, expected
 		);
-	if(sha256(valueIndexBrowserPromotionClosureRepair) === expected)
-		return valueIndexBrowserPromotionClosureRepair;
-	text = valueIndexBrowserPromotionClosureRepair;
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
 	if(path === typeSurfacePath)
 	{
 		const exact = normalizeExactTypeSurfaceHistory(text, expected);
@@ -3348,1154 +3348,1154 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 			text = exact;
 		}
 	}
-	const stagedPhpProducerReplayRepair
+	stage
 		= beforeStagedPhpProducerReplayRepairSource(path, text, expected);
-	if(sha256(stagedPhpProducerReplayRepair) === expected)
-		return stagedPhpProducerReplayRepair;
-	const dependentBrowserHandoffRetentionRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeDependentBrowserHandoffRetentionRepairSource(
-			path, stagedPhpProducerReplayRepair, expected
+			path, stage, expected
 		);
-	if(sha256(dependentBrowserHandoffRetentionRepair) === expected)
-		return dependentBrowserHandoffRetentionRepair;
-	const witRecursiveProducerReplayRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeWitRecursiveProducerReplayRepairSource(
-			path, dependentBrowserHandoffRetentionRepair, expected
+			path, stage, expected
 		);
-	if(sha256(witRecursiveProducerReplayRepair) === expected)
-		return witRecursiveProducerReplayRepair;
-	const jvmProducerReplayRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeJvmProducerReplayRepairSource(
-			path, witRecursiveProducerReplayRepair, expected
+			path, stage, expected
 		);
-	if(sha256(jvmProducerReplayRepair) === expected)
-		return jvmProducerReplayRepair;
-	const ownedReceiverProducerReplayRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeOwnedReceiverProducerReplayRepairSource(
-			path, jvmProducerReplayRepair, expected
+			path, stage, expected
 		);
-	if(sha256(ownedReceiverProducerReplayRepair) === expected)
-		return ownedReceiverProducerReplayRepair;
-	const ownedTransferProducerReplayRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeOwnedTransferProducerReplayRepairSource(
-			path, ownedReceiverProducerReplayRepair, expected
+			path, stage, expected
 		);
-	if(sha256(ownedTransferProducerReplayRepair) === expected)
-		return ownedTransferProducerReplayRepair;
-	const ownedPythonBorrowProducerReplayRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeOwnedPythonBorrowProducerReplayRepairSource(
-			path, ownedTransferProducerReplayRepair, expected
+			path, stage, expected
 		);
-	if(sha256(ownedPythonBorrowProducerReplayRepair) === expected)
-		return ownedPythonBorrowProducerReplayRepair;
-	const ownedPhpProducerReplayRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeOwnedPhpProducerReplayRepairSource(
-			path, ownedPythonBorrowProducerReplayRepair, expected
+			path, stage, expected
 		);
-	if(sha256(ownedPhpProducerReplayRepair) === expected)
-		return ownedPhpProducerReplayRepair;
-	const ownedJavaScriptTransferProducerReplayRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeOwnedJavaScriptTransferProducerReplayRepairSource(
-			path, ownedPhpProducerReplayRepair, expected
+			path, stage, expected
 		);
-	if(sha256(ownedJavaScriptTransferProducerReplayRepair) === expected)
-		return ownedJavaScriptTransferProducerReplayRepair;
-	const ownedPerlTransferProducerReplayRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeOwnedPerlTransferProducerReplayRepairSource(
-			path, ownedJavaScriptTransferProducerReplayRepair, expected
+			path, stage, expected
 		);
-	if(sha256(ownedPerlTransferProducerReplayRepair) === expected)
-		return ownedPerlTransferProducerReplayRepair;
-	const promotionDocMilestoneReplayRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforePromotionDocMilestoneReplayRepairSource(
-			path, ownedPerlTransferProducerReplayRepair, expected
+			path, stage, expected
 		);
-	if(sha256(promotionDocMilestoneReplayRepair) === expected)
-		return promotionDocMilestoneReplayRepair;
-	const nestedPromotionDocMilestoneRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeNestedPromotionDocMilestoneRepairSource(
-			path, promotionDocMilestoneReplayRepair, expected
+			path, stage, expected
 		);
-	if(sha256(nestedPromotionDocMilestoneRepair) === expected)
-		return nestedPromotionDocMilestoneRepair;
-	const workflowMilestoneReplayRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeWorkflowMilestoneReplayRepairSource(
-			path, nestedPromotionDocMilestoneRepair, expected
+			path, stage, expected
 		);
-	if(sha256(workflowMilestoneReplayRepair) === expected)
-		return workflowMilestoneReplayRepair;
-	const coreResidualLedgerPointerReplayRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeCoreResidualLedgerPointerReplayRepairSource(
-			path, workflowMilestoneReplayRepair, expected
+			path, stage, expected
 		);
-	if(sha256(coreResidualLedgerPointerReplayRepair) === expected)
-		return coreResidualLedgerPointerReplayRepair;
-	const coreRubyModelAvailabilityRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeCoreRubyModelAvailabilityRepairSource(
-			path, coreResidualLedgerPointerReplayRepair, expected
+			path, stage, expected
 		);
-	if(sha256(coreRubyModelAvailabilityRepair) === expected)
-		return coreRubyModelAvailabilityRepair;
-	const coreResidualProducerReplayRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeCoreResidualProducerReplayRepairSource(
-			path, coreRubyModelAvailabilityRepair, expected
+			path, stage, expected
 		);
-	if(sha256(coreResidualProducerReplayRepair) === expected)
-		return coreResidualProducerReplayRepair;
-	const callbackStagingLineageReplayRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeCallbackStagingLineageReplayRepairSource(
-			path, coreResidualProducerReplayRepair, expected
+			path, stage, expected
 		);
-	if(sha256(callbackStagingLineageReplayRepair) === expected)
-		return callbackStagingLineageReplayRepair;
-	const callbackStagingProducerReplayRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeCallbackStagingProducerReplayRepairSource(
-			path, callbackStagingLineageReplayRepair, expected
+			path, stage, expected
 		);
-	if(sha256(callbackStagingProducerReplayRepair) === expected)
-		return callbackStagingProducerReplayRepair;
-	const coreFirstRunPinReplayRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeCoreFirstRunPinReplayRepairSource(
-			path, callbackStagingProducerReplayRepair, expected
+			path, stage, expected
 		);
-	if(sha256(coreFirstRunPinReplayRepair) === expected)
-		return coreFirstRunPinReplayRepair;
-	const structuredCallableProducerReplayRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeStructuredCallableProducerReplayRepairSource(
-			path, coreFirstRunPinReplayRepair, expected
+			path, stage, expected
 		);
-	if(sha256(structuredCallableProducerReplayRepair) === expected)
-		return structuredCallableProducerReplayRepair;
-	const nativeBudgetReplayRepair = beforeNativeBudgetReplayRepairSource(
-		path, structuredCallableProducerReplayRepair, expected
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage = beforeNativeBudgetReplayRepairSource(
+		path, stage, expected
 	);
-	if(sha256(nativeBudgetReplayRepair) === expected)
-		return nativeBudgetReplayRepair;
-	const inheritedDocsReplayRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeInheritedDocsReplayRepairSource(
-			path, nativeBudgetReplayRepair, expected
+			path, stage, expected
 		);
-	if(sha256(inheritedDocsReplayRepair) === expected)
-		return inheritedDocsReplayRepair;
-	const valueIndexRustGeneratorReplayRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeValueIndexRustGeneratorReplayRepairSource(
-			path, inheritedDocsReplayRepair, expected
+			path, stage, expected
 		);
-	if(sha256(valueIndexRustGeneratorReplayRepair) === expected)
-		return valueIndexRustGeneratorReplayRepair;
-	const genericSubtypeRustOraclePathRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeGenericSubtypeRustOraclePathRepairSource(
-			path, valueIndexRustGeneratorReplayRepair, expected
+			path, stage, expected
 		);
-	if(sha256(genericSubtypeRustOraclePathRepair) === expected)
-		return genericSubtypeRustOraclePathRepair;
-	const dependentRecordAuthorityReplayRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeDependentRecordAuthorityReplayRepairSource(
-			path, genericSubtypeRustOraclePathRepair, expected
+			path, stage, expected
 		);
-	if(sha256(dependentRecordAuthorityReplayRepair) === expected)
-		return dependentRecordAuthorityReplayRepair;
-	const preFinTypeSurfaceHistoryRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforePreFinTypeSurfaceHistoryRepairSource(
-			path, dependentRecordAuthorityReplayRepair, expected
+			path, stage, expected
 		);
-	if(sha256(preFinTypeSurfaceHistoryRepair) === expected)
-		return preFinTypeSurfaceHistoryRepair;
-	const valueIndexPromotionMemoryRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeValueIndexPromotionMemoryRepairSource(
-			path, preFinTypeSurfaceHistoryRepair, expected
+			path, stage, expected
 		);
-	if(sha256(valueIndexPromotionMemoryRepair) === expected)
-		return valueIndexPromotionMemoryRepair;
-	const nominalEntryTagRepair = beforeNominalEntryTagRepairSource(
-		path, valueIndexPromotionMemoryRepair, expected
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage = beforeNominalEntryTagRepairSource(
+		path, stage, expected
 	);
-	if(sha256(nominalEntryTagRepair) === expected) return nominalEntryTagRepair;
-	const callbackCheckedRecordPromotionRefresh
+	if(expected !== undefined && sha256(stage) === expected) return stage;
+	stage
 		= beforeCallbackCheckedRecordPromotionRefreshSource(
-			path, nominalEntryTagRepair, expected
+			path, stage, expected
 		);
-	if(sha256(callbackCheckedRecordPromotionRefresh) === expected)
-		return callbackCheckedRecordPromotionRefresh;
-	const callbackCheckedRecordArchiveCommitProvenance
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeCallbackCheckedRecordArchiveCommitProvenanceSource(
-			path, callbackCheckedRecordPromotionRefresh, expected
+			path, stage, expected
 		);
-	if(sha256(callbackCheckedRecordArchiveCommitProvenance) === expected)
-		return callbackCheckedRecordArchiveCommitProvenance;
-	const callbackCheckedRecordArchiveProvenanceRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeCallbackCheckedRecordArchiveProvenanceRepairSource(
-			path, callbackCheckedRecordArchiveCommitProvenance, expected
+			path, stage, expected
 		);
-	if(sha256(callbackCheckedRecordArchiveProvenanceRepair) === expected)
-		return callbackCheckedRecordArchiveProvenanceRepair;
-	const callbackCheckedRecordRetainedArchiveRollover
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeCallbackCheckedRecordRetainedArchiveRolloverSource(
-			path, callbackCheckedRecordArchiveProvenanceRepair, expected
+			path, stage, expected
 		);
-	if(sha256(callbackCheckedRecordRetainedArchiveRollover) === expected)
-		return callbackCheckedRecordRetainedArchiveRollover;
-	const callbackEntryTracePlanRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforePhpWasmCallbackEntryTracePlanRepairSource(
-			path, callbackCheckedRecordRetainedArchiveRollover, expected
+			path, stage, expected
 		);
-	if(sha256(callbackEntryTracePlanRepair) === expected)
-		return callbackEntryTracePlanRepair;
-	const dependentBrowserReviewedRouteRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeDependentCheckedRecordBrowserReviewedRouteRepairSource(
-			path, callbackEntryTracePlanRepair, expected
+			path, stage, expected
 		);
-	if(sha256(dependentBrowserReviewedRouteRepair) === expected)
-		return dependentBrowserReviewedRouteRepair;
-	const structuredCallbackFallbackRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeStructuredCallbackPublicFallbackRepairSource(
-			path, dependentBrowserReviewedRouteRepair, expected
+			path, stage, expected
 		);
-	if(sha256(structuredCallbackFallbackRepair) === expected)
-		return structuredCallbackFallbackRepair;
-	const callbackWitDiagnosticRepairIntegration
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeCallbackCheckedRecordWitDiagnosticRepairSource(
-			path, structuredCallbackFallbackRepair, expected
+			path, stage, expected
 		);
-	if(sha256(callbackWitDiagnosticRepairIntegration) === expected)
-		return callbackWitDiagnosticRepairIntegration;
-	const callbackWitDiagnosticRepairImplementation
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeCallbackCheckedRecordWitDiagnosticRepairSource(
-			path, callbackWitDiagnosticRepairIntegration, expected
+			path, stage, expected
 		);
-	if(sha256(callbackWitDiagnosticRepairImplementation) === expected)
-		return callbackWitDiagnosticRepairImplementation;
-	const valueIndexProfileReadRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeValueIndexTestProfileLiveReadRepairSource(
-			path, callbackWitDiagnosticRepairImplementation, expected
+			path, stage, expected
 		);
-	if(sha256(valueIndexProfileReadRepair) === expected)
-		return valueIndexProfileReadRepair;
-	const callbackEntrySelectionRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforePhpWasmCallbackEntrySelectionRepairSource(
-			path, valueIndexProfileReadRepair, expected
+			path, stage, expected
 		);
-	if(sha256(callbackEntrySelectionRepair) === expected)
-		return callbackEntrySelectionRepair;
-	const callbackRefinementsPhpWasmPromotion
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeCallbackRefinementsPhpWasmPromotionSource(
-			path, callbackEntrySelectionRepair, expected
+			path, stage, expected
 		);
-	if(sha256(callbackRefinementsPhpWasmPromotion) === expected)
-		return callbackRefinementsPhpWasmPromotion;
-	const testProfilesRegistrationGap
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeTestProfilesRegistrationGapSource(
-			path, callbackRefinementsPhpWasmPromotion, expected
+			path, stage, expected
 		);
-	if(sha256(testProfilesRegistrationGap) === expected)
-		return testProfilesRegistrationGap;
-	const callbackRefinementsPhpWasmHostedArchive
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeCallbackRefinementsPhpWasmHostedArchiveSource(
-			path, testProfilesRegistrationGap, expected
+			path, stage, expected
 		);
-	if(sha256(callbackRefinementsPhpWasmHostedArchive) === expected)
-		return callbackRefinementsPhpWasmHostedArchive;
-	const dependentCheckedRecordWitArchive
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeDependentCheckedRecordWitArchiveSource(
-			path, callbackRefinementsPhpWasmHostedArchive, expected
+			path, stage, expected
 		);
-	if(sha256(dependentCheckedRecordWitArchive) === expected)
-		return dependentCheckedRecordWitArchive;
-	const dependentCheckedRecordBrowserPathDiagnosticRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeDependentCheckedRecordBrowserPathDiagnosticRepairSource(
-			path, dependentCheckedRecordWitArchive, expected
+			path, stage, expected
 		);
-	if(sha256(dependentCheckedRecordBrowserPathDiagnosticRepair) === expected)
-		return dependentCheckedRecordBrowserPathDiagnosticRepair;
-	const dependentCheckedRecordWitRetainedPkgConfigRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeDependentCheckedRecordWitRetainedPkgConfigRepairSource(
-			path, dependentCheckedRecordBrowserPathDiagnosticRepair, expected
+			path, stage, expected
 		);
-	if(sha256(dependentCheckedRecordWitRetainedPkgConfigRepair) === expected)
-		return dependentCheckedRecordWitRetainedPkgConfigRepair;
-	const callbackPhpWasmStaticQualityRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeCallbackPhpWasmStaticQualityRepairSource(
-			path, dependentCheckedRecordWitRetainedPkgConfigRepair, expected
+			path, stage, expected
 		);
-	if(sha256(callbackPhpWasmStaticQualityRepair) === expected)
-		return callbackPhpWasmStaticQualityRepair;
-	const phpWasmCallbackEntrySuiteSplit
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforePhpWasmCallbackEntrySuiteSplitSource(
-			path, callbackPhpWasmStaticQualityRepair, expected
+			path, stage, expected
 		);
-	if(sha256(phpWasmCallbackEntrySuiteSplit) === expected)
-		return phpWasmCallbackEntrySuiteSplit;
-	const dependentCheckedRecordPhpArchive
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeDependentCheckedRecordPhpArchiveSource(
-			path, phpWasmCallbackEntrySuiteSplit, expected
+			path, stage, expected
 		);
-	if(sha256(dependentCheckedRecordPhpArchive) === expected)
-		return dependentCheckedRecordPhpArchive;
-	const dependentCheckedRecordWitPkgConfigSpaceRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeDependentCheckedRecordWitPkgConfigSpaceRepairSource(
-			path, dependentCheckedRecordPhpArchive, expected
+			path, stage, expected
 		);
-	if(sha256(dependentCheckedRecordWitPkgConfigSpaceRepair) === expected)
-		return dependentCheckedRecordWitPkgConfigSpaceRepair;
-	const dependentCheckedRecordPromotionArtifactIdentityHardening
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeDependentCheckedRecordPromotionArtifactIdentityHardeningSource(
-			path, dependentCheckedRecordWitPkgConfigSpaceRepair, expected
+			path, stage, expected
 		);
-	if(sha256(dependentCheckedRecordPromotionArtifactIdentityHardening) === expected)
-		return dependentCheckedRecordPromotionArtifactIdentityHardening;
-	const dependentCheckedRecordPhpWasmArchive
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeDependentCheckedRecordPhpWasmArchiveSource(
-			path, dependentCheckedRecordPromotionArtifactIdentityHardening, expected
+			path, stage, expected
 		);
-	if(sha256(dependentCheckedRecordPhpWasmArchive) === expected)
-		return dependentCheckedRecordPhpWasmArchive;
-	const dependentCheckedRecordWitExportCountRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeDependentCheckedRecordWitExportCountRepairSource(
-			path, dependentCheckedRecordPhpWasmArchive, expected
+			path, stage, expected
 		);
-	if(sha256(dependentCheckedRecordWitExportCountRepair) === expected)
-		return dependentCheckedRecordWitExportCountRepair;
-	const dependentCheckedRecordBrowserDiagnosticRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeDependentCheckedRecordBrowserDiagnosticRepairSource(
-			path, dependentCheckedRecordWitExportCountRepair, expected
+			path, stage, expected
 		);
-	if(sha256(dependentCheckedRecordBrowserDiagnosticRepair) === expected)
-		return dependentCheckedRecordBrowserDiagnosticRepair;
-	const dependentCheckedRecordDotnetArchive
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeDependentCheckedRecordDotnetArchiveSource(
-			path, dependentCheckedRecordBrowserDiagnosticRepair, expected
+			path, stage, expected
 		);
-	if(sha256(dependentCheckedRecordDotnetArchive) === expected)
-		return dependentCheckedRecordDotnetArchive;
-	const dependentCheckedRecordNativeArchive
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeDependentCheckedRecordNativeArchiveSource(
-			path, dependentCheckedRecordDotnetArchive, expected
+			path, stage, expected
 		);
-	if(sha256(dependentCheckedRecordNativeArchive) === expected)
-		return dependentCheckedRecordNativeArchive;
-	const dependentCheckedRecordPromotionContract
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeDependentCheckedRecordPromotionContractSource(
-			path, dependentCheckedRecordNativeArchive, expected
+			path, stage, expected
 		);
-	if(sha256(dependentCheckedRecordPromotionContract) === expected)
-		return dependentCheckedRecordPromotionContract;
-	const hostedRefinementVerifierRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeHostedRefinementVerifierRepairSource(
-			path, dependentCheckedRecordPromotionContract, expected
+			path, stage, expected
 		);
-	if(sha256(hostedRefinementVerifierRepair) === expected)
-		return hostedRefinementVerifierRepair;
-	const callbackFinPhpWasmNominalRefusalRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeCallbackFinPhpWasmNominalRefusalRepairSource(
-			path, hostedRefinementVerifierRepair, expected
+			path, stage, expected
 		);
-	if(sha256(callbackFinPhpWasmNominalRefusalRepair) === expected)
-		return callbackFinPhpWasmNominalRefusalRepair;
-	const dependentCheckedRecordPhpSpacePathRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeDependentCheckedRecordPhpSpacePathRepairSource(
-			path, callbackFinPhpWasmNominalRefusalRepair, expected
+			path, stage, expected
 		);
-	if(sha256(dependentCheckedRecordPhpSpacePathRepair) === expected)
-		return dependentCheckedRecordPhpSpacePathRepair;
-	const callbackFinPhpWasmValidatorRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeCallbackFinPhpWasmValidatorRepairSource(
-			path, dependentCheckedRecordPhpSpacePathRepair, expected
+			path, stage, expected
 		);
-	if(sha256(callbackFinPhpWasmValidatorRepair) === expected)
-		return callbackFinPhpWasmValidatorRepair;
-	const callbackCheckedRecordRetainedPackages
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeCallbackCheckedRecordRetainedPackagesSource(
-			path, callbackFinPhpWasmValidatorRepair, expected
+			path, stage, expected
 		);
-	if(sha256(callbackCheckedRecordRetainedPackages) === expected)
-		return callbackCheckedRecordRetainedPackages;
-	const ownedCheckedRecordJavaScriptRetention
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeOwnedCheckedRecordJavaScriptRetentionSource(
-			path, callbackCheckedRecordRetainedPackages, expected
+			path, stage, expected
 		);
-	if(sha256(ownedCheckedRecordJavaScriptRetention) === expected)
-		return ownedCheckedRecordJavaScriptRetention;
-	const callbackSubtypeRetainedPackages
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeCallbackSubtypeRetainedPackagesSource(
-			path, ownedCheckedRecordJavaScriptRetention, expected
+			path, stage, expected
 		);
-	if(sha256(callbackSubtypeRetainedPackages) === expected)
-		return callbackSubtypeRetainedPackages;
-	const recursivePhpWasmEvidenceReplayRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeRecursivePhpWasmEvidenceReplayRepairSource(
-			path, callbackSubtypeRetainedPackages, expected
+			path, stage, expected
 		);
-	if(sha256(recursivePhpWasmEvidenceReplayRepair) === expected)
-		return recursivePhpWasmEvidenceReplayRepair;
-	const ownedCheckedRecordHostedArchivers
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeOwnedCheckedRecordHostedArchiversSource(
-			path, recursivePhpWasmEvidenceReplayRepair, expected
+			path, stage, expected
 		);
-	if(sha256(ownedCheckedRecordHostedArchivers) === expected)
-		return ownedCheckedRecordHostedArchivers;
-	const zeroPayloadMatrixClosure
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeZeroPayloadMatrixClosureSource(
-			path, ownedCheckedRecordHostedArchivers, expected
+			path, stage, expected
 		);
-	if(sha256(zeroPayloadMatrixClosure) === expected)
-		return zeroPayloadMatrixClosure;
-	const ownedCheckedRecordPhpWasmRetainedHandoff
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeOwnedCheckedRecordPhpWasmRetainedHandoffSource(
-			path, zeroPayloadMatrixClosure, expected
+			path, stage, expected
 		);
-	if(sha256(ownedCheckedRecordPhpWasmRetainedHandoff) === expected)
-		return ownedCheckedRecordPhpWasmRetainedHandoff;
-	const ownedCheckedRecordEvidenceContract
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeOwnedCheckedRecordEvidenceContractSource(
-			path, ownedCheckedRecordPhpWasmRetainedHandoff, expected
+			path, stage, expected
 		);
-	if(sha256(ownedCheckedRecordEvidenceContract) === expected)
-		return ownedCheckedRecordEvidenceContract;
-	const callbackSubtypeDocumentationReviewRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeCallbackSubtypeDocumentationReviewRepairSource(
-			path, ownedCheckedRecordEvidenceContract, expected
+			path, stage, expected
 		);
-	if(sha256(callbackSubtypeDocumentationReviewRepair) === expected)
-		return callbackSubtypeDocumentationReviewRepair;
-	const phpWasmRefinementEntryGeneratorClosure
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforePhpWasmRefinementEntryGeneratorClosureSource(
-			path, callbackSubtypeDocumentationReviewRepair, expected
+			path, stage, expected
 		);
-	if(sha256(phpWasmRefinementEntryGeneratorClosure) === expected)
-		return phpWasmRefinementEntryGeneratorClosure;
-	const callbackSubtypeDocumentationReadiness
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeCallbackSubtypeDocumentationReadinessSource(
-			path, phpWasmRefinementEntryGeneratorClosure, expected
+			path, stage, expected
 		);
-	if(sha256(callbackSubtypeDocumentationReadiness) === expected)
-		return callbackSubtypeDocumentationReadiness;
-	const callbackSubtypeTestRegistration
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeCallbackSubtypeTestRegistrationSource(
-			path, callbackSubtypeDocumentationReadiness, expected
+			path, stage, expected
 		);
-	if(sha256(callbackSubtypeTestRegistration) === expected)
-		return callbackSubtypeTestRegistration;
-	const callbackSubtypeReviewRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeCallbackSubtypeReviewRepairSource(
-			path, callbackSubtypeTestRegistration, expected
+			path, stage, expected
 		);
-	if(sha256(callbackSubtypeReviewRepair) === expected)
-		return callbackSubtypeReviewRepair;
-	const callbackSubtypePromotionContract
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeCallbackSubtypePromotionContractSource(
-			path, callbackSubtypeReviewRepair, expected
+			path, stage, expected
 		);
-	if(sha256(callbackSubtypePromotionContract) === expected)
-		return callbackSubtypePromotionContract;
-	const callbackSubtypeHostedArchiveFoundation
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeCallbackSubtypeHostedArchiveFoundationSource(
-			path, callbackSubtypePromotionContract, expected
+			path, stage, expected
 		);
-	if(sha256(callbackSubtypeHostedArchiveFoundation) === expected)
-		return callbackSubtypeHostedArchiveFoundation;
-	const phpWasmRefinementEntryDocumentationPrecision
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforePhpWasmRefinementEntryDocumentationPrecisionSource(
-			path, callbackSubtypeHostedArchiveFoundation, expected
+			path, stage, expected
 		);
-	if(sha256(phpWasmRefinementEntryDocumentationPrecision) === expected)
-		return phpWasmRefinementEntryDocumentationPrecision;
-	const phpWasmRefinementEntryDocumentation
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforePhpWasmRefinementEntryDocumentationSource(
-			path, phpWasmRefinementEntryDocumentationPrecision, expected
+			path, stage, expected
 		);
-	if(sha256(phpWasmRefinementEntryDocumentation) === expected)
-		return phpWasmRefinementEntryDocumentation;
-	const phpWasmRefinementEntryHostedVerifierRoot
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforePhpWasmRefinementEntryHostedVerifierRootSource(
-			path, phpWasmRefinementEntryDocumentation, expected
+			path, stage, expected
 		);
-	if(sha256(phpWasmRefinementEntryHostedVerifierRoot) === expected)
-		return phpWasmRefinementEntryHostedVerifierRoot;
-	const phpWasmRefinementEntryPromotion
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforePhpWasmRefinementEntryPromotionSource(
-			path, phpWasmRefinementEntryHostedVerifierRoot, expected
+			path, stage, expected
 		);
-	if(sha256(phpWasmRefinementEntryPromotion) === expected)
-		return phpWasmRefinementEntryPromotion;
-	const phpWasmRefinementEntryHostedVerifierClosure
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforePhpWasmRefinementEntryHostedVerifierClosureSource(
-			path, phpWasmRefinementEntryPromotion, expected
+			path, stage, expected
 		);
-	if(sha256(phpWasmRefinementEntryHostedVerifierClosure) === expected)
-		return phpWasmRefinementEntryHostedVerifierClosure;
-	const phpWasmRefinementCiClosureRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforePhpWasmRefinementCiClosureRepairSource(
-			path, phpWasmRefinementEntryHostedVerifierClosure, expected
+			path, stage, expected
 		);
-	if(sha256(phpWasmRefinementCiClosureRepair) === expected)
-		return phpWasmRefinementCiClosureRepair;
-	const phpWasmRefinementEntryHosted
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforePhpWasmRefinementEntryHostedSource(
-			path, phpWasmRefinementCiClosureRepair, expected
+			path, stage, expected
 		);
-	if(sha256(phpWasmRefinementEntryHosted) === expected)
-		return phpWasmRefinementEntryHosted;
-	const phpWasmRefinementEntryMatrix
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforePhpWasmRefinementEntryMatrixSource(
-			path, phpWasmRefinementEntryHosted, expected
+			path, stage, expected
 		);
-	if(sha256(phpWasmRefinementEntryMatrix) === expected)
-		return phpWasmRefinementEntryMatrix;
-	const phpWasmRefinementCiMatrix
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforePhpWasmRefinementCiMatrixSource(
-			path, phpWasmRefinementEntryMatrix, expected
+			path, stage, expected
 		);
-	if(sha256(phpWasmRefinementCiMatrix) === expected)
-		return phpWasmRefinementCiMatrix;
-	const callbackSubtypeManagedConsumerRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeCallbackSubtypeManagedConsumerRepairSource(
-			path, phpWasmRefinementCiMatrix, expected
+			path, stage, expected
 		);
-	if(sha256(callbackSubtypeManagedConsumerRepair) === expected)
-		return callbackSubtypeManagedConsumerRepair;
-	const phpWasmIndexedRefinementEntry
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforePhpWasmIndexedRefinementEntrySource(
-			path, callbackSubtypeManagedConsumerRepair, expected
+			path, stage, expected
 		);
-	if(sha256(phpWasmIndexedRefinementEntry) === expected)
-		return phpWasmIndexedRefinementEntry;
-	const callableClosureRefusal
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeCallableClosureRefusalSource(
-			path, phpWasmIndexedRefinementEntry, expected
+			path, stage, expected
 		);
-	if(sha256(callableClosureRefusal) === expected)
-		return callableClosureRefusal;
-	const phpWasmCallbackEntry
-		= beforePhpWasmCallbackEntrySource(path, callableClosureRefusal, expected);
-	if(sha256(phpWasmCallbackEntry) === expected)
-		return phpWasmCallbackEntry;
-	const phpWasmOwnedRefinementEntry
-		= beforePhpWasmOwnedRefinementEntrySource(path, phpWasmCallbackEntry, expected);
-	if(sha256(phpWasmOwnedRefinementEntry) === expected)
-		return phpWasmOwnedRefinementEntry;
-	const phpWasmRefinementEntryInstalled
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
+		= beforePhpWasmCallbackEntrySource(path, stage, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
+		= beforePhpWasmOwnedRefinementEntrySource(path, stage, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforePhpWasmRefinementEntryInstalledSource(
-			path, phpWasmOwnedRefinementEntry, expected
+			path, stage, expected
 		);
-	if(sha256(phpWasmRefinementEntryInstalled) === expected)
-		return phpWasmRefinementEntryInstalled;
-	const callbackSubtypePhpWasmProfile
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeCallbackSubtypePhpWasmProfileSource(
-			path, phpWasmRefinementEntryInstalled, expected
+			path, stage, expected
 		);
-	if(sha256(callbackSubtypePhpWasmProfile) === expected)
-		return callbackSubtypePhpWasmProfile;
-	const witConsumerRootRepair
-		= beforeWitConsumerRootRepairSource(path, callbackSubtypePhpWasmProfile, expected);
-	if(sha256(witConsumerRootRepair) === expected) return witConsumerRootRepair;
-	const nominalEntryRepair = beforeNominalEntryRepairSource(path, witConsumerRootRepair, expected);
-	if(sha256(nominalEntryRepair) === expected) return nominalEntryRepair;
-	const callbackRefinementsPhpWasm
-		= beforeCallbackRefinementsPhpWasmSource(path, nominalEntryRepair, expected);
-	if(sha256(callbackRefinementsPhpWasm) === expected)
-		return callbackRefinementsPhpWasm;
-	const callbackSubtypePhpWasm
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
+		= beforeWitConsumerRootRepairSource(path, stage, expected);
+	if(expected !== undefined && sha256(stage) === expected) return stage;
+	stage = beforeNominalEntryRepairSource(path, stage, expected);
+	if(expected !== undefined && sha256(stage) === expected) return stage;
+	stage
+		= beforeCallbackRefinementsPhpWasmSource(path, stage, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeCallbackSubtypePhpWasmSource(
-			path, callbackRefinementsPhpWasm, expected
+			path, stage, expected
 		);
-	if(sha256(callbackSubtypePhpWasm) === expected)
-		return callbackSubtypePhpWasm;
-	const ownedCheckedRecordPhpWasm
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeOwnedCheckedRecordPhpWasmSource(
-			path, callbackSubtypePhpWasm, expected
+			path, stage, expected
 		);
-	if(sha256(ownedCheckedRecordPhpWasm) === expected)
-		return ownedCheckedRecordPhpWasm;
-	const ownedSubtypePhpWasmQualification
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeOwnedSubtypePhpWasmQualificationSource(
-			path, ownedCheckedRecordPhpWasm, expected
+			path, stage, expected
 		);
-	if(sha256(ownedSubtypePhpWasmQualification) === expected)
-		return ownedSubtypePhpWasmQualification;
-	const ownedSubtypePhpWasmPackageGap
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeOwnedSubtypePhpWasmPackageGapSource(
-			path, ownedSubtypePhpWasmQualification, expected
+			path, stage, expected
 		);
-	if(sha256(ownedSubtypePhpWasmPackageGap) === expected)
-		return ownedSubtypePhpWasmPackageGap;
-	const ownedCheckedRecordManaged
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeOwnedCheckedRecordManagedSource(
-			path, ownedSubtypePhpWasmPackageGap, expected
+			path, stage, expected
 		);
-	if(sha256(ownedCheckedRecordManaged) === expected)
-		return ownedCheckedRecordManaged;
-	const ownedCheckedRecordLanguage
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeOwnedCheckedRecordLanguageSource(
-			path, ownedCheckedRecordManaged, expected
+			path, stage, expected
 		);
-	if(sha256(ownedCheckedRecordLanguage) === expected)
-		return ownedCheckedRecordLanguage;
-	const ownedCheckedRecordNativePerl
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeOwnedCheckedRecordNativePerlSource(
-			path, ownedCheckedRecordLanguage, expected
+			path, stage, expected
 		);
-	if(sha256(ownedCheckedRecordNativePerl) === expected)
-		return ownedCheckedRecordNativePerl;
-	const ownedCheckedRecordJavaScript
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeOwnedCheckedRecordJavaScriptSource(
-			path, ownedCheckedRecordNativePerl, expected
+			path, stage, expected
 		);
-	if(sha256(ownedCheckedRecordJavaScript) === expected)
-		return ownedCheckedRecordJavaScript;
-	const ownedCheckedRecordCallable
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeOwnedCheckedRecordCallableSource(
-			path, ownedCheckedRecordJavaScript, expected
+			path, stage, expected
 		);
-	if(sha256(ownedCheckedRecordCallable) === expected)
-		return ownedCheckedRecordCallable;
-	const ownedCheckedRecordFoundation
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeOwnedCheckedRecordFoundationSource(
-			path, ownedCheckedRecordCallable, expected
+			path, stage, expected
 		);
-	if(sha256(ownedCheckedRecordFoundation) === expected)
-		return ownedCheckedRecordFoundation;
-	const dependentRecordConstructorAuthority
-		= beforeDependentRecordConstructorAuthoritySource(path, ownedCheckedRecordFoundation, expected);
-	if(sha256(dependentRecordConstructorAuthority) === expected)
-		return dependentRecordConstructorAuthority;
-	const callbackCheckedRecordPromotion
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
+		= beforeDependentRecordConstructorAuthoritySource(path, stage, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeCallbackCheckedRecordPromotionSource(
-			path, dependentRecordConstructorAuthority, expected
+			path, stage, expected
 		);
-	if(sha256(callbackCheckedRecordPromotion) === expected)
-		return callbackCheckedRecordPromotion;
-	const callbackDependentIntegration
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeCallbackDependentIntegrationSource(
-			path, callbackCheckedRecordPromotion, expected
+			path, stage, expected
 		);
-	if(sha256(callbackDependentIntegration) === expected)
-		return callbackDependentIntegration;
-	const callbackCheckedRecordNativeErrorRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeCallbackCheckedRecordNativeErrorRepairSource(
-			path, callbackDependentIntegration, expected
+			path, stage, expected
 		);
-	if(sha256(callbackCheckedRecordNativeErrorRepair) === expected)
-		return callbackCheckedRecordNativeErrorRepair;
-	const callbackCheckedRecordRemaining
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeCallbackCheckedRecordRemainingSource(
-			path, callbackCheckedRecordNativeErrorRepair, expected
+			path, stage, expected
 		);
-	if(sha256(callbackCheckedRecordRemaining) === expected)
-		return callbackCheckedRecordRemaining;
-	const callbackCheckedRecordLanguage = beforeCallbackCheckedRecordLanguageSource(
-		path, callbackCheckedRecordRemaining, expected
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage = beforeCallbackCheckedRecordLanguageSource(
+		path, stage, expected
 	);
-	if(sha256(callbackCheckedRecordLanguage) === expected) return callbackCheckedRecordLanguage;
-	const callbackCheckedRecordNative = beforeCallbackCheckedRecordNativeSource(path, callbackCheckedRecordLanguage, expected);
-	if(sha256(callbackCheckedRecordNative) === expected) return callbackCheckedRecordNative;
-	const callbackCheckedRecordNpmBrowser = beforeCallbackCheckedRecordNpmBrowserSource(path, callbackCheckedRecordNative, expected);
-	if(sha256(callbackCheckedRecordNpmBrowser) === expected) return callbackCheckedRecordNpmBrowser;
-	const callbackCheckedRecordFoundation = beforeCallbackCheckedRecordFoundationSource(path, callbackCheckedRecordNpmBrowser, expected);
-	if(sha256(callbackCheckedRecordFoundation) === expected) return callbackCheckedRecordFoundation;
-	const dependentCheckedRecordJvmArchive
+	if(expected !== undefined && sha256(stage) === expected) return stage;
+	stage = beforeCallbackCheckedRecordNativeSource(path, stage, expected);
+	if(expected !== undefined && sha256(stage) === expected) return stage;
+	stage = beforeCallbackCheckedRecordNpmBrowserSource(path, stage, expected);
+	if(expected !== undefined && sha256(stage) === expected) return stage;
+	stage = beforeCallbackCheckedRecordFoundationSource(path, stage, expected);
+	if(expected !== undefined && sha256(stage) === expected) return stage;
+	stage
 		= beforeDependentCheckedRecordJvmArchiveSource(
-			path, callbackCheckedRecordFoundation, expected
+			path, stage, expected
 		);
-	if(sha256(dependentCheckedRecordJvmArchive) === expected)
-		return dependentCheckedRecordJvmArchive;
-	const dependentCheckedRecordHostedArchivers
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeDependentCheckedRecordHostedArchiversSource(
-			path, dependentCheckedRecordJvmArchive, expected
+			path, stage, expected
 		);
-	if(sha256(dependentCheckedRecordHostedArchivers) === expected)
-		return dependentCheckedRecordHostedArchivers;
-	const nestedCheckedRecordRegressionContract
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeNestedCheckedRecordRegressionContractSource(
-			path, dependentCheckedRecordHostedArchivers, expected
+			path, stage, expected
 		);
-	if(sha256(nestedCheckedRecordRegressionContract) === expected)
-		return nestedCheckedRecordRegressionContract;
-	const dependentCheckedRecordPythonArchive
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeDependentCheckedRecordPythonArchiveSource(
-			path, nestedCheckedRecordRegressionContract, expected
+			path, stage, expected
 		);
-	if(sha256(dependentCheckedRecordPythonArchive) === expected)
-		return dependentCheckedRecordPythonArchive;
-	const dependentCheckedRecordPerlArchive
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeDependentCheckedRecordPerlArchiveSource(
-			path, dependentCheckedRecordPythonArchive, expected
+			path, stage, expected
 		);
-	if(sha256(dependentCheckedRecordPerlArchive) === expected)
-		return dependentCheckedRecordPerlArchive;
-	const dependentCheckedRecordHostedFailureRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeDependentCheckedRecordHostedFailureRepairSource(
-			path, dependentCheckedRecordPerlArchive, expected
+			path, stage, expected
 		);
-	if(sha256(dependentCheckedRecordHostedFailureRepair) === expected)
-		return dependentCheckedRecordHostedFailureRepair;
-	const dependentCheckedRecordRubyArchive
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeDependentCheckedRecordRubyArchiveSource(
-			path, dependentCheckedRecordHostedFailureRepair, expected
+			path, stage, expected
 		);
-	if(sha256(dependentCheckedRecordRubyArchive) === expected)
-		return dependentCheckedRecordRubyArchive;
-	const dependentCheckedRecordTypeSurfaceGap
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeDependentCheckedRecordTypeSurfaceGapSource(
-			path, dependentCheckedRecordRubyArchive, expected
+			path, stage, expected
 		);
-	if(sha256(dependentCheckedRecordTypeSurfaceGap) === expected)
-		return dependentCheckedRecordTypeSurfaceGap;
-	const dependentCheckedRecordPhpWasm
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeDependentCheckedRecordPhpWasmSource(
-			path, dependentCheckedRecordTypeSurfaceGap, expected
+			path, stage, expected
 		);
-	if(sha256(dependentCheckedRecordPhpWasm) === expected)
-		return dependentCheckedRecordPhpWasm;
-	const dependentCheckedRecordJvm
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeDependentCheckedRecordJvmSource(
-			path, dependentCheckedRecordPhpWasm, expected
+			path, stage, expected
 		);
-	if(sha256(dependentCheckedRecordJvm) === expected)
-		return dependentCheckedRecordJvm;
-	const dependentCheckedRecordDotnet
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeDependentCheckedRecordDotnetSource(
-			path, dependentCheckedRecordJvm, expected
+			path, stage, expected
 		);
-	if(sha256(dependentCheckedRecordDotnet) === expected)
-		return dependentCheckedRecordDotnet;
-	const dependentCheckedRecordWit
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeDependentCheckedRecordWitSource(
-			path, dependentCheckedRecordDotnet, expected
+			path, stage, expected
 		);
-	if(sha256(dependentCheckedRecordWit) === expected)
-		return dependentCheckedRecordWit;
-	const dependentCheckedRecordPhp
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeDependentCheckedRecordPhpSource(
-			path, dependentCheckedRecordWit, expected
+			path, stage, expected
 		);
-	if(sha256(dependentCheckedRecordPhp) === expected)
-		return dependentCheckedRecordPhp;
-	const dependentCheckedRecordRustArchive
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeDependentCheckedRecordRustArchiveSource(
-			path, dependentCheckedRecordPhp, expected
+			path, stage, expected
 		);
-	if(sha256(dependentCheckedRecordRustArchive) === expected)
-		return dependentCheckedRecordRustArchive;
-	const dependentCheckedRecordArchiveSelectionRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeDependentCheckedRecordArchiveSelectionRepairSource(
-			path, dependentCheckedRecordRustArchive, expected
+			path, stage, expected
 		);
-	if(sha256(dependentCheckedRecordArchiveSelectionRepair) === expected)
-		return dependentCheckedRecordArchiveSelectionRepair;
-	const zeroPayloadNativeControlContract
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeZeroPayloadNativeControlContractSource(
-			path, dependentCheckedRecordArchiveSelectionRepair, expected
+			path, stage, expected
 		);
-	if(sha256(zeroPayloadNativeControlContract) === expected)
-		return zeroPayloadNativeControlContract;
-	const dependentCheckedRecordHostedArchivePreparation
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeDependentCheckedRecordHostedArchivePreparationSource(
-			path, zeroPayloadNativeControlContract, expected
+			path, stage, expected
 		);
-	if(sha256(dependentCheckedRecordHostedArchivePreparation) === expected)
-		return dependentCheckedRecordHostedArchivePreparation;
-	const dependentCheckedRecordRust
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeDependentCheckedRecordRustSource(
-			path, dependentCheckedRecordHostedArchivePreparation, expected
+			path, stage, expected
 		);
-	if(sha256(dependentCheckedRecordRust) === expected)
-		return dependentCheckedRecordRust;
-	const dependentCheckedRecordRuby
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeDependentCheckedRecordRubySource(
-			path, dependentCheckedRecordRust, expected
+			path, stage, expected
 		);
-	if(sha256(dependentCheckedRecordRuby) === expected)
-		return dependentCheckedRecordRuby;
-	const dependentCheckedRecordPython
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeDependentCheckedRecordPythonSource(
-			path, dependentCheckedRecordRuby, expected
+			path, stage, expected
 		);
-	if(sha256(dependentCheckedRecordPython) === expected)
-		return dependentCheckedRecordPython;
-	const dependentCheckedRecordPerl
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeDependentCheckedRecordPerlSource(
-			path, dependentCheckedRecordPython, expected
+			path, stage, expected
 		);
-	if(sha256(dependentCheckedRecordPerl) === expected)
-		return dependentCheckedRecordPerl;
-	const dependentCheckedRecordNative
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeDependentCheckedRecordNativeSource(
-			path, dependentCheckedRecordPerl, expected
+			path, stage, expected
 		);
-	if(sha256(dependentCheckedRecordNative) === expected)
-		return dependentCheckedRecordNative;
-	const dependentCheckedRecord = beforeDependentCheckedRecordFoundationSource(
-		path, dependentCheckedRecordNative, expected
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage = beforeDependentCheckedRecordFoundationSource(
+		path, stage, expected
 	);
-	if(sha256(dependentCheckedRecord) === expected)
-		return dependentCheckedRecord;
-	const dependentGenericSubtypeCiPinReconciliation
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeDependentGenericSubtypeCiPinReconciliationSource(
-			path, dependentCheckedRecord, expected
+			path, stage, expected
 		);
-	if(sha256(dependentGenericSubtypeCiPinReconciliation) === expected)
-		return dependentGenericSubtypeCiPinReconciliation;
-	const dependentGenericSubtypeCi = beforeDependentGenericSubtypeCiSource(
-		path, dependentGenericSubtypeCiPinReconciliation, expected
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage = beforeDependentGenericSubtypeCiSource(
+		path, stage, expected
 	);
-	if(sha256(dependentGenericSubtypeCi) === expected)
-		return dependentGenericSubtypeCi;
-	const dependentGenericSubtype = beforeDependentGenericSubtypeSource(
-		path, dependentGenericSubtypeCi, expected
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage = beforeDependentGenericSubtypeSource(
+		path, stage, expected
 	);
-	if(sha256(dependentGenericSubtype) === expected)
-		return dependentGenericSubtype;
-	const genericTestRegistration = beforeGenericSubtypeTestRegistrationSource(
-		path, dependentGenericSubtype, expected
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage = beforeGenericSubtypeTestRegistrationSource(
+		path, stage, expected
 	);
-	if(sha256(genericTestRegistration) === expected) return genericTestRegistration;
-	const genericManagedWit = beforeGenericSubtypeManagedWitSource(
-		path, genericTestRegistration, expected
+	if(expected !== undefined && sha256(stage) === expected) return stage;
+	stage = beforeGenericSubtypeManagedWitSource(
+		path, stage, expected
 	);
-	if(sha256(genericManagedWit) === expected) return genericManagedWit;
-	const genericLanguages = beforeGenericSubtypeLanguageSource(
-		path, genericManagedWit, expected
+	if(expected !== undefined && sha256(stage) === expected) return stage;
+	stage = beforeGenericSubtypeLanguageSource(
+		path, stage, expected
 	);
-	if(sha256(genericLanguages) === expected) return genericLanguages;
-	const genericNativePerl = beforeGenericSubtypeNativePerlSource(
-		path, genericLanguages, expected
+	if(expected !== undefined && sha256(stage) === expected) return stage;
+	stage = beforeGenericSubtypeNativePerlSource(
+		path, stage, expected
 	);
-	if(sha256(genericNativePerl) === expected) return genericNativePerl;
-	const pinReconciliation = beforeCallbackSubtypeHistoryPinReconciliationSource(
-		path, genericNativePerl, expected
+	if(expected !== undefined && sha256(stage) === expected) return stage;
+	stage = beforeCallbackSubtypeHistoryPinReconciliationSource(
+		path, stage, expected
 	);
-	if(sha256(pinReconciliation) === expected) return pinReconciliation;
-	const phpCallbackRepair = beforeCallbackSubtypeRemainingPhpRepairSource(
-		path, pinReconciliation, expected
+	if(expected !== undefined && sha256(stage) === expected) return stage;
+	stage = beforeCallbackSubtypeRemainingPhpRepairSource(
+		path, stage, expected
 	);
-	if(sha256(phpCallbackRepair) === expected) return phpCallbackRepair;
-	const phpWasmPromotion = beforeZeroPayloadPhpWasmPromotionSource(
-		path, phpCallbackRepair, expected
+	if(expected !== undefined && sha256(stage) === expected) return stage;
+	stage = beforeZeroPayloadPhpWasmPromotionSource(
+		path, stage, expected
 	);
-	if(sha256(phpWasmPromotion) === expected) return phpWasmPromotion;
-	const phpWasmArchive = beforeZeroPayloadPhpWasmArchiveSource(
-		path, phpWasmPromotion, expected
+	if(expected !== undefined && sha256(stage) === expected) return stage;
+	stage = beforeZeroPayloadPhpWasmArchiveSource(
+		path, stage, expected
 	);
-	if(sha256(phpWasmArchive) === expected) return phpWasmArchive;
-	const callbackRuntimeRepair = beforeCallbackSubtypeRemainingRuntimeRepairSource(
-		path, phpWasmArchive, expected
+	if(expected !== undefined && sha256(stage) === expected) return stage;
+	stage = beforeCallbackSubtypeRemainingRuntimeRepairSource(
+		path, stage, expected
 	);
-	if(sha256(callbackRuntimeRepair) === expected) return callbackRuntimeRepair;
-	const nativeTransferAcceptance = beforeOwnedSubtypeNativeTransferAcceptanceSource(
-		path, callbackRuntimeRepair, expected
+	if(expected !== undefined && sha256(stage) === expected) return stage;
+	stage = beforeOwnedSubtypeNativeTransferAcceptanceSource(
+		path, stage, expected
 	);
-	if(sha256(nativeTransferAcceptance) === expected) return nativeTransferAcceptance;
-	const handoffRepair = beforeHostedAcceptanceHandoffRepairSource(
-		path, nativeTransferAcceptance, expected
+	if(expected !== undefined && sha256(stage) === expected) return stage;
+	stage = beforeHostedAcceptanceHandoffRepairSource(
+		path, stage, expected
 	);
-	if(sha256(handoffRepair) === expected) return handoffRepair;
-	const plainExportRepair = beforeZeroPayloadPhpWasmPlainExportRepairSource(
-		path, handoffRepair, expected
+	if(expected !== undefined && sha256(stage) === expected) return stage;
+	stage = beforeZeroPayloadPhpWasmPlainExportRepairSource(
+		path, stage, expected
 	);
-	if(sha256(plainExportRepair) === expected) return plainExportRepair;
-	const hostedPromotion = beforeZeroPayloadHostedPromotionSource(
-		path, plainExportRepair, expected
+	if(expected !== undefined && sha256(stage) === expected) return stage;
+	stage = beforeZeroPayloadHostedPromotionSource(
+		path, stage, expected
 	);
-	if(sha256(hostedPromotion) === expected) return hostedPromotion;
-	const perlWitEvidence = beforeZeroPayloadPerlWitEvidenceSource(
-		path, hostedPromotion, expected
+	if(expected !== undefined && sha256(stage) === expected) return stage;
+	stage = beforeZeroPayloadPerlWitEvidenceSource(
+		path, stage, expected
 	);
-	if(sha256(perlWitEvidence) === expected) return perlWitEvidence;
-	const languageEvidence = beforeZeroPayloadLanguageEvidenceSource(
-		path, perlWitEvidence, expected
+	if(expected !== undefined && sha256(stage) === expected) return stage;
+	stage = beforeZeroPayloadLanguageEvidenceSource(
+		path, stage, expected
 	);
-	if(sha256(languageEvidence) === expected) return languageEvidence;
-	const archivePreparation = beforeZeroPayloadHostedArchivePreparationSource(
-		path, languageEvidence, expected
+	if(expected !== undefined && sha256(stage) === expected) return stage;
+	stage = beforeZeroPayloadHostedArchivePreparationSource(
+		path, stage, expected
 	);
-	if(sha256(archivePreparation) === expected) return archivePreparation;
-	const browserEvidence = beforeZeroPayloadBrowserEvidenceSource(
-		path, archivePreparation, expected
+	if(expected !== undefined && sha256(stage) === expected) return stage;
+	stage = beforeZeroPayloadBrowserEvidenceSource(
+		path, stage, expected
 	);
-	if(sha256(browserEvidence) === expected) return browserEvidence;
-	const evidenceExpectation = beforeZeroPayloadOrdinaryEvidenceExpectationSource(
-		path, browserEvidence, expected
+	if(expected !== undefined && sha256(stage) === expected) return stage;
+	stage = beforeZeroPayloadOrdinaryEvidenceExpectationSource(
+		path, stage, expected
 	);
-	if(sha256(evidenceExpectation) === expected) return evidenceExpectation;
-	const bufferRepair = beforeHistoryReaderBufferRepairSource(
-		path, evidenceExpectation, expected
+	if(expected !== undefined && sha256(stage) === expected) return stage;
+	stage = beforeHistoryReaderBufferRepairSource(
+		path, stage, expected
 	);
-	if(sha256(bufferRepair) === expected) return bufferRepair;
-	const hubGap = beforeHubTransitionGapSource(path, bufferRepair, expected);
-	if(sha256(hubGap) === expected) return hubGap;
-	const readerRepair = beforeHistoryReaderHubRepairSource(path, hubGap, expected);
-	if(sha256(readerRepair) === expected) return readerRepair;
-	const ledgerGap = beforeLedgerTransitionGapSource(path, readerRepair, expected);
-	if(sha256(ledgerGap) === expected) return ledgerGap;
-	const zeroPayloadRustPromotion = beforeZeroPayloadRustPromotionSource(
-		path, ledgerGap, expected
+	if(expected !== undefined && sha256(stage) === expected) return stage;
+	stage = beforeHubTransitionGapSource(path, stage, expected);
+	if(expected !== undefined && sha256(stage) === expected) return stage;
+	stage = beforeHistoryReaderHubRepairSource(path, stage, expected);
+	if(expected !== undefined && sha256(stage) === expected) return stage;
+	stage = beforeLedgerTransitionGapSource(path, stage, expected);
+	if(expected !== undefined && sha256(stage) === expected) return stage;
+	stage = beforeZeroPayloadRustPromotionSource(
+		path, stage, expected
 	);
-	if(sha256(zeroPayloadRustPromotion) === expected)
-		return zeroPayloadRustPromotion;
-	const zeroPayloadTypeSurfaceGapPrelude
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeZeroPayloadTypeSurfaceGapSource(
-			path, zeroPayloadRustPromotion, expected
+			path, stage, expected
 		);
-	if(sha256(zeroPayloadTypeSurfaceGapPrelude) === expected)
-		return zeroPayloadTypeSurfaceGapPrelude;
-	const zeroPayloadDotnetPromotion = beforeZeroPayloadDotnetPromotionSource(
-		path, zeroPayloadTypeSurfaceGapPrelude, expected
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage = beforeZeroPayloadDotnetPromotionSource(
+		path, stage, expected
 	);
-	if(sha256(zeroPayloadDotnetPromotion) === expected)
-		return zeroPayloadDotnetPromotion;
-	const zeroPayloadJvmPromotion = beforeZeroPayloadJvmPromotionSource(
-		path, zeroPayloadDotnetPromotion, expected
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage = beforeZeroPayloadJvmPromotionSource(
+		path, stage, expected
 	);
-	if(sha256(zeroPayloadJvmPromotion) === expected)
-		return zeroPayloadJvmPromotion;
-	const zeroPayloadRuby = beforeZeroPayloadRubyHistorySource(
-		path, zeroPayloadJvmPromotion, expected
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage = beforeZeroPayloadRubyHistorySource(
+		path, stage, expected
 	);
-	if(sha256(zeroPayloadRuby) === expected) return zeroPayloadRuby;
-	const zeroPayloadTypeSurfaceGap = beforeZeroPayloadTypeSurfaceGapSource(
-		path, zeroPayloadRuby, expected
+	if(expected !== undefined && sha256(stage) === expected) return stage;
+	stage = beforeZeroPayloadTypeSurfaceGapSource(
+		path, stage, expected
 	);
-	if(sha256(zeroPayloadTypeSurfaceGap) === expected)
-		return zeroPayloadTypeSurfaceGap;
-	const zeroPayloadPython = beforeZeroPayloadPythonHistorySource(
-		path, zeroPayloadTypeSurfaceGap, expected
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage = beforeZeroPayloadPythonHistorySource(
+		path, stage, expected
 	);
-	if(sha256(zeroPayloadPython) === expected) return zeroPayloadPython;
-	const zeroPayloadJvmNullBoundary = beforeZeroPayloadJvmNullBoundarySource(
-		path, zeroPayloadPython, expected
+	if(expected !== undefined && sha256(stage) === expected) return stage;
+	stage = beforeZeroPayloadJvmNullBoundarySource(
+		path, stage, expected
 	);
-	if(sha256(zeroPayloadJvmNullBoundary) === expected)
-		return zeroPayloadJvmNullBoundary;
-	const zeroPayloadNativePromotion = beforeZeroPayloadNativePromotionSource(
-		path, zeroPayloadJvmNullBoundary, expected
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage = beforeZeroPayloadNativePromotionSource(
+		path, stage, expected
 	);
-	if(sha256(zeroPayloadNativePromotion) === expected)
-		return zeroPayloadNativePromotion;
-	const zeroPayloadBrowserDiagnostic = beforeZeroPayloadBrowserDiagnosticSource(
-		path, zeroPayloadNativePromotion, expected
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage = beforeZeroPayloadBrowserDiagnosticSource(
+		path, stage, expected
 	);
-	if(sha256(zeroPayloadBrowserDiagnostic) === expected)
-		return zeroPayloadBrowserDiagnostic;
-	const zeroPayloadNativeEvidence = beforeZeroPayloadNativeEvidenceSource(
-		path, zeroPayloadBrowserDiagnostic, expected
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage = beforeZeroPayloadNativeEvidenceSource(
+		path, stage, expected
 	);
-	if(sha256(zeroPayloadNativeEvidence) === expected)
-		return zeroPayloadNativeEvidence;
-	const zeroPayloadPhpWasm = beforeZeroPayloadPhpWasmHistorySource(
-		path, zeroPayloadNativeEvidence, expected
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage = beforeZeroPayloadPhpWasmHistorySource(
+		path, stage, expected
 	);
-	if(sha256(zeroPayloadPhpWasm) === expected)
-		return zeroPayloadPhpWasm;
-	const zeroPayloadPerlBooleanRepair
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage
 		= beforeZeroPayloadPerlBooleanRepairSource(
-			path, zeroPayloadPhpWasm, expected
+			path, stage, expected
 		);
-	if(sha256(zeroPayloadPerlBooleanRepair) === expected)
-		return zeroPayloadPerlBooleanRepair;
-	const zeroPayloadWit = beforeZeroPayloadWitHistorySource(
-		path, zeroPayloadPerlBooleanRepair, expected
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage = beforeZeroPayloadWitHistorySource(
+		path, stage, expected
 	);
-	if(sha256(zeroPayloadWit) === expected) return zeroPayloadWit;
-	const zeroPayloadPhp = beforeZeroPayloadPhpHistorySource(
-		path, zeroPayloadWit, expected
+	if(expected !== undefined && sha256(stage) === expected) return stage;
+	stage = beforeZeroPayloadPhpHistorySource(
+		path, stage, expected
 	);
-	if(sha256(zeroPayloadPhp) === expected) return zeroPayloadPhp;
-	const zeroPayloadPerlArchive = beforeZeroPayloadPerlArchiveSource(
-		path, zeroPayloadPhp, expected
+	if(expected !== undefined && sha256(stage) === expected) return stage;
+	stage = beforeZeroPayloadPerlArchiveSource(
+		path, stage, expected
 	);
-	if(sha256(zeroPayloadPerlArchive) === expected)
-		return zeroPayloadPerlArchive;
-	const zeroPayloadRustArchive = beforeZeroPayloadRustArchiveSource(
-		path, zeroPayloadPerlArchive, expected
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage = beforeZeroPayloadRustArchiveSource(
+		path, stage, expected
 	);
-	if(sha256(zeroPayloadRustArchive) === expected)
-		return zeroPayloadRustArchive;
-	const zeroPayloadRustCi = beforeZeroPayloadRustCiSource(
-		path, zeroPayloadRustArchive, expected
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage = beforeZeroPayloadRustCiSource(
+		path, stage, expected
 	);
-	if(sha256(zeroPayloadRustCi) === expected) return zeroPayloadRustCi;
-	const zeroPayloadRustAuditRepair = beforeZeroPayloadRustAuditRepairSource(
-		path, zeroPayloadRustCi, expected
+	if(expected !== undefined && sha256(stage) === expected) return stage;
+	stage = beforeZeroPayloadRustAuditRepairSource(
+		path, stage, expected
 	);
-	if(sha256(zeroPayloadRustAuditRepair) === expected)
-		return zeroPayloadRustAuditRepair;
-	const zeroPayloadRustInstalled = beforeZeroPayloadRustInstalledSource(
-		path, zeroPayloadRustAuditRepair, expected
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage = beforeZeroPayloadRustInstalledSource(
+		path, stage, expected
 	);
-	if(sha256(zeroPayloadRustInstalled) === expected)
-		return zeroPayloadRustInstalled;
-	const zeroPayloadRust = beforeZeroPayloadRustSource(
-		path, zeroPayloadRustInstalled, expected
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage = beforeZeroPayloadRustSource(
+		path, stage, expected
 	);
-	if(sha256(zeroPayloadRust) === expected) return zeroPayloadRust;
-	const zeroPayloadJvmArchive = beforeZeroPayloadJvmArchiveSource(
-		path, zeroPayloadRust, expected
+	if(expected !== undefined && sha256(stage) === expected) return stage;
+	stage = beforeZeroPayloadJvmArchiveSource(
+		path, stage, expected
 	);
-	if(sha256(zeroPayloadJvmArchive) === expected)
-		return zeroPayloadJvmArchive;
-	const zeroPayloadJvm = beforeZeroPayloadJvmSource(
-		path, zeroPayloadJvmArchive, expected
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage = beforeZeroPayloadJvmSource(
+		path, stage, expected
 	);
-	if(sha256(zeroPayloadJvm) === expected) return zeroPayloadJvm;
-	const zeroPayloadDotnetControlRepair
+	if(expected !== undefined && sha256(stage) === expected) return stage;
+	stage
 		= beforeZeroPayloadDotnetControlRepairSource(
-			path, zeroPayloadJvm, expected
+			path, stage, expected
 		);
-	if(sha256(zeroPayloadDotnetControlRepair) === expected)
-		return zeroPayloadDotnetControlRepair;
-	const zeroPayloadDotnetArchive = beforeZeroPayloadDotnetArchiveSource(
-		path, zeroPayloadDotnetControlRepair, expected
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage = beforeZeroPayloadDotnetArchiveSource(
+		path, stage, expected
 	);
-	if(sha256(zeroPayloadDotnetArchive) === expected)
-		return zeroPayloadDotnetArchive;
-	const zeroPayloadVariant = beforeZeroPayloadVariantSource(
-		path, zeroPayloadDotnetArchive, expected
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage = beforeZeroPayloadVariantSource(
+		path, stage, expected
 	);
-	if(sha256(zeroPayloadVariant) === expected) return zeroPayloadVariant;
-	const zeroPayloadDotnetVerifierRepair
+	if(expected !== undefined && sha256(stage) === expected) return stage;
+	stage
 		= beforeZeroPayloadDotnetVerifierRepairSource(
-			path, zeroPayloadVariant, expected
+			path, stage, expected
 		);
-	if(sha256(zeroPayloadDotnetVerifierRepair) === expected)
-		return zeroPayloadDotnetVerifierRepair;
-	const zeroPayloadDotnetCi = beforeZeroPayloadDotnetCiSource(
-		path, zeroPayloadDotnetVerifierRepair, expected
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage = beforeZeroPayloadDotnetCiSource(
+		path, stage, expected
 	);
-	if(sha256(zeroPayloadDotnetCi) === expected) return zeroPayloadDotnetCi;
-	const zeroPayloadDotnet = beforeZeroPayloadDotnetSource(
-		path, zeroPayloadDotnetCi, expected
+	if(expected !== undefined && sha256(stage) === expected) return stage;
+	stage = beforeZeroPayloadDotnetSource(
+		path, stage, expected
 	);
-	if(sha256(zeroPayloadDotnet) === expected) return zeroPayloadDotnet;
-	const zeroPayloadNativeArchive = beforeZeroPayloadNativeArchiveSource(
-		path, zeroPayloadDotnet, expected
+	if(expected !== undefined && sha256(stage) === expected) return stage;
+	stage = beforeZeroPayloadNativeArchiveSource(
+		path, stage, expected
 	);
-	if(sha256(zeroPayloadNativeArchive) === expected)
-		return zeroPayloadNativeArchive;
-	const zeroPayloadNative = beforeZeroPayloadNativeSource(
-		path, zeroPayloadNativeArchive, expected
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage = beforeZeroPayloadNativeSource(
+		path, stage, expected
 	);
-	if(sha256(zeroPayloadNative) === expected) return zeroPayloadNative;
-	const zeroPayloadBrowserArchive = beforeZeroPayloadBrowserArchiveSource(
-		path, zeroPayloadNative, expected
+	if(expected !== undefined && sha256(stage) === expected) return stage;
+	stage = beforeZeroPayloadBrowserArchiveSource(
+		path, stage, expected
 	);
-	if(sha256(zeroPayloadBrowserArchive) === expected)
-		return zeroPayloadBrowserArchive;
-	const zeroPayloadBrowserCi = beforeZeroPayloadBrowserCiSource(
-		path, zeroPayloadBrowserArchive, expected
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage = beforeZeroPayloadBrowserCiSource(
+		path, stage, expected
 	);
-	if(sha256(zeroPayloadBrowserCi) === expected) return zeroPayloadBrowserCi;
-	const zeroPayloadBrowser = beforeZeroPayloadBrowserSource(
-		path, zeroPayloadBrowserCi, expected
+	if(expected !== undefined && sha256(stage) === expected) return stage;
+	stage = beforeZeroPayloadBrowserSource(
+		path, stage, expected
 	);
-	if(sha256(zeroPayloadBrowser) === expected) return zeroPayloadBrowser;
-	const zeroPayloadNpmInstalled = beforeZeroPayloadNpmInstalledSource(
-		path, zeroPayloadBrowser, expected
+	if(expected !== undefined && sha256(stage) === expected) return stage;
+	stage = beforeZeroPayloadNpmInstalledSource(
+		path, stage, expected
 	);
-	if(sha256(zeroPayloadNpmInstalled) === expected) return zeroPayloadNpmInstalled;
-	const zeroPayloadJavaScript = beforeZeroPayloadJavaScriptSource(
-		path, zeroPayloadNpmInstalled, expected
+	if(expected !== undefined && sha256(stage) === expected) return stage;
+	stage = beforeZeroPayloadJavaScriptSource(
+		path, stage, expected
 	);
-	if(sha256(zeroPayloadJavaScript) === expected) return zeroPayloadJavaScript;
-	const zeroPayloadNpm = beforeZeroPayloadNpmFoundationSource(
-		path, zeroPayloadJavaScript, expected
+	if(expected !== undefined && sha256(stage) === expected) return stage;
+	stage = beforeZeroPayloadNpmFoundationSource(
+		path, stage, expected
 	);
-	if(sha256(zeroPayloadNpm) === expected) return zeroPayloadNpm;
-	const zeroPayload = beforeZeroPayloadCheckedRecordSource(
-		path, zeroPayloadNpm, expected
+	if(expected !== undefined && sha256(stage) === expected) return stage;
+	stage = beforeZeroPayloadCheckedRecordSource(
+		path, stage, expected
 	);
-	if(sha256(zeroPayload) === expected) return zeroPayload;
-	const projectedMirror = beforeProjectedCheckedRecordMirrorSource(
-		path, zeroPayload, expected
+	if(expected !== undefined && sha256(stage) === expected) return stage;
+	stage = beforeProjectedCheckedRecordMirrorSource(
+		path, stage, expected
 	);
-	if(sha256(projectedMirror) === expected) return projectedMirror;
-	const perlEngineClosure = beforePerlEngineOwnedRefinementClosureSource(
-		path, projectedMirror, expected
+	if(expected !== undefined && sha256(stage) === expected) return stage;
+	stage = beforePerlEngineOwnedRefinementClosureSource(
+		path, stage, expected
 	);
-	if(sha256(perlEngineClosure) === expected) return perlEngineClosure;
-	const partitionValidator = beforeStructuralSubtypePartitionValidatorSource(
-		path, perlEngineClosure, expected
+	if(expected !== undefined && sha256(stage) === expected) return stage;
+	stage = beforeStructuralSubtypePartitionValidatorSource(
+		path, stage, expected
 	);
-	if(sha256(partitionValidator) === expected) return partitionValidator;
-	const genericSubtypeNpm = beforeGenericSubtypeNpmBrowserSource(
-		path, partitionValidator, expected
+	if(expected !== undefined && sha256(stage) === expected) return stage;
+	stage = beforeGenericSubtypeNpmBrowserSource(
+		path, stage, expected
 	);
-	if(sha256(genericSubtypeNpm) === expected) return genericSubtypeNpm;
-	const ownedSubtypeRegistration = beforeOwnedSubtypeCoreRegistrationSource(
-		path, genericSubtypeNpm, expected
+	if(expected !== undefined && sha256(stage) === expected) return stage;
+	stage = beforeOwnedSubtypeCoreRegistrationSource(
+		path, stage, expected
 	);
-	if(sha256(ownedSubtypeRegistration) === expected)
-		return ownedSubtypeRegistration;
-	const runnerHeadroom = beforeCoreRunnerHeadroomSource(
-		path, ownedSubtypeRegistration, expected
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage = beforeCoreRunnerHeadroomSource(
+		path, stage, expected
 	);
-	if(sha256(runnerHeadroom) === expected) return runnerHeadroom;
-	const genericSubtype = beforeGenericSubtypeCompositionSource(
-		path, runnerHeadroom, expected
+	if(expected !== undefined && sha256(stage) === expected) return stage;
+	stage = beforeGenericSubtypeCompositionSource(
+		path, stage, expected
 	);
-	if(sha256(genericSubtype) === expected) return genericSubtype;
-	const hostRegistration = beforeOwnedSubtypeHostRegistrationSource(
-		path, genericSubtype, expected
+	if(expected !== undefined && sha256(stage) === expected) return stage;
+	stage = beforeOwnedSubtypeHostRegistrationSource(
+		path, stage, expected
 	);
-	if(sha256(hostRegistration) === expected) return hostRegistration;
-	const ownedJavaScriptTransfer = beforeOwnedSubtypeJavaScriptTransferSource(
-		path, hostRegistration, expected
+	if(expected !== undefined && sha256(stage) === expected) return stage;
+	stage = beforeOwnedSubtypeJavaScriptTransferSource(
+		path, stage, expected
 	);
-	if(sha256(ownedJavaScriptTransfer) === expected)
-		return ownedJavaScriptTransfer;
-	const ownedJavaScript = beforeOwnedSubtypeJavaScriptSource(
-		path, ownedJavaScriptTransfer, expected
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	stage = beforeOwnedSubtypeJavaScriptSource(
+		path, stage, expected
 	);
-	if(sha256(ownedJavaScript) === expected) return ownedJavaScript;
-	const ownedCarriers = beforeOwnedRefinementCarriersSource(
-		path, ownedJavaScript, expected
+	if(expected !== undefined && sha256(stage) === expected) return stage;
+	stage = beforeOwnedRefinementCarriersSource(
+		path, stage, expected
 	);
-	if(sha256(ownedCarriers) === expected) return ownedCarriers;
-	const ownedRefinement = beforeOwnedRefinementModelSource(
-		path, ownedCarriers, expected
+	if(expected !== undefined && sha256(stage) === expected) return stage;
+	stage = beforeOwnedRefinementModelSource(
+		path, stage, expected
 	);
-	if(sha256(ownedRefinement) === expected) return ownedRefinement;
-	const ownedSubtype = beforeOwnedSubtypeAnalysisSource(
-		path, ownedRefinement, expected
+	if(expected !== undefined && sha256(stage) === expected) return stage;
+	stage = beforeOwnedSubtypeAnalysisSource(
+		path, stage, expected
 	);
-	if(sha256(ownedSubtype) === expected) return ownedSubtype;
-	const ownedHistory = beforeOwnedSubtypeJavaScriptHistoricalSource(
-		path, ownedSubtype, expected
+	if(expected !== undefined && sha256(stage) === expected) return stage;
+	stage = beforeOwnedSubtypeJavaScriptHistoricalSource(
+		path, stage, expected
 	);
-	if(sha256(ownedHistory) === expected) return ownedHistory;
-	const remainingAcceptance = beforeCallbackSubtypeRemainingAcceptanceSource(
-		path, ownedHistory, expected
+	if(expected !== undefined && sha256(stage) === expected) return stage;
+	stage = beforeCallbackSubtypeRemainingAcceptanceSource(
+		path, stage, expected
 	);
-	if(sha256(remainingAcceptance) === expected) return remainingAcceptance;
-	const remainingCallbacks = beforeCallbackSubtypeRemainingSource(
-		path, remainingAcceptance, expected
+	if(expected !== undefined && sha256(stage) === expected) return stage;
+	stage = beforeCallbackSubtypeRemainingSource(
+		path, stage, expected
 	);
-	if(sha256(remainingCallbacks) === expected) return remainingCallbacks;
-	const languages = beforeCallbackSubtypeLanguageSource(
-		path, remainingCallbacks, expected
+	if(expected !== undefined && sha256(stage) === expected) return stage;
+	stage = beforeCallbackSubtypeLanguageSource(
+		path, stage, expected
 	);
-	if(sha256(languages) === expected) return languages;
-	const nativeCallbacks = beforeCallbackSubtypeNativeSource(
-		path, languages, expected
+	if(expected !== undefined && sha256(stage) === expected) return stage;
+	stage = beforeCallbackSubtypeNativeSource(
+		path, stage, expected
 	);
-	if(sha256(nativeCallbacks) === expected) return nativeCallbacks;
-	const browserArtifact = beforeCallbackSubtypeBrowserArtifactSource(
-		path, nativeCallbacks, expected
+	if(expected !== undefined && sha256(stage) === expected) return stage;
+	stage = beforeCallbackSubtypeBrowserArtifactSource(
+		path, stage, expected
 	);
-	if(sha256(browserArtifact) === expected) return browserArtifact;
-	const npmAcceptance = beforeCallbackSubtypeNpmAcceptanceSource(
-		path, browserArtifact, expected
+	if(expected !== undefined && sha256(stage) === expected) return stage;
+	stage = beforeCallbackSubtypeNpmAcceptanceSource(
+		path, stage, expected
 	);
-	if(sha256(npmAcceptance) === expected) return npmAcceptance;
-	const npmBrowser = beforeCallbackSubtypeNpmBrowserSource(
-		path, npmAcceptance, expected
+	if(expected !== undefined && sha256(stage) === expected) return stage;
+	stage = beforeCallbackSubtypeNpmBrowserSource(
+		path, stage, expected
 	);
-	if(sha256(npmBrowser) === expected) return npmBrowser;
-	const foundation = beforeCallbackSubtypeFoundationSource(
-		path, npmBrowser, expected
+	if(expected !== undefined && sha256(stage) === expected) return stage;
+	stage = beforeCallbackSubtypeFoundationSource(
+		path, stage, expected
 	);
-	if(sha256(foundation) === expected) return foundation;
+	if(expected !== undefined && sha256(stage) === expected) return stage;
 	let previous = beforeNominalSubtypeEntryMeasurementSource(
-		path, foundation, expected
+		path, stage, expected
 	);
 	if(sha256(previous) === expected) return previous;
 	previous = beforeCheckedRecordValueIndexMatrixEvidencePinRepairSource(
