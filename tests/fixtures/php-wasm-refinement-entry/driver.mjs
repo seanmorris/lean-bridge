@@ -43,8 +43,12 @@ const entryMismatch = (calls, cases) => {
 		const where = entry < Math.max(expectedEntries.length, observedEntries.length)
 			? `entry ${entry}: expected ${entryName(expectedEntries[entry])} observed ${entryName(observedEntries[entry])}`
 			: `entries match, call fields differ: ${bounded(fields.join(","))}`;
+		const kind = ["validator", "constructor", "adapter", "source"].find(name =>
+			planned?.counts?.[name] !== observed?.counts?.[name]);
 		const counts = fields.includes("counts")
-			? `; counts expected ${bounded(JSON.stringify(normalized(planned?.counts ?? null)))}`
+			? `; first count ${kind ?? "shape"} expected ${planned?.counts?.[kind] ?? "none"}`
+				+ ` observed ${observed?.counts?.[kind] ?? "none"}`
+				+ `; counts expected ${bounded(JSON.stringify(normalized(planned?.counts ?? null)))}`
 				+ ` observed ${bounded(JSON.stringify(normalized(observed?.counts ?? null)))}`
 			: "";
 		return `case ${index} (${bounded(cases[index]?.control ?? "unplanned")}) ${where}; `
