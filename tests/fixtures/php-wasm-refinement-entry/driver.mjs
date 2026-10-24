@@ -38,11 +38,17 @@ const entryMismatch = (calls, cases) => {
 		let entry = 0;
 		while(entry < Math.max(expectedEntries.length, observedEntries.length)
 			&& same(expectedEntries[entry], observedEntries[entry])) entry++;
+		const fields = [...new Set([...Object.keys(planned ?? {}), ...Object.keys(observed ?? {})])]
+			.filter(key => key !== "entries" && !same(planned?.[key], observed?.[key])).sort();
 		const where = entry < Math.max(expectedEntries.length, observedEntries.length)
 			? `entry ${entry}: expected ${entryName(expectedEntries[entry])} observed ${entryName(observedEntries[entry])}`
-			: "entries match, call fields differ";
+			: `entries match, call fields differ: ${bounded(fields.join(","))}`;
+		const counts = fields.includes("counts")
+			? `; counts expected ${bounded(JSON.stringify(normalized(planned?.counts ?? null)))}`
+				+ ` observed ${bounded(JSON.stringify(normalized(observed?.counts ?? null)))}`
+			: "";
 		return `case ${index} (${bounded(cases[index]?.control ?? "unplanned")}) ${where}; `
-			+ `entries expected ${expectedEntries.length} observed ${observedEntries.length}; ${totals}`;
+			+ `entries expected ${expectedEntries.length} observed ${observedEntries.length}${counts}; ${totals}`;
 	}
 	return totals;
 };

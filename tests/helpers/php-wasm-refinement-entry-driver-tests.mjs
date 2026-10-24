@@ -127,18 +127,52 @@ test("graph refinement entry driver refuses trace and plan drift", async () => {
 test("entry driver names the first divergence with bounded identities and counts", async () => {
 	await assert.rejects(driver({ trace: trace.replace("LB_SUBTYPE_ENTRY_V1 enter source Probe.first\n", "") })
 		, { message: "probe entry sequence differs from its independent plan: case 0 (direct) entry 2: "
-			+ "expected source:Probe.first observed none; entries expected 3 observed 2; cases expected 1 observed 1" });
+			+ "expected source:Probe.first observed none; entries expected 3 observed 2; counts expected "
+			+ "{\"adapter\":1,\"constructor\":0,\"source\":1,\"validator\":1} observed "
+			+ "{\"adapter\":1,\"constructor\":0,\"source\":0,\"validator\":1}; cases expected 1 observed 1" });
 	const second = { ...plan.cases[0], control: "second" };
 	await assert.rejects(driver({ plan: { ...plan, cases: [plan.cases[0], second] } })
 		, { message: "probe entry sequence differs from its independent plan: case 1 (second) entry 0: "
-			+ "expected validator:Probe.first:fin_guard_0 observed none; entries expected 3 observed 0; cases expected 2 observed 1" });
+			+ "expected validator:Probe.first:fin_guard_0 observed none; entries expected 3 observed 0; counts expected "
+			+ "{\"adapter\":1,\"constructor\":0,\"source\":1,\"validator\":1} observed null; cases expected 2 observed 1" });
 	const control = "c".repeat(400);
 	const error = await driver({ plan: { ...plan, cases: [{ ...plan.cases[0], control }] }
 		, trace: trace.replace("LB_SUBTYPE_ENTRY_V1 enter source Probe.first\n", "") }).catch(value => value);
 	assert.ok(error instanceof Error);
 	assert.ok(error.message.includes(`(${"c".repeat(117)}...)`));
 	assert.ok(!error.message.includes("c".repeat(118)));
-	assert.ok(error.message.length < 400);
+	// One control, two entries and two count objects, each capped at 120 characters.
+	assert.ok(error.message.length < 900);
+	// Equal entry lengths must still expose the differing per-kind counts.
+	const doubled = trace.replace("LB_SUBTYPE_ENTRY_V1 enter adapter Probe.first\n"
+		, "LB_SUBTYPE_ENTRY_V1 enter validator Probe.first:fin_guard_0\n");
+	await assert.rejects(driver({ trace: doubled })
+		, { message: "probe entry sequence differs from its independent plan: case 0 (direct) entry 1: "
+			+ "expected adapter:Probe.first observed validator:Probe.first:fin_guard_0; entries expected 3 observed 3; "
+			+ "counts expected {\"adapter\":1,\"constructor\":0,\"source\":1,\"validator\":1} observed "
+			+ "{\"adapter\":0,\"constructor\":0,\"source\":1,\"validator\":2}; cases expected 1 observed 1" });
+});
+
+test("entry driver reports the first missing nested constructor entry", async () => {
+	const nestedSelected = [...selected
+		, { symbol: "outer", kind: "constructor", label: "Probe.outer" }
+		, { symbol: "inner", kind: "constructor", label: "Probe.inner" }];
+	const entries = [call.entries[0], { kind: "constructor", label: "Probe.outer" }
+		, { kind: "constructor", label: "Probe.inner" }, ...call.entries.slice(1)];
+	const nestedCall = { ...call, entries, counts: { ...call.counts, constructor: 2 } };
+	const nestedPlan = { ...plan, selected: nestedSelected
+		, cases: [{ ...plan.cases[0], call: nestedCall }] };
+	const outerOnly = trace.replace("enter validator Probe.first:fin_guard_0\n"
+		, "enter validator Probe.first:fin_guard_0\nLB_SUBTYPE_ENTRY_V1 enter constructor Probe.outer\n");
+	await assert.rejects(driver({ plan: nestedPlan, trace: outerOnly })
+		, { message: "probe entry sequence differs from its independent plan: case 0 (direct) entry 2: "
+			+ "expected constructor:Probe.inner observed adapter:Probe.first; entries expected 5 observed 4; counts expected "
+			+ "{\"adapter\":1,\"constructor\":2,\"source\":1,\"validator\":1} observed "
+			+ "{\"adapter\":1,\"constructor\":1,\"source\":1,\"validator\":1}; cases expected 1 observed 1" });
+	const nested = outerOnly.replace("enter constructor Probe.outer\n"
+		, "enter constructor Probe.outer\nLB_SUBTYPE_ENTRY_V1 enter constructor Probe.inner\n");
+	const { value } = await driver({ plan: nestedPlan, trace: nested });
+	assert.equal(value.entryProbe.counts.constructor, 2);
 });
 
 test("entry driver admits owned native/Lean layers while preserving refusal boundary", async () => {
