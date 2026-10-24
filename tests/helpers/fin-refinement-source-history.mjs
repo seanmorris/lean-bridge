@@ -46,6 +46,7 @@ import { beforePhpRecursiveReplaySource, phpRecursiveReplayNormalizationPaths } 
 import { beforeZeroPayloadRustReplaySource, zeroPayloadRustReplayNormalizationPaths } from "./zero-payload-rust-producer-replay-source-history.mjs";
 import { beforeCallbackProducerReplaySource, callbackProducerReplayNormalizationPaths } from "./callback-producer-replay-source-history.mjs";
 import { beforeTransferBorrowProducerReplaySource, transferBorrowProducerReplayNormalizationPaths } from "./transfer-borrow-producer-replay-source-history.mjs";
+import { beforeOwnedLifetimeReplaySource, ownedLifetimeReplayNormalizationPaths } from "./owned-lifetime-producer-replay-source-history.mjs";
 import { beforeCoreEvidenceMemoryRepairSource, coreEvidenceMemoryRepairNormalizationPaths } from "./core-evidence-memory-repair-source-history.mjs";
 import { beforeValueIndexPromotionMilestoneRepairSource, valueIndexPromotionMilestoneRepairNormalizationPaths } from "./value-index-promotion-milestone-repair-source-history.mjs";
 import { beforeCoreMilestoneReplayRepairSource, coreMilestoneReplayRepairNormalizationPaths } from "./core-milestone-replay-repair-source-history.mjs";
@@ -2139,7 +2140,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...transferBorrowProducerReplayNormalizationPaths
+	...ownedLifetimeReplayNormalizationPaths
+	, ...transferBorrowProducerReplayNormalizationPaths
 	, ...callbackProducerReplayNormalizationPaths
 	, ...zeroPayloadRustReplayNormalizationPaths
 	, ...phpRecursiveReplayNormalizationPaths
@@ -3022,7 +3024,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
 	let stage
-		= beforeTransferBorrowProducerReplaySource(path, text, expected);
+		= beforeOwnedLifetimeReplaySource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeTransferBorrowProducerReplaySource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;

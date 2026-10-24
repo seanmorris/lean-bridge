@@ -1,0 +1,246 @@
+{
+  "additions": [
+    {
+      "currentSha256": "a2b838d7ab3fdfef2294846f39d599d6fc1ef2c8f579ec086fdfe015e723fcc5",
+      "path": "tests/helpers/owned-lifetime-producer-tests.mjs"
+    },
+    {
+      "currentSha256": "563e98df0ef9c10b728505c37d0e39e02d56c3e4c08639c7bcb601a31fa06068",
+      "path": "tests/helpers/owned-lifetime-producers.mjs"
+    },
+    {
+      "currentSha256": "2fe318c2d1ab434d82e398bbdd37181b68554e0664e1999688bc4a5913563ff2",
+      "path": "tests/helpers/owned-lifetime-replay-control-tests.mjs"
+    },
+    {
+      "currentSha256": "427571b96efc398fa0aefc4f36060752642183c4bd15bd6a327a3ea12b9f485e",
+      "path": "scripts/update-owned-lifetime-producer-replay-source-history.mjs"
+    },
+    {
+      "currentSha256": "2c5faefafe6f139d2bafdfaf76fe5dbba593b671533a8e785024d91e877b4b77",
+      "path": "tests/helpers/owned-lifetime-producer-replay-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "6c97f2372d028e1f42ffcdb1a4e615c9c78c66e8abc8ebaabf163880fce8dc5d",
+      "path": "tests/helpers/owned-lifetime-producer-replay-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "dcd89cee91bdb595681cd6d482ef5df4e9e7bf21",
+  "integrationUpdates": [
+    {
+      "currentSha256": "7202451d175e75ded29dc0f9186c36be9db800d4b5393d9fcfc5b07ca91d534e",
+      "edits": [
+        {
+          "current": "import { beforeOwnedLifetimeReplaySource, ownedLifetimeReplayNormalizationPaths } from \"./owned-lifetime-producer-replay-source-history.mjs\";\n",
+          "previous": "",
+          "start": 6293
+        },
+        {
+          "current": "\t...ownedLifetimeReplayNormalizationPaths\n\t, ...transferBorrowProducerReplayNormalizationPaths\n",
+          "previous": "\t...transferBorrowProducerReplayNormalizationPaths\n",
+          "start": 179474
+        },
+        {
+          "current": "\t\t= beforeOwnedLifetimeReplaySource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeTransferBorrowProducerReplaySource(path, text, expected);\n",
+          "previous": "\t\t= beforeTransferBorrowProducerReplaySource(path, text, expected);\n",
+          "start": 221804
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "eabe8ecdd7be42a67c36571d823bc9823682a6684994fc41bfec4a398682535d"
+    },
+    {
+      "currentSha256": "d9dc0064e77f1f2dafca9553e09faac256ddd1ba556b0a1b28bc71508c755938",
+      "edits": [
+        {
+          "current": "import \"./helpers/owned-lifetime-producer-tests.mjs\";\nimport \"./helpers/owned-lifetime-replay-control-tests.mjs\";\nimport \"./helpers/owned-lifetime-producer-replay-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 3986
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "92ba91ed84b80a3644d8c8007f1ad909e7e5b22d68ad1f3d2a0f6e04d88bb5eb"
+    }
+  ],
+  "milestone": "owned-lifetime-producer-replay-source-v1",
+  "predecessorCommit": "42a3a352114d048139c16786bcf0da586ad7afee",
+  "schemaVersion": 1,
+  "scope": "Reproduce C++ borrows, Rust receivers, JVM receiver GC and WIT receivers with their exact unchanged receipt producers and authenticated module/data closures of 70, 77, 103 and 94 files. Explicitly pin the producer Git identities of omitted Boost JSON and JVM tool-options sources. Preserve fresh JVM generator selection; authenticate deferred probe reads and archived CLI files, including sparse-checkout omissions, and reject rehashed CLI forgeries. Preserve the four original wasm32-era 64-bit snapshots using their original producer and its 38-file closure, explicitly pinning omitted SPDX data. Retain current 32-bit layout checks and live implicit/explicit 64-bit output equality. Original receipt, archive, type-inventory, execution and support claims are unchanged. Full source-history/inventory replay, longer original mutation suites and complete Core verification remain hosted gates.",
+  "updates": [
+    {
+      "currentSha256": "7101717e78bf316757de4735372f7d45dd72a418ed26f3d5ceb100b5acc8e3d2",
+      "edits": [
+        {
+          "current": "import { ownedLifetimeReplay } from \"./owned-lifetime-producers.mjs\";\n",
+          "previous": "import { generateOwnedCPackage } from \"../../src/backends/c/owned-package.mjs\";\nimport { generateOwnedCppPackage } from \"../../src/backends/cpp/owned-package.mjs\";\nimport { createCompiledNativeModel } from \"../../src/build/native-graph-model.mjs\";\nimport { validatePackageSetReceipt } from \"../../src/release/package-set-receipt.mjs\";\n",
+          "start": 408
+        },
+        {
+          "current": " * @param record - Runtime and installed evidence bound to its producer sources.\n",
+          "previous": " * @param record - Runtime and installed evidence bound to the current sources.\n",
+          "start": 2338
+        },
+        {
+          "current": "\tconst { generateOwnedCPackage, generateOwnedCppPackage\n\t\t, createCompiledNativeModel, validatePackageSetReceipt }\n\t\t= await ownedLifetimeReplay(\"cppBorrow\", record.sources);\n",
+          "previous": "",
+          "start": 3112
+        }
+      ],
+      "path": "tests/helpers/owned-cpp-borrow-evidence.mjs",
+      "previousSha256": "cb871d2d28b2e37b4b038c9ec31ccb7bddbbf603c125e0550f967966d9f09a08"
+    },
+    {
+      "currentSha256": "c9d6ac719245513ccf5b04391f4b8ae9dbb77ebc1448ce30e4e033021898ae23",
+      "edits": [
+        {
+          "current": "import { ownedLifetimeReplay } from \"./owned-lifetime-producers.mjs\";\n\nconst current = Object.freeze({\n\tcreateCompiledNativeModel, generateOwnedJvmPackage, ownedJvmCallNative\n\t, ownedRustReceiverSource, readSource: path => readFile(path, \"utf8\")\n});\n\n/**\n * Keep fresh checks live while archived acceptance selects its own producer.\n *\n * @param sources - Optional historical receipt source identities.\n */\nexport const ownedJvmReceiverGcReplay = async sources => sources === undefined\n\t? current : ownedLifetimeReplay(\"jvmGc\", sources);\n",
+          "previous": "",
+          "start": 631
+        },
+        {
+          "current": " * @param replay - Optional authenticated historical generators and source reader.\n",
+          "previous": "",
+          "start": 3094
+        },
+        {
+          "current": "export const assertOwnedJvmReceiverGcExecution = async (item, replay) => {\n\tconst { createCompiledNativeModel, generateOwnedJvmPackage\n\t\t, ownedJvmCallNative, ownedRustReceiverSource, readSource }\n\t\t= replay ?? await ownedJvmReceiverGcReplay();\n",
+          "previous": "export const assertOwnedJvmReceiverGcExecution = async item => {\n",
+          "start": 3181
+        },
+        {
+          "current": "\tconst source = await readSource(\"tests/fixtures/onboarding/owned-aggregates/Owned.lean\");\n",
+          "previous": "\tconst source = await readFile(\"tests/fixtures/onboarding/owned-aggregates/Owned.lean\", \"utf8\");\n",
+          "start": 3869
+        },
+        {
+          "current": "\tassert.equal(item.javaProbeSha256, sha256(await readSource(\"tests/fixtures/structured-types/owned-jvm-receiver-gc.java\")));\n\tassert.equal(item.kotlinProbeSha256, sha256(await readSource(\"tests/fixtures/structured-types/owned-kotlin-receiver-gc.kt\")));\n",
+          "previous": "\tassert.equal(item.javaProbeSha256, sha256(await readFile(\"tests/fixtures/structured-types/owned-jvm-receiver-gc.java\")));\n\tassert.equal(item.kotlinProbeSha256, sha256(await readFile(\"tests/fixtures/structured-types/owned-kotlin-receiver-gc.kt\")));\n",
+          "start": 4886
+        },
+        {
+          "current": "\tconst replay = await ownedJvmReceiverGcReplay(record.sources);\n\tfor(const item of record.runtime) await assertOwnedJvmReceiverGcExecution(item, replay);\n",
+          "previous": "\tfor(const item of record.runtime) await assertOwnedJvmReceiverGcExecution(item);\n",
+          "start": 7628
+        }
+      ],
+      "path": "tests/helpers/owned-jvm-receiver-gc-evidence.mjs",
+      "previousSha256": "fd923460c4a2b4b087c883a6aa25a6391b6be67ec1f5c9d94173e9da2f567514"
+    },
+    {
+      "currentSha256": "ceb060749092383a4f9b7a4c1baf334fedc33a8c855de4389d0db4ae9df5c8bc",
+      "edits": [
+        {
+          "current": "import { ownedLifetimeProducers, ownedLifetimeReplay } from \"./owned-lifetime-producers.mjs\";\nimport { bytesAtProducer } from \"./producer-source.mjs\";\n",
+          "previous": "import { compiledPackageMetadata } from \"../../src/analyze/package-metadata.mjs\";\nimport { createCompiledNativeModel } from \"../../src/build/native-graph-model.mjs\";\nimport { generateOwnedCPackage } from \"../../src/backends/c/owned-package.mjs\";\nimport { generateOwnedRustCallables } from \"../../src/backends/rust/owned-callables.mjs\";\nimport { generateOwnedRustPackage } from \"../../src/backends/rust/owned-package.mjs\";\nimport { ownedRustBorrowNativeSource } from \"./owned-rust-borrow-fixture.mjs\";\nimport { ownedRustReceiverSource, ownedRustReceiverProbe, ownedRustPlainReceiverProbe } from \"./owned-rust-receiver-fixture.mjs\";\nimport { ownedRustReceiverLinker } from \"./owned-rust-receiver-fixture.mjs\";\nimport { ownedReceiverSource } from \"./owned-receiver-fixture.mjs\";\n",
+          "start": 255
+        },
+        {
+          "current": "",
+          "previous": "import { ownedPythonReceiverHistoricalBytes } from \"./owned-python-receiver-history.mjs\";\n",
+          "start": 480
+        },
+        {
+          "current": "\tconst replay = await ownedLifetimeReplay(\"rustReceiver\", record.sources);\n\tconst { compiledPackageMetadata, createCompiledNativeModel\n\t\t, generateOwnedCPackage, generateOwnedRustCallables\n\t\t, generateOwnedRustPackage, ownedRustBorrowNativeSource\n\t\t, ownedRustReceiverSource, ownedRustReceiverProbe\n\t\t, ownedRustPlainReceiverProbe, ownedRustReceiverLinker\n\t\t, ownedReceiverSource } = replay;\n",
+          "previous": "",
+          "start": 3398
+        },
+        {
+          "current": "\tconst cliConfig = JSON.parse(await replay.readSource(\"config/cli-package.v1.json\"));\n",
+          "previous": "\tconst cliConfig = JSON.parse(ownedPythonReceiverHistoricalBytes(\"config/cli-package.v1.json\", await readFile(\"config/cli-package.v1.json\"), record.sources[\"config/cli-package.v1.json\"]).toString());\n",
+          "start": 8308
+        },
+        {
+          "current": "\t\t\tassert.ok(file, path);\n\t\t\tconst bytes = bytesAtProducer(ownedLifetimeProducers.rustReceiver.revision, path, file.sha256);\n\t\t\tassert.equal(file.bytes, bytes.length, path); assert.equal(file.sha256, sha256(bytes), path);\n",
+          "previous": "\t\t\tconst bytes = Buffer.from(ownedPythonReceiverHistoricalBytes(path, await readFile(path), file.sha256));\n\t\t\tassert.ok(file, path); assert.equal(file.bytes, bytes.length); assert.equal(file.sha256, sha256(bytes), path);\n",
+          "start": 12637
+        }
+      ],
+      "path": "tests/helpers/owned-rust-receiver-evidence.mjs",
+      "previousSha256": "1513a09f8821cd664ed7a1c98b0986a92a880b62a1f712a076abdd8aee63f590"
+    },
+    {
+      "currentSha256": "f2d6091b85de2bbf711980e9c4e6bffd01b6b29b76f5c08f572a1a8bca0b02ba",
+      "edits": [
+        {
+          "current": "import { ownedLifetimeProducers, ownedLifetimeReplay } from \"./owned-lifetime-producers.mjs\";\nimport { bytesAtProducer } from \"./producer-source.mjs\";\n",
+          "previous": "import { createCompiledNativeModel } from \"../../src/build/native-graph-model.mjs\";\nimport { generateOwnedWitPackage } from \"../../src/backends/wit/owned-package.mjs\";\nimport { guardOwnedWitHostSource } from \"../../src/backends/wit/owned-host-evidence.mjs\";\nimport { ownedRustReceiverSource } from \"./owned-rust-receiver-fixture.mjs\";\nimport { ownedJvmPlainReceiverSource } from \"./owned-jvm-receiver-fixture.mjs\";\nimport { ownedReceiverMutants } from \"./owned-receiver-mutants.mjs\";\nimport { ownedWitBorrowNativeSource } from \"./wit-owned-borrow-probe.mjs\";\nimport { ownedWitBorrowMutations } from \"./wit-owned-borrow-mutants.mjs\";\nimport { ownedWitReceiverProbe } from \"./wit-owned-receiver-probe.mjs\";\nimport { ownedWitReceiverResourceProbe } from \"./wit-owned-receiver-resource-probe.mjs\";\n",
+          "start": 251
+        },
+        {
+          "current": "",
+          "previous": "import { beforeOwnedCallbackResults } from \"./owned-callback-result-history.mjs\";\n",
+          "start": 474
+        },
+        {
+          "current": "const inputModel = (replay, input, mode, kind, base, installed = false) => {\n\tconst { createCompiledNativeModel, ownedJvmPlainReceiverSource\n\t\t, ownedRustReceiverSource } = replay;\n",
+          "previous": "const inputModel = (input, mode, kind, base, installed = false) => {\n",
+          "start": 2094
+        },
+        {
+          "current": "const checkCli = async (item, replay) => {\n",
+          "previous": "const checkCli = async item => {\n",
+          "start": 4020
+        },
+        {
+          "current": "\tconst config = JSON.parse(await replay.readSource(configPath));\n",
+          "previous": "\tconst config = JSON.parse(beforeOwnedCallbackResults(configPath, await readFile(configPath, \"utf8\")));\n",
+          "start": 4746
+        },
+        {
+          "current": "\t\tassert.ok(file, path);\n\t\tconst bytes = bytesAtProducer(ownedLifetimeProducers.witReceiver.revision, path, file.sha256);\n\t\tassert.equal(file.bytes, bytes.length, path); assert.equal(file.sha256, sha256(bytes), path);\n",
+          "previous": "\t\tconst bytes = Buffer.from(beforeOwnedCallbackResults(path, await readFile(path)));\n\t\tassert.ok(file, path); assert.equal(file.bytes, bytes.length, path); assert.equal(file.sha256, sha256(bytes), path);\n",
+          "start": 5142
+        },
+        {
+          "current": "\tconst replay = await ownedLifetimeReplay(\"witReceiver\", record.sources);\n\tconst { generateOwnedWitPackage, guardOwnedWitHostSource\n\t\t, ownedReceiverMutants, ownedWitBorrowNativeSource\n\t\t, ownedWitBorrowMutations, ownedWitReceiverProbe\n\t\t, ownedWitReceiverResourceProbe } = replay;\n",
+          "previous": "",
+          "start": 8144
+        },
+        {
+          "current": "\t\tassert.deepEqual(item.native, inputModel(replay, item.input, item.mode, kind, base));\n",
+          "previous": "\t\tassert.deepEqual(item.native, inputModel(item.input, item.mode, kind, base));\n",
+          "start": 8684
+        },
+        {
+          "current": "\t\tawait checkCli(item, replay);\n\t\tassert.deepEqual(item.model, inputModel(replay, item.inputs, item.mode, kind, base, true));\n",
+          "previous": "\t\tawait checkCli(item);\n\t\tassert.deepEqual(item.model, inputModel(item.inputs, item.mode, kind, base, true));\n",
+          "start": 11228
+        }
+      ],
+      "path": "tests/helpers/wit-owned-receiver-evidence.mjs",
+      "previousSha256": "d63104d747bd2983edcad5fe9a8e82c63c64eb692cc09445f1d78cbf44240d3b"
+    },
+    {
+      "currentSha256": "21c1b1fc870336d7f362e3b884c2493be660e95c9fa23f63c23bbb4693ff51c2",
+      "edits": [
+        {
+          "current": "import { ownedLifetimeReplay } from \"./helpers/owned-lifetime-producers.mjs\";\n",
+          "previous": "",
+          "start": 874
+        },
+        {
+          "current": "test(\"wasm32 selection preserves historical and current 64-bit adapter outputs\", async () => {\n",
+          "previous": "test(\"wasm32 selection preserves all existing 64-bit owned adapters byte for byte\", async () => {\n",
+          "start": 2643
+        },
+        {
+          "current": "\tconst { sources } = JSON.parse(await readFile(\"docs/evidence/owned-wasm32-transport-20260928.json\", \"utf8\"));\n\tconst historical = await ownedLifetimeReplay(\"wasm32\", sources);\n",
+          "previous": "",
+          "start": 2772
+        },
+        {
+          "current": "\t\tconst original = historical.generateOwnedNativeValueAdapters({ ...input, hostCallbacks });\n\t\tassert.equal(sha256(canonicalJson(original)), expected[name][Number(hostCallbacks)]);\n\t\tassert.deepEqual(historical.generateOwnedNativeValueAdapters({ ...input, hostCallbacks, wordBits: 64 }), original);\n",
+          "previous": "",
+          "start": 3373
+        },
+        {
+          "current": "",
+          "previous": "\t\tassert.equal(sha256(canonicalJson(output)), expected[name][Number(hostCallbacks)]);\n",
+          "start": 3752
+        }
+      ],
+      "path": "tests/owned-wasm32-transport.test.mjs",
+      "previousSha256": "43f5980439e56960e577e4ee61f35fb53ac7c0592e7fd6f765e70355c62d9731"
+    }
+  ]
+}

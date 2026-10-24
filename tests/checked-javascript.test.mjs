@@ -60,6 +60,9 @@ import "./helpers/owned-callback-inventory-endpoint-tests.mjs";
 import "./helpers/callback-producer-replay-source-history-tests.mjs";
 import "./helpers/owned-transfer-borrow-producer-tests.mjs";
 import "./helpers/transfer-borrow-producer-replay-source-history-tests.mjs";
+import "./helpers/owned-lifetime-producer-tests.mjs";
+import "./helpers/owned-lifetime-replay-control-tests.mjs";
+import "./helpers/owned-lifetime-producer-replay-source-history-tests.mjs";
 
 const root = resolve(".");
 
