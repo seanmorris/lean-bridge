@@ -1,0 +1,223 @@
+{
+  "additions": [
+    {
+      "currentSha256": "971b96b96ca03140f337d55c9d2f2d5c9e93066ca6bff2fd8a760cd1459eb63e",
+      "path": "docs/evidence/generic-subtype-promotion-baseline-20261024.json"
+    },
+    {
+      "currentSha256": "5988a04864865bffe4ccaf57ad6504cccb0ca406d576d030af59b08647391100",
+      "path": "tests/helpers/generic-subtype-promotion-baseline-tests.mjs"
+    },
+    {
+      "currentSha256": "f2c2428b04a597240d2aa2c8afbb7d4978c45a8e3967a4950d9aec2db1476e9a",
+      "path": "tests/helpers/generic-subtype-promotion-baseline.mjs"
+    },
+    {
+      "currentSha256": "2a87d3a8dbc073d020e45409c12b36efa3f7ae1e494ebc62493b51db202636ff",
+      "path": "tests/helpers/source-history-stream-tests.mjs"
+    },
+    {
+      "currentSha256": "da2e3499619860e20d5376e01fded60396eeb8aadae08289012f453c2306d670",
+      "path": "tests/helpers/source-history-stream.mjs"
+    },
+    {
+      "currentSha256": "3656aa8848a1d53384045488d230b94c871e359e9d834811cfe55188fc8e041f",
+      "path": "scripts/update-generic-subtype-promotion-baseline-source-history.mjs"
+    },
+    {
+      "currentSha256": "248feefd2c0e557dca47550695269d37d8d36d13b46f889e0fde66e14bbd83c7",
+      "path": "tests/helpers/generic-subtype-promotion-baseline-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "8b26c46a7ecc3c93186b8628d4398b54f930a403b470fc6aa39213c41f7bf9f8",
+      "path": "tests/helpers/generic-subtype-promotion-baseline-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "9042222ccb2dc3726b2869c5ca067d605e0ef854",
+  "implementationCommits": [
+    "9042222ccb2dc3726b2869c5ca067d605e0ef854"
+  ],
+  "integrationBaseCommit": "9042222ccb2dc3726b2869c5ca067d605e0ef854",
+  "integrationUpdates": [
+    {
+      "currentSha256": "3ac5d9e205bf72a5c83eb7cfae51b2da8ce5dc8b64e29695eec18ec7f2bbf5ea",
+      "edits": [
+        {
+          "current": "import { beforeGenericSubtypePromotionBaselineSource, genericSubtypePromotionBaselineNormalizationPaths } from \"./generic-subtype-promotion-baseline-source-history.mjs\";\n",
+          "previous": "",
+          "start": 9292
+        },
+        {
+          "current": "\t...genericSubtypePromotionBaselineNormalizationPaths\n\t, ...genericSubtypePromotionTransactionNormalizationPaths\n",
+          "previous": "\t...genericSubtypePromotionTransactionNormalizationPaths\n",
+          "start": 182501
+        },
+        {
+          "current": "\tlet stage = beforeGenericSubtypePromotionBaselineSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeGenericSubtypePromotionTransactionSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeGenericSubtypePromotionTransactionSource(path, text, expected);\n",
+          "start": 225814
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "e77c9c6e1029f6e7083b90706bd913a76b4f551342f229adecc781dba900884c"
+    },
+    {
+      "currentSha256": "de2cf0e8b0290523f09db23c96028d0dee31fb94265f71279d84124683e8bc62",
+      "edits": [
+        {
+          "current": "import \"./helpers/generic-subtype-promotion-baseline-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 6262
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "df04f81726e907daf62f08fe856188cc1d7299bcbd59384b8e3fff372e580929"
+    }
+  ],
+  "milestone": "generic-subtype-promotion-baseline-source-v1",
+  "predecessorCommit": "ecdc51a2ca463ad812080d11e8230fc66111d105",
+  "schemaVersion": 1,
+  "scope": "Authenticate pre-promotion inventory, independent contracts and fourteen guide inputs at immutable commit6d5f926 while continuing to execute the current promotion and renderers. Capture generic Git history transitions with bounded streamed source spans, complete endpoint hashes and inverse verification; test Unicode, EOF, sparse large sources, child failures and forged transitions. Link independent dependent checked-record composition to VO #1481 without inferring dependent Subtype coverage. Refresh exactly eleven testing-document hashes and preserve every other inventory byte. This prepares actual generic promotion; no supported cell or hosted archive is changed.",
+  "updates": [
+    {
+      "currentSha256": "6c2a08fc10f0a4f3412eb487897aa86fe2e5fd0e99c6319adfd6a688b1819dff",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"846994037538135be94a0a81e5fca69f0a7ff30b5e7dc6a0a3e514a8e7afd525\"\n",
+          "previous": "          \"sha256\": \"e2d4d6d1fe835604ded0c4bc1a047cabd3679bcecc0626adcf94dbcdb4f4be99\"\n",
+          "start": 1167697
+        },
+        {
+          "current": "          \"sha256\": \"846994037538135be94a0a81e5fca69f0a7ff30b5e7dc6a0a3e514a8e7afd525\"\n",
+          "previous": "          \"sha256\": \"e2d4d6d1fe835604ded0c4bc1a047cabd3679bcecc0626adcf94dbcdb4f4be99\"\n",
+          "start": 1177811
+        },
+        {
+          "current": "          \"sha256\": \"846994037538135be94a0a81e5fca69f0a7ff30b5e7dc6a0a3e514a8e7afd525\"\n",
+          "previous": "          \"sha256\": \"e2d4d6d1fe835604ded0c4bc1a047cabd3679bcecc0626adcf94dbcdb4f4be99\"\n",
+          "start": 1189747
+        },
+        {
+          "current": "          \"sha256\": \"846994037538135be94a0a81e5fca69f0a7ff30b5e7dc6a0a3e514a8e7afd525\"\n",
+          "previous": "          \"sha256\": \"e2d4d6d1fe835604ded0c4bc1a047cabd3679bcecc0626adcf94dbcdb4f4be99\"\n",
+          "start": 1222308
+        },
+        {
+          "current": "          \"sha256\": \"846994037538135be94a0a81e5fca69f0a7ff30b5e7dc6a0a3e514a8e7afd525\"\n",
+          "previous": "          \"sha256\": \"e2d4d6d1fe835604ded0c4bc1a047cabd3679bcecc0626adcf94dbcdb4f4be99\"\n",
+          "start": 1252587
+        },
+        {
+          "current": "          \"sha256\": \"846994037538135be94a0a81e5fca69f0a7ff30b5e7dc6a0a3e514a8e7afd525\"\n",
+          "previous": "          \"sha256\": \"e2d4d6d1fe835604ded0c4bc1a047cabd3679bcecc0626adcf94dbcdb4f4be99\"\n",
+          "start": 1285738
+        },
+        {
+          "current": "          \"sha256\": \"846994037538135be94a0a81e5fca69f0a7ff30b5e7dc6a0a3e514a8e7afd525\"\n",
+          "previous": "          \"sha256\": \"e2d4d6d1fe835604ded0c4bc1a047cabd3679bcecc0626adcf94dbcdb4f4be99\"\n",
+          "start": 1325841
+        },
+        {
+          "current": "          \"sha256\": \"846994037538135be94a0a81e5fca69f0a7ff30b5e7dc6a0a3e514a8e7afd525\"\n",
+          "previous": "          \"sha256\": \"e2d4d6d1fe835604ded0c4bc1a047cabd3679bcecc0626adcf94dbcdb4f4be99\"\n",
+          "start": 1352261
+        },
+        {
+          "current": "          \"sha256\": \"846994037538135be94a0a81e5fca69f0a7ff30b5e7dc6a0a3e514a8e7afd525\"\n",
+          "previous": "          \"sha256\": \"e2d4d6d1fe835604ded0c4bc1a047cabd3679bcecc0626adcf94dbcdb4f4be99\"\n",
+          "start": 1374941
+        },
+        {
+          "current": "          \"sha256\": \"846994037538135be94a0a81e5fca69f0a7ff30b5e7dc6a0a3e514a8e7afd525\"\n",
+          "previous": "          \"sha256\": \"e2d4d6d1fe835604ded0c4bc1a047cabd3679bcecc0626adcf94dbcdb4f4be99\"\n",
+          "start": 1394608
+        },
+        {
+          "current": "          \"sha256\": \"846994037538135be94a0a81e5fca69f0a7ff30b5e7dc6a0a3e514a8e7afd525\"\n",
+          "previous": "          \"sha256\": \"e2d4d6d1fe835604ded0c4bc1a047cabd3679bcecc0626adcf94dbcdb4f4be99\"\n",
+          "start": 1417696
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "27ec707f67caf68401d3843ecb00fb5c3e8165f7463cd3d12924de248846a43f"
+    },
+    {
+      "currentSha256": "846994037538135be94a0a81e5fca69f0a7ff30b5e7dc6a0a3e514a8e7afd525",
+      "edits": [
+        {
+          "current": "\nPromotion regressions use the authenticated pre-promotion inventory, schemas\nand fourteen documentation pages recorded in\n`docs/evidence/generic-subtype-promotion-baseline-20261024.json`. They read those\ninputs from an immutable Git commit and run the current promotion and rendering\ncode against them. This keeps the regressions valid after the public inventory\nhas been promoted; it does not replace current-code tests with old code.\n\n`tests/helpers/source-history-stream.mjs` records full inventory transitions\nwithout loading entire predecessor/current blobs. It captures only the changed\nline spans, retains the ledger's character offsets, hashes both complete Git\nobjects, and authenticates a streamed inverse against the predecessor digest.\nMalformed UTF-8, wrong identities, duplicate or overlapping edits, changes\noutside the recorded spans, missing Git objects and edit-budget overruns fail.\n\n```sh\nnode --test tests/helpers/generic-subtype-promotion-baseline-tests.mjs\nnode --test tests/helpers/source-history-stream-tests.mjs\n```\n",
+          "previous": "",
+          "start": 251216
+        }
+      ],
+      "path": "docs/contributing/testing.md",
+      "previousSha256": "e2d4d6d1fe835604ded0c4bc1a047cabd3679bcecc0626adcf94dbcdb4f4be99"
+    },
+    {
+      "currentSha256": "df04f81726e907daf62f08fe856188cc1d7299bcbd59384b8e3fff372e580929",
+      "edits": [
+        {
+          "current": "import \"./helpers/generic-subtype-promotion-baseline-tests.mjs\";\nimport \"./helpers/source-history-stream-tests.mjs\";\n",
+          "previous": "",
+          "start": 6145
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "d1acb629771894e17bf4132a6cd5ddddd77aa151708c4ecfdd40744517ac8f25"
+    },
+    {
+      "currentSha256": "e58287bc854b2b75dabeb1dcf31090f2413e2a35ebb44291694aeadd12cb14a4",
+      "edits": [
+        {
+          "current": "import { existsSync } from \"node:fs\";\n",
+          "previous": "import { createReadStream, existsSync } from \"node:fs\";\nimport { readFile } from \"node:fs/promises\";\n",
+          "start": 139
+        },
+        {
+          "current": "",
+          "previous": "import { readPromotionInventory } from \"./type-surface-promotion-io.mjs\";\n",
+          "start": 750
+        },
+        {
+          "current": "import {\n\tgenericSubtypePromotionBaselineText, genericSubtypePromotionBaselineInventory\n\t, genericSubtypePromotionBaselineDocumentation\n} from \"./generic-subtype-promotion-baseline.mjs\";\n",
+          "previous": "",
+          "start": 836
+        },
+        {
+          "current": "const readJson = async path => JSON.parse(await genericSubtypePromotionBaselineText(path));\n",
+          "previous": "const readJson = async path => JSON.parse(await readFile(path, \"utf8\"));\n",
+          "start": 1024
+        },
+        {
+          "current": "const readDocument = async () => inventory ??= await genericSubtypePromotionBaselineInventory(contracts);\n",
+          "previous": "const readDocument = async () => (inventory ??= await readPromotionInventory(\n\tcreateReadStream(\"docs/type-surface.v1.json\"), contracts)).document;\n",
+          "start": 1316
+        },
+        {
+          "current": "\tassert.match(summary, /\\[acceptance record\\]\\(dependent-checked-record-promotion\\.md\\).*VO #1481/u);\n\tassert.match(summary, /does not establish installed support for dependent Subtype fields/u);\n",
+          "previous": "",
+          "start": 6665
+        },
+        {
+          "current": "const documentationSources = await genericSubtypePromotionBaselineDocumentation();\n",
+          "previous": "const documentationSources = Object.fromEntries(await Promise.all(Object.entries(\n\tgenericSubtypeDocumentationPaths\n).map(async ([name, path]) => [name, await readFile(path, \"utf8\")])));\n",
+          "start": 7040
+        }
+      ],
+      "path": "tests/helpers/generic-subtype-promotion-tests.mjs",
+      "previousSha256": "f3d9e2a33525892497ee54eaef9c8315bd0c16eebdb3143abf2eba78d63d66ac"
+    },
+    {
+      "currentSha256": "c9edede32966106123683756a2d7111b610226568db9040b6c257a0807a8e662",
+      "edits": [
+        {
+          "current": "\nDependent checked-record composition has its own [acceptance record](dependent-checked-record-promotion.md) and completion gate (VO #1481). That separate matrix does not establish installed support for dependent Subtype fields.\n",
+          "previous": "",
+          "start": 14056
+        }
+      ],
+      "path": "tests/helpers/generic-subtype-promotion.mjs",
+      "previousSha256": "2b55e10555ea06dd2015c9804d1d7c70b8076e92e845eafda662af2a9a7a4a7c"
+    }
+  ]
+}

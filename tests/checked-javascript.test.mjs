@@ -93,6 +93,7 @@ import "./helpers/promotion-file-transaction-tests.mjs";
 import "./helpers/generic-subtype-promotion-transaction-source-history-tests.mjs";
 import "./helpers/generic-subtype-promotion-baseline-tests.mjs";
 import "./helpers/source-history-stream-tests.mjs";
+import "./helpers/generic-subtype-promotion-baseline-source-history-tests.mjs";
 
 const root = resolve(".");
 
