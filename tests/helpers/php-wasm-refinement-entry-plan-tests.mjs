@@ -321,3 +321,14 @@ test("module-initialized authored entries leave the per-call trace", async () =>
 	]) assert.throws(() => phpWasmRefinementEntryPlan(family, selection.selected, selection.generated.leanSource
 		, { globalDefinitions: globals }));
 });
+
+test("nominal result-only calls follow the compiled shared-result sequence", async () => {
+	const value = await plan("nominal-result-only");
+	const repeated = value.cases.find(item => item.control === "repeated-result");
+	assert.deepEqual(labels(repeated).filter(item => !item.startsWith("validator:")), [
+		"adapter:NominalPrimitiveSubtypes.producePair"
+		, "source:NominalPrimitiveSubtypes.producePair"
+		, "source:NominalPrimitiveSubtypes.produceGroup"
+		, "source:NominalPrimitiveSubtypes.produce"
+	]);
+});
