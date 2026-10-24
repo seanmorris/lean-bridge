@@ -9,13 +9,13 @@ import { execFileSync } from "node:child_process";
 import { isAbsolute, posix } from "node:path";
 import { hashBindingIr } from "../../src/binding-ir/canonical.mjs";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
-import { generateCopiedPhpPackage } from "../../src/backends/php/copied-values.mjs";
 import { reviewedContractDifference } from "../../src/analyze/reviewed-source.mjs";
 import {
 	zeroPayloadPhpCallerArgs, zeroPayloadPhpRoutes
 	, zeroPayloadPhpSelection, parseZeroPayloadPhpResult
 } from "./zero-payload-checked-record-php-fixture.mjs";
 import { assertNominalSubtypePhpToolRecords } from "./nominal-subtype-php-tool-records.mjs";
+import { moduleAtProducerWithSourceReads } from "./producer-module.mjs";
 
 /**
  * Return the exact installed test name for one closed route.
@@ -215,6 +215,10 @@ export const checkZeroPayloadPhpReport = async (read, {
 	for(const path of packaged.retained)
 		assert.deepEqual(memberIdentity(await read(`package/${path}`)), packaged.files[path], `Retained package member: ${path}`);
 	const firstModel = JSON.parse(await read("build-0/model.json"));
+	// Package sources are regenerated with the producer's generator, never a later one.
+	const { generateCopiedPhpPackage } = await moduleAtProducerWithSourceReads(
+		producerCommit, "src/backends/php/copied-values.mjs"
+	);
 	for(const [path, source] of Object.entries(generateCopiedPhpPackage(firstModel.bindingIr, packaged.evidence)))
 		assert.equal((await read(`package/${path}`)).toString(), source, path);
 	const caller = sourceAt(producerCommit, "tests/fixtures/zero-payload-checked-record-php/php.php").toString();
