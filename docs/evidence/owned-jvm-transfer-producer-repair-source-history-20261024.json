@@ -1,0 +1,144 @@
+{
+  "additions": [
+    {
+      "currentSha256": "0b89eae4b0ac9fc48f4e95d6568df6edb361d5036dee37de075ea7ec6679d6cb",
+      "path": "scripts/update-owned-jvm-transfer-producer-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "b876b48d1ba1044a5464050ecbb5cde9abcbc204d664309109cf206d292c3dc8",
+      "path": "tests/helpers/owned-jvm-transfer-producer-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "fd7bf543fe61108b5bae7d2fb416f6f6952f54e62010715794afaf33b985f37b",
+      "path": "tests/helpers/owned-jvm-transfer-producer-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "3c296f8780786e958a36facc0c70ae6522605069",
+  "integrationBaseCommit": "960dd7ad7e101f596f768efd22cede5f9933be39",
+  "integrationUpdates": [
+    {
+      "currentSha256": "73b7745641056f3b0ac27a34c534424f9dce992de23ecf2e19d8ffea3e2b470c",
+      "edits": [
+        {
+          "current": "import { beforeOwnedJvmTransferProducerRepairSource, ownedJvmTransferProducerRepairNormalizationPaths } from \"./owned-jvm-transfer-producer-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 1789
+        },
+        {
+          "current": "\t...ownedJvmTransferProducerRepairNormalizationPaths\n\t, ...perlCallbackAdmissionRepairNormalizationPaths\n",
+          "previous": "\t...perlCallbackAdmissionRepairNormalizationPaths\n",
+          "start": 174996
+        },
+        {
+          "current": "\t\t= beforeOwnedJvmTransferProducerRepairSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "",
+          "start": 215865
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "268df23465d94602e61d4feedd666de87acab770828bbc701111b2da4184e428"
+    },
+    {
+      "currentSha256": "3339c9f9242a319eeb373a4a54c35ef237951b545bc8f606d1df1a307a58d049",
+      "edits": [
+        {
+          "current": "import \"./helpers/owned-jvm-transfer-producer-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 1179
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "b844cd22d129298db983962375f1a47950c43b96b3a2086bf33d7a63b8c9ceaf"
+    }
+  ],
+  "milestone": "owned-jvm-transfer-producer-repair-source-v1",
+  "predecessorCommit": "0074a334129841c4a287312a9f3353cc4332b4bb",
+  "schemaVersion": 1,
+  "scope": "Recheck frozen Java/Kotlin owned-transfer evidence with its authenticated producer source, generator, and deferred-read closure. Preserve all recorded digests, installed observations, transferred ownership assertions, tamper controls, and live CI gates. No inventory or support changes.",
+  "updates": [
+    {
+      "currentSha256": "35c951fa343101bdd091e40f8eb15eaf647d57cbd3c56ad0845fd5d97a231118",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { readFile } from \"node:fs/promises\";\n",
+          "start": 240
+        },
+        {
+          "current": "",
+          "previous": "import { ownedBorrowHistoricalBytes } from \"./owned-borrow-history.mjs\";\nimport { generateOwnedCPackage } from \"../../src/backends/c/owned-package.mjs\";\n",
+          "start": 346
+        },
+        {
+          "current": "import { moduleAtProducerWithSourceReads } from \"./producer-module.mjs\";\nimport { bytesAtProducer, sourceAtProducer } from \"./producer-source.mjs\";\n",
+          "previous": "import { generateOwnedJvmCalls } from \"../../src/backends/jvm/owned-calls.mjs\";\nimport { generateOwnedJvmPackage } from \"../../src/backends/jvm/owned-package.mjs\";\nimport { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from \"../../src/build/native-graph-model.mjs\";\nimport { ownedJvmAdapterSources } from \"../../src/build/owned-jvm-artifacts.mjs\";\nimport { validateKotlinCompilation } from \"../../src/build/compile-jvm-sources.mjs\";\nimport { validatePackageSetReceipt } from \"../../src/release/package-set-receipt.mjs\";\nimport { ownedJvmCallNative, ownedJvmCallProbeMethods } from \"./owned-jvm-call-fixture.mjs\";\nimport { ownedJvmTransferInstalledFixture } from \"./owned-jvm-transfer-installed.mjs\";\nimport { ownedRustTransferSource } from \"./owned-rust-transfer-fixture.mjs\";\n",
+          "start": 475
+        },
+        {
+          "current": "/** The commit whose complete source tree every digest in the Java/Kotlin transfer record names. */\nexport const ownedJvmTransferProducer = \"9591a41dd71d74db92a614cbfa352a712359945c\";\nlet producerPromise;\nconst producerModules = () => producerPromise ??= Promise.all([\n\t\"src/backends/c/owned-package.mjs\"\n\t, \"src/backends/jvm/owned-calls.mjs\"\n\t, \"src/backends/jvm/owned-package.mjs\"\n\t, \"src/build/native-graph-model.mjs\"\n\t, \"src/build/owned-jvm-artifacts.mjs\"\n\t, \"src/build/compile-jvm-sources.mjs\"\n\t, \"src/release/package-set-receipt.mjs\"\n\t, \"tests/helpers/owned-jvm-call-fixture.mjs\"\n\t, \"tests/helpers/owned-jvm-transfer-installed.mjs\"\n\t, \"tests/helpers/owned-rust-transfer-fixture.mjs\"\n].map(path => moduleAtProducerWithSourceReads(ownedJvmTransferProducer, path)))\n\t.then(modules => Object.assign({}, ...modules));\nconst historical = path => sourceAtProducer(ownedJvmTransferProducer, path);\n",
+          "previous": "",
+          "start": 1568
+        },
+        {
+          "current": "\tconst {\n\t\tgenerateOwnedCPackage, generateOwnedJvmCalls, generateOwnedJvmPackage\n\t\t, createCompiledNativeModel, generateCompiledNativeLeanAdapters\n\t\t, ownedJvmAdapterSources, validateKotlinCompilation, validatePackageSetReceipt\n\t\t, ownedJvmCallNative, ownedJvmCallProbeMethods\n\t\t, ownedJvmTransferInstalledFixture, ownedRustTransferSource\n\t} = await producerModules();\n\tconst lean = historical(\"tests/fixtures/onboarding/owned-aggregates/Owned.lean\") + ownedRustTransferSource;\n",
+          "previous": "\tconst lean = await readFile(\"tests/fixtures/onboarding/owned-aggregates/Owned.lean\", \"utf8\") + ownedRustTransferSource;\n",
+          "start": 3939
+        },
+        {
+          "current": "\t\tassert.equal(sha256(bytesAtProducer(ownedJvmTransferProducer, extractor)), expectedExtractor);\n",
+          "previous": "\t\tassert.equal(sha256(ownedBorrowHistoricalBytes(extractor, await readFile(extractor), expectedExtractor)), expectedExtractor);\n",
+          "start": 4815
+        },
+        {
+          "current": "\t\t\t\tconst source = historical(\"tests/fixtures/structured-types/\" + file);\n",
+          "previous": "\t\t\t\tconst source = await readFile(\"tests/fixtures/structured-types/\" + file, \"utf8\");\n",
+          "start": 6057
+        },
+        {
+          "current": "\t\tassert.equal(inspection.probeSha256, sha256(bytesAtProducer(ownedJvmTransferProducer, \"tests/fixtures/structured-types/OwnedInstalledAssetsProbe.java\")));\n",
+          "previous": "\t\tassert.equal(inspection.probeSha256, sha256(await readFile(\"tests/fixtures/structured-types/OwnedInstalledAssetsProbe.java\")));\n",
+          "start": 17705
+        }
+      ],
+      "path": "tests/helpers/owned-jvm-transfer-evidence.mjs",
+      "previousSha256": "3651967aa397a83ba3d000c332c4c70f2e44b537cb4d599390e30a7b516ce712"
+    },
+    {
+      "currentSha256": "d4d382b104720a03ceb381e3c6ba6a026ccfe785a3576dccc641060bce33a546",
+      "edits": [
+        {
+          "current": "import { beforeOwnedPerlTransfer } from \"./helpers/owned-perl-transfer-history.mjs\";\nimport { assertOwnedJvmTransferExecution, assertOwnedJvmTransferCi, ownedJvmTransferProducer } from \"./helpers/owned-jvm-transfer-evidence.mjs\";\n",
+          "previous": "import { beforeOwnedPerlTransfer, ownedPerlTransferHistoricalBytes } from \"./helpers/owned-perl-transfer-history.mjs\";\nimport { assertOwnedJvmTransferExecution, assertOwnedJvmTransferCi } from \"./helpers/owned-jvm-transfer-evidence.mjs\";\n",
+          "start": 271
+        },
+        {
+          "current": "import { bytesAtProducer, sourceAtProducer } from \"./helpers/producer-source.mjs\";\n",
+          "previous": "",
+          "start": 784
+        },
+        {
+          "current": "\t// Every recorded digest names the producer tree; later owned and Fin layers never reach back this far.\n\tfor(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(bytesAtProducer(ownedJvmTransferProducer, path)), digest, path);\n",
+          "previous": "\tfor(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(ownedPerlTransferHistoricalBytes(path, await readFile(path), digest)), digest, path);\n",
+          "start": 1621
+        },
+        {
+          "current": "\t\tconst current = sourceAtProducer(ownedJvmTransferProducer, update.path, update.currentSha256), prior = beforeOwnedJvmTransfer(update.path, current, update.previousSha256);\n",
+          "previous": "\t\tconst current = beforeOwnedPerlTransfer(update.path, await readFile(update.path, \"utf8\")), prior = beforeOwnedJvmTransfer(update.path, current);\n",
+          "start": 2141
+        },
+        {
+          "current": "\t\tassert.equal(beforeOwnedJvmTransfer(update.path, prior, update.previousSha256), prior);\n",
+          "previous": "\t\tassert.equal(beforeOwnedJvmTransfer(update.path, prior), prior);\n",
+          "start": 2369
+        },
+        {
+          "current": "\tconst path = \"docs/type-surface.v1.json\", current = sourceAtProducer(ownedJvmTransferProducer, path, record.sources[path]);\n\tconst previousIndex = JSON.parse(beforeOwnedJvmTransfer(path, current, record.updates.find(update => update.path === path)?.previousSha256));\n\tfor(const evidence of previousIndex.evidence) for(const file of evidence.files) file.sha256 = record.sources[file.path] ?? sha256(bytesAtProducer(ownedJvmTransferProducer, file.path));\n",
+          "previous": "\tconst current = beforeOwnedPerlTransfer(\"docs/type-surface.v1.json\", await readFile(\"docs/type-surface.v1.json\", \"utf8\"));\n\tconst previousIndex = JSON.parse(beforeOwnedJvmTransfer(\"docs/type-surface.v1.json\", current));\n\tfor(const evidence of previousIndex.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedPerlTransferHistoricalBytes(file.path, await readFile(file.path)));\n",
+          "start": 2555
+        }
+      ],
+      "path": "tests/owned-jvm-transfer-evidence.test.mjs",
+      "previousSha256": "37c2fb9f35b9613289a711a04fc9673dc0cd571d75d7e4b68b7dbb51671fc4f3"
+    }
+  ]
+}
