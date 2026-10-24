@@ -35,6 +35,8 @@ export const ownedDotnetProcessScope = {
 	, transferredInputs: false, anchoredResults: false
 	, wasm: false, promotedCells: 0
 };
+/** The commit whose complete source tree every digest in the process-origin record names. */
+export const ownedDotnetProcessProducer = "6e73096a2e309bca71106924a5276e0a2ddb0c8c";
 const json = async path => JSON.parse(await readFile(path, "utf8"));
 const digest = value => assert.match(value, /^[a-f0-9]{64}$/u);
 
@@ -174,7 +176,7 @@ export const assertOwnedDotnetProcess = async (record, replay = true) => {
 		assert.doesNotMatch(run.text, /^not ok/mu);
 	}
 	await coldExecution(record.coexistence.coldLoading, record.coexistence);
-	await assertOwnedDotnetReports(record);
+	await assertOwnedDotnetReports(record, ownedDotnetProcessProducer);
 	assert.equal(record.inventory.promoted, 0);
 	assert.deepEqual(record.inventory, previous.inventory);
 	const { irSchema, consumers } = await readTypeSurface(), contracts = { irSchema, consumers };
