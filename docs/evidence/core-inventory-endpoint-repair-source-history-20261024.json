@@ -1,0 +1,586 @@
+{
+  "additions": [
+    {
+      "currentSha256": "6eec3f1868ef4ee3259fa418438d37ce304dbb374bdd5fbfa57969e654c95d1e",
+      "path": "tests/helpers/core-inventory-endpoint-tests.mjs"
+    },
+    {
+      "currentSha256": "7383045b2bf7554e1a141941d76fc3d6f97a0d8d3cd433ea230287b080aafeaf",
+      "path": "scripts/update-core-inventory-endpoint-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "cf7b4c1540c52b8ccf03265531031c6ddd75ac41e23ec75f48fe6daa05a8c9e9",
+      "path": "tests/helpers/core-inventory-endpoint-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "a933770de4457353c115b724e51cc768b03faa274dbc2a997b7bab50fdeedd2f",
+      "path": "tests/helpers/core-inventory-endpoint-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "ea5dff93ce189cf2f9f343f1ace2a7e7e0edce2b",
+  "implementationCommits": [
+    "ea5dff93ce189cf2f9f343f1ace2a7e7e0edce2b"
+  ],
+  "integrationBaseCommit": "ea5dff93ce189cf2f9f343f1ace2a7e7e0edce2b",
+  "integrationUpdates": [
+    {
+      "currentSha256": "40b0127f28b8f6f6f55f7b99d6d50bce317537e0119ea0ed9507fb925ffb5597",
+      "edits": [
+        {
+          "current": "import { beforeCoreInventoryEndpointRepairSource, coreInventoryEndpointRepairNormalizationPaths } from \"./core-inventory-endpoint-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 6747
+        },
+        {
+          "current": "\t...coreInventoryEndpointRepairNormalizationPaths\n\t, ...ownedNpmCiEnvironmentRepairNormalizationPaths\n",
+          "previous": "\t...ownedNpmCiEnvironmentRepairNormalizationPaths\n",
+          "start": 179944
+        },
+        {
+          "current": "\t\t= beforeCoreInventoryEndpointRepairSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeOwnedNpmCiEnvironmentRepairSource(path, text, expected);\n",
+          "previous": "\t\t= beforeOwnedNpmCiEnvironmentRepairSource(path, text, expected);\n",
+          "start": 222428
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "daf6ce9bc3d99dcc8f7d8016cb2834bacb993203557255044bc778ae14e66dc2"
+    },
+    {
+      "currentSha256": "cedb0a8550ff10374616b838e3c4be4523998a13f40b1efe088462661e12e8ec",
+      "edits": [
+        {
+          "current": "import \"./helpers/core-inventory-endpoint-tests.mjs\";\nimport \"./helpers/core-inventory-endpoint-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 4328
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "c5df9ee75a27e26ae6b36000fea8034a268f0d3c588d280f4eab7c4edea156c9"
+    }
+  ],
+  "milestone": "core-inventory-endpoint-repair-source-v1",
+  "predecessorCommit": "4054ef148ec14c4bc9b557dfe2fb4de464e09cee",
+  "schemaVersion": 1,
+  "scope": "Require explicit current and predecessor identities at 70 historical reads, including C++ byte-reader forwarding. Authenticate 18 unchanged original Git-backed inventory snapshots; retain the full hosted source, installation, mutation and support-preservation tests. Check the original nested C# and native copied-position documentation against authenticated milestone pages while keeping live prose, links and conversion checks. Refresh exactly 11 live source pins and preserve every other inventory byte. No original receipt, archive, runtime implementation, support cell or installed acceptance claim changes. Full historical acceptance remains a hosted gate.",
+  "updates": [
+    {
+      "currentSha256": "b6b464080762c46c3ccd644451022f09911803fa59064956539913a9f7a36a7a",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"78fe1ccfbac2c304fdbb5dba37af6510753fa09373a4bc767fe3f0fc06cd43cd\"\n",
+          "previous": "          \"sha256\": \"6cd3a75ef38b81e04bef4674e1460c64a453afebbe0a8407c541d51e8068c921\"\n",
+          "start": 1160855
+        },
+        {
+          "current": "          \"sha256\": \"78fe1ccfbac2c304fdbb5dba37af6510753fa09373a4bc767fe3f0fc06cd43cd\"\n",
+          "previous": "          \"sha256\": \"6cd3a75ef38b81e04bef4674e1460c64a453afebbe0a8407c541d51e8068c921\"\n",
+          "start": 1171596
+        },
+        {
+          "current": "          \"sha256\": \"78fe1ccfbac2c304fdbb5dba37af6510753fa09373a4bc767fe3f0fc06cd43cd\"\n",
+          "previous": "          \"sha256\": \"6cd3a75ef38b81e04bef4674e1460c64a453afebbe0a8407c541d51e8068c921\"\n",
+          "start": 1407345
+        },
+        {
+          "current": "          \"sha256\": \"b30d624382ae6f551a8f69285de1ea46baeecd32105ebd1f9bbb1d154d464822\"\n",
+          "previous": "          \"sha256\": \"2dc76d318767515898954e9c6db523c695ae41fbc738295eb79af2c3b8999ae0\"\n",
+          "start": 10812161
+        },
+        {
+          "current": "          \"sha256\": \"b30d624382ae6f551a8f69285de1ea46baeecd32105ebd1f9bbb1d154d464822\"\n",
+          "previous": "          \"sha256\": \"2dc76d318767515898954e9c6db523c695ae41fbc738295eb79af2c3b8999ae0\"\n",
+          "start": 10952370
+        },
+        {
+          "current": "          \"sha256\": \"b30d624382ae6f551a8f69285de1ea46baeecd32105ebd1f9bbb1d154d464822\"\n",
+          "previous": "          \"sha256\": \"2dc76d318767515898954e9c6db523c695ae41fbc738295eb79af2c3b8999ae0\"\n",
+          "start": 11092929
+        },
+        {
+          "current": "          \"sha256\": \"b30d624382ae6f551a8f69285de1ea46baeecd32105ebd1f9bbb1d154d464822\"\n",
+          "previous": "          \"sha256\": \"2dc76d318767515898954e9c6db523c695ae41fbc738295eb79af2c3b8999ae0\"\n",
+          "start": 11233600
+        },
+        {
+          "current": "          \"sha256\": \"bf30a67e555c97cc878023d3f95cce69cc80cdc4d9f98e6fc71b95768506a2a0\"\n",
+          "previous": "          \"sha256\": \"bc0820ef0d792db1ee820f6883860d0fed2b393856b6617b72f8866592eeb034\"\n",
+          "start": 11375204
+        },
+        {
+          "current": "          \"sha256\": \"bf30a67e555c97cc878023d3f95cce69cc80cdc4d9f98e6fc71b95768506a2a0\"\n",
+          "previous": "          \"sha256\": \"bc0820ef0d792db1ee820f6883860d0fed2b393856b6617b72f8866592eeb034\"\n",
+          "start": 11525561
+        },
+        {
+          "current": "          \"sha256\": \"bf30a67e555c97cc878023d3f95cce69cc80cdc4d9f98e6fc71b95768506a2a0\"\n",
+          "previous": "          \"sha256\": \"bc0820ef0d792db1ee820f6883860d0fed2b393856b6617b72f8866592eeb034\"\n",
+          "start": 11676370
+        },
+        {
+          "current": "          \"sha256\": \"bf30a67e555c97cc878023d3f95cce69cc80cdc4d9f98e6fc71b95768506a2a0\"\n",
+          "previous": "          \"sha256\": \"bc0820ef0d792db1ee820f6883860d0fed2b393856b6617b72f8866592eeb034\"\n",
+          "start": 11827189
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "56a74680c4c38a7ea05390c0d8d24c0d5e32b8375775e1b73ad8184de5cb61c3"
+    },
+    {
+      "currentSha256": "bf30a67e555c97cc878023d3f95cce69cc80cdc4d9f98e6fc71b95768506a2a0",
+      "edits": [
+        {
+          "current": "\t// Later callback promotions broaden the live row. Keep this milestone's\n\t// three-position boundary tied to its authenticated documentation.\n\tconst milestone = sourceAtHistoryMilestone(\n\t\tnestedCheckedRecordDotnetPromotionHistoryPath, \"docs/consume/dotnet.md\");\n\tconst row = milestone.split(\"\\n\").find(line =>\n\t\tline.startsWith(\"| `Checked record\"));\n",
+          "previous": "\tconst row = dotnet.split(\"\\n\").find(line =>\n\t\tline.startsWith(\"| `Checked records and closed Nat indices`\"));\n",
+          "start": 10896
+        },
+        {
+          "current": "\tassert.ok(dotnet.includes(nestedCheckedRecordDotnetConversion));\n\tassert.ok(dotnet.includes(nestedCheckedRecordDotnetField));\n",
+          "previous": "",
+          "start": 11588
+        }
+      ],
+      "path": "tests/helpers/nested-checked-record-dotnet-promotion-tests.mjs",
+      "previousSha256": "bc0820ef0d792db1ee820f6883860d0fed2b393856b6617b72f8866592eeb034"
+    },
+    {
+      "currentSha256": "b30d624382ae6f551a8f69285de1ea46baeecd32105ebd1f9bbb1d154d464822",
+      "edits": [
+        {
+          "current": "\tnestedCheckedRecordNativePromotionHistoryPath\n\t, nestedCheckedRecordNativePromotionPredecessor\n",
+          "previous": "\tnestedCheckedRecordNativePromotionPredecessor\n",
+          "start": 807
+        },
+        {
+          "current": "import { sourceAtHistoryMilestone } from \"./source-history-test-source.mjs\";\n",
+          "previous": "",
+          "start": 966
+        },
+        {
+          "current": "\t\t// Keep the original copied-position claim separate from later callbacks.\n\t\tconst milestone = sourceAtHistoryMilestone(\n\t\t\tnestedCheckedRecordNativePromotionHistoryPath, path);\n\t\tconst row = milestone.split(\"\\n\").find(line =>\n\t\t\tline.startsWith(\"| `Checked record\"));\n",
+          "previous": "\t\tconst row = source.split(\"\\n\").find(line =>\n\t\t\tline.startsWith(\"| `Checked records and closed Nat indices`\"));\n",
+          "start": 9481
+        },
+        {
+          "current": "\t\tassert.ok(source.includes(nestedCheckedRecordNativeConversion));\n",
+          "previous": "",
+          "start": 9892
+        }
+      ],
+      "path": "tests/helpers/nested-checked-record-native-promotion-tests.mjs",
+      "previousSha256": "2dc76d318767515898954e9c6db523c695ae41fbc738295eb79af2c3b8999ae0"
+    },
+    {
+      "currentSha256": "fc87ae352e3443b01928f7e44e3c4e80cc13b4c4b6fd022de4d2b1f2b2de0a41",
+      "edits": [
+        {
+          "current": "\tfor(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(ownedCppOrderHistoricalBytes(path, await readFile(path), digest)), digest, path);\n",
+          "previous": "\tfor(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(ownedCppOrderHistoricalBytes(path, await readFile(path))), digest, path);\n",
+          "start": 10122
+        },
+        {
+          "current": "\t\tconst current = ownedCppOrderHistoricalBytes(path, await readFile(path), record.sourceHashes[path]); assert.equal(sha256(current), record.sourceHashes[path], path);\n",
+          "previous": "\t\tconst current = ownedCppOrderHistoricalBytes(path, await readFile(path)); assert.equal(sha256(current), record.sourceHashes[path], path);\n",
+          "start": 14478
+        },
+        {
+          "current": "\tconst document = JSON.parse(ownedCppOrderHistoricalBytes(\"docs/type-surface.v1.json\", await readFile(\"docs/type-surface.v1.json\"), record.sourceHashes[\"docs/type-surface.v1.json\"]));\n",
+          "previous": "\tconst document = JSON.parse(ownedCppOrderHistoricalBytes(\"docs/type-surface.v1.json\", await readFile(\"docs/type-surface.v1.json\")));\n",
+          "start": 15149
+        }
+      ],
+      "path": "tests/helpers/owned-cpp-evidence.mjs",
+      "previousSha256": "89b38211120177d04d982f6725dd24c93f634bf142894bcd872ddebbf442002e"
+    },
+    {
+      "currentSha256": "db579bc8ed9d41be8a8320cd74d640f49b750631403f391873e705bbba812718",
+      "edits": [
+        {
+          "current": " * @param expected - Optional exact stopping identity.\n",
+          "previous": "",
+          "start": 2510
+        },
+        {
+          "current": "export const ownedCppOrderHistoricalBytes = (path, bytes, expected) => ownedCppOrderPaths.includes(path) || ownedRustChangedPaths.includes(path) || ownedPythonChangedPaths.includes(path) || ownedRubyChangedPaths.includes(path) || ownedDotnetNormalizationPaths.includes(path)\n\t? beforeOwnedCppOrder(path, bytes.toString(\"utf8\"), expected) : bytes;\n",
+          "previous": "export const ownedCppOrderHistoricalBytes = (path, bytes) => ownedCppOrderPaths.includes(path) || ownedRustChangedPaths.includes(path) || ownedPythonChangedPaths.includes(path) || ownedRubyChangedPaths.includes(path) || ownedDotnetNormalizationPaths.includes(path)\n\t? beforeOwnedCppOrder(path, bytes.toString(\"utf8\")) : bytes;\n",
+          "start": 2569
+        }
+      ],
+      "path": "tests/helpers/owned-cpp-order-history.mjs",
+      "previousSha256": "1ffd44bb94f3dda5179a311e0b00e34170bd639b80658737f4a874321e00dc79"
+    },
+    {
+      "currentSha256": "78fe1ccfbac2c304fdbb5dba37af6510753fa09373a4bc767fe3f0fc06cd43cd",
+      "edits": [
+        {
+          "current": "const priorSource = async (path, expected) => beforeWitStructuredCallables(path, await readFile(path, \"utf8\"), expected);\n",
+          "previous": "const priorSource = async path => beforeWitStructuredCallables(path, await readFile(path, \"utf8\"));\n",
+          "start": 2875
+        },
+        {
+          "current": "\tfor(const path of paths) assert.equal(sha256(await priorSource(path, record.sourceHashes[path])), record.sourceHashes[path], path);\n",
+          "previous": "\tfor(const path of paths) assert.equal(sha256(await priorSource(path)), record.sourceHashes[path], path);\n",
+          "start": 13944
+        },
+        {
+          "current": "\t\trestored[update.path] = reversePhpWasmStructuredCallableUpdate(await priorSource(update.path, update.currentSha256), update);\n",
+          "previous": "\t\trestored[update.path] = reversePhpWasmStructuredCallableUpdate(await priorSource(update.path), update);\n",
+          "start": 14211
+        },
+        {
+          "current": "\t\t, document: JSON.parse(await priorSource(\"docs/type-surface.v1.json\", record.sourceHashes[\"docs/type-surface.v1.json\"])) };\n",
+          "previous": "\t\t, document: JSON.parse(await priorSource(\"docs/type-surface.v1.json\")) };\n",
+          "start": 14820
+        }
+      ],
+      "path": "tests/helpers/php-wasm-structured-callable-evidence.mjs",
+      "previousSha256": "6cd3a75ef38b81e04bef4674e1460c64a453afebbe0a8407c541d51e8068c921"
+    },
+    {
+      "currentSha256": "2261a7562db5d47bbf9d7532739459ab6c4a29149d48a6189ffe6e8336f0eafd",
+      "edits": [
+        {
+          "current": "\t\tconst prior = beforeJvmThreadExitRepair(update.path, current, update.previousSha256);\n",
+          "previous": "\t\tconst prior = beforeJvmThreadExitRepair(update.path, current);\n",
+          "start": 2243
+        },
+        {
+          "current": "\t\tassert.equal(beforeJvmThreadExitRepair(update.path, prior, update.previousSha256), prior);\n",
+          "previous": "\t\tassert.equal(beforeJvmThreadExitRepair(update.path, prior), prior);\n",
+          "start": 2398
+        },
+        {
+          "current": "\tconst prior = JSON.parse(beforeJvmThreadExitRepair(\"docs/type-surface.v1.json\", current, previous.sources[\"docs/type-surface.v1.json\"]));\n",
+          "previous": "\tconst prior = JSON.parse(beforeJvmThreadExitRepair(\"docs/type-surface.v1.json\", current));\n",
+          "start": 3365
+        }
+      ],
+      "path": "tests/jvm-thread-exit-repair-evidence.test.mjs",
+      "previousSha256": "ffac8a9eb3f2b406ec4cf46e4ab15bfb59ef7ebb07321b3d0bb2fa7a58f3fe03"
+    },
+    {
+      "currentSha256": "16ec11de22bc347726b080d356ec83dffada28e1c4e2fb4b582d734fd70f581e",
+      "edits": [
+        {
+          "current": "\t\tassert.equal(sha256(beforeManagedCiIsolation(update.path, current, update.previousSha256)), update.previousSha256);\n",
+          "previous": "\t\tassert.equal(sha256(beforeManagedCiIsolation(update.path, current)), update.previousSha256);\n",
+          "start": 2577
+        }
+      ],
+      "path": "tests/managed-ci-isolation-evidence.test.mjs",
+      "previousSha256": "714fb11adabd94327c1885030a7b49c7e5a16f14cd857db9a9234c002e9590bd"
+    },
+    {
+      "currentSha256": "c96d44e639ccf185f1c2651d5be3fd8c99120047c1ddc675614d4f0974db2baa",
+      "edits": [
+        {
+          "current": "\t\tconst source = beforeOwnedCppOrder(update.path, await readFile(update.path, \"utf8\"), update.currentSha256);\n",
+          "previous": "\t\tconst source = beforeOwnedCppOrder(update.path, await readFile(update.path, \"utf8\"));\n",
+          "start": 3336
+        },
+        {
+          "current": "\t\tassert.equal(sha256(beforeOwnedCpp(update.path, source, update.previousSha256)), update.previousSha256);\n",
+          "previous": "\t\tassert.equal(sha256(beforeOwnedCpp(update.path, source)), update.previousSha256);\n",
+          "start": 3532
+        },
+        {
+          "current": "\t\tconst source = beforeOwnedRust(update.path, await readFile(update.path, \"utf8\"), update.currentSha256);\n",
+          "previous": "\t\tconst source = beforeOwnedRust(update.path, await readFile(update.path, \"utf8\"));\n",
+          "start": 4543
+        },
+        {
+          "current": "\t\tconst previous = beforeOwnedCppOrder(update.path, source, update.previousSha256);\n",
+          "previous": "\t\tconst previous = beforeOwnedCppOrder(update.path, source);\n",
+          "start": 4703
+        },
+        {
+          "current": "\t\tassert.equal(beforeOwnedCppOrder(update.path, previous, update.previousSha256), previous);\n",
+          "previous": "\t\tassert.equal(beforeOwnedCppOrder(update.path, previous), previous);\n",
+          "start": 4932
+        },
+        {
+          "current": "\tfor(const [path, digest] of Object.entries(record.additions)) assert.equal(sha256(beforeOwnedRust(path, await readFile(path, \"utf8\"), digest)), digest);\n",
+          "previous": "\tfor(const [path, digest] of Object.entries(record.additions)) assert.equal(sha256(beforeOwnedRust(path, await readFile(path, \"utf8\"))), digest);\n",
+          "start": 5823
+        }
+      ],
+      "path": "tests/owned-cpp-evidence.test.mjs",
+      "previousSha256": "1b5597b4ddd3848f93dce0001360293f5984846efa416bc962b1e2c04b241d92"
+    },
+    {
+      "currentSha256": "70247df85a3fe68762cff0cc90aa1e25f1b05496e1e81f7275f5a4a51f13ed0a",
+      "edits": [
+        {
+          "current": "\t\tconst prior = beforeOwnedCppReceiver(update.path, source, update.previousSha256);\n",
+          "previous": "\t\tconst prior = beforeOwnedCppReceiver(update.path, source);\n",
+          "start": 2138
+        },
+        {
+          "current": "\t\tassert.equal(beforeOwnedCppReceiver(update.path, prior, update.previousSha256), prior);\n",
+          "previous": "\t\tassert.equal(beforeOwnedCppReceiver(update.path, prior), prior);\n",
+          "start": 2276
+        },
+        {
+          "current": "\tconst prior = JSON.parse(beforeOwnedCppReceiver(path, current, previous.sources[path]));\n",
+          "previous": "\tconst prior = JSON.parse(beforeOwnedCppReceiver(path, current));\n",
+          "start": 3053
+        }
+      ],
+      "path": "tests/owned-cpp-receiver-evidence.test.mjs",
+      "previousSha256": "e3a36ff0b282c1907e3e5f39b17570b1f6797c1141414c1fd61a015dc65588ed"
+    },
+    {
+      "currentSha256": "a32072e33efc9a1fff373356b2f810497fb649055b9725100cc4b35f777045af",
+      "edits": [
+        {
+          "current": "\t\tconst prior = beforeOwnedDotnetReceiver(update.path, source, update.previousSha256);\n\t\tassert.equal(sha256(prior), update.previousSha256); assert.equal(beforeOwnedDotnetReceiver(update.path, prior, update.previousSha256), prior);\n",
+          "previous": "\t\tconst prior = beforeOwnedDotnetReceiver(update.path, source);\n\t\tassert.equal(sha256(prior), update.previousSha256); assert.equal(beforeOwnedDotnetReceiver(update.path, prior), prior);\n",
+          "start": 2185
+        },
+        {
+          "current": "\tconst prior = JSON.parse(beforeOwnedDotnetReceiver(path, current, previous.sources[path]));\n",
+          "previous": "\tconst prior = JSON.parse(beforeOwnedDotnetReceiver(path, current));\n",
+          "start": 3103
+        }
+      ],
+      "path": "tests/owned-dotnet-receiver-evidence.test.mjs",
+      "previousSha256": "6a15741212bb9b85d4c3e239611783d635abd6a4917f449b72498dae33c8681d"
+    },
+    {
+      "currentSha256": "072c7e403ed625c9c348678e2f7fdcbbf193c8434203d5b1125789f90c472f6f",
+      "edits": [
+        {
+          "current": "\t\tconst current = beforeOwnedJavaScriptPublication(update.path, await readFile(update.path, \"utf8\"), update.currentSha256), prior = beforeOwnedJavaScriptEngine(update.path, current, update.previousSha256);\n",
+          "previous": "\t\tconst current = beforeOwnedJavaScriptPublication(update.path, await readFile(update.path, \"utf8\"), update.currentSha256), prior = beforeOwnedJavaScriptEngine(update.path, current);\n",
+          "start": 2322
+        },
+        {
+          "current": "\t\tassert.equal(beforeOwnedJavaScriptEngine(update.path, prior, update.previousSha256), prior);\n",
+          "previous": "\t\tassert.equal(beforeOwnedJavaScriptEngine(update.path, prior), prior);\n",
+          "start": 2582
+        },
+        {
+          "current": "\tconst prior = JSON.parse(beforeOwnedJavaScriptEngine(\"docs/type-surface.v1.json\", current, previous.sources[\"docs/type-surface.v1.json\"]));\n",
+          "previous": "\tconst prior = JSON.parse(beforeOwnedJavaScriptEngine(\"docs/type-surface.v1.json\", current));\n",
+          "start": 3418
+        }
+      ],
+      "path": "tests/owned-javascript-engine-evidence.test.mjs",
+      "previousSha256": "99c3fcebf589902f7edd77020d0625d8187f772aafa1f772af6cfaa4ec74c08b"
+    },
+    {
+      "currentSha256": "0b794736ccbd9f7bcaacda718ee200bc80848f93287ddeff847e381e935aae1f",
+      "edits": [
+        {
+          "current": "\t\tconst prior = beforeOwnedJvmBorrow(update.path, source, update.previousSha256);\n",
+          "previous": "\t\tconst prior = beforeOwnedJvmBorrow(update.path, source);\n",
+          "start": 2183
+        },
+        {
+          "current": "\t\tassert.equal(beforeOwnedJvmBorrow(update.path, prior, update.previousSha256), prior);\n",
+          "previous": "\t\tassert.equal(beforeOwnedJvmBorrow(update.path, prior), prior);\n",
+          "start": 2319
+        },
+        {
+          "current": "\tconst prior = JSON.parse(beforeOwnedJvmBorrow(path, current, previous.sources[path]));\n",
+          "previous": "\tconst prior = JSON.parse(beforeOwnedJvmBorrow(path, current));\n",
+          "start": 3079
+        }
+      ],
+      "path": "tests/owned-jvm-borrow-evidence.test.mjs",
+      "previousSha256": "6910edeef19b4b9f22aca23a51cc9cde7f700895a30e6d574bb164f8ecd02986"
+    },
+    {
+      "currentSha256": "4b29dc7586ebf9502e029ae13b559a9bc543c62c49282aac094f8e555c9400f1",
+      "edits": [
+        {
+          "current": "\t\tconst prior = beforeOwnedJvmReceiver(update.path, source, update.previousSha256);\n\t\tassert.equal(sha256(prior), update.previousSha256); assert.equal(beforeOwnedJvmReceiver(update.path, prior, update.previousSha256), prior);\n",
+          "previous": "\t\tconst prior = beforeOwnedJvmReceiver(update.path, source);\n\t\tassert.equal(sha256(prior), update.previousSha256); assert.equal(beforeOwnedJvmReceiver(update.path, prior), prior);\n",
+          "start": 2309
+        },
+        {
+          "current": "\tconst prior = JSON.parse(beforeOwnedJvmReceiver(path, current, previous.sources[path]));\n",
+          "previous": "\tconst prior = JSON.parse(beforeOwnedJvmReceiver(path, current));\n",
+          "start": 3210
+        }
+      ],
+      "path": "tests/owned-jvm-receiver-evidence.test.mjs",
+      "previousSha256": "04b1849f799c7c812520ad9ac353f54026dec8cb5f524e585ba537e1dc592a31"
+    },
+    {
+      "currentSha256": "03f32a9c7f90905b41daf8ed22dd2fc04f6d0ee7c0d5a5bb9ebd2d3229df8bbc",
+      "edits": [
+        {
+          "current": "\t\tconst prior = beforeOwnedPerlReceiver(update.path, source, update.previousSha256);\n\t\tassert.equal(sha256(prior), update.previousSha256); assert.equal(beforeOwnedPerlReceiver(update.path, prior, update.previousSha256), prior);\n",
+          "previous": "\t\tconst prior = beforeOwnedPerlReceiver(update.path, source);\n\t\tassert.equal(sha256(prior), update.previousSha256); assert.equal(beforeOwnedPerlReceiver(update.path, prior), prior);\n",
+          "start": 2105
+        },
+        {
+          "current": "\tconst prior = JSON.parse(beforeOwnedPerlReceiver(path, current, previous.sources[path]));\n",
+          "previous": "\tconst prior = JSON.parse(beforeOwnedPerlReceiver(path, current));\n",
+          "start": 3011
+        }
+      ],
+      "path": "tests/owned-perl-receiver-evidence.test.mjs",
+      "previousSha256": "6fca03dcd027b766a39b4aedba788165a85e6c2f87d1fdb5d31d3a822ef78d06"
+    },
+    {
+      "currentSha256": "81cd4763fb868ae66be6ba1e10991e9acc28de23383855b933a0338cecb7a6f3",
+      "edits": [
+        {
+          "current": "\t\tconst prior = beforeOwnedPhpReceiver(update.path, source, update.previousSha256);\n\t\tassert.equal(sha256(prior), update.previousSha256); assert.equal(beforeOwnedPhpReceiver(update.path, prior, update.previousSha256), prior);\n",
+          "previous": "\t\tconst prior = beforeOwnedPhpReceiver(update.path, source);\n\t\tassert.equal(sha256(prior), update.previousSha256); assert.equal(beforeOwnedPhpReceiver(update.path, prior), prior);\n",
+          "start": 2124
+        },
+        {
+          "current": "\tconst prior = JSON.parse(beforeOwnedPhpReceiver(path, current, previous.sources[path]));\n",
+          "previous": "\tconst prior = JSON.parse(beforeOwnedPhpReceiver(path, current));\n",
+          "start": 3029
+        }
+      ],
+      "path": "tests/owned-php-receiver-evidence.test.mjs",
+      "previousSha256": "b585bb6d7eaa4faa9e090a80fe928e280a73da07f9a22eae84cd9c6d6a7930e4"
+    },
+    {
+      "currentSha256": "60f853bc876251f3439d785812668bd7349bd817fb921d8600aeaef7360ce8ac",
+      "edits": [
+        {
+          "current": "\t\tconst source = beforeOwnedJavaScriptReceiver(update.path, await readFile(update.path, \"utf8\"), update.currentSha256), prior = beforeOwnedPhpWasmReceiver(update.path, source, update.previousSha256);\n",
+          "previous": "\t\tconst source = beforeOwnedJavaScriptReceiver(update.path, await readFile(update.path, \"utf8\"), update.currentSha256), prior = beforeOwnedPhpWasmReceiver(update.path, source);\n",
+          "start": 2069
+        },
+        {
+          "current": "\t\tassert.equal(beforeOwnedPhpWasmReceiver(update.path, prior, update.previousSha256), prior);\n",
+          "previous": "\t\tassert.equal(beforeOwnedPhpWasmReceiver(update.path, prior), prior);\n",
+          "start": 2323
+        },
+        {
+          "current": "\tconst prior = JSON.parse(beforeOwnedPhpWasmReceiver(path, current, previous.sources[path]));\n",
+          "previous": "\tconst prior = JSON.parse(beforeOwnedPhpWasmReceiver(path, current));\n",
+          "start": 3112
+        }
+      ],
+      "path": "tests/owned-php-wasm-receiver-evidence.test.mjs",
+      "previousSha256": "7cd6e8061621ee3d34a6c6932acbac3527627e845dcefa41dde396fc9ef30f5c"
+    },
+    {
+      "currentSha256": "0c5f5c68b2924c3ab5d630f3be67b2eeb8f2f975536f158d7c8a098cb8f617da",
+      "edits": [
+        {
+          "current": "\t\tconst source = beforeOwnedJavaScriptTransfer(update.path, await readFile(update.path, \"utf8\"), update.currentSha256), prior = beforeOwnedPhpWasmTransfer(update.path, source, update.previousSha256);\n",
+          "previous": "\t\tconst source = beforeOwnedJavaScriptTransfer(update.path, await readFile(update.path, \"utf8\")), prior = beforeOwnedPhpWasmTransfer(update.path, source);\n",
+          "start": 1986
+        },
+        {
+          "current": "\t\tassert.equal(beforeOwnedPhpWasmTransfer(update.path, prior, update.previousSha256), prior);\n",
+          "previous": "\t\tassert.equal(beforeOwnedPhpWasmTransfer(update.path, prior), prior);\n",
+          "start": 2240
+        },
+        {
+          "current": "\tconst current = beforeOwnedJavaScriptTransfer(\"docs/type-surface.v1.json\", await readFile(\"docs/type-surface.v1.json\", \"utf8\"), record.sources[\"docs/type-surface.v1.json\"]);\n\tconst prior = JSON.parse(beforeOwnedPhpWasmTransfer(\"docs/type-surface.v1.json\", current, previous.sources[\"docs/type-surface.v1.json\"]));\n\tfor(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedJavaScriptTransferHistoricalBytes(file.path, await readFile(file.path), record.sources[file.path]));\n",
+          "previous": "\tconst current = beforeOwnedJavaScriptTransfer(\"docs/type-surface.v1.json\", await readFile(\"docs/type-surface.v1.json\", \"utf8\"));\n\tconst prior = JSON.parse(beforeOwnedPhpWasmTransfer(\"docs/type-surface.v1.json\", current));\n\tfor(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedJavaScriptTransferHistoricalBytes(file.path, await readFile(file.path)));\n",
+          "start": 2432
+        },
+        {
+          "current": "\t\tconst source = beforeOwnedJavaScriptTransfer(update.path, await readFile(update.path, \"utf8\"), update.currentSha256), unknown = source + \"\\n/* unrelated */\\n\";\n",
+          "previous": "\t\tconst source = beforeOwnedJavaScriptTransfer(update.path, await readFile(update.path, \"utf8\")), unknown = source + \"\\n/* unrelated */\\n\";\n",
+          "start": 3143
+        }
+      ],
+      "path": "tests/owned-php-wasm-transfer-evidence.test.mjs",
+      "previousSha256": "7bd2c86e400aafaa2533ee60cfee2ae8d58ded8b361d03066199618a375b0b45"
+    },
+    {
+      "currentSha256": "5e19d72a7cbcac76907fc3bd62308a006217f0a7716c3cfab5fbd4ac0db3f882",
+      "edits": [
+        {
+          "current": "\t\tconst source = beforeOwnedRubyReceiver(update.path, await readFile(update.path, \"utf8\"), update.currentSha256), prior = beforeOwnedPythonReceiver(update.path, source, update.previousSha256);\n\t\tassert.equal(sha256(prior), update.previousSha256); assert.equal(beforeOwnedPythonReceiver(update.path, prior, update.previousSha256), prior);\n",
+          "previous": "\t\tconst source = beforeOwnedRubyReceiver(update.path, await readFile(update.path, \"utf8\"), update.currentSha256), prior = beforeOwnedPythonReceiver(update.path, source);\n\t\tassert.equal(sha256(prior), update.previousSha256); assert.equal(beforeOwnedPythonReceiver(update.path, prior), prior);\n",
+          "start": 2167
+        },
+        {
+          "current": "\tconst prior = JSON.parse(beforeOwnedPythonReceiver(path, current, previous.sources[path]));\n",
+          "previous": "\tconst prior = JSON.parse(beforeOwnedPythonReceiver(path, current));\n",
+          "start": 3192
+        }
+      ],
+      "path": "tests/owned-python-receiver-evidence.test.mjs",
+      "previousSha256": "b0bfd9bfbf2a7e0ef1375546ba6a202d6096b37bcd87a1d647f6e3810f85f2c4"
+    },
+    {
+      "currentSha256": "f5544b8c543e9f37df50aac622ae4b629529b68b436715d89f32b679da247df4",
+      "edits": [
+        {
+          "current": "\t\tconst source = beforeOwnedRubyBorrowCi(update.path, await readFile(update.path, \"utf8\"), update.currentSha256), prior = beforeOwnedRubyBorrow(update.path, source, update.previousSha256);\n",
+          "previous": "\t\tconst source = beforeOwnedRubyBorrowCi(update.path, await readFile(update.path, \"utf8\"), update.currentSha256), prior = beforeOwnedRubyBorrow(update.path, source);\n",
+          "start": 2288
+        },
+        {
+          "current": "\t\tassert.equal(beforeOwnedRubyBorrow(update.path, prior, update.previousSha256), prior);\n",
+          "previous": "\t\tassert.equal(beforeOwnedRubyBorrow(update.path, prior), prior);\n",
+          "start": 2531
+        },
+        {
+          "current": "\tconst path = \"docs/type-surface.v1.json\", current = beforeOwnedRubyBorrowCi(path, await readFile(path, \"utf8\"), record.sources[path]);\n\tconst prior = JSON.parse(beforeOwnedRubyBorrow(path, current, previous.sources[path]));\n",
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", current = beforeOwnedRubyBorrowCi(path, await readFile(path, \"utf8\"));\n\tconst prior = JSON.parse(beforeOwnedRubyBorrow(path, current));\n",
+          "start": 3158
+        }
+      ],
+      "path": "tests/owned-ruby-borrow-evidence.test.mjs",
+      "previousSha256": "1196aae5cc7b2e8646bc8a47fdc61bf445bb8e174cbe5d42f4fb773330dfb542"
+    },
+    {
+      "currentSha256": "e6b30677146488719e4c1bc5acbd99160e995041fca5622b36d6e383f9337541",
+      "edits": [
+        {
+          "current": "\t\tconst current = beforeOwnedDotnetTransfer(update.path, await readFile(update.path, \"utf8\"), update.currentSha256), prior = beforeOwnedRubyTransfer(update.path, current, update.previousSha256);\n",
+          "previous": "\t\tconst current = beforeOwnedDotnetTransfer(update.path, await readFile(update.path, \"utf8\")), prior = beforeOwnedRubyTransfer(update.path, current);\n",
+          "start": 1986
+        },
+        {
+          "current": "\t\tassert.equal(beforeOwnedRubyTransfer(update.path, prior, update.previousSha256), prior);\n",
+          "previous": "\t\tassert.equal(beforeOwnedRubyTransfer(update.path, prior), prior);\n",
+          "start": 2235
+        },
+        {
+          "current": "\tconst current = beforeOwnedDotnetTransfer(\"docs/type-surface.v1.json\", await readFile(\"docs/type-surface.v1.json\", \"utf8\"), record.sources[\"docs/type-surface.v1.json\"]);\n\tconst previousIndex = JSON.parse(beforeOwnedRubyTransfer(\"docs/type-surface.v1.json\", current, previous.sources[\"docs/type-surface.v1.json\"]));\n\tfor(const evidence of previousIndex.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedDotnetTransferHistoricalBytes(file.path, await readFile(file.path), record.sources[file.path]));\n",
+          "previous": "\tconst current = beforeOwnedDotnetTransfer(\"docs/type-surface.v1.json\", await readFile(\"docs/type-surface.v1.json\", \"utf8\"));\n\tconst previousIndex = JSON.parse(beforeOwnedRubyTransfer(\"docs/type-surface.v1.json\", current));\n\tfor(const evidence of previousIndex.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedDotnetTransferHistoricalBytes(file.path, await readFile(file.path)));\n",
+          "start": 2423
+        },
+        {
+          "current": "\t\tconst source = beforeOwnedDotnetTransfer(update.path, await readFile(update.path, \"utf8\"), update.currentSha256), unknown = source + \"\\n/* unrelated */\\n\";\n",
+          "previous": "\t\tconst source = beforeOwnedDotnetTransfer(update.path, await readFile(update.path, \"utf8\")), unknown = source + \"\\n/* unrelated */\\n\";\n",
+          "start": 3146
+        }
+      ],
+      "path": "tests/owned-ruby-transfer-evidence.test.mjs",
+      "previousSha256": "b0b5e22d2bd8edc7b5b44e1f5dd475db019065702f07ab1d9a131aeafea15fbc"
+    },
+    {
+      "currentSha256": "8a19e35ca3dbfdfe14fc2b502f9123e32f41b55069cb8da3211cf8e4c1c50c0f",
+      "edits": [
+        {
+          "current": "\t\tconst current = beforeOwnedTransferC(update.path, await readFile(update.path, \"utf8\"), update.currentSha256), prior = beforeOwnedWitBuildRepair(update.path, current, update.previousSha256);\n",
+          "previous": "\t\tconst current = beforeOwnedTransferC(update.path, await readFile(update.path, \"utf8\")), prior = beforeOwnedWitBuildRepair(update.path, current);\n",
+          "start": 2179
+        },
+        {
+          "current": "\t\tassert.equal(beforeOwnedWitBuildRepair(update.path, prior, update.previousSha256), prior);\n",
+          "previous": "\t\tassert.equal(beforeOwnedWitBuildRepair(update.path, prior), prior);\n",
+          "start": 2425
+        },
+        {
+          "current": "\tconst current = beforeOwnedTransferC(\"docs/type-surface.v1.json\", await readFile(\"docs/type-surface.v1.json\", \"utf8\"), record.sources[\"docs/type-surface.v1.json\"]);\n\tconst prior = JSON.parse(beforeOwnedWitBuildRepair(\"docs/type-surface.v1.json\", current, previous.sources[\"docs/type-surface.v1.json\"]));\n\tfor(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedTransferCHistoricalBytes(file.path, await readFile(file.path), record.sources[file.path]));\n",
+          "previous": "\tconst current = beforeOwnedTransferC(\"docs/type-surface.v1.json\", await readFile(\"docs/type-surface.v1.json\", \"utf8\"));\n\tconst prior = JSON.parse(beforeOwnedWitBuildRepair(\"docs/type-surface.v1.json\", current));\n\tfor(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedTransferCHistoricalBytes(file.path, await readFile(file.path)));\n",
+          "start": 2617
+        },
+        {
+          "current": "\t\tconst current = beforeOwnedTransferC(update.path, await readFile(update.path, \"utf8\"), update.currentSha256), unknown = current + \"\\n/* unrelated */\\n\";\n",
+          "previous": "\t\tconst current = beforeOwnedTransferC(update.path, await readFile(update.path, \"utf8\")), unknown = current + \"\\n/* unrelated */\\n\";\n",
+          "start": 3383
+        }
+      ],
+      "path": "tests/wit-owned-build-repair-evidence.test.mjs",
+      "previousSha256": "b561ed6017debaecfef2905d63c871d5a9403315b479cfb6d965a6a3cd7ce11f"
+    }
+  ]
+}
