@@ -274,3 +274,18 @@ test("module-initialized authored entries leave the per-call trace", async () =>
 	]) assert.throws(() => phpWasmRefinementEntryPlan(family, selection.selected, selection.generated.leanSource
 		, { globalDefinitions: globals }));
 });
+
+test("a refused-only source no compiled call reaches leaves the plan unchanged", async () => {
+	const family = "zero-payload-full", marker = phpWasmRefinementEntrySourceFixture(family);
+	const source = phpWasmRefinementEntrySource(await readFile(marker.path, "utf8"), marker);
+	const selection = flatPlanSelection(family, source.entries);
+	const absent = selection.selected.find(item => item.kind === "source" && item.label.endsWith(".absentCount"));
+	const witness = selection.selected.find(item => item.kind === "source" && item.label.endsWith(".witnessCount"));
+	const plan = options => phpWasmRefinementEntryPlan(family, selection.selected
+		, selection.generated.leanSource, options);
+	assert.deepEqual(plan({ unreachedSources: [absent] }), plan());
+	assert.throws(() => plan({ unreachedSources: [witness] }), /no compiled call reaches/u);
+	const reduced = { ...absent, target: "l_ZeroPayloadCheckedRecords_absentCount___redArg" };
+	assert.throws(() => plan({ unreachedSources: [absent], reducedArity: [reduced] })
+		, /one classification/u);
+});

@@ -24,9 +24,12 @@ const escaped = text => text.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&");
  * @param options - Classified globals and reduced-arity call targets.
  * @param options.globalDefinitions - Authored entries compiled as module-initialized values.
  * @param options.reducedArity - Authored sources reached only through a reduced-arity target.
+ * @param options.unreachedSources - Authored sources no compiled call reaches.
  */
-export const phpWasmUnmarkedEntries = (selected, { globalDefinitions = [], reducedArity = [] } = {}) => {
-	assert.ok(Array.isArray(globalDefinitions) && Array.isArray(reducedArity));
+export const phpWasmUnmarkedEntries = (selected, {
+	globalDefinitions = [], reducedArity = [], unreachedSources = []
+} = {}) => {
+	assert.ok(Array.isArray(globalDefinitions) && Array.isArray(reducedArity) && Array.isArray(unreachedSources));
 	const closeItems = (items, kinds, fields) => items.map(item => {
 		assert.deepEqual(Object.keys(item ?? {}).sort(), [...fields].sort());
 		assert.ok(kinds.includes(item.kind), `${item.symbol} cannot be unmarked`);
@@ -37,12 +40,16 @@ export const phpWasmUnmarkedEntries = (selected, { globalDefinitions = [], reduc
 	const globals = closeItems(globalDefinitions, ["constructor", "source"], ["symbol", "kind", "label"]);
 	const reduced = closeItems(reducedArity, ["source"], ["symbol", "kind", "label", "target"]);
 	for(const item of reduced) assert.equal(item.target, `l_${item.label.replaceAll(".", "_")}___redArg`);
-	const symbols = [...globals, ...reduced].map(item => item.symbol);
+	const unreached = new Set(closeItems(unreachedSources, ["source"], ["symbol", "kind", "label"])
+		.map(item => `${item.kind}/${item.label}`));
+	const symbols = [...globals, ...reduced, ...unreachedSources].map(item => item.symbol);
 	assert.equal(new Set(symbols).size, symbols.length, "one classification per entry");
 	const classes = [["moduleInitialized", globals], ["reducedArity", reduced]].map(([key, items]) => [
 		key, new Set(items.map(item => `${item.kind}/${item.label}`))
 	]);
 	const unmarked = (control, outcome, publicName, planned, count) => {
+		assert.ok(!planned.some(entry => unreached.has(`${entry.kind}/${entry.label}`))
+			, `${control} cannot plan a source no compiled call reaches`);
 		const declared = Object.fromEntries(classes.map(([key, values]) => [key
 			, [...new Set(planned.filter(entry => values.has(`${entry.kind}/${entry.label}`)).map(entry => entry.label))].sort()]));
 		const entries = planned.filter(entry => !classes.some(([, values]) => values.has(`${entry.kind}/${entry.label}`)));
@@ -74,12 +81,11 @@ export const phpWasmUnmarkedEntries = (selected, { globalDefinitions = [], reduc
  * @param options - Compiler-classified entry forms and call targets.
  * @param options.globalDefinitions - Authored entries compiled as module-initialized values.
  * @param options.reducedArity - Authored sources reached only through a reduced-arity target.
+ * @param options.unreachedSources - Authored sources no compiled call reaches.
  */
-export const phpWasmRefinementEntryPlan = (family, selected, generatedLeanSource, {
-	globalDefinitions = [], reducedArity = []
-} = {}) => {
+export const phpWasmRefinementEntryPlan = (family, selected, generatedLeanSource, options = {}) => {
 	validateSubtypeEntrySelection(selected); assert.equal(typeof generatedLeanSource, "string");
-	const { unmarked, close } = phpWasmUnmarkedEntries(selected, { globalDefinitions, reducedArity });
+	const { unmarked, close } = phpWasmUnmarkedEntries(selected, options);
 	const namespace = family.startsWith("nominal-") ? "NominalPrimitiveSubtypes"
 		: family === "recursive-subtype" ? "RecursiveSubtypes"
 			: family === "recursive-checked-record" ? "RecursiveCheckedRecords"

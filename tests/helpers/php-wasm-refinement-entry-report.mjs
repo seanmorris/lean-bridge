@@ -31,7 +31,7 @@ import { phpWasmOwnedRefinementEntrySelection } from "./php-wasm-owned-refinemen
 import {
 	phpWasmOwnedRefinementEntrySourceDefinition
 } from "./php-wasm-owned-refinement-entry-source-fixtures.mjs";
-import { phpWasmReducedArityTargets } from "./php-wasm-entry-call-targets.mjs";
+import { phpWasmSourceCallTargets } from "./php-wasm-entry-call-targets.mjs";
 import { phpWasmExecutionTuples } from "./php-wasm-fin-fixtures.mjs";
 import { instrumentSubtypeCEntries } from "./php-wasm-subtype-entry-c.mjs";
 import { parseSubtypeEntryTrace } from "./php-wasm-subtype-entry-trace.mjs";
@@ -237,7 +237,7 @@ export const checkPhpWasmRefinementEntryReport = async (records, {
 			.filter(item => sourceProbe.entryForms[item.symbol] === "global"));
 		const classifications = {
 			globalDefinitions
-			, reducedArity: phpWasmReducedArityTargets(inputs, observation.selected, { globalDefinitions })
+			, ...phpWasmSourceCallTargets(inputs, observation.selected, { globalDefinitions })
 		};
 		const plan = planEntries(family, selected, classifications);
 		assert.deepEqual(report.entryPlan, plan);
