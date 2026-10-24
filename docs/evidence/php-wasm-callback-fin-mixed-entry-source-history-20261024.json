@@ -1,0 +1,192 @@
+{
+  "additions": [
+    {
+      "currentSha256": "2d7a5196286b3c29597af326f03b7c334bcfdf1d7449decf28f7e8df7b618f41",
+      "path": "scripts/update-php-wasm-callback-fin-mixed-entry-source-history.mjs"
+    },
+    {
+      "currentSha256": "02daa86939794fa576e22e343bdc2c8712ef7969f2b4c6c47099ef3264d79508",
+      "path": "tests/helpers/php-wasm-callback-fin-mixed-entry-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "fd125ac08ee47f5cee5ed98053b651e9d9692696f5d9ab07e993d7496cf3f5ab",
+      "path": "tests/helpers/php-wasm-callback-fin-mixed-entry-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "2203aa81e7e74d365059ed0edcf4c8c3a0b6ca20",
+  "integrationBaseCommit": "87a73905874f3f06adfc7abccb1233dc79889778",
+  "integrationUpdates": [
+    {
+      "currentSha256": "b0a5f8c0e6ab73e7a27604031d8c30a45cf8b1dc8a91859d1b4a7cc18c314692",
+      "edits": [
+        {
+          "current": "import { beforePhpWasmCallbackFinMixedEntrySource, phpWasmCallbackFinMixedEntryNormalizationPaths } from \"./php-wasm-callback-fin-mixed-entry-source-history.mjs\";\n",
+          "previous": "",
+          "start": 2278
+        },
+        {
+          "current": "\t...phpWasmCallbackFinMixedEntryNormalizationPaths\n\t, ...phpWasmCallbackSubtypeEntryNormalizationPaths\n",
+          "previous": "\t...phpWasmCallbackSubtypeEntryNormalizationPaths\n",
+          "start": 175480
+        },
+        {
+          "current": "\t\t= beforePhpWasmCallbackFinMixedEntrySource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "",
+          "start": 216507
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "40357268e13a3dc315758bf976b862c841f799140206a10ff3770649ddc3d9c1"
+    },
+    {
+      "currentSha256": "f1aa762156b4b58964f9b5594b0839254ba02918ad2ff85c84b15c49170abcff",
+      "edits": [
+        {
+          "current": "import \"./helpers/php-wasm-callback-fin-mixed-entry-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 1414
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "a51fb58b869a3d2cdf9b8eedb2ab2a739b47b7772568dd05e2536e0ed4fb66ea"
+    }
+  ],
+  "milestone": "php-wasm-callback-fin-mixed-entry-source-v1",
+  "predecessorCommit": "a0536e1ed272588a1702a9fe4b16445ded6f971d",
+  "schemaVersion": 1,
+  "scope": "Measure mixed Fin/Nat record fields in existing admitted tiles and tileMaker returned closures, including accepted input/result, Fin-field refusal before the body, later valid input and cleanup. Authenticate nominal-only bidirectional callbacks in the export-result closure role through generated apply and lease-call identities; continue rejecting an unselected host role. No production admission, original Lean fixture, configuration, type inventory, support-state or historical observation changes. The real compiler model validates probe compilation and selection; installed execution must independently establish runtime order.",
+  "updates": [
+    {
+      "currentSha256": "5d87cd3acb0c1df7bd14bbf640f54e607a10a760128169b4ca601515e8eb9be1",
+      "edits": [
+        {
+          "current": "use LeanReviewedcallbacks\\Tile;\n",
+          "previous": "",
+          "start": 182
+        },
+        {
+          "current": "use function LeanReviewedcallbacks\\tile_maker;\nuse function LeanReviewedcallbacks\\tiles;\n",
+          "previous": "",
+          "start": 343
+        },
+        {
+          "current": "    $tile = fn(int $digit, int $count): Tile => new Tile($n($digit), $n($count));\n",
+          "previous": "",
+          "start": 729
+        },
+        {
+          "current": "        'mixed-closure-input-refusal',\n",
+          "previous": "",
+          "start": 926
+        },
+        {
+          "current": "            case 'mixed-closure-input':\n                $leanBridgeCallbackProbeState['tiles'] = tiles(null);\n                if (!$leanBridgeCallbackProbeState['tiles']([$tile(2, 5), $tile(4, 1)])->isEqualTo($n(606)))\n                    throw new RuntimeException('mixed closure Fin input');\n                break;\n            case 'mixed-closure-input-refusal':\n                $leanBridgeCallbackProbeState['tiles']([$tile(5, 1)]);\n                break;\n            case 'mixed-closure-input-recovery':\n                if (!$leanBridgeCallbackProbeState['tiles']([$tile(1, 7)])->isEqualTo($n(107)))\n                    throw new RuntimeException('mixed closure Fin recovery');\n                $leanBridgeCallbackProbeState['tiles']->close();\n                break;\n            case 'mixed-closure-result':\n                $closure = tile_maker($n(4));\n                if (!$closure($n(3))->equals($tile(2, 3)))\n                    throw new RuntimeException('mixed closure Fin result');\n                $closure->close();\n                break;\n",
+          "previous": "",
+          "start": 3001
+        }
+      ],
+      "path": "tests/fixtures/php-wasm-callback-entry/callback-fin.php",
+      "previousSha256": "b53022d08988650285f378c91ef2ac2d0e7a09e1147493779612160a3225e07f"
+    },
+    {
+      "currentSha256": "0b363f262375a3c386088164de0df5b5bcf22f05d50120420d59df172205d454",
+      "edits": [
+        {
+          "current": "\t\t, \"mixed-closure-input\", \"mixed-closure-input-refusal\"\n\t\t, \"mixed-closure-input-recovery\", \"mixed-closure-result\"\n",
+          "previous": "",
+          "start": 2085
+        },
+        {
+          "current": "\tconst mixed = control => plan.cases.find(item => item.control === control);\n\tconst kinds = call => call.entries.map(item => item.kind);\n\tassert.deepEqual(mixed(\"mixed-closure-input\").calls.map(kinds), [\n\t\t[\"adapter\", \"adapter\", \"cleanup\"]\n\t\t, [\"adapter\", \"adapter\", \"closure\", \"cleanup\"]\n\t]);\n\tassert.equal(mixed(\"mixed-closure-input-refusal\").outcome, \"refused\");\n\tassert.deepEqual(mixed(\"mixed-closure-input-refusal\").calls.map(kinds)\n\t\t, [[\"adapter\", \"adapter\", \"cleanup\"]], \"the Fin field refuses before the closure body\");\n\tassert.deepEqual(mixed(\"mixed-closure-input-recovery\").calls.map(kinds)\n\t\t, [[\"adapter\", \"adapter\", \"closure\", \"cleanup\"]]);\n\tassert.deepEqual(mixed(\"mixed-closure-result\").calls.map(kinds), [\n\t\t[\"adapter\", \"adapter\", \"cleanup\"]\n\t\t, [\"adapter\", \"adapter\", \"source\", \"closure\", \"cleanup\"]\n\t]);\n\tassert.equal(mixed(\"mixed-closure-result\").calls[1].entries[3].label\n\t\t, \"ReviewedCallbacks.tileMaker:body\");\n",
+          "previous": "",
+          "start": 2206
+        }
+      ],
+      "path": "tests/helpers/php-wasm-callback-entry-plan-tests.mjs",
+      "previousSha256": "556fccb7519495bd5eb165f0745a9f78d8e0b4711eccc11862cc0165c1b64356"
+    },
+    {
+      "currentSha256": "9c2929d25cf798624da11ee8cbe1c1aeab4893c90b4d7c3418857a3080f13873",
+      "edits": [
+        {
+          "current": "\t\tconst tiles = \"ReviewedCallbacks.tiles\", tileMaker = \"ReviewedCallbacks.tileMaker\";\n",
+          "previous": "",
+          "start": 4405
+        },
+        {
+          "current": "\t\t\t// Tile values mix a checked Fin field with a plain Nat field. The maker ignores its\n\t\t\t// Unit argument, so like the checked-record makers it builds the closure without\n\t\t\t// running its marked source; the Fin field refuses before the closure body runs.\n\t\t\t, { control: \"mixed-closure-input\", outcome: \"accepted\"\n\t\t\t\t, calls: [maker(tiles), closure(tiles, [], false)] }\n\t\t\t, { control: \"mixed-closure-input-refusal\", outcome: \"refused\"\n\t\t\t\t, calls: [closureRefusal(tiles)] }\n\t\t\t, { control: \"mixed-closure-input-recovery\", outcome: \"accepted\"\n\t\t\t\t, calls: [closure(tiles, [], false)] }\n\t\t\t// Like counter, tileMaker binds its start argument and runs its source on application.\n\t\t\t, { control: \"mixed-closure-result\", outcome: \"accepted\"\n\t\t\t\t, calls: [maker(tileMaker), closure(tileMaker)] }\n",
+          "previous": "",
+          "start": 5303
+        }
+      ],
+      "path": "tests/helpers/php-wasm-callback-entry-plan.mjs",
+      "previousSha256": "07c2ac3476f4397404be85941bd2576fd075a25fe3bb6b69fbc9d4539a622489"
+    },
+    {
+      "currentSha256": "12e6db2a3bc0a0b87bf6753d9f8f58f3f420d05d028f3dd6a9367090e4ad62fa",
+      "edits": [
+        {
+          "current": "test(\"callback selection measures nominal-only callbacks only as returned closures\", async () => {\n\tconst fixture = await phpWasmCallbackEntrySourceFixture(\"callback-fin\");\n\tconst model = modelFromReview(callbackFinPhpWasmReview());\n\tconst { selected } = phpWasmCallbackEntrySelection(model, fixture.entries);\n\tfor(const name of [\"tiles\", \"tileMaker\"])\n\t{\n\t\tassert.ok(selected.some(item => item.label === `ReviewedCallbacks.${name}:closure:lean`), name);\n\t\tassert.ok(!selected.some(item => item.label === `ReviewedCallbacks.${name}:recovery:lean`), name);\n\t}\n\t// The unrefined host callback of apply has no admitted role to measure.\n\tconst visit = fixture.entries.find(item => item.label === \"ReviewedCallbacks.visit\");\n\tconst apply = { ...visit, symbol: `${visit.symbol}_apply`, label: \"ReviewedCallbacks.apply\" };\n\tassert.throws(() => phpWasmCallbackEntrySelection(model, [...fixture.entries, apply])\n\t\t, /Selected callback has no admitted direction: ReviewedCallbacks\\.apply/u);\n});\n\n",
+          "previous": "",
+          "start": 4189
+        }
+      ],
+      "path": "tests/helpers/php-wasm-callback-entry-selection-tests.mjs",
+      "previousSha256": "7f28263abe2300c3e243a079d24b87d150bfb1b50e39149369ce8bde3d7eeb4d"
+    },
+    {
+      "currentSha256": "f9560969a14f3d217142e8cccb314a6a1f175a0cdfa8d52c71a83d7dbbbb1af0",
+      "edits": [
+        {
+          "current": "\t\t\towners.push({ label, callback: site.callback, role: site === fn.result ? \"closure\" : \"host\" });\n\t\t\tcallbackOwners.set(site.callback.id, owners);\n",
+          "previous": "\t\t\towners.push({ label, callback: site.callback }); callbackOwners.set(site.callback.id, owners);\n",
+          "start": 5984
+        },
+        {
+          "current": "\t\tconst { label, callback, role: exported } = owners[0];\n",
+          "previous": "\t\tconst { label, callback } = owners[0];\n",
+          "start": 6481
+        },
+        {
+          "current": "\t\t// A callback checked only by nominal types (a record field such as Tile.digit : Fin 5)\n\t\t// carries no callback refinement, so it stays bidirectional. Measure it only in the\n\t\t// returned-closure role its export authenticates, through its generated apply.\n\t\tconst role = direction ?? (exported === \"closure\" && annotations.has(`${prefix}_apply`)\n\t\t\t? \"closure\" : null);\n",
+          "previous": "",
+          "start": 6778
+        },
+        {
+          "current": "\t\tif(role === \"host\")\n",
+          "previous": "\t\tif(direction === \"host\")\n",
+          "start": 7572
+        },
+        {
+          "current": "\t\telse if(role === \"closure\")\n",
+          "previous": "\t\telse if(direction === \"closure\")\n",
+          "start": 8297
+        },
+        {
+          "current": "\t\t\tassert.equal(typeof callback.call, \"string\", `closure call symbol for ${label}`);\n",
+          "previous": "",
+          "start": 8381
+        }
+      ],
+      "path": "tests/helpers/php-wasm-callback-entry-selection.mjs",
+      "previousSha256": "3388f0f3570c3f145464cfda5204434612cedb4fb811da9fc5587826d0ec9fec"
+    },
+    {
+      "currentSha256": "b58648523a1b91314a2ace53bc9e6eca61618a7df3d196f0c6bde2e2716fa5cc",
+      "edits": [
+        {
+          "current": "\t\t, sources: Object.freeze([\"scaler\", \"counter\", \"visit\", \"three\", \"tiles\", \"tileMaker\"])\n",
+          "previous": "\t\t, sources: Object.freeze([\"scaler\", \"counter\", \"visit\", \"three\"])\n",
+          "start": 883
+        },
+        {
+          "current": "\t\t\t// Tile mixes a checked Fin field with a plain Nat field in both closure directions.\n\t\t\t, Object.freeze({\n\t\t\t\tname: \"tiles\", body: \"tilesProbeBody\"\n\t\t\t\t, previous: \"def tiles (_ : Unit) : List Tile → Nat := fun values => values.foldl (fun acc tile => acc + tile.digit.val * 100 + tile.count) 0\"\n\t\t\t\t, current: `@[noinline, export lb_callback_fin_closure_tiles]\ndef tilesProbeBody (values : List Tile) : Nat :=\n  values.foldl (fun acc tile => acc + tile.digit.val * 100 + tile.count) 0\n\ndef tiles (_ : Unit) : List Tile → Nat := tilesProbeBody`\n\t\t\t})\n\t\t\t, Object.freeze({\n\t\t\t\tname: \"tileMaker\", body: \"tileMakerProbeBody\"\n\t\t\t\t, previous: \"def tileMaker (start : Nat) : Nat → Tile := fun n => ⟨⟨(start + n) % 5, Nat.mod_lt _ (by decide)⟩, n⟩\"\n\t\t\t\t, current: `@[noinline, export lb_callback_fin_closure_tileMaker]\ndef tileMakerProbeBody (start n : Nat) : Tile :=\n  ⟨⟨(start + n) % 5, Nat.mod_lt _ (by decide)⟩, n⟩\n\ndef tileMaker (start : Nat) : Nat → Tile := tileMakerProbeBody start`\n\t\t\t})\n",
+          "previous": "",
+          "start": 1816
+        }
+      ],
+      "path": "tests/helpers/php-wasm-callback-entry-source-fixtures.mjs",
+      "previousSha256": "7b0991884ab4312bd2868bd6468626830e70c87202a5e7c8cff5ae63d7e72adb"
+    }
+  ]
+}

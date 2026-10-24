@@ -24,6 +24,7 @@ import "./helpers/perl-callback-admission-repair-source-history-tests.mjs";
 import "./helpers/owned-jvm-transfer-producer-repair-source-history-tests.mjs";
 import "./helpers/owned-c-receiver-producer-repair-source-history-tests.mjs";
 import "./helpers/php-wasm-callback-subtype-entry-source-history-tests.mjs";
+import "./helpers/php-wasm-callback-fin-mixed-entry-source-history-tests.mjs";
 
 const root = resolve(".");
 
