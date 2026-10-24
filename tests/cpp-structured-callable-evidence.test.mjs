@@ -60,8 +60,10 @@ test("C++ structured source history never discards unrelated edits", async () =>
 		const source = sourceAtProducer(cppStructuredCallableProducer
 			, update.path, update.currentSha256);
 		assert.equal(sha256(reverseCppStructuredCallableUpdate(source, update)), update.previousSha256);
-		assert.equal(sha256(beforeCppStructuredCallables(update.path, source)), update.previousSha256);
-		assert.notEqual(sha256(beforeCppStructuredCallables(update.path, source + "\n// unrelated\n")), update.previousSha256);
+		assert.equal(sha256(beforeCppStructuredCallables(update.path, source
+			, update.previousSha256)), update.previousSha256, update.path);
+		assert.notEqual(sha256(beforeCppStructuredCallables(update.path, source + "\n// unrelated\n"
+			, update.previousSha256)), update.previousSha256, update.path);
 		assert.throws(() => reverseCppStructuredCallableUpdate(source + "\n// unrelated\n", update));
 	}
 });

@@ -1,0 +1,341 @@
+{
+  "additions": [
+    {
+      "currentSha256": "5f4313b078afb6467179d054dfc5c6a552a60bf09f3e61e9239556196b31ba4c",
+      "path": "scripts/update-core-evidence-memory-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "182bef2fd6b8d488aab54f98d9b017951b6ede53d4dffca35a8136ce74fcc635",
+      "path": "tests/helpers/core-evidence-memory-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "7d62a935e6632b128cadb22509d4bfbf0d07b3fd19c2efae1806f6231f327308",
+      "path": "tests/helpers/core-evidence-memory-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "310dd69af9b4edd7bdbdc40e215d3991baa14ec3",
+  "integrationBaseCommit": "310dd69af9b4edd7bdbdc40e215d3991baa14ec3",
+  "integrationUpdates": [
+    {
+      "currentSha256": "94e7852395c758016f895d14c257a342179962cc1e21fee3a21c79947ff7fd6e",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"6d82259bff3bc5de418a4f909fd3cada384997a678e5b45e9a685585bde4b44a\"\n",
+          "previous": "          \"sha256\": \"22d80c9cd0b71ee8e60c6b9cddfb8231119f8d3133eb155dac49114cbe568a67\"\n",
+          "start": 55615
+        },
+        {
+          "current": "          \"sha256\": \"6d82259bff3bc5de418a4f909fd3cada384997a678e5b45e9a685585bde4b44a\"\n",
+          "previous": "          \"sha256\": \"22d80c9cd0b71ee8e60c6b9cddfb8231119f8d3133eb155dac49114cbe568a67\"\n",
+          "start": 78173
+        },
+        {
+          "current": "          \"sha256\": \"6d82259bff3bc5de418a4f909fd3cada384997a678e5b45e9a685585bde4b44a\"\n",
+          "previous": "          \"sha256\": \"22d80c9cd0b71ee8e60c6b9cddfb8231119f8d3133eb155dac49114cbe568a67\"\n",
+          "start": 95368
+        },
+        {
+          "current": "          \"sha256\": \"6d82259bff3bc5de418a4f909fd3cada384997a678e5b45e9a685585bde4b44a\"\n",
+          "previous": "          \"sha256\": \"22d80c9cd0b71ee8e60c6b9cddfb8231119f8d3133eb155dac49114cbe568a67\"\n",
+          "start": 111669
+        },
+        {
+          "current": "          \"sha256\": \"6d82259bff3bc5de418a4f909fd3cada384997a678e5b45e9a685585bde4b44a\"\n",
+          "previous": "          \"sha256\": \"22d80c9cd0b71ee8e60c6b9cddfb8231119f8d3133eb155dac49114cbe568a67\"\n",
+          "start": 432701
+        },
+        {
+          "current": "          \"sha256\": \"6d82259bff3bc5de418a4f909fd3cada384997a678e5b45e9a685585bde4b44a\"\n",
+          "previous": "          \"sha256\": \"22d80c9cd0b71ee8e60c6b9cddfb8231119f8d3133eb155dac49114cbe568a67\"\n",
+          "start": 1012191
+        },
+        {
+          "current": "          \"sha256\": \"4f3b8ea61a4ae41d36d2d1e4fa55df63673b32c81a7312a3272b8457f4f22f7c\"\n",
+          "previous": "          \"sha256\": \"e1917ac130d6545ef292aadf4a107f48f557de6ee15b27a2954409b2ee4359b8\"\n",
+          "start": 1082996
+        },
+        {
+          "current": "          \"sha256\": \"4f3b8ea61a4ae41d36d2d1e4fa55df63673b32c81a7312a3272b8457f4f22f7c\"\n",
+          "previous": "          \"sha256\": \"e1917ac130d6545ef292aadf4a107f48f557de6ee15b27a2954409b2ee4359b8\"\n",
+          "start": 1088597
+        },
+        {
+          "current": "          \"sha256\": \"6d82259bff3bc5de418a4f909fd3cada384997a678e5b45e9a685585bde4b44a\"\n",
+          "previous": "          \"sha256\": \"22d80c9cd0b71ee8e60c6b9cddfb8231119f8d3133eb155dac49114cbe568a67\"\n",
+          "start": 1137823
+        },
+        {
+          "current": "          \"sha256\": \"6d82259bff3bc5de418a4f909fd3cada384997a678e5b45e9a685585bde4b44a\"\n",
+          "previous": "          \"sha256\": \"22d80c9cd0b71ee8e60c6b9cddfb8231119f8d3133eb155dac49114cbe568a67\"\n",
+          "start": 1167383
+        },
+        {
+          "current": "          \"sha256\": \"6d82259bff3bc5de418a4f909fd3cada384997a678e5b45e9a685585bde4b44a\"\n",
+          "previous": "          \"sha256\": \"22d80c9cd0b71ee8e60c6b9cddfb8231119f8d3133eb155dac49114cbe568a67\"\n",
+          "start": 1177497
+        },
+        {
+          "current": "          \"sha256\": \"6d82259bff3bc5de418a4f909fd3cada384997a678e5b45e9a685585bde4b44a\"\n",
+          "previous": "          \"sha256\": \"22d80c9cd0b71ee8e60c6b9cddfb8231119f8d3133eb155dac49114cbe568a67\"\n",
+          "start": 1189258
+        },
+        {
+          "current": "          \"sha256\": \"6d82259bff3bc5de418a4f909fd3cada384997a678e5b45e9a685585bde4b44a\"\n",
+          "previous": "          \"sha256\": \"22d80c9cd0b71ee8e60c6b9cddfb8231119f8d3133eb155dac49114cbe568a67\"\n",
+          "start": 1221819
+        },
+        {
+          "current": "          \"sha256\": \"4f3b8ea61a4ae41d36d2d1e4fa55df63673b32c81a7312a3272b8457f4f22f7c\"\n",
+          "previous": "          \"sha256\": \"e1917ac130d6545ef292aadf4a107f48f557de6ee15b27a2954409b2ee4359b8\"\n",
+          "start": 1237542
+        },
+        {
+          "current": "          \"sha256\": \"6d82259bff3bc5de418a4f909fd3cada384997a678e5b45e9a685585bde4b44a\"\n",
+          "previous": "          \"sha256\": \"22d80c9cd0b71ee8e60c6b9cddfb8231119f8d3133eb155dac49114cbe568a67\"\n",
+          "start": 1252098
+        },
+        {
+          "current": "          \"sha256\": \"6d82259bff3bc5de418a4f909fd3cada384997a678e5b45e9a685585bde4b44a\"\n",
+          "previous": "          \"sha256\": \"22d80c9cd0b71ee8e60c6b9cddfb8231119f8d3133eb155dac49114cbe568a67\"\n",
+          "start": 1285249
+        },
+        {
+          "current": "          \"sha256\": \"6d82259bff3bc5de418a4f909fd3cada384997a678e5b45e9a685585bde4b44a\"\n",
+          "previous": "          \"sha256\": \"22d80c9cd0b71ee8e60c6b9cddfb8231119f8d3133eb155dac49114cbe568a67\"\n",
+          "start": 1325050
+        },
+        {
+          "current": "          \"sha256\": \"6d82259bff3bc5de418a4f909fd3cada384997a678e5b45e9a685585bde4b44a\"\n",
+          "previous": "          \"sha256\": \"22d80c9cd0b71ee8e60c6b9cddfb8231119f8d3133eb155dac49114cbe568a67\"\n",
+          "start": 1351620
+        },
+        {
+          "current": "          \"sha256\": \"6d82259bff3bc5de418a4f909fd3cada384997a678e5b45e9a685585bde4b44a\"\n",
+          "previous": "          \"sha256\": \"22d80c9cd0b71ee8e60c6b9cddfb8231119f8d3133eb155dac49114cbe568a67\"\n",
+          "start": 1373998
+        },
+        {
+          "current": "          \"sha256\": \"6d82259bff3bc5de418a4f909fd3cada384997a678e5b45e9a685585bde4b44a\"\n",
+          "previous": "          \"sha256\": \"22d80c9cd0b71ee8e60c6b9cddfb8231119f8d3133eb155dac49114cbe568a67\"\n",
+          "start": 1393665
+        },
+        {
+          "current": "          \"sha256\": \"6d82259bff3bc5de418a4f909fd3cada384997a678e5b45e9a685585bde4b44a\"\n",
+          "previous": "          \"sha256\": \"22d80c9cd0b71ee8e60c6b9cddfb8231119f8d3133eb155dac49114cbe568a67\"\n",
+          "start": 1417053
+        },
+        {
+          "current": "          \"sha256\": \"a7153954f8a44b780d5847df96dd7d60498c649b0e41853ee1e83036804c9071\"\n",
+          "previous": "          \"sha256\": \"026c865b8a98764fee60281a7f36d04efb51d14d067180b5c8636280c185c4ae\"\n",
+          "start": 35498837
+        },
+        {
+          "current": "          \"sha256\": \"a7153954f8a44b780d5847df96dd7d60498c649b0e41853ee1e83036804c9071\"\n",
+          "previous": "          \"sha256\": \"026c865b8a98764fee60281a7f36d04efb51d14d067180b5c8636280c185c4ae\"\n",
+          "start": 35795521
+        },
+        {
+          "current": "          \"sha256\": \"a7153954f8a44b780d5847df96dd7d60498c649b0e41853ee1e83036804c9071\"\n",
+          "previous": "          \"sha256\": \"026c865b8a98764fee60281a7f36d04efb51d14d067180b5c8636280c185c4ae\"\n",
+          "start": 36092367
+        },
+        {
+          "current": "          \"sha256\": \"a7153954f8a44b780d5847df96dd7d60498c649b0e41853ee1e83036804c9071\"\n",
+          "previous": "          \"sha256\": \"026c865b8a98764fee60281a7f36d04efb51d14d067180b5c8636280c185c4ae\"\n",
+          "start": 36389863
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "19d8f87b15f08543959e240856c2b7162884384248dfdafe29a2d25cd789a8fc"
+    },
+    {
+      "currentSha256": "753995311eb9239ba8a0cc4c5329c7a25958a309577feb960026a21f90861954",
+      "edits": [
+        {
+          "current": "import { beforeCoreEvidenceMemoryRepairSource, coreEvidenceMemoryRepairNormalizationPaths } from \"./core-evidence-memory-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...coreEvidenceMemoryRepairNormalizationPaths\n\t, ...valueIndexPromotionMilestoneRepairNormalizationPaths\n",
+          "previous": "\t...valueIndexPromotionMilestoneRepairNormalizationPaths\n",
+          "start": 173449
+        },
+        {
+          "current": "\tconst coreEvidenceMemoryRepair\n\t\t= beforeCoreEvidenceMemoryRepairSource(path, text, expected);\n\tif(sha256(coreEvidenceMemoryRepair) === expected)\n\t\treturn coreEvidenceMemoryRepair;\n\ttext = coreEvidenceMemoryRepair;\n",
+          "previous": "",
+          "start": 213798
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "b3316f09a87cc084a8ee6e1d7314f0a3a490645ae1e9cb62d30d779cf08682a0"
+    },
+    {
+      "currentSha256": "4f3b8ea61a4ae41d36d2d1e4fa55df63673b32c81a7312a3272b8457f4f22f7c",
+      "edits": [
+        {
+          "current": "\t\tassert.equal(sha256(beforeCppStructuredCallables(update.path, source\n\t\t\t, update.previousSha256)), update.previousSha256, update.path);\n\t\tassert.notEqual(sha256(beforeCppStructuredCallables(update.path, source + \"\\n// unrelated\\n\"\n\t\t\t, update.previousSha256)), update.previousSha256, update.path);\n",
+          "previous": "\t\tassert.equal(sha256(beforeCppStructuredCallables(update.path, source)), update.previousSha256);\n\t\tassert.notEqual(sha256(beforeCppStructuredCallables(update.path, source + \"\\n// unrelated\\n\")), update.previousSha256);\n",
+          "start": 3279
+        }
+      ],
+      "path": "tests/cpp-structured-callable-evidence.test.mjs",
+      "previousSha256": "cc6f8694155ed98b2dcd7296265deaa6e6f8ef5f8346573fa90e6273e2e37204"
+    },
+    {
+      "currentSha256": "ab893b9ca773c8429e9391379cbd2deb04e59d10d700b82052dffefba9544256",
+      "edits": [
+        {
+          "current": "import \"./helpers/core-evidence-memory-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 381
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "f280ba22f146ac11c2049874fd188e9d3778eabd6143ec4c07b72aaa55c74673"
+    }
+  ],
+  "milestone": "core-evidence-memory-repair-source-v1",
+  "predecessorCommit": "18788f75277f468b143346188a93c9bce62cd0fd",
+  "schemaVersion": 1,
+  "scope": "Bound retained history source text to 64 MiB and 256 entries, register owned-refinement source dispositions, and authenticate C++/Ruby/native-PHP evidence at its recorded milestones. Refresh exactly 25 current source pins without changing support claims or installed observations.",
+  "updates": [
+    {
+      "currentSha256": "6d82259bff3bc5de418a4f909fd3cada384997a678e5b45e9a685585bde4b44a",
+      "edits": [
+        {
+          "current": "\t\t{ \"path\": \"src/build/owned-refinement-carriers.mjs\", \"classification\": \"strict-migration-backlog\" },\n",
+          "previous": "",
+          "start": 17018
+        },
+        {
+          "current": "\t\t{\n\t\t\t\"path\": \"src/abi/owned-refinement-model.mjs\",\n\t\t\t\"classification\": \"strict-migration-backlog\"\n\t\t},\n",
+          "previous": "",
+          "start": 45459
+        }
+      ],
+      "path": "config/checked-javascript.json",
+      "previousSha256": "22d80c9cd0b71ee8e60c6b9cddfb8231119f8d3133eb155dac49114cbe568a67"
+    },
+    {
+      "currentSha256": "cc6f8694155ed98b2dcd7296265deaa6e6f8ef5f8346573fa90e6273e2e37204",
+      "edits": [
+        {
+          "current": "import { assertCppStructuredCallableExecution, assertCppStructuredCallableIntegration, cppStructuredCallableExecutionPath, cppStructuredCallableProducer } from \"./helpers/cpp-structured-callable-evidence.mjs\";\n",
+          "previous": "import { assertCppStructuredCallableExecution, assertCppStructuredCallableIntegration, cppStructuredCallableExecutionPath } from \"./helpers/cpp-structured-callable-evidence.mjs\";\n",
+          "start": 258
+        },
+        {
+          "current": "import { sourceAtProducer } from \"./helpers/producer-source.mjs\";\n",
+          "previous": "import { beforeRustStructuredCallables } from \"./helpers/rust-structured-callable-source-history.mjs\";\n",
+          "start": 639
+        },
+        {
+          "current": "\t\tconst source = sourceAtProducer(cppStructuredCallableProducer\n\t\t\t, update.path, update.currentSha256);\n",
+          "previous": "\t\tconst source = beforeRustStructuredCallables(update.path, await readFile(update.path, \"utf8\"));\n",
+          "start": 3075
+        }
+      ],
+      "path": "tests/cpp-structured-callable-evidence.test.mjs",
+      "previousSha256": "e1917ac130d6545ef292aadf4a107f48f557de6ee15b27a2954409b2ee4359b8"
+    },
+    {
+      "currentSha256": "a7153954f8a44b780d5847df96dd7d60498c649b0e41853ee1e83036804c9071",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { generateCopiedPhpPackage } from \"../../src/backends/php/copied-values.mjs\";\n",
+          "start": 441
+        },
+        {
+          "current": "import { moduleAtProducer } from \"./producer-module.mjs\";\n",
+          "previous": "",
+          "start": 832
+        },
+        {
+          "current": "\tconst { generateCopiedPhpPackage } = await moduleAtProducer(\n\t\tproducerCommit, \"src/backends/php/copied-values.mjs\");\n",
+          "previous": "",
+          "start": 12071
+        }
+      ],
+      "path": "tests/helpers/checked-record-value-index-php-ci-report.mjs",
+      "previousSha256": "026c865b8a98764fee60281a7f36d04efb51d14d067180b5c8636280c185c4ae"
+    },
+    {
+      "currentSha256": "5b4dc9960623fde1a9abbbf30985c246f5982b2ec3bceb42fdd463be720b0680",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { beforeDotnetDispatchIntegrationSource } from \"./dotnet-dispatch-integration-source-history.mjs\";\n",
+          "start": 524
+        },
+        {
+          "current": "\tconst record = JSON.parse(await readFile(rubyGdbCiHistoryPath, \"utf8\"));\n\tconst milestoneSource = path => {\n\t\tconst update = record.updates.find(item => item.path === path);\n\t\tassert.ok(update, path);\n\t\treturn sourceAt(path, update.currentSha256);\n\t};\n\tconst workflow = await milestoneSource(\".github/workflows/consumer-matrix.yml\");\n",
+          "previous": "\tconst workflow = beforeDotnetDispatchIntegrationSource(\".github/workflows/consumer-matrix.yml\", await readFile(\".github/workflows/consumer-matrix.yml\", \"utf8\"));\n",
+          "start": 3337
+        },
+        {
+          "current": "\tconst source = await milestoneSource(\"tests/documentation.test.mjs\");\n",
+          "previous": "\tconst source = beforeDotnetDispatchIntegrationSource(\"tests/documentation.test.mjs\", await readFile(\"tests/documentation.test.mjs\", \"utf8\"));\n",
+          "start": 3773
+        }
+      ],
+      "path": "tests/helpers/ruby-gdb-ci-source-history-tests.mjs",
+      "previousSha256": "ce604e6c5fe789d40a9519bd5b17f9516dd5b47c802a3843806518b83ef5e692"
+    },
+    {
+      "currentSha256": "2eab5e0c99711eef24190a60c18b79ccab306d985e81849752b461460ed87aeb",
+      "edits": [
+        {
+          "current": "import { createHistorySourceCache } from \"./source-history-test-source.mjs\";\n",
+          "previous": "",
+          "start": 326
+        },
+        {
+          "current": "\ntest(\"history source cache keeps exact text and bounds both milestone sides\", () => {\n\tconst cache = createHistorySourceCache({ maxEntries: 3, maxBytes: 64 });\n\tcache.set(\"before\", \"é\\0🙂\");\n\tcache.set(\"after\", \"next\");\n\tassert.equal(cache.get(\"before\"), \"é\\0🙂\");\n\tassert.equal(cache.get(\"after\"), \"next\");\n\tassert.equal(cache.stats().retainedBytes, 2 * (6 + 4 + 5 + 4));\n\tcache.set(\"third\", \"x\");\n\tcache.get(\"before\");\n\tcache.set(\"fourth\", \"y\");\n\tassert.equal(cache.get(\"after\"), undefined);\n\tassert.equal(cache.get(\"before\"), \"é\\0🙂\");\n\tassert.equal(cache.stats().size, 3);\n\tassert.ok(cache.stats().retainedBytes <= 64);\n});\n\ntest(\"history source cache evicts by bytes and bypasses oversized sources\", () => {\n\tconst cache = createHistorySourceCache({ maxEntries: 10, maxBytes: 20 });\n\tcache.set(\"a\", \"1234\");\n\tcache.set(\"b\", \"1234\");\n\tcache.get(\"a\");\n\tcache.set(\"c\", \"1234\");\n\tassert.equal(cache.get(\"b\"), undefined);\n\tassert.equal(cache.stats().retainedBytes, 20);\n\tcache.set(\"large\", \"x\".repeat(30));\n\tassert.equal(cache.get(\"large\"), undefined);\n\tassert.equal(cache.get(\"a\"), \"1234\");\n\tassert.equal(cache.stats().size, 2);\n\tcache.set(\"a\", \"x\".repeat(30));\n\tassert.equal(cache.get(\"a\"), undefined);\n\tassert.equal(cache.stats().retainedBytes, 10);\n\tcache.set(\"c\", \"\");\n\tassert.equal(cache.get(\"c\"), \"\");\n\tassert.equal(cache.stats().retainedBytes, 2);\n});\n\ntest(\"history source cache validates limits and supports disabled caching\", () => {\n\tfor(const key of [\"maxEntries\", \"maxBytes\"])\n\t{\n\t\tfor(const value of [-1, 0.5, NaN, Infinity, \"2\"])\n\t\t\tassert.throws(() => createHistorySourceCache({ [key]: value }));\n\t\tconst cache = createHistorySourceCache({ [key]: 0 });\n\t\tcache.set(\"key\", \"text\");\n\t\tassert.equal(cache.get(\"key\"), undefined);\n\t\tassert.equal(cache.stats().size, 0);\n\t\tassert.equal(cache.stats().retainedBytes, 0);\n\t}\n\tconst cache = createHistorySourceCache();\n\tassert.throws(() => cache.set({}, \"text\"));\n\tassert.throws(() => cache.set(\"key\", Buffer.from(\"text\")));\n});\n",
+          "previous": "",
+          "start": 2869
+        }
+      ],
+      "path": "tests/helpers/source-history-digest-tests.mjs",
+      "previousSha256": "76f82189de761202c7f7ca659dcc131628c0a2f4c7d379d63589a063c15e93cb"
+    },
+    {
+      "currentSha256": "ef812ca25775fea30b69636ad08d9a694c8ee47d46736326968b1ec072c9f98a",
+      "edits": [
+        {
+          "current": "/**\n * Bound shared predecessor and replay text retained between history checks.\n *\n * @param options - Independent limits on entries and UTF-16 text bytes.\n * @param options.maxEntries - Maximum number of cached identities.\n * @param options.maxBytes - Maximum retained key and source bytes.\n */\nexport const createHistorySourceCache = ({\n\tmaxEntries = 256, maxBytes = 64 * 1024 * 1024\n} = {}) => {\n\tfor(const limit of [maxEntries, maxBytes])\n\t\tassert.ok(Number.isSafeInteger(limit) && limit >= 0);\n\tconst entries = new Map();\n\tlet retainedBytes = 0;\n\tconst remove = key => {\n\t\tconst entry = entries.get(key);\n\t\tif(entry === undefined) return;\n\t\tretainedBytes -= entry.bytes;\n\t\tentries.delete(key);\n\t};\n\treturn {\n\t\t/**\n\t\t * Read exact cached text and refresh its recency.\n\t\t *\n\t\t * @param key - Authenticated milestone identity.\n\t\t */\n\t\tget: key => {\n\t\t\tconst entry = entries.get(key);\n\t\t\tif(entry === undefined) return undefined;\n\t\t\tentries.delete(key);\n\t\t\tentries.set(key, entry);\n\t\t\treturn entry.source;\n\t\t}\n\t\t/**\n\t\t * Retain text only when it fits both cache bounds.\n\t\t *\n\t\t * @param key - Authenticated milestone identity.\n\t\t * @param source - Immutable source text.\n\t\t */\n\t\t, set: (key, source) => {\n\t\t\tassert.equal(typeof key, \"string\");\n\t\t\tassert.equal(typeof source, \"string\");\n\t\t\tremove(key);\n\t\t\tconst bytes = 2 * (key.length + source.length);\n\t\t\tif(maxEntries === 0 || maxBytes === 0 || bytes > maxBytes) return;\n\t\t\twhile(entries.size >= maxEntries || retainedBytes + bytes > maxBytes)\n\t\t\t\tremove(entries.keys().next().value);\n\t\t\tentries.set(key, { source, bytes });\n\t\t\tretainedBytes += bytes;\n\t\t}\n\t\t, stats: () => ({ size: entries.size, retainedBytes })\n\t};\n};\n\nconst milestones = createHistorySourceCache();\n",
+          "previous": "const replayedMilestones = new Map();\nconst previousMilestones = new Map();\n",
+          "start": 338
+        },
+        {
+          "current": "\tconst key = `previous\\0${historyPath}\\0${path}`;\n\tlet source = milestones.get(key);\n",
+          "previous": "\tconst key = `${historyPath}\\0${path}`;\n\tlet source = previousMilestones.get(key);\n",
+          "start": 2307
+        },
+        {
+          "current": "\tmilestones.set(key, source);\n",
+          "previous": "\tpreviousMilestones.set(key, source);\n",
+          "start": 3574
+        },
+        {
+          "current": "\tconst key = `replayed\\0${historyPath}\\0${path}`;\n\tlet source = milestones.get(key);\n",
+          "previous": "\tconst key = `${historyPath}\\0${path}`;\n\tlet source = replayedMilestones.get(key);\n",
+          "start": 3993
+        },
+        {
+          "current": "\t\tmilestones.set(key, source);\n",
+          "previous": "\t\treplayedMilestones.set(key, source);\n",
+          "start": 5078
+        },
+        {
+          "current": "\tmilestones.set(key, source);\n",
+          "previous": "\treplayedMilestones.set(key, source);\n",
+          "start": 6086
+        }
+      ],
+      "path": "tests/helpers/source-history-test-source.mjs",
+      "previousSha256": "46c1ebefa7b76167def31e59efe478d5e8ed6807455bbae1bc7f4bd09d308515"
+    }
+  ]
+}
