@@ -1,0 +1,58 @@
+
+> @lean-wasm/bridge-poc@0.0.0-poc test:owned-checked-record-native
+> LEAN_BRIDGE_OWNED_CHECKED_RECORD_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-checked-record-native-packaging.test.mjs
+
+TAP version 13
+# Subtest: owned checked-record C and C++ generators retain exact callback directions
+ok 1 - owned checked-record C and C++ generators retain exact callback directions
+  ---
+  duration_ms: 44.298478
+  type: 'test'
+  ...
+# Subtest: owned checked-record native acceptance is a required recurring job
+ok 2 - owned checked-record native acceptance is a required recurring job
+  ---
+  duration_ms: 57.136006
+  type: 'test'
+  ...
+# Subtest: installed ordinary-full owned checked records execute through C and C++ archives
+ok 3 - installed ordinary-full owned checked records execute through C and C++ archives
+  ---
+  duration_ms: 121049.611908
+  type: 'test'
+  ...
+# ordinary-full: Compiling checked native Lean exports
+# {"route":"ordinary-full","c":261,"cpp":125,"sanitizer":true}
+# Subtest: installed ordinary-result-only owned checked records execute through C and C++ archives
+ok 4 - installed ordinary-result-only owned checked records execute through C and C++ archives
+  ---
+  duration_ms: 109052.659781
+  type: 'test'
+  ...
+# ordinary-result-only: Compiling checked native Lean exports
+# {"route":"ordinary-result-only","c":14,"cpp":3,"sanitizer":false}
+# Subtest: installed reviewed-full owned checked records execute through C and C++ archives
+ok 5 - installed reviewed-full owned checked records execute through C and C++ archives
+  ---
+  duration_ms: 114776.767604
+  type: 'test'
+  ...
+# reviewed-full: Compiling checked native Lean exports
+# {"route":"reviewed-full","c":261,"cpp":125,"sanitizer":true}
+# Subtest: installed reviewed-result-only owned checked records execute through C and C++ archives
+ok 6 - installed reviewed-result-only owned checked records execute through C and C++ archives
+  ---
+  duration_ms: 113214.6281
+  type: 'test'
+  ...
+# reviewed-result-only: Compiling checked native Lean exports
+# {"route":"reviewed-result-only","c":14,"cpp":3,"sanitizer":false}
+1..6
+# tests 6
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 458376.162866
