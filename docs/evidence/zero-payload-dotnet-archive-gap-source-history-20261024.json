@@ -1,0 +1,53 @@
+{
+  "additions": [
+    {
+      "currentSha256": "46e84989476bfab7e9ccb60eab48d87a0b3b01a78f47f9c1d4281b8fbd6d4d8f",
+      "path": "scripts/update-zero-payload-dotnet-archive-gap-source-history.mjs"
+    },
+    {
+      "currentSha256": "0efdde08364d30a3812eb8eea31f7884bc8a3e4f680303212a863e7ffe179433",
+      "path": "tests/helpers/zero-payload-dotnet-archive-gap-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "cdb692f743281d0ddd75c81cf0f96d121097b79e86a5585be266fdd401fbead1",
+      "path": "tests/helpers/zero-payload-dotnet-archive-gap-source-history.mjs"
+    }
+  ],
+  "historicalCommit": "c5a8723cd1baa801ae10807df698578997401f66",
+  "historicalPredecessorCommit": "60412850d9ecc85cddcf271dd6d15884e370ca40",
+  "historicalTransitions": [
+    {
+      "currentCommit": "c5a8723cd1baa801ae10807df698578997401f66",
+      "currentSha256": "d36fa795be29f3e1e5ee2c97b09f4d76e2d703e2099d15863be355914c130abc",
+      "edits": [
+        {
+          "current": "const stableTools = tools => ({\n\t...tools, measurements: tools.measurements.map(measurement => {\n\t\tassert.match(measurement.cwd\n\t\t\t, /^\\/tmp\\/lean-bridge-zero-payload-dotnet-[^/]+\\/toolchain$/u);\n\t\tconst stable = { ...measurement };\n\t\tReflect.deleteProperty(stable, \"cwd\");\n\t\treturn stable;\n\t})\n});\n",
+          "previous": "",
+          "start": 3038
+        },
+        {
+          "current": "\t\tconst toolIdentity = stableTools(report.tools);\n\t\ttools ??= toolIdentity;\n",
+          "previous": "\t\ttools ??= report.tools;\n",
+          "start": 4426
+        },
+        {
+          "current": "\t\tassert.deepEqual(toolIdentity, tools, `${route} toolchain identity`);\n",
+          "previous": "\t\tassert.deepEqual(report.tools, tools, `${route} toolchain identity`);\n",
+          "start": 4576
+        },
+        {
+          "current": "\t\tconst tap = await readFile(join(cell, \"run.tap\"), \"utf8\");\n",
+          "previous": "\t\tconst tap = await readFile(join(cell, \"run.tap\"));\n",
+          "start": 4932
+        }
+      ],
+      "path": "scripts/archive-zero-payload-checked-record-dotnet-evidence.mjs",
+      "previousCommit": "60412850d9ecc85cddcf271dd6d15884e370ca40",
+      "previousSha256": "22b432dc979543f4c8485164d67239a3d1d92641c4599e4d717bcbba1230169c"
+    }
+  ],
+  "milestone": "zero-payload-dotnet-archive-gap-source-v1",
+  "predecessorCommit": "af8232b140605a598b128fdea9562649a8ba94d5",
+  "schemaVersion": 1,
+  "scope": "Restore the zero-payload .NET archiver transition from c5a8723 that no history record carried, so hub-routed readers reverse the archiver script to the bytes the zero-payload .NET archive history recorded; no evidence, observation or support claim changes. Hub and registration integration are recorded by the integrating seal."
+}
