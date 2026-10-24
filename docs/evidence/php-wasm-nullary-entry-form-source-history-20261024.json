@@ -1,0 +1,226 @@
+{
+  "additions": [
+    {
+      "currentSha256": "712df2f9f6152522db529c5e2d332cac4feebbaff3fa60defcc9ea568089f0a0",
+      "path": "scripts/update-php-wasm-nullary-entry-form-source-history.mjs"
+    },
+    {
+      "currentSha256": "8150399f77f8c1d1af9a4f8221be24f0e19a17854ebec0c49f57b405cce321db",
+      "path": "tests/helpers/php-wasm-nullary-entry-form-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "f34cf4c833bc5397778e131dc9f038f773f6aee66175946eb237969803eb9b57",
+      "path": "tests/helpers/php-wasm-nullary-entry-form-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "08a6e7b2df96afaeebe39957523042981a616fca",
+  "integrationUpdates": [
+    {
+      "currentSha256": "139c7d613c06d76203749a31a65905d11e8a6069ca23564201ebca3e53756514",
+      "edits": [
+        {
+          "current": "import \"./helpers/php-wasm-nullary-entry-form-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 7707
+        }
+      ],
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "1df5caf1d368af7f60ee0bbd79ce62ca2e41e5522192110c618f6af8c72c4712"
+    },
+    {
+      "currentSha256": "ec604a29454801b69c2c596f69af35d282063c833a4318594da95ea526133097",
+      "edits": [
+        {
+          "current": "import { beforePhpWasmNullaryEntryFormSource, phpWasmNullaryEntryFormNormalizationPaths } from \"./php-wasm-nullary-entry-form-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...phpWasmNullaryEntryFormNormalizationPaths\n\t, ...managedResultOnlyFixtureRepairNormalizationPaths\n",
+          "previous": "\t...managedResultOnlyFixtureRepairNormalizationPaths\n",
+          "start": 171392
+        },
+        {
+          "current": "\tconst phpWasmNullaryEntryForm\n\t\t= beforePhpWasmNullaryEntryFormSource(path, text, expected);\n\tif(sha256(phpWasmNullaryEntryForm) === expected)\n\t\treturn phpWasmNullaryEntryForm;\n\ttext = phpWasmNullaryEntryForm;\n",
+          "previous": "",
+          "start": 211072
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "ffbbe5ca3a814892e66524035a514a3f88a40f017bef6ed0bffd11017fdec3c5"
+    }
+  ],
+  "milestone": "php-wasm-nullary-entry-form-source-v1",
+  "predecessorCommit": "b512997482f98e730e13dea03eb8df3c6436db34",
+  "schemaVersion": 1,
+  "scope": "Classify authored PHP-Wasm entry probes by their source and compiled function or global forms without requiring impossible call markers from module-initialized values.",
+  "updates": [
+    {
+      "currentSha256": "da4ca0ee33950f59087aa16e8036246809e21df64f1a6a380f51d0a0b78f3694",
+      "edits": [
+        {
+          "current": "\t\tconst observed = observer.snapshot();\n\t\tassert.deepEqual(observed.globalDefinitions ?? [], sourceProbe.entries\n\t\t\t.filter(item => sourceProbe.entryForms[item.symbol] === \"global\"));\n",
+          "previous": "",
+          "start": 2982
+        },
+        {
+          "current": "\t\t\t...observed, modelSha256: sha256(canonicalJson(model))\n",
+          "previous": "\t\t\t...observer.snapshot(), modelSha256: sha256(canonicalJson(model))\n",
+          "start": 3190
+        }
+      ],
+      "path": "tests/helpers/php-wasm-owned-refinement-entry-build.mjs",
+      "previousSha256": "2216ae71b4616eba83d9098d192e6356039e48832bdd36e66bdaf8ece1567199"
+    },
+    {
+      "currentSha256": "ec4fc64fe72ee363080112512de690c18b4d8c1bea3907e91691987f498224fe",
+      "edits": [
+        {
+          "current": "import {\n\tinstrumentSubtypeCEntries, restoreSubtypeCEntries\n} from \"./php-wasm-subtype-entry-c.mjs\";\n",
+          "previous": "import { restoreSubtypeCEntries } from \"./php-wasm-subtype-entry-c.mjs\";\n",
+          "start": 303
+        },
+        {
+          "current": "\tawait assert.rejects(value.link, /adapter: exactly one compiled definition required/u);\n",
+          "previous": "\tawait assert.rejects(value.link, /adapter: exactly one marked definition required/u);\n",
+          "start": 3284
+        },
+        {
+          "current": "});\n\ntest(\"compiler-input observer classifies nullary Lean exports as globals\", async t => {\n\tconst root = await mkdtemp(join(tmpdir(), \"lean-bridge-entry-global-observer-\"));\n\tt.after(() => rm(root, { recursive: true }));\n\tconst input = join(root, \"input.c\"), records = join(root, \"records\");\n\tawait mkdir(records);\n\tawait writeFile(input, [\n\t\t\"LEAN_EXPORT lean_object* source_value;\"\n\t\t, \"lean_object *adapter(lean_object *value) { return value; }\"\n\t\t, \"static ZEND_FUNCTION(lg_call0) { RETURN_NULL(); }\"\n\t\t, \"\"\n\t].join(\"\\n\"));\n\tconst selection = [\n\t\t{ symbol: \"source_value\", kind: \"source\", label: \"Probe.source\" }\n\t\t, { symbol: \"adapter\", kind: \"adapter\", label: \"Probe.adapter\" }\n\t\t, { symbol: \"lg_call0\", kind: \"public\", label: \"Probe.call\" }\n\t];\n\tconst runner = { capture: async request => {\n\t\tif(request.args.includes(\"-c\"))\n\t\t{\n\t\t\tconst source = await readFile(\n\t\t\t\trequest.args[request.args.indexOf(\"-c\") + 1], \"utf8\");\n\t\t\tassert.doesNotMatch(source\n\t\t\t\t, /enter source Probe\\.source/u);\n\t\t\tassert.match(source, /enter adapter Probe\\.adapter/u);\n\t\t\tawait writeFile(request.args[request.args.indexOf(\"-o\") + 1], source);\n\t\t}\n\t\treturn { stdout: \"\", stderr: \"\", code: 0 };\n\t} };\n\tconst observer = createPhpWasmRefinementEntryBuildObserver({\n\t\trecordRoot: records, runner\n\t});\n\tobserver.select(selection);\n\tawait observer.capture({ command: \"/tool/emcc\"\n\t\t, args: [\"-c\", input, \"-o\", join(root, \"input.o\")] });\n\tawait observer.capture({ command: \"/tool/emcc\"\n\t\t, args: [\"-sSIDE_MODULE=2\", join(root, \"input.o\"), \"-o\", join(root, \"probe.so\")] });\n\tconst observation = observer.snapshot();\n\tassert.deepEqual(observation.definitionCounts, {\n\t\tsource_value: 1, adapter: 1, lg_call0: 1\n\t});\n\tassert.deepEqual(observation.globalDefinitions, [selection[0]]);\n\tassert.throws(() => instrumentSubtypeCEntries(\n\t\t\"LEAN_EXPORT lean_object* adapter;\\n\", [selection[1]])\n\t, /only authored entries may compile as globals/u);\n",
+          "previous": "",
+          "start": 3494
+        }
+      ],
+      "path": "tests/helpers/php-wasm-refinement-entry-build-tests.mjs",
+      "previousSha256": "b82fe24d48da695a95ce4ad0c6bfdc080df36bd8d995d21090a51c3c0bbbfcda"
+    },
+    {
+      "currentSha256": "b1f1dbe6bc942dab44a57324ac5785f735b0e3f47fdc8c33936f0464b6da7d36",
+      "edits": [
+        {
+          "current": "\tconst compiled = [], headers = [], commands = [];\n\tconst counts = new Map(), forms = new Map(), markers = new Map();\n",
+          "previous": "\tconst compiled = [], headers = [], commands = [], counts = new Map();\n",
+          "start": 2065
+        },
+        {
+          "current": "\t\tfor(const item of selected)\n\t\t{\n\t\t\tcounts.set(item.symbol, 0); forms.set(item.symbol, new Set());\n\t\t\tmarkers.set(item.symbol, 0);\n\t\t}\n",
+          "previous": "\t\tfor(const item of selected) counts.set(item.symbol, 0);\n",
+          "start": 2404
+        },
+        {
+          "current": "\tconst recordDefinitions = receipt => {\n\t\tconst definitions = receipt.definitions ?? receipt.insertions\n\t\t\t.filter(item => item.kind !== \"preamble\")\n\t\t\t.map(item => ({ ...item, form: \"function\" }));\n\t\tfor(const item of definitions)\n\t\t{\n\t\t\tassert.ok(counts.has(item.symbol));\n\t\t\tcounts.set(item.symbol, counts.get(item.symbol) + 1);\n\t\t\tforms.get(item.symbol).add(item.form);\n\t\t}\n\t\tfor(const item of receipt.insertions.filter(item => item.kind !== \"preamble\"))\n\t\t{\n\t\t\tassert.ok(markers.has(item.symbol));\n\t\t\tmarkers.set(item.symbol, markers.get(item.symbol) + 1);\n\t\t}\n\t};\n",
+          "previous": "",
+          "start": 2580
+        },
+        {
+          "current": "\t\t\trecordDefinitions(receipt);\n",
+          "previous": "\t\t\tfor(const item of receipt.insertions.filter(item => item.kind !== \"preamble\"))\n\t\t\t\tcounts.set(item.symbol, counts.get(item.symbol) + 1);\n",
+          "start": 4126
+        },
+        {
+          "current": "\t\t\trecordDefinitions(receipt);\n",
+          "previous": "\t\t\tfor(const item of receipt.insertions.filter(item => item.kind !== \"preamble\"))\n\t\t\t\tcounts.set(item.symbol, counts.get(item.symbol) + 1);\n",
+          "start": 4941
+        },
+        {
+          "current": "\t\t\tfor(const item of selected)\n\t\t\t{\n\t\t\t\tconst { symbol, kind } = item, count = counts.get(symbol);\n\t\t\t\tassert.equal(count, 1, `${symbol}: exactly one compiled definition required`);\n\t\t\t\tassert.equal(forms.get(symbol).size, 1, `${symbol}: one compiled form required`);\n\t\t\t\tconst form = [...forms.get(symbol)][0];\n\t\t\t\tassert.ok([\"function\", \"global\"].includes(form));\n\t\t\t\tif(form === \"function\")\n\t\t\t\t\tassert.equal(markers.get(symbol), 1\n\t\t\t\t\t\t, `${symbol}: exactly one marked definition required`);\n\t\t\t\telse\n\t\t\t\t{\n\t\t\t\t\tassert.ok([\"constructor\", \"source\"].includes(kind)\n\t\t\t\t\t\t, `${symbol}: only authored entries may be module-initialized`);\n\t\t\t\t\tassert.equal(markers.get(symbol), 0\n\t\t\t\t\t\t, `${symbol}: a module-initialized value has no call marker`);\n\t\t\t\t}\n\t\t\t}\n",
+          "previous": "\t\t\tfor(const [symbol, count] of counts) assert.equal(count, 1, `${symbol}: exactly one marked definition required`);\n",
+          "start": 5748
+        },
+        {
+          "current": "\t\t, ...[...forms.values()].some(value => value.has(\"global\")) ? {\n\t\t\tglobalDefinitions: selected.filter(item => forms.get(item.symbol).has(\"global\"))\n\t\t} : {}\n",
+          "previous": "",
+          "start": 7452
+        },
+        {
+          "current": "\t\tconst observed = observer.snapshot();\n\t\tassert.deepEqual(observed.globalDefinitions ?? [], sourceProbe.entries\n\t\t\t.filter(item => sourceProbe.entryForms[item.symbol] === \"global\"));\n",
+          "previous": "",
+          "start": 9839
+        },
+        {
+          "current": "\t\t\t...observed, modelSha256: sha256(canonicalJson(model))\n",
+          "previous": "\t\t\t...observer.snapshot(), modelSha256: sha256(canonicalJson(model))\n",
+          "start": 10047
+        }
+      ],
+      "path": "tests/helpers/php-wasm-refinement-entry-build.mjs",
+      "previousSha256": "f5feba2e38ee21a5a40797de23975863dead8bc35e9a2b5ae164becfb9be7322"
+    },
+    {
+      "currentSha256": "dc486d53681157f6da4db1e675fb3c0f2f036a5d1ca1dd932d075f35e41973ee",
+      "edits": [
+        {
+          "current": "\t\tassert.deepEqual(Object.keys(probe.entryForms).sort()\n\t\t\t, probe.entries.map(item => item.symbol).sort());\n",
+          "previous": "",
+          "start": 1078
+        },
+        {
+          "current": "\t\t\tassert.ok([\"function\", \"global\"].includes(probe.entryForms[item.symbol]));\n",
+          "previous": "",
+          "start": 1372
+        },
+        {
+          "current": "\t}\n});\n\ntest(\"nullary authored values are classified as module-initialized globals\", async () => {\n\tconst expected = {\n\t\t\"nominal-full\": [\"wordBits\"]\n\t\t, \"nominal-result-only\": [\"wordBits\"]\n\t\t, \"recursive-subtype\": []\n\t\t, \"recursive-checked-record\": []\n\t\t, \"dependent-full\": []\n\t\t, \"dependent-result-only\": []\n\t\t, \"value-index-full\": [\n\t\t\t\"produceTrueBool\", \"produceFalseBool\", \"produceAb\", \"produceEmptySized\"\n\t\t]\n\t\t, \"value-index-result-only\": [\n\t\t\t\"produceTrueBool\", \"produceFalseBool\", \"produceAb\", \"produceEmptySized\"\n\t\t]\n\t\t, \"zero-payload-full\": [\n\t\t\t\"mkWitness\", \"mkAbsent\", \"produceWitness\", \"produceToken\", \"produceMarker\"\n\t\t]\n\t\t, \"zero-payload-result-only\": [\n\t\t\t\"mkWitness\", \"mkAbsent\", \"produceWitness\", \"produceToken\", \"produceMarker\"\n\t\t]\n\t};\n\tfor(const [family, names] of Object.entries(expected))\n\t{\n\t\tconst fixture = phpWasmRefinementEntrySourceFixture(family);\n\t\tconst probe = phpWasmRefinementEntrySource(\n\t\t\tawait readFile(fixture.path, \"utf8\"), fixture);\n\t\tassert.deepEqual(probe.entries.filter(item =>\n\t\t\tprobe.entryForms[item.symbol] === \"global\").map(item =>\n\t\t\t\titem.label.slice(fixture.namespace.length + 1)), names, family);\n",
+          "previous": "",
+          "start": 1541
+        }
+      ],
+      "path": "tests/helpers/php-wasm-refinement-entry-source-tests.mjs",
+      "previousSha256": "2ee6c61be26901f53225f90b960497d4e3bc7d45c2a84d1ec53bf7d1a1e34498"
+    },
+    {
+      "currentSha256": "000a7eb91f022a4a7430813ca74de7608887bc1fb1e5d61f3eb338878c738e89",
+      "edits": [
+        {
+          "current": "\tconst edits = [], entries = [], entryForms = {};\n",
+          "previous": "\tconst edits = [], entries = [];\n",
+          "start": 1607
+        },
+        {
+          "current": "\t\tif(header.includes(\":=\"))\n\t\t{\n\t\t\tconst signature = header.slice(header.indexOf(name) + name.length\n\t\t\t\t, header.lastIndexOf(\":=\"));\n\t\t\tentryForms[symbol] = signature.trimStart().startsWith(\":\")\n\t\t\t\t? \"global\" : \"function\";\n",
+          "previous": "\t\tif(header.includes(\" :=\"))\n",
+          "start": 2181
+        },
+        {
+          "current": "\t\t}\n",
+          "previous": "",
+          "start": 2525
+        },
+        {
+          "current": "\t\t\tentryForms[symbol] = \"function\";\n",
+          "previous": "",
+          "start": 3067
+        },
+        {
+          "current": "\tassert.equal(Object.keys(entryForms).length, entries.length);\n\treturn {\n\t\tsource, entries, entryForms, edits\n\t\t, originalSha256: sha256(original), probeSha256: sha256(source)\n\t};\n",
+          "previous": "\treturn { source, entries, edits, originalSha256: sha256(original), probeSha256: sha256(source) };\n",
+          "start": 4078
+        }
+      ],
+      "path": "tests/helpers/php-wasm-refinement-entry-source.mjs",
+      "previousSha256": "fb7ddc2b244a56f4f9207570e9c26b1f97ad6a292b79fcdd44afe54ab2e6df03"
+    },
+    {
+      "currentSha256": "318e69749e8bd9388198f35982c03ae400619450e280c83a33230914545e4a10",
+      "edits": [
+        {
+          "current": "\tconst masked = maskedC(original), insertions = [], definitions = [];\n",
+          "previous": "\tconst masked = maskedC(original), insertions = [];\n",
+          "start": 2182
+        },
+        {
+          "current": "\t\tconst global = new RegExp(\n\t\t\t`^LEAN_EXPORT[^;()\\\\n]*\\\\b${item.symbol}\\\\b[ \\\\t]*(?:=[^;\\\\n]*)?;`, \"gmu\"\n\t\t);\n\t\tconst globals = [...masked.matchAll(global)];\n\t\tassert.ok(matches.length + globals.length <= 1\n\t\t\t, `duplicate selected definition: ${item.symbol}`);\n\t\tif(matches.length === 0 && globals.length === 0) continue;\n\t\tif(globals.length === 1)\n\t\t{\n\t\t\tassert.ok([\"constructor\", \"source\"].includes(item.kind)\n\t\t\t\t, `only authored entries may compile as globals: ${item.symbol}`);\n\t\t\tdefinitions.push({ ...item, form: \"global\", offset: globals[0].index });\n\t\t\tcontinue;\n\t\t}\n\t\tdefinitions.push({ ...item, form: \"function\", offset: matches[0].index });\n",
+          "previous": "\t\tassert.ok(matches.length <= 1, `duplicate selected definition: ${item.symbol}`);\n\t\tif(matches.length === 0) continue;\n",
+          "start": 2963
+        },
+        {
+          "current": "\tconst receipt = {\n\t\toriginalSha256: sha256(original), probeSha256: sha256(source)\n\t\t, definitions, insertions\n\t};\n",
+          "previous": "\tconst receipt = { originalSha256: sha256(original), probeSha256: sha256(source), insertions };\n",
+          "start": 4572
+        }
+      ],
+      "path": "tests/helpers/php-wasm-subtype-entry-c.mjs",
+      "previousSha256": "2ae9b1588380c457aa9fe04930d645b6208c6665457453276951cec97de22eb2"
+    }
+  ]
+}

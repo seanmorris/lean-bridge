@@ -104,6 +104,7 @@ import "./helpers/owned-subtype-remaining-hosts-tap-repair-source-history-tests.
 import "./helpers/structured-callable-recovery-gate-repair-source-history-tests.mjs";
 import "./helpers/generic-subtype-managed-tap-escape-repair-source-history-tests.mjs";
 import "./helpers/managed-result-only-fixture-repair-source-history-tests.mjs";
+import "./helpers/php-wasm-nullary-entry-form-source-history-tests.mjs";
 import "./helpers/core-runner-headroom-source-history-tests.mjs";
 import "./helpers/generic-subtype-npm-browser-source-history-tests.mjs";
 import "./helpers/structural-subtype-partition-validator-source-history-tests.mjs";
