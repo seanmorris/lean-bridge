@@ -96,7 +96,9 @@ test("owned Subtype test-profile repair refreshes exactly 98 live pins"
 	const record = await readRecord();
 	assert.equal(record.pinCount, 98);
 	assert.deepEqual(record.pin, ownedSubtypeTestProfilePinRepairPin);
-	assert.equal(sha256(await readFile(ownedSubtypeTestProfilePinRepairPin.path))
+	assert.equal(sha256(await sourceAtFinHistoryMilestone(
+		ownedSubtypeTestProfilePinRepairPin.path
+		, ownedSubtypeTestProfilePinRepairCurrentSha256))
 		, ownedSubtypeTestProfilePinRepairCurrentSha256);
 	const update = record.updates[0];
 	const current = JSON.parse(await sourceAtFinHistoryMilestone(
