@@ -15,7 +15,7 @@ import { startSiteServer } from "../../site/serve.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
 import { corpusBrowserSelection } from "./type-corpus.mjs";
 import { nominalSubtypeName } from "./nominal-subtype-installed-fixture.mjs";
-import { accountNominalSubtypeEntry, nominalSubtypeEntryConsumer, nominalSubtypeEntryExpected } from "./nominal-subtype-entry.mjs";
+import { accountNominalSubtypeEntry, nominalSubtypeEntryConsumer, nominalSubtypeEntryExpected, splitNominalSubtypeEntryConsole } from "./nominal-subtype-entry.mjs";
 
 const repository = resolve(import.meta.dirname, "../..");
 const base = "/corpus/nested/";
@@ -68,11 +68,13 @@ export const observeNominalSubtypeEntryBrowser = async ({ consumer, output, envi
 				await tab.locator("#result[data-status=\"ready\"], #result[data-status=\"error\"]").waitFor();
 				assert.equal(await tab.locator("#result").getAttribute("data-status"), "ready", await tab.locator("#result").textContent());
 				const rows = await tab.evaluate(() => globalThis.nominalEntryRows);
-				const trace = lines.map(line => line + "\n").join("");
-				await saveLakeFile(output, `entry/browser/${engine}.console.txt`, trace);
+				// The record keeps the complete console stream; only exact allowed engine warnings leave the trace.
+				await saveLakeFile(output, `entry/browser/${engine}.console.txt`, lines.map(line => line + "\n").join(""));
+				const { trace: traceLines, warnings } = splitNominalSubtypeEntryConsole(engine, lines);
+				const trace = traceLines.map(line => line + "\n").join("");
 				const { observed, counts } = accountNominalSubtypeEntry(trace, rows, expected);
 				assert.deepEqual(foreignRequests, []); assert.deepEqual(errors, []);
-				engines.push({ engine, hostVersion: browser.version(), rows, observed, counts, errors, consoleLines: lines.length });
+				engines.push({ engine, hostVersion: browser.version(), rows, observed, counts, errors, warnings, consoleLines: lines.length });
 				await context.close();
 			}
 			finally

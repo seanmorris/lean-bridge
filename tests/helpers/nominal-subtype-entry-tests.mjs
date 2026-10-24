@@ -9,7 +9,7 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 import { nominalSubtypeFixture, nominalSubtypeModule } from "./nominal-subtype-installed-fixture.mjs";
 import { nominalSubtypeDispatchSteps } from "./nominal-subtype-dispatch.mjs";
-import { accountNominalSubtypeEntry, assertNominalSubtypeEntryReport, instrumentNominalSubtypeLean, nominalSubtypeEntryBegin, nominalSubtypeEntryConsumer, nominalSubtypeEntryEnd, nominalSubtypeEntryExpected, nominalSubtypeEntryInstrumentation, nominalSubtypeEntryMarker } from "./nominal-subtype-entry.mjs";
+import { accountNominalSubtypeEntry, assertNominalSubtypeEntryReport, instrumentNominalSubtypeLean, nominalSubtypeEntryBegin, nominalSubtypeEntryConsumer, nominalSubtypeEntryEnd, nominalSubtypeEntryExpected, nominalSubtypeEntryBrowserWarnings, nominalSubtypeEntryInstrumentation, nominalSubtypeEntryMarker, splitNominalSubtypeEntryConsole } from "./nominal-subtype-entry.mjs";
 
 const fixture = () => readFileSync(`${nominalSubtypeFixture}/${nominalSubtypeModule}.lean`, "utf8");
 const trace = expected => expected.map(item => [`${nominalSubtypeEntryBegin} ${item.step}`, ...item.entries.map(entry => `${nominalSubtypeEntryMarker} ${entry}`), `${nominalSubtypeEntryEnd} ${item.step}`].join("\n")).join("\n") + "\n";
@@ -158,11 +158,39 @@ test("nominal entry report checker requires distinct probe identities, exact row
 	assert.throws(() => assertNominalSubtypeEntryReport({ ...entry
 		, sideModuleExports: { ...entry.sideModuleExports
 			, emscriptenInternals: ["__wasm_call_ctors"] } }));
-	const engine = { engine: "chromium", hostVersion: "1.0", rows: rows(expected), observed: expected, counts, errors: [], consoleLines: 1 };
+	const engine = { engine: "chromium", hostVersion: "1.0", rows: rows(expected), observed: expected, counts, errors: [], warnings: [], consoleLines: 1 };
 	const browser = { deployment: { sha256: digest, viteVersion: "1" }, pageSha256: digest, engines: [engine], externalNetworkBlocked: true };
 	assert.deepEqual(assertNominalSubtypeEntryReport({ ...entry, browser }), counts);
 	assert.throws(() => assertNominalSubtypeEntryReport({ ...entry, browser: { ...browser, engines: [] } }), /at least one engine/u);
 	assert.throws(() => assertNominalSubtypeEntryReport({ ...entry, browser: { ...browser, engines: [{ ...engine, rows: rows(expected).slice(1) }] } }));
 	assert.throws(() => assertNominalSubtypeEntryReport({ ...entry, browser: { ...browser, engines: [{ ...engine, errors: ["boom"] }] } }));
 	assert.throws(() => assertNominalSubtypeEntryReport({ ...entry, browser: { ...browser, engines: [{ ...engine, engine: "node" }] } }));
+	const [firefoxWarning] = nominalSubtypeEntryBrowserWarnings.firefox;
+	const firefox = { ...engine, engine: "firefox", warnings: [firefoxWarning] };
+	assert.deepEqual(assertNominalSubtypeEntryReport({ ...entry, browser: { ...browser, engines: [firefox] } }), counts);
+	assert.throws(() => assertNominalSubtypeEntryReport({ ...entry, browser: { ...browser, engines: [{ ...engine, warnings: undefined }] } }), /warnings/u);
+	assert.throws(() => assertNominalSubtypeEntryReport({ ...entry, browser: { ...browser, engines: [{ ...engine, warnings: [firefoxWarning] }] } }), /chromium warnings/u);
+	assert.throws(() => assertNominalSubtypeEntryReport({ ...entry, browser: { ...browser, engines: [{ ...firefox, warnings: [firefoxWarning + " "] }] } }), /firefox warnings/u);
+});
+
+test("nominal entry browser console keeps every line but the exact Firefox exception-handling warning in the trace", () => {
+	const expected = nominalSubtypeEntryExpected();
+	const lines = trace(expected).split("\n").slice(0, -1);
+	const [warning] = nominalSubtypeEntryBrowserWarnings.firefox;
+	assert.match(warning, /WebAssembly exception handling 'try' instruction is deprecated/u);
+	const firefox = splitNominalSubtypeEntryConsole("firefox", [warning, ...lines, warning]);
+	assert.deepEqual(firefox, { trace: lines, warnings: [warning, warning] });
+	assert.deepEqual(accountNominalSubtypeEntry(firefox.trace.map(line => line + "\n").join(""), rows(expected), expected).observed, expected);
+	// The same text from another engine, a near miss or any other line stays in the trace and fails accounting.
+	const noise = [["chromium", warning], ["webkit", warning], ["firefox", warning.replace("try_table", "try-table")]];
+	noise.push(["firefox", "[JavaScript Warning: \"unrelated\"]"]);
+	for(const [engine, extra] of noise)
+	{
+		const split = splitNominalSubtypeEntryConsole(engine, [extra, ...lines]);
+		assert.deepEqual(split.warnings, []);
+		assert.throws(() => accountNominalSubtypeEntry(split.trace.map(line => line + "\n").join(""), rows(expected), expected)
+			, /unexpected stderr line/u);
+	}
+	assert.ok(Object.isFrozen(nominalSubtypeEntryBrowserWarnings) && Object.isFrozen(nominalSubtypeEntryBrowserWarnings.firefox));
+	assert.deepEqual(Object.keys(nominalSubtypeEntryBrowserWarnings), ["firefox"]);
 });
