@@ -17,6 +17,36 @@ const exact = (value, keys, label) => {
 	require(same(Object.keys(value).sort(), [...keys].sort()), `open ${label}`);
 };
 
+const bounded = value => {
+	const text = String(value);
+	return text.length > 120 ? `${text.slice(0, 117)}...` : text;
+};
+const entryName = entry => entry === undefined ? "none" : bounded(`${entry.kind}:${entry.label}`);
+/**
+ * Name the first planned/observed divergence with bounded identities and counts only.
+ *
+ * @param calls - Calls parsed from the probe trace.
+ * @param cases - Independently planned cases.
+ */
+const entryMismatch = (calls, cases) => {
+	const totals = `cases expected ${cases.length} observed ${calls.length}`;
+	for(let index = 0; index < Math.max(calls.length, cases.length); index++)
+	{
+		const planned = cases[index]?.call, observed = calls[index];
+		if(same(observed, planned)) continue;
+		const expectedEntries = planned?.entries ?? [], observedEntries = observed?.entries ?? [];
+		let entry = 0;
+		while(entry < Math.max(expectedEntries.length, observedEntries.length)
+			&& same(expectedEntries[entry], observedEntries[entry])) entry++;
+		const where = entry < Math.max(expectedEntries.length, observedEntries.length)
+			? `entry ${entry}: expected ${entryName(expectedEntries[entry])} observed ${entryName(observedEntries[entry])}`
+			: "entries match, call fields differ";
+		return `case ${index} (${bounded(cases[index]?.control ?? "unplanned")}) ${where}; `
+			+ `entries expected ${expectedEntries.length} observed ${observedEntries.length}; ${totals}`;
+	}
+	return totals;
+};
+
 const optionalKeys = (value, required, optional) => [
 	...required, ...optional.filter(key => value && Object.hasOwn(value, key))
 ];
@@ -151,7 +181,8 @@ export const executePhpWasmCorpus = async options => {
 	await run("<?php require '/" + mode + ".php';");
 	const observation = JSON.parse(stdout), trace = stderr;
 	const calls = parseSubtypeEntryTrace(trace, input.entryProbe.selected);
-	require(same(calls, input.entryProbe.cases.map(item => item.call)), "probe entry sequence differs from its independent plan");
+	if(!same(calls, input.entryProbe.cases.map(item => item.call)))
+		throw new Error(`probe entry sequence differs from its independent plan: ${entryMismatch(calls, input.entryProbe.cases)}`);
 	phases.push({ stage: "complete", libraries: [...libraries] });
 	return { phases, observation
 		, entryProbe: {

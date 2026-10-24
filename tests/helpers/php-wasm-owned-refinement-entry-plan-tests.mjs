@@ -4,8 +4,11 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 import test from "node:test";
-import { phpWasmOwnedRefinementEntryPlan } from "./php-wasm-owned-refinement-entry-plan.mjs";
+import {
+	phpWasmOwnedRefinementEntryPlan, phpWasmOwnedSubtypeAlternateConstructors
+} from "./php-wasm-owned-refinement-entry-plan.mjs";
 import { phpWasmReducedArityTargets, phpWasmSourceCallTargets } from "./php-wasm-entry-call-targets.mjs";
 import { phpWasmOwnedRefinementEntrySourceFixture } from "./php-wasm-owned-refinement-entry-source-fixtures.mjs";
 
@@ -73,9 +76,10 @@ test("owned Subtype plan distinguishes per-site checks and pre-source transfer o
 	const alternate = plan.cases.find(value => value.control === "alternate-valid");
 	assert.deepEqual(labels(alternate), [
 		"identity.borrow", "echoRecordAlternate:native", "owned:refine_alternate"
-		, "Owned.checkedCountAlternate", "echoRecordAlternate:lean"
-		, "Owned.checkedCountAlternate", "Owned.echoRecordAlternate"
-		, "transfer.finish"
+		, "Owned.checkedCountAlternate", "Owned.checkedCount"
+		, "echoRecordAlternate:lean"
+		, "Owned.checkedCountAlternate", "Owned.checkedCount"
+		, "Owned.echoRecordAlternate", "transfer.finish"
 	]);
 	const refused = plan.cases.find(value => value.control === "transfer-refusal");
 	assert.deepEqual(labels(refused), [
@@ -87,6 +91,33 @@ test("owned Subtype plan distinguishes per-site checks and pre-source transfer o
 	assert.ok(labels(accepted).indexOf("owner.move") < labels(accepted).indexOf("transferRecord:lean"));
 	assert.ok(labels(accepted).indexOf("owner.consume") < labels(accepted).indexOf("Owned.transferRecord"));
 	assert.equal(labels(accepted).at(-1), "transfer.finish");
+});
+
+test("owned Subtype alternate constructor encloses its authored checkedCount delegation", async () => {
+	const lean = await readFile("tests/fixtures/onboarding/owned-subtypes/Owned.lean", "utf8");
+	assert.match(lean, /^def checkedCountAlternate \(value : Int\) : Option \{ count : Int \/\/ 0 ≤ count \} :=\n {2}checkedCount value$/mu);
+	assert.deepEqual(phpWasmOwnedSubtypeAlternateConstructors, ["checkedCountAlternate", "checkedCount"]);
+	assert.ok(Object.isFrozen(phpWasmOwnedSubtypeAlternateConstructors));
+	const { plan } = await fixture("owned-subtype");
+	const refused = plan.cases.find(value => value.control === "alternate-refusal");
+	assert.deepEqual(labels(refused), [
+		"identity.borrow", "echoRecordAlternate:native", "owned:refine_alternate"
+		, "Owned.checkedCountAlternate", "Owned.checkedCount", "transfer.finish"
+	]);
+	assert.deepEqual(refused.call.counts, { validator: 1, constructor: 2, adapter: 3, source: 0 });
+	const accepted = plan.cases.find(value => value.control === "alternate-valid");
+	assert.deepEqual(accepted.call.counts, { validator: 1, constructor: 4, adapter: 4, source: 1 });
+	// Only the alternate cases delegate; every other constructor stays a single entry.
+	for(const value of plan.cases.filter(item => !item.control.startsWith("alternate-")))
+		assert.ok(!labels(value).includes("Owned.checkedCountAlternate"), value.control);
+	const entries = refused.call.entries;
+	const nested = entries.findIndex(entry => entry.label === "Owned.checkedCount");
+	for(const [name, changed] of [
+		["missing", entries.filter((_, index) => index !== nested)]
+		, ["extra", [...entries.slice(0, nested + 1), entries[nested], ...entries.slice(nested + 1)]]
+		, ["reordered", [...entries.slice(0, nested - 1), entries[nested], entries[nested - 1], ...entries.slice(nested + 1)]]
+		, ["duplicated", [...entries.slice(0, nested + 1), entries[nested - 1], entries[nested], ...entries.slice(nested + 1)]]
+	]) assert.notDeepEqual(changed, entries, name);
 });
 
 test("owned checked-record plan preserves first-refusal, nested and transfer order", async () => {

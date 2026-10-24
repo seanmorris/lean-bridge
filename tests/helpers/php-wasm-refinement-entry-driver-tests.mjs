@@ -124,6 +124,23 @@ test("graph refinement entry driver refuses trace and plan drift", async () => {
 	]) await assert.rejects(driver(faults));
 });
 
+test("entry driver names the first divergence with bounded identities and counts", async () => {
+	await assert.rejects(driver({ trace: trace.replace("LB_SUBTYPE_ENTRY_V1 enter source Probe.first\n", "") })
+		, { message: "probe entry sequence differs from its independent plan: case 0 (direct) entry 2: "
+			+ "expected source:Probe.first observed none; entries expected 3 observed 2; cases expected 1 observed 1" });
+	const second = { ...plan.cases[0], control: "second" };
+	await assert.rejects(driver({ plan: { ...plan, cases: [plan.cases[0], second] } })
+		, { message: "probe entry sequence differs from its independent plan: case 1 (second) entry 0: "
+			+ "expected validator:Probe.first:fin_guard_0 observed none; entries expected 3 observed 0; cases expected 2 observed 1" });
+	const control = "c".repeat(400);
+	const error = await driver({ plan: { ...plan, cases: [{ ...plan.cases[0], control }] }
+		, trace: trace.replace("LB_SUBTYPE_ENTRY_V1 enter source Probe.first\n", "") }).catch(value => value);
+	assert.ok(error instanceof Error);
+	assert.ok(error.message.includes(`(${"c".repeat(117)}...)`));
+	assert.ok(!error.message.includes("c".repeat(118)));
+	assert.ok(error.message.length < 400);
+});
+
 test("entry driver admits owned native/Lean layers while preserving refusal boundary", async () => {
 	const ownedSelected = [
 		{ symbol: "lgo_call0", kind: "public", label: "echoClaim" }
