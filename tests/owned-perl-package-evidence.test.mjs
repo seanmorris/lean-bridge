@@ -76,6 +76,9 @@ test("owned Perl evidence rejects widened scope and forged installed observation
 		, record => { record.packages.ordinary.observations[0].observed.checks--; }
 		, record => { record.packages["callbacks-reviewed"].observations[0].observed.primitives--; }
 		, record => { record.packages.ordinary.observations[0].assets.observations.pop(); }
+		, record => { delete record.sources["tests/fixtures/structured-types/owned-perl-installed-assets.pl"]; }
+		, record => { record.sources["tests/fixtures/structured-types/owned-perl-installed-assets.pl"] = "0".repeat(64); }
+		, record => { record.packages.ordinary.observations[0].assets.sourceSha256 = "0".repeat(64); }
 		, record => { record.packages.ordinary.observations[0].assets.observations[0].brokerIdentities = 1; }
 		, record => { record.packages.ordinary.packageSetReceipt.packages[0].artifacts[0].sha256 = "0".repeat(64); }
 		, record => { record.documentation.sourceHashes.example = "0".repeat(64); }

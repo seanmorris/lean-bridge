@@ -4,6 +4,7 @@
  * @file
  */
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import { readFile } from 'node:fs/promises';
 import { canonicalJson, sha256 } from '../../src/capsule/node.mjs';
 import { hashBindingIr } from '../../src/binding-ir/canonical.mjs';
@@ -21,17 +22,30 @@ import { assertPhpRecursiveFaults, assertPhpRecursivePoison, assertPhpRecursiveO
 import { phpRecursiveTamperSource } from './php-recursive-callable-tamper.mjs';
 import { assertJvmRecursiveCallableIntegration } from './jvm-recursive-callable-evidence.mjs';
 import { jvmRecursiveCallableHistoryPath } from './jvm-recursive-callable-source-history.mjs';
-import { phpRecursiveCallableChangedPaths, reversePhpRecursiveCallableUpdate } from './php-recursive-callable-source-history.mjs';
+import { phpRecursiveCallableChangedPaths, phpRecursiveCallableHistoryPath, reversePhpRecursiveCallableUpdate } from './php-recursive-callable-source-history.mjs';
 import { beforePhpWasmRecursiveCallables } from './php-wasm-recursive-callable-source-history.mjs';
 
 const priorSource = async path => beforePhpWasmRecursiveCallables(path, await readFile(path, 'utf8'));
+let inventorySha256;
 
 /**
  * Authenticate the inventory's original bytes before parsing its historical data.
  *
  * @param source - Complete raw inventory file, without JSON reserialization.
  */
-export const phpRecursiveTypeSurface = source => JSON.parse(beforePhpWasmRecursiveCallables('docs/type-surface.v1.json', source));
+export const phpRecursiveTypeSurface = source => {
+	const path = 'docs/type-surface.v1.json';
+	if(inventorySha256 === undefined)
+	{
+		const record = JSON.parse(readFileSync(phpRecursiveCallableHistoryPath, 'utf8'));
+		const updates = record.updates.filter(update => update.path === path);
+		assert.equal(updates.length, 1);
+		const digest = updates[0].currentSha256;
+		assert.match(digest, /^[a-f0-9]{64}$/u);
+		inventorySha256 = digest;
+	}
+	return JSON.parse(beforePhpWasmRecursiveCallables(path, source, inventorySha256));
+};
 
 export const phpRecursiveCallableBaseline = 'e17c1fe6e137d1a3bbdb65d9a9ec1e49dbc751be';
 export const phpRecursiveCallableExecutionPath = 'docs/evidence/php-recursive-callables-20260926.json';

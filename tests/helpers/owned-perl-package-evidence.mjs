@@ -9,6 +9,7 @@ import { sha256 } from "../../src/capsule/node.mjs";
 import { generateOwnedPerlXs } from "../../src/backends/perl/owned-xs.mjs";
 import { ownedDotnetCallbacksReviewedIr } from "./owned-dotnet-callback-fixture.mjs";
 import { ownedPythonScalarsReviewedIr } from "./owned-python-scalars-fixture.mjs";
+import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
 
 export const ownedPerlPackageScope = {
 	profiles: ["perl"], sourcePaths: ["ordinary-source", "reviewed-ir"]
@@ -61,7 +62,9 @@ export const assertOwnedPerlExecution = async record => {
 	for(const [name, count] of Object.entries({ packages: 4, documentation: 1, coexistence: 1, runtime: 16, legacy: 2 }))
 		passing(record.runs[name], name, count);
 	assert.deepEqual(Object.keys(record.packages).sort(), ["callbacks-ordinary", "callbacks-reviewed", "ordinary", "reviewed"]);
-	const assetSource = sha256(await readFile("tests/fixtures/structured-types/owned-perl-installed-assets.pl"));
+	const assetPath = "tests/fixtures/structured-types/owned-perl-installed-assets.pl";
+	const assetSource = sha256(await sourceAtFinHistoryMilestone(
+		assetPath, record.sources[assetPath]));
 	for(const [name, report] of Object.entries(record.packages))
 	{
 		const complete = name.startsWith("callbacks-");

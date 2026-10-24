@@ -98,7 +98,8 @@ test("hosted Rust value-index promotion closes every added source", async () => 
 		checkedRecordValueIndexRustPromotionHistoryPath, "utf8"));
 	for(const addition of record.additions)
 	{
-		assert.equal(sha256(await readFile(addition.path))
+		assert.equal(sha256(await sourceAtFinHistoryMilestone(
+			addition.path, addition.currentSha256))
 			, addition.currentSha256, addition.path);
 		assert.notEqual(spawnSync("git", ["cat-file", "-e"
 			, `${checkedRecordValueIndexRustPromotionPredecessor}:${addition.path}`]
