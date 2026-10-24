@@ -1,0 +1,242 @@
+{
+  "additions": [
+    {
+      "currentSha256": "1d7daea62fcd9f514c015931ad8d2cb186aa12cc9297a08081dc06607793164c",
+      "path": "tests/helpers/owned-checked-record-javascript-evidence-fixture.mjs"
+    },
+    {
+      "currentSha256": "7dd242f5aea214959e3df3030c0c9e9f0bdbacf6064411be8fb1785ae5e8da84",
+      "path": "scripts/update-owned-npm-source-identity-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "641031052ff58912838546bbd0e0f30857770ec8592dd80edf2e3e504db36fd8",
+      "path": "tests/helpers/owned-npm-source-identity-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "a12035733c610a6ad77e27cbe550c02b03db12a7a05d7376c1f9a17a7276f863",
+      "path": "tests/helpers/owned-npm-source-identity-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "16c19ea1c98f6e552ba4370218afe324ef925660",
+  "implementationCommits": [
+    "16c19ea1c98f6e552ba4370218afe324ef925660"
+  ],
+  "integrationBaseCommit": "16c19ea1c98f6e552ba4370218afe324ef925660",
+  "integrationUpdates": [
+    {
+      "currentSha256": "8d3dffffb19dfdeae285288a16922f3ceee5b92f44b0ee1a296931bb6fd3357e",
+      "edits": [
+        {
+          "current": "import { beforeOwnedNpmSourceIdentityRepairSource, ownedNpmSourceIdentityRepairNormalizationPaths } from \"./owned-npm-source-identity-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 8784
+        },
+        {
+          "current": "\t...ownedNpmSourceIdentityRepairNormalizationPaths\n\t, ...coreStructuredHistoryRepairNormalizationPaths\n",
+          "previous": "\t...coreStructuredHistoryRepairNormalizationPaths\n",
+          "start": 181985
+        },
+        {
+          "current": "\tlet stage = beforeOwnedNpmSourceIdentityRepairSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCoreStructuredHistoryRepairSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeCoreStructuredHistoryRepairSource(path, text, expected);\n",
+          "start": 225128
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "29b0de01834fa0db8c0b26e7db1c66f08ce7be886efa86f442873da66bb52281"
+    },
+    {
+      "currentSha256": "430fb5d0a40b77a29ae0fe201d05f79e525914d38b0b0ee3f461e575b7264105",
+      "edits": [
+        {
+          "current": "import \"./helpers/owned-npm-source-identity-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 5792
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "25e5b7c95c282abb8cbf353c74c16b70c3a4eb8b6ceeb4b6e4d97f01544b92a7"
+    }
+  ],
+  "milestone": "owned-npm-source-identity-repair-source-v1",
+  "predecessorCommit": "0be57f78747083ee6d6986418e15a0f9121fd300",
+  "schemaVersion": 1,
+  "scope": "Repair the owned checked-record npm/browser evidence verifier to accept the real structured compiler source identity and bind it to retained compiler metadata, semantic owned-v4 binding IR, component model, package coordinates, compiled and installed Wasm, runtime identity and browser asset digests. Replace the misleading digest-only fixture with a shared inert package fixture. Add report and rehashed-receipt substitution controls; independently validate the untouched failed producer artifact without accepting that failed run as hosted evidence. Refresh exactly eleven testing-document hashes and preserve every other inventory byte. Original hosted evidence and supported cells remain unchanged. A terminal successful replacement producer and complete matrix replay remain required.",
+  "updates": [
+    {
+      "currentSha256": "eec2d6dfc69c6e3b7e70f1cdd44861bf40f181fe5696a70f7ccf5efb4cd2eeb9",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"acd21552e997b7003de081b9764281cf9f101b0a27ff473e77be221647779d96\"\n",
+          "previous": "          \"sha256\": \"c83070b2b2160ebced563fd46a4e6e849c7690143472954b87d0c936f96a9929\"\n",
+          "start": 1167697
+        },
+        {
+          "current": "          \"sha256\": \"acd21552e997b7003de081b9764281cf9f101b0a27ff473e77be221647779d96\"\n",
+          "previous": "          \"sha256\": \"c83070b2b2160ebced563fd46a4e6e849c7690143472954b87d0c936f96a9929\"\n",
+          "start": 1177811
+        },
+        {
+          "current": "          \"sha256\": \"acd21552e997b7003de081b9764281cf9f101b0a27ff473e77be221647779d96\"\n",
+          "previous": "          \"sha256\": \"c83070b2b2160ebced563fd46a4e6e849c7690143472954b87d0c936f96a9929\"\n",
+          "start": 1189747
+        },
+        {
+          "current": "          \"sha256\": \"acd21552e997b7003de081b9764281cf9f101b0a27ff473e77be221647779d96\"\n",
+          "previous": "          \"sha256\": \"c83070b2b2160ebced563fd46a4e6e849c7690143472954b87d0c936f96a9929\"\n",
+          "start": 1222308
+        },
+        {
+          "current": "          \"sha256\": \"acd21552e997b7003de081b9764281cf9f101b0a27ff473e77be221647779d96\"\n",
+          "previous": "          \"sha256\": \"c83070b2b2160ebced563fd46a4e6e849c7690143472954b87d0c936f96a9929\"\n",
+          "start": 1252587
+        },
+        {
+          "current": "          \"sha256\": \"acd21552e997b7003de081b9764281cf9f101b0a27ff473e77be221647779d96\"\n",
+          "previous": "          \"sha256\": \"c83070b2b2160ebced563fd46a4e6e849c7690143472954b87d0c936f96a9929\"\n",
+          "start": 1285738
+        },
+        {
+          "current": "          \"sha256\": \"acd21552e997b7003de081b9764281cf9f101b0a27ff473e77be221647779d96\"\n",
+          "previous": "          \"sha256\": \"c83070b2b2160ebced563fd46a4e6e849c7690143472954b87d0c936f96a9929\"\n",
+          "start": 1325841
+        },
+        {
+          "current": "          \"sha256\": \"acd21552e997b7003de081b9764281cf9f101b0a27ff473e77be221647779d96\"\n",
+          "previous": "          \"sha256\": \"c83070b2b2160ebced563fd46a4e6e849c7690143472954b87d0c936f96a9929\"\n",
+          "start": 1352261
+        },
+        {
+          "current": "          \"sha256\": \"acd21552e997b7003de081b9764281cf9f101b0a27ff473e77be221647779d96\"\n",
+          "previous": "          \"sha256\": \"c83070b2b2160ebced563fd46a4e6e849c7690143472954b87d0c936f96a9929\"\n",
+          "start": 1374941
+        },
+        {
+          "current": "          \"sha256\": \"acd21552e997b7003de081b9764281cf9f101b0a27ff473e77be221647779d96\"\n",
+          "previous": "          \"sha256\": \"c83070b2b2160ebced563fd46a4e6e849c7690143472954b87d0c936f96a9929\"\n",
+          "start": 1394608
+        },
+        {
+          "current": "          \"sha256\": \"acd21552e997b7003de081b9764281cf9f101b0a27ff473e77be221647779d96\"\n",
+          "previous": "          \"sha256\": \"c83070b2b2160ebced563fd46a4e6e849c7690143472954b87d0c936f96a9929\"\n",
+          "start": 1417696
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "9010c6fc911841e2a88cf18f75c363658a80afc79e659d87526209ff5f4982d9"
+    },
+    {
+      "currentSha256": "acd21552e997b7003de081b9764281cf9f101b0a27ff473e77be221647779d96",
+      "edits": [
+        {
+          "current": "The report checker compares each structured source identity with compiler metadata\ninside its retained npm archive. It binds the compiled IR, component receipt,\npackage coordinates, shared runtime and browser Wasm assets to that package set.\nIt reads archive contents without executing them.\n\n",
+          "previous": "",
+          "start": 1890
+        }
+      ],
+      "path": "docs/contributing/testing.md",
+      "previousSha256": "c83070b2b2160ebced563fd46a4e6e849c7690143472954b87d0c936f96a9929"
+    },
+    {
+      "currentSha256": "ab2c01af72563573a15fb119dd64d7ee4538b8fc07db68449d5d1ac20dc0447f",
+      "edits": [
+        {
+          "current": "import { canonicalJson, sha256 } from \"../../src/capsule/node.mjs\";\nimport { canonicalizeJsonValue } from \"../../src/binding-ir/canonical.mjs\";\nimport { validateOwnedAggregateBindingIr } from \"../../src/binding-ir/contract.mjs\";\nimport { readClosedPackageTarGz } from \"./closed-package-tar.mjs\";\n",
+          "previous": "import { canonicalJson } from \"../../src/capsule/node.mjs\";\n",
+          "start": 300
+        },
+        {
+          "current": "const verifyBrowser = (browser, resultOnly, assets) => {\n",
+          "previous": "const verifyBrowser = (browser, resultOnly) => {\n",
+          "start": 2327
+        },
+        {
+          "current": "\t\tassert.deepEqual(execution.assets.toSorted(), assets.toSorted()\n\t\t\t, \"Browser assets must be the retained component and runtime Wasm\");\n",
+          "previous": "",
+          "start": 3365
+        },
+        {
+          "current": "\nconst packageIdentity = async (entry, receipt, root) => {\n\tconst component = receipt.packages.find(pkg => pkg.role === \"component\");\n\tconst runtime = receipt.packages.find(pkg => pkg.role === \"runtime\");\n\tconst archive = async pkg => {\n\t\tconst artifact = pkg.artifacts[0];\n\t\tconst bytes = await readFile(join(root, artifact.path));\n\t\tassert.equal(bytes.length, artifact.bytes, \"Retained archive size\");\n\t\tassert.equal(sha256(bytes), artifact.sha256, \"Retained archive identity\");\n\t\treturn readClosedPackageTarGz(bytes, { root: \"package\"\n\t\t\t, maxInput: 64 * 1024 ** 2, maxBytes: 64 * 1024 ** 2 });\n\t};\n\tconst files = await archive(component), runtimeFiles = await archive(runtime);\n\tconst member = (members, path) => {\n\t\tconst bytes = members.get(path);\n\t\tassert.ok(Buffer.isBuffer(bytes), \"Missing retained package member: \" + path);\n\t\treturn bytes;\n\t};\n\tconst json = (members, path) => {\n\t\tconst bytes = member(members, path), value = JSON.parse(bytes);\n\t\tassert.equal(bytes.toString(\"utf8\"), canonicalJson(value)\n\t\t\t, \"Retained metadata must be canonical: \" + path);\n\t\treturn value;\n\t};\n\tconst compilerPath = \"metadata/compiler/javascript-wasm-component.json\";\n\tconst compiler = json(files, compilerPath);\n\tassert.equal(sha256(member(files, compilerPath)), entry.componentIdentity\n\t\t, \"Compiled component identity\");\n\tassert.equal(compiler.schemaVersion, 1);\n\tassert.equal(compiler.profile, \"javascript-wasm-owned-v1\");\n\tassert.equal(compiler.pointerBits, 32);\n\tassert.deepEqual(entry.sourceIdentity, compiler.sourceIdentity\n\t\t, \"Report source identity must match retained compiler metadata\");\n\tassert.match(entry.sourceIdentity.sourceTreeSha256, digest);\n\tassert.equal(receipt.source.treeSha256, entry.sourceIdentity.sourceTreeSha256\n\t\t, \"Package-set source tree\");\n\tassert.equal(Boolean(entry.sourceIdentity.reviewedBindingIr)\n\t\t, entry.authorRoute === \"reviewed\", \"Compiled author route\");\n\tassert.equal(compiler.bindingIrSha256, entry.bindingIrSha256\n\t\t, \"Compiled binding IR identity\");\n\tconst model = json(files, \"metadata/compiler/model.json\");\n\tassert.equal(sha256(member(files, \"metadata/compiler/model.json\"))\n\t\t, compiler.modelSha256, \"Compiled model identity\");\n\tassert.deepEqual(model.component, receipt.component, \"Compiled component coordinate\");\n\tassert.deepEqual(model.sourceIdentity, entry.sourceIdentity, \"Compiled model source\");\n\tassert.equal(model.bindingIrSha256, entry.bindingIrSha256);\n\tconst bindingIr = json(files, \"metadata/compiler/binding-ir.json\");\n\tvalidateOwnedAggregateBindingIr(bindingIr);\n\tassert.deepEqual(model.bindingIr, bindingIr, \"Compiled model binding IR\");\n\tassert.equal(sha256(canonicalizeJsonValue(bindingIr))\n\t\t, entry.bindingIrSha256, \"Retained binding IR identity\");\n\tassert.deepEqual(receipt.profiles, [{ id: \"javascript-wasm-owned-v1\"\n\t\t, bindingIrSha256: entry.bindingIrSha256\n\t\t, runtimeIdentity: runtime.runtimeIdentity }], \"Installed package profile\");\n\tconst metadata = json(files, \"package.json\");\n\tassert.equal(metadata.name, component.name);\n\tassert.equal(metadata.version, component.version);\n\tassert.deepEqual(metadata.leanBridge, {\n\t\tcomponent: receipt.component.id, profile: \"javascript-wasm-owned-v1\"\n\t\t, bindingIrSha256: entry.bindingIrSha256\n\t\t, componentIdentitySha256: entry.componentIdentity\n\t\t, runtimeIdentity: runtime.runtimeIdentity, sharedRuntime: true\n\t}, \"Installed component metadata\");\n\tconst runtimeMetadata = json(runtimeFiles, \"package.json\");\n\tassert.equal(runtimeMetadata.name, runtime.name);\n\tassert.equal(runtimeMetadata.version, runtime.version);\n\tassert.equal(runtimeMetadata.leanBridge.runtimeIdentity, runtime.runtimeIdentity);\n\tassert.equal(runtimeMetadata.leanBridge.sharedRuntime, true);\n\tassert.equal(runtimeMetadata.leanBridge.profile, \"side-lazy\");\n\tassert.equal(compiler.library, \"lib/component.so.wasm\");\n\tconst side = member(files, \"internal/component.so.wasm\");\n\tassert.deepEqual(side, member(files, \"metadata/compiler/lib/component.so.wasm\")\n\t\t, \"Installed Wasm must be the retained compiled binary\");\n\tassert.deepEqual(compiler.wasmLibrary, entry.wasm, \"Compiled Wasm identity\");\n\tassert.deepEqual(entry.wasm, { bytes: side.length, sha256: sha256(side) }\n\t\t, \"Installed Wasm identity\");\n\treturn [entry.wasm.sha256, sha256(member(runtimeFiles, \"internal/main.wasm\"))];\n};\n\n",
+          "previous": "",
+          "start": 3723
+        },
+        {
+          "current": "\t\t\t, entry.wasm.sha256]) assert.match(value, digest);\n\t\tassert.ok(entry.sourceIdentity && typeof entry.sourceIdentity === \"object\"\n\t\t\t&& !Array.isArray(entry.sourceIdentity), \"Source identity must be a structured record\");\n",
+          "previous": "\t\t\t, entry.sourceIdentity, entry.wasm.sha256]) assert.match(value, digest);\n",
+          "start": 9632
+        },
+        {
+          "current": "",
+          "previous": "\t\tconst browserExecutions = verifyBrowser(entry.browser, shape.resultOnly);\n",
+          "start": 10103
+        },
+        {
+          "current": "\t\tconst assets = await packageIdentity(entry, receipt, retainedRoot);\n\t\tconst browserExecutions = verifyBrowser(entry.browser, shape.resultOnly, assets);\n",
+          "previous": "",
+          "start": 11499
+        }
+      ],
+      "path": "tests/helpers/owned-checked-record-javascript-evidence.mjs",
+      "previousSha256": "980c54c86e588d1cd8e53ee7212cada7830353494f7f7132eac0d3d48c8899ee"
+    },
+    {
+      "currentSha256": "67c0ed89a27e971afd4ce043dbca063a8ba2e973a8564fdf6853649cace8067d",
+      "edits": [
+        {
+          "current": "import { packageSetReceiptName } from \"../../src/release/package-set-receipt.mjs\";\n",
+          "previous": "import {\n\tpackageSetReceiptName, readVerifiedPackageSetReceipt\n\t, writePackageSetReceipt\n} from \"../../src/release/package-set-receipt.mjs\";\n",
+          "start": 394
+        },
+        {
+          "current": "import { writeSyntheticOwnedCheckedRecordJavaScriptRoute } from \"./owned-checked-record-javascript-evidence-fixture.mjs\";\n",
+          "previous": "import { saveLakeFile } from \"./lake-workspace.mjs\";\n\nconst digest = value => sha256(Buffer.from(value));\nconst fullObserved = {\n\tchecks: 30, claimRejected: true, bookingRejected: true\n\t, lateRejected: true, retainedRejected: true\n\t, transferRejected: true, callbackRejected: true\n\t, callbackThrown: true, closureRejected: true\n\t, transferred: true, callbackCalls: 1\n};\nconst resultOnlyObserved = {\n\tchecks: 7, produced: true, fullApiOmitted: true\n\t, retained: true, disposed: true\n};\nconst browser = resultOnly => {\n\tconst executions = [];\n\tfor(const engine of [\"chromium\", \"firefox\", \"webkit\"])\n\t\tfor(const profile of [\"page\", \"react\", \"worker\"])\n\t\t\texecutions.push({ engine, profile, version: `${engine}-1`, reruns: 2\n\t\t\t\t, checks: resultOnly ? 7 : 30\n\t\t\t\t, assets: [digest(`${engine}/${profile}/a`)\n\t\t\t\t\t, digest(`${engine}/${profile}/b`)] });\n\treturn { externalNetworkBlocked: true, installedSourcesRemoved: true\n\t\t, executions };\n};\n",
+          "start": 625
+        },
+        {
+          "current": "\t\treports.push(await writeSyntheticOwnedCheckedRecordJavaScriptRoute(root, route));\n",
+          "previous": "\t{\n\t\tconst handoff = join(root, \"evidence\", route, \"handoff\");\n\t\tconst runtimePath = `archives/npm/runtime-${route}.tgz`;\n\t\tconst componentPath = `archives/npm/component-${route}.tgz`;\n\t\tconst runtimeBytes = Buffer.from(`runtime ${route}\\n`);\n\t\tconst componentBytes = Buffer.from(`component ${route}\\n`);\n\t\tawait saveLakeFile(handoff, runtimePath, runtimeBytes);\n\t\tawait saveLakeFile(handoff, componentPath, componentBytes);\n\t\tconst profile = { id: \"javascript-wasm-owned-v1\"\n\t\t\t, bindingIrSha256: digest(`${route}/ir`)\n\t\t\t, runtimeIdentity: digest(`${route}/runtime`) };\n\t\tconst runtime = { target: \"npm\", ecosystem: \"npm\"\n\t\t\t, name: \"@lean-bridge/runtime\", version: \"1.0.0\"\n\t\t\t, profile: profile.id, role: \"runtime\"\n\t\t\t, runtimeIdentity: profile.runtimeIdentity\n\t\t\t, runtimeDelivery: \"provided\", requires: []\n\t\t\t, artifacts: [{ path: runtimePath, bytes: runtimeBytes.length\n\t\t\t\t, sha256: sha256(runtimeBytes) }] };\n\t\tconst component = { target: \"npm\", ecosystem: \"npm\"\n\t\t\t, name: \"@example/owned-records\", version: \"1.0.0\"\n\t\t\t, profile: profile.id, role: \"component\"\n\t\t\t, runtimeIdentity: profile.runtimeIdentity\n\t\t\t, runtimeDelivery: \"dependency\"\n\t\t\t, requires: [{ ecosystem: runtime.ecosystem, name: runtime.name\n\t\t\t\t, version: runtime.version }]\n\t\t\t, artifacts: [{ path: componentPath, bytes: componentBytes.length\n\t\t\t\t, sha256: sha256(componentBytes) }] };\n\t\tconst receipt = await writePackageSetReceipt({ root: handoff\n\t\t\t, component: { id: `owned-records-${route}@1.0.0`\n\t\t\t\t, name: `owned-records-${route}`, version: \"1.0.0\" }\n\t\t\t, source: { treeSha256: digest(`${route}/source`) }\n\t\t\t, profiles: [profile], packages: [component, runtime] });\n\t\tconst verified = await readVerifiedPackageSetReceipt({\n\t\t\treceiptPath: join(handoff, packageSetReceiptName)\n\t\t});\n\t\tconst artifacts = receipt.packages.flatMap(pkg => pkg.artifacts);\n\t\tconst files = [packageSetReceiptName, `${packageSetReceiptName}.sha256`\n\t\t\t, ...artifacts.map(artifact => artifact.path)].toSorted();\n\t\tconst resultOnly = route.endsWith(\"result-only\");\n\t\treports.push({ route\n\t\t\t, authorRoute: route.startsWith(\"ordinary\")\n\t\t\t\t? \"ordinary\" : \"reviewed\"\n\t\t\t, mode: resultOnly ? \"result-only\" : \"full\"\n\t\t\t, bindingIrSha256: profile.bindingIrSha256\n\t\t\t, componentIdentity: digest(`${route}/component`)\n\t\t\t, sourceIdentity: digest(`${route}/identity`)\n\t\t\t, packageSetReceipt: receipt\n\t\t\t, archives: Object.fromEntries(receipt.packages.map(pkg =>\n\t\t\t\t[pkg.role, pkg.artifacts[0].sha256]))\n\t\t\t, observed: resultOnly ? resultOnlyObserved : fullObserved\n\t\t\t, retainedPackageSet: { path: `evidence/${route}/handoff`\n\t\t\t\t, receiptSha256: verified.result.receiptSha256\n\t\t\t\t, archives: verified.result.archives\n\t\t\t\t, archiveBytes: artifacts.reduce((sum, artifact) =>\n\t\t\t\t\tsum + artifact.bytes, 0)\n\t\t\t\t, files }\n\t\t\t, installedNode: true, installedTypeScript: true\n\t\t\t, sourceRemovedBeforeInstall: true, relocatedInstallation: true\n\t\t\t, archiveReproduction: true, browser: browser(resultOnly)\n\t\t\t, wasm: { bytes: 4096, sha256: digest(`${route}/wasm`) } });\n\t}\n",
+          "start": 993
+        },
+        {
+          "current": "test(\"owned checked-record JavaScript evidence binds source and execution identities\", async t => {\n\tconst cases = [\n\t\t[entry => { entry.sourceIdentity = \"0\".repeat(64); }, /structured record/u]\n\t\t, [entry => { entry.sourceIdentity = null; }, /structured record/u]\n\t\t, [entry => { entry.sourceIdentity = []; }, /structured record/u]\n\t\t, [entry => { entry.sourceIdentity.extractorSha256 = \"0\".repeat(64); }, /source identity/u]\n\t\t, [entry => { entry.sourceIdentity.unrecorded = true; }, /source identity/u]\n\t\t, [entry => { entry.sourceIdentity.reviewedBindingIr = {}; }, /source identity/u]\n\t\t, [entry => { entry.componentIdentity = \"0\".repeat(64); }, /Compiled component identity/u]\n\t\t, [entry => { entry.bindingIrSha256 = \"0\".repeat(64); }, /Compiled binding IR/u]\n\t\t, [entry => { entry.wasm.sha256 = \"0\".repeat(64); }, /Compiled Wasm identity/u]\n\t\t, [entry => { entry.wasm.bytes++; }, /Compiled Wasm identity/u]\n\t\t, [entry => { entry.browser.executions[0].assets[0] = \"0\".repeat(64); }, /Browser assets/u]\n\t];\n\tfor(const [mutate, pattern] of cases)\n\t{\n\t\tconst { reportPath } = await fixture(t);\n\t\tconst report = JSON.parse(await readFile(reportPath));\n\t\tmutate(report.reports[0]);\n\t\tawait writeFile(reportPath, canonicalJson(report));\n\t\tawait assert.rejects(verifyOwnedCheckedRecordJavaScriptEvidence(reportPath), pattern);\n\t}\n});\n\ntest(\"owned checked-record JavaScript evidence binds rehashed receipts to compiled packages\", async t => {\n\tfor(const [mutate, pattern] of [\n\t\t[receipt => { receipt.source.treeSha256 = \"0\".repeat(64); }, /Package-set source tree/u]\n\t\t, [receipt => { receipt.profiles[0].bindingIrSha256 = \"0\".repeat(64); }, /Installed package profile/u]\n\t\t, [receipt => { receipt.component.name = \"forged\"; }, /Compiled component coordinate/u]\n\t]) {\n\t\tconst { root, reportPath } = await fixture(t);\n\t\tconst report = JSON.parse(await readFile(reportPath));\n\t\tconst entry = report.reports[0], receipt = entry.packageSetReceipt;\n\t\tmutate(receipt);\n\t\tconst bytes = canonicalJson(receipt);\n\t\tconst handoff = join(root, entry.retainedPackageSet.path);\n\t\tawait writeFile(join(handoff, packageSetReceiptName), bytes);\n\t\tawait writeFile(join(handoff, packageSetReceiptName + \".sha256\")\n\t\t\t, sha256(bytes) + \"  \" + packageSetReceiptName + \"\\n\");\n\t\tentry.retainedPackageSet.receiptSha256 = sha256(bytes);\n\t\tawait writeFile(reportPath, canonicalJson(report));\n\t\tawait assert.rejects(verifyOwnedCheckedRecordJavaScriptEvidence(reportPath), pattern);\n\t}\n});\n\n",
+          "previous": "",
+          "start": 1745
+        }
+      ],
+      "path": "tests/helpers/owned-checked-record-javascript-evidence-tests.mjs",
+      "previousSha256": "47d95392f5c6423966d5d8ca586b75f660946560f94f09590fc640422efa6dcd"
+    },
+    {
+      "currentSha256": "e4ff11502f9f27bc0a4c127e21601fe7b1f83bd68eb996fa18742c9b587a5d36",
+      "edits": [
+        {
+          "current": "import { writeSyntheticOwnedCheckedRecordJavaScriptRoute } from \"./helpers/owned-checked-record-javascript-evidence-fixture.mjs\";\n",
+          "previous": "",
+          "start": 847
+        },
+        {
+          "current": "\tconst abi = { id: \"native-library-v1\"\n\t\t, bindingIrSha256: \"1\".repeat(64)\n\t\t, runtimeIdentity: \"2\".repeat(64) };\n",
+          "previous": "\tconst abi = { id: lane.kind === \"javascript\"\n\t\t? \"javascript-wasm-owned-v1\" : \"native-library-v1\"\n\t, bindingIrSha256: \"1\".repeat(64)\n\t, runtimeIdentity: \"2\".repeat(64) };\n",
+          "start": 3269
+        },
+        {
+          "current": "\t\tif(target === \"cpan\")\n",
+          "previous": "\t\tif(target === \"npm\")\n\t\t{\n\t\t\tconst runtime = await add(target, \"@lean-bridge/runtime\", \"runtime\");\n\t\t\tawait add(target, \"@example/owned-checked-records\", \"component\"\n\t\t\t\t, [runtime]);\n\t\t}\n\t\telse if(target === \"cpan\")\n",
+          "start": 4181
+        },
+        {
+          "current": "\t\tif(lane.kind === \"javascript\")\n\t\t{\n\t\t\treports.push(await writeSyntheticOwnedCheckedRecordJavaScriptRoute(\n\t\t\t\tjoin(root, lane.packaging), route));\n\t\t\tcontinue;\n\t\t}\n",
+          "previous": "",
+          "start": 5081
+        },
+        {
+          "current": "",
+          "previous": "\t\telse if(lane.kind === \"javascript\")\n\t\t{\n\t\t\tconst executions = [];\n\t\t\tfor(const engine of [\"chromium\", \"firefox\", \"webkit\"])\n\t\t\t\tfor(const profile of [\"page\", \"react\", \"worker\"])\n\t\t\t\t\texecutions.push({ engine, profile, version: `${engine}-1`\n\t\t\t\t\t\t, reruns: 2, checks: resultOnly ? 7 : 30\n\t\t\t\t\t\t, assets: [sha256(`${route}/${engine}/${profile}/a`)\n\t\t\t\t\t\t\t, sha256(`${route}/${engine}/${profile}/b`)] });\n\t\t\tObject.assign(entry, {\n\t\t\t\tbindingIrSha256: \"3\".repeat(64)\n\t\t\t\t, componentIdentity: \"4\".repeat(64)\n\t\t\t\t, sourceIdentity: \"5\".repeat(64)\n\t\t\t\t, packageSetReceipt: receipt\n\t\t\t\t, archives: Object.fromEntries(receipt.packages.map(pkg =>\n\t\t\t\t\t[pkg.role, pkg.artifacts[0].sha256]))\n\t\t\t\t, observed: resultOnly ? {\n\t\t\t\t\tchecks: 7, produced: true, fullApiOmitted: true\n\t\t\t\t\t, retained: true, disposed: true\n\t\t\t\t} : {\n\t\t\t\t\tchecks: 30, claimRejected: true, bookingRejected: true\n\t\t\t\t\t, lateRejected: true, retainedRejected: true\n\t\t\t\t\t, transferRejected: true, callbackRejected: true\n\t\t\t\t\t, callbackThrown: true, closureRejected: true\n\t\t\t\t\t, transferred: true, callbackCalls: 1\n\t\t\t\t}\n\t\t\t\t, browser: { externalNetworkBlocked: true\n\t\t\t\t\t, installedSourcesRemoved: true, executions }\n\t\t\t\t, wasm: { bytes: 4096, sha256: \"6\".repeat(64) }\n\t\t\t});\n\t\t}\n",
+          "start": 7822
+        }
+      ],
+      "path": "tests/owned-checked-record-hosted-archive.test.mjs",
+      "previousSha256": "e04bbbc590da95da262e97515a93c7898d4fce9b3ee401c81186cb71ea68b0f4"
+    }
+  ]
+}

@@ -62,6 +62,7 @@ import { beforeOwnedNpmScopedProducerSource, ownedNpmScopedProducerNormalization
 import { beforeCorePhpStructuredEndpointRepairSource, corePhpStructuredEndpointRepairNormalizationPaths } from "./core-php-structured-endpoint-repair-source-history.mjs";
 import { beforeOwnedCheckedRecordMatrixGateSource, ownedCheckedRecordMatrixGateNormalizationPaths } from "./owned-checked-record-matrix-gate-source-history.mjs";
 import { beforeCoreStructuredHistoryRepairSource, coreStructuredHistoryRepairNormalizationPaths } from "./core-structured-history-repair-source-history.mjs";
+import { beforeOwnedNpmSourceIdentityRepairSource, ownedNpmSourceIdentityRepairNormalizationPaths } from "./owned-npm-source-identity-repair-source-history.mjs";
 import { beforeCoreEvidenceMemoryRepairSource, coreEvidenceMemoryRepairNormalizationPaths } from "./core-evidence-memory-repair-source-history.mjs";
 import { beforeValueIndexPromotionMilestoneRepairSource, valueIndexPromotionMilestoneRepairNormalizationPaths } from "./value-index-promotion-milestone-repair-source-history.mjs";
 import { beforeCoreMilestoneReplayRepairSource, coreMilestoneReplayRepairNormalizationPaths } from "./core-milestone-replay-repair-source-history.mjs";
@@ -2155,7 +2156,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...coreStructuredHistoryRepairNormalizationPaths
+	...ownedNpmSourceIdentityRepairNormalizationPaths
+	, ...coreStructuredHistoryRepairNormalizationPaths
 	, ...ownedCheckedRecordMatrixGateNormalizationPaths
 	, ...corePhpStructuredEndpointRepairNormalizationPaths
 	, ...ownedNpmScopedProducerNormalizationPaths
@@ -3053,7 +3055,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeCoreStructuredHistoryRepairSource(path, text, expected);
+	let stage = beforeOwnedNpmSourceIdentityRepairSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeCoreStructuredHistoryRepairSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;
