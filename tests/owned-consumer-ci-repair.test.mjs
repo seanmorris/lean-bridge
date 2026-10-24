@@ -40,21 +40,21 @@ test("owned consumer CI repair authenticates current sources without promoting s
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path]);
 		assert.equal(update.currentSha256, record.sources[update.path]);
-		const current = beforeOwnedPythonTransfer(update.path, await readFile(update.path, "utf8")), prior = beforeOwnedConsumerCi(update.path, current);
+		const current = beforeOwnedPythonTransfer(update.path, await readFile(update.path, "utf8"), update.currentSha256), prior = beforeOwnedConsumerCi(update.path, current, update.previousSha256);
 		assert.equal(sha256(prior), update.previousSha256);
-		assert.equal(beforeOwnedConsumerCi(update.path, prior), prior);
+		assert.equal(beforeOwnedConsumerCi(update.path, prior, update.previousSha256), prior);
 		assert.equal(beforeOwnedConsumerCi(update.path, current, update.currentSha256), current);
 	}
-	const current = beforeOwnedPythonTransfer("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8"));
-	const previousIndex = JSON.parse(beforeOwnedConsumerCi("docs/type-surface.v1.json", current));
-	for(const evidence of previousIndex.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedPythonTransferHistoricalBytes(file.path, await readFile(file.path)));
+	const current = beforeOwnedPythonTransfer("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8"), record.sources["docs/type-surface.v1.json"]);
+	const previousIndex = JSON.parse(beforeOwnedConsumerCi("docs/type-surface.v1.json", current, previous.sources["docs/type-surface.v1.json"]));
+	for(const evidence of previousIndex.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedPythonTransferHistoricalBytes(file.path, await readFile(file.path), record.sources[file.path] ?? file.sha256));
 	assert.deepEqual(JSON.parse(current), previousIndex);
 });
 
 test("owned consumer CI history rejects unrelated edits and invalid reversal spans", async () => {
 	for(const update of (await read()).updates)
 	{
-		const source = beforeOwnedPythonTransfer(update.path, await readFile(update.path, "utf8")), unknown = source + "\n/* unrelated */\n";
+		const source = beforeOwnedPythonTransfer(update.path, await readFile(update.path, "utf8"), update.currentSha256), unknown = source + "\n/* unrelated */\n";
 		assert.equal(beforeOwnedConsumerCi(update.path, unknown), unknown);
 		assert.throws(() => reverseOwnedConsumerCiUpdate(unknown, update));
 		for(const changed of [{ ...update, previousSha256: "0".repeat(64) }

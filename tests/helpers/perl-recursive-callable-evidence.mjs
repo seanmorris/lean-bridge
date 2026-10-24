@@ -17,7 +17,7 @@ import { perlRecursiveAcyclicConsumer } from "./perl-recursive-callable-consumer
 import { perlRecursiveCallableChangedPaths, reversePerlRecursiveCallableUpdate } from "./perl-recursive-callable-source-history.mjs";
 import { beforeDotnetRecursiveCallables } from "./dotnet-recursive-callable-source-history.mjs";
 
-const priorSource = async path => beforeDotnetRecursiveCallables(path, await readFile(path, "utf8"));
+const priorSource = async (path, expected) => beforeDotnetRecursiveCallables(path, await readFile(path, "utf8"), expected);
 
 export const perlRecursiveCallableBaseline = "7cf6ee0bf049502eb9b581c8cc6efb88dc9aeddc";
 export const perlRecursiveCallableExecutionPath = "docs/evidence/perl-recursive-callables-20260925.json";
@@ -158,17 +158,17 @@ export const assertPerlRecursiveCallableIntegration = async record => {
 	assert.deepEqual(Object.keys(record.additions).sort(), perlRecursiveCallableAddedPaths);
 	const paths = [...new Set([...Object.keys(previous.sourceHashes), ...perlRecursiveCallableChangedPaths, ...perlRecursiveCallableAddedPaths])].sort();
 	assert.deepEqual(Object.keys(record.sourceHashes).sort(), paths);
-	for(const path of paths) assert.equal(sha256(await priorSource(path)), record.sourceHashes[path], path);
+	for(const path of paths) assert.equal(sha256(await priorSource(path, record.sourceHashes[path])), record.sourceHashes[path], path);
 	const restored = {};
 	for(const update of record.updates)
 	{
 		assert.equal(update.currentSha256, record.sourceHashes[update.path]);
 		if(previous.sourceHashes[update.path]) assert.equal(update.previousSha256, previous.sourceHashes[update.path]);
-		restored[update.path] = reversePerlRecursiveCallableUpdate(await priorSource(update.path), update);
+		restored[update.path] = reversePerlRecursiveCallableUpdate(await priorSource(update.path, update.currentSha256), update);
 	}
 	for(const [path, hash] of Object.entries(record.additions)) assert.equal(hash, record.sourceHashes[path]);
 	const { document: current, ...contracts } = await readTypeSurface(); void current;
-	const document = JSON.parse(await priorSource("docs/type-surface.v1.json")), old = JSON.parse(restored["docs/type-surface.v1.json"]);
+	const document = JSON.parse(await priorSource("docs/type-surface.v1.json", record.sourceHashes["docs/type-surface.v1.json"])), old = JSON.parse(restored["docs/type-surface.v1.json"]);
 	assert.equal(document.contractVersion, "0.102.0"); assert.equal(old.contractVersion, "0.101.0");
 	const cells = typeSurfaceCells(document, contracts), oldCells = typeSurfaceCells(old, contracts);
 	const count = values => values.filter(cell => cell.stages.installedExecution.state === "passed").length;

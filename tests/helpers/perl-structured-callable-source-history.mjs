@@ -76,8 +76,9 @@ export const reversePerlStructuredCallableUpdate = (source, update) => {
 export const beforePerlStructuredCallables = (path, source, expected) => {
 	source = beforeNpmStructuredCallables(path, source, expected);
 	if(typeof source === "string" && !perlStructuredCallableChangedPaths.includes(path)) return source;
-	if(sha256(source) === expected || !perlStructuredCallableChangedPaths.includes(path)) return source;
+	const digest = sha256(source);
+	if(digest === expected || !perlStructuredCallableChangedPaths.includes(path)) return source;
 	const record = history ??= JSON.parse(readFileSync(perlStructuredCallableHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
-	return update ? reverse(source, update) : source;
+	return update?.currentSha256 === digest ? reversePerlStructuredCallableUpdate(source, update) : source;
 };
