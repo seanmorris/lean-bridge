@@ -35,6 +35,9 @@ import { beforeCoreProducerLivePinRepairSource, coreProducerLivePinRepairNormali
 import { beforeRubyTransferCopyGapSource, rubyTransferCopyGapNormalizationPaths } from "./ruby-transfer-copy-gap-source-history.mjs";
 import { beforeRubyTransferCopyGapIntegrationSource, rubyTransferCopyGapIntegrationNormalizationPaths } from "./ruby-transfer-copy-gap-integration-source-history.mjs";
 import { beforePerlPromotionLivePinRepairSource, perlPromotionLivePinRepairNormalizationPaths } from "./perl-promotion-live-pin-repair-source-history.mjs";
+import { beforePhpWasmCallbackEndpointStopSource, phpWasmCallbackEndpointStopNormalizationPaths } from "./php-wasm-callback-endpoint-stop-source-history.mjs";
+import { beforeZeroPayloadDotnetArchiveGapSource, zeroPayloadDotnetArchiveGapNormalizationPaths } from "./zero-payload-dotnet-archive-gap-source-history.mjs";
+import { beforeCoreHistoryEndpointIntegrationSource, coreHistoryEndpointIntegrationNormalizationPaths } from "./core-history-endpoint-integration-source-history.mjs";
 import { beforeCoreEvidenceMemoryRepairSource, coreEvidenceMemoryRepairNormalizationPaths } from "./core-evidence-memory-repair-source-history.mjs";
 import { beforeValueIndexPromotionMilestoneRepairSource, valueIndexPromotionMilestoneRepairNormalizationPaths } from "./value-index-promotion-milestone-repair-source-history.mjs";
 import { beforeCoreMilestoneReplayRepairSource, coreMilestoneReplayRepairNormalizationPaths } from "./core-milestone-replay-repair-source-history.mjs";
@@ -2128,7 +2131,10 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...perlPromotionLivePinRepairNormalizationPaths
+	...coreHistoryEndpointIntegrationNormalizationPaths
+	, ...zeroPayloadDotnetArchiveGapNormalizationPaths
+	, ...phpWasmCallbackEndpointStopNormalizationPaths
+	, ...perlPromotionLivePinRepairNormalizationPaths
 	, ...rubyTransferCopyGapIntegrationNormalizationPaths
 	, ...rubyTransferCopyGapNormalizationPaths
 	, ...coreProducerLivePinRepairNormalizationPaths
@@ -3000,6 +3006,19 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
 	let stage
+		= beforeCoreHistoryEndpointIntegrationSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeZeroPayloadDotnetArchiveGapSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforePhpWasmCallbackEndpointStopSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage
 		= beforePerlPromotionLivePinRepairSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
@@ -3238,10 +3257,15 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;
-	stage
-		= beforeOwnedTransferCopyReplayRepairSource(path, text, expected);
-	if(expected !== undefined && sha256(stage) === expected)
-		return stage;
+	stage = text;
+	while(true)
+	{
+		const previous = beforeOwnedTransferCopyReplayRepairSource(
+			path, stage, expected);
+		if(sha256(previous) === expected) return previous;
+		if(previous === stage) break;
+		stage = previous;
+	}
 	text = stage;
 	stage
 		= beforeOwnedSubtypeWasmTransferFixtureSource(path, text, expected);
