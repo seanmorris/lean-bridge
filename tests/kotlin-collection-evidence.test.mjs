@@ -8,7 +8,6 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { readTypeSurface, typeSurfaceCells } from "../src/adoption/type-surface.mjs";
-import { generateCopiedJvmKotlinPackage } from "../src/backends/jvm/copied-kotlin.mjs";
 import { collectionReviewedIr, collectionSignatures } from "./helpers/collection-fixture.mjs";
 import { jvmCollectionConsumer, jvmCollectionDocumentation, jvmCollectionPublicChecks, jvmCollectionRejections } from "./helpers/jvm-collection-fixture.mjs";
 import { jvmKotlinMetadataConsumer } from "./helpers/jvm-kotlin-metadata-fixture.mjs";
@@ -22,6 +21,7 @@ import { jvmCallableSignatures } from "./helpers/jvm-callable-fixture.mjs";
 import { assertCurrentKotlinCollectionSources } from "./helpers/current-collection-evidence.mjs";
 import { beforeJvmStructuredCallables } from "./helpers/jvm-structured-callable-source-history.mjs";
 import { beforeOwnedJvmGenerated } from "./helpers/owned-jvm-source-history.mjs";
+import { moduleAtProducerWithSourceReads } from "./helpers/producer-module.mjs";
 
 const receipt = async () => JSON.parse(await readFile("docs/evidence/kotlin-collections-20260922.json"));
 const digest = value => sha256(canonicalJson(value));
@@ -33,7 +33,13 @@ const observations = run => ({ checks: run.checks
 	, documentation: run.documentation });
 const executionOrder = ["ordinary-source/java", "ordinary-source/kotlin", "reviewed-ir/java", "reviewed-ir/kotlin"];
 // Compiler-owned IR orders definitions by identity, unlike the independent fixture.
-const generatedSources = fixture => {
+/** The commit whose complete source tree every digest in the Kotlin collection record names. */
+const kotlinCollectionProducer = "7e9d8a24c9d8eb0baea8b068ca3983bf561e7a46";
+// Installed sources are regenerated with the producer's generator; later generator changes never reach back.
+const generatedSources = async fixture => {
+	const { generateCopiedJvmKotlinPackage } = await moduleAtProducerWithSourceReads(
+		kotlinCollectionProducer, "src/backends/jvm/copied-kotlin.mjs"
+	);
 	const ir = fixture();
 	for(const key of ["declarations", "types"]) ir[key].sort((a, b) => a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
 	return generateCopiedJvmKotlinPackage(ir);
@@ -82,7 +88,7 @@ test("Kotlin collections bind current sources to both original installed source 
 	});
 	assert.equal(record.reportSha256, digest({ schemaVersion: 1, profiles: record.profiles, reports }));
 	assert.deepEqual(record.executions.map(run => `${run.path}/${run.profile}`), executionOrder);
-	const sources = generatedSources(collectionReviewedIr);
+	const sources = await generatedSources(collectionReviewedIr);
 	for(const run of record.executions)
 	{
 		assertInstalled(run);
@@ -157,7 +163,7 @@ test("Kotlin companion API retains installed JVM compounds, lists, aliases, vari
 	{
 		assertLog(regression.log, 1); assert.equal(regression.sourceSha256, record.sourceHashes[regression.test]);
 		assert.deepEqual(regression.executions.map(run => `${run.path}/${run.profile}`), executionOrder);
-		const sources = generatedSources(fixtures[regression.name]);
+		const sources = await generatedSources(fixtures[regression.name]);
 		for(const run of regression.executions)
 		{
 			assertInstalled(run);

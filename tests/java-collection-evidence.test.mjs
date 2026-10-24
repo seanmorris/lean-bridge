@@ -8,7 +8,6 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { readTypeSurface, typeSurfaceCells } from "../src/adoption/type-surface.mjs";
-import { generateCopiedJvmPackage } from "../src/backends/jvm/copied-values.mjs";
 import { collectionReviewedIr, collectionSignatures } from "./helpers/collection-fixture.mjs";
 import { jvmCollectionConsumer, jvmCollectionDocumentation, jvmCollectionPublicChecks, jvmCollectionRejections } from "./helpers/jvm-collection-fixture.mjs";
 import { compoundReviewedIr } from "./helpers/compound-fixture.mjs";
@@ -17,8 +16,11 @@ import { nativeAliasReviewedIr } from "./helpers/native-alias-fixture.mjs";
 import { nativeVariantReviewedIr } from "./helpers/native-variant-fixture.mjs";
 import { assertJvmHistoricalSource, readJvmHistoricalEvidence } from "./helpers/jvm-source-history.mjs";
 import { beforeOwnedJvmGenerated } from "./helpers/owned-jvm-source-history.mjs";
+import { moduleAtProducerWithSourceReads } from "./helpers/producer-module.mjs";
 
 const receipt = () => readJvmHistoricalEvidence("java-collections-20260922");
+/** The commit whose complete source tree every digest in the Java collection record names. */
+const javaCollectionProducer = "5f7e67a03b560e27ef1af19849a125821c9b6fa2";
 const observations = run => ({ checks: run.checks
 	, calls: run.calls
 	, rejected: run.rejected
@@ -123,6 +125,10 @@ test("JVM conversion and equality evidence distinguishes host checks from instal
 	}
 	assert.deepEqual(conversion.observation, { checks: 984, nativeCalls: 0, rejected: 562 });
 	assert.equal(conversion.probeSourceSha256, sha256(await readFile("tests/fixtures/collection-consumers/jvm-conversions.java")));
+	// Generated sources are rebuilt with the producer's generator; later generator changes never reach back.
+	const { generateCopiedJvmPackage } = await moduleAtProducerWithSourceReads(
+		javaCollectionProducer, "src/backends/jvm/copied-values.mjs"
+	);
 	const javaSources = (fixture, expected) => Object.fromEntries(Object.entries(generateCopiedJvmPackage(fixture()))
 		.filter(([path]) => path.endsWith(".java"))
 		.map(([path, source]) => [path, sha256(beforeOwnedJvmGenerated(path, source, expected[path]))]));
