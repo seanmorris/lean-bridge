@@ -47,6 +47,44 @@ export function genericSubtypeMatrixReference(document)
 	return "[Hosted closed generic-Subtype acceptance](../evidence/generic-subtype-promotion-20261023.md) covers the closed `GenericNat` alias of `GenericCarrier Nat` across sixteen non-PHP-Wasm profiles on both author routes. Its `Positive` value field crosses without a proof, the Nat marker remains payload, the two named specializations retain their distinct `plusOne` and `plusTwo` constructors, and copied results carry no constructor. The twelve original archives establish exactly 32 Subtype field cells. PHP-Wasm, open generic host types, arbitrary arguments or predicates, generic Fin, callbacks, ownership and recursive generic graphs are not covered. The separate compiler/review foundation checks retained Nat, Bool and String indices; it does not establish installed host support for those dependent shapes.";
 }
 
+/**
+ * Publish the owned checked-record summary only when all seventeen profiles,
+ * both source routes and five positions name their own installed archive.
+ * This checks documentation consistency; the promotion replays the archives.
+ *
+ * @param document - Validated type-surface semantic document.
+ */
+export function ownedCheckedRecordMatrixReference(document)
+{
+	const lanes = {
+		native: ["c", "cpp"], perl: ["perl"], python: ["python"], ruby: ["ruby"]
+		, rust: ["rust"], dotnet: ["dotnet"], jvm: ["java", "kotlin"]
+		, php: ["php-native"], wit: ["wit-wasi"]
+		, javascript: ["node-javascript", "node-typescript", "browser-javascript", "browser-react", "browser-worker"]
+		, "php-wasm": ["php-wasm"]
+	};
+	const profiles = Object.values(lanes).flat();
+	if(document.profiles.length !== profiles.length
+		|| !document.profiles.every(profile => profiles.includes(profile.id))) return "";
+	for(const [lane, selected] of Object.entries(lanes))
+	{
+		const id = `owned-checked-record-${lane}-hosted-installed`;
+		const evidence = document.evidence.filter(item => item.id === id);
+		if(evidence.length !== 1 || evidence[0].kind !== "installed") return "";
+		for(const profile of selected)
+			for(const path of ["ordinary-source", "reviewed-ir"])
+				for(const position of ["parameter", "result", "field", "callback-parameter", "callback-result"])
+				{
+					const observations = document.observations.filter(item => item.profiles.includes(profile)
+						&& item.path === path && item.shapes.includes("checked-record") && item.positions.includes(position));
+					if(observations.length !== 1 || !document.stages.every(stage =>
+						observations[0].stages[stage]?.state === "passed"
+						&& observations[0].stages[stage].evidence.includes(id))) return "";
+				}
+	}
+	return "[Hosted owned checked-record acceptance](../evidence/owned-checked-record-promotion-20261024.md) binds eleven immutable archives to exactly 170 cells across seventeen profiles and both source routes. The acyclic Booking carries a copied checked Window; Claim retains its Ticket resource and checked quota. Full packages check borrowed and transferred inputs before ownership moves, project leased proof-free results, and exercise synchronous host callbacks and returned Lean closures. Standalone result-only packages expose Claim results without checked-input, transfer or callback metadata. Native PHP and PHP-Wasm have independent archives. Grant and its nested Subtype, arbitrary owned containers, recursive owned graphs, retained or asynchronous callbacks, other predicates, dispatch cost and peak memory are not covered.";
+}
+
 const names = {
 	"node-javascript": "Node JavaScript"
 	, "node-typescript": "TypeScript"
@@ -393,6 +431,7 @@ export async function renderTypeDocuments({ root, inventory = null })
 	}
 	const { document } = inventory;
 	const genericReference = genericSubtypeMatrixReference(document);
+	const ownedCheckedReference = ownedCheckedRecordMatrixReference(document);
 	const profileRows = document.profiles.map(profile => {
 		const guide = Object.entries(typeGuideProfiles).find(([, profiles]) => profiles.includes(profile.id))[0];
 		const relative = path.posix.relative("docs/reference", guide);
@@ -405,7 +444,8 @@ export async function renderTypeDocuments({ root, inventory = null })
 	return {
 		documents
 		, reference: [
-			`Inventory ${document.contractVersion} covers ${document.shapes.length} source forms and ${document.profiles.length} consumer profiles. The language tables distinguish ordinary-source packages from reviewed-IR profiles and retain unaudited cells.`
+			...(ownedCheckedReference ? [ownedCheckedReference, ""] : [])
+			, `Inventory ${document.contractVersion} covers ${document.shapes.length} source forms and ${document.profiles.length} consumer profiles. The language tables distinguish ordinary-source packages from reviewed-IR profiles and retain unaudited cells.`
 			, ""
 			, table(["Consumer table", "Runtime context", "Compiled Lean width"], profileRows)
 			, ""

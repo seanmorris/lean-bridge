@@ -96,6 +96,7 @@ import "./helpers/source-history-stream-tests.mjs";
 import "./helpers/generic-subtype-promotion-baseline-source-history-tests.mjs";
 import "./helpers/owned-npm-history-checkout-source-history-tests.mjs";
 import "./helpers/generic-subtype-published-matrix-tests.mjs";
+import "./helpers/owned-checked-record-promotion-tests.mjs";
 import "./helpers/generic-subtype-matrix-publication-source-history-tests.mjs";
 
 const root = resolve(".");

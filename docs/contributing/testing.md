@@ -112,6 +112,45 @@ npm/browser and PHP-Wasm keep their independent producer identities. Progress go
 to stderr, and the verification receipt appears on stdout only after every lane
 passes. This command runs no compilers and changes no support claims or archives.
 
+### Prepare owned checked-record support and documentation
+
+The promotion command requires the complete selection committed as
+`docs/evidence/owned-checked-record-matrix-selection-20261024.json` and a clean
+checkout containing every indexed archive file. It independently runs the whole
+matrix verifier; a previously saved success receipt cannot bypass that replay.
+With all eleven captures available, stage and inspect the update without
+installing it:
+
+```sh
+node --max-old-space-size=512 scripts/promote-owned-checked-record-evidence.mjs --check
+```
+
+Omit `--check` to install the staged inventory and documentation together. The
+command updates exactly 170 existing cells across seventeen profiles, two author
+routes and five positions, plus fourteen author/consumer guides and the generated
+references. It preserves old evidence bytes, checks every target's original
+identity, and retains recovery files if transaction rollback cannot safely
+restore a concurrently edited file. It refuses an already-promoted inventory.
+
+The tested forms are the copied `Window` inside an owned `Booking`, and `Claim`
+with its live `Ticket` resource. Full routes cover inputs, results, fields and
+synchronous callbacks; result-only routes cover Lean-produced results only.
+`Grant`, nested owned Subtypes, arbitrary owned containers, recursive owned
+graphs, retained/asynchronous callbacks and performance remain separate work.
+Native PHP and PHP-Wasm retain separate archives and profile bindings.
+
+Lightweight controls run the current projection and documentation code against
+authenticated pre-promotion inputs; they do not run package compilers or establish
+hosted acceptance:
+
+```sh
+node --max-old-space-size=512 --test tests/helpers/owned-checked-record-promotion-tests.mjs
+```
+
+Publishing these tools does not itself promote support. The actual update still
+requires the complete committed replay, recorded inventory/documentation
+transition, zero stale source pins, and final-revision Core and hosted gates.
+
 ## Build the example artifacts as a maintainer
 
 Build the universal Alpha bundle, then project its Python, Rust, C, and C++ packages:
