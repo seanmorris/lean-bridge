@@ -30,6 +30,8 @@ const validators = Object.freeze([
 	, "tests/helpers/generic-subtype-hosted-evidence.mjs"
 	, "tests/helpers/generic-subtype-hosted-output.mjs"
 	, "tests/helpers/generic-subtype-promotion.mjs"
+	, "tests/helpers/type-surface-promotion-io.mjs"
+	, "tests/helpers/promotion-file-transaction.mjs"
 ]);
 const evidenceId = lane => `generic-subtype-${lane}-hosted-installed`;
 export const genericSubtypePromotionRoots = Object.freeze({

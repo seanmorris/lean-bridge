@@ -4121,3 +4121,26 @@ node --test tests/helpers/generic-subtype-archive-boundary-tests.mjs
 These controls test reference construction, not installed package acceptance.
 Public support promotion still requires the complete retained archive replay,
 the exact field-cell and documentation update, and the required hosted gates.
+
+The promotion command validates the inventory one complete evidence entry at a
+time. It keeps a semantic projection for rendering, but preserves every old
+evidence byte in the staged inventory. It renders the manual prose and generated
+tables together before changing any repository file. To replay all twelve
+archives and validate the complete staged update without installing it, start
+from a clean tracked tree with every archive materialized and run:
+
+```sh
+node --max-old-space-size=512 scripts/promote-generic-subtype-evidence.mjs --check
+```
+
+Omit `--check` to install the validated update. All targets and staged files are
+hash-checked first. Installation failures trigger rollback; concurrent edits
+detected during rollback are preserved, with recovery copies and
+`transaction.json` retained in the reported staging directory. The command
+refuses an inventory at or above the 100 MiB file guard. These controls can be
+run without a compiler:
+
+```sh
+node --test tests/helpers/type-surface-promotion-io-tests.mjs
+node --test tests/helpers/promotion-file-transaction-tests.mjs
+```

@@ -88,6 +88,8 @@ import "./helpers/core-structured-history-endpoint-tests.mjs";
 import "./helpers/core-structured-history-repair-source-history-tests.mjs";
 import "./helpers/owned-npm-source-identity-repair-source-history-tests.mjs";
 import "./helpers/generic-subtype-compact-reference-source-history-tests.mjs";
+import "./helpers/type-surface-promotion-io-tests.mjs";
+import "./helpers/promotion-file-transaction-tests.mjs";
 
 const root = resolve(".");
 

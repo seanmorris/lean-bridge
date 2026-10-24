@@ -4,7 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { existsSync } from "node:fs";
+import { createReadStream, existsSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import {
@@ -21,14 +21,18 @@ import {
 import {
 	genericSubtypeDocumentationPaths, renderGenericSubtypeDocumentation
 } from "./generic-subtype-documentation.mjs";
+import { readPromotionInventory } from "./type-surface-promotion-io.mjs";
+import { genericSubtypeMatrixReference } from "../../scripts/generate-type-docs.mjs";
 
 const readJson = async path => JSON.parse(await readFile(path, "utf8"));
-const [document, irSchema, consumers] = await Promise.all([
-	readJson("docs/type-surface.v1.json")
-	, readJson("schema/binding-ir.schema.json")
+const [irSchema, consumers] = await Promise.all([
+	readJson("schema/binding-ir.schema.json")
 	, readJson("docs/consumer-support.v1.json")
 ]);
 const contracts = { irSchema, consumers };
+let inventory;
+const readDocument = async () => (inventory ??= await readPromotionInventory(
+	createReadStream("docs/type-surface.v1.json"), contracts)).document;
 const digest = "0".repeat(64), revision = "0".repeat(40);
 const references = genericSubtypeHostedLaneNames.map(lane => {
 	const contract = genericSubtypeHostedContracts[lane];
@@ -48,15 +52,17 @@ const target = new Set(targetProfiles.flatMap(profile =>
 	["ordinary-source", "reviewed-ir"].map(path =>
 		`${profile}/subtype/${path}/field`)));
 
-test("generic Subtype promotion closes exactly 32 non-PHP-Wasm cells", () => {
+test("generic Subtype promotion closes exactly 32 non-PHP-Wasm cells", async () => {
+	const document = await readDocument();
 	const promoted = promoteGenericSubtypes(document, references);
 	assert.equal(validateTypeSurface(promoted, contracts), true);
 	assert.equal(targetProfiles.length, 16);
 	assert.equal(target.size, 32);
-	const before = new Map(typeSurfaceCells(document, contracts).map(cell =>
+	const selected = cell => target.has(cell.id) || cell.id.startsWith("php-wasm/subtype/");
+	const before = new Map(typeSurfaceCells(document, contracts, selected).map(cell =>
 		[cell.id, cell]));
 	let changed = 0;
-	for(const cell of typeSurfaceCells(promoted, contracts))
+	for(const cell of typeSurfaceCells(promoted, contracts, selected))
 	{
 		const original = before.get(cell.id);
 		if(target.has(cell.id))
@@ -78,13 +84,29 @@ test("generic Subtype promotion closes exactly 32 non-PHP-Wasm cells", () => {
 		else assert.deepEqual(cell, original, cell.id);
 	}
 	assert.equal(changed, 32);
+	const changedObservations = promoted.observations.filter((observation, index) => {
+		if(observation.scope === document.observations[index].scope)
+		{
+			assert.deepEqual(observation, document.observations[index]);
+			return false;
+		}
+		assert.ok(observation.profiles.every(profile => target.has(
+			`${profile}/subtype/${observation.path}/field`)));
+		assert.deepEqual(observation.shapes, ["subtype"]);
+		assert.deepEqual(observation.positions, ["field"]);
+		return true;
+	});
+	assert.equal(changedObservations.length, 22);
+	assert.deepEqual({ ...promoted, evidence: document.evidence
+		, observations: document.observations }, document);
 	for(const path of ["ordinary-source", "reviewed-ir"])
 		assert.deepEqual(before.get(`php-wasm/subtype/${path}/field`)
-			, typeSurfaceCells(promoted, contracts).find(cell =>
+			, typeSurfaceCells(promoted, contracts, selected).find(cell =>
 				cell.id === `php-wasm/subtype/${path}/field`));
 });
 
-test("generic Subtype promotion binds all twelve archive identities", () => {
+test("generic Subtype promotion binds all twelve archive identities", async () => {
+	const document = await readDocument();
 	const promoted = promoteGenericSubtypes(document, references);
 	assert.deepEqual(promoted.evidence.slice(-12).map(item => item.id)
 		, references.map(item => item.id));
@@ -96,6 +118,21 @@ test("generic Subtype promotion binds all twelve archive identities", () => {
 	wrong.find(item => item.lane === "native").profiles = ["php-wasm"];
 	assert.throws(() => promoteGenericSubtypes(document, wrong)
 		, assert.AssertionError);
+});
+
+test("generic Subtype reference requires every hosted lane and all field cells", async () => {
+	const document = await readDocument();
+	assert.equal(genericSubtypeMatrixReference(document), "");
+	const promoted = promoteGenericSubtypes(document, references);
+	assert.match(genericSubtypeMatrixReference(promoted), /exactly 32 Subtype field cells/u);
+	assert.match(genericSubtypeMatrixReference(promoted), /does not establish installed host support/u);
+	for(const reference of references)
+		assert.equal(genericSubtypeMatrixReference({ ...promoted
+			, evidence: promoted.evidence.filter(item => item.id !== reference.id) }), "");
+	const observation = promoted.observations.find(item => item.id === "nominal-subtype-npm-fields-ordinary-source");
+	observation.stages.installedExecution.evidence = observation.stages.installedExecution.evidence
+		.filter(id => id !== "generic-subtype-npm-ordinary-hosted-installed");
+	assert.equal(genericSubtypeMatrixReference(promoted), "");
 });
 
 test("generic Subtype promotion renders its exact closed boundary", () => {
