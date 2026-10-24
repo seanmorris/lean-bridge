@@ -1,0 +1,157 @@
+{
+  "additions": [
+    {
+      "currentSha256": "2509713aa9d4d65ceadd4c944c03d9f8b00df570c087b05ffa4b2314fad513d6",
+      "path": "scripts/update-nominal-subtype-entry-export-surface-source-history.mjs"
+    },
+    {
+      "currentSha256": "e1395b464e62c0d3c19f4a5e26dcf54f247c24770c2af9f2649f886d7fb6466b",
+      "path": "tests/helpers/nominal-subtype-entry-export-surface-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "580830f661692ba777fc71ab099f1e51f203875aa5561cc970d66e3cbd964710",
+      "path": "tests/helpers/nominal-subtype-entry-export-surface-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "9be0d1e79410e17cb389438463b180785db17d57",
+  "integrationUpdates": [
+    {
+      "currentSha256": "462e814b0f23fd8c431f3ca229ad13a1c780ef083cf0ba2cefc79bbac19ec447",
+      "edits": [
+        {
+          "current": "import \"./helpers/nominal-subtype-entry-export-surface-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 7780
+        }
+      ],
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "139c7d613c06d76203749a31a65905d11e8a6069ca23564201ebca3e53756514"
+    },
+    {
+      "currentSha256": "7926d60a9eef20651b6f843a05248984d8c53d3885aa48550af5bf9478ba68d6",
+      "edits": [
+        {
+          "current": "import { beforeNominalSubtypeEntryExportSurfaceSource, nominalSubtypeEntryExportSurfaceNormalizationPaths } from \"./nominal-subtype-entry-export-surface-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...nominalSubtypeEntryExportSurfaceNormalizationPaths\n\t, ...phpWasmNullaryEntryFormNormalizationPaths\n",
+          "previous": "\t...phpWasmNullaryEntryFormNormalizationPaths\n",
+          "start": 171566
+        },
+        {
+          "current": "\tconst nominalSubtypeEntryExportSurface\n\t\t= beforeNominalSubtypeEntryExportSurfaceSource(path, text, expected);\n\tif(sha256(nominalSubtypeEntryExportSurface) === expected)\n\t\treturn nominalSubtypeEntryExportSurface;\n\ttext = nominalSubtypeEntryExportSurface;\n",
+          "previous": "",
+          "start": 211303
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "ec604a29454801b69c2c596f69af35d282063c833a4318594da95ea526133097"
+    }
+  ],
+  "milestone": "nominal-subtype-entry-export-surface-source-v1",
+  "predecessorCommit": "cb70f9c90303af391e2374e0b6d6aa794a025812",
+  "schemaVersion": 1,
+  "scope": "Validate the installed nominal Subtype npm side module against its exact linker-authorized adapter and initializer surface while keeping Lean wrappers and validators private.",
+  "updates": [
+    {
+      "currentSha256": "2912bb730d73f672d2bce8dab97a44d75bf637874bec01727349819e064ded36",
+      "edits": [
+        {
+          "current": "test(\"nominal entry export classification closes the installed linker surface\", () => {\n\tconst linkManifest = { exports: {\n\t\tdirectSymbols: [\"lean_bridge_b\", \"lean_bridge_a\"]\n\t\t, initializer: \"initialize_LeanBridgeGenerated\"\n\t\t, internalInitializer: \"lean_bridge_internal_initialize_0123456789abcdef\"\n\t} };\n\tconst names = [\n\t\t\"__wasm_call_ctors\", \"initialize_LeanBridgeGenerated\"\n\t\t, \"lean_bridge_a\", \"lean_bridge_b\"\n\t\t, \"lean_bridge_internal_initialize_0123456789abcdef\"\n\t\t, \"__wasm_apply_data_relocs\"\n\t];\n\tconst exports = names.map(name => ({ name, kind: \"function\" }));\n\tconst javascript = \"const symbols = [\\\"lean_bridge_a\\\", \\\"lean_bridge_b\\\"];\";\n\tconst classified = classifyNominalSubtypeEntryExports(\n\t\texports, javascript, linkManifest);\n\tassert.deepEqual(classified, {\n\t\texports: 6\n\t\t, adapters: { exported: [\"lean_bridge_a\", \"lean_bridge_b\"]\n\t\t\t, referencedByPackageJavaScript: [\"lean_bridge_a\", \"lean_bridge_b\"] }\n\t\t, initializers: [\"initialize_LeanBridgeGenerated\"\n\t\t\t, \"lean_bridge_internal_initialize_0123456789abcdef\"]\n\t\t, emscriptenInternals: [\"__wasm_apply_data_relocs\"\n\t\t\t, \"__wasm_call_ctors\"]\n\t\t, validators: { exported: [], referencedByPackageJavaScript: [] }\n\t});\n\tassert.throws(() => classifyNominalSubtypeEntryExports(\n\t\t[], javascript, linkManifest), /empty/u);\n\tassert.throws(() => classifyNominalSubtypeEntryExports(\n\t\texports, null, linkManifest));\n\tassert.throws(() => classifyNominalSubtypeEntryExports(\n\t\texports, javascript, null), /manifest/u);\n\tassert.throws(() => classifyNominalSubtypeEntryExports(\n\t\texports, \"lean_bridge_a\", linkManifest), /every direct adapter/u);\n\tassert.throws(() => classifyNominalSubtypeEntryExports(\n\t\t[...exports, { name: \"lb_a_refinement_0\", kind: \"function\" }]\n\t\t, javascript, linkManifest), /differ/u);\n\tassert.throws(() => classifyNominalSubtypeEntryExports(\n\t\texports.map(item => item.name === \"lean_bridge_a\"\n\t\t\t? { ...item, kind: \"global\" } : item)\n\t\t, javascript, linkManifest), /export kind/u);\n\tassert.throws(() => classifyNominalSubtypeEntryExports(\n\t\texports.slice(1), javascript, linkManifest), /differ/u);\n",
+          "previous": "test(\"nominal entry export classification names unreferenced validators instead of dropping them\", () => {\n\tconst names = [\"memory\", \"lb_abc_lean\", \"lb_def_lean\", \"lb_abc_refinement_0\", \"lb_def_refinement_1\", \"lean_bridge_init\", \"lb_abc_make\"];\n\tconst javascript = \"runtime.call(\\\"lean:NominalSubtypes.first\\\"); const symbols = [\\\"lb_abc_lean\\\", \\\"lb_def_lean\\\"];\";\n\tconst classified = classifyNominalSubtypeEntryExports(names, javascript);\n\tassert.deepEqual(classified, { exports: 7, adapters: 2, validators: { exported: [\"lb_abc_refinement_0\", \"lb_def_refinement_1\"], referencedByPackageJavaScript: [] } });\n\tconst referenced = classifyNominalSubtypeEntryExports(names, javascript + \" instance.exports.lb_abc_refinement_0(carrier);\");\n\tassert.deepEqual(referenced.validators.referencedByPackageJavaScript, [\"lb_abc_refinement_0\"]);\n\tassert.throws(() => classifyNominalSubtypeEntryExports([], javascript), /empty/u);\n\tassert.throws(() => classifyNominalSubtypeEntryExports([\"memory\", \"lb_abc_refinement_0\"], javascript), /no exported adapters/u);\n\tassert.throws(() => classifyNominalSubtypeEntryExports(names, null));\n",
+          "start": 279
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-entry-npm-tests.mjs",
+      "previousSha256": "63d70eb23075413906b98008f9a3a917fb34b2278e72d68023e3d02078171502"
+    },
+    {
+      "currentSha256": "962c71aebe6db0cfe6e6e5105f7cc781d5ee4d6c37010c909e54c12b6d321fee",
+      "edits": [
+        {
+          "current": " * Classify the installed side module's closed public export surface. Carrier validators and Lean\n * wrappers are private implementation symbols; the link manifest admits only direct component\n * adapters, two initializers and Emscripten's two side-module hooks.\n",
+          "previous": " * Classify the side module's exports: the compiler-emitted carrier validators are exported but no\n * package JavaScript names them, so they are reported as unreferenced rather than silently absent.\n",
+          "start": 2282
+        },
+        {
+          "current": " * @param moduleExports - WebAssembly export descriptors of the installed side module.\n",
+          "previous": " * @param exportNames - Export names of the installed side module.\n",
+          "start": 2548
+        },
+        {
+          "current": " * @param linkManifest - Authenticated side-module link manifest from the same build.\n",
+          "previous": "",
+          "start": 2730
+        },
+        {
+          "current": "export const classifyNominalSubtypeEntryExports = (\n\tmoduleExports, javascript, linkManifest\n) => {\n\tassert.ok(Array.isArray(moduleExports) && moduleExports.length > 0\n\t\t, \"empty side module export table\");\n",
+          "previous": "export const classifyNominalSubtypeEntryExports = (exportNames, javascript) => {\n\tassert.ok(Array.isArray(exportNames) && exportNames.length > 0, \"empty side module export table\");\n",
+          "start": 2820
+        },
+        {
+          "current": "\tassert.ok(linkManifest !== null && typeof linkManifest === \"object\"\n\t\t&& !Array.isArray(linkManifest), \"invalid link manifest\");\n\tconst declared = linkManifest.exports;\n\tassert.deepEqual(Object.keys(declared ?? {}).sort()\n\t\t, [\"directSymbols\", \"initializer\", \"internalInitializer\"]);\n\tassert.ok(Array.isArray(declared.directSymbols)\n\t\t&& declared.directSymbols.length > 0, \"no declared direct adapters\");\n\tfor(const item of moduleExports)\n\t{\n\t\tassert.deepEqual(Object.keys(item).sort(), [\"kind\", \"name\"]);\n\t\tassert.equal(item.kind, \"function\", `${item.name} export kind`);\n\t}\n\tconst names = moduleExports.map(item => item.name);\n\tassert.equal(new Set(names).size, names.length, \"duplicate side module export\");\n\tconst emscriptenInternals = [\n\t\t\"__wasm_apply_data_relocs\", \"__wasm_call_ctors\"\n\t];\n\tconst expected = [\n\t\t...declared.directSymbols, declared.initializer\n\t\t, declared.internalInitializer, ...emscriptenInternals\n\t].sort();\n\tassert.deepEqual([...names].sort(), expected\n\t\t, \"installed side module exports differ from its link manifest\");\n\tconst leakedValidators = names.filter(name => /_refinement_\\d+$/u.test(name));\n\tconst leakedLeanWrappers = names.filter(name => /_lean$/u.test(name));\n\tassert.deepEqual(leakedValidators, [], \"private validator export leaked\");\n\tassert.deepEqual(leakedLeanWrappers, [], \"private Lean wrapper export leaked\");\n\tconst adapters = [...declared.directSymbols].sort();\n\tconst referenced = adapters.filter(name => javascript.includes(name));\n\tassert.deepEqual(referenced, adapters\n\t\t, \"package JavaScript does not identify every direct adapter\");\n\treturn {\n\t\texports: names.length\n\t\t, adapters: { exported: adapters\n\t\t\t, referencedByPackageJavaScript: referenced }\n\t\t, initializers: [declared.initializer\n\t\t\t, declared.internalInitializer].sort()\n\t\t, emscriptenInternals: emscriptenInternals.sort()\n\t\t, validators: { exported: [], referencedByPackageJavaScript: [] }\n\t};\n",
+          "previous": "\tconst validators = exportNames.filter(name => /_refinement_\\d+$/u.test(name)).sort();\n\tconst adapters = exportNames.filter(name => /_lean$/u.test(name)).sort();\n\tassert.ok(adapters.length > 0, \"no exported adapters\");\n\tconst referenced = validators.filter(name => javascript.includes(name));\n\treturn { exports: exportNames.length, adapters: adapters.length, validators: { exported: validators, referencedByPackageJavaScript: referenced } };\n",
+          "start": 3071
+        },
+        {
+          "current": "\tconst moduleExports = WebAssembly.Module.exports(\n\t\tnew WebAssembly.Module(wasmBytes));\n",
+          "previous": "\tconst exportNames = WebAssembly.Module.exports(new WebAssembly.Module(wasmBytes)).map(item => item.name);\n",
+          "start": 9678
+        },
+        {
+          "current": "\tconst sideModule = classifyNominalSubtypeEntryExports(\n\t\tmoduleExports, javascript, linkManifest);\n",
+          "previous": "\tconst sideModule = classifyNominalSubtypeEntryExports(exportNames, javascript);\n",
+          "start": 10245
+        },
+        {
+          "current": "\tentry.validatorExportsPrivate = sideModule.validators.exported.length === 0;\n",
+          "previous": "\tentry.validatorExportsReferenced = sideModule.validators.referencedByPackageJavaScript.length > 0;\n",
+          "start": 11049
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-entry-npm.mjs",
+      "previousSha256": "d3c2170aa8e1409202dee0a21da42d9625122ce75b35e9c2c86f790bd439183d"
+    },
+    {
+      "currentSha256": "4901dcd435debcd756070063e96079000b5b4f530796049deb827865eabd28e7",
+      "edits": [
+        {
+          "current": "test(\"nominal entry report checker requires distinct probe identities, exact rows and private validators\", () => {\n",
+          "previous": "test(\"nominal entry report checker requires distinct probe identities, exact rows and an explicit validator statement\", () => {\n",
+          "start": 8904
+        },
+        {
+          "current": "\tentry.sideModuleExports = { exports: 5\n\t\t, adapters: { exported: [\"lean_bridge_a\"]\n\t\t\t, referencedByPackageJavaScript: [\"lean_bridge_a\"] }\n\t\t, initializers: [\"initialize_A\", \"lean_bridge_internal_initialize_a\"]\n\t\t, emscriptenInternals: [\"__wasm_apply_data_relocs\", \"__wasm_call_ctors\"]\n\t\t, validators: { exported: [], referencedByPackageJavaScript: [] } };\n\tentry.unmodifiedReleasePackages = true; entry.validatorExportsPrivate = true;\n",
+          "previous": "\tentry.sideModuleExports = { exports: 3, adapters: 1, validators: { exported: [\"lb_a_refinement_0\"], referencedByPackageJavaScript: [] } };\n\tentry.unmodifiedReleasePackages = true; entry.validatorExportsReferenced = false;\n",
+          "start": 9640
+        },
+        {
+          "current": "\tassert.throws(() => assertNominalSubtypeEntryReport({ ...entry\n\t\t, validatorExportsPrivate: false }));\n\tassert.throws(() => assertNominalSubtypeEntryReport({ ...entry\n\t\t, sideModuleExports: { ...entry.sideModuleExports\n\t\t\t, validators: { exported: [\"lb_a_refinement_0\"]\n\t\t\t\t, referencedByPackageJavaScript: [] } } }));\n\tassert.throws(() => assertNominalSubtypeEntryReport({ ...entry\n\t\t, sideModuleExports: { ...entry.sideModuleExports\n\t\t\t, adapters: { exported: []\n\t\t\t\t, referencedByPackageJavaScript: [] } } }), /listed/u);\n",
+          "previous": "\tassert.throws(() => assertNominalSubtypeEntryReport({ ...entry, validatorExportsReferenced: true }));\n\tassert.throws(() => assertNominalSubtypeEntryReport({ ...entry, sideModuleExports: { validators: { exported: [], referencedByPackageJavaScript: [] } } }), /listed/u);\n",
+          "start": 10722
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-entry-tests.mjs",
+      "previousSha256": "da5ea9f6286882379ae9d2fe22921efc40c4465a3778e2ef8975f9aacceda396"
+    },
+    {
+      "currentSha256": "b9a34bf5b65d39323b6d89f72d870bf3e5de119003400c8d96ac328d5e466a5b",
+      "edits": [
+        {
+          "current": " * complete Lean source call graph; a refused call stops in the validator pass. Package JavaScript\n * cannot call those private validator symbols directly. Probe packages are instrumented builds; they are not the\n",
+          "previous": " * complete Lean source call graph; a refused call stops in the validator pass. Package JavaScript does\n * not call the validator exports directly. Probe packages are instrumented builds; they are not the\n",
+          "start": 628
+        },
+        {
+          "current": "\tassert.ok(Array.isArray(entry.sideModuleExports.adapters.exported)\n\t\t&& entry.sideModuleExports.adapters.exported.length > 0\n\t, \"direct adapter exports are listed\");\n\tassert.deepEqual(entry.sideModuleExports.adapters.referencedByPackageJavaScript\n\t\t, entry.sideModuleExports.adapters.exported);\n\tassert.deepEqual(entry.sideModuleExports.validators\n\t\t, { exported: [], referencedByPackageJavaScript: [] });\n\tassert.equal(entry.validatorExportsPrivate, true);\n",
+          "previous": "\tassert.ok(Array.isArray(entry.sideModuleExports.validators.exported) && entry.sideModuleExports.validators.exported.length > 0, \"validator exports are listed\");\n\tassert.equal(entry.validatorExportsReferenced, entry.sideModuleExports.validators.referencedByPackageJavaScript.length > 0);\n",
+          "start": 11741
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-entry.mjs",
+      "previousSha256": "b05bd5300acd3328b5b628debc251815454da9ca72ffbac513b2ef524688a392"
+    }
+  ]
+}

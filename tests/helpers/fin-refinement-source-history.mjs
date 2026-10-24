@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeNominalSubtypeEntryExportSurfaceSource, nominalSubtypeEntryExportSurfaceNormalizationPaths } from "./nominal-subtype-entry-export-surface-source-history.mjs";
 import { beforePhpWasmNullaryEntryFormSource, phpWasmNullaryEntryFormNormalizationPaths } from "./php-wasm-nullary-entry-form-source-history.mjs";
 import { beforeManagedResultOnlyFixtureRepairSource, managedResultOnlyFixtureRepairNormalizationPaths } from "./managed-result-only-fixture-repair-source-history.mjs";
 import { beforeGenericSubtypeManagedTapEscapeRepairSource, genericSubtypeManagedTapEscapeRepairNormalizationPaths } from "./generic-subtype-managed-tap-escape-repair-source-history.mjs";
@@ -2088,7 +2089,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...phpWasmNullaryEntryFormNormalizationPaths
+	...nominalSubtypeEntryExportSurfaceNormalizationPaths
+	, ...phpWasmNullaryEntryFormNormalizationPaths
 	, ...managedResultOnlyFixtureRepairNormalizationPaths
 	, ...genericSubtypeManagedTapEscapeRepairNormalizationPaths
 	, ...structuredCallableRecoveryGateRepairNormalizationPaths
@@ -2919,6 +2921,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
+	const nominalSubtypeEntryExportSurface
+		= beforeNominalSubtypeEntryExportSurfaceSource(path, text, expected);
+	if(sha256(nominalSubtypeEntryExportSurface) === expected)
+		return nominalSubtypeEntryExportSurface;
+	text = nominalSubtypeEntryExportSurface;
 	const phpWasmNullaryEntryForm
 		= beforePhpWasmNullaryEntryFormSource(path, text, expected);
 	if(sha256(phpWasmNullaryEntryForm) === expected)
