@@ -25,6 +25,7 @@ import {
 import { sha256 } from "./source-history-digest.mjs";
 import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
 import { beforeWitRecursiveCallables } from "./wit-recursive-callable-source-history.mjs";
+import "./core-milestone-replay-repair-source-history-tests.mjs";
 
 const inventoryPath = "docs/type-surface.v1.json";
 const git = arguments_ => execFileSync("git", arguments_, {
@@ -157,7 +158,7 @@ test("PHP-Wasm recursive replay reaches both transitions without passing a stop"
 			path, source, expected)), expected);
 		assert.equal(sha256(beforeFinRefinementSource(
 			path, Buffer.from(source), expected)), expected);
-	}
+		}
 	assert.equal(sha256(beforePhpWasmRecursiveEvidenceReplayRepairSource(
 		path, source)), integration.previousSha256);
 	const unknown = source + "\nunknown\n";
