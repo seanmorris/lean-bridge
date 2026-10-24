@@ -27,6 +27,7 @@ import { beforePhpWasmCallbackTilesTraceRepairSource, phpWasmCallbackTilesTraceR
 import { beforeAuthorRefinementGuidanceRepairSource, authorRefinementGuidanceRepairNormalizationPaths } from "./author-refinement-guidance-repair-source-history.mjs";
 import { beforeWitTransferCopyGapSource, witTransferCopyGapNormalizationPaths } from "./wit-transfer-copy-gap-source-history.mjs";
 import { beforeCoreEvidenceRepairIntegrationSource, coreEvidenceRepairIntegrationChangedPaths } from "./core-evidence-repair-integration-source-history.mjs";
+import { beforeJvmNpmProducerRepairSource, jvmNpmProducerRepairNormalizationPaths } from "./jvm-npm-producer-repair-source-history.mjs";
 import { beforeCoreEvidenceMemoryRepairSource, coreEvidenceMemoryRepairNormalizationPaths } from "./core-evidence-memory-repair-source-history.mjs";
 import { beforeValueIndexPromotionMilestoneRepairSource, valueIndexPromotionMilestoneRepairNormalizationPaths } from "./value-index-promotion-milestone-repair-source-history.mjs";
 import { beforeCoreMilestoneReplayRepairSource, coreMilestoneReplayRepairNormalizationPaths } from "./core-milestone-replay-repair-source-history.mjs";
@@ -2120,7 +2121,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...coreEvidenceRepairIntegrationChangedPaths
+	...jvmNpmProducerRepairNormalizationPaths
+	, ...coreEvidenceRepairIntegrationChangedPaths
 	, ...authorRefinementGuidanceRepairNormalizationPaths
 	, ...witTransferCopyGapNormalizationPaths
 	, ...phpWasmCallbackTilesTraceRepairNormalizationPaths
@@ -2984,6 +2986,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
 	let stage
+		= beforeJvmNpmProducerRepairSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage
 		= beforeCoreEvidenceRepairIntegrationSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;

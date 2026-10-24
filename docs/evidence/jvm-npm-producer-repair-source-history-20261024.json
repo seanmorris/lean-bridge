@@ -1,0 +1,193 @@
+{
+  "additions": [
+    {
+      "currentSha256": "940c136133465bc50d8836d789f68cedc8eb540712caa8621e6602a3a4d36a25",
+      "path": "scripts/update-jvm-npm-producer-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "ac417f7fa1002c708b14f473bcdba594dae70a205c7db7289af45a8d2049b7b6",
+      "path": "tests/helpers/jvm-npm-producer-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "e5255cb9893880159ca2d467ae746ee0f0cd3e26a18f8b6b696515dbfb439836",
+      "path": "tests/helpers/jvm-npm-producer-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "be73509387305170fa9632f17896f25ebda3226e75476b5899444d834bf7d10e",
+      "path": "tests/helpers/jvm-npm-producer-binding-tests.mjs"
+    }
+  ],
+  "implementationCommit": "c1e02adf50697346c2e3c1328ecdc69d0fb1c5a5",
+  "implementationCommits": [
+    "246f857fd9ef5c7f7c26a543ccec0062fbd5fc52",
+    "c1e02adf50697346c2e3c1328ecdc69d0fb1c5a5"
+  ],
+  "integrationBaseCommit": "c1e02adf50697346c2e3c1328ecdc69d0fb1c5a5",
+  "integrationUpdates": [
+    {
+      "currentSha256": "48bfafd8b033f71736c72f9f969163bba6c5aa891aa1db025dc9f39920444745",
+      "edits": [
+        {
+          "current": "import { beforeJvmNpmProducerRepairSource, jvmNpmProducerRepairNormalizationPaths } from \"./jvm-npm-producer-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 3429
+        },
+        {
+          "current": "\t...jvmNpmProducerRepairNormalizationPaths\n\t, ...coreEvidenceRepairIntegrationChangedPaths\n",
+          "previous": "\t...coreEvidenceRepairIntegrationChangedPaths\n",
+          "start": 176605
+        },
+        {
+          "current": "\t\t= beforeJvmNpmProducerRepairSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "",
+          "start": 217997
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "e22e97e5ea953c1d31b08efdac1b83c48635483180e84f5bf5e46770c77fa50e"
+    },
+    {
+      "currentSha256": "a61b23e5d03b59e5ae9f3eb2414499ffebcb57f387d9b861736ae2b4b02b6876",
+      "edits": [
+        {
+          "current": "import \"./helpers/jvm-npm-producer-binding-tests.mjs\";\nimport \"./helpers/jvm-npm-producer-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 1967
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "dc2e0735161115e5441a953cff5ec527a99079cb1c26af7e6fd3449faed8fb2b"
+    }
+  ],
+  "milestone": "jvm-npm-producer-repair-source-v1",
+  "predecessorCommit": "77412d1289348eb2dbec74a6a0c2a28c58f103a6",
+  "schemaVersion": 1,
+  "scope": "Regenerate original Java/Kotlin collection, JVM callback and JVM conversion evidence with each receipt's authenticated producer modules. Freeze the installed npm receipt's original command while retaining the expanded current CI checker. Preserve installed observations, archive hashes, source checks, live fixtures and mutation/refusal controls. Record the exact two-commit implementation range and lightweight producer-binding controls. No inventory, runtime implementation or support-state changes; generator acceptance remains a hosted gate.",
+  "updates": [
+    {
+      "currentSha256": "0425fd0d6d1644f7f7fbb8ca853ca8d8d07ad04c5906022df9b595fa0ca88833",
+      "edits": [
+        {
+          "current": "import { assertOwnedJavaScriptWasmCi } from \"./owned-javascript-wasm-ci.mjs\";\n",
+          "previous": "import { assertOwnedJavaScriptWasmCi, ownedJavaScriptNpmTestCommand } from \"./owned-javascript-wasm-ci.mjs\";\n",
+          "start": 240
+        },
+        {
+          "current": "export const ownedJavaScriptNpmEvidenceProducer = \"239fd61ea7664dbfd8191207c6396975e6345726\";\n// The archived run predates the separate Subtype packaging case. Keep its exact\n// command frozen while assertOwnedJavaScriptWasmCi still checks today's workflow.\nconst ownedJavaScriptNpmMilestoneCommand = \"node --test --test-concurrency=1 \"\n\t+ [\"owned-javascript-wasm-model\", \"javascript-wasm-compiler-inputs\"\n\t\t, \"owned-javascript-cli\", \"owned-javascript-wasm-build\"]\n\t\t.map(name => `tests/${name}.test.mjs`).join(\" \");\n",
+          "previous": "",
+          "start": 888
+        },
+        {
+          "current": "\texecution: \"LEAN_BRIDGE_OWNED_JS_WASM_BUILD_TEST=1 LEAN_BRIDGE_OWNED_JS_WASM_BROWSER_TEST=1 LEAN_BRIDGE_OWNED_JS_WASM_PREPARED_ROOT=/app/build/lean-link-spike-owned-20260928 EMCC_CORES=2 \" + ownedJavaScriptNpmMilestoneCommand\n",
+          "previous": "\texecution: \"LEAN_BRIDGE_OWNED_JS_WASM_BUILD_TEST=1 LEAN_BRIDGE_OWNED_JS_WASM_BROWSER_TEST=1 LEAN_BRIDGE_OWNED_JS_WASM_PREPARED_ROOT=/app/build/lean-link-spike-owned-20260928 EMCC_CORES=2 \" + ownedJavaScriptNpmTestCommand\n",
+          "start": 1471
+        }
+      ],
+      "path": "tests/helpers/owned-javascript-npm-evidence.mjs",
+      "previousSha256": "8251d4e76bcb842078f3c81329f1995e6b859d2785a8ab2dd2951d6574abe28a"
+    },
+    {
+      "currentSha256": "bfd8a2b6831b69dc2dc3b108b143278529ed4e43cd4f3378b3225d386b9ec7d7",
+      "edits": [
+        {
+          "current": "import { moduleAtProducerWithSourceReads } from \"./producer-module.mjs\";\n",
+          "previous": "import { generateOwnedJvmCalls } from \"../../src/backends/jvm/owned-calls.mjs\";\nimport { ownedJvmCallNative, ownedJvmCallProbeMethods } from \"./owned-jvm-call-fixture.mjs\";\n",
+          "start": 235
+        },
+        {
+          "current": "export const ownedJvmCallProducer = \"5b4bda6e479314eebf944848a2b4b24ae77a540a\";\nlet producerPromise;\nconst producerModules = () => producerPromise ??= Promise.all([\n\t\"src/backends/jvm/owned-calls.mjs\"\n\t, \"tests/helpers/owned-jvm-call-fixture.mjs\"\n].map(path => moduleAtProducerWithSourceReads(ownedJvmCallProducer, path)))\n\t.then(modules => Object.assign({}, ...modules));\n",
+          "previous": "",
+          "start": 704
+        },
+        {
+          "current": "\tconst { generateOwnedJvmCalls, ownedJvmCallNative, ownedJvmCallProbeMethods }\n\t\t= await producerModules();\n",
+          "previous": "",
+          "start": 4239
+        }
+      ],
+      "path": "tests/helpers/owned-jvm-call-evidence.mjs",
+      "previousSha256": "58054a9b32bcfc386401d9dc88e7e43320f43b76147e1dd8779d58f54a298b8a"
+    },
+    {
+      "currentSha256": "bc133903eb65f0fe8038b23f3b0e5793cdd134c65afa1af96dd407dfa647d813",
+      "edits": [
+        {
+          "current": "import { moduleAtProducerWithSourceReads } from \"./producer-module.mjs\";\n",
+          "previous": "import { generateOwnedJvmConversions } from \"../../src/backends/jvm/owned-conversions.mjs\";\nimport { ownedJvmConversionNative } from \"./owned-jvm-conversion-native.mjs\";\nimport { ownedJvmConversionProbeSource } from \"./owned-jvm-conversion-calls.mjs\";\n",
+          "start": 239
+        },
+        {
+          "current": "export const ownedJvmConversionProducer = \"b28ff217cc2b35ff9c8feb8cd262e32f8a5e05c9\";\nlet producerPromise;\nconst producerModules = () => producerPromise ??= Promise.all([\n\t\"src/backends/jvm/owned-conversions.mjs\"\n\t, \"tests/helpers/owned-jvm-conversion-native.mjs\"\n\t, \"tests/helpers/owned-jvm-conversion-calls.mjs\"\n].map(path => moduleAtProducerWithSourceReads(ownedJvmConversionProducer, path)))\n\t.then(modules => Object.assign({}, ...modules));\n",
+          "previous": "",
+          "start": 589
+        },
+        {
+          "current": "\tconst { generateOwnedJvmConversions, ownedJvmConversionNative\n\t\t, ownedJvmConversionProbeSource } = await producerModules();\n",
+          "previous": "",
+          "start": 3812
+        }
+      ],
+      "path": "tests/helpers/owned-jvm-conversion-evidence.mjs",
+      "previousSha256": "47ec1675e48e39f0ffd0b69669bb1fb4fea5c6ca36dca31fe38aa75fc5d92527"
+    },
+    {
+      "currentSha256": "22ce4dd94ab4617eeceb59c723837a37529dad91ff4be43c874af5d6f4829429",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { generateCopiedJvmPackage } from \"../src/backends/jvm/copied-values.mjs\";\n",
+          "start": 370
+        },
+        {
+          "current": "import { moduleAtProducerWithSourceReads } from \"./helpers/producer-module.mjs\";\n",
+          "previous": "",
+          "start": 1096
+        },
+        {
+          "current": "/** The commit whose complete source tree every digest in the Java collection record names. */\nconst javaCollectionProducer = \"5f7e67a03b560e27ef1af19849a125821c9b6fa2\";\n",
+          "previous": "",
+          "start": 1256
+        },
+        {
+          "current": "\t// Generated sources are rebuilt with the producer's generator; later generator changes never reach back.\n\tconst { generateCopiedJvmPackage } = await moduleAtProducerWithSourceReads(\n\t\tjavaCollectionProducer, \"src/backends/jvm/copied-values.mjs\"\n\t);\n",
+          "previous": "",
+          "start": 8776
+        }
+      ],
+      "path": "tests/java-collection-evidence.test.mjs",
+      "previousSha256": "0976200f46566efae3f422861c7ca90a1e02d593bedf3f9c30dc467ec2ece71d"
+    },
+    {
+      "currentSha256": "0e2d94303484aae879d96fbf3c498f8d1683c1616b1acf215e10f813e765637a",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { generateCopiedJvmKotlinPackage } from \"../src/backends/jvm/copied-kotlin.mjs\";\n",
+          "start": 373
+        },
+        {
+          "current": "import { moduleAtProducerWithSourceReads } from \"./helpers/producer-module.mjs\";\n",
+          "previous": "",
+          "start": 1523
+        },
+        {
+          "current": "/** The commit whose complete source tree every digest in the Kotlin collection record names. */\nconst kotlinCollectionProducer = \"7e9d8a24c9d8eb0baea8b068ca3983bf561e7a46\";\n// Installed sources are regenerated with the producer's generator; later generator changes never reach back.\nconst generatedSources = async fixture => {\n\tconst { generateCopiedJvmKotlinPackage } = await moduleAtProducerWithSourceReads(\n\t\tkotlinCollectionProducer, \"src/backends/jvm/copied-kotlin.mjs\"\n\t);\n",
+          "previous": "const generatedSources = fixture => {\n",
+          "start": 2161
+        },
+        {
+          "current": "\tconst sources = await generatedSources(collectionReviewedIr);\n",
+          "previous": "\tconst sources = generatedSources(collectionReviewedIr);\n",
+          "start": 5526
+        },
+        {
+          "current": "\t\tconst sources = await generatedSources(fixtures[regression.name]);\n",
+          "previous": "\t\tconst sources = generatedSources(fixtures[regression.name]);\n",
+          "start": 11227
+        }
+      ],
+      "path": "tests/kotlin-collection-evidence.test.mjs",
+      "previousSha256": "adebf2cc34a5dae976e8022b02e21cb1ea2e9ea2e3cf260c97ca6523b2de62e0"
+    }
+  ]
+}
