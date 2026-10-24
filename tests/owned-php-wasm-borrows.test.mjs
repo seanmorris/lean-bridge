@@ -26,6 +26,9 @@ import { checkOwnedPhpWasmBorrows } from "./helpers/owned-php-wasm-borrows.mjs";
 import { generateCompiledPhpWasmOwned } from "../src/build/php-wasm-owned-component.mjs";
 import { checkOwnedPhpWasmBorrowFibers } from "./helpers/owned-php-wasm-borrow-fibers.mjs";
 import { assertOwnedPhpWasmBorrowCi, ownedPhpWasmBorrowReports } from "./helpers/owned-php-wasm-borrow-ci.mjs";
+import { moduleAtProducerWithSourceReads } from "./helpers/producer-module.mjs";
+
+const phpWasmBorrowAdmissionProducer = "49555c6612107ef8e6a3f8f7576312a5c32da894";
 
 test("Zend borrowed-result models require exact whole owners and explicit admission", () => {
 	const ir = ownedRustBorrowReviewedIr();
@@ -96,17 +99,28 @@ test("PHP-Wasm borrowed-result carriers preserve authenticated lifetimes and rej
 	}
 });
 
-test("borrowed-result support preserves captured non-anchored Zend sources byte for byte", async () => {
+test("borrowed-result admission preserves current Zend output and original captured bytes", async () => {
 	const transfers = JSON.parse(await readFile("docs/evidence/owned-php-wasm-transfers-20260930.json", "utf8"));
 	const integration = JSON.parse(await readFile("docs/evidence/owned-php-wasm-integration-20260928.json", "utf8"));
+	const historical = Object.assign({}, ...await Promise.all([
+		"src/backends/native/owned-value-adapters.mjs"
+		, "src/backends/php/owned-zend-extension.mjs"
+		, "src/backends/php/owned-zend-php.mjs"
+	].map(path => moduleAtProducerWithSourceReads(phpWasmBorrowAdmissionProducer, path))));
 	for(const record of [...transfers.runtime, integration.reports.generated, integration.reports.generatedReviewed])
 	{
 		const input = record.input ?? record.inputs;
-		const native = generateOwnedNativeValueAdapters({ ...input, wordBits: 32, hostCallbacks: true, transferredInputs: Boolean(record.input) });
+		const options = { ...input, wordBits: 32, hostCallbacks: true, transferredInputs: Boolean(record.input) };
+		const native = generateOwnedNativeValueAdapters({ ...options, anchoredResults: false });
 		const extension = generateOwnedPhpZendExtension(native);
+		const admitted = generateOwnedPhpZendExtension(generateOwnedNativeValueAdapters({ ...options, anchoredResults: true }));
+		assert.deepEqual(admitted, extension);
+		assert.deepEqual(generateOwnedPhpZendPhp(admitted.model), generateOwnedPhpZendPhp(extension.model));
 		assert.equal(extension.model.anchoredResults, undefined);
-		assert.equal(sha256(extension.source), record.sourceSha256);
-		for(const [path, source] of Object.entries(generateOwnedPhpZendPhp(extension.model)))
+		const original = historical.generateOwnedPhpZendExtension(historical.generateOwnedNativeValueAdapters(options));
+		assert.equal(original.model.anchoredResults, undefined);
+		assert.equal(sha256(original.source), record.sourceSha256);
+		for(const [path, source] of Object.entries(historical.generateOwnedPhpZendPhp(original.model)))
 			assert.equal(sha256(source), record.files[path], path);
 	}
 });

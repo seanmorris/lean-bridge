@@ -19,6 +19,9 @@ import { generateOwnedWasmComponent } from "../src/backends/javascript/owned-was
 import { ownedJavaScriptWasmNativeProbe } from "./helpers/owned-javascript-wasm-native.mjs";
 import { ownedRustBorrowReviewedIr } from "./helpers/owned-rust-borrow-fixture.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
+import { moduleAtProducerWithSourceReads } from "./helpers/producer-module.mjs";
+
+const javaScriptBorrowAdmissionProducer = "3701d0880be3195b249ed17caac6975dea7283f6";
 
 const prepare = async t => {
 	const directory = await mkdtemp(join(tmpdir(), "lean-bridge-js-borrow-types-"));
@@ -105,13 +108,26 @@ api.close(); void same; void serial; void count;
 	}));
 });
 
-test("borrowed-result capability leaves prior transfer components byte-identical", async () => {
+test("borrowed-result admission preserves current transfers and original component bytes", async () => {
 	const receipt = JSON.parse(await readFile("docs/evidence/owned-javascript-transfers-20260930.json", "utf8"));
+	const historical = Object.assign({}, ...await Promise.all([
+		"src/backends/native/owned-value-adapters.mjs"
+		, "src/backends/javascript/owned-wasm-component.mjs"
+		, "tests/helpers/owned-javascript-wasm-native.mjs"
+	].map(path => moduleAtProducerWithSourceReads(javaScriptBorrowAdmissionProducer, path))));
 	for(const previous of receipt.runtime)
 	{
-		const generated = generateOwnedNativeValueAdapters({ ...previous.input, wordBits: 32, hostCallbacks: true, transferredInputs: true });
+		const options = { ...previous.input, wordBits: 32, hostCallbacks: true, transferredInputs: true };
+		const generated = generateOwnedNativeValueAdapters({ ...options, anchoredResults: false });
 		const component = generateOwnedWasmComponent(generated);
+		const admitted = generateOwnedWasmComponent(generateOwnedNativeValueAdapters({ ...options, anchoredResults: true }));
+		assert.deepEqual(admitted, component);
+		assert.equal(ownedJavaScriptWasmNativeProbe(admitted), ownedJavaScriptWasmNativeProbe(component));
 		assert.deepEqual(component.privateAbi, previous.privateAbi);
-		assert.equal(sha256(ownedJavaScriptWasmNativeProbe(component)), previous.sourceSha256);
+		// Recheck the original feature's byte-compatibility promise at its admission,
+		// while the enabled/disabled comparison above continues to exercise today's code.
+		const original = historical.generateOwnedWasmComponent(historical.generateOwnedNativeValueAdapters(options));
+		assert.deepEqual(original.privateAbi, previous.privateAbi);
+		assert.equal(sha256(historical.ownedJavaScriptWasmNativeProbe(original)), previous.sourceSha256);
 	}
 });

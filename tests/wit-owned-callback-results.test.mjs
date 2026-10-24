@@ -28,9 +28,11 @@ import { witOwnedCallbackResultFixture } from "./helpers/wit-owned-callback-resu
 import { ownedWitCallbackResultProbe } from "./helpers/wit-owned-callback-result-probe.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { runCopied } from "./helpers/copied-fixture-install.mjs";
+import { moduleAtProducerWithSourceReads } from "./helpers/producer-module.mjs";
 
 const capabilities = { transferredInputs: true, anchoredResults: true, receiverExports: true, callbackResultAnchors: true };
 const variants = ["no-host", "host", "combined"];
+const witCallbackAdmissionProducer = "c960596253f5b4c902820ba5ff2131aeb8bd5727";
 
 test("WIT native and multi-profile admission reconstruct callback anchors without admitting unsupported targets", async () => {
 	for(const targets of [["wit-wasi"], ["c", "wit-wasi"], ["cpan", "maven", "wit-wasi", "php-native"]])
@@ -202,13 +204,20 @@ test("WIT callback invocation names and callback-local anchors reject collisions
 	}
 });
 
-test("WIT callback admission preserves predecessor files and contracts byte for byte", async () => {
+test("WIT callback admission preserves current predecessors and original files and contracts", async () => {
 	for(const fixture of [ownedAggregateReviewedIr, ownedRustTransferReviewedIr, ownedRustBorrowReviewedIr, ownedRustReceiverReviewedIr])
 	{
 		const ir = fixture(), before = compileOwnedWitGraphModel(ir, {}, { ...capabilities, callbackResultAnchors: false });
 		const after = compileOwnedWitGraphModel(ir, {}, capabilities);
 		for(const key of ["layout", "manifest", "wit", "wat"]) assert.deepEqual(after[key], before[key]);
 	}
+	const historical = Object.assign({}, ...await Promise.all([
+		"src/backends/wit/owned-package.mjs"
+		, "src/backends/wit/owned-host-evidence.mjs"
+		, "src/build/native-graph-model.mjs"
+		, "src/build/owned-wit-artifacts.mjs"
+		, "src/release/owned-wasi.mjs"
+	].map(path => moduleAtProducerWithSourceReads(witCallbackAdmissionProducer, path))));
 	const predecessors = [
 		["wit-owned-borrows-20261001"
 			, "1cbcf73fbad42679441371ff5448379c0513dab5ba17892095dbaa37efef2e01"
@@ -243,24 +252,47 @@ test("WIT callback admission preserves predecessor files and contracts byte for 
 			const component = Buffer.from(item.componentBase64, "base64");
 			const before = generateOwnedWitPackage(item.input, component);
 			const after = generateOwnedWitPackage({ ...item.input, callbackResultAnchors: true }, component);
-			assert.equal(sha256(canonicalJson(before.files)), filesHashes[index]);
-			assert.deepEqual(after.files, before.files); assert.deepEqual(after.model.manifest, item.manifest);
-			assert.equal(sha256(after.source), item.sourceSha256);
+			assert.deepEqual(after.files, before.files);
+			assert.deepEqual(after.model.manifest, before.model.manifest);
+			const originalBefore = historical.generateOwnedWitPackage(item.input, component);
+			const originalAfter = historical.generateOwnedWitPackage({ ...item.input, callbackResultAnchors: true }, component);
+			assert.equal(sha256(canonicalJson(originalBefore.files)), filesHashes[index]);
+			assert.deepEqual(originalAfter.files, originalBefore.files);
+			assert.deepEqual(originalAfter.model.manifest, item.manifest);
+			assert.equal(sha256(originalAfter.source), item.sourceSha256);
 		}
 		for(const item of [...record.packages, ...record.resourcePackages ?? []])
 		{
-			assert.deepEqual(createCompiledNativeModel(item.inputs, { ownedGraphs: true
+			const options = { ownedGraphs: true
 				, ownedHostCallbacks: Boolean(item.model.ownedGraph.hostCallbacks)
 				, ownedInputTransfers: true, ownedAnchoredResults: true
-				, ownedReceiverExports: true
-				, ownedCallbackResultAnchors: true }), item.model);
-			const generated = generateOwnedWitPackage({ ...item.inputs, callbackResultAnchors: true }
-				, Buffer.from(item.componentBase64, "base64"), item.receipt.settings);
+				, ownedReceiverExports: true };
+			const beforeModel = createCompiledNativeModel(item.inputs, { ...options, ownedCallbackResultAnchors: false });
+			const afterModel = createCompiledNativeModel(item.inputs, { ...options, ownedCallbackResultAnchors: true });
+			assert.deepEqual(afterModel, beforeModel);
+			const component = Buffer.from(item.componentBase64, "base64");
+			const before = generateOwnedWitPackage({ ...item.inputs, callbackResultAnchors: false }, component, item.receipt.settings);
+			const after = generateOwnedWitPackage({ ...item.inputs, callbackResultAnchors: true }, component, item.receipt.settings);
+			assert.deepEqual(after.files, before.files);
+			const currentSources = generated => ({ generated
+				, files: { ...generated.files
+				, [`src/${generated.values.prefix}.c`]: guardOwnedWitHostSource(generated, item.receipt.dependencies) } });
+			assert.deepEqual(ownedWitValueContract(afterModel, currentSources(after))
+				, ownedWitValueContract(beforeModel, currentSources(before)));
+			const currentReadme = (generated, model) => ownedWitReadme({
+				projection: generated.model, prefix: generated.values.prefix, model
+			}, item.manifest.glibcMinimumVersion
+				, item.manifest.cmakePackage, item.manifest.cmakeTarget);
+			assert.equal(currentReadme(after, afterModel), currentReadme(before, beforeModel));
+			assert.deepEqual(historical.createCompiledNativeModel(item.inputs
+				, { ...options, ownedCallbackResultAnchors: true }), item.model);
+			const generated = historical.generateOwnedWitPackage({ ...item.inputs, callbackResultAnchors: true }
+				, component, item.receipt.settings);
 			const sources = { generated
 				, files: { ...generated.files
-				, [`src/${generated.values.prefix}.c`]: guardOwnedWitHostSource(generated, item.receipt.dependencies) } };
-			assert.deepEqual(ownedWitValueContract(item.model, sources), item.receipt.ownedValues);
-			const readme = ownedWitReadme({ projection: generated.model, prefix: generated.values.prefix, model: item.model }
+				, [`src/${generated.values.prefix}.c`]: historical.guardOwnedWitHostSource(generated, item.receipt.dependencies) } };
+			assert.deepEqual(historical.ownedWitValueContract(item.model, sources), item.receipt.ownedValues);
+			const readme = historical.ownedWitReadme({ projection: generated.model, prefix: generated.values.prefix, model: item.model }
 				, item.manifest.glibcMinimumVersion, item.manifest.cmakePackage, item.manifest.cmakeTarget);
 			assert.deepEqual({ bytes: Buffer.byteLength(readme), sha256: sha256(readme) }, item.manifest.files["README.md"]);
 		}
