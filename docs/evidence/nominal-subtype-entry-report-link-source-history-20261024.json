@@ -1,0 +1,103 @@
+{
+  "additions": [
+    {
+      "currentSha256": "5e60780688a9fb298a6fdcf50694227485f3c6261fe42040e4c0a6def9a7df0d",
+      "path": "scripts/update-nominal-subtype-entry-report-link-source-history.mjs"
+    },
+    {
+      "currentSha256": "26f650417d1711fb7274db01e68f71ed90d44baa2a2596ed39b76b7f0787dc2f",
+      "path": "tests/helpers/nominal-subtype-entry-report-link-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "f8a34384f063795dc41db5dc3b9fddb1e68361e9542d3ec6cd70a28fb5b40211",
+      "path": "tests/helpers/nominal-subtype-entry-report-link-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "cb729fb13ebe3d54e8ac1c7af0b5022cb19c5a7b",
+  "integrationUpdates": [
+    {
+      "currentSha256": "a4bc718d424ba8d1207813a362e0feae9a18f94433355249020167997189ea2a",
+      "edits": [
+        {
+          "current": "import \"./helpers/nominal-subtype-entry-report-link-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 7862
+        }
+      ],
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "462e814b0f23fd8c431f3ca229ad13a1c780ef083cf0ba2cefc79bbac19ec447"
+    },
+    {
+      "currentSha256": "72322eea87d701aaa70ce26afdbb872983facaf0ca7f1703dfc93f45a17e43b1",
+      "edits": [
+        {
+          "current": "import { beforeNominalSubtypeEntryReportLinkSource, nominalSubtypeEntryReportLinkNormalizationPaths } from \"./nominal-subtype-entry-report-link-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...nominalSubtypeEntryReportLinkNormalizationPaths\n\t, ...nominalSubtypeEntryExportSurfaceNormalizationPaths\n",
+          "previous": "\t...nominalSubtypeEntryExportSurfaceNormalizationPaths\n",
+          "start": 171731
+        },
+        {
+          "current": "\tconst nominalSubtypeEntryReportLink\n\t\t= beforeNominalSubtypeEntryReportLinkSource(path, text, expected);\n\tif(sha256(nominalSubtypeEntryReportLink) === expected)\n\t\treturn nominalSubtypeEntryReportLink;\n\ttext = nominalSubtypeEntryReportLink;\n",
+          "previous": "",
+          "start": 211522
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "7926d60a9eef20651b6f843a05248984d8c53d3885aa48550af5bf9478ba68d6"
+    }
+  ],
+  "milestone": "nominal-subtype-entry-report-link-source-v1",
+  "predecessorCommit": "98820709dde31ec61482aea6378b95e2ad7adf73",
+  "schemaVersion": 1,
+  "scope": "Recompute the nominal Subtype entry report's closed adapter, initializer and Emscripten export surface from its authenticated side-module link manifest.",
+  "updates": [
+    {
+      "currentSha256": "b0525e4594ecc03edc87290f87c8872e9574470015902b17b1fe391be852f188",
+      "edits": [
+        {
+          "current": "\tentry.probe = {\n\t\treceiptSha256: digest, packageSha256: digest\n\t\t, runtimeSha256: digest, bindingIrSha256: digest\n\t\t, linkManifest: {\n\t\t\texports: {\n\t\t\t\tdirectSymbols: [\"lean_bridge_a\"]\n\t\t\t\t, initializer: \"initialize_A\"\n\t\t\t\t, internalInitializer: \"lean_bridge_internal_initialize_a\"\n\t\t\t}\n\t\t}\n\t\t, sideModule\n\t};\n",
+          "previous": "\tentry.probe = { receiptSha256: digest, packageSha256: digest, runtimeSha256: digest, bindingIrSha256: digest, linkManifest: {}, sideModule };\n",
+          "start": 9417
+        },
+        {
+          "current": "\tassert.throws(() => assertNominalSubtypeEntryReport({\n\t\t...entry\n\t\t, probe: {\n\t\t\t...entry.probe\n\t\t\t, linkManifest: {\n\t\t\t\texports: {\n\t\t\t\t\tdirectSymbols: [\"lean_bridge_other\"]\n\t\t\t\t\t, initializer: \"initialize_A\"\n\t\t\t\t\t, internalInitializer: \"lean_bridge_internal_initialize_a\"\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}));\n\tassert.throws(() => assertNominalSubtypeEntryReport({ ...entry\n\t\t, sideModuleExports: { ...entry.sideModuleExports, exports: 6 } }));\n\tassert.throws(() => assertNominalSubtypeEntryReport({ ...entry\n\t\t, sideModuleExports: { ...entry.sideModuleExports\n\t\t\t, initializers: [\"initialize_other\"\n\t\t\t\t, \"lean_bridge_internal_initialize_a\"] } }));\n\tassert.throws(() => assertNominalSubtypeEntryReport({ ...entry\n\t\t, sideModuleExports: { ...entry.sideModuleExports\n\t\t\t, emscriptenInternals: [\"__wasm_call_ctors\"] } }));\n",
+          "previous": "",
+          "start": 11416
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-entry-tests.mjs",
+      "previousSha256": "4901dcd435debcd756070063e96079000b5b4f530796049deb827865eabd28e7"
+    },
+    {
+      "currentSha256": "e4f52dce3fa47bbeff1a97bb829e3c25b9920067b7fd74971d662454bf5c80f6",
+      "edits": [
+        {
+          "current": "\tconst manifestExports = entry.probe.linkManifest.exports;\n\tassert.deepEqual(Object.keys(manifestExports ?? {}).sort()\n\t\t, [\"directSymbols\", \"initializer\", \"internalInitializer\"]);\n\tconst directSymbols = [...manifestExports.directSymbols].sort();\n\tconst initializers = [manifestExports.initializer\n\t\t, manifestExports.internalInitializer].sort();\n\tconst emscriptenInternals = [\n\t\t\"__wasm_apply_data_relocs\", \"__wasm_call_ctors\"\n\t];\n",
+          "previous": "",
+          "start": 11741
+        },
+        {
+          "current": "\tassert.deepEqual(entry.sideModuleExports.adapters.exported, directSymbols);\n",
+          "previous": "",
+          "start": 12340
+        },
+        {
+          "current": "\t\t, directSymbols);\n\tassert.deepEqual(entry.sideModuleExports.initializers, initializers);\n\tassert.deepEqual(entry.sideModuleExports.emscriptenInternals\n\t\t, emscriptenInternals);\n",
+          "previous": "\t\t, entry.sideModuleExports.adapters.exported);\n",
+          "start": 12498
+        },
+        {
+          "current": "\tassert.equal(entry.sideModuleExports.exports\n\t\t, directSymbols.length + initializers.length + emscriptenInternals.length);\n",
+          "previous": "",
+          "start": 12788
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-entry.mjs",
+      "previousSha256": "b9a34bf5b65d39323b6d89f72d870bf3e5de119003400c8d96ac328d5e466a5b"
+    }
+  ]
+}
