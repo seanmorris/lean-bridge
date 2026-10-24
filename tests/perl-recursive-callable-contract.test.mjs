@@ -118,8 +118,13 @@ test("Perl callback Subtypes require and copy a typed Runtime::Callback recovery
 		, directory, { ...copiedCleanEnvironment, PATH: "/usr/bin:/bin" });
 	for(const targets of [["c"], ["cpp"], ["cpan"], ["c", "cpp", "cpan"]])
 		assert.ok(compileNativeGraphProjection(ir, targets, moduleName).layoutSha256);
+	// Every native graph target admits callback Subtypes, and CPAN shares each target's layout.
+	const layout = compileNativeGraphProjection(ir, ["cpan"], moduleName).layoutSha256;
 	for(const target of ["pypi", "cargo", "rubygems", "nuget", "maven", "php-native", "wit-wasi"])
-		assert.throws(() => compileNativeGraphProjection(ir, [target], moduleName), { code: "native-graph-projection-unavailable" });
+		assert.equal(compileNativeGraphProjection(ir, ["cpan", target], moduleName).layoutSha256, layout, target);
+	for(const targets of [[], ["cpan", "cpan"], ["cpan", "php-wasm"], ["unknown"]])
+		assert.throws(() => compileNativeGraphProjection(ir, targets, moduleName), { code: "native-graph-projection-unavailable" });
+	assert.throws(() => compileNativeGraphProjection(ir, ["cpan"]), { code: "native-graph-projection-unavailable" });
 });
 
 test("Perl recursive callables reject hidden identity fields and asynchronous signatures", () => {
