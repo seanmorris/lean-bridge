@@ -1,0 +1,71 @@
+{
+  "additions": [
+    {
+      "currentSha256": "c28def309bb883e24b664926c656ffd4a8846a6f5eed01ad8d68fbbc0a871961",
+      "path": "scripts/update-core-evidence-tracking-test-registration-source-history.mjs"
+    },
+    {
+      "currentSha256": "277de992c15c2d008cd2f9f7115632bd21002ca2d4a6847cb9a0f089999a6fc4",
+      "path": "tests/helpers/core-evidence-tracking-test-registration-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "c3ced51a825330df4675d474921ee917b9ebac25a41cfa97a211002e46703e4b",
+      "path": "tests/helpers/core-evidence-tracking-test-registration-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "a48cddd81ac04129b21a35bf54977792982339cf",
+  "integrationUpdates": [
+    {
+      "currentSha256": "e73601099401ead2459dedb9c6d669fdb64006259beed92459baf7c1747dafce",
+      "edits": [
+        {
+          "current": "import \"./helpers/core-evidence-tracking-test-registration-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 7282
+        }
+      ],
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "76b8fd1565425cad2757477293e23392a040a50856ee0bb6aaa2e4e05f615d4e"
+    },
+    {
+      "currentSha256": "1d6db4f4aedb150c0e14d570863e4bcea2cda4cdeda6a9a1f6831804f5a9965e",
+      "edits": [
+        {
+          "current": "import { beforeCoreEvidenceTrackingTestRegistrationSource, coreEvidenceTrackingTestRegistrationNormalizationPaths } from \"./core-evidence-tracking-test-registration-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...coreEvidenceTrackingTestRegistrationNormalizationPaths\n\t, ...checkedRecordValueIndexBrowserControlsContractNormalizationPaths\n",
+          "previous": "\t...checkedRecordValueIndexBrowserControlsContractNormalizationPaths\n",
+          "start": 170520
+        },
+        {
+          "current": "\tconst coreEvidenceTrackingTestRegistration\n\t\t= beforeCoreEvidenceTrackingTestRegistrationSource(\n\t\t\tpath, text, expected);\n\tif(sha256(coreEvidenceTrackingTestRegistration) === expected)\n\t\treturn coreEvidenceTrackingTestRegistration;\n\ttext = coreEvidenceTrackingTestRegistration;\n",
+          "previous": "",
+          "start": 209915
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "09136d9788c1c3e49cfb1ce285515aaf51010c9be7cdcfc2603ba44aad35b7e2"
+    }
+  ],
+  "milestone": "core-evidence-tracking-test-registration-source-v1",
+  "predecessorCommit": "7817e56b1ad9ac7039a075f411fc315e22200a90",
+  "schemaVersion": 1,
+  "scope": "Classify the committed type-surface evidence tracking test in the complete Core contract profile so all six hosted shards execute instead of stopping during manifest construction.",
+  "updates": [
+    {
+      "currentSha256": "e01087e1dd31c675a739ee26a727a86a864d7d921a2396e9f178fd78199e9fee",
+      "edits": [
+        {
+          "current": "\t\t, \"type-surface-evidence-tracked\"\n",
+          "previous": "",
+          "start": 33603
+        }
+      ],
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "a61f10d548f706386965331b76f5e7a9ca695ac867e7aaf419124aedaa397651"
+    }
+  ]
+}

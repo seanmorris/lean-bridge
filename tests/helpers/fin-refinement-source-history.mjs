@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeCoreEvidenceTrackingTestRegistrationSource, coreEvidenceTrackingTestRegistrationNormalizationPaths } from "./core-evidence-tracking-test-registration-source-history.mjs";
 import { beforeCheckedRecordValueIndexBrowserControlsContractSource, checkedRecordValueIndexBrowserControlsContractNormalizationPaths } from "./checked-record-value-index-browser-controls-contract-source-history.mjs";
 import { beforeOwnedTransferCopyReplayRepairSource, ownedTransferCopyReplayRepairNormalizationPaths } from "./owned-transfer-copy-replay-repair-source-history.mjs";
 import { beforeOwnedSubtypeWasmTransferFixtureSource, ownedSubtypeWasmTransferFixtureNormalizationPaths } from "./owned-subtype-wasm-transfer-fixture-source-history.mjs";
@@ -2082,7 +2083,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...checkedRecordValueIndexBrowserControlsContractNormalizationPaths
+	...coreEvidenceTrackingTestRegistrationNormalizationPaths
+	, ...checkedRecordValueIndexBrowserControlsContractNormalizationPaths
 	, ...ownedTransferCopyReplayRepairNormalizationPaths
 	, ...ownedSubtypeWasmTransferFixtureNormalizationPaths
 	, ...ownedCheckedRecordJavaScriptHostedRunOutcomeNormalizationPaths
@@ -2907,6 +2909,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
+	const coreEvidenceTrackingTestRegistration
+		= beforeCoreEvidenceTrackingTestRegistrationSource(
+			path, text, expected);
+	if(sha256(coreEvidenceTrackingTestRegistration) === expected)
+		return coreEvidenceTrackingTestRegistration;
+	text = coreEvidenceTrackingTestRegistration;
 	const checkedRecordValueIndexBrowserControlsContract
 		= beforeCheckedRecordValueIndexBrowserControlsContractSource(
 			path, text, expected);

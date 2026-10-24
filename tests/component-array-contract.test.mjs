@@ -99,6 +99,7 @@ import "./helpers/python-refinement-evidence-source-history-tests.mjs";
 import "./helpers/structural-subtype-core-ci-tests.mjs";
 import "./helpers/structural-subtype-core-ci-history-tests.mjs";
 import "./helpers/core-quality-budget-tests.mjs";
+import "./helpers/core-evidence-tracking-test-registration-source-history-tests.mjs";
 import "./helpers/core-runner-headroom-source-history-tests.mjs";
 import "./helpers/generic-subtype-npm-browser-source-history-tests.mjs";
 import "./helpers/structural-subtype-partition-validator-source-history-tests.mjs";
