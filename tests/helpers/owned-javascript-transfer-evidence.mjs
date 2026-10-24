@@ -27,7 +27,8 @@ export const ownedJavaScriptTransferScope = Object.freeze({
 });
 const digest = value => assert.match(value, /^[a-f0-9]{64}$/u);
 const flags = (value, names) => { for(const name of names) assert.equal(value[name], true, name); };
-const producerCommit = "3e28428f0b304f1dfed2cb2ad524b50c1fabdeef";
+/** The commit whose complete source tree every digest in the JavaScript transfer record names. */
+export const ownedJavaScriptTransferProducer = "3e28428f0b304f1dfed2cb2ad524b50c1fabdeef";
 
 /**
  * Authenticate the execution scope without inflating frozen support claims.
@@ -43,7 +44,7 @@ export const assertOwnedJavaScriptTransferExecution = async record => {
 		, "tests/helpers/owned-javascript-transfer-ci.mjs"
 		, "tests/helpers/owned-javascript-wasm-native.mjs"
 		, "tests/helpers/owned-rust-transfer-fixture.mjs"
-	].map(path => moduleAtProducer(producerCommit, path))));
+	].map(path => moduleAtProducer(ownedJavaScriptTransferProducer, path))));
 	for(const name of [
 		"assertComponentOwnedWasmBindings"
 		, "assertOwnedJavaScriptTransferCi"
@@ -52,7 +53,7 @@ export const assertOwnedJavaScriptTransferExecution = async record => {
 		, "ownedJavaScriptWasmNativeProbe"
 	]) assert.equal(typeof producer[name], "function", name);
 	assert.equal(typeof producer.ownedRustTransferSource, "string");
-	const historical = path => bytesAtProducer(producerCommit, path);
+	const historical = path => bytesAtProducer(ownedJavaScriptTransferProducer, path);
 	assert.equal(record.acceptance, "passed"); assert.deepEqual(record.scope, ownedJavaScriptTransferScope);
 	assert.equal(record.baselineRevision
 		, "10463a29b72d47b01e11cc799d97589f2ca594fe");

@@ -7,13 +7,13 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
-import { beforeOwnedWitNative, ownedWitNativeHistoricalBytes } from "./helpers/wit-owned-native-history.mjs";
 import { assertOwnedJavaScriptNixCi, assertOwnedJavaScriptNixExecution
-	, ownedJavaScriptNixTests } from "./helpers/owned-javascript-nix-evidence.mjs";
+	, ownedJavaScriptNixProducer, ownedJavaScriptNixTests } from "./helpers/owned-javascript-nix-evidence.mjs";
 import { beforeOwnedJavaScriptNix, ownedJavaScriptNixAddedPaths
 	, ownedJavaScriptNixBaseline, ownedJavaScriptNixChangedPaths
 	, ownedJavaScriptNixPath, ownedJavaScriptNixPrevious
 	, reverseOwnedJavaScriptNixUpdate } from "./helpers/owned-javascript-nix-history.mjs";
+import { bytesAtProducer, sourceAtProducer } from "./helpers/producer-source.mjs";
 
 const read = async () => JSON.parse(await readFile(ownedJavaScriptNixPath, "utf8"));
 
@@ -25,26 +25,27 @@ test("real Nix successor authenticates every change without promoting type cover
 	const bytes = await readFile(record.previous.path), previous = JSON.parse(bytes);
 	assert.equal(sha256(bytes), record.previous.sha256);
 	assert.deepEqual(Object.keys(record.sources).sort(), [...new Set([...Object.keys(previous.sources), ...ownedJavaScriptNixAddedPaths])].sort());
-	for(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(ownedWitNativeHistoricalBytes(path, await readFile(path), digest)), digest, path);
+	// Every recorded digest names the producer tree; later owned and Fin layers never reach back this far.
+	for(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(bytesAtProducer(ownedJavaScriptNixProducer, path)), digest, path);
 	assert.deepEqual(record.updates.map(update => update.path), ownedJavaScriptNixChangedPaths);
 	for(const update of record.updates)
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path], update.path);
 		assert.equal(update.currentSha256, record.sources[update.path], update.path);
-		const current = beforeOwnedWitNative(update.path, await readFile(update.path, "utf8"));
-		assert.equal(sha256(beforeOwnedJavaScriptNix(update.path, current)), update.previousSha256);
+		const current = sourceAtProducer(ownedJavaScriptNixProducer, update.path, update.currentSha256);
+		assert.equal(sha256(beforeOwnedJavaScriptNix(update.path, current, update.previousSha256)), update.previousSha256);
 		assert.equal(beforeOwnedJavaScriptNix(update.path, current, update.currentSha256), current);
 	}
-	const current = beforeOwnedWitNative("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8"));
-	const prior = JSON.parse(beforeOwnedJavaScriptNix("docs/type-surface.v1.json", current));
-	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedWitNativeHistoricalBytes(file.path, await readFile(file.path)));
+	const path = "docs/type-surface.v1.json", current = sourceAtProducer(ownedJavaScriptNixProducer, path, record.sources[path]);
+	const prior = JSON.parse(beforeOwnedJavaScriptNix(path, current, record.updates.find(update => update.path === path)?.previousSha256));
+	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = record.sources[file.path] ?? sha256(bytesAtProducer(ownedJavaScriptNixProducer, file.path));
 	assert.deepEqual(JSON.parse(current), prior);
 });
 
 test("real Nix history rejects unknown text, altered predecessors and overlapping spans", async () => {
 	for(const update of (await read()).updates)
 	{
-		const current = beforeOwnedWitNative(update.path, await readFile(update.path, "utf8")), unknown = current + "\n/* unrelated */\n";
+		const current = sourceAtProducer(ownedJavaScriptNixProducer, update.path, update.currentSha256), unknown = current + "\n/* unrelated */\n";
 		assert.equal(beforeOwnedJavaScriptNix(update.path, unknown), unknown);
 		assert.throws(() => reverseOwnedJavaScriptNixUpdate(unknown, update));
 		for(const changed of [{ ...update, previousSha256: "0".repeat(64) }

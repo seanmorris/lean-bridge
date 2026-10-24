@@ -6,6 +6,8 @@
 import assert from "node:assert/strict";
 import { sha256 } from "../../src/capsule/node.mjs";
 
+/** The commit whose complete source tree every digest in the real Nix record names. */
+export const ownedJavaScriptNixProducer = "9a2ab9091d501e6d4aac5d668496de2bd6a40579";
 export const ownedJavaScriptNixTests = ["tests/nix-toolchain-installation.test.mjs", "tests/owned-javascript-nix-installed.test.mjs"];
 export const ownedJavaScriptNixCommand = "node --test --test-concurrency=1 " + ownedJavaScriptNixTests.join(" ");
 export const ownedJavaScriptNixScope = Object.freeze({
