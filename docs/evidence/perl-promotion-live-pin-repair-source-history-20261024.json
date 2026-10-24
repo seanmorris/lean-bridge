@@ -1,0 +1,150 @@
+{
+  "additions": [
+    {
+      "currentSha256": "039715a96da85443360997d4570fb89878f6fbca59559f7ad66e29b4ccfe2d1a",
+      "path": "scripts/update-perl-promotion-live-pin-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "1b0174a0f4f0c7a72d8e6e46e80623187a57ca2708c74d77b77b537298b896fe",
+      "path": "tests/helpers/perl-promotion-live-pin-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "7df085b58590d1212166f3a47df788f87d539fbc1041f07fed5a9b4383f903b6",
+      "path": "tests/helpers/perl-promotion-live-pin-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "7a86ede66ccb114a900762b146c5bca454e363d2",
+  "implementationCommits": [
+    "7a86ede66ccb114a900762b146c5bca454e363d2"
+  ],
+  "integrationBaseCommit": "7a86ede66ccb114a900762b146c5bca454e363d2",
+  "integrationUpdates": [
+    {
+      "currentSha256": "6175848aa5a8c2c728d5c0d8d53021c8f287aed7697920a72521175be93b0c29",
+      "edits": [
+        {
+          "current": "import { beforePerlPromotionLivePinRepairSource, perlPromotionLivePinRepairNormalizationPaths } from \"./perl-promotion-live-pin-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 4513
+        },
+        {
+          "current": "\t...perlPromotionLivePinRepairNormalizationPaths\n\t, ...rubyTransferCopyGapIntegrationNormalizationPaths\n",
+          "previous": "\t...rubyTransferCopyGapIntegrationNormalizationPaths\n",
+          "start": 177708
+        },
+        {
+          "current": "\t\t= beforePerlPromotionLivePinRepairSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "",
+          "start": 219462
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "901e1c19ada27cc5e59c9b45c8e04a3e9ae82468d124d57318bd3dd13b7e15a3"
+    },
+    {
+      "currentSha256": "5314a18427ec29e936fde606609206325c1200e0d88433b8d4b53534ffc5f229",
+      "edits": [
+        {
+          "current": "import \"./helpers/perl-promotion-live-pin-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 2739
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "e0e71800ec607d94d50defb23a27432adb26c5c2b919cc4b32365ee1ad53b45e"
+    }
+  ],
+  "milestone": "perl-promotion-live-pin-repair-source-v1",
+  "predecessorCommit": "473327396bae25615f116e6fa015cbbe73666ed5",
+  "schemaVersion": 1,
+  "scope": "Refresh the final 16 stale live source-evidence pins across four nested Perl-promotion helpers repaired at a0b746c. Preserve all support observations, original artifacts, immutable receipts and non-pin inventory bytes, with a streamed exact whole-blob reconstruction of the predecessor. No installed acceptance or support expansion is claimed.",
+  "updates": [
+    {
+      "currentSha256": "584671913304ca35bc158b2057cfaad2728776d3999a2cf2f55151eaef79cf3a",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"7512373db9050663c7b89621895119f76ce03298c035696d0a89ab510446a563\"\n",
+          "previous": "          \"sha256\": \"16fde47048456825d3e4d4440fc989531aff5218540f4f75b69bcbf186e7b990\"\n",
+          "start": 12637910
+        },
+        {
+          "current": "          \"sha256\": \"99df049c52cf1741807243a8030ae8410ae0de39b5a971f351947af43e29ceca\"\n",
+          "previous": "          \"sha256\": \"865abfc6ea5a30ce2eeeaf774a89ae4c50eca4fd0df4ce16de150a32e090fc73\"\n",
+          "start": 12638100
+        },
+        {
+          "current": "          \"sha256\": \"f89f67263d131e3fec68f30ec3854083dd07fe01c7856e9ab9d11adcaa974c33\"\n",
+          "previous": "          \"sha256\": \"47da4cc13ebb1967c7e869792a8a3d0330d3cb2e3e48fcc841fab3be53bf586d\"\n",
+          "start": 12638292
+        },
+        {
+          "current": "          \"sha256\": \"c31b52e4feb94d59585f8f973111a3003661b5043b8e5206b8248e263c5922b7\"\n",
+          "previous": "          \"sha256\": \"16846d74135b62f79a2dffd84721bceb1c1c2deb0150d7133668711c31b0665d\"\n",
+          "start": 12638490
+        },
+        {
+          "current": "          \"sha256\": \"7512373db9050663c7b89621895119f76ce03298c035696d0a89ab510446a563\"\n",
+          "previous": "          \"sha256\": \"16fde47048456825d3e4d4440fc989531aff5218540f4f75b69bcbf186e7b990\"\n",
+          "start": 12793271
+        },
+        {
+          "current": "          \"sha256\": \"99df049c52cf1741807243a8030ae8410ae0de39b5a971f351947af43e29ceca\"\n",
+          "previous": "          \"sha256\": \"865abfc6ea5a30ce2eeeaf774a89ae4c50eca4fd0df4ce16de150a32e090fc73\"\n",
+          "start": 12793461
+        },
+        {
+          "current": "          \"sha256\": \"f89f67263d131e3fec68f30ec3854083dd07fe01c7856e9ab9d11adcaa974c33\"\n",
+          "previous": "          \"sha256\": \"47da4cc13ebb1967c7e869792a8a3d0330d3cb2e3e48fcc841fab3be53bf586d\"\n",
+          "start": 12793653
+        },
+        {
+          "current": "          \"sha256\": \"c31b52e4feb94d59585f8f973111a3003661b5043b8e5206b8248e263c5922b7\"\n",
+          "previous": "          \"sha256\": \"16846d74135b62f79a2dffd84721bceb1c1c2deb0150d7133668711c31b0665d\"\n",
+          "start": 12793851
+        },
+        {
+          "current": "          \"sha256\": \"7512373db9050663c7b89621895119f76ce03298c035696d0a89ab510446a563\"\n",
+          "previous": "          \"sha256\": \"16fde47048456825d3e4d4440fc989531aff5218540f4f75b69bcbf186e7b990\"\n",
+          "start": 12949521
+        },
+        {
+          "current": "          \"sha256\": \"99df049c52cf1741807243a8030ae8410ae0de39b5a971f351947af43e29ceca\"\n",
+          "previous": "          \"sha256\": \"865abfc6ea5a30ce2eeeaf774a89ae4c50eca4fd0df4ce16de150a32e090fc73\"\n",
+          "start": 12949711
+        },
+        {
+          "current": "          \"sha256\": \"f89f67263d131e3fec68f30ec3854083dd07fe01c7856e9ab9d11adcaa974c33\"\n",
+          "previous": "          \"sha256\": \"47da4cc13ebb1967c7e869792a8a3d0330d3cb2e3e48fcc841fab3be53bf586d\"\n",
+          "start": 12949903
+        },
+        {
+          "current": "          \"sha256\": \"c31b52e4feb94d59585f8f973111a3003661b5043b8e5206b8248e263c5922b7\"\n",
+          "previous": "          \"sha256\": \"16846d74135b62f79a2dffd84721bceb1c1c2deb0150d7133668711c31b0665d\"\n",
+          "start": 12950101
+        },
+        {
+          "current": "          \"sha256\": \"7512373db9050663c7b89621895119f76ce03298c035696d0a89ab510446a563\"\n",
+          "previous": "          \"sha256\": \"16fde47048456825d3e4d4440fc989531aff5218540f4f75b69bcbf186e7b990\"\n",
+          "start": 13105340
+        },
+        {
+          "current": "          \"sha256\": \"99df049c52cf1741807243a8030ae8410ae0de39b5a971f351947af43e29ceca\"\n",
+          "previous": "          \"sha256\": \"865abfc6ea5a30ce2eeeaf774a89ae4c50eca4fd0df4ce16de150a32e090fc73\"\n",
+          "start": 13105530
+        },
+        {
+          "current": "          \"sha256\": \"f89f67263d131e3fec68f30ec3854083dd07fe01c7856e9ab9d11adcaa974c33\"\n",
+          "previous": "          \"sha256\": \"47da4cc13ebb1967c7e869792a8a3d0330d3cb2e3e48fcc841fab3be53bf586d\"\n",
+          "start": 13105722
+        },
+        {
+          "current": "          \"sha256\": \"c31b52e4feb94d59585f8f973111a3003661b5043b8e5206b8248e263c5922b7\"\n",
+          "previous": "          \"sha256\": \"16846d74135b62f79a2dffd84721bceb1c1c2deb0150d7133668711c31b0665d\"\n",
+          "start": 13105920
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "4111693a5772ef10ac58b75bbe05f269c368c764345225667c9d1a02fc2a181c"
+    }
+  ]
+}
