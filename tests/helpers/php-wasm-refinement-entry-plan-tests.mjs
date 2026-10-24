@@ -10,6 +10,7 @@ import { sha256 } from "../../src/capsule/node.mjs";
 import {
 	nominalPrimitiveSubtypePhpWasmReview
 } from "./nominal-primitive-subtype-php-wasm-fixture.mjs";
+import { nominalPrimitiveSubtypeFields } from "./nominal-primitive-subtype-fixture.mjs";
 import {
 	recursiveCheckedRecordPhpWasmReview
 } from "./recursive-checked-record-php-wasm-fixture.mjs";
@@ -181,6 +182,52 @@ const graphSelection = async family => {
 	return phpWasmGraphRefinementEntrySelection(fixtureModel(family), source.entries);
 };
 const labels = item => item.call.entries.map(entry => `${entry.kind}:${entry.label.replace(/_[a-f0-9]{20}$/u, "")}`);
+
+const nestedNominalEventSelection = async () => {
+	const selection = await graphSelection("nominal-full");
+	const base = "NominalPrimitiveSubtypes.echoEventA:refinement_0";
+	const selected = selection.selected.filter(item => item.label !== base);
+	const source = [selection.generated.leanSource];
+	const constructors = nominalPrimitiveSubtypeFields.map(item => item.constructor + "A");
+	for(const [branch, path] of [["box", "1_0"], ["choices", "2_0_0_0_0"]])
+		constructors.forEach((constructor, index) => {
+			const symbol = `lb_plan_echo_event_a_${branch}_${index}`;
+			selected.push({ symbol, kind: "validator", label: `${base}_${path}_${index}` });
+			source.push(`@[export ${symbol}]`, `def ${symbol} := _root_.NominalPrimitiveSubtypes.${constructor}`, "");
+		});
+	return { selected, leanSource: source.join("\n"), constructors, base };
+};
+
+test("flat nominal active variants select every leaf validator from only the active branch", async () => {
+	const fixture = await nestedNominalEventSelection();
+	const create = (selected = fixture.selected, source = fixture.leanSource) =>
+		phpWasmRefinementEntryPlan("nominal-full", selected, source);
+	const active = create().cases.find(item => item.control === "active-branch");
+	const validators = active.call.entries.filter(item => item.kind === "validator"
+		&& item.label.includes(":refinement_"));
+	assert.equal(validators.length, fixture.constructors.length);
+	assert.deepEqual(validators.map(item => item.label), fixture.constructors.map((_, index) =>
+		`NominalPrimitiveSubtypes.echoEventA:refinement_0_1_0_${index}`));
+	assert.ok(validators.every(item => !item.label.includes(":refinement_0_2_")));
+	for(const [index, validator] of validators.entries())
+	{
+		const position = active.call.entries.indexOf(validator);
+		assert.deepEqual(active.call.entries[position + 1], {
+			kind: "constructor"
+			, label: `NominalPrimitiveSubtypes.${fixture.constructors[index]}`
+		});
+	}
+	const inactive = create().cases.find(item => item.control === "inactive-branch");
+	assert.equal(inactive.call.entries.filter(item => item.kind === "validator"
+		&& item.label.includes(":refinement_")).length, 0);
+	const firstBox = `${fixture.base}_1_0_0`, firstChoice = `${fixture.base}_2_0_0_0_0_0`;
+	assert.throws(() => create(fixture.selected.filter(item => item.label !== firstBox)));
+	assert.throws(() => create(fixture.selected.filter(item => !item.label.startsWith(`${fixture.base}_1_0_`))));
+	const swapped = fixture.selected.map(item => item.label === firstBox ? { ...item, label: `${fixture.base}_1_0_1` }
+		: item.label === `${fixture.base}_1_0_1` ? { ...item, label: firstBox } : item);
+	assert.throws(() => create(swapped));
+	assert.ok(fixture.selected.some(item => item.label === firstChoice));
+});
 
 test("graph-carried recursive plans follow the generated per-position validation order", async () => {
 	const subtype = await plan("recursive-subtype");
