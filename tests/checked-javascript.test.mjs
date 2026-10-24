@@ -46,6 +46,9 @@ import "./helpers/perl-promotion-live-pin-repair-source-history-tests.mjs";
 import "./helpers/php-wasm-callback-endpoint-stop-source-history-tests.mjs";
 import "./helpers/zero-payload-dotnet-archive-gap-source-history-tests.mjs";
 import "./helpers/core-history-endpoint-integration-source-history-tests.mjs";
+import "./helpers/owned-producer-replay-source-history-tests.mjs";
+import "./helpers/php-recursive-milestone-stop-tests.mjs";
+import "./helpers/owned-history-followup-source-history-tests.mjs";
 
 const root = resolve(".");
 

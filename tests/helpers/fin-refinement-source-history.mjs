@@ -38,6 +38,8 @@ import { beforePerlPromotionLivePinRepairSource, perlPromotionLivePinRepairNorma
 import { beforePhpWasmCallbackEndpointStopSource, phpWasmCallbackEndpointStopNormalizationPaths } from "./php-wasm-callback-endpoint-stop-source-history.mjs";
 import { beforeZeroPayloadDotnetArchiveGapSource, zeroPayloadDotnetArchiveGapNormalizationPaths } from "./zero-payload-dotnet-archive-gap-source-history.mjs";
 import { beforeCoreHistoryEndpointIntegrationSource, coreHistoryEndpointIntegrationNormalizationPaths } from "./core-history-endpoint-integration-source-history.mjs";
+import { beforeOwnedProducerReplaySource, ownedProducerReplayNormalizationPaths } from "./owned-producer-replay-source-history.mjs";
+import { beforeOwnedHistoryFollowupSource, ownedHistoryFollowupNormalizationPaths } from "./owned-history-followup-source-history.mjs";
 import { beforeCoreEvidenceMemoryRepairSource, coreEvidenceMemoryRepairNormalizationPaths } from "./core-evidence-memory-repair-source-history.mjs";
 import { beforeValueIndexPromotionMilestoneRepairSource, valueIndexPromotionMilestoneRepairNormalizationPaths } from "./value-index-promotion-milestone-repair-source-history.mjs";
 import { beforeCoreMilestoneReplayRepairSource, coreMilestoneReplayRepairNormalizationPaths } from "./core-milestone-replay-repair-source-history.mjs";
@@ -2131,7 +2133,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...coreHistoryEndpointIntegrationNormalizationPaths
+	...ownedHistoryFollowupNormalizationPaths
+	, ...ownedProducerReplayNormalizationPaths
+	, ...coreHistoryEndpointIntegrationNormalizationPaths
 	, ...zeroPayloadDotnetArchiveGapNormalizationPaths
 	, ...phpWasmCallbackEndpointStopNormalizationPaths
 	, ...perlPromotionLivePinRepairNormalizationPaths
@@ -3006,6 +3010,15 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
 	let stage
+		= beforeOwnedHistoryFollowupSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeOwnedProducerReplaySource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage
 		= beforeCoreHistoryEndpointIntegrationSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;

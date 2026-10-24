@@ -1,0 +1,295 @@
+{
+  "additions": [
+    {
+      "currentSha256": "88f450412b11e8f36ec8b9343400c8e885311d8e6edd2726f82fee74157323bb",
+      "path": "docs/evidence/owned-producer-replay-source-history-20261024.json"
+    },
+    {
+      "currentSha256": "ad7b6e819b48397e51bc8ed5d0fda53c4325be2af5001adf7a1c7e9b95a7b953",
+      "path": "scripts/update-owned-producer-replay-source-history.mjs"
+    },
+    {
+      "currentSha256": "9a14d42a8151eda2a83b951da1dd52c417e58040cd6e825d93846923815f71f7",
+      "path": "tests/helpers/owned-producer-replay-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "6359f83c038f40a9bba0ea037af2ec541f7fb120e6ed4a36fd1556d684f28f1f",
+      "path": "tests/helpers/owned-producer-replay-source-history.mjs"
+    },
+    {
+      "currentSha256": "045b9903add76eb52bfcc23b89c6884ee0a3eff47759f4d1ceafd7172aca6b53",
+      "path": "tests/helpers/php-recursive-milestone-stop-tests.mjs"
+    },
+    {
+      "currentSha256": "76131f471ad35e57b9eb8a3ef0a44ecc69f74c14c43698a2bb7adaffc7ee7e16",
+      "path": "scripts/update-owned-history-followup-source-history.mjs"
+    },
+    {
+      "currentSha256": "b9813a803e64cb736747d5f58f32dd687cd3183e60a86cba78d2f55e6de1d63f",
+      "path": "tests/helpers/owned-history-followup-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "cccbd82dfc389557eae8f345c4a70b41379a208f8c045f07f26650d8319b559c",
+      "path": "tests/helpers/owned-history-followup-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "746551e1bd040960a6239af8348b1315e8c6d3de",
+  "implementationCommits": [
+    "17fe7e9e4216bdefaa3d81e63efb87812c05d00f",
+    "32e9ac1fd761e3ef4d653ebdbc68f4f9e3d7d485",
+    "6765abe1df0db64d8fa7377e1c998090e0efb69e",
+    "2652e77c8d8e2c2bc69ecd57c7947453d7c64d4f",
+    "746551e1bd040960a6239af8348b1315e8c6d3de"
+  ],
+  "integrationBaseCommit": "746551e1bd040960a6239af8348b1315e8c6d3de",
+  "integrationUpdates": [
+    {
+      "currentSha256": "75da755256c6eb9ae01773cf76e601d74a0c433a87909bacd0db8698aa2319aa",
+      "edits": [
+        {
+          "current": "import { beforeOwnedProducerReplaySource, ownedProducerReplayNormalizationPaths } from \"./owned-producer-replay-source-history.mjs\";\nimport { beforeOwnedHistoryFollowupSource, ownedHistoryFollowupNormalizationPaths } from \"./owned-history-followup-source-history.mjs\";\n",
+          "previous": "",
+          "start": 5154
+        },
+        {
+          "current": "\t...ownedHistoryFollowupNormalizationPaths\n\t, ...ownedProducerReplayNormalizationPaths\n\t, ...coreHistoryEndpointIntegrationNormalizationPaths\n",
+          "previous": "\t...coreHistoryEndpointIntegrationNormalizationPaths\n",
+          "start": 178462
+        },
+        {
+          "current": "\t\t= beforeOwnedHistoryFollowupSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeOwnedProducerReplaySource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "",
+          "start": 220464
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "e4776728f95187c4191da25286d80eca2a379ed02ddb3f12086647f54202e72f"
+    },
+    {
+      "currentSha256": "cd443498e2b861a558e32ebe6cc22e4202da2179fb59e87161e1663361317da0",
+      "edits": [
+        {
+          "current": "import \"./helpers/owned-producer-replay-source-history-tests.mjs\";\nimport \"./helpers/php-recursive-milestone-stop-tests.mjs\";\nimport \"./helpers/owned-history-followup-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 3048
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "013de60e3f8a55bece43daa6eb7f13201c8cd8a7fe4721db85b643eda4b34a04"
+    }
+  ],
+  "milestone": "owned-history-followup-source-v1",
+  "predecessorCommit": "49df58c8bacf9641bdea03dac5627d4aa4699358",
+  "schemaVersion": 1,
+  "scope": "Integrate exact producer-bound staged C transfer and JVM runtime generators, authentic pre-partition CI controls with nonvacuous mutations, the original Perl asset fixture, the recorded PHP recursive inventory endpoint, and Rust/native historical-addition reads. Refresh exactly three live PHP helper pins, preserving every other inventory byte. Retain the original producer receipt, all installed observations, source identities and support scope. No new installed acceptance or support expansion is claimed.",
+  "updates": [
+    {
+      "currentSha256": "9e900631a144858000bcd91d910200151e1c623aba505be4c0a21719ecbc51e0",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"3df4b00e72d62cf08e202f2b366e6a23a30c7f46925b56f57cb6a27ff3a244da\"\n",
+          "previous": "          \"sha256\": \"d3498a362e04a92ffbd34b59ddff4277ab839beebdc5efe51da488c7b563db63\"\n",
+          "start": 1385758
+        },
+        {
+          "current": "          \"sha256\": \"3df4b00e72d62cf08e202f2b366e6a23a30c7f46925b56f57cb6a27ff3a244da\"\n",
+          "previous": "          \"sha256\": \"d3498a362e04a92ffbd34b59ddff4277ab839beebdc5efe51da488c7b563db63\"\n",
+          "start": 1404057
+        },
+        {
+          "current": "          \"sha256\": \"3df4b00e72d62cf08e202f2b366e6a23a30c7f46925b56f57cb6a27ff3a244da\"\n",
+          "previous": "          \"sha256\": \"d3498a362e04a92ffbd34b59ddff4277ab839beebdc5efe51da488c7b563db63\"\n",
+          "start": 1422437
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "37ec9f215767f81ddaabfde664529c559f942c56d9a1cd5ba778bb44ca6d9c61"
+    },
+    {
+      "currentSha256": "19ee6c9db1ea42ced462172c3661b60866acd605b1c355174d670eedc0dacc69",
+      "edits": [
+        {
+          "current": "import { moduleAtProducer } from \"./producer-module.mjs\";\n",
+          "previous": "import { ownedJvmRuntime } from \"../../src/backends/jvm/owned-runtime.mjs\";\nimport { ownedJvmRuntimeProbeSources } from \"./owned-jvm-runtime-native.mjs\";\n",
+          "start": 240
+        },
+        {
+          "current": "// The receipt's eight recorded sources are exactly this commit's bytes.\nexport const ownedJvmRuntimeProducer = \"7ee68a3f3b3f3064acb81ef13a775bd2257d7f17\";\n",
+          "previous": "",
+          "start": 470
+        },
+        {
+          "current": " * Native and Java sources are regenerated with the receipt's own producer\n * modules; present-day behavior is covered by tests/owned-jvm-runtime.test.mjs.\n",
+          "previous": "",
+          "start": 1417
+        },
+        {
+          "current": "\tconst [{ ownedJvmRuntimeProbeSources }, { ownedJvmRuntime }] = await Promise.all([\n\t\tmoduleAtProducer(ownedJvmRuntimeProducer, \"tests/helpers/owned-jvm-runtime-native.mjs\")\n\t\t, moduleAtProducer(ownedJvmRuntimeProducer, \"src/backends/jvm/owned-runtime.mjs\")\n\t]);\n",
+          "previous": "",
+          "start": 1689
+        }
+      ],
+      "path": "tests/helpers/owned-jvm-runtime-evidence.mjs",
+      "previousSha256": "24fb06e7943f9812d433c3cb8b30aca57b8027efee8770627152cb10228b7de9"
+    },
+    {
+      "currentSha256": "d8f7e58d649a3b5eee1c93d4fabd46f3ca601ff81a8fd2422e758e68a619b43a",
+      "edits": [
+        {
+          "current": "import { posix } from \"node:path\";\n",
+          "previous": "",
+          "start": 278
+        },
+        {
+          "current": "import { moduleSpecifiers } from \"./module-closure.mjs\";\nimport { moduleAtProducer } from \"./producer-module.mjs\";\nimport { bytesAtProducer } from \"./producer-source.mjs\";\n",
+          "previous": "import { generateOwnedCPackage } from \"../../src/backends/c/owned-package.mjs\";\nimport { ownedAggregateTransferLeaseSource } from \"../../src/backends/native/owned-aggregate-transfers.mjs\";\n",
+          "start": 446
+        },
+        {
+          "current": "",
+          "previous": "import { historicalOwnedTransferPackage } from \"./owned-transfer-generated-history.mjs\";\n",
+          "start": 686
+        },
+        {
+          "current": "// The receipt's complete source inventory is exactly this commit's tree.\nexport const ownedTransferCProducer = \"27e0eac89682a498537f7a2c5861ac3a53f3b3f1\";\nexport const ownedTransferCProducerEntries = Object.freeze([\n\t\"src/backends/c/owned-package.mjs\"\n\t, \"src/backends/native/owned-aggregate-transfers.mjs\"\n]);\n",
+          "previous": "",
+          "start": 756
+        },
+        {
+          "current": "/**\n * Bind every producer module and JSON file the replayed generator loads to this\n * receipt's recorded source identity.\n *\n * @param sources - Receipt source identities by repository-relative path.\n */\nexport const ownedTransferCProducerClosure = sources => {\n\tconst paths = new Set();\n\tconst visit = path => {\n\t\tif(paths.has(path)) return;\n\t\tpaths.add(path);\n\t\tassert.match(sources[path] ?? \"\", /^[a-f0-9]{64}$/u, path);\n\t\tconst bytes = bytesAtProducer(ownedTransferCProducer, path, sources[path]);\n\t\tif(!path.endsWith(\".mjs\")) return;\n\t\tfor(const specifier of moduleSpecifiers(bytes.toString(\"utf8\"), path))\n\t\t{\n\t\t\tconst joined = posix.normalize(posix.join(posix.dirname(path), specifier));\n\t\t\tvisit(posix.extname(joined) === \"\" ? `${joined}.mjs` : joined);\n\t\t}\n\t};\n\tfor(const entry of ownedTransferCProducerEntries) visit(entry);\n\treturn [...paths].sort();\n};\n\n",
+          "previous": "",
+          "start": 1529
+        },
+        {
+          "current": " * Generated C is replayed with the receipt's own producer modules; present-day\n * generator behavior is covered by the current transfer suites.\n",
+          "previous": "",
+          "start": 2485
+        },
+        {
+          "current": "\townedTransferCProducerClosure(record.sources);\n\tconst [{ generateOwnedCPackage }, { ownedAggregateTransferLeaseSource }] = await Promise.all(\n\t\townedTransferCProducerEntries.map(entry => moduleAtProducer(ownedTransferCProducer, entry)));\n",
+          "previous": "",
+          "start": 2758
+        },
+        {
+          "current": "\t\tconst generated = generateOwnedCPackage({ ...input, hostCallbacks: true, transferredInputs: true });\n",
+          "previous": "\t\tconst generated = historicalOwnedTransferPackage(generateOwnedCPackage({ ...input, hostCallbacks: true, transferredInputs: true }), report.sourceSha256);\n",
+          "start": 5127
+        }
+      ],
+      "path": "tests/helpers/owned-transfer-c-evidence.mjs",
+      "previousSha256": "2bacfe58e4fd57f450b923309ba716c5ba9c12dc6d0f7a91833672057b4bac5a"
+    },
+    {
+      "currentSha256": "15f8ff3b653c49315ddf48bfccbe7fa3afc764c1a083da483466c51ac2841f03",
+      "edits": [
+        {
+          "current": "import { phpWasmCorpusPartitionHistoryPath } from \"./helpers/php-wasm-corpus-partition-history.mjs\";\nimport { sourceAtFinHistoryMilestone } from \"./helpers/source-at-fin-history-milestone.mjs\";\n",
+          "previous": "",
+          "start": 778
+        },
+        {
+          "current": "// The CI check describes the workflow immediately before the PHP-Wasm corpus partition.\nconst workflowPath = \".github/workflows/consumer-matrix.yml\";\nconst prePartitionWorkflow = async () => {\n\tconst partition = JSON.parse(await readFile(phpWasmCorpusPartitionHistoryPath, \"utf8\"));\n\tconst update = partition.updates.find(item => item.path === workflowPath);\n\treturn sourceAtFinHistoryMilestone(workflowPath, update.previousSha256);\n};\n",
+          "previous": "",
+          "start": 1232
+        },
+        {
+          "current": "\tassertOwnedTransferCCi(await prePartitionWorkflow());\n",
+          "previous": "\tassertOwnedTransferCCi(await readFile(\".github/workflows/consumer-matrix.yml\", \"utf8\"));\n",
+          "start": 4538
+        },
+        {
+          "current": "\tconst workflow = await prePartitionWorkflow();\n\tassertOwnedTransferCCi(workflow);\n\tfor(const text of [\n\t\t\"          npm run test:owned-transfers\\n\"\n",
+          "previous": "\tconst workflow = await readFile(\".github/workflows/consumer-matrix.yml\", \"utf8\");\n\tfor(const text of [\"          npm run test:owned-transfers\\n\"\n",
+          "start": 5780
+        },
+        {
+          "current": "\t\t, \"          test -s build/owned-transfers/reviewed-c.json\\n\"\n\t]) {\n\t\tconst changed = workflow.replace(text, \"\");\n\t\tassert.notEqual(changed, workflow, text);\n\t\tassert.throws(() => assertOwnedTransferCCi(changed));\n\t}\n",
+          "previous": "\t\t, \"          test -s build/owned-transfers/reviewed-c.json\\n\"])\n\t\tassert.throws(() => assertOwnedTransferCCi(workflow.replace(text, \"\")));\n",
+          "start": 5972
+        }
+      ],
+      "path": "tests/owned-transfer-c-evidence.test.mjs",
+      "previousSha256": "377e7d974f11c56928fb7721ea5463f3c4567b7fad6759a64e3c47f7b9026a80"
+    },
+    {
+      "currentSha256": "2413d6543f15026dd0e5d96d44241cd19d2a6165724cdb09de4f9b791da30476",
+      "edits": [
+        {
+          "current": "import { sourceAtFinHistoryMilestone } from \"./source-at-fin-history-milestone.mjs\";\n",
+          "previous": "",
+          "start": 483
+        },
+        {
+          "current": "\tconst assetPath = \"tests/fixtures/structured-types/owned-perl-installed-assets.pl\";\n\tconst assetSource = sha256(await sourceAtFinHistoryMilestone(\n\t\tassetPath, record.sources[assetPath]));\n",
+          "previous": "\tconst assetSource = sha256(await readFile(\"tests/fixtures/structured-types/owned-perl-installed-assets.pl\"));\n",
+          "start": 3600
+        }
+      ],
+      "path": "tests/helpers/owned-perl-package-evidence.mjs",
+      "previousSha256": "a92b264bfe14f8ecbedc77d96396131bba286414b9c7660edffa58efa189f663"
+    },
+    {
+      "currentSha256": "3df4b00e72d62cf08e202f2b366e6a23a30c7f46925b56f57cb6a27ff3a244da",
+      "edits": [
+        {
+          "current": "import { readFileSync } from 'node:fs';\n",
+          "previous": "",
+          "start": 144
+        },
+        {
+          "current": "import { phpRecursiveCallableChangedPaths, phpRecursiveCallableHistoryPath, reversePhpRecursiveCallableUpdate } from './php-recursive-callable-source-history.mjs';\n",
+          "previous": "import { phpRecursiveCallableChangedPaths, reversePhpRecursiveCallableUpdate } from './php-recursive-callable-source-history.mjs';\n",
+          "start": 1680
+        },
+        {
+          "current": "let inventorySha256;\n",
+          "previous": "",
+          "start": 2048
+        },
+        {
+          "current": "export const phpRecursiveTypeSurface = source => {\n\tconst path = 'docs/type-surface.v1.json';\n\tif(inventorySha256 === undefined)\n\t{\n\t\tconst record = JSON.parse(readFileSync(phpRecursiveCallableHistoryPath, 'utf8'));\n\t\tconst updates = record.updates.filter(update => update.path === path);\n\t\tassert.equal(updates.length, 1);\n\t\tconst digest = updates[0].currentSha256;\n\t\tassert.match(digest, /^[a-f0-9]{64}$/u);\n\t\tinventorySha256 = digest;\n\t}\n\treturn JSON.parse(beforePhpWasmRecursiveCallables(path, source, inventorySha256));\n};\n",
+          "previous": "export const phpRecursiveTypeSurface = source => JSON.parse(beforePhpWasmRecursiveCallables('docs/type-surface.v1.json', source));\n",
+          "start": 2242
+        }
+      ],
+      "path": "tests/helpers/php-recursive-callable-evidence.mjs",
+      "previousSha256": "d3498a362e04a92ffbd34b59ddff4277ab839beebdc5efe51da488c7b563db63"
+    },
+    {
+      "currentSha256": "054723f321876f1ff359688b78bfdb8e8be07d1ab4047ba64b7e495b6b6ef1e0",
+      "edits": [
+        {
+          "current": "\t\t, record => { delete record.sources[\"tests/fixtures/structured-types/owned-perl-installed-assets.pl\"]; }\n\t\t, record => { record.sources[\"tests/fixtures/structured-types/owned-perl-installed-assets.pl\"] = \"0\".repeat(64); }\n\t\t, record => { record.packages.ordinary.observations[0].assets.sourceSha256 = \"0\".repeat(64); }\n",
+          "previous": "",
+          "start": 4751
+        }
+      ],
+      "path": "tests/owned-perl-package-evidence.test.mjs",
+      "previousSha256": "ec82e1e517684944b0eb6e12ac20d188c278262c947222754adcdfaef9bc49fe"
+    },
+    {
+      "currentSha256": "7521baf05f0ecd18e01001a49e697f555b16a1c286e0d2176981cc20a72ec3e6",
+      "edits": [
+        {
+          "current": "\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256))\n",
+          "previous": "\t\tassert.equal(sha256(await readFile(addition.path))\n",
+          "start": 4635
+        }
+      ],
+      "path": "tests/helpers/checked-record-value-index-rust-promotion-source-history-tests.mjs",
+      "previousSha256": "9986cb31dde2f541287ce1776ec66820eaa51dd6956c285162c83f148ac4baf3"
+    },
+    {
+      "currentSha256": "e717cebbb4acf93d8489ce6e8c164edf7af9cf0a70fa26dea6a109754d60eea2",
+      "edits": [
+        {
+          "current": "\t\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\t\taddition.path, addition.currentSha256))\n",
+          "previous": "\t\t\tassert.equal(sha256(await readFile(addition.path))\n",
+          "start": 3502
+        }
+      ],
+      "path": "tests/helpers/mutual-checked-record-native-review-source-history-tests.mjs",
+      "previousSha256": "dc5803459c80736b5daa043624aa8965ad8bd02d7fb637fa81a937d0bdfd9e4f"
+    }
+  ]
+}
