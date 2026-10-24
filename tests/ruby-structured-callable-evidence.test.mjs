@@ -59,9 +59,10 @@ test("Ruby structured source history preserves unrelated source drift", async ()
 	const record = await json(rubyStructuredCallableHistoryPath);
 	for(const update of record.updates)
 	{
-		const source = beforeDotnetStructuredCallables(update.path, await readFile(update.path, "utf8"));
+		// The hub reverses every recognized state, so live reads and predecessor reads name their stops.
+		const source = beforeDotnetStructuredCallables(update.path, await readFile(update.path, "utf8"), update.currentSha256);
 		assert.equal(sha256(reverseRubyStructuredCallableUpdate(source, update)), update.previousSha256);
-		assert.equal(sha256(beforeRubyStructuredCallables(update.path, source)), update.previousSha256);
+		assert.equal(sha256(beforeRubyStructuredCallables(update.path, source, update.previousSha256)), update.previousSha256);
 		assert.notEqual(sha256(beforeRubyStructuredCallables(update.path, source + "\n// unrelated\n")), update.previousSha256);
 		assert.throws(() => reverseRubyStructuredCallableUpdate(source + "\n// unrelated\n", update));
 	}

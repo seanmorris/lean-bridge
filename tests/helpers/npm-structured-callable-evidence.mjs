@@ -15,7 +15,8 @@ import { npmStructuredCallableChangedPaths, reverseNpmStructuredCallableUpdate }
 import { beforePhpStructuredCallables } from "./php-structured-callable-source-history.mjs";
 import { npmStructuredCallableDocumentation } from "./npm-structured-callable-documentation.mjs";
 
-const priorSource = async path => beforePhpStructuredCallables(path, await readFile(path, "utf8"));
+// The hub reverses every recognized state, so each read names the milestone digest it stops at.
+const priorSource = async (path, expected) => beforePhpStructuredCallables(path, await readFile(path, "utf8"), expected);
 
 export const npmStructuredCallableExecutionPath = "docs/evidence/npm-structured-callables-20260925.json";
 export const npmStructuredCallableScope = {
@@ -168,17 +169,17 @@ export const assertNpmStructuredCallableIntegration = async record => {
 	assert.deepEqual(Object.keys(record.additions).sort(), npmStructuredCallableAddedPaths);
 	const paths = [...new Set([...Object.keys(previous.sourceHashes), ...npmStructuredCallableChangedPaths, ...npmStructuredCallableAddedPaths])].sort();
 	assert.deepEqual(Object.keys(record.sourceHashes).sort(), paths);
-	for(const path of paths) assert.equal(sha256(await priorSource(path)), record.sourceHashes[path], path);
+	for(const path of paths) assert.equal(sha256(await priorSource(path, record.sourceHashes[path])), record.sourceHashes[path], path);
 	const restored = {};
 	for(const update of record.updates)
 	{
 		assert.equal(update.currentSha256, record.sourceHashes[update.path]);
-		restored[update.path] = reverseNpmStructuredCallableUpdate(await priorSource(update.path), update);
+		restored[update.path] = reverseNpmStructuredCallableUpdate(await priorSource(update.path, update.currentSha256), update);
 		if(previous.sourceHashes[update.path]) assert.equal(update.previousSha256, previous.sourceHashes[update.path]);
 	}
 	for(const [path, digest] of Object.entries(record.additions)) assert.equal(digest, record.sourceHashes[path]);
 	const { document, ...contracts } = { ...await readTypeSurface()
-		, document: JSON.parse(await priorSource("docs/type-surface.v1.json")) };
+		, document: JSON.parse(await priorSource("docs/type-surface.v1.json", record.sourceHashes["docs/type-surface.v1.json"])) };
 	const old = JSON.parse(restored["docs/type-surface.v1.json"]);
 	assert.equal(document.contractVersion, record.inventory.version); assert.equal(old.contractVersion, record.inventory.previousVersion);
 	const cells = typeSurfaceCells(document, contracts), oldCells = typeSurfaceCells(old, contracts);

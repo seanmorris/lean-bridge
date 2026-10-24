@@ -115,9 +115,11 @@ test("hosted WIT/WASI value-index promotion closes every added source"
 		const record = JSON.parse(await readFile(
 			checkedRecordValueIndexWitPromotionHistoryPath, "utf8"
 		));
+		// Later layers may edit an addition; reconstruct its recorded milestone bytes.
 		for(const addition of record.additions)
 		{
-			assert.equal(sha256(await readFile(addition.path))
+			assert.equal(sha256(await sourceAtFinHistoryMilestone(
+				addition.path, addition.currentSha256))
 				, addition.currentSha256, addition.path);
 			assert.notEqual(spawnSync("git", ["cat-file", "-e"
 				, `${checkedRecordValueIndexWitPromotionPredecessor}:${addition.path}`]

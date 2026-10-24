@@ -1,0 +1,164 @@
+{
+  "additions": [
+    {
+      "currentSha256": "700090718cc759de38cc159ba68f72e40906b6b4041cb0662456dbbeee8fe29e",
+      "path": "scripts/update-wit-transfer-copy-gap-source-history.mjs"
+    },
+    {
+      "currentSha256": "ea6af901648ae446d22411d7a168a895f11275cb2d39dcfaf702210e3940bb71",
+      "path": "tests/helpers/wit-transfer-copy-gap-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "9400cf80fa14a3006f69546e5aea0eebc270c64eec638736b521f6dd009c7aff",
+      "path": "tests/helpers/wit-transfer-copy-gap-source-history.mjs"
+    }
+  ],
+  "historicalCommit": "1b77979abe846c67f5b3b19693012ed0a238f8ea",
+  "historicalPredecessorCommit": "cf5062772b63ee7483d0a30c2f9df3c01d358157",
+  "historicalTransitions": [
+    {
+      "currentCommit": "1b77979abe846c67f5b3b19693012ed0a238f8ea",
+      "currentSha256": "ce00dd38412729e7e71d35755403fe3992639a7c5e9063a06569dc6cffe827db",
+      "edits": [
+        {
+          "current": "import { generateOwnedCValues, ownedCProjectionRequiresValueCopies } from \"../c/owned-values.mjs\";\n",
+          "previous": "import { generateOwnedCValues } from \"../c/owned-values.mjs\";\n",
+          "start": 246
+        },
+        {
+          "current": "\tconst values = generateOwnedCValues(generateOwnedAggregateCarriers(options).model.bindingIr, options);\n\tconst valueCopies = callbackAnchors || ownedCProjectionRequiresValueCopies(values);\n\tconst generated = generateOwnedCPackage({ ...options, ...valueCopies ? { valueCopies: true } : {} }, {\n",
+          "previous": "\tconst generated = generateOwnedCPackage({ ...options, ...callbackAnchors ? { valueCopies: true } : {} }, {\n",
+          "start": 1582
+        }
+      ],
+      "path": "src/backends/wit/owned-package.mjs",
+      "previousCommit": "cf5062772b63ee7483d0a30c2f9df3c01d358157",
+      "previousSha256": "84531aba24093681dbd9adce13e17a9b8b13683ac0ccfc7b5b8662f043a85cd0"
+    },
+    {
+      "currentCommit": "1b77979abe846c67f5b3b19693012ed0a238f8ea",
+      "currentSha256": "3d20ff61579080ef6456d49dd689cc37f9a8e7843cb829e934a07ac20af76e56",
+      "edits": [
+        {
+          "current": "\tconst { model, receipt } = await readVerifiedNativeComponent(nativeRoot, runtimeIdentity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true, ownedReceiverExports: true, ownedCallbackResultAnchors: true, nativeRefinements: true, nativeCheckedRecords: true });\n",
+          "previous": "\tconst { model, receipt } = await readVerifiedNativeComponent(nativeRoot, runtimeIdentity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true, ownedReceiverExports: true, ownedCallbackResultAnchors: true });\n",
+          "start": 1362
+        }
+      ],
+      "path": "src/build/owned-wit-artifacts.mjs",
+      "previousCommit": "cf5062772b63ee7483d0a30c2f9df3c01d358157",
+      "previousSha256": "8d9fea68a5be17a3719167e0ad513db9458fc22db2be159009e28279bba42a22"
+    },
+    {
+      "currentCommit": "1b77979abe846c67f5b3b19693012ed0a238f8ea",
+      "currentSha256": "92b862c99035dc2c32644ce38cc3a694f2153486611418e4072d51068a82a994",
+      "edits": [
+        {
+          "current": "import { ownedSubtypePackageReviewedIr } from \"./helpers/owned-aggregate-fixture.mjs\";\n",
+          "previous": "",
+          "start": 480
+        },
+        {
+          "current": "});\n\ntest(\"C# snapshots checked aggregate transfers without enabling callbacks\", () => {\n\tconst ir = ownedSubtypePackageReviewedIr(), before = structuredClone(ir);\n\tconst generated = generateOwnedDotnetCalls(ir, {\n\t\ttransferredInputs: true, hostCallbacks: false\n\t});\n\tassert.deepEqual(ir, before);\n\tassert.equal(generated.c.callbacks.length, 0);\n\tassert.ok(generated.c.copies?.some(copy => copy.id === \"lean:Owned.Bundle\"));\n\tassert.match(generated.files[\"Calls.cs\"], /moves\\.Arm\\(\\)/u);\n",
+          "previous": "",
+          "start": 2096
+        }
+      ],
+      "path": "tests/owned-dotnet-transfers.test.mjs",
+      "previousCommit": "cf5062772b63ee7483d0a30c2f9df3c01d358157",
+      "previousSha256": "57d69671c92c899c39589010d85b37d1dce3dab3427edbeb2567af0ddd8247a8"
+    },
+    {
+      "currentCommit": "1b77979abe846c67f5b3b19693012ed0a238f8ea",
+      "currentSha256": "e83086fc0ca0abf72bd5e525bce7bada45252008c58e8ba3666d86f2e639e14b",
+      "edits": [
+        {
+          "current": "import { ownedSubtypePackageReviewedIr } from \"./helpers/owned-aggregate-fixture.mjs\";\n",
+          "previous": "",
+          "start": 487
+        },
+        {
+          "current": "});\n\ntest(\"JVM snapshots checked aggregate transfers without enabling callbacks\", () => {\n\tconst ir = ownedSubtypePackageReviewedIr(), before = structuredClone(ir);\n\tconst generated = generateOwnedJvmCalls(ir, {\n\t\ttransferredInputs: true, hostCallbacks: false\n\t});\n\tassert.deepEqual(ir, before);\n\tassert.equal(generated.c.callbacks.length, 0);\n\tassert.ok(generated.c.copies?.some(copy => copy.id === \"lean:Owned.Bundle\"));\n\tassert.match(Object.values(generated.files).join(\"\\n\"), /moves\\.arm\\(\\)/u);\n",
+          "previous": "",
+          "start": 2239
+        }
+      ],
+      "path": "tests/owned-jvm-transfers.test.mjs",
+      "previousCommit": "cf5062772b63ee7483d0a30c2f9df3c01d358157",
+      "previousSha256": "e2ecad0315aeaab657cc099c6912fecd3eceb12a3469b3f652653888f01dcf26"
+    },
+    {
+      "currentCommit": "1b77979abe846c67f5b3b19693012ed0a238f8ea",
+      "currentSha256": "13ff34aa7cfce135c3274f46de74304fc57a79a1bde29d3e5fbead5e7373be53",
+      "edits": [
+        {
+          "current": "import { ownedSubtypePackageReviewedIr } from \"./helpers/owned-aggregate-fixture.mjs\";\n",
+          "previous": "",
+          "start": 355
+        },
+        {
+          "current": "});\n\ntest(\"PHP snapshots checked aggregate transfers without enabling callbacks\", () => {\n\tconst ir = ownedSubtypePackageReviewedIr(), before = structuredClone(ir);\n\tconst generated = generateOwnedPhpCalls(ir, {\n\t\ttransferredInputs: true, hostCallbacks: false\n\t});\n\tassert.deepEqual(ir, before);\n\tassert.equal(generated.c.callbacks.length, 0);\n\tassert.ok(generated.c.copies?.some(copy => copy.id === \"lean:Owned.Bundle\"));\n\tassert.match(Object.values(generated.files).join(\"\\n\"), /owned_subtypes_bundle_t_copy/u);\n",
+          "previous": "",
+          "start": 1859
+        }
+      ],
+      "path": "tests/owned-php-transfers.test.mjs",
+      "previousCommit": "cf5062772b63ee7483d0a30c2f9df3c01d358157",
+      "previousSha256": "d5430734d7389afa9a9377dbd2f9d28ae413dd3d2f3c5351648ce1c10c0ff598"
+    },
+    {
+      "currentCommit": "1b77979abe846c67f5b3b19693012ed0a238f8ea",
+      "currentSha256": "7fd64ee2abab81b66580fcaef94b2404fb533794c99733167965e3fd516d79c3",
+      "edits": [
+        {
+          "current": "test(\"WIT snapshots aggregate transfers without enabling callbacks\", async () => {\n\tconst record = JSON.parse(await readFile(\"docs/evidence/wit-owned-transfers-20260930.json\", \"utf8\"));\n\tfor(const item of record.packages)\n\t{\n\t\tconst generated = generateOwnedWitPackage({ ...item.inputs\n\t\t\t, hostCallbacks: false, transferredInputs: true }, new Uint8Array());\n\t\tassert.equal(generated.values.functions.filter(fn => fn.transfers?.length).length, 20);\n\t\tassert.ok(generated.values.copies?.length > 20);\n\t\tconst nodes = new Map(generated.values.nodes.map(node => [node.id, node]));\n\t\tfor(const fn of generated.values.functions.filter(fn => fn.transfers?.length))\n\t\t\tfor(const index of fn.transfers)\n\t\t\t\tassert.ok(nodes.get(fn.parameters[index]).identity\n\t\t\t\t\t|| generated.values.copies.some(copy => copy.id === fn.parameters[index]));\n\t}\n});\n\n",
+          "previous": "",
+          "start": 2430
+        }
+      ],
+      "path": "tests/wit-owned-transfers.test.mjs",
+      "previousCommit": "cf5062772b63ee7483d0a30c2f9df3c01d358157",
+      "previousSha256": "e334f17a05e4c44eeb72b1e014adb2640f5d277c0c1640ec7a9621985c3ce08a"
+    }
+  ],
+  "integrationUpdates": [
+    {
+      "currentSha256": "dc9bc4d8679addb142521b02f8e232ee38021824eb578b4c4cddc3ada84154eb",
+      "edits": [
+        {
+          "current": "import { beforeWitTransferCopyGapSource, witTransferCopyGapNormalizationPaths } from \"./wit-transfer-copy-gap-source-history.mjs\";\n",
+          "previous": "",
+          "start": 2973
+        },
+        {
+          "current": "\t...witTransferCopyGapNormalizationPaths\n\t, ...phpWasmCallbackTilesTraceRepairNormalizationPaths\n",
+          "previous": "\t...phpWasmCallbackTilesTraceRepairNormalizationPaths\n",
+          "start": 176143
+        },
+        {
+          "current": "\t\t= beforeWitTransferCopyGapSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "",
+          "start": 217387
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "ec821dceb826734dfb50e48562f126128005baf90daff8c81166edc581d1843d"
+    },
+    {
+      "currentSha256": "8dae9da246e9b138dd37bbf042e764b352f2dab8dc43b1f623d620b31149bf7b",
+      "edits": [
+        {
+          "current": "import \"./helpers/wit-transfer-copy-gap-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 1743
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "f0b88f27faffa3482d629b36a80ec8cafab89fba050987fe8810911a28a1c145"
+    }
+  ],
+  "milestone": "wit-transfer-copy-gap-source-v1",
+  "predecessorCommit": "3298c7461ce704c058d6eadf98871a3db1b61680",
+  "schemaVersion": 1,
+  "scope": "Restore the six transfer-copy transitions from 1b77979 that the owned replay gap record omitted, so hub-routed historical readers reverse the WIT owned package, its artifacts and four host transfer tests; no evidence, observation or support claim changes."
+}

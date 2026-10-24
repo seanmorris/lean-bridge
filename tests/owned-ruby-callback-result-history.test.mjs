@@ -25,12 +25,13 @@ test("Ruby callback history authenticates exact source transitions and rejects p
 	assert.deepEqual(history.updates.map(update => update.path), ownedRubyCallbackChangedPaths);
 	for(const update of history.updates)
 	{
-		const current = Buffer.from(beforeOwnedDotnetCallbackResults(update.path, await readFile(update.path)));
-		const prior = beforeOwnedRubyCallbackResults(update.path, current);
+		// The hub reverses every recognized state, so live reads and predecessor reads name their stops.
+		const current = Buffer.from(beforeOwnedDotnetCallbackResults(update.path, await readFile(update.path), update.currentSha256));
+		const prior = beforeOwnedRubyCallbackResults(update.path, current, update.previousSha256);
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		assert.equal(sha256(prior), update.previousSha256, update.path);
 		assert.equal(beforeOwnedRubyCallbackResults(update.path, current, update.currentSha256), current);
-		assert.equal(beforeOwnedRubyCallbackResults(update.path, prior), prior);
+		assert.equal(beforeOwnedRubyCallbackResults(update.path, prior, update.previousSha256), prior);
 		for(const unknown of [current + "\n", current + current, ""])
 		{
 			assert.equal(beforeOwnedRubyCallbackResults(update.path, unknown), unknown);
@@ -61,10 +62,23 @@ test("Ruby historical generation preserves exact legacy files and rejects callba
 });
 
 test("Ruby callback source identities do not promote unrelated type-surface cells", async () => {
-	const path = "docs/type-surface.v1.json", current = beforeOwnedDotnetCallbackResults(path, await readFile(path, "utf8"));
-	const previous = JSON.parse(beforeOwnedRubyCallbackResults(path, current));
+	const path = "docs/type-surface.v1.json", history = JSON.parse(await readFile(ownedRubyCallbackHistoryPath, "utf8"));
+	const transition = history.updates.find(update => update.path === path);
+	assert.ok(transition, "Ruby callback history records an explicit type-surface predecessor");
+	const current = beforeOwnedDotnetCallbackResults(path, await readFile(path, "utf8"), transition.currentSha256);
+	const previous = JSON.parse(beforeOwnedRubyCallbackResults(path, current, transition.previousSha256));
+	// Source pins compare against the milestone inventory's own pins, never later live bytes.
+	const pins = new Map();
+	for(const evidence of JSON.parse(current).evidence) for(const file of evidence.files)
+	{
+		assert.ok(!pins.has(file.path) || pins.get(file.path) === file.sha256, file.path);
+		pins.set(file.path, file.sha256);
+	}
 	for(const evidence of previous.evidence) for(const file of evidence.files)
-		file.sha256 = sha256(beforeOwnedDotnetCallbackResults(file.path, await readFile(file.path)));
+	{
+		assert.ok(pins.has(file.path), file.path);
+		file.sha256 = pins.get(file.path);
+	}
 	assert.deepEqual(JSON.parse(current), previous);
 	const binary = Buffer.from([0, 255, 128, 192]);
 	assert.equal(beforeOwnedRubyCallbackResults("unrelated.bin", binary), binary);

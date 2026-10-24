@@ -18,7 +18,8 @@ import { dotnetRecursiveMixedFixture } from "./dotnet-recursive-callable-mixed.m
 import { dotnetRecursiveCallableChangedPaths, reverseDotnetRecursiveCallableUpdate } from "./dotnet-recursive-callable-source-history.mjs";
 import { beforeJvmRecursiveCallables } from "./jvm-recursive-callable-source-history.mjs";
 
-const priorSource = async path => beforeJvmRecursiveCallables(path, await readFile(path, "utf8"));
+// The hub reverses every recognized state, so each read names the milestone digest it stops at.
+const priorSource = async (path, expected) => beforeJvmRecursiveCallables(path, await readFile(path, "utf8"), expected);
 
 export const dotnetRecursiveCallableBaseline = "a8a255329c102155add79169d71a05246190b8fd";
 export const dotnetRecursiveCallableExecutionPath = "docs/evidence/dotnet-recursive-callables-20260926.json";
@@ -57,17 +58,17 @@ export const assertDotnetRecursiveCallableIntegration = async record => {
 	assert.deepEqual(Object.keys(record.additions).sort(), dotnetRecursiveCallableAddedPaths);
 	const paths = [...new Set([...Object.keys(previous.sourceHashes), ...dotnetRecursiveCallableChangedPaths, ...dotnetRecursiveCallableAddedPaths])].sort();
 	assert.deepEqual(Object.keys(record.sourceHashes).sort(), paths);
-	for(const path of paths) assert.equal(sha256(await priorSource(path)), record.sourceHashes[path], path);
+	for(const path of paths) assert.equal(sha256(await priorSource(path, record.sourceHashes[path])), record.sourceHashes[path], path);
 	const restored = {};
 	for(const update of record.updates)
 	{
 		assert.equal(update.currentSha256, record.sourceHashes[update.path]);
 		if(previous.sourceHashes[update.path]) assert.equal(update.previousSha256, previous.sourceHashes[update.path]);
-		restored[update.path] = reverseDotnetRecursiveCallableUpdate(await priorSource(update.path), update);
+		restored[update.path] = reverseDotnetRecursiveCallableUpdate(await priorSource(update.path, update.currentSha256), update);
 	}
 	for(const [path, hash] of Object.entries(record.additions)) assert.equal(hash, record.sourceHashes[path]);
 	const { document: current, ...contracts } = await readTypeSurface(); void current;
-	const document = JSON.parse(await priorSource("docs/type-surface.v1.json")), old = JSON.parse(restored["docs/type-surface.v1.json"]);
+	const document = JSON.parse(await priorSource("docs/type-surface.v1.json", record.sourceHashes["docs/type-surface.v1.json"])), old = JSON.parse(restored["docs/type-surface.v1.json"]);
 	assert.equal(document.contractVersion, "0.103.0"); assert.equal(old.contractVersion, "0.102.0");
 	const cells = typeSurfaceCells(document, contracts), oldCells = typeSurfaceCells(old, contracts);
 	const count = values => values.filter(cell => cell.stages.installedExecution.state === "passed").length;
@@ -133,7 +134,7 @@ export const assertDotnetRecursiveCallableExecution = async record => {
 	for(const flag of ["PACKAGE", "INSTALLED", "COMPOSITION", "REPRODUCIBILITY", "CONFLICT"])
 		assert.ok(regressions.copied.installed.command.includes(`LEAN_BRIDGE_DOTNET_GRAPH_${flag}_TEST=1`));
 	assert.deepEqual(Object.keys(regressions.projectionSources).sort(), dotnetRecursiveCallableProjectionPaths);
-	for(const [path, hash] of Object.entries(regressions.projectionSources)) assert.equal(sha256(await priorSource(path)), hash, path);
+	for(const [path, hash] of Object.entries(regressions.projectionSources)) assert.equal(sha256(await priorSource(path, hash)), hash, path);
 	const old = await authenticated(record.previousDotnetExecution, dotnetStructuredCallableExecutionPath);
 	await assertDotnetStructuredCallableExecution({ ...old
 		, installed: regressions.structured.installed

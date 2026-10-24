@@ -22,7 +22,8 @@ import { phpWasmStructuredCallableHistoryPath } from "./php-wasm-structured-call
 import { witStructuredCallableChangedPaths, reverseWitStructuredCallableUpdate } from "./wit-structured-callable-source-history.mjs";
 import { beforeNativeRecursiveCallables } from "./native-recursive-callable-source-history.mjs";
 
-const priorSource = async path => beforeNativeRecursiveCallables(path, await readFile(path, "utf8"));
+// The hub reverses every recognized state, so each read names the milestone digest it stops at.
+const priorSource = async (path, expected) => beforeNativeRecursiveCallables(path, await readFile(path, "utf8"), expected);
 
 export const witStructuredCallableExecutionPath = "docs/evidence/wit-structured-callables-20260925.json";
 export const witStructuredCodegenPath = "docs/evidence/wit-structured-codegen-regression-20260925.json";
@@ -193,19 +194,19 @@ export const assertWitStructuredCallableIntegration = async record => {
 	assert.deepEqual(Object.keys(record.additions).sort(), witStructuredCallableAddedPaths);
 	const paths = [...new Set([...Object.keys(previous.sourceHashes), ...witStructuredCallableChangedPaths, ...witStructuredCallableAddedPaths])].sort();
 	assert.deepEqual(Object.keys(record.sourceHashes).sort(), paths);
-	for(const path of paths) assert.equal(sha256(await priorSource(path)), record.sourceHashes[path], path);
+	for(const path of paths) assert.equal(sha256(await priorSource(path, record.sourceHashes[path])), record.sourceHashes[path], path);
 	const restored = {};
 	for(const update of record.updates)
 	{
 		assert.equal(update.currentSha256, record.sourceHashes[update.path]);
-		restored[update.path] = reverseWitStructuredCallableUpdate(await priorSource(update.path), update);
+		restored[update.path] = reverseWitStructuredCallableUpdate(await priorSource(update.path, update.currentSha256), update);
 		if(previous.sourceHashes[update.path]) assert.equal(update.previousSha256, previous.sourceHashes[update.path]);
 	}
 	for(const [path, digest] of Object.entries(record.additions)) assert.equal(digest, record.sourceHashes[path]);
 	for(const [path, digest] of Object.entries(codegen.predecessors))
 	{ assert.equal(digest, sha256(restored[path])); assert.equal(codegen.sourceHashes[path], record.sourceHashes[path]); }
 	const contracts = await readTypeSurface();
-	const document = JSON.parse(await priorSource("docs/type-surface.v1.json"));
+	const document = JSON.parse(await priorSource("docs/type-surface.v1.json", record.sourceHashes["docs/type-surface.v1.json"]));
 	const old = JSON.parse(restored["docs/type-surface.v1.json"]);
 	assert.equal(document.contractVersion, record.inventory.version); assert.equal(old.contractVersion, record.inventory.previousVersion);
 	const cells = typeSurfaceCells(document, contracts), oldCells = typeSurfaceCells(old, contracts);

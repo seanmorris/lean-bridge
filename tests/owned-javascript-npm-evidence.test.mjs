@@ -31,9 +31,11 @@ test("installed owned npm evidence binds exact sources without rewriting runtime
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path] ?? ownedJavaScriptNpmBaselineSources[update.path], update.path);
 		assert.equal(update.currentSha256, record.sources[update.path], update.path);
-		const current = beforeOwnedJavaScriptCoexistence(update.path, await readFile(update.path, "utf8"), update.currentSha256), prior = beforeOwnedJavaScriptNpm(update.path, current);
+		// The hub reverses every recognized state, so each predecessor read names its stop.
+		const current = beforeOwnedJavaScriptCoexistence(update.path, await readFile(update.path, "utf8"), update.currentSha256)
+			, prior = beforeOwnedJavaScriptNpm(update.path, current, update.previousSha256);
 		assert.equal(sha256(prior), update.previousSha256, update.path);
-		assert.equal(beforeOwnedJavaScriptNpm(update.path, prior), prior);
+		assert.equal(beforeOwnedJavaScriptNpm(update.path, prior, update.previousSha256), prior);
 		assert.equal(beforeOwnedJavaScriptNpm(update.path, current, update.currentSha256), current);
 		const unknown = current + "\n/* unrecorded installed npm edit */\n";
 		assert.equal(beforeOwnedJavaScriptNpm(update.path, unknown), unknown);
@@ -45,7 +47,9 @@ test("installed owned npm evidence binds exact sources without rewriting runtime
 	const inventoryPath = "docs/type-surface.v1.json";
 	const current = ownedJavaScriptCoexistenceHistoricalBytes(inventoryPath, await readFile(inventoryPath)
 		, record.sources[inventoryPath]).toString("utf8");
-	const prior = JSON.parse(beforeOwnedJavaScriptNpm("docs/type-surface.v1.json", current));
+	const transition = record.updates.find(update => update.path === inventoryPath);
+	assert.ok(transition, "Installed npm evidence records an explicit type-surface predecessor");
+	const prior = JSON.parse(beforeOwnedJavaScriptNpm(inventoryPath, current, transition.previousSha256));
 	for(const evidence of prior.evidence) for(const file of evidence.files)
 		if(record.sources[file.path]) file.sha256 = record.sources[file.path];
 	assert.deepEqual(JSON.parse(current), prior, "Only current file identities change; support cells are not promoted");

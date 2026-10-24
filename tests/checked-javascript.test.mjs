@@ -29,6 +29,7 @@ import "./helpers/owned-javascript-transfer-nix-producer-repair-source-history-t
 import "./helpers/owned-milestone-producer-repair-source-history-tests.mjs";
 import "./helpers/php-wasm-callback-tiles-trace-repair-source-history-tests.mjs";
 import "./helpers/author-refinement-guidance-repair-source-history-tests.mjs";
+import "./helpers/wit-transfer-copy-gap-source-history-tests.mjs";
 
 const root = resolve(".");
 

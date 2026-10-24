@@ -8,8 +8,7 @@ import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { readTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { historicalTypeSurfaceCells as typeSurfaceCells } from "./historical-type-surface-cells.mjs";
-import { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from "../../src/build/native-graph-model.mjs";
-import { generateOwnedCPackage } from "../../src/backends/c/owned-package.mjs";
+import { moduleAtProducerWithSourceReads } from "./producer-module.mjs";
 import { ownedPackageExecutionSources, assertOwnedPackageIntegration } from "./owned-package-evidence.mjs";
 import { ownedPackageHistoryPath } from "./owned-package-source-history.mjs";
 import { ownedHostBaseline, ownedHostChangedPaths, ownedHostAddedPaths, ownedHostExecutionPath, reverseOwnedHostUpdate } from "./owned-host-source-history.mjs";
@@ -42,12 +41,18 @@ const passing = (run, command, count) => {
 		assert.match(run.text, new RegExp(`^# ${name} ${value}$`, "mu"));
 };
 
+/** The commit whose complete source tree every digest in the host-callback execution record names. */
+export const ownedHostProducer = "650641c1274543a334aa7d50c43c70de945984a0";
+
 /**
  * Reconstruct callback and package identities and require actual enabled runs.
  *
  * @param record - Original execution logs, compiler inputs and package receipts.
  */
 export const assertOwnedHostExecution = async record => {
+	const [{ createCompiledNativeModel, generateCompiledNativeLeanAdapters }, { generateOwnedCPackage }] = await Promise.all([
+		"src/build/native-graph-model.mjs", "src/backends/c/owned-package.mjs"
+	].map(path => moduleAtProducerWithSourceReads(ownedHostProducer, path)));
 	assert.equal(record.schemaVersion, 1); assert.equal(record.planNode, 1219);
 	assert.equal(record.kind, "owned-host-callback-execution");
 	assert.equal(record.baselineRevision, ownedHostBaseline); assert.deepEqual(record.scope, ownedHostScope);

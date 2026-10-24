@@ -99,9 +99,10 @@ test("recursive C# probes require every failure path, ownership mutation and typ
 test("recursive C# source transitions reject unknown bytes and substituted predecessors", async () => {
 	for(const update of (await json(dotnetRecursiveCallableHistoryPath)).updates)
 	{
-		const source = beforeJvmRecursiveCallables(update.path, await readFile(update.path, "utf8"));
+		// The hub reverses every recognized state, so live reads and predecessor reads name their stops.
+		const source = beforeJvmRecursiveCallables(update.path, await readFile(update.path, "utf8"), update.currentSha256);
 		assert.equal(sha256(reverseDotnetRecursiveCallableUpdate(source, update)), update.previousSha256);
-		assert.equal(sha256(beforeDotnetRecursiveCallables(update.path, source)), update.previousSha256);
+		assert.equal(sha256(beforeDotnetRecursiveCallables(update.path, source, update.previousSha256)), update.previousSha256);
 		assert.equal(beforeDotnetRecursiveCallables(update.path, source, update.currentSha256), source);
 		const unrelated = source + "\n/* unrelated */\n";
 		assert.equal(beforeDotnetRecursiveCallables(update.path, unrelated), unrelated);

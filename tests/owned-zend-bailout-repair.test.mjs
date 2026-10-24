@@ -29,9 +29,11 @@ test("Zend bailout repair binds all current sources and leaves production and pr
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path], update.path);
 		assert.equal(update.currentSha256, record.sources[update.path], update.path);
-		const current = beforeOwnedJavaScriptEngine(update.path, await readFile(update.path, "utf8"), update.currentSha256), prior = beforeOwnedZendBailoutRepair(update.path, current);
+		// The hub reverses every recognized state, so each predecessor read names its stop.
+		const current = beforeOwnedJavaScriptEngine(update.path, await readFile(update.path, "utf8"), update.currentSha256)
+			, prior = beforeOwnedZendBailoutRepair(update.path, current, update.previousSha256);
 		assert.equal(sha256(prior), update.previousSha256);
-		assert.equal(beforeOwnedZendBailoutRepair(update.path, prior), prior);
+		assert.equal(beforeOwnedZendBailoutRepair(update.path, prior, update.previousSha256), prior);
 		assert.equal(beforeOwnedZendBailoutRepair(update.path, current, update.currentSha256), current);
 		const unknown = current + "\n/* unrecorded bailout repair */\n";
 		assert.equal(beforeOwnedZendBailoutRepair(update.path, unknown), unknown);
@@ -42,8 +44,21 @@ test("Zend bailout repair binds all current sources and leaves production and pr
 	for(const path of Object.keys(previous.sources).filter(path => path.startsWith("src/") && path !== "src/adoption/test-profiles.mjs"))
 		assert.equal(record.sources[path], previous.sources[path], "No production changes: " + path);
 	const current = beforeOwnedJavaScriptEngine("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8"), record.sources["docs/type-surface.v1.json"]);
-	const prior = JSON.parse(beforeOwnedZendBailoutRepair("docs/type-surface.v1.json", current));
-	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedJavaScriptEngineHistoricalBytes(file.path, await readFile(file.path), record.sources[file.path]));
+	const transition = record.updates.find(update => update.path === "docs/type-surface.v1.json");
+	assert.ok(transition, "The bailout repair records an explicit type-surface predecessor");
+	const prior = JSON.parse(beforeOwnedZendBailoutRepair("docs/type-surface.v1.json", current, transition.previousSha256));
+	// Source pins compare against the milestone inventory's own pins, never later live bytes.
+	const pins = new Map();
+	for(const evidence of JSON.parse(current).evidence) for(const file of evidence.files)
+	{
+		assert.ok(!pins.has(file.path) || pins.get(file.path) === file.sha256, file.path);
+		pins.set(file.path, file.sha256);
+	}
+	for(const evidence of prior.evidence) for(const file of evidence.files)
+	{
+		assert.ok(pins.has(file.path), file.path);
+		file.sha256 = pins.get(file.path);
+	}
 	assert.deepEqual(JSON.parse(current), prior, "The repair must not promote installed support");
 });
 

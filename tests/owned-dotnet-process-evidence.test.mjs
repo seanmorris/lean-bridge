@@ -56,7 +56,8 @@ test("C# process-origin history accepts only exact whole-file transitions", asyn
 	for(const update of (await receipt()).updates)
 	{
 		const current = beforeNativeForkRepair(update.path, await readFile(update.path, "utf8"), update.currentSha256);
-		assert.equal(sha256(beforeOwnedDotnetProcess(update.path, current)), update.previousSha256);
+		// The hub reverses every recognized state, so each predecessor read names its stop.
+		assert.equal(sha256(beforeOwnedDotnetProcess(update.path, current, update.previousSha256)), update.previousSha256);
 		assert.equal(beforeOwnedDotnetProcess(update.path, current, update.currentSha256), current);
 		assert.ok(ownedDotnetNormalizationPaths.includes(update.path));
 		for(const historicalBytes of [ownedDotnetHistoricalBytes, ownedRubyHistoricalBytes])

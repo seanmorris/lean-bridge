@@ -8,10 +8,7 @@ import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { readTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { historicalTypeSurfaceCells as typeSurfaceCells } from "./historical-type-surface-cells.mjs";
-import { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from "../../src/build/native-graph-model.mjs";
-import { generateOwnedCPackage } from "../../src/backends/c/owned-package.mjs";
-import { generateOwnedDotnetPackage } from "../../src/backends/dotnet/owned-package.mjs";
-import { ownedDotnetAdapterSources } from "../../src/build/owned-dotnet-artifacts.mjs";
+import { moduleAtProducerWithSourceReads } from "./producer-module.mjs";
 import { gmpIdentity } from "../../src/backends/c/gmp.mjs";
 import { assertDotnetRecursiveProbes } from "./dotnet-recursive-callable-faults.mjs";
 import { assertDotnetStructuredFaults } from "./dotnet-structured-callable-faults.mjs";
@@ -58,6 +55,21 @@ const files = value => {
 	for(const file of Object.values(value))
 	{ digest(file.sha256); assert.ok(Number.isSafeInteger(file.bytes) && file.bytes >= 0); }
 };
+/** The commit whose complete source tree every digest in the .NET execution record names. */
+export const ownedDotnetExecutionProducer = "02d067429ab3b2b72d38270ea9c491c81017fe2f";
+const producerModules = new Map();
+// Reports are regenerated with their producer's generators; later generator changes never reach back.
+const producerGenerators = revision => {
+	assert.match(revision, /^[a-f0-9]{40}$/u);
+	if(!producerModules.has(revision)) producerModules.set(revision, Promise.all([
+		"src/build/native-graph-model.mjs"
+		, "src/backends/c/owned-package.mjs"
+		, "src/backends/dotnet/owned-package.mjs"
+		, "src/build/owned-dotnet-artifacts.mjs"
+	].map(path => moduleAtProducerWithSourceReads(revision, path))).then(modules =>
+		Object.assign({}, ...modules)));
+	return producerModules.get(revision);
+};
 const passing = (run, command, count) => {
 	assert.equal(run.command, command); assert.equal(run.exitCode, 0);
 	assert.equal(sha256(run.text), run.sha256);
@@ -73,8 +85,14 @@ const passing = (run, command, count) => {
  * @param mode - Ordinary source or independently reviewed IR.
  * @param scalar - Whether this case exercises the all-primitive record.
  * @param sources - Whole source identities from the execution record.
+ * @param producer - Commit whose complete source tree the record names.
  */
-export const assertOwnedDotnetPackageReport = async (report, mode, scalar, sources) => {
+export const assertOwnedDotnetPackageReport = async (report, mode, scalar, sources, producer) => {
+	const {
+		createCompiledNativeModel, generateCompiledNativeLeanAdapters
+		, generateOwnedCPackage, generateOwnedDotnetPackage
+		, ownedDotnetAdapterSources
+	} = await producerGenerators(producer);
 	assert.equal(report.schemaVersion, 1); assert.equal(report.planNode, 1219); assert.equal(report.mode, mode);
 	for(const flag of ["compiledLean", "installedNuget", "sourceUnchanged"
 		, "sourceFreeInstallation", "sourceFreeRelocatedExecution", "handoffRemoved"
@@ -215,20 +233,22 @@ export const assertOwnedDotnetExecution = async record => {
 	const references = ["foundation", "callbacks", "loading"].map(name => `docs/evidence/owned-dotnet-${name}-20260927.json`);
 	assert.deepEqual(record.references.map(item => item.path), references);
 	for(const reference of record.references) assert.deepEqual({ bytes: reference.bytes, sha256: reference.sha256 }, identity(await readFile(reference.path)));
-	await assertOwnedDotnetReports(record);
+	await assertOwnedDotnetReports(record, ownedDotnetExecutionProducer);
 };
 
 /**
  * Check complete installed reports against their compiler and package receipts.
  *
  * @param record - Four packages, mixed peer execution and callback regressions.
+ * @param producer - Commit whose complete source tree the record names.
  */
-export const assertOwnedDotnetReports = async record => {
+export const assertOwnedDotnetReports = async (record, producer) => {
+	assert.match(producer, /^[a-f0-9]{40}$/u, "Every report set names its own producer");
 	for(const group of [record.packages, record.scalarPackages]) assert.deepEqual(Object.keys(group).sort(), ["ordinary", "reviewed"]);
 	for(const mode of ["ordinary", "reviewed"])
 	{
-		await assertOwnedDotnetPackageReport(record.packages[mode], mode, false, record.sources);
-		await assertOwnedDotnetPackageReport(record.scalarPackages[mode], mode, true, record.sources);
+		await assertOwnedDotnetPackageReport(record.packages[mode], mode, false, record.sources, producer);
+		await assertOwnedDotnetPackageReport(record.scalarPackages[mode], mode, true, record.sources, producer);
 	}
 	const peers = record.coexistence;
 	assert.equal(peers.schemaVersion, 1); assert.equal(peers.planNode, 1219);

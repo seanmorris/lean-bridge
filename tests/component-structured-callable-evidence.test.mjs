@@ -54,9 +54,10 @@ test("npm structured source history rejects unrelated edits and altered predeces
 	const record = await json(npmStructuredCallableHistoryPath);
 	for(const update of record.updates)
 	{
-		const source = beforePhpStructuredCallables(update.path, await readFile(update.path, "utf8"));
+		// The hub reverses every recognized state, so live reads and predecessor reads name their stops.
+		const source = beforePhpStructuredCallables(update.path, await readFile(update.path, "utf8"), update.currentSha256);
 		assert.equal(sha256(reverseNpmStructuredCallableUpdate(source, update)), update.previousSha256);
-		assert.equal(sha256(beforeNpmStructuredCallables(update.path, source)), update.previousSha256);
+		assert.equal(sha256(beforeNpmStructuredCallables(update.path, source, update.previousSha256)), update.previousSha256);
 		const changed = source + "\n// unrelated\n";
 		assert.equal(beforeNpmStructuredCallables(update.path, changed), changed);
 		assert.throws(() => reverseNpmStructuredCallableUpdate(changed, update));
