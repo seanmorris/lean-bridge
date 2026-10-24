@@ -1,0 +1,62 @@
+{
+  "additions": [
+    {
+      "currentSha256": "8ecf4185ce7f14f01f6f4e4742bda9cdadb5f4c7e9edc06318efdf602f931d92",
+      "path": "scripts/update-ruby-transfer-copy-gap-source-history.mjs"
+    },
+    {
+      "currentSha256": "456a3556f71a1e41a1b21b80c6fc7e49b2dc0a1b1d17f032f79c780a3ccefb41",
+      "path": "tests/helpers/ruby-transfer-copy-gap-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "8fd927b2b198bc8e7c20ee4894d7d3a125d23af83f1377e88ce51576968f9a05",
+      "path": "tests/helpers/ruby-transfer-copy-gap-source-history.mjs"
+    }
+  ],
+  "historicalCommit": "3c22d43fa73c646b9a2472e4b6aada674c0a564e",
+  "historicalPredecessorCommit": "18804049b371cfe17eaec867c0365fb4b47b8152",
+  "historicalTransitions": [
+    {
+      "currentCommit": "3c22d43fa73c646b9a2472e4b6aada674c0a564e",
+      "currentSha256": "abc04e3114fadc50a3f190299d1f17fa3feab5bbf800105235f7badc2e2e7812",
+      "edits": [
+        {
+          "current": "import { ownedSubtypePackageReviewedIr } from \"./helpers/owned-aggregate-fixture.mjs\";\n",
+          "previous": "",
+          "start": 1284
+        },
+        {
+          "current": "});\n\ntest(\"Ruby package sources include checked transfer copies without callbacks\", () => {\n\tconst generated = generateOwnedRubyPackage(ownedSubtypePackageReviewedIr(), null, {\n\t\ttransferredInputs: true, hostCallbacks: false\n\t});\n\tassert.equal(generated.contract.schemaVersion, 2);\n\tassert.equal(generated.c.callbacks.length, 0);\n\tassert.ok(generated.c.copies?.some(copy => copy.id === \"lean:Owned.Bundle\"));\n\tassert.match(generated.cSource, /owned_subtypes_bundle_t_copy/u);\n\tassert.doesNotMatch(generated.valuesSource, /WithRecovery|with_recovery/u);\n",
+          "previous": "",
+          "start": 2825
+        }
+      ],
+      "path": "tests/owned-ruby-transfer-packaging.test.mjs",
+      "previousCommit": "18804049b371cfe17eaec867c0365fb4b47b8152",
+      "previousSha256": "3a3d61946a3466bc300c1239d9b8b16841cb292ffe08873c5e054b0036849643"
+    },
+    {
+      "currentCommit": "3c22d43fa73c646b9a2472e4b6aada674c0a564e",
+      "currentSha256": "37e54a8c24c587c085289c9e1eff1bdc46d07c8fa73485c18ec91d437d9247ea",
+      "edits": [
+        {
+          "current": "import { ownedSubtypePackageReviewedIr } from \"./helpers/owned-aggregate-fixture.mjs\";\n",
+          "previous": "",
+          "start": 651
+        },
+        {
+          "current": "});\n\ntest(\"Ruby snapshots checked aggregate transfers without enabling callbacks\", () => {\n\tconst ir = ownedSubtypePackageReviewedIr(), before = structuredClone(ir);\n\tconst generated = generateOwnedRubyConversions(ir, {\n\t\ttransferredInputs: true, hostCallbacks: false\n\t});\n\tassert.deepEqual(ir, before);\n\tassert.equal(generated.c.callbacks.length, 0);\n\tassert.ok(generated.c.copies?.some(copy => copy.id === \"lean:Owned.Bundle\"));\n\tassert.match(generated.source, /moves\\.arm/u);\n\tassert.match(generated.cSource, /owned_subtypes_bundle_t_copy/u);\n\tassert.doesNotMatch(generated.valuesSource, /WithRecovery|with_recovery/u);\n",
+          "previous": "",
+          "start": 2643
+        }
+      ],
+      "path": "tests/owned-ruby-transfers.test.mjs",
+      "previousCommit": "18804049b371cfe17eaec867c0365fb4b47b8152",
+      "previousSha256": "baeeac968dca88263daa89d88fefc560aa4c47c3372b1b724124f51046e341b2"
+    }
+  ],
+  "milestone": "ruby-transfer-copy-gap-source-v1",
+  "predecessorCommit": "2014af9bf78714f0d5a5c0eb9a5ce724d7a1778e",
+  "schemaVersion": 1,
+  "scope": "Restore the two Ruby transfer-copy test transitions from 3c22d43 that the owned replay gap record omitted, so hub-routed historical readers reverse the Ruby packaging and transfer tests to their original producer bytes; no evidence, observation or support claim changes. Hub and registration integration are recorded by the integrating seal."
+}
