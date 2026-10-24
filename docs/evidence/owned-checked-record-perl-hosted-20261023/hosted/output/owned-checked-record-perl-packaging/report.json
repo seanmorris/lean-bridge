@@ -1,0 +1,3321 @@
+{
+  "profile": "installed-owned-checked-record-perl",
+  "reports": [
+    {
+      "authorRoute": "ordinary",
+      "bindingIrSha256": "9718ef3267bd6310c84b544a12a9339166fab121a2293f618d6c9c89fbd477a4",
+      "callbackRecovery": true,
+      "componentReceipt": {
+        "adaptersSha256": "c4a44c15fea603b075f8e7439de7ed9c322a7ffabf124bf7a6b5af0affdf91c8",
+        "allocationGuardSha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83",
+        "bindingIrSha256": "9718ef3267bd6310c84b544a12a9339166fab121a2293f618d6c9c89fbd477a4",
+        "callbackSourceSha256": "3e261ceab74d47361218b0917fc1de5c2909abf6fe539b4c901bddd40e13d482",
+        "compiler": "cc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+        "exports": [
+          {
+            "declaration": "OwnedCheckedRecords.claimClosure",
+            "symbol": "lean_bridge_owned_7c0952aa59266028f783f4e4_fa3218a29f42862f9b113"
+          },
+          {
+            "declaration": "OwnedCheckedRecords.claimFor",
+            "symbol": "lean_bridge_owned_7c0952aa59266028f783f4e4_f483485736ace9af57086"
+          },
+          {
+            "declaration": "OwnedCheckedRecords.echoBooking",
+            "symbol": "lean_bridge_owned_7c0952aa59266028f783f4e4_f0711e856cfa97d876c9a"
+          },
+          {
+            "declaration": "OwnedCheckedRecords.echoClaim",
+            "symbol": "lean_bridge_owned_7c0952aa59266028f783f4e4_f535babcfd8d0f67ea0e6"
+          },
+          {
+            "declaration": "OwnedCheckedRecords.newTicket",
+            "symbol": "lean_bridge_owned_7c0952aa59266028f783f4e4_fa1e5189bd92568e4b939"
+          },
+          {
+            "declaration": "OwnedCheckedRecords.pairClaim",
+            "symbol": "lean_bridge_owned_7c0952aa59266028f783f4e4_feaac3cc8d9197bd7bbca"
+          },
+          {
+            "declaration": "OwnedCheckedRecords.serial",
+            "symbol": "lean_bridge_owned_7c0952aa59266028f783f4e4_fec926afda994fba3abe2"
+          },
+          {
+            "declaration": "OwnedCheckedRecords.transferClaim",
+            "symbol": "lean_bridge_owned_7c0952aa59266028f783f4e4_f040aca3025d850fc12cc"
+          },
+          {
+            "declaration": "OwnedCheckedRecords.withClaimCallback",
+            "symbol": "lean_bridge_owned_7c0952aa59266028f783f4e4_f7d6c8617a0788c12de15"
+          }
+        ],
+        "headerSha256": "cf69fd5f14bac5384c0c9905695c46e8692ba27e91d661103dc9b3335877d03a",
+        "initializer": "initialize_LeanBridgeOwned6b4a63d74400f30e",
+        "inputTransfers": {
+          "consumption": "before-lean-call",
+          "exports": [
+            {
+              "bindingId": "lean:OwnedCheckedRecords.transferClaim",
+              "parameters": [
+                0
+              ]
+            }
+          ],
+          "failure": "consumed-after-handoff",
+          "ownership": "whole-result-owner",
+          "schemaVersion": 1,
+          "validation": "before-consumption",
+          "viewLifetime": "until-call-returns"
+        },
+        "library": "libcomponent_161bdaa35ee11fef40c6.so",
+        "metadataSha256": "4e9e9c6d763e1da136d23652f3c960e3c66511a60de52dc450ccbcecd7e28469",
+        "modelSha256": "114770bd3ab2aacbb327755239c3c171e47d89b9dd8e9daae76e23a76fdc5549",
+        "nativeLibrary": {
+          "bytes": 106200,
+          "sha256": "deb5fdff5f1e57c687ef389687fe08d7cabd001186e59b2effafdc395e92efd7"
+        },
+        "profile": "native-library-v1",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+        "schemaVersion": 4,
+        "sourceIdentity": {
+          "exportConfigurationSha256": "fc2dd629e3434cf91a83de5829c8ada284846f8817c2f9e181fc80764f2e8f71",
+          "exportConfigurationSource": "{\n  \"arities\": {\n    \"OwnedCheckedRecords.claimClosure\": 0\n  },\n  \"contracts\": {\n    \"OwnedCheckedRecords.claimClosure\": {\n      \"result\": {\n        \"callable\": {\n          \"parameters\": [\n            {\n              \"lifetime\": {\n                \"anchor\": null,\n                \"scope\": \"call\"\n              },\n              \"ownership\": \"borrow\",\n              \"refinement\": {\n                \"constructor\": \"OwnedCheckedRecords.mkClaim\",\n                \"fields\": [\n                  {\n                    \"name\": \"holder\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"quota\",\n                    \"refinement\": null\n                  }\n                ],\n                \"kind\": \"checked-record\",\n                \"name\": \"OwnedCheckedRecords.Claim\"\n              }\n            }\n          ],\n          \"result\": {\n            \"lifetime\": {\n              \"anchor\": null,\n              \"scope\": \"explicit\"\n            },\n            \"ownership\": \"lease\"\n          }\n        },\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\"\n      }\n    },\n    \"OwnedCheckedRecords.echoBooking\": {\n      \"parameters\": [\n        {\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"ownership\": \"borrow\",\n          \"refinement\": {\n            \"fields\": [\n              {\n                \"name\": \"holder\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"window\",\n                \"refinement\": {\n                  \"constructor\": \"OwnedCheckedRecords.mkWindow\",\n                  \"fields\": [\n                    {\n                      \"name\": \"lo\",\n                      \"refinement\": null\n                    },\n                    {\n                      \"name\": \"hi\",\n                      \"refinement\": null\n                    }\n                  ],\n                  \"kind\": \"checked-record\",\n                  \"name\": \"OwnedCheckedRecords.Window\"\n                }\n              }\n            ],\n            \"kind\": \"record\",\n            \"name\": \"OwnedCheckedRecords.Booking\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\"\n      }\n    },\n    \"OwnedCheckedRecords.echoClaim\": {\n      \"parameters\": [\n        {\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"ownership\": \"borrow\",\n          \"refinement\": {\n            \"constructor\": \"OwnedCheckedRecords.mkClaim\",\n            \"fields\": [\n              {\n                \"name\": \"holder\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"quota\",\n                \"refinement\": null\n              }\n            ],\n            \"kind\": \"checked-record\",\n            \"name\": \"OwnedCheckedRecords.Claim\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\"\n      }\n    },\n    \"OwnedCheckedRecords.pairClaim\": {\n      \"parameters\": [\n        {\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"ownership\": \"borrow\",\n          \"refinement\": {\n            \"fields\": [\n              {\n                \"name\": \"holder\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"window\",\n                \"refinement\": {\n                  \"constructor\": \"OwnedCheckedRecords.mkWindow\",\n                  \"fields\": [\n                    {\n                      \"name\": \"lo\",\n                      \"refinement\": null\n                    },\n                    {\n                      \"name\": \"hi\",\n                      \"refinement\": null\n                    }\n                  ],\n                  \"kind\": \"checked-record\",\n                  \"name\": \"OwnedCheckedRecords.Window\"\n                }\n              }\n            ],\n            \"kind\": \"record\",\n            \"name\": \"OwnedCheckedRecords.Booking\"\n          }\n        },\n        {\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"ownership\": \"borrow\",\n          \"refinement\": {\n            \"constructor\": \"OwnedCheckedRecords.mkClaim\",\n            \"fields\": [\n              {\n                \"name\": \"holder\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"quota\",\n                \"refinement\": null\n              }\n            ],\n            \"kind\": \"checked-record\",\n            \"name\": \"OwnedCheckedRecords.Claim\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\"\n      }\n    },\n    \"OwnedCheckedRecords.transferClaim\": {\n      \"parameters\": [\n        {\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"ownership\": \"transfer\",\n          \"refinement\": {\n            \"constructor\": \"OwnedCheckedRecords.mkClaim\",\n            \"fields\": [\n              {\n                \"name\": \"holder\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"quota\",\n                \"refinement\": null\n              }\n            ],\n            \"kind\": \"checked-record\",\n            \"name\": \"OwnedCheckedRecords.Claim\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\"\n      }\n    },\n    \"OwnedCheckedRecords.withClaimCallback\": {\n      \"parameters\": [\n        {\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"ownership\": \"borrow\",\n          \"refinement\": {\n            \"constructor\": \"OwnedCheckedRecords.mkClaim\",\n            \"fields\": [\n              {\n                \"name\": \"holder\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"quota\",\n                \"refinement\": null\n              }\n            ],\n            \"kind\": \"checked-record\",\n            \"name\": \"OwnedCheckedRecords.Claim\"\n          }\n        },\n        {\n          \"callable\": {\n            \"parameters\": [\n              {\n                \"lifetime\": {\n                  \"anchor\": null,\n                  \"scope\": \"call\"\n                },\n                \"ownership\": \"borrow\"\n              }\n            ],\n            \"result\": {\n              \"lifetime\": {\n                \"anchor\": null,\n                \"scope\": \"explicit\"\n              },\n              \"ownership\": \"lease\",\n              \"refinement\": {\n                \"constructor\": \"OwnedCheckedRecords.mkClaim\",\n                \"fields\": [\n                  {\n                    \"name\": \"holder\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"quota\",\n                    \"refinement\": null\n                  }\n                ],\n                \"kind\": \"checked-record\",\n                \"name\": \"OwnedCheckedRecords.Claim\"\n              }\n            }\n          },\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"ownership\": \"borrow\"\n        }\n      ],\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\"\n      }\n    }\n  },\n  \"exports\": [\n    \"OwnedCheckedRecords.newTicket\",\n    \"OwnedCheckedRecords.serial\",\n    \"OwnedCheckedRecords.echoBooking\",\n    \"OwnedCheckedRecords.echoClaim\",\n    \"OwnedCheckedRecords.transferClaim\",\n    \"OwnedCheckedRecords.claimFor\",\n    \"OwnedCheckedRecords.pairClaim\",\n    \"OwnedCheckedRecords.withClaimCallback\",\n    \"OwnedCheckedRecords.claimClosure\"\n  ],\n  \"modules\": [\n    \"OwnedCheckedRecords\"\n  ],\n  \"ownedAggregates\": {\n    \"cycles\": \"reject\",\n    \"disposal\": \"required\",\n    \"fallback\": \"queued-finalizer\",\n    \"ownership\": \"lease\"\n  },\n  \"package\": {\n    \"description\": \"Owned proof-erased checked records.\"\n  },\n  \"resources\": [\n    \"OwnedCheckedRecords.Ticket\"\n  ],\n  \"schemaVersion\": 1,\n  \"targets\": {\n    \"cpan\": {\n      \"module\": \"LeanBridge::OwnedCheckedRecords\",\n      \"version\": \"1.000\"\n    }\n  }\n}\n",
+          "extractorSha256": "00f8ce7a3888339cdb1c36b0dce3d8bc9d4c650ea18c7a4926c2d29d4690443a",
+          "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+          "leanCompilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+          "leanVersion": "4.32.2",
+          "modules": [
+            {
+              "interface": {
+                "bytes": 179712,
+                "interfaceSha256": "b5183c0470521b85929acc5cf191dc7718923b1897484aa8f74ab0f9bf88b118",
+                "sha256": "93c84e361092f2d393acd0b9788c576b19aa2884efb79fcd912462f165cab1ac"
+              },
+              "module": "OwnedCheckedRecords",
+              "source": {
+                "bytes": 3009,
+                "path": "OwnedCheckedRecords.lean",
+                "sha256": "b5c2e10c7ccb18859da182d63d7f664e2cc12d2a748f8943ab3e6dc603ddf57f"
+              }
+            }
+          ],
+          "request": {
+            "arities": [
+              [
+                "OwnedCheckedRecords.claimClosure",
+                0
+              ]
+            ],
+            "contracts": {
+              "OwnedCheckedRecords.claimClosure": {
+                "result": {
+                  "callable": {
+                    "parameters": [
+                      {
+                        "lifetime": {
+                          "anchor": null,
+                          "scope": "call"
+                        },
+                        "ownership": "borrow",
+                        "refinement": {
+                          "constructor": "OwnedCheckedRecords.mkClaim",
+                          "fields": [
+                            {
+                              "name": "holder",
+                              "refinement": null
+                            },
+                            {
+                              "name": "quota",
+                              "refinement": null
+                            }
+                          ],
+                          "kind": "checked-record",
+                          "name": "OwnedCheckedRecords.Claim"
+                        }
+                      }
+                    ],
+                    "result": {
+                      "lifetime": {
+                        "anchor": null,
+                        "scope": "explicit"
+                      },
+                      "ownership": "lease"
+                    }
+                  },
+                  "lifetime": {
+                    "anchor": null,
+                    "scope": "explicit"
+                  },
+                  "ownership": "lease"
+                }
+              },
+              "OwnedCheckedRecords.echoBooking": {
+                "parameters": [
+                  {
+                    "lifetime": {
+                      "anchor": null,
+                      "scope": "call"
+                    },
+                    "ownership": "borrow",
+                    "refinement": {
+                      "fields": [
+                        {
+                          "name": "holder",
+                          "refinement": null
+                        },
+                        {
+                          "name": "window",
+                          "refinement": {
+                            "constructor": "OwnedCheckedRecords.mkWindow",
+                            "fields": [
+                              {
+                                "name": "lo",
+                                "refinement": null
+                              },
+                              {
+                                "name": "hi",
+                                "refinement": null
+                              }
+                            ],
+                            "kind": "checked-record",
+                            "name": "OwnedCheckedRecords.Window"
+                          }
+                        }
+                      ],
+                      "kind": "record",
+                      "name": "OwnedCheckedRecords.Booking"
+                    }
+                  }
+                ],
+                "result": {
+                  "lifetime": {
+                    "anchor": null,
+                    "scope": "explicit"
+                  },
+                  "ownership": "lease"
+                }
+              },
+              "OwnedCheckedRecords.echoClaim": {
+                "parameters": [
+                  {
+                    "lifetime": {
+                      "anchor": null,
+                      "scope": "call"
+                    },
+                    "ownership": "borrow",
+                    "refinement": {
+                      "constructor": "OwnedCheckedRecords.mkClaim",
+                      "fields": [
+                        {
+                          "name": "holder",
+                          "refinement": null
+                        },
+                        {
+                          "name": "quota",
+                          "refinement": null
+                        }
+                      ],
+                      "kind": "checked-record",
+                      "name": "OwnedCheckedRecords.Claim"
+                    }
+                  }
+                ],
+                "result": {
+                  "lifetime": {
+                    "anchor": null,
+                    "scope": "explicit"
+                  },
+                  "ownership": "lease"
+                }
+              },
+              "OwnedCheckedRecords.pairClaim": {
+                "parameters": [
+                  {
+                    "lifetime": {
+                      "anchor": null,
+                      "scope": "call"
+                    },
+                    "ownership": "borrow",
+                    "refinement": {
+                      "fields": [
+                        {
+                          "name": "holder",
+                          "refinement": null
+                        },
+                        {
+                          "name": "window",
+                          "refinement": {
+                            "constructor": "OwnedCheckedRecords.mkWindow",
+                            "fields": [
+                              {
+                                "name": "lo",
+                                "refinement": null
+                              },
+                              {
+                                "name": "hi",
+                                "refinement": null
+                              }
+                            ],
+                            "kind": "checked-record",
+                            "name": "OwnedCheckedRecords.Window"
+                          }
+                        }
+                      ],
+                      "kind": "record",
+                      "name": "OwnedCheckedRecords.Booking"
+                    }
+                  },
+                  {
+                    "lifetime": {
+                      "anchor": null,
+                      "scope": "call"
+                    },
+                    "ownership": "borrow",
+                    "refinement": {
+                      "constructor": "OwnedCheckedRecords.mkClaim",
+                      "fields": [
+                        {
+                          "name": "holder",
+                          "refinement": null
+                        },
+                        {
+                          "name": "quota",
+                          "refinement": null
+                        }
+                      ],
+                      "kind": "checked-record",
+                      "name": "OwnedCheckedRecords.Claim"
+                    }
+                  }
+                ],
+                "result": {
+                  "lifetime": {
+                    "anchor": null,
+                    "scope": "explicit"
+                  },
+                  "ownership": "lease"
+                }
+              },
+              "OwnedCheckedRecords.transferClaim": {
+                "parameters": [
+                  {
+                    "lifetime": {
+                      "anchor": null,
+                      "scope": "call"
+                    },
+                    "ownership": "transfer",
+                    "refinement": {
+                      "constructor": "OwnedCheckedRecords.mkClaim",
+                      "fields": [
+                        {
+                          "name": "holder",
+                          "refinement": null
+                        },
+                        {
+                          "name": "quota",
+                          "refinement": null
+                        }
+                      ],
+                      "kind": "checked-record",
+                      "name": "OwnedCheckedRecords.Claim"
+                    }
+                  }
+                ],
+                "result": {
+                  "lifetime": {
+                    "anchor": null,
+                    "scope": "explicit"
+                  },
+                  "ownership": "lease"
+                }
+              },
+              "OwnedCheckedRecords.withClaimCallback": {
+                "parameters": [
+                  {
+                    "lifetime": {
+                      "anchor": null,
+                      "scope": "call"
+                    },
+                    "ownership": "borrow",
+                    "refinement": {
+                      "constructor": "OwnedCheckedRecords.mkClaim",
+                      "fields": [
+                        {
+                          "name": "holder",
+                          "refinement": null
+                        },
+                        {
+                          "name": "quota",
+                          "refinement": null
+                        }
+                      ],
+                      "kind": "checked-record",
+                      "name": "OwnedCheckedRecords.Claim"
+                    }
+                  },
+                  {
+                    "callable": {
+                      "parameters": [
+                        {
+                          "lifetime": {
+                            "anchor": null,
+                            "scope": "call"
+                          },
+                          "ownership": "borrow"
+                        }
+                      ],
+                      "result": {
+                        "lifetime": {
+                          "anchor": null,
+                          "scope": "explicit"
+                        },
+                        "ownership": "lease",
+                        "refinement": {
+                          "constructor": "OwnedCheckedRecords.mkClaim",
+                          "fields": [
+                            {
+                              "name": "holder",
+                              "refinement": null
+                            },
+                            {
+                              "name": "quota",
+                              "refinement": null
+                            }
+                          ],
+                          "kind": "checked-record",
+                          "name": "OwnedCheckedRecords.Claim"
+                        }
+                      }
+                    },
+                    "lifetime": {
+                      "anchor": null,
+                      "scope": "call"
+                    },
+                    "ownership": "borrow"
+                  }
+                ],
+                "result": {
+                  "lifetime": {
+                    "anchor": null,
+                    "scope": "explicit"
+                  },
+                  "ownership": "lease"
+                }
+              }
+            },
+            "exportModules": [
+              "OwnedCheckedRecords"
+            ],
+            "exports": [
+              "OwnedCheckedRecords.newTicket",
+              "OwnedCheckedRecords.serial",
+              "OwnedCheckedRecords.echoBooking",
+              "OwnedCheckedRecords.echoClaim",
+              "OwnedCheckedRecords.transferClaim",
+              "OwnedCheckedRecords.claimFor",
+              "OwnedCheckedRecords.pairClaim",
+              "OwnedCheckedRecords.withClaimCallback",
+              "OwnedCheckedRecords.claimClosure"
+            ],
+            "metadata": {
+              "invocationIdentitySha256": "a08a620dd7f66da2b32182e2af22cb5dda88f477b1caa75103723ca34cd6c0b9",
+              "modules": [
+                {
+                  "interfaceSha256": "b5183c0470521b85929acc5cf191dc7718923b1897484aa8f74ab0f9bf88b118",
+                  "name": "OwnedCheckedRecords",
+                  "sourcePath": "OwnedCheckedRecords.lean",
+                  "sourceSha256": "b5c2e10c7ccb18859da182d63d7f664e2cc12d2a748f8943ab3e6dc603ddf57f"
+                }
+              ],
+              "toolchain": "leanprover/lean4:v4.32.2"
+            },
+            "modules": [
+              "OwnedCheckedRecords"
+            ],
+            "ownedAggregates": {
+              "cycles": "reject",
+              "disposal": "required",
+              "fallback": "queued-finalizer",
+              "ownership": "lease"
+            },
+            "profile": "native-library-v1",
+            "resources": [
+              "OwnedCheckedRecords.Ticket"
+            ]
+          },
+          "sourceNoticesSha256": "4357faff607378afd08f90b3f4ada9fc80c3697ef138928cf65489a3ce0b90cc",
+          "sourceTreeSha256": "b220f72845ee4d8086d79d3aedd9e2e681184b99211fba5d15a6a1b89d8a4ee9"
+        }
+      },
+      "consumerSha256": "189e5fd13efff72dd8eac4beee838e04e0e0d0c01d55bc9836d167b674d5737a",
+      "deterministicReassembly": true,
+      "earlyAndLateRejection": true,
+      "immutableConsumer": true,
+      "independentlyVerified": true,
+      "lifecycle": "perl-destruction-plus-explicit-close",
+      "mode": "full",
+      "observations": [
+        {
+          "assets": {
+            "observations": [
+              {
+                "asset": "OwnedCheckedRecords.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "18df724424836ef6ffc6db3c4ffb57d1ff3282d8dc534bfae0635c5bc58facef"
+              },
+              {
+                "asset": "OwnedCheckedRecords.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "18df724424836ef6ffc6db3c4ffb57d1ff3282d8dc534bfae0635c5bc58facef"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "deb5fdff5f1e57c687ef389687fe08d7cabd001186e59b2effafdc395e92efd7"
+              },
+              {
+                "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "deb5fdff5f1e57c687ef389687fe08d7cabd001186e59b2effafdc395e92efd7"
+              }
+            ],
+            "sourceSha256": "c19aeddf9e5acfa8415ef583ab2513a13a9eaf59f4916fc68e3e60c804bfb152"
+          },
+          "mode": "prebuilt-only",
+          "observed": {
+            "borrowed_rejection_preserved": true,
+            "callback_calls": 2,
+            "callback_recovered": true,
+            "checks": 63,
+            "closure_reused": true,
+            "live_identities": 1,
+            "successful_transfer_consumed": true,
+            "transfer_rejection_preserved": true
+          },
+          "perl": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-threaded/bin/perl",
+          "runtimeOnlyRuns": 2
+        },
+        {
+          "assets": {
+            "observations": [
+              {
+                "asset": "OwnedCheckedRecords.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "c8d11eb66c03cb7334e781116a825031afc83bbf7db4c01b0db8ca31924761ef"
+              },
+              {
+                "asset": "OwnedCheckedRecords.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "c8d11eb66c03cb7334e781116a825031afc83bbf7db4c01b0db8ca31924761ef"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "deb5fdff5f1e57c687ef389687fe08d7cabd001186e59b2effafdc395e92efd7"
+              },
+              {
+                "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "deb5fdff5f1e57c687ef389687fe08d7cabd001186e59b2effafdc395e92efd7"
+              }
+            ],
+            "sourceSha256": "c19aeddf9e5acfa8415ef583ab2513a13a9eaf59f4916fc68e3e60c804bfb152"
+          },
+          "mode": "build-xs",
+          "observed": {
+            "borrowed_rejection_preserved": true,
+            "callback_calls": 2,
+            "callback_recovered": true,
+            "checks": 63,
+            "closure_reused": true,
+            "live_identities": 1,
+            "successful_transfer_consumed": true,
+            "transfer_rejection_preserved": true
+          },
+          "perl": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-threaded/bin/perl",
+          "runtimeOnlyRuns": 2
+        },
+        {
+          "assets": {
+            "observations": [
+              {
+                "asset": "OwnedCheckedRecords.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "19296cc1e7c142ebe3186bc2761b8286b933d8dffe9df60f27273e6b91bae612"
+              },
+              {
+                "asset": "OwnedCheckedRecords.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "19296cc1e7c142ebe3186bc2761b8286b933d8dffe9df60f27273e6b91bae612"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "deb5fdff5f1e57c687ef389687fe08d7cabd001186e59b2effafdc395e92efd7"
+              },
+              {
+                "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "deb5fdff5f1e57c687ef389687fe08d7cabd001186e59b2effafdc395e92efd7"
+              }
+            ],
+            "sourceSha256": "c19aeddf9e5acfa8415ef583ab2513a13a9eaf59f4916fc68e3e60c804bfb152"
+          },
+          "mode": "prebuilt-only",
+          "observed": {
+            "borrowed_rejection_preserved": true,
+            "callback_calls": 2,
+            "callback_recovered": true,
+            "checks": 63,
+            "closure_reused": true,
+            "live_identities": 1,
+            "successful_transfer_consumed": true,
+            "transfer_rejection_preserved": true
+          },
+          "perl": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-unthreaded/bin/perl",
+          "runtimeOnlyRuns": 2
+        },
+        {
+          "assets": {
+            "observations": [
+              {
+                "asset": "OwnedCheckedRecords.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "17065014f8d355399a632a85c02d68c9f8bbbf009d5a694d9b162ad7e4b907fb"
+              },
+              {
+                "asset": "OwnedCheckedRecords.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "17065014f8d355399a632a85c02d68c9f8bbbf009d5a694d9b162ad7e4b907fb"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "deb5fdff5f1e57c687ef389687fe08d7cabd001186e59b2effafdc395e92efd7"
+              },
+              {
+                "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "deb5fdff5f1e57c687ef389687fe08d7cabd001186e59b2effafdc395e92efd7"
+              }
+            ],
+            "sourceSha256": "c19aeddf9e5acfa8415ef583ab2513a13a9eaf59f4916fc68e3e60c804bfb152"
+          },
+          "mode": "build-xs",
+          "observed": {
+            "borrowed_rejection_preserved": true,
+            "callback_calls": 2,
+            "callback_recovered": true,
+            "checks": 63,
+            "closure_reused": true,
+            "live_identities": 1,
+            "successful_transfer_consumed": true,
+            "transfer_rejection_preserved": true
+          },
+          "perl": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-unthreaded/bin/perl",
+          "runtimeOnlyRuns": 2
+        },
+        {
+          "assets": {
+            "observations": [
+              {
+                "asset": "OwnedCheckedRecords.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "7fc0e15659103298a67352327bbe6ca517ba8b9e3db0b283600905e385a08757"
+              },
+              {
+                "asset": "OwnedCheckedRecords.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "7fc0e15659103298a67352327bbe6ca517ba8b9e3db0b283600905e385a08757"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "deb5fdff5f1e57c687ef389687fe08d7cabd001186e59b2effafdc395e92efd7"
+              },
+              {
+                "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "deb5fdff5f1e57c687ef389687fe08d7cabd001186e59b2effafdc395e92efd7"
+              }
+            ],
+            "sourceSha256": "c19aeddf9e5acfa8415ef583ab2513a13a9eaf59f4916fc68e3e60c804bfb152"
+          },
+          "mode": "prebuilt-only",
+          "observed": {
+            "borrowed_rejection_preserved": true,
+            "callback_calls": 2,
+            "callback_recovered": true,
+            "checks": 63,
+            "closure_reused": true,
+            "live_identities": 1,
+            "successful_transfer_consumed": true,
+            "transfer_rejection_preserved": true
+          },
+          "perl": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-threaded/bin/perl",
+          "runtimeOnlyRuns": 2
+        },
+        {
+          "assets": {
+            "observations": [
+              {
+                "asset": "OwnedCheckedRecords.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "4f02d4c864dfb6f1ed829546ca897e0afb9ea512cd22ee1071761d286bee667e"
+              },
+              {
+                "asset": "OwnedCheckedRecords.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "4f02d4c864dfb6f1ed829546ca897e0afb9ea512cd22ee1071761d286bee667e"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "deb5fdff5f1e57c687ef389687fe08d7cabd001186e59b2effafdc395e92efd7"
+              },
+              {
+                "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "deb5fdff5f1e57c687ef389687fe08d7cabd001186e59b2effafdc395e92efd7"
+              }
+            ],
+            "sourceSha256": "c19aeddf9e5acfa8415ef583ab2513a13a9eaf59f4916fc68e3e60c804bfb152"
+          },
+          "mode": "build-xs",
+          "observed": {
+            "borrowed_rejection_preserved": true,
+            "callback_calls": 2,
+            "callback_recovered": true,
+            "checks": 63,
+            "closure_reused": true,
+            "live_identities": 1,
+            "successful_transfer_consumed": true,
+            "transfer_rejection_preserved": true
+          },
+          "perl": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-threaded/bin/perl",
+          "runtimeOnlyRuns": 2
+        },
+        {
+          "assets": {
+            "observations": [
+              {
+                "asset": "OwnedCheckedRecords.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "8b1003308371ac295c34fed8e020b81d4455eb84b2cd635e552c91a662e6eec5"
+              },
+              {
+                "asset": "OwnedCheckedRecords.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "8b1003308371ac295c34fed8e020b81d4455eb84b2cd635e552c91a662e6eec5"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "deb5fdff5f1e57c687ef389687fe08d7cabd001186e59b2effafdc395e92efd7"
+              },
+              {
+                "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "deb5fdff5f1e57c687ef389687fe08d7cabd001186e59b2effafdc395e92efd7"
+              }
+            ],
+            "sourceSha256": "c19aeddf9e5acfa8415ef583ab2513a13a9eaf59f4916fc68e3e60c804bfb152"
+          },
+          "mode": "prebuilt-only",
+          "observed": {
+            "borrowed_rejection_preserved": true,
+            "callback_calls": 2,
+            "callback_recovered": true,
+            "checks": 63,
+            "closure_reused": true,
+            "live_identities": 1,
+            "successful_transfer_consumed": true,
+            "transfer_rejection_preserved": true
+          },
+          "perl": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-unthreaded/bin/perl",
+          "runtimeOnlyRuns": 2
+        },
+        {
+          "assets": {
+            "observations": [
+              {
+                "asset": "OwnedCheckedRecords.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "741f186e3c5c97e498001652bc6e606cafc0d023c661b71c4872ed15795e78f7"
+              },
+              {
+                "asset": "OwnedCheckedRecords.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "741f186e3c5c97e498001652bc6e606cafc0d023c661b71c4872ed15795e78f7"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "deb5fdff5f1e57c687ef389687fe08d7cabd001186e59b2effafdc395e92efd7"
+              },
+              {
+                "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "deb5fdff5f1e57c687ef389687fe08d7cabd001186e59b2effafdc395e92efd7"
+              }
+            ],
+            "sourceSha256": "c19aeddf9e5acfa8415ef583ab2513a13a9eaf59f4916fc68e3e60c804bfb152"
+          },
+          "mode": "build-xs",
+          "observed": {
+            "borrowed_rejection_preserved": true,
+            "callback_calls": 2,
+            "callback_recovered": true,
+            "checks": 63,
+            "closure_reused": true,
+            "live_identities": 1,
+            "successful_transfer_consumed": true,
+            "transfer_rejection_preserved": true
+          },
+          "perl": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-unthreaded/bin/perl",
+          "runtimeOnlyRuns": 2
+        }
+      ],
+      "packageSetReceipt": {
+        "component": {
+          "id": "owned-checked-records@1.0.0",
+          "name": "owned-checked-records",
+          "version": "1.0.0"
+        },
+        "kind": "lean-bridge-package-set-receipt",
+        "packages": [
+          {
+            "artifacts": [
+              {
+                "bytes": 3165690,
+                "path": "archives/LeanBridge-OwnedCheckedRecords-1.000.tar.gz",
+                "sha256": "c5fdfe895064312b9b5b6ade01a8834d72a4060153242d3f9e8153dbd0a969b7"
+              }
+            ],
+            "ecosystem": "cpan",
+            "name": "LeanBridge-OwnedCheckedRecords",
+            "profile": "native-library-v1",
+            "requires": [
+              {
+                "ecosystem": "cpan",
+                "name": "LeanBridge-Runtime",
+                "version": "0.0020873093885122476990213970161242772861093089627532315710208989625599780543964681"
+              }
+            ],
+            "role": "component",
+            "runtimeDelivery": "dependency",
+            "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+            "target": "cpan",
+            "version": "1.000"
+          },
+          {
+            "artifacts": [
+              {
+                "bytes": 51397546,
+                "path": "archives/LeanBridge-Runtime-0.0020873093885122476990213970161242772861093089627532315710208989625599780543964681.tar.gz",
+                "sha256": "484ac7525e65a991241645388ddcdad082a580e14f2b2447b3c5ce9bb7d58c26"
+              }
+            ],
+            "ecosystem": "cpan",
+            "name": "LeanBridge-Runtime",
+            "profile": "native-library-v1",
+            "requires": [],
+            "role": "runtime",
+            "runtimeDelivery": "provided",
+            "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+            "target": "cpan",
+            "version": "0.0020873093885122476990213970161242772861093089627532315710208989625599780543964681"
+          }
+        ],
+        "profiles": [
+          {
+            "bindingIrSha256": "9718ef3267bd6310c84b544a12a9339166fab121a2293f618d6c9c89fbd477a4",
+            "id": "native-library-v1",
+            "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+          }
+        ],
+        "schemaVersion": 1,
+        "source": {
+          "treeSha256": "b220f72845ee4d8086d79d3aedd9e2e681184b99211fba5d15a6a1b89d8a4ee9"
+        }
+      },
+      "relocatedInstallation": true,
+      "retainedPackageSet": {
+        "archiveBytes": 54563236,
+        "archives": 2,
+        "files": [
+          "archives/LeanBridge-OwnedCheckedRecords-1.000.tar.gz",
+          "archives/LeanBridge-Runtime-0.0020873093885122476990213970161242772861093089627532315710208989625599780543964681.tar.gz",
+          "package-set-receipt.json",
+          "package-set-receipt.json.sha256"
+        ],
+        "path": "evidence/ordinary-full/handoff",
+        "receiptSha256": "caffe658eb68b2fa9c03f2630a531745347f56b8fcbc70f7ce3a0afcd07736d5"
+      },
+      "route": "ordinary-full",
+      "sourceFreeInstallation": true,
+      "sourceUnchanged": true,
+      "unchangedRejectedInputs": true
+    },
+    {
+      "authorRoute": "ordinary",
+      "bindingIrSha256": "21fe7ca8e072aeeed9c12d550e31f8367620f77fe70acf9a7f15624ab896fc3f",
+      "callbackRecovery": false,
+      "componentReceipt": {
+        "adaptersSha256": "e1c26a30f0c87233cb1c34598587dda44f2d735246f1d8cc9d734598e7fbbfc5",
+        "allocationGuardSha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83",
+        "bindingIrSha256": "21fe7ca8e072aeeed9c12d550e31f8367620f77fe70acf9a7f15624ab896fc3f",
+        "callbackSourceSha256": "85b333e9d5e386e7bc0186a723170228e26646d57881f6accd45db4bf7a7539a",
+        "compiler": "cc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+        "exports": [
+          {
+            "declaration": "OwnedCheckedRecords.claimFor",
+            "symbol": "lean_bridge_owned_0bd47d71968e3be93c341f46_f483485736ace9af57086"
+          },
+          {
+            "declaration": "OwnedCheckedRecords.newTicket",
+            "symbol": "lean_bridge_owned_0bd47d71968e3be93c341f46_fa1e5189bd92568e4b939"
+          },
+          {
+            "declaration": "OwnedCheckedRecords.serial",
+            "symbol": "lean_bridge_owned_0bd47d71968e3be93c341f46_fec926afda994fba3abe2"
+          }
+        ],
+        "headerSha256": "2157074b05c556a3dc7748de0416613306696fd6d91090a3c7e49a31c57f4ab5",
+        "initializer": "initialize_LeanBridgeOwned18df5e0bebbaaa2a",
+        "library": "libcomponent_161bdaa35ee11fef40c6.so",
+        "metadataSha256": "7e348f545c6b9bc7e14fc60acde43c69731d971e51315f901fdd924f2861efef",
+        "modelSha256": "175100e72af4665abafe2a1b8c26475af698b0c22654c9558bd4c65604b866af",
+        "nativeLibrary": {
+          "bytes": 60464,
+          "sha256": "b68b5fbb4eb5441bb39a2fdfe1e59d5eabf91d7fd0c5f6e6bdeb84d9a8b775fa"
+        },
+        "profile": "native-library-v1",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+        "schemaVersion": 3,
+        "sourceIdentity": {
+          "exportConfigurationSha256": "86529a28db4b7e45b99a782851383c11edb8a113006ed31140e08507b0e9ef92",
+          "exportConfigurationSource": "{\n  \"exports\": [\n    \"OwnedCheckedRecords.newTicket\",\n    \"OwnedCheckedRecords.serial\",\n    \"OwnedCheckedRecords.claimFor\"\n  ],\n  \"modules\": [\n    \"OwnedCheckedRecords\"\n  ],\n  \"ownedAggregates\": {\n    \"cycles\": \"reject\",\n    \"disposal\": \"required\",\n    \"fallback\": \"queued-finalizer\",\n    \"ownership\": \"lease\"\n  },\n  \"package\": {\n    \"description\": \"Lean-produced owned proof-erased checked records.\"\n  },\n  \"resources\": [\n    \"OwnedCheckedRecords.Ticket\"\n  ],\n  \"schemaVersion\": 1,\n  \"targets\": {\n    \"cpan\": {\n      \"module\": \"LeanBridge::OwnedCheckedRecords\",\n      \"version\": \"1.000\"\n    }\n  }\n}\n",
+          "extractorSha256": "00f8ce7a3888339cdb1c36b0dce3d8bc9d4c650ea18c7a4926c2d29d4690443a",
+          "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+          "leanCompilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+          "leanVersion": "4.32.2",
+          "modules": [
+            {
+              "interface": {
+                "bytes": 179712,
+                "interfaceSha256": "b5183c0470521b85929acc5cf191dc7718923b1897484aa8f74ab0f9bf88b118",
+                "sha256": "93c84e361092f2d393acd0b9788c576b19aa2884efb79fcd912462f165cab1ac"
+              },
+              "module": "OwnedCheckedRecords",
+              "source": {
+                "bytes": 3009,
+                "path": "OwnedCheckedRecords.lean",
+                "sha256": "b5c2e10c7ccb18859da182d63d7f664e2cc12d2a748f8943ab3e6dc603ddf57f"
+              }
+            }
+          ],
+          "request": {
+            "arities": [],
+            "exportModules": [
+              "OwnedCheckedRecords"
+            ],
+            "exports": [
+              "OwnedCheckedRecords.newTicket",
+              "OwnedCheckedRecords.serial",
+              "OwnedCheckedRecords.claimFor"
+            ],
+            "metadata": {
+              "invocationIdentitySha256": "40d7b5143b49a71745515e899f1e2a201f5c8f0d88735cfb1e5f64d55e2c1576",
+              "modules": [
+                {
+                  "interfaceSha256": "b5183c0470521b85929acc5cf191dc7718923b1897484aa8f74ab0f9bf88b118",
+                  "name": "OwnedCheckedRecords",
+                  "sourcePath": "OwnedCheckedRecords.lean",
+                  "sourceSha256": "b5c2e10c7ccb18859da182d63d7f664e2cc12d2a748f8943ab3e6dc603ddf57f"
+                }
+              ],
+              "toolchain": "leanprover/lean4:v4.32.2"
+            },
+            "modules": [
+              "OwnedCheckedRecords"
+            ],
+            "ownedAggregates": {
+              "cycles": "reject",
+              "disposal": "required",
+              "fallback": "queued-finalizer",
+              "ownership": "lease"
+            },
+            "profile": "native-library-v1",
+            "resources": [
+              "OwnedCheckedRecords.Ticket"
+            ]
+          },
+          "sourceNoticesSha256": "6c897ededbb4d10a00dc5b133e12cae029a58280bee54817a31d3c25d58b868c",
+          "sourceTreeSha256": "a06acffe7aa729be68aaa92d9e77ff1843cb29f8832a30b4f4414f2ca80b3b41"
+        }
+      },
+      "consumerSha256": "ae9402cc4d05ba4809c3605490d11216310d5bd31c6030f1a27485dd20d39c7d",
+      "deterministicReassembly": true,
+      "earlyAndLateRejection": false,
+      "immutableConsumer": true,
+      "independentlyVerified": true,
+      "lifecycle": "perl-destruction-plus-explicit-close",
+      "mode": "result-only",
+      "observations": [
+        {
+          "assets": {
+            "observations": [
+              {
+                "asset": "OwnedCheckedRecords.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "d74a4c7cce3d3538b1fbe48b890751da41d873b18bb772ed53c7cabe7f677205"
+              },
+              {
+                "asset": "OwnedCheckedRecords.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "d74a4c7cce3d3538b1fbe48b890751da41d873b18bb772ed53c7cabe7f677205"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "b68b5fbb4eb5441bb39a2fdfe1e59d5eabf91d7fd0c5f6e6bdeb84d9a8b775fa"
+              },
+              {
+                "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "b68b5fbb4eb5441bb39a2fdfe1e59d5eabf91d7fd0c5f6e6bdeb84d9a8b775fa"
+              }
+            ],
+            "sourceSha256": "c19aeddf9e5acfa8415ef583ab2513a13a9eaf59f4916fc68e3e60c804bfb152"
+          },
+          "mode": "prebuilt-only",
+          "observed": {
+            "checks": 9,
+            "result_only": true
+          },
+          "perl": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-threaded/bin/perl",
+          "runtimeOnlyRuns": 2
+        },
+        {
+          "assets": {
+            "observations": [
+              {
+                "asset": "OwnedCheckedRecords.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "00f8660877acb1fdd85be0d2b9f2b10726a2890310efeac8b6b20e33a2399997"
+              },
+              {
+                "asset": "OwnedCheckedRecords.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "00f8660877acb1fdd85be0d2b9f2b10726a2890310efeac8b6b20e33a2399997"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "b68b5fbb4eb5441bb39a2fdfe1e59d5eabf91d7fd0c5f6e6bdeb84d9a8b775fa"
+              },
+              {
+                "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "b68b5fbb4eb5441bb39a2fdfe1e59d5eabf91d7fd0c5f6e6bdeb84d9a8b775fa"
+              }
+            ],
+            "sourceSha256": "c19aeddf9e5acfa8415ef583ab2513a13a9eaf59f4916fc68e3e60c804bfb152"
+          },
+          "mode": "build-xs",
+          "observed": {
+            "checks": 9,
+            "result_only": true
+          },
+          "perl": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-threaded/bin/perl",
+          "runtimeOnlyRuns": 2
+        },
+        {
+          "assets": {
+            "observations": [
+              {
+                "asset": "OwnedCheckedRecords.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "4ef9b04c92b47ea157ae9ebaafcf203d85f5685b6f27b2f6853aae3af6c04464"
+              },
+              {
+                "asset": "OwnedCheckedRecords.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "4ef9b04c92b47ea157ae9ebaafcf203d85f5685b6f27b2f6853aae3af6c04464"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "b68b5fbb4eb5441bb39a2fdfe1e59d5eabf91d7fd0c5f6e6bdeb84d9a8b775fa"
+              },
+              {
+                "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "b68b5fbb4eb5441bb39a2fdfe1e59d5eabf91d7fd0c5f6e6bdeb84d9a8b775fa"
+              }
+            ],
+            "sourceSha256": "c19aeddf9e5acfa8415ef583ab2513a13a9eaf59f4916fc68e3e60c804bfb152"
+          },
+          "mode": "prebuilt-only",
+          "observed": {
+            "checks": 9,
+            "result_only": true
+          },
+          "perl": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-unthreaded/bin/perl",
+          "runtimeOnlyRuns": 2
+        },
+        {
+          "assets": {
+            "observations": [
+              {
+                "asset": "OwnedCheckedRecords.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "c9d9447a082f30f6925adf4c4843a526675fef6f024acf2b7a93572f5aeac30a"
+              },
+              {
+                "asset": "OwnedCheckedRecords.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "c9d9447a082f30f6925adf4c4843a526675fef6f024acf2b7a93572f5aeac30a"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "b68b5fbb4eb5441bb39a2fdfe1e59d5eabf91d7fd0c5f6e6bdeb84d9a8b775fa"
+              },
+              {
+                "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "b68b5fbb4eb5441bb39a2fdfe1e59d5eabf91d7fd0c5f6e6bdeb84d9a8b775fa"
+              }
+            ],
+            "sourceSha256": "c19aeddf9e5acfa8415ef583ab2513a13a9eaf59f4916fc68e3e60c804bfb152"
+          },
+          "mode": "build-xs",
+          "observed": {
+            "checks": 9,
+            "result_only": true
+          },
+          "perl": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-unthreaded/bin/perl",
+          "runtimeOnlyRuns": 2
+        },
+        {
+          "assets": {
+            "observations": [
+              {
+                "asset": "OwnedCheckedRecords.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "09daed83ec2308431626775e97034e8f5f50691dab1948e51c7d81fc39128f6b"
+              },
+              {
+                "asset": "OwnedCheckedRecords.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "09daed83ec2308431626775e97034e8f5f50691dab1948e51c7d81fc39128f6b"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "b68b5fbb4eb5441bb39a2fdfe1e59d5eabf91d7fd0c5f6e6bdeb84d9a8b775fa"
+              },
+              {
+                "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "b68b5fbb4eb5441bb39a2fdfe1e59d5eabf91d7fd0c5f6e6bdeb84d9a8b775fa"
+              }
+            ],
+            "sourceSha256": "c19aeddf9e5acfa8415ef583ab2513a13a9eaf59f4916fc68e3e60c804bfb152"
+          },
+          "mode": "prebuilt-only",
+          "observed": {
+            "checks": 9,
+            "result_only": true
+          },
+          "perl": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-threaded/bin/perl",
+          "runtimeOnlyRuns": 2
+        },
+        {
+          "assets": {
+            "observations": [
+              {
+                "asset": "OwnedCheckedRecords.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "ae229e6d012f7319e438ef231c39d12c74bb4c4b6b8bd8003d1bf4f661ef4f48"
+              },
+              {
+                "asset": "OwnedCheckedRecords.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "ae229e6d012f7319e438ef231c39d12c74bb4c4b6b8bd8003d1bf4f661ef4f48"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "b68b5fbb4eb5441bb39a2fdfe1e59d5eabf91d7fd0c5f6e6bdeb84d9a8b775fa"
+              },
+              {
+                "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "b68b5fbb4eb5441bb39a2fdfe1e59d5eabf91d7fd0c5f6e6bdeb84d9a8b775fa"
+              }
+            ],
+            "sourceSha256": "c19aeddf9e5acfa8415ef583ab2513a13a9eaf59f4916fc68e3e60c804bfb152"
+          },
+          "mode": "build-xs",
+          "observed": {
+            "checks": 9,
+            "result_only": true
+          },
+          "perl": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-threaded/bin/perl",
+          "runtimeOnlyRuns": 2
+        },
+        {
+          "assets": {
+            "observations": [
+              {
+                "asset": "OwnedCheckedRecords.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "969c324d7396525be6d09d64f965e8a13d5284bf0931cd6203f62a37a89d5237"
+              },
+              {
+                "asset": "OwnedCheckedRecords.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "969c324d7396525be6d09d64f965e8a13d5284bf0931cd6203f62a37a89d5237"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "b68b5fbb4eb5441bb39a2fdfe1e59d5eabf91d7fd0c5f6e6bdeb84d9a8b775fa"
+              },
+              {
+                "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "b68b5fbb4eb5441bb39a2fdfe1e59d5eabf91d7fd0c5f6e6bdeb84d9a8b775fa"
+              }
+            ],
+            "sourceSha256": "c19aeddf9e5acfa8415ef583ab2513a13a9eaf59f4916fc68e3e60c804bfb152"
+          },
+          "mode": "prebuilt-only",
+          "observed": {
+            "checks": 9,
+            "result_only": true
+          },
+          "perl": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-unthreaded/bin/perl",
+          "runtimeOnlyRuns": 2
+        },
+        {
+          "assets": {
+            "observations": [
+              {
+                "asset": "OwnedCheckedRecords.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "1cf5b72373bfce40ec0f8cc9c490821e8e34a9b165c87493e5b34bfef3d87047"
+              },
+              {
+                "asset": "OwnedCheckedRecords.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "1cf5b72373bfce40ec0f8cc9c490821e8e34a9b165c87493e5b34bfef3d87047"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "b68b5fbb4eb5441bb39a2fdfe1e59d5eabf91d7fd0c5f6e6bdeb84d9a8b775fa"
+              },
+              {
+                "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "b68b5fbb4eb5441bb39a2fdfe1e59d5eabf91d7fd0c5f6e6bdeb84d9a8b775fa"
+              }
+            ],
+            "sourceSha256": "c19aeddf9e5acfa8415ef583ab2513a13a9eaf59f4916fc68e3e60c804bfb152"
+          },
+          "mode": "build-xs",
+          "observed": {
+            "checks": 9,
+            "result_only": true
+          },
+          "perl": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-unthreaded/bin/perl",
+          "runtimeOnlyRuns": 2
+        }
+      ],
+      "packageSetReceipt": {
+        "component": {
+          "id": "owned-checked-records@1.0.0",
+          "name": "owned-checked-records",
+          "version": "1.0.0"
+        },
+        "kind": "lean-bridge-package-set-receipt",
+        "packages": [
+          {
+            "artifacts": [
+              {
+                "bytes": 3028705,
+                "path": "archives/LeanBridge-OwnedCheckedRecords-1.000.tar.gz",
+                "sha256": "385b1c0e997438152d7c68c38addbf882aee8612f1b25b3008d0d3baf5d01049"
+              }
+            ],
+            "ecosystem": "cpan",
+            "name": "LeanBridge-OwnedCheckedRecords",
+            "profile": "native-library-v1",
+            "requires": [
+              {
+                "ecosystem": "cpan",
+                "name": "LeanBridge-Runtime",
+                "version": "0.0020873093885122476990213970161242772861093089627532315710208989625599780543964681"
+              }
+            ],
+            "role": "component",
+            "runtimeDelivery": "dependency",
+            "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+            "target": "cpan",
+            "version": "1.000"
+          },
+          {
+            "artifacts": [
+              {
+                "bytes": 51397546,
+                "path": "archives/LeanBridge-Runtime-0.0020873093885122476990213970161242772861093089627532315710208989625599780543964681.tar.gz",
+                "sha256": "484ac7525e65a991241645388ddcdad082a580e14f2b2447b3c5ce9bb7d58c26"
+              }
+            ],
+            "ecosystem": "cpan",
+            "name": "LeanBridge-Runtime",
+            "profile": "native-library-v1",
+            "requires": [],
+            "role": "runtime",
+            "runtimeDelivery": "provided",
+            "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+            "target": "cpan",
+            "version": "0.0020873093885122476990213970161242772861093089627532315710208989625599780543964681"
+          }
+        ],
+        "profiles": [
+          {
+            "bindingIrSha256": "21fe7ca8e072aeeed9c12d550e31f8367620f77fe70acf9a7f15624ab896fc3f",
+            "id": "native-library-v1",
+            "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+          }
+        ],
+        "schemaVersion": 1,
+        "source": {
+          "treeSha256": "a06acffe7aa729be68aaa92d9e77ff1843cb29f8832a30b4f4414f2ca80b3b41"
+        }
+      },
+      "relocatedInstallation": true,
+      "retainedPackageSet": {
+        "archiveBytes": 54426251,
+        "archives": 2,
+        "files": [
+          "archives/LeanBridge-OwnedCheckedRecords-1.000.tar.gz",
+          "archives/LeanBridge-Runtime-0.0020873093885122476990213970161242772861093089627532315710208989625599780543964681.tar.gz",
+          "package-set-receipt.json",
+          "package-set-receipt.json.sha256"
+        ],
+        "path": "evidence/ordinary-result-only/handoff",
+        "receiptSha256": "a7d4b73ddf1ccb94fdc1b93a00879dae9b33ebf929ee1344dd2d63fb4a29a9fa"
+      },
+      "route": "ordinary-result-only",
+      "sourceFreeInstallation": true,
+      "sourceUnchanged": true,
+      "unchangedRejectedInputs": false
+    },
+    {
+      "authorRoute": "reviewed",
+      "bindingIrSha256": "b9fe531ba2f219617d7df9aa09c07b3ee9eaa5ecd2f426c0095f4b91489d638f",
+      "callbackRecovery": true,
+      "componentReceipt": {
+        "adaptersSha256": "86c3d84831f109241ab6f6cee20b4e9b21dd1a8fab7aef88e4cf7b326cd4b416",
+        "allocationGuardSha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83",
+        "bindingIrSha256": "b9fe531ba2f219617d7df9aa09c07b3ee9eaa5ecd2f426c0095f4b91489d638f",
+        "callbackSourceSha256": "0688771a70d2e6f8c088ee75e0b3888790c134f5c15a489479a0caf5f20a008a",
+        "compiler": "cc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+        "exports": [
+          {
+            "declaration": "OwnedCheckedRecords.claimClosure",
+            "symbol": "lean_bridge_owned_160d2f76d2aefdee405ac39e_fa3218a29f42862f9b113"
+          },
+          {
+            "declaration": "OwnedCheckedRecords.claimFor",
+            "symbol": "lean_bridge_owned_160d2f76d2aefdee405ac39e_f483485736ace9af57086"
+          },
+          {
+            "declaration": "OwnedCheckedRecords.echoBooking",
+            "symbol": "lean_bridge_owned_160d2f76d2aefdee405ac39e_f0711e856cfa97d876c9a"
+          },
+          {
+            "declaration": "OwnedCheckedRecords.echoClaim",
+            "symbol": "lean_bridge_owned_160d2f76d2aefdee405ac39e_f535babcfd8d0f67ea0e6"
+          },
+          {
+            "declaration": "OwnedCheckedRecords.newTicket",
+            "symbol": "lean_bridge_owned_160d2f76d2aefdee405ac39e_fa1e5189bd92568e4b939"
+          },
+          {
+            "declaration": "OwnedCheckedRecords.pairClaim",
+            "symbol": "lean_bridge_owned_160d2f76d2aefdee405ac39e_feaac3cc8d9197bd7bbca"
+          },
+          {
+            "declaration": "OwnedCheckedRecords.serial",
+            "symbol": "lean_bridge_owned_160d2f76d2aefdee405ac39e_fec926afda994fba3abe2"
+          },
+          {
+            "declaration": "OwnedCheckedRecords.transferClaim",
+            "symbol": "lean_bridge_owned_160d2f76d2aefdee405ac39e_f040aca3025d850fc12cc"
+          },
+          {
+            "declaration": "OwnedCheckedRecords.withClaimCallback",
+            "symbol": "lean_bridge_owned_160d2f76d2aefdee405ac39e_f7d6c8617a0788c12de15"
+          }
+        ],
+        "headerSha256": "b867259b2a4f1b15f383f7d3c0ff69df142aad79ab9e3c602a2eaae829861b26",
+        "initializer": "initialize_LeanBridgeOwnedd6929745748affc0",
+        "inputTransfers": {
+          "consumption": "before-lean-call",
+          "exports": [
+            {
+              "bindingId": "lean:OwnedCheckedRecords.transferClaim",
+              "parameters": [
+                0
+              ]
+            }
+          ],
+          "failure": "consumed-after-handoff",
+          "ownership": "whole-result-owner",
+          "schemaVersion": 1,
+          "validation": "before-consumption",
+          "viewLifetime": "until-call-returns"
+        },
+        "library": "libcomponent_161bdaa35ee11fef40c6.so",
+        "metadataSha256": "b41de70e317248c318206328bdf0fc4178b43629794b4169b01b82063d1c8105",
+        "modelSha256": "976147c9421bc73921ad585243a739cbe6077e4290ccd73878703e05a8f28217",
+        "nativeLibrary": {
+          "bytes": 106200,
+          "sha256": "42c8f563da4d51937e1c20950ec364ecbbbf72801787d7307f53a335ed89f36d"
+        },
+        "profile": "native-library-v1",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+        "schemaVersion": 4,
+        "sourceIdentity": {
+          "exportConfigurationSha256": "ad2353127f789d762150ce297605376d0d679daab82c20aa3d0a9e921c4a236f",
+          "exportConfigurationSource": "{\n  \"modules\": [\n    \"OwnedCheckedRecords\"\n  ],\n  \"schemaVersion\": 1,\n  \"targets\": {\n    \"cpan\": {\n      \"module\": \"LeanBridge::OwnedCheckedRecords\",\n      \"version\": \"1.000\"\n    }\n  }\n}\n",
+          "extractorSha256": "00f8ce7a3888339cdb1c36b0dce3d8bc9d4c650ea18c7a4926c2d29d4690443a",
+          "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+          "leanCompilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+          "leanVersion": "4.32.2",
+          "modules": [
+            {
+              "interface": {
+                "bytes": 179712,
+                "interfaceSha256": "b5183c0470521b85929acc5cf191dc7718923b1897484aa8f74ab0f9bf88b118",
+                "sha256": "93c84e361092f2d393acd0b9788c576b19aa2884efb79fcd912462f165cab1ac"
+              },
+              "module": "OwnedCheckedRecords",
+              "source": {
+                "bytes": 3009,
+                "path": "OwnedCheckedRecords.lean",
+                "sha256": "b5c2e10c7ccb18859da182d63d7f664e2cc12d2a748f8943ab3e6dc603ddf57f"
+              }
+            }
+          ],
+          "request": {
+            "arities": [
+              [
+                "OwnedCheckedRecords.claimClosure",
+                0
+              ]
+            ],
+            "contracts": {
+              "OwnedCheckedRecords.claimClosure": {
+                "result": {
+                  "callable": {
+                    "parameters": [
+                      {
+                        "lifetime": {
+                          "anchor": null,
+                          "scope": "call"
+                        },
+                        "ownership": "borrow",
+                        "refinement": {
+                          "constructor": "OwnedCheckedRecords.mkClaim",
+                          "fields": [
+                            {
+                              "name": "holder",
+                              "refinement": null
+                            },
+                            {
+                              "name": "quota",
+                              "refinement": null
+                            }
+                          ],
+                          "kind": "checked-record",
+                          "name": "OwnedCheckedRecords.Claim"
+                        }
+                      }
+                    ],
+                    "result": {
+                      "lifetime": {
+                        "anchor": null,
+                        "scope": "explicit"
+                      },
+                      "ownership": "lease"
+                    }
+                  },
+                  "lifetime": {
+                    "anchor": null,
+                    "scope": "explicit"
+                  },
+                  "ownership": "lease"
+                }
+              },
+              "OwnedCheckedRecords.echoBooking": {
+                "parameters": [
+                  {
+                    "lifetime": {
+                      "anchor": null,
+                      "scope": "call"
+                    },
+                    "ownership": "borrow",
+                    "refinement": {
+                      "fields": [
+                        {
+                          "name": "holder",
+                          "refinement": null
+                        },
+                        {
+                          "name": "window",
+                          "refinement": {
+                            "constructor": "OwnedCheckedRecords.mkWindow",
+                            "fields": [
+                              {
+                                "name": "lo",
+                                "refinement": null
+                              },
+                              {
+                                "name": "hi",
+                                "refinement": null
+                              }
+                            ],
+                            "kind": "checked-record",
+                            "name": "OwnedCheckedRecords.Window"
+                          }
+                        }
+                      ],
+                      "kind": "record",
+                      "name": "OwnedCheckedRecords.Booking"
+                    }
+                  }
+                ]
+              },
+              "OwnedCheckedRecords.echoClaim": {
+                "parameters": [
+                  {
+                    "lifetime": {
+                      "anchor": null,
+                      "scope": "call"
+                    },
+                    "ownership": "borrow",
+                    "refinement": {
+                      "constructor": "OwnedCheckedRecords.mkClaim",
+                      "fields": [
+                        {
+                          "name": "holder",
+                          "refinement": null
+                        },
+                        {
+                          "name": "quota",
+                          "refinement": null
+                        }
+                      ],
+                      "kind": "checked-record",
+                      "name": "OwnedCheckedRecords.Claim"
+                    }
+                  }
+                ]
+              },
+              "OwnedCheckedRecords.pairClaim": {
+                "parameters": [
+                  {
+                    "lifetime": {
+                      "anchor": null,
+                      "scope": "call"
+                    },
+                    "ownership": "borrow",
+                    "refinement": {
+                      "fields": [
+                        {
+                          "name": "holder",
+                          "refinement": null
+                        },
+                        {
+                          "name": "window",
+                          "refinement": {
+                            "constructor": "OwnedCheckedRecords.mkWindow",
+                            "fields": [
+                              {
+                                "name": "lo",
+                                "refinement": null
+                              },
+                              {
+                                "name": "hi",
+                                "refinement": null
+                              }
+                            ],
+                            "kind": "checked-record",
+                            "name": "OwnedCheckedRecords.Window"
+                          }
+                        }
+                      ],
+                      "kind": "record",
+                      "name": "OwnedCheckedRecords.Booking"
+                    }
+                  },
+                  {
+                    "lifetime": {
+                      "anchor": null,
+                      "scope": "call"
+                    },
+                    "ownership": "borrow",
+                    "refinement": {
+                      "constructor": "OwnedCheckedRecords.mkClaim",
+                      "fields": [
+                        {
+                          "name": "holder",
+                          "refinement": null
+                        },
+                        {
+                          "name": "quota",
+                          "refinement": null
+                        }
+                      ],
+                      "kind": "checked-record",
+                      "name": "OwnedCheckedRecords.Claim"
+                    }
+                  }
+                ]
+              },
+              "OwnedCheckedRecords.transferClaim": {
+                "parameters": [
+                  {
+                    "lifetime": {
+                      "anchor": null,
+                      "scope": "call"
+                    },
+                    "ownership": "transfer",
+                    "refinement": {
+                      "constructor": "OwnedCheckedRecords.mkClaim",
+                      "fields": [
+                        {
+                          "name": "holder",
+                          "refinement": null
+                        },
+                        {
+                          "name": "quota",
+                          "refinement": null
+                        }
+                      ],
+                      "kind": "checked-record",
+                      "name": "OwnedCheckedRecords.Claim"
+                    }
+                  }
+                ]
+              },
+              "OwnedCheckedRecords.withClaimCallback": {
+                "parameters": [
+                  {
+                    "lifetime": {
+                      "anchor": null,
+                      "scope": "call"
+                    },
+                    "ownership": "borrow",
+                    "refinement": {
+                      "constructor": "OwnedCheckedRecords.mkClaim",
+                      "fields": [
+                        {
+                          "name": "holder",
+                          "refinement": null
+                        },
+                        {
+                          "name": "quota",
+                          "refinement": null
+                        }
+                      ],
+                      "kind": "checked-record",
+                      "name": "OwnedCheckedRecords.Claim"
+                    }
+                  },
+                  {
+                    "callable": {
+                      "parameters": [
+                        {
+                          "lifetime": {
+                            "anchor": null,
+                            "scope": "call"
+                          },
+                          "ownership": "borrow"
+                        }
+                      ],
+                      "result": {
+                        "lifetime": {
+                          "anchor": null,
+                          "scope": "explicit"
+                        },
+                        "ownership": "lease",
+                        "refinement": {
+                          "constructor": "OwnedCheckedRecords.mkClaim",
+                          "fields": [
+                            {
+                              "name": "holder",
+                              "refinement": null
+                            },
+                            {
+                              "name": "quota",
+                              "refinement": null
+                            }
+                          ],
+                          "kind": "checked-record",
+                          "name": "OwnedCheckedRecords.Claim"
+                        }
+                      }
+                    },
+                    "lifetime": {
+                      "anchor": null,
+                      "scope": "call"
+                    },
+                    "ownership": "borrow"
+                  }
+                ]
+              }
+            },
+            "exportModules": [
+              "OwnedCheckedRecords"
+            ],
+            "exports": [
+              "OwnedCheckedRecords.claimClosure",
+              "OwnedCheckedRecords.claimFor",
+              "OwnedCheckedRecords.echoBooking",
+              "OwnedCheckedRecords.echoClaim",
+              "OwnedCheckedRecords.newTicket",
+              "OwnedCheckedRecords.pairClaim",
+              "OwnedCheckedRecords.serial",
+              "OwnedCheckedRecords.transferClaim",
+              "OwnedCheckedRecords.withClaimCallback"
+            ],
+            "metadata": {
+              "invocationIdentitySha256": "4a48d269bd4363dc8a758f4731d54d4321d95be43199cd759183ac635a81b320",
+              "modules": [
+                {
+                  "interfaceSha256": "b5183c0470521b85929acc5cf191dc7718923b1897484aa8f74ab0f9bf88b118",
+                  "name": "OwnedCheckedRecords",
+                  "sourcePath": "OwnedCheckedRecords.lean",
+                  "sourceSha256": "b5c2e10c7ccb18859da182d63d7f664e2cc12d2a748f8943ab3e6dc603ddf57f"
+                }
+              ],
+              "toolchain": "leanprover/lean4:v4.32.2"
+            },
+            "modules": [
+              "OwnedCheckedRecords"
+            ],
+            "ownedAggregates": {
+              "cycles": "reject",
+              "disposal": "required",
+              "fallback": "queued-finalizer",
+              "ownership": "lease"
+            },
+            "profile": "native-library-v1",
+            "resources": [
+              "OwnedCheckedRecords.Ticket"
+            ]
+          },
+          "reviewedBindingIr": {
+            "path": "api.binding-ir.json",
+            "schemaVersion": 1,
+            "semanticSha256": "6cb098e827b2d66e0599d4ed1ac34ba2c9c408a3b1afdd50ee35924866c75c46",
+            "source": "{\n  \"aggregatePolicy\": {\n    \"cycles\": \"reject\",\n    \"disposal\": \"required\",\n    \"fallback\": \"queued-finalizer\",\n    \"ownership\": \"lease\"\n  },\n  \"assurance\": [],\n  \"capabilities\": [],\n  \"component\": {\n    \"id\": \"owned-checked-records@1.0.0\",\n    \"name\": \"owned-checked-records\",\n    \"version\": \"1.0.0\"\n  },\n  \"declarations\": [\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [\n        \"allocates\"\n      ],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:OwnedCheckedRecords.newTicket\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"newTicket\",\n      \"overloadKey\": \"OwnedCheckedRecords.newTicket\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"arg0\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        },\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"arg1\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"string\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\",\n        \"type\": {\n          \"id\": \"lean:OwnedCheckedRecords.Ticket\",\n          \"kind\": \"named\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"OwnedCheckedRecords.newTicket\",\n        \"extensions\": {},\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [\n        \"reads-resource\"\n      ],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:OwnedCheckedRecords.serial\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"serial\",\n      \"overloadKey\": \"OwnedCheckedRecords.serial\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"arg0\",\n          \"optional\": false,\n          \"ownership\": \"borrow\",\n          \"type\": {\n            \"id\": \"lean:OwnedCheckedRecords.Ticket\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"kind\": \"primitive\",\n          \"name\": \"nat\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"OwnedCheckedRecords.serial\",\n        \"extensions\": {},\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [\n        \"allocates\",\n        \"reads-resource\"\n      ],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:OwnedCheckedRecords.echoBooking\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"echoBooking\",\n      \"overloadKey\": \"OwnedCheckedRecords.echoBooking\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"arg0\",\n          \"optional\": false,\n          \"ownership\": \"borrow\",\n          \"type\": {\n            \"id\": \"lean:OwnedCheckedRecords.Booking\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\",\n        \"type\": {\n          \"id\": \"lean:OwnedCheckedRecords.Booking\",\n          \"kind\": \"named\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"OwnedCheckedRecords.echoBooking\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"fields\": [\n                  {\n                    \"name\": \"holder\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"window\",\n                    \"refinement\": {\n                      \"constructor\": \"OwnedCheckedRecords.mkWindow\",\n                      \"fields\": [\n                        {\n                          \"name\": \"lo\",\n                          \"refinement\": null\n                        },\n                        {\n                          \"name\": \"hi\",\n                          \"refinement\": null\n                        }\n                      ],\n                      \"kind\": \"checked-record\",\n                      \"name\": \"OwnedCheckedRecords.Window\"\n                    }\n                  }\n                ],\n                \"kind\": \"record\",\n                \"name\": \"OwnedCheckedRecords.Booking\"\n              }\n            ],\n            \"result\": {\n              \"fields\": [\n                {\n                  \"name\": \"holder\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"window\",\n                  \"refinement\": {\n                    \"constructor\": null,\n                    \"fields\": [\n                      {\n                        \"name\": \"lo\",\n                        \"refinement\": null\n                      },\n                      {\n                        \"name\": \"hi\",\n                        \"refinement\": null\n                      }\n                    ],\n                    \"kind\": \"checked-record\",\n                    \"name\": \"OwnedCheckedRecords.Window\"\n                  }\n                }\n              ],\n              \"kind\": \"record\",\n              \"name\": \"OwnedCheckedRecords.Booking\"\n            }\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [\n        \"allocates\",\n        \"reads-resource\"\n      ],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:OwnedCheckedRecords.echoClaim\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"echoClaim\",\n      \"overloadKey\": \"OwnedCheckedRecords.echoClaim\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"arg0\",\n          \"optional\": false,\n          \"ownership\": \"borrow\",\n          \"type\": {\n            \"id\": \"lean:OwnedCheckedRecords.Claim\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\",\n        \"type\": {\n          \"id\": \"lean:OwnedCheckedRecords.Claim\",\n          \"kind\": \"named\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"OwnedCheckedRecords.echoClaim\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"constructor\": \"OwnedCheckedRecords.mkClaim\",\n                \"fields\": [\n                  {\n                    \"name\": \"holder\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"quota\",\n                    \"refinement\": null\n                  }\n                ],\n                \"kind\": \"checked-record\",\n                \"name\": \"OwnedCheckedRecords.Claim\"\n              }\n            ],\n            \"result\": {\n              \"constructor\": null,\n              \"fields\": [\n                {\n                  \"name\": \"holder\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"quota\",\n                  \"refinement\": null\n                }\n              ],\n              \"kind\": \"checked-record\",\n              \"name\": \"OwnedCheckedRecords.Claim\"\n            }\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [\n        \"allocates\",\n        \"reads-resource\"\n      ],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:OwnedCheckedRecords.transferClaim\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"transferClaim\",\n      \"overloadKey\": \"OwnedCheckedRecords.transferClaim\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"arg0\",\n          \"optional\": false,\n          \"ownership\": \"transfer\",\n          \"type\": {\n            \"id\": \"lean:OwnedCheckedRecords.Claim\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\",\n        \"type\": {\n          \"id\": \"lean:OwnedCheckedRecords.Claim\",\n          \"kind\": \"named\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"OwnedCheckedRecords.transferClaim\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"constructor\": \"OwnedCheckedRecords.mkClaim\",\n                \"fields\": [\n                  {\n                    \"name\": \"holder\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"quota\",\n                    \"refinement\": null\n                  }\n                ],\n                \"kind\": \"checked-record\",\n                \"name\": \"OwnedCheckedRecords.Claim\"\n              }\n            ],\n            \"result\": {\n              \"constructor\": null,\n              \"fields\": [\n                {\n                  \"name\": \"holder\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"quota\",\n                  \"refinement\": null\n                }\n              ],\n              \"kind\": \"checked-record\",\n              \"name\": \"OwnedCheckedRecords.Claim\"\n            }\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [\n        \"allocates\",\n        \"reads-resource\"\n      ],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:OwnedCheckedRecords.claimFor\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"claimFor\",\n      \"overloadKey\": \"OwnedCheckedRecords.claimFor\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"arg0\",\n          \"optional\": false,\n          \"ownership\": \"borrow\",\n          \"type\": {\n            \"id\": \"lean:OwnedCheckedRecords.Ticket\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\",\n        \"type\": {\n          \"arguments\": [\n            {\n              \"id\": \"lean:OwnedCheckedRecords.Claim\",\n              \"kind\": \"named\"\n            }\n          ],\n          \"constructor\": \"option\",\n          \"kind\": \"apply\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"OwnedCheckedRecords.claimFor\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              null\n            ],\n            \"result\": {\n              \"arguments\": [\n                {\n                  \"constructor\": null,\n                  \"fields\": [\n                    {\n                      \"name\": \"holder\",\n                      \"refinement\": null\n                    },\n                    {\n                      \"name\": \"quota\",\n                      \"refinement\": null\n                    }\n                  ],\n                  \"kind\": \"checked-record\",\n                  \"name\": \"OwnedCheckedRecords.Claim\"\n                }\n              ],\n              \"kind\": \"option\"\n            }\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [\n        \"allocates\",\n        \"reads-resource\"\n      ],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:OwnedCheckedRecords.pairClaim\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"pairClaim\",\n      \"overloadKey\": \"OwnedCheckedRecords.pairClaim\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"arg0\",\n          \"optional\": false,\n          \"ownership\": \"borrow\",\n          \"type\": {\n            \"id\": \"lean:OwnedCheckedRecords.Booking\",\n            \"kind\": \"named\"\n          }\n        },\n        {\n          \"default\": null,\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"arg1\",\n          \"optional\": false,\n          \"ownership\": \"borrow\",\n          \"type\": {\n            \"id\": \"lean:OwnedCheckedRecords.Claim\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\",\n        \"type\": {\n          \"id\": \"lean:OwnedCheckedRecords.Claim\",\n          \"kind\": \"named\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"OwnedCheckedRecords.pairClaim\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"fields\": [\n                  {\n                    \"name\": \"holder\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"window\",\n                    \"refinement\": {\n                      \"constructor\": \"OwnedCheckedRecords.mkWindow\",\n                      \"fields\": [\n                        {\n                          \"name\": \"lo\",\n                          \"refinement\": null\n                        },\n                        {\n                          \"name\": \"hi\",\n                          \"refinement\": null\n                        }\n                      ],\n                      \"kind\": \"checked-record\",\n                      \"name\": \"OwnedCheckedRecords.Window\"\n                    }\n                  }\n                ],\n                \"kind\": \"record\",\n                \"name\": \"OwnedCheckedRecords.Booking\"\n              },\n              {\n                \"constructor\": \"OwnedCheckedRecords.mkClaim\",\n                \"fields\": [\n                  {\n                    \"name\": \"holder\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"quota\",\n                    \"refinement\": null\n                  }\n                ],\n                \"kind\": \"checked-record\",\n                \"name\": \"OwnedCheckedRecords.Claim\"\n              }\n            ],\n            \"result\": {\n              \"constructor\": null,\n              \"fields\": [\n                {\n                  \"name\": \"holder\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"quota\",\n                  \"refinement\": null\n                }\n              ],\n              \"kind\": \"checked-record\",\n              \"name\": \"OwnedCheckedRecords.Claim\"\n            }\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [\n        \"allocates\",\n        \"fails\",\n        \"host-call\",\n        \"reads-resource\"\n      ],\n      \"failure\": {\n        \"errors\": [\n          \"error:native-callback\"\n        ],\n        \"mode\": \"declared\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:OwnedCheckedRecords.withClaimCallback\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"withClaimCallback\",\n      \"overloadKey\": \"OwnedCheckedRecords.withClaimCallback\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"arg0\",\n          \"optional\": false,\n          \"ownership\": \"borrow\",\n          \"type\": {\n            \"id\": \"lean:OwnedCheckedRecords.Claim\",\n            \"kind\": \"named\"\n          }\n        },\n        {\n          \"default\": null,\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"arg1\",\n          \"optional\": false,\n          \"ownership\": \"borrow\",\n          \"type\": {\n            \"id\": \"bridge:Callbackb2d3d6fd4e031785f278\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\",\n        \"type\": {\n          \"id\": \"lean:OwnedCheckedRecords.Claim\",\n          \"kind\": \"named\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"OwnedCheckedRecords.withClaimCallback\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"constructor\": \"OwnedCheckedRecords.mkClaim\",\n                \"fields\": [\n                  {\n                    \"name\": \"holder\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"quota\",\n                    \"refinement\": null\n                  }\n                ],\n                \"kind\": \"checked-record\",\n                \"name\": \"OwnedCheckedRecords.Claim\"\n              },\n              null\n            ],\n            \"result\": {\n              \"constructor\": null,\n              \"fields\": [\n                {\n                  \"name\": \"holder\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"quota\",\n                  \"refinement\": null\n                }\n              ],\n              \"kind\": \"checked-record\",\n              \"name\": \"OwnedCheckedRecords.Claim\"\n            }\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [\n        \"allocates\"\n      ],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:OwnedCheckedRecords.claimClosure\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"claimClosure\",\n      \"overloadKey\": \"OwnedCheckedRecords.claimClosure\",\n      \"owner\": null,\n      \"parameters\": [],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\",\n        \"type\": {\n          \"id\": \"bridge:Callback26621c40b48fce52ca37\",\n          \"kind\": \"named\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"OwnedCheckedRecords.claimClosure\",\n        \"extensions\": {},\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    }\n  ],\n  \"documentation\": {\n    \"details\": \"\",\n    \"summary\": \"Independent corpus contract.\"\n  },\n  \"errors\": [\n    {\n      \"category\": \"boundary\",\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent owned checked-record callback failure.\"\n      },\n      \"id\": \"error:native-callback\",\n      \"name\": \"NativeCallbackFailure\",\n      \"payload\": null\n    }\n  ],\n  \"producers\": [\n    {\n      \"adapter\": \"independent-corpus-contract\",\n      \"adapterVersion\": 1,\n      \"extensions\": {},\n      \"id\": \"corpusReview\",\n      \"tool\": \"Corpus contract review\",\n      \"toolVersion\": \"1\"\n    }\n  ],\n  \"schemaVersion\": 4,\n  \"types\": [\n    {\n      \"aggregate\": null,\n      \"assurance\": [],\n      \"callable\": null,\n      \"cases\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent owned checked-record contract.\"\n      },\n      \"fields\": [],\n      \"host\": null,\n      \"id\": \"lean:OwnedCheckedRecords.Ticket\",\n      \"kind\": \"resource\",\n      \"mutability\": \"read\",\n      \"name\": \"Ticket\",\n      \"representation\": \"identity\",\n      \"resource\": {\n        \"cycles\": \"explicit-cut\",\n        \"disposal\": \"required\",\n        \"fallback\": \"queued-finalizer\",\n        \"kindId\": \"resource:OwnedCheckedRecords.Ticket\"\n      },\n      \"source\": {\n        \"declaration\": \"OwnedCheckedRecords.Ticket\",\n        \"extensions\": {},\n        \"producer\": \"corpusReview\"\n      },\n      \"target\": null,\n      \"typeParameters\": []\n    },\n    {\n      \"aggregate\": null,\n      \"assurance\": [],\n      \"callable\": null,\n      \"cases\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent owned checked-record contract.\"\n      },\n      \"fields\": [\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent owned checked-record contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"lo\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        },\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent owned checked-record contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"hi\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        }\n      ],\n      \"host\": null,\n      \"id\": \"lean:OwnedCheckedRecords.Window\",\n      \"kind\": \"record\",\n      \"mutability\": \"immutable\",\n      \"name\": \"Window\",\n      \"representation\": \"copied\",\n      \"resource\": null,\n      \"source\": {\n        \"declaration\": \"OwnedCheckedRecords.Window\",\n        \"extensions\": {\n          \"lean-lang.org/erased-proofs\": {\n            \"fields\": [\n              \"ordered\"\n            ]\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"target\": null,\n      \"typeParameters\": []\n    },\n    {\n      \"aggregate\": {\n        \"cycles\": \"reject\",\n        \"disposal\": \"required\",\n        \"fallback\": \"queued-finalizer\",\n        \"ownership\": \"lease\"\n      },\n      \"assurance\": [],\n      \"callable\": null,\n      \"cases\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent owned checked-record contract.\"\n      },\n      \"fields\": [\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent owned checked-record contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"holder\",\n          \"type\": {\n            \"id\": \"lean:OwnedCheckedRecords.Ticket\",\n            \"kind\": \"named\"\n          }\n        },\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent owned checked-record contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"window\",\n          \"type\": {\n            \"id\": \"lean:OwnedCheckedRecords.Window\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"host\": null,\n      \"id\": \"lean:OwnedCheckedRecords.Booking\",\n      \"kind\": \"record\",\n      \"mutability\": \"immutable\",\n      \"name\": \"Booking\",\n      \"representation\": \"owned\",\n      \"resource\": null,\n      \"source\": {\n        \"declaration\": \"OwnedCheckedRecords.Booking\",\n        \"extensions\": {},\n        \"producer\": \"corpusReview\"\n      },\n      \"target\": null,\n      \"typeParameters\": []\n    },\n    {\n      \"aggregate\": {\n        \"cycles\": \"reject\",\n        \"disposal\": \"required\",\n        \"fallback\": \"queued-finalizer\",\n        \"ownership\": \"lease\"\n      },\n      \"assurance\": [],\n      \"callable\": null,\n      \"cases\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent owned checked-record contract.\"\n      },\n      \"fields\": [\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent owned checked-record contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"holder\",\n          \"type\": {\n            \"id\": \"lean:OwnedCheckedRecords.Ticket\",\n            \"kind\": \"named\"\n          }\n        },\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent owned checked-record contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"quota\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        }\n      ],\n      \"host\": null,\n      \"id\": \"lean:OwnedCheckedRecords.Claim\",\n      \"kind\": \"record\",\n      \"mutability\": \"immutable\",\n      \"name\": \"Claim\",\n      \"representation\": \"owned\",\n      \"resource\": null,\n      \"source\": {\n        \"declaration\": \"OwnedCheckedRecords.Claim\",\n        \"extensions\": {\n          \"lean-lang.org/erased-proofs\": {\n            \"fields\": [\n              \"bounded\"\n            ]\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"target\": null,\n      \"typeParameters\": []\n    },\n    {\n      \"aggregate\": null,\n      \"assurance\": [],\n      \"callable\": {\n        \"effects\": [\n          \"host-call\",\n          \"fails\"\n        ],\n        \"failure\": {\n          \"errors\": [\n            \"error:native-callback\"\n          ],\n          \"mode\": \"declared\",\n          \"unexpected\": \"poison-runtime\"\n        },\n        \"invocation\": \"many\",\n        \"parameters\": [\n          {\n            \"default\": null,\n            \"lifetime\": {\n              \"anchor\": null,\n              \"scope\": \"call\"\n            },\n            \"mutability\": \"immutable\",\n            \"name\": \"arg0\",\n            \"optional\": false,\n            \"ownership\": \"borrow\",\n            \"type\": {\n              \"id\": \"lean:OwnedCheckedRecords.Claim\",\n              \"kind\": \"named\"\n            }\n          }\n        ],\n        \"reentry\": \"same-agent\",\n        \"result\": {\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"explicit\"\n          },\n          \"ownership\": \"lease\",\n          \"type\": {\n            \"id\": \"lean:OwnedCheckedRecords.Claim\",\n            \"kind\": \"named\"\n          }\n        },\n        \"resultMode\": \"value\",\n        \"selfDisposal\": \"defer\"\n      },\n      \"cases\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent owned checked-record contract.\"\n      },\n      \"fields\": [],\n      \"host\": null,\n      \"id\": \"bridge:Callbackb2d3d6fd4e031785f278\",\n      \"kind\": \"callback\",\n      \"mutability\": \"immutable\",\n      \"name\": \"Callbackb2d3d6fd4e031785f278\",\n      \"representation\": \"identity\",\n      \"resource\": null,\n      \"source\": {\n        \"declaration\": \"Callbackb2d3d6fd4e031785f278\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"constructor\": null,\n                \"fields\": [\n                  {\n                    \"name\": \"holder\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"quota\",\n                    \"refinement\": null\n                  }\n                ],\n                \"kind\": \"checked-record\",\n                \"name\": \"OwnedCheckedRecords.Claim\"\n              }\n            ],\n            \"result\": {\n              \"constructor\": \"OwnedCheckedRecords.mkClaim\",\n              \"fields\": [\n                {\n                  \"name\": \"holder\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"quota\",\n                  \"refinement\": null\n                }\n              ],\n              \"kind\": \"checked-record\",\n              \"name\": \"OwnedCheckedRecords.Claim\"\n            }\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"target\": null,\n      \"typeParameters\": []\n    },\n    {\n      \"aggregate\": null,\n      \"assurance\": [],\n      \"callable\": {\n        \"effects\": [\n          \"host-call\",\n          \"fails\"\n        ],\n        \"failure\": {\n          \"errors\": [\n            \"error:native-callback\"\n          ],\n          \"mode\": \"declared\",\n          \"unexpected\": \"poison-runtime\"\n        },\n        \"invocation\": \"many\",\n        \"parameters\": [\n          {\n            \"default\": null,\n            \"lifetime\": {\n              \"anchor\": null,\n              \"scope\": \"call\"\n            },\n            \"mutability\": \"immutable\",\n            \"name\": \"arg0\",\n            \"optional\": false,\n            \"ownership\": \"borrow\",\n            \"type\": {\n              \"id\": \"lean:OwnedCheckedRecords.Claim\",\n              \"kind\": \"named\"\n            }\n          }\n        ],\n        \"reentry\": \"same-agent\",\n        \"result\": {\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"explicit\"\n          },\n          \"ownership\": \"lease\",\n          \"type\": {\n            \"id\": \"lean:OwnedCheckedRecords.Claim\",\n            \"kind\": \"named\"\n          }\n        },\n        \"resultMode\": \"value\",\n        \"selfDisposal\": \"defer\"\n      },\n      \"cases\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent owned checked-record contract.\"\n      },\n      \"fields\": [],\n      \"host\": null,\n      \"id\": \"bridge:Callback26621c40b48fce52ca37\",\n      \"kind\": \"callback\",\n      \"mutability\": \"immutable\",\n      \"name\": \"Callback26621c40b48fce52ca37\",\n      \"representation\": \"identity\",\n      \"resource\": null,\n      \"source\": {\n        \"declaration\": \"Callback26621c40b48fce52ca37\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"constructor\": \"OwnedCheckedRecords.mkClaim\",\n                \"fields\": [\n                  {\n                    \"name\": \"holder\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"quota\",\n                    \"refinement\": null\n                  }\n                ],\n                \"kind\": \"checked-record\",\n                \"name\": \"OwnedCheckedRecords.Claim\"\n              }\n            ],\n            \"result\": {\n              \"constructor\": null,\n              \"fields\": [\n                {\n                  \"name\": \"holder\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"quota\",\n                  \"refinement\": null\n                }\n              ],\n              \"kind\": \"checked-record\",\n              \"name\": \"OwnedCheckedRecords.Claim\"\n            }\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"target\": null,\n      \"typeParameters\": []\n    }\n  ]\n}\n",
+            "sourceSha256": "4f8732c1d904657e1f2c22b31f8f0e8e9807a1b0b4b66581755d3716c7eaa6e2"
+          },
+          "sourceNoticesSha256": "633baa26ae8ca9150661aab434693f93daec4117acb8b13219450895e3986fd0",
+          "sourceTreeSha256": "927d77f87df822fa6dc0025947431903e9cad8ae3d5a330e9b504cb7d85a7afb"
+        }
+      },
+      "consumerSha256": "189e5fd13efff72dd8eac4beee838e04e0e0d0c01d55bc9836d167b674d5737a",
+      "deterministicReassembly": true,
+      "earlyAndLateRejection": true,
+      "immutableConsumer": true,
+      "independentlyVerified": true,
+      "lifecycle": "perl-destruction-plus-explicit-close",
+      "mode": "full",
+      "observations": [
+        {
+          "assets": {
+            "observations": [
+              {
+                "asset": "OwnedCheckedRecords.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "98688c0e65c02ac0fe0339aa6011f2ebf5436ef4c8fcf60fed26ecd0c0159c58"
+              },
+              {
+                "asset": "OwnedCheckedRecords.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "98688c0e65c02ac0fe0339aa6011f2ebf5436ef4c8fcf60fed26ecd0c0159c58"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "42c8f563da4d51937e1c20950ec364ecbbbf72801787d7307f53a335ed89f36d"
+              },
+              {
+                "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "42c8f563da4d51937e1c20950ec364ecbbbf72801787d7307f53a335ed89f36d"
+              }
+            ],
+            "sourceSha256": "c19aeddf9e5acfa8415ef583ab2513a13a9eaf59f4916fc68e3e60c804bfb152"
+          },
+          "mode": "prebuilt-only",
+          "observed": {
+            "borrowed_rejection_preserved": true,
+            "callback_calls": 2,
+            "callback_recovered": true,
+            "checks": 63,
+            "closure_reused": true,
+            "live_identities": 1,
+            "successful_transfer_consumed": true,
+            "transfer_rejection_preserved": true
+          },
+          "perl": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-threaded/bin/perl",
+          "runtimeOnlyRuns": 2
+        },
+        {
+          "assets": {
+            "observations": [
+              {
+                "asset": "OwnedCheckedRecords.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "873afc34dfca11bed405b8d86d6adfe8ffd7e8ea611b02ff9a56478c4bd2ae5e"
+              },
+              {
+                "asset": "OwnedCheckedRecords.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "873afc34dfca11bed405b8d86d6adfe8ffd7e8ea611b02ff9a56478c4bd2ae5e"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "42c8f563da4d51937e1c20950ec364ecbbbf72801787d7307f53a335ed89f36d"
+              },
+              {
+                "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "42c8f563da4d51937e1c20950ec364ecbbbf72801787d7307f53a335ed89f36d"
+              }
+            ],
+            "sourceSha256": "c19aeddf9e5acfa8415ef583ab2513a13a9eaf59f4916fc68e3e60c804bfb152"
+          },
+          "mode": "build-xs",
+          "observed": {
+            "borrowed_rejection_preserved": true,
+            "callback_calls": 2,
+            "callback_recovered": true,
+            "checks": 63,
+            "closure_reused": true,
+            "live_identities": 1,
+            "successful_transfer_consumed": true,
+            "transfer_rejection_preserved": true
+          },
+          "perl": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-threaded/bin/perl",
+          "runtimeOnlyRuns": 2
+        },
+        {
+          "assets": {
+            "observations": [
+              {
+                "asset": "OwnedCheckedRecords.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "6b5f96e37bcef1ec4ef73dad604c4fe44c8d1b593c8c2c83108849496952eba8"
+              },
+              {
+                "asset": "OwnedCheckedRecords.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "6b5f96e37bcef1ec4ef73dad604c4fe44c8d1b593c8c2c83108849496952eba8"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "42c8f563da4d51937e1c20950ec364ecbbbf72801787d7307f53a335ed89f36d"
+              },
+              {
+                "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "42c8f563da4d51937e1c20950ec364ecbbbf72801787d7307f53a335ed89f36d"
+              }
+            ],
+            "sourceSha256": "c19aeddf9e5acfa8415ef583ab2513a13a9eaf59f4916fc68e3e60c804bfb152"
+          },
+          "mode": "prebuilt-only",
+          "observed": {
+            "borrowed_rejection_preserved": true,
+            "callback_calls": 2,
+            "callback_recovered": true,
+            "checks": 63,
+            "closure_reused": true,
+            "live_identities": 1,
+            "successful_transfer_consumed": true,
+            "transfer_rejection_preserved": true
+          },
+          "perl": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-unthreaded/bin/perl",
+          "runtimeOnlyRuns": 2
+        },
+        {
+          "assets": {
+            "observations": [
+              {
+                "asset": "OwnedCheckedRecords.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "b297d53b3b010f0a5eb18cd1cde19602b2972053673a62b6d9ccbfacdf43029a"
+              },
+              {
+                "asset": "OwnedCheckedRecords.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "b297d53b3b010f0a5eb18cd1cde19602b2972053673a62b6d9ccbfacdf43029a"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "42c8f563da4d51937e1c20950ec364ecbbbf72801787d7307f53a335ed89f36d"
+              },
+              {
+                "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "42c8f563da4d51937e1c20950ec364ecbbbf72801787d7307f53a335ed89f36d"
+              }
+            ],
+            "sourceSha256": "c19aeddf9e5acfa8415ef583ab2513a13a9eaf59f4916fc68e3e60c804bfb152"
+          },
+          "mode": "build-xs",
+          "observed": {
+            "borrowed_rejection_preserved": true,
+            "callback_calls": 2,
+            "callback_recovered": true,
+            "checks": 63,
+            "closure_reused": true,
+            "live_identities": 1,
+            "successful_transfer_consumed": true,
+            "transfer_rejection_preserved": true
+          },
+          "perl": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-unthreaded/bin/perl",
+          "runtimeOnlyRuns": 2
+        },
+        {
+          "assets": {
+            "observations": [
+              {
+                "asset": "OwnedCheckedRecords.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "d7b319aa2e9d3a8a7f1f7e73162031d2c192f56034bd1bcd2179dbe51611ae25"
+              },
+              {
+                "asset": "OwnedCheckedRecords.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "d7b319aa2e9d3a8a7f1f7e73162031d2c192f56034bd1bcd2179dbe51611ae25"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "42c8f563da4d51937e1c20950ec364ecbbbf72801787d7307f53a335ed89f36d"
+              },
+              {
+                "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "42c8f563da4d51937e1c20950ec364ecbbbf72801787d7307f53a335ed89f36d"
+              }
+            ],
+            "sourceSha256": "c19aeddf9e5acfa8415ef583ab2513a13a9eaf59f4916fc68e3e60c804bfb152"
+          },
+          "mode": "prebuilt-only",
+          "observed": {
+            "borrowed_rejection_preserved": true,
+            "callback_calls": 2,
+            "callback_recovered": true,
+            "checks": 63,
+            "closure_reused": true,
+            "live_identities": 1,
+            "successful_transfer_consumed": true,
+            "transfer_rejection_preserved": true
+          },
+          "perl": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-threaded/bin/perl",
+          "runtimeOnlyRuns": 2
+        },
+        {
+          "assets": {
+            "observations": [
+              {
+                "asset": "OwnedCheckedRecords.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "589bcb4adf2e96b5aa87304cc224e9dbdab953ac0e9c9edf55ab8031f4307bfe"
+              },
+              {
+                "asset": "OwnedCheckedRecords.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "589bcb4adf2e96b5aa87304cc224e9dbdab953ac0e9c9edf55ab8031f4307bfe"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "42c8f563da4d51937e1c20950ec364ecbbbf72801787d7307f53a335ed89f36d"
+              },
+              {
+                "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "42c8f563da4d51937e1c20950ec364ecbbbf72801787d7307f53a335ed89f36d"
+              }
+            ],
+            "sourceSha256": "c19aeddf9e5acfa8415ef583ab2513a13a9eaf59f4916fc68e3e60c804bfb152"
+          },
+          "mode": "build-xs",
+          "observed": {
+            "borrowed_rejection_preserved": true,
+            "callback_calls": 2,
+            "callback_recovered": true,
+            "checks": 63,
+            "closure_reused": true,
+            "live_identities": 1,
+            "successful_transfer_consumed": true,
+            "transfer_rejection_preserved": true
+          },
+          "perl": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-threaded/bin/perl",
+          "runtimeOnlyRuns": 2
+        },
+        {
+          "assets": {
+            "observations": [
+              {
+                "asset": "OwnedCheckedRecords.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "923cdfbc2d020d56ecbc81ea215ff93b5d770b88afeec05d9e949fa47e5ebef0"
+              },
+              {
+                "asset": "OwnedCheckedRecords.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "923cdfbc2d020d56ecbc81ea215ff93b5d770b88afeec05d9e949fa47e5ebef0"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "42c8f563da4d51937e1c20950ec364ecbbbf72801787d7307f53a335ed89f36d"
+              },
+              {
+                "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "42c8f563da4d51937e1c20950ec364ecbbbf72801787d7307f53a335ed89f36d"
+              }
+            ],
+            "sourceSha256": "c19aeddf9e5acfa8415ef583ab2513a13a9eaf59f4916fc68e3e60c804bfb152"
+          },
+          "mode": "prebuilt-only",
+          "observed": {
+            "borrowed_rejection_preserved": true,
+            "callback_calls": 2,
+            "callback_recovered": true,
+            "checks": 63,
+            "closure_reused": true,
+            "live_identities": 1,
+            "successful_transfer_consumed": true,
+            "transfer_rejection_preserved": true
+          },
+          "perl": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-unthreaded/bin/perl",
+          "runtimeOnlyRuns": 2
+        },
+        {
+          "assets": {
+            "observations": [
+              {
+                "asset": "OwnedCheckedRecords.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "33e49fbe4d9688dce11d91f86318867fd6936e00e591c3057c1de73d013921d1"
+              },
+              {
+                "asset": "OwnedCheckedRecords.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "33e49fbe4d9688dce11d91f86318867fd6936e00e591c3057c1de73d013921d1"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "42c8f563da4d51937e1c20950ec364ecbbbf72801787d7307f53a335ed89f36d"
+              },
+              {
+                "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "42c8f563da4d51937e1c20950ec364ecbbbf72801787d7307f53a335ed89f36d"
+              }
+            ],
+            "sourceSha256": "c19aeddf9e5acfa8415ef583ab2513a13a9eaf59f4916fc68e3e60c804bfb152"
+          },
+          "mode": "build-xs",
+          "observed": {
+            "borrowed_rejection_preserved": true,
+            "callback_calls": 2,
+            "callback_recovered": true,
+            "checks": 63,
+            "closure_reused": true,
+            "live_identities": 1,
+            "successful_transfer_consumed": true,
+            "transfer_rejection_preserved": true
+          },
+          "perl": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-unthreaded/bin/perl",
+          "runtimeOnlyRuns": 2
+        }
+      ],
+      "packageSetReceipt": {
+        "component": {
+          "id": "owned-checked-records@1.0.0",
+          "name": "owned-checked-records",
+          "version": "1.0.0"
+        },
+        "kind": "lean-bridge-package-set-receipt",
+        "packages": [
+          {
+            "artifacts": [
+              {
+                "bytes": 3168772,
+                "path": "archives/LeanBridge-OwnedCheckedRecords-1.000.tar.gz",
+                "sha256": "caaeb865f3e95bad81f608ee35fa2720a41a7ee7d69f954efd28b52d9a4567eb"
+              }
+            ],
+            "ecosystem": "cpan",
+            "name": "LeanBridge-OwnedCheckedRecords",
+            "profile": "native-library-v1",
+            "requires": [
+              {
+                "ecosystem": "cpan",
+                "name": "LeanBridge-Runtime",
+                "version": "0.0020873093885122476990213970161242772861093089627532315710208989625599780543964681"
+              }
+            ],
+            "role": "component",
+            "runtimeDelivery": "dependency",
+            "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+            "target": "cpan",
+            "version": "1.000"
+          },
+          {
+            "artifacts": [
+              {
+                "bytes": 51397546,
+                "path": "archives/LeanBridge-Runtime-0.0020873093885122476990213970161242772861093089627532315710208989625599780543964681.tar.gz",
+                "sha256": "484ac7525e65a991241645388ddcdad082a580e14f2b2447b3c5ce9bb7d58c26"
+              }
+            ],
+            "ecosystem": "cpan",
+            "name": "LeanBridge-Runtime",
+            "profile": "native-library-v1",
+            "requires": [],
+            "role": "runtime",
+            "runtimeDelivery": "provided",
+            "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+            "target": "cpan",
+            "version": "0.0020873093885122476990213970161242772861093089627532315710208989625599780543964681"
+          }
+        ],
+        "profiles": [
+          {
+            "bindingIrSha256": "b9fe531ba2f219617d7df9aa09c07b3ee9eaa5ecd2f426c0095f4b91489d638f",
+            "id": "native-library-v1",
+            "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+          }
+        ],
+        "schemaVersion": 1,
+        "source": {
+          "treeSha256": "927d77f87df822fa6dc0025947431903e9cad8ae3d5a330e9b504cb7d85a7afb"
+        }
+      },
+      "relocatedInstallation": true,
+      "retainedPackageSet": {
+        "archiveBytes": 54566318,
+        "archives": 2,
+        "files": [
+          "archives/LeanBridge-OwnedCheckedRecords-1.000.tar.gz",
+          "archives/LeanBridge-Runtime-0.0020873093885122476990213970161242772861093089627532315710208989625599780543964681.tar.gz",
+          "package-set-receipt.json",
+          "package-set-receipt.json.sha256"
+        ],
+        "path": "evidence/reviewed-full/handoff",
+        "receiptSha256": "2782642cd2c05c72121d364b96f4feb0cd1dcd830c6be312a457951953000bb9"
+      },
+      "route": "reviewed-full",
+      "sourceFreeInstallation": true,
+      "sourceUnchanged": true,
+      "unchangedRejectedInputs": true
+    },
+    {
+      "authorRoute": "reviewed",
+      "bindingIrSha256": "2035d03012aab6f62022c64b71f265582e9b94d6cf923061cb4566ad189d5b84",
+      "callbackRecovery": false,
+      "componentReceipt": {
+        "adaptersSha256": "1d42e364a9e60d056e0fa6931a89dcc44dc9e2293685b14ffe94323f8b167de0",
+        "allocationGuardSha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83",
+        "bindingIrSha256": "2035d03012aab6f62022c64b71f265582e9b94d6cf923061cb4566ad189d5b84",
+        "callbackSourceSha256": "74211b6d82bc7b43013b131732d88b92ef1395da1f7e8a15168301336cebb1aa",
+        "compiler": "cc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+        "exports": [
+          {
+            "declaration": "OwnedCheckedRecords.claimFor",
+            "symbol": "lean_bridge_owned_26ef1b541ea5cf922ce1fc38_f483485736ace9af57086"
+          },
+          {
+            "declaration": "OwnedCheckedRecords.newTicket",
+            "symbol": "lean_bridge_owned_26ef1b541ea5cf922ce1fc38_fa1e5189bd92568e4b939"
+          },
+          {
+            "declaration": "OwnedCheckedRecords.serial",
+            "symbol": "lean_bridge_owned_26ef1b541ea5cf922ce1fc38_fec926afda994fba3abe2"
+          }
+        ],
+        "headerSha256": "4a9185775541dd14e5abf8377f3c40fb5a36a9127182b97a28b8389a3542539d",
+        "initializer": "initialize_LeanBridgeOwned5088871f7cf8ba22",
+        "library": "libcomponent_161bdaa35ee11fef40c6.so",
+        "metadataSha256": "ac4ccc3bf09fa3e8a57b39b389b39253cbb92d284c2ce169376275db93800307",
+        "modelSha256": "874c8d87d3bb7f842253ad8f7dfc5ccb52393102f6267837c011b6fa290b2c91",
+        "nativeLibrary": {
+          "bytes": 60464,
+          "sha256": "03f6176276d88ec5b5f121397f42faaefb2de87f0df675b85dd7303694b1fc88"
+        },
+        "profile": "native-library-v1",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+        "schemaVersion": 3,
+        "sourceIdentity": {
+          "exportConfigurationSha256": "ad2353127f789d762150ce297605376d0d679daab82c20aa3d0a9e921c4a236f",
+          "exportConfigurationSource": "{\n  \"modules\": [\n    \"OwnedCheckedRecords\"\n  ],\n  \"schemaVersion\": 1,\n  \"targets\": {\n    \"cpan\": {\n      \"module\": \"LeanBridge::OwnedCheckedRecords\",\n      \"version\": \"1.000\"\n    }\n  }\n}\n",
+          "extractorSha256": "00f8ce7a3888339cdb1c36b0dce3d8bc9d4c650ea18c7a4926c2d29d4690443a",
+          "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+          "leanCompilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+          "leanVersion": "4.32.2",
+          "modules": [
+            {
+              "interface": {
+                "bytes": 179712,
+                "interfaceSha256": "b5183c0470521b85929acc5cf191dc7718923b1897484aa8f74ab0f9bf88b118",
+                "sha256": "93c84e361092f2d393acd0b9788c576b19aa2884efb79fcd912462f165cab1ac"
+              },
+              "module": "OwnedCheckedRecords",
+              "source": {
+                "bytes": 3009,
+                "path": "OwnedCheckedRecords.lean",
+                "sha256": "b5c2e10c7ccb18859da182d63d7f664e2cc12d2a748f8943ab3e6dc603ddf57f"
+              }
+            }
+          ],
+          "request": {
+            "arities": [],
+            "exportModules": [
+              "OwnedCheckedRecords"
+            ],
+            "exports": [
+              "OwnedCheckedRecords.claimFor",
+              "OwnedCheckedRecords.newTicket",
+              "OwnedCheckedRecords.serial"
+            ],
+            "metadata": {
+              "invocationIdentitySha256": "94d371fb761499759726094967e2bb8b45024f55e49c0a5a5c8106b6a25bc9f7",
+              "modules": [
+                {
+                  "interfaceSha256": "b5183c0470521b85929acc5cf191dc7718923b1897484aa8f74ab0f9bf88b118",
+                  "name": "OwnedCheckedRecords",
+                  "sourcePath": "OwnedCheckedRecords.lean",
+                  "sourceSha256": "b5c2e10c7ccb18859da182d63d7f664e2cc12d2a748f8943ab3e6dc603ddf57f"
+                }
+              ],
+              "toolchain": "leanprover/lean4:v4.32.2"
+            },
+            "modules": [
+              "OwnedCheckedRecords"
+            ],
+            "ownedAggregates": {
+              "cycles": "reject",
+              "disposal": "required",
+              "fallback": "queued-finalizer",
+              "ownership": "lease"
+            },
+            "profile": "native-library-v1",
+            "resources": [
+              "OwnedCheckedRecords.Ticket"
+            ]
+          },
+          "reviewedBindingIr": {
+            "path": "api.binding-ir.json",
+            "schemaVersion": 1,
+            "semanticSha256": "442975d7cd0fc63332f8fdfc2097f912b352ff932b0e8ac7e14d4952eb8ae6da",
+            "source": "{\n  \"aggregatePolicy\": {\n    \"cycles\": \"reject\",\n    \"disposal\": \"required\",\n    \"fallback\": \"queued-finalizer\",\n    \"ownership\": \"lease\"\n  },\n  \"assurance\": [],\n  \"capabilities\": [],\n  \"component\": {\n    \"id\": \"owned-checked-records@1.0.0\",\n    \"name\": \"owned-checked-records\",\n    \"version\": \"1.0.0\"\n  },\n  \"declarations\": [\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [\n        \"allocates\"\n      ],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:OwnedCheckedRecords.newTicket\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"newTicket\",\n      \"overloadKey\": \"OwnedCheckedRecords.newTicket\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"arg0\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        },\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"arg1\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"string\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\",\n        \"type\": {\n          \"id\": \"lean:OwnedCheckedRecords.Ticket\",\n          \"kind\": \"named\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"OwnedCheckedRecords.newTicket\",\n        \"extensions\": {},\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [\n        \"reads-resource\"\n      ],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:OwnedCheckedRecords.serial\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"serial\",\n      \"overloadKey\": \"OwnedCheckedRecords.serial\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"arg0\",\n          \"optional\": false,\n          \"ownership\": \"borrow\",\n          \"type\": {\n            \"id\": \"lean:OwnedCheckedRecords.Ticket\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"kind\": \"primitive\",\n          \"name\": \"nat\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"OwnedCheckedRecords.serial\",\n        \"extensions\": {},\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [\n        \"allocates\",\n        \"reads-resource\"\n      ],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:OwnedCheckedRecords.claimFor\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"claimFor\",\n      \"overloadKey\": \"OwnedCheckedRecords.claimFor\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"arg0\",\n          \"optional\": false,\n          \"ownership\": \"borrow\",\n          \"type\": {\n            \"id\": \"lean:OwnedCheckedRecords.Ticket\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\",\n        \"type\": {\n          \"arguments\": [\n            {\n              \"id\": \"lean:OwnedCheckedRecords.Claim\",\n              \"kind\": \"named\"\n            }\n          ],\n          \"constructor\": \"option\",\n          \"kind\": \"apply\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"OwnedCheckedRecords.claimFor\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              null\n            ],\n            \"result\": {\n              \"arguments\": [\n                {\n                  \"constructor\": null,\n                  \"fields\": [\n                    {\n                      \"name\": \"holder\",\n                      \"refinement\": null\n                    },\n                    {\n                      \"name\": \"quota\",\n                      \"refinement\": null\n                    }\n                  ],\n                  \"kind\": \"checked-record\",\n                  \"name\": \"OwnedCheckedRecords.Claim\"\n                }\n              ],\n              \"kind\": \"option\"\n            }\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    }\n  ],\n  \"documentation\": {\n    \"details\": \"\",\n    \"summary\": \"Independent corpus contract.\"\n  },\n  \"errors\": [],\n  \"producers\": [\n    {\n      \"adapter\": \"independent-corpus-contract\",\n      \"adapterVersion\": 1,\n      \"extensions\": {},\n      \"id\": \"corpusReview\",\n      \"tool\": \"Corpus contract review\",\n      \"toolVersion\": \"1\"\n    }\n  ],\n  \"schemaVersion\": 4,\n  \"types\": [\n    {\n      \"aggregate\": null,\n      \"assurance\": [],\n      \"callable\": null,\n      \"cases\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent owned checked-record contract.\"\n      },\n      \"fields\": [],\n      \"host\": null,\n      \"id\": \"lean:OwnedCheckedRecords.Ticket\",\n      \"kind\": \"resource\",\n      \"mutability\": \"read\",\n      \"name\": \"Ticket\",\n      \"representation\": \"identity\",\n      \"resource\": {\n        \"cycles\": \"explicit-cut\",\n        \"disposal\": \"required\",\n        \"fallback\": \"queued-finalizer\",\n        \"kindId\": \"resource:OwnedCheckedRecords.Ticket\"\n      },\n      \"source\": {\n        \"declaration\": \"OwnedCheckedRecords.Ticket\",\n        \"extensions\": {},\n        \"producer\": \"corpusReview\"\n      },\n      \"target\": null,\n      \"typeParameters\": []\n    },\n    {\n      \"aggregate\": {\n        \"cycles\": \"reject\",\n        \"disposal\": \"required\",\n        \"fallback\": \"queued-finalizer\",\n        \"ownership\": \"lease\"\n      },\n      \"assurance\": [],\n      \"callable\": null,\n      \"cases\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent owned checked-record contract.\"\n      },\n      \"fields\": [\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent owned checked-record contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"holder\",\n          \"type\": {\n            \"id\": \"lean:OwnedCheckedRecords.Ticket\",\n            \"kind\": \"named\"\n          }\n        },\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent owned checked-record contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"quota\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        }\n      ],\n      \"host\": null,\n      \"id\": \"lean:OwnedCheckedRecords.Claim\",\n      \"kind\": \"record\",\n      \"mutability\": \"immutable\",\n      \"name\": \"Claim\",\n      \"representation\": \"owned\",\n      \"resource\": null,\n      \"source\": {\n        \"declaration\": \"OwnedCheckedRecords.Claim\",\n        \"extensions\": {\n          \"lean-lang.org/erased-proofs\": {\n            \"fields\": [\n              \"bounded\"\n            ]\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"target\": null,\n      \"typeParameters\": []\n    }\n  ]\n}\n",
+            "sourceSha256": "2b788dc047c67a7d13bbefffe9d507356bc83263544d832f59a88c66bad5f832"
+          },
+          "sourceNoticesSha256": "83f44436570300b805c58a680c547238a94c13acd57b401d6abd4bf8dc03fb58",
+          "sourceTreeSha256": "bbf323d298e55e99e1097c8ff1ff47a959c0dbc44bc39ed5747079b2947fe98d"
+        }
+      },
+      "consumerSha256": "ae9402cc4d05ba4809c3605490d11216310d5bd31c6030f1a27485dd20d39c7d",
+      "deterministicReassembly": true,
+      "earlyAndLateRejection": false,
+      "immutableConsumer": true,
+      "independentlyVerified": true,
+      "lifecycle": "perl-destruction-plus-explicit-close",
+      "mode": "result-only",
+      "observations": [
+        {
+          "assets": {
+            "observations": [
+              {
+                "asset": "OwnedCheckedRecords.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "82261edd635616a2f2620d67af815d74fdbc99c455fcc7d854ecfc04c02af25a"
+              },
+              {
+                "asset": "OwnedCheckedRecords.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "82261edd635616a2f2620d67af815d74fdbc99c455fcc7d854ecfc04c02af25a"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "03f6176276d88ec5b5f121397f42faaefb2de87f0df675b85dd7303694b1fc88"
+              },
+              {
+                "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "03f6176276d88ec5b5f121397f42faaefb2de87f0df675b85dd7303694b1fc88"
+              }
+            ],
+            "sourceSha256": "c19aeddf9e5acfa8415ef583ab2513a13a9eaf59f4916fc68e3e60c804bfb152"
+          },
+          "mode": "prebuilt-only",
+          "observed": {
+            "checks": 9,
+            "result_only": true
+          },
+          "perl": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-threaded/bin/perl",
+          "runtimeOnlyRuns": 2
+        },
+        {
+          "assets": {
+            "observations": [
+              {
+                "asset": "OwnedCheckedRecords.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "f4cc28d186a8b927128a4ccaab9154a322bd335db7dc4e1e32c4f15a7e1de635"
+              },
+              {
+                "asset": "OwnedCheckedRecords.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "f4cc28d186a8b927128a4ccaab9154a322bd335db7dc4e1e32c4f15a7e1de635"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "03f6176276d88ec5b5f121397f42faaefb2de87f0df675b85dd7303694b1fc88"
+              },
+              {
+                "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "03f6176276d88ec5b5f121397f42faaefb2de87f0df675b85dd7303694b1fc88"
+              }
+            ],
+            "sourceSha256": "c19aeddf9e5acfa8415ef583ab2513a13a9eaf59f4916fc68e3e60c804bfb152"
+          },
+          "mode": "build-xs",
+          "observed": {
+            "checks": 9,
+            "result_only": true
+          },
+          "perl": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-threaded/bin/perl",
+          "runtimeOnlyRuns": 2
+        },
+        {
+          "assets": {
+            "observations": [
+              {
+                "asset": "OwnedCheckedRecords.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "ce7a5d6a6c4d1455a2a5cefdac7d045af153fcbd0f2e292daa18fe1314edc734"
+              },
+              {
+                "asset": "OwnedCheckedRecords.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "ce7a5d6a6c4d1455a2a5cefdac7d045af153fcbd0f2e292daa18fe1314edc734"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "03f6176276d88ec5b5f121397f42faaefb2de87f0df675b85dd7303694b1fc88"
+              },
+              {
+                "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "03f6176276d88ec5b5f121397f42faaefb2de87f0df675b85dd7303694b1fc88"
+              }
+            ],
+            "sourceSha256": "c19aeddf9e5acfa8415ef583ab2513a13a9eaf59f4916fc68e3e60c804bfb152"
+          },
+          "mode": "prebuilt-only",
+          "observed": {
+            "checks": 9,
+            "result_only": true
+          },
+          "perl": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-unthreaded/bin/perl",
+          "runtimeOnlyRuns": 2
+        },
+        {
+          "assets": {
+            "observations": [
+              {
+                "asset": "OwnedCheckedRecords.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "3fb21fc143072a9ac04fa1ab2d4508edcb93e1f935c9d06938abd34bbdc01b0f"
+              },
+              {
+                "asset": "OwnedCheckedRecords.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "3fb21fc143072a9ac04fa1ab2d4508edcb93e1f935c9d06938abd34bbdc01b0f"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "03f6176276d88ec5b5f121397f42faaefb2de87f0df675b85dd7303694b1fc88"
+              },
+              {
+                "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "03f6176276d88ec5b5f121397f42faaefb2de87f0df675b85dd7303694b1fc88"
+              }
+            ],
+            "sourceSha256": "c19aeddf9e5acfa8415ef583ab2513a13a9eaf59f4916fc68e3e60c804bfb152"
+          },
+          "mode": "build-xs",
+          "observed": {
+            "checks": 9,
+            "result_only": true
+          },
+          "perl": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-unthreaded/bin/perl",
+          "runtimeOnlyRuns": 2
+        },
+        {
+          "assets": {
+            "observations": [
+              {
+                "asset": "OwnedCheckedRecords.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "f79e6f024b3ca0f1ad96247db48302e6e8f26a56feb3dd46b34b23401979487f"
+              },
+              {
+                "asset": "OwnedCheckedRecords.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "f79e6f024b3ca0f1ad96247db48302e6e8f26a56feb3dd46b34b23401979487f"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "03f6176276d88ec5b5f121397f42faaefb2de87f0df675b85dd7303694b1fc88"
+              },
+              {
+                "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "03f6176276d88ec5b5f121397f42faaefb2de87f0df675b85dd7303694b1fc88"
+              }
+            ],
+            "sourceSha256": "c19aeddf9e5acfa8415ef583ab2513a13a9eaf59f4916fc68e3e60c804bfb152"
+          },
+          "mode": "prebuilt-only",
+          "observed": {
+            "checks": 9,
+            "result_only": true
+          },
+          "perl": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-threaded/bin/perl",
+          "runtimeOnlyRuns": 2
+        },
+        {
+          "assets": {
+            "observations": [
+              {
+                "asset": "OwnedCheckedRecords.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "dbdea5f221979273bd1ddbc60cf5de433283d0e0dd4ef9f83736d421f74fb9a4"
+              },
+              {
+                "asset": "OwnedCheckedRecords.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "dbdea5f221979273bd1ddbc60cf5de433283d0e0dd4ef9f83736d421f74fb9a4"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "03f6176276d88ec5b5f121397f42faaefb2de87f0df675b85dd7303694b1fc88"
+              },
+              {
+                "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "03f6176276d88ec5b5f121397f42faaefb2de87f0df675b85dd7303694b1fc88"
+              }
+            ],
+            "sourceSha256": "c19aeddf9e5acfa8415ef583ab2513a13a9eaf59f4916fc68e3e60c804bfb152"
+          },
+          "mode": "build-xs",
+          "observed": {
+            "checks": 9,
+            "result_only": true
+          },
+          "perl": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-threaded/bin/perl",
+          "runtimeOnlyRuns": 2
+        },
+        {
+          "assets": {
+            "observations": [
+              {
+                "asset": "OwnedCheckedRecords.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "55e9e1c4699a7e086a72a26b29fb594a7a2938c297a2abf2e93a47a9bce2f94f"
+              },
+              {
+                "asset": "OwnedCheckedRecords.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "55e9e1c4699a7e086a72a26b29fb594a7a2938c297a2abf2e93a47a9bce2f94f"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "03f6176276d88ec5b5f121397f42faaefb2de87f0df675b85dd7303694b1fc88"
+              },
+              {
+                "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "03f6176276d88ec5b5f121397f42faaefb2de87f0df675b85dd7303694b1fc88"
+              }
+            ],
+            "sourceSha256": "c19aeddf9e5acfa8415ef583ab2513a13a9eaf59f4916fc68e3e60c804bfb152"
+          },
+          "mode": "prebuilt-only",
+          "observed": {
+            "checks": 9,
+            "result_only": true
+          },
+          "perl": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-unthreaded/bin/perl",
+          "runtimeOnlyRuns": 2
+        },
+        {
+          "assets": {
+            "observations": [
+              {
+                "asset": "OwnedCheckedRecords.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "fc4d8b9a2af1483bf16768f60a7c2d92ddf5f0bb939978202f4844467decb3d5"
+              },
+              {
+                "asset": "OwnedCheckedRecords.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "fc4d8b9a2af1483bf16768f60a7c2d92ddf5f0bb939978202f4844467decb3d5"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libgmp-lean-bridge.so.10",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "9687f8d50f5c413728d4fcc8d96328912239ce8b1269cbb9a1ff793e430a7b27"
+              },
+              {
+                "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "cold",
+                "originalSha256": "03f6176276d88ec5b5f121397f42faaefb2de87f0df675b85dd7303694b1fc88"
+              },
+              {
+                "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+                "brokerIdentities": 0,
+                "checks": 7,
+                "mode": "warm",
+                "originalSha256": "03f6176276d88ec5b5f121397f42faaefb2de87f0df675b85dd7303694b1fc88"
+              }
+            ],
+            "sourceSha256": "c19aeddf9e5acfa8415ef583ab2513a13a9eaf59f4916fc68e3e60c804bfb152"
+          },
+          "mode": "build-xs",
+          "observed": {
+            "checks": 9,
+            "result_only": true
+          },
+          "perl": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-unthreaded/bin/perl",
+          "runtimeOnlyRuns": 2
+        }
+      ],
+      "packageSetReceipt": {
+        "component": {
+          "id": "owned-checked-records@1.0.0",
+          "name": "owned-checked-records",
+          "version": "1.0.0"
+        },
+        "kind": "lean-bridge-package-set-receipt",
+        "packages": [
+          {
+            "artifacts": [
+              {
+                "bytes": 3029872,
+                "path": "archives/LeanBridge-OwnedCheckedRecords-1.000.tar.gz",
+                "sha256": "3f5e5a488affd76814e865507724ef5f36e3dac72f3efb77f2b86e719e3a090f"
+              }
+            ],
+            "ecosystem": "cpan",
+            "name": "LeanBridge-OwnedCheckedRecords",
+            "profile": "native-library-v1",
+            "requires": [
+              {
+                "ecosystem": "cpan",
+                "name": "LeanBridge-Runtime",
+                "version": "0.0020873093885122476990213970161242772861093089627532315710208989625599780543964681"
+              }
+            ],
+            "role": "component",
+            "runtimeDelivery": "dependency",
+            "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+            "target": "cpan",
+            "version": "1.000"
+          },
+          {
+            "artifacts": [
+              {
+                "bytes": 51397546,
+                "path": "archives/LeanBridge-Runtime-0.0020873093885122476990213970161242772861093089627532315710208989625599780543964681.tar.gz",
+                "sha256": "484ac7525e65a991241645388ddcdad082a580e14f2b2447b3c5ce9bb7d58c26"
+              }
+            ],
+            "ecosystem": "cpan",
+            "name": "LeanBridge-Runtime",
+            "profile": "native-library-v1",
+            "requires": [],
+            "role": "runtime",
+            "runtimeDelivery": "provided",
+            "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+            "target": "cpan",
+            "version": "0.0020873093885122476990213970161242772861093089627532315710208989625599780543964681"
+          }
+        ],
+        "profiles": [
+          {
+            "bindingIrSha256": "2035d03012aab6f62022c64b71f265582e9b94d6cf923061cb4566ad189d5b84",
+            "id": "native-library-v1",
+            "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+          }
+        ],
+        "schemaVersion": 1,
+        "source": {
+          "treeSha256": "bbf323d298e55e99e1097c8ff1ff47a959c0dbc44bc39ed5747079b2947fe98d"
+        }
+      },
+      "relocatedInstallation": true,
+      "retainedPackageSet": {
+        "archiveBytes": 54427418,
+        "archives": 2,
+        "files": [
+          "archives/LeanBridge-OwnedCheckedRecords-1.000.tar.gz",
+          "archives/LeanBridge-Runtime-0.0020873093885122476990213970161242772861093089627532315710208989625599780543964681.tar.gz",
+          "package-set-receipt.json",
+          "package-set-receipt.json.sha256"
+        ],
+        "path": "evidence/reviewed-result-only/handoff",
+        "receiptSha256": "1fbb0421014c5ebf275953150b7f763e2cae1744b862ee66695e41c87f603f6e"
+      },
+      "route": "reviewed-result-only",
+      "sourceFreeInstallation": true,
+      "sourceUnchanged": true,
+      "unchangedRejectedInputs": false
+    }
+  ],
+  "schemaVersion": 1
+}
