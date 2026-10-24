@@ -74,6 +74,32 @@ source closure. Every route must retain the package archives actually installed
 and executed. Cancelled, incomplete or failed scoped runs cannot establish
 acceptance. Archive capture alone does not promote type support.
 
+### Verify the complete owned checked-record matrix
+
+Commit all eleven captures before preparing a support promotion. Save an explicit
+selection file with `schemaVersion: 1`,
+`kind: "owned-checked-record-matrix-selection"`, and an `archives` array.
+Each entry names its `lane` and an `index` object containing the repository-relative
+`path` and SHA-256 of that capture's original `index.json`. Use the hosted lane
+contract order: `native`, `perl`, `python`, `ruby`, `rust`, `dotnet`, `jvm`, `php`,
+`wit`, `javascript`, `php-wasm`. Do not substitute a local qualification report
+or an expiring Actions artifact for a committed capture.
+
+From a clean checkout, run:
+
+```sh
+node scripts/check-owned-checked-record-matrix.mjs \
+  --selection /absolute/path/to/matrix-selection.json \
+  > build/owned-checked-record-matrix-verification.json
+```
+
+The checker rejects partial selections before replay, checks every indexed byte
+against the fixed Git revision, and independently replays all forty-four routes.
+The nine native/managed lanes must share their authenticated producer revision;
+npm/browser and PHP-Wasm keep their independent producer identities. Progress goes
+to stderr, and the verification receipt appears on stdout only after every lane
+passes. This command runs no compilers and changes no support claims or archives.
+
 ## Build the example artifacts as a maintainer
 
 Build the universal Alpha bundle, then project its Python, Rust, C, and C++ packages:
