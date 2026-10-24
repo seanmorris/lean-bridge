@@ -1,0 +1,239 @@
+{
+  "additions": [
+    {
+      "currentSha256": "227fe757a8a0dfd2be08d14960ea8be886af602ac4df5f11d2b902dbd9377615",
+      "path": "scripts/update-admission-archive-producer-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "ccb420ca21180958182aaed59e7d94c700d4a994b4ffccdb0a76887ef929f96c",
+      "path": "tests/helpers/admission-archive-producer-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "1dcbb0ea24dfeb5f5f7e1760b0a79662d4e636c8536f568744880de63584c341",
+      "path": "tests/helpers/admission-archive-producer-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "19cdf41f3e8400f565fd2cee4ab00dbf8f4beae054cda37d688b99cd3bcab338",
+      "path": "tests/helpers/feature-admission-producer-binding-tests.mjs"
+    }
+  ],
+  "implementationCommit": "b70f755f38f12513d36cb9c83457f104481f1c07",
+  "implementationCommits": [
+    "194938a0d9d63a34c50c8564e55b2170d562b4d8",
+    "babb307d40fcf8f7c50c2acac706f11472581c66",
+    "b70f755f38f12513d36cb9c83457f104481f1c07"
+  ],
+  "integrationBaseCommit": "b70f755f38f12513d36cb9c83457f104481f1c07",
+  "integrationUpdates": [
+    {
+      "currentSha256": "44ee7609a1ffcdba76098415b8240468d27d98f2895254143d34d07f8d4bb4d2",
+      "edits": [
+        {
+          "current": "import { beforeAdmissionArchiveProducerRepairSource, admissionArchiveProducerRepairNormalizationPaths } from \"./admission-archive-producer-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 3566
+        },
+        {
+          "current": "\t...admissionArchiveProducerRepairNormalizationPaths\n\t, ...jvmNpmProducerRepairNormalizationPaths\n",
+          "previous": "\t...jvmNpmProducerRepairNormalizationPaths\n",
+          "start": 176772
+        },
+        {
+          "current": "\t\t= beforeAdmissionArchiveProducerRepairSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "",
+          "start": 218219
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "48bfafd8b033f71736c72f9f969163bba6c5aa891aa1db025dc9f39920444745"
+    },
+    {
+      "currentSha256": "113b8d6c940027e6fd9e118efc1294b2323b4647035260541aab5a4223772129",
+      "edits": [
+        {
+          "current": "import \"./helpers/feature-admission-producer-binding-tests.mjs\";\nimport \"./helpers/admission-archive-producer-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 2091
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "a61b23e5d03b59e5ae9f3eb2414499ffebcb57f387d9b861736ae2b4b02b6876"
+    }
+  ],
+  "milestone": "admission-archive-producer-repair-source-v1",
+  "predecessorCommit": "618580a8fbee793b648fe72d6f06679611124583",
+  "schemaVersion": 1,
+  "scope": "Keep current feature-enabled/disabled comparisons live for JavaScript and PHP-Wasm borrows and WIT callbacks, while authenticating frozen byte-compatibility claims with their original feature-admission generators. Bind Rust transfer regeneration and zero-payload PHP archive package-source checks to explicit producer commits. Preserve every receipt hash, ABI, manifest, contract, installed observation and refusal check. Record the exact three-commit range and small source/hash controls. No inventory, runtime implementation or support-state changes; generator and archive acceptance remain hosted gates.",
+  "updates": [
+    {
+      "currentSha256": "63cdf3f0cf8e4b20ebccf1a85c8ccddf01935740c97c561d6f323468cd520602",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { generateOwnedRustCallables } from \"../../src/backends/rust/owned-callables.mjs\";\nimport { generateOwnedRustPackage } from \"../../src/backends/rust/owned-package.mjs\";\nimport { generateOwnedCPackage } from \"../../src/backends/c/owned-package.mjs\";\n",
+          "start": 327
+        },
+        {
+          "current": "import { moduleAtProducerWithSourceReads } from \"./producer-module.mjs\";\n",
+          "previous": "import { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from \"../../src/build/native-graph-model.mjs\";\nimport { validatePackageSetReceipt } from \"../../src/release/package-set-receipt.mjs\";\n",
+          "start": 416
+        },
+        {
+          "current": "/** The commit whose complete source tree every digest in the Rust transfer record names. */\nexport const ownedRustTransferProducer = \"23dbfd68ae4a1e8593f99f97aa3d2717b4632ca9\";\nlet producerPromise;\n// Contracts and packages are regenerated with the producer's generators; later changes never reach back.\nconst producerModules = () => producerPromise ??= Promise.all([\n\t\"src/build/native-graph-model.mjs\"\n\t, \"src/backends/rust/owned-callables.mjs\"\n\t, \"src/backends/rust/owned-package.mjs\"\n\t, \"src/backends/c/owned-package.mjs\"\n\t, \"src/release/package-set-receipt.mjs\"\n].map(path => moduleAtProducerWithSourceReads(ownedRustTransferProducer, path)))\n\t.then(modules => Object.assign({}, ...modules));\n",
+          "previous": "",
+          "start": 644
+        },
+        {
+          "current": "\tconst {\n\t\tcreateCompiledNativeModel, generateCompiledNativeLeanAdapters\n\t\t, generateOwnedRustCallables, generateOwnedRustPackage\n\t\t, generateOwnedCPackage, validatePackageSetReceipt\n\t} = await producerModules();\n",
+          "previous": "",
+          "start": 2890
+        }
+      ],
+      "path": "tests/helpers/owned-rust-transfer-evidence.mjs",
+      "previousSha256": "f649aa418251bd4362ab629fcdabd06097d5b01da2edd68e83e5f9c5cbbda7d2"
+    },
+    {
+      "currentSha256": "19e584ee7c2bbde979322ae555e60005feb5fd18b5d0b7d0a4b8bd9cac03075b",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { generateCopiedPhpPackage } from \"../../src/backends/php/copied-values.mjs\";\n",
+          "start": 442
+        },
+        {
+          "current": "import { moduleAtProducerWithSourceReads } from \"./producer-module.mjs\";\n",
+          "previous": "",
+          "start": 786
+        },
+        {
+          "current": "\t// Package sources are regenerated with the producer's generator, never a later one.\n\tconst { generateCopiedPhpPackage } = await moduleAtProducerWithSourceReads(\n\t\tproducerCommit, \"src/backends/php/copied-values.mjs\"\n\t);\n",
+          "previous": "",
+          "start": 11904
+        }
+      ],
+      "path": "tests/helpers/zero-payload-checked-record-php-ci-report.mjs",
+      "previousSha256": "cb374b542a89bef9ffa2ffdb871fb0106098f51ddfb6821251d87574e6016d5e"
+    },
+    {
+      "currentSha256": "8a59e75ee5b82997dee3f7382b2a48b43873786ca8d0b517db3c4393fc3786ea",
+      "edits": [
+        {
+          "current": "import { moduleAtProducerWithSourceReads } from \"./helpers/producer-module.mjs\";\n\nconst javaScriptBorrowAdmissionProducer = \"3701d0880be3195b249ed17caac6975dea7283f6\";\n",
+          "previous": "",
+          "start": 1105
+        },
+        {
+          "current": "test(\"borrowed-result admission preserves current transfers and original component bytes\", async () => {\n",
+          "previous": "test(\"borrowed-result capability leaves prior transfer components byte-identical\", async () => {\n",
+          "start": 6351
+        },
+        {
+          "current": "\tconst historical = Object.assign({}, ...await Promise.all([\n\t\t\"src/backends/native/owned-value-adapters.mjs\"\n\t\t, \"src/backends/javascript/owned-wasm-component.mjs\"\n\t\t, \"tests/helpers/owned-javascript-wasm-native.mjs\"\n\t].map(path => moduleAtProducerWithSourceReads(javaScriptBorrowAdmissionProducer, path))));\n",
+          "previous": "",
+          "start": 6567
+        },
+        {
+          "current": "\t\tconst options = { ...previous.input, wordBits: 32, hostCallbacks: true, transferredInputs: true };\n\t\tconst generated = generateOwnedNativeValueAdapters({ ...options, anchoredResults: false });\n",
+          "previous": "\t\tconst generated = generateOwnedNativeValueAdapters({ ...previous.input, wordBits: 32, hostCallbacks: true, transferredInputs: true });\n",
+          "start": 6920
+        },
+        {
+          "current": "\t\tconst admitted = generateOwnedWasmComponent(generateOwnedNativeValueAdapters({ ...options, anchoredResults: true }));\n\t\tassert.deepEqual(admitted, component);\n\t\tassert.equal(ownedJavaScriptWasmNativeProbe(admitted), ownedJavaScriptWasmNativeProbe(component));\n",
+          "previous": "",
+          "start": 7174
+        },
+        {
+          "current": "\t\t// Recheck the original feature's byte-compatibility promise at its admission,\n\t\t// while the enabled/disabled comparison above continues to exercise today's code.\n\t\tconst original = historical.generateOwnedWasmComponent(historical.generateOwnedNativeValueAdapters(options));\n\t\tassert.deepEqual(original.privateAbi, previous.privateAbi);\n\t\tassert.equal(sha256(historical.ownedJavaScriptWasmNativeProbe(original)), previous.sourceSha256);\n",
+          "previous": "\t\tassert.equal(sha256(ownedJavaScriptWasmNativeProbe(component)), previous.sourceSha256);\n",
+          "start": 7499
+        }
+      ],
+      "path": "tests/owned-javascript-borrow-package.test.mjs",
+      "previousSha256": "a02a75ab2d4c906c784b6032c5942dfdad4ba138b563d5f988d17f4d04540cee"
+    },
+    {
+      "currentSha256": "8db6b222394ea019712986396346c6f53163cc14d191494d2dde4d63c705e84b",
+      "edits": [
+        {
+          "current": "import { moduleAtProducerWithSourceReads } from \"./helpers/producer-module.mjs\";\n\nconst phpWasmBorrowAdmissionProducer = \"49555c6612107ef8e6a3f8f7576312a5c32da894\";\n",
+          "previous": "",
+          "start": 1875
+        },
+        {
+          "current": "test(\"borrowed-result admission preserves current Zend output and original captured bytes\", async () => {\n",
+          "previous": "test(\"borrowed-result support preserves captured non-anchored Zend sources byte for byte\", async () => {\n",
+          "start": 6239
+        },
+        {
+          "current": "\tconst historical = Object.assign({}, ...await Promise.all([\n\t\t\"src/backends/native/owned-value-adapters.mjs\"\n\t\t, \"src/backends/php/owned-zend-extension.mjs\"\n\t\t, \"src/backends/php/owned-zend-php.mjs\"\n\t].map(path => moduleAtProducerWithSourceReads(phpWasmBorrowAdmissionProducer, path))));\n",
+          "previous": "",
+          "start": 6571
+        },
+        {
+          "current": "\t\tconst options = { ...input, wordBits: 32, hostCallbacks: true, transferredInputs: Boolean(record.input) };\n\t\tconst native = generateOwnedNativeValueAdapters({ ...options, anchoredResults: false });\n",
+          "previous": "\t\tconst native = generateOwnedNativeValueAdapters({ ...input, wordBits: 32, hostCallbacks: true, transferredInputs: Boolean(record.input) });\n",
+          "start": 7025
+        },
+        {
+          "current": "\t\tconst admitted = generateOwnedPhpZendExtension(generateOwnedNativeValueAdapters({ ...options, anchoredResults: true }));\n\t\tassert.deepEqual(admitted, extension);\n\t\tassert.deepEqual(generateOwnedPhpZendPhp(admitted.model), generateOwnedPhpZendPhp(extension.model));\n",
+          "previous": "",
+          "start": 7284
+        },
+        {
+          "current": "\t\tconst original = historical.generateOwnedPhpZendExtension(historical.generateOwnedNativeValueAdapters(options));\n\t\tassert.equal(original.model.anchoredResults, undefined);\n\t\tassert.equal(sha256(original.source), record.sourceSha256);\n\t\tfor(const [path, source] of Object.entries(historical.generateOwnedPhpZendPhp(original.model)))\n",
+          "previous": "\t\tassert.equal(sha256(extension.source), record.sourceSha256);\n\t\tfor(const [path, source] of Object.entries(generateOwnedPhpZendPhp(extension.model)))\n",
+          "start": 7611
+        }
+      ],
+      "path": "tests/owned-php-wasm-borrows.test.mjs",
+      "previousSha256": "2cea2f66ddbc3cf4f5afe97cbb663e1e0de078203c134024f19ec003d0d94b81"
+    },
+    {
+      "currentSha256": "129d95ec7b165c4defc9e3eaa22f9db9da842637292355f88f6f105dcde65335",
+      "edits": [
+        {
+          "current": "import { moduleAtProducerWithSourceReads } from \"./helpers/producer-module.mjs\";\n",
+          "previous": "",
+          "start": 2066
+        },
+        {
+          "current": "const witCallbackAdmissionProducer = \"c960596253f5b4c902820ba5ff2131aeb8bd5727\";\n",
+          "previous": "",
+          "start": 2323
+        },
+        {
+          "current": "test(\"WIT callback admission preserves current predecessors and original files and contracts\", async () => {\n",
+          "previous": "test(\"WIT callback admission preserves predecessor files and contracts byte for byte\", async () => {\n",
+          "start": 13081
+        },
+        {
+          "current": "\tconst historical = Object.assign({}, ...await Promise.all([\n\t\t\"src/backends/wit/owned-package.mjs\"\n\t\t, \"src/backends/wit/owned-host-evidence.mjs\"\n\t\t, \"src/build/native-graph-model.mjs\"\n\t\t, \"src/build/owned-wit-artifacts.mjs\"\n\t\t, \"src/release/owned-wasi.mjs\"\n\t].map(path => moduleAtProducerWithSourceReads(witCallbackAdmissionProducer, path))));\n",
+          "previous": "",
+          "start": 13615
+        },
+        {
+          "current": "\t\t\tassert.deepEqual(after.files, before.files);\n\t\t\tassert.deepEqual(after.model.manifest, before.model.manifest);\n\t\t\tconst originalBefore = historical.generateOwnedWitPackage(item.input, component);\n\t\t\tconst originalAfter = historical.generateOwnedWitPackage({ ...item.input, callbackResultAnchors: true }, component);\n\t\t\tassert.equal(sha256(canonicalJson(originalBefore.files)), filesHashes[index]);\n\t\t\tassert.deepEqual(originalAfter.files, originalBefore.files);\n\t\t\tassert.deepEqual(originalAfter.model.manifest, item.manifest);\n\t\t\tassert.equal(sha256(originalAfter.source), item.sourceSha256);\n",
+          "previous": "\t\t\tassert.equal(sha256(canonicalJson(before.files)), filesHashes[index]);\n\t\t\tassert.deepEqual(after.files, before.files); assert.deepEqual(after.model.manifest, item.manifest);\n\t\t\tassert.equal(sha256(after.source), item.sourceSha256);\n",
+          "start": 15706
+        },
+        {
+          "current": "\t\t\tconst options = { ownedGraphs: true\n",
+          "previous": "\t\t\tassert.deepEqual(createCompiledNativeModel(item.inputs, { ownedGraphs: true\n",
+          "start": 16387
+        },
+        {
+          "current": "\t\t\t\t, ownedReceiverExports: true };\n\t\t\tconst beforeModel = createCompiledNativeModel(item.inputs, { ...options, ownedCallbackResultAnchors: false });\n\t\t\tconst afterModel = createCompiledNativeModel(item.inputs, { ...options, ownedCallbackResultAnchors: true });\n\t\t\tassert.deepEqual(afterModel, beforeModel);\n\t\t\tconst component = Buffer.from(item.componentBase64, \"base64\");\n\t\t\tconst before = generateOwnedWitPackage({ ...item.inputs, callbackResultAnchors: false }, component, item.receipt.settings);\n\t\t\tconst after = generateOwnedWitPackage({ ...item.inputs, callbackResultAnchors: true }, component, item.receipt.settings);\n\t\t\tassert.deepEqual(after.files, before.files);\n\t\t\tconst currentSources = generated => ({ generated\n\t\t\t\t, files: { ...generated.files\n\t\t\t\t, [`src/${generated.values.prefix}.c`]: guardOwnedWitHostSource(generated, item.receipt.dependencies) } });\n\t\t\tassert.deepEqual(ownedWitValueContract(afterModel, currentSources(after))\n\t\t\t\t, ownedWitValueContract(beforeModel, currentSources(before)));\n\t\t\tconst currentReadme = (generated, model) => ownedWitReadme({\n\t\t\t\tprojection: generated.model, prefix: generated.values.prefix, model\n\t\t\t}, item.manifest.glibcMinimumVersion\n\t\t\t\t, item.manifest.cmakePackage, item.manifest.cmakeTarget);\n\t\t\tassert.equal(currentReadme(after, afterModel), currentReadme(before, beforeModel));\n\t\t\tassert.deepEqual(historical.createCompiledNativeModel(item.inputs\n\t\t\t\t, { ...options, ownedCallbackResultAnchors: true }), item.model);\n\t\t\tconst generated = historical.generateOwnedWitPackage({ ...item.inputs, callbackResultAnchors: true }\n\t\t\t\t, component, item.receipt.settings);\n",
+          "previous": "\t\t\t\t, ownedReceiverExports: true\n\t\t\t\t, ownedCallbackResultAnchors: true }), item.model);\n\t\t\tconst generated = generateOwnedWitPackage({ ...item.inputs, callbackResultAnchors: true }\n\t\t\t\t, Buffer.from(item.componentBase64, \"base64\"), item.receipt.settings);\n",
+          "start": 16557
+        },
+        {
+          "current": "\t\t\t\t, [`src/${generated.values.prefix}.c`]: historical.guardOwnedWitHostSource(generated, item.receipt.dependencies) } };\n\t\t\tassert.deepEqual(historical.ownedWitValueContract(item.model, sources), item.receipt.ownedValues);\n\t\t\tconst readme = historical.ownedWitReadme({ projection: generated.model, prefix: generated.values.prefix, model: item.model }\n",
+          "previous": "\t\t\t\t, [`src/${generated.values.prefix}.c`]: guardOwnedWitHostSource(generated, item.receipt.dependencies) } };\n\t\t\tassert.deepEqual(ownedWitValueContract(item.model, sources), item.receipt.ownedValues);\n\t\t\tconst readme = ownedWitReadme({ projection: generated.model, prefix: generated.values.prefix, model: item.model }\n",
+          "start": 18247
+        }
+      ],
+      "path": "tests/wit-owned-callback-results.test.mjs",
+      "previousSha256": "84f7d3a9ad8cbcb8a657256a8da6db43e94e1d7310564e9ab083d68e0f65f593"
+    }
+  ]
+}

@@ -33,6 +33,8 @@ import "./helpers/wit-transfer-copy-gap-source-history-tests.mjs";
 import "./helpers/core-evidence-repair-integration-source-history-tests.mjs";
 import "./helpers/jvm-npm-producer-binding-tests.mjs";
 import "./helpers/jvm-npm-producer-repair-source-history-tests.mjs";
+import "./helpers/feature-admission-producer-binding-tests.mjs";
+import "./helpers/admission-archive-producer-repair-source-history-tests.mjs";
 
 const root = resolve(".");
 
