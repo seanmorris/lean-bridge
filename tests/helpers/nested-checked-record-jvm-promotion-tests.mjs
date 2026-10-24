@@ -210,8 +210,13 @@ test("nested checked-record JVM docs name the accepted boundary", async () => {
 		for(const text of ["nested `Packet`", "JDK 22.0.2", "Kotlin 2.2.0"
 			, "Linux x64/glibc 2.36", "source-free", "load-admission ceiling of 12"])
 			assert.ok(guide.includes(text), `${path}: ${text}`);
-		const row = guide.split("\n").find(line => line.startsWith("| `Checked record"));
+		// Later callback promotions broaden the live row. Check this milestone's
+		// exact three-position claim against its authenticated documentation.
+		const milestone = sourceAtHistoryMilestone(
+			nestedCheckedRecordJvmPromotionHistoryPath, path);
+		const row = milestone.split("\n").find(line => line.startsWith("| `Checked record"));
 		assert.ok(row.includes("Installed checks passed (input, result, field)"), path);
 		assert.ok(row.includes(nestedCheckedRecordJvmConversion), path);
+		assert.ok(guide.includes(nestedCheckedRecordJvmConversion), path);
 	}
 });

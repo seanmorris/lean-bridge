@@ -229,5 +229,10 @@ test("Fin admission does not authorize compiler evidence or nominal and callable
 		assert.throws(() => validateReviewedSource(reviewInput(ir)), { code: "reviewed-ir-build-unsupported" });
 	}
 	const subtype = { kind: "refinement", base: nat, predicate: { kind: "subtype", constructor: "Sample.checked" }, abi: nat.abi };
-	assert.throws(() => createNativeModel(nativeFixture(document(), subtype), { refinements: true }), { code: "reviewed-ir-source-mismatch" });
+	const producedSubtype = { ...subtype, predicate: { kind: "subtype", constructor: null } };
+	// Both compiler facts are structurally valid. Fin review must reject the
+	// different predicate at either site rather than failing type validation.
+	for(const [parameter, result] of [[subtype, nativeFin("10")], [nativeFin("10"), producedSubtype]])
+		assert.throws(() => createNativeModel(nativeFixture(document(), parameter, result), { refinements: true })
+			, { code: "reviewed-ir-source-mismatch" });
 });
