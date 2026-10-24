@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforePhpWasmEntryFlatPositionSource, phpWasmEntryFlatPositionNormalizationPaths } from "./php-wasm-entry-flat-position-source-history.mjs";
 import { beforePhpWasmEntryUnreachedSourceSource, phpWasmEntryUnreachedSourceNormalizationPaths } from "./php-wasm-entry-unreached-source-source-history.mjs";
 import { beforePhpWasmEntryCallPathSource, phpWasmEntryCallPathNormalizationPaths } from "./php-wasm-entry-call-path-source-history.mjs";
 import { beforeNominalSubtypeEntryReportLinkSource, nominalSubtypeEntryReportLinkNormalizationPaths } from "./nominal-subtype-entry-report-link-source-history.mjs";
@@ -2092,7 +2093,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...phpWasmEntryUnreachedSourceNormalizationPaths
+	...phpWasmEntryFlatPositionNormalizationPaths
+	, ...phpWasmEntryUnreachedSourceNormalizationPaths
 	, ...phpWasmEntryCallPathNormalizationPaths
 	, ...nominalSubtypeEntryReportLinkNormalizationPaths
 	, ...nominalSubtypeEntryExportSurfaceNormalizationPaths
@@ -2927,6 +2929,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
+	const phpWasmEntryFlatPosition
+		= beforePhpWasmEntryFlatPositionSource(path, text, expected);
+	if(sha256(phpWasmEntryFlatPosition) === expected)
+		return phpWasmEntryFlatPosition;
+	text = phpWasmEntryFlatPosition;
 	const phpWasmEntryUnreachedSource
 		= beforePhpWasmEntryUnreachedSourceSource(path, text, expected);
 	if(sha256(phpWasmEntryUnreachedSource) === expected)
