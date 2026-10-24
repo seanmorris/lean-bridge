@@ -1,0 +1,58 @@
+
+> @lean-wasm/bridge-poc@0.0.0-poc test:owned-checked-record-managed
+> LEAN_BRIDGE_OWNED_CHECKED_RECORD_MANAGED_TEST=1 node --test --test-concurrency=1 tests/owned-checked-record-managed-packaging.test.mjs
+
+TAP version 13
+# Subtest: managed owned checked-record generators preserve exact API modes
+ok 1 - managed owned checked-record generators preserve exact API modes
+  ---
+  duration_ms: 106.939487
+  type: 'test'
+  ...
+# Subtest: managed owned checked-record consumers are independently authored
+ok 2 - managed owned checked-record consumers are independently authored
+  ---
+  duration_ms: 5.336264
+  type: 'test'
+  ...
+# Subtest: installed ordinary-full owned checked records execute through wit packages
+ok 3 - installed ordinary-full owned checked records execute through wit packages
+  ---
+  duration_ms: 154202.482971
+  type: 'test'
+  ...
+# wit/ordinary-full: Compiling checked native Lean exports
+# wit/ordinary-full: wit-wasi=261
+# Subtest: installed ordinary-result-only owned checked records execute through wit packages
+ok 4 - installed ordinary-result-only owned checked records execute through wit packages
+  ---
+  duration_ms: 136173.208311
+  type: 'test'
+  ...
+# wit/ordinary-result-only: Compiling checked native Lean exports
+# wit/ordinary-result-only: wit-wasi=14
+# Subtest: installed reviewed-full owned checked records execute through wit packages
+ok 5 - installed reviewed-full owned checked records execute through wit packages
+  ---
+  duration_ms: 138762.632508
+  type: 'test'
+  ...
+# wit/reviewed-full: Compiling checked native Lean exports
+# wit/reviewed-full: wit-wasi=261
+# Subtest: installed reviewed-result-only owned checked records execute through wit packages
+ok 6 - installed reviewed-result-only owned checked records execute through wit packages
+  ---
+  duration_ms: 135748.090809
+  type: 'test'
+  ...
+# wit/reviewed-result-only: Compiling checked native Lean exports
+# wit/reviewed-result-only: wit-wasi=14
+1..6
+# tests 6
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 565333.239629
