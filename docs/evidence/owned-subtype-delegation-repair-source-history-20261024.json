@@ -1,0 +1,184 @@
+{
+  "additions": [
+    {
+      "currentSha256": "a01ac88cf88ad6f7161f14666b03c2a06393ba6f2d737e6723b045343822c1a4",
+      "path": "scripts/update-owned-subtype-delegation-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "babd9660ecb9ac34e3842af168fab14e0148c9c892756c03611355b3c24fefb6",
+      "path": "tests/helpers/owned-subtype-delegation-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "585ab501b4310ce4fff1fe26216f70015f8e6bc8dd0c992953fbd650fccbee5f",
+      "path": "tests/helpers/owned-subtype-delegation-repair-source-history.mjs"
+    }
+  ],
+  "followupImplementationCommit": "8b219d3e94312acac6956f24a0dc4a306bd6b0d9",
+  "followupPredecessorCommit": "27a6923732ee6c93744129bcb940f9f8c0837090",
+  "implementationCommit": "f3a551a5e17ff633b0ff692d1d836ab2e43fce66",
+  "integrationBaseCommit": "d6c311bf145ab3c03713b3dbfeeadc7d30c89ee7",
+  "integrationUpdates": [
+    {
+      "currentSha256": "94a2fc5fc9f9c6e76b0bcda9c98a70c33101182a879be2602d41f0b250e0c058",
+      "edits": [
+        {
+          "current": "import { beforeOwnedSubtypeDelegationRepairSource, ownedSubtypeDelegationRepairNormalizationPaths } from \"./owned-subtype-delegation-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 1150
+        },
+        {
+          "current": "\t...ownedSubtypeDelegationRepairNormalizationPaths\n\t, ...ownedJavaScriptProducerRepairNormalizationPaths\n",
+          "previous": "\t...ownedJavaScriptProducerRepairNormalizationPaths\n",
+          "start": 174350
+        },
+        {
+          "current": "\tconst ownedSubtypeDelegationRepair\n\t\t= beforeOwnedSubtypeDelegationRepairSource(path, text, expected);\n\tif(sha256(ownedSubtypeDelegationRepair) === expected)\n\t\treturn ownedSubtypeDelegationRepair;\n\ttext = ownedSubtypeDelegationRepair;\n",
+          "previous": "",
+          "start": 214996
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "131fd9f096a80d5733ac3cbf79a3966a4e4e229204f03dae2db27fd004f29192"
+    },
+    {
+      "currentSha256": "9625f1cd83fff6f6a11527b48485ada54430154b4ca4c5af981e808d1db05d5e",
+      "edits": [
+        {
+          "current": "import \"./helpers/owned-subtype-delegation-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 816
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "a2675d4ae914efdeb9eda5e78d31f8113bf5f903f84ead2b2852c2b5c1b7cab3"
+    },
+    {
+      "currentSha256": "16ad44f58ea61665bf110cfd88b2cacd39cdd5b7f37eadcb4cf9d463449b9943",
+      "edits": [
+        {
+          "current": "\t\tconst fields = [...new Set([...Object.keys(planned ?? {}), ...Object.keys(observed ?? {})])]\n\t\t\t.filter(key => key !== \"entries\" && !same(planned?.[key], observed?.[key])).sort();\n",
+          "previous": "",
+          "start": 1813
+        },
+        {
+          "current": "\t\t\t: `entries match, call fields differ: ${bounded(fields.join(\",\"))}`;\n\t\tconst kind = [\"validator\", \"constructor\", \"adapter\", \"source\"].find(name =>\n\t\t\tplanned?.counts?.[name] !== observed?.counts?.[name]);\n\t\tconst counts = fields.includes(\"counts\")\n\t\t\t? `; first count ${kind ?? \"shape\"} expected ${planned?.counts?.[kind] ?? \"none\"}`\n\t\t\t\t+ ` observed ${observed?.counts?.[kind] ?? \"none\"}`\n\t\t\t\t+ `; counts expected ${bounded(JSON.stringify(normalized(planned?.counts ?? null)))}`\n\t\t\t\t+ ` observed ${bounded(JSON.stringify(normalized(observed?.counts ?? null)))}`\n\t\t\t: \"\";\n",
+          "previous": "\t\t\t: \"entries match, call fields differ\";\n",
+          "start": 2191
+        },
+        {
+          "current": "\t\t\t+ `entries expected ${expectedEntries.length} observed ${observedEntries.length}${counts}; ${totals}`;\n",
+          "previous": "\t\t\t+ `entries expected ${expectedEntries.length} observed ${observedEntries.length}; ${totals}`;\n",
+          "start": 2853
+        }
+      ],
+      "path": "tests/fixtures/php-wasm-refinement-entry/driver.mjs",
+      "previousSha256": "ee5a73bb8dbe9e2c5edee912a89617c534a163babad36a7e9afa4c1e3a47e940"
+    },
+    {
+      "currentSha256": "f1f4a51b3e2a244ed7e4be25ee7dd171ae719d928a52e47c86ec4358a2d5f10b",
+      "edits": [
+        {
+          "current": "\t\t\t+ \"expected source:Probe.first observed none; entries expected 3 observed 2; \"\n\t\t\t+ \"first count source expected 1 observed 0; counts expected \"\n\t\t\t+ \"{\\\"adapter\\\":1,\\\"constructor\\\":0,\\\"source\\\":1,\\\"validator\\\":1} observed \"\n\t\t\t+ \"{\\\"adapter\\\":1,\\\"constructor\\\":0,\\\"source\\\":0,\\\"validator\\\":1}; cases expected 1 observed 1\" });\n",
+          "previous": "\t\t\t+ \"expected source:Probe.first observed none; entries expected 3 observed 2; cases expected 1 observed 1\" });\n",
+          "start": 4905
+        },
+        {
+          "current": "\t\t\t+ \"expected validator:Probe.first:fin_guard_0 observed none; entries expected 3 observed 0; \"\n\t\t\t+ \"first count validator expected 1 observed none; counts expected \"\n\t\t\t+ \"{\\\"adapter\\\":1,\\\"constructor\\\":0,\\\"source\\\":1,\\\"validator\\\":1} observed null; cases expected 2 observed 1\" });\n",
+          "previous": "\t\t\t+ \"expected validator:Probe.first:fin_guard_0 observed none; entries expected 3 observed 0; cases expected 2 observed 1\" });\n",
+          "start": 5476
+        },
+        {
+          "current": "\t// One control, two entries and two count objects, each capped at 120 characters.\n\tassert.ok(error.message.length < 900);\n\t// Equal entry lengths must still expose the differing per-kind counts.\n\tconst doubled = trace.replace(\"LB_SUBTYPE_ENTRY_V1 enter adapter Probe.first\\n\"\n\t\t, \"LB_SUBTYPE_ENTRY_V1 enter validator Probe.first:fin_guard_0\\n\");\n\tawait assert.rejects(driver({ trace: doubled })\n\t\t, { message: \"probe entry sequence differs from its independent plan: case 0 (direct) entry 1: \"\n\t\t\t+ \"expected adapter:Probe.first observed validator:Probe.first:fin_guard_0; entries expected 3 observed 3; \"\n\t\t\t+ \"first count validator expected 1 observed 2; counts expected {\\\"adapter\\\":1,\\\"constructor\\\":0,\\\"source\\\":1,\\\"validator\\\":1} observed \"\n\t\t\t+ \"{\\\"adapter\\\":0,\\\"constructor\\\":0,\\\"source\\\":1,\\\"validator\\\":2}; cases expected 1 observed 1\" });\n});\n\ntest(\"entry driver reports the first missing nested constructor entry\", async () => {\n\tconst nestedSelected = [...selected\n\t\t, { symbol: \"outer\", kind: \"constructor\", label: \"Probe.outer\" }\n\t\t, { symbol: \"inner\", kind: \"constructor\", label: \"Probe.inner\" }];\n\tconst entries = [call.entries[0], { kind: \"constructor\", label: \"Probe.outer\" }\n\t\t, { kind: \"constructor\", label: \"Probe.inner\" }, ...call.entries.slice(1)];\n\tconst nestedCall = { ...call, entries, counts: { ...call.counts, constructor: 2 } };\n\tconst nestedPlan = { ...plan, selected: nestedSelected\n\t\t, cases: [{ ...plan.cases[0], call: nestedCall }] };\n\tconst outerOnly = trace.replace(\"enter validator Probe.first:fin_guard_0\\n\"\n\t\t, \"enter validator Probe.first:fin_guard_0\\nLB_SUBTYPE_ENTRY_V1 enter constructor Probe.outer\\n\");\n\tawait assert.rejects(driver({ plan: nestedPlan, trace: outerOnly })\n\t\t, { message: \"probe entry sequence differs from its independent plan: case 0 (direct) entry 2: \"\n\t\t\t+ \"expected constructor:Probe.inner observed adapter:Probe.first; entries expected 5 observed 4; \"\n\t\t\t+ \"first count constructor expected 2 observed 1; counts expected \"\n\t\t\t+ \"{\\\"adapter\\\":1,\\\"constructor\\\":2,\\\"source\\\":1,\\\"validator\\\":1} observed \"\n\t\t\t+ \"{\\\"adapter\\\":1,\\\"constructor\\\":1,\\\"source\\\":1,\\\"validator\\\":1}; cases expected 1 observed 1\" });\n\tconst nested = outerOnly.replace(\"enter constructor Probe.outer\\n\"\n\t\t, \"enter constructor Probe.outer\\nLB_SUBTYPE_ENTRY_V1 enter constructor Probe.inner\\n\");\n\tconst { value } = await driver({ plan: nestedPlan, trace: nested });\n\tassert.equal(value.entryProbe.counts.constructor, 2);\n});\n\ntest(\"entry driver names an extra observed call and a differing public name\", async () => {\n\tawait assert.rejects(driver({ trace: trace + trace })\n\t\t, { message: \"probe entry sequence differs from its independent plan: case 1 (unplanned) entry 0: \"\n\t\t\t+ \"expected none observed validator:Probe.first:fin_guard_0; entries expected 0 observed 3; \"\n\t\t\t+ \"first count validator expected none observed 1; counts expected null observed \"\n\t\t\t+ \"{\\\"adapter\\\":1,\\\"constructor\\\":0,\\\"source\\\":1,\\\"validator\\\":1}; cases expected 1 observed 2\" });\n\tconst renamed = { ...plan, selected: [...selected, { symbol: \"lg_call1\", kind: \"public\", label: \"other\" }]\n\t\t, cases: [{ ...plan.cases[0], call: { ...call, publicName: \"other\" } }] };\n\tawait assert.rejects(driver({ plan: renamed })\n\t\t, { message: \"probe entry sequence differs from its independent plan: case 0 (direct) entries match, \"\n\t\t\t+ \"call fields differ: publicName; entries expected 3 observed 3; cases expected 1 observed 1\" });\n});\n\ntest(\"entry driver rejects every nested owned alternate constructor mutation\", async () => {\n\tconst owned = [\n\t\t{ symbol: \"lgo_call0\", kind: \"public\", label: \"echoRecordAlternate\" }\n\t\t, { symbol: \"borrow\", kind: \"adapter\", label: \"identity.borrow\" }\n\t\t, { symbol: \"native\", kind: \"adapter\", label: \"echoRecordAlternate:native\" }\n\t\t, { symbol: \"guard\", kind: \"validator\", label: \"owned:alternate\" }\n\t\t, { symbol: \"alternate\", kind: \"constructor\", label: \"Owned.checkedCountAlternate\" }\n\t\t, { symbol: \"count\", kind: \"constructor\", label: \"Owned.checkedCount\" }\n\t\t, { symbol: \"lean\", kind: \"adapter\", label: \"echoRecordAlternate:lean\" }\n\t\t, { symbol: \"source\", kind: \"source\", label: \"Owned.echoRecordAlternate\" }\n\t\t, { symbol: \"finish\", kind: \"adapter\", label: \"transfer.finish\" }\n\t];\n\tconst at = label => owned.find(item => item.label === label);\n\tconst entry = label => ({ kind: at(label).kind, label });\n\tconst nested = [\"Owned.checkedCountAlternate\", \"Owned.checkedCount\"];\n\tconst prefix = [\"identity.borrow\", \"echoRecordAlternate:native\", \"owned:alternate\"];\n\tconst shapes = {\n\t\t\"alternate-valid\": [...prefix, ...nested, \"echoRecordAlternate:lean\"\n\t\t\t, ...nested, \"Owned.echoRecordAlternate\", \"transfer.finish\"]\n\t\t, \"alternate-refusal\": [...prefix, ...nested, \"transfer.finish\"]\n\t};\n\tconst tally = labels => Object.fromEntries([\"validator\", \"constructor\", \"adapter\", \"source\"].map(kind => [\n\t\tkind, labels.filter(label => at(label).kind === kind).length]));\n\tconst render = labels => \"LB_SUBTYPE_ENTRY_V1 begin public echoRecordAlternate\\n\"\n\t\t+ labels.map(label => `LB_SUBTYPE_ENTRY_V1 enter ${at(label).kind} ${label}\\n`).join(\"\")\n\t\t+ \"LB_SUBTYPE_ENTRY_V1 end public echoRecordAlternate\\n\";\n\tfor(const [control, labels] of Object.entries(shapes))\n\t{\n\t\tconst outcome = control === \"alternate-valid\" ? \"accepted\" : \"refused\";\n\t\tconst ownedCall = { publicName: \"echoRecordAlternate\"\n\t\t\t, entries: labels.map(entry), counts: tally(labels) };\n\t\tconst ownedPlan = { scope: \"separate-instrumented-probe\"\n\t\t\t, family: \"owned-subtype\", selected: owned\n\t\t\t, cases: [{ control, outcome, call: ownedCall }] };\n\t\tconst { value } = await driver({ plan: ownedPlan, trace: render(labels) });\n\t\tassert.equal(value.entryProbe.counts.constructor, outcome === \"accepted\" ? 4 : 2);\n\t\tconst first = labels.indexOf(\"Owned.checkedCount\");\n\t\tfor(const [name, changed] of [\n\t\t\t[\"missing\", labels.filter((_, index) => index !== first)]\n\t\t\t, [\"extra\", [...labels.slice(0, first + 1), \"Owned.checkedCount\", ...labels.slice(first + 1)]]\n\t\t\t, [\"reordered\", [...labels.slice(0, first - 1), labels[first], labels[first - 1], ...labels.slice(first + 1)]]\n\t\t\t, [\"duplicated\", [...labels.slice(0, first + 1), ...nested, ...labels.slice(first + 1)]]\n\t\t]) await assert.rejects(driver({ plan: ownedPlan, trace: render(changed) }), error => error.message.startsWith(\n\t\t\t`probe entry sequence differs from its independent plan: case 0 (${control}) entry `), `${control} ${name}`);\n\t}\n",
+          "previous": "\tassert.ok(error.message.length < 400);\n",
+          "start": 6142
+        }
+      ],
+      "path": "tests/helpers/php-wasm-refinement-entry-driver-tests.mjs",
+      "previousSha256": "f821a3b9608d08df8e647128e6ee96aba2361402005d3ff856a775433b3e4664"
+    }
+  ],
+  "milestone": "owned-subtype-delegation-repair-source-v1",
+  "predecessorCommit": "3bc6015abe6ee91be8e4d226e0d61f91954388bc",
+  "schemaVersion": 1,
+  "scope": "Correct the independent owned Subtype trace plan to match the authored checkedCountAlternate-to-checkedCount delegation, preserving the alternate validator identity, exact marker equality, first-refusal boundary, and transfer order. Add bounded first-divergence diagnostics and actual driver rejection controls for missing, extra, reordered, and duplicated nested entries on accepted and refused calls. Expected semantic order remains authored independently of compiled output. No inventory, installed observation, runtime, or workflow changes.",
+  "updates": [
+    {
+      "currentSha256": "ee5a73bb8dbe9e2c5edee912a89617c534a163babad36a7e9afa4c1e3a47e940",
+      "edits": [
+        {
+          "current": "const bounded = value => {\n\tconst text = String(value);\n\treturn text.length > 120 ? `${text.slice(0, 117)}...` : text;\n};\nconst entryName = entry => entry === undefined ? \"none\" : bounded(`${entry.kind}:${entry.label}`);\n/**\n * Name the first planned/observed divergence with bounded identities and counts only.\n *\n * @param calls - Calls parsed from the probe trace.\n * @param cases - Independently planned cases.\n */\nconst entryMismatch = (calls, cases) => {\n\tconst totals = `cases expected ${cases.length} observed ${calls.length}`;\n\tfor(let index = 0; index < Math.max(calls.length, cases.length); index++)\n\t{\n\t\tconst planned = cases[index]?.call, observed = calls[index];\n\t\tif(same(observed, planned)) continue;\n\t\tconst expectedEntries = planned?.entries ?? [], observedEntries = observed?.entries ?? [];\n\t\tlet entry = 0;\n\t\twhile(entry < Math.max(expectedEntries.length, observedEntries.length)\n\t\t\t&& same(expectedEntries[entry], observedEntries[entry])) entry++;\n\t\tconst where = entry < Math.max(expectedEntries.length, observedEntries.length)\n\t\t\t? `entry ${entry}: expected ${entryName(expectedEntries[entry])} observed ${entryName(observedEntries[entry])}`\n\t\t\t: \"entries match, call fields differ\";\n\t\treturn `case ${index} (${bounded(cases[index]?.control ?? \"unplanned\")}) ${where}; `\n\t\t\t+ `entries expected ${expectedEntries.length} observed ${observedEntries.length}; ${totals}`;\n\t}\n\treturn totals;\n};\n\n",
+          "previous": "",
+          "start": 844
+        },
+        {
+          "current": "\tif(!same(calls, input.entryProbe.cases.map(item => item.call)))\n\t\tthrow new Error(`probe entry sequence differs from its independent plan: ${entryMismatch(calls, input.entryProbe.cases)}`);\n",
+          "previous": "\trequire(same(calls, input.entryProbe.cases.map(item => item.call)), \"probe entry sequence differs from its independent plan\");\n",
+          "start": 9757
+        }
+      ],
+      "path": "tests/fixtures/php-wasm-refinement-entry/driver.mjs",
+      "previousSha256": "b9ee397582d81ad59d644eecb2d33e1a5420ab35bbf2466f1ced97505e99d874"
+    },
+    {
+      "currentSha256": "d30442a6e40df7496350c8a90ecba58ef112938ce2972d5f2362cbecd9bd3edc",
+      "edits": [
+        {
+          "current": "import { readFile } from \"node:fs/promises\";\n",
+          "previous": "",
+          "start": 132
+        },
+        {
+          "current": "import {\n\tphpWasmOwnedRefinementEntryPlan, phpWasmOwnedSubtypeAlternateConstructors\n} from \"./php-wasm-owned-refinement-entry-plan.mjs\";\n",
+          "previous": "import { phpWasmOwnedRefinementEntryPlan } from \"./php-wasm-owned-refinement-entry-plan.mjs\";\n",
+          "start": 207
+        },
+        {
+          "current": "\t\t, \"Owned.checkedCountAlternate\", \"Owned.checkedCount\"\n\t\t, \"echoRecordAlternate:lean\"\n\t\t, \"Owned.checkedCountAlternate\", \"Owned.checkedCount\"\n\t\t, \"Owned.echoRecordAlternate\", \"transfer.finish\"\n",
+          "previous": "\t\t, \"Owned.checkedCountAlternate\", \"echoRecordAlternate:lean\"\n\t\t, \"Owned.checkedCountAlternate\", \"Owned.echoRecordAlternate\"\n\t\t, \"transfer.finish\"\n",
+          "start": 3124
+        },
+        {
+          "current": "test(\"owned Subtype alternate constructor encloses its authored checkedCount delegation\", async () => {\n\tconst lean = await readFile(\"tests/fixtures/onboarding/owned-subtypes/Owned.lean\", \"utf8\");\n\tassert.match(lean, /^def checkedCountAlternate \\(value : Int\\) : Option \\{ count : Int \\/\\/ 0 ≤ count \\} :=\\n {2}checkedCount value$/mu);\n\tassert.deepEqual(phpWasmOwnedSubtypeAlternateConstructors, [\"checkedCountAlternate\", \"checkedCount\"]);\n\tassert.ok(Object.isFrozen(phpWasmOwnedSubtypeAlternateConstructors));\n\tconst { plan } = await fixture(\"owned-subtype\");\n\tconst refused = plan.cases.find(value => value.control === \"alternate-refusal\");\n\tassert.deepEqual(labels(refused), [\n\t\t\"identity.borrow\", \"echoRecordAlternate:native\", \"owned:refine_alternate\"\n\t\t, \"Owned.checkedCountAlternate\", \"Owned.checkedCount\", \"transfer.finish\"\n\t]);\n\tassert.deepEqual(refused.call.counts, { validator: 1, constructor: 2, adapter: 3, source: 0 });\n\tconst accepted = plan.cases.find(value => value.control === \"alternate-valid\");\n\tassert.deepEqual(accepted.call.counts, { validator: 1, constructor: 4, adapter: 4, source: 1 });\n\t// Only the alternate cases delegate; every other constructor stays a single entry.\n\tfor(const value of plan.cases.filter(item => !item.control.startsWith(\"alternate-\")))\n\t\tassert.ok(!labels(value).includes(\"Owned.checkedCountAlternate\"), value.control);\n\tconst entries = refused.call.entries;\n\tconst nested = entries.findIndex(entry => entry.label === \"Owned.checkedCount\");\n\tfor(const [name, changed] of [\n\t\t[\"missing\", entries.filter((_, index) => index !== nested)]\n\t\t, [\"extra\", [...entries.slice(0, nested + 1), entries[nested], ...entries.slice(nested + 1)]]\n\t\t, [\"reordered\", [...entries.slice(0, nested - 1), entries[nested], entries[nested - 1], ...entries.slice(nested + 1)]]\n\t\t, [\"duplicated\", [...entries.slice(0, nested + 1), entries[nested - 1], entries[nested], ...entries.slice(nested + 1)]]\n\t]) assert.notDeepEqual(changed, entries, name);\n});\n\n",
+          "previous": "",
+          "start": 3972
+        }
+      ],
+      "path": "tests/helpers/php-wasm-owned-refinement-entry-plan-tests.mjs",
+      "previousSha256": "47880f7f80fd8e2f204c9791ba4bfdc292bd65ed6a66df67a9953f02d6086a20"
+    },
+    {
+      "currentSha256": "fc22531b6f4b8c3067bc79ebf3dac9a02e5b5597c5b77a853bbd6c209b3a70be",
+      "edits": [
+        {
+          "current": "/**\n * Owned.lean defines checkedCountAlternate as checkedCount, so each alternate\n * constructor entry encloses exactly one checkedCount entry.\n */\nexport const phpWasmOwnedSubtypeAlternateConstructors\n\t= Object.freeze([\"checkedCountAlternate\", \"checkedCount\"]);\n",
+          "previous": "",
+          "start": 441
+        },
+        {
+          "current": "\t\t\t, [\"checkedCountAlternate\"], phpWasmOwnedSubtypeAlternateConstructors)\n",
+          "previous": "\t\t\t, [\"checkedCountAlternate\"], [\"checkedCountAlternate\"])\n",
+          "start": 5293
+        },
+        {
+          "current": "\t\t\t, [\"checkedCountAlternate\"], phpWasmOwnedSubtypeAlternateConstructors)\n",
+          "previous": "\t\t\t, [\"checkedCountAlternate\"], [\"checkedCountAlternate\"])\n",
+          "start": 5422
+        }
+      ],
+      "path": "tests/helpers/php-wasm-owned-refinement-entry-plan.mjs",
+      "previousSha256": "28f787c74bf8b8abf39478ff97511a71ec5815fd71b6993dbaed29ac5cee894f"
+    },
+    {
+      "currentSha256": "f821a3b9608d08df8e647128e6ee96aba2361402005d3ff856a775433b3e4664",
+      "edits": [
+        {
+          "current": "test(\"entry driver names the first divergence with bounded identities and counts\", async () => {\n\tawait assert.rejects(driver({ trace: trace.replace(\"LB_SUBTYPE_ENTRY_V1 enter source Probe.first\\n\", \"\") })\n\t\t, { message: \"probe entry sequence differs from its independent plan: case 0 (direct) entry 2: \"\n\t\t\t+ \"expected source:Probe.first observed none; entries expected 3 observed 2; cases expected 1 observed 1\" });\n\tconst second = { ...plan.cases[0], control: \"second\" };\n\tawait assert.rejects(driver({ plan: { ...plan, cases: [plan.cases[0], second] } })\n\t\t, { message: \"probe entry sequence differs from its independent plan: case 1 (second) entry 0: \"\n\t\t\t+ \"expected validator:Probe.first:fin_guard_0 observed none; entries expected 3 observed 0; cases expected 2 observed 1\" });\n\tconst control = \"c\".repeat(400);\n\tconst error = await driver({ plan: { ...plan, cases: [{ ...plan.cases[0], control }] }\n\t\t, trace: trace.replace(\"LB_SUBTYPE_ENTRY_V1 enter source Probe.first\\n\", \"\") }).catch(value => value);\n\tassert.ok(error instanceof Error);\n\tassert.ok(error.message.includes(`(${\"c\".repeat(117)}...)`));\n\tassert.ok(!error.message.includes(\"c\".repeat(118)));\n\tassert.ok(error.message.length < 400);\n});\n\n",
+          "previous": "",
+          "start": 4600
+        }
+      ],
+      "path": "tests/helpers/php-wasm-refinement-entry-driver-tests.mjs",
+      "previousSha256": "f9c081b80e678f090a1afc32ee6826fe26a9d162166ce587e0c48af573f4d722"
+    }
+  ]
+}

@@ -13,6 +13,7 @@ import { beforeOwnedCProducerRepairSource, ownedCProducerRepairNormalizationPath
 import { beforeOwnedDotnetProducerRepairSource, ownedDotnetProducerRepairNormalizationPaths } from "./owned-dotnet-producer-repair-source-history.mjs";
 import { beforeDocumentationWorkflowRepairSource, documentationWorkflowRepairNormalizationPaths } from "./documentation-workflow-repair-source-history.mjs";
 import { beforeOwnedJavaScriptProducerRepairSource, ownedJavaScriptProducerRepairNormalizationPaths } from "./owned-javascript-producer-repair-source-history.mjs";
+import { beforeOwnedSubtypeDelegationRepairSource, ownedSubtypeDelegationRepairNormalizationPaths } from "./owned-subtype-delegation-repair-source-history.mjs";
 import { beforeCoreEvidenceMemoryRepairSource, coreEvidenceMemoryRepairNormalizationPaths } from "./core-evidence-memory-repair-source-history.mjs";
 import { beforeValueIndexPromotionMilestoneRepairSource, valueIndexPromotionMilestoneRepairNormalizationPaths } from "./value-index-promotion-milestone-repair-source-history.mjs";
 import { beforeCoreMilestoneReplayRepairSource, coreMilestoneReplayRepairNormalizationPaths } from "./core-milestone-replay-repair-source-history.mjs";
@@ -2106,7 +2107,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...ownedJavaScriptProducerRepairNormalizationPaths
+	...ownedSubtypeDelegationRepairNormalizationPaths
+	, ...ownedJavaScriptProducerRepairNormalizationPaths
 	, ...documentationWorkflowRepairNormalizationPaths
 	, ...ownedDotnetProducerRepairNormalizationPaths
 	, ...ownedCProducerRepairNormalizationPaths
@@ -2955,6 +2957,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
+	const ownedSubtypeDelegationRepair
+		= beforeOwnedSubtypeDelegationRepairSource(path, text, expected);
+	if(sha256(ownedSubtypeDelegationRepair) === expected)
+		return ownedSubtypeDelegationRepair;
+	text = ownedSubtypeDelegationRepair;
 	const ownedJavaScriptProducerRepair
 		= beforeOwnedJavaScriptProducerRepairSource(path, text, expected);
 	if(sha256(ownedJavaScriptProducerRepair) === expected)
