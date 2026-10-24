@@ -9,9 +9,10 @@ import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
 import { beforeOwnedCppBorrow } from "./helpers/owned-cpp-borrow-history.mjs";
 import { assertOwnedBorrowCiRepair } from "./helpers/owned-borrow-ci-evidence.mjs";
-import { beforeOwnedBorrowCi, ownedBorrowCiHistoricalBytes, ownedBorrowCiPath
+import { beforeOwnedBorrowCi, ownedBorrowCiBaseline, ownedBorrowCiPath
 	, reverseOwnedBorrowCiUpdate } from "./helpers/owned-borrow-ci-history.mjs";
-import { assertOwnedBorrowExecution, assertOwnedBorrowCi } from "./helpers/owned-borrow-evidence.mjs";
+import { assertOwnedBorrowExecution, assertOwnedBorrowCi, ownedBorrowProducer } from "./helpers/owned-borrow-evidence.mjs";
+import { bytesAtProducer, sourceAtProducer } from "./helpers/producer-source.mjs";
 import { ownedBorrowPath, ownedBorrowBaseline, ownedBorrowPrevious
 	, ownedBorrowAddedPaths, ownedBorrowChangedPaths, beforeOwnedBorrow
 	, reverseOwnedBorrowUpdate } from "./helpers/owned-borrow-history.mjs";
@@ -26,13 +27,15 @@ test("C result-anchor evidence preserves immutable predecessors and binds curren
 	const bytes = await readFile(record.previous.path), previous = JSON.parse(bytes);
 	assert.equal(sha256(bytes), record.previous.sha256);
 	assert.deepEqual(Object.keys(record.sources).sort(), [...Object.keys(previous.sources), ...ownedBorrowAddedPaths].sort());
-	for(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(ownedBorrowCiHistoricalBytes(path, await readFile(path), hash)), hash, path);
+	// Every recorded digest names the producer tree; later owned and Fin layers never reach back this far.
+	assert.equal(ownedBorrowProducer, ownedBorrowCiBaseline);
+	for(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(bytesAtProducer(ownedBorrowProducer, path)), hash, path);
 	assert.deepEqual(record.updates.map(update => update.path), ownedBorrowChangedPaths);
 	for(const update of record.updates)
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path]);
 		assert.equal(update.currentSha256, record.sources[update.path]);
-		const source = beforeOwnedBorrowCi(update.path, await readFile(update.path, "utf8"), update.currentSha256), prior = beforeOwnedBorrow(update.path, source);
+		const source = sourceAtProducer(ownedBorrowProducer, update.path, update.currentSha256), prior = beforeOwnedBorrow(update.path, source, update.previousSha256);
 		assert.equal(sha256(prior), update.previousSha256);
 		assert.equal(beforeOwnedBorrow(update.path, prior), prior);
 		assert.equal(beforeOwnedBorrow(update.path, source, update.currentSha256), source);
@@ -44,9 +47,10 @@ test("C result-anchor evidence preserves immutable predecessors and binds curren
 			, { ...update, edits: [...update.edits, update.edits[0]] }])
 			assert.throws(() => reverseOwnedBorrowUpdate(source, altered));
 	}
-	const current = beforeOwnedBorrowCi("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8"));
-	const prior = JSON.parse(beforeOwnedBorrow("docs/type-surface.v1.json", current));
-	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedBorrowCiHistoricalBytes(file.path, await readFile(file.path), record.sources[file.path]));
+	const current = sourceAtProducer(ownedBorrowProducer, "docs/type-surface.v1.json", record.sources["docs/type-surface.v1.json"]);
+	const inventoryUpdate = record.updates.find(update => update.path === "docs/type-surface.v1.json");
+	const prior = JSON.parse(beforeOwnedBorrow("docs/type-surface.v1.json", current, inventoryUpdate.previousSha256));
+	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = record.sources[file.path] ?? sha256(bytesAtProducer(ownedBorrowProducer, file.path));
 	assert.deepEqual(JSON.parse(current), prior);
 });
 

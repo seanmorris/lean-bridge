@@ -6,8 +6,8 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
-import { readTypeSurface } from "../../src/adoption/type-surface.mjs";
-import { historicalTypeSurfaceCells as typeSurfaceCells } from "./historical-type-surface-cells.mjs";
+import { moduleAtProducer } from "./producer-module.mjs";
+import { bytesAtProducer, sourceAtProducer, typeSurfaceContractsAtProducer } from "./producer-source.mjs";
 import { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from "../../src/build/native-graph-model.mjs";
 import { generateOwnedCPackage } from "../../src/backends/c/owned-package.mjs";
 import { ownedReviewedExecutionSources, assertOwnedReviewedIntegration } from "./owned-reviewed-evidence.mjs";
@@ -21,6 +21,8 @@ import { ownedPythonChangedPaths } from "./owned-python-source-history.mjs";
 import { ownedRubyChangedPaths } from "./owned-ruby-source-history.mjs";
 import { ownedDotnetNormalizationPaths } from "./owned-dotnet-source-history.mjs";
 
+/** The commit whose complete source tree every digest in the owned C package records names. */
+export const ownedPackageProducer = "b74df10a50bbdc277f6e111718ddeb5af5006c72";
 export const ownedPackageCommand = "LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-c-packaging.test.mjs";
 export const ownedPackageRegressionCommand = "LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/reviewed-owned-source.test.mjs tests/reviewed-source.test.mjs tests/reviewed-callables.test.mjs tests/owned-c-values.test.mjs";
 export const ownedPackageScope = { profiles: ["c"]
@@ -135,7 +137,7 @@ export const assertOwnedPackageIntegration = async record => {
 	const updates = new Map(record.updates.map(item => [item.path, item])), restored = {};
 	for(const path of paths)
 	{
-		const current = await historicalBytes(path); assert.equal(sha256(current), record.sourceHashes[path], path);
+		const current = bytesAtProducer(ownedPackageProducer, path); assert.equal(sha256(current), record.sourceHashes[path], path);
 		const update = updates.get(path);
 		if(update)
 		{
@@ -145,8 +147,10 @@ export const assertOwnedPackageIntegration = async record => {
 		if(previous.sourceHashes[path]) assert.equal(sha256(restored[path] ?? current), previous.sourceHashes[path], path);
 		if(record.additions[path]) assert.equal(record.additions[path], record.sourceHashes[path], path);
 	}
-	const { irSchema, consumers } = await readTypeSurface(), contracts = { irSchema, consumers };
-	const document = JSON.parse(await source("docs/type-surface.v1.json"));
+	// Classify both inventories exactly as the producer did, with its own contracts.
+	const contracts = typeSurfaceContractsAtProducer(ownedPackageProducer);
+	const { typeSurfaceCells } = await moduleAtProducer(ownedPackageProducer, "src/adoption/type-surface.mjs");
+	const document = JSON.parse(sourceAtProducer(ownedPackageProducer, "docs/type-surface.v1.json", record.sourceHashes["docs/type-surface.v1.json"]));
 	assert.equal(document.contractVersion, record.inventory.version);
 	const old = JSON.parse(restored["docs/type-surface.v1.json"]);
 	const expected = structuredClone(old);

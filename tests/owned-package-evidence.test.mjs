@@ -7,9 +7,9 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
-import { assertOwnedPackageExecution, assertOwnedPackageIntegration } from "./helpers/owned-package-evidence.mjs";
+import { assertOwnedPackageExecution, assertOwnedPackageIntegration, ownedPackageProducer } from "./helpers/owned-package-evidence.mjs";
 import { beforeOwnedPackage, reverseOwnedPackageUpdate, ownedPackageHistoryPath, ownedPackageExecutionPath } from "./helpers/owned-package-source-history.mjs";
-import { beforeOwnedHost } from "./helpers/owned-host-source-history.mjs";
+import { sourceAtProducer } from "./helpers/producer-source.mjs";
 
 const json = async path => JSON.parse(await readFile(path, "utf8"));
 
@@ -46,9 +46,9 @@ test("owned C package evidence rejects altered execution and broader support cla
 test("owned package source history rejects unknown text and overlapping edits", async () => {
 	for(const update of (await json(ownedPackageHistoryPath)).updates)
 	{
-		const source = beforeOwnedHost(update.path, await readFile(update.path, "utf8"));
+		const source = sourceAtProducer(ownedPackageProducer, update.path, update.currentSha256);
 		assert.equal(sha256(reverseOwnedPackageUpdate(source, update)), update.previousSha256);
-		assert.equal(sha256(beforeOwnedPackage(update.path, source)), update.previousSha256);
+		assert.equal(sha256(beforeOwnedPackage(update.path, source, update.previousSha256)), update.previousSha256);
 		assert.equal(beforeOwnedPackage(update.path, source, update.currentSha256), source);
 		const unknown = source + "\n/* unrecorded */\n";
 		assert.equal(beforeOwnedPackage(update.path, unknown), unknown);

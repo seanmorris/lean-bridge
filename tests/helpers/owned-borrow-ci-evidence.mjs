@@ -6,13 +6,14 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { ownedBorrowHistoricalBytes } from "./owned-borrow-history.mjs";
-import { ownedCppBorrowHistoricalBytes } from "./owned-cpp-borrow-history.mjs";
+import { bytesAtProducer, sourceAtProducer } from "./producer-source.mjs";
 import { ownedBorrowCiBaseline, ownedBorrowCiPrevious, ownedBorrowCiChangedPaths
 	, ownedBorrowCiAddedPaths, reverseOwnedBorrowCiUpdate } from "./owned-borrow-ci-history.mjs";
 
 export const ownedBorrowCiConsumers = ["dotnet", "jvm", "perl", "php", "python", "ruby", "rust"];
+/** The commit whose complete source tree every digest in the extractor repair names. */
+export const ownedBorrowCiProducer = "2e422bde5449fd6578af0d4c27256e7110ec3c48";
 export const ownedBorrowCiReceipts = ownedBorrowCiConsumers.map(name => `docs/evidence/owned-${name}-transfers-202609${name === "php" ? "30" : "29"}.json`);
 
 /**
@@ -29,20 +30,18 @@ export const assertOwnedBorrowCiRepair = async record => {
 	const priorBytes = await readFile(record.previous.path), previous = JSON.parse(priorBytes);
 	assert.equal(sha256(priorBytes), record.previous.sha256);
 	assert.deepEqual(Object.keys(record.sources).sort(), [...Object.keys(previous.sources), ...ownedBorrowCiAddedPaths].sort());
-	for(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(ownedCppBorrowHistoricalBytes(path, await readFile(path), hash)), hash, path);
+	for(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(bytesAtProducer(ownedBorrowCiProducer, path)), hash, path);
 	assert.deepEqual(record.updates.map(update => update.path), ownedBorrowCiChangedPaths);
 	for(const update of record.updates)
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path]);
 		assert.equal(update.currentSha256, record.sources[update.path]);
-		const current = beforeFinRefinementSource(
-			update.path, await readFile(update.path, "utf8"), update.currentSha256
-		);
+		const current = sourceAtProducer(ownedBorrowCiProducer, update.path, update.currentSha256);
 		assert.equal(sha256(reverseOwnedBorrowCiUpdate(current, update)), update.previousSha256);
 	}
 	assert.equal(record.sources["docs/type-surface.v1.json"], previous.sources["docs/type-surface.v1.json"]);
-	const extractor = "src/analyze/NativeExports.lean", currentExtractor = await readFile(extractor);
-	const bytes = Buffer.from(ownedCppBorrowHistoricalBytes(extractor, currentExtractor, record.extractor.currentSha256));
+	const extractor = "src/analyze/NativeExports.lean";
+	const bytes = bytesAtProducer(ownedBorrowCiProducer, extractor), currentExtractor = bytes;
 	assert.equal(record.extractor.path, extractor);
 	assert.equal(record.extractor.currentSha256, sha256(bytes));
 	assert.equal(record.extractor.previousSha256, "bbee934c9edbf1de092857dc68a0d770d9139fea40e6cfa74a2bfd3abff61b08");
