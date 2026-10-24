@@ -4,8 +4,10 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
+import { sha256 } from "../../src/capsule/node.mjs";
 import { typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
 import {
 	checkedRecordValueIndexWitPromotionBaseline
@@ -14,6 +16,9 @@ import {
 	, checkedRecordValueIndexWitPromotionReferences
 	, promoteCheckedRecordValueIndexWit
 } from "./checked-record-value-index-wit-promotion.mjs";
+import {
+	checkedRecordValueIndexWitPromotionHistoryPath
+} from "./checked-record-value-index-wit-promotion-source-history.mjs";
 
 const contracts = async () => ({
 	irSchema: JSON.parse(await readFile("schema/binding-ir.schema.json"))
@@ -76,13 +81,28 @@ test("WIT/WASI promotion changes only four exact cells", {
 		original, references.slice(1)));
 });
 
+/** History commit whose inventory the promotion ledger records. */
+const checkedRecordValueIndexWitPromotionMilestone
+	= "f9839b7f13facf1d0ec4135202cb91ef5e0ccfe0";
+
 test("checked-record value-index WIT/WASI inventory equals the exact promotion", {
 	timeout: 180_000
 }, async () => {
+	const show = path => execFileSync("git", ["show"
+		, `${checkedRecordValueIndexWitPromotionMilestone}:${path}`]
+	, { maxBuffer: 512 * 1024 * 1024 });
+	const history = JSON.parse(await readFile(
+		checkedRecordValueIndexWitPromotionHistoryPath, "utf8"));
+	assert.equal(execFileSync("git", ["rev-parse"
+		, `${checkedRecordValueIndexWitPromotionMilestone}^`], { encoding: "utf8" })
+		.trim(), history.draftParentCommit);
+	const inventory = show("docs/type-surface.v1.json");
+	assert.equal(sha256(inventory), history.updates.find(update =>
+		update.path === "docs/type-surface.v1.json").currentSha256);
 	const proposed = await promoteCheckedRecordValueIndexWit(
 		checkedRecordValueIndexWitPromotionBaseline()
 		, await checkedRecordValueIndexWitPromotionReferences()
+		, async path => show(path)
 	);
-	assert.deepEqual(JSON.parse(await readFile("docs/type-surface.v1.json"))
-		, proposed);
+	assert.deepEqual(JSON.parse(inventory), proposed);
 });

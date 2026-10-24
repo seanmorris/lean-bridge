@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
@@ -15,6 +16,9 @@ import {
 	, checkedRecordValueIndexRubyPromotionReferences
 	, promoteCheckedRecordValueIndexRuby
 } from "./checked-record-value-index-ruby-promotion.mjs";
+import {
+	checkedRecordValueIndexRubyPromotionHistoryPath
+} from "./checked-record-value-index-ruby-promotion-source-history.mjs";
 
 const contracts = async () => ({
 	irSchema: JSON.parse(await readFile("schema/binding-ir.schema.json"))
@@ -85,13 +89,28 @@ test("Ruby promotion changes only four exact cells and refreshes stale pins", {
 		original, references.slice(1)));
 });
 
+/** History commit whose inventory the promotion ledger records. */
+const checkedRecordValueIndexRubyPromotionMilestone
+	= "bb14e51b5a9f1fc5c0957f97c7c3d0ad7952326d";
+
 test("checked-record value-index Ruby inventory equals the exact promotion", {
 	timeout: 120_000
 }, async () => {
+	const show = path => execFileSync("git", ["show"
+		, `${checkedRecordValueIndexRubyPromotionMilestone}:${path}`]
+	, { maxBuffer: 512 * 1024 * 1024 });
+	const history = JSON.parse(await readFile(
+		checkedRecordValueIndexRubyPromotionHistoryPath, "utf8"));
+	assert.equal(execFileSync("git", ["rev-parse"
+		, `${checkedRecordValueIndexRubyPromotionMilestone}^`], { encoding: "utf8" })
+		.trim(), history.draftParentCommit);
+	const inventory = show("docs/type-surface.v1.json");
+	assert.equal(sha256(inventory), history.updates.find(update =>
+		update.path === "docs/type-surface.v1.json").currentSha256);
 	const proposed = await promoteCheckedRecordValueIndexRuby(
 		checkedRecordValueIndexRubyPromotionBaseline()
 		, await checkedRecordValueIndexRubyPromotionReferences()
+		, async path => show(path)
 	);
-	assert.deepEqual(JSON.parse(await readFile("docs/type-surface.v1.json"))
-		, proposed);
+	assert.deepEqual(JSON.parse(inventory), proposed);
 });

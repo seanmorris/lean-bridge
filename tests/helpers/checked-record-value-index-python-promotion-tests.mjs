@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
@@ -15,6 +16,9 @@ import {
 	, checkedRecordValueIndexPythonPromotionReferences
 	, promoteCheckedRecordValueIndexPython
 } from "./checked-record-value-index-python-promotion.mjs";
+import {
+	checkedRecordValueIndexPythonPromotionHistoryPath
+} from "./checked-record-value-index-python-promotion-source-history.mjs";
 
 const contracts = async () => ({
 	irSchema: JSON.parse(await readFile("schema/binding-ir.schema.json"))
@@ -80,12 +84,28 @@ test("Python promotion changes only four exact cells and refreshes stale pins", 
 	await assert.rejects(promoteCheckedRecordValueIndexPython(original, references.slice(1)));
 });
 
+/** History commit whose inventory the promotion ledger records. */
+const checkedRecordValueIndexPythonPromotionMilestone
+	= "4060e1c6eaea9d7ebcef15d57cdf98b7f5a7b81b";
+
 test("checked-record value-index Python inventory equals the exact promotion", {
 	timeout: 120_000
 }, async () => {
+	const show = path => execFileSync("git", ["show"
+		, `${checkedRecordValueIndexPythonPromotionMilestone}:${path}`]
+	, { maxBuffer: 512 * 1024 * 1024 });
+	const history = JSON.parse(await readFile(
+		checkedRecordValueIndexPythonPromotionHistoryPath, "utf8"));
+	assert.equal(execFileSync("git", ["rev-parse"
+		, `${checkedRecordValueIndexPythonPromotionMilestone}^`], { encoding: "utf8" })
+		.trim(), history.draftParentCommit);
+	const inventory = show("docs/type-surface.v1.json");
+	assert.equal(sha256(inventory), history.updates.find(update =>
+		update.path === "docs/type-surface.v1.json").currentSha256);
 	const proposed = await promoteCheckedRecordValueIndexPython(
 		checkedRecordValueIndexPythonPromotionBaseline()
 		, await checkedRecordValueIndexPythonPromotionReferences()
+		, async path => show(path)
 	);
-	assert.deepEqual(JSON.parse(await readFile("docs/type-surface.v1.json")), proposed);
+	assert.deepEqual(JSON.parse(inventory), proposed);
 });

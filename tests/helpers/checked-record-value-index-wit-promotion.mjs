@@ -100,15 +100,17 @@ export const checkedRecordValueIndexWitPromotionReferences = async () => {
  *
  * @param original - Exact inventory before this promotion.
  * @param references - Four independently authenticated hosted selections.
+ * @param [read] - Source bytes for validators and pins; defaults to the
+ * live checkout.
  */
 export const promoteCheckedRecordValueIndexWit = async (
-	original, references
+	original, references, read = path => readFile(path)
 ) => {
 	assert.deepEqual(references
 		, await checkedRecordValueIndexWitPromotionReferences());
 	const inventory = structuredClone(original);
 	const sources = await Promise.all(validators.map(async path => ({
-		path, sha256: sha256(await readFile(path))
+		path, sha256: sha256(await read(path))
 	})));
 	for(const reference of references)
 	{
@@ -155,7 +157,7 @@ export const promoteCheckedRecordValueIndexWit = async (
 			}
 		}
 	const pins = new Map(await Promise.all(pinPaths.map(async path => [
-		path, sha256(await readFile(path))
+		path, sha256(await read(path))
 	])));
 	for(const evidence of inventory.evidence) for(const file of evidence.files)
 		if(pins.has(file.path)) file.sha256 = pins.get(file.path);

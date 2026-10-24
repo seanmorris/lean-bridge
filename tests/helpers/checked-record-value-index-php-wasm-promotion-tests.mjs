@@ -4,8 +4,10 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
+import { sha256 } from "../../src/capsule/node.mjs";
 import { typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
 import {
 	checkedRecordValueIndexPhpWasmPromotionBaseline
@@ -14,6 +16,9 @@ import {
 	, checkedRecordValueIndexPhpWasmPromotionReferences
 	, promoteCheckedRecordValueIndexPhpWasm
 } from "./checked-record-value-index-php-wasm-promotion.mjs";
+import {
+	checkedRecordValueIndexPhpWasmPromotionHistoryPath
+} from "./checked-record-value-index-php-wasm-promotion-source-history.mjs";
 
 const contracts = async () => ({
 	irSchema: JSON.parse(await readFile("schema/binding-ir.schema.json"))
@@ -79,13 +84,28 @@ test("PHP-Wasm promotion changes only four exact cells", {
 		original, references.slice(1)));
 });
 
+/** History commit whose inventory the promotion ledger records. */
+const checkedRecordValueIndexPhpWasmPromotionMilestone
+	= "dd2ee7a08530f5956912616442bc0a110c5708e9";
+
 test("checked-record value-index PHP-Wasm inventory equals the exact promotion", {
 	timeout: 900_000
 }, async () => {
+	const show = path => execFileSync("git", ["show"
+		, `${checkedRecordValueIndexPhpWasmPromotionMilestone}:${path}`]
+	, { maxBuffer: 512 * 1024 * 1024 });
+	const history = JSON.parse(await readFile(
+		checkedRecordValueIndexPhpWasmPromotionHistoryPath, "utf8"));
+	assert.equal(execFileSync("git", ["rev-parse"
+		, `${checkedRecordValueIndexPhpWasmPromotionMilestone}^`], { encoding: "utf8" })
+		.trim(), history.draftParentCommit);
+	const inventory = show("docs/type-surface.v1.json");
+	assert.equal(sha256(inventory), history.updates.find(update =>
+		update.path === "docs/type-surface.v1.json").currentSha256);
 	const proposed = await promoteCheckedRecordValueIndexPhpWasm(
 		checkedRecordValueIndexPhpWasmPromotionBaseline()
 		, await checkedRecordValueIndexPhpWasmPromotionReferences()
+		, async path => show(path)
 	);
-	assert.deepEqual(JSON.parse(await readFile("docs/type-surface.v1.json"))
-		, proposed);
+	assert.deepEqual(JSON.parse(inventory), proposed);
 });
