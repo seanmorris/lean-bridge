@@ -42,13 +42,13 @@ test("Fin callback plan separates preflight refusal, reply rejection and recover
 	const kinds = call => call.entries.map(item => item.kind);
 	assert.deepEqual(mixed("mixed-closure-input").calls.map(kinds), [
 		["adapter", "adapter", "cleanup"]
-		, ["adapter", "adapter", "closure", "cleanup"]
+		, ["adapter", "adapter", "source", "closure", "cleanup"]
 	]);
 	assert.equal(mixed("mixed-closure-input-refusal").outcome, "refused");
 	assert.deepEqual(mixed("mixed-closure-input-refusal").calls.map(kinds)
 		, [["adapter", "adapter", "cleanup"]], "the Fin field refuses before the closure body");
 	assert.deepEqual(mixed("mixed-closure-input-recovery").calls.map(kinds)
-		, [["adapter", "adapter", "closure", "cleanup"]]);
+		, [["adapter", "adapter", "source", "closure", "cleanup"]]);
 	assert.deepEqual(mixed("mixed-closure-result").calls.map(kinds), [
 		["adapter", "adapter", "cleanup"]
 		, ["adapter", "adapter", "source", "closure", "cleanup"]
