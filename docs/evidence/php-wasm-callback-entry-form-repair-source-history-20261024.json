@@ -1,0 +1,99 @@
+{
+  "additions": [
+    {
+      "currentSha256": "711110d3cc642edc2da0b7de86d99a927370b4ea1ada0720c6b12ff866b1848e",
+      "path": "scripts/update-php-wasm-callback-entry-form-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "978558f0e3c0bb59e171aa1c3d27436c8b9547429eb060fd4458923378ab96d4",
+      "path": "tests/helpers/php-wasm-callback-entry-form-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "8c6ed6f311c6646ad735b03c59d005b17bb7c58fc0226ee4aa7bb874a0e9fc23",
+      "path": "tests/helpers/php-wasm-callback-entry-form-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "7603e11e58745ad47aaa617081692df32ee2e7dd",
+  "integrationBaseCommit": "46f221c995121664656834c566a6819bfd9b070a",
+  "integrationUpdates": [
+    {
+      "currentSha256": "541b4ecb15cfd4069bbf04b18300e5165617f551bacfd03abad3fee271cc618e",
+      "edits": [
+        {
+          "current": "import \"./helpers/php-wasm-callback-entry-form-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 1837
+        }
+      ],
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "cb0cfd5cab02cfcafea0c60fdadcdb55b79225dfad9c4218771f426d66eb0199"
+    },
+    {
+      "currentSha256": "3059c50595b8259f62b7270576bb15c17fea993f5ae2a733a6b19a278f640711",
+      "edits": [
+        {
+          "current": "import { beforePhpWasmCallbackEntryFormRepairSource, phpWasmCallbackEntryFormRepairNormalizationPaths } from \"./php-wasm-callback-entry-form-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...phpWasmCallbackEntryFormRepairNormalizationPaths\n\t, ...phpWasmEntryOracleIntegrationChangedPaths\n",
+          "previous": "\t...phpWasmEntryOracleIntegrationChangedPaths\n",
+          "start": 172809
+        },
+        {
+          "current": "\tconst phpWasmCallbackEntryFormRepair\n\t\t= beforePhpWasmCallbackEntryFormRepairSource(path, text, expected);\n\tif(sha256(phpWasmCallbackEntryFormRepair) === expected)\n\t\treturn phpWasmCallbackEntryFormRepair;\n\ttext = phpWasmCallbackEntryFormRepair;\n",
+          "previous": "",
+          "start": 212948
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "acda1d05ed27bf3f04f31f9aff1b1d318f40ddeddeff46b4bc992d3f3fe6b406"
+    }
+  ],
+  "milestone": "php-wasm-callback-entry-form-repair-source-v1",
+  "predecessorCommit": "537cc3fcc09acc4e393c4919aace1f2283a66bff",
+  "schemaVersion": 1,
+  "scope": "Callback PHP-Wasm probes explicitly retain compiler-derived function/global forms for authored entries and classify extracted closure bodies as functions, so nullary entry validation remains closed without a permissive fallback.",
+  "updates": [
+    {
+      "currentSha256": "3632c2ad7f43b974b4497be510fa5b5dab5d7ac29f268e1eceea7b9357d3e388",
+      "edits": [
+        {
+          "current": "\tconst entryForms = { ...marked.entryForms };\n\tfor(const item of closureEntries) entryForms[item.symbol] = \"function\";\n\tassert.deepEqual(Object.keys(entryForms).sort()\n\t\t, entries.map(item => item.symbol).sort());\n",
+          "previous": "",
+          "start": 5418
+        },
+        {
+          "current": "\tconst value = { family, path: definition.path, source: marked.source\n\t\t, entries, entryForms\n",
+          "previous": "\tconst value = { family, path: definition.path, source: marked.source, entries\n",
+          "start": 5681
+        }
+      ],
+      "path": "tests/helpers/php-wasm-callback-entry-source-fixtures.mjs",
+      "previousSha256": "ff7583b0e8217b202914410ba40a224e25948b3e5b18d06b48fc810019abb137"
+    },
+    {
+      "currentSha256": "11f0c5389936aae71cbe87008a0c5aa0e2e429d19e5892ad041c1fb7fd638183",
+      "edits": [
+        {
+          "current": "\t\tassert.deepEqual(Object.keys(fixture.entryForms).sort()\n\t\t\t, fixture.entries.map(item => item.symbol).sort());\n",
+          "previous": "",
+          "start": 967
+        },
+        {
+          "current": "\t\t{\n\t\t\tassert.ok([\"function\", \"global\"].includes(\n\t\t\t\tfixture.entryForms[item.symbol]));\n\t\t\tif(item.kind === \"closure\")\n\t\t\t\tassert.equal(fixture.entryForms[item.symbol], \"function\");\n",
+          "previous": "",
+          "start": 1117
+        },
+        {
+          "current": "\t\t}\n",
+          "previous": "",
+          "start": 1388
+        }
+      ],
+      "path": "tests/helpers/php-wasm-callback-entry-source-tests.mjs",
+      "previousSha256": "0a779082605e795a919d18857a86d2e478c35e85784ea6c4a189c60606a7724f"
+    }
+  ]
+}
