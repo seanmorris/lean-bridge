@@ -8,11 +8,9 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
 import { classifyRepositoryTest } from "../src/adoption/test-profiles.mjs";
-import { generateOwnedDotnetCalls } from "../src/backends/dotnet/owned-calls.mjs";
-import { createCompiledNativeModel } from "../src/build/native-graph-model.mjs";
-import { assertOwnedDotnetBorrowExecution, assertOwnedDotnetBorrowCi } from "./helpers/owned-dotnet-borrow-evidence.mjs";
-import { beforeOwnedDotnetReadRaceGenerated } from "./helpers/owned-dotnet-read-race-generated.mjs";
-import { beforeStructuredDocsCi, structuredDocsCiHistoricalBytes } from "./helpers/structured-docs-ci-history.mjs";
+import { assertOwnedDotnetBorrowExecution, assertOwnedDotnetBorrowCi, ownedDotnetLifetimeProducer } from "./helpers/owned-dotnet-borrow-evidence.mjs";
+import { moduleAtProducer } from "./helpers/producer-module.mjs";
+import { bytesAtProducer, sourceAtProducer } from "./helpers/producer-source.mjs";
 import { ownedDotnetLifetimePath, ownedDotnetLifetimeBaseline
 	, ownedDotnetLifetimePrevious, ownedDotnetLifetimeChangedPaths
 	, ownedDotnetLifetimeAddedPaths, beforeOwnedDotnetLifetime
@@ -28,14 +26,15 @@ test("C# lifetime repair authenticates exact source transitions without rewritin
 	const bytes = await readFile(record.previous.path), previous = JSON.parse(bytes);
 	assert.equal(sha256(bytes), record.previous.sha256);
 	assert.deepEqual(Object.keys(record.sources).sort(), [...Object.keys(previous.sources), ...ownedDotnetLifetimeAddedPaths].sort());
-	for(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(structuredDocsCiHistoricalBytes(path, await readFile(path), hash)), hash, path);
+	// Every recorded digest names the producer tree; later owned and Fin layers never reach back this far.
+	for(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(bytesAtProducer(ownedDotnetLifetimeProducer, path)), hash, path);
 	assert.deepEqual(record.updates.map(update => update.path), ownedDotnetLifetimeChangedPaths);
 	for(const update of record.updates)
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path]);
 		assert.equal(update.currentSha256, record.sources[update.path]);
-		const source = beforeStructuredDocsCi(update.path, await readFile(update.path, "utf8"), update.currentSha256);
-		const prior = beforeOwnedDotnetLifetime(update.path, source);
+		const source = sourceAtProducer(ownedDotnetLifetimeProducer, update.path, update.currentSha256);
+		const prior = beforeOwnedDotnetLifetime(update.path, source, update.previousSha256);
 		assert.equal(sha256(prior), update.previousSha256);
 		assert.equal(beforeOwnedDotnetLifetime(update.path, prior), prior);
 		assert.equal(beforeOwnedDotnetLifetime(update.path, source, update.currentSha256), source);
@@ -47,10 +46,10 @@ test("C# lifetime repair authenticates exact source transitions without rewritin
 			, { ...update, edits: [...update.edits, update.edits[0]] }])
 			assert.throws(() => reverseOwnedDotnetLifetimeUpdate(source, changed));
 	}
-	const path = "docs/type-surface.v1.json", current = beforeStructuredDocsCi(path, await readFile(path, "utf8"), record.sources[path]);
-	const prior = JSON.parse(beforeOwnedDotnetLifetime(path, current));
+	const path = "docs/type-surface.v1.json", current = sourceAtProducer(ownedDotnetLifetimeProducer, path, record.sources[path]);
+	const prior = JSON.parse(beforeOwnedDotnetLifetime(path, current, record.updates.find(update => update.path === path)?.previousSha256));
 	for(const evidence of prior.evidence) for(const file of evidence.files)
-		file.sha256 = sha256(structuredDocsCiHistoricalBytes(file.path, await readFile(file.path), record.sources[file.path]));
+		file.sha256 = record.sources[file.path] ?? sha256(bytesAtProducer(ownedDotnetLifetimeProducer, file.path));
 	assert.deepEqual(JSON.parse(current), prior);
 	assert.equal(classifyRepositoryTest("tests/owned-dotnet-lifetime-evidence.test.mjs"), "contract");
 });
@@ -107,6 +106,11 @@ test("C# predecessor source reconstruction rejects unknown generated edits", asy
 	assert.equal(sha256(bytes), "6ea35c6fb18d4d1b0d204186a28635b7a10aa9fd7e2c79a767b0f80dd6295bfe");
 	const record = JSON.parse(bytes);
 	await assertOwnedDotnetBorrowExecution(record);
+	// The repaired generator and its read-race reverser exactly as the lifetime producer shipped them.
+	const [{ createCompiledNativeModel }, { generateOwnedDotnetCalls }, { beforeOwnedDotnetReadRaceGenerated }] = await Promise.all([
+		"src/build/native-graph-model.mjs", "src/backends/dotnet/owned-calls.mjs"
+		, "tests/helpers/owned-dotnet-read-race-generated.mjs"
+	].map(entry => moduleAtProducer(ownedDotnetLifetimeProducer, entry)));
 	for(const item of record.runtime)
 	{
 		const model = createCompiledNativeModel(item.input, { ownedGraphs: true

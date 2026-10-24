@@ -7,10 +7,13 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
-import { beforeOwnedJvmCallbackResults } from "./helpers/owned-jvm-callback-result-history.mjs";
+import { bytesAtProducer } from "./helpers/producer-source.mjs";
 import { ownedDotnetCallbackHistoryPath, ownedDotnetCallbackHistorySha256
 	, ownedDotnetCallbackBaseline, ownedDotnetCallbackChangedPaths
 	, beforeOwnedDotnetCallbackResults, reverseOwnedDotnetCallbackUpdate } from "./helpers/owned-dotnet-callback-result-history.mjs";
+
+/** The commit that recorded this history; each update's current side is that tree. */
+const ownedDotnetCallbackProducer = "72d123d69917f1145ec03d8624b6a08c3b2be6bc";
 
 test("Dotnet callback history authenticates exact source transitions and rejects partial edits", async () => {
 	const bytes = await readFile(ownedDotnetCallbackHistoryPath);
@@ -21,8 +24,8 @@ test("Dotnet callback history authenticates exact source transitions and rejects
 	assert.deepEqual(history.updates.map(update => update.path), ownedDotnetCallbackChangedPaths);
 	for(const update of history.updates)
 	{
-		const current = Buffer.from(beforeOwnedJvmCallbackResults(update.path, await readFile(update.path)));
-		const prior = beforeOwnedDotnetCallbackResults(update.path, current);
+		const current = bytesAtProducer(ownedDotnetCallbackProducer, update.path);
+		const prior = beforeOwnedDotnetCallbackResults(update.path, current, update.previousSha256);
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		assert.equal(sha256(prior), update.previousSha256, update.path);
 		assert.equal(beforeOwnedDotnetCallbackResults(update.path, current, update.currentSha256), current);
