@@ -64,6 +64,7 @@ import { beforeOwnedCheckedRecordMatrixGateSource, ownedCheckedRecordMatrixGateN
 import { beforeCoreStructuredHistoryRepairSource, coreStructuredHistoryRepairNormalizationPaths } from "./core-structured-history-repair-source-history.mjs";
 import { beforeOwnedNpmSourceIdentityRepairSource, ownedNpmSourceIdentityRepairNormalizationPaths } from "./owned-npm-source-identity-repair-source-history.mjs";
 import { beforeGenericSubtypeCompactReferenceSource, genericSubtypeCompactReferenceNormalizationPaths } from "./generic-subtype-compact-reference-source-history.mjs";
+import { beforeGenericSubtypePromotionTransactionSource, genericSubtypePromotionTransactionNormalizationPaths } from "./generic-subtype-promotion-transaction-source-history.mjs";
 import { beforeCoreEvidenceMemoryRepairSource, coreEvidenceMemoryRepairNormalizationPaths } from "./core-evidence-memory-repair-source-history.mjs";
 import { beforeValueIndexPromotionMilestoneRepairSource, valueIndexPromotionMilestoneRepairNormalizationPaths } from "./value-index-promotion-milestone-repair-source-history.mjs";
 import { beforeCoreMilestoneReplayRepairSource, coreMilestoneReplayRepairNormalizationPaths } from "./core-milestone-replay-repair-source-history.mjs";
@@ -2157,7 +2158,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...genericSubtypeCompactReferenceNormalizationPaths
+	...genericSubtypePromotionTransactionNormalizationPaths
+	, ...genericSubtypeCompactReferenceNormalizationPaths
 	, ...ownedNpmSourceIdentityRepairNormalizationPaths
 	, ...coreStructuredHistoryRepairNormalizationPaths
 	, ...ownedCheckedRecordMatrixGateNormalizationPaths
@@ -3057,7 +3059,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeGenericSubtypeCompactReferenceSource(path, text, expected);
+	let stage = beforeGenericSubtypePromotionTransactionSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeGenericSubtypeCompactReferenceSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;
