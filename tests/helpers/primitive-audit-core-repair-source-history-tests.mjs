@@ -27,6 +27,7 @@ import {
 } from "./primitive-audit-core-repair-source-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
+import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
 
 const show = (commit, path) => execFileSync("git", ["show"
 	, `${commit}:${path}`]
@@ -52,7 +53,8 @@ test("primitive audit Core repair authenticates every transition and pin", async
 		"docs/evidence/nominal-primitive-subtype-supplement-20261018/.gitattributes"
 		, "utf8"), "# Preserve the exact supplemental primitive-base GitHub job log.\napi/job.log whitespace=-blank-at-eol\n");
 	for(const addition of record.additions)
-		assert.equal(sha256(await readFile(addition.path))
+		assert.equal(sha256(await sourceAtFinHistoryMilestone(
+			addition.path, addition.currentSha256))
 			, addition.currentSha256, addition.path);
 	for(const update of record.updates)
 	{

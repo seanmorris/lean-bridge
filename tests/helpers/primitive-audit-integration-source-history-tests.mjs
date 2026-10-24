@@ -13,6 +13,7 @@ import test from "node:test";
 import { sha256 } from "./source-history-digest.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
+import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
 import {
 	beforePrimitiveAuditIntegrationSource
 	, primitiveAuditIntegrationAddedPaths
@@ -42,7 +43,8 @@ test("primitive audit integration authenticates every current-line transition", 
 	assert.deepEqual(record.additions.map(item => item.path)
 		, primitiveAuditIntegrationAddedPaths);
 	for(const addition of record.additions)
-		assert.equal(sha256(await readFile(addition.path))
+		assert.equal(sha256(await sourceAtFinHistoryMilestone(
+			addition.path, addition.currentSha256))
 			, addition.currentSha256, addition.path);
 	for(const update of record.updates)
 	{
