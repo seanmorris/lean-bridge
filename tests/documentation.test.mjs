@@ -24,16 +24,19 @@ import { assertFinRecordZeroWorkflow, disableFinRecordZeroWorkflow } from "./hel
 import { assertPhpWasmDirectFinWorkflow, disablePhpWasmDirectFinWorkflow } from "./helpers/php-wasm-fin-direct-ci.mjs";
 import { assertPhpWasmSubtypeWorkflow, disablePhpWasmSubtypeWorkflow } from "./helpers/php-wasm-subtype-ci.mjs";
 import { assertPhpWasmEntryWorkflow, disablePhpWasmEntryWorkflow } from "./helpers/php-wasm-subtype-entry-ci.mjs";
-import { beforePhpWasmCorpusPartitionSource } from "./helpers/php-wasm-corpus-partition-history.mjs";
-import { assertPhpWasmCorpusPartition } from "./helpers/php-wasm-corpus-partition.mjs";
+import { beforePhpWasmCorpusPartitionSource, phpWasmCorpusPartitionHistoryPath } from "./helpers/php-wasm-corpus-partition-history.mjs";
+import { assertPhpWasmCorpusPartition, phpWasmCorpusPartitionSha256 } from "./helpers/php-wasm-corpus-partition.mjs";
 import { assertReviewedSubtypeHostWorkflow, disableReviewedSubtypeHostWorkflow } from "./helpers/reviewed-subtype-host-ci-workflow.mjs";
 import { assertReviewedSubtypePackageWorkflow, disableReviewedSubtypePackageWorkflow } from "./helpers/reviewed-subtype-package-ci-workflow.mjs";
 import { assertCheckedRecordHostWorkflow, disableCheckedRecordHostWorkflow } from "./helpers/checked-record-host-ci-workflow.mjs";
 import { assertStructuralSubtypeWorkflow, disableStructuralSubtypeWorkflow } from "./helpers/structural-subtype-ci-workflow.mjs";
 import { assertManagedCiIsolation } from "./helpers/managed-ci-isolation.mjs";
 import { assertNativeCiIsolation } from "./helpers/native-ci-isolation.mjs";
-import { assertNativeConsumerPartition, extendPerlCompilerBudget } from "./helpers/native-consumer-partition.mjs";
-import { beforeNativeConsumerPartitionSource } from "./helpers/native-consumer-partition-history.mjs";
+import { assertNativeConsumerPartition, extendPerlCompilerBudget, nativeConsumerPartitionBaseline, nativeConsumerPartitionSha256 } from "./helpers/native-consumer-partition.mjs";
+import { sourceAtProducer } from "./helpers/producer-source.mjs";
+import { sourceAtHistoryMilestone } from "./helpers/source-history-test-source.mjs";
+import { beforeFinRefinementSource } from "./helpers/fin-refinement-source-history.mjs";
+import { sha256 } from "./helpers/source-history-digest.mjs";
 import { assertNominalSubtypeJvmWorkflow, disableNominalSubtypeJvmWorkflow } from "./helpers/nominal-subtype-jvm-ci-workflow.mjs";
 import { assertNominalSubtypePhpWorkflow, disableNominalSubtypePhpWorkflow } from "./helpers/nominal-subtype-php-ci-workflow.mjs";
 import { assertNominalSubtypeWitWorkflow, disableNominalSubtypeWitWorkflow } from "./helpers/nominal-subtype-wit-ci-workflow.mjs";
@@ -628,25 +631,51 @@ test("CI result contract detects support loss", async () => {
   assert.match(markdown, /Consumer \| Scope \| Platform \| Architecture \| CPU/);
 });
 
-test("dedicated CI covers every consumer with Node 22 and pinned build paths", async () => {
-  const [liveWorkflow, packageDocument, livePerlWorkflow, toolchainBootstrap] = await Promise.all([
+test("live downstream workflows retain their required refinement gates", async () => {
+  const [workflow, perlWorkflow] = await Promise.all([
     readFile(".github/workflows/consumer-matrix.yml", "utf8")
-    , readFile("package.json", "utf8").then(JSON.parse)
+    , readFile(".github/workflows/perl-consumer.yml", "utf8")
+  ]);
+  assertNominalSubtypeJvmWorkflow(workflow);
+  assertNominalSubtypePhpWorkflow(workflow);
+  assertNominalSubtypeWitWorkflow(workflow);
+  assertStructuralSubtypeWorkflow(workflow, "consumer-matrix.yml");
+  assertStructuralSubtypeWorkflow(perlWorkflow, "perl-consumer.yml");
+  assertWorkflowRunBudget(workflow);
+  // These guards must reject missing producers in the live files, not accept a frozen copy.
+  for(const [source, script, check] of [
+    [workflow, "run-nominal-subtype-jvm-ci.sh", assertNominalSubtypeJvmWorkflow]
+    , [workflow, "run-nominal-subtype-php-ci.sh", assertNominalSubtypePhpWorkflow]
+    , [workflow, "run-nominal-subtype-wit-ci.sh", assertNominalSubtypeWitWorkflow]
+    , [workflow, "run-structural-subtype-ci.sh", value => assertStructuralSubtypeWorkflow(value, "consumer-matrix.yml")]
+    , [perlWorkflow, "run-structural-subtype-ci.sh", value => assertStructuralSubtypeWorkflow(value, "perl-consumer.yml")]
+  ]) {
+    assert.ok(source.includes(script), script);
+    assert.throws(() => check(source.replaceAll(script, "missing-required-producer.sh")), script);
+  }
+});
+
+test("consumer CI history preserves every consumer and pinned build path", async () => {
+  const [packageDocument, livePerlWorkflow, toolchainBootstrap] = await Promise.all([
+    readFile("package.json", "utf8").then(JSON.parse)
     , readFile(".github/workflows/perl-consumer.yml", "utf8")
     , readFile("scripts/bootstrap-toolchains.sh", "utf8")
   ]);
-  const beforePhpPartition = beforePhpWasmCorpusPartitionSource(".github/workflows/consumer-matrix.yml", liveWorkflow);
-  assertPhpWasmCorpusPartition(beforePhpPartition, liveWorkflow);
-  const structuralWorkflow = beforeNativeConsumerPartitionSource(".github/workflows/consumer-matrix.yml", liveWorkflow);
-  const structuralPerlWorkflow = beforeNativeConsumerPartitionSource(".github/workflows/perl-consumer.yml", livePerlWorkflow);
-  assertNominalSubtypeJvmWorkflow(liveWorkflow);
-  assertNominalSubtypePhpWorkflow(liveWorkflow);
-  assertNominalSubtypeWitWorkflow(liveWorkflow);
+  // Partition transforms authenticate their own epochs; later workflow additions are checked above.
+  const path = ".github/workflows/consumer-matrix.yml";
+  const partitionWorkflow = sourceAtHistoryMilestone(phpWasmCorpusPartitionHistoryPath, path);
+  const partitionSha256 = sha256(partitionWorkflow);
+  const liveWorkflow = await readFile(path, "utf8");
+  assert.equal(sha256(beforeFinRefinementSource(path, liveWorkflow, partitionSha256)), partitionSha256);
+  const missingSpecializations = liveWorkflow.replace("LEAN_BRIDGE_SPECIALIZATION_PROFILES=c,cpp node --test tests/native-specializations.test.mjs", "true");
+  assert.notEqual(missingSpecializations, liveWorkflow);
+  assert.notEqual(sha256(beforeFinRefinementSource(path, missingSpecializations, partitionSha256)), partitionSha256);
+  const beforePhpPartition = beforePhpWasmCorpusPartitionSource(path, partitionWorkflow, phpWasmCorpusPartitionSha256);
+  assertPhpWasmCorpusPartition(beforePhpPartition, partitionWorkflow);
+  const structuralWorkflow = sourceAtProducer(nativeConsumerPartitionBaseline, path, nativeConsumerPartitionSha256);
+  const structuralPerlWorkflow = sourceAtProducer(nativeConsumerPartitionBaseline, ".github/workflows/perl-consumer.yml");
   assertNativeConsumerPartition(structuralWorkflow, disableNominalSubtypeJvmWorkflow(disableNominalSubtypePhpWorkflow(disableNominalSubtypeWitWorkflow(beforePhpPartition))));
   assert.equal(extendPerlCompilerBudget(structuralPerlWorkflow), livePerlWorkflow);
-  assertStructuralSubtypeWorkflow(liveWorkflow, "consumer-matrix.yml");
-  assertStructuralSubtypeWorkflow(livePerlWorkflow, "perl-consumer.yml");
-  assertWorkflowRunBudget(liveWorkflow);
   // Validate each required structural gate before removing only its additions for older comparisons.
   assertStructuralSubtypeWorkflow(structuralWorkflow, "consumer-matrix.yml");
   assertStructuralSubtypeWorkflow(structuralPerlWorkflow, "perl-consumer.yml");
