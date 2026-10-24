@@ -6,19 +6,25 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
-import { createCompiledPhpWasmModel, generateCompiledPhpWasmLeanAdapters } from "../../src/build/php-wasm-graph-model.mjs";
-import { generateCompiledPhpWasmOwned } from "../../src/build/php-wasm-owned-component.mjs";
-import { phpWasmCopiedPins } from "../../src/build/php-wasm-copied-artifacts.mjs";
-import { validatePackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
+import { moduleAtProducerWithSourceReads } from "./producer-module.mjs";
 import { ownedRustReceiverSource } from "./owned-rust-receiver-fixture.mjs";
 import { ownedJvmPlainReceiverSource } from "./owned-jvm-receiver-fixture.mjs";
-import { ownedPhpPlainInstalledReceiverProbe, ownedPhpUnanchoredReceiverProbe } from "./owned-php-receiver-fixture.mjs";
-import { ownedPhpWasmInstalledHost } from "./owned-php-wasm-packages.mjs";
 import { assertOwnedPhpWasmBorrowRuntime, assertOwnedPhpWasmBorrowFibers, assertOwnedPhpWasmBorrowPackages } from "./owned-php-wasm-borrow-evidence.mjs";
 import { assertOwnedPhpWasmReceiverCi } from "./owned-php-wasm-receiver-ci.mjs";
 import { validateBrickMathInstall } from "./brick-math.mjs";
 
 export const ownedPhpWasmReceiverCommand = "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 npm run test:owned-php-wasm-receivers";
+export const ownedPhpWasmReceiverProducer = "a56a39a7e959067643b545800b7d5e95082beafd";
+let producerPromise;
+const producerModules = () => producerPromise ??= Promise.all([
+	"src/build/php-wasm-graph-model.mjs"
+	, "src/build/php-wasm-owned-component.mjs"
+	, "src/build/php-wasm-copied-artifacts.mjs"
+	, "src/release/package-set-receipt.mjs"
+	, "tests/helpers/owned-php-receiver-fixture.mjs"
+	, "tests/helpers/owned-php-wasm-packages.mjs"
+].map(path => moduleAtProducerWithSourceReads(ownedPhpWasmReceiverProducer, path)))
+	.then(modules => Object.assign({}, ...modules));
 export const ownedPhpWasmReceiverScope = Object.freeze({
 	profiles: ["php-wasm"], sourcePaths: ["ordinary-source", "reviewed-ir"]
 	, compiledLean: true, installedCli: true, installedNpm: true
@@ -54,7 +60,8 @@ const block = (source, heading, language) => {
 	const match = section.match(new RegExp("```" + language + "\\n([^]*?)\\n```"));
 	assert.ok(match); return match[1] + "\n";
 };
-const resourceConsumer = (consuming, unanchored, installed) => {
+const resourceConsumer = async (consuming, unanchored, installed) => {
+	const { ownedPhpPlainInstalledReceiverProbe, ownedPhpUnanchoredReceiverProbe } = await producerModules();
 	let source = ownedPhpPlainInstalledReceiverProbe(consuming);
 	if(unanchored)
 	{
@@ -83,7 +90,11 @@ const resourceConsumer = (consuming, unanchored, installed) => {
  * @param lean - Base Lean fixture source.
  * @param installed - Require npm and Composer installation evidence.
  */
-export const assertOwnedPhpWasmReceiverResource = (item, lean, installed = false) => {
+export const assertOwnedPhpWasmReceiverResource = async (item, lean, installed = false) => {
+	const {
+		createCompiledPhpWasmModel, generateCompiledPhpWasmLeanAdapters
+		, generateCompiledPhpWasmOwned, phpWasmCopiedPins, ownedPhpWasmInstalledHost
+	} = await producerModules();
 	flags(item, ["compiledLean", "sourceUnchanged"]);
 	assert.equal(item.schemaVersion, 1); assert.equal(item.installedPackage, installed);
 	assert.equal(item.producerInterface, "php-wasm-build-api");
@@ -108,7 +119,7 @@ export const assertOwnedPhpWasmReceiverResource = (item, lean, installed = false
 	assert.equal(item.receipt.modelSha256, hash(model)); assert.equal(item.receipt.runtimeIdentity, item.runtimeIdentity);
 	digest(item.runtimeIdentity); assert.equal(item.observer.runtimeIdentity, item.runtimeIdentity);
 	assert.equal(item.observer.testOnly, true); digest(item.observer.binarySha256);
-	assert.equal(item.consumerSha256, sha256(resourceConsumer(consuming, unanchored, installed)));
+	assert.equal(item.consumerSha256, sha256(await resourceConsumer(consuming, unanchored, installed)));
 	digest(item.runnerSha256);
 	const checks = unanchored ? 12 : consuming ? 26 : 25;
 	const checkRun = run => {
@@ -171,6 +182,7 @@ export const assertOwnedPhpWasmReceiverResource = (item, lean, installed = false
  * @param record - Frozen execution evidence and bound source identities.
  */
 export const assertOwnedPhpWasmReceiverExecution = async record => {
+	const { validatePackageSetReceipt } = await producerModules();
 	assert.equal(record.acceptance, "passed"); assert.deepEqual(record.scope, ownedPhpWasmReceiverScope);
 	assert.equal(record.run.command, ownedPhpWasmReceiverCommand); assert.equal(record.run.exitCode, 0);
 	assert.equal(record.run.sha256, sha256(record.run.text));
@@ -186,14 +198,14 @@ export const assertOwnedPhpWasmReceiverExecution = async record => {
 	{
 		assert.equal(Boolean(item.input.sourceIdentity.reviewedBindingIr), item.mode === "reviewed");
 		assert.equal(item.input.sourceIdentity.modules.find(module => module.module === "Owned").source.sha256, sha256(lean + ownedRustReceiverSource));
-		await assertOwnedPhpWasmBorrowRuntime(item, true);
+		await assertOwnedPhpWasmBorrowRuntime(item, true, ownedPhpWasmReceiverProducer);
 		assert.equal(item.runtimeIdentity, record.packages.runtimeIdentity);
 	}
-	await assertOwnedPhpWasmBorrowFibers(record.nativeFibers, true);
-	await assertOwnedPhpWasmBorrowPackages(record.packages, lean + ownedRustReceiverSource, true);
+	await assertOwnedPhpWasmBorrowFibers(record.nativeFibers, true, ownedPhpWasmReceiverProducer);
+	await assertOwnedPhpWasmBorrowPackages(record.packages, lean + ownedRustReceiverSource, true, ownedPhpWasmReceiverProducer);
 	for(const item of [...record.resources, ...record.resourcePackages])
 	{
-		assertOwnedPhpWasmReceiverResource(item, lean, record.resourcePackages.includes(item));
+		await assertOwnedPhpWasmReceiverResource(item, lean, record.resourcePackages.includes(item));
 		assert.equal(item.runtimeIdentity, record.packages.runtimeIdentity);
 	}
 	const author = await readFile("docs/publish/php.md", "utf8"), consumer = await readFile("docs/php.md", "utf8");

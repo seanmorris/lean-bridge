@@ -7,27 +7,35 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { ownedReceiverHistoricalBytes } from "./owned-receiver-history.mjs";
-import { generateOwnedNativeValueAdapters } from "../../src/backends/native/owned-value-adapters.mjs";
-import { ownedAggregateTransferRuntime } from "../../src/backends/native/owned-aggregate-transfers.mjs";
-import { ownedAggregateLeaseRuntime } from "../../src/backends/native/owned-aggregate-leases.mjs";
-import { generateOwnedPhpZendExtension } from "../../src/backends/php/owned-zend-extension.mjs";
-import { generateOwnedPhpZendPhp } from "../../src/backends/php/owned-zend-php.mjs";
-import { compileOwnedPhpZendModel } from "../../src/backends/php/owned-zend-model.mjs";
-import { bundledBrickMath } from "../../src/backends/php/brick-math.mjs";
-import { nativeAllocationGuardHeader } from "../../src/build/native-allocation-guard.mjs";
-import { createCompiledPhpWasmModel, generateCompiledPhpWasmLeanAdapters } from "../../src/build/php-wasm-graph-model.mjs";
-import { generateCompiledPhpWasmOwned } from "../../src/build/php-wasm-owned-component.mjs";
-import { phpWasmCopiedPins } from "../../src/build/php-wasm-copied-artifacts.mjs";
-import { validatePackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
+import { moduleAtProducerWithSourceReads } from "./producer-module.mjs";
 import { ownedRustBorrowSource } from "./owned-rust-borrow-fixture.mjs";
-import { ownedPhpWasmTransferProbe } from "./owned-php-wasm-transfer-probe.mjs";
 import { assertOwnedPhpWasmBorrowCi } from "./owned-php-wasm-borrow-ci.mjs";
 import { validateBrickMathInstall } from "./brick-math.mjs";
-import { ownedPhpInstalledReceiverProbe } from "./owned-php-receiver-fixture.mjs";
-import { ownedPhpWasmInstalledHost } from "./owned-php-wasm-packages.mjs";
 import { ownedPhpWasmReceiverHistoricalBytes } from "./owned-php-wasm-receiver-history.mjs";
 
 export const ownedPhpWasmBorrowCommand = "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 npm run test:owned-php-wasm-borrows";
+export const ownedPhpWasmBorrowProducer = "49555c6612107ef8e6a3f8f7576312a5c32da894";
+const producerPromises = new Map();
+const producerModules = producer => {
+	assert.match(producer, /^[a-f0-9]{40}$/u);
+	if(!producerPromises.has(producer)) producerPromises.set(producer, Promise.all([
+		"src/backends/native/owned-value-adapters.mjs"
+		, "src/backends/native/owned-aggregate-transfers.mjs"
+		, "src/backends/native/owned-aggregate-leases.mjs"
+		, "src/backends/php/owned-zend-extension.mjs"
+		, "src/backends/php/owned-zend-php.mjs"
+		, "src/backends/php/owned-zend-model.mjs"
+		, "src/backends/php/brick-math.mjs"
+		, "src/build/native-allocation-guard.mjs"
+		, "src/build/php-wasm-graph-model.mjs"
+		, "src/build/php-wasm-owned-component.mjs"
+		, "src/build/php-wasm-copied-artifacts.mjs"
+		, "src/release/package-set-receipt.mjs"
+		, "tests/helpers/owned-php-wasm-transfer-probe.mjs"
+	].map(path => moduleAtProducerWithSourceReads(producer, path)))
+		.then(modules => Object.assign({}, ...modules)));
+	return producerPromises.get(producer);
+};
 
 /**
  * Reconstruct installed artifacts and check every Node and Chromium arrangement.
@@ -35,8 +43,18 @@ export const ownedPhpWasmBorrowCommand = "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.
  * @param packages - Installed npm and Composer execution reports.
  * @param lean - Complete source compiled by both independent builds.
  * @param receiverExports - Require nominal receiver members and anchors.
+ * @param producer - Exact generator revision for this receipt's family.
  */
-export const assertOwnedPhpWasmBorrowPackages = async (packages, lean, receiverExports = false) => {
+export const assertOwnedPhpWasmBorrowPackages = async (packages, lean, receiverExports = false, producer = ownedPhpWasmBorrowProducer) => {
+	const {
+		phpWasmCopiedPins, createCompiledPhpWasmModel
+		, generateCompiledPhpWasmLeanAdapters, generateCompiledPhpWasmOwned
+		, validatePackageSetReceipt, compileOwnedPhpZendModel
+	} = await producerModules(producer);
+	const receiver = receiverExports ? Object.assign({}, ...await Promise.all([
+		"tests/helpers/owned-php-receiver-fixture.mjs"
+		, "tests/helpers/owned-php-wasm-packages.mjs"
+	].map(path => moduleAtProducerWithSourceReads(producer, path)))) : null;
 	assert.equal(packages.profile, receiverExports ? "installed-owned-php-wasm-receivers" : "installed-owned-php-wasm-borrows");
 	flags(packages, ["compiledLean", "installedPackage", "cliAdmission"]);
 	assert.equal(packages.runtimeIdentity, hash(packages.runtimeManifest));
@@ -69,11 +87,11 @@ export const assertOwnedPhpWasmBorrowPackages = async (packages, lean, receiverE
 		{ assert.equal(build.status, "ok"); assert.deepEqual(build.result.targets, ["php-wasm"]); }
 		validatePackageSetReceipt(item.packageSetReceipt); assert.equal(item.verification.status, "ok");
 		assert.equal(item.verification.result.verified, true); assert.equal(item.verification.result.receiptSha256, hash(item.packageSetReceipt));
-		const consumer = (receiverExports ? await ownedPhpInstalledReceiverProbe() : await fixture("owned-installed-php-borrows"))
+		const consumer = (receiverExports ? await receiver.ownedPhpInstalledReceiverProbe() : await fixture("owned-installed-php-borrows"))
 			.replace("require __DIR__ . '/vendor/autoload.php';", "// The host has already loaded the installed Composer or embedded autoloader.")
 			.replace("'ordinaryAutoload' => true", "'phpBits' => PHP_INT_SIZE * 8, 'ordinaryAutoload' => true");
 		assert.equal(item.consumerSha256, sha256(consumer));
-		if(receiverExports) assert.equal(item.runnerSha256, sha256(ownedPhpWasmInstalledHost(item.packageReceipt.npmSettings.name, true)));
+		if(receiverExports) assert.equal(item.runnerSha256, sha256(receiver.ownedPhpWasmInstalledHost(item.packageReceipt.npmSettings.name, true)));
 		const names = compileOwnedPhpZendModel(model.bindingIr, { transferredInputs: true, anchoredResults: true, receiverExports }).functions.map(fn => fn.publicName).sort();
 		const checkRun = run => {
 			assert.equal(run.observed.checks, receiverExports ? 222 : 176); assert.equal(run.observed.phpBits, 32);
@@ -157,8 +175,15 @@ const mutations = [
  *
  * @param item - Complete runtime execution with captured Lean compiler inputs.
  * @param receiverExports - Require nominal members and their negative probes.
+ * @param producer - Exact generator revision for this receipt's family.
  */
-export const assertOwnedPhpWasmBorrowRuntime = async (item, receiverExports = false) => {
+export const assertOwnedPhpWasmBorrowRuntime = async (item, receiverExports = false, producer = ownedPhpWasmBorrowProducer) => {
+	const {
+		generateOwnedNativeValueAdapters, generateOwnedPhpZendExtension
+		, generateOwnedPhpZendPhp, bundledBrickMath
+		, ownedAggregateLeaseRuntime, ownedAggregateTransferRuntime
+		, nativeAllocationGuardHeader, ownedPhpWasmTransferProbe
+	} = await producerModules(producer);
 	const native = generateOwnedNativeValueAdapters({ ...item.input, wordBits: 32
 		, hostCallbacks: true, transferredInputs: true
 		, anchoredResults: true, receiverExports });
@@ -249,8 +274,14 @@ export const assertOwnedPhpWasmBorrowRuntime = async (item, receiverExports = fa
  *
  * @param item - Native companion report, never counted as a Wasm execution.
  * @param receiverExports - Require checked methods and properties in guards.
+ * @param producer - Exact generator revision for this receipt's family.
  */
-export const assertOwnedPhpWasmBorrowFibers = async (item, receiverExports = false) => {
+export const assertOwnedPhpWasmBorrowFibers = async (item, receiverExports = false, producer = ownedPhpWasmBorrowProducer) => {
+	const {
+		generateOwnedNativeValueAdapters, generateOwnedPhpZendExtension
+		, generateOwnedPhpZendPhp, bundledBrickMath
+		, ownedAggregateTransferRuntime, ownedPhpWasmTransferProbe
+	} = await producerModules(producer);
 	assert.equal(item.profile, receiverExports ? "native-zend-receiver-fibers" : "native-zend-borrow-fibers"); assert.equal(item.wasm32, false);
 	assert.match(item.phpVersion, /^PHP 8\./u);
 	const options = { ...item.input, hostCallbacks: true, transferredInputs: true, anchoredResults: true, receiverExports };
@@ -298,6 +329,7 @@ export const assertOwnedPhpWasmBorrowFibers = async (item, receiverExports = fal
  * @param record - Frozen execution reports, source identities and exact TAP log.
  */
 export const assertOwnedPhpWasmBorrowExecution = async record => {
+	const { validatePackageSetReceipt } = await producerModules(ownedPhpWasmBorrowProducer);
 	assert.equal(record.acceptance, "passed"); assert.deepEqual(record.scope, ownedPhpWasmBorrowScope);
 	assert.equal(record.run.command, ownedPhpWasmBorrowCommand); assert.equal(record.run.exitCode, 0);
 	assert.equal(record.run.sha256, sha256(record.run.text));

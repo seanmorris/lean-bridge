@@ -7,19 +7,30 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { ownedReceiverHistoricalBytes } from "./owned-receiver-history.mjs";
-import { generateOwnedCPackage } from "../../src/backends/c/owned-package.mjs";
-import { generateOwnedRubyConversions } from "../../src/backends/ruby/owned-conversions.mjs";
-import { historicalOwnedRubyCallbackPackage as generateOwnedRubyPackage
-	, historicalOwnedRubyCallbackRuntime as ownedRubyRuntime } from "./owned-ruby-callback-generated-history.mjs";
-import { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from "../../src/build/native-graph-model.mjs";
-import { ownedRubyAdapterSources } from "../../src/build/owned-ruby-artifacts.mjs";
-import { validatePackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
-import { ownedRustBorrowSource, ownedRustBorrowNativeSource } from "./owned-rust-borrow-fixture.mjs";
+import { moduleAtProducerWithSourceReads } from "./producer-module.mjs";
+import { ownedRustBorrowSource } from "./owned-rust-borrow-fixture.mjs";
 import { beforeManagedClose } from "./managed-close-history.mjs";
 import { beforeManagedCloseGenerated, historicalManagedCloseRubyPackage } from "./managed-close-generated-history.mjs";
 
 export const ownedRubyBorrowScript = "LEAN_BRIDGE_OWNED_RUBY_BORROW_TEST=1 node --test --test-concurrency=1 tests/owned-ruby-borrows.test.mjs tests/owned-ruby-borrow-packaging.test.mjs";
 export const ownedRubyBorrowCommand = "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 npm run test:owned-ruby-borrows";
+export const ownedRubyBorrowProducer = "fbdcc20287f8491dbe6435be003a08733fa717c4";
+export const ownedRubyCloseProducer = "85e684e746df8458e48f18ce2962b4a54ea3c989";
+const producerPromises = new Map();
+const producerModules = producer => {
+	if(!producerPromises.has(producer)) producerPromises.set(producer, Promise.all([
+		"src/backends/c/owned-package.mjs"
+		, "src/backends/ruby/owned-conversions.mjs"
+		, "src/backends/ruby/owned-package.mjs"
+		, "src/backends/ruby/owned-runtime.mjs"
+		, "src/build/native-graph-model.mjs"
+		, "src/build/owned-ruby-artifacts.mjs"
+		, "src/release/package-set-receipt.mjs"
+		, "tests/helpers/owned-rust-borrow-fixture.mjs"
+	].map(path => moduleAtProducerWithSourceReads(producer, path)))
+		.then(modules => Object.assign({}, ...modules)));
+	return producerPromises.get(producer);
+};
 export const ownedRubyBorrowScope = Object.freeze({
 	profiles: ["ruby"], sharedComponentConsumers: ["cpp", "rust", "python"]
 	, sourcePaths: ["ordinary-source", "reviewed-ir"]
@@ -50,16 +61,24 @@ const fields = ["values", "anchor", "expiration", "descendants", "emptyValues"
  * Regenerate all checked interfaces and require actual installed observations.
  *
  * @param record - Exact execution log, compiler inputs and observed receipts.
+ * @param producer - Original borrow or managed-close generator revision.
  */
-export const assertOwnedRubyBorrowExecution = async record => {
+export const assertOwnedRubyBorrowExecution = async (record, producer = ownedRubyBorrowProducer) => {
 	const repaired = record.kind === "owned-ruby-close-repair";
 	assert.equal(record.kind, repaired ? "owned-ruby-close-repair" : "owned-ruby-borrows");
+	assert.equal(producer, repaired ? ownedRubyCloseProducer : ownedRubyBorrowProducer);
 	assert.equal(record.acceptance, "passed"); assert.deepEqual(record.scope, repaired ? ownedRubyCloseScope : ownedRubyBorrowScope);
 	assert.equal(record.run.command, repaired ? ownedRubyCloseCommand : ownedRubyBorrowCommand);
 	assert.equal(record.run.exitCode, 0); assert.equal(record.run.sha256, sha256(record.run.text));
 	for(const [name, count] of Object.entries({ tests: 7, pass: 7, fail: 0, skipped: 0, cancelled: 0, todo: 0 }))
 		assert.match(record.run.text, new RegExp(`^# ${name} ${count}$`, "mu"));
 	assert.doesNotMatch(record.run.text, /^not ok|# SKIP|# TODO/mu);
+	const {
+		generateOwnedCPackage, generateOwnedRubyConversions, generateOwnedRubyPackage
+		, ownedRubyRuntime, createCompiledNativeModel
+		, generateCompiledNativeLeanAdapters, ownedRubyAdapterSources
+		, validatePackageSetReceipt, ownedRustBorrowNativeSource
+	} = await producerModules(producer);
 	for(const group of [record.runtime, record.packages, record.borrowOnly.observations])
 		assert.deepEqual(group.map(item => item.mode), ["ordinary", "reviewed"]);
 	const baseLean = await readFile("tests/fixtures/onboarding/owned-aggregates/Owned.lean", "utf8");

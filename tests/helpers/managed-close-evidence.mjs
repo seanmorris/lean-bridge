@@ -5,7 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { assertOwnedPythonBorrowExecution, assertOwnedPythonBorrowCi } from "./owned-python-borrow-evidence.mjs";
-import { assertOwnedRubyBorrowExecution, assertOwnedRubyBorrowCi } from "./owned-ruby-borrow-evidence.mjs";
+import { assertOwnedRubyBorrowExecution, assertOwnedRubyBorrowCi, ownedRubyCloseProducer } from "./owned-ruby-borrow-evidence.mjs";
 
 export const managedCloseScope = Object.freeze({
 	profiles: ["python", "ruby"]
@@ -31,7 +31,7 @@ export const assertManagedCloseExecution = async record => {
 	assert.equal(record.python.kind, "owned-python-close-repair");
 	assert.equal(record.ruby.kind, "owned-ruby-close-repair");
 	await assertOwnedPythonBorrowExecution(record.python);
-	await assertOwnedRubyBorrowExecution(record.ruby);
+	await assertOwnedRubyBorrowExecution(record.ruby, ownedRubyCloseProducer);
 };
 
 /**
