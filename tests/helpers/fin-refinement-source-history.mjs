@@ -51,6 +51,7 @@ import { beforeOwnedPhpWasmHostedArchiveSource, ownedPhpWasmHostedArchiveNormali
 import { beforeOwnedNpmCiEnvironmentRepairSource, ownedNpmCiEnvironmentRepairNormalizationPaths } from "./owned-npm-ci-environment-repair-source-history.mjs";
 import { beforeCoreInventoryEndpointRepairSource, coreInventoryEndpointRepairNormalizationPaths } from "./core-inventory-endpoint-repair-source-history.mjs";
 import { beforeCoreInventoryFollowupRepairSource, coreInventoryFollowupRepairNormalizationPaths } from "./core-inventory-followup-repair-source-history.mjs";
+import { beforeCoreFinCppRepairSource, coreFinCppRepairNormalizationPaths } from "./core-fin-cpp-repair-source-history.mjs";
 import { beforeCoreEvidenceMemoryRepairSource, coreEvidenceMemoryRepairNormalizationPaths } from "./core-evidence-memory-repair-source-history.mjs";
 import { beforeValueIndexPromotionMilestoneRepairSource, valueIndexPromotionMilestoneRepairNormalizationPaths } from "./value-index-promotion-milestone-repair-source-history.mjs";
 import { beforeCoreMilestoneReplayRepairSource, coreMilestoneReplayRepairNormalizationPaths } from "./core-milestone-replay-repair-source-history.mjs";
@@ -2144,7 +2145,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...coreInventoryFollowupRepairNormalizationPaths
+	...coreFinCppRepairNormalizationPaths
+	, ...coreInventoryFollowupRepairNormalizationPaths
 	, ...coreInventoryEndpointRepairNormalizationPaths
 	, ...ownedNpmCiEnvironmentRepairNormalizationPaths
 	, ...ownedPhpWasmHostedArchiveNormalizationPaths
@@ -3032,7 +3034,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
 	let stage
-		= beforeCoreInventoryFollowupRepairSource(path, text, expected);
+		= beforeCoreFinCppRepairSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeCoreInventoryFollowupRepairSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;
