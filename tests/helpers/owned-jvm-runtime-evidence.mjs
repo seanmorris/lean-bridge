@@ -6,11 +6,12 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { ownedJvmRuntime } from "../../src/backends/jvm/owned-runtime.mjs";
-import { ownedJvmRuntimeProbeSources } from "./owned-jvm-runtime-native.mjs";
+import { moduleAtProducer } from "./producer-module.mjs";
 import { ownedJvmTransferHistoricalBytes } from "./owned-jvm-transfer-history.mjs";
 
 export const ownedJvmRuntimeReceipt = "docs/evidence/owned-jvm-runtime-20260927.json";
+// The receipt's eight recorded sources are exactly this commit's bytes.
+export const ownedJvmRuntimeProducer = "7ee68a3f3b3f3064acb81ef13a775bd2257d7f17";
 export const ownedJvmRuntimeSources = [
 	"docs/evidence/owned-jvm-runtime-20260927.md"
 	, "src/backends/jvm/owned-runtime.mjs"
@@ -28,10 +29,16 @@ export const ownedJvmRuntimeScope = { compiledLean: true
 
 /**
  * Check complete compiler inputs, emitted native/Java code and observed cleanup.
+ * Native and Java sources are regenerated with the receipt's own producer
+ * modules; present-day behavior is covered by tests/owned-jvm-runtime.test.mjs.
  *
  * @param record - Frozen runtime foundation receipt.
  */
 export const assertOwnedJvmRuntime = async record => {
+	const [{ ownedJvmRuntimeProbeSources }, { ownedJvmRuntime }] = await Promise.all([
+		moduleAtProducer(ownedJvmRuntimeProducer, "tests/helpers/owned-jvm-runtime-native.mjs")
+		, moduleAtProducer(ownedJvmRuntimeProducer, "src/backends/jvm/owned-runtime.mjs")
+	]);
 	assert.equal(record.schemaVersion, 1); assert.equal(record.planNode, 1219);
 	assert.equal(record.kind, "owned-jvm-runtime-foundation");
 	assert.equal(record.baselineRevision, "6e73096a2e309bca71106924a5276e0a2ddb0c8c");
