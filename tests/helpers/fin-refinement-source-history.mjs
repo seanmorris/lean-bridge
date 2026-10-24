@@ -58,6 +58,7 @@ import { beforeJvmCallbackProducerReplaySource, jvmCallbackProducerReplayNormali
 import { beforePhpWasmCallbackProducerReplaySource, phpWasmCallbackProducerReplayNormalizationPaths } from "./php-wasm-callback-producer-replay-source-history.mjs";
 import { beforeCoreReceiverEndpointRepairSource, coreReceiverEndpointRepairNormalizationPaths } from "./core-receiver-endpoint-repair-source-history.mjs";
 import { beforeCorePerlConsumerEndpointRepairSource, corePerlConsumerEndpointRepairNormalizationPaths } from "./core-perl-consumer-endpoint-repair-source-history.mjs";
+import { beforeOwnedNpmScopedProducerSource, ownedNpmScopedProducerNormalizationPaths } from "./owned-npm-scoped-producer-source-history.mjs";
 import { beforeCoreEvidenceMemoryRepairSource, coreEvidenceMemoryRepairNormalizationPaths } from "./core-evidence-memory-repair-source-history.mjs";
 import { beforeValueIndexPromotionMilestoneRepairSource, valueIndexPromotionMilestoneRepairNormalizationPaths } from "./value-index-promotion-milestone-repair-source-history.mjs";
 import { beforeCoreMilestoneReplayRepairSource, coreMilestoneReplayRepairNormalizationPaths } from "./core-milestone-replay-repair-source-history.mjs";
@@ -2151,7 +2152,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...corePerlConsumerEndpointRepairNormalizationPaths
+	...ownedNpmScopedProducerNormalizationPaths
+	, ...corePerlConsumerEndpointRepairNormalizationPaths
 	, ...coreReceiverEndpointRepairNormalizationPaths
 	, ...phpWasmCallbackProducerReplayNormalizationPaths
 	, ...jvmCallbackProducerReplayNormalizationPaths
@@ -3045,7 +3047,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeCorePerlConsumerEndpointRepairSource(path, text, expected);
+	let stage = beforeOwnedNpmScopedProducerSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeCorePerlConsumerEndpointRepairSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;

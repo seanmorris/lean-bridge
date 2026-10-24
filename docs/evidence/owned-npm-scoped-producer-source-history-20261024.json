@@ -1,0 +1,282 @@
+{
+  "additions": [
+    {
+      "currentSha256": "1bf24674aa255c400c6bdff995ac0bd713de3af28065ed7e13fe0cf1fee53700",
+      "path": ".github/workflows/owned-checked-record-npm-browser.yml"
+    },
+    {
+      "currentSha256": "1ebf5211f6f48932ee51b5df3b3906e4cb7dba032bf71fc58a3f727fa0493f78",
+      "path": "tests/helpers/owned-checked-record-npm-producer.mjs"
+    },
+    {
+      "currentSha256": "7745faedd59834f6ef8519a96f5a9d0120a9f24f24b841464ced8f5217cfa429",
+      "path": "tests/helpers/owned-checked-record-npm-producer-tests.mjs"
+    },
+    {
+      "currentSha256": "d317d93b986aebb9bf515ad30de447b1546ef18ba6bbe00d2d28f04fd5a2b03f",
+      "path": "scripts/update-owned-npm-scoped-producer-source-history.mjs"
+    },
+    {
+      "currentSha256": "34b23e32f37995ce7aee4db1d4cc0ddd291db8531e1c63286defce1218ae867d",
+      "path": "tests/helpers/owned-npm-scoped-producer-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "b45ddbb18824f738c253cdce64ecc9e5d9f241338b911a1f9ce3b01e8c648099",
+      "path": "tests/helpers/owned-npm-scoped-producer-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "06aae2741485e3a2f4e731f3823c60aa87eebeab",
+  "implementationCommits": [
+    "06aae2741485e3a2f4e731f3823c60aa87eebeab"
+  ],
+  "integrationBaseCommit": "06aae2741485e3a2f4e731f3823c60aa87eebeab",
+  "integrationUpdates": [
+    {
+      "currentSha256": "bd1ac1b7c6f8ec0b4bd04b25a1dad3c1f84eb470cc9e17dec165100f93d2cc5d",
+      "edits": [
+        {
+          "current": "import { beforeOwnedNpmScopedProducerSource, ownedNpmScopedProducerNormalizationPaths } from \"./owned-npm-scoped-producer-source-history.mjs\";\n",
+          "previous": "",
+          "start": 8150
+        },
+        {
+          "current": "\t...ownedNpmScopedProducerNormalizationPaths\n\t, ...corePerlConsumerEndpointRepairNormalizationPaths\n",
+          "previous": "\t...corePerlConsumerEndpointRepairNormalizationPaths\n",
+          "start": 181332
+        },
+        {
+          "current": "\tlet stage = beforeOwnedNpmScopedProducerSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCorePerlConsumerEndpointRepairSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeCorePerlConsumerEndpointRepairSource(path, text, expected);\n",
+          "start": 224261
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "e7411951e8c140123d9e2be4062439016b36e10993e9d0c4278414b8f2c23667"
+    },
+    {
+      "currentSha256": "9c77dfb3365a5bbb594098e33dc6b7fb27d09dc32f84de29bbbf454d228ab4ff",
+      "edits": [
+        {
+          "current": "import \"./helpers/owned-checked-record-npm-producer-tests.mjs\";\nimport \"./helpers/owned-npm-scoped-producer-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 5235
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "15135bfe2bbce1515ce67173e9fe228855c8f23dac6e3b3269d4a6974de028a0"
+    }
+  ],
+  "milestone": "owned-npm-scoped-producer-source-v1",
+  "predecessorCommit": "d3a9e0d2c87a2171f96812f48e0ed04a38e0511d",
+  "schemaVersion": 1,
+  "scope": "Add a one-job npm and browser workflow that preserves the complete recurring JavaScript producer. Authenticate only the exact alternate workflow, bind create events to a non-release tag naming the producer commit, and retain both workflow sources. Keep Consumer Matrix and its full support summary unchanged. Document dispatch, bootstrap and archive requirements. Refresh exactly eleven live documentation source hashes and preserve every other inventory byte. Original archives, runtime behavior and installed support claims do not change. Fresh hosted acceptance and independent capture remain required.",
+  "updates": [
+    {
+      "currentSha256": "125c9bfa620b71b15f39d78b3ebd466692064e789476ce85bf36f2ac55651450",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"6c1a59dbc2731390baa936c5776b2418c29f78678e7b9f7633fc97252919e1b1\"\n",
+          "previous": "          \"sha256\": \"dfdbc01a11b1c272e68e658cfbad28f14131244a23e0566a053f373954993a27\"\n",
+          "start": 1167697
+        },
+        {
+          "current": "          \"sha256\": \"6c1a59dbc2731390baa936c5776b2418c29f78678e7b9f7633fc97252919e1b1\"\n",
+          "previous": "          \"sha256\": \"dfdbc01a11b1c272e68e658cfbad28f14131244a23e0566a053f373954993a27\"\n",
+          "start": 1177811
+        },
+        {
+          "current": "          \"sha256\": \"6c1a59dbc2731390baa936c5776b2418c29f78678e7b9f7633fc97252919e1b1\"\n",
+          "previous": "          \"sha256\": \"dfdbc01a11b1c272e68e658cfbad28f14131244a23e0566a053f373954993a27\"\n",
+          "start": 1189747
+        },
+        {
+          "current": "          \"sha256\": \"6c1a59dbc2731390baa936c5776b2418c29f78678e7b9f7633fc97252919e1b1\"\n",
+          "previous": "          \"sha256\": \"dfdbc01a11b1c272e68e658cfbad28f14131244a23e0566a053f373954993a27\"\n",
+          "start": 1222308
+        },
+        {
+          "current": "          \"sha256\": \"6c1a59dbc2731390baa936c5776b2418c29f78678e7b9f7633fc97252919e1b1\"\n",
+          "previous": "          \"sha256\": \"dfdbc01a11b1c272e68e658cfbad28f14131244a23e0566a053f373954993a27\"\n",
+          "start": 1252587
+        },
+        {
+          "current": "          \"sha256\": \"6c1a59dbc2731390baa936c5776b2418c29f78678e7b9f7633fc97252919e1b1\"\n",
+          "previous": "          \"sha256\": \"dfdbc01a11b1c272e68e658cfbad28f14131244a23e0566a053f373954993a27\"\n",
+          "start": 1285738
+        },
+        {
+          "current": "          \"sha256\": \"6c1a59dbc2731390baa936c5776b2418c29f78678e7b9f7633fc97252919e1b1\"\n",
+          "previous": "          \"sha256\": \"dfdbc01a11b1c272e68e658cfbad28f14131244a23e0566a053f373954993a27\"\n",
+          "start": 1325841
+        },
+        {
+          "current": "          \"sha256\": \"6c1a59dbc2731390baa936c5776b2418c29f78678e7b9f7633fc97252919e1b1\"\n",
+          "previous": "          \"sha256\": \"dfdbc01a11b1c272e68e658cfbad28f14131244a23e0566a053f373954993a27\"\n",
+          "start": 1352261
+        },
+        {
+          "current": "          \"sha256\": \"6c1a59dbc2731390baa936c5776b2418c29f78678e7b9f7633fc97252919e1b1\"\n",
+          "previous": "          \"sha256\": \"dfdbc01a11b1c272e68e658cfbad28f14131244a23e0566a053f373954993a27\"\n",
+          "start": 1374941
+        },
+        {
+          "current": "          \"sha256\": \"6c1a59dbc2731390baa936c5776b2418c29f78678e7b9f7633fc97252919e1b1\"\n",
+          "previous": "          \"sha256\": \"dfdbc01a11b1c272e68e658cfbad28f14131244a23e0566a053f373954993a27\"\n",
+          "start": 1394608
+        },
+        {
+          "current": "          \"sha256\": \"6c1a59dbc2731390baa936c5776b2418c29f78678e7b9f7633fc97252919e1b1\"\n",
+          "previous": "          \"sha256\": \"dfdbc01a11b1c272e68e658cfbad28f14131244a23e0566a053f373954993a27\"\n",
+          "start": 1417696
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "f1a76b60559c1f514d9615aa309a106fdb5ce645b4406e261fcc459ad815d0a1"
+    },
+    {
+      "currentSha256": "6c1a59dbc2731390baa936c5776b2418c29f78678e7b9f7633fc97252919e1b1",
+      "edits": [
+        {
+          "current": "## Capture owned checked-record npm and browser evidence\n\nThe `Owned checked-record npm and browser producer` workflow runs the complete\nJavaScript/Wasm job from the recurring Consumer Matrix. It builds the production\nruntime, exercises ordinary and reviewed full/result-only npm packages, and\nretains the Node, TypeScript, Chromium, Firefox and WebKit observations. A\ncontract test rejects differences between the two jobs. This scoped run does\nnot replace the full Consumer Matrix or its support summary.\n\nOnce GitHub has registered the workflow, run it against a pushed branch:\n\n```sh\ngh workflow run owned-checked-record-npm-browser.yml --ref YOUR_BRANCH\n```\n\nBefore the workflow reaches the default branch, its first run can use a\nnon-release CI tag. Start from a clean, pushed commit whose message includes\n`[skip ci]`. That marker suppresses unrelated push workflows; the `create`\ntrigger accepts only a tag named for the exact commit. Check the status and\ncommit message before creating it:\n\n```sh\ngit status --short\ngit show -s --format=%B HEAD\nLEAN_BRIDGE_CI_REVISION=$(git rev-parse HEAD)\ngit push origin \"$LEAN_BRIDGE_CI_REVISION:refs/tags/ci/owned-checked-record-npm/$LEAN_BRIDGE_CI_REVISION\"\n```\n\nDo not force-update an existing CI tag. Follow the original run to completion;\nrerunning that run keeps its original source revision. A corrected producer\nneeds a new pushed commit and a new tag or dispatch.\n\nAfter a successful producer, download its original artifact ZIP and the exact\nGitHub run, job and artifact API records. Archive them from a clean checkout:\n\n```sh\nnode scripts/archive-owned-checked-record-evidence.mjs \\\n  --lane javascript \\\n  --artifact-zip /absolute/path/to/artifact.zip \\\n  --run-json /absolute/path/to/run.json \\\n  --job-json /absolute/path/to/job.json \\\n  --artifact-json /absolute/path/to/artifact.json\n```\n\nThe archiver authenticates either the original Consumer Matrix workflow or this\nexact scoped producer. For the scoped producer it requires a successful run,\nverifies both workflow sources at the producer commit, and retains both in the\nsource closure. Every route must retain the package archives actually installed\nand executed. Cancelled, incomplete or failed scoped runs cannot establish\nacceptance. Archive capture alone does not promote type support.\n\n",
+          "previous": "",
+          "start": 1382
+        }
+      ],
+      "path": "docs/contributing/testing.md",
+      "previousSha256": "dfdbc01a11b1c272e68e658cfbad28f14131244a23e0566a053f373954993a27"
+    },
+    {
+      "currentSha256": "8b1a43464cf8da94faf262ff3ad6b7f59d81794e2382aab6a2bcae92ef317e91",
+      "edits": [
+        {
+          "current": "\tconst scopedCreate = Object.hasOwn(expected, \"createTagPrefix\");\n",
+          "previous": "",
+          "start": 2676
+        },
+        {
+          "current": "\t\t, ...scopedCreate ? [\"createTagPrefix\"] : []\n",
+          "previous": "",
+          "start": 2853
+        },
+        {
+          "current": "\tif(scopedCreate) assert.match(expected.createTagPrefix, /^ci\\/[a-z0-9-]+\\/$/u);\n",
+          "previous": "",
+          "start": 2931
+        },
+        {
+          "current": "\tassert.ok((scopedCreate ? [\"create\", \"workflow_dispatch\"]\n\t\t: [\"push\", \"workflow_dispatch\"]).includes(run.event));\n\tif(run.event === \"create\")\n\t\tassert.equal(run.head_branch, expected.createTagPrefix + run.head_sha\n\t\t\t, \"Scoped producer tag must name its exact commit\");\n",
+          "previous": "\tassert.ok([\"push\", \"workflow_dispatch\"].includes(run.event));\n",
+          "start": 4209
+        }
+      ],
+      "path": "tests/helpers/checked-record-value-index-hosted-archive.mjs",
+      "previousSha256": "65ce957ca0a1541821e6214cdb34d951423fda3e06e36cbb13ac417ef86cefb9"
+    },
+    {
+      "currentSha256": "30477187d47ef794149270cfbfc51fc1caede24967918de3257de55fc5eff940",
+      "edits": [
+        {
+          "current": "import {\n\tassertOwnedCheckedRecordNpmProducer, selectOwnedCheckedRecordWorkflow\n} from \"./owned-checked-record-npm-producer.mjs\";\n",
+          "previous": "",
+          "start": 766
+        },
+        {
+          "current": " * @param workflow - Exact recurring or scoped producer workflow.\n",
+          "previous": "",
+          "start": 4177
+        },
+        {
+          "current": "export const ownedCheckedRecordEvidenceSources = (laneName, value, workflow) => {\n",
+          "previous": "export const ownedCheckedRecordEvidenceSources = (laneName, value) => {\n",
+          "start": 4247
+        },
+        {
+          "current": "\tconst selectedWorkflow = selectOwnedCheckedRecordWorkflow(lane, workflow);\n\tif(selectedWorkflow !== lane.workflow)\n\t\tassertOwnedCheckedRecordNpmProducer(\n\t\t\townedCheckedRecordHostedOriginal(value.producer, selectedWorkflow).toString(\"utf8\")\n\t\t\t, ownedCheckedRecordHostedOriginal(value.producer, lane.workflow).toString(\"utf8\")\n\t\t);\n",
+          "previous": "",
+          "start": 4650
+        },
+        {
+          "current": "\t\t\t\t, ...selectedWorkflow === lane.workflow ? [] : [selectedWorkflow]\n",
+          "previous": "",
+          "start": 5306
+        }
+      ],
+      "path": "tests/helpers/owned-checked-record-hosted-evidence-sources.mjs",
+      "previousSha256": "49db798a6cd470e701de5984f3830a06d406700a8d63b0b7c56e63dd8becda98"
+    },
+    {
+      "currentSha256": "a62f02fea376bd4f717ca8a782f87767928399dc1b3a76fcc72346115555929c",
+      "edits": [
+        {
+          "current": "import {\n\townedCheckedRecordNpmTagPrefix, ownedCheckedRecordNpmWorkflow\n\t, selectOwnedCheckedRecordWorkflow\n} from \"./owned-checked-record-npm-producer.mjs\";\n",
+          "previous": "",
+          "start": 1667
+        },
+        {
+          "current": "/**\n * Bind a run to one closed workflow identity and its eligible conclusions.\n *\n * @param lane - Closed hosted lane contract.\n * @param run - Original GitHub run API record.\n * @param retainedConclusions - Optional previously recorded terminal states.\n */\nexport const ownedCheckedRecordHostedWorkflowContract = (lane, run, retainedConclusions) => {\n\tassert.equal(typeof run.path, \"string\", \"The run must name its workflow\");\n\tassert.equal(run.status, \"completed\", \"The producer must be terminal\");\n\tconst workflow = selectOwnedCheckedRecordWorkflow(lane, run.path);\n\tconst expected = { workflow, jobName: lane.job\n",
+          "previous": "const hostedContract = (lane, selected, retainedConclusions) => {\n\tconst expected = { workflow: lane.workflow, jobName: lane.job\n",
+          "start": 6162
+        },
+        {
+          "current": "\tconst conclusions = retainedConclusions ?? { run: run.conclusion, job: \"success\" };\n",
+          "previous": "\tconst conclusions = retainedConclusions ?? (() => {\n\t\tconst run = JSON.parse(readFileSync(selected[\"run-json\"], \"utf8\"));\n\t\treturn { run: run.conclusion, job: \"success\" };\n\t})();\n",
+          "start": 6858
+        },
+        {
+          "current": "\tassert.equal(conclusions.run, run.conclusion, \"Retained conclusion must match the run API\");\n\tif(workflow === ownedCheckedRecordNpmWorkflow)\n\t{\n\t\tassert.equal(conclusions.run, \"success\", \"The scoped producer must succeed\");\n\t\texpected.createTagPrefix = ownedCheckedRecordNpmTagPrefix;\n\t}\n",
+          "previous": "",
+          "start": 7172
+        },
+        {
+          "current": "const hostedContract = (lane, selected, retainedConclusions) =>\n\townedCheckedRecordHostedWorkflowContract(lane\n\t\t, JSON.parse(readFileSync(selected[\"run-json\"], \"utf8\")), retainedConclusions);\n\n",
+          "previous": "",
+          "start": 7503
+        },
+        {
+          "current": "\t\t\tlaneName, revisions, hosted.hostedRun.workflow);\n",
+          "previous": "\t\t\tlaneName, revisions);\n",
+          "start": 10291
+        },
+        {
+          "current": "\t\t, ownedCheckedRecordEvidenceSources(laneName, revisions, index.hostedRun.workflow));\n",
+          "previous": "\t\t, ownedCheckedRecordEvidenceSources(laneName, revisions));\n",
+          "start": 14289
+        }
+      ],
+      "path": "tests/helpers/owned-checked-record-hosted-evidence.mjs",
+      "previousSha256": "be7da49114ce33f03dfeb8370c22c84d316a48dbb8e5ab835925d3357a5c4e3b"
+    },
+    {
+      "currentSha256": "e04bbbc590da95da262e97515a93c7898d4fce9b3ee401c81186cb71ea68b0f4",
+      "edits": [
+        {
+          "current": "import {\n\townedCheckedRecordNpmTagPrefix, ownedCheckedRecordNpmWorkflow\n} from \"./helpers/owned-checked-record-npm-producer.mjs\";\n",
+          "previous": "",
+          "start": 1470
+        },
+        {
+          "current": "\tenforce = \"skipped\", runConclusion = \"success\", workflow, event = \"push\"\n",
+          "previous": "\tenforce = \"skipped\", runConclusion = \"success\"\n",
+          "start": 20436
+        },
+        {
+          "current": "\t\t, head_sha: revision, path: workflow ?? lane.workflow\n\t\t, ...event === \"create\" ? { head_branch: ownedCheckedRecordNpmTagPrefix + revision } : {}\n",
+          "previous": "\t\t, head_sha: revision, path: lane.workflow\n",
+          "start": 20961
+        },
+        {
+          "current": "\t\t, run_attempt: 1, event\n",
+          "previous": "\t\t, run_attempt: 1, event: \"push\"\n",
+          "start": 21226
+        },
+        {
+          "current": "test(\"scoped npm hosted archive binds the create tag and both workflow sources\", async t => {\n\tconst { selected, inputs } = await archiveInputs(t, \"javascript\"\n\t\t, { workflow: ownedCheckedRecordNpmWorkflow, event: \"create\" });\n\tconst destination = join(inputs, \"evidence\");\n\tconst index = await writeOwnedCheckedRecordHostedEvidence({ lane: \"javascript\"\n\t\t, selected, destination, archiveCommit: revision });\n\tassert.equal(index.hostedRun.event, \"create\");\n\tassert.equal(index.hostedRun.workflow, ownedCheckedRecordNpmWorkflow);\n\tfor(const path of [ownedCheckedRecordNpmWorkflow, \".github/workflows/consumer-matrix.yml\"])\n\t\tassert.ok(index.selectedSources.some(source => source.role === \"producer\" && source.path === path));\n\tassert.deepEqual(await checkOwnedCheckedRecordHostedEvidence(\"javascript\", destination), index);\n\tconst path = selected[\"run-json\"], original = JSON.parse(await readFile(path, \"utf8\"));\n\tfor(const change of [{ head_branch: ownedCheckedRecordNpmTagPrefix + \"0\".repeat(40) }\n\t\t, { head_branch: \"master\" }, { event: \"push\" }, { event: \"pull_request\" }\n\t\t, { path: \".github/workflows/unrelated.yml\" }\n\t\t, { status: \"in_progress\" }, { conclusion: \"failure\" }\n\t\t, { conclusion: \"cancelled\" }]) {\n\t\tawait writeFile(path, canonicalJson({ ...original, ...change }));\n\t\tconst refused = join(inputs, \"refused\");\n\t\tawait assert.rejects(writeOwnedCheckedRecordHostedEvidence({ lane: \"javascript\"\n\t\t\t, selected, destination: refused, archiveCommit: revision }));\n\t\tawait assert.rejects(readFile(join(refused, \"index.json\")), { code: \"ENOENT\" });\n\t\t}\n\tawait writeFile(path, canonicalJson(original));\n});\n\n",
+          "previous": "",
+          "start": 25598
+        }
+      ],
+      "path": "tests/owned-checked-record-hosted-archive.test.mjs",
+      "previousSha256": "a247fe886a7fa8f8f42ce63d4e6615ba7fcecdaebabb4e95f7f895aed4ccaa28"
+    }
+  ]
+}
