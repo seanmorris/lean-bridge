@@ -174,3 +174,103 @@ test("graph entry plans refuse incomplete compiler selections and generated sour
 	assert.throws(() => phpWasmRefinementEntryPlan(family, selection.selected
 		, selection.generated.leanSource.replace("_root_.RecursiveCheckedRecords.mkPacket", "_root_.RecursiveCheckedRecords.changed")));
 });
+
+const graphSelection = async family => {
+	const marker = phpWasmRefinementEntrySourceFixture(family);
+	const source = phpWasmRefinementEntrySource(await readFile(marker.path, "utf8"), marker);
+	return phpWasmGraphRefinementEntrySelection(fixtureModel(family), source.entries);
+};
+const labels = item => item.call.entries.map(entry => `${entry.kind}:${entry.label.replace(/_[a-f0-9]{20}$/u, "")}`);
+
+test("graph-carried recursive plans follow the generated per-position validation order", async () => {
+	const subtype = await plan("recursive-subtype");
+	const byControl = Object.fromEntries(subtype.cases.map(item => [item.control, item]));
+	const check = "validator:RecursiveSubtypes.first:graph_refinement_0";
+	assert.deepEqual(labels(byControl.direct), [
+		check, "constructor:RecursiveSubtypes.plusOne"
+		, check, "constructor:RecursiveSubtypes.plusOne"
+		, "adapter:RecursiveSubtypes.first", "constructor:RecursiveSubtypes.plusOne"
+		, "constructor:RecursiveSubtypes.plusOne", "source:RecursiveSubtypes.first"
+	]);
+	assert.deepEqual(labels(byControl["first-refusal"]), labels(byControl.direct).slice(0, 4));
+	assert.deepEqual(labels(byControl["inactive-branch"]), ["adapter:RecursiveSubtypes.echo", "source:RecursiveSubtypes.echo"]);
+	assert.deepEqual(labels(byControl["constructor-free"]), ["adapter:RecursiveSubtypes.produce", "source:RecursiveSubtypes.produce"]);
+	assert.ok(subtype.cases.every(item => !item.call.entries.some(entry =>
+		/:(?:fin_guard|refinement)_0$/u.test(entry.label))), "graph transports never reach flat validators");
+	const record = Object.fromEntries((await plan("recursive-checked-record")).cases.map(item => [item.control, item]));
+	const [leaf, packet] = [labels(record.direct)[0], labels(record.direct)[2]];
+	assert.notEqual(record.direct.call.entries[0].label, record.direct.call.entries[2].label);
+	assert.deepEqual(labels(record.direct), [
+		leaf, "constructor:RecursiveCheckedRecords.plusOne"
+		, packet, "constructor:RecursiveCheckedRecords.plusOne"
+		, "constructor:RecursiveCheckedRecords.mkPacket"
+		, "adapter:RecursiveCheckedRecords.first"
+		, "constructor:RecursiveCheckedRecords.plusOne"
+		, "constructor:RecursiveCheckedRecords.mkPacket"
+		, "source:RecursiveCheckedRecords.first"
+	]);
+	assert.deepEqual(labels(record["first-refusal"]), [
+		leaf, "constructor:RecursiveCheckedRecords.plusOne"
+		, leaf, "constructor:RecursiveCheckedRecords.plusOne"
+	]);
+	assert.deepEqual(labels(record["record-refusal"]), labels(record.direct).slice(0, 5));
+	assert.deepEqual(labels(record["inactive-branch"]), ["adapter:RecursiveCheckedRecords.groups", "source:RecursiveCheckedRecords.groups"]);
+});
+
+test("graph-carried plans refuse flat selections and generated conversion drift", async () => {
+	for(const family of ["recursive-subtype", "recursive-checked-record"])
+	{
+		const selection = await graphSelection(family), source = selection.generated.leanSource;
+		const namespace = family === "recursive-subtype" ? "RecursiveSubtypes" : "RecursiveCheckedRecords";
+		const adapter = selection.selected.find(item => item.kind === "adapter" && item.label === `${namespace}.first`);
+		const block = source.slice(source.indexOf(`@[export ${adapter.symbol}]`));
+		const flat = selection.selected.map(item => item.kind === "public"
+			? { ...item, symbol: item.symbol.replace(/^lg_/u, "lb_") } : item);
+		const via = block.match(/\b(LbErased\.[A-Za-z0-9_.]+\.via_[a-f0-9]+)\b/u)[1];
+		const header = source.indexOf(`def ${via} `), end = source.indexOf("\ndef ", header + 4);
+		const unrecursive = source.slice(0, header) + source.slice(header, end)
+			.replace(new RegExp(`(:=[^]*)${via.replaceAll(".", "\\.")}`, "u"), "$1id")
+			+ source.slice(end);
+		assert.notEqual(unrecursive, source);
+		for(const [label, selected, lean] of [
+			["flat public entries", flat, source]
+			, ["missing graph validators", selection.selected.filter(item => !item.label.includes(":graph_refinement_")), source]
+			, ["conversion without recursion", selection.selected, unrecursive]
+			, ["conversion without a selected constructor", selection.selected
+				, source.replaceAll(family === "recursive-subtype" ? "_root_.RecursiveSubtypes.plusOne " : "_root_.RecursiveCheckedRecords.mkPacket "
+					, "_root_.changed ")]
+		]) assert.throws(() => phpWasmRefinementEntryPlan(family, selected, lean), label);
+	}
+});
+
+test("module-initialized authored entries leave the per-call trace", async () => {
+	const family = "zero-payload-full", marker = phpWasmRefinementEntrySourceFixture(family);
+	const source = phpWasmRefinementEntrySource(await readFile(marker.path, "utf8"), marker);
+	const selection = flatPlanSelection(family, source.entries);
+	const witness = selection.selected.find(item => item.kind === "constructor" && item.label.endsWith(".mkWitness"));
+	const value = phpWasmRefinementEntryPlan(family, selection.selected, selection.generated.leanSource
+		, { globalDefinitions: [witness] });
+	assert.deepEqual(value.globals, [witness]);
+	const direct = value.cases.find(item => item.control === "direct");
+	assert.deepEqual(direct.moduleInitialized, [witness.label]);
+	assert.ok(value.cases.every(item => !item.call.entries.some(entry => entry.label === witness.label)));
+	assert.ok(value.cases.some(item => !Object.hasOwn(item, "moduleInitialized")));
+	const baseline = phpWasmRefinementEntryPlan(family, selection.selected, selection.generated.leanSource);
+	assert.equal(Object.hasOwn(baseline, "globals"), false);
+	assert.equal(baseline.cases.find(item => item.control === "direct").call.counts.constructor
+		, direct.call.counts.constructor + 2);
+	const nominal = await plan("nominal-result-only");
+	const wordBits = nominal.selected.find(item => item.kind === "source" && item.label.endsWith(".wordBits"));
+	const nominalSelection = await graphSelection("nominal-result-only");
+	const free = phpWasmRefinementEntryPlan("nominal-result-only", nominalSelection.selected
+		, nominalSelection.generated.leanSource, { globalDefinitions: [wordBits] })
+		.cases.find(item => item.control === "constructor-free");
+	assert.deepEqual(free.moduleInitialized, [wordBits.label]);
+	assert.equal(free.call.counts.source, 0);
+	for(const globals of [
+		[{ ...witness, symbol: "missing" }], [{ ...witness, kind: "adapter" }]
+		, [witness, witness]
+		, [selection.selected.find(item => item.kind === "adapter")]
+	]) assert.throws(() => phpWasmRefinementEntryPlan(family, selection.selected, selection.generated.leanSource
+		, { globalDefinitions: globals }));
+});
