@@ -4,18 +4,9 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
-import { ownedReceiverHistoricalBytes } from "./owned-receiver-history.mjs";
-import { generateOwnedDotnetCalls } from "../../src/backends/dotnet/owned-calls.mjs";
-import { generateOwnedDotnetPackage } from "../../src/backends/dotnet/owned-package.mjs";
-import { generateOwnedCPackage } from "../../src/backends/c/owned-package.mjs";
-import { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from "../../src/build/native-graph-model.mjs";
-import { ownedDotnetAdapterSources } from "../../src/build/owned-dotnet-artifacts.mjs";
-import { validatePackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
-import { ownedDotnetNativeProbe, ownedDotnetProbeLoader } from "./owned-dotnet-native.mjs";
-import { ownedDotnetBorrowInvalidPrograms } from "./owned-dotnet-borrow-installed.mjs";
-import { ownedRustBorrowSource } from "./owned-rust-borrow-fixture.mjs";
+import { moduleAtProducerWithSourceReads } from "./producer-module.mjs";
+import { sourceAtProducer } from "./producer-source.mjs";
 import { beforeOwnedDotnetLifetime } from "./owned-dotnet-lifetime-history.mjs";
 import { historicalDotnetReadRaceCalls, historicalDotnetReadRacePackage } from "./owned-dotnet-read-race-generated.mjs";
 
@@ -45,6 +36,25 @@ export const ownedDotnetBorrowScope = Object.freeze({
 export const ownedDotnetLifetimeScope = Object.freeze({ ...ownedDotnetBorrowScope
 	, atomicWholeRead: true, optimizedReceiverGc: true });
 export const ownedDotnetLifetimeCommand = "LEAN_BRIDGE_PYTHON_TYPING_WHEELS=/app/build/python-typing-wheels " + ownedDotnetBorrowCommand;
+/** The commits whose complete source trees the borrow and lifetime-repair records name. */
+export const ownedDotnetBorrowProducer = "444cace8fed766606caf7bb70e68a9a0badf3ec1";
+export const ownedDotnetLifetimeProducer = "f88043186b944a3f3bd0133d5e49efd5ff034c69";
+const producerModules = new Map();
+const producerClosure = revision => {
+	if(!producerModules.has(revision)) producerModules.set(revision, Promise.all([
+		"src/backends/dotnet/owned-calls.mjs"
+		, "src/backends/dotnet/owned-package.mjs"
+		, "src/backends/c/owned-package.mjs"
+		, "src/build/native-graph-model.mjs"
+		, "src/build/owned-dotnet-artifacts.mjs"
+		, "src/release/package-set-receipt.mjs"
+		, "tests/helpers/owned-dotnet-native.mjs"
+		, "tests/helpers/owned-dotnet-borrow-installed.mjs"
+		, "tests/helpers/owned-rust-borrow-fixture.mjs"
+	].map(path => moduleAtProducerWithSourceReads(revision, path))).then(modules =>
+		Object.assign({}, ...modules)));
+	return producerModules.get(revision);
+};
 const capabilities = { ownedGraphs: true, ownedHostCallbacks: true
 	, ownedInputTransfers: true, ownedAnchoredResults: true };
 const options = { transferredInputs: true, anchoredResults: true };
@@ -60,6 +70,15 @@ const fields = ["values", "anchor", "expiration", "descendants", "emptyValues"
 export const assertOwnedDotnetBorrowExecution = async record => {
 	const repaired = record.kind === "owned-dotnet-lifetime-repair";
 	assert.equal(record.kind, repaired ? "owned-dotnet-lifetime-repair" : "owned-dotnet-borrows");
+	const producer = repaired ? ownedDotnetLifetimeProducer : ownedDotnetBorrowProducer;
+	const historical = path => sourceAtProducer(producer, path);
+	const {
+		createCompiledNativeModel, generateCompiledNativeLeanAdapters
+		, generateOwnedCPackage, generateOwnedDotnetCalls, generateOwnedDotnetPackage
+		, ownedDotnetAdapterSources, ownedDotnetBorrowInvalidPrograms
+		, ownedDotnetNativeProbe, ownedDotnetProbeLoader, ownedRustBorrowSource
+		, validatePackageSetReceipt
+	} = await producerClosure(producer);
 	assert.equal(record.acceptance, "passed"); assert.deepEqual(record.scope, repaired ? ownedDotnetLifetimeScope : ownedDotnetBorrowScope);
 	assert.equal(record.run.command, repaired ? ownedDotnetLifetimeCommand : ownedDotnetBorrowCommand); assert.equal(record.run.exitCode, 0);
 	assert.equal(record.run.sha256, sha256(record.run.text));
@@ -69,17 +88,17 @@ export const assertOwnedDotnetBorrowExecution = async record => {
 	assert.deepEqual(record.runtime.map(item => item.mode), ["ordinary", "reviewed"]);
 	assert.deepEqual(record.packages.map(item => item.mode), ["ordinary", "reviewed"]);
 	const probePath = "tests/fixtures/structured-types/owned-dotnet-borrows.cs";
-	let probe = await readFile(probePath, "utf8");
+	let probe = historical(probePath);
 	if(!repaired) probe = beforeOwnedDotnetLifetime(probePath, probe, record.sources[probePath]);
-	const testSource = await readFile("tests/owned-dotnet-borrows.test.mjs", "utf8");
-	const fixture = await readFile("tests/fixtures/structured-types/owned-installed-dotnet-borrows.cs");
-	const documentation = await readFile("tests/fixtures/documentation/consumers/dotnet/owned-borrows.cs");
-	const baseLean = await readFile("tests/fixtures/onboarding/owned-aggregates/Owned.lean", "utf8");
+	const testSource = historical("tests/owned-dotnet-borrows.test.mjs");
+	const fixture = historical("tests/fixtures/structured-types/owned-installed-dotnet-borrows.cs");
+	const documentation = historical("tests/fixtures/documentation/consumers/dotnet/owned-borrows.cs");
+	const baseLean = historical("tests/fixtures/onboarding/owned-aggregates/Owned.lean");
 	const lean = baseLean + ownedRustBorrowSource;
-	const extractor = sha256(ownedReceiverHistoricalBytes("src/analyze/NativeExports.lean", await readFile("src/analyze/NativeExports.lean")));
-	assert.equal((await readFile("docs/consume/dotnet.md", "utf8")).match(/\x60\x60\x60csharp file=dotnet\/owned-borrows\.cs\n([\s\S]*?)\x60\x60\x60/u)?.[1], documentation.toString("utf8"));
+	const extractor = sha256(historical("src/analyze/NativeExports.lean"));
+	assert.equal(historical("docs/consume/dotnet.md").match(/\x60\x60\x60csharp file=dotnet\/owned-borrows\.cs\n([\s\S]*?)\x60\x60\x60/u)?.[1], documentation);
 	assert.equal(record.borrowOnly.probeSha256, sha256(record.borrowOnly.probe));
-	assert.ok((await readFile("tests/owned-dotnet-borrows.test.mjs", "utf8")).includes(record.borrowOnly.probe));
+	assert.ok(testSource.includes(record.borrowOnly.probe));
 	assert.deepEqual(record.borrowOnly.observations.map(item => item.mode), ["ordinary", "reviewed"]);
 	for(const item of record.borrowOnly.observations)
 	{
