@@ -6,14 +6,9 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
-import { generateCompiledNativeLeanAdapters } from "../../src/build/native-graph-model.mjs";
-import { generateOwnedCPackage } from "../../src/backends/c/owned-package.mjs";
-import { generateOwnedPhpPackage } from "../../src/backends/php/owned-package.mjs";
-import { ownedPhpAdapterSources } from "../../src/build/owned-php-artifacts.mjs";
-import { validatePackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
 import { validateBrickMathInstall } from "./brick-math.mjs";
-import { ownedPhpReceiverCommand, ownedPhpReceiverScope, ownedPhpReceiverModel, assertOwnedPhpReceiverRuntime } from "./owned-php-receiver-evidence.mjs";
-import { ownedPhpInstalledReceiverProbe, ownedPhpPlainInstalledReceiverProbe } from "./owned-php-receiver-fixture.mjs";
+import { ownedPhpReceiverCommand, ownedPhpReceiverScope, ownedPhpReceiverModel
+	, ownedPhpReceiverProducerModules, assertOwnedPhpReceiverRuntime } from "./owned-php-receiver-evidence.mjs";
 import { assertOwnedPhpReceiverCi } from "./owned-php-receiver-ci.mjs";
 import { ownedPhpWasmReceiverHistoricalBytes } from "./owned-php-wasm-receiver-history.mjs";
 
@@ -74,7 +69,14 @@ export const assertOwnedPhpReceiverPackage = async (item, plain = false) => {
 		await assertCli(item);
 		assert.deepEqual(item.tamperRejected, ["missing-receivers", "native-slot", "member", "property", "owner", "consumption", "equality", "invalid-equality", "member-kind", "export"]);
 	}
-	const { model, capabilities } = await ownedPhpReceiverModel(item, { plain, consuming });
+	const modules = await ownedPhpReceiverProducerModules();
+	const {
+		generateCompiledNativeLeanAdapters, generateOwnedCPackage
+		, generateOwnedPhpPackage
+		, ownedPhpAdapterSources, validatePackageSetReceipt
+		, ownedPhpInstalledReceiverProbe, ownedPhpPlainInstalledReceiverProbe
+	} = modules;
+	const { model, capabilities } = await ownedPhpReceiverModel(item, { plain, consuming }, modules);
 	const component = item.componentReceipt, native = generateCompiledNativeLeanAdapters(model);
 	assert.equal(component.schemaVersion, 6);
 	assert.equal(component.runtimeIdentity, item.built.runtimeIdentity);
@@ -211,6 +213,7 @@ export const assertOwnedPhpReceiverDocumentation = async doc => {
 	assert.deepEqual(doc.cliBuild.result.targets, ["c", "php-native"]);
 	assert.equal(doc.verification.status, "ok");
 	assert.equal(doc.verification.result.verificationType, "local-package-set");
+	const { validatePackageSetReceipt } = await ownedPhpReceiverProducerModules();
 	validatePackageSetReceipt(doc.packageSetReceipt);
 	assert.deepEqual([...new Set(doc.packageSetReceipt.packages.map(pkg => pkg.target))].sort(), ["c", "php-native"]);
 	assert.equal(doc.packageSetReceipt.profiles.length, 1);

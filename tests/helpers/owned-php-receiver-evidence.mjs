@@ -7,14 +7,33 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { createCompiledNativeModel } from "../../src/build/native-graph-model.mjs";
-import { generateOwnedCPackage } from "../../src/backends/c/owned-package.mjs";
-import { generateOwnedPhpCalls } from "../../src/backends/php/owned-calls.mjs";
 import { ownedRustReceiverSource } from "./owned-rust-receiver-fixture.mjs";
 import { ownedJvmPlainReceiverSource } from "./owned-jvm-receiver-fixture.mjs";
-import { ownedPhpReceiverProbe, ownedPhpPlainReceiverProbe, ownedPhpRetiredIdentityProbe, ownedPhpUnanchoredReceiverProbe } from "./owned-php-receiver-fixture.mjs";
 import { ownedPhpWasmReceiverHistoricalBytes } from "./owned-php-wasm-receiver-history.mjs";
+import { moduleAtProducerWithSourceReads } from "./producer-module.mjs";
 
 export const ownedPhpReceiverCommand = "npm run test:owned-php-receivers";
+/** The commit whose complete source tree every digest in the native PHP receiver record names. */
+export const ownedPhpReceiverProducer = "16fadc8add3769e83852c51d6ad89e6dedfb6c06";
+let producerPromise;
+/**
+ * Load the producer's generators, probes and fixtures; later changes never reach back.
+ *
+ * @returns {Promise<object>} Every export of the receiver record's producer modules.
+ */
+export const ownedPhpReceiverProducerModules = () => producerPromise ??= Promise.all([
+	"src/backends/c/owned-package.mjs"
+	, "src/backends/php/owned-calls.mjs"
+	, "src/backends/php/owned-package.mjs"
+	, "src/build/native-graph-model.mjs"
+	, "src/build/owned-php-artifacts.mjs"
+	, "src/release/package-set-receipt.mjs"
+	, "tests/helpers/owned-jvm-receiver-fixture.mjs"
+	, "tests/helpers/owned-php-receiver-fixture.mjs"
+	, "tests/helpers/owned-rust-receiver-fixture.mjs"
+].map(path => moduleAtProducerWithSourceReads(ownedPhpReceiverProducer, path)))
+	.then(modules => Object.assign({}, ...modules));
+const liveModelModules = { createCompiledNativeModel, ownedJvmPlainReceiverSource, ownedRustReceiverSource };
 export const ownedPhpReceiverScope = Object.freeze({
 	profiles: ["php-native"], sourcePaths: ["ordinary-source", "reviewed-ir"]
 	, installedComposer: true, publicExports: 27, receiverExports: 16
@@ -45,18 +64,22 @@ export const ownedPhpReceiverScope = Object.freeze({
  * @param options.plain - Require resource-only exports without callback transport.
  * @param options.unanchored - Require callback exports without result anchors.
  * @param options.consuming - Require explicit original-owner transfers.
+ * @param modules - Model builder and fixture sources; frozen receipts pass their producer's.
  */
-export const ownedPhpReceiverModel = async (item, { plain = false, unanchored = false, consuming = true } = {}) => {
+export const ownedPhpReceiverModel = async (item, { plain = false, unanchored = false, consuming = true } = {}, modules = liveModelModules) => {
+	const { createCompiledNativeModel: createModel
+		, ownedJvmPlainReceiverSource: plainSource
+		, ownedRustReceiverSource: anchoredSource } = modules;
 	assert.ok(["ordinary", "reviewed"].includes(item.mode));
 	assert.equal(Boolean(item.input.sourceIdentity.reviewedBindingIr), item.mode === "reviewed");
 	const lean = await readFile("tests/fixtures/onboarding/owned-aggregates/Owned.lean", "utf8");
 	assert.equal(item.input.sourceIdentity.modules.find(module => module.module === "Owned").source.sha256
-		, sha256(lean + (plain ? ownedJvmPlainReceiverSource : ownedRustReceiverSource)));
+		, sha256(lean + (plain ? plainSource : anchoredSource)));
 	assert.equal(item.input.sourceIdentity.extractorSha256, sha256(ownedPhpWasmReceiverHistoricalBytes(
 		"src/analyze/NativeExports.lean", await readFile("src/analyze/NativeExports.lean"))));
 	const capabilities = { receiverExports: true, hostCallbacks: !plain
 		, transferredInputs: consuming, anchoredResults: !plain && !unanchored };
-	const model = createCompiledNativeModel(item.input, {
+	const model = createModel(item.input, {
 		ownedGraphs: true, ownedReceiverExports: true
 		, ownedHostCallbacks: !plain
 		, ownedInputTransfers: consuming, ownedAnchoredResults: !plain && !unanchored
@@ -125,11 +148,17 @@ export const assertOwnedPhpReceiverRuntime = async record => {
 		["ordinary", false], ["reviewed", false]
 		, ["ordinary", true], ["reviewed", true]
 	]);
+	const modules = await ownedPhpReceiverProducerModules();
+	const {
+		generateOwnedCPackage, generateOwnedPhpCalls, ownedPhpReceiverProbe
+		, ownedPhpPlainReceiverProbe, ownedPhpRetiredIdentityProbe
+		, ownedPhpUnanchoredReceiverProbe
+	} = modules;
 	for(const item of [...record.runtime, ...record.plain, ...record.unanchored])
 	{
 		const plain = record.plain.includes(item), unanchored = record.unanchored.includes(item);
 		const consuming = plain ? item.consuming : true;
-		const { model, capabilities } = await ownedPhpReceiverModel(item, { plain, unanchored, consuming });
+		const { model, capabilities } = await ownedPhpReceiverModel(item, { plain, unanchored, consuming }, modules);
 		const calls = generateOwnedPhpCalls(model.bindingIr, capabilities);
 		const c = generateOwnedCPackage({ ...item.input, ...capabilities, identityEquality: true });
 		assert.equal(item.actualLean, true); assert.equal(item.installedPackage, false);

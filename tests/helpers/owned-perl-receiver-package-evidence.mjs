@@ -7,14 +7,10 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { ownedPhpReceiverHistoricalBytes } from "./owned-php-receiver-history.mjs";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
-import { generateOwnedPerlPackage } from "../../src/backends/perl/owned-package.mjs";
-import { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from "../../src/build/native-graph-model.mjs";
-import { validatePackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
-import { ownedReceiverSource } from "./owned-receiver-fixture.mjs";
-import { ownedRustReceiverSource } from "./owned-rust-receiver-fixture.mjs";
-import { ownedPerlReceiverProbe, ownedPerlPlainReceiverProbe } from "./owned-perl-receiver-fixture.mjs";
 import { assertOwnedPerlReceiverInputs, assertOwnedPerlReceiverMatrix, assertOwnedPerlReceiverObservation
-	, ownedPerlReceiverCommand, ownedPerlReceiverVariant } from "./owned-perl-receiver-evidence.mjs";
+	, ownedPerlReceiverCommand, ownedPerlReceiverProducer, ownedPerlReceiverProducerModules
+	, ownedPerlReceiverVariant } from "./owned-perl-receiver-evidence.mjs";
+import { bytesAtProducer } from "./producer-source.mjs";
 
 export const ownedPerlReceiverScope = Object.freeze({
 	profiles: ["perl"], abiVariants: 4
@@ -85,6 +81,12 @@ export const assertOwnedPerlReceiverPackage = async (item, plain = false) => {
 		, "handoffRemovedBeforeExecution"
 		, "receiptVerifiedWithoutProducer", "relocated"]);
 	assert.equal(item.schemaVersion, 1);
+	const {
+		createCompiledNativeModel, generateCompiledNativeLeanAdapters
+		, generateOwnedPerlPackage
+		, validatePackageSetReceipt, ownedReceiverSource, ownedRustReceiverSource
+		, ownedPerlReceiverProbe, ownedPerlPlainReceiverProbe
+	} = await ownedPerlReceiverProducerModules();
 	const consuming = plain ? item.consuming : true;
 	const model = createCompiledNativeModel(item.input, { ownedGraphs: true
 		, ownedReceiverExports: true, ownedHostCallbacks: !plain
@@ -168,7 +170,7 @@ export const assertOwnedPerlReceiverPackage = async (item, plain = false) => {
 		await assertCli(item);
 	}
 	assertOwnedPerlReceiverMatrix(item.observations, true);
-	const assets = sha256(await readFile("tests/fixtures/structured-types/owned-perl-installed-assets.pl"));
+	const assets = sha256(bytesAtProducer(ownedPerlReceiverProducer, "tests/fixtures/structured-types/owned-perl-installed-assets.pl"));
 	for(const observation of item.observations)
 	{
 		const { mode, assets: inspected } = observation;
@@ -220,6 +222,7 @@ export const assertOwnedPerlReceiverDocumentation = async documentation => {
 	assert.deepEqual(documentation.mixedTargets, ["c", "cpan"]);
 	assert.equal(documentation.cliBuild.status, "ok");
 	assert.deepEqual(documentation.cliBuild.result.targets, documentation.mixedTargets);
+	const { validatePackageSetReceipt } = await ownedPerlReceiverProducerModules();
 	validatePackageSetReceipt(documentation.packageSetReceipt);
 	assert.deepEqual([...new Set(documentation.packageSetReceipt.packages.map(pkg => pkg.target))], ["c", "cpan"]);
 	assert.equal(documentation.packageSetReceipt.profiles.length, 1);

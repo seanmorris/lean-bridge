@@ -6,14 +6,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
-import { generateOwnedCPackage } from "../../src/backends/c/owned-package.mjs";
-import { generateOwnedDotnetCalls } from "../../src/backends/dotnet/owned-calls.mjs";
-import { createCompiledNativeModel } from "../../src/build/native-graph-model.mjs";
-import { ownedRustReceiverSource } from "./owned-rust-receiver-fixture.mjs";
-import { ownedDotnetNativeProbe, ownedDotnetProbeLoader } from "./owned-dotnet-native.mjs";
-import { instrumentOwnedDotnetReceivers, ownedDotnetReceiverProbe, ownedDotnetReceiverProject
-	, ownedDotnetPlainReceiverProbe, ownedDotnetPlainReceiverSource } from "./owned-dotnet-receiver-fixture.mjs";
-import { assertOwnedDotnetReceiverPackages } from "./owned-dotnet-receiver-package-evidence.mjs";
+import { assertOwnedDotnetReceiverPackages, ownedDotnetReceiverProducerModules } from "./owned-dotnet-receiver-package-evidence.mjs";
 import { assertOwnedDotnetReceiverCi } from "./owned-dotnet-receiver-ci.mjs";
 
 export const ownedDotnetReceiverCommand = "LEAN_BRIDGE_PYTHON_TYPING_WHEELS=/app/build/python-typing-wheels LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 npm run test:owned-dotnet-receivers";
@@ -43,7 +36,7 @@ const options = { receiverExports: true, anchoredResults: true, transferredInput
 const capabilities = { ownedGraphs: true, ownedReceiverExports: true
 	, ownedAnchoredResults: true, ownedInputTransfers: true
 	, ownedHostCallbacks: true };
-const compareFiles = (item, generated) => {
+const compareFiles = (item, generated, { ownedDotnetProbeLoader, ownedDotnetReceiverProject }) => {
 	assert.deepEqual(item.generated, Object.fromEntries(Object.entries(generated.files).map(([path, source]) => [path, sha256(source)])));
 	assert.equal(item.loaderSha256, sha256(ownedDotnetProbeLoader(generated.namespace)));
 	assert.equal(item.optimizedProjectSha256, sha256(ownedDotnetReceiverProject));
@@ -60,6 +53,14 @@ export const assertOwnedDotnetReceiverInputs = async record => {
 		["ordinary", false], ["reviewed", false]
 		, ["ordinary", true], ["reviewed", true]
 	]);
+	const modules = await ownedDotnetReceiverProducerModules();
+	const {
+		generateOwnedCPackage, generateOwnedDotnetCalls, createCompiledNativeModel
+		, ownedRustReceiverSource, ownedDotnetNativeProbe
+		, instrumentOwnedDotnetReceivers
+		, ownedDotnetReceiverProbe, ownedDotnetReceiverProject
+		, ownedDotnetPlainReceiverProbe, ownedDotnetPlainReceiverSource
+	} = modules;
 	const lean = await readFile("tests/fixtures/onboarding/owned-aggregates/Owned.lean", "utf8");
 	const probe = await ownedDotnetReceiverProbe();
 	const sourceIdentity = (item, source) => {
@@ -76,7 +77,7 @@ export const assertOwnedDotnetReceiverInputs = async record => {
 		assert.equal(model.ownedGraph.resultAnchors.exports.length, 20); assert.equal(model.ownedGraph.inputTransfers.exports.length, 4);
 		assert.deepEqual(model.ownedGraph.resultAnchors.exports.find(fn => fn.bindingId === "lean:Owned.chooseTicket"), { bindingId: "lean:Owned.chooseTicket", parameter: 0 });
 		const generated = generateOwnedDotnetCalls(model.bindingIr, options);
-		compareFiles(item, generated);
+		compareFiles(item, generated, modules);
 		assert.equal(item.probeSha256, sha256(probe));
 		assert.equal(item.nativeProbeSha256, sha256(ownedDotnetNativeProbe(generateOwnedCPackage(input), true)));
 		assert.equal(item.optimizedProject, ownedDotnetReceiverProject);
@@ -110,7 +111,7 @@ export const assertOwnedDotnetReceiverInputs = async record => {
 		assert.equal(model.ownedGraph.hostCallbacks, undefined); assert.equal(model.ownedGraph.resultAnchors, undefined);
 		if(!item.consuming) assert.equal(model.ownedGraph.inputTransfers, undefined);
 		const generated = generateOwnedDotnetCalls(model.bindingIr, config);
-		compareFiles(item, generated);
+		compareFiles(item, generated, modules);
 		assert.equal(item.probeSha256, sha256(ownedDotnetPlainReceiverProbe(item.consuming)));
 		assert.equal(item.nativeProbeSha256, sha256(ownedDotnetNativeProbe(generateOwnedCPackage(input), item.consuming)));
 		assert.deepEqual(item.observed, { checks: item.consuming ? 13 : 12, live: 0, identities: 0 });

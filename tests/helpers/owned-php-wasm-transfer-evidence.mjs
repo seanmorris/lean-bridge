@@ -6,19 +6,28 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
-import { createCompiledPhpWasmModel, generateCompiledPhpWasmLeanAdapters } from "../../src/build/php-wasm-graph-model.mjs";
-import { generateCompiledPhpWasmOwned } from "../../src/build/php-wasm-owned-component.mjs";
-import { phpWasmCopiedPins } from "../../src/build/php-wasm-copied-artifacts.mjs";
-import { compileOwnedPhpZendModel } from "../../src/backends/php/owned-zend-model.mjs";
-import { generateOwnedNativeValueAdapters } from "../../src/backends/native/owned-value-adapters.mjs";
-import { generateOwnedPhpZendExtension } from "../../src/backends/php/owned-zend-extension.mjs";
-import { validatePackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
-import { ownedRustTransferSource } from "./owned-rust-transfer-fixture.mjs";
-import { ownedPhpWasmTransferProbe } from "./owned-php-wasm-transfer-probe.mjs";
 import { assertOwnedPhpWasmTransferCi } from "./owned-php-wasm-transfer-ci.mjs";
 import { validateBrickMathInstall } from "./brick-math.mjs";
+import { moduleAtProducerWithSourceReads } from "./producer-module.mjs";
+import { sourceAtProducer } from "./producer-source.mjs";
 
 export const ownedPhpWasmTransferCommand = "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 npm run test:owned-php-wasm-transfers";
+/** The commit whose complete source tree every digest in the PHP-Wasm transfer record names. */
+export const ownedPhpWasmTransferProducer = "10463a29b72d47b01e11cc799d97589f2ca594fe";
+let producerPromise;
+// Models, packages, pins, probes and documentation come from the producer; later changes never reach back.
+const producerModules = () => producerPromise ??= Promise.all([
+	"src/build/php-wasm-graph-model.mjs"
+	, "src/build/php-wasm-owned-component.mjs"
+	, "src/build/php-wasm-copied-artifacts.mjs"
+	, "src/backends/php/owned-zend-model.mjs"
+	, "src/backends/native/owned-value-adapters.mjs"
+	, "src/backends/php/owned-zend-extension.mjs"
+	, "src/release/package-set-receipt.mjs"
+	, "tests/helpers/owned-rust-transfer-fixture.mjs"
+	, "tests/helpers/owned-php-wasm-transfer-probe.mjs"
+].map(path => moduleAtProducerWithSourceReads(ownedPhpWasmTransferProducer, path)))
+	.then(modules => Object.assign({}, ...modules));
 export const ownedPhpWasmTransferScope = Object.freeze({
 	profiles: ["php-wasm"], sourcePaths: ["ordinary-source", "reviewed-ir"]
 	, compiledLean: true, installedCli: true
@@ -60,6 +69,14 @@ export const assertOwnedPhpWasmTransferExecution = async record => {
 		assert.match(record.run.text, new RegExp("^# " + key + " " + value + "$", "mu"));
 	assert.doesNotMatch(record.run.text, /^not ok|# SKIP|# TODO/mu);
 	assert.deepEqual(record.runtime.map(item => item.mode), ["ordinary", "reviewed"]);
+	const {
+		createCompiledPhpWasmModel, generateCompiledPhpWasmLeanAdapters
+		, generateCompiledPhpWasmOwned
+		, phpWasmCopiedPins, compileOwnedPhpZendModel
+		, generateOwnedNativeValueAdapters
+		, generateOwnedPhpZendExtension, validatePackageSetReceipt
+		, ownedRustTransferSource, ownedPhpWasmTransferProbe
+	} = await producerModules();
 	const lean = await readFile("tests/fixtures/onboarding/owned-aggregates/Owned.lean", "utf8") + ownedRustTransferSource;
 	for(const item of record.runtime)
 	{
@@ -158,7 +175,8 @@ export const assertOwnedPhpWasmTransferExecution = async record => {
 		for(const archive of item.installed.archives)
 			assert.deepEqual(archive, item.packageReceipt.archives.find(value => value.archive === archive.archive));
 	}
-	const author = await readFile("docs/publish/php.md", "utf8"), consumer = await readFile("docs/php.md", "utf8");
+	const author = sourceAtProducer(ownedPhpWasmTransferProducer, "docs/publish/php.md");
+	const consumer = sourceAtProducer(ownedPhpWasmTransferProducer, "docs/php.md");
 	const config = canonicalJson({ ...JSON.parse(block(author, "### Export resource-containing values", "json"))
 		, ...JSON.parse(block(author, "### Export consuming inputs", "json")) });
 	const doc = record.documentation;

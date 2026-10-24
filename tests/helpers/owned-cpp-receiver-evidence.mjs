@@ -6,15 +6,23 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
-import { generateOwnedCPackage } from "../../src/backends/c/owned-package.mjs";
-import { generateOwnedCppPackage } from "../../src/backends/cpp/owned-package.mjs";
-import { createCompiledNativeModel } from "../../src/build/native-graph-model.mjs";
-import { ownedCppReceiverSource, ownedCppReceiverProbe, ownedCppPlainReceiverProbe } from "./owned-cpp-receiver-fixture.mjs";
-import { ownedReceiverSource } from "./owned-receiver-fixture.mjs";
 import { assertOwnedCppReceiverCi } from "./owned-cpp-receiver-ci.mjs";
 import { ownedRustReceiverHistoricalBytes } from "./owned-rust-receiver-history.mjs";
+import { moduleAtProducerWithSourceReads } from "./producer-module.mjs";
 
 export const ownedCppReceiverCommand = "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 npm run test:owned-cpp-receivers";
+/** The commit whose complete source tree every digest in the C++ receiver record names. */
+export const ownedCppReceiverProducer = "86f54487bfa6c6a2a75b9a78afbe0aae5c883f67";
+let producerPromise;
+// Packages, models and probes are regenerated with the producer's generators and fixtures; later changes never reach back.
+const producerModules = () => producerPromise ??= Promise.all([
+	"src/backends/c/owned-package.mjs"
+	, "src/backends/cpp/owned-package.mjs"
+	, "src/build/native-graph-model.mjs"
+	, "tests/helpers/owned-cpp-receiver-fixture.mjs"
+	, "tests/helpers/owned-receiver-fixture.mjs"
+].map(path => moduleAtProducerWithSourceReads(ownedCppReceiverProducer, path)))
+	.then(modules => Object.assign({}, ...modules));
 export const ownedCppReceiverScope = Object.freeze({
 	profiles: ["cpp"], sourcePaths: ["ordinary-source", "reviewed-ir"]
 	, compiledLean: true, installedCli: true, installedPackages: true
@@ -49,6 +57,11 @@ export const assertOwnedCppReceiverExecution = async record => {
 	for(const [key, count] of Object.entries({ tests: 10, pass: 10, fail: 0, cancelled: 0, skipped: 0, todo: 0 }))
 		assert.match(record.run.text, new RegExp("^# " + key + " " + count + "$", "mu"));
 	assert.doesNotMatch(record.run.text, /^not ok|# SKIP|# TODO/mu);
+	const {
+		generateOwnedCPackage, generateOwnedCppPackage, createCompiledNativeModel
+		, ownedCppReceiverSource, ownedCppReceiverProbe, ownedCppPlainReceiverProbe
+		, ownedReceiverSource
+	} = await producerModules();
 	for(const key of ["runtime", "packages"])
 		assert.deepEqual(record[key].map(item => item.mode), ["ordinary", "reviewed"]);
 	assert.deepEqual(record.plain.map(item => [item.mode, item.consuming]), [

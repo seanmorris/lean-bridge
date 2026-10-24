@@ -7,17 +7,25 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { ownedBorrowHistoricalBytes } from "./owned-borrow-history.mjs";
-import { generateOwnedRubyConversions } from "../../src/backends/ruby/owned-conversions.mjs";
-import { historicalOwnedRubyCallbackPackage as generateOwnedRubyPackage
-	, historicalOwnedRubyCallbackRuntime as ownedRubyRuntime } from "./owned-ruby-callback-generated-history.mjs";
-import { generateOwnedCPackage } from "../../src/backends/c/owned-package.mjs";
 import { historicalOwnedTransferPackage } from "./owned-transfer-generated-history.mjs";
-import { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from "../../src/build/native-graph-model.mjs";
-import { ownedRubyAdapterSources } from "../../src/build/owned-ruby-artifacts.mjs";
-import { validatePackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
-import { ownedRustTransferSource } from "./owned-rust-transfer-fixture.mjs";
+import { moduleAtProducerWithSourceReads } from "./producer-module.mjs";
 
 export const ownedRubyTransferCommand = "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 npm run test:owned-ruby-transfers";
+/** The commit whose complete source tree every digest in the Ruby transfer record names. */
+export const ownedRubyTransferProducer = "ea7759886937d82bc6c8c2c90f867b99e8ea10e0";
+let producerPromise;
+// Conversions, runtime, packages and adapters are regenerated with the producer's generators; later changes never reach back.
+const producerModules = () => producerPromise ??= Promise.all([
+	"src/backends/ruby/owned-conversions.mjs"
+	, "src/backends/ruby/owned-package.mjs"
+	, "src/backends/ruby/owned-runtime.mjs"
+	, "src/backends/c/owned-package.mjs"
+	, "src/build/native-graph-model.mjs"
+	, "src/build/owned-ruby-artifacts.mjs"
+	, "src/release/package-set-receipt.mjs"
+	, "tests/helpers/owned-rust-transfer-fixture.mjs"
+].map(path => moduleAtProducerWithSourceReads(ownedRubyTransferProducer, path)))
+	.then(modules => Object.assign({}, ...modules));
 export const ownedRubyTransferScope = Object.freeze({
 	ordinaryCompiler: true, reviewedCompiler: true, installedRuby: true
 	, transferredInputs: true, hostAssembledGraphs: true, boxedRecursion: true
@@ -44,6 +52,12 @@ export const assertOwnedRubyTransferExecution = async record => {
 	assert.doesNotMatch(record.run.text, /^not ok|# SKIP|# TODO/mu);
 	assert.deepEqual(record.runtime.map(item => item.mode), ["ordinary", "reviewed"]);
 	assert.deepEqual(record.consumers.map(item => item.mode), ["ordinary", "reviewed"]);
+	const {
+		generateOwnedRubyConversions, generateOwnedRubyPackage, ownedRubyRuntime
+		, generateOwnedCPackage, createCompiledNativeModel
+		, generateCompiledNativeLeanAdapters
+		, ownedRubyAdapterSources, validatePackageSetReceipt, ownedRustTransferSource
+	} = await producerModules();
 	const probe = await readFile("tests/fixtures/structured-types/owned-ruby-transfers.rb");
 	const helpers = await readFile("tests/fixtures/structured-types/owned-ruby-probe.rb");
 	const fixture = await readFile("tests/fixtures/structured-types/owned-installed-ruby-transfers.rb");

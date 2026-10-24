@@ -7,14 +7,29 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { ownedJvmReceiverHistoricalBytes } from "./owned-jvm-receiver-history.mjs";
-import { generateOwnedCPackage } from "../../src/backends/c/owned-package.mjs";
-import { generateOwnedDotnetPackage } from "../../src/backends/dotnet/owned-package.mjs";
-import { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from "../../src/build/native-graph-model.mjs";
-import { ownedDotnetAdapterSources } from "../../src/build/owned-dotnet-artifacts.mjs";
-import { validatePackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
-import { ownedRustReceiverSource } from "./owned-rust-receiver-fixture.mjs";
-import { ownedDotnetInstalledReceiverProbe, ownedDotnetReceiverInvalidPrograms } from "./owned-dotnet-receiver-installed.mjs";
+import { moduleAtProducerWithSourceReads } from "./producer-module.mjs";
 
+/** The commit whose complete source tree every digest in the .NET receiver record names. */
+export const ownedDotnetReceiverProducer = "58750ab55e52114fa1d48715216fc5c049f4d683";
+let producerPromise;
+/**
+ * Load the producer's generators, probes and fixtures; later changes never reach back.
+ *
+ * @returns {Promise<object>} Every export of the receiver record's producer modules.
+ */
+export const ownedDotnetReceiverProducerModules = () => producerPromise ??= Promise.all([
+	"src/backends/c/owned-package.mjs"
+	, "src/backends/dotnet/owned-calls.mjs"
+	, "src/backends/dotnet/owned-package.mjs"
+	, "src/build/native-graph-model.mjs"
+	, "src/build/owned-dotnet-artifacts.mjs"
+	, "src/release/package-set-receipt.mjs"
+	, "tests/helpers/owned-dotnet-native.mjs"
+	, "tests/helpers/owned-dotnet-receiver-fixture.mjs"
+	, "tests/helpers/owned-dotnet-receiver-installed.mjs"
+	, "tests/helpers/owned-rust-receiver-fixture.mjs"
+].map(path => moduleAtProducerWithSourceReads(ownedDotnetReceiverProducer, path)))
+	.then(modules => Object.assign({}, ...modules));
 const options = { transferredInputs: true, anchoredResults: true, receiverExports: true, hostCallbacks: true };
 const capabilities = { ownedGraphs: true, ownedHostCallbacks: true
 	, ownedInputTransfers: true, ownedAnchoredResults: true
@@ -27,6 +42,13 @@ const capabilities = { ownedGraphs: true, ownedHostCallbacks: true
  */
 export const assertOwnedDotnetReceiverPackages = async record => {
 	assert.deepEqual(record.packages.map(item => item.mode), ["ordinary", "reviewed"]);
+	const {
+		generateOwnedCPackage, generateOwnedDotnetPackage
+		, createCompiledNativeModel, generateCompiledNativeLeanAdapters
+		, ownedDotnetAdapterSources, validatePackageSetReceipt
+		, ownedRustReceiverSource
+		, ownedDotnetInstalledReceiverProbe, ownedDotnetReceiverInvalidPrograms
+	} = await ownedDotnetReceiverProducerModules();
 	const consumer = await ownedDotnetInstalledReceiverProbe();
 	const example = await readFile("tests/fixtures/documentation/consumers/dotnet/owned-receivers.cs", "utf8");
 	const guide = await readFile("docs/consume/dotnet.md", "utf8");

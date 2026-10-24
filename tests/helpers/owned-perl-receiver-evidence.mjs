@@ -6,16 +6,30 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { createCompiledNativeModel } from "../../src/build/native-graph-model.mjs";
-import { generateOwnedCPackage } from "../../src/backends/c/owned-package.mjs";
-import { generateOwnedPerlXs } from "../../src/backends/perl/owned-xs.mjs";
-import { ownedReceiverSource } from "./owned-receiver-fixture.mjs";
-import { ownedRustReceiverSource } from "./owned-rust-receiver-fixture.mjs";
 import { ownedPerlBorrowInstrumentedSources } from "./owned-perl-borrow-evidence.mjs";
-import { ownedPerlReceiverProbe, ownedPerlPlainReceiverProbe, ownedPerlUnanchoredReceiverProbe } from "./owned-perl-receiver-fixture.mjs";
+import { moduleAtProducerWithSourceReads } from "./producer-module.mjs";
 
 export const ownedPerlReceiverCommand = "LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 npm run test:owned-perl-receivers";
 export const ownedPerlReceiverVariants = ["5.36.3-threaded", "5.36.3-unthreaded", "5.38.2-threaded", "5.38.2-unthreaded"];
+/** The commit whose complete source tree every digest in the Perl receiver record names. */
+export const ownedPerlReceiverProducer = "ffc4b5d9c881be809a17649c545be8bbb24a0110";
+let producerPromise;
+/**
+ * Load the producer's generators, probes and fixtures; later changes never reach back.
+ *
+ * @returns {Promise<object>} Every export of the receiver record's producer modules.
+ */
+export const ownedPerlReceiverProducerModules = () => producerPromise ??= Promise.all([
+	"src/backends/c/owned-package.mjs"
+	, "src/backends/perl/owned-package.mjs"
+	, "src/backends/perl/owned-xs.mjs"
+	, "src/build/native-graph-model.mjs"
+	, "src/release/package-set-receipt.mjs"
+	, "tests/helpers/owned-perl-receiver-fixture.mjs"
+	, "tests/helpers/owned-receiver-fixture.mjs"
+	, "tests/helpers/owned-rust-receiver-fixture.mjs"
+].map(path => moduleAtProducerWithSourceReads(ownedPerlReceiverProducer, path)))
+	.then(modules => Object.assign({}, ...modules));
 
 /**
  * Match an actual interpreter path to one of the four pinned ABIs.
@@ -103,6 +117,11 @@ export const assertOwnedPerlReceiverInputs = async record => {
 		["ordinary", false], ["reviewed", false]
 		, ["ordinary", true], ["reviewed", true]
 	]);
+	const {
+		createCompiledNativeModel, generateOwnedCPackage, generateOwnedPerlXs
+		, ownedReceiverSource, ownedRustReceiverSource, ownedPerlReceiverProbe
+		, ownedPerlPlainReceiverProbe, ownedPerlUnanchoredReceiverProbe
+	} = await ownedPerlReceiverProducerModules();
 	const lean = await readFile("tests/fixtures/onboarding/owned-aggregates/Owned.lean", "utf8");
 	for(const item of [...record.runtime, ...record.plain, ...record.unanchored])
 	{

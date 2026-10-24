@@ -6,21 +6,29 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
-import { generateOwnedNativeValueAdapters } from "../../src/backends/native/owned-value-adapters.mjs";
-import { ownedAggregateTransferRuntime } from "../../src/backends/native/owned-aggregate-transfers.mjs";
-import { generateOwnedWasmComponent } from "../../src/backends/javascript/owned-wasm-component.mjs";
-import { generateJavaScriptPackage } from "../../src/backends/javascript/generate.mjs";
-import { createOwnedJavaScriptWasmModel, generateOwnedJavaScriptWasmLeanAdapters } from "../../src/build/javascript-wasm-owned-model.mjs";
-import { generateCompiledJavaScriptWasmOwned } from "../../src/build/javascript-wasm-owned-sources.mjs";
-import { assertComponentOwnedWasmBindings } from "../../src/abi/component-owned-wasm.mjs";
-import { ownedJavaScriptWasmNativeProbe } from "./owned-javascript-wasm-native.mjs";
 import { ownedJavaScriptReceiverMutations } from "./owned-javascript-receiver-mutants.mjs";
 import { assertOwnedJavaScriptReceiverCi } from "./owned-javascript-receiver-ci.mjs";
-import { ownedRustReceiverSource } from "./owned-rust-receiver-fixture.mjs";
-import { ownedJvmPlainReceiverSource } from "./owned-jvm-receiver-fixture.mjs";
 import { beforeOwnedCallbackResults } from "./owned-callback-result-history.mjs";
+import { moduleAtProducerWithSourceReads } from "./producer-module.mjs";
 
 export const ownedJavaScriptReceiverCommand = "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 npm run test:owned-javascript-receivers";
+/** The commit whose complete source tree every digest in the JavaScript receiver record names. */
+export const ownedJavaScriptReceiverProducer = "3195b47fc2ef224a6b4d92501e0dadefb3b9a1f0";
+let producerPromise;
+// Components, models, packages and probes are regenerated with the producer's generators; later changes never reach back.
+const producerModules = () => producerPromise ??= Promise.all([
+	"src/backends/native/owned-value-adapters.mjs"
+	, "src/backends/native/owned-aggregate-transfers.mjs"
+	, "src/backends/javascript/owned-wasm-component.mjs"
+	, "src/backends/javascript/generate.mjs"
+	, "src/build/javascript-wasm-owned-model.mjs"
+	, "src/build/javascript-wasm-owned-sources.mjs"
+	, "src/abi/component-owned-wasm.mjs"
+	, "tests/helpers/owned-javascript-wasm-native.mjs"
+	, "tests/helpers/owned-rust-receiver-fixture.mjs"
+	, "tests/helpers/owned-jvm-receiver-fixture.mjs"
+].map(path => moduleAtProducerWithSourceReads(ownedJavaScriptReceiverProducer, path)))
+	.then(modules => Object.assign({}, ...modules));
 export const ownedJavaScriptReceiverScope = Object.freeze({
 	profiles: ["javascript", "typescript", "browser", "react", "worker"]
 	, sourcePaths: ["ordinary-source", "reviewed-ir"]
@@ -53,7 +61,10 @@ const options = kind => ({ receiverExports: true
 	, anchoredResults: kind === "full"
 	, hostCallbacks: ["full", "unanchored"].includes(kind)
 	, transferredInputs: kind !== "plain" });
-const compile = (item, lean, kind = "full", probe = true) => {
+const compile = (modules, item, lean, kind = "full", probe = true) => {
+	const { generateOwnedNativeValueAdapters, generateOwnedWasmComponent
+		, assertComponentOwnedWasmBindings
+		, ownedJavaScriptWasmNativeProbe } = modules;
 	assert.equal(item.schemaVersion, 1);
 	assert.equal(Boolean(item.input.sourceIdentity.reviewedBindingIr), item.mode === "reviewed");
 	assert.equal(item.input.sourceIdentity.modules.find(module => module.module === "Owned").source.sha256, sha256(lean));
@@ -82,7 +93,9 @@ const browser = (item, name, checks) => {
 		assert.deepEqual(execution.assets, assets);
 	}
 };
-const installed = async (item, name, lean, kind = "full") => {
+const installed = async (modules, item, name, lean, kind = "full") => {
+	const { createOwnedJavaScriptWasmModel, generateOwnedJavaScriptWasmLeanAdapters
+		, generateCompiledJavaScriptWasmOwned, generateJavaScriptPackage } = modules;
 	flags(item, ["sourceRemovedBeforeInstall", "installedTypeScript", "deterministicReassembly", "independentRebuild"]);
 	assert.equal(Boolean(item.input.sourceIdentity.reviewedBindingIr), (item.mode ?? (item.reviewed ? "reviewed" : "ordinary")) === "reviewed");
 	assert.equal(item.input.sourceIdentity.modules.find(module => module.module === "Owned").source.sha256, sha256(lean));
@@ -138,11 +151,14 @@ export const assertOwnedJavaScriptReceiverExecution = async record => {
 		assert.match(record.run.text, new RegExp("^# " + key + " " + value + "$", "mu"));
 	assert.doesNotMatch(record.run.text, /^not ok|# SKIP|# TODO/mu);
 	const base = await readFile("tests/fixtures/onboarding/owned-aggregates/Owned.lean", "utf8");
+	const modules = await producerModules();
+	const { ownedAggregateTransferRuntime, ownedJavaScriptWasmNativeProbe
+		, ownedRustReceiverSource, ownedJvmPlainReceiverSource } = modules;
 	const lean = base + ownedRustReceiverSource, plainLean = base + ownedJvmPlainReceiverSource;
 	for(const field of ["runtime", "gc", "mutants"]) assert.deepEqual(record[field].map(item => item.mode), ["ordinary", "reviewed"]);
 	for(const item of record.runtime)
 	{
-		assert.equal(item.profile, "owned-javascript-receivers"); compile(item, lean);
+		assert.equal(item.profile, "owned-javascript-receivers"); compile(modules, item, lean);
 		members(item.members); borrows(item.borrows); drained(item);
 		assert.equal(item.compiledLean, true); assert.equal(item.installedPackage, false);
 		const cleanup = item.failureCleanup;
@@ -176,20 +192,20 @@ export const assertOwnedJavaScriptReceiverExecution = async record => {
 	for(const item of record.resources)
 	{
 		const unanchored = item.profile === "owned-javascript-unanchored-receivers";
-		compile(item, unanchored ? lean : plainLean, unanchored ? "unanchored" : item.consuming ? "consuming" : "plain");
+		compile(modules, item, unanchored ? lean : plainLean, unanchored ? "unanchored" : item.consuming ? "consuming" : "plain");
 		drained(item); assert.equal(item.compiledLean, true); assert.equal(item.installedPackage, false);
 		if(unanchored) assert.deepEqual(item.observed, { checks: 11, consuming: true, callbacks: true, resultAnchors: false });
 	}
 	for(const item of record.gc)
 	{
-		assert.equal(item.profile, "owned-javascript-receiver-gc"); compile(item, lean); drained(item);
+		assert.equal(item.profile, "owned-javascript-receiver-gc"); compile(modules, item, lean); drained(item);
 		flags(item, ["actualGc", "originalOwnerCollected", "cycleCollected", "retainedMethodPinsReceiver"]);
 		assert.ok(Number.isSafeInteger(item.collections) && item.collections >= 3 && item.collections <= 600);
 	}
 	for(const item of record.mutants)
 	{
 		assert.equal(item.profile, "owned-javascript-receiver-mutants");
-		const component = compile(item, lean), source = ownedJavaScriptWasmNativeProbe(component);
+		const component = compile(modules, item, lean), source = ownedJavaScriptWasmNativeProbe(component);
 		assert.equal(item.baselineChecks, 12);
 		assert.equal(item.probeSha256, sha256(await readFile("tests/fixtures/structured-types/owned-javascript-receiver-semantic.mjs")));
 		const expected = [];
@@ -207,7 +223,7 @@ export const assertOwnedJavaScriptReceiverExecution = async record => {
 	const runtimes = new Set(), alphas = new Set(), archives = new Set();
 	for(const item of record.coexistence)
 	{
-		assert.equal(item.profile, "owned-javascript-receiver-coexistence"); compile(item, lean, "full", false);
+		assert.equal(item.profile, "owned-javascript-receiver-coexistence"); compile(modules, item, lean, "full", false);
 		members(item.members); borrows(item.borrows);
 		for(const key of ["componentSha256", "runtimeSha256", "alphaSha256"]) digest(item[key]);
 		runtimes.add(item.runtimeSha256); alphas.add(item.alphaSha256);
@@ -225,7 +241,7 @@ export const assertOwnedJavaScriptReceiverExecution = async record => {
 	{
 		assert.equal(item.installedCli, true); assert.equal(item.combinedNative, item.reviewed); assert.equal(item.rejected, 19);
 		const name = `@owned/${item.reviewed ? "reviewed" : "ordinary"}-receivers`;
-		const checked = await installed(item, name, lean);
+		const checked = await installed(modules, item, name, lean);
 		archives.add(checked.runtimeArchive); assert.ok(runtimes.has(checked.runtime));
 		members(item.observed.members); borrows(item.observed.borrows); assert.equal(item.observed.checks, 292);
 		assert.deepEqual(item.documentation, { sourceSha256: sha256(example), output: "42n\nexpired\n42n\n" });
@@ -240,7 +256,7 @@ export const assertOwnedJavaScriptReceiverExecution = async record => {
 		const unanchored = item.kind === "unanchored", consuming = item.kind !== "plain";
 		assert.equal(item.unanchored, unanchored); assert.equal(item.consuming, consuming);
 		const name = `@owned/${item.mode}-${item.kind}-receivers`;
-		const checked = await installed(item, name, unanchored ? lean : plainLean, item.kind);
+		const checked = await installed(modules, item, name, unanchored ? lean : plainLean, item.kind);
 		archives.add(checked.runtimeArchive); assert.ok(runtimes.has(checked.runtime));
 		const checks = unanchored ? 11 : consuming ? 20 : 17;
 		assert.deepEqual(item.observed, { checks, consuming, callbacks: unanchored, resultAnchors: false });

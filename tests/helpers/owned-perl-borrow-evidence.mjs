@@ -7,15 +7,24 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { ownedReceiverHistoricalBytes } from "./owned-receiver-history.mjs";
-import { generateOwnedCPackage } from "../../src/backends/c/owned-package.mjs";
-import { generateOwnedPerlPackage } from "../../src/backends/perl/owned-package.mjs";
-import { generateOwnedPerlXs } from "../../src/backends/perl/owned-xs.mjs";
-import { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from "../../src/build/native-graph-model.mjs";
-import { validatePackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
-import { ownedRustBorrowSource } from "./owned-rust-borrow-fixture.mjs";
+import { moduleAtProducerWithSourceReads } from "./producer-module.mjs";
+import { bytesAtProducer } from "./producer-source.mjs";
 
 export const ownedPerlBorrowScript = "LEAN_BRIDGE_OWNED_PERL_BORROW_TEST=1 LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-perl-borrows.test.mjs tests/owned-perl-borrow-packaging.test.mjs tests/owned-perl-borrow-documentation.test.mjs";
 export const ownedPerlBorrowCommand = "LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 npm run test:owned-perl-borrows";
+/** The commit whose complete source tree every digest in the Perl borrow record names. */
+export const ownedPerlBorrowProducer = "25745d5f3683a3919b40bbc8ce64f6140e615e39";
+let producerPromise;
+// Models, XS, packages and fixtures for the frozen receipt come from the producer; later changes never reach back.
+const producerModules = () => producerPromise ??= Promise.all([
+	"src/backends/c/owned-package.mjs"
+	, "src/backends/perl/owned-package.mjs"
+	, "src/backends/perl/owned-xs.mjs"
+	, "src/build/native-graph-model.mjs"
+	, "src/release/package-set-receipt.mjs"
+	, "tests/helpers/owned-rust-borrow-fixture.mjs"
+].map(path => moduleAtProducerWithSourceReads(ownedPerlBorrowProducer, path)))
+	.then(modules => Object.assign({}, ...modules));
 export const ownedPerlBorrowScope = Object.freeze({
 	ordinaryCompiler: true, reviewedCompiler: true, installedCpan: true
 	, profiles: ["perl"], anchoredResults: 19, publicExports: 26
@@ -121,6 +130,7 @@ const block = (text, heading, language) => {
  * @param exports - Expected public calls exercised by the consumer.
  */
 export const assertOwnedPerlBorrowRuntime = async (item, model, xs, exports) => {
+	const { generateOwnedCPackage } = await producerModules();
 	assert.equal(item.actualLean, true); assert.equal(item.installedPackage, false);
 	assert.equal(item.declarationsSha256, sha256(xs.declarations));
 	assert.equal(item.valuesSha256, sha256(xs.valuesSource));
@@ -174,6 +184,7 @@ export const assertOwnedPerlBorrowRuntime = async (item, model, xs, exports) => 
  */
 const assertBorrowOnly = async record => {
 	assert.equal(record.probeSha256, sha256(record.probe));
+	const { createCompiledNativeModel, generateOwnedCPackage, generateOwnedPerlXs } = await producerModules();
 	const source = await readFile("tests/owned-perl-borrows.test.mjs", "utf8");
 	const literal = source.match(/const probe = `([^]*?)`;/u)?.[1];
 	assert.equal(literal?.replaceAll("\\\\", "\\"), record.probe);
@@ -226,9 +237,14 @@ export const assertOwnedPerlBorrowExecution = async record => {
 export const assertOwnedPerlBorrowArtifacts = async record => {
 	assert.deepEqual(record.runtime.map(item => item.mode), ["ordinary", "reviewed"]);
 	assert.deepEqual(record.packages.map(item => item.mode), ["ordinary", "reviewed"]);
+	const {
+		createCompiledNativeModel, generateCompiledNativeLeanAdapters
+		, generateOwnedPerlPackage
+		, generateOwnedPerlXs, validatePackageSetReceipt, ownedRustBorrowSource
+	} = await producerModules();
 	const lean = await readFile("tests/fixtures/onboarding/owned-aggregates/Owned.lean", "utf8") + ownedRustBorrowSource;
 	const consumer = sha256(await readFile("tests/fixtures/structured-types/owned-perl-borrows.pl"));
-	const assets = sha256(await readFile("tests/fixtures/structured-types/owned-perl-installed-assets.pl"));
+	const assets = sha256(bytesAtProducer(ownedPerlBorrowProducer, "tests/fixtures/structured-types/owned-perl-installed-assets.pl"));
 	for(const item of [...record.runtime, ...record.packages])
 	{
 		assert.equal(Boolean(item.input.sourceIdentity.reviewedBindingIr), item.mode === "reviewed");

@@ -7,15 +7,23 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { ownedReceiverHistoricalBytes } from "./owned-receiver-history.mjs";
-import { generateOwnedCPackage } from "../../src/backends/c/owned-package.mjs";
-import { generateOwnedCppPackage } from "../../src/backends/cpp/owned-package.mjs";
-import { generateOwnedRustCallables } from "../../src/backends/rust/owned-callables.mjs";
-import { generateOwnedRustPackage } from "../../src/backends/rust/owned-package.mjs";
-import { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from "../../src/build/native-graph-model.mjs";
-import { validatePackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
-import { ownedRustBorrowSource, ownedRustBorrowNativeSource } from "./owned-rust-borrow-fixture.mjs";
+import { moduleAtProducerWithSourceReads } from "./producer-module.mjs";
 
 export const ownedRustBorrowScript = "LEAN_BRIDGE_OWNED_RUST_BORROW_TEST=1 node --test --test-concurrency=1 tests/owned-rust-borrows.test.mjs tests/owned-rust-borrow-packaging.test.mjs";
+/** The commit whose complete source tree every digest in the Rust borrow record names. */
+export const ownedRustBorrowProducer = "e14a880886634053116c9546ced265a345281b2a";
+let producerPromise;
+// Callables, packages and native probes are regenerated with the producer's generators; later changes never reach back.
+const producerModules = () => producerPromise ??= Promise.all([
+	"src/backends/c/owned-package.mjs"
+	, "src/backends/cpp/owned-package.mjs"
+	, "src/backends/rust/owned-callables.mjs"
+	, "src/backends/rust/owned-package.mjs"
+	, "src/build/native-graph-model.mjs"
+	, "src/release/package-set-receipt.mjs"
+	, "tests/helpers/owned-rust-borrow-fixture.mjs"
+].map(path => moduleAtProducerWithSourceReads(ownedRustBorrowProducer, path)))
+	.then(modules => Object.assign({}, ...modules));
 export const ownedRustBorrowScope = Object.freeze({
 	profiles: ["rust"], sharedAdapterConsumers: ["cpp"]
 	, sourcePaths: ["ordinary-source", "reviewed-ir"]
@@ -54,6 +62,13 @@ export const assertOwnedRustBorrowExecution = async record => {
 	run(record.runs.runtime, "LEAN_BRIDGE_OWNED_RUST_BORROW_TEST=1 node --test --test-concurrency=1 tests/owned-rust-borrows.test.mjs", 3);
 	run(record.runs.installed, "LEAN_BRIDGE_OWNED_RUST_BORROW_TEST=1 node --test --test-concurrency=1 tests/owned-rust-borrow-packaging.test.mjs", 3);
 	for(const group of [record.runtime, record.packages]) assert.deepEqual(group.map(item => item.mode), ["ordinary", "reviewed"]);
+	const {
+		generateOwnedCPackage, generateOwnedCppPackage, generateOwnedRustCallables
+		, generateOwnedRustPackage
+		, createCompiledNativeModel, generateCompiledNativeLeanAdapters
+		, validatePackageSetReceipt
+		, ownedRustBorrowSource, ownedRustBorrowNativeSource
+	} = await producerModules();
 	const probe = await readFile("tests/fixtures/structured-types/owned-rust-borrows.rs", "utf8");
 	const lean = await readFile("tests/fixtures/onboarding/owned-aggregates/Owned.lean", "utf8") + ownedRustBorrowSource;
 	const page = await readFile("docs/consume/rust.md", "utf8");
