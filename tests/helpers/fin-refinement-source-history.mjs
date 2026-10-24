@@ -59,6 +59,7 @@ import { beforePhpWasmCallbackProducerReplaySource, phpWasmCallbackProducerRepla
 import { beforeCoreReceiverEndpointRepairSource, coreReceiverEndpointRepairNormalizationPaths } from "./core-receiver-endpoint-repair-source-history.mjs";
 import { beforeCorePerlConsumerEndpointRepairSource, corePerlConsumerEndpointRepairNormalizationPaths } from "./core-perl-consumer-endpoint-repair-source-history.mjs";
 import { beforeOwnedNpmScopedProducerSource, ownedNpmScopedProducerNormalizationPaths } from "./owned-npm-scoped-producer-source-history.mjs";
+import { beforeCorePhpStructuredEndpointRepairSource, corePhpStructuredEndpointRepairNormalizationPaths } from "./core-php-structured-endpoint-repair-source-history.mjs";
 import { beforeCoreEvidenceMemoryRepairSource, coreEvidenceMemoryRepairNormalizationPaths } from "./core-evidence-memory-repair-source-history.mjs";
 import { beforeValueIndexPromotionMilestoneRepairSource, valueIndexPromotionMilestoneRepairNormalizationPaths } from "./value-index-promotion-milestone-repair-source-history.mjs";
 import { beforeCoreMilestoneReplayRepairSource, coreMilestoneReplayRepairNormalizationPaths } from "./core-milestone-replay-repair-source-history.mjs";
@@ -2152,7 +2153,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...ownedNpmScopedProducerNormalizationPaths
+	...corePhpStructuredEndpointRepairNormalizationPaths
+	, ...ownedNpmScopedProducerNormalizationPaths
 	, ...corePerlConsumerEndpointRepairNormalizationPaths
 	, ...coreReceiverEndpointRepairNormalizationPaths
 	, ...phpWasmCallbackProducerReplayNormalizationPaths
@@ -3047,7 +3049,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeOwnedNpmScopedProducerSource(path, text, expected);
+	let stage = beforeCorePhpStructuredEndpointRepairSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeOwnedNpmScopedProducerSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;

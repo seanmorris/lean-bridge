@@ -80,6 +80,8 @@ import "./helpers/core-perl-consumer-endpoint-tests.mjs";
 import "./helpers/core-perl-consumer-endpoint-repair-source-history-tests.mjs";
 import "./helpers/owned-checked-record-npm-producer-tests.mjs";
 import "./helpers/owned-npm-scoped-producer-source-history-tests.mjs";
+import "./helpers/core-php-structured-endpoint-tests.mjs";
+import "./helpers/core-php-structured-endpoint-repair-source-history-tests.mjs";
 
 const root = resolve(".");
 

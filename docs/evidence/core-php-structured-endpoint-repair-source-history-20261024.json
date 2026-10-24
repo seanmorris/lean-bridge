@@ -1,0 +1,195 @@
+{
+  "additions": [
+    {
+      "currentSha256": "8fafb604a7d893d6ddd518590783324b6416fb8733dc8aa3b68f196427e27cb4",
+      "path": "tests/helpers/core-php-structured-endpoint-tests.mjs"
+    },
+    {
+      "currentSha256": "3043c786e787d111cddde1d1c142d3a7911f1fc85426742a0bd49b3bd4eacddf",
+      "path": "scripts/update-core-php-structured-endpoint-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "4f76f99ee6942341c329c0cacf29a8758dca61855a4fe9a2e6e9426b063f3c48",
+      "path": "tests/helpers/core-php-structured-endpoint-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "4547abd51368e68828d893d631f865bd25fb297a026408901a5b3a2b41526553",
+      "path": "tests/helpers/core-php-structured-endpoint-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "cbaf3cdcb6c0858dba9e7d482b03292f3d7155f7",
+  "implementationCommits": [
+    "cbaf3cdcb6c0858dba9e7d482b03292f3d7155f7"
+  ],
+  "integrationBaseCommit": "cbaf3cdcb6c0858dba9e7d482b03292f3d7155f7",
+  "integrationUpdates": [
+    {
+      "currentSha256": "c7a1545d520efbe26e5d52b558aa26802c583096a8fb72ffcc2d0c406afcb199",
+      "edits": [
+        {
+          "current": "import { beforeCorePhpStructuredEndpointRepairSource, corePhpStructuredEndpointRepairNormalizationPaths } from \"./core-php-structured-endpoint-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 8293
+        },
+        {
+          "current": "\t...corePhpStructuredEndpointRepairNormalizationPaths\n\t, ...ownedNpmScopedProducerNormalizationPaths\n",
+          "previous": "\t...ownedNpmScopedProducerNormalizationPaths\n",
+          "start": 181503
+        },
+        {
+          "current": "\tlet stage = beforeCorePhpStructuredEndpointRepairSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeOwnedNpmScopedProducerSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeOwnedNpmScopedProducerSource(path, text, expected);\n",
+          "start": 224488
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "bd1ac1b7c6f8ec0b4bd04b25a1dad3c1f84eb470cc9e17dec165100f93d2cc5d"
+    },
+    {
+      "currentSha256": "25a503fa8410c55a4ae781df387c7cc5e14352aad6bcf141757b00d6186637f6",
+      "edits": [
+        {
+          "current": "import \"./helpers/core-php-structured-endpoint-tests.mjs\";\nimport \"./helpers/core-php-structured-endpoint-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 5370
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "9c77dfb3365a5bbb594098e33dc6b7fb27d09dc32f84de29bbbf454d228ab4ff"
+    }
+  ],
+  "milestone": "core-php-structured-endpoint-repair-source-v1",
+  "predecessorCommit": "4ac1f5cddaec9d476f3a6dc554b5a69db33d067a",
+  "schemaVersion": 1,
+  "scope": "Repair nine missing stop arguments in native PHP structured acceptance and PHP/PHP-Wasm historical tests. Audit 25 calls across the complete npm, native PHP, PHP-Wasm and WIT structured chain, including the fault-probe source. Authenticate four unchanged original Git-backed inventory snapshots and their exact predecessor transitions. Refresh exactly eleven live source hashes across three files and preserve every other inventory byte. Original receipts, archives, runtime behavior, supported cells and installed acceptance claims do not change. Complete historical acceptance remains a hosted Core gate.",
+  "updates": [
+    {
+      "currentSha256": "b184c25cf415faa86275eea6e8530cec83aa621a9ebfbb92fc2e66c54a8a1bc6",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"2cef8269b2b767664bc04f2f89eab1ac5494210af33ec6626cba23c244fa9005\"\n",
+          "previous": "          \"sha256\": \"f7bdb62299eb16f492f74cb1299178b3a594eb41c64e154552c8ca89d76e6cb4\"\n",
+          "start": 1153143
+        },
+        {
+          "current": "          \"sha256\": \"1a9bf67461e76fafc531a7b431f90fb3b7720a9e23fdf2e8280ad9a84c026498\"\n",
+          "previous": "          \"sha256\": \"a43bc433a8edefce7c5018e100dee93084501c9f6f79d72975709db211d1a0de\"\n",
+          "start": 1154539
+        },
+        {
+          "current": "          \"sha256\": \"2cef8269b2b767664bc04f2f89eab1ac5494210af33ec6626cba23c244fa9005\"\n",
+          "previous": "          \"sha256\": \"f7bdb62299eb16f492f74cb1299178b3a594eb41c64e154552c8ca89d76e6cb4\"\n",
+          "start": 1160128
+        },
+        {
+          "current": "          \"sha256\": \"1a9bf67461e76fafc531a7b431f90fb3b7720a9e23fdf2e8280ad9a84c026498\"\n",
+          "previous": "          \"sha256\": \"a43bc433a8edefce7c5018e100dee93084501c9f6f79d72975709db211d1a0de\"\n",
+          "start": 1162116
+        },
+        {
+          "current": "          \"sha256\": \"791237521a6ab1d8d31f07e59e57ab5abf672826bd42a2e54fc2c0c707cbd08b\"\n",
+          "previous": "          \"sha256\": \"78869c605d02e2f842ec656ab4909b93792c7f2aa127250bc49ad82199d965c9\"\n",
+          "start": 1163658
+        },
+        {
+          "current": "          \"sha256\": \"791237521a6ab1d8d31f07e59e57ab5abf672826bd42a2e54fc2c0c707cbd08b\"\n",
+          "previous": "          \"sha256\": \"78869c605d02e2f842ec656ab4909b93792c7f2aa127250bc49ad82199d965c9\"\n",
+          "start": 1173401
+        },
+        {
+          "current": "          \"sha256\": \"2cef8269b2b767664bc04f2f89eab1ac5494210af33ec6626cba23c244fa9005\"\n",
+          "previous": "          \"sha256\": \"f7bdb62299eb16f492f74cb1299178b3a594eb41c64e154552c8ca89d76e6cb4\"\n",
+          "start": 1386831
+        },
+        {
+          "current": "          \"sha256\": \"1a9bf67461e76fafc531a7b431f90fb3b7720a9e23fdf2e8280ad9a84c026498\"\n",
+          "previous": "          \"sha256\": \"a43bc433a8edefce7c5018e100dee93084501c9f6f79d72975709db211d1a0de\"\n",
+          "start": 1389979
+        },
+        {
+          "current": "          \"sha256\": \"2cef8269b2b767664bc04f2f89eab1ac5494210af33ec6626cba23c244fa9005\"\n",
+          "previous": "          \"sha256\": \"f7bdb62299eb16f492f74cb1299178b3a594eb41c64e154552c8ca89d76e6cb4\"\n",
+          "start": 1404422
+        },
+        {
+          "current": "          \"sha256\": \"1a9bf67461e76fafc531a7b431f90fb3b7720a9e23fdf2e8280ad9a84c026498\"\n",
+          "previous": "          \"sha256\": \"a43bc433a8edefce7c5018e100dee93084501c9f6f79d72975709db211d1a0de\"\n",
+          "start": 1409485
+        },
+        {
+          "current": "          \"sha256\": \"791237521a6ab1d8d31f07e59e57ab5abf672826bd42a2e54fc2c0c707cbd08b\"\n",
+          "previous": "          \"sha256\": \"78869c605d02e2f842ec656ab4909b93792c7f2aa127250bc49ad82199d965c9\"\n",
+          "start": 1411933
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "125c9bfa620b71b15f39d78b3ebd466692064e789476ce85bf36f2ac55651450"
+    },
+    {
+      "currentSha256": "2cef8269b2b767664bc04f2f89eab1ac5494210af33ec6626cba23c244fa9005",
+      "edits": [
+        {
+          "current": "const priorSource = async (path, expected) => beforePhpWasmStructuredCallables(path, await readFile(path, \"utf8\"), expected);\n",
+          "previous": "const priorSource = async path => beforePhpWasmStructuredCallables(path, await readFile(path, \"utf8\"));\n",
+          "start": 2639
+        },
+        {
+          "current": "\tconst probe = probeSource ?? await priorSource(\"tests/fixtures/structured-callable-consumers/php-faults.php\", record.report.reports[0].faults.sourceSha256);\n",
+          "previous": "\tconst probe = probeSource ?? await priorSource(\"tests/fixtures/structured-callable-consumers/php-faults.php\");\n",
+          "start": 7679
+        },
+        {
+          "current": "\tfor(const path of paths) assert.equal(sha256(await priorSource(path, record.sourceHashes[path])), record.sourceHashes[path], path);\n",
+          "previous": "\tfor(const path of paths) assert.equal(sha256(await priorSource(path)), record.sourceHashes[path], path);\n",
+          "start": 12950
+        },
+        {
+          "current": "\t\trestored[update.path] = reversePhpStructuredCallableUpdate(await priorSource(update.path, update.currentSha256), update);\n",
+          "previous": "\t\trestored[update.path] = reversePhpStructuredCallableUpdate(await priorSource(update.path), update);\n",
+          "start": 13217
+        },
+        {
+          "current": "\t\t, document: JSON.parse(await priorSource(\"docs/type-surface.v1.json\", record.sourceHashes[\"docs/type-surface.v1.json\"])) };\n",
+          "previous": "\t\t, document: JSON.parse(await priorSource(\"docs/type-surface.v1.json\")) };\n",
+          "start": 13822
+        }
+      ],
+      "path": "tests/helpers/php-structured-callable-evidence.mjs",
+      "previousSha256": "f7bdb62299eb16f492f74cb1299178b3a594eb41c64e154552c8ca89d76e6cb4"
+    },
+    {
+      "currentSha256": "1a9bf67461e76fafc531a7b431f90fb3b7720a9e23fdf2e8280ad9a84c026498",
+      "edits": [
+        {
+          "current": "\t\tconst source = beforePhpWasmStructuredCallables(update.path, await readFile(update.path, \"utf8\"), update.currentSha256);\n",
+          "previous": "\t\tconst source = beforePhpWasmStructuredCallables(update.path, await readFile(update.path, \"utf8\"));\n",
+          "start": 3309
+        },
+        {
+          "current": "\t\tassert.equal(sha256(beforePhpStructuredCallables(update.path, source, update.previousSha256)), update.previousSha256);\n",
+          "previous": "\t\tassert.equal(sha256(beforePhpStructuredCallables(update.path, source)), update.previousSha256);\n",
+          "start": 3531
+        }
+      ],
+      "path": "tests/php-structured-callable-evidence.test.mjs",
+      "previousSha256": "a43bc433a8edefce7c5018e100dee93084501c9f6f79d72975709db211d1a0de"
+    },
+    {
+      "currentSha256": "791237521a6ab1d8d31f07e59e57ab5abf672826bd42a2e54fc2c0c707cbd08b",
+      "edits": [
+        {
+          "current": "\t\tconst source = beforeWitStructuredCallables(update.path, await readFile(update.path, \"utf8\"), update.currentSha256);\n",
+          "previous": "\t\tconst source = beforeWitStructuredCallables(update.path, await readFile(update.path, \"utf8\"));\n",
+          "start": 3440
+        },
+        {
+          "current": "\t\tassert.equal(sha256(beforePhpWasmStructuredCallables(update.path, source, update.previousSha256)), update.previousSha256);\n",
+          "previous": "\t\tassert.equal(sha256(beforePhpWasmStructuredCallables(update.path, source)), update.previousSha256);\n",
+          "start": 3662
+        }
+      ],
+      "path": "tests/php-wasm-structured-callable-evidence.test.mjs",
+      "previousSha256": "78869c605d02e2f842ec656ab4909b93792c7f2aa127250bc49ad82199d965c9"
+    }
+  ]
+}
