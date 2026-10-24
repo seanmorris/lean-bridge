@@ -1,6 +1,7 @@
 name: Promote the complete PHP-Wasm refinement entry matrix
 
 on:
+  create:
   schedule:
     - cron: "17 5 1 * *"
   workflow_dispatch:
@@ -11,28 +12,33 @@ permissions:
 
 concurrency:
   group: php-wasm-refinement-entry-promotion-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   copied:
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'schedule' || (github.event_name == 'create' && github.event.ref_type == 'tag' && github.event.ref == format('ci/php-wasm-refinement-entry/{0}', github.sha)) }}
     name: Produce copied refinement entry artifacts
     uses: ./.github/workflows/php-wasm-refinement-entry.yml
 
   owned:
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'schedule' || (github.event_name == 'create' && github.event.ref_type == 'tag' && github.event.ref == format('ci/php-wasm-refinement-entry/{0}', github.sha)) }}
     name: Produce owned refinement entry artifacts
     uses: ./.github/workflows/php-wasm-owned-refinement-entry.yml
 
   callback:
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'schedule' || (github.event_name == 'create' && github.event.ref_type == 'tag' && github.event.ref == format('ci/php-wasm-refinement-entry/{0}', github.sha)) }}
     name: Produce callback refinement entry artifacts
     needs: owned
     uses: ./.github/workflows/php-wasm-callback-entry.yml
 
   indexed:
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'schedule' || (github.event_name == 'create' && github.event.ref_type == 'tag' && github.event.ref == format('ci/php-wasm-refinement-entry/{0}', github.sha)) }}
     name: Produce indexed refinement entry artifacts
     needs: copied
     uses: ./.github/workflows/php-wasm-indexed-refinement-entry.yml
 
   promote:
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'schedule' || (github.event_name == 'create' && github.event.ref_type == 'tag' && github.event.ref == format('ci/php-wasm-refinement-entry/{0}', github.sha)) }}
     name: Authenticate all 30 refinement entry routes
     needs:
       - copied

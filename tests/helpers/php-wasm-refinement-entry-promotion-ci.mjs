@@ -9,6 +9,7 @@ import { phpWasmRefinementCiMatrix } from "./php-wasm-refinement-ci-matrix.mjs";
 
 export const phpWasmRefinementEntryPromotionPath
 	= ".github/workflows/php-wasm-refinement-entry-promotion.yml";
+export const phpWasmRefinementEntryPromotionGuard = "${{ github.event_name == 'workflow_dispatch' || github.event_name == 'schedule' || (github.event_name == 'create' && github.event.ref_type == 'tag' && github.event.ref == format('ci/php-wasm-refinement-entry/{0}', github.sha)) }}";
 export const phpWasmRefinementEntryPromotionProducers = Object.freeze([
 	Object.freeze({
 		id: "copied", name: "Produce copied refinement entry artifacts"
@@ -41,6 +42,7 @@ const blocks = source => {
 	}));
 };
 const exactProducer = producer => `  ${producer.id}:\n`
+	+ `    if: ${phpWasmRefinementEntryPromotionGuard}\n`
 	+ `    name: ${producer.name}\n`
 	+ (producer.needs === null ? "" : `    needs: ${producer.needs}\n`)
 	+ `    uses: ./.github/workflows/${producer.workflow}.yml`;
@@ -57,6 +59,7 @@ export const assertPhpWasmRefinementEntryPromotionWorkflow = source => {
 	assert.ok(header);
 	assert.equal(header[0], `
 on:
+  create:
   schedule:
     - cron: "17 5 1 * *"
   workflow_dispatch:
@@ -67,7 +70,7 @@ permissions:
 
 concurrency:
   group: php-wasm-refinement-entry-promotion-\${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
 `);
@@ -85,6 +88,7 @@ jobs:
 	}
 	const promote = jobs.at(-1).source;
 	assert.ok(promote.startsWith(`  promote:
+    if: ${phpWasmRefinementEntryPromotionGuard}
     name: Authenticate all 30 refinement entry routes
     needs:
       - copied

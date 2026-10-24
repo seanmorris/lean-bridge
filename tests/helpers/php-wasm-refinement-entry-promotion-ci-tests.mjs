@@ -9,6 +9,7 @@ import test from "node:test";
 import {
 	assertPhpWasmRefinementEntryPromotionWorkflow
 	, phpWasmRefinementEntryPromotionPath
+	, phpWasmRefinementEntryPromotionProducers
 } from "./php-wasm-refinement-entry-promotion-ci.mjs";
 import {
 	phpWasmRefinementEntryArtifactNames
@@ -31,6 +32,31 @@ test("the recurring PHP-Wasm entry promotion has one bounded same-run topology",
 		, expression);
 });
 
+test("PHP-Wasm entry promotion admits only exact revision tags before default-branch registration", async () => {
+	const source = await readFile(phpWasmRefinementEntryPromotionPath, "utf8");
+	assert.match(source, /^ {2}create:$/mu);
+	assert.match(source, /^ {2}cancel-in-progress: false$/mu);
+	const guard = "${{ github.event_name == 'workflow_dispatch' || github.event_name == 'schedule' || (github.event_name == 'create' && github.event.ref_type == 'tag' && github.event.ref == format('ci/php-wasm-refinement-entry/{0}', github.sha)) }}";
+	assert.equal(source.split(`    if: ${guard}\n`).length, 6);
+	for(const id of [...phpWasmRefinementEntryPromotionProducers.map(item => item.id), "promote"])
+	{
+		const marker = `  ${id}:\n    if: ${guard}\n`;
+		assert.ok(source.includes(marker), id);
+		assert.throws(() => assertPhpWasmRefinementEntryPromotionWorkflow(source.replace(marker, `  ${id}:\n`)));
+		assert.throws(() => assertPhpWasmRefinementEntryPromotionWorkflow(source.replace(marker, `  ${id}:\n    if: always()\n`)));
+	}
+	for(const [previous, next] of [
+		["  create:\n", "  push:\n"]
+		, ["github.event.ref_type == 'tag' && ", ""]
+		, ["github.event_name == 'create'", "github.event_name == 'push'"]
+		, ["ci/php-wasm-refinement-entry/{0}", "ci/php-wasm-refinement-entry/latest"]
+		, ["github.sha", "github.ref_name"]
+	]) {
+		assert.ok(source.includes(previous));
+		assert.throws(() => assertPhpWasmRefinementEntryPromotionWorkflow(source.replace(previous, next)));
+	}
+});
+
 test("the recurring PHP-Wasm entry promotion rejects scheduling and verifier drift", async t => {
 	const source = await readFile(phpWasmRefinementEntryPromotionPath, "utf8");
 	const replacements = [
@@ -38,7 +64,7 @@ test("the recurring PHP-Wasm entry promotion rejects scheduling and verifier dri
 		, ["  workflow_dispatch:\n", ""]
 		, ["  actions: read\n", "  actions: write\n"]
 		, ["  contents: read\n", "  contents: write\n"]
-		, ["  cancel-in-progress: true\n", "  cancel-in-progress: false\n"]
+		, ["  cancel-in-progress: false\n", "  cancel-in-progress: true\n"]
 		, ["  owned:\n", "  forged:\n"]
 		, ["    needs: owned\n", ""]
 		, ["    needs: copied\n", ""]

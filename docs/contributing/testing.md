@@ -23,6 +23,44 @@ predecessor, with a 64 MiB string budget and at most 1,024 entries. Changed text
 is checked again. Unknown text and failed checks are not cached. Verifiers still
 authenticate every recorded source transition and installed execution receipt.
 
+## Run the complete PHP-Wasm entry matrix
+
+The complete measurement workflow builds 30 ordinary/reviewed routes in 27
+artifacts at one revision. Four reusable producer groups run with at most four
+producer jobs at once. The verifier accepts only that run's exact artifact set;
+separate successful runs cannot be combined into a complete promotion.
+
+Before the workflow reaches the default branch, launch it by creating one
+revision-bound tag through the GitHub API. Commit and push the tested revision
+first, and check for an existing run before dispatching:
+
+```sh
+LEAN_BRIDGE_ENTRY_PRODUCER=$(git rev-parse HEAD)
+gh api --method POST repos/seanmorris/lean-bridge/git/refs \
+  -f "ref=refs/tags/ci/php-wasm-refinement-entry/$LEAN_BRIDGE_ENTRY_PRODUCER" \
+  -f "sha=$LEAN_BRIDGE_ENTRY_PRODUCER"
+```
+
+The [GitHub create event](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#create)
+uses the created reference's commit. Every producer and the verifier require the
+tag's full SHA suffix to equal that commit. Branch creation, unrelated tags and
+tags naming a different revision start no measurement jobs. Do not retarget or
+recreate an existing dispatch tag. The workflow does not cancel an active run.
+Use the API creation above rather than a tag push, which can also trigger other
+push-based workflows.
+
+Manual dispatch and the monthly schedule remain available once the workflow is
+registered on the default branch. A branch-tag run does not establish that
+recurring activation. It also does not promote public measurements by itself:
+retain and independently authenticate the original hosted artifacts, their API
+identities and the completed verifier result before updating support or docs.
+
+The scheduling and tamper controls need no Lean, PHP or Wasm compilation:
+
+```sh
+node --test tests/helpers/php-wasm-refinement-entry-promotion-ci-tests.mjs
+```
+
 ## Capture owned checked-record npm and browser evidence
 
 The `Owned checked-record npm and browser producer` workflow runs the complete
