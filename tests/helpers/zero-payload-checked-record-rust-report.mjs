@@ -5,11 +5,9 @@
  */
 import assert from "node:assert/strict";
 import { posix } from "node:path";
-import { compiledPackageMetadata } from "../../src/analyze/package-metadata.mjs";
 import { reviewedContractDifference } from "../../src/analyze/reviewed-source.mjs";
 import { hashBindingIr } from "../../src/binding-ir/canonical.mjs";
 import { validateBindingIr } from "../../src/binding-ir/contract.mjs";
-import { generateCopiedRustPackage } from "../../src/backends/rust/copied-values.mjs";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { validatePackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
 import {
@@ -41,6 +39,12 @@ import {
 	assertZeroPayloadRustResources, zeroPayloadRustLoadCeilings
 } from "./zero-payload-checked-record-rust-resources.mjs";
 import { readOwnedPerlCallbackVariantTar } from "./owned-perl-callback-result-variant-archives.mjs";
+import { moduleAtProducer } from "./producer-module.mjs";
+
+export const zeroPayloadRustGeneratorEntries = Object.freeze([
+	"src/backends/rust/copied-values.mjs"
+	, "src/analyze/package-metadata.mjs"
+]);
 
 const digest = /^[a-f0-9]{64}$/u;
 const absolute = path => assert.ok(typeof path === "string" && path.startsWith("/")
@@ -56,6 +60,31 @@ const reader = read => async path => {
 	const bytes = Buffer.from(await read(path)), value = JSON.parse(bytes);
 	assert.equal(bytes.toString(), canonicalJson(value), `Noncanonical record: ${path}`);
 	return value;
+};
+
+/**
+ * Compare retained public sources with the exact recorded producer's output.
+ * The hosted archive authenticates this producer's complete source closure.
+ * Fresh installed-package inspection still uses the current generators.
+ *
+ * @param read - Selection-relative original byte reader.
+ * @param options - Authenticated producer model and package identities.
+ * @param options.producerCommit - Independently selected full producer revision.
+ * @param options.model - Reproduced compiler model.
+ * @param options.evidence - Verified native loader identities.
+ * @param options.pkg - Verified package-set entry.
+ */
+export const checkZeroPayloadRustGeneratedSources = async (read, options) => {
+	const { producerCommit, model, evidence, pkg } = options;
+	const [generator, metadata] = await Promise.all(zeroPayloadRustGeneratorEntries
+		.map(entry => moduleAtProducer(producerCommit, entry)));
+	const generated = generator.generateCopiedRustPackage(model.bindingIr, evidence, {
+		name: pkg.name
+		, version: pkg.version
+		, metadata: metadata.compiledPackageMetadata(model.sourceIdentity)
+	});
+	for(const [path, source] of Object.entries(generated))
+		assert.equal((await read(`package/${path}`)).toString(), source, path);
 };
 
 /**
@@ -143,9 +172,10 @@ const checkModels = async options => {
  * @param options.model - Reproduced compiler model.
  * @param options.receipt - Verified package-set receipt.
  * @param options.floor - Explicit native glibc floor.
+ * @param options.producerCommit - Independently selected full producer revision.
  */
 const checkPackage = async options => {
-	const { read, json, model, receipt, floor } = options;
+	const { read, json, model, receipt, floor, producerCommit } = options;
 	const pkg = receipt.packages[0], crate = await json("crate.json");
 	assert.deepEqual(Object.keys(crate).sort()
 		, ["archive", "closure", "evidence", "files", "receiptSha256", "retained"]);
@@ -183,13 +213,9 @@ const checkPackage = async options => {
 	const runtime = await json("package/lean-bridge/runtime.json");
 	const evidence = zeroPayloadRustNativeEvidence(packageReceipt, component, adapter, runtime);
 	assert.deepEqual(crate.evidence, evidence);
-	const generated = generateCopiedRustPackage(model.bindingIr, evidence, {
-		name: pkg.name
-		, version: pkg.version
-		, metadata: compiledPackageMetadata(model.sourceIdentity)
+	await checkZeroPayloadRustGeneratedSources(read, {
+		producerCommit, model, evidence, pkg
 	});
-	for(const [path, source] of Object.entries(generated))
-		assert.equal((await read(`package/${path}`)).toString(), source, path);
 	const compiled = await json("package/lean-bridge/native-rust.json");
 	assert.equal(sha256(canonicalJson(compiled)), packageReceipt.compiledProjectionSha256);
 	assert.equal(compiled.name, pkg.name); assert.equal(compiled.version, pkg.version);
@@ -370,7 +396,7 @@ export const checkZeroPayloadRustReport = async (read, options) => {
 	assert.deepEqual(report.resourceChecks, resources);
 	for(const resource of resources) assertZeroPayloadRustResources(resource, report.loadCeiling);
 	const { model, receipt } = await checkModels({ report, read, json, route, selection });
-	const { pkg, crate } = await checkPackage({ read, json, model, receipt, floor });
+	const { pkg, crate } = await checkPackage({ read, json, model, receipt, floor, producerCommit });
 	assert.equal((await read("consumer.rs")).toString(), await zeroPayloadRustCaller());
 	const environment = await checkEnvironment({ read, json, crate, pkg, selection, toolchain });
 	assert.deepEqual(report.installation, environment.installation);
