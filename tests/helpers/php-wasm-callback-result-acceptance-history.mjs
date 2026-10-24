@@ -340,16 +340,21 @@ export const reversePhpWasmCallbackResultUpdate = (source, update, category = "u
 
 /**
  * Peel this acceptance layer while preserving historical and unknown bytes.
+ * Without an exact stop, newer history stops at this layer's own recorded
+ * endpoint, so older readers continue from the bytes this layer produced.
  *
  * @param path - Repository-relative source path.
  * @param source - Complete current, historical or unknown source.
  * @param expected - Optional exact stopping SHA-256.
  */
 export const beforePhpWasmCallbackResultAcceptance = (path, source, expected) => {
-	source = beforeFinRefinementSource(path, source, expected);
+	const acceptance = readPhpWasmCallbackResultHistory();
+	const own = acceptance.readerUpdates.find(value => value.path === path)
+		?? acceptance.updates.find(value => value.path === path);
+	source = beforeFinRefinementSource(path, source, expected ?? own?.currentSha256);
 	for(const category of ["readerUpdates", "updates"])
 	{
-		const update = readPhpWasmCallbackResultHistory()[category].find(value => value.path === path);
+		const update = acceptance[category].find(value => value.path === path);
 		const current = sha256(source);
 		if(update && current !== expected && current === update.currentSha256)
 			source = reversePhpWasmCallbackResultUpdate(source, update, category);
