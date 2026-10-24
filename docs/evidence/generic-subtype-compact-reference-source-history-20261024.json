@@ -1,0 +1,206 @@
+{
+  "additions": [
+    {
+      "currentSha256": "4f1875ebec2472f01e0a637b4675e9830128343d909b996cfd51e0fbc41ed3e4",
+      "path": "scripts/update-generic-subtype-compact-reference-source-history.mjs"
+    },
+    {
+      "currentSha256": "745215f3412201653223dc355cd75c3e30030971d57aa91dfee13e787b2e923c",
+      "path": "tests/helpers/generic-subtype-compact-reference-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "0982d8888dda8c8febb0007b06441e146766045c1545b18c10ae1e422287849c",
+      "path": "tests/helpers/generic-subtype-compact-reference-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "b3f066360ef51e57f625de90f0206011e15e8719",
+  "implementationCommits": [
+    "b3f066360ef51e57f625de90f0206011e15e8719"
+  ],
+  "integrationBaseCommit": "b3f066360ef51e57f625de90f0206011e15e8719",
+  "integrationUpdates": [
+    {
+      "currentSha256": "5a2f358490357913e6d438120d2d6ee3580aaed94039e31b578f8fb2af30d65b",
+      "edits": [
+        {
+          "current": "import { beforeGenericSubtypeCompactReferenceSource, genericSubtypeCompactReferenceNormalizationPaths } from \"./generic-subtype-compact-reference-source-history.mjs\";\n",
+          "previous": "",
+          "start": 8946
+        },
+        {
+          "current": "\t...genericSubtypeCompactReferenceNormalizationPaths\n\t, ...ownedNpmSourceIdentityRepairNormalizationPaths\n",
+          "previous": "\t...ownedNpmSourceIdentityRepairNormalizationPaths\n",
+          "start": 182152
+        },
+        {
+          "current": "\tlet stage = beforeGenericSubtypeCompactReferenceSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeOwnedNpmSourceIdentityRepairSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeOwnedNpmSourceIdentityRepairSource(path, text, expected);\n",
+          "start": 225350
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "8d3dffffb19dfdeae285288a16922f3ceee5b92f44b0ee1a296931bb6fd3357e"
+    },
+    {
+      "currentSha256": "88c75a84cae7670b9ed25955a5023d122d5bc2d5c963b5c67d160ff49b79440d",
+      "edits": [
+        {
+          "current": "import \"./helpers/generic-subtype-compact-reference-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 5870
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "430fb5d0a40b77a29ae0fe201d05f79e525914d38b0b0ee3f461e575b7264105"
+    }
+  ],
+  "milestone": "generic-subtype-compact-reference-source-v1",
+  "predecessorCommit": "6abd65895becbd1c4787d853af5e5fd9e80954ec",
+  "schemaVersion": 1,
+  "scope": "Keep complete generic Subtype archive replay while replacing redundant inventory file manifests with authenticated index, original API, ZIP part and live-validator references. Bind the re-read canonical index to the exact replay result, require complete API and ZIP manifest bindings and reject duplicate, unsafe, substituted or misordered metadata. All twelve retained indexes project 139 references instead of 22227; no archived byte or supported cell changes. Refresh exactly eleven testing-document hashes and preserve every other inventory byte. Bounded-memory transactional promotion, public documentation and final hosted gates remain required.",
+  "updates": [
+    {
+      "currentSha256": "f1e2b0fe19b7b830eb8839ec3cbd96a7412530c4443e599c038051aa913e788d",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"5ef920ff619dbd6488d006a1d922264d3c0d405e0969fa4caa2c683c9adbd657\"\n",
+          "previous": "          \"sha256\": \"acd21552e997b7003de081b9764281cf9f101b0a27ff473e77be221647779d96\"\n",
+          "start": 1167697
+        },
+        {
+          "current": "          \"sha256\": \"5ef920ff619dbd6488d006a1d922264d3c0d405e0969fa4caa2c683c9adbd657\"\n",
+          "previous": "          \"sha256\": \"acd21552e997b7003de081b9764281cf9f101b0a27ff473e77be221647779d96\"\n",
+          "start": 1177811
+        },
+        {
+          "current": "          \"sha256\": \"5ef920ff619dbd6488d006a1d922264d3c0d405e0969fa4caa2c683c9adbd657\"\n",
+          "previous": "          \"sha256\": \"acd21552e997b7003de081b9764281cf9f101b0a27ff473e77be221647779d96\"\n",
+          "start": 1189747
+        },
+        {
+          "current": "          \"sha256\": \"5ef920ff619dbd6488d006a1d922264d3c0d405e0969fa4caa2c683c9adbd657\"\n",
+          "previous": "          \"sha256\": \"acd21552e997b7003de081b9764281cf9f101b0a27ff473e77be221647779d96\"\n",
+          "start": 1222308
+        },
+        {
+          "current": "          \"sha256\": \"5ef920ff619dbd6488d006a1d922264d3c0d405e0969fa4caa2c683c9adbd657\"\n",
+          "previous": "          \"sha256\": \"acd21552e997b7003de081b9764281cf9f101b0a27ff473e77be221647779d96\"\n",
+          "start": 1252587
+        },
+        {
+          "current": "          \"sha256\": \"5ef920ff619dbd6488d006a1d922264d3c0d405e0969fa4caa2c683c9adbd657\"\n",
+          "previous": "          \"sha256\": \"acd21552e997b7003de081b9764281cf9f101b0a27ff473e77be221647779d96\"\n",
+          "start": 1285738
+        },
+        {
+          "current": "          \"sha256\": \"5ef920ff619dbd6488d006a1d922264d3c0d405e0969fa4caa2c683c9adbd657\"\n",
+          "previous": "          \"sha256\": \"acd21552e997b7003de081b9764281cf9f101b0a27ff473e77be221647779d96\"\n",
+          "start": 1325841
+        },
+        {
+          "current": "          \"sha256\": \"5ef920ff619dbd6488d006a1d922264d3c0d405e0969fa4caa2c683c9adbd657\"\n",
+          "previous": "          \"sha256\": \"acd21552e997b7003de081b9764281cf9f101b0a27ff473e77be221647779d96\"\n",
+          "start": 1352261
+        },
+        {
+          "current": "          \"sha256\": \"5ef920ff619dbd6488d006a1d922264d3c0d405e0969fa4caa2c683c9adbd657\"\n",
+          "previous": "          \"sha256\": \"acd21552e997b7003de081b9764281cf9f101b0a27ff473e77be221647779d96\"\n",
+          "start": 1374941
+        },
+        {
+          "current": "          \"sha256\": \"5ef920ff619dbd6488d006a1d922264d3c0d405e0969fa4caa2c683c9adbd657\"\n",
+          "previous": "          \"sha256\": \"acd21552e997b7003de081b9764281cf9f101b0a27ff473e77be221647779d96\"\n",
+          "start": 1394608
+        },
+        {
+          "current": "          \"sha256\": \"5ef920ff619dbd6488d006a1d922264d3c0d405e0969fa4caa2c683c9adbd657\"\n",
+          "previous": "          \"sha256\": \"acd21552e997b7003de081b9764281cf9f101b0a27ff473e77be221647779d96\"\n",
+          "start": 1417696
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "eec2d6dfc69c6e3b7e70f1cdd44861bf40f181fe5696a70f7ccf5efb4cd2eeb9"
+    },
+    {
+      "currentSha256": "5ef920ff619dbd6488d006a1d922264d3c0d405e0969fa4caa2c683c9adbd657",
+      "edits": [
+        {
+          "current": "\n### Closed generic-Subtype archive references\n\nGeneric-Subtype promotion replays all twelve retained lanes serially before\nconstructing support references. Each reference pins the complete archive index,\nthe three original GitHub API records, every ZIP part and the live validator\nsources. The index authenticates the full file manifest; the replay still checks\nevery retained output and producer, consumer, checker and archiver source. The\ninventory does not repeat that complete manifest a second time.\n\nThe projection rejects an index changed after replay, missing or duplicate\nmanifest entries, unsafe paths, API or ZIP hash/size substitutions and broken\nZIP part ordering. Its lightweight controls require no compiler or hosted build:\n\n```sh\nnode --test tests/helpers/generic-subtype-archive-boundary-tests.mjs\n```\n\nThese controls test reference construction, not installed package acceptance.\nPublic support promotion still requires the complete retained archive replay,\nthe exact field-cell and documentation update, and the required hosted gates.\n",
+          "previous": "",
+          "start": 249072
+        }
+      ],
+      "path": "docs/contributing/testing.md",
+      "previousSha256": "acd21552e997b7003de081b9764281cf9f101b0a27ff473e77be221647779d96"
+    },
+    {
+      "currentSha256": "8a5448ec552095a24f70d4b9254da03209bcdfe2ecaea8c6ea5060ea94449137",
+      "edits": [
+        {
+          "current": "import { canonicalJson, sha256 } from \"../../src/capsule/node.mjs\";\n",
+          "previous": "import { sha256 } from \"../../src/capsule/node.mjs\";\n",
+          "start": 226
+        },
+        {
+          "current": "import { genericSubtypeHostedSafePath } from \"./generic-subtype-hosted-output.mjs\";\n",
+          "previous": "",
+          "start": 506
+        },
+        {
+          "current": "/**\n * Project a fully replayed archive without duplicating its entire file list.\n * The exact index digest authenticates the complete retained manifest; the live\n * checker still hashes and replays every file before this projection is used.\n *\n * @param index - Index returned by the complete archive replay.\n * @param root - Exact dated lane root.\n * @param indexBytes - Original index bytes re-read after that replay.\n */\nexport const genericSubtypePromotionArchiveReferences = (index, root, indexBytes) => {\n\tassert.equal(root, hostedRoot(index.lane));\n\tassert.equal(indexBytes.toString(), canonicalJson(index)\n\t\t, \"Generic Subtype archive index changed after replay\");\n\tconst manifest = new Map();\n\tfor(const file of index.files)\n\t{\n\t\tgenericSubtypeHostedSafePath(file.path);\n\t\tassert.notEqual(file.path, \"index.json\");\n\t\tassert.ok(!manifest.has(file.path), `Duplicate archive file: ${file.path}`);\n\t\tassert.match(file.sha256, /^[a-f0-9]{64}$/u);\n\t\tassert.ok(Number.isSafeInteger(file.bytes) && file.bytes >= 0);\n\t\tmanifest.set(file.path, file);\n\t}\n\tconst boundFile = (path, record) => {\n\t\tconst file = manifest.get(path);\n\t\tassert.ok(file, `Missing archive manifest binding: ${path}`);\n\t\tassert.equal(record.sha256, file.sha256, path);\n\t\tassert.equal(record.bytes, file.bytes, path);\n\t\treturn { path: `${root}/${path}`, sha256: file.sha256 };\n\t};\n\tconst { apiRecords, artifact } = index.hostedRun;\n\tassert.deepEqual(Object.keys(apiRecords).toSorted(), [\"artifact\", \"job\", \"run\"]);\n\tconst files = [\n\t\t{ path: `${root}/index.json`, sha256: sha256(indexBytes) }\n\t\t, ...[\"artifact\", \"job\", \"run\"].map(name =>\n\t\t\tboundFile(`hosted/api/${name}.json`, apiRecords[name]))\n\t];\n\tassert.ok(artifact.parts.length > 0);\n\tlet offset = 0;\n\tconst artifacts = artifact.parts.map((part, number) => {\n\t\tassert.equal(part.path\n\t\t\t, `hosted/artifact.zip.parts/${String(number).padStart(4, \"0\")}.part`);\n\t\tassert.equal(part.offset, offset);\n\t\tassert.ok(Number.isSafeInteger(part.bytes) && part.bytes > 0);\n\t\toffset += part.bytes;\n\t\tassert.ok(Number.isSafeInteger(offset));\n\t\treturn boundFile(part.path, part);\n\t});\n\tassert.equal(offset, artifact.bytes);\n\treturn { files: [...files, ...artifacts], artifacts };\n};\n\n",
+          "previous": "",
+          "start": 5129
+        },
+        {
+          "current": "\t\tconst compact = genericSubtypePromotionArchiveReferences(\n\t\t\tindex, root, await read(indexPath));\n",
+          "previous": "",
+          "start": 8272
+        },
+        {
+          "current": "\t\t\t...compact.files\n",
+          "previous": "\t\t\t{ path: indexPath, sha256: sha256(await read(indexPath)) }\n\t\t\t, ...index.files.map(file => ({\n\t\t\t\tpath: `${root}/${file.path}`, sha256: file.sha256\n\t\t\t}))\n",
+          "start": 8390
+        },
+        {
+          "current": "\t\tconst artifacts = compact.artifacts;\n",
+          "previous": "\t\tconst artifacts = index.hostedRun.artifact.parts.map(part => ({\n\t\t\tpath: `${root}/${part.path}`, sha256: part.sha256\n\t\t}));\n",
+          "start": 8598
+        }
+      ],
+      "path": "tests/helpers/generic-subtype-promotion.mjs",
+      "previousSha256": "b906a0808073a5eb4e1525c930aa7ee6616943b73445dfc466acdf4a5cd4b400"
+    },
+    {
+      "currentSha256": "5ed988ca854400e93838e61cef7ba3ed6a7d3453794bc8b831e0a5f9fe3f8af8",
+      "edits": [
+        {
+          "current": "import { canonicalJson, sha256 } from \"../../src/capsule/node.mjs\";\n",
+          "previous": "",
+          "start": 217
+        },
+        {
+          "current": "\t, genericSubtypePromotionArchiveReferences, renderGenericSubtypePromotion\n",
+          "previous": "\t, renderGenericSubtypePromotion\n",
+          "start": 672
+        },
+        {
+          "current": "\tconst apiRecords = Object.fromEntries([\"run\", \"job\", \"artifact\"].map(\n\t\tname => [name, { bytes: 10, sha256: sha256(`Synthetic ${name}`) }]\n\t));\n\tconst part = { path: \"hosted/artifact.zip.parts/0000.part\"\n\t\t, bytes: 20, offset: 0, sha256: \"3\".repeat(64) };\n",
+          "previous": "",
+          "start": 3004
+        },
+        {
+          "current": "\t\t, files: [{ path: \"report.json\", bytes: 10, sha256: \"2\".repeat(64) }\n\t\t\t, ...Object.entries(apiRecords).map(([name, record]) => ({\n\t\t\t\tpath: `hosted/api/${name}.json`, ...record\n\t\t\t}))\n\t\t\t, { path: part.path, bytes: part.bytes, sha256: part.sha256 }]\n\t\t, hostedRun: { runId: 1, job: { id: 2 }, apiRecords\n\t\t\t, artifact: { id: 3, bytes: part.bytes, parts: [part] } }\n",
+          "previous": "\t\t, files: [{ path: \"report.json\", sha256: \"2\".repeat(64) }]\n\t\t, hostedRun: { runId: 1, job: { id: 2 }\n\t\t\t, artifact: { id: 3\n\t\t\t\t, parts: [{ path: \"artifact.zip.parts/0000.part\", sha256: \"3\".repeat(64) }] } }\n",
+          "start": 3458
+        },
+        {
+          "current": "const read = async path => {\n\tconst lane = genericSubtypeHostedLaneNames.find(name =>\n\t\tpath === `${genericSubtypePromotionRoots[name]}/index.json`);\n\treturn Buffer.from(lane ? canonicalJson(fixture(lane))\n\t\t: `Synthetic bytes for ${path}.`);\n};\n\ntest(\"generic archive promotion binds a compact complete-manifest index\", () => {\n\tconst index = fixture(\"native\"), root = genericSubtypePromotionRoots.native;\n\tfor(let number = 0; number < 2_000; number++) index.files.push({\n\t\tpath: `sources/producer/source-${number}.mjs`\n\t\t, bytes: 10, sha256: \"4\".repeat(64)\n\t});\n\tconst bytes = Buffer.from(canonicalJson(index));\n\tconst result = genericSubtypePromotionArchiveReferences(index, root, bytes);\n\tassert.equal(result.files.length, 5);\n\tassert.deepEqual(result.files[0]\n\t\t, { path: `${root}/index.json`, sha256: sha256(bytes) });\n\tassert.deepEqual(result.files.slice(1).map(file => file.path), [\n\t\t`${root}/hosted/api/artifact.json`, `${root}/hosted/api/job.json`\n\t\t, `${root}/hosted/api/run.json`\n\t\t, `${root}/hosted/artifact.zip.parts/0000.part`\n\t]);\n\tassert.deepEqual(result.artifacts, result.files.slice(-1));\n\tassert.ok(JSON.stringify(result).length < 1_500);\n\tassert.equal(index.files.length, 2_005);\n});\n\ntest(\"generic archive promotion rejects substituted post-replay index bytes\", async () => {\n\tconst index = fixture(\"native\"), root = genericSubtypePromotionRoots.native;\n\tconst bytes = Buffer.from(canonicalJson(index));\n\tindex.files[0].sha256 = \"5\".repeat(64);\n\tassert.throws(() => genericSubtypePromotionArchiveReferences(index, root, bytes)\n\t\t, /changed after replay/u);\n\tawait assert.rejects(genericSubtypePromotionReferences(async lane => fixture(lane)\n\t\t, async path => path.endsWith(\"/index.json\")\n\t\t\t? Buffer.from(canonicalJson(index)) : read(path)), /changed after replay/u);\n});\n\ntest(\"generic archive compact references reject missing and forged manifest bindings\", () => {\n\tconst mutations = [\n\t\tindex => { index.files.pop(); }\n\t\t, index => { index.files.push(index.files[0]); }\n\t\t, index => { index.files[0].path = \"../escape\"; }\n\t\t, index => { index.files[0].sha256 = \"not-a-digest\"; }\n\t\t, index => { index.files[0].bytes = -1; }\n\t\t, index => { index.files[0].path = \"index.json\"; }\n\t\t, index => { delete index.hostedRun.apiRecords.run; }\n\t\t, index => { index.hostedRun.apiRecords.extra = index.hostedRun.apiRecords.run; }\n\t\t, index => { index.hostedRun.apiRecords.run.sha256 = \"6\".repeat(64); }\n\t\t, index => { index.hostedRun.apiRecords.job.bytes++; }\n\t\t, index => { index.files = index.files.filter(file => file.path !== \"hosted/api/job.json\"); }\n\t\t, index => { index.hostedRun.artifact.parts = []; }\n\t\t, index => { index.hostedRun.artifact.parts.push(index.hostedRun.artifact.parts[0]); }\n\t\t, index => { index.hostedRun.artifact.parts[0].path = \"../../escape\"; }\n\t\t, index => { index.hostedRun.artifact.parts[0].sha256 = \"7\".repeat(64); }\n\t\t, index => { index.hostedRun.artifact.parts[0].bytes++; }\n\t\t, index => { index.hostedRun.artifact.parts[0].offset++; }\n\t\t, index => { index.hostedRun.artifact.bytes++; }\n\t];\n\tfor(const mutate of mutations)\n\t{\n\t\tconst index = fixture(\"native\");\n\t\tmutate(index);\n\t\tassert.throws(() => genericSubtypePromotionArchiveReferences(index\n\t\t\t, genericSubtypePromotionRoots.native, Buffer.from(canonicalJson(index)))\n\t\t, assert.AssertionError, String(mutate));\n\t}\n\tconst index = fixture(\"native\");\n\tassert.throws(() => genericSubtypePromotionArchiveReferences(index\n\t\t, genericSubtypePromotionRoots.perl, Buffer.from(canonicalJson(index)))\n\t, assert.AssertionError);\n});\n",
+          "previous": "const read = async path => Buffer.from(`Synthetic bytes for ${path}.`);\n",
+          "start": 3903
+        }
+      ],
+      "path": "tests/helpers/generic-subtype-archive-boundary-tests.mjs",
+      "previousSha256": "29cf6032f7231f8999c1132791b7d06fdfa9929e26e9b35f207be77488f9f0e9"
+    }
+  ]
+}
