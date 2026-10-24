@@ -1,0 +1,140 @@
+{
+  "additions": [
+    {
+      "currentSha256": "63205b4f8d350e1b6887a2305d5244897ccf65014d524fe28627356480236c7c",
+      "path": "scripts/update-owned-subtype-remaining-hosts-tap-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "9c4aa236fde4e8717c5167943e76d2607f5f1303df72e9ae09bb0724768e609c",
+      "path": "tests/helpers/owned-subtype-remaining-hosts-tap-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "b67516417e8c0304d731d8662786077879cea2ae6b1f6da3b56a385e06969948",
+      "path": "tests/helpers/owned-subtype-remaining-hosts-tap-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "0fa543fe8af38bf534cfa0db2b837e35763d59af",
+  "integrationUpdates": [
+    {
+      "currentSha256": "924ab35ee96b197ee12bbd2464f3dd716682d03c68f29e5164f687af20d338a2",
+      "edits": [
+        {
+          "current": "import \"./helpers/owned-subtype-remaining-hosts-tap-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 7368
+        }
+      ],
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "e73601099401ead2459dedb9c6d669fdb64006259beed92459baf7c1747dafce"
+    },
+    {
+      "currentSha256": "1d9170bc65af678972b532fcf437359e4a452f29d256170fe062de597462e777",
+      "edits": [
+        {
+          "current": "import { beforeOwnedSubtypeRemainingHostsTapRepairSource, ownedSubtypeRemainingHostsTapRepairNormalizationPaths } from \"./owned-subtype-remaining-hosts-tap-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...ownedSubtypeRemainingHostsTapRepairNormalizationPaths\n\t, ...coreEvidenceTrackingTestRegistrationNormalizationPaths\n",
+          "previous": "\t...coreEvidenceTrackingTestRegistrationNormalizationPaths\n",
+          "start": 170704
+        },
+        {
+          "current": "\tconst ownedSubtypeRemainingHostsTapRepair\n\t\t= beforeOwnedSubtypeRemainingHostsTapRepairSource(\n\t\t\tpath, text, expected);\n\tif(sha256(ownedSubtypeRemainingHostsTapRepair) === expected)\n\t\treturn ownedSubtypeRemainingHostsTapRepair;\n\ttext = ownedSubtypeRemainingHostsTapRepair;\n",
+          "previous": "",
+          "start": 210159
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "1d6db4f4aedb150c0e14d570863e4bcea2cda4cdeda6a9a1f6831804f5a9965e"
+    }
+  ],
+  "milestone": "owned-subtype-remaining-hosts-tap-repair-source-v1",
+  "predecessorCommit": "7346de20456d0639bc605016a8e000c0af4c5049",
+  "schemaVersion": 1,
+  "scope": "Require the exact zero-skip TAP emitted by each remaining owned Subtype hosted lane, including the shared host-API prerequisite and the JVM-only Java caller check.",
+  "updates": [
+    {
+      "currentSha256": "7b31c40d2372245afefa2a2c94cdf00d4db97ac60ba9350f6cfcc4c22673d9c2",
+      "edits": [
+        {
+          "current": "\tcount: lane === \"jvm\" ? 7 : 6\n",
+          "previous": "\tcount: 5\n",
+          "start": 2759
+        },
+        {
+          "current": "\t\t\"owned Subtype WIT consumer names the installed host API\"\n\t\t, ...lane === \"jvm\"\n\t\t\t? [\"Java callers construct owned bindings without the Kotlin runtime\"] : []\n\t\t, `installed ordinary checked owned Subtypes execute in ${lane}`\n",
+          "previous": "\t\t`installed ordinary checked owned Subtypes execute in ${lane}`\n",
+          "start": 2802
+        }
+      ],
+      "path": "tests/helpers/owned-subtype-hosted-ci.mjs",
+      "previousSha256": "b57c41b1156822f84b4c8497e3d11d9b2a3ad26e83921f0105b47218f9ff41e8"
+    },
+    {
+      "currentSha256": "5c7a2d2854d978fae61e362e4535b9241dbbe597786e9a0bbcd2c5dc132bba53",
+      "edits": [
+        {
+          "current": "\t, dotnet: { count: 6\n",
+          "previous": "\t, dotnet: { count: 5\n",
+          "start": 1682
+        },
+        {
+          "current": "\t\t\t\"owned Subtype WIT consumer names the installed host API\"\n\t\t\t, \"installed ordinary checked owned Subtypes execute in dotnet\"\n",
+          "previous": "\t\t\t\"installed ordinary checked owned Subtypes execute in dotnet\"\n",
+          "start": 1717
+        },
+        {
+          "current": "\t, jvm: { count: 7\n",
+          "previous": "\t, jvm: { count: 5\n",
+          "start": 1919
+        },
+        {
+          "current": "\t\t\t\"owned Subtype WIT consumer names the installed host API\"\n\t\t\t, \"Java callers construct owned bindings without the Kotlin runtime\"\n\t\t\t, \"installed ordinary checked owned Subtypes execute in jvm\"\n",
+          "previous": "\t\t\t\"installed ordinary checked owned Subtypes execute in jvm\"\n",
+          "start": 1951
+        },
+        {
+          "current": "\t, \"php-native\": { count: 6\n",
+          "previous": "\t, \"php-native\": { count: 5\n",
+          "start": 2219
+        },
+        {
+          "current": "\t\t\t\"owned Subtype WIT consumer names the installed host API\"\n\t\t\t, \"installed ordinary checked owned Subtypes execute in php-native\"\n",
+          "previous": "\t\t\t\"installed ordinary checked owned Subtypes execute in php-native\"\n",
+          "start": 2260
+        },
+        {
+          "current": "\t, \"wit-wasi\": { count: 6\n",
+          "previous": "\t, \"wit-wasi\": { count: 5\n",
+          "start": 2470
+        },
+        {
+          "current": "\t\t\t\"owned Subtype WIT consumer names the installed host API\"\n\t\t\t, \"installed ordinary checked owned Subtypes execute in wit-wasi\"\n",
+          "previous": "\t\t\t\"installed ordinary checked owned Subtypes execute in wit-wasi\"\n",
+          "start": 2509
+        },
+        {
+          "current": "\tconst java = \"Java callers construct owned bindings without the Kotlin runtime\";\n\tassert.throws(() => assertOwnedSubtypeHostedTap(\n\t\ttapFor(\"jvm\").replaceAll(java, \"different prerequisite\"), \"jvm\"));\n\tassert.throws(() => assertOwnedSubtypeHostedTap(tapFor(\"jvm\"), \"dotnet\"));\n\tassert.throws(() => assertOwnedSubtypeHostedTap(tapFor(\"dotnet\"), \"jvm\"));\n",
+          "previous": "",
+          "start": 7840
+        }
+      ],
+      "path": "tests/owned-subtype-hosted-ci.test.mjs",
+      "previousSha256": "36cffa2f8976dd098cff6244599f151be90dbcdb9ccfecd29d9ef7e8ca086278"
+    },
+    {
+      "currentSha256": "fa6aa5dc437b155f9351f892da6666346b9569f9e253b48fd41358ac00757df0",
+      "edits": [
+        {
+          "current": "// Hosted lanes require zero skips, so only the jvm lane registers this test.\nif(selectedLane === undefined || selectedLane === \"jvm\") test(\"Java callers construct owned bindings without the Kotlin runtime\"\n",
+          "previous": "test(\"Java callers construct owned bindings without the Kotlin runtime\"\n",
+          "start": 6673
+        }
+      ],
+      "path": "tests/owned-subtype-remaining-packaging.test.mjs",
+      "previousSha256": "4a88f99ec124bb84d74cf699eb60ce979d689b14df2ad2352d00e7b8cc839c17"
+    }
+  ]
+}

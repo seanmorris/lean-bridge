@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeOwnedSubtypeRemainingHostsTapRepairSource, ownedSubtypeRemainingHostsTapRepairNormalizationPaths } from "./owned-subtype-remaining-hosts-tap-repair-source-history.mjs";
 import { beforeCoreEvidenceTrackingTestRegistrationSource, coreEvidenceTrackingTestRegistrationNormalizationPaths } from "./core-evidence-tracking-test-registration-source-history.mjs";
 import { beforeCheckedRecordValueIndexBrowserControlsContractSource, checkedRecordValueIndexBrowserControlsContractNormalizationPaths } from "./checked-record-value-index-browser-controls-contract-source-history.mjs";
 import { beforeOwnedTransferCopyReplayRepairSource, ownedTransferCopyReplayRepairNormalizationPaths } from "./owned-transfer-copy-replay-repair-source-history.mjs";
@@ -2083,7 +2084,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...coreEvidenceTrackingTestRegistrationNormalizationPaths
+	...ownedSubtypeRemainingHostsTapRepairNormalizationPaths
+	, ...coreEvidenceTrackingTestRegistrationNormalizationPaths
 	, ...checkedRecordValueIndexBrowserControlsContractNormalizationPaths
 	, ...ownedTransferCopyReplayRepairNormalizationPaths
 	, ...ownedSubtypeWasmTransferFixtureNormalizationPaths
@@ -2909,6 +2911,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
+	const ownedSubtypeRemainingHostsTapRepair
+		= beforeOwnedSubtypeRemainingHostsTapRepairSource(
+			path, text, expected);
+	if(sha256(ownedSubtypeRemainingHostsTapRepair) === expected)
+		return ownedSubtypeRemainingHostsTapRepair;
+	text = ownedSubtypeRemainingHostsTapRepair;
 	const coreEvidenceTrackingTestRegistration
 		= beforeCoreEvidenceTrackingTestRegistrationSource(
 			path, text, expected);
