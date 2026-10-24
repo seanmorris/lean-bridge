@@ -57,6 +57,7 @@ import { beforePythonCallbackProducerReplaySource, pythonCallbackProducerReplayN
 import { beforeJvmCallbackProducerReplaySource, jvmCallbackProducerReplayNormalizationPaths } from "./jvm-callback-producer-replay-source-history.mjs";
 import { beforePhpWasmCallbackProducerReplaySource, phpWasmCallbackProducerReplayNormalizationPaths } from "./php-wasm-callback-producer-replay-source-history.mjs";
 import { beforeCoreReceiverEndpointRepairSource, coreReceiverEndpointRepairNormalizationPaths } from "./core-receiver-endpoint-repair-source-history.mjs";
+import { beforeCorePerlConsumerEndpointRepairSource, corePerlConsumerEndpointRepairNormalizationPaths } from "./core-perl-consumer-endpoint-repair-source-history.mjs";
 import { beforeCoreEvidenceMemoryRepairSource, coreEvidenceMemoryRepairNormalizationPaths } from "./core-evidence-memory-repair-source-history.mjs";
 import { beforeValueIndexPromotionMilestoneRepairSource, valueIndexPromotionMilestoneRepairNormalizationPaths } from "./value-index-promotion-milestone-repair-source-history.mjs";
 import { beforeCoreMilestoneReplayRepairSource, coreMilestoneReplayRepairNormalizationPaths } from "./core-milestone-replay-repair-source-history.mjs";
@@ -2150,7 +2151,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...coreReceiverEndpointRepairNormalizationPaths
+	...corePerlConsumerEndpointRepairNormalizationPaths
+	, ...coreReceiverEndpointRepairNormalizationPaths
 	, ...phpWasmCallbackProducerReplayNormalizationPaths
 	, ...jvmCallbackProducerReplayNormalizationPaths
 	, ...pythonCallbackProducerReplayNormalizationPaths
@@ -3043,7 +3045,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeCoreReceiverEndpointRepairSource(path, text, expected);
+	let stage = beforeCorePerlConsumerEndpointRepairSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeCoreReceiverEndpointRepairSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;
