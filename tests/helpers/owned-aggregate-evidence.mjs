@@ -6,22 +6,15 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
-import { readTypeSurface } from "../../src/adoption/type-surface.mjs";
-import { historicalTypeSurfaceCells as typeSurfaceCells } from "./historical-type-surface-cells.mjs";
+import { moduleAtProducer } from "./producer-module.mjs";
+import { bytesAtProducer, sourceAtProducer, typeSurfaceContractsAtProducer } from "./producer-source.mjs";
 import { generateOwnedNativeValueAdapters } from "../../src/backends/native/owned-value-adapters.mjs";
 import { ownedAggregateAddedPaths, ownedAggregateChangedPaths, ownedAggregateBaseline, ownedAggregateExecutionPath, reverseOwnedAggregateUpdate } from "./owned-aggregate-source-history.mjs";
 import { witRecursiveCallableHistoryPath } from "./wit-recursive-callable-source-history.mjs";
-import { beforeOwnedC, ownedCChangedPaths } from "./owned-c-source-history.mjs";
-import { ownedReviewedChangedPaths } from "./owned-reviewed-source-history.mjs";
-import { ownedPackageChangedPaths } from "./owned-package-source-history.mjs";
-import { ownedHostChangedPaths } from "./owned-host-source-history.mjs";
-import { ownedCiChangedPaths } from "./owned-ci-source-history.mjs";
-import { ownedCppChangedPaths } from "./owned-cpp-source-history.mjs";
-import { ownedRustChangedPaths } from "./owned-rust-source-history.mjs";
-import { ownedPythonChangedPaths } from "./owned-python-source-history.mjs";
-import { ownedRubyChangedPaths } from "./owned-ruby-source-history.mjs";
-import { ownedDotnetNormalizationPaths } from "./owned-dotnet-source-history.mjs";
+import { beforeOwnedC } from "./owned-c-source-history.mjs";
 
+/** The commit whose complete source tree every digest in the owned aggregate records names. */
+export const ownedAggregateProducer = "a2dc55fd307491e20d54731e5ad8da59e4cfc501";
 export const ownedAggregateNativeCommand = "LEAN_BRIDGE_ELABORATED_METADATA_TEST=1 LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-aggregate-contract.test.mjs tests/owned-aggregate-model.test.mjs tests/owned-aggregate-metadata.test.mjs tests/owned-aggregate-native.test.mjs tests/owned-native-values.test.mjs tests/owned-native-scalars.test.mjs";
 export const ownedAggregateRegressionCommand = "LEAN_BRIDGE_ELABORATED_METADATA_TEST=1 node --test --test-concurrency=1 tests/binding-ir-contract.test.mjs tests/binding-ir-structured.test.mjs tests/export-configuration.test.mjs tests/elaborated-metadata.test.mjs";
 export const ownedAggregateScope = { compiledLean: true
@@ -149,10 +142,7 @@ export const assertOwnedAggregateIntegration = async record => {
 	const updates = new Map(record.updates.map(update => [update.path, update])), restored = {};
 	for(const path of paths)
 	{
-		const bytes = await readFile(path);
-		const current = ownedCChangedPaths.includes(path) || ownedReviewedChangedPaths.includes(path) || ownedPackageChangedPaths.includes(path) || ownedHostChangedPaths.includes(path) || ownedCiChangedPaths.includes(path) || ownedCppChangedPaths.includes(path) || ownedRustChangedPaths.includes(path) || ownedPythonChangedPaths.includes(path) || ownedRubyChangedPaths.includes(path) || ownedDotnetNormalizationPaths.includes(path)
-			? beforeOwnedC(path, bytes.toString("utf8")) : bytes;
-		assert.equal(sha256(current), record.sourceHashes[path], path);
+		const current = bytesAtProducer(ownedAggregateProducer, path); assert.equal(sha256(current), record.sourceHashes[path], path);
 		const update = updates.get(path);
 		if(update)
 		{
@@ -162,8 +152,10 @@ export const assertOwnedAggregateIntegration = async record => {
 		if(previous.sourceHashes[path]) assert.equal(sha256(restored[path] ?? current), previous.sourceHashes[path], path);
 		if(record.additions[path]) assert.equal(record.additions[path], record.sourceHashes[path], path);
 	}
-	const { irSchema, consumers } = await readTypeSurface(), contracts = { irSchema, consumers };
-	const document = JSON.parse(await source("docs/type-surface.v1.json"));
+	// Classify both inventories exactly as the producer did, with its own contracts.
+	const contracts = typeSurfaceContractsAtProducer(ownedAggregateProducer);
+	const { typeSurfaceCells } = await moduleAtProducer(ownedAggregateProducer, "src/adoption/type-surface.mjs");
+	const document = JSON.parse(sourceAtProducer(ownedAggregateProducer, "docs/type-surface.v1.json", record.sourceHashes["docs/type-surface.v1.json"]));
 	assert.equal(document.contractVersion, record.inventory.version);
 	const old = JSON.parse(restored["docs/type-surface.v1.json"]), expected = structuredClone(old);
 	for(const evidence of expected.evidence) for(const file of evidence.files)

@@ -7,8 +7,8 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
-import { readTypeSurface } from "../../src/adoption/type-surface.mjs";
-import { historicalTypeSurfaceCells as typeSurfaceCells } from "./historical-type-surface-cells.mjs";
+import { moduleAtProducer } from "./producer-module.mjs";
+import { bytesAtProducer, sourceAtProducer, typeSurfaceContractsAtProducer } from "./producer-source.mjs";
 import { generateOwnedCPackage } from "../../src/backends/c/owned-package.mjs";
 import { generateOwnedNativeValueAdapters } from "../../src/backends/native/owned-value-adapters.mjs";
 import { ownedAggregateLeaseSource } from "../../src/backends/native/owned-aggregate-leases.mjs";
@@ -25,6 +25,8 @@ import { ownedPythonChangedPaths } from "./owned-python-source-history.mjs";
 import { ownedRubyChangedPaths } from "./owned-ruby-source-history.mjs";
 import { ownedDotnetNormalizationPaths } from "./owned-dotnet-source-history.mjs";
 
+/** The commit whose complete source tree every digest in the public owned C projection records names. */
+export const ownedCProducer = "ca016c0a04d9329a861d6a40cd34d95926cbcce4";
 export const ownedCCommand = "LEAN_BRIDGE_OWNED_NATIVE_TEST=1 LEAN_BRIDGE_ELABORATED_METADATA_TEST=1 node --test --test-concurrency=1 tests/owned-aggregate-contract.test.mjs tests/owned-aggregate-model.test.mjs tests/owned-aggregate-metadata.test.mjs tests/owned-aggregate-native.test.mjs tests/owned-native-values.test.mjs tests/owned-native-scalars.test.mjs tests/owned-c-values.test.mjs tests/native-runtime-retirement.test.mjs";
 export const ownedCScope = { compiledLean: true, nativeTransport: true
 	, publicCValues: true, forkSafeRuntime: true, installedPackage: false
@@ -151,7 +153,7 @@ export const assertOwnedCIntegration = async record => {
 	const updates = new Map(record.updates.map(item => [item.path, item])), restored = {};
 	for(const path of paths)
 	{
-		const current = await historicalBytes(path); assert.equal(sha256(current), record.sourceHashes[path], path);
+		const current = bytesAtProducer(ownedCProducer, path); assert.equal(sha256(current), record.sourceHashes[path], path);
 		const update = updates.get(path);
 		if(update)
 		{
@@ -161,9 +163,10 @@ export const assertOwnedCIntegration = async record => {
 		if(previous.sourceHashes[path]) assert.equal(sha256(restored[path] ?? current), previous.sourceHashes[path], path);
 		if(record.additions[path]) assert.equal(record.additions[path], record.sourceHashes[path], path);
 	}
-	const { document: currentDocument, ...contracts } = await readTypeSurface();
-	assert.ok(currentDocument);
-	const document = JSON.parse(await source("docs/type-surface.v1.json"));
+	// Classify both inventories exactly as the producer did, with its own contracts.
+	const contracts = typeSurfaceContractsAtProducer(ownedCProducer);
+	const { typeSurfaceCells } = await moduleAtProducer(ownedCProducer, "src/adoption/type-surface.mjs");
+	const document = JSON.parse(sourceAtProducer(ownedCProducer, "docs/type-surface.v1.json", record.sourceHashes["docs/type-surface.v1.json"]));
 	const old = JSON.parse(restored["docs/type-surface.v1.json"]), expected = structuredClone(old);
 	for(const evidence of expected.evidence) for(const file of evidence.files)
 	{

@@ -4,13 +4,10 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
-import { generateOwnedCPackage } from "../../src/backends/c/owned-package.mjs";
-import { ownedAggregateTransferRuntime } from "../../src/backends/native/owned-aggregate-transfers.mjs";
-import { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from "../../src/build/native-graph-model.mjs";
-import { ownedBorrowSource } from "./owned-borrow-fixture.mjs";
 import { nativeConsumerValueGate } from "./native-consumer-partition.mjs";
+import { moduleAtProducer } from "./producer-module.mjs";
+import { sourceAtProducer } from "./producer-source.mjs";
 
 export const ownedBorrowRuntimeScript = "LEAN_BRIDGE_OWNED_BORROW_TEST=1 node --test --test-concurrency=1 tests/owned-aggregate-borrows.test.mjs tests/owned-borrow-analysis.test.mjs tests/owned-c-borrows.test.mjs";
 export const ownedBorrowPackageScript = "LEAN_BRIDGE_OWNED_BORROW_PACKAGE_TEST=1 node --test --test-concurrency=1 tests/owned-borrow-packaging.test.mjs";
@@ -28,6 +25,17 @@ export const ownedBorrowScope = Object.freeze({
 	, receiverAnchors: false, callbackResultAnchors: false
 	, otherConsumerProjections: false, docker: false, installedSupportPromotions: 0
 });
+/** The commit whose complete source tree every digest in the result-anchor record names. */
+export const ownedBorrowProducer = "dffda6f46065692b8ce52bdb05e79b2d7ab8343b";
+let producerPromise;
+const producerModules = () => producerPromise ??= Promise.all([
+	"src/backends/c/owned-package.mjs"
+	, "src/backends/native/owned-aggregate-transfers.mjs"
+	, "src/build/native-graph-model.mjs"
+	, "tests/helpers/owned-borrow-fixture.mjs"
+].map(path => moduleAtProducer(ownedBorrowProducer, path))).then(modules =>
+	Object.assign({}, ...modules));
+const historical = path => sourceAtProducer(ownedBorrowProducer, path);
 const capabilities = { ownedGraphs: true, ownedHostCallbacks: true
 	, ownedInputTransfers: true, ownedAnchoredResults: true };
 const flags = (value, names) => { for(const name of names) assert.equal(value[name], true, name); };
@@ -45,6 +53,10 @@ const run = (value, command, count) => {
  * @param record - Source-bound runtime and installed execution receipt.
  */
 export const assertOwnedBorrowExecution = async record => {
+	const {
+		createCompiledNativeModel, generateCompiledNativeLeanAdapters
+		, generateOwnedCPackage, ownedAggregateTransferRuntime, ownedBorrowSource
+	} = await producerModules();
 	assert.equal(record.acceptance, "passed"); assert.deepEqual(record.scope, ownedBorrowScope);
 	run(record.runs.runtime, "npm run test:owned-borrows", 8);
 	run(record.runs.installed, "npm run test:owned-borrow-packages", 2);
@@ -56,18 +68,18 @@ export const assertOwnedBorrowExecution = async record => {
 	assert.equal(native.sanitizer, "address,undefined");
 	assert.doesNotMatch(native.startupLeakBaseline, /ERROR: AddressSanitizer|runtime error:/u);
 	assert.equal(native.ledgerSha256, sha256(ownedAggregateTransferRuntime({ anchoredResults: true })));
-	assert.equal(native.probeSha256, sha256(await readFile("tests/fixtures/structured-types/owned-aggregate-borrows.c")));
+	assert.equal(native.probeSha256, sha256(historical("tests/fixtures/structured-types/owned-aggregate-borrows.c")));
 	assert.deepEqual(native.rejectedMutations, [
 		"missing-owner-generation", "expired-view-revived"
 		, "retained-alias-substitution"
 		, "missing-transfer-expiration", "early-descendant-destruction"
 		, "disposal-reentry", "missing-input-pin"
 	]);
-	const page = await readFile("docs/consume/c.md", "utf8");
+	const page = historical("docs/consume/c.md");
 	const example = page.split("### Borrowed results\n")[1]?.split("```c\n")[1]?.split("```")[0];
 	assert.ok(example);
-	const source = await readFile("tests/fixtures/onboarding/owned-aggregates/Owned.lean", "utf8");
-	const probe = await readFile("tests/fixtures/structured-types/owned-public-borrows.c", "utf8");
+	const source = historical("tests/fixtures/onboarding/owned-aggregates/Owned.lean");
+	const probe = historical("tests/fixtures/structured-types/owned-public-borrows.c");
 	const checkInput = (input, mode, mixed) => {
 		assert.equal(Boolean(input.sourceIdentity.reviewedBindingIr), mode === "reviewed");
 		assert.equal(input.sourceIdentity.modules.find(item => item.module === "Owned").source.sha256, sha256(source + (mixed ? ownedBorrowSource : "")));
