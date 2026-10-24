@@ -40,13 +40,34 @@ export const createPhpWasmRefinementEntryBuildObserver = options => {
 	assert.equal(new Set(headerInputs).size, headerInputs.length);
 	for(const path of headerInputs)
 		assert.match(path, /^[A-Za-z_][A-Za-z0-9_.-]*(?:\/[A-Za-z_][A-Za-z0-9_.-]*)*$/u);
-	const compiled = [], headers = [], commands = [], counts = new Map();
+	const compiled = [], headers = [], commands = [];
+	const counts = new Map(), forms = new Map(), markers = new Map();
 	let selected = null, linked = false, headerProbeRoot = null;
 	const select = entries => {
 		assert.equal(selected, null, "entry selection is bound once");
 		validateEntries(entries); selected = structuredClone(entries);
-		for(const item of selected) counts.set(item.symbol, 0);
+		for(const item of selected)
+		{
+			counts.set(item.symbol, 0); forms.set(item.symbol, new Set());
+			markers.set(item.symbol, 0);
+		}
 		return structuredClone(selected);
+	};
+	const recordDefinitions = receipt => {
+		const definitions = receipt.definitions ?? receipt.insertions
+			.filter(item => item.kind !== "preamble")
+			.map(item => ({ ...item, form: "function" }));
+		for(const item of definitions)
+		{
+			assert.ok(counts.has(item.symbol));
+			counts.set(item.symbol, counts.get(item.symbol) + 1);
+			forms.get(item.symbol).add(item.form);
+		}
+		for(const item of receipt.insertions.filter(item => item.kind !== "preamble"))
+		{
+			assert.ok(markers.has(item.symbol));
+			markers.set(item.symbol, markers.get(item.symbol) + 1);
+		}
 	};
 	const instrumentHeaders = async args => {
 		if(!headerInputs.length) return null;
@@ -72,8 +93,7 @@ export const createPhpWasmRefinementEntryBuildObserver = options => {
 			const { source, receipt } = instrumentEntries(original, selected);
 			await save(recordRoot, `header-inputs/${path}`, original);
 			await save(recordRoot, `header-probes/${path}`, source);
-			for(const item of receipt.insertions.filter(item => item.kind !== "preamble"))
-				counts.set(item.symbol, counts.get(item.symbol) + 1);
+			recordDefinitions(receipt);
 			headers.push({ path, originalPath, probePath: join(probeRoot, path), ...receipt });
 		}
 		return probeRoot;
@@ -90,8 +110,7 @@ export const createPhpWasmRefinementEntryBuildObserver = options => {
 			const probePath = join(recordRoot, "c-probes", name);
 			await save(recordRoot, `c-inputs/${name}`, original);
 			await save(recordRoot, `c-probes/${name}`, source);
-			for(const item of receipt.insertions.filter(item => item.kind !== "preamble"))
-				counts.set(item.symbol, counts.get(item.symbol) + 1);
+			recordDefinitions(receipt);
 			args[args.indexOf("-c") + 1] = probePath;
 			args.push(...headerRoot ? ["-iquote", headerRoot] : []
 				, "-iquote", dirname(originalPath)
@@ -107,7 +126,24 @@ export const createPhpWasmRefinementEntryBuildObserver = options => {
 		if(basename(request.command) === "emcc" && args.includes("-sSIDE_MODULE=2"))
 		{
 			assert.ok(selected && compiled.length > 0); assert.equal(linked, false);
-			for(const [symbol, count] of counts) assert.equal(count, 1, `${symbol}: exactly one marked definition required`);
+			for(const item of selected)
+			{
+				const { symbol, kind } = item, count = counts.get(symbol);
+				assert.equal(count, 1, `${symbol}: exactly one compiled definition required`);
+				assert.equal(forms.get(symbol).size, 1, `${symbol}: one compiled form required`);
+				const form = [...forms.get(symbol)][0];
+				assert.ok(["function", "global"].includes(form));
+				if(form === "function")
+					assert.equal(markers.get(symbol), 1
+						, `${symbol}: exactly one marked definition required`);
+				else
+				{
+					assert.ok(["constructor", "source"].includes(kind)
+						, `${symbol}: only authored entries may be module-initialized`);
+					assert.equal(markers.get(symbol), 0
+						, `${symbol}: a module-initialized value has no call marker`);
+				}
+			}
 			for(const item of compiled)
 			{
 				assert.equal(sha256(await readFile(item.originalPath)), item.originalSha256);
@@ -131,6 +167,9 @@ export const createPhpWasmRefinementEntryBuildObserver = options => {
 		, compiled: structuredClone(compiled), headers: structuredClone(headers)
 		, commands: structuredClone(commands)
 		, linked
+		, ...[...forms.values()].some(value => value.has("global")) ? {
+			globalDefinitions: selected.filter(item => forms.get(item.symbol).has("global"))
+		} : {}
 	});
 	const snapshot = () => {
 		assert.ok(selected && linked, "completed entry-observer link required");
@@ -186,8 +225,11 @@ export const buildPhpWasmRefinementEntryProbe = async options => {
 		});
 		const library = identity(await readFile(join(component.root, component.receipt.library)));
 		assert.deepEqual(library, component.receipt.wasmLibrary);
+		const observed = observer.snapshot();
+		assert.deepEqual(observed.globalDefinitions ?? [], sourceProbe.entries
+			.filter(item => sourceProbe.entryForms[item.symbol] === "global"));
 		const observation = {
-			...observer.snapshot(), modelSha256: sha256(canonicalJson(model))
+			...observed, modelSha256: sha256(canonicalJson(model))
 			, component: component.receipt, library
 			, packageSetSha256: sha256(canonicalJson(receipt))
 		};

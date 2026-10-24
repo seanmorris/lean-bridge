@@ -30,7 +30,7 @@ export const phpWasmRefinementEntrySource = (original, options) => {
 	const definitions = [...constructors.map(name => ["constructor", name])
 		, ...sources.map(name => ["source", name])];
 	assert.equal(new Set(definitions.map(([, name]) => name)).size, definitions.length);
-	const edits = [], entries = [];
+	const edits = [], entries = [], entryForms = {};
 	for(const [kind, name] of definitions)
 	{
 		assert.match(name, identifier);
@@ -40,9 +40,15 @@ export const phpWasmRefinementEntrySource = (original, options) => {
 		const start = matches[0].index, lineEnd = original.indexOf("\n", start);
 		assert.ok(lineEnd >= 0, `terminated definition header for ${name}`);
 		const header = original.slice(start, lineEnd), symbol = `${prefix}_${kind}_${name}`;
-		if(header.includes(" :="))
+		if(header.includes(":="))
+		{
+			const signature = header.slice(header.indexOf(name) + name.length
+				, header.lastIndexOf(":="));
+			entryForms[symbol] = signature.trimStart().startsWith(":")
+				? "global" : "function";
 			edits.push({ offset: start, previous: matches[0][0]
 				, current: `@[noinline, export ${symbol}]\ndef ${name}` });
+		}
 		else
 		{
 			const wrapper = wrappers[name];
@@ -53,6 +59,7 @@ export const phpWasmRefinementEntrySource = (original, options) => {
 			edits.push({ offset: start, previous: matches[0][0], current: `def ${name}Body` });
 			edits.push({ offset: boundary, previous: ""
 				, current: `@[noinline, export ${symbol}]\ndef ${name} ${wrapper}\n` });
+			entryForms[symbol] = "function";
 		}
 		entries.push({ symbol, kind, label: `${namespace}.${name}` });
 	}
@@ -73,5 +80,9 @@ export const phpWasmRefinementEntrySource = (original, options) => {
 		restored = restored.slice(0, edit.offset) + edit.previous + restored.slice(edit.offset + edit.current.length);
 	}
 	assert.equal(restored, original);
-	return { source, entries, edits, originalSha256: sha256(original), probeSha256: sha256(source) };
+	assert.equal(Object.keys(entryForms).length, entries.length);
+	return {
+		source, entries, entryForms, edits
+		, originalSha256: sha256(original), probeSha256: sha256(source)
+	};
 };

@@ -8,7 +8,9 @@ import { mkdtemp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
-import { restoreSubtypeCEntries } from "./php-wasm-subtype-entry-c.mjs";
+import {
+	instrumentSubtypeCEntries, restoreSubtypeCEntries
+} from "./php-wasm-subtype-entry-c.mjs";
 import {
 	instrumentPhpWasmCallbackEntries, validatePhpWasmCallbackEntrySelection
 } from "./php-wasm-callback-entry-c.mjs";
@@ -62,9 +64,55 @@ test("compiler-input observer closes every selected definition and restores orig
 
 test("compiler-input observer refuses a missing definition before linking", async t => {
 	const value = await run("adapter"); t.after(() => rm(value.root, { recursive: true }));
-	await assert.rejects(value.link, /adapter: exactly one marked definition required/u);
+	await assert.rejects(value.link, /adapter: exactly one compiled definition required/u);
 	assert.throws(() => value.observer.snapshot(), /completed/u);
 	assert.equal(value.observer.transcript().linked, false);
+});
+
+test("compiler-input observer classifies nullary Lean exports as globals", async t => {
+	const root = await mkdtemp(join(tmpdir(), "lean-bridge-entry-global-observer-"));
+	t.after(() => rm(root, { recursive: true }));
+	const input = join(root, "input.c"), records = join(root, "records");
+	await mkdir(records);
+	await writeFile(input, [
+		"LEAN_EXPORT lean_object* source_value;"
+		, "lean_object *adapter(lean_object *value) { return value; }"
+		, "static ZEND_FUNCTION(lg_call0) { RETURN_NULL(); }"
+		, ""
+	].join("\n"));
+	const selection = [
+		{ symbol: "source_value", kind: "source", label: "Probe.source" }
+		, { symbol: "adapter", kind: "adapter", label: "Probe.adapter" }
+		, { symbol: "lg_call0", kind: "public", label: "Probe.call" }
+	];
+	const runner = { capture: async request => {
+		if(request.args.includes("-c"))
+		{
+			const source = await readFile(
+				request.args[request.args.indexOf("-c") + 1], "utf8");
+			assert.doesNotMatch(source
+				, /enter source Probe\.source/u);
+			assert.match(source, /enter adapter Probe\.adapter/u);
+			await writeFile(request.args[request.args.indexOf("-o") + 1], source);
+		}
+		return { stdout: "", stderr: "", code: 0 };
+	} };
+	const observer = createPhpWasmRefinementEntryBuildObserver({
+		recordRoot: records, runner
+	});
+	observer.select(selection);
+	await observer.capture({ command: "/tool/emcc"
+		, args: ["-c", input, "-o", join(root, "input.o")] });
+	await observer.capture({ command: "/tool/emcc"
+		, args: ["-sSIDE_MODULE=2", join(root, "input.o"), "-o", join(root, "probe.so")] });
+	const observation = observer.snapshot();
+	assert.deepEqual(observation.definitionCounts, {
+		source_value: 1, adapter: 1, lg_call0: 1
+	});
+	assert.deepEqual(observation.globalDefinitions, [selection[0]]);
+	assert.throws(() => instrumentSubtypeCEntries(
+		"LEAN_EXPORT lean_object* adapter;\n", [selection[1]])
+	, /only authored entries may compile as globals/u);
 });
 
 test("compiler-input observer overlays and restores generated owned headers", async t => {

@@ -66,8 +66,11 @@ export const buildPhpWasmOwnedRefinementEntryProbe = async options => {
 		});
 		const library = identity(await readFile(join(component.root, component.receipt.library)));
 		assert.deepEqual(library, component.receipt.wasmLibrary);
+		const observed = observer.snapshot();
+		assert.deepEqual(observed.globalDefinitions ?? [], sourceProbe.entries
+			.filter(item => sourceProbe.entryForms[item.symbol] === "global"));
 		const observation = {
-			...observer.snapshot(), modelSha256: sha256(canonicalJson(model))
+			...observed, modelSha256: sha256(canonicalJson(model))
 			, component: component.receipt, library
 			, packageSetSha256: sha256(canonicalJson(receipt))
 		};

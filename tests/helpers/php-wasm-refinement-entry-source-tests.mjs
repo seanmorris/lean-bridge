@@ -22,12 +22,47 @@ test("copied entry probes name every authored boundary reversibly", async () => 
 		assert.notEqual(probe.originalSha256, probe.probeSha256, fixture.namespace);
 		assert.equal(probe.entries.length, fixture.constructors.length + fixture.sources.length);
 		assert.equal(new Set(probe.entries.map(item => item.symbol)).size, probe.entries.length);
+		assert.deepEqual(Object.keys(probe.entryForms).sort()
+			, probe.entries.map(item => item.symbol).sort());
 		for(const item of probe.entries)
 		{
 			assert.ok(probe.source.includes(`export ${item.symbol}`), item.symbol);
 			assert.equal(item.label.startsWith(fixture.namespace + "."), true);
+			assert.ok(["function", "global"].includes(probe.entryForms[item.symbol]));
 		}
 		assert.throws(() => phpWasmRefinementEntrySource(probe.source, fixture), /prefix/u);
+	}
+});
+
+test("nullary authored values are classified as module-initialized globals", async () => {
+	const expected = {
+		"nominal-full": ["wordBits"]
+		, "nominal-result-only": ["wordBits"]
+		, "recursive-subtype": []
+		, "recursive-checked-record": []
+		, "dependent-full": []
+		, "dependent-result-only": []
+		, "value-index-full": [
+			"produceTrueBool", "produceFalseBool", "produceAb", "produceEmptySized"
+		]
+		, "value-index-result-only": [
+			"produceTrueBool", "produceFalseBool", "produceAb", "produceEmptySized"
+		]
+		, "zero-payload-full": [
+			"mkWitness", "mkAbsent", "produceWitness", "produceToken", "produceMarker"
+		]
+		, "zero-payload-result-only": [
+			"mkWitness", "mkAbsent", "produceWitness", "produceToken", "produceMarker"
+		]
+	};
+	for(const [family, names] of Object.entries(expected))
+	{
+		const fixture = phpWasmRefinementEntrySourceFixture(family);
+		const probe = phpWasmRefinementEntrySource(
+			await readFile(fixture.path, "utf8"), fixture);
+		assert.deepEqual(probe.entries.filter(item =>
+			probe.entryForms[item.symbol] === "global").map(item =>
+				item.label.slice(fixture.namespace.length + 1)), names, family);
 	}
 });
 

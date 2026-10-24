@@ -46,7 +46,7 @@ export const instrumentSubtypeCEntries = (original, selected) => {
 	assert.equal(typeof original, "string");
 	validateSubtypeEntrySelection(selected);
 	assert.doesNotMatch(original, /LB_SUBTYPE_ENTRY_V1|lb_probe_public_scope|lb_probe_end/u);
-	const masked = maskedC(original), insertions = [];
+	const masked = maskedC(original), insertions = [], definitions = [];
 	for(const item of selected)
 	{
 		const direct = new RegExp(`^[A-Za-z_][A-Za-z0-9_* \\t]*\\b${item.symbol}\\([^{};]*\\)\\s*\\{`, "gmu");
@@ -58,8 +58,21 @@ export const instrumentSubtypeCEntries = (original, selected) => {
 			? new RegExp(`^static[ \\t]+ZEND_FUNCTION\\(${item.symbol}\\)[ \\t]*\\{`, "gmu") : null;
 		const matches = [...masked.matchAll(direct), ...(zend ? masked.matchAll(zend) : [])]
 			.sort((left, right) => left.index - right.index);
-		assert.ok(matches.length <= 1, `duplicate selected definition: ${item.symbol}`);
-		if(matches.length === 0) continue;
+		const global = new RegExp(
+			`^LEAN_EXPORT[^;()\\n]*\\b${item.symbol}\\b[ \\t]*(?:=[^;\\n]*)?;`, "gmu"
+		);
+		const globals = [...masked.matchAll(global)];
+		assert.ok(matches.length + globals.length <= 1
+			, `duplicate selected definition: ${item.symbol}`);
+		if(matches.length === 0 && globals.length === 0) continue;
+		if(globals.length === 1)
+		{
+			assert.ok(["constructor", "source"].includes(item.kind)
+				, `only authored entries may compile as globals: ${item.symbol}`);
+			definitions.push({ ...item, form: "global", offset: globals[0].index });
+			continue;
+		}
+		definitions.push({ ...item, form: "function", offset: matches[0].index });
 		const text = item.kind === "public"
 			? `\n  const char *lb_probe_public_scope __attribute__((cleanup(lb_probe_end))) = ${JSON.stringify(item.label)};\n  fputs(${JSON.stringify(`LB_SUBTYPE_ENTRY_V1 begin public ${item.label}\n`)}, stderr);\n`
 			: `\n  fputs(${JSON.stringify(`LB_SUBTYPE_ENTRY_V1 enter ${item.kind} ${item.label}\n`)}, stderr);\n`;
@@ -74,7 +87,10 @@ export const instrumentSubtypeCEntries = (original, selected) => {
 	insertions.sort((left, right) => right.offset - left.offset);
 	let source = original;
 	for(const { offset, text } of insertions) source = source.slice(0, offset) + text + source.slice(offset);
-	const receipt = { originalSha256: sha256(original), probeSha256: sha256(source), insertions };
+	const receipt = {
+		originalSha256: sha256(original), probeSha256: sha256(source)
+		, definitions, insertions
+	};
 	assert.equal(restoreSubtypeCEntries(source, receipt), original);
 	return { source, receipt };
 };
