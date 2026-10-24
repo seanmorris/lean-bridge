@@ -32,6 +32,11 @@ retains the Node, TypeScript, Chromium, Firefox and WebKit observations. A
 contract test rejects differences between the two jobs. This scoped run does
 not replace the full Consumer Matrix or its support summary.
 
+The report checker compares each structured source identity with compiler metadata
+inside its retained npm archive. It binds the compiled IR, component receipt,
+package coordinates, shared runtime and browser Wasm assets to that package set.
+It reads archive contents without executing them.
+
 Once GitHub has registered the workflow, run it against a pushed branch:
 
 ```sh

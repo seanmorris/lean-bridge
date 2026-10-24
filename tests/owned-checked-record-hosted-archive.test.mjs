@@ -19,6 +19,7 @@ import {
 	packageSetReceiptName, readVerifiedPackageSetReceipt, writePackageSetReceipt
 } from "../src/release/package-set-receipt.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
+import { writeSyntheticOwnedCheckedRecordJavaScriptRoute } from "./helpers/owned-checked-record-javascript-evidence-fixture.mjs";
 import {
 	ownedCheckedRecordHostedLaneNames, ownedCheckedRecordHostedLanes
 	, ownedCheckedRecordHostedRoutes, ownedCheckedRecordHostedTestNames
@@ -64,10 +65,9 @@ const consumerDigest = (lane, profile, resultOnly) => {
 };
 
 const writePackageSet = async (root, lane, route) => {
-	const abi = { id: lane.kind === "javascript"
-		? "javascript-wasm-owned-v1" : "native-library-v1"
-	, bindingIrSha256: "1".repeat(64)
-	, runtimeIdentity: "2".repeat(64) };
+	const abi = { id: "native-library-v1"
+		, bindingIrSha256: "1".repeat(64)
+		, runtimeIdentity: "2".repeat(64) };
 	const packages = [];
 	const add = async (target, name, role = "component", requires = []) => {
 		const path = `archives/${target}/${name}-${route}.fixture`;
@@ -84,13 +84,7 @@ const writePackageSet = async (root, lane, route) => {
 	};
 	for(const target of lane.targets)
 	{
-		if(target === "npm")
-		{
-			const runtime = await add(target, "@lean-bridge/runtime", "runtime");
-			await add(target, "@example/owned-checked-records", "component"
-				, [runtime]);
-		}
-		else if(target === "cpan")
+		if(target === "cpan")
 		{
 			const runtime = await add(target, "LeanBridge-Runtime", "runtime");
 			await add(target, "LeanBridge-OwnedCheckedRecords", "component", [runtime]);
@@ -115,6 +109,12 @@ const synthesizeOutput = async (root, laneName) => {
 	const diagnostics = [], reports = [];
 	for(const route of ownedCheckedRecordHostedRoutes)
 	{
+		if(lane.kind === "javascript")
+		{
+			reports.push(await writeSyntheticOwnedCheckedRecordJavaScriptRoute(
+				join(root, lane.packaging), route));
+			continue;
+		}
 		const resultOnly = route.endsWith("result-only");
 		const full = !resultOnly;
 		const evidence = `${lane.evidence}/${route}/handoff`;
@@ -165,37 +165,6 @@ const synthesizeOutput = async (root, laneName) => {
 				, bindingIrSha256: "3".repeat(64), packageSetReceipt: receipt
 				, consumerSha256: consumerDigest(lane, "perl", resultOnly)
 				, componentReceipt: { synthetic: true }, observations });
-		}
-		else if(lane.kind === "javascript")
-		{
-			const executions = [];
-			for(const engine of ["chromium", "firefox", "webkit"])
-				for(const profile of ["page", "react", "worker"])
-					executions.push({ engine, profile, version: `${engine}-1`
-						, reruns: 2, checks: resultOnly ? 7 : 30
-						, assets: [sha256(`${route}/${engine}/${profile}/a`)
-							, sha256(`${route}/${engine}/${profile}/b`)] });
-			Object.assign(entry, {
-				bindingIrSha256: "3".repeat(64)
-				, componentIdentity: "4".repeat(64)
-				, sourceIdentity: "5".repeat(64)
-				, packageSetReceipt: receipt
-				, archives: Object.fromEntries(receipt.packages.map(pkg =>
-					[pkg.role, pkg.artifacts[0].sha256]))
-				, observed: resultOnly ? {
-					checks: 7, produced: true, fullApiOmitted: true
-					, retained: true, disposed: true
-				} : {
-					checks: 30, claimRejected: true, bookingRejected: true
-					, lateRejected: true, retainedRejected: true
-					, transferRejected: true, callbackRejected: true
-					, callbackThrown: true, closureRejected: true
-					, transferred: true, callbackCalls: 1
-				}
-				, browser: { externalNetworkBlocked: true
-					, installedSourcesRemoved: true, executions }
-				, wasm: { bytes: 4096, sha256: "6".repeat(64) }
-			});
 		}
 		else
 		{

@@ -11,106 +11,19 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
-import {
-	packageSetReceiptName, readVerifiedPackageSetReceipt
-	, writePackageSetReceipt
-} from "../../src/release/package-set-receipt.mjs";
+import { packageSetReceiptName } from "../../src/release/package-set-receipt.mjs";
 import {
 	ownedCheckedRecordJavaScriptRoutes
 	, verifyOwnedCheckedRecordJavaScriptEvidence
 } from "./owned-checked-record-javascript-evidence.mjs";
-import { saveLakeFile } from "./lake-workspace.mjs";
-
-const digest = value => sha256(Buffer.from(value));
-const fullObserved = {
-	checks: 30, claimRejected: true, bookingRejected: true
-	, lateRejected: true, retainedRejected: true
-	, transferRejected: true, callbackRejected: true
-	, callbackThrown: true, closureRejected: true
-	, transferred: true, callbackCalls: 1
-};
-const resultOnlyObserved = {
-	checks: 7, produced: true, fullApiOmitted: true
-	, retained: true, disposed: true
-};
-const browser = resultOnly => {
-	const executions = [];
-	for(const engine of ["chromium", "firefox", "webkit"])
-		for(const profile of ["page", "react", "worker"])
-			executions.push({ engine, profile, version: `${engine}-1`, reruns: 2
-				, checks: resultOnly ? 7 : 30
-				, assets: [digest(`${engine}/${profile}/a`)
-					, digest(`${engine}/${profile}/b`)] });
-	return { externalNetworkBlocked: true, installedSourcesRemoved: true
-		, executions };
-};
+import { writeSyntheticOwnedCheckedRecordJavaScriptRoute } from "./owned-checked-record-javascript-evidence-fixture.mjs";
 
 const fixture = async t => {
 	const root = await mkdtemp(join(tmpdir(), "lean-owned-record-js-evidence-"));
 	t.after(() => rm(root, { recursive: true, force: true }));
 	const reports = [];
 	for(const route of ownedCheckedRecordJavaScriptRoutes)
-	{
-		const handoff = join(root, "evidence", route, "handoff");
-		const runtimePath = `archives/npm/runtime-${route}.tgz`;
-		const componentPath = `archives/npm/component-${route}.tgz`;
-		const runtimeBytes = Buffer.from(`runtime ${route}\n`);
-		const componentBytes = Buffer.from(`component ${route}\n`);
-		await saveLakeFile(handoff, runtimePath, runtimeBytes);
-		await saveLakeFile(handoff, componentPath, componentBytes);
-		const profile = { id: "javascript-wasm-owned-v1"
-			, bindingIrSha256: digest(`${route}/ir`)
-			, runtimeIdentity: digest(`${route}/runtime`) };
-		const runtime = { target: "npm", ecosystem: "npm"
-			, name: "@lean-bridge/runtime", version: "1.0.0"
-			, profile: profile.id, role: "runtime"
-			, runtimeIdentity: profile.runtimeIdentity
-			, runtimeDelivery: "provided", requires: []
-			, artifacts: [{ path: runtimePath, bytes: runtimeBytes.length
-				, sha256: sha256(runtimeBytes) }] };
-		const component = { target: "npm", ecosystem: "npm"
-			, name: "@example/owned-records", version: "1.0.0"
-			, profile: profile.id, role: "component"
-			, runtimeIdentity: profile.runtimeIdentity
-			, runtimeDelivery: "dependency"
-			, requires: [{ ecosystem: runtime.ecosystem, name: runtime.name
-				, version: runtime.version }]
-			, artifacts: [{ path: componentPath, bytes: componentBytes.length
-				, sha256: sha256(componentBytes) }] };
-		const receipt = await writePackageSetReceipt({ root: handoff
-			, component: { id: `owned-records-${route}@1.0.0`
-				, name: `owned-records-${route}`, version: "1.0.0" }
-			, source: { treeSha256: digest(`${route}/source`) }
-			, profiles: [profile], packages: [component, runtime] });
-		const verified = await readVerifiedPackageSetReceipt({
-			receiptPath: join(handoff, packageSetReceiptName)
-		});
-		const artifacts = receipt.packages.flatMap(pkg => pkg.artifacts);
-		const files = [packageSetReceiptName, `${packageSetReceiptName}.sha256`
-			, ...artifacts.map(artifact => artifact.path)].toSorted();
-		const resultOnly = route.endsWith("result-only");
-		reports.push({ route
-			, authorRoute: route.startsWith("ordinary")
-				? "ordinary" : "reviewed"
-			, mode: resultOnly ? "result-only" : "full"
-			, bindingIrSha256: profile.bindingIrSha256
-			, componentIdentity: digest(`${route}/component`)
-			, sourceIdentity: digest(`${route}/identity`)
-			, packageSetReceipt: receipt
-			, archives: Object.fromEntries(receipt.packages.map(pkg =>
-				[pkg.role, pkg.artifacts[0].sha256]))
-			, observed: resultOnly ? resultOnlyObserved : fullObserved
-			, retainedPackageSet: { path: `evidence/${route}/handoff`
-				, receiptSha256: verified.result.receiptSha256
-				, archives: verified.result.archives
-				, archiveBytes: artifacts.reduce((sum, artifact) =>
-					sum + artifact.bytes, 0)
-				, files }
-			, installedNode: true, installedTypeScript: true
-			, sourceRemovedBeforeInstall: true, relocatedInstallation: true
-			, archiveReproduction: true, browser: browser(resultOnly)
-			, wasm: { bytes: 4096, sha256: digest(`${route}/wasm`) } });
-	}
+		reports.push(await writeSyntheticOwnedCheckedRecordJavaScriptRoute(root, route));
 	const reportPath = join(root, "report.json");
 	await writeFile(reportPath, canonicalJson({ schemaVersion: 1
 		, profile: "installed-owned-checked-record-javascript", reports }));
@@ -126,6 +39,51 @@ test("owned checked-record JavaScript evidence authenticates every retained rout
 	assert.ok(result.routes.every(route =>
 		route.archives === 2 && route.archiveBytes > 0
 		&& route.browserExecutions === 9));
+});
+
+test("owned checked-record JavaScript evidence binds source and execution identities", async t => {
+	const cases = [
+		[entry => { entry.sourceIdentity = "0".repeat(64); }, /structured record/u]
+		, [entry => { entry.sourceIdentity = null; }, /structured record/u]
+		, [entry => { entry.sourceIdentity = []; }, /structured record/u]
+		, [entry => { entry.sourceIdentity.extractorSha256 = "0".repeat(64); }, /source identity/u]
+		, [entry => { entry.sourceIdentity.unrecorded = true; }, /source identity/u]
+		, [entry => { entry.sourceIdentity.reviewedBindingIr = {}; }, /source identity/u]
+		, [entry => { entry.componentIdentity = "0".repeat(64); }, /Compiled component identity/u]
+		, [entry => { entry.bindingIrSha256 = "0".repeat(64); }, /Compiled binding IR/u]
+		, [entry => { entry.wasm.sha256 = "0".repeat(64); }, /Compiled Wasm identity/u]
+		, [entry => { entry.wasm.bytes++; }, /Compiled Wasm identity/u]
+		, [entry => { entry.browser.executions[0].assets[0] = "0".repeat(64); }, /Browser assets/u]
+	];
+	for(const [mutate, pattern] of cases)
+	{
+		const { reportPath } = await fixture(t);
+		const report = JSON.parse(await readFile(reportPath));
+		mutate(report.reports[0]);
+		await writeFile(reportPath, canonicalJson(report));
+		await assert.rejects(verifyOwnedCheckedRecordJavaScriptEvidence(reportPath), pattern);
+	}
+});
+
+test("owned checked-record JavaScript evidence binds rehashed receipts to compiled packages", async t => {
+	for(const [mutate, pattern] of [
+		[receipt => { receipt.source.treeSha256 = "0".repeat(64); }, /Package-set source tree/u]
+		, [receipt => { receipt.profiles[0].bindingIrSha256 = "0".repeat(64); }, /Installed package profile/u]
+		, [receipt => { receipt.component.name = "forged"; }, /Compiled component coordinate/u]
+	]) {
+		const { root, reportPath } = await fixture(t);
+		const report = JSON.parse(await readFile(reportPath));
+		const entry = report.reports[0], receipt = entry.packageSetReceipt;
+		mutate(receipt);
+		const bytes = canonicalJson(receipt);
+		const handoff = join(root, entry.retainedPackageSet.path);
+		await writeFile(join(handoff, packageSetReceiptName), bytes);
+		await writeFile(join(handoff, packageSetReceiptName + ".sha256")
+			, sha256(bytes) + "  " + packageSetReceiptName + "\n");
+		entry.retainedPackageSet.receiptSha256 = sha256(bytes);
+		await writeFile(reportPath, canonicalJson(report));
+		await assert.rejects(verifyOwnedCheckedRecordJavaScriptEvidence(reportPath), pattern);
+	}
 });
 
 test("owned checked-record JavaScript evidence rejects altered or wider trees", async t => {
