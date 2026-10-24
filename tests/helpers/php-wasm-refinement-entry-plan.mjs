@@ -277,7 +277,7 @@ export const phpWasmRefinementEntryPlan = (family, selected, generatedLeanSource
 		accepted("present-result", "produce")
 		, accepted("absent-result", "produce")
 		, accepted("repeated-result", "producePair", [], [
-			"producePair", "produceGroup", "produce", "produceGroup", "produce"
+			"producePair", "produceGroup", "produce"
 		])
 		, accepted("constructor-free", "wordBits")
 	];
