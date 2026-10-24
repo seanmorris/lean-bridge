@@ -31,6 +31,7 @@ import { phpWasmOwnedRefinementEntrySelection } from "./php-wasm-owned-refinemen
 import {
 	phpWasmOwnedRefinementEntrySourceDefinition
 } from "./php-wasm-owned-refinement-entry-source-fixtures.mjs";
+import { phpWasmReducedArityTargets } from "./php-wasm-entry-call-targets.mjs";
 import { phpWasmExecutionTuples } from "./php-wasm-fin-fixtures.mjs";
 import { instrumentSubtypeCEntries } from "./php-wasm-subtype-entry-c.mjs";
 import { parseSubtypeEntryTrace } from "./php-wasm-subtype-entry-trace.mjs";
@@ -54,9 +55,9 @@ const sourceDefinition = family => ownedFamily(family)
 const selectEntries = (family, model, sourceEntries) => ownedFamily(family)
 	? phpWasmOwnedRefinementEntrySelection(model, sourceEntries)
 	: phpWasmRefinementEntrySelection(model, sourceEntries);
-const planEntries = (family, selection) => ownedFamily(family)
-	? phpWasmOwnedRefinementEntryPlan(family, selection.selected, selection.adapters.leanSource)
-	: phpWasmRefinementEntryPlan(family, selection.selected, selection.generated.leanSource);
+const planEntries = (family, selection, classifications) => ownedFamily(family)
+	? phpWasmOwnedRefinementEntryPlan(family, selection.selected, selection.adapters.leanSource, classifications)
+	: phpWasmRefinementEntryPlan(family, selection.selected, selection.generated.leanSource, classifications);
 const caller = (family, mode) => ownedFamily(family)
 	? phpWasmOwnedRefinementEntryCaller(family, mode)
 	: phpWasmRefinementEntryCaller(family, mode);
@@ -172,6 +173,7 @@ export const checkPhpWasmRefinementEntryReport = async (records, {
 			, "headers"
 			, "commands", "linked", "modelSha256", "component", "library"
 			, "packageSetSha256"
+			, ...Object.hasOwn(observation, "globalDefinitions") ? ["globalDefinitions"] : []
 		], `build ${index} observation`);
 		assert.equal(observation.schemaVersion, 1);
 		assert.equal(observation.scope, report.scope); assert.equal(observation.linked, true);
@@ -180,18 +182,18 @@ export const checkPhpWasmRefinementEntryReport = async (records, {
 		assert.deepEqual(observation.selected, selected.selected);
 		assert.deepEqual(observation.definitionCounts
 			, Object.fromEntries(selected.selected.map(item => [item.symbol, 1])));
-		const plan = planEntries(family, selected);
-		assert.deepEqual(report.entryPlan, plan);
 		const commands = await json(prefix + "commands.json");
 		assert.deepEqual(commands, {
 			selected: observation.selected
 			, definitionCounts: observation.definitionCounts
 			, compiled: observation.compiled, headers: observation.headers
 			, commands: observation.commands, linked: true
+			, ...Object.hasOwn(observation, "globalDefinitions") ? { globalDefinitions: observation.globalDefinitions } : {}
 		});
 		assert.ok(observation.compiled.length > 0);
 		assert.equal(new Set(observation.compiled.map(item => item.name)).size
 			, observation.compiled.length);
+		const inputs = [], forms = new Map(observation.selected.map(item => [item.symbol, []]));
 		for(const compiled of observation.compiled)
 		{
 			assert.match(compiled.name, /^\d+-[A-Za-z0-9_.+-]+$/u);
@@ -204,6 +206,9 @@ export const checkPhpWasmRefinementEntryReport = async (records, {
 			assert.equal(compiled.originalSha256, sha256(input));
 			assert.equal(compiled.probeSha256, sha256(probe));
 			assert.deepEqual(compiled.insertions, reconstructed.receipt.insertions);
+			assert.deepEqual(compiled.definitions, reconstructed.receipt.definitions);
+			for(const item of reconstructed.receipt.definitions) forms.get(item.symbol).push(item.form);
+			inputs.push({ name: compiled.name, text: input.toString() });
 			exact(compiled.object, ["bytes", "sha256"], "compiled object identity");
 			assert.ok(Number.isSafeInteger(compiled.object.bytes) && compiled.object.bytes > 0);
 			digest(compiled.object.sha256);
@@ -220,7 +225,22 @@ export const checkPhpWasmRefinementEntryReport = async (records, {
 			assert.equal(header.originalSha256, sha256(input));
 			assert.equal(header.probeSha256, sha256(probe));
 			assert.deepEqual(header.insertions, reconstructed.receipt.insertions);
+			assert.deepEqual(header.definitions, reconstructed.receipt.definitions);
+			for(const item of reconstructed.receipt.definitions) forms.get(item.symbol).push(item.form);
 		}
+		// Retained compiler inputs, not the trace, decide which entries cannot carry markers.
+		for(const [symbol, values] of forms) assert.equal(values.length, 1, `${symbol}: one retained compiled definition`);
+		const globalDefinitions = observation.selected.filter(item => forms.get(item.symbol)[0] === "global");
+		assert.deepEqual(observation.globalDefinitions ?? [], globalDefinitions);
+		assert.equal(Object.hasOwn(observation, "globalDefinitions"), globalDefinitions.length > 0);
+		assert.deepEqual(globalDefinitions, sourceProbe.entries
+			.filter(item => sourceProbe.entryForms[item.symbol] === "global"));
+		const classifications = {
+			globalDefinitions
+			, reducedArity: phpWasmReducedArityTargets(inputs, observation.selected, { globalDefinitions })
+		};
+		const plan = planEntries(family, selected, classifications);
+		assert.deepEqual(report.entryPlan, plan);
 		assert.deepEqual(summary.observations[index], observation);
 		assert.equal(observation.packageSetSha256, sha256(canonicalJson(summary.receipt)));
 		builds.push({ model, observation, plan });

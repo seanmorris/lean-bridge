@@ -107,6 +107,7 @@ jobs:
           LEAN_BRIDGE_CALLBACK_ENTRY_PHP_WASM_FAMILIES: ${{ matrix.family }}
           LEAN_BRIDGE_CALLBACK_ENTRY_PHP_WASM_ROUTES: ordinary,reviewed
           LEAN_BRIDGE_CALLBACK_ENTRY_PHP_WASM_OUTPUT: build/php-wasm-callback-entry-ci
+          LEAN_BRIDGE_PHP_WASM_FAILED_DEPLOYMENTS: build/php-wasm-callback-entry-failed-deployments
         run: |
           source scripts/env.sh
           bash scripts/run-php-wasm-callback-entry-ci.sh
@@ -121,6 +122,7 @@ jobs:
             build/php-wasm-callback-entry-host.log
             build/php-wasm-callback-entry-runtime.log
             build/php-wasm-callback-entry-input/php-wasm-runtime/runtime.json
+            build/php-wasm-callback-entry-failed-deployments/
           if-no-files-found: error
           retention-days: 30
       - name: Enforce callback entry production

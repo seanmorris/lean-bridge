@@ -14,6 +14,7 @@ import { canonicalJson } from "../../src/capsule/node.mjs";
 import { verifyPackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
 import { copiedCleanEnvironment, nativeFixtureEnvironment } from "./copied-fixture-install.mjs";
 import { copyPackageSetHandoff } from "./package-set.mjs";
+import { phpWasmEntryBuildClassifications } from "./php-wasm-entry-call-targets.mjs";
 import { phpWasmExecutionTuples } from "./php-wasm-fin-fixtures.mjs";
 import { buildPhpWasmOwnedRefinementEntryProbe } from "./php-wasm-owned-refinement-entry-build.mjs";
 import {
@@ -82,7 +83,10 @@ test(`instrumented owned PHP-Wasm package closes ${family} ${route} dispatch and
 	assert.deepEqual(builds[1].observation.definitionCounts, builds[0].observation.definitionCounts);
 	const selection = phpWasmOwnedRefinementEntrySelection(builds[0].model, sourceProbe.entries);
 	assert.deepEqual(selection.selected, builds[0].observation.selected);
-	const entryPlan = phpWasmOwnedRefinementEntryPlan(family, selection.selected, selection.adapters.leanSource);
+	const classifications = await Promise.all([0, 1].map(index =>
+		phpWasmEntryBuildClassifications(join(output, `build-${index}`), builds[index].observation)));
+	assert.deepEqual(classifications[1], classifications[0], "independent builds classify one call surface");
+	const entryPlan = phpWasmOwnedRefinementEntryPlan(family, selection.selected, selection.adapters.leanSource, classifications[0]);
 	const sources = Object.fromEntries(await Promise.all(["weak", "strict"].map(async mode => [
 		mode, await phpWasmOwnedRefinementEntryCaller(family, mode)
 	])));
