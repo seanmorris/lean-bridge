@@ -100,9 +100,9 @@ test('recursive PHP probes require complete failures, named mutants and real lif
 test('recursive PHP source transitions reject unrelated bytes and substituted predecessors', async () => {
 	for(const update of(await json(phpRecursiveCallableHistoryPath)).updates)
 	{
-		const source = beforePhpWasmRecursiveCallables(update.path, await readFile(update.path, 'utf8'));
+		const source = beforePhpWasmRecursiveCallables(update.path, await readFile(update.path, 'utf8'), update.currentSha256);
 		assert.equal(sha256(reversePhpRecursiveCallableUpdate(source, update)), update.previousSha256);
-		assert.equal(sha256(beforePhpRecursiveCallables(update.path, source)), update.previousSha256);
+		assert.equal(sha256(beforePhpRecursiveCallables(update.path, source, update.previousSha256)), update.previousSha256);
 		assert.equal(beforePhpRecursiveCallables(update.path, source, update.currentSha256), source);
 		const unrelated = source + '\n/* unrelated */\n';
 		assert.equal(beforePhpRecursiveCallables(update.path, unrelated), unrelated);
