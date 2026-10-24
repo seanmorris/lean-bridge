@@ -12,10 +12,19 @@ import { assertOwnedTransferCExecution, assertOwnedTransferCCi } from "./helpers
 import { beforeOwnedTransferC, ownedTransferCAddedPaths, ownedTransferCBaseline
 	, ownedTransferCChangedPaths, ownedTransferCHistoricalBytes, ownedTransferCPath
 	, ownedTransferCPrevious, ownedTransferCRegisteredSources, reverseOwnedTransferCUpdate } from "./helpers/owned-transfer-c-history.mjs";
+import { phpWasmCorpusPartitionHistoryPath } from "./helpers/php-wasm-corpus-partition-history.mjs";
+import { sourceAtFinHistoryMilestone } from "./helpers/source-at-fin-history-milestone.mjs";
 
 const read = async () => JSON.parse(await readFile(ownedTransferCPath, "utf8"));
 const historical = async path => ownedTransferPackageHistoricalBytes(path, await readFile(path));
 const historicalText = async path => (await historical(path)).toString("utf8");
+// The CI check describes the workflow immediately before the PHP-Wasm corpus partition.
+const workflowPath = ".github/workflows/consumer-matrix.yml";
+const prePartitionWorkflow = async () => {
+	const partition = JSON.parse(await readFile(phpWasmCorpusPartitionHistoryPath, "utf8"));
+	const update = partition.updates.find(item => item.path === workflowPath);
+	return sourceAtFinHistoryMilestone(workflowPath, update.previousSha256);
+};
 
 test("staged C transfers authenticate every source and preserve installed support", async () => {
 	const record = await read();
@@ -62,7 +71,7 @@ test("staged C transfer history rejects unknown edits and forged ancestors", asy
 
 test("staged transfers require real ordinary/reviewed Lean execution and enabled CI", async () => {
 	await assertOwnedTransferCExecution(await read());
-	assertOwnedTransferCCi(await readFile(".github/workflows/consumer-matrix.yml", "utf8"));
+	assertOwnedTransferCCi(await prePartitionWorkflow());
 });
 
 test("transfer evidence rejects removed checks, changed inputs and unsupported package claims", async () => {
@@ -83,9 +92,15 @@ test("transfer evidence rejects removed checks, changed inputs and unsupported p
 		const changed = structuredClone(original); mutate(changed);
 		await assert.rejects(() => assertOwnedTransferCExecution(changed), mutate.toString());
 	}
-	const workflow = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
-	for(const text of ["          npm run test:owned-transfers\n"
+	const workflow = await prePartitionWorkflow();
+	assertOwnedTransferCCi(workflow);
+	for(const text of [
+		"          npm run test:owned-transfers\n"
 		, "            build/owned-transfers/\n"
-		, "          test -s build/owned-transfers/reviewed-c.json\n"])
-		assert.throws(() => assertOwnedTransferCCi(workflow.replace(text, "")));
+		, "          test -s build/owned-transfers/reviewed-c.json\n"
+	]) {
+		const changed = workflow.replace(text, "");
+		assert.notEqual(changed, workflow, text);
+		assert.throws(() => assertOwnedTransferCCi(changed));
+	}
 });
