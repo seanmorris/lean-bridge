@@ -65,6 +65,11 @@ const addedPaths = [
 	, "tests/helpers/owned-ruby-callback-generated-history.mjs"
 	, "docs/evidence/ruby-callback-sanitizer-runtime-20261002.md"
 ];
+const current = {
+	ownedRubyCallbackInstalledProbe
+	, readSource: path => readFile(path, "utf8")
+};
+
 /** Preserve predecessor coverage and include all Ruby acceptance inputs. */
 export const ownedRubyCallbackSourcePaths = async () => {
 	const bytes = await readFile(ownedRubyCallbackPrevious.path);
@@ -79,21 +84,23 @@ const flags = (item, names) => { for(const name of names) assert.equal(item[name
  * @param mode - Ordinary or reviewed source admission.
  * @param additionalTargets - Extra peers checked by the caller.
  * @param fixture - Explicit source and counts for an extended shared fixture.
+ * @param replay - Optional authenticated producer dependencies.
  */
-export const assertOwnedRubyCallbackCombinedRelease = async (item, mode, additionalTargets = [], fixture = null) => {
-	await assertOwnedPythonCallbackCombinedRelease(item, mode, ["rubygems", ...additionalTargets], fixture);
+export const assertOwnedRubyCallbackCombinedRelease = async (item, mode, additionalTargets = [], fixture = null, replay) => {
+	const { ownedRubyCallbackInstalledProbe, readSource } = replay ?? current;
+	await assertOwnedPythonCallbackCombinedRelease(item, mode, ["rubygems", ...additionalTargets], fixture, replay);
 	validatePackageSetReceipt(item.receipt);
 	const ruby = item.installedRuby;
 	await assertOwnedRubyCallbackPackageInputs({ mode, combined: true
 		, metadata: item.nativeInput.metadata, model: item.native.model
 		, componentReceipt: item.native.receipt, adapter: item.rubyAdapter
-		, runtime: item.nativeRuntime, manifest: ruby.manifest }, fixture);
+		, runtime: item.nativeRuntime, manifest: ruby.manifest }, fixture, replay);
 	assert.equal(ruby.checks, 206); assert.equal(ruby.relocatedChecks, 206);
 	flags(ruby, ["sourceFreeInstallation", "cliRemovedBeforeConsumerInstall"
 		, "offlineInstall", "sourceFreeRelocatedExecution"
 		, "handoffRemovedBeforeRelocatedExecution", "gemCacheRemoved"]);
 	assert.equal(ruby.consumerSha256, sha256(await ownedRubyCallbackInstalledProbe(true)));
-	assert.equal(ruby.loaderProbeSha256, sha256(await readFile("tests/fixtures/structured-types/owned-ruby-installed-loader.rb")));
+	assert.equal(ruby.loaderProbeSha256, sha256(await readSource("tests/fixtures/structured-types/owned-ruby-installed-loader.rb")));
 	assert.deepEqual(ruby.observation, { checks: 206, ordinaryRequire: true
 		, scenarios: ["original_owners", "independent_closures", "native_passback"
 			, "recursive_owners", "affinity", "host_replies", "combined_transfers"] });
@@ -101,8 +108,8 @@ export const assertOwnedRubyCallbackCombinedRelease = async (item, mode, additio
 	assert.equal(ruby.loader.liveIdentities, 0); assert.equal(ruby.loader.runtimeInitializations, 1);
 	assert.equal(ruby.loader.componentInitializations, 1); assert.equal(ruby.loader.concurrentRequires, 4);
 	flags(ruby.loader, ["privateGmp", "forkBeforeLock"]);
-	const example = await readFile("tests/fixtures/documentation/consumers/ruby/owned-callback-results.rb", "utf8");
-	assert.equal((await readFile("docs/consume/ruby.md", "utf8")).match(/```ruby file=ruby\/owned-callback-results\.rb\n([\s\S]*?)```/u)?.[1], example);
+	const example = await readSource("tests/fixtures/documentation/consumers/ruby/owned-callback-results.rb");
+	assert.equal((await readSource("docs/consume/ruby.md")).match(/```ruby file=ruby\/owned-callback-results\.rb\n([\s\S]*?)```/u)?.[1], example);
 	assert.deepEqual(ruby.documentation, { sourceSha256: sha256(example), stdout: "42\n42\n" });
 	const packages = item.receipt.packages.filter(value => value.target === "rubygems");
 	assert.equal(packages.length, 1);

@@ -24,10 +24,14 @@ const fixture = {
  * Validate shared compiler contracts and each independently generated package.
  *
  * @param item - Original combined release report.
+ * @param replay - Optional authenticated producer dependencies.
  */
-export const assertOwnedDotnetCallbackCombinedInputs = async item => {
+export const assertOwnedDotnetCallbackCombinedInputs = async (item, replay) => {
 	assert.ok(["ordinary", "reviewed"].includes(item.mode));
-	await assertOwnedRubyCallbackCombinedRelease(item, item.mode, ["nuget"], fixture);
+	const selectedFixture = { ...fixture
+		, source: replay ? replay.ownedDotnetCallbackResultCombinedSource : fixture.source
+		, cli: report => assertOwnedDotnetCallbackCli(report, replay) };
+	await assertOwnedRubyCallbackCombinedRelease(item, item.mode, ["nuget"], selectedFixture, replay);
 	const targets = {
 		c: { name: "owned-callback-combinations", version: "1.2.3" }
 		, cpp: { name: "owned-cpp-callback-combinations", version: "1.2.3" }
@@ -43,7 +47,7 @@ export const assertOwnedDotnetCallbackCombinedInputs = async item => {
 		, componentReceipt: item.native.receipt, runtimeReceipt: item.nativeRuntime
 		, adapterReceipt: dotnet.adapterReceipt
 		, compiledProjection: dotnet.compiledProjection, manifest: dotnet.manifest
-	}, targets);
+	}, targets, replay);
 	const packages = item.receipt.packages.filter(value => value.target === "nuget");
 	assert.equal(packages.length, 1);
 	assert.equal(packages[0].name, dotnet.manifest.name);
@@ -66,11 +70,12 @@ export const assertOwnedDotnetCallbackCombinedInputs = async item => {
  * Require SDK-free installed .NET execution alongside all six peer ecosystems.
  *
  * @param item - Complete release report after installed process checks.
+ * @param replay - Optional authenticated producer dependencies.
  */
-export const assertOwnedDotnetCallbackCombinedRelease = async item => {
-	const { projection } = await assertOwnedDotnetCallbackCombinedInputs(item);
+export const assertOwnedDotnetCallbackCombinedRelease = async (item, replay) => {
+	const { projection } = await assertOwnedDotnetCallbackCombinedInputs(item, replay);
 	const dotnet = item.installedDotnet;
-	await assertOwnedDotnetCallbackInstalledExecution(dotnet, projection, true);
+	await assertOwnedDotnetCallbackInstalledExecution(dotnet, projection, true, replay);
 	assert.equal(dotnet.checks, 57); assert.equal(dotnet.relocatedChecks, 57);
 	for(const name of ["cliRemovedBeforeConsumerInstall", "offlineInstall", "handoffRemovedBeforeRelocatedExecution"])
 		assert.equal(dotnet[name], true, name);

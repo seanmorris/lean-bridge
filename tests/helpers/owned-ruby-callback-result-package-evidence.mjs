@@ -19,13 +19,35 @@ import { beforeOwnedDotnetCallbackResults } from "./owned-dotnet-callback-result
 const hash = value => sha256(canonicalJson(value));
 const flags = (value, names) => { for(const name of names) assert.equal(value[name], true, name); };
 
+const current = {
+	generateOwnedCPackage
+	, generateOwnedRubyPackage
+	, createCompiledNativeModel
+	, generateCompiledNativeLeanAdapters
+	, ownedRubyAdapterSources
+	, ownedRubyCallbackResultSource
+	, ownedRubyCallbackResultCombinedSource
+	, readSource: path => readFile(path, "utf8")
+};
+
 /**
  * Authenticate the generated adapter, packaged API and automatically loaded libraries.
  *
  * @param item - Compiled inputs and original installed gem receipt.
  * @param fixture - Exact source and export counts for an extended shared fixture.
+ * @param replay - Optional authenticated producer dependencies.
  */
-export const assertOwnedRubyCallbackPackageInputs = async (item, fixture = null) => {
+export const assertOwnedRubyCallbackPackageInputs = async (item, fixture = null, replay) => {
+	const {
+		generateOwnedCPackage
+		, generateOwnedRubyPackage
+		, createCompiledNativeModel
+		, generateCompiledNativeLeanAdapters
+		, ownedRubyAdapterSources
+		, ownedRubyCallbackResultSource
+		, ownedRubyCallbackResultCombinedSource
+		, readSource
+	} = replay ?? current;
 	const { mode, combined, metadata, model, componentReceipt: component, adapter, runtime, manifest } = item;
 	assert.ok(["ordinary", "reviewed"].includes(mode)); assert.equal(typeof combined, "boolean");
 	const options = { hostCallbacks: combined, transferredInputs: combined
@@ -41,8 +63,8 @@ export const assertOwnedRubyCallbackPackageInputs = async (item, fixture = null)
 	assert.equal(model.schemaVersion, 11); assert.equal(model.ownedGraph.schemaVersion, 6);
 	assert.equal(model.ownedGraph.callbackResultAnchors.signatures.length, 4);
 	assert.equal(Boolean(model.sourceIdentity.reviewedBindingIr), mode === "reviewed");
-	assert.equal(model.sourceIdentity.extractorSha256, sha256(beforeFinRefinementSource("src/analyze/NativeExports.lean", await readFile("src/analyze/NativeExports.lean"), model.sourceIdentity.extractorSha256)));
-	const source = await readFile("tests/fixtures/onboarding/owned-aggregates/Owned.lean", "utf8");
+	assert.equal(model.sourceIdentity.extractorSha256, sha256(beforeFinRefinementSource("src/analyze/NativeExports.lean", await readSource("src/analyze/NativeExports.lean"), model.sourceIdentity.extractorSha256)));
+	const source = await readSource("tests/fixtures/onboarding/owned-aggregates/Owned.lean");
 	assert.equal(model.sourceIdentity.modules.find(value => value.module === "Owned").source.sha256
 		, sha256(source + (fixture?.source ?? (combined ? ownedRubyCallbackResultCombinedSource : ownedRubyCallbackResultSource))));
 	const c = generateOwnedCPackage(input), ruby = generateOwnedRubyPackage(model.bindingIr, null, options);

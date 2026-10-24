@@ -20,14 +20,50 @@ import { ownedDotnetCallbackResultProbe, ownedDotnetCallbackLifetimeProbe
 import { ownedDotnetCallbackInvalidPrograms } from "./owned-dotnet-callback-result-installed.mjs";
 import { ownedDotnetSanitizerControls } from "./owned-dotnet-callback-result-sanitizers.mjs";
 
+const current = {
+	createCompiledNativeModel
+	, generateOwnedCPackage
+	, generateOwnedDotnetCalls
+	, ownedDotnetNativeProbe
+	, ownedDotnetReceiverProject
+	, instrumentOwnedDotnetReceivers
+	, ownedDotnetCallbackResultConfiguration
+	, ownedDotnetCallbackResultReviewedIr
+	, ownedDotnetCallbackResultSource
+	, ownedDotnetCallbackResultCombinedConfiguration
+	, ownedDotnetCallbackResultCombinedReviewedIr
+	, ownedDotnetCallbackResultCombinedSource
+	, ownedDotnetCallbackResultProbe
+	, ownedDotnetCallbackLifetimeProbe
+	, ownedDotnetCallbackSanitizerProbe
+	, ownedDotnetCallbackForkProbe
+	, ownedDotnetCallbackInvalidPrograms
+	, ownedDotnetSanitizerControls
+	, readSource: path => readFile(path, "utf8")
+};
+
 /**
  * Require the complete author or independent reviewed contract, not a hash alone.
  *
  * @param item - One compiled runtime observation.
  * @param hostCallbacks - Selected host delegate capability.
  * @param combined - Selected receiver, export-anchor and transfer capabilities.
+ * @param replay - Optional authenticated producer dependencies.
  */
-export const assertOwnedDotnetCallbackInputs = async (item, hostCallbacks, combined) => {
+export const assertOwnedDotnetCallbackInputs = async (item, hostCallbacks, combined, replay) => {
+	const {
+		createCompiledNativeModel
+		, generateOwnedCPackage
+		, generateOwnedDotnetCalls
+		, ownedDotnetNativeProbe
+		, ownedDotnetCallbackResultConfiguration
+		, ownedDotnetCallbackResultReviewedIr
+		, ownedDotnetCallbackResultSource
+		, ownedDotnetCallbackResultCombinedConfiguration
+		, ownedDotnetCallbackResultCombinedReviewedIr
+		, ownedDotnetCallbackResultCombinedSource
+		, readSource
+	} = replay ?? current;
 	assert.ok(["ordinary", "reviewed"].includes(item.mode));
 	const options = { hostCallbacks, callbackResultAnchors: true, valueCopies: true
 		, transferredInputs: combined, anchoredResults: combined
@@ -43,8 +79,8 @@ export const assertOwnedDotnetCallbackInputs = async (item, hostCallbacks, combi
 		assert.equal(Boolean(native.ownedGraph[key]), combined, key);
 	const identity = item.input.sourceIdentity;
 	assert.equal(Boolean(identity.reviewedBindingIr), item.mode === "reviewed");
-	assert.equal(identity.extractorSha256, sha256(beforeFinRefinementSource("src/analyze/NativeExports.lean", await readFile("src/analyze/NativeExports.lean"), identity.extractorSha256)));
-	const lean = await readFile("tests/fixtures/onboarding/owned-aggregates/Owned.lean", "utf8");
+	assert.equal(identity.extractorSha256, sha256(beforeFinRefinementSource("src/analyze/NativeExports.lean", await readSource("src/analyze/NativeExports.lean"), identity.extractorSha256)));
+	const lean = await readSource("tests/fixtures/onboarding/owned-aggregates/Owned.lean");
 	assert.equal(identity.modules.find(value => value.module === "Owned").source.sha256,
 		sha256(lean + (combined ? ownedDotnetCallbackResultCombinedSource : ownedDotnetCallbackResultSource)));
 	const configuration = item.mode === "ordinary"
@@ -84,8 +120,20 @@ const mutations = (files, cases, occurrences = false) => cases.map(([name, path,
  *
  * @param name - Report basename including source mode, variant and optional kind.
  * @param item - Complete report from the executable test.
+ * @param replay - Optional authenticated producer dependencies.
  */
-export const assertOwnedDotnetCallbackRuntime = async (name, item) => {
+export const assertOwnedDotnetCallbackRuntime = async (name, item, replay) => {
+	const {
+		ownedDotnetReceiverProject
+		, instrumentOwnedDotnetReceivers
+		, ownedDotnetCallbackResultProbe
+		, ownedDotnetCallbackLifetimeProbe
+		, ownedDotnetCallbackSanitizerProbe
+		, ownedDotnetCallbackForkProbe
+		, ownedDotnetCallbackInvalidPrograms
+		, ownedDotnetSanitizerControls
+		, readSource
+	} = replay ?? current;
 	const match = /^(ordinary|reviewed)-(no-host|host|combined)(?:-(lifetime|sanitizers|process))?\.json$/u.exec(name);
 	assert.ok(match, name);
 	const [, mode, variant, kind = "calls"] = match;
@@ -94,7 +142,7 @@ export const assertOwnedDotnetCallbackRuntime = async (name, item) => {
 	if(kind !== "process") assert.equal(item.hostCallbacks, host);
 	assert.equal(item.actualLean, true); assert.equal(item.installedPackage, false);
 	if(["sanitizers", "process"].includes(kind)) assert.notEqual(variant, "host");
-	const generated = await assertOwnedDotnetCallbackInputs(item, host, combined);
+	const generated = await assertOwnedDotnetCallbackInputs(item, host, combined, replay);
 	if(kind === "calls")
 	{
 		assert.deepEqual(item.observed, observation(host, combined)); assert.equal(item.restored, true);
@@ -155,7 +203,7 @@ export const assertOwnedDotnetCallbackRuntime = async (name, item) => {
 	}
 	else
 	{
-		assert.equal(item.probeSha256, sha256(await readFile("tests/fixtures/structured-types/owned-dotnet-callback-process.cs")));
+		assert.equal(item.probeSha256, sha256(await readSource("tests/fixtures/structured-types/owned-dotnet-callback-process.cs")));
 		assert.equal(item.forkProbeSha256, sha256(ownedDotnetCallbackForkProbe));
 		assert.equal(item.project, combined ? ownedDotnetReceiverProject.replace("<Optimize>", "<DefineConstants>HOST_CALLBACKS</DefineConstants><Optimize>") : ownedDotnetReceiverProject);
 		assert.deepEqual(item.observations, [

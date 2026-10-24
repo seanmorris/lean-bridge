@@ -6,6 +6,8 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
+import "./owned-dotnet-callback-result-replay-tests.mjs";
+import { ownedDotnetCallbackReplay } from "./owned-dotnet-callback-result-replay.mjs";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { classifyRepositoryTest } from "../../src/adoption/test-profiles.mjs";
 import { unpackOwnedCallbackReports } from "./owned-callback-result-evidence.mjs";
@@ -46,20 +48,23 @@ test(".NET acceptance rejects incomplete runs, substituted sources and inflated 
 	}
 });
 
-test(".NET acceptance keeps runtime, installed and combined ownership claims distinct", async () => {
-	const reports = unpackOwnedCallbackReports((await read()).archive);
-	for(const mode of ["ordinary", "reviewed"])
-	for(const [name, mutate] of [
-		[`${mode}-no-host.json`, item => { item.installedPackage = true; }]
-		, [`${mode}-combined-lifetime.json`, item => { item.observed.identities++; }]
-		, [`${mode}-combined-sanitizers.json`, item => { item.sanitized.leakSanitizer = true; }]
-		, [`${mode}-no-host-process.json`, item => { item.observations[0].forkChecks = 0; }]
-		, [`${mode}-combined-package.json`, item => { item.installedProcess.observations[0].installedPublicApi = false; }]
-		, [`${mode}-no-host-package.json`, item => { item.relocatedProcess.pop(); }]
-		, [`${mode}-combined-release.json`, item => { item.installedDotnet.relocatedChecks--; }]
-	]) {
-		const path = "build/owned-dotnet-callback-results/" + name;
-		const changed = structuredClone(reports[path]); mutate(changed);
-		await assert.rejects(() => assertOwnedDotnetCallbackReport(path, changed), undefined, name);
-	}
-});
+for(const mode of ["ordinary", "reviewed"])
+	test(".NET acceptance keeps ownership claims distinct: " + mode, async () => {
+		const original = await read();
+		const reports = unpackOwnedCallbackReports(original.archive);
+		const replay = await ownedDotnetCallbackReplay(original.sources);
+		for(const [name, mutate] of [
+			[`${mode}-no-host.json`, item => { item.installedPackage = true; }]
+			, [`${mode}-combined-lifetime.json`, item => { item.observed.identities++; }]
+			, [`${mode}-combined-sanitizers.json`, item => { item.sanitized.leakSanitizer = true; }]
+			, [`${mode}-no-host-process.json`, item => { item.observations[0].forkChecks = 0; }]
+			, [`${mode}-combined-package.json`, item => { item.installedProcess.observations[0].installedPublicApi = false; }]
+			, [`${mode}-no-host-package.json`, item => { item.relocatedProcess.pop(); }]
+			, [`${mode}-combined-release.json`, item => { item.installedDotnet.relocatedChecks--; }]
+		]) {
+			const path = "build/owned-dotnet-callback-results/" + name;
+			await assertOwnedDotnetCallbackReport(path, reports[path], replay);
+			const changed = structuredClone(reports[path]); mutate(changed);
+			await assert.rejects(() => assertOwnedDotnetCallbackReport(path, changed, replay), undefined, name);
+		}
+	});

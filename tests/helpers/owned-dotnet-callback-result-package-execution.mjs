@@ -18,14 +18,35 @@ const hash = value => sha256(canonicalJson(value));
 const digest = value => assert.match(value, /^[a-f0-9]{64}$/u);
 const flags = (item, names) => { for(const name of names) assert.equal(item[name], true, name); };
 
+const current = {
+	ownedDotnetCallbackInstalledProbe
+	, ownedDotnetCallbackInvalidPrograms
+	, ownedDotnetCallbackInstalledProcessProbe
+	, ownedDotnetCallbackProcessProject
+	, ownedDotnetCallbackForkProbe
+	, ownedDotnetCallbackResultConfiguration
+	, readSource: path => readFile(path, "utf8")
+	, readBytes: path => readFile(path)
+};
+
 /**
  * Require the installed public API, negative compilations and relocated probes.
  *
  * @param item - Installed NuGet observations, standalone or combined.
  * @param projection - Reconstructed managed API.
  * @param combined - Whether host callbacks and consuming receivers are enabled.
+ * @param replay - Optional authenticated producer dependencies.
  */
-export const assertOwnedDotnetCallbackInstalledExecution = async (item, projection, combined) => {
+export const assertOwnedDotnetCallbackInstalledExecution = async (item, projection, combined, replay) => {
+	const {
+		ownedDotnetCallbackInstalledProbe
+		, ownedDotnetCallbackInvalidPrograms
+		, ownedDotnetCallbackInstalledProcessProbe
+		, ownedDotnetCallbackProcessProject
+		, ownedDotnetCallbackForkProbe
+		, ownedDotnetCallbackResultConfiguration
+		, readSource
+	} = replay ?? current;
 	flags(item, ["sourceFreeInstallation", "sourceFreeRelocatedExecution"
 		, "consumerSourceRemoved", "packageCacheRemoved", "sdkFreeExecution"]);
 	assert.equal(item.consumerSha256, sha256(await ownedDotnetCallbackInstalledProbe(combined)));
@@ -40,15 +61,15 @@ export const assertOwnedDotnetCallbackInstalledExecution = async (item, projecti
 		, source: `using ${projection.namespace};\ninternal static class Program { static void Main() { } internal static ${statement} }\n`
 		, diagnostic: diagnostic.source
 	})));
-	const guide = await readFile("docs/consume/dotnet.md", "utf8");
-	const publisher = await readFile("docs/publish/nuget.md", "utf8");
+	const guide = await readSource("docs/consume/dotnet.md");
+	const publisher = await readSource("docs/publish/nuget.md");
 	const section = publisher.split("### Anchor a callback result to its argument\n")[1];
 	const contract = (await ownedDotnetCallbackResultConfiguration()).contracts["Owned.makeRecord"];
 	assert.deepEqual(JSON.parse(section.split("```json\n")[1].split("\n```")[0]), contract);
 	const observed = [];
 	for(const name of ["owned-callback-results", ...combined ? ["owned-callback-replies"] : []])
 	{
-		const source = await readFile(`tests/fixtures/documentation/consumers/dotnet/${name}.cs`, "utf8");
+		const source = await readSource(`tests/fixtures/documentation/consumers/dotnet/${name}.cs`);
 		assert.equal(guide.split(`\x60\x60\x60csharp file=dotnet/${name}.cs\n`)[1].split("\n```")[0] + "\n", source);
 		observed.push({ name, sourceSha256: sha256(source), code: 0, stdout: "42\n42\n", stderr: "" });
 	}
@@ -73,20 +94,23 @@ export const assertOwnedDotnetCallbackInstalledExecution = async (item, projecti
  * Authenticate the installed producer CLI's complete configured file set.
  *
  * @param report - CLI archive inventory from the actual offline installation.
+ * @param replay - Optional authenticated producer dependencies.
  */
-export const assertOwnedDotnetCallbackCli = async report => {
+export const assertOwnedDotnetCallbackCli = async (report, replay) => {
+	const { readSource, readBytes } = replay ?? current;
 	const { archive, inventorySha256, externalRegistryWrites, ...inventory } = report;
 	assert.equal(report.schemaVersion, 1); assert.equal(report.kind, "lean-bridge-cli-package");
 	assert.equal(report.productionApproved, false); assert.equal(externalRegistryWrites, false);
 	assert.equal(inventorySha256, hash(inventory)); digest(archive.sha256); assert.ok(archive.bytes > 0);
 	const configPath = "config/cli-package.v1.json";
-	const config = JSON.parse(beforeOwnedJvmCallbackResults(configPath, await readFile(configPath, "utf8")));
+	const config = JSON.parse(replay ? await readSource(configPath)
+		: beforeOwnedJvmCallbackResults(configPath, await readSource(configPath)));
 	assert.deepEqual(report.package, { name: config.name, version: config.version });
 	assert.equal(new Set(report.files.map(file => file.path)).size, report.files.length);
 	for(const path of config.files)
 	{
 		const file = report.files.find(entry => entry.path === path); assert.ok(file, path);
-		const bytes = Buffer.from(beforeOwnedJvmCallbackResults(path, await readFile(path), file.sha256));
+		const bytes = Buffer.from(beforeOwnedJvmCallbackResults(path, await readBytes(path, file.sha256), file.sha256));
 		assert.equal(file.bytes, bytes.length, path); assert.equal(file.sha256, sha256(bytes), path);
 	}
 };
@@ -95,14 +119,15 @@ export const assertOwnedDotnetCallbackCli = async report => {
  * Require two reproducible builds and every original standalone package check.
  *
  * @param item - Original installed-package report.
+ * @param replay - Optional authenticated producer dependencies.
  */
-export const assertOwnedDotnetCallbackPackageExecution = async item => {
-	const { model, projection } = await assertOwnedDotnetCallbackPackageInputs(item);
+export const assertOwnedDotnetCallbackPackageExecution = async (item, replay) => {
+	const { model, projection } = await assertOwnedDotnetCallbackPackageInputs(item, undefined, replay);
 	assert.equal(item.schemaVersion, 1); assert.equal(item.planNode, 1219);
 	flags(item, ["compiledLean", "installedPackage", "installedNuget"
 		, "sourceUnchanged", "handoffRemoved", "deterministicReassembly"
 		, "independentProducerBuild", "safePublicApi"]);
-	await assertOwnedDotnetCallbackInstalledExecution(item, projection, item.combined);
+	await assertOwnedDotnetCallbackInstalledExecution(item, projection, item.combined, replay);
 	assert.deepEqual(item.relocatedObservation, item.observation);
 	const rejected = [];
 	for(const [prefix, contract] of [
@@ -120,7 +145,7 @@ export const assertOwnedDotnetCallbackPackageExecution = async item => {
 	assert.deepEqual(item.incapableReadersRejected, ["ownedCallbackResultAnchors"
 		, ...item.combined ? ["ownedHostCallbacks", "ownedInputTransfers", "ownedAnchoredResults", "ownedReceiverExports"] : []]);
 	assert.deepEqual(item.loaderRejected, ["changed-library", "symlink-library"]);
-	await assertOwnedDotnetCallbackCli(item.cli);
+	await assertOwnedDotnetCallbackCli(item.cli, replay);
 	assert.deepEqual(item.cliInstallation, { offline: true, filesVerified: item.cli.files.length, sourceRemoved: true });
 	const receipt = item.packageSetReceipt; validatePackageSetReceipt(receipt);
 	assert.deepEqual(receipt.component, model.component);

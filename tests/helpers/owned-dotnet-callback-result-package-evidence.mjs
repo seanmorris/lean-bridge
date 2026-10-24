@@ -18,13 +18,43 @@ import { ownedDotnetCallbackResultConfiguration, ownedDotnetCallbackResultReview
 const hash = value => sha256(canonicalJson(value));
 const inventory = bytes => ({ bytes: Buffer.byteLength(bytes), sha256: sha256(bytes) });
 
+const current = {
+	createCompiledNativeModel
+	, generateCompiledNativeLeanAdapters
+	, generateOwnedCPackage
+	, generateOwnedDotnetPackage
+	, ownedDotnetAdapterSources
+	, ownedDotnetCallbackResultConfiguration
+	, ownedDotnetCallbackResultReviewedIr
+	, ownedDotnetCallbackResultSource
+	, ownedDotnetCallbackResultCombinedConfiguration
+	, ownedDotnetCallbackResultCombinedReviewedIr
+	, ownedDotnetCallbackResultCombinedSource
+	, readSource: path => readFile(path, "utf8")
+};
+
 /**
  * Authenticate the .NET projection of either a standalone or combined release.
  *
  * @param item - Original compiler inputs and linked package receipts.
  * @param targets - Exact publishing configuration for this release.
+ * @param replay - Optional authenticated producer dependencies.
  */
-export const assertOwnedDotnetCallbackPackageInputs = async (item, targets = { nuget: { name: "Owned.CallbackResults", version: "1.2.3" } }) => {
+export const assertOwnedDotnetCallbackPackageInputs = async (item, targets = { nuget: { name: "Owned.CallbackResults", version: "1.2.3" } }, replay) => {
+	const {
+		createCompiledNativeModel
+		, generateCompiledNativeLeanAdapters
+		, generateOwnedCPackage
+		, generateOwnedDotnetPackage
+		, ownedDotnetAdapterSources
+		, ownedDotnetCallbackResultConfiguration
+		, ownedDotnetCallbackResultReviewedIr
+		, ownedDotnetCallbackResultSource
+		, ownedDotnetCallbackResultCombinedConfiguration
+		, ownedDotnetCallbackResultCombinedReviewedIr
+		, ownedDotnetCallbackResultCombinedSource
+		, readSource
+	} = replay ?? current;
 	const { mode, combined, input, componentReceipt: component
 		, adapterReceipt: adapter
 		, compiledProjection: compiled, runtimeReceipt: runtime, manifest } = item;
@@ -52,8 +82,8 @@ export const assertOwnedDotnetCallbackPackageInputs = async (item, targets = { n
 		assert.equal(model.sourceIdentity.reviewedBindingIr.source, canonicalJson(ir));
 		assert.equal(model.sourceIdentity.reviewedBindingIr.sourceSha256, hash(ir));
 	}
-	assert.equal(model.sourceIdentity.extractorSha256, sha256(beforeFinRefinementSource("src/analyze/NativeExports.lean", await readFile("src/analyze/NativeExports.lean"), model.sourceIdentity.extractorSha256)));
-	const lean = await readFile("tests/fixtures/onboarding/owned-aggregates/Owned.lean", "utf8");
+	assert.equal(model.sourceIdentity.extractorSha256, sha256(beforeFinRefinementSource("src/analyze/NativeExports.lean", await readSource("src/analyze/NativeExports.lean"), model.sourceIdentity.extractorSha256)));
+	const lean = await readSource("tests/fixtures/onboarding/owned-aggregates/Owned.lean");
 	assert.equal(model.sourceIdentity.modules.find(value => value.module === "Owned").source.sha256,
 		sha256(lean + (combined ? ownedDotnetCallbackResultCombinedSource : ownedDotnetCallbackResultSource)));
 	const c = generateOwnedCPackage({ ...input, ...options });

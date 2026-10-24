@@ -8,6 +8,7 @@ import { readFile } from "node:fs/promises";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeOwnedJvmCallbackResults } from "./owned-jvm-callback-result-history.mjs";
 import { unpackOwnedCallbackReports } from "./owned-callback-result-evidence.mjs";
+import { ownedDotnetCallbackReplay } from "./owned-dotnet-callback-result-replay.mjs";
 import { assertOwnedDotnetCallbackRuntime } from "./owned-dotnet-callback-result-evidence.mjs";
 import { assertOwnedDotnetCallbackPackageExecution } from "./owned-dotnet-callback-result-package-execution.mjs";
 import { assertOwnedDotnetCallbackCombinedRelease } from "./owned-dotnet-callback-result-combined-evidence.mjs";
@@ -86,18 +87,19 @@ const passed = (run, tests) => {
  *
  * @param path - Required report path.
  * @param item - Reconstructed original JSON report.
+ * @param replay - Optional authenticated producer dependencies.
  */
-export const assertOwnedDotnetCallbackReport = async (path, item) => {
+export const assertOwnedDotnetCallbackReport = async (path, item, replay) => {
 	assert.ok(ownedDotnetCallbackResultReports.includes(path), path);
 	const name = path.split("/").at(-1);
 	assert.equal(item.mode, name.startsWith("ordinary-") ? "ordinary" : "reviewed");
-	if(name.endsWith("-combined-release.json")) return assertOwnedDotnetCallbackCombinedRelease(item);
+	if(name.endsWith("-combined-release.json")) return assertOwnedDotnetCallbackCombinedRelease(item, replay);
 	if(name.endsWith("-package.json"))
 	{
 		assert.equal(item.combined, name.includes("-combined-"));
-		return assertOwnedDotnetCallbackPackageExecution(item);
+		return assertOwnedDotnetCallbackPackageExecution(item, replay);
 	}
-	return assertOwnedDotnetCallbackRuntime(name, item);
+	return assertOwnedDotnetCallbackRuntime(name, item, replay);
 };
 
 /**
@@ -122,6 +124,7 @@ export const assertOwnedDotnetCallbackAcceptance = async record => {
 	passed(record.verification, 8);
 	const reports = unpackOwnedCallbackReports(record.archive);
 	assert.deepEqual(Object.keys(reports).sort(), [...ownedDotnetCallbackResultReports].sort());
-	for(const [path, item] of Object.entries(reports)) await assertOwnedDotnetCallbackReport(path, item);
+	const replay = await ownedDotnetCallbackReplay(record.sources);
+	for(const [path, item] of Object.entries(reports)) await assertOwnedDotnetCallbackReport(path, item, replay);
 	assertOwnedDotnetCallbackResultCi(await readFile(".github/workflows/consumer-matrix.yml", "utf8"), JSON.parse(await readFile("package.json", "utf8")));
 };
