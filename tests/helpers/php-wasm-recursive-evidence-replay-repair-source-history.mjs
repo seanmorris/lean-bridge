@@ -79,23 +79,30 @@ export const reversePhpWasmRecursiveEvidenceReplayRepairUpdate = (
 };
 
 /**
- * Reverse one recognized transition; the calling history reader owns stops.
+ * Reach the requested digest, or reverse one transition when no stop is given.
  *
  * @param {string} path - Repository-relative source path.
  * @param {string} source - Complete current or historical source.
- * @param {string} [expected] - Stop digest, handled by the caller.
+ * @param {string} [expected] - Exact digest at which reconstruction stops.
  */
 export const beforePhpWasmRecursiveEvidenceReplayRepairSource = (
 	path, source, expected
 ) => {
-	void expected;
 	if(typeof source !== "string"
 		|| !phpWasmRecursiveEvidenceReplayRepairNormalizationPaths.includes(path))
 		return source;
-	const digest = sha256(source);
 	const value = record();
-	const update = [...value.integrationUpdates, ...value.updates].find(item =>
-		item.path === path && item.currentSha256 === digest);
-	return update === undefined ? source
-		: reversePhpWasmRecursiveEvidenceReplayRepairUpdate(source, update);
+	const updates = [...value.integrationUpdates, ...value.updates];
+	let current = source;
+	for(let count = 0; count < updates.length; count++)
+	{
+		const digest = sha256(current);
+		if(digest === expected) return current;
+		const update = updates.find(item =>
+			item.path === path && item.currentSha256 === digest);
+		if(update === undefined) return current;
+		current = reversePhpWasmRecursiveEvidenceReplayRepairUpdate(current, update);
+		if(expected === undefined) return current;
+	}
+	return current;
 };

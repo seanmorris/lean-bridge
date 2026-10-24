@@ -22,6 +22,12 @@ import {
 import {
 	renderCallbackSubtypeLeanAuthorDocs
 } from "./helpers/callback-subtype-documentation.mjs";
+import {
+	callbackSubtypePromotionHistoryPath
+} from "./helpers/callback-subtype-promotion-source-history.mjs";
+import {
+	sourceAtFinHistoryMilestone
+} from "./helpers/source-at-fin-history-milestone.mjs";
 
 const readJson = async path => JSON.parse(await readFile(path, "utf8"));
 const promotionPredecessor = "5b9ca827d621b2bcf8e67c73f85b8d9c8a84b5f0";
@@ -137,6 +143,12 @@ test("callback Subtype promotion documents every affected consumer", async () =>
 	const after = await renderTypeDocuments({
 		root: ".", inventory: { document: promoted, ...contracts }
 	});
+	const current = await renderTypeDocuments({
+		root: "."
+		, inventory: {
+			document: await readJson("docs/type-surface.v1.json"), ...contracts
+		}
+	});
 	const evidence = /callback-subtype-promotion-20261022\.md/u;
 	for(const [path, source] of Object.entries(after.documents))
 	{
@@ -145,7 +157,8 @@ test("callback Subtype promotion documents every affected consumer", async () =>
 		assert.match(source, /exact typed recovery wrapper/u, path);
 		assert.match(source, /prevents callback entry/u, path);
 		assert.match(source, /later valid call/u, path);
-		assert.equal(await readFile(path, "utf8"), source, path);
+		assert.match(current.documents[path], evidence, path);
+		assert.equal(await readFile(path, "utf8"), current.documents[path], path);
 	}
 	assert.doesNotMatch(before.reference, evidence);
 	assert.match(after.reference, evidence);
@@ -157,7 +170,7 @@ test("callback Subtype promotion documents every affected consumer", async () =>
 		, referenceStart);
 	assert.ok(referenceStart >= 0 && referenceEnd > referenceStart);
 	assert.equal(referenceSource.slice(referenceStart, referenceEnd).trimEnd()
-		, after.reference.trimEnd());
+		, current.reference.trimEnd());
 	for(const source of [before.reference, after.reference])
 	{
 		assert.match(source, /28 ordinary\/reviewed routes in 26 retained artifacts/u);
@@ -178,13 +191,19 @@ test("callback Subtype promotion repairs stale Lean-author and consumer boundari
 		...Object.fromEntries(Object.entries(paths).map(([name, path]) =>
 			[name, predecessorSource(path)]))
 	});
+	const history = await readJson(callbackSubtypePromotionHistoryPath);
+	const promotionSource = async path => {
+		const update = history.integrationUpdates.find(item => item.path === path);
+		assert.ok(update, path);
+		return sourceAtFinHistoryMilestone(path, update.currentSha256);
+	};
 	for(const name of ["existingPackage", "exportDecisions"])
-		assert.equal(await readFile(paths[name], "utf8"), rendered[name]
+		assert.equal(await promotionSource(paths[name]), rendered[name]
 			, paths[name]);
 	const omitTypeSection = source => replaceTypeSection(source
 		, "### Type conversions\n<!-- generated section omitted -->");
 	for(const name of ["dotnet", "java", "witWasi"])
-		assert.equal(omitTypeSection(await readFile(paths[name], "utf8"))
+		assert.equal(omitTypeSection(await promotionSource(paths[name]))
 			, omitTypeSection(rendered[name]), paths[name]);
 	for(const source of [rendered.existingPackage, rendered.exportDecisions])
 	{

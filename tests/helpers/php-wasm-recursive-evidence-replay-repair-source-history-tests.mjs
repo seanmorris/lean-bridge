@@ -142,6 +142,30 @@ test("WIT reader reaches PHP-Wasm recursive evidence milestones", async () => {
 		, original);
 });
 
+test("PHP-Wasm recursive replay reaches both transitions without passing a stop"
+	, async () => {
+	const record = await readRecord();
+	const path = "tests/php-wasm-recursive-callable-evidence.test.mjs";
+	const integration = record.integrationUpdates.find(item => item.path === path);
+	const implementation = record.updates.find(item => item.path === path);
+	assert.equal(integration.previousSha256, implementation.currentSha256);
+	const source = await sourceAtFinHistoryMilestone(path
+		, integration.currentSha256);
+	for(const expected of [integration.currentSha256
+		, integration.previousSha256, implementation.previousSha256]) {
+		assert.equal(sha256(beforePhpWasmRecursiveEvidenceReplayRepairSource(
+			path, source, expected)), expected);
+		assert.equal(sha256(beforeFinRefinementSource(
+			path, Buffer.from(source), expected)), expected);
+	}
+	assert.equal(sha256(beforePhpWasmRecursiveEvidenceReplayRepairSource(
+		path, source)), integration.previousSha256);
+	const unknown = source + "\nunknown\n";
+	assert.equal(beforePhpWasmRecursiveEvidenceReplayRepairSource(
+		path, unknown, implementation.previousSha256), unknown);
+	}
+);
+
 test("PHP-Wasm recursive evidence replay repair rejects alteration"
 	, async () => {
 	const record = await readRecord();
