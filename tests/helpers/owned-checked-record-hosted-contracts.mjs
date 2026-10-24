@@ -1,10 +1,11 @@
 /**
- * Closed hosted contracts for the non-PHP-Wasm owned checked-record lanes.
+ * Closed hosted contracts for the owned checked-record lanes.
  *
  * Each lane names the workflow job and artifact that produce it, the exact
  * uploaded directories, the aggregate report and its per-route evidence
  * prefix, the Node test names, and the report fields that must hold on
- * every route or only on full routes.
+ * every route or only on full routes. The PHP-Wasm lane has its own
+ * per-mode report layout and is never inferred from native PHP.
  *
  * @file
  */
@@ -195,6 +196,38 @@ const javascriptLane = freeze({
 	, fullOnly: []
 });
 
+const phpWasmLane = freeze({
+	kind: "php-wasm"
+	, workflow: ".github/workflows/owned-checked-record-php-wasm.yml"
+	, job: "Owned checked records in PHP-Wasm"
+	, prefix: "owned-checked-record-php-wasm"
+	, acceptanceStep: "Require ordinary and reviewed full and result-only packages"
+	, enforceStep: "Enforce installed owned checked-record acceptance"
+	, test: "tests/owned-checked-record-php-wasm-packaging.test.mjs"
+	, packaging: "owned-checked-record-php-wasm"
+	, report: "packages.json"
+	, reportProfile: "installed-owned-checked-record-php-wasm"
+	, evidence: "evidence"
+	, acceptance: "owned-checked-record-php-wasm.log"
+	, logs: ["owned-checked-record-php-wasm-host.log"
+		, "owned-checked-record-php-wasm-runtime.log"]
+	, uploads: ["owned-checked-record-php-wasm.log"
+		, "owned-checked-record-php-wasm-host.log"
+		, "owned-checked-record-php-wasm-runtime.log"
+		, "owned-checked-record-php-wasm/packages.json"
+		, "owned-checked-record-php-wasm/full.json"
+		, "owned-checked-record-php-wasm/result-only.json"
+		, "owned-checked-record-php-wasm/evidence"]
+	, modes: ["full", "result-only"]
+	, targets: ["php-wasm"]
+	, modeTest: "installed PHP-Wasm {mode} owned checked records execute in Node and Chromium"
+	, staticTests: [
+		"owned checked-record PHP-Wasm acceptance remains a separate recurring gate"
+		, "PHP-Wasm receipt handoff binds exactly the verified archive bytes"
+		, "owned PHP-Wasm consumers install the same receipt-only bytes that are retained"
+	]
+});
+
 export const ownedCheckedRecordHostedLanes = Object.freeze({
 	native: nativeLane
 	, perl: perlLane
@@ -206,6 +239,7 @@ export const ownedCheckedRecordHostedLanes = Object.freeze({
 	, php: managedLane("php")
 	, wit: managedLane("wit")
 	, javascript: javascriptLane
+	, "php-wasm": phpWasmLane
 });
 
 export const ownedCheckedRecordHostedLaneNames
@@ -216,7 +250,10 @@ export const ownedCheckedRecordHostedLaneNames
  *
  * @param lane - Hosted lane contract.
  */
-export const ownedCheckedRecordHostedTestNames = lane => [
+export const ownedCheckedRecordHostedTestNames = lane => lane.modeTest ? [
+	...lane.modes.map(mode => lane.modeTest.replace("{mode}", mode))
+	, ...lane.staticTests
+] : [
 	...lane.staticTests
 	, ...ownedCheckedRecordHostedRoutes.map(route =>
 		lane.routeTest.replace("{route}", route))

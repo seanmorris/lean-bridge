@@ -43,6 +43,15 @@ const limitations = Object.freeze([
 	, "PHP-Wasm, recursive owned graphs, retained or asynchronous callbacks, arbitrary predicates, dispatch cost and peak memory remain separate work."
 	, "External runtimes, compilers, package managers and operating-system distributions remain trusted inputs represented by recorded identities rather than copied toolchains."
 ]);
+const phpWasmLimitations = Object.freeze([
+	"The fixture covers the tested owned Ticket, Booking and Claim records with checked Window and Claim payloads on four ordinary/reviewed full/result-only routes; full routes add a transferred input, two synchronous host callbacks and returned Lean closures, while result-only routes admit only Lean-produced checked results."
+	, "Every route retains the exact receipt-named npm and Composer archives that the source-free installations executed in Node (embedded and Composer arrangements, startup and lazy loading, weak and strict callers) and in Chromium; the receipt, sidecar, closed file set and every archive byte are independently verified."
+	, "The original artifact ZIP, GitHub API records, complete hosted output and exact producer, consumer, checker and archiver source closures are retained byte-for-byte and independently replayed."
+	, "This is PHP-Wasm evidence only and establishes nothing for native PHP; recursive owned graphs, retained or asynchronous callbacks, arbitrary predicates, dispatch cost and peak memory remain separate work."
+	, "The pinned PHP-Wasm runtime, Emscripten SDK, PHP source, Chromium and other external toolchains remain trusted inputs represented by recorded identities rather than copied toolchains."
+]);
+const limitationsFor = lane => lane.kind === "php-wasm"
+	? phpWasmLimitations : limitations;
 
 /**
  * Require the hosted job to have reached acceptance and skipped enforcement.
@@ -201,7 +210,7 @@ export const writeOwnedCheckedRecordHostedEvidence = async ({
 					}))
 				}
 			}
-			, selectedSources, files, limitations
+			, selectedSources, files, limitations: limitationsFor(lane)
 		};
 		await mkdir(destination, { recursive: true });
 		for(const [path, descriptor] of descriptors)
@@ -249,7 +258,7 @@ export const checkOwnedCheckedRecordHostedEvidence = async (
 	assert.equal(index.kind, `owned-checked-record-${laneName}-hosted-v1`);
 	assert.equal(index.lane, laneName);
 	assert.deepEqual(index.targets, lane.targets);
-	assert.deepEqual(index.limitations, limitations);
+	assert.deepEqual(index.limitations, limitationsFor(lane));
 	for(const key of [
 		"producerCommit", "consumerCommit", "checkerCommit", "archiveCommit"
 	]) assert.match(index[key], /^[a-f0-9]{40}$/u, key);

@@ -53,7 +53,16 @@ const managedConsumers = {
 	dotnet: ["dotnet.cs"], jvm: ["java.java", "kotlin.kt"], php: ["php.php"]
 };
 
+const phpWasmWorkflowInputs = ["config/cli-package.v1.json", "flake.lock"
+	, "poc/lean-link-spike/bindings/php-wasm.package.json"
+	, "scripts/bootstrap-php-wasm-ci.sh", "scripts/build-lean-runtime.sh"
+	, "scripts/install-playwright-browsers.sh", "scripts/lean-runtime-config.sh"
+	, "tests/helpers/owned-php-wasm-runtime.mjs"];
+
 const consumers = lane => {
+	if(lane.kind === "php-wasm")
+		return ["php-wasm.php", "result-only-php-wasm.php"]
+			.map(name => structured(`owned-checked-record-${name}`));
 	if(lane.kind === "javascript")
 		return ["tests/owned-checked-record-javascript-packaging.test.mjs"];
 	if(lane.kind === "native")
@@ -113,6 +122,7 @@ export const ownedCheckedRecordEvidenceSources = (laneName, value) => {
 					"scripts/build-lean-link-spike.sh"
 					, "scripts/install-playwright-browsers.sh"
 				] : []
+				, ...lane.kind === "php-wasm" ? phpWasmWorkflowInputs : []
 			]
 		}
 		, { role: "consumer", revision: value.consumer

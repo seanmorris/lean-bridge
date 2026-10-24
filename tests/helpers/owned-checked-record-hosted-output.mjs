@@ -3,7 +3,8 @@
  *
  * The tree is the extracted original artifact: the CI log directory and the
  * packaging directory with its aggregate report and the retained package set
- * for every route. Nothing here trusts the producer's own gates; the Node TAP,
+ * for every route. The PHP-Wasm lane instead retains its acceptance and
+ * runtime logs beside per-mode reports and one handoff per mode and author. Nothing here trusts the producer's own gates; the Node TAP,
  * the canonical report, every retained archive byte and every consumer source
  * digest are checked against each other and against the lane contract.
  *
@@ -24,6 +25,7 @@ import {
 import {
 	verifyOwnedCheckedRecordJavaScriptEvidence
 } from "./owned-checked-record-javascript-evidence.mjs";
+import { moduleAtProducerWithSourceReads } from "./producer-module.mjs";
 
 const summaryKeys = Object.freeze(["tests", "suites", "pass", "fail"
 	, "cancelled", "skipped", "todo"]);
@@ -181,6 +183,382 @@ const replayJavaScript = async (lane, root, producer) => {
 	};
 };
 
+const digestPattern = /^[a-f0-9]{64}$/u;
+const phpWasmReportKeys = Object.freeze(["cliAdmission", "compiledLean"
+	, "installedCli", "installedPackage", "mode", "observations", "profile"
+	, "runtimeIdentity", "runtimeManifest", "runtimeSupplied", "schemaVersion"]);
+const phpWasmObservationKeys = Object.freeze(["authorRemoved", "browser"
+	, "cliBuild", "consumerSha256", "deterministicReassembly", "executions"
+	, "handoffRemoved", "independentlyRebuiltExactly", "inputs", "installed"
+	, "model", "observer", "packageReceipt", "packageSetReceipt", "receipt"
+	, "receiptVerifiedWithoutProducer", "rejected", "repeatedCliBuild"
+	, "reproducedArchives", "reviewed", "runnerSha256", "sourceFreeInstallation"
+	, "sourceUnchanged", "verification"]);
+const phpWasmFlags = Object.freeze(["authorRemoved", "deterministicReassembly"
+	, "handoffRemoved", "independentlyRebuiltExactly"
+	, "receiptVerifiedWithoutProducer", "sourceFreeInstallation"
+	, "sourceUnchanged"]);
+const phpWasmArrangements = Object.freeze(["embedded", "composer"]);
+const phpWasmChromiumCells = Object.freeze(["startup", "lazy"]
+	.flatMap(loading => ["weak", "strict"]
+		.map(mode => `chromium/bundled/${loading}/${mode}`)));
+const phpWasmRuntimeKeys = Object.freeze(["compiler", "files", "inputs"
+	, "library", "pins", "pointerBits", "profile", "schemaVersion"]);
+const phpWasmNodeCells = Object.freeze(phpWasmArrangements.flatMap(arrangement =>
+	["startup", "lazy"].flatMap(loading => [0, 1].map(strict =>
+		`${arrangement}/${loading}/${strict}`))));
+const phpWasmArchives = "packages/php-wasm/archives";
+
+/**
+ * Check one installed PHP-Wasm execution against its mode's exact claims.
+ *
+ * @param label - Mode, author and cell used in diagnostics.
+ * @param run - One Node or Chromium execution record.
+ * @param mode - Full or result-only owned checked-record mode.
+ */
+const checkPhpWasmRun = (label, run, mode) => {
+	assert.equal(run.observed.ownedCheckedRecord, true, label);
+	assert.equal(run.observed.mode, mode, label);
+	if(mode === "full") assert.equal(run.observed.heldOriginalError, true, label);
+	assert.equal(run.observed.phpBits, 32, label);
+	assert.ok(Number.isSafeInteger(run.observed.checks)
+		&& run.observed.checks >= (mode === "full" ? 101 : 4), label);
+	assert.equal(run.requestRecovery, true, label);
+	for(const state of [run.cleaned, run.refreshed])
+	{
+		assert.equal(state.liveIdentities, 0, label);
+		assert.equal(state.runtimeInitRuns, 1, label);
+	}
+	return run.observed.checks;
+};
+
+/**
+ * Require the compiled PHP-Wasm model each author actually installed.
+ *
+ * @param label - Mode and author used in diagnostics.
+ * @param observation - One author's installed observation.
+ * @param mode - Full or result-only owned checked-record mode.
+ * @param lean - Original Lean fixture bytes at the producer revision.
+ */
+const checkPhpWasmModel = (label, observation, mode, lean) => {
+	const { model, inputs } = observation;
+	const resultOnly = mode === "result-only";
+	assert.equal(model.pointerBits, 32, label);
+	assert.equal(model.schemaVersion, resultOnly ? 6 : 8, label);
+	assert.equal(model.ownedGraph.transport, "owned-zend-v1", label);
+	assert.equal(model.exports.length, resultOnly ? 3 : 9, label);
+	if(resultOnly)
+	{
+		assert.equal(model.ownedGraph.inputTransfers, undefined, label);
+		assert.equal(model.ownedGraph.hostCallbacks, undefined, label);
+	}
+	else
+	{
+		assert.equal(model.ownedGraph.inputTransfers.exports.length, 1, label);
+		assert.equal(model.ownedGraph.hostCallbacks.signatures.length, 2, label);
+	}
+	assert.equal(Boolean(model.sourceIdentity.reviewedBindingIr)
+		, observation.reviewed, label);
+	assert.deepEqual(inputs.sourceIdentity, model.sourceIdentity, label);
+	assert.deepEqual(inputs.component, model.component, label);
+	assert.equal(inputs.sourceIdentity.modules.find(module =>
+		module.module === "OwnedCheckedRecords")?.source.sha256, sha256(lean)
+	, `${label}: compiled Lean source`);
+};
+
+/**
+ * Verify one retained PHP-Wasm handoff against the observation that names it.
+ *
+ * @param lane - PHP-Wasm hosted lane contract.
+ * @param packagingRoot - Extracted packaging directory.
+ * @param mode - Full or result-only owned checked-record mode.
+ * @param observation - One author's installed observation.
+ */
+const checkPhpWasmPackageSet = async (lane, packagingRoot, mode, observation) => {
+	const author = observation.reviewed ? "reviewed" : "ordinary";
+	const label = `${mode}/${author}`;
+	const path = `${lane.evidence}/${mode}/${author}/handoff`;
+	const root = join(packagingRoot, path);
+	const { receipt, result } = await readVerifiedPackageSetReceipt({
+		receiptPath: join(root, packageSetReceiptName)
+	});
+	const artifacts = receipt.packages.flatMap(pkg => pkg.artifacts);
+	const files = [packageSetReceiptName, `${packageSetReceiptName}.sha256`
+		, ...artifacts.map(artifact => artifact.path)].toSorted();
+	assert.deepEqual(await regularFiles(root), files
+		, `${label}: retained evidence must be exactly the receipt-named set`);
+	assert.deepEqual([...new Set(receipt.packages.map(pkg => pkg.target))]
+		, [...lane.targets], `${label}: package targets`);
+	assert.deepEqual(observation.packageSetReceipt, receipt
+		, `${label}: installed receipt`);
+	assert.deepEqual(receipt.component, observation.model.component
+		, `${label}: installed component identity`);
+	const profile = { id: "php-wasm-copied-v1"
+		, bindingIrSha256: observation.model.bindingIrSha256
+		, runtimeIdentity: observation.receipt.runtimeIdentity };
+	assert.deepEqual(receipt.profiles, [profile]
+		, `${label}: installed runtime profile`);
+	assert.deepEqual(receipt.packages.map(pkg =>
+		`${pkg.ecosystem}/${pkg.role}`).toSorted()
+	, ["composer/api", "npm/component", "npm/runtime"]
+	, `${label}: installed npm and Composer roles`);
+	for(const pkg of receipt.packages)
+	{
+		assert.equal(pkg.profile, profile.id, `${label}: package profile`);
+		assert.equal(pkg.runtimeIdentity, profile.runtimeIdentity
+			, `${label}: package runtime`);
+	}
+	const archives = observation.packageReceipt.archives;
+	assert.ok(Array.isArray(archives) && archives.length > 0, label);
+	assert.deepEqual(artifacts.map(artifact => artifact.path).toSorted()
+		, archives.map(item => `${phpWasmArchives}/${item.archive}`).toSorted()
+		, `${label}: receipt must name exactly the verified package archives`);
+	for(const item of archives)
+	{
+		const artifact = artifacts.find(entry =>
+			entry.path === `${phpWasmArchives}/${item.archive}`);
+		assert.deepEqual({ bytes: artifact.bytes, sha256: artifact.sha256 }
+			, { bytes: item.bytes, sha256: item.sha256 }, `${label}: ${item.archive}`);
+	}
+	assert.deepEqual(observation.reproducedArchives, archives
+		, `${label}: independent rebuild must reproduce every archive`);
+	const archiveBytes = artifacts.reduce((total, artifact) =>
+		total + artifact.bytes, 0);
+	return { path, receiptSha256: result.receiptSha256
+		, archives: result.archives, archiveBytes, packages: result.packages
+		, files };
+};
+
+/**
+ * Check every Node cell and Chromium arrangement one author executed.
+ *
+ * @param label - Mode and author used in diagnostics.
+ * @param observation - One author's installed observation.
+ * @param mode - Full or result-only owned checked-record mode.
+ */
+const checkPhpWasmExecutions = (label, observation, mode) => {
+	assert.deepEqual(observation.executions.map(run =>
+		`${run.arrangement}/${run.loading}/${run.strict}`), [...phpWasmNodeCells]
+	, `${label}: every installed Node cell in order`);
+	const node = observation.executions.map(run => {
+		const cell = `${label}/${run.arrangement}/${run.loading}/${run.strict}`;
+		assert.equal(run.invalidStayedCold, true, cell);
+		assert.equal(run.libraries.length, 2, cell);
+		assert.equal(new Set(run.libraries).size, 2, cell);
+		return checkPhpWasmRun(cell, run, mode);
+	});
+	const { browser } = observation;
+	assert.match(browser.bundleSha256, digestPattern, label);
+	assert.deepEqual(browser.observations.map(item => item.arrangement)
+		, [...phpWasmArrangements], `${label}: both Chromium arrangements`);
+	assert.equal(new Set(browser.observations.map(item =>
+		`${item.version}/${item.executableSha256}`)).size, 1
+	, `${label}: one Chromium build for both arrangements`);
+	const chromium = browser.observations.flatMap(item => {
+		assert.match(item.sourceSha256, digestPattern, label);
+		assert.ok(typeof item.version === "string" && item.version.length > 0, label);
+		assert.match(item.executableSha256, digestPattern, label);
+		assert.deepEqual(item.executions.map(run =>
+			`${run.realm}/${run.arrangement}/${run.loading}/${run.mode}`)
+		, [...phpWasmChromiumCells]
+		, `${label}/${item.arrangement}: every Chromium cell in order`);
+		return item.executions.map(run => {
+			const cell = `${label}/chromium/${item.arrangement}/${run.loading}/${run.mode}`;
+			assert.deepEqual(run.phases.map(phase => phase.stage)
+				, ["ready", "autoload", "invalid", "complete", "recovered"], cell);
+			assert.deepEqual(run.phases.map(phase => phase.libraries.length)
+				, run.loading === "lazy" ? [0, 0, 0, 2, 2] : [2, 2, 2, 2, 2], cell);
+			return checkPhpWasmRun(cell, run, mode);
+		});
+	});
+	return { node, chromium };
+};
+
+const phpWasmFileIdentity = value => value && typeof value === "object"
+	&& !Array.isArray(value)
+	&& canonicalJson(Object.keys(value).toSorted()) === canonicalJson(["bytes", "sha256"])
+	&& Number.isSafeInteger(value.bytes) && value.bytes >= 0
+	&& typeof value.sha256 === "string" && digestPattern.test(value.sha256);
+const phpWasmRuntimeHeaders = Object.freeze(["lean.h", "lean_gmp.h"
+	, "lean_libuv.h", "config.h", "version.h"]);
+const phpWasmRuntimeMembers = Object.freeze(["include/lean/lean.h"
+	, "include/lean/config.h", "include/lean_bridge_native_runtime.h"]);
+const phpWasmRuntimeInputMembers = Object.freeze(["cmake/lib/lean/libInit.a"
+	, "cmake/lib/lean/libleanrt.a", "source/.lean-wasm-patched"]);
+
+/**
+ * Require exactly the runtime manifest record that the producer's
+ * copied-runtime reader accepts, and bind its identity to the exact
+ * manifest bytes. Only the recorded manifest is validated; no retained
+ * runtime path is opened and nothing is rebuilt.
+ *
+ * @param identity - Reported runtime identity.
+ * @param manifest - Reported runtime manifest.
+ * @param producer - Full producer revision supplying profile, pins and compiler files.
+ */
+const checkPhpWasmRuntime = async (identity, manifest, producer) => {
+	const artifacts = "src/build/php-wasm-copied-artifacts.mjs";
+	const { phpWasmCopiedCompilerFiles, phpWasmCopiedPins, phpWasmCopiedProfile }
+		= await moduleAtProducerWithSourceReads(producer, artifacts);
+	assert.match(identity, digestPattern, "PHP-Wasm runtime identity");
+	assert.equal(identity, sha256(canonicalJson(manifest))
+		, "PHP-Wasm runtime identity must hash its exact manifest");
+	assert.deepEqual(Object.keys(manifest).toSorted(), [...phpWasmRuntimeKeys]
+		, "PHP-Wasm runtime manifest fields");
+	assert.equal(manifest.schemaVersion, 1);
+	assert.equal(manifest.profile, phpWasmCopiedProfile, "PHP-Wasm runtime profile");
+	assert.equal(manifest.pointerBits, 32, "PHP-Wasm runtime pointer width");
+	assert.deepEqual(manifest.pins, phpWasmCopiedPins, "PHP-Wasm runtime pins");
+	const { profile, pins, compiler, inputs } = manifest;
+	assert.deepEqual(Object.keys(compiler).toSorted()
+		, ["emsdkCommit", "files", "version"], "PHP-Wasm compiler identity fields");
+	assert.equal(compiler.emsdkCommit, phpWasmCopiedPins.emsdkCommit
+		, "PHP-Wasm compiler emsdk commit");
+	const release = ` ${phpWasmCopiedPins.emscriptenVersion} (${phpWasmCopiedPins.emscriptenCommit})`;
+	assert.ok(typeof compiler.version === "string"
+		&& compiler.version.endsWith(release), "PHP-Wasm compiler version");
+	assert.deepEqual(Object.keys(compiler.files).toSorted()
+		, [...phpWasmCopiedCompilerFiles].toSorted(), "PHP-Wasm compiler files");
+	for(const [path, item] of Object.entries(compiler.files))
+		assert.ok(phpWasmFileIdentity(item) && item.bytes > 0
+			, `PHP-Wasm compiler file identity: ${path}`);
+	assert.deepEqual(Object.keys(inputs).toSorted()
+		, ["brokerSha256", "files", "libuvSha256"], "PHP-Wasm runtime inputs");
+	for(const key of ["brokerSha256", "libuvSha256"])
+		assert.match(inputs[key], digestPattern, `PHP-Wasm runtime input ${key}`);
+	assert.ok(inputs.files && typeof inputs.files === "object"
+		&& !Array.isArray(inputs.files), "PHP-Wasm runtime input files");
+	for(const [path, item] of Object.entries(inputs.files))
+		assert.ok(phpWasmFileIdentity(item)
+			, `PHP-Wasm runtime input identity: ${path}`);
+	const key = sha256(canonicalJson({ profile, pins, compiler, inputs }))
+		.slice(0, 20);
+	assert.equal(manifest.library, `lib/liblean_bridge_php_wasm_copied_${key}.so`
+		, "PHP-Wasm runtime library must name its build inputs");
+	for(const [path, item] of Object.entries(manifest.files))
+		assert.ok(phpWasmFileIdentity(item), `PHP-Wasm runtime file identity: ${path}`);
+	for(const path of [manifest.library, ...phpWasmRuntimeMembers])
+		assert.ok(Object.hasOwn(manifest.files, path)
+			, `PHP-Wasm runtime member: ${path}`);
+	for(const name of phpWasmRuntimeHeaders)
+		assert.deepEqual(manifest.files[`include/lean/${name}`]
+			, inputs.files[`cmake/include/lean/${name}`]
+			, `PHP-Wasm runtime header ${name} must match its target build`);
+	for(const path of phpWasmRuntimeInputMembers)
+		assert.ok(Object.hasOwn(inputs.files, path)
+			, `PHP-Wasm runtime input member: ${path}`);
+};
+
+/**
+ * Replay the PHP-Wasm lane: one acceptance log, two runtime logs, the
+ * aggregate and per-mode reports, and one retained handoff per mode and
+ * author. Nothing here is inferred from native PHP evidence.
+ *
+ * @param lane - PHP-Wasm hosted lane contract.
+ * @param root - Extracted original artifact root.
+ * @param producer - Full producer revision named by the hosted run.
+ * @param original - Reader of committed source bytes at `producer`.
+ */
+const replayPhpWasm = async (lane, root, producer, original) => {
+	const packagingRoot = join(root, lane.packaging);
+	const reportPath = `${lane.packaging}/${lane.report}`;
+	const reportBytes = await readFile(join(root, reportPath));
+	const report = JSON.parse(reportBytes);
+	assert.equal(reportBytes.toString("utf8"), canonicalJson(report)
+		, "Hosted report must be canonical");
+	assert.deepEqual(Object.keys(report).toSorted()
+		, ["profile", "reports", "schemaVersion"]);
+	assert.equal(report.schemaVersion, 1);
+	assert.equal(report.profile, lane.reportProfile);
+	assert.deepEqual(report.reports.map(entry => entry.mode), [...lane.modes]);
+	const acceptance = await readFile(join(root, lane.acceptance), "utf8");
+	const tap = parseOwnedCheckedRecordTap(acceptance);
+	assert.deepEqual(tap.tests, ownedCheckedRecordHostedTestNames(lane)
+		, "Acceptance TAP must contain exactly the PHP-Wasm lane tests in order");
+	const lean = original(
+		"tests/fixtures/onboarding/owned-checked-records/OwnedCheckedRecords.lean");
+	for(const log of lane.logs)
+	{
+		const text = await readFile(join(root, log), "utf8").catch(error =>
+			assert.fail(`${log} is a required hosted log (${error.code})`));
+		assert.ok(text.trim().length > 0, `${log} must retain the hosted build output`);
+	}
+	const members = [lane.acceptance, ...lane.logs, reportPath];
+	const routes = new Map(), runtimes = new Set();
+	for(const [index, mode] of lane.modes.entries())
+	{
+		const modePath = `${lane.packaging}/${mode}.json`;
+		const modeBytes = await readFile(join(root, modePath));
+		const entry = JSON.parse(modeBytes);
+		assert.equal(modeBytes.toString("utf8"), canonicalJson(entry)
+			, `${mode}: report must be canonical`);
+		assert.deepEqual(report.reports[index], entry
+			, `${mode}: aggregate must equal the per-mode report`);
+		members.push(modePath);
+		assert.deepEqual(Object.keys(entry).toSorted(), [...phpWasmReportKeys]
+			, `${mode}: exact report fields`);
+		assert.equal(entry.schemaVersion, 1);
+		assert.equal(entry.profile, `${lane.reportProfile}-${mode}`);
+		for(const key of ["cliAdmission", "compiledLean", "installedPackage", "runtimeSupplied"])
+			assert.equal(entry[key], true, `${mode}: ${key}`);
+		assert.equal(entry.installedCli.packagingSourceRemoved, true, mode);
+		await checkPhpWasmRuntime(entry.runtimeIdentity, entry.runtimeManifest
+			, producer);
+		runtimes.add(canonicalJson({ identity: entry.runtimeIdentity
+			, manifest: entry.runtimeManifest }));
+		assert.deepEqual(entry.observations.map(item => item.reviewed)
+			, [false, true], `${mode}: ordinary then reviewed authors`);
+		const consumer = sha256(original("tests/fixtures/structured-types/"
+			+ `owned-checked-record-${mode === "result-only" ? "result-only-" : ""}php-wasm.php`));
+		const runners = new Set();
+		for(const observation of entry.observations)
+		{
+			const author = observation.reviewed ? "reviewed" : "ordinary";
+			const label = `${mode}/${author}`;
+			assert.deepEqual(Object.keys(observation).toSorted()
+				, [...phpWasmObservationKeys], `${label}: exact observation fields`);
+			for(const key of phpWasmFlags)
+				assert.equal(observation[key], true, `${label}: ${key}`);
+			assert.equal(observation.consumerSha256, consumer
+				, `${label}: consumer source`);
+			assert.match(observation.runnerSha256, digestPattern, label);
+			runners.add(observation.runnerSha256);
+			checkPhpWasmModel(label, observation, mode, lean);
+			assert.equal(observation.receipt.runtimeIdentity, entry.runtimeIdentity
+				, `${label}: component receipt runtime`);
+			for(const build of [observation.cliBuild, observation.repeatedCliBuild])
+			{
+				assert.equal(build.status, "ok", label);
+				assert.deepEqual(build.result.targets, [...lane.targets], label);
+			}
+			assert.equal(observation.verification.status, "ok", label);
+			assert.equal(observation.verification.result.verificationType
+				, "local-package-set", label);
+			assert.ok(Array.isArray(observation.rejected)
+				&& observation.rejected.length > 0, `${label}: drift controls`);
+			const { files, ...retained } = await checkPhpWasmPackageSet(
+				lane, packagingRoot, mode, observation);
+			members.push(...files.map(file =>
+				`${lane.packaging}/${retained.path}/${file}`));
+			routes.set(`${author}-${mode}`, { route: `${author}-${mode}`
+				, ...retained, checks: checkPhpWasmExecutions(label, observation, mode) });
+		}
+		assert.equal(runners.size, 1, `${mode}: one installed runner for both authors`);
+	}
+	assert.equal(runtimes.size, 1
+		, "Both modes must execute the same pinned PHP-Wasm runtime");
+	assert.deepEqual(await regularFiles(root), members.toSorted()
+		, "Hosted PHP-Wasm output must contain exactly the logs, reports and retained package sets");
+	return {
+		schemaVersion: 1, kind: "owned-checked-record-hosted-replay"
+		, lane: "php-wasm", producerCommit: producer
+		, reportSha256: sha256(reportBytes)
+		, acceptanceLogSha256: sha256(Buffer.from(acceptance))
+		, tests: tap.tests.length
+		, routes: ownedCheckedRecordHostedRoutes.map(route => routes.get(route))
+	};
+};
+
 const checkObservations = ({ lane, entry, shape, diagnostics, source }) => {
 	const route = entry.route;
 	if(lane.kind === "native")
@@ -319,6 +697,8 @@ export const replayOwnedCheckedRecordHostedOutput = async (
 	const lane = ownedCheckedRecordHostedLanes[laneName];
 	if(lane.kind === "javascript")
 		return replayJavaScript(lane, root, producer);
+	if(lane.kind === "php-wasm")
+		return replayPhpWasm(lane, root, producer, original);
 	const packagingRoot = join(root, lane.packaging);
 	const reportPath = `${lane.packaging}/${lane.report}`;
 	const reportBytes = await readFile(join(root, reportPath));

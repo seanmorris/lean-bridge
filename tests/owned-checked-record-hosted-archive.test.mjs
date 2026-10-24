@@ -14,6 +14,7 @@ import { join } from "node:path";
 import test from "node:test";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import "./helpers/owned-checked-record-javascript-evidence-tests.mjs";
+import "./helpers/owned-checked-record-php-wasm-hosted-tests.mjs";
 import {
 	packageSetReceiptName, readVerifiedPackageSetReceipt, writePackageSetReceipt
 } from "../src/release/package-set-receipt.mjs";
@@ -263,14 +264,14 @@ const synthesize = async (t, laneName) => {
 const replay = (laneName, root) =>
 	replayOwnedCheckedRecordHostedOutput(laneName, root, revision, original);
 
-test("owned checked-record hosted contracts name every non-PHP-Wasm lane exactly", async () => {
+test("owned checked-record hosted contracts name every lane exactly", async () => {
 	assert.deepEqual(ownedCheckedRecordHostedLaneNames, ["native", "perl"
 		, "python", "ruby", "rust", "dotnet", "jvm", "php", "wit"
-		, "javascript"]);
+		, "javascript", "php-wasm"]);
 	const targets = ownedCheckedRecordHostedLaneNames.flatMap(name =>
 		ownedCheckedRecordHostedLanes[name].targets).toSorted();
 	assert.deepEqual(targets, ["c", "cargo", "cpan", "cpp", "maven", "npm"
-		, "nuget", "php-native", "pypi", "rubygems", "wit-wasi"]);
+		, "nuget", "php-native", "php-wasm", "pypi", "rubygems", "wit-wasi"]);
 	for(const name of ownedCheckedRecordHostedLaneNames)
 	{
 		const lane = ownedCheckedRecordHostedLanes[name];
@@ -282,16 +283,19 @@ test("owned checked-record hosted contracts name every non-PHP-Wasm lane exactly
 			, `name: ${matrix(lane.prefix)}-\${{ github.sha }}`
 			, `- name: ${lane.acceptanceStep}`
 			, `- name: ${lane.enforceStep ?? lane.archiveStep}`
-			, `build/${lane.packaging}/\n`
+			, ...lane.uploads ? lane.uploads.map(path => `build/${path}\n`)
+				: [`build/${lane.packaging}/\n`]
 			, ...lane.ci ? [`build/${lane.ci}/\n`] : []])
 			assert.ok(workflow.includes(required), `${name}: ${required}`);
 		for(const title of lane.staticTests)
 			assert.ok(source.includes(`test("${title}"`), `${name}: ${title}`);
-		const routeTitle = lane.routeTest.replace("{route}", "${route}")
-			.replace(lane.group ?? "\0", "${group}");
+		const routeTitle = lane.modeTest
+			? lane.modeTest.replace("{mode}", "${mode}")
+			: lane.routeTest.replace("{route}", "${route}")
+				.replace(lane.group ?? "\0", "${group}");
 		assert.ok(source.includes(`test(\`${routeTitle}\``), `${name}: route test`);
 		assert.equal(ownedCheckedRecordHostedTestNames(lane).length
-			, lane.kind === "javascript" ? 5 : 6);
+			, ["javascript", "php-wasm"].includes(lane.kind) ? 5 : 6);
 	}
 });
 
@@ -326,7 +330,8 @@ test("owned checked-record TAP parsing accepts only complete npm-prefixed stream
 });
 
 test("every owned checked-record lane replays a synthetic retained hosted output", async t => {
-	for(const name of ownedCheckedRecordHostedLaneNames)
+	// The PHP-Wasm lane has its own per-mode layout and synthetic controls.
+	for(const name of ownedCheckedRecordHostedLaneNames.filter(item => item !== "php-wasm"))
 	{
 		const { root } = await synthesize(t, name);
 		const accepted = await replay(name, root);
@@ -577,5 +582,5 @@ test("owned checked-record source roles retain workflow inputs and unreachable a
 		, "src/backends/rust/dependencies.lock"));
 	assert.ok(has(ownedCheckedRecordEvidenceSources("wit", revisions), "producer"
 		, "flake.lock"));
-	assert.throws(() => ownedCheckedRecordEvidenceSources("php-wasm", revisions));
+	assert.throws(() => ownedCheckedRecordEvidenceSources("php-native", revisions));
 });
