@@ -4144,3 +4144,22 @@ run without a compiler:
 node --test tests/helpers/type-surface-promotion-io-tests.mjs
 node --test tests/helpers/promotion-file-transaction-tests.mjs
 ```
+
+Promotion regressions use the authenticated pre-promotion inventory, schemas
+and fourteen documentation pages recorded in
+`docs/evidence/generic-subtype-promotion-baseline-20261024.json`. They read those
+inputs from an immutable Git commit and run the current promotion and rendering
+code against them. This keeps the regressions valid after the public inventory
+has been promoted; it does not replace current-code tests with old code.
+
+`tests/helpers/source-history-stream.mjs` records full inventory transitions
+without loading entire predecessor/current blobs. It captures only the changed
+line spans, retains the ledger's character offsets, hashes both complete Git
+objects, and authenticates a streamed inverse against the predecessor digest.
+Malformed UTF-8, wrong identities, duplicate or overlapping edits, changes
+outside the recorded spans, missing Git objects and edit-budget overruns fail.
+
+```sh
+node --test tests/helpers/generic-subtype-promotion-baseline-tests.mjs
+node --test tests/helpers/source-history-stream-tests.mjs
+```

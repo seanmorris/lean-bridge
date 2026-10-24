@@ -278,5 +278,7 @@ ${rows.join("\n")}
 The support inventory refines exactly 32 existing cells: sixteen profiles, two author routes and the Subtype field position. Installed consumers pass a concrete \`GenericNat\` record containing the proof-erased value and retained Nat marker. Rejection preserves the caller record, a later valid call succeeds, and copied results carry no constructor.
 
 This promotion does not expose an open generic host type and does not cover arbitrary type arguments or predicates, generic Fin fields, PHP-Wasm, callbacks, ownership, recursive generic graphs, dispatch cost or peak memory. The dependent foundation checks retained Nat, Bool and String indices only in compiler and reviewed contracts; installed dependent host coverage remains separately scoped. External runtimes, compilers, package managers and operating-system distributions remain trusted recorded inputs.
+
+Dependent checked-record composition has its own [acceptance record](dependent-checked-record-promotion.md) and completion gate (VO #1481). That separate matrix does not establish installed support for dependent Subtype fields.
 `;
 };

@@ -4,8 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { createReadStream, existsSync } from "node:fs";
-import { readFile } from "node:fs/promises";
+import { existsSync } from "node:fs";
 import test from "node:test";
 import {
 	typeSurfaceCells, validateTypeSurface
@@ -21,18 +20,20 @@ import {
 import {
 	genericSubtypeDocumentationPaths, renderGenericSubtypeDocumentation
 } from "./generic-subtype-documentation.mjs";
-import { readPromotionInventory } from "./type-surface-promotion-io.mjs";
 import { genericSubtypeMatrixReference } from "../../scripts/generate-type-docs.mjs";
+import {
+	genericSubtypePromotionBaselineText, genericSubtypePromotionBaselineInventory
+	, genericSubtypePromotionBaselineDocumentation
+} from "./generic-subtype-promotion-baseline.mjs";
 
-const readJson = async path => JSON.parse(await readFile(path, "utf8"));
+const readJson = async path => JSON.parse(await genericSubtypePromotionBaselineText(path));
 const [irSchema, consumers] = await Promise.all([
 	readJson("schema/binding-ir.schema.json")
 	, readJson("docs/consumer-support.v1.json")
 ]);
 const contracts = { irSchema, consumers };
 let inventory;
-const readDocument = async () => (inventory ??= await readPromotionInventory(
-	createReadStream("docs/type-surface.v1.json"), contracts)).document;
+const readDocument = async () => inventory ??= await genericSubtypePromotionBaselineInventory(contracts);
 const digest = "0".repeat(64), revision = "0".repeat(40);
 const references = genericSubtypeHostedLaneNames.map(lane => {
 	const contract = genericSubtypeHostedContracts[lane];
@@ -142,14 +143,14 @@ test("generic Subtype promotion renders its exact closed boundary", () => {
 	assert.match(summary, /exactly 32 existing cells/u);
 	assert.match(summary, /does not expose an open generic host type/u);
 	assert.match(summary, /does not cover.*PHP-Wasm/u);
+	assert.match(summary, /\[acceptance record\]\(dependent-checked-record-promotion\.md\).*VO #1481/u);
+	assert.match(summary, /does not establish installed support for dependent Subtype fields/u);
 	for(const lane of genericSubtypeHostedLaneNames)
 		assert.ok(summary.includes(`${genericSubtypePromotionRoots[lane]
 			.slice("docs/evidence/".length)}/index.json`), lane);
 });
 
-const documentationSources = Object.fromEntries(await Promise.all(Object.entries(
-	genericSubtypeDocumentationPaths
-).map(async ([name, path]) => [name, await readFile(path, "utf8")])));
+const documentationSources = await genericSubtypePromotionBaselineDocumentation();
 const marker = /Expected one generic-Subtype documentation marker/u;
 
 test("generic Subtype promotion repairs exact manual boundaries", () => {
