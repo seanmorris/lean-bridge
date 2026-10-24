@@ -7,14 +7,47 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { classifyNominalSubtypeEntryExports } from "./nominal-subtype-entry-npm.mjs";
 
-test("nominal entry export classification names unreferenced validators instead of dropping them", () => {
-	const names = ["memory", "lb_abc_lean", "lb_def_lean", "lb_abc_refinement_0", "lb_def_refinement_1", "lean_bridge_init", "lb_abc_make"];
-	const javascript = "runtime.call(\"lean:NominalSubtypes.first\"); const symbols = [\"lb_abc_lean\", \"lb_def_lean\"];";
-	const classified = classifyNominalSubtypeEntryExports(names, javascript);
-	assert.deepEqual(classified, { exports: 7, adapters: 2, validators: { exported: ["lb_abc_refinement_0", "lb_def_refinement_1"], referencedByPackageJavaScript: [] } });
-	const referenced = classifyNominalSubtypeEntryExports(names, javascript + " instance.exports.lb_abc_refinement_0(carrier);");
-	assert.deepEqual(referenced.validators.referencedByPackageJavaScript, ["lb_abc_refinement_0"]);
-	assert.throws(() => classifyNominalSubtypeEntryExports([], javascript), /empty/u);
-	assert.throws(() => classifyNominalSubtypeEntryExports(["memory", "lb_abc_refinement_0"], javascript), /no exported adapters/u);
-	assert.throws(() => classifyNominalSubtypeEntryExports(names, null));
+test("nominal entry export classification closes the installed linker surface", () => {
+	const linkManifest = { exports: {
+		directSymbols: ["lean_bridge_b", "lean_bridge_a"]
+		, initializer: "initialize_LeanBridgeGenerated"
+		, internalInitializer: "lean_bridge_internal_initialize_0123456789abcdef"
+	} };
+	const names = [
+		"__wasm_call_ctors", "initialize_LeanBridgeGenerated"
+		, "lean_bridge_a", "lean_bridge_b"
+		, "lean_bridge_internal_initialize_0123456789abcdef"
+		, "__wasm_apply_data_relocs"
+	];
+	const exports = names.map(name => ({ name, kind: "function" }));
+	const javascript = "const symbols = [\"lean_bridge_a\", \"lean_bridge_b\"];";
+	const classified = classifyNominalSubtypeEntryExports(
+		exports, javascript, linkManifest);
+	assert.deepEqual(classified, {
+		exports: 6
+		, adapters: { exported: ["lean_bridge_a", "lean_bridge_b"]
+			, referencedByPackageJavaScript: ["lean_bridge_a", "lean_bridge_b"] }
+		, initializers: ["initialize_LeanBridgeGenerated"
+			, "lean_bridge_internal_initialize_0123456789abcdef"]
+		, emscriptenInternals: ["__wasm_apply_data_relocs"
+			, "__wasm_call_ctors"]
+		, validators: { exported: [], referencedByPackageJavaScript: [] }
+	});
+	assert.throws(() => classifyNominalSubtypeEntryExports(
+		[], javascript, linkManifest), /empty/u);
+	assert.throws(() => classifyNominalSubtypeEntryExports(
+		exports, null, linkManifest));
+	assert.throws(() => classifyNominalSubtypeEntryExports(
+		exports, javascript, null), /manifest/u);
+	assert.throws(() => classifyNominalSubtypeEntryExports(
+		exports, "lean_bridge_a", linkManifest), /every direct adapter/u);
+	assert.throws(() => classifyNominalSubtypeEntryExports(
+		[...exports, { name: "lb_a_refinement_0", kind: "function" }]
+		, javascript, linkManifest), /differ/u);
+	assert.throws(() => classifyNominalSubtypeEntryExports(
+		exports.map(item => item.name === "lean_bridge_a"
+			? { ...item, kind: "global" } : item)
+		, javascript, linkManifest), /export kind/u);
+	assert.throws(() => classifyNominalSubtypeEntryExports(
+		exports.slice(1), javascript, linkManifest), /differ/u);
 });

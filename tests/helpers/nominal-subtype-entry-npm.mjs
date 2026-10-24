@@ -39,20 +39,60 @@ export const nominalSubtypeEntryRecordPaths = ({ browser = false } = {}) => [
 ];
 
 /**
- * Classify the side module's exports: the compiler-emitted carrier validators are exported but no
- * package JavaScript names them, so they are reported as unreferenced rather than silently absent.
+ * Classify the installed side module's closed public export surface. Carrier validators and Lean
+ * wrappers are private implementation symbols; the link manifest admits only direct component
+ * adapters, two initializers and Emscripten's two side-module hooks.
  *
- * @param exportNames - Export names of the installed side module.
+ * @param moduleExports - WebAssembly export descriptors of the installed side module.
  * @param javascript - Concatenated package JavaScript that could reference an export by name.
+ * @param linkManifest - Authenticated side-module link manifest from the same build.
  */
-export const classifyNominalSubtypeEntryExports = (exportNames, javascript) => {
-	assert.ok(Array.isArray(exportNames) && exportNames.length > 0, "empty side module export table");
+export const classifyNominalSubtypeEntryExports = (
+	moduleExports, javascript, linkManifest
+) => {
+	assert.ok(Array.isArray(moduleExports) && moduleExports.length > 0
+		, "empty side module export table");
 	assert.equal(typeof javascript, "string");
-	const validators = exportNames.filter(name => /_refinement_\d+$/u.test(name)).sort();
-	const adapters = exportNames.filter(name => /_lean$/u.test(name)).sort();
-	assert.ok(adapters.length > 0, "no exported adapters");
-	const referenced = validators.filter(name => javascript.includes(name));
-	return { exports: exportNames.length, adapters: adapters.length, validators: { exported: validators, referencedByPackageJavaScript: referenced } };
+	assert.ok(linkManifest !== null && typeof linkManifest === "object"
+		&& !Array.isArray(linkManifest), "invalid link manifest");
+	const declared = linkManifest.exports;
+	assert.deepEqual(Object.keys(declared ?? {}).sort()
+		, ["directSymbols", "initializer", "internalInitializer"]);
+	assert.ok(Array.isArray(declared.directSymbols)
+		&& declared.directSymbols.length > 0, "no declared direct adapters");
+	for(const item of moduleExports)
+	{
+		assert.deepEqual(Object.keys(item).sort(), ["kind", "name"]);
+		assert.equal(item.kind, "function", `${item.name} export kind`);
+	}
+	const names = moduleExports.map(item => item.name);
+	assert.equal(new Set(names).size, names.length, "duplicate side module export");
+	const emscriptenInternals = [
+		"__wasm_apply_data_relocs", "__wasm_call_ctors"
+	];
+	const expected = [
+		...declared.directSymbols, declared.initializer
+		, declared.internalInitializer, ...emscriptenInternals
+	].sort();
+	assert.deepEqual([...names].sort(), expected
+		, "installed side module exports differ from its link manifest");
+	const leakedValidators = names.filter(name => /_refinement_\d+$/u.test(name));
+	const leakedLeanWrappers = names.filter(name => /_lean$/u.test(name));
+	assert.deepEqual(leakedValidators, [], "private validator export leaked");
+	assert.deepEqual(leakedLeanWrappers, [], "private Lean wrapper export leaked");
+	const adapters = [...declared.directSymbols].sort();
+	const referenced = adapters.filter(name => javascript.includes(name));
+	assert.deepEqual(referenced, adapters
+		, "package JavaScript does not identify every direct adapter");
+	return {
+		exports: names.length
+		, adapters: { exported: adapters
+			, referencedByPackageJavaScript: referenced }
+		, initializers: [declared.initializer
+			, declared.internalInitializer].sort()
+		, emscriptenInternals: emscriptenInternals.sort()
+		, validators: { exported: [], referencedByPackageJavaScript: [] }
+	};
 };
 
 /**
@@ -109,7 +149,8 @@ export const observeNominalSubtypeEntryNpm = async ({ directory, output, route, 
 	const wasmNames = (await readdir(wasmRoot)).filter(name => name.endsWith(".wasm"));
 	assert.equal(wasmNames.length, 1, "one installed side module");
 	const wasmBytes = await readFile(join(wasmRoot, wasmNames[0]));
-	const exportNames = WebAssembly.Module.exports(new WebAssembly.Module(wasmBytes)).map(item => item.name);
+	const moduleExports = WebAssembly.Module.exports(
+		new WebAssembly.Module(wasmBytes));
 	const javascriptFiles = [];
 	const walk = async root => {
 		for(const entry of await readdir(root, { withFileTypes: true }))
@@ -120,14 +161,15 @@ export const observeNominalSubtypeEntryNpm = async ({ directory, output, route, 
 	};
 	await walk(packageRoot);
 	const javascript = (await Promise.all(javascriptFiles.sort().map(path => readFile(path, "utf8")))).join("\n");
-	const sideModule = classifyNominalSubtypeEntryExports(exportNames, javascript);
+	const sideModule = classifyNominalSubtypeEntryExports(
+		moduleExports, javascript, linkManifest);
 	const fixture = { originalSha256: sha256(original), probeSha256: sha256(probeLean) };
 	const probe = { receiptSha256: sha256(canonicalJson(receipt)), packageSha256: receipt.package.sha256, runtimeSha256: receipt.runtime.sha256 };
 	probe.bindingIrSha256 = sha256(irBytes); probe.linkManifest = linkManifest; probe.sideModule = { name: wasmNames[0], sha256: sha256(wasmBytes) };
 	const entry = { instrumentation: nominalSubtypeEntryInstrumentation, fixture, probe, consumerSha256: sha256(consumerSource) };
 	entry.install = { status: install.status ?? 0 }; entry.rows = rows; entry.observed = observed; entry.counts = counts;
 	entry.sideModuleExports = sideModule; entry.unmodifiedReleasePackages = true;
-	entry.validatorExportsReferenced = sideModule.validators.referencedByPackageJavaScript.length > 0;
+	entry.validatorExportsPrivate = sideModule.validators.exported.length === 0;
 	await saveLakeFile(output, "entry/fixture.probe.lean", probeLean);
 	await saveLakeFile(output, "entry/entry.mjs", consumerSource);
 	await saveLakeFile(output, "entry/stderr.txt", run.stderr);

@@ -95,23 +95,36 @@ test("nominal entry accounting requires exactly the expected entries inside each
 	assert.throws(() => accountNominalSubtypeEntry(trace(silent), rows(silent), silent), /never entered/u);
 });
 
-test("nominal entry report checker requires distinct probe identities, exact rows and an explicit validator statement", () => {
+test("nominal entry report checker requires distinct probe identities, exact rows and private validators", () => {
 	const expected = nominalSubtypeEntryExpected(), { counts } = accountNominalSubtypeEntry(trace(expected), rows(expected));
 	const digest = "a".repeat(64), sideModule = { name: "x.wasm", sha256: digest };
 	const entry = { instrumentation: nominalSubtypeEntryInstrumentation, consumerSha256: digest, install: { status: 0 } };
 	entry.fixture = { originalSha256: digest, probeSha256: "b".repeat(64) };
 	entry.probe = { receiptSha256: digest, packageSha256: digest, runtimeSha256: digest, bindingIrSha256: digest, linkManifest: {}, sideModule };
 	entry.rows = rows(expected); entry.observed = expected; entry.counts = counts;
-	entry.sideModuleExports = { exports: 3, adapters: 1, validators: { exported: ["lb_a_refinement_0"], referencedByPackageJavaScript: [] } };
-	entry.unmodifiedReleasePackages = true; entry.validatorExportsReferenced = false;
+	entry.sideModuleExports = { exports: 5
+		, adapters: { exported: ["lean_bridge_a"]
+			, referencedByPackageJavaScript: ["lean_bridge_a"] }
+		, initializers: ["initialize_A", "lean_bridge_internal_initialize_a"]
+		, emscriptenInternals: ["__wasm_apply_data_relocs", "__wasm_call_ctors"]
+		, validators: { exported: [], referencedByPackageJavaScript: [] } };
+	entry.unmodifiedReleasePackages = true; entry.validatorExportsPrivate = true;
 	assert.deepEqual(assertNominalSubtypeEntryReport(entry), counts);
 	assert.throws(() => assertNominalSubtypeEntryReport({ ...entry, fixture: { originalSha256: digest, probeSha256: digest } }), /distinct/u);
 	assert.throws(() => assertNominalSubtypeEntryReport({ ...entry, instrumentation: "release packages" }));
 	assert.throws(() => assertNominalSubtypeEntryReport({ ...entry, rows: rows(expected).slice(1) }));
 	assert.throws(() => assertNominalSubtypeEntryReport({ ...entry, observed: expected.map(item => ({ ...item, entries: [] })) }));
 	assert.throws(() => assertNominalSubtypeEntryReport({ ...entry, unmodifiedReleasePackages: false }));
-	assert.throws(() => assertNominalSubtypeEntryReport({ ...entry, validatorExportsReferenced: true }));
-	assert.throws(() => assertNominalSubtypeEntryReport({ ...entry, sideModuleExports: { validators: { exported: [], referencedByPackageJavaScript: [] } } }), /listed/u);
+	assert.throws(() => assertNominalSubtypeEntryReport({ ...entry
+		, validatorExportsPrivate: false }));
+	assert.throws(() => assertNominalSubtypeEntryReport({ ...entry
+		, sideModuleExports: { ...entry.sideModuleExports
+			, validators: { exported: ["lb_a_refinement_0"]
+				, referencedByPackageJavaScript: [] } } }));
+	assert.throws(() => assertNominalSubtypeEntryReport({ ...entry
+		, sideModuleExports: { ...entry.sideModuleExports
+			, adapters: { exported: []
+				, referencedByPackageJavaScript: [] } } }), /listed/u);
 	const engine = { engine: "chromium", hostVersion: "1.0", rows: rows(expected), observed: expected, counts, errors: [], consoleLines: 1 };
 	const browser = { deployment: { sha256: digest, viteVersion: "1" }, pageSha256: digest, engines: [engine], externalNetworkBlocked: true };
 	assert.deepEqual(assertNominalSubtypeEntryReport({ ...entry, browser }), counts);

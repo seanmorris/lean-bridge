@@ -5,8 +5,8 @@
  * the same stderr stream, so each marker belongs to exactly one step. In the copied-graph frame ABI the
  * side-module entry first runs each selected constructor through its exported carrier validator. An
  * accepted call then runs the constructors again inside the `_lean` adapter guard before entering the
- * complete Lean source call graph; a refused call stops in the validator pass. Package JavaScript does
- * not call the validator exports directly. Probe packages are instrumented builds; they are not the
+ * complete Lean source call graph; a refused call stops in the validator pass. Package JavaScript
+ * cannot call those private validator symbols directly. Probe packages are instrumented builds; they are not the
  * unmodified packages the acceptance suites install.
  *
  * @file
@@ -193,8 +193,14 @@ export const assertNominalSubtypeEntryReport = entry => {
 	assert.deepEqual(entry.rows, expected.map(item => [item.step, item.status]));
 	assert.deepEqual(entry.observed, expected);
 	assert.deepEqual(entry.counts, accountNominalSubtypeEntry(entry.observed.map(item => [`${nominalSubtypeEntryBegin} ${item.step}`, ...item.entries.map(value => `${nominalSubtypeEntryMarker} ${value}`), `${nominalSubtypeEntryEnd} ${item.step}`].join("\n")).join("\n") + "\n", entry.rows, expected).counts);
-	assert.ok(Array.isArray(entry.sideModuleExports.validators.exported) && entry.sideModuleExports.validators.exported.length > 0, "validator exports are listed");
-	assert.equal(entry.validatorExportsReferenced, entry.sideModuleExports.validators.referencedByPackageJavaScript.length > 0);
+	assert.ok(Array.isArray(entry.sideModuleExports.adapters.exported)
+		&& entry.sideModuleExports.adapters.exported.length > 0
+	, "direct adapter exports are listed");
+	assert.deepEqual(entry.sideModuleExports.adapters.referencedByPackageJavaScript
+		, entry.sideModuleExports.adapters.exported);
+	assert.deepEqual(entry.sideModuleExports.validators
+		, { exported: [], referencedByPackageJavaScript: [] });
+	assert.equal(entry.validatorExportsPrivate, true);
 	// A browser section repeats the same rows and entries per engine through the page console stream.
 	if(entry.browser !== undefined)
 	{
