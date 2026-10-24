@@ -8,10 +8,7 @@ import { nativeConsumerValueGate } from "./native-consumer-partition.mjs";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { ownedReceiverHistoricalBytes } from "./owned-receiver-history.mjs";
-import { generateOwnedCPackage } from "../../src/backends/c/owned-package.mjs";
-import { generateOwnedCppPackage } from "../../src/backends/cpp/owned-package.mjs";
-import { createCompiledNativeModel } from "../../src/build/native-graph-model.mjs";
-import { validatePackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
+import { ownedLifetimeReplay } from "./owned-lifetime-producers.mjs";
 import { ownedCppBorrowSource } from "./owned-cpp-borrow-fixture.mjs";
 
 export const ownedCppBorrowScript = "LEAN_BRIDGE_OWNED_CPP_BORROW_TEST=1 node --test --test-concurrency=1 tests/owned-cpp-borrows.test.mjs tests/owned-cpp-borrow-packaging.test.mjs";
@@ -43,7 +40,7 @@ const run = (value, command, count) => {
 /**
  * Reconstruct native/C++ contracts and require both independent source paths.
  *
- * @param record - Runtime and installed evidence bound to the current sources.
+ * @param record - Runtime and installed evidence bound to its producer sources.
  */
 export const assertOwnedCppBorrowExecution = async record => {
 	assert.equal(record.acceptance, "passed"); assert.deepEqual(record.scope, ownedCppBorrowScope);
@@ -51,6 +48,9 @@ export const assertOwnedCppBorrowExecution = async record => {
 	run(record.runs.runtime, "LEAN_BRIDGE_OWNED_CPP_BORROW_TEST=1 node --test --test-concurrency=1 tests/owned-cpp-borrows.test.mjs", 3);
 	run(record.runs.installed, "LEAN_BRIDGE_OWNED_CPP_BORROW_TEST=1 node --test --test-concurrency=1 tests/owned-cpp-borrow-packaging.test.mjs", 2);
 	for(const group of [record.runtime, record.packages]) assert.deepEqual(group.map(item => item.mode), ["ordinary", "reviewed"]);
+	const { generateOwnedCPackage, generateOwnedCppPackage
+		, createCompiledNativeModel, validatePackageSetReceipt }
+		= await ownedLifetimeReplay("cppBorrow", record.sources);
 	const probe = await readFile("tests/fixtures/structured-types/owned-cpp-borrows.cpp");
 	const source = (await readFile("tests/fixtures/onboarding/owned-aggregates/Owned.lean", "utf8")) + ownedCppBorrowSource;
 	const page = await readFile("docs/consume/cpp.md", "utf8");

@@ -11,6 +11,20 @@ import { generateOwnedJvmPackage } from "../../src/backends/jvm/owned-package.mj
 import { ownedJvmCallNative } from "./owned-jvm-call-fixture.mjs";
 import { ownedRustReceiverSource } from "./owned-rust-receiver-fixture.mjs";
 import { assertOwnedJvmReceiverGcCi } from "./owned-jvm-receiver-gc-ci.mjs";
+import { ownedLifetimeReplay } from "./owned-lifetime-producers.mjs";
+
+const current = Object.freeze({
+	createCompiledNativeModel, generateOwnedJvmPackage, ownedJvmCallNative
+	, ownedRustReceiverSource, readSource: path => readFile(path, "utf8")
+});
+
+/**
+ * Keep fresh checks live while archived acceptance selects its own producer.
+ *
+ * @param sources - Optional historical receipt source identities.
+ */
+export const ownedJvmReceiverGcReplay = async sources => sources === undefined
+	? current : ownedLifetimeReplay("jvmGc", sources);
 
 export const ownedJvmReceiverGcCommand = "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 npm run test:owned-jvm-receiver-gc";
 export const ownedJvmReceiverGcScope = Object.freeze({
@@ -54,15 +68,19 @@ const optimized = (value, methods, namespace) => {
  * Rebuild every tested generator output and check actual optimizing compilations.
  *
  * @param item - One completed ordinary or reviewed runtime observation.
+ * @param replay - Optional authenticated historical generators and source reader.
  */
-export const assertOwnedJvmReceiverGcExecution = async item => {
+export const assertOwnedJvmReceiverGcExecution = async (item, replay) => {
+	const { createCompiledNativeModel, generateOwnedJvmPackage
+		, ownedJvmCallNative, ownedRustReceiverSource, readSource }
+		= replay ?? await ownedJvmReceiverGcReplay();
 	assert.equal(item.schemaVersion, 1); assert.ok(["ordinary", "reviewed"].includes(item.mode));
 	assert.equal(item.actualLean, true); assert.equal(item.actualGc, true);
 	assert.equal(item.installedPackage, false); assert.equal(item.compiler, "c2");
 	assert.equal(item.missingFencesRejected, true);
 	observed(item.observed); observed(item.restored);
 	assert.equal(Boolean(item.input.sourceIdentity.reviewedBindingIr), item.mode === "reviewed");
-	const source = await readFile("tests/fixtures/onboarding/owned-aggregates/Owned.lean", "utf8");
+	const source = await readSource("tests/fixtures/onboarding/owned-aggregates/Owned.lean");
 	assert.equal(item.input.sourceIdentity.modules.find(module => module.module === "Owned").source.sha256, sha256(source + ownedRustReceiverSource));
 	for(const field of ["hostCallbacks", "transferredInputs", "anchoredResults", "receiverExports"])
 		assert.equal(item.input[field], true, field);
@@ -75,8 +93,8 @@ export const assertOwnedJvmReceiverGcExecution = async item => {
 	assert.equal(model.functions.filter(fn => fn.receiver === 0).length, 16);
 	assert.deepEqual(item.generated, Object.fromEntries(Object.entries(model.files).map(([path, text]) => [path, sha256(text)])));
 	assert.equal(item.nativeProbeSha256, sha256(ownedJvmCallNative(item.input).implementation));
-	assert.equal(item.javaProbeSha256, sha256(await readFile("tests/fixtures/structured-types/owned-jvm-receiver-gc.java")));
-	assert.equal(item.kotlinProbeSha256, sha256(await readFile("tests/fixtures/structured-types/owned-kotlin-receiver-gc.kt")));
+	assert.equal(item.javaProbeSha256, sha256(await readSource("tests/fixtures/structured-types/owned-jvm-receiver-gc.java")));
+	assert.equal(item.kotlinProbeSha256, sha256(await readSource("tests/fixtures/structured-types/owned-kotlin-receiver-gc.kt")));
 	const bindingsPath = Object.keys(model.files).find(path => path.endsWith("/_OwnedBindings.java"));
 	let bindings = model.files[bindingsPath];
 	const serial = model.functions.findIndex(fn => fn.publicName === "serial");
@@ -119,7 +137,8 @@ export const assertOwnedJvmReceiverGcAcceptance = async record => {
 		assert.match(record.run.text, new RegExp("^# " + key + " " + count + "$", "mu"));
 	assert.doesNotMatch(record.run.text, /^not ok|# SKIP|# TODO/mu);
 	assert.deepEqual(record.runtime.map(value => value.mode), ["ordinary", "reviewed"]);
-	for(const item of record.runtime) await assertOwnedJvmReceiverGcExecution(item);
+	const replay = await ownedJvmReceiverGcReplay(record.sources);
+	for(const item of record.runtime) await assertOwnedJvmReceiverGcExecution(item, replay);
 	// Canonical report files sort object keys; TAP diagnostics preserve insertion order.
 	const diagnostics = record.run.text.split("\n").filter(line => line.startsWith("# {")).map(line => JSON.parse(line.slice(2)));
 	assert.deepEqual(diagnostics, record.runtime.map(item => ({ mode: item.mode, ...item.observed, optimizedMethods: item.optimizedMethods })));

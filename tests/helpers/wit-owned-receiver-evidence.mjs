@@ -6,18 +6,9 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
-import { createCompiledNativeModel } from "../../src/build/native-graph-model.mjs";
-import { generateOwnedWitPackage } from "../../src/backends/wit/owned-package.mjs";
-import { guardOwnedWitHostSource } from "../../src/backends/wit/owned-host-evidence.mjs";
-import { ownedRustReceiverSource } from "./owned-rust-receiver-fixture.mjs";
-import { ownedJvmPlainReceiverSource } from "./owned-jvm-receiver-fixture.mjs";
-import { ownedReceiverMutants } from "./owned-receiver-mutants.mjs";
-import { ownedWitBorrowNativeSource } from "./wit-owned-borrow-probe.mjs";
-import { ownedWitBorrowMutations } from "./wit-owned-borrow-mutants.mjs";
-import { ownedWitReceiverProbe } from "./wit-owned-receiver-probe.mjs";
-import { ownedWitReceiverResourceProbe } from "./wit-owned-receiver-resource-probe.mjs";
+import { ownedLifetimeProducers, ownedLifetimeReplay } from "./owned-lifetime-producers.mjs";
+import { bytesAtProducer } from "./producer-source.mjs";
 import { assertOwnedWitReceiverCi } from "./wit-owned-receiver-ci.mjs";
-import { beforeOwnedCallbackResults } from "./owned-callback-result-history.mjs";
 
 export const ownedWitReceiverCommand = "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 npm run test:owned-wit-receivers";
 export const ownedWitReceiverScope = Object.freeze({
@@ -42,7 +33,9 @@ export const ownedWitReceiverScope = Object.freeze({
 const digest = value => { assert.match(value, /^[a-f0-9]{64}$/u); assert.notEqual(value, "0".repeat(64)); };
 const flags = (value, names) => { for(const name of names) assert.equal(value[name], true, name); };
 const optionalOrder = ["ordinary", "reviewed"].flatMap(mode => ["plain", "consuming", "unanchored"].map(kind => [mode, kind]));
-const inputModel = (input, mode, kind, base, installed = false) => {
+const inputModel = (replay, input, mode, kind, base, installed = false) => {
+	const { createCompiledNativeModel, ownedJvmPlainReceiverSource
+		, ownedRustReceiverSource } = replay;
 	assert.equal(input.receiverExports, true); assert.equal(input.anchoredResults, kind === "full");
 	assert.equal(input.hostCallbacks, installed || ["full", "unanchored"].includes(kind));
 	assert.equal(input.transferredInputs, kind !== "plain");
@@ -69,7 +62,7 @@ const componentBytes = item => {
 	assert.equal(sha256(bytes), item.componentSha256 ?? item.manifest.componentSha256);
 	return bytes;
 };
-const checkCli = async item => {
+const checkCli = async (item, replay) => {
 	flags(item.installedCli, ["offlineInstall", "packagingSourceRemoved"]);
 	assert.equal(item.cliRemovedBeforeConsumerInstall, true);
 	const { report } = item.installedCli;
@@ -80,15 +73,16 @@ const checkCli = async item => {
 	digest(archive.sha256); assert.ok(archive.bytes > 0);
 	assert.equal(item.installedCli.filesVerified, report.files.length);
 	const configPath = "config/cli-package.v1.json";
-	const config = JSON.parse(beforeOwnedCallbackResults(configPath, await readFile(configPath, "utf8")));
+	const config = JSON.parse(await replay.readSource(configPath));
 	assert.deepEqual(report.package, { name: config.name, version: config.version });
 	assert.equal(report.files.length, config.files.length + 2);
 	assert.equal(new Set(report.files.map(file => file.path)).size, report.files.length);
 	for(const path of config.files)
 	{
 		const file = report.files.find(entry => entry.path === path);
-		const bytes = Buffer.from(beforeOwnedCallbackResults(path, await readFile(path)));
-		assert.ok(file, path); assert.equal(file.bytes, bytes.length, path); assert.equal(file.sha256, sha256(bytes), path);
+		assert.ok(file, path);
+		const bytes = bytesAtProducer(ownedLifetimeProducers.witReceiver.revision, path, file.sha256);
+		assert.equal(file.bytes, bytes.length, path); assert.equal(file.sha256, sha256(bytes), path);
 	}
 	assert.deepEqual(item.targets, item.mode === "ordinary" ? ["wit-wasi"] : ["wit-wasi", "c"]);
 	assert.equal(item.cliBuilds.length, 2);
@@ -134,12 +128,17 @@ export const assertOwnedWitReceiverExecution = async record => {
 	assert.doesNotMatch(record.run.text, /^not ok|# SKIP|# TODO/mu);
 	for(const field of ["runtime", "packages"]) assert.deepEqual(record[field].map(item => item.mode), ["ordinary", "reviewed"]);
 	for(const field of ["resources", "resourcePackages"]) assert.deepEqual(record[field].map(item => [item.mode, item.kind]), optionalOrder);
+	const replay = await ownedLifetimeReplay("witReceiver", record.sources);
+	const { generateOwnedWitPackage, guardOwnedWitHostSource
+		, ownedReceiverMutants, ownedWitBorrowNativeSource
+		, ownedWitBorrowMutations, ownedWitReceiverProbe
+		, ownedWitReceiverResourceProbe } = replay;
 	const base = await readFile("tests/fixtures/onboarding/owned-aggregates/Owned.lean", "utf8");
 	for(const item of [...record.runtime, ...record.resources])
 	{
 		const kind = item.kind ?? "full", full = kind === "full";
 		assert.equal(item.schemaVersion, 1);
-		assert.deepEqual(item.native, inputModel(item.input, item.mode, kind, base));
+		assert.deepEqual(item.native, inputModel(replay, item.input, item.mode, kind, base));
 		const generated = generateOwnedWitPackage(item.input, componentBytes(item));
 		assert.equal(item.sourceSha256, sha256(generated.source));
 		const probe = full ? await ownedWitReceiverProbe(generated) : await ownedWitReceiverResourceProbe(generated, kind);
@@ -180,8 +179,8 @@ export const assertOwnedWitReceiverExecution = async record => {
 		const kind = item.kind ?? "full", full = kind === "full";
 		assert.equal(item.schemaVersion, 1);
 		flags(item, ["sourceRemovedBeforeInstall", "relocated", "deterministicReassembly", "independentRebuild", "pkgConfig", "cmake"]);
-		await checkCli(item);
-		assert.deepEqual(item.model, inputModel(item.inputs, item.mode, kind, base, true));
+		await checkCli(item, replay);
+		assert.deepEqual(item.model, inputModel(replay, item.inputs, item.mode, kind, base, true));
 		const generated = generateOwnedWitPackage(item.inputs, componentBytes(item), item.receipt.settings);
 		assert.deepEqual(generated.layout.model.bindingIr, item.model.bindingIr);
 		const source = guardOwnedWitHostSource(generated, item.receipt.dependencies);

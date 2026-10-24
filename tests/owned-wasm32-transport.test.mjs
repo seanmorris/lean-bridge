@@ -15,6 +15,7 @@ import { ownedNativeValueRuntime } from "../src/backends/native/owned-value-runt
 import { ownedAggregateReviewedIr } from "./helpers/owned-aggregate-fixture.mjs";
 import { checkOwnedWasm32Transport } from "./helpers/owned-wasm32-transport.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
+import { ownedLifetimeReplay } from "./helpers/owned-lifetime-producers.mjs";
 
 const inputs = async () => JSON.parse(await readFile("docs/evidence/owned-aggregate-execution-20260926.json", "utf8")).inputs;
 
@@ -47,16 +48,20 @@ test("wasm32 owned layouts preserve nominal identities and reject ambiguous mach
 	}
 });
 
-test("wasm32 selection preserves all existing 64-bit owned adapters byte for byte", async () => {
+test("wasm32 selection preserves historical and current 64-bit adapter outputs", async () => {
 	const fixtures = await inputs();
+	const { sources } = JSON.parse(await readFile("docs/evidence/owned-wasm32-transport-20260928.json", "utf8"));
+	const historical = await ownedLifetimeReplay("wasm32", sources);
 	const expected = {
 		aggregates: ["cfa22f95cef0f31a374566ec95a80e181e53ae679493b0b57d5526bbc2f4a292", "0c69375a6e86840d92f9879e46647a370e7373b1cde98c0b875fb6c271a12cea"]
 		, scalars: ["d1f2157c86d92f7fa3e10881ef7b6f7118718b01c2bd9cc22a14349f972caa02", "859d4c009fbab6e889b28e41c631c2bc39f89719bccc595aa8c2aeb750c824af"]
 	};
 	for(const [name, input] of Object.entries(fixtures)) for(const hostCallbacks of [false, true])
 	{
+		const original = historical.generateOwnedNativeValueAdapters({ ...input, hostCallbacks });
+		assert.equal(sha256(canonicalJson(original)), expected[name][Number(hostCallbacks)]);
+		assert.deepEqual(historical.generateOwnedNativeValueAdapters({ ...input, hostCallbacks, wordBits: 64 }), original);
 		const output = generateOwnedNativeValueAdapters({ ...input, hostCallbacks });
-		assert.equal(sha256(canonicalJson(output)), expected[name][Number(hostCallbacks)]);
 		assert.deepEqual(generateOwnedNativeValueAdapters({ ...input, hostCallbacks, wordBits: 64 }), output);
 	}
 });
