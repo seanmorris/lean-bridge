@@ -18,6 +18,8 @@ import "./helpers/documentation-workflow-repair-source-history-tests.mjs";
 import "./helpers/owned-javascript-producer-repair-source-history-tests.mjs";
 import "./helpers/owned-subtype-delegation-repair-source-history-tests.mjs";
 import "./helpers/native-fork-transfer-producer-repair-source-history-tests.mjs";
+import "./helpers/fin-history-rolling-repair-source-history-tests.mjs";
+import "./helpers/fin-history-rolling-stage-tests.mjs";
 
 const root = resolve(".");
 

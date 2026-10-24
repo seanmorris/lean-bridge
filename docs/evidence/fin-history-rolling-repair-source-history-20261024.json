@@ -1,0 +1,2161 @@
+{
+  "additions": [
+    {
+      "currentSha256": "e1b2a9aa4de1ba7db5d6bf21d7318c2beda1d44bc1cd0060dac05eef592e07d1",
+      "path": "scripts/update-fin-history-rolling-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "ae6b48ad687ecbc5946db40c0a8ab50cb49f782a45aa26a020e24dbe538432b9",
+      "path": "tests/helpers/fin-history-rolling-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "9550eeace7d09c11e4d27e92574dd2e3cfd2881de9d7961b0a8e22699bfacd14",
+      "path": "tests/helpers/fin-history-rolling-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "cad271be99b3d0242ce013f183878c920adcad9b495e897bb6625c5aefbe0e6b",
+      "path": "tests/helpers/fin-history-rolling-stage-tests.mjs"
+    }
+  ],
+  "implementationCommit": "9ce78fcac3dfff304fae9b284c2259a9b3a3c7be",
+  "integrationBaseCommit": "63e7041b4c18cd6891873cf5975c3e500a42f938",
+  "integrationUpdates": [
+    {
+      "currentSha256": "d59ce5150f8e5c512b71dae11c99e70d352348616fb16f3ead7dd61fb56adc0f",
+      "edits": [
+        {
+          "current": "import { beforeFinHistoryRollingRepairSource, finHistoryRollingRepairNormalizationPaths } from \"./fin-history-rolling-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 1485
+        },
+        {
+          "current": "\t...finHistoryRollingRepairNormalizationPaths\n\t, ...nativeForkTransferProducerRepairNormalizationPaths\n",
+          "previous": "\t...nativeForkTransferProducerRepairNormalizationPaths\n",
+          "start": 174670
+        },
+        {
+          "current": "\t\t= beforeFinHistoryRollingRepairSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "",
+          "start": 215432
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "3cb18ca4c1eb2f220a091cde58ad43265d6a363d07b32304ebfcc1758e354f85"
+    },
+    {
+      "currentSha256": "260e0dbd42fbd02623753981f73106de12fd911918874898a09636d343361df4",
+      "edits": [
+        {
+          "current": "import \"./helpers/fin-history-rolling-repair-source-history-tests.mjs\";\nimport \"./helpers/fin-history-rolling-stage-tests.mjs\";\n",
+          "previous": "",
+          "start": 975
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "e52f2c63b5568806a59529ef0e96b593d1f39da09d5ba18a7cd51ec19500aa50"
+    }
+  ],
+  "milestone": "fin-history-rolling-repair-source-v1",
+  "predecessorCommit": "21d0dfc7f0e487ca6937d450eed5b33198b00366",
+  "schemaVersion": 1,
+  "scope": "Replace 288 dead top-level history-stage bindings with one rolling stage, retaining exact call order, dataflow, loop behavior, expected-digest stopping points, planner handoffs, recursion, and original-buffer identity. Skip 282 impossible digest comparisons when no stop is requested. Keep all authenticated reversing layers unchanged. Add small independent AST and synthetic behavioral controls plus a live one-stage retention guard. The integration normalizer also reuses the rolling stage. No inventory, installed observation, runtime, or workflow changes; full-scale memory validation remains hosted.",
+  "updates": [
+    {
+      "currentSha256": "3cb18ca4c1eb2f220a091cde58ad43265d6a363d07b32304ebfcc1758e354f85",
+      "edits": [
+        {
+          "current": "\tlet stage\n",
+          "previous": "\tconst nativeForkTransferProducerRepair\n",
+          "start": 215227
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "\tif(sha256(nativeForkTransferProducerRepair) === expected)\n\t\treturn nativeForkTransferProducerRepair;\n\ttext = nativeForkTransferProducerRepair;\n\tconst ownedSubtypeDelegationRepair\n",
+          "start": 215310
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "\tif(sha256(ownedSubtypeDelegationRepair) === expected)\n\t\treturn ownedSubtypeDelegationRepair;\n\ttext = ownedSubtypeDelegationRepair;\n\tconst ownedJavaScriptProducerRepair\n",
+          "start": 215474
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "\tif(sha256(ownedJavaScriptProducerRepair) === expected)\n\t\treturn ownedJavaScriptProducerRepair;\n\ttext = ownedJavaScriptProducerRepair;\n\tconst documentationWorkflowRepair\n",
+          "start": 215639
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "\tif(sha256(documentationWorkflowRepair) === expected)\n\t\treturn documentationWorkflowRepair;\n\ttext = documentationWorkflowRepair;\n\tconst ownedDotnetProducerRepair\n",
+          "start": 215802
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "\tif(sha256(ownedDotnetProducerRepair) === expected)\n\t\treturn ownedDotnetProducerRepair;\n\ttext = ownedDotnetProducerRepair;\n\tconst ownedCProducerRepair\n",
+          "start": 215963
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "\tif(sha256(ownedCProducerRepair) === expected)\n\t\treturn ownedCProducerRepair;\n\ttext = ownedCProducerRepair;\n\tconst entryFixtureRepair\n",
+          "start": 216119
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "\tif(sha256(entryFixtureRepair) === expected)\n\t\treturn entryFixtureRepair;\n\ttext = entryFixtureRepair;\n\tconst coreEvidenceMemoryRepair\n",
+          "start": 216273
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "\tif(sha256(coreEvidenceMemoryRepair) === expected)\n\t\treturn coreEvidenceMemoryRepair;\n\ttext = coreEvidenceMemoryRepair;\n\tconst valueIndexPromotionMilestoneRepair\n",
+          "start": 216433
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "\tif(sha256(valueIndexPromotionMilestoneRepair) === expected)\n\t\treturn valueIndexPromotionMilestoneRepair;\n\ttext = valueIndexPromotionMilestoneRepair;\n\tconst coreMilestoneReplayRepair\n",
+          "start": 216603
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "\tif(sha256(coreMilestoneReplayRepair) === expected)\n\t\treturn coreMilestoneReplayRepair;\n\ttext = coreMilestoneReplayRepair;\n\tconst typeSurfaceCurrentPinRepair\n",
+          "start": 216764
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "\tif(sha256(typeSurfaceCurrentPinRepair) === expected)\n\t\treturn typeSurfaceCurrentPinRepair;\n\ttext = typeSurfaceCurrentPinRepair;\n\tconst phpWasmCallbackEntryFormRepair\n",
+          "start": 216927
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "\tif(sha256(phpWasmCallbackEntryFormRepair) === expected)\n\t\treturn phpWasmCallbackEntryFormRepair;\n\ttext = phpWasmCallbackEntryFormRepair;\n\tconst phpWasmEntryOracleIntegration\n",
+          "start": 217093
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "\tif(sha256(phpWasmEntryOracleIntegration) === expected)\n\t\treturn phpWasmEntryOracleIntegration;\n\ttext = phpWasmEntryOracleIntegration;\n\tconst phpWasmEntryOracleRepair\n",
+          "start": 217258
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "\tif(sha256(phpWasmEntryOracleRepair) === expected)\n\t\treturn phpWasmEntryOracleRepair;\n\ttext = phpWasmEntryOracleRepair;\n\tconst phpWasmEntryOracleClosure\n",
+          "start": 217418
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "\tif(sha256(phpWasmEntryOracleClosure) === expected)\n\t\treturn phpWasmEntryOracleClosure;\n\ttext = phpWasmEntryOracleClosure;\n\tconst phpWasmEntryFlatPosition\n",
+          "start": 217579
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "\tif(sha256(phpWasmEntryFlatPosition) === expected)\n\t\treturn phpWasmEntryFlatPosition;\n\ttext = phpWasmEntryFlatPosition;\n\tconst phpWasmEntryUnreachedSource\n",
+          "start": 217739
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "\tif(sha256(phpWasmEntryUnreachedSource) === expected)\n\t\treturn phpWasmEntryUnreachedSource;\n\ttext = phpWasmEntryUnreachedSource;\n\tconst phpWasmEntryCallPath\n",
+          "start": 217902
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "\tif(sha256(phpWasmEntryCallPath) === expected)\n\t\treturn phpWasmEntryCallPath;\n\ttext = phpWasmEntryCallPath;\n\tconst nominalSubtypeEntryReportLink\n",
+          "start": 218058
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "\tif(sha256(nominalSubtypeEntryReportLink) === expected)\n\t\treturn nominalSubtypeEntryReportLink;\n\ttext = nominalSubtypeEntryReportLink;\n\tconst nominalSubtypeEntryExportSurface\n",
+          "start": 218223
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "\tif(sha256(nominalSubtypeEntryExportSurface) === expected)\n\t\treturn nominalSubtypeEntryExportSurface;\n\ttext = nominalSubtypeEntryExportSurface;\n\tconst phpWasmNullaryEntryForm\n",
+          "start": 218391
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "\tif(sha256(phpWasmNullaryEntryForm) === expected)\n\t\treturn phpWasmNullaryEntryForm;\n\ttext = phpWasmNullaryEntryForm;\n\tconst managedResultOnlyFixtureRepair\n",
+          "start": 218550
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "\tif(sha256(managedResultOnlyFixtureRepair) === expected)\n\t\treturn managedResultOnlyFixtureRepair;\n\ttext = managedResultOnlyFixtureRepair;\n\tconst genericSubtypeManagedTapEscapeRepair\n",
+          "start": 218716
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "\tif(sha256(genericSubtypeManagedTapEscapeRepair) === expected)\n\t\treturn genericSubtypeManagedTapEscapeRepair;\n\ttext = genericSubtypeManagedTapEscapeRepair;\n\tconst structuredCallableRecoveryGateRepair\n",
+          "start": 218892
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "\tif(sha256(structuredCallableRecoveryGateRepair) === expected)\n\t\treturn structuredCallableRecoveryGateRepair;\n\ttext = structuredCallableRecoveryGateRepair;\n\tconst ownedSubtypeRemainingHostsTapRepair\n",
+          "start": 219068
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "\tif(sha256(ownedSubtypeRemainingHostsTapRepair) === expected)\n\t\treturn ownedSubtypeRemainingHostsTapRepair;\n\ttext = ownedSubtypeRemainingHostsTapRepair;\n\tconst coreEvidenceTrackingTestRegistration\n",
+          "start": 219243
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "\tif(sha256(coreEvidenceTrackingTestRegistration) === expected)\n\t\treturn coreEvidenceTrackingTestRegistration;\n\ttext = coreEvidenceTrackingTestRegistration;\n\tconst checkedRecordValueIndexBrowserControlsContract\n",
+          "start": 219419
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "\tif(sha256(checkedRecordValueIndexBrowserControlsContract) === expected)\n\t\treturn checkedRecordValueIndexBrowserControlsContract;\n\ttext = checkedRecordValueIndexBrowserControlsContract;\n\tconst ownedTransferCopyReplayRepair\n",
+          "start": 219605
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "\tif(sha256(ownedTransferCopyReplayRepair) === expected)\n\t\treturn ownedTransferCopyReplayRepair;\n\ttext = ownedTransferCopyReplayRepair;\n\tconst ownedSubtypeWasmTransferFixture\n",
+          "start": 219770
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "\tif(sha256(ownedSubtypeWasmTransferFixture) === expected)\n\t\treturn ownedSubtypeWasmTransferFixture;\n\ttext = ownedSubtypeWasmTransferFixture;\n\tconst ownedCheckedRecordJavaScriptHostedRunOutcome\n",
+          "start": 219937
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "\tif(sha256(ownedCheckedRecordJavaScriptHostedRunOutcome) === expected)\n\t\treturn ownedCheckedRecordJavaScriptHostedRunOutcome;\n\ttext = ownedCheckedRecordJavaScriptHostedRunOutcome;\n\tconst ownedCheckedRecordJavaScriptHostedLane\n",
+          "start": 220121
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "\tif(sha256(ownedCheckedRecordJavaScriptHostedLane) === expected)\n\t\treturn ownedCheckedRecordJavaScriptHostedLane;\n\ttext = ownedCheckedRecordJavaScriptHostedLane;\n\tconst coreSourceBoundaryClosure\n",
+          "start": 220299
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "\tif(sha256(coreSourceBoundaryClosure) === expected)\n\t\treturn coreSourceBoundaryClosure;\n\ttext = coreSourceBoundaryClosure;\n\tconst evidenceCheckoutClosureRepair\n",
+          "start": 220460
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "\tif(sha256(evidenceCheckoutClosureRepair) === expected)\n\t\treturn evidenceCheckoutClosureRepair;\n\ttext = evidenceCheckoutClosureRepair;\n\tconst witAcceptanceStopBoundary\n",
+          "start": 220625
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "\tif(sha256(witAcceptanceStopBoundary) === expected)\n\t\treturn witAcceptanceStopBoundary;\n\ttext = witAcceptanceStopBoundary;\n\tconst ownedJvmLazyKotlinFactory\n",
+          "start": 220786
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "\tif(sha256(ownedJvmLazyKotlinFactory) === expected)\n\t\treturn ownedJvmLazyKotlinFactory;\n\ttext = ownedJvmLazyKotlinFactory;\n\tconst ownedSubtypeLivePinCompletion\n",
+          "start": 220947
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "\tif(sha256(ownedSubtypeLivePinCompletion) === expected)\n\t\treturn ownedSubtypeLivePinCompletion;\n\ttext = ownedSubtypeLivePinCompletion;\n\tconst phpWasmRecursiveEvidenceReplayRepair\n",
+          "start": 221112
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "\tif(sha256(phpWasmRecursiveEvidenceReplayRepair) === expected)\n\t\treturn phpWasmRecursiveEvidenceReplayRepair;\n\ttext = phpWasmRecursiveEvidenceReplayRepair;\n\tconst genericSubtypeWitHelperWarningScope\n",
+          "start": 221284
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "\tif(sha256(genericSubtypeWitHelperWarningScope) === expected)\n\t\treturn genericSubtypeWitHelperWarningScope;\n\ttext = genericSubtypeWitHelperWarningScope;\n\tconst ownedSubtypeTestProfilePinRepair\n",
+          "start": 221455
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "\tif(sha256(ownedSubtypeTestProfilePinRepair) === expected)\n\t\treturn ownedSubtypeTestProfilePinRepair;\n\ttext = ownedSubtypeTestProfilePinRepair;\n\tconst witRecursiveReaderTraversalRepair\n",
+          "start": 221623
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "\tif(sha256(witRecursiveReaderTraversalRepair) === expected)\n\t\treturn witRecursiveReaderTraversalRepair;\n\ttext = witRecursiveReaderTraversalRepair;\n\tconst genericSubtypeDotnetRuntimeProbe\n",
+          "start": 221792
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = text;\n",
+          "previous": "\tif(sha256(genericSubtypeDotnetRuntimeProbe) === expected)\n\t\treturn genericSubtypeDotnetRuntimeProbe;\n\ttext = genericSubtypeDotnetRuntimeProbe;\n\tlet genericSubtypeEvidenceSourceClosureRepair = text;\n",
+          "start": 221960
+        },
+        {
+          "current": "\t\t\tpath, stage, expected);\n",
+          "previous": "\t\t\tpath, genericSubtypeEvidenceSourceClosureRepair, expected);\n",
+          "start": 222154
+        },
+        {
+          "current": "\t\tif(previous === stage) break;\n\t\tstage = previous;\n",
+          "previous": "\t\tif(previous === genericSubtypeEvidenceSourceClosureRepair) break;\n\t\tgenericSubtypeEvidenceSourceClosureRepair = previous;\n",
+          "start": 222234
+        },
+        {
+          "current": "\ttext = stage;\n\tstage = text;\n",
+          "previous": "\ttext = genericSubtypeEvidenceSourceClosureRepair;\n\tlet genericSubtypeArtifactPrefixRepair = text;\n",
+          "start": 222289
+        },
+        {
+          "current": "\t\t\tpath, stage, expected);\n",
+          "previous": "\t\t\tpath, genericSubtypeArtifactPrefixRepair, expected);\n",
+          "start": 222402
+        },
+        {
+          "current": "\t\tif(previous === stage) break;\n\t\tstage = previous;\n",
+          "previous": "\t\tif(previous === genericSubtypeArtifactPrefixRepair) break;\n\t\tgenericSubtypeArtifactPrefixRepair = previous;\n",
+          "start": 222482
+        },
+        {
+          "current": "\ttext = stage;\n\tstage = text;\n",
+          "previous": "\ttext = genericSubtypeArtifactPrefixRepair;\n\tlet ownedSubtypeWitHostNamespaceRepair = text;\n",
+          "start": 222537
+        },
+        {
+          "current": "\t\t\tpath, stage, expected);\n",
+          "previous": "\t\t\tpath, ownedSubtypeWitHostNamespaceRepair, expected);\n",
+          "start": 222650
+        },
+        {
+          "current": "\t\tif(previous === stage) break;\n\t\tstage = previous;\n",
+          "previous": "\t\tif(previous === ownedSubtypeWitHostNamespaceRepair) break;\n\t\townedSubtypeWitHostNamespaceRepair = previous;\n",
+          "start": 222730
+        },
+        {
+          "current": "\ttext = stage;\n\tstage = text;\n",
+          "previous": "\ttext = ownedSubtypeWitHostNamespaceRepair;\n\tlet phpWasmEntryStructuralEqualityRepair = text;\n",
+          "start": 222785
+        },
+        {
+          "current": "\t\t\tpath, stage, expected);\n",
+          "previous": "\t\t\tpath, phpWasmEntryStructuralEqualityRepair, expected);\n",
+          "start": 222900
+        },
+        {
+          "current": "\t\tif(previous === stage) break;\n\t\tstage = previous;\n",
+          "previous": "\t\tif(previous === phpWasmEntryStructuralEqualityRepair) break;\n\t\tphpWasmEntryStructuralEqualityRepair = previous;\n",
+          "start": 222980
+        },
+        {
+          "current": "\ttext = stage;\n\tstage = text;\n",
+          "previous": "\ttext = phpWasmEntryStructuralEqualityRepair;\n\tlet ownedSubtypePerlSourcePathRepair = text;\n",
+          "start": 223035
+        },
+        {
+          "current": "\t\t\tpath, stage, expected);\n",
+          "previous": "\t\t\tpath, ownedSubtypePerlSourcePathRepair, expected);\n",
+          "start": 223146
+        },
+        {
+          "current": "\t\tif(previous === stage) break;\n\t\tstage = previous;\n",
+          "previous": "\t\tif(previous === ownedSubtypePerlSourcePathRepair) break;\n\t\townedSubtypePerlSourcePathRepair = previous;\n",
+          "start": 223226
+        },
+        {
+          "current": "\ttext = stage;\n\tstage\n",
+          "previous": "\ttext = ownedSubtypePerlSourcePathRepair;\n\tconst genericSubtypeDocumentation\n",
+          "start": 223281
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = text;\n",
+          "previous": "\tif(sha256(genericSubtypeDocumentation) === expected)\n\t\treturn genericSubtypeDocumentation;\n\ttext = genericSubtypeDocumentation;\n\tlet genericSubtypePromotion = text;\n",
+          "start": 223370
+        },
+        {
+          "current": "\t\t\tpath, stage, expected);\n",
+          "previous": "\t\t\tpath, genericSubtypePromotion, expected);\n",
+          "start": 223546
+        },
+        {
+          "current": "\t\tif(previous === stage) break;\n\t\tstage = previous;\n",
+          "previous": "\t\tif(previous === genericSubtypePromotion) break;\n\t\tgenericSubtypePromotion = previous;\n",
+          "start": 223626
+        },
+        {
+          "current": "\ttext = stage;\n\tstage\n",
+          "previous": "\ttext = genericSubtypePromotion;\n\tconst genericSubtypeHostedArchive\n",
+          "start": 223681
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "\tif(sha256(genericSubtypeHostedArchive) === expected)\n\t\treturn genericSubtypeHostedArchive;\n\ttext = genericSubtypeHostedArchive;\n\tconst recursiveCheckedRecordDocumentationClosure\n",
+          "start": 223770
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "\tif(sha256(recursiveCheckedRecordDocumentationClosure) === expected)\n\t\treturn recursiveCheckedRecordDocumentationClosure;\n\ttext = recursiveCheckedRecordDocumentationClosure;\n\tconst ownedSubtypePythonDependencyRepair\n",
+          "start": 223952
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "\tif(sha256(ownedSubtypePythonDependencyRepair) === expected)\n\t\treturn ownedSubtypePythonDependencyRepair;\n\ttext = ownedSubtypePythonDependencyRepair;\n\tconst ownedSubtypeDocumentationTransaction\n",
+          "start": 224122
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "\tif(sha256(ownedSubtypeDocumentationTransaction) === expected)\n\t\treturn ownedSubtypeDocumentationTransaction;\n\ttext = ownedSubtypeDocumentationTransaction;\n\tconst callbackSubtypeHistoryTraversalRepair\n",
+          "start": 224298
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "\tif(sha256(callbackSubtypeHistoryTraversalRepair) === expected)\n\t\treturn callbackSubtypeHistoryTraversalRepair;\n\ttext = callbackSubtypeHistoryTraversalRepair;\n\tconst ownedSubtypePerlIdentityRepair\n",
+          "start": 224475
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "\tif(sha256(ownedSubtypePerlIdentityRepair) === expected)\n\t\treturn ownedSubtypePerlIdentityRepair;\n\ttext = ownedSubtypePerlIdentityRepair;\n\tconst ownedSubtypeWitResourceRepair\n",
+          "start": 224641
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "\tif(sha256(ownedSubtypeWitResourceRepair) === expected)\n\t\treturn ownedSubtypeWitResourceRepair;\n\ttext = ownedSubtypeWitResourceRepair;\n\tconst ownedSubtypeJvmFilenameRepair\n",
+          "start": 224806
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "\tif(sha256(ownedSubtypeJvmFilenameRepair) === expected)\n\t\treturn ownedSubtypeJvmFilenameRepair;\n\ttext = ownedSubtypeJvmFilenameRepair;\n\tconst ownedSubtypePromotionContract\n",
+          "start": 224971
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeOwnedSubtypeHostedArchiveSource(\n",
+          "previous": "\tif(sha256(ownedSubtypePromotionContract) === expected)\n\t\treturn ownedSubtypePromotionContract;\n\ttext = ownedSubtypePromotionContract;\n\tconst ownedSubtypeHostedArchive = beforeOwnedSubtypeHostedArchiveSource(\n",
+          "start": 225136
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "\tif(sha256(ownedSubtypeHostedArchive) === expected)\n\t\treturn ownedSubtypeHostedArchive;\n\ttext = ownedSubtypeHostedArchive;\n\tconst ownedSubtypeEvidenceTestRegistration\n",
+          "start": 225298
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "\tif(sha256(ownedSubtypeEvidenceTestRegistration) === expected)\n\t\treturn ownedSubtypeEvidenceTestRegistration;\n\ttext = ownedSubtypeEvidenceTestRegistration;\n\tconst ownedSubtypeHostedEvidenceContract\n",
+          "start": 225474
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCallbackSubtypePromotionSource(\n",
+          "previous": "\tif(sha256(ownedSubtypeHostedEvidenceContract) === expected)\n\t\treturn ownedSubtypeHostedEvidenceContract;\n\ttext = ownedSubtypeHostedEvidenceContract;\n\tconst callbackSubtypePromotion = beforeCallbackSubtypePromotionSource(\n",
+          "start": 225644
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "\tif(sha256(callbackSubtypePromotion) === expected)\n\t\treturn callbackSubtypePromotion;\n\ttext = callbackSubtypePromotion;\n\tconst valueIndexMatrixHistoricalInventoryRepair\n",
+          "start": 225805
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "\tif(sha256(valueIndexMatrixHistoricalInventoryRepair) === expected)\n\t\treturn valueIndexMatrixHistoricalInventoryRepair;\n\ttext = valueIndexMatrixHistoricalInventoryRepair;\n\tconst dependentCheckedRecordDocumentationClosure\n",
+          "start": 225986
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "\tif(sha256(dependentCheckedRecordDocumentationClosure) === expected)\n\t\treturn dependentCheckedRecordDocumentationClosure;\n\ttext = dependentCheckedRecordDocumentationClosure;\n\tconst dependentCheckedRecordPromotion\n",
+          "start": 226168
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "\tif(sha256(dependentCheckedRecordPromotion) === expected)\n\t\treturn dependentCheckedRecordPromotion;\n\ttext = dependentCheckedRecordPromotion;\n\tconst checkedRefinementGateRepair\n",
+          "start": 226335
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "\tif(sha256(checkedRefinementGateRepair) === expected)\n\t\treturn checkedRefinementGateRepair;\n\ttext = checkedRefinementGateRepair;\n\tconst dependentCheckedRecordBrowserArchive\n",
+          "start": 226498
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "\tif(sha256(dependentCheckedRecordBrowserArchive) === expected)\n\t\treturn dependentCheckedRecordBrowserArchive;\n\ttext = dependentCheckedRecordBrowserArchive;\n\tconst valueIndexBrowserPromotionClosureRepair\n",
+          "start": 226670
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n",
+          "previous": "\tif(sha256(valueIndexBrowserPromotionClosureRepair) === expected)\n\t\treturn valueIndexBrowserPromotionClosureRepair;\n\ttext = valueIndexBrowserPromotionClosureRepair;\n",
+          "start": 226852
+        },
+        {
+          "current": "\tstage\n",
+          "previous": "\tconst stagedPhpProducerReplayRepair\n",
+          "start": 227163
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(stagedPhpProducerReplayRepair) === expected)\n\t\treturn stagedPhpProducerReplayRepair;\n\tconst dependentBrowserHandoffRetentionRepair\n",
+          "start": 227239
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, stagedPhpProducerReplayRepair, expected\n",
+          "start": 227376
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(dependentBrowserHandoffRetentionRepair) === expected)\n\t\treturn dependentBrowserHandoffRetentionRepair;\n\tconst witRecursiveProducerReplayRepair\n",
+          "start": 227406
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, dependentBrowserHandoffRetentionRepair, expected\n",
+          "start": 227537
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(witRecursiveProducerReplayRepair) === expected)\n\t\treturn witRecursiveProducerReplayRepair;\n\tconst jvmProducerReplayRepair\n",
+          "start": 227567
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, witRecursiveProducerReplayRepair, expected\n",
+          "start": 227689
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(jvmProducerReplayRepair) === expected)\n\t\treturn jvmProducerReplayRepair;\n\tconst ownedReceiverProducerReplayRepair\n",
+          "start": 227719
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, jvmProducerReplayRepair, expected\n",
+          "start": 227851
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(ownedReceiverProducerReplayRepair) === expected)\n\t\treturn ownedReceiverProducerReplayRepair;\n\tconst ownedTransferProducerReplayRepair\n",
+          "start": 227881
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, ownedReceiverProducerReplayRepair, expected\n",
+          "start": 228013
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(ownedTransferProducerReplayRepair) === expected)\n\t\treturn ownedTransferProducerReplayRepair;\n\tconst ownedPythonBorrowProducerReplayRepair\n",
+          "start": 228043
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, ownedTransferProducerReplayRepair, expected\n",
+          "start": 228179
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(ownedPythonBorrowProducerReplayRepair) === expected)\n\t\treturn ownedPythonBorrowProducerReplayRepair;\n\tconst ownedPhpProducerReplayRepair\n",
+          "start": 228209
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, ownedPythonBorrowProducerReplayRepair, expected\n",
+          "start": 228336
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(ownedPhpProducerReplayRepair) === expected)\n\t\treturn ownedPhpProducerReplayRepair;\n\tconst ownedJavaScriptTransferProducerReplayRepair\n",
+          "start": 228366
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, ownedPhpProducerReplayRepair, expected\n",
+          "start": 228508
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(ownedJavaScriptTransferProducerReplayRepair) === expected)\n\t\treturn ownedJavaScriptTransferProducerReplayRepair;\n\tconst ownedPerlTransferProducerReplayRepair\n",
+          "start": 228538
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, ownedJavaScriptTransferProducerReplayRepair, expected\n",
+          "start": 228674
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(ownedPerlTransferProducerReplayRepair) === expected)\n\t\treturn ownedPerlTransferProducerReplayRepair;\n\tconst promotionDocMilestoneReplayRepair\n",
+          "start": 228704
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, ownedPerlTransferProducerReplayRepair, expected\n",
+          "start": 228836
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(promotionDocMilestoneReplayRepair) === expected)\n\t\treturn promotionDocMilestoneReplayRepair;\n\tconst nestedPromotionDocMilestoneRepair\n",
+          "start": 228866
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, promotionDocMilestoneReplayRepair, expected\n",
+          "start": 228998
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(nestedPromotionDocMilestoneRepair) === expected)\n\t\treturn nestedPromotionDocMilestoneRepair;\n\tconst workflowMilestoneReplayRepair\n",
+          "start": 229028
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, nestedPromotionDocMilestoneRepair, expected\n",
+          "start": 229156
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(workflowMilestoneReplayRepair) === expected)\n\t\treturn workflowMilestoneReplayRepair;\n\tconst coreResidualLedgerPointerReplayRepair\n",
+          "start": 229186
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, workflowMilestoneReplayRepair, expected\n",
+          "start": 229322
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(coreResidualLedgerPointerReplayRepair) === expected)\n\t\treturn coreResidualLedgerPointerReplayRepair;\n\tconst coreRubyModelAvailabilityRepair\n",
+          "start": 229352
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, coreResidualLedgerPointerReplayRepair, expected\n",
+          "start": 229482
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(coreRubyModelAvailabilityRepair) === expected)\n\t\treturn coreRubyModelAvailabilityRepair;\n\tconst coreResidualProducerReplayRepair\n",
+          "start": 229512
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, coreRubyModelAvailabilityRepair, expected\n",
+          "start": 229643
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(coreResidualProducerReplayRepair) === expected)\n\t\treturn coreResidualProducerReplayRepair;\n\tconst callbackStagingLineageReplayRepair\n",
+          "start": 229673
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, coreResidualProducerReplayRepair, expected\n",
+          "start": 229806
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(callbackStagingLineageReplayRepair) === expected)\n\t\treturn callbackStagingLineageReplayRepair;\n\tconst callbackStagingProducerReplayRepair\n",
+          "start": 229836
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, callbackStagingLineageReplayRepair, expected\n",
+          "start": 229970
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(callbackStagingProducerReplayRepair) === expected)\n\t\treturn callbackStagingProducerReplayRepair;\n\tconst coreFirstRunPinReplayRepair\n",
+          "start": 230000
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, callbackStagingProducerReplayRepair, expected\n",
+          "start": 230126
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(coreFirstRunPinReplayRepair) === expected)\n\t\treturn coreFirstRunPinReplayRepair;\n\tconst structuredCallableProducerReplayRepair\n",
+          "start": 230156
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, coreFirstRunPinReplayRepair, expected\n",
+          "start": 230293
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage = beforeNativeBudgetReplayRepairSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(structuredCallableProducerReplayRepair) === expected)\n\t\treturn structuredCallableProducerReplayRepair;\n\tconst nativeBudgetReplayRepair = beforeNativeBudgetReplayRepairSource(\n\t\tpath, structuredCallableProducerReplayRepair, expected\n",
+          "start": 230323
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(nativeBudgetReplayRepair) === expected)\n\t\treturn nativeBudgetReplayRepair;\n\tconst inheritedDocsReplayRepair\n",
+          "start": 230472
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, nativeBudgetReplayRepair, expected\n",
+          "start": 230596
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(inheritedDocsReplayRepair) === expected)\n\t\treturn inheritedDocsReplayRepair;\n\tconst valueIndexRustGeneratorReplayRepair\n",
+          "start": 230626
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, inheritedDocsReplayRepair, expected\n",
+          "start": 230760
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(valueIndexRustGeneratorReplayRepair) === expected)\n\t\treturn valueIndexRustGeneratorReplayRepair;\n\tconst genericSubtypeRustOraclePathRepair\n",
+          "start": 230790
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, valueIndexRustGeneratorReplayRepair, expected\n",
+          "start": 230923
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(genericSubtypeRustOraclePathRepair) === expected)\n\t\treturn genericSubtypeRustOraclePathRepair;\n\tconst dependentRecordAuthorityReplayRepair\n",
+          "start": 230953
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, genericSubtypeRustOraclePathRepair, expected\n",
+          "start": 231088
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(dependentRecordAuthorityReplayRepair) === expected)\n\t\treturn dependentRecordAuthorityReplayRepair;\n\tconst preFinTypeSurfaceHistoryRepair\n",
+          "start": 231118
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, dependentRecordAuthorityReplayRepair, expected\n",
+          "start": 231247
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(preFinTypeSurfaceHistoryRepair) === expected)\n\t\treturn preFinTypeSurfaceHistoryRepair;\n\tconst valueIndexPromotionMemoryRepair\n",
+          "start": 231277
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, preFinTypeSurfaceHistoryRepair, expected\n",
+          "start": 231407
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage = beforeNominalEntryTagRepairSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(valueIndexPromotionMemoryRepair) === expected)\n\t\treturn valueIndexPromotionMemoryRepair;\n\tconst nominalEntryTagRepair = beforeNominalEntryTagRepairSource(\n\t\tpath, valueIndexPromotionMemoryRepair, expected\n",
+          "start": 231437
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected) return stage;\n\tstage\n",
+          "previous": "\tif(sha256(nominalEntryTagRepair) === expected) return nominalEntryTagRepair;\n\tconst callbackCheckedRecordPromotionRefresh\n",
+          "start": 231583
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, nominalEntryTagRepair, expected\n",
+          "start": 231717
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(callbackCheckedRecordPromotionRefresh) === expected)\n\t\treturn callbackCheckedRecordPromotionRefresh;\n\tconst callbackCheckedRecordArchiveCommitProvenance\n",
+          "start": 231747
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, callbackCheckedRecordPromotionRefresh, expected\n",
+          "start": 231890
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(callbackCheckedRecordArchiveCommitProvenance) === expected)\n\t\treturn callbackCheckedRecordArchiveCommitProvenance;\n\tconst callbackCheckedRecordArchiveProvenanceRepair\n",
+          "start": 231920
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, callbackCheckedRecordArchiveCommitProvenance, expected\n",
+          "start": 232063
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(callbackCheckedRecordArchiveProvenanceRepair) === expected)\n\t\treturn callbackCheckedRecordArchiveProvenanceRepair;\n\tconst callbackCheckedRecordRetainedArchiveRollover\n",
+          "start": 232093
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, callbackCheckedRecordArchiveProvenanceRepair, expected\n",
+          "start": 232236
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(callbackCheckedRecordRetainedArchiveRollover) === expected)\n\t\treturn callbackCheckedRecordRetainedArchiveRollover;\n\tconst callbackEntryTracePlanRepair\n",
+          "start": 232266
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, callbackCheckedRecordRetainedArchiveRollover, expected\n",
+          "start": 232400
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(callbackEntryTracePlanRepair) === expected)\n\t\treturn callbackEntryTracePlanRepair;\n\tconst dependentBrowserReviewedRouteRepair\n",
+          "start": 232430
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, callbackEntryTracePlanRepair, expected\n",
+          "start": 232577
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(dependentBrowserReviewedRouteRepair) === expected)\n\t\treturn dependentBrowserReviewedRouteRepair;\n\tconst structuredCallbackFallbackRepair\n",
+          "start": 232607
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, dependentBrowserReviewedRouteRepair, expected\n",
+          "start": 232744
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(structuredCallbackFallbackRepair) === expected)\n\t\treturn structuredCallbackFallbackRepair;\n\tconst callbackWitDiagnosticRepairIntegration\n",
+          "start": 232774
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, structuredCallbackFallbackRepair, expected\n",
+          "start": 232913
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(callbackWitDiagnosticRepairIntegration) === expected)\n\t\treturn callbackWitDiagnosticRepairIntegration;\n\tconst callbackWitDiagnosticRepairImplementation\n",
+          "start": 232943
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, callbackWitDiagnosticRepairIntegration, expected\n",
+          "start": 233082
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(callbackWitDiagnosticRepairImplementation) === expected)\n\t\treturn callbackWitDiagnosticRepairImplementation;\n\tconst valueIndexProfileReadRepair\n",
+          "start": 233112
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, callbackWitDiagnosticRepairImplementation, expected\n",
+          "start": 233246
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(valueIndexProfileReadRepair) === expected)\n\t\treturn valueIndexProfileReadRepair;\n\tconst callbackEntrySelectionRepair\n",
+          "start": 233276
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, valueIndexProfileReadRepair, expected\n",
+          "start": 233410
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(callbackEntrySelectionRepair) === expected)\n\t\treturn callbackEntrySelectionRepair;\n\tconst callbackRefinementsPhpWasmPromotion\n",
+          "start": 233440
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, callbackEntrySelectionRepair, expected\n",
+          "start": 233574
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(callbackRefinementsPhpWasmPromotion) === expected)\n\t\treturn callbackRefinementsPhpWasmPromotion;\n\tconst testProfilesRegistrationGap\n",
+          "start": 233604
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, callbackRefinementsPhpWasmPromotion, expected\n",
+          "start": 233730
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(testProfilesRegistrationGap) === expected)\n\t\treturn testProfilesRegistrationGap;\n\tconst callbackRefinementsPhpWasmHostedArchive\n",
+          "start": 233760
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, testProfilesRegistrationGap, expected\n",
+          "start": 233898
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(callbackRefinementsPhpWasmHostedArchive) === expected)\n\t\treturn callbackRefinementsPhpWasmHostedArchive;\n\tconst dependentCheckedRecordWitArchive\n",
+          "start": 233928
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, callbackRefinementsPhpWasmHostedArchive, expected\n",
+          "start": 234059
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(dependentCheckedRecordWitArchive) === expected)\n\t\treturn dependentCheckedRecordWitArchive;\n\tconst dependentCheckedRecordBrowserPathDiagnosticRepair\n",
+          "start": 234089
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, dependentCheckedRecordWitArchive, expected\n",
+          "start": 234237
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(dependentCheckedRecordBrowserPathDiagnosticRepair) === expected)\n\t\treturn dependentCheckedRecordBrowserPathDiagnosticRepair;\n\tconst dependentCheckedRecordWitRetainedPkgConfigRepair\n",
+          "start": 234267
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, dependentCheckedRecordBrowserPathDiagnosticRepair, expected\n",
+          "start": 234414
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(dependentCheckedRecordWitRetainedPkgConfigRepair) === expected)\n\t\treturn dependentCheckedRecordWitRetainedPkgConfigRepair;\n\tconst callbackPhpWasmStaticQualityRepair\n",
+          "start": 234444
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, dependentCheckedRecordWitRetainedPkgConfigRepair, expected\n",
+          "start": 234577
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(callbackPhpWasmStaticQualityRepair) === expected)\n\t\treturn callbackPhpWasmStaticQualityRepair;\n\tconst phpWasmCallbackEntrySuiteSplit\n",
+          "start": 234607
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, callbackPhpWasmStaticQualityRepair, expected\n",
+          "start": 234736
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(phpWasmCallbackEntrySuiteSplit) === expected)\n\t\treturn phpWasmCallbackEntrySuiteSplit;\n\tconst dependentCheckedRecordPhpArchive\n",
+          "start": 234766
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, phpWasmCallbackEntrySuiteSplit, expected\n",
+          "start": 234897
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(dependentCheckedRecordPhpArchive) === expected)\n\t\treturn dependentCheckedRecordPhpArchive;\n\tconst dependentCheckedRecordWitPkgConfigSpaceRepair\n",
+          "start": 234927
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, dependentCheckedRecordPhpArchive, expected\n",
+          "start": 235071
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(dependentCheckedRecordWitPkgConfigSpaceRepair) === expected)\n\t\treturn dependentCheckedRecordWitPkgConfigSpaceRepair;\n\tconst dependentCheckedRecordPromotionArtifactIdentityHardening\n",
+          "start": 235101
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, dependentCheckedRecordWitPkgConfigSpaceRepair, expected\n",
+          "start": 235256
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(dependentCheckedRecordPromotionArtifactIdentityHardening) === expected)\n\t\treturn dependentCheckedRecordPromotionArtifactIdentityHardening;\n\tconst dependentCheckedRecordPhpWasmArchive\n",
+          "start": 235286
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, dependentCheckedRecordPromotionArtifactIdentityHardening, expected\n",
+          "start": 235421
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(dependentCheckedRecordPhpWasmArchive) === expected)\n\t\treturn dependentCheckedRecordPhpWasmArchive;\n\tconst dependentCheckedRecordWitExportCountRepair\n",
+          "start": 235451
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, dependentCheckedRecordPhpWasmArchive, expected\n",
+          "start": 235592
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(dependentCheckedRecordWitExportCountRepair) === expected)\n\t\treturn dependentCheckedRecordWitExportCountRepair;\n\tconst dependentCheckedRecordBrowserDiagnosticRepair\n",
+          "start": 235622
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, dependentCheckedRecordWitExportCountRepair, expected\n",
+          "start": 235766
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(dependentCheckedRecordBrowserDiagnosticRepair) === expected)\n\t\treturn dependentCheckedRecordBrowserDiagnosticRepair;\n\tconst dependentCheckedRecordDotnetArchive\n",
+          "start": 235796
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, dependentCheckedRecordBrowserDiagnosticRepair, expected\n",
+          "start": 235930
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(dependentCheckedRecordDotnetArchive) === expected)\n\t\treturn dependentCheckedRecordDotnetArchive;\n\tconst dependentCheckedRecordNativeArchive\n",
+          "start": 235960
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, dependentCheckedRecordDotnetArchive, expected\n",
+          "start": 236094
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(dependentCheckedRecordNativeArchive) === expected)\n\t\treturn dependentCheckedRecordNativeArchive;\n\tconst dependentCheckedRecordPromotionContract\n",
+          "start": 236124
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, dependentCheckedRecordNativeArchive, expected\n",
+          "start": 236262
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(dependentCheckedRecordPromotionContract) === expected)\n\t\treturn dependentCheckedRecordPromotionContract;\n\tconst hostedRefinementVerifierRepair\n",
+          "start": 236292
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, dependentCheckedRecordPromotionContract, expected\n",
+          "start": 236421
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(hostedRefinementVerifierRepair) === expected)\n\t\treturn hostedRefinementVerifierRepair;\n\tconst callbackFinPhpWasmNominalRefusalRepair\n",
+          "start": 236451
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, hostedRefinementVerifierRepair, expected\n",
+          "start": 236588
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(callbackFinPhpWasmNominalRefusalRepair) === expected)\n\t\treturn callbackFinPhpWasmNominalRefusalRepair;\n\tconst dependentCheckedRecordPhpSpacePathRepair\n",
+          "start": 236618
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, callbackFinPhpWasmNominalRefusalRepair, expected\n",
+          "start": 236757
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(dependentCheckedRecordPhpSpacePathRepair) === expected)\n\t\treturn dependentCheckedRecordPhpSpacePathRepair;\n\tconst callbackFinPhpWasmValidatorRepair\n",
+          "start": 236787
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, dependentCheckedRecordPhpSpacePathRepair, expected\n",
+          "start": 236919
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(callbackFinPhpWasmValidatorRepair) === expected)\n\t\treturn callbackFinPhpWasmValidatorRepair;\n\tconst callbackCheckedRecordRetainedPackages\n",
+          "start": 236949
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, callbackFinPhpWasmValidatorRepair, expected\n",
+          "start": 237085
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(callbackCheckedRecordRetainedPackages) === expected)\n\t\treturn callbackCheckedRecordRetainedPackages;\n\tconst ownedCheckedRecordJavaScriptRetention\n",
+          "start": 237115
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, callbackCheckedRecordRetainedPackages, expected\n",
+          "start": 237251
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(ownedCheckedRecordJavaScriptRetention) === expected)\n\t\treturn ownedCheckedRecordJavaScriptRetention;\n\tconst callbackSubtypeRetainedPackages\n",
+          "start": 237281
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, ownedCheckedRecordJavaScriptRetention, expected\n",
+          "start": 237411
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(callbackSubtypeRetainedPackages) === expected)\n\t\treturn callbackSubtypeRetainedPackages;\n\tconst recursivePhpWasmEvidenceReplayRepair\n",
+          "start": 237441
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, callbackSubtypeRetainedPackages, expected\n",
+          "start": 237576
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(recursivePhpWasmEvidenceReplayRepair) === expected)\n\t\treturn recursivePhpWasmEvidenceReplayRepair;\n\tconst ownedCheckedRecordHostedArchivers\n",
+          "start": 237606
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, recursivePhpWasmEvidenceReplayRepair, expected\n",
+          "start": 237738
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(ownedCheckedRecordHostedArchivers) === expected)\n\t\treturn ownedCheckedRecordHostedArchivers;\n\tconst zeroPayloadMatrixClosure\n",
+          "start": 237768
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, ownedCheckedRecordHostedArchivers, expected\n",
+          "start": 237891
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(zeroPayloadMatrixClosure) === expected)\n\t\treturn zeroPayloadMatrixClosure;\n\tconst ownedCheckedRecordPhpWasmRetainedHandoff\n",
+          "start": 237921
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, zeroPayloadMatrixClosure, expected\n",
+          "start": 238060
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(ownedCheckedRecordPhpWasmRetainedHandoff) === expected)\n\t\treturn ownedCheckedRecordPhpWasmRetainedHandoff;\n\tconst ownedCheckedRecordEvidenceContract\n",
+          "start": 238090
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, ownedCheckedRecordPhpWasmRetainedHandoff, expected\n",
+          "start": 238223
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(ownedCheckedRecordEvidenceContract) === expected)\n\t\treturn ownedCheckedRecordEvidenceContract;\n\tconst callbackSubtypeDocumentationReviewRepair\n",
+          "start": 238253
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, ownedCheckedRecordEvidenceContract, expected\n",
+          "start": 238392
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(callbackSubtypeDocumentationReviewRepair) === expected)\n\t\treturn callbackSubtypeDocumentationReviewRepair;\n\tconst phpWasmRefinementEntryGeneratorClosure\n",
+          "start": 238422
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, callbackSubtypeDocumentationReviewRepair, expected\n",
+          "start": 238559
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(phpWasmRefinementEntryGeneratorClosure) === expected)\n\t\treturn phpWasmRefinementEntryGeneratorClosure;\n\tconst callbackSubtypeDocumentationReadiness\n",
+          "start": 238589
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, phpWasmRefinementEntryGeneratorClosure, expected\n",
+          "start": 238725
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(callbackSubtypeDocumentationReadiness) === expected)\n\t\treturn callbackSubtypeDocumentationReadiness;\n\tconst callbackSubtypeTestRegistration\n",
+          "start": 238755
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, callbackSubtypeDocumentationReadiness, expected\n",
+          "start": 238885
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(callbackSubtypeTestRegistration) === expected)\n\t\treturn callbackSubtypeTestRegistration;\n\tconst callbackSubtypeReviewRepair\n",
+          "start": 238915
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, callbackSubtypeTestRegistration, expected\n",
+          "start": 239041
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(callbackSubtypeReviewRepair) === expected)\n\t\treturn callbackSubtypeReviewRepair;\n\tconst callbackSubtypePromotionContract\n",
+          "start": 239071
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, callbackSubtypeReviewRepair, expected\n",
+          "start": 239202
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(callbackSubtypePromotionContract) === expected)\n\t\treturn callbackSubtypePromotionContract;\n\tconst callbackSubtypeHostedArchiveFoundation\n",
+          "start": 239232
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, callbackSubtypePromotionContract, expected\n",
+          "start": 239369
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(callbackSubtypeHostedArchiveFoundation) === expected)\n\t\treturn callbackSubtypeHostedArchiveFoundation;\n\tconst phpWasmRefinementEntryDocumentationPrecision\n",
+          "start": 239399
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, callbackSubtypeHostedArchiveFoundation, expected\n",
+          "start": 239542
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(phpWasmRefinementEntryDocumentationPrecision) === expected)\n\t\treturn phpWasmRefinementEntryDocumentationPrecision;\n\tconst phpWasmRefinementEntryDocumentation\n",
+          "start": 239572
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, phpWasmRefinementEntryDocumentationPrecision, expected\n",
+          "start": 239706
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(phpWasmRefinementEntryDocumentation) === expected)\n\t\treturn phpWasmRefinementEntryDocumentation;\n\tconst phpWasmRefinementEntryHostedVerifierRoot\n",
+          "start": 239736
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, phpWasmRefinementEntryDocumentation, expected\n",
+          "start": 239875
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(phpWasmRefinementEntryHostedVerifierRoot) === expected)\n\t\treturn phpWasmRefinementEntryHostedVerifierRoot;\n\tconst phpWasmRefinementEntryPromotion\n",
+          "start": 239905
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, phpWasmRefinementEntryHostedVerifierRoot, expected\n",
+          "start": 240035
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(phpWasmRefinementEntryPromotion) === expected)\n\t\treturn phpWasmRefinementEntryPromotion;\n\tconst phpWasmRefinementEntryHostedVerifierClosure\n",
+          "start": 240065
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, phpWasmRefinementEntryPromotion, expected\n",
+          "start": 240207
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(phpWasmRefinementEntryHostedVerifierClosure) === expected)\n\t\treturn phpWasmRefinementEntryHostedVerifierClosure;\n\tconst phpWasmRefinementCiClosureRepair\n",
+          "start": 240237
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, phpWasmRefinementEntryHostedVerifierClosure, expected\n",
+          "start": 240368
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(phpWasmRefinementCiClosureRepair) === expected)\n\t\treturn phpWasmRefinementCiClosureRepair;\n\tconst phpWasmRefinementEntryHosted\n",
+          "start": 240398
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, phpWasmRefinementCiClosureRepair, expected\n",
+          "start": 240525
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(phpWasmRefinementEntryHosted) === expected)\n\t\treturn phpWasmRefinementEntryHosted;\n\tconst phpWasmRefinementEntryMatrix\n",
+          "start": 240555
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, phpWasmRefinementEntryHosted, expected\n",
+          "start": 240682
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(phpWasmRefinementEntryMatrix) === expected)\n\t\treturn phpWasmRefinementEntryMatrix;\n\tconst phpWasmRefinementCiMatrix\n",
+          "start": 240712
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, phpWasmRefinementEntryMatrix, expected\n",
+          "start": 240836
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(phpWasmRefinementCiMatrix) === expected)\n\t\treturn phpWasmRefinementCiMatrix;\n\tconst callbackSubtypeManagedConsumerRepair\n",
+          "start": 240866
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, phpWasmRefinementCiMatrix, expected\n",
+          "start": 241001
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(callbackSubtypeManagedConsumerRepair) === expected)\n\t\treturn callbackSubtypeManagedConsumerRepair;\n\tconst phpWasmIndexedRefinementEntry\n",
+          "start": 241031
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, callbackSubtypeManagedConsumerRepair, expected\n",
+          "start": 241159
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(phpWasmIndexedRefinementEntry) === expected)\n\t\treturn phpWasmIndexedRefinementEntry;\n\tconst callableClosureRefusal\n",
+          "start": 241189
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, phpWasmIndexedRefinementEntry, expected\n",
+          "start": 241310
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n\t\t= beforePhpWasmCallbackEntrySource(path, stage, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n\t\t= beforePhpWasmOwnedRefinementEntrySource(path, stage, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(callableClosureRefusal) === expected)\n\t\treturn callableClosureRefusal;\n\tconst phpWasmCallbackEntry\n\t\t= beforePhpWasmCallbackEntrySource(path, callableClosureRefusal, expected);\n\tif(sha256(phpWasmCallbackEntry) === expected)\n\t\treturn phpWasmCallbackEntry;\n\tconst phpWasmOwnedRefinementEntry\n\t\t= beforePhpWasmOwnedRefinementEntrySource(path, phpWasmCallbackEntry, expected);\n\tif(sha256(phpWasmOwnedRefinementEntry) === expected)\n\t\treturn phpWasmOwnedRefinementEntry;\n\tconst phpWasmRefinementEntryInstalled\n",
+          "start": 241340
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, phpWasmOwnedRefinementEntry, expected\n",
+          "start": 241761
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(phpWasmRefinementEntryInstalled) === expected)\n\t\treturn phpWasmRefinementEntryInstalled;\n\tconst callbackSubtypePhpWasmProfile\n",
+          "start": 241791
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, phpWasmRefinementEntryInstalled, expected\n",
+          "start": 241919
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n\t\t= beforeWitConsumerRootRepairSource(path, stage, expected);\n\tif(expected !== undefined && sha256(stage) === expected) return stage;\n\tstage = beforeNominalEntryRepairSource(path, stage, expected);\n\tif(expected !== undefined && sha256(stage) === expected) return stage;\n\tstage\n\t\t= beforeCallbackRefinementsPhpWasmSource(path, stage, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(callbackSubtypePhpWasmProfile) === expected)\n\t\treturn callbackSubtypePhpWasmProfile;\n\tconst witConsumerRootRepair\n\t\t= beforeWitConsumerRootRepairSource(path, callbackSubtypePhpWasmProfile, expected);\n\tif(sha256(witConsumerRootRepair) === expected) return witConsumerRootRepair;\n\tconst nominalEntryRepair = beforeNominalEntryRepairSource(path, witConsumerRootRepair, expected);\n\tif(sha256(nominalEntryRepair) === expected) return nominalEntryRepair;\n\tconst callbackRefinementsPhpWasm\n\t\t= beforeCallbackRefinementsPhpWasmSource(path, nominalEntryRepair, expected);\n\tif(sha256(callbackRefinementsPhpWasm) === expected)\n\t\treturn callbackRefinementsPhpWasm;\n\tconst callbackSubtypePhpWasm\n",
+          "start": 241949
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, callbackRefinementsPhpWasm, expected\n",
+          "start": 242495
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(callbackSubtypePhpWasm) === expected)\n\t\treturn callbackSubtypePhpWasm;\n\tconst ownedCheckedRecordPhpWasm\n",
+          "start": 242525
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, callbackSubtypePhpWasm, expected\n",
+          "start": 242649
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(ownedCheckedRecordPhpWasm) === expected)\n\t\treturn ownedCheckedRecordPhpWasm;\n\tconst ownedSubtypePhpWasmQualification\n",
+          "start": 242679
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, ownedCheckedRecordPhpWasm, expected\n",
+          "start": 242810
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(ownedSubtypePhpWasmQualification) === expected)\n\t\treturn ownedSubtypePhpWasmQualification;\n\tconst ownedSubtypePhpWasmPackageGap\n",
+          "start": 242840
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, ownedSubtypePhpWasmQualification, expected\n",
+          "start": 242968
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(ownedSubtypePhpWasmPackageGap) === expected)\n\t\treturn ownedSubtypePhpWasmPackageGap;\n\tconst ownedCheckedRecordManaged\n",
+          "start": 242998
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, ownedSubtypePhpWasmPackageGap, expected\n",
+          "start": 243122
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(ownedCheckedRecordManaged) === expected)\n\t\treturn ownedCheckedRecordManaged;\n\tconst ownedCheckedRecordLanguage\n",
+          "start": 243152
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, ownedCheckedRecordManaged, expected\n",
+          "start": 243277
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(ownedCheckedRecordLanguage) === expected)\n\t\treturn ownedCheckedRecordLanguage;\n\tconst ownedCheckedRecordNativePerl\n",
+          "start": 243307
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, ownedCheckedRecordLanguage, expected\n",
+          "start": 243434
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(ownedCheckedRecordNativePerl) === expected)\n\t\treturn ownedCheckedRecordNativePerl;\n\tconst ownedCheckedRecordJavaScript\n",
+          "start": 243464
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, ownedCheckedRecordNativePerl, expected\n",
+          "start": 243591
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(ownedCheckedRecordJavaScript) === expected)\n\t\treturn ownedCheckedRecordJavaScript;\n\tconst ownedCheckedRecordCallable\n",
+          "start": 243621
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, ownedCheckedRecordJavaScript, expected\n",
+          "start": 243746
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(ownedCheckedRecordCallable) === expected)\n\t\treturn ownedCheckedRecordCallable;\n\tconst ownedCheckedRecordFoundation\n",
+          "start": 243776
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, ownedCheckedRecordCallable, expected\n",
+          "start": 243903
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n\t\t= beforeDependentRecordConstructorAuthoritySource(path, stage, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(ownedCheckedRecordFoundation) === expected)\n\t\treturn ownedCheckedRecordFoundation;\n\tconst dependentRecordConstructorAuthority\n\t\t= beforeDependentRecordConstructorAuthoritySource(path, ownedCheckedRecordFoundation, expected);\n\tif(sha256(dependentRecordConstructorAuthority) === expected)\n\t\treturn dependentRecordConstructorAuthority;\n\tconst callbackCheckedRecordPromotion\n",
+          "start": 243933
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, dependentRecordConstructorAuthority, expected\n",
+          "start": 244219
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(callbackCheckedRecordPromotion) === expected)\n\t\treturn callbackCheckedRecordPromotion;\n\tconst callbackDependentIntegration\n",
+          "start": 244249
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, callbackCheckedRecordPromotion, expected\n",
+          "start": 244376
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(callbackDependentIntegration) === expected)\n\t\treturn callbackDependentIntegration;\n\tconst callbackCheckedRecordNativeErrorRepair\n",
+          "start": 244406
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, callbackDependentIntegration, expected\n",
+          "start": 244543
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(callbackCheckedRecordNativeErrorRepair) === expected)\n\t\treturn callbackCheckedRecordNativeErrorRepair;\n\tconst callbackCheckedRecordRemaining\n",
+          "start": 244573
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, callbackCheckedRecordNativeErrorRepair, expected\n",
+          "start": 244702
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage = beforeCallbackCheckedRecordLanguageSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(callbackCheckedRecordRemaining) === expected)\n\t\treturn callbackCheckedRecordRemaining;\n\tconst callbackCheckedRecordLanguage = beforeCallbackCheckedRecordLanguageSource(\n\t\tpath, callbackCheckedRecordRemaining, expected\n",
+          "start": 244732
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected) return stage;\n\tstage = beforeCallbackCheckedRecordNativeSource(path, stage, expected);\n\tif(expected !== undefined && sha256(stage) === expected) return stage;\n\tstage = beforeCallbackCheckedRecordNpmBrowserSource(path, stage, expected);\n\tif(expected !== undefined && sha256(stage) === expected) return stage;\n\tstage = beforeCallbackCheckedRecordFoundationSource(path, stage, expected);\n\tif(expected !== undefined && sha256(stage) === expected) return stage;\n\tstage\n",
+          "previous": "\tif(sha256(callbackCheckedRecordLanguage) === expected) return callbackCheckedRecordLanguage;\n\tconst callbackCheckedRecordNative = beforeCallbackCheckedRecordNativeSource(path, callbackCheckedRecordLanguage, expected);\n\tif(sha256(callbackCheckedRecordNative) === expected) return callbackCheckedRecordNative;\n\tconst callbackCheckedRecordNpmBrowser = beforeCallbackCheckedRecordNpmBrowserSource(path, callbackCheckedRecordNative, expected);\n\tif(sha256(callbackCheckedRecordNpmBrowser) === expected) return callbackCheckedRecordNpmBrowser;\n\tconst callbackCheckedRecordFoundation = beforeCallbackCheckedRecordFoundationSource(path, callbackCheckedRecordNpmBrowser, expected);\n\tif(sha256(callbackCheckedRecordFoundation) === expected) return callbackCheckedRecordFoundation;\n\tconst dependentCheckedRecordJvmArchive\n",
+          "start": 244886
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, callbackCheckedRecordFoundation, expected\n",
+          "start": 245458
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(dependentCheckedRecordJvmArchive) === expected)\n\t\treturn dependentCheckedRecordJvmArchive;\n\tconst dependentCheckedRecordHostedArchivers\n",
+          "start": 245488
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, dependentCheckedRecordJvmArchive, expected\n",
+          "start": 245624
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(dependentCheckedRecordHostedArchivers) === expected)\n\t\treturn dependentCheckedRecordHostedArchivers;\n\tconst nestedCheckedRecordRegressionContract\n",
+          "start": 245654
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, dependentCheckedRecordHostedArchivers, expected\n",
+          "start": 245790
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(nestedCheckedRecordRegressionContract) === expected)\n\t\treturn nestedCheckedRecordRegressionContract;\n\tconst dependentCheckedRecordPythonArchive\n",
+          "start": 245820
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, nestedCheckedRecordRegressionContract, expected\n",
+          "start": 245954
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(dependentCheckedRecordPythonArchive) === expected)\n\t\treturn dependentCheckedRecordPythonArchive;\n\tconst dependentCheckedRecordPerlArchive\n",
+          "start": 245984
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, dependentCheckedRecordPythonArchive, expected\n",
+          "start": 246116
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(dependentCheckedRecordPerlArchive) === expected)\n\t\treturn dependentCheckedRecordPerlArchive;\n\tconst dependentCheckedRecordHostedFailureRepair\n",
+          "start": 246146
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, dependentCheckedRecordPerlArchive, expected\n",
+          "start": 246286
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(dependentCheckedRecordHostedFailureRepair) === expected)\n\t\treturn dependentCheckedRecordHostedFailureRepair;\n\tconst dependentCheckedRecordRubyArchive\n",
+          "start": 246316
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, dependentCheckedRecordHostedFailureRepair, expected\n",
+          "start": 246448
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(dependentCheckedRecordRubyArchive) === expected)\n\t\treturn dependentCheckedRecordRubyArchive;\n\tconst dependentCheckedRecordTypeSurfaceGap\n",
+          "start": 246478
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, dependentCheckedRecordRubyArchive, expected\n",
+          "start": 246613
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(dependentCheckedRecordTypeSurfaceGap) === expected)\n\t\treturn dependentCheckedRecordTypeSurfaceGap;\n\tconst dependentCheckedRecordPhpWasm\n",
+          "start": 246643
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, dependentCheckedRecordTypeSurfaceGap, expected\n",
+          "start": 246771
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(dependentCheckedRecordPhpWasm) === expected)\n\t\treturn dependentCheckedRecordPhpWasm;\n\tconst dependentCheckedRecordJvm\n",
+          "start": 246801
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, dependentCheckedRecordPhpWasm, expected\n",
+          "start": 246925
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(dependentCheckedRecordJvm) === expected)\n\t\treturn dependentCheckedRecordJvm;\n\tconst dependentCheckedRecordDotnet\n",
+          "start": 246955
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, dependentCheckedRecordJvm, expected\n",
+          "start": 247082
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(dependentCheckedRecordDotnet) === expected)\n\t\treturn dependentCheckedRecordDotnet;\n\tconst dependentCheckedRecordWit\n",
+          "start": 247112
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, dependentCheckedRecordDotnet, expected\n",
+          "start": 247236
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(dependentCheckedRecordWit) === expected)\n\t\treturn dependentCheckedRecordWit;\n\tconst dependentCheckedRecordPhp\n",
+          "start": 247266
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, dependentCheckedRecordWit, expected\n",
+          "start": 247390
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(dependentCheckedRecordPhp) === expected)\n\t\treturn dependentCheckedRecordPhp;\n\tconst dependentCheckedRecordRustArchive\n",
+          "start": 247420
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, dependentCheckedRecordPhp, expected\n",
+          "start": 247552
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(dependentCheckedRecordRustArchive) === expected)\n\t\treturn dependentCheckedRecordRustArchive;\n\tconst dependentCheckedRecordArchiveSelectionRepair\n",
+          "start": 247582
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, dependentCheckedRecordRustArchive, expected\n",
+          "start": 247725
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(dependentCheckedRecordArchiveSelectionRepair) === expected)\n\t\treturn dependentCheckedRecordArchiveSelectionRepair;\n\tconst zeroPayloadNativeControlContract\n",
+          "start": 247755
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, dependentCheckedRecordArchiveSelectionRepair, expected\n",
+          "start": 247886
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(zeroPayloadNativeControlContract) === expected)\n\t\treturn zeroPayloadNativeControlContract;\n\tconst dependentCheckedRecordHostedArchivePreparation\n",
+          "start": 247916
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, zeroPayloadNativeControlContract, expected\n",
+          "start": 248061
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(dependentCheckedRecordHostedArchivePreparation) === expected)\n\t\treturn dependentCheckedRecordHostedArchivePreparation;\n\tconst dependentCheckedRecordRust\n",
+          "start": 248091
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, dependentCheckedRecordHostedArchivePreparation, expected\n",
+          "start": 248216
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(dependentCheckedRecordRust) === expected)\n\t\treturn dependentCheckedRecordRust;\n\tconst dependentCheckedRecordRuby\n",
+          "start": 248246
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, dependentCheckedRecordRust, expected\n",
+          "start": 248371
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(dependentCheckedRecordRuby) === expected)\n\t\treturn dependentCheckedRecordRuby;\n\tconst dependentCheckedRecordPython\n",
+          "start": 248401
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, dependentCheckedRecordRuby, expected\n",
+          "start": 248528
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(dependentCheckedRecordPython) === expected)\n\t\treturn dependentCheckedRecordPython;\n\tconst dependentCheckedRecordPerl\n",
+          "start": 248558
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, dependentCheckedRecordPython, expected\n",
+          "start": 248683
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(dependentCheckedRecordPerl) === expected)\n\t\treturn dependentCheckedRecordPerl;\n\tconst dependentCheckedRecordNative\n",
+          "start": 248713
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, dependentCheckedRecordPerl, expected\n",
+          "start": 248840
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage = beforeDependentCheckedRecordFoundationSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(dependentCheckedRecordNative) === expected)\n\t\treturn dependentCheckedRecordNative;\n\tconst dependentCheckedRecord = beforeDependentCheckedRecordFoundationSource(\n\t\tpath, dependentCheckedRecordNative, expected\n",
+          "start": 248870
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(dependentCheckedRecord) === expected)\n\t\treturn dependentCheckedRecord;\n\tconst dependentGenericSubtypeCiPinReconciliation\n",
+          "start": 249027
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, dependentCheckedRecord, expected\n",
+          "start": 249168
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage = beforeDependentGenericSubtypeCiSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(dependentGenericSubtypeCiPinReconciliation) === expected)\n\t\treturn dependentGenericSubtypeCiPinReconciliation;\n\tconst dependentGenericSubtypeCi = beforeDependentGenericSubtypeCiSource(\n\t\tpath, dependentGenericSubtypeCiPinReconciliation, expected\n",
+          "start": 249198
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage = beforeDependentGenericSubtypeSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(dependentGenericSubtypeCi) === expected)\n\t\treturn dependentGenericSubtypeCi;\n\tconst dependentGenericSubtype = beforeDependentGenericSubtypeSource(\n\t\tpath, dependentGenericSubtypeCi, expected\n",
+          "start": 249348
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage = beforeGenericSubtypeTestRegistrationSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(dependentGenericSubtype) === expected)\n\t\treturn dependentGenericSubtype;\n\tconst genericTestRegistration = beforeGenericSubtypeTestRegistrationSource(\n\t\tpath, dependentGenericSubtype, expected\n",
+          "start": 249496
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected) return stage;\n\tstage = beforeGenericSubtypeManagedWitSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(genericTestRegistration) === expected) return genericTestRegistration;\n\tconst genericManagedWit = beforeGenericSubtypeManagedWitSource(\n\t\tpath, genericTestRegistration, expected\n",
+          "start": 249651
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected) return stage;\n\tstage = beforeGenericSubtypeLanguageSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(genericManagedWit) === expected) return genericManagedWit;\n\tconst genericLanguages = beforeGenericSubtypeLanguageSource(\n\t\tpath, genericManagedWit, expected\n",
+          "start": 249798
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected) return stage;\n\tstage = beforeGenericSubtypeNativePerlSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(genericLanguages) === expected) return genericLanguages;\n\tconst genericNativePerl = beforeGenericSubtypeNativePerlSource(\n\t\tpath, genericLanguages, expected\n",
+          "start": 249943
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected) return stage;\n\tstage = beforeCallbackSubtypeHistoryPinReconciliationSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(genericNativePerl) === expected) return genericNativePerl;\n\tconst pinReconciliation = beforeCallbackSubtypeHistoryPinReconciliationSource(\n\t\tpath, genericNativePerl, expected\n",
+          "start": 250090
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected) return stage;\n\tstage = beforeCallbackSubtypeRemainingPhpRepairSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(pinReconciliation) === expected) return pinReconciliation;\n\tconst phpCallbackRepair = beforeCallbackSubtypeRemainingPhpRepairSource(\n\t\tpath, pinReconciliation, expected\n",
+          "start": 250252
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected) return stage;\n\tstage = beforeZeroPayloadPhpWasmPromotionSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(phpCallbackRepair) === expected) return phpCallbackRepair;\n\tconst phpWasmPromotion = beforeZeroPayloadPhpWasmPromotionSource(\n\t\tpath, phpCallbackRepair, expected\n",
+          "start": 250408
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected) return stage;\n\tstage = beforeZeroPayloadPhpWasmArchiveSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(phpWasmPromotion) === expected) return phpWasmPromotion;\n\tconst phpWasmArchive = beforeZeroPayloadPhpWasmArchiveSource(\n\t\tpath, phpWasmPromotion, expected\n",
+          "start": 250558
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected) return stage;\n\tstage = beforeCallbackSubtypeRemainingRuntimeRepairSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(phpWasmArchive) === expected) return phpWasmArchive;\n\tconst callbackRuntimeRepair = beforeCallbackSubtypeRemainingRuntimeRepairSource(\n\t\tpath, phpWasmArchive, expected\n",
+          "start": 250706
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected) return stage;\n\tstage = beforeOwnedSubtypeNativeTransferAcceptanceSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(callbackRuntimeRepair) === expected) return callbackRuntimeRepair;\n\tconst nativeTransferAcceptance = beforeOwnedSubtypeNativeTransferAcceptanceSource(\n\t\tpath, callbackRuntimeRepair, expected\n",
+          "start": 250866
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected) return stage;\n\tstage = beforeHostedAcceptanceHandoffRepairSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(nativeTransferAcceptance) === expected) return nativeTransferAcceptance;\n\tconst handoffRepair = beforeHostedAcceptanceHandoffRepairSource(\n\t\tpath, nativeTransferAcceptance, expected\n",
+          "start": 251025
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected) return stage;\n\tstage = beforeZeroPayloadPhpWasmPlainExportRepairSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(handoffRepair) === expected) return handoffRepair;\n\tconst plainExportRepair = beforeZeroPayloadPhpWasmPlainExportRepairSource(\n\t\tpath, handoffRepair, expected\n",
+          "start": 251177
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected) return stage;\n\tstage = beforeZeroPayloadHostedPromotionSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(plainExportRepair) === expected) return plainExportRepair;\n\tconst hostedPromotion = beforeZeroPayloadHostedPromotionSource(\n\t\tpath, plainExportRepair, expected\n",
+          "start": 251335
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected) return stage;\n\tstage = beforeZeroPayloadPerlWitEvidenceSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(hostedPromotion) === expected) return hostedPromotion;\n\tconst perlWitEvidence = beforeZeroPayloadPerlWitEvidenceSource(\n\t\tpath, hostedPromotion, expected\n",
+          "start": 251484
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected) return stage;\n\tstage = beforeZeroPayloadLanguageEvidenceSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(perlWitEvidence) === expected) return perlWitEvidence;\n\tconst languageEvidence = beforeZeroPayloadLanguageEvidenceSource(\n\t\tpath, perlWitEvidence, expected\n",
+          "start": 251633
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected) return stage;\n\tstage = beforeZeroPayloadHostedArchivePreparationSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(languageEvidence) === expected) return languageEvidence;\n\tconst archivePreparation = beforeZeroPayloadHostedArchivePreparationSource(\n\t\tpath, languageEvidence, expected\n",
+          "start": 251783
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected) return stage;\n\tstage = beforeZeroPayloadBrowserEvidenceSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(archivePreparation) === expected) return archivePreparation;\n\tconst browserEvidence = beforeZeroPayloadBrowserEvidenceSource(\n\t\tpath, archivePreparation, expected\n",
+          "start": 251941
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected) return stage;\n\tstage = beforeZeroPayloadOrdinaryEvidenceExpectationSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(browserEvidence) === expected) return browserEvidence;\n\tconst evidenceExpectation = beforeZeroPayloadOrdinaryEvidenceExpectationSource(\n\t\tpath, browserEvidence, expected\n",
+          "start": 252090
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected) return stage;\n\tstage = beforeHistoryReaderBufferRepairSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(evidenceExpectation) === expected) return evidenceExpectation;\n\tconst bufferRepair = beforeHistoryReaderBufferRepairSource(\n\t\tpath, evidenceExpectation, expected\n",
+          "start": 252251
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected) return stage;\n\tstage = beforeHubTransitionGapSource(path, stage, expected);\n\tif(expected !== undefined && sha256(stage) === expected) return stage;\n\tstage = beforeHistoryReaderHubRepairSource(path, stage, expected);\n\tif(expected !== undefined && sha256(stage) === expected) return stage;\n\tstage = beforeLedgerTransitionGapSource(path, stage, expected);\n\tif(expected !== undefined && sha256(stage) === expected) return stage;\n\tstage = beforeZeroPayloadRustPromotionSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(bufferRepair) === expected) return bufferRepair;\n\tconst hubGap = beforeHubTransitionGapSource(path, bufferRepair, expected);\n\tif(sha256(hubGap) === expected) return hubGap;\n\tconst readerRepair = beforeHistoryReaderHubRepairSource(path, hubGap, expected);\n\tif(sha256(readerRepair) === expected) return readerRepair;\n\tconst ledgerGap = beforeLedgerTransitionGapSource(path, readerRepair, expected);\n\tif(sha256(ledgerGap) === expected) return ledgerGap;\n\tconst zeroPayloadRustPromotion = beforeZeroPayloadRustPromotionSource(\n\t\tpath, ledgerGap, expected\n",
+          "start": 252399
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(zeroPayloadRustPromotion) === expected)\n\t\treturn zeroPayloadRustPromotion;\n\tconst zeroPayloadTypeSurfaceGapPrelude\n",
+          "start": 252957
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, zeroPayloadRustPromotion, expected\n",
+          "start": 253081
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage = beforeZeroPayloadDotnetPromotionSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(zeroPayloadTypeSurfaceGapPrelude) === expected)\n\t\treturn zeroPayloadTypeSurfaceGapPrelude;\n\tconst zeroPayloadDotnetPromotion = beforeZeroPayloadDotnetPromotionSource(\n\t\tpath, zeroPayloadTypeSurfaceGapPrelude, expected\n",
+          "start": 253111
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage = beforeZeroPayloadJvmPromotionSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(zeroPayloadDotnetPromotion) === expected)\n\t\treturn zeroPayloadDotnetPromotion;\n\tconst zeroPayloadJvmPromotion = beforeZeroPayloadJvmPromotionSource(\n\t\tpath, zeroPayloadDotnetPromotion, expected\n",
+          "start": 253262
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage = beforeZeroPayloadRubyHistorySource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(zeroPayloadJvmPromotion) === expected)\n\t\treturn zeroPayloadJvmPromotion;\n\tconst zeroPayloadRuby = beforeZeroPayloadRubyHistorySource(\n\t\tpath, zeroPayloadJvmPromotion, expected\n",
+          "start": 253410
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected) return stage;\n\tstage = beforeZeroPayloadTypeSurfaceGapSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(zeroPayloadRuby) === expected) return zeroPayloadRuby;\n\tconst zeroPayloadTypeSurfaceGap = beforeZeroPayloadTypeSurfaceGapSource(\n\t\tpath, zeroPayloadRuby, expected\n",
+          "start": 253557
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage = beforeZeroPayloadPythonHistorySource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(zeroPayloadTypeSurfaceGap) === expected)\n\t\treturn zeroPayloadTypeSurfaceGap;\n\tconst zeroPayloadPython = beforeZeroPayloadPythonHistorySource(\n\t\tpath, zeroPayloadTypeSurfaceGap, expected\n",
+          "start": 253705
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected) return stage;\n\tstage = beforeZeroPayloadJvmNullBoundarySource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(zeroPayloadPython) === expected) return zeroPayloadPython;\n\tconst zeroPayloadJvmNullBoundary = beforeZeroPayloadJvmNullBoundarySource(\n\t\tpath, zeroPayloadPython, expected\n",
+          "start": 253854
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage = beforeZeroPayloadNativePromotionSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(zeroPayloadJvmNullBoundary) === expected)\n\t\treturn zeroPayloadJvmNullBoundary;\n\tconst zeroPayloadNativePromotion = beforeZeroPayloadNativePromotionSource(\n\t\tpath, zeroPayloadJvmNullBoundary, expected\n",
+          "start": 254003
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage = beforeZeroPayloadBrowserDiagnosticSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(zeroPayloadNativePromotion) === expected)\n\t\treturn zeroPayloadNativePromotion;\n\tconst zeroPayloadBrowserDiagnostic = beforeZeroPayloadBrowserDiagnosticSource(\n\t\tpath, zeroPayloadNativePromotion, expected\n",
+          "start": 254154
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage = beforeZeroPayloadNativeEvidenceSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(zeroPayloadBrowserDiagnostic) === expected)\n\t\treturn zeroPayloadBrowserDiagnostic;\n\tconst zeroPayloadNativeEvidence = beforeZeroPayloadNativeEvidenceSource(\n\t\tpath, zeroPayloadBrowserDiagnostic, expected\n",
+          "start": 254307
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage = beforeZeroPayloadPhpWasmHistorySource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(zeroPayloadNativeEvidence) === expected)\n\t\treturn zeroPayloadNativeEvidence;\n\tconst zeroPayloadPhpWasm = beforeZeroPayloadPhpWasmHistorySource(\n\t\tpath, zeroPayloadNativeEvidence, expected\n",
+          "start": 254457
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage\n",
+          "previous": "\tif(sha256(zeroPayloadPhpWasm) === expected)\n\t\treturn zeroPayloadPhpWasm;\n\tconst zeroPayloadPerlBooleanRepair\n",
+          "start": 254607
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, zeroPayloadPhpWasm, expected\n",
+          "start": 254734
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage = beforeZeroPayloadWitHistorySource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(zeroPayloadPerlBooleanRepair) === expected)\n\t\treturn zeroPayloadPerlBooleanRepair;\n\tconst zeroPayloadWit = beforeZeroPayloadWitHistorySource(\n\t\tpath, zeroPayloadPerlBooleanRepair, expected\n",
+          "start": 254764
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected) return stage;\n\tstage = beforeZeroPayloadPhpHistorySource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(zeroPayloadWit) === expected) return zeroPayloadWit;\n\tconst zeroPayloadPhp = beforeZeroPayloadPhpHistorySource(\n\t\tpath, zeroPayloadWit, expected\n",
+          "start": 254910
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected) return stage;\n\tstage = beforeZeroPayloadPerlArchiveSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(zeroPayloadPhp) === expected) return zeroPayloadPhp;\n\tconst zeroPayloadPerlArchive = beforeZeroPayloadPerlArchiveSource(\n\t\tpath, zeroPayloadPhp, expected\n",
+          "start": 255054
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage = beforeZeroPayloadRustArchiveSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(zeroPayloadPerlArchive) === expected)\n\t\treturn zeroPayloadPerlArchive;\n\tconst zeroPayloadRustArchive = beforeZeroPayloadRustArchiveSource(\n\t\tpath, zeroPayloadPerlArchive, expected\n",
+          "start": 255199
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage = beforeZeroPayloadRustCiSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(zeroPayloadRustArchive) === expected)\n\t\treturn zeroPayloadRustArchive;\n\tconst zeroPayloadRustCi = beforeZeroPayloadRustCiSource(\n\t\tpath, zeroPayloadRustArchive, expected\n",
+          "start": 255346
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected) return stage;\n\tstage = beforeZeroPayloadRustAuditRepairSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(zeroPayloadRustCi) === expected) return zeroPayloadRustCi;\n\tconst zeroPayloadRustAuditRepair = beforeZeroPayloadRustAuditRepairSource(\n\t\tpath, zeroPayloadRustCi, expected\n",
+          "start": 255488
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage = beforeZeroPayloadRustInstalledSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(zeroPayloadRustAuditRepair) === expected)\n\t\treturn zeroPayloadRustAuditRepair;\n\tconst zeroPayloadRustInstalled = beforeZeroPayloadRustInstalledSource(\n\t\tpath, zeroPayloadRustAuditRepair, expected\n",
+          "start": 255637
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage = beforeZeroPayloadRustSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(zeroPayloadRustInstalled) === expected)\n\t\treturn zeroPayloadRustInstalled;\n\tconst zeroPayloadRust = beforeZeroPayloadRustSource(\n\t\tpath, zeroPayloadRustInstalled, expected\n",
+          "start": 255786
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected) return stage;\n\tstage = beforeZeroPayloadJvmArchiveSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(zeroPayloadRust) === expected) return zeroPayloadRust;\n\tconst zeroPayloadJvmArchive = beforeZeroPayloadJvmArchiveSource(\n\t\tpath, zeroPayloadRust, expected\n",
+          "start": 255926
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage = beforeZeroPayloadJvmSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(zeroPayloadJvmArchive) === expected)\n\t\treturn zeroPayloadJvmArchive;\n\tconst zeroPayloadJvm = beforeZeroPayloadJvmSource(\n\t\tpath, zeroPayloadJvmArchive, expected\n",
+          "start": 256070
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected) return stage;\n\tstage\n",
+          "previous": "\tif(sha256(zeroPayloadJvm) === expected) return zeroPayloadJvm;\n\tconst zeroPayloadDotnetControlRepair\n",
+          "start": 256209
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, zeroPayloadJvm, expected\n",
+          "start": 256336
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage = beforeZeroPayloadDotnetArchiveSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(zeroPayloadDotnetControlRepair) === expected)\n\t\treturn zeroPayloadDotnetControlRepair;\n\tconst zeroPayloadDotnetArchive = beforeZeroPayloadDotnetArchiveSource(\n\t\tpath, zeroPayloadDotnetControlRepair, expected\n",
+          "start": 256366
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage = beforeZeroPayloadVariantSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(zeroPayloadDotnetArchive) === expected)\n\t\treturn zeroPayloadDotnetArchive;\n\tconst zeroPayloadVariant = beforeZeroPayloadVariantSource(\n\t\tpath, zeroPayloadDotnetArchive, expected\n",
+          "start": 256515
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected) return stage;\n\tstage\n",
+          "previous": "\tif(sha256(zeroPayloadVariant) === expected) return zeroPayloadVariant;\n\tconst zeroPayloadDotnetVerifierRepair\n",
+          "start": 256658
+        },
+        {
+          "current": "\t\t\tpath, stage, expected\n",
+          "previous": "\t\t\tpath, zeroPayloadVariant, expected\n",
+          "start": 256786
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage = beforeZeroPayloadDotnetCiSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(zeroPayloadDotnetVerifierRepair) === expected)\n\t\treturn zeroPayloadDotnetVerifierRepair;\n\tconst zeroPayloadDotnetCi = beforeZeroPayloadDotnetCiSource(\n\t\tpath, zeroPayloadDotnetVerifierRepair, expected\n",
+          "start": 256816
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected) return stage;\n\tstage = beforeZeroPayloadDotnetSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(zeroPayloadDotnetCi) === expected) return zeroPayloadDotnetCi;\n\tconst zeroPayloadDotnet = beforeZeroPayloadDotnetSource(\n\t\tpath, zeroPayloadDotnetCi, expected\n",
+          "start": 256960
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected) return stage;\n\tstage = beforeZeroPayloadNativeArchiveSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(zeroPayloadDotnet) === expected) return zeroPayloadDotnet;\n\tconst zeroPayloadNativeArchive = beforeZeroPayloadNativeArchiveSource(\n\t\tpath, zeroPayloadDotnet, expected\n",
+          "start": 257100
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage = beforeZeroPayloadNativeSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(zeroPayloadNativeArchive) === expected)\n\t\treturn zeroPayloadNativeArchive;\n\tconst zeroPayloadNative = beforeZeroPayloadNativeSource(\n\t\tpath, zeroPayloadNativeArchive, expected\n",
+          "start": 257247
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected) return stage;\n\tstage = beforeZeroPayloadBrowserArchiveSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(zeroPayloadNative) === expected) return zeroPayloadNative;\n\tconst zeroPayloadBrowserArchive = beforeZeroPayloadBrowserArchiveSource(\n\t\tpath, zeroPayloadNative, expected\n",
+          "start": 257389
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage = beforeZeroPayloadBrowserCiSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(zeroPayloadBrowserArchive) === expected)\n\t\treturn zeroPayloadBrowserArchive;\n\tconst zeroPayloadBrowserCi = beforeZeroPayloadBrowserCiSource(\n\t\tpath, zeroPayloadBrowserArchive, expected\n",
+          "start": 257537
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected) return stage;\n\tstage = beforeZeroPayloadBrowserSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(zeroPayloadBrowserCi) === expected) return zeroPayloadBrowserCi;\n\tconst zeroPayloadBrowser = beforeZeroPayloadBrowserSource(\n\t\tpath, zeroPayloadBrowserCi, expected\n",
+          "start": 257682
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected) return stage;\n\tstage = beforeZeroPayloadNpmInstalledSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(zeroPayloadBrowser) === expected) return zeroPayloadBrowser;\n\tconst zeroPayloadNpmInstalled = beforeZeroPayloadNpmInstalledSource(\n\t\tpath, zeroPayloadBrowser, expected\n",
+          "start": 257823
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected) return stage;\n\tstage = beforeZeroPayloadJavaScriptSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(zeroPayloadNpmInstalled) === expected) return zeroPayloadNpmInstalled;\n\tconst zeroPayloadJavaScript = beforeZeroPayloadJavaScriptSource(\n\t\tpath, zeroPayloadNpmInstalled, expected\n",
+          "start": 257969
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected) return stage;\n\tstage = beforeZeroPayloadNpmFoundationSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(zeroPayloadJavaScript) === expected) return zeroPayloadJavaScript;\n\tconst zeroPayloadNpm = beforeZeroPayloadNpmFoundationSource(\n\t\tpath, zeroPayloadJavaScript, expected\n",
+          "start": 258113
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected) return stage;\n\tstage = beforeZeroPayloadCheckedRecordSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(zeroPayloadNpm) === expected) return zeroPayloadNpm;\n\tconst zeroPayload = beforeZeroPayloadCheckedRecordSource(\n\t\tpath, zeroPayloadNpm, expected\n",
+          "start": 258260
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected) return stage;\n\tstage = beforeProjectedCheckedRecordMirrorSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(zeroPayload) === expected) return zeroPayload;\n\tconst projectedMirror = beforeProjectedCheckedRecordMirrorSource(\n\t\tpath, zeroPayload, expected\n",
+          "start": 258407
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected) return stage;\n\tstage = beforePerlEngineOwnedRefinementClosureSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(projectedMirror) === expected) return projectedMirror;\n\tconst perlEngineClosure = beforePerlEngineOwnedRefinementClosureSource(\n\t\tpath, projectedMirror, expected\n",
+          "start": 258558
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected) return stage;\n\tstage = beforeStructuralSubtypePartitionValidatorSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(perlEngineClosure) === expected) return perlEngineClosure;\n\tconst partitionValidator = beforeStructuralSubtypePartitionValidatorSource(\n\t\tpath, perlEngineClosure, expected\n",
+          "start": 258713
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected) return stage;\n\tstage = beforeGenericSubtypeNpmBrowserSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(partitionValidator) === expected) return partitionValidator;\n\tconst genericSubtypeNpm = beforeGenericSubtypeNpmBrowserSource(\n\t\tpath, partitionValidator, expected\n",
+          "start": 258871
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected) return stage;\n\tstage = beforeOwnedSubtypeCoreRegistrationSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(genericSubtypeNpm) === expected) return genericSubtypeNpm;\n\tconst ownedSubtypeRegistration = beforeOwnedSubtypeCoreRegistrationSource(\n\t\tpath, genericSubtypeNpm, expected\n",
+          "start": 259018
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage = beforeCoreRunnerHeadroomSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(ownedSubtypeRegistration) === expected)\n\t\treturn ownedSubtypeRegistration;\n\tconst runnerHeadroom = beforeCoreRunnerHeadroomSource(\n\t\tpath, ownedSubtypeRegistration, expected\n",
+          "start": 259169
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected) return stage;\n\tstage = beforeGenericSubtypeCompositionSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(runnerHeadroom) === expected) return runnerHeadroom;\n\tconst genericSubtype = beforeGenericSubtypeCompositionSource(\n\t\tpath, runnerHeadroom, expected\n",
+          "start": 259312
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected) return stage;\n\tstage = beforeOwnedSubtypeHostRegistrationSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(genericSubtype) === expected) return genericSubtype;\n\tconst hostRegistration = beforeOwnedSubtypeHostRegistrationSource(\n\t\tpath, genericSubtype, expected\n",
+          "start": 259460
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected) return stage;\n\tstage = beforeOwnedSubtypeJavaScriptTransferSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(hostRegistration) === expected) return hostRegistration;\n\tconst ownedJavaScriptTransfer = beforeOwnedSubtypeJavaScriptTransferSource(\n\t\tpath, hostRegistration, expected\n",
+          "start": 259611
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\tstage = beforeOwnedSubtypeJavaScriptSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(ownedJavaScriptTransfer) === expected)\n\t\treturn ownedJavaScriptTransfer;\n\tconst ownedJavaScript = beforeOwnedSubtypeJavaScriptSource(\n\t\tpath, ownedJavaScriptTransfer, expected\n",
+          "start": 259764
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected) return stage;\n\tstage = beforeOwnedRefinementCarriersSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(ownedJavaScript) === expected) return ownedJavaScript;\n\tconst ownedCarriers = beforeOwnedRefinementCarriersSource(\n\t\tpath, ownedJavaScript, expected\n",
+          "start": 259911
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected) return stage;\n\tstage = beforeOwnedRefinementModelSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(ownedCarriers) === expected) return ownedCarriers;\n\tconst ownedRefinement = beforeOwnedRefinementModelSource(\n\t\tpath, ownedCarriers, expected\n",
+          "start": 260057
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected) return stage;\n\tstage = beforeOwnedSubtypeAnalysisSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(ownedRefinement) === expected) return ownedRefinement;\n\tconst ownedSubtype = beforeOwnedSubtypeAnalysisSource(\n\t\tpath, ownedRefinement, expected\n",
+          "start": 260200
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected) return stage;\n\tstage = beforeOwnedSubtypeJavaScriptHistoricalSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(ownedSubtype) === expected) return ownedSubtype;\n\tconst ownedHistory = beforeOwnedSubtypeJavaScriptHistoricalSource(\n\t\tpath, ownedSubtype, expected\n",
+          "start": 260343
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected) return stage;\n\tstage = beforeCallbackSubtypeRemainingAcceptanceSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(ownedHistory) === expected) return ownedHistory;\n\tconst remainingAcceptance = beforeCallbackSubtypeRemainingAcceptanceSource(\n\t\tpath, ownedHistory, expected\n",
+          "start": 260498
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected) return stage;\n\tstage = beforeCallbackSubtypeRemainingSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(remainingAcceptance) === expected) return remainingAcceptance;\n\tconst remainingCallbacks = beforeCallbackSubtypeRemainingSource(\n\t\tpath, remainingAcceptance, expected\n",
+          "start": 260655
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected) return stage;\n\tstage = beforeCallbackSubtypeLanguageSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(remainingCallbacks) === expected) return remainingCallbacks;\n\tconst languages = beforeCallbackSubtypeLanguageSource(\n\t\tpath, remainingCallbacks, expected\n",
+          "start": 260802
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected) return stage;\n\tstage = beforeCallbackSubtypeNativeSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(languages) === expected) return languages;\n\tconst nativeCallbacks = beforeCallbackSubtypeNativeSource(\n\t\tpath, languages, expected\n",
+          "start": 260948
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected) return stage;\n\tstage = beforeCallbackSubtypeBrowserArtifactSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(nativeCallbacks) === expected) return nativeCallbacks;\n\tconst browserArtifact = beforeCallbackSubtypeBrowserArtifactSource(\n\t\tpath, nativeCallbacks, expected\n",
+          "start": 261092
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected) return stage;\n\tstage = beforeCallbackSubtypeNpmAcceptanceSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(browserArtifact) === expected) return browserArtifact;\n\tconst npmAcceptance = beforeCallbackSubtypeNpmAcceptanceSource(\n\t\tpath, browserArtifact, expected\n",
+          "start": 261245
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected) return stage;\n\tstage = beforeCallbackSubtypeNpmBrowserSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(npmAcceptance) === expected) return npmAcceptance;\n\tconst npmBrowser = beforeCallbackSubtypeNpmBrowserSource(\n\t\tpath, npmAcceptance, expected\n",
+          "start": 261396
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected) return stage;\n\tstage = beforeCallbackSubtypeFoundationSource(\n\t\tpath, stage, expected\n",
+          "previous": "\tif(sha256(npmBrowser) === expected) return npmBrowser;\n\tconst foundation = beforeCallbackSubtypeFoundationSource(\n\t\tpath, npmBrowser, expected\n",
+          "start": 261544
+        },
+        {
+          "current": "\tif(expected !== undefined && sha256(stage) === expected) return stage;\n",
+          "previous": "\tif(sha256(foundation) === expected) return foundation;\n",
+          "start": 261692
+        },
+        {
+          "current": "\t\tpath, stage, expected\n",
+          "previous": "\t\tpath, foundation, expected\n",
+          "start": 261824
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "b16f490e1e52853f00a56b54d942d0d37ce8906c781cee0c932de00f20146304"
+    }
+  ]
+}
