@@ -121,8 +121,13 @@ export const phpWasmCallbackEntrySourceFixture = async (family, originalSource =
 		, kind: "closure", label: `${definition.namespace}.${closure.name}:body`
 	}));
 	const entries = [...marked.entries, ...closureEntries];
+	const entryForms = { ...marked.entryForms };
+	for(const item of closureEntries) entryForms[item.symbol] = "function";
+	assert.deepEqual(Object.keys(entryForms).sort()
+		, entries.map(item => item.symbol).sort());
 	validatePhpWasmCallbackEntrySelection(entries);
-	const value = { family, path: definition.path, source: marked.source, entries
+	const value = { family, path: definition.path, source: marked.source
+		, entries, entryForms
 		, sourceEdits: marked.edits, closureEdits
 		, originalSha256: sha256(original), probeSha256: sha256(marked.source) };
 	assert.equal(restorePhpWasmCallbackEntrySource(value), original);

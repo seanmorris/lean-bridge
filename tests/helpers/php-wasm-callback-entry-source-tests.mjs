@@ -18,8 +18,16 @@ test("callback source probes name source creation and authored closure bodies re
 		assert.ok(fixture.entries.some(item => item.kind === "closure"));
 		assert.equal(new Set(fixture.entries.map(item => item.symbol)).size
 			, fixture.entries.length);
+		assert.deepEqual(Object.keys(fixture.entryForms).sort()
+			, fixture.entries.map(item => item.symbol).sort());
 		for(const item of fixture.entries)
+		{
+			assert.ok(["function", "global"].includes(
+				fixture.entryForms[item.symbol]));
+			if(item.kind === "closure")
+				assert.equal(fixture.entryForms[item.symbol], "function");
 			assert.match(fixture.source, new RegExp(`export ${item.symbol}`, "u"), item.symbol);
+		}
 	}
 });
 
