@@ -1,0 +1,200 @@
+{
+  "additions": [
+    {
+      "currentSha256": "b24373fc89d144a90bb2be09827576868c0730aa0737a8f15401fce8b2486860",
+      "path": "scripts/update-native-fork-transfer-producer-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "000e45b1e22af6413bd671f7f6c9d76b07f2d47f2c15d4ee356a9d5a42597b3c",
+      "path": "tests/helpers/native-fork-transfer-producer-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "b17634af80c03d2ae59eacd0f623dcca293ea0600a8c4df1a4a46e93c0ac441a",
+      "path": "tests/helpers/native-fork-transfer-producer-repair-source-history.mjs"
+    }
+  ],
+  "forkImplementationCommit": "f8007d77d66821c6f9ee5ca0570f5891e43335fe",
+  "implementationCommit": "f6bd01f875495e85acbf3855367683f092192623",
+  "integrationBaseCommit": "f6bd01f875495e85acbf3855367683f092192623",
+  "integrationUpdates": [
+    {
+      "currentSha256": "b16f490e1e52853f00a56b54d942d0d37ce8906c781cee0c932de00f20146304",
+      "edits": [
+        {
+          "current": "import { beforeNativeForkTransferProducerRepairSource, nativeForkTransferProducerRepairNormalizationPaths } from \"./native-fork-transfer-producer-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 1311
+        },
+        {
+          "current": "\t...nativeForkTransferProducerRepairNormalizationPaths\n\t, ...ownedSubtypeDelegationRepairNormalizationPaths\n",
+          "previous": "\t...ownedSubtypeDelegationRepairNormalizationPaths\n",
+          "start": 174524
+        },
+        {
+          "current": "\tconst nativeForkTransferProducerRepair\n\t\t= beforeNativeForkTransferProducerRepairSource(path, text, expected);\n\tif(sha256(nativeForkTransferProducerRepair) === expected)\n\t\treturn nativeForkTransferProducerRepair;\n\ttext = nativeForkTransferProducerRepair;\n",
+          "previous": "",
+          "start": 215227
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "94a2fc5fc9f9c6e76b0bcda9c98a70c33101182a879be2602d41f0b250e0c058"
+    },
+    {
+      "currentSha256": "e52f2c63b5568806a59529ef0e96b593d1f39da09d5ba18a7cd51ec19500aa50",
+      "edits": [
+        {
+          "current": "import \"./helpers/native-fork-transfer-producer-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 893
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "9625f1cd83fff6f6a11527b48485ada54430154b4ca4c5af981e808d1db05d5e"
+    }
+  ],
+  "milestone": "native-fork-transfer-producer-repair-source-v1",
+  "predecessorCommit": "fbd2866b162e0eb33bdbbf1044ee62df12d7169d",
+  "schemaVersion": 1,
+  "scope": "Verify immutable native fork and installed C transfer evidence using authenticated original producer trees, generator closures, and deferred source reads. Restore the exact historical inventories directly and retain stopped source reversals, unknown-source and forged-evidence refusals, generated caller and package digests, complete predecessor replay, and the live C-transfer CI gate. Authenticate both source commits and their unchanged merge. No inventory, runtime, workflow, or installed observation changes.",
+  "transferImplementationCommit": "d495c7c391a9545f3397493f2e27fa72053e0430",
+  "updates": [
+    {
+      "currentSha256": "4612700521832781c05760285f1661ddbe7c9ab68e036f47f7246ab107145a75",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { readTypeSurface } from \"../../src/adoption/type-surface.mjs\";\n",
+          "start": 239
+        },
+        {
+          "current": "",
+          "previous": "import { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from \"../../src/build/native-graph-model.mjs\";\nimport { nativeRecursiveCallableCallsProbe } from \"./native-recursive-callable-calls-probe.mjs\";\nimport { assertOwnedDotnetProcess } from \"./owned-dotnet-process-evidence.mjs\";\n",
+          "start": 341
+        },
+        {
+          "current": "import { bytesAtProducer, sourceAtProducer, typeSurfaceContractsAtProducer } from \"./producer-source.mjs\";\nimport { moduleAtProducerWithSourceReads } from \"./producer-module.mjs\";\n\nexport const nativeForkRepairProducer = \"733bd5a289841309c3ed0b6a99e322cdcb361a09\";\n",
+          "previous": "import { beforeManagedCiIsolation, managedCiIsolationHistoricalBytes } from \"./managed-ci-isolation-history.mjs\";\n",
+          "start": 578
+        },
+        {
+          "current": "\t\tconst bytes = bytesAtProducer(nativeForkRepairProducer, path, record.sources[path]);\n",
+          "previous": "\t\tconst bytes = managedCiIsolationHistoricalBytes(path, await readFile(path), record.sources[path]);\n",
+          "start": 3041
+        },
+        {
+          "current": "\tconst { createCompiledNativeModel, generateCompiledNativeLeanAdapters }\n\t\t= await moduleAtProducerWithSourceReads(nativeForkRepairProducer, \"src/build/native-graph-model.mjs\");\n\tconst { nativeRecursiveCallableCallsProbe }\n\t\t= await moduleAtProducerWithSourceReads(nativeForkRepairProducer, \"tests/helpers/native-recursive-callable-calls-probe.mjs\");\n",
+          "previous": "",
+          "start": 4237
+        },
+        {
+          "current": "\tconst contracts = typeSurfaceContractsAtProducer(nativeForkRepairProducer);\n\tconst inventory = sourceAtProducer(nativeForkRepairProducer, \"docs/type-surface.v1.json\", record.sources[\"docs/type-surface.v1.json\"]);\n",
+          "previous": "\tconst { irSchema, consumers } = await readTypeSurface(), contracts = { irSchema, consumers };\n\tconst inventory = beforeManagedCiIsolation(\"docs/type-surface.v1.json\", await readFile(\"docs/type-surface.v1.json\", \"utf8\"), record.sources[\"docs/type-surface.v1.json\"]);\n",
+          "start": 6382
+        },
+        {
+          "current": "\tif(replay)\n\t{\n\t\tconst { assertOwnedDotnetProcess } = await moduleAtProducerWithSourceReads(\n\t\t\tnativeForkRepairProducer, \"tests/helpers/owned-dotnet-process-evidence.mjs\");\n\t\tawait assertOwnedDotnetProcess(previous);\n\t}\n",
+          "previous": "\tif(replay) await assertOwnedDotnetProcess(previous);\n",
+          "start": 7139
+        }
+      ],
+      "path": "tests/helpers/native-fork-repair-evidence.mjs",
+      "previousSha256": "ef682f017e88af81ba365c6bcdbb2403cb0e7f6f22b05274d284c5186b2a175b"
+    },
+    {
+      "currentSha256": "6d2dda7f8dba26dd4f6be83c1884a9a249db53c0ba8c95d1c6899bec115bea4d",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { readFile } from \"node:fs/promises\";\n",
+          "start": 142
+        },
+        {
+          "current": "",
+          "previous": "import { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from \"../../src/build/native-graph-model.mjs\";\nimport { generateOwnedCPackage } from \"../../src/backends/c/owned-package.mjs\";\n",
+          "start": 275
+        },
+        {
+          "current": "import { moduleAtProducerWithSourceReads } from \"./producer-module.mjs\";\nimport { bytesAtProducer, sourceAtProducer } from \"./producer-source.mjs\";\n",
+          "previous": "import { validatePackageSetReceipt } from \"../../src/release/package-set-receipt.mjs\";\nimport { ownedTransferConfiguration, ownedTransferSource } from \"./owned-transfer-fixture.mjs\";\n",
+          "start": 364
+        },
+        {
+          "current": "/** The commit whose complete source tree every digest in the installed transfer record names. */\nexport const ownedTransferPackageProducer = \"2a0329ae6819dfa3c2387e1bdda628c21df8e62b\";\nlet producerPromise;\nconst producerModules = () => producerPromise ??= Promise.all([\n\t\"src/build/native-graph-model.mjs\"\n\t, \"src/backends/c/owned-package.mjs\"\n\t, \"src/release/package-set-receipt.mjs\"\n\t, \"tests/helpers/owned-transfer-fixture.mjs\"\n].map(path => moduleAtProducerWithSourceReads(ownedTransferPackageProducer, path)))\n\t.then(modules => Object.assign({}, ...modules));\n",
+          "previous": "",
+          "start": 1008
+        },
+        {
+          "current": "\tconst {\n\t\tcreateCompiledNativeModel, generateCompiledNativeLeanAdapters\n\t\t, generateOwnedCPackage, validatePackageSetReceipt\n\t\t, ownedTransferConfiguration, ownedTransferSource\n\t} = await producerModules();\n",
+          "previous": "",
+          "start": 2498
+        },
+        {
+          "current": "\tconst fixture = bytesAtProducer(ownedTransferPackageProducer, \"tests/fixtures/structured-types/owned-installed-transfers.c\");\n\tconst lean = sourceAtProducer(ownedTransferPackageProducer, \"tests/fixtures/onboarding/owned-aggregates/Owned.lean\") + ownedTransferSource;\n",
+          "previous": "\tconst fixture = await readFile(\"tests/fixtures/structured-types/owned-installed-transfers.c\");\n\tconst lean = (await readFile(\"tests/fixtures/onboarding/owned-aggregates/Owned.lean\", \"utf8\")) + ownedTransferSource;\n",
+          "start": 3591
+        }
+      ],
+      "path": "tests/helpers/owned-transfer-package-evidence.mjs",
+      "previousSha256": "d63f62da10932bd4b4e7648a35cea9ab3cce6cf9fee1f04a1b723ed83ca15066"
+    },
+    {
+      "currentSha256": "a14c85e3e1345c09fe240d1a6ba0d4c058876a17fad5b5307f47227e87a0a64e",
+      "edits": [
+        {
+          "current": "import { assertNativeForkRepair, nativeForkRepairProducer } from \"./helpers/native-fork-repair-evidence.mjs\";\n",
+          "previous": "import { assertNativeForkRepair } from \"./helpers/native-fork-repair-evidence.mjs\";\n",
+          "start": 261
+        },
+        {
+          "current": "import { sourceAtProducer } from \"./helpers/producer-source.mjs\";\n",
+          "previous": "import { beforeManagedCiIsolation } from \"./helpers/managed-ci-isolation-history.mjs\";\n",
+          "start": 737
+        },
+        {
+          "current": "\t\tconst current = sourceAtProducer(nativeForkRepairProducer, update.path, update.currentSha256);\n\t\tconst previous = beforeNativeForkRepair(update.path, current, update.previousSha256);\n\t\tassert.equal(sha256(previous), update.previousSha256);\n\t\tassert.equal(beforeNativeForkRepair(update.path, previous, update.previousSha256), previous);\n",
+          "previous": "\t\tconst current = beforeManagedCiIsolation(update.path, await readFile(update.path, \"utf8\"), update.currentSha256);\n\t\tassert.equal(sha256(beforeNativeForkRepair(update.path, current)), update.previousSha256);\n",
+          "start": 3019
+        }
+      ],
+      "path": "tests/native-fork-repair-evidence.test.mjs",
+      "previousSha256": "2193c92addb1f874fccddf961b173c82d8f4ef4e1422dee3f5afd75a6e7257db"
+    },
+    {
+      "currentSha256": "42e5acb6b271598cb4d26ce707e5369a6749d81e040f014968cd6b404e820e83",
+      "edits": [
+        {
+          "current": "import { assertOwnedTransferPackageExecution, assertOwnedTransferPackageCi, ownedTransferPackageProducer } from \"./helpers/owned-transfer-package-evidence.mjs\";\n",
+          "previous": "import { assertOwnedTransferPackageExecution, assertOwnedTransferPackageCi } from \"./helpers/owned-transfer-package-evidence.mjs\";\n",
+          "start": 355
+        },
+        {
+          "current": "import { bytesAtProducer, sourceAtProducer } from \"./helpers/producer-source.mjs\";\n",
+          "previous": "",
+          "start": 835
+        },
+        {
+          "current": "\t// Every recorded digest names the producer tree; later owned and Fin layers never reach back this far.\n\tfor(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(bytesAtProducer(ownedTransferPackageProducer, path)), digest, path);\n",
+          "previous": "\tfor(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(await sourceAtMilestone(path)), digest, path);\n",
+          "start": 1796
+        },
+        {
+          "current": "\t\tconst current = sourceAtProducer(ownedTransferPackageProducer, update.path, update.currentSha256), prior = beforeOwnedTransferPackage(update.path, current, update.previousSha256);\n",
+          "previous": "\t\tconst current = (await sourceAtMilestone(update.path)).toString(), prior = beforeOwnedTransferPackage(update.path, current);\n",
+          "start": 2350
+        },
+        {
+          "current": "\t\tassert.equal(beforeOwnedTransferPackage(update.path, prior, update.previousSha256), prior);\n",
+          "previous": "\t\tassert.equal(beforeOwnedTransferPackage(update.path, prior), prior);\n",
+          "start": 2586
+        },
+        {
+          "current": "\tconst path = \"docs/type-surface.v1.json\", current = sourceAtProducer(ownedTransferPackageProducer, path, record.sources[path]);\n\tconst prior = JSON.parse(beforeOwnedTransferPackage(path, current, record.updates.find(update => update.path === path)?.previousSha256));\n\tfor(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = record.sources[file.path] ?? sha256(bytesAtProducer(ownedTransferPackageProducer, file.path));\n",
+          "previous": "\tconst current = (await sourceAtMilestone(\"docs/type-surface.v1.json\")).toString();\n\tconst prior = JSON.parse(beforeOwnedTransferPackage(\"docs/type-surface.v1.json\", current));\n\tfor(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(await sourceAtMilestone(file.path));\n",
+          "start": 2780
+        }
+      ],
+      "path": "tests/owned-transfer-package-evidence.test.mjs",
+      "previousSha256": "a67ea1dee70012824673fcbcd42220796e40b3233f431f0e8cdf2403ca254068"
+    }
+  ]
+}

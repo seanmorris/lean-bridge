@@ -14,6 +14,7 @@ import { beforeOwnedDotnetProducerRepairSource, ownedDotnetProducerRepairNormali
 import { beforeDocumentationWorkflowRepairSource, documentationWorkflowRepairNormalizationPaths } from "./documentation-workflow-repair-source-history.mjs";
 import { beforeOwnedJavaScriptProducerRepairSource, ownedJavaScriptProducerRepairNormalizationPaths } from "./owned-javascript-producer-repair-source-history.mjs";
 import { beforeOwnedSubtypeDelegationRepairSource, ownedSubtypeDelegationRepairNormalizationPaths } from "./owned-subtype-delegation-repair-source-history.mjs";
+import { beforeNativeForkTransferProducerRepairSource, nativeForkTransferProducerRepairNormalizationPaths } from "./native-fork-transfer-producer-repair-source-history.mjs";
 import { beforeCoreEvidenceMemoryRepairSource, coreEvidenceMemoryRepairNormalizationPaths } from "./core-evidence-memory-repair-source-history.mjs";
 import { beforeValueIndexPromotionMilestoneRepairSource, valueIndexPromotionMilestoneRepairNormalizationPaths } from "./value-index-promotion-milestone-repair-source-history.mjs";
 import { beforeCoreMilestoneReplayRepairSource, coreMilestoneReplayRepairNormalizationPaths } from "./core-milestone-replay-repair-source-history.mjs";
@@ -2107,7 +2108,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...ownedSubtypeDelegationRepairNormalizationPaths
+	...nativeForkTransferProducerRepairNormalizationPaths
+	, ...ownedSubtypeDelegationRepairNormalizationPaths
 	, ...ownedJavaScriptProducerRepairNormalizationPaths
 	, ...documentationWorkflowRepairNormalizationPaths
 	, ...ownedDotnetProducerRepairNormalizationPaths
@@ -2957,6 +2959,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
+	const nativeForkTransferProducerRepair
+		= beforeNativeForkTransferProducerRepairSource(path, text, expected);
+	if(sha256(nativeForkTransferProducerRepair) === expected)
+		return nativeForkTransferProducerRepair;
+	text = nativeForkTransferProducerRepair;
 	const ownedSubtypeDelegationRepair
 		= beforeOwnedSubtypeDelegationRepairSource(path, text, expected);
 	if(sha256(ownedSubtypeDelegationRepair) === expected)
