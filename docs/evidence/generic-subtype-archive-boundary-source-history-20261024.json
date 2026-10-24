@@ -1,0 +1,140 @@
+{
+  "additions": [
+    {
+      "currentSha256": "29cf6032f7231f8999c1132791b7d06fdfa9929e26e9b35f207be77488f9f0e9",
+      "path": "tests/helpers/generic-subtype-archive-boundary-tests.mjs"
+    },
+    {
+      "currentSha256": "370569c0da1d45d032616694dc8d2b98e11b9a68f9ee484031a574603edde9b4",
+      "path": "scripts/update-generic-subtype-archive-boundary-source-history.mjs"
+    },
+    {
+      "currentSha256": "e75823925cb3497fa2c194e807ff7f694bec182fe6062ec56c3b316da4322700",
+      "path": "tests/helpers/generic-subtype-archive-boundary-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "3c0603fd6ac044e6fe78516516b4e713007c69c2eb19647ec10ac8ffdaf0e146",
+      "path": "tests/helpers/generic-subtype-archive-boundary-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "11cdd43393d39e76208d4e729f4d8bddd93d21df",
+  "implementationCommits": [
+    "11cdd43393d39e76208d4e729f4d8bddd93d21df"
+  ],
+  "integrationBaseCommit": "11cdd43393d39e76208d4e729f4d8bddd93d21df",
+  "integrationUpdates": [
+    {
+      "currentSha256": "5e7024ff7c0147d19bfe5e99fd6792d6f192988b3a2e4ba6bb10c449fdcb4869",
+      "edits": [
+        {
+          "current": "import { beforeGenericSubtypeArchiveBoundarySource, genericSubtypeArchiveBoundaryNormalizationPaths } from \"./generic-subtype-archive-boundary-source-history.mjs\";\n",
+          "previous": "",
+          "start": 3894
+        },
+        {
+          "current": "\t...genericSubtypeArchiveBoundaryNormalizationPaths\n\t, ...borrowReceiverProducerRepairNormalizationPaths\n",
+          "previous": "\t...borrowReceiverProducerRepairNormalizationPaths\n",
+          "start": 177097
+        },
+        {
+          "current": "\t\t= beforeGenericSubtypeArchiveBoundarySource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage\n",
+          "previous": "",
+          "start": 218651
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "37987ddf07a63d6fd666d8191aca7ff70a25885191a9d2c6654816b764fb25af"
+    },
+    {
+      "currentSha256": "417b029cd7d054001edf5d4184799a1be760f947d19b35f895137fe2f19bebd2",
+      "edits": [
+        {
+          "current": "import \"./helpers/generic-subtype-archive-boundary-tests.mjs\";\nimport \"./helpers/generic-subtype-archive-boundary-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 2375
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "6b84eab0e83e0dca74ceb3d059fff47c5572fb8354ff2e76da613df94d85572e"
+    }
+  ],
+  "milestone": "generic-subtype-archive-boundary-source-v1",
+  "predecessorCommit": "c506aadba5209e2b76fee794897a2db0d23d814f",
+  "schemaVersion": 1,
+  "scope": "Accept only the literal NuGet [Content_Types].xml basename in portable hosted ZIP and generic-output paths while preserving traversal, directory and nonliteral-name refusals. Select the eight original 20261023 and four managed 20261024 generic-Subtype archive roots explicitly, use the same roots in availability checks and rendered links, and replay the twelve archives serially with immediate failure propagation. Preserve original ZIPs, receipts, runtime observations and closed lane/route validation. Register small path, date, ordering and substitution controls without parsing the type inventory. No runtime, support-inventory or installed acceptance claim changes.",
+  "updates": [
+    {
+      "currentSha256": "65ce957ca0a1541821e6214cdb34d951423fda3e06e36cbb13ac417ef86cefb9",
+      "edits": [
+        {
+          "current": "\t// NuGet retains this literal metadata filename, never a directory or glob.\n\treturn value.length > 0\n\t\t&& /^(?:[A-Za-z0-9_$@.+-]+\\/)*(?:[A-Za-z0-9_$@.+-]+|\\[Content_Types\\]\\.xml)$/u.test(value)\n\t\t&& !path.endsWith(\"[Content_Types].xml/\")\n",
+          "previous": "\treturn value.length > 0 && /^[A-Za-z0-9_$@.+/-]+$/u.test(value)\n",
+          "start": 6108
+        }
+      ],
+      "path": "tests/helpers/checked-record-value-index-hosted-archive.mjs",
+      "previousSha256": "9e1778cc99573da5c259a9e2b14e8709e4dde03face6016ca795264299356699"
+    },
+    {
+      "currentSha256": "30d551efc6d423077e7f002c728b3ce2d935422e8f7d1095ec735457ae63fb03",
+      "edits": [
+        {
+          "current": "\tassert.match(path, /^(?:[A-Za-z0-9_@.+-]+\\/)*(?:[A-Za-z0-9_@.+-]+|\\[Content_Types\\]\\.xml)$/u);\n",
+          "previous": "\tassert.match(path, /^(?:[A-Za-z0-9_@.+-]+\\/)*[A-Za-z0-9_@.+-]+$/u);\n",
+          "start": 1316
+        }
+      ],
+      "path": "tests/helpers/generic-subtype-hosted-output.mjs",
+      "previousSha256": "9c0faf60bc3ebd75ea878f0db2cc4ec9bc7bf1d3ba293f7c565422eb745e30d7"
+    },
+    {
+      "currentSha256": "475612216475711f735c203f70e187ea2b7efaff9037c81922cbf1c2067cd72a",
+      "edits": [
+        {
+          "current": "\t, genericSubtypePromotionRoots\n",
+          "previous": "",
+          "start": 540
+        },
+        {
+          "current": "\t\tassert.ok(summary.includes(`${genericSubtypePromotionRoots[lane]\n\t\t\t.slice(\"docs/evidence/\".length)}/index.json`), lane);\n",
+          "previous": "\t\tassert.match(summary, new RegExp(\n\t\t\t`generic-subtype-${lane}-hosted-20261023/index\\\\.json`, \"u\"));\n",
+          "start": 4565
+        },
+        {
+          "current": "\texistsSync(`${genericSubtypePromotionRoots[lane]}/index.json`));\n",
+          "previous": "\texistsSync(`docs/evidence/generic-subtype-${lane}-hosted-20261023/index.json`));\n",
+          "start": 7834
+        }
+      ],
+      "path": "tests/helpers/generic-subtype-promotion-tests.mjs",
+      "previousSha256": "20282aa11c25306af3fb70ae5718f1fdc5aaca4295de8f604599988855f0c898"
+    },
+    {
+      "currentSha256": "b906a0808073a5eb4e1525c930aa7ee6616943b73445dfc466acdf4a5cd4b400",
+      "edits": [
+        {
+          "current": "export const genericSubtypePromotionRoots = Object.freeze({\n\t\"npm-ordinary\": \"docs/evidence/generic-subtype-npm-ordinary-hosted-20261023\"\n\t, \"npm-reviewed\": \"docs/evidence/generic-subtype-npm-reviewed-hosted-20261023\"\n\t, foundation: \"docs/evidence/generic-subtype-foundation-hosted-20261023\"\n\t, native: \"docs/evidence/generic-subtype-native-hosted-20261023\"\n\t, perl: \"docs/evidence/generic-subtype-perl-hosted-20261023\"\n\t, python: \"docs/evidence/generic-subtype-python-hosted-20261023\"\n\t, ruby: \"docs/evidence/generic-subtype-ruby-hosted-20261023\"\n\t, rust: \"docs/evidence/generic-subtype-rust-hosted-20261023\"\n\t, dotnet: \"docs/evidence/generic-subtype-dotnet-hosted-20261024\"\n\t, jvm: \"docs/evidence/generic-subtype-jvm-hosted-20261024\"\n\t, \"php-native\": \"docs/evidence/generic-subtype-php-native-hosted-20261024\"\n\t, \"wit-wasi\": \"docs/evidence/generic-subtype-wit-wasi-hosted-20261024\"\n});\nassert.deepEqual(Object.keys(genericSubtypePromotionRoots)\n\t, genericSubtypeHostedLaneNames);\nconst hostedRoot = lane => genericSubtypePromotionRoots[lane];\n",
+          "previous": "const hostedRoot = lane =>\n\t`docs/evidence/generic-subtype-${lane}-hosted-20261023`;\n",
+          "start": 1946
+        },
+        {
+          "current": " * @param read - Byte reader, injectable for focused tests.\n",
+          "previous": "",
+          "start": 5190
+        },
+        {
+          "current": "\t, read = readFile\n) => {\n\tconst references = [];\n\t// Each replay reconstructs a complete ZIP and source closure. Keep them serial.\n\tfor(const lane of genericSubtypeHostedLaneNames)\n\t{\n\t\tconst contract = genericSubtypeHostedContracts[lane];\n\t\tconst root = hostedRoot(lane);\n\t\tconst index = await check(lane, root);\n\t\tassert.equal(index.lane, lane);\n\t\tassert.deepEqual(index.profiles, contract.profiles);\n\t\tassert.deepEqual(index.routes, contract.routes);\n\t\tassert.deepEqual(index.accepted.profiles, contract.profiles);\n\t\tassert.deepEqual(index.accepted.routes, contract.routes);\n\t\tconst indexPath = `${root}/index.json`;\n\t\tconst files = [\n\t\t\t{ path: indexPath, sha256: sha256(await read(indexPath)) }\n\t\t\t, ...index.files.map(file => ({\n\t\t\t\tpath: `${root}/${file.path}`, sha256: file.sha256\n\t\t\t}))\n\t\t\t, ...await Promise.all(validators.map(async path => ({\n\t\t\t\tpath, sha256: sha256(await read(path))\n\t\t\t})))\n\t\t];\n\t\tassert.equal(new Set(files.map(file => file.path)).size, files.length);\n\t\tconst artifacts = index.hostedRun.artifact.parts.map(part => ({\n\t\t\tpath: `${root}/${part.path}`, sha256: part.sha256\n\t\t}));\n\t\tconst reference = {\n\t\t\tlane, profiles: [...contract.profiles], routes: [...contract.routes]\n\t\t\t, id: evidenceId(lane)\n\t\t\t, kind: lane === foundationLane ? \"test\" : \"installed\"\n\t\t\t, revision: index.producerCommit\n\t\t\t, command: \"node --test --test-name-pattern='^retained generic Subtype archives replay for promotion$' tests/generic-subtype-native-perl.test.mjs\"\n\t\t\t, scope: `GitHub Actions run ${index.hostedRun.runId}, job ${index.hostedRun.job.id}, artifact ${index.hostedRun.artifact.id} retains and independently replays the ${lane} generic-Subtype contract. ${index.limitations.join(\" \")}`\n\t\t\t, files, artifacts\n\t\t};\n\t\tvalidateReference(reference);\n\t\treferences.push(reference);\n\t}\n\treturn references;\n};\n",
+          "previous": ") => Promise.all(genericSubtypeHostedLaneNames.map(async lane => {\n\tconst contract = genericSubtypeHostedContracts[lane];\n\tconst root = hostedRoot(lane);\n\tconst index = await check(lane, root);\n\tassert.equal(index.lane, lane);\n\tassert.deepEqual(index.profiles, contract.profiles);\n\tassert.deepEqual(index.routes, contract.routes);\n\tassert.deepEqual(index.accepted.profiles, contract.profiles);\n\tassert.deepEqual(index.accepted.routes, contract.routes);\n\tconst indexPath = `${root}/index.json`;\n\tconst files = [\n\t\t{ path: indexPath, sha256: sha256(await readFile(indexPath)) }\n\t\t, ...index.files.map(file => ({\n\t\t\tpath: `${root}/${file.path}`, sha256: file.sha256\n\t\t}))\n\t\t, ...await Promise.all(validators.map(async path => ({\n\t\t\tpath, sha256: sha256(await readFile(path))\n\t\t})))\n\t];\n\tassert.equal(new Set(files.map(file => file.path)).size, files.length);\n\tconst artifacts = index.hostedRun.artifact.parts.map(part => ({\n\t\tpath: `${root}/${part.path}`, sha256: part.sha256\n\t}));\n\tconst reference = {\n\t\tlane, profiles: [...contract.profiles], routes: [...contract.routes]\n\t\t, id: evidenceId(lane)\n\t\t, kind: lane === foundationLane ? \"test\" : \"installed\"\n\t\t, revision: index.producerCommit\n\t\t, command: \"node --test --test-name-pattern='^retained generic Subtype archives replay for promotion$' tests/generic-subtype-native-perl.test.mjs\"\n\t\t, scope: `GitHub Actions run ${index.hostedRun.runId}, job ${index.hostedRun.job.id}, artifact ${index.hostedRun.artifact.id} retains and independently replays the ${lane} generic-Subtype contract. ${index.limitations.join(\" \")}`\n\t\t, files, artifacts\n\t};\n\tvalidateReference(reference);\n\treturn reference;\n}));\n",
+          "start": 5354
+        },
+        {
+          "current": "\t\t`| ${reference.lane} | ${reference.profiles.join(\", \") || \"compiler/review foundation\"} | ${reference.routes.join(\", \")} | [archive index](${hostedRoot(reference.lane).slice(\"docs/evidence/\".length)}/index.json) | \\`${reference.revision}\\` |`\n",
+          "previous": "\t\t`| ${reference.lane} | ${reference.profiles.join(\", \") || \"compiler/review foundation\"} | ${reference.routes.join(\", \")} | [archive index](generic-subtype-${reference.lane}-hosted-20261023/index.json) | \\`${reference.revision}\\` |`\n",
+          "start": 10103
+        }
+      ],
+      "path": "tests/helpers/generic-subtype-promotion.mjs",
+      "previousSha256": "3b7aaa094d3acb6d8fe99d14252a109f1007c0dcabcbad4ed33c257a75527e22"
+    }
+  ]
+}

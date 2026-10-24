@@ -30,6 +30,7 @@ import { beforeCoreEvidenceRepairIntegrationSource, coreEvidenceRepairIntegratio
 import { beforeJvmNpmProducerRepairSource, jvmNpmProducerRepairNormalizationPaths } from "./jvm-npm-producer-repair-source-history.mjs";
 import { beforeAdmissionArchiveProducerRepairSource, admissionArchiveProducerRepairNormalizationPaths } from "./admission-archive-producer-repair-source-history.mjs";
 import { beforeBorrowReceiverProducerRepairSource, borrowReceiverProducerRepairNormalizationPaths } from "./borrow-receiver-producer-repair-source-history.mjs";
+import { beforeGenericSubtypeArchiveBoundarySource, genericSubtypeArchiveBoundaryNormalizationPaths } from "./generic-subtype-archive-boundary-source-history.mjs";
 import { beforeCoreEvidenceMemoryRepairSource, coreEvidenceMemoryRepairNormalizationPaths } from "./core-evidence-memory-repair-source-history.mjs";
 import { beforeValueIndexPromotionMilestoneRepairSource, valueIndexPromotionMilestoneRepairNormalizationPaths } from "./value-index-promotion-milestone-repair-source-history.mjs";
 import { beforeCoreMilestoneReplayRepairSource, coreMilestoneReplayRepairNormalizationPaths } from "./core-milestone-replay-repair-source-history.mjs";
@@ -2123,7 +2124,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...borrowReceiverProducerRepairNormalizationPaths
+	...genericSubtypeArchiveBoundaryNormalizationPaths
+	, ...borrowReceiverProducerRepairNormalizationPaths
 	, ...admissionArchiveProducerRepairNormalizationPaths
 	, ...jvmNpmProducerRepairNormalizationPaths
 	, ...coreEvidenceRepairIntegrationChangedPaths
@@ -2990,6 +2992,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
 	let stage
+		= beforeGenericSubtypeArchiveBoundarySource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage
 		= beforeBorrowReceiverProducerRepairSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;

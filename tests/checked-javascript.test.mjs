@@ -37,6 +37,8 @@ import "./helpers/feature-admission-producer-binding-tests.mjs";
 import "./helpers/admission-archive-producer-repair-source-history-tests.mjs";
 import "./helpers/borrow-receiver-producer-binding-tests.mjs";
 import "./helpers/borrow-receiver-producer-repair-source-history-tests.mjs";
+import "./helpers/generic-subtype-archive-boundary-tests.mjs";
+import "./helpers/generic-subtype-archive-boundary-source-history-tests.mjs";
 
 const root = resolve(".");
 
