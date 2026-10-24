@@ -1,0 +1,243 @@
+{
+  "additions": [
+    {
+      "currentSha256": "4c048f78e50e6d6d10dab6ef0b287f5d5755af346eb6d271a32d6b7acca6efb3",
+      "path": "scripts/update-php-wasm-entry-tag-dispatch-source-history.mjs"
+    },
+    {
+      "currentSha256": "484480bd39e5fd40170e8b665de159aea44091c7c037f9f303e80e47ad47cc58",
+      "path": "tests/helpers/php-wasm-entry-tag-dispatch-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "782086e5ee2ec779c4319cf7ce4d8bf0874ff2bd416c2ed1c8fd4bbdf9c67dd6",
+      "path": "tests/helpers/php-wasm-entry-tag-dispatch-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "5075ca5c680a55a5f5e20fe4c3fa59a912cb5286",
+  "implementationCommits": [
+    "5075ca5c680a55a5f5e20fe4c3fa59a912cb5286"
+  ],
+  "integrationBaseCommit": "5075ca5c680a55a5f5e20fe4c3fa59a912cb5286",
+  "integrationUpdates": [
+    {
+      "currentSha256": "3d056d1b1c5098c28253906f7d80763eea5e742b069af48386a1875f7fcb876b",
+      "edits": [
+        {
+          "current": "import { beforePhpWasmEntryTagDispatchSource, phpWasmEntryTagDispatchNormalizationPaths } from \"./php-wasm-entry-tag-dispatch-source-history.mjs\";\n",
+          "previous": "",
+          "start": 9970
+        },
+        {
+          "current": "\t...phpWasmEntryTagDispatchNormalizationPaths\n\t, ...ownedCheckedRecordPromotionPreparationNormalizationPaths\n",
+          "previous": "\t...ownedCheckedRecordPromotionPreparationNormalizationPaths\n",
+          "start": 183156
+        },
+        {
+          "current": "\tlet stage = beforePhpWasmEntryTagDispatchSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeOwnedCheckedRecordPromotionPreparationSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeOwnedCheckedRecordPromotionPreparationSource(path, text, expected);\n",
+          "start": 226684
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "8c88c596177c23a5428b177eace742432b40bdb9f1a4f517a06f0ecbac0b3fde"
+    },
+    {
+      "currentSha256": "935366eaee3491961a0a9209415a57c152fbcd1342546dccaa7d4b2b7378c943",
+      "edits": [
+        {
+          "current": "import \"./helpers/php-wasm-entry-tag-dispatch-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 6706
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "baf4f3520f4bd0482b9ab7a9acec7720ca5df96c1b74f740cfac8682f8b4a190"
+    }
+  ],
+  "milestone": "php-wasm-entry-tag-dispatch-source-v1",
+  "predecessorCommit": "f0c4365bbab1a5bcf7313a9126c4491b385419d1",
+  "schemaVersion": 1,
+  "scope": "Enable one exact full-SHA create-tag dispatch for the complete PHP-Wasm entry matrix before default-branch registration. Require the tag guard on all four reusable producers and the verifier; reject branches, unrelated tags and mismatched revisions. Preserve thirty logical routes, twenty-seven artifacts, four bounded producer jobs, same-run and same-revision verification, ordinary/reviewed parity, original partial artifacts and manual/monthly triggers. Do not cancel an active aggregate. Document API-based dispatch without triggering unrelated push workflows. Add guard and tamper regressions, refresh exactly thirteen live source pins, and preserve all other inventory bytes and historical evidence. This source milestone does not establish recurring activation or measured support; terminal hosted artifact verification and final gates remain required.",
+  "updates": [
+    {
+      "currentSha256": "59f11fd102550f62afa5536d13c301560a267f6df86d77453a74abbdeaac0ad4",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"000a883b22e63a4a46b7c88929d424bff8a3dce4e14a4d16141f3f19d5cc5a78\"\n",
+          "previous": "          \"sha256\": \"71578018e88495492407855414618749a2f1600dd57c4da6abcd562b2675ef5c\"\n",
+          "start": 1167697
+        },
+        {
+          "current": "          \"sha256\": \"000a883b22e63a4a46b7c88929d424bff8a3dce4e14a4d16141f3f19d5cc5a78\"\n",
+          "previous": "          \"sha256\": \"71578018e88495492407855414618749a2f1600dd57c4da6abcd562b2675ef5c\"\n",
+          "start": 1177811
+        },
+        {
+          "current": "          \"sha256\": \"000a883b22e63a4a46b7c88929d424bff8a3dce4e14a4d16141f3f19d5cc5a78\"\n",
+          "previous": "          \"sha256\": \"71578018e88495492407855414618749a2f1600dd57c4da6abcd562b2675ef5c\"\n",
+          "start": 1189747
+        },
+        {
+          "current": "          \"sha256\": \"000a883b22e63a4a46b7c88929d424bff8a3dce4e14a4d16141f3f19d5cc5a78\"\n",
+          "previous": "          \"sha256\": \"71578018e88495492407855414618749a2f1600dd57c4da6abcd562b2675ef5c\"\n",
+          "start": 1222308
+        },
+        {
+          "current": "          \"sha256\": \"000a883b22e63a4a46b7c88929d424bff8a3dce4e14a4d16141f3f19d5cc5a78\"\n",
+          "previous": "          \"sha256\": \"71578018e88495492407855414618749a2f1600dd57c4da6abcd562b2675ef5c\"\n",
+          "start": 1252587
+        },
+        {
+          "current": "          \"sha256\": \"000a883b22e63a4a46b7c88929d424bff8a3dce4e14a4d16141f3f19d5cc5a78\"\n",
+          "previous": "          \"sha256\": \"71578018e88495492407855414618749a2f1600dd57c4da6abcd562b2675ef5c\"\n",
+          "start": 1285738
+        },
+        {
+          "current": "          \"sha256\": \"000a883b22e63a4a46b7c88929d424bff8a3dce4e14a4d16141f3f19d5cc5a78\"\n",
+          "previous": "          \"sha256\": \"71578018e88495492407855414618749a2f1600dd57c4da6abcd562b2675ef5c\"\n",
+          "start": 1325841
+        },
+        {
+          "current": "          \"sha256\": \"000a883b22e63a4a46b7c88929d424bff8a3dce4e14a4d16141f3f19d5cc5a78\"\n",
+          "previous": "          \"sha256\": \"71578018e88495492407855414618749a2f1600dd57c4da6abcd562b2675ef5c\"\n",
+          "start": 1352261
+        },
+        {
+          "current": "          \"sha256\": \"000a883b22e63a4a46b7c88929d424bff8a3dce4e14a4d16141f3f19d5cc5a78\"\n",
+          "previous": "          \"sha256\": \"71578018e88495492407855414618749a2f1600dd57c4da6abcd562b2675ef5c\"\n",
+          "start": 1374941
+        },
+        {
+          "current": "          \"sha256\": \"000a883b22e63a4a46b7c88929d424bff8a3dce4e14a4d16141f3f19d5cc5a78\"\n",
+          "previous": "          \"sha256\": \"71578018e88495492407855414618749a2f1600dd57c4da6abcd562b2675ef5c\"\n",
+          "start": 1394608
+        },
+        {
+          "current": "          \"sha256\": \"000a883b22e63a4a46b7c88929d424bff8a3dce4e14a4d16141f3f19d5cc5a78\"\n",
+          "previous": "          \"sha256\": \"71578018e88495492407855414618749a2f1600dd57c4da6abcd562b2675ef5c\"\n",
+          "start": 1417696
+        },
+        {
+          "current": "          \"sha256\": \"0a480f5a9829f95902fcdee35f122cce3e3bfe82a13e71d24762ff31847817d5\"\n",
+          "previous": "          \"sha256\": \"6ed959da50824a3c2d8465a255710bf52ae267fde2487df025d11a6dd43a0167\"\n",
+          "start": 75740219
+        },
+        {
+          "current": "          \"sha256\": \"a67313f82b83a07932efa51b4307d89634cc7588ea9344ea6016b6050f34dfa9\"\n",
+          "previous": "          \"sha256\": \"68d01f9fb2aad641fe92b426b7f86f2c1183dd0199ce6d75e0150afc8f91de3c\"\n",
+          "start": 75740773
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "d9442a589aa1c420856ea798fc2fda83edb3a67df478f2eacd8d00f5fd95ae61"
+    },
+    {
+      "currentSha256": "0a480f5a9829f95902fcdee35f122cce3e3bfe82a13e71d24762ff31847817d5",
+      "edits": [
+        {
+          "current": "  create:\n",
+          "previous": "",
+          "start": 65
+        },
+        {
+          "current": "  cancel-in-progress: false\n",
+          "previous": "  cancel-in-progress: true\n",
+          "start": 257
+        },
+        {
+          "current": "    if: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'schedule' || (github.event_name == 'create' && github.event.ref_type == 'tag' && github.event.ref == format('ci/php-wasm-refinement-entry/{0}', github.sha)) }}\n",
+          "previous": "",
+          "start": 302
+        },
+        {
+          "current": "    if: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'schedule' || (github.event_name == 'create' && github.event.ref_type == 'tag' && github.event.ref == format('ci/php-wasm-refinement-entry/{0}', github.sha)) }}\n",
+          "previous": "",
+          "start": 662
+        },
+        {
+          "current": "    if: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'schedule' || (github.event_name == 'create' && github.event.ref_type == 'tag' && github.event.ref == format('ci/php-wasm-refinement-entry/{0}', github.sha)) }}\n",
+          "previous": "",
+          "start": 1030
+        },
+        {
+          "current": "    if: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'schedule' || (github.event_name == 'create' && github.event.ref_type == 'tag' && github.event.ref == format('ci/php-wasm-refinement-entry/{0}', github.sha)) }}\n",
+          "previous": "",
+          "start": 1409
+        },
+        {
+          "current": "    if: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'schedule' || (github.event_name == 'create' && github.event.ref_type == 'tag' && github.event.ref == format('ci/php-wasm-refinement-entry/{0}', github.sha)) }}\n",
+          "previous": "",
+          "start": 1798
+        }
+      ],
+      "path": ".github/workflows/php-wasm-refinement-entry-promotion.yml",
+      "previousSha256": "6ed959da50824a3c2d8465a255710bf52ae267fde2487df025d11a6dd43a0167"
+    },
+    {
+      "currentSha256": "000a883b22e63a4a46b7c88929d424bff8a3dce4e14a4d16141f3f19d5cc5a78",
+      "edits": [
+        {
+          "current": "## Run the complete PHP-Wasm entry matrix\n\nThe complete measurement workflow builds 30 ordinary/reviewed routes in 27\nartifacts at one revision. Four reusable producer groups run with at most four\nproducer jobs at once. The verifier accepts only that run's exact artifact set;\nseparate successful runs cannot be combined into a complete promotion.\n\nBefore the workflow reaches the default branch, launch it by creating one\nrevision-bound tag through the GitHub API. Commit and push the tested revision\nfirst, and check for an existing run before dispatching:\n\n```sh\nLEAN_BRIDGE_ENTRY_PRODUCER=$(git rev-parse HEAD)\ngh api --method POST repos/seanmorris/lean-bridge/git/refs \\\n  -f \"ref=refs/tags/ci/php-wasm-refinement-entry/$LEAN_BRIDGE_ENTRY_PRODUCER\" \\\n  -f \"sha=$LEAN_BRIDGE_ENTRY_PRODUCER\"\n```\n\nThe [GitHub create event](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#create)\nuses the created reference's commit. Every producer and the verifier require the\ntag's full SHA suffix to equal that commit. Branch creation, unrelated tags and\ntags naming a different revision start no measurement jobs. Do not retarget or\nrecreate an existing dispatch tag. The workflow does not cancel an active run.\nUse the API creation above rather than a tag push, which can also trigger other\npush-based workflows.\n\nManual dispatch and the monthly schedule remain available once the workflow is\nregistered on the default branch. A branch-tag run does not establish that\nrecurring activation. It also does not promote public measurements by itself:\nretain and independently authenticate the original hosted artifacts, their API\nidentities and the completed verifier result before updating support or docs.\n\nThe scheduling and tamper controls need no Lean, PHP or Wasm compilation:\n\n```sh\nnode --test tests/helpers/php-wasm-refinement-entry-promotion-ci-tests.mjs\n```\n\n",
+          "previous": "",
+          "start": 1382
+        }
+      ],
+      "path": "docs/contributing/testing.md",
+      "previousSha256": "71578018e88495492407855414618749a2f1600dd57c4da6abcd562b2675ef5c"
+    },
+    {
+      "currentSha256": "a67313f82b83a07932efa51b4307d89634cc7588ea9344ea6016b6050f34dfa9",
+      "edits": [
+        {
+          "current": "export const phpWasmRefinementEntryPromotionGuard = \"${{ github.event_name == 'workflow_dispatch' || github.event_name == 'schedule' || (github.event_name == 'create' && github.event.ref_type == 'tag' && github.event.ref == format('ci/php-wasm-refinement-entry/{0}', github.sha)) }}\";\n",
+          "previous": "",
+          "start": 351
+        },
+        {
+          "current": "\t+ `    if: ${phpWasmRefinementEntryPromotionGuard}\\n`\n",
+          "previous": "",
+          "start": 1753
+        },
+        {
+          "current": "  create:\n",
+          "previous": "",
+          "start": 2387
+        },
+        {
+          "current": "  cancel-in-progress: false\n",
+          "previous": "  cancel-in-progress: true\n",
+          "start": 2580
+        },
+        {
+          "current": "    if: ${phpWasmRefinementEntryPromotionGuard}\n",
+          "previous": "",
+          "start": 3255
+        }
+      ],
+      "path": "tests/helpers/php-wasm-refinement-entry-promotion-ci.mjs",
+      "previousSha256": "68d01f9fb2aad641fe92b426b7f86f2c1183dd0199ce6d75e0150afc8f91de3c"
+    },
+    {
+      "currentSha256": "2d889eb8faa9a4e8e51f59bc566bf46093b0798e7a5f19ca7d8edebedb696902",
+      "edits": [
+        {
+          "current": "\t, phpWasmRefinementEntryPromotionProducers\n",
+          "previous": "",
+          "start": 306
+        },
+        {
+          "current": "test(\"PHP-Wasm entry promotion admits only exact revision tags before default-branch registration\", async () => {\n\tconst source = await readFile(phpWasmRefinementEntryPromotionPath, \"utf8\");\n\tassert.match(source, /^ {2}create:$/mu);\n\tassert.match(source, /^ {2}cancel-in-progress: false$/mu);\n\tconst guard = \"${{ github.event_name == 'workflow_dispatch' || github.event_name == 'schedule' || (github.event_name == 'create' && github.event.ref_type == 'tag' && github.event.ref == format('ci/php-wasm-refinement-entry/{0}', github.sha)) }}\";\n\tassert.equal(source.split(`    if: ${guard}\\n`).length, 6);\n\tfor(const id of [...phpWasmRefinementEntryPromotionProducers.map(item => item.id), \"promote\"])\n\t{\n\t\tconst marker = `  ${id}:\\n    if: ${guard}\\n`;\n\t\tassert.ok(source.includes(marker), id);\n\t\tassert.throws(() => assertPhpWasmRefinementEntryPromotionWorkflow(source.replace(marker, `  ${id}:\\n`)));\n\t\tassert.throws(() => assertPhpWasmRefinementEntryPromotionWorkflow(source.replace(marker, `  ${id}:\\n    if: always()\\n`)));\n\t}\n\tfor(const [previous, next] of [\n\t\t[\"  create:\\n\", \"  push:\\n\"]\n\t\t, [\"github.event.ref_type == 'tag' && \", \"\"]\n\t\t, [\"github.event_name == 'create'\", \"github.event_name == 'push'\"]\n\t\t, [\"ci/php-wasm-refinement-entry/{0}\", \"ci/php-wasm-refinement-entry/latest\"]\n\t\t, [\"github.sha\", \"github.ref_name\"]\n\t]) {\n\t\tassert.ok(source.includes(previous));\n\t\tassert.throws(() => assertPhpWasmRefinementEntryPromotionWorkflow(source.replace(previous, next)));\n\t}\n});\n\n",
+          "previous": "",
+          "start": 1344
+        },
+        {
+          "current": "\t\t, [\"  cancel-in-progress: false\\n\", \"  cancel-in-progress: true\\n\"]\n",
+          "previous": "\t\t, [\"  cancel-in-progress: true\\n\", \"  cancel-in-progress: false\\n\"]\n",
+          "start": 3190
+        }
+      ],
+      "path": "tests/helpers/php-wasm-refinement-entry-promotion-ci-tests.mjs",
+      "previousSha256": "bb5870977cd32e8be06cd271c526862f5db4d99e8f056b998ce9aa9d31c30a37"
+    }
+  ]
+}

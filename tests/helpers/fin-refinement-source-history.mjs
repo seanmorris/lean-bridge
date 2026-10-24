@@ -69,6 +69,7 @@ import { beforeGenericSubtypePromotionBaselineSource, genericSubtypePromotionBas
 import { beforeOwnedNpmHistoryCheckoutSource, ownedNpmHistoryCheckoutNormalizationPaths } from "./owned-npm-history-checkout-source-history.mjs";
 import { beforeGenericSubtypeMatrixPublicationSource, genericSubtypeMatrixPublicationNormalizationPaths } from "./generic-subtype-matrix-publication-source-history.mjs";
 import { beforeOwnedCheckedRecordPromotionPreparationSource, ownedCheckedRecordPromotionPreparationNormalizationPaths } from "./owned-checked-record-promotion-preparation-source-history.mjs";
+import { beforePhpWasmEntryTagDispatchSource, phpWasmEntryTagDispatchNormalizationPaths } from "./php-wasm-entry-tag-dispatch-source-history.mjs";
 import { beforeCoreEvidenceMemoryRepairSource, coreEvidenceMemoryRepairNormalizationPaths } from "./core-evidence-memory-repair-source-history.mjs";
 import { beforeValueIndexPromotionMilestoneRepairSource, valueIndexPromotionMilestoneRepairNormalizationPaths } from "./value-index-promotion-milestone-repair-source-history.mjs";
 import { beforeCoreMilestoneReplayRepairSource, coreMilestoneReplayRepairNormalizationPaths } from "./core-milestone-replay-repair-source-history.mjs";
@@ -2162,7 +2163,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...ownedCheckedRecordPromotionPreparationNormalizationPaths
+	...phpWasmEntryTagDispatchNormalizationPaths
+	, ...ownedCheckedRecordPromotionPreparationNormalizationPaths
 	, ...genericSubtypeMatrixPublicationNormalizationPaths
 	, ...ownedNpmHistoryCheckoutNormalizationPaths
 	, ...genericSubtypePromotionBaselineNormalizationPaths
@@ -3067,7 +3069,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeOwnedCheckedRecordPromotionPreparationSource(path, text, expected);
+	let stage = beforePhpWasmEntryTagDispatchSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeOwnedCheckedRecordPromotionPreparationSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;

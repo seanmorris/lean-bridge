@@ -99,6 +99,7 @@ import "./helpers/generic-subtype-published-matrix-tests.mjs";
 import "./helpers/owned-checked-record-promotion-tests.mjs";
 import "./helpers/generic-subtype-matrix-publication-source-history-tests.mjs";
 import "./helpers/owned-checked-record-promotion-preparation-source-history-tests.mjs";
+import "./helpers/php-wasm-entry-tag-dispatch-source-history-tests.mjs";
 
 const root = resolve(".");
 
