@@ -72,6 +72,7 @@ import "./helpers/core-inventory-followup-repair-source-history-tests.mjs";
 import "./helpers/core-fin-cpp-repair-source-history-tests.mjs";
 import "./helpers/dotnet-callback-producer-replay-source-history-tests.mjs";
 import "./helpers/python-callback-producer-replay-source-history-tests.mjs";
+import "./helpers/jvm-callback-producer-replay-source-history-tests.mjs";
 
 const root = resolve(".");
 

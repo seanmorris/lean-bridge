@@ -54,6 +54,7 @@ import { beforeCoreInventoryFollowupRepairSource, coreInventoryFollowupRepairNor
 import { beforeCoreFinCppRepairSource, coreFinCppRepairNormalizationPaths } from "./core-fin-cpp-repair-source-history.mjs";
 import { beforeDotnetCallbackProducerReplaySource, dotnetCallbackProducerReplayNormalizationPaths } from "./dotnet-callback-producer-replay-source-history.mjs";
 import { beforePythonCallbackProducerReplaySource, pythonCallbackProducerReplayNormalizationPaths } from "./python-callback-producer-replay-source-history.mjs";
+import { beforeJvmCallbackProducerReplaySource, jvmCallbackProducerReplayNormalizationPaths } from "./jvm-callback-producer-replay-source-history.mjs";
 import { beforeCoreEvidenceMemoryRepairSource, coreEvidenceMemoryRepairNormalizationPaths } from "./core-evidence-memory-repair-source-history.mjs";
 import { beforeValueIndexPromotionMilestoneRepairSource, valueIndexPromotionMilestoneRepairNormalizationPaths } from "./value-index-promotion-milestone-repair-source-history.mjs";
 import { beforeCoreMilestoneReplayRepairSource, coreMilestoneReplayRepairNormalizationPaths } from "./core-milestone-replay-repair-source-history.mjs";
@@ -2147,7 +2148,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...pythonCallbackProducerReplayNormalizationPaths
+	...jvmCallbackProducerReplayNormalizationPaths
+	, ...pythonCallbackProducerReplayNormalizationPaths
 	, ...dotnetCallbackProducerReplayNormalizationPaths
 	, ...coreFinCppRepairNormalizationPaths
 	, ...coreInventoryFollowupRepairNormalizationPaths
@@ -3038,7 +3040,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
 	let stage
-		= beforePythonCallbackProducerReplaySource(path, text, expected);
+		= beforeJvmCallbackProducerReplaySource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforePythonCallbackProducerReplaySource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;
