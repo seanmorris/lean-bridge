@@ -1,0 +1,189 @@
+{
+  "additions": [
+    {
+      "currentSha256": "5f2fefdae8a5901f04183dd7e719fdb1cae47ace0df99656346e98a04d20649b",
+      "path": "tests/helpers/owned-php-wasm-callback-result-replay-tests.mjs"
+    },
+    {
+      "currentSha256": "26ccb0acfe9f739d6bba29bacf4e0624a5db12d8af9a3b772c1ef26e2486e588",
+      "path": "tests/helpers/owned-php-wasm-callback-result-replay.mjs"
+    },
+    {
+      "currentSha256": "7cb325872c219ef6205e35bbdc01f81c1066de48b0766af1abc9b43c9a01072f",
+      "path": "scripts/update-php-wasm-callback-producer-replay-source-history.mjs"
+    },
+    {
+      "currentSha256": "74399cdc3565e5e946d4fdf261ec0a922ddcb2d73ac4c36f64215cd1c31856d8",
+      "path": "tests/helpers/php-wasm-callback-producer-replay-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "56999b35c19da7f2f31a4a9b0168fef0386bad61f865b3021c6d23ddbb9b8c1a",
+      "path": "tests/helpers/php-wasm-callback-producer-replay-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "e953e4106b0ebacc47ddf95610a0ddcb7336cf65",
+  "implementationCommits": [
+    "e953e4106b0ebacc47ddf95610a0ddcb7336cf65"
+  ],
+  "integrationBaseCommit": "e953e4106b0ebacc47ddf95610a0ddcb7336cf65",
+  "integrationUpdates": [
+    {
+      "currentSha256": "1465797e65bdc9dcf834f495daddce96b2f3922937cae749279dcda3c1dbcdeb",
+      "edits": [
+        {
+          "current": "import { beforePhpWasmCallbackProducerReplaySource, phpWasmCallbackProducerReplayNormalizationPaths } from \"./php-wasm-callback-producer-replay-source-history.mjs\";\n",
+          "previous": "",
+          "start": 7662
+        },
+        {
+          "current": "\t...phpWasmCallbackProducerReplayNormalizationPaths\n\t, ...jvmCallbackProducerReplayNormalizationPaths\n",
+          "previous": "\t...jvmCallbackProducerReplayNormalizationPaths\n",
+          "start": 180866
+        },
+        {
+          "current": "\t\t= beforePhpWasmCallbackProducerReplaySource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeJvmCallbackProducerReplaySource(path, text, expected);\n",
+          "previous": "\t\t= beforeJvmCallbackProducerReplaySource(path, text, expected);\n",
+          "start": 223653
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "db2d18d8dceb0c76a271b5db7898c7cf06b9f5e086365432fb7c73d9e0a66387"
+    },
+    {
+      "currentSha256": "6d2f82c51bdc301b25b13cd59d1a292ac500d6e0ea71f4fd96a619221a33e282",
+      "edits": [
+        {
+          "current": "import \"./helpers/php-wasm-callback-producer-replay-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 4890
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "a8d753fb30244bbd084f574c606af3a843e84596e742443046aa04697ae2b728"
+    }
+  ],
+  "milestone": "php-wasm-callback-producer-replay-source-v1",
+  "predecessorCommit": "3ce92c5e0c225b3025704493bc5bf3cd5be2010e",
+  "schemaVersion": 1,
+  "scope": "Bind the three archived PHP-Wasm callback package reports, six ordinary/reviewed observations and 96 retained Node/Chromium executions to producer 39a82da8a81730db7d576b706011f20ea4a29892. Authenticate the unchanged 17-source receipt map and the complete 114-import generator closure. Explicit historical replay uses producer generators and runtime pins with current package, ownership, execution and receipt assertions; fresh recording retains live generators. Accept the original evidence before all 11 original scope/archive/payload mutations; also reject missing or altered source identities and an unrecorded variant. Refresh exactly two named live source pins and preserve old introduced-source endpoints. No original receipt, archive, runtime implementation, support cell or installed acceptance claim changes. The remaining broad Core gate runs on GitHub.",
+  "updates": [
+    {
+      "currentSha256": "f414cf91e3d0717c53ab2bd32e24f5079dc9b93d5275c6ea3de8eb413030adca",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"3015baca69eb962e199e7cd420b4b2956046ad45082d7b62b0230b324a3e4d45\"\n",
+          "previous": "          \"sha256\": \"19e32a4062d486b6dbd644a8a633b8e215b0ab247355e180a008bee999f12949\"\n",
+          "start": 1429685
+        },
+        {
+          "current": "          \"sha256\": \"11646b36650deac4026cd05f9ff4edd0585ad2fece5a55d88b2874ac300238c9\"\n",
+          "previous": "          \"sha256\": \"4888e5c9d9d94701054e0448445ebe265704a23850aa924228bcce020fb4879f\"\n",
+          "start": 1430040
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "0fcc80f3160133143f1d8f01a42c3ddb3af0bd608aa6cc436c6f3d50a6deb3db"
+    },
+    {
+      "currentSha256": "3015baca69eb962e199e7cd420b4b2956046ad45082d7b62b0230b324a3e4d45",
+      "edits": [
+        {
+          "current": "import { ownedPhpWasmCallbackReplay } from \"./owned-php-wasm-callback-result-replay.mjs\";\n",
+          "previous": "import { createCompiledPhpWasmModel, generateCompiledPhpWasmLeanAdapters } from \"../../src/build/php-wasm-graph-model.mjs\";\nimport { generateCompiledPhpWasmOwned } from \"../../src/build/php-wasm-owned-component.mjs\";\nimport { phpWasmCopiedPins } from \"../../src/build/php-wasm-copied-artifacts.mjs\";\n",
+          "start": 297
+        },
+        {
+          "current": "const checkObservation = (item, variant, expected, runtimeIdentity, replay) => {\n\tconst { createCompiledPhpWasmModel, generateCompiledPhpWasmLeanAdapters\n\t\t, generateCompiledPhpWasmOwned } = replay;\n",
+          "previous": "const checkObservation = (item, variant, expected, runtimeIdentity) => {\n",
+          "start": 4193
+        },
+        {
+          "current": "/**\n * Check both source modes and all installed executions in one variant report.\n *\n * @param name - Required callback variant.\n * @param report - Captured installed-package observations.\n * @param runtimeIdentity - Shared runtime identity across the matrix.\n * @param replay - Optional authenticated producer dependencies.\n */\nexport const assertOwnedPhpWasmCallbackReport = async (\n\tname, report, runtimeIdentity, replay\n) => {\n\treplay ??= await ownedPhpWasmCallbackReplay();\n\tassert.ok(Object.hasOwn(ownedPhpWasmCallbackResultVariants, name), name);\n\tconst expected = ownedPhpWasmCallbackResultVariants[name];\n\tassert.equal(report.schemaVersion, 1); assert.equal(report.profile, \"installed-owned-php-wasm-callback-results\");\n\tflags(report, [\"compiledLean\", \"installedPackage\", \"cliAdmission\", \"runtimeSupplied\"]);\n\tassert.equal(report.runtimeIdentity, runtimeIdentity); digest(runtimeIdentity);\n\tassert.equal(report.runtimeIdentity, sha256(canonicalJson(report.runtimeManifest)));\n\tassert.deepEqual(report.runtimeManifest.pins, replay.phpWasmCopiedPins); assert.equal(report.runtimeManifest.pointerBits, 32);\n\tassert.equal(report.installedCli.packagingSourceRemoved, true); assert.equal(report.observations.length, 2);\n\tassert.deepEqual(report.observations.map(item => item.reviewed), [false, true]);\n\tfor(const item of report.observations) checkObservation(item, name, expected, runtimeIdentity, replay);\n};\n\n",
+          "previous": "",
+          "start": 7100
+        },
+        {
+          "current": " * @param replay - Optional authenticated producer dependencies; fresh recording stays live.\n",
+          "previous": "",
+          "start": 8683
+        },
+        {
+          "current": "export const assertOwnedPhpWasmCallbackResultEvidence = async (record, replay) => {\n\treplay ??= await ownedPhpWasmCallbackReplay();\n",
+          "previous": "export const assertOwnedPhpWasmCallbackResultEvidence = async record => {\n",
+          "start": 8780
+        },
+        {
+          "current": "\treplay.assertSources?.(record.sources);\n",
+          "previous": "",
+          "start": 9227
+        },
+        {
+          "current": "\tfor(const name of Object.keys(ownedPhpWasmCallbackResultVariants))\n",
+          "previous": "\tfor(const [name, expected] of Object.entries(ownedPhpWasmCallbackResultVariants))\n",
+          "start": 9689
+        },
+        {
+          "current": "\t\truntimeIdentity ??= report.runtimeIdentity;\n\t\tawait assertOwnedPhpWasmCallbackReport(name, report, runtimeIdentity, replay);\n",
+          "previous": "\t\tassert.equal(report.schemaVersion, 1); assert.equal(report.profile, \"installed-owned-php-wasm-callback-results\");\n\t\tflags(report, [\"compiledLean\", \"installedPackage\", \"cliAdmission\", \"runtimeSupplied\"]);\n\t\truntimeIdentity ??= report.runtimeIdentity; assert.equal(report.runtimeIdentity, runtimeIdentity); digest(runtimeIdentity);\n\t\tassert.equal(report.runtimeIdentity, sha256(canonicalJson(report.runtimeManifest)));\n\t\tassert.deepEqual(report.runtimeManifest.pins, phpWasmCopiedPins); assert.equal(report.runtimeManifest.pointerBits, 32);\n\t\tassert.equal(report.installedCli.packagingSourceRemoved, true); assert.equal(report.observations.length, 2);\n\t\tassert.deepEqual(report.observations.map(item => item.reviewed), [false, true]);\n\t\tfor(const item of report.observations) checkObservation(item, name, expected, runtimeIdentity);\n",
+          "start": 9811
+        }
+      ],
+      "path": "tests/helpers/owned-php-wasm-callback-result-evidence.mjs",
+      "previousSha256": "19e32a4062d486b6dbd644a8a633b8e215b0ab247355e180a008bee999f12949"
+    },
+    {
+      "currentSha256": "f3a7bf45e62258d034a6c601e22d9e8f92aa766f34729e79000818b924d84b4d",
+      "edits": [
+        {
+          "current": "\t\tconst source = beforeFinRefinementSource(path, await readFile(path), identity.currentSha256);\n",
+          "previous": "\t\tconst source = await readFile(path);\n",
+          "start": 2507
+        }
+      ],
+      "path": "tests/helpers/php-wasm-callback-result-acceptance-history-tests.mjs",
+      "previousSha256": "c01c418ef7347bc6c15d27ffd3062ce7e9300b6b54285e586ed7768eb1fc4f55"
+    },
+    {
+      "currentSha256": "11646b36650deac4026cd05f9ff4edd0585ad2fece5a55d88b2874ac300238c9",
+      "edits": [
+        {
+          "current": "import \"./helpers/owned-php-wasm-callback-result-replay-tests.mjs\";\nimport { ownedPhpWasmCallbackReplay } from \"./helpers/owned-php-wasm-callback-result-replay.mjs\";\n",
+          "previous": "",
+          "start": 514
+        },
+        {
+          "current": "let replay;\nconst verify = async record => {\n\treplay ??= ownedPhpWasmCallbackReplay((await read()).sources);\n\treturn assertOwnedPhpWasmCallbackResultEvidence(record, await replay);\n};\n",
+          "previous": "",
+          "start": 782
+        },
+        {
+          "current": "\tawait verify(await read());\n",
+          "previous": "\tawait assertOwnedPhpWasmCallbackResultEvidence(await read());\n",
+          "start": 1074
+        },
+        {
+          "current": "\tconst record = await read(); await verify(record);\n",
+          "previous": "\tconst record = await read(); await assertOwnedPhpWasmCallbackResultEvidence(record);\n",
+          "start": 1211
+        },
+        {
+          "current": "\t\tawait assert.rejects(() => verify(changed));\n",
+          "previous": "\t\tawait assert.rejects(() => assertOwnedPhpWasmCallbackResultEvidence(changed));\n",
+          "start": 1721
+        },
+        {
+          "current": "\tconst record = await read(); await verify(record);\n\tconst reports = unpackOwnedPhpWasmCallbackResultReports(record.reports);\n",
+          "previous": "\tconst record = await read(); const reports = unpackOwnedPhpWasmCallbackResultReports(record.reports);\n",
+          "start": 1880
+        },
+        {
+          "current": "\t\tawait assert.rejects(() => verify(replaced));\n",
+          "previous": "\t\tawait assert.rejects(() => assertOwnedPhpWasmCallbackResultEvidence(replaced));\n",
+          "start": 2713
+        }
+      ],
+      "path": "tests/owned-php-wasm-callback-result-evidence.test.mjs",
+      "previousSha256": "4888e5c9d9d94701054e0448445ebe265704a23850aa924228bcce020fb4879f"
+    }
+  ]
+}
