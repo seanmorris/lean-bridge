@@ -6,7 +6,10 @@
 import assert from "node:assert/strict";
 import { componentStructuredCallbackDirection } from "../../src/abi/component-structured-callables.mjs";
 import { compileCallablePhpGraphZendModel } from "../../src/backends/php/callable-graph-zend-model.mjs";
-import { componentStructuredCallablePrefix } from "../../src/build/component-structured-callable-lean.mjs";
+import { componentRecursiveRefinementLeaves } from "../../src/build/component-refinements.mjs";
+import {
+	componentStructuredCallablePrefix, componentStructuredClosureRefusals
+} from "../../src/build/component-structured-callable-lean.mjs";
 import {
 	generateCompiledPhpWasmLeanAdapters, phpWasmGraphCarrierAbi
 } from "../../src/build/php-wasm-graph-model.mjs";
@@ -38,6 +41,29 @@ const constructorIdentities = value => {
 };
 
 /**
+ * Name the constructor each per-leaf closure refusal validator checks, from the same refusal
+ * sites and leaf identities the PHP-Wasm adapter generator uses.
+ *
+ * @param abi - Authenticated copied-payload callable descriptor.
+ */
+const closureValidatorConstructors = abi => {
+	const refusals = componentStructuredClosureRefusals(abi, { finDirections: true });
+	const definitions = new Map(abi.types.map(type => [type.id, type]));
+	const constructors = new Map();
+	for(const site of refusals?.sites ?? []) site.refinements.parameters.forEach((tree, index) => {
+		const leaves = componentRecursiveRefinementLeaves(
+			tree, site.signature.parameters[index], definitions, refusals.cycles);
+		for(const leaf of leaves)
+		{
+			const constructor = leaf.refinement.constructor;
+			assert.equal(typeof constructor, "string", "closure refusal leaf names its constructor");
+			constructors.set(`${site.symbol}_graph_refinement_${index}_${leaf.key}`, constructor);
+		}
+	});
+	return constructors;
+};
+
+/**
  * Select exact public, adapter, recovery, callback, rejection, closure and cleanup entries.
  * Authored source and closure-body identities are supplied explicitly by the reversible fixture.
  *
@@ -58,6 +84,8 @@ export const phpWasmCallbackEntrySelection = (model, sourceEntries) => {
 	assert.equal(zend.functions.length, model.bindingIr.declarations.length);
 	const selected = structuredClone(sourceEntries);
 	const constructors = constructorIdentities(model.bindingIr);
+	const leafConstructors = closureValidatorConstructors(abi);
+	const validatorConstructors = {};
 	for(const entry of sourceEntries.filter(item => item.kind === "constructor"))
 		assert.ok(constructors.has(entry.label)
 			, `authored callback constructor is absent from compiler refinements: ${entry.label}`);
@@ -113,10 +141,15 @@ export const phpWasmCallbackEntrySelection = (model, sourceEntries) => {
 		const prefix = componentStructuredCallablePrefix(abi, signature);
 		const direction = componentStructuredCallbackDirection(abi, signature, true);
 		assert.equal(direction, callback.direction);
-		for(const symbol of [...annotations]
-			.filter(value => refinementSymbol(value, prefix + "_")).sort())
-			selected.push({ symbol, kind: "validator"
-				, label: `${label}:callback_validator:${symbol.slice(prefix.length + 1)}` });
+		const validators = [...annotations]
+			.filter(value => refinementSymbol(value, prefix + "_")).sort();
+		for(const symbol of validators)
+		{
+			const validatorLabel = `${label}:callback_validator:${symbol.slice(prefix.length + 1)}`;
+			selected.push({ symbol, kind: "validator", label: validatorLabel });
+			if(leafConstructors.has(symbol))
+				validatorConstructors[validatorLabel] = leafConstructors.get(symbol);
+		}
 		if(direction === "host")
 		{
 			selected.push(
@@ -143,5 +176,5 @@ export const phpWasmCallbackEntrySelection = (model, sourceEntries) => {
 		else throw new TypeError(`Selected callback has no admitted direction: ${label}`);
 	}
 	validatePhpWasmCallbackEntrySelection(selected);
-	return { selected, generated, zend, abi };
+	return { selected, generated, zend, abi, validatorConstructors };
 };

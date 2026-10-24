@@ -24,6 +24,7 @@ function lean_bridge_callback_probe(string $control): array
     $weighted = fn(int $weight, int $limit): Weighted => new Weighted($n($weight), $n($limit));
     $refused = in_array($control, [
         'invalid-recovery', 'actual-reply-rejection', 'closure-input-refusal',
+        'nested-invalid-recovery', 'nested-reply-rejection', 'nested-closure-refusal',
     ], true);
     $outcome = 'accepted';
     try {
@@ -74,10 +75,24 @@ function lean_bridge_callback_probe(string $control): array
                 $closure->close();
                 break;
             case 'nested-closure':
-                $closure = make_nested_closure($n(0));
-                if (!$closure($weighted(2, 5))->isEqualTo($n(3)))
+                $leanBridgeCallbackProbeState['nested'] = make_nested_closure($n(0));
+                if (!$leanBridgeCallbackProbeState['nested']($weighted(2, 5))->isEqualTo($n(3)))
                     throw new RuntimeException('nested closure');
-                $closure->close();
+                break;
+            case 'nested-invalid-recovery':
+                call_host_nested(with_recovery(fn(Weighted $value) => $value, $weighted(0, 2)));
+                break;
+            case 'nested-reply-rejection':
+                call_host_nested(with_recovery(
+                    fn(Weighted $_value) => $weighted(0, 5), $weighted(1, 2)
+                ));
+                break;
+            case 'nested-closure-refusal':
+                try {
+                    $leanBridgeCallbackProbeState['nested']($weighted(0, 5));
+                } finally {
+                    $leanBridgeCallbackProbeState['nested']->close();
+                }
                 break;
             default:
                 throw new InvalidArgumentException('unknown checked-record callback probe control');

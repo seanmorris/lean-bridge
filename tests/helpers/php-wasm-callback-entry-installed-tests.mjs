@@ -64,9 +64,9 @@ test("instrumented PHP-Wasm callbacks close and execute every selected entry", {
 	{
 		const sourceProbe = await phpWasmCallbackEntrySourceFixture(family);
 		let ordinaryIr = null;
-		if(family === "callback-checked-record" && hosted.routes.includes("reviewed"))
+		if(family !== "callback-fin" && hosted.routes.includes("reviewed"))
 			assert.equal(hosted.routes[0], "ordinary"
-				, "checked-record reviewed entry probes require ordinary extraction first");
+				, `${family} reviewed entry probes require ordinary extraction first`);
 		for(const route of hosted.routes)
 		{
 			const fixture = phpWasmCallbackEntryFixture(family, route, ordinaryIr);
@@ -121,7 +121,8 @@ test("instrumented PHP-Wasm callbacks close and execute every selected entry", {
 			}
 			const selection = phpWasmCallbackEntrySelection(builds[0].model, sourceProbe.entries);
 			assert.deepEqual(selection.selected, builds[0].observation.selected);
-			const entryPlan = phpWasmCallbackEntryPlan(family, selection.selected);
+			const entryPlan = phpWasmCallbackEntryPlan(family, selection.selected
+				, selection.validatorConstructors);
 			const sources = Object.fromEntries(await Promise.all(["weak", "strict"].map(async mode => [
 				mode, await phpWasmCallbackEntryCaller(family, mode)
 			])));
