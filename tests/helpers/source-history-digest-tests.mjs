@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { sha256 as uncachedSha256 } from "../../src/capsule/node.mjs";
 import { createSourceHistoryDigest, sha256 } from "./source-history-digest.mjs";
+import { createHistorySourceCache } from "./source-history-test-source.mjs";
 
 test("history digests preserve exact Unicode text and rehash mutable bytes", () => {
 	let calls = 0;
@@ -51,4 +52,56 @@ test("history digest cache preserves failures, bypasses objects and can be disab
 	for(const key of ["maxBytes", "maxEntries"])
 		for(const value of [-1, 0.5, NaN, Infinity, "2", Number.MAX_SAFE_INTEGER + 1])
 			assert.throws(() => createSourceHistoryDigest(uncachedSha256, { [key]: value }), TypeError);
+});
+
+test("history source cache keeps exact text and bounds both milestone sides", () => {
+	const cache = createHistorySourceCache({ maxEntries: 3, maxBytes: 64 });
+	cache.set("before", "é\0🙂");
+	cache.set("after", "next");
+	assert.equal(cache.get("before"), "é\0🙂");
+	assert.equal(cache.get("after"), "next");
+	assert.equal(cache.stats().retainedBytes, 2 * (6 + 4 + 5 + 4));
+	cache.set("third", "x");
+	cache.get("before");
+	cache.set("fourth", "y");
+	assert.equal(cache.get("after"), undefined);
+	assert.equal(cache.get("before"), "é\0🙂");
+	assert.equal(cache.stats().size, 3);
+	assert.ok(cache.stats().retainedBytes <= 64);
+});
+
+test("history source cache evicts by bytes and bypasses oversized sources", () => {
+	const cache = createHistorySourceCache({ maxEntries: 10, maxBytes: 20 });
+	cache.set("a", "1234");
+	cache.set("b", "1234");
+	cache.get("a");
+	cache.set("c", "1234");
+	assert.equal(cache.get("b"), undefined);
+	assert.equal(cache.stats().retainedBytes, 20);
+	cache.set("large", "x".repeat(30));
+	assert.equal(cache.get("large"), undefined);
+	assert.equal(cache.get("a"), "1234");
+	assert.equal(cache.stats().size, 2);
+	cache.set("a", "x".repeat(30));
+	assert.equal(cache.get("a"), undefined);
+	assert.equal(cache.stats().retainedBytes, 10);
+	cache.set("c", "");
+	assert.equal(cache.get("c"), "");
+	assert.equal(cache.stats().retainedBytes, 2);
+});
+
+test("history source cache validates limits and supports disabled caching", () => {
+	for(const key of ["maxEntries", "maxBytes"])
+	{
+		for(const value of [-1, 0.5, NaN, Infinity, "2"])
+			assert.throws(() => createHistorySourceCache({ [key]: value }));
+		const cache = createHistorySourceCache({ [key]: 0 });
+		cache.set("key", "text");
+		assert.equal(cache.get("key"), undefined);
+		assert.equal(cache.stats().size, 0);
+		assert.equal(cache.stats().retainedBytes, 0);
+	}
+	const cache = createHistorySourceCache();
+	assert.throws(() => cache.set({}, "text"));
+	assert.throws(() => cache.set("key", Buffer.from("text")));
 });

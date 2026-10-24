@@ -172,6 +172,7 @@
 		{ "path": "src/backends/native/owned-value-runtime.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/backends/native/owned-value-transfers.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/build/owned-aggregate-carriers.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/build/owned-refinement-carriers.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/build/owned-c-projection.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/build/owned-callback-carriers.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/build/owned-native-model.mjs", "classification": "strict-migration-backlog" },
@@ -472,6 +473,10 @@
 		},
 		{
 			"path": "src/abi/owned-aggregate-model.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/abi/owned-refinement-model.mjs",
 			"classification": "strict-migration-backlog"
 		},
 		{

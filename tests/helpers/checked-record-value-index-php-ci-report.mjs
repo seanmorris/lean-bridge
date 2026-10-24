@@ -9,13 +9,13 @@ import { execFileSync } from "node:child_process";
 import { isAbsolute, posix } from "node:path";
 import { hashBindingIr } from "../../src/binding-ir/canonical.mjs";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
-import { generateCopiedPhpPackage } from "../../src/backends/php/copied-values.mjs";
 import { reviewedContractDifference } from "../../src/analyze/reviewed-source.mjs";
 import {
 	checkedRecordValueIndexPhpCallerArgs, checkedRecordValueIndexPhpRoutes
 	, checkedRecordValueIndexPhpSelection, parseCheckedRecordValueIndexPhpResult
 } from "./checked-record-value-index-php-fixture.mjs";
 import { assertNominalSubtypePhpToolRecords } from "./nominal-subtype-php-tool-records.mjs";
+import { moduleAtProducer } from "./producer-module.mjs";
 
 /**
  * Return the exact installed test name for one closed route.
@@ -215,6 +215,8 @@ export const checkCheckedRecordValueIndexPhpReport = async (read, {
 	for(const path of packaged.retained)
 		assert.deepEqual(memberIdentity(await read(`package/${path}`)), packaged.files[path], `Retained package member: ${path}`);
 	const firstModel = JSON.parse(await read("build-0/model.json"));
+	const { generateCopiedPhpPackage } = await moduleAtProducer(
+		producerCommit, "src/backends/php/copied-values.mjs");
 	for(const [path, source] of Object.entries(generateCopiedPhpPackage(firstModel.bindingIr, packaged.evidence)))
 		assert.equal((await read(`package/${path}`)).toString(), source, path);
 	const caller = sourceAt(producerCommit, "tests/fixtures/checked-record-value-index-php/php.php").toString();

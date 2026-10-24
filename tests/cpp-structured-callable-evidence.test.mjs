@@ -7,9 +7,9 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
-import { assertCppStructuredCallableExecution, assertCppStructuredCallableIntegration, cppStructuredCallableExecutionPath } from "./helpers/cpp-structured-callable-evidence.mjs";
+import { assertCppStructuredCallableExecution, assertCppStructuredCallableIntegration, cppStructuredCallableExecutionPath, cppStructuredCallableProducer } from "./helpers/cpp-structured-callable-evidence.mjs";
 import { beforeCppStructuredCallables, cppStructuredCallableHistoryPath, reverseCppStructuredCallableUpdate } from "./helpers/cpp-structured-callable-source-history.mjs";
-import { beforeRustStructuredCallables } from "./helpers/rust-structured-callable-source-history.mjs";
+import { sourceAtProducer } from "./helpers/producer-source.mjs";
 
 const json = async path => JSON.parse(await readFile(path, "utf8"));
 
@@ -57,7 +57,8 @@ test("C++ structured source history never discards unrelated edits", async () =>
 	const record = await json(cppStructuredCallableHistoryPath);
 	for(const update of record.updates)
 	{
-		const source = beforeRustStructuredCallables(update.path, await readFile(update.path, "utf8"));
+		const source = sourceAtProducer(cppStructuredCallableProducer
+			, update.path, update.currentSha256);
 		assert.equal(sha256(reverseCppStructuredCallableUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeCppStructuredCallables(update.path, source)), update.previousSha256);
 		assert.notEqual(sha256(beforeCppStructuredCallables(update.path, source + "\n// unrelated\n")), update.previousSha256);

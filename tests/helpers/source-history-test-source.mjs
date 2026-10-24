@@ -9,8 +9,61 @@ import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
 
-const replayedMilestones = new Map();
-const previousMilestones = new Map();
+/**
+ * Bound shared predecessor and replay text retained between history checks.
+ *
+ * @param options - Independent limits on entries and UTF-16 text bytes.
+ * @param options.maxEntries - Maximum number of cached identities.
+ * @param options.maxBytes - Maximum retained key and source bytes.
+ */
+export const createHistorySourceCache = ({
+	maxEntries = 256, maxBytes = 64 * 1024 * 1024
+} = {}) => {
+	for(const limit of [maxEntries, maxBytes])
+		assert.ok(Number.isSafeInteger(limit) && limit >= 0);
+	const entries = new Map();
+	let retainedBytes = 0;
+	const remove = key => {
+		const entry = entries.get(key);
+		if(entry === undefined) return;
+		retainedBytes -= entry.bytes;
+		entries.delete(key);
+	};
+	return {
+		/**
+		 * Read exact cached text and refresh its recency.
+		 *
+		 * @param key - Authenticated milestone identity.
+		 */
+		get: key => {
+			const entry = entries.get(key);
+			if(entry === undefined) return undefined;
+			entries.delete(key);
+			entries.set(key, entry);
+			return entry.source;
+		}
+		/**
+		 * Retain text only when it fits both cache bounds.
+		 *
+		 * @param key - Authenticated milestone identity.
+		 * @param source - Immutable source text.
+		 */
+		, set: (key, source) => {
+			assert.equal(typeof key, "string");
+			assert.equal(typeof source, "string");
+			remove(key);
+			const bytes = 2 * (key.length + source.length);
+			if(maxEntries === 0 || maxBytes === 0 || bytes > maxBytes) return;
+			while(entries.size >= maxEntries || retainedBytes + bytes > maxBytes)
+				remove(entries.keys().next().value);
+			entries.set(key, { source, bytes });
+			retainedBytes += bytes;
+		}
+		, stats: () => ({ size: entries.size, retainedBytes })
+	};
+};
+
+const milestones = createHistorySourceCache();
 
 /**
  * Read and authenticate the predecessor side of one immutable transition.
@@ -19,8 +72,8 @@ const previousMilestones = new Map();
  * @param path - Repository-relative source path.
  */
 const previousHistoryMilestone = (historyPath, path) => {
-	const key = `${historyPath}\0${path}`;
-	let source = previousMilestones.get(key);
+	const key = `previous\0${historyPath}\0${path}`;
+	let source = milestones.get(key);
 	if(source !== undefined) return source;
 	const record = JSON.parse(readFileSync(historyPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
@@ -44,7 +97,7 @@ const previousHistoryMilestone = (historyPath, path) => {
 		, { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
 	}
 	assert.equal(sha256(source), update.previousSha256, historyPath);
-	previousMilestones.set(key, source);
+	milestones.set(key, source);
 	return source;
 };
 
@@ -57,8 +110,8 @@ const previousHistoryMilestone = (historyPath, path) => {
  * @param path - Repository-relative source path.
  */
 const replayHistoryMilestone = (historyPath, path) => {
-	const key = `${historyPath}\0${path}`;
-	let source = replayedMilestones.get(key);
+	const key = `replayed\0${historyPath}\0${path}`;
+	let source = milestones.get(key);
 	if(source !== undefined) return source;
 	const record = JSON.parse(readFileSync(historyPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
@@ -83,7 +136,7 @@ const replayHistoryMilestone = (historyPath, path) => {
 			);
 		}
 		assert.equal(sha256(source), update.currentSha256, historyPath);
-		replayedMilestones.set(key, source);
+		milestones.set(key, source);
 		return source;
 	}
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
@@ -108,7 +161,7 @@ const replayHistoryMilestone = (historyPath, path) => {
 	parts.push(previous.slice(previousCursor));
 	source = parts.join("");
 	assert.equal(sha256(source), update.currentSha256, historyPath);
-	replayedMilestones.set(key, source);
+	milestones.set(key, source);
 	return source;
 };
 
