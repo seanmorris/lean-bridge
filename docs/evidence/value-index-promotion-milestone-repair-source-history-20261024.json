@@ -1,0 +1,602 @@
+{
+  "additions": [
+    {
+      "currentSha256": "c87c21f303df39294f4aaefc68048c25e286f8bfa8e7f2b34a596486464cc2e5",
+      "path": "scripts/update-value-index-promotion-milestone-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "58e51be40d9359c1033da47d87c413277972f2fc03bef9a21d298e9ab76e9aaf",
+      "path": "tests/helpers/value-index-promotion-milestone-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "7d96f60e410901d562e8664804e5a424e6e7ac36228be5bbd1aefc1e9dfff127",
+      "path": "tests/helpers/value-index-promotion-milestone-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "8d98a43200580caa7dbd2c4485d5b84bbea3104d",
+  "integrationBaseCommit": "7bfc573c5427caf231b3860ed43256927c948cc5",
+  "integrationUpdates": [
+    {
+      "currentSha256": "19d8f87b15f08543959e240856c2b7162884384248dfdafe29a2d25cd789a8fc",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"b8aa9ae89c17bee74750d1fa4c1134789867dc545882c6ab778d5c1c36967bc0\"\n",
+          "previous": "          \"sha256\": \"811c6d3659a34e7e74ab5bf7b9714911ed301c24a164ef3315bfc2a36d5c5743\"\n",
+          "start": 38439759
+        },
+        {
+          "current": "          \"sha256\": \"2439c83a33828c5a4e59a9195927c1aaf44d1bc1c8cf2b4f0321de7c3dc67ef0\"\n",
+          "previous": "          \"sha256\": \"ec73198b22340a3b45e89e1a8c2456ca7d100bdbf9a6cabb1757f7e6ca9a0dba\"\n",
+          "start": 38439956
+        },
+        {
+          "current": "          \"sha256\": \"b8aa9ae89c17bee74750d1fa4c1134789867dc545882c6ab778d5c1c36967bc0\"\n",
+          "previous": "          \"sha256\": \"811c6d3659a34e7e74ab5bf7b9714911ed301c24a164ef3315bfc2a36d5c5743\"\n",
+          "start": 38736230
+        },
+        {
+          "current": "          \"sha256\": \"2439c83a33828c5a4e59a9195927c1aaf44d1bc1c8cf2b4f0321de7c3dc67ef0\"\n",
+          "previous": "          \"sha256\": \"ec73198b22340a3b45e89e1a8c2456ca7d100bdbf9a6cabb1757f7e6ca9a0dba\"\n",
+          "start": 38736427
+        },
+        {
+          "current": "          \"sha256\": \"b8aa9ae89c17bee74750d1fa4c1134789867dc545882c6ab778d5c1c36967bc0\"\n",
+          "previous": "          \"sha256\": \"811c6d3659a34e7e74ab5bf7b9714911ed301c24a164ef3315bfc2a36d5c5743\"\n",
+          "start": 39032877
+        },
+        {
+          "current": "          \"sha256\": \"2439c83a33828c5a4e59a9195927c1aaf44d1bc1c8cf2b4f0321de7c3dc67ef0\"\n",
+          "previous": "          \"sha256\": \"ec73198b22340a3b45e89e1a8c2456ca7d100bdbf9a6cabb1757f7e6ca9a0dba\"\n",
+          "start": 39033074
+        },
+        {
+          "current": "          \"sha256\": \"b8aa9ae89c17bee74750d1fa4c1134789867dc545882c6ab778d5c1c36967bc0\"\n",
+          "previous": "          \"sha256\": \"811c6d3659a34e7e74ab5bf7b9714911ed301c24a164ef3315bfc2a36d5c5743\"\n",
+          "start": 39330136
+        },
+        {
+          "current": "          \"sha256\": \"2439c83a33828c5a4e59a9195927c1aaf44d1bc1c8cf2b4f0321de7c3dc67ef0\"\n",
+          "previous": "          \"sha256\": \"ec73198b22340a3b45e89e1a8c2456ca7d100bdbf9a6cabb1757f7e6ca9a0dba\"\n",
+          "start": 39330333
+        },
+        {
+          "current": "          \"sha256\": \"67de8319a93ee15de5424f8cf5124cce00b81a984e9b5a2b8602817686e45791\"\n",
+          "previous": "          \"sha256\": \"2f6aba6559362f8c5d80cde21f392adc6743011dfa62b31b4de62f79f0a69ca3\"\n",
+          "start": 39627413
+        },
+        {
+          "current": "          \"sha256\": \"7de40e43f004a7a9b30186f043913e9a5427b87df89d1822e7de948d9fd3bf7e\"\n",
+          "previous": "          \"sha256\": \"1040cc3974462d1857431cdafab7df0841d736eba6a0b1916ff8d705a7a1c6b9\"\n",
+          "start": 39627608
+        },
+        {
+          "current": "          \"sha256\": \"67de8319a93ee15de5424f8cf5124cce00b81a984e9b5a2b8602817686e45791\"\n",
+          "previous": "          \"sha256\": \"2f6aba6559362f8c5d80cde21f392adc6743011dfa62b31b4de62f79f0a69ca3\"\n",
+          "start": 40030602
+        },
+        {
+          "current": "          \"sha256\": \"7de40e43f004a7a9b30186f043913e9a5427b87df89d1822e7de948d9fd3bf7e\"\n",
+          "previous": "          \"sha256\": \"1040cc3974462d1857431cdafab7df0841d736eba6a0b1916ff8d705a7a1c6b9\"\n",
+          "start": 40030797
+        },
+        {
+          "current": "          \"sha256\": \"67de8319a93ee15de5424f8cf5124cce00b81a984e9b5a2b8602817686e45791\"\n",
+          "previous": "          \"sha256\": \"2f6aba6559362f8c5d80cde21f392adc6743011dfa62b31b4de62f79f0a69ca3\"\n",
+          "start": 40434031
+        },
+        {
+          "current": "          \"sha256\": \"7de40e43f004a7a9b30186f043913e9a5427b87df89d1822e7de948d9fd3bf7e\"\n",
+          "previous": "          \"sha256\": \"1040cc3974462d1857431cdafab7df0841d736eba6a0b1916ff8d705a7a1c6b9\"\n",
+          "start": 40434226
+        },
+        {
+          "current": "          \"sha256\": \"67de8319a93ee15de5424f8cf5124cce00b81a984e9b5a2b8602817686e45791\"\n",
+          "previous": "          \"sha256\": \"2f6aba6559362f8c5d80cde21f392adc6743011dfa62b31b4de62f79f0a69ca3\"\n",
+          "start": 40837804
+        },
+        {
+          "current": "          \"sha256\": \"7de40e43f004a7a9b30186f043913e9a5427b87df89d1822e7de948d9fd3bf7e\"\n",
+          "previous": "          \"sha256\": \"1040cc3974462d1857431cdafab7df0841d736eba6a0b1916ff8d705a7a1c6b9\"\n",
+          "start": 40837999
+        },
+        {
+          "current": "          \"sha256\": \"e6250fcc01219ab14b7ec4b98a5da4fc2dfa34b731a681121c973d412b865fe2\"\n",
+          "previous": "          \"sha256\": \"cc597c96477d82a179db6d6914291621708ff95ba00eb7e8b4b3a773196a8a9c\"\n",
+          "start": 41242281
+        },
+        {
+          "current": "          \"sha256\": \"e4dd651bde4aba40e149ed40bbc550b7301a5d2cd5ab712fb8ee512f2777b172\"\n",
+          "previous": "          \"sha256\": \"b49d8a1de24b3ef03498db5d77ca69383ede16910de98245b5c56b81c2292d80\"\n",
+          "start": 41242480
+        },
+        {
+          "current": "          \"sha256\": \"e6250fcc01219ab14b7ec4b98a5da4fc2dfa34b731a681121c973d412b865fe2\"\n",
+          "previous": "          \"sha256\": \"cc597c96477d82a179db6d6914291621708ff95ba00eb7e8b4b3a773196a8a9c\"\n",
+          "start": 41903834
+        },
+        {
+          "current": "          \"sha256\": \"e4dd651bde4aba40e149ed40bbc550b7301a5d2cd5ab712fb8ee512f2777b172\"\n",
+          "previous": "          \"sha256\": \"b49d8a1de24b3ef03498db5d77ca69383ede16910de98245b5c56b81c2292d80\"\n",
+          "start": 41904033
+        },
+        {
+          "current": "          \"sha256\": \"e6250fcc01219ab14b7ec4b98a5da4fc2dfa34b731a681121c973d412b865fe2\"\n",
+          "previous": "          \"sha256\": \"cc597c96477d82a179db6d6914291621708ff95ba00eb7e8b4b3a773196a8a9c\"\n",
+          "start": 42565619
+        },
+        {
+          "current": "          \"sha256\": \"e4dd651bde4aba40e149ed40bbc550b7301a5d2cd5ab712fb8ee512f2777b172\"\n",
+          "previous": "          \"sha256\": \"b49d8a1de24b3ef03498db5d77ca69383ede16910de98245b5c56b81c2292d80\"\n",
+          "start": 42565818
+        },
+        {
+          "current": "          \"sha256\": \"e6250fcc01219ab14b7ec4b98a5da4fc2dfa34b731a681121c973d412b865fe2\"\n",
+          "previous": "          \"sha256\": \"cc597c96477d82a179db6d6914291621708ff95ba00eb7e8b4b3a773196a8a9c\"\n",
+          "start": 43227804
+        },
+        {
+          "current": "          \"sha256\": \"e4dd651bde4aba40e149ed40bbc550b7301a5d2cd5ab712fb8ee512f2777b172\"\n",
+          "previous": "          \"sha256\": \"b49d8a1de24b3ef03498db5d77ca69383ede16910de98245b5c56b81c2292d80\"\n",
+          "start": 43228003
+        },
+        {
+          "current": "          \"sha256\": \"182f71892f78aa92fc05b3278679ee3276a8a25c6c9d9f9d9e47f3e1434bff74\"\n",
+          "previous": "          \"sha256\": \"d6dd064308b70ac9fdf09a7815b5997e4eccb148e7cab499c0ca55806b779bc3\"\n",
+          "start": 43890217
+        },
+        {
+          "current": "          \"sha256\": \"b012f0f7259134543c18bea74feca3ea33f19377069492a13bdcb3f77938a505\"\n",
+          "previous": "          \"sha256\": \"245511564eed53f785a247f95eee3107787b487181f7ed50615a1000dfec08f7\"\n",
+          "start": 43890411
+        },
+        {
+          "current": "          \"sha256\": \"182f71892f78aa92fc05b3278679ee3276a8a25c6c9d9f9d9e47f3e1434bff74\"\n",
+          "previous": "          \"sha256\": \"d6dd064308b70ac9fdf09a7815b5997e4eccb148e7cab499c0ca55806b779bc3\"\n",
+          "start": 44321626
+        },
+        {
+          "current": "          \"sha256\": \"b012f0f7259134543c18bea74feca3ea33f19377069492a13bdcb3f77938a505\"\n",
+          "previous": "          \"sha256\": \"245511564eed53f785a247f95eee3107787b487181f7ed50615a1000dfec08f7\"\n",
+          "start": 44321820
+        },
+        {
+          "current": "          \"sha256\": \"182f71892f78aa92fc05b3278679ee3276a8a25c6c9d9f9d9e47f3e1434bff74\"\n",
+          "previous": "          \"sha256\": \"d6dd064308b70ac9fdf09a7815b5997e4eccb148e7cab499c0ca55806b779bc3\"\n",
+          "start": 44753105
+        },
+        {
+          "current": "          \"sha256\": \"b012f0f7259134543c18bea74feca3ea33f19377069492a13bdcb3f77938a505\"\n",
+          "previous": "          \"sha256\": \"245511564eed53f785a247f95eee3107787b487181f7ed50615a1000dfec08f7\"\n",
+          "start": 44753299
+        },
+        {
+          "current": "          \"sha256\": \"182f71892f78aa92fc05b3278679ee3276a8a25c6c9d9f9d9e47f3e1434bff74\"\n",
+          "previous": "          \"sha256\": \"d6dd064308b70ac9fdf09a7815b5997e4eccb148e7cab499c0ca55806b779bc3\"\n",
+          "start": 45185602
+        },
+        {
+          "current": "          \"sha256\": \"b012f0f7259134543c18bea74feca3ea33f19377069492a13bdcb3f77938a505\"\n",
+          "previous": "          \"sha256\": \"245511564eed53f785a247f95eee3107787b487181f7ed50615a1000dfec08f7\"\n",
+          "start": 45185796
+        },
+        {
+          "current": "          \"sha256\": \"0619d260c4f74636b660f3eff523338f8c8e6a0eab8167f98a577160a09c6bb0\"\n",
+          "previous": "          \"sha256\": \"bea275ee1b7006e951a9c27e39b923fef586033b9da5af6508cd0b6e21a2556e\"\n",
+          "start": 45617991
+        },
+        {
+          "current": "          \"sha256\": \"6d6af35f85fff1ad2dd73fbaaa2b77ea861661fceef2c8eebd71fd916025d8d3\"\n",
+          "previous": "          \"sha256\": \"20ad85d146daae195141d7d46475c09e2c34d4cbc1bccc1d794b430a4eb4bbe2\"\n",
+          "start": 45618186
+        },
+        {
+          "current": "          \"sha256\": \"0619d260c4f74636b660f3eff523338f8c8e6a0eab8167f98a577160a09c6bb0\"\n",
+          "previous": "          \"sha256\": \"bea275ee1b7006e951a9c27e39b923fef586033b9da5af6508cd0b6e21a2556e\"\n",
+          "start": 46037987
+        },
+        {
+          "current": "          \"sha256\": \"6d6af35f85fff1ad2dd73fbaaa2b77ea861661fceef2c8eebd71fd916025d8d3\"\n",
+          "previous": "          \"sha256\": \"20ad85d146daae195141d7d46475c09e2c34d4cbc1bccc1d794b430a4eb4bbe2\"\n",
+          "start": 46038182
+        },
+        {
+          "current": "          \"sha256\": \"0619d260c4f74636b660f3eff523338f8c8e6a0eab8167f98a577160a09c6bb0\"\n",
+          "previous": "          \"sha256\": \"bea275ee1b7006e951a9c27e39b923fef586033b9da5af6508cd0b6e21a2556e\"\n",
+          "start": 46458119
+        },
+        {
+          "current": "          \"sha256\": \"6d6af35f85fff1ad2dd73fbaaa2b77ea861661fceef2c8eebd71fd916025d8d3\"\n",
+          "previous": "          \"sha256\": \"20ad85d146daae195141d7d46475c09e2c34d4cbc1bccc1d794b430a4eb4bbe2\"\n",
+          "start": 46458314
+        },
+        {
+          "current": "          \"sha256\": \"0619d260c4f74636b660f3eff523338f8c8e6a0eab8167f98a577160a09c6bb0\"\n",
+          "previous": "          \"sha256\": \"bea275ee1b7006e951a9c27e39b923fef586033b9da5af6508cd0b6e21a2556e\"\n",
+          "start": 46879011
+        },
+        {
+          "current": "          \"sha256\": \"6d6af35f85fff1ad2dd73fbaaa2b77ea861661fceef2c8eebd71fd916025d8d3\"\n",
+          "previous": "          \"sha256\": \"20ad85d146daae195141d7d46475c09e2c34d4cbc1bccc1d794b430a4eb4bbe2\"\n",
+          "start": 46879206
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "672c5892cdb7927f2f77b3b8c911b41935256d52c02ea3fb5ba5967c84541d10"
+    },
+    {
+      "currentSha256": "b3316f09a87cc084a8ee6e1d7314f0a3a490645ae1e9cb62d30d779cf08682a0",
+      "edits": [
+        {
+          "current": "import { beforeValueIndexPromotionMilestoneRepairSource, valueIndexPromotionMilestoneRepairNormalizationPaths } from \"./value-index-promotion-milestone-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...valueIndexPromotionMilestoneRepairNormalizationPaths\n\t, ...coreMilestoneReplayRepairNormalizationPaths\n",
+          "previous": "\t...coreMilestoneReplayRepairNormalizationPaths\n",
+          "start": 173300
+        },
+        {
+          "current": "\tconst valueIndexPromotionMilestoneRepair\n\t\t= beforeValueIndexPromotionMilestoneRepairSource(path, text, expected);\n\tif(sha256(valueIndexPromotionMilestoneRepair) === expected)\n\t\treturn valueIndexPromotionMilestoneRepair;\n\ttext = valueIndexPromotionMilestoneRepair;\n",
+          "previous": "",
+          "start": 213600
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "2c822b00542ec54dd45ae32b7c7fb0634526230db561a38f7004230777baddb1"
+    },
+    {
+      "currentSha256": "65320aa7e8cecf8d90e026cded9d56748a5888bcb768acc531f006c53182a91b",
+      "edits": [
+        {
+          "current": "import \"./helpers/value-index-promotion-milestone-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 611
+        }
+      ],
+      "path": "tests/checked-record-value-index-php-wasm.test.mjs",
+      "previousSha256": "8e76f557f9e8ff15c75e9c64d33fa65bf26cba67b81ca7a1d8de22d5e4b99015"
+    }
+  ],
+  "milestone": "value-index-promotion-milestone-repair-source-v1",
+  "predecessorCommit": "523ef62011b53c38444f01a9056392bfe3ed1d9a",
+  "schemaVersion": 1,
+  "scope": "Authenticate Python, Ruby, PHP-Wasm, Rust and WIT value-index promotion comparisons against exact recorded milestone bytes; preserve default live promotion behavior and refresh exactly 40 current source pins without changing support claims or installed observations.",
+  "updates": [
+    {
+      "currentSha256": "e4dd651bde4aba40e149ed40bbc550b7301a5d2cd5ab712fb8ee512f2777b172",
+      "edits": [
+        {
+          "current": "import { execFileSync } from \"node:child_process\";\n",
+          "previous": "",
+          "start": 131
+        },
+        {
+          "current": "import { sha256 } from \"../../src/capsule/node.mjs\";\n",
+          "previous": "",
+          "start": 257
+        },
+        {
+          "current": "import {\n\tcheckedRecordValueIndexPhpWasmPromotionHistoryPath\n} from \"./checked-record-value-index-php-wasm-promotion-source-history.mjs\";\n",
+          "previous": "",
+          "start": 718
+        },
+        {
+          "current": "/** History commit whose inventory the promotion ledger records. */\nconst checkedRecordValueIndexPhpWasmPromotionMilestone\n\t= \"dd2ee7a08530f5956912616442bc0a110c5708e9\";\n\n",
+          "previous": "",
+          "start": 3510
+        },
+        {
+          "current": "\tconst show = path => execFileSync(\"git\", [\"show\"\n\t\t, `${checkedRecordValueIndexPhpWasmPromotionMilestone}:${path}`]\n\t, { maxBuffer: 512 * 1024 * 1024 });\n\tconst history = JSON.parse(await readFile(\n\t\tcheckedRecordValueIndexPhpWasmPromotionHistoryPath, \"utf8\"));\n\tassert.equal(execFileSync(\"git\", [\"rev-parse\"\n\t\t, `${checkedRecordValueIndexPhpWasmPromotionMilestone}^`], { encoding: \"utf8\" })\n\t\t.trim(), history.draftParentCommit);\n\tconst inventory = show(\"docs/type-surface.v1.json\");\n\tassert.equal(sha256(inventory), history.updates.find(update =>\n\t\tupdate.path === \"docs/type-surface.v1.json\").currentSha256);\n",
+          "previous": "",
+          "start": 3799
+        },
+        {
+          "current": "\t\t, async path => show(path)\n",
+          "previous": "",
+          "start": 4589
+        },
+        {
+          "current": "\tassert.deepEqual(JSON.parse(inventory), proposed);\n",
+          "previous": "\tassert.deepEqual(JSON.parse(await readFile(\"docs/type-surface.v1.json\"))\n\t\t, proposed);\n",
+          "start": 4622
+        }
+      ],
+      "path": "tests/helpers/checked-record-value-index-php-wasm-promotion-tests.mjs",
+      "previousSha256": "b49d8a1de24b3ef03498db5d77ca69383ede16910de98245b5c56b81c2292d80"
+    },
+    {
+      "currentSha256": "e6250fcc01219ab14b7ec4b98a5da4fc2dfa34b731a681121c973d412b865fe2",
+      "edits": [
+        {
+          "current": " * @param [read] - Source bytes for validators and pins; defaults to the\n * live checkout.\n",
+          "previous": "",
+          "start": 8206
+        },
+        {
+          "current": "\toriginal, references, read = path => readFile(path)\n",
+          "previous": "\toriginal, references\n",
+          "start": 8362
+        },
+        {
+          "current": "\t\tpath, sha256: sha256(await read(path))\n",
+          "previous": "\t\tpath, sha256: sha256(await readFile(path))\n",
+          "start": 8628
+        },
+        {
+          "current": "\t\tpath, sha256(await read(path))\n",
+          "previous": "\t\tpath, sha256(await readFile(path))\n",
+          "start": 10864
+        }
+      ],
+      "path": "tests/helpers/checked-record-value-index-php-wasm-promotion.mjs",
+      "previousSha256": "cc597c96477d82a179db6d6914291621708ff95ba00eb7e8b4b3a773196a8a9c"
+    },
+    {
+      "currentSha256": "2439c83a33828c5a4e59a9195927c1aaf44d1bc1c8cf2b4f0321de7c3dc67ef0",
+      "edits": [
+        {
+          "current": "import { execFileSync } from \"node:child_process\";\n",
+          "previous": "",
+          "start": 129
+        },
+        {
+          "current": "import {\n\tcheckedRecordValueIndexPythonPromotionHistoryPath\n} from \"./checked-record-value-index-python-promotion-source-history.mjs\";\n",
+          "previous": "",
+          "start": 709
+        },
+        {
+          "current": "/** History commit whose inventory the promotion ledger records. */\nconst checkedRecordValueIndexPythonPromotionMilestone\n\t= \"4060e1c6eaea9d7ebcef15d57cdf98b7f5a7b81b\";\n\n",
+          "previous": "",
+          "start": 3802
+        },
+        {
+          "current": "\tconst show = path => execFileSync(\"git\", [\"show\"\n\t\t, `${checkedRecordValueIndexPythonPromotionMilestone}:${path}`]\n\t, { maxBuffer: 512 * 1024 * 1024 });\n\tconst history = JSON.parse(await readFile(\n\t\tcheckedRecordValueIndexPythonPromotionHistoryPath, \"utf8\"));\n\tassert.equal(execFileSync(\"git\", [\"rev-parse\"\n\t\t, `${checkedRecordValueIndexPythonPromotionMilestone}^`], { encoding: \"utf8\" })\n\t\t.trim(), history.draftParentCommit);\n\tconst inventory = show(\"docs/type-surface.v1.json\");\n\tassert.equal(sha256(inventory), history.updates.find(update =>\n\t\tupdate.path === \"docs/type-surface.v1.json\").currentSha256);\n",
+          "previous": "",
+          "start": 4088
+        },
+        {
+          "current": "\t\t, async path => show(path)\n",
+          "previous": "",
+          "start": 4872
+        },
+        {
+          "current": "\tassert.deepEqual(JSON.parse(inventory), proposed);\n",
+          "previous": "\tassert.deepEqual(JSON.parse(await readFile(\"docs/type-surface.v1.json\")), proposed);\n",
+          "start": 4905
+        }
+      ],
+      "path": "tests/helpers/checked-record-value-index-python-promotion-tests.mjs",
+      "previousSha256": "ec73198b22340a3b45e89e1a8c2456ca7d100bdbf9a6cabb1757f7e6ca9a0dba"
+    },
+    {
+      "currentSha256": "b8aa9ae89c17bee74750d1fa4c1134789867dc545882c6ab778d5c1c36967bc0",
+      "edits": [
+        {
+          "current": " * @param [read] - Source bytes for validators and pins; defaults to the\n * live checkout.\n",
+          "previous": "",
+          "start": 7797
+        },
+        {
+          "current": "export const promoteCheckedRecordValueIndexPython = async (\n\toriginal, references, read = path => readFile(path)\n) => {\n",
+          "previous": "export const promoteCheckedRecordValueIndexPython = async (original, references) => {\n",
+          "start": 7892
+        },
+        {
+          "current": "\t\tpath, sha256: sha256(await read(path))\n",
+          "previous": "\t\tpath, sha256: sha256(await readFile(path))\n",
+          "start": 8214
+        },
+        {
+          "current": "\t\tpath, sha256(await read(path))\n",
+          "previous": "\t\tpath, sha256(await readFile(path))\n",
+          "start": 10438
+        }
+      ],
+      "path": "tests/helpers/checked-record-value-index-python-promotion.mjs",
+      "previousSha256": "811c6d3659a34e7e74ab5bf7b9714911ed301c24a164ef3315bfc2a36d5c5743"
+    },
+    {
+      "currentSha256": "7de40e43f004a7a9b30186f043913e9a5427b87df89d1822e7de948d9fd3bf7e",
+      "edits": [
+        {
+          "current": "import { execFileSync } from \"node:child_process\";\n",
+          "previous": "",
+          "start": 127
+        },
+        {
+          "current": "import {\n\tcheckedRecordValueIndexRubyPromotionHistoryPath\n} from \"./checked-record-value-index-ruby-promotion-source-history.mjs\";\n",
+          "previous": "",
+          "start": 695
+        },
+        {
+          "current": "/** History commit whose inventory the promotion ledger records. */\nconst checkedRecordValueIndexRubyPromotionMilestone\n\t= \"bb14e51b5a9f1fc5c0957f97c7c3d0ad7952326d\";\n\n",
+          "previous": "",
+          "start": 3773
+        },
+        {
+          "current": "\tconst show = path => execFileSync(\"git\", [\"show\"\n\t\t, `${checkedRecordValueIndexRubyPromotionMilestone}:${path}`]\n\t, { maxBuffer: 512 * 1024 * 1024 });\n\tconst history = JSON.parse(await readFile(\n\t\tcheckedRecordValueIndexRubyPromotionHistoryPath, \"utf8\"));\n\tassert.equal(execFileSync(\"git\", [\"rev-parse\"\n\t\t, `${checkedRecordValueIndexRubyPromotionMilestone}^`], { encoding: \"utf8\" })\n\t\t.trim(), history.draftParentCommit);\n\tconst inventory = show(\"docs/type-surface.v1.json\");\n\tassert.equal(sha256(inventory), history.updates.find(update =>\n\t\tupdate.path === \"docs/type-surface.v1.json\").currentSha256);\n",
+          "previous": "",
+          "start": 4055
+        },
+        {
+          "current": "\t\t, async path => show(path)\n",
+          "previous": "",
+          "start": 4827
+        },
+        {
+          "current": "\tassert.deepEqual(JSON.parse(inventory), proposed);\n",
+          "previous": "\tassert.deepEqual(JSON.parse(await readFile(\"docs/type-surface.v1.json\"))\n\t\t, proposed);\n",
+          "start": 4860
+        }
+      ],
+      "path": "tests/helpers/checked-record-value-index-ruby-promotion-tests.mjs",
+      "previousSha256": "1040cc3974462d1857431cdafab7df0841d736eba6a0b1916ff8d705a7a1c6b9"
+    },
+    {
+      "currentSha256": "67de8319a93ee15de5424f8cf5124cce00b81a984e9b5a2b8602817686e45791",
+      "edits": [
+        {
+          "current": " * @param [read] - Source bytes for validators and pins; defaults to the\n * live checkout.\n",
+          "previous": "",
+          "start": 7661
+        },
+        {
+          "current": "\toriginal, references, read = path => readFile(path)\n",
+          "previous": "\toriginal, references\n",
+          "start": 7814
+        },
+        {
+          "current": "\t\tpath, sha256: sha256(await read(path))\n",
+          "previous": "\t\tpath, sha256: sha256(await readFile(path))\n",
+          "start": 8077
+        },
+        {
+          "current": "\t\tpath, sha256(await read(path))\n",
+          "previous": "\t\tpath, sha256(await readFile(path))\n",
+          "start": 10293
+        }
+      ],
+      "path": "tests/helpers/checked-record-value-index-ruby-promotion.mjs",
+      "previousSha256": "2f6aba6559362f8c5d80cde21f392adc6743011dfa62b31b4de62f79f0a69ca3"
+    },
+    {
+      "currentSha256": "6d6af35f85fff1ad2dd73fbaaa2b77ea861661fceef2c8eebd71fd916025d8d3",
+      "edits": [
+        {
+          "current": "import { execFileSync } from \"node:child_process\";\n",
+          "previous": "",
+          "start": 127
+        },
+        {
+          "current": "import { sha256 } from \"../../src/capsule/node.mjs\";\n",
+          "previous": "",
+          "start": 253
+        },
+        {
+          "current": "import {\n\tcheckedRecordValueIndexRustPromotionHistoryPath\n} from \"./checked-record-value-index-rust-promotion-source-history.mjs\";\n",
+          "previous": "",
+          "start": 695
+        },
+        {
+          "current": "/** History commit whose inventory the promotion ledger records. */\nconst checkedRecordValueIndexRustPromotionMilestone\n\t= \"42c40d8d54895be99bfcd2ee6856357919f55113\";\n\n",
+          "previous": "",
+          "start": 3426
+        },
+        {
+          "current": "\tconst show = path => execFileSync(\"git\", [\"show\"\n\t\t, `${checkedRecordValueIndexRustPromotionMilestone}:${path}`]\n\t, { maxBuffer: 512 * 1024 * 1024 });\n\tconst history = JSON.parse(await readFile(\n\t\tcheckedRecordValueIndexRustPromotionHistoryPath, \"utf8\"));\n\tassert.equal(execFileSync(\"git\", [\"rev-parse\"\n\t\t, `${checkedRecordValueIndexRustPromotionMilestone}^`], { encoding: \"utf8\" })\n\t\t.trim(), history.draftParentCommit);\n\tconst inventory = show(\"docs/type-surface.v1.json\");\n\tassert.equal(sha256(inventory), history.updates.find(update =>\n\t\tupdate.path === \"docs/type-surface.v1.json\").currentSha256);\n",
+          "previous": "",
+          "start": 3708
+        },
+        {
+          "current": "\t\t, async path => show(path)\n",
+          "previous": "",
+          "start": 4480
+        },
+        {
+          "current": "\tassert.deepEqual(JSON.parse(inventory), proposed);\n",
+          "previous": "\tassert.deepEqual(JSON.parse(await readFile(\"docs/type-surface.v1.json\"))\n\t\t, proposed);\n",
+          "start": 4513
+        }
+      ],
+      "path": "tests/helpers/checked-record-value-index-rust-promotion-tests.mjs",
+      "previousSha256": "20ad85d146daae195141d7d46475c09e2c34d4cbc1bccc1d794b430a4eb4bbe2"
+    },
+    {
+      "currentSha256": "0619d260c4f74636b660f3eff523338f8c8e6a0eab8167f98a577160a09c6bb0",
+      "edits": [
+        {
+          "current": " * @param [read] - Source bytes for validators and pins; defaults to the\n * live checkout.\n",
+          "previous": "",
+          "start": 7900
+        },
+        {
+          "current": "\toriginal, references, read = path => readFile(path)\n",
+          "previous": "\toriginal, references\n",
+          "start": 8053
+        },
+        {
+          "current": "\t\tpath, sha256: sha256(await read(path))\n",
+          "previous": "\t\tpath, sha256: sha256(await readFile(path))\n",
+          "start": 8316
+        },
+        {
+          "current": "\t\tpath, sha256(await read(path))\n",
+          "previous": "\t\tpath, sha256(await readFile(path))\n",
+          "start": 10536
+        }
+      ],
+      "path": "tests/helpers/checked-record-value-index-rust-promotion.mjs",
+      "previousSha256": "bea275ee1b7006e951a9c27e39b923fef586033b9da5af6508cd0b6e21a2556e"
+    },
+    {
+      "currentSha256": "b012f0f7259134543c18bea74feca3ea33f19377069492a13bdcb3f77938a505",
+      "edits": [
+        {
+          "current": "import { execFileSync } from \"node:child_process\";\n",
+          "previous": "",
+          "start": 131
+        },
+        {
+          "current": "import { sha256 } from \"../../src/capsule/node.mjs\";\n",
+          "previous": "",
+          "start": 257
+        },
+        {
+          "current": "import {\n\tcheckedRecordValueIndexWitPromotionHistoryPath\n} from \"./checked-record-value-index-wit-promotion-source-history.mjs\";\n",
+          "previous": "",
+          "start": 693
+        },
+        {
+          "current": "/** History commit whose inventory the promotion ledger records. */\nconst checkedRecordValueIndexWitPromotionMilestone\n\t= \"f9839b7f13facf1d0ec4135202cb91ef5e0ccfe0\";\n\n",
+          "previous": "",
+          "start": 3429
+        },
+        {
+          "current": "\tconst show = path => execFileSync(\"git\", [\"show\"\n\t\t, `${checkedRecordValueIndexWitPromotionMilestone}:${path}`]\n\t, { maxBuffer: 512 * 1024 * 1024 });\n\tconst history = JSON.parse(await readFile(\n\t\tcheckedRecordValueIndexWitPromotionHistoryPath, \"utf8\"));\n\tassert.equal(execFileSync(\"git\", [\"rev-parse\"\n\t\t, `${checkedRecordValueIndexWitPromotionMilestone}^`], { encoding: \"utf8\" })\n\t\t.trim(), history.draftParentCommit);\n\tconst inventory = show(\"docs/type-surface.v1.json\");\n\tassert.equal(sha256(inventory), history.updates.find(update =>\n\t\tupdate.path === \"docs/type-surface.v1.json\").currentSha256);\n",
+          "previous": "",
+          "start": 3714
+        },
+        {
+          "current": "\t\t, async path => show(path)\n",
+          "previous": "",
+          "start": 4480
+        },
+        {
+          "current": "\tassert.deepEqual(JSON.parse(inventory), proposed);\n",
+          "previous": "\tassert.deepEqual(JSON.parse(await readFile(\"docs/type-surface.v1.json\"))\n\t\t, proposed);\n",
+          "start": 4513
+        }
+      ],
+      "path": "tests/helpers/checked-record-value-index-wit-promotion-tests.mjs",
+      "previousSha256": "245511564eed53f785a247f95eee3107787b487181f7ed50615a1000dfec08f7"
+    },
+    {
+      "currentSha256": "182f71892f78aa92fc05b3278679ee3276a8a25c6c9d9f9d9e47f3e1434bff74",
+      "edits": [
+        {
+          "current": " * @param [read] - Source bytes for validators and pins; defaults to the\n * live checkout.\n",
+          "previous": "",
+          "start": 8287
+        },
+        {
+          "current": "\toriginal, references, read = path => readFile(path)\n",
+          "previous": "\toriginal, references\n",
+          "start": 8439
+        },
+        {
+          "current": "\t\tpath, sha256: sha256(await read(path))\n",
+          "previous": "\t\tpath, sha256: sha256(await readFile(path))\n",
+          "start": 8701
+        },
+        {
+          "current": "\t\tpath, sha256(await read(path))\n",
+          "previous": "\t\tpath, sha256(await readFile(path))\n",
+          "start": 10925
+        }
+      ],
+      "path": "tests/helpers/checked-record-value-index-wit-promotion.mjs",
+      "previousSha256": "d6dd064308b70ac9fdf09a7815b5997e4eccb148e7cab499c0ca55806b779bc3"
+    }
+  ]
+}
