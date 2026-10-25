@@ -27,6 +27,7 @@ import { ownedCheckedRecordJavaScriptSelection } from "./owned-checked-record-ja
 import { ownedCheckedRecordNativeSelection } from "./owned-checked-record-native-fixture.mjs";
 import { ownedCheckedRecordLanguageSelection } from "./owned-checked-record-language-fixture.mjs";
 import { ownedCheckedRecordManagedSelection } from "./owned-checked-record-managed-fixture.mjs";
+import { ownedCheckedRecordMixedSelection } from "./owned-checked-record-mixed-fixture.mjs";
 import {
 	ownedCheckedRecordDocumentationPaths, refreshOwnedCheckedRecordDocumentation
 	, renderOwnedCheckedRecordDocumentation
@@ -250,6 +251,7 @@ test("owned checked-record promotion keeps the installed fixture and result-only
 		const native = ownedCheckedRecordNativeSelection(route, ["c", "cpp", "cpan"]);
 		const selections = [
 			ownedCheckedRecordLanguageSelection(route, ["python", "ruby", "rust"])
+			, ownedCheckedRecordMixedSelection(route)
 			, ...["dotnet", "jvm", "php", "wit"].map(group => ownedCheckedRecordManagedSelection(route, group))];
 		for(const selected of selections)
 		{
@@ -264,7 +266,7 @@ test("owned checked-record promotion keeps the installed fixture and result-only
 		}
 		else
 		{
-			// Expanded native/language/managed coverage needs its own hosted evidence.
+			// Expanded native/language/managed/PHP-Wasm coverage needs its own hosted evidence.
 			// Keep the admitted shared boundary exact without promoting new cases.
 			const types = new Set(javascript.reviewedIr.types.map(type => type.id));
 			const declarations = new Set(javascript.reviewedIr.declarations.map(item => item.id));
@@ -300,8 +302,9 @@ test("owned checked-record promotion keeps the installed fixture and result-only
 		assert.ok(!definitions.some(type => type.name === "Grant"));
 	}
 	const php = await readFile("tests/helpers/owned-php-wasm-packages.mjs", "utf8");
-	assert.ok(php.includes('ownedCheckedRecordJavaScriptConfiguration(reviewed ? "reviewed" : "ordinary", { resultOnly })'));
-	assert.ok(php.includes("ownedCheckedRecordJavaScriptReviewedIr({ resultOnly })"));
+	assert.ok(php.includes('ownedCheckedRecordMixedSelection('));
+	assert.ok(php.includes("checkedSelection.configuration"));
+	assert.ok(php.includes("checkedSelection.reviewedIr"));
 	const rendered = renderOwnedCheckedRecordPromotion(references);
 	for(const expected of [
 		"Eleven immutable hosted archives", "seventeen consumer profiles"

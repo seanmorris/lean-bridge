@@ -28,6 +28,10 @@ import {
 } from "./owned-checked-record-hosted-evidence.mjs";
 import { ownedCheckedRecordEvidenceSources } from "./owned-checked-record-hosted-evidence-sources.mjs";
 import { replayOwnedCheckedRecordHostedOutput } from "./owned-checked-record-hosted-output.mjs";
+import {
+	assertOwnedCheckedRecordPhpWasmModelCorpus, ownedCheckedRecordPhpWasmCorpora
+	, ownedCheckedRecordPhpWasmCorpus
+} from "./owned-checked-record-php-wasm-corpus.mjs";
 
 const revision = execFileSync("git", ["rev-parse", "HEAD"], {
 	encoding: "utf8"
@@ -116,7 +120,16 @@ const run = (mode, extra) => ({ ...extra
 	, cleaned: { liveIdentities: 0, runtimeInitRuns: 1 }
 	, refreshed: { liveIdentities: 0, runtimeInitRuns: 1 } });
 
-const observationFor = async (packagingRoot, mode, reviewed) => {
+const corpusModel = (mode, corpus) => ({
+	exports: (mode === "full" ? corpus.exports
+		: ["newTicket", "serial", "claimFor"].map(name => `lean:OwnedCheckedRecords.${name}`))
+		.map(bindingId => ({ bindingId }))
+	, ownedGraph: { transport: "owned-zend-v1", ...mode === "result-only" ? {} : {
+		inputTransfers: { exports: structuredClone(corpus.transfers) }
+		, hostCallbacks: { signatures: [{ index: 0 }, { index: 1 }] } } }
+});
+
+const observationFor = async (packagingRoot, mode, reviewed, readOriginal) => {
 	const author = reviewed ? "reviewed" : "ordinary";
 	const resultOnly = mode === "result-only";
 	const handoff = join(packagingRoot, lane.evidence, mode, author, "handoff");
@@ -126,13 +139,11 @@ const observationFor = async (packagingRoot, mode, reviewed) => {
 	const component = receipt.component;
 	const model = { pointerBits: 32, schemaVersion: resultOnly ? 6 : 8
 		, bindingIrSha256: receipt.profiles[0].bindingIrSha256
-		, exports: Array.from({ length: resultOnly ? 3 : 9 }, (_, index) => ({ index }))
-		, ownedGraph: { transport: "owned-zend-v1", ...resultOnly ? {} : {
-			inputTransfers: { exports: [{ index: 0 }] }
-			, hostCallbacks: { signatures: [{ index: 0 }, { index: 1 }] } } }
+		, ...corpusModel(mode, ownedCheckedRecordPhpWasmCorpus(readOriginal(
+			"tests/fixtures/structured-types/owned-checked-record-php-wasm.php")))
 		, sourceIdentity, component };
 	const build = { status: "ok", result: { targets: ["php-wasm"] } };
-	const consumer = original("tests/fixtures/structured-types/"
+	const consumer = readOriginal("tests/fixtures/structured-types/"
 		+ `owned-checked-record-${resultOnly ? "result-only-" : ""}php-wasm.php`);
 	const executions = [];
 	for(const arrangement of ["embedded", "composer"])
@@ -170,8 +181,9 @@ const observationFor = async (packagingRoot, mode, reviewed) => {
  * Write one complete synthetic PHP-Wasm hosted output tree.
  *
  * @param root - Empty extracted-artifact root.
+ * @param readOriginal - Source reader used only to create synthetic observations.
  */
-const synthesizePhpWasmOutput = async root => {
+const synthesizePhpWasmOutput = async (root, readOriginal = original) => {
 	const packagingRoot = join(root, lane.packaging);
 	const reports = [];
 	for(const mode of lane.modes)
@@ -181,8 +193,8 @@ const synthesizePhpWasmOutput = async root => {
 			, compiledLean: true, installedPackage: true
 			, installedCli: { archive: "lean-bridge-cli.tgz", packagingSourceRemoved: true }
 			, cliAdmission: true, runtimeSupplied: true, runtimeIdentity, runtimeManifest
-			, observations: [await observationFor(packagingRoot, mode, false)
-				, await observationFor(packagingRoot, mode, true)] };
+			, observations: [await observationFor(packagingRoot, mode, false, readOriginal)
+				, await observationFor(packagingRoot, mode, true, readOriginal)] };
 		await saveLakeFile(packagingRoot, `${mode}.json`, canonicalJson(report));
 		reports.push(report);
 	}
@@ -208,9 +220,9 @@ const temporary = async (t, prefix) => {
 	return root;
 };
 
-const synthesize = async t => {
+const synthesize = async (t, readOriginal = original) => {
 	const root = await temporary(t, "lean-owned-hosted-php-wasm-");
-	await synthesizePhpWasmOutput(root);
+	await synthesizePhpWasmOutput(root, readOriginal);
 	return root;
 };
 
@@ -236,6 +248,41 @@ const rewriteMode = async (root, mode, mutate) => {
 	aggregate.reports[lane.modes.indexOf(mode)] = report;
 	await writeFile(packagingPath(root, lane.report), canonicalJson(aggregate));
 };
+
+test("owned checked-record PHP-Wasm corpus requires exact old or expanded consumer bytes", async t => {
+	const path = "tests/fixtures/structured-types/owned-checked-record-php-wasm.php";
+	const legacy = execFileSync("git", ["show", `83d8de7c2d69efede5a3cf701790cce71bdc9a48:${path}`]);
+	const mixed = await readFile(path);
+	assert.equal(ownedCheckedRecordPhpWasmCorpus(legacy), ownedCheckedRecordPhpWasmCorpora.legacy);
+	assert.equal(ownedCheckedRecordPhpWasmCorpus(mixed), ownedCheckedRecordPhpWasmCorpora.mixed);
+	for(const source of [Buffer.concat([legacy, Buffer.from("\n")]), Buffer.concat([mixed, Buffer.from("\n")])])
+		assert.throws(() => ownedCheckedRecordPhpWasmCorpus(source), /Unknown.*consumer/u);
+	for(const [name, source] of [["legacy", legacy], ["mixed", mixed]])
+	{
+		const corpus = ownedCheckedRecordPhpWasmCorpus(source);
+		const other = ownedCheckedRecordPhpWasmCorpora[name === "legacy" ? "mixed" : "legacy"];
+		const model = corpusModel("full", corpus);
+		assertOwnedCheckedRecordPhpWasmModelCorpus(model, "full", corpus);
+		assert.throws(() => assertOwnedCheckedRecordPhpWasmModelCorpus(model, "full", other), /exact PHP-Wasm corpus exports/u);
+		assert.throws(() => assertOwnedCheckedRecordPhpWasmModelCorpus(model, "full", { ...corpus }), /exact producer source/u);
+		const badTransfer = structuredClone(model);
+		badTransfer.ownedGraph.inputTransfers.exports[0].parameters = [1];
+		assert.throws(() => assertOwnedCheckedRecordPhpWasmModelCorpus(badTransfer, "full", corpus), /transfer bindings and positions/u);
+		const duplicate = structuredClone(model);
+		duplicate.exports[1] = duplicate.exports[0];
+		assert.throws(() => assertOwnedCheckedRecordPhpWasmModelCorpus(duplicate, "full", corpus), /exact PHP-Wasm corpus exports/u);
+		assertOwnedCheckedRecordPhpWasmModelCorpus(corpusModel("result-only", corpus), "result-only", other);
+		// These inert archives exercise the checker, not installed runtime acceptance.
+		const reader = name => name === path ? source : original(name);
+		const root = await synthesize(t, reader);
+		assert.equal((await replayOwnedCheckedRecordHostedOutput("php-wasm", root, revision, reader)).routes.length, 4);
+		await rewriteMode(root, "full", report => {
+			for(const observation of report.observations)
+				Object.assign(observation.model, corpusModel("full", other));
+		});
+		await assert.rejects(replayOwnedCheckedRecordHostedOutput("php-wasm", root, revision, reader), /exact PHP-Wasm corpus exports/u);
+	}
+});
 
 test("owned checked-record PHP-Wasm hosted output replays all four routes", async t => {
 	const accepted = await replay(await synthesize(t));

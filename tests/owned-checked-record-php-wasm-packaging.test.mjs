@@ -13,6 +13,13 @@ import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { checkOwnedPhpWasmPackages } from "./helpers/owned-php-wasm-packages.mjs";
 import { bindPhpWasmReceiptArchives } from "./helpers/php-wasm-graph-packages.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
+import { compileOwnedPhpZendModel } from "../src/backends/php/owned-zend-model.mjs";
+import { generateOwnedPhpZendPhp } from "../src/backends/php/owned-zend-php.mjs";
+import { ownedCheckedRecordMixedSelection } from "./helpers/owned-checked-record-mixed-fixture.mjs";
+import {
+	assertOwnedCheckedRecordPhpWasmModelCorpus, ownedCheckedRecordPhpWasmCorpora
+	, ownedCheckedRecordPhpWasmCorpus
+} from "./helpers/owned-checked-record-php-wasm-corpus.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_OWNED_CHECKED_RECORD_PHP_WASM_TEST === "1";
 const modeVariable = "LEAN_BRIDGE_OWNED_CHECKED_RECORD_PHP_WASM_MODES";
@@ -84,6 +91,28 @@ for(const mode of modes) test(`installed PHP-Wasm ${mode} owned checked records 
 });
 
 test("owned checked-record PHP-Wasm acceptance remains a separate recurring gate", async () => {
+	const consumer = await readFile("tests/fixtures/structured-types/owned-checked-record-php-wasm.php");
+	assert.equal(ownedCheckedRecordPhpWasmCorpus(consumer), ownedCheckedRecordPhpWasmCorpora.mixed);
+	for(const mode of allModes)
+	{
+		const full = mode === "full";
+		const ir = ownedCheckedRecordMixedSelection(`reviewed-${mode}`).reviewedIr;
+		const model = compileOwnedPhpZendModel(ir, { transferredInputs: full, hostCallbacks: full });
+		const php = generateOwnedPhpZendPhp(model);
+		assert.equal(model.integerBits, 32); assert.equal(model.wordBits, 32);
+		assert.equal(model.callbacks.length, full ? 2 : 0);
+		assertOwnedCheckedRecordPhpWasmModelCorpus({
+			exports: model.functions.map(fn => ({ bindingId: fn.id }))
+			, ownedGraph: full ? { inputTransfers: { exports: model.functions.filter(fn => fn.transfers?.length)
+				.map(fn => ({ bindingId: fn.id, parameters: fn.transfers })) } } : {}
+		}, mode, ownedCheckedRecordPhpWasmCorpora.mixed);
+		if(full)
+			for(const symbol of [
+				"booking_span", "claim_quota", "echo_grant", "echo_claims"
+				, "transfer_pair_claim", "transfer_with_claim_callback"
+			])
+				assert.ok(php["src/Api.php"].includes(`function ${symbol}(`), symbol);
+	}
 	const workflow = await readFile(".github/workflows/owned-checked-record-php-wasm.yml", "utf8");
 	const cli = JSON.parse(await readFile("config/cli-package.v1.json", "utf8"));
 	for(const dependency of [

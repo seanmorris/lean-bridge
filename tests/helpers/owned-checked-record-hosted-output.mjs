@@ -26,6 +26,9 @@ import {
 	verifyOwnedCheckedRecordJavaScriptEvidence
 } from "./owned-checked-record-javascript-evidence.mjs";
 import { moduleAtProducerWithSourceReads } from "./producer-module.mjs";
+import {
+	assertOwnedCheckedRecordPhpWasmModelCorpus, ownedCheckedRecordPhpWasmCorpus
+} from "./owned-checked-record-php-wasm-corpus.mjs";
 
 const summaryKeys = Object.freeze(["tests", "suites", "pass", "fail"
 	, "cancelled", "skipped", "todo"]);
@@ -239,14 +242,15 @@ const checkPhpWasmRun = (label, run, mode) => {
  * @param observation - One author's installed observation.
  * @param mode - Full or result-only owned checked-record mode.
  * @param lean - Original Lean fixture bytes at the producer revision.
+ * @param corpus - Contract selected from the producer's original full caller.
  */
-const checkPhpWasmModel = (label, observation, mode, lean) => {
+const checkPhpWasmModel = (label, observation, mode, lean, corpus) => {
 	const { model, inputs } = observation;
 	const resultOnly = mode === "result-only";
 	assert.equal(model.pointerBits, 32, label);
 	assert.equal(model.schemaVersion, resultOnly ? 6 : 8, label);
 	assert.equal(model.ownedGraph.transport, "owned-zend-v1", label);
-	assert.equal(model.exports.length, resultOnly ? 3 : 9, label);
+	assertOwnedCheckedRecordPhpWasmModelCorpus(model, mode, corpus, label);
 	if(resultOnly)
 	{
 		assert.equal(model.ownedGraph.inputTransfers, undefined, label);
@@ -254,7 +258,6 @@ const checkPhpWasmModel = (label, observation, mode, lean) => {
 	}
 	else
 	{
-		assert.equal(model.ownedGraph.inputTransfers.exports.length, 1, label);
 		assert.equal(model.ownedGraph.hostCallbacks.signatures.length, 2, label);
 	}
 	assert.equal(Boolean(model.sourceIdentity.reviewedBindingIr)
@@ -460,6 +463,8 @@ const checkPhpWasmRuntime = async (identity, manifest, producer) => {
  * @param original - Reader of committed source bytes at `producer`.
  */
 const replayPhpWasm = async (lane, root, producer, original) => {
+	const corpus = ownedCheckedRecordPhpWasmCorpus(original(
+		"tests/fixtures/structured-types/owned-checked-record-php-wasm.php"));
 	const packagingRoot = join(root, lane.packaging);
 	const reportPath = `${lane.packaging}/${lane.report}`;
 	const reportBytes = await readFile(join(root, reportPath));
@@ -523,7 +528,7 @@ const replayPhpWasm = async (lane, root, producer, original) => {
 				, `${label}: consumer source`);
 			assert.match(observation.runnerSha256, digestPattern, label);
 			runners.add(observation.runnerSha256);
-			checkPhpWasmModel(label, observation, mode, lean);
+			checkPhpWasmModel(label, observation, mode, lean, corpus);
 			assert.equal(observation.receipt.runtimeIdentity, entry.runtimeIdentity
 				, `${label}: component receipt runtime`);
 			for(const build of [observation.cliBuild, observation.repeatedCliBuild])

@@ -1,0 +1,162 @@
+{
+  "schemaVersion": 1,
+  "profile": "owned-checked-php-wasm-mixed-source-qualification",
+  "predecessorCommit": "83d8de7c2d69efede5a3cf701790cce71bdc9a48",
+  "sourceIdentity": {
+    "kind": "pre-implementation-working-tree-bytes",
+    "files": [
+      {
+        "path": "tests/fixtures/structured-types/owned-checked-record-php-wasm.php",
+        "bytes": 11646,
+        "sha256": "ca67f744050815ecb10a84867045a9718aed20debeb08888c681bc5c95fd69d3"
+      },
+      {
+        "path": "tests/helpers/owned-checked-record-hosted-output.mjs",
+        "bytes": 36206,
+        "sha256": "06e71de8da8c60c07ea561806c53b64770b038f61e8a001b097400b2eb6d078c"
+      },
+      {
+        "path": "tests/helpers/owned-checked-record-php-wasm-corpus.mjs",
+        "bytes": 3224,
+        "sha256": "efb2ff391cfe82018eba5a36aa94ea3a21d09146be4dd6a6cf438bd6eb015c72"
+      },
+      {
+        "path": "tests/helpers/owned-checked-record-php-wasm-hosted-tests.mjs",
+        "bytes": 31918,
+        "sha256": "77157eef7389121e6214ed6a4dd11abb9dc281b74e3fc4b01c6ff18d45833833"
+      },
+      {
+        "path": "tests/helpers/owned-checked-record-promotion-tests.mjs",
+        "bytes": 24771,
+        "sha256": "721cb21bb45200b09c15bb225a12e2e18644cacf087e78c26a74c57aee24a3d0"
+      },
+      {
+        "path": "tests/helpers/owned-php-wasm-packages.mjs",
+        "bytes": 30383,
+        "sha256": "264d6d33b27fd5b508f2e89c7dcdcf0801a19906fe6d179b8ad3c247a707c3b0"
+      },
+      {
+        "path": "tests/owned-checked-record-php-wasm-packaging.test.mjs",
+        "bytes": 10537,
+        "sha256": "a9e4cfbd64568662011273a0a10c7b543081980ea1cb5d3dec0ad71b2fa512ef"
+      }
+    ]
+  },
+  "scope": "Source-only expansion of PHP-Wasm owned checked-record acceptance under VO 1728 and 1484. This is not installed runtime or lifetime acceptance.",
+  "changes": [
+    "Select the shared fifteen-export mixed fixture for ordinary/reviewed full PHP-Wasm packages; keep the three-export result-only selections and caller unchanged.",
+    "Reject nested Window(8,3) repeatedly without changing fields or invalidating the owner; accept equality and recover. Exercise copied bookingSpan and owned claimQuota.",
+    "Exercise Grant's nested positive Nat Subtype and outer bound, Claim arrays with independent returned owners, repeated late-element rejection without partial output, empty arrays and recovery.",
+    "Exercise two-input transfer rollback, joint consumption, surviving independent retains, and original callback exception identity or invalid callback replies after transfer followed by successful recovery.",
+    "Reuse existing source-free Node/Chromium, startup/lazy, weak/strict, embedded/Composer, request cleanup, finalizer and deterministic independent-rebuild gates.",
+    "Select archive coverage only from exact producer-bound full consumer bytes. Reject unknown caller bytes, mismatched old/new export sets, duplicated bindings, changed transfer positions and caller-supplied corpus contracts. Preserve the original PHP-Wasm packaging TAP names.",
+    "Keep published nine-export support and every original archive unchanged. Candidate expansion does not widen accepted support."
+  ],
+  "validation": {
+    "executionLimits": {
+      "heavyCommands": "serial",
+      "cpuAffinity": [
+        2
+      ],
+      "nice": 15,
+      "nodeMaxOldSpaceMiB": 512
+    },
+    "focusedGeneratorsAndBoundary": {
+      "tests": 4,
+      "pass": 4,
+      "fail": 0,
+      "skipped": 0,
+      "durationMs": 2965.310471,
+      "files": [
+        "tests/owned-checked-record-php-wasm-packaging.test.mjs",
+        "tests/helpers/owned-checked-record-promotion-tests.mjs"
+      ],
+      "selection": "owned checked-record PHP-Wasm acceptance remains|PHP-Wasm receipt handoff|owned PHP-Wasm consumers|owned checked-record promotion keeps"
+    },
+    "hostedCheckerControls": {
+      "tests": 6,
+      "pass": 6,
+      "fail": 0,
+      "skipped": 0,
+      "durationMs": 18803.290787,
+      "file": "tests/helpers/owned-checked-record-php-wasm-hosted-tests.mjs",
+      "scope": "Synthetic archive, source-role, replay and adversarial controls. No installed package execution."
+    },
+    "callerCompilation": {
+      "modes": [
+        "full",
+        "result-only"
+      ],
+      "resultOnlySelectionsUnchanged": 2,
+      "generatedPhpAndCallerSyntaxChecks": 12,
+      "php": "Generated wasm32 Zend public API sources and actual callers pass PHP syntax checks. No Lean runtime loaded."
+    },
+    "legacyModels": {
+      "archive": "docs/evidence/owned-checked-record-php-wasm-hosted-20261024",
+      "modelsChecked": 4,
+      "scope": "Original committed full/result-only reports for both author routes satisfy exact export and transfer checks. This is not a new complete artifact replay."
+    },
+    "sourceQuality": [
+      "Scoped ESLint",
+      "Configured checked-JavaScript typecheck (adopted subset only)",
+      "git diff --check"
+    ],
+    "liveInventoryAudit": {
+      "liveReferences": 16055,
+      "uniquePaths": 2555,
+      "stalePins": 0
+    },
+    "acceptedRuntimeRuns": 0
+  },
+  "inventory": {
+    "original": {
+      "bytes": 102579190,
+      "sha256": "603f565ced92597ae077e66b735f57b7148346fcbd9ac13339b2752a9d2ecf66"
+    },
+    "current": {
+      "bytes": 102579190,
+      "sha256": "745526bc0d4c5ec213274f12c269766fa31155344fae9cc02009aaae8353a605"
+    },
+    "refreshedPins": 37,
+    "pins": [
+      {
+        "path": "tests/fixtures/structured-types/owned-checked-record-php-wasm.php",
+        "count": 4,
+        "previousSha256": "587502c1489137797675c9c4ecc7f1d9b12a32f2464d6046ed2f33ee9ce18fdc",
+        "currentSha256": "ca67f744050815ecb10a84867045a9718aed20debeb08888c681bc5c95fd69d3"
+      },
+      {
+        "path": "tests/helpers/owned-checked-record-hosted-output.mjs",
+        "count": 11,
+        "previousSha256": "bbe381f19f70166312731bf151f21da56c8374857c7c7d9cb1098ce56f0e44c0",
+        "currentSha256": "06e71de8da8c60c07ea561806c53b64770b038f61e8a001b097400b2eb6d078c"
+      },
+      {
+        "path": "tests/helpers/owned-checked-record-promotion-tests.mjs",
+        "count": 11,
+        "previousSha256": "b257df31252c8007f2dfb5dc041c0deaa870bfc51d7b0c357fd6ed4a60132bf4",
+        "currentSha256": "721cb21bb45200b09c15bb225a12e2e18644cacf087e78c26a74c57aee24a3d0"
+      },
+      {
+        "path": "tests/helpers/owned-php-wasm-packages.mjs",
+        "count": 7,
+        "previousSha256": "cd8d2c8c672babfc1f601f7008ddf479913f6b6d6550198f016ff2f7795dbee0",
+        "currentSha256": "264d6d33b27fd5b508f2e89c7dcdcf0801a19906fe6d179b8ad3c247a707c3b0"
+      },
+      {
+        "path": "tests/owned-checked-record-php-wasm-packaging.test.mjs",
+        "count": 4,
+        "previousSha256": "f6ca6ea5118059d63bc2c21b1f42b03070f458d7a8180819908c01e2a78760c6",
+        "currentSha256": "a9e4cfbd64568662011273a0a10c7b543081980ea1cb5d3dec0ad71b2fa512ef"
+      }
+    ],
+    "supportObservationsChanged": false,
+    "originalArchivesChanged": false
+  },
+  "pending": [
+    "Hosted installed Node and Chromium acceptance for ordinary/reviewed full and standalone result-only PHP-Wasm packages, with the expanded caller and original cleanup/reproduction requirements.",
+    "Retain the original successful API records and artifact bytes; independently replay the complete PHP-Wasm archive at its authenticated producer and checker revisions.",
+    "Finish the original cross-runtime, lifetime and rejection-cleanup requirement audit without inferring PHP-Wasm coverage from another host.",
+    "Reconcile exact support and documentation only after authenticated acceptance; complete final-revision Core and required hosted gates before parent closure."
+  ]
+}

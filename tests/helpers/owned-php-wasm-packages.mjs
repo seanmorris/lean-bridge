@@ -33,10 +33,11 @@ import { ownedDotnetCallbackResultConfiguration, ownedDotnetCallbackResultReview
 	, ownedDotnetCallbackResultCombinedReviewedIr, ownedDotnetCallbackResultCombinedSource } from "./owned-dotnet-callback-result-fixture.mjs";
 import { expectedOwnedPhpInstalledCallback, ownedPhpInstalledCallbackProbe } from "./owned-php-callback-result-installed.mjs";
 import { ownedCheckedRecordFixture } from "./owned-checked-record-fixture.mjs";
+import { ownedCheckedRecordMixedSelection } from "./owned-checked-record-mixed-fixture.mjs";
 import {
-	ownedCheckedRecordJavaScriptConfiguration
-	, ownedCheckedRecordJavaScriptReviewedIr
-} from "./owned-checked-record-javascript-fixture.mjs";
+	assertOwnedCheckedRecordPhpWasmModelCorpus, ownedCheckedRecordPhpWasmCorpora
+	, ownedCheckedRecordPhpWasmCorpus
+} from "./owned-checked-record-php-wasm-corpus.mjs";
 
 /**
  * Run an installed package with both autoload and extension-loading modes.
@@ -213,6 +214,8 @@ export const checkOwnedPhpWasmPackages = async (directory, diagnostic, { transfe
 	if(wholeOwners) consumer = consumer.replace("require __DIR__ . '/vendor/autoload.php';", "// The host has already loaded the installed Composer or embedded autoloader.")
 		.replace("'ordinaryAutoload' => true", "'phpBits' => PHP_INT_SIZE * 8, 'ordinaryAutoload' => true");
 	if(callbackResultAnchors) consumer = consumer.replace("$variant = $argv[1] ?? '';", `$variant = '${callbackVariant}';`);
+	if(checkedRecords && !resultOnly)
+		assert.equal(ownedCheckedRecordPhpWasmCorpus(consumer), ownedCheckedRecordPhpWasmCorpora.mixed);
 	const observations = [];
 	for(const reviewed of [false, true])
 	{
@@ -226,8 +229,10 @@ export const checkOwnedPhpWasmPackages = async (directory, diagnostic, { transfe
 			await saveLakeFile(projectRoot, path, await readFile(join(fixture, path), "utf8") + (path === "Owned.lean" ? callbackResultAnchors
 				? callbackVariant === "combined" ? ownedDotnetCallbackResultCombinedSource : ownedDotnetCallbackResultSource
 				: transferredInputs ? receiverExports ? ownedRustReceiverSource : anchoredResults ? ownedRustBorrowSource : ownedRustTransferSource : "" : ""));
+		const checkedSelection = checkedRecords ? ownedCheckedRecordMixedSelection(
+			`${reviewed ? "reviewed" : "ordinary"}-${resultOnly ? "result-only" : "full"}`) : null;
 		const config = checkedRecords
-			? ownedCheckedRecordJavaScriptConfiguration(reviewed ? "reviewed" : "ordinary", { resultOnly })
+			? checkedSelection.configuration
 			: checkedRefinements
 				? JSON.parse(await readFile(join(fixture, "lean-bridge.exports.json"), "utf8"))
 				: callbackResultAnchors
@@ -242,7 +247,7 @@ export const checkOwnedPhpWasmPackages = async (directory, diagnostic, { transfe
 			, targets: { "php-wasm": { npm: npmSettings, composer: composerSettings
 				, ...callbackVariant === "no-host" || checkedRecords && resultOnly ? { hostCallbacks: false } : {} } } }));
 		if(reviewed) await saveLakeFile(projectRoot, "reviewed.binding-ir.json", canonicalJson(checkedRecords
-			? ownedCheckedRecordJavaScriptReviewedIr({ resultOnly })
+			? checkedSelection.reviewedIr
 			: checkedRefinements
 				? ownedSubtypePackageReviewedIr()
 				: callbackResultAnchors
@@ -254,8 +259,8 @@ export const checkOwnedPhpWasmPackages = async (directory, diagnostic, { transfe
 		assert.deepEqual(await lakeInputState(projectRoot), before);
 		const { model, receipt } = await readVerifiedPhpWasmCopiedComponent(componentRoot, runtime.identity);
 		assert.equal(model.pointerBits, 32); assert.equal(model.schemaVersion, checkedRecords ? resultOnly ? 6 : 8 : callbackResultAnchors ? 11 : receiverExports ? 10 : anchoredResults ? 9 : transferredInputs ? 8 : 7);
-		assert.equal(model.ownedGraph.transport, "owned-zend-v1"); assert.equal(model.exports.length, checkedRecords ? resultOnly ? 3 : 9 : checkedRefinements ? 5 : callbackResultAnchors ? callbackVariant === "combined" ? 30 : 27 : receiverExports ? 27 : transferredInputs ? 26 : 51);
-		if(transferredInputs) assert.equal(model.ownedGraph.inputTransfers.exports.length, checkedRecords || checkedRefinements ? 1 : callbackResultAnchors ? 2 : anchoredResults ? 4 : 20);
+		assert.equal(model.ownedGraph.transport, "owned-zend-v1"); assert.equal(model.exports.length, checkedRecords ? resultOnly ? 3 : 15 : checkedRefinements ? 5 : callbackResultAnchors ? callbackVariant === "combined" ? 30 : 27 : receiverExports ? 27 : transferredInputs ? 26 : 51);
+		if(transferredInputs) assert.equal(model.ownedGraph.inputTransfers.exports.length, checkedRecords ? 3 : checkedRefinements ? 1 : callbackResultAnchors ? 2 : anchoredResults ? 4 : 20);
 		if(anchoredResults) assert.equal(model.ownedGraph.resultAnchors.exports.length, callbackResultAnchors ? 1 : receiverExports ? 20 : 19);
 		if(receiverExports) assert.equal(model.ownedGraph.receiverExports.exports.length, callbackResultAnchors ? 5 : 16);
 		if(callbackResultAnchors)
@@ -277,6 +282,8 @@ export const checkOwnedPhpWasmPackages = async (directory, diagnostic, { transfe
 		}
 		if(checkedRecords)
 		{
+			assertOwnedCheckedRecordPhpWasmModelCorpus(model, resultOnly ? "result-only" : "full"
+				, ownedCheckedRecordPhpWasmCorpora.mixed);
 			const refinement = name => model.bindingIr.declarations.find(item => item.name === name)
 				?.source.extensions["lean-lang.org/refinements"];
 			if(resultOnly)
@@ -297,6 +304,16 @@ export const checkOwnedPhpWasmPackages = async (directory, diagnostic, { transfe
 				assert.equal(refinement("echoClaim").parameters[0].constructor
 					, "OwnedCheckedRecords.mkClaim");
 				assert.equal(refinement("transferClaim").parameters[0].constructor
+					, "OwnedCheckedRecords.mkClaim");
+				assert.equal(refinement("echoGrant").parameters[0].constructor
+					, "OwnedCheckedRecords.mkGrant");
+				assert.equal(refinement("echoGrant").parameters[0].fields[1].refinement.constructor
+					, "OwnedCheckedRecords.checkedPositive");
+				assert.equal(refinement("echoClaims").parameters[0].arguments[0].constructor
+					, "OwnedCheckedRecords.mkClaim");
+				assert.equal(refinement("transferWithClaimCallback").parameters[0].constructor
+					, "OwnedCheckedRecords.mkClaim");
+				assert.equal(refinement("transferPairClaim").parameters[1].constructor
 					, "OwnedCheckedRecords.mkClaim");
 				assert.equal(model.bindingIr.types.filter(type => type.kind === "callback").length, 2);
 				assert.equal(model.ownedGraph.hostCallbacks.signatures.length, 2);
