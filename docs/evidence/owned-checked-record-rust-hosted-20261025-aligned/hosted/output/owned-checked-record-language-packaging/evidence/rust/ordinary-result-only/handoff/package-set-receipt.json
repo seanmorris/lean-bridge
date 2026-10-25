@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "owned-checked-records@1.0.0",
+    "name": "owned-checked-records",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 53833458,
+          "path": "archives/owned-checked-records-result-only-1.0.0.crate",
+          "sha256": "57ec0f18e975c3be60d4d6b9ddbb1326a11723f7a1590efaa5c7d4630a9651a6"
+        }
+      ],
+      "ecosystem": "cargo",
+      "name": "owned-checked-records-result-only",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "cargo",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "02be197425254ac163d7490bd700e113fdd357c2fc636000fad74e77f8deafda",
+      "id": "native-library-v1",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "3371c28b2ce96354a7b12edc473d57fe28771237fe866fc40a090ed61ab4f1f7"
+  }
+}

@@ -1,0 +1,58 @@
+
+> @lean-wasm/bridge-poc@0.0.0-poc test:owned-checked-record-languages
+> LEAN_BRIDGE_OWNED_CHECKED_RECORD_LANGUAGE_TEST=1 node --test --test-concurrency=1 tests/owned-checked-record-language-packaging.test.mjs
+
+TAP version 13
+# Subtest: owned checked-record language generators preserve the exact API modes
+ok 1 - owned checked-record language generators preserve the exact API modes
+  ---
+  duration_ms: 162.49099
+  type: 'test'
+  ...
+# Subtest: owned checked-record language consumers and recurring workflow stay registered
+ok 2 - owned checked-record language consumers and recurring workflow stay registered
+  ---
+  duration_ms: 4.648907
+  type: 'test'
+  ...
+# Subtest: installed ordinary-full owned checked records execute through selected language archives
+ok 3 - installed ordinary-full owned checked records execute through selected language archives
+  ---
+  duration_ms: 163389.001096
+  type: 'test'
+  ...
+# ordinary-full: Compiling checked native Lean exports
+# ordinary-full: rust=218
+# Subtest: installed ordinary-result-only owned checked records execute through selected language archives
+ok 4 - installed ordinary-result-only owned checked records execute through selected language archives
+  ---
+  duration_ms: 145513.175714
+  type: 'test'
+  ...
+# ordinary-result-only: Compiling checked native Lean exports
+# ordinary-result-only: rust=3
+# Subtest: installed reviewed-full owned checked records execute through selected language archives
+ok 5 - installed reviewed-full owned checked records execute through selected language archives
+  ---
+  duration_ms: 150197.495727
+  type: 'test'
+  ...
+# reviewed-full: Compiling checked native Lean exports
+# reviewed-full: rust=218
+# Subtest: installed reviewed-result-only owned checked records execute through selected language archives
+ok 6 - installed reviewed-result-only owned checked records execute through selected language archives
+  ---
+  duration_ms: 145780.401089
+  type: 'test'
+  ...
+# reviewed-result-only: Compiling checked native Lean exports
+# reviewed-result-only: rust=3
+1..6
+# tests 6
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 605396.298758
