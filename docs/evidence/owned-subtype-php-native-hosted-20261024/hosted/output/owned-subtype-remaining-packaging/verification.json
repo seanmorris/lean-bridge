@@ -1,0 +1,31 @@
+{
+  "kind": "owned-subtype-php-native",
+  "producerCommit": "390ae18d3a2607bc73463767a33fea0cfb9350b0",
+  "profiles": [
+    "php-native"
+  ],
+  "reportSha256": "3921b3bb8ed3a3fefab7dd754e696a57d880bb8911e73b6801aaf75e1c4588aa",
+  "reports": 2,
+  "retainedPackages": {
+    "routes": [
+      {
+        "archiveBytes": 53938057,
+        "archives": 1,
+        "receiptSha256": "9f991212549d9776040b2d9999c92c70aa3afde76cce8040536ee71487d811ac",
+        "route": "ordinary"
+      },
+      {
+        "archiveBytes": 53940920,
+        "archives": 1,
+        "receiptSha256": "4682f201d746f5b5013a6246a3dc7edd57859a2eae38fd4d761f5783fd4741b7",
+        "route": "reviewed"
+      }
+    ],
+    "schemaVersion": 1
+  },
+  "routes": [
+    "ordinary",
+    "reviewed"
+  ],
+  "schemaVersion": 1
+}

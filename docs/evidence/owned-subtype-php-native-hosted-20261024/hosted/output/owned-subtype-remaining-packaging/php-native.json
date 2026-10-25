@@ -1,0 +1,87 @@
+{
+  "lane": "php-native",
+  "profile": "installed-owned-subtype-remaining",
+  "reports": [
+    {
+      "compilerSelectedConstructors": true,
+      "deterministicReassembly": true,
+      "handoffRemovedBeforeRelocatedExecution": true,
+      "immutableInstalledInputs": true,
+      "lane": "php-native",
+      "lifecycle": {
+        "php-native": {
+          "fallback": "destructor",
+          "observation": "weak-reference-cleared"
+        }
+      },
+      "observations": {
+        "php-native": {
+          "checks": 119,
+          "consumerSha256": "3e371b402ed6c23be647245a00a358f679637608a8027ac28c61dbc468c3c863"
+        }
+      },
+      "packageSetReceiptSha256": "9f991212549d9776040b2d9999c92c70aa3afde76cce8040536ee71487d811ac",
+      "reassembled": {
+        "componentReceiptSha256": "b0bcde444e7204cd01d3b4a4f86e1c13a3f58a881d82d5b1e4441ceec5e74dc8",
+        "packages": [
+          {
+            "archive": "lean-bridge-owned-subtypes-1.0.0-linux-x86_64.zip",
+            "sha256": "815bff956cd8a5b56722280a10bbacf7a35cdf167b03af3daefb2816bf670b05"
+          }
+        ]
+      },
+      "relocatedInstallation": true,
+      "repeated": {
+        "php-native": {
+          "checks": 119,
+          "runs": 2
+        }
+      },
+      "route": "ordinary",
+      "sourceFreeInstallation": true,
+      "sourceUnchanged": true,
+      "transferredInputCheckedBeforeHandoff": true
+    },
+    {
+      "compilerSelectedConstructors": true,
+      "deterministicReassembly": true,
+      "handoffRemovedBeforeRelocatedExecution": true,
+      "immutableInstalledInputs": true,
+      "lane": "php-native",
+      "lifecycle": {
+        "php-native": {
+          "fallback": "destructor",
+          "observation": "weak-reference-cleared"
+        }
+      },
+      "observations": {
+        "php-native": {
+          "checks": 119,
+          "consumerSha256": "3e371b402ed6c23be647245a00a358f679637608a8027ac28c61dbc468c3c863"
+        }
+      },
+      "packageSetReceiptSha256": "4682f201d746f5b5013a6246a3dc7edd57859a2eae38fd4d761f5783fd4741b7",
+      "reassembled": {
+        "componentReceiptSha256": "0ac54abd93d6fff2b7ef2137973516ff31d1d4e1aa4b4d01c08ff2c9b1c49720",
+        "packages": [
+          {
+            "archive": "lean-bridge-owned-subtypes-1.0.0-linux-x86_64.zip",
+            "sha256": "936f03fc979f088a4bf96b9421010700232dd21e45c5987b2eb021505f1adf7a"
+          }
+        ]
+      },
+      "relocatedInstallation": true,
+      "repeated": {
+        "php-native": {
+          "checks": 119,
+          "runs": 2
+        }
+      },
+      "route": "reviewed",
+      "sourceFreeInstallation": true,
+      "sourceUnchanged": true,
+      "transferredInputCheckedBeforeHandoff": true
+    }
+  ],
+  "schemaVersion": 1
+}
