@@ -48,6 +48,53 @@ test("owned matrix selection requires eleven lanes and forty-four routes", () =>
 	assert.equal(new Set(values.map(value => value.producerCommit)).size, 3);
 });
 
+test("owned matrix selection preserves labeled capture identities and producer requirements", () => {
+	const indexes = indexesForPreflight(), selection = selectionFor(indexes);
+	for(const entry of selection.archives)
+	{
+		const label = entry.lane === "javascript" ? "complete"
+			: entry.lane === "php-wasm" ? "contexts" : "aligned";
+		entry.index.path = entry.index.path.replace("/index.json", "-" + label + "/index.json");
+	}
+	const values = assertOwnedCheckedRecordMatrixIndexes(selection, indexes);
+	assert.equal(values.length, 11);
+	assert.equal(values.reduce((sum, value) => sum + value.accepted.routes.length, 0), 44);
+	for(const [position, entry] of selection.archives.entries())
+		assert.equal(entry.index.sha256, sha256(indexes[position]));
+	const altered = [...indexes], changed = JSON.parse(altered[0]);
+	changed.producerCommit = changed.consumerCommit = changed.accepted.producerCommit = "d".repeat(40);
+	altered[0] = Buffer.from(canonicalJson(changed));
+	selection.archives[0].index.sha256 = sha256(altered[0]);
+	assert.throws(() => assertOwnedCheckedRecordMatrixIndexes(selection, altered)
+		, /share one authenticated producer revision/u);
+});
+
+test("owned matrix selection refuses unsafe or ambiguous capture labels", async () => {
+	const original = selectionFor(indexesForPreflight());
+	const root = "docs/evidence/owned-checked-record-native-hosted-20990101";
+	const invalid = ["-", "--aligned", "-aligned--retry", "-Aligned", "-a_b"
+		, "-../other", "-a/../b", "-a\\b", "-a%2fb", "-a:b", "-a?b", "-a#b"
+		, "-a\0b", "-a\nb", "-" + "a".repeat(65)].map(suffix => root + suffix);
+	invalid.push(root + "\n", root + "\r", " " + root, root + "/"
+		, root.replace("-native-", "-unknown-")
+		, root.replace("docs/evidence/", "/tmp/"));
+	for(const path of invalid)
+	{
+		const selection = structuredClone(original);
+		selection.archives[0].index.path = path + "/index.json";
+		assert.throws(() => assertOwnedCheckedRecordMatrixSelection(selection)
+			, /owned checked-record archive/iu, path);
+		await assert.rejects(assertOwnedCheckedRecordCommittedArchive(
+			"a".repeat(40), path, Buffer.from("{}"), "/nonexistent-owned-matrix-repository")
+		, /owned checked-record archive/iu, path);
+	}
+	const selection = structuredClone(original);
+	selection.archives[0].index.path += "\n";
+	assert.throws(() => assertOwnedCheckedRecordMatrixSelection(selection), /original capture index/u);
+	selection.archives[0].index.path = root.replace("-native-", "-perl-") + "-aligned/index.json";
+	assert.throws(() => assertOwnedCheckedRecordMatrixSelection(selection), /match the selected lane/u);
+});
+
 test("owned matrix selection rejects missing, duplicate, widened and unsafe references", () => {
 	const original = selectionFor(indexesForPreflight());
 	for(const mutate of [
@@ -97,10 +144,10 @@ test("owned matrix preflight rejects forged hashes, lanes, targets and route cov
 	}
 });
 
-const committedFixture = async t => {
+const committedFixture = async (t, suffix = "") => {
 	const repository = await mkdtemp(join(tmpdir(), "lean-owned-matrix-git-"));
 	t.after(() => rm(repository, { recursive: true, force: true }));
-	const root = "docs/evidence/owned-checked-record-ruby-hosted-20990101";
+	const root = "docs/evidence/owned-checked-record-ruby-hosted-20990101" + suffix;
 	await mkdir(join(repository, root), { recursive: true });
 	const files = [];
 	for(const [path, bytes] of [["empty", Buffer.alloc(0)]
@@ -131,6 +178,22 @@ test("owned matrix Git audit streams the exact committed file set", async t => {
 	// Git retention is independent of the worktree; full verification separately replays it.
 	await writeFile(join(repository, root, "text"), "uncommitted");
 	assert.equal((await assertOwnedCheckedRecordCommittedArchive(revision, root, index, repository)).files, 4);
+});
+
+test("owned matrix Git audit and isolated replay preserve labeled archive roots", async t => {
+	for(const suffix of ["-aligned", "-complete", "-contexts", "-retry-2", "-" + "a".repeat(64)])
+	{
+		const { repository, root, index, revision } = await committedFixture(t, suffix);
+		const result = await withOwnedCheckedRecordCommittedArchive(
+			revision, root, index, async path => {
+				assert.ok(path.endsWith(root));
+				assert.deepEqual(await readFile(join(path, "index.json")), index);
+				assert.equal(await readFile(join(path, "text"), "utf8"), "alpha\n\0omega\n");
+				return true;
+			}, repository);
+		assert.equal(result.committed.files, 4);
+		assert.equal(result.result, true);
+	}
 });
 
 test("owned matrix Git audit rejects altered indexes and missing or duplicate files", async t => {

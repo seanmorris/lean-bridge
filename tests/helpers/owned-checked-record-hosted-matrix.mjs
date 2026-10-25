@@ -26,6 +26,21 @@ const keys = (value, expected) => {
 	assert.deepEqual(Object.keys(value).sort(), [...expected].sort());
 };
 
+// A label distinguishes immutable captures from the same day. It conveys no
+// acceptance: the selected index, producer and every committed byte still bind.
+const archiveRootLane = root => {
+	assert.equal(typeof root, "string");
+	assert.ok(root.length <= 200, "Invalid owned checked-record archive root");
+	const match = /^docs\/evidence\/owned-checked-record-([a-z-]+)-hosted-([0-9]{8})(?:-([a-z0-9]+(?:-[a-z0-9]+)*))?$/u.exec(root);
+	assert.ok(match && match[0] === root
+		, "Invalid owned checked-record archive root");
+	assert.ok(ownedCheckedRecordHostedLaneNames.includes(match[1])
+		, "Unknown owned checked-record archive lane");
+	assert.ok(match[3] === undefined || match[3].length <= 64
+		, "Owned checked-record archive label exceeds 64 characters");
+	return match[1];
+};
+
 /**
  * Reject partial, duplicate, widened or ambiguous archive selections.
  *
@@ -42,9 +57,11 @@ export const assertOwnedCheckedRecordMatrixSelection = selection => {
 	{
 		keys(entry, ["lane", "index"]);
 		keys(entry.index, ["path", "sha256"]);
-		assert.match(entry.index.path, new RegExp(
-			"^docs/evidence/owned-checked-record-" + entry.lane + "-hosted-[0-9]{8}/index\\.json$", "u"
-		));
+		assert.equal(typeof entry.index.path, "string");
+		assert.ok(entry.index.path.endsWith("/index.json")
+			, "Select the original capture index.json");
+		assert.equal(archiveRootLane(entry.index.path.slice(0, -"/index.json".length))
+			, entry.lane, "Archive root must match the selected lane");
 		assert.match(entry.index.sha256, /^[a-f0-9]{64}$/u);
 	}
 };
@@ -96,7 +113,7 @@ export const assertOwnedCheckedRecordCommittedArchive = async (
 	revision, root, indexBytes, repository = process.cwd()
 ) => {
 	assert.match(revision, /^[a-f0-9]{40}$/u);
-	assert.match(root, /^docs\/evidence\/owned-checked-record-[a-z-]+-hosted-[0-9]{8}$/u);
+	archiveRootLane(root);
 	const index = JSON.parse(indexBytes);
 	const files = [...index.files, { path: "index.json", bytes: indexBytes.length
 		, sha256: sha256(indexBytes) }];

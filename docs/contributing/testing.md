@@ -271,6 +271,13 @@ contract order: `native`, `perl`, `python`, `ruby`, `rust`, `dotnet`, `jvm`, `ph
 `wit`, `javascript`, `php-wasm`. Do not substitute a local qualification report
 or an expiring Actions artifact for a committed capture.
 
+Capture directories use `owned-checked-record-<lane>-hosted-YYYYMMDD`, optionally
+followed by a label such as `-aligned`, `-complete`, or `-contexts`. Labels contain
+lowercase ASCII letters or digits in hyphen-separated words, with at most 64
+characters. Select the exact existing directory and index digest. Keep earlier
+captures under their original names; a label does not establish acceptance or
+replace any producer, route, package, or committed-byte check.
+
 From a clean checkout, run:
 
 ```sh
