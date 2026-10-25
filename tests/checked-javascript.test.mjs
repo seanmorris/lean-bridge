@@ -149,6 +149,7 @@ import "./helpers/owned-checked-php-wasm-contexts-source-history-tests.mjs";
 import "./helpers/owned-checked-retained-identity-source-history-tests.mjs";
 import "./helpers/owned-subtype-npm-complete-acceptance-source-history-tests.mjs";
 import "./helpers/owned-subtype-npm-hosted-source-history-tests.mjs";
+import "./helpers/owned-subtype-hosted-promotion-source-history-tests.mjs";
 import "./helpers/owned-checked-c-session-boundaries-source-history-tests.mjs";
 
 const root = resolve(".");

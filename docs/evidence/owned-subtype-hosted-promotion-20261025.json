@@ -1,0 +1,139 @@
+{
+  "schemaVersion": 1,
+  "kind": "owned-subtype-hosted-promotion-source-v1",
+  "sourceBaseCommit": "9d79ed3b9e1e044d96670403723a127ed25e42a1",
+  "implementationCommit": "246ab1d2fdd3f736104a3123a6210797839ad200",
+  "implementationCommits": [
+    "246ab1d2fdd3f736104a3123a6210797839ad200"
+  ],
+  "scope": "Require complete original hosted evidence for all eight owned-Subtype lanes, with exact archive dates and producer/run/job identities. Retain the historical local JavaScript qualification only for historical checks. Replace skippable replay selectors with a required direct CLI, replay serially, preserve all archived payloads without cloning them, and require hosted JavaScript in generated consumer guidance. Register the new verifier controls in Core and refresh exactly 230 live source pins. This source milestone does not promote any support cell or establish new installed-runtime acceptance; original npm capture, full eight-lane promotion, documentation publication and final gates remain pending.",
+  "sources": [
+    {
+      "path": "docs/contributing/testing.md",
+      "bytes": 265311,
+      "sha256": "dabb64c8b65335a612378da0cb3b8cfbc87c6960e4121fa593a7727f067a6379"
+    },
+    {
+      "path": "docs/type-surface.v1.json",
+      "bytes": 102579190,
+      "sha256": "a1c0e7d484f135d38f18aab9a8ea9b7c2e6c1b4313440379c90713c76fc1c7f8"
+    },
+    {
+      "path": "scripts/generate-type-docs.mjs",
+      "bytes": 65931,
+      "sha256": "92311b9d1695fdb6181461ef41edffa9757df8c64e05d3e4ff50af2bc07eeadf"
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "bytes": 43158,
+      "sha256": "c9d875ffc7e5983666e24a169b0f01f01a88f1125a9ba668ebb988b8bacf5d81"
+    },
+    {
+      "path": "tests/helpers/owned-subtype-promotion.mjs",
+      "bytes": 13772,
+      "sha256": "844e08004eb70c0fd70cee12432eaa370ded757979e5b04f16160f3ed9bf257c"
+    },
+    {
+      "path": "tests/owned-subtype-promotion.test.mjs",
+      "bytes": 8372,
+      "sha256": "e0ee7f2e6ad121f9283fffd6ad525efd96d484c38a126c14950b9e873af20574"
+    },
+    {
+      "path": "scripts/check-owned-subtype-hosted-evidence.mjs",
+      "bytes": 1428,
+      "sha256": "522c85cfdace2c83aa9e30836ed291f0d62fbe5ba4becf00a330d5d299758377"
+    },
+    {
+      "path": "tests/helpers/owned-subtype-promotion-catalog.mjs",
+      "bytes": 4909,
+      "sha256": "b7d546882e9d422522d2d21da85380f401693cecf2e9e7244560d25055da0b2c"
+    },
+    {
+      "path": "tests/owned-subtype-hosted-promotion.test.mjs",
+      "bytes": 9717,
+      "sha256": "ecc00cd365398f952251e8bdfc4bebf47da12c7eaedfdc0f9f8f51bb787a1c2d"
+    }
+  ],
+  "contract": {
+    "hostedLanes": 8,
+    "consumerProfiles": 16,
+    "promotionCells": 32,
+    "authorRoutes": [
+      "ordinary",
+      "reviewed"
+    ],
+    "serialReplay": true,
+    "missingEvidenceFails": true,
+    "archiveDates": [
+      "20261023",
+      "20261024",
+      "20261025"
+    ],
+    "historicalLocalJavaScriptPreserved": true,
+    "supportCellsPromoted": 0
+  },
+  "validation": {
+    "focused": {
+      "passed": 12,
+      "skipped": 0,
+      "durationMs": 22693.308436,
+      "scope": "Synthetic catalog/refusal/scheduling controls and closed Core profile registration"
+    },
+    "matrix": {
+      "passed": 6,
+      "skipped": 1,
+      "durationMs": 21505.316547,
+      "pending": "all eight retained original archives, npm pending",
+      "scope": "Exact synthetic 32-cell transformation, consumer/manual documentation and historical JavaScript qualification"
+    },
+    "scopedEslint": "passed all seven implementation JavaScript files",
+    "checkedJavaScriptTypecheck": "passed jsconfig.checked.json",
+    "diffCheck": "passed",
+    "installedRuntimeExecutions": 0,
+    "inventory": {
+      "head": "246ab1d2fdd3f736104a3123a6210797839ad200",
+      "inventory": {
+        "bytes": 102579190,
+        "sha256": "a1c0e7d484f135d38f18aab9a8ea9b7c2e6c1b4313440379c90713c76fc1c7f8"
+      },
+      "liveReferences": 16055,
+      "archivedReferences": 352995,
+      "uniquePaths": 2555,
+      "stalePins": 0,
+      "refreshedPins": 230
+    },
+    "originalArchiveReplay": {
+      "stage": "direct-cli-original-dotnet-replay",
+      "sourceCommit": "9d79ed3b9e1e044d96670403723a127ed25e42a1",
+      "result": {
+        "files": 1683,
+        "indexSha256": "f3053383377a467ec51fca861d69531cabad04f299b701aa5bc798cb06c7c99b",
+        "job": 120732735924,
+        "kind": "owned-subtype-promotion-replay",
+        "lane": "dotnet",
+        "producerCommit": "390ae18d3a2607bc73463767a33fea0cfb9350b0",
+        "run": 40047586162
+      }
+    },
+    "fixtureBoundary": "Synthetic metadata and transformation controls do not establish installed runtime acceptance. The .NET CLI replay checks original retained bytes and does not execute a new installed runtime."
+  },
+  "registration": {
+    "source": {
+      "path": "src/adoption/test-profiles.mjs",
+      "bytes": 43158,
+      "sha256": "c9d875ffc7e5983666e24a169b0f01f01a88f1125a9ba668ebb988b8bacf5d81"
+    },
+    "partition": {
+      "schemaVersion": 1,
+      "partition": "sorted-index-modulo-v1",
+      "shards": 6,
+      "contractFiles": 1009,
+      "contractSha256": "afe5a6ac37f1f7e080c089f0cef88d803d4b7a802de712d463458f39d151693b"
+    }
+  },
+  "pending": [
+    "Finish the existing npm/browser producer and retain, authenticate and independently replay its original installed archives.",
+    "Replay all eight complete original archives, preflight the full inventory and transactionally promote exactly 32 support cells and all affected documentation.",
+    "Pass final current-source integration, required hosted/Core gates and recurring CI activation without narrowing #1220."
+  ]
+}
