@@ -1,0 +1,44 @@
+TAP version 13
+# Subtest: instrumented PHP-Wasm callbacks close and execute every selected entry
+ok 1 - instrumented PHP-Wasm callbacks close and execute every selected entry
+  ---
+  duration_ms: 238346.477248
+  type: 'test'
+  ...
+# callback-fin callback-entry ordinary: author 0
+# callback-fin callback-entry ordinary: author 1
+# callback-fin-ordinary-callback-entry-probe: PHP-Wasm Node embedded/startup/weak
+# callback-fin-ordinary-callback-entry-probe: PHP-Wasm Node embedded/startup/strict
+# callback-fin-ordinary-callback-entry-probe: PHP-Wasm Node embedded/lazy/weak
+# callback-fin-ordinary-callback-entry-probe: PHP-Wasm Node embedded/lazy/strict
+# callback-fin-ordinary-callback-entry-probe: PHP-Wasm Node composer/startup/weak
+# callback-fin-ordinary-callback-entry-probe: PHP-Wasm Node composer/startup/strict
+# callback-fin-ordinary-callback-entry-probe: PHP-Wasm Node composer/lazy/weak
+# callback-fin-ordinary-callback-entry-probe: PHP-Wasm Node composer/lazy/strict
+# callback-fin-ordinary-callback-entry-probe: PHP-Wasm Chromium bundled/startup/weak
+# callback-fin-ordinary-callback-entry-probe: PHP-Wasm Chromium bundled/startup/strict
+# callback-fin-ordinary-callback-entry-probe: PHP-Wasm Chromium bundled/lazy/weak
+# callback-fin-ordinary-callback-entry-probe: PHP-Wasm Chromium bundled/lazy/strict
+# callback-fin callback-entry reviewed: author 0
+# callback-fin callback-entry reviewed: author 1
+# callback-fin-reviewed-callback-entry-probe: PHP-Wasm Node embedded/startup/weak
+# callback-fin-reviewed-callback-entry-probe: PHP-Wasm Node embedded/startup/strict
+# callback-fin-reviewed-callback-entry-probe: PHP-Wasm Node embedded/lazy/weak
+# callback-fin-reviewed-callback-entry-probe: PHP-Wasm Node embedded/lazy/strict
+# callback-fin-reviewed-callback-entry-probe: PHP-Wasm Node composer/startup/weak
+# callback-fin-reviewed-callback-entry-probe: PHP-Wasm Node composer/startup/strict
+# callback-fin-reviewed-callback-entry-probe: PHP-Wasm Node composer/lazy/weak
+# callback-fin-reviewed-callback-entry-probe: PHP-Wasm Node composer/lazy/strict
+# callback-fin-reviewed-callback-entry-probe: PHP-Wasm Chromium bundled/startup/weak
+# callback-fin-reviewed-callback-entry-probe: PHP-Wasm Chromium bundled/startup/strict
+# callback-fin-reviewed-callback-entry-probe: PHP-Wasm Chromium bundled/lazy/weak
+# callback-fin-reviewed-callback-entry-probe: PHP-Wasm Chromium bundled/lazy/strict
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 239549.283837

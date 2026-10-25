@@ -1,0 +1,2914 @@
+{
+  "bindingIr": {
+    "aggregatePolicy": {
+      "cycles": "reject",
+      "disposal": "required",
+      "fallback": "queued-finalizer",
+      "ownership": "lease"
+    },
+    "assurance": [],
+    "capabilities": [],
+    "component": {
+      "id": "owned-checked-records@1.0.0",
+      "name": "owned-checked-records",
+      "version": "1.0.0"
+    },
+    "declarations": [
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "Shape A both ways: the input window runs mkWindow, the result projects it. "
+        },
+        "effects": [
+          "allocates",
+          "reads-resource"
+        ],
+        "failure": {
+          "errors": [],
+          "mode": "none",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:OwnedCheckedRecords.echoBooking",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "echoBooking",
+        "overloadKey": "OwnedCheckedRecords.echoBooking",
+        "owner": null,
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": {
+              "anchor": null,
+              "scope": "call"
+            },
+            "mutability": "immutable",
+            "name": "arg0",
+            "optional": false,
+            "ownership": "borrow",
+            "type": {
+              "id": "lean:OwnedCheckedRecords.Booking",
+              "kind": "named"
+            }
+          }
+        ],
+        "receiver": null,
+        "result": {
+          "lifetime": {
+            "anchor": null,
+            "scope": "explicit"
+          },
+          "ownership": "lease",
+          "type": {
+            "id": "lean:OwnedCheckedRecords.Booking",
+            "kind": "named"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "OwnedCheckedRecords.echoBooking",
+          "extensions": {
+            "lean-lang.org/export-contract": {
+              "parameters": [
+                {
+                  "lifetime": {
+                    "anchor": null,
+                    "scope": "call"
+                  },
+                  "ownership": "borrow",
+                  "refinement": {
+                    "fields": [
+                      {
+                        "name": "holder",
+                        "refinement": null
+                      },
+                      {
+                        "name": "window",
+                        "refinement": {
+                          "constructor": "OwnedCheckedRecords.mkWindow",
+                          "fields": [
+                            {
+                              "name": "lo",
+                              "refinement": null
+                            },
+                            {
+                              "name": "hi",
+                              "refinement": null
+                            }
+                          ],
+                          "kind": "checked-record",
+                          "name": "OwnedCheckedRecords.Window"
+                        }
+                      }
+                    ],
+                    "kind": "record",
+                    "name": "OwnedCheckedRecords.Booking"
+                  }
+                }
+              ],
+              "result": {
+                "lifetime": {
+                  "anchor": null,
+                  "scope": "explicit"
+                },
+                "ownership": "lease"
+              }
+            },
+            "lean-lang.org/refinements": {
+              "parameters": [
+                {
+                  "fields": [
+                    {
+                      "name": "holder",
+                      "refinement": null
+                    },
+                    {
+                      "name": "window",
+                      "refinement": {
+                        "constructor": "OwnedCheckedRecords.mkWindow",
+                        "fields": [
+                          {
+                            "name": "lo",
+                            "refinement": null
+                          },
+                          {
+                            "name": "hi",
+                            "refinement": null
+                          }
+                        ],
+                        "kind": "checked-record",
+                        "name": "OwnedCheckedRecords.Window"
+                      }
+                    }
+                  ],
+                  "kind": "record",
+                  "name": "OwnedCheckedRecords.Booking"
+                }
+              ],
+              "result": {
+                "fields": [
+                  {
+                    "name": "holder",
+                    "refinement": null
+                  },
+                  {
+                    "name": "window",
+                    "refinement": {
+                      "constructor": null,
+                      "fields": [
+                        {
+                          "name": "lo",
+                          "refinement": null
+                        },
+                        {
+                          "name": "hi",
+                          "refinement": null
+                        }
+                      ],
+                      "kind": "checked-record",
+                      "name": "OwnedCheckedRecords.Window"
+                    }
+                  }
+                ],
+                "kind": "record",
+                "name": "OwnedCheckedRecords.Booking"
+              }
+            },
+            "lean-lang.org/source-position": {
+              "endColumn": 52,
+              "endLine": 58,
+              "path": "OwnedCheckedRecords.lean",
+              "startColumn": 0,
+              "startLine": 56
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "Shape B both ways: the input claim runs mkClaim after the ticket is borrowed. "
+        },
+        "effects": [
+          "allocates",
+          "reads-resource"
+        ],
+        "failure": {
+          "errors": [],
+          "mode": "none",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:OwnedCheckedRecords.echoClaim",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "echoClaim",
+        "overloadKey": "OwnedCheckedRecords.echoClaim",
+        "owner": null,
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": {
+              "anchor": null,
+              "scope": "call"
+            },
+            "mutability": "immutable",
+            "name": "arg0",
+            "optional": false,
+            "ownership": "borrow",
+            "type": {
+              "id": "lean:OwnedCheckedRecords.Claim",
+              "kind": "named"
+            }
+          }
+        ],
+        "receiver": null,
+        "result": {
+          "lifetime": {
+            "anchor": null,
+            "scope": "explicit"
+          },
+          "ownership": "lease",
+          "type": {
+            "id": "lean:OwnedCheckedRecords.Claim",
+            "kind": "named"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "OwnedCheckedRecords.echoClaim",
+          "extensions": {
+            "lean-lang.org/export-contract": {
+              "parameters": [
+                {
+                  "lifetime": {
+                    "anchor": null,
+                    "scope": "call"
+                  },
+                  "ownership": "borrow",
+                  "refinement": {
+                    "constructor": "OwnedCheckedRecords.mkClaim",
+                    "fields": [
+                      {
+                        "name": "holder",
+                        "refinement": null
+                      },
+                      {
+                        "name": "quota",
+                        "refinement": null
+                      }
+                    ],
+                    "kind": "checked-record",
+                    "name": "OwnedCheckedRecords.Claim"
+                  }
+                }
+              ],
+              "result": {
+                "lifetime": {
+                  "anchor": null,
+                  "scope": "explicit"
+                },
+                "ownership": "lease"
+              }
+            },
+            "lean-lang.org/refinements": {
+              "parameters": [
+                {
+                  "constructor": "OwnedCheckedRecords.mkClaim",
+                  "fields": [
+                    {
+                      "name": "holder",
+                      "refinement": null
+                    },
+                    {
+                      "name": "quota",
+                      "refinement": null
+                    }
+                  ],
+                  "kind": "checked-record",
+                  "name": "OwnedCheckedRecords.Claim"
+                }
+              ],
+              "result": {
+                "constructor": null,
+                "fields": [
+                  {
+                    "name": "holder",
+                    "refinement": null
+                  },
+                  {
+                    "name": "quota",
+                    "refinement": null
+                  }
+                ],
+                "kind": "checked-record",
+                "name": "OwnedCheckedRecords.Claim"
+              }
+            },
+            "lean-lang.org/source-position": {
+              "endColumn": 46,
+              "endLine": 64,
+              "path": "OwnedCheckedRecords.lean",
+              "startColumn": 0,
+              "startLine": 62
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "Nested direction: the Positive field runs before mkGrant. "
+        },
+        "effects": [
+          "allocates",
+          "reads-resource"
+        ],
+        "failure": {
+          "errors": [],
+          "mode": "none",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:OwnedCheckedRecords.echoGrant",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "echoGrant",
+        "overloadKey": "OwnedCheckedRecords.echoGrant",
+        "owner": null,
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": {
+              "anchor": null,
+              "scope": "call"
+            },
+            "mutability": "immutable",
+            "name": "arg0",
+            "optional": false,
+            "ownership": "borrow",
+            "type": {
+              "id": "lean:OwnedCheckedRecords.Grant",
+              "kind": "named"
+            }
+          }
+        ],
+        "receiver": null,
+        "result": {
+          "lifetime": {
+            "anchor": null,
+            "scope": "explicit"
+          },
+          "ownership": "lease",
+          "type": {
+            "id": "lean:OwnedCheckedRecords.Grant",
+            "kind": "named"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "OwnedCheckedRecords.echoGrant",
+          "extensions": {
+            "lean-lang.org/export-contract": {
+              "parameters": [
+                {
+                  "lifetime": {
+                    "anchor": null,
+                    "scope": "call"
+                  },
+                  "ownership": "borrow",
+                  "refinement": {
+                    "constructor": "OwnedCheckedRecords.mkGrant",
+                    "fields": [
+                      {
+                        "name": "holder",
+                        "refinement": null
+                      },
+                      {
+                        "name": "weight",
+                        "refinement": {
+                          "constructor": "OwnedCheckedRecords.checkedPositive"
+                        }
+                      },
+                      {
+                        "name": "limit",
+                        "refinement": null
+                      }
+                    ],
+                    "kind": "checked-record",
+                    "name": "OwnedCheckedRecords.Grant"
+                  }
+                }
+              ],
+              "result": {
+                "lifetime": {
+                  "anchor": null,
+                  "scope": "explicit"
+                },
+                "ownership": "lease"
+              }
+            },
+            "lean-lang.org/refinements": {
+              "parameters": [
+                {
+                  "constructor": "OwnedCheckedRecords.mkGrant",
+                  "fields": [
+                    {
+                      "name": "holder",
+                      "refinement": null
+                    },
+                    {
+                      "name": "weight",
+                      "refinement": {
+                        "constructor": "OwnedCheckedRecords.checkedPositive",
+                        "kind": "subtype"
+                      }
+                    },
+                    {
+                      "name": "limit",
+                      "refinement": null
+                    }
+                  ],
+                  "kind": "checked-record",
+                  "name": "OwnedCheckedRecords.Grant"
+                }
+              ],
+              "result": {
+                "constructor": null,
+                "fields": [
+                  {
+                    "name": "holder",
+                    "refinement": null
+                  },
+                  {
+                    "name": "weight",
+                    "refinement": {
+                      "constructor": null,
+                      "kind": "subtype"
+                    }
+                  },
+                  {
+                    "name": "limit",
+                    "refinement": null
+                  }
+                ],
+                "kind": "checked-record",
+                "name": "OwnedCheckedRecords.Grant"
+              }
+            },
+            "lean-lang.org/source-position": {
+              "endColumn": 46,
+              "endLine": 74,
+              "path": "OwnedCheckedRecords.lean",
+              "startColumn": 0,
+              "startLine": 72
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "Call OwnedCheckedRecords.newTicket."
+        },
+        "effects": [
+          "allocates"
+        ],
+        "failure": {
+          "errors": [],
+          "mode": "none",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:OwnedCheckedRecords.newTicket",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "newTicket",
+        "overloadKey": "OwnedCheckedRecords.newTicket",
+        "owner": null,
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "arg0",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          },
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "arg1",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "kind": "primitive",
+              "name": "string"
+            }
+          }
+        ],
+        "receiver": null,
+        "result": {
+          "lifetime": {
+            "anchor": null,
+            "scope": "explicit"
+          },
+          "ownership": "lease",
+          "type": {
+            "id": "lean:OwnedCheckedRecords.Ticket",
+            "kind": "named"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "OwnedCheckedRecords.newTicket",
+          "extensions": {
+            "lean-lang.org/source-position": {
+              "endColumn": 73,
+              "endLine": 52,
+              "path": "OwnedCheckedRecords.lean",
+              "startColumn": 0,
+              "startLine": 51
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "The second constructor can reject after the first owned argument converted. "
+        },
+        "effects": [
+          "allocates",
+          "reads-resource"
+        ],
+        "failure": {
+          "errors": [],
+          "mode": "none",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:OwnedCheckedRecords.pairClaim",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "pairClaim",
+        "overloadKey": "OwnedCheckedRecords.pairClaim",
+        "owner": null,
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": {
+              "anchor": null,
+              "scope": "call"
+            },
+            "mutability": "immutable",
+            "name": "arg0",
+            "optional": false,
+            "ownership": "borrow",
+            "type": {
+              "id": "lean:OwnedCheckedRecords.Booking",
+              "kind": "named"
+            }
+          },
+          {
+            "default": null,
+            "lifetime": {
+              "anchor": null,
+              "scope": "call"
+            },
+            "mutability": "immutable",
+            "name": "arg1",
+            "optional": false,
+            "ownership": "borrow",
+            "type": {
+              "id": "lean:OwnedCheckedRecords.Claim",
+              "kind": "named"
+            }
+          }
+        ],
+        "receiver": null,
+        "result": {
+          "lifetime": {
+            "anchor": null,
+            "scope": "explicit"
+          },
+          "ownership": "lease",
+          "type": {
+            "id": "lean:OwnedCheckedRecords.Claim",
+            "kind": "named"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "OwnedCheckedRecords.pairClaim",
+          "extensions": {
+            "lean-lang.org/export-contract": {
+              "parameters": [
+                {
+                  "lifetime": {
+                    "anchor": null,
+                    "scope": "call"
+                  },
+                  "ownership": "borrow",
+                  "refinement": {
+                    "fields": [
+                      {
+                        "name": "holder",
+                        "refinement": null
+                      },
+                      {
+                        "name": "window",
+                        "refinement": {
+                          "constructor": "OwnedCheckedRecords.mkWindow",
+                          "fields": [
+                            {
+                              "name": "lo",
+                              "refinement": null
+                            },
+                            {
+                              "name": "hi",
+                              "refinement": null
+                            }
+                          ],
+                          "kind": "checked-record",
+                          "name": "OwnedCheckedRecords.Window"
+                        }
+                      }
+                    ],
+                    "kind": "record",
+                    "name": "OwnedCheckedRecords.Booking"
+                  }
+                },
+                {
+                  "lifetime": {
+                    "anchor": null,
+                    "scope": "call"
+                  },
+                  "ownership": "borrow",
+                  "refinement": {
+                    "constructor": "OwnedCheckedRecords.mkClaim",
+                    "fields": [
+                      {
+                        "name": "holder",
+                        "refinement": null
+                      },
+                      {
+                        "name": "quota",
+                        "refinement": null
+                      }
+                    ],
+                    "kind": "checked-record",
+                    "name": "OwnedCheckedRecords.Claim"
+                  }
+                }
+              ],
+              "result": {
+                "lifetime": {
+                  "anchor": null,
+                  "scope": "explicit"
+                },
+                "ownership": "lease"
+              }
+            },
+            "lean-lang.org/refinements": {
+              "parameters": [
+                {
+                  "fields": [
+                    {
+                      "name": "holder",
+                      "refinement": null
+                    },
+                    {
+                      "name": "window",
+                      "refinement": {
+                        "constructor": "OwnedCheckedRecords.mkWindow",
+                        "fields": [
+                          {
+                            "name": "lo",
+                            "refinement": null
+                          },
+                          {
+                            "name": "hi",
+                            "refinement": null
+                          }
+                        ],
+                        "kind": "checked-record",
+                        "name": "OwnedCheckedRecords.Window"
+                      }
+                    }
+                  ],
+                  "kind": "record",
+                  "name": "OwnedCheckedRecords.Booking"
+                },
+                {
+                  "constructor": "OwnedCheckedRecords.mkClaim",
+                  "fields": [
+                    {
+                      "name": "holder",
+                      "refinement": null
+                    },
+                    {
+                      "name": "quota",
+                      "refinement": null
+                    }
+                  ],
+                  "kind": "checked-record",
+                  "name": "OwnedCheckedRecords.Claim"
+                }
+              ],
+              "result": {
+                "constructor": null,
+                "fields": [
+                  {
+                    "name": "holder",
+                    "refinement": null
+                  },
+                  {
+                    "name": "quota",
+                    "refinement": null
+                  }
+                ],
+                "kind": "checked-record",
+                "name": "OwnedCheckedRecords.Claim"
+              }
+            },
+            "lean-lang.org/source-position": {
+              "endColumn": 67,
+              "endLine": 87,
+              "path": "OwnedCheckedRecords.lean",
+              "startColumn": 0,
+              "startLine": 85
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "Call OwnedCheckedRecords.serial."
+        },
+        "effects": [
+          "reads-resource"
+        ],
+        "failure": {
+          "errors": [],
+          "mode": "none",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:OwnedCheckedRecords.serial",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "serial",
+        "overloadKey": "OwnedCheckedRecords.serial",
+        "owner": null,
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": {
+              "anchor": null,
+              "scope": "call"
+            },
+            "mutability": "immutable",
+            "name": "arg0",
+            "optional": false,
+            "ownership": "borrow",
+            "type": {
+              "id": "lean:OwnedCheckedRecords.Ticket",
+              "kind": "named"
+            }
+          }
+        ],
+        "receiver": null,
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "OwnedCheckedRecords.serial",
+          "extensions": {
+            "lean-lang.org/source-position": {
+              "endColumn": 51,
+              "endLine": 54,
+              "path": "OwnedCheckedRecords.lean",
+              "startColumn": 0,
+              "startLine": 54
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "Transfer: the claim moves into Lean and comes back as a new lease. "
+        },
+        "effects": [
+          "allocates",
+          "reads-resource"
+        ],
+        "failure": {
+          "errors": [],
+          "mode": "none",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:OwnedCheckedRecords.transferClaim",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "transferClaim",
+        "overloadKey": "OwnedCheckedRecords.transferClaim",
+        "owner": null,
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": {
+              "anchor": null,
+              "scope": "call"
+            },
+            "mutability": "immutable",
+            "name": "arg0",
+            "optional": false,
+            "ownership": "transfer",
+            "type": {
+              "id": "lean:OwnedCheckedRecords.Claim",
+              "kind": "named"
+            }
+          }
+        ],
+        "receiver": null,
+        "result": {
+          "lifetime": {
+            "anchor": null,
+            "scope": "explicit"
+          },
+          "ownership": "lease",
+          "type": {
+            "id": "lean:OwnedCheckedRecords.Claim",
+            "kind": "named"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "OwnedCheckedRecords.transferClaim",
+          "extensions": {
+            "lean-lang.org/export-contract": {
+              "parameters": [
+                {
+                  "lifetime": {
+                    "anchor": null,
+                    "scope": "call"
+                  },
+                  "ownership": "transfer",
+                  "refinement": {
+                    "constructor": "OwnedCheckedRecords.mkClaim",
+                    "fields": [
+                      {
+                        "name": "holder",
+                        "refinement": null
+                      },
+                      {
+                        "name": "quota",
+                        "refinement": null
+                      }
+                    ],
+                    "kind": "checked-record",
+                    "name": "OwnedCheckedRecords.Claim"
+                  }
+                }
+              ],
+              "result": {
+                "lifetime": {
+                  "anchor": null,
+                  "scope": "explicit"
+                },
+                "ownership": "lease"
+              }
+            },
+            "lean-lang.org/refinements": {
+              "parameters": [
+                {
+                  "constructor": "OwnedCheckedRecords.mkClaim",
+                  "fields": [
+                    {
+                      "name": "holder",
+                      "refinement": null
+                    },
+                    {
+                      "name": "quota",
+                      "refinement": null
+                    }
+                  ],
+                  "kind": "checked-record",
+                  "name": "OwnedCheckedRecords.Claim"
+                }
+              ],
+              "result": {
+                "constructor": null,
+                "fields": [
+                  {
+                    "name": "holder",
+                    "refinement": null
+                  },
+                  {
+                    "name": "quota",
+                    "refinement": null
+                  }
+                ],
+                "kind": "checked-record",
+                "name": "OwnedCheckedRecords.Claim"
+              }
+            },
+            "lean-lang.org/source-position": {
+              "endColumn": 50,
+              "endLine": 70,
+              "path": "OwnedCheckedRecords.lean",
+              "startColumn": 0,
+              "startLine": 68
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      }
+    ],
+    "documentation": {
+      "details": "",
+      "summary": "Compiler-checked exports for owned-checked-records."
+    },
+    "errors": [],
+    "producers": [
+      {
+        "adapter": "lean-bridge-elaborator",
+        "adapterVersion": 2,
+        "extensions": {
+          "lean-lang.org/elaboration-sha256": "4eb40ff69ba4f189671e01abbee41696e4a662c96c0f15971ddb81d7def56a4a",
+          "lean-lang.org/toolchain": "leanprover/lean4:v4.32.2"
+        },
+        "id": "lean",
+        "tool": "Lean",
+        "toolVersion": "4.32.2"
+      }
+    ],
+    "schemaVersion": 4,
+    "types": [
+      {
+        "aggregate": {
+          "cycles": "reject",
+          "disposal": "required",
+          "fallback": "queued-finalizer",
+          "ownership": "lease"
+        },
+        "assurance": [],
+        "callable": null,
+        "cases": [],
+        "documentation": {
+          "details": "",
+          "summary": "Checked Lean OwnedCheckedRecords.Booking."
+        },
+        "fields": [
+          {
+            "documentation": {
+              "details": "",
+              "summary": "holder"
+            },
+            "mutability": "immutable",
+            "name": "holder",
+            "type": {
+              "id": "lean:OwnedCheckedRecords.Ticket",
+              "kind": "named"
+            }
+          },
+          {
+            "documentation": {
+              "details": "",
+              "summary": "window"
+            },
+            "mutability": "immutable",
+            "name": "window",
+            "type": {
+              "id": "lean:OwnedCheckedRecords.Window",
+              "kind": "named"
+            }
+          }
+        ],
+        "host": null,
+        "id": "lean:OwnedCheckedRecords.Booking",
+        "kind": "record",
+        "mutability": "immutable",
+        "name": "Booking",
+        "representation": "owned",
+        "resource": null,
+        "source": {
+          "declaration": "OwnedCheckedRecords.Booking",
+          "extensions": {},
+          "producer": "lean"
+        },
+        "target": null,
+        "typeParameters": []
+      },
+      {
+        "aggregate": {
+          "cycles": "reject",
+          "disposal": "required",
+          "fallback": "queued-finalizer",
+          "ownership": "lease"
+        },
+        "assurance": [],
+        "callable": null,
+        "cases": [],
+        "documentation": {
+          "details": "",
+          "summary": "Checked Lean OwnedCheckedRecords.Claim."
+        },
+        "fields": [
+          {
+            "documentation": {
+              "details": "",
+              "summary": "holder"
+            },
+            "mutability": "immutable",
+            "name": "holder",
+            "type": {
+              "id": "lean:OwnedCheckedRecords.Ticket",
+              "kind": "named"
+            }
+          },
+          {
+            "documentation": {
+              "details": "",
+              "summary": "quota"
+            },
+            "mutability": "immutable",
+            "name": "quota",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          }
+        ],
+        "host": null,
+        "id": "lean:OwnedCheckedRecords.Claim",
+        "kind": "record",
+        "mutability": "immutable",
+        "name": "Claim",
+        "representation": "owned",
+        "resource": null,
+        "source": {
+          "declaration": "OwnedCheckedRecords.Claim",
+          "extensions": {
+            "lean-lang.org/erased-proofs": {
+              "fields": [
+                "bounded"
+              ]
+            }
+          },
+          "producer": "lean"
+        },
+        "target": null,
+        "typeParameters": []
+      },
+      {
+        "aggregate": {
+          "cycles": "reject",
+          "disposal": "required",
+          "fallback": "queued-finalizer",
+          "ownership": "lease"
+        },
+        "assurance": [],
+        "callable": null,
+        "cases": [],
+        "documentation": {
+          "details": "",
+          "summary": "Checked Lean OwnedCheckedRecords.Grant."
+        },
+        "fields": [
+          {
+            "documentation": {
+              "details": "",
+              "summary": "holder"
+            },
+            "mutability": "immutable",
+            "name": "holder",
+            "type": {
+              "id": "lean:OwnedCheckedRecords.Ticket",
+              "kind": "named"
+            }
+          },
+          {
+            "documentation": {
+              "details": "",
+              "summary": "weight"
+            },
+            "mutability": "immutable",
+            "name": "weight",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          },
+          {
+            "documentation": {
+              "details": "",
+              "summary": "limit"
+            },
+            "mutability": "immutable",
+            "name": "limit",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          }
+        ],
+        "host": null,
+        "id": "lean:OwnedCheckedRecords.Grant",
+        "kind": "record",
+        "mutability": "immutable",
+        "name": "Grant",
+        "representation": "owned",
+        "resource": null,
+        "source": {
+          "declaration": "OwnedCheckedRecords.Grant",
+          "extensions": {
+            "lean-lang.org/erased-proofs": {
+              "fields": [
+                "within"
+              ]
+            }
+          },
+          "producer": "lean"
+        },
+        "target": null,
+        "typeParameters": []
+      },
+      {
+        "aggregate": null,
+        "assurance": [],
+        "callable": null,
+        "cases": [],
+        "documentation": {
+          "details": "",
+          "summary": "Checked Lean OwnedCheckedRecords.Ticket."
+        },
+        "fields": [],
+        "host": null,
+        "id": "lean:OwnedCheckedRecords.Ticket",
+        "kind": "resource",
+        "mutability": "read",
+        "name": "Ticket",
+        "representation": "identity",
+        "resource": {
+          "cycles": "explicit-cut",
+          "disposal": "required",
+          "fallback": "queued-finalizer",
+          "kindId": "resource:OwnedCheckedRecords.Ticket"
+        },
+        "source": {
+          "declaration": "OwnedCheckedRecords.Ticket",
+          "extensions": {},
+          "producer": "lean"
+        },
+        "target": null,
+        "typeParameters": []
+      },
+      {
+        "aggregate": null,
+        "assurance": [],
+        "callable": null,
+        "cases": [],
+        "documentation": {
+          "details": "",
+          "summary": "Checked Lean OwnedCheckedRecords.Window."
+        },
+        "fields": [
+          {
+            "documentation": {
+              "details": "",
+              "summary": "lo"
+            },
+            "mutability": "immutable",
+            "name": "lo",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          },
+          {
+            "documentation": {
+              "details": "",
+              "summary": "hi"
+            },
+            "mutability": "immutable",
+            "name": "hi",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          }
+        ],
+        "host": null,
+        "id": "lean:OwnedCheckedRecords.Window",
+        "kind": "record",
+        "mutability": "immutable",
+        "name": "Window",
+        "representation": "copied",
+        "resource": null,
+        "source": {
+          "declaration": "OwnedCheckedRecords.Window",
+          "extensions": {
+            "lean-lang.org/erased-proofs": {
+              "fields": [
+                "ordered"
+              ]
+            }
+          },
+          "producer": "lean"
+        },
+        "target": null,
+        "typeParameters": []
+      }
+    ]
+  },
+  "bindingIrSha256": "688f713fb0b7ec51d26f341a1e72b126ccd54b9899951143d59b7cfb78f81bb4",
+  "byteOrder": "little",
+  "component": {
+    "id": "owned-checked-records@1.0.0",
+    "name": "owned-checked-records",
+    "version": "1.0.0"
+  },
+  "exports": [
+    {
+      "bindingId": "lean:OwnedCheckedRecords.echoBooking",
+      "documentation": "Shape A both ways: the input window runs mkWindow, the result projects it. ",
+      "module": "OwnedCheckedRecords",
+      "name": "OwnedCheckedRecords.echoBooking",
+      "parameters": [
+        {
+          "name": "value",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": true,
+              "unbox": "lean_unbox"
+            },
+            "kind": "owned-graph",
+            "policy": {
+              "cycles": "reject",
+              "disposal": "required",
+              "fallback": "queued-finalizer",
+              "ownership": "lease"
+            },
+            "root": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": true,
+                "unbox": "lean_unbox"
+              },
+              "kind": "reference",
+              "lean": "OwnedCheckedRecords.Booking",
+              "name": "OwnedCheckedRecords.Booking"
+            },
+            "types": [
+              {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": true,
+                  "unbox": "lean_unbox"
+                },
+                "constructor": "OwnedCheckedRecords.Booking.mk",
+                "fields": [
+                  {
+                    "name": "holder",
+                    "projection": "OwnedCheckedRecords.Booking.holder",
+                    "type": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": true,
+                        "unbox": "lean_unbox"
+                      },
+                      "kind": "resource",
+                      "lean": "OwnedCheckedRecords.Ticket",
+                      "module": "OwnedCheckedRecords",
+                      "name": "OwnedCheckedRecords.Ticket"
+                    }
+                  },
+                  {
+                    "name": "window",
+                    "projection": "OwnedCheckedRecords.Booking.window",
+                    "type": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": true,
+                        "unbox": "lean_unbox"
+                      },
+                      "base": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": true,
+                          "unbox": "lean_unbox"
+                        },
+                        "kind": "reference",
+                        "lean": "OwnedCheckedRecords.Window",
+                        "name": "OwnedCheckedRecords.Window"
+                      },
+                      "kind": "refinement",
+                      "predicate": {
+                        "constructor": "OwnedCheckedRecords.mkWindow",
+                        "kind": "checked-record"
+                      }
+                    }
+                  }
+                ],
+                "kind": "record",
+                "lean": "OwnedCheckedRecords.Booking",
+                "name": "OwnedCheckedRecords.Booking"
+              },
+              {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": true,
+                  "unbox": "lean_unbox"
+                },
+                "constructor": "OwnedCheckedRecords.Window.mk",
+                "erased": [
+                  "ordered"
+                ],
+                "fields": [
+                  {
+                    "name": "lo",
+                    "projection": "OwnedCheckedRecords.Window.lo",
+                    "type": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": false,
+                        "unbox": "lean_unbox"
+                      },
+                      "kind": "primitive",
+                      "lean": "Nat",
+                      "name": "nat"
+                    }
+                  },
+                  {
+                    "name": "hi",
+                    "projection": "OwnedCheckedRecords.Window.hi",
+                    "type": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": false,
+                        "unbox": "lean_unbox"
+                      },
+                      "kind": "primitive",
+                      "lean": "Nat",
+                      "name": "nat"
+                    }
+                  }
+                ],
+                "kind": "record",
+                "lean": "OwnedCheckedRecords.Window",
+                "name": "OwnedCheckedRecords.Window"
+              }
+            ]
+          }
+        }
+      ],
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": true,
+          "unbox": "lean_unbox"
+        },
+        "kind": "owned-graph",
+        "policy": {
+          "cycles": "reject",
+          "disposal": "required",
+          "fallback": "queued-finalizer",
+          "ownership": "lease"
+        },
+        "root": {
+          "abi": {
+            "box": "lean_box",
+            "cType": "lean_object*",
+            "heap": true,
+            "unbox": "lean_unbox"
+          },
+          "kind": "reference",
+          "lean": "OwnedCheckedRecords.Booking",
+          "name": "OwnedCheckedRecords.Booking"
+        },
+        "types": [
+          {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": true,
+              "unbox": "lean_unbox"
+            },
+            "constructor": "OwnedCheckedRecords.Booking.mk",
+            "fields": [
+              {
+                "name": "holder",
+                "projection": "OwnedCheckedRecords.Booking.holder",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": true,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "resource",
+                  "lean": "OwnedCheckedRecords.Ticket",
+                  "module": "OwnedCheckedRecords",
+                  "name": "OwnedCheckedRecords.Ticket"
+                }
+              },
+              {
+                "name": "window",
+                "projection": "OwnedCheckedRecords.Booking.window",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": true,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "reference",
+                  "lean": "OwnedCheckedRecords.Window",
+                  "name": "OwnedCheckedRecords.Window"
+                }
+              }
+            ],
+            "kind": "record",
+            "lean": "OwnedCheckedRecords.Booking",
+            "name": "OwnedCheckedRecords.Booking"
+          },
+          {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": true,
+              "unbox": "lean_unbox"
+            },
+            "constructor": "OwnedCheckedRecords.Window.mk",
+            "erased": [
+              "ordered"
+            ],
+            "fields": [
+              {
+                "name": "lo",
+                "projection": "OwnedCheckedRecords.Window.lo",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "primitive",
+                  "lean": "Nat",
+                  "name": "nat"
+                }
+              },
+              {
+                "name": "hi",
+                "projection": "OwnedCheckedRecords.Window.hi",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "primitive",
+                  "lean": "Nat",
+                  "name": "nat"
+                }
+              }
+            ],
+            "kind": "record",
+            "lean": "OwnedCheckedRecords.Window",
+            "name": "OwnedCheckedRecords.Window"
+          }
+        ]
+      },
+      "sourcePosition": {
+        "endColumn": 52,
+        "endLine": 58,
+        "path": "OwnedCheckedRecords.lean",
+        "startColumn": 0,
+        "startLine": 56
+      },
+      "symbol": "lean_bridge_owned_38052845794454b97cd9016a_f0711e856cfa97d876c9a",
+      "theoremReferences": []
+    },
+    {
+      "bindingId": "lean:OwnedCheckedRecords.echoClaim",
+      "documentation": "Shape B both ways: the input claim runs mkClaim after the ticket is borrowed. ",
+      "module": "OwnedCheckedRecords",
+      "name": "OwnedCheckedRecords.echoClaim",
+      "parameters": [
+        {
+          "name": "value",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": true,
+              "unbox": "lean_unbox"
+            },
+            "kind": "owned-graph",
+            "policy": {
+              "cycles": "reject",
+              "disposal": "required",
+              "fallback": "queued-finalizer",
+              "ownership": "lease"
+            },
+            "root": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": true,
+                "unbox": "lean_unbox"
+              },
+              "base": {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": true,
+                  "unbox": "lean_unbox"
+                },
+                "kind": "reference",
+                "lean": "OwnedCheckedRecords.Claim",
+                "name": "OwnedCheckedRecords.Claim"
+              },
+              "kind": "refinement",
+              "predicate": {
+                "constructor": "OwnedCheckedRecords.mkClaim",
+                "kind": "checked-record"
+              }
+            },
+            "types": [
+              {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": true,
+                  "unbox": "lean_unbox"
+                },
+                "constructor": "OwnedCheckedRecords.Claim.mk",
+                "erased": [
+                  "bounded"
+                ],
+                "fields": [
+                  {
+                    "name": "holder",
+                    "projection": "OwnedCheckedRecords.Claim.holder",
+                    "type": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": true,
+                        "unbox": "lean_unbox"
+                      },
+                      "kind": "resource",
+                      "lean": "OwnedCheckedRecords.Ticket",
+                      "module": "OwnedCheckedRecords",
+                      "name": "OwnedCheckedRecords.Ticket"
+                    }
+                  },
+                  {
+                    "name": "quota",
+                    "projection": "OwnedCheckedRecords.Claim.quota",
+                    "type": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": false,
+                        "unbox": "lean_unbox"
+                      },
+                      "kind": "primitive",
+                      "lean": "Nat",
+                      "name": "nat"
+                    }
+                  }
+                ],
+                "kind": "record",
+                "lean": "OwnedCheckedRecords.Claim",
+                "name": "OwnedCheckedRecords.Claim"
+              }
+            ]
+          }
+        }
+      ],
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": true,
+          "unbox": "lean_unbox"
+        },
+        "kind": "owned-graph",
+        "policy": {
+          "cycles": "reject",
+          "disposal": "required",
+          "fallback": "queued-finalizer",
+          "ownership": "lease"
+        },
+        "root": {
+          "abi": {
+            "box": "lean_box",
+            "cType": "lean_object*",
+            "heap": true,
+            "unbox": "lean_unbox"
+          },
+          "kind": "reference",
+          "lean": "OwnedCheckedRecords.Claim",
+          "name": "OwnedCheckedRecords.Claim"
+        },
+        "types": [
+          {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": true,
+              "unbox": "lean_unbox"
+            },
+            "constructor": "OwnedCheckedRecords.Claim.mk",
+            "erased": [
+              "bounded"
+            ],
+            "fields": [
+              {
+                "name": "holder",
+                "projection": "OwnedCheckedRecords.Claim.holder",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": true,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "resource",
+                  "lean": "OwnedCheckedRecords.Ticket",
+                  "module": "OwnedCheckedRecords",
+                  "name": "OwnedCheckedRecords.Ticket"
+                }
+              },
+              {
+                "name": "quota",
+                "projection": "OwnedCheckedRecords.Claim.quota",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "primitive",
+                  "lean": "Nat",
+                  "name": "nat"
+                }
+              }
+            ],
+            "kind": "record",
+            "lean": "OwnedCheckedRecords.Claim",
+            "name": "OwnedCheckedRecords.Claim"
+          }
+        ]
+      },
+      "sourcePosition": {
+        "endColumn": 46,
+        "endLine": 64,
+        "path": "OwnedCheckedRecords.lean",
+        "startColumn": 0,
+        "startLine": 62
+      },
+      "symbol": "lean_bridge_owned_38052845794454b97cd9016a_f535babcfd8d0f67ea0e6",
+      "theoremReferences": []
+    },
+    {
+      "bindingId": "lean:OwnedCheckedRecords.echoGrant",
+      "documentation": "Nested direction: the Positive field runs before mkGrant. ",
+      "module": "OwnedCheckedRecords",
+      "name": "OwnedCheckedRecords.echoGrant",
+      "parameters": [
+        {
+          "name": "value",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": true,
+              "unbox": "lean_unbox"
+            },
+            "kind": "owned-graph",
+            "policy": {
+              "cycles": "reject",
+              "disposal": "required",
+              "fallback": "queued-finalizer",
+              "ownership": "lease"
+            },
+            "root": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": true,
+                "unbox": "lean_unbox"
+              },
+              "base": {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": true,
+                  "unbox": "lean_unbox"
+                },
+                "kind": "reference",
+                "lean": "OwnedCheckedRecords.Grant",
+                "name": "OwnedCheckedRecords.Grant"
+              },
+              "kind": "refinement",
+              "predicate": {
+                "constructor": "OwnedCheckedRecords.mkGrant",
+                "kind": "checked-record"
+              }
+            },
+            "types": [
+              {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": true,
+                  "unbox": "lean_unbox"
+                },
+                "constructor": "OwnedCheckedRecords.Grant.mk",
+                "erased": [
+                  "within"
+                ],
+                "fields": [
+                  {
+                    "name": "holder",
+                    "projection": "OwnedCheckedRecords.Grant.holder",
+                    "type": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": true,
+                        "unbox": "lean_unbox"
+                      },
+                      "kind": "resource",
+                      "lean": "OwnedCheckedRecords.Ticket",
+                      "module": "OwnedCheckedRecords",
+                      "name": "OwnedCheckedRecords.Ticket"
+                    }
+                  },
+                  {
+                    "name": "weight",
+                    "projection": "OwnedCheckedRecords.Grant.weight",
+                    "type": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": false,
+                        "unbox": "lean_unbox"
+                      },
+                      "base": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": false,
+                          "unbox": "lean_unbox"
+                        },
+                        "kind": "primitive",
+                        "lean": "Nat",
+                        "name": "nat"
+                      },
+                      "kind": "refinement",
+                      "predicate": {
+                        "constructor": "OwnedCheckedRecords.checkedPositive",
+                        "kind": "subtype"
+                      }
+                    }
+                  },
+                  {
+                    "name": "limit",
+                    "projection": "OwnedCheckedRecords.Grant.limit",
+                    "type": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": false,
+                        "unbox": "lean_unbox"
+                      },
+                      "kind": "primitive",
+                      "lean": "Nat",
+                      "name": "nat"
+                    }
+                  }
+                ],
+                "kind": "record",
+                "lean": "OwnedCheckedRecords.Grant",
+                "name": "OwnedCheckedRecords.Grant"
+              }
+            ]
+          }
+        }
+      ],
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": true,
+          "unbox": "lean_unbox"
+        },
+        "kind": "owned-graph",
+        "policy": {
+          "cycles": "reject",
+          "disposal": "required",
+          "fallback": "queued-finalizer",
+          "ownership": "lease"
+        },
+        "root": {
+          "abi": {
+            "box": "lean_box",
+            "cType": "lean_object*",
+            "heap": true,
+            "unbox": "lean_unbox"
+          },
+          "kind": "reference",
+          "lean": "OwnedCheckedRecords.Grant",
+          "name": "OwnedCheckedRecords.Grant"
+        },
+        "types": [
+          {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": true,
+              "unbox": "lean_unbox"
+            },
+            "constructor": "OwnedCheckedRecords.Grant.mk",
+            "erased": [
+              "within"
+            ],
+            "fields": [
+              {
+                "name": "holder",
+                "projection": "OwnedCheckedRecords.Grant.holder",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": true,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "resource",
+                  "lean": "OwnedCheckedRecords.Ticket",
+                  "module": "OwnedCheckedRecords",
+                  "name": "OwnedCheckedRecords.Ticket"
+                }
+              },
+              {
+                "name": "weight",
+                "projection": "OwnedCheckedRecords.Grant.weight",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "base": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": false,
+                      "unbox": "lean_unbox"
+                    },
+                    "kind": "primitive",
+                    "lean": "Nat",
+                    "name": "nat"
+                  },
+                  "kind": "refinement",
+                  "predicate": {
+                    "constructor": null,
+                    "kind": "subtype"
+                  }
+                }
+              },
+              {
+                "name": "limit",
+                "projection": "OwnedCheckedRecords.Grant.limit",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "primitive",
+                  "lean": "Nat",
+                  "name": "nat"
+                }
+              }
+            ],
+            "kind": "record",
+            "lean": "OwnedCheckedRecords.Grant",
+            "name": "OwnedCheckedRecords.Grant"
+          }
+        ]
+      },
+      "sourcePosition": {
+        "endColumn": 46,
+        "endLine": 74,
+        "path": "OwnedCheckedRecords.lean",
+        "startColumn": 0,
+        "startLine": 72
+      },
+      "symbol": "lean_bridge_owned_38052845794454b97cd9016a_feb082cf837ef02082ea8",
+      "theoremReferences": []
+    },
+    {
+      "bindingId": "lean:OwnedCheckedRecords.newTicket",
+      "documentation": null,
+      "module": "OwnedCheckedRecords",
+      "name": "OwnedCheckedRecords.newTicket",
+      "parameters": [
+        {
+          "name": "serial",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": false,
+              "unbox": "lean_unbox"
+            },
+            "kind": "primitive",
+            "lean": "Nat",
+            "name": "nat"
+          }
+        },
+        {
+          "name": "label",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": true,
+              "unbox": "lean_unbox"
+            },
+            "kind": "primitive",
+            "lean": "String",
+            "name": "string"
+          }
+        }
+      ],
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": true,
+          "unbox": "lean_unbox"
+        },
+        "kind": "resource",
+        "lean": "OwnedCheckedRecords.Ticket",
+        "module": "OwnedCheckedRecords",
+        "name": "OwnedCheckedRecords.Ticket"
+      },
+      "sourcePosition": {
+        "endColumn": 73,
+        "endLine": 52,
+        "path": "OwnedCheckedRecords.lean",
+        "startColumn": 0,
+        "startLine": 51
+      },
+      "symbol": "lean_bridge_owned_38052845794454b97cd9016a_fa1e5189bd92568e4b939",
+      "theoremReferences": []
+    },
+    {
+      "bindingId": "lean:OwnedCheckedRecords.pairClaim",
+      "documentation": "The second constructor can reject after the first owned argument converted. ",
+      "module": "OwnedCheckedRecords",
+      "name": "OwnedCheckedRecords.pairClaim",
+      "parameters": [
+        {
+          "name": "_booking",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": true,
+              "unbox": "lean_unbox"
+            },
+            "kind": "owned-graph",
+            "policy": {
+              "cycles": "reject",
+              "disposal": "required",
+              "fallback": "queued-finalizer",
+              "ownership": "lease"
+            },
+            "root": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": true,
+                "unbox": "lean_unbox"
+              },
+              "kind": "reference",
+              "lean": "OwnedCheckedRecords.Booking",
+              "name": "OwnedCheckedRecords.Booking"
+            },
+            "types": [
+              {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": true,
+                  "unbox": "lean_unbox"
+                },
+                "constructor": "OwnedCheckedRecords.Booking.mk",
+                "fields": [
+                  {
+                    "name": "holder",
+                    "projection": "OwnedCheckedRecords.Booking.holder",
+                    "type": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": true,
+                        "unbox": "lean_unbox"
+                      },
+                      "kind": "resource",
+                      "lean": "OwnedCheckedRecords.Ticket",
+                      "module": "OwnedCheckedRecords",
+                      "name": "OwnedCheckedRecords.Ticket"
+                    }
+                  },
+                  {
+                    "name": "window",
+                    "projection": "OwnedCheckedRecords.Booking.window",
+                    "type": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": true,
+                        "unbox": "lean_unbox"
+                      },
+                      "base": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": true,
+                          "unbox": "lean_unbox"
+                        },
+                        "kind": "reference",
+                        "lean": "OwnedCheckedRecords.Window",
+                        "name": "OwnedCheckedRecords.Window"
+                      },
+                      "kind": "refinement",
+                      "predicate": {
+                        "constructor": "OwnedCheckedRecords.mkWindow",
+                        "kind": "checked-record"
+                      }
+                    }
+                  }
+                ],
+                "kind": "record",
+                "lean": "OwnedCheckedRecords.Booking",
+                "name": "OwnedCheckedRecords.Booking"
+              },
+              {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": true,
+                  "unbox": "lean_unbox"
+                },
+                "constructor": "OwnedCheckedRecords.Window.mk",
+                "erased": [
+                  "ordered"
+                ],
+                "fields": [
+                  {
+                    "name": "lo",
+                    "projection": "OwnedCheckedRecords.Window.lo",
+                    "type": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": false,
+                        "unbox": "lean_unbox"
+                      },
+                      "kind": "primitive",
+                      "lean": "Nat",
+                      "name": "nat"
+                    }
+                  },
+                  {
+                    "name": "hi",
+                    "projection": "OwnedCheckedRecords.Window.hi",
+                    "type": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": false,
+                        "unbox": "lean_unbox"
+                      },
+                      "kind": "primitive",
+                      "lean": "Nat",
+                      "name": "nat"
+                    }
+                  }
+                ],
+                "kind": "record",
+                "lean": "OwnedCheckedRecords.Window",
+                "name": "OwnedCheckedRecords.Window"
+              }
+            ]
+          }
+        },
+        {
+          "name": "claim",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": true,
+              "unbox": "lean_unbox"
+            },
+            "kind": "owned-graph",
+            "policy": {
+              "cycles": "reject",
+              "disposal": "required",
+              "fallback": "queued-finalizer",
+              "ownership": "lease"
+            },
+            "root": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": true,
+                "unbox": "lean_unbox"
+              },
+              "base": {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": true,
+                  "unbox": "lean_unbox"
+                },
+                "kind": "reference",
+                "lean": "OwnedCheckedRecords.Claim",
+                "name": "OwnedCheckedRecords.Claim"
+              },
+              "kind": "refinement",
+              "predicate": {
+                "constructor": "OwnedCheckedRecords.mkClaim",
+                "kind": "checked-record"
+              }
+            },
+            "types": [
+              {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": true,
+                  "unbox": "lean_unbox"
+                },
+                "constructor": "OwnedCheckedRecords.Claim.mk",
+                "erased": [
+                  "bounded"
+                ],
+                "fields": [
+                  {
+                    "name": "holder",
+                    "projection": "OwnedCheckedRecords.Claim.holder",
+                    "type": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": true,
+                        "unbox": "lean_unbox"
+                      },
+                      "kind": "resource",
+                      "lean": "OwnedCheckedRecords.Ticket",
+                      "module": "OwnedCheckedRecords",
+                      "name": "OwnedCheckedRecords.Ticket"
+                    }
+                  },
+                  {
+                    "name": "quota",
+                    "projection": "OwnedCheckedRecords.Claim.quota",
+                    "type": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": false,
+                        "unbox": "lean_unbox"
+                      },
+                      "kind": "primitive",
+                      "lean": "Nat",
+                      "name": "nat"
+                    }
+                  }
+                ],
+                "kind": "record",
+                "lean": "OwnedCheckedRecords.Claim",
+                "name": "OwnedCheckedRecords.Claim"
+              }
+            ]
+          }
+        }
+      ],
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": true,
+          "unbox": "lean_unbox"
+        },
+        "kind": "owned-graph",
+        "policy": {
+          "cycles": "reject",
+          "disposal": "required",
+          "fallback": "queued-finalizer",
+          "ownership": "lease"
+        },
+        "root": {
+          "abi": {
+            "box": "lean_box",
+            "cType": "lean_object*",
+            "heap": true,
+            "unbox": "lean_unbox"
+          },
+          "kind": "reference",
+          "lean": "OwnedCheckedRecords.Claim",
+          "name": "OwnedCheckedRecords.Claim"
+        },
+        "types": [
+          {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": true,
+              "unbox": "lean_unbox"
+            },
+            "constructor": "OwnedCheckedRecords.Claim.mk",
+            "erased": [
+              "bounded"
+            ],
+            "fields": [
+              {
+                "name": "holder",
+                "projection": "OwnedCheckedRecords.Claim.holder",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": true,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "resource",
+                  "lean": "OwnedCheckedRecords.Ticket",
+                  "module": "OwnedCheckedRecords",
+                  "name": "OwnedCheckedRecords.Ticket"
+                }
+              },
+              {
+                "name": "quota",
+                "projection": "OwnedCheckedRecords.Claim.quota",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "primitive",
+                  "lean": "Nat",
+                  "name": "nat"
+                }
+              }
+            ],
+            "kind": "record",
+            "lean": "OwnedCheckedRecords.Claim",
+            "name": "OwnedCheckedRecords.Claim"
+          }
+        ]
+      },
+      "sourcePosition": {
+        "endColumn": 67,
+        "endLine": 87,
+        "path": "OwnedCheckedRecords.lean",
+        "startColumn": 0,
+        "startLine": 85
+      },
+      "symbol": "lean_bridge_owned_38052845794454b97cd9016a_feaac3cc8d9197bd7bbca",
+      "theoremReferences": []
+    },
+    {
+      "bindingId": "lean:OwnedCheckedRecords.serial",
+      "documentation": null,
+      "module": "OwnedCheckedRecords",
+      "name": "OwnedCheckedRecords.serial",
+      "parameters": [
+        {
+          "name": "ticket",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": true,
+              "unbox": "lean_unbox"
+            },
+            "kind": "resource",
+            "lean": "OwnedCheckedRecords.Ticket",
+            "module": "OwnedCheckedRecords",
+            "name": "OwnedCheckedRecords.Ticket"
+          }
+        }
+      ],
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": false,
+          "unbox": "lean_unbox"
+        },
+        "kind": "primitive",
+        "lean": "Nat",
+        "name": "nat"
+      },
+      "sourcePosition": {
+        "endColumn": 51,
+        "endLine": 54,
+        "path": "OwnedCheckedRecords.lean",
+        "startColumn": 0,
+        "startLine": 54
+      },
+      "symbol": "lean_bridge_owned_38052845794454b97cd9016a_fec926afda994fba3abe2",
+      "theoremReferences": []
+    },
+    {
+      "bindingId": "lean:OwnedCheckedRecords.transferClaim",
+      "documentation": "Transfer: the claim moves into Lean and comes back as a new lease. ",
+      "module": "OwnedCheckedRecords",
+      "name": "OwnedCheckedRecords.transferClaim",
+      "parameters": [
+        {
+          "name": "value",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": true,
+              "unbox": "lean_unbox"
+            },
+            "kind": "owned-graph",
+            "policy": {
+              "cycles": "reject",
+              "disposal": "required",
+              "fallback": "queued-finalizer",
+              "ownership": "lease"
+            },
+            "root": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": true,
+                "unbox": "lean_unbox"
+              },
+              "base": {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": true,
+                  "unbox": "lean_unbox"
+                },
+                "kind": "reference",
+                "lean": "OwnedCheckedRecords.Claim",
+                "name": "OwnedCheckedRecords.Claim"
+              },
+              "kind": "refinement",
+              "predicate": {
+                "constructor": "OwnedCheckedRecords.mkClaim",
+                "kind": "checked-record"
+              }
+            },
+            "types": [
+              {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": true,
+                  "unbox": "lean_unbox"
+                },
+                "constructor": "OwnedCheckedRecords.Claim.mk",
+                "erased": [
+                  "bounded"
+                ],
+                "fields": [
+                  {
+                    "name": "holder",
+                    "projection": "OwnedCheckedRecords.Claim.holder",
+                    "type": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": true,
+                        "unbox": "lean_unbox"
+                      },
+                      "kind": "resource",
+                      "lean": "OwnedCheckedRecords.Ticket",
+                      "module": "OwnedCheckedRecords",
+                      "name": "OwnedCheckedRecords.Ticket"
+                    }
+                  },
+                  {
+                    "name": "quota",
+                    "projection": "OwnedCheckedRecords.Claim.quota",
+                    "type": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": false,
+                        "unbox": "lean_unbox"
+                      },
+                      "kind": "primitive",
+                      "lean": "Nat",
+                      "name": "nat"
+                    }
+                  }
+                ],
+                "kind": "record",
+                "lean": "OwnedCheckedRecords.Claim",
+                "name": "OwnedCheckedRecords.Claim"
+              }
+            ]
+          }
+        }
+      ],
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": true,
+          "unbox": "lean_unbox"
+        },
+        "kind": "owned-graph",
+        "policy": {
+          "cycles": "reject",
+          "disposal": "required",
+          "fallback": "queued-finalizer",
+          "ownership": "lease"
+        },
+        "root": {
+          "abi": {
+            "box": "lean_box",
+            "cType": "lean_object*",
+            "heap": true,
+            "unbox": "lean_unbox"
+          },
+          "kind": "reference",
+          "lean": "OwnedCheckedRecords.Claim",
+          "name": "OwnedCheckedRecords.Claim"
+        },
+        "types": [
+          {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": true,
+              "unbox": "lean_unbox"
+            },
+            "constructor": "OwnedCheckedRecords.Claim.mk",
+            "erased": [
+              "bounded"
+            ],
+            "fields": [
+              {
+                "name": "holder",
+                "projection": "OwnedCheckedRecords.Claim.holder",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": true,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "resource",
+                  "lean": "OwnedCheckedRecords.Ticket",
+                  "module": "OwnedCheckedRecords",
+                  "name": "OwnedCheckedRecords.Ticket"
+                }
+              },
+              {
+                "name": "quota",
+                "projection": "OwnedCheckedRecords.Claim.quota",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "primitive",
+                  "lean": "Nat",
+                  "name": "nat"
+                }
+              }
+            ],
+            "kind": "record",
+            "lean": "OwnedCheckedRecords.Claim",
+            "name": "OwnedCheckedRecords.Claim"
+          }
+        ]
+      },
+      "sourcePosition": {
+        "endColumn": 50,
+        "endLine": 70,
+        "path": "OwnedCheckedRecords.lean",
+        "startColumn": 0,
+        "startLine": 68
+      },
+      "symbol": "lean_bridge_owned_38052845794454b97cd9016a_f040aca3025d850fc12cc",
+      "theoremReferences": []
+    }
+  ],
+  "ownedGraph": {
+    "inputTransfers": {
+      "consumption": "before-lean-call",
+      "exports": [
+        {
+          "bindingId": "lean:OwnedCheckedRecords.transferClaim",
+          "parameters": [
+            0
+          ]
+        }
+      ],
+      "failure": "consumed-after-handoff",
+      "ownership": "whole-result-owner",
+      "schemaVersion": 1,
+      "validation": "before-consumption",
+      "viewLifetime": "until-call-returns"
+    },
+    "layoutSha256": "7a4876ce9b4d6da363bfff455afe33648dd0e9f1294ee0c9ee0a4b6758e9c877",
+    "metadataSha256": "4eb40ff69ba4f189671e01abbee41696e4a662c96c0f15971ddb81d7def56a4a",
+    "module": "LeanBridgeOwned3dbc613d9b479e3b",
+    "schemaVersion": 3,
+    "symbols": {
+      "exports": {
+        "lean:OwnedCheckedRecords.echoBooking": "lean_bridge_owned_38052845794454b97cd9016a_f0711e856cfa97d876c9a",
+        "lean:OwnedCheckedRecords.echoClaim": "lean_bridge_owned_38052845794454b97cd9016a_f535babcfd8d0f67ea0e6",
+        "lean:OwnedCheckedRecords.echoGrant": "lean_bridge_owned_38052845794454b97cd9016a_feb082cf837ef02082ea8",
+        "lean:OwnedCheckedRecords.newTicket": "lean_bridge_owned_38052845794454b97cd9016a_fa1e5189bd92568e4b939",
+        "lean:OwnedCheckedRecords.pairClaim": "lean_bridge_owned_38052845794454b97cd9016a_feaac3cc8d9197bd7bbca",
+        "lean:OwnedCheckedRecords.serial": "lean_bridge_owned_38052845794454b97cd9016a_fec926afda994fba3abe2",
+        "lean:OwnedCheckedRecords.transferClaim": "lean_bridge_owned_38052845794454b97cd9016a_f040aca3025d850fc12cc"
+      },
+      "types": {
+        "lean:OwnedCheckedRecords.Booking": "lean_bridge_owned_38052845794454b97cd9016a_t23107461f72b24c37654",
+        "lean:OwnedCheckedRecords.Claim": "lean_bridge_owned_38052845794454b97cd9016a_tb2825946e038e653bd2b",
+        "lean:OwnedCheckedRecords.Grant": "lean_bridge_owned_38052845794454b97cd9016a_t4ce841c87ea3b1559bfb",
+        "lean:OwnedCheckedRecords.Ticket": "lean_bridge_owned_38052845794454b97cd9016a_td79b9bbde250ee1779da",
+        "lean:OwnedCheckedRecords.Window": "lean_bridge_owned_38052845794454b97cd9016a_t2a091437b2d587ce3891",
+        "primitive:nat": "lean_bridge_owned_38052845794454b97cd9016a_t167081552b6f9c1d1afd",
+        "primitive:string": "lean_bridge_owned_38052845794454b97cd9016a_tdc0347e1f7f5c4d928f1"
+      }
+    },
+    "transport": "owned-zend-v1"
+  },
+  "pointerBits": 32,
+  "profile": "php-wasm-copied-v1",
+  "schemaVersion": 8,
+  "sourceIdentity": {
+    "exportConfigurationSha256": "4117197a35e7fb845688f2cc6c3631b73df96ba23db4917a8c4ca7d592397d0a",
+    "exportConfigurationSource": "{\n  \"arities\": {},\n  \"contracts\": {\n    \"OwnedCheckedRecords.echoBooking\": {\n      \"parameters\": [\n        {\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"ownership\": \"borrow\",\n          \"refinement\": {\n            \"fields\": [\n              {\n                \"name\": \"holder\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"window\",\n                \"refinement\": {\n                  \"constructor\": \"OwnedCheckedRecords.mkWindow\",\n                  \"fields\": [\n                    {\n                      \"name\": \"lo\",\n                      \"refinement\": null\n                    },\n                    {\n                      \"name\": \"hi\",\n                      \"refinement\": null\n                    }\n                  ],\n                  \"kind\": \"checked-record\",\n                  \"name\": \"OwnedCheckedRecords.Window\"\n                }\n              }\n            ],\n            \"kind\": \"record\",\n            \"name\": \"OwnedCheckedRecords.Booking\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\"\n      }\n    },\n    \"OwnedCheckedRecords.echoClaim\": {\n      \"parameters\": [\n        {\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"ownership\": \"borrow\",\n          \"refinement\": {\n            \"constructor\": \"OwnedCheckedRecords.mkClaim\",\n            \"fields\": [\n              {\n                \"name\": \"holder\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"quota\",\n                \"refinement\": null\n              }\n            ],\n            \"kind\": \"checked-record\",\n            \"name\": \"OwnedCheckedRecords.Claim\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\"\n      }\n    },\n    \"OwnedCheckedRecords.echoGrant\": {\n      \"parameters\": [\n        {\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"ownership\": \"borrow\",\n          \"refinement\": {\n            \"constructor\": \"OwnedCheckedRecords.mkGrant\",\n            \"fields\": [\n              {\n                \"name\": \"holder\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"weight\",\n                \"refinement\": {\n                  \"constructor\": \"OwnedCheckedRecords.checkedPositive\"\n                }\n              },\n              {\n                \"name\": \"limit\",\n                \"refinement\": null\n              }\n            ],\n            \"kind\": \"checked-record\",\n            \"name\": \"OwnedCheckedRecords.Grant\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\"\n      }\n    },\n    \"OwnedCheckedRecords.pairClaim\": {\n      \"parameters\": [\n        {\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"ownership\": \"borrow\",\n          \"refinement\": {\n            \"fields\": [\n              {\n                \"name\": \"holder\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"window\",\n                \"refinement\": {\n                  \"constructor\": \"OwnedCheckedRecords.mkWindow\",\n                  \"fields\": [\n                    {\n                      \"name\": \"lo\",\n                      \"refinement\": null\n                    },\n                    {\n                      \"name\": \"hi\",\n                      \"refinement\": null\n                    }\n                  ],\n                  \"kind\": \"checked-record\",\n                  \"name\": \"OwnedCheckedRecords.Window\"\n                }\n              }\n            ],\n            \"kind\": \"record\",\n            \"name\": \"OwnedCheckedRecords.Booking\"\n          }\n        },\n        {\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"ownership\": \"borrow\",\n          \"refinement\": {\n            \"constructor\": \"OwnedCheckedRecords.mkClaim\",\n            \"fields\": [\n              {\n                \"name\": \"holder\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"quota\",\n                \"refinement\": null\n              }\n            ],\n            \"kind\": \"checked-record\",\n            \"name\": \"OwnedCheckedRecords.Claim\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\"\n      }\n    },\n    \"OwnedCheckedRecords.transferClaim\": {\n      \"parameters\": [\n        {\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"ownership\": \"transfer\",\n          \"refinement\": {\n            \"constructor\": \"OwnedCheckedRecords.mkClaim\",\n            \"fields\": [\n              {\n                \"name\": \"holder\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"quota\",\n                \"refinement\": null\n              }\n            ],\n            \"kind\": \"checked-record\",\n            \"name\": \"OwnedCheckedRecords.Claim\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\"\n      }\n    }\n  },\n  \"exports\": [\n    \"OwnedCheckedRecords.newTicket\",\n    \"OwnedCheckedRecords.serial\",\n    \"OwnedCheckedRecords.echoBooking\",\n    \"OwnedCheckedRecords.echoClaim\",\n    \"OwnedCheckedRecords.echoGrant\",\n    \"OwnedCheckedRecords.pairClaim\",\n    \"OwnedCheckedRecords.transferClaim\"\n  ],\n  \"modules\": [\n    \"OwnedCheckedRecords\"\n  ],\n  \"ownedAggregates\": {\n    \"cycles\": \"reject\",\n    \"disposal\": \"required\",\n    \"fallback\": \"queued-finalizer\",\n    \"ownership\": \"lease\"\n  },\n  \"package\": {\n    \"description\": \"Owned proof-erased checked records.\"\n  },\n  \"resources\": [\n    \"OwnedCheckedRecords.Ticket\"\n  ],\n  \"schemaVersion\": 1,\n  \"targets\": {\n    \"php-wasm\": {\n      \"composer\": {\n        \"name\": \"lean-bridge-test/owned-refinement-entry-checked\",\n        \"version\": \"1.0.0\"\n      },\n      \"hostCallbacks\": false,\n      \"npm\": {\n        \"name\": \"@lean-bridge-test/owned-refinement-entry-checked\",\n        \"version\": \"1.0.0\"\n      }\n    }\n  }\n}\n",
+    "extractorSha256": "00f8ce7a3888339cdb1c36b0dce3d8bc9d4c650ea18c7a4926c2d29d4690443a",
+    "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+    "leanCompilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+    "leanVersion": "4.32.2",
+    "modules": [
+      {
+        "interface": {
+          "bytes": 180336,
+          "interfaceSha256": "c3553db9cf00be174b65e73c29fbcfb1097104a20237e7b79e9e469372b4ea4e",
+          "sha256": "054121f627236300859b67d0fd694824caf36e72969cd12f4993dbbe4cbbacdd"
+        },
+        "module": "OwnedCheckedRecords",
+        "source": {
+          "bytes": 3682,
+          "path": "OwnedCheckedRecords.lean",
+          "sha256": "7a52ed60e8d66664713b5efd73524fb286407dc4759228da8801ea901c16da66"
+        }
+      }
+    ],
+    "request": {
+      "arities": [],
+      "contracts": {
+        "OwnedCheckedRecords.echoBooking": {
+          "parameters": [
+            {
+              "lifetime": {
+                "anchor": null,
+                "scope": "call"
+              },
+              "ownership": "borrow",
+              "refinement": {
+                "fields": [
+                  {
+                    "name": "holder",
+                    "refinement": null
+                  },
+                  {
+                    "name": "window",
+                    "refinement": {
+                      "constructor": "OwnedCheckedRecords.mkWindow",
+                      "fields": [
+                        {
+                          "name": "lo",
+                          "refinement": null
+                        },
+                        {
+                          "name": "hi",
+                          "refinement": null
+                        }
+                      ],
+                      "kind": "checked-record",
+                      "name": "OwnedCheckedRecords.Window"
+                    }
+                  }
+                ],
+                "kind": "record",
+                "name": "OwnedCheckedRecords.Booking"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": {
+              "anchor": null,
+              "scope": "explicit"
+            },
+            "ownership": "lease"
+          }
+        },
+        "OwnedCheckedRecords.echoClaim": {
+          "parameters": [
+            {
+              "lifetime": {
+                "anchor": null,
+                "scope": "call"
+              },
+              "ownership": "borrow",
+              "refinement": {
+                "constructor": "OwnedCheckedRecords.mkClaim",
+                "fields": [
+                  {
+                    "name": "holder",
+                    "refinement": null
+                  },
+                  {
+                    "name": "quota",
+                    "refinement": null
+                  }
+                ],
+                "kind": "checked-record",
+                "name": "OwnedCheckedRecords.Claim"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": {
+              "anchor": null,
+              "scope": "explicit"
+            },
+            "ownership": "lease"
+          }
+        },
+        "OwnedCheckedRecords.echoGrant": {
+          "parameters": [
+            {
+              "lifetime": {
+                "anchor": null,
+                "scope": "call"
+              },
+              "ownership": "borrow",
+              "refinement": {
+                "constructor": "OwnedCheckedRecords.mkGrant",
+                "fields": [
+                  {
+                    "name": "holder",
+                    "refinement": null
+                  },
+                  {
+                    "name": "weight",
+                    "refinement": {
+                      "constructor": "OwnedCheckedRecords.checkedPositive"
+                    }
+                  },
+                  {
+                    "name": "limit",
+                    "refinement": null
+                  }
+                ],
+                "kind": "checked-record",
+                "name": "OwnedCheckedRecords.Grant"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": {
+              "anchor": null,
+              "scope": "explicit"
+            },
+            "ownership": "lease"
+          }
+        },
+        "OwnedCheckedRecords.pairClaim": {
+          "parameters": [
+            {
+              "lifetime": {
+                "anchor": null,
+                "scope": "call"
+              },
+              "ownership": "borrow",
+              "refinement": {
+                "fields": [
+                  {
+                    "name": "holder",
+                    "refinement": null
+                  },
+                  {
+                    "name": "window",
+                    "refinement": {
+                      "constructor": "OwnedCheckedRecords.mkWindow",
+                      "fields": [
+                        {
+                          "name": "lo",
+                          "refinement": null
+                        },
+                        {
+                          "name": "hi",
+                          "refinement": null
+                        }
+                      ],
+                      "kind": "checked-record",
+                      "name": "OwnedCheckedRecords.Window"
+                    }
+                  }
+                ],
+                "kind": "record",
+                "name": "OwnedCheckedRecords.Booking"
+              }
+            },
+            {
+              "lifetime": {
+                "anchor": null,
+                "scope": "call"
+              },
+              "ownership": "borrow",
+              "refinement": {
+                "constructor": "OwnedCheckedRecords.mkClaim",
+                "fields": [
+                  {
+                    "name": "holder",
+                    "refinement": null
+                  },
+                  {
+                    "name": "quota",
+                    "refinement": null
+                  }
+                ],
+                "kind": "checked-record",
+                "name": "OwnedCheckedRecords.Claim"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": {
+              "anchor": null,
+              "scope": "explicit"
+            },
+            "ownership": "lease"
+          }
+        },
+        "OwnedCheckedRecords.transferClaim": {
+          "parameters": [
+            {
+              "lifetime": {
+                "anchor": null,
+                "scope": "call"
+              },
+              "ownership": "transfer",
+              "refinement": {
+                "constructor": "OwnedCheckedRecords.mkClaim",
+                "fields": [
+                  {
+                    "name": "holder",
+                    "refinement": null
+                  },
+                  {
+                    "name": "quota",
+                    "refinement": null
+                  }
+                ],
+                "kind": "checked-record",
+                "name": "OwnedCheckedRecords.Claim"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": {
+              "anchor": null,
+              "scope": "explicit"
+            },
+            "ownership": "lease"
+          }
+        }
+      },
+      "exportModules": [
+        "OwnedCheckedRecords"
+      ],
+      "exports": [
+        "OwnedCheckedRecords.newTicket",
+        "OwnedCheckedRecords.serial",
+        "OwnedCheckedRecords.echoBooking",
+        "OwnedCheckedRecords.echoClaim",
+        "OwnedCheckedRecords.echoGrant",
+        "OwnedCheckedRecords.pairClaim",
+        "OwnedCheckedRecords.transferClaim"
+      ],
+      "metadata": {
+        "invocationIdentitySha256": "b3a3ab299fce360e08bb721acb7061c7872edceeab3ee98ab9a5d8764eddd248",
+        "modules": [
+          {
+            "interfaceSha256": "c3553db9cf00be174b65e73c29fbcfb1097104a20237e7b79e9e469372b4ea4e",
+            "name": "OwnedCheckedRecords",
+            "sourcePath": "OwnedCheckedRecords.lean",
+            "sourceSha256": "7a52ed60e8d66664713b5efd73524fb286407dc4759228da8801ea901c16da66"
+          }
+        ],
+        "toolchain": "leanprover/lean4:v4.32.2"
+      },
+      "modules": [
+        "OwnedCheckedRecords"
+      ],
+      "ownedAggregates": {
+        "cycles": "reject",
+        "disposal": "required",
+        "fallback": "queued-finalizer",
+        "ownership": "lease"
+      },
+      "profile": "native-library-v1",
+      "resources": [
+        "OwnedCheckedRecords.Ticket"
+      ]
+    },
+    "sourceNoticesSha256": "7adc81b92a508f898b1d811178572cd3318970c168a9162caf230ece671a0635",
+    "sourceTreeSha256": "0de277b2f52ddfa1fa5a56011af0f5514eb7cbf7da567d54676329191bb387db"
+  },
+  "types": []
+}

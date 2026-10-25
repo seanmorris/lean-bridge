@@ -1,0 +1,430 @@
+{
+  "bindingIr": {
+    "assurance": [],
+    "capabilities": [],
+    "component": {
+      "id": "dependentrecords@1.0.0",
+      "name": "dependentrecords",
+      "version": "1.0.0"
+    },
+    "declarations": [
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "Lean produces the dependent proofs for a result-only API. "
+        },
+        "effects": [],
+        "failure": {
+          "errors": [],
+          "mode": "none",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:DependentRecords.dependentResult",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "dependentResult",
+        "overloadKey": "DependentRecords.dependentResult",
+        "owner": null,
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "arg0",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          }
+        ],
+        "receiver": null,
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "id": "lean:DependentRecords.Dependent",
+            "kind": "named"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "DependentRecords.dependentResult",
+          "extensions": {
+            "lean-lang.org/export-contract": {
+              "parameters": [
+                {
+                  "lifetime": null,
+                  "ownership": "copy"
+                }
+              ],
+              "result": {
+                "lifetime": null,
+                "ownership": "copy"
+              }
+            },
+            "lean-lang.org/refinements": {
+              "parameters": [
+                null
+              ],
+              "result": {
+                "constructor": null,
+                "fields": [
+                  {
+                    "name": "bound",
+                    "refinement": null
+                  },
+                  {
+                    "name": "below",
+                    "refinement": {
+                      "field": "bound",
+                      "kind": "fin-field"
+                    }
+                  }
+                ],
+                "kind": "checked-record",
+                "name": "DependentRecords.Dependent"
+              }
+            },
+            "lean-lang.org/source-position": {
+              "endColumn": 40,
+              "endLine": 24,
+              "path": "DependentRecords.lean",
+              "startColumn": 0,
+              "startLine": 21
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      }
+    ],
+    "documentation": {
+      "details": "",
+      "summary": "Compiler-checked exports for dependentrecords."
+    },
+    "errors": [],
+    "producers": [
+      {
+        "adapter": "lean-bridge-elaborator",
+        "adapterVersion": 2,
+        "extensions": {
+          "lean-lang.org/elaboration-sha256": "50c1cf5466425c6c296d149c928d6229137602aeff3ae52a981e40db27e386d4",
+          "lean-lang.org/toolchain": "leanprover/lean4:v4.32.2"
+        },
+        "id": "lean",
+        "tool": "Lean",
+        "toolVersion": "4.32.2"
+      }
+    ],
+    "schemaVersion": 3,
+    "types": [
+      {
+        "assurance": [],
+        "callable": null,
+        "cases": [],
+        "documentation": {
+          "details": "",
+          "summary": "Checked Lean DependentRecords.Dependent."
+        },
+        "fields": [
+          {
+            "documentation": {
+              "details": "",
+              "summary": "bound"
+            },
+            "mutability": "immutable",
+            "name": "bound",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          },
+          {
+            "documentation": {
+              "details": "",
+              "summary": "below"
+            },
+            "mutability": "immutable",
+            "name": "below",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          }
+        ],
+        "host": null,
+        "id": "lean:DependentRecords.Dependent",
+        "kind": "record",
+        "mutability": "immutable",
+        "name": "Dependent",
+        "representation": "copied",
+        "resource": null,
+        "source": {
+          "declaration": "DependentRecords.Dependent",
+          "extensions": {
+            "lean-lang.org/erased-proofs": {
+              "fields": [
+                "valid"
+              ]
+            },
+            "lean-lang.org/nominal-refinements": {
+              "fields": [
+                null,
+                {
+                  "field": "bound",
+                  "kind": "fin-field"
+                }
+              ],
+              "kind": "record"
+            }
+          },
+          "producer": "lean"
+        },
+        "target": null,
+        "typeParameters": []
+      }
+    ]
+  },
+  "bindingIrSha256": "5ae832d075c741be0582588e1d85e675836c18824fafaf93f0212314e0f5f4f1",
+  "byteOrder": "little",
+  "component": {
+    "id": "dependentrecords@1.0.0",
+    "name": "dependentrecords",
+    "version": "1.0.0"
+  },
+  "exports": [
+    {
+      "documentation": "Lean produces the dependent proofs for a result-only API. ",
+      "module": "DependentRecords",
+      "name": "DependentRecords.dependentResult",
+      "parameters": [
+        {
+          "name": "seed",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": false,
+              "unbox": "lean_unbox"
+            },
+            "kind": "primitive",
+            "lean": "Nat",
+            "name": "nat"
+          }
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          null
+        ],
+        "result": {
+          "arguments": [
+            null,
+            {
+              "field": "bound",
+              "kind": "fin-field"
+            }
+          ],
+          "constructor": null,
+          "definition": "DependentRecords.Dependent",
+          "fields": [
+            "bound",
+            "below"
+          ],
+          "kind": "checked-record"
+        }
+      },
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": true,
+          "unbox": "lean_unbox"
+        },
+        "constructor": "DependentRecords.Dependent.mk",
+        "erased": [
+          "valid"
+        ],
+        "fields": [
+          {
+            "name": "bound",
+            "projection": "DependentRecords.Dependent.bound",
+            "type": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "kind": "primitive",
+              "lean": "Nat",
+              "name": "nat"
+            }
+          },
+          {
+            "name": "below",
+            "projection": "DependentRecords.Dependent.below",
+            "type": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "kind": "primitive",
+              "lean": "Nat",
+              "name": "nat"
+            }
+          }
+        ],
+        "kind": "record",
+        "lean": "DependentRecords.Dependent",
+        "name": "DependentRecords.Dependent"
+      },
+      "sourcePosition": {
+        "endColumn": 40,
+        "endLine": 24,
+        "path": "DependentRecords.lean",
+        "startColumn": 0,
+        "startLine": 21
+      },
+      "symbol": "lb_e59e187300c993f56dccdfb9",
+      "theoremReferences": []
+    }
+  ],
+  "pointerBits": 32,
+  "profile": "php-wasm-copied-v1",
+  "schemaVersion": 2,
+  "sourceIdentity": {
+    "exportConfigurationSha256": "8a8149a426c6602b940705903863259cd1467f57eba9cac28c2bf22699df1ea9",
+    "exportConfigurationSource": "{\n  \"contracts\": {\n    \"DependentRecords.dependentResult\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\"\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    }\n  },\n  \"exports\": [\n    \"DependentRecords.dependentResult\"\n  ],\n  \"modules\": [\n    \"DependentRecords\"\n  ],\n  \"schemaVersion\": 1,\n  \"targets\": {\n    \"php-wasm\": {\n      \"composer\": {\n        \"name\": \"lean-bridge-dependentrecords/wasm\",\n        \"version\": \"1.0.0\"\n      },\n      \"npm\": {\n        \"name\": \"lean-bridge-dependentrecords-wasm\",\n        \"version\": \"1.0.0\"\n      }\n    }\n  }\n}\n",
+    "extractorSha256": "00f8ce7a3888339cdb1c36b0dce3d8bc9d4c650ea18c7a4926c2d29d4690443a",
+    "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+    "leanCompilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+    "leanVersion": "4.32.2",
+    "modules": [
+      {
+        "interface": {
+          "bytes": 73824,
+          "interfaceSha256": "e0dfc60ac0a1d1ddbd87eb3b089c520883a55a3d92a4cbf62571406da417b1c7",
+          "sha256": "e9d199bc8834b7e24ede1b411593406371cb6344a7ce21e0a9a272c6ee44d367"
+        },
+        "module": "DependentRecords",
+        "source": {
+          "bytes": 1055,
+          "path": "DependentRecords.lean",
+          "sha256": "cdef8c3a642dc19366179c287bbd1bc975b3e5b4edf78f75bca44c6cffac0de6"
+        }
+      }
+    ],
+    "request": {
+      "arities": [],
+      "contracts": {
+        "DependentRecords.dependentResult": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        }
+      },
+      "exportModules": [
+        "DependentRecords"
+      ],
+      "exports": [
+        "DependentRecords.dependentResult"
+      ],
+      "metadata": {
+        "invocationIdentitySha256": "fd76ca4dfb62e3342cafbfe805e13cc19c4a6941217e2887ab544f9752091cdb",
+        "modules": [
+          {
+            "interfaceSha256": "e0dfc60ac0a1d1ddbd87eb3b089c520883a55a3d92a4cbf62571406da417b1c7",
+            "name": "DependentRecords",
+            "sourcePath": "DependentRecords.lean",
+            "sourceSha256": "cdef8c3a642dc19366179c287bbd1bc975b3e5b4edf78f75bca44c6cffac0de6"
+          }
+        ],
+        "toolchain": "leanprover/lean4:v4.32.2"
+      },
+      "modules": [
+        "DependentRecords"
+      ],
+      "profile": "native-library-v1",
+      "resources": []
+    },
+    "sourceNoticesSha256": "8c0a71a8bf28132665d7940052d53f86ebe8ad1f6eba9c0251ce398d54bff32a",
+    "sourceTreeSha256": "ed3c69a871a2a34064669c889a02d6bd02d5d89b27b7e15e84c6f551716be349"
+  },
+  "types": [
+    {
+      "abi": {
+        "box": "lean_box",
+        "cType": "lean_object*",
+        "heap": false,
+        "unbox": "lean_unbox"
+      },
+      "key": "bcb803bc837008bec599",
+      "kind": "primitive",
+      "lean": "Nat",
+      "name": "nat"
+    },
+    {
+      "abi": {
+        "box": "lean_box",
+        "cType": "lean_object*",
+        "heap": true,
+        "unbox": "lean_unbox"
+      },
+      "constructor": "DependentRecords.Dependent.mk",
+      "erased": [
+        "valid"
+      ],
+      "fields": [
+        {
+          "name": "bound",
+          "projection": "DependentRecords.Dependent.bound",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": false,
+              "unbox": "lean_unbox"
+            },
+            "kind": "primitive",
+            "lean": "Nat",
+            "name": "nat"
+          }
+        },
+        {
+          "name": "below",
+          "projection": "DependentRecords.Dependent.below",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": false,
+              "unbox": "lean_unbox"
+            },
+            "kind": "primitive",
+            "lean": "Nat",
+            "name": "nat"
+          }
+        }
+      ],
+      "key": "9c7fb003d50bbc5bd05d",
+      "kind": "record",
+      "lean": "DependentRecords.Dependent",
+      "name": "DependentRecords.Dependent"
+    }
+  ]
+}

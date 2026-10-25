@@ -1,0 +1,18 @@
+{
+  "modules": [
+    "ReviewedCallbacks"
+  ],
+  "schemaVersion": 1,
+  "targets": {
+    "php-wasm": {
+      "composer": {
+        "name": "lean-bridge-reviewedcallbacks/wasm",
+        "version": "1.0.0"
+      },
+      "npm": {
+        "name": "lean-bridge-reviewedcallbacks-wasm",
+        "version": "1.0.0"
+      }
+    }
+  }
+}

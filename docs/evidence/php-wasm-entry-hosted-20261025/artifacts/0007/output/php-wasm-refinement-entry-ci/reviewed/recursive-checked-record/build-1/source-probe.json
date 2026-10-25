@@ -1,0 +1,121 @@
+{
+  "edits": [
+    {
+      "current": "@[noinline, export lb_recursive_checked_record_probe_source_produce]\ndef produce",
+      "offset": 1708,
+      "previous": "def produce"
+    },
+    {
+      "current": "@[noinline, export lb_recursive_checked_record_probe_source_echoGroups]\ndef echoGroups",
+      "offset": 1563,
+      "previous": "@[noinline] def echoGroups"
+    },
+    {
+      "current": "@[noinline, export lb_recursive_checked_record_probe_source_groups]\ndef groups",
+      "offset": 1501,
+      "previous": "@[noinline] def groups"
+    },
+    {
+      "current": "@[noinline, export lb_recursive_checked_record_probe_source_echo]\ndef echo",
+      "offset": 1445,
+      "previous": "@[noinline] def echo"
+    },
+    {
+      "current": "@[noinline, export lb_recursive_checked_record_probe_source_second]\ndef second",
+      "offset": 1380,
+      "previous": "@[noinline] def second"
+    },
+    {
+      "current": "@[noinline, export lb_recursive_checked_record_probe_source_first]\ndef first",
+      "offset": 1316,
+      "previous": "@[noinline] def first"
+    },
+    {
+      "current": "@[noinline, export lb_recursive_checked_record_probe_constructor_normalizePacket]\ndef normalizePacket",
+      "offset": 996,
+      "previous": "def normalizePacket"
+    },
+    {
+      "current": "@[noinline, export lb_recursive_checked_record_probe_constructor_mkPacket]\ndef mkPacket",
+      "offset": 742,
+      "previous": "def mkPacket"
+    },
+    {
+      "current": "@[noinline, export lb_recursive_checked_record_probe_constructor_plusTwo]\ndef plusTwo",
+      "offset": 365,
+      "previous": "def plusTwo"
+    },
+    {
+      "current": "@[noinline, export lb_recursive_checked_record_probe_constructor_plusOne]\ndef plusOne",
+      "offset": 199,
+      "previous": "def plusOne"
+    }
+  ],
+  "entries": [
+    {
+      "kind": "constructor",
+      "label": "RecursiveCheckedRecords.plusOne",
+      "symbol": "lb_recursive_checked_record_probe_constructor_plusOne"
+    },
+    {
+      "kind": "constructor",
+      "label": "RecursiveCheckedRecords.plusTwo",
+      "symbol": "lb_recursive_checked_record_probe_constructor_plusTwo"
+    },
+    {
+      "kind": "constructor",
+      "label": "RecursiveCheckedRecords.mkPacket",
+      "symbol": "lb_recursive_checked_record_probe_constructor_mkPacket"
+    },
+    {
+      "kind": "constructor",
+      "label": "RecursiveCheckedRecords.normalizePacket",
+      "symbol": "lb_recursive_checked_record_probe_constructor_normalizePacket"
+    },
+    {
+      "kind": "source",
+      "label": "RecursiveCheckedRecords.first",
+      "symbol": "lb_recursive_checked_record_probe_source_first"
+    },
+    {
+      "kind": "source",
+      "label": "RecursiveCheckedRecords.second",
+      "symbol": "lb_recursive_checked_record_probe_source_second"
+    },
+    {
+      "kind": "source",
+      "label": "RecursiveCheckedRecords.echo",
+      "symbol": "lb_recursive_checked_record_probe_source_echo"
+    },
+    {
+      "kind": "source",
+      "label": "RecursiveCheckedRecords.groups",
+      "symbol": "lb_recursive_checked_record_probe_source_groups"
+    },
+    {
+      "kind": "source",
+      "label": "RecursiveCheckedRecords.echoGroups",
+      "symbol": "lb_recursive_checked_record_probe_source_echoGroups"
+    },
+    {
+      "kind": "source",
+      "label": "RecursiveCheckedRecords.produce",
+      "symbol": "lb_recursive_checked_record_probe_source_produce"
+    }
+  ],
+  "entryForms": {
+    "lb_recursive_checked_record_probe_constructor_mkPacket": "function",
+    "lb_recursive_checked_record_probe_constructor_normalizePacket": "function",
+    "lb_recursive_checked_record_probe_constructor_plusOne": "function",
+    "lb_recursive_checked_record_probe_constructor_plusTwo": "function",
+    "lb_recursive_checked_record_probe_source_echo": "function",
+    "lb_recursive_checked_record_probe_source_echoGroups": "function",
+    "lb_recursive_checked_record_probe_source_first": "function",
+    "lb_recursive_checked_record_probe_source_groups": "function",
+    "lb_recursive_checked_record_probe_source_produce": "function",
+    "lb_recursive_checked_record_probe_source_second": "function"
+  },
+  "originalSha256": "6c905b0b62022ccb111c4f2d26b294b4f5d09e9977811045a083bf9742a04089",
+  "probeSha256": "c7a86e15a4a169203f983cfe34270660b94feef595e884569541b785b603febc",
+  "source": "namespace RecursiveCheckedRecords\n\n/-- A positive word represented by its natural-number payload. -/\nabbrev Positive := { value : Nat // 0 < value }\n\n/-- Check and normalize a word by adding one. -/\n@[noinline, export lb_recursive_checked_record_probe_constructor_plusOne]\ndef plusOne (value : Nat) : Option Positive :=\n  if value < 100 then some ⟨value + 1, Nat.zero_lt_succ value⟩ else none\n\n/-- A distinct per-site word constructor. -/\n@[noinline, export lb_recursive_checked_record_probe_constructor_plusTwo]\ndef plusTwo (value : Nat) : Option Positive :=\n  if value < 90 then some ⟨value + 2, by omega⟩ else none\n\n/-- A recursive checked record. Proofs never cross the package boundary. -/\nstructure Packet where\n  value : Positive\n  digit : Fin 3\n  tail : Option Packet\n  linked : digit.val ≤ value.val\n\n/-- Preserve a packet when its current payload satisfies the outer relation. -/\n@[noinline, export lb_recursive_checked_record_probe_constructor_mkPacket]\ndef mkPacket (value : Positive) (digit : Fin 3) (tail : Option Packet) : Option Packet :=\n  if linked : digit.val ≤ value.val then some ⟨value, digit, tail, linked⟩ else none\n\n/-- Normalize the current value while preserving the already checked tail. -/\n@[noinline, export lb_recursive_checked_record_probe_constructor_normalizePacket]\ndef normalizePacket (value : Positive) (digit : Fin 3) (tail : Option Packet) : Option Packet :=\n  let normalized : Positive := ⟨digit.val + 1, Nat.zero_lt_succ digit.val⟩\n  let _ := value\n  some ⟨normalized, digit, tail, Nat.le_succ digit.val⟩\n\nabbrev PacketAlias := Packet\nabbrev Groups := Array (Option PacketAlias)\n\n@[noinline, export lb_recursive_checked_record_probe_source_first]\ndef first (value : Packet) : Nat := value.value.val\n@[noinline, export lb_recursive_checked_record_probe_source_second]\ndef second (value : Packet) : Nat := value.value.val\n@[noinline, export lb_recursive_checked_record_probe_source_echo]\ndef echo (value : Packet) : Packet := value\n@[noinline, export lb_recursive_checked_record_probe_source_groups]\ndef groups (values : Groups) : Nat := values.size\n@[noinline, export lb_recursive_checked_record_probe_source_echoGroups]\ndef echoGroups (values : Groups) : Groups := values\n\ndef positive (value : Nat) : Positive :=\n  ⟨value + 1, Nat.zero_lt_succ value⟩\n\n@[noinline, export lb_recursive_checked_record_probe_source_produce]\ndef produce (value : Nat) : Packet :=\n  ⟨positive value, ⟨1, by decide⟩,\n    some ⟨positive (value + 1), ⟨2, by decide⟩, none, by simp [positive]⟩,\n    by simp [positive]⟩\n\nend RecursiveCheckedRecords\n"
+}

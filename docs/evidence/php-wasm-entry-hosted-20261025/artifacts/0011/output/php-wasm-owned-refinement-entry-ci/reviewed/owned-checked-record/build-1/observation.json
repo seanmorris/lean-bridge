@@ -1,0 +1,1752 @@
+{
+  "commands": [
+    {
+      "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm/upstream/emscripten/emcc",
+      "originalArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-fbracket-depth=4096",
+        "-include",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/owned/allocation-guard.h",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-owned-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-owned-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/php/ext",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/owned",
+        "-c",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/OwnedCheckedRecords.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/0.o"
+      ],
+      "probeArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-fbracket-depth=4096",
+        "-include",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/owned/allocation-guard.h",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-owned-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-owned-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/php/ext",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/owned",
+        "-c",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-owned-refinement-entry-ci/reviewed/owned-checked-record/build-1/c-probes/1-OwnedCheckedRecords.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/0.o",
+        "-iquote",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-owned-refinement-entry-ci/reviewed/owned-checked-record/build-1/header-probes",
+        "-iquote",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-owned-refinement-entry-ci/reviewed/owned-checked-record/build-1=/build/php-wasm-refinement-entry-probe"
+      ]
+    },
+    {
+      "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm/upstream/emscripten/emcc",
+      "originalArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-fbracket-depth=4096",
+        "-include",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/owned/allocation-guard.h",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-owned-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-owned-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/php/ext",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/owned",
+        "-c",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/adapter.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/1.o"
+      ],
+      "probeArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-fbracket-depth=4096",
+        "-include",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/owned/allocation-guard.h",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-owned-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-owned-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/php/ext",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/owned",
+        "-c",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-owned-refinement-entry-ci/reviewed/owned-checked-record/build-1/c-probes/2-adapter.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/1.o",
+        "-iquote",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-owned-refinement-entry-ci/reviewed/owned-checked-record/build-1/header-probes",
+        "-iquote",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-owned-refinement-entry-ci/reviewed/owned-checked-record/build-1=/build/php-wasm-refinement-entry-probe"
+      ]
+    },
+    {
+      "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm/upstream/emscripten/emcc",
+      "originalArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-fbracket-depth=4096",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-owned-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-owned-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/php/ext",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/owned",
+        "-c",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/extension/lb_owned_927414336ec9185cc5a2.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/2.o"
+      ],
+      "probeArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-fbracket-depth=4096",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-owned-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-owned-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/php/ext",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/owned",
+        "-c",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-owned-refinement-entry-ci/reviewed/owned-checked-record/build-1/c-probes/3-lb_owned_927414336ec9185cc5a2.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/2.o",
+        "-iquote",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-owned-refinement-entry-ci/reviewed/owned-checked-record/build-1/header-probes",
+        "-iquote",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/extension",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-owned-refinement-entry-ci/reviewed/owned-checked-record/build-1=/build/php-wasm-refinement-entry-probe"
+      ]
+    },
+    {
+      "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm/upstream/emscripten/emcc",
+      "originalArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-fbracket-depth=4096",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-owned-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-owned-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/php/ext",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/owned",
+        "-c",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/width.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/3.o"
+      ],
+      "probeArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-fbracket-depth=4096",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-owned-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-owned-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/php/ext",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/owned",
+        "-c",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-owned-refinement-entry-ci/reviewed/owned-checked-record/build-1/c-probes/4-width.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/3.o",
+        "-iquote",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-owned-refinement-entry-ci/reviewed/owned-checked-record/build-1/header-probes",
+        "-iquote",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-owned-refinement-entry-ci/reviewed/owned-checked-record/build-1=/build/php-wasm-refinement-entry-probe"
+      ]
+    },
+    {
+      "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm/upstream/emscripten/emcc",
+      "originalArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-sSIDE_MODULE=2",
+        "-sEXPORTED_FUNCTIONS=['_get_module']",
+        "-Wl,--no-entry",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/0.o",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/1.o",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/2.o",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/3.o",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-owned-refinement-entry-input/php-wasm-runtime/lib/liblean_bridge_php_wasm_copied_488de83b725bba40a9b4.so",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/lib/php8.4-lb_owned_927414336ec9185cc5a2.so"
+      ],
+      "probeArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-sSIDE_MODULE=2",
+        "-sEXPORTED_FUNCTIONS=['_get_module']",
+        "-Wl,--no-entry",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/0.o",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/1.o",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/2.o",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/3.o",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-owned-refinement-entry-input/php-wasm-runtime/lib/liblean_bridge_php_wasm_copied_488de83b725bba40a9b4.so",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/lib/php8.4-lb_owned_927414336ec9185cc5a2.so"
+      ]
+    }
+  ],
+  "compiled": [
+    {
+      "definitions": [
+        {
+          "form": "function",
+          "kind": "constructor",
+          "label": "OwnedCheckedRecords.mkWindow",
+          "offset": 4149,
+          "symbol": "lb_owned_entry_checked_record_constructor_mkWindow"
+        },
+        {
+          "form": "function",
+          "kind": "constructor",
+          "label": "OwnedCheckedRecords.mkClaim",
+          "offset": 4734,
+          "symbol": "lb_owned_entry_checked_record_constructor_mkClaim"
+        },
+        {
+          "form": "function",
+          "kind": "constructor",
+          "label": "OwnedCheckedRecords.checkedPositive",
+          "offset": 5436,
+          "symbol": "lb_owned_entry_checked_record_constructor_checkedPositive"
+        },
+        {
+          "form": "function",
+          "kind": "constructor",
+          "label": "OwnedCheckedRecords.mkGrant",
+          "offset": 5942,
+          "symbol": "lb_owned_entry_checked_record_constructor_mkGrant"
+        },
+        {
+          "form": "function",
+          "kind": "source",
+          "label": "OwnedCheckedRecords.newTicket",
+          "offset": 6675,
+          "symbol": "lb_owned_entry_checked_record_source_newTicket"
+        },
+        {
+          "form": "function",
+          "kind": "source",
+          "label": "OwnedCheckedRecords.echoBooking",
+          "offset": 7428,
+          "symbol": "lb_owned_entry_checked_record_source_echoBooking"
+        },
+        {
+          "form": "function",
+          "kind": "source",
+          "label": "OwnedCheckedRecords.echoClaim",
+          "offset": 8195,
+          "symbol": "lb_owned_entry_checked_record_source_echoClaim"
+        },
+        {
+          "form": "function",
+          "kind": "source",
+          "label": "OwnedCheckedRecords.transferClaim",
+          "offset": 8778,
+          "symbol": "lb_owned_entry_checked_record_source_transferClaim"
+        },
+        {
+          "form": "function",
+          "kind": "source",
+          "label": "OwnedCheckedRecords.echoGrant",
+          "offset": 8915,
+          "symbol": "lb_owned_entry_checked_record_source_echoGrant"
+        },
+        {
+          "form": "function",
+          "kind": "source",
+          "label": "OwnedCheckedRecords.pairClaim",
+          "offset": 13178,
+          "symbol": "lb_owned_entry_checked_record_source_pairClaim"
+        }
+      ],
+      "insertions": [
+        {
+          "kind": "source",
+          "label": "OwnedCheckedRecords.pairClaim",
+          "offset": 13306,
+          "symbol": "lb_owned_entry_checked_record_source_pairClaim",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter source OwnedCheckedRecords.pairClaim\\n\", stderr);\n"
+        },
+        {
+          "kind": "source",
+          "label": "OwnedCheckedRecords.echoGrant",
+          "offset": 9013,
+          "symbol": "lb_owned_entry_checked_record_source_echoGrant",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter source OwnedCheckedRecords.echoGrant\\n\", stderr);\n"
+        },
+        {
+          "kind": "source",
+          "label": "OwnedCheckedRecords.transferClaim",
+          "offset": 8880,
+          "symbol": "lb_owned_entry_checked_record_source_transferClaim",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter source OwnedCheckedRecords.transferClaim\\n\", stderr);\n"
+        },
+        {
+          "kind": "source",
+          "label": "OwnedCheckedRecords.echoClaim",
+          "offset": 8293,
+          "symbol": "lb_owned_entry_checked_record_source_echoClaim",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter source OwnedCheckedRecords.echoClaim\\n\", stderr);\n"
+        },
+        {
+          "kind": "source",
+          "label": "OwnedCheckedRecords.echoBooking",
+          "offset": 7528,
+          "symbol": "lb_owned_entry_checked_record_source_echoBooking",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter source OwnedCheckedRecords.echoBooking\\n\", stderr);\n"
+        },
+        {
+          "kind": "source",
+          "label": "OwnedCheckedRecords.newTicket",
+          "offset": 6800,
+          "symbol": "lb_owned_entry_checked_record_source_newTicket",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter source OwnedCheckedRecords.newTicket\\n\", stderr);\n"
+        },
+        {
+          "kind": "constructor",
+          "label": "OwnedCheckedRecords.mkGrant",
+          "offset": 6097,
+          "symbol": "lb_owned_entry_checked_record_constructor_mkGrant",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter constructor OwnedCheckedRecords.mkGrant\\n\", stderr);\n"
+        },
+        {
+          "kind": "constructor",
+          "label": "OwnedCheckedRecords.checkedPositive",
+          "offset": 5545,
+          "symbol": "lb_owned_entry_checked_record_constructor_checkedPositive",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter constructor OwnedCheckedRecords.checkedPositive\\n\", stderr);\n"
+        },
+        {
+          "kind": "constructor",
+          "label": "OwnedCheckedRecords.mkClaim",
+          "offset": 4860,
+          "symbol": "lb_owned_entry_checked_record_constructor_mkClaim",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter constructor OwnedCheckedRecords.mkClaim\\n\", stderr);\n"
+        },
+        {
+          "kind": "constructor",
+          "label": "OwnedCheckedRecords.mkWindow",
+          "offset": 4269,
+          "symbol": "lb_owned_entry_checked_record_constructor_mkWindow",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter constructor OwnedCheckedRecords.mkWindow\\n\", stderr);\n"
+        },
+        {
+          "kind": "preamble",
+          "offset": 0,
+          "text": "#include <stdio.h>\n"
+        }
+      ],
+      "name": "1-OwnedCheckedRecords.c",
+      "object": {
+        "bytes": 11744,
+        "sha256": "2b83419a4b50c5e338e2759b6bc2ef65573f41bf86c9f67390b2ef552ebe86e1"
+      },
+      "objectPath": "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/0.o",
+      "originalPath": "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/OwnedCheckedRecords.c",
+      "originalSha256": "fb6568eb485d6c8a3ab3aef270ef6519153cfeadb4fbeba215bc81d9d2c8db36",
+      "probePath": "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-owned-refinement-entry-ci/reviewed/owned-checked-record/build-1/c-probes/1-OwnedCheckedRecords.c",
+      "probeSha256": "d71daa4f0925f1b7d362f6cf883b9a3bccce1afd4a5acfb21a4948b655062b13"
+    },
+    {
+      "definitions": [
+        {
+          "form": "function",
+          "kind": "adapter",
+          "label": "echoBooking:lean",
+          "offset": 54438,
+          "symbol": "lean_bridge_owned_24fe4c7e8d66d167b16d25ca_f0711e856cfa97d876c9a"
+        },
+        {
+          "form": "function",
+          "kind": "adapter",
+          "label": "echoClaim:lean",
+          "offset": 59286,
+          "symbol": "lean_bridge_owned_24fe4c7e8d66d167b16d25ca_f535babcfd8d0f67ea0e6"
+        },
+        {
+          "form": "function",
+          "kind": "adapter",
+          "label": "echoGrant:lean",
+          "offset": 62669,
+          "symbol": "lean_bridge_owned_24fe4c7e8d66d167b16d25ca_feb082cf837ef02082ea8"
+        },
+        {
+          "form": "function",
+          "kind": "adapter",
+          "label": "newTicket:lean",
+          "offset": 66784,
+          "symbol": "lean_bridge_owned_24fe4c7e8d66d167b16d25ca_fa1e5189bd92568e4b939"
+        },
+        {
+          "form": "function",
+          "kind": "adapter",
+          "label": "pairClaim:lean",
+          "offset": 69070,
+          "symbol": "lean_bridge_owned_24fe4c7e8d66d167b16d25ca_feaac3cc8d9197bd7bbca"
+        },
+        {
+          "form": "function",
+          "kind": "adapter",
+          "label": "serial:lean",
+          "offset": 73905,
+          "symbol": "lean_bridge_owned_24fe4c7e8d66d167b16d25ca_fec926afda994fba3abe2"
+        },
+        {
+          "form": "function",
+          "kind": "adapter",
+          "label": "transferClaim:lean",
+          "offset": 75578,
+          "symbol": "lean_bridge_owned_24fe4c7e8d66d167b16d25ca_f040aca3025d850fc12cc"
+        },
+        {
+          "form": "function",
+          "kind": "validator",
+          "label": "owned:lean_bridge_owned_refine_5593f0b9830f059702a4",
+          "offset": 25697,
+          "symbol": "lean_bridge_owned_refine_5593f0b9830f059702a4"
+        },
+        {
+          "form": "function",
+          "kind": "validator",
+          "label": "owned:lean_bridge_owned_refine_5ba8ebacbf26c0755e45",
+          "offset": 22896,
+          "symbol": "lean_bridge_owned_refine_5ba8ebacbf26c0755e45"
+        },
+        {
+          "form": "function",
+          "kind": "validator",
+          "label": "owned:lean_bridge_owned_refine_ca177b2570793a278657",
+          "offset": 24350,
+          "symbol": "lean_bridge_owned_refine_ca177b2570793a278657"
+        }
+      ],
+      "insertions": [
+        {
+          "kind": "adapter",
+          "label": "transferClaim:lean",
+          "offset": 75692,
+          "symbol": "lean_bridge_owned_24fe4c7e8d66d167b16d25ca_f040aca3025d850fc12cc",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter transferClaim:lean\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "serial:lean",
+          "offset": 74019,
+          "symbol": "lean_bridge_owned_24fe4c7e8d66d167b16d25ca_fec926afda994fba3abe2",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter serial:lean\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "pairClaim:lean",
+          "offset": 69208,
+          "symbol": "lean_bridge_owned_24fe4c7e8d66d167b16d25ca_feaac3cc8d9197bd7bbca",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter pairClaim:lean\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "newTicket:lean",
+          "offset": 66922,
+          "symbol": "lean_bridge_owned_24fe4c7e8d66d167b16d25ca_fa1e5189bd92568e4b939",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter newTicket:lean\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "echoGrant:lean",
+          "offset": 62783,
+          "symbol": "lean_bridge_owned_24fe4c7e8d66d167b16d25ca_feb082cf837ef02082ea8",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter echoGrant:lean\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "echoClaim:lean",
+          "offset": 59400,
+          "symbol": "lean_bridge_owned_24fe4c7e8d66d167b16d25ca_f535babcfd8d0f67ea0e6",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter echoClaim:lean\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "echoBooking:lean",
+          "offset": 54552,
+          "symbol": "lean_bridge_owned_24fe4c7e8d66d167b16d25ca_f0711e856cfa97d876c9a",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter echoBooking:lean\\n\", stderr);\n"
+        },
+        {
+          "kind": "validator",
+          "label": "owned:lean_bridge_owned_refine_5593f0b9830f059702a4",
+          "offset": 25792,
+          "symbol": "lean_bridge_owned_refine_5593f0b9830f059702a4",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter validator owned:lean_bridge_owned_refine_5593f0b9830f059702a4\\n\", stderr);\n"
+        },
+        {
+          "kind": "validator",
+          "label": "owned:lean_bridge_owned_refine_ca177b2570793a278657",
+          "offset": 24445,
+          "symbol": "lean_bridge_owned_refine_ca177b2570793a278657",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter validator owned:lean_bridge_owned_refine_ca177b2570793a278657\\n\", stderr);\n"
+        },
+        {
+          "kind": "validator",
+          "label": "owned:lean_bridge_owned_refine_5ba8ebacbf26c0755e45",
+          "offset": 22991,
+          "symbol": "lean_bridge_owned_refine_5ba8ebacbf26c0755e45",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter validator owned:lean_bridge_owned_refine_5ba8ebacbf26c0755e45\\n\", stderr);\n"
+        },
+        {
+          "kind": "preamble",
+          "offset": 0,
+          "text": "#include <stdio.h>\n"
+        }
+      ],
+      "name": "2-adapter.c",
+      "object": {
+        "bytes": 74581,
+        "sha256": "4fe01a8251c4c9c71e23d850663cc9a6f603255a8a3145b525fe3eaa7c4e729f"
+      },
+      "objectPath": "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/1.o",
+      "originalPath": "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/adapter.c",
+      "originalSha256": "fdc2fe6d6b24a091048cf8e0b38e5bb62b0e6b91f416e05dddaac9af32e3531b",
+      "probePath": "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-owned-refinement-entry-ci/reviewed/owned-checked-record/build-1/c-probes/2-adapter.c",
+      "probeSha256": "fc9c479effe495424e115ea0d86067272a6779d476c4a8feb5430bd0ef0ca299"
+    },
+    {
+      "definitions": [
+        {
+          "form": "function",
+          "kind": "public",
+          "label": "echoBooking",
+          "offset": 45845,
+          "symbol": "lgo_call0"
+        },
+        {
+          "form": "function",
+          "kind": "public",
+          "label": "echoClaim",
+          "offset": 47777,
+          "symbol": "lgo_call1"
+        },
+        {
+          "form": "function",
+          "kind": "public",
+          "label": "echoGrant",
+          "offset": 49709,
+          "symbol": "lgo_call2"
+        },
+        {
+          "form": "function",
+          "kind": "public",
+          "label": "newTicket",
+          "offset": 51798,
+          "symbol": "lgo_call3"
+        },
+        {
+          "form": "function",
+          "kind": "public",
+          "label": "pairClaim",
+          "offset": 53887,
+          "symbol": "lgo_call4"
+        },
+        {
+          "form": "function",
+          "kind": "public",
+          "label": "serial",
+          "offset": 55819,
+          "symbol": "lgo_call5"
+        },
+        {
+          "form": "function",
+          "kind": "public",
+          "label": "transferClaim",
+          "offset": 58234,
+          "symbol": "lgo_call6"
+        },
+        {
+          "form": "function",
+          "kind": "adapter",
+          "label": "identity.borrow",
+          "offset": 41145,
+          "symbol": "lgo_identity_input"
+        },
+        {
+          "form": "function",
+          "kind": "adapter",
+          "label": "transfer.reserve",
+          "offset": 37939,
+          "symbol": "lgo_input_reserve"
+        },
+        {
+          "form": "function",
+          "kind": "adapter",
+          "label": "transfer.begin",
+          "offset": 38858,
+          "symbol": "lgo_input_begin"
+        },
+        {
+          "form": "function",
+          "kind": "adapter",
+          "label": "transfer.commit",
+          "offset": 39369,
+          "symbol": "lgo_input_commit"
+        },
+        {
+          "form": "function",
+          "kind": "adapter",
+          "label": "owner.consume",
+          "offset": 39851,
+          "symbol": "lgo_input_consume"
+        },
+        {
+          "form": "function",
+          "kind": "adapter",
+          "label": "transfer.finish",
+          "offset": 40111,
+          "symbol": "lgo_inputs_finish"
+        }
+      ],
+      "insertions": [
+        {
+          "kind": "public",
+          "label": "transferClaim",
+          "offset": 58267,
+          "symbol": "lgo_call6",
+          "text": "\n  const char *lb_probe_public_scope __attribute__((cleanup(lb_probe_end))) = \"transferClaim\";\n  fputs(\"LB_SUBTYPE_ENTRY_V1 begin public transferClaim\\n\", stderr);\n"
+        },
+        {
+          "kind": "public",
+          "label": "serial",
+          "offset": 55852,
+          "symbol": "lgo_call5",
+          "text": "\n  const char *lb_probe_public_scope __attribute__((cleanup(lb_probe_end))) = \"serial\";\n  fputs(\"LB_SUBTYPE_ENTRY_V1 begin public serial\\n\", stderr);\n"
+        },
+        {
+          "kind": "public",
+          "label": "pairClaim",
+          "offset": 53920,
+          "symbol": "lgo_call4",
+          "text": "\n  const char *lb_probe_public_scope __attribute__((cleanup(lb_probe_end))) = \"pairClaim\";\n  fputs(\"LB_SUBTYPE_ENTRY_V1 begin public pairClaim\\n\", stderr);\n"
+        },
+        {
+          "kind": "public",
+          "label": "newTicket",
+          "offset": 51831,
+          "symbol": "lgo_call3",
+          "text": "\n  const char *lb_probe_public_scope __attribute__((cleanup(lb_probe_end))) = \"newTicket\";\n  fputs(\"LB_SUBTYPE_ENTRY_V1 begin public newTicket\\n\", stderr);\n"
+        },
+        {
+          "kind": "public",
+          "label": "echoGrant",
+          "offset": 49742,
+          "symbol": "lgo_call2",
+          "text": "\n  const char *lb_probe_public_scope __attribute__((cleanup(lb_probe_end))) = \"echoGrant\";\n  fputs(\"LB_SUBTYPE_ENTRY_V1 begin public echoGrant\\n\", stderr);\n"
+        },
+        {
+          "kind": "public",
+          "label": "echoClaim",
+          "offset": 47810,
+          "symbol": "lgo_call1",
+          "text": "\n  const char *lb_probe_public_scope __attribute__((cleanup(lb_probe_end))) = \"echoClaim\";\n  fputs(\"LB_SUBTYPE_ENTRY_V1 begin public echoClaim\\n\", stderr);\n"
+        },
+        {
+          "kind": "public",
+          "label": "echoBooking",
+          "offset": 45878,
+          "symbol": "lgo_call0",
+          "text": "\n  const char *lb_probe_public_scope __attribute__((cleanup(lb_probe_end))) = \"echoBooking\";\n  fputs(\"LB_SUBTYPE_ENTRY_V1 begin public echoBooking\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "identity.borrow",
+          "offset": 41238,
+          "symbol": "lgo_identity_input",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter identity.borrow\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "transfer.finish",
+          "offset": 40158,
+          "symbol": "lgo_inputs_finish",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter transfer.finish\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "owner.consume",
+          "offset": 39897,
+          "symbol": "lgo_input_consume",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter owner.consume\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "transfer.commit",
+          "offset": 39414,
+          "symbol": "lgo_input_commit",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter transfer.commit\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "transfer.begin",
+          "offset": 38916,
+          "symbol": "lgo_input_begin",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter transfer.begin\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "transfer.reserve",
+          "offset": 38025,
+          "symbol": "lgo_input_reserve",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter transfer.reserve\\n\", stderr);\n"
+        },
+        {
+          "kind": "preamble",
+          "offset": 0,
+          "text": "#include <stdio.h>\nstatic void lb_probe_end(const char **label) { fprintf(stderr, \"LB_SUBTYPE_ENTRY_V1 end public %s\\n\", *label); }\n"
+        }
+      ],
+      "name": "3-lb_owned_927414336ec9185cc5a2.c",
+      "object": {
+        "bytes": 84269,
+        "sha256": "f2db8fdad8cb345a016e3abc7aa5672276f653b81cf51b4542e06c02501d8156"
+      },
+      "objectPath": "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/2.o",
+      "originalPath": "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/extension/lb_owned_927414336ec9185cc5a2.c",
+      "originalSha256": "494d9b388286fbcd8a1cf2938754352d4c8c3912b44d4c09576c86d1e2b8ccbc",
+      "probePath": "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-owned-refinement-entry-ci/reviewed/owned-checked-record/build-1/c-probes/3-lb_owned_927414336ec9185cc5a2.c",
+      "probeSha256": "524cf2348674b472a6b4e9013ae24ccf66ebe1ce6e8ba4bffe5928559df5af14"
+    },
+    {
+      "definitions": [],
+      "insertions": [],
+      "name": "4-width.c",
+      "object": {
+        "bytes": 258,
+        "sha256": "a8e680be3accc5b8ad9d8becda8fdb51ee27aeef43f3a380f4d440aa1fc45be9"
+      },
+      "objectPath": "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/3.o",
+      "originalPath": "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/c/width.c",
+      "originalSha256": "94f94bd37af397f400f10b97b24efb34a1ecab8f8aae613e50376f1ab2218d1e",
+      "probePath": "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-owned-refinement-entry-ci/reviewed/owned-checked-record/build-1/c-probes/4-width.c",
+      "probeSha256": "94f94bd37af397f400f10b97b24efb34a1ecab8f8aae613e50376f1ab2218d1e"
+    }
+  ],
+  "component": {
+    "adaptersSha256": "92778a6784218ca89702a6cce5227ffd86b11f360d03be01244475680edb9100",
+    "bindingIrSha256": "927414336ec9185cc5a28f1d71c0e997384423872e4522378a7aa548509303be",
+    "compiler": {
+      "emsdkCommit": "54ef088329e5a329614b3659a579d2ccd31fd621",
+      "files": {
+        "upstream/bin/clang": {
+          "bytes": 141971168,
+          "sha256": "cbac1be8f3026afc67c45beb7baab688a06d548e52ef5d010146160d46618860"
+        },
+        "upstream/bin/wasm-ld": {
+          "bytes": 73912360,
+          "sha256": "af23d9d3f6c30a496f566c817c954de3e9139fa7d2562579cdbbbff8f21caa72"
+        },
+        "upstream/emscripten/em++.py": {
+          "bytes": 506,
+          "sha256": "017f735c953318fdaaa4af68c8d4bf13936a787ddbd5dad804d532b0223b6c2f"
+        },
+        "upstream/emscripten/emcc": {
+          "bytes": 1065,
+          "sha256": "b0c9551f9155fa9c028efa24591acdfd30f02f32fb247cf9266f5f0f2ede7589"
+        },
+        "upstream/emscripten/emcc.py": {
+          "bytes": 62149,
+          "sha256": "16d0198f2a7a843199a886c4bffe4900849c43826a50ed905089bf018f93b190"
+        },
+        "upstream/emscripten/tools/link.py": {
+          "bytes": 133185,
+          "sha256": "20f5ae3672c1647059b887c256f304fe6af3ad314d440e9932d1c7e9042cd4c9"
+        }
+      },
+      "version": "emcc (Emscripten gcc/clang-like replacement + linker emulating GNU ld) 3.1.68 (ceee49d2ecdab36a3feb85a684f8e5a453dde910)"
+    },
+    "exports": [
+      {
+        "bindingId": "lean:OwnedCheckedRecords.echoBooking",
+        "entry": "LeanOwnedCheckedRecords\\Internal\\OwnedZend927414336ec9185cc5a2\\call0",
+        "name": "echo_booking",
+        "parameters": [
+          "lean:OwnedCheckedRecords.Booking"
+        ],
+        "result": "lean:OwnedCheckedRecords.Booking"
+      },
+      {
+        "bindingId": "lean:OwnedCheckedRecords.echoClaim",
+        "entry": "LeanOwnedCheckedRecords\\Internal\\OwnedZend927414336ec9185cc5a2\\call1",
+        "name": "echo_claim",
+        "parameters": [
+          "lean:OwnedCheckedRecords.Claim"
+        ],
+        "result": "lean:OwnedCheckedRecords.Claim"
+      },
+      {
+        "bindingId": "lean:OwnedCheckedRecords.echoGrant",
+        "entry": "LeanOwnedCheckedRecords\\Internal\\OwnedZend927414336ec9185cc5a2\\call2",
+        "name": "echo_grant",
+        "parameters": [
+          "lean:OwnedCheckedRecords.Grant"
+        ],
+        "result": "lean:OwnedCheckedRecords.Grant"
+      },
+      {
+        "bindingId": "lean:OwnedCheckedRecords.newTicket",
+        "entry": "LeanOwnedCheckedRecords\\Internal\\OwnedZend927414336ec9185cc5a2\\call3",
+        "name": "new_ticket",
+        "parameters": [
+          "primitive:nat",
+          "primitive:string"
+        ],
+        "result": "lean:OwnedCheckedRecords.Ticket"
+      },
+      {
+        "bindingId": "lean:OwnedCheckedRecords.pairClaim",
+        "entry": "LeanOwnedCheckedRecords\\Internal\\OwnedZend927414336ec9185cc5a2\\call4",
+        "name": "pair_claim",
+        "parameters": [
+          "lean:OwnedCheckedRecords.Booking",
+          "lean:OwnedCheckedRecords.Claim"
+        ],
+        "result": "lean:OwnedCheckedRecords.Claim"
+      },
+      {
+        "bindingId": "lean:OwnedCheckedRecords.serial",
+        "entry": "LeanOwnedCheckedRecords\\Internal\\OwnedZend927414336ec9185cc5a2\\call5",
+        "name": "serial",
+        "parameters": [
+          "lean:OwnedCheckedRecords.Ticket"
+        ],
+        "result": "primitive:nat"
+      },
+      {
+        "bindingId": "lean:OwnedCheckedRecords.transferClaim",
+        "entry": "LeanOwnedCheckedRecords\\Internal\\OwnedZend927414336ec9185cc5a2\\call6",
+        "name": "transfer_claim",
+        "parameters": [
+          "lean:OwnedCheckedRecords.Claim"
+        ],
+        "result": "lean:OwnedCheckedRecords.Claim"
+      }
+    ],
+    "headerSha256": "88b8080e5a69300a07d5fc7a26d7d7746ca17290fb092e9826318c698bc51c0a",
+    "initializer": "initialize_LeanBridgeOwnedb0f19854153c0b48",
+    "library": "lib/php8.4-lb_owned_927414336ec9185cc5a2.so",
+    "metadataSha256": "16202b6a6167f70ec080845c7eb9487971bc782a0cbe3e4432b260ddff14ffbd",
+    "modelSha256": "db91e483653973ba458dc0d4b6eb4420946b7cb81bba939a9c482a816fe89491",
+    "ownedGraph": {
+      "files": {
+        "extension/lb_owned_927414336ec9185cc5a2.c": "494d9b388286fbcd8a1cf2938754352d4c8c3912b44d4c09576c86d1e2b8ccbc",
+        "owned-zend-manifest.json": "f51671ac573cd81803c42d886ec8b40370e17fbdab8f0df9c524f74f081b38d0",
+        "owned/allocation-guard.h": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83",
+        "owned/carriers.h": "88b8080e5a69300a07d5fc7a26d7d7746ca17290fb092e9826318c698bc51c0a",
+        "owned/owned-leases.h": "7972775960f3df0707a8d08872915337f2c5f285bf9ace1dc931b5dd1867dbe3",
+        "owned/owned-values-codec.h": "6ec2c16ea954f1c4c1e64b23c24ff5d4df4b4f69e585e9b3029a41bf308815ad",
+        "owned/owned-values.h": "bd7e64b31e07bb9ad904acf9d79a4c7c700f7e6f4b85374cd0da8c9f73747c0d",
+        "src/Api.php": "16dd35519d71bc67c6e7c09ffe8dfae75145ead217cce7dd166b306407bc9dd1",
+        "src/Internal/GraphTypes.php": "c0726dea9403f68152fe81b04caee8c1de1aeab438e03b8509f900d12f051b2f",
+        "src/Internal/Native.php": "9d96ddd931c3dc648900b552c1cdf2afbff7b7613aa501cab4ccc30e5298401f",
+        "src/Internal/Values.php": "bcd665cf88bba996f1b0dd561a0aa5599acca476c2f297374beff45bfcc85578",
+        "src/Internal/Wire.php": "45c010ae2cde376a0811eb914e1e0662a251eb351f0c5caf5ac901697b543fb6"
+      },
+      "inputTransfers": {
+        "consumption": "before-lean-call",
+        "exports": [
+          {
+            "bindingId": "lean:OwnedCheckedRecords.transferClaim",
+            "parameters": [
+              0
+            ]
+          }
+        ],
+        "failure": "consumed-after-handoff",
+        "ownership": "whole-result-owner",
+        "schemaVersion": 1,
+        "validation": "before-consumption",
+        "viewLifetime": "until-call-returns"
+      },
+      "layoutSha256": "e970559454d071b013cdff5545a83458fd7ea79ce4622553650c50f7f7a88f9b",
+      "schemaVersion": 2,
+      "transport": "owned-zend-v1"
+    },
+    "phpHeadersSha256": "fb4c613d43c6bbb4066364c2da7e4e2118016314a00b3bcfe4d4e1d2bdeb493b",
+    "pointerBits": 32,
+    "profile": "php-wasm-copied-v1",
+    "runtimeIdentity": "fbc32dc75641fc5d381ab6bddd05671cb59cad725d631e433cda14469ae1f25a",
+    "schemaVersion": 1,
+    "sourceIdentity": {
+      "exportConfigurationSha256": "263242b3b66ae3f9a1efde07082034f9c78cb569b77e6945f91cb1fe6744f2b8",
+      "exportConfigurationSource": "{\n  \"modules\": [\n    \"OwnedCheckedRecords\"\n  ],\n  \"schemaVersion\": 1,\n  \"targets\": {\n    \"php-wasm\": {\n      \"composer\": {\n        \"name\": \"lean-bridge-test/owned-refinement-entry-checked\",\n        \"version\": \"1.0.0\"\n      },\n      \"hostCallbacks\": false,\n      \"npm\": {\n        \"name\": \"@lean-bridge-test/owned-refinement-entry-checked\",\n        \"version\": \"1.0.0\"\n      }\n    }\n  }\n}\n",
+      "extractorSha256": "00f8ce7a3888339cdb1c36b0dce3d8bc9d4c650ea18c7a4926c2d29d4690443a",
+      "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+      "leanCompilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+      "leanVersion": "4.32.2",
+      "modules": [
+        {
+          "interface": {
+            "bytes": 180336,
+            "interfaceSha256": "c3553db9cf00be174b65e73c29fbcfb1097104a20237e7b79e9e469372b4ea4e",
+            "sha256": "054121f627236300859b67d0fd694824caf36e72969cd12f4993dbbe4cbbacdd"
+          },
+          "module": "OwnedCheckedRecords",
+          "source": {
+            "bytes": 3682,
+            "path": "OwnedCheckedRecords.lean",
+            "sha256": "7a52ed60e8d66664713b5efd73524fb286407dc4759228da8801ea901c16da66"
+          }
+        }
+      ],
+      "request": {
+        "arities": [],
+        "contracts": {
+          "OwnedCheckedRecords.echoBooking": {
+            "parameters": [
+              {
+                "lifetime": {
+                  "anchor": null,
+                  "scope": "call"
+                },
+                "ownership": "borrow",
+                "refinement": {
+                  "fields": [
+                    {
+                      "name": "holder",
+                      "refinement": null
+                    },
+                    {
+                      "name": "window",
+                      "refinement": {
+                        "constructor": "OwnedCheckedRecords.mkWindow",
+                        "fields": [
+                          {
+                            "name": "lo",
+                            "refinement": null
+                          },
+                          {
+                            "name": "hi",
+                            "refinement": null
+                          }
+                        ],
+                        "kind": "checked-record",
+                        "name": "OwnedCheckedRecords.Window"
+                      }
+                    }
+                  ],
+                  "kind": "record",
+                  "name": "OwnedCheckedRecords.Booking"
+                }
+              }
+            ]
+          },
+          "OwnedCheckedRecords.echoClaim": {
+            "parameters": [
+              {
+                "lifetime": {
+                  "anchor": null,
+                  "scope": "call"
+                },
+                "ownership": "borrow",
+                "refinement": {
+                  "constructor": "OwnedCheckedRecords.mkClaim",
+                  "fields": [
+                    {
+                      "name": "holder",
+                      "refinement": null
+                    },
+                    {
+                      "name": "quota",
+                      "refinement": null
+                    }
+                  ],
+                  "kind": "checked-record",
+                  "name": "OwnedCheckedRecords.Claim"
+                }
+              }
+            ]
+          },
+          "OwnedCheckedRecords.echoGrant": {
+            "parameters": [
+              {
+                "lifetime": {
+                  "anchor": null,
+                  "scope": "call"
+                },
+                "ownership": "borrow",
+                "refinement": {
+                  "constructor": "OwnedCheckedRecords.mkGrant",
+                  "fields": [
+                    {
+                      "name": "holder",
+                      "refinement": null
+                    },
+                    {
+                      "name": "weight",
+                      "refinement": {
+                        "constructor": "OwnedCheckedRecords.checkedPositive"
+                      }
+                    },
+                    {
+                      "name": "limit",
+                      "refinement": null
+                    }
+                  ],
+                  "kind": "checked-record",
+                  "name": "OwnedCheckedRecords.Grant"
+                }
+              }
+            ]
+          },
+          "OwnedCheckedRecords.pairClaim": {
+            "parameters": [
+              {
+                "lifetime": {
+                  "anchor": null,
+                  "scope": "call"
+                },
+                "ownership": "borrow",
+                "refinement": {
+                  "fields": [
+                    {
+                      "name": "holder",
+                      "refinement": null
+                    },
+                    {
+                      "name": "window",
+                      "refinement": {
+                        "constructor": "OwnedCheckedRecords.mkWindow",
+                        "fields": [
+                          {
+                            "name": "lo",
+                            "refinement": null
+                          },
+                          {
+                            "name": "hi",
+                            "refinement": null
+                          }
+                        ],
+                        "kind": "checked-record",
+                        "name": "OwnedCheckedRecords.Window"
+                      }
+                    }
+                  ],
+                  "kind": "record",
+                  "name": "OwnedCheckedRecords.Booking"
+                }
+              },
+              {
+                "lifetime": {
+                  "anchor": null,
+                  "scope": "call"
+                },
+                "ownership": "borrow",
+                "refinement": {
+                  "constructor": "OwnedCheckedRecords.mkClaim",
+                  "fields": [
+                    {
+                      "name": "holder",
+                      "refinement": null
+                    },
+                    {
+                      "name": "quota",
+                      "refinement": null
+                    }
+                  ],
+                  "kind": "checked-record",
+                  "name": "OwnedCheckedRecords.Claim"
+                }
+              }
+            ]
+          },
+          "OwnedCheckedRecords.transferClaim": {
+            "parameters": [
+              {
+                "lifetime": {
+                  "anchor": null,
+                  "scope": "call"
+                },
+                "ownership": "transfer",
+                "refinement": {
+                  "constructor": "OwnedCheckedRecords.mkClaim",
+                  "fields": [
+                    {
+                      "name": "holder",
+                      "refinement": null
+                    },
+                    {
+                      "name": "quota",
+                      "refinement": null
+                    }
+                  ],
+                  "kind": "checked-record",
+                  "name": "OwnedCheckedRecords.Claim"
+                }
+              }
+            ]
+          }
+        },
+        "exportModules": [
+          "OwnedCheckedRecords"
+        ],
+        "exports": [
+          "OwnedCheckedRecords.echoBooking",
+          "OwnedCheckedRecords.echoClaim",
+          "OwnedCheckedRecords.echoGrant",
+          "OwnedCheckedRecords.newTicket",
+          "OwnedCheckedRecords.pairClaim",
+          "OwnedCheckedRecords.serial",
+          "OwnedCheckedRecords.transferClaim"
+        ],
+        "metadata": {
+          "invocationIdentitySha256": "ec9052a6607a0992e0cd3989bd0c56456b2af85c9c1fba534103fda2a5069ee3",
+          "modules": [
+            {
+              "interfaceSha256": "c3553db9cf00be174b65e73c29fbcfb1097104a20237e7b79e9e469372b4ea4e",
+              "name": "OwnedCheckedRecords",
+              "sourcePath": "OwnedCheckedRecords.lean",
+              "sourceSha256": "7a52ed60e8d66664713b5efd73524fb286407dc4759228da8801ea901c16da66"
+            }
+          ],
+          "toolchain": "leanprover/lean4:v4.32.2"
+        },
+        "modules": [
+          "OwnedCheckedRecords"
+        ],
+        "ownedAggregates": {
+          "cycles": "reject",
+          "disposal": "required",
+          "fallback": "queued-finalizer",
+          "ownership": "lease"
+        },
+        "profile": "native-library-v1",
+        "resources": [
+          "OwnedCheckedRecords.Ticket"
+        ]
+      },
+      "reviewedBindingIr": {
+        "path": "reviewed.binding-ir.json",
+        "schemaVersion": 1,
+        "semanticSha256": "e507b2d2237799e2393a64722a261fb7ea48d8668a6160344bb5ccce4d23230a",
+        "source": "{\n  \"aggregatePolicy\": {\n    \"cycles\": \"reject\",\n    \"disposal\": \"required\",\n    \"fallback\": \"queued-finalizer\",\n    \"ownership\": \"lease\"\n  },\n  \"assurance\": [],\n  \"capabilities\": [],\n  \"component\": {\n    \"id\": \"owned-checked-records@1.0.0\",\n    \"name\": \"owned-checked-records\",\n    \"version\": \"1.0.0\"\n  },\n  \"declarations\": [\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [\n        \"allocates\"\n      ],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:OwnedCheckedRecords.newTicket\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"newTicket\",\n      \"overloadKey\": \"OwnedCheckedRecords.newTicket\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"arg0\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        },\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"arg1\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"string\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\",\n        \"type\": {\n          \"id\": \"lean:OwnedCheckedRecords.Ticket\",\n          \"kind\": \"named\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"OwnedCheckedRecords.newTicket\",\n        \"extensions\": {},\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [\n        \"reads-resource\"\n      ],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:OwnedCheckedRecords.serial\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"serial\",\n      \"overloadKey\": \"OwnedCheckedRecords.serial\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"arg0\",\n          \"optional\": false,\n          \"ownership\": \"borrow\",\n          \"type\": {\n            \"id\": \"lean:OwnedCheckedRecords.Ticket\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"kind\": \"primitive\",\n          \"name\": \"nat\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"OwnedCheckedRecords.serial\",\n        \"extensions\": {},\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [\n        \"allocates\",\n        \"reads-resource\"\n      ],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:OwnedCheckedRecords.echoBooking\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"echoBooking\",\n      \"overloadKey\": \"OwnedCheckedRecords.echoBooking\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"arg0\",\n          \"optional\": false,\n          \"ownership\": \"borrow\",\n          \"type\": {\n            \"id\": \"lean:OwnedCheckedRecords.Booking\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\",\n        \"type\": {\n          \"id\": \"lean:OwnedCheckedRecords.Booking\",\n          \"kind\": \"named\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"OwnedCheckedRecords.echoBooking\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"fields\": [\n                  {\n                    \"name\": \"holder\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"window\",\n                    \"refinement\": {\n                      \"constructor\": \"OwnedCheckedRecords.mkWindow\",\n                      \"fields\": [\n                        {\n                          \"name\": \"lo\",\n                          \"refinement\": null\n                        },\n                        {\n                          \"name\": \"hi\",\n                          \"refinement\": null\n                        }\n                      ],\n                      \"kind\": \"checked-record\",\n                      \"name\": \"OwnedCheckedRecords.Window\"\n                    }\n                  }\n                ],\n                \"kind\": \"record\",\n                \"name\": \"OwnedCheckedRecords.Booking\"\n              }\n            ],\n            \"result\": {\n              \"fields\": [\n                {\n                  \"name\": \"holder\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"window\",\n                  \"refinement\": {\n                    \"constructor\": null,\n                    \"fields\": [\n                      {\n                        \"name\": \"lo\",\n                        \"refinement\": null\n                      },\n                      {\n                        \"name\": \"hi\",\n                        \"refinement\": null\n                      }\n                    ],\n                    \"kind\": \"checked-record\",\n                    \"name\": \"OwnedCheckedRecords.Window\"\n                  }\n                }\n              ],\n              \"kind\": \"record\",\n              \"name\": \"OwnedCheckedRecords.Booking\"\n            }\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [\n        \"allocates\",\n        \"reads-resource\"\n      ],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:OwnedCheckedRecords.echoClaim\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"echoClaim\",\n      \"overloadKey\": \"OwnedCheckedRecords.echoClaim\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"arg0\",\n          \"optional\": false,\n          \"ownership\": \"borrow\",\n          \"type\": {\n            \"id\": \"lean:OwnedCheckedRecords.Claim\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\",\n        \"type\": {\n          \"id\": \"lean:OwnedCheckedRecords.Claim\",\n          \"kind\": \"named\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"OwnedCheckedRecords.echoClaim\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"constructor\": \"OwnedCheckedRecords.mkClaim\",\n                \"fields\": [\n                  {\n                    \"name\": \"holder\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"quota\",\n                    \"refinement\": null\n                  }\n                ],\n                \"kind\": \"checked-record\",\n                \"name\": \"OwnedCheckedRecords.Claim\"\n              }\n            ],\n            \"result\": {\n              \"constructor\": null,\n              \"fields\": [\n                {\n                  \"name\": \"holder\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"quota\",\n                  \"refinement\": null\n                }\n              ],\n              \"kind\": \"checked-record\",\n              \"name\": \"OwnedCheckedRecords.Claim\"\n            }\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [\n        \"allocates\",\n        \"reads-resource\"\n      ],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:OwnedCheckedRecords.echoGrant\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"echoGrant\",\n      \"overloadKey\": \"OwnedCheckedRecords.echoGrant\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"arg0\",\n          \"optional\": false,\n          \"ownership\": \"borrow\",\n          \"type\": {\n            \"id\": \"lean:OwnedCheckedRecords.Grant\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\",\n        \"type\": {\n          \"id\": \"lean:OwnedCheckedRecords.Grant\",\n          \"kind\": \"named\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"OwnedCheckedRecords.echoGrant\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"constructor\": \"OwnedCheckedRecords.mkGrant\",\n                \"fields\": [\n                  {\n                    \"name\": \"holder\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"weight\",\n                    \"refinement\": {\n                      \"constructor\": \"OwnedCheckedRecords.checkedPositive\",\n                      \"kind\": \"subtype\"\n                    }\n                  },\n                  {\n                    \"name\": \"limit\",\n                    \"refinement\": null\n                  }\n                ],\n                \"kind\": \"checked-record\",\n                \"name\": \"OwnedCheckedRecords.Grant\"\n              }\n            ],\n            \"result\": {\n              \"constructor\": null,\n              \"fields\": [\n                {\n                  \"name\": \"holder\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"weight\",\n                  \"refinement\": {\n                    \"constructor\": null,\n                    \"kind\": \"subtype\"\n                  }\n                },\n                {\n                  \"name\": \"limit\",\n                  \"refinement\": null\n                }\n              ],\n              \"kind\": \"checked-record\",\n              \"name\": \"OwnedCheckedRecords.Grant\"\n            }\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [\n        \"allocates\",\n        \"reads-resource\"\n      ],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:OwnedCheckedRecords.pairClaim\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"pairClaim\",\n      \"overloadKey\": \"OwnedCheckedRecords.pairClaim\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"arg0\",\n          \"optional\": false,\n          \"ownership\": \"borrow\",\n          \"type\": {\n            \"id\": \"lean:OwnedCheckedRecords.Booking\",\n            \"kind\": \"named\"\n          }\n        },\n        {\n          \"default\": null,\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"arg1\",\n          \"optional\": false,\n          \"ownership\": \"borrow\",\n          \"type\": {\n            \"id\": \"lean:OwnedCheckedRecords.Claim\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\",\n        \"type\": {\n          \"id\": \"lean:OwnedCheckedRecords.Claim\",\n          \"kind\": \"named\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"OwnedCheckedRecords.pairClaim\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"fields\": [\n                  {\n                    \"name\": \"holder\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"window\",\n                    \"refinement\": {\n                      \"constructor\": \"OwnedCheckedRecords.mkWindow\",\n                      \"fields\": [\n                        {\n                          \"name\": \"lo\",\n                          \"refinement\": null\n                        },\n                        {\n                          \"name\": \"hi\",\n                          \"refinement\": null\n                        }\n                      ],\n                      \"kind\": \"checked-record\",\n                      \"name\": \"OwnedCheckedRecords.Window\"\n                    }\n                  }\n                ],\n                \"kind\": \"record\",\n                \"name\": \"OwnedCheckedRecords.Booking\"\n              },\n              {\n                \"constructor\": \"OwnedCheckedRecords.mkClaim\",\n                \"fields\": [\n                  {\n                    \"name\": \"holder\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"quota\",\n                    \"refinement\": null\n                  }\n                ],\n                \"kind\": \"checked-record\",\n                \"name\": \"OwnedCheckedRecords.Claim\"\n              }\n            ],\n            \"result\": {\n              \"constructor\": null,\n              \"fields\": [\n                {\n                  \"name\": \"holder\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"quota\",\n                  \"refinement\": null\n                }\n              ],\n              \"kind\": \"checked-record\",\n              \"name\": \"OwnedCheckedRecords.Claim\"\n            }\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [\n        \"allocates\",\n        \"reads-resource\"\n      ],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:OwnedCheckedRecords.transferClaim\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"transferClaim\",\n      \"overloadKey\": \"OwnedCheckedRecords.transferClaim\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"arg0\",\n          \"optional\": false,\n          \"ownership\": \"transfer\",\n          \"type\": {\n            \"id\": \"lean:OwnedCheckedRecords.Claim\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\",\n        \"type\": {\n          \"id\": \"lean:OwnedCheckedRecords.Claim\",\n          \"kind\": \"named\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"OwnedCheckedRecords.transferClaim\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"constructor\": \"OwnedCheckedRecords.mkClaim\",\n                \"fields\": [\n                  {\n                    \"name\": \"holder\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"quota\",\n                    \"refinement\": null\n                  }\n                ],\n                \"kind\": \"checked-record\",\n                \"name\": \"OwnedCheckedRecords.Claim\"\n              }\n            ],\n            \"result\": {\n              \"constructor\": null,\n              \"fields\": [\n                {\n                  \"name\": \"holder\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"quota\",\n                  \"refinement\": null\n                }\n              ],\n              \"kind\": \"checked-record\",\n              \"name\": \"OwnedCheckedRecords.Claim\"\n            }\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    }\n  ],\n  \"documentation\": {\n    \"details\": \"\",\n    \"summary\": \"Independent corpus contract.\"\n  },\n  \"errors\": [],\n  \"producers\": [\n    {\n      \"adapter\": \"independent-corpus-contract\",\n      \"adapterVersion\": 1,\n      \"extensions\": {},\n      \"id\": \"corpusReview\",\n      \"tool\": \"Corpus contract review\",\n      \"toolVersion\": \"1\"\n    }\n  ],\n  \"schemaVersion\": 4,\n  \"types\": [\n    {\n      \"aggregate\": null,\n      \"assurance\": [],\n      \"callable\": null,\n      \"cases\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent owned checked-record contract.\"\n      },\n      \"fields\": [],\n      \"host\": null,\n      \"id\": \"lean:OwnedCheckedRecords.Ticket\",\n      \"kind\": \"resource\",\n      \"mutability\": \"read\",\n      \"name\": \"Ticket\",\n      \"representation\": \"identity\",\n      \"resource\": {\n        \"cycles\": \"explicit-cut\",\n        \"disposal\": \"required\",\n        \"fallback\": \"queued-finalizer\",\n        \"kindId\": \"resource:OwnedCheckedRecords.Ticket\"\n      },\n      \"source\": {\n        \"declaration\": \"OwnedCheckedRecords.Ticket\",\n        \"extensions\": {},\n        \"producer\": \"corpusReview\"\n      },\n      \"target\": null,\n      \"typeParameters\": []\n    },\n    {\n      \"aggregate\": null,\n      \"assurance\": [],\n      \"callable\": null,\n      \"cases\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent owned checked-record contract.\"\n      },\n      \"fields\": [\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent owned checked-record contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"lo\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        },\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent owned checked-record contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"hi\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        }\n      ],\n      \"host\": null,\n      \"id\": \"lean:OwnedCheckedRecords.Window\",\n      \"kind\": \"record\",\n      \"mutability\": \"immutable\",\n      \"name\": \"Window\",\n      \"representation\": \"copied\",\n      \"resource\": null,\n      \"source\": {\n        \"declaration\": \"OwnedCheckedRecords.Window\",\n        \"extensions\": {\n          \"lean-lang.org/erased-proofs\": {\n            \"fields\": [\n              \"ordered\"\n            ]\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"target\": null,\n      \"typeParameters\": []\n    },\n    {\n      \"aggregate\": {\n        \"cycles\": \"reject\",\n        \"disposal\": \"required\",\n        \"fallback\": \"queued-finalizer\",\n        \"ownership\": \"lease\"\n      },\n      \"assurance\": [],\n      \"callable\": null,\n      \"cases\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent owned checked-record contract.\"\n      },\n      \"fields\": [\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent owned checked-record contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"holder\",\n          \"type\": {\n            \"id\": \"lean:OwnedCheckedRecords.Ticket\",\n            \"kind\": \"named\"\n          }\n        },\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent owned checked-record contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"window\",\n          \"type\": {\n            \"id\": \"lean:OwnedCheckedRecords.Window\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"host\": null,\n      \"id\": \"lean:OwnedCheckedRecords.Booking\",\n      \"kind\": \"record\",\n      \"mutability\": \"immutable\",\n      \"name\": \"Booking\",\n      \"representation\": \"owned\",\n      \"resource\": null,\n      \"source\": {\n        \"declaration\": \"OwnedCheckedRecords.Booking\",\n        \"extensions\": {},\n        \"producer\": \"corpusReview\"\n      },\n      \"target\": null,\n      \"typeParameters\": []\n    },\n    {\n      \"aggregate\": {\n        \"cycles\": \"reject\",\n        \"disposal\": \"required\",\n        \"fallback\": \"queued-finalizer\",\n        \"ownership\": \"lease\"\n      },\n      \"assurance\": [],\n      \"callable\": null,\n      \"cases\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent owned checked-record contract.\"\n      },\n      \"fields\": [\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent owned checked-record contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"holder\",\n          \"type\": {\n            \"id\": \"lean:OwnedCheckedRecords.Ticket\",\n            \"kind\": \"named\"\n          }\n        },\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent owned checked-record contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"quota\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        }\n      ],\n      \"host\": null,\n      \"id\": \"lean:OwnedCheckedRecords.Claim\",\n      \"kind\": \"record\",\n      \"mutability\": \"immutable\",\n      \"name\": \"Claim\",\n      \"representation\": \"owned\",\n      \"resource\": null,\n      \"source\": {\n        \"declaration\": \"OwnedCheckedRecords.Claim\",\n        \"extensions\": {\n          \"lean-lang.org/erased-proofs\": {\n            \"fields\": [\n              \"bounded\"\n            ]\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"target\": null,\n      \"typeParameters\": []\n    },\n    {\n      \"aggregate\": {\n        \"cycles\": \"reject\",\n        \"disposal\": \"required\",\n        \"fallback\": \"queued-finalizer\",\n        \"ownership\": \"lease\"\n      },\n      \"assurance\": [],\n      \"callable\": null,\n      \"cases\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent owned checked-record contract.\"\n      },\n      \"fields\": [\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent owned checked-record contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"holder\",\n          \"type\": {\n            \"id\": \"lean:OwnedCheckedRecords.Ticket\",\n            \"kind\": \"named\"\n          }\n        },\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent owned checked-record contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"weight\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        },\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent owned checked-record contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"limit\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        }\n      ],\n      \"host\": null,\n      \"id\": \"lean:OwnedCheckedRecords.Grant\",\n      \"kind\": \"record\",\n      \"mutability\": \"immutable\",\n      \"name\": \"Grant\",\n      \"representation\": \"owned\",\n      \"resource\": null,\n      \"source\": {\n        \"declaration\": \"OwnedCheckedRecords.Grant\",\n        \"extensions\": {\n          \"lean-lang.org/erased-proofs\": {\n            \"fields\": [\n              \"within\"\n            ]\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"target\": null,\n      \"typeParameters\": []\n    }\n  ]\n}\n",
+        "sourceSha256": "1140380eb6f7f4a148b4340f49d15bd44acaf2a1a9f5c7980b80ea8b0572965f"
+      },
+      "sourceNoticesSha256": "a2271a48a942e56fd0742a2c3ed04ae6ed3f0cc678bc919e4ea442c1576c655a",
+      "sourceTreeSha256": "d258d47d7d7dcf0037f772e7ed4f387f2d3f7b957289044bf725c81f2642fa4b"
+    },
+    "wasmLibrary": {
+      "bytes": 87569,
+      "sha256": "9a9d666fb74c2dd3250e7e30cae4e59028be94cc4eb738a6cc670262fe1d4b01"
+    },
+    "zendSha256": "f51671ac573cd81803c42d886ec8b40370e17fbdab8f0df9c524f74f081b38d0"
+  },
+  "definitionCounts": {
+    "lb_owned_entry_checked_record_constructor_checkedPositive": 1,
+    "lb_owned_entry_checked_record_constructor_mkClaim": 1,
+    "lb_owned_entry_checked_record_constructor_mkGrant": 1,
+    "lb_owned_entry_checked_record_constructor_mkWindow": 1,
+    "lb_owned_entry_checked_record_source_echoBooking": 1,
+    "lb_owned_entry_checked_record_source_echoClaim": 1,
+    "lb_owned_entry_checked_record_source_echoGrant": 1,
+    "lb_owned_entry_checked_record_source_newTicket": 1,
+    "lb_owned_entry_checked_record_source_pairClaim": 1,
+    "lb_owned_entry_checked_record_source_transferClaim": 1,
+    "lb_owned_scope_transfer_many": 1,
+    "lbov_927414336ec9185cc5a2_f040aca3025d850fc12cc": 1,
+    "lbov_927414336ec9185cc5a2_f0711e856cfa97d876c9a": 1,
+    "lbov_927414336ec9185cc5a2_f535babcfd8d0f67ea0e6": 1,
+    "lbov_927414336ec9185cc5a2_fa1e5189bd92568e4b939": 1,
+    "lbov_927414336ec9185cc5a2_feaac3cc8d9197bd7bbca": 1,
+    "lbov_927414336ec9185cc5a2_feb082cf837ef02082ea8": 1,
+    "lbov_927414336ec9185cc5a2_fec926afda994fba3abe2": 1,
+    "lean_bridge_owned_24fe4c7e8d66d167b16d25ca_f040aca3025d850fc12cc": 1,
+    "lean_bridge_owned_24fe4c7e8d66d167b16d25ca_f0711e856cfa97d876c9a": 1,
+    "lean_bridge_owned_24fe4c7e8d66d167b16d25ca_f535babcfd8d0f67ea0e6": 1,
+    "lean_bridge_owned_24fe4c7e8d66d167b16d25ca_fa1e5189bd92568e4b939": 1,
+    "lean_bridge_owned_24fe4c7e8d66d167b16d25ca_feaac3cc8d9197bd7bbca": 1,
+    "lean_bridge_owned_24fe4c7e8d66d167b16d25ca_feb082cf837ef02082ea8": 1,
+    "lean_bridge_owned_24fe4c7e8d66d167b16d25ca_fec926afda994fba3abe2": 1,
+    "lean_bridge_owned_refine_5593f0b9830f059702a4": 1,
+    "lean_bridge_owned_refine_5ba8ebacbf26c0755e45": 1,
+    "lean_bridge_owned_refine_ca177b2570793a278657": 1,
+    "lgo_call0": 1,
+    "lgo_call1": 1,
+    "lgo_call2": 1,
+    "lgo_call3": 1,
+    "lgo_call4": 1,
+    "lgo_call5": 1,
+    "lgo_call6": 1,
+    "lgo_identity_input": 1,
+    "lgo_input_begin": 1,
+    "lgo_input_commit": 1,
+    "lgo_input_consume": 1,
+    "lgo_input_reserve": 1,
+    "lgo_inputs_finish": 1
+  },
+  "headers": [
+    {
+      "definitions": [
+        {
+          "form": "function",
+          "kind": "adapter",
+          "label": "echoBooking:native",
+          "offset": 27125,
+          "symbol": "lbov_927414336ec9185cc5a2_f0711e856cfa97d876c9a"
+        },
+        {
+          "form": "function",
+          "kind": "adapter",
+          "label": "echoClaim:native",
+          "offset": 28937,
+          "symbol": "lbov_927414336ec9185cc5a2_f535babcfd8d0f67ea0e6"
+        },
+        {
+          "form": "function",
+          "kind": "adapter",
+          "label": "echoGrant:native",
+          "offset": 30749,
+          "symbol": "lbov_927414336ec9185cc5a2_feb082cf837ef02082ea8"
+        },
+        {
+          "form": "function",
+          "kind": "adapter",
+          "label": "newTicket:native",
+          "offset": 32561,
+          "symbol": "lbov_927414336ec9185cc5a2_fa1e5189bd92568e4b939"
+        },
+        {
+          "form": "function",
+          "kind": "adapter",
+          "label": "pairClaim:native",
+          "offset": 34597,
+          "symbol": "lbov_927414336ec9185cc5a2_feaac3cc8d9197bd7bbca"
+        },
+        {
+          "form": "function",
+          "kind": "adapter",
+          "label": "serial:native",
+          "offset": 36983,
+          "symbol": "lbov_927414336ec9185cc5a2_fec926afda994fba3abe2"
+        },
+        {
+          "form": "function",
+          "kind": "adapter",
+          "label": "transferClaim:native",
+          "offset": 38620,
+          "symbol": "lbov_927414336ec9185cc5a2_f040aca3025d850fc12cc"
+        }
+      ],
+      "insertions": [
+        {
+          "kind": "adapter",
+          "label": "transferClaim:native",
+          "offset": 38881,
+          "symbol": "lbov_927414336ec9185cc5a2_f040aca3025d850fc12cc",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter transferClaim:native\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "serial:native",
+          "offset": 37214,
+          "symbol": "lbov_927414336ec9185cc5a2_fec926afda994fba3abe2",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter serial:native\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "pairClaim:native",
+          "offset": 34887,
+          "symbol": "lbov_927414336ec9185cc5a2_feaac3cc8d9197bd7bbca",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter pairClaim:native\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "newTicket:native",
+          "offset": 32851,
+          "symbol": "lbov_927414336ec9185cc5a2_fa1e5189bd92568e4b939",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter newTicket:native\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "echoGrant:native",
+          "offset": 30980,
+          "symbol": "lbov_927414336ec9185cc5a2_feb082cf837ef02082ea8",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter echoGrant:native\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "echoClaim:native",
+          "offset": 29168,
+          "symbol": "lbov_927414336ec9185cc5a2_f535babcfd8d0f67ea0e6",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter echoClaim:native\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "echoBooking:native",
+          "offset": 27356,
+          "symbol": "lbov_927414336ec9185cc5a2_f0711e856cfa97d876c9a",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter echoBooking:native\\n\", stderr);\n"
+        },
+        {
+          "kind": "preamble",
+          "offset": 0,
+          "text": "#include <stdio.h>\n"
+        }
+      ],
+      "originalPath": "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/owned/owned-values-codec.h",
+      "originalSha256": "6ec2c16ea954f1c4c1e64b23c24ff5d4df4b4f69e585e9b3029a41bf308815ad",
+      "path": "owned-values-codec.h",
+      "probePath": "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-owned-refinement-entry-ci/reviewed/owned-checked-record/build-1/header-probes/owned-values-codec.h",
+      "probeSha256": "b36db48bc536ccfa96c9f3fae85f314114acba002674ac4ab9d1be50814305f4"
+    },
+    {
+      "definitions": [
+        {
+          "form": "function",
+          "kind": "adapter",
+          "label": "owner.move",
+          "offset": 12190,
+          "symbol": "lb_owned_scope_transfer_many"
+        }
+      ],
+      "insertions": [
+        {
+          "kind": "adapter",
+          "label": "owner.move",
+          "offset": 12311,
+          "symbol": "lb_owned_scope_transfer_many",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter owner.move\\n\", stderr);\n"
+        },
+        {
+          "kind": "preamble",
+          "offset": 0,
+          "text": "#include <stdio.h>\n"
+        }
+      ],
+      "originalPath": "/home/runner/work/_temp/lean-bridge-owned-checked-record-reviewed-entry-vuZXRq/release/php-wasm/.lean-bridge-native-component-w06vQz/owned/owned-leases.h",
+      "originalSha256": "7972775960f3df0707a8d08872915337f2c5f285bf9ace1dc931b5dd1867dbe3",
+      "path": "owned-leases.h",
+      "probePath": "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-owned-refinement-entry-ci/reviewed/owned-checked-record/build-1/header-probes/owned-leases.h",
+      "probeSha256": "792ef3ca5531503c0f382ed18b633b88fc4a18ef8b5bb964ede22a124f19f79e"
+    }
+  ],
+  "library": {
+    "bytes": 87569,
+    "sha256": "9a9d666fb74c2dd3250e7e30cae4e59028be94cc4eb738a6cc670262fe1d4b01"
+  },
+  "linked": true,
+  "modelSha256": "db91e483653973ba458dc0d4b6eb4420946b7cb81bba939a9c482a816fe89491",
+  "packageSetSha256": "67d42f938d86014249596e3505dc61758719268d6819fff83e81de090043d7b8",
+  "schemaVersion": 1,
+  "scope": "separate-instrumented-probe",
+  "selected": [
+    {
+      "kind": "constructor",
+      "label": "OwnedCheckedRecords.mkWindow",
+      "symbol": "lb_owned_entry_checked_record_constructor_mkWindow"
+    },
+    {
+      "kind": "constructor",
+      "label": "OwnedCheckedRecords.mkClaim",
+      "symbol": "lb_owned_entry_checked_record_constructor_mkClaim"
+    },
+    {
+      "kind": "constructor",
+      "label": "OwnedCheckedRecords.checkedPositive",
+      "symbol": "lb_owned_entry_checked_record_constructor_checkedPositive"
+    },
+    {
+      "kind": "constructor",
+      "label": "OwnedCheckedRecords.mkGrant",
+      "symbol": "lb_owned_entry_checked_record_constructor_mkGrant"
+    },
+    {
+      "kind": "source",
+      "label": "OwnedCheckedRecords.newTicket",
+      "symbol": "lb_owned_entry_checked_record_source_newTicket"
+    },
+    {
+      "kind": "source",
+      "label": "OwnedCheckedRecords.echoBooking",
+      "symbol": "lb_owned_entry_checked_record_source_echoBooking"
+    },
+    {
+      "kind": "source",
+      "label": "OwnedCheckedRecords.echoClaim",
+      "symbol": "lb_owned_entry_checked_record_source_echoClaim"
+    },
+    {
+      "kind": "source",
+      "label": "OwnedCheckedRecords.transferClaim",
+      "symbol": "lb_owned_entry_checked_record_source_transferClaim"
+    },
+    {
+      "kind": "source",
+      "label": "OwnedCheckedRecords.echoGrant",
+      "symbol": "lb_owned_entry_checked_record_source_echoGrant"
+    },
+    {
+      "kind": "source",
+      "label": "OwnedCheckedRecords.pairClaim",
+      "symbol": "lb_owned_entry_checked_record_source_pairClaim"
+    },
+    {
+      "kind": "public",
+      "label": "echoBooking",
+      "symbol": "lgo_call0"
+    },
+    {
+      "kind": "adapter",
+      "label": "echoBooking:native",
+      "symbol": "lbov_927414336ec9185cc5a2_f0711e856cfa97d876c9a"
+    },
+    {
+      "kind": "public",
+      "label": "echoClaim",
+      "symbol": "lgo_call1"
+    },
+    {
+      "kind": "adapter",
+      "label": "echoClaim:native",
+      "symbol": "lbov_927414336ec9185cc5a2_f535babcfd8d0f67ea0e6"
+    },
+    {
+      "kind": "public",
+      "label": "echoGrant",
+      "symbol": "lgo_call2"
+    },
+    {
+      "kind": "adapter",
+      "label": "echoGrant:native",
+      "symbol": "lbov_927414336ec9185cc5a2_feb082cf837ef02082ea8"
+    },
+    {
+      "kind": "public",
+      "label": "newTicket",
+      "symbol": "lgo_call3"
+    },
+    {
+      "kind": "adapter",
+      "label": "newTicket:native",
+      "symbol": "lbov_927414336ec9185cc5a2_fa1e5189bd92568e4b939"
+    },
+    {
+      "kind": "public",
+      "label": "pairClaim",
+      "symbol": "lgo_call4"
+    },
+    {
+      "kind": "adapter",
+      "label": "pairClaim:native",
+      "symbol": "lbov_927414336ec9185cc5a2_feaac3cc8d9197bd7bbca"
+    },
+    {
+      "kind": "public",
+      "label": "serial",
+      "symbol": "lgo_call5"
+    },
+    {
+      "kind": "adapter",
+      "label": "serial:native",
+      "symbol": "lbov_927414336ec9185cc5a2_fec926afda994fba3abe2"
+    },
+    {
+      "kind": "public",
+      "label": "transferClaim",
+      "symbol": "lgo_call6"
+    },
+    {
+      "kind": "adapter",
+      "label": "transferClaim:native",
+      "symbol": "lbov_927414336ec9185cc5a2_f040aca3025d850fc12cc"
+    },
+    {
+      "kind": "adapter",
+      "label": "echoBooking:lean",
+      "symbol": "lean_bridge_owned_24fe4c7e8d66d167b16d25ca_f0711e856cfa97d876c9a"
+    },
+    {
+      "kind": "adapter",
+      "label": "echoClaim:lean",
+      "symbol": "lean_bridge_owned_24fe4c7e8d66d167b16d25ca_f535babcfd8d0f67ea0e6"
+    },
+    {
+      "kind": "adapter",
+      "label": "echoGrant:lean",
+      "symbol": "lean_bridge_owned_24fe4c7e8d66d167b16d25ca_feb082cf837ef02082ea8"
+    },
+    {
+      "kind": "adapter",
+      "label": "newTicket:lean",
+      "symbol": "lean_bridge_owned_24fe4c7e8d66d167b16d25ca_fa1e5189bd92568e4b939"
+    },
+    {
+      "kind": "adapter",
+      "label": "pairClaim:lean",
+      "symbol": "lean_bridge_owned_24fe4c7e8d66d167b16d25ca_feaac3cc8d9197bd7bbca"
+    },
+    {
+      "kind": "adapter",
+      "label": "serial:lean",
+      "symbol": "lean_bridge_owned_24fe4c7e8d66d167b16d25ca_fec926afda994fba3abe2"
+    },
+    {
+      "kind": "adapter",
+      "label": "transferClaim:lean",
+      "symbol": "lean_bridge_owned_24fe4c7e8d66d167b16d25ca_f040aca3025d850fc12cc"
+    },
+    {
+      "kind": "validator",
+      "label": "owned:lean_bridge_owned_refine_5593f0b9830f059702a4",
+      "symbol": "lean_bridge_owned_refine_5593f0b9830f059702a4"
+    },
+    {
+      "kind": "validator",
+      "label": "owned:lean_bridge_owned_refine_5ba8ebacbf26c0755e45",
+      "symbol": "lean_bridge_owned_refine_5ba8ebacbf26c0755e45"
+    },
+    {
+      "kind": "validator",
+      "label": "owned:lean_bridge_owned_refine_ca177b2570793a278657",
+      "symbol": "lean_bridge_owned_refine_ca177b2570793a278657"
+    },
+    {
+      "kind": "adapter",
+      "label": "identity.borrow",
+      "symbol": "lgo_identity_input"
+    },
+    {
+      "kind": "adapter",
+      "label": "transfer.reserve",
+      "symbol": "lgo_input_reserve"
+    },
+    {
+      "kind": "adapter",
+      "label": "transfer.begin",
+      "symbol": "lgo_input_begin"
+    },
+    {
+      "kind": "adapter",
+      "label": "transfer.commit",
+      "symbol": "lgo_input_commit"
+    },
+    {
+      "kind": "adapter",
+      "label": "owner.move",
+      "symbol": "lb_owned_scope_transfer_many"
+    },
+    {
+      "kind": "adapter",
+      "label": "owner.consume",
+      "symbol": "lgo_input_consume"
+    },
+    {
+      "kind": "adapter",
+      "label": "transfer.finish",
+      "symbol": "lgo_inputs_finish"
+    }
+  ]
+}

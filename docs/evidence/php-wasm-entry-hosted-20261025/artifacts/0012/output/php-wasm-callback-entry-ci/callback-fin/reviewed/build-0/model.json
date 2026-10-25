@@ -1,0 +1,2434 @@
+{
+  "bindingIr": {
+    "assurance": [],
+    "capabilities": [],
+    "component": {
+      "id": "reviewedcallbacks@1.0.0",
+      "name": "reviewedcallbacks",
+      "version": "1.0.0"
+    },
+    "declarations": [
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "Call ReviewedCallbacks.apply."
+        },
+        "effects": [
+          "fails",
+          "host-call"
+        ],
+        "failure": {
+          "errors": [
+            "error:native-callback"
+          ],
+          "mode": "declared",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:ReviewedCallbacks.apply",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "apply",
+        "overloadKey": "ReviewedCallbacks.apply",
+        "owner": null,
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": {
+              "anchor": null,
+              "scope": "call"
+            },
+            "mutability": "immutable",
+            "name": "arg0",
+            "optional": false,
+            "ownership": "borrow",
+            "type": {
+              "id": "bridge:Callbackf2af9db3bda87ab235db",
+              "kind": "named"
+            }
+          },
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "arg1",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          }
+        ],
+        "receiver": null,
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "ReviewedCallbacks.apply",
+          "extensions": {
+            "lean-lang.org/source-position": {
+              "endColumn": 56,
+              "endLine": 47,
+              "path": "ReviewedCallbacks.lean",
+              "startColumn": 0,
+              "startLine": 46
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "Call ReviewedCallbacks.counter."
+        },
+        "effects": [],
+        "failure": {
+          "errors": [],
+          "mode": "none",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:ReviewedCallbacks.counter",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "counter",
+        "overloadKey": "ReviewedCallbacks.counter",
+        "owner": null,
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "arg0",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          }
+        ],
+        "receiver": null,
+        "result": {
+          "lifetime": {
+            "anchor": null,
+            "scope": "explicit"
+          },
+          "ownership": "lease",
+          "type": {
+            "id": "bridge:Callbacka1b5e4d2cfa3d3e80004",
+            "kind": "named"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "ReviewedCallbacks.counter",
+          "extensions": {
+            "lean-lang.org/source-position": {
+              "endColumn": 66,
+              "endLine": 21,
+              "path": "ReviewedCallbacks.lean",
+              "startColumn": 0,
+              "startLine": 20
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "Call ReviewedCallbacks.digits."
+        },
+        "effects": [],
+        "failure": {
+          "errors": [],
+          "mode": "none",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:ReviewedCallbacks.digits",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "digits",
+        "overloadKey": "ReviewedCallbacks.digits",
+        "owner": null,
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "arg0",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "kind": "primitive",
+              "name": "unit"
+            }
+          }
+        ],
+        "receiver": null,
+        "result": {
+          "lifetime": {
+            "anchor": null,
+            "scope": "explicit"
+          },
+          "ownership": "lease",
+          "type": {
+            "id": "bridge:Callback4ee3669b3c7a96ffd2d0",
+            "kind": "named"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "ReviewedCallbacks.digits",
+          "extensions": {
+            "lean-lang.org/source-position": {
+              "endColumn": 106,
+              "endLine": 28,
+              "path": "ReviewedCallbacks.lean",
+              "startColumn": 0,
+              "startLine": 27
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "Call ReviewedCallbacks.scaler."
+        },
+        "effects": [],
+        "failure": {
+          "errors": [],
+          "mode": "none",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:ReviewedCallbacks.scaler",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "scaler",
+        "overloadKey": "ReviewedCallbacks.scaler",
+        "owner": null,
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "arg0",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          }
+        ],
+        "receiver": null,
+        "result": {
+          "lifetime": {
+            "anchor": null,
+            "scope": "explicit"
+          },
+          "ownership": "lease",
+          "type": {
+            "id": "bridge:Callback1469b3ae2047ff62e64f",
+            "kind": "named"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "ReviewedCallbacks.scaler",
+          "extensions": {
+            "lean-lang.org/source-position": {
+              "endColumn": 66,
+              "endLine": 13,
+              "path": "ReviewedCallbacks.lean",
+              "startColumn": 0,
+              "startLine": 12
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "Call ReviewedCallbacks.three."
+        },
+        "effects": [
+          "fails",
+          "host-call"
+        ],
+        "failure": {
+          "errors": [
+            "error:native-callback"
+          ],
+          "mode": "declared",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:ReviewedCallbacks.three",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "three",
+        "overloadKey": "ReviewedCallbacks.three",
+        "owner": null,
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": {
+              "anchor": null,
+              "scope": "call"
+            },
+            "mutability": "immutable",
+            "name": "arg0",
+            "optional": false,
+            "ownership": "borrow",
+            "type": {
+              "id": "bridge:Callbackab07c65d8a1ba94ea760",
+              "kind": "named"
+            }
+          },
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "arg1",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          }
+        ],
+        "receiver": null,
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "ReviewedCallbacks.three",
+          "extensions": {
+            "lean-lang.org/refinements": {
+              "parameters": [
+                null,
+                {
+                  "bound": "3",
+                  "kind": "fin"
+                }
+              ],
+              "result": {
+                "bound": "3",
+                "kind": "fin"
+              }
+            },
+            "lean-lang.org/source-position": {
+              "endColumn": 64,
+              "endLine": 51,
+              "path": "ReviewedCallbacks.lean",
+              "startColumn": 0,
+              "startLine": 49
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "Call ReviewedCallbacks.tileMaker."
+        },
+        "effects": [],
+        "failure": {
+          "errors": [],
+          "mode": "none",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:ReviewedCallbacks.tileMaker",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "tileMaker",
+        "overloadKey": "ReviewedCallbacks.tileMaker",
+        "owner": null,
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "arg0",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          }
+        ],
+        "receiver": null,
+        "result": {
+          "lifetime": {
+            "anchor": null,
+            "scope": "explicit"
+          },
+          "ownership": "lease",
+          "type": {
+            "id": "bridge:Callbackb2f90de4d8e7b5a028e6",
+            "kind": "named"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "ReviewedCallbacks.tileMaker",
+          "extensions": {
+            "lean-lang.org/source-position": {
+              "endColumn": 68,
+              "endLine": 44,
+              "path": "ReviewedCallbacks.lean",
+              "startColumn": 0,
+              "startLine": 43
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "Call ReviewedCallbacks.tiles."
+        },
+        "effects": [],
+        "failure": {
+          "errors": [],
+          "mode": "none",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:ReviewedCallbacks.tiles",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "tiles",
+        "overloadKey": "ReviewedCallbacks.tiles",
+        "owner": null,
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "arg0",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "kind": "primitive",
+              "name": "unit"
+            }
+          }
+        ],
+        "receiver": null,
+        "result": {
+          "lifetime": {
+            "anchor": null,
+            "scope": "explicit"
+          },
+          "ownership": "lease",
+          "type": {
+            "id": "bridge:Callbacka0d2888f62a2884d0fa6",
+            "kind": "named"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "ReviewedCallbacks.tiles",
+          "extensions": {
+            "lean-lang.org/source-position": {
+              "endColumn": 56,
+              "endLine": 36,
+              "path": "ReviewedCallbacks.lean",
+              "startColumn": 0,
+              "startLine": 35
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "Call ReviewedCallbacks.visit."
+        },
+        "effects": [
+          "fails",
+          "host-call"
+        ],
+        "failure": {
+          "errors": [
+            "error:native-callback"
+          ],
+          "mode": "declared",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:ReviewedCallbacks.visit",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "visit",
+        "overloadKey": "ReviewedCallbacks.visit",
+        "owner": null,
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": {
+              "anchor": null,
+              "scope": "call"
+            },
+            "mutability": "immutable",
+            "name": "arg0",
+            "optional": false,
+            "ownership": "borrow",
+            "type": {
+              "id": "bridge:Callback0b35b98375ec45f097a4",
+              "kind": "named"
+            }
+          }
+        ],
+        "receiver": null,
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "ReviewedCallbacks.visit",
+          "extensions": {
+            "lean-lang.org/source-position": {
+              "endColumn": 122,
+              "endLine": 25,
+              "path": "ReviewedCallbacks.lean",
+              "startColumn": 0,
+              "startLine": 23
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      }
+    ],
+    "documentation": {
+      "details": "",
+      "summary": "Independent callback contract."
+    },
+    "errors": [
+      {
+        "category": "boundary",
+        "documentation": {
+          "details": "",
+          "summary": "A synchronous host callback failed; the adapter preserves the exception after cleanup."
+        },
+        "id": "error:native-callback",
+        "name": "NativeCallbackFailure",
+        "payload": null
+      }
+    ],
+    "producers": [
+      {
+        "adapter": "lean-bridge-elaborator",
+        "adapterVersion": 2,
+        "extensions": {
+          "lean-lang.org/elaboration-sha256": "4caac7573ed967fb3d3296cd5fe11971af80ff51577656d6bc4cae9facd8e9ff",
+          "lean-lang.org/toolchain": "leanprover/lean4:v4.32.2"
+        },
+        "id": "lean",
+        "tool": "Lean",
+        "toolVersion": "4.32.2"
+      }
+    ],
+    "schemaVersion": 3,
+    "types": [
+      {
+        "assurance": [],
+        "callable": {
+          "effects": [
+            "host-call",
+            "fails"
+          ],
+          "failure": {
+            "errors": [
+              "error:native-callback"
+            ],
+            "mode": "declared",
+            "unexpected": "poison-runtime"
+          },
+          "invocation": "many",
+          "parameters": [
+            {
+              "default": null,
+              "lifetime": null,
+              "mutability": "immutable",
+              "name": "arg0",
+              "optional": false,
+              "ownership": "copy",
+              "type": {
+                "kind": "primitive",
+                "name": "nat"
+              }
+            }
+          ],
+          "reentry": "same-agent",
+          "result": {
+            "lifetime": null,
+            "ownership": "copy",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          },
+          "resultMode": "value",
+          "selfDisposal": "defer"
+        },
+        "cases": [],
+        "documentation": {
+          "details": "",
+          "summary": "Checked Lean callback."
+        },
+        "fields": [],
+        "host": null,
+        "id": "bridge:Callback0b35b98375ec45f097a4",
+        "kind": "callback",
+        "mutability": "immutable",
+        "name": "Callback0b35b98375ec45f097a4",
+        "representation": "identity",
+        "resource": null,
+        "source": {
+          "declaration": "Callback0b35b98375ec45f097a4",
+          "extensions": {
+            "lean-lang.org/refinements": {
+              "parameters": [
+                {
+                  "bound": "5",
+                  "kind": "fin"
+                }
+              ],
+              "result": null
+            }
+          },
+          "producer": "lean"
+        },
+        "target": null,
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "callable": {
+          "effects": [
+            "host-call",
+            "fails"
+          ],
+          "failure": {
+            "errors": [
+              "error:native-callback"
+            ],
+            "mode": "declared",
+            "unexpected": "poison-runtime"
+          },
+          "invocation": "many",
+          "parameters": [
+            {
+              "default": null,
+              "lifetime": null,
+              "mutability": "immutable",
+              "name": "arg0",
+              "optional": false,
+              "ownership": "copy",
+              "type": {
+                "kind": "primitive",
+                "name": "nat"
+              }
+            }
+          ],
+          "reentry": "same-agent",
+          "result": {
+            "lifetime": null,
+            "ownership": "copy",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          },
+          "resultMode": "value",
+          "selfDisposal": "defer"
+        },
+        "cases": [],
+        "documentation": {
+          "details": "",
+          "summary": "Checked Lean callback."
+        },
+        "fields": [],
+        "host": null,
+        "id": "bridge:Callback1469b3ae2047ff62e64f",
+        "kind": "callback",
+        "mutability": "immutable",
+        "name": "Callback1469b3ae2047ff62e64f",
+        "representation": "identity",
+        "resource": null,
+        "source": {
+          "declaration": "Callback1469b3ae2047ff62e64f",
+          "extensions": {
+            "lean-lang.org/refinements": {
+              "parameters": [
+                {
+                  "bound": "10",
+                  "kind": "fin"
+                }
+              ],
+              "result": null
+            }
+          },
+          "producer": "lean"
+        },
+        "target": null,
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "callable": {
+          "effects": [
+            "host-call",
+            "fails"
+          ],
+          "failure": {
+            "errors": [
+              "error:native-callback"
+            ],
+            "mode": "declared",
+            "unexpected": "poison-runtime"
+          },
+          "invocation": "many",
+          "parameters": [
+            {
+              "default": null,
+              "lifetime": null,
+              "mutability": "immutable",
+              "name": "arg0",
+              "optional": false,
+              "ownership": "copy",
+              "type": {
+                "arguments": [
+                  {
+                    "kind": "primitive",
+                    "name": "nat"
+                  }
+                ],
+                "constructor": "array",
+                "kind": "apply"
+              }
+            }
+          ],
+          "reentry": "same-agent",
+          "result": {
+            "lifetime": null,
+            "ownership": "copy",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          },
+          "resultMode": "value",
+          "selfDisposal": "defer"
+        },
+        "cases": [],
+        "documentation": {
+          "details": "",
+          "summary": "Checked Lean callback."
+        },
+        "fields": [],
+        "host": null,
+        "id": "bridge:Callback4ee3669b3c7a96ffd2d0",
+        "kind": "callback",
+        "mutability": "immutable",
+        "name": "Callback4ee3669b3c7a96ffd2d0",
+        "representation": "identity",
+        "resource": null,
+        "source": {
+          "declaration": "Callback4ee3669b3c7a96ffd2d0",
+          "extensions": {
+            "lean-lang.org/refinements": {
+              "parameters": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "3",
+                      "kind": "fin"
+                    }
+                  ],
+                  "kind": "array"
+                }
+              ],
+              "result": null
+            }
+          },
+          "producer": "lean"
+        },
+        "target": null,
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "callable": {
+          "effects": [
+            "host-call",
+            "fails"
+          ],
+          "failure": {
+            "errors": [
+              "error:native-callback"
+            ],
+            "mode": "declared",
+            "unexpected": "poison-runtime"
+          },
+          "invocation": "many",
+          "parameters": [
+            {
+              "default": null,
+              "lifetime": null,
+              "mutability": "immutable",
+              "name": "arg0",
+              "optional": false,
+              "ownership": "copy",
+              "type": {
+                "arguments": [
+                  {
+                    "id": "lean:ReviewedCallbacks.Tile",
+                    "kind": "named"
+                  }
+                ],
+                "constructor": "list",
+                "kind": "apply"
+              }
+            }
+          ],
+          "reentry": "same-agent",
+          "result": {
+            "lifetime": null,
+            "ownership": "copy",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          },
+          "resultMode": "value",
+          "selfDisposal": "defer"
+        },
+        "cases": [],
+        "documentation": {
+          "details": "",
+          "summary": "Checked Lean callback."
+        },
+        "fields": [],
+        "host": null,
+        "id": "bridge:Callbacka0d2888f62a2884d0fa6",
+        "kind": "callback",
+        "mutability": "immutable",
+        "name": "Callbacka0d2888f62a2884d0fa6",
+        "representation": "identity",
+        "resource": null,
+        "source": {
+          "declaration": "Callbacka0d2888f62a2884d0fa6",
+          "extensions": {},
+          "producer": "lean"
+        },
+        "target": null,
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "callable": {
+          "effects": [
+            "host-call",
+            "fails"
+          ],
+          "failure": {
+            "errors": [
+              "error:native-callback"
+            ],
+            "mode": "declared",
+            "unexpected": "poison-runtime"
+          },
+          "invocation": "many",
+          "parameters": [
+            {
+              "default": null,
+              "lifetime": null,
+              "mutability": "immutable",
+              "name": "arg0",
+              "optional": false,
+              "ownership": "copy",
+              "type": {
+                "kind": "primitive",
+                "name": "nat"
+              }
+            }
+          ],
+          "reentry": "same-agent",
+          "result": {
+            "lifetime": null,
+            "ownership": "copy",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          },
+          "resultMode": "value",
+          "selfDisposal": "defer"
+        },
+        "cases": [],
+        "documentation": {
+          "details": "",
+          "summary": "Checked Lean callback."
+        },
+        "fields": [],
+        "host": null,
+        "id": "bridge:Callbacka1b5e4d2cfa3d3e80004",
+        "kind": "callback",
+        "mutability": "immutable",
+        "name": "Callbacka1b5e4d2cfa3d3e80004",
+        "representation": "identity",
+        "resource": null,
+        "source": {
+          "declaration": "Callbacka1b5e4d2cfa3d3e80004",
+          "extensions": {
+            "lean-lang.org/refinements": {
+              "parameters": [
+                null
+              ],
+              "result": {
+                "bound": "10",
+                "kind": "fin"
+              }
+            }
+          },
+          "producer": "lean"
+        },
+        "target": null,
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "callable": {
+          "effects": [
+            "host-call",
+            "fails"
+          ],
+          "failure": {
+            "errors": [
+              "error:native-callback"
+            ],
+            "mode": "declared",
+            "unexpected": "poison-runtime"
+          },
+          "invocation": "many",
+          "parameters": [
+            {
+              "default": null,
+              "lifetime": null,
+              "mutability": "immutable",
+              "name": "arg0",
+              "optional": false,
+              "ownership": "copy",
+              "type": {
+                "kind": "primitive",
+                "name": "nat"
+              }
+            }
+          ],
+          "reentry": "same-agent",
+          "result": {
+            "lifetime": null,
+            "ownership": "copy",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          },
+          "resultMode": "value",
+          "selfDisposal": "defer"
+        },
+        "cases": [],
+        "documentation": {
+          "details": "",
+          "summary": "Checked Lean callback."
+        },
+        "fields": [],
+        "host": null,
+        "id": "bridge:Callbackab07c65d8a1ba94ea760",
+        "kind": "callback",
+        "mutability": "immutable",
+        "name": "Callbackab07c65d8a1ba94ea760",
+        "representation": "identity",
+        "resource": null,
+        "source": {
+          "declaration": "Callbackab07c65d8a1ba94ea760",
+          "extensions": {
+            "lean-lang.org/refinements": {
+              "parameters": [
+                {
+                  "bound": "3",
+                  "kind": "fin"
+                }
+              ],
+              "result": {
+                "bound": "3",
+                "kind": "fin"
+              }
+            }
+          },
+          "producer": "lean"
+        },
+        "target": null,
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "callable": {
+          "effects": [
+            "host-call",
+            "fails"
+          ],
+          "failure": {
+            "errors": [
+              "error:native-callback"
+            ],
+            "mode": "declared",
+            "unexpected": "poison-runtime"
+          },
+          "invocation": "many",
+          "parameters": [
+            {
+              "default": null,
+              "lifetime": null,
+              "mutability": "immutable",
+              "name": "arg0",
+              "optional": false,
+              "ownership": "copy",
+              "type": {
+                "kind": "primitive",
+                "name": "nat"
+              }
+            }
+          ],
+          "reentry": "same-agent",
+          "result": {
+            "lifetime": null,
+            "ownership": "copy",
+            "type": {
+              "id": "lean:ReviewedCallbacks.Tile",
+              "kind": "named"
+            }
+          },
+          "resultMode": "value",
+          "selfDisposal": "defer"
+        },
+        "cases": [],
+        "documentation": {
+          "details": "",
+          "summary": "Checked Lean callback."
+        },
+        "fields": [],
+        "host": null,
+        "id": "bridge:Callbackb2f90de4d8e7b5a028e6",
+        "kind": "callback",
+        "mutability": "immutable",
+        "name": "Callbackb2f90de4d8e7b5a028e6",
+        "representation": "identity",
+        "resource": null,
+        "source": {
+          "declaration": "Callbackb2f90de4d8e7b5a028e6",
+          "extensions": {},
+          "producer": "lean"
+        },
+        "target": null,
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "callable": {
+          "effects": [
+            "host-call",
+            "fails"
+          ],
+          "failure": {
+            "errors": [
+              "error:native-callback"
+            ],
+            "mode": "declared",
+            "unexpected": "poison-runtime"
+          },
+          "invocation": "many",
+          "parameters": [
+            {
+              "default": null,
+              "lifetime": null,
+              "mutability": "immutable",
+              "name": "arg0",
+              "optional": false,
+              "ownership": "copy",
+              "type": {
+                "kind": "primitive",
+                "name": "nat"
+              }
+            }
+          ],
+          "reentry": "same-agent",
+          "result": {
+            "lifetime": null,
+            "ownership": "copy",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          },
+          "resultMode": "value",
+          "selfDisposal": "defer"
+        },
+        "cases": [],
+        "documentation": {
+          "details": "",
+          "summary": "Checked Lean callback."
+        },
+        "fields": [],
+        "host": null,
+        "id": "bridge:Callbackf2af9db3bda87ab235db",
+        "kind": "callback",
+        "mutability": "immutable",
+        "name": "Callbackf2af9db3bda87ab235db",
+        "representation": "identity",
+        "resource": null,
+        "source": {
+          "declaration": "Callbackf2af9db3bda87ab235db",
+          "extensions": {},
+          "producer": "lean"
+        },
+        "target": null,
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "callable": null,
+        "cases": [],
+        "documentation": {
+          "details": "",
+          "summary": "A tile."
+        },
+        "fields": [
+          {
+            "documentation": {
+              "details": "",
+              "summary": "digit"
+            },
+            "mutability": "immutable",
+            "name": "digit",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          },
+          {
+            "documentation": {
+              "details": "",
+              "summary": "count"
+            },
+            "mutability": "immutable",
+            "name": "count",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          }
+        ],
+        "host": null,
+        "id": "lean:ReviewedCallbacks.Tile",
+        "kind": "record",
+        "mutability": "immutable",
+        "name": "Tile",
+        "representation": "copied",
+        "resource": null,
+        "source": {
+          "declaration": "ReviewedCallbacks.Tile",
+          "extensions": {
+            "lean-lang.org/nominal-refinements": {
+              "fields": [
+                {
+                  "bound": "5",
+                  "kind": "fin"
+                },
+                null
+              ],
+              "kind": "record"
+            }
+          },
+          "producer": "lean"
+        },
+        "target": null,
+        "typeParameters": []
+      }
+    ]
+  },
+  "bindingIrSha256": "fd2780ddb2ebda7cce198bd5fcae11d3d6caf5bffb9ec5226ccb431f49b06bc4",
+  "byteOrder": "little",
+  "component": {
+    "id": "reviewedcallbacks@1.0.0",
+    "name": "reviewedcallbacks",
+    "version": "1.0.0"
+  },
+  "copiedGraph": {
+    "callbacks": [
+      {
+        "id": "bridge:Callback0b35b98375ec45f097a4",
+        "key": "1c8c62ab9d1ea80d3641b41193c41bc6de9a3096",
+        "parameters": [
+          {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        ],
+        "refinements": {
+          "parameters": [
+            {
+              "bound": "5",
+              "kind": "fin"
+            }
+          ],
+          "result": null
+        },
+        "result": {
+          "kind": "primitive",
+          "name": "nat"
+        }
+      },
+      {
+        "id": "bridge:Callback1469b3ae2047ff62e64f",
+        "key": "c9f9ab9808d5ed4cd9eb0c5380d7151c17138950",
+        "parameters": [
+          {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        ],
+        "refinements": {
+          "parameters": [
+            {
+              "bound": "10",
+              "kind": "fin"
+            }
+          ],
+          "result": null
+        },
+        "result": {
+          "kind": "primitive",
+          "name": "nat"
+        }
+      },
+      {
+        "id": "bridge:Callback4ee3669b3c7a96ffd2d0",
+        "key": "423e0c37f5780352153f2e471aebd23d81e23f74",
+        "parameters": [
+          {
+            "arguments": [
+              {
+                "kind": "primitive",
+                "name": "nat"
+              }
+            ],
+            "constructor": "array",
+            "kind": "apply"
+          }
+        ],
+        "refinements": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "3",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": null
+        },
+        "result": {
+          "kind": "primitive",
+          "name": "nat"
+        }
+      },
+      {
+        "id": "bridge:Callbacka0d2888f62a2884d0fa6",
+        "key": "ce903715575b2b74e1c334bc071ce4eceaad0558",
+        "parameters": [
+          {
+            "arguments": [
+              {
+                "id": "lean:ReviewedCallbacks.Tile",
+                "kind": "named"
+              }
+            ],
+            "constructor": "list",
+            "kind": "apply"
+          }
+        ],
+        "result": {
+          "kind": "primitive",
+          "name": "nat"
+        }
+      },
+      {
+        "id": "bridge:Callbacka1b5e4d2cfa3d3e80004",
+        "key": "3b911dc0ceee9737631b7e83276319d96008e83d",
+        "parameters": [
+          {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        ],
+        "refinements": {
+          "parameters": [
+            null
+          ],
+          "result": {
+            "bound": "10",
+            "kind": "fin"
+          }
+        },
+        "result": {
+          "kind": "primitive",
+          "name": "nat"
+        }
+      },
+      {
+        "id": "bridge:Callbackab07c65d8a1ba94ea760",
+        "key": "ffe59c1b227e089c6c50c0421d94e57562f09578",
+        "parameters": [
+          {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        ],
+        "refinements": {
+          "parameters": [
+            {
+              "bound": "3",
+              "kind": "fin"
+            }
+          ],
+          "result": {
+            "bound": "3",
+            "kind": "fin"
+          }
+        },
+        "result": {
+          "kind": "primitive",
+          "name": "nat"
+        }
+      },
+      {
+        "id": "bridge:Callbackb2f90de4d8e7b5a028e6",
+        "key": "d8cf2e9a7b0c40482bf9414b886a3e2086ac2e4e",
+        "parameters": [
+          {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        ],
+        "result": {
+          "id": "lean:ReviewedCallbacks.Tile",
+          "kind": "named"
+        }
+      },
+      {
+        "id": "bridge:Callbackf2af9db3bda87ab235db",
+        "key": "8a8a1e0d7d82df3b4bfabb94f5d59f8bf4b9ed1d",
+        "parameters": [
+          {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        ],
+        "result": {
+          "kind": "primitive",
+          "name": "nat"
+        }
+      }
+    ],
+    "exports": [
+      {
+        "bindingId": "lean:ReviewedCallbacks.apply",
+        "parameters": [
+          {
+            "id": "bridge:Callbackf2af9db3bda87ab235db",
+            "kind": "named"
+          },
+          {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        ],
+        "result": {
+          "kind": "primitive",
+          "name": "nat"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_fa450d817b39ecc8598f3607"
+      },
+      {
+        "bindingId": "lean:ReviewedCallbacks.counter",
+        "parameters": [
+          {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        ],
+        "result": {
+          "id": "bridge:Callbacka1b5e4d2cfa3d3e80004",
+          "kind": "named"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_53b0de0e75e4c429aaad48c8"
+      },
+      {
+        "bindingId": "lean:ReviewedCallbacks.digits",
+        "parameters": [
+          {
+            "kind": "primitive",
+            "name": "unit"
+          }
+        ],
+        "result": {
+          "id": "bridge:Callback4ee3669b3c7a96ffd2d0",
+          "kind": "named"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_8477254b8ea47a726adc68ad"
+      },
+      {
+        "bindingId": "lean:ReviewedCallbacks.scaler",
+        "parameters": [
+          {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        ],
+        "result": {
+          "id": "bridge:Callback1469b3ae2047ff62e64f",
+          "kind": "named"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_fb3aeed37b46e0e2a78ba51c"
+      },
+      {
+        "bindingId": "lean:ReviewedCallbacks.three",
+        "parameters": [
+          {
+            "id": "bridge:Callbackab07c65d8a1ba94ea760",
+            "kind": "named"
+          },
+          {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        ],
+        "result": {
+          "kind": "primitive",
+          "name": "nat"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_2f9e82778120400da600fcee"
+      },
+      {
+        "bindingId": "lean:ReviewedCallbacks.tileMaker",
+        "parameters": [
+          {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        ],
+        "result": {
+          "id": "bridge:Callbackb2f90de4d8e7b5a028e6",
+          "kind": "named"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_e429d90b6e2575f2175e6951"
+      },
+      {
+        "bindingId": "lean:ReviewedCallbacks.tiles",
+        "parameters": [
+          {
+            "kind": "primitive",
+            "name": "unit"
+          }
+        ],
+        "result": {
+          "id": "bridge:Callbacka0d2888f62a2884d0fa6",
+          "kind": "named"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_b6410c4c69dffaa409842d74"
+      },
+      {
+        "bindingId": "lean:ReviewedCallbacks.visit",
+        "parameters": [
+          {
+            "id": "bridge:Callback0b35b98375ec45f097a4",
+            "kind": "named"
+          }
+        ],
+        "result": {
+          "kind": "primitive",
+          "name": "nat"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_a4054277eb23862f1406fddb"
+      }
+    ],
+    "nominalRefinements": [
+      {
+        "id": "lean:ReviewedCallbacks.Tile",
+        "refinement": {
+          "fields": [
+            {
+              "bound": "5",
+              "kind": "fin"
+            },
+            null
+          ],
+          "kind": "record"
+        }
+      }
+    ],
+    "schemaVersion": 1,
+    "types": [
+      {
+        "fields": [
+          {
+            "name": "digit",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          },
+          {
+            "name": "count",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          }
+        ],
+        "id": "lean:ReviewedCallbacks.Tile",
+        "kind": "record"
+      }
+    ]
+  },
+  "exports": [
+    {
+      "bindingId": "lean:ReviewedCallbacks.apply",
+      "documentation": "An unrefined callback keeps its original identity. ",
+      "module": "ReviewedCallbacks",
+      "name": "ReviewedCallbacks.apply",
+      "parameters": [
+        {
+          "name": "f",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": true,
+              "unbox": "lean_unbox"
+            },
+            "kind": "callback",
+            "parameters": [
+              {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": false,
+                  "unbox": "lean_unbox"
+                },
+                "kind": "primitive",
+                "lean": "Nat",
+                "name": "nat"
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "kind": "primitive",
+              "lean": "Nat",
+              "name": "nat"
+            }
+          }
+        },
+        {
+          "name": "value",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": false,
+              "unbox": "lean_unbox"
+            },
+            "kind": "primitive",
+            "lean": "Nat",
+            "name": "nat"
+          }
+        }
+      ],
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": false,
+          "unbox": "lean_unbox"
+        },
+        "kind": "primitive",
+        "lean": "Nat",
+        "name": "nat"
+      },
+      "sourcePosition": {
+        "endColumn": 56,
+        "endLine": 47,
+        "path": "ReviewedCallbacks.lean",
+        "startColumn": 0,
+        "startLine": 46
+      },
+      "symbol": "lean_bridge_fa450d817b39ecc8598f3607_lean",
+      "theoremReferences": []
+    },
+    {
+      "bindingId": "lean:ReviewedCallbacks.counter",
+      "documentation": null,
+      "module": "ReviewedCallbacks",
+      "name": "ReviewedCallbacks.counter",
+      "parameters": [
+        {
+          "name": "start",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": false,
+              "unbox": "lean_unbox"
+            },
+            "kind": "primitive",
+            "lean": "Nat",
+            "name": "nat"
+          }
+        }
+      ],
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": true,
+          "unbox": "lean_unbox"
+        },
+        "kind": "callback",
+        "parameters": [
+          {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": false,
+              "unbox": "lean_unbox"
+            },
+            "kind": "primitive",
+            "lean": "Nat",
+            "name": "nat"
+          }
+        ],
+        "result": {
+          "abi": {
+            "box": "lean_box",
+            "cType": "lean_object*",
+            "heap": false,
+            "unbox": "lean_unbox"
+          },
+          "base": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": false,
+              "unbox": "lean_unbox"
+            },
+            "kind": "primitive",
+            "lean": "Nat",
+            "name": "nat"
+          },
+          "kind": "refinement",
+          "predicate": {
+            "bound": "10",
+            "kind": "fin"
+          }
+        }
+      },
+      "sourcePosition": {
+        "endColumn": 66,
+        "endLine": 21,
+        "path": "ReviewedCallbacks.lean",
+        "startColumn": 0,
+        "startLine": 20
+      },
+      "symbol": "lean_bridge_53b0de0e75e4c429aaad48c8_lean",
+      "theoremReferences": []
+    },
+    {
+      "bindingId": "lean:ReviewedCallbacks.digits",
+      "documentation": "A container of bounded values in a leased closure's argument. ",
+      "module": "ReviewedCallbacks",
+      "name": "ReviewedCallbacks.digits",
+      "parameters": [
+        {
+          "name": "x._@.ReviewedCallbacks.4093913789._hygCtx._hyg.2",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": false,
+              "unbox": "lean_unbox"
+            },
+            "kind": "primitive",
+            "lean": "Unit",
+            "name": "unit"
+          }
+        }
+      ],
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": true,
+          "unbox": "lean_unbox"
+        },
+        "kind": "callback",
+        "parameters": [
+          {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": true,
+              "unbox": "lean_unbox"
+            },
+            "element": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "base": {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": false,
+                  "unbox": "lean_unbox"
+                },
+                "kind": "primitive",
+                "lean": "Nat",
+                "name": "nat"
+              },
+              "kind": "refinement",
+              "predicate": {
+                "bound": "3",
+                "kind": "fin"
+              }
+            },
+            "kind": "array"
+          }
+        ],
+        "result": {
+          "abi": {
+            "box": "lean_box",
+            "cType": "lean_object*",
+            "heap": false,
+            "unbox": "lean_unbox"
+          },
+          "kind": "primitive",
+          "lean": "Nat",
+          "name": "nat"
+        }
+      },
+      "sourcePosition": {
+        "endColumn": 106,
+        "endLine": 28,
+        "path": "ReviewedCallbacks.lean",
+        "startColumn": 0,
+        "startLine": 27
+      },
+      "symbol": "lean_bridge_8477254b8ea47a726adc68ad_lean",
+      "theoremReferences": []
+    },
+    {
+      "bindingId": "lean:ReviewedCallbacks.scaler",
+      "documentation": null,
+      "module": "ReviewedCallbacks",
+      "name": "ReviewedCallbacks.scaler",
+      "parameters": [
+        {
+          "name": "factor",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": false,
+              "unbox": "lean_unbox"
+            },
+            "kind": "primitive",
+            "lean": "Nat",
+            "name": "nat"
+          }
+        }
+      ],
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": true,
+          "unbox": "lean_unbox"
+        },
+        "kind": "callback",
+        "parameters": [
+          {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": false,
+              "unbox": "lean_unbox"
+            },
+            "base": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "kind": "primitive",
+              "lean": "Nat",
+              "name": "nat"
+            },
+            "kind": "refinement",
+            "predicate": {
+              "bound": "10",
+              "kind": "fin"
+            }
+          }
+        ],
+        "result": {
+          "abi": {
+            "box": "lean_box",
+            "cType": "lean_object*",
+            "heap": false,
+            "unbox": "lean_unbox"
+          },
+          "kind": "primitive",
+          "lean": "Nat",
+          "name": "nat"
+        }
+      },
+      "sourcePosition": {
+        "endColumn": 66,
+        "endLine": 13,
+        "path": "ReviewedCallbacks.lean",
+        "startColumn": 0,
+        "startLine": 12
+      },
+      "symbol": "lean_bridge_fb3aeed37b46e0e2a78ba51c_lean",
+      "theoremReferences": []
+    },
+    {
+      "bindingId": "lean:ReviewedCallbacks.three",
+      "documentation": "A host-produced bounded reply: admitted by npm, refused by native packages. ",
+      "module": "ReviewedCallbacks",
+      "name": "ReviewedCallbacks.three",
+      "parameters": [
+        {
+          "name": "f",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": true,
+              "unbox": "lean_unbox"
+            },
+            "kind": "callback",
+            "parameters": [
+              {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": false,
+                  "unbox": "lean_unbox"
+                },
+                "base": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "primitive",
+                  "lean": "Nat",
+                  "name": "nat"
+                },
+                "kind": "refinement",
+                "predicate": {
+                  "bound": "3",
+                  "kind": "fin"
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "base": {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": false,
+                  "unbox": "lean_unbox"
+                },
+                "kind": "primitive",
+                "lean": "Nat",
+                "name": "nat"
+              },
+              "kind": "refinement",
+              "predicate": {
+                "bound": "3",
+                "kind": "fin"
+              }
+            }
+          }
+        },
+        {
+          "name": "value",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": false,
+              "unbox": "lean_unbox"
+            },
+            "base": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "kind": "primitive",
+              "lean": "Nat",
+              "name": "nat"
+            },
+            "kind": "refinement",
+            "predicate": {
+              "bound": "3",
+              "kind": "fin"
+            }
+          }
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          null,
+          {
+            "bound": "3",
+            "kind": "fin"
+          }
+        ],
+        "result": {
+          "bound": "3",
+          "kind": "fin"
+        }
+      },
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": false,
+          "unbox": "lean_unbox"
+        },
+        "base": {
+          "abi": {
+            "box": "lean_box",
+            "cType": "lean_object*",
+            "heap": false,
+            "unbox": "lean_unbox"
+          },
+          "kind": "primitive",
+          "lean": "Nat",
+          "name": "nat"
+        },
+        "kind": "refinement",
+        "predicate": {
+          "bound": "3",
+          "kind": "fin"
+        }
+      },
+      "sourcePosition": {
+        "endColumn": 64,
+        "endLine": 51,
+        "path": "ReviewedCallbacks.lean",
+        "startColumn": 0,
+        "startLine": 49
+      },
+      "symbol": "lean_bridge_2f9e82778120400da600fcee_lean",
+      "theoremReferences": []
+    },
+    {
+      "bindingId": "lean:ReviewedCallbacks.tileMaker",
+      "documentation": null,
+      "module": "ReviewedCallbacks",
+      "name": "ReviewedCallbacks.tileMaker",
+      "parameters": [
+        {
+          "name": "start",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": false,
+              "unbox": "lean_unbox"
+            },
+            "kind": "primitive",
+            "lean": "Nat",
+            "name": "nat"
+          }
+        }
+      ],
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": true,
+          "unbox": "lean_unbox"
+        },
+        "kind": "callback",
+        "parameters": [
+          {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": false,
+              "unbox": "lean_unbox"
+            },
+            "kind": "primitive",
+            "lean": "Nat",
+            "name": "nat"
+          }
+        ],
+        "result": {
+          "abi": {
+            "box": "lean_box",
+            "cType": "lean_object*",
+            "heap": true,
+            "unbox": "lean_unbox"
+          },
+          "constructor": "ReviewedCallbacks.Tile.mk",
+          "fields": [
+            {
+              "name": "digit",
+              "projection": "ReviewedCallbacks.Tile.digit",
+              "type": {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": false,
+                  "unbox": "lean_unbox"
+                },
+                "base": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "primitive",
+                  "lean": "Nat",
+                  "name": "nat"
+                },
+                "kind": "refinement",
+                "predicate": {
+                  "bound": "5",
+                  "kind": "fin"
+                }
+              }
+            },
+            {
+              "name": "count",
+              "projection": "ReviewedCallbacks.Tile.count",
+              "type": {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": false,
+                  "unbox": "lean_unbox"
+                },
+                "kind": "primitive",
+                "lean": "Nat",
+                "name": "nat"
+              }
+            }
+          ],
+          "kind": "record",
+          "lean": "ReviewedCallbacks.Tile",
+          "name": "ReviewedCallbacks.Tile"
+        }
+      },
+      "sourcePosition": {
+        "endColumn": 68,
+        "endLine": 44,
+        "path": "ReviewedCallbacks.lean",
+        "startColumn": 0,
+        "startLine": 43
+      },
+      "symbol": "lean_bridge_e429d90b6e2575f2175e6951_lean",
+      "theoremReferences": []
+    },
+    {
+      "bindingId": "lean:ReviewedCallbacks.tiles",
+      "documentation": null,
+      "module": "ReviewedCallbacks",
+      "name": "ReviewedCallbacks.tiles",
+      "parameters": [
+        {
+          "name": "x._@.ReviewedCallbacks.241264836._hygCtx._hyg.2",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": false,
+              "unbox": "lean_unbox"
+            },
+            "kind": "primitive",
+            "lean": "Unit",
+            "name": "unit"
+          }
+        }
+      ],
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": true,
+          "unbox": "lean_unbox"
+        },
+        "kind": "callback",
+        "parameters": [
+          {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": false,
+              "unbox": "lean_unbox"
+            },
+            "element": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": true,
+                "unbox": "lean_unbox"
+              },
+              "constructor": "ReviewedCallbacks.Tile.mk",
+              "fields": [
+                {
+                  "name": "digit",
+                  "projection": "ReviewedCallbacks.Tile.digit",
+                  "type": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": false,
+                      "unbox": "lean_unbox"
+                    },
+                    "base": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": false,
+                        "unbox": "lean_unbox"
+                      },
+                      "kind": "primitive",
+                      "lean": "Nat",
+                      "name": "nat"
+                    },
+                    "kind": "refinement",
+                    "predicate": {
+                      "bound": "5",
+                      "kind": "fin"
+                    }
+                  }
+                },
+                {
+                  "name": "count",
+                  "projection": "ReviewedCallbacks.Tile.count",
+                  "type": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": false,
+                      "unbox": "lean_unbox"
+                    },
+                    "kind": "primitive",
+                    "lean": "Nat",
+                    "name": "nat"
+                  }
+                }
+              ],
+              "kind": "record",
+              "lean": "ReviewedCallbacks.Tile",
+              "name": "ReviewedCallbacks.Tile"
+            },
+            "kind": "list"
+          }
+        ],
+        "result": {
+          "abi": {
+            "box": "lean_box",
+            "cType": "lean_object*",
+            "heap": false,
+            "unbox": "lean_unbox"
+          },
+          "kind": "primitive",
+          "lean": "Nat",
+          "name": "nat"
+        }
+      },
+      "sourcePosition": {
+        "endColumn": 56,
+        "endLine": 36,
+        "path": "ReviewedCallbacks.lean",
+        "startColumn": 0,
+        "startLine": 35
+      },
+      "symbol": "lean_bridge_b6410c4c69dffaa409842d74_lean",
+      "theoremReferences": []
+    },
+    {
+      "bindingId": "lean:ReviewedCallbacks.visit",
+      "documentation": "Lean passes bounded arguments to the host's callback. ",
+      "module": "ReviewedCallbacks",
+      "name": "ReviewedCallbacks.visit",
+      "parameters": [
+        {
+          "name": "host",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": true,
+              "unbox": "lean_unbox"
+            },
+            "kind": "callback",
+            "parameters": [
+              {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": false,
+                  "unbox": "lean_unbox"
+                },
+                "base": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "primitive",
+                  "lean": "Nat",
+                  "name": "nat"
+                },
+                "kind": "refinement",
+                "predicate": {
+                  "bound": "5",
+                  "kind": "fin"
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "kind": "primitive",
+              "lean": "Nat",
+              "name": "nat"
+            }
+          }
+        }
+      ],
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": false,
+          "unbox": "lean_unbox"
+        },
+        "kind": "primitive",
+        "lean": "Nat",
+        "name": "nat"
+      },
+      "sourcePosition": {
+        "endColumn": 122,
+        "endLine": 25,
+        "path": "ReviewedCallbacks.lean",
+        "startColumn": 0,
+        "startLine": 23
+      },
+      "symbol": "lean_bridge_a4054277eb23862f1406fddb_lean",
+      "theoremReferences": []
+    }
+  ],
+  "pointerBits": 32,
+  "profile": "php-wasm-copied-v1",
+  "schemaVersion": 5,
+  "sourceIdentity": {
+    "exportConfigurationSha256": "d4d91cf5a4e97de22ed3eaec6e3e7868ea41b78c8bfe981e2a21150b1f3306b2",
+    "exportConfigurationSource": "{\n  \"modules\": [\n    \"ReviewedCallbacks\"\n  ],\n  \"schemaVersion\": 1,\n  \"targets\": {\n    \"php-wasm\": {\n      \"composer\": {\n        \"name\": \"lean-bridge-reviewedcallbacks/wasm\",\n        \"version\": \"1.0.0\"\n      },\n      \"npm\": {\n        \"name\": \"lean-bridge-reviewedcallbacks-wasm\",\n        \"version\": \"1.0.0\"\n      }\n    }\n  }\n}\n",
+    "extractorSha256": "00f8ce7a3888339cdb1c36b0dce3d8bc9d4c650ea18c7a4926c2d29d4690443a",
+    "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+    "leanCompilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+    "leanVersion": "4.32.2",
+    "modules": [
+      {
+        "interface": {
+          "bytes": 94504,
+          "interfaceSha256": "813f72b9812c7faa85f5afef0be120802f8b0abec0db01318b07e720a465a8cb",
+          "sha256": "6ffbb13e93a785ec48f8d50565deab1d0c746c3c186a410129009b747e2b6b29"
+        },
+        "module": "ReviewedCallbacks",
+        "source": {
+          "bytes": 2303,
+          "path": "ReviewedCallbacks.lean",
+          "sha256": "e13a236a80191b6eab79e94c8bbaa293633ab192cb8f8818b902cfaabfd02b24"
+        }
+      }
+    ],
+    "request": {
+      "arities": [
+        [
+          "ReviewedCallbacks.counter",
+          1
+        ],
+        [
+          "ReviewedCallbacks.digits",
+          1
+        ],
+        [
+          "ReviewedCallbacks.scaler",
+          1
+        ],
+        [
+          "ReviewedCallbacks.tileMaker",
+          1
+        ],
+        [
+          "ReviewedCallbacks.tiles",
+          1
+        ]
+      ],
+      "exportModules": [
+        "ReviewedCallbacks"
+      ],
+      "exports": [
+        "ReviewedCallbacks.apply",
+        "ReviewedCallbacks.counter",
+        "ReviewedCallbacks.digits",
+        "ReviewedCallbacks.scaler",
+        "ReviewedCallbacks.three",
+        "ReviewedCallbacks.tileMaker",
+        "ReviewedCallbacks.tiles",
+        "ReviewedCallbacks.visit"
+      ],
+      "metadata": {
+        "invocationIdentitySha256": "d6c650dadd49f9b5c049af9082f68861b2f352b2c3e1dc8fbca00a34f179183c",
+        "modules": [
+          {
+            "interfaceSha256": "813f72b9812c7faa85f5afef0be120802f8b0abec0db01318b07e720a465a8cb",
+            "name": "ReviewedCallbacks",
+            "sourcePath": "ReviewedCallbacks.lean",
+            "sourceSha256": "e13a236a80191b6eab79e94c8bbaa293633ab192cb8f8818b902cfaabfd02b24"
+          }
+        ],
+        "toolchain": "leanprover/lean4:v4.32.2"
+      },
+      "modules": [
+        "ReviewedCallbacks"
+      ],
+      "profile": "native-library-v1",
+      "resources": []
+    },
+    "reviewedBindingIr": {
+      "path": "api.binding-ir.json",
+      "schemaVersion": 1,
+      "semanticSha256": "2f0956756509c38c2ff12de38e4bb550459343321c91a0d9980d7ddbab409c8f",
+      "source": "{\n  \"assurance\": [],\n  \"capabilities\": [],\n  \"component\": {\n    \"id\": \"reviewedcallbacks@1.0.0\",\n    \"name\": \"reviewedcallbacks\",\n    \"version\": \"1.0.0\"\n  },\n  \"declarations\": [\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Call ReviewedCallbacks.scaler.\"\n      },\n      \"effects\": [],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:ReviewedCallbacks.scaler\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"scaler\",\n      \"overloadKey\": \"ReviewedCallbacks.scaler\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"arg0\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\",\n        \"type\": {\n          \"id\": \"bridge:Callback1469b3ae2047ff62e64f\",\n          \"kind\": \"named\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"ReviewedCallbacks.scaler\",\n        \"extensions\": {},\n        \"producer\": \"review\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Call ReviewedCallbacks.counter.\"\n      },\n      \"effects\": [],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:ReviewedCallbacks.counter\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"counter\",\n      \"overloadKey\": \"ReviewedCallbacks.counter\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"arg0\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\",\n        \"type\": {\n          \"id\": \"bridge:Callbacka1b5e4d2cfa3d3e80004\",\n          \"kind\": \"named\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"ReviewedCallbacks.counter\",\n        \"extensions\": {},\n        \"producer\": \"review\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Call ReviewedCallbacks.visit.\"\n      },\n      \"effects\": [\n        \"fails\",\n        \"host-call\"\n      ],\n      \"failure\": {\n        \"errors\": [\n          \"error:native-callback\"\n        ],\n        \"mode\": \"declared\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:ReviewedCallbacks.visit\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"visit\",\n      \"overloadKey\": \"ReviewedCallbacks.visit\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"arg0\",\n          \"optional\": false,\n          \"ownership\": \"borrow\",\n          \"type\": {\n            \"id\": \"bridge:Callback0b35b98375ec45f097a4\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"kind\": \"primitive\",\n          \"name\": \"nat\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"ReviewedCallbacks.visit\",\n        \"extensions\": {},\n        \"producer\": \"review\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Call ReviewedCallbacks.digits.\"\n      },\n      \"effects\": [],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:ReviewedCallbacks.digits\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"digits\",\n      \"overloadKey\": \"ReviewedCallbacks.digits\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"arg0\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"unit\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\",\n        \"type\": {\n          \"id\": \"bridge:Callback4ee3669b3c7a96ffd2d0\",\n          \"kind\": \"named\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"ReviewedCallbacks.digits\",\n        \"extensions\": {},\n        \"producer\": \"review\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Call ReviewedCallbacks.tiles.\"\n      },\n      \"effects\": [],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:ReviewedCallbacks.tiles\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"tiles\",\n      \"overloadKey\": \"ReviewedCallbacks.tiles\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"arg0\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"unit\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\",\n        \"type\": {\n          \"id\": \"bridge:Callbacka0d2888f62a2884d0fa6\",\n          \"kind\": \"named\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"ReviewedCallbacks.tiles\",\n        \"extensions\": {},\n        \"producer\": \"review\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Call ReviewedCallbacks.tileMaker.\"\n      },\n      \"effects\": [],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:ReviewedCallbacks.tileMaker\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"tileMaker\",\n      \"overloadKey\": \"ReviewedCallbacks.tileMaker\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"arg0\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\",\n        \"type\": {\n          \"id\": \"bridge:Callbackb2f90de4d8e7b5a028e6\",\n          \"kind\": \"named\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"ReviewedCallbacks.tileMaker\",\n        \"extensions\": {},\n        \"producer\": \"review\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Call ReviewedCallbacks.apply.\"\n      },\n      \"effects\": [\n        \"fails\",\n        \"host-call\"\n      ],\n      \"failure\": {\n        \"errors\": [\n          \"error:native-callback\"\n        ],\n        \"mode\": \"declared\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:ReviewedCallbacks.apply\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"apply\",\n      \"overloadKey\": \"ReviewedCallbacks.apply\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"arg0\",\n          \"optional\": false,\n          \"ownership\": \"borrow\",\n          \"type\": {\n            \"id\": \"bridge:Callbackf2af9db3bda87ab235db\",\n            \"kind\": \"named\"\n          }\n        },\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"arg1\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"kind\": \"primitive\",\n          \"name\": \"nat\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"ReviewedCallbacks.apply\",\n        \"extensions\": {},\n        \"producer\": \"review\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Call ReviewedCallbacks.three.\"\n      },\n      \"effects\": [\n        \"fails\",\n        \"host-call\"\n      ],\n      \"failure\": {\n        \"errors\": [\n          \"error:native-callback\"\n        ],\n        \"mode\": \"declared\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:ReviewedCallbacks.three\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"three\",\n      \"overloadKey\": \"ReviewedCallbacks.three\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"arg0\",\n          \"optional\": false,\n          \"ownership\": \"borrow\",\n          \"type\": {\n            \"id\": \"bridge:Callbackab07c65d8a1ba94ea760\",\n            \"kind\": \"named\"\n          }\n        },\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"arg1\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"kind\": \"primitive\",\n          \"name\": \"nat\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"ReviewedCallbacks.three\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              null,\n              {\n                \"bound\": \"3\",\n                \"kind\": \"fin\"\n              }\n            ],\n            \"result\": {\n              \"bound\": \"3\",\n              \"kind\": \"fin\"\n            }\n          }\n        },\n        \"producer\": \"review\"\n      },\n      \"typeParameters\": []\n    }\n  ],\n  \"documentation\": {\n    \"details\": \"\",\n    \"summary\": \"Independent callback contract.\"\n  },\n  \"errors\": [\n    {\n      \"category\": \"boundary\",\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"A host callback failed.\"\n      },\n      \"id\": \"error:native-callback\",\n      \"name\": \"NativeCallbackFailure\",\n      \"payload\": null\n    }\n  ],\n  \"producers\": [\n    {\n      \"adapter\": \"independent-callback-review\",\n      \"adapterVersion\": 1,\n      \"extensions\": {},\n      \"id\": \"review\",\n      \"tool\": \"Callback contract review\",\n      \"toolVersion\": \"1\"\n    }\n  ],\n  \"schemaVersion\": 3,\n  \"types\": [\n    {\n      \"assurance\": [],\n      \"callable\": null,\n      \"cases\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"A tile.\"\n      },\n      \"fields\": [\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"digit\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"digit\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        },\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"count\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"count\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        }\n      ],\n      \"host\": null,\n      \"id\": \"lean:ReviewedCallbacks.Tile\",\n      \"kind\": \"record\",\n      \"mutability\": \"immutable\",\n      \"name\": \"Tile\",\n      \"representation\": \"copied\",\n      \"resource\": null,\n      \"source\": {\n        \"declaration\": \"ReviewedCallbacks.Tile\",\n        \"extensions\": {\n          \"lean-lang.org/nominal-refinements\": {\n            \"fields\": [\n              {\n                \"bound\": \"5\",\n                \"kind\": \"fin\"\n              },\n              null\n            ],\n            \"kind\": \"record\"\n          }\n        },\n        \"producer\": \"review\"\n      },\n      \"target\": null,\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"callable\": {\n        \"effects\": [\n          \"host-call\",\n          \"fails\"\n        ],\n        \"failure\": {\n          \"errors\": [\n            \"error:native-callback\"\n          ],\n          \"mode\": \"declared\",\n          \"unexpected\": \"poison-runtime\"\n        },\n        \"invocation\": \"many\",\n        \"parameters\": [\n          {\n            \"default\": null,\n            \"lifetime\": null,\n            \"mutability\": \"immutable\",\n            \"name\": \"arg0\",\n            \"optional\": false,\n            \"ownership\": \"copy\",\n            \"type\": {\n              \"kind\": \"primitive\",\n              \"name\": \"nat\"\n            }\n          }\n        ],\n        \"reentry\": \"same-agent\",\n        \"result\": {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        },\n        \"resultMode\": \"value\",\n        \"selfDisposal\": \"defer\"\n      },\n      \"cases\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Checked Lean callback.\"\n      },\n      \"fields\": [],\n      \"host\": null,\n      \"id\": \"bridge:Callback1469b3ae2047ff62e64f\",\n      \"kind\": \"callback\",\n      \"mutability\": \"immutable\",\n      \"name\": \"Callback1469b3ae2047ff62e64f\",\n      \"representation\": \"identity\",\n      \"resource\": null,\n      \"source\": {\n        \"declaration\": \"Callback1469b3ae2047ff62e64f\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"bound\": \"10\",\n                \"kind\": \"fin\"\n              }\n            ],\n            \"result\": null\n          }\n        },\n        \"producer\": \"review\"\n      },\n      \"target\": null,\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"callable\": {\n        \"effects\": [\n          \"host-call\",\n          \"fails\"\n        ],\n        \"failure\": {\n          \"errors\": [\n            \"error:native-callback\"\n          ],\n          \"mode\": \"declared\",\n          \"unexpected\": \"poison-runtime\"\n        },\n        \"invocation\": \"many\",\n        \"parameters\": [\n          {\n            \"default\": null,\n            \"lifetime\": null,\n            \"mutability\": \"immutable\",\n            \"name\": \"arg0\",\n            \"optional\": false,\n            \"ownership\": \"copy\",\n            \"type\": {\n              \"kind\": \"primitive\",\n              \"name\": \"nat\"\n            }\n          }\n        ],\n        \"reentry\": \"same-agent\",\n        \"result\": {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        },\n        \"resultMode\": \"value\",\n        \"selfDisposal\": \"defer\"\n      },\n      \"cases\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Checked Lean callback.\"\n      },\n      \"fields\": [],\n      \"host\": null,\n      \"id\": \"bridge:Callbacka1b5e4d2cfa3d3e80004\",\n      \"kind\": \"callback\",\n      \"mutability\": \"immutable\",\n      \"name\": \"Callbacka1b5e4d2cfa3d3e80004\",\n      \"representation\": \"identity\",\n      \"resource\": null,\n      \"source\": {\n        \"declaration\": \"Callbacka1b5e4d2cfa3d3e80004\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              null\n            ],\n            \"result\": {\n              \"bound\": \"10\",\n              \"kind\": \"fin\"\n            }\n          }\n        },\n        \"producer\": \"review\"\n      },\n      \"target\": null,\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"callable\": {\n        \"effects\": [\n          \"host-call\",\n          \"fails\"\n        ],\n        \"failure\": {\n          \"errors\": [\n            \"error:native-callback\"\n          ],\n          \"mode\": \"declared\",\n          \"unexpected\": \"poison-runtime\"\n        },\n        \"invocation\": \"many\",\n        \"parameters\": [\n          {\n            \"default\": null,\n            \"lifetime\": null,\n            \"mutability\": \"immutable\",\n            \"name\": \"arg0\",\n            \"optional\": false,\n            \"ownership\": \"copy\",\n            \"type\": {\n              \"kind\": \"primitive\",\n              \"name\": \"nat\"\n            }\n          }\n        ],\n        \"reentry\": \"same-agent\",\n        \"result\": {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        },\n        \"resultMode\": \"value\",\n        \"selfDisposal\": \"defer\"\n      },\n      \"cases\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Checked Lean callback.\"\n      },\n      \"fields\": [],\n      \"host\": null,\n      \"id\": \"bridge:Callback0b35b98375ec45f097a4\",\n      \"kind\": \"callback\",\n      \"mutability\": \"immutable\",\n      \"name\": \"Callback0b35b98375ec45f097a4\",\n      \"representation\": \"identity\",\n      \"resource\": null,\n      \"source\": {\n        \"declaration\": \"Callback0b35b98375ec45f097a4\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"bound\": \"5\",\n                \"kind\": \"fin\"\n              }\n            ],\n            \"result\": null\n          }\n        },\n        \"producer\": \"review\"\n      },\n      \"target\": null,\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"callable\": {\n        \"effects\": [\n          \"host-call\",\n          \"fails\"\n        ],\n        \"failure\": {\n          \"errors\": [\n            \"error:native-callback\"\n          ],\n          \"mode\": \"declared\",\n          \"unexpected\": \"poison-runtime\"\n        },\n        \"invocation\": \"many\",\n        \"parameters\": [\n          {\n            \"default\": null,\n            \"lifetime\": null,\n            \"mutability\": \"immutable\",\n            \"name\": \"arg0\",\n            \"optional\": false,\n            \"ownership\": \"copy\",\n            \"type\": {\n              \"arguments\": [\n                {\n                  \"kind\": \"primitive\",\n                  \"name\": \"nat\"\n                }\n              ],\n              \"constructor\": \"array\",\n              \"kind\": \"apply\"\n            }\n          }\n        ],\n        \"reentry\": \"same-agent\",\n        \"result\": {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        },\n        \"resultMode\": \"value\",\n        \"selfDisposal\": \"defer\"\n      },\n      \"cases\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Checked Lean callback.\"\n      },\n      \"fields\": [],\n      \"host\": null,\n      \"id\": \"bridge:Callback4ee3669b3c7a96ffd2d0\",\n      \"kind\": \"callback\",\n      \"mutability\": \"immutable\",\n      \"name\": \"Callback4ee3669b3c7a96ffd2d0\",\n      \"representation\": \"identity\",\n      \"resource\": null,\n      \"source\": {\n        \"declaration\": \"Callback4ee3669b3c7a96ffd2d0\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"arguments\": [\n                  {\n                    \"bound\": \"3\",\n                    \"kind\": \"fin\"\n                  }\n                ],\n                \"kind\": \"array\"\n              }\n            ],\n            \"result\": null\n          }\n        },\n        \"producer\": \"review\"\n      },\n      \"target\": null,\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"callable\": {\n        \"effects\": [\n          \"host-call\",\n          \"fails\"\n        ],\n        \"failure\": {\n          \"errors\": [\n            \"error:native-callback\"\n          ],\n          \"mode\": \"declared\",\n          \"unexpected\": \"poison-runtime\"\n        },\n        \"invocation\": \"many\",\n        \"parameters\": [\n          {\n            \"default\": null,\n            \"lifetime\": null,\n            \"mutability\": \"immutable\",\n            \"name\": \"arg0\",\n            \"optional\": false,\n            \"ownership\": \"copy\",\n            \"type\": {\n              \"arguments\": [\n                {\n                  \"id\": \"lean:ReviewedCallbacks.Tile\",\n                  \"kind\": \"named\"\n                }\n              ],\n              \"constructor\": \"list\",\n              \"kind\": \"apply\"\n            }\n          }\n        ],\n        \"reentry\": \"same-agent\",\n        \"result\": {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        },\n        \"resultMode\": \"value\",\n        \"selfDisposal\": \"defer\"\n      },\n      \"cases\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Checked Lean callback.\"\n      },\n      \"fields\": [],\n      \"host\": null,\n      \"id\": \"bridge:Callbacka0d2888f62a2884d0fa6\",\n      \"kind\": \"callback\",\n      \"mutability\": \"immutable\",\n      \"name\": \"Callbacka0d2888f62a2884d0fa6\",\n      \"representation\": \"identity\",\n      \"resource\": null,\n      \"source\": {\n        \"declaration\": \"Callbacka0d2888f62a2884d0fa6\",\n        \"extensions\": {},\n        \"producer\": \"review\"\n      },\n      \"target\": null,\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"callable\": {\n        \"effects\": [\n          \"host-call\",\n          \"fails\"\n        ],\n        \"failure\": {\n          \"errors\": [\n            \"error:native-callback\"\n          ],\n          \"mode\": \"declared\",\n          \"unexpected\": \"poison-runtime\"\n        },\n        \"invocation\": \"many\",\n        \"parameters\": [\n          {\n            \"default\": null,\n            \"lifetime\": null,\n            \"mutability\": \"immutable\",\n            \"name\": \"arg0\",\n            \"optional\": false,\n            \"ownership\": \"copy\",\n            \"type\": {\n              \"kind\": \"primitive\",\n              \"name\": \"nat\"\n            }\n          }\n        ],\n        \"reentry\": \"same-agent\",\n        \"result\": {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"id\": \"lean:ReviewedCallbacks.Tile\",\n            \"kind\": \"named\"\n          }\n        },\n        \"resultMode\": \"value\",\n        \"selfDisposal\": \"defer\"\n      },\n      \"cases\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Checked Lean callback.\"\n      },\n      \"fields\": [],\n      \"host\": null,\n      \"id\": \"bridge:Callbackb2f90de4d8e7b5a028e6\",\n      \"kind\": \"callback\",\n      \"mutability\": \"immutable\",\n      \"name\": \"Callbackb2f90de4d8e7b5a028e6\",\n      \"representation\": \"identity\",\n      \"resource\": null,\n      \"source\": {\n        \"declaration\": \"Callbackb2f90de4d8e7b5a028e6\",\n        \"extensions\": {},\n        \"producer\": \"review\"\n      },\n      \"target\": null,\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"callable\": {\n        \"effects\": [\n          \"host-call\",\n          \"fails\"\n        ],\n        \"failure\": {\n          \"errors\": [\n            \"error:native-callback\"\n          ],\n          \"mode\": \"declared\",\n          \"unexpected\": \"poison-runtime\"\n        },\n        \"invocation\": \"many\",\n        \"parameters\": [\n          {\n            \"default\": null,\n            \"lifetime\": null,\n            \"mutability\": \"immutable\",\n            \"name\": \"arg0\",\n            \"optional\": false,\n            \"ownership\": \"copy\",\n            \"type\": {\n              \"kind\": \"primitive\",\n              \"name\": \"nat\"\n            }\n          }\n        ],\n        \"reentry\": \"same-agent\",\n        \"result\": {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        },\n        \"resultMode\": \"value\",\n        \"selfDisposal\": \"defer\"\n      },\n      \"cases\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Checked Lean callback.\"\n      },\n      \"fields\": [],\n      \"host\": null,\n      \"id\": \"bridge:Callbackf2af9db3bda87ab235db\",\n      \"kind\": \"callback\",\n      \"mutability\": \"immutable\",\n      \"name\": \"Callbackf2af9db3bda87ab235db\",\n      \"representation\": \"identity\",\n      \"resource\": null,\n      \"source\": {\n        \"declaration\": \"Callbackf2af9db3bda87ab235db\",\n        \"extensions\": {},\n        \"producer\": \"review\"\n      },\n      \"target\": null,\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"callable\": {\n        \"effects\": [\n          \"host-call\",\n          \"fails\"\n        ],\n        \"failure\": {\n          \"errors\": [\n            \"error:native-callback\"\n          ],\n          \"mode\": \"declared\",\n          \"unexpected\": \"poison-runtime\"\n        },\n        \"invocation\": \"many\",\n        \"parameters\": [\n          {\n            \"default\": null,\n            \"lifetime\": null,\n            \"mutability\": \"immutable\",\n            \"name\": \"arg0\",\n            \"optional\": false,\n            \"ownership\": \"copy\",\n            \"type\": {\n              \"kind\": \"primitive\",\n              \"name\": \"nat\"\n            }\n          }\n        ],\n        \"reentry\": \"same-agent\",\n        \"result\": {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        },\n        \"resultMode\": \"value\",\n        \"selfDisposal\": \"defer\"\n      },\n      \"cases\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Checked Lean callback.\"\n      },\n      \"fields\": [],\n      \"host\": null,\n      \"id\": \"bridge:Callbackab07c65d8a1ba94ea760\",\n      \"kind\": \"callback\",\n      \"mutability\": \"immutable\",\n      \"name\": \"Callbackab07c65d8a1ba94ea760\",\n      \"representation\": \"identity\",\n      \"resource\": null,\n      \"source\": {\n        \"declaration\": \"Callbackab07c65d8a1ba94ea760\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"bound\": \"3\",\n                \"kind\": \"fin\"\n              }\n            ],\n            \"result\": {\n              \"bound\": \"3\",\n              \"kind\": \"fin\"\n            }\n          }\n        },\n        \"producer\": \"review\"\n      },\n      \"target\": null,\n      \"typeParameters\": []\n    }\n  ]\n}\n",
+      "sourceSha256": "e918ead3c6867341d18f0face2392cda39b8bfa5da2b9d3ea830d197e061bf07"
+    },
+    "sourceNoticesSha256": "db52f227410570aaa15a0c288da18482ba91933c3b5ee81c3b93271fefa39ef8",
+    "sourceTreeSha256": "9d84f1207d0dcc5ede8e30a413120629119ba10cedcb7d9df8d9ba8ffbae68ee"
+  },
+  "types": []
+}

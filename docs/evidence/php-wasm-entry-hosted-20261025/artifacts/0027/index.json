@@ -1,0 +1,29 @@
+{
+  "kind": "php-wasm-entry-artifact-bytes-v1",
+  "output": [
+    {
+      "bytes": 7559,
+      "path": "output/summary.json",
+      "sha256": "a265c9f7f28486047bae458b2d0b887294cf1338c967a2584cffc741a6053abf"
+    },
+    {
+      "bytes": 0,
+      "path": "output/verification.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "schemaVersion": 1,
+  "scope": "original-zip-and-output-bytes-only",
+  "zip": {
+    "bytes": 1953,
+    "parts": [
+      {
+        "bytes": 1953,
+        "offset": 0,
+        "path": "zip/0000.part",
+        "sha256": "3ca855ec17059a0ee8bf9d8c338c58f9f9bc926cce376081f77b95bb1f60e1d7"
+      }
+    ],
+    "sha256": "3ca855ec17059a0ee8bf9d8c338c58f9f9bc926cce376081f77b95bb1f60e1d7"
+  }
+}

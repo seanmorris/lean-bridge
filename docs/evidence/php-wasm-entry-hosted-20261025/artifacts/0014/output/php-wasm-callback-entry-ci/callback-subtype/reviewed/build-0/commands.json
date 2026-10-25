@@ -1,0 +1,1359 @@
+{
+  "commands": [
+    {
+      "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm/upstream/emscripten/emcc",
+      "originalArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-fbracket-depth=4096",
+        "-include",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/graph/allocation-guard.h",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/php/ext",
+        "-c",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/CallbackSubtypes.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/0.o"
+      ],
+      "probeArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-fbracket-depth=4096",
+        "-include",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/graph/allocation-guard.h",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/php/ext",
+        "-c",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-ci/callback-subtype/reviewed/build-0/c-probes/1-CallbackSubtypes.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/0.o",
+        "-iquote",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-ci/callback-subtype/reviewed/build-0=/build/php-wasm-refinement-entry-probe"
+      ]
+    },
+    {
+      "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm/upstream/emscripten/emcc",
+      "originalArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-fbracket-depth=4096",
+        "-include",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/graph/allocation-guard.h",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/php/ext",
+        "-c",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/adapter.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/1.o"
+      ],
+      "probeArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-fbracket-depth=4096",
+        "-include",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/graph/allocation-guard.h",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/php/ext",
+        "-c",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-ci/callback-subtype/reviewed/build-0/c-probes/2-adapter.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/1.o",
+        "-iquote",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-ci/callback-subtype/reviewed/build-0=/build/php-wasm-refinement-entry-probe"
+      ]
+    },
+    {
+      "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm/upstream/emscripten/emcc",
+      "originalArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-fbracket-depth=4096",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/php/ext",
+        "-c",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/graph/transport.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/2.o"
+      ],
+      "probeArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-fbracket-depth=4096",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/php/ext",
+        "-c",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-ci/callback-subtype/reviewed/build-0/c-probes/3-transport.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/2.o",
+        "-iquote",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/graph",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-ci/callback-subtype/reviewed/build-0=/build/php-wasm-refinement-entry-probe"
+      ]
+    },
+    {
+      "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm/upstream/emscripten/emcc",
+      "originalArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-fbracket-depth=4096",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/php/ext",
+        "-c",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/graph/runtime.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/3.o"
+      ],
+      "probeArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-fbracket-depth=4096",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/php/ext",
+        "-c",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-ci/callback-subtype/reviewed/build-0/c-probes/4-runtime.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/3.o",
+        "-iquote",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/graph",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-ci/callback-subtype/reviewed/build-0=/build/php-wasm-refinement-entry-probe"
+      ]
+    },
+    {
+      "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm/upstream/emscripten/emcc",
+      "originalArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-fbracket-depth=4096",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/php/ext",
+        "-c",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/width.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/4.o"
+      ],
+      "probeArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-fbracket-depth=4096",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/php/ext",
+        "-c",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-ci/callback-subtype/reviewed/build-0/c-probes/5-width.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/4.o",
+        "-iquote",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-ci/callback-subtype/reviewed/build-0=/build/php-wasm-refinement-entry-probe"
+      ]
+    },
+    {
+      "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm/upstream/emscripten/emcc",
+      "originalArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-fbracket-depth=4096",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/php/ext",
+        "-c",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/graph/callbacks.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/5.o"
+      ],
+      "probeArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-fbracket-depth=4096",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/php/ext",
+        "-c",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-ci/callback-subtype/reviewed/build-0/c-probes/6-callbacks.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/5.o",
+        "-iquote",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/graph",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-ci/callback-subtype/reviewed/build-0=/build/php-wasm-refinement-entry-probe"
+      ]
+    },
+    {
+      "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm/upstream/emscripten/emcc",
+      "originalArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-fbracket-depth=4096",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/php/ext",
+        "-c",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/extension/lb_callbacksubtypes_graph_7b2d83cdf38a7d09.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/6.o"
+      ],
+      "probeArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-fbracket-depth=4096",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/php/ext",
+        "-c",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-ci/callback-subtype/reviewed/build-0/c-probes/7-lb_callbacksubtypes_graph_7b2d83cdf38a7d09.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/6.o",
+        "-iquote",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/extension",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-ci/callback-subtype/reviewed/build-0=/build/php-wasm-refinement-entry-probe"
+      ]
+    },
+    {
+      "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm/upstream/emscripten/emcc",
+      "originalArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-sSIDE_MODULE=2",
+        "-sEXPORTED_FUNCTIONS=['_get_module']",
+        "-Wl,--no-entry",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/0.o",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/1.o",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/2.o",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/3.o",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/4.o",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/5.o",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/6.o",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-input/php-wasm-runtime/lib/liblean_bridge_php_wasm_copied_488de83b725bba40a9b4.so",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/lib/php8.4-lb_callbacksubtypes_graph_7b2d83cdf38a7d09.so"
+      ],
+      "probeArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-sSIDE_MODULE=2",
+        "-sEXPORTED_FUNCTIONS=['_get_module']",
+        "-Wl,--no-entry",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/0.o",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/1.o",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/2.o",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/3.o",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/4.o",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/5.o",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/6.o",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-input/php-wasm-runtime/lib/liblean_bridge_php_wasm_copied_488de83b725bba40a9b4.so",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/lib/php8.4-lb_callbacksubtypes_graph_7b2d83cdf38a7d09.so"
+      ]
+    }
+  ],
+  "compiled": [
+    {
+      "insertions": [
+        {
+          "kind": "source",
+          "label": "CallbackSubtypes.makeMixedClosure",
+          "offset": 5047,
+          "symbol": "lb_callback_subtype_probe_source_makeMixedClosure",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter source CallbackSubtypes.makeMixedClosure\\n\", stderr);\n"
+        },
+        {
+          "kind": "closure",
+          "label": "CallbackSubtypes.makeMixedClosure:body",
+          "offset": 4213,
+          "symbol": "lb_callback_subtype_closure_makeMixedClosure",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter closure CallbackSubtypes.makeMixedClosure:body\\n\", stderr);\n"
+        },
+        {
+          "kind": "source",
+          "label": "CallbackSubtypes.callHostMixed",
+          "offset": 3405,
+          "symbol": "lb_callback_subtype_probe_source_callHostMixed",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter source CallbackSubtypes.callHostMixed\\n\", stderr);\n"
+        },
+        {
+          "kind": "source",
+          "label": "CallbackSubtypes.makeClosure",
+          "offset": 3156,
+          "symbol": "lb_callback_subtype_probe_source_makeClosure",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter source CallbackSubtypes.makeClosure\\n\", stderr);\n"
+        },
+        {
+          "kind": "closure",
+          "label": "CallbackSubtypes.makeClosure:body",
+          "offset": 2784,
+          "symbol": "lb_callback_subtype_closure_makeClosure",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter closure CallbackSubtypes.makeClosure:body\\n\", stderr);\n"
+        },
+        {
+          "kind": "source",
+          "label": "CallbackSubtypes.callHost",
+          "offset": 2528,
+          "symbol": "lb_callback_subtype_probe_source_callHost",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter source CallbackSubtypes.callHost\\n\", stderr);\n"
+        },
+        {
+          "kind": "constructor",
+          "label": "CallbackSubtypes.checkedPositive",
+          "offset": 2052,
+          "symbol": "lb_callback_subtype_probe_constructor_checkedPositive",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter constructor CallbackSubtypes.checkedPositive\\n\", stderr);\n"
+        },
+        {
+          "kind": "preamble",
+          "offset": 0,
+          "text": "#include <stdio.h>\n"
+        }
+      ],
+      "name": "1-CallbackSubtypes.c",
+      "object": {
+        "bytes": 4130,
+        "sha256": "d3b18e3ee7d5ec404fc33bc9b2e2f61c4b80127e819bd185afc88fe68e9880fe"
+      },
+      "objectPath": "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/0.o",
+      "originalPath": "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/CallbackSubtypes.c",
+      "originalSha256": "58d2bdb2092f9f0cbcd1a757b8549e0052253c046147b04ccd567a9263251437",
+      "probePath": "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-ci/callback-subtype/reviewed/build-0/c-probes/1-CallbackSubtypes.c",
+      "probeSha256": "e9e8311831d1e8998fdd9251ebc7970a65d3a3b502f7ec501e431da36f9ce4f7"
+    },
+    {
+      "insertions": [
+        {
+          "kind": "adapter",
+          "label": "CallbackSubtypes.makeMixedClosure:lean",
+          "offset": 105760,
+          "symbol": "lean_bridge_36fd9c74c3921bfb2ead3644_lean",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter adapter CallbackSubtypes.makeMixedClosure:lean\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "CallbackSubtypes.makeClosure:lean",
+          "offset": 98039,
+          "symbol": "lean_bridge_e2d5407c03792441cb368ec1_lean",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter adapter CallbackSubtypes.makeClosure:lean\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "CallbackSubtypes.callHostMixed:lean",
+          "offset": 92805,
+          "symbol": "lean_bridge_4f106adfac5064464a2a8e3f_lean",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter adapter CallbackSubtypes.callHostMixed:lean\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "CallbackSubtypes.callHost:lean",
+          "offset": 71980,
+          "symbol": "lean_bridge_23220a30761b2d3716c5b4ed_lean",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter adapter CallbackSubtypes.callHost:lean\\n\", stderr);\n"
+        },
+        {
+          "kind": "validator",
+          "label": "CallbackSubtypes.makeMixedClosure:callback_validator:closure_graph_refinement_1_ba12b83e7ba38842c8fd",
+          "offset": 62513,
+          "symbol": "lean_bridge_23220a30761b2d3716c5b4ed_structured_51bfd752726fcfd8a9187a7c3a979ace51f7c1be_closure_graph_refinement_1_ba12b83e7ba38842c8fd",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter validator CallbackSubtypes.makeMixedClosure:callback_validator:closure_graph_refinement_1_ba12b83e7ba38842c8fd\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "CallbackSubtypes.makeMixedClosure:closure:lean",
+          "offset": 60457,
+          "symbol": "lean_bridge_23220a30761b2d3716c5b4ed_structured_51bfd752726fcfd8a9187a7c3a979ace51f7c1be_apply",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter adapter CallbackSubtypes.makeMixedClosure:closure:lean\\n\", stderr);\n"
+        },
+        {
+          "kind": "validator",
+          "label": "CallbackSubtypes.makeClosure:callback_validator:closure_graph_refinement_0_ba12b83e7ba38842c8fd",
+          "offset": 56765,
+          "symbol": "lean_bridge_23220a30761b2d3716c5b4ed_structured_c27fa7df7f1805196544d398fb121b21c179beb1_closure_graph_refinement_0_ba12b83e7ba38842c8fd",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter validator CallbackSubtypes.makeClosure:callback_validator:closure_graph_refinement_0_ba12b83e7ba38842c8fd\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "CallbackSubtypes.makeClosure:closure:lean",
+          "offset": 55250,
+          "symbol": "lean_bridge_23220a30761b2d3716c5b4ed_structured_c27fa7df7f1805196544d398fb121b21c179beb1_apply",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter adapter CallbackSubtypes.makeClosure:closure:lean\\n\", stderr);\n"
+        },
+        {
+          "kind": "preamble",
+          "offset": 0,
+          "text": "#include <stdio.h>\n"
+        }
+      ],
+      "name": "2-adapter.c",
+      "object": {
+        "bytes": 77784,
+        "sha256": "27afab051995981aba41cee1dfa97b0fbfeb003b95541df7ebc97b1c69cb7c46"
+      },
+      "objectPath": "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/1.o",
+      "originalPath": "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/adapter.c",
+      "originalSha256": "f5f6a5dbef0158865d3f81cd6fe098c39f9b758c8f60916a6a9faee1114f178f",
+      "probePath": "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-ci/callback-subtype/reviewed/build-0/c-probes/2-adapter.c",
+      "probeSha256": "970a4b6fa678f0dff96ffa9486c5cfd98a8a875d72af510cf3dbea69003bac93"
+    },
+    {
+      "insertions": [
+        {
+          "kind": "adapter",
+          "label": "CallbackSubtypes.makeMixedClosure:closure:native",
+          "offset": 62267,
+          "symbol": "callbacksubtypes_callback_51bfd752726fcfd8a9187a7c3a979ace51f7c1be_lease_call",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter adapter CallbackSubtypes.makeMixedClosure:closure:native\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "CallbackSubtypes.makeClosure:closure:native",
+          "offset": 59678,
+          "symbol": "callbacksubtypes_callback_c27fa7df7f1805196544d398fb121b21c179beb1_lease_call",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter adapter CallbackSubtypes.makeClosure:closure:native\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "CallbackSubtypes.makeMixedClosure:native",
+          "offset": 57899,
+          "symbol": "lean_bridge_36fd9c74c3921bfb2ead3644_graph",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter adapter CallbackSubtypes.makeMixedClosure:native\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "CallbackSubtypes.makeClosure:native",
+          "offset": 54483,
+          "symbol": "lean_bridge_e2d5407c03792441cb368ec1_graph",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter adapter CallbackSubtypes.makeClosure:native\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "CallbackSubtypes.callHostMixed:native",
+          "offset": 52106,
+          "symbol": "lean_bridge_4f106adfac5064464a2a8e3f_graph",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter adapter CallbackSubtypes.callHostMixed:native\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "CallbackSubtypes.callHost:native",
+          "offset": 47188,
+          "symbol": "lean_bridge_23220a30761b2d3716c5b4ed_graph",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter adapter CallbackSubtypes.callHost:native\\n\", stderr);\n"
+        },
+        {
+          "kind": "rejection",
+          "label": "CallbackSubtypes.callHost:rejection:native",
+          "offset": 36189,
+          "symbol": "ng_reject_6bc98ee774b20d3238b9e42a92309a51ce9dad0a",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter rejection CallbackSubtypes.callHost:rejection:native\\n\", stderr);\n"
+        },
+        {
+          "kind": "recovery",
+          "label": "CallbackSubtypes.callHost:recovery:native",
+          "offset": 35622,
+          "symbol": "ng_recovery_6bc98ee774b20d3238b9e42a92309a51ce9dad0a",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter recovery CallbackSubtypes.callHost:recovery:native\\n\", stderr);\n"
+        },
+        {
+          "kind": "callback",
+          "label": "CallbackSubtypes.callHost:callback:native",
+          "offset": 34277,
+          "symbol": "ng_invoke_6bc98ee774b20d3238b9e42a92309a51ce9dad0a",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter callback CallbackSubtypes.callHost:callback:native\\n\", stderr);\n"
+        },
+        {
+          "kind": "rejection",
+          "label": "CallbackSubtypes.callHostMixed:rejection:native",
+          "offset": 30311,
+          "symbol": "ng_reject_197d5bf19058d37bc5547c33a8e0bed3bf121ea7",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter rejection CallbackSubtypes.callHostMixed:rejection:native\\n\", stderr);\n"
+        },
+        {
+          "kind": "recovery",
+          "label": "CallbackSubtypes.callHostMixed:recovery:native",
+          "offset": 29744,
+          "symbol": "ng_recovery_197d5bf19058d37bc5547c33a8e0bed3bf121ea7",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter recovery CallbackSubtypes.callHostMixed:recovery:native\\n\", stderr);\n"
+        },
+        {
+          "kind": "callback",
+          "label": "CallbackSubtypes.callHostMixed:callback:native",
+          "offset": 28080,
+          "symbol": "ng_invoke_197d5bf19058d37bc5547c33a8e0bed3bf121ea7",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter callback CallbackSubtypes.callHostMixed:callback:native\\n\", stderr);\n"
+        },
+        {
+          "kind": "preamble",
+          "offset": 0,
+          "text": "#include <stdio.h>\n"
+        }
+      ],
+      "name": "3-transport.c",
+      "object": {
+        "bytes": 265143,
+        "sha256": "890610be3f7d719ce1411db87e569a224a70ca1b07ec9f9e400832e214059bdb"
+      },
+      "objectPath": "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/2.o",
+      "originalPath": "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/graph/transport.c",
+      "originalSha256": "38d5d6e72ff412e72dd2bbc244791bd2c3b6fe4bd2da7a2bc8065d4cb40fff00",
+      "probePath": "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-ci/callback-subtype/reviewed/build-0/c-probes/3-transport.c",
+      "probeSha256": "e3a96305877646d908c2118650e1783804e13f5fecdfdb6a09624c9038702605"
+    },
+    {
+      "insertions": [],
+      "name": "4-runtime.c",
+      "object": {
+        "bytes": 937,
+        "sha256": "541246c62f85ee0666834ad27e424fe46cb3bf275e68c607979c1a815324767a"
+      },
+      "objectPath": "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/3.o",
+      "originalPath": "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/graph/runtime.c",
+      "originalSha256": "7dac636b1cc9cf2ccab0fff7dab72a45f94c9eeeed3c627382e5cf94d55ffa2b",
+      "probePath": "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-ci/callback-subtype/reviewed/build-0/c-probes/4-runtime.c",
+      "probeSha256": "7dac636b1cc9cf2ccab0fff7dab72a45f94c9eeeed3c627382e5cf94d55ffa2b"
+    },
+    {
+      "insertions": [],
+      "name": "5-width.c",
+      "object": {
+        "bytes": 258,
+        "sha256": "a8e680be3accc5b8ad9d8becda8fdb51ee27aeef43f3a380f4d440aa1fc45be9"
+      },
+      "objectPath": "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/4.o",
+      "originalPath": "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/width.c",
+      "originalSha256": "94f94bd37af397f400f10b97b24efb34a1ecab8f8aae613e50376f1ab2218d1e",
+      "probePath": "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-ci/callback-subtype/reviewed/build-0/c-probes/5-width.c",
+      "probeSha256": "94f94bd37af397f400f10b97b24efb34a1ecab8f8aae613e50376f1ab2218d1e"
+    },
+    {
+      "insertions": [
+        {
+          "kind": "rejection",
+          "label": "CallbackSubtypes.callHost:rejection:lean",
+          "offset": 3905,
+          "symbol": "lean_bridge_23220a30761b2d3716c5b4ed_structured_6bc98ee774b20d3238b9e42a92309a51ce9dad0a_reject",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter rejection CallbackSubtypes.callHost:rejection:lean\\n\", stderr);\n"
+        },
+        {
+          "kind": "recovery",
+          "label": "CallbackSubtypes.callHost:recovery:lean",
+          "offset": 3431,
+          "symbol": "lean_bridge_23220a30761b2d3716c5b4ed_structured_6bc98ee774b20d3238b9e42a92309a51ce9dad0a_recovery",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter recovery CallbackSubtypes.callHost:recovery:lean\\n\", stderr);\n"
+        },
+        {
+          "kind": "callback",
+          "label": "CallbackSubtypes.callHost:callback:lean",
+          "offset": 3054,
+          "symbol": "lean_bridge_23220a30761b2d3716c5b4ed_structured_6bc98ee774b20d3238b9e42a92309a51ce9dad0a_invoke",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter callback CallbackSubtypes.callHost:callback:lean\\n\", stderr);\n"
+        },
+        {
+          "kind": "rejection",
+          "label": "CallbackSubtypes.callHostMixed:rejection:lean",
+          "offset": 2515,
+          "symbol": "lean_bridge_23220a30761b2d3716c5b4ed_structured_197d5bf19058d37bc5547c33a8e0bed3bf121ea7_reject",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter rejection CallbackSubtypes.callHostMixed:rejection:lean\\n\", stderr);\n"
+        },
+        {
+          "kind": "recovery",
+          "label": "CallbackSubtypes.callHostMixed:recovery:lean",
+          "offset": 2041,
+          "symbol": "lean_bridge_23220a30761b2d3716c5b4ed_structured_197d5bf19058d37bc5547c33a8e0bed3bf121ea7_recovery",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter recovery CallbackSubtypes.callHostMixed:recovery:lean\\n\", stderr);\n"
+        },
+        {
+          "kind": "callback",
+          "label": "CallbackSubtypes.callHostMixed:callback:lean",
+          "offset": 1619,
+          "symbol": "lean_bridge_23220a30761b2d3716c5b4ed_structured_197d5bf19058d37bc5547c33a8e0bed3bf121ea7_invoke",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter callback CallbackSubtypes.callHostMixed:callback:lean\\n\", stderr);\n"
+        },
+        {
+          "kind": "preamble",
+          "offset": 0,
+          "text": "#include <stdio.h>\n"
+        }
+      ],
+      "name": "6-callbacks.c",
+      "object": {
+        "bytes": 4686,
+        "sha256": "35cd45604a4009caf0bbc76b25fd4b53e88304ee0116629189836fcee5b97cba"
+      },
+      "objectPath": "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/5.o",
+      "originalPath": "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/graph/callbacks.c",
+      "originalSha256": "bbe7d47953e86ec427c14099e1bf588f80ced79404bbf9d517b0c33f990863fa",
+      "probePath": "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-ci/callback-subtype/reviewed/build-0/c-probes/6-callbacks.c",
+      "probeSha256": "4bd0bf82fdb8067c20b49939e6df32d63b62b19d976ee7f4a279ca83e28a0b29"
+    },
+    {
+      "insertions": [
+        {
+          "kind": "public",
+          "label": "CallbackSubtypes.makeMixedClosure:invoke",
+          "offset": 56645,
+          "symbol": "lgc_invoke3",
+          "text": "\n  const char *lb_callback_probe_public_scope __attribute__((cleanup(lb_callback_probe_end))) = \"CallbackSubtypes.makeMixedClosure:invoke\";\n  fputs(\"LB_CALLBACK_ENTRY_V1 begin public CallbackSubtypes.makeMixedClosure:invoke\\n\", stderr);\n"
+        },
+        {
+          "kind": "cleanup",
+          "label": "CallbackSubtypes.makeMixedClosure:invoke:cleanup",
+          "offset": 55258,
+          "symbol": "lgc_cleanup_invoke3",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter cleanup CallbackSubtypes.makeMixedClosure:invoke:cleanup\\n\", stderr);\n"
+        },
+        {
+          "kind": "public",
+          "label": "CallbackSubtypes.makeClosure:invoke",
+          "offset": 53368,
+          "symbol": "lgc_invoke1",
+          "text": "\n  const char *lb_callback_probe_public_scope __attribute__((cleanup(lb_callback_probe_end))) = \"CallbackSubtypes.makeClosure:invoke\";\n  fputs(\"LB_CALLBACK_ENTRY_V1 begin public CallbackSubtypes.makeClosure:invoke\\n\", stderr);\n"
+        },
+        {
+          "kind": "cleanup",
+          "label": "CallbackSubtypes.makeClosure:invoke:cleanup",
+          "offset": 52082,
+          "symbol": "lgc_cleanup_invoke1",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter cleanup CallbackSubtypes.makeClosure:invoke:cleanup\\n\", stderr);\n"
+        },
+        {
+          "kind": "public",
+          "label": "CallbackSubtypes.makeMixedClosure",
+          "offset": 50240,
+          "symbol": "lgc_call5",
+          "text": "\n  const char *lb_callback_probe_public_scope __attribute__((cleanup(lb_callback_probe_end))) = \"CallbackSubtypes.makeMixedClosure\";\n  fputs(\"LB_CALLBACK_ENTRY_V1 begin public CallbackSubtypes.makeMixedClosure\\n\", stderr);\n"
+        },
+        {
+          "kind": "cleanup",
+          "label": "CallbackSubtypes.makeMixedClosure:cleanup",
+          "offset": 48641,
+          "symbol": "lgc_cleanup_call5",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter cleanup CallbackSubtypes.makeMixedClosure:cleanup\\n\", stderr);\n"
+        },
+        {
+          "kind": "public",
+          "label": "CallbackSubtypes.makeClosure",
+          "offset": 43412,
+          "symbol": "lgc_call3",
+          "text": "\n  const char *lb_callback_probe_public_scope __attribute__((cleanup(lb_callback_probe_end))) = \"CallbackSubtypes.makeClosure\";\n  fputs(\"LB_CALLBACK_ENTRY_V1 begin public CallbackSubtypes.makeClosure\\n\", stderr);\n"
+        },
+        {
+          "kind": "cleanup",
+          "label": "CallbackSubtypes.makeClosure:cleanup",
+          "offset": 41813,
+          "symbol": "lgc_cleanup_call3",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter cleanup CallbackSubtypes.makeClosure:cleanup\\n\", stderr);\n"
+        },
+        {
+          "kind": "public",
+          "label": "CallbackSubtypes.callHostMixed",
+          "offset": 39998,
+          "symbol": "lgc_call2",
+          "text": "\n  const char *lb_callback_probe_public_scope __attribute__((cleanup(lb_callback_probe_end))) = \"CallbackSubtypes.callHostMixed\";\n  fputs(\"LB_CALLBACK_ENTRY_V1 begin public CallbackSubtypes.callHostMixed\\n\", stderr);\n"
+        },
+        {
+          "kind": "cleanup",
+          "label": "CallbackSubtypes.callHostMixed:cleanup",
+          "offset": 38422,
+          "symbol": "lgc_cleanup_call2",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter cleanup CallbackSubtypes.callHostMixed:cleanup\\n\", stderr);\n"
+        },
+        {
+          "kind": "public",
+          "label": "CallbackSubtypes.callHost",
+          "offset": 32966,
+          "symbol": "lgc_call0",
+          "text": "\n  const char *lb_callback_probe_public_scope __attribute__((cleanup(lb_callback_probe_end))) = \"CallbackSubtypes.callHost\";\n  fputs(\"LB_CALLBACK_ENTRY_V1 begin public CallbackSubtypes.callHost\\n\", stderr);\n"
+        },
+        {
+          "kind": "cleanup",
+          "label": "CallbackSubtypes.callHost:cleanup",
+          "offset": 31390,
+          "symbol": "lgc_cleanup_call0",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter cleanup CallbackSubtypes.callHost:cleanup\\n\", stderr);\n"
+        },
+        {
+          "kind": "callback",
+          "label": "CallbackSubtypes.callHost:callback:zend",
+          "offset": 30186,
+          "symbol": "lgc_callback5",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter callback CallbackSubtypes.callHost:callback:zend\\n\", stderr);\n"
+        },
+        {
+          "kind": "callback",
+          "label": "CallbackSubtypes.callHostMixed:callback:zend",
+          "offset": 28060,
+          "symbol": "lgc_callback2",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter callback CallbackSubtypes.callHostMixed:callback:zend\\n\", stderr);\n"
+        },
+        {
+          "kind": "preamble",
+          "offset": 0,
+          "text": "#include <stdio.h>\nstatic void lb_callback_probe_end(const char **label) { fprintf(stderr, \"LB_CALLBACK_ENTRY_V1 end public %s\\n\", *label); }\n"
+        }
+      ],
+      "name": "7-lb_callbacksubtypes_graph_7b2d83cdf38a7d09.c",
+      "object": {
+        "bytes": 74317,
+        "sha256": "1f3281d607289febbe71959494eeb01eb78360172d89d6a0e4d26471fea7d44b"
+      },
+      "objectPath": "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/c/6.o",
+      "originalPath": "/home/runner/work/_temp/lean-bridge-callback-subtype-reviewed-entry-author-WqJHsz/release/php-wasm/.lean-bridge-native-component-B0uLN5/extension/lb_callbacksubtypes_graph_7b2d83cdf38a7d09.c",
+      "originalSha256": "95ad196d1a05380b8b7bf9a0de9e2905ff0bd7d2caac3056e293de754834e2fa",
+      "probePath": "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-ci/callback-subtype/reviewed/build-0/c-probes/7-lb_callbacksubtypes_graph_7b2d83cdf38a7d09.c",
+      "probeSha256": "def7bfd6c1a3b98deb6f9d94c1d6342232b537e8dbf9433c1546d73d5b62efcd"
+    }
+  ],
+  "definitionCounts": {
+    "callbacksubtypes_callback_51bfd752726fcfd8a9187a7c3a979ace51f7c1be_lease_call": 1,
+    "callbacksubtypes_callback_c27fa7df7f1805196544d398fb121b21c179beb1_lease_call": 1,
+    "lb_callback_subtype_closure_makeClosure": 1,
+    "lb_callback_subtype_closure_makeMixedClosure": 1,
+    "lb_callback_subtype_probe_constructor_checkedPositive": 1,
+    "lb_callback_subtype_probe_source_callHost": 1,
+    "lb_callback_subtype_probe_source_callHostMixed": 1,
+    "lb_callback_subtype_probe_source_makeClosure": 1,
+    "lb_callback_subtype_probe_source_makeMixedClosure": 1,
+    "lean_bridge_23220a30761b2d3716c5b4ed_graph": 1,
+    "lean_bridge_23220a30761b2d3716c5b4ed_lean": 1,
+    "lean_bridge_23220a30761b2d3716c5b4ed_structured_197d5bf19058d37bc5547c33a8e0bed3bf121ea7_invoke": 1,
+    "lean_bridge_23220a30761b2d3716c5b4ed_structured_197d5bf19058d37bc5547c33a8e0bed3bf121ea7_recovery": 1,
+    "lean_bridge_23220a30761b2d3716c5b4ed_structured_197d5bf19058d37bc5547c33a8e0bed3bf121ea7_reject": 1,
+    "lean_bridge_23220a30761b2d3716c5b4ed_structured_51bfd752726fcfd8a9187a7c3a979ace51f7c1be_apply": 1,
+    "lean_bridge_23220a30761b2d3716c5b4ed_structured_51bfd752726fcfd8a9187a7c3a979ace51f7c1be_closure_graph_refinement_1_ba12b83e7ba38842c8fd": 1,
+    "lean_bridge_23220a30761b2d3716c5b4ed_structured_6bc98ee774b20d3238b9e42a92309a51ce9dad0a_invoke": 1,
+    "lean_bridge_23220a30761b2d3716c5b4ed_structured_6bc98ee774b20d3238b9e42a92309a51ce9dad0a_recovery": 1,
+    "lean_bridge_23220a30761b2d3716c5b4ed_structured_6bc98ee774b20d3238b9e42a92309a51ce9dad0a_reject": 1,
+    "lean_bridge_23220a30761b2d3716c5b4ed_structured_c27fa7df7f1805196544d398fb121b21c179beb1_apply": 1,
+    "lean_bridge_23220a30761b2d3716c5b4ed_structured_c27fa7df7f1805196544d398fb121b21c179beb1_closure_graph_refinement_0_ba12b83e7ba38842c8fd": 1,
+    "lean_bridge_36fd9c74c3921bfb2ead3644_graph": 1,
+    "lean_bridge_36fd9c74c3921bfb2ead3644_lean": 1,
+    "lean_bridge_4f106adfac5064464a2a8e3f_graph": 1,
+    "lean_bridge_4f106adfac5064464a2a8e3f_lean": 1,
+    "lean_bridge_e2d5407c03792441cb368ec1_graph": 1,
+    "lean_bridge_e2d5407c03792441cb368ec1_lean": 1,
+    "lgc_call0": 1,
+    "lgc_call2": 1,
+    "lgc_call3": 1,
+    "lgc_call5": 1,
+    "lgc_callback2": 1,
+    "lgc_callback5": 1,
+    "lgc_cleanup_call0": 1,
+    "lgc_cleanup_call2": 1,
+    "lgc_cleanup_call3": 1,
+    "lgc_cleanup_call5": 1,
+    "lgc_cleanup_invoke1": 1,
+    "lgc_cleanup_invoke3": 1,
+    "lgc_invoke1": 1,
+    "lgc_invoke3": 1,
+    "ng_invoke_197d5bf19058d37bc5547c33a8e0bed3bf121ea7": 1,
+    "ng_invoke_6bc98ee774b20d3238b9e42a92309a51ce9dad0a": 1,
+    "ng_recovery_197d5bf19058d37bc5547c33a8e0bed3bf121ea7": 1,
+    "ng_recovery_6bc98ee774b20d3238b9e42a92309a51ce9dad0a": 1,
+    "ng_reject_197d5bf19058d37bc5547c33a8e0bed3bf121ea7": 1,
+    "ng_reject_6bc98ee774b20d3238b9e42a92309a51ce9dad0a": 1
+  },
+  "headers": [],
+  "linked": true,
+  "selected": [
+    {
+      "kind": "constructor",
+      "label": "CallbackSubtypes.checkedPositive",
+      "symbol": "lb_callback_subtype_probe_constructor_checkedPositive"
+    },
+    {
+      "kind": "source",
+      "label": "CallbackSubtypes.callHost",
+      "symbol": "lb_callback_subtype_probe_source_callHost"
+    },
+    {
+      "kind": "source",
+      "label": "CallbackSubtypes.callHostMixed",
+      "symbol": "lb_callback_subtype_probe_source_callHostMixed"
+    },
+    {
+      "kind": "source",
+      "label": "CallbackSubtypes.makeClosure",
+      "symbol": "lb_callback_subtype_probe_source_makeClosure"
+    },
+    {
+      "kind": "source",
+      "label": "CallbackSubtypes.makeMixedClosure",
+      "symbol": "lb_callback_subtype_probe_source_makeMixedClosure"
+    },
+    {
+      "kind": "closure",
+      "label": "CallbackSubtypes.makeClosure:body",
+      "symbol": "lb_callback_subtype_closure_makeClosure"
+    },
+    {
+      "kind": "closure",
+      "label": "CallbackSubtypes.makeMixedClosure:body",
+      "symbol": "lb_callback_subtype_closure_makeMixedClosure"
+    },
+    {
+      "kind": "public",
+      "label": "CallbackSubtypes.callHost",
+      "symbol": "lgc_call0"
+    },
+    {
+      "kind": "adapter",
+      "label": "CallbackSubtypes.callHost:native",
+      "symbol": "lean_bridge_23220a30761b2d3716c5b4ed_graph"
+    },
+    {
+      "kind": "adapter",
+      "label": "CallbackSubtypes.callHost:lean",
+      "symbol": "lean_bridge_23220a30761b2d3716c5b4ed_lean"
+    },
+    {
+      "kind": "cleanup",
+      "label": "CallbackSubtypes.callHost:cleanup",
+      "symbol": "lgc_cleanup_call0"
+    },
+    {
+      "kind": "public",
+      "label": "CallbackSubtypes.callHostMixed",
+      "symbol": "lgc_call2"
+    },
+    {
+      "kind": "adapter",
+      "label": "CallbackSubtypes.callHostMixed:native",
+      "symbol": "lean_bridge_4f106adfac5064464a2a8e3f_graph"
+    },
+    {
+      "kind": "adapter",
+      "label": "CallbackSubtypes.callHostMixed:lean",
+      "symbol": "lean_bridge_4f106adfac5064464a2a8e3f_lean"
+    },
+    {
+      "kind": "cleanup",
+      "label": "CallbackSubtypes.callHostMixed:cleanup",
+      "symbol": "lgc_cleanup_call2"
+    },
+    {
+      "kind": "public",
+      "label": "CallbackSubtypes.makeClosure",
+      "symbol": "lgc_call3"
+    },
+    {
+      "kind": "adapter",
+      "label": "CallbackSubtypes.makeClosure:native",
+      "symbol": "lean_bridge_e2d5407c03792441cb368ec1_graph"
+    },
+    {
+      "kind": "adapter",
+      "label": "CallbackSubtypes.makeClosure:lean",
+      "symbol": "lean_bridge_e2d5407c03792441cb368ec1_lean"
+    },
+    {
+      "kind": "cleanup",
+      "label": "CallbackSubtypes.makeClosure:cleanup",
+      "symbol": "lgc_cleanup_call3"
+    },
+    {
+      "kind": "public",
+      "label": "CallbackSubtypes.makeMixedClosure",
+      "symbol": "lgc_call5"
+    },
+    {
+      "kind": "adapter",
+      "label": "CallbackSubtypes.makeMixedClosure:native",
+      "symbol": "lean_bridge_36fd9c74c3921bfb2ead3644_graph"
+    },
+    {
+      "kind": "adapter",
+      "label": "CallbackSubtypes.makeMixedClosure:lean",
+      "symbol": "lean_bridge_36fd9c74c3921bfb2ead3644_lean"
+    },
+    {
+      "kind": "cleanup",
+      "label": "CallbackSubtypes.makeMixedClosure:cleanup",
+      "symbol": "lgc_cleanup_call5"
+    },
+    {
+      "kind": "validator",
+      "label": "CallbackSubtypes.makeClosure:callback_validator:closure_graph_refinement_0_ba12b83e7ba38842c8fd",
+      "symbol": "lean_bridge_23220a30761b2d3716c5b4ed_structured_c27fa7df7f1805196544d398fb121b21c179beb1_closure_graph_refinement_0_ba12b83e7ba38842c8fd"
+    },
+    {
+      "kind": "public",
+      "label": "CallbackSubtypes.makeClosure:invoke",
+      "symbol": "lgc_invoke1"
+    },
+    {
+      "kind": "adapter",
+      "label": "CallbackSubtypes.makeClosure:closure:native",
+      "symbol": "callbacksubtypes_callback_c27fa7df7f1805196544d398fb121b21c179beb1_lease_call"
+    },
+    {
+      "kind": "adapter",
+      "label": "CallbackSubtypes.makeClosure:closure:lean",
+      "symbol": "lean_bridge_23220a30761b2d3716c5b4ed_structured_c27fa7df7f1805196544d398fb121b21c179beb1_apply"
+    },
+    {
+      "kind": "cleanup",
+      "label": "CallbackSubtypes.makeClosure:invoke:cleanup",
+      "symbol": "lgc_cleanup_invoke1"
+    },
+    {
+      "kind": "recovery",
+      "label": "CallbackSubtypes.callHostMixed:recovery:lean",
+      "symbol": "lean_bridge_23220a30761b2d3716c5b4ed_structured_197d5bf19058d37bc5547c33a8e0bed3bf121ea7_recovery"
+    },
+    {
+      "kind": "recovery",
+      "label": "CallbackSubtypes.callHostMixed:recovery:native",
+      "symbol": "ng_recovery_197d5bf19058d37bc5547c33a8e0bed3bf121ea7"
+    },
+    {
+      "kind": "callback",
+      "label": "CallbackSubtypes.callHostMixed:callback:lean",
+      "symbol": "lean_bridge_23220a30761b2d3716c5b4ed_structured_197d5bf19058d37bc5547c33a8e0bed3bf121ea7_invoke"
+    },
+    {
+      "kind": "callback",
+      "label": "CallbackSubtypes.callHostMixed:callback:native",
+      "symbol": "ng_invoke_197d5bf19058d37bc5547c33a8e0bed3bf121ea7"
+    },
+    {
+      "kind": "callback",
+      "label": "CallbackSubtypes.callHostMixed:callback:zend",
+      "symbol": "lgc_callback2"
+    },
+    {
+      "kind": "rejection",
+      "label": "CallbackSubtypes.callHostMixed:rejection:lean",
+      "symbol": "lean_bridge_23220a30761b2d3716c5b4ed_structured_197d5bf19058d37bc5547c33a8e0bed3bf121ea7_reject"
+    },
+    {
+      "kind": "rejection",
+      "label": "CallbackSubtypes.callHostMixed:rejection:native",
+      "symbol": "ng_reject_197d5bf19058d37bc5547c33a8e0bed3bf121ea7"
+    },
+    {
+      "kind": "validator",
+      "label": "CallbackSubtypes.makeMixedClosure:callback_validator:closure_graph_refinement_1_ba12b83e7ba38842c8fd",
+      "symbol": "lean_bridge_23220a30761b2d3716c5b4ed_structured_51bfd752726fcfd8a9187a7c3a979ace51f7c1be_closure_graph_refinement_1_ba12b83e7ba38842c8fd"
+    },
+    {
+      "kind": "public",
+      "label": "CallbackSubtypes.makeMixedClosure:invoke",
+      "symbol": "lgc_invoke3"
+    },
+    {
+      "kind": "adapter",
+      "label": "CallbackSubtypes.makeMixedClosure:closure:native",
+      "symbol": "callbacksubtypes_callback_51bfd752726fcfd8a9187a7c3a979ace51f7c1be_lease_call"
+    },
+    {
+      "kind": "adapter",
+      "label": "CallbackSubtypes.makeMixedClosure:closure:lean",
+      "symbol": "lean_bridge_23220a30761b2d3716c5b4ed_structured_51bfd752726fcfd8a9187a7c3a979ace51f7c1be_apply"
+    },
+    {
+      "kind": "cleanup",
+      "label": "CallbackSubtypes.makeMixedClosure:invoke:cleanup",
+      "symbol": "lgc_cleanup_invoke3"
+    },
+    {
+      "kind": "recovery",
+      "label": "CallbackSubtypes.callHost:recovery:lean",
+      "symbol": "lean_bridge_23220a30761b2d3716c5b4ed_structured_6bc98ee774b20d3238b9e42a92309a51ce9dad0a_recovery"
+    },
+    {
+      "kind": "recovery",
+      "label": "CallbackSubtypes.callHost:recovery:native",
+      "symbol": "ng_recovery_6bc98ee774b20d3238b9e42a92309a51ce9dad0a"
+    },
+    {
+      "kind": "callback",
+      "label": "CallbackSubtypes.callHost:callback:lean",
+      "symbol": "lean_bridge_23220a30761b2d3716c5b4ed_structured_6bc98ee774b20d3238b9e42a92309a51ce9dad0a_invoke"
+    },
+    {
+      "kind": "callback",
+      "label": "CallbackSubtypes.callHost:callback:native",
+      "symbol": "ng_invoke_6bc98ee774b20d3238b9e42a92309a51ce9dad0a"
+    },
+    {
+      "kind": "callback",
+      "label": "CallbackSubtypes.callHost:callback:zend",
+      "symbol": "lgc_callback5"
+    },
+    {
+      "kind": "rejection",
+      "label": "CallbackSubtypes.callHost:rejection:lean",
+      "symbol": "lean_bridge_23220a30761b2d3716c5b4ed_structured_6bc98ee774b20d3238b9e42a92309a51ce9dad0a_reject"
+    },
+    {
+      "kind": "rejection",
+      "label": "CallbackSubtypes.callHost:rejection:native",
+      "symbol": "ng_reject_6bc98ee774b20d3238b9e42a92309a51ce9dad0a"
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "changes": [
+    {
+      "after": {
+        "bytes": 765397,
+        "sha256": "08841d70df8da0d76883bd63e9120dfc1f347472f6b8e9eff399d9ddd5059516"
+      },
+      "before": {
+        "bytes": 765397,
+        "path": "artifacts/0000/zip/0000.part",
+        "sha256": "3aa25602e2f82d0c7806b5d062eb0d94826c5e19f66d6fdcb275305df7a6393d"
+      },
+      "path": "artifacts/0000/zip/0000.part"
+    }
+  ],
+  "name": "zip-tamper",
+  "refusal": {
+    "code": "ERR_ASSERTION",
+    "message": "zip/0000.part\n+ actual - expected\n\n+ '08841d70df8da0d76883bd63e9120dfc1f347472f6b8e9eff399d9ddd5059516'\n- '3aa25602e2f82d0c7806b5d062eb0d94826c5e19f66d6fdcb275305df7a6393d'\n",
+    "name": "AssertionError"
+  },
+  "rejected": true
+}

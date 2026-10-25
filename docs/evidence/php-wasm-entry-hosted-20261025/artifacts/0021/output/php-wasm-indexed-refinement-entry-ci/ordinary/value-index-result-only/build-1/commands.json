@@ -1,0 +1,1358 @@
+{
+  "commands": [
+    {
+      "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm/upstream/emscripten/emcc",
+      "originalArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/php/ext",
+        "-c",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/CheckedRecordValueIndices.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/0.o"
+      ],
+      "probeArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/php/ext",
+        "-c",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/ordinary/value-index-result-only/build-1/c-probes/1-CheckedRecordValueIndices.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/0.o",
+        "-iquote",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/ordinary/value-index-result-only/build-1=/build/php-wasm-refinement-entry-probe"
+      ]
+    },
+    {
+      "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm/upstream/emscripten/emcc",
+      "originalArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/php/ext",
+        "-c",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/adapter.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/1.o"
+      ],
+      "probeArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/php/ext",
+        "-c",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/ordinary/value-index-result-only/build-1/c-probes/2-adapter.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/1.o",
+        "-iquote",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/ordinary/value-index-result-only/build-1=/build/php-wasm-refinement-entry-probe"
+      ]
+    },
+    {
+      "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm/upstream/emscripten/emcc",
+      "originalArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/php/ext",
+        "-c",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/provider.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/2.o"
+      ],
+      "probeArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/php/ext",
+        "-c",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/ordinary/value-index-result-only/build-1/c-probes/3-provider.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/2.o",
+        "-iquote",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/ordinary/value-index-result-only/build-1=/build/php-wasm-refinement-entry-probe"
+      ]
+    },
+    {
+      "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm/upstream/emscripten/emcc",
+      "originalArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/php/ext",
+        "-c",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/callbacks.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/3.o"
+      ],
+      "probeArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/php/ext",
+        "-c",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/ordinary/value-index-result-only/build-1/c-probes/4-callbacks.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/3.o",
+        "-iquote",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/ordinary/value-index-result-only/build-1=/build/php-wasm-refinement-entry-probe"
+      ]
+    },
+    {
+      "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm/upstream/emscripten/emcc",
+      "originalArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/php/ext",
+        "-c",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/width.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/4.o"
+      ],
+      "probeArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/php/ext",
+        "-c",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/ordinary/value-index-result-only/build-1/c-probes/5-width.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/4.o",
+        "-iquote",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/ordinary/value-index-result-only/build-1=/build/php-wasm-refinement-entry-probe"
+      ]
+    },
+    {
+      "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm/upstream/emscripten/emcc",
+      "originalArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/php/ext",
+        "-c",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/binding/src/checkedrecordvalueindices.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/5.o"
+      ],
+      "probeArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/php/ext",
+        "-c",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/ordinary/value-index-result-only/build-1/c-probes/6-checkedrecordvalueindices.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/5.o",
+        "-iquote",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/binding/src",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/ordinary/value-index-result-only/build-1=/build/php-wasm-refinement-entry-probe"
+      ]
+    },
+    {
+      "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm/upstream/emscripten/emcc",
+      "originalArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/php/ext",
+        "-c",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/extension/lb_checkedrecordvalueindices_91b52cf4a915be95.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/6.o"
+      ],
+      "probeArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/php/ext",
+        "-c",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/ordinary/value-index-result-only/build-1/c-probes/7-lb_checkedrecordvalueindices_91b52cf4a915be95.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/6.o",
+        "-iquote",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/extension",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/ordinary/value-index-result-only/build-1=/build/php-wasm-refinement-entry-probe"
+      ]
+    },
+    {
+      "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm/upstream/emscripten/emcc",
+      "originalArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-sSIDE_MODULE=2",
+        "-sEXPORTED_FUNCTIONS=['_get_module']",
+        "-Wl,--no-entry",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/0.o",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/1.o",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/2.o",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/3.o",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/4.o",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/5.o",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/6.o",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime/lib/liblean_bridge_php_wasm_copied_488de83b725bba40a9b4.so",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/lib/php8.4-lb_checkedrecordvalueindices_91b52cf4a915be95.so"
+      ],
+      "probeArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-sSIDE_MODULE=2",
+        "-sEXPORTED_FUNCTIONS=['_get_module']",
+        "-Wl,--no-entry",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/0.o",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/1.o",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/2.o",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/3.o",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/4.o",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/5.o",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/6.o",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime/lib/liblean_bridge_php_wasm_copied_488de83b725bba40a9b4.so",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/lib/php8.4-lb_checkedrecordvalueindices_91b52cf4a915be95.so"
+      ]
+    }
+  ],
+  "compiled": [
+    {
+      "definitions": [
+        {
+          "form": "function",
+          "kind": "constructor",
+          "label": "CheckedRecordValueIndices.mkOn",
+          "offset": 4068,
+          "symbol": "lb_value_index_result_only_probe_constructor_mkOn"
+        },
+        {
+          "form": "function",
+          "kind": "constructor",
+          "label": "CheckedRecordValueIndices.mkOff",
+          "offset": 4549,
+          "symbol": "lb_value_index_result_only_probe_constructor_mkOff"
+        },
+        {
+          "form": "function",
+          "kind": "constructor",
+          "label": "CheckedRecordValueIndices.mkAb",
+          "offset": 5034,
+          "symbol": "lb_value_index_result_only_probe_constructor_mkAb"
+        },
+        {
+          "form": "function",
+          "kind": "constructor",
+          "label": "CheckedRecordValueIndices.mkEmptySized",
+          "offset": 5528,
+          "symbol": "lb_value_index_result_only_probe_constructor_mkEmptySized"
+        },
+        {
+          "form": "function",
+          "kind": "constructor",
+          "label": "CheckedRecordValueIndices.mkZeroToken",
+          "offset": 6102,
+          "symbol": "lb_value_index_result_only_probe_constructor_mkZeroToken"
+        },
+        {
+          "form": "function",
+          "kind": "constructor",
+          "label": "CheckedRecordValueIndices.mkWideToken",
+          "offset": 6348,
+          "symbol": "lb_value_index_result_only_probe_constructor_mkWideToken"
+        },
+        {
+          "form": "function",
+          "kind": "constructor",
+          "label": "CheckedRecordValueIndices.mkEmptyToken",
+          "offset": 6594,
+          "symbol": "lb_value_index_result_only_probe_constructor_mkEmptyToken"
+        },
+        {
+          "form": "function",
+          "kind": "constructor",
+          "label": "CheckedRecordValueIndices.mkUnicodeToken",
+          "offset": 6841,
+          "symbol": "lb_value_index_result_only_probe_constructor_mkUnicodeToken"
+        },
+        {
+          "form": "global",
+          "kind": "source",
+          "label": "CheckedRecordValueIndices.produceTrueBool",
+          "offset": 2836,
+          "symbol": "lb_value_index_result_only_probe_source_produceTrueBool"
+        },
+        {
+          "form": "global",
+          "kind": "source",
+          "label": "CheckedRecordValueIndices.produceFalseBool",
+          "offset": 2918,
+          "symbol": "lb_value_index_result_only_probe_source_produceFalseBool"
+        },
+        {
+          "form": "global",
+          "kind": "source",
+          "label": "CheckedRecordValueIndices.produceAb",
+          "offset": 3001,
+          "symbol": "lb_value_index_result_only_probe_source_produceAb"
+        },
+        {
+          "form": "function",
+          "kind": "source",
+          "label": "CheckedRecordValueIndices.produceEmptyString",
+          "offset": 10922,
+          "symbol": "lb_value_index_result_only_probe_source_produceEmptyString"
+        },
+        {
+          "form": "function",
+          "kind": "source",
+          "label": "CheckedRecordValueIndices.produceUnicodeString",
+          "offset": 11067,
+          "symbol": "lb_value_index_result_only_probe_source_produceUnicodeString"
+        },
+        {
+          "form": "global",
+          "kind": "source",
+          "label": "CheckedRecordValueIndices.produceEmptySized",
+          "offset": 3701,
+          "symbol": "lb_value_index_result_only_probe_source_produceEmptySized"
+        },
+        {
+          "form": "function",
+          "kind": "source",
+          "label": "CheckedRecordValueIndices.produceZeroNat",
+          "offset": 11214,
+          "symbol": "lb_value_index_result_only_probe_source_produceZeroNat"
+        },
+        {
+          "form": "function",
+          "kind": "source",
+          "label": "CheckedRecordValueIndices.produceWideNat",
+          "offset": 11355,
+          "symbol": "lb_value_index_result_only_probe_source_produceWideNat"
+        }
+      ],
+      "insertions": [
+        {
+          "kind": "source",
+          "label": "CheckedRecordValueIndices.produceWideNat",
+          "offset": 11461,
+          "symbol": "lb_value_index_result_only_probe_source_produceWideNat",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter source CheckedRecordValueIndices.produceWideNat\\n\", stderr);\n"
+        },
+        {
+          "kind": "source",
+          "label": "CheckedRecordValueIndices.produceZeroNat",
+          "offset": 11320,
+          "symbol": "lb_value_index_result_only_probe_source_produceZeroNat",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter source CheckedRecordValueIndices.produceZeroNat\\n\", stderr);\n"
+        },
+        {
+          "kind": "source",
+          "label": "CheckedRecordValueIndices.produceUnicodeString",
+          "offset": 11179,
+          "symbol": "lb_value_index_result_only_probe_source_produceUnicodeString",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter source CheckedRecordValueIndices.produceUnicodeString\\n\", stderr);\n"
+        },
+        {
+          "kind": "source",
+          "label": "CheckedRecordValueIndices.produceEmptyString",
+          "offset": 11032,
+          "symbol": "lb_value_index_result_only_probe_source_produceEmptyString",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter source CheckedRecordValueIndices.produceEmptyString\\n\", stderr);\n"
+        },
+        {
+          "kind": "constructor",
+          "label": "CheckedRecordValueIndices.mkUnicodeToken",
+          "offset": 6952,
+          "symbol": "lb_value_index_result_only_probe_constructor_mkUnicodeToken",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter constructor CheckedRecordValueIndices.mkUnicodeToken\\n\", stderr);\n"
+        },
+        {
+          "kind": "constructor",
+          "label": "CheckedRecordValueIndices.mkEmptyToken",
+          "offset": 6703,
+          "symbol": "lb_value_index_result_only_probe_constructor_mkEmptyToken",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter constructor CheckedRecordValueIndices.mkEmptyToken\\n\", stderr);\n"
+        },
+        {
+          "kind": "constructor",
+          "label": "CheckedRecordValueIndices.mkWideToken",
+          "offset": 6456,
+          "symbol": "lb_value_index_result_only_probe_constructor_mkWideToken",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter constructor CheckedRecordValueIndices.mkWideToken\\n\", stderr);\n"
+        },
+        {
+          "kind": "constructor",
+          "label": "CheckedRecordValueIndices.mkZeroToken",
+          "offset": 6210,
+          "symbol": "lb_value_index_result_only_probe_constructor_mkZeroToken",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter constructor CheckedRecordValueIndices.mkZeroToken\\n\", stderr);\n"
+        },
+        {
+          "kind": "constructor",
+          "label": "CheckedRecordValueIndices.mkEmptySized",
+          "offset": 5636,
+          "symbol": "lb_value_index_result_only_probe_constructor_mkEmptySized",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter constructor CheckedRecordValueIndices.mkEmptySized\\n\", stderr);\n"
+        },
+        {
+          "kind": "constructor",
+          "label": "CheckedRecordValueIndices.mkAb",
+          "offset": 5134,
+          "symbol": "lb_value_index_result_only_probe_constructor_mkAb",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter constructor CheckedRecordValueIndices.mkAb\\n\", stderr);\n"
+        },
+        {
+          "kind": "constructor",
+          "label": "CheckedRecordValueIndices.mkOff",
+          "offset": 4650,
+          "symbol": "lb_value_index_result_only_probe_constructor_mkOff",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter constructor CheckedRecordValueIndices.mkOff\\n\", stderr);\n"
+        },
+        {
+          "kind": "constructor",
+          "label": "CheckedRecordValueIndices.mkOn",
+          "offset": 4168,
+          "symbol": "lb_value_index_result_only_probe_constructor_mkOn",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter constructor CheckedRecordValueIndices.mkOn\\n\", stderr);\n"
+        },
+        {
+          "kind": "preamble",
+          "offset": 0,
+          "text": "#include <stdio.h>\n"
+        }
+      ],
+      "name": "1-CheckedRecordValueIndices.c",
+      "object": {
+        "bytes": 8057,
+        "sha256": "9ea73ffeab556a1151d887bf7774e067801724de298fcac00cf3efae40bf517b"
+      },
+      "objectPath": "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/0.o",
+      "originalPath": "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/CheckedRecordValueIndices.c",
+      "originalSha256": "23fbaa8f0dde34066f1906a0f1056892c6da4072c1009030b4478075a3cf0350",
+      "probePath": "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/ordinary/value-index-result-only/build-1/c-probes/1-CheckedRecordValueIndices.c",
+      "probeSha256": "d86f216a3befea7dd27e3c1a6bd2c65452ffd183ea4b7c75b44c445e671dd2db"
+    },
+    {
+      "definitions": [
+        {
+          "form": "function",
+          "kind": "adapter",
+          "label": "CheckedRecordValueIndices.produceAb",
+          "offset": 10182,
+          "symbol": "lb_4d7bad0a7665bc1e177e4091"
+        },
+        {
+          "form": "function",
+          "kind": "adapter",
+          "label": "CheckedRecordValueIndices.produceEmptySized",
+          "offset": 10383,
+          "symbol": "lb_2cb2ac73cad1bf0e92f223f2"
+        },
+        {
+          "form": "function",
+          "kind": "adapter",
+          "label": "CheckedRecordValueIndices.produceEmptyString",
+          "offset": 10592,
+          "symbol": "lb_1c301039413f26b466ffc0ac"
+        },
+        {
+          "form": "function",
+          "kind": "adapter",
+          "label": "CheckedRecordValueIndices.produceFalseBool",
+          "offset": 10808,
+          "symbol": "lb_4aa58b13819217d37533c8be"
+        },
+        {
+          "form": "function",
+          "kind": "adapter",
+          "label": "CheckedRecordValueIndices.produceTrueBool",
+          "offset": 11016,
+          "symbol": "lb_fa4a826e4cfc4b858bea336d"
+        },
+        {
+          "form": "function",
+          "kind": "adapter",
+          "label": "CheckedRecordValueIndices.produceUnicodeString",
+          "offset": 11223,
+          "symbol": "lb_c3c99619aef987f5fd710b1d"
+        },
+        {
+          "form": "function",
+          "kind": "adapter",
+          "label": "CheckedRecordValueIndices.produceWideNat",
+          "offset": 11441,
+          "symbol": "lb_ee4a5ad2bcd3cf6bb8065218"
+        },
+        {
+          "form": "function",
+          "kind": "adapter",
+          "label": "CheckedRecordValueIndices.produceZeroNat",
+          "offset": 11653,
+          "symbol": "lb_de7d470e18379efff61de31b"
+        }
+      ],
+      "insertions": [
+        {
+          "kind": "adapter",
+          "label": "CheckedRecordValueIndices.produceZeroNat",
+          "offset": 11729,
+          "symbol": "lb_de7d470e18379efff61de31b",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter CheckedRecordValueIndices.produceZeroNat\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "CheckedRecordValueIndices.produceWideNat",
+          "offset": 11517,
+          "symbol": "lb_ee4a5ad2bcd3cf6bb8065218",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter CheckedRecordValueIndices.produceWideNat\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "CheckedRecordValueIndices.produceUnicodeString",
+          "offset": 11299,
+          "symbol": "lb_c3c99619aef987f5fd710b1d",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter CheckedRecordValueIndices.produceUnicodeString\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "CheckedRecordValueIndices.produceTrueBool",
+          "offset": 11096,
+          "symbol": "lb_fa4a826e4cfc4b858bea336d",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter CheckedRecordValueIndices.produceTrueBool\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "CheckedRecordValueIndices.produceFalseBool",
+          "offset": 10888,
+          "symbol": "lb_4aa58b13819217d37533c8be",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter CheckedRecordValueIndices.produceFalseBool\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "CheckedRecordValueIndices.produceEmptyString",
+          "offset": 10668,
+          "symbol": "lb_1c301039413f26b466ffc0ac",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter CheckedRecordValueIndices.produceEmptyString\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "CheckedRecordValueIndices.produceEmptySized",
+          "offset": 10463,
+          "symbol": "lb_2cb2ac73cad1bf0e92f223f2",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter CheckedRecordValueIndices.produceEmptySized\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "CheckedRecordValueIndices.produceAb",
+          "offset": 10262,
+          "symbol": "lb_4d7bad0a7665bc1e177e4091",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter CheckedRecordValueIndices.produceAb\\n\", stderr);\n"
+        },
+        {
+          "kind": "preamble",
+          "offset": 0,
+          "text": "#include <stdio.h>\n"
+        }
+      ],
+      "name": "2-adapter.c",
+      "object": {
+        "bytes": 9153,
+        "sha256": "b5783ed06a2331e97900e081887585b6699b725b05c2a9f9223c1e47c57ab8c2"
+      },
+      "objectPath": "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/1.o",
+      "originalPath": "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/adapter.c",
+      "originalSha256": "d042d03808e60dcba6f7f8077eda18ff067a4df9ae611663fd2a54285affd467",
+      "probePath": "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/ordinary/value-index-result-only/build-1/c-probes/2-adapter.c",
+      "probeSha256": "bd8da901f40f906e4e19fa7b5681f28332568272c84b975d6d3e2ee217b54daa"
+    },
+    {
+      "definitions": [],
+      "insertions": [],
+      "name": "3-provider.c",
+      "object": {
+        "bytes": 11480,
+        "sha256": "e1d91d8aa947d12a5c128946675b157cb17a1740d64a13adbc875dc987408933"
+      },
+      "objectPath": "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/2.o",
+      "originalPath": "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/provider.c",
+      "originalSha256": "4baafc021cce79cde3b6b26eb5e3d72c20fa3946fcd307e3bf8b5e57dbc56b6b",
+      "probePath": "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/ordinary/value-index-result-only/build-1/c-probes/3-provider.c",
+      "probeSha256": "4baafc021cce79cde3b6b26eb5e3d72c20fa3946fcd307e3bf8b5e57dbc56b6b"
+    },
+    {
+      "definitions": [],
+      "insertions": [],
+      "name": "4-callbacks.c",
+      "object": {
+        "bytes": 258,
+        "sha256": "a8e680be3accc5b8ad9d8becda8fdb51ee27aeef43f3a380f4d440aa1fc45be9"
+      },
+      "objectPath": "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/3.o",
+      "originalPath": "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/callbacks.c",
+      "originalSha256": "57fca410285f79f9a58f3f5b23f97203e9cc9e76066139cb529ff406afa92c2c",
+      "probePath": "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/ordinary/value-index-result-only/build-1/c-probes/4-callbacks.c",
+      "probeSha256": "57fca410285f79f9a58f3f5b23f97203e9cc9e76066139cb529ff406afa92c2c"
+    },
+    {
+      "definitions": [],
+      "insertions": [],
+      "name": "5-width.c",
+      "object": {
+        "bytes": 258,
+        "sha256": "a8e680be3accc5b8ad9d8becda8fdb51ee27aeef43f3a380f4d440aa1fc45be9"
+      },
+      "objectPath": "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/4.o",
+      "originalPath": "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/width.c",
+      "originalSha256": "94f94bd37af397f400f10b97b24efb34a1ecab8f8aae613e50376f1ab2218d1e",
+      "probePath": "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/ordinary/value-index-result-only/build-1/c-probes/5-width.c",
+      "probeSha256": "94f94bd37af397f400f10b97b24efb34a1ecab8f8aae613e50376f1ab2218d1e"
+    },
+    {
+      "definitions": [],
+      "insertions": [],
+      "name": "6-checkedrecordvalueindices.c",
+      "object": {
+        "bytes": 7174,
+        "sha256": "389a35800fa7b97195fa9ded4af5625f3765a39894d1c32bfb1e57b414527b42"
+      },
+      "objectPath": "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/5.o",
+      "originalPath": "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/binding/src/checkedrecordvalueindices.c",
+      "originalSha256": "3a84cd92d859e4afd335aa97cb1dde93c5d7d41135a2cdc63934fb9baff2f886",
+      "probePath": "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/ordinary/value-index-result-only/build-1/c-probes/6-checkedrecordvalueindices.c",
+      "probeSha256": "3a84cd92d859e4afd335aa97cb1dde93c5d7d41135a2cdc63934fb9baff2f886"
+    },
+    {
+      "definitions": [
+        {
+          "form": "function",
+          "kind": "public",
+          "label": "produceAb",
+          "offset": 17397,
+          "symbol": "lb_call0"
+        },
+        {
+          "form": "function",
+          "kind": "public",
+          "label": "produceEmptySized",
+          "offset": 19652,
+          "symbol": "lb_call1"
+        },
+        {
+          "form": "function",
+          "kind": "public",
+          "label": "produceEmptyString",
+          "offset": 22042,
+          "symbol": "lb_call2"
+        },
+        {
+          "form": "function",
+          "kind": "public",
+          "label": "produceFalseBool",
+          "offset": 24350,
+          "symbol": "lb_call3"
+        },
+        {
+          "form": "function",
+          "kind": "public",
+          "label": "produceTrueBool",
+          "offset": 26585,
+          "symbol": "lb_call4"
+        },
+        {
+          "form": "function",
+          "kind": "public",
+          "label": "produceUnicodeString",
+          "offset": 28981,
+          "symbol": "lb_call5"
+        },
+        {
+          "form": "function",
+          "kind": "public",
+          "label": "produceWideNat",
+          "offset": 31435,
+          "symbol": "lb_call6"
+        },
+        {
+          "form": "function",
+          "kind": "public",
+          "label": "produceZeroNat",
+          "offset": 33889,
+          "symbol": "lb_call7"
+        }
+      ],
+      "insertions": [
+        {
+          "kind": "public",
+          "label": "produceZeroNat",
+          "offset": 33921,
+          "symbol": "lb_call7",
+          "text": "\n  const char *lb_probe_public_scope __attribute__((cleanup(lb_probe_end))) = \"produceZeroNat\";\n  fputs(\"LB_SUBTYPE_ENTRY_V1 begin public produceZeroNat\\n\", stderr);\n"
+        },
+        {
+          "kind": "public",
+          "label": "produceWideNat",
+          "offset": 31467,
+          "symbol": "lb_call6",
+          "text": "\n  const char *lb_probe_public_scope __attribute__((cleanup(lb_probe_end))) = \"produceWideNat\";\n  fputs(\"LB_SUBTYPE_ENTRY_V1 begin public produceWideNat\\n\", stderr);\n"
+        },
+        {
+          "kind": "public",
+          "label": "produceUnicodeString",
+          "offset": 29013,
+          "symbol": "lb_call5",
+          "text": "\n  const char *lb_probe_public_scope __attribute__((cleanup(lb_probe_end))) = \"produceUnicodeString\";\n  fputs(\"LB_SUBTYPE_ENTRY_V1 begin public produceUnicodeString\\n\", stderr);\n"
+        },
+        {
+          "kind": "public",
+          "label": "produceTrueBool",
+          "offset": 26617,
+          "symbol": "lb_call4",
+          "text": "\n  const char *lb_probe_public_scope __attribute__((cleanup(lb_probe_end))) = \"produceTrueBool\";\n  fputs(\"LB_SUBTYPE_ENTRY_V1 begin public produceTrueBool\\n\", stderr);\n"
+        },
+        {
+          "kind": "public",
+          "label": "produceFalseBool",
+          "offset": 24382,
+          "symbol": "lb_call3",
+          "text": "\n  const char *lb_probe_public_scope __attribute__((cleanup(lb_probe_end))) = \"produceFalseBool\";\n  fputs(\"LB_SUBTYPE_ENTRY_V1 begin public produceFalseBool\\n\", stderr);\n"
+        },
+        {
+          "kind": "public",
+          "label": "produceEmptyString",
+          "offset": 22074,
+          "symbol": "lb_call2",
+          "text": "\n  const char *lb_probe_public_scope __attribute__((cleanup(lb_probe_end))) = \"produceEmptyString\";\n  fputs(\"LB_SUBTYPE_ENTRY_V1 begin public produceEmptyString\\n\", stderr);\n"
+        },
+        {
+          "kind": "public",
+          "label": "produceEmptySized",
+          "offset": 19684,
+          "symbol": "lb_call1",
+          "text": "\n  const char *lb_probe_public_scope __attribute__((cleanup(lb_probe_end))) = \"produceEmptySized\";\n  fputs(\"LB_SUBTYPE_ENTRY_V1 begin public produceEmptySized\\n\", stderr);\n"
+        },
+        {
+          "kind": "public",
+          "label": "produceAb",
+          "offset": 17429,
+          "symbol": "lb_call0",
+          "text": "\n  const char *lb_probe_public_scope __attribute__((cleanup(lb_probe_end))) = \"produceAb\";\n  fputs(\"LB_SUBTYPE_ENTRY_V1 begin public produceAb\\n\", stderr);\n"
+        },
+        {
+          "kind": "preamble",
+          "offset": 0,
+          "text": "#include <stdio.h>\nstatic void lb_probe_end(const char **label) { fprintf(stderr, \"LB_SUBTYPE_ENTRY_V1 end public %s\\n\", *label); }\n"
+        }
+      ],
+      "name": "7-lb_checkedrecordvalueindices_91b52cf4a915be95.c",
+      "object": {
+        "bytes": 44452,
+        "sha256": "ac067caf4fd59683739262599445c5dcc158b7ed952e2375d10613bcdc87b822"
+      },
+      "objectPath": "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/c/6.o",
+      "originalPath": "/home/runner/work/_temp/lean-bridge-value-index-result-only-ordinary-BbJaOG/release/php-wasm/.lean-bridge-native-component-XPxo4s/extension/lb_checkedrecordvalueindices_91b52cf4a915be95.c",
+      "originalSha256": "24971add9bdb9e122f14b278ca5cd5400067e2be7ae83ea0607bf87202befa05",
+      "probePath": "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/ordinary/value-index-result-only/build-1/c-probes/7-lb_checkedrecordvalueindices_91b52cf4a915be95.c",
+      "probeSha256": "082b3d4300b4463a6c7307a18d0ae2149944692c08ccf02bb10bd9ac8e24dbd8"
+    }
+  ],
+  "definitionCounts": {
+    "lb_1c301039413f26b466ffc0ac": 1,
+    "lb_2cb2ac73cad1bf0e92f223f2": 1,
+    "lb_4aa58b13819217d37533c8be": 1,
+    "lb_4d7bad0a7665bc1e177e4091": 1,
+    "lb_c3c99619aef987f5fd710b1d": 1,
+    "lb_call0": 1,
+    "lb_call1": 1,
+    "lb_call2": 1,
+    "lb_call3": 1,
+    "lb_call4": 1,
+    "lb_call5": 1,
+    "lb_call6": 1,
+    "lb_call7": 1,
+    "lb_de7d470e18379efff61de31b": 1,
+    "lb_ee4a5ad2bcd3cf6bb8065218": 1,
+    "lb_fa4a826e4cfc4b858bea336d": 1,
+    "lb_value_index_result_only_probe_constructor_mkAb": 1,
+    "lb_value_index_result_only_probe_constructor_mkEmptySized": 1,
+    "lb_value_index_result_only_probe_constructor_mkEmptyToken": 1,
+    "lb_value_index_result_only_probe_constructor_mkOff": 1,
+    "lb_value_index_result_only_probe_constructor_mkOn": 1,
+    "lb_value_index_result_only_probe_constructor_mkUnicodeToken": 1,
+    "lb_value_index_result_only_probe_constructor_mkWideToken": 1,
+    "lb_value_index_result_only_probe_constructor_mkZeroToken": 1,
+    "lb_value_index_result_only_probe_source_produceAb": 1,
+    "lb_value_index_result_only_probe_source_produceEmptySized": 1,
+    "lb_value_index_result_only_probe_source_produceEmptyString": 1,
+    "lb_value_index_result_only_probe_source_produceFalseBool": 1,
+    "lb_value_index_result_only_probe_source_produceTrueBool": 1,
+    "lb_value_index_result_only_probe_source_produceUnicodeString": 1,
+    "lb_value_index_result_only_probe_source_produceWideNat": 1,
+    "lb_value_index_result_only_probe_source_produceZeroNat": 1
+  },
+  "globalDefinitions": [
+    {
+      "kind": "source",
+      "label": "CheckedRecordValueIndices.produceTrueBool",
+      "symbol": "lb_value_index_result_only_probe_source_produceTrueBool"
+    },
+    {
+      "kind": "source",
+      "label": "CheckedRecordValueIndices.produceFalseBool",
+      "symbol": "lb_value_index_result_only_probe_source_produceFalseBool"
+    },
+    {
+      "kind": "source",
+      "label": "CheckedRecordValueIndices.produceAb",
+      "symbol": "lb_value_index_result_only_probe_source_produceAb"
+    },
+    {
+      "kind": "source",
+      "label": "CheckedRecordValueIndices.produceEmptySized",
+      "symbol": "lb_value_index_result_only_probe_source_produceEmptySized"
+    }
+  ],
+  "headers": [],
+  "linked": true,
+  "selected": [
+    {
+      "kind": "constructor",
+      "label": "CheckedRecordValueIndices.mkOn",
+      "symbol": "lb_value_index_result_only_probe_constructor_mkOn"
+    },
+    {
+      "kind": "constructor",
+      "label": "CheckedRecordValueIndices.mkOff",
+      "symbol": "lb_value_index_result_only_probe_constructor_mkOff"
+    },
+    {
+      "kind": "constructor",
+      "label": "CheckedRecordValueIndices.mkAb",
+      "symbol": "lb_value_index_result_only_probe_constructor_mkAb"
+    },
+    {
+      "kind": "constructor",
+      "label": "CheckedRecordValueIndices.mkEmptySized",
+      "symbol": "lb_value_index_result_only_probe_constructor_mkEmptySized"
+    },
+    {
+      "kind": "constructor",
+      "label": "CheckedRecordValueIndices.mkZeroToken",
+      "symbol": "lb_value_index_result_only_probe_constructor_mkZeroToken"
+    },
+    {
+      "kind": "constructor",
+      "label": "CheckedRecordValueIndices.mkWideToken",
+      "symbol": "lb_value_index_result_only_probe_constructor_mkWideToken"
+    },
+    {
+      "kind": "constructor",
+      "label": "CheckedRecordValueIndices.mkEmptyToken",
+      "symbol": "lb_value_index_result_only_probe_constructor_mkEmptyToken"
+    },
+    {
+      "kind": "constructor",
+      "label": "CheckedRecordValueIndices.mkUnicodeToken",
+      "symbol": "lb_value_index_result_only_probe_constructor_mkUnicodeToken"
+    },
+    {
+      "kind": "source",
+      "label": "CheckedRecordValueIndices.produceTrueBool",
+      "symbol": "lb_value_index_result_only_probe_source_produceTrueBool"
+    },
+    {
+      "kind": "source",
+      "label": "CheckedRecordValueIndices.produceFalseBool",
+      "symbol": "lb_value_index_result_only_probe_source_produceFalseBool"
+    },
+    {
+      "kind": "source",
+      "label": "CheckedRecordValueIndices.produceAb",
+      "symbol": "lb_value_index_result_only_probe_source_produceAb"
+    },
+    {
+      "kind": "source",
+      "label": "CheckedRecordValueIndices.produceEmptyString",
+      "symbol": "lb_value_index_result_only_probe_source_produceEmptyString"
+    },
+    {
+      "kind": "source",
+      "label": "CheckedRecordValueIndices.produceUnicodeString",
+      "symbol": "lb_value_index_result_only_probe_source_produceUnicodeString"
+    },
+    {
+      "kind": "source",
+      "label": "CheckedRecordValueIndices.produceEmptySized",
+      "symbol": "lb_value_index_result_only_probe_source_produceEmptySized"
+    },
+    {
+      "kind": "source",
+      "label": "CheckedRecordValueIndices.produceZeroNat",
+      "symbol": "lb_value_index_result_only_probe_source_produceZeroNat"
+    },
+    {
+      "kind": "source",
+      "label": "CheckedRecordValueIndices.produceWideNat",
+      "symbol": "lb_value_index_result_only_probe_source_produceWideNat"
+    },
+    {
+      "kind": "public",
+      "label": "produceAb",
+      "symbol": "lb_call0"
+    },
+    {
+      "kind": "public",
+      "label": "produceEmptySized",
+      "symbol": "lb_call1"
+    },
+    {
+      "kind": "public",
+      "label": "produceEmptyString",
+      "symbol": "lb_call2"
+    },
+    {
+      "kind": "public",
+      "label": "produceFalseBool",
+      "symbol": "lb_call3"
+    },
+    {
+      "kind": "public",
+      "label": "produceTrueBool",
+      "symbol": "lb_call4"
+    },
+    {
+      "kind": "public",
+      "label": "produceUnicodeString",
+      "symbol": "lb_call5"
+    },
+    {
+      "kind": "public",
+      "label": "produceWideNat",
+      "symbol": "lb_call6"
+    },
+    {
+      "kind": "public",
+      "label": "produceZeroNat",
+      "symbol": "lb_call7"
+    },
+    {
+      "kind": "adapter",
+      "label": "CheckedRecordValueIndices.produceAb",
+      "symbol": "lb_4d7bad0a7665bc1e177e4091"
+    },
+    {
+      "kind": "adapter",
+      "label": "CheckedRecordValueIndices.produceEmptySized",
+      "symbol": "lb_2cb2ac73cad1bf0e92f223f2"
+    },
+    {
+      "kind": "adapter",
+      "label": "CheckedRecordValueIndices.produceEmptyString",
+      "symbol": "lb_1c301039413f26b466ffc0ac"
+    },
+    {
+      "kind": "adapter",
+      "label": "CheckedRecordValueIndices.produceFalseBool",
+      "symbol": "lb_4aa58b13819217d37533c8be"
+    },
+    {
+      "kind": "adapter",
+      "label": "CheckedRecordValueIndices.produceTrueBool",
+      "symbol": "lb_fa4a826e4cfc4b858bea336d"
+    },
+    {
+      "kind": "adapter",
+      "label": "CheckedRecordValueIndices.produceUnicodeString",
+      "symbol": "lb_c3c99619aef987f5fd710b1d"
+    },
+    {
+      "kind": "adapter",
+      "label": "CheckedRecordValueIndices.produceWideNat",
+      "symbol": "lb_ee4a5ad2bcd3cf6bb8065218"
+    },
+    {
+      "kind": "adapter",
+      "label": "CheckedRecordValueIndices.produceZeroNat",
+      "symbol": "lb_de7d470e18379efff61de31b"
+    }
+  ]
+}

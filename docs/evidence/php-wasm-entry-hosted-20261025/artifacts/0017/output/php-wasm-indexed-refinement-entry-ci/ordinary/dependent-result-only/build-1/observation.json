@@ -1,0 +1,934 @@
+{
+  "commands": [
+    {
+      "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm/upstream/emscripten/emcc",
+      "originalArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/php/ext",
+        "-c",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/DependentRecords.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/0.o"
+      ],
+      "probeArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/php/ext",
+        "-c",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/ordinary/dependent-result-only/build-1/c-probes/1-DependentRecords.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/0.o",
+        "-iquote",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/ordinary/dependent-result-only/build-1=/build/php-wasm-refinement-entry-probe"
+      ]
+    },
+    {
+      "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm/upstream/emscripten/emcc",
+      "originalArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/php/ext",
+        "-c",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/adapter.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/1.o"
+      ],
+      "probeArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/php/ext",
+        "-c",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/ordinary/dependent-result-only/build-1/c-probes/2-adapter.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/1.o",
+        "-iquote",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/ordinary/dependent-result-only/build-1=/build/php-wasm-refinement-entry-probe"
+      ]
+    },
+    {
+      "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm/upstream/emscripten/emcc",
+      "originalArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/php/ext",
+        "-c",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/provider.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/2.o"
+      ],
+      "probeArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/php/ext",
+        "-c",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/ordinary/dependent-result-only/build-1/c-probes/3-provider.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/2.o",
+        "-iquote",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/ordinary/dependent-result-only/build-1=/build/php-wasm-refinement-entry-probe"
+      ]
+    },
+    {
+      "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm/upstream/emscripten/emcc",
+      "originalArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/php/ext",
+        "-c",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/callbacks.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/3.o"
+      ],
+      "probeArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/php/ext",
+        "-c",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/ordinary/dependent-result-only/build-1/c-probes/4-callbacks.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/3.o",
+        "-iquote",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/ordinary/dependent-result-only/build-1=/build/php-wasm-refinement-entry-probe"
+      ]
+    },
+    {
+      "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm/upstream/emscripten/emcc",
+      "originalArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/php/ext",
+        "-c",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/width.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/4.o"
+      ],
+      "probeArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/php/ext",
+        "-c",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/ordinary/dependent-result-only/build-1/c-probes/5-width.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/4.o",
+        "-iquote",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/ordinary/dependent-result-only/build-1=/build/php-wasm-refinement-entry-probe"
+      ]
+    },
+    {
+      "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm/upstream/emscripten/emcc",
+      "originalArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/php/ext",
+        "-c",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/binding/src/dependentrecords.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/5.o"
+      ],
+      "probeArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/php/ext",
+        "-c",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/ordinary/dependent-result-only/build-1/c-probes/6-dependentrecords.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/5.o",
+        "-iquote",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/binding/src",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/ordinary/dependent-result-only/build-1=/build/php-wasm-refinement-entry-probe"
+      ]
+    },
+    {
+      "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm/upstream/emscripten/emcc",
+      "originalArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/php/ext",
+        "-c",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/extension/lb_dependentrecords_5ae832d075c741be.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/6.o"
+      ],
+      "probeArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/php/ext",
+        "-c",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/ordinary/dependent-result-only/build-1/c-probes/7-lb_dependentrecords_5ae832d075c741be.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/6.o",
+        "-iquote",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/extension",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/ordinary/dependent-result-only/build-1=/build/php-wasm-refinement-entry-probe"
+      ]
+    },
+    {
+      "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm/upstream/emscripten/emcc",
+      "originalArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-sSIDE_MODULE=2",
+        "-sEXPORTED_FUNCTIONS=['_get_module']",
+        "-Wl,--no-entry",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/0.o",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/1.o",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/2.o",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/3.o",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/4.o",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/5.o",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/6.o",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime/lib/liblean_bridge_php_wasm_copied_488de83b725bba40a9b4.so",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/lib/php8.4-lb_dependentrecords_5ae832d075c741be.so"
+      ],
+      "probeArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-sSIDE_MODULE=2",
+        "-sEXPORTED_FUNCTIONS=['_get_module']",
+        "-Wl,--no-entry",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/0.o",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/1.o",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/2.o",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/3.o",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/4.o",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/5.o",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/6.o",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime/lib/liblean_bridge_php_wasm_copied_488de83b725bba40a9b4.so",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/lib/php8.4-lb_dependentrecords_5ae832d075c741be.so"
+      ]
+    }
+  ],
+  "compiled": [
+    {
+      "definitions": [
+        {
+          "form": "function",
+          "kind": "constructor",
+          "label": "DependentRecords.mkDependent",
+          "offset": 1140,
+          "symbol": "lb_dependent_result_only_probe_constructor_mkDependent"
+        },
+        {
+          "form": "function",
+          "kind": "source",
+          "label": "DependentRecords.dependentResult",
+          "offset": 2716,
+          "symbol": "lb_dependent_result_only_probe_source_dependentResult"
+        }
+      ],
+      "insertions": [
+        {
+          "kind": "source",
+          "label": "DependentRecords.dependentResult",
+          "offset": 2820,
+          "symbol": "lb_dependent_result_only_probe_source_dependentResult",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter source DependentRecords.dependentResult\\n\", stderr);\n"
+        },
+        {
+          "kind": "constructor",
+          "label": "DependentRecords.mkDependent",
+          "offset": 1270,
+          "symbol": "lb_dependent_result_only_probe_constructor_mkDependent",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter constructor DependentRecords.mkDependent\\n\", stderr);\n"
+        },
+        {
+          "kind": "preamble",
+          "offset": 0,
+          "text": "#include <stdio.h>\n"
+        }
+      ],
+      "name": "1-DependentRecords.c",
+      "object": {
+        "bytes": 3257,
+        "sha256": "e0fc8c6627789ae59ab301f529f7e419e639efc1297a4ea35d7a5352cbc181ae"
+      },
+      "objectPath": "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/0.o",
+      "originalPath": "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/DependentRecords.c",
+      "originalSha256": "f684352af1ef98317dee161ed4ff4010cf19c86c50ba4f78e3f2c31493099c6b",
+      "probePath": "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/ordinary/dependent-result-only/build-1/c-probes/1-DependentRecords.c",
+      "probeSha256": "659121a95c22502ca54a08f24bb599087be0d922a665dc2e4a1d62f9b42591cc"
+    },
+    {
+      "definitions": [
+        {
+          "form": "function",
+          "kind": "adapter",
+          "label": "DependentRecords.dependentResult",
+          "offset": 3169,
+          "symbol": "lb_e59e187300c993f56dccdfb9"
+        }
+      ],
+      "insertions": [
+        {
+          "kind": "adapter",
+          "label": "DependentRecords.dependentResult",
+          "offset": 3245,
+          "symbol": "lb_e59e187300c993f56dccdfb9",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter DependentRecords.dependentResult\\n\", stderr);\n"
+        },
+        {
+          "kind": "preamble",
+          "offset": 0,
+          "text": "#include <stdio.h>\n"
+        }
+      ],
+      "name": "2-adapter.c",
+      "object": {
+        "bytes": 5408,
+        "sha256": "b0b1646c3a224b5e1c0319d3d9040b542a206e3e0d88ab4b311568d1000841aa"
+      },
+      "objectPath": "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/1.o",
+      "originalPath": "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/adapter.c",
+      "originalSha256": "b8786c98c353eb87cb72108a09098c2561c1757596ffa647371e25cf037cf552",
+      "probePath": "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/ordinary/dependent-result-only/build-1/c-probes/2-adapter.c",
+      "probeSha256": "fa5659a18c523f328a5eeae2f73fff06073d690137eb1e26afa88541d13f6642"
+    },
+    {
+      "definitions": [],
+      "insertions": [],
+      "name": "3-provider.c",
+      "object": {
+        "bytes": 4178,
+        "sha256": "e0b5190440c317a15c9171cc95cf5548e7991fb322dff28095c9a3592f38d643"
+      },
+      "objectPath": "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/2.o",
+      "originalPath": "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/provider.c",
+      "originalSha256": "7141fe43d79c6d83474f661eba12a37ad89e2e71b4f38134bf63faeb98835deb",
+      "probePath": "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/ordinary/dependent-result-only/build-1/c-probes/3-provider.c",
+      "probeSha256": "7141fe43d79c6d83474f661eba12a37ad89e2e71b4f38134bf63faeb98835deb"
+    },
+    {
+      "definitions": [],
+      "insertions": [],
+      "name": "4-callbacks.c",
+      "object": {
+        "bytes": 258,
+        "sha256": "a8e680be3accc5b8ad9d8becda8fdb51ee27aeef43f3a380f4d440aa1fc45be9"
+      },
+      "objectPath": "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/3.o",
+      "originalPath": "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/callbacks.c",
+      "originalSha256": "57fca410285f79f9a58f3f5b23f97203e9cc9e76066139cb529ff406afa92c2c",
+      "probePath": "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/ordinary/dependent-result-only/build-1/c-probes/4-callbacks.c",
+      "probeSha256": "57fca410285f79f9a58f3f5b23f97203e9cc9e76066139cb529ff406afa92c2c"
+    },
+    {
+      "definitions": [],
+      "insertions": [],
+      "name": "5-width.c",
+      "object": {
+        "bytes": 258,
+        "sha256": "a8e680be3accc5b8ad9d8becda8fdb51ee27aeef43f3a380f4d440aa1fc45be9"
+      },
+      "objectPath": "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/4.o",
+      "originalPath": "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/width.c",
+      "originalSha256": "94f94bd37af397f400f10b97b24efb34a1ecab8f8aae613e50376f1ab2218d1e",
+      "probePath": "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/ordinary/dependent-result-only/build-1/c-probes/5-width.c",
+      "probeSha256": "94f94bd37af397f400f10b97b24efb34a1ecab8f8aae613e50376f1ab2218d1e"
+    },
+    {
+      "definitions": [],
+      "insertions": [],
+      "name": "6-dependentrecords.c",
+      "object": {
+        "bytes": 2378,
+        "sha256": "7283bf54fd40b123c8f1dccd7eafa27cc7b9b9271e21265a4c1ad8bc39d967f1"
+      },
+      "objectPath": "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/5.o",
+      "originalPath": "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/binding/src/dependentrecords.c",
+      "originalSha256": "9e846ad297b105fc1cc4fc58eb50855c305c48f94b8a2b3c283508a2e0a1d2a4",
+      "probePath": "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/ordinary/dependent-result-only/build-1/c-probes/6-dependentrecords.c",
+      "probeSha256": "9e846ad297b105fc1cc4fc58eb50855c305c48f94b8a2b3c283508a2e0a1d2a4"
+    },
+    {
+      "definitions": [
+        {
+          "form": "function",
+          "kind": "public",
+          "label": "dependentResult",
+          "offset": 10128,
+          "symbol": "lb_call0"
+        }
+      ],
+      "insertions": [
+        {
+          "kind": "public",
+          "label": "dependentResult",
+          "offset": 10160,
+          "symbol": "lb_call0",
+          "text": "\n  const char *lb_probe_public_scope __attribute__((cleanup(lb_probe_end))) = \"dependentResult\";\n  fputs(\"LB_SUBTYPE_ENTRY_V1 begin public dependentResult\\n\", stderr);\n"
+        },
+        {
+          "kind": "preamble",
+          "offset": 0,
+          "text": "#include <stdio.h>\nstatic void lb_probe_end(const char **label) { fprintf(stderr, \"LB_SUBTYPE_ENTRY_V1 end public %s\\n\", *label); }\n"
+        }
+      ],
+      "name": "7-lb_dependentrecords_5ae832d075c741be.c",
+      "object": {
+        "bytes": 11701,
+        "sha256": "cb140269f0009ca4a22024150d98b0ef9d2f3f1eac6b38c6cfa3d4cc3a9074d7"
+      },
+      "objectPath": "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/c/6.o",
+      "originalPath": "/home/runner/work/_temp/lean-bridge-dependent-result-only-ordinary-GU3HLU/release/php-wasm/.lean-bridge-native-component-rDSXPF/extension/lb_dependentrecords_5ae832d075c741be.c",
+      "originalSha256": "7f138b9adb0fb39e72ef055983c5b5d3df055b626079a188148ed4e153562882",
+      "probePath": "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/ordinary/dependent-result-only/build-1/c-probes/7-lb_dependentrecords_5ae832d075c741be.c",
+      "probeSha256": "afd0f9fb3de2e6808d2a858ae52cafabfa07c88ea4e5688acd65367dcea56d72"
+    }
+  ],
+  "component": {
+    "adaptersSha256": "5a7485eacae5569d1ddae8ebe5dfcef7b106520f52c01b19f6fd5bf2f94aa891",
+    "bindingIrSha256": "5ae832d075c741be0582588e1d85e675836c18824fafaf93f0212314e0f5f4f1",
+    "compiler": {
+      "emsdkCommit": "54ef088329e5a329614b3659a579d2ccd31fd621",
+      "files": {
+        "upstream/bin/clang": {
+          "bytes": 141971168,
+          "sha256": "cbac1be8f3026afc67c45beb7baab688a06d548e52ef5d010146160d46618860"
+        },
+        "upstream/bin/wasm-ld": {
+          "bytes": 73912360,
+          "sha256": "af23d9d3f6c30a496f566c817c954de3e9139fa7d2562579cdbbbff8f21caa72"
+        },
+        "upstream/emscripten/em++.py": {
+          "bytes": 506,
+          "sha256": "017f735c953318fdaaa4af68c8d4bf13936a787ddbd5dad804d532b0223b6c2f"
+        },
+        "upstream/emscripten/emcc": {
+          "bytes": 1065,
+          "sha256": "b0c9551f9155fa9c028efa24591acdfd30f02f32fb247cf9266f5f0f2ede7589"
+        },
+        "upstream/emscripten/emcc.py": {
+          "bytes": 62149,
+          "sha256": "16d0198f2a7a843199a886c4bffe4900849c43826a50ed905089bf018f93b190"
+        },
+        "upstream/emscripten/tools/link.py": {
+          "bytes": 133185,
+          "sha256": "20f5ae3672c1647059b887c256f304fe6af3ad314d440e9932d1c7e9042cd4c9"
+        }
+      },
+      "version": "emcc (Emscripten gcc/clang-like replacement + linker emulating GNU ld) 3.1.68 (ceee49d2ecdab36a3feb85a684f8e5a453dde910)"
+    },
+    "exports": [
+      {
+        "cSymbol": "dependentrecords_dependent_result",
+        "declaration": "lean:DependentRecords.dependentResult",
+        "function": "LeanDependentrecords\\dependent_result",
+        "transport": "LeanDependentrecords\\Internal\\Zend5ae832d075c741be\\call0"
+      }
+    ],
+    "headerSha256": "5f116f82d51cab7ebb0cd340e6402b61435c18d46471df1f3ad60df2bbcc83ed",
+    "initializer": "initialize_LeanBridgeNativeca8ca903379eb247",
+    "library": "lib/php8.4-lb_dependentrecords_5ae832d075c741be.so",
+    "metadataSha256": "a02467ff73950d3f38882a6513f4aa39645860aa873b4b900635ffd16853698b",
+    "modelSha256": "c414083f6e2f815b928fdc6aef4e4c3db597bd9bc3922817bbfe720b67728a92",
+    "phpHeadersSha256": "fb4c613d43c6bbb4066364c2da7e4e2118016314a00b3bcfe4d4e1d2bdeb493b",
+    "pointerBits": 32,
+    "profile": "php-wasm-copied-v1",
+    "runtimeIdentity": "fbc32dc75641fc5d381ab6bddd05671cb59cad725d631e433cda14469ae1f25a",
+    "schemaVersion": 1,
+    "sourceIdentity": {
+      "exportConfigurationSha256": "8a8149a426c6602b940705903863259cd1467f57eba9cac28c2bf22699df1ea9",
+      "exportConfigurationSource": "{\n  \"contracts\": {\n    \"DependentRecords.dependentResult\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\"\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    }\n  },\n  \"exports\": [\n    \"DependentRecords.dependentResult\"\n  ],\n  \"modules\": [\n    \"DependentRecords\"\n  ],\n  \"schemaVersion\": 1,\n  \"targets\": {\n    \"php-wasm\": {\n      \"composer\": {\n        \"name\": \"lean-bridge-dependentrecords/wasm\",\n        \"version\": \"1.0.0\"\n      },\n      \"npm\": {\n        \"name\": \"lean-bridge-dependentrecords-wasm\",\n        \"version\": \"1.0.0\"\n      }\n    }\n  }\n}\n",
+      "extractorSha256": "00f8ce7a3888339cdb1c36b0dce3d8bc9d4c650ea18c7a4926c2d29d4690443a",
+      "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+      "leanCompilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+      "leanVersion": "4.32.2",
+      "modules": [
+        {
+          "interface": {
+            "bytes": 73824,
+            "interfaceSha256": "e0dfc60ac0a1d1ddbd87eb3b089c520883a55a3d92a4cbf62571406da417b1c7",
+            "sha256": "e9d199bc8834b7e24ede1b411593406371cb6344a7ce21e0a9a272c6ee44d367"
+          },
+          "module": "DependentRecords",
+          "source": {
+            "bytes": 1055,
+            "path": "DependentRecords.lean",
+            "sha256": "cdef8c3a642dc19366179c287bbd1bc975b3e5b4edf78f75bca44c6cffac0de6"
+          }
+        }
+      ],
+      "request": {
+        "arities": [],
+        "contracts": {
+          "DependentRecords.dependentResult": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy"
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          }
+        },
+        "exportModules": [
+          "DependentRecords"
+        ],
+        "exports": [
+          "DependentRecords.dependentResult"
+        ],
+        "metadata": {
+          "invocationIdentitySha256": "fd76ca4dfb62e3342cafbfe805e13cc19c4a6941217e2887ab544f9752091cdb",
+          "modules": [
+            {
+              "interfaceSha256": "e0dfc60ac0a1d1ddbd87eb3b089c520883a55a3d92a4cbf62571406da417b1c7",
+              "name": "DependentRecords",
+              "sourcePath": "DependentRecords.lean",
+              "sourceSha256": "cdef8c3a642dc19366179c287bbd1bc975b3e5b4edf78f75bca44c6cffac0de6"
+            }
+          ],
+          "toolchain": "leanprover/lean4:v4.32.2"
+        },
+        "modules": [
+          "DependentRecords"
+        ],
+        "profile": "native-library-v1",
+        "resources": []
+      },
+      "sourceNoticesSha256": "8c0a71a8bf28132665d7940052d53f86ebe8ad1f6eba9c0251ce398d54bff32a",
+      "sourceTreeSha256": "ed3c69a871a2a34064669c889a02d6bd02d5d89b27b7e15e84c6f551716be349"
+    },
+    "wasmLibrary": {
+      "bytes": 12268,
+      "sha256": "10a7428bc7235fef0b79dcd8611dd4e76135b1d319b31a5983f3208e63e14467"
+    },
+    "zendSha256": "de5c60384e2ba5fa820182074c82ab11b9be4c7308a43520cc45b023ea7a7b0c"
+  },
+  "definitionCounts": {
+    "lb_call0": 1,
+    "lb_dependent_result_only_probe_constructor_mkDependent": 1,
+    "lb_dependent_result_only_probe_source_dependentResult": 1,
+    "lb_e59e187300c993f56dccdfb9": 1
+  },
+  "headers": [],
+  "library": {
+    "bytes": 12268,
+    "sha256": "10a7428bc7235fef0b79dcd8611dd4e76135b1d319b31a5983f3208e63e14467"
+  },
+  "linked": true,
+  "modelSha256": "c414083f6e2f815b928fdc6aef4e4c3db597bd9bc3922817bbfe720b67728a92",
+  "packageSetSha256": "c68b072b103e114716025d38f687bd9c2ac4edea67fb03f7e458a0d3d13a819e",
+  "schemaVersion": 1,
+  "scope": "separate-instrumented-probe",
+  "selected": [
+    {
+      "kind": "constructor",
+      "label": "DependentRecords.mkDependent",
+      "symbol": "lb_dependent_result_only_probe_constructor_mkDependent"
+    },
+    {
+      "kind": "source",
+      "label": "DependentRecords.dependentResult",
+      "symbol": "lb_dependent_result_only_probe_source_dependentResult"
+    },
+    {
+      "kind": "public",
+      "label": "dependentResult",
+      "symbol": "lb_call0"
+    },
+    {
+      "kind": "adapter",
+      "label": "DependentRecords.dependentResult",
+      "symbol": "lb_e59e187300c993f56dccdfb9"
+    }
+  ]
+}

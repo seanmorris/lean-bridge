@@ -1,0 +1,2258 @@
+{
+  "commands": [
+    {
+      "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm/upstream/emscripten/emcc",
+      "originalArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-fbracket-depth=4096",
+        "-include",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/graph/allocation-guard.h",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/php/ext",
+        "-c",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/CallbackCheckedRecords.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/0.o"
+      ],
+      "probeArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-fbracket-depth=4096",
+        "-include",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/graph/allocation-guard.h",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/php/ext",
+        "-c",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-ci/callback-checked-record/ordinary/build-0/c-probes/1-CallbackCheckedRecords.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/0.o",
+        "-iquote",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-ci/callback-checked-record/ordinary/build-0=/build/php-wasm-refinement-entry-probe"
+      ]
+    },
+    {
+      "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm/upstream/emscripten/emcc",
+      "originalArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-fbracket-depth=4096",
+        "-include",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/graph/allocation-guard.h",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/php/ext",
+        "-c",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/adapter.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/1.o"
+      ],
+      "probeArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-fbracket-depth=4096",
+        "-include",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/graph/allocation-guard.h",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/php/ext",
+        "-c",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-ci/callback-checked-record/ordinary/build-0/c-probes/2-adapter.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/1.o",
+        "-iquote",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-ci/callback-checked-record/ordinary/build-0=/build/php-wasm-refinement-entry-probe"
+      ]
+    },
+    {
+      "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm/upstream/emscripten/emcc",
+      "originalArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-fbracket-depth=4096",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/php/ext",
+        "-c",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/graph/transport.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/2.o"
+      ],
+      "probeArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-fbracket-depth=4096",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/php/ext",
+        "-c",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-ci/callback-checked-record/ordinary/build-0/c-probes/3-transport.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/2.o",
+        "-iquote",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/graph",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-ci/callback-checked-record/ordinary/build-0=/build/php-wasm-refinement-entry-probe"
+      ]
+    },
+    {
+      "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm/upstream/emscripten/emcc",
+      "originalArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-fbracket-depth=4096",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/php/ext",
+        "-c",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/graph/runtime.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/3.o"
+      ],
+      "probeArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-fbracket-depth=4096",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/php/ext",
+        "-c",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-ci/callback-checked-record/ordinary/build-0/c-probes/4-runtime.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/3.o",
+        "-iquote",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/graph",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-ci/callback-checked-record/ordinary/build-0=/build/php-wasm-refinement-entry-probe"
+      ]
+    },
+    {
+      "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm/upstream/emscripten/emcc",
+      "originalArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-fbracket-depth=4096",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/php/ext",
+        "-c",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/width.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/4.o"
+      ],
+      "probeArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-fbracket-depth=4096",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/php/ext",
+        "-c",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-ci/callback-checked-record/ordinary/build-0/c-probes/5-width.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/4.o",
+        "-iquote",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-ci/callback-checked-record/ordinary/build-0=/build/php-wasm-refinement-entry-probe"
+      ]
+    },
+    {
+      "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm/upstream/emscripten/emcc",
+      "originalArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-fbracket-depth=4096",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/php/ext",
+        "-c",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/graph/callbacks.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/5.o"
+      ],
+      "probeArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-fbracket-depth=4096",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/php/ext",
+        "-c",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-ci/callback-checked-record/ordinary/build-0/c-probes/6-callbacks.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/5.o",
+        "-iquote",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/graph",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-ci/callback-checked-record/ordinary/build-0=/build/php-wasm-refinement-entry-probe"
+      ]
+    },
+    {
+      "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm/upstream/emscripten/emcc",
+      "originalArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-fbracket-depth=4096",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/php/ext",
+        "-c",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/extension/lb_callbackcheckedrecords_graph_5340f85b22ce3006.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/6.o"
+      ],
+      "probeArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-fbracket-depth=4096",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/php/ext",
+        "-c",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-ci/callback-checked-record/ordinary/build-0/c-probes/7-lb_callbackcheckedrecords_graph_5340f85b22ce3006.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/6.o",
+        "-iquote",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/extension",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-ci/callback-checked-record/ordinary/build-0=/build/php-wasm-refinement-entry-probe"
+      ]
+    },
+    {
+      "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm/upstream/emscripten/emcc",
+      "originalArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-sSIDE_MODULE=2",
+        "-sEXPORTED_FUNCTIONS=['_get_module']",
+        "-Wl,--no-entry",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/0.o",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/1.o",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/2.o",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/3.o",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/4.o",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/5.o",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/6.o",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-input/php-wasm-runtime/lib/liblean_bridge_php_wasm_copied_488de83b725bba40a9b4.so",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/lib/php8.4-lb_callbackcheckedrecords_graph_5340f85b22ce3006.so"
+      ],
+      "probeArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-sSIDE_MODULE=2",
+        "-sEXPORTED_FUNCTIONS=['_get_module']",
+        "-Wl,--no-entry",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/0.o",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/1.o",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/2.o",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/3.o",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/4.o",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/5.o",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/6.o",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-input/php-wasm-runtime/lib/liblean_bridge_php_wasm_copied_488de83b725bba40a9b4.so",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/lib/php8.4-lb_callbackcheckedrecords_graph_5340f85b22ce3006.so"
+      ]
+    }
+  ],
+  "compiled": [
+    {
+      "insertions": [
+        {
+          "kind": "source",
+          "label": "CallbackCheckedRecords.makeNestedClosure",
+          "offset": 12305,
+          "symbol": "lb_callback_record_probe_source_makeNestedClosure",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter source CallbackCheckedRecords.makeNestedClosure\\n\", stderr);\n"
+        },
+        {
+          "kind": "closure",
+          "label": "CallbackCheckedRecords.makeNestedClosure:body",
+          "offset": 11569,
+          "symbol": "lb_callback_record_closure_makeNestedClosure",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter closure CallbackCheckedRecords.makeNestedClosure:body\\n\", stderr);\n"
+        },
+        {
+          "kind": "source",
+          "label": "CallbackCheckedRecords.callHostNested",
+          "offset": 10909,
+          "symbol": "lb_callback_record_probe_source_callHostNested",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter source CallbackCheckedRecords.callHostNested\\n\", stderr);\n"
+        },
+        {
+          "kind": "source",
+          "label": "CallbackCheckedRecords.makeMixedClosure",
+          "offset": 8976,
+          "symbol": "lb_callback_record_probe_source_makeMixedClosure",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter source CallbackCheckedRecords.makeMixedClosure\\n\", stderr);\n"
+        },
+        {
+          "kind": "closure",
+          "label": "CallbackCheckedRecords.makeMixedClosure:body",
+          "offset": 8105,
+          "symbol": "lb_callback_record_closure_makeMixedClosure",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter closure CallbackCheckedRecords.makeMixedClosure:body\\n\", stderr);\n"
+        },
+        {
+          "kind": "source",
+          "label": "CallbackCheckedRecords.callHostMixed",
+          "offset": 6922,
+          "symbol": "lb_callback_record_probe_source_callHostMixed",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter source CallbackCheckedRecords.callHostMixed\\n\", stderr);\n"
+        },
+        {
+          "kind": "source",
+          "label": "CallbackCheckedRecords.makeClosure",
+          "offset": 6668,
+          "symbol": "lb_callback_record_probe_source_makeClosure",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter source CallbackCheckedRecords.makeClosure\\n\", stderr);\n"
+        },
+        {
+          "kind": "closure",
+          "label": "CallbackCheckedRecords.makeClosure:body",
+          "offset": 5985,
+          "symbol": "lb_callback_record_closure_makeClosure",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter closure CallbackCheckedRecords.makeClosure:body\\n\", stderr);\n"
+        },
+        {
+          "kind": "source",
+          "label": "CallbackCheckedRecords.callHost",
+          "offset": 5372,
+          "symbol": "lb_callback_record_probe_source_callHost",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter source CallbackCheckedRecords.callHost\\n\", stderr);\n"
+        },
+        {
+          "kind": "constructor",
+          "label": "CallbackCheckedRecords.mkWeighted",
+          "offset": 4770,
+          "symbol": "lb_callback_record_probe_constructor_mkWeighted",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter constructor CallbackCheckedRecords.mkWeighted\\n\", stderr);\n"
+        },
+        {
+          "kind": "constructor",
+          "label": "CallbackCheckedRecords.checkedPositive",
+          "offset": 4256,
+          "symbol": "lb_callback_record_probe_constructor_checkedPositive",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter constructor CallbackCheckedRecords.checkedPositive\\n\", stderr);\n"
+        },
+        {
+          "kind": "constructor",
+          "label": "CallbackCheckedRecords.mkInterval",
+          "offset": 3688,
+          "symbol": "lb_callback_record_probe_constructor_mkInterval",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter constructor CallbackCheckedRecords.mkInterval\\n\", stderr);\n"
+        },
+        {
+          "kind": "preamble",
+          "offset": 0,
+          "text": "#include <stdio.h>\n"
+        }
+      ],
+      "name": "1-CallbackCheckedRecords.c",
+      "object": {
+        "bytes": 13563,
+        "sha256": "11800f942197a8aaa573d2c7020f635042f93b1a53221ad089e8dfbff32f5dcf"
+      },
+      "objectPath": "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/0.o",
+      "originalPath": "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/CallbackCheckedRecords.c",
+      "originalSha256": "fb3d42288f51a64fa68e2f97eebd9536556ed160a333992f31724a22e226d029",
+      "probePath": "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-ci/callback-checked-record/ordinary/build-0/c-probes/1-CallbackCheckedRecords.c",
+      "probeSha256": "682d4749e4c306a19dfa68f74328c7574ba32a6824bd6e4d4c7c1111536a26e2"
+    },
+    {
+      "insertions": [
+        {
+          "kind": "adapter",
+          "label": "CallbackCheckedRecords.makeNestedClosure:lean",
+          "offset": 142727,
+          "symbol": "lean_bridge_77496697d09177e0d1ebadfd_lean",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter adapter CallbackCheckedRecords.makeNestedClosure:lean\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "CallbackCheckedRecords.makeMixedClosure:lean",
+          "offset": 139865,
+          "symbol": "lean_bridge_bbabc0c3fa2252f4f7a67708_lean",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter adapter CallbackCheckedRecords.makeMixedClosure:lean\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "CallbackCheckedRecords.makeClosure:lean",
+          "offset": 131917,
+          "symbol": "lean_bridge_97d7a19c3e5ee22681017ca9_lean",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter adapter CallbackCheckedRecords.makeClosure:lean\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "CallbackCheckedRecords.callHostNested:lean",
+          "offset": 126407,
+          "symbol": "lean_bridge_f168e18f231fdb7eb1733b0e_lean",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter adapter CallbackCheckedRecords.callHostNested:lean\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "CallbackCheckedRecords.callHostMixed:lean",
+          "offset": 119790,
+          "symbol": "lean_bridge_184bfb6b98fb39095f0bfec8_lean",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter adapter CallbackCheckedRecords.callHostMixed:lean\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "CallbackCheckedRecords.callHost:lean",
+          "offset": 101798,
+          "symbol": "lean_bridge_697151f2fc3cf6b95ff12b69_lean",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter adapter CallbackCheckedRecords.callHost:lean\\n\", stderr);\n"
+        },
+        {
+          "kind": "validator",
+          "label": "CallbackCheckedRecords.makeMixedClosure:callback_validator:closure_graph_refinement_1_c356a7238da028f9ec99",
+          "offset": 94311,
+          "symbol": "lean_bridge_697151f2fc3cf6b95ff12b69_structured_2e292aebff8c53f6a465ec3d5745e74400590434_closure_graph_refinement_1_c356a7238da028f9ec99",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter validator CallbackCheckedRecords.makeMixedClosure:callback_validator:closure_graph_refinement_1_c356a7238da028f9ec99\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "CallbackCheckedRecords.makeMixedClosure:closure:lean",
+          "offset": 92073,
+          "symbol": "lean_bridge_697151f2fc3cf6b95ff12b69_structured_2e292aebff8c53f6a465ec3d5745e74400590434_apply",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter adapter CallbackCheckedRecords.makeMixedClosure:closure:lean\\n\", stderr);\n"
+        },
+        {
+          "kind": "validator",
+          "label": "CallbackCheckedRecords.makeNestedClosure:callback_validator:closure_graph_refinement_0_b50ad1ac24da4bc3a6eb",
+          "offset": 88417,
+          "symbol": "lean_bridge_697151f2fc3cf6b95ff12b69_structured_d885a7d82ec894d17b81e7a67a36bc2930adca13_closure_graph_refinement_0_b50ad1ac24da4bc3a6eb",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter validator CallbackCheckedRecords.makeNestedClosure:callback_validator:closure_graph_refinement_0_b50ad1ac24da4bc3a6eb\\n\", stderr);\n"
+        },
+        {
+          "kind": "validator",
+          "label": "CallbackCheckedRecords.makeNestedClosure:callback_validator:closure_graph_refinement_0_93110217dc013facd35d",
+          "offset": 87032,
+          "symbol": "lean_bridge_697151f2fc3cf6b95ff12b69_structured_d885a7d82ec894d17b81e7a67a36bc2930adca13_closure_graph_refinement_0_93110217dc013facd35d",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter validator CallbackCheckedRecords.makeNestedClosure:callback_validator:closure_graph_refinement_0_93110217dc013facd35d\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "CallbackCheckedRecords.makeNestedClosure:closure:lean",
+          "offset": 85335,
+          "symbol": "lean_bridge_697151f2fc3cf6b95ff12b69_structured_d885a7d82ec894d17b81e7a67a36bc2930adca13_apply",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter adapter CallbackCheckedRecords.makeNestedClosure:closure:lean\\n\", stderr);\n"
+        },
+        {
+          "kind": "validator",
+          "label": "CallbackCheckedRecords.makeClosure:callback_validator:closure_graph_refinement_0_c356a7238da028f9ec99",
+          "offset": 81658,
+          "symbol": "lean_bridge_697151f2fc3cf6b95ff12b69_structured_e014092ff0a1ee8527eeeb58a78e2de63bdf09fa_closure_graph_refinement_0_c356a7238da028f9ec99",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter validator CallbackCheckedRecords.makeClosure:callback_validator:closure_graph_refinement_0_c356a7238da028f9ec99\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "CallbackCheckedRecords.makeClosure:closure:lean",
+          "offset": 79961,
+          "symbol": "lean_bridge_697151f2fc3cf6b95ff12b69_structured_e014092ff0a1ee8527eeeb58a78e2de63bdf09fa_apply",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter adapter CallbackCheckedRecords.makeClosure:closure:lean\\n\", stderr);\n"
+        },
+        {
+          "kind": "preamble",
+          "offset": 0,
+          "text": "#include <stdio.h>\n"
+        }
+      ],
+      "name": "2-adapter.c",
+      "object": {
+        "bytes": 106982,
+        "sha256": "c6bb015846bdeb9f682c8befe22945453982362282f38e85ae450c17ef3cb107"
+      },
+      "objectPath": "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/1.o",
+      "originalPath": "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/adapter.c",
+      "originalSha256": "014689987bd6f73ed01b85ac6474c682e4a72d4f085e0f4c97f720c802ea42e3",
+      "probePath": "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-ci/callback-checked-record/ordinary/build-0/c-probes/2-adapter.c",
+      "probeSha256": "1ff9f54065d091d30844b05e863363f32b0a74eebf7070dda2fcff60f53a2830"
+    },
+    {
+      "insertions": [
+        {
+          "kind": "adapter",
+          "label": "CallbackCheckedRecords.makeMixedClosure:closure:native",
+          "offset": 82761,
+          "symbol": "callbackcheckedrecords_callback_2e292aebff8c53f6a465ec3d5745e74400590434_lease_call",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter adapter CallbackCheckedRecords.makeMixedClosure:closure:native\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "CallbackCheckedRecords.makeNestedClosure:closure:native",
+          "offset": 80116,
+          "symbol": "callbackcheckedrecords_callback_d885a7d82ec894d17b81e7a67a36bc2930adca13_lease_call",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter adapter CallbackCheckedRecords.makeNestedClosure:closure:native\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "CallbackCheckedRecords.makeClosure:closure:native",
+          "offset": 77516,
+          "symbol": "callbackcheckedrecords_callback_e014092ff0a1ee8527eeeb58a78e2de63bdf09fa_lease_call",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter adapter CallbackCheckedRecords.makeClosure:closure:native\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "CallbackCheckedRecords.makeNestedClosure:native",
+          "offset": 75703,
+          "symbol": "lean_bridge_77496697d09177e0d1ebadfd_graph",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter adapter CallbackCheckedRecords.makeNestedClosure:native\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "CallbackCheckedRecords.makeMixedClosure:native",
+          "offset": 73971,
+          "symbol": "lean_bridge_bbabc0c3fa2252f4f7a67708_graph",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter adapter CallbackCheckedRecords.makeMixedClosure:native\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "CallbackCheckedRecords.makeClosure:native",
+          "offset": 70507,
+          "symbol": "lean_bridge_97d7a19c3e5ee22681017ca9_graph",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter adapter CallbackCheckedRecords.makeClosure:native\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "CallbackCheckedRecords.callHostNested:native",
+          "offset": 68100,
+          "symbol": "lean_bridge_f168e18f231fdb7eb1733b0e_graph",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter adapter CallbackCheckedRecords.callHostNested:native\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "CallbackCheckedRecords.callHostMixed:native",
+          "offset": 65629,
+          "symbol": "lean_bridge_184bfb6b98fb39095f0bfec8_graph",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter adapter CallbackCheckedRecords.callHostMixed:native\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "CallbackCheckedRecords.callHost:native",
+          "offset": 60687,
+          "symbol": "lean_bridge_697151f2fc3cf6b95ff12b69_graph",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter adapter CallbackCheckedRecords.callHost:native\\n\", stderr);\n"
+        },
+        {
+          "kind": "rejection",
+          "label": "CallbackCheckedRecords.callHostNested:rejection:native",
+          "offset": 43797,
+          "symbol": "ng_reject_cd01d463066ae86d043223e65eab1640e16b22ab",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter rejection CallbackCheckedRecords.callHostNested:rejection:native\\n\", stderr);\n"
+        },
+        {
+          "kind": "recovery",
+          "label": "CallbackCheckedRecords.callHostNested:recovery:native",
+          "offset": 43230,
+          "symbol": "ng_recovery_cd01d463066ae86d043223e65eab1640e16b22ab",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter recovery CallbackCheckedRecords.callHostNested:recovery:native\\n\", stderr);\n"
+        },
+        {
+          "kind": "callback",
+          "label": "CallbackCheckedRecords.callHostNested:callback:native",
+          "offset": 41873,
+          "symbol": "ng_invoke_cd01d463066ae86d043223e65eab1640e16b22ab",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter callback CallbackCheckedRecords.callHostNested:callback:native\\n\", stderr);\n"
+        },
+        {
+          "kind": "rejection",
+          "label": "CallbackCheckedRecords.callHost:rejection:native",
+          "offset": 39803,
+          "symbol": "ng_reject_00652748bed3eb7036c9091f570efa39888f5490",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter rejection CallbackCheckedRecords.callHost:rejection:native\\n\", stderr);\n"
+        },
+        {
+          "kind": "recovery",
+          "label": "CallbackCheckedRecords.callHost:recovery:native",
+          "offset": 39236,
+          "symbol": "ng_recovery_00652748bed3eb7036c9091f570efa39888f5490",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter recovery CallbackCheckedRecords.callHost:recovery:native\\n\", stderr);\n"
+        },
+        {
+          "kind": "callback",
+          "label": "CallbackCheckedRecords.callHost:callback:native",
+          "offset": 37879,
+          "symbol": "ng_invoke_00652748bed3eb7036c9091f570efa39888f5490",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter callback CallbackCheckedRecords.callHost:callback:native\\n\", stderr);\n"
+        },
+        {
+          "kind": "rejection",
+          "label": "CallbackCheckedRecords.callHostMixed:rejection:native",
+          "offset": 35809,
+          "symbol": "ng_reject_526ba4a0f03797057c1f9a17ca435a5a42131510",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter rejection CallbackCheckedRecords.callHostMixed:rejection:native\\n\", stderr);\n"
+        },
+        {
+          "kind": "recovery",
+          "label": "CallbackCheckedRecords.callHostMixed:recovery:native",
+          "offset": 35242,
+          "symbol": "ng_recovery_526ba4a0f03797057c1f9a17ca435a5a42131510",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter recovery CallbackCheckedRecords.callHostMixed:recovery:native\\n\", stderr);\n"
+        },
+        {
+          "kind": "callback",
+          "label": "CallbackCheckedRecords.callHostMixed:callback:native",
+          "offset": 33560,
+          "symbol": "ng_invoke_526ba4a0f03797057c1f9a17ca435a5a42131510",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter callback CallbackCheckedRecords.callHostMixed:callback:native\\n\", stderr);\n"
+        },
+        {
+          "kind": "preamble",
+          "offset": 0,
+          "text": "#include <stdio.h>\n"
+        }
+      ],
+      "name": "3-transport.c",
+      "object": {
+        "bytes": 275946,
+        "sha256": "a1cf24578ab9382c34c05ac8a1c2076967037d565627d45df8298ae33e20c5d5"
+      },
+      "objectPath": "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/2.o",
+      "originalPath": "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/graph/transport.c",
+      "originalSha256": "a28efbdd2dbd51e29286c16f1c6f1c52d80eca1c1c787a8a90bce4471914ba58",
+      "probePath": "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-ci/callback-checked-record/ordinary/build-0/c-probes/3-transport.c",
+      "probeSha256": "e93330b38aa0b3ccba8f874b480cc50403fd96ee737a02d4318026b0569a7c66"
+    },
+    {
+      "insertions": [],
+      "name": "4-runtime.c",
+      "object": {
+        "bytes": 961,
+        "sha256": "7dc5ee140a9d7714f50b6c680a10717471e82f3af93e9dce9189229ebf52cf57"
+      },
+      "objectPath": "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/3.o",
+      "originalPath": "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/graph/runtime.c",
+      "originalSha256": "ebb5884ad2008aa95644fe28a611e2812ec5bad3ed8b4caf80df7cdbe17ce622",
+      "probePath": "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-ci/callback-checked-record/ordinary/build-0/c-probes/4-runtime.c",
+      "probeSha256": "ebb5884ad2008aa95644fe28a611e2812ec5bad3ed8b4caf80df7cdbe17ce622"
+    },
+    {
+      "insertions": [],
+      "name": "5-width.c",
+      "object": {
+        "bytes": 258,
+        "sha256": "a8e680be3accc5b8ad9d8becda8fdb51ee27aeef43f3a380f4d440aa1fc45be9"
+      },
+      "objectPath": "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/4.o",
+      "originalPath": "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/width.c",
+      "originalSha256": "94f94bd37af397f400f10b97b24efb34a1ecab8f8aae613e50376f1ab2218d1e",
+      "probePath": "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-ci/callback-checked-record/ordinary/build-0/c-probes/5-width.c",
+      "probeSha256": "94f94bd37af397f400f10b97b24efb34a1ecab8f8aae613e50376f1ab2218d1e"
+    },
+    {
+      "insertions": [
+        {
+          "kind": "rejection",
+          "label": "CallbackCheckedRecords.callHostNested:rejection:lean",
+          "offset": 5295,
+          "symbol": "lean_bridge_697151f2fc3cf6b95ff12b69_structured_cd01d463066ae86d043223e65eab1640e16b22ab_reject",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter rejection CallbackCheckedRecords.callHostNested:rejection:lean\\n\", stderr);\n"
+        },
+        {
+          "kind": "recovery",
+          "label": "CallbackCheckedRecords.callHostNested:recovery:lean",
+          "offset": 4821,
+          "symbol": "lean_bridge_697151f2fc3cf6b95ff12b69_structured_cd01d463066ae86d043223e65eab1640e16b22ab_recovery",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter recovery CallbackCheckedRecords.callHostNested:recovery:lean\\n\", stderr);\n"
+        },
+        {
+          "kind": "callback",
+          "label": "CallbackCheckedRecords.callHostNested:callback:lean",
+          "offset": 4444,
+          "symbol": "lean_bridge_697151f2fc3cf6b95ff12b69_structured_cd01d463066ae86d043223e65eab1640e16b22ab_invoke",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter callback CallbackCheckedRecords.callHostNested:callback:lean\\n\", stderr);\n"
+        },
+        {
+          "kind": "rejection",
+          "label": "CallbackCheckedRecords.callHost:rejection:lean",
+          "offset": 3905,
+          "symbol": "lean_bridge_697151f2fc3cf6b95ff12b69_structured_00652748bed3eb7036c9091f570efa39888f5490_reject",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter rejection CallbackCheckedRecords.callHost:rejection:lean\\n\", stderr);\n"
+        },
+        {
+          "kind": "recovery",
+          "label": "CallbackCheckedRecords.callHost:recovery:lean",
+          "offset": 3431,
+          "symbol": "lean_bridge_697151f2fc3cf6b95ff12b69_structured_00652748bed3eb7036c9091f570efa39888f5490_recovery",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter recovery CallbackCheckedRecords.callHost:recovery:lean\\n\", stderr);\n"
+        },
+        {
+          "kind": "callback",
+          "label": "CallbackCheckedRecords.callHost:callback:lean",
+          "offset": 3054,
+          "symbol": "lean_bridge_697151f2fc3cf6b95ff12b69_structured_00652748bed3eb7036c9091f570efa39888f5490_invoke",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter callback CallbackCheckedRecords.callHost:callback:lean\\n\", stderr);\n"
+        },
+        {
+          "kind": "rejection",
+          "label": "CallbackCheckedRecords.callHostMixed:rejection:lean",
+          "offset": 2515,
+          "symbol": "lean_bridge_697151f2fc3cf6b95ff12b69_structured_526ba4a0f03797057c1f9a17ca435a5a42131510_reject",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter rejection CallbackCheckedRecords.callHostMixed:rejection:lean\\n\", stderr);\n"
+        },
+        {
+          "kind": "recovery",
+          "label": "CallbackCheckedRecords.callHostMixed:recovery:lean",
+          "offset": 2041,
+          "symbol": "lean_bridge_697151f2fc3cf6b95ff12b69_structured_526ba4a0f03797057c1f9a17ca435a5a42131510_recovery",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter recovery CallbackCheckedRecords.callHostMixed:recovery:lean\\n\", stderr);\n"
+        },
+        {
+          "kind": "callback",
+          "label": "CallbackCheckedRecords.callHostMixed:callback:lean",
+          "offset": 1619,
+          "symbol": "lean_bridge_697151f2fc3cf6b95ff12b69_structured_526ba4a0f03797057c1f9a17ca435a5a42131510_invoke",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter callback CallbackCheckedRecords.callHostMixed:callback:lean\\n\", stderr);\n"
+        },
+        {
+          "kind": "preamble",
+          "offset": 0,
+          "text": "#include <stdio.h>\n"
+        }
+      ],
+      "name": "6-callbacks.c",
+      "object": {
+        "bytes": 6275,
+        "sha256": "b4e9f311f5111ac46c715a529ddc91f8223b0d9588b8cc931c0d7dc5b643ed62"
+      },
+      "objectPath": "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/5.o",
+      "originalPath": "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/graph/callbacks.c",
+      "originalSha256": "33919cdd49d4ae16a85f41b3626d87844c298562db644d3ba909fffca3bc1ea8",
+      "probePath": "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-ci/callback-checked-record/ordinary/build-0/c-probes/6-callbacks.c",
+      "probeSha256": "4bb2cb440768525613e0378359ae265b574037f52bc3c9bee87f7f6307d54fb9"
+    },
+    {
+      "insertions": [
+        {
+          "kind": "public",
+          "label": "CallbackCheckedRecords.makeMixedClosure:invoke",
+          "offset": 69800,
+          "symbol": "lgc_invoke6",
+          "text": "\n  const char *lb_callback_probe_public_scope __attribute__((cleanup(lb_callback_probe_end))) = \"CallbackCheckedRecords.makeMixedClosure:invoke\";\n  fputs(\"LB_CALLBACK_ENTRY_V1 begin public CallbackCheckedRecords.makeMixedClosure:invoke\\n\", stderr);\n"
+        },
+        {
+          "kind": "cleanup",
+          "label": "CallbackCheckedRecords.makeMixedClosure:invoke:cleanup",
+          "offset": 68385,
+          "symbol": "lgc_cleanup_invoke6",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter cleanup CallbackCheckedRecords.makeMixedClosure:invoke:cleanup\\n\", stderr);\n"
+        },
+        {
+          "kind": "public",
+          "label": "CallbackCheckedRecords.makeNestedClosure:invoke",
+          "offset": 66481,
+          "symbol": "lgc_invoke4",
+          "text": "\n  const char *lb_callback_probe_public_scope __attribute__((cleanup(lb_callback_probe_end))) = \"CallbackCheckedRecords.makeNestedClosure:invoke\";\n  fputs(\"LB_CALLBACK_ENTRY_V1 begin public CallbackCheckedRecords.makeNestedClosure:invoke\\n\", stderr);\n"
+        },
+        {
+          "kind": "cleanup",
+          "label": "CallbackCheckedRecords.makeNestedClosure:invoke:cleanup",
+          "offset": 65165,
+          "symbol": "lgc_cleanup_invoke4",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter cleanup CallbackCheckedRecords.makeNestedClosure:invoke:cleanup\\n\", stderr);\n"
+        },
+        {
+          "kind": "public",
+          "label": "CallbackCheckedRecords.makeClosure:invoke",
+          "offset": 63305,
+          "symbol": "lgc_invoke2",
+          "text": "\n  const char *lb_callback_probe_public_scope __attribute__((cleanup(lb_callback_probe_end))) = \"CallbackCheckedRecords.makeClosure:invoke\";\n  fputs(\"LB_CALLBACK_ENTRY_V1 begin public CallbackCheckedRecords.makeClosure:invoke\\n\", stderr);\n"
+        },
+        {
+          "kind": "cleanup",
+          "label": "CallbackCheckedRecords.makeClosure:invoke:cleanup",
+          "offset": 61989,
+          "symbol": "lgc_cleanup_invoke2",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter cleanup CallbackCheckedRecords.makeClosure:invoke:cleanup\\n\", stderr);\n"
+        },
+        {
+          "kind": "public",
+          "label": "CallbackCheckedRecords.makeNestedClosure",
+          "offset": 60137,
+          "symbol": "lgc_call7",
+          "text": "\n  const char *lb_callback_probe_public_scope __attribute__((cleanup(lb_callback_probe_end))) = \"CallbackCheckedRecords.makeNestedClosure\";\n  fputs(\"LB_CALLBACK_ENTRY_V1 begin public CallbackCheckedRecords.makeNestedClosure\\n\", stderr);\n"
+        },
+        {
+          "kind": "cleanup",
+          "label": "CallbackCheckedRecords.makeNestedClosure:cleanup",
+          "offset": 58508,
+          "symbol": "lgc_cleanup_call7",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter cleanup CallbackCheckedRecords.makeNestedClosure:cleanup\\n\", stderr);\n"
+        },
+        {
+          "kind": "public",
+          "label": "CallbackCheckedRecords.makeMixedClosure",
+          "offset": 56687,
+          "symbol": "lgc_call6",
+          "text": "\n  const char *lb_callback_probe_public_scope __attribute__((cleanup(lb_callback_probe_end))) = \"CallbackCheckedRecords.makeMixedClosure\";\n  fputs(\"LB_CALLBACK_ENTRY_V1 begin public CallbackCheckedRecords.makeMixedClosure\\n\", stderr);\n"
+        },
+        {
+          "kind": "cleanup",
+          "label": "CallbackCheckedRecords.makeMixedClosure:cleanup",
+          "offset": 55058,
+          "symbol": "lgc_cleanup_call6",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter cleanup CallbackCheckedRecords.makeMixedClosure:cleanup\\n\", stderr);\n"
+        },
+        {
+          "kind": "public",
+          "label": "CallbackCheckedRecords.makeClosure",
+          "offset": 49787,
+          "symbol": "lgc_call4",
+          "text": "\n  const char *lb_callback_probe_public_scope __attribute__((cleanup(lb_callback_probe_end))) = \"CallbackCheckedRecords.makeClosure\";\n  fputs(\"LB_CALLBACK_ENTRY_V1 begin public CallbackCheckedRecords.makeClosure\\n\", stderr);\n"
+        },
+        {
+          "kind": "cleanup",
+          "label": "CallbackCheckedRecords.makeClosure:cleanup",
+          "offset": 48158,
+          "symbol": "lgc_cleanup_call4",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter cleanup CallbackCheckedRecords.makeClosure:cleanup\\n\", stderr);\n"
+        },
+        {
+          "kind": "public",
+          "label": "CallbackCheckedRecords.callHostNested",
+          "offset": 46337,
+          "symbol": "lgc_call3",
+          "text": "\n  const char *lb_callback_probe_public_scope __attribute__((cleanup(lb_callback_probe_end))) = \"CallbackCheckedRecords.callHostNested\";\n  fputs(\"LB_CALLBACK_ENTRY_V1 begin public CallbackCheckedRecords.callHostNested\\n\", stderr);\n"
+        },
+        {
+          "kind": "cleanup",
+          "label": "CallbackCheckedRecords.callHostNested:cleanup",
+          "offset": 44737,
+          "symbol": "lgc_cleanup_call3",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter cleanup CallbackCheckedRecords.callHostNested:cleanup\\n\", stderr);\n"
+        },
+        {
+          "kind": "public",
+          "label": "CallbackCheckedRecords.callHostMixed",
+          "offset": 42805,
+          "symbol": "lgc_call2",
+          "text": "\n  const char *lb_callback_probe_public_scope __attribute__((cleanup(lb_callback_probe_end))) = \"CallbackCheckedRecords.callHostMixed\";\n  fputs(\"LB_CALLBACK_ENTRY_V1 begin public CallbackCheckedRecords.callHostMixed\\n\", stderr);\n"
+        },
+        {
+          "kind": "cleanup",
+          "label": "CallbackCheckedRecords.callHostMixed:cleanup",
+          "offset": 41205,
+          "symbol": "lgc_cleanup_call2",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter cleanup CallbackCheckedRecords.callHostMixed:cleanup\\n\", stderr);\n"
+        },
+        {
+          "kind": "public",
+          "label": "CallbackCheckedRecords.callHost",
+          "offset": 35723,
+          "symbol": "lgc_call0",
+          "text": "\n  const char *lb_callback_probe_public_scope __attribute__((cleanup(lb_callback_probe_end))) = \"CallbackCheckedRecords.callHost\";\n  fputs(\"LB_CALLBACK_ENTRY_V1 begin public CallbackCheckedRecords.callHost\\n\", stderr);\n"
+        },
+        {
+          "kind": "cleanup",
+          "label": "CallbackCheckedRecords.callHost:cleanup",
+          "offset": 34123,
+          "symbol": "lgc_cleanup_call0",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter cleanup CallbackCheckedRecords.callHost:cleanup\\n\", stderr);\n"
+        },
+        {
+          "kind": "callback",
+          "label": "CallbackCheckedRecords.callHostNested:callback:zend",
+          "offset": 31901,
+          "symbol": "lgc_callback5",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter callback CallbackCheckedRecords.callHostNested:callback:zend\\n\", stderr);\n"
+        },
+        {
+          "kind": "callback",
+          "label": "CallbackCheckedRecords.callHost:callback:zend",
+          "offset": 30327,
+          "symbol": "lgc_callback3",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter callback CallbackCheckedRecords.callHost:callback:zend\\n\", stderr);\n"
+        },
+        {
+          "kind": "callback",
+          "label": "CallbackCheckedRecords.callHostMixed:callback:zend",
+          "offset": 28688,
+          "symbol": "lgc_callback1",
+          "text": "\n  fputs(\"LB_CALLBACK_ENTRY_V1 enter callback CallbackCheckedRecords.callHostMixed:callback:zend\\n\", stderr);\n"
+        },
+        {
+          "kind": "preamble",
+          "offset": 0,
+          "text": "#include <stdio.h>\nstatic void lb_callback_probe_end(const char **label) { fprintf(stderr, \"LB_CALLBACK_ENTRY_V1 end public %s\\n\", *label); }\n"
+        }
+      ],
+      "name": "7-lb_callbackcheckedrecords_graph_5340f85b22ce3006.c",
+      "object": {
+        "bytes": 94245,
+        "sha256": "017952bd45e5153b2a6ebb986cae8bdd0836b725741021dfa09805d4a32719e9"
+      },
+      "objectPath": "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/c/6.o",
+      "originalPath": "/home/runner/work/_temp/lean-bridge-callback-checked-record-ordinary-entry-author-ShvBbZ/release/php-wasm/.lean-bridge-native-component-Jov12d/extension/lb_callbackcheckedrecords_graph_5340f85b22ce3006.c",
+      "originalSha256": "3a67645291b4cfc70f7ae65c66fb63cc7505dd0060f72264523cc08cc81913e7",
+      "probePath": "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-callback-entry-ci/callback-checked-record/ordinary/build-0/c-probes/7-lb_callbackcheckedrecords_graph_5340f85b22ce3006.c",
+      "probeSha256": "6e4bb28b650ab701414ac655d81fd8619b409afb6e76148a258f8775370a69fa"
+    }
+  ],
+  "component": {
+    "adaptersSha256": "92adf01999d31a74c183873470b5836d619d561da3edb3865c1498a689a9b729",
+    "bindingIrSha256": "5340f85b22ce3006674a836ace48ce7c94acc3ad52d0a7c6b216e4289b4ff63a",
+    "compiler": {
+      "emsdkCommit": "54ef088329e5a329614b3659a579d2ccd31fd621",
+      "files": {
+        "upstream/bin/clang": {
+          "bytes": 141971168,
+          "sha256": "cbac1be8f3026afc67c45beb7baab688a06d548e52ef5d010146160d46618860"
+        },
+        "upstream/bin/wasm-ld": {
+          "bytes": 73912360,
+          "sha256": "af23d9d3f6c30a496f566c817c954de3e9139fa7d2562579cdbbbff8f21caa72"
+        },
+        "upstream/emscripten/em++.py": {
+          "bytes": 506,
+          "sha256": "017f735c953318fdaaa4af68c8d4bf13936a787ddbd5dad804d532b0223b6c2f"
+        },
+        "upstream/emscripten/emcc": {
+          "bytes": 1065,
+          "sha256": "b0c9551f9155fa9c028efa24591acdfd30f02f32fb247cf9266f5f0f2ede7589"
+        },
+        "upstream/emscripten/emcc.py": {
+          "bytes": 62149,
+          "sha256": "16d0198f2a7a843199a886c4bffe4900849c43826a50ed905089bf018f93b190"
+        },
+        "upstream/emscripten/tools/link.py": {
+          "bytes": 133185,
+          "sha256": "20f5ae3672c1647059b887c256f304fe6af3ad314d440e9932d1c7e9042cd4c9"
+        }
+      },
+      "version": "emcc (Emscripten gcc/clang-like replacement + linker emulating GNU ld) 3.1.68 (ceee49d2ecdab36a3feb85a684f8e5a453dde910)"
+    },
+    "copiedGraph": {
+      "allocationGuardSha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83",
+      "callbacksSha256": "33919cdd49d4ae16a85f41b3626d87844c298562db644d3ba909fffca3bc1ea8",
+      "layoutSha256": "b204838ea00acad1cd21eb6a569c7c2b7bbc72e245c49a8afa3b2e42fd3dfcd9",
+      "lifecycleSha256": "ebb5884ad2008aa95644fe28a611e2812ec5bad3ed8b4caf80df7cdbe17ce622",
+      "schemaVersion": 1,
+      "transportSha256": "a28efbdd2dbd51e29286c16f1c6f1c52d80eca1c1c787a8a90bce4471914ba58"
+    },
+    "exports": [
+      {
+        "cSymbol": "lean_bridge_697151f2fc3cf6b95ff12b69_graph",
+        "declaration": "lean:CallbackCheckedRecords.callHost",
+        "function": "LeanCallbackcheckedrecords\\call_host",
+        "transport": "LeanCallbackcheckedrecords\\Internal\\GraphZend5340f85b22ce3006\\call0"
+      },
+      {
+        "cSymbol": "lean_bridge_413afe4aaf66162bb3ba3d3c_graph",
+        "declaration": "lean:CallbackCheckedRecords.callHostContainer",
+        "function": "LeanCallbackcheckedrecords\\call_host_container",
+        "transport": "LeanCallbackcheckedrecords\\Internal\\GraphZend5340f85b22ce3006\\call1"
+      },
+      {
+        "cSymbol": "lean_bridge_184bfb6b98fb39095f0bfec8_graph",
+        "declaration": "lean:CallbackCheckedRecords.callHostMixed",
+        "function": "LeanCallbackcheckedrecords\\call_host_mixed",
+        "transport": "LeanCallbackcheckedrecords\\Internal\\GraphZend5340f85b22ce3006\\call2"
+      },
+      {
+        "cSymbol": "lean_bridge_f168e18f231fdb7eb1733b0e_graph",
+        "declaration": "lean:CallbackCheckedRecords.callHostNested",
+        "function": "LeanCallbackcheckedrecords\\call_host_nested",
+        "transport": "LeanCallbackcheckedrecords\\Internal\\GraphZend5340f85b22ce3006\\call3"
+      },
+      {
+        "cSymbol": "lean_bridge_97d7a19c3e5ee22681017ca9_graph",
+        "declaration": "lean:CallbackCheckedRecords.makeClosure",
+        "function": "LeanCallbackcheckedrecords\\make_closure",
+        "transport": "LeanCallbackcheckedrecords\\Internal\\GraphZend5340f85b22ce3006\\call4"
+      },
+      {
+        "cSymbol": "lean_bridge_74ed57fc03e7ed555389a3ab_graph",
+        "declaration": "lean:CallbackCheckedRecords.makeContainerClosure",
+        "function": "LeanCallbackcheckedrecords\\make_container_closure",
+        "transport": "LeanCallbackcheckedrecords\\Internal\\GraphZend5340f85b22ce3006\\call5"
+      },
+      {
+        "cSymbol": "lean_bridge_bbabc0c3fa2252f4f7a67708_graph",
+        "declaration": "lean:CallbackCheckedRecords.makeMixedClosure",
+        "function": "LeanCallbackcheckedrecords\\make_mixed_closure",
+        "transport": "LeanCallbackcheckedrecords\\Internal\\GraphZend5340f85b22ce3006\\call6"
+      },
+      {
+        "cSymbol": "lean_bridge_77496697d09177e0d1ebadfd_graph",
+        "declaration": "lean:CallbackCheckedRecords.makeNestedClosure",
+        "function": "LeanCallbackcheckedrecords\\make_nested_closure",
+        "transport": "LeanCallbackcheckedrecords\\Internal\\GraphZend5340f85b22ce3006\\call7"
+      }
+    ],
+    "headerSha256": "db858894a776954920b8744450219e5e61abb4159f86e14d93a3da387b06c9ac",
+    "initializer": "initialize_LeanBridgeNative82670d9206f05718",
+    "library": "lib/php8.4-lb_callbackcheckedrecords_graph_5340f85b22ce3006.so",
+    "metadataSha256": "464f62f85cbeaa4375e3d42d786d8290d3d358f8b50ca9bdb01ee5e9960095c9",
+    "modelSha256": "355fe37b3e0f9df95f62ad8a471208629494f9537bcd85ebece60ee4dfc5342b",
+    "phpHeadersSha256": "fb4c613d43c6bbb4066364c2da7e4e2118016314a00b3bcfe4d4e1d2bdeb493b",
+    "pointerBits": 32,
+    "profile": "php-wasm-copied-v1",
+    "runtimeIdentity": "fbc32dc75641fc5d381ab6bddd05671cb59cad725d631e433cda14469ae1f25a",
+    "schemaVersion": 1,
+    "sourceIdentity": {
+      "exportConfigurationSha256": "886962ffe8101b3c4be39600f287a20b6ab8bc299a7f9fea70a076831e771582",
+      "exportConfigurationSource": "{\n  \"arities\": {\n    \"CallbackCheckedRecords.makeClosure\": 1,\n    \"CallbackCheckedRecords.makeContainerClosure\": 1,\n    \"CallbackCheckedRecords.makeMixedClosure\": 1,\n    \"CallbackCheckedRecords.makeNestedClosure\": 1\n  },\n  \"contracts\": {\n    \"CallbackCheckedRecords.callHost\": {\n      \"parameters\": [\n        {\n          \"callable\": {\n            \"parameters\": [\n              {\n                \"lifetime\": null,\n                \"ownership\": \"copy\"\n              }\n            ],\n            \"result\": {\n              \"lifetime\": null,\n              \"ownership\": \"copy\",\n              \"refinement\": {\n                \"constructor\": \"CallbackCheckedRecords.mkInterval\",\n                \"fields\": [\n                  {\n                    \"name\": \"lo\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"hi\",\n                    \"refinement\": null\n                  }\n                ],\n                \"kind\": \"checked-record\",\n                \"name\": \"CallbackCheckedRecords.Interval\"\n              }\n            }\n          },\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"ownership\": \"borrow\"\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"CallbackCheckedRecords.callHostContainer\": {\n      \"parameters\": [\n        {\n          \"callable\": {\n            \"parameters\": [\n              {\n                \"lifetime\": null,\n                \"ownership\": \"copy\"\n              }\n            ],\n            \"result\": {\n              \"lifetime\": null,\n              \"ownership\": \"copy\",\n              \"refinement\": {\n                \"arguments\": [\n                  {\n                    \"arguments\": [\n                      {\n                        \"constructor\": \"CallbackCheckedRecords.mkInterval\",\n                        \"fields\": [\n                          {\n                            \"name\": \"lo\",\n                            \"refinement\": null\n                          },\n                          {\n                            \"name\": \"hi\",\n                            \"refinement\": null\n                          }\n                        ],\n                        \"kind\": \"checked-record\",\n                        \"name\": \"CallbackCheckedRecords.Interval\"\n                      }\n                    ],\n                    \"kind\": \"option\"\n                  },\n                  null\n                ],\n                \"kind\": \"result\"\n              }\n            }\n          },\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"ownership\": \"borrow\"\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"CallbackCheckedRecords.callHostMixed\": {\n      \"parameters\": [\n        {\n          \"callable\": {\n            \"parameters\": [\n              {\n                \"lifetime\": null,\n                \"ownership\": \"copy\"\n              },\n              {\n                \"lifetime\": null,\n                \"ownership\": \"copy\"\n              }\n            ],\n            \"result\": {\n              \"lifetime\": null,\n              \"ownership\": \"copy\",\n              \"refinement\": {\n                \"constructor\": \"CallbackCheckedRecords.mkInterval\",\n                \"fields\": [\n                  {\n                    \"name\": \"lo\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"hi\",\n                    \"refinement\": null\n                  }\n                ],\n                \"kind\": \"checked-record\",\n                \"name\": \"CallbackCheckedRecords.Interval\"\n              }\n            }\n          },\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"ownership\": \"borrow\"\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"CallbackCheckedRecords.callHostNested\": {\n      \"parameters\": [\n        {\n          \"callable\": {\n            \"parameters\": [\n              {\n                \"lifetime\": null,\n                \"ownership\": \"copy\"\n              }\n            ],\n            \"result\": {\n              \"lifetime\": null,\n              \"ownership\": \"copy\",\n              \"refinement\": {\n                \"constructor\": \"CallbackCheckedRecords.mkWeighted\",\n                \"fields\": [\n                  {\n                    \"name\": \"weight\",\n                    \"refinement\": {\n                      \"constructor\": \"CallbackCheckedRecords.checkedPositive\"\n                    }\n                  },\n                  {\n                    \"name\": \"limit\",\n                    \"refinement\": null\n                  }\n                ],\n                \"kind\": \"checked-record\",\n                \"name\": \"CallbackCheckedRecords.Weighted\"\n              }\n            }\n          },\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"ownership\": \"borrow\"\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"CallbackCheckedRecords.makeClosure\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\"\n        }\n      ],\n      \"result\": {\n        \"callable\": {\n          \"parameters\": [\n            {\n              \"lifetime\": null,\n              \"ownership\": \"copy\",\n              \"refinement\": {\n                \"constructor\": \"CallbackCheckedRecords.mkInterval\",\n                \"fields\": [\n                  {\n                    \"name\": \"lo\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"hi\",\n                    \"refinement\": null\n                  }\n                ],\n                \"kind\": \"checked-record\",\n                \"name\": \"CallbackCheckedRecords.Interval\"\n              }\n            }\n          ],\n          \"result\": {\n            \"lifetime\": null,\n            \"ownership\": \"copy\"\n          }\n        },\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\"\n      }\n    },\n    \"CallbackCheckedRecords.makeContainerClosure\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\"\n        }\n      ],\n      \"result\": {\n        \"callable\": {\n          \"parameters\": [\n            {\n              \"lifetime\": null,\n              \"ownership\": \"copy\",\n              \"refinement\": {\n                \"arguments\": [\n                  {\n                    \"arguments\": [\n                      {\n                        \"constructor\": \"CallbackCheckedRecords.mkInterval\",\n                        \"fields\": [\n                          {\n                            \"name\": \"lo\",\n                            \"refinement\": null\n                          },\n                          {\n                            \"name\": \"hi\",\n                            \"refinement\": null\n                          }\n                        ],\n                        \"kind\": \"checked-record\",\n                        \"name\": \"CallbackCheckedRecords.Interval\"\n                      }\n                    ],\n                    \"kind\": \"option\"\n                  }\n                ],\n                \"kind\": \"array\"\n              }\n            }\n          ],\n          \"result\": {\n            \"lifetime\": null,\n            \"ownership\": \"copy\"\n          }\n        },\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\"\n      }\n    },\n    \"CallbackCheckedRecords.makeMixedClosure\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\"\n        }\n      ],\n      \"result\": {\n        \"callable\": {\n          \"parameters\": [\n            {\n              \"lifetime\": null,\n              \"ownership\": \"copy\"\n            },\n            {\n              \"lifetime\": null,\n              \"ownership\": \"copy\",\n              \"refinement\": {\n                \"constructor\": \"CallbackCheckedRecords.mkInterval\",\n                \"fields\": [\n                  {\n                    \"name\": \"lo\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"hi\",\n                    \"refinement\": null\n                  }\n                ],\n                \"kind\": \"checked-record\",\n                \"name\": \"CallbackCheckedRecords.Interval\"\n              }\n            }\n          ],\n          \"result\": {\n            \"lifetime\": null,\n            \"ownership\": \"copy\"\n          }\n        },\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\"\n      }\n    },\n    \"CallbackCheckedRecords.makeNestedClosure\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\"\n        }\n      ],\n      \"result\": {\n        \"callable\": {\n          \"parameters\": [\n            {\n              \"lifetime\": null,\n              \"ownership\": \"copy\",\n              \"refinement\": {\n                \"constructor\": \"CallbackCheckedRecords.mkWeighted\",\n                \"fields\": [\n                  {\n                    \"name\": \"weight\",\n                    \"refinement\": {\n                      \"constructor\": \"CallbackCheckedRecords.checkedPositive\"\n                    }\n                  },\n                  {\n                    \"name\": \"limit\",\n                    \"refinement\": null\n                  }\n                ],\n                \"kind\": \"checked-record\",\n                \"name\": \"CallbackCheckedRecords.Weighted\"\n              }\n            }\n          ],\n          \"result\": {\n            \"lifetime\": null,\n            \"ownership\": \"copy\"\n          }\n        },\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\"\n      }\n    }\n  },\n  \"exports\": [\n    \"CallbackCheckedRecords.callHost\",\n    \"CallbackCheckedRecords.makeClosure\",\n    \"CallbackCheckedRecords.callHostMixed\",\n    \"CallbackCheckedRecords.makeMixedClosure\",\n    \"CallbackCheckedRecords.callHostContainer\",\n    \"CallbackCheckedRecords.makeContainerClosure\",\n    \"CallbackCheckedRecords.callHostNested\",\n    \"CallbackCheckedRecords.makeNestedClosure\"\n  ],\n  \"modules\": [\n    \"CallbackCheckedRecords\"\n  ],\n  \"schemaVersion\": 1,\n  \"targets\": {\n    \"php-wasm\": {\n      \"composer\": {\n        \"name\": \"lean-bridge-callbackcheckedrecords/wasm\",\n        \"version\": \"1.0.0\"\n      },\n      \"npm\": {\n        \"name\": \"lean-bridge-callbackcheckedrecords-wasm\",\n        \"version\": \"1.0.0\"\n      }\n    }\n  }\n}\n",
+      "extractorSha256": "00f8ce7a3888339cdb1c36b0dce3d8bc9d4c650ea18c7a4926c2d29d4690443a",
+      "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+      "leanCompilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+      "leanVersion": "4.32.2",
+      "modules": [
+        {
+          "interface": {
+            "bytes": 116320,
+            "interfaceSha256": "fcb89bca4fba5df082834da922a011640e0740440257d531115a8e35ee7c0383",
+            "sha256": "dca70e6522e1a3c8438f59644911665fed0366a05723899eb5e9b15766a18aec"
+          },
+          "module": "CallbackCheckedRecords",
+          "source": {
+            "bytes": 3496,
+            "path": "CallbackCheckedRecords.lean",
+            "sha256": "296d4751607a871561122277ccf1cfbcda1ac8c8e7f0a2c53b62980f93390c93"
+          }
+        }
+      ],
+      "request": {
+        "arities": [
+          [
+            "CallbackCheckedRecords.makeClosure",
+            1
+          ],
+          [
+            "CallbackCheckedRecords.makeContainerClosure",
+            1
+          ],
+          [
+            "CallbackCheckedRecords.makeMixedClosure",
+            1
+          ],
+          [
+            "CallbackCheckedRecords.makeNestedClosure",
+            1
+          ]
+        ],
+        "contracts": {
+          "CallbackCheckedRecords.callHost": {
+            "parameters": [
+              {
+                "callable": {
+                  "parameters": [
+                    {
+                      "lifetime": null,
+                      "ownership": "copy"
+                    }
+                  ],
+                  "result": {
+                    "lifetime": null,
+                    "ownership": "copy",
+                    "refinement": {
+                      "constructor": "CallbackCheckedRecords.mkInterval",
+                      "fields": [
+                        {
+                          "name": "lo",
+                          "refinement": null
+                        },
+                        {
+                          "name": "hi",
+                          "refinement": null
+                        }
+                      ],
+                      "kind": "checked-record",
+                      "name": "CallbackCheckedRecords.Interval"
+                    }
+                  }
+                },
+                "lifetime": {
+                  "anchor": null,
+                  "scope": "call"
+                },
+                "ownership": "borrow"
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          },
+          "CallbackCheckedRecords.callHostContainer": {
+            "parameters": [
+              {
+                "callable": {
+                  "parameters": [
+                    {
+                      "lifetime": null,
+                      "ownership": "copy"
+                    }
+                  ],
+                  "result": {
+                    "lifetime": null,
+                    "ownership": "copy",
+                    "refinement": {
+                      "arguments": [
+                        {
+                          "arguments": [
+                            {
+                              "constructor": "CallbackCheckedRecords.mkInterval",
+                              "fields": [
+                                {
+                                  "name": "lo",
+                                  "refinement": null
+                                },
+                                {
+                                  "name": "hi",
+                                  "refinement": null
+                                }
+                              ],
+                              "kind": "checked-record",
+                              "name": "CallbackCheckedRecords.Interval"
+                            }
+                          ],
+                          "kind": "option"
+                        },
+                        null
+                      ],
+                      "kind": "result"
+                    }
+                  }
+                },
+                "lifetime": {
+                  "anchor": null,
+                  "scope": "call"
+                },
+                "ownership": "borrow"
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          },
+          "CallbackCheckedRecords.callHostMixed": {
+            "parameters": [
+              {
+                "callable": {
+                  "parameters": [
+                    {
+                      "lifetime": null,
+                      "ownership": "copy"
+                    },
+                    {
+                      "lifetime": null,
+                      "ownership": "copy"
+                    }
+                  ],
+                  "result": {
+                    "lifetime": null,
+                    "ownership": "copy",
+                    "refinement": {
+                      "constructor": "CallbackCheckedRecords.mkInterval",
+                      "fields": [
+                        {
+                          "name": "lo",
+                          "refinement": null
+                        },
+                        {
+                          "name": "hi",
+                          "refinement": null
+                        }
+                      ],
+                      "kind": "checked-record",
+                      "name": "CallbackCheckedRecords.Interval"
+                    }
+                  }
+                },
+                "lifetime": {
+                  "anchor": null,
+                  "scope": "call"
+                },
+                "ownership": "borrow"
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          },
+          "CallbackCheckedRecords.callHostNested": {
+            "parameters": [
+              {
+                "callable": {
+                  "parameters": [
+                    {
+                      "lifetime": null,
+                      "ownership": "copy"
+                    }
+                  ],
+                  "result": {
+                    "lifetime": null,
+                    "ownership": "copy",
+                    "refinement": {
+                      "constructor": "CallbackCheckedRecords.mkWeighted",
+                      "fields": [
+                        {
+                          "name": "weight",
+                          "refinement": {
+                            "constructor": "CallbackCheckedRecords.checkedPositive"
+                          }
+                        },
+                        {
+                          "name": "limit",
+                          "refinement": null
+                        }
+                      ],
+                      "kind": "checked-record",
+                      "name": "CallbackCheckedRecords.Weighted"
+                    }
+                  }
+                },
+                "lifetime": {
+                  "anchor": null,
+                  "scope": "call"
+                },
+                "ownership": "borrow"
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          },
+          "CallbackCheckedRecords.makeClosure": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy"
+              }
+            ],
+            "result": {
+              "callable": {
+                "parameters": [
+                  {
+                    "lifetime": null,
+                    "ownership": "copy",
+                    "refinement": {
+                      "constructor": "CallbackCheckedRecords.mkInterval",
+                      "fields": [
+                        {
+                          "name": "lo",
+                          "refinement": null
+                        },
+                        {
+                          "name": "hi",
+                          "refinement": null
+                        }
+                      ],
+                      "kind": "checked-record",
+                      "name": "CallbackCheckedRecords.Interval"
+                    }
+                  }
+                ],
+                "result": {
+                  "lifetime": null,
+                  "ownership": "copy"
+                }
+              },
+              "lifetime": {
+                "anchor": null,
+                "scope": "explicit"
+              },
+              "ownership": "lease"
+            }
+          },
+          "CallbackCheckedRecords.makeContainerClosure": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy"
+              }
+            ],
+            "result": {
+              "callable": {
+                "parameters": [
+                  {
+                    "lifetime": null,
+                    "ownership": "copy",
+                    "refinement": {
+                      "arguments": [
+                        {
+                          "arguments": [
+                            {
+                              "constructor": "CallbackCheckedRecords.mkInterval",
+                              "fields": [
+                                {
+                                  "name": "lo",
+                                  "refinement": null
+                                },
+                                {
+                                  "name": "hi",
+                                  "refinement": null
+                                }
+                              ],
+                              "kind": "checked-record",
+                              "name": "CallbackCheckedRecords.Interval"
+                            }
+                          ],
+                          "kind": "option"
+                        }
+                      ],
+                      "kind": "array"
+                    }
+                  }
+                ],
+                "result": {
+                  "lifetime": null,
+                  "ownership": "copy"
+                }
+              },
+              "lifetime": {
+                "anchor": null,
+                "scope": "explicit"
+              },
+              "ownership": "lease"
+            }
+          },
+          "CallbackCheckedRecords.makeMixedClosure": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy"
+              }
+            ],
+            "result": {
+              "callable": {
+                "parameters": [
+                  {
+                    "lifetime": null,
+                    "ownership": "copy"
+                  },
+                  {
+                    "lifetime": null,
+                    "ownership": "copy",
+                    "refinement": {
+                      "constructor": "CallbackCheckedRecords.mkInterval",
+                      "fields": [
+                        {
+                          "name": "lo",
+                          "refinement": null
+                        },
+                        {
+                          "name": "hi",
+                          "refinement": null
+                        }
+                      ],
+                      "kind": "checked-record",
+                      "name": "CallbackCheckedRecords.Interval"
+                    }
+                  }
+                ],
+                "result": {
+                  "lifetime": null,
+                  "ownership": "copy"
+                }
+              },
+              "lifetime": {
+                "anchor": null,
+                "scope": "explicit"
+              },
+              "ownership": "lease"
+            }
+          },
+          "CallbackCheckedRecords.makeNestedClosure": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy"
+              }
+            ],
+            "result": {
+              "callable": {
+                "parameters": [
+                  {
+                    "lifetime": null,
+                    "ownership": "copy",
+                    "refinement": {
+                      "constructor": "CallbackCheckedRecords.mkWeighted",
+                      "fields": [
+                        {
+                          "name": "weight",
+                          "refinement": {
+                            "constructor": "CallbackCheckedRecords.checkedPositive"
+                          }
+                        },
+                        {
+                          "name": "limit",
+                          "refinement": null
+                        }
+                      ],
+                      "kind": "checked-record",
+                      "name": "CallbackCheckedRecords.Weighted"
+                    }
+                  }
+                ],
+                "result": {
+                  "lifetime": null,
+                  "ownership": "copy"
+                }
+              },
+              "lifetime": {
+                "anchor": null,
+                "scope": "explicit"
+              },
+              "ownership": "lease"
+            }
+          }
+        },
+        "exportModules": [
+          "CallbackCheckedRecords"
+        ],
+        "exports": [
+          "CallbackCheckedRecords.callHost",
+          "CallbackCheckedRecords.makeClosure",
+          "CallbackCheckedRecords.callHostMixed",
+          "CallbackCheckedRecords.makeMixedClosure",
+          "CallbackCheckedRecords.callHostContainer",
+          "CallbackCheckedRecords.makeContainerClosure",
+          "CallbackCheckedRecords.callHostNested",
+          "CallbackCheckedRecords.makeNestedClosure"
+        ],
+        "metadata": {
+          "invocationIdentitySha256": "591d41eae5eaf3282177b8ccebd8ada88da99544cfd06ab01c73ee03c97916a7",
+          "modules": [
+            {
+              "interfaceSha256": "fcb89bca4fba5df082834da922a011640e0740440257d531115a8e35ee7c0383",
+              "name": "CallbackCheckedRecords",
+              "sourcePath": "CallbackCheckedRecords.lean",
+              "sourceSha256": "296d4751607a871561122277ccf1cfbcda1ac8c8e7f0a2c53b62980f93390c93"
+            }
+          ],
+          "toolchain": "leanprover/lean4:v4.32.2"
+        },
+        "modules": [
+          "CallbackCheckedRecords"
+        ],
+        "profile": "native-library-v1",
+        "resources": []
+      },
+      "sourceNoticesSha256": "771fee56b7bfa3f9ca8bf6fea30aef81b6a0597e6718ea33918a913e55706520",
+      "sourceTreeSha256": "6e28f43851d4aa3327699490d1b20fff5a3af0f5adc48abab3bab0fdc7a775ad"
+    },
+    "wasmLibrary": {
+      "bytes": 362200,
+      "sha256": "8689d4cfcbea847385f3accdc3eace6a375ff1be16f9fcc030e440919299795c"
+    },
+    "zendSha256": "b8d0c78cf5f5f4c726e21dc96a6377392189b9f3eb8bbb63412c0effb9bd761c"
+  },
+  "definitionCounts": {
+    "callbackcheckedrecords_callback_2e292aebff8c53f6a465ec3d5745e74400590434_lease_call": 1,
+    "callbackcheckedrecords_callback_d885a7d82ec894d17b81e7a67a36bc2930adca13_lease_call": 1,
+    "callbackcheckedrecords_callback_e014092ff0a1ee8527eeeb58a78e2de63bdf09fa_lease_call": 1,
+    "lb_callback_record_closure_makeClosure": 1,
+    "lb_callback_record_closure_makeMixedClosure": 1,
+    "lb_callback_record_closure_makeNestedClosure": 1,
+    "lb_callback_record_probe_constructor_checkedPositive": 1,
+    "lb_callback_record_probe_constructor_mkInterval": 1,
+    "lb_callback_record_probe_constructor_mkWeighted": 1,
+    "lb_callback_record_probe_source_callHost": 1,
+    "lb_callback_record_probe_source_callHostMixed": 1,
+    "lb_callback_record_probe_source_callHostNested": 1,
+    "lb_callback_record_probe_source_makeClosure": 1,
+    "lb_callback_record_probe_source_makeMixedClosure": 1,
+    "lb_callback_record_probe_source_makeNestedClosure": 1,
+    "lean_bridge_184bfb6b98fb39095f0bfec8_graph": 1,
+    "lean_bridge_184bfb6b98fb39095f0bfec8_lean": 1,
+    "lean_bridge_697151f2fc3cf6b95ff12b69_graph": 1,
+    "lean_bridge_697151f2fc3cf6b95ff12b69_lean": 1,
+    "lean_bridge_697151f2fc3cf6b95ff12b69_structured_00652748bed3eb7036c9091f570efa39888f5490_invoke": 1,
+    "lean_bridge_697151f2fc3cf6b95ff12b69_structured_00652748bed3eb7036c9091f570efa39888f5490_recovery": 1,
+    "lean_bridge_697151f2fc3cf6b95ff12b69_structured_00652748bed3eb7036c9091f570efa39888f5490_reject": 1,
+    "lean_bridge_697151f2fc3cf6b95ff12b69_structured_2e292aebff8c53f6a465ec3d5745e74400590434_apply": 1,
+    "lean_bridge_697151f2fc3cf6b95ff12b69_structured_2e292aebff8c53f6a465ec3d5745e74400590434_closure_graph_refinement_1_c356a7238da028f9ec99": 1,
+    "lean_bridge_697151f2fc3cf6b95ff12b69_structured_526ba4a0f03797057c1f9a17ca435a5a42131510_invoke": 1,
+    "lean_bridge_697151f2fc3cf6b95ff12b69_structured_526ba4a0f03797057c1f9a17ca435a5a42131510_recovery": 1,
+    "lean_bridge_697151f2fc3cf6b95ff12b69_structured_526ba4a0f03797057c1f9a17ca435a5a42131510_reject": 1,
+    "lean_bridge_697151f2fc3cf6b95ff12b69_structured_cd01d463066ae86d043223e65eab1640e16b22ab_invoke": 1,
+    "lean_bridge_697151f2fc3cf6b95ff12b69_structured_cd01d463066ae86d043223e65eab1640e16b22ab_recovery": 1,
+    "lean_bridge_697151f2fc3cf6b95ff12b69_structured_cd01d463066ae86d043223e65eab1640e16b22ab_reject": 1,
+    "lean_bridge_697151f2fc3cf6b95ff12b69_structured_d885a7d82ec894d17b81e7a67a36bc2930adca13_apply": 1,
+    "lean_bridge_697151f2fc3cf6b95ff12b69_structured_d885a7d82ec894d17b81e7a67a36bc2930adca13_closure_graph_refinement_0_93110217dc013facd35d": 1,
+    "lean_bridge_697151f2fc3cf6b95ff12b69_structured_d885a7d82ec894d17b81e7a67a36bc2930adca13_closure_graph_refinement_0_b50ad1ac24da4bc3a6eb": 1,
+    "lean_bridge_697151f2fc3cf6b95ff12b69_structured_e014092ff0a1ee8527eeeb58a78e2de63bdf09fa_apply": 1,
+    "lean_bridge_697151f2fc3cf6b95ff12b69_structured_e014092ff0a1ee8527eeeb58a78e2de63bdf09fa_closure_graph_refinement_0_c356a7238da028f9ec99": 1,
+    "lean_bridge_77496697d09177e0d1ebadfd_graph": 1,
+    "lean_bridge_77496697d09177e0d1ebadfd_lean": 1,
+    "lean_bridge_97d7a19c3e5ee22681017ca9_graph": 1,
+    "lean_bridge_97d7a19c3e5ee22681017ca9_lean": 1,
+    "lean_bridge_bbabc0c3fa2252f4f7a67708_graph": 1,
+    "lean_bridge_bbabc0c3fa2252f4f7a67708_lean": 1,
+    "lean_bridge_f168e18f231fdb7eb1733b0e_graph": 1,
+    "lean_bridge_f168e18f231fdb7eb1733b0e_lean": 1,
+    "lgc_call0": 1,
+    "lgc_call2": 1,
+    "lgc_call3": 1,
+    "lgc_call4": 1,
+    "lgc_call6": 1,
+    "lgc_call7": 1,
+    "lgc_callback1": 1,
+    "lgc_callback3": 1,
+    "lgc_callback5": 1,
+    "lgc_cleanup_call0": 1,
+    "lgc_cleanup_call2": 1,
+    "lgc_cleanup_call3": 1,
+    "lgc_cleanup_call4": 1,
+    "lgc_cleanup_call6": 1,
+    "lgc_cleanup_call7": 1,
+    "lgc_cleanup_invoke2": 1,
+    "lgc_cleanup_invoke4": 1,
+    "lgc_cleanup_invoke6": 1,
+    "lgc_invoke2": 1,
+    "lgc_invoke4": 1,
+    "lgc_invoke6": 1,
+    "ng_invoke_00652748bed3eb7036c9091f570efa39888f5490": 1,
+    "ng_invoke_526ba4a0f03797057c1f9a17ca435a5a42131510": 1,
+    "ng_invoke_cd01d463066ae86d043223e65eab1640e16b22ab": 1,
+    "ng_recovery_00652748bed3eb7036c9091f570efa39888f5490": 1,
+    "ng_recovery_526ba4a0f03797057c1f9a17ca435a5a42131510": 1,
+    "ng_recovery_cd01d463066ae86d043223e65eab1640e16b22ab": 1,
+    "ng_reject_00652748bed3eb7036c9091f570efa39888f5490": 1,
+    "ng_reject_526ba4a0f03797057c1f9a17ca435a5a42131510": 1,
+    "ng_reject_cd01d463066ae86d043223e65eab1640e16b22ab": 1
+  },
+  "headers": [],
+  "library": {
+    "bytes": 362200,
+    "sha256": "8689d4cfcbea847385f3accdc3eace6a375ff1be16f9fcc030e440919299795c"
+  },
+  "linked": true,
+  "modelSha256": "355fe37b3e0f9df95f62ad8a471208629494f9537bcd85ebece60ee4dfc5342b",
+  "packageSetSha256": "bf59710dfa52f66d3a4d0a9dde8a653130638a9973adcb46db4a426aae43653e",
+  "schemaVersion": 1,
+  "scope": "separate-instrumented-probe",
+  "selected": [
+    {
+      "kind": "constructor",
+      "label": "CallbackCheckedRecords.mkInterval",
+      "symbol": "lb_callback_record_probe_constructor_mkInterval"
+    },
+    {
+      "kind": "constructor",
+      "label": "CallbackCheckedRecords.checkedPositive",
+      "symbol": "lb_callback_record_probe_constructor_checkedPositive"
+    },
+    {
+      "kind": "constructor",
+      "label": "CallbackCheckedRecords.mkWeighted",
+      "symbol": "lb_callback_record_probe_constructor_mkWeighted"
+    },
+    {
+      "kind": "source",
+      "label": "CallbackCheckedRecords.callHost",
+      "symbol": "lb_callback_record_probe_source_callHost"
+    },
+    {
+      "kind": "source",
+      "label": "CallbackCheckedRecords.callHostMixed",
+      "symbol": "lb_callback_record_probe_source_callHostMixed"
+    },
+    {
+      "kind": "source",
+      "label": "CallbackCheckedRecords.callHostNested",
+      "symbol": "lb_callback_record_probe_source_callHostNested"
+    },
+    {
+      "kind": "source",
+      "label": "CallbackCheckedRecords.makeClosure",
+      "symbol": "lb_callback_record_probe_source_makeClosure"
+    },
+    {
+      "kind": "source",
+      "label": "CallbackCheckedRecords.makeMixedClosure",
+      "symbol": "lb_callback_record_probe_source_makeMixedClosure"
+    },
+    {
+      "kind": "source",
+      "label": "CallbackCheckedRecords.makeNestedClosure",
+      "symbol": "lb_callback_record_probe_source_makeNestedClosure"
+    },
+    {
+      "kind": "closure",
+      "label": "CallbackCheckedRecords.makeClosure:body",
+      "symbol": "lb_callback_record_closure_makeClosure"
+    },
+    {
+      "kind": "closure",
+      "label": "CallbackCheckedRecords.makeMixedClosure:body",
+      "symbol": "lb_callback_record_closure_makeMixedClosure"
+    },
+    {
+      "kind": "closure",
+      "label": "CallbackCheckedRecords.makeNestedClosure:body",
+      "symbol": "lb_callback_record_closure_makeNestedClosure"
+    },
+    {
+      "kind": "public",
+      "label": "CallbackCheckedRecords.callHost",
+      "symbol": "lgc_call0"
+    },
+    {
+      "kind": "adapter",
+      "label": "CallbackCheckedRecords.callHost:native",
+      "symbol": "lean_bridge_697151f2fc3cf6b95ff12b69_graph"
+    },
+    {
+      "kind": "adapter",
+      "label": "CallbackCheckedRecords.callHost:lean",
+      "symbol": "lean_bridge_697151f2fc3cf6b95ff12b69_lean"
+    },
+    {
+      "kind": "cleanup",
+      "label": "CallbackCheckedRecords.callHost:cleanup",
+      "symbol": "lgc_cleanup_call0"
+    },
+    {
+      "kind": "public",
+      "label": "CallbackCheckedRecords.callHostMixed",
+      "symbol": "lgc_call2"
+    },
+    {
+      "kind": "adapter",
+      "label": "CallbackCheckedRecords.callHostMixed:native",
+      "symbol": "lean_bridge_184bfb6b98fb39095f0bfec8_graph"
+    },
+    {
+      "kind": "adapter",
+      "label": "CallbackCheckedRecords.callHostMixed:lean",
+      "symbol": "lean_bridge_184bfb6b98fb39095f0bfec8_lean"
+    },
+    {
+      "kind": "cleanup",
+      "label": "CallbackCheckedRecords.callHostMixed:cleanup",
+      "symbol": "lgc_cleanup_call2"
+    },
+    {
+      "kind": "public",
+      "label": "CallbackCheckedRecords.callHostNested",
+      "symbol": "lgc_call3"
+    },
+    {
+      "kind": "adapter",
+      "label": "CallbackCheckedRecords.callHostNested:native",
+      "symbol": "lean_bridge_f168e18f231fdb7eb1733b0e_graph"
+    },
+    {
+      "kind": "adapter",
+      "label": "CallbackCheckedRecords.callHostNested:lean",
+      "symbol": "lean_bridge_f168e18f231fdb7eb1733b0e_lean"
+    },
+    {
+      "kind": "cleanup",
+      "label": "CallbackCheckedRecords.callHostNested:cleanup",
+      "symbol": "lgc_cleanup_call3"
+    },
+    {
+      "kind": "public",
+      "label": "CallbackCheckedRecords.makeClosure",
+      "symbol": "lgc_call4"
+    },
+    {
+      "kind": "adapter",
+      "label": "CallbackCheckedRecords.makeClosure:native",
+      "symbol": "lean_bridge_97d7a19c3e5ee22681017ca9_graph"
+    },
+    {
+      "kind": "adapter",
+      "label": "CallbackCheckedRecords.makeClosure:lean",
+      "symbol": "lean_bridge_97d7a19c3e5ee22681017ca9_lean"
+    },
+    {
+      "kind": "cleanup",
+      "label": "CallbackCheckedRecords.makeClosure:cleanup",
+      "symbol": "lgc_cleanup_call4"
+    },
+    {
+      "kind": "public",
+      "label": "CallbackCheckedRecords.makeMixedClosure",
+      "symbol": "lgc_call6"
+    },
+    {
+      "kind": "adapter",
+      "label": "CallbackCheckedRecords.makeMixedClosure:native",
+      "symbol": "lean_bridge_bbabc0c3fa2252f4f7a67708_graph"
+    },
+    {
+      "kind": "adapter",
+      "label": "CallbackCheckedRecords.makeMixedClosure:lean",
+      "symbol": "lean_bridge_bbabc0c3fa2252f4f7a67708_lean"
+    },
+    {
+      "kind": "cleanup",
+      "label": "CallbackCheckedRecords.makeMixedClosure:cleanup",
+      "symbol": "lgc_cleanup_call6"
+    },
+    {
+      "kind": "public",
+      "label": "CallbackCheckedRecords.makeNestedClosure",
+      "symbol": "lgc_call7"
+    },
+    {
+      "kind": "adapter",
+      "label": "CallbackCheckedRecords.makeNestedClosure:native",
+      "symbol": "lean_bridge_77496697d09177e0d1ebadfd_graph"
+    },
+    {
+      "kind": "adapter",
+      "label": "CallbackCheckedRecords.makeNestedClosure:lean",
+      "symbol": "lean_bridge_77496697d09177e0d1ebadfd_lean"
+    },
+    {
+      "kind": "cleanup",
+      "label": "CallbackCheckedRecords.makeNestedClosure:cleanup",
+      "symbol": "lgc_cleanup_call7"
+    },
+    {
+      "kind": "recovery",
+      "label": "CallbackCheckedRecords.callHostMixed:recovery:lean",
+      "symbol": "lean_bridge_697151f2fc3cf6b95ff12b69_structured_526ba4a0f03797057c1f9a17ca435a5a42131510_recovery"
+    },
+    {
+      "kind": "recovery",
+      "label": "CallbackCheckedRecords.callHostMixed:recovery:native",
+      "symbol": "ng_recovery_526ba4a0f03797057c1f9a17ca435a5a42131510"
+    },
+    {
+      "kind": "callback",
+      "label": "CallbackCheckedRecords.callHostMixed:callback:lean",
+      "symbol": "lean_bridge_697151f2fc3cf6b95ff12b69_structured_526ba4a0f03797057c1f9a17ca435a5a42131510_invoke"
+    },
+    {
+      "kind": "callback",
+      "label": "CallbackCheckedRecords.callHostMixed:callback:native",
+      "symbol": "ng_invoke_526ba4a0f03797057c1f9a17ca435a5a42131510"
+    },
+    {
+      "kind": "callback",
+      "label": "CallbackCheckedRecords.callHostMixed:callback:zend",
+      "symbol": "lgc_callback1"
+    },
+    {
+      "kind": "rejection",
+      "label": "CallbackCheckedRecords.callHostMixed:rejection:lean",
+      "symbol": "lean_bridge_697151f2fc3cf6b95ff12b69_structured_526ba4a0f03797057c1f9a17ca435a5a42131510_reject"
+    },
+    {
+      "kind": "rejection",
+      "label": "CallbackCheckedRecords.callHostMixed:rejection:native",
+      "symbol": "ng_reject_526ba4a0f03797057c1f9a17ca435a5a42131510"
+    },
+    {
+      "kind": "validator",
+      "label": "CallbackCheckedRecords.makeClosure:callback_validator:closure_graph_refinement_0_c356a7238da028f9ec99",
+      "symbol": "lean_bridge_697151f2fc3cf6b95ff12b69_structured_e014092ff0a1ee8527eeeb58a78e2de63bdf09fa_closure_graph_refinement_0_c356a7238da028f9ec99"
+    },
+    {
+      "kind": "public",
+      "label": "CallbackCheckedRecords.makeClosure:invoke",
+      "symbol": "lgc_invoke2"
+    },
+    {
+      "kind": "adapter",
+      "label": "CallbackCheckedRecords.makeClosure:closure:native",
+      "symbol": "callbackcheckedrecords_callback_e014092ff0a1ee8527eeeb58a78e2de63bdf09fa_lease_call"
+    },
+    {
+      "kind": "adapter",
+      "label": "CallbackCheckedRecords.makeClosure:closure:lean",
+      "symbol": "lean_bridge_697151f2fc3cf6b95ff12b69_structured_e014092ff0a1ee8527eeeb58a78e2de63bdf09fa_apply"
+    },
+    {
+      "kind": "cleanup",
+      "label": "CallbackCheckedRecords.makeClosure:invoke:cleanup",
+      "symbol": "lgc_cleanup_invoke2"
+    },
+    {
+      "kind": "recovery",
+      "label": "CallbackCheckedRecords.callHost:recovery:lean",
+      "symbol": "lean_bridge_697151f2fc3cf6b95ff12b69_structured_00652748bed3eb7036c9091f570efa39888f5490_recovery"
+    },
+    {
+      "kind": "recovery",
+      "label": "CallbackCheckedRecords.callHost:recovery:native",
+      "symbol": "ng_recovery_00652748bed3eb7036c9091f570efa39888f5490"
+    },
+    {
+      "kind": "callback",
+      "label": "CallbackCheckedRecords.callHost:callback:lean",
+      "symbol": "lean_bridge_697151f2fc3cf6b95ff12b69_structured_00652748bed3eb7036c9091f570efa39888f5490_invoke"
+    },
+    {
+      "kind": "callback",
+      "label": "CallbackCheckedRecords.callHost:callback:native",
+      "symbol": "ng_invoke_00652748bed3eb7036c9091f570efa39888f5490"
+    },
+    {
+      "kind": "callback",
+      "label": "CallbackCheckedRecords.callHost:callback:zend",
+      "symbol": "lgc_callback3"
+    },
+    {
+      "kind": "rejection",
+      "label": "CallbackCheckedRecords.callHost:rejection:lean",
+      "symbol": "lean_bridge_697151f2fc3cf6b95ff12b69_structured_00652748bed3eb7036c9091f570efa39888f5490_reject"
+    },
+    {
+      "kind": "rejection",
+      "label": "CallbackCheckedRecords.callHost:rejection:native",
+      "symbol": "ng_reject_00652748bed3eb7036c9091f570efa39888f5490"
+    },
+    {
+      "kind": "validator",
+      "label": "CallbackCheckedRecords.makeNestedClosure:callback_validator:closure_graph_refinement_0_93110217dc013facd35d",
+      "symbol": "lean_bridge_697151f2fc3cf6b95ff12b69_structured_d885a7d82ec894d17b81e7a67a36bc2930adca13_closure_graph_refinement_0_93110217dc013facd35d"
+    },
+    {
+      "kind": "validator",
+      "label": "CallbackCheckedRecords.makeNestedClosure:callback_validator:closure_graph_refinement_0_b50ad1ac24da4bc3a6eb",
+      "symbol": "lean_bridge_697151f2fc3cf6b95ff12b69_structured_d885a7d82ec894d17b81e7a67a36bc2930adca13_closure_graph_refinement_0_b50ad1ac24da4bc3a6eb"
+    },
+    {
+      "kind": "public",
+      "label": "CallbackCheckedRecords.makeNestedClosure:invoke",
+      "symbol": "lgc_invoke4"
+    },
+    {
+      "kind": "adapter",
+      "label": "CallbackCheckedRecords.makeNestedClosure:closure:native",
+      "symbol": "callbackcheckedrecords_callback_d885a7d82ec894d17b81e7a67a36bc2930adca13_lease_call"
+    },
+    {
+      "kind": "adapter",
+      "label": "CallbackCheckedRecords.makeNestedClosure:closure:lean",
+      "symbol": "lean_bridge_697151f2fc3cf6b95ff12b69_structured_d885a7d82ec894d17b81e7a67a36bc2930adca13_apply"
+    },
+    {
+      "kind": "cleanup",
+      "label": "CallbackCheckedRecords.makeNestedClosure:invoke:cleanup",
+      "symbol": "lgc_cleanup_invoke4"
+    },
+    {
+      "kind": "recovery",
+      "label": "CallbackCheckedRecords.callHostNested:recovery:lean",
+      "symbol": "lean_bridge_697151f2fc3cf6b95ff12b69_structured_cd01d463066ae86d043223e65eab1640e16b22ab_recovery"
+    },
+    {
+      "kind": "recovery",
+      "label": "CallbackCheckedRecords.callHostNested:recovery:native",
+      "symbol": "ng_recovery_cd01d463066ae86d043223e65eab1640e16b22ab"
+    },
+    {
+      "kind": "callback",
+      "label": "CallbackCheckedRecords.callHostNested:callback:lean",
+      "symbol": "lean_bridge_697151f2fc3cf6b95ff12b69_structured_cd01d463066ae86d043223e65eab1640e16b22ab_invoke"
+    },
+    {
+      "kind": "callback",
+      "label": "CallbackCheckedRecords.callHostNested:callback:native",
+      "symbol": "ng_invoke_cd01d463066ae86d043223e65eab1640e16b22ab"
+    },
+    {
+      "kind": "callback",
+      "label": "CallbackCheckedRecords.callHostNested:callback:zend",
+      "symbol": "lgc_callback5"
+    },
+    {
+      "kind": "rejection",
+      "label": "CallbackCheckedRecords.callHostNested:rejection:lean",
+      "symbol": "lean_bridge_697151f2fc3cf6b95ff12b69_structured_cd01d463066ae86d043223e65eab1640e16b22ab_reject"
+    },
+    {
+      "kind": "rejection",
+      "label": "CallbackCheckedRecords.callHostNested:rejection:native",
+      "symbol": "ng_reject_cd01d463066ae86d043223e65eab1640e16b22ab"
+    },
+    {
+      "kind": "validator",
+      "label": "CallbackCheckedRecords.makeMixedClosure:callback_validator:closure_graph_refinement_1_c356a7238da028f9ec99",
+      "symbol": "lean_bridge_697151f2fc3cf6b95ff12b69_structured_2e292aebff8c53f6a465ec3d5745e74400590434_closure_graph_refinement_1_c356a7238da028f9ec99"
+    },
+    {
+      "kind": "public",
+      "label": "CallbackCheckedRecords.makeMixedClosure:invoke",
+      "symbol": "lgc_invoke6"
+    },
+    {
+      "kind": "adapter",
+      "label": "CallbackCheckedRecords.makeMixedClosure:closure:native",
+      "symbol": "callbackcheckedrecords_callback_2e292aebff8c53f6a465ec3d5745e74400590434_lease_call"
+    },
+    {
+      "kind": "adapter",
+      "label": "CallbackCheckedRecords.makeMixedClosure:closure:lean",
+      "symbol": "lean_bridge_697151f2fc3cf6b95ff12b69_structured_2e292aebff8c53f6a465ec3d5745e74400590434_apply"
+    },
+    {
+      "kind": "cleanup",
+      "label": "CallbackCheckedRecords.makeMixedClosure:invoke:cleanup",
+      "symbol": "lgc_cleanup_invoke6"
+    }
+  ]
+}

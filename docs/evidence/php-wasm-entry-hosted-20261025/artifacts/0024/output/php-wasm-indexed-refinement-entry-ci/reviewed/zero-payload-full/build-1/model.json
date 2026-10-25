@@ -1,0 +1,2076 @@
+{
+  "bindingIr": {
+    "assurance": [],
+    "capabilities": [],
+    "component": {
+      "id": "zeropayloadcheckedrecords@1.0.0",
+      "name": "zeropayloadcheckedrecords",
+      "version": "1.0.0"
+    },
+    "declarations": [
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "Independent corpus contract."
+        },
+        "effects": [],
+        "failure": {
+          "errors": [],
+          "mode": "none",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:ZeroPayloadCheckedRecords.absentCount",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "absentCount",
+        "overloadKey": "ZeroPayloadCheckedRecords.absentCount",
+        "owner": null,
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "value0",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "id": "lean:ZeroPayloadCheckedRecords.Witness",
+              "kind": "named"
+            }
+          }
+        ],
+        "receiver": null,
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "ZeroPayloadCheckedRecords.absentCount",
+          "extensions": {
+            "lean-lang.org/export-contract": {
+              "parameters": [
+                {
+                  "lifetime": null,
+                  "ownership": "copy",
+                  "refinement": {
+                    "constructor": "ZeroPayloadCheckedRecords.mkAbsent"
+                  }
+                }
+              ],
+              "result": {
+                "lifetime": null,
+                "ownership": "copy"
+              }
+            },
+            "lean-lang.org/refinements": {
+              "parameters": [
+                {
+                  "constructor": "ZeroPayloadCheckedRecords.mkAbsent",
+                  "kind": "checked-record"
+                }
+              ],
+              "result": null
+            },
+            "lean-lang.org/source-position": {
+              "endColumn": 44,
+              "endLine": 34,
+              "path": "ZeroPayloadCheckedRecords.lean",
+              "startColumn": 0,
+              "startLine": 32
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "Independent corpus contract."
+        },
+        "effects": [],
+        "failure": {
+          "errors": [],
+          "mode": "none",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:ZeroPayloadCheckedRecords.markCount",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "markCount",
+        "overloadKey": "ZeroPayloadCheckedRecords.markCount",
+        "owner": null,
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "value0",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "id": "lean:ZeroPayloadCheckedRecords.Mark",
+              "kind": "named"
+            }
+          }
+        ],
+        "receiver": null,
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "ZeroPayloadCheckedRecords.markCount",
+          "extensions": {
+            "lean-lang.org/export-contract": {
+              "parameters": [
+                {
+                  "lifetime": null,
+                  "ownership": "copy",
+                  "refinement": {
+                    "cases": [
+                      {
+                        "fields": [],
+                        "name": "blank"
+                      },
+                      {
+                        "fields": [
+                          {
+                            "name": "witness",
+                            "refinement": {
+                              "constructor": "ZeroPayloadCheckedRecords.mkWitness",
+                              "fields": [],
+                              "kind": "checked-record",
+                              "name": "ZeroPayloadCheckedRecords.Witness"
+                            }
+                          }
+                        ],
+                        "name": "marked"
+                      }
+                    ],
+                    "kind": "variant",
+                    "name": "ZeroPayloadCheckedRecords.Mark"
+                  }
+                }
+              ],
+              "result": {
+                "lifetime": null,
+                "ownership": "copy"
+              }
+            },
+            "lean-lang.org/refinements": {
+              "parameters": [
+                {
+                  "cases": [
+                    {
+                      "fields": [],
+                      "name": "blank"
+                    },
+                    {
+                      "fields": [
+                        {
+                          "name": "witness",
+                          "refinement": {
+                            "constructor": "ZeroPayloadCheckedRecords.mkWitness",
+                            "fields": [],
+                            "kind": "checked-record",
+                            "name": "ZeroPayloadCheckedRecords.Witness"
+                          }
+                        }
+                      ],
+                      "name": "marked"
+                    }
+                  ],
+                  "kind": "variant",
+                  "name": "ZeroPayloadCheckedRecords.Mark"
+                }
+              ],
+              "result": null
+            },
+            "lean-lang.org/source-position": {
+              "endColumn": 18,
+              "endLine": 60,
+              "path": "ZeroPayloadCheckedRecords.lean",
+              "startColumn": 0,
+              "startLine": 55
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "Independent corpus contract."
+        },
+        "effects": [],
+        "failure": {
+          "errors": [],
+          "mode": "none",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:ZeroPayloadCheckedRecords.markerCount",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "markerCount",
+        "overloadKey": "ZeroPayloadCheckedRecords.markerCount",
+        "owner": null,
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "value0",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "id": "lean:ZeroPayloadCheckedRecords.Marker",
+              "kind": "named"
+            }
+          }
+        ],
+        "receiver": null,
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "ZeroPayloadCheckedRecords.markerCount",
+          "extensions": {
+            "lean-lang.org/source-position": {
+              "endColumn": 43,
+              "endLine": 52,
+              "path": "ZeroPayloadCheckedRecords.lean",
+              "startColumn": 0,
+              "startLine": 50
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "Independent corpus contract."
+        },
+        "effects": [],
+        "failure": {
+          "errors": [],
+          "mode": "none",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:ZeroPayloadCheckedRecords.maybeWitness",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "maybeWitness",
+        "overloadKey": "ZeroPayloadCheckedRecords.maybeWitness",
+        "owner": null,
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "value0",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "kind": "primitive",
+              "name": "bool"
+            }
+          }
+        ],
+        "receiver": null,
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "arguments": [
+              {
+                "id": "lean:ZeroPayloadCheckedRecords.Witness",
+                "kind": "named"
+              }
+            ],
+            "constructor": "option",
+            "kind": "apply"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "ZeroPayloadCheckedRecords.maybeWitness",
+          "extensions": {
+            "lean-lang.org/refinements": {
+              "parameters": [
+                null
+              ],
+              "result": {
+                "arguments": [
+                  {
+                    "constructor": null,
+                    "fields": [],
+                    "kind": "checked-record",
+                    "name": "ZeroPayloadCheckedRecords.Witness"
+                  }
+                ],
+                "kind": "option"
+              }
+            },
+            "lean-lang.org/source-position": {
+              "endColumn": 50,
+              "endLine": 49,
+              "path": "ZeroPayloadCheckedRecords.lean",
+              "startColumn": 0,
+              "startLine": 47
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "Independent corpus contract."
+        },
+        "effects": [],
+        "failure": {
+          "errors": [],
+          "mode": "none",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:ZeroPayloadCheckedRecords.produceMark",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "produceMark",
+        "overloadKey": "ZeroPayloadCheckedRecords.produceMark",
+        "owner": null,
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "value0",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "kind": "primitive",
+              "name": "bool"
+            }
+          }
+        ],
+        "receiver": null,
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "id": "lean:ZeroPayloadCheckedRecords.Mark",
+            "kind": "named"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "ZeroPayloadCheckedRecords.produceMark",
+          "extensions": {
+            "lean-lang.org/refinements": {
+              "parameters": [
+                null
+              ],
+              "result": {
+                "cases": [
+                  {
+                    "fields": [],
+                    "name": "blank"
+                  },
+                  {
+                    "fields": [
+                      {
+                        "name": "witness",
+                        "refinement": {
+                          "constructor": null,
+                          "fields": [],
+                          "kind": "checked-record",
+                          "name": "ZeroPayloadCheckedRecords.Witness"
+                        }
+                      }
+                    ],
+                    "name": "marked"
+                  }
+                ],
+                "kind": "variant",
+                "name": "ZeroPayloadCheckedRecords.Mark"
+              }
+            },
+            "lean-lang.org/source-position": {
+              "endColumn": 54,
+              "endLine": 63,
+              "path": "ZeroPayloadCheckedRecords.lean",
+              "startColumn": 0,
+              "startLine": 61
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "Independent corpus contract."
+        },
+        "effects": [],
+        "failure": {
+          "errors": [],
+          "mode": "none",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:ZeroPayloadCheckedRecords.produceMarker",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "produceMarker",
+        "overloadKey": "ZeroPayloadCheckedRecords.produceMarker",
+        "owner": null,
+        "parameters": [],
+        "receiver": null,
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "id": "lean:ZeroPayloadCheckedRecords.Marker",
+            "kind": "named"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "ZeroPayloadCheckedRecords.produceMarker",
+          "extensions": {
+            "lean-lang.org/source-position": {
+              "endColumn": 39,
+              "endLine": 54,
+              "path": "ZeroPayloadCheckedRecords.lean",
+              "startColumn": 0,
+              "startLine": 53
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "Independent corpus contract."
+        },
+        "effects": [],
+        "failure": {
+          "errors": [],
+          "mode": "none",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:ZeroPayloadCheckedRecords.produceToken",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "produceToken",
+        "overloadKey": "ZeroPayloadCheckedRecords.produceToken",
+        "owner": null,
+        "parameters": [],
+        "receiver": null,
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "id": "lean:ZeroPayloadCheckedRecords.Token",
+            "kind": "named"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "ZeroPayloadCheckedRecords.produceToken",
+          "extensions": {
+            "lean-lang.org/source-position": {
+              "endColumn": 41,
+              "endLine": 42,
+              "path": "ZeroPayloadCheckedRecords.lean",
+              "startColumn": 0,
+              "startLine": 41
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "Independent corpus contract."
+        },
+        "effects": [],
+        "failure": {
+          "errors": [],
+          "mode": "none",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:ZeroPayloadCheckedRecords.produceWitness",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "produceWitness",
+        "overloadKey": "ZeroPayloadCheckedRecords.produceWitness",
+        "owner": null,
+        "parameters": [],
+        "receiver": null,
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "id": "lean:ZeroPayloadCheckedRecords.Witness",
+            "kind": "named"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "ZeroPayloadCheckedRecords.produceWitness",
+          "extensions": {
+            "lean-lang.org/source-position": {
+              "endColumn": 49,
+              "endLine": 40,
+              "path": "ZeroPayloadCheckedRecords.lean",
+              "startColumn": 0,
+              "startLine": 38
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "Independent corpus contract."
+        },
+        "effects": [],
+        "failure": {
+          "errors": [],
+          "mode": "none",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:ZeroPayloadCheckedRecords.tokenTag",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "tokenTag",
+        "overloadKey": "ZeroPayloadCheckedRecords.tokenTag",
+        "owner": null,
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "value0",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "id": "lean:ZeroPayloadCheckedRecords.Token",
+              "kind": "named"
+            }
+          }
+        ],
+        "receiver": null,
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "unit"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "ZeroPayloadCheckedRecords.tokenTag",
+          "extensions": {
+            "lean-lang.org/export-contract": {
+              "parameters": [
+                {
+                  "lifetime": null,
+                  "ownership": "copy",
+                  "refinement": {
+                    "constructor": "ZeroPayloadCheckedRecords.mkToken"
+                  }
+                }
+              ],
+              "result": {
+                "lifetime": null,
+                "ownership": "copy"
+              }
+            },
+            "lean-lang.org/refinements": {
+              "parameters": [
+                {
+                  "constructor": "ZeroPayloadCheckedRecords.mkToken",
+                  "kind": "checked-record"
+                }
+              ],
+              "result": null
+            },
+            "lean-lang.org/source-position": {
+              "endColumn": 48,
+              "endLine": 37,
+              "path": "ZeroPayloadCheckedRecords.lean",
+              "startColumn": 0,
+              "startLine": 35
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "Independent corpus contract."
+        },
+        "effects": [],
+        "failure": {
+          "errors": [],
+          "mode": "none",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:ZeroPayloadCheckedRecords.witnessCount",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "witnessCount",
+        "overloadKey": "ZeroPayloadCheckedRecords.witnessCount",
+        "owner": null,
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "value0",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "id": "lean:ZeroPayloadCheckedRecords.Witness",
+              "kind": "named"
+            }
+          }
+        ],
+        "receiver": null,
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "ZeroPayloadCheckedRecords.witnessCount",
+          "extensions": {
+            "lean-lang.org/export-contract": {
+              "parameters": [
+                {
+                  "lifetime": null,
+                  "ownership": "copy",
+                  "refinement": {
+                    "constructor": "ZeroPayloadCheckedRecords.mkWitness"
+                  }
+                }
+              ],
+              "result": {
+                "lifetime": null,
+                "ownership": "copy"
+              }
+            },
+            "lean-lang.org/refinements": {
+              "parameters": [
+                {
+                  "constructor": "ZeroPayloadCheckedRecords.mkWitness",
+                  "kind": "checked-record"
+                }
+              ],
+              "result": null
+            },
+            "lean-lang.org/source-position": {
+              "endColumn": 45,
+              "endLine": 31,
+              "path": "ZeroPayloadCheckedRecords.lean",
+              "startColumn": 0,
+              "startLine": 29
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "Independent corpus contract."
+        },
+        "effects": [],
+        "failure": {
+          "errors": [],
+          "mode": "none",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:ZeroPayloadCheckedRecords.witnesses",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "witnesses",
+        "overloadKey": "ZeroPayloadCheckedRecords.witnesses",
+        "owner": null,
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "value0",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          }
+        ],
+        "receiver": null,
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "arguments": [
+              {
+                "id": "lean:ZeroPayloadCheckedRecords.Witness",
+                "kind": "named"
+              }
+            ],
+            "constructor": "array",
+            "kind": "apply"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "ZeroPayloadCheckedRecords.witnesses",
+          "extensions": {
+            "lean-lang.org/refinements": {
+              "parameters": [
+                null
+              ],
+              "result": {
+                "arguments": [
+                  {
+                    "constructor": null,
+                    "fields": [],
+                    "kind": "checked-record",
+                    "name": "ZeroPayloadCheckedRecords.Witness"
+                  }
+                ],
+                "kind": "array"
+              }
+            },
+            "lean-lang.org/source-position": {
+              "endColumn": 62,
+              "endLine": 46,
+              "path": "ZeroPayloadCheckedRecords.lean",
+              "startColumn": 0,
+              "startLine": 43
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      }
+    ],
+    "documentation": {
+      "details": "",
+      "summary": "Independent corpus contract."
+    },
+    "errors": [],
+    "producers": [
+      {
+        "adapter": "lean-bridge-elaborator",
+        "adapterVersion": 2,
+        "extensions": {
+          "lean-lang.org/elaboration-sha256": "2d34d2e5b8d895b099f0a1b3d044c44eb5b0755bcb4f700dced6797e9d51632e",
+          "lean-lang.org/toolchain": "leanprover/lean4:v4.32.2"
+        },
+        "id": "lean",
+        "tool": "Lean",
+        "toolVersion": "4.32.2"
+      }
+    ],
+    "schemaVersion": 3,
+    "types": [
+      {
+        "assurance": [],
+        "callable": null,
+        "cases": [
+          {
+            "documentation": {
+              "details": "",
+              "summary": "blank"
+            },
+            "fields": [],
+            "name": "blank"
+          },
+          {
+            "documentation": {
+              "details": "",
+              "summary": "marked"
+            },
+            "fields": [
+              {
+                "documentation": {
+                  "details": "",
+                  "summary": "witness"
+                },
+                "mutability": "immutable",
+                "name": "witness",
+                "type": {
+                  "id": "lean:ZeroPayloadCheckedRecords.Witness",
+                  "kind": "named"
+                }
+              }
+            ],
+            "name": "marked"
+          }
+        ],
+        "documentation": {
+          "details": "",
+          "summary": "Independent corpus contract."
+        },
+        "fields": [],
+        "host": null,
+        "id": "lean:ZeroPayloadCheckedRecords.Mark",
+        "kind": "variant",
+        "mutability": "immutable",
+        "name": "Mark",
+        "representation": "copied",
+        "resource": null,
+        "source": {
+          "declaration": "ZeroPayloadCheckedRecords.Mark",
+          "extensions": {},
+          "producer": "lean"
+        },
+        "target": null,
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "callable": null,
+        "cases": [],
+        "documentation": {
+          "details": "",
+          "summary": "Independent corpus contract."
+        },
+        "fields": [],
+        "host": null,
+        "id": "lean:ZeroPayloadCheckedRecords.Marker",
+        "kind": "record",
+        "mutability": "immutable",
+        "name": "Marker",
+        "representation": "copied",
+        "resource": null,
+        "source": {
+          "declaration": "ZeroPayloadCheckedRecords.Marker",
+          "extensions": {},
+          "producer": "lean"
+        },
+        "target": null,
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "callable": null,
+        "cases": [],
+        "documentation": {
+          "details": "",
+          "summary": "Independent corpus contract."
+        },
+        "fields": [
+          {
+            "documentation": {
+              "details": "",
+              "summary": "Independent corpus contract."
+            },
+            "mutability": "immutable",
+            "name": "tag",
+            "type": {
+              "kind": "primitive",
+              "name": "unit"
+            }
+          }
+        ],
+        "host": null,
+        "id": "lean:ZeroPayloadCheckedRecords.Token",
+        "kind": "record",
+        "mutability": "immutable",
+        "name": "Token",
+        "representation": "copied",
+        "resource": null,
+        "source": {
+          "declaration": "ZeroPayloadCheckedRecords.Token",
+          "extensions": {
+            "lean-lang.org/erased-proofs": {
+              "fields": [
+                "fresh"
+              ]
+            }
+          },
+          "producer": "lean"
+        },
+        "target": null,
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "callable": null,
+        "cases": [],
+        "documentation": {
+          "details": "",
+          "summary": "Independent corpus contract."
+        },
+        "fields": [],
+        "host": null,
+        "id": "lean:ZeroPayloadCheckedRecords.Witness",
+        "kind": "record",
+        "mutability": "immutable",
+        "name": "Witness",
+        "representation": "copied",
+        "resource": null,
+        "source": {
+          "declaration": "ZeroPayloadCheckedRecords.Witness",
+          "extensions": {
+            "lean-lang.org/erased-proofs": {
+              "fields": [
+                "positive"
+              ]
+            }
+          },
+          "producer": "lean"
+        },
+        "target": null,
+        "typeParameters": []
+      }
+    ]
+  },
+  "bindingIrSha256": "601e4a782826e93ae245d519d27791edf579aaa33b94fbba416fecc870703efb",
+  "byteOrder": "little",
+  "component": {
+    "id": "zeropayloadcheckedrecords@1.0.0",
+    "name": "zeropayloadcheckedrecords",
+    "version": "1.0.0"
+  },
+  "exports": [
+    {
+      "documentation": "The same input site under the refusing constructor. ",
+      "module": "ZeroPayloadCheckedRecords",
+      "name": "ZeroPayloadCheckedRecords.absentCount",
+      "parameters": [
+        {
+          "name": "value",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": false,
+              "unbox": "lean_unbox"
+            },
+            "constructor": "ZeroPayloadCheckedRecords.Witness.mk",
+            "erased": [
+              "positive"
+            ],
+            "fields": [],
+            "kind": "record",
+            "lean": "ZeroPayloadCheckedRecords.Witness",
+            "name": "ZeroPayloadCheckedRecords.Witness"
+          }
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "constructor": "ZeroPayloadCheckedRecords.mkAbsent",
+            "definition": "ZeroPayloadCheckedRecords.Witness",
+            "fields": [],
+            "kind": "checked-record"
+          }
+        ],
+        "result": null
+      },
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": false,
+          "unbox": "lean_unbox"
+        },
+        "kind": "primitive",
+        "lean": "Nat",
+        "name": "nat"
+      },
+      "sourcePosition": {
+        "endColumn": 44,
+        "endLine": 34,
+        "path": "ZeroPayloadCheckedRecords.lean",
+        "startColumn": 0,
+        "startLine": 32
+      },
+      "symbol": "lb_2e762f0a465455f60e6d2e91",
+      "theoremReferences": []
+    },
+    {
+      "documentation": "Both variant branches remain distinct after the nested proof has been erased. ",
+      "module": "ZeroPayloadCheckedRecords",
+      "name": "ZeroPayloadCheckedRecords.markCount",
+      "parameters": [
+        {
+          "name": "value",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": false,
+              "unbox": "lean_unbox"
+            },
+            "cases": [
+              {
+                "constructor": "ZeroPayloadCheckedRecords.Mark.blank",
+                "fields": [],
+                "name": "blank"
+              },
+              {
+                "constructor": "ZeroPayloadCheckedRecords.Mark.marked",
+                "fields": [
+                  {
+                    "name": "witness",
+                    "type": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": false,
+                        "unbox": "lean_unbox"
+                      },
+                      "constructor": "ZeroPayloadCheckedRecords.Witness.mk",
+                      "erased": [
+                        "positive"
+                      ],
+                      "fields": [],
+                      "kind": "record",
+                      "lean": "ZeroPayloadCheckedRecords.Witness",
+                      "name": "ZeroPayloadCheckedRecords.Witness"
+                    }
+                  }
+                ],
+                "name": "marked"
+              }
+            ],
+            "kind": "variant",
+            "lean": "ZeroPayloadCheckedRecords.Mark",
+            "name": "ZeroPayloadCheckedRecords.Mark"
+          }
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "cases": [
+              {
+                "arguments": [],
+                "fields": [],
+                "name": "blank"
+              },
+              {
+                "arguments": [
+                  {
+                    "arguments": [],
+                    "constructor": "ZeroPayloadCheckedRecords.mkWitness",
+                    "definition": "ZeroPayloadCheckedRecords.Witness",
+                    "fields": [],
+                    "kind": "checked-record"
+                  }
+                ],
+                "fields": [
+                  "witness"
+                ],
+                "name": "marked"
+              }
+            ],
+            "definition": "ZeroPayloadCheckedRecords.Mark",
+            "kind": "variant"
+          }
+        ],
+        "result": null
+      },
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": false,
+          "unbox": "lean_unbox"
+        },
+        "kind": "primitive",
+        "lean": "Nat",
+        "name": "nat"
+      },
+      "sourcePosition": {
+        "endColumn": 18,
+        "endLine": 60,
+        "path": "ZeroPayloadCheckedRecords.lean",
+        "startColumn": 0,
+        "startLine": 55
+      },
+      "symbol": "lb_8dde9faac3cf2ad062791db9",
+      "theoremReferences": []
+    },
+    {
+      "documentation": "A plain empty record crosses as an ordinary copied record in both directions. ",
+      "module": "ZeroPayloadCheckedRecords",
+      "name": "ZeroPayloadCheckedRecords.markerCount",
+      "parameters": [
+        {
+          "name": "value",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": false,
+              "unbox": "lean_unbox"
+            },
+            "constructor": "ZeroPayloadCheckedRecords.Marker.mk",
+            "fields": [],
+            "kind": "record",
+            "lean": "ZeroPayloadCheckedRecords.Marker",
+            "name": "ZeroPayloadCheckedRecords.Marker"
+          }
+        }
+      ],
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": false,
+          "unbox": "lean_unbox"
+        },
+        "kind": "primitive",
+        "lean": "Nat",
+        "name": "nat"
+      },
+      "sourcePosition": {
+        "endColumn": 43,
+        "endLine": 52,
+        "path": "ZeroPayloadCheckedRecords.lean",
+        "startColumn": 0,
+        "startLine": 50
+      },
+      "symbol": "lb_51200de1ff13cece7733b1f1",
+      "theoremReferences": []
+    },
+    {
+      "documentation": null,
+      "module": "ZeroPayloadCheckedRecords",
+      "name": "ZeroPayloadCheckedRecords.maybeWitness",
+      "parameters": [
+        {
+          "name": "present",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "uint8_t",
+              "heap": false,
+              "unbox": "lean_unbox"
+            },
+            "kind": "primitive",
+            "lean": "Bool",
+            "name": "bool"
+          }
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          null
+        ],
+        "result": {
+          "arguments": [
+            {
+              "arguments": [],
+              "constructor": null,
+              "definition": "ZeroPayloadCheckedRecords.Witness",
+              "fields": [],
+              "kind": "checked-record"
+            }
+          ],
+          "kind": "option"
+        }
+      },
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": false,
+          "unbox": "lean_unbox"
+        },
+        "element": {
+          "abi": {
+            "box": "lean_box",
+            "cType": "lean_object*",
+            "heap": false,
+            "unbox": "lean_unbox"
+          },
+          "constructor": "ZeroPayloadCheckedRecords.Witness.mk",
+          "erased": [
+            "positive"
+          ],
+          "fields": [],
+          "kind": "record",
+          "lean": "ZeroPayloadCheckedRecords.Witness",
+          "name": "ZeroPayloadCheckedRecords.Witness"
+        },
+        "kind": "option"
+      },
+      "sourcePosition": {
+        "endColumn": 50,
+        "endLine": 49,
+        "path": "ZeroPayloadCheckedRecords.lean",
+        "startColumn": 0,
+        "startLine": 47
+      },
+      "symbol": "lb_cde1a97bb44e62e5508a2ab3",
+      "theoremReferences": []
+    },
+    {
+      "documentation": null,
+      "module": "ZeroPayloadCheckedRecords",
+      "name": "ZeroPayloadCheckedRecords.produceMark",
+      "parameters": [
+        {
+          "name": "active",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "uint8_t",
+              "heap": false,
+              "unbox": "lean_unbox"
+            },
+            "kind": "primitive",
+            "lean": "Bool",
+            "name": "bool"
+          }
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          null
+        ],
+        "result": {
+          "cases": [
+            {
+              "arguments": [],
+              "fields": [],
+              "name": "blank"
+            },
+            {
+              "arguments": [
+                {
+                  "arguments": [],
+                  "constructor": null,
+                  "definition": "ZeroPayloadCheckedRecords.Witness",
+                  "fields": [],
+                  "kind": "checked-record"
+                }
+              ],
+              "fields": [
+                "witness"
+              ],
+              "name": "marked"
+            }
+          ],
+          "definition": "ZeroPayloadCheckedRecords.Mark",
+          "kind": "variant"
+        }
+      },
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": false,
+          "unbox": "lean_unbox"
+        },
+        "cases": [
+          {
+            "constructor": "ZeroPayloadCheckedRecords.Mark.blank",
+            "fields": [],
+            "name": "blank"
+          },
+          {
+            "constructor": "ZeroPayloadCheckedRecords.Mark.marked",
+            "fields": [
+              {
+                "name": "witness",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "constructor": "ZeroPayloadCheckedRecords.Witness.mk",
+                  "erased": [
+                    "positive"
+                  ],
+                  "fields": [],
+                  "kind": "record",
+                  "lean": "ZeroPayloadCheckedRecords.Witness",
+                  "name": "ZeroPayloadCheckedRecords.Witness"
+                }
+              }
+            ],
+            "name": "marked"
+          }
+        ],
+        "kind": "variant",
+        "lean": "ZeroPayloadCheckedRecords.Mark",
+        "name": "ZeroPayloadCheckedRecords.Mark"
+      },
+      "sourcePosition": {
+        "endColumn": 54,
+        "endLine": 63,
+        "path": "ZeroPayloadCheckedRecords.lean",
+        "startColumn": 0,
+        "startLine": 61
+      },
+      "symbol": "lb_3190b0fd601d06277d65cc15",
+      "theoremReferences": []
+    },
+    {
+      "documentation": null,
+      "module": "ZeroPayloadCheckedRecords",
+      "name": "ZeroPayloadCheckedRecords.produceMarker",
+      "parameters": [],
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": false,
+          "unbox": "lean_unbox"
+        },
+        "constructor": "ZeroPayloadCheckedRecords.Marker.mk",
+        "fields": [],
+        "kind": "record",
+        "lean": "ZeroPayloadCheckedRecords.Marker",
+        "name": "ZeroPayloadCheckedRecords.Marker"
+      },
+      "sourcePosition": {
+        "endColumn": 39,
+        "endLine": 54,
+        "path": "ZeroPayloadCheckedRecords.lean",
+        "startColumn": 0,
+        "startLine": 53
+      },
+      "symbol": "lb_53d00d3f28c820ff014ddaab",
+      "theoremReferences": []
+    },
+    {
+      "documentation": null,
+      "module": "ZeroPayloadCheckedRecords",
+      "name": "ZeroPayloadCheckedRecords.produceToken",
+      "parameters": [],
+      "refinements": {
+        "parameters": [],
+        "result": {
+          "constructor": null,
+          "definition": "ZeroPayloadCheckedRecords.Token",
+          "fields": [
+            "tag"
+          ],
+          "kind": "checked-record"
+        }
+      },
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": false,
+          "unbox": "lean_unbox"
+        },
+        "constructor": "ZeroPayloadCheckedRecords.Token.mk",
+        "erased": [
+          "fresh"
+        ],
+        "fields": [
+          {
+            "name": "tag",
+            "projection": "ZeroPayloadCheckedRecords.Token.tag",
+            "type": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "kind": "primitive",
+              "lean": "Unit",
+              "name": "unit"
+            }
+          }
+        ],
+        "kind": "record",
+        "lean": "ZeroPayloadCheckedRecords.Token",
+        "name": "ZeroPayloadCheckedRecords.Token"
+      },
+      "sourcePosition": {
+        "endColumn": 41,
+        "endLine": 42,
+        "path": "ZeroPayloadCheckedRecords.lean",
+        "startColumn": 0,
+        "startLine": 41
+      },
+      "symbol": "lb_582f4605f271fe1a26173078",
+      "theoremReferences": []
+    },
+    {
+      "documentation": "Lean produces the proof; the host receives the empty carrier. ",
+      "module": "ZeroPayloadCheckedRecords",
+      "name": "ZeroPayloadCheckedRecords.produceWitness",
+      "parameters": [],
+      "refinements": {
+        "parameters": [],
+        "result": {
+          "constructor": null,
+          "definition": "ZeroPayloadCheckedRecords.Witness",
+          "fields": [],
+          "kind": "checked-record"
+        }
+      },
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": false,
+          "unbox": "lean_unbox"
+        },
+        "constructor": "ZeroPayloadCheckedRecords.Witness.mk",
+        "erased": [
+          "positive"
+        ],
+        "fields": [],
+        "kind": "record",
+        "lean": "ZeroPayloadCheckedRecords.Witness",
+        "name": "ZeroPayloadCheckedRecords.Witness"
+      },
+      "sourcePosition": {
+        "endColumn": 49,
+        "endLine": 40,
+        "path": "ZeroPayloadCheckedRecords.lean",
+        "startColumn": 0,
+        "startLine": 38
+      },
+      "symbol": "lb_e28f59b3ac170ab2f8d671cf",
+      "theoremReferences": []
+    },
+    {
+      "documentation": "Read the unit tag of a checked token input. ",
+      "module": "ZeroPayloadCheckedRecords",
+      "name": "ZeroPayloadCheckedRecords.tokenTag",
+      "parameters": [
+        {
+          "name": "value",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": false,
+              "unbox": "lean_unbox"
+            },
+            "constructor": "ZeroPayloadCheckedRecords.Token.mk",
+            "erased": [
+              "fresh"
+            ],
+            "fields": [
+              {
+                "name": "tag",
+                "projection": "ZeroPayloadCheckedRecords.Token.tag",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "primitive",
+                  "lean": "Unit",
+                  "name": "unit"
+                }
+              }
+            ],
+            "kind": "record",
+            "lean": "ZeroPayloadCheckedRecords.Token",
+            "name": "ZeroPayloadCheckedRecords.Token"
+          }
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "constructor": "ZeroPayloadCheckedRecords.mkToken",
+            "definition": "ZeroPayloadCheckedRecords.Token",
+            "fields": [
+              "tag"
+            ],
+            "kind": "checked-record"
+          }
+        ],
+        "result": null
+      },
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": false,
+          "unbox": "lean_unbox"
+        },
+        "kind": "primitive",
+        "lean": "Unit",
+        "name": "unit"
+      },
+      "sourcePosition": {
+        "endColumn": 48,
+        "endLine": 37,
+        "path": "ZeroPayloadCheckedRecords.lean",
+        "startColumn": 0,
+        "startLine": 35
+      },
+      "symbol": "lb_8b1381b2213f3d87f755a4ae",
+      "theoremReferences": []
+    },
+    {
+      "documentation": "Count a checked proof-only input. ",
+      "module": "ZeroPayloadCheckedRecords",
+      "name": "ZeroPayloadCheckedRecords.witnessCount",
+      "parameters": [
+        {
+          "name": "value",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": false,
+              "unbox": "lean_unbox"
+            },
+            "constructor": "ZeroPayloadCheckedRecords.Witness.mk",
+            "erased": [
+              "positive"
+            ],
+            "fields": [],
+            "kind": "record",
+            "lean": "ZeroPayloadCheckedRecords.Witness",
+            "name": "ZeroPayloadCheckedRecords.Witness"
+          }
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "constructor": "ZeroPayloadCheckedRecords.mkWitness",
+            "definition": "ZeroPayloadCheckedRecords.Witness",
+            "fields": [],
+            "kind": "checked-record"
+          }
+        ],
+        "result": null
+      },
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": false,
+          "unbox": "lean_unbox"
+        },
+        "kind": "primitive",
+        "lean": "Nat",
+        "name": "nat"
+      },
+      "sourcePosition": {
+        "endColumn": 45,
+        "endLine": 31,
+        "path": "ZeroPayloadCheckedRecords.lean",
+        "startColumn": 0,
+        "startLine": 29
+      },
+      "symbol": "lb_cbd016913ee33db9a876fa11",
+      "theoremReferences": []
+    },
+    {
+      "documentation": "Containers of zero-payload results keep their length and presence. ",
+      "module": "ZeroPayloadCheckedRecords",
+      "name": "ZeroPayloadCheckedRecords.witnesses",
+      "parameters": [
+        {
+          "name": "count",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": false,
+              "unbox": "lean_unbox"
+            },
+            "kind": "primitive",
+            "lean": "Nat",
+            "name": "nat"
+          }
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          null
+        ],
+        "result": {
+          "arguments": [
+            {
+              "arguments": [],
+              "constructor": null,
+              "definition": "ZeroPayloadCheckedRecords.Witness",
+              "fields": [],
+              "kind": "checked-record"
+            }
+          ],
+          "kind": "array"
+        }
+      },
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": true,
+          "unbox": "lean_unbox"
+        },
+        "element": {
+          "abi": {
+            "box": "lean_box",
+            "cType": "lean_object*",
+            "heap": false,
+            "unbox": "lean_unbox"
+          },
+          "constructor": "ZeroPayloadCheckedRecords.Witness.mk",
+          "erased": [
+            "positive"
+          ],
+          "fields": [],
+          "kind": "record",
+          "lean": "ZeroPayloadCheckedRecords.Witness",
+          "name": "ZeroPayloadCheckedRecords.Witness"
+        },
+        "kind": "array"
+      },
+      "sourcePosition": {
+        "endColumn": 62,
+        "endLine": 46,
+        "path": "ZeroPayloadCheckedRecords.lean",
+        "startColumn": 0,
+        "startLine": 43
+      },
+      "symbol": "lb_77f288f49ad4518952eca999",
+      "theoremReferences": []
+    }
+  ],
+  "pointerBits": 32,
+  "profile": "php-wasm-copied-v1",
+  "schemaVersion": 3,
+  "sourceIdentity": {
+    "exportConfigurationSha256": "2d771930235dd3ccb4c5dd9261b0f2e96fdbeaf045ec272def1b585f11c1f7aa",
+    "exportConfigurationSource": "{\n  \"modules\": [\n    \"ZeroPayloadCheckedRecords\"\n  ],\n  \"schemaVersion\": 1,\n  \"targets\": {\n    \"php-wasm\": {\n      \"composer\": {\n        \"name\": \"lean-bridge-zeropayloadcheckedrecords/wasm\",\n        \"version\": \"1.0.0\"\n      },\n      \"npm\": {\n        \"name\": \"lean-bridge-zeropayloadcheckedrecords-wasm\",\n        \"version\": \"1.0.0\"\n      }\n    }\n  }\n}\n",
+    "extractorSha256": "00f8ce7a3888339cdb1c36b0dce3d8bc9d4c650ea18c7a4926c2d29d4690443a",
+    "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+    "leanCompilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+    "leanVersion": "4.32.2",
+    "modules": [
+      {
+        "interface": {
+          "bytes": 117360,
+          "interfaceSha256": "fec3e4a8ca143e6f6046b35b54fd5be2337ce01f53aca3d067a232c15318f4ba",
+          "sha256": "ccf3a4969a3b5c0652ea94d1ade571215fb0604d0069d276829c155e728dab28"
+        },
+        "module": "ZeroPayloadCheckedRecords",
+        "source": {
+          "bytes": 3086,
+          "path": "ZeroPayloadCheckedRecords.lean",
+          "sha256": "8a473f6795e884444a417542ff9649d37504c425f62136f35d2c081b25d56560"
+        }
+      }
+    ],
+    "request": {
+      "arities": [],
+      "contracts": {
+        "ZeroPayloadCheckedRecords.absentCount": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "ZeroPayloadCheckedRecords.mkAbsent"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "ZeroPayloadCheckedRecords.markCount": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "cases": [
+                  {
+                    "fields": [],
+                    "name": "blank"
+                  },
+                  {
+                    "fields": [
+                      {
+                        "name": "witness",
+                        "refinement": {
+                          "constructor": "ZeroPayloadCheckedRecords.mkWitness",
+                          "fields": [],
+                          "kind": "checked-record",
+                          "name": "ZeroPayloadCheckedRecords.Witness"
+                        }
+                      }
+                    ],
+                    "name": "marked"
+                  }
+                ],
+                "kind": "variant",
+                "name": "ZeroPayloadCheckedRecords.Mark"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "ZeroPayloadCheckedRecords.tokenTag": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "ZeroPayloadCheckedRecords.mkToken"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "ZeroPayloadCheckedRecords.witnessCount": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "ZeroPayloadCheckedRecords.mkWitness"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        }
+      },
+      "exportModules": [
+        "ZeroPayloadCheckedRecords"
+      ],
+      "exports": [
+        "ZeroPayloadCheckedRecords.absentCount",
+        "ZeroPayloadCheckedRecords.markCount",
+        "ZeroPayloadCheckedRecords.markerCount",
+        "ZeroPayloadCheckedRecords.maybeWitness",
+        "ZeroPayloadCheckedRecords.produceMark",
+        "ZeroPayloadCheckedRecords.produceMarker",
+        "ZeroPayloadCheckedRecords.produceToken",
+        "ZeroPayloadCheckedRecords.produceWitness",
+        "ZeroPayloadCheckedRecords.tokenTag",
+        "ZeroPayloadCheckedRecords.witnessCount",
+        "ZeroPayloadCheckedRecords.witnesses"
+      ],
+      "metadata": {
+        "invocationIdentitySha256": "d58d9606641feee0e7a682dd019fd753b9b572fed2275a7e5ab3461526d9e088",
+        "modules": [
+          {
+            "interfaceSha256": "fec3e4a8ca143e6f6046b35b54fd5be2337ce01f53aca3d067a232c15318f4ba",
+            "name": "ZeroPayloadCheckedRecords",
+            "sourcePath": "ZeroPayloadCheckedRecords.lean",
+            "sourceSha256": "8a473f6795e884444a417542ff9649d37504c425f62136f35d2c081b25d56560"
+          }
+        ],
+        "toolchain": "leanprover/lean4:v4.32.2"
+      },
+      "modules": [
+        "ZeroPayloadCheckedRecords"
+      ],
+      "profile": "native-library-v1",
+      "resources": []
+    },
+    "reviewedBindingIr": {
+      "path": "api.binding-ir.json",
+      "schemaVersion": 1,
+      "semanticSha256": "5aab06d568445bd23bfbc67eb7e3867f0fcdb828a16d7f1e2a52aa6f0da08b07",
+      "source": "{\n  \"assurance\": [],\n  \"capabilities\": [],\n  \"component\": {\n    \"id\": \"zeropayloadcheckedrecords@1.0.0\",\n    \"name\": \"zeropayloadcheckedrecords\",\n    \"version\": \"1.0.0\"\n  },\n  \"declarations\": [\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:ZeroPayloadCheckedRecords.witnessCount\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"witnessCount\",\n      \"overloadKey\": \"ZeroPayloadCheckedRecords.witnessCount\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"value0\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"id\": \"lean:ZeroPayloadCheckedRecords.Witness\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"kind\": \"primitive\",\n          \"name\": \"nat\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"ZeroPayloadCheckedRecords.witnessCount\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"constructor\": \"ZeroPayloadCheckedRecords.mkWitness\",\n                \"kind\": \"checked-record\"\n              }\n            ],\n            \"result\": null\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:ZeroPayloadCheckedRecords.absentCount\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"absentCount\",\n      \"overloadKey\": \"ZeroPayloadCheckedRecords.absentCount\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"value0\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"id\": \"lean:ZeroPayloadCheckedRecords.Witness\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"kind\": \"primitive\",\n          \"name\": \"nat\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"ZeroPayloadCheckedRecords.absentCount\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"constructor\": \"ZeroPayloadCheckedRecords.mkAbsent\",\n                \"kind\": \"checked-record\"\n              }\n            ],\n            \"result\": null\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:ZeroPayloadCheckedRecords.tokenTag\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"tokenTag\",\n      \"overloadKey\": \"ZeroPayloadCheckedRecords.tokenTag\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"value0\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"id\": \"lean:ZeroPayloadCheckedRecords.Token\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"kind\": \"primitive\",\n          \"name\": \"unit\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"ZeroPayloadCheckedRecords.tokenTag\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"constructor\": \"ZeroPayloadCheckedRecords.mkToken\",\n                \"kind\": \"checked-record\"\n              }\n            ],\n            \"result\": null\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:ZeroPayloadCheckedRecords.produceWitness\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"produceWitness\",\n      \"overloadKey\": \"ZeroPayloadCheckedRecords.produceWitness\",\n      \"owner\": null,\n      \"parameters\": [],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"id\": \"lean:ZeroPayloadCheckedRecords.Witness\",\n          \"kind\": \"named\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"ZeroPayloadCheckedRecords.produceWitness\",\n        \"extensions\": {},\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:ZeroPayloadCheckedRecords.produceToken\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"produceToken\",\n      \"overloadKey\": \"ZeroPayloadCheckedRecords.produceToken\",\n      \"owner\": null,\n      \"parameters\": [],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"id\": \"lean:ZeroPayloadCheckedRecords.Token\",\n          \"kind\": \"named\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"ZeroPayloadCheckedRecords.produceToken\",\n        \"extensions\": {},\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:ZeroPayloadCheckedRecords.witnesses\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"witnesses\",\n      \"overloadKey\": \"ZeroPayloadCheckedRecords.witnesses\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"value0\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"arguments\": [\n            {\n              \"id\": \"lean:ZeroPayloadCheckedRecords.Witness\",\n              \"kind\": \"named\"\n            }\n          ],\n          \"constructor\": \"array\",\n          \"kind\": \"apply\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"ZeroPayloadCheckedRecords.witnesses\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              null\n            ],\n            \"result\": {\n              \"arguments\": [\n                {\n                  \"constructor\": null,\n                  \"fields\": [],\n                  \"kind\": \"checked-record\",\n                  \"name\": \"ZeroPayloadCheckedRecords.Witness\"\n                }\n              ],\n              \"kind\": \"array\"\n            }\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:ZeroPayloadCheckedRecords.maybeWitness\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"maybeWitness\",\n      \"overloadKey\": \"ZeroPayloadCheckedRecords.maybeWitness\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"value0\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"bool\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"arguments\": [\n            {\n              \"id\": \"lean:ZeroPayloadCheckedRecords.Witness\",\n              \"kind\": \"named\"\n            }\n          ],\n          \"constructor\": \"option\",\n          \"kind\": \"apply\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"ZeroPayloadCheckedRecords.maybeWitness\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              null\n            ],\n            \"result\": {\n              \"arguments\": [\n                {\n                  \"constructor\": null,\n                  \"fields\": [],\n                  \"kind\": \"checked-record\",\n                  \"name\": \"ZeroPayloadCheckedRecords.Witness\"\n                }\n              ],\n              \"kind\": \"option\"\n            }\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:ZeroPayloadCheckedRecords.markerCount\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"markerCount\",\n      \"overloadKey\": \"ZeroPayloadCheckedRecords.markerCount\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"value0\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"id\": \"lean:ZeroPayloadCheckedRecords.Marker\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"kind\": \"primitive\",\n          \"name\": \"nat\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"ZeroPayloadCheckedRecords.markerCount\",\n        \"extensions\": {},\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:ZeroPayloadCheckedRecords.produceMarker\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"produceMarker\",\n      \"overloadKey\": \"ZeroPayloadCheckedRecords.produceMarker\",\n      \"owner\": null,\n      \"parameters\": [],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"id\": \"lean:ZeroPayloadCheckedRecords.Marker\",\n          \"kind\": \"named\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"ZeroPayloadCheckedRecords.produceMarker\",\n        \"extensions\": {},\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:ZeroPayloadCheckedRecords.markCount\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"markCount\",\n      \"overloadKey\": \"ZeroPayloadCheckedRecords.markCount\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"value0\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"id\": \"lean:ZeroPayloadCheckedRecords.Mark\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"kind\": \"primitive\",\n          \"name\": \"nat\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"ZeroPayloadCheckedRecords.markCount\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"cases\": [\n                  {\n                    \"fields\": [],\n                    \"name\": \"blank\"\n                  },\n                  {\n                    \"fields\": [\n                      {\n                        \"name\": \"witness\",\n                        \"refinement\": {\n                          \"constructor\": \"ZeroPayloadCheckedRecords.mkWitness\",\n                          \"fields\": [],\n                          \"kind\": \"checked-record\",\n                          \"name\": \"ZeroPayloadCheckedRecords.Witness\"\n                        }\n                      }\n                    ],\n                    \"name\": \"marked\"\n                  }\n                ],\n                \"kind\": \"variant\",\n                \"name\": \"ZeroPayloadCheckedRecords.Mark\"\n              }\n            ],\n            \"result\": null\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:ZeroPayloadCheckedRecords.produceMark\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"produceMark\",\n      \"overloadKey\": \"ZeroPayloadCheckedRecords.produceMark\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"value0\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"bool\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"id\": \"lean:ZeroPayloadCheckedRecords.Mark\",\n          \"kind\": \"named\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"ZeroPayloadCheckedRecords.produceMark\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              null\n            ],\n            \"result\": {\n              \"cases\": [\n                {\n                  \"fields\": [],\n                  \"name\": \"blank\"\n                },\n                {\n                  \"fields\": [\n                    {\n                      \"name\": \"witness\",\n                      \"refinement\": {\n                        \"constructor\": null,\n                        \"fields\": [],\n                        \"kind\": \"checked-record\",\n                        \"name\": \"ZeroPayloadCheckedRecords.Witness\"\n                      }\n                    }\n                  ],\n                  \"name\": \"marked\"\n                }\n              ],\n              \"kind\": \"variant\",\n              \"name\": \"ZeroPayloadCheckedRecords.Mark\"\n            }\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    }\n  ],\n  \"documentation\": {\n    \"details\": \"\",\n    \"summary\": \"Independent corpus contract.\"\n  },\n  \"errors\": [],\n  \"producers\": [\n    {\n      \"adapter\": \"independent-corpus-contract\",\n      \"adapterVersion\": 1,\n      \"extensions\": {},\n      \"id\": \"corpusReview\",\n      \"tool\": \"Corpus contract review\",\n      \"toolVersion\": \"1\"\n    }\n  ],\n  \"schemaVersion\": 3,\n  \"types\": [\n    {\n      \"assurance\": [],\n      \"callable\": null,\n      \"cases\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"fields\": [],\n      \"host\": null,\n      \"id\": \"lean:ZeroPayloadCheckedRecords.Witness\",\n      \"kind\": \"record\",\n      \"mutability\": \"immutable\",\n      \"name\": \"Witness\",\n      \"representation\": \"copied\",\n      \"resource\": null,\n      \"source\": {\n        \"declaration\": \"ZeroPayloadCheckedRecords.Witness\",\n        \"extensions\": {\n          \"lean-lang.org/erased-proofs\": {\n            \"fields\": [\n              \"positive\"\n            ]\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"target\": null,\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"callable\": null,\n      \"cases\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"fields\": [\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent corpus contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"tag\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"unit\"\n          }\n        }\n      ],\n      \"host\": null,\n      \"id\": \"lean:ZeroPayloadCheckedRecords.Token\",\n      \"kind\": \"record\",\n      \"mutability\": \"immutable\",\n      \"name\": \"Token\",\n      \"representation\": \"copied\",\n      \"resource\": null,\n      \"source\": {\n        \"declaration\": \"ZeroPayloadCheckedRecords.Token\",\n        \"extensions\": {\n          \"lean-lang.org/erased-proofs\": {\n            \"fields\": [\n              \"fresh\"\n            ]\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"target\": null,\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"callable\": null,\n      \"cases\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"fields\": [],\n      \"host\": null,\n      \"id\": \"lean:ZeroPayloadCheckedRecords.Marker\",\n      \"kind\": \"record\",\n      \"mutability\": \"immutable\",\n      \"name\": \"Marker\",\n      \"representation\": \"copied\",\n      \"resource\": null,\n      \"source\": {\n        \"declaration\": \"ZeroPayloadCheckedRecords.Marker\",\n        \"extensions\": {},\n        \"producer\": \"corpusReview\"\n      },\n      \"target\": null,\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"callable\": null,\n      \"cases\": [\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent zero-payload contract.\"\n          },\n          \"fields\": [],\n          \"name\": \"blank\"\n        },\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent zero-payload contract.\"\n          },\n          \"fields\": [\n            {\n              \"documentation\": {\n                \"details\": \"\",\n                \"summary\": \"Independent zero-payload contract.\"\n              },\n              \"mutability\": \"immutable\",\n              \"name\": \"witness\",\n              \"type\": {\n                \"id\": \"lean:ZeroPayloadCheckedRecords.Witness\",\n                \"kind\": \"named\"\n              }\n            }\n          ],\n          \"name\": \"marked\"\n        }\n      ],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"fields\": [],\n      \"host\": null,\n      \"id\": \"lean:ZeroPayloadCheckedRecords.Mark\",\n      \"kind\": \"variant\",\n      \"mutability\": \"immutable\",\n      \"name\": \"Mark\",\n      \"representation\": \"copied\",\n      \"resource\": null,\n      \"source\": {\n        \"declaration\": \"ZeroPayloadCheckedRecords.Mark\",\n        \"extensions\": {},\n        \"producer\": \"corpusReview\"\n      },\n      \"target\": null,\n      \"typeParameters\": []\n    }\n  ]\n}\n",
+      "sourceSha256": "5729dadf55bd74cd38c63e84aa3a0ff278282da2710430e75b835243736377d4"
+    },
+    "sourceNoticesSha256": "7eb517131df5fc14c0addae2f8cf3f0c7b6ebbc55e0b2a0fdf2574f1110563ce",
+    "sourceTreeSha256": "68ce72ee1c2a7453a8b4000d135cb8cb6548fcaa4510a0c7693b9ce62d7e98d5"
+  },
+  "types": [
+    {
+      "abi": {
+        "box": "lean_box",
+        "cType": "lean_object*",
+        "heap": false,
+        "unbox": "lean_unbox"
+      },
+      "constructor": "ZeroPayloadCheckedRecords.Witness.mk",
+      "erased": [
+        "positive"
+      ],
+      "fields": [],
+      "key": "34d3e5dc58186a7e28fe",
+      "kind": "record",
+      "lean": "ZeroPayloadCheckedRecords.Witness",
+      "name": "ZeroPayloadCheckedRecords.Witness"
+    },
+    {
+      "abi": {
+        "box": "lean_box",
+        "cType": "lean_object*",
+        "heap": false,
+        "unbox": "lean_unbox"
+      },
+      "key": "bcb803bc837008bec599",
+      "kind": "primitive",
+      "lean": "Nat",
+      "name": "nat"
+    },
+    {
+      "abi": {
+        "box": "lean_box",
+        "cType": "lean_object*",
+        "heap": false,
+        "unbox": "lean_unbox"
+      },
+      "cases": [
+        {
+          "constructor": "ZeroPayloadCheckedRecords.Mark.blank",
+          "fields": [],
+          "name": "blank"
+        },
+        {
+          "constructor": "ZeroPayloadCheckedRecords.Mark.marked",
+          "fields": [
+            {
+              "name": "witness",
+              "type": {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": false,
+                  "unbox": "lean_unbox"
+                },
+                "constructor": "ZeroPayloadCheckedRecords.Witness.mk",
+                "erased": [
+                  "positive"
+                ],
+                "fields": [],
+                "kind": "record",
+                "lean": "ZeroPayloadCheckedRecords.Witness",
+                "name": "ZeroPayloadCheckedRecords.Witness"
+              }
+            }
+          ],
+          "name": "marked"
+        }
+      ],
+      "key": "fb04270e7e168afb2516",
+      "kind": "variant",
+      "lean": "ZeroPayloadCheckedRecords.Mark",
+      "name": "ZeroPayloadCheckedRecords.Mark"
+    },
+    {
+      "abi": {
+        "box": "lean_box",
+        "cType": "lean_object*",
+        "heap": false,
+        "unbox": "lean_unbox"
+      },
+      "constructor": "ZeroPayloadCheckedRecords.Marker.mk",
+      "fields": [],
+      "key": "c0930e24985d380f1be0",
+      "kind": "record",
+      "lean": "ZeroPayloadCheckedRecords.Marker",
+      "name": "ZeroPayloadCheckedRecords.Marker"
+    },
+    {
+      "abi": {
+        "box": "lean_box",
+        "cType": "uint8_t",
+        "heap": false,
+        "unbox": "lean_unbox"
+      },
+      "key": "4c1bd7bbac2488b31e7f",
+      "kind": "primitive",
+      "lean": "Bool",
+      "name": "bool"
+    },
+    {
+      "abi": {
+        "box": "lean_box",
+        "cType": "lean_object*",
+        "heap": false,
+        "unbox": "lean_unbox"
+      },
+      "element": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": false,
+          "unbox": "lean_unbox"
+        },
+        "constructor": "ZeroPayloadCheckedRecords.Witness.mk",
+        "erased": [
+          "positive"
+        ],
+        "fields": [],
+        "kind": "record",
+        "lean": "ZeroPayloadCheckedRecords.Witness",
+        "name": "ZeroPayloadCheckedRecords.Witness"
+      },
+      "key": "69a9586cb343e910790a",
+      "kind": "option"
+    },
+    {
+      "abi": {
+        "box": "lean_box",
+        "cType": "lean_object*",
+        "heap": false,
+        "unbox": "lean_unbox"
+      },
+      "key": "c6349afd7d22f2e92812",
+      "kind": "primitive",
+      "lean": "Unit",
+      "name": "unit"
+    },
+    {
+      "abi": {
+        "box": "lean_box",
+        "cType": "lean_object*",
+        "heap": false,
+        "unbox": "lean_unbox"
+      },
+      "constructor": "ZeroPayloadCheckedRecords.Token.mk",
+      "erased": [
+        "fresh"
+      ],
+      "fields": [
+        {
+          "name": "tag",
+          "projection": "ZeroPayloadCheckedRecords.Token.tag",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": false,
+              "unbox": "lean_unbox"
+            },
+            "kind": "primitive",
+            "lean": "Unit",
+            "name": "unit"
+          }
+        }
+      ],
+      "key": "57b6486affb0e5f49fdf",
+      "kind": "record",
+      "lean": "ZeroPayloadCheckedRecords.Token",
+      "name": "ZeroPayloadCheckedRecords.Token"
+    },
+    {
+      "abi": {
+        "box": "lean_box",
+        "cType": "lean_object*",
+        "heap": true,
+        "unbox": "lean_unbox"
+      },
+      "element": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": false,
+          "unbox": "lean_unbox"
+        },
+        "constructor": "ZeroPayloadCheckedRecords.Witness.mk",
+        "erased": [
+          "positive"
+        ],
+        "fields": [],
+        "kind": "record",
+        "lean": "ZeroPayloadCheckedRecords.Witness",
+        "name": "ZeroPayloadCheckedRecords.Witness"
+      },
+      "key": "2d5a3c90d023dde89ed1",
+      "kind": "array"
+    }
+  ]
+}

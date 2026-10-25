@@ -1,0 +1,35 @@
+{
+  "changes": [
+    {
+      "after": {
+        "bytes": 5536,
+        "sha256": "39e7fbfb337e2860d6d0ad11e492a081105aae683a4b37a83aa6c1725e44035d"
+      },
+      "before": {
+        "bytes": 4397,
+        "path": "api/jobs/0000.json",
+        "sha256": "138a3d922a4535382eaff4d6ee36467a9c251a4472ea88eedd5c8eb72eebf337"
+      },
+      "path": "api/jobs/0000.json"
+    },
+    {
+      "after": {
+        "bytes": 6087819,
+        "sha256": "a4137b7788ead4020cd7f187169208d014f4c634f6bb5397791e5cea707becaf"
+      },
+      "before": {
+        "bytes": 6087819,
+        "path": "index.json",
+        "sha256": "581b034fd9dc2c8c59b60b571df2c7861bac8eed576d5d39f4cd3f2adf2f97a8"
+      },
+      "path": "index.json"
+    }
+  ],
+  "name": "wrong-job",
+  "refusal": {
+    "code": "ERR_ASSERTION",
+    "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ 'foreign job'\n- 'Produce copied refinement entry artifacts / nominal-full ordinary graph entries'\n",
+    "name": "AssertionError"
+  },
+  "rejected": true
+}

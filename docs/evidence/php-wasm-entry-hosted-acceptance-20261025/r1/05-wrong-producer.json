@@ -1,0 +1,35 @@
+{
+  "changes": [
+    {
+      "after": {
+        "bytes": 15052,
+        "sha256": "552d8b6d1cc02226f15bad5c6a101385de5e177a2b2c94a732bcdb372d431227"
+      },
+      "before": {
+        "bytes": 13584,
+        "path": "api/run.json",
+        "sha256": "128e2737d9a1ba25e07d7be132950352feda29caa5d079c4a887ca3ee1bcc068"
+      },
+      "path": "api/run.json"
+    },
+    {
+      "after": {
+        "bytes": 6087819,
+        "sha256": "92879fe82d2912ec956fe2c66a0dfc84c00db55e578a89d87cbd5bbfd07d176a"
+      },
+      "before": {
+        "bytes": 6087819,
+        "path": "index.json",
+        "sha256": "581b034fd9dc2c8c59b60b571df2c7861bac8eed576d5d39f4cd3f2adf2f97a8"
+      },
+      "path": "index.json"
+    }
+  ],
+  "name": "wrong-producer",
+  "refusal": {
+    "code": "ERR_ASSERTION",
+    "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ 'ci/php-wasm-refinement-entry/a003269808c43a2a3a509a23c8a8ab8def07b610'\n- 'ci/php-wasm-refinement-entry/0000000000000000000000000000000000000000'\n",
+    "name": "AssertionError"
+  },
+  "rejected": true
+}

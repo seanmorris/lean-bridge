@@ -1,0 +1,110 @@
+{
+  "edits": [
+    {
+      "current": "@[noinline, export lb_zero_payload_result_only_probe_source_produceMark]\ndef produceMark",
+      "offset": 2155,
+      "previous": "@[noinline] def produceMark"
+    },
+    {
+      "current": "@[noinline, export lb_zero_payload_result_only_probe_source_produceMarker]\ndef produceMarker",
+      "offset": 1914,
+      "previous": "@[noinline] def produceMarker"
+    },
+    {
+      "current": "@[noinline, export lb_zero_payload_result_only_probe_source_maybeWitness]\ndef maybeWitness",
+      "offset": 1656,
+      "previous": "@[noinline] def maybeWitness"
+    },
+    {
+      "current": "@[noinline, export lb_zero_payload_result_only_probe_source_witnesses]\ndef witnesses",
+      "offset": 1534,
+      "previous": "@[noinline] def witnesses"
+    },
+    {
+      "current": "@[noinline, export lb_zero_payload_result_only_probe_source_produceToken]\ndef produceToken",
+      "offset": 1406,
+      "previous": "@[noinline] def produceToken"
+    },
+    {
+      "current": "@[noinline, export lb_zero_payload_result_only_probe_source_produceWitness]\ndef produceWitness",
+      "offset": 1344,
+      "previous": "@[noinline] def produceWitness"
+    },
+    {
+      "current": "@[noinline, export lb_zero_payload_result_only_probe_constructor_mkAbsent]\ndef mkAbsent",
+      "offset": 897,
+      "previous": "@[noinline] def mkAbsent"
+    },
+    {
+      "current": "@[noinline, export lb_zero_payload_result_only_probe_constructor_mkToken]\ndef mkToken",
+      "offset": 729,
+      "previous": "@[noinline] def mkToken"
+    },
+    {
+      "current": "@[noinline, export lb_zero_payload_result_only_probe_constructor_mkWitness]\ndef mkWitness",
+      "offset": 660,
+      "previous": "@[noinline] def mkWitness"
+    }
+  ],
+  "entries": [
+    {
+      "kind": "constructor",
+      "label": "ZeroPayloadCheckedRecords.mkWitness",
+      "symbol": "lb_zero_payload_result_only_probe_constructor_mkWitness"
+    },
+    {
+      "kind": "constructor",
+      "label": "ZeroPayloadCheckedRecords.mkToken",
+      "symbol": "lb_zero_payload_result_only_probe_constructor_mkToken"
+    },
+    {
+      "kind": "constructor",
+      "label": "ZeroPayloadCheckedRecords.mkAbsent",
+      "symbol": "lb_zero_payload_result_only_probe_constructor_mkAbsent"
+    },
+    {
+      "kind": "source",
+      "label": "ZeroPayloadCheckedRecords.produceWitness",
+      "symbol": "lb_zero_payload_result_only_probe_source_produceWitness"
+    },
+    {
+      "kind": "source",
+      "label": "ZeroPayloadCheckedRecords.produceToken",
+      "symbol": "lb_zero_payload_result_only_probe_source_produceToken"
+    },
+    {
+      "kind": "source",
+      "label": "ZeroPayloadCheckedRecords.witnesses",
+      "symbol": "lb_zero_payload_result_only_probe_source_witnesses"
+    },
+    {
+      "kind": "source",
+      "label": "ZeroPayloadCheckedRecords.maybeWitness",
+      "symbol": "lb_zero_payload_result_only_probe_source_maybeWitness"
+    },
+    {
+      "kind": "source",
+      "label": "ZeroPayloadCheckedRecords.produceMarker",
+      "symbol": "lb_zero_payload_result_only_probe_source_produceMarker"
+    },
+    {
+      "kind": "source",
+      "label": "ZeroPayloadCheckedRecords.produceMark",
+      "symbol": "lb_zero_payload_result_only_probe_source_produceMark"
+    }
+  ],
+  "entryForms": {
+    "lb_zero_payload_result_only_probe_constructor_mkAbsent": "global",
+    "lb_zero_payload_result_only_probe_constructor_mkToken": "function",
+    "lb_zero_payload_result_only_probe_constructor_mkWitness": "global",
+    "lb_zero_payload_result_only_probe_source_maybeWitness": "function",
+    "lb_zero_payload_result_only_probe_source_produceMark": "function",
+    "lb_zero_payload_result_only_probe_source_produceMarker": "global",
+    "lb_zero_payload_result_only_probe_source_produceToken": "global",
+    "lb_zero_payload_result_only_probe_source_produceWitness": "global",
+    "lb_zero_payload_result_only_probe_source_witnesses": "function"
+  },
+  "originalSha256": "ec380a8846fdb502045f3a17e7593b95554a54a1045fa83a165af9dd4f7de1d8",
+  "probeSha256": "1a1a4a85ba79c2a6988b4da1a0a48b18fc629ea4349e8ae21b9bf1335cac5189",
+  "source": "namespace ZeroPayloadCheckedRecords\n\n/-- A proof-only checked record: no runtime field, one erased proof. -/\nstructure Witness : Type where\n  positive : 0 < 1\n\n/-- A Unit-bearing checked record: one runtime `Unit` field beside an erased proof. -/\nstructure Token : Type where\n  tag : Unit\n  fresh : True\n\n/-- A plain empty record: no fields and no proofs, so it is never a checked record. -/\nstructure Marker : Type where\n\n/-- A variant whose active branch carries a proof-only checked record. -/\ninductive Mark : Type where\n  | blank\n  | marked (witness : Witness)\n\n/-- Checked constructors: a nullary constructor is the only proof source for a `Witness`. -/\n@[noinline, export lb_zero_payload_result_only_probe_constructor_mkWitness]\ndef mkWitness : Option Witness := some ⟨Nat.zero_lt_one⟩\n@[noinline, export lb_zero_payload_result_only_probe_constructor_mkToken]\ndef mkToken (tag : Unit) : Option Token := some ⟨tag, trivial⟩\n/-- A refusing nullary constructor: the host's empty carrier is rejected at the boundary. -/\n@[noinline, export lb_zero_payload_result_only_probe_constructor_mkAbsent]\ndef mkAbsent : Option Witness := none\n\n/-- Count a checked proof-only input. -/\n@[noinline] def witnessCount (value : Witness) : Nat := 1\n/-- The same input site under the refusing constructor. -/\n@[noinline] def absentCount (value : Witness) : Nat := 0\n/-- Read the unit tag of a checked token input. -/\n@[noinline] def tokenTag (value : Token) : Unit := value.tag\n/-- Lean produces the proof; the host receives the empty carrier. -/\n@[noinline, export lb_zero_payload_result_only_probe_source_produceWitness]\ndef produceWitness : Witness := ⟨Nat.zero_lt_one⟩\n@[noinline, export lb_zero_payload_result_only_probe_source_produceToken]\ndef produceToken : Token := ⟨(), trivial⟩\n/-- Containers of zero-payload results keep their length and presence. -/\n@[noinline, export lb_zero_payload_result_only_probe_source_witnesses]\ndef witnesses (count : Nat) : Array Witness :=\n  (List.replicate count (⟨Nat.zero_lt_one⟩ : Witness)).toArray\n@[noinline, export lb_zero_payload_result_only_probe_source_maybeWitness]\ndef maybeWitness (present : Bool) : Option Witness :=\n  if present then some ⟨Nat.zero_lt_one⟩ else none\n/-- A plain empty record crosses as an ordinary copied record in both directions. -/\n@[noinline] def markerCount (value : Marker) : Nat := 0\n@[noinline, export lb_zero_payload_result_only_probe_source_produceMarker]\ndef produceMarker : Marker := Marker.mk\n/-- Both variant branches remain distinct after the nested proof has been erased. -/\n@[noinline] def markCount (value : Mark) : Nat :=\n  match value with\n  | .blank => 0\n  | .marked _ => 1\n@[noinline, export lb_zero_payload_result_only_probe_source_produceMark]\ndef produceMark (active : Bool) : Mark :=\n  if active then .marked ⟨Nat.zero_lt_one⟩ else .blank\n\nend ZeroPayloadCheckedRecords\n"
+}

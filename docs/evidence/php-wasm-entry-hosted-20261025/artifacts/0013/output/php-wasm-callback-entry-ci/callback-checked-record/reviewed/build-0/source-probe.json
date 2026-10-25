@@ -1,0 +1,147 @@
+{
+  "closureEdits": [
+    {
+      "current": "@[noinline, export lb_callback_record_closure_makeClosure]\ndef makeClosureProbeBody (value : Interval) : Nat := value.hi - value.lo\n\ndef makeClosure (_seed : Nat) : Interval → Nat := makeClosureProbeBody",
+      "offset": 1147,
+      "previous": "def makeClosure (_seed : Nat) : Interval → Nat :=\n  fun value => value.hi - value.lo"
+    },
+    {
+      "current": "@[noinline, export lb_callback_record_closure_makeMixedClosure]\ndef makeMixedClosureProbeBody (_marker : Nat) (value : Interval) : Interval := value\n\ndef makeMixedClosure (_seed : Nat) : Nat → Interval → Interval := makeMixedClosureProbeBody",
+      "offset": 1638,
+      "previous": "def makeMixedClosure (_seed : Nat) : Nat → Interval → Interval :=\n  fun _marker value => value"
+    },
+    {
+      "current": "@[noinline, export lb_callback_record_closure_makeNestedClosure]\ndef makeNestedClosureProbeBody (value : Weighted) : Nat := value.limit - value.weight.val\n\ndef makeNestedClosure (_seed : Nat) : Weighted → Nat := makeNestedClosureProbeBody",
+      "offset": 2579,
+      "previous": "def makeNestedClosure (_seed : Nat) : Weighted → Nat :=\n  fun value => value.limit - value.weight.val"
+    }
+  ],
+  "entries": [
+    {
+      "kind": "constructor",
+      "label": "CallbackCheckedRecords.mkInterval",
+      "symbol": "lb_callback_record_probe_constructor_mkInterval"
+    },
+    {
+      "kind": "constructor",
+      "label": "CallbackCheckedRecords.checkedPositive",
+      "symbol": "lb_callback_record_probe_constructor_checkedPositive"
+    },
+    {
+      "kind": "constructor",
+      "label": "CallbackCheckedRecords.mkWeighted",
+      "symbol": "lb_callback_record_probe_constructor_mkWeighted"
+    },
+    {
+      "kind": "source",
+      "label": "CallbackCheckedRecords.callHost",
+      "symbol": "lb_callback_record_probe_source_callHost"
+    },
+    {
+      "kind": "source",
+      "label": "CallbackCheckedRecords.callHostMixed",
+      "symbol": "lb_callback_record_probe_source_callHostMixed"
+    },
+    {
+      "kind": "source",
+      "label": "CallbackCheckedRecords.callHostNested",
+      "symbol": "lb_callback_record_probe_source_callHostNested"
+    },
+    {
+      "kind": "source",
+      "label": "CallbackCheckedRecords.makeClosure",
+      "symbol": "lb_callback_record_probe_source_makeClosure"
+    },
+    {
+      "kind": "source",
+      "label": "CallbackCheckedRecords.makeMixedClosure",
+      "symbol": "lb_callback_record_probe_source_makeMixedClosure"
+    },
+    {
+      "kind": "source",
+      "label": "CallbackCheckedRecords.makeNestedClosure",
+      "symbol": "lb_callback_record_probe_source_makeNestedClosure"
+    },
+    {
+      "kind": "closure",
+      "label": "CallbackCheckedRecords.makeClosure:body",
+      "symbol": "lb_callback_record_closure_makeClosure"
+    },
+    {
+      "kind": "closure",
+      "label": "CallbackCheckedRecords.makeMixedClosure:body",
+      "symbol": "lb_callback_record_closure_makeMixedClosure"
+    },
+    {
+      "kind": "closure",
+      "label": "CallbackCheckedRecords.makeNestedClosure:body",
+      "symbol": "lb_callback_record_closure_makeNestedClosure"
+    }
+  ],
+  "entryForms": {
+    "lb_callback_record_closure_makeClosure": "function",
+    "lb_callback_record_closure_makeMixedClosure": "function",
+    "lb_callback_record_closure_makeNestedClosure": "function",
+    "lb_callback_record_probe_constructor_checkedPositive": "function",
+    "lb_callback_record_probe_constructor_mkInterval": "function",
+    "lb_callback_record_probe_constructor_mkWeighted": "function",
+    "lb_callback_record_probe_source_callHost": "function",
+    "lb_callback_record_probe_source_callHostMixed": "function",
+    "lb_callback_record_probe_source_callHostNested": "function",
+    "lb_callback_record_probe_source_makeClosure": "function",
+    "lb_callback_record_probe_source_makeMixedClosure": "function",
+    "lb_callback_record_probe_source_makeNestedClosure": "function"
+  },
+  "family": "callback-checked-record",
+  "originalSha256": "8e6babb2f13a48d39de6158814b75f54c59173780e1310f2fa521cdd110909b7",
+  "path": "tests/fixtures/onboarding/callback-checked-records/CallbackCheckedRecords.lean",
+  "probeSha256": "296d4751607a871561122277ccf1cfbcda1ac8c8e7f0a2c53b62980f93390c93",
+  "source": "namespace CallbackCheckedRecords\n\n/-- A closed interval: the proof relates the two payload fields. -/\nstructure Interval where\n  lo : Nat\n  hi : Nat\n  ordered : lo ≤ hi\n\nabbrev Positive := { value : Nat // 0 < value }\n\n/-- A proof-backed record whose first payload field is itself a checked Subtype. -/\nstructure Weighted where\n  weight : Positive\n  limit : Nat\n  within : weight.val ≤ limit\n\n/-- Checked constructors: the only way a host payload becomes a checked record. -/\n@[noinline, export lb_callback_record_probe_constructor_mkInterval]\ndef mkInterval (lo hi : Nat) : Option Interval :=\n  if h : lo ≤ hi then some ⟨lo, hi, h⟩ else none\n\n@[noinline, export lb_callback_record_probe_constructor_checkedPositive]\ndef checkedPositive (value : Nat) : Option Positive :=\n  if bound : 0 < value then some ⟨value, bound⟩ else none\n\n@[noinline, export lb_callback_record_probe_constructor_mkWeighted]\ndef mkWeighted (weight : Positive) (limit : Nat) : Option Weighted :=\n  if h : weight.val ≤ limit then some ⟨weight, limit, h⟩ else none\n\n/-- The host receives a proof-backed interval and must construct the one it replies with. -/\n@[noinline, export lb_callback_record_probe_source_callHost]\ndef callHost (callback : Interval → Interval) : Nat :=\n  let reply := callback ⟨1, 3, by decide⟩\n  reply.hi - reply.lo\n\n/-- A leased closure constructs its interval argument before running; its result is plain. -/\n@[noinline, export lb_callback_record_closure_makeClosure]\ndef makeClosureProbeBody (value : Interval) : Nat := value.hi - value.lo\n\n@[noinline, export lb_callback_record_probe_source_makeClosure]\ndef makeClosure (_seed : Nat) : Interval → Nat := makeClosureProbeBody\n\n/-- A plain marker before the checked record in both directions. -/\n@[noinline, export lb_callback_record_probe_source_callHostMixed]\ndef callHostMixed (callback : Nat → Interval → Interval) : Nat :=\n  let reply := callback 7 ⟨1, 3, by decide⟩\n  reply.hi - reply.lo\n\n/-- A leased closure with a checked argument and a Lean-produced interval result. -/\n@[noinline, export lb_callback_record_closure_makeMixedClosure]\ndef makeMixedClosureProbeBody (_marker : Nat) (value : Interval) : Interval := value\n\n@[noinline, export lb_callback_record_probe_source_makeMixedClosure]\ndef makeMixedClosure (_seed : Nat) : Nat → Interval → Interval := makeMixedClosureProbeBody\n\n/-- Checked records inside structural containers keep their direction; the export itself\nreturns a plain value so only the callback carries records. -/\ndef callHostContainer\n    (callback : Option Interval → Except String (Option Interval)) : Nat :=\n  match callback none with\n  | .ok (some reply) => reply.hi - reply.lo\n  | .ok none => 0\n  | .error _ => 1\n\ndef makeContainerClosure (_seed : Nat) : Array (Option Interval) → Option Interval :=\n  fun _values => none\n\n/-- A refined payload field keeps its own Subtype direction below the record. -/\n@[noinline, export lb_callback_record_probe_source_callHostNested]\ndef callHostNested (callback : Weighted → Weighted) : Nat :=\n  let reply := callback ⟨⟨1, by decide⟩, 2, by decide⟩\n  reply.limit - reply.weight.val\n\n@[noinline, export lb_callback_record_closure_makeNestedClosure]\ndef makeNestedClosureProbeBody (value : Weighted) : Nat := value.limit - value.weight.val\n\n@[noinline, export lb_callback_record_probe_source_makeNestedClosure]\ndef makeNestedClosure (_seed : Nat) : Weighted → Nat := makeNestedClosureProbeBody\n\nend CallbackCheckedRecords\n",
+  "sourceEdits": [
+    {
+      "current": "@[noinline, export lb_callback_record_probe_source_makeNestedClosure]\ndef makeNestedClosure",
+      "offset": 2735,
+      "previous": "def makeNestedClosure"
+    },
+    {
+      "current": "@[noinline, export lb_callback_record_probe_source_callHostNested]\ndef callHostNested",
+      "offset": 2429,
+      "previous": "def callHostNested"
+    },
+    {
+      "current": "@[noinline, export lb_callback_record_probe_source_makeMixedClosure]\ndef makeMixedClosure",
+      "offset": 1788,
+      "previous": "def makeMixedClosure"
+    },
+    {
+      "current": "@[noinline, export lb_callback_record_probe_source_callHostMixed]\ndef callHostMixed",
+      "offset": 1420,
+      "previous": "def callHostMixed"
+    },
+    {
+      "current": "@[noinline, export lb_callback_record_probe_source_makeClosure]\ndef makeClosure",
+      "offset": 1280,
+      "previous": "def makeClosure"
+    },
+    {
+      "current": "@[noinline, export lb_callback_record_probe_source_callHost]\ndef callHost",
+      "offset": 933,
+      "previous": "def callHost"
+    },
+    {
+      "current": "@[noinline, export lb_callback_record_probe_constructor_mkWeighted]\ndef mkWeighted",
+      "offset": 702,
+      "previous": "def mkWeighted"
+    },
+    {
+      "current": "@[noinline, export lb_callback_record_probe_constructor_checkedPositive]\ndef checkedPositive",
+      "offset": 588,
+      "previous": "def checkedPositive"
+    },
+    {
+      "current": "@[noinline, export lb_callback_record_probe_constructor_mkInterval]\ndef mkInterval",
+      "offset": 476,
+      "previous": "@[noinline] def mkInterval"
+    }
+  ]
+}

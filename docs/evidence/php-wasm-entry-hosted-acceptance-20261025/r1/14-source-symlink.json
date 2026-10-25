@@ -1,0 +1,22 @@
+{
+  "changes": [
+    {
+      "after": {
+        "kind": "symlink"
+      },
+      "before": {
+        "bytes": 26369339,
+        "path": "sources/producer/0000.part",
+        "sha256": "48add54f5f0790d004d80c723729ccd075b20b8f91df8c818bb20f96a3672143"
+      },
+      "path": "sources/producer/0000.part"
+    }
+  ],
+  "name": "source-symlink",
+  "refusal": {
+    "code": "ERR_ASSERTION",
+    "message": "canonical archive path\n+ actual - expected\n\n+ '/app/build/worktrees/codex-vo1824-dispatch/docs/evidence/php-wasm-entry-hosted-20261025/sources/producer/0000.part'\n- '/tmp/lean-php-entry-real-controls-qqqTjz/archive/sources/producer/0000.part'\n",
+    "name": "AssertionError"
+  },
+  "rejected": true
+}

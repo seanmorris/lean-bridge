@@ -1,0 +1,10 @@
+{
+  "changes": [],
+  "name": "wrong-source-checkout",
+  "refusal": {
+    "code": "ERR_ASSERTION",
+    "message": "exact original producer checkout\n+ actual - expected\n\n+ '2e00c60aa4555377b4f17eb1f5eb2d2a812596c2'\n- 'a003269808c43a2a3a509a23c8a8ab8def07b610'\n",
+    "name": "AssertionError"
+  },
+  "rejected": true
+}

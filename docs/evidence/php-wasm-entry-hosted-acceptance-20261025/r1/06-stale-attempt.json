@@ -1,0 +1,35 @@
+{
+  "changes": [
+    {
+      "after": {
+        "bytes": 5604,
+        "sha256": "9758d1482719804dc11fb551404eaa591cc5fe53e9df58d7aedd7f11d439fa7e"
+      },
+      "before": {
+        "bytes": 4397,
+        "path": "api/jobs/0000.json",
+        "sha256": "138a3d922a4535382eaff4d6ee36467a9c251a4472ea88eedd5c8eb72eebf337"
+      },
+      "path": "api/jobs/0000.json"
+    },
+    {
+      "after": {
+        "bytes": 6087819,
+        "sha256": "79c476dd543c4a3ab1d188dec8d2ff380a64fb19c09c6cea7750ca73ed1c2896"
+      },
+      "before": {
+        "bytes": 6087819,
+        "path": "index.json",
+        "sha256": "581b034fd9dc2c8c59b60b571df2c7861bac8eed576d5d39f4cd3f2adf2f97a8"
+      },
+      "path": "index.json"
+    }
+  ],
+  "name": "stale-attempt",
+  "refusal": {
+    "code": "ERR_ASSERTION",
+    "message": "Expected values to be strictly equal:\n\n2 !== 1\n",
+    "name": "AssertionError"
+  },
+  "rejected": true
+}

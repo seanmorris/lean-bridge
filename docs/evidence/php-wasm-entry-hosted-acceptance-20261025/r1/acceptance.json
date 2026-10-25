@@ -1,0 +1,55 @@
+{
+  "archiveIndex": {
+    "bytes": 6087819,
+    "sha256": "581b034fd9dc2c8c59b60b571df2c7861bac8eed576d5d39f4cd3f2adf2f97a8"
+  },
+  "checkerCommit": "2e00c60aa4555377b4f17eb1f5eb2d2a812596c2",
+  "controls": [
+    "malformed-index",
+    "missing-artifact",
+    "reordered-artifacts",
+    "duplicate-artifact",
+    "wrong-producer",
+    "stale-attempt",
+    "wrong-job",
+    "expired-artifact",
+    "failed-upload",
+    "zip-tamper",
+    "output-tamper",
+    "source-zip-tamper",
+    "source-manifest-tamper",
+    "source-symlink",
+    "extra-member",
+    "forged-replay-summary",
+    "wrong-source-checkout"
+  ],
+  "kind": "php-wasm-entry-real-archive-controls-v1",
+  "negativeControls": 17,
+  "nodeVersion": "22.23.2",
+  "originalBytesUnchanged": true,
+  "originalManifest": {
+    "bytes": 312707,
+    "path": "original-files.json",
+    "sha256": "c18c392cbc3b12d84f815a81c26583f537e8fde245fef0881207c7a14c8a4a1a"
+  },
+  "positive": {
+    "bytes": 1028,
+    "path": "positive.json",
+    "sha256": "1b52e5422ba2f67631d5784325d71c39f9e6ec17c71e19902841282da0e17659"
+  },
+  "producerCommit": "a003269808c43a2a3a509a23c8a8ab8def07b610",
+  "restored": {
+    "bytes": 1028,
+    "path": "positive-restored.json",
+    "sha256": "1b52e5422ba2f67631d5784325d71c39f9e6ec17c71e19902841282da0e17659"
+  },
+  "runAttempt": 1,
+  "runId": 40144947516,
+  "schemaVersion": 1,
+  "scope": "separate-instrumented-probe",
+  "source": {
+    "bytes": 12741,
+    "path": "docs/evidence/php-wasm-entry-hosted-acceptance-20261025/acceptance-runner.mjs",
+    "sha256": "2ca931941295c8cc8ad02fc88222759374c35069e0e4ce5a33c5122a9bbce908"
+  }
+}

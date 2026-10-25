@@ -1,0 +1,26 @@
+{
+  "command": [
+    "/usr/bin/node",
+    "--max-old-space-size=512",
+    "/app/build/worktrees/codex-vo1824-dispatch/scripts/archive-php-wasm-refinement-entry-hosted.mjs",
+    "--selection",
+    "/tmp/vo2061-complete-inputs-i5l6vC/selection.json",
+    "--output",
+    "/app/build/worktrees/codex-vo1824-dispatch/docs/evidence/php-wasm-entry-hosted-20261025",
+    "--producer-checkout",
+    "/app/build/worktrees/vo2061-producer-kreTbG"
+  ],
+  "completed": "2026-10-25T03:29:34.066Z",
+  "cwd": "/app/build/worktrees/codex-vo1824-dispatch",
+  "nodeVersion": "22.23.2",
+  "result": {
+    "bytes": 1028,
+    "path": "capture.json",
+    "sha256": "1b52e5422ba2f67631d5784325d71c39f9e6ec17c71e19902841282da0e17659"
+  },
+  "runnerSha256": "25ee42875910666046cbbbc0368a1dc34eb15527f6344f98d1ae05ba6416fc5d",
+  "schemaVersion": 1,
+  "scope": "complete-capture-execution",
+  "started": "2026-10-25T03:28:12.053Z",
+  "stderr": ""
+}

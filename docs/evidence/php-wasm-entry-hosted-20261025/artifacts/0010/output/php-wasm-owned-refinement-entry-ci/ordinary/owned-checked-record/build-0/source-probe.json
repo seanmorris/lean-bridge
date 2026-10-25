@@ -1,0 +1,123 @@
+{
+  "edits": [
+    {
+      "current": "@[noinline, export lb_owned_entry_checked_record_source_pairClaim]\ndef pairClaim",
+      "offset": 2584,
+      "previous": "def pairClaim"
+    },
+    {
+      "current": "@[noinline, export lb_owned_entry_checked_record_source_echoGrant]\ndef echoGrant",
+      "offset": 2106,
+      "previous": "def echoGrant"
+    },
+    {
+      "current": "@[noinline, export lb_owned_entry_checked_record_source_transferClaim]\ndef transferClaim",
+      "offset": 1989,
+      "previous": "def transferClaim"
+    },
+    {
+      "current": "@[noinline, export lb_owned_entry_checked_record_source_echoClaim]\ndef echoClaim",
+      "offset": 1814,
+      "previous": "def echoClaim"
+    },
+    {
+      "current": "@[noinline, export lb_owned_entry_checked_record_source_echoBooking]\ndef echoBooking",
+      "offset": 1597,
+      "previous": "def echoBooking"
+    },
+    {
+      "current": "@[noinline, export lb_owned_entry_checked_record_source_newTicket]\ndef newTicket",
+      "offset": 1387,
+      "previous": "def newTicket"
+    },
+    {
+      "current": "@[noinline, export lb_owned_entry_checked_record_constructor_mkGrant]\ndef mkGrant",
+      "offset": 1229,
+      "previous": "def mkGrant"
+    },
+    {
+      "current": "@[noinline, export lb_owned_entry_checked_record_constructor_checkedPositive]\ndef checkedPositive",
+      "offset": 1018,
+      "previous": "def checkedPositive"
+    },
+    {
+      "current": "@[noinline, export lb_owned_entry_checked_record_constructor_mkClaim]\ndef mkClaim",
+      "offset": 737,
+      "previous": "@[noinline] def mkClaim"
+    },
+    {
+      "current": "@[noinline, export lb_owned_entry_checked_record_constructor_mkWindow]\ndef mkWindow",
+      "offset": 282,
+      "previous": "@[noinline] def mkWindow"
+    }
+  ],
+  "entries": [
+    {
+      "kind": "constructor",
+      "label": "OwnedCheckedRecords.mkWindow",
+      "symbol": "lb_owned_entry_checked_record_constructor_mkWindow"
+    },
+    {
+      "kind": "constructor",
+      "label": "OwnedCheckedRecords.mkClaim",
+      "symbol": "lb_owned_entry_checked_record_constructor_mkClaim"
+    },
+    {
+      "kind": "constructor",
+      "label": "OwnedCheckedRecords.checkedPositive",
+      "symbol": "lb_owned_entry_checked_record_constructor_checkedPositive"
+    },
+    {
+      "kind": "constructor",
+      "label": "OwnedCheckedRecords.mkGrant",
+      "symbol": "lb_owned_entry_checked_record_constructor_mkGrant"
+    },
+    {
+      "kind": "source",
+      "label": "OwnedCheckedRecords.newTicket",
+      "symbol": "lb_owned_entry_checked_record_source_newTicket"
+    },
+    {
+      "kind": "source",
+      "label": "OwnedCheckedRecords.echoBooking",
+      "symbol": "lb_owned_entry_checked_record_source_echoBooking"
+    },
+    {
+      "kind": "source",
+      "label": "OwnedCheckedRecords.echoClaim",
+      "symbol": "lb_owned_entry_checked_record_source_echoClaim"
+    },
+    {
+      "kind": "source",
+      "label": "OwnedCheckedRecords.transferClaim",
+      "symbol": "lb_owned_entry_checked_record_source_transferClaim"
+    },
+    {
+      "kind": "source",
+      "label": "OwnedCheckedRecords.echoGrant",
+      "symbol": "lb_owned_entry_checked_record_source_echoGrant"
+    },
+    {
+      "kind": "source",
+      "label": "OwnedCheckedRecords.pairClaim",
+      "symbol": "lb_owned_entry_checked_record_source_pairClaim"
+    }
+  ],
+  "entryForms": {
+    "lb_owned_entry_checked_record_constructor_checkedPositive": "function",
+    "lb_owned_entry_checked_record_constructor_mkClaim": "function",
+    "lb_owned_entry_checked_record_constructor_mkGrant": "function",
+    "lb_owned_entry_checked_record_constructor_mkWindow": "function",
+    "lb_owned_entry_checked_record_source_echoBooking": "function",
+    "lb_owned_entry_checked_record_source_echoClaim": "function",
+    "lb_owned_entry_checked_record_source_echoGrant": "function",
+    "lb_owned_entry_checked_record_source_newTicket": "function",
+    "lb_owned_entry_checked_record_source_pairClaim": "function",
+    "lb_owned_entry_checked_record_source_transferClaim": "function"
+  },
+  "family": "owned-checked-record",
+  "originalSha256": "b5c2e10c7ccb18859da182d63d7f664e2cc12d2a748f8943ab3e6dc603ddf57f",
+  "path": "tests/fixtures/onboarding/owned-checked-records/OwnedCheckedRecords.lean",
+  "probeSha256": "7a52ed60e8d66664713b5efd73524fb286407dc4759228da8801ea901c16da66",
+  "source": "namespace OwnedCheckedRecords\n\n/-- An identity resource carried by lease. -/\nstructure Ticket where\n  serial : Nat\n  label : String\n\n/-- Shape A: a copied checked record. The proof relates its two payload fields. -/\nstructure Window where\n  lo : Nat\n  hi : Nat\n  ordered : lo ≤ hi\n\n@[noinline, export lb_owned_entry_checked_record_constructor_mkWindow]\ndef mkWindow (lo hi : Nat) : Option Window :=\n  if h : lo ≤ hi then some ⟨lo, hi, h⟩ else none\n\n/-- An owned aggregate whose copied field is a checked record. -/\nstructure Booking where\n  holder : Ticket\n  window : Window\n\n/-- Shape B: an owned checked record. It holds a resource field and its proof\nrelates a payload field to the resource's serial. -/\nstructure Claim where\n  holder : Ticket\n  quota : Nat\n  bounded : quota ≤ holder.serial\n\n@[noinline, export lb_owned_entry_checked_record_constructor_mkClaim]\ndef mkClaim (holder : Ticket) (quota : Nat) : Option Claim :=\n  if h : quota ≤ holder.serial then some ⟨holder, quota, h⟩ else none\n\n/-- A checked Subtype field below the owned checked record keeps its own direction. -/\nabbrev Positive := { value : Nat // 0 < value }\n\n@[noinline, export lb_owned_entry_checked_record_constructor_checkedPositive]\ndef checkedPositive (value : Nat) : Option Positive :=\n  if h : 0 < value then some ⟨value, h⟩ else none\n\nstructure Grant where\n  holder : Ticket\n  weight : Positive\n  limit : Nat\n  within : weight.val ≤ limit\n\n@[noinline, export lb_owned_entry_checked_record_constructor_mkGrant]\ndef mkGrant (holder : Ticket) (weight : Positive) (limit : Nat) : Option Grant :=\n  if h : weight.val ≤ limit then some ⟨holder, weight, limit, h⟩ else none\n\n@[noinline, export lb_owned_entry_checked_record_source_newTicket]\ndef newTicket (serial : Nat) (label : String) : Ticket := ⟨serial, label⟩\n\ndef serial (ticket : Ticket) : Nat := ticket.serial\n\n/-- Shape A both ways: the input window runs mkWindow, the result projects it. -/\n@[noinline, export lb_owned_entry_checked_record_source_echoBooking]\ndef echoBooking (value : Booking) : Booking := value\n\ndef bookingSpan (value : Booking) : Nat := value.window.hi - value.window.lo\n\n/-- Shape B both ways: the input claim runs mkClaim after the ticket is borrowed. -/\n@[noinline, export lb_owned_entry_checked_record_source_echoClaim]\ndef echoClaim (value : Claim) : Claim := value\n\ndef claimQuota (value : Claim) : Nat := value.quota\n\n/-- Transfer: the claim moves into Lean and comes back as a new lease. -/\n@[noinline, export lb_owned_entry_checked_record_source_transferClaim]\ndef transferClaim (value : Claim) : Claim := value\n\n/-- Nested direction: the Positive field runs before mkGrant. -/\n@[noinline, export lb_owned_entry_checked_record_source_echoGrant]\ndef echoGrant (value : Grant) : Grant := value\n\n/-- Containers keep the direction of their site. -/\ndef echoClaims (values : Array Claim) : Array Claim := values\n\ndef firstClaim (values : Array (Option Claim)) : Option Claim :=\n  (values.findSome? id)\n\n/-- Result-only: Lean produces an owned checked record from a resource. -/\ndef claimFor (holder : Ticket) : Option Claim := mkClaim holder 0\n\n/-- The second constructor can reject after the first owned argument converted. -/\n@[noinline, export lb_owned_entry_checked_record_source_pairClaim]\ndef pairClaim (_booking : Booking) (claim : Claim) : Claim := claim\n\n/-- A host callback receives a proved claim and must return another proved claim. -/\ndef withClaimCallback (claim : Claim) (callback : Claim → Claim) : Claim :=\n  callback claim\n\n/-- A leased Lean closure consumes host claims and returns proved claims. -/\ndef claimClosure : Claim → Claim := id\n\nend OwnedCheckedRecords\n"
+}

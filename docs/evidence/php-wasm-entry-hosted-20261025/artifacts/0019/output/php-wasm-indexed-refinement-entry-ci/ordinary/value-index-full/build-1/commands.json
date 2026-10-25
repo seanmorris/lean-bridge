@@ -1,0 +1,1998 @@
+{
+  "commands": [
+    {
+      "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm/upstream/emscripten/emcc",
+      "originalArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/php/ext",
+        "-c",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/CheckedRecordValueIndices.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/0.o"
+      ],
+      "probeArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/php/ext",
+        "-c",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/ordinary/value-index-full/build-1/c-probes/1-CheckedRecordValueIndices.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/0.o",
+        "-iquote",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/ordinary/value-index-full/build-1=/build/php-wasm-refinement-entry-probe"
+      ]
+    },
+    {
+      "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm/upstream/emscripten/emcc",
+      "originalArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/php/ext",
+        "-c",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/adapter.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/1.o"
+      ],
+      "probeArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/php/ext",
+        "-c",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/ordinary/value-index-full/build-1/c-probes/2-adapter.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/1.o",
+        "-iquote",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/ordinary/value-index-full/build-1=/build/php-wasm-refinement-entry-probe"
+      ]
+    },
+    {
+      "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm/upstream/emscripten/emcc",
+      "originalArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/php/ext",
+        "-c",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/provider.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/2.o"
+      ],
+      "probeArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/php/ext",
+        "-c",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/ordinary/value-index-full/build-1/c-probes/3-provider.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/2.o",
+        "-iquote",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/ordinary/value-index-full/build-1=/build/php-wasm-refinement-entry-probe"
+      ]
+    },
+    {
+      "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm/upstream/emscripten/emcc",
+      "originalArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/php/ext",
+        "-c",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/callbacks.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/3.o"
+      ],
+      "probeArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/php/ext",
+        "-c",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/ordinary/value-index-full/build-1/c-probes/4-callbacks.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/3.o",
+        "-iquote",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/ordinary/value-index-full/build-1=/build/php-wasm-refinement-entry-probe"
+      ]
+    },
+    {
+      "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm/upstream/emscripten/emcc",
+      "originalArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/php/ext",
+        "-c",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/width.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/4.o"
+      ],
+      "probeArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/php/ext",
+        "-c",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/ordinary/value-index-full/build-1/c-probes/5-width.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/4.o",
+        "-iquote",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/ordinary/value-index-full/build-1=/build/php-wasm-refinement-entry-probe"
+      ]
+    },
+    {
+      "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm/upstream/emscripten/emcc",
+      "originalArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/php/ext",
+        "-c",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/binding/src/checkedrecordvalueindices.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/5.o"
+      ],
+      "probeArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/php/ext",
+        "-c",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/ordinary/value-index-full/build-1/c-probes/6-checkedrecordvalueindices.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/5.o",
+        "-iquote",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/binding/src",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/ordinary/value-index-full/build-1=/build/php-wasm-refinement-entry-probe"
+      ]
+    },
+    {
+      "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm/upstream/emscripten/emcc",
+      "originalArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/php/ext",
+        "-c",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/extension/lb_checkedrecordvalueindices_9a59ae38fa66670e.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/6.o"
+      ],
+      "probeArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/php/ext",
+        "-c",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/ordinary/value-index-full/build-1/c-probes/7-lb_checkedrecordvalueindices_9a59ae38fa66670e.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/6.o",
+        "-iquote",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/extension",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/ordinary/value-index-full/build-1=/build/php-wasm-refinement-entry-probe"
+      ]
+    },
+    {
+      "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm/upstream/emscripten/emcc",
+      "originalArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-sSIDE_MODULE=2",
+        "-sEXPORTED_FUNCTIONS=['_get_module']",
+        "-Wl,--no-entry",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/0.o",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/1.o",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/2.o",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/3.o",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/4.o",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/5.o",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/6.o",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime/lib/liblean_bridge_php_wasm_copied_488de83b725bba40a9b4.so",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/lib/php8.4-lb_checkedrecordvalueindices_9a59ae38fa66670e.so"
+      ],
+      "probeArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-sSIDE_MODULE=2",
+        "-sEXPORTED_FUNCTIONS=['_get_module']",
+        "-Wl,--no-entry",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/0.o",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/1.o",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/2.o",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/3.o",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/4.o",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/5.o",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/6.o",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime/lib/liblean_bridge_php_wasm_copied_488de83b725bba40a9b4.so",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/lib/php8.4-lb_checkedrecordvalueindices_9a59ae38fa66670e.so"
+      ]
+    }
+  ],
+  "compiled": [
+    {
+      "definitions": [
+        {
+          "form": "function",
+          "kind": "constructor",
+          "label": "CheckedRecordValueIndices.mkOn",
+          "offset": 3267,
+          "symbol": "lb_value_index_full_probe_constructor_mkOn"
+        },
+        {
+          "form": "function",
+          "kind": "constructor",
+          "label": "CheckedRecordValueIndices.mkOff",
+          "offset": 3741,
+          "symbol": "lb_value_index_full_probe_constructor_mkOff"
+        },
+        {
+          "form": "function",
+          "kind": "constructor",
+          "label": "CheckedRecordValueIndices.mkAb",
+          "offset": 4219,
+          "symbol": "lb_value_index_full_probe_constructor_mkAb"
+        },
+        {
+          "form": "function",
+          "kind": "constructor",
+          "label": "CheckedRecordValueIndices.mkEmptySized",
+          "offset": 4706,
+          "symbol": "lb_value_index_full_probe_constructor_mkEmptySized"
+        },
+        {
+          "form": "function",
+          "kind": "constructor",
+          "label": "CheckedRecordValueIndices.mkZeroToken",
+          "offset": 5273,
+          "symbol": "lb_value_index_full_probe_constructor_mkZeroToken"
+        },
+        {
+          "form": "function",
+          "kind": "constructor",
+          "label": "CheckedRecordValueIndices.mkWideToken",
+          "offset": 5512,
+          "symbol": "lb_value_index_full_probe_constructor_mkWideToken"
+        },
+        {
+          "form": "function",
+          "kind": "constructor",
+          "label": "CheckedRecordValueIndices.mkEmptyToken",
+          "offset": 5751,
+          "symbol": "lb_value_index_full_probe_constructor_mkEmptyToken"
+        },
+        {
+          "form": "function",
+          "kind": "constructor",
+          "label": "CheckedRecordValueIndices.mkUnicodeToken",
+          "offset": 5991,
+          "symbol": "lb_value_index_full_probe_constructor_mkUnicodeToken"
+        },
+        {
+          "form": "function",
+          "kind": "source",
+          "label": "CheckedRecordValueIndices.trueBoolIndex",
+          "offset": 6233,
+          "symbol": "lb_value_index_full_probe_source_trueBoolIndex"
+        },
+        {
+          "form": "function",
+          "kind": "source",
+          "label": "CheckedRecordValueIndices.falseBoolIndex",
+          "offset": 6366,
+          "symbol": "lb_value_index_full_probe_source_falseBoolIndex"
+        },
+        {
+          "form": "function",
+          "kind": "source",
+          "label": "CheckedRecordValueIndices.abStringIndex",
+          "offset": 6500,
+          "symbol": "lb_value_index_full_probe_source_abStringIndex"
+        },
+        {
+          "form": "function",
+          "kind": "source",
+          "label": "CheckedRecordValueIndices.emptyStringIndex",
+          "offset": 6633,
+          "symbol": "lb_value_index_full_probe_source_emptyStringIndex"
+        },
+        {
+          "form": "function",
+          "kind": "source",
+          "label": "CheckedRecordValueIndices.unicodeStringIndex",
+          "offset": 6769,
+          "symbol": "lb_value_index_full_probe_source_unicodeStringIndex"
+        },
+        {
+          "form": "function",
+          "kind": "source",
+          "label": "CheckedRecordValueIndices.emptySizedIndex",
+          "offset": 6907,
+          "symbol": "lb_value_index_full_probe_source_emptySizedIndex"
+        },
+        {
+          "form": "function",
+          "kind": "source",
+          "label": "CheckedRecordValueIndices.zeroNatIndex",
+          "offset": 7138,
+          "symbol": "lb_value_index_full_probe_source_zeroNatIndex"
+        },
+        {
+          "form": "function",
+          "kind": "source",
+          "label": "CheckedRecordValueIndices.wideNatIndex",
+          "offset": 7270,
+          "symbol": "lb_value_index_full_probe_source_wideNatIndex"
+        },
+        {
+          "form": "global",
+          "kind": "source",
+          "label": "CheckedRecordValueIndices.produceTrueBool",
+          "offset": 2091,
+          "symbol": "lb_value_index_full_probe_source_produceTrueBool"
+        },
+        {
+          "form": "global",
+          "kind": "source",
+          "label": "CheckedRecordValueIndices.produceFalseBool",
+          "offset": 2166,
+          "symbol": "lb_value_index_full_probe_source_produceFalseBool"
+        },
+        {
+          "form": "global",
+          "kind": "source",
+          "label": "CheckedRecordValueIndices.produceAb",
+          "offset": 2242,
+          "symbol": "lb_value_index_full_probe_source_produceAb"
+        },
+        {
+          "form": "function",
+          "kind": "source",
+          "label": "CheckedRecordValueIndices.produceEmptyString",
+          "offset": 7928,
+          "symbol": "lb_value_index_full_probe_source_produceEmptyString"
+        },
+        {
+          "form": "function",
+          "kind": "source",
+          "label": "CheckedRecordValueIndices.produceUnicodeString",
+          "offset": 8066,
+          "symbol": "lb_value_index_full_probe_source_produceUnicodeString"
+        },
+        {
+          "form": "global",
+          "kind": "source",
+          "label": "CheckedRecordValueIndices.produceEmptySized",
+          "offset": 2921,
+          "symbol": "lb_value_index_full_probe_source_produceEmptySized"
+        },
+        {
+          "form": "function",
+          "kind": "source",
+          "label": "CheckedRecordValueIndices.produceZeroNat",
+          "offset": 8206,
+          "symbol": "lb_value_index_full_probe_source_produceZeroNat"
+        },
+        {
+          "form": "function",
+          "kind": "source",
+          "label": "CheckedRecordValueIndices.produceWideNat",
+          "offset": 8340,
+          "symbol": "lb_value_index_full_probe_source_produceWideNat"
+        }
+      ],
+      "insertions": [
+        {
+          "kind": "source",
+          "label": "CheckedRecordValueIndices.produceWideNat",
+          "offset": 8439,
+          "symbol": "lb_value_index_full_probe_source_produceWideNat",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter source CheckedRecordValueIndices.produceWideNat\\n\", stderr);\n"
+        },
+        {
+          "kind": "source",
+          "label": "CheckedRecordValueIndices.produceZeroNat",
+          "offset": 8305,
+          "symbol": "lb_value_index_full_probe_source_produceZeroNat",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter source CheckedRecordValueIndices.produceZeroNat\\n\", stderr);\n"
+        },
+        {
+          "kind": "source",
+          "label": "CheckedRecordValueIndices.produceUnicodeString",
+          "offset": 8171,
+          "symbol": "lb_value_index_full_probe_source_produceUnicodeString",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter source CheckedRecordValueIndices.produceUnicodeString\\n\", stderr);\n"
+        },
+        {
+          "kind": "source",
+          "label": "CheckedRecordValueIndices.produceEmptyString",
+          "offset": 8031,
+          "symbol": "lb_value_index_full_probe_source_produceEmptyString",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter source CheckedRecordValueIndices.produceEmptyString\\n\", stderr);\n"
+        },
+        {
+          "kind": "source",
+          "label": "CheckedRecordValueIndices.wideNatIndex",
+          "offset": 7367,
+          "symbol": "lb_value_index_full_probe_source_wideNatIndex",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter source CheckedRecordValueIndices.wideNatIndex\\n\", stderr);\n"
+        },
+        {
+          "kind": "source",
+          "label": "CheckedRecordValueIndices.zeroNatIndex",
+          "offset": 7235,
+          "symbol": "lb_value_index_full_probe_source_zeroNatIndex",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter source CheckedRecordValueIndices.zeroNatIndex\\n\", stderr);\n"
+        },
+        {
+          "kind": "source",
+          "label": "CheckedRecordValueIndices.emptySizedIndex",
+          "offset": 7007,
+          "symbol": "lb_value_index_full_probe_source_emptySizedIndex",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter source CheckedRecordValueIndices.emptySizedIndex\\n\", stderr);\n"
+        },
+        {
+          "kind": "source",
+          "label": "CheckedRecordValueIndices.unicodeStringIndex",
+          "offset": 6872,
+          "symbol": "lb_value_index_full_probe_source_unicodeStringIndex",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter source CheckedRecordValueIndices.unicodeStringIndex\\n\", stderr);\n"
+        },
+        {
+          "kind": "source",
+          "label": "CheckedRecordValueIndices.emptyStringIndex",
+          "offset": 6734,
+          "symbol": "lb_value_index_full_probe_source_emptyStringIndex",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter source CheckedRecordValueIndices.emptyStringIndex\\n\", stderr);\n"
+        },
+        {
+          "kind": "source",
+          "label": "CheckedRecordValueIndices.abStringIndex",
+          "offset": 6598,
+          "symbol": "lb_value_index_full_probe_source_abStringIndex",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter source CheckedRecordValueIndices.abStringIndex\\n\", stderr);\n"
+        },
+        {
+          "kind": "source",
+          "label": "CheckedRecordValueIndices.falseBoolIndex",
+          "offset": 6465,
+          "symbol": "lb_value_index_full_probe_source_falseBoolIndex",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter source CheckedRecordValueIndices.falseBoolIndex\\n\", stderr);\n"
+        },
+        {
+          "kind": "source",
+          "label": "CheckedRecordValueIndices.trueBoolIndex",
+          "offset": 6331,
+          "symbol": "lb_value_index_full_probe_source_trueBoolIndex",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter source CheckedRecordValueIndices.trueBoolIndex\\n\", stderr);\n"
+        },
+        {
+          "kind": "constructor",
+          "label": "CheckedRecordValueIndices.mkUnicodeToken",
+          "offset": 6095,
+          "symbol": "lb_value_index_full_probe_constructor_mkUnicodeToken",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter constructor CheckedRecordValueIndices.mkUnicodeToken\\n\", stderr);\n"
+        },
+        {
+          "kind": "constructor",
+          "label": "CheckedRecordValueIndices.mkEmptyToken",
+          "offset": 5853,
+          "symbol": "lb_value_index_full_probe_constructor_mkEmptyToken",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter constructor CheckedRecordValueIndices.mkEmptyToken\\n\", stderr);\n"
+        },
+        {
+          "kind": "constructor",
+          "label": "CheckedRecordValueIndices.mkWideToken",
+          "offset": 5613,
+          "symbol": "lb_value_index_full_probe_constructor_mkWideToken",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter constructor CheckedRecordValueIndices.mkWideToken\\n\", stderr);\n"
+        },
+        {
+          "kind": "constructor",
+          "label": "CheckedRecordValueIndices.mkZeroToken",
+          "offset": 5374,
+          "symbol": "lb_value_index_full_probe_constructor_mkZeroToken",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter constructor CheckedRecordValueIndices.mkZeroToken\\n\", stderr);\n"
+        },
+        {
+          "kind": "constructor",
+          "label": "CheckedRecordValueIndices.mkEmptySized",
+          "offset": 4807,
+          "symbol": "lb_value_index_full_probe_constructor_mkEmptySized",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter constructor CheckedRecordValueIndices.mkEmptySized\\n\", stderr);\n"
+        },
+        {
+          "kind": "constructor",
+          "label": "CheckedRecordValueIndices.mkAb",
+          "offset": 4312,
+          "symbol": "lb_value_index_full_probe_constructor_mkAb",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter constructor CheckedRecordValueIndices.mkAb\\n\", stderr);\n"
+        },
+        {
+          "kind": "constructor",
+          "label": "CheckedRecordValueIndices.mkOff",
+          "offset": 3835,
+          "symbol": "lb_value_index_full_probe_constructor_mkOff",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter constructor CheckedRecordValueIndices.mkOff\\n\", stderr);\n"
+        },
+        {
+          "kind": "constructor",
+          "label": "CheckedRecordValueIndices.mkOn",
+          "offset": 3360,
+          "symbol": "lb_value_index_full_probe_constructor_mkOn",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter constructor CheckedRecordValueIndices.mkOn\\n\", stderr);\n"
+        },
+        {
+          "kind": "preamble",
+          "offset": 0,
+          "text": "#include <stdio.h>\n"
+        }
+      ],
+      "name": "1-CheckedRecordValueIndices.c",
+      "object": {
+        "bytes": 7608,
+        "sha256": "7fdde1f016470206725d9be8509aa68e9100132db5747d28cf964c9d0ca83a50"
+      },
+      "objectPath": "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/0.o",
+      "originalPath": "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/CheckedRecordValueIndices.c",
+      "originalSha256": "ac5a0ac8d161705bd5ae0308f701e301f2c4c0d655d610eea72abf6035867cac",
+      "probePath": "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/ordinary/value-index-full/build-1/c-probes/1-CheckedRecordValueIndices.c",
+      "probeSha256": "bbbd645258ee335adf60c199ebced8face7c1f575e6e20f8b4db3a4a2bf90f5a"
+    },
+    {
+      "definitions": [
+        {
+          "form": "function",
+          "kind": "adapter",
+          "label": "CheckedRecordValueIndices.abStringIndex",
+          "offset": 16925,
+          "symbol": "lb_aa7389f0b324bcc872e58eb7"
+        },
+        {
+          "form": "function",
+          "kind": "validator",
+          "label": "CheckedRecordValueIndices.abStringIndex:refinement_0",
+          "offset": 18154,
+          "symbol": "lb_aa7389f0b324bcc872e58eb7_refinement_0"
+        },
+        {
+          "form": "function",
+          "kind": "adapter",
+          "label": "CheckedRecordValueIndices.emptySizedIndex",
+          "offset": 18849,
+          "symbol": "lb_bc7bc77b17e26626a1e79470"
+        },
+        {
+          "form": "function",
+          "kind": "validator",
+          "label": "CheckedRecordValueIndices.emptySizedIndex:refinement_0",
+          "offset": 20088,
+          "symbol": "lb_bc7bc77b17e26626a1e79470_refinement_0"
+        },
+        {
+          "form": "function",
+          "kind": "adapter",
+          "label": "CheckedRecordValueIndices.emptyStringIndex",
+          "offset": 20791,
+          "symbol": "lb_9317a25424a9625bb91b8651"
+        },
+        {
+          "form": "function",
+          "kind": "validator",
+          "label": "CheckedRecordValueIndices.emptyStringIndex:refinement_0",
+          "offset": 21915,
+          "symbol": "lb_9317a25424a9625bb91b8651_refinement_0"
+        },
+        {
+          "form": "function",
+          "kind": "adapter",
+          "label": "CheckedRecordValueIndices.falseBoolIndex",
+          "offset": 22504,
+          "symbol": "lb_8171c54f4160a22ad89a1929"
+        },
+        {
+          "form": "function",
+          "kind": "validator",
+          "label": "CheckedRecordValueIndices.falseBoolIndex:refinement_0",
+          "offset": 23767,
+          "symbol": "lb_8171c54f4160a22ad89a1929_refinement_0"
+        },
+        {
+          "form": "function",
+          "kind": "adapter",
+          "label": "CheckedRecordValueIndices.produceAb",
+          "offset": 24483,
+          "symbol": "lb_4d7bad0a7665bc1e177e4091"
+        },
+        {
+          "form": "function",
+          "kind": "adapter",
+          "label": "CheckedRecordValueIndices.produceEmptySized",
+          "offset": 24681,
+          "symbol": "lb_2cb2ac73cad1bf0e92f223f2"
+        },
+        {
+          "form": "function",
+          "kind": "adapter",
+          "label": "CheckedRecordValueIndices.produceEmptyString",
+          "offset": 24887,
+          "symbol": "lb_1c301039413f26b466ffc0ac"
+        },
+        {
+          "form": "function",
+          "kind": "adapter",
+          "label": "CheckedRecordValueIndices.produceFalseBool",
+          "offset": 25101,
+          "symbol": "lb_4aa58b13819217d37533c8be"
+        },
+        {
+          "form": "function",
+          "kind": "adapter",
+          "label": "CheckedRecordValueIndices.produceTrueBool",
+          "offset": 25306,
+          "symbol": "lb_fa4a826e4cfc4b858bea336d"
+        },
+        {
+          "form": "function",
+          "kind": "adapter",
+          "label": "CheckedRecordValueIndices.produceUnicodeString",
+          "offset": 25510,
+          "symbol": "lb_c3c99619aef987f5fd710b1d"
+        },
+        {
+          "form": "function",
+          "kind": "adapter",
+          "label": "CheckedRecordValueIndices.produceWideNat",
+          "offset": 25726,
+          "symbol": "lb_ee4a5ad2bcd3cf6bb8065218"
+        },
+        {
+          "form": "function",
+          "kind": "adapter",
+          "label": "CheckedRecordValueIndices.produceZeroNat",
+          "offset": 25936,
+          "symbol": "lb_de7d470e18379efff61de31b"
+        },
+        {
+          "form": "function",
+          "kind": "adapter",
+          "label": "CheckedRecordValueIndices.trueBoolIndex",
+          "offset": 26146,
+          "symbol": "lb_d1b030ebab8bb6628451db44"
+        },
+        {
+          "form": "function",
+          "kind": "validator",
+          "label": "CheckedRecordValueIndices.trueBoolIndex:refinement_0",
+          "offset": 27423,
+          "symbol": "lb_d1b030ebab8bb6628451db44_refinement_0"
+        },
+        {
+          "form": "function",
+          "kind": "adapter",
+          "label": "CheckedRecordValueIndices.unicodeStringIndex",
+          "offset": 28138,
+          "symbol": "lb_35b0d02ac4b5686e440a8198"
+        },
+        {
+          "form": "function",
+          "kind": "validator",
+          "label": "CheckedRecordValueIndices.unicodeStringIndex:refinement_0",
+          "offset": 29310,
+          "symbol": "lb_35b0d02ac4b5686e440a8198_refinement_0"
+        },
+        {
+          "form": "function",
+          "kind": "adapter",
+          "label": "CheckedRecordValueIndices.wideNatIndex",
+          "offset": 29917,
+          "symbol": "lb_629d14b28988602cba2f4f16"
+        },
+        {
+          "form": "function",
+          "kind": "validator",
+          "label": "CheckedRecordValueIndices.wideNatIndex:refinement_0",
+          "offset": 31080,
+          "symbol": "lb_629d14b28988602cba2f4f16_refinement_0"
+        },
+        {
+          "form": "function",
+          "kind": "adapter",
+          "label": "CheckedRecordValueIndices.zeroNatIndex",
+          "offset": 31684,
+          "symbol": "lb_2ddd8644625ba5d077273f54"
+        },
+        {
+          "form": "function",
+          "kind": "validator",
+          "label": "CheckedRecordValueIndices.zeroNatIndex:refinement_0",
+          "offset": 32847,
+          "symbol": "lb_2ddd8644625ba5d077273f54_refinement_0"
+        }
+      ],
+      "insertions": [
+        {
+          "kind": "validator",
+          "label": "CheckedRecordValueIndices.zeroNatIndex:refinement_0",
+          "offset": 32935,
+          "symbol": "lb_2ddd8644625ba5d077273f54_refinement_0",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter validator CheckedRecordValueIndices.zeroNatIndex:refinement_0\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "CheckedRecordValueIndices.zeroNatIndex",
+          "offset": 31761,
+          "symbol": "lb_2ddd8644625ba5d077273f54",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter CheckedRecordValueIndices.zeroNatIndex\\n\", stderr);\n"
+        },
+        {
+          "kind": "validator",
+          "label": "CheckedRecordValueIndices.wideNatIndex:refinement_0",
+          "offset": 31168,
+          "symbol": "lb_629d14b28988602cba2f4f16_refinement_0",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter validator CheckedRecordValueIndices.wideNatIndex:refinement_0\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "CheckedRecordValueIndices.wideNatIndex",
+          "offset": 29994,
+          "symbol": "lb_629d14b28988602cba2f4f16",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter CheckedRecordValueIndices.wideNatIndex\\n\", stderr);\n"
+        },
+        {
+          "kind": "validator",
+          "label": "CheckedRecordValueIndices.unicodeStringIndex:refinement_0",
+          "offset": 29398,
+          "symbol": "lb_35b0d02ac4b5686e440a8198_refinement_0",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter validator CheckedRecordValueIndices.unicodeStringIndex:refinement_0\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "CheckedRecordValueIndices.unicodeStringIndex",
+          "offset": 28215,
+          "symbol": "lb_35b0d02ac4b5686e440a8198",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter CheckedRecordValueIndices.unicodeStringIndex\\n\", stderr);\n"
+        },
+        {
+          "kind": "validator",
+          "label": "CheckedRecordValueIndices.trueBoolIndex:refinement_0",
+          "offset": 27511,
+          "symbol": "lb_d1b030ebab8bb6628451db44_refinement_0",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter validator CheckedRecordValueIndices.trueBoolIndex:refinement_0\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "CheckedRecordValueIndices.trueBoolIndex",
+          "offset": 26223,
+          "symbol": "lb_d1b030ebab8bb6628451db44",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter CheckedRecordValueIndices.trueBoolIndex\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "CheckedRecordValueIndices.produceZeroNat",
+          "offset": 26013,
+          "symbol": "lb_de7d470e18379efff61de31b",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter CheckedRecordValueIndices.produceZeroNat\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "CheckedRecordValueIndices.produceWideNat",
+          "offset": 25803,
+          "symbol": "lb_ee4a5ad2bcd3cf6bb8065218",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter CheckedRecordValueIndices.produceWideNat\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "CheckedRecordValueIndices.produceUnicodeString",
+          "offset": 25587,
+          "symbol": "lb_c3c99619aef987f5fd710b1d",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter CheckedRecordValueIndices.produceUnicodeString\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "CheckedRecordValueIndices.produceTrueBool",
+          "offset": 25387,
+          "symbol": "lb_fa4a826e4cfc4b858bea336d",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter CheckedRecordValueIndices.produceTrueBool\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "CheckedRecordValueIndices.produceFalseBool",
+          "offset": 25182,
+          "symbol": "lb_4aa58b13819217d37533c8be",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter CheckedRecordValueIndices.produceFalseBool\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "CheckedRecordValueIndices.produceEmptyString",
+          "offset": 24964,
+          "symbol": "lb_1c301039413f26b466ffc0ac",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter CheckedRecordValueIndices.produceEmptyString\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "CheckedRecordValueIndices.produceEmptySized",
+          "offset": 24762,
+          "symbol": "lb_2cb2ac73cad1bf0e92f223f2",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter CheckedRecordValueIndices.produceEmptySized\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "CheckedRecordValueIndices.produceAb",
+          "offset": 24564,
+          "symbol": "lb_4d7bad0a7665bc1e177e4091",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter CheckedRecordValueIndices.produceAb\\n\", stderr);\n"
+        },
+        {
+          "kind": "validator",
+          "label": "CheckedRecordValueIndices.falseBoolIndex:refinement_0",
+          "offset": 23855,
+          "symbol": "lb_8171c54f4160a22ad89a1929_refinement_0",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter validator CheckedRecordValueIndices.falseBoolIndex:refinement_0\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "CheckedRecordValueIndices.falseBoolIndex",
+          "offset": 22580,
+          "symbol": "lb_8171c54f4160a22ad89a1929",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter CheckedRecordValueIndices.falseBoolIndex\\n\", stderr);\n"
+        },
+        {
+          "kind": "validator",
+          "label": "CheckedRecordValueIndices.emptyStringIndex:refinement_0",
+          "offset": 22002,
+          "symbol": "lb_9317a25424a9625bb91b8651_refinement_0",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter validator CheckedRecordValueIndices.emptyStringIndex:refinement_0\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "CheckedRecordValueIndices.emptyStringIndex",
+          "offset": 20867,
+          "symbol": "lb_9317a25424a9625bb91b8651",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter CheckedRecordValueIndices.emptyStringIndex\\n\", stderr);\n"
+        },
+        {
+          "kind": "validator",
+          "label": "CheckedRecordValueIndices.emptySizedIndex:refinement_0",
+          "offset": 20175,
+          "symbol": "lb_bc7bc77b17e26626a1e79470_refinement_0",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter validator CheckedRecordValueIndices.emptySizedIndex:refinement_0\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "CheckedRecordValueIndices.emptySizedIndex",
+          "offset": 18925,
+          "symbol": "lb_bc7bc77b17e26626a1e79470",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter CheckedRecordValueIndices.emptySizedIndex\\n\", stderr);\n"
+        },
+        {
+          "kind": "validator",
+          "label": "CheckedRecordValueIndices.abStringIndex:refinement_0",
+          "offset": 18241,
+          "symbol": "lb_aa7389f0b324bcc872e58eb7_refinement_0",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter validator CheckedRecordValueIndices.abStringIndex:refinement_0\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "CheckedRecordValueIndices.abStringIndex",
+          "offset": 17001,
+          "symbol": "lb_aa7389f0b324bcc872e58eb7",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter CheckedRecordValueIndices.abStringIndex\\n\", stderr);\n"
+        },
+        {
+          "kind": "preamble",
+          "offset": 0,
+          "text": "#include <stdio.h>\n"
+        }
+      ],
+      "name": "2-adapter.c",
+      "object": {
+        "bytes": 22615,
+        "sha256": "d94bedc359b9e63a80bb459de5ae32e2467f5545ebde3851d0f25ea3ffec3103"
+      },
+      "objectPath": "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/1.o",
+      "originalPath": "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/adapter.c",
+      "originalSha256": "003ea5cfb86581bd0328cabc5835b851706909d0f804b703fe933fdf54669f73",
+      "probePath": "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/ordinary/value-index-full/build-1/c-probes/2-adapter.c",
+      "probeSha256": "c5e6a693be07ebb9abac0c99ca3c387a7dc8f61853b41716e4f7700d1f454e7c"
+    },
+    {
+      "definitions": [],
+      "insertions": [],
+      "name": "3-provider.c",
+      "object": {
+        "bytes": 24218,
+        "sha256": "4352012de71e490a2743e54bf8f1b6e44478f79488819a5805567d522e30a653"
+      },
+      "objectPath": "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/2.o",
+      "originalPath": "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/provider.c",
+      "originalSha256": "80cff6489a54430ba3017012836f9e29e388949181926edab05b08e6bffd86d9",
+      "probePath": "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/ordinary/value-index-full/build-1/c-probes/3-provider.c",
+      "probeSha256": "80cff6489a54430ba3017012836f9e29e388949181926edab05b08e6bffd86d9"
+    },
+    {
+      "definitions": [],
+      "insertions": [],
+      "name": "4-callbacks.c",
+      "object": {
+        "bytes": 258,
+        "sha256": "a8e680be3accc5b8ad9d8becda8fdb51ee27aeef43f3a380f4d440aa1fc45be9"
+      },
+      "objectPath": "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/3.o",
+      "originalPath": "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/callbacks.c",
+      "originalSha256": "57fca410285f79f9a58f3f5b23f97203e9cc9e76066139cb529ff406afa92c2c",
+      "probePath": "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/ordinary/value-index-full/build-1/c-probes/4-callbacks.c",
+      "probeSha256": "57fca410285f79f9a58f3f5b23f97203e9cc9e76066139cb529ff406afa92c2c"
+    },
+    {
+      "definitions": [],
+      "insertions": [],
+      "name": "5-width.c",
+      "object": {
+        "bytes": 258,
+        "sha256": "a8e680be3accc5b8ad9d8becda8fdb51ee27aeef43f3a380f4d440aa1fc45be9"
+      },
+      "objectPath": "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/4.o",
+      "originalPath": "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/width.c",
+      "originalSha256": "94f94bd37af397f400f10b97b24efb34a1ecab8f8aae613e50376f1ab2218d1e",
+      "probePath": "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/ordinary/value-index-full/build-1/c-probes/5-width.c",
+      "probeSha256": "94f94bd37af397f400f10b97b24efb34a1ecab8f8aae613e50376f1ab2218d1e"
+    },
+    {
+      "definitions": [],
+      "insertions": [],
+      "name": "6-checkedrecordvalueindices.c",
+      "object": {
+        "bytes": 11560,
+        "sha256": "15cfa8b62a667349740354bd4e42842c5c7aad3bd3d87168a38c0af85061c537"
+      },
+      "objectPath": "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/5.o",
+      "originalPath": "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/binding/src/checkedrecordvalueindices.c",
+      "originalSha256": "9d36281c56ba60a2aa5fde4a329fa7e81a4460115a8e6c2112882de00cd1a028",
+      "probePath": "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/ordinary/value-index-full/build-1/c-probes/6-checkedrecordvalueindices.c",
+      "probeSha256": "9d36281c56ba60a2aa5fde4a329fa7e81a4460115a8e6c2112882de00cd1a028"
+    },
+    {
+      "definitions": [
+        {
+          "form": "function",
+          "kind": "public",
+          "label": "abStringIndex",
+          "offset": 17537,
+          "symbol": "lb_call0"
+        },
+        {
+          "form": "function",
+          "kind": "public",
+          "label": "emptySizedIndex",
+          "offset": 19986,
+          "symbol": "lb_call1"
+        },
+        {
+          "form": "function",
+          "kind": "public",
+          "label": "emptyStringIndex",
+          "offset": 22436,
+          "symbol": "lb_call2"
+        },
+        {
+          "form": "function",
+          "kind": "public",
+          "label": "falseBoolIndex",
+          "offset": 24876,
+          "symbol": "lb_call3"
+        },
+        {
+          "form": "function",
+          "kind": "public",
+          "label": "produceAb",
+          "offset": 27174,
+          "symbol": "lb_call4"
+        },
+        {
+          "form": "function",
+          "kind": "public",
+          "label": "produceEmptySized",
+          "offset": 29429,
+          "symbol": "lb_call5"
+        },
+        {
+          "form": "function",
+          "kind": "public",
+          "label": "produceEmptyString",
+          "offset": 31819,
+          "symbol": "lb_call6"
+        },
+        {
+          "form": "function",
+          "kind": "public",
+          "label": "produceFalseBool",
+          "offset": 34127,
+          "symbol": "lb_call7"
+        },
+        {
+          "form": "function",
+          "kind": "public",
+          "label": "produceTrueBool",
+          "offset": 36362,
+          "symbol": "lb_call8"
+        },
+        {
+          "form": "function",
+          "kind": "public",
+          "label": "produceUnicodeString",
+          "offset": 38758,
+          "symbol": "lb_call9"
+        },
+        {
+          "form": "function",
+          "kind": "public",
+          "label": "produceWideNat",
+          "offset": 41218,
+          "symbol": "lb_call10"
+        },
+        {
+          "form": "function",
+          "kind": "public",
+          "label": "produceZeroNat",
+          "offset": 43684,
+          "symbol": "lb_call11"
+        },
+        {
+          "form": "function",
+          "kind": "public",
+          "label": "trueBoolIndex",
+          "offset": 46134,
+          "symbol": "lb_call12"
+        },
+        {
+          "form": "function",
+          "kind": "public",
+          "label": "unicodeStringIndex",
+          "offset": 48600,
+          "symbol": "lb_call13"
+        },
+        {
+          "form": "function",
+          "kind": "public",
+          "label": "wideNatIndex",
+          "offset": 51057,
+          "symbol": "lb_call14"
+        },
+        {
+          "form": "function",
+          "kind": "public",
+          "label": "zeroNatIndex",
+          "offset": 53514,
+          "symbol": "lb_call15"
+        }
+      ],
+      "insertions": [
+        {
+          "kind": "public",
+          "label": "zeroNatIndex",
+          "offset": 53547,
+          "symbol": "lb_call15",
+          "text": "\n  const char *lb_probe_public_scope __attribute__((cleanup(lb_probe_end))) = \"zeroNatIndex\";\n  fputs(\"LB_SUBTYPE_ENTRY_V1 begin public zeroNatIndex\\n\", stderr);\n"
+        },
+        {
+          "kind": "public",
+          "label": "wideNatIndex",
+          "offset": 51090,
+          "symbol": "lb_call14",
+          "text": "\n  const char *lb_probe_public_scope __attribute__((cleanup(lb_probe_end))) = \"wideNatIndex\";\n  fputs(\"LB_SUBTYPE_ENTRY_V1 begin public wideNatIndex\\n\", stderr);\n"
+        },
+        {
+          "kind": "public",
+          "label": "unicodeStringIndex",
+          "offset": 48633,
+          "symbol": "lb_call13",
+          "text": "\n  const char *lb_probe_public_scope __attribute__((cleanup(lb_probe_end))) = \"unicodeStringIndex\";\n  fputs(\"LB_SUBTYPE_ENTRY_V1 begin public unicodeStringIndex\\n\", stderr);\n"
+        },
+        {
+          "kind": "public",
+          "label": "trueBoolIndex",
+          "offset": 46167,
+          "symbol": "lb_call12",
+          "text": "\n  const char *lb_probe_public_scope __attribute__((cleanup(lb_probe_end))) = \"trueBoolIndex\";\n  fputs(\"LB_SUBTYPE_ENTRY_V1 begin public trueBoolIndex\\n\", stderr);\n"
+        },
+        {
+          "kind": "public",
+          "label": "produceZeroNat",
+          "offset": 43717,
+          "symbol": "lb_call11",
+          "text": "\n  const char *lb_probe_public_scope __attribute__((cleanup(lb_probe_end))) = \"produceZeroNat\";\n  fputs(\"LB_SUBTYPE_ENTRY_V1 begin public produceZeroNat\\n\", stderr);\n"
+        },
+        {
+          "kind": "public",
+          "label": "produceWideNat",
+          "offset": 41251,
+          "symbol": "lb_call10",
+          "text": "\n  const char *lb_probe_public_scope __attribute__((cleanup(lb_probe_end))) = \"produceWideNat\";\n  fputs(\"LB_SUBTYPE_ENTRY_V1 begin public produceWideNat\\n\", stderr);\n"
+        },
+        {
+          "kind": "public",
+          "label": "produceUnicodeString",
+          "offset": 38790,
+          "symbol": "lb_call9",
+          "text": "\n  const char *lb_probe_public_scope __attribute__((cleanup(lb_probe_end))) = \"produceUnicodeString\";\n  fputs(\"LB_SUBTYPE_ENTRY_V1 begin public produceUnicodeString\\n\", stderr);\n"
+        },
+        {
+          "kind": "public",
+          "label": "produceTrueBool",
+          "offset": 36394,
+          "symbol": "lb_call8",
+          "text": "\n  const char *lb_probe_public_scope __attribute__((cleanup(lb_probe_end))) = \"produceTrueBool\";\n  fputs(\"LB_SUBTYPE_ENTRY_V1 begin public produceTrueBool\\n\", stderr);\n"
+        },
+        {
+          "kind": "public",
+          "label": "produceFalseBool",
+          "offset": 34159,
+          "symbol": "lb_call7",
+          "text": "\n  const char *lb_probe_public_scope __attribute__((cleanup(lb_probe_end))) = \"produceFalseBool\";\n  fputs(\"LB_SUBTYPE_ENTRY_V1 begin public produceFalseBool\\n\", stderr);\n"
+        },
+        {
+          "kind": "public",
+          "label": "produceEmptyString",
+          "offset": 31851,
+          "symbol": "lb_call6",
+          "text": "\n  const char *lb_probe_public_scope __attribute__((cleanup(lb_probe_end))) = \"produceEmptyString\";\n  fputs(\"LB_SUBTYPE_ENTRY_V1 begin public produceEmptyString\\n\", stderr);\n"
+        },
+        {
+          "kind": "public",
+          "label": "produceEmptySized",
+          "offset": 29461,
+          "symbol": "lb_call5",
+          "text": "\n  const char *lb_probe_public_scope __attribute__((cleanup(lb_probe_end))) = \"produceEmptySized\";\n  fputs(\"LB_SUBTYPE_ENTRY_V1 begin public produceEmptySized\\n\", stderr);\n"
+        },
+        {
+          "kind": "public",
+          "label": "produceAb",
+          "offset": 27206,
+          "symbol": "lb_call4",
+          "text": "\n  const char *lb_probe_public_scope __attribute__((cleanup(lb_probe_end))) = \"produceAb\";\n  fputs(\"LB_SUBTYPE_ENTRY_V1 begin public produceAb\\n\", stderr);\n"
+        },
+        {
+          "kind": "public",
+          "label": "falseBoolIndex",
+          "offset": 24908,
+          "symbol": "lb_call3",
+          "text": "\n  const char *lb_probe_public_scope __attribute__((cleanup(lb_probe_end))) = \"falseBoolIndex\";\n  fputs(\"LB_SUBTYPE_ENTRY_V1 begin public falseBoolIndex\\n\", stderr);\n"
+        },
+        {
+          "kind": "public",
+          "label": "emptyStringIndex",
+          "offset": 22468,
+          "symbol": "lb_call2",
+          "text": "\n  const char *lb_probe_public_scope __attribute__((cleanup(lb_probe_end))) = \"emptyStringIndex\";\n  fputs(\"LB_SUBTYPE_ENTRY_V1 begin public emptyStringIndex\\n\", stderr);\n"
+        },
+        {
+          "kind": "public",
+          "label": "emptySizedIndex",
+          "offset": 20018,
+          "symbol": "lb_call1",
+          "text": "\n  const char *lb_probe_public_scope __attribute__((cleanup(lb_probe_end))) = \"emptySizedIndex\";\n  fputs(\"LB_SUBTYPE_ENTRY_V1 begin public emptySizedIndex\\n\", stderr);\n"
+        },
+        {
+          "kind": "public",
+          "label": "abStringIndex",
+          "offset": 17569,
+          "symbol": "lb_call0",
+          "text": "\n  const char *lb_probe_public_scope __attribute__((cleanup(lb_probe_end))) = \"abStringIndex\";\n  fputs(\"LB_SUBTYPE_ENTRY_V1 begin public abStringIndex\\n\", stderr);\n"
+        },
+        {
+          "kind": "preamble",
+          "offset": 0,
+          "text": "#include <stdio.h>\nstatic void lb_probe_end(const char **label) { fprintf(stderr, \"LB_SUBTYPE_ENTRY_V1 end public %s\\n\", *label); }\n"
+        }
+      ],
+      "name": "7-lb_checkedrecordvalueindices_9a59ae38fa66670e.c",
+      "object": {
+        "bytes": 82355,
+        "sha256": "df11dc4a4dd09cc10342663f1f6d00c3111a17a2967edc6caa7ac7601ce23ea3"
+      },
+      "objectPath": "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/c/6.o",
+      "originalPath": "/home/runner/work/_temp/lean-bridge-value-index-full-ordinary-2pVA5Y/release/php-wasm/.lean-bridge-native-component-2Wrhx1/extension/lb_checkedrecordvalueindices_9a59ae38fa66670e.c",
+      "originalSha256": "0e6416229d96e68d8cc1fe2c055a70d71f7ff1477d38629d2dbde42f8bef7c06",
+      "probePath": "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/ordinary/value-index-full/build-1/c-probes/7-lb_checkedrecordvalueindices_9a59ae38fa66670e.c",
+      "probeSha256": "820434315c9d763e2a92826c740e07fb7705d7fb1ed59758c104868a2c50d38f"
+    }
+  ],
+  "definitionCounts": {
+    "lb_1c301039413f26b466ffc0ac": 1,
+    "lb_2cb2ac73cad1bf0e92f223f2": 1,
+    "lb_2ddd8644625ba5d077273f54": 1,
+    "lb_2ddd8644625ba5d077273f54_refinement_0": 1,
+    "lb_35b0d02ac4b5686e440a8198": 1,
+    "lb_35b0d02ac4b5686e440a8198_refinement_0": 1,
+    "lb_4aa58b13819217d37533c8be": 1,
+    "lb_4d7bad0a7665bc1e177e4091": 1,
+    "lb_629d14b28988602cba2f4f16": 1,
+    "lb_629d14b28988602cba2f4f16_refinement_0": 1,
+    "lb_8171c54f4160a22ad89a1929": 1,
+    "lb_8171c54f4160a22ad89a1929_refinement_0": 1,
+    "lb_9317a25424a9625bb91b8651": 1,
+    "lb_9317a25424a9625bb91b8651_refinement_0": 1,
+    "lb_aa7389f0b324bcc872e58eb7": 1,
+    "lb_aa7389f0b324bcc872e58eb7_refinement_0": 1,
+    "lb_bc7bc77b17e26626a1e79470": 1,
+    "lb_bc7bc77b17e26626a1e79470_refinement_0": 1,
+    "lb_c3c99619aef987f5fd710b1d": 1,
+    "lb_call0": 1,
+    "lb_call1": 1,
+    "lb_call10": 1,
+    "lb_call11": 1,
+    "lb_call12": 1,
+    "lb_call13": 1,
+    "lb_call14": 1,
+    "lb_call15": 1,
+    "lb_call2": 1,
+    "lb_call3": 1,
+    "lb_call4": 1,
+    "lb_call5": 1,
+    "lb_call6": 1,
+    "lb_call7": 1,
+    "lb_call8": 1,
+    "lb_call9": 1,
+    "lb_d1b030ebab8bb6628451db44": 1,
+    "lb_d1b030ebab8bb6628451db44_refinement_0": 1,
+    "lb_de7d470e18379efff61de31b": 1,
+    "lb_ee4a5ad2bcd3cf6bb8065218": 1,
+    "lb_fa4a826e4cfc4b858bea336d": 1,
+    "lb_value_index_full_probe_constructor_mkAb": 1,
+    "lb_value_index_full_probe_constructor_mkEmptySized": 1,
+    "lb_value_index_full_probe_constructor_mkEmptyToken": 1,
+    "lb_value_index_full_probe_constructor_mkOff": 1,
+    "lb_value_index_full_probe_constructor_mkOn": 1,
+    "lb_value_index_full_probe_constructor_mkUnicodeToken": 1,
+    "lb_value_index_full_probe_constructor_mkWideToken": 1,
+    "lb_value_index_full_probe_constructor_mkZeroToken": 1,
+    "lb_value_index_full_probe_source_abStringIndex": 1,
+    "lb_value_index_full_probe_source_emptySizedIndex": 1,
+    "lb_value_index_full_probe_source_emptyStringIndex": 1,
+    "lb_value_index_full_probe_source_falseBoolIndex": 1,
+    "lb_value_index_full_probe_source_produceAb": 1,
+    "lb_value_index_full_probe_source_produceEmptySized": 1,
+    "lb_value_index_full_probe_source_produceEmptyString": 1,
+    "lb_value_index_full_probe_source_produceFalseBool": 1,
+    "lb_value_index_full_probe_source_produceTrueBool": 1,
+    "lb_value_index_full_probe_source_produceUnicodeString": 1,
+    "lb_value_index_full_probe_source_produceWideNat": 1,
+    "lb_value_index_full_probe_source_produceZeroNat": 1,
+    "lb_value_index_full_probe_source_trueBoolIndex": 1,
+    "lb_value_index_full_probe_source_unicodeStringIndex": 1,
+    "lb_value_index_full_probe_source_wideNatIndex": 1,
+    "lb_value_index_full_probe_source_zeroNatIndex": 1
+  },
+  "globalDefinitions": [
+    {
+      "kind": "source",
+      "label": "CheckedRecordValueIndices.produceTrueBool",
+      "symbol": "lb_value_index_full_probe_source_produceTrueBool"
+    },
+    {
+      "kind": "source",
+      "label": "CheckedRecordValueIndices.produceFalseBool",
+      "symbol": "lb_value_index_full_probe_source_produceFalseBool"
+    },
+    {
+      "kind": "source",
+      "label": "CheckedRecordValueIndices.produceAb",
+      "symbol": "lb_value_index_full_probe_source_produceAb"
+    },
+    {
+      "kind": "source",
+      "label": "CheckedRecordValueIndices.produceEmptySized",
+      "symbol": "lb_value_index_full_probe_source_produceEmptySized"
+    }
+  ],
+  "headers": [],
+  "linked": true,
+  "selected": [
+    {
+      "kind": "constructor",
+      "label": "CheckedRecordValueIndices.mkOn",
+      "symbol": "lb_value_index_full_probe_constructor_mkOn"
+    },
+    {
+      "kind": "constructor",
+      "label": "CheckedRecordValueIndices.mkOff",
+      "symbol": "lb_value_index_full_probe_constructor_mkOff"
+    },
+    {
+      "kind": "constructor",
+      "label": "CheckedRecordValueIndices.mkAb",
+      "symbol": "lb_value_index_full_probe_constructor_mkAb"
+    },
+    {
+      "kind": "constructor",
+      "label": "CheckedRecordValueIndices.mkEmptySized",
+      "symbol": "lb_value_index_full_probe_constructor_mkEmptySized"
+    },
+    {
+      "kind": "constructor",
+      "label": "CheckedRecordValueIndices.mkZeroToken",
+      "symbol": "lb_value_index_full_probe_constructor_mkZeroToken"
+    },
+    {
+      "kind": "constructor",
+      "label": "CheckedRecordValueIndices.mkWideToken",
+      "symbol": "lb_value_index_full_probe_constructor_mkWideToken"
+    },
+    {
+      "kind": "constructor",
+      "label": "CheckedRecordValueIndices.mkEmptyToken",
+      "symbol": "lb_value_index_full_probe_constructor_mkEmptyToken"
+    },
+    {
+      "kind": "constructor",
+      "label": "CheckedRecordValueIndices.mkUnicodeToken",
+      "symbol": "lb_value_index_full_probe_constructor_mkUnicodeToken"
+    },
+    {
+      "kind": "source",
+      "label": "CheckedRecordValueIndices.trueBoolIndex",
+      "symbol": "lb_value_index_full_probe_source_trueBoolIndex"
+    },
+    {
+      "kind": "source",
+      "label": "CheckedRecordValueIndices.falseBoolIndex",
+      "symbol": "lb_value_index_full_probe_source_falseBoolIndex"
+    },
+    {
+      "kind": "source",
+      "label": "CheckedRecordValueIndices.abStringIndex",
+      "symbol": "lb_value_index_full_probe_source_abStringIndex"
+    },
+    {
+      "kind": "source",
+      "label": "CheckedRecordValueIndices.emptyStringIndex",
+      "symbol": "lb_value_index_full_probe_source_emptyStringIndex"
+    },
+    {
+      "kind": "source",
+      "label": "CheckedRecordValueIndices.unicodeStringIndex",
+      "symbol": "lb_value_index_full_probe_source_unicodeStringIndex"
+    },
+    {
+      "kind": "source",
+      "label": "CheckedRecordValueIndices.emptySizedIndex",
+      "symbol": "lb_value_index_full_probe_source_emptySizedIndex"
+    },
+    {
+      "kind": "source",
+      "label": "CheckedRecordValueIndices.zeroNatIndex",
+      "symbol": "lb_value_index_full_probe_source_zeroNatIndex"
+    },
+    {
+      "kind": "source",
+      "label": "CheckedRecordValueIndices.wideNatIndex",
+      "symbol": "lb_value_index_full_probe_source_wideNatIndex"
+    },
+    {
+      "kind": "source",
+      "label": "CheckedRecordValueIndices.produceTrueBool",
+      "symbol": "lb_value_index_full_probe_source_produceTrueBool"
+    },
+    {
+      "kind": "source",
+      "label": "CheckedRecordValueIndices.produceFalseBool",
+      "symbol": "lb_value_index_full_probe_source_produceFalseBool"
+    },
+    {
+      "kind": "source",
+      "label": "CheckedRecordValueIndices.produceAb",
+      "symbol": "lb_value_index_full_probe_source_produceAb"
+    },
+    {
+      "kind": "source",
+      "label": "CheckedRecordValueIndices.produceEmptyString",
+      "symbol": "lb_value_index_full_probe_source_produceEmptyString"
+    },
+    {
+      "kind": "source",
+      "label": "CheckedRecordValueIndices.produceUnicodeString",
+      "symbol": "lb_value_index_full_probe_source_produceUnicodeString"
+    },
+    {
+      "kind": "source",
+      "label": "CheckedRecordValueIndices.produceEmptySized",
+      "symbol": "lb_value_index_full_probe_source_produceEmptySized"
+    },
+    {
+      "kind": "source",
+      "label": "CheckedRecordValueIndices.produceZeroNat",
+      "symbol": "lb_value_index_full_probe_source_produceZeroNat"
+    },
+    {
+      "kind": "source",
+      "label": "CheckedRecordValueIndices.produceWideNat",
+      "symbol": "lb_value_index_full_probe_source_produceWideNat"
+    },
+    {
+      "kind": "public",
+      "label": "abStringIndex",
+      "symbol": "lb_call0"
+    },
+    {
+      "kind": "public",
+      "label": "emptySizedIndex",
+      "symbol": "lb_call1"
+    },
+    {
+      "kind": "public",
+      "label": "emptyStringIndex",
+      "symbol": "lb_call2"
+    },
+    {
+      "kind": "public",
+      "label": "falseBoolIndex",
+      "symbol": "lb_call3"
+    },
+    {
+      "kind": "public",
+      "label": "produceAb",
+      "symbol": "lb_call4"
+    },
+    {
+      "kind": "public",
+      "label": "produceEmptySized",
+      "symbol": "lb_call5"
+    },
+    {
+      "kind": "public",
+      "label": "produceEmptyString",
+      "symbol": "lb_call6"
+    },
+    {
+      "kind": "public",
+      "label": "produceFalseBool",
+      "symbol": "lb_call7"
+    },
+    {
+      "kind": "public",
+      "label": "produceTrueBool",
+      "symbol": "lb_call8"
+    },
+    {
+      "kind": "public",
+      "label": "produceUnicodeString",
+      "symbol": "lb_call9"
+    },
+    {
+      "kind": "public",
+      "label": "produceWideNat",
+      "symbol": "lb_call10"
+    },
+    {
+      "kind": "public",
+      "label": "produceZeroNat",
+      "symbol": "lb_call11"
+    },
+    {
+      "kind": "public",
+      "label": "trueBoolIndex",
+      "symbol": "lb_call12"
+    },
+    {
+      "kind": "public",
+      "label": "unicodeStringIndex",
+      "symbol": "lb_call13"
+    },
+    {
+      "kind": "public",
+      "label": "wideNatIndex",
+      "symbol": "lb_call14"
+    },
+    {
+      "kind": "public",
+      "label": "zeroNatIndex",
+      "symbol": "lb_call15"
+    },
+    {
+      "kind": "adapter",
+      "label": "CheckedRecordValueIndices.abStringIndex",
+      "symbol": "lb_aa7389f0b324bcc872e58eb7"
+    },
+    {
+      "kind": "validator",
+      "label": "CheckedRecordValueIndices.abStringIndex:refinement_0",
+      "symbol": "lb_aa7389f0b324bcc872e58eb7_refinement_0"
+    },
+    {
+      "kind": "adapter",
+      "label": "CheckedRecordValueIndices.emptySizedIndex",
+      "symbol": "lb_bc7bc77b17e26626a1e79470"
+    },
+    {
+      "kind": "validator",
+      "label": "CheckedRecordValueIndices.emptySizedIndex:refinement_0",
+      "symbol": "lb_bc7bc77b17e26626a1e79470_refinement_0"
+    },
+    {
+      "kind": "adapter",
+      "label": "CheckedRecordValueIndices.emptyStringIndex",
+      "symbol": "lb_9317a25424a9625bb91b8651"
+    },
+    {
+      "kind": "validator",
+      "label": "CheckedRecordValueIndices.emptyStringIndex:refinement_0",
+      "symbol": "lb_9317a25424a9625bb91b8651_refinement_0"
+    },
+    {
+      "kind": "adapter",
+      "label": "CheckedRecordValueIndices.falseBoolIndex",
+      "symbol": "lb_8171c54f4160a22ad89a1929"
+    },
+    {
+      "kind": "validator",
+      "label": "CheckedRecordValueIndices.falseBoolIndex:refinement_0",
+      "symbol": "lb_8171c54f4160a22ad89a1929_refinement_0"
+    },
+    {
+      "kind": "adapter",
+      "label": "CheckedRecordValueIndices.produceAb",
+      "symbol": "lb_4d7bad0a7665bc1e177e4091"
+    },
+    {
+      "kind": "adapter",
+      "label": "CheckedRecordValueIndices.produceEmptySized",
+      "symbol": "lb_2cb2ac73cad1bf0e92f223f2"
+    },
+    {
+      "kind": "adapter",
+      "label": "CheckedRecordValueIndices.produceEmptyString",
+      "symbol": "lb_1c301039413f26b466ffc0ac"
+    },
+    {
+      "kind": "adapter",
+      "label": "CheckedRecordValueIndices.produceFalseBool",
+      "symbol": "lb_4aa58b13819217d37533c8be"
+    },
+    {
+      "kind": "adapter",
+      "label": "CheckedRecordValueIndices.produceTrueBool",
+      "symbol": "lb_fa4a826e4cfc4b858bea336d"
+    },
+    {
+      "kind": "adapter",
+      "label": "CheckedRecordValueIndices.produceUnicodeString",
+      "symbol": "lb_c3c99619aef987f5fd710b1d"
+    },
+    {
+      "kind": "adapter",
+      "label": "CheckedRecordValueIndices.produceWideNat",
+      "symbol": "lb_ee4a5ad2bcd3cf6bb8065218"
+    },
+    {
+      "kind": "adapter",
+      "label": "CheckedRecordValueIndices.produceZeroNat",
+      "symbol": "lb_de7d470e18379efff61de31b"
+    },
+    {
+      "kind": "adapter",
+      "label": "CheckedRecordValueIndices.trueBoolIndex",
+      "symbol": "lb_d1b030ebab8bb6628451db44"
+    },
+    {
+      "kind": "validator",
+      "label": "CheckedRecordValueIndices.trueBoolIndex:refinement_0",
+      "symbol": "lb_d1b030ebab8bb6628451db44_refinement_0"
+    },
+    {
+      "kind": "adapter",
+      "label": "CheckedRecordValueIndices.unicodeStringIndex",
+      "symbol": "lb_35b0d02ac4b5686e440a8198"
+    },
+    {
+      "kind": "validator",
+      "label": "CheckedRecordValueIndices.unicodeStringIndex:refinement_0",
+      "symbol": "lb_35b0d02ac4b5686e440a8198_refinement_0"
+    },
+    {
+      "kind": "adapter",
+      "label": "CheckedRecordValueIndices.wideNatIndex",
+      "symbol": "lb_629d14b28988602cba2f4f16"
+    },
+    {
+      "kind": "validator",
+      "label": "CheckedRecordValueIndices.wideNatIndex:refinement_0",
+      "symbol": "lb_629d14b28988602cba2f4f16_refinement_0"
+    },
+    {
+      "kind": "adapter",
+      "label": "CheckedRecordValueIndices.zeroNatIndex",
+      "symbol": "lb_2ddd8644625ba5d077273f54"
+    },
+    {
+      "kind": "validator",
+      "label": "CheckedRecordValueIndices.zeroNatIndex:refinement_0",
+      "symbol": "lb_2ddd8644625ba5d077273f54_refinement_0"
+    }
+  ]
+}

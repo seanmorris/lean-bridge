@@ -1,0 +1,109 @@
+{
+  "edits": [
+    {
+      "current": "@[noinline, export lb_recursive_subtype_probe_source_produce]\ndef produce",
+      "offset": 826,
+      "previous": "def produce"
+    },
+    {
+      "current": "@[noinline, export lb_recursive_subtype_probe_source_echoGroups]\ndef echoGroups",
+      "offset": 773,
+      "previous": "def echoGroups"
+    },
+    {
+      "current": "@[noinline, export lb_recursive_subtype_probe_source_groups]\ndef groups",
+      "offset": 722,
+      "previous": "def groups"
+    },
+    {
+      "current": "@[noinline, export lb_recursive_subtype_probe_source_echo]\ndef echo",
+      "offset": 679,
+      "previous": "def echo"
+    },
+    {
+      "current": "@[noinline, export lb_recursive_subtype_probe_source_second]\ndef second (value : Chain) : Nat := secondBody value\n",
+      "offset": 679,
+      "previous": ""
+    },
+    {
+      "current": "def secondBody",
+      "offset": 604,
+      "previous": "def second"
+    },
+    {
+      "current": "@[noinline, export lb_recursive_subtype_probe_source_first]\ndef first (value : Chain) : Nat := firstBody value\n",
+      "offset": 604,
+      "previous": ""
+    },
+    {
+      "current": "def firstBody",
+      "offset": 530,
+      "previous": "def first"
+    },
+    {
+      "current": "@[noinline, export lb_recursive_subtype_probe_constructor_plusTwo]\ndef plusTwo",
+      "offset": 260,
+      "previous": "def plusTwo"
+    },
+    {
+      "current": "@[noinline, export lb_recursive_subtype_probe_constructor_plusOne]\ndef plusOne",
+      "offset": 158,
+      "previous": "def plusOne"
+    }
+  ],
+  "entries": [
+    {
+      "kind": "constructor",
+      "label": "RecursiveSubtypes.plusOne",
+      "symbol": "lb_recursive_subtype_probe_constructor_plusOne"
+    },
+    {
+      "kind": "constructor",
+      "label": "RecursiveSubtypes.plusTwo",
+      "symbol": "lb_recursive_subtype_probe_constructor_plusTwo"
+    },
+    {
+      "kind": "source",
+      "label": "RecursiveSubtypes.first",
+      "symbol": "lb_recursive_subtype_probe_source_first"
+    },
+    {
+      "kind": "source",
+      "label": "RecursiveSubtypes.second",
+      "symbol": "lb_recursive_subtype_probe_source_second"
+    },
+    {
+      "kind": "source",
+      "label": "RecursiveSubtypes.echo",
+      "symbol": "lb_recursive_subtype_probe_source_echo"
+    },
+    {
+      "kind": "source",
+      "label": "RecursiveSubtypes.groups",
+      "symbol": "lb_recursive_subtype_probe_source_groups"
+    },
+    {
+      "kind": "source",
+      "label": "RecursiveSubtypes.echoGroups",
+      "symbol": "lb_recursive_subtype_probe_source_echoGroups"
+    },
+    {
+      "kind": "source",
+      "label": "RecursiveSubtypes.produce",
+      "symbol": "lb_recursive_subtype_probe_source_produce"
+    }
+  ],
+  "entryForms": {
+    "lb_recursive_subtype_probe_constructor_plusOne": "function",
+    "lb_recursive_subtype_probe_constructor_plusTwo": "function",
+    "lb_recursive_subtype_probe_source_echo": "function",
+    "lb_recursive_subtype_probe_source_echoGroups": "function",
+    "lb_recursive_subtype_probe_source_first": "function",
+    "lb_recursive_subtype_probe_source_groups": "function",
+    "lb_recursive_subtype_probe_source_produce": "function",
+    "lb_recursive_subtype_probe_source_second": "function"
+  },
+  "originalSha256": "dc22479de2528065dcfc21f21d889f66f428aa76f7622a3ccd15b422fe65449b",
+  "probeSha256": "5a97b38165ded622057d5e1ec435faf09cbf16b2cd0cae225b35b7a0bfd2b0a4",
+  "source": "namespace RecursiveSubtypes\n\nabbrev Positive := { value : Nat // 0 < value }\n\ndef positive (value : Nat) : Positive :=\n  ⟨value + 1, Nat.zero_lt_succ value⟩\n\n@[noinline, export lb_recursive_subtype_probe_constructor_plusOne]\ndef plusOne (value : Nat) : Option Positive :=\n  if value < 100 then some (positive value) else none\n\n@[noinline, export lb_recursive_subtype_probe_constructor_plusTwo]\ndef plusTwo (value : Nat) : Option Positive :=\n  if value < 90 then some (positive (value + 1)) else none\n\ninductive Chain where\n  | empty\n  | node (value : Positive) (digit : Fin 3) (tail : Chain)\n\nabbrev ChainAlias := Chain\nabbrev Groups := Array (Option ChainAlias)\n\ndef firstBody : Chain → Nat\n  | .empty => 0\n  | .node value _ _ => value.val\n\n@[noinline, export lb_recursive_subtype_probe_source_first]\ndef first (value : Chain) : Nat := firstBody value\ndef secondBody : Chain → Nat\n  | .empty => 0\n  | .node value _ _ => value.val\n\n@[noinline, export lb_recursive_subtype_probe_source_second]\ndef second (value : Chain) : Nat := secondBody value\n@[noinline, export lb_recursive_subtype_probe_source_echo]\ndef echo (value : Chain) : Chain := value\n\n@[noinline, export lb_recursive_subtype_probe_source_groups]\ndef groups (values : Groups) : Nat := values.size\n\n@[noinline, export lb_recursive_subtype_probe_source_echoGroups]\ndef echoGroups (values : Groups) : Groups := values\n\n@[noinline, export lb_recursive_subtype_probe_source_produce]\ndef produce (value : Nat) : Chain :=\n  .node (positive value) ⟨2, by decide⟩ (.node (positive (value + 1)) ⟨1, by decide⟩ .empty)\n\nend RecursiveSubtypes\n"
+}

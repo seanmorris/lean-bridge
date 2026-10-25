@@ -1,0 +1,23 @@
+{
+  "changes": [
+    {
+      "after": {
+        "bytes": 6087819,
+        "sha256": "da72b11f3ae3a8ed32efda2ef13db0b39a7fb8075f88865e05e7c64898ba563e"
+      },
+      "before": {
+        "bytes": 6087819,
+        "path": "index.json",
+        "sha256": "581b034fd9dc2c8c59b60b571df2c7861bac8eed576d5d39f4cd3f2adf2f97a8"
+      },
+      "path": "index.json"
+    }
+  ],
+  "name": "duplicate-artifact",
+  "refusal": {
+    "code": "ERR_ASSERTION",
+    "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ 'php-wasm-refinement-entry-nominal-full-ordinary-a003269808c43a2a3a509a23c8a8ab8def07b610'\n- 'php-wasm-refinement-entry-nominal-full-reviewed-a003269808c43a2a3a509a23c8a8ab8def07b610'\n",
+    "name": "AssertionError"
+  },
+  "rejected": true
+}

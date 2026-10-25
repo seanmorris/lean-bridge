@@ -1,0 +1,187 @@
+{
+  "edits": [
+    {
+      "current": "@[noinline, export lb_value_index_result_only_probe_source_produceWideNat]\ndef produceWideNat",
+      "offset": 2757,
+      "previous": "@[noinline] def produceWideNat"
+    },
+    {
+      "current": "@[noinline, export lb_value_index_result_only_probe_source_produceZeroNat]\ndef produceZeroNat",
+      "offset": 2684,
+      "previous": "@[noinline] def produceZeroNat"
+    },
+    {
+      "current": "@[noinline, export lb_value_index_result_only_probe_source_produceEmptySized]\ndef produceEmptySized",
+      "offset": 2623,
+      "previous": "@[noinline] def produceEmptySized"
+    },
+    {
+      "current": "@[noinline, export lb_value_index_result_only_probe_source_produceUnicodeString]\ndef produceUnicodeString",
+      "offset": 2541,
+      "previous": "@[noinline] def produceUnicodeString"
+    },
+    {
+      "current": "@[noinline, export lb_value_index_result_only_probe_source_produceEmptyString]\ndef produceEmptyString",
+      "offset": 2463,
+      "previous": "@[noinline] def produceEmptyString"
+    },
+    {
+      "current": "@[noinline, export lb_value_index_result_only_probe_source_produceAb]\ndef produceAb",
+      "offset": 2410,
+      "previous": "@[noinline] def produceAb"
+    },
+    {
+      "current": "@[noinline, export lb_value_index_result_only_probe_source_produceFalseBool]\ndef produceFalseBool",
+      "offset": 2359,
+      "previous": "@[noinline] def produceFalseBool"
+    },
+    {
+      "current": "@[noinline, export lb_value_index_result_only_probe_source_produceTrueBool]\ndef produceTrueBool",
+      "offset": 2310,
+      "previous": "@[noinline] def produceTrueBool"
+    },
+    {
+      "current": "@[noinline, export lb_value_index_result_only_probe_constructor_mkUnicodeToken]\ndef mkUnicodeToken",
+      "offset": 1599,
+      "previous": "def mkUnicodeToken"
+    },
+    {
+      "current": "@[noinline, export lb_value_index_result_only_probe_constructor_mkEmptyToken]\ndef mkEmptyToken",
+      "offset": 1527,
+      "previous": "def mkEmptyToken"
+    },
+    {
+      "current": "@[noinline, export lb_value_index_result_only_probe_constructor_mkWideToken]\ndef mkWideToken",
+      "offset": 1457,
+      "previous": "def mkWideToken"
+    },
+    {
+      "current": "@[noinline, export lb_value_index_result_only_probe_constructor_mkZeroToken]\ndef mkZeroToken",
+      "offset": 1387,
+      "previous": "def mkZeroToken"
+    },
+    {
+      "current": "@[noinline, export lb_value_index_result_only_probe_constructor_mkEmptySized]\ndef mkEmptySized",
+      "offset": 1275,
+      "previous": "def mkEmptySized"
+    },
+    {
+      "current": "@[noinline, export lb_value_index_result_only_probe_constructor_mkAb]\ndef mkAb",
+      "offset": 1180,
+      "previous": "def mkAb"
+    },
+    {
+      "current": "@[noinline, export lb_value_index_result_only_probe_constructor_mkOff]\ndef mkOff",
+      "offset": 1079,
+      "previous": "def mkOff"
+    },
+    {
+      "current": "@[noinline, export lb_value_index_result_only_probe_constructor_mkOn]\ndef mkOn",
+      "offset": 981,
+      "previous": "def mkOn"
+    }
+  ],
+  "entries": [
+    {
+      "kind": "constructor",
+      "label": "CheckedRecordValueIndices.mkOn",
+      "symbol": "lb_value_index_result_only_probe_constructor_mkOn"
+    },
+    {
+      "kind": "constructor",
+      "label": "CheckedRecordValueIndices.mkOff",
+      "symbol": "lb_value_index_result_only_probe_constructor_mkOff"
+    },
+    {
+      "kind": "constructor",
+      "label": "CheckedRecordValueIndices.mkAb",
+      "symbol": "lb_value_index_result_only_probe_constructor_mkAb"
+    },
+    {
+      "kind": "constructor",
+      "label": "CheckedRecordValueIndices.mkEmptySized",
+      "symbol": "lb_value_index_result_only_probe_constructor_mkEmptySized"
+    },
+    {
+      "kind": "constructor",
+      "label": "CheckedRecordValueIndices.mkZeroToken",
+      "symbol": "lb_value_index_result_only_probe_constructor_mkZeroToken"
+    },
+    {
+      "kind": "constructor",
+      "label": "CheckedRecordValueIndices.mkWideToken",
+      "symbol": "lb_value_index_result_only_probe_constructor_mkWideToken"
+    },
+    {
+      "kind": "constructor",
+      "label": "CheckedRecordValueIndices.mkEmptyToken",
+      "symbol": "lb_value_index_result_only_probe_constructor_mkEmptyToken"
+    },
+    {
+      "kind": "constructor",
+      "label": "CheckedRecordValueIndices.mkUnicodeToken",
+      "symbol": "lb_value_index_result_only_probe_constructor_mkUnicodeToken"
+    },
+    {
+      "kind": "source",
+      "label": "CheckedRecordValueIndices.produceTrueBool",
+      "symbol": "lb_value_index_result_only_probe_source_produceTrueBool"
+    },
+    {
+      "kind": "source",
+      "label": "CheckedRecordValueIndices.produceFalseBool",
+      "symbol": "lb_value_index_result_only_probe_source_produceFalseBool"
+    },
+    {
+      "kind": "source",
+      "label": "CheckedRecordValueIndices.produceAb",
+      "symbol": "lb_value_index_result_only_probe_source_produceAb"
+    },
+    {
+      "kind": "source",
+      "label": "CheckedRecordValueIndices.produceEmptyString",
+      "symbol": "lb_value_index_result_only_probe_source_produceEmptyString"
+    },
+    {
+      "kind": "source",
+      "label": "CheckedRecordValueIndices.produceUnicodeString",
+      "symbol": "lb_value_index_result_only_probe_source_produceUnicodeString"
+    },
+    {
+      "kind": "source",
+      "label": "CheckedRecordValueIndices.produceEmptySized",
+      "symbol": "lb_value_index_result_only_probe_source_produceEmptySized"
+    },
+    {
+      "kind": "source",
+      "label": "CheckedRecordValueIndices.produceZeroNat",
+      "symbol": "lb_value_index_result_only_probe_source_produceZeroNat"
+    },
+    {
+      "kind": "source",
+      "label": "CheckedRecordValueIndices.produceWideNat",
+      "symbol": "lb_value_index_result_only_probe_source_produceWideNat"
+    }
+  ],
+  "entryForms": {
+    "lb_value_index_result_only_probe_constructor_mkAb": "function",
+    "lb_value_index_result_only_probe_constructor_mkEmptySized": "function",
+    "lb_value_index_result_only_probe_constructor_mkEmptyToken": "function",
+    "lb_value_index_result_only_probe_constructor_mkOff": "function",
+    "lb_value_index_result_only_probe_constructor_mkOn": "function",
+    "lb_value_index_result_only_probe_constructor_mkUnicodeToken": "function",
+    "lb_value_index_result_only_probe_constructor_mkWideToken": "function",
+    "lb_value_index_result_only_probe_constructor_mkZeroToken": "function",
+    "lb_value_index_result_only_probe_source_produceAb": "global",
+    "lb_value_index_result_only_probe_source_produceEmptySized": "global",
+    "lb_value_index_result_only_probe_source_produceEmptyString": "function",
+    "lb_value_index_result_only_probe_source_produceFalseBool": "global",
+    "lb_value_index_result_only_probe_source_produceTrueBool": "global",
+    "lb_value_index_result_only_probe_source_produceUnicodeString": "function",
+    "lb_value_index_result_only_probe_source_produceWideNat": "function",
+    "lb_value_index_result_only_probe_source_produceZeroNat": "function"
+  },
+  "originalSha256": "ccc330676f03ae5e101315010ed6fad4f4902b8f4d3c10228d5223006273a054",
+  "probeSha256": "207d03c4f2e3691534030efd26c1efdb5ae48ac11a8225022fc711e1701d93cb",
+  "source": "namespace CheckedRecordValueIndices\n\n/-- An array whose size is the closed natural-number index. -/\nstructure Sized (n : Nat) where\n  data : Array Nat\n  sized : data.size = n\n\n/-- A payload guarded by a closed boolean index. -/\nstructure Flagged (flag : Bool) where\n  count : Nat\n  set : (count == 0) = flag\n\n/-- A payload guarded by the length of a closed string index. -/\nstructure Labeled (label : String) where\n  size : Nat\n  named : label.length = size\n\n/-- One generic carrier covers closed Nat, Bool and String indices. -/\nstructure Token (alpha : Type) (index : alpha) where\n  count : Nat\n  fixed : index = index\n\nabbrev On := Flagged true\nabbrev Off := Flagged false\nabbrev Ab := Labeled \"ab\"\nabbrev EmptySized := Sized 0\nabbrev ZeroToken := Token Nat 0\nabbrev WideToken := Token Nat 340282366920938463463374607431768211457\nabbrev EmptyToken := Token String \"\"\nabbrev UnicodeToken := Token String \"λ🌱\"\n\n/-- Exact, site-selected constructors for host-supplied records. -/\n@[noinline, export lb_value_index_result_only_probe_constructor_mkOn]\ndef mkOn (count : Nat) : Option On :=\n  if h : (count == 0) = true then some ⟨count, h⟩ else none\n@[noinline, export lb_value_index_result_only_probe_constructor_mkOff]\ndef mkOff (count : Nat) : Option Off :=\n  if h : (count == 0) = false then some ⟨count, h⟩ else none\n@[noinline, export lb_value_index_result_only_probe_constructor_mkAb]\ndef mkAb (size : Nat) : Option Ab :=\n  if h : \"ab\".length = size then some ⟨size, h⟩ else none\n@[noinline, export lb_value_index_result_only_probe_constructor_mkEmptySized]\ndef mkEmptySized (data : Array Nat) : Option EmptySized :=\n  if h : data.size = 0 then some ⟨data, h⟩ else none\n@[noinline, export lb_value_index_result_only_probe_constructor_mkZeroToken]\ndef mkZeroToken (count : Nat) : Option ZeroToken := some ⟨count, rfl⟩\n@[noinline, export lb_value_index_result_only_probe_constructor_mkWideToken]\ndef mkWideToken (count : Nat) : Option WideToken := some ⟨count, rfl⟩\n@[noinline, export lb_value_index_result_only_probe_constructor_mkEmptyToken]\ndef mkEmptyToken (count : Nat) : Option EmptyToken := some ⟨count, rfl⟩\n@[noinline, export lb_value_index_result_only_probe_constructor_mkUnicodeToken]\ndef mkUnicodeToken (count : Nat) : Option UnicodeToken := some ⟨count, rfl⟩\n\n@[noinline] def trueBoolIndex (value : On) : Nat := value.count\n@[noinline] def falseBoolIndex (value : Off) : Nat := value.count\n@[noinline] def abStringIndex (value : Ab) : Nat := value.size\n@[noinline] def emptyStringIndex (value : EmptyToken) : Nat := value.count\n@[noinline] def unicodeStringIndex (value : UnicodeToken) : Nat := value.count\n@[noinline] def emptySizedIndex (value : EmptySized) : Nat := value.data.size\n@[noinline] def zeroNatIndex (value : ZeroToken) : Nat := value.count\n@[noinline] def wideNatIndex (value : WideToken) : Nat := value.count\n\n/-- Lean-produced records need no host-side checked constructor. -/\n@[noinline, export lb_value_index_result_only_probe_source_produceTrueBool]\ndef produceTrueBool : On := ⟨0, rfl⟩\n@[noinline, export lb_value_index_result_only_probe_source_produceFalseBool]\ndef produceFalseBool : Off := ⟨1, rfl⟩\n@[noinline, export lb_value_index_result_only_probe_source_produceAb]\ndef produceAb : Ab := ⟨\"ab\".length, rfl⟩\n@[noinline, export lb_value_index_result_only_probe_source_produceEmptyString]\ndef produceEmptyString (count : Nat) : EmptyToken := ⟨count, rfl⟩\n@[noinline, export lb_value_index_result_only_probe_source_produceUnicodeString]\ndef produceUnicodeString (count : Nat) : UnicodeToken := ⟨count, rfl⟩\n@[noinline, export lb_value_index_result_only_probe_source_produceEmptySized]\ndef produceEmptySized : EmptySized := ⟨#[], rfl⟩\n@[noinline, export lb_value_index_result_only_probe_source_produceZeroNat]\ndef produceZeroNat (count : Nat) : ZeroToken := ⟨count, rfl⟩\n@[noinline, export lb_value_index_result_only_probe_source_produceWideNat]\ndef produceWideNat (count : Nat) : WideToken := ⟨count, rfl⟩\n\nend CheckedRecordValueIndices\n"
+}

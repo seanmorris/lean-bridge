@@ -1,0 +1,3082 @@
+{
+  "bindingIr": {
+    "assurance": [],
+    "capabilities": [],
+    "component": {
+      "id": "recursivesubtypes@1.0.0",
+      "name": "recursivesubtypes",
+      "version": "1.0.0"
+    },
+    "declarations": [
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "Call RecursiveSubtypes.echo."
+        },
+        "effects": [],
+        "failure": {
+          "errors": [],
+          "mode": "none",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:RecursiveSubtypes.echo",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "echo",
+        "overloadKey": "RecursiveSubtypes.echo",
+        "owner": null,
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "arg0",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "id": "lean:RecursiveSubtypes.Chain",
+              "kind": "named"
+            }
+          }
+        ],
+        "receiver": null,
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "id": "lean:RecursiveSubtypes.Chain",
+            "kind": "named"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "RecursiveSubtypes.echo",
+          "extensions": {
+            "lean-lang.org/export-contract": {
+              "parameters": [
+                {
+                  "lifetime": null,
+                  "ownership": "copy",
+                  "refinement": {
+                    "cases": [
+                      {
+                        "fields": [],
+                        "name": "empty"
+                      },
+                      {
+                        "fields": [
+                          {
+                            "name": "value",
+                            "refinement": {
+                              "constructor": "RecursiveSubtypes.plusOne"
+                            }
+                          },
+                          {
+                            "name": "digit",
+                            "refinement": null
+                          },
+                          {
+                            "name": "tail",
+                            "refinement": null
+                          }
+                        ],
+                        "name": "node"
+                      }
+                    ],
+                    "kind": "variant",
+                    "name": "RecursiveSubtypes.Chain"
+                  }
+                }
+              ],
+              "result": {
+                "lifetime": null,
+                "ownership": "copy"
+              }
+            },
+            "lean-lang.org/refinements": {
+              "parameters": [
+                {
+                  "cases": [
+                    {
+                      "fields": [],
+                      "name": "empty"
+                    },
+                    {
+                      "fields": [
+                        {
+                          "name": "value",
+                          "refinement": {
+                            "constructor": "RecursiveSubtypes.plusOne",
+                            "kind": "subtype"
+                          }
+                        },
+                        {
+                          "name": "digit",
+                          "refinement": {
+                            "bound": "3",
+                            "kind": "fin"
+                          }
+                        },
+                        {
+                          "name": "tail",
+                          "refinement": null
+                        }
+                      ],
+                      "name": "node"
+                    }
+                  ],
+                  "kind": "variant",
+                  "name": "RecursiveSubtypes.Chain"
+                }
+              ],
+              "result": {
+                "cases": [
+                  {
+                    "fields": [],
+                    "name": "empty"
+                  },
+                  {
+                    "fields": [
+                      {
+                        "name": "value",
+                        "refinement": {
+                          "constructor": null,
+                          "kind": "subtype"
+                        }
+                      },
+                      {
+                        "name": "digit",
+                        "refinement": {
+                          "bound": "3",
+                          "kind": "fin"
+                        }
+                      },
+                      {
+                        "name": "tail",
+                        "refinement": null
+                      }
+                    ],
+                    "name": "node"
+                  }
+                ],
+                "kind": "variant",
+                "name": "RecursiveSubtypes.Chain"
+              }
+            },
+            "lean-lang.org/source-position": {
+              "endColumn": 41,
+              "endLine": 36,
+              "path": "RecursiveSubtypes.lean",
+              "startColumn": 0,
+              "startLine": 35
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "Call RecursiveSubtypes.echoGroups."
+        },
+        "effects": [],
+        "failure": {
+          "errors": [],
+          "mode": "none",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:RecursiveSubtypes.echoGroups",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "echoGroups",
+        "overloadKey": "RecursiveSubtypes.echoGroups",
+        "owner": null,
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "arg0",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "id": "lean:RecursiveSubtypes.ChainAlias",
+                      "kind": "named"
+                    }
+                  ],
+                  "constructor": "option",
+                  "kind": "apply"
+                }
+              ],
+              "constructor": "array",
+              "kind": "apply"
+            }
+          }
+        ],
+        "receiver": null,
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "id": "lean:RecursiveSubtypes.ChainAlias",
+                    "kind": "named"
+                  }
+                ],
+                "constructor": "option",
+                "kind": "apply"
+              }
+            ],
+            "constructor": "array",
+            "kind": "apply"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "RecursiveSubtypes.echoGroups",
+          "extensions": {
+            "lean-lang.org/export-contract": {
+              "parameters": [
+                {
+                  "lifetime": null,
+                  "ownership": "copy",
+                  "refinement": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "cases": [
+                              {
+                                "fields": [],
+                                "name": "empty"
+                              },
+                              {
+                                "fields": [
+                                  {
+                                    "name": "value",
+                                    "refinement": {
+                                      "constructor": "RecursiveSubtypes.plusOne"
+                                    }
+                                  },
+                                  {
+                                    "name": "digit",
+                                    "refinement": null
+                                  },
+                                  {
+                                    "name": "tail",
+                                    "refinement": null
+                                  }
+                                ],
+                                "name": "node"
+                              }
+                            ],
+                            "kind": "variant",
+                            "name": "RecursiveSubtypes.Chain"
+                          }
+                        ],
+                        "kind": "option"
+                      }
+                    ],
+                    "kind": "array"
+                  }
+                }
+              ],
+              "result": {
+                "lifetime": null,
+                "ownership": "copy"
+              }
+            },
+            "lean-lang.org/refinements": {
+              "parameters": [
+                {
+                  "arguments": [
+                    {
+                      "arguments": [
+                        {
+                          "cases": [
+                            {
+                              "fields": [],
+                              "name": "empty"
+                            },
+                            {
+                              "fields": [
+                                {
+                                  "name": "value",
+                                  "refinement": {
+                                    "constructor": "RecursiveSubtypes.plusOne",
+                                    "kind": "subtype"
+                                  }
+                                },
+                                {
+                                  "name": "digit",
+                                  "refinement": {
+                                    "bound": "3",
+                                    "kind": "fin"
+                                  }
+                                },
+                                {
+                                  "name": "tail",
+                                  "refinement": null
+                                }
+                              ],
+                              "name": "node"
+                            }
+                          ],
+                          "kind": "variant",
+                          "name": "RecursiveSubtypes.Chain"
+                        }
+                      ],
+                      "kind": "option"
+                    }
+                  ],
+                  "kind": "array"
+                }
+              ],
+              "result": {
+                "arguments": [
+                  {
+                    "arguments": [
+                      {
+                        "cases": [
+                          {
+                            "fields": [],
+                            "name": "empty"
+                          },
+                          {
+                            "fields": [
+                              {
+                                "name": "value",
+                                "refinement": {
+                                  "constructor": null,
+                                  "kind": "subtype"
+                                }
+                              },
+                              {
+                                "name": "digit",
+                                "refinement": {
+                                  "bound": "3",
+                                  "kind": "fin"
+                                }
+                              },
+                              {
+                                "name": "tail",
+                                "refinement": null
+                              }
+                            ],
+                            "name": "node"
+                          }
+                        ],
+                        "kind": "variant",
+                        "name": "RecursiveSubtypes.Chain"
+                      }
+                    ],
+                    "kind": "option"
+                  }
+                ],
+                "kind": "array"
+              }
+            },
+            "lean-lang.org/source-position": {
+              "endColumn": 51,
+              "endLine": 42,
+              "path": "RecursiveSubtypes.lean",
+              "startColumn": 0,
+              "startLine": 41
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "Call RecursiveSubtypes.first."
+        },
+        "effects": [],
+        "failure": {
+          "errors": [],
+          "mode": "none",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:RecursiveSubtypes.first",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "first",
+        "overloadKey": "RecursiveSubtypes.first",
+        "owner": null,
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "arg0",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "id": "lean:RecursiveSubtypes.Chain",
+              "kind": "named"
+            }
+          }
+        ],
+        "receiver": null,
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "RecursiveSubtypes.first",
+          "extensions": {
+            "lean-lang.org/export-contract": {
+              "parameters": [
+                {
+                  "lifetime": null,
+                  "ownership": "copy",
+                  "refinement": {
+                    "cases": [
+                      {
+                        "fields": [],
+                        "name": "empty"
+                      },
+                      {
+                        "fields": [
+                          {
+                            "name": "value",
+                            "refinement": {
+                              "constructor": "RecursiveSubtypes.plusOne"
+                            }
+                          },
+                          {
+                            "name": "digit",
+                            "refinement": null
+                          },
+                          {
+                            "name": "tail",
+                            "refinement": null
+                          }
+                        ],
+                        "name": "node"
+                      }
+                    ],
+                    "kind": "variant",
+                    "name": "RecursiveSubtypes.Chain"
+                  }
+                }
+              ],
+              "result": {
+                "lifetime": null,
+                "ownership": "copy"
+              }
+            },
+            "lean-lang.org/refinements": {
+              "parameters": [
+                {
+                  "cases": [
+                    {
+                      "fields": [],
+                      "name": "empty"
+                    },
+                    {
+                      "fields": [
+                        {
+                          "name": "value",
+                          "refinement": {
+                            "constructor": "RecursiveSubtypes.plusOne",
+                            "kind": "subtype"
+                          }
+                        },
+                        {
+                          "name": "digit",
+                          "refinement": {
+                            "bound": "3",
+                            "kind": "fin"
+                          }
+                        },
+                        {
+                          "name": "tail",
+                          "refinement": null
+                        }
+                      ],
+                      "name": "node"
+                    }
+                  ],
+                  "kind": "variant",
+                  "name": "RecursiveSubtypes.Chain"
+                }
+              ],
+              "result": null
+            },
+            "lean-lang.org/source-position": {
+              "endColumn": 50,
+              "endLine": 28,
+              "path": "RecursiveSubtypes.lean",
+              "startColumn": 0,
+              "startLine": 27
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "Call RecursiveSubtypes.groups."
+        },
+        "effects": [],
+        "failure": {
+          "errors": [],
+          "mode": "none",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:RecursiveSubtypes.groups",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "groups",
+        "overloadKey": "RecursiveSubtypes.groups",
+        "owner": null,
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "arg0",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "id": "lean:RecursiveSubtypes.ChainAlias",
+                      "kind": "named"
+                    }
+                  ],
+                  "constructor": "option",
+                  "kind": "apply"
+                }
+              ],
+              "constructor": "array",
+              "kind": "apply"
+            }
+          }
+        ],
+        "receiver": null,
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "RecursiveSubtypes.groups",
+          "extensions": {
+            "lean-lang.org/export-contract": {
+              "parameters": [
+                {
+                  "lifetime": null,
+                  "ownership": "copy",
+                  "refinement": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "cases": [
+                              {
+                                "fields": [],
+                                "name": "empty"
+                              },
+                              {
+                                "fields": [
+                                  {
+                                    "name": "value",
+                                    "refinement": {
+                                      "constructor": "RecursiveSubtypes.plusOne"
+                                    }
+                                  },
+                                  {
+                                    "name": "digit",
+                                    "refinement": null
+                                  },
+                                  {
+                                    "name": "tail",
+                                    "refinement": null
+                                  }
+                                ],
+                                "name": "node"
+                              }
+                            ],
+                            "kind": "variant",
+                            "name": "RecursiveSubtypes.Chain"
+                          }
+                        ],
+                        "kind": "option"
+                      }
+                    ],
+                    "kind": "array"
+                  }
+                }
+              ],
+              "result": {
+                "lifetime": null,
+                "ownership": "copy"
+              }
+            },
+            "lean-lang.org/refinements": {
+              "parameters": [
+                {
+                  "arguments": [
+                    {
+                      "arguments": [
+                        {
+                          "cases": [
+                            {
+                              "fields": [],
+                              "name": "empty"
+                            },
+                            {
+                              "fields": [
+                                {
+                                  "name": "value",
+                                  "refinement": {
+                                    "constructor": "RecursiveSubtypes.plusOne",
+                                    "kind": "subtype"
+                                  }
+                                },
+                                {
+                                  "name": "digit",
+                                  "refinement": {
+                                    "bound": "3",
+                                    "kind": "fin"
+                                  }
+                                },
+                                {
+                                  "name": "tail",
+                                  "refinement": null
+                                }
+                              ],
+                              "name": "node"
+                            }
+                          ],
+                          "kind": "variant",
+                          "name": "RecursiveSubtypes.Chain"
+                        }
+                      ],
+                      "kind": "option"
+                    }
+                  ],
+                  "kind": "array"
+                }
+              ],
+              "result": null
+            },
+            "lean-lang.org/source-position": {
+              "endColumn": 49,
+              "endLine": 39,
+              "path": "RecursiveSubtypes.lean",
+              "startColumn": 0,
+              "startLine": 38
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "Call RecursiveSubtypes.produce."
+        },
+        "effects": [],
+        "failure": {
+          "errors": [],
+          "mode": "none",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:RecursiveSubtypes.produce",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "produce",
+        "overloadKey": "RecursiveSubtypes.produce",
+        "owner": null,
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "arg0",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          }
+        ],
+        "receiver": null,
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "id": "lean:RecursiveSubtypes.Chain",
+            "kind": "named"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "RecursiveSubtypes.produce",
+          "extensions": {
+            "lean-lang.org/refinements": {
+              "parameters": [
+                null
+              ],
+              "result": {
+                "cases": [
+                  {
+                    "fields": [],
+                    "name": "empty"
+                  },
+                  {
+                    "fields": [
+                      {
+                        "name": "value",
+                        "refinement": {
+                          "constructor": null,
+                          "kind": "subtype"
+                        }
+                      },
+                      {
+                        "name": "digit",
+                        "refinement": {
+                          "bound": "3",
+                          "kind": "fin"
+                        }
+                      },
+                      {
+                        "name": "tail",
+                        "refinement": null
+                      }
+                    ],
+                    "name": "node"
+                  }
+                ],
+                "kind": "variant",
+                "name": "RecursiveSubtypes.Chain"
+              }
+            },
+            "lean-lang.org/source-position": {
+              "endColumn": 92,
+              "endLine": 46,
+              "path": "RecursiveSubtypes.lean",
+              "startColumn": 0,
+              "startLine": 44
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "Call RecursiveSubtypes.second."
+        },
+        "effects": [],
+        "failure": {
+          "errors": [],
+          "mode": "none",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:RecursiveSubtypes.second",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "second",
+        "overloadKey": "RecursiveSubtypes.second",
+        "owner": null,
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "arg0",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "id": "lean:RecursiveSubtypes.Chain",
+              "kind": "named"
+            }
+          }
+        ],
+        "receiver": null,
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "RecursiveSubtypes.second",
+          "extensions": {
+            "lean-lang.org/export-contract": {
+              "parameters": [
+                {
+                  "lifetime": null,
+                  "ownership": "copy",
+                  "refinement": {
+                    "cases": [
+                      {
+                        "fields": [],
+                        "name": "empty"
+                      },
+                      {
+                        "fields": [
+                          {
+                            "name": "value",
+                            "refinement": {
+                              "constructor": "RecursiveSubtypes.plusTwo"
+                            }
+                          },
+                          {
+                            "name": "digit",
+                            "refinement": null
+                          },
+                          {
+                            "name": "tail",
+                            "refinement": null
+                          }
+                        ],
+                        "name": "node"
+                      }
+                    ],
+                    "kind": "variant",
+                    "name": "RecursiveSubtypes.Chain"
+                  }
+                }
+              ],
+              "result": {
+                "lifetime": null,
+                "ownership": "copy"
+              }
+            },
+            "lean-lang.org/refinements": {
+              "parameters": [
+                {
+                  "cases": [
+                    {
+                      "fields": [],
+                      "name": "empty"
+                    },
+                    {
+                      "fields": [
+                        {
+                          "name": "value",
+                          "refinement": {
+                            "constructor": "RecursiveSubtypes.plusTwo",
+                            "kind": "subtype"
+                          }
+                        },
+                        {
+                          "name": "digit",
+                          "refinement": {
+                            "bound": "3",
+                            "kind": "fin"
+                          }
+                        },
+                        {
+                          "name": "tail",
+                          "refinement": null
+                        }
+                      ],
+                      "name": "node"
+                    }
+                  ],
+                  "kind": "variant",
+                  "name": "RecursiveSubtypes.Chain"
+                }
+              ],
+              "result": null
+            },
+            "lean-lang.org/source-position": {
+              "endColumn": 52,
+              "endLine": 34,
+              "path": "RecursiveSubtypes.lean",
+              "startColumn": 0,
+              "startLine": 33
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      }
+    ],
+    "documentation": {
+      "details": "",
+      "summary": "Compiler-checked exports for recursivesubtypes."
+    },
+    "errors": [],
+    "producers": [
+      {
+        "adapter": "lean-bridge-elaborator",
+        "adapterVersion": 2,
+        "extensions": {
+          "lean-lang.org/elaboration-sha256": "6e7337736eaeb4c85af0774efb815f8988c9a8589c8b39de0b05b28941de251b",
+          "lean-lang.org/toolchain": "leanprover/lean4:v4.32.2"
+        },
+        "id": "lean",
+        "tool": "Lean",
+        "toolVersion": "4.32.2"
+      }
+    ],
+    "schemaVersion": 3,
+    "types": [
+      {
+        "assurance": [],
+        "callable": null,
+        "cases": [
+          {
+            "documentation": {
+              "details": "",
+              "summary": "empty"
+            },
+            "fields": [],
+            "name": "empty"
+          },
+          {
+            "documentation": {
+              "details": "",
+              "summary": "node"
+            },
+            "fields": [
+              {
+                "documentation": {
+                  "details": "",
+                  "summary": "value"
+                },
+                "mutability": "immutable",
+                "name": "value",
+                "type": {
+                  "kind": "primitive",
+                  "name": "nat"
+                }
+              },
+              {
+                "documentation": {
+                  "details": "",
+                  "summary": "digit"
+                },
+                "mutability": "immutable",
+                "name": "digit",
+                "type": {
+                  "kind": "primitive",
+                  "name": "nat"
+                }
+              },
+              {
+                "documentation": {
+                  "details": "",
+                  "summary": "tail"
+                },
+                "mutability": "immutable",
+                "name": "tail",
+                "type": {
+                  "id": "lean:RecursiveSubtypes.Chain",
+                  "kind": "named"
+                }
+              }
+            ],
+            "name": "node"
+          }
+        ],
+        "documentation": {
+          "details": "",
+          "summary": "Checked Lean RecursiveSubtypes.Chain."
+        },
+        "fields": [],
+        "host": null,
+        "id": "lean:RecursiveSubtypes.Chain",
+        "kind": "variant",
+        "mutability": "immutable",
+        "name": "Chain",
+        "representation": "copied",
+        "resource": null,
+        "source": {
+          "declaration": "RecursiveSubtypes.Chain",
+          "extensions": {
+            "lean-lang.org/nominal-refinements": {
+              "cases": [
+                [],
+                [
+                  null,
+                  {
+                    "bound": "3",
+                    "kind": "fin"
+                  },
+                  null
+                ]
+              ],
+              "kind": "variant"
+            }
+          },
+          "producer": "lean"
+        },
+        "target": null,
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "callable": null,
+        "cases": [],
+        "documentation": {
+          "details": "",
+          "summary": "Checked Lean RecursiveSubtypes.ChainAlias."
+        },
+        "fields": [],
+        "host": null,
+        "id": "lean:RecursiveSubtypes.ChainAlias",
+        "kind": "alias",
+        "mutability": "immutable",
+        "name": "ChainAlias",
+        "representation": "copied",
+        "resource": null,
+        "source": {
+          "declaration": "RecursiveSubtypes.ChainAlias",
+          "extensions": {},
+          "producer": "lean"
+        },
+        "target": {
+          "id": "lean:RecursiveSubtypes.Chain",
+          "kind": "named"
+        },
+        "typeParameters": []
+      }
+    ]
+  },
+  "bindingIrSha256": "3573c76dee2d2c9cb66c7ff6666f6f2b575d31716f4367333de99f8ef5a38e1a",
+  "byteOrder": "little",
+  "component": {
+    "id": "recursivesubtypes@1.0.0",
+    "name": "recursivesubtypes",
+    "version": "1.0.0"
+  },
+  "copiedGraph": {
+    "exports": [
+      {
+        "bindingId": "lean:RecursiveSubtypes.echo",
+        "parameters": [
+          {
+            "id": "lean:RecursiveSubtypes.Chain",
+            "kind": "named"
+          }
+        ],
+        "result": {
+          "id": "lean:RecursiveSubtypes.Chain",
+          "kind": "named"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_890e535d855edd42581629d4"
+      },
+      {
+        "bindingId": "lean:RecursiveSubtypes.echoGroups",
+        "parameters": [
+          {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "id": "lean:RecursiveSubtypes.ChainAlias",
+                    "kind": "named"
+                  }
+                ],
+                "constructor": "option",
+                "kind": "apply"
+              }
+            ],
+            "constructor": "array",
+            "kind": "apply"
+          }
+        ],
+        "result": {
+          "arguments": [
+            {
+              "arguments": [
+                {
+                  "id": "lean:RecursiveSubtypes.ChainAlias",
+                  "kind": "named"
+                }
+              ],
+              "constructor": "option",
+              "kind": "apply"
+            }
+          ],
+          "constructor": "array",
+          "kind": "apply"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_61edaca9ace2104f41ea6e59"
+      },
+      {
+        "bindingId": "lean:RecursiveSubtypes.first",
+        "parameters": [
+          {
+            "id": "lean:RecursiveSubtypes.Chain",
+            "kind": "named"
+          }
+        ],
+        "result": {
+          "kind": "primitive",
+          "name": "nat"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_a9ae70188abbca81b8f235ce"
+      },
+      {
+        "bindingId": "lean:RecursiveSubtypes.groups",
+        "parameters": [
+          {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "id": "lean:RecursiveSubtypes.ChainAlias",
+                    "kind": "named"
+                  }
+                ],
+                "constructor": "option",
+                "kind": "apply"
+              }
+            ],
+            "constructor": "array",
+            "kind": "apply"
+          }
+        ],
+        "result": {
+          "kind": "primitive",
+          "name": "nat"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_5f9ebf1241c61a39ed1bdebf"
+      },
+      {
+        "bindingId": "lean:RecursiveSubtypes.produce",
+        "parameters": [
+          {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        ],
+        "result": {
+          "id": "lean:RecursiveSubtypes.Chain",
+          "kind": "named"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_cc48993941d89731cae43d8e"
+      },
+      {
+        "bindingId": "lean:RecursiveSubtypes.second",
+        "parameters": [
+          {
+            "id": "lean:RecursiveSubtypes.Chain",
+            "kind": "named"
+          }
+        ],
+        "result": {
+          "kind": "primitive",
+          "name": "nat"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_9e8d2cbaa99dca92eb622921"
+      }
+    ],
+    "schemaVersion": 1,
+    "types": [
+      {
+        "cases": [
+          {
+            "fields": [],
+            "name": "empty"
+          },
+          {
+            "fields": [
+              {
+                "name": "value",
+                "type": {
+                  "kind": "primitive",
+                  "name": "nat"
+                }
+              },
+              {
+                "name": "digit",
+                "type": {
+                  "kind": "primitive",
+                  "name": "nat"
+                }
+              },
+              {
+                "name": "tail",
+                "type": {
+                  "id": "lean:RecursiveSubtypes.Chain",
+                  "kind": "named"
+                }
+              }
+            ],
+            "name": "node"
+          }
+        ],
+        "id": "lean:RecursiveSubtypes.Chain",
+        "kind": "variant"
+      },
+      {
+        "id": "lean:RecursiveSubtypes.ChainAlias",
+        "kind": "alias",
+        "target": {
+          "id": "lean:RecursiveSubtypes.Chain",
+          "kind": "named"
+        }
+      }
+    ]
+  },
+  "exports": [
+    {
+      "bindingId": "lean:RecursiveSubtypes.echo",
+      "documentation": null,
+      "module": "RecursiveSubtypes",
+      "name": "RecursiveSubtypes.echo",
+      "parameters": [
+        {
+          "name": "value",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": false,
+              "unbox": "lean_unbox"
+            },
+            "kind": "graph",
+            "root": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "kind": "reference",
+              "lean": "RecursiveSubtypes.Chain",
+              "name": "RecursiveSubtypes.Chain"
+            },
+            "types": [
+              {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": false,
+                  "unbox": "lean_unbox"
+                },
+                "cases": [
+                  {
+                    "constructor": "RecursiveSubtypes.Chain.empty",
+                    "fields": [],
+                    "name": "empty"
+                  },
+                  {
+                    "constructor": "RecursiveSubtypes.Chain.node",
+                    "fields": [
+                      {
+                        "name": "value",
+                        "type": {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": false,
+                            "unbox": "lean_unbox"
+                          },
+                          "base": {
+                            "abi": {
+                              "box": "lean_box",
+                              "cType": "lean_object*",
+                              "heap": false,
+                              "unbox": "lean_unbox"
+                            },
+                            "kind": "primitive",
+                            "lean": "Nat",
+                            "name": "nat"
+                          },
+                          "kind": "refinement",
+                          "predicate": {
+                            "constructor": "RecursiveSubtypes.plusOne",
+                            "kind": "subtype"
+                          }
+                        }
+                      },
+                      {
+                        "name": "digit",
+                        "type": {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": false,
+                            "unbox": "lean_unbox"
+                          },
+                          "base": {
+                            "abi": {
+                              "box": "lean_box",
+                              "cType": "lean_object*",
+                              "heap": false,
+                              "unbox": "lean_unbox"
+                            },
+                            "kind": "primitive",
+                            "lean": "Nat",
+                            "name": "nat"
+                          },
+                          "kind": "refinement",
+                          "predicate": {
+                            "bound": "3",
+                            "kind": "fin"
+                          }
+                        }
+                      },
+                      {
+                        "name": "tail",
+                        "type": {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": false,
+                            "unbox": "lean_unbox"
+                          },
+                          "kind": "reference",
+                          "lean": "RecursiveSubtypes.Chain",
+                          "name": "RecursiveSubtypes.Chain"
+                        }
+                      }
+                    ],
+                    "name": "node"
+                  }
+                ],
+                "kind": "variant",
+                "lean": "RecursiveSubtypes.Chain",
+                "name": "RecursiveSubtypes.Chain"
+              }
+            ]
+          }
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "cases": [
+              {
+                "fields": [],
+                "name": "empty"
+              },
+              {
+                "fields": [
+                  {
+                    "name": "value",
+                    "refinement": {
+                      "constructor": "RecursiveSubtypes.plusOne",
+                      "kind": "subtype"
+                    }
+                  },
+                  {
+                    "name": "digit",
+                    "refinement": {
+                      "bound": "3",
+                      "kind": "fin"
+                    }
+                  },
+                  {
+                    "name": "tail",
+                    "refinement": null
+                  }
+                ],
+                "name": "node"
+              }
+            ],
+            "kind": "variant",
+            "name": "RecursiveSubtypes.Chain"
+          }
+        ],
+        "result": {
+          "cases": [
+            {
+              "fields": [],
+              "name": "empty"
+            },
+            {
+              "fields": [
+                {
+                  "name": "value",
+                  "refinement": {
+                    "constructor": null,
+                    "kind": "subtype"
+                  }
+                },
+                {
+                  "name": "digit",
+                  "refinement": {
+                    "bound": "3",
+                    "kind": "fin"
+                  }
+                },
+                {
+                  "name": "tail",
+                  "refinement": null
+                }
+              ],
+              "name": "node"
+            }
+          ],
+          "kind": "variant",
+          "name": "RecursiveSubtypes.Chain"
+        }
+      },
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": false,
+          "unbox": "lean_unbox"
+        },
+        "kind": "graph",
+        "root": {
+          "abi": {
+            "box": "lean_box",
+            "cType": "lean_object*",
+            "heap": false,
+            "unbox": "lean_unbox"
+          },
+          "kind": "reference",
+          "lean": "RecursiveSubtypes.Chain",
+          "name": "RecursiveSubtypes.Chain"
+        },
+        "types": [
+          {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": false,
+              "unbox": "lean_unbox"
+            },
+            "cases": [
+              {
+                "constructor": "RecursiveSubtypes.Chain.empty",
+                "fields": [],
+                "name": "empty"
+              },
+              {
+                "constructor": "RecursiveSubtypes.Chain.node",
+                "fields": [
+                  {
+                    "name": "value",
+                    "type": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": false,
+                        "unbox": "lean_unbox"
+                      },
+                      "base": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": false,
+                          "unbox": "lean_unbox"
+                        },
+                        "kind": "primitive",
+                        "lean": "Nat",
+                        "name": "nat"
+                      },
+                      "kind": "refinement",
+                      "predicate": {
+                        "constructor": null,
+                        "kind": "subtype"
+                      }
+                    }
+                  },
+                  {
+                    "name": "digit",
+                    "type": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": false,
+                        "unbox": "lean_unbox"
+                      },
+                      "base": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": false,
+                          "unbox": "lean_unbox"
+                        },
+                        "kind": "primitive",
+                        "lean": "Nat",
+                        "name": "nat"
+                      },
+                      "kind": "refinement",
+                      "predicate": {
+                        "bound": "3",
+                        "kind": "fin"
+                      }
+                    }
+                  },
+                  {
+                    "name": "tail",
+                    "type": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": false,
+                        "unbox": "lean_unbox"
+                      },
+                      "kind": "reference",
+                      "lean": "RecursiveSubtypes.Chain",
+                      "name": "RecursiveSubtypes.Chain"
+                    }
+                  }
+                ],
+                "name": "node"
+              }
+            ],
+            "kind": "variant",
+            "lean": "RecursiveSubtypes.Chain",
+            "name": "RecursiveSubtypes.Chain"
+          }
+        ]
+      },
+      "sourcePosition": {
+        "endColumn": 41,
+        "endLine": 36,
+        "path": "RecursiveSubtypes.lean",
+        "startColumn": 0,
+        "startLine": 35
+      },
+      "symbol": "lean_bridge_890e535d855edd42581629d4_lean",
+      "theoremReferences": []
+    },
+    {
+      "bindingId": "lean:RecursiveSubtypes.echoGroups",
+      "documentation": null,
+      "module": "RecursiveSubtypes",
+      "name": "RecursiveSubtypes.echoGroups",
+      "parameters": [
+        {
+          "name": "values",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": true,
+              "unbox": "lean_unbox"
+            },
+            "kind": "graph",
+            "root": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": true,
+                "unbox": "lean_unbox"
+              },
+              "element": {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": false,
+                  "unbox": "lean_unbox"
+                },
+                "element": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "reference",
+                  "lean": "RecursiveSubtypes.ChainAlias",
+                  "name": "RecursiveSubtypes.ChainAlias"
+                },
+                "kind": "option"
+              },
+              "kind": "array"
+            },
+            "types": [
+              {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": false,
+                  "unbox": "lean_unbox"
+                },
+                "cases": [
+                  {
+                    "constructor": "RecursiveSubtypes.Chain.empty",
+                    "fields": [],
+                    "name": "empty"
+                  },
+                  {
+                    "constructor": "RecursiveSubtypes.Chain.node",
+                    "fields": [
+                      {
+                        "name": "value",
+                        "type": {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": false,
+                            "unbox": "lean_unbox"
+                          },
+                          "base": {
+                            "abi": {
+                              "box": "lean_box",
+                              "cType": "lean_object*",
+                              "heap": false,
+                              "unbox": "lean_unbox"
+                            },
+                            "kind": "primitive",
+                            "lean": "Nat",
+                            "name": "nat"
+                          },
+                          "kind": "refinement",
+                          "predicate": {
+                            "constructor": "RecursiveSubtypes.plusOne",
+                            "kind": "subtype"
+                          }
+                        }
+                      },
+                      {
+                        "name": "digit",
+                        "type": {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": false,
+                            "unbox": "lean_unbox"
+                          },
+                          "base": {
+                            "abi": {
+                              "box": "lean_box",
+                              "cType": "lean_object*",
+                              "heap": false,
+                              "unbox": "lean_unbox"
+                            },
+                            "kind": "primitive",
+                            "lean": "Nat",
+                            "name": "nat"
+                          },
+                          "kind": "refinement",
+                          "predicate": {
+                            "bound": "3",
+                            "kind": "fin"
+                          }
+                        }
+                      },
+                      {
+                        "name": "tail",
+                        "type": {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": false,
+                            "unbox": "lean_unbox"
+                          },
+                          "kind": "reference",
+                          "lean": "RecursiveSubtypes.Chain",
+                          "name": "RecursiveSubtypes.Chain"
+                        }
+                      }
+                    ],
+                    "name": "node"
+                  }
+                ],
+                "kind": "variant",
+                "lean": "RecursiveSubtypes.Chain",
+                "name": "RecursiveSubtypes.Chain"
+              },
+              {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": false,
+                  "unbox": "lean_unbox"
+                },
+                "kind": "alias",
+                "lean": "RecursiveSubtypes.ChainAlias",
+                "name": "RecursiveSubtypes.ChainAlias",
+                "target": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "reference",
+                  "lean": "RecursiveSubtypes.Chain",
+                  "name": "RecursiveSubtypes.Chain"
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "cases": [
+                      {
+                        "fields": [],
+                        "name": "empty"
+                      },
+                      {
+                        "fields": [
+                          {
+                            "name": "value",
+                            "refinement": {
+                              "constructor": "RecursiveSubtypes.plusOne",
+                              "kind": "subtype"
+                            }
+                          },
+                          {
+                            "name": "digit",
+                            "refinement": {
+                              "bound": "3",
+                              "kind": "fin"
+                            }
+                          },
+                          {
+                            "name": "tail",
+                            "refinement": null
+                          }
+                        ],
+                        "name": "node"
+                      }
+                    ],
+                    "kind": "variant",
+                    "name": "RecursiveSubtypes.Chain"
+                  }
+                ],
+                "kind": "option"
+              }
+            ],
+            "kind": "array"
+          }
+        ],
+        "result": {
+          "arguments": [
+            {
+              "arguments": [
+                {
+                  "cases": [
+                    {
+                      "fields": [],
+                      "name": "empty"
+                    },
+                    {
+                      "fields": [
+                        {
+                          "name": "value",
+                          "refinement": {
+                            "constructor": null,
+                            "kind": "subtype"
+                          }
+                        },
+                        {
+                          "name": "digit",
+                          "refinement": {
+                            "bound": "3",
+                            "kind": "fin"
+                          }
+                        },
+                        {
+                          "name": "tail",
+                          "refinement": null
+                        }
+                      ],
+                      "name": "node"
+                    }
+                  ],
+                  "kind": "variant",
+                  "name": "RecursiveSubtypes.Chain"
+                }
+              ],
+              "kind": "option"
+            }
+          ],
+          "kind": "array"
+        }
+      },
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": true,
+          "unbox": "lean_unbox"
+        },
+        "kind": "graph",
+        "root": {
+          "abi": {
+            "box": "lean_box",
+            "cType": "lean_object*",
+            "heap": true,
+            "unbox": "lean_unbox"
+          },
+          "element": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": false,
+              "unbox": "lean_unbox"
+            },
+            "element": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "kind": "reference",
+              "lean": "RecursiveSubtypes.ChainAlias",
+              "name": "RecursiveSubtypes.ChainAlias"
+            },
+            "kind": "option"
+          },
+          "kind": "array"
+        },
+        "types": [
+          {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": false,
+              "unbox": "lean_unbox"
+            },
+            "cases": [
+              {
+                "constructor": "RecursiveSubtypes.Chain.empty",
+                "fields": [],
+                "name": "empty"
+              },
+              {
+                "constructor": "RecursiveSubtypes.Chain.node",
+                "fields": [
+                  {
+                    "name": "value",
+                    "type": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": false,
+                        "unbox": "lean_unbox"
+                      },
+                      "base": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": false,
+                          "unbox": "lean_unbox"
+                        },
+                        "kind": "primitive",
+                        "lean": "Nat",
+                        "name": "nat"
+                      },
+                      "kind": "refinement",
+                      "predicate": {
+                        "constructor": null,
+                        "kind": "subtype"
+                      }
+                    }
+                  },
+                  {
+                    "name": "digit",
+                    "type": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": false,
+                        "unbox": "lean_unbox"
+                      },
+                      "base": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": false,
+                          "unbox": "lean_unbox"
+                        },
+                        "kind": "primitive",
+                        "lean": "Nat",
+                        "name": "nat"
+                      },
+                      "kind": "refinement",
+                      "predicate": {
+                        "bound": "3",
+                        "kind": "fin"
+                      }
+                    }
+                  },
+                  {
+                    "name": "tail",
+                    "type": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": false,
+                        "unbox": "lean_unbox"
+                      },
+                      "kind": "reference",
+                      "lean": "RecursiveSubtypes.Chain",
+                      "name": "RecursiveSubtypes.Chain"
+                    }
+                  }
+                ],
+                "name": "node"
+              }
+            ],
+            "kind": "variant",
+            "lean": "RecursiveSubtypes.Chain",
+            "name": "RecursiveSubtypes.Chain"
+          },
+          {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": false,
+              "unbox": "lean_unbox"
+            },
+            "kind": "alias",
+            "lean": "RecursiveSubtypes.ChainAlias",
+            "name": "RecursiveSubtypes.ChainAlias",
+            "target": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "kind": "reference",
+              "lean": "RecursiveSubtypes.Chain",
+              "name": "RecursiveSubtypes.Chain"
+            }
+          }
+        ]
+      },
+      "sourcePosition": {
+        "endColumn": 51,
+        "endLine": 42,
+        "path": "RecursiveSubtypes.lean",
+        "startColumn": 0,
+        "startLine": 41
+      },
+      "symbol": "lean_bridge_61edaca9ace2104f41ea6e59_lean",
+      "theoremReferences": []
+    },
+    {
+      "bindingId": "lean:RecursiveSubtypes.first",
+      "documentation": null,
+      "module": "RecursiveSubtypes",
+      "name": "RecursiveSubtypes.first",
+      "parameters": [
+        {
+          "name": "value",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": false,
+              "unbox": "lean_unbox"
+            },
+            "kind": "graph",
+            "root": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "kind": "reference",
+              "lean": "RecursiveSubtypes.Chain",
+              "name": "RecursiveSubtypes.Chain"
+            },
+            "types": [
+              {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": false,
+                  "unbox": "lean_unbox"
+                },
+                "cases": [
+                  {
+                    "constructor": "RecursiveSubtypes.Chain.empty",
+                    "fields": [],
+                    "name": "empty"
+                  },
+                  {
+                    "constructor": "RecursiveSubtypes.Chain.node",
+                    "fields": [
+                      {
+                        "name": "value",
+                        "type": {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": false,
+                            "unbox": "lean_unbox"
+                          },
+                          "base": {
+                            "abi": {
+                              "box": "lean_box",
+                              "cType": "lean_object*",
+                              "heap": false,
+                              "unbox": "lean_unbox"
+                            },
+                            "kind": "primitive",
+                            "lean": "Nat",
+                            "name": "nat"
+                          },
+                          "kind": "refinement",
+                          "predicate": {
+                            "constructor": "RecursiveSubtypes.plusOne",
+                            "kind": "subtype"
+                          }
+                        }
+                      },
+                      {
+                        "name": "digit",
+                        "type": {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": false,
+                            "unbox": "lean_unbox"
+                          },
+                          "base": {
+                            "abi": {
+                              "box": "lean_box",
+                              "cType": "lean_object*",
+                              "heap": false,
+                              "unbox": "lean_unbox"
+                            },
+                            "kind": "primitive",
+                            "lean": "Nat",
+                            "name": "nat"
+                          },
+                          "kind": "refinement",
+                          "predicate": {
+                            "bound": "3",
+                            "kind": "fin"
+                          }
+                        }
+                      },
+                      {
+                        "name": "tail",
+                        "type": {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": false,
+                            "unbox": "lean_unbox"
+                          },
+                          "kind": "reference",
+                          "lean": "RecursiveSubtypes.Chain",
+                          "name": "RecursiveSubtypes.Chain"
+                        }
+                      }
+                    ],
+                    "name": "node"
+                  }
+                ],
+                "kind": "variant",
+                "lean": "RecursiveSubtypes.Chain",
+                "name": "RecursiveSubtypes.Chain"
+              }
+            ]
+          }
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "cases": [
+              {
+                "fields": [],
+                "name": "empty"
+              },
+              {
+                "fields": [
+                  {
+                    "name": "value",
+                    "refinement": {
+                      "constructor": "RecursiveSubtypes.plusOne",
+                      "kind": "subtype"
+                    }
+                  },
+                  {
+                    "name": "digit",
+                    "refinement": {
+                      "bound": "3",
+                      "kind": "fin"
+                    }
+                  },
+                  {
+                    "name": "tail",
+                    "refinement": null
+                  }
+                ],
+                "name": "node"
+              }
+            ],
+            "kind": "variant",
+            "name": "RecursiveSubtypes.Chain"
+          }
+        ],
+        "result": null
+      },
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": false,
+          "unbox": "lean_unbox"
+        },
+        "kind": "primitive",
+        "lean": "Nat",
+        "name": "nat"
+      },
+      "sourcePosition": {
+        "endColumn": 50,
+        "endLine": 28,
+        "path": "RecursiveSubtypes.lean",
+        "startColumn": 0,
+        "startLine": 27
+      },
+      "symbol": "lean_bridge_a9ae70188abbca81b8f235ce_lean",
+      "theoremReferences": []
+    },
+    {
+      "bindingId": "lean:RecursiveSubtypes.groups",
+      "documentation": null,
+      "module": "RecursiveSubtypes",
+      "name": "RecursiveSubtypes.groups",
+      "parameters": [
+        {
+          "name": "values",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": true,
+              "unbox": "lean_unbox"
+            },
+            "kind": "graph",
+            "root": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": true,
+                "unbox": "lean_unbox"
+              },
+              "element": {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": false,
+                  "unbox": "lean_unbox"
+                },
+                "element": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "reference",
+                  "lean": "RecursiveSubtypes.ChainAlias",
+                  "name": "RecursiveSubtypes.ChainAlias"
+                },
+                "kind": "option"
+              },
+              "kind": "array"
+            },
+            "types": [
+              {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": false,
+                  "unbox": "lean_unbox"
+                },
+                "cases": [
+                  {
+                    "constructor": "RecursiveSubtypes.Chain.empty",
+                    "fields": [],
+                    "name": "empty"
+                  },
+                  {
+                    "constructor": "RecursiveSubtypes.Chain.node",
+                    "fields": [
+                      {
+                        "name": "value",
+                        "type": {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": false,
+                            "unbox": "lean_unbox"
+                          },
+                          "base": {
+                            "abi": {
+                              "box": "lean_box",
+                              "cType": "lean_object*",
+                              "heap": false,
+                              "unbox": "lean_unbox"
+                            },
+                            "kind": "primitive",
+                            "lean": "Nat",
+                            "name": "nat"
+                          },
+                          "kind": "refinement",
+                          "predicate": {
+                            "constructor": "RecursiveSubtypes.plusOne",
+                            "kind": "subtype"
+                          }
+                        }
+                      },
+                      {
+                        "name": "digit",
+                        "type": {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": false,
+                            "unbox": "lean_unbox"
+                          },
+                          "base": {
+                            "abi": {
+                              "box": "lean_box",
+                              "cType": "lean_object*",
+                              "heap": false,
+                              "unbox": "lean_unbox"
+                            },
+                            "kind": "primitive",
+                            "lean": "Nat",
+                            "name": "nat"
+                          },
+                          "kind": "refinement",
+                          "predicate": {
+                            "bound": "3",
+                            "kind": "fin"
+                          }
+                        }
+                      },
+                      {
+                        "name": "tail",
+                        "type": {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": false,
+                            "unbox": "lean_unbox"
+                          },
+                          "kind": "reference",
+                          "lean": "RecursiveSubtypes.Chain",
+                          "name": "RecursiveSubtypes.Chain"
+                        }
+                      }
+                    ],
+                    "name": "node"
+                  }
+                ],
+                "kind": "variant",
+                "lean": "RecursiveSubtypes.Chain",
+                "name": "RecursiveSubtypes.Chain"
+              },
+              {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": false,
+                  "unbox": "lean_unbox"
+                },
+                "kind": "alias",
+                "lean": "RecursiveSubtypes.ChainAlias",
+                "name": "RecursiveSubtypes.ChainAlias",
+                "target": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "reference",
+                  "lean": "RecursiveSubtypes.Chain",
+                  "name": "RecursiveSubtypes.Chain"
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "cases": [
+                      {
+                        "fields": [],
+                        "name": "empty"
+                      },
+                      {
+                        "fields": [
+                          {
+                            "name": "value",
+                            "refinement": {
+                              "constructor": "RecursiveSubtypes.plusOne",
+                              "kind": "subtype"
+                            }
+                          },
+                          {
+                            "name": "digit",
+                            "refinement": {
+                              "bound": "3",
+                              "kind": "fin"
+                            }
+                          },
+                          {
+                            "name": "tail",
+                            "refinement": null
+                          }
+                        ],
+                        "name": "node"
+                      }
+                    ],
+                    "kind": "variant",
+                    "name": "RecursiveSubtypes.Chain"
+                  }
+                ],
+                "kind": "option"
+              }
+            ],
+            "kind": "array"
+          }
+        ],
+        "result": null
+      },
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": false,
+          "unbox": "lean_unbox"
+        },
+        "kind": "primitive",
+        "lean": "Nat",
+        "name": "nat"
+      },
+      "sourcePosition": {
+        "endColumn": 49,
+        "endLine": 39,
+        "path": "RecursiveSubtypes.lean",
+        "startColumn": 0,
+        "startLine": 38
+      },
+      "symbol": "lean_bridge_5f9ebf1241c61a39ed1bdebf_lean",
+      "theoremReferences": []
+    },
+    {
+      "bindingId": "lean:RecursiveSubtypes.produce",
+      "documentation": null,
+      "module": "RecursiveSubtypes",
+      "name": "RecursiveSubtypes.produce",
+      "parameters": [
+        {
+          "name": "value",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": false,
+              "unbox": "lean_unbox"
+            },
+            "kind": "primitive",
+            "lean": "Nat",
+            "name": "nat"
+          }
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          null
+        ],
+        "result": {
+          "cases": [
+            {
+              "fields": [],
+              "name": "empty"
+            },
+            {
+              "fields": [
+                {
+                  "name": "value",
+                  "refinement": {
+                    "constructor": null,
+                    "kind": "subtype"
+                  }
+                },
+                {
+                  "name": "digit",
+                  "refinement": {
+                    "bound": "3",
+                    "kind": "fin"
+                  }
+                },
+                {
+                  "name": "tail",
+                  "refinement": null
+                }
+              ],
+              "name": "node"
+            }
+          ],
+          "kind": "variant",
+          "name": "RecursiveSubtypes.Chain"
+        }
+      },
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": false,
+          "unbox": "lean_unbox"
+        },
+        "kind": "graph",
+        "root": {
+          "abi": {
+            "box": "lean_box",
+            "cType": "lean_object*",
+            "heap": false,
+            "unbox": "lean_unbox"
+          },
+          "kind": "reference",
+          "lean": "RecursiveSubtypes.Chain",
+          "name": "RecursiveSubtypes.Chain"
+        },
+        "types": [
+          {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": false,
+              "unbox": "lean_unbox"
+            },
+            "cases": [
+              {
+                "constructor": "RecursiveSubtypes.Chain.empty",
+                "fields": [],
+                "name": "empty"
+              },
+              {
+                "constructor": "RecursiveSubtypes.Chain.node",
+                "fields": [
+                  {
+                    "name": "value",
+                    "type": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": false,
+                        "unbox": "lean_unbox"
+                      },
+                      "base": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": false,
+                          "unbox": "lean_unbox"
+                        },
+                        "kind": "primitive",
+                        "lean": "Nat",
+                        "name": "nat"
+                      },
+                      "kind": "refinement",
+                      "predicate": {
+                        "constructor": null,
+                        "kind": "subtype"
+                      }
+                    }
+                  },
+                  {
+                    "name": "digit",
+                    "type": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": false,
+                        "unbox": "lean_unbox"
+                      },
+                      "base": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": false,
+                          "unbox": "lean_unbox"
+                        },
+                        "kind": "primitive",
+                        "lean": "Nat",
+                        "name": "nat"
+                      },
+                      "kind": "refinement",
+                      "predicate": {
+                        "bound": "3",
+                        "kind": "fin"
+                      }
+                    }
+                  },
+                  {
+                    "name": "tail",
+                    "type": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": false,
+                        "unbox": "lean_unbox"
+                      },
+                      "kind": "reference",
+                      "lean": "RecursiveSubtypes.Chain",
+                      "name": "RecursiveSubtypes.Chain"
+                    }
+                  }
+                ],
+                "name": "node"
+              }
+            ],
+            "kind": "variant",
+            "lean": "RecursiveSubtypes.Chain",
+            "name": "RecursiveSubtypes.Chain"
+          }
+        ]
+      },
+      "sourcePosition": {
+        "endColumn": 92,
+        "endLine": 46,
+        "path": "RecursiveSubtypes.lean",
+        "startColumn": 0,
+        "startLine": 44
+      },
+      "symbol": "lean_bridge_cc48993941d89731cae43d8e_lean",
+      "theoremReferences": []
+    },
+    {
+      "bindingId": "lean:RecursiveSubtypes.second",
+      "documentation": null,
+      "module": "RecursiveSubtypes",
+      "name": "RecursiveSubtypes.second",
+      "parameters": [
+        {
+          "name": "value",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": false,
+              "unbox": "lean_unbox"
+            },
+            "kind": "graph",
+            "root": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "kind": "reference",
+              "lean": "RecursiveSubtypes.Chain",
+              "name": "RecursiveSubtypes.Chain"
+            },
+            "types": [
+              {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": false,
+                  "unbox": "lean_unbox"
+                },
+                "cases": [
+                  {
+                    "constructor": "RecursiveSubtypes.Chain.empty",
+                    "fields": [],
+                    "name": "empty"
+                  },
+                  {
+                    "constructor": "RecursiveSubtypes.Chain.node",
+                    "fields": [
+                      {
+                        "name": "value",
+                        "type": {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": false,
+                            "unbox": "lean_unbox"
+                          },
+                          "base": {
+                            "abi": {
+                              "box": "lean_box",
+                              "cType": "lean_object*",
+                              "heap": false,
+                              "unbox": "lean_unbox"
+                            },
+                            "kind": "primitive",
+                            "lean": "Nat",
+                            "name": "nat"
+                          },
+                          "kind": "refinement",
+                          "predicate": {
+                            "constructor": "RecursiveSubtypes.plusTwo",
+                            "kind": "subtype"
+                          }
+                        }
+                      },
+                      {
+                        "name": "digit",
+                        "type": {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": false,
+                            "unbox": "lean_unbox"
+                          },
+                          "base": {
+                            "abi": {
+                              "box": "lean_box",
+                              "cType": "lean_object*",
+                              "heap": false,
+                              "unbox": "lean_unbox"
+                            },
+                            "kind": "primitive",
+                            "lean": "Nat",
+                            "name": "nat"
+                          },
+                          "kind": "refinement",
+                          "predicate": {
+                            "bound": "3",
+                            "kind": "fin"
+                          }
+                        }
+                      },
+                      {
+                        "name": "tail",
+                        "type": {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": false,
+                            "unbox": "lean_unbox"
+                          },
+                          "kind": "reference",
+                          "lean": "RecursiveSubtypes.Chain",
+                          "name": "RecursiveSubtypes.Chain"
+                        }
+                      }
+                    ],
+                    "name": "node"
+                  }
+                ],
+                "kind": "variant",
+                "lean": "RecursiveSubtypes.Chain",
+                "name": "RecursiveSubtypes.Chain"
+              }
+            ]
+          }
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "cases": [
+              {
+                "fields": [],
+                "name": "empty"
+              },
+              {
+                "fields": [
+                  {
+                    "name": "value",
+                    "refinement": {
+                      "constructor": "RecursiveSubtypes.plusTwo",
+                      "kind": "subtype"
+                    }
+                  },
+                  {
+                    "name": "digit",
+                    "refinement": {
+                      "bound": "3",
+                      "kind": "fin"
+                    }
+                  },
+                  {
+                    "name": "tail",
+                    "refinement": null
+                  }
+                ],
+                "name": "node"
+              }
+            ],
+            "kind": "variant",
+            "name": "RecursiveSubtypes.Chain"
+          }
+        ],
+        "result": null
+      },
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": false,
+          "unbox": "lean_unbox"
+        },
+        "kind": "primitive",
+        "lean": "Nat",
+        "name": "nat"
+      },
+      "sourcePosition": {
+        "endColumn": 52,
+        "endLine": 34,
+        "path": "RecursiveSubtypes.lean",
+        "startColumn": 0,
+        "startLine": 33
+      },
+      "symbol": "lean_bridge_9e8d2cbaa99dca92eb622921_lean",
+      "theoremReferences": []
+    }
+  ],
+  "pointerBits": 32,
+  "profile": "php-wasm-copied-v1",
+  "schemaVersion": 4,
+  "sourceIdentity": {
+    "exportConfigurationSha256": "88251ff6b47d1a1854a8a601965b9ff83405ea8fc2bb51ffc8a1769ba1267467",
+    "exportConfigurationSource": "{\n  \"contracts\": {\n    \"RecursiveSubtypes.echo\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": {\n            \"cases\": [\n              {\n                \"fields\": [],\n                \"name\": \"empty\"\n              },\n              {\n                \"fields\": [\n                  {\n                    \"name\": \"value\",\n                    \"refinement\": {\n                      \"constructor\": \"RecursiveSubtypes.plusOne\"\n                    }\n                  },\n                  {\n                    \"name\": \"digit\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"tail\",\n                    \"refinement\": null\n                  }\n                ],\n                \"name\": \"node\"\n              }\n            ],\n            \"kind\": \"variant\",\n            \"name\": \"RecursiveSubtypes.Chain\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"RecursiveSubtypes.echoGroups\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": {\n            \"arguments\": [\n              {\n                \"arguments\": [\n                  {\n                    \"cases\": [\n                      {\n                        \"fields\": [],\n                        \"name\": \"empty\"\n                      },\n                      {\n                        \"fields\": [\n                          {\n                            \"name\": \"value\",\n                            \"refinement\": {\n                              \"constructor\": \"RecursiveSubtypes.plusOne\"\n                            }\n                          },\n                          {\n                            \"name\": \"digit\",\n                            \"refinement\": null\n                          },\n                          {\n                            \"name\": \"tail\",\n                            \"refinement\": null\n                          }\n                        ],\n                        \"name\": \"node\"\n                      }\n                    ],\n                    \"kind\": \"variant\",\n                    \"name\": \"RecursiveSubtypes.Chain\"\n                  }\n                ],\n                \"kind\": \"option\"\n              }\n            ],\n            \"kind\": \"array\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"RecursiveSubtypes.first\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": {\n            \"cases\": [\n              {\n                \"fields\": [],\n                \"name\": \"empty\"\n              },\n              {\n                \"fields\": [\n                  {\n                    \"name\": \"value\",\n                    \"refinement\": {\n                      \"constructor\": \"RecursiveSubtypes.plusOne\"\n                    }\n                  },\n                  {\n                    \"name\": \"digit\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"tail\",\n                    \"refinement\": null\n                  }\n                ],\n                \"name\": \"node\"\n              }\n            ],\n            \"kind\": \"variant\",\n            \"name\": \"RecursiveSubtypes.Chain\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"RecursiveSubtypes.groups\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": {\n            \"arguments\": [\n              {\n                \"arguments\": [\n                  {\n                    \"cases\": [\n                      {\n                        \"fields\": [],\n                        \"name\": \"empty\"\n                      },\n                      {\n                        \"fields\": [\n                          {\n                            \"name\": \"value\",\n                            \"refinement\": {\n                              \"constructor\": \"RecursiveSubtypes.plusOne\"\n                            }\n                          },\n                          {\n                            \"name\": \"digit\",\n                            \"refinement\": null\n                          },\n                          {\n                            \"name\": \"tail\",\n                            \"refinement\": null\n                          }\n                        ],\n                        \"name\": \"node\"\n                      }\n                    ],\n                    \"kind\": \"variant\",\n                    \"name\": \"RecursiveSubtypes.Chain\"\n                  }\n                ],\n                \"kind\": \"option\"\n              }\n            ],\n            \"kind\": \"array\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"RecursiveSubtypes.second\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": {\n            \"cases\": [\n              {\n                \"fields\": [],\n                \"name\": \"empty\"\n              },\n              {\n                \"fields\": [\n                  {\n                    \"name\": \"value\",\n                    \"refinement\": {\n                      \"constructor\": \"RecursiveSubtypes.plusTwo\"\n                    }\n                  },\n                  {\n                    \"name\": \"digit\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"tail\",\n                    \"refinement\": null\n                  }\n                ],\n                \"name\": \"node\"\n              }\n            ],\n            \"kind\": \"variant\",\n            \"name\": \"RecursiveSubtypes.Chain\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    }\n  },\n  \"exports\": [\n    \"RecursiveSubtypes.first\",\n    \"RecursiveSubtypes.second\",\n    \"RecursiveSubtypes.echo\",\n    \"RecursiveSubtypes.groups\",\n    \"RecursiveSubtypes.echoGroups\",\n    \"RecursiveSubtypes.produce\"\n  ],\n  \"modules\": [\n    \"RecursiveSubtypes\"\n  ],\n  \"schemaVersion\": 1,\n  \"targets\": {\n    \"php-wasm\": {\n      \"composer\": {\n        \"name\": \"lean-bridge-recursive-subtypes/wasm\",\n        \"version\": \"1.0.0\"\n      },\n      \"npm\": {\n        \"name\": \"lean-bridge-recursive-subtypes-wasm\",\n        \"version\": \"1.0.0\"\n      }\n    }\n  }\n}\n",
+    "extractorSha256": "00f8ce7a3888339cdb1c36b0dce3d8bc9d4c650ea18c7a4926c2d29d4690443a",
+    "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+    "leanCompilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+    "leanVersion": "4.32.2",
+    "modules": [
+      {
+        "interface": {
+          "bytes": 100688,
+          "interfaceSha256": "ba7897501de8e458205d299bd163b43587e2445af35a1d0cf2a8b05a8e36b609",
+          "sha256": "c7c5dc1b3e1cd4533af0cee03bdb07a35749499ff27ccf578e9a1ac4e0228143"
+        },
+        "module": "RecursiveSubtypes",
+        "source": {
+          "bytes": 1609,
+          "path": "RecursiveSubtypes.lean",
+          "sha256": "5a97b38165ded622057d5e1ec435faf09cbf16b2cd0cae225b35b7a0bfd2b0a4"
+        }
+      }
+    ],
+    "request": {
+      "arities": [],
+      "contracts": {
+        "RecursiveSubtypes.echo": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "cases": [
+                  {
+                    "fields": [],
+                    "name": "empty"
+                  },
+                  {
+                    "fields": [
+                      {
+                        "name": "value",
+                        "refinement": {
+                          "constructor": "RecursiveSubtypes.plusOne"
+                        }
+                      },
+                      {
+                        "name": "digit",
+                        "refinement": null
+                      },
+                      {
+                        "name": "tail",
+                        "refinement": null
+                      }
+                    ],
+                    "name": "node"
+                  }
+                ],
+                "kind": "variant",
+                "name": "RecursiveSubtypes.Chain"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "RecursiveSubtypes.echoGroups": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "arguments": [
+                  {
+                    "arguments": [
+                      {
+                        "cases": [
+                          {
+                            "fields": [],
+                            "name": "empty"
+                          },
+                          {
+                            "fields": [
+                              {
+                                "name": "value",
+                                "refinement": {
+                                  "constructor": "RecursiveSubtypes.plusOne"
+                                }
+                              },
+                              {
+                                "name": "digit",
+                                "refinement": null
+                              },
+                              {
+                                "name": "tail",
+                                "refinement": null
+                              }
+                            ],
+                            "name": "node"
+                          }
+                        ],
+                        "kind": "variant",
+                        "name": "RecursiveSubtypes.Chain"
+                      }
+                    ],
+                    "kind": "option"
+                  }
+                ],
+                "kind": "array"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "RecursiveSubtypes.first": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "cases": [
+                  {
+                    "fields": [],
+                    "name": "empty"
+                  },
+                  {
+                    "fields": [
+                      {
+                        "name": "value",
+                        "refinement": {
+                          "constructor": "RecursiveSubtypes.plusOne"
+                        }
+                      },
+                      {
+                        "name": "digit",
+                        "refinement": null
+                      },
+                      {
+                        "name": "tail",
+                        "refinement": null
+                      }
+                    ],
+                    "name": "node"
+                  }
+                ],
+                "kind": "variant",
+                "name": "RecursiveSubtypes.Chain"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "RecursiveSubtypes.groups": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "arguments": [
+                  {
+                    "arguments": [
+                      {
+                        "cases": [
+                          {
+                            "fields": [],
+                            "name": "empty"
+                          },
+                          {
+                            "fields": [
+                              {
+                                "name": "value",
+                                "refinement": {
+                                  "constructor": "RecursiveSubtypes.plusOne"
+                                }
+                              },
+                              {
+                                "name": "digit",
+                                "refinement": null
+                              },
+                              {
+                                "name": "tail",
+                                "refinement": null
+                              }
+                            ],
+                            "name": "node"
+                          }
+                        ],
+                        "kind": "variant",
+                        "name": "RecursiveSubtypes.Chain"
+                      }
+                    ],
+                    "kind": "option"
+                  }
+                ],
+                "kind": "array"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "RecursiveSubtypes.second": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "cases": [
+                  {
+                    "fields": [],
+                    "name": "empty"
+                  },
+                  {
+                    "fields": [
+                      {
+                        "name": "value",
+                        "refinement": {
+                          "constructor": "RecursiveSubtypes.plusTwo"
+                        }
+                      },
+                      {
+                        "name": "digit",
+                        "refinement": null
+                      },
+                      {
+                        "name": "tail",
+                        "refinement": null
+                      }
+                    ],
+                    "name": "node"
+                  }
+                ],
+                "kind": "variant",
+                "name": "RecursiveSubtypes.Chain"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        }
+      },
+      "exportModules": [
+        "RecursiveSubtypes"
+      ],
+      "exports": [
+        "RecursiveSubtypes.first",
+        "RecursiveSubtypes.second",
+        "RecursiveSubtypes.echo",
+        "RecursiveSubtypes.groups",
+        "RecursiveSubtypes.echoGroups",
+        "RecursiveSubtypes.produce"
+      ],
+      "metadata": {
+        "invocationIdentitySha256": "f260d0fb16c13c6a284124d1ba41876fd9960c8843c00cc6ea407e8dd79c8b92",
+        "modules": [
+          {
+            "interfaceSha256": "ba7897501de8e458205d299bd163b43587e2445af35a1d0cf2a8b05a8e36b609",
+            "name": "RecursiveSubtypes",
+            "sourcePath": "RecursiveSubtypes.lean",
+            "sourceSha256": "5a97b38165ded622057d5e1ec435faf09cbf16b2cd0cae225b35b7a0bfd2b0a4"
+          }
+        ],
+        "toolchain": "leanprover/lean4:v4.32.2"
+      },
+      "modules": [
+        "RecursiveSubtypes"
+      ],
+      "profile": "native-library-v1",
+      "resources": []
+    },
+    "sourceNoticesSha256": "fbda53f4b1982b080e6a515e49f8cc60afb88042b7c47619cf6e1ca50c6e8fe6",
+    "sourceTreeSha256": "46e13053481024137c6d4d42777e2833997aa055015eb9d520b094c18af01a4f"
+  },
+  "types": []
+}

@@ -1,0 +1,230 @@
+{
+  "arities": {
+    "CallbackSubtypes.makeClosure": 1,
+    "CallbackSubtypes.makeContainerClosure": 1,
+    "CallbackSubtypes.makeMixedClosure": 1
+  },
+  "contracts": {
+    "CallbackSubtypes.callHost": {
+      "parameters": [
+        {
+          "callable": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy"
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "CallbackSubtypes.checkedPositive"
+              }
+            }
+          },
+          "lifetime": {
+            "anchor": null,
+            "scope": "call"
+          },
+          "ownership": "borrow"
+        }
+      ]
+    },
+    "CallbackSubtypes.callHostContainer": {
+      "parameters": [
+        {
+          "callable": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy"
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "arguments": [
+                  {
+                    "arguments": [
+                      {
+                        "constructor": "CallbackSubtypes.checkedPositive"
+                      }
+                    ],
+                    "kind": "option"
+                  },
+                  null
+                ],
+                "kind": "result"
+              }
+            }
+          },
+          "lifetime": {
+            "anchor": null,
+            "scope": "call"
+          },
+          "ownership": "borrow"
+        }
+      ]
+    },
+    "CallbackSubtypes.callHostMixed": {
+      "parameters": [
+        {
+          "callable": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy"
+              },
+              {
+                "lifetime": null,
+                "ownership": "copy"
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "CallbackSubtypes.checkedPositive"
+              }
+            }
+          },
+          "lifetime": {
+            "anchor": null,
+            "scope": "call"
+          },
+          "ownership": "borrow"
+        }
+      ]
+    },
+    "CallbackSubtypes.makeClosure": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      ],
+      "result": {
+        "callable": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "CallbackSubtypes.checkedPositive"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "lifetime": {
+          "anchor": null,
+          "scope": "explicit"
+        },
+        "ownership": "lease"
+      }
+    },
+    "CallbackSubtypes.makeContainerClosure": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      ],
+      "result": {
+        "callable": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "arguments": [
+                  {
+                    "arguments": [
+                      {
+                        "constructor": "CallbackSubtypes.checkedPositive"
+                      }
+                    ],
+                    "kind": "option"
+                  }
+                ],
+                "kind": "array"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "lifetime": {
+          "anchor": null,
+          "scope": "explicit"
+        },
+        "ownership": "lease"
+      }
+    },
+    "CallbackSubtypes.makeMixedClosure": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      ],
+      "result": {
+        "callable": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy"
+            },
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "CallbackSubtypes.checkedPositive"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "lifetime": {
+          "anchor": null,
+          "scope": "explicit"
+        },
+        "ownership": "lease"
+      }
+    }
+  },
+  "exports": [
+    "CallbackSubtypes.callHost",
+    "CallbackSubtypes.makeClosure",
+    "CallbackSubtypes.callHostMixed",
+    "CallbackSubtypes.makeMixedClosure",
+    "CallbackSubtypes.callHostContainer",
+    "CallbackSubtypes.makeContainerClosure"
+  ],
+  "modules": [
+    "CallbackSubtypes"
+  ],
+  "schemaVersion": 1,
+  "targets": {
+    "php-wasm": {
+      "composer": {
+        "name": "lean-bridge-callbacksubtypes/wasm",
+        "version": "1.0.0"
+      },
+      "npm": {
+        "name": "lean-bridge-callbacksubtypes-wasm",
+        "version": "1.0.0"
+      }
+    }
+  }
+}

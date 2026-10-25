@@ -1,0 +1,35 @@
+{
+  "changes": [
+    {
+      "after": {
+        "bytes": 6087819,
+        "sha256": "d18c11490bd80d5fcc45901253d85e7eb8b255c930e33a35f7442f453d2c87d7"
+      },
+      "before": {
+        "bytes": 6087819,
+        "path": "index.json",
+        "sha256": "581b034fd9dc2c8c59b60b571df2c7861bac8eed576d5d39f4cd3f2adf2f97a8"
+      },
+      "path": "index.json"
+    },
+    {
+      "after": {
+        "bytes": 7559,
+        "sha256": "ed2b25d1724db694edf285c638669339bed01eb6c89f915995a4def424ff7e55"
+      },
+      "before": {
+        "bytes": 7559,
+        "path": "replay.json",
+        "sha256": "920aaed619ed0458c59214b5e32a425673d82a3f721ab777ed7a41abd8d22f0e"
+      },
+      "path": "replay.json"
+    }
+  ],
+  "name": "forged-replay-summary",
+  "refusal": {
+    "code": "ERR_ASSERTION",
+    "message": "all hosted summary semantics must match actual original-source replay\n+ actual - expected\n\n+ '2121e8bd0957cdf6c6d79a92cb1d94d28ec99b5403db229576a2d5ee3db9e8e5'\n- '5968adf7a8fb0a5083b9fdbddb88e0894749e4c895d434b6aee4c82afde86c26'\n",
+    "name": "AssertionError"
+  },
+  "rejected": true
+}

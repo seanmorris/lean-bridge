@@ -1,0 +1,77 @@
+{
+  "edits": [
+    {
+      "current": "@[noinline, export lb_nominal_result_only_probe_source_wordBits]\ndef wordBits",
+      "offset": 10696,
+      "previous": "def wordBits"
+    },
+    {
+      "current": "@[noinline, export lb_nominal_result_only_probe_source_produceChoices]\ndef produceChoices",
+      "offset": 10512,
+      "previous": "def produceChoices"
+    },
+    {
+      "current": "@[noinline, export lb_nominal_result_only_probe_source_produceEvent]\ndef produceEvent",
+      "offset": 10386,
+      "previous": "def produceEvent"
+    },
+    {
+      "current": "@[noinline, export lb_nominal_result_only_probe_source_producePair]\ndef producePair",
+      "offset": 10298,
+      "previous": "def producePair"
+    },
+    {
+      "current": "@[noinline, export lb_nominal_result_only_probe_source_produceGroup]\ndef produceGroup",
+      "offset": 10162,
+      "previous": "def produceGroup"
+    },
+    {
+      "current": "@[noinline, export lb_nominal_result_only_probe_source_produce]\ndef produce",
+      "offset": 8220,
+      "previous": "def produce"
+    }
+  ],
+  "entries": [
+    {
+      "kind": "source",
+      "label": "NominalPrimitiveSubtypes.produce",
+      "symbol": "lb_nominal_result_only_probe_source_produce"
+    },
+    {
+      "kind": "source",
+      "label": "NominalPrimitiveSubtypes.produceGroup",
+      "symbol": "lb_nominal_result_only_probe_source_produceGroup"
+    },
+    {
+      "kind": "source",
+      "label": "NominalPrimitiveSubtypes.producePair",
+      "symbol": "lb_nominal_result_only_probe_source_producePair"
+    },
+    {
+      "kind": "source",
+      "label": "NominalPrimitiveSubtypes.produceEvent",
+      "symbol": "lb_nominal_result_only_probe_source_produceEvent"
+    },
+    {
+      "kind": "source",
+      "label": "NominalPrimitiveSubtypes.produceChoices",
+      "symbol": "lb_nominal_result_only_probe_source_produceChoices"
+    },
+    {
+      "kind": "source",
+      "label": "NominalPrimitiveSubtypes.wordBits",
+      "symbol": "lb_nominal_result_only_probe_source_wordBits"
+    }
+  ],
+  "entryForms": {
+    "lb_nominal_result_only_probe_source_produce": "function",
+    "lb_nominal_result_only_probe_source_produceChoices": "function",
+    "lb_nominal_result_only_probe_source_produceEvent": "function",
+    "lb_nominal_result_only_probe_source_produceGroup": "function",
+    "lb_nominal_result_only_probe_source_producePair": "function",
+    "lb_nominal_result_only_probe_source_wordBits": "global"
+  },
+  "originalSha256": "1b82df85335f49de3dbfbef1d0070f42ecf83cd1896936a28b71de47af1994a9",
+  "probeSha256": "9204661a3ff61bb7ff195b76454dfe1c58bd94b326fb8d7cd00ebb07eefdb463",
+  "source": "namespace NominalPrimitiveSubtypes\n\n-- These author definitions are independent of compiler metadata and host bindings.\ndef checked {α : Type} (predicate : α → Prop) [DecidablePred predicate]\n    (value : α) : Option { item : α // predicate item } :=\n  if proof : predicate value then some ⟨value, proof⟩ else none\n\nabbrev PresentUnit := Subtype (fun _ : Unit => True)\nabbrev TrueBool := { value : Bool // value = true }\nabbrev EvenUInt8 := { value : UInt8 // value.toNat % 2 = 0 }\nabbrev EvenUInt16 := { value : UInt16 // value.toNat % 2 = 0 }\nabbrev EvenUInt32 := { value : UInt32 // value.toNat % 2 = 0 }\nabbrev EvenUInt64 := { value : UInt64 // value.toNat % 2 = 0 }\nabbrev EvenInt8 := { value : Int8 // value.toInt % 2 = 0 }\nabbrev EvenInt16 := { value : Int16 // value.toInt % 2 = 0 }\nabbrev EvenInt32 := { value : Int32 // value.toInt % 2 = 0 }\nabbrev EvenInt64 := { value : Int64 // value.toInt % 2 = 0 }\nabbrev EvenNat := { value : Nat // value % 2 = 0 }\nabbrev EvenInt := { value : Int // value % 2 = 0 }\nabbrev FiniteFloat32 := { value : Float32 // value.isFinite = true }\nabbrev FiniteFloat64 := { value : Float // value.isFinite = true }\nabbrev NonemptyText := { value : String // value.length > 0 }\nabbrev NonemptyBytes := { value : ByteArray // value.size > 0 }\nabbrev NonzeroChar := { value : Char // value.toNat ≠ 0 }\nabbrev EvenUSize := { value : USize // value.toNat % 2 = 0 }\nabbrev EvenISize := { value : ISize // value.toInt % 2 = 0 }\n\n-- Unit has one value. Its separate refusal selection tests constructor authority\n-- without preventing the normalizing Packet export from reaching other fields.\ndef unitA (value : Unit) : Option PresentUnit := some ⟨value, trivial⟩\ndef unitB (value : Unit) : Option PresentUnit := some ⟨value, trivial⟩\ndef unitReject (_ : Unit) : Option PresentUnit := none\ndef boolA (value : Bool) : Option TrueBool := checked (· = true) value\ndef boolB (value : Bool) : Option TrueBool := checked (· = true) (!value)\n\n-- The first selections have a stricter input policy than the Subtype predicate.\n-- Result-only producers below may return valid values outside that policy.\ndef uint8A (value : UInt8) : Option EvenUInt8 :=\n  if value.toNat < 100 then checked (fun item : UInt8 => item.toNat % 2 = 0) value else none\ndef uint8B (value : UInt8) : Option EvenUInt8 :=\n  checked (fun item : UInt8 => item.toNat % 2 = 0) (value + 2)\ndef uint16A (value : UInt16) : Option EvenUInt16 :=\n  if value.toNat < 100 then checked (fun item : UInt16 => item.toNat % 2 = 0) value else none\ndef uint16B (value : UInt16) : Option EvenUInt16 :=\n  checked (fun item : UInt16 => item.toNat % 2 = 0) (value + 2)\ndef uint32A (value : UInt32) : Option EvenUInt32 :=\n  if value.toNat < 100 then checked (fun item : UInt32 => item.toNat % 2 = 0) value else none\ndef uint32B (value : UInt32) : Option EvenUInt32 :=\n  checked (fun item : UInt32 => item.toNat % 2 = 0) (value + 2)\ndef uint64A (value : UInt64) : Option EvenUInt64 :=\n  if value.toNat < 100 then checked (fun item : UInt64 => item.toNat % 2 = 0) value else none\ndef uint64B (value : UInt64) : Option EvenUInt64 :=\n  checked (fun item : UInt64 => item.toNat % 2 = 0) (value + 2)\ndef int8A (value : Int8) : Option EvenInt8 :=\n  if value.toInt < 100 then checked (fun item : Int8 => item.toInt % 2 = 0) value else none\ndef int8B (value : Int8) : Option EvenInt8 :=\n  checked (fun item : Int8 => item.toInt % 2 = 0) (value + 2)\ndef int16A (value : Int16) : Option EvenInt16 :=\n  if value.toInt < 100 then checked (fun item : Int16 => item.toInt % 2 = 0) value else none\ndef int16B (value : Int16) : Option EvenInt16 :=\n  checked (fun item : Int16 => item.toInt % 2 = 0) (value + 2)\ndef int32A (value : Int32) : Option EvenInt32 :=\n  if value.toInt < 100 then checked (fun item : Int32 => item.toInt % 2 = 0) value else none\ndef int32B (value : Int32) : Option EvenInt32 :=\n  checked (fun item : Int32 => item.toInt % 2 = 0) (value + 2)\ndef int64A (value : Int64) : Option EvenInt64 :=\n  if value.toInt < 100 then checked (fun item : Int64 => item.toInt % 2 = 0) value else none\ndef int64B (value : Int64) : Option EvenInt64 :=\n  checked (fun item : Int64 => item.toInt % 2 = 0) (value + 2)\ndef natA (value : Nat) : Option EvenNat :=\n  if value < 100 then checked (fun item : Nat => item % 2 = 0) value else none\ndef natB (value : Nat) : Option EvenNat := checked (fun item : Nat => item % 2 = 0) (value + 2)\ndef intA (value : Int) : Option EvenInt :=\n  if value < 100 then checked (fun item : Int => item % 2 = 0) value else none\ndef intB (value : Int) : Option EvenInt := checked (fun item : Int => item % 2 = 0) (value + 2)\ndef float32A (value : Float32) : Option FiniteFloat32 :=\n  if value < 10 then checked (fun item : Float32 => item.isFinite = true) value else none\ndef float32B (value : Float32) : Option FiniteFloat32 :=\n  checked (fun item : Float32 => item.isFinite = true) (-value)\ndef float64A (value : Float) : Option FiniteFloat64 :=\n  if value < 10 then checked (fun item : Float => item.isFinite = true) value else none\ndef float64B (value : Float) : Option FiniteFloat64 :=\n  checked (fun item : Float => item.isFinite = true) (-value)\ndef textA (value : String) : Option NonemptyText :=\n  if value.length < 8 then checked (fun item : String => item.length > 0) value else none\ndef textB (value : String) : Option NonemptyText :=\n  checked (fun item : String => item.length > 0) (value ++ \"!\")\ndef bytesA (value : ByteArray) : Option NonemptyBytes :=\n  if value.size < 8 then checked (fun item : ByteArray => item.size > 0) value else none\ndef bytesB (value : ByteArray) : Option NonemptyBytes :=\n  checked (fun item : ByteArray => item.size > 0) (value.push 255)\ndef charA (value : Char) : Option NonzeroChar :=\n  if value.toNat < 128 then checked (fun item : Char => item.toNat ≠ 0) value else none\ndef charB (value : Char) : Option NonzeroChar :=\n  checked (fun item : Char => item.toNat ≠ 0) (if value == 'a' then 'b' else value)\ndef usizeA (value : USize) : Option EvenUSize :=\n  if value.toNat < 100 then checked (fun item : USize => item.toNat % 2 = 0) value else none\ndef usizeB (value : USize) : Option EvenUSize :=\n  checked (fun item : USize => item.toNat % 2 = 0) (value + 2)\ndef isizeA (value : ISize) : Option EvenISize :=\n  if value.toInt < 100 then checked (fun item : ISize => item.toInt % 2 = 0) value else none\ndef isizeB (value : ISize) : Option EvenISize :=\n  checked (fun item : ISize => item.toInt % 2 = 0) (value + 2)\n\nstructure Packet where\n  unitValue : PresentUnit\n  boolValue : TrueBool\n  uint8Value : EvenUInt8\n  uint16Value : EvenUInt16\n  uint32Value : EvenUInt32\n  uint64Value : EvenUInt64\n  int8Value : EvenInt8\n  int16Value : EvenInt16\n  int32Value : EvenInt32\n  int64Value : EvenInt64\n  natValue : EvenNat\n  intValue : EvenInt\n  float32Value : FiniteFloat32\n  float64Value : FiniteFloat64\n  textValue : NonemptyText\n  bytesValue : NonemptyBytes\n  charValue : NonzeroChar\n  usizeValue : EvenUSize\n  isizeValue : EvenISize\n  digit : Fin 3\n\nstructure RawPacket where\n  unitValue : Unit\n  boolValue : Bool\n  uint8Value : UInt8\n  uint16Value : UInt16\n  uint32Value : UInt32\n  uint64Value : UInt64\n  int8Value : Int8\n  int16Value : Int16\n  int32Value : Int32\n  int64Value : Int64\n  natValue : Nat\n  intValue : Int\n  float32Value : Float32\n  float64Value : Float\n  textValue : String\n  bytesValue : ByteArray\n  charValue : Char\n  usizeValue : USize\n  isizeValue : ISize\n  digit : Nat\n\nabbrev PacketAlias := Packet\nabbrev Group := Array (Option PacketAlias)\n\nstructure Pair where\n  left : Group\n  right : Group\n\ninductive Event where\n  | empty\n  | box (value : Packet)\n  | choices (values : Array (Option (Except Packet Packet)))\n\ndef echoA (value : Packet) : Packet := value\ndef echoB (value : Packet) : Packet := value\ndef refuseUnit (value : Packet) : Packet := value\ndef combine (left right : Packet) : Packet × Packet := (left, right)\ndef echoPair (value : Pair) : Pair := value\ndef echoEventA (value : Event) : Event := value\ndef echoEventB (value : Event) : Event := value\ndef aliases (left right : Group) : Group := left ++ right\n\n-- These producers construct proofs directly from their weaker predicates. They\n-- never call the A/B input selections and need no host-selected constructors.\n@[noinline, export lb_nominal_result_only_probe_source_produce]\ndef produce (value : RawPacket) : Option Packet := do\n  let boolValue ← checked (fun item : Bool => item = true) value.boolValue\n  let uint8Value ← checked (fun item : UInt8 => item.toNat % 2 = 0) value.uint8Value\n  let uint16Value ← checked (fun item : UInt16 => item.toNat % 2 = 0) value.uint16Value\n  let uint32Value ← checked (fun item : UInt32 => item.toNat % 2 = 0) value.uint32Value\n  let uint64Value ← checked (fun item : UInt64 => item.toNat % 2 = 0) value.uint64Value\n  let int8Value ← checked (fun item : Int8 => item.toInt % 2 = 0) value.int8Value\n  let int16Value ← checked (fun item : Int16 => item.toInt % 2 = 0) value.int16Value\n  let int32Value ← checked (fun item : Int32 => item.toInt % 2 = 0) value.int32Value\n  let int64Value ← checked (fun item : Int64 => item.toInt % 2 = 0) value.int64Value\n  let natValue ← checked (fun item : Nat => item % 2 = 0) value.natValue\n  let intValue ← checked (fun item : Int => item % 2 = 0) value.intValue\n  let float32Value ← checked (fun item : Float32 => item.isFinite = true) value.float32Value\n  let float64Value ← checked (fun item : Float => item.isFinite = true) value.float64Value\n  let textValue ← checked (fun item : String => item.length > 0) value.textValue\n  let bytesValue ← checked (fun item : ByteArray => item.size > 0) value.bytesValue\n  let charValue ← checked (fun item : Char => item.toNat ≠ 0) value.charValue\n  let usizeValue ← checked (fun item : USize => item.toNat % 2 = 0) value.usizeValue\n  let isizeValue ← checked (fun item : ISize => item.toInt % 2 = 0) value.isizeValue\n  let digit : Fin 3 ← if proof : value.digit < 3 then some ⟨value.digit, proof⟩ else none\n  return {\n    unitValue := ⟨value.unitValue, trivial⟩\n    boolValue, uint8Value, uint16Value, uint32Value, uint64Value\n    int8Value, int16Value, int32Value, int64Value, natValue, intValue\n    float32Value, float64Value, textValue, bytesValue, charValue\n    usizeValue, isizeValue, digit\n  }\n\n@[noinline, export lb_nominal_result_only_probe_source_produceGroup]\ndef produceGroup (value : RawPacket) : Group :=\n  match produce value with\n  | none => #[none]\n  | some packet => #[none, some packet]\n\n@[noinline, export lb_nominal_result_only_probe_source_producePair]\ndef producePair (value : RawPacket) : Pair := ⟨produceGroup value, produceGroup value⟩\n\n@[noinline, export lb_nominal_result_only_probe_source_produceEvent]\ndef produceEvent (value : RawPacket) : Event :=\n  match produce value with\n  | none => .empty\n  | some packet => .box packet\n\n@[noinline, export lb_nominal_result_only_probe_source_produceChoices]\ndef produceChoices (value : RawPacket) : Event :=\n  match produce value with\n  | none => .choices #[none]\n  | some packet => .choices #[none, some (.ok packet), some (.error packet)]\n\n@[noinline, export lb_nominal_result_only_probe_source_wordBits]\ndef wordBits : UInt32 := System.Platform.numBits.toUInt32\n\nend NominalPrimitiveSubtypes\n"
+}

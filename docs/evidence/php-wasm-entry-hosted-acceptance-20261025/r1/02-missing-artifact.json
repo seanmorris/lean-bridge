@@ -1,0 +1,23 @@
+{
+  "changes": [
+    {
+      "after": {
+        "bytes": 6086967,
+        "sha256": "f9c4bfc1b809d57074f9a2a19ffa47d2f3661e89612aa09303efab33f3c320f0"
+      },
+      "before": {
+        "bytes": 6087819,
+        "path": "index.json",
+        "sha256": "581b034fd9dc2c8c59b60b571df2c7861bac8eed576d5d39f4cd3f2adf2f97a8"
+      },
+      "path": "index.json"
+    }
+  ],
+  "name": "missing-artifact",
+  "refusal": {
+    "code": "ERR_ASSERTION",
+    "message": "Expected values to be strictly equal:\n\n27 !== 28\n",
+    "name": "AssertionError"
+  },
+  "rejected": true
+}

@@ -1,0 +1,79 @@
+{
+  "edits": [
+    {
+      "current": "@[noinline, export lb_owned_entry_subtype_source_transferRecord]\ndef transferRecord",
+      "offset": 912,
+      "previous": "def transferRecord"
+    },
+    {
+      "current": "@[noinline, export lb_owned_entry_subtype_source_echoRecordAlternate]\ndef echoRecordAlternate",
+      "offset": 852,
+      "previous": "def echoRecordAlternate"
+    },
+    {
+      "current": "@[noinline, export lb_owned_entry_subtype_source_echoRecord]\ndef echoRecord",
+      "offset": 801,
+      "previous": "def echoRecord"
+    },
+    {
+      "current": "@[noinline, export lb_owned_entry_subtype_source_newTicket]\ndef newTicket",
+      "offset": 671,
+      "previous": "def newTicket"
+    },
+    {
+      "current": "@[noinline, export lb_owned_entry_subtype_constructor_checkedCountAlternate]\ndef checkedCountAlternate",
+      "offset": 204,
+      "previous": "def checkedCountAlternate"
+    },
+    {
+      "current": "@[noinline, export lb_owned_entry_subtype_constructor_checkedCount]\ndef checkedCount",
+      "offset": 73,
+      "previous": "def checkedCount"
+    }
+  ],
+  "entries": [
+    {
+      "kind": "constructor",
+      "label": "Owned.checkedCount",
+      "symbol": "lb_owned_entry_subtype_constructor_checkedCount"
+    },
+    {
+      "kind": "constructor",
+      "label": "Owned.checkedCountAlternate",
+      "symbol": "lb_owned_entry_subtype_constructor_checkedCountAlternate"
+    },
+    {
+      "kind": "source",
+      "label": "Owned.newTicket",
+      "symbol": "lb_owned_entry_subtype_source_newTicket"
+    },
+    {
+      "kind": "source",
+      "label": "Owned.echoRecord",
+      "symbol": "lb_owned_entry_subtype_source_echoRecord"
+    },
+    {
+      "kind": "source",
+      "label": "Owned.echoRecordAlternate",
+      "symbol": "lb_owned_entry_subtype_source_echoRecordAlternate"
+    },
+    {
+      "kind": "source",
+      "label": "Owned.transferRecord",
+      "symbol": "lb_owned_entry_subtype_source_transferRecord"
+    }
+  ],
+  "entryForms": {
+    "lb_owned_entry_subtype_constructor_checkedCount": "function",
+    "lb_owned_entry_subtype_constructor_checkedCountAlternate": "function",
+    "lb_owned_entry_subtype_source_echoRecord": "function",
+    "lb_owned_entry_subtype_source_echoRecordAlternate": "function",
+    "lb_owned_entry_subtype_source_newTicket": "function",
+    "lb_owned_entry_subtype_source_transferRecord": "function"
+  },
+  "family": "owned-subtype",
+  "originalSha256": "c0346b3446761904f3d0e1dfe5c057e2f18418929d088feca3d373488fa34042",
+  "path": "tests/fixtures/onboarding/owned-subtypes/Owned.lean",
+  "probeSha256": "d3233a591625ffe9b52e90871ca8e6053bc6b8c6fa2f8b6d84d2f77aac7489f2",
+  "source": "namespace Owned\n\nstructure Ticket where\n  serial : Nat\n  label : String\n\n@[noinline, export lb_owned_entry_subtype_constructor_checkedCount]\ndef checkedCount (value : Int) : Option { count : Int // 0 ≤ count } :=\n  if proof : 0 ≤ value then some ⟨value, proof⟩ else none\n\n@[noinline, export lb_owned_entry_subtype_constructor_checkedCountAlternate]\ndef checkedCountAlternate (value : Int) : Option { count : Int // 0 ≤ count } :=\n  checkedCount value\n\nstructure Payload where\n  count : { count : Int // 0 ≤ count }\n  bytes : ByteArray\n\nstructure Bundle where\n  primary : Ticket\n  spare : Option Ticket\n  peers : Array Ticket\n  history : List Ticket\n  payload : Payload\n\nstructure CallbackPayload where\n  count : Int\n  bytes : ByteArray\n\nstructure CallbackBundle where\n  primary : Ticket\n  payload : CallbackPayload\n\n@[noinline, export lb_owned_entry_subtype_source_newTicket]\ndef newTicket (serial : Nat) (label : String) : Ticket :=\n  ⟨serial, label⟩\n\ndef serial (ticket : Ticket) : Nat := ticket.serial\n\n@[noinline, export lb_owned_entry_subtype_source_echoRecord]\ndef echoRecord (value : Bundle) : Bundle := value\n\n@[noinline, export lb_owned_entry_subtype_source_echoRecordAlternate]\ndef echoRecordAlternate (value : Bundle) : Bundle := value\n\n@[noinline, export lb_owned_entry_subtype_source_transferRecord]\ndef transferRecord (value : Bundle) : Bundle := value\n\ndef callbackRecord (value : CallbackBundle)\n    (callback : CallbackBundle → CallbackBundle) : CallbackBundle :=\n  callback value\n\nend Owned\n"
+}

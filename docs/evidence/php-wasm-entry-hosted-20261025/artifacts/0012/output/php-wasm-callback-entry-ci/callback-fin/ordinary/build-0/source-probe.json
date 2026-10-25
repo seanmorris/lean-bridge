@@ -1,0 +1,125 @@
+{
+  "closureEdits": [
+    {
+      "current": "@[noinline, export lb_callback_fin_closure_scaler]\ndef scalerProbeBody (factor : Nat) (digit : Fin 10) : Nat := digit.val * factor\n\ndef scaler (factor : Nat) : Fin 10 → Nat := scalerProbeBody factor",
+      "offset": 231,
+      "previous": "def scaler (factor : Nat) : Fin 10 → Nat := fun digit => digit.val * factor"
+    },
+    {
+      "current": "@[noinline, export lb_callback_fin_closure_counter]\ndef counterProbeBody (start step : Nat) : Fin 10 :=\n  ⟨(start + step) % 10, Nat.mod_lt _ (by decide)⟩\n\ndef counter (start : Nat) : Nat → Fin 10 := counterProbeBody start",
+      "offset": 483,
+      "previous": "def counter (start : Nat) : Nat → Fin 10 := fun step => ⟨(start + step) % 10, Nat.mod_lt _ (by decide)⟩"
+    },
+    {
+      "current": "@[noinline, export lb_callback_fin_closure_tiles]\ndef tilesProbeBody (values : List Tile) : Nat :=\n  values.foldl (fun acc tile => acc + tile.digit.val * 100 + tile.count) 0\n\ndef tiles (_ : Unit) : List Tile → Nat := tilesProbeBody",
+      "offset": 1124,
+      "previous": "def tiles (_ : Unit) : List Tile → Nat := fun values => values.foldl (fun acc tile => acc + tile.digit.val * 100 + tile.count) 0"
+    },
+    {
+      "current": "@[noinline, export lb_callback_fin_closure_tileMaker]\ndef tileMakerProbeBody (start n : Nat) : Tile :=\n  ⟨⟨(start + n) % 5, Nat.mod_lt _ (by decide)⟩, n⟩\n\ndef tileMaker (start : Nat) : Nat → Tile := tileMakerProbeBody start",
+      "offset": 1422,
+      "previous": "def tileMaker (start : Nat) : Nat → Tile := fun n => ⟨⟨(start + n) % 5, Nat.mod_lt _ (by decide)⟩, n⟩"
+    }
+  ],
+  "entries": [
+    {
+      "kind": "source",
+      "label": "ReviewedCallbacks.scaler",
+      "symbol": "lb_callback_fin_probe_source_scaler"
+    },
+    {
+      "kind": "source",
+      "label": "ReviewedCallbacks.counter",
+      "symbol": "lb_callback_fin_probe_source_counter"
+    },
+    {
+      "kind": "source",
+      "label": "ReviewedCallbacks.visit",
+      "symbol": "lb_callback_fin_probe_source_visit"
+    },
+    {
+      "kind": "source",
+      "label": "ReviewedCallbacks.three",
+      "symbol": "lb_callback_fin_probe_source_three"
+    },
+    {
+      "kind": "source",
+      "label": "ReviewedCallbacks.tiles",
+      "symbol": "lb_callback_fin_probe_source_tiles"
+    },
+    {
+      "kind": "source",
+      "label": "ReviewedCallbacks.tileMaker",
+      "symbol": "lb_callback_fin_probe_source_tileMaker"
+    },
+    {
+      "kind": "closure",
+      "label": "ReviewedCallbacks.scaler:body",
+      "symbol": "lb_callback_fin_closure_scaler"
+    },
+    {
+      "kind": "closure",
+      "label": "ReviewedCallbacks.counter:body",
+      "symbol": "lb_callback_fin_closure_counter"
+    },
+    {
+      "kind": "closure",
+      "label": "ReviewedCallbacks.tiles:body",
+      "symbol": "lb_callback_fin_closure_tiles"
+    },
+    {
+      "kind": "closure",
+      "label": "ReviewedCallbacks.tileMaker:body",
+      "symbol": "lb_callback_fin_closure_tileMaker"
+    }
+  ],
+  "entryForms": {
+    "lb_callback_fin_closure_counter": "function",
+    "lb_callback_fin_closure_scaler": "function",
+    "lb_callback_fin_closure_tileMaker": "function",
+    "lb_callback_fin_closure_tiles": "function",
+    "lb_callback_fin_probe_source_counter": "function",
+    "lb_callback_fin_probe_source_scaler": "function",
+    "lb_callback_fin_probe_source_three": "function",
+    "lb_callback_fin_probe_source_tileMaker": "function",
+    "lb_callback_fin_probe_source_tiles": "function",
+    "lb_callback_fin_probe_source_visit": "function"
+  },
+  "family": "callback-fin",
+  "originalSha256": "86bf340d6072fc538e1c020b24194cea0a668f8839c58fe141c4fd722c07a1cd",
+  "path": "tests/fixtures/onboarding/reviewed-callback-fin/ReviewedCallbacks.lean",
+  "probeSha256": "e13a236a80191b6eab79e94c8bbaa293633ab192cb8f8818b902cfaabfd02b24",
+  "source": "namespace ReviewedCallbacks\n\n/-- A record with a checked field, reached through callbacks in both directions. -/\nstructure Tile where\n  digit : Fin 5\n  count : Nat\n\n/-- A leased closure: each argument is checked before it runs. -/\n@[noinline, export lb_callback_fin_closure_scaler]\ndef scalerProbeBody (factor : Nat) (digit : Fin 10) : Nat := digit.val * factor\n\n@[noinline, export lb_callback_fin_probe_source_scaler]\ndef scaler (factor : Nat) : Fin 10 → Nat := scalerProbeBody factor\n\n/-- A leased closure whose result Lean produces. -/\n@[noinline, export lb_callback_fin_closure_counter]\ndef counterProbeBody (start step : Nat) : Fin 10 :=\n  ⟨(start + step) % 10, Nat.mod_lt _ (by decide)⟩\n\n@[noinline, export lb_callback_fin_probe_source_counter]\ndef counter (start : Nat) : Nat → Fin 10 := counterProbeBody start\n\n/-- Lean passes bounded arguments to the host's callback. -/\n@[noinline, export lb_callback_fin_probe_source_visit]\ndef visit (host : Fin 5 → Nat) : Nat := (List.range 5).foldl (fun acc n => acc + host ⟨n % 5, Nat.mod_lt _ (by decide)⟩) 0\n\n/-- A container of bounded values in a leased closure's argument. -/\ndef digits (_ : Unit) : Array (Fin 3) → Nat := fun values => values.foldl (fun acc d => acc * 3 + d.val) 0\n\n/-- Nominal bounds in a leased closure's argument... -/\n@[noinline, export lb_callback_fin_closure_tiles]\ndef tilesProbeBody (values : List Tile) : Nat :=\n  values.foldl (fun acc tile => acc + tile.digit.val * 100 + tile.count) 0\n\n@[noinline, export lb_callback_fin_probe_source_tiles]\ndef tiles (_ : Unit) : List Tile → Nat := tilesProbeBody\n\n/-- ...and in a leased closure's result, which Lean produces. -/\n@[noinline, export lb_callback_fin_closure_tileMaker]\ndef tileMakerProbeBody (start n : Nat) : Tile :=\n  ⟨⟨(start + n) % 5, Nat.mod_lt _ (by decide)⟩, n⟩\n\n@[noinline, export lb_callback_fin_probe_source_tileMaker]\ndef tileMaker (start : Nat) : Nat → Tile := tileMakerProbeBody start\n\n/-- An unrefined callback keeps its original identity. -/\ndef apply (f : Nat → Nat) (value : Nat) : Nat := f value\n\n/-- A host-produced bounded reply: admitted by npm, refused by native packages. -/\n@[noinline, export lb_callback_fin_probe_source_three]\ndef three (f : Fin 3 → Fin 3) (value : Fin 3) : Fin 3 := f value\n\nend ReviewedCallbacks\n",
+  "sourceEdits": [
+    {
+      "current": "@[noinline, export lb_callback_fin_probe_source_three]\ndef three",
+      "offset": 1846,
+      "previous": "def three"
+    },
+    {
+      "current": "@[noinline, export lb_callback_fin_probe_source_tileMaker]\ndef tileMaker",
+      "offset": 1577,
+      "previous": "def tileMaker"
+    },
+    {
+      "current": "@[noinline, export lb_callback_fin_probe_source_tiles]\ndef tiles",
+      "offset": 1299,
+      "previous": "def tiles"
+    },
+    {
+      "current": "@[noinline, export lb_callback_fin_probe_source_visit]\ndef visit",
+      "offset": 767,
+      "previous": "def visit"
+    },
+    {
+      "current": "@[noinline, export lb_callback_fin_probe_source_counter]\ndef counter",
+      "offset": 638,
+      "previous": "def counter"
+    },
+    {
+      "current": "@[noinline, export lb_callback_fin_probe_source_scaler]\ndef scaler",
+      "offset": 363,
+      "previous": "def scaler"
+    }
+  ]
+}

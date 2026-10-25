@@ -1,0 +1,1370 @@
+{
+  "commands": [
+    {
+      "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm/upstream/emscripten/emcc",
+      "originalArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-fbracket-depth=4096",
+        "-include",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/graph/allocation-guard.h",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/php/ext",
+        "-c",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/RecursiveSubtypes.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/0.o"
+      ],
+      "probeArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-fbracket-depth=4096",
+        "-include",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/graph/allocation-guard.h",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/php/ext",
+        "-c",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-ci/reviewed/recursive-subtype/build-0/c-probes/1-RecursiveSubtypes.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/0.o",
+        "-iquote",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-ci/reviewed/recursive-subtype/build-0=/build/php-wasm-refinement-entry-probe"
+      ]
+    },
+    {
+      "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm/upstream/emscripten/emcc",
+      "originalArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-fbracket-depth=4096",
+        "-include",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/graph/allocation-guard.h",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/php/ext",
+        "-c",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/adapter.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/1.o"
+      ],
+      "probeArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-fbracket-depth=4096",
+        "-include",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/graph/allocation-guard.h",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/php/ext",
+        "-c",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-ci/reviewed/recursive-subtype/build-0/c-probes/2-adapter.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/1.o",
+        "-iquote",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-ci/reviewed/recursive-subtype/build-0=/build/php-wasm-refinement-entry-probe"
+      ]
+    },
+    {
+      "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm/upstream/emscripten/emcc",
+      "originalArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-fbracket-depth=4096",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/php/ext",
+        "-c",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/graph/transport.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/2.o"
+      ],
+      "probeArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-fbracket-depth=4096",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/php/ext",
+        "-c",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-ci/reviewed/recursive-subtype/build-0/c-probes/3-transport.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/2.o",
+        "-iquote",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/graph",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-ci/reviewed/recursive-subtype/build-0=/build/php-wasm-refinement-entry-probe"
+      ]
+    },
+    {
+      "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm/upstream/emscripten/emcc",
+      "originalArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-fbracket-depth=4096",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/php/ext",
+        "-c",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/graph/runtime.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/3.o"
+      ],
+      "probeArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-fbracket-depth=4096",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/php/ext",
+        "-c",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-ci/reviewed/recursive-subtype/build-0/c-probes/4-runtime.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/3.o",
+        "-iquote",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/graph",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-ci/reviewed/recursive-subtype/build-0=/build/php-wasm-refinement-entry-probe"
+      ]
+    },
+    {
+      "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm/upstream/emscripten/emcc",
+      "originalArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-fbracket-depth=4096",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/php/ext",
+        "-c",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/width.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/4.o"
+      ],
+      "probeArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-fbracket-depth=4096",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/php/ext",
+        "-c",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-ci/reviewed/recursive-subtype/build-0/c-probes/5-width.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/4.o",
+        "-iquote",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-ci/reviewed/recursive-subtype/build-0=/build/php-wasm-refinement-entry-probe"
+      ]
+    },
+    {
+      "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm/upstream/emscripten/emcc",
+      "originalArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-fbracket-depth=4096",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/php/ext",
+        "-c",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/extension/lb_recursivesubtypes_graph_7329d2a3d44f7501.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/5.o"
+      ],
+      "probeArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-fbracket-depth=4096",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/php/ext",
+        "-c",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-ci/reviewed/recursive-subtype/build-0/c-probes/6-lb_recursivesubtypes_graph_7329d2a3d44f7501.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/5.o",
+        "-iquote",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/extension",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-ci/reviewed/recursive-subtype/build-0=/build/php-wasm-refinement-entry-probe"
+      ]
+    },
+    {
+      "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm/upstream/emscripten/emcc",
+      "originalArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-sSIDE_MODULE=2",
+        "-sEXPORTED_FUNCTIONS=['_get_module']",
+        "-Wl,--no-entry",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/0.o",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/1.o",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/2.o",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/3.o",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/4.o",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/5.o",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-input/php-wasm-runtime/lib/liblean_bridge_php_wasm_copied_488de83b725bba40a9b4.so",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/lib/php8.4-lb_recursivesubtypes_graph_7329d2a3d44f7501.so"
+      ],
+      "probeArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-sSIDE_MODULE=2",
+        "-sEXPORTED_FUNCTIONS=['_get_module']",
+        "-Wl,--no-entry",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/0.o",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/1.o",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/2.o",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/3.o",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/4.o",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/5.o",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-input/php-wasm-runtime/lib/liblean_bridge_php_wasm_copied_488de83b725bba40a9b4.so",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/lib/php8.4-lb_recursivesubtypes_graph_7329d2a3d44f7501.so"
+      ]
+    }
+  ],
+  "compiled": [
+    {
+      "definitions": [
+        {
+          "form": "function",
+          "kind": "constructor",
+          "label": "RecursiveSubtypes.plusOne",
+          "offset": 3192,
+          "symbol": "lb_recursive_subtype_probe_constructor_plusOne"
+        },
+        {
+          "form": "function",
+          "kind": "constructor",
+          "label": "RecursiveSubtypes.plusTwo",
+          "offset": 3775,
+          "symbol": "lb_recursive_subtype_probe_constructor_plusTwo"
+        },
+        {
+          "form": "function",
+          "kind": "source",
+          "label": "RecursiveSubtypes.first",
+          "offset": 7986,
+          "symbol": "lb_recursive_subtype_probe_source_first"
+        },
+        {
+          "form": "function",
+          "kind": "source",
+          "label": "RecursiveSubtypes.second",
+          "offset": 8760,
+          "symbol": "lb_recursive_subtype_probe_source_second"
+        },
+        {
+          "form": "function",
+          "kind": "source",
+          "label": "RecursiveSubtypes.echo",
+          "offset": 8990,
+          "symbol": "lb_recursive_subtype_probe_source_echo"
+        },
+        {
+          "form": "function",
+          "kind": "source",
+          "label": "RecursiveSubtypes.groups",
+          "offset": 9115,
+          "symbol": "lb_recursive_subtype_probe_source_groups"
+        },
+        {
+          "form": "function",
+          "kind": "source",
+          "label": "RecursiveSubtypes.echoGroups",
+          "offset": 9341,
+          "symbol": "lb_recursive_subtype_probe_source_echoGroups"
+        },
+        {
+          "form": "function",
+          "kind": "source",
+          "label": "RecursiveSubtypes.produce",
+          "offset": 9474,
+          "symbol": "lb_recursive_subtype_probe_source_produce"
+        }
+      ],
+      "insertions": [
+        {
+          "kind": "source",
+          "label": "RecursiveSubtypes.produce",
+          "offset": 9567,
+          "symbol": "lb_recursive_subtype_probe_source_produce",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter source RecursiveSubtypes.produce\\n\", stderr);\n"
+        },
+        {
+          "kind": "source",
+          "label": "RecursiveSubtypes.echoGroups",
+          "offset": 9438,
+          "symbol": "lb_recursive_subtype_probe_source_echoGroups",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter source RecursiveSubtypes.echoGroups\\n\", stderr);\n"
+        },
+        {
+          "kind": "source",
+          "label": "RecursiveSubtypes.groups",
+          "offset": 9208,
+          "symbol": "lb_recursive_subtype_probe_source_groups",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter source RecursiveSubtypes.groups\\n\", stderr);\n"
+        },
+        {
+          "kind": "source",
+          "label": "RecursiveSubtypes.echo",
+          "offset": 9080,
+          "symbol": "lb_recursive_subtype_probe_source_echo",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter source RecursiveSubtypes.echo\\n\", stderr);\n"
+        },
+        {
+          "kind": "source",
+          "label": "RecursiveSubtypes.second",
+          "offset": 8852,
+          "symbol": "lb_recursive_subtype_probe_source_second",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter source RecursiveSubtypes.second\\n\", stderr);\n"
+        },
+        {
+          "kind": "source",
+          "label": "RecursiveSubtypes.first",
+          "offset": 8077,
+          "symbol": "lb_recursive_subtype_probe_source_first",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter source RecursiveSubtypes.first\\n\", stderr);\n"
+        },
+        {
+          "kind": "constructor",
+          "label": "RecursiveSubtypes.plusTwo",
+          "offset": 3873,
+          "symbol": "lb_recursive_subtype_probe_constructor_plusTwo",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter constructor RecursiveSubtypes.plusTwo\\n\", stderr);\n"
+        },
+        {
+          "kind": "constructor",
+          "label": "RecursiveSubtypes.plusOne",
+          "offset": 3289,
+          "symbol": "lb_recursive_subtype_probe_constructor_plusOne",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter constructor RecursiveSubtypes.plusOne\\n\", stderr);\n"
+        },
+        {
+          "kind": "preamble",
+          "offset": 0,
+          "text": "#include <stdio.h>\n"
+        }
+      ],
+      "name": "1-RecursiveSubtypes.c",
+      "object": {
+        "bytes": 8094,
+        "sha256": "1bfe2eaa04a8bb812abf81b70daef9c4fd6feb4204e2a5474651e064292cca9a"
+      },
+      "objectPath": "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/0.o",
+      "originalPath": "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/RecursiveSubtypes.c",
+      "originalSha256": "e9a4939b915fd7d5e98062b4974ac8ed9e9b97359981b7096e912d7a7d79df11",
+      "probePath": "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-ci/reviewed/recursive-subtype/build-0/c-probes/1-RecursiveSubtypes.c",
+      "probeSha256": "1ebe93623b441aadcceccc95087e546beabb21800082b5d8f3f24aa68fad41b9"
+    },
+    {
+      "definitions": [
+        {
+          "form": "function",
+          "kind": "adapter",
+          "label": "RecursiveSubtypes.echo",
+          "offset": 68688,
+          "symbol": "lean_bridge_890e535d855edd42581629d4_lean"
+        },
+        {
+          "form": "function",
+          "kind": "validator",
+          "label": "RecursiveSubtypes.echo:fin_guard_0",
+          "offset": 65015,
+          "symbol": "lean_bridge_890e535d855edd42581629d4_fin_guard_0"
+        },
+        {
+          "form": "function",
+          "kind": "validator",
+          "label": "RecursiveSubtypes.echo:graph_refinement_0_f47f84e548df9f42ce87",
+          "offset": 67516,
+          "symbol": "lean_bridge_890e535d855edd42581629d4_graph_refinement_0_f47f84e548df9f42ce87"
+        },
+        {
+          "form": "function",
+          "kind": "validator",
+          "label": "RecursiveSubtypes.echo:refinement_0",
+          "offset": 66100,
+          "symbol": "lean_bridge_890e535d855edd42581629d4_refinement_0"
+        },
+        {
+          "form": "function",
+          "kind": "adapter",
+          "label": "RecursiveSubtypes.echoGroups",
+          "offset": 83579,
+          "symbol": "lean_bridge_61edaca9ace2104f41ea6e59_lean"
+        },
+        {
+          "form": "function",
+          "kind": "validator",
+          "label": "RecursiveSubtypes.echoGroups:fin_guard_0",
+          "offset": 73351,
+          "symbol": "lean_bridge_61edaca9ace2104f41ea6e59_fin_guard_0"
+        },
+        {
+          "form": "function",
+          "kind": "validator",
+          "label": "RecursiveSubtypes.echoGroups:graph_refinement_0_f47f84e548df9f42ce87",
+          "offset": 79450,
+          "symbol": "lean_bridge_61edaca9ace2104f41ea6e59_graph_refinement_0_f47f84e548df9f42ce87"
+        },
+        {
+          "form": "function",
+          "kind": "validator",
+          "label": "RecursiveSubtypes.echoGroups:refinement_0",
+          "offset": 77373,
+          "symbol": "lean_bridge_61edaca9ace2104f41ea6e59_refinement_0"
+        },
+        {
+          "form": "function",
+          "kind": "adapter",
+          "label": "RecursiveSubtypes.first",
+          "offset": 90709,
+          "symbol": "lean_bridge_a9ae70188abbca81b8f235ce_lean"
+        },
+        {
+          "form": "function",
+          "kind": "validator",
+          "label": "RecursiveSubtypes.first:fin_guard_0",
+          "offset": 87036,
+          "symbol": "lean_bridge_a9ae70188abbca81b8f235ce_fin_guard_0"
+        },
+        {
+          "form": "function",
+          "kind": "validator",
+          "label": "RecursiveSubtypes.first:graph_refinement_0_f47f84e548df9f42ce87",
+          "offset": 89537,
+          "symbol": "lean_bridge_a9ae70188abbca81b8f235ce_graph_refinement_0_f47f84e548df9f42ce87"
+        },
+        {
+          "form": "function",
+          "kind": "validator",
+          "label": "RecursiveSubtypes.first:refinement_0",
+          "offset": 88121,
+          "symbol": "lean_bridge_a9ae70188abbca81b8f235ce_refinement_0"
+        },
+        {
+          "form": "function",
+          "kind": "adapter",
+          "label": "RecursiveSubtypes.groups",
+          "offset": 98567,
+          "symbol": "lean_bridge_5f9ebf1241c61a39ed1bdebf_lean"
+        },
+        {
+          "form": "function",
+          "kind": "validator",
+          "label": "RecursiveSubtypes.groups:fin_guard_0",
+          "offset": 93610,
+          "symbol": "lean_bridge_5f9ebf1241c61a39ed1bdebf_fin_guard_0"
+        },
+        {
+          "form": "function",
+          "kind": "validator",
+          "label": "RecursiveSubtypes.groups:graph_refinement_0_f47f84e548df9f42ce87",
+          "offset": 97395,
+          "symbol": "lean_bridge_5f9ebf1241c61a39ed1bdebf_graph_refinement_0_f47f84e548df9f42ce87"
+        },
+        {
+          "form": "function",
+          "kind": "validator",
+          "label": "RecursiveSubtypes.groups:refinement_0",
+          "offset": 95318,
+          "symbol": "lean_bridge_5f9ebf1241c61a39ed1bdebf_refinement_0"
+        },
+        {
+          "form": "function",
+          "kind": "adapter",
+          "label": "RecursiveSubtypes.produce",
+          "offset": 102889,
+          "symbol": "lean_bridge_cc48993941d89731cae43d8e_lean"
+        },
+        {
+          "form": "function",
+          "kind": "validator",
+          "label": "RecursiveSubtypes.produce:fin_guard_0",
+          "offset": 102130,
+          "symbol": "lean_bridge_cc48993941d89731cae43d8e_fin_guard_0"
+        },
+        {
+          "form": "function",
+          "kind": "adapter",
+          "label": "RecursiveSubtypes.second",
+          "offset": 108359,
+          "symbol": "lean_bridge_9e8d2cbaa99dca92eb622921_lean"
+        },
+        {
+          "form": "function",
+          "kind": "validator",
+          "label": "RecursiveSubtypes.second:fin_guard_0",
+          "offset": 104686,
+          "symbol": "lean_bridge_9e8d2cbaa99dca92eb622921_fin_guard_0"
+        },
+        {
+          "form": "function",
+          "kind": "validator",
+          "label": "RecursiveSubtypes.second:graph_refinement_0_053cd996a2b855a7fe90",
+          "offset": 107187,
+          "symbol": "lean_bridge_9e8d2cbaa99dca92eb622921_graph_refinement_0_053cd996a2b855a7fe90"
+        },
+        {
+          "form": "function",
+          "kind": "validator",
+          "label": "RecursiveSubtypes.second:refinement_0",
+          "offset": 105771,
+          "symbol": "lean_bridge_9e8d2cbaa99dca92eb622921_refinement_0"
+        }
+      ],
+      "insertions": [
+        {
+          "kind": "adapter",
+          "label": "RecursiveSubtypes.second",
+          "offset": 108450,
+          "symbol": "lean_bridge_9e8d2cbaa99dca92eb622921_lean",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter RecursiveSubtypes.second\\n\", stderr);\n"
+        },
+        {
+          "kind": "validator",
+          "label": "RecursiveSubtypes.second:graph_refinement_0_053cd996a2b855a7fe90",
+          "offset": 107313,
+          "symbol": "lean_bridge_9e8d2cbaa99dca92eb622921_graph_refinement_0_053cd996a2b855a7fe90",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter validator RecursiveSubtypes.second:graph_refinement_0_053cd996a2b855a7fe90\\n\", stderr);\n"
+        },
+        {
+          "kind": "validator",
+          "label": "RecursiveSubtypes.second:refinement_0",
+          "offset": 105870,
+          "symbol": "lean_bridge_9e8d2cbaa99dca92eb622921_refinement_0",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter validator RecursiveSubtypes.second:refinement_0\\n\", stderr);\n"
+        },
+        {
+          "kind": "validator",
+          "label": "RecursiveSubtypes.second:fin_guard_0",
+          "offset": 104784,
+          "symbol": "lean_bridge_9e8d2cbaa99dca92eb622921_fin_guard_0",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter validator RecursiveSubtypes.second:fin_guard_0\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "RecursiveSubtypes.produce",
+          "offset": 102980,
+          "symbol": "lean_bridge_cc48993941d89731cae43d8e_lean",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter RecursiveSubtypes.produce\\n\", stderr);\n"
+        },
+        {
+          "kind": "validator",
+          "label": "RecursiveSubtypes.produce:fin_guard_0",
+          "offset": 102228,
+          "symbol": "lean_bridge_cc48993941d89731cae43d8e_fin_guard_0",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter validator RecursiveSubtypes.produce:fin_guard_0\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "RecursiveSubtypes.groups",
+          "offset": 98658,
+          "symbol": "lean_bridge_5f9ebf1241c61a39ed1bdebf_lean",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter RecursiveSubtypes.groups\\n\", stderr);\n"
+        },
+        {
+          "kind": "validator",
+          "label": "RecursiveSubtypes.groups:graph_refinement_0_f47f84e548df9f42ce87",
+          "offset": 97521,
+          "symbol": "lean_bridge_5f9ebf1241c61a39ed1bdebf_graph_refinement_0_f47f84e548df9f42ce87",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter validator RecursiveSubtypes.groups:graph_refinement_0_f47f84e548df9f42ce87\\n\", stderr);\n"
+        },
+        {
+          "kind": "validator",
+          "label": "RecursiveSubtypes.groups:refinement_0",
+          "offset": 95417,
+          "symbol": "lean_bridge_5f9ebf1241c61a39ed1bdebf_refinement_0",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter validator RecursiveSubtypes.groups:refinement_0\\n\", stderr);\n"
+        },
+        {
+          "kind": "validator",
+          "label": "RecursiveSubtypes.groups:fin_guard_0",
+          "offset": 93708,
+          "symbol": "lean_bridge_5f9ebf1241c61a39ed1bdebf_fin_guard_0",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter validator RecursiveSubtypes.groups:fin_guard_0\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "RecursiveSubtypes.first",
+          "offset": 90800,
+          "symbol": "lean_bridge_a9ae70188abbca81b8f235ce_lean",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter RecursiveSubtypes.first\\n\", stderr);\n"
+        },
+        {
+          "kind": "validator",
+          "label": "RecursiveSubtypes.first:graph_refinement_0_f47f84e548df9f42ce87",
+          "offset": 89663,
+          "symbol": "lean_bridge_a9ae70188abbca81b8f235ce_graph_refinement_0_f47f84e548df9f42ce87",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter validator RecursiveSubtypes.first:graph_refinement_0_f47f84e548df9f42ce87\\n\", stderr);\n"
+        },
+        {
+          "kind": "validator",
+          "label": "RecursiveSubtypes.first:refinement_0",
+          "offset": 88220,
+          "symbol": "lean_bridge_a9ae70188abbca81b8f235ce_refinement_0",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter validator RecursiveSubtypes.first:refinement_0\\n\", stderr);\n"
+        },
+        {
+          "kind": "validator",
+          "label": "RecursiveSubtypes.first:fin_guard_0",
+          "offset": 87134,
+          "symbol": "lean_bridge_a9ae70188abbca81b8f235ce_fin_guard_0",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter validator RecursiveSubtypes.first:fin_guard_0\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "RecursiveSubtypes.echoGroups",
+          "offset": 83670,
+          "symbol": "lean_bridge_61edaca9ace2104f41ea6e59_lean",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter RecursiveSubtypes.echoGroups\\n\", stderr);\n"
+        },
+        {
+          "kind": "validator",
+          "label": "RecursiveSubtypes.echoGroups:graph_refinement_0_f47f84e548df9f42ce87",
+          "offset": 79576,
+          "symbol": "lean_bridge_61edaca9ace2104f41ea6e59_graph_refinement_0_f47f84e548df9f42ce87",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter validator RecursiveSubtypes.echoGroups:graph_refinement_0_f47f84e548df9f42ce87\\n\", stderr);\n"
+        },
+        {
+          "kind": "validator",
+          "label": "RecursiveSubtypes.echoGroups:refinement_0",
+          "offset": 77472,
+          "symbol": "lean_bridge_61edaca9ace2104f41ea6e59_refinement_0",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter validator RecursiveSubtypes.echoGroups:refinement_0\\n\", stderr);\n"
+        },
+        {
+          "kind": "validator",
+          "label": "RecursiveSubtypes.echoGroups:fin_guard_0",
+          "offset": 73449,
+          "symbol": "lean_bridge_61edaca9ace2104f41ea6e59_fin_guard_0",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter validator RecursiveSubtypes.echoGroups:fin_guard_0\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "RecursiveSubtypes.echo",
+          "offset": 68779,
+          "symbol": "lean_bridge_890e535d855edd42581629d4_lean",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter RecursiveSubtypes.echo\\n\", stderr);\n"
+        },
+        {
+          "kind": "validator",
+          "label": "RecursiveSubtypes.echo:graph_refinement_0_f47f84e548df9f42ce87",
+          "offset": 67642,
+          "symbol": "lean_bridge_890e535d855edd42581629d4_graph_refinement_0_f47f84e548df9f42ce87",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter validator RecursiveSubtypes.echo:graph_refinement_0_f47f84e548df9f42ce87\\n\", stderr);\n"
+        },
+        {
+          "kind": "validator",
+          "label": "RecursiveSubtypes.echo:refinement_0",
+          "offset": 66199,
+          "symbol": "lean_bridge_890e535d855edd42581629d4_refinement_0",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter validator RecursiveSubtypes.echo:refinement_0\\n\", stderr);\n"
+        },
+        {
+          "kind": "validator",
+          "label": "RecursiveSubtypes.echo:fin_guard_0",
+          "offset": 65113,
+          "symbol": "lean_bridge_890e535d855edd42581629d4_fin_guard_0",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter validator RecursiveSubtypes.echo:fin_guard_0\\n\", stderr);\n"
+        },
+        {
+          "kind": "preamble",
+          "offset": 0,
+          "text": "#include <stdio.h>\n"
+        }
+      ],
+      "name": "2-adapter.c",
+      "object": {
+        "bytes": 77136,
+        "sha256": "777b8de2d635d4ba3294e54864299cc9ef430267d498104ffbfa1cddd9293012"
+      },
+      "objectPath": "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/1.o",
+      "originalPath": "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/adapter.c",
+      "originalSha256": "1fa010cf7a36bd57d548794e8d9740cb077c15b323ed90e7d93c14ebe142d721",
+      "probePath": "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-ci/reviewed/recursive-subtype/build-0/c-probes/2-adapter.c",
+      "probeSha256": "96d8366633f49e351a3b2697144d448a7c28df63a2181bff5574e8813588667f"
+    },
+    {
+      "definitions": [],
+      "insertions": [],
+      "name": "3-transport.c",
+      "object": {
+        "bytes": 47707,
+        "sha256": "09a0f098b4771be22f0894b09dd63d23a9fc3201ba708163bde220a0e58ca9d3"
+      },
+      "objectPath": "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/2.o",
+      "originalPath": "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/graph/transport.c",
+      "originalSha256": "ac6fe16ae1ae3be98db929b886bd9b62557e42df5513ecc34300827650b5196c",
+      "probePath": "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-ci/reviewed/recursive-subtype/build-0/c-probes/3-transport.c",
+      "probeSha256": "ac6fe16ae1ae3be98db929b886bd9b62557e42df5513ecc34300827650b5196c"
+    },
+    {
+      "definitions": [],
+      "insertions": [],
+      "name": "4-runtime.c",
+      "object": {
+        "bytes": 941,
+        "sha256": "34b5240bf75f517afbc0abb0a7222ea107eaa53cb3eb05ae52b10b99fbed5738"
+      },
+      "objectPath": "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/3.o",
+      "originalPath": "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/graph/runtime.c",
+      "originalSha256": "aa8c8fc0be6a804382e792c5c9939018a7d07367da1c08a17ee37126d90e6223",
+      "probePath": "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-ci/reviewed/recursive-subtype/build-0/c-probes/4-runtime.c",
+      "probeSha256": "aa8c8fc0be6a804382e792c5c9939018a7d07367da1c08a17ee37126d90e6223"
+    },
+    {
+      "definitions": [],
+      "insertions": [],
+      "name": "5-width.c",
+      "object": {
+        "bytes": 258,
+        "sha256": "a8e680be3accc5b8ad9d8becda8fdb51ee27aeef43f3a380f4d440aa1fc45be9"
+      },
+      "objectPath": "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/4.o",
+      "originalPath": "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/width.c",
+      "originalSha256": "94f94bd37af397f400f10b97b24efb34a1ecab8f8aae613e50376f1ab2218d1e",
+      "probePath": "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-ci/reviewed/recursive-subtype/build-0/c-probes/5-width.c",
+      "probeSha256": "94f94bd37af397f400f10b97b24efb34a1ecab8f8aae613e50376f1ab2218d1e"
+    },
+    {
+      "definitions": [
+        {
+          "form": "function",
+          "kind": "public",
+          "label": "echo",
+          "offset": 21302,
+          "symbol": "lg_call0"
+        },
+        {
+          "form": "function",
+          "kind": "public",
+          "label": "echoGroups",
+          "offset": 23854,
+          "symbol": "lg_call1"
+        },
+        {
+          "form": "function",
+          "kind": "public",
+          "label": "first",
+          "offset": 26368,
+          "symbol": "lg_call2"
+        },
+        {
+          "form": "function",
+          "kind": "public",
+          "label": "groups",
+          "offset": 28888,
+          "symbol": "lg_call3"
+        },
+        {
+          "form": "function",
+          "kind": "public",
+          "label": "produce",
+          "offset": 31383,
+          "symbol": "lg_call4"
+        },
+        {
+          "form": "function",
+          "kind": "public",
+          "label": "second",
+          "offset": 33877,
+          "symbol": "lg_call5"
+        }
+      ],
+      "insertions": [
+        {
+          "kind": "public",
+          "label": "second",
+          "offset": 33909,
+          "symbol": "lg_call5",
+          "text": "\n  const char *lb_probe_public_scope __attribute__((cleanup(lb_probe_end))) = \"second\";\n  fputs(\"LB_SUBTYPE_ENTRY_V1 begin public second\\n\", stderr);\n"
+        },
+        {
+          "kind": "public",
+          "label": "produce",
+          "offset": 31415,
+          "symbol": "lg_call4",
+          "text": "\n  const char *lb_probe_public_scope __attribute__((cleanup(lb_probe_end))) = \"produce\";\n  fputs(\"LB_SUBTYPE_ENTRY_V1 begin public produce\\n\", stderr);\n"
+        },
+        {
+          "kind": "public",
+          "label": "groups",
+          "offset": 28920,
+          "symbol": "lg_call3",
+          "text": "\n  const char *lb_probe_public_scope __attribute__((cleanup(lb_probe_end))) = \"groups\";\n  fputs(\"LB_SUBTYPE_ENTRY_V1 begin public groups\\n\", stderr);\n"
+        },
+        {
+          "kind": "public",
+          "label": "first",
+          "offset": 26400,
+          "symbol": "lg_call2",
+          "text": "\n  const char *lb_probe_public_scope __attribute__((cleanup(lb_probe_end))) = \"first\";\n  fputs(\"LB_SUBTYPE_ENTRY_V1 begin public first\\n\", stderr);\n"
+        },
+        {
+          "kind": "public",
+          "label": "echoGroups",
+          "offset": 23886,
+          "symbol": "lg_call1",
+          "text": "\n  const char *lb_probe_public_scope __attribute__((cleanup(lb_probe_end))) = \"echoGroups\";\n  fputs(\"LB_SUBTYPE_ENTRY_V1 begin public echoGroups\\n\", stderr);\n"
+        },
+        {
+          "kind": "public",
+          "label": "echo",
+          "offset": 21334,
+          "symbol": "lg_call0",
+          "text": "\n  const char *lb_probe_public_scope __attribute__((cleanup(lb_probe_end))) = \"echo\";\n  fputs(\"LB_SUBTYPE_ENTRY_V1 begin public echo\\n\", stderr);\n"
+        },
+        {
+          "kind": "preamble",
+          "offset": 0,
+          "text": "#include <stdio.h>\nstatic void lb_probe_end(const char **label) { fprintf(stderr, \"LB_SUBTYPE_ENTRY_V1 end public %s\\n\", *label); }\n"
+        }
+      ],
+      "name": "6-lb_recursivesubtypes_graph_7329d2a3d44f7501.c",
+      "object": {
+        "bytes": 41509,
+        "sha256": "0ebc0c429f821f63bdd1772856e89584b569205fae7de6a0681a12ccd957508a"
+      },
+      "objectPath": "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/c/5.o",
+      "originalPath": "/home/runner/work/_temp/lean-bridge-recursive-subtype-reviewed-B6TlMj/release/php-wasm/.lean-bridge-native-component-hmKTlm/extension/lb_recursivesubtypes_graph_7329d2a3d44f7501.c",
+      "originalSha256": "f5b8b716a464c0212a67cbec8c368b8f17b9df77a9bcd5ae24a7280fd32085d4",
+      "probePath": "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-ci/reviewed/recursive-subtype/build-0/c-probes/6-lb_recursivesubtypes_graph_7329d2a3d44f7501.c",
+      "probeSha256": "5b9021483e95b9ec9f7b3e95bc77aeb0f27b312887c0e26488073b9e577e58a2"
+    }
+  ],
+  "definitionCounts": {
+    "lb_recursive_subtype_probe_constructor_plusOne": 1,
+    "lb_recursive_subtype_probe_constructor_plusTwo": 1,
+    "lb_recursive_subtype_probe_source_echo": 1,
+    "lb_recursive_subtype_probe_source_echoGroups": 1,
+    "lb_recursive_subtype_probe_source_first": 1,
+    "lb_recursive_subtype_probe_source_groups": 1,
+    "lb_recursive_subtype_probe_source_produce": 1,
+    "lb_recursive_subtype_probe_source_second": 1,
+    "lean_bridge_5f9ebf1241c61a39ed1bdebf_fin_guard_0": 1,
+    "lean_bridge_5f9ebf1241c61a39ed1bdebf_graph_refinement_0_f47f84e548df9f42ce87": 1,
+    "lean_bridge_5f9ebf1241c61a39ed1bdebf_lean": 1,
+    "lean_bridge_5f9ebf1241c61a39ed1bdebf_refinement_0": 1,
+    "lean_bridge_61edaca9ace2104f41ea6e59_fin_guard_0": 1,
+    "lean_bridge_61edaca9ace2104f41ea6e59_graph_refinement_0_f47f84e548df9f42ce87": 1,
+    "lean_bridge_61edaca9ace2104f41ea6e59_lean": 1,
+    "lean_bridge_61edaca9ace2104f41ea6e59_refinement_0": 1,
+    "lean_bridge_890e535d855edd42581629d4_fin_guard_0": 1,
+    "lean_bridge_890e535d855edd42581629d4_graph_refinement_0_f47f84e548df9f42ce87": 1,
+    "lean_bridge_890e535d855edd42581629d4_lean": 1,
+    "lean_bridge_890e535d855edd42581629d4_refinement_0": 1,
+    "lean_bridge_9e8d2cbaa99dca92eb622921_fin_guard_0": 1,
+    "lean_bridge_9e8d2cbaa99dca92eb622921_graph_refinement_0_053cd996a2b855a7fe90": 1,
+    "lean_bridge_9e8d2cbaa99dca92eb622921_lean": 1,
+    "lean_bridge_9e8d2cbaa99dca92eb622921_refinement_0": 1,
+    "lean_bridge_a9ae70188abbca81b8f235ce_fin_guard_0": 1,
+    "lean_bridge_a9ae70188abbca81b8f235ce_graph_refinement_0_f47f84e548df9f42ce87": 1,
+    "lean_bridge_a9ae70188abbca81b8f235ce_lean": 1,
+    "lean_bridge_a9ae70188abbca81b8f235ce_refinement_0": 1,
+    "lean_bridge_cc48993941d89731cae43d8e_fin_guard_0": 1,
+    "lean_bridge_cc48993941d89731cae43d8e_lean": 1,
+    "lg_call0": 1,
+    "lg_call1": 1,
+    "lg_call2": 1,
+    "lg_call3": 1,
+    "lg_call4": 1,
+    "lg_call5": 1
+  },
+  "headers": [],
+  "linked": true,
+  "selected": [
+    {
+      "kind": "constructor",
+      "label": "RecursiveSubtypes.plusOne",
+      "symbol": "lb_recursive_subtype_probe_constructor_plusOne"
+    },
+    {
+      "kind": "constructor",
+      "label": "RecursiveSubtypes.plusTwo",
+      "symbol": "lb_recursive_subtype_probe_constructor_plusTwo"
+    },
+    {
+      "kind": "source",
+      "label": "RecursiveSubtypes.first",
+      "symbol": "lb_recursive_subtype_probe_source_first"
+    },
+    {
+      "kind": "source",
+      "label": "RecursiveSubtypes.second",
+      "symbol": "lb_recursive_subtype_probe_source_second"
+    },
+    {
+      "kind": "source",
+      "label": "RecursiveSubtypes.echo",
+      "symbol": "lb_recursive_subtype_probe_source_echo"
+    },
+    {
+      "kind": "source",
+      "label": "RecursiveSubtypes.groups",
+      "symbol": "lb_recursive_subtype_probe_source_groups"
+    },
+    {
+      "kind": "source",
+      "label": "RecursiveSubtypes.echoGroups",
+      "symbol": "lb_recursive_subtype_probe_source_echoGroups"
+    },
+    {
+      "kind": "source",
+      "label": "RecursiveSubtypes.produce",
+      "symbol": "lb_recursive_subtype_probe_source_produce"
+    },
+    {
+      "kind": "public",
+      "label": "echo",
+      "symbol": "lg_call0"
+    },
+    {
+      "kind": "public",
+      "label": "echoGroups",
+      "symbol": "lg_call1"
+    },
+    {
+      "kind": "public",
+      "label": "first",
+      "symbol": "lg_call2"
+    },
+    {
+      "kind": "public",
+      "label": "groups",
+      "symbol": "lg_call3"
+    },
+    {
+      "kind": "public",
+      "label": "produce",
+      "symbol": "lg_call4"
+    },
+    {
+      "kind": "public",
+      "label": "second",
+      "symbol": "lg_call5"
+    },
+    {
+      "kind": "adapter",
+      "label": "RecursiveSubtypes.echo",
+      "symbol": "lean_bridge_890e535d855edd42581629d4_lean"
+    },
+    {
+      "kind": "validator",
+      "label": "RecursiveSubtypes.echo:fin_guard_0",
+      "symbol": "lean_bridge_890e535d855edd42581629d4_fin_guard_0"
+    },
+    {
+      "kind": "validator",
+      "label": "RecursiveSubtypes.echo:graph_refinement_0_f47f84e548df9f42ce87",
+      "symbol": "lean_bridge_890e535d855edd42581629d4_graph_refinement_0_f47f84e548df9f42ce87"
+    },
+    {
+      "kind": "validator",
+      "label": "RecursiveSubtypes.echo:refinement_0",
+      "symbol": "lean_bridge_890e535d855edd42581629d4_refinement_0"
+    },
+    {
+      "kind": "adapter",
+      "label": "RecursiveSubtypes.echoGroups",
+      "symbol": "lean_bridge_61edaca9ace2104f41ea6e59_lean"
+    },
+    {
+      "kind": "validator",
+      "label": "RecursiveSubtypes.echoGroups:fin_guard_0",
+      "symbol": "lean_bridge_61edaca9ace2104f41ea6e59_fin_guard_0"
+    },
+    {
+      "kind": "validator",
+      "label": "RecursiveSubtypes.echoGroups:graph_refinement_0_f47f84e548df9f42ce87",
+      "symbol": "lean_bridge_61edaca9ace2104f41ea6e59_graph_refinement_0_f47f84e548df9f42ce87"
+    },
+    {
+      "kind": "validator",
+      "label": "RecursiveSubtypes.echoGroups:refinement_0",
+      "symbol": "lean_bridge_61edaca9ace2104f41ea6e59_refinement_0"
+    },
+    {
+      "kind": "adapter",
+      "label": "RecursiveSubtypes.first",
+      "symbol": "lean_bridge_a9ae70188abbca81b8f235ce_lean"
+    },
+    {
+      "kind": "validator",
+      "label": "RecursiveSubtypes.first:fin_guard_0",
+      "symbol": "lean_bridge_a9ae70188abbca81b8f235ce_fin_guard_0"
+    },
+    {
+      "kind": "validator",
+      "label": "RecursiveSubtypes.first:graph_refinement_0_f47f84e548df9f42ce87",
+      "symbol": "lean_bridge_a9ae70188abbca81b8f235ce_graph_refinement_0_f47f84e548df9f42ce87"
+    },
+    {
+      "kind": "validator",
+      "label": "RecursiveSubtypes.first:refinement_0",
+      "symbol": "lean_bridge_a9ae70188abbca81b8f235ce_refinement_0"
+    },
+    {
+      "kind": "adapter",
+      "label": "RecursiveSubtypes.groups",
+      "symbol": "lean_bridge_5f9ebf1241c61a39ed1bdebf_lean"
+    },
+    {
+      "kind": "validator",
+      "label": "RecursiveSubtypes.groups:fin_guard_0",
+      "symbol": "lean_bridge_5f9ebf1241c61a39ed1bdebf_fin_guard_0"
+    },
+    {
+      "kind": "validator",
+      "label": "RecursiveSubtypes.groups:graph_refinement_0_f47f84e548df9f42ce87",
+      "symbol": "lean_bridge_5f9ebf1241c61a39ed1bdebf_graph_refinement_0_f47f84e548df9f42ce87"
+    },
+    {
+      "kind": "validator",
+      "label": "RecursiveSubtypes.groups:refinement_0",
+      "symbol": "lean_bridge_5f9ebf1241c61a39ed1bdebf_refinement_0"
+    },
+    {
+      "kind": "adapter",
+      "label": "RecursiveSubtypes.produce",
+      "symbol": "lean_bridge_cc48993941d89731cae43d8e_lean"
+    },
+    {
+      "kind": "validator",
+      "label": "RecursiveSubtypes.produce:fin_guard_0",
+      "symbol": "lean_bridge_cc48993941d89731cae43d8e_fin_guard_0"
+    },
+    {
+      "kind": "adapter",
+      "label": "RecursiveSubtypes.second",
+      "symbol": "lean_bridge_9e8d2cbaa99dca92eb622921_lean"
+    },
+    {
+      "kind": "validator",
+      "label": "RecursiveSubtypes.second:fin_guard_0",
+      "symbol": "lean_bridge_9e8d2cbaa99dca92eb622921_fin_guard_0"
+    },
+    {
+      "kind": "validator",
+      "label": "RecursiveSubtypes.second:graph_refinement_0_053cd996a2b855a7fe90",
+      "symbol": "lean_bridge_9e8d2cbaa99dca92eb622921_graph_refinement_0_053cd996a2b855a7fe90"
+    },
+    {
+      "kind": "validator",
+      "label": "RecursiveSubtypes.second:refinement_0",
+      "symbol": "lean_bridge_9e8d2cbaa99dca92eb622921_refinement_0"
+    }
+  ]
+}

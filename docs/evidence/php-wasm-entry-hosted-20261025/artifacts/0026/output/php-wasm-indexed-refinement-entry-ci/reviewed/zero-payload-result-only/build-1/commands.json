@@ -1,0 +1,1136 @@
+{
+  "commands": [
+    {
+      "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm/upstream/emscripten/emcc",
+      "originalArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/php/ext",
+        "-c",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/ZeroPayloadCheckedRecords.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/0.o"
+      ],
+      "probeArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/php/ext",
+        "-c",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/reviewed/zero-payload-result-only/build-1/c-probes/1-ZeroPayloadCheckedRecords.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/0.o",
+        "-iquote",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/reviewed/zero-payload-result-only/build-1=/build/php-wasm-refinement-entry-probe"
+      ]
+    },
+    {
+      "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm/upstream/emscripten/emcc",
+      "originalArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/php/ext",
+        "-c",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/adapter.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/1.o"
+      ],
+      "probeArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/php/ext",
+        "-c",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/reviewed/zero-payload-result-only/build-1/c-probes/2-adapter.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/1.o",
+        "-iquote",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/reviewed/zero-payload-result-only/build-1=/build/php-wasm-refinement-entry-probe"
+      ]
+    },
+    {
+      "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm/upstream/emscripten/emcc",
+      "originalArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/php/ext",
+        "-c",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/provider.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/2.o"
+      ],
+      "probeArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/php/ext",
+        "-c",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/reviewed/zero-payload-result-only/build-1/c-probes/3-provider.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/2.o",
+        "-iquote",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/reviewed/zero-payload-result-only/build-1=/build/php-wasm-refinement-entry-probe"
+      ]
+    },
+    {
+      "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm/upstream/emscripten/emcc",
+      "originalArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/php/ext",
+        "-c",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/callbacks.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/3.o"
+      ],
+      "probeArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/php/ext",
+        "-c",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/reviewed/zero-payload-result-only/build-1/c-probes/4-callbacks.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/3.o",
+        "-iquote",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/reviewed/zero-payload-result-only/build-1=/build/php-wasm-refinement-entry-probe"
+      ]
+    },
+    {
+      "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm/upstream/emscripten/emcc",
+      "originalArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/php/ext",
+        "-c",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/width.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/4.o"
+      ],
+      "probeArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/php/ext",
+        "-c",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/reviewed/zero-payload-result-only/build-1/c-probes/5-width.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/4.o",
+        "-iquote",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/reviewed/zero-payload-result-only/build-1=/build/php-wasm-refinement-entry-probe"
+      ]
+    },
+    {
+      "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm/upstream/emscripten/emcc",
+      "originalArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/php/ext",
+        "-c",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/binding/src/zeropayloadcheckedrecords.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/5.o"
+      ],
+      "probeArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/php/ext",
+        "-c",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/reviewed/zero-payload-result-only/build-1/c-probes/6-zeropayloadcheckedrecords.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/5.o",
+        "-iquote",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/binding/src",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/reviewed/zero-payload-result-only/build-1=/build/php-wasm-refinement-entry-probe"
+      ]
+    },
+    {
+      "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm/upstream/emscripten/emcc",
+      "originalArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/php/ext",
+        "-c",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/extension/lb_zeropayloadcheckedrecords_d30bb96553a73642.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/6.o"
+      ],
+      "probeArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/php/ext",
+        "-c",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/reviewed/zero-payload-result-only/build-1/c-probes/7-lb_zeropayloadcheckedrecords_d30bb96553a73642.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/6.o",
+        "-iquote",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/extension",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/reviewed/zero-payload-result-only/build-1=/build/php-wasm-refinement-entry-probe"
+      ]
+    },
+    {
+      "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm/upstream/emscripten/emcc",
+      "originalArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-sSIDE_MODULE=2",
+        "-sEXPORTED_FUNCTIONS=['_get_module']",
+        "-Wl,--no-entry",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/0.o",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/1.o",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/2.o",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/3.o",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/4.o",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/5.o",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/6.o",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime/lib/liblean_bridge_php_wasm_copied_488de83b725bba40a9b4.so",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/lib/php8.4-lb_zeropayloadcheckedrecords_d30bb96553a73642.so"
+      ],
+      "probeArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-sSIDE_MODULE=2",
+        "-sEXPORTED_FUNCTIONS=['_get_module']",
+        "-Wl,--no-entry",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/0.o",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/1.o",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/2.o",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/3.o",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/4.o",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/5.o",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/6.o",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-input/php-wasm-runtime/lib/liblean_bridge_php_wasm_copied_488de83b725bba40a9b4.so",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/lib/php8.4-lb_zeropayloadcheckedrecords_d30bb96553a73642.so"
+      ]
+    }
+  ],
+  "compiled": [
+    {
+      "definitions": [
+        {
+          "form": "global",
+          "kind": "constructor",
+          "label": "ZeroPayloadCheckedRecords.mkWitness",
+          "offset": 2152,
+          "symbol": "lb_zero_payload_result_only_probe_constructor_mkWitness"
+        },
+        {
+          "form": "function",
+          "kind": "constructor",
+          "label": "ZeroPayloadCheckedRecords.mkToken",
+          "offset": 7090,
+          "symbol": "lb_zero_payload_result_only_probe_constructor_mkToken"
+        },
+        {
+          "form": "global",
+          "kind": "constructor",
+          "label": "ZeroPayloadCheckedRecords.mkAbsent",
+          "offset": 2413,
+          "symbol": "lb_zero_payload_result_only_probe_constructor_mkAbsent"
+        },
+        {
+          "form": "global",
+          "kind": "source",
+          "label": "ZeroPayloadCheckedRecords.produceWitness",
+          "offset": 2732,
+          "symbol": "lb_zero_payload_result_only_probe_source_produceWitness"
+        },
+        {
+          "form": "global",
+          "kind": "source",
+          "label": "ZeroPayloadCheckedRecords.produceToken",
+          "offset": 2814,
+          "symbol": "lb_zero_payload_result_only_probe_source_produceToken"
+        },
+        {
+          "form": "function",
+          "kind": "source",
+          "label": "ZeroPayloadCheckedRecords.witnesses",
+          "offset": 8337,
+          "symbol": "lb_zero_payload_result_only_probe_source_witnesses"
+        },
+        {
+          "form": "function",
+          "kind": "source",
+          "label": "ZeroPayloadCheckedRecords.maybeWitness",
+          "offset": 8673,
+          "symbol": "lb_zero_payload_result_only_probe_source_maybeWitness"
+        },
+        {
+          "form": "global",
+          "kind": "source",
+          "label": "ZeroPayloadCheckedRecords.produceMarker",
+          "offset": 3243,
+          "symbol": "lb_zero_payload_result_only_probe_source_produceMarker"
+        },
+        {
+          "form": "function",
+          "kind": "source",
+          "label": "ZeroPayloadCheckedRecords.produceMark",
+          "offset": 10259,
+          "symbol": "lb_zero_payload_result_only_probe_source_produceMark"
+        }
+      ],
+      "insertions": [
+        {
+          "kind": "source",
+          "label": "ZeroPayloadCheckedRecords.produceMark",
+          "offset": 10359,
+          "symbol": "lb_zero_payload_result_only_probe_source_produceMark",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter source ZeroPayloadCheckedRecords.produceMark\\n\", stderr);\n"
+        },
+        {
+          "kind": "source",
+          "label": "ZeroPayloadCheckedRecords.maybeWitness",
+          "offset": 8775,
+          "symbol": "lb_zero_payload_result_only_probe_source_maybeWitness",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter source ZeroPayloadCheckedRecords.maybeWitness\\n\", stderr);\n"
+        },
+        {
+          "kind": "source",
+          "label": "ZeroPayloadCheckedRecords.witnesses",
+          "offset": 8439,
+          "symbol": "lb_zero_payload_result_only_probe_source_witnesses",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter source ZeroPayloadCheckedRecords.witnesses\\n\", stderr);\n"
+        },
+        {
+          "kind": "constructor",
+          "label": "ZeroPayloadCheckedRecords.mkToken",
+          "offset": 7193,
+          "symbol": "lb_zero_payload_result_only_probe_constructor_mkToken",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter constructor ZeroPayloadCheckedRecords.mkToken\\n\", stderr);\n"
+        },
+        {
+          "kind": "preamble",
+          "offset": 0,
+          "text": "#include <stdio.h>\n"
+        }
+      ],
+      "name": "1-ZeroPayloadCheckedRecords.c",
+      "object": {
+        "bytes": 5948,
+        "sha256": "5581edae087ea0b0b09d8d7eeea43aa9b70eba5002bf37a1f273f472d90aede6"
+      },
+      "objectPath": "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/0.o",
+      "originalPath": "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/ZeroPayloadCheckedRecords.c",
+      "originalSha256": "e6e0bfb17c77b213e6e401018b7e1ab9655778917bbb842cdf8dffdafdbd3e4f",
+      "probePath": "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/reviewed/zero-payload-result-only/build-1/c-probes/1-ZeroPayloadCheckedRecords.c",
+      "probeSha256": "9677ab0eb8636db8e0055a5fcac791085efee18acde723596dcaaefea92368a5"
+    },
+    {
+      "definitions": [
+        {
+          "form": "function",
+          "kind": "adapter",
+          "label": "ZeroPayloadCheckedRecords.maybeWitness",
+          "offset": 12215,
+          "symbol": "lb_cde1a97bb44e62e5508a2ab3"
+        },
+        {
+          "form": "function",
+          "kind": "adapter",
+          "label": "ZeroPayloadCheckedRecords.produceMark",
+          "offset": 13006,
+          "symbol": "lb_3190b0fd601d06277d65cc15"
+        },
+        {
+          "form": "function",
+          "kind": "adapter",
+          "label": "ZeroPayloadCheckedRecords.produceMarker",
+          "offset": 13662,
+          "symbol": "lb_53d00d3f28c820ff014ddaab"
+        },
+        {
+          "form": "function",
+          "kind": "adapter",
+          "label": "ZeroPayloadCheckedRecords.produceToken",
+          "offset": 13868,
+          "symbol": "lb_582f4605f271fe1a26173078"
+        },
+        {
+          "form": "function",
+          "kind": "adapter",
+          "label": "ZeroPayloadCheckedRecords.produceWitness",
+          "offset": 14073,
+          "symbol": "lb_e28f59b3ac170ab2f8d671cf"
+        },
+        {
+          "form": "function",
+          "kind": "adapter",
+          "label": "ZeroPayloadCheckedRecords.witnesses",
+          "offset": 15713,
+          "symbol": "lb_77f288f49ad4518952eca999"
+        }
+      ],
+      "insertions": [
+        {
+          "kind": "adapter",
+          "label": "ZeroPayloadCheckedRecords.witnesses",
+          "offset": 15789,
+          "symbol": "lb_77f288f49ad4518952eca999",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter ZeroPayloadCheckedRecords.witnesses\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "ZeroPayloadCheckedRecords.produceWitness",
+          "offset": 14153,
+          "symbol": "lb_e28f59b3ac170ab2f8d671cf",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter ZeroPayloadCheckedRecords.produceWitness\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "ZeroPayloadCheckedRecords.produceToken",
+          "offset": 13948,
+          "symbol": "lb_582f4605f271fe1a26173078",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter ZeroPayloadCheckedRecords.produceToken\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "ZeroPayloadCheckedRecords.produceMarker",
+          "offset": 13742,
+          "symbol": "lb_53d00d3f28c820ff014ddaab",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter ZeroPayloadCheckedRecords.produceMarker\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "ZeroPayloadCheckedRecords.produceMark",
+          "offset": 13077,
+          "symbol": "lb_3190b0fd601d06277d65cc15",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter ZeroPayloadCheckedRecords.produceMark\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "ZeroPayloadCheckedRecords.maybeWitness",
+          "offset": 12286,
+          "symbol": "lb_cde1a97bb44e62e5508a2ab3",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter ZeroPayloadCheckedRecords.maybeWitness\\n\", stderr);\n"
+        },
+        {
+          "kind": "preamble",
+          "offset": 0,
+          "text": "#include <stdio.h>\n"
+        }
+      ],
+      "name": "2-adapter.c",
+      "object": {
+        "bytes": 11684,
+        "sha256": "df1489d543157a505a11396a5f169aa569ded70789d97c94246e5352105d04e7"
+      },
+      "objectPath": "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/1.o",
+      "originalPath": "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/adapter.c",
+      "originalSha256": "eae39b232f89d78b40a4dddca3ce6d2bc3dddace031b638a1a34bcccb89d06d3",
+      "probePath": "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/reviewed/zero-payload-result-only/build-1/c-probes/2-adapter.c",
+      "probeSha256": "7a7f88a21f01c76e4d7df1978d9178441335691470517a2405e9b52c23d09451"
+    },
+    {
+      "definitions": [],
+      "insertions": [],
+      "name": "3-provider.c",
+      "object": {
+        "bytes": 7273,
+        "sha256": "fbb49f3a66caaa419eee3d851a5c43173d336ef876451d5d9ead6510e551ec3f"
+      },
+      "objectPath": "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/2.o",
+      "originalPath": "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/provider.c",
+      "originalSha256": "4759e9e169c075b901cb645b6df80368792a8272a26aa03f6cab29584374ec95",
+      "probePath": "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/reviewed/zero-payload-result-only/build-1/c-probes/3-provider.c",
+      "probeSha256": "4759e9e169c075b901cb645b6df80368792a8272a26aa03f6cab29584374ec95"
+    },
+    {
+      "definitions": [],
+      "insertions": [],
+      "name": "4-callbacks.c",
+      "object": {
+        "bytes": 258,
+        "sha256": "a8e680be3accc5b8ad9d8becda8fdb51ee27aeef43f3a380f4d440aa1fc45be9"
+      },
+      "objectPath": "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/3.o",
+      "originalPath": "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/callbacks.c",
+      "originalSha256": "57fca410285f79f9a58f3f5b23f97203e9cc9e76066139cb529ff406afa92c2c",
+      "probePath": "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/reviewed/zero-payload-result-only/build-1/c-probes/4-callbacks.c",
+      "probeSha256": "57fca410285f79f9a58f3f5b23f97203e9cc9e76066139cb529ff406afa92c2c"
+    },
+    {
+      "definitions": [],
+      "insertions": [],
+      "name": "5-width.c",
+      "object": {
+        "bytes": 258,
+        "sha256": "a8e680be3accc5b8ad9d8becda8fdb51ee27aeef43f3a380f4d440aa1fc45be9"
+      },
+      "objectPath": "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/4.o",
+      "originalPath": "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/width.c",
+      "originalSha256": "94f94bd37af397f400f10b97b24efb34a1ecab8f8aae613e50376f1ab2218d1e",
+      "probePath": "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/reviewed/zero-payload-result-only/build-1/c-probes/5-width.c",
+      "probeSha256": "94f94bd37af397f400f10b97b24efb34a1ecab8f8aae613e50376f1ab2218d1e"
+    },
+    {
+      "definitions": [],
+      "insertions": [],
+      "name": "6-zeropayloadcheckedrecords.c",
+      "object": {
+        "bytes": 5592,
+        "sha256": "c3d096cc9045dc3330a5fe69d383b198322212f7ff0b4f99f899ed14438960d3"
+      },
+      "objectPath": "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/5.o",
+      "originalPath": "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/binding/src/zeropayloadcheckedrecords.c",
+      "originalSha256": "7a60b87d77600b5ec55a21c91d42ab81b98a3436373afdca3f21256148fc1d8d",
+      "probePath": "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/reviewed/zero-payload-result-only/build-1/c-probes/6-zeropayloadcheckedrecords.c",
+      "probeSha256": "7a60b87d77600b5ec55a21c91d42ab81b98a3436373afdca3f21256148fc1d8d"
+    },
+    {
+      "definitions": [
+        {
+          "form": "function",
+          "kind": "public",
+          "label": "maybeWitness",
+          "offset": 16973,
+          "symbol": "lb_call0"
+        },
+        {
+          "form": "function",
+          "kind": "public",
+          "label": "produceMark",
+          "offset": 19385,
+          "symbol": "lb_call1"
+        },
+        {
+          "form": "function",
+          "kind": "public",
+          "label": "produceMarker",
+          "offset": 21695,
+          "symbol": "lb_call2"
+        },
+        {
+          "form": "function",
+          "kind": "public",
+          "label": "produceToken",
+          "offset": 23932,
+          "symbol": "lb_call3"
+        },
+        {
+          "form": "function",
+          "kind": "public",
+          "label": "produceWitness",
+          "offset": 26175,
+          "symbol": "lb_call4"
+        },
+        {
+          "form": "function",
+          "kind": "public",
+          "label": "witnesses",
+          "offset": 28636,
+          "symbol": "lb_call5"
+        }
+      ],
+      "insertions": [
+        {
+          "kind": "public",
+          "label": "witnesses",
+          "offset": 28668,
+          "symbol": "lb_call5",
+          "text": "\n  const char *lb_probe_public_scope __attribute__((cleanup(lb_probe_end))) = \"witnesses\";\n  fputs(\"LB_SUBTYPE_ENTRY_V1 begin public witnesses\\n\", stderr);\n"
+        },
+        {
+          "kind": "public",
+          "label": "produceWitness",
+          "offset": 26207,
+          "symbol": "lb_call4",
+          "text": "\n  const char *lb_probe_public_scope __attribute__((cleanup(lb_probe_end))) = \"produceWitness\";\n  fputs(\"LB_SUBTYPE_ENTRY_V1 begin public produceWitness\\n\", stderr);\n"
+        },
+        {
+          "kind": "public",
+          "label": "produceToken",
+          "offset": 23964,
+          "symbol": "lb_call3",
+          "text": "\n  const char *lb_probe_public_scope __attribute__((cleanup(lb_probe_end))) = \"produceToken\";\n  fputs(\"LB_SUBTYPE_ENTRY_V1 begin public produceToken\\n\", stderr);\n"
+        },
+        {
+          "kind": "public",
+          "label": "produceMarker",
+          "offset": 21727,
+          "symbol": "lb_call2",
+          "text": "\n  const char *lb_probe_public_scope __attribute__((cleanup(lb_probe_end))) = \"produceMarker\";\n  fputs(\"LB_SUBTYPE_ENTRY_V1 begin public produceMarker\\n\", stderr);\n"
+        },
+        {
+          "kind": "public",
+          "label": "produceMark",
+          "offset": 19417,
+          "symbol": "lb_call1",
+          "text": "\n  const char *lb_probe_public_scope __attribute__((cleanup(lb_probe_end))) = \"produceMark\";\n  fputs(\"LB_SUBTYPE_ENTRY_V1 begin public produceMark\\n\", stderr);\n"
+        },
+        {
+          "kind": "public",
+          "label": "maybeWitness",
+          "offset": 17005,
+          "symbol": "lb_call0",
+          "text": "\n  const char *lb_probe_public_scope __attribute__((cleanup(lb_probe_end))) = \"maybeWitness\";\n  fputs(\"LB_SUBTYPE_ENTRY_V1 begin public maybeWitness\\n\", stderr);\n"
+        },
+        {
+          "kind": "preamble",
+          "offset": 0,
+          "text": "#include <stdio.h>\nstatic void lb_probe_end(const char **label) { fprintf(stderr, \"LB_SUBTYPE_ENTRY_V1 end public %s\\n\", *label); }\n"
+        }
+      ],
+      "name": "7-lb_zeropayloadcheckedrecords_d30bb96553a73642.c",
+      "object": {
+        "bytes": 32311,
+        "sha256": "5086e04e15ba112d8e76057a3a8b2330b5407c3ab7d1da2a4f78bf78100d8ab2"
+      },
+      "objectPath": "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/c/6.o",
+      "originalPath": "/home/runner/work/_temp/lean-bridge-zero-payload-result-only-reviewed-NOnBXC/release/php-wasm/.lean-bridge-native-component-DCOjcx/extension/lb_zeropayloadcheckedrecords_d30bb96553a73642.c",
+      "originalSha256": "08c6a70345e9cfc96a98c27cc61c19c1a15c197c24259eb1145e1fa641af2d84",
+      "probePath": "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-indexed-refinement-entry-ci/reviewed/zero-payload-result-only/build-1/c-probes/7-lb_zeropayloadcheckedrecords_d30bb96553a73642.c",
+      "probeSha256": "42c83cf130171551059fb8d644f621fd576233f186e8ac78458218e26895531a"
+    }
+  ],
+  "definitionCounts": {
+    "lb_3190b0fd601d06277d65cc15": 1,
+    "lb_53d00d3f28c820ff014ddaab": 1,
+    "lb_582f4605f271fe1a26173078": 1,
+    "lb_77f288f49ad4518952eca999": 1,
+    "lb_call0": 1,
+    "lb_call1": 1,
+    "lb_call2": 1,
+    "lb_call3": 1,
+    "lb_call4": 1,
+    "lb_call5": 1,
+    "lb_cde1a97bb44e62e5508a2ab3": 1,
+    "lb_e28f59b3ac170ab2f8d671cf": 1,
+    "lb_zero_payload_result_only_probe_constructor_mkAbsent": 1,
+    "lb_zero_payload_result_only_probe_constructor_mkToken": 1,
+    "lb_zero_payload_result_only_probe_constructor_mkWitness": 1,
+    "lb_zero_payload_result_only_probe_source_maybeWitness": 1,
+    "lb_zero_payload_result_only_probe_source_produceMark": 1,
+    "lb_zero_payload_result_only_probe_source_produceMarker": 1,
+    "lb_zero_payload_result_only_probe_source_produceToken": 1,
+    "lb_zero_payload_result_only_probe_source_produceWitness": 1,
+    "lb_zero_payload_result_only_probe_source_witnesses": 1
+  },
+  "globalDefinitions": [
+    {
+      "kind": "constructor",
+      "label": "ZeroPayloadCheckedRecords.mkWitness",
+      "symbol": "lb_zero_payload_result_only_probe_constructor_mkWitness"
+    },
+    {
+      "kind": "constructor",
+      "label": "ZeroPayloadCheckedRecords.mkAbsent",
+      "symbol": "lb_zero_payload_result_only_probe_constructor_mkAbsent"
+    },
+    {
+      "kind": "source",
+      "label": "ZeroPayloadCheckedRecords.produceWitness",
+      "symbol": "lb_zero_payload_result_only_probe_source_produceWitness"
+    },
+    {
+      "kind": "source",
+      "label": "ZeroPayloadCheckedRecords.produceToken",
+      "symbol": "lb_zero_payload_result_only_probe_source_produceToken"
+    },
+    {
+      "kind": "source",
+      "label": "ZeroPayloadCheckedRecords.produceMarker",
+      "symbol": "lb_zero_payload_result_only_probe_source_produceMarker"
+    }
+  ],
+  "headers": [],
+  "linked": true,
+  "selected": [
+    {
+      "kind": "constructor",
+      "label": "ZeroPayloadCheckedRecords.mkWitness",
+      "symbol": "lb_zero_payload_result_only_probe_constructor_mkWitness"
+    },
+    {
+      "kind": "constructor",
+      "label": "ZeroPayloadCheckedRecords.mkToken",
+      "symbol": "lb_zero_payload_result_only_probe_constructor_mkToken"
+    },
+    {
+      "kind": "constructor",
+      "label": "ZeroPayloadCheckedRecords.mkAbsent",
+      "symbol": "lb_zero_payload_result_only_probe_constructor_mkAbsent"
+    },
+    {
+      "kind": "source",
+      "label": "ZeroPayloadCheckedRecords.produceWitness",
+      "symbol": "lb_zero_payload_result_only_probe_source_produceWitness"
+    },
+    {
+      "kind": "source",
+      "label": "ZeroPayloadCheckedRecords.produceToken",
+      "symbol": "lb_zero_payload_result_only_probe_source_produceToken"
+    },
+    {
+      "kind": "source",
+      "label": "ZeroPayloadCheckedRecords.witnesses",
+      "symbol": "lb_zero_payload_result_only_probe_source_witnesses"
+    },
+    {
+      "kind": "source",
+      "label": "ZeroPayloadCheckedRecords.maybeWitness",
+      "symbol": "lb_zero_payload_result_only_probe_source_maybeWitness"
+    },
+    {
+      "kind": "source",
+      "label": "ZeroPayloadCheckedRecords.produceMarker",
+      "symbol": "lb_zero_payload_result_only_probe_source_produceMarker"
+    },
+    {
+      "kind": "source",
+      "label": "ZeroPayloadCheckedRecords.produceMark",
+      "symbol": "lb_zero_payload_result_only_probe_source_produceMark"
+    },
+    {
+      "kind": "public",
+      "label": "maybeWitness",
+      "symbol": "lb_call0"
+    },
+    {
+      "kind": "public",
+      "label": "produceMark",
+      "symbol": "lb_call1"
+    },
+    {
+      "kind": "public",
+      "label": "produceMarker",
+      "symbol": "lb_call2"
+    },
+    {
+      "kind": "public",
+      "label": "produceToken",
+      "symbol": "lb_call3"
+    },
+    {
+      "kind": "public",
+      "label": "produceWitness",
+      "symbol": "lb_call4"
+    },
+    {
+      "kind": "public",
+      "label": "witnesses",
+      "symbol": "lb_call5"
+    },
+    {
+      "kind": "adapter",
+      "label": "ZeroPayloadCheckedRecords.maybeWitness",
+      "symbol": "lb_cde1a97bb44e62e5508a2ab3"
+    },
+    {
+      "kind": "adapter",
+      "label": "ZeroPayloadCheckedRecords.produceMark",
+      "symbol": "lb_3190b0fd601d06277d65cc15"
+    },
+    {
+      "kind": "adapter",
+      "label": "ZeroPayloadCheckedRecords.produceMarker",
+      "symbol": "lb_53d00d3f28c820ff014ddaab"
+    },
+    {
+      "kind": "adapter",
+      "label": "ZeroPayloadCheckedRecords.produceToken",
+      "symbol": "lb_582f4605f271fe1a26173078"
+    },
+    {
+      "kind": "adapter",
+      "label": "ZeroPayloadCheckedRecords.produceWitness",
+      "symbol": "lb_e28f59b3ac170ab2f8d671cf"
+    },
+    {
+      "kind": "adapter",
+      "label": "ZeroPayloadCheckedRecords.witnesses",
+      "symbol": "lb_77f288f49ad4518952eca999"
+    }
+  ]
+}

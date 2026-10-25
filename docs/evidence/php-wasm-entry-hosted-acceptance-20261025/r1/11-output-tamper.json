@@ -1,0 +1,23 @@
+{
+  "changes": [
+    {
+      "after": {
+        "bytes": 1244,
+        "sha256": "75e0fe2756861b08aa4fbf36864aa93542cb092acaffe079b533b7cb5f2ab963"
+      },
+      "before": {
+        "bytes": 1244,
+        "path": "artifacts/0000/output/php-wasm-refinement-entry-ci.tap",
+        "sha256": "37ae540926015d2d5a9018109f754a4c46847d963be68783147796737767faf7"
+      },
+      "path": "artifacts/0000/output/php-wasm-refinement-entry-ci.tap"
+    }
+  ],
+  "name": "output-tamper",
+  "refusal": {
+    "code": "ERR_ASSERTION",
+    "message": "output/php-wasm-refinement-entry-ci.tap\n+ actual - expected\n\n+ '75e0fe2756861b08aa4fbf36864aa93542cb092acaffe079b533b7cb5f2ab963'\n- '37ae540926015d2d5a9018109f754a4c46847d963be68783147796737767faf7'\n",
+    "name": "AssertionError"
+  },
+  "rejected": true
+}

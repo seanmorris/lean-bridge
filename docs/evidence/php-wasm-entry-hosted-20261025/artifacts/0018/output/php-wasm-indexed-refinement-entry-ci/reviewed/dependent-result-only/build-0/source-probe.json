@@ -1,0 +1,33 @@
+{
+  "edits": [
+    {
+      "current": "@[noinline, export lb_dependent_result_only_probe_source_dependentResult]\ndef dependentResult",
+      "offset": 791,
+      "previous": "@[noinline] def dependentResult"
+    },
+    {
+      "current": "@[noinline, export lb_dependent_result_only_probe_constructor_mkDependent]\ndef mkDependent",
+      "offset": 270,
+      "previous": "@[noinline] def mkDependent"
+    }
+  ],
+  "entries": [
+    {
+      "kind": "constructor",
+      "label": "DependentRecords.mkDependent",
+      "symbol": "lb_dependent_result_only_probe_constructor_mkDependent"
+    },
+    {
+      "kind": "source",
+      "label": "DependentRecords.dependentResult",
+      "symbol": "lb_dependent_result_only_probe_source_dependentResult"
+    }
+  ],
+  "entryForms": {
+    "lb_dependent_result_only_probe_constructor_mkDependent": "function",
+    "lb_dependent_result_only_probe_source_dependentResult": "function"
+  },
+  "originalSha256": "44eeadfa43d24e6a0a65d5b8be25809c22a5f29f217d57fb5dd462da9526782e",
+  "probeSha256": "cdef8c3a642dc19366179c287bbd1bc975b3e5b4edf78f75bca44c6cffac0de6",
+  "source": "namespace DependentRecords\n\n/-- The second runtime field is bounded by the first runtime field. -/\nstructure Dependent where\n  bound : Nat\n  below : Fin bound\n  valid : below.val < bound\n\n/-- The only host-input path constructs both proofs from the observed payload. -/\n@[noinline, export lb_dependent_result_only_probe_constructor_mkDependent]\ndef mkDependent (bound below : Nat) : Option Dependent :=\n  if h : below < bound then some ⟨bound, ⟨below, h⟩, h⟩ else none\n\n/-- Consume both retained fields after the checked constructor has run. -/\n@[noinline] def dependentTotal (value : Dependent) : Nat :=\n  value.bound + value.below.val\n\n/-- Return the exact checked value through its proof-free host mirror. -/\n@[noinline] def dependentRoundtrip (value : Dependent) : Dependent := value\n\n/-- Lean produces the dependent proofs for a result-only API. -/\n@[noinline, export lb_dependent_result_only_probe_source_dependentResult]\ndef dependentResult (seed : Nat) : Dependent :=\n  ⟨seed + 1, ⟨seed, by omega⟩, by omega⟩\n\nend DependentRecords\n"
+}

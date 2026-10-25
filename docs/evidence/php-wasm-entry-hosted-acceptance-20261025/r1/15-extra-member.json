@@ -1,0 +1,19 @@
+{
+  "changes": [
+    {
+      "after": {
+        "bytes": 18,
+        "sha256": "f838269d2dd95d0ce7cd895ed5bc831b83160c9ba58409cc1bca9b6777315705"
+      },
+      "before": null,
+      "path": "unrecorded-file.txt"
+    }
+  ],
+  "name": "extra-member",
+  "refusal": {
+    "code": "ERR_ASSERTION",
+    "message": "complete archive file closure\n+ actual - expected\n... Skipped lines\n\n  [\n    'api/artifacts/0000.json',\n    'api/artifacts/0001.json',\n    'api/artifacts/0002.json',\n    'api/artifacts/0003.json',\n...\n    'sources/producer/0000.part',\n+   'unrecorded-file.txt'\n  ]\n",
+    "name": "AssertionError"
+  },
+  "rejected": true
+}

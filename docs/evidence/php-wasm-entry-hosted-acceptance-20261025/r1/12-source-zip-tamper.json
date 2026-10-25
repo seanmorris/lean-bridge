@@ -1,0 +1,23 @@
+{
+  "changes": [
+    {
+      "after": {
+        "bytes": 26369339,
+        "sha256": "ca87e9b1b051af3956899100c742b13f498c0fe656cc86f9f5c2f0dbbe261d2e"
+      },
+      "before": {
+        "bytes": 26369339,
+        "path": "sources/producer/0000.part",
+        "sha256": "48add54f5f0790d004d80c723729ccd075b20b8f91df8c818bb20f96a3672143"
+      },
+      "path": "sources/producer/0000.part"
+    }
+  ],
+  "name": "source-zip-tamper",
+  "refusal": {
+    "code": "ERR_ASSERTION",
+    "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ 'ca87e9b1b051af3956899100c742b13f498c0fe656cc86f9f5c2f0dbbe261d2e'\n- '48add54f5f0790d004d80c723729ccd075b20b8f91df8c818bb20f96a3672143'\n",
+    "name": "AssertionError"
+  },
+  "rejected": true
+}

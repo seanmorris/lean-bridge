@@ -1,0 +1,23 @@
+{
+  "changes": [
+    {
+      "after": {
+        "bytes": 6087819,
+        "sha256": "cb97bdb7885098a9fe83ca292f5fc93bb1e3f5040be10c31931b3f2e64a96255"
+      },
+      "before": {
+        "bytes": 6087819,
+        "path": "index.json",
+        "sha256": "581b034fd9dc2c8c59b60b571df2c7861bac8eed576d5d39f4cd3f2adf2f97a8"
+      },
+      "path": "index.json"
+    }
+  ],
+  "name": "source-manifest-tamper",
+  "refusal": {
+    "code": "ERR_ASSERTION",
+    "message": "source closure must equal original Git bytes\n+ actual - expected\n\n  [\n    {\n      bytes: 370,\n      mode: '100644',\n      object: '256378fcc8f56a1e299c4af3483ec356695f1fcd',\n      path: '.github/actions/bounded-apt/action.yml',\n+     sha256: '0000000000000000000000000000000000000000000000000000000000000000'\n-     sha256: '75895874f8349fc13934480765b01665cad82add6afd33536697b2b90ea6f507'\n    },\n    {\n      bytes: 112,\n      mode: '100644',\n      object: 'bd44ca8ad564c9a175dae1bc2d1ef1122341a39c',\n",
+    "name": "AssertionError"
+  },
+  "rejected": true
+}

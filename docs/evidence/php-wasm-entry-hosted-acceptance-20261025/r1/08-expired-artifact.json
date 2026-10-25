@@ -1,0 +1,35 @@
+{
+  "changes": [
+    {
+      "after": {
+        "bytes": 907,
+        "sha256": "bb75df14b6f955fb434e6209310523bf50d0102d24f06f0326284e21d01ec2ea"
+      },
+      "before": {
+        "bytes": 825,
+        "path": "api/artifacts/0000.json",
+        "sha256": "8348995954eee574c480fe9301fb3546926d9cfa9763d7fd0feac3434832d6bc"
+      },
+      "path": "api/artifacts/0000.json"
+    },
+    {
+      "after": {
+        "bytes": 6087819,
+        "sha256": "7e77483c00ca6d22e3728316c4ad3cb0bef939bbf7d5d537e4b647fc286a30e7"
+      },
+      "before": {
+        "bytes": 6087819,
+        "path": "index.json",
+        "sha256": "581b034fd9dc2c8c59b60b571df2c7861bac8eed576d5d39f4cd3f2adf2f97a8"
+      },
+      "path": "index.json"
+    }
+  ],
+  "name": "expired-artifact",
+  "refusal": {
+    "code": "ERR_ASSERTION",
+    "message": "Expected values to be strictly equal:\n\ntrue !== false\n",
+    "name": "AssertionError"
+  },
+  "rejected": true
+}

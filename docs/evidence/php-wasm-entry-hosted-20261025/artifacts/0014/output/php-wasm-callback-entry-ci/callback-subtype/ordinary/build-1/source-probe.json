@@ -1,0 +1,92 @@
+{
+  "closureEdits": [
+    {
+      "current": "@[noinline, export lb_callback_subtype_closure_makeClosure]\ndef makeClosureProbeBody (value : Positive) : Positive := value\n\ndef makeClosure (_seed : Nat) : Positive → Positive := makeClosureProbeBody",
+      "offset": 278,
+      "previous": "def makeClosure (_seed : Nat) : Positive → Positive :=\n  fun value => value"
+    },
+    {
+      "current": "@[noinline, export lb_callback_subtype_closure_makeMixedClosure]\ndef makeMixedClosureProbeBody (_marker : Nat) (value : Positive) : Positive := value\n\ndef makeMixedClosure (_seed : Nat) : Nat → Positive → Positive := makeMixedClosureProbeBody",
+      "offset": 580,
+      "previous": "def makeMixedClosure (_seed : Nat) : Nat → Positive → Positive :=\n  fun _marker value => value"
+    }
+  ],
+  "entries": [
+    {
+      "kind": "constructor",
+      "label": "CallbackSubtypes.checkedPositive",
+      "symbol": "lb_callback_subtype_probe_constructor_checkedPositive"
+    },
+    {
+      "kind": "source",
+      "label": "CallbackSubtypes.callHost",
+      "symbol": "lb_callback_subtype_probe_source_callHost"
+    },
+    {
+      "kind": "source",
+      "label": "CallbackSubtypes.callHostMixed",
+      "symbol": "lb_callback_subtype_probe_source_callHostMixed"
+    },
+    {
+      "kind": "source",
+      "label": "CallbackSubtypes.makeClosure",
+      "symbol": "lb_callback_subtype_probe_source_makeClosure"
+    },
+    {
+      "kind": "source",
+      "label": "CallbackSubtypes.makeMixedClosure",
+      "symbol": "lb_callback_subtype_probe_source_makeMixedClosure"
+    },
+    {
+      "kind": "closure",
+      "label": "CallbackSubtypes.makeClosure:body",
+      "symbol": "lb_callback_subtype_closure_makeClosure"
+    },
+    {
+      "kind": "closure",
+      "label": "CallbackSubtypes.makeMixedClosure:body",
+      "symbol": "lb_callback_subtype_closure_makeMixedClosure"
+    }
+  ],
+  "entryForms": {
+    "lb_callback_subtype_closure_makeClosure": "function",
+    "lb_callback_subtype_closure_makeMixedClosure": "function",
+    "lb_callback_subtype_probe_constructor_checkedPositive": "function",
+    "lb_callback_subtype_probe_source_callHost": "function",
+    "lb_callback_subtype_probe_source_callHostMixed": "function",
+    "lb_callback_subtype_probe_source_makeClosure": "function",
+    "lb_callback_subtype_probe_source_makeMixedClosure": "function"
+  },
+  "family": "callback-subtype",
+  "originalSha256": "4eef12901f9b50dbecd449a8f03c112a5e9977618093637cb9e2a22fee7359f6",
+  "path": "tests/fixtures/onboarding/callback-subtypes/CallbackSubtypes.lean",
+  "probeSha256": "7325a93826e36f35387dcc970be9bc78787d5204544eb6cccc24579e30853fef",
+  "source": "namespace CallbackSubtypes\n\nabbrev Positive := { value : Nat // 0 < value }\n\n@[noinline, export lb_callback_subtype_probe_constructor_checkedPositive]\ndef checkedPositive (value : Nat) : Option Positive :=\n  if bound : 0 < value then some ⟨value, bound⟩ else none\n\n@[noinline, export lb_callback_subtype_probe_source_callHost]\ndef callHost (callback : Positive → Positive) : Positive :=\n  callback ⟨1, by decide⟩\n\n@[noinline, export lb_callback_subtype_closure_makeClosure]\ndef makeClosureProbeBody (value : Positive) : Positive := value\n\n@[noinline, export lb_callback_subtype_probe_source_makeClosure]\ndef makeClosure (_seed : Nat) : Positive → Positive := makeClosureProbeBody\n\n@[noinline, export lb_callback_subtype_probe_source_callHostMixed]\ndef callHostMixed (callback : Nat → Positive → Positive) : Positive :=\n  callback 7 ⟨1, by decide⟩\n\n@[noinline, export lb_callback_subtype_closure_makeMixedClosure]\ndef makeMixedClosureProbeBody (_marker : Nat) (value : Positive) : Positive := value\n\n@[noinline, export lb_callback_subtype_probe_source_makeMixedClosure]\ndef makeMixedClosure (_seed : Nat) : Nat → Positive → Positive := makeMixedClosureProbeBody\n\ndef callHostContainer\n    (callback : Option Positive → Except String (Option Positive)) :\n    Except String (Option Positive) :=\n  callback none\n\ndef makeContainerClosure (_seed : Nat) : Array (Option Positive) → Option Positive :=\n  fun _values => none\n\nend CallbackSubtypes\n",
+  "sourceEdits": [
+    {
+      "current": "@[noinline, export lb_callback_subtype_probe_source_makeMixedClosure]\ndef makeMixedClosure",
+      "offset": 731,
+      "previous": "def makeMixedClosure"
+    },
+    {
+      "current": "@[noinline, export lb_callback_subtype_probe_source_callHostMixed]\ndef callHostMixed",
+      "offset": 480,
+      "previous": "def callHostMixed"
+    },
+    {
+      "current": "@[noinline, export lb_callback_subtype_probe_source_makeClosure]\ndef makeClosure",
+      "offset": 403,
+      "previous": "def makeClosure"
+    },
+    {
+      "current": "@[noinline, export lb_callback_subtype_probe_source_callHost]\ndef callHost",
+      "offset": 191,
+      "previous": "def callHost"
+    },
+    {
+      "current": "@[noinline, export lb_callback_subtype_probe_constructor_checkedPositive]\ndef checkedPositive",
+      "offset": 77,
+      "previous": "def checkedPositive"
+    }
+  ]
+}

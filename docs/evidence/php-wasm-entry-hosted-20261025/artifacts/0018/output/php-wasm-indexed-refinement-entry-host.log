@@ -1,0 +1,28 @@
+From https://github.com/emscripten-core/emsdk
+ * branch            54ef088329e5a329614b3659a579d2ccd31fd621 -> FETCH_HEAD
+HEAD is now at 54ef088 Release 3.1.68 (#1453)
+Resolving SDK version '3.1.68' to 'sdk-releases-b52d8c9150dc7d4c8e4a7a08c7a9b4006c9abe49-64bit'
+Installing SDK 'sdk-releases-b52d8c9150dc7d4c8e4a7a08c7a9b4006c9abe49-64bit'..
+Skipped installing node-18.20.3-64bit, already installed.
+Skipped installing releases-b52d8c9150dc7d4c8e4a7a08c7a9b4006c9abe49-64bit, already installed.
+All SDK components already installed: 'sdk-releases-b52d8c9150dc7d4c8e4a7a08c7a9b4006c9abe49-64bit'.
+Resolving SDK version '3.1.68' to 'sdk-releases-b52d8c9150dc7d4c8e4a7a08c7a9b4006c9abe49-64bit'
+Setting the following tools as active:
+   node-18.20.3-64bit
+   releases-b52d8c9150dc7d4c8e4a7a08c7a9b4006c9abe49-64bit
+
+Next steps:
+- To conveniently access emsdk tools from the command line,
+  consider adding the following directories to your PATH:
+    /home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm
+    /home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm/upstream/emscripten
+- This can be done for the current shell by running:
+    source "/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm/emsdk_env.sh"
+- Configure emsdk in your shell startup scripts by running:
+    echo 'source "/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm/emsdk_env.sh"' >> $HOME/.bash_profile
+From https://github.com/seanmorris/php-wasm
+ * branch              bd9a46bf4984bfbdfef4bb6f5b04b7dcd6264c89 -> FETCH_HEAD
+HEAD is now at bd9a46bf Preventing cache stability issues in demo
+
+up to date in 377ms
+Prepared PHP-Wasm bd9a46bf4984bfbdfef4bb6f5b04b7dcd6264c89 with Emscripten 3.1.68 and PHP 8.4.1.

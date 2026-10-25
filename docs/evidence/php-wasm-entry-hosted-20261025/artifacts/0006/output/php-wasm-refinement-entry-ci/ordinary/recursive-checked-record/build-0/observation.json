@@ -1,0 +1,1855 @@
+{
+  "commands": [
+    {
+      "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm/upstream/emscripten/emcc",
+      "originalArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-fbracket-depth=4096",
+        "-include",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/graph/allocation-guard.h",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/php/ext",
+        "-c",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/RecursiveCheckedRecords.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/0.o"
+      ],
+      "probeArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-fbracket-depth=4096",
+        "-include",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/graph/allocation-guard.h",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/php/ext",
+        "-c",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-ci/ordinary/recursive-checked-record/build-0/c-probes/1-RecursiveCheckedRecords.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/0.o",
+        "-iquote",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-ci/ordinary/recursive-checked-record/build-0=/build/php-wasm-refinement-entry-probe"
+      ]
+    },
+    {
+      "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm/upstream/emscripten/emcc",
+      "originalArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-fbracket-depth=4096",
+        "-include",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/graph/allocation-guard.h",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/php/ext",
+        "-c",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/adapter.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/1.o"
+      ],
+      "probeArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-fbracket-depth=4096",
+        "-include",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/graph/allocation-guard.h",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/php/ext",
+        "-c",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-ci/ordinary/recursive-checked-record/build-0/c-probes/2-adapter.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/1.o",
+        "-iquote",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-ci/ordinary/recursive-checked-record/build-0=/build/php-wasm-refinement-entry-probe"
+      ]
+    },
+    {
+      "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm/upstream/emscripten/emcc",
+      "originalArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-fbracket-depth=4096",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/php/ext",
+        "-c",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/graph/transport.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/2.o"
+      ],
+      "probeArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-fbracket-depth=4096",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/php/ext",
+        "-c",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-ci/ordinary/recursive-checked-record/build-0/c-probes/3-transport.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/2.o",
+        "-iquote",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/graph",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-ci/ordinary/recursive-checked-record/build-0=/build/php-wasm-refinement-entry-probe"
+      ]
+    },
+    {
+      "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm/upstream/emscripten/emcc",
+      "originalArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-fbracket-depth=4096",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/php/ext",
+        "-c",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/graph/runtime.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/3.o"
+      ],
+      "probeArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-fbracket-depth=4096",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/php/ext",
+        "-c",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-ci/ordinary/recursive-checked-record/build-0/c-probes/4-runtime.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/3.o",
+        "-iquote",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/graph",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-ci/ordinary/recursive-checked-record/build-0=/build/php-wasm-refinement-entry-probe"
+      ]
+    },
+    {
+      "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm/upstream/emscripten/emcc",
+      "originalArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-fbracket-depth=4096",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/php/ext",
+        "-c",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/width.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/4.o"
+      ],
+      "probeArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-fbracket-depth=4096",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/php/ext",
+        "-c",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-ci/ordinary/recursive-checked-record/build-0/c-probes/5-width.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/4.o",
+        "-iquote",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-ci/ordinary/recursive-checked-record/build-0=/build/php-wasm-refinement-entry-probe"
+      ]
+    },
+    {
+      "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm/upstream/emscripten/emcc",
+      "originalArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-fbracket-depth=4096",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/php/ext",
+        "-c",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/extension/lb_recursivecheckedrecords_graph_e372d69f3f2ad6c7.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/5.o"
+      ],
+      "probeArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-fbracket-depth=4096",
+        "-ffile-prefix-map=/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR=/build/php-wasm-component",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-input/php-wasm-runtime=/build/php-wasm-runtime",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm=/toolchains/php-wasm",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/binding/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/binding/internal",
+        "-I",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-input/php-wasm-runtime/include",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/php",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/php/Zend",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/php/main",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/php/TSRM",
+        "-I",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/php/ext",
+        "-c",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-ci/ordinary/recursive-checked-record/build-0/c-probes/6-lb_recursivecheckedrecords_graph_e372d69f3f2ad6c7.c",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/5.o",
+        "-iquote",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/extension",
+        "-ffile-prefix-map=/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-ci/ordinary/recursive-checked-record/build-0=/build/php-wasm-refinement-entry-probe"
+      ]
+    },
+    {
+      "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/emsdk-php-wasm/upstream/emscripten/emcc",
+      "originalArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-sSIDE_MODULE=2",
+        "-sEXPORTED_FUNCTIONS=['_get_module']",
+        "-Wl,--no-entry",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/0.o",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/1.o",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/2.o",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/3.o",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/4.o",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/5.o",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-input/php-wasm-runtime/lib/liblean_bridge_php_wasm_copied_488de83b725bba40a9b4.so",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/lib/php8.4-lb_recursivecheckedrecords_graph_e372d69f3f2ad6c7.so"
+      ],
+      "probeArgs": [
+        "-O2",
+        "-g0",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-ffp-contract=off",
+        "-Werror=date-time",
+        "-DLEAN_EMSCRIPTEN",
+        "-sSIDE_MODULE=2",
+        "-sEXPORTED_FUNCTIONS=['_get_module']",
+        "-Wl,--no-entry",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/0.o",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/1.o",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/2.o",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/3.o",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/4.o",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/5.o",
+        "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-input/php-wasm-runtime/lib/liblean_bridge_php_wasm_copied_488de83b725bba40a9b4.so",
+        "-o",
+        "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/lib/php8.4-lb_recursivecheckedrecords_graph_e372d69f3f2ad6c7.so"
+      ]
+    }
+  ],
+  "compiled": [
+    {
+      "definitions": [
+        {
+          "form": "function",
+          "kind": "constructor",
+          "label": "RecursiveCheckedRecords.plusOne",
+          "offset": 1959,
+          "symbol": "lb_recursive_checked_record_probe_constructor_plusOne"
+        },
+        {
+          "form": "function",
+          "kind": "constructor",
+          "label": "RecursiveCheckedRecords.plusTwo",
+          "offset": 2596,
+          "symbol": "lb_recursive_checked_record_probe_constructor_plusTwo"
+        },
+        {
+          "form": "function",
+          "kind": "constructor",
+          "label": "RecursiveCheckedRecords.mkPacket",
+          "offset": 3248,
+          "symbol": "lb_recursive_checked_record_probe_constructor_mkPacket"
+        },
+        {
+          "form": "function",
+          "kind": "constructor",
+          "label": "RecursiveCheckedRecords.normalizePacket",
+          "offset": 4577,
+          "symbol": "lb_recursive_checked_record_probe_constructor_normalizePacket"
+        },
+        {
+          "form": "function",
+          "kind": "source",
+          "label": "RecursiveCheckedRecords.first",
+          "offset": 4911,
+          "symbol": "lb_recursive_checked_record_probe_source_first"
+        },
+        {
+          "form": "function",
+          "kind": "source",
+          "label": "RecursiveCheckedRecords.second",
+          "offset": 5166,
+          "symbol": "lb_recursive_checked_record_probe_source_second"
+        },
+        {
+          "form": "function",
+          "kind": "source",
+          "label": "RecursiveCheckedRecords.echo",
+          "offset": 5422,
+          "symbol": "lb_recursive_checked_record_probe_source_echo"
+        },
+        {
+          "form": "function",
+          "kind": "source",
+          "label": "RecursiveCheckedRecords.groups",
+          "offset": 5554,
+          "symbol": "lb_recursive_checked_record_probe_source_groups"
+        },
+        {
+          "form": "function",
+          "kind": "source",
+          "label": "RecursiveCheckedRecords.echoGroups",
+          "offset": 5787,
+          "symbol": "lb_recursive_checked_record_probe_source_echoGroups"
+        },
+        {
+          "form": "function",
+          "kind": "source",
+          "label": "RecursiveCheckedRecords.produce",
+          "offset": 6419,
+          "symbol": "lb_recursive_checked_record_probe_source_produce"
+        }
+      ],
+      "insertions": [
+        {
+          "kind": "source",
+          "label": "RecursiveCheckedRecords.produce",
+          "offset": 6519,
+          "symbol": "lb_recursive_checked_record_probe_source_produce",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter source RecursiveCheckedRecords.produce\\n\", stderr);\n"
+        },
+        {
+          "kind": "source",
+          "label": "RecursiveCheckedRecords.echoGroups",
+          "offset": 5891,
+          "symbol": "lb_recursive_checked_record_probe_source_echoGroups",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter source RecursiveCheckedRecords.echoGroups\\n\", stderr);\n"
+        },
+        {
+          "kind": "source",
+          "label": "RecursiveCheckedRecords.groups",
+          "offset": 5654,
+          "symbol": "lb_recursive_checked_record_probe_source_groups",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter source RecursiveCheckedRecords.groups\\n\", stderr);\n"
+        },
+        {
+          "kind": "source",
+          "label": "RecursiveCheckedRecords.echo",
+          "offset": 5519,
+          "symbol": "lb_recursive_checked_record_probe_source_echo",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter source RecursiveCheckedRecords.echo\\n\", stderr);\n"
+        },
+        {
+          "kind": "source",
+          "label": "RecursiveCheckedRecords.second",
+          "offset": 5265,
+          "symbol": "lb_recursive_checked_record_probe_source_second",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter source RecursiveCheckedRecords.second\\n\", stderr);\n"
+        },
+        {
+          "kind": "source",
+          "label": "RecursiveCheckedRecords.first",
+          "offset": 5009,
+          "symbol": "lb_recursive_checked_record_probe_source_first",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter source RecursiveCheckedRecords.first\\n\", stderr);\n"
+        },
+        {
+          "kind": "constructor",
+          "label": "RecursiveCheckedRecords.normalizePacket",
+          "offset": 4741,
+          "symbol": "lb_recursive_checked_record_probe_constructor_normalizePacket",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter constructor RecursiveCheckedRecords.normalizePacket\\n\", stderr);\n"
+        },
+        {
+          "kind": "constructor",
+          "label": "RecursiveCheckedRecords.mkPacket",
+          "offset": 3405,
+          "symbol": "lb_recursive_checked_record_probe_constructor_mkPacket",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter constructor RecursiveCheckedRecords.mkPacket\\n\", stderr);\n"
+        },
+        {
+          "kind": "constructor",
+          "label": "RecursiveCheckedRecords.plusTwo",
+          "offset": 2700,
+          "symbol": "lb_recursive_checked_record_probe_constructor_plusTwo",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter constructor RecursiveCheckedRecords.plusTwo\\n\", stderr);\n"
+        },
+        {
+          "kind": "constructor",
+          "label": "RecursiveCheckedRecords.plusOne",
+          "offset": 2063,
+          "symbol": "lb_recursive_checked_record_probe_constructor_plusOne",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter constructor RecursiveCheckedRecords.plusOne\\n\", stderr);\n"
+        },
+        {
+          "kind": "preamble",
+          "offset": 0,
+          "text": "#include <stdio.h>\n"
+        }
+      ],
+      "name": "1-RecursiveCheckedRecords.c",
+      "object": {
+        "bytes": 6540,
+        "sha256": "f7f0778ceb7723d1b80b107a5aadee2a84e3d25336f2e0c56b91467e340cf227"
+      },
+      "objectPath": "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/0.o",
+      "originalPath": "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/RecursiveCheckedRecords.c",
+      "originalSha256": "47ec3ec5737b5df642989053e2b0d5190dfc03f5266382628a19907fd35cfaa9",
+      "probePath": "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-ci/ordinary/recursive-checked-record/build-0/c-probes/1-RecursiveCheckedRecords.c",
+      "probeSha256": "0901042bd1ef663d052de4cf56370b2ccfedacf6c0ecb5452786ec379baa3e83"
+    },
+    {
+      "definitions": [
+        {
+          "form": "function",
+          "kind": "adapter",
+          "label": "RecursiveCheckedRecords.echo",
+          "offset": 65047,
+          "symbol": "lean_bridge_9a14c44da851e2d4fdfbfb9b_lean"
+        },
+        {
+          "form": "function",
+          "kind": "validator",
+          "label": "RecursiveCheckedRecords.echo:fin_guard_0",
+          "offset": 60172,
+          "symbol": "lean_bridge_9a14c44da851e2d4fdfbfb9b_fin_guard_0"
+        },
+        {
+          "form": "function",
+          "kind": "validator",
+          "label": "RecursiveCheckedRecords.echo:graph_refinement_0_71ba01578b385b329e98",
+          "offset": 62646,
+          "symbol": "lean_bridge_9a14c44da851e2d4fdfbfb9b_graph_refinement_0_71ba01578b385b329e98"
+        },
+        {
+          "form": "function",
+          "kind": "validator",
+          "label": "RecursiveCheckedRecords.echo:graph_refinement_0_8b6f9e05ee7b31aa9e96",
+          "offset": 63825,
+          "symbol": "lean_bridge_9a14c44da851e2d4fdfbfb9b_graph_refinement_0_8b6f9e05ee7b31aa9e96"
+        },
+        {
+          "form": "function",
+          "kind": "validator",
+          "label": "RecursiveCheckedRecords.echo:refinement_0",
+          "offset": 61264,
+          "symbol": "lean_bridge_9a14c44da851e2d4fdfbfb9b_refinement_0"
+        },
+        {
+          "form": "function",
+          "kind": "adapter",
+          "label": "RecursiveCheckedRecords.echoGroups",
+          "offset": 81114,
+          "symbol": "lean_bridge_b1c46fbb29fb86a306017349_lean"
+        },
+        {
+          "form": "function",
+          "kind": "validator",
+          "label": "RecursiveCheckedRecords.echoGroups:fin_guard_0",
+          "offset": 69691,
+          "symbol": "lean_bridge_b1c46fbb29fb86a306017349_fin_guard_0"
+        },
+        {
+          "form": "function",
+          "kind": "validator",
+          "label": "RecursiveCheckedRecords.echoGroups:graph_refinement_0_262d1fa6be548d6d1dd0",
+          "offset": 75749,
+          "symbol": "lean_bridge_b1c46fbb29fb86a306017349_graph_refinement_0_262d1fa6be548d6d1dd0"
+        },
+        {
+          "form": "function",
+          "kind": "validator",
+          "label": "RecursiveCheckedRecords.echoGroups:graph_refinement_0_88f1c5c2e3a6ba3c4460",
+          "offset": 76928,
+          "symbol": "lean_bridge_b1c46fbb29fb86a306017349_graph_refinement_0_88f1c5c2e3a6ba3c4460"
+        },
+        {
+          "form": "function",
+          "kind": "validator",
+          "label": "RecursiveCheckedRecords.echoGroups:refinement_0",
+          "offset": 73672,
+          "symbol": "lean_bridge_b1c46fbb29fb86a306017349_refinement_0"
+        },
+        {
+          "form": "function",
+          "kind": "adapter",
+          "label": "RecursiveCheckedRecords.first",
+          "offset": 89453,
+          "symbol": "lean_bridge_8540c0aac676a8863cdff838_lean"
+        },
+        {
+          "form": "function",
+          "kind": "validator",
+          "label": "RecursiveCheckedRecords.first:fin_guard_0",
+          "offset": 84578,
+          "symbol": "lean_bridge_8540c0aac676a8863cdff838_fin_guard_0"
+        },
+        {
+          "form": "function",
+          "kind": "validator",
+          "label": "RecursiveCheckedRecords.first:graph_refinement_0_71ba01578b385b329e98",
+          "offset": 87052,
+          "symbol": "lean_bridge_8540c0aac676a8863cdff838_graph_refinement_0_71ba01578b385b329e98"
+        },
+        {
+          "form": "function",
+          "kind": "validator",
+          "label": "RecursiveCheckedRecords.first:graph_refinement_0_8b6f9e05ee7b31aa9e96",
+          "offset": 88231,
+          "symbol": "lean_bridge_8540c0aac676a8863cdff838_graph_refinement_0_8b6f9e05ee7b31aa9e96"
+        },
+        {
+          "form": "function",
+          "kind": "validator",
+          "label": "RecursiveCheckedRecords.first:refinement_0",
+          "offset": 85670,
+          "symbol": "lean_bridge_8540c0aac676a8863cdff838_refinement_0"
+        },
+        {
+          "form": "function",
+          "kind": "adapter",
+          "label": "RecursiveCheckedRecords.groups",
+          "offset": 100723,
+          "symbol": "lean_bridge_24b13094b4039f73d0959480_lean"
+        },
+        {
+          "form": "function",
+          "kind": "validator",
+          "label": "RecursiveCheckedRecords.groups:fin_guard_0",
+          "offset": 92264,
+          "symbol": "lean_bridge_24b13094b4039f73d0959480_fin_guard_0"
+        },
+        {
+          "form": "function",
+          "kind": "validator",
+          "label": "RecursiveCheckedRecords.groups:graph_refinement_0_71ba01578b385b329e98",
+          "offset": 98322,
+          "symbol": "lean_bridge_24b13094b4039f73d0959480_graph_refinement_0_71ba01578b385b329e98"
+        },
+        {
+          "form": "function",
+          "kind": "validator",
+          "label": "RecursiveCheckedRecords.groups:graph_refinement_0_8b6f9e05ee7b31aa9e96",
+          "offset": 99501,
+          "symbol": "lean_bridge_24b13094b4039f73d0959480_graph_refinement_0_8b6f9e05ee7b31aa9e96"
+        },
+        {
+          "form": "function",
+          "kind": "validator",
+          "label": "RecursiveCheckedRecords.groups:refinement_0",
+          "offset": 96245,
+          "symbol": "lean_bridge_24b13094b4039f73d0959480_refinement_0"
+        },
+        {
+          "form": "function",
+          "kind": "adapter",
+          "label": "RecursiveCheckedRecords.produce",
+          "offset": 104989,
+          "symbol": "lean_bridge_df0f714db6fdbd3762d5e0a5_lean"
+        },
+        {
+          "form": "function",
+          "kind": "validator",
+          "label": "RecursiveCheckedRecords.produce:fin_guard_0",
+          "offset": 104230,
+          "symbol": "lean_bridge_df0f714db6fdbd3762d5e0a5_fin_guard_0"
+        },
+        {
+          "form": "function",
+          "kind": "adapter",
+          "label": "RecursiveCheckedRecords.second",
+          "offset": 111672,
+          "symbol": "lean_bridge_c3338006aea7f276ff222c0c_lean"
+        },
+        {
+          "form": "function",
+          "kind": "validator",
+          "label": "RecursiveCheckedRecords.second:fin_guard_0",
+          "offset": 106797,
+          "symbol": "lean_bridge_c3338006aea7f276ff222c0c_fin_guard_0"
+        },
+        {
+          "form": "function",
+          "kind": "validator",
+          "label": "RecursiveCheckedRecords.second:graph_refinement_0_262d1fa6be548d6d1dd0",
+          "offset": 109271,
+          "symbol": "lean_bridge_c3338006aea7f276ff222c0c_graph_refinement_0_262d1fa6be548d6d1dd0"
+        },
+        {
+          "form": "function",
+          "kind": "validator",
+          "label": "RecursiveCheckedRecords.second:graph_refinement_0_88f1c5c2e3a6ba3c4460",
+          "offset": 110450,
+          "symbol": "lean_bridge_c3338006aea7f276ff222c0c_graph_refinement_0_88f1c5c2e3a6ba3c4460"
+        },
+        {
+          "form": "function",
+          "kind": "validator",
+          "label": "RecursiveCheckedRecords.second:refinement_0",
+          "offset": 107889,
+          "symbol": "lean_bridge_c3338006aea7f276ff222c0c_refinement_0"
+        }
+      ],
+      "insertions": [
+        {
+          "kind": "adapter",
+          "label": "RecursiveCheckedRecords.second",
+          "offset": 111763,
+          "symbol": "lean_bridge_c3338006aea7f276ff222c0c_lean",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter RecursiveCheckedRecords.second\\n\", stderr);\n"
+        },
+        {
+          "kind": "validator",
+          "label": "RecursiveCheckedRecords.second:graph_refinement_0_88f1c5c2e3a6ba3c4460",
+          "offset": 110576,
+          "symbol": "lean_bridge_c3338006aea7f276ff222c0c_graph_refinement_0_88f1c5c2e3a6ba3c4460",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter validator RecursiveCheckedRecords.second:graph_refinement_0_88f1c5c2e3a6ba3c4460\\n\", stderr);\n"
+        },
+        {
+          "kind": "validator",
+          "label": "RecursiveCheckedRecords.second:graph_refinement_0_262d1fa6be548d6d1dd0",
+          "offset": 109397,
+          "symbol": "lean_bridge_c3338006aea7f276ff222c0c_graph_refinement_0_262d1fa6be548d6d1dd0",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter validator RecursiveCheckedRecords.second:graph_refinement_0_262d1fa6be548d6d1dd0\\n\", stderr);\n"
+        },
+        {
+          "kind": "validator",
+          "label": "RecursiveCheckedRecords.second:refinement_0",
+          "offset": 107988,
+          "symbol": "lean_bridge_c3338006aea7f276ff222c0c_refinement_0",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter validator RecursiveCheckedRecords.second:refinement_0\\n\", stderr);\n"
+        },
+        {
+          "kind": "validator",
+          "label": "RecursiveCheckedRecords.second:fin_guard_0",
+          "offset": 106895,
+          "symbol": "lean_bridge_c3338006aea7f276ff222c0c_fin_guard_0",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter validator RecursiveCheckedRecords.second:fin_guard_0\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "RecursiveCheckedRecords.produce",
+          "offset": 105080,
+          "symbol": "lean_bridge_df0f714db6fdbd3762d5e0a5_lean",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter RecursiveCheckedRecords.produce\\n\", stderr);\n"
+        },
+        {
+          "kind": "validator",
+          "label": "RecursiveCheckedRecords.produce:fin_guard_0",
+          "offset": 104328,
+          "symbol": "lean_bridge_df0f714db6fdbd3762d5e0a5_fin_guard_0",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter validator RecursiveCheckedRecords.produce:fin_guard_0\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "RecursiveCheckedRecords.groups",
+          "offset": 100814,
+          "symbol": "lean_bridge_24b13094b4039f73d0959480_lean",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter RecursiveCheckedRecords.groups\\n\", stderr);\n"
+        },
+        {
+          "kind": "validator",
+          "label": "RecursiveCheckedRecords.groups:graph_refinement_0_8b6f9e05ee7b31aa9e96",
+          "offset": 99627,
+          "symbol": "lean_bridge_24b13094b4039f73d0959480_graph_refinement_0_8b6f9e05ee7b31aa9e96",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter validator RecursiveCheckedRecords.groups:graph_refinement_0_8b6f9e05ee7b31aa9e96\\n\", stderr);\n"
+        },
+        {
+          "kind": "validator",
+          "label": "RecursiveCheckedRecords.groups:graph_refinement_0_71ba01578b385b329e98",
+          "offset": 98448,
+          "symbol": "lean_bridge_24b13094b4039f73d0959480_graph_refinement_0_71ba01578b385b329e98",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter validator RecursiveCheckedRecords.groups:graph_refinement_0_71ba01578b385b329e98\\n\", stderr);\n"
+        },
+        {
+          "kind": "validator",
+          "label": "RecursiveCheckedRecords.groups:refinement_0",
+          "offset": 96344,
+          "symbol": "lean_bridge_24b13094b4039f73d0959480_refinement_0",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter validator RecursiveCheckedRecords.groups:refinement_0\\n\", stderr);\n"
+        },
+        {
+          "kind": "validator",
+          "label": "RecursiveCheckedRecords.groups:fin_guard_0",
+          "offset": 92362,
+          "symbol": "lean_bridge_24b13094b4039f73d0959480_fin_guard_0",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter validator RecursiveCheckedRecords.groups:fin_guard_0\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "RecursiveCheckedRecords.first",
+          "offset": 89544,
+          "symbol": "lean_bridge_8540c0aac676a8863cdff838_lean",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter RecursiveCheckedRecords.first\\n\", stderr);\n"
+        },
+        {
+          "kind": "validator",
+          "label": "RecursiveCheckedRecords.first:graph_refinement_0_8b6f9e05ee7b31aa9e96",
+          "offset": 88357,
+          "symbol": "lean_bridge_8540c0aac676a8863cdff838_graph_refinement_0_8b6f9e05ee7b31aa9e96",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter validator RecursiveCheckedRecords.first:graph_refinement_0_8b6f9e05ee7b31aa9e96\\n\", stderr);\n"
+        },
+        {
+          "kind": "validator",
+          "label": "RecursiveCheckedRecords.first:graph_refinement_0_71ba01578b385b329e98",
+          "offset": 87178,
+          "symbol": "lean_bridge_8540c0aac676a8863cdff838_graph_refinement_0_71ba01578b385b329e98",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter validator RecursiveCheckedRecords.first:graph_refinement_0_71ba01578b385b329e98\\n\", stderr);\n"
+        },
+        {
+          "kind": "validator",
+          "label": "RecursiveCheckedRecords.first:refinement_0",
+          "offset": 85769,
+          "symbol": "lean_bridge_8540c0aac676a8863cdff838_refinement_0",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter validator RecursiveCheckedRecords.first:refinement_0\\n\", stderr);\n"
+        },
+        {
+          "kind": "validator",
+          "label": "RecursiveCheckedRecords.first:fin_guard_0",
+          "offset": 84676,
+          "symbol": "lean_bridge_8540c0aac676a8863cdff838_fin_guard_0",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter validator RecursiveCheckedRecords.first:fin_guard_0\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "RecursiveCheckedRecords.echoGroups",
+          "offset": 81205,
+          "symbol": "lean_bridge_b1c46fbb29fb86a306017349_lean",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter RecursiveCheckedRecords.echoGroups\\n\", stderr);\n"
+        },
+        {
+          "kind": "validator",
+          "label": "RecursiveCheckedRecords.echoGroups:graph_refinement_0_88f1c5c2e3a6ba3c4460",
+          "offset": 77054,
+          "symbol": "lean_bridge_b1c46fbb29fb86a306017349_graph_refinement_0_88f1c5c2e3a6ba3c4460",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter validator RecursiveCheckedRecords.echoGroups:graph_refinement_0_88f1c5c2e3a6ba3c4460\\n\", stderr);\n"
+        },
+        {
+          "kind": "validator",
+          "label": "RecursiveCheckedRecords.echoGroups:graph_refinement_0_262d1fa6be548d6d1dd0",
+          "offset": 75875,
+          "symbol": "lean_bridge_b1c46fbb29fb86a306017349_graph_refinement_0_262d1fa6be548d6d1dd0",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter validator RecursiveCheckedRecords.echoGroups:graph_refinement_0_262d1fa6be548d6d1dd0\\n\", stderr);\n"
+        },
+        {
+          "kind": "validator",
+          "label": "RecursiveCheckedRecords.echoGroups:refinement_0",
+          "offset": 73771,
+          "symbol": "lean_bridge_b1c46fbb29fb86a306017349_refinement_0",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter validator RecursiveCheckedRecords.echoGroups:refinement_0\\n\", stderr);\n"
+        },
+        {
+          "kind": "validator",
+          "label": "RecursiveCheckedRecords.echoGroups:fin_guard_0",
+          "offset": 69789,
+          "symbol": "lean_bridge_b1c46fbb29fb86a306017349_fin_guard_0",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter validator RecursiveCheckedRecords.echoGroups:fin_guard_0\\n\", stderr);\n"
+        },
+        {
+          "kind": "adapter",
+          "label": "RecursiveCheckedRecords.echo",
+          "offset": 65138,
+          "symbol": "lean_bridge_9a14c44da851e2d4fdfbfb9b_lean",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter RecursiveCheckedRecords.echo\\n\", stderr);\n"
+        },
+        {
+          "kind": "validator",
+          "label": "RecursiveCheckedRecords.echo:graph_refinement_0_8b6f9e05ee7b31aa9e96",
+          "offset": 63951,
+          "symbol": "lean_bridge_9a14c44da851e2d4fdfbfb9b_graph_refinement_0_8b6f9e05ee7b31aa9e96",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter validator RecursiveCheckedRecords.echo:graph_refinement_0_8b6f9e05ee7b31aa9e96\\n\", stderr);\n"
+        },
+        {
+          "kind": "validator",
+          "label": "RecursiveCheckedRecords.echo:graph_refinement_0_71ba01578b385b329e98",
+          "offset": 62772,
+          "symbol": "lean_bridge_9a14c44da851e2d4fdfbfb9b_graph_refinement_0_71ba01578b385b329e98",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter validator RecursiveCheckedRecords.echo:graph_refinement_0_71ba01578b385b329e98\\n\", stderr);\n"
+        },
+        {
+          "kind": "validator",
+          "label": "RecursiveCheckedRecords.echo:refinement_0",
+          "offset": 61363,
+          "symbol": "lean_bridge_9a14c44da851e2d4fdfbfb9b_refinement_0",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter validator RecursiveCheckedRecords.echo:refinement_0\\n\", stderr);\n"
+        },
+        {
+          "kind": "validator",
+          "label": "RecursiveCheckedRecords.echo:fin_guard_0",
+          "offset": 60270,
+          "symbol": "lean_bridge_9a14c44da851e2d4fdfbfb9b_fin_guard_0",
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter validator RecursiveCheckedRecords.echo:fin_guard_0\\n\", stderr);\n"
+        },
+        {
+          "kind": "preamble",
+          "offset": 0,
+          "text": "#include <stdio.h>\n"
+        }
+      ],
+      "name": "2-adapter.c",
+      "object": {
+        "bytes": 81969,
+        "sha256": "4e534609b81de3c21968a6450c9a6d464e4bc5378f5cc111e957246ea8d4bddd"
+      },
+      "objectPath": "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/1.o",
+      "originalPath": "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/adapter.c",
+      "originalSha256": "f3f9a87ff23ed296baa95486d70bd66f465dea8593e0b13f8be20ba27c038bdb",
+      "probePath": "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-ci/ordinary/recursive-checked-record/build-0/c-probes/2-adapter.c",
+      "probeSha256": "6151cdbb8567785ae49e43f5e56fee7f0c0bf1d1eab3b4005718c4ad7b91378b"
+    },
+    {
+      "definitions": [],
+      "insertions": [],
+      "name": "3-transport.c",
+      "object": {
+        "bytes": 50238,
+        "sha256": "e6c74bdc366cd4e9f44ce75de9425d7d4b49c8b7194a206500ff1f538ca90ca8"
+      },
+      "objectPath": "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/2.o",
+      "originalPath": "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/graph/transport.c",
+      "originalSha256": "c463e485d9ad7cc5d55561511e8274e098f27a25b0cb3f18c040f9c23a449128",
+      "probePath": "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-ci/ordinary/recursive-checked-record/build-0/c-probes/3-transport.c",
+      "probeSha256": "c463e485d9ad7cc5d55561511e8274e098f27a25b0cb3f18c040f9c23a449128"
+    },
+    {
+      "definitions": [],
+      "insertions": [],
+      "name": "4-runtime.c",
+      "object": {
+        "bytes": 965,
+        "sha256": "9b2620abf6b1fd897f41a49f9954160117bb39bd0a278701c733f0b7409a9813"
+      },
+      "objectPath": "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/3.o",
+      "originalPath": "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/graph/runtime.c",
+      "originalSha256": "242cea44792f409fc9f4c622034ab7641e33c3c83d183a9ad5d9733d0f98f591",
+      "probePath": "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-ci/ordinary/recursive-checked-record/build-0/c-probes/4-runtime.c",
+      "probeSha256": "242cea44792f409fc9f4c622034ab7641e33c3c83d183a9ad5d9733d0f98f591"
+    },
+    {
+      "definitions": [],
+      "insertions": [],
+      "name": "5-width.c",
+      "object": {
+        "bytes": 258,
+        "sha256": "a8e680be3accc5b8ad9d8becda8fdb51ee27aeef43f3a380f4d440aa1fc45be9"
+      },
+      "objectPath": "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/4.o",
+      "originalPath": "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/width.c",
+      "originalSha256": "94f94bd37af397f400f10b97b24efb34a1ecab8f8aae613e50376f1ab2218d1e",
+      "probePath": "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-ci/ordinary/recursive-checked-record/build-0/c-probes/5-width.c",
+      "probeSha256": "94f94bd37af397f400f10b97b24efb34a1ecab8f8aae613e50376f1ab2218d1e"
+    },
+    {
+      "definitions": [
+        {
+          "form": "function",
+          "kind": "public",
+          "label": "echo",
+          "offset": 21390,
+          "symbol": "lg_call0"
+        },
+        {
+          "form": "function",
+          "kind": "public",
+          "label": "echoGroups",
+          "offset": 24003,
+          "symbol": "lg_call1"
+        },
+        {
+          "form": "function",
+          "kind": "public",
+          "label": "first",
+          "offset": 26578,
+          "symbol": "lg_call2"
+        },
+        {
+          "form": "function",
+          "kind": "public",
+          "label": "groups",
+          "offset": 29158,
+          "symbol": "lg_call3"
+        },
+        {
+          "form": "function",
+          "kind": "public",
+          "label": "produce",
+          "offset": 31715,
+          "symbol": "lg_call4"
+        },
+        {
+          "form": "function",
+          "kind": "public",
+          "label": "second",
+          "offset": 34271,
+          "symbol": "lg_call5"
+        }
+      ],
+      "insertions": [
+        {
+          "kind": "public",
+          "label": "second",
+          "offset": 34303,
+          "symbol": "lg_call5",
+          "text": "\n  const char *lb_probe_public_scope __attribute__((cleanup(lb_probe_end))) = \"second\";\n  fputs(\"LB_SUBTYPE_ENTRY_V1 begin public second\\n\", stderr);\n"
+        },
+        {
+          "kind": "public",
+          "label": "produce",
+          "offset": 31747,
+          "symbol": "lg_call4",
+          "text": "\n  const char *lb_probe_public_scope __attribute__((cleanup(lb_probe_end))) = \"produce\";\n  fputs(\"LB_SUBTYPE_ENTRY_V1 begin public produce\\n\", stderr);\n"
+        },
+        {
+          "kind": "public",
+          "label": "groups",
+          "offset": 29190,
+          "symbol": "lg_call3",
+          "text": "\n  const char *lb_probe_public_scope __attribute__((cleanup(lb_probe_end))) = \"groups\";\n  fputs(\"LB_SUBTYPE_ENTRY_V1 begin public groups\\n\", stderr);\n"
+        },
+        {
+          "kind": "public",
+          "label": "first",
+          "offset": 26610,
+          "symbol": "lg_call2",
+          "text": "\n  const char *lb_probe_public_scope __attribute__((cleanup(lb_probe_end))) = \"first\";\n  fputs(\"LB_SUBTYPE_ENTRY_V1 begin public first\\n\", stderr);\n"
+        },
+        {
+          "kind": "public",
+          "label": "echoGroups",
+          "offset": 24035,
+          "symbol": "lg_call1",
+          "text": "\n  const char *lb_probe_public_scope __attribute__((cleanup(lb_probe_end))) = \"echoGroups\";\n  fputs(\"LB_SUBTYPE_ENTRY_V1 begin public echoGroups\\n\", stderr);\n"
+        },
+        {
+          "kind": "public",
+          "label": "echo",
+          "offset": 21422,
+          "symbol": "lg_call0",
+          "text": "\n  const char *lb_probe_public_scope __attribute__((cleanup(lb_probe_end))) = \"echo\";\n  fputs(\"LB_SUBTYPE_ENTRY_V1 begin public echo\\n\", stderr);\n"
+        },
+        {
+          "kind": "preamble",
+          "offset": 0,
+          "text": "#include <stdio.h>\nstatic void lb_probe_end(const char **label) { fprintf(stderr, \"LB_SUBTYPE_ENTRY_V1 end public %s\\n\", *label); }\n"
+        }
+      ],
+      "name": "6-lb_recursivecheckedrecords_graph_e372d69f3f2ad6c7.c",
+      "object": {
+        "bytes": 41734,
+        "sha256": "827c9f0ad440284e601a850250b83edf95e3cd86c3f41e722894f5aa9f58049e"
+      },
+      "objectPath": "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/c/5.o",
+      "originalPath": "/home/runner/work/_temp/lean-bridge-recursive-checked-record-ordinary-X5d77K/release/php-wasm/.lean-bridge-native-component-OVYTuR/extension/lb_recursivecheckedrecords_graph_e372d69f3f2ad6c7.c",
+      "originalSha256": "8ffb17942f4cdf6013884e90ef1c9674ce794b624a97d30766688cf4656c0e1b",
+      "probePath": "/home/runner/work/lean-bridge/lean-bridge/build/php-wasm-refinement-entry-ci/ordinary/recursive-checked-record/build-0/c-probes/6-lb_recursivecheckedrecords_graph_e372d69f3f2ad6c7.c",
+      "probeSha256": "915bd7559ecd9347d090b6c7819ee8a7340c7d983eb881d591086514adb3ef7f"
+    }
+  ],
+  "component": {
+    "adaptersSha256": "a1c92d5eb3be9e3a4dc57117125dfc9618093f94d7dc9fa54c843ccfbe168411",
+    "bindingIrSha256": "e372d69f3f2ad6c7efa19c9d82014493f926736bf826a74e3c6ef1df850444e5",
+    "compiler": {
+      "emsdkCommit": "54ef088329e5a329614b3659a579d2ccd31fd621",
+      "files": {
+        "upstream/bin/clang": {
+          "bytes": 141971168,
+          "sha256": "cbac1be8f3026afc67c45beb7baab688a06d548e52ef5d010146160d46618860"
+        },
+        "upstream/bin/wasm-ld": {
+          "bytes": 73912360,
+          "sha256": "af23d9d3f6c30a496f566c817c954de3e9139fa7d2562579cdbbbff8f21caa72"
+        },
+        "upstream/emscripten/em++.py": {
+          "bytes": 506,
+          "sha256": "017f735c953318fdaaa4af68c8d4bf13936a787ddbd5dad804d532b0223b6c2f"
+        },
+        "upstream/emscripten/emcc": {
+          "bytes": 1065,
+          "sha256": "b0c9551f9155fa9c028efa24591acdfd30f02f32fb247cf9266f5f0f2ede7589"
+        },
+        "upstream/emscripten/emcc.py": {
+          "bytes": 62149,
+          "sha256": "16d0198f2a7a843199a886c4bffe4900849c43826a50ed905089bf018f93b190"
+        },
+        "upstream/emscripten/tools/link.py": {
+          "bytes": 133185,
+          "sha256": "20f5ae3672c1647059b887c256f304fe6af3ad314d440e9932d1c7e9042cd4c9"
+        }
+      },
+      "version": "emcc (Emscripten gcc/clang-like replacement + linker emulating GNU ld) 3.1.68 (ceee49d2ecdab36a3feb85a684f8e5a453dde910)"
+    },
+    "copiedGraph": {
+      "allocationGuardSha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83",
+      "layoutSha256": "c38e4b6d20d7388e0f1fffb1b4deaa15d2703f844b5e2243b8cd355e1e457ff4",
+      "lifecycleSha256": "242cea44792f409fc9f4c622034ab7641e33c3c83d183a9ad5d9733d0f98f591",
+      "schemaVersion": 1,
+      "transportSha256": "c463e485d9ad7cc5d55561511e8274e098f27a25b0cb3f18c040f9c23a449128"
+    },
+    "exports": [
+      {
+        "cSymbol": "recursivecheckedrecords_echo_graph",
+        "declaration": "lean:RecursiveCheckedRecords.echo",
+        "function": "LeanRecursivecheckedrecords\\echo_",
+        "transport": "LeanRecursivecheckedrecords\\Internal\\GraphZende372d69f3f2ad6c7\\call0"
+      },
+      {
+        "cSymbol": "recursivecheckedrecords_echo_groups_graph",
+        "declaration": "lean:RecursiveCheckedRecords.echoGroups",
+        "function": "LeanRecursivecheckedrecords\\echo_groups",
+        "transport": "LeanRecursivecheckedrecords\\Internal\\GraphZende372d69f3f2ad6c7\\call1"
+      },
+      {
+        "cSymbol": "recursivecheckedrecords_first_graph",
+        "declaration": "lean:RecursiveCheckedRecords.first",
+        "function": "LeanRecursivecheckedrecords\\first",
+        "transport": "LeanRecursivecheckedrecords\\Internal\\GraphZende372d69f3f2ad6c7\\call2"
+      },
+      {
+        "cSymbol": "recursivecheckedrecords_groups_graph",
+        "declaration": "lean:RecursiveCheckedRecords.groups",
+        "function": "LeanRecursivecheckedrecords\\groups",
+        "transport": "LeanRecursivecheckedrecords\\Internal\\GraphZende372d69f3f2ad6c7\\call3"
+      },
+      {
+        "cSymbol": "recursivecheckedrecords_produce_graph",
+        "declaration": "lean:RecursiveCheckedRecords.produce",
+        "function": "LeanRecursivecheckedrecords\\produce",
+        "transport": "LeanRecursivecheckedrecords\\Internal\\GraphZende372d69f3f2ad6c7\\call4"
+      },
+      {
+        "cSymbol": "recursivecheckedrecords_second_graph",
+        "declaration": "lean:RecursiveCheckedRecords.second",
+        "function": "LeanRecursivecheckedrecords\\second",
+        "transport": "LeanRecursivecheckedrecords\\Internal\\GraphZende372d69f3f2ad6c7\\call5"
+      }
+    ],
+    "headerSha256": "96ff49affb612d8f75a457b373754143259b4f7bdbd63512e7156dc23430f845",
+    "initializer": "initialize_LeanBridgeNativea1d30b9a0f384ed5",
+    "library": "lib/php8.4-lb_recursivecheckedrecords_graph_e372d69f3f2ad6c7.so",
+    "metadataSha256": "b112db9b25419cf3836a40493df6fa88ae3eca7ed8d72b806a5804c14abed0bf",
+    "modelSha256": "9d2440b962d500f88dfdc4498798de3febf2ef7c47be7c84cfe89a1000b84f05",
+    "phpHeadersSha256": "fb4c613d43c6bbb4066364c2da7e4e2118016314a00b3bcfe4d4e1d2bdeb493b",
+    "pointerBits": 32,
+    "profile": "php-wasm-copied-v1",
+    "runtimeIdentity": "fbc32dc75641fc5d381ab6bddd05671cb59cad725d631e433cda14469ae1f25a",
+    "schemaVersion": 1,
+    "sourceIdentity": {
+      "exportConfigurationSha256": "42afda31739a9eeeedb58ab4fde22e6c8d9a61f868e264e557eef7b66eb2ce37",
+      "exportConfigurationSource": "{\n  \"contracts\": {\n    \"RecursiveCheckedRecords.echo\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": {\n            \"constructor\": \"RecursiveCheckedRecords.mkPacket\",\n            \"fields\": [\n              {\n                \"name\": \"value\",\n                \"refinement\": {\n                  \"constructor\": \"RecursiveCheckedRecords.plusOne\"\n                }\n              },\n              {\n                \"name\": \"digit\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"tail\",\n                \"refinement\": null\n              }\n            ],\n            \"kind\": \"checked-record\",\n            \"name\": \"RecursiveCheckedRecords.Packet\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"RecursiveCheckedRecords.echoGroups\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": {\n            \"arguments\": [\n              {\n                \"arguments\": [\n                  {\n                    \"constructor\": \"RecursiveCheckedRecords.normalizePacket\",\n                    \"fields\": [\n                      {\n                        \"name\": \"value\",\n                        \"refinement\": {\n                          \"constructor\": \"RecursiveCheckedRecords.plusTwo\"\n                        }\n                      },\n                      {\n                        \"name\": \"digit\",\n                        \"refinement\": null\n                      },\n                      {\n                        \"name\": \"tail\",\n                        \"refinement\": null\n                      }\n                    ],\n                    \"kind\": \"checked-record\",\n                    \"name\": \"RecursiveCheckedRecords.Packet\"\n                  }\n                ],\n                \"kind\": \"option\"\n              }\n            ],\n            \"kind\": \"array\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"RecursiveCheckedRecords.first\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": {\n            \"constructor\": \"RecursiveCheckedRecords.mkPacket\",\n            \"fields\": [\n              {\n                \"name\": \"value\",\n                \"refinement\": {\n                  \"constructor\": \"RecursiveCheckedRecords.plusOne\"\n                }\n              },\n              {\n                \"name\": \"digit\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"tail\",\n                \"refinement\": null\n              }\n            ],\n            \"kind\": \"checked-record\",\n            \"name\": \"RecursiveCheckedRecords.Packet\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"RecursiveCheckedRecords.groups\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": {\n            \"arguments\": [\n              {\n                \"arguments\": [\n                  {\n                    \"constructor\": \"RecursiveCheckedRecords.mkPacket\",\n                    \"fields\": [\n                      {\n                        \"name\": \"value\",\n                        \"refinement\": {\n                          \"constructor\": \"RecursiveCheckedRecords.plusOne\"\n                        }\n                      },\n                      {\n                        \"name\": \"digit\",\n                        \"refinement\": null\n                      },\n                      {\n                        \"name\": \"tail\",\n                        \"refinement\": null\n                      }\n                    ],\n                    \"kind\": \"checked-record\",\n                    \"name\": \"RecursiveCheckedRecords.Packet\"\n                  }\n                ],\n                \"kind\": \"option\"\n              }\n            ],\n            \"kind\": \"array\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"RecursiveCheckedRecords.second\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": {\n            \"constructor\": \"RecursiveCheckedRecords.normalizePacket\",\n            \"fields\": [\n              {\n                \"name\": \"value\",\n                \"refinement\": {\n                  \"constructor\": \"RecursiveCheckedRecords.plusTwo\"\n                }\n              },\n              {\n                \"name\": \"digit\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"tail\",\n                \"refinement\": null\n              }\n            ],\n            \"kind\": \"checked-record\",\n            \"name\": \"RecursiveCheckedRecords.Packet\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    }\n  },\n  \"exports\": [\n    \"RecursiveCheckedRecords.first\",\n    \"RecursiveCheckedRecords.second\",\n    \"RecursiveCheckedRecords.echo\",\n    \"RecursiveCheckedRecords.groups\",\n    \"RecursiveCheckedRecords.echoGroups\",\n    \"RecursiveCheckedRecords.produce\"\n  ],\n  \"modules\": [\n    \"RecursiveCheckedRecords\"\n  ],\n  \"schemaVersion\": 1,\n  \"targets\": {\n    \"php-wasm\": {\n      \"composer\": {\n        \"name\": \"lean-bridge-recursivecheckedrecords/wasm\",\n        \"version\": \"1.0.0\"\n      },\n      \"npm\": {\n        \"name\": \"lean-bridge-recursivecheckedrecords-wasm\",\n        \"version\": \"1.0.0\"\n      }\n    }\n  }\n}\n",
+      "extractorSha256": "00f8ce7a3888339cdb1c36b0dce3d8bc9d4c650ea18c7a4926c2d29d4690443a",
+      "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+      "leanCompilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+      "leanVersion": "4.32.2",
+      "modules": [
+        {
+          "interface": {
+            "bytes": 121648,
+            "interfaceSha256": "ab0f68a54c31a20ca8af5e85fc0f9c01af7df765788d99f14b6bf9d374e25be1",
+            "sha256": "1c646eb6958f56c991bea15659fcdd1b211ffa44fd6838e1bf7cc30a4caa40a5"
+          },
+          "module": "RecursiveCheckedRecords",
+          "source": {
+            "bytes": 2608,
+            "path": "RecursiveCheckedRecords.lean",
+            "sha256": "c7a86e15a4a169203f983cfe34270660b94feef595e884569541b785b603febc"
+          }
+        }
+      ],
+      "request": {
+        "arities": [],
+        "contracts": {
+          "RecursiveCheckedRecords.echo": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "constructor": "RecursiveCheckedRecords.mkPacket",
+                  "fields": [
+                    {
+                      "name": "value",
+                      "refinement": {
+                        "constructor": "RecursiveCheckedRecords.plusOne"
+                      }
+                    },
+                    {
+                      "name": "digit",
+                      "refinement": null
+                    },
+                    {
+                      "name": "tail",
+                      "refinement": null
+                    }
+                  ],
+                  "kind": "checked-record",
+                  "name": "RecursiveCheckedRecords.Packet"
+                }
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          },
+          "RecursiveCheckedRecords.echoGroups": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "arguments": [
+                    {
+                      "arguments": [
+                        {
+                          "constructor": "RecursiveCheckedRecords.normalizePacket",
+                          "fields": [
+                            {
+                              "name": "value",
+                              "refinement": {
+                                "constructor": "RecursiveCheckedRecords.plusTwo"
+                              }
+                            },
+                            {
+                              "name": "digit",
+                              "refinement": null
+                            },
+                            {
+                              "name": "tail",
+                              "refinement": null
+                            }
+                          ],
+                          "kind": "checked-record",
+                          "name": "RecursiveCheckedRecords.Packet"
+                        }
+                      ],
+                      "kind": "option"
+                    }
+                  ],
+                  "kind": "array"
+                }
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          },
+          "RecursiveCheckedRecords.first": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "constructor": "RecursiveCheckedRecords.mkPacket",
+                  "fields": [
+                    {
+                      "name": "value",
+                      "refinement": {
+                        "constructor": "RecursiveCheckedRecords.plusOne"
+                      }
+                    },
+                    {
+                      "name": "digit",
+                      "refinement": null
+                    },
+                    {
+                      "name": "tail",
+                      "refinement": null
+                    }
+                  ],
+                  "kind": "checked-record",
+                  "name": "RecursiveCheckedRecords.Packet"
+                }
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          },
+          "RecursiveCheckedRecords.groups": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "arguments": [
+                    {
+                      "arguments": [
+                        {
+                          "constructor": "RecursiveCheckedRecords.mkPacket",
+                          "fields": [
+                            {
+                              "name": "value",
+                              "refinement": {
+                                "constructor": "RecursiveCheckedRecords.plusOne"
+                              }
+                            },
+                            {
+                              "name": "digit",
+                              "refinement": null
+                            },
+                            {
+                              "name": "tail",
+                              "refinement": null
+                            }
+                          ],
+                          "kind": "checked-record",
+                          "name": "RecursiveCheckedRecords.Packet"
+                        }
+                      ],
+                      "kind": "option"
+                    }
+                  ],
+                  "kind": "array"
+                }
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          },
+          "RecursiveCheckedRecords.second": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "constructor": "RecursiveCheckedRecords.normalizePacket",
+                  "fields": [
+                    {
+                      "name": "value",
+                      "refinement": {
+                        "constructor": "RecursiveCheckedRecords.plusTwo"
+                      }
+                    },
+                    {
+                      "name": "digit",
+                      "refinement": null
+                    },
+                    {
+                      "name": "tail",
+                      "refinement": null
+                    }
+                  ],
+                  "kind": "checked-record",
+                  "name": "RecursiveCheckedRecords.Packet"
+                }
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          }
+        },
+        "exportModules": [
+          "RecursiveCheckedRecords"
+        ],
+        "exports": [
+          "RecursiveCheckedRecords.first",
+          "RecursiveCheckedRecords.second",
+          "RecursiveCheckedRecords.echo",
+          "RecursiveCheckedRecords.groups",
+          "RecursiveCheckedRecords.echoGroups",
+          "RecursiveCheckedRecords.produce"
+        ],
+        "metadata": {
+          "invocationIdentitySha256": "22422fa3f1afc812bbfa4bce35d58d2dac14401bdaa9e39f9593299a4841a134",
+          "modules": [
+            {
+              "interfaceSha256": "ab0f68a54c31a20ca8af5e85fc0f9c01af7df765788d99f14b6bf9d374e25be1",
+              "name": "RecursiveCheckedRecords",
+              "sourcePath": "RecursiveCheckedRecords.lean",
+              "sourceSha256": "c7a86e15a4a169203f983cfe34270660b94feef595e884569541b785b603febc"
+            }
+          ],
+          "toolchain": "leanprover/lean4:v4.32.2"
+        },
+        "modules": [
+          "RecursiveCheckedRecords"
+        ],
+        "profile": "native-library-v1",
+        "resources": []
+      },
+      "sourceNoticesSha256": "136096c9e9b62d92ebec479af0084b3e2a5013476f61bacb7ecc94b9b1f406c0",
+      "sourceTreeSha256": "5297b2f0302e04276ce5cb58520776e56c64d052d8f926578b4ae048bcd41bdf"
+    },
+    "wasmLibrary": {
+      "bytes": 94618,
+      "sha256": "1c19c9c97c7c68ad0985f3e94989b3a8ce49c27d6b2fc0903d45ef4dab9d7787"
+    },
+    "zendSha256": "36fe25fc544b6b890421b6405e61bf28df81f002a350a60d0b49ab87d2c36fc4"
+  },
+  "definitionCounts": {
+    "lb_recursive_checked_record_probe_constructor_mkPacket": 1,
+    "lb_recursive_checked_record_probe_constructor_normalizePacket": 1,
+    "lb_recursive_checked_record_probe_constructor_plusOne": 1,
+    "lb_recursive_checked_record_probe_constructor_plusTwo": 1,
+    "lb_recursive_checked_record_probe_source_echo": 1,
+    "lb_recursive_checked_record_probe_source_echoGroups": 1,
+    "lb_recursive_checked_record_probe_source_first": 1,
+    "lb_recursive_checked_record_probe_source_groups": 1,
+    "lb_recursive_checked_record_probe_source_produce": 1,
+    "lb_recursive_checked_record_probe_source_second": 1,
+    "lean_bridge_24b13094b4039f73d0959480_fin_guard_0": 1,
+    "lean_bridge_24b13094b4039f73d0959480_graph_refinement_0_71ba01578b385b329e98": 1,
+    "lean_bridge_24b13094b4039f73d0959480_graph_refinement_0_8b6f9e05ee7b31aa9e96": 1,
+    "lean_bridge_24b13094b4039f73d0959480_lean": 1,
+    "lean_bridge_24b13094b4039f73d0959480_refinement_0": 1,
+    "lean_bridge_8540c0aac676a8863cdff838_fin_guard_0": 1,
+    "lean_bridge_8540c0aac676a8863cdff838_graph_refinement_0_71ba01578b385b329e98": 1,
+    "lean_bridge_8540c0aac676a8863cdff838_graph_refinement_0_8b6f9e05ee7b31aa9e96": 1,
+    "lean_bridge_8540c0aac676a8863cdff838_lean": 1,
+    "lean_bridge_8540c0aac676a8863cdff838_refinement_0": 1,
+    "lean_bridge_9a14c44da851e2d4fdfbfb9b_fin_guard_0": 1,
+    "lean_bridge_9a14c44da851e2d4fdfbfb9b_graph_refinement_0_71ba01578b385b329e98": 1,
+    "lean_bridge_9a14c44da851e2d4fdfbfb9b_graph_refinement_0_8b6f9e05ee7b31aa9e96": 1,
+    "lean_bridge_9a14c44da851e2d4fdfbfb9b_lean": 1,
+    "lean_bridge_9a14c44da851e2d4fdfbfb9b_refinement_0": 1,
+    "lean_bridge_b1c46fbb29fb86a306017349_fin_guard_0": 1,
+    "lean_bridge_b1c46fbb29fb86a306017349_graph_refinement_0_262d1fa6be548d6d1dd0": 1,
+    "lean_bridge_b1c46fbb29fb86a306017349_graph_refinement_0_88f1c5c2e3a6ba3c4460": 1,
+    "lean_bridge_b1c46fbb29fb86a306017349_lean": 1,
+    "lean_bridge_b1c46fbb29fb86a306017349_refinement_0": 1,
+    "lean_bridge_c3338006aea7f276ff222c0c_fin_guard_0": 1,
+    "lean_bridge_c3338006aea7f276ff222c0c_graph_refinement_0_262d1fa6be548d6d1dd0": 1,
+    "lean_bridge_c3338006aea7f276ff222c0c_graph_refinement_0_88f1c5c2e3a6ba3c4460": 1,
+    "lean_bridge_c3338006aea7f276ff222c0c_lean": 1,
+    "lean_bridge_c3338006aea7f276ff222c0c_refinement_0": 1,
+    "lean_bridge_df0f714db6fdbd3762d5e0a5_fin_guard_0": 1,
+    "lean_bridge_df0f714db6fdbd3762d5e0a5_lean": 1,
+    "lg_call0": 1,
+    "lg_call1": 1,
+    "lg_call2": 1,
+    "lg_call3": 1,
+    "lg_call4": 1,
+    "lg_call5": 1
+  },
+  "headers": [],
+  "library": {
+    "bytes": 94618,
+    "sha256": "1c19c9c97c7c68ad0985f3e94989b3a8ce49c27d6b2fc0903d45ef4dab9d7787"
+  },
+  "linked": true,
+  "modelSha256": "9d2440b962d500f88dfdc4498798de3febf2ef7c47be7c84cfe89a1000b84f05",
+  "packageSetSha256": "8b643f8f73d58d9a14bfd078f07ba77a540ee0284eb422acf543a318d3dd881a",
+  "schemaVersion": 1,
+  "scope": "separate-instrumented-probe",
+  "selected": [
+    {
+      "kind": "constructor",
+      "label": "RecursiveCheckedRecords.plusOne",
+      "symbol": "lb_recursive_checked_record_probe_constructor_plusOne"
+    },
+    {
+      "kind": "constructor",
+      "label": "RecursiveCheckedRecords.plusTwo",
+      "symbol": "lb_recursive_checked_record_probe_constructor_plusTwo"
+    },
+    {
+      "kind": "constructor",
+      "label": "RecursiveCheckedRecords.mkPacket",
+      "symbol": "lb_recursive_checked_record_probe_constructor_mkPacket"
+    },
+    {
+      "kind": "constructor",
+      "label": "RecursiveCheckedRecords.normalizePacket",
+      "symbol": "lb_recursive_checked_record_probe_constructor_normalizePacket"
+    },
+    {
+      "kind": "source",
+      "label": "RecursiveCheckedRecords.first",
+      "symbol": "lb_recursive_checked_record_probe_source_first"
+    },
+    {
+      "kind": "source",
+      "label": "RecursiveCheckedRecords.second",
+      "symbol": "lb_recursive_checked_record_probe_source_second"
+    },
+    {
+      "kind": "source",
+      "label": "RecursiveCheckedRecords.echo",
+      "symbol": "lb_recursive_checked_record_probe_source_echo"
+    },
+    {
+      "kind": "source",
+      "label": "RecursiveCheckedRecords.groups",
+      "symbol": "lb_recursive_checked_record_probe_source_groups"
+    },
+    {
+      "kind": "source",
+      "label": "RecursiveCheckedRecords.echoGroups",
+      "symbol": "lb_recursive_checked_record_probe_source_echoGroups"
+    },
+    {
+      "kind": "source",
+      "label": "RecursiveCheckedRecords.produce",
+      "symbol": "lb_recursive_checked_record_probe_source_produce"
+    },
+    {
+      "kind": "public",
+      "label": "echo",
+      "symbol": "lg_call0"
+    },
+    {
+      "kind": "public",
+      "label": "echoGroups",
+      "symbol": "lg_call1"
+    },
+    {
+      "kind": "public",
+      "label": "first",
+      "symbol": "lg_call2"
+    },
+    {
+      "kind": "public",
+      "label": "groups",
+      "symbol": "lg_call3"
+    },
+    {
+      "kind": "public",
+      "label": "produce",
+      "symbol": "lg_call4"
+    },
+    {
+      "kind": "public",
+      "label": "second",
+      "symbol": "lg_call5"
+    },
+    {
+      "kind": "adapter",
+      "label": "RecursiveCheckedRecords.echo",
+      "symbol": "lean_bridge_9a14c44da851e2d4fdfbfb9b_lean"
+    },
+    {
+      "kind": "validator",
+      "label": "RecursiveCheckedRecords.echo:fin_guard_0",
+      "symbol": "lean_bridge_9a14c44da851e2d4fdfbfb9b_fin_guard_0"
+    },
+    {
+      "kind": "validator",
+      "label": "RecursiveCheckedRecords.echo:graph_refinement_0_71ba01578b385b329e98",
+      "symbol": "lean_bridge_9a14c44da851e2d4fdfbfb9b_graph_refinement_0_71ba01578b385b329e98"
+    },
+    {
+      "kind": "validator",
+      "label": "RecursiveCheckedRecords.echo:graph_refinement_0_8b6f9e05ee7b31aa9e96",
+      "symbol": "lean_bridge_9a14c44da851e2d4fdfbfb9b_graph_refinement_0_8b6f9e05ee7b31aa9e96"
+    },
+    {
+      "kind": "validator",
+      "label": "RecursiveCheckedRecords.echo:refinement_0",
+      "symbol": "lean_bridge_9a14c44da851e2d4fdfbfb9b_refinement_0"
+    },
+    {
+      "kind": "adapter",
+      "label": "RecursiveCheckedRecords.echoGroups",
+      "symbol": "lean_bridge_b1c46fbb29fb86a306017349_lean"
+    },
+    {
+      "kind": "validator",
+      "label": "RecursiveCheckedRecords.echoGroups:fin_guard_0",
+      "symbol": "lean_bridge_b1c46fbb29fb86a306017349_fin_guard_0"
+    },
+    {
+      "kind": "validator",
+      "label": "RecursiveCheckedRecords.echoGroups:graph_refinement_0_262d1fa6be548d6d1dd0",
+      "symbol": "lean_bridge_b1c46fbb29fb86a306017349_graph_refinement_0_262d1fa6be548d6d1dd0"
+    },
+    {
+      "kind": "validator",
+      "label": "RecursiveCheckedRecords.echoGroups:graph_refinement_0_88f1c5c2e3a6ba3c4460",
+      "symbol": "lean_bridge_b1c46fbb29fb86a306017349_graph_refinement_0_88f1c5c2e3a6ba3c4460"
+    },
+    {
+      "kind": "validator",
+      "label": "RecursiveCheckedRecords.echoGroups:refinement_0",
+      "symbol": "lean_bridge_b1c46fbb29fb86a306017349_refinement_0"
+    },
+    {
+      "kind": "adapter",
+      "label": "RecursiveCheckedRecords.first",
+      "symbol": "lean_bridge_8540c0aac676a8863cdff838_lean"
+    },
+    {
+      "kind": "validator",
+      "label": "RecursiveCheckedRecords.first:fin_guard_0",
+      "symbol": "lean_bridge_8540c0aac676a8863cdff838_fin_guard_0"
+    },
+    {
+      "kind": "validator",
+      "label": "RecursiveCheckedRecords.first:graph_refinement_0_71ba01578b385b329e98",
+      "symbol": "lean_bridge_8540c0aac676a8863cdff838_graph_refinement_0_71ba01578b385b329e98"
+    },
+    {
+      "kind": "validator",
+      "label": "RecursiveCheckedRecords.first:graph_refinement_0_8b6f9e05ee7b31aa9e96",
+      "symbol": "lean_bridge_8540c0aac676a8863cdff838_graph_refinement_0_8b6f9e05ee7b31aa9e96"
+    },
+    {
+      "kind": "validator",
+      "label": "RecursiveCheckedRecords.first:refinement_0",
+      "symbol": "lean_bridge_8540c0aac676a8863cdff838_refinement_0"
+    },
+    {
+      "kind": "adapter",
+      "label": "RecursiveCheckedRecords.groups",
+      "symbol": "lean_bridge_24b13094b4039f73d0959480_lean"
+    },
+    {
+      "kind": "validator",
+      "label": "RecursiveCheckedRecords.groups:fin_guard_0",
+      "symbol": "lean_bridge_24b13094b4039f73d0959480_fin_guard_0"
+    },
+    {
+      "kind": "validator",
+      "label": "RecursiveCheckedRecords.groups:graph_refinement_0_71ba01578b385b329e98",
+      "symbol": "lean_bridge_24b13094b4039f73d0959480_graph_refinement_0_71ba01578b385b329e98"
+    },
+    {
+      "kind": "validator",
+      "label": "RecursiveCheckedRecords.groups:graph_refinement_0_8b6f9e05ee7b31aa9e96",
+      "symbol": "lean_bridge_24b13094b4039f73d0959480_graph_refinement_0_8b6f9e05ee7b31aa9e96"
+    },
+    {
+      "kind": "validator",
+      "label": "RecursiveCheckedRecords.groups:refinement_0",
+      "symbol": "lean_bridge_24b13094b4039f73d0959480_refinement_0"
+    },
+    {
+      "kind": "adapter",
+      "label": "RecursiveCheckedRecords.produce",
+      "symbol": "lean_bridge_df0f714db6fdbd3762d5e0a5_lean"
+    },
+    {
+      "kind": "validator",
+      "label": "RecursiveCheckedRecords.produce:fin_guard_0",
+      "symbol": "lean_bridge_df0f714db6fdbd3762d5e0a5_fin_guard_0"
+    },
+    {
+      "kind": "adapter",
+      "label": "RecursiveCheckedRecords.second",
+      "symbol": "lean_bridge_c3338006aea7f276ff222c0c_lean"
+    },
+    {
+      "kind": "validator",
+      "label": "RecursiveCheckedRecords.second:fin_guard_0",
+      "symbol": "lean_bridge_c3338006aea7f276ff222c0c_fin_guard_0"
+    },
+    {
+      "kind": "validator",
+      "label": "RecursiveCheckedRecords.second:graph_refinement_0_262d1fa6be548d6d1dd0",
+      "symbol": "lean_bridge_c3338006aea7f276ff222c0c_graph_refinement_0_262d1fa6be548d6d1dd0"
+    },
+    {
+      "kind": "validator",
+      "label": "RecursiveCheckedRecords.second:graph_refinement_0_88f1c5c2e3a6ba3c4460",
+      "symbol": "lean_bridge_c3338006aea7f276ff222c0c_graph_refinement_0_88f1c5c2e3a6ba3c4460"
+    },
+    {
+      "kind": "validator",
+      "label": "RecursiveCheckedRecords.second:refinement_0",
+      "symbol": "lean_bridge_c3338006aea7f276ff222c0c_refinement_0"
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+TAP version 13
+# Subtest: instrumented PHP-Wasm copied package closes nominal-full ordinary compiler entries
+ok 1 - instrumented PHP-Wasm copied package closes nominal-full ordinary compiler entries
+  ---
+  duration_ms: 155028.156764
+  type: 'test'
+  ...
+# nominal-full-ordinary-entry-probe: PHP-Wasm Node embedded/startup/weak
+# nominal-full-ordinary-entry-probe: PHP-Wasm Node embedded/startup/strict
+# nominal-full-ordinary-entry-probe: PHP-Wasm Node embedded/lazy/weak
+# nominal-full-ordinary-entry-probe: PHP-Wasm Node embedded/lazy/strict
+# nominal-full-ordinary-entry-probe: PHP-Wasm Node composer/startup/weak
+# nominal-full-ordinary-entry-probe: PHP-Wasm Node composer/startup/strict
+# nominal-full-ordinary-entry-probe: PHP-Wasm Node composer/lazy/weak
+# nominal-full-ordinary-entry-probe: PHP-Wasm Node composer/lazy/strict
+# nominal-full-ordinary-entry-probe: PHP-Wasm Chromium bundled/startup/weak
+# nominal-full-ordinary-entry-probe: PHP-Wasm Chromium bundled/startup/strict
+# nominal-full-ordinary-entry-probe: PHP-Wasm Chromium bundled/lazy/weak
+# nominal-full-ordinary-entry-probe: PHP-Wasm Chromium bundled/lazy/strict
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 155915.409056

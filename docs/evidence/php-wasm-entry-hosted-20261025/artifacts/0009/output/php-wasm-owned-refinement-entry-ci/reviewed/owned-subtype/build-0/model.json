@@ -1,0 +1,2668 @@
+{
+  "bindingIr": {
+    "aggregatePolicy": {
+      "cycles": "reject",
+      "disposal": "required",
+      "fallback": "queued-finalizer",
+      "ownership": "lease"
+    },
+    "assurance": [],
+    "capabilities": [],
+    "component": {
+      "id": "owned-subtypes@1.0.0",
+      "name": "owned-subtypes",
+      "version": "1.0.0"
+    },
+    "declarations": [
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "Independent corpus contract."
+        },
+        "effects": [
+          "allocates",
+          "reads-resource"
+        ],
+        "failure": {
+          "errors": [],
+          "mode": "none",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:Owned.echoRecord",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "echoRecord",
+        "overloadKey": "Owned.echoRecord",
+        "owner": null,
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": {
+              "anchor": null,
+              "scope": "call"
+            },
+            "mutability": "immutable",
+            "name": "arg0",
+            "optional": false,
+            "ownership": "borrow",
+            "type": {
+              "id": "lean:Owned.Bundle",
+              "kind": "named"
+            }
+          }
+        ],
+        "receiver": null,
+        "result": {
+          "lifetime": {
+            "anchor": null,
+            "scope": "explicit"
+          },
+          "ownership": "lease",
+          "type": {
+            "id": "lean:Owned.Bundle",
+            "kind": "named"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "Owned.echoRecord",
+          "extensions": {
+            "lean-lang.org/export-contract": {
+              "parameters": [
+                {
+                  "lifetime": {
+                    "anchor": null,
+                    "scope": "call"
+                  },
+                  "ownership": "borrow",
+                  "refinement": {
+                    "fields": [
+                      {
+                        "name": "primary",
+                        "refinement": null
+                      },
+                      {
+                        "name": "spare",
+                        "refinement": null
+                      },
+                      {
+                        "name": "peers",
+                        "refinement": null
+                      },
+                      {
+                        "name": "history",
+                        "refinement": null
+                      },
+                      {
+                        "name": "payload",
+                        "refinement": {
+                          "fields": [
+                            {
+                              "name": "count",
+                              "refinement": {
+                                "constructor": "Owned.checkedCount"
+                              }
+                            },
+                            {
+                              "name": "bytes",
+                              "refinement": null
+                            }
+                          ],
+                          "kind": "record",
+                          "name": "Owned.Payload"
+                        }
+                      }
+                    ],
+                    "kind": "record",
+                    "name": "Owned.Bundle"
+                  }
+                }
+              ]
+            },
+            "lean-lang.org/refinements": {
+              "parameters": [
+                {
+                  "fields": [
+                    {
+                      "name": "primary",
+                      "refinement": null
+                    },
+                    {
+                      "name": "spare",
+                      "refinement": null
+                    },
+                    {
+                      "name": "peers",
+                      "refinement": null
+                    },
+                    {
+                      "name": "history",
+                      "refinement": null
+                    },
+                    {
+                      "name": "payload",
+                      "refinement": {
+                        "fields": [
+                          {
+                            "name": "count",
+                            "refinement": {
+                              "constructor": "Owned.checkedCount",
+                              "kind": "subtype"
+                            }
+                          },
+                          {
+                            "name": "bytes",
+                            "refinement": null
+                          }
+                        ],
+                        "kind": "record",
+                        "name": "Owned.Payload"
+                      }
+                    }
+                  ],
+                  "kind": "record",
+                  "name": "Owned.Bundle"
+                }
+              ],
+              "result": {
+                "fields": [
+                  {
+                    "name": "primary",
+                    "refinement": null
+                  },
+                  {
+                    "name": "spare",
+                    "refinement": null
+                  },
+                  {
+                    "name": "peers",
+                    "refinement": null
+                  },
+                  {
+                    "name": "history",
+                    "refinement": null
+                  },
+                  {
+                    "name": "payload",
+                    "refinement": {
+                      "fields": [
+                        {
+                          "name": "count",
+                          "refinement": {
+                            "constructor": null,
+                            "kind": "subtype"
+                          }
+                        },
+                        {
+                          "name": "bytes",
+                          "refinement": null
+                        }
+                      ],
+                      "kind": "record",
+                      "name": "Owned.Payload"
+                    }
+                  }
+                ],
+                "kind": "record",
+                "name": "Owned.Bundle"
+              }
+            },
+            "lean-lang.org/source-position": {
+              "endColumn": 49,
+              "endLine": 41,
+              "path": "Owned.lean",
+              "startColumn": 0,
+              "startLine": 40
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "Independent corpus contract."
+        },
+        "effects": [
+          "allocates",
+          "reads-resource"
+        ],
+        "failure": {
+          "errors": [],
+          "mode": "none",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:Owned.echoRecordAlternate",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "echoRecordAlternate",
+        "overloadKey": "Owned.echoRecordAlternate",
+        "owner": null,
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": {
+              "anchor": null,
+              "scope": "call"
+            },
+            "mutability": "immutable",
+            "name": "arg0",
+            "optional": false,
+            "ownership": "borrow",
+            "type": {
+              "id": "lean:Owned.Bundle",
+              "kind": "named"
+            }
+          }
+        ],
+        "receiver": null,
+        "result": {
+          "lifetime": {
+            "anchor": null,
+            "scope": "explicit"
+          },
+          "ownership": "lease",
+          "type": {
+            "id": "lean:Owned.Bundle",
+            "kind": "named"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "Owned.echoRecordAlternate",
+          "extensions": {
+            "lean-lang.org/export-contract": {
+              "parameters": [
+                {
+                  "lifetime": {
+                    "anchor": null,
+                    "scope": "call"
+                  },
+                  "ownership": "borrow",
+                  "refinement": {
+                    "fields": [
+                      {
+                        "name": "primary",
+                        "refinement": null
+                      },
+                      {
+                        "name": "spare",
+                        "refinement": null
+                      },
+                      {
+                        "name": "peers",
+                        "refinement": null
+                      },
+                      {
+                        "name": "history",
+                        "refinement": null
+                      },
+                      {
+                        "name": "payload",
+                        "refinement": {
+                          "fields": [
+                            {
+                              "name": "count",
+                              "refinement": {
+                                "constructor": "Owned.checkedCountAlternate"
+                              }
+                            },
+                            {
+                              "name": "bytes",
+                              "refinement": null
+                            }
+                          ],
+                          "kind": "record",
+                          "name": "Owned.Payload"
+                        }
+                      }
+                    ],
+                    "kind": "record",
+                    "name": "Owned.Bundle"
+                  }
+                }
+              ]
+            },
+            "lean-lang.org/refinements": {
+              "parameters": [
+                {
+                  "fields": [
+                    {
+                      "name": "primary",
+                      "refinement": null
+                    },
+                    {
+                      "name": "spare",
+                      "refinement": null
+                    },
+                    {
+                      "name": "peers",
+                      "refinement": null
+                    },
+                    {
+                      "name": "history",
+                      "refinement": null
+                    },
+                    {
+                      "name": "payload",
+                      "refinement": {
+                        "fields": [
+                          {
+                            "name": "count",
+                            "refinement": {
+                              "constructor": "Owned.checkedCountAlternate",
+                              "kind": "subtype"
+                            }
+                          },
+                          {
+                            "name": "bytes",
+                            "refinement": null
+                          }
+                        ],
+                        "kind": "record",
+                        "name": "Owned.Payload"
+                      }
+                    }
+                  ],
+                  "kind": "record",
+                  "name": "Owned.Bundle"
+                }
+              ],
+              "result": {
+                "fields": [
+                  {
+                    "name": "primary",
+                    "refinement": null
+                  },
+                  {
+                    "name": "spare",
+                    "refinement": null
+                  },
+                  {
+                    "name": "peers",
+                    "refinement": null
+                  },
+                  {
+                    "name": "history",
+                    "refinement": null
+                  },
+                  {
+                    "name": "payload",
+                    "refinement": {
+                      "fields": [
+                        {
+                          "name": "count",
+                          "refinement": {
+                            "constructor": null,
+                            "kind": "subtype"
+                          }
+                        },
+                        {
+                          "name": "bytes",
+                          "refinement": null
+                        }
+                      ],
+                      "kind": "record",
+                      "name": "Owned.Payload"
+                    }
+                  }
+                ],
+                "kind": "record",
+                "name": "Owned.Bundle"
+              }
+            },
+            "lean-lang.org/source-position": {
+              "endColumn": 58,
+              "endLine": 44,
+              "path": "Owned.lean",
+              "startColumn": 0,
+              "startLine": 43
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "Independent corpus contract."
+        },
+        "effects": [
+          "allocates"
+        ],
+        "failure": {
+          "errors": [],
+          "mode": "none",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:Owned.newTicket",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "newTicket",
+        "overloadKey": "Owned.newTicket",
+        "owner": null,
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "arg0",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          },
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "arg1",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "kind": "primitive",
+              "name": "string"
+            }
+          }
+        ],
+        "receiver": null,
+        "result": {
+          "lifetime": {
+            "anchor": null,
+            "scope": "explicit"
+          },
+          "ownership": "lease",
+          "type": {
+            "id": "lean:Owned.Ticket",
+            "kind": "named"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "Owned.newTicket",
+          "extensions": {
+            "lean-lang.org/source-position": {
+              "endColumn": 17,
+              "endLine": 36,
+              "path": "Owned.lean",
+              "startColumn": 0,
+              "startLine": 34
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "Independent corpus contract."
+        },
+        "effects": [
+          "reads-resource"
+        ],
+        "failure": {
+          "errors": [],
+          "mode": "none",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:Owned.serial",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "serial",
+        "overloadKey": "Owned.serial",
+        "owner": null,
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": {
+              "anchor": null,
+              "scope": "call"
+            },
+            "mutability": "immutable",
+            "name": "arg0",
+            "optional": false,
+            "ownership": "borrow",
+            "type": {
+              "id": "lean:Owned.Ticket",
+              "kind": "named"
+            }
+          }
+        ],
+        "receiver": null,
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "Owned.serial",
+          "extensions": {
+            "lean-lang.org/source-position": {
+              "endColumn": 51,
+              "endLine": 38,
+              "path": "Owned.lean",
+              "startColumn": 0,
+              "startLine": 38
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "Independent corpus contract."
+        },
+        "effects": [
+          "allocates",
+          "reads-resource"
+        ],
+        "failure": {
+          "errors": [],
+          "mode": "none",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:Owned.transferRecord",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "transferRecord",
+        "overloadKey": "Owned.transferRecord",
+        "owner": null,
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": {
+              "anchor": null,
+              "scope": "call"
+            },
+            "mutability": "immutable",
+            "name": "arg0",
+            "optional": false,
+            "ownership": "transfer",
+            "type": {
+              "id": "lean:Owned.Bundle",
+              "kind": "named"
+            }
+          }
+        ],
+        "receiver": null,
+        "result": {
+          "lifetime": {
+            "anchor": null,
+            "scope": "explicit"
+          },
+          "ownership": "lease",
+          "type": {
+            "id": "lean:Owned.Bundle",
+            "kind": "named"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "Owned.transferRecord",
+          "extensions": {
+            "lean-lang.org/export-contract": {
+              "parameters": [
+                {
+                  "lifetime": {
+                    "anchor": null,
+                    "scope": "call"
+                  },
+                  "ownership": "transfer",
+                  "refinement": {
+                    "fields": [
+                      {
+                        "name": "primary",
+                        "refinement": null
+                      },
+                      {
+                        "name": "spare",
+                        "refinement": null
+                      },
+                      {
+                        "name": "peers",
+                        "refinement": null
+                      },
+                      {
+                        "name": "history",
+                        "refinement": null
+                      },
+                      {
+                        "name": "payload",
+                        "refinement": {
+                          "fields": [
+                            {
+                              "name": "count",
+                              "refinement": {
+                                "constructor": "Owned.checkedCount"
+                              }
+                            },
+                            {
+                              "name": "bytes",
+                              "refinement": null
+                            }
+                          ],
+                          "kind": "record",
+                          "name": "Owned.Payload"
+                        }
+                      }
+                    ],
+                    "kind": "record",
+                    "name": "Owned.Bundle"
+                  }
+                }
+              ]
+            },
+            "lean-lang.org/refinements": {
+              "parameters": [
+                {
+                  "fields": [
+                    {
+                      "name": "primary",
+                      "refinement": null
+                    },
+                    {
+                      "name": "spare",
+                      "refinement": null
+                    },
+                    {
+                      "name": "peers",
+                      "refinement": null
+                    },
+                    {
+                      "name": "history",
+                      "refinement": null
+                    },
+                    {
+                      "name": "payload",
+                      "refinement": {
+                        "fields": [
+                          {
+                            "name": "count",
+                            "refinement": {
+                              "constructor": "Owned.checkedCount",
+                              "kind": "subtype"
+                            }
+                          },
+                          {
+                            "name": "bytes",
+                            "refinement": null
+                          }
+                        ],
+                        "kind": "record",
+                        "name": "Owned.Payload"
+                      }
+                    }
+                  ],
+                  "kind": "record",
+                  "name": "Owned.Bundle"
+                }
+              ],
+              "result": {
+                "fields": [
+                  {
+                    "name": "primary",
+                    "refinement": null
+                  },
+                  {
+                    "name": "spare",
+                    "refinement": null
+                  },
+                  {
+                    "name": "peers",
+                    "refinement": null
+                  },
+                  {
+                    "name": "history",
+                    "refinement": null
+                  },
+                  {
+                    "name": "payload",
+                    "refinement": {
+                      "fields": [
+                        {
+                          "name": "count",
+                          "refinement": {
+                            "constructor": null,
+                            "kind": "subtype"
+                          }
+                        },
+                        {
+                          "name": "bytes",
+                          "refinement": null
+                        }
+                      ],
+                      "kind": "record",
+                      "name": "Owned.Payload"
+                    }
+                  }
+                ],
+                "kind": "record",
+                "name": "Owned.Bundle"
+              }
+            },
+            "lean-lang.org/source-position": {
+              "endColumn": 53,
+              "endLine": 47,
+              "path": "Owned.lean",
+              "startColumn": 0,
+              "startLine": 46
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      }
+    ],
+    "documentation": {
+      "details": "",
+      "summary": "Independent corpus contract."
+    },
+    "errors": [],
+    "producers": [
+      {
+        "adapter": "lean-bridge-elaborator",
+        "adapterVersion": 2,
+        "extensions": {
+          "lean-lang.org/elaboration-sha256": "53cb326c13060c8942a563dc4cb7c9e581d6b6c1d29ae06abddc2088a1e89636",
+          "lean-lang.org/toolchain": "leanprover/lean4:v4.32.2"
+        },
+        "id": "lean",
+        "tool": "Lean",
+        "toolVersion": "4.32.2"
+      }
+    ],
+    "schemaVersion": 4,
+    "types": [
+      {
+        "aggregate": {
+          "cycles": "reject",
+          "disposal": "required",
+          "fallback": "queued-finalizer",
+          "ownership": "lease"
+        },
+        "assurance": [],
+        "callable": null,
+        "cases": [],
+        "documentation": {
+          "details": "",
+          "summary": "Independent owned aggregate contract."
+        },
+        "fields": [
+          {
+            "documentation": {
+              "details": "",
+              "summary": "Independent owned aggregate contract."
+            },
+            "mutability": "immutable",
+            "name": "primary",
+            "type": {
+              "id": "lean:Owned.Ticket",
+              "kind": "named"
+            }
+          },
+          {
+            "documentation": {
+              "details": "",
+              "summary": "Independent owned aggregate contract."
+            },
+            "mutability": "immutable",
+            "name": "spare",
+            "type": {
+              "arguments": [
+                {
+                  "id": "lean:Owned.Ticket",
+                  "kind": "named"
+                }
+              ],
+              "constructor": "option",
+              "kind": "apply"
+            }
+          },
+          {
+            "documentation": {
+              "details": "",
+              "summary": "Independent owned aggregate contract."
+            },
+            "mutability": "immutable",
+            "name": "peers",
+            "type": {
+              "arguments": [
+                {
+                  "id": "lean:Owned.Ticket",
+                  "kind": "named"
+                }
+              ],
+              "constructor": "array",
+              "kind": "apply"
+            }
+          },
+          {
+            "documentation": {
+              "details": "",
+              "summary": "Independent owned aggregate contract."
+            },
+            "mutability": "immutable",
+            "name": "history",
+            "type": {
+              "arguments": [
+                {
+                  "id": "lean:Owned.Ticket",
+                  "kind": "named"
+                }
+              ],
+              "constructor": "list",
+              "kind": "apply"
+            }
+          },
+          {
+            "documentation": {
+              "details": "",
+              "summary": "Independent owned aggregate contract."
+            },
+            "mutability": "immutable",
+            "name": "payload",
+            "type": {
+              "id": "lean:Owned.Payload",
+              "kind": "named"
+            }
+          }
+        ],
+        "host": null,
+        "id": "lean:Owned.Bundle",
+        "kind": "record",
+        "mutability": "immutable",
+        "name": "Bundle",
+        "representation": "owned",
+        "resource": null,
+        "source": {
+          "declaration": "Owned.Bundle",
+          "extensions": {},
+          "producer": "lean"
+        },
+        "target": null,
+        "typeParameters": []
+      },
+      {
+        "aggregate": null,
+        "assurance": [],
+        "callable": null,
+        "cases": [],
+        "documentation": {
+          "details": "",
+          "summary": "Independent owned aggregate contract."
+        },
+        "fields": [
+          {
+            "documentation": {
+              "details": "",
+              "summary": "Independent owned aggregate contract."
+            },
+            "mutability": "immutable",
+            "name": "count",
+            "type": {
+              "kind": "primitive",
+              "name": "int"
+            }
+          },
+          {
+            "documentation": {
+              "details": "",
+              "summary": "Independent owned aggregate contract."
+            },
+            "mutability": "immutable",
+            "name": "bytes",
+            "type": {
+              "kind": "primitive",
+              "name": "bytes"
+            }
+          }
+        ],
+        "host": null,
+        "id": "lean:Owned.Payload",
+        "kind": "record",
+        "mutability": "immutable",
+        "name": "Payload",
+        "representation": "copied",
+        "resource": null,
+        "source": {
+          "declaration": "Owned.Payload",
+          "extensions": {},
+          "producer": "lean"
+        },
+        "target": null,
+        "typeParameters": []
+      },
+      {
+        "aggregate": null,
+        "assurance": [],
+        "callable": null,
+        "cases": [],
+        "documentation": {
+          "details": "",
+          "summary": "Independent owned aggregate contract."
+        },
+        "fields": [],
+        "host": null,
+        "id": "lean:Owned.Ticket",
+        "kind": "resource",
+        "mutability": "read",
+        "name": "Ticket",
+        "representation": "identity",
+        "resource": {
+          "cycles": "explicit-cut",
+          "disposal": "required",
+          "fallback": "queued-finalizer",
+          "kindId": "resource:Owned.Ticket"
+        },
+        "source": {
+          "declaration": "Owned.Ticket",
+          "extensions": {},
+          "producer": "lean"
+        },
+        "target": null,
+        "typeParameters": []
+      }
+    ]
+  },
+  "bindingIrSha256": "e9cb893ef976a1a687d1866df3affb32afa92eca42765b0ad111c3aea3625251",
+  "byteOrder": "little",
+  "component": {
+    "id": "owned-subtypes@1.0.0",
+    "name": "owned-subtypes",
+    "version": "1.0.0"
+  },
+  "exports": [
+    {
+      "bindingId": "lean:Owned.echoRecord",
+      "documentation": null,
+      "module": "Owned",
+      "name": "Owned.echoRecord",
+      "parameters": [
+        {
+          "name": "value",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": true,
+              "unbox": "lean_unbox"
+            },
+            "kind": "owned-graph",
+            "policy": {
+              "cycles": "reject",
+              "disposal": "required",
+              "fallback": "queued-finalizer",
+              "ownership": "lease"
+            },
+            "root": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": true,
+                "unbox": "lean_unbox"
+              },
+              "kind": "reference",
+              "lean": "Owned.Bundle",
+              "name": "Owned.Bundle"
+            },
+            "types": [
+              {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": true,
+                  "unbox": "lean_unbox"
+                },
+                "constructor": "Owned.Bundle.mk",
+                "fields": [
+                  {
+                    "name": "primary",
+                    "projection": "Owned.Bundle.primary",
+                    "type": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": true,
+                        "unbox": "lean_unbox"
+                      },
+                      "kind": "resource",
+                      "lean": "Owned.Ticket",
+                      "module": "Owned",
+                      "name": "Owned.Ticket"
+                    }
+                  },
+                  {
+                    "name": "spare",
+                    "projection": "Owned.Bundle.spare",
+                    "type": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": false,
+                        "unbox": "lean_unbox"
+                      },
+                      "element": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": true,
+                          "unbox": "lean_unbox"
+                        },
+                        "kind": "resource",
+                        "lean": "Owned.Ticket",
+                        "module": "Owned",
+                        "name": "Owned.Ticket"
+                      },
+                      "kind": "option"
+                    }
+                  },
+                  {
+                    "name": "peers",
+                    "projection": "Owned.Bundle.peers",
+                    "type": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": true,
+                        "unbox": "lean_unbox"
+                      },
+                      "element": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": true,
+                          "unbox": "lean_unbox"
+                        },
+                        "kind": "resource",
+                        "lean": "Owned.Ticket",
+                        "module": "Owned",
+                        "name": "Owned.Ticket"
+                      },
+                      "kind": "array"
+                    }
+                  },
+                  {
+                    "name": "history",
+                    "projection": "Owned.Bundle.history",
+                    "type": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": false,
+                        "unbox": "lean_unbox"
+                      },
+                      "element": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": true,
+                          "unbox": "lean_unbox"
+                        },
+                        "kind": "resource",
+                        "lean": "Owned.Ticket",
+                        "module": "Owned",
+                        "name": "Owned.Ticket"
+                      },
+                      "kind": "list"
+                    }
+                  },
+                  {
+                    "name": "payload",
+                    "projection": "Owned.Bundle.payload",
+                    "type": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": true,
+                        "unbox": "lean_unbox"
+                      },
+                      "kind": "reference",
+                      "lean": "Owned.Payload",
+                      "name": "Owned.Payload"
+                    }
+                  }
+                ],
+                "kind": "record",
+                "lean": "Owned.Bundle",
+                "name": "Owned.Bundle"
+              },
+              {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": true,
+                  "unbox": "lean_unbox"
+                },
+                "constructor": "Owned.Payload.mk",
+                "fields": [
+                  {
+                    "name": "count",
+                    "projection": "Owned.Payload.count",
+                    "type": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": false,
+                        "unbox": "lean_unbox"
+                      },
+                      "base": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": false,
+                          "unbox": "lean_unbox"
+                        },
+                        "kind": "primitive",
+                        "lean": "Int",
+                        "name": "int"
+                      },
+                      "kind": "refinement",
+                      "predicate": {
+                        "constructor": "Owned.checkedCount",
+                        "kind": "subtype"
+                      }
+                    }
+                  },
+                  {
+                    "name": "bytes",
+                    "projection": "Owned.Payload.bytes",
+                    "type": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": true,
+                        "unbox": "lean_unbox"
+                      },
+                      "kind": "primitive",
+                      "lean": "ByteArray",
+                      "name": "bytes"
+                    }
+                  }
+                ],
+                "kind": "record",
+                "lean": "Owned.Payload",
+                "name": "Owned.Payload"
+              }
+            ]
+          }
+        }
+      ],
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": true,
+          "unbox": "lean_unbox"
+        },
+        "kind": "owned-graph",
+        "policy": {
+          "cycles": "reject",
+          "disposal": "required",
+          "fallback": "queued-finalizer",
+          "ownership": "lease"
+        },
+        "root": {
+          "abi": {
+            "box": "lean_box",
+            "cType": "lean_object*",
+            "heap": true,
+            "unbox": "lean_unbox"
+          },
+          "kind": "reference",
+          "lean": "Owned.Bundle",
+          "name": "Owned.Bundle"
+        },
+        "types": [
+          {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": true,
+              "unbox": "lean_unbox"
+            },
+            "constructor": "Owned.Bundle.mk",
+            "fields": [
+              {
+                "name": "primary",
+                "projection": "Owned.Bundle.primary",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": true,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "resource",
+                  "lean": "Owned.Ticket",
+                  "module": "Owned",
+                  "name": "Owned.Ticket"
+                }
+              },
+              {
+                "name": "spare",
+                "projection": "Owned.Bundle.spare",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "element": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": true,
+                      "unbox": "lean_unbox"
+                    },
+                    "kind": "resource",
+                    "lean": "Owned.Ticket",
+                    "module": "Owned",
+                    "name": "Owned.Ticket"
+                  },
+                  "kind": "option"
+                }
+              },
+              {
+                "name": "peers",
+                "projection": "Owned.Bundle.peers",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": true,
+                    "unbox": "lean_unbox"
+                  },
+                  "element": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": true,
+                      "unbox": "lean_unbox"
+                    },
+                    "kind": "resource",
+                    "lean": "Owned.Ticket",
+                    "module": "Owned",
+                    "name": "Owned.Ticket"
+                  },
+                  "kind": "array"
+                }
+              },
+              {
+                "name": "history",
+                "projection": "Owned.Bundle.history",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "element": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": true,
+                      "unbox": "lean_unbox"
+                    },
+                    "kind": "resource",
+                    "lean": "Owned.Ticket",
+                    "module": "Owned",
+                    "name": "Owned.Ticket"
+                  },
+                  "kind": "list"
+                }
+              },
+              {
+                "name": "payload",
+                "projection": "Owned.Bundle.payload",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": true,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "reference",
+                  "lean": "Owned.Payload",
+                  "name": "Owned.Payload"
+                }
+              }
+            ],
+            "kind": "record",
+            "lean": "Owned.Bundle",
+            "name": "Owned.Bundle"
+          },
+          {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": true,
+              "unbox": "lean_unbox"
+            },
+            "constructor": "Owned.Payload.mk",
+            "fields": [
+              {
+                "name": "count",
+                "projection": "Owned.Payload.count",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "base": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": false,
+                      "unbox": "lean_unbox"
+                    },
+                    "kind": "primitive",
+                    "lean": "Int",
+                    "name": "int"
+                  },
+                  "kind": "refinement",
+                  "predicate": {
+                    "constructor": null,
+                    "kind": "subtype"
+                  }
+                }
+              },
+              {
+                "name": "bytes",
+                "projection": "Owned.Payload.bytes",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": true,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "primitive",
+                  "lean": "ByteArray",
+                  "name": "bytes"
+                }
+              }
+            ],
+            "kind": "record",
+            "lean": "Owned.Payload",
+            "name": "Owned.Payload"
+          }
+        ]
+      },
+      "sourcePosition": {
+        "endColumn": 49,
+        "endLine": 41,
+        "path": "Owned.lean",
+        "startColumn": 0,
+        "startLine": 40
+      },
+      "symbol": "lean_bridge_owned_2f491879aa1a54f87d6d12e2_f080cb47999bb83cdc0c1",
+      "theoremReferences": []
+    },
+    {
+      "bindingId": "lean:Owned.echoRecordAlternate",
+      "documentation": null,
+      "module": "Owned",
+      "name": "Owned.echoRecordAlternate",
+      "parameters": [
+        {
+          "name": "value",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": true,
+              "unbox": "lean_unbox"
+            },
+            "kind": "owned-graph",
+            "policy": {
+              "cycles": "reject",
+              "disposal": "required",
+              "fallback": "queued-finalizer",
+              "ownership": "lease"
+            },
+            "root": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": true,
+                "unbox": "lean_unbox"
+              },
+              "kind": "reference",
+              "lean": "Owned.Bundle",
+              "name": "Owned.Bundle"
+            },
+            "types": [
+              {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": true,
+                  "unbox": "lean_unbox"
+                },
+                "constructor": "Owned.Bundle.mk",
+                "fields": [
+                  {
+                    "name": "primary",
+                    "projection": "Owned.Bundle.primary",
+                    "type": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": true,
+                        "unbox": "lean_unbox"
+                      },
+                      "kind": "resource",
+                      "lean": "Owned.Ticket",
+                      "module": "Owned",
+                      "name": "Owned.Ticket"
+                    }
+                  },
+                  {
+                    "name": "spare",
+                    "projection": "Owned.Bundle.spare",
+                    "type": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": false,
+                        "unbox": "lean_unbox"
+                      },
+                      "element": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": true,
+                          "unbox": "lean_unbox"
+                        },
+                        "kind": "resource",
+                        "lean": "Owned.Ticket",
+                        "module": "Owned",
+                        "name": "Owned.Ticket"
+                      },
+                      "kind": "option"
+                    }
+                  },
+                  {
+                    "name": "peers",
+                    "projection": "Owned.Bundle.peers",
+                    "type": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": true,
+                        "unbox": "lean_unbox"
+                      },
+                      "element": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": true,
+                          "unbox": "lean_unbox"
+                        },
+                        "kind": "resource",
+                        "lean": "Owned.Ticket",
+                        "module": "Owned",
+                        "name": "Owned.Ticket"
+                      },
+                      "kind": "array"
+                    }
+                  },
+                  {
+                    "name": "history",
+                    "projection": "Owned.Bundle.history",
+                    "type": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": false,
+                        "unbox": "lean_unbox"
+                      },
+                      "element": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": true,
+                          "unbox": "lean_unbox"
+                        },
+                        "kind": "resource",
+                        "lean": "Owned.Ticket",
+                        "module": "Owned",
+                        "name": "Owned.Ticket"
+                      },
+                      "kind": "list"
+                    }
+                  },
+                  {
+                    "name": "payload",
+                    "projection": "Owned.Bundle.payload",
+                    "type": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": true,
+                        "unbox": "lean_unbox"
+                      },
+                      "kind": "reference",
+                      "lean": "Owned.Payload",
+                      "name": "Owned.Payload"
+                    }
+                  }
+                ],
+                "kind": "record",
+                "lean": "Owned.Bundle",
+                "name": "Owned.Bundle"
+              },
+              {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": true,
+                  "unbox": "lean_unbox"
+                },
+                "constructor": "Owned.Payload.mk",
+                "fields": [
+                  {
+                    "name": "count",
+                    "projection": "Owned.Payload.count",
+                    "type": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": false,
+                        "unbox": "lean_unbox"
+                      },
+                      "base": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": false,
+                          "unbox": "lean_unbox"
+                        },
+                        "kind": "primitive",
+                        "lean": "Int",
+                        "name": "int"
+                      },
+                      "kind": "refinement",
+                      "predicate": {
+                        "constructor": "Owned.checkedCountAlternate",
+                        "kind": "subtype"
+                      }
+                    }
+                  },
+                  {
+                    "name": "bytes",
+                    "projection": "Owned.Payload.bytes",
+                    "type": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": true,
+                        "unbox": "lean_unbox"
+                      },
+                      "kind": "primitive",
+                      "lean": "ByteArray",
+                      "name": "bytes"
+                    }
+                  }
+                ],
+                "kind": "record",
+                "lean": "Owned.Payload",
+                "name": "Owned.Payload"
+              }
+            ]
+          }
+        }
+      ],
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": true,
+          "unbox": "lean_unbox"
+        },
+        "kind": "owned-graph",
+        "policy": {
+          "cycles": "reject",
+          "disposal": "required",
+          "fallback": "queued-finalizer",
+          "ownership": "lease"
+        },
+        "root": {
+          "abi": {
+            "box": "lean_box",
+            "cType": "lean_object*",
+            "heap": true,
+            "unbox": "lean_unbox"
+          },
+          "kind": "reference",
+          "lean": "Owned.Bundle",
+          "name": "Owned.Bundle"
+        },
+        "types": [
+          {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": true,
+              "unbox": "lean_unbox"
+            },
+            "constructor": "Owned.Bundle.mk",
+            "fields": [
+              {
+                "name": "primary",
+                "projection": "Owned.Bundle.primary",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": true,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "resource",
+                  "lean": "Owned.Ticket",
+                  "module": "Owned",
+                  "name": "Owned.Ticket"
+                }
+              },
+              {
+                "name": "spare",
+                "projection": "Owned.Bundle.spare",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "element": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": true,
+                      "unbox": "lean_unbox"
+                    },
+                    "kind": "resource",
+                    "lean": "Owned.Ticket",
+                    "module": "Owned",
+                    "name": "Owned.Ticket"
+                  },
+                  "kind": "option"
+                }
+              },
+              {
+                "name": "peers",
+                "projection": "Owned.Bundle.peers",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": true,
+                    "unbox": "lean_unbox"
+                  },
+                  "element": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": true,
+                      "unbox": "lean_unbox"
+                    },
+                    "kind": "resource",
+                    "lean": "Owned.Ticket",
+                    "module": "Owned",
+                    "name": "Owned.Ticket"
+                  },
+                  "kind": "array"
+                }
+              },
+              {
+                "name": "history",
+                "projection": "Owned.Bundle.history",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "element": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": true,
+                      "unbox": "lean_unbox"
+                    },
+                    "kind": "resource",
+                    "lean": "Owned.Ticket",
+                    "module": "Owned",
+                    "name": "Owned.Ticket"
+                  },
+                  "kind": "list"
+                }
+              },
+              {
+                "name": "payload",
+                "projection": "Owned.Bundle.payload",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": true,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "reference",
+                  "lean": "Owned.Payload",
+                  "name": "Owned.Payload"
+                }
+              }
+            ],
+            "kind": "record",
+            "lean": "Owned.Bundle",
+            "name": "Owned.Bundle"
+          },
+          {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": true,
+              "unbox": "lean_unbox"
+            },
+            "constructor": "Owned.Payload.mk",
+            "fields": [
+              {
+                "name": "count",
+                "projection": "Owned.Payload.count",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "base": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": false,
+                      "unbox": "lean_unbox"
+                    },
+                    "kind": "primitive",
+                    "lean": "Int",
+                    "name": "int"
+                  },
+                  "kind": "refinement",
+                  "predicate": {
+                    "constructor": null,
+                    "kind": "subtype"
+                  }
+                }
+              },
+              {
+                "name": "bytes",
+                "projection": "Owned.Payload.bytes",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": true,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "primitive",
+                  "lean": "ByteArray",
+                  "name": "bytes"
+                }
+              }
+            ],
+            "kind": "record",
+            "lean": "Owned.Payload",
+            "name": "Owned.Payload"
+          }
+        ]
+      },
+      "sourcePosition": {
+        "endColumn": 58,
+        "endLine": 44,
+        "path": "Owned.lean",
+        "startColumn": 0,
+        "startLine": 43
+      },
+      "symbol": "lean_bridge_owned_2f491879aa1a54f87d6d12e2_f579c430cd49e7c98161f",
+      "theoremReferences": []
+    },
+    {
+      "bindingId": "lean:Owned.newTicket",
+      "documentation": null,
+      "module": "Owned",
+      "name": "Owned.newTicket",
+      "parameters": [
+        {
+          "name": "serial",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": false,
+              "unbox": "lean_unbox"
+            },
+            "kind": "primitive",
+            "lean": "Nat",
+            "name": "nat"
+          }
+        },
+        {
+          "name": "label",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": true,
+              "unbox": "lean_unbox"
+            },
+            "kind": "primitive",
+            "lean": "String",
+            "name": "string"
+          }
+        }
+      ],
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": true,
+          "unbox": "lean_unbox"
+        },
+        "kind": "resource",
+        "lean": "Owned.Ticket",
+        "module": "Owned",
+        "name": "Owned.Ticket"
+      },
+      "sourcePosition": {
+        "endColumn": 17,
+        "endLine": 36,
+        "path": "Owned.lean",
+        "startColumn": 0,
+        "startLine": 34
+      },
+      "symbol": "lean_bridge_owned_2f491879aa1a54f87d6d12e2_f9735b5a0a586b46ce0b8",
+      "theoremReferences": []
+    },
+    {
+      "bindingId": "lean:Owned.serial",
+      "documentation": null,
+      "module": "Owned",
+      "name": "Owned.serial",
+      "parameters": [
+        {
+          "name": "ticket",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": true,
+              "unbox": "lean_unbox"
+            },
+            "kind": "resource",
+            "lean": "Owned.Ticket",
+            "module": "Owned",
+            "name": "Owned.Ticket"
+          }
+        }
+      ],
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": false,
+          "unbox": "lean_unbox"
+        },
+        "kind": "primitive",
+        "lean": "Nat",
+        "name": "nat"
+      },
+      "sourcePosition": {
+        "endColumn": 51,
+        "endLine": 38,
+        "path": "Owned.lean",
+        "startColumn": 0,
+        "startLine": 38
+      },
+      "symbol": "lean_bridge_owned_2f491879aa1a54f87d6d12e2_f52957d819a8a28259bf1",
+      "theoremReferences": []
+    },
+    {
+      "bindingId": "lean:Owned.transferRecord",
+      "documentation": null,
+      "module": "Owned",
+      "name": "Owned.transferRecord",
+      "parameters": [
+        {
+          "name": "value",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": true,
+              "unbox": "lean_unbox"
+            },
+            "kind": "owned-graph",
+            "policy": {
+              "cycles": "reject",
+              "disposal": "required",
+              "fallback": "queued-finalizer",
+              "ownership": "lease"
+            },
+            "root": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": true,
+                "unbox": "lean_unbox"
+              },
+              "kind": "reference",
+              "lean": "Owned.Bundle",
+              "name": "Owned.Bundle"
+            },
+            "types": [
+              {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": true,
+                  "unbox": "lean_unbox"
+                },
+                "constructor": "Owned.Bundle.mk",
+                "fields": [
+                  {
+                    "name": "primary",
+                    "projection": "Owned.Bundle.primary",
+                    "type": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": true,
+                        "unbox": "lean_unbox"
+                      },
+                      "kind": "resource",
+                      "lean": "Owned.Ticket",
+                      "module": "Owned",
+                      "name": "Owned.Ticket"
+                    }
+                  },
+                  {
+                    "name": "spare",
+                    "projection": "Owned.Bundle.spare",
+                    "type": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": false,
+                        "unbox": "lean_unbox"
+                      },
+                      "element": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": true,
+                          "unbox": "lean_unbox"
+                        },
+                        "kind": "resource",
+                        "lean": "Owned.Ticket",
+                        "module": "Owned",
+                        "name": "Owned.Ticket"
+                      },
+                      "kind": "option"
+                    }
+                  },
+                  {
+                    "name": "peers",
+                    "projection": "Owned.Bundle.peers",
+                    "type": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": true,
+                        "unbox": "lean_unbox"
+                      },
+                      "element": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": true,
+                          "unbox": "lean_unbox"
+                        },
+                        "kind": "resource",
+                        "lean": "Owned.Ticket",
+                        "module": "Owned",
+                        "name": "Owned.Ticket"
+                      },
+                      "kind": "array"
+                    }
+                  },
+                  {
+                    "name": "history",
+                    "projection": "Owned.Bundle.history",
+                    "type": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": false,
+                        "unbox": "lean_unbox"
+                      },
+                      "element": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": true,
+                          "unbox": "lean_unbox"
+                        },
+                        "kind": "resource",
+                        "lean": "Owned.Ticket",
+                        "module": "Owned",
+                        "name": "Owned.Ticket"
+                      },
+                      "kind": "list"
+                    }
+                  },
+                  {
+                    "name": "payload",
+                    "projection": "Owned.Bundle.payload",
+                    "type": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": true,
+                        "unbox": "lean_unbox"
+                      },
+                      "kind": "reference",
+                      "lean": "Owned.Payload",
+                      "name": "Owned.Payload"
+                    }
+                  }
+                ],
+                "kind": "record",
+                "lean": "Owned.Bundle",
+                "name": "Owned.Bundle"
+              },
+              {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": true,
+                  "unbox": "lean_unbox"
+                },
+                "constructor": "Owned.Payload.mk",
+                "fields": [
+                  {
+                    "name": "count",
+                    "projection": "Owned.Payload.count",
+                    "type": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": false,
+                        "unbox": "lean_unbox"
+                      },
+                      "base": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": false,
+                          "unbox": "lean_unbox"
+                        },
+                        "kind": "primitive",
+                        "lean": "Int",
+                        "name": "int"
+                      },
+                      "kind": "refinement",
+                      "predicate": {
+                        "constructor": "Owned.checkedCount",
+                        "kind": "subtype"
+                      }
+                    }
+                  },
+                  {
+                    "name": "bytes",
+                    "projection": "Owned.Payload.bytes",
+                    "type": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": true,
+                        "unbox": "lean_unbox"
+                      },
+                      "kind": "primitive",
+                      "lean": "ByteArray",
+                      "name": "bytes"
+                    }
+                  }
+                ],
+                "kind": "record",
+                "lean": "Owned.Payload",
+                "name": "Owned.Payload"
+              }
+            ]
+          }
+        }
+      ],
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": true,
+          "unbox": "lean_unbox"
+        },
+        "kind": "owned-graph",
+        "policy": {
+          "cycles": "reject",
+          "disposal": "required",
+          "fallback": "queued-finalizer",
+          "ownership": "lease"
+        },
+        "root": {
+          "abi": {
+            "box": "lean_box",
+            "cType": "lean_object*",
+            "heap": true,
+            "unbox": "lean_unbox"
+          },
+          "kind": "reference",
+          "lean": "Owned.Bundle",
+          "name": "Owned.Bundle"
+        },
+        "types": [
+          {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": true,
+              "unbox": "lean_unbox"
+            },
+            "constructor": "Owned.Bundle.mk",
+            "fields": [
+              {
+                "name": "primary",
+                "projection": "Owned.Bundle.primary",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": true,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "resource",
+                  "lean": "Owned.Ticket",
+                  "module": "Owned",
+                  "name": "Owned.Ticket"
+                }
+              },
+              {
+                "name": "spare",
+                "projection": "Owned.Bundle.spare",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "element": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": true,
+                      "unbox": "lean_unbox"
+                    },
+                    "kind": "resource",
+                    "lean": "Owned.Ticket",
+                    "module": "Owned",
+                    "name": "Owned.Ticket"
+                  },
+                  "kind": "option"
+                }
+              },
+              {
+                "name": "peers",
+                "projection": "Owned.Bundle.peers",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": true,
+                    "unbox": "lean_unbox"
+                  },
+                  "element": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": true,
+                      "unbox": "lean_unbox"
+                    },
+                    "kind": "resource",
+                    "lean": "Owned.Ticket",
+                    "module": "Owned",
+                    "name": "Owned.Ticket"
+                  },
+                  "kind": "array"
+                }
+              },
+              {
+                "name": "history",
+                "projection": "Owned.Bundle.history",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "element": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": true,
+                      "unbox": "lean_unbox"
+                    },
+                    "kind": "resource",
+                    "lean": "Owned.Ticket",
+                    "module": "Owned",
+                    "name": "Owned.Ticket"
+                  },
+                  "kind": "list"
+                }
+              },
+              {
+                "name": "payload",
+                "projection": "Owned.Bundle.payload",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": true,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "reference",
+                  "lean": "Owned.Payload",
+                  "name": "Owned.Payload"
+                }
+              }
+            ],
+            "kind": "record",
+            "lean": "Owned.Bundle",
+            "name": "Owned.Bundle"
+          },
+          {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": true,
+              "unbox": "lean_unbox"
+            },
+            "constructor": "Owned.Payload.mk",
+            "fields": [
+              {
+                "name": "count",
+                "projection": "Owned.Payload.count",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "base": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": false,
+                      "unbox": "lean_unbox"
+                    },
+                    "kind": "primitive",
+                    "lean": "Int",
+                    "name": "int"
+                  },
+                  "kind": "refinement",
+                  "predicate": {
+                    "constructor": null,
+                    "kind": "subtype"
+                  }
+                }
+              },
+              {
+                "name": "bytes",
+                "projection": "Owned.Payload.bytes",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": true,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "primitive",
+                  "lean": "ByteArray",
+                  "name": "bytes"
+                }
+              }
+            ],
+            "kind": "record",
+            "lean": "Owned.Payload",
+            "name": "Owned.Payload"
+          }
+        ]
+      },
+      "sourcePosition": {
+        "endColumn": 53,
+        "endLine": 47,
+        "path": "Owned.lean",
+        "startColumn": 0,
+        "startLine": 46
+      },
+      "symbol": "lean_bridge_owned_2f491879aa1a54f87d6d12e2_f973a6e63b7dad7a3d147",
+      "theoremReferences": []
+    }
+  ],
+  "ownedGraph": {
+    "inputTransfers": {
+      "consumption": "before-lean-call",
+      "exports": [
+        {
+          "bindingId": "lean:Owned.transferRecord",
+          "parameters": [
+            0
+          ]
+        }
+      ],
+      "failure": "consumed-after-handoff",
+      "ownership": "whole-result-owner",
+      "schemaVersion": 1,
+      "validation": "before-consumption",
+      "viewLifetime": "until-call-returns"
+    },
+    "layoutSha256": "0301619a6946ddf3b37e9115656bea6f5709e19e1122d5f61e124d2e9af21466",
+    "metadataSha256": "53cb326c13060c8942a563dc4cb7c9e581d6b6c1d29ae06abddc2088a1e89636",
+    "module": "LeanBridgeOwned5795d9605d5613e2",
+    "schemaVersion": 3,
+    "symbols": {
+      "exports": {
+        "lean:Owned.echoRecord": "lean_bridge_owned_2f491879aa1a54f87d6d12e2_f080cb47999bb83cdc0c1",
+        "lean:Owned.echoRecordAlternate": "lean_bridge_owned_2f491879aa1a54f87d6d12e2_f579c430cd49e7c98161f",
+        "lean:Owned.newTicket": "lean_bridge_owned_2f491879aa1a54f87d6d12e2_f9735b5a0a586b46ce0b8",
+        "lean:Owned.serial": "lean_bridge_owned_2f491879aa1a54f87d6d12e2_f52957d819a8a28259bf1",
+        "lean:Owned.transferRecord": "lean_bridge_owned_2f491879aa1a54f87d6d12e2_f973a6e63b7dad7a3d147"
+      },
+      "types": {
+        "aggregate:5b803fca85b63753b94598572dcc48d7ec375c17a2b7594141634b13153d5134": "lean_bridge_owned_2f491879aa1a54f87d6d12e2_t82551d965c182180b0dd",
+        "aggregate:8cc131347ce1c6420f6d0f6bb0487b9db8c1889378871db204ab9a0cc79666d0": "lean_bridge_owned_2f491879aa1a54f87d6d12e2_t659ec6a690764999d00d",
+        "aggregate:a5b920a88eec30f0b51dc5236bad917e31778a7a216725e2af86a05324c96f60": "lean_bridge_owned_2f491879aa1a54f87d6d12e2_t817592654f48ba756bd4",
+        "lean:Owned.Bundle": "lean_bridge_owned_2f491879aa1a54f87d6d12e2_t5faad500583201774348",
+        "lean:Owned.Payload": "lean_bridge_owned_2f491879aa1a54f87d6d12e2_t550e0acb733e8dd08e4e",
+        "lean:Owned.Ticket": "lean_bridge_owned_2f491879aa1a54f87d6d12e2_t6de8e950bc342c30091c",
+        "primitive:bytes": "lean_bridge_owned_2f491879aa1a54f87d6d12e2_tf098e5912ebfda269f53",
+        "primitive:int": "lean_bridge_owned_2f491879aa1a54f87d6d12e2_t11140334dba7a15b6b99",
+        "primitive:nat": "lean_bridge_owned_2f491879aa1a54f87d6d12e2_t167081552b6f9c1d1afd",
+        "primitive:string": "lean_bridge_owned_2f491879aa1a54f87d6d12e2_tdc0347e1f7f5c4d928f1"
+      }
+    },
+    "transport": "owned-zend-v1"
+  },
+  "pointerBits": 32,
+  "profile": "php-wasm-copied-v1",
+  "schemaVersion": 8,
+  "sourceIdentity": {
+    "exportConfigurationSha256": "be353c26b8c94a30ec1a1dc88cc19c110f3066bbb1e0eeef56bcd1e762974889",
+    "exportConfigurationSource": "{\n  \"modules\": [\n    \"Owned\"\n  ],\n  \"schemaVersion\": 1,\n  \"targets\": {\n    \"php-wasm\": {\n      \"composer\": {\n        \"name\": \"lean-bridge-test/owned-refinement-entry-subtype\",\n        \"version\": \"1.0.0\"\n      },\n      \"hostCallbacks\": false,\n      \"npm\": {\n        \"name\": \"@lean-bridge-test/owned-refinement-entry-subtype\",\n        \"version\": \"1.0.0\"\n      }\n    }\n  }\n}\n",
+    "extractorSha256": "00f8ce7a3888339cdb1c36b0dce3d8bc9d4c650ea18c7a4926c2d29d4690443a",
+    "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+    "leanCompilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+    "leanVersion": "4.32.2",
+    "modules": [
+      {
+        "interface": {
+          "bytes": 134032,
+          "interfaceSha256": "24bb603d8dcc366ae423fdc57b4903992e3bdba8720bb1a661f2a21fffb421ca",
+          "sha256": "785e4d4196a00e3dbb4495ca574c1dd29c5b676d3597e3d3bb8d07b153d84a14"
+        },
+        "module": "Owned",
+        "source": {
+          "bytes": 1527,
+          "path": "Owned.lean",
+          "sha256": "d3233a591625ffe9b52e90871ca8e6053bc6b8c6fa2f8b6d84d2f77aac7489f2"
+        }
+      }
+    ],
+    "request": {
+      "arities": [],
+      "contracts": {
+        "Owned.echoRecord": {
+          "parameters": [
+            {
+              "lifetime": {
+                "anchor": null,
+                "scope": "call"
+              },
+              "ownership": "borrow",
+              "refinement": {
+                "fields": [
+                  {
+                    "name": "primary",
+                    "refinement": null
+                  },
+                  {
+                    "name": "spare",
+                    "refinement": null
+                  },
+                  {
+                    "name": "peers",
+                    "refinement": null
+                  },
+                  {
+                    "name": "history",
+                    "refinement": null
+                  },
+                  {
+                    "name": "payload",
+                    "refinement": {
+                      "fields": [
+                        {
+                          "name": "count",
+                          "refinement": {
+                            "constructor": "Owned.checkedCount"
+                          }
+                        },
+                        {
+                          "name": "bytes",
+                          "refinement": null
+                        }
+                      ],
+                      "kind": "record",
+                      "name": "Owned.Payload"
+                    }
+                  }
+                ],
+                "kind": "record",
+                "name": "Owned.Bundle"
+              }
+            }
+          ]
+        },
+        "Owned.echoRecordAlternate": {
+          "parameters": [
+            {
+              "lifetime": {
+                "anchor": null,
+                "scope": "call"
+              },
+              "ownership": "borrow",
+              "refinement": {
+                "fields": [
+                  {
+                    "name": "primary",
+                    "refinement": null
+                  },
+                  {
+                    "name": "spare",
+                    "refinement": null
+                  },
+                  {
+                    "name": "peers",
+                    "refinement": null
+                  },
+                  {
+                    "name": "history",
+                    "refinement": null
+                  },
+                  {
+                    "name": "payload",
+                    "refinement": {
+                      "fields": [
+                        {
+                          "name": "count",
+                          "refinement": {
+                            "constructor": "Owned.checkedCountAlternate"
+                          }
+                        },
+                        {
+                          "name": "bytes",
+                          "refinement": null
+                        }
+                      ],
+                      "kind": "record",
+                      "name": "Owned.Payload"
+                    }
+                  }
+                ],
+                "kind": "record",
+                "name": "Owned.Bundle"
+              }
+            }
+          ]
+        },
+        "Owned.transferRecord": {
+          "parameters": [
+            {
+              "lifetime": {
+                "anchor": null,
+                "scope": "call"
+              },
+              "ownership": "transfer",
+              "refinement": {
+                "fields": [
+                  {
+                    "name": "primary",
+                    "refinement": null
+                  },
+                  {
+                    "name": "spare",
+                    "refinement": null
+                  },
+                  {
+                    "name": "peers",
+                    "refinement": null
+                  },
+                  {
+                    "name": "history",
+                    "refinement": null
+                  },
+                  {
+                    "name": "payload",
+                    "refinement": {
+                      "fields": [
+                        {
+                          "name": "count",
+                          "refinement": {
+                            "constructor": "Owned.checkedCount"
+                          }
+                        },
+                        {
+                          "name": "bytes",
+                          "refinement": null
+                        }
+                      ],
+                      "kind": "record",
+                      "name": "Owned.Payload"
+                    }
+                  }
+                ],
+                "kind": "record",
+                "name": "Owned.Bundle"
+              }
+            }
+          ]
+        }
+      },
+      "exportModules": [
+        "Owned"
+      ],
+      "exports": [
+        "Owned.echoRecord",
+        "Owned.echoRecordAlternate",
+        "Owned.newTicket",
+        "Owned.serial",
+        "Owned.transferRecord"
+      ],
+      "metadata": {
+        "invocationIdentitySha256": "93c8bcf7495ce7e0635ed70ec51c5406556ce91ad6f9ff90eeb9c15869aed88c",
+        "modules": [
+          {
+            "interfaceSha256": "24bb603d8dcc366ae423fdc57b4903992e3bdba8720bb1a661f2a21fffb421ca",
+            "name": "Owned",
+            "sourcePath": "Owned.lean",
+            "sourceSha256": "d3233a591625ffe9b52e90871ca8e6053bc6b8c6fa2f8b6d84d2f77aac7489f2"
+          }
+        ],
+        "toolchain": "leanprover/lean4:v4.32.2"
+      },
+      "modules": [
+        "Owned"
+      ],
+      "ownedAggregates": {
+        "cycles": "reject",
+        "disposal": "required",
+        "fallback": "queued-finalizer",
+        "ownership": "lease"
+      },
+      "profile": "native-library-v1",
+      "resources": [
+        "Owned.Ticket"
+      ]
+    },
+    "reviewedBindingIr": {
+      "path": "reviewed.binding-ir.json",
+      "schemaVersion": 1,
+      "semanticSha256": "ee4772f6028548386068c7c242888d8b23831b79d85700d03aab37feea3b8f26",
+      "source": "{\n  \"aggregatePolicy\": {\n    \"cycles\": \"reject\",\n    \"disposal\": \"required\",\n    \"fallback\": \"queued-finalizer\",\n    \"ownership\": \"lease\"\n  },\n  \"assurance\": [],\n  \"capabilities\": [],\n  \"component\": {\n    \"id\": \"owned-subtypes@1.0.0\",\n    \"name\": \"owned-subtypes\",\n    \"version\": \"1.0.0\"\n  },\n  \"declarations\": [\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [\n        \"allocates\"\n      ],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:Owned.newTicket\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"newTicket\",\n      \"overloadKey\": \"Owned.newTicket\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"arg0\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        },\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"arg1\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"string\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\",\n        \"type\": {\n          \"id\": \"lean:Owned.Ticket\",\n          \"kind\": \"named\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"Owned.newTicket\",\n        \"extensions\": {},\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [\n        \"reads-resource\"\n      ],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:Owned.serial\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"serial\",\n      \"overloadKey\": \"Owned.serial\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"arg0\",\n          \"optional\": false,\n          \"ownership\": \"borrow\",\n          \"type\": {\n            \"id\": \"lean:Owned.Ticket\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"kind\": \"primitive\",\n          \"name\": \"nat\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"Owned.serial\",\n        \"extensions\": {},\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [\n        \"allocates\",\n        \"reads-resource\"\n      ],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:Owned.echoRecord\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"echoRecord\",\n      \"overloadKey\": \"Owned.echoRecord\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"arg0\",\n          \"optional\": false,\n          \"ownership\": \"borrow\",\n          \"type\": {\n            \"id\": \"lean:Owned.Bundle\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\",\n        \"type\": {\n          \"id\": \"lean:Owned.Bundle\",\n          \"kind\": \"named\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"Owned.echoRecord\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"fields\": [\n                  {\n                    \"name\": \"primary\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"spare\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"peers\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"history\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"payload\",\n                    \"refinement\": {\n                      \"fields\": [\n                        {\n                          \"name\": \"count\",\n                          \"refinement\": {\n                            \"constructor\": \"Owned.checkedCount\",\n                            \"kind\": \"subtype\"\n                          }\n                        },\n                        {\n                          \"name\": \"bytes\",\n                          \"refinement\": null\n                        }\n                      ],\n                      \"kind\": \"record\",\n                      \"name\": \"Owned.Payload\"\n                    }\n                  }\n                ],\n                \"kind\": \"record\",\n                \"name\": \"Owned.Bundle\"\n              }\n            ],\n            \"result\": {\n              \"fields\": [\n                {\n                  \"name\": \"primary\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"spare\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"peers\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"history\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"payload\",\n                  \"refinement\": {\n                    \"fields\": [\n                      {\n                        \"name\": \"count\",\n                        \"refinement\": {\n                          \"constructor\": null,\n                          \"kind\": \"subtype\"\n                        }\n                      },\n                      {\n                        \"name\": \"bytes\",\n                        \"refinement\": null\n                      }\n                    ],\n                    \"kind\": \"record\",\n                    \"name\": \"Owned.Payload\"\n                  }\n                }\n              ],\n              \"kind\": \"record\",\n              \"name\": \"Owned.Bundle\"\n            }\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [\n        \"allocates\",\n        \"reads-resource\"\n      ],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:Owned.echoRecordAlternate\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"echoRecordAlternate\",\n      \"overloadKey\": \"Owned.echoRecordAlternate\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"arg0\",\n          \"optional\": false,\n          \"ownership\": \"borrow\",\n          \"type\": {\n            \"id\": \"lean:Owned.Bundle\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\",\n        \"type\": {\n          \"id\": \"lean:Owned.Bundle\",\n          \"kind\": \"named\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"Owned.echoRecordAlternate\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"fields\": [\n                  {\n                    \"name\": \"primary\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"spare\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"peers\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"history\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"payload\",\n                    \"refinement\": {\n                      \"fields\": [\n                        {\n                          \"name\": \"count\",\n                          \"refinement\": {\n                            \"constructor\": \"Owned.checkedCountAlternate\",\n                            \"kind\": \"subtype\"\n                          }\n                        },\n                        {\n                          \"name\": \"bytes\",\n                          \"refinement\": null\n                        }\n                      ],\n                      \"kind\": \"record\",\n                      \"name\": \"Owned.Payload\"\n                    }\n                  }\n                ],\n                \"kind\": \"record\",\n                \"name\": \"Owned.Bundle\"\n              }\n            ],\n            \"result\": {\n              \"fields\": [\n                {\n                  \"name\": \"primary\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"spare\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"peers\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"history\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"payload\",\n                  \"refinement\": {\n                    \"fields\": [\n                      {\n                        \"name\": \"count\",\n                        \"refinement\": {\n                          \"constructor\": null,\n                          \"kind\": \"subtype\"\n                        }\n                      },\n                      {\n                        \"name\": \"bytes\",\n                        \"refinement\": null\n                      }\n                    ],\n                    \"kind\": \"record\",\n                    \"name\": \"Owned.Payload\"\n                  }\n                }\n              ],\n              \"kind\": \"record\",\n              \"name\": \"Owned.Bundle\"\n            }\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [\n        \"allocates\",\n        \"reads-resource\"\n      ],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:Owned.transferRecord\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"transferRecord\",\n      \"overloadKey\": \"Owned.transferRecord\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"arg0\",\n          \"optional\": false,\n          \"ownership\": \"transfer\",\n          \"type\": {\n            \"id\": \"lean:Owned.Bundle\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\",\n        \"type\": {\n          \"id\": \"lean:Owned.Bundle\",\n          \"kind\": \"named\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"Owned.transferRecord\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"fields\": [\n                  {\n                    \"name\": \"primary\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"spare\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"peers\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"history\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"payload\",\n                    \"refinement\": {\n                      \"fields\": [\n                        {\n                          \"name\": \"count\",\n                          \"refinement\": {\n                            \"constructor\": \"Owned.checkedCount\",\n                            \"kind\": \"subtype\"\n                          }\n                        },\n                        {\n                          \"name\": \"bytes\",\n                          \"refinement\": null\n                        }\n                      ],\n                      \"kind\": \"record\",\n                      \"name\": \"Owned.Payload\"\n                    }\n                  }\n                ],\n                \"kind\": \"record\",\n                \"name\": \"Owned.Bundle\"\n              }\n            ],\n            \"result\": {\n              \"fields\": [\n                {\n                  \"name\": \"primary\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"spare\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"peers\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"history\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"payload\",\n                  \"refinement\": {\n                    \"fields\": [\n                      {\n                        \"name\": \"count\",\n                        \"refinement\": {\n                          \"constructor\": null,\n                          \"kind\": \"subtype\"\n                        }\n                      },\n                      {\n                        \"name\": \"bytes\",\n                        \"refinement\": null\n                      }\n                    ],\n                    \"kind\": \"record\",\n                    \"name\": \"Owned.Payload\"\n                  }\n                }\n              ],\n              \"kind\": \"record\",\n              \"name\": \"Owned.Bundle\"\n            }\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    }\n  ],\n  \"documentation\": {\n    \"details\": \"\",\n    \"summary\": \"Independent corpus contract.\"\n  },\n  \"errors\": [],\n  \"producers\": [\n    {\n      \"adapter\": \"independent-corpus-contract\",\n      \"adapterVersion\": 1,\n      \"extensions\": {},\n      \"id\": \"corpusReview\",\n      \"tool\": \"Corpus contract review\",\n      \"toolVersion\": \"1\"\n    }\n  ],\n  \"schemaVersion\": 4,\n  \"types\": [\n    {\n      \"aggregate\": null,\n      \"assurance\": [],\n      \"callable\": null,\n      \"cases\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent owned aggregate contract.\"\n      },\n      \"fields\": [],\n      \"host\": null,\n      \"id\": \"lean:Owned.Ticket\",\n      \"kind\": \"resource\",\n      \"mutability\": \"read\",\n      \"name\": \"Ticket\",\n      \"representation\": \"identity\",\n      \"resource\": {\n        \"cycles\": \"explicit-cut\",\n        \"disposal\": \"required\",\n        \"fallback\": \"queued-finalizer\",\n        \"kindId\": \"resource:Owned.Ticket\"\n      },\n      \"source\": {\n        \"declaration\": \"Owned.Ticket\",\n        \"extensions\": {},\n        \"producer\": \"corpusReview\"\n      },\n      \"target\": null,\n      \"typeParameters\": []\n    },\n    {\n      \"aggregate\": null,\n      \"assurance\": [],\n      \"callable\": null,\n      \"cases\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent owned aggregate contract.\"\n      },\n      \"fields\": [\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent owned aggregate contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"count\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"int\"\n          }\n        },\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent owned aggregate contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"bytes\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"bytes\"\n          }\n        }\n      ],\n      \"host\": null,\n      \"id\": \"lean:Owned.Payload\",\n      \"kind\": \"record\",\n      \"mutability\": \"immutable\",\n      \"name\": \"Payload\",\n      \"representation\": \"copied\",\n      \"resource\": null,\n      \"source\": {\n        \"declaration\": \"Owned.Payload\",\n        \"extensions\": {},\n        \"producer\": \"corpusReview\"\n      },\n      \"target\": null,\n      \"typeParameters\": []\n    },\n    {\n      \"aggregate\": {\n        \"cycles\": \"reject\",\n        \"disposal\": \"required\",\n        \"fallback\": \"queued-finalizer\",\n        \"ownership\": \"lease\"\n      },\n      \"assurance\": [],\n      \"callable\": null,\n      \"cases\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent owned aggregate contract.\"\n      },\n      \"fields\": [\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent owned aggregate contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"primary\",\n          \"type\": {\n            \"id\": \"lean:Owned.Ticket\",\n            \"kind\": \"named\"\n          }\n        },\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent owned aggregate contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"spare\",\n          \"type\": {\n            \"arguments\": [\n              {\n                \"id\": \"lean:Owned.Ticket\",\n                \"kind\": \"named\"\n              }\n            ],\n            \"constructor\": \"option\",\n            \"kind\": \"apply\"\n          }\n        },\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent owned aggregate contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"peers\",\n          \"type\": {\n            \"arguments\": [\n              {\n                \"id\": \"lean:Owned.Ticket\",\n                \"kind\": \"named\"\n              }\n            ],\n            \"constructor\": \"array\",\n            \"kind\": \"apply\"\n          }\n        },\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent owned aggregate contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"history\",\n          \"type\": {\n            \"arguments\": [\n              {\n                \"id\": \"lean:Owned.Ticket\",\n                \"kind\": \"named\"\n              }\n            ],\n            \"constructor\": \"list\",\n            \"kind\": \"apply\"\n          }\n        },\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent owned aggregate contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"payload\",\n          \"type\": {\n            \"id\": \"lean:Owned.Payload\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"host\": null,\n      \"id\": \"lean:Owned.Bundle\",\n      \"kind\": \"record\",\n      \"mutability\": \"immutable\",\n      \"name\": \"Bundle\",\n      \"representation\": \"owned\",\n      \"resource\": null,\n      \"source\": {\n        \"declaration\": \"Owned.Bundle\",\n        \"extensions\": {},\n        \"producer\": \"corpusReview\"\n      },\n      \"target\": null,\n      \"typeParameters\": []\n    }\n  ]\n}\n",
+      "sourceSha256": "19a367053109a2910adb4ae7f263285764eb5578836449c94c2a8a10f08877f3"
+    },
+    "sourceNoticesSha256": "9849a629dbb2a8d6a3a60a360e0a7f47b20fe0220aeffacd627fd8c0bba7d08a",
+    "sourceTreeSha256": "f3ba4a1b083bdd2b04b2576b25d0ceab0fb302acb87d536fe570e4ff5e236db3"
+  },
+  "types": []
+}
