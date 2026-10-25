@@ -128,6 +128,7 @@ import "./helpers/core-publication-recursive-repair-source-history-tests.mjs";
 import "./helpers/core-author-publication-repair-source-history-tests.mjs";
 import "./helpers/php-wasm-entry-build-input-supplement-source-history-tests.mjs";
 import "./helpers/core-aggregate-sparse-checkout-source-history-tests.mjs";
+import "./helpers/owned-npm-complete-acceptance-source-history-tests.mjs";
 
 const root = resolve(".");
 

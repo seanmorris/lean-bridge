@@ -1,0 +1,268 @@
+{
+  "additions": [
+    {
+      "currentSha256": "f9a75e18c99c461925952498b3603f2f435c6185ba925629cdc255e549960496",
+      "path": "scripts/update-owned-npm-complete-acceptance-source-history.mjs"
+    },
+    {
+      "currentSha256": "27b06dcdbd6ee80dc89c8f9f5015a210bc7ecf91317cef914156f9d58bab3e0a",
+      "path": "tests/helpers/owned-npm-complete-acceptance-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "bcb6dbf53384a5c279188c5b4cbe8ce0db8a53ae4a3a65a6e780883479988275",
+      "path": "tests/helpers/owned-npm-complete-acceptance-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "657f7e9d8bee50a3c83336ad8fbc6dabfb681133",
+  "implementationCommits": [
+    "657f7e9d8bee50a3c83336ad8fbc6dabfb681133"
+  ],
+  "integrationBaseCommit": "657f7e9d8bee50a3c83336ad8fbc6dabfb681133",
+  "integrationUpdates": [
+    {
+      "currentSha256": "c9683f8e8fe2bbdd1e7cc3f1148c7be01e90102fcc01e39485b00c8ceecf03dd",
+      "edits": [
+        {
+          "current": "import { beforeOwnedNpmCompleteAcceptanceSource, ownedNpmCompleteAcceptanceNormalizationPaths } from \"./owned-npm-complete-acceptance-source-history.mjs\";\n",
+          "previous": "",
+          "start": 12546
+        },
+        {
+          "current": "\t...ownedNpmCompleteAcceptanceNormalizationPaths\n\t, ...coreAggregateSparseCheckoutNormalizationPaths\n",
+          "previous": "\t...coreAggregateSparseCheckoutNormalizationPaths\n",
+          "start": 185740
+        },
+        {
+          "current": "\tlet stage = beforeOwnedNpmCompleteAcceptanceSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCoreAggregateSparseCheckoutSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeCoreAggregateSparseCheckoutSource(path, text, expected);\n",
+          "start": 230115
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "a1cf656045c841c1439c79aeecc62f9e03ede04dd4ec28ed6615c4f39c38fa9f"
+    },
+    {
+      "currentSha256": "575fdc34f6e7666751f3ef8b50a0b5408ee087cd5e8ec0a172ae6d50fabe98c3",
+      "edits": [
+        {
+          "current": "import \"./helpers/owned-npm-complete-acceptance-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 8821
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "2f9970c6ebbd30e26281f1ef16cb58bbbf660688961c00b25803883a2808474f"
+    }
+  ],
+  "milestone": "owned-npm-complete-acceptance-source-v1",
+  "predecessorCommit": "6ca01c96fe3960a54e6709768caea7464c1adc6a",
+  "schemaVersion": 1,
+  "scope": "Require two independent author-root compilations and byte-identical npm packages on all four owned checked-record routes. Execute production React alongside StrictMode, pages and workers on Chromium, Firefox and WebKit. The current CLI requires version-two evidence with both build identities and twelve browser cells per route. Preserve original version-one archives, their nine-cell historical contract, all runtime source, every inventory byte and all support observations. Final-head hosted production and original artifact capture remain required.",
+  "updates": [
+    {
+      "currentSha256": "88606fb73f18cf5d542030a1bca8b19686013e673b949963bbbafe6ecda0a7fd",
+      "edits": [
+        {
+          "current": "\tawait verifyOwnedCheckedRecordJavaScriptEvidence(resolve(args[1]), { minimumVersion: 2 })\n",
+          "previous": "\tawait verifyOwnedCheckedRecordJavaScriptEvidence(resolve(args[1]))\n",
+          "start": 674
+        }
+      ],
+      "path": "scripts/check-owned-checked-record-javascript-ci.mjs",
+      "previousSha256": "6a015684f341a1e1509b2d6371a109267167192d47acd23818a0d0c962bce250"
+    },
+    {
+      "currentSha256": "f4fb25adfe4fdb24e0fed8374707bee9bf5b5539645ce4ab8cf0186e97f4af56",
+      "edits": [
+        {
+          "current": "import { spawnSync } from \"node:child_process\";\n",
+          "previous": "",
+          "start": 139
+        },
+        {
+          "current": "import { ownedJavaScriptBrowserBuilds } from \"./owned-javascript-npm-browser.mjs\";\n",
+          "previous": "",
+          "start": 795
+        },
+        {
+          "current": "\ntest(\"current owned JavaScript acceptance refuses the older single-build browser contract\", async t => {\n\tconst { reportPath } = await fixture(t);\n\tawait assert.rejects(verifyOwnedCheckedRecordJavaScriptEvidence(\n\t\treportPath, { minimumVersion: 2 }\n\t), /version 2/u);\n});\n\nconst completeFixture = async t => {\n\tconst selected = await fixture(t);\n\tconst report = JSON.parse(await readFile(selected.reportPath));\n\treport.schemaVersion = 2;\n\tfor(const entry of report.reports)\n\t{\n\t\tentry.independentBuilds = [0, 1].map(attempt => ({\n\t\t\tauthorRoot: `author-${attempt}`, componentIdentity: entry.componentIdentity\n\t\t\t, bindingIrSha256: entry.bindingIrSha256\n\t\t\t, sourceIdentity: entry.sourceIdentity\n\t\t\t, wasm: entry.wasm, archives: entry.archives\n\t\t\t, sourceUnchanged: true, removedBeforeInstall: true\n\t\t}));\n\t\tentry.browser.executions = entry.browser.executions.flatMap(execution => [\n\t\t\t{ ...execution, variant: \"production\" }\n\t\t\t, ...execution.profile === \"react\"\n\t\t\t\t? [{ ...execution, variant: \"strict\" }] : []\n\t\t]);\n\t}\n\tawait writeFile(selected.reportPath, canonicalJson(report));\n\treturn selected;\n};\n\ntest(\"complete owned JavaScript evidence binds two author builds and both React variants\", async t => {\n\tconst { reportPath } = await completeFixture(t);\n\tconst result = await verifyOwnedCheckedRecordJavaScriptEvidence(reportPath, { minimumVersion: 2 });\n\tassert.equal(result.schemaVersion, 2);\n\tassert.equal(result.routes.length, 4);\n\tassert.ok(result.routes.every(route => route.archives === 2 && route.browserExecutions === 12));\n\tconst child = spawnSync(process.execPath, [\"scripts/check-owned-checked-record-javascript-ci.mjs\", \"--report\", reportPath]\n\t\t, { encoding: \"utf8\", timeout: 20_000 });\n\tassert.equal(child.status, 0, child.stderr);\n\tassert.deepEqual(JSON.parse(child.stdout), result);\n});\n\ntest(\"complete owned JavaScript evidence refuses incomplete rebuilds and React cells\", async t => {\n\tconst cases = [\n\t\t[entry => { entry.independentBuilds.pop(); }, /independent author builds/u]\n\t\t, [entry => { entry.independentBuilds[1].authorRoot = \"author-0\"; }, /independent author builds/u]\n\t\t, [entry => { entry.independentBuilds[1].componentIdentity = \"0\".repeat(64); }, /independent author builds/u]\n\t\t, [entry => { entry.independentBuilds[1].bindingIrSha256 = \"0\".repeat(64); }, /independent author builds/u]\n\t\t, [entry => { entry.independentBuilds[1].sourceIdentity = {}; }, /independent author builds/u]\n\t\t, [entry => { entry.independentBuilds[1].wasm.sha256 = \"0\".repeat(64); }, /independent author builds/u]\n\t\t, [entry => { entry.independentBuilds[1].archives.component = \"0\".repeat(64); }, /independent author builds/u]\n\t\t, [entry => { entry.independentBuilds[1].sourceUnchanged = false; }, /independent author builds/u]\n\t\t, [entry => { entry.independentBuilds[1].removedBeforeInstall = false; }, /independent author builds/u]\n\t\t, [entry => { entry.browser.executions.pop(); }, /11 !== 12/u]\n\t\t, [entry => { entry.browser.executions.find(item => item.profile === \"react\" && item.variant === \"production\").variant = \"strict\"; }, /React variant/u]\n\t\t, [entry => { entry.browser.executions.find(item => item.variant === \"strict\").variant = \"production\"; }, /React variant/u]\n\t\t, [entry => { entry.browser.executions[0].variant = \"development\"; }, /React variant/u]\n\t\t, [entry => { entry.browser.executions[0].engine = \"unknown\"; }, /unknown/u]\n\t\t, [entry => { entry.browser.executions[0].assets[0] = \"0\".repeat(64); }, /Browser assets/u]\n\t];\n\tfor(const [mutate, pattern] of cases)\n\t{\n\t\tconst { reportPath } = await completeFixture(t);\n\t\tconst report = JSON.parse(await readFile(reportPath));\n\t\tmutate(report.reports[0]);\n\t\tawait writeFile(reportPath, canonicalJson(report));\n\t\tawait assert.rejects(verifyOwnedCheckedRecordJavaScriptEvidence(reportPath, { minimumVersion: 2 }), pattern);\n\t}\n});\n\ntest(\"current owned JavaScript CLI cannot accept a historical report\", async t => {\n\tconst { reportPath } = await fixture(t);\n\tconst child = spawnSync(process.execPath, [\"scripts/check-owned-checked-record-javascript-ci.mjs\", \"--report\", reportPath]\n\t\t, { encoding: \"utf8\", timeout: 20_000 });\n\tassert.notEqual(child.status, 0);\n\tassert.match(child.stderr, /report version 2/u);\n\tassert.equal(child.stdout, \"\");\n});\n\ntest(\"owned browser build modes preserve history and select real production React\", () => {\n\tassert.deepEqual(ownedJavaScriptBrowserBuilds(), [{\n\t\tvariant: \"strict\", mode: \"development\", directory: \"dist\"\n\t\t, profiles: [\"page\", \"react\", \"worker\"] }]);\n\tassert.deepEqual(ownedJavaScriptBrowserBuilds(true), [\n\t\t{ variant: \"production\", mode: \"production\", directory: \"dist-production\", profiles: [\"page\", \"react\", \"worker\"] }\n\t\t, { variant: \"strict\", mode: \"development\", directory: \"dist-strict\", profiles: [\"react\"] }\n\t]);\n\tassert.throws(() => ownedJavaScriptBrowserBuilds(\"production\"));\n});\n",
+          "previous": "",
+          "start": 5799
+        }
+      ],
+      "path": "tests/helpers/owned-checked-record-javascript-evidence-tests.mjs",
+      "previousSha256": "67c0ed89a27e971afd4ce043dbca063a8ba2e973a8564fdf6853649cace8067d"
+    },
+    {
+      "currentSha256": "b3a9866820e74275fbac0de1f175b5183bda15f469deb62d87837bb6901b5c6e",
+      "edits": [
+        {
+          "current": "const verifyBrowser = (browser, resultOnly, assets, version) => {\n",
+          "previous": "const verifyBrowser = (browser, resultOnly, assets) => {\n",
+          "start": 2327
+        },
+        {
+          "current": "\tconst expectedCells = engines.flatMap(engine => version === 1\n\t\t? browserProfiles.map(profile => `${engine}/${profile}`)\n\t\t: [...browserProfiles.map(profile => `${engine}/${profile}/production`)\n\t\t\t, `${engine}/react/strict`]);\n\tassert.equal(browser.executions.length, expectedCells.length);\n",
+          "previous": "\tassert.equal(browser.executions.length, engines.length * browserProfiles.length);\n",
+          "start": 2624
+        },
+        {
+          "current": "\t\t\t, [\"assets\", \"checks\", \"engine\", \"profile\", \"reruns\"\n\t\t\t\t, ...version === 2 ? [\"variant\"] : [], \"version\"]);\n",
+          "previous": "\t\t\t, [\"assets\", \"checks\", \"engine\", \"profile\", \"reruns\", \"version\"]);\n",
+          "start": 3036
+        },
+        {
+          "current": "\t\tcells.push(`${execution.engine}/${execution.profile}`\n\t\t\t+ (version === 2 ? `/${execution.variant}` : \"\"));\n",
+          "previous": "\t\tcells.push(`${execution.engine}/${execution.profile}`);\n",
+          "start": 3764
+        },
+        {
+          "current": "\tassert.deepEqual(cells.toSorted(), expectedCells.toSorted()\n\t\t, \"Browser cells must include every required profile and React variant\");\n",
+          "previous": "\tassert.deepEqual(cells.toSorted(), engines.flatMap(engine =>\n\t\tbrowserProfiles.map(profile => `${engine}/${profile}`)).toSorted());\n",
+          "start": 3877
+        },
+        {
+          "current": " * @param options - Historical replay or the current mandatory acceptance version.\n * @param options.minimumVersion - Lowest admitted report version (one for original archives).\n",
+          "previous": "",
+          "start": 8469
+        },
+        {
+          "current": "export const verifyOwnedCheckedRecordJavaScriptEvidence = async (reportPath, { minimumVersion = 1 } = {}) => {\n\tassert.ok([1, 2].includes(minimumVersion));\n",
+          "previous": "export const verifyOwnedCheckedRecordJavaScriptEvidence = async reportPath => {\n",
+          "start": 8651
+        },
+        {
+          "current": "\tassert.ok([1, 2].includes(report.schemaVersion)\n\t\t&& report.schemaVersion >= minimumVersion\n\t, `Owned JavaScript acceptance requires report version ${minimumVersion} or later`);\n",
+          "previous": "\tassert.equal(report.schemaVersion, 1);\n",
+          "start": 9098
+        },
+        {
+          "current": "\t\t\t, \"browser\", \"componentIdentity\"\n\t\t\t, ...report.schemaVersion === 2 ? [\"independentBuilds\"] : [], \"installedNode\"\n",
+          "previous": "\t\t\t, \"browser\", \"componentIdentity\", \"installedNode\"\n",
+          "start": 9683
+        },
+        {
+          "current": "\t\tif(report.schemaVersion === 2)\n\t\t\tassert.deepEqual(entry.independentBuilds, [0, 1].map(attempt => ({\n\t\t\t\tauthorRoot: `author-${attempt}`, componentIdentity: entry.componentIdentity\n\t\t\t\t, bindingIrSha256: entry.bindingIrSha256\n\t\t\t\t, sourceIdentity: entry.sourceIdentity\n\t\t\t\t, wasm: entry.wasm, archives: entry.archives\n\t\t\t\t, sourceUnchanged: true, removedBeforeInstall: true\n\t\t\t})), \"Both independent author builds must reproduce the retained installed package\");\n\t\tconst browserExecutions = verifyBrowser(entry.browser, shape.resultOnly, assets, report.schemaVersion);\n",
+          "previous": "\t\tconst browserExecutions = verifyBrowser(entry.browser, shape.resultOnly, assets);\n",
+          "start": 12343
+        },
+        {
+          "current": "\treturn { schemaVersion: report.schemaVersion, profile: report.profile, routes };\n",
+          "previous": "\treturn { schemaVersion: 1, profile: report.profile, routes };\n",
+          "start": 13280
+        }
+      ],
+      "path": "tests/helpers/owned-checked-record-javascript-evidence.mjs",
+      "previousSha256": "ab2c01af72563573a15fb119dd64d7ee4538b8fc07db68449d5d1ac20dc0447f"
+    },
+    {
+      "currentSha256": "f4b6dfbec2b6178b816ebd35235e9761879d4bf005c0ca33083953047b2d08c7",
+      "edits": [
+        {
+          "current": "/**\n * Select the historical bundle or the complete production/StrictMode matrix.\n *\n * @param productionReact - Require production React as well as StrictMode.\n */\nexport const ownedJavaScriptBrowserBuilds = (productionReact = false) => {\n\tassert.equal(typeof productionReact, \"boolean\");\n\treturn productionReact ? [\n\t\t{ variant: \"production\", mode: \"production\", directory: \"dist-production\"\n\t\t\t, profiles: [\"page\", \"react\", \"worker\"] }\n\t\t, { variant: \"strict\", mode: \"development\", directory: \"dist-strict\"\n\t\t\t, profiles: [\"react\"] }\n\t] : [{ variant: \"strict\", mode: \"development\", directory: \"dist\"\n\t\t, profiles: [\"page\", \"react\", \"worker\"] }];\n};\n\n",
+          "previous": "",
+          "start": 4663
+        },
+        {
+          "current": " * @param options.productionReact - Include production React alongside StrictMode.\n",
+          "previous": "",
+          "start": 5905
+        },
+        {
+          "current": "export const checkOwnedJavaScriptBrowsers = async ({ root, name, run, probeSource, expected, productionReact = false }) => {\n\tconst builds = ownedJavaScriptBrowserBuilds(productionReact);\n",
+          "previous": "export const checkOwnedJavaScriptBrowsers = async ({ root, name, run, probeSource, expected }) => {\n",
+          "start": 5992
+        },
+        {
+          "current": "\tfor(const selected of builds)\n\t\tawait build({ root, base, configFile: false, envDir: false, publicDir: false\n\t\t\t, logLevel: \"silent\", plugins: [audit()]\n\t\t\t, define: { \"process.env.NODE_ENV\": JSON.stringify(selected.mode) }\n\t\t\t, build: { outDir: selected.directory, target: \"esnext\", assetsInlineLimit: 0\n\t\t\t\t, minify: false\n\t\t\t\t, rollupOptions: { input: Object.fromEntries(selected.profiles.map(profile => [profile, join(root, profile, \"index.html\")])) } }\n\t\t\t, worker: { format: \"es\", plugins: () => [audit()] } });\n",
+          "previous": "\tawait build({ root, base, configFile: false, envDir: false, publicDir: false\n\t\t, logLevel: \"silent\", plugins: [audit()]\n\t\t, define: { \"process.env.NODE_ENV\": JSON.stringify(\"development\") }\n\t\t, build: { outDir: \"dist\", target: \"esnext\", assetsInlineLimit: 0\n\t\t\t, minify: false\n\t\t\t, rollupOptions: { input: Object.fromEntries([\"page\", \"react\", \"worker\"].map(profile => [profile, join(root, profile, \"index.html\")])) } }\n\t\t, worker: { format: \"es\", plugins: () => [audit()] } });\n",
+          "start": 7583
+        },
+        {
+          "current": "\tfor(const path of await readdir(root)) if(!builds.some(selected => selected.directory === path)) await rm(join(root, path), { recursive: true, force: true });\n",
+          "previous": "\tfor(const path of await readdir(root)) if(path !== \"dist\") await rm(join(root, path), { recursive: true, force: true });\n",
+          "start": 8268
+        },
+        {
+          "current": "\tconst cells = builds.flatMap(selected => selected.profiles.map(profile => ({ selected, profile })));\n\tconst servers = new Map();\n",
+          "previous": "\tconst server = await startSiteServer({ root: join(root, \"dist\"), base });\n",
+          "start": 8490
+        },
+        {
+          "current": "\t\tfor(const selected of builds)\n\t\t\tservers.set(selected.variant, await startSiteServer({ root: join(root, selected.directory), base }));\n",
+          "previous": "",
+          "start": 8628
+        },
+        {
+          "current": "\t\t\t\tfor(const { selected, profile } of cells)\n",
+          "previous": "\t\t\t\tfor(const profile of [\"page\", \"react\", \"worker\"])\n",
+          "start": 8969
+        },
+        {
+          "current": "\t\t\t\t\tconst server = servers.get(selected.variant);\n",
+          "previous": "",
+          "start": 9021
+        },
+        {
+          "current": "\t\t\t\t\t\tif(profile === \"react\") assert.deepEqual(await page.evaluate(() => globalThis.ownedLifecycle), selected.variant === \"production\"\n\t\t\t\t\t\t\t? { effects: 3, cleanups: 2, commits: 3 }\n\t\t\t\t\t\t\t: { effects: 6, cleanups: 5, commits: 3 });\n",
+          "previous": "\t\t\t\t\t\tif(profile === \"react\") assert.deepEqual(await page.evaluate(() => globalThis.ownedLifecycle), { effects: 6, cleanups: 5, commits: 3 });\n",
+          "start": 11261
+        },
+        {
+          "current": "\t\t\t\t\t\texecutions.push({ engine, version: browser.version(), profile\n\t\t\t\t\t\t\t, checks: first.value.checks, reruns: 2, assets\n\t\t\t\t\t\t\t, ...productionReact ? { variant: selected.variant } : {} });\n",
+          "previous": "\t\t\t\t\t\texecutions.push({ engine, version: browser.version(), profile, checks: first.value.checks, reruns: 2, assets });\n",
+          "start": 11846
+        },
+        {
+          "current": "\t{ for(const server of servers.values()) await server.close(); }\n",
+          "previous": "\t{ await server.close(); }\n",
+          "start": 12158
+        }
+      ],
+      "path": "tests/helpers/owned-javascript-npm-browser.mjs",
+      "previousSha256": "a9c5d90971a82dd9973c90d4198942ed0d34d5e55a5f70365fa19bb02ec1883e"
+    },
+    {
+      "currentSha256": "db880e22e58166972795dedebfdb065b143b357724c1ce3bb0e1e26d3a12f7f9",
+      "edits": [
+        {
+          "current": "\t\t\t\t\tschemaVersion: 2\n",
+          "previous": "\t\t\t\t\tschemaVersion: 1\n",
+          "start": 5008
+        },
+        {
+          "current": "\t\tconst builds = [];\n\t\tfor(const attempt of [0, 1])\n\t\t{\n\t\t\tconst authorRoot = `author-${attempt}`;\n\t\t\tconst author = join(scratch, authorRoot);\n\t\t\tconst project = join(author, \"project\");\n\t\t\tconst componentRoot = join(author, \"component\");\n\t\t\tawait cp(resolve(ownedCheckedRecordFixture), project, { recursive: true });\n\t\t\tawait saveLakeFile(project, \"lean-bridge.exports.json\", canonicalJson(\n\t\t\t\tselection.configuration\n\t\t\t));\n\t\t\tif(authorRoute === \"reviewed\") await saveLakeFile(project\n\t\t\t\t, \"reviewed.binding-ir.json\", canonicalJson(selection.reviewedIr));\n\t\t\tconst before = await lakeInputState(project);\n\t\t\tconst built = await buildOwnedJavaScriptWasmComponent({\n\t\t\t\tprojectRoot: project, outputRoot: componentRoot\n\t\t\t\t, leanPrefix: resolve(process.env.LEAN_BRIDGE_LEAN_PREFIX\n\t\t\t\t\t?? \".toolchains/elan/toolchains/leanprover--lean4---v4.32.2\")\n\t\t\t\t, leanRuntimeRoot: target\n\t\t\t\t, emsdkRoot: resolve(process.env.LEAN_WASM_EMSDK ?? \".toolchains/emsdk\")\n\t\t\t}).catch(error => {\n\t\t\t\tt.diagnostic(JSON.stringify(error.details ?? error.message));\n\t\t\t\tthrow error;\n\t\t\t});\n\t\t\tassert.deepEqual(await lakeInputState(project), before\n\t\t\t\t, \"builds must not modify authored inputs\");\n\t\t\tconst verified = await readVerifiedOwnedJavaScriptWasmComponent(componentRoot);\n\t\t\tassert.deepEqual(verified.model, built.model);\n\t\t\tconst packages = await buildOwnedJavaScriptNpmPackages({\n\t\t\t\tcomponentRoot, runtimeRoot: prepared, outputRoot: join(author, \"packages\")\n\t\t\t});\n\t\t\tbuilds.push({ author, authorRoot, verified, packages });\n\t\t}\n\t\tconst [{ verified, packages: first }, { verified: repeatedVerified, packages: repeated }] = builds;\n\t\tassert.deepEqual(repeatedVerified.model, verified.model\n\t\t\t, \"Independent author roots must compile the same model\");\n\t\tassert.deepEqual(repeatedVerified.receipt.wasmLibrary, verified.receipt.wasmLibrary\n\t\t\t, \"Independent author roots must compile the same Wasm\");\n",
+          "previous": "\t\tconst project = join(scratch, \"author\");\n\t\tconst componentRoot = join(scratch, \"component\");\n\t\tawait cp(resolve(ownedCheckedRecordFixture), project, { recursive: true });\n\t\tawait saveLakeFile(project, \"lean-bridge.exports.json\", canonicalJson(\n\t\t\tselection.configuration\n\t\t));\n\t\tif(authorRoute === \"reviewed\") await saveLakeFile(project\n\t\t\t, \"reviewed.binding-ir.json\"\n\t\t\t, canonicalJson(selection.reviewedIr));\n\t\tconst before = await lakeInputState(project);\n\t\tconst built = await buildOwnedJavaScriptWasmComponent({\n\t\t\tprojectRoot: project, outputRoot: componentRoot\n\t\t\t, leanPrefix: resolve(process.env.LEAN_BRIDGE_LEAN_PREFIX\n\t\t\t\t?? \".toolchains/elan/toolchains/leanprover--lean4---v4.32.2\")\n\t\t\t, leanRuntimeRoot: target\n\t\t\t, emsdkRoot: resolve(process.env.LEAN_WASM_EMSDK ?? \".toolchains/emsdk\")\n\t\t}).catch(error => {\n\t\t\tt.diagnostic(JSON.stringify(error.details ?? error.message));\n\t\t\tthrow error;\n\t\t});\n\t\tassert.deepEqual(await lakeInputState(project), before\n\t\t\t, \"builds must not modify authored inputs\");\n\t\tconst verified = await readVerifiedOwnedJavaScriptWasmComponent(\n\t\t\tcomponentRoot\n\t\t);\n\t\tassert.deepEqual(verified.model, built.model);\n",
+          "start": 10976
+        },
+        {
+          "current": "",
+          "previous": "\t\tconst first = await buildOwnedJavaScriptNpmPackages({\n\t\t\tcomponentRoot, runtimeRoot: prepared\n\t\t\t, outputRoot: join(scratch, \"packages\")\n\t\t});\n\t\tconst repeated = await buildOwnedJavaScriptNpmPackages({\n\t\t\tcomponentRoot, runtimeRoot: prepared\n\t\t\t, outputRoot: join(scratch, \"packages-repeated\")\n\t\t});\n",
+          "start": 13529
+        },
+        {
+          "current": "\t\tconst independentBuilds = builds.map(build => ({ authorRoot: build.authorRoot\n\t\t\t, componentIdentity: build.verified.identity\n\t\t\t, bindingIrSha256: build.verified.model.bindingIrSha256\n\t\t\t, sourceIdentity: build.verified.receipt.sourceIdentity\n\t\t\t, wasm: build.verified.receipt.wasmLibrary, archives\n\t\t\t, sourceUnchanged: true, removedBeforeInstall: true }));\n",
+          "previous": "",
+          "start": 14085
+        },
+        {
+          "current": "\t\tfor(const build of builds) await rm(build.author, { recursive: true });\n",
+          "previous": "\t\tawait rm(project, { recursive: true });\n\t\tawait rm(componentRoot, { recursive: true });\n\t\tawait rm(first.output, { recursive: true });\n\t\tawait rm(repeated.output, { recursive: true });\n",
+          "start": 15012
+        },
+        {
+          "current": "\t\t\t, probeSource, expected: observed, productionReact: true\n",
+          "previous": "\t\t\t, probeSource, expected: observed\n",
+          "start": 17709
+        },
+        {
+          "current": "\t\t\t, archiveReproduction: true, independentBuilds, browser\n",
+          "previous": "\t\t\t, archiveReproduction: true, browser\n",
+          "start": 18358
+        }
+      ],
+      "path": "tests/owned-checked-record-javascript-packaging.test.mjs",
+      "previousSha256": "8d827b98284e7472337314c6712d2ac892874f7c373c0383f4908c5398c5029c"
+    }
+  ]
+}
