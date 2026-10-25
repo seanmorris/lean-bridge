@@ -6,8 +6,10 @@
 import assert from "node:assert/strict";
 import { execFileSync, spawn } from "node:child_process";
 import { createHash } from "node:crypto";
-import { readFile } from "node:fs/promises";
-import { dirname } from "node:path";
+import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { dirname, join } from "node:path";
+import { pipeline } from "node:stream/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import {
 	ownedCheckedRecordHostedLaneNames, ownedCheckedRecordHostedLanes
@@ -185,6 +187,70 @@ export const assertOwnedCheckedRecordCommittedArchive = async (
 };
 
 /**
+ * Replay one authenticated Git archive in an isolated temporary directory.
+ * Sparse checkouts need not retain all eleven multi-gigabyte archive trees.
+ * The callback still performs the full API/ZIP/package/source verification.
+ *
+ * @param revision - Exact committed revision.
+ * @param root - Closed repository-relative archive root.
+ * @param indexBytes - Selected original index bytes.
+ * @param inspect - Archive consumer, never a replacement for the Git audit.
+ * @param repository - Git repository location for isolated tests.
+ */
+export const withOwnedCheckedRecordCommittedArchive = async (
+	revision, root, indexBytes, inspect, repository = process.cwd()
+) => {
+	assert.equal(typeof inspect, "function");
+	const committed = await assertOwnedCheckedRecordCommittedArchive(
+		revision, root, indexBytes, repository
+	);
+	const temporary = await mkdtemp(join(tmpdir(), "lean-owned-matrix-"));
+	const children = [], completions = [];
+	const start = (command, arguments_) => {
+		const child = spawn(command, arguments_, { stdio: ["pipe", "pipe", "pipe"] });
+		children.push(child);
+		let errors = "";
+		child.stderr.setEncoding("utf8");
+		child.stderr.on("data", text => { errors = (errors + text).slice(-4096); });
+		const completed = new Promise((accept, reject) => {
+			child.once("error", reject);
+			child.once("close", (code, signal) => {
+				if(code === 0) accept();
+				else reject(new Error(`${command} failed: ${code}/${signal}: ${errors}`));
+			});
+		});
+		completed.catch(() => {});
+		completions.push(completed);
+		return child;
+	};
+	try
+	{
+		const source = start("git", ["-C", repository, "archive", "--format=tar", revision, "--", root]);
+		// Read through the final padding to EOF before closing the pipe.
+		const extract = start("tar", ["-x", "-i", "-f", "-", "-C", temporary]);
+		source.stdin.end(); extract.stdout.resume();
+		const outcomes = await Promise.allSettled([
+			...completions, pipeline(source.stdout, extract.stdin)
+		]);
+		const failures = outcomes.filter(outcome => outcome.status === "rejected")
+			.map(outcome => outcome.reason);
+		if(failures.length) throw new AggregateError(failures, "Committed archive extraction failed");
+		const result = await inspect(join(temporary, root));
+		return { committed, result };
+	}
+	finally
+	{
+		for(const child of children)
+		{
+			child.stdin.destroy(); child.stdout.destroy();
+			if(child.exitCode === null) child.kill();
+		}
+		await Promise.allSettled(completions);
+		await rm(temporary, { recursive: true });
+	}
+};
+
+/**
  * Authenticate committed bytes and independently replay all eleven captures.
  * This reports capture verification only; it never edits support claims.
  *
@@ -204,8 +270,10 @@ export const verifyOwnedCheckedRecordHostedMatrix = async (selection, onLane = (
 	for(const [position, entry] of selection.archives.entries())
 	{
 		const root = dirname(entry.index.path);
-		const committed = await assertOwnedCheckedRecordCommittedArchive(revision, root, bytes[position]);
-		const index = await checkOwnedCheckedRecordHostedEvidence(entry.lane, root);
+		const { committed, result: index } = await withOwnedCheckedRecordCommittedArchive(
+			revision, root, bytes[position]
+			, temporary => checkOwnedCheckedRecordHostedEvidence(entry.lane, temporary)
+		);
 		assert.deepEqual(index, indexes[position], "Index changed after matrix preflight");
 		captures.push({ lane: entry.lane, index: { ...entry.index }
 			, producerCommit: index.producerCommit, archiveCommit: index.archiveCommit

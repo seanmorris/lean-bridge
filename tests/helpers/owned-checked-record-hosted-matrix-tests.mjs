@@ -5,7 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { chmod, mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
+import { access, chmod, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
@@ -17,6 +17,7 @@ import {
 import {
 	assertOwnedCheckedRecordCommittedArchive, assertOwnedCheckedRecordMatrixIndexes
 	, assertOwnedCheckedRecordMatrixSelection, verifyOwnedCheckedRecordHostedMatrix
+	, withOwnedCheckedRecordCommittedArchive
 } from "./owned-checked-record-hosted-matrix.mjs";
 
 const selectionFor = indexes => ({
@@ -167,4 +168,56 @@ test("owned matrix verification refuses absent archives before reporting any lan
 		selectionFor(indexesForPreflight()), () => { reported++; }
 	), { code: "ENOENT" });
 	assert.equal(reported, 0);
+});
+
+test("owned matrix isolated replay uses committed bytes and removes only its temporary tree", async t => {
+	const { repository, root, index, revision } = await committedFixture(t);
+	await writeFile(join(repository, root, "text"), "leave this local edit intact");
+	let temporary;
+	const result = await withOwnedCheckedRecordCommittedArchive(
+		revision, root, index, async path => {
+			temporary = path;
+			assert.deepEqual(await readFile(join(path, "index.json")), index);
+			assert.equal(await readFile(join(path, "text"), "utf8"), "alpha\n\0omega\n");
+			assert.equal((await readFile(join(path, "binary"))).length, 256 * 1024 + 17);
+			return "inspected";
+		}, repository
+	);
+	assert.equal(result.committed.files, 4);
+	assert.equal(result.result, "inspected");
+	await assert.rejects(access(temporary), { code: "ENOENT" });
+	assert.equal(await readFile(join(repository, root, "text"), "utf8"), "leave this local edit intact");
+});
+
+test("owned matrix isolated replay cleans failed inspection and refuses uncommitted evidence", async t => {
+	const { repository, root, index, revision } = await committedFixture(t);
+	let temporary, calls = 0;
+	const failure = new Error("inspection rejected");
+	await assert.rejects(withOwnedCheckedRecordCommittedArchive(
+		revision, root, index, path => {
+			temporary = path; calls++; throw failure;
+		}, repository
+	), error => error === failure);
+	await assert.rejects(access(temporary), { code: "ENOENT" });
+	await assert.rejects(withOwnedCheckedRecordCommittedArchive(
+		revision, root, Buffer.concat([index, Buffer.from(" ")]), () => { calls++; }, repository
+	));
+	assert.equal(calls, 1);
+});
+
+test("owned matrix isolated replay drains large padded archives before accepting extraction", async t => {
+	const fixture = await committedFixture(t);
+	const bytes = Buffer.alloc(9 * 1024 * 1024 + 511, 137);
+	await writeFile(join(fixture.repository, fixture.root, "binary"), bytes);
+	const index = JSON.parse(fixture.index);
+	const file = index.files.find(item => item.path === "binary");
+	file.bytes = bytes.length; file.sha256 = sha256(bytes);
+	const indexBytes = Buffer.from(canonicalJson(index));
+	await writeFile(join(fixture.repository, fixture.root, "index.json"), indexBytes);
+	const { committed } = await withOwnedCheckedRecordCommittedArchive(
+		fixture.commit(), fixture.root, indexBytes, async path => {
+			assert.deepEqual(await readFile(join(path, "binary")), bytes);
+		}, fixture.repository
+	);
+	assert.equal(committed.files, 4);
 });
