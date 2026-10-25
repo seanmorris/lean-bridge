@@ -1,0 +1,60 @@
+
+> @lean-wasm/bridge-poc@0.0.0-poc test:owned-subtype-remaining
+> LEAN_BRIDGE_OWNED_SUBTYPE_REMAINING_TEST=1 node --test --test-concurrency=1 tests/owned-subtype-remaining-packaging.test.mjs
+
+TAP version 13
+# Subtest: remaining hosts generate callback-free checked transfer copies
+ok 1 - remaining hosts generate callback-free checked transfer copies
+  ---
+  duration_ms: 56.667825
+  type: 'test'
+  ...
+# Subtest: Java callers construct owned bindings without the Kotlin runtime
+ok 2 - Java callers construct owned bindings without the Kotlin runtime
+  ---
+  duration_ms: 7284.053006
+  type: 'test'
+  ...
+# Subtest: callback-free WIT consumer matches the checked native header
+ok 3 - callback-free WIT consumer matches the checked native header
+  ---
+  duration_ms: 373.935261
+  type: 'test'
+  ...
+# Subtest: remaining owned Subtype fixtures and required matrix stay registered
+ok 4 - remaining owned Subtype fixtures and required matrix stay registered
+  ---
+  duration_ms: 4.445048
+  type: 'test'
+  ...
+# Subtest: owned Subtype WIT consumer names the installed host API
+ok 5 - owned Subtype WIT consumer names the installed host API
+  ---
+  duration_ms: 40.274533
+  type: 'test'
+  ...
+# Subtest: installed ordinary checked owned Subtypes execute in jvm
+ok 6 - installed ordinary checked owned Subtypes execute in jvm
+  ---
+  duration_ms: 152107.728562
+  type: 'test'
+  ...
+# ordinary/jvm: Compiling checked native Lean exports
+# ordinary/jvm: java=122, kotlin=121
+# Subtest: installed reviewed checked owned Subtypes execute in jvm
+ok 7 - installed reviewed checked owned Subtypes execute in jvm
+  ---
+  duration_ms: 143846.992896
+  type: 'test'
+  ...
+# reviewed/jvm: Compiling checked native Lean exports
+# reviewed/jvm: java=122, kotlin=121
+1..7
+# tests 7
+# suites 0
+# pass 7
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 304080.450523

@@ -1,0 +1,32 @@
+{
+  "kind": "owned-subtype-jvm",
+  "producerCommit": "390ae18d3a2607bc73463767a33fea0cfb9350b0",
+  "profiles": [
+    "java",
+    "kotlin"
+  ],
+  "reportSha256": "5b975a352f74b9e35525220a9ca751f22c7d39125444ff817a35e9e466785b8f",
+  "reports": 2,
+  "retainedPackages": {
+    "routes": [
+      {
+        "archiveBytes": 54078520,
+        "archives": 2,
+        "receiptSha256": "228805697a9fe252a4e41937db000e7d099fb0038b947f10dcc63c7eb74706e3",
+        "route": "ordinary"
+      },
+      {
+        "archiveBytes": 54081434,
+        "archives": 2,
+        "receiptSha256": "c21189ce6fbb28053f97f4ea3ba930877c5045484682f16085e1ff77b81c5c8c",
+        "route": "reviewed"
+      }
+    ],
+    "schemaVersion": 1
+  },
+  "routes": [
+    "ordinary",
+    "reviewed"
+  ],
+  "schemaVersion": 1
+}

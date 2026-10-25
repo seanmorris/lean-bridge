@@ -1,0 +1,119 @@
+{
+  "lane": "jvm",
+  "profile": "installed-owned-subtype-remaining",
+  "reports": [
+    {
+      "compilerSelectedConstructors": true,
+      "deterministicReassembly": true,
+      "handoffRemovedBeforeRelocatedExecution": true,
+      "immutableInstalledInputs": true,
+      "lane": "jvm",
+      "lifecycle": {
+        "java": {
+          "affinity": "foreign-thread-status-5",
+          "fallback": "cleaner"
+        },
+        "kotlin": {
+          "affinity": "foreign-thread-status-5",
+          "fallback": "cleaner"
+        }
+      },
+      "observations": {
+        "java": {
+          "checks": 122,
+          "consumerSha256": "f3c46335c76fd5c8dd2c797048e9e3f0428715e70da435cc625bbc5128747660"
+        },
+        "kotlin": {
+          "checks": 121,
+          "consumerSha256": "3564dd88a581a4fe706117e7493dcca56bd814aaa105b79ae1c2ef51a7fea6ce"
+        }
+      },
+      "packageSetReceiptSha256": "228805697a9fe252a4e41937db000e7d099fb0038b947f10dcc63c7eb74706e3",
+      "reassembled": {
+        "componentReceiptSha256": "432475d90c91cfe6c1755a89e1d5a11c58aa2ed313d0267cde880b8350b03904",
+        "packages": [
+          {
+            "archive": "owned-subtypes-1.0.0.jar",
+            "sha256": "368fd3206c8ede6a62720a18338603243494f0d77e1de64ce40a710db56a75c4"
+          },
+          {
+            "archive": "owned-subtypes-1.0.0.pom",
+            "sha256": "8a8fffa5f3aab6ea11e1bceef50bfc0731a24a16a12e18f7a4303e82ad954852"
+          }
+        ]
+      },
+      "relocatedInstallation": true,
+      "repeated": {
+        "java": {
+          "checks": 122,
+          "runs": 1
+        },
+        "kotlin": {
+          "checks": 121,
+          "runs": 1
+        }
+      },
+      "route": "ordinary",
+      "sourceFreeInstallation": true,
+      "sourceUnchanged": true,
+      "transferredInputCheckedBeforeHandoff": true
+    },
+    {
+      "compilerSelectedConstructors": true,
+      "deterministicReassembly": true,
+      "handoffRemovedBeforeRelocatedExecution": true,
+      "immutableInstalledInputs": true,
+      "lane": "jvm",
+      "lifecycle": {
+        "java": {
+          "affinity": "foreign-thread-status-5",
+          "fallback": "cleaner"
+        },
+        "kotlin": {
+          "affinity": "foreign-thread-status-5",
+          "fallback": "cleaner"
+        }
+      },
+      "observations": {
+        "java": {
+          "checks": 122,
+          "consumerSha256": "f3c46335c76fd5c8dd2c797048e9e3f0428715e70da435cc625bbc5128747660"
+        },
+        "kotlin": {
+          "checks": 121,
+          "consumerSha256": "3564dd88a581a4fe706117e7493dcca56bd814aaa105b79ae1c2ef51a7fea6ce"
+        }
+      },
+      "packageSetReceiptSha256": "c21189ce6fbb28053f97f4ea3ba930877c5045484682f16085e1ff77b81c5c8c",
+      "reassembled": {
+        "componentReceiptSha256": "acff25f837c83a15bff4a3a9ba4243eee2171cc5eb27a3140a9d563a977858fc",
+        "packages": [
+          {
+            "archive": "owned-subtypes-1.0.0.jar",
+            "sha256": "1f4856a172f66d1eeaf412779c2c9b001fd8c26cdd4fd1d279f845c0115cced4"
+          },
+          {
+            "archive": "owned-subtypes-1.0.0.pom",
+            "sha256": "14bee764547131251fc82b36f87ebb91e9157eb047041405f56dd61b1355fe47"
+          }
+        ]
+      },
+      "relocatedInstallation": true,
+      "repeated": {
+        "java": {
+          "checks": 122,
+          "runs": 1
+        },
+        "kotlin": {
+          "checks": 121,
+          "runs": 1
+        }
+      },
+      "route": "reviewed",
+      "sourceFreeInstallation": true,
+      "sourceUnchanged": true,
+      "transferredInputCheckedBeforeHandoff": true
+    }
+  ],
+  "schemaVersion": 1
+}
