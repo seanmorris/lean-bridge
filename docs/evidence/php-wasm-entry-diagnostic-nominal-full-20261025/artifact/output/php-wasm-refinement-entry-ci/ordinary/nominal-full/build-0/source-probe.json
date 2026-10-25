@@ -1,0 +1,594 @@
+{
+  "edits": [
+    {
+      "current": "@[noinline, export lb_nominal_full_probe_source_wordBits]\ndef wordBits",
+      "offset": 10696,
+      "previous": "def wordBits"
+    },
+    {
+      "current": "@[noinline, export lb_nominal_full_probe_source_produceChoices]\ndef produceChoices",
+      "offset": 10512,
+      "previous": "def produceChoices"
+    },
+    {
+      "current": "@[noinline, export lb_nominal_full_probe_source_produceEvent]\ndef produceEvent",
+      "offset": 10386,
+      "previous": "def produceEvent"
+    },
+    {
+      "current": "@[noinline, export lb_nominal_full_probe_source_producePair]\ndef producePair",
+      "offset": 10298,
+      "previous": "def producePair"
+    },
+    {
+      "current": "@[noinline, export lb_nominal_full_probe_source_produceGroup]\ndef produceGroup",
+      "offset": 10162,
+      "previous": "def produceGroup"
+    },
+    {
+      "current": "@[noinline, export lb_nominal_full_probe_source_produce]\ndef produce",
+      "offset": 8220,
+      "previous": "def produce"
+    },
+    {
+      "current": "@[noinline, export lb_nominal_full_probe_source_aliases]\ndef aliases",
+      "offset": 8002,
+      "previous": "def aliases"
+    },
+    {
+      "current": "@[noinline, export lb_nominal_full_probe_source_echoEventB]\ndef echoEventB",
+      "offset": 7954,
+      "previous": "def echoEventB"
+    },
+    {
+      "current": "@[noinline, export lb_nominal_full_probe_source_echoEventA]\ndef echoEventA",
+      "offset": 7906,
+      "previous": "def echoEventA"
+    },
+    {
+      "current": "@[noinline, export lb_nominal_full_probe_source_echoPair]\ndef echoPair",
+      "offset": 7862,
+      "previous": "def echoPair"
+    },
+    {
+      "current": "@[noinline, export lb_nominal_full_probe_source_combine]\ndef combine",
+      "offset": 7793,
+      "previous": "def combine"
+    },
+    {
+      "current": "@[noinline, export lb_nominal_full_probe_source_refuseUnit]\ndef refuseUnit",
+      "offset": 7743,
+      "previous": "def refuseUnit"
+    },
+    {
+      "current": "@[noinline, export lb_nominal_full_probe_source_echoB]\ndef echoB",
+      "offset": 7698,
+      "previous": "def echoB"
+    },
+    {
+      "current": "@[noinline, export lb_nominal_full_probe_source_echoA]\ndef echoA",
+      "offset": 7653,
+      "previous": "def echoA"
+    },
+    {
+      "current": "@[noinline, export lb_nominal_full_probe_constructor_isizeB]\ndef isizeB",
+      "offset": 6326,
+      "previous": "def isizeB"
+    },
+    {
+      "current": "@[noinline, export lb_nominal_full_probe_constructor_isizeA]\ndef isizeA",
+      "offset": 6184,
+      "previous": "def isizeA"
+    },
+    {
+      "current": "@[noinline, export lb_nominal_full_probe_constructor_usizeB]\ndef usizeB",
+      "offset": 6072,
+      "previous": "def usizeB"
+    },
+    {
+      "current": "@[noinline, export lb_nominal_full_probe_constructor_usizeA]\ndef usizeA",
+      "offset": 5930,
+      "previous": "def usizeA"
+    },
+    {
+      "current": "@[noinline, export lb_nominal_full_probe_constructor_charB]\ndef charB",
+      "offset": 5797,
+      "previous": "def charB"
+    },
+    {
+      "current": "@[noinline, export lb_nominal_full_probe_constructor_charA]\ndef charA",
+      "offset": 5660,
+      "previous": "def charA"
+    },
+    {
+      "current": "@[noinline, export lb_nominal_full_probe_constructor_bytesB]\ndef bytesB",
+      "offset": 5536,
+      "previous": "def bytesB"
+    },
+    {
+      "current": "@[noinline, export lb_nominal_full_probe_constructor_bytesA]\ndef bytesA",
+      "offset": 5390,
+      "previous": "def bytesA"
+    },
+    {
+      "current": "@[noinline, export lb_nominal_full_probe_constructor_textB]\ndef textB",
+      "offset": 5274,
+      "previous": "def textB"
+    },
+    {
+      "current": "@[noinline, export lb_nominal_full_probe_constructor_textA]\ndef textA",
+      "offset": 5132,
+      "previous": "def textA"
+    },
+    {
+      "current": "@[noinline, export lb_nominal_full_probe_constructor_float64B]\ndef float64B",
+      "offset": 5015,
+      "previous": "def float64B"
+    },
+    {
+      "current": "@[noinline, export lb_nominal_full_probe_constructor_float64A]\ndef float64A",
+      "offset": 4872,
+      "previous": "def float64A"
+    },
+    {
+      "current": "@[noinline, export lb_nominal_full_probe_constructor_float32B]\ndef float32B",
+      "offset": 4751,
+      "previous": "def float32B"
+    },
+    {
+      "current": "@[noinline, export lb_nominal_full_probe_constructor_float32A]\ndef float32A",
+      "offset": 4604,
+      "previous": "def float32A"
+    },
+    {
+      "current": "@[noinline, export lb_nominal_full_probe_constructor_intB]\ndef intB",
+      "offset": 4508,
+      "previous": "def intB"
+    },
+    {
+      "current": "@[noinline, export lb_nominal_full_probe_constructor_intA]\ndef intA",
+      "offset": 4386,
+      "previous": "def intA"
+    },
+    {
+      "current": "@[noinline, export lb_nominal_full_probe_constructor_natB]\ndef natB",
+      "offset": 4290,
+      "previous": "def natB"
+    },
+    {
+      "current": "@[noinline, export lb_nominal_full_probe_constructor_natA]\ndef natA",
+      "offset": 4168,
+      "previous": "def natA"
+    },
+    {
+      "current": "@[noinline, export lb_nominal_full_probe_constructor_int64B]\ndef int64B",
+      "offset": 4056,
+      "previous": "def int64B"
+    },
+    {
+      "current": "@[noinline, export lb_nominal_full_probe_constructor_int64A]\ndef int64A",
+      "offset": 3914,
+      "previous": "def int64A"
+    },
+    {
+      "current": "@[noinline, export lb_nominal_full_probe_constructor_int32B]\ndef int32B",
+      "offset": 3802,
+      "previous": "def int32B"
+    },
+    {
+      "current": "@[noinline, export lb_nominal_full_probe_constructor_int32A]\ndef int32A",
+      "offset": 3660,
+      "previous": "def int32A"
+    },
+    {
+      "current": "@[noinline, export lb_nominal_full_probe_constructor_int16B]\ndef int16B",
+      "offset": 3548,
+      "previous": "def int16B"
+    },
+    {
+      "current": "@[noinline, export lb_nominal_full_probe_constructor_int16A]\ndef int16A",
+      "offset": 3406,
+      "previous": "def int16A"
+    },
+    {
+      "current": "@[noinline, export lb_nominal_full_probe_constructor_int8B]\ndef int8B",
+      "offset": 3298,
+      "previous": "def int8B"
+    },
+    {
+      "current": "@[noinline, export lb_nominal_full_probe_constructor_int8A]\ndef int8A",
+      "offset": 3160,
+      "previous": "def int8A"
+    },
+    {
+      "current": "@[noinline, export lb_nominal_full_probe_constructor_uint64B]\ndef uint64B",
+      "offset": 3044,
+      "previous": "def uint64B"
+    },
+    {
+      "current": "@[noinline, export lb_nominal_full_probe_constructor_uint64A]\ndef uint64A",
+      "offset": 2898,
+      "previous": "def uint64A"
+    },
+    {
+      "current": "@[noinline, export lb_nominal_full_probe_constructor_uint32B]\ndef uint32B",
+      "offset": 2782,
+      "previous": "def uint32B"
+    },
+    {
+      "current": "@[noinline, export lb_nominal_full_probe_constructor_uint32A]\ndef uint32A",
+      "offset": 2636,
+      "previous": "def uint32A"
+    },
+    {
+      "current": "@[noinline, export lb_nominal_full_probe_constructor_uint16B]\ndef uint16B",
+      "offset": 2520,
+      "previous": "def uint16B"
+    },
+    {
+      "current": "@[noinline, export lb_nominal_full_probe_constructor_uint16A]\ndef uint16A",
+      "offset": 2374,
+      "previous": "def uint16A"
+    },
+    {
+      "current": "@[noinline, export lb_nominal_full_probe_constructor_uint8B]\ndef uint8B",
+      "offset": 2262,
+      "previous": "def uint8B"
+    },
+    {
+      "current": "@[noinline, export lb_nominal_full_probe_constructor_uint8A]\ndef uint8A",
+      "offset": 2120,
+      "previous": "def uint8A"
+    },
+    {
+      "current": "@[noinline, export lb_nominal_full_probe_constructor_boolB]\ndef boolB",
+      "offset": 1888,
+      "previous": "def boolB"
+    },
+    {
+      "current": "@[noinline, export lb_nominal_full_probe_constructor_boolA]\ndef boolA",
+      "offset": 1817,
+      "previous": "def boolA"
+    },
+    {
+      "current": "@[noinline, export lb_nominal_full_probe_constructor_unitReject]\ndef unitReject",
+      "offset": 1762,
+      "previous": "def unitReject"
+    },
+    {
+      "current": "@[noinline, export lb_nominal_full_probe_constructor_unitB]\ndef unitB",
+      "offset": 1691,
+      "previous": "def unitB"
+    },
+    {
+      "current": "@[noinline, export lb_nominal_full_probe_constructor_unitA]\ndef unitA",
+      "offset": 1620,
+      "previous": "def unitA"
+    }
+  ],
+  "entries": [
+    {
+      "kind": "constructor",
+      "label": "NominalPrimitiveSubtypes.unitA",
+      "symbol": "lb_nominal_full_probe_constructor_unitA"
+    },
+    {
+      "kind": "constructor",
+      "label": "NominalPrimitiveSubtypes.unitB",
+      "symbol": "lb_nominal_full_probe_constructor_unitB"
+    },
+    {
+      "kind": "constructor",
+      "label": "NominalPrimitiveSubtypes.boolA",
+      "symbol": "lb_nominal_full_probe_constructor_boolA"
+    },
+    {
+      "kind": "constructor",
+      "label": "NominalPrimitiveSubtypes.boolB",
+      "symbol": "lb_nominal_full_probe_constructor_boolB"
+    },
+    {
+      "kind": "constructor",
+      "label": "NominalPrimitiveSubtypes.uint8A",
+      "symbol": "lb_nominal_full_probe_constructor_uint8A"
+    },
+    {
+      "kind": "constructor",
+      "label": "NominalPrimitiveSubtypes.uint8B",
+      "symbol": "lb_nominal_full_probe_constructor_uint8B"
+    },
+    {
+      "kind": "constructor",
+      "label": "NominalPrimitiveSubtypes.uint16A",
+      "symbol": "lb_nominal_full_probe_constructor_uint16A"
+    },
+    {
+      "kind": "constructor",
+      "label": "NominalPrimitiveSubtypes.uint16B",
+      "symbol": "lb_nominal_full_probe_constructor_uint16B"
+    },
+    {
+      "kind": "constructor",
+      "label": "NominalPrimitiveSubtypes.uint32A",
+      "symbol": "lb_nominal_full_probe_constructor_uint32A"
+    },
+    {
+      "kind": "constructor",
+      "label": "NominalPrimitiveSubtypes.uint32B",
+      "symbol": "lb_nominal_full_probe_constructor_uint32B"
+    },
+    {
+      "kind": "constructor",
+      "label": "NominalPrimitiveSubtypes.uint64A",
+      "symbol": "lb_nominal_full_probe_constructor_uint64A"
+    },
+    {
+      "kind": "constructor",
+      "label": "NominalPrimitiveSubtypes.uint64B",
+      "symbol": "lb_nominal_full_probe_constructor_uint64B"
+    },
+    {
+      "kind": "constructor",
+      "label": "NominalPrimitiveSubtypes.int8A",
+      "symbol": "lb_nominal_full_probe_constructor_int8A"
+    },
+    {
+      "kind": "constructor",
+      "label": "NominalPrimitiveSubtypes.int8B",
+      "symbol": "lb_nominal_full_probe_constructor_int8B"
+    },
+    {
+      "kind": "constructor",
+      "label": "NominalPrimitiveSubtypes.int16A",
+      "symbol": "lb_nominal_full_probe_constructor_int16A"
+    },
+    {
+      "kind": "constructor",
+      "label": "NominalPrimitiveSubtypes.int16B",
+      "symbol": "lb_nominal_full_probe_constructor_int16B"
+    },
+    {
+      "kind": "constructor",
+      "label": "NominalPrimitiveSubtypes.int32A",
+      "symbol": "lb_nominal_full_probe_constructor_int32A"
+    },
+    {
+      "kind": "constructor",
+      "label": "NominalPrimitiveSubtypes.int32B",
+      "symbol": "lb_nominal_full_probe_constructor_int32B"
+    },
+    {
+      "kind": "constructor",
+      "label": "NominalPrimitiveSubtypes.int64A",
+      "symbol": "lb_nominal_full_probe_constructor_int64A"
+    },
+    {
+      "kind": "constructor",
+      "label": "NominalPrimitiveSubtypes.int64B",
+      "symbol": "lb_nominal_full_probe_constructor_int64B"
+    },
+    {
+      "kind": "constructor",
+      "label": "NominalPrimitiveSubtypes.natA",
+      "symbol": "lb_nominal_full_probe_constructor_natA"
+    },
+    {
+      "kind": "constructor",
+      "label": "NominalPrimitiveSubtypes.natB",
+      "symbol": "lb_nominal_full_probe_constructor_natB"
+    },
+    {
+      "kind": "constructor",
+      "label": "NominalPrimitiveSubtypes.intA",
+      "symbol": "lb_nominal_full_probe_constructor_intA"
+    },
+    {
+      "kind": "constructor",
+      "label": "NominalPrimitiveSubtypes.intB",
+      "symbol": "lb_nominal_full_probe_constructor_intB"
+    },
+    {
+      "kind": "constructor",
+      "label": "NominalPrimitiveSubtypes.float32A",
+      "symbol": "lb_nominal_full_probe_constructor_float32A"
+    },
+    {
+      "kind": "constructor",
+      "label": "NominalPrimitiveSubtypes.float32B",
+      "symbol": "lb_nominal_full_probe_constructor_float32B"
+    },
+    {
+      "kind": "constructor",
+      "label": "NominalPrimitiveSubtypes.float64A",
+      "symbol": "lb_nominal_full_probe_constructor_float64A"
+    },
+    {
+      "kind": "constructor",
+      "label": "NominalPrimitiveSubtypes.float64B",
+      "symbol": "lb_nominal_full_probe_constructor_float64B"
+    },
+    {
+      "kind": "constructor",
+      "label": "NominalPrimitiveSubtypes.textA",
+      "symbol": "lb_nominal_full_probe_constructor_textA"
+    },
+    {
+      "kind": "constructor",
+      "label": "NominalPrimitiveSubtypes.textB",
+      "symbol": "lb_nominal_full_probe_constructor_textB"
+    },
+    {
+      "kind": "constructor",
+      "label": "NominalPrimitiveSubtypes.bytesA",
+      "symbol": "lb_nominal_full_probe_constructor_bytesA"
+    },
+    {
+      "kind": "constructor",
+      "label": "NominalPrimitiveSubtypes.bytesB",
+      "symbol": "lb_nominal_full_probe_constructor_bytesB"
+    },
+    {
+      "kind": "constructor",
+      "label": "NominalPrimitiveSubtypes.charA",
+      "symbol": "lb_nominal_full_probe_constructor_charA"
+    },
+    {
+      "kind": "constructor",
+      "label": "NominalPrimitiveSubtypes.charB",
+      "symbol": "lb_nominal_full_probe_constructor_charB"
+    },
+    {
+      "kind": "constructor",
+      "label": "NominalPrimitiveSubtypes.usizeA",
+      "symbol": "lb_nominal_full_probe_constructor_usizeA"
+    },
+    {
+      "kind": "constructor",
+      "label": "NominalPrimitiveSubtypes.usizeB",
+      "symbol": "lb_nominal_full_probe_constructor_usizeB"
+    },
+    {
+      "kind": "constructor",
+      "label": "NominalPrimitiveSubtypes.isizeA",
+      "symbol": "lb_nominal_full_probe_constructor_isizeA"
+    },
+    {
+      "kind": "constructor",
+      "label": "NominalPrimitiveSubtypes.isizeB",
+      "symbol": "lb_nominal_full_probe_constructor_isizeB"
+    },
+    {
+      "kind": "constructor",
+      "label": "NominalPrimitiveSubtypes.unitReject",
+      "symbol": "lb_nominal_full_probe_constructor_unitReject"
+    },
+    {
+      "kind": "source",
+      "label": "NominalPrimitiveSubtypes.echoA",
+      "symbol": "lb_nominal_full_probe_source_echoA"
+    },
+    {
+      "kind": "source",
+      "label": "NominalPrimitiveSubtypes.echoB",
+      "symbol": "lb_nominal_full_probe_source_echoB"
+    },
+    {
+      "kind": "source",
+      "label": "NominalPrimitiveSubtypes.refuseUnit",
+      "symbol": "lb_nominal_full_probe_source_refuseUnit"
+    },
+    {
+      "kind": "source",
+      "label": "NominalPrimitiveSubtypes.combine",
+      "symbol": "lb_nominal_full_probe_source_combine"
+    },
+    {
+      "kind": "source",
+      "label": "NominalPrimitiveSubtypes.echoPair",
+      "symbol": "lb_nominal_full_probe_source_echoPair"
+    },
+    {
+      "kind": "source",
+      "label": "NominalPrimitiveSubtypes.echoEventA",
+      "symbol": "lb_nominal_full_probe_source_echoEventA"
+    },
+    {
+      "kind": "source",
+      "label": "NominalPrimitiveSubtypes.echoEventB",
+      "symbol": "lb_nominal_full_probe_source_echoEventB"
+    },
+    {
+      "kind": "source",
+      "label": "NominalPrimitiveSubtypes.aliases",
+      "symbol": "lb_nominal_full_probe_source_aliases"
+    },
+    {
+      "kind": "source",
+      "label": "NominalPrimitiveSubtypes.produce",
+      "symbol": "lb_nominal_full_probe_source_produce"
+    },
+    {
+      "kind": "source",
+      "label": "NominalPrimitiveSubtypes.produceGroup",
+      "symbol": "lb_nominal_full_probe_source_produceGroup"
+    },
+    {
+      "kind": "source",
+      "label": "NominalPrimitiveSubtypes.producePair",
+      "symbol": "lb_nominal_full_probe_source_producePair"
+    },
+    {
+      "kind": "source",
+      "label": "NominalPrimitiveSubtypes.produceEvent",
+      "symbol": "lb_nominal_full_probe_source_produceEvent"
+    },
+    {
+      "kind": "source",
+      "label": "NominalPrimitiveSubtypes.produceChoices",
+      "symbol": "lb_nominal_full_probe_source_produceChoices"
+    },
+    {
+      "kind": "source",
+      "label": "NominalPrimitiveSubtypes.wordBits",
+      "symbol": "lb_nominal_full_probe_source_wordBits"
+    }
+  ],
+  "entryForms": {
+    "lb_nominal_full_probe_constructor_boolA": "function",
+    "lb_nominal_full_probe_constructor_boolB": "function",
+    "lb_nominal_full_probe_constructor_bytesA": "function",
+    "lb_nominal_full_probe_constructor_bytesB": "function",
+    "lb_nominal_full_probe_constructor_charA": "function",
+    "lb_nominal_full_probe_constructor_charB": "function",
+    "lb_nominal_full_probe_constructor_float32A": "function",
+    "lb_nominal_full_probe_constructor_float32B": "function",
+    "lb_nominal_full_probe_constructor_float64A": "function",
+    "lb_nominal_full_probe_constructor_float64B": "function",
+    "lb_nominal_full_probe_constructor_int16A": "function",
+    "lb_nominal_full_probe_constructor_int16B": "function",
+    "lb_nominal_full_probe_constructor_int32A": "function",
+    "lb_nominal_full_probe_constructor_int32B": "function",
+    "lb_nominal_full_probe_constructor_int64A": "function",
+    "lb_nominal_full_probe_constructor_int64B": "function",
+    "lb_nominal_full_probe_constructor_int8A": "function",
+    "lb_nominal_full_probe_constructor_int8B": "function",
+    "lb_nominal_full_probe_constructor_intA": "function",
+    "lb_nominal_full_probe_constructor_intB": "function",
+    "lb_nominal_full_probe_constructor_isizeA": "function",
+    "lb_nominal_full_probe_constructor_isizeB": "function",
+    "lb_nominal_full_probe_constructor_natA": "function",
+    "lb_nominal_full_probe_constructor_natB": "function",
+    "lb_nominal_full_probe_constructor_textA": "function",
+    "lb_nominal_full_probe_constructor_textB": "function",
+    "lb_nominal_full_probe_constructor_uint16A": "function",
+    "lb_nominal_full_probe_constructor_uint16B": "function",
+    "lb_nominal_full_probe_constructor_uint32A": "function",
+    "lb_nominal_full_probe_constructor_uint32B": "function",
+    "lb_nominal_full_probe_constructor_uint64A": "function",
+    "lb_nominal_full_probe_constructor_uint64B": "function",
+    "lb_nominal_full_probe_constructor_uint8A": "function",
+    "lb_nominal_full_probe_constructor_uint8B": "function",
+    "lb_nominal_full_probe_constructor_unitA": "function",
+    "lb_nominal_full_probe_constructor_unitB": "function",
+    "lb_nominal_full_probe_constructor_unitReject": "function",
+    "lb_nominal_full_probe_constructor_usizeA": "function",
+    "lb_nominal_full_probe_constructor_usizeB": "function",
+    "lb_nominal_full_probe_source_aliases": "function",
+    "lb_nominal_full_probe_source_combine": "function",
+    "lb_nominal_full_probe_source_echoA": "function",
+    "lb_nominal_full_probe_source_echoB": "function",
+    "lb_nominal_full_probe_source_echoEventA": "function",
+    "lb_nominal_full_probe_source_echoEventB": "function",
+    "lb_nominal_full_probe_source_echoPair": "function",
+    "lb_nominal_full_probe_source_produce": "function",
+    "lb_nominal_full_probe_source_produceChoices": "function",
+    "lb_nominal_full_probe_source_produceEvent": "function",
+    "lb_nominal_full_probe_source_produceGroup": "function",
+    "lb_nominal_full_probe_source_producePair": "function",
+    "lb_nominal_full_probe_source_refuseUnit": "function",
+    "lb_nominal_full_probe_source_wordBits": "global"
+  },
+  "originalSha256": "1b82df85335f49de3dbfbef1d0070f42ecf83cd1896936a28b71de47af1994a9",
+  "probeSha256": "54972ba05dfc5fd6c0c1e99a380321f7c34cf37132b33d84a9b2280afd824267",
+  "source": "namespace NominalPrimitiveSubtypes\n\n-- These author definitions are independent of compiler metadata and host bindings.\ndef checked {α : Type} (predicate : α → Prop) [DecidablePred predicate]\n    (value : α) : Option { item : α // predicate item } :=\n  if proof : predicate value then some ⟨value, proof⟩ else none\n\nabbrev PresentUnit := Subtype (fun _ : Unit => True)\nabbrev TrueBool := { value : Bool // value = true }\nabbrev EvenUInt8 := { value : UInt8 // value.toNat % 2 = 0 }\nabbrev EvenUInt16 := { value : UInt16 // value.toNat % 2 = 0 }\nabbrev EvenUInt32 := { value : UInt32 // value.toNat % 2 = 0 }\nabbrev EvenUInt64 := { value : UInt64 // value.toNat % 2 = 0 }\nabbrev EvenInt8 := { value : Int8 // value.toInt % 2 = 0 }\nabbrev EvenInt16 := { value : Int16 // value.toInt % 2 = 0 }\nabbrev EvenInt32 := { value : Int32 // value.toInt % 2 = 0 }\nabbrev EvenInt64 := { value : Int64 // value.toInt % 2 = 0 }\nabbrev EvenNat := { value : Nat // value % 2 = 0 }\nabbrev EvenInt := { value : Int // value % 2 = 0 }\nabbrev FiniteFloat32 := { value : Float32 // value.isFinite = true }\nabbrev FiniteFloat64 := { value : Float // value.isFinite = true }\nabbrev NonemptyText := { value : String // value.length > 0 }\nabbrev NonemptyBytes := { value : ByteArray // value.size > 0 }\nabbrev NonzeroChar := { value : Char // value.toNat ≠ 0 }\nabbrev EvenUSize := { value : USize // value.toNat % 2 = 0 }\nabbrev EvenISize := { value : ISize // value.toInt % 2 = 0 }\n\n-- Unit has one value. Its separate refusal selection tests constructor authority\n-- without preventing the normalizing Packet export from reaching other fields.\n@[noinline, export lb_nominal_full_probe_constructor_unitA]\ndef unitA (value : Unit) : Option PresentUnit := some ⟨value, trivial⟩\n@[noinline, export lb_nominal_full_probe_constructor_unitB]\ndef unitB (value : Unit) : Option PresentUnit := some ⟨value, trivial⟩\n@[noinline, export lb_nominal_full_probe_constructor_unitReject]\ndef unitReject (_ : Unit) : Option PresentUnit := none\n@[noinline, export lb_nominal_full_probe_constructor_boolA]\ndef boolA (value : Bool) : Option TrueBool := checked (· = true) value\n@[noinline, export lb_nominal_full_probe_constructor_boolB]\ndef boolB (value : Bool) : Option TrueBool := checked (· = true) (!value)\n\n-- The first selections have a stricter input policy than the Subtype predicate.\n-- Result-only producers below may return valid values outside that policy.\n@[noinline, export lb_nominal_full_probe_constructor_uint8A]\ndef uint8A (value : UInt8) : Option EvenUInt8 :=\n  if value.toNat < 100 then checked (fun item : UInt8 => item.toNat % 2 = 0) value else none\n@[noinline, export lb_nominal_full_probe_constructor_uint8B]\ndef uint8B (value : UInt8) : Option EvenUInt8 :=\n  checked (fun item : UInt8 => item.toNat % 2 = 0) (value + 2)\n@[noinline, export lb_nominal_full_probe_constructor_uint16A]\ndef uint16A (value : UInt16) : Option EvenUInt16 :=\n  if value.toNat < 100 then checked (fun item : UInt16 => item.toNat % 2 = 0) value else none\n@[noinline, export lb_nominal_full_probe_constructor_uint16B]\ndef uint16B (value : UInt16) : Option EvenUInt16 :=\n  checked (fun item : UInt16 => item.toNat % 2 = 0) (value + 2)\n@[noinline, export lb_nominal_full_probe_constructor_uint32A]\ndef uint32A (value : UInt32) : Option EvenUInt32 :=\n  if value.toNat < 100 then checked (fun item : UInt32 => item.toNat % 2 = 0) value else none\n@[noinline, export lb_nominal_full_probe_constructor_uint32B]\ndef uint32B (value : UInt32) : Option EvenUInt32 :=\n  checked (fun item : UInt32 => item.toNat % 2 = 0) (value + 2)\n@[noinline, export lb_nominal_full_probe_constructor_uint64A]\ndef uint64A (value : UInt64) : Option EvenUInt64 :=\n  if value.toNat < 100 then checked (fun item : UInt64 => item.toNat % 2 = 0) value else none\n@[noinline, export lb_nominal_full_probe_constructor_uint64B]\ndef uint64B (value : UInt64) : Option EvenUInt64 :=\n  checked (fun item : UInt64 => item.toNat % 2 = 0) (value + 2)\n@[noinline, export lb_nominal_full_probe_constructor_int8A]\ndef int8A (value : Int8) : Option EvenInt8 :=\n  if value.toInt < 100 then checked (fun item : Int8 => item.toInt % 2 = 0) value else none\n@[noinline, export lb_nominal_full_probe_constructor_int8B]\ndef int8B (value : Int8) : Option EvenInt8 :=\n  checked (fun item : Int8 => item.toInt % 2 = 0) (value + 2)\n@[noinline, export lb_nominal_full_probe_constructor_int16A]\ndef int16A (value : Int16) : Option EvenInt16 :=\n  if value.toInt < 100 then checked (fun item : Int16 => item.toInt % 2 = 0) value else none\n@[noinline, export lb_nominal_full_probe_constructor_int16B]\ndef int16B (value : Int16) : Option EvenInt16 :=\n  checked (fun item : Int16 => item.toInt % 2 = 0) (value + 2)\n@[noinline, export lb_nominal_full_probe_constructor_int32A]\ndef int32A (value : Int32) : Option EvenInt32 :=\n  if value.toInt < 100 then checked (fun item : Int32 => item.toInt % 2 = 0) value else none\n@[noinline, export lb_nominal_full_probe_constructor_int32B]\ndef int32B (value : Int32) : Option EvenInt32 :=\n  checked (fun item : Int32 => item.toInt % 2 = 0) (value + 2)\n@[noinline, export lb_nominal_full_probe_constructor_int64A]\ndef int64A (value : Int64) : Option EvenInt64 :=\n  if value.toInt < 100 then checked (fun item : Int64 => item.toInt % 2 = 0) value else none\n@[noinline, export lb_nominal_full_probe_constructor_int64B]\ndef int64B (value : Int64) : Option EvenInt64 :=\n  checked (fun item : Int64 => item.toInt % 2 = 0) (value + 2)\n@[noinline, export lb_nominal_full_probe_constructor_natA]\ndef natA (value : Nat) : Option EvenNat :=\n  if value < 100 then checked (fun item : Nat => item % 2 = 0) value else none\n@[noinline, export lb_nominal_full_probe_constructor_natB]\ndef natB (value : Nat) : Option EvenNat := checked (fun item : Nat => item % 2 = 0) (value + 2)\n@[noinline, export lb_nominal_full_probe_constructor_intA]\ndef intA (value : Int) : Option EvenInt :=\n  if value < 100 then checked (fun item : Int => item % 2 = 0) value else none\n@[noinline, export lb_nominal_full_probe_constructor_intB]\ndef intB (value : Int) : Option EvenInt := checked (fun item : Int => item % 2 = 0) (value + 2)\n@[noinline, export lb_nominal_full_probe_constructor_float32A]\ndef float32A (value : Float32) : Option FiniteFloat32 :=\n  if value < 10 then checked (fun item : Float32 => item.isFinite = true) value else none\n@[noinline, export lb_nominal_full_probe_constructor_float32B]\ndef float32B (value : Float32) : Option FiniteFloat32 :=\n  checked (fun item : Float32 => item.isFinite = true) (-value)\n@[noinline, export lb_nominal_full_probe_constructor_float64A]\ndef float64A (value : Float) : Option FiniteFloat64 :=\n  if value < 10 then checked (fun item : Float => item.isFinite = true) value else none\n@[noinline, export lb_nominal_full_probe_constructor_float64B]\ndef float64B (value : Float) : Option FiniteFloat64 :=\n  checked (fun item : Float => item.isFinite = true) (-value)\n@[noinline, export lb_nominal_full_probe_constructor_textA]\ndef textA (value : String) : Option NonemptyText :=\n  if value.length < 8 then checked (fun item : String => item.length > 0) value else none\n@[noinline, export lb_nominal_full_probe_constructor_textB]\ndef textB (value : String) : Option NonemptyText :=\n  checked (fun item : String => item.length > 0) (value ++ \"!\")\n@[noinline, export lb_nominal_full_probe_constructor_bytesA]\ndef bytesA (value : ByteArray) : Option NonemptyBytes :=\n  if value.size < 8 then checked (fun item : ByteArray => item.size > 0) value else none\n@[noinline, export lb_nominal_full_probe_constructor_bytesB]\ndef bytesB (value : ByteArray) : Option NonemptyBytes :=\n  checked (fun item : ByteArray => item.size > 0) (value.push 255)\n@[noinline, export lb_nominal_full_probe_constructor_charA]\ndef charA (value : Char) : Option NonzeroChar :=\n  if value.toNat < 128 then checked (fun item : Char => item.toNat ≠ 0) value else none\n@[noinline, export lb_nominal_full_probe_constructor_charB]\ndef charB (value : Char) : Option NonzeroChar :=\n  checked (fun item : Char => item.toNat ≠ 0) (if value == 'a' then 'b' else value)\n@[noinline, export lb_nominal_full_probe_constructor_usizeA]\ndef usizeA (value : USize) : Option EvenUSize :=\n  if value.toNat < 100 then checked (fun item : USize => item.toNat % 2 = 0) value else none\n@[noinline, export lb_nominal_full_probe_constructor_usizeB]\ndef usizeB (value : USize) : Option EvenUSize :=\n  checked (fun item : USize => item.toNat % 2 = 0) (value + 2)\n@[noinline, export lb_nominal_full_probe_constructor_isizeA]\ndef isizeA (value : ISize) : Option EvenISize :=\n  if value.toInt < 100 then checked (fun item : ISize => item.toInt % 2 = 0) value else none\n@[noinline, export lb_nominal_full_probe_constructor_isizeB]\ndef isizeB (value : ISize) : Option EvenISize :=\n  checked (fun item : ISize => item.toInt % 2 = 0) (value + 2)\n\nstructure Packet where\n  unitValue : PresentUnit\n  boolValue : TrueBool\n  uint8Value : EvenUInt8\n  uint16Value : EvenUInt16\n  uint32Value : EvenUInt32\n  uint64Value : EvenUInt64\n  int8Value : EvenInt8\n  int16Value : EvenInt16\n  int32Value : EvenInt32\n  int64Value : EvenInt64\n  natValue : EvenNat\n  intValue : EvenInt\n  float32Value : FiniteFloat32\n  float64Value : FiniteFloat64\n  textValue : NonemptyText\n  bytesValue : NonemptyBytes\n  charValue : NonzeroChar\n  usizeValue : EvenUSize\n  isizeValue : EvenISize\n  digit : Fin 3\n\nstructure RawPacket where\n  unitValue : Unit\n  boolValue : Bool\n  uint8Value : UInt8\n  uint16Value : UInt16\n  uint32Value : UInt32\n  uint64Value : UInt64\n  int8Value : Int8\n  int16Value : Int16\n  int32Value : Int32\n  int64Value : Int64\n  natValue : Nat\n  intValue : Int\n  float32Value : Float32\n  float64Value : Float\n  textValue : String\n  bytesValue : ByteArray\n  charValue : Char\n  usizeValue : USize\n  isizeValue : ISize\n  digit : Nat\n\nabbrev PacketAlias := Packet\nabbrev Group := Array (Option PacketAlias)\n\nstructure Pair where\n  left : Group\n  right : Group\n\ninductive Event where\n  | empty\n  | box (value : Packet)\n  | choices (values : Array (Option (Except Packet Packet)))\n\n@[noinline, export lb_nominal_full_probe_source_echoA]\ndef echoA (value : Packet) : Packet := value\n@[noinline, export lb_nominal_full_probe_source_echoB]\ndef echoB (value : Packet) : Packet := value\n@[noinline, export lb_nominal_full_probe_source_refuseUnit]\ndef refuseUnit (value : Packet) : Packet := value\n@[noinline, export lb_nominal_full_probe_source_combine]\ndef combine (left right : Packet) : Packet × Packet := (left, right)\n@[noinline, export lb_nominal_full_probe_source_echoPair]\ndef echoPair (value : Pair) : Pair := value\n@[noinline, export lb_nominal_full_probe_source_echoEventA]\ndef echoEventA (value : Event) : Event := value\n@[noinline, export lb_nominal_full_probe_source_echoEventB]\ndef echoEventB (value : Event) : Event := value\n@[noinline, export lb_nominal_full_probe_source_aliases]\ndef aliases (left right : Group) : Group := left ++ right\n\n-- These producers construct proofs directly from their weaker predicates. They\n-- never call the A/B input selections and need no host-selected constructors.\n@[noinline, export lb_nominal_full_probe_source_produce]\ndef produce (value : RawPacket) : Option Packet := do\n  let boolValue ← checked (fun item : Bool => item = true) value.boolValue\n  let uint8Value ← checked (fun item : UInt8 => item.toNat % 2 = 0) value.uint8Value\n  let uint16Value ← checked (fun item : UInt16 => item.toNat % 2 = 0) value.uint16Value\n  let uint32Value ← checked (fun item : UInt32 => item.toNat % 2 = 0) value.uint32Value\n  let uint64Value ← checked (fun item : UInt64 => item.toNat % 2 = 0) value.uint64Value\n  let int8Value ← checked (fun item : Int8 => item.toInt % 2 = 0) value.int8Value\n  let int16Value ← checked (fun item : Int16 => item.toInt % 2 = 0) value.int16Value\n  let int32Value ← checked (fun item : Int32 => item.toInt % 2 = 0) value.int32Value\n  let int64Value ← checked (fun item : Int64 => item.toInt % 2 = 0) value.int64Value\n  let natValue ← checked (fun item : Nat => item % 2 = 0) value.natValue\n  let intValue ← checked (fun item : Int => item % 2 = 0) value.intValue\n  let float32Value ← checked (fun item : Float32 => item.isFinite = true) value.float32Value\n  let float64Value ← checked (fun item : Float => item.isFinite = true) value.float64Value\n  let textValue ← checked (fun item : String => item.length > 0) value.textValue\n  let bytesValue ← checked (fun item : ByteArray => item.size > 0) value.bytesValue\n  let charValue ← checked (fun item : Char => item.toNat ≠ 0) value.charValue\n  let usizeValue ← checked (fun item : USize => item.toNat % 2 = 0) value.usizeValue\n  let isizeValue ← checked (fun item : ISize => item.toInt % 2 = 0) value.isizeValue\n  let digit : Fin 3 ← if proof : value.digit < 3 then some ⟨value.digit, proof⟩ else none\n  return {\n    unitValue := ⟨value.unitValue, trivial⟩\n    boolValue, uint8Value, uint16Value, uint32Value, uint64Value\n    int8Value, int16Value, int32Value, int64Value, natValue, intValue\n    float32Value, float64Value, textValue, bytesValue, charValue\n    usizeValue, isizeValue, digit\n  }\n\n@[noinline, export lb_nominal_full_probe_source_produceGroup]\ndef produceGroup (value : RawPacket) : Group :=\n  match produce value with\n  | none => #[none]\n  | some packet => #[none, some packet]\n\n@[noinline, export lb_nominal_full_probe_source_producePair]\ndef producePair (value : RawPacket) : Pair := ⟨produceGroup value, produceGroup value⟩\n\n@[noinline, export lb_nominal_full_probe_source_produceEvent]\ndef produceEvent (value : RawPacket) : Event :=\n  match produce value with\n  | none => .empty\n  | some packet => .box packet\n\n@[noinline, export lb_nominal_full_probe_source_produceChoices]\ndef produceChoices (value : RawPacket) : Event :=\n  match produce value with\n  | none => .choices #[none]\n  | some packet => .choices #[none, some (.ok packet), some (.error packet)]\n\n@[noinline, export lb_nominal_full_probe_source_wordBits]\ndef wordBits : UInt32 := System.Platform.numBits.toUInt32\n\nend NominalPrimitiveSubtypes\n"
+}
