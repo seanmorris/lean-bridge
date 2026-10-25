@@ -1,0 +1,99 @@
+{
+  "additions": [
+    {
+      "currentSha256": "32b755a24bb7f2e6977f652e9663c275824c087b8cb48f33cca1c246ffff0c0e",
+      "path": "scripts/archive-php-wasm-entry-hosted-diagnostic.mjs"
+    },
+    {
+      "currentSha256": "751f88ee825b4d93a5e72f15d71d7536a950c1e9725555e9a2336de306cf2e37",
+      "path": "scripts/check-php-wasm-entry-hosted-diagnostic.mjs"
+    },
+    {
+      "currentSha256": "f52e097713c56154a22139a9b7b9629df737298ea9582070788abad0d52ab4fd",
+      "path": "tests/helpers/php-wasm-refinement-entry-hosted-diagnostic.mjs"
+    },
+    {
+      "currentSha256": "49aa9170da9ca2779efc747b38235ceb9655c6eed67d639a5903bd09da1c8db3",
+      "path": "tests/helpers/php-wasm-refinement-entry-hosted-diagnostic-tests.mjs"
+    },
+    {
+      "currentSha256": "dc419a097b36910f1fd97aed47896d83f5151cb9586c90b0d55723738b848812",
+      "path": "tests/helpers/php-wasm-refinement-entry-hosted-storage.mjs"
+    },
+    {
+      "currentSha256": "60bb58155fa6cb534ae0f64a10cb5e065c3572e4b6e5c1ee3be97b054e930275",
+      "path": "tests/helpers/php-wasm-refinement-entry-hosted-storage-tests.mjs"
+    },
+    {
+      "currentSha256": "0af953de9b7bd1927b624bbea2e6ab4aa96be05b25b27c0528516aa2c2d7c9dc",
+      "path": "scripts/update-php-wasm-entry-diagnostic-retention-source-history.mjs"
+    },
+    {
+      "currentSha256": "28093662dff3387d92a9597410d7cf5eab7bafa2426665d08487ecb851eae969",
+      "path": "tests/helpers/php-wasm-entry-diagnostic-retention-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "778827c1697ec158df230983b169284d98d948e29ed116dd5a6f37792a7858e0",
+      "path": "tests/helpers/php-wasm-entry-diagnostic-retention-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "700fea2378ffd59b61611deaaa6a1d15ba5d38d2",
+  "implementationCommits": [
+    "700fea2378ffd59b61611deaaa6a1d15ba5d38d2"
+  ],
+  "integrationBaseCommit": "700fea2378ffd59b61611deaaa6a1d15ba5d38d2",
+  "integrationUpdates": [
+    {
+      "currentSha256": "d66b79718b350c73d0bc7f80aa86aff307f565dbd60f38bb0095fcf378198434",
+      "edits": [
+        {
+          "current": "import { beforePhpWasmEntryDiagnosticRetentionSource, phpWasmEntryDiagnosticRetentionNormalizationPaths } from \"./php-wasm-entry-diagnostic-retention-source-history.mjs\";\n",
+          "previous": "",
+          "start": 10606
+        },
+        {
+          "current": "\t...phpWasmEntryDiagnosticRetentionNormalizationPaths\n\t, ...phpWasmEntryHostedReplayNormalizationPaths\n",
+          "previous": "\t...phpWasmEntryHostedReplayNormalizationPaths\n",
+          "start": 183816
+        },
+        {
+          "current": "\tlet stage = beforePhpWasmEntryDiagnosticRetentionSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforePhpWasmEntryHostedReplaySource(path, text, expected);\n",
+          "previous": "\tlet stage = beforePhpWasmEntryHostedReplaySource(path, text, expected);\n",
+          "start": 227560
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "72a61ce5399395c3e64d82d632865c75fe8437054f3782f76e872e8ba9a9bda9"
+    },
+    {
+      "currentSha256": "8463c7831da3c0ec93ea9a115d29d0af931577f9d473fa894629bee86096e4b7",
+      "edits": [
+        {
+          "current": "import \"./helpers/php-wasm-entry-diagnostic-retention-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 7371
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "219b1a7caaed5a15b319d3de8da81f32c1b9d0425d7e0d6ae58d263018b9085a"
+    }
+  ],
+  "milestone": "php-wasm-entry-diagnostic-retention-source-v1",
+  "predecessorCommit": "e8a3410b22087a7f89b8655336af5dc4dde4715e",
+  "schemaVersion": 1,
+  "scope": "Retain original PHP-Wasm artifact ZIP bytes in authenticated Git-safe ranges and preserve every extracted file, with independent reconstruction and closed output comparison. Refuse symlinks, traversal, duplicate entries, encrypted or oversized members, malformed streams, forged byte receipts, missing output and hidden extra files before byte acceptance. Add diagnostic-only capture/check CLIs preserving untouched run/job/artifact APIs, actual source/run/attempt/upload identity and both producer/archiver source snapshots. Live and failed runs remain diagnostic-only with zero replayed routes; malformed containers retain raw API-bound bytes without extraction. Require the archiver exact clean source checkout, fresh destinations, exclusive writes and minimum free space. Register nine focused storage/diagnostic tests. The complete matrix acceptance remains separate required work under VO #2061/#1828; diagnostic-only partial retention must never imply installed or mathematical acceptance. No support inventory, existing workflow, record verifier or historical evidence changes.",
+  "updates": [
+    {
+      "currentSha256": "219b1a7caaed5a15b319d3de8da81f32c1b9d0425d7e0d6ae58d263018b9085a",
+      "edits": [
+        {
+          "current": "import \"./helpers/php-wasm-refinement-entry-hosted-storage-tests.mjs\";\nimport \"./helpers/php-wasm-refinement-entry-hosted-diagnostic-tests.mjs\";\n",
+          "previous": "",
+          "start": 7226
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "143df32de30b8c957ab39d705e47017164600f34b819e394f72700f7f77cd2f6"
+    }
+  ]
+}
