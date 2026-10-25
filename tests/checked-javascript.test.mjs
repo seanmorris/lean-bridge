@@ -101,6 +101,7 @@ import "./helpers/generic-subtype-matrix-publication-source-history-tests.mjs";
 import "./helpers/owned-checked-record-promotion-preparation-source-history-tests.mjs";
 import "./helpers/php-wasm-entry-tag-dispatch-source-history-tests.mjs";
 import "./helpers/owned-checked-record-published-matrix-tests.mjs";
+import "./helpers/owned-checked-record-matrix-publication-source-history-tests.mjs";
 
 const root = resolve(".");
 
