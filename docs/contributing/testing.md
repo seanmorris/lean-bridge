@@ -156,7 +156,7 @@ The promotion command requires the complete selection committed as
 `docs/evidence/owned-checked-record-matrix-selection-20261024.json` and a clean
 checkout containing every indexed archive file. It independently runs the whole
 matrix verifier; a previously saved success receipt cannot bypass that replay.
-With all eleven captures available, stage and inspect the update without
+On an unpromoted checkout with all eleven captures available, inspect the update without
 installing it:
 
 ```sh
@@ -185,9 +185,12 @@ hosted acceptance:
 node --max-old-space-size=512 --test tests/helpers/owned-checked-record-promotion-tests.mjs
 ```
 
-Publishing these tools does not itself promote support. The actual update still
-requires the complete committed replay, recorded inventory/documentation
-transition, zero stale source pins, and final-revision Core and hosted gates.
+The committed selection now contains all eleven hosted captures. The published
+inventory and fourteen guides bind them to the tested Booking/Window and
+Ticket/Claim forms, not arbitrary owned combinations. Use the matrix checker
+above to re-audit those bytes; the one-time promotion command refuses an already
+promoted checkout. Source-history and current-state tests retain the exact update,
+while final-revision Core and the required hosted gates remain separate checks.
 
 ## Build the example artifacts as a maintainer
 

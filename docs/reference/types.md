@@ -4,6 +4,8 @@ Use this reference to choose Lean exports and pass values to prepared packages. 
 
 ## Full type surface
 
+[Hosted owned checked-record acceptance](../evidence/owned-checked-record-promotion-20261024.md) binds eleven immutable archives to exactly 170 cells across seventeen profiles and both source routes. The acyclic Booking carries a copied checked Window; Claim retains its Ticket resource and checked quota. Full packages check borrowed and transferred inputs before ownership moves, project leased proof-free results, and exercise synchronous host callbacks and returned Lean closures. Standalone result-only packages expose Claim results without checked-input, transfer or callback metadata. Native PHP and PHP-Wasm have independent archives. Grant and its nested Subtype, arbitrary owned containers, recursive owned graphs, retained or asynchronous callbacks, other predicates, dispatch cost and peak memory are not covered.
+
 Inventory 0.109.0 covers 49 source forms and 17 consumer profiles. The language tables distinguish ordinary-source packages from reviewed-IR profiles and retain unaudited cells.
 
 | Consumer table | Runtime context | Compiled Lean width |

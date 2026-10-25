@@ -1,0 +1,1479 @@
+{
+  "schemaVersion": 1,
+  "kind": "owned-checked-record-published-matrix-acceptance-v1",
+  "sourceCommit": "a9cad3b18a244d7e74918e6e8964455e073e2453",
+  "command": "node --max-old-space-size=512 scripts/promote-owned-checked-record-evidence.mjs",
+  "localLimits": {
+    "cpus": 1,
+    "nice": 15,
+    "maxOldSpaceMiB": 512
+  },
+  "before": {
+    "bytes": 101896921,
+    "sha256": "59f11fd102550f62afa5536d13c301560a267f6df86d77453a74abbdeaac0ad4"
+  },
+  "staged": {
+    "bytes": 102545935,
+    "sha256": "8d455bd3919688fb3e840d8ceb774915f0151073f8c8ec2c0b9d5278e465f892"
+  },
+  "published": {
+    "bytes": 102545935,
+    "sha256": "f99d776c3903e57a237ffa8f4a053eed76f1c81915b92391abf1acbf6083bfe3"
+  },
+  "selection": {
+    "path": "docs/evidence/owned-checked-record-matrix-selection-20261024.json",
+    "sha256": "8e1f7b6c3d5430c51bff31b316e1cffcc6f6dbed1942f7ded32029d43c90f64a"
+  },
+  "coverage": {
+    "archives": 11,
+    "profiles": 17,
+    "routes": 44,
+    "cells": 170,
+    "changedObservations": 114,
+    "totalObservations": 655,
+    "evidenceBefore": 869,
+    "evidenceAfter": 880,
+    "retainedFiles": 7205,
+    "retainedBytes": 4515511987
+  },
+  "archives": [
+    {
+      "lane": "native",
+      "profiles": [
+        "c",
+        "cpp"
+      ],
+      "routes": [
+        "ordinary-full",
+        "ordinary-result-only",
+        "reviewed-full",
+        "reviewed-result-only"
+      ],
+      "producerCommit": "390ae18d3a2607bc73463767a33fea0cfb9350b0",
+      "archiveCommit": "8093420214ad5b28357b37824bb69a37496e052a",
+      "index": {
+        "path": "docs/evidence/owned-checked-record-native-hosted-20261024/index.json",
+        "sha256": "01a51851e6c0f11abd27dd90b8bde22e8a79bac6cf01fa200bb87bf91ec30b19"
+      },
+      "runId": 40047587551,
+      "jobId": 120732739601,
+      "artifactId": 12545293019,
+      "retainedFiles": 670,
+      "retainedBytes": 875027316,
+      "accepted": {
+        "acceptanceLogSha256": "e392fe0e5a3d53dcc01d44da291d1acf0f3e9a7671068114738a7f58af6f34fc",
+        "kind": "owned-checked-record-hosted-replay",
+        "lane": "native",
+        "producerCommit": "390ae18d3a2607bc73463767a33fea0cfb9350b0",
+        "reportSha256": "bc9c7f910aea4c9684a2377412d46b432fa0b39c987b2545eeaf7de98b1adcee",
+        "routes": [
+          {
+            "archiveBytes": 108221015,
+            "archives": 2,
+            "checks": {
+              "c": 261,
+              "cpp": 125
+            },
+            "packages": [
+              {
+                "ecosystem": "c",
+                "name": "owned-checked-records",
+                "target": "c",
+                "version": "1.0.0"
+              },
+              {
+                "ecosystem": "cpp",
+                "name": "owned-checked-records",
+                "target": "cpp",
+                "version": "1.0.0"
+              }
+            ],
+            "path": "evidence/ordinary-full/handoff",
+            "receiptSha256": "c4629746e64df2493d935294dfb08661ad4d7a6600a52cd09e1c6e6ac0553124",
+            "route": "ordinary-full"
+          },
+          {
+            "archiveBytes": 108119402,
+            "archives": 2,
+            "checks": {
+              "c": 14,
+              "cpp": 3
+            },
+            "packages": [
+              {
+                "ecosystem": "c",
+                "name": "owned-checked-records-result-only",
+                "target": "c",
+                "version": "1.0.0"
+              },
+              {
+                "ecosystem": "cpp",
+                "name": "owned-checked-records-result-only",
+                "target": "cpp",
+                "version": "1.0.0"
+              }
+            ],
+            "path": "evidence/ordinary-result-only/handoff",
+            "receiptSha256": "c6394be62603e87222084dfd14da893eda8672e2fe7e3c29cae903c5a0f027f7",
+            "route": "ordinary-result-only"
+          },
+          {
+            "archiveBytes": 108228328,
+            "archives": 2,
+            "checks": {
+              "c": 261,
+              "cpp": 125
+            },
+            "packages": [
+              {
+                "ecosystem": "c",
+                "name": "owned-checked-records",
+                "target": "c",
+                "version": "1.0.0"
+              },
+              {
+                "ecosystem": "cpp",
+                "name": "owned-checked-records",
+                "target": "cpp",
+                "version": "1.0.0"
+              }
+            ],
+            "path": "evidence/reviewed-full/handoff",
+            "receiptSha256": "166f389ca8fdadc13b16252aff7860bf3dd85e994eeea6208714525121b77e59",
+            "route": "reviewed-full"
+          },
+          {
+            "archiveBytes": 108121309,
+            "archives": 2,
+            "checks": {
+              "c": 14,
+              "cpp": 3
+            },
+            "packages": [
+              {
+                "ecosystem": "c",
+                "name": "owned-checked-records-result-only",
+                "target": "c",
+                "version": "1.0.0"
+              },
+              {
+                "ecosystem": "cpp",
+                "name": "owned-checked-records-result-only",
+                "target": "cpp",
+                "version": "1.0.0"
+              }
+            ],
+            "path": "evidence/reviewed-result-only/handoff",
+            "receiptSha256": "c82d05eb93c0e83b839585521dc7a4aecf795a759b976444b88cfb8a394152eb",
+            "route": "reviewed-result-only"
+          }
+        ],
+        "schemaVersion": 1,
+        "tests": 6
+      }
+    },
+    {
+      "lane": "perl",
+      "profiles": [
+        "perl"
+      ],
+      "routes": [
+        "ordinary-full",
+        "ordinary-result-only",
+        "reviewed-full",
+        "reviewed-result-only"
+      ],
+      "producerCommit": "390ae18d3a2607bc73463767a33fea0cfb9350b0",
+      "archiveCommit": "e7712f071bad4d1a32ecaa52747fe5f095fc1c05",
+      "index": {
+        "path": "docs/evidence/owned-checked-record-perl-hosted-20261024/index.json",
+        "sha256": "b8bee969232e05b11c28df4e0b253d78cc303ac12c489e6c87dd9283936561f1"
+      },
+      "runId": 40047587551,
+      "jobId": 120732739454,
+      "artifactId": 12544589514,
+      "retainedFiles": 675,
+      "retainedBytes": 445835173,
+      "accepted": {
+        "acceptanceLogSha256": "736d10151ac3ce9cbc8f46400722138b49283cbed11541836ce3452be9fa93d3",
+        "kind": "owned-checked-record-hosted-replay",
+        "lane": "perl",
+        "producerCommit": "390ae18d3a2607bc73463767a33fea0cfb9350b0",
+        "reportSha256": "542878e533b1065ae0431125f416c904de74c5084339cc76560897f0598859b5",
+        "routes": [
+          {
+            "archiveBytes": 54563236,
+            "archives": 2,
+            "checks": {
+              "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-threaded/bin/perl/build-xs": 63,
+              "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-threaded/bin/perl/prebuilt-only": 63,
+              "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-unthreaded/bin/perl/build-xs": 63,
+              "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-unthreaded/bin/perl/prebuilt-only": 63,
+              "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-threaded/bin/perl/build-xs": 63,
+              "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-threaded/bin/perl/prebuilt-only": 63,
+              "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-unthreaded/bin/perl/build-xs": 63,
+              "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-unthreaded/bin/perl/prebuilt-only": 63
+            },
+            "packages": [
+              {
+                "ecosystem": "cpan",
+                "name": "LeanBridge-OwnedCheckedRecords",
+                "target": "cpan",
+                "version": "1.000"
+              },
+              {
+                "ecosystem": "cpan",
+                "name": "LeanBridge-Runtime",
+                "target": "cpan",
+                "version": "0.0020873093885122476990213970161242772861093089627532315710208989625599780543964681"
+              }
+            ],
+            "path": "evidence/ordinary-full/handoff",
+            "receiptSha256": "caffe658eb68b2fa9c03f2630a531745347f56b8fcbc70f7ce3a0afcd07736d5",
+            "route": "ordinary-full"
+          },
+          {
+            "archiveBytes": 54426251,
+            "archives": 2,
+            "checks": {
+              "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-threaded/bin/perl/build-xs": 9,
+              "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-threaded/bin/perl/prebuilt-only": 9,
+              "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-unthreaded/bin/perl/build-xs": 9,
+              "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-unthreaded/bin/perl/prebuilt-only": 9,
+              "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-threaded/bin/perl/build-xs": 9,
+              "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-threaded/bin/perl/prebuilt-only": 9,
+              "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-unthreaded/bin/perl/build-xs": 9,
+              "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-unthreaded/bin/perl/prebuilt-only": 9
+            },
+            "packages": [
+              {
+                "ecosystem": "cpan",
+                "name": "LeanBridge-OwnedCheckedRecords",
+                "target": "cpan",
+                "version": "1.000"
+              },
+              {
+                "ecosystem": "cpan",
+                "name": "LeanBridge-Runtime",
+                "target": "cpan",
+                "version": "0.0020873093885122476990213970161242772861093089627532315710208989625599780543964681"
+              }
+            ],
+            "path": "evidence/ordinary-result-only/handoff",
+            "receiptSha256": "a7d4b73ddf1ccb94fdc1b93a00879dae9b33ebf929ee1344dd2d63fb4a29a9fa",
+            "route": "ordinary-result-only"
+          },
+          {
+            "archiveBytes": 54566318,
+            "archives": 2,
+            "checks": {
+              "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-threaded/bin/perl/build-xs": 63,
+              "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-threaded/bin/perl/prebuilt-only": 63,
+              "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-unthreaded/bin/perl/build-xs": 63,
+              "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-unthreaded/bin/perl/prebuilt-only": 63,
+              "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-threaded/bin/perl/build-xs": 63,
+              "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-threaded/bin/perl/prebuilt-only": 63,
+              "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-unthreaded/bin/perl/build-xs": 63,
+              "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-unthreaded/bin/perl/prebuilt-only": 63
+            },
+            "packages": [
+              {
+                "ecosystem": "cpan",
+                "name": "LeanBridge-OwnedCheckedRecords",
+                "target": "cpan",
+                "version": "1.000"
+              },
+              {
+                "ecosystem": "cpan",
+                "name": "LeanBridge-Runtime",
+                "target": "cpan",
+                "version": "0.0020873093885122476990213970161242772861093089627532315710208989625599780543964681"
+              }
+            ],
+            "path": "evidence/reviewed-full/handoff",
+            "receiptSha256": "2782642cd2c05c72121d364b96f4feb0cd1dcd830c6be312a457951953000bb9",
+            "route": "reviewed-full"
+          },
+          {
+            "archiveBytes": 54427418,
+            "archives": 2,
+            "checks": {
+              "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-threaded/bin/perl/build-xs": 9,
+              "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-threaded/bin/perl/prebuilt-only": 9,
+              "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-unthreaded/bin/perl/build-xs": 9,
+              "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-unthreaded/bin/perl/prebuilt-only": 9,
+              "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-threaded/bin/perl/build-xs": 9,
+              "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-threaded/bin/perl/prebuilt-only": 9,
+              "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-unthreaded/bin/perl/build-xs": 9,
+              "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-unthreaded/bin/perl/prebuilt-only": 9
+            },
+            "packages": [
+              {
+                "ecosystem": "cpan",
+                "name": "LeanBridge-OwnedCheckedRecords",
+                "target": "cpan",
+                "version": "1.000"
+              },
+              {
+                "ecosystem": "cpan",
+                "name": "LeanBridge-Runtime",
+                "target": "cpan",
+                "version": "0.0020873093885122476990213970161242772861093089627532315710208989625599780543964681"
+              }
+            ],
+            "path": "evidence/reviewed-result-only/handoff",
+            "receiptSha256": "1fbb0421014c5ebf275953150b7f763e2cae1744b862ee66695e41c87f603f6e",
+            "route": "reviewed-result-only"
+          }
+        ],
+        "schemaVersion": 1,
+        "tests": 6
+      }
+    },
+    {
+      "lane": "python",
+      "profiles": [
+        "python"
+      ],
+      "routes": [
+        "ordinary-full",
+        "ordinary-result-only",
+        "reviewed-full",
+        "reviewed-result-only"
+      ],
+      "producerCommit": "390ae18d3a2607bc73463767a33fea0cfb9350b0",
+      "archiveCommit": "64c31323d82171bcfa9c99cf85e3a0d11e080781",
+      "index": {
+        "path": "docs/evidence/owned-checked-record-python-hosted-20261024/index.json",
+        "sha256": "823bca5c0de8240ad3b30c5388aa5b0b71dc2cce0ce394b466abafccfa58c5c4"
+      },
+      "runId": 40047586211,
+      "jobId": 120732735833,
+      "artifactId": 12543484153,
+      "retainedFiles": 663,
+      "retainedBytes": 440879302,
+      "accepted": {
+        "acceptanceLogSha256": "588e28efce635e2dcb9acb6196893507f6494be00a97c18bb60d541a530a12ce",
+        "kind": "owned-checked-record-hosted-replay",
+        "lane": "python",
+        "producerCommit": "390ae18d3a2607bc73463767a33fea0cfb9350b0",
+        "reportSha256": "11b393d39520960fe30bb13c0c12a5e954bfb9e9fb6c68645395f4313ca8175d",
+        "routes": [
+          {
+            "archiveBytes": 53926524,
+            "archives": 1,
+            "checks": {
+              "python": 138
+            },
+            "packages": [
+              {
+                "ecosystem": "pypi",
+                "name": "lean-owned-checked-records",
+                "target": "pypi",
+                "version": "1.0.0"
+              }
+            ],
+            "path": "evidence/python/ordinary-full/handoff",
+            "receiptSha256": "10b454781ea5c5c8f4b978cef4d80817f7dfe38aca2b692756d834c08a29341f",
+            "route": "ordinary-full"
+          },
+          {
+            "archiveBytes": 53872307,
+            "archives": 1,
+            "checks": {
+              "python": 5
+            },
+            "packages": [
+              {
+                "ecosystem": "pypi",
+                "name": "lean-owned-checked-records-result-only",
+                "target": "pypi",
+                "version": "1.0.0"
+              }
+            ],
+            "path": "evidence/python/ordinary-result-only/handoff",
+            "receiptSha256": "ef0394255f1351a733dfa706ad75040de976c933c6738a64995eb450e514fdfd",
+            "route": "ordinary-result-only"
+          },
+          {
+            "archiveBytes": 53929868,
+            "archives": 1,
+            "checks": {
+              "python": 138
+            },
+            "packages": [
+              {
+                "ecosystem": "pypi",
+                "name": "lean-owned-checked-records",
+                "target": "pypi",
+                "version": "1.0.0"
+              }
+            ],
+            "path": "evidence/python/reviewed-full/handoff",
+            "receiptSha256": "2d26fde7d2a912ad7f73fda59ec77a2c49b5f1c7492ee75a73b35f55fb1a7d32",
+            "route": "reviewed-full"
+          },
+          {
+            "archiveBytes": 53875511,
+            "archives": 1,
+            "checks": {
+              "python": 5
+            },
+            "packages": [
+              {
+                "ecosystem": "pypi",
+                "name": "lean-owned-checked-records-result-only",
+                "target": "pypi",
+                "version": "1.0.0"
+              }
+            ],
+            "path": "evidence/python/reviewed-result-only/handoff",
+            "receiptSha256": "0b132e848beb82557f3794a7fe1dcdb98bb0777bc2190bdc97149b84135641ce",
+            "route": "reviewed-result-only"
+          }
+        ],
+        "schemaVersion": 1,
+        "tests": 6
+      }
+    },
+    {
+      "lane": "ruby",
+      "profiles": [
+        "ruby"
+      ],
+      "routes": [
+        "ordinary-full",
+        "ordinary-result-only",
+        "reviewed-full",
+        "reviewed-result-only"
+      ],
+      "producerCommit": "390ae18d3a2607bc73463767a33fea0cfb9350b0",
+      "archiveCommit": "f11933cd25230d88f4218a543b8db337f04049ad",
+      "index": {
+        "path": "docs/evidence/owned-checked-record-ruby-hosted-20261024/index.json",
+        "sha256": "0d49be592f38e7530686821c5d75c7696c25d4864e4fe726b41d8c64519cd488"
+      },
+      "runId": 40047586211,
+      "jobId": 120732736079,
+      "artifactId": 12543069587,
+      "retainedFiles": 663,
+      "retainedBytes": 430808638,
+      "accepted": {
+        "acceptanceLogSha256": "cd74bdcd63d3ae9c20d5d7600ad1c31f79ad5cd86098e7173ee6083a77d23e7f",
+        "kind": "owned-checked-record-hosted-replay",
+        "lane": "ruby",
+        "producerCommit": "390ae18d3a2607bc73463767a33fea0cfb9350b0",
+        "reportSha256": "48f3f4685d9974912f9066988121d38007a5a9245dbbdd60b5a7d532f4cb19b5",
+        "routes": [
+          {
+            "archiveBytes": 52669952,
+            "archives": 1,
+            "checks": {
+              "ruby": 138
+            },
+            "packages": [
+              {
+                "ecosystem": "rubygems",
+                "name": "lean_bridge_owned_checked_records",
+                "target": "rubygems",
+                "version": "1.0.0"
+              }
+            ],
+            "path": "evidence/ruby/ordinary-full/handoff",
+            "receiptSha256": "bdde92515291e554268f1d00a01b58165f0fc76a73cc79745a2b9237640dd573",
+            "route": "ordinary-full"
+          },
+          {
+            "archiveBytes": 52610560,
+            "archives": 1,
+            "checks": {
+              "ruby": 5
+            },
+            "packages": [
+              {
+                "ecosystem": "rubygems",
+                "name": "lean_bridge_owned_checked_records-result-only",
+                "target": "rubygems",
+                "version": "1.0.0"
+              }
+            ],
+            "path": "evidence/ruby/ordinary-result-only/handoff",
+            "receiptSha256": "5bf348ce8c2115abce5bb26a124881b6eab99999764dea500977a41da9e78a38",
+            "route": "ordinary-result-only"
+          },
+          {
+            "archiveBytes": 52679168,
+            "archives": 1,
+            "checks": {
+              "ruby": 138
+            },
+            "packages": [
+              {
+                "ecosystem": "rubygems",
+                "name": "lean_bridge_owned_checked_records",
+                "target": "rubygems",
+                "version": "1.0.0"
+              }
+            ],
+            "path": "evidence/ruby/reviewed-full/handoff",
+            "receiptSha256": "fc160bc9386eb274a779fc5137ac3d64947744bc9194de446b218b1f850ee9bd",
+            "route": "reviewed-full"
+          },
+          {
+            "archiveBytes": 52611072,
+            "archives": 1,
+            "checks": {
+              "ruby": 5
+            },
+            "packages": [
+              {
+                "ecosystem": "rubygems",
+                "name": "lean_bridge_owned_checked_records-result-only",
+                "target": "rubygems",
+                "version": "1.0.0"
+              }
+            ],
+            "path": "evidence/ruby/reviewed-result-only/handoff",
+            "receiptSha256": "0a495d586241e0e7e1626a2d241192922534f6416ef9f3ddc1695bbe42ef7cd7",
+            "route": "reviewed-result-only"
+          }
+        ],
+        "schemaVersion": 1,
+        "tests": 6
+      }
+    },
+    {
+      "lane": "rust",
+      "profiles": [
+        "rust"
+      ],
+      "routes": [
+        "ordinary-full",
+        "ordinary-result-only",
+        "reviewed-full",
+        "reviewed-result-only"
+      ],
+      "producerCommit": "390ae18d3a2607bc73463767a33fea0cfb9350b0",
+      "archiveCommit": "52b683d4c49bc110c54eb42b0eddc0cfa908ba7e",
+      "index": {
+        "path": "docs/evidence/owned-checked-record-rust-hosted-20261024/index.json",
+        "sha256": "da5e9219ec751661607fb4bffa221ef899b09a31f5e75997539a955e8a379879"
+      },
+      "runId": 40047586211,
+      "jobId": 120732736168,
+      "artifactId": 12545276093,
+      "retainedFiles": 665,
+      "retainedBytes": 440643476,
+      "accepted": {
+        "acceptanceLogSha256": "80cb75b914bed6bb47d1c8c8938882b5729858a5aa5bfec2309ff5e94511d150",
+        "kind": "owned-checked-record-hosted-replay",
+        "lane": "rust",
+        "producerCommit": "390ae18d3a2607bc73463767a33fea0cfb9350b0",
+        "reportSha256": "11a4e002d7162b876a66b6a0a6158a0c51341941f3133fe4c7f6abe9af6699e7",
+        "routes": [
+          {
+            "archiveBytes": 53884041,
+            "archives": 1,
+            "checks": {
+              "rust": 134
+            },
+            "packages": [
+              {
+                "ecosystem": "cargo",
+                "name": "owned-checked-records",
+                "target": "cargo",
+                "version": "1.0.0"
+              }
+            ],
+            "path": "evidence/rust/ordinary-full/handoff",
+            "receiptSha256": "a5522a3c0b6dda1bfeb528d4c301a114d6aa3c14861bc31716857fe91e3ed6af",
+            "route": "ordinary-full"
+          },
+          {
+            "archiveBytes": 53833134,
+            "archives": 1,
+            "checks": {
+              "rust": 3
+            },
+            "packages": [
+              {
+                "ecosystem": "cargo",
+                "name": "owned-checked-records-result-only",
+                "target": "cargo",
+                "version": "1.0.0"
+              }
+            ],
+            "path": "evidence/rust/ordinary-result-only/handoff",
+            "receiptSha256": "02f126bc2b33102c7effd15152b29772efb870785eb609cddaeec77d14eeab2f",
+            "route": "ordinary-result-only"
+          },
+          {
+            "archiveBytes": 53889687,
+            "archives": 1,
+            "checks": {
+              "rust": 134
+            },
+            "packages": [
+              {
+                "ecosystem": "cargo",
+                "name": "owned-checked-records",
+                "target": "cargo",
+                "version": "1.0.0"
+              }
+            ],
+            "path": "evidence/rust/reviewed-full/handoff",
+            "receiptSha256": "cd4658e2864d7fd9d44ced85d465bd2d133eb0aa32608a851e5f89e3a5b27ce2",
+            "route": "reviewed-full"
+          },
+          {
+            "archiveBytes": 53834844,
+            "archives": 1,
+            "checks": {
+              "rust": 3
+            },
+            "packages": [
+              {
+                "ecosystem": "cargo",
+                "name": "owned-checked-records-result-only",
+                "target": "cargo",
+                "version": "1.0.0"
+              }
+            ],
+            "path": "evidence/rust/reviewed-result-only/handoff",
+            "receiptSha256": "1343449b743e3132c8861839862ac9130ee40caacdfed22a7bba1b9da20427b7",
+            "route": "reviewed-result-only"
+          }
+        ],
+        "schemaVersion": 1,
+        "tests": 6
+      }
+    },
+    {
+      "lane": "dotnet",
+      "profiles": [
+        "dotnet"
+      ],
+      "routes": [
+        "ordinary-full",
+        "ordinary-result-only",
+        "reviewed-full",
+        "reviewed-result-only"
+      ],
+      "producerCommit": "390ae18d3a2607bc73463767a33fea0cfb9350b0",
+      "archiveCommit": "e7867d7f662c20f244e9cf851c469f0273f3fe47",
+      "index": {
+        "path": "docs/evidence/owned-checked-record-dotnet-hosted-20261024/index.json",
+        "sha256": "be6c700e76a06bacc98f14b24fe2d5bdfd69c10f154728343efb82263693749c"
+      },
+      "runId": 40047586038,
+      "jobId": 120732735322,
+      "artifactId": 12545878082,
+      "retainedFiles": 659,
+      "retainedBytes": 441117050,
+      "accepted": {
+        "acceptanceLogSha256": "205642822b8d5346cb17534334c66e1122605378299393536d8a1da1dbb39eb2",
+        "kind": "owned-checked-record-hosted-replay",
+        "lane": "dotnet",
+        "producerCommit": "390ae18d3a2607bc73463767a33fea0cfb9350b0",
+        "reportSha256": "92af5969d9572adb293a034648f99948f643e17260b80aac47c6f1bb7fd01642",
+        "routes": [
+          {
+            "archiveBytes": 53982469,
+            "archives": 1,
+            "checks": {
+              "dotnet": 130
+            },
+            "packages": [
+              {
+                "ecosystem": "nuget",
+                "name": "LeanBridge.OwnedCheckedRecords",
+                "target": "nuget",
+                "version": "1.0.0"
+              }
+            ],
+            "path": "evidence/dotnet/ordinary-full/handoff",
+            "receiptSha256": "53da8d1ba0d5fb8b30da760f60e388717702949dff79cf93d1ec145973c02e20",
+            "route": "ordinary-full"
+          },
+          {
+            "archiveBytes": 53911505,
+            "archives": 1,
+            "checks": {
+              "dotnet": 4
+            },
+            "packages": [
+              {
+                "ecosystem": "nuget",
+                "name": "LeanBridge.OwnedCheckedRecords.ResultOnly",
+                "target": "nuget",
+                "version": "1.0.0"
+              }
+            ],
+            "path": "evidence/dotnet/ordinary-result-only/handoff",
+            "receiptSha256": "f37979a14edc387517e01a630383d07753f405d55695939ed333e4196c1e69e9",
+            "route": "ordinary-result-only"
+          },
+          {
+            "archiveBytes": 53985997,
+            "archives": 1,
+            "checks": {
+              "dotnet": 130
+            },
+            "packages": [
+              {
+                "ecosystem": "nuget",
+                "name": "LeanBridge.OwnedCheckedRecords",
+                "target": "nuget",
+                "version": "1.0.0"
+              }
+            ],
+            "path": "evidence/dotnet/reviewed-full/handoff",
+            "receiptSha256": "1b860ed63989eb1c0d3a7efebe33d4ea05a887c47a7164234b0cc26e7be84e5b",
+            "route": "reviewed-full"
+          },
+          {
+            "archiveBytes": 53914725,
+            "archives": 1,
+            "checks": {
+              "dotnet": 4
+            },
+            "packages": [
+              {
+                "ecosystem": "nuget",
+                "name": "LeanBridge.OwnedCheckedRecords.ResultOnly",
+                "target": "nuget",
+                "version": "1.0.0"
+              }
+            ],
+            "path": "evidence/dotnet/reviewed-result-only/handoff",
+            "receiptSha256": "16fa5b5cd0e1e1c3e1ae0dbdf614fac50d99b82939c9ab04efc43668b97d3a78",
+            "route": "reviewed-result-only"
+          }
+        ],
+        "schemaVersion": 1,
+        "tests": 6
+      }
+    },
+    {
+      "lane": "jvm",
+      "profiles": [
+        "java",
+        "kotlin"
+      ],
+      "routes": [
+        "ordinary-full",
+        "ordinary-result-only",
+        "reviewed-full",
+        "reviewed-result-only"
+      ],
+      "producerCommit": "390ae18d3a2607bc73463767a33fea0cfb9350b0",
+      "archiveCommit": "22edee4aed9c5758020ebe4a1d536a613e142e2c",
+      "index": {
+        "path": "docs/evidence/owned-checked-record-jvm-hosted-20261024/index.json",
+        "sha256": "b7d98cda1edcef611268dce81058180f11e66c7f078e8621dc72793e92b24013"
+      },
+      "runId": 40047586038,
+      "jobId": 120732735372,
+      "artifactId": 12544275877,
+      "retainedFiles": 667,
+      "retainedBytes": 442167234,
+      "accepted": {
+        "acceptanceLogSha256": "bcb07961418fe5bb5812dfea39341598b99257a26c54558cda25395183aa7647",
+        "kind": "owned-checked-record-hosted-replay",
+        "lane": "jvm",
+        "producerCommit": "390ae18d3a2607bc73463767a33fea0cfb9350b0",
+        "reportSha256": "775916512b9e9c08c3b13c33dde6bc92f162a76026320a3a26a6dcda67b96139",
+        "routes": [
+          {
+            "archiveBytes": 54150628,
+            "archives": 2,
+            "checks": {
+              "java": 121,
+              "kotlin": 119
+            },
+            "packages": [
+              {
+                "ecosystem": "maven",
+                "name": "org.leanbridge:owned-checked-records",
+                "target": "maven",
+                "version": "1.0.0"
+              }
+            ],
+            "path": "evidence/jvm/ordinary-full/handoff",
+            "receiptSha256": "1925e30ccd92e83ad63743bc5c9973a3ab58060044533a1a046ad0d8bf1f8973",
+            "route": "ordinary-full"
+          },
+          {
+            "archiveBytes": 54025599,
+            "archives": 2,
+            "checks": {
+              "java": 4,
+              "kotlin": 4
+            },
+            "packages": [
+              {
+                "ecosystem": "maven",
+                "name": "org.leanbridge:owned-checked-records-result-only",
+                "target": "maven",
+                "version": "1.0.0"
+              }
+            ],
+            "path": "evidence/jvm/ordinary-result-only/handoff",
+            "receiptSha256": "911b17aceb847eb59b4ad733649a6a020a36a3274075f631f7167552e1828a6a",
+            "route": "ordinary-result-only"
+          },
+          {
+            "archiveBytes": 54154164,
+            "archives": 2,
+            "checks": {
+              "java": 121,
+              "kotlin": 119
+            },
+            "packages": [
+              {
+                "ecosystem": "maven",
+                "name": "org.leanbridge:owned-checked-records",
+                "target": "maven",
+                "version": "1.0.0"
+              }
+            ],
+            "path": "evidence/jvm/reviewed-full/handoff",
+            "receiptSha256": "5e3f94e4c27f48828b3bd9e058661c2eb217c73435fde4af6033b0b6c283a538",
+            "route": "reviewed-full"
+          },
+          {
+            "archiveBytes": 54028922,
+            "archives": 2,
+            "checks": {
+              "java": 4,
+              "kotlin": 4
+            },
+            "packages": [
+              {
+                "ecosystem": "maven",
+                "name": "org.leanbridge:owned-checked-records-result-only",
+                "target": "maven",
+                "version": "1.0.0"
+              }
+            ],
+            "path": "evidence/jvm/reviewed-result-only/handoff",
+            "receiptSha256": "da156cf755c8faef7809f219d3c62587470a95c423eff758a34be179d12e2999",
+            "route": "reviewed-result-only"
+          }
+        ],
+        "schemaVersion": 1,
+        "tests": 6
+      }
+    },
+    {
+      "lane": "php",
+      "profiles": [
+        "php-native"
+      ],
+      "routes": [
+        "ordinary-full",
+        "ordinary-result-only",
+        "reviewed-full",
+        "reviewed-result-only"
+      ],
+      "producerCommit": "390ae18d3a2607bc73463767a33fea0cfb9350b0",
+      "archiveCommit": "eb1d63edb44d703a072d72a2c9498c316b51d319",
+      "index": {
+        "path": "docs/evidence/owned-checked-record-php-hosted-20261024/index.json",
+        "sha256": "6da88bde29b88bdf142cc7b71c8c50322997602e4c5390b7334493ec1813c2aa"
+      },
+      "runId": 40047586038,
+      "jobId": 120732735316,
+      "artifactId": 12542919744,
+      "retainedFiles": 659,
+      "retainedBytes": 440971866,
+      "accepted": {
+        "acceptanceLogSha256": "20a5be4848851fb90536b47e27e67c0bddf1e38009fc7b8c92422f24b61fa921",
+        "kind": "owned-checked-record-hosted-replay",
+        "lane": "php",
+        "producerCommit": "390ae18d3a2607bc73463767a33fea0cfb9350b0",
+        "reportSha256": "0fa68f5459d8d785fc6d69aab1eb4a22e4919e98b24841953b1043b6e9316f20",
+        "routes": [
+          {
+            "archiveBytes": 53961593,
+            "archives": 1,
+            "checks": {
+              "php-native": 120
+            },
+            "packages": [
+              {
+                "ecosystem": "composer",
+                "name": "leanbridge/owned-checked-records",
+                "target": "php-native",
+                "version": "1.0.0"
+              }
+            ],
+            "path": "evidence/php/ordinary-full/handoff",
+            "receiptSha256": "0deb747f1e2fa89f9eddde516d79e591049c7f1a135b33d9757c283b7ee1fbb4",
+            "route": "ordinary-full"
+          },
+          {
+            "archiveBytes": 53896857,
+            "archives": 1,
+            "checks": {
+              "php-native": 4
+            },
+            "packages": [
+              {
+                "ecosystem": "composer",
+                "name": "leanbridge/owned-checked-records-result-only",
+                "target": "php-native",
+                "version": "1.0.0"
+              }
+            ],
+            "path": "evidence/php/ordinary-result-only/handoff",
+            "receiptSha256": "e48cb35e218176a6e3d9e48d35bdc06de642ff00680b967cdbddb742a7d44974",
+            "route": "ordinary-result-only"
+          },
+          {
+            "archiveBytes": 53965031,
+            "archives": 1,
+            "checks": {
+              "php-native": 120
+            },
+            "packages": [
+              {
+                "ecosystem": "composer",
+                "name": "leanbridge/owned-checked-records",
+                "target": "php-native",
+                "version": "1.0.0"
+              }
+            ],
+            "path": "evidence/php/reviewed-full/handoff",
+            "receiptSha256": "70055781f6b8863d2fa3c0f733ea97866fdcd2a9d364b190462e4d50fadcd352",
+            "route": "reviewed-full"
+          },
+          {
+            "archiveBytes": 53900011,
+            "archives": 1,
+            "checks": {
+              "php-native": 4
+            },
+            "packages": [
+              {
+                "ecosystem": "composer",
+                "name": "leanbridge/owned-checked-records-result-only",
+                "target": "php-native",
+                "version": "1.0.0"
+              }
+            ],
+            "path": "evidence/php/reviewed-result-only/handoff",
+            "receiptSha256": "28dd7922bdfc70ba5a0a25e87ae623ff3fbfea3c9adea060395bdd4028195bf4",
+            "route": "reviewed-result-only"
+          }
+        ],
+        "schemaVersion": 1,
+        "tests": 6
+      }
+    },
+    {
+      "lane": "wit",
+      "profiles": [
+        "wit-wasi"
+      ],
+      "routes": [
+        "ordinary-full",
+        "ordinary-result-only",
+        "reviewed-full",
+        "reviewed-result-only"
+      ],
+      "producerCommit": "390ae18d3a2607bc73463767a33fea0cfb9350b0",
+      "archiveCommit": "4d3d30cc470ab1a1548ebbc24c41a1d5a92b0506",
+      "index": {
+        "path": "docs/evidence/owned-checked-record-wit-hosted-20261024/index.json",
+        "sha256": "dff08fbdec87bd164d132b4d9f3121988edcf191fa1cfb6aea2c04dccd00633a"
+      },
+      "runId": 40047586038,
+      "jobId": 120732735151,
+      "artifactId": 12545852091,
+      "retainedFiles": 662,
+      "retainedBytes": 503887091,
+      "accepted": {
+        "acceptanceLogSha256": "d0bc3d715be48dd98b2914795f34810379700020d5a1104e542da2347187f77e",
+        "kind": "owned-checked-record-hosted-replay",
+        "lane": "wit",
+        "producerCommit": "390ae18d3a2607bc73463767a33fea0cfb9350b0",
+        "reportSha256": "08345d6d4427ce1d3c88b021b8477b5be4c0577c63910920b75b8b02820cb8b2",
+        "routes": [
+          {
+            "archiveBytes": 61828082,
+            "archives": 1,
+            "checks": {
+              "wit-wasi": 261
+            },
+            "packages": [
+              {
+                "ecosystem": "wit-wasi",
+                "name": "owned-checked-records",
+                "target": "wit-wasi",
+                "version": "1.0.0"
+              }
+            ],
+            "path": "evidence/wit/ordinary-full/handoff",
+            "receiptSha256": "25566406df7cfd332d9ce85aa20eb61d88a7ec8ca1dbc48d282254c382c1d71d",
+            "route": "ordinary-full"
+          },
+          {
+            "archiveBytes": 61753328,
+            "archives": 1,
+            "checks": {
+              "wit-wasi": 14
+            },
+            "packages": [
+              {
+                "ecosystem": "wit-wasi",
+                "name": "owned-checked-records-result-only",
+                "target": "wit-wasi",
+                "version": "1.0.0"
+              }
+            ],
+            "path": "evidence/wit/ordinary-result-only/handoff",
+            "receiptSha256": "6c8e68fc4136e0431096e6bbed84a952a0cc7a0329d02df312f83bb9aa0f68bf",
+            "route": "ordinary-result-only"
+          },
+          {
+            "archiveBytes": 61832815,
+            "archives": 1,
+            "checks": {
+              "wit-wasi": 261
+            },
+            "packages": [
+              {
+                "ecosystem": "wit-wasi",
+                "name": "owned-checked-records",
+                "target": "wit-wasi",
+                "version": "1.0.0"
+              }
+            ],
+            "path": "evidence/wit/reviewed-full/handoff",
+            "receiptSha256": "068decaa47d9a2123a75a0abd244c0ad2ebf8bb7c1df005f1b95b3b0068c5c43",
+            "route": "reviewed-full"
+          },
+          {
+            "archiveBytes": 61754569,
+            "archives": 1,
+            "checks": {
+              "wit-wasi": 14
+            },
+            "packages": [
+              {
+                "ecosystem": "wit-wasi",
+                "name": "owned-checked-records-result-only",
+                "target": "wit-wasi",
+                "version": "1.0.0"
+              }
+            ],
+            "path": "evidence/wit/reviewed-result-only/handoff",
+            "receiptSha256": "5f574aa431be6081ef3c12ef28fa3252154ccd164c2f4150998844bf7c11fefe",
+            "route": "reviewed-result-only"
+          }
+        ],
+        "schemaVersion": 1,
+        "tests": 6
+      }
+    },
+    {
+      "lane": "javascript",
+      "profiles": [
+        "node-javascript",
+        "node-typescript",
+        "browser-javascript",
+        "browser-react",
+        "browser-worker"
+      ],
+      "routes": [
+        "ordinary-full",
+        "ordinary-result-only",
+        "reviewed-full",
+        "reviewed-result-only"
+      ],
+      "producerCommit": "10cc8859e6ef7124c52b147aebcdae92e69a2957",
+      "archiveCommit": "a003269808c43a2a3a509a23c8a8ab8def07b610",
+      "index": {
+        "path": "docs/evidence/owned-checked-record-javascript-hosted-20261024/index.json",
+        "sha256": "c37e0ac26f75d2904e488a2ba6607bb0ebb21ebcadb9abfa64c9f5e6d3400f36"
+      },
+      "runId": 40140719554,
+      "jobId": 121011706525,
+      "artifactId": 12580490499,
+      "retainedFiles": 509,
+      "retainedBytes": 23628335,
+      "accepted": {
+        "acceptanceLogSha256": "83e5f1027b23c84383d415254bcb91fa069687593f8cf3be49de9fe2346f4d32",
+        "kind": "owned-checked-record-hosted-replay",
+        "lane": "javascript",
+        "producerCommit": "10cc8859e6ef7124c52b147aebcdae92e69a2957",
+        "reportSha256": "ba73835030b934277598b4ced34e4548960ddcab21d6c06bd420aa0340e324fd",
+        "routes": [
+          {
+            "archiveBytes": 1761596,
+            "archives": 2,
+            "browserExecutions": 9,
+            "receiptSha256": "83654a5316c1fec29b1faa2726adb5067e9c660a3c399f75f56ff30ca9000257",
+            "route": "ordinary-full"
+          },
+          {
+            "archiveBytes": 1718892,
+            "archives": 2,
+            "browserExecutions": 9,
+            "receiptSha256": "a20f2a2ebe50b1bef699b90fb1ac2415c4126b7552fbbfafbef7032a7faa7355",
+            "route": "ordinary-result-only"
+          },
+          {
+            "archiveBytes": 1762573,
+            "archives": 2,
+            "browserExecutions": 9,
+            "receiptSha256": "94208e8505952e6f97819be9431d584f6d97e8e70fcc670853732fde32419d7c",
+            "route": "reviewed-full"
+          },
+          {
+            "archiveBytes": 1720808,
+            "archives": 2,
+            "browserExecutions": 9,
+            "receiptSha256": "7415f2a23b072099006d0b8160853d5cf0e821838ab35c277f62ee9284275551",
+            "route": "reviewed-result-only"
+          }
+        ],
+        "schemaVersion": 1,
+        "tests": 5
+      }
+    },
+    {
+      "lane": "php-wasm",
+      "profiles": [
+        "php-wasm"
+      ],
+      "routes": [
+        "ordinary-full",
+        "ordinary-result-only",
+        "reviewed-full",
+        "reviewed-result-only"
+      ],
+      "producerCommit": "390ae18d3a2607bc73463767a33fea0cfb9350b0",
+      "archiveCommit": "12692c0d6160cdf2b56ccd795e40b6ae721879fb",
+      "index": {
+        "path": "docs/evidence/owned-checked-record-php-wasm-hosted-20261024/index.json",
+        "sha256": "eeda468ec6c6b14cef3a6c2dec5aa06114cd8087045bffb5c62ee4420adfbb59"
+      },
+      "runId": 40047587306,
+      "jobId": 120732739446,
+      "artifactId": 12544430189,
+      "retainedFiles": 713,
+      "retainedBytes": 30546506,
+      "accepted": {
+        "acceptanceLogSha256": "51ec511462c22f0ba13c029d66d95d22694e2bc3b156ffcd3af944277b9c1dba",
+        "kind": "owned-checked-record-hosted-replay",
+        "lane": "php-wasm",
+        "producerCommit": "390ae18d3a2607bc73463767a33fea0cfb9350b0",
+        "reportSha256": "b5d7599cfeb0fbe6297b7b140bc776246c7d472c643b1ba5cd4b7d41150978ce",
+        "routes": [
+          {
+            "archiveBytes": 1926180,
+            "archives": 3,
+            "checks": {
+              "chromium": [
+                137,
+                137,
+                137,
+                137,
+                137,
+                137,
+                137,
+                137
+              ],
+              "node": [
+                137,
+                137,
+                137,
+                137,
+                137,
+                137,
+                137,
+                137
+              ]
+            },
+            "packages": [
+              {
+                "ecosystem": "composer",
+                "name": "lean-bridge-test/owned-php-wasm-checked-record",
+                "target": "php-wasm",
+                "version": "1.0.0"
+              },
+              {
+                "ecosystem": "npm",
+                "name": "@lean-bridge-test/owned-php-wasm-checked-record",
+                "target": "php-wasm",
+                "version": "1.0.0"
+              },
+              {
+                "ecosystem": "npm",
+                "name": "@lean-bridge/php-wasm-copied-runtime",
+                "target": "php-wasm",
+                "version": "0.0.0-copied1.a01f27ff8abc302e781ded2cad03992af20457e406e5ee58b47e101db107cfeb"
+              }
+            ],
+            "path": "evidence/full/ordinary/handoff",
+            "receiptSha256": "e2491e229def97dac3cb05c909da0a16c6ecd0ba88ebb95d38f7bfdbaac10ac8",
+            "route": "ordinary-full"
+          },
+          {
+            "archiveBytes": 1890979,
+            "archives": 3,
+            "checks": {
+              "chromium": [
+                4,
+                4,
+                4,
+                4,
+                4,
+                4,
+                4,
+                4
+              ],
+              "node": [
+                4,
+                4,
+                4,
+                4,
+                4,
+                4,
+                4,
+                4
+              ]
+            },
+            "packages": [
+              {
+                "ecosystem": "composer",
+                "name": "lean-bridge-test/owned-php-wasm-checked-record-result-only",
+                "target": "php-wasm",
+                "version": "1.0.0"
+              },
+              {
+                "ecosystem": "npm",
+                "name": "@lean-bridge-test/owned-php-wasm-checked-record-result-only",
+                "target": "php-wasm",
+                "version": "1.0.0"
+              },
+              {
+                "ecosystem": "npm",
+                "name": "@lean-bridge/php-wasm-copied-runtime",
+                "target": "php-wasm",
+                "version": "0.0.0-copied1.a01f27ff8abc302e781ded2cad03992af20457e406e5ee58b47e101db107cfeb"
+              }
+            ],
+            "path": "evidence/result-only/ordinary/handoff",
+            "receiptSha256": "be0cb1d1f8e90f1bcf555457cfea47325b84396921ad40ba518d298d94ca9231",
+            "route": "ordinary-result-only"
+          },
+          {
+            "archiveBytes": 1929875,
+            "archives": 3,
+            "checks": {
+              "chromium": [
+                137,
+                137,
+                137,
+                137,
+                137,
+                137,
+                137,
+                137
+              ],
+              "node": [
+                137,
+                137,
+                137,
+                137,
+                137,
+                137,
+                137,
+                137
+              ]
+            },
+            "packages": [
+              {
+                "ecosystem": "composer",
+                "name": "lean-bridge-test/owned-php-wasm-checked-record",
+                "target": "php-wasm",
+                "version": "1.0.0"
+              },
+              {
+                "ecosystem": "npm",
+                "name": "@lean-bridge-test/owned-php-wasm-checked-record",
+                "target": "php-wasm",
+                "version": "1.0.0"
+              },
+              {
+                "ecosystem": "npm",
+                "name": "@lean-bridge/php-wasm-copied-runtime",
+                "target": "php-wasm",
+                "version": "0.0.0-copied1.a01f27ff8abc302e781ded2cad03992af20457e406e5ee58b47e101db107cfeb"
+              }
+            ],
+            "path": "evidence/full/reviewed/handoff",
+            "receiptSha256": "691732a0c5f0b5aca70e1093bb14aff12d221810f929f869175630e51e4e91b8",
+            "route": "reviewed-full"
+          },
+          {
+            "archiveBytes": 1894185,
+            "archives": 3,
+            "checks": {
+              "chromium": [
+                4,
+                4,
+                4,
+                4,
+                4,
+                4,
+                4,
+                4
+              ],
+              "node": [
+                4,
+                4,
+                4,
+                4,
+                4,
+                4,
+                4,
+                4
+              ]
+            },
+            "packages": [
+              {
+                "ecosystem": "composer",
+                "name": "lean-bridge-test/owned-php-wasm-checked-record-result-only",
+                "target": "php-wasm",
+                "version": "1.0.0"
+              },
+              {
+                "ecosystem": "npm",
+                "name": "@lean-bridge-test/owned-php-wasm-checked-record-result-only",
+                "target": "php-wasm",
+                "version": "1.0.0"
+              },
+              {
+                "ecosystem": "npm",
+                "name": "@lean-bridge/php-wasm-copied-runtime",
+                "target": "php-wasm",
+                "version": "0.0.0-copied1.a01f27ff8abc302e781ded2cad03992af20457e406e5ee58b47e101db107cfeb"
+              }
+            ],
+            "path": "evidence/result-only/reviewed/handoff",
+            "receiptSha256": "db8dde0243dd2f4c5e99ce626475e4c05d7e0dadd99fa137f8f7c7ecd6d82253",
+            "route": "reviewed-result-only"
+          }
+        ],
+        "schemaVersion": 1,
+        "tests": 5
+      }
+    }
+  ],
+  "sourcePins": [
+    {
+      "path": "docs/consume/c.md",
+      "currentSha256": "4676474c965da41bc8cb538d23d7fe8f79753a6004e45cc80d80bfe0552557ff",
+      "count": 1,
+      "previousSha256": "932ba66959bd577f00b329b2589c596ba69269b45dadb754d6fb29053fe25b24"
+    },
+    {
+      "path": "docs/consume/cpp.md",
+      "currentSha256": "faa7d09034465d9861601c6780e032d914bc701c198663d897b4786959a81a09",
+      "count": 1,
+      "previousSha256": "e9910cb2953cc784f7381061e571fe5ca186f05bfd4a9dec882d1f2326cfd715"
+    },
+    {
+      "path": "docs/consume/dotnet.md",
+      "currentSha256": "204a4233e8ab45e41df3d72ba391fb8414da6700e6078299d5dd0477c6792ffb",
+      "count": 5,
+      "previousSha256": "203dbbc63ca4935350adae9bd4249fcbdba0a0c8abda80f3886d2ee171bb184d"
+    },
+    {
+      "path": "docs/consume/java.md",
+      "currentSha256": "b1feee04d18e4ede9bc1298e7f908f930bb4d0538b4cd88ec88ca60467e7cd4b",
+      "count": 5,
+      "previousSha256": "03163737fd1229f2be5199655743cabc05dc37655db060596dd1c2fb2d886233"
+    },
+    {
+      "path": "docs/consume/kotlin.md",
+      "currentSha256": "6e2b14a42e08345ee5724d1faf77f05d44250f0034caadd0e2a8f745e598f911",
+      "count": 6,
+      "previousSha256": "170fb62db75dc66d32b130af966b0bf2c3756db24ded7764f1a94dd71250dece"
+    },
+    {
+      "path": "docs/consume/perl.md",
+      "currentSha256": "bae96fd3215f1c800cbb8beec4f0a09a99db10c6707e983fabaf9eebc9065861",
+      "count": 1,
+      "previousSha256": "2318e2d83c77b754624b01387c1edde90133498f5b5a112a755e28990b1c929d"
+    },
+    {
+      "path": "docs/consume/python.md",
+      "currentSha256": "8bf30095de92afe4fd510e3b154cc5c3189e5955e61f255e0240e4cbc79862cc",
+      "count": 1,
+      "previousSha256": "b5550a5e3b1706a4b3bb3d7ee86364e1fd630cc3065a155267cd178dcfd050de"
+    },
+    {
+      "path": "docs/consume/ruby.md",
+      "currentSha256": "360e7f03a26df43e98b4b10763e491fb22fa1f600a83c0cb8d83b31781a2d79a",
+      "count": 1,
+      "previousSha256": "929347299d8b9c77d68c51d0e4d5fb2b3e11cc3123ccbc81ce4db2967d8726ea"
+    },
+    {
+      "path": "docs/consume/rust.md",
+      "currentSha256": "ee787dabe61671df8e0025ecd639a01fbba5f8756325d5f3ff5d2e9130072f90",
+      "count": 1,
+      "previousSha256": "7e560000ca4c1f6c381ff4fa690cf4a44706fa4408fe7a4d37c9200027ace47a"
+    },
+    {
+      "path": "docs/consume/wit-wasi.md",
+      "currentSha256": "8f27942dd838768f424c2dd7ada7afebf6e651a55e32c225b0a3280a0b340893",
+      "count": 2,
+      "previousSha256": "80ac2db0997df9d6d00748bf3c64f123a1cef1d7bbe14b5716926f1cafed95b6"
+    },
+    {
+      "path": "docs/contributing/testing.md",
+      "currentSha256": "94be66d7e298b22293a773fc641435d008aed29c886f82e428c5cb9dac46c2cb",
+      "count": 11,
+      "previousSha256": "000a883b22e63a4a46b7c88929d424bff8a3dce4e14a4d16141f3f19d5cc5a78"
+    },
+    {
+      "path": "docs/lean/existing-package.md",
+      "currentSha256": "c15b6b4fce1001120661ab9d919a279fa16252f45c0f868d3a9cd1afdc106459",
+      "count": 18,
+      "previousSha256": "ddcb45ff701b2e1ea398ca40ee5d452db5097c917a560d691bfec44cbc6b3eda"
+    },
+    {
+      "path": "docs/lean/export-decisions.md",
+      "currentSha256": "99cef3dc3654c7f13b18f3b5509c12bdb3e3722a26361181ac6b8b480bb730da",
+      "count": 22,
+      "previousSha256": "37d1a95e47bf11aefd561b38554819ff4c8e10465d116f8b0f7dbdaa67f614b3"
+    },
+    {
+      "path": "docs/php.md",
+      "currentSha256": "2dfdc4e1afc1d87d856453f0aae18761c1b56a6c176c315c95894bca30b577e4",
+      "count": 6,
+      "previousSha256": "d1264958fab471cb3e64242ac012d96249cd28349b4ee2e1b4d0460050149efd"
+    }
+  ],
+  "validation": {
+    "completeArchivesReplayed": true,
+    "semanticDeltaMatchesPromotion": true,
+    "allOtherObservationsUnchanged": true,
+    "sourcePinInverseMatchesStagedInventory": true,
+    "currentInventoryAndDocumentationTests": 6,
+    "currentGuides": 14,
+    "liveSourcePins": 16038,
+    "uniqueLiveSources": 2548,
+    "staleEntries": 0
+  },
+  "scope": "The acyclic Booking/Window and Ticket/Claim forms only, with full and standalone result-only package routes. Full packages cover borrowed and transferred inputs, leased results, copied checked fields, synchronous host replies and returned Lean closures. Result-only Claim packages expose Lean-produced results without input-constructor, transfer or callback metadata. The public update refines existing checked-record cells; it does not establish Grant, nested owned Subtypes, arbitrary owned containers, recursive owned graphs, retained/asynchronous callbacks, other predicates or performance.",
+  "remaining": [
+    "Final-revision Core and required hosted gates",
+    "Remaining original #1220 scope, including independent PHP-Wasm dispatch promotion and unarchived compositions"
+  ]
+}
