@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeOwnedCheckedArchiveRootsSource, ownedCheckedArchiveRootsNormalizationPaths } from "./owned-checked-record-archive-roots-source-history.mjs";
 import { beforeOwnedSubtypeMatrixPublicationSource, ownedSubtypeMatrixPublicationNormalizationPaths } from "./owned-subtype-matrix-publication-source-history.mjs";
 import { beforeOwnedSubtypePromotionTransactionSource, ownedSubtypePromotionTransactionNormalizationPaths } from "./owned-subtype-promotion-transaction-source-history.mjs";
 import { beforeOwnedSubtypeHostedPromotionSource, ownedSubtypeHostedPromotionNormalizationPaths } from "./owned-subtype-hosted-promotion-source-history.mjs";
@@ -2201,7 +2202,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...ownedSubtypeMatrixPublicationNormalizationPaths
+	...ownedCheckedArchiveRootsNormalizationPaths
+	, ...ownedSubtypeMatrixPublicationNormalizationPaths
 	, ...ownedSubtypePromotionTransactionNormalizationPaths
 	, ...ownedSubtypeHostedPromotionNormalizationPaths
 	, ...ownedSubtypeNpmHostedNormalizationPaths
@@ -3145,7 +3147,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeOwnedSubtypeMatrixPublicationSource(path, text, expected);
+	let stage = beforeOwnedCheckedArchiveRootsSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeOwnedSubtypeMatrixPublicationSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;

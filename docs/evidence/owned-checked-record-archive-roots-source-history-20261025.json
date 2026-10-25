@@ -1,0 +1,245 @@
+{
+  "additions": [
+    {
+      "currentSha256": "3d6223cf11a0e4b7a950b0d8bed429a2c7fa9259ce227fe8a0d2cb5f851bc77f",
+      "path": "docs/evidence/owned-checked-record-archive-roots-20261025.json"
+    },
+    {
+      "currentSha256": "64f864fc13af10d426e239bbb2ee0c231e97a2f9c981707e0925efa06825f12b",
+      "path": "scripts/update-owned-checked-record-archive-roots-source-history.mjs"
+    },
+    {
+      "currentSha256": "08f5fdb3b6d1c273704623c01ac5631bf3352b4577a5ad1afff2f46ec456a13e",
+      "path": "tests/helpers/owned-checked-record-archive-roots-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "1733396e14648948e6eb7279121d6b6a94eb135017eb4c14b06e1c93e3253b4e",
+      "path": "tests/helpers/owned-checked-record-archive-roots-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "54d2f6a4dae47371fed515381a0867929347cb22",
+  "implementationCommits": [
+    "54d2f6a4dae47371fed515381a0867929347cb22"
+  ],
+  "integrationBaseCommit": "54d2f6a4dae47371fed515381a0867929347cb22",
+  "integrationUpdates": [
+    {
+      "currentSha256": "80a42f40a05a3a9cc531bb0cc7568cf9a22cfbed01397cb13addc5bc254233fa",
+      "edits": [
+        {
+          "current": "import { beforeOwnedCheckedArchiveRootsSource, ownedCheckedArchiveRootsNormalizationPaths } from \"./owned-checked-record-archive-roots-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...ownedCheckedArchiveRootsNormalizationPaths\n\t, ...ownedSubtypeMatrixPublicationNormalizationPaths\n",
+          "previous": "\t...ownedSubtypeMatrixPublicationNormalizationPaths\n",
+          "start": 189368
+        },
+        {
+          "current": "\tlet stage = beforeOwnedCheckedArchiveRootsSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeOwnedSubtypeMatrixPublicationSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeOwnedSubtypeMatrixPublicationSource(path, text, expected);\n",
+          "start": 234932
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "d13f3614f406cc3bb1a88a63a317c8b70fe0638d8d05ab00e2ff616932e80478"
+    },
+    {
+      "currentSha256": "5f43752fa7af3638e085dfd9788ff747cfd6fde3bd5c906614ae1d3396bf28d8",
+      "edits": [
+        {
+          "current": "import \"./helpers/owned-checked-record-archive-roots-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 10673
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "709bfe3b363e8a813f711dcaef2affb84195709d8d3d74c80f75a686c669c4b5"
+    }
+  ],
+  "milestone": "owned-checked-record-archive-roots-source-v1",
+  "predecessorCommit": "186a319c7c1a55f8340de7d9db3224b74517c1a5",
+  "schemaVersion": 1,
+  "scope": "Allow bounded opaque labels on immutable owned checked-record archive roots without renaming, replacing or discarding earlier captures. Use one closed-lane path validator in selection and committed-file auditing, rejecting unsafe labels, lane confusion and trailing newline aliases. Preserve all eleven lanes, forty-four routes, exact index identities, shared native producer revision, committed file-set and byte authentication, and complete independent API/ZIP/package/source replay. Exercise the current implementation against the original labeled Perl, npm/browser and PHP-Wasm captures. Document the exact naming contract, refresh exactly 22 live source/documentation hashes and preserve every other inventory byte. This repair does not promote support cells, constitute the complete aligned eleven-lane replay, or add new installed runtime execution. Remaining aligned captures and final Core/hosted/recurring gates stay open.",
+  "updates": [
+    {
+      "currentSha256": "2f5ba18624b6a92026fcd502c515ae7474a08e86a7ebe364be7ad06f5ab4e50c",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"729545fe4f30e58e96514a225374a0330a48ccdf7ca7df5cce3560c896cda0d0\"\n",
+          "previous": "          \"sha256\": \"cab259e552316b78b66f1bfcd53dd58537d04f7216edcce2a1fe40fad74cfc40\"\n",
+          "start": 1167697
+        },
+        {
+          "current": "          \"sha256\": \"729545fe4f30e58e96514a225374a0330a48ccdf7ca7df5cce3560c896cda0d0\"\n",
+          "previous": "          \"sha256\": \"cab259e552316b78b66f1bfcd53dd58537d04f7216edcce2a1fe40fad74cfc40\"\n",
+          "start": 1177811
+        },
+        {
+          "current": "          \"sha256\": \"729545fe4f30e58e96514a225374a0330a48ccdf7ca7df5cce3560c896cda0d0\"\n",
+          "previous": "          \"sha256\": \"cab259e552316b78b66f1bfcd53dd58537d04f7216edcce2a1fe40fad74cfc40\"\n",
+          "start": 1189747
+        },
+        {
+          "current": "          \"sha256\": \"729545fe4f30e58e96514a225374a0330a48ccdf7ca7df5cce3560c896cda0d0\"\n",
+          "previous": "          \"sha256\": \"cab259e552316b78b66f1bfcd53dd58537d04f7216edcce2a1fe40fad74cfc40\"\n",
+          "start": 1222308
+        },
+        {
+          "current": "          \"sha256\": \"729545fe4f30e58e96514a225374a0330a48ccdf7ca7df5cce3560c896cda0d0\"\n",
+          "previous": "          \"sha256\": \"cab259e552316b78b66f1bfcd53dd58537d04f7216edcce2a1fe40fad74cfc40\"\n",
+          "start": 1252587
+        },
+        {
+          "current": "          \"sha256\": \"729545fe4f30e58e96514a225374a0330a48ccdf7ca7df5cce3560c896cda0d0\"\n",
+          "previous": "          \"sha256\": \"cab259e552316b78b66f1bfcd53dd58537d04f7216edcce2a1fe40fad74cfc40\"\n",
+          "start": 1285738
+        },
+        {
+          "current": "          \"sha256\": \"729545fe4f30e58e96514a225374a0330a48ccdf7ca7df5cce3560c896cda0d0\"\n",
+          "previous": "          \"sha256\": \"cab259e552316b78b66f1bfcd53dd58537d04f7216edcce2a1fe40fad74cfc40\"\n",
+          "start": 1325841
+        },
+        {
+          "current": "          \"sha256\": \"729545fe4f30e58e96514a225374a0330a48ccdf7ca7df5cce3560c896cda0d0\"\n",
+          "previous": "          \"sha256\": \"cab259e552316b78b66f1bfcd53dd58537d04f7216edcce2a1fe40fad74cfc40\"\n",
+          "start": 1352261
+        },
+        {
+          "current": "          \"sha256\": \"729545fe4f30e58e96514a225374a0330a48ccdf7ca7df5cce3560c896cda0d0\"\n",
+          "previous": "          \"sha256\": \"cab259e552316b78b66f1bfcd53dd58537d04f7216edcce2a1fe40fad74cfc40\"\n",
+          "start": 1374941
+        },
+        {
+          "current": "          \"sha256\": \"729545fe4f30e58e96514a225374a0330a48ccdf7ca7df5cce3560c896cda0d0\"\n",
+          "previous": "          \"sha256\": \"cab259e552316b78b66f1bfcd53dd58537d04f7216edcce2a1fe40fad74cfc40\"\n",
+          "start": 1394608
+        },
+        {
+          "current": "          \"sha256\": \"729545fe4f30e58e96514a225374a0330a48ccdf7ca7df5cce3560c896cda0d0\"\n",
+          "previous": "          \"sha256\": \"cab259e552316b78b66f1bfcd53dd58537d04f7216edcce2a1fe40fad74cfc40\"\n",
+          "start": 1417696
+        },
+        {
+          "current": "          \"sha256\": \"136b67849a8649d249507613656d8a2373573ab74371e77ef0b46b8fbcbfff1d\"\n",
+          "previous": "          \"sha256\": \"6e004e92ee882c3d441ef3d252666ff950477e559af2fb4e34b4e89f84c14c94\"\n",
+          "start": 89523895
+        },
+        {
+          "current": "          \"sha256\": \"136b67849a8649d249507613656d8a2373573ab74371e77ef0b46b8fbcbfff1d\"\n",
+          "previous": "          \"sha256\": \"6e004e92ee882c3d441ef3d252666ff950477e559af2fb4e34b4e89f84c14c94\"\n",
+          "start": 89530933
+        },
+        {
+          "current": "          \"sha256\": \"136b67849a8649d249507613656d8a2373573ab74371e77ef0b46b8fbcbfff1d\"\n",
+          "previous": "          \"sha256\": \"6e004e92ee882c3d441ef3d252666ff950477e559af2fb4e34b4e89f84c14c94\"\n",
+          "start": 89537314
+        },
+        {
+          "current": "          \"sha256\": \"136b67849a8649d249507613656d8a2373573ab74371e77ef0b46b8fbcbfff1d\"\n",
+          "previous": "          \"sha256\": \"6e004e92ee882c3d441ef3d252666ff950477e559af2fb4e34b4e89f84c14c94\"\n",
+          "start": 89543683
+        },
+        {
+          "current": "          \"sha256\": \"136b67849a8649d249507613656d8a2373573ab74371e77ef0b46b8fbcbfff1d\"\n",
+          "previous": "          \"sha256\": \"6e004e92ee882c3d441ef3d252666ff950477e559af2fb4e34b4e89f84c14c94\"\n",
+          "start": 89550044
+        },
+        {
+          "current": "          \"sha256\": \"136b67849a8649d249507613656d8a2373573ab74371e77ef0b46b8fbcbfff1d\"\n",
+          "previous": "          \"sha256\": \"6e004e92ee882c3d441ef3d252666ff950477e559af2fb4e34b4e89f84c14c94\"\n",
+          "start": 89556425
+        },
+        {
+          "current": "          \"sha256\": \"136b67849a8649d249507613656d8a2373573ab74371e77ef0b46b8fbcbfff1d\"\n",
+          "previous": "          \"sha256\": \"6e004e92ee882c3d441ef3d252666ff950477e559af2fb4e34b4e89f84c14c94\"\n",
+          "start": 89562784
+        },
+        {
+          "current": "          \"sha256\": \"136b67849a8649d249507613656d8a2373573ab74371e77ef0b46b8fbcbfff1d\"\n",
+          "previous": "          \"sha256\": \"6e004e92ee882c3d441ef3d252666ff950477e559af2fb4e34b4e89f84c14c94\"\n",
+          "start": 89569131
+        },
+        {
+          "current": "          \"sha256\": \"136b67849a8649d249507613656d8a2373573ab74371e77ef0b46b8fbcbfff1d\"\n",
+          "previous": "          \"sha256\": \"6e004e92ee882c3d441ef3d252666ff950477e559af2fb4e34b4e89f84c14c94\"\n",
+          "start": 89575478
+        },
+        {
+          "current": "          \"sha256\": \"136b67849a8649d249507613656d8a2373573ab74371e77ef0b46b8fbcbfff1d\"\n",
+          "previous": "          \"sha256\": \"6e004e92ee882c3d441ef3d252666ff950477e559af2fb4e34b4e89f84c14c94\"\n",
+          "start": 89581214
+        },
+        {
+          "current": "          \"sha256\": \"136b67849a8649d249507613656d8a2373573ab74371e77ef0b46b8fbcbfff1d\"\n",
+          "previous": "          \"sha256\": \"6e004e92ee882c3d441ef3d252666ff950477e559af2fb4e34b4e89f84c14c94\"\n",
+          "start": 89586585
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "466ad4d9ce09ae5ed071f8ca67c8f4ccb110f85f35d983814a79ba33996cba22"
+    },
+    {
+      "currentSha256": "729545fe4f30e58e96514a225374a0330a48ccdf7ca7df5cce3560c896cda0d0",
+      "edits": [
+        {
+          "current": "Capture directories use `owned-checked-record-<lane>-hosted-YYYYMMDD`, optionally\nfollowed by a label such as `-aligned`, `-complete`, or `-contexts`. Labels contain\nlowercase ASCII letters or digits in hyphen-separated words, with at most 64\ncharacters. Select the exact existing directory and index digest. Keep earlier\ncaptures under their original names; a label does not establish acceptance or\nreplace any producer, route, package, or committed-byte check.\n\n",
+          "previous": "",
+          "start": 14155
+        }
+      ],
+      "path": "docs/contributing/testing.md",
+      "previousSha256": "cab259e552316b78b66f1bfcd53dd58537d04f7216edcce2a1fe40fad74cfc40"
+    },
+    {
+      "currentSha256": "136b67849a8649d249507613656d8a2373573ab74371e77ef0b46b8fbcbfff1d",
+      "edits": [
+        {
+          "current": "// A label distinguishes immutable captures from the same day. It conveys no\n// acceptance: the selected index, producer and every committed byte still bind.\nconst archiveRootLane = root => {\n\tassert.equal(typeof root, \"string\");\n\tassert.ok(root.length <= 200, \"Invalid owned checked-record archive root\");\n\tconst match = /^docs\\/evidence\\/owned-checked-record-([a-z-]+)-hosted-([0-9]{8})(?:-([a-z0-9]+(?:-[a-z0-9]+)*))?$/u.exec(root);\n\tassert.ok(match && match[0] === root\n\t\t, \"Invalid owned checked-record archive root\");\n\tassert.ok(ownedCheckedRecordHostedLaneNames.includes(match[1])\n\t\t, \"Unknown owned checked-record archive lane\");\n\tassert.ok(match[3] === undefined || match[3].length <= 64\n\t\t, \"Owned checked-record archive label exceeds 64 characters\");\n\treturn match[1];\n};\n\n",
+          "previous": "",
+          "start": 1105
+        },
+        {
+          "current": "\t\tassert.equal(typeof entry.index.path, \"string\");\n\t\tassert.ok(entry.index.path.endsWith(\"/index.json\")\n\t\t\t, \"Select the original capture index.json\");\n\t\tassert.equal(archiveRootLane(entry.index.path.slice(0, -\"/index.json\".length))\n\t\t\t, entry.lane, \"Archive root must match the selected lane\");\n",
+          "previous": "\t\tassert.match(entry.index.path, new RegExp(\n\t\t\t\"^docs/evidence/owned-checked-record-\" + entry.lane + \"-hosted-[0-9]{8}/index\\\\.json$\", \"u\"\n\t\t));\n",
+          "start": 2609
+        },
+        {
+          "current": "\tarchiveRootLane(root);\n",
+          "previous": "\tassert.match(root, /^docs\\/evidence\\/owned-checked-record-[a-z-]+-hosted-[0-9]{8}$/u);\n",
+          "start": 5192
+        }
+      ],
+      "path": "tests/helpers/owned-checked-record-hosted-matrix.mjs",
+      "previousSha256": "6e004e92ee882c3d441ef3d252666ff950477e559af2fb4e34b4e89f84c14c94"
+    },
+    {
+      "currentSha256": "6fafd4297ae1f1b93eb53ea841ed558a8e664f4c035a0b38ed80492c860ac59c",
+      "edits": [
+        {
+          "current": "test(\"owned matrix selection preserves labeled capture identities and producer requirements\", () => {\n\tconst indexes = indexesForPreflight(), selection = selectionFor(indexes);\n\tfor(const entry of selection.archives)\n\t{\n\t\tconst label = entry.lane === \"javascript\" ? \"complete\"\n\t\t\t: entry.lane === \"php-wasm\" ? \"contexts\" : \"aligned\";\n\t\tentry.index.path = entry.index.path.replace(\"/index.json\", \"-\" + label + \"/index.json\");\n\t}\n\tconst values = assertOwnedCheckedRecordMatrixIndexes(selection, indexes);\n\tassert.equal(values.length, 11);\n\tassert.equal(values.reduce((sum, value) => sum + value.accepted.routes.length, 0), 44);\n\tfor(const [position, entry] of selection.archives.entries())\n\t\tassert.equal(entry.index.sha256, sha256(indexes[position]));\n\tconst altered = [...indexes], changed = JSON.parse(altered[0]);\n\tchanged.producerCommit = changed.consumerCommit = changed.accepted.producerCommit = \"d\".repeat(40);\n\taltered[0] = Buffer.from(canonicalJson(changed));\n\tselection.archives[0].index.sha256 = sha256(altered[0]);\n\tassert.throws(() => assertOwnedCheckedRecordMatrixIndexes(selection, altered)\n\t\t, /share one authenticated producer revision/u);\n});\n\ntest(\"owned matrix selection refuses unsafe or ambiguous capture labels\", async () => {\n\tconst original = selectionFor(indexesForPreflight());\n\tconst root = \"docs/evidence/owned-checked-record-native-hosted-20990101\";\n\tconst invalid = [\"-\", \"--aligned\", \"-aligned--retry\", \"-Aligned\", \"-a_b\"\n\t\t, \"-../other\", \"-a/../b\", \"-a\\\\b\", \"-a%2fb\", \"-a:b\", \"-a?b\", \"-a#b\"\n\t\t, \"-a\\0b\", \"-a\\nb\", \"-\" + \"a\".repeat(65)].map(suffix => root + suffix);\n\tinvalid.push(root + \"\\n\", root + \"\\r\", \" \" + root, root + \"/\"\n\t\t, root.replace(\"-native-\", \"-unknown-\")\n\t\t, root.replace(\"docs/evidence/\", \"/tmp/\"));\n\tfor(const path of invalid)\n\t{\n\t\tconst selection = structuredClone(original);\n\t\tselection.archives[0].index.path = path + \"/index.json\";\n\t\tassert.throws(() => assertOwnedCheckedRecordMatrixSelection(selection)\n\t\t\t, /owned checked-record archive/iu, path);\n\t\tawait assert.rejects(assertOwnedCheckedRecordCommittedArchive(\n\t\t\t\"a\".repeat(40), path, Buffer.from(\"{}\"), \"/nonexistent-owned-matrix-repository\")\n\t\t, /owned checked-record archive/iu, path);\n\t}\n\tconst selection = structuredClone(original);\n\tselection.archives[0].index.path += \"\\n\";\n\tassert.throws(() => assertOwnedCheckedRecordMatrixSelection(selection), /original capture index/u);\n\tselection.archives[0].index.path = root.replace(\"-native-\", \"-perl-\") + \"-aligned/index.json\";\n\tassert.throws(() => assertOwnedCheckedRecordMatrixSelection(selection), /match the selected lane/u);\n});\n\n",
+          "previous": "",
+          "start": 2200
+        },
+        {
+          "current": "const committedFixture = async (t, suffix = \"\") => {\n",
+          "previous": "const committedFixture = async t => {\n",
+          "start": 7292
+        },
+        {
+          "current": "\tconst root = \"docs/evidence/owned-checked-record-ruby-hosted-20990101\" + suffix;\n",
+          "previous": "\tconst root = \"docs/evidence/owned-checked-record-ruby-hosted-20990101\";\n",
+          "start": 7488
+        },
+        {
+          "current": "test(\"owned matrix Git audit and isolated replay preserve labeled archive roots\", async t => {\n\tfor(const suffix of [\"-aligned\", \"-complete\", \"-contexts\", \"-retry-2\", \"-\" + \"a\".repeat(64)])\n\t{\n\t\tconst { repository, root, index, revision } = await committedFixture(t, suffix);\n\t\tconst result = await withOwnedCheckedRecordCommittedArchive(\n\t\t\trevision, root, index, async path => {\n\t\t\t\tassert.ok(path.endsWith(root));\n\t\t\t\tassert.deepEqual(await readFile(join(path, \"index.json\")), index);\n\t\t\t\tassert.equal(await readFile(join(path, \"text\"), \"utf8\"), \"alpha\\n\\0omega\\n\");\n\t\t\t\treturn true;\n\t\t\t}, repository);\n\t\tassert.equal(result.committed.files, 4);\n\t\tassert.equal(result.result, true);\n\t}\n});\n\n",
+          "previous": "",
+          "start": 9289
+        }
+      ],
+      "path": "tests/helpers/owned-checked-record-hosted-matrix-tests.mjs",
+      "previousSha256": "182954aed1884cb6d51b198808c9639f08a527b7038d3f98c2fd3f24e6987be0"
+    }
+  ]
+}

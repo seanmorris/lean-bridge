@@ -1,0 +1,142 @@
+{
+  "schemaVersion": 1,
+  "kind": "owned-checked-record-archive-roots-qualification",
+  "predecessorCommit": "186a319c7c1a55f8340de7d9db3224b74517c1a5",
+  "implementationCommit": "54d2f6a4dae47371fed515381a0867929347cb22",
+  "scope": "Preserve distinct labeled original captures without relaxing the complete eleven-lane matrix, forty-four routes, shared native producer, index hashes, committed bytes or independent archive replay.",
+  "sourcePins": {
+    "base": "186a319c7c1a55f8340de7d9db3224b74517c1a5",
+    "applied": true,
+    "original": {
+      "bytes": 102676066,
+      "sha256": "466ad4d9ce09ae5ed071f8ca67c8f4ccb110f85f35d983814a79ba33996cba22"
+    },
+    "current": {
+      "bytes": 102676066,
+      "sha256": "2f5ba18624b6a92026fcd502c515ae7474a08e86a7ebe364be7ad06f5ab4e50c"
+    },
+    "pins": [
+      {
+        "path": "docs/contributing/testing.md",
+        "count": 11,
+        "alreadyCurrent": 0,
+        "previousSha256": "cab259e552316b78b66f1bfcd53dd58537d04f7216edcce2a1fe40fad74cfc40",
+        "currentSha256": "729545fe4f30e58e96514a225374a0330a48ccdf7ca7df5cce3560c896cda0d0"
+      },
+      {
+        "path": "tests/helpers/owned-checked-record-hosted-matrix-tests.mjs",
+        "count": 0,
+        "alreadyCurrent": 0,
+        "previousSha256": "182954aed1884cb6d51b198808c9639f08a527b7038d3f98c2fd3f24e6987be0",
+        "currentSha256": "6fafd4297ae1f1b93eb53ea841ed558a8e664f4c035a0b38ed80492c860ac59c"
+      },
+      {
+        "path": "tests/helpers/owned-checked-record-hosted-matrix.mjs",
+        "count": 11,
+        "alreadyCurrent": 0,
+        "previousSha256": "6e004e92ee882c3d441ef3d252666ff950477e559af2fb4e34b4e89f84c14c94",
+        "currentSha256": "136b67849a8649d249507613656d8a2373573ab74371e77ef0b46b8fbcbfff1d"
+      }
+    ],
+    "refreshedPins": 22,
+    "alreadyCurrent": 0
+  },
+  "validation": {
+    "directTests": {
+      "passed": 13,
+      "failed": 0,
+      "skipped": 0
+    },
+    "registeredTests": {
+      "passed": 13,
+      "failed": 0,
+      "skipped": 0,
+      "command": "node --test --test-concurrency=1 --test-name-pattern='^owned matrix (selection|preflight|Git audit|verification|isolated replay)' tests/checked-javascript.test.mjs"
+    },
+    "scopedEslint": true,
+    "checkedJavaScriptTypecheck": true,
+    "diffCheck": true,
+    "liveSourcePins": {
+      "checked": 16199,
+      "archived": 353048,
+      "paths": 2569,
+      "stale": 0
+    },
+    "initialFailure": "The first focused run passed 12 tests and failed one because a refusal-test message regex was case-sensitive. The implementation correctly rejected the 65-character label. The assertion regex was corrected to ignore case; all 13 tests then passed."
+  },
+  "originalReplay": {
+    "schemaVersion": 1,
+    "kind": "owned-checked-record-labeled-archive-replay",
+    "committedRevision": "186a319c7c1a55f8340de7d9db3224b74517c1a5",
+    "sources": [
+      {
+        "path": "tests/helpers/owned-checked-record-hosted-matrix.mjs",
+        "sha256": "136b67849a8649d249507613656d8a2373573ab74371e77ef0b46b8fbcbfff1d"
+      },
+      {
+        "path": "tests/helpers/owned-checked-record-hosted-matrix-tests.mjs",
+        "sha256": "6fafd4297ae1f1b93eb53ea841ed558a8e664f4c035a0b38ed80492c860ac59c"
+      },
+      {
+        "path": "docs/contributing/testing.md",
+        "sha256": "729545fe4f30e58e96514a225374a0330a48ccdf7ca7df5cce3560c896cda0d0"
+      }
+    ],
+    "captures": [
+      {
+        "lane": "perl",
+        "root": "docs/evidence/owned-checked-record-perl-hosted-20261025-aligned",
+        "indexSha256": "0ff15f3158d7106f2091a239e0b3cb24bfc778a939f1b74eb25d023cbea6713b",
+        "committed": {
+          "files": 1690,
+          "bytes": 457997036
+        },
+        "producerCommit": "9e571b4214df98e1b8d0319f24fe7b6729ab34ba",
+        "runId": 40236273660,
+        "jobId": 121298431428,
+        "artifactId": 12616921063,
+        "routes": 4,
+        "tests": 6
+      },
+      {
+        "lane": "javascript",
+        "root": "docs/evidence/owned-checked-record-javascript-hosted-20261025-complete",
+        "indexSha256": "c85010a0079ec8815b3d83b7f203b7f2f60f92d656e284318935574a55c111ff",
+        "committed": {
+          "files": 1520,
+          "bytes": 39093967
+        },
+        "producerCommit": "ab133c88b7fe0ec2c18cb453bccbde203968f7c6",
+        "runId": 40228624969,
+        "jobId": 121275380746,
+        "artifactId": 12614538380,
+        "routes": 4,
+        "tests": 5
+      },
+      {
+        "lane": "php-wasm",
+        "root": "docs/evidence/owned-checked-record-php-wasm-hosted-20261025-contexts",
+        "indexSha256": "86ecd4acae54c691cf2ee68b3166a1ffd52d7ca9759daa806de53a1ca777f3c8",
+        "committed": {
+          "files": 1753,
+          "bytes": 67765676
+        },
+        "producerCommit": "3f124208c4b8eb0c96dde5dde28ac5ec38540868",
+        "runId": 40219596387,
+        "jobId": 121248065031,
+        "artifactId": 12610337377,
+        "routes": 4,
+        "tests": 5
+      }
+    ],
+    "fullMatrixVerified": false,
+    "newInstalledRuntimeExecutions": 0
+  },
+  "fullMatrixVerified": false,
+  "newInstalledRuntimeExecutions": 0,
+  "remaining": [
+    "Capture and independently replay the other eight aligned native originals.",
+    "Verify the complete eleven-lane, forty-four-route aligned matrix.",
+    "Reconcile support and documentation and satisfy final current-source Core, hosted and recurring gates."
+  ]
+}
