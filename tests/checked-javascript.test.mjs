@@ -142,6 +142,8 @@ import "./helpers/owned-checked-window-rejection-source-history-tests.mjs";
 import "./helpers/owned-checked-managed-mixed-coverage-source-history-tests.mjs";
 import "./helpers/owned-checked-php-wasm-mixed-coverage-source-history-tests.mjs";
 import "./helpers/owned-checked-wit-bootstrap-source-history-tests.mjs";
+import "./helpers/wasmtime-capi-rollout-tests.mjs";
+import "./helpers/wasmtime-capi-ci-rollout-source-history-tests.mjs";
 
 const root = resolve(".");
 

@@ -99,6 +99,7 @@ import { beforeOwnedCheckedWindowRejectionSource, ownedCheckedWindowRejectionNor
 import { beforeOwnedCheckedManagedMixedCoverageSource, ownedCheckedManagedMixedCoverageNormalizationPaths } from "./owned-checked-managed-mixed-coverage-source-history.mjs";
 import { beforeOwnedCheckedPhpWasmMixedCoverageSource, ownedCheckedPhpWasmMixedCoverageNormalizationPaths } from "./owned-checked-php-wasm-mixed-coverage-source-history.mjs";
 import { beforeOwnedCheckedWitBootstrapSource, ownedCheckedWitBootstrapNormalizationPaths } from "./owned-checked-wit-bootstrap-source-history.mjs";
+import { beforeWasmtimeCapiRolloutSource, wasmtimeCapiRolloutNormalizationPaths } from "./wasmtime-capi-ci-rollout-source-history.mjs";
 import { beforeCoreEvidenceMemoryRepairSource, coreEvidenceMemoryRepairNormalizationPaths } from "./core-evidence-memory-repair-source-history.mjs";
 import { beforeValueIndexPromotionMilestoneRepairSource, valueIndexPromotionMilestoneRepairNormalizationPaths } from "./value-index-promotion-milestone-repair-source-history.mjs";
 import { beforeCoreMilestoneReplayRepairSource, coreMilestoneReplayRepairNormalizationPaths } from "./core-milestone-replay-repair-source-history.mjs";
@@ -2192,7 +2193,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...ownedCheckedWitBootstrapNormalizationPaths
+	...wasmtimeCapiRolloutNormalizationPaths
+	, ...ownedCheckedWitBootstrapNormalizationPaths
 	, ...ownedCheckedPhpWasmMixedCoverageNormalizationPaths
 	, ...ownedCheckedManagedMixedCoverageNormalizationPaths
 	, ...ownedCheckedWindowRejectionNormalizationPaths
@@ -3127,7 +3129,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeOwnedCheckedWitBootstrapSource(path, text, expected);
+	let stage = beforeWasmtimeCapiRolloutSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeOwnedCheckedWitBootstrapSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;

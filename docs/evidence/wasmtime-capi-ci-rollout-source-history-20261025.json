@@ -1,0 +1,1857 @@
+{
+  "additions": [
+    {
+      "currentSha256": "326a6c8065550018bb69c6900c3f284e8bdda5eb14e6465ee5a4b9e8c4a5a839",
+      "path": "docs/evidence/wasmtime-capi-ci-rollout-20261025.json"
+    },
+    {
+      "currentSha256": "51f89a6b6cc1ddefed6ddbf15564a5eb716d6e22ad8acf1ea42901da87d1151b",
+      "path": "tests/helpers/wasmtime-capi-rollout-tests.mjs"
+    },
+    {
+      "currentSha256": "d91bf7ff27e88ab04cac93ae4ff5ea6c87e0cb01adc1e16f7243860e4bc7d194",
+      "path": "scripts/update-wasmtime-capi-ci-rollout-source-history.mjs"
+    },
+    {
+      "currentSha256": "0b1ad72980de8585af99c5d4934a7c212b85d27e3738f9cfce9814ae965cbba8",
+      "path": "tests/helpers/wasmtime-capi-ci-rollout-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "2f70f8ae168c2962a7ab15dc59878d0271b9cc60f8aa444acefc35d680995292",
+      "path": "tests/helpers/wasmtime-capi-ci-rollout-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "04f347effd2bac2e357665157e69e61d8464136c",
+  "implementationCommits": [
+    "04f347effd2bac2e357665157e69e61d8464136c"
+  ],
+  "integrationBaseCommit": "04f347effd2bac2e357665157e69e61d8464136c",
+  "integrationUpdates": [
+    {
+      "currentSha256": "0606243dead60fe45cec86a498abc2445ce48de2f73d96463db99d3332ff6495",
+      "edits": [
+        {
+          "current": "import { beforeWasmtimeCapiRolloutSource, wasmtimeCapiRolloutNormalizationPaths } from \"./wasmtime-capi-ci-rollout-source-history.mjs\";\n",
+          "previous": "",
+          "start": 14737
+        },
+        {
+          "current": "\t...wasmtimeCapiRolloutNormalizationPaths\n\t, ...ownedCheckedWitBootstrapNormalizationPaths\n",
+          "previous": "\t...ownedCheckedWitBootstrapNormalizationPaths\n",
+          "start": 187912
+        },
+        {
+          "current": "\tlet stage = beforeWasmtimeCapiRolloutSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeOwnedCheckedWitBootstrapSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeOwnedCheckedWitBootstrapSource(path, text, expected);\n",
+          "start": 233000
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "88ff5dd35c6cde75517c5d3b80b5adb6a398156a8b8211cb4b0212296af77d1a"
+    },
+    {
+      "currentSha256": "a63daf5f1386a2a982625271e07f2960c3f06153510fa5c463342b41de28f743",
+      "edits": [
+        {
+          "current": "import \"./helpers/wasmtime-capi-rollout-tests.mjs\";\nimport \"./helpers/wasmtime-capi-ci-rollout-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 9880
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "a03a2e3bf3f53e1f0378bf97d71647d2d70eeac0ffef345dd7565c1dd0d26ef3"
+    }
+  ],
+  "milestone": "wasmtime-capi-ci-rollout-source-v1",
+  "predecessorCommit": "9b6cd8048433479b5f09eeb328afb301fa1ad9b2",
+  "schemaVersion": 1,
+  "scope": "Replace fourteen Wasmtime setup sites in twelve workflows with the identical official 42.0.1 archive and checksum. Confine strict shell flags and cleanup to a subshell, remove eleven unused Nix installer steps and preserve all original routes, budgets, acceptance, artifact and enforcement commands. Make three owned-subtype tool-discovery failures propagate correctly. Retain the six offline installer scenarios, 84 altered/duplicate installer controls, 254 workflow bypass controls and 117 gate outcomes. Refresh exactly 214 live CI/documentation source pins and update two setup descriptions, without modifying runtime code, support observations or older evidence. The rollout has source validation only; require actual installed acceptance, independent original artifact replay and final Core/hosted gates.",
+  "updates": [
+    {
+      "currentSha256": "88611860d7112eb29308347cfef9733b03478db803da1d6b57c9e7240915342f",
+      "edits": [
+        {
+          "current": "",
+          "previous": "      - name: Install the documented Nix CLI\n        if: matrix.lane == 'wit-wasi'\n        uses: cachix/install-nix-action@v31\n        with:\n          install_url: https://releases.nixos.org/nix/nix-2.24.11/install\n",
+          "start": 2522
+        },
+        {
+          "current": "        run: |\n          (\n            set -euo pipefail\n            test \"$(uname -sm)\" = 'Linux x86_64'\n            mkdir -p build\n            test ! -e build/wasmtime-c-api && test ! -L build/wasmtime-c-api\n            WASMTIME_CAPI_STAGING=$(mktemp -d build/wasmtime-c-api.XXXXXX)\n            trap 'rm -rf -- \"$WASMTIME_CAPI_STAGING\"' EXIT\n            curl --fail --location --retry 3 --retry-delay 2 --connect-timeout 20 --max-time 300 \\\n              --output \"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" \\\n              'https://github.com/bytecodealliance/wasmtime/releases/download/v42.0.1/wasmtime-v42.0.1-x86_64-linux-c-api.tar.xz'\n            echo '2097a47351918a446b26c7e65f487278f63bc947591b71897db547cd90c05082'\"  $WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" | sha256sum --check --status\n            mkdir \"$WASMTIME_CAPI_STAGING/unpacked\"\n            tar -xJf \"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" --strip-components=1 -C \"$WASMTIME_CAPI_STAGING/unpacked\"\n            test -s \"$WASMTIME_CAPI_STAGING/unpacked/include/wasmtime.h\"\n            test -s \"$WASMTIME_CAPI_STAGING/unpacked/include/wasm.h\"\n            test -s \"$WASMTIME_CAPI_STAGING/unpacked/lib/libwasmtime.so\"\n            test -s \"$WASMTIME_CAPI_STAGING/unpacked/lib/libwasmtime.a\"\n            mv -T \"$WASMTIME_CAPI_STAGING/unpacked\" build/wasmtime-c-api\n          )\n",
+          "previous": "        run: nix build .#wasmtime-c-api --out-link build/wasmtime-c-api\n",
+          "start": 3257
+        }
+      ],
+      "path": ".github/workflows/callback-checked-record-remaining.yml",
+      "previousSha256": "d9108a83d08568b1f75bfba4a1a8dc836040effde22bdd0c78de5b759ba60a3c"
+    },
+    {
+      "currentSha256": "3d2c383e600158978a28f0724e988ca75da191c5ccca087cfbda9386d2440505",
+      "edits": [
+        {
+          "current": "",
+          "previous": "      - name: Install the documented Nix CLI\n        if: matrix.lane == 'wit-wasi'\n        uses: cachix/install-nix-action@v31\n        with:\n          install_url: https://releases.nixos.org/nix/nix-2.24.11/install\n",
+          "start": 2487
+        },
+        {
+          "current": "        run: |\n          (\n            set -euo pipefail\n            test \"$(uname -sm)\" = 'Linux x86_64'\n            mkdir -p build\n            test ! -e build/wasmtime-c-api && test ! -L build/wasmtime-c-api\n            WASMTIME_CAPI_STAGING=$(mktemp -d build/wasmtime-c-api.XXXXXX)\n            trap 'rm -rf -- \"$WASMTIME_CAPI_STAGING\"' EXIT\n            curl --fail --location --retry 3 --retry-delay 2 --connect-timeout 20 --max-time 300 \\\n              --output \"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" \\\n              'https://github.com/bytecodealliance/wasmtime/releases/download/v42.0.1/wasmtime-v42.0.1-x86_64-linux-c-api.tar.xz'\n            echo '2097a47351918a446b26c7e65f487278f63bc947591b71897db547cd90c05082'\"  $WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" | sha256sum --check --status\n            mkdir \"$WASMTIME_CAPI_STAGING/unpacked\"\n            tar -xJf \"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" --strip-components=1 -C \"$WASMTIME_CAPI_STAGING/unpacked\"\n            test -s \"$WASMTIME_CAPI_STAGING/unpacked/include/wasmtime.h\"\n            test -s \"$WASMTIME_CAPI_STAGING/unpacked/include/wasm.h\"\n            test -s \"$WASMTIME_CAPI_STAGING/unpacked/lib/libwasmtime.so\"\n            test -s \"$WASMTIME_CAPI_STAGING/unpacked/lib/libwasmtime.a\"\n            mv -T \"$WASMTIME_CAPI_STAGING/unpacked\" build/wasmtime-c-api\n          )\n",
+          "previous": "        run: nix build .#wasmtime-c-api --out-link build/wasmtime-c-api\n",
+          "start": 3208
+        }
+      ],
+      "path": ".github/workflows/callback-subtype-remaining.yml",
+      "previousSha256": "44d5c3969433581723eeb6e69fac3d21428de6fc4d4601160fb87a18b6c1d610"
+    },
+    {
+      "currentSha256": "e2582db7a7b9db417ba5eead833f7f9517b8d2bbfb1db851681f7451921f5807",
+      "edits": [
+        {
+          "current": "",
+          "previous": "      - name: Install the documented Nix CLI\n        uses: cachix/install-nix-action@v31\n        with:\n          install_url: https://releases.nixos.org/nix/nix-2.24.11/install\n",
+          "start": 1133
+        },
+        {
+          "current": "          (\n            set -euo pipefail\n            test \"$(uname -sm)\" = 'Linux x86_64'\n            mkdir -p build\n            test ! -e build/wasmtime-c-api && test ! -L build/wasmtime-c-api\n            WASMTIME_CAPI_STAGING=$(mktemp -d build/wasmtime-c-api.XXXXXX)\n            trap 'rm -rf -- \"$WASMTIME_CAPI_STAGING\"' EXIT\n            curl --fail --location --retry 3 --retry-delay 2 --connect-timeout 20 --max-time 300 \\\n              --output \"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" \\\n              'https://github.com/bytecodealliance/wasmtime/releases/download/v42.0.1/wasmtime-v42.0.1-x86_64-linux-c-api.tar.xz'\n            echo '2097a47351918a446b26c7e65f487278f63bc947591b71897db547cd90c05082'\"  $WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" | sha256sum --check --status\n            mkdir \"$WASMTIME_CAPI_STAGING/unpacked\"\n            tar -xJf \"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" --strip-components=1 -C \"$WASMTIME_CAPI_STAGING/unpacked\"\n            test -s \"$WASMTIME_CAPI_STAGING/unpacked/include/wasmtime.h\"\n            test -s \"$WASMTIME_CAPI_STAGING/unpacked/include/wasm.h\"\n            test -s \"$WASMTIME_CAPI_STAGING/unpacked/lib/libwasmtime.so\"\n            test -s \"$WASMTIME_CAPI_STAGING/unpacked/lib/libwasmtime.a\"\n            mv -T \"$WASMTIME_CAPI_STAGING/unpacked\" build/wasmtime-c-api\n          )\n",
+          "previous": "          nix build .#wasmtime-c-api --out-link build/wasmtime-c-api\n",
+          "start": 1768
+        }
+      ],
+      "path": ".github/workflows/checked-record-value-index-wit.yml",
+      "previousSha256": "db21e5b567335e1d98dbff8d32e70c970338b10d87315678bfaff8eeca9ba98f"
+    },
+    {
+      "currentSha256": "7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3",
+      "edits": [
+        {
+          "current": "          (\n            set -euo pipefail\n            test \"$(uname -sm)\" = 'Linux x86_64'\n            mkdir -p build\n            test ! -e build/wasmtime-c-api && test ! -L build/wasmtime-c-api\n            WASMTIME_CAPI_STAGING=$(mktemp -d build/wasmtime-c-api.XXXXXX)\n            trap 'rm -rf -- \"$WASMTIME_CAPI_STAGING\"' EXIT\n            curl --fail --location --retry 3 --retry-delay 2 --connect-timeout 20 --max-time 300 \\\n              --output \"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" \\\n              'https://github.com/bytecodealliance/wasmtime/releases/download/v42.0.1/wasmtime-v42.0.1-x86_64-linux-c-api.tar.xz'\n            echo '2097a47351918a446b26c7e65f487278f63bc947591b71897db547cd90c05082'\"  $WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" | sha256sum --check --status\n            mkdir \"$WASMTIME_CAPI_STAGING/unpacked\"\n            tar -xJf \"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" --strip-components=1 -C \"$WASMTIME_CAPI_STAGING/unpacked\"\n            test -s \"$WASMTIME_CAPI_STAGING/unpacked/include/wasmtime.h\"\n            test -s \"$WASMTIME_CAPI_STAGING/unpacked/include/wasm.h\"\n            test -s \"$WASMTIME_CAPI_STAGING/unpacked/lib/libwasmtime.so\"\n            test -s \"$WASMTIME_CAPI_STAGING/unpacked/lib/libwasmtime.a\"\n            mv -T \"$WASMTIME_CAPI_STAGING/unpacked\" build/wasmtime-c-api\n          )\n",
+          "previous": "          nix build .#wasmtime-c-api --out-link build/wasmtime-c-api\n",
+          "start": 77214
+        },
+        {
+          "current": "          (\n            set -euo pipefail\n            test \"$(uname -sm)\" = 'Linux x86_64'\n            mkdir -p build\n            test ! -e build/wasmtime-c-api && test ! -L build/wasmtime-c-api\n            WASMTIME_CAPI_STAGING=$(mktemp -d build/wasmtime-c-api.XXXXXX)\n            trap 'rm -rf -- \"$WASMTIME_CAPI_STAGING\"' EXIT\n            curl --fail --location --retry 3 --retry-delay 2 --connect-timeout 20 --max-time 300 \\\n              --output \"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" \\\n              'https://github.com/bytecodealliance/wasmtime/releases/download/v42.0.1/wasmtime-v42.0.1-x86_64-linux-c-api.tar.xz'\n            echo '2097a47351918a446b26c7e65f487278f63bc947591b71897db547cd90c05082'\"  $WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" | sha256sum --check --status\n            mkdir \"$WASMTIME_CAPI_STAGING/unpacked\"\n            tar -xJf \"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" --strip-components=1 -C \"$WASMTIME_CAPI_STAGING/unpacked\"\n            test -s \"$WASMTIME_CAPI_STAGING/unpacked/include/wasmtime.h\"\n            test -s \"$WASMTIME_CAPI_STAGING/unpacked/include/wasm.h\"\n            test -s \"$WASMTIME_CAPI_STAGING/unpacked/lib/libwasmtime.so\"\n            test -s \"$WASMTIME_CAPI_STAGING/unpacked/lib/libwasmtime.a\"\n            mv -T \"$WASMTIME_CAPI_STAGING/unpacked\" build/wasmtime-c-api\n          )\n",
+          "previous": "          nix build .#wasmtime-c-api --out-link build/wasmtime-c-api\n",
+          "start": 310318
+        },
+        {
+          "current": "          (\n            set -euo pipefail\n            test \"$(uname -sm)\" = 'Linux x86_64'\n            mkdir -p build\n            test ! -e build/wasmtime-c-api && test ! -L build/wasmtime-c-api\n            WASMTIME_CAPI_STAGING=$(mktemp -d build/wasmtime-c-api.XXXXXX)\n            trap 'rm -rf -- \"$WASMTIME_CAPI_STAGING\"' EXIT\n            curl --fail --location --retry 3 --retry-delay 2 --connect-timeout 20 --max-time 300 \\\n              --output \"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" \\\n              'https://github.com/bytecodealliance/wasmtime/releases/download/v42.0.1/wasmtime-v42.0.1-x86_64-linux-c-api.tar.xz'\n            echo '2097a47351918a446b26c7e65f487278f63bc947591b71897db547cd90c05082'\"  $WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" | sha256sum --check --status\n            mkdir \"$WASMTIME_CAPI_STAGING/unpacked\"\n            tar -xJf \"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" --strip-components=1 -C \"$WASMTIME_CAPI_STAGING/unpacked\"\n            test -s \"$WASMTIME_CAPI_STAGING/unpacked/include/wasmtime.h\"\n            test -s \"$WASMTIME_CAPI_STAGING/unpacked/include/wasm.h\"\n            test -s \"$WASMTIME_CAPI_STAGING/unpacked/lib/libwasmtime.so\"\n            test -s \"$WASMTIME_CAPI_STAGING/unpacked/lib/libwasmtime.a\"\n            mv -T \"$WASMTIME_CAPI_STAGING/unpacked\" build/wasmtime-c-api\n          )\n",
+          "previous": "          nix build .#wasmtime-c-api --out-link build/wasmtime-c-api\n",
+          "start": 316430
+        }
+      ],
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previousSha256": "0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1"
+    },
+    {
+      "currentSha256": "195a03368ea50a17099412d30f812a6f8d90d326bcc1fc879c52ef52dd72d1db",
+      "edits": [
+        {
+          "current": "",
+          "previous": "      - name: Install the documented Nix CLI\n        uses: cachix/install-nix-action@v31\n        with:\n          install_url: https://releases.nixos.org/nix/nix-2.24.11/install\n",
+          "start": 1141
+        },
+        {
+          "current": "          (\n            set -euo pipefail\n            test \"$(uname -sm)\" = 'Linux x86_64'\n            mkdir -p build\n            test ! -e build/wasmtime-c-api && test ! -L build/wasmtime-c-api\n            WASMTIME_CAPI_STAGING=$(mktemp -d build/wasmtime-c-api.XXXXXX)\n            trap 'rm -rf -- \"$WASMTIME_CAPI_STAGING\"' EXIT\n            curl --fail --location --retry 3 --retry-delay 2 --connect-timeout 20 --max-time 300 \\\n              --output \"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" \\\n              'https://github.com/bytecodealliance/wasmtime/releases/download/v42.0.1/wasmtime-v42.0.1-x86_64-linux-c-api.tar.xz'\n            echo '2097a47351918a446b26c7e65f487278f63bc947591b71897db547cd90c05082'\"  $WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" | sha256sum --check --status\n            mkdir \"$WASMTIME_CAPI_STAGING/unpacked\"\n            tar -xJf \"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" --strip-components=1 -C \"$WASMTIME_CAPI_STAGING/unpacked\"\n            test -s \"$WASMTIME_CAPI_STAGING/unpacked/include/wasmtime.h\"\n            test -s \"$WASMTIME_CAPI_STAGING/unpacked/include/wasm.h\"\n            test -s \"$WASMTIME_CAPI_STAGING/unpacked/lib/libwasmtime.so\"\n            test -s \"$WASMTIME_CAPI_STAGING/unpacked/lib/libwasmtime.a\"\n            mv -T \"$WASMTIME_CAPI_STAGING/unpacked\" build/wasmtime-c-api\n          )\n",
+          "previous": "          nix build .#wasmtime-c-api --out-link build/wasmtime-c-api\n",
+          "start": 1772
+        }
+      ],
+      "path": ".github/workflows/dependent-checked-record-wit.yml",
+      "previousSha256": "cfd70e35174d20c12a4153f51bf14f6887da5c356f8f6afa2df52563954c73e9"
+    },
+    {
+      "currentSha256": "2dd49b42235ecbd49db1a99435a0dfb149fc990779a1ec3e58db1b8127ff632e",
+      "edits": [
+        {
+          "current": "",
+          "previous": "      - name: Install the documented Nix CLI\n        uses: cachix/install-nix-action@v31\n        with:\n          install_url: https://releases.nixos.org/nix/nix-2.24.11/install\n",
+          "start": 7741
+        },
+        {
+          "current": "          (\n            set -euo pipefail\n            test \"$(uname -sm)\" = 'Linux x86_64'\n            mkdir -p build\n            test ! -e build/wasmtime-c-api && test ! -L build/wasmtime-c-api\n            WASMTIME_CAPI_STAGING=$(mktemp -d build/wasmtime-c-api.XXXXXX)\n            trap 'rm -rf -- \"$WASMTIME_CAPI_STAGING\"' EXIT\n            curl --fail --location --retry 3 --retry-delay 2 --connect-timeout 20 --max-time 300 \\\n              --output \"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" \\\n              'https://github.com/bytecodealliance/wasmtime/releases/download/v42.0.1/wasmtime-v42.0.1-x86_64-linux-c-api.tar.xz'\n            echo '2097a47351918a446b26c7e65f487278f63bc947591b71897db547cd90c05082'\"  $WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" | sha256sum --check --status\n            mkdir \"$WASMTIME_CAPI_STAGING/unpacked\"\n            tar -xJf \"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" --strip-components=1 -C \"$WASMTIME_CAPI_STAGING/unpacked\"\n            test -s \"$WASMTIME_CAPI_STAGING/unpacked/include/wasmtime.h\"\n            test -s \"$WASMTIME_CAPI_STAGING/unpacked/include/wasm.h\"\n            test -s \"$WASMTIME_CAPI_STAGING/unpacked/lib/libwasmtime.so\"\n            test -s \"$WASMTIME_CAPI_STAGING/unpacked/lib/libwasmtime.a\"\n            mv -T \"$WASMTIME_CAPI_STAGING/unpacked\" build/wasmtime-c-api\n          )\n",
+          "previous": "          nix build .#wasmtime-c-api --out-link build/wasmtime-c-api\n",
+          "start": 8354
+        }
+      ],
+      "path": ".github/workflows/generic-subtype-managed-wit.yml",
+      "previousSha256": "d885adf8c5acf76e8f982ccf0797b9db47db6f984d5b39dea99a58976d961c25"
+    },
+    {
+      "currentSha256": "cd1c2ced7175dc2a4b8bf2da3bc3639ed8a09f15f14074937e42701c1946aece",
+      "edits": [
+        {
+          "current": "",
+          "previous": "      - name: Install the documented Nix CLI\n        uses: cachix/install-nix-action@v31\n        with:\n          install_url: https://releases.nixos.org/nix/nix-2.24.11/install\n",
+          "start": 1125
+        },
+        {
+          "current": "          (\n            set -euo pipefail\n            test \"$(uname -sm)\" = 'Linux x86_64'\n            mkdir -p build\n            test ! -e build/wasmtime-c-api && test ! -L build/wasmtime-c-api\n            WASMTIME_CAPI_STAGING=$(mktemp -d build/wasmtime-c-api.XXXXXX)\n            trap 'rm -rf -- \"$WASMTIME_CAPI_STAGING\"' EXIT\n            curl --fail --location --retry 3 --retry-delay 2 --connect-timeout 20 --max-time 300 \\\n              --output \"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" \\\n              'https://github.com/bytecodealliance/wasmtime/releases/download/v42.0.1/wasmtime-v42.0.1-x86_64-linux-c-api.tar.xz'\n            echo '2097a47351918a446b26c7e65f487278f63bc947591b71897db547cd90c05082'\"  $WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" | sha256sum --check --status\n            mkdir \"$WASMTIME_CAPI_STAGING/unpacked\"\n            tar -xJf \"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" --strip-components=1 -C \"$WASMTIME_CAPI_STAGING/unpacked\"\n            test -s \"$WASMTIME_CAPI_STAGING/unpacked/include/wasmtime.h\"\n            test -s \"$WASMTIME_CAPI_STAGING/unpacked/include/wasm.h\"\n            test -s \"$WASMTIME_CAPI_STAGING/unpacked/lib/libwasmtime.so\"\n            test -s \"$WASMTIME_CAPI_STAGING/unpacked/lib/libwasmtime.a\"\n            mv -T \"$WASMTIME_CAPI_STAGING/unpacked\" build/wasmtime-c-api\n          )\n",
+          "previous": "          nix build .#wasmtime-c-api --out-link build/wasmtime-c-api\n",
+          "start": 1756
+        }
+      ],
+      "path": ".github/workflows/inherited-checked-record-wit.yml",
+      "previousSha256": "dd3d6326a8aae650d0d7a13ff5a393302b4d8bbe9d5f03db19aa1865ca78e0be"
+    },
+    {
+      "currentSha256": "315a2de3dccc79de79090ab084edda55a1a9f678c974bb5fdb7dce63e384b3ca",
+      "edits": [
+        {
+          "current": "",
+          "previous": "      - name: Install the documented Nix CLI\n        uses: cachix/install-nix-action@v31\n        with:\n          install_url: https://releases.nixos.org/nix/nix-2.24.11/install\n",
+          "start": 1113
+        },
+        {
+          "current": "          (\n            set -euo pipefail\n            test \"$(uname -sm)\" = 'Linux x86_64'\n            mkdir -p build\n            test ! -e build/wasmtime-c-api && test ! -L build/wasmtime-c-api\n            WASMTIME_CAPI_STAGING=$(mktemp -d build/wasmtime-c-api.XXXXXX)\n            trap 'rm -rf -- \"$WASMTIME_CAPI_STAGING\"' EXIT\n            curl --fail --location --retry 3 --retry-delay 2 --connect-timeout 20 --max-time 300 \\\n              --output \"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" \\\n              'https://github.com/bytecodealliance/wasmtime/releases/download/v42.0.1/wasmtime-v42.0.1-x86_64-linux-c-api.tar.xz'\n            echo '2097a47351918a446b26c7e65f487278f63bc947591b71897db547cd90c05082'\"  $WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" | sha256sum --check --status\n            mkdir \"$WASMTIME_CAPI_STAGING/unpacked\"\n            tar -xJf \"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" --strip-components=1 -C \"$WASMTIME_CAPI_STAGING/unpacked\"\n            test -s \"$WASMTIME_CAPI_STAGING/unpacked/include/wasmtime.h\"\n            test -s \"$WASMTIME_CAPI_STAGING/unpacked/include/wasm.h\"\n            test -s \"$WASMTIME_CAPI_STAGING/unpacked/lib/libwasmtime.so\"\n            test -s \"$WASMTIME_CAPI_STAGING/unpacked/lib/libwasmtime.a\"\n            mv -T \"$WASMTIME_CAPI_STAGING/unpacked\" build/wasmtime-c-api\n          )\n",
+          "previous": "          nix build .#wasmtime-c-api --out-link build/wasmtime-c-api\n",
+          "start": 1738
+        }
+      ],
+      "path": ".github/workflows/nested-checked-record-wit.yml",
+      "previousSha256": "af39b57b8034cce69f7187d70a2ef8dd566701e0e55b476e87ec1373b844f124"
+    },
+    {
+      "currentSha256": "783c18a05989136f5ffa30597d61b0b81683adc519b54e9a93d15edd022f2571",
+      "edits": [
+        {
+          "current": "",
+          "previous": "      - name: Install the documented Nix CLI\n        uses: cachix/install-nix-action@v31\n        with:\n          install_url: https://releases.nixos.org/nix/nix-2.24.11/install\n",
+          "start": 1131
+        },
+        {
+          "current": "          (\n            set -euo pipefail\n            test \"$(uname -sm)\" = 'Linux x86_64'\n            mkdir -p build\n            test ! -e build/wasmtime-c-api && test ! -L build/wasmtime-c-api\n            WASMTIME_CAPI_STAGING=$(mktemp -d build/wasmtime-c-api.XXXXXX)\n            trap 'rm -rf -- \"$WASMTIME_CAPI_STAGING\"' EXIT\n            curl --fail --location --retry 3 --retry-delay 2 --connect-timeout 20 --max-time 300 \\\n              --output \"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" \\\n              'https://github.com/bytecodealliance/wasmtime/releases/download/v42.0.1/wasmtime-v42.0.1-x86_64-linux-c-api.tar.xz'\n            echo '2097a47351918a446b26c7e65f487278f63bc947591b71897db547cd90c05082'\"  $WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" | sha256sum --check --status\n            mkdir \"$WASMTIME_CAPI_STAGING/unpacked\"\n            tar -xJf \"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" --strip-components=1 -C \"$WASMTIME_CAPI_STAGING/unpacked\"\n            test -s \"$WASMTIME_CAPI_STAGING/unpacked/include/wasmtime.h\"\n            test -s \"$WASMTIME_CAPI_STAGING/unpacked/include/wasm.h\"\n            test -s \"$WASMTIME_CAPI_STAGING/unpacked/lib/libwasmtime.so\"\n            test -s \"$WASMTIME_CAPI_STAGING/unpacked/lib/libwasmtime.a\"\n            mv -T \"$WASMTIME_CAPI_STAGING/unpacked\" build/wasmtime-c-api\n          )\n",
+          "previous": "          nix build .#wasmtime-c-api --out-link build/wasmtime-c-api\n",
+          "start": 1764
+        }
+      ],
+      "path": ".github/workflows/nominal-primitive-subtype-wit.yml",
+      "previousSha256": "1c4f828f5329ee4941aaaf3ac4554d6403ce5d945a4f7a69ed0b037df85b39b2"
+    },
+    {
+      "currentSha256": "5d3e5dae5ecc87abd03d26a41f8f97bc403ea53c42355f5554195d3acb5c756b",
+      "edits": [
+        {
+          "current": "",
+          "previous": "      - name: Install the documented Nix CLI\n        if: matrix.lane == 'wit-wasi'\n        uses: cachix/install-nix-action@v31\n        with:\n          install_url: https://releases.nixos.org/nix/nix-2.24.11/install\n",
+          "start": 2507
+        },
+        {
+          "current": "        run: |\n          (\n            set -euo pipefail\n            test \"$(uname -sm)\" = 'Linux x86_64'\n            mkdir -p build\n            test ! -e build/wasmtime-c-api && test ! -L build/wasmtime-c-api\n            WASMTIME_CAPI_STAGING=$(mktemp -d build/wasmtime-c-api.XXXXXX)\n            trap 'rm -rf -- \"$WASMTIME_CAPI_STAGING\"' EXIT\n            curl --fail --location --retry 3 --retry-delay 2 --connect-timeout 20 --max-time 300 \\\n              --output \"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" \\\n              'https://github.com/bytecodealliance/wasmtime/releases/download/v42.0.1/wasmtime-v42.0.1-x86_64-linux-c-api.tar.xz'\n            echo '2097a47351918a446b26c7e65f487278f63bc947591b71897db547cd90c05082'\"  $WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" | sha256sum --check --status\n            mkdir \"$WASMTIME_CAPI_STAGING/unpacked\"\n            tar -xJf \"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" --strip-components=1 -C \"$WASMTIME_CAPI_STAGING/unpacked\"\n            test -s \"$WASMTIME_CAPI_STAGING/unpacked/include/wasmtime.h\"\n            test -s \"$WASMTIME_CAPI_STAGING/unpacked/include/wasm.h\"\n            test -s \"$WASMTIME_CAPI_STAGING/unpacked/lib/libwasmtime.so\"\n            test -s \"$WASMTIME_CAPI_STAGING/unpacked/lib/libwasmtime.a\"\n            mv -T \"$WASMTIME_CAPI_STAGING/unpacked\" build/wasmtime-c-api\n          )\n",
+          "previous": "        run: nix build .#wasmtime-c-api --out-link build/wasmtime-c-api\n",
+          "start": 3215
+        },
+        {
+          "current": "              LEAN_BRIDGE_MAVEN=\"$(command -v mvn)\"\n              export LEAN_BRIDGE_MAVEN\n",
+          "previous": "              export LEAN_BRIDGE_MAVEN=\"$(command -v mvn)\"\n",
+          "start": 5254
+        },
+        {
+          "current": "              LEAN_BRIDGE_PHP=\"$(command -v php)\"\n              LEAN_BRIDGE_COMPOSER=\"$(command -v composer)\"\n              export LEAN_BRIDGE_PHP LEAN_BRIDGE_COMPOSER\n",
+          "previous": "              export LEAN_BRIDGE_PHP=\"$(command -v php)\"\n              export LEAN_BRIDGE_COMPOSER=\"$(command -v composer)\"\n",
+          "start": 5386
+        }
+      ],
+      "path": ".github/workflows/owned-subtype-remaining.yml",
+      "previousSha256": "39a78d1136025c3b1c11b7d2daf82d8834593b44f4ceabec7850d447cf62e0db"
+    },
+    {
+      "currentSha256": "712f77d6542fdf8e3e9f5e7898a103fc9e4fe32d6966b81c097d7a427ba84e84",
+      "edits": [
+        {
+          "current": "",
+          "previous": "      - name: Install the documented Nix CLI\n        uses: cachix/install-nix-action@v31\n        with:\n          install_url: https://releases.nixos.org/nix/nix-2.24.11/install\n",
+          "start": 1125
+        },
+        {
+          "current": "          (\n            set -euo pipefail\n            test \"$(uname -sm)\" = 'Linux x86_64'\n            mkdir -p build\n            test ! -e build/wasmtime-c-api && test ! -L build/wasmtime-c-api\n            WASMTIME_CAPI_STAGING=$(mktemp -d build/wasmtime-c-api.XXXXXX)\n            trap 'rm -rf -- \"$WASMTIME_CAPI_STAGING\"' EXIT\n            curl --fail --location --retry 3 --retry-delay 2 --connect-timeout 20 --max-time 300 \\\n              --output \"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" \\\n              'https://github.com/bytecodealliance/wasmtime/releases/download/v42.0.1/wasmtime-v42.0.1-x86_64-linux-c-api.tar.xz'\n            echo '2097a47351918a446b26c7e65f487278f63bc947591b71897db547cd90c05082'\"  $WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" | sha256sum --check --status\n            mkdir \"$WASMTIME_CAPI_STAGING/unpacked\"\n            tar -xJf \"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" --strip-components=1 -C \"$WASMTIME_CAPI_STAGING/unpacked\"\n            test -s \"$WASMTIME_CAPI_STAGING/unpacked/include/wasmtime.h\"\n            test -s \"$WASMTIME_CAPI_STAGING/unpacked/include/wasm.h\"\n            test -s \"$WASMTIME_CAPI_STAGING/unpacked/lib/libwasmtime.so\"\n            test -s \"$WASMTIME_CAPI_STAGING/unpacked/lib/libwasmtime.a\"\n            mv -T \"$WASMTIME_CAPI_STAGING/unpacked\" build/wasmtime-c-api\n          )\n",
+          "previous": "          nix build .#wasmtime-c-api --out-link build/wasmtime-c-api\n",
+          "start": 1756
+        }
+      ],
+      "path": ".github/workflows/recursive-checked-record-wit.yml",
+      "previousSha256": "0255681c06c4bbd899da390181ff63c64b5018106372ab92eddbaab057f9485a"
+    },
+    {
+      "currentSha256": "66ad4f3303e653eaaf692a3cd35d98055e36144053613e2eddc6a8e6d11a1dc2",
+      "edits": [
+        {
+          "current": "",
+          "previous": "      - name: Install the documented Nix CLI\n        uses: cachix/install-nix-action@v31\n        with:\n          install_url: https://releases.nixos.org/nix/nix-2.24.11/install\n",
+          "start": 1123
+        },
+        {
+          "current": "          (\n            set -euo pipefail\n            test \"$(uname -sm)\" = 'Linux x86_64'\n            mkdir -p build\n            test ! -e build/wasmtime-c-api && test ! -L build/wasmtime-c-api\n            WASMTIME_CAPI_STAGING=$(mktemp -d build/wasmtime-c-api.XXXXXX)\n            trap 'rm -rf -- \"$WASMTIME_CAPI_STAGING\"' EXIT\n            curl --fail --location --retry 3 --retry-delay 2 --connect-timeout 20 --max-time 300 \\\n              --output \"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" \\\n              'https://github.com/bytecodealliance/wasmtime/releases/download/v42.0.1/wasmtime-v42.0.1-x86_64-linux-c-api.tar.xz'\n            echo '2097a47351918a446b26c7e65f487278f63bc947591b71897db547cd90c05082'\"  $WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" | sha256sum --check --status\n            mkdir \"$WASMTIME_CAPI_STAGING/unpacked\"\n            tar -xJf \"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" --strip-components=1 -C \"$WASMTIME_CAPI_STAGING/unpacked\"\n            test -s \"$WASMTIME_CAPI_STAGING/unpacked/include/wasmtime.h\"\n            test -s \"$WASMTIME_CAPI_STAGING/unpacked/include/wasm.h\"\n            test -s \"$WASMTIME_CAPI_STAGING/unpacked/lib/libwasmtime.so\"\n            test -s \"$WASMTIME_CAPI_STAGING/unpacked/lib/libwasmtime.a\"\n            mv -T \"$WASMTIME_CAPI_STAGING/unpacked\" build/wasmtime-c-api\n          )\n",
+          "previous": "          nix build .#wasmtime-c-api --out-link build/wasmtime-c-api\n",
+          "start": 1760
+        }
+      ],
+      "path": ".github/workflows/zero-payload-checked-record-wit.yml",
+      "previousSha256": "974ba24fbaed1f9fea2cd35259c044563ba39bf15e5625a3b1c98067bae03c7c"
+    },
+    {
+      "currentSha256": "8289583edab34ef75320b8db5e936adef156c86f3d16c17b27b9329a4802d1aa",
+      "edits": [
+        {
+          "current": "runs those four selections on the pinned Wasmtime 42.0.1 C API. The local\n",
+          "previous": "runs those four selections on the pinned Nix-built Wasmtime C API. The local\n",
+          "start": 3410
+        }
+      ],
+      "path": "docs/consume/wit-wasi.md",
+      "previousSha256": "602faa0bf52394d661fd21c5af1c403515dc93b387e08d0e7d4453a12481b20a"
+    },
+    {
+      "currentSha256": "09ca6df5f173172191d89cd852be4345620a9409c05108bd52e696d62926fdbf",
+      "edits": [
+        {
+          "current": "The local default is `.toolchains/wasmtime42`. `LEAN_BRIDGE_WASM_TOOLS` selects the wasm-tools executable; the installed-consumer check otherwise uses `.toolchains/wasm-tools/bin/wasm-tools`. CI downloads the official Wasmtime 42.0.1 C API archive, verifies its pinned SHA-256 and extracts the same SDK files as the Nix output. This avoids copying the repository's evidence archives into the Nix store. Consumers receive both Wasmtime and Lean libraries in their prepared archives.\n",
+          "previous": "The local default is `.toolchains/wasmtime42`. `LEAN_BRIDGE_WASM_TOOLS` selects the wasm-tools executable; the installed-consumer check otherwise uses `.toolchains/wasm-tools/bin/wasm-tools`. CI obtains the C API from `nix build .#wasmtime-c-api`. Consumers receive both Wasmtime and Lean libraries in their prepared archives.\n",
+          "start": 45577
+        }
+      ],
+      "path": "docs/contributing/testing.md",
+      "previousSha256": "35229bc22d131919b94a6a3922e0cb3a2e8c2cb7a7d0149dc4390106d0c80aa2"
+    },
+    {
+      "currentSha256": "71967061e9958d35bca2e07e793ce16ac495d7e7a6094c5fc3c95eb9de5b20da",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 78013
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 95208
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 111509
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 126277
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 135559
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 145184
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 168568
+        },
+        {
+          "current": "          \"sha256\": \"8289583edab34ef75320b8db5e936adef156c86f3d16c17b27b9329a4802d1aa\"\n",
+          "previous": "          \"sha256\": \"602faa0bf52394d661fd21c5af1c403515dc93b387e08d0e7d4453a12481b20a\"\n",
+          "start": 168722
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 181537
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 196432
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 209216
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 222436
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 230969
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 239399
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 248416
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 256790
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 276070
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 285909
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 298044
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 316642
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 325938
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 338621
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 347876
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 357159
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 366292
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 375151
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 382538
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 390462
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 401108
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 415214
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 422312
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 432541
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 440285
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 446659
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 452822
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 458919
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 465440
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 473106
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 482400
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 493622
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 503319
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 524454
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 533019
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 544027
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 575912
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 582541
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 592800
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 613673
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 622196
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 633146
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 664664
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 673883
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 681223
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 693506
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 700366
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 709394
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 723420
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 734462
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 748510
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 759256
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 771327
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 782615
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 791198
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 797656
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 806042
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 823632
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 844628
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 899969
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 1012031
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 1072272
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 1079666
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 1086264
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 1093366
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 1100866
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 1107916
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 1115526
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 1137500
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 1149387
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 1157258
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 1167223
+        },
+        {
+          "current": "          \"sha256\": \"09ca6df5f173172191d89cd852be4345620a9409c05108bd52e696d62926fdbf\"\n",
+          "previous": "          \"sha256\": \"35229bc22d131919b94a6a3922e0cb3a2e8c2cb7a7d0149dc4390106d0c80aa2\"\n",
+          "start": 1167697
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 1177337
+        },
+        {
+          "current": "          \"sha256\": \"09ca6df5f173172191d89cd852be4345620a9409c05108bd52e696d62926fdbf\"\n",
+          "previous": "          \"sha256\": \"35229bc22d131919b94a6a3922e0cb3a2e8c2cb7a7d0149dc4390106d0c80aa2\"\n",
+          "start": 1177811
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 1189098
+        },
+        {
+          "current": "          \"sha256\": \"09ca6df5f173172191d89cd852be4345620a9409c05108bd52e696d62926fdbf\"\n",
+          "previous": "          \"sha256\": \"35229bc22d131919b94a6a3922e0cb3a2e8c2cb7a7d0149dc4390106d0c80aa2\"\n",
+          "start": 1189747
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 1221659
+        },
+        {
+          "current": "          \"sha256\": \"09ca6df5f173172191d89cd852be4345620a9409c05108bd52e696d62926fdbf\"\n",
+          "previous": "          \"sha256\": \"35229bc22d131919b94a6a3922e0cb3a2e8c2cb7a7d0149dc4390106d0c80aa2\"\n",
+          "start": 1222308
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 1251938
+        },
+        {
+          "current": "          \"sha256\": \"09ca6df5f173172191d89cd852be4345620a9409c05108bd52e696d62926fdbf\"\n",
+          "previous": "          \"sha256\": \"35229bc22d131919b94a6a3922e0cb3a2e8c2cb7a7d0149dc4390106d0c80aa2\"\n",
+          "start": 1252587
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 1284924
+        },
+        {
+          "current": "          \"sha256\": \"09ca6df5f173172191d89cd852be4345620a9409c05108bd52e696d62926fdbf\"\n",
+          "previous": "          \"sha256\": \"35229bc22d131919b94a6a3922e0cb3a2e8c2cb7a7d0149dc4390106d0c80aa2\"\n",
+          "start": 1285738
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 1324725
+        },
+        {
+          "current": "          \"sha256\": \"09ca6df5f173172191d89cd852be4345620a9409c05108bd52e696d62926fdbf\"\n",
+          "previous": "          \"sha256\": \"35229bc22d131919b94a6a3922e0cb3a2e8c2cb7a7d0149dc4390106d0c80aa2\"\n",
+          "start": 1325841
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 1351301
+        },
+        {
+          "current": "          \"sha256\": \"09ca6df5f173172191d89cd852be4345620a9409c05108bd52e696d62926fdbf\"\n",
+          "previous": "          \"sha256\": \"35229bc22d131919b94a6a3922e0cb3a2e8c2cb7a7d0149dc4390106d0c80aa2\"\n",
+          "start": 1352261
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 1373838
+        },
+        {
+          "current": "          \"sha256\": \"09ca6df5f173172191d89cd852be4345620a9409c05108bd52e696d62926fdbf\"\n",
+          "previous": "          \"sha256\": \"35229bc22d131919b94a6a3922e0cb3a2e8c2cb7a7d0149dc4390106d0c80aa2\"\n",
+          "start": 1374941
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 1393505
+        },
+        {
+          "current": "          \"sha256\": \"09ca6df5f173172191d89cd852be4345620a9409c05108bd52e696d62926fdbf\"\n",
+          "previous": "          \"sha256\": \"35229bc22d131919b94a6a3922e0cb3a2e8c2cb7a7d0149dc4390106d0c80aa2\"\n",
+          "start": 1394608
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 1416893
+        },
+        {
+          "current": "          \"sha256\": \"8289583edab34ef75320b8db5e936adef156c86f3d16c17b27b9329a4802d1aa\"\n",
+          "previous": "          \"sha256\": \"602faa0bf52394d661fd21c5af1c403515dc93b387e08d0e7d4453a12481b20a\"\n",
+          "start": 1417538
+        },
+        {
+          "current": "          \"sha256\": \"09ca6df5f173172191d89cd852be4345620a9409c05108bd52e696d62926fdbf\"\n",
+          "previous": "          \"sha256\": \"35229bc22d131919b94a6a3922e0cb3a2e8c2cb7a7d0149dc4390106d0c80aa2\"\n",
+          "start": 1417696
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 1428521
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 1451667
+        },
+        {
+          "current": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "previous": "          \"sha256\": \"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1\"\n",
+          "start": 1951804
+        },
+        {
+          "current": "          \"sha256\": \"7331d348ec928c3415751665869a0524b066d6eed533a2d70049de6f02cb1ce0\"\n",
+          "previous": "          \"sha256\": \"411b7bde5ff11f485284d450f1faf157fce0cf5c41067b0a165276af67e540d2\"\n",
+          "start": 10384417
+        },
+        {
+          "current": "          \"sha256\": \"783c18a05989136f5ffa30597d61b0b81683adc519b54e9a93d15edd022f2571\"\n",
+          "previous": "          \"sha256\": \"1c4f828f5329ee4941aaaf3ac4554d6403ce5d945a4f7a69ed0b037df85b39b2\"\n",
+          "start": 10384955
+        },
+        {
+          "current": "          \"sha256\": \"7331d348ec928c3415751665869a0524b066d6eed533a2d70049de6f02cb1ce0\"\n",
+          "previous": "          \"sha256\": \"411b7bde5ff11f485284d450f1faf157fce0cf5c41067b0a165276af67e540d2\"\n",
+          "start": 10430635
+        },
+        {
+          "current": "          \"sha256\": \"783c18a05989136f5ffa30597d61b0b81683adc519b54e9a93d15edd022f2571\"\n",
+          "previous": "          \"sha256\": \"1c4f828f5329ee4941aaaf3ac4554d6403ce5d945a4f7a69ed0b037df85b39b2\"\n",
+          "start": 10431173
+        },
+        {
+          "current": "          \"sha256\": \"7331d348ec928c3415751665869a0524b066d6eed533a2d70049de6f02cb1ce0\"\n",
+          "previous": "          \"sha256\": \"411b7bde5ff11f485284d450f1faf157fce0cf5c41067b0a165276af67e540d2\"\n",
+          "start": 10477711
+        },
+        {
+          "current": "          \"sha256\": \"783c18a05989136f5ffa30597d61b0b81683adc519b54e9a93d15edd022f2571\"\n",
+          "previous": "          \"sha256\": \"1c4f828f5329ee4941aaaf3ac4554d6403ce5d945a4f7a69ed0b037df85b39b2\"\n",
+          "start": 10478249
+        },
+        {
+          "current": "          \"sha256\": \"7331d348ec928c3415751665869a0524b066d6eed533a2d70049de6f02cb1ce0\"\n",
+          "previous": "          \"sha256\": \"411b7bde5ff11f485284d450f1faf157fce0cf5c41067b0a165276af67e540d2\"\n",
+          "start": 10524393
+        },
+        {
+          "current": "          \"sha256\": \"783c18a05989136f5ffa30597d61b0b81683adc519b54e9a93d15edd022f2571\"\n",
+          "previous": "          \"sha256\": \"1c4f828f5329ee4941aaaf3ac4554d6403ce5d945a4f7a69ed0b037df85b39b2\"\n",
+          "start": 10524931
+        },
+        {
+          "current": "          \"sha256\": \"fe521ae08fae949a91d8baef36655066913bdf6fe22817e7ab554d98700d9d2f\"\n",
+          "previous": "          \"sha256\": \"5a8b34a28fdca40fdf0e37121399c989a5f2d697f653fbae7c4087b18316394d\"\n",
+          "start": 15315390
+        },
+        {
+          "current": "          \"sha256\": \"9aeb787753275479c4061c74ebb5b24858f1a74acdf5187a9c0528fffa3d963c\"\n",
+          "previous": "          \"sha256\": \"b04cca4a408882ef58fa1b62de9d4a18513c50102303184f732c01f4d55f73b0\"\n",
+          "start": 15315581
+        },
+        {
+          "current": "          \"sha256\": \"315a2de3dccc79de79090ab084edda55a1a9f678c974bb5fdb7dce63e384b3ca\"\n",
+          "previous": "          \"sha256\": \"af39b57b8034cce69f7187d70a2ef8dd566701e0e55b476e87ec1373b844f124\"\n",
+          "start": 15317044
+        },
+        {
+          "current": "          \"sha256\": \"fe521ae08fae949a91d8baef36655066913bdf6fe22817e7ab554d98700d9d2f\"\n",
+          "previous": "          \"sha256\": \"5a8b34a28fdca40fdf0e37121399c989a5f2d697f653fbae7c4087b18316394d\"\n",
+          "start": 15500421
+        },
+        {
+          "current": "          \"sha256\": \"9aeb787753275479c4061c74ebb5b24858f1a74acdf5187a9c0528fffa3d963c\"\n",
+          "previous": "          \"sha256\": \"b04cca4a408882ef58fa1b62de9d4a18513c50102303184f732c01f4d55f73b0\"\n",
+          "start": 15500612
+        },
+        {
+          "current": "          \"sha256\": \"315a2de3dccc79de79090ab084edda55a1a9f678c974bb5fdb7dce63e384b3ca\"\n",
+          "previous": "          \"sha256\": \"af39b57b8034cce69f7187d70a2ef8dd566701e0e55b476e87ec1373b844f124\"\n",
+          "start": 15502075
+        },
+        {
+          "current": "          \"sha256\": \"fe521ae08fae949a91d8baef36655066913bdf6fe22817e7ab554d98700d9d2f\"\n",
+          "previous": "          \"sha256\": \"5a8b34a28fdca40fdf0e37121399c989a5f2d697f653fbae7c4087b18316394d\"\n",
+          "start": 15686222
+        },
+        {
+          "current": "          \"sha256\": \"9aeb787753275479c4061c74ebb5b24858f1a74acdf5187a9c0528fffa3d963c\"\n",
+          "previous": "          \"sha256\": \"b04cca4a408882ef58fa1b62de9d4a18513c50102303184f732c01f4d55f73b0\"\n",
+          "start": 15686413
+        },
+        {
+          "current": "          \"sha256\": \"315a2de3dccc79de79090ab084edda55a1a9f678c974bb5fdb7dce63e384b3ca\"\n",
+          "previous": "          \"sha256\": \"af39b57b8034cce69f7187d70a2ef8dd566701e0e55b476e87ec1373b844f124\"\n",
+          "start": 15687876
+        },
+        {
+          "current": "          \"sha256\": \"fe521ae08fae949a91d8baef36655066913bdf6fe22817e7ab554d98700d9d2f\"\n",
+          "previous": "          \"sha256\": \"5a8b34a28fdca40fdf0e37121399c989a5f2d697f653fbae7c4087b18316394d\"\n",
+          "start": 15871709
+        },
+        {
+          "current": "          \"sha256\": \"9aeb787753275479c4061c74ebb5b24858f1a74acdf5187a9c0528fffa3d963c\"\n",
+          "previous": "          \"sha256\": \"b04cca4a408882ef58fa1b62de9d4a18513c50102303184f732c01f4d55f73b0\"\n",
+          "start": 15871900
+        },
+        {
+          "current": "          \"sha256\": \"315a2de3dccc79de79090ab084edda55a1a9f678c974bb5fdb7dce63e384b3ca\"\n",
+          "previous": "          \"sha256\": \"af39b57b8034cce69f7187d70a2ef8dd566701e0e55b476e87ec1373b844f124\"\n",
+          "start": 15873363
+        },
+        {
+          "current": "          \"sha256\": \"cd1c2ced7175dc2a4b8bf2da3bc3639ed8a09f15f14074937e42701c1946aece\"\n",
+          "previous": "          \"sha256\": \"dd3d6326a8aae650d0d7a13ff5a393302b4d8bbe9d5f03db19aa1865ca78e0be\"\n",
+          "start": 17310312
+        },
+        {
+          "current": "          \"sha256\": \"cd1c2ced7175dc2a4b8bf2da3bc3639ed8a09f15f14074937e42701c1946aece\"\n",
+          "previous": "          \"sha256\": \"dd3d6326a8aae650d0d7a13ff5a393302b4d8bbe9d5f03db19aa1865ca78e0be\"\n",
+          "start": 17602383
+        },
+        {
+          "current": "          \"sha256\": \"cd1c2ced7175dc2a4b8bf2da3bc3639ed8a09f15f14074937e42701c1946aece\"\n",
+          "previous": "          \"sha256\": \"dd3d6326a8aae650d0d7a13ff5a393302b4d8bbe9d5f03db19aa1865ca78e0be\"\n",
+          "start": 17894764
+        },
+        {
+          "current": "          \"sha256\": \"cd1c2ced7175dc2a4b8bf2da3bc3639ed8a09f15f14074937e42701c1946aece\"\n",
+          "previous": "          \"sha256\": \"dd3d6326a8aae650d0d7a13ff5a393302b4d8bbe9d5f03db19aa1865ca78e0be\"\n",
+          "start": 18187303
+        },
+        {
+          "current": "          \"sha256\": \"cd1c2ced7175dc2a4b8bf2da3bc3639ed8a09f15f14074937e42701c1946aece\"\n",
+          "previous": "          \"sha256\": \"dd3d6326a8aae650d0d7a13ff5a393302b4d8bbe9d5f03db19aa1865ca78e0be\"\n",
+          "start": 18480453
+        },
+        {
+          "current": "          \"sha256\": \"cd1c2ced7175dc2a4b8bf2da3bc3639ed8a09f15f14074937e42701c1946aece\"\n",
+          "previous": "          \"sha256\": \"dd3d6326a8aae650d0d7a13ff5a393302b4d8bbe9d5f03db19aa1865ca78e0be\"\n",
+          "start": 18855335
+        },
+        {
+          "current": "          \"sha256\": \"cd1c2ced7175dc2a4b8bf2da3bc3639ed8a09f15f14074937e42701c1946aece\"\n",
+          "previous": "          \"sha256\": \"dd3d6326a8aae650d0d7a13ff5a393302b4d8bbe9d5f03db19aa1865ca78e0be\"\n",
+          "start": 19230940
+        },
+        {
+          "current": "          \"sha256\": \"cd1c2ced7175dc2a4b8bf2da3bc3639ed8a09f15f14074937e42701c1946aece\"\n",
+          "previous": "          \"sha256\": \"dd3d6326a8aae650d0d7a13ff5a393302b4d8bbe9d5f03db19aa1865ca78e0be\"\n",
+          "start": 19605822
+        },
+        {
+          "current": "          \"sha256\": \"cd1c2ced7175dc2a4b8bf2da3bc3639ed8a09f15f14074937e42701c1946aece\"\n",
+          "previous": "          \"sha256\": \"dd3d6326a8aae650d0d7a13ff5a393302b4d8bbe9d5f03db19aa1865ca78e0be\"\n",
+          "start": 19981174
+        },
+        {
+          "current": "          \"sha256\": \"cd1c2ced7175dc2a4b8bf2da3bc3639ed8a09f15f14074937e42701c1946aece\"\n",
+          "previous": "          \"sha256\": \"dd3d6326a8aae650d0d7a13ff5a393302b4d8bbe9d5f03db19aa1865ca78e0be\"\n",
+          "start": 20183284
+        },
+        {
+          "current": "          \"sha256\": \"cd1c2ced7175dc2a4b8bf2da3bc3639ed8a09f15f14074937e42701c1946aece\"\n",
+          "previous": "          \"sha256\": \"dd3d6326a8aae650d0d7a13ff5a393302b4d8bbe9d5f03db19aa1865ca78e0be\"\n",
+          "start": 20383481
+        },
+        {
+          "current": "          \"sha256\": \"cd1c2ced7175dc2a4b8bf2da3bc3639ed8a09f15f14074937e42701c1946aece\"\n",
+          "previous": "          \"sha256\": \"dd3d6326a8aae650d0d7a13ff5a393302b4d8bbe9d5f03db19aa1865ca78e0be\"\n",
+          "start": 20586053
+        },
+        {
+          "current": "          \"sha256\": \"cd1c2ced7175dc2a4b8bf2da3bc3639ed8a09f15f14074937e42701c1946aece\"\n",
+          "previous": "          \"sha256\": \"dd3d6326a8aae650d0d7a13ff5a393302b4d8bbe9d5f03db19aa1865ca78e0be\"\n",
+          "start": 20786672
+        },
+        {
+          "current": "          \"sha256\": \"cd1c2ced7175dc2a4b8bf2da3bc3639ed8a09f15f14074937e42701c1946aece\"\n",
+          "previous": "          \"sha256\": \"dd3d6326a8aae650d0d7a13ff5a393302b4d8bbe9d5f03db19aa1865ca78e0be\"\n",
+          "start": 21106870
+        },
+        {
+          "current": "          \"sha256\": \"cd1c2ced7175dc2a4b8bf2da3bc3639ed8a09f15f14074937e42701c1946aece\"\n",
+          "previous": "          \"sha256\": \"dd3d6326a8aae650d0d7a13ff5a393302b4d8bbe9d5f03db19aa1865ca78e0be\"\n",
+          "start": 21427449
+        },
+        {
+          "current": "          \"sha256\": \"cd1c2ced7175dc2a4b8bf2da3bc3639ed8a09f15f14074937e42701c1946aece\"\n",
+          "previous": "          \"sha256\": \"dd3d6326a8aae650d0d7a13ff5a393302b4d8bbe9d5f03db19aa1865ca78e0be\"\n",
+          "start": 21748115
+        },
+        {
+          "current": "          \"sha256\": \"cd1c2ced7175dc2a4b8bf2da3bc3639ed8a09f15f14074937e42701c1946aece\"\n",
+          "previous": "          \"sha256\": \"dd3d6326a8aae650d0d7a13ff5a393302b4d8bbe9d5f03db19aa1865ca78e0be\"\n",
+          "start": 22069268
+        },
+        {
+          "current": "          \"sha256\": \"cd1c2ced7175dc2a4b8bf2da3bc3639ed8a09f15f14074937e42701c1946aece\"\n",
+          "previous": "          \"sha256\": \"dd3d6326a8aae650d0d7a13ff5a393302b4d8bbe9d5f03db19aa1865ca78e0be\"\n",
+          "start": 22277858
+        },
+        {
+          "current": "          \"sha256\": \"cd1c2ced7175dc2a4b8bf2da3bc3639ed8a09f15f14074937e42701c1946aece\"\n",
+          "previous": "          \"sha256\": \"dd3d6326a8aae650d0d7a13ff5a393302b4d8bbe9d5f03db19aa1865ca78e0be\"\n",
+          "start": 22486982
+        },
+        {
+          "current": "          \"sha256\": \"cd1c2ced7175dc2a4b8bf2da3bc3639ed8a09f15f14074937e42701c1946aece\"\n",
+          "previous": "          \"sha256\": \"dd3d6326a8aae650d0d7a13ff5a393302b4d8bbe9d5f03db19aa1865ca78e0be\"\n",
+          "start": 22696040
+        },
+        {
+          "current": "          \"sha256\": \"cd1c2ced7175dc2a4b8bf2da3bc3639ed8a09f15f14074937e42701c1946aece\"\n",
+          "previous": "          \"sha256\": \"dd3d6326a8aae650d0d7a13ff5a393302b4d8bbe9d5f03db19aa1865ca78e0be\"\n",
+          "start": 22905608
+        },
+        {
+          "current": "          \"sha256\": \"cd1c2ced7175dc2a4b8bf2da3bc3639ed8a09f15f14074937e42701c1946aece\"\n",
+          "previous": "          \"sha256\": \"dd3d6326a8aae650d0d7a13ff5a393302b4d8bbe9d5f03db19aa1865ca78e0be\"\n",
+          "start": 23109373
+        },
+        {
+          "current": "          \"sha256\": \"cd1c2ced7175dc2a4b8bf2da3bc3639ed8a09f15f14074937e42701c1946aece\"\n",
+          "previous": "          \"sha256\": \"dd3d6326a8aae650d0d7a13ff5a393302b4d8bbe9d5f03db19aa1865ca78e0be\"\n",
+          "start": 23313546
+        },
+        {
+          "current": "          \"sha256\": \"cd1c2ced7175dc2a4b8bf2da3bc3639ed8a09f15f14074937e42701c1946aece\"\n",
+          "previous": "          \"sha256\": \"dd3d6326a8aae650d0d7a13ff5a393302b4d8bbe9d5f03db19aa1865ca78e0be\"\n",
+          "start": 23517775
+        },
+        {
+          "current": "          \"sha256\": \"cd1c2ced7175dc2a4b8bf2da3bc3639ed8a09f15f14074937e42701c1946aece\"\n",
+          "previous": "          \"sha256\": \"dd3d6326a8aae650d0d7a13ff5a393302b4d8bbe9d5f03db19aa1865ca78e0be\"\n",
+          "start": 23722437
+        },
+        {
+          "current": "          \"sha256\": \"cd1c2ced7175dc2a4b8bf2da3bc3639ed8a09f15f14074937e42701c1946aece\"\n",
+          "previous": "          \"sha256\": \"dd3d6326a8aae650d0d7a13ff5a393302b4d8bbe9d5f03db19aa1865ca78e0be\"\n",
+          "start": 23963460
+        },
+        {
+          "current": "          \"sha256\": \"cd1c2ced7175dc2a4b8bf2da3bc3639ed8a09f15f14074937e42701c1946aece\"\n",
+          "previous": "          \"sha256\": \"dd3d6326a8aae650d0d7a13ff5a393302b4d8bbe9d5f03db19aa1865ca78e0be\"\n",
+          "start": 24205507
+        },
+        {
+          "current": "          \"sha256\": \"cd1c2ced7175dc2a4b8bf2da3bc3639ed8a09f15f14074937e42701c1946aece\"\n",
+          "previous": "          \"sha256\": \"dd3d6326a8aae650d0d7a13ff5a393302b4d8bbe9d5f03db19aa1865ca78e0be\"\n",
+          "start": 24446994
+        },
+        {
+          "current": "          \"sha256\": \"cd1c2ced7175dc2a4b8bf2da3bc3639ed8a09f15f14074937e42701c1946aece\"\n",
+          "previous": "          \"sha256\": \"dd3d6326a8aae650d0d7a13ff5a393302b4d8bbe9d5f03db19aa1865ca78e0be\"\n",
+          "start": 24689514
+        },
+        {
+          "current": "          \"sha256\": \"cd1c2ced7175dc2a4b8bf2da3bc3639ed8a09f15f14074937e42701c1946aece\"\n",
+          "previous": "          \"sha256\": \"dd3d6326a8aae650d0d7a13ff5a393302b4d8bbe9d5f03db19aa1865ca78e0be\"\n",
+          "start": 24895901
+        },
+        {
+          "current": "          \"sha256\": \"cd1c2ced7175dc2a4b8bf2da3bc3639ed8a09f15f14074937e42701c1946aece\"\n",
+          "previous": "          \"sha256\": \"dd3d6326a8aae650d0d7a13ff5a393302b4d8bbe9d5f03db19aa1865ca78e0be\"\n",
+          "start": 25102829
+        },
+        {
+          "current": "          \"sha256\": \"cd1c2ced7175dc2a4b8bf2da3bc3639ed8a09f15f14074937e42701c1946aece\"\n",
+          "previous": "          \"sha256\": \"dd3d6326a8aae650d0d7a13ff5a393302b4d8bbe9d5f03db19aa1865ca78e0be\"\n",
+          "start": 25309678
+        },
+        {
+          "current": "          \"sha256\": \"cd1c2ced7175dc2a4b8bf2da3bc3639ed8a09f15f14074937e42701c1946aece\"\n",
+          "previous": "          \"sha256\": \"dd3d6326a8aae650d0d7a13ff5a393302b4d8bbe9d5f03db19aa1865ca78e0be\"\n",
+          "start": 25517059
+        },
+        {
+          "current": "          \"sha256\": \"cd1c2ced7175dc2a4b8bf2da3bc3639ed8a09f15f14074937e42701c1946aece\"\n",
+          "previous": "          \"sha256\": \"dd3d6326a8aae650d0d7a13ff5a393302b4d8bbe9d5f03db19aa1865ca78e0be\"\n",
+          "start": 25942013
+        },
+        {
+          "current": "          \"sha256\": \"cd1c2ced7175dc2a4b8bf2da3bc3639ed8a09f15f14074937e42701c1946aece\"\n",
+          "previous": "          \"sha256\": \"dd3d6326a8aae650d0d7a13ff5a393302b4d8bbe9d5f03db19aa1865ca78e0be\"\n",
+          "start": 26367452
+        },
+        {
+          "current": "          \"sha256\": \"cd1c2ced7175dc2a4b8bf2da3bc3639ed8a09f15f14074937e42701c1946aece\"\n",
+          "previous": "          \"sha256\": \"dd3d6326a8aae650d0d7a13ff5a393302b4d8bbe9d5f03db19aa1865ca78e0be\"\n",
+          "start": 26792878
+        },
+        {
+          "current": "          \"sha256\": \"cd1c2ced7175dc2a4b8bf2da3bc3639ed8a09f15f14074937e42701c1946aece\"\n",
+          "previous": "          \"sha256\": \"dd3d6326a8aae650d0d7a13ff5a393302b4d8bbe9d5f03db19aa1865ca78e0be\"\n",
+          "start": 27218764
+        },
+        {
+          "current": "          \"sha256\": \"cd1c2ced7175dc2a4b8bf2da3bc3639ed8a09f15f14074937e42701c1946aece\"\n",
+          "previous": "          \"sha256\": \"dd3d6326a8aae650d0d7a13ff5a393302b4d8bbe9d5f03db19aa1865ca78e0be\"\n",
+          "start": 27429361
+        },
+        {
+          "current": "          \"sha256\": \"cd1c2ced7175dc2a4b8bf2da3bc3639ed8a09f15f14074937e42701c1946aece\"\n",
+          "previous": "          \"sha256\": \"dd3d6326a8aae650d0d7a13ff5a393302b4d8bbe9d5f03db19aa1865ca78e0be\"\n",
+          "start": 27640569
+        },
+        {
+          "current": "          \"sha256\": \"cd1c2ced7175dc2a4b8bf2da3bc3639ed8a09f15f14074937e42701c1946aece\"\n",
+          "previous": "          \"sha256\": \"dd3d6326a8aae650d0d7a13ff5a393302b4d8bbe9d5f03db19aa1865ca78e0be\"\n",
+          "start": 27851630
+        },
+        {
+          "current": "          \"sha256\": \"cd1c2ced7175dc2a4b8bf2da3bc3639ed8a09f15f14074937e42701c1946aece\"\n",
+          "previous": "          \"sha256\": \"dd3d6326a8aae650d0d7a13ff5a393302b4d8bbe9d5f03db19aa1865ca78e0be\"\n",
+          "start": 28063312
+        },
+        {
+          "current": "          \"sha256\": \"cd1c2ced7175dc2a4b8bf2da3bc3639ed8a09f15f14074937e42701c1946aece\"\n",
+          "previous": "          \"sha256\": \"dd3d6326a8aae650d0d7a13ff5a393302b4d8bbe9d5f03db19aa1865ca78e0be\"\n",
+          "start": 28289228
+        },
+        {
+          "current": "          \"sha256\": \"cd1c2ced7175dc2a4b8bf2da3bc3639ed8a09f15f14074937e42701c1946aece\"\n",
+          "previous": "          \"sha256\": \"dd3d6326a8aae650d0d7a13ff5a393302b4d8bbe9d5f03db19aa1865ca78e0be\"\n",
+          "start": 28515846
+        },
+        {
+          "current": "          \"sha256\": \"cd1c2ced7175dc2a4b8bf2da3bc3639ed8a09f15f14074937e42701c1946aece\"\n",
+          "previous": "          \"sha256\": \"dd3d6326a8aae650d0d7a13ff5a393302b4d8bbe9d5f03db19aa1865ca78e0be\"\n",
+          "start": 28742224
+        },
+        {
+          "current": "          \"sha256\": \"712f77d6542fdf8e3e9f5e7898a103fc9e4fe32d6966b81c097d7a427ba84e84\"\n",
+          "previous": "          \"sha256\": \"0255681c06c4bbd899da390181ff63c64b5018106372ab92eddbaab057f9485a\"\n",
+          "start": 28968831
+        },
+        {
+          "current": "          \"sha256\": \"712f77d6542fdf8e3e9f5e7898a103fc9e4fe32d6966b81c097d7a427ba84e84\"\n",
+          "previous": "          \"sha256\": \"0255681c06c4bbd899da390181ff63c64b5018106372ab92eddbaab057f9485a\"\n",
+          "start": 29138436
+        },
+        {
+          "current": "          \"sha256\": \"712f77d6542fdf8e3e9f5e7898a103fc9e4fe32d6966b81c097d7a427ba84e84\"\n",
+          "previous": "          \"sha256\": \"0255681c06c4bbd899da390181ff63c64b5018106372ab92eddbaab057f9485a\"\n",
+          "start": 29308022
+        },
+        {
+          "current": "          \"sha256\": \"712f77d6542fdf8e3e9f5e7898a103fc9e4fe32d6966b81c097d7a427ba84e84\"\n",
+          "previous": "          \"sha256\": \"0255681c06c4bbd899da390181ff63c64b5018106372ab92eddbaab057f9485a\"\n",
+          "start": 29360337
+        },
+        {
+          "current": "          \"sha256\": \"712f77d6542fdf8e3e9f5e7898a103fc9e4fe32d6966b81c097d7a427ba84e84\"\n",
+          "previous": "          \"sha256\": \"0255681c06c4bbd899da390181ff63c64b5018106372ab92eddbaab057f9485a\"\n",
+          "start": 29413382
+        },
+        {
+          "current": "          \"sha256\": \"712f77d6542fdf8e3e9f5e7898a103fc9e4fe32d6966b81c097d7a427ba84e84\"\n",
+          "previous": "          \"sha256\": \"0255681c06c4bbd899da390181ff63c64b5018106372ab92eddbaab057f9485a\"\n",
+          "start": 29581453
+        },
+        {
+          "current": "          \"sha256\": \"712f77d6542fdf8e3e9f5e7898a103fc9e4fe32d6966b81c097d7a427ba84e84\"\n",
+          "previous": "          \"sha256\": \"0255681c06c4bbd899da390181ff63c64b5018106372ab92eddbaab057f9485a\"\n",
+          "start": 29749769
+        },
+        {
+          "current": "          \"sha256\": \"712f77d6542fdf8e3e9f5e7898a103fc9e4fe32d6966b81c097d7a427ba84e84\"\n",
+          "previous": "          \"sha256\": \"0255681c06c4bbd899da390181ff63c64b5018106372ab92eddbaab057f9485a\"\n",
+          "start": 29906230
+        },
+        {
+          "current": "          \"sha256\": \"712f77d6542fdf8e3e9f5e7898a103fc9e4fe32d6966b81c097d7a427ba84e84\"\n",
+          "previous": "          \"sha256\": \"0255681c06c4bbd899da390181ff63c64b5018106372ab92eddbaab057f9485a\"\n",
+          "start": 30062355
+        },
+        {
+          "current": "          \"sha256\": \"712f77d6542fdf8e3e9f5e7898a103fc9e4fe32d6966b81c097d7a427ba84e84\"\n",
+          "previous": "          \"sha256\": \"0255681c06c4bbd899da390181ff63c64b5018106372ab92eddbaab057f9485a\"\n",
+          "start": 30246188
+        },
+        {
+          "current": "          \"sha256\": \"712f77d6542fdf8e3e9f5e7898a103fc9e4fe32d6966b81c097d7a427ba84e84\"\n",
+          "previous": "          \"sha256\": \"0255681c06c4bbd899da390181ff63c64b5018106372ab92eddbaab057f9485a\"\n",
+          "start": 30429694
+        },
+        {
+          "current": "          \"sha256\": \"712f77d6542fdf8e3e9f5e7898a103fc9e4fe32d6966b81c097d7a427ba84e84\"\n",
+          "previous": "          \"sha256\": \"0255681c06c4bbd899da390181ff63c64b5018106372ab92eddbaab057f9485a\"\n",
+          "start": 30614005
+        },
+        {
+          "current": "          \"sha256\": \"712f77d6542fdf8e3e9f5e7898a103fc9e4fe32d6966b81c097d7a427ba84e84\"\n",
+          "previous": "          \"sha256\": \"0255681c06c4bbd899da390181ff63c64b5018106372ab92eddbaab057f9485a\"\n",
+          "start": 30798060
+        },
+        {
+          "current": "          \"sha256\": \"712f77d6542fdf8e3e9f5e7898a103fc9e4fe32d6966b81c097d7a427ba84e84\"\n",
+          "previous": "          \"sha256\": \"0255681c06c4bbd899da390181ff63c64b5018106372ab92eddbaab057f9485a\"\n",
+          "start": 30977381
+        },
+        {
+          "current": "          \"sha256\": \"712f77d6542fdf8e3e9f5e7898a103fc9e4fe32d6966b81c097d7a427ba84e84\"\n",
+          "previous": "          \"sha256\": \"0255681c06c4bbd899da390181ff63c64b5018106372ab92eddbaab057f9485a\"\n",
+          "start": 31156525
+        },
+        {
+          "current": "          \"sha256\": \"712f77d6542fdf8e3e9f5e7898a103fc9e4fe32d6966b81c097d7a427ba84e84\"\n",
+          "previous": "          \"sha256\": \"0255681c06c4bbd899da390181ff63c64b5018106372ab92eddbaab057f9485a\"\n",
+          "start": 31336320
+        },
+        {
+          "current": "          \"sha256\": \"712f77d6542fdf8e3e9f5e7898a103fc9e4fe32d6966b81c097d7a427ba84e84\"\n",
+          "previous": "          \"sha256\": \"0255681c06c4bbd899da390181ff63c64b5018106372ab92eddbaab057f9485a\"\n",
+          "start": 31517029
+        },
+        {
+          "current": "          \"sha256\": \"712f77d6542fdf8e3e9f5e7898a103fc9e4fe32d6966b81c097d7a427ba84e84\"\n",
+          "previous": "          \"sha256\": \"0255681c06c4bbd899da390181ff63c64b5018106372ab92eddbaab057f9485a\"\n",
+          "start": 31690968
+        },
+        {
+          "current": "          \"sha256\": \"712f77d6542fdf8e3e9f5e7898a103fc9e4fe32d6966b81c097d7a427ba84e84\"\n",
+          "previous": "          \"sha256\": \"0255681c06c4bbd899da390181ff63c64b5018106372ab92eddbaab057f9485a\"\n",
+          "start": 31864496
+        },
+        {
+          "current": "          \"sha256\": \"712f77d6542fdf8e3e9f5e7898a103fc9e4fe32d6966b81c097d7a427ba84e84\"\n",
+          "previous": "          \"sha256\": \"0255681c06c4bbd899da390181ff63c64b5018106372ab92eddbaab057f9485a\"\n",
+          "start": 32038909
+        },
+        {
+          "current": "          \"sha256\": \"712f77d6542fdf8e3e9f5e7898a103fc9e4fe32d6966b81c097d7a427ba84e84\"\n",
+          "previous": "          \"sha256\": \"0255681c06c4bbd899da390181ff63c64b5018106372ab92eddbaab057f9485a\"\n",
+          "start": 32212093
+        },
+        {
+          "current": "          \"sha256\": \"712f77d6542fdf8e3e9f5e7898a103fc9e4fe32d6966b81c097d7a427ba84e84\"\n",
+          "previous": "          \"sha256\": \"0255681c06c4bbd899da390181ff63c64b5018106372ab92eddbaab057f9485a\"\n",
+          "start": 32376301
+        },
+        {
+          "current": "          \"sha256\": \"712f77d6542fdf8e3e9f5e7898a103fc9e4fe32d6966b81c097d7a427ba84e84\"\n",
+          "previous": "          \"sha256\": \"0255681c06c4bbd899da390181ff63c64b5018106372ab92eddbaab057f9485a\"\n",
+          "start": 32540263
+        },
+        {
+          "current": "          \"sha256\": \"712f77d6542fdf8e3e9f5e7898a103fc9e4fe32d6966b81c097d7a427ba84e84\"\n",
+          "previous": "          \"sha256\": \"0255681c06c4bbd899da390181ff63c64b5018106372ab92eddbaab057f9485a\"\n",
+          "start": 32704943
+        },
+        {
+          "current": "          \"sha256\": \"712f77d6542fdf8e3e9f5e7898a103fc9e4fe32d6966b81c097d7a427ba84e84\"\n",
+          "previous": "          \"sha256\": \"0255681c06c4bbd899da390181ff63c64b5018106372ab92eddbaab057f9485a\"\n",
+          "start": 32869366
+        },
+        {
+          "current": "          \"sha256\": \"712f77d6542fdf8e3e9f5e7898a103fc9e4fe32d6966b81c097d7a427ba84e84\"\n",
+          "previous": "          \"sha256\": \"0255681c06c4bbd899da390181ff63c64b5018106372ab92eddbaab057f9485a\"\n",
+          "start": 33161809
+        },
+        {
+          "current": "          \"sha256\": \"712f77d6542fdf8e3e9f5e7898a103fc9e4fe32d6966b81c097d7a427ba84e84\"\n",
+          "previous": "          \"sha256\": \"0255681c06c4bbd899da390181ff63c64b5018106372ab92eddbaab057f9485a\"\n",
+          "start": 33454054
+        },
+        {
+          "current": "          \"sha256\": \"712f77d6542fdf8e3e9f5e7898a103fc9e4fe32d6966b81c097d7a427ba84e84\"\n",
+          "previous": "          \"sha256\": \"0255681c06c4bbd899da390181ff63c64b5018106372ab92eddbaab057f9485a\"\n",
+          "start": 33746979
+        },
+        {
+          "current": "          \"sha256\": \"712f77d6542fdf8e3e9f5e7898a103fc9e4fe32d6966b81c097d7a427ba84e84\"\n",
+          "previous": "          \"sha256\": \"0255681c06c4bbd899da390181ff63c64b5018106372ab92eddbaab057f9485a\"\n",
+          "start": 34039797
+        },
+        {
+          "current": "          \"sha256\": \"712f77d6542fdf8e3e9f5e7898a103fc9e4fe32d6966b81c097d7a427ba84e84\"\n",
+          "previous": "          \"sha256\": \"0255681c06c4bbd899da390181ff63c64b5018106372ab92eddbaab057f9485a\"\n",
+          "start": 34207201
+        },
+        {
+          "current": "          \"sha256\": \"712f77d6542fdf8e3e9f5e7898a103fc9e4fe32d6966b81c097d7a427ba84e84\"\n",
+          "previous": "          \"sha256\": \"0255681c06c4bbd899da390181ff63c64b5018106372ab92eddbaab057f9485a\"\n",
+          "start": 34374362
+        },
+        {
+          "current": "          \"sha256\": \"712f77d6542fdf8e3e9f5e7898a103fc9e4fe32d6966b81c097d7a427ba84e84\"\n",
+          "previous": "          \"sha256\": \"0255681c06c4bbd899da390181ff63c64b5018106372ab92eddbaab057f9485a\"\n",
+          "start": 34542240
+        },
+        {
+          "current": "          \"sha256\": \"712f77d6542fdf8e3e9f5e7898a103fc9e4fe32d6966b81c097d7a427ba84e84\"\n",
+          "previous": "          \"sha256\": \"0255681c06c4bbd899da390181ff63c64b5018106372ab92eddbaab057f9485a\"\n",
+          "start": 34709759
+        },
+        {
+          "current": "          \"sha256\": \"712f77d6542fdf8e3e9f5e7898a103fc9e4fe32d6966b81c097d7a427ba84e84\"\n",
+          "previous": "          \"sha256\": \"0255681c06c4bbd899da390181ff63c64b5018106372ab92eddbaab057f9485a\"\n",
+          "start": 34909533
+        },
+        {
+          "current": "          \"sha256\": \"712f77d6542fdf8e3e9f5e7898a103fc9e4fe32d6966b81c097d7a427ba84e84\"\n",
+          "previous": "          \"sha256\": \"0255681c06c4bbd899da390181ff63c64b5018106372ab92eddbaab057f9485a\"\n",
+          "start": 35108992
+        },
+        {
+          "current": "          \"sha256\": \"712f77d6542fdf8e3e9f5e7898a103fc9e4fe32d6966b81c097d7a427ba84e84\"\n",
+          "previous": "          \"sha256\": \"0255681c06c4bbd899da390181ff63c64b5018106372ab92eddbaab057f9485a\"\n",
+          "start": 35309238
+        },
+        {
+          "current": "          \"sha256\": \"e2582db7a7b9db417ba5eead833f7f9517b8d2bbfb1db851681f7451921f5807\"\n",
+          "previous": "          \"sha256\": \"db21e5b567335e1d98dbff8d32e70c970338b10d87315678bfaff8eeca9ba98f\"\n",
+          "start": 43888722
+        },
+        {
+          "current": "          \"sha256\": \"e2582db7a7b9db417ba5eead833f7f9517b8d2bbfb1db851681f7451921f5807\"\n",
+          "previous": "          \"sha256\": \"db21e5b567335e1d98dbff8d32e70c970338b10d87315678bfaff8eeca9ba98f\"\n",
+          "start": 44320131
+        },
+        {
+          "current": "          \"sha256\": \"e2582db7a7b9db417ba5eead833f7f9517b8d2bbfb1db851681f7451921f5807\"\n",
+          "previous": "          \"sha256\": \"db21e5b567335e1d98dbff8d32e70c970338b10d87315678bfaff8eeca9ba98f\"\n",
+          "start": 44751610
+        },
+        {
+          "current": "          \"sha256\": \"e2582db7a7b9db417ba5eead833f7f9517b8d2bbfb1db851681f7451921f5807\"\n",
+          "previous": "          \"sha256\": \"db21e5b567335e1d98dbff8d32e70c970338b10d87315678bfaff8eeca9ba98f\"\n",
+          "start": 45184107
+        },
+        {
+          "current": "          \"sha256\": \"66ad4f3303e653eaaf692a3cd35d98055e36144053613e2eddc6a8e6d11a1dc2\"\n",
+          "previous": "          \"sha256\": \"974ba24fbaed1f9fea2cd35259c044563ba39bf15e5625a3b1c98067bae03c7c\"\n",
+          "start": 69673930
+        },
+        {
+          "current": "          \"sha256\": \"66ad4f3303e653eaaf692a3cd35d98055e36144053613e2eddc6a8e6d11a1dc2\"\n",
+          "previous": "          \"sha256\": \"974ba24fbaed1f9fea2cd35259c044563ba39bf15e5625a3b1c98067bae03c7c\"\n",
+          "start": 70126047
+        },
+        {
+          "current": "          \"sha256\": \"66ad4f3303e653eaaf692a3cd35d98055e36144053613e2eddc6a8e6d11a1dc2\"\n",
+          "previous": "          \"sha256\": \"974ba24fbaed1f9fea2cd35259c044563ba39bf15e5625a3b1c98067bae03c7c\"\n",
+          "start": 70578226
+        },
+        {
+          "current": "          \"sha256\": \"66ad4f3303e653eaaf692a3cd35d98055e36144053613e2eddc6a8e6d11a1dc2\"\n",
+          "previous": "          \"sha256\": \"974ba24fbaed1f9fea2cd35259c044563ba39bf15e5625a3b1c98067bae03c7c\"\n",
+          "start": 71031421
+        },
+        {
+          "current": "          \"sha256\": \"88611860d7112eb29308347cfef9733b03478db803da1d6b57c9e7240915342f\"\n",
+          "previous": "          \"sha256\": \"d9108a83d08568b1f75bfba4a1a8dc836040effde22bdd0c78de5b759ba60a3c\"\n",
+          "start": 74243097
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "745526bc0d4c5ec213274f12c269766fa31155344fae9cc02009aaae8353a605"
+    },
+    {
+      "currentSha256": "f80480bb8b97d6829db99c7a4615f8069f108eceb773a61c55a30db2a824d67e",
+      "edits": [
+        {
+          "current": "import { assertIsolatedWasmtimeCapiBootstraps } from \"./wasmtime-capi-bootstrap.mjs\";\n",
+          "previous": "",
+          "start": 224
+        },
+        {
+          "current": "\t// The same pinned SDK bytes and isolated installer as the consumer matrix.\n",
+          "previous": "\t// The same Nix CLI, wasm-tools bootstrap and C API derivation as the consumer matrix.\n",
+          "start": 1566
+        },
+        {
+          "current": "\tassertIsolatedWasmtimeCapiBootstraps(consumer, 3);\n",
+          "previous": "\tassert.ok(consumer.includes(\"        uses: cachix/install-nix-action@v31\\n        with:\\n          install_url: https://releases.nixos.org/nix/nix-2.24.11/install\\n\"));\n\tassert.ok(consumer.includes(\"          nix build .#wasmtime-c-api --out-link build/wasmtime-c-api\\n\"));\n",
+          "start": 1726
+        },
+        {
+          "current": "\t\t, [\"wasmtime-v42.0.1\", \"wasmtime-v42.0.2\"]\n\t\t, [\"sha256sum --check --status\", \"true\"]\n\t\t, [\"mv -T\", \"mkdir -p\"]\n",
+          "previous": "\t\t, [\"nix-2.24.11\", \"nix-2.30.0\"]\n\t\t, [\"        uses: cachix/install-nix-action@v31\\n        with:\\n          install_url: https://releases.nixos.org/nix/nix-2.24.11/install\\n\", \"        run: curl -L https://nixos.org/nix/install | sh\\n\"]\n\t\t, [\"nix build .#wasmtime-c-api --out-link build/wasmtime-c-api\", \"mkdir -p build/wasmtime-c-api\"]\n",
+          "start": 2682
+        }
+      ],
+      "path": "tests/helpers/checked-record-value-index-wit-ci-workflow-tests.mjs",
+      "previousSha256": "40b1e1b24ac71b43a183f0abf0caabe3105983e9aead634911ec52c5b9958161"
+    },
+    {
+      "currentSha256": "e029c50ceac9a4e88965c27c4b7cdfd6ef4c2179bce405a23e82416bb8b4099c",
+      "edits": [
+        {
+          "current": "import { isolatedWasmtimeCapiBootstrap } from \"./wasmtime-capi-bootstrap.mjs\";\n",
+          "previous": "",
+          "start": 192
+        },
+        {
+          "current": "const capi = \"set -euo pipefail\\n\" + isolatedWasmtimeCapiBootstrap.trimEnd();\n",
+          "previous": "const capi = \"set -euo pipefail\\nnix build .#wasmtime-c-api --out-link build/wasmtime-c-api\";\n",
+          "start": 713
+        },
+        {
+          "current": "",
+          "previous": "\t\t, \"Install the documented Nix CLI\"\n",
+          "start": 2804
+        },
+        {
+          "current": "\tassert.equal(step(names[4]), \"        timeout-minutes: 30\\n        shell: bash\\n        run: |\\n\" + indent(toolchains));\n\tassert.equal(step(names[5]), \"        timeout-minutes: 30\\n        shell: bash\\n        run: |\\n\" + indent(capi));\n\tassert.equal(step(names[6]), \"        id: acceptance\\n        timeout-minutes: 120\\n        shell: bash\\n        run: |\\n\" + indent(acceptance));\n\tassert.equal(step(names[7]), \"        if: always()\\n        uses: actions/upload-artifact@v7\\n        with:\\n          name: checked-record-value-index-wit-${{ github.sha }}\\n          path: |\\n            build/checked-record-value-index-wit-ci/\\n            build/checked-record-value-index-wit-toolchain.log\\n          if-no-files-found: error\\n          retention-days: 30\\n\");\n\tassert.equal(step(names[8]), \"        if: always() && steps.acceptance.outcome != 'success'\\n        run: exit 1\\n\");\n\tassert.doesNotMatch(source, /nix build|cachix\\/install-nix/u);\n",
+          "previous": "\tassert.equal(step(names[4]), \"        uses: cachix/install-nix-action@v31\\n        with:\\n          install_url: https://releases.nixos.org/nix/nix-2.24.11/install\\n\");\n\tassert.equal(step(names[5]), \"        timeout-minutes: 30\\n        shell: bash\\n        run: |\\n\" + indent(toolchains));\n\tassert.equal(step(names[6]), \"        timeout-minutes: 30\\n        shell: bash\\n        run: |\\n\" + indent(capi));\n\tassert.equal(step(names[7]), \"        id: acceptance\\n        timeout-minutes: 120\\n        shell: bash\\n        run: |\\n\" + indent(acceptance));\n\tassert.equal(step(names[8]), \"        if: always()\\n        uses: actions/upload-artifact@v7\\n        with:\\n          name: checked-record-value-index-wit-${{ github.sha }}\\n          path: |\\n            build/checked-record-value-index-wit-ci/\\n            build/checked-record-value-index-wit-toolchain.log\\n          if-no-files-found: error\\n          retention-days: 30\\n\");\n\tassert.equal(step(names[9]), \"        if: always() && steps.acceptance.outcome != 'success'\\n        run: exit 1\\n\");\n",
+          "start": 3826
+        }
+      ],
+      "path": "tests/helpers/checked-record-value-index-wit-ci-workflow.mjs",
+      "previousSha256": "ee2039252aa791e5c33e37a9e990bc3e4af4a9e39e193af4d599861b0bff62e3"
+    },
+    {
+      "currentSha256": "91f10db776c44cb41bc1eb10ccf9f4dc59fa2e632bfe673cdba0c7c382c45a4d",
+      "edits": [
+        {
+          "current": "import { assertIsolatedWasmtimeCapiBootstraps } from \"./wasmtime-capi-bootstrap.mjs\";\n",
+          "previous": "",
+          "start": 224
+        },
+        {
+          "current": "\t// The same pinned SDK bytes and isolated installer as the consumer matrix.\n",
+          "previous": "\t// The same Nix CLI, wasm-tools bootstrap and C API derivation as the consumer matrix.\n",
+          "start": 1593
+        },
+        {
+          "current": "\tassertIsolatedWasmtimeCapiBootstraps(consumer, 3);\n",
+          "previous": "\tassert.ok(consumer.includes(\"        uses: cachix/install-nix-action@v31\\n        with:\\n          install_url: https://releases.nixos.org/nix/nix-2.24.11/install\\n\"));\n\tassert.ok(consumer.includes(\"          nix build .#wasmtime-c-api --out-link build/wasmtime-c-api\\n\"));\n",
+          "start": 1753
+        },
+        {
+          "current": "\t\t, [\"wasmtime-v42.0.1\", \"wasmtime-v42.0.2\"]\n\t\t, [\"sha256sum --check --status\", \"true\"]\n\t\t, [\"mv -T\", \"mkdir -p\"]\n",
+          "previous": "\t\t, [\"nix-2.24.11\", \"nix-2.30.0\"]\n\t\t, [\"        uses: cachix/install-nix-action@v31\\n        with:\\n          install_url: https://releases.nixos.org/nix/nix-2.24.11/install\\n\", \"        run: curl -L https://nixos.org/nix/install | sh\\n\"]\n\t\t, [\"nix build .#wasmtime-c-api --out-link build/wasmtime-c-api\", \"mkdir -p build/wasmtime-c-api\"]\n",
+          "start": 2718
+        }
+      ],
+      "path": "tests/helpers/dependent-checked-record-wit-ci-workflow-tests.mjs",
+      "previousSha256": "4c805f6d040bf9c46da73aba3c976ffc91bf4fe2e5105f3d7efe1f7022343a6c"
+    },
+    {
+      "currentSha256": "b487a1aaa2ae37af4f0e58a8a9208705b8d3e73b7ed7c4259185c43cbfdb26ad",
+      "edits": [
+        {
+          "current": "import { isolatedWasmtimeCapiBootstrap } from \"./wasmtime-capi-bootstrap.mjs\";\n",
+          "previous": "",
+          "start": 205
+        },
+        {
+          "current": "const capi = \"set -euo pipefail\\n\" + isolatedWasmtimeCapiBootstrap.trimEnd();\n",
+          "previous": "const capi = \"set -euo pipefail\\nnix build .#wasmtime-c-api --out-link build/wasmtime-c-api\";\n",
+          "start": 722
+        },
+        {
+          "current": "",
+          "previous": "\t\t, \"Install the documented Nix CLI\"\n",
+          "start": 2820
+        },
+        {
+          "current": "\tassert.equal(step(names[4]), \"        timeout-minutes: 30\\n        shell: bash\\n        run: |\\n\" + indent(toolchains));\n\tassert.equal(step(names[5]), \"        timeout-minutes: 30\\n        shell: bash\\n        run: |\\n\" + indent(capi));\n\tassert.equal(step(names[6]), \"        id: acceptance\\n        timeout-minutes: 120\\n        shell: bash\\n        run: |\\n\" + indent(acceptance));\n\tassert.equal(step(names[7]), \"        if: always()\\n        uses: actions/upload-artifact@v7\\n        with:\\n          name: dependent-checked-record-wit-${{ github.sha }}\\n          path: |\\n            build/dependent-checked-record-wit-ci/\\n            build/dependent-checked-record-wit-toolchain.log\\n          if-no-files-found: error\\n          retention-days: 30\\n\");\n\tassert.equal(step(names[8]), \"        if: always() && steps.acceptance.outcome != 'success'\\n        run: exit 1\\n\");\n\tassert.doesNotMatch(source, /nix build|cachix\\/install-nix/u);\n",
+          "previous": "\tassert.equal(step(names[4]), \"        uses: cachix/install-nix-action@v31\\n        with:\\n          install_url: https://releases.nixos.org/nix/nix-2.24.11/install\\n\");\n\tassert.equal(step(names[5]), \"        timeout-minutes: 30\\n        shell: bash\\n        run: |\\n\" + indent(toolchains));\n\tassert.equal(step(names[6]), \"        timeout-minutes: 30\\n        shell: bash\\n        run: |\\n\" + indent(capi));\n\tassert.equal(step(names[7]), \"        id: acceptance\\n        timeout-minutes: 120\\n        shell: bash\\n        run: |\\n\" + indent(acceptance));\n\tassert.equal(step(names[8]), \"        if: always()\\n        uses: actions/upload-artifact@v7\\n        with:\\n          name: dependent-checked-record-wit-${{ github.sha }}\\n          path: |\\n            build/dependent-checked-record-wit-ci/\\n            build/dependent-checked-record-wit-toolchain.log\\n          if-no-files-found: error\\n          retention-days: 30\\n\");\n\tassert.equal(step(names[9]), \"        if: always() && steps.acceptance.outcome != 'success'\\n        run: exit 1\\n\");\n",
+          "start": 3855
+        }
+      ],
+      "path": "tests/helpers/dependent-checked-record-wit-ci-workflow.mjs",
+      "previousSha256": "387976559ee170b2da79e827d3e65044d5a4f71200a65125d581d6ca3e4d418d"
+    },
+    {
+      "currentSha256": "fb30a5fc72319c80479f73ff2a67f355f1bad6cf222f6e685158628f3e1255ac",
+      "edits": [
+        {
+          "current": "import { assertIsolatedWasmtimeCapiBootstraps } from \"./wasmtime-capi-bootstrap.mjs\";\n",
+          "previous": "",
+          "start": 224
+        },
+        {
+          "current": "\t// The same pinned SDK bytes and isolated installer as the consumer matrix.\n",
+          "previous": "\t// The same Nix CLI, wasm-tools bootstrap and C API derivation as the consumer matrix.\n",
+          "start": 1552
+        },
+        {
+          "current": "\tassertIsolatedWasmtimeCapiBootstraps(consumer, 3);\n",
+          "previous": "\tassert.ok(consumer.includes(\"        uses: cachix/install-nix-action@v31\\n        with:\\n          install_url: https://releases.nixos.org/nix/nix-2.24.11/install\\n\"));\n\tassert.ok(consumer.includes(\"          nix build .#wasmtime-c-api --out-link build/wasmtime-c-api\\n\"));\n",
+          "start": 1712
+        },
+        {
+          "current": "\t\t, [\"wasmtime-v42.0.1\", \"wasmtime-v42.0.2\"]\n\t\t, [\"sha256sum --check --status\", \"true\"]\n\t\t, [\"mv -T\", \"mkdir -p\"]\n",
+          "previous": "\t\t, [\"nix-2.24.11\", \"nix-2.30.0\"]\n\t\t, [\"        uses: cachix/install-nix-action@v31\\n        with:\\n          install_url: https://releases.nixos.org/nix/nix-2.24.11/install\\n\", \"        run: curl -L https://nixos.org/nix/install | sh\\n\"]\n\t\t, [\"nix build .#wasmtime-c-api --out-link build/wasmtime-c-api\", \"mkdir -p build/wasmtime-c-api\"]\n",
+          "start": 2662
+        }
+      ],
+      "path": "tests/helpers/inherited-checked-record-wit-ci-workflow-tests.mjs",
+      "previousSha256": "48d34a2085961e76ede8aef7fd0abd57b7bb795439905602d19f08a299a8c79f"
+    },
+    {
+      "currentSha256": "5dc2df2c6c1139d160dbc659857e1340f03320e705559c1c08f5364938355358",
+      "edits": [
+        {
+          "current": "import { isolatedWasmtimeCapiBootstrap } from \"./wasmtime-capi-bootstrap.mjs\";\n",
+          "previous": "",
+          "start": 190
+        },
+        {
+          "current": "const capi = \"set -euo pipefail\\n\" + isolatedWasmtimeCapiBootstrap.trimEnd();\n",
+          "previous": "const capi = \"set -euo pipefail\\nnix build .#wasmtime-c-api --out-link build/wasmtime-c-api\";\n",
+          "start": 707
+        },
+        {
+          "current": "",
+          "previous": "\t\t, \"Install the documented Nix CLI\"\n",
+          "start": 2800
+        },
+        {
+          "current": "\tassert.equal(step(names[4]), \"        timeout-minutes: 30\\n        shell: bash\\n        run: |\\n\" + indent(toolchains));\n\tassert.equal(step(names[5]), \"        timeout-minutes: 30\\n        shell: bash\\n        run: |\\n\" + indent(capi));\n\tassert.equal(step(names[6]), \"        id: acceptance\\n        timeout-minutes: 120\\n        shell: bash\\n        run: |\\n\" + indent(acceptance));\n\tassert.equal(step(names[7]), \"        if: always()\\n        uses: actions/upload-artifact@v7\\n        with:\\n          name: inherited-checked-record-wit-${{ github.sha }}\\n          path: |\\n            build/inherited-checked-record-wit-ci/\\n            build/inherited-checked-record-wit-toolchain.log\\n          if-no-files-found: error\\n          retention-days: 30\\n\");\n\tassert.equal(step(names[8]), \"        if: always() && steps.acceptance.outcome != 'success'\\n        run: exit 1\\n\");\n\tassert.doesNotMatch(source, /nix build|cachix\\/install-nix/u);\n",
+          "previous": "\tassert.equal(step(names[4]), \"        uses: cachix/install-nix-action@v31\\n        with:\\n          install_url: https://releases.nixos.org/nix/nix-2.24.11/install\\n\");\n\tassert.equal(step(names[5]), \"        timeout-minutes: 30\\n        shell: bash\\n        run: |\\n\" + indent(toolchains));\n\tassert.equal(step(names[6]), \"        timeout-minutes: 30\\n        shell: bash\\n        run: |\\n\" + indent(capi));\n\tassert.equal(step(names[7]), \"        id: acceptance\\n        timeout-minutes: 120\\n        shell: bash\\n        run: |\\n\" + indent(acceptance));\n\tassert.equal(step(names[8]), \"        if: always()\\n        uses: actions/upload-artifact@v7\\n        with:\\n          name: inherited-checked-record-wit-${{ github.sha }}\\n          path: |\\n            build/inherited-checked-record-wit-ci/\\n            build/inherited-checked-record-wit-toolchain.log\\n          if-no-files-found: error\\n          retention-days: 30\\n\");\n\tassert.equal(step(names[9]), \"        if: always() && steps.acceptance.outcome != 'success'\\n        run: exit 1\\n\");\n",
+          "start": 3820
+        }
+      ],
+      "path": "tests/helpers/inherited-checked-record-wit-ci-workflow.mjs",
+      "previousSha256": "89bd57fee7fb84f41f1e71358bedc512a0d8dafd68783215acdf072008e1b4c3"
+    },
+    {
+      "currentSha256": "9aeb787753275479c4061c74ebb5b24858f1a74acdf5187a9c0528fffa3d963c",
+      "edits": [
+        {
+          "current": "import { assertIsolatedWasmtimeCapiBootstraps } from \"./wasmtime-capi-bootstrap.mjs\";\n",
+          "previous": "",
+          "start": 224
+        },
+        {
+          "current": "\t// The same pinned SDK bytes and isolated installer as the consumer matrix.\n",
+          "previous": "\t// The same Nix CLI, wasm-tools bootstrap and C API derivation as the consumer matrix.\n",
+          "start": 1522
+        },
+        {
+          "current": "\tassertIsolatedWasmtimeCapiBootstraps(consumer, 3);\n",
+          "previous": "\tassert.ok(consumer.includes(\"        uses: cachix/install-nix-action@v31\\n        with:\\n          install_url: https://releases.nixos.org/nix/nix-2.24.11/install\\n\"));\n\tassert.ok(consumer.includes(\"          nix build .#wasmtime-c-api --out-link build/wasmtime-c-api\\n\"));\n",
+          "start": 1682
+        },
+        {
+          "current": "\t\t, [\"wasmtime-v42.0.1\", \"wasmtime-v42.0.2\"]\n\t\t, [\"sha256sum --check --status\", \"true\"]\n\t\t, [\"mv -T\", \"mkdir -p\"]\n",
+          "previous": "\t\t, [\"nix-2.24.11\", \"nix-2.30.0\"]\n\t\t, [\"        uses: cachix/install-nix-action@v31\\n        with:\\n          install_url: https://releases.nixos.org/nix/nix-2.24.11/install\\n\", \"        run: curl -L https://nixos.org/nix/install | sh\\n\"]\n\t\t, [\"nix build .#wasmtime-c-api --out-link build/wasmtime-c-api\", \"mkdir -p build/wasmtime-c-api\"]\n",
+          "start": 2623
+        }
+      ],
+      "path": "tests/helpers/nested-checked-record-wit-ci-workflow-tests.mjs",
+      "previousSha256": "b04cca4a408882ef58fa1b62de9d4a18513c50102303184f732c01f4d55f73b0"
+    },
+    {
+      "currentSha256": "fe521ae08fae949a91d8baef36655066913bdf6fe22817e7ab554d98700d9d2f",
+      "edits": [
+        {
+          "current": "import { isolatedWasmtimeCapiBootstrap } from \"./wasmtime-capi-bootstrap.mjs\";\n",
+          "previous": "",
+          "start": 187
+        },
+        {
+          "current": "const capi = \"set -euo pipefail\\n\" + isolatedWasmtimeCapiBootstrap.trimEnd();\n",
+          "previous": "const capi = \"set -euo pipefail\\nnix build .#wasmtime-c-api --out-link build/wasmtime-c-api\";\n",
+          "start": 698
+        },
+        {
+          "current": "",
+          "previous": "\t\t, \"Install the documented Nix CLI\"\n",
+          "start": 2770
+        },
+        {
+          "current": "\tassert.equal(step(names[4]), \"        timeout-minutes: 30\\n        shell: bash\\n        run: |\\n\" + indent(toolchains));\n\tassert.equal(step(names[5]), \"        timeout-minutes: 30\\n        shell: bash\\n        run: |\\n\" + indent(capi));\n\tassert.equal(step(names[6]), \"        id: acceptance\\n        timeout-minutes: 120\\n        shell: bash\\n        run: |\\n\" + indent(acceptance));\n\tassert.equal(step(names[7]), \"        if: always()\\n        uses: actions/upload-artifact@v7\\n        with:\\n          name: nested-checked-record-wit-${{ github.sha }}\\n          path: |\\n            build/nested-checked-record-wit-ci/\\n            build/nested-checked-record-wit-toolchain.log\\n          if-no-files-found: error\\n          retention-days: 30\\n\");\n\tassert.equal(step(names[8]), \"        if: always() && steps.acceptance.outcome != 'success'\\n        run: exit 1\\n\");\n\tassert.doesNotMatch(source, /nix build|cachix\\/install-nix/u);\n",
+          "previous": "\tassert.equal(step(names[4]), \"        uses: cachix/install-nix-action@v31\\n        with:\\n          install_url: https://releases.nixos.org/nix/nix-2.24.11/install\\n\");\n\tassert.equal(step(names[5]), \"        timeout-minutes: 30\\n        shell: bash\\n        run: |\\n\" + indent(toolchains));\n\tassert.equal(step(names[6]), \"        timeout-minutes: 30\\n        shell: bash\\n        run: |\\n\" + indent(capi));\n\tassert.equal(step(names[7]), \"        id: acceptance\\n        timeout-minutes: 120\\n        shell: bash\\n        run: |\\n\" + indent(acceptance));\n\tassert.equal(step(names[8]), \"        if: always()\\n        uses: actions/upload-artifact@v7\\n        with:\\n          name: nested-checked-record-wit-${{ github.sha }}\\n          path: |\\n            build/nested-checked-record-wit-ci/\\n            build/nested-checked-record-wit-toolchain.log\\n          if-no-files-found: error\\n          retention-days: 30\\n\");\n\tassert.equal(step(names[9]), \"        if: always() && steps.acceptance.outcome != 'success'\\n        run: exit 1\\n\");\n",
+          "start": 3787
+        }
+      ],
+      "path": "tests/helpers/nested-checked-record-wit-ci-workflow.mjs",
+      "previousSha256": "5a8b34a28fdca40fdf0e37121399c989a5f2d697f653fbae7c4087b18316394d"
+    },
+    {
+      "currentSha256": "d83e222ee004809246cb5309ba14974767681e0624dd47f54486a229a40a6da7",
+      "edits": [
+        {
+          "current": "import { assertIsolatedWasmtimeCapiBootstraps } from \"./wasmtime-capi-bootstrap.mjs\";\n",
+          "previous": "",
+          "start": 224
+        },
+        {
+          "current": "\t// The same pinned SDK bytes and isolated installer as the consumer matrix.\n",
+          "previous": "\t// The same Nix CLI, wasm-tools bootstrap and C API derivation as the consumer matrix.\n",
+          "start": 1551
+        },
+        {
+          "current": "\tassertIsolatedWasmtimeCapiBootstraps(consumer, 3);\n",
+          "previous": "\tassert.ok(consumer.includes(\"        uses: cachix/install-nix-action@v31\\n        with:\\n          install_url: https://releases.nixos.org/nix/nix-2.24.11/install\\n\"));\n\tassert.ok(consumer.includes(\"          nix build .#wasmtime-c-api --out-link build/wasmtime-c-api\\n\"));\n",
+          "start": 1711
+        },
+        {
+          "current": "\t\t, [\"wasmtime-v42.0.1\", \"wasmtime-v42.0.2\"]\n\t\t, [\"sha256sum --check --status\", \"true\"]\n\t\t, [\"mv -T\", \"mkdir -p\"]\n",
+          "previous": "\t\t, [\"nix-2.24.11\", \"nix-2.30.0\"]\n\t\t, [\"        uses: cachix/install-nix-action@v31\\n        with:\\n          install_url: https://releases.nixos.org/nix/nix-2.24.11/install\\n\", \"        run: curl -L https://nixos.org/nix/install | sh\\n\"]\n\t\t, [\"nix build .#wasmtime-c-api --out-link build/wasmtime-c-api\", \"mkdir -p build/wasmtime-c-api\"]\n",
+          "start": 2653
+        }
+      ],
+      "path": "tests/helpers/nominal-primitive-subtype-wit-ci-workflow-tests.mjs",
+      "previousSha256": "01097a3292d14e4fa118c203ea67a4d499fa9a870dd40d372d84aa407eb900be"
+    },
+    {
+      "currentSha256": "7331d348ec928c3415751665869a0524b066d6eed533a2d70049de6f02cb1ce0",
+      "edits": [
+        {
+          "current": "import { isolatedWasmtimeCapiBootstrap } from \"./wasmtime-capi-bootstrap.mjs\";\n",
+          "previous": "",
+          "start": 179
+        },
+        {
+          "current": "const capi = \"set -euo pipefail\\n\" + isolatedWasmtimeCapiBootstrap.trimEnd();\n",
+          "previous": "const capi = \"set -euo pipefail\\nnix build .#wasmtime-c-api --out-link build/wasmtime-c-api\";\n",
+          "start": 698
+        },
+        {
+          "current": "",
+          "previous": "\t\t, \"Install the documented Nix CLI\"\n",
+          "start": 2803
+        },
+        {
+          "current": "\tassert.equal(step(names[4]), \"        timeout-minutes: 30\\n        shell: bash\\n        run: |\\n\" + indent(toolchains));\n\tassert.equal(step(names[5]), \"        timeout-minutes: 30\\n        shell: bash\\n        run: |\\n\" + indent(capi));\n\tassert.equal(step(names[6]), \"        id: acceptance\\n        timeout-minutes: 120\\n        shell: bash\\n        run: |\\n\" + indent(acceptance));\n\tassert.equal(step(names[7]), \"        if: always()\\n        uses: actions/upload-artifact@v7\\n        with:\\n          name: nominal-primitive-subtype-wit-${{ github.sha }}\\n          path: |\\n            build/nominal-primitive-subtype-wit-ci/\\n            build/nominal-primitive-subtype-wit-toolchain.log\\n          if-no-files-found: error\\n          retention-days: 30\\n\");\n\tassert.equal(step(names[8]), \"        if: always() && steps.acceptance.outcome != 'success'\\n        run: exit 1\\n\");\n\tassert.doesNotMatch(source, /nix build|cachix\\/install-nix/u);\n",
+          "previous": "\tassert.equal(step(names[4]), \"        uses: cachix/install-nix-action@v31\\n        with:\\n          install_url: https://releases.nixos.org/nix/nix-2.24.11/install\\n\");\n\tassert.equal(step(names[5]), \"        timeout-minutes: 30\\n        shell: bash\\n        run: |\\n\" + indent(toolchains));\n\tassert.equal(step(names[6]), \"        timeout-minutes: 30\\n        shell: bash\\n        run: |\\n\" + indent(capi));\n\tassert.equal(step(names[7]), \"        id: acceptance\\n        timeout-minutes: 120\\n        shell: bash\\n        run: |\\n\" + indent(acceptance));\n\tassert.equal(step(names[8]), \"        if: always()\\n        uses: actions/upload-artifact@v7\\n        with:\\n          name: nominal-primitive-subtype-wit-${{ github.sha }}\\n          path: |\\n            build/nominal-primitive-subtype-wit-ci/\\n            build/nominal-primitive-subtype-wit-toolchain.log\\n          if-no-files-found: error\\n          retention-days: 30\\n\");\n\tassert.equal(step(names[9]), \"        if: always() && steps.acceptance.outcome != 'success'\\n        run: exit 1\\n\");\n",
+          "start": 3813
+        }
+      ],
+      "path": "tests/helpers/nominal-primitive-subtype-wit-ci-workflow.mjs",
+      "previousSha256": "411b7bde5ff11f485284d450f1faf157fce0cf5c41067b0a165276af67e540d2"
+    },
+    {
+      "currentSha256": "eb2b068bb8adcce5a875d14d8cda15d6a75c7e9b4d0dca0c8eb14b764cda68a2",
+      "edits": [
+        {
+          "current": "\t\t, [\"sha256sum --check --status\", \"true\"]\n",
+          "previous": "\t\t, [\"          nix build .#wasmtime-c-api --out-link build/wasmtime-c-api\\n\", \"\"]\n",
+          "start": 4397
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-wit-ci-workflow-tests.mjs",
+      "previousSha256": "13f4f2c2507cc1814b9dcf129c393663d720d8777b52e73cc48cfa519aa22ba9"
+    },
+    {
+      "currentSha256": "f88a28381cb7a80d8460d57afa3b0c0605c3f975ffe197bf3f8fb77e64e0791c",
+      "edits": [
+        {
+          "current": "import { assertIsolatedWasmtimeCapiBootstraps } from \"./wasmtime-capi-bootstrap.mjs\";\n",
+          "previous": "",
+          "start": 151
+        },
+        {
+          "current": "\t\t, \"          bash scripts/bootstrap-toolchains.sh --wasm-tools-only\\n\"])\n",
+          "previous": "\t\t, \"          bash scripts/bootstrap-toolchains.sh --wasm-tools-only\\n\"\n\t\t, \"          nix build .#wasmtime-c-api --out-link build/wasmtime-c-api\\n\"])\n",
+          "start": 4293
+        },
+        {
+          "current": "\tassertIsolatedWasmtimeCapiBootstraps(body);\n",
+          "previous": "",
+          "start": 4406
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-wit-ci-workflow.mjs",
+      "previousSha256": "ec7dce003a104fe5a3d52de1c3f9408347abf04bb42ca8dd9096071ce940fd43"
+    },
+    {
+      "currentSha256": "05776ffde8adeb98aa5fe855247168afc24851b81e6d3723a7dc46c04f300f0b",
+      "edits": [
+        {
+          "current": "import { assertIsolatedWasmtimeCapiBootstraps } from \"./wasmtime-capi-bootstrap.mjs\";\n",
+          "previous": "",
+          "start": 224
+        },
+        {
+          "current": "\t// The same pinned SDK bytes and isolated installer as the consumer matrix.\n",
+          "previous": "\t// The same Nix CLI, wasm-tools bootstrap and C API derivation as the consumer matrix.\n",
+          "start": 1558
+        },
+        {
+          "current": "\tassertIsolatedWasmtimeCapiBootstraps(consumer, 3);\n",
+          "previous": "\tassert.ok(consumer.includes(\"        uses: cachix/install-nix-action@v31\\n        with:\\n          install_url: https://releases.nixos.org/nix/nix-2.24.11/install\\n\"));\n\tassert.ok(consumer.includes(\"          nix build .#wasmtime-c-api --out-link build/wasmtime-c-api\\n\"));\n",
+          "start": 1718
+        },
+        {
+          "current": "\t\t, [\"wasmtime-v42.0.1\", \"wasmtime-v42.0.2\"]\n\t\t, [\"sha256sum --check --status\", \"true\"]\n\t\t, [\"mv -T\", \"mkdir -p\"]\n",
+          "previous": "\t\t, [\"nix-2.24.11\", \"nix-2.30.0\"]\n\t\t, [\"        uses: cachix/install-nix-action@v31\\n        with:\\n          install_url: https://releases.nixos.org/nix/nix-2.24.11/install\\n\", \"        run: curl -L https://nixos.org/nix/install | sh\\n\"]\n\t\t, [\"nix build .#wasmtime-c-api --out-link build/wasmtime-c-api\", \"mkdir -p build/wasmtime-c-api\"]\n",
+          "start": 2668
+        }
+      ],
+      "path": "tests/helpers/recursive-checked-record-wit-ci-workflow-tests.mjs",
+      "previousSha256": "bcce8d0491261dc0f110652c752b888bb96d864771a8eb7a37b3409a6ff8d4ce"
+    },
+    {
+      "currentSha256": "f932d7a9c9b7566453e4aa4f00d2755ff990cf458a19d89cd12a07d8a649c71b",
+      "edits": [
+        {
+          "current": "import { isolatedWasmtimeCapiBootstrap } from \"./wasmtime-capi-bootstrap.mjs\";\n",
+          "previous": "",
+          "start": 190
+        },
+        {
+          "current": "const capi = \"set -euo pipefail\\n\" + isolatedWasmtimeCapiBootstrap.trimEnd();\n",
+          "previous": "const capi = \"set -euo pipefail\\nnix build .#wasmtime-c-api --out-link build/wasmtime-c-api\";\n",
+          "start": 707
+        },
+        {
+          "current": "",
+          "previous": "\t\t, \"Install the documented Nix CLI\"\n",
+          "start": 2800
+        },
+        {
+          "current": "\tassert.equal(step(names[4]), \"        timeout-minutes: 30\\n        shell: bash\\n        run: |\\n\" + indent(toolchains));\n\tassert.equal(step(names[5]), \"        timeout-minutes: 30\\n        shell: bash\\n        run: |\\n\" + indent(capi));\n\tassert.equal(step(names[6]), \"        id: acceptance\\n        timeout-minutes: 120\\n        shell: bash\\n        run: |\\n\" + indent(acceptance));\n\tassert.equal(step(names[7]), \"        if: always()\\n        uses: actions/upload-artifact@v7\\n        with:\\n          name: recursive-checked-record-wit-${{ github.sha }}\\n          path: |\\n            build/recursive-checked-record-wit-ci/\\n            build/recursive-checked-record-wit-toolchain.log\\n          if-no-files-found: error\\n          retention-days: 30\\n\");\n\tassert.equal(step(names[8]), \"        if: always() && steps.acceptance.outcome != 'success'\\n        run: exit 1\\n\");\n\tassert.doesNotMatch(source, /nix build|cachix\\/install-nix/u);\n",
+          "previous": "\tassert.equal(step(names[4]), \"        uses: cachix/install-nix-action@v31\\n        with:\\n          install_url: https://releases.nixos.org/nix/nix-2.24.11/install\\n\");\n\tassert.equal(step(names[5]), \"        timeout-minutes: 30\\n        shell: bash\\n        run: |\\n\" + indent(toolchains));\n\tassert.equal(step(names[6]), \"        timeout-minutes: 30\\n        shell: bash\\n        run: |\\n\" + indent(capi));\n\tassert.equal(step(names[7]), \"        id: acceptance\\n        timeout-minutes: 120\\n        shell: bash\\n        run: |\\n\" + indent(acceptance));\n\tassert.equal(step(names[8]), \"        if: always()\\n        uses: actions/upload-artifact@v7\\n        with:\\n          name: recursive-checked-record-wit-${{ github.sha }}\\n          path: |\\n            build/recursive-checked-record-wit-ci/\\n            build/recursive-checked-record-wit-toolchain.log\\n          if-no-files-found: error\\n          retention-days: 30\\n\");\n\tassert.equal(step(names[9]), \"        if: always() && steps.acceptance.outcome != 'success'\\n        run: exit 1\\n\");\n",
+          "start": 3818
+        }
+      ],
+      "path": "tests/helpers/recursive-checked-record-wit-ci-workflow.mjs",
+      "previousSha256": "d2f37cac11b0cbb4784c1687464cbb286b159e4640f5b2317cc6406d20943648"
+    },
+    {
+      "currentSha256": "24035f3692218b8b3c4912921e71cf06a019973657968db7c6bbfc0962523ba8",
+      "edits": [
+        {
+          "current": "// A subshell confines strict options and staging cleanup in combined CI steps.\nexport const isolatedWasmtimeCapiBootstrap = \"(\\n\"\n\t+ wasmtimeCapiBootstrap.trimEnd().split(\"\\n\").map(line => \"  \" + line).join(\"\\n\")\n\t+ \"\\n)\\n\";\n\n/**\n * Require every fixed SDK installer in a workflow or isolated job body.\n *\n * @param source - Workflow YAML whose run blocks use ten-space indentation.\n * @param count - Exact number of independent SDK installation sites.\n */\nexport const assertIsolatedWasmtimeCapiBootstraps = (source, count = 1) => {\n\tconst block = isolatedWasmtimeCapiBootstrap.trimEnd().split(\"\\n\")\n\t\t.map(line => \"          \" + line + \"\\n\").join(\"\");\n\tassert.equal(source.split(block).length - 1, count, \"exact isolated Wasmtime installers\");\n\tassert.equal(source.split(\"WASMTIME_CAPI_STAGING=$(mktemp\").length - 1, count);\n\tassert.doesNotMatch(source, /nix build \\.#wasmtime-c-api/u);\n};\n\n",
+          "previous": "",
+          "start": 1763
+        },
+        {
+          "current": " * @param isolated - Require the subshell form used inside combined steps.\n",
+          "previous": "",
+          "start": 3014
+        },
+        {
+          "current": "export const checkWasmtimeCapiBootstrap = async (t, source, isolated = false) => {\n\tassert.equal(source, isolated ? isolatedWasmtimeCapiBootstrap : wasmtimeCapiBootstrap\n\t\t, \"exact pinned Wasmtime bootstrap\");\n",
+          "previous": "export const checkWasmtimeCapiBootstrap = async (t, source) => {\n\tassert.equal(source, wasmtimeCapiBootstrap, \"exact pinned Wasmtime bootstrap\");\n",
+          "start": 3093
+        },
+        {
+          "current": "\t\tconst guarded = isolated\n\t\t\t? \"set -e\\nset +u\\nBOOTSTRAP_CALLER_FLAGS=$-\\ntrap 'printf retained > parent-exit' EXIT\\n\"\n\t\t\t\t+ script + '\\ntest \"$-\" = \"$BOOTSTRAP_CALLER_FLAGS\"\\n'\n\t\t\t: script;\n\t\tconst result = spawnSync(\"/usr/bin/bash\", [\"-c\", guarded], {\n",
+          "previous": "\t\tconst result = spawnSync(\"/usr/bin/bash\", [\"-c\", script], {\n",
+          "start": 5096
+        },
+        {
+          "current": "\t\tif(isolated) assert.equal(await readFile(join(directory, \"parent-exit\"), \"utf8\"), \"retained\");\n",
+          "previous": "",
+          "start": 5584
+        }
+      ],
+      "path": "tests/helpers/wasmtime-capi-bootstrap.mjs",
+      "previousSha256": "42c5cd10f58a6f4cbfcd00c67270a04840f55cb288e1da0e643b7184fc6440e4"
+    },
+    {
+      "currentSha256": "b87f5ee320b6454ffe772c8c9d70a0a8dd0f3716d5ddf74b4c37a36856a2b62a",
+      "edits": [
+        {
+          "current": "import { assertIsolatedWasmtimeCapiBootstraps } from \"./wasmtime-capi-bootstrap.mjs\";\n",
+          "previous": "",
+          "start": 144
+        },
+        {
+          "current": "",
+          "previous": "\t\t, \"nix build .#wasmtime-c-api --out-link build/wasmtime-c-api\"\n",
+          "start": 1821
+        },
+        {
+          "current": "\tassertIsolatedWasmtimeCapiBootstraps(job);\n",
+          "previous": "\tassert.match(job, /uses: cachix\\/install-nix-action@v31/u);\n",
+          "start": 1900
+        }
+      ],
+      "path": "tests/helpers/wit-owned-receiver-ci.mjs",
+      "previousSha256": "13720be5e35b9da371ea83e18ea0db0d84baa287a4caba0f26451f24eaf69b9e"
+    },
+    {
+      "currentSha256": "bed15b6017e09ca0a97bb6b4f1708cb949c1bd6ec6ebd9ee60dc569132d1be63",
+      "edits": [
+        {
+          "current": "import { assertIsolatedWasmtimeCapiBootstraps } from \"./wasmtime-capi-bootstrap.mjs\";\n",
+          "previous": "",
+          "start": 224
+        },
+        {
+          "current": "\t// The same pinned SDK bytes and isolated installer as the consumer matrix.\n",
+          "previous": "\t// The same Nix CLI, wasm-tools bootstrap and C API derivation as the consumer matrix.\n",
+          "start": 1550
+        },
+        {
+          "current": "\tassertIsolatedWasmtimeCapiBootstraps(consumer, 3);\n",
+          "previous": "\tassert.ok(consumer.includes(\"        uses: cachix/install-nix-action@v31\\n        with:\\n          install_url: https://releases.nixos.org/nix/nix-2.24.11/install\\n\"));\n\tassert.ok(consumer.includes(\"          nix build .#wasmtime-c-api --out-link build/wasmtime-c-api\\n\"));\n",
+          "start": 1710
+        },
+        {
+          "current": "\t\t, [\"wasmtime-v42.0.1\", \"wasmtime-v42.0.2\"]\n\t\t, [\"sha256sum --check --status\", \"true\"]\n\t\t, [\"mv -T\", \"mkdir -p\"]\n",
+          "previous": "\t\t, [\"nix-2.24.11\", \"nix-2.30.0\"]\n\t\t, [\"        uses: cachix/install-nix-action@v31\\n        with:\\n          install_url: https://releases.nixos.org/nix/nix-2.24.11/install\\n\", \"        run: curl -L https://nixos.org/nix/install | sh\\n\"]\n\t\t, [\"nix build .#wasmtime-c-api --out-link build/wasmtime-c-api\", \"mkdir -p build/wasmtime-c-api\"]\n",
+          "start": 2669
+        }
+      ],
+      "path": "tests/helpers/zero-payload-checked-record-wit-ci-workflow-tests.mjs",
+      "previousSha256": "e18656262005e99d6d4c01fe67e913f91601f2592643a486942c9bb79e38dcce"
+    },
+    {
+      "currentSha256": "bf9ee3997cafd07cf70b8455565d71fb98f39d35769a9b62014f94ed9a3a6607",
+      "edits": [
+        {
+          "current": "import { isolatedWasmtimeCapiBootstrap } from \"./wasmtime-capi-bootstrap.mjs\";\n",
+          "previous": "",
+          "start": 193
+        },
+        {
+          "current": "const capi = \"set -euo pipefail\\n\" + isolatedWasmtimeCapiBootstrap.trimEnd();\n",
+          "previous": "const capi = \"set -euo pipefail\\nnix build .#wasmtime-c-api --out-link build/wasmtime-c-api\";\n",
+          "start": 716
+        },
+        {
+          "current": "",
+          "previous": "\t\t, \"Install the documented Nix CLI\"\n",
+          "start": 2791
+        },
+        {
+          "current": "\tassert.equal(step(names[4]), \"        timeout-minutes: 30\\n        shell: bash\\n        run: |\\n\" + indent(toolchains));\n\tassert.equal(step(names[5]), \"        timeout-minutes: 30\\n        shell: bash\\n        run: |\\n\" + indent(capi));\n\tassert.equal(step(names[6]), \"        id: acceptance\\n        timeout-minutes: 120\\n        shell: bash\\n        run: |\\n\" + indent(acceptance));\n\tassert.equal(step(names[7]), \"        if: always()\\n        uses: actions/upload-artifact@v7\\n        with:\\n          name: zero-payload-checked-record-wit-${{ github.sha }}\\n          path: |\\n            build/zero-payload-checked-record-wit-ci/\\n            build/zero-payload-checked-record-wit-toolchain.log\\n          if-no-files-found: error\\n          retention-days: 30\\n\");\n\tassert.equal(step(names[8]), \"        if: always() && steps.acceptance.outcome != 'success'\\n        run: exit 1\\n\");\n\tassert.doesNotMatch(source, /nix build|cachix\\/install-nix/u);\n",
+          "previous": "\tassert.equal(step(names[4]), \"        uses: cachix/install-nix-action@v31\\n        with:\\n          install_url: https://releases.nixos.org/nix/nix-2.24.11/install\\n\");\n\tassert.equal(step(names[5]), \"        timeout-minutes: 30\\n        shell: bash\\n        run: |\\n\" + indent(toolchains));\n\tassert.equal(step(names[6]), \"        timeout-minutes: 30\\n        shell: bash\\n        run: |\\n\" + indent(capi));\n\tassert.equal(step(names[7]), \"        id: acceptance\\n        timeout-minutes: 120\\n        shell: bash\\n        run: |\\n\" + indent(acceptance));\n\tassert.equal(step(names[8]), \"        if: always()\\n        uses: actions/upload-artifact@v7\\n        with:\\n          name: zero-payload-checked-record-wit-${{ github.sha }}\\n          path: |\\n            build/zero-payload-checked-record-wit-ci/\\n            build/zero-payload-checked-record-wit-toolchain.log\\n          if-no-files-found: error\\n          retention-days: 30\\n\");\n\tassert.equal(step(names[9]), \"        if: always() && steps.acceptance.outcome != 'success'\\n        run: exit 1\\n\");\n",
+          "start": 3814
+        }
+      ],
+      "path": "tests/helpers/zero-payload-checked-record-wit-ci-workflow.mjs",
+      "previousSha256": "e6848a38b86cc1bd6eb6757f89c39647ffd34189e50107a19daed6f3bcbbe86b"
+    }
+  ]
+}
