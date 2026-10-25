@@ -249,13 +249,37 @@ test("owned checked-record promotion keeps the installed fixture and result-only
 		const javascript = ownedCheckedRecordJavaScriptSelection(route);
 		const selections = [
 			javascript
-			, ownedCheckedRecordNativeSelection(route, ["c", "cpp", "cpan"])
 			, ownedCheckedRecordLanguageSelection(route, ["python", "ruby", "rust"])
 			, ...["dotnet", "jvm", "php", "wit"].map(group => ownedCheckedRecordManagedSelection(route, group))];
 		for(const selected of selections)
 		{
 			assert.deepEqual(selected.reviewedIr, javascript.reviewedIr);
 			assert.deepEqual(selected.configuration.exports, javascript.configuration.exports);
+		}
+		const native = ownedCheckedRecordNativeSelection(route, ["c", "cpp", "cpan"]);
+		if(javascript.resultOnly)
+		{
+			assert.deepEqual(native.reviewedIr, javascript.reviewedIr);
+			assert.deepEqual(native.configuration.exports, javascript.configuration.exports);
+		}
+		else
+		{
+			// New native coverage is awaiting hosted execution. Keep the admitted
+			// shared boundary exact without promoting the additional cases here.
+			const types = new Set(javascript.reviewedIr.types.map(type => type.id));
+			const declarations = new Set(javascript.reviewedIr.declarations.map(item => item.id));
+			assert.deepEqual({ ...native.reviewedIr
+				, types: native.reviewedIr.types.filter(type => types.has(type.id))
+				, declarations: native.reviewedIr.declarations.filter(item => declarations.has(item.id))
+			}, javascript.reviewedIr);
+			assert.deepEqual(native.reviewedIr.types.filter(type => !types.has(type.id))
+				.map(type => type.name), ["Grant"]);
+			const additional = ["bookingSpan", "claimQuota", "echoGrant", "echoClaims"
+				, "transferWithClaimCallback", "transferPairClaim"];
+			assert.deepEqual(native.reviewedIr.declarations.filter(item => !declarations.has(item.id))
+				.map(item => item.name), additional);
+			assert.deepEqual(native.configuration.exports, javascript.configuration.exports?.concat(
+				additional.map(name => `OwnedCheckedRecords.${name}`)));
 		}
 		const definitions = javascript.reviewedIr.types.filter(type => !type.name.startsWith("Callback"));
 		if(javascript.resultOnly)
