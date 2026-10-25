@@ -82,6 +82,18 @@ test("promotion inventory rejects malformed canonical input and budgets", async 
 	await assert.rejects(read(fixture(), { section: 100 }), /prefix limit/u);
 });
 
+test("promotion inventory retains only explicitly selected complete evidence", async () => {
+	const value = fixture();
+	const result = await read(value, { retainEvidence: ["second"] });
+	assert.equal(result.document.evidence[0].files.length, 1);
+	assert.deepEqual(result.document.evidence[1], value.evidence[1]);
+	for(const retainEvidence of [null, "second", ["missing"], ["second", "second"]
+		, [""], [1], Array.from({ length: 9 }, (_, index) => String(index))])
+		await assert.rejects(read(value, { retainEvidence }));
+	value.evidence[1].files[1].sha256 = "invalid";
+	await assert.rejects(read(value, { retainEvidence: ["second"] }));
+});
+
 test("promotion inventory handles UTF-8 chunk boundaries and complete manifests", async () => {
 	const value = fixture();
 	for(let index = 0; index < 2_000; index++) value.evidence[0].files.push({

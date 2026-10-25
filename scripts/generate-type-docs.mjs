@@ -8,6 +8,8 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { readTypeSurface, typeSurfaceCells } from "../src/adoption/type-surface.mjs";
+import { phpWasmEntryProbeEvidenceId } from "../tests/helpers/php-wasm-refinement-entry-publication.mjs";
+import { renderPhpWasmEntryProbeBoundary } from "../tests/helpers/php-wasm-refinement-entry-publication-docs.mjs";
 
 export const typeGuideProfiles = Object.freeze({
 	"docs/javascript-typescript.md": ["node-javascript", "node-typescript", "browser-javascript", "browser-react", "browser-worker"]
@@ -213,6 +215,23 @@ not widen any type-support cell. The configured [promotion
 workflow](https://github.com/seanmorris/lean-bridge/actions/workflows/php-wasm-refinement-entry-promotion.yml)
 is not a hosted result; entry counts become hosted evidence only when a
 completed run publishes a verified summary for one revision.`;
+
+/**
+ * Keep generated prose consistent with the published probe reference.
+ * This rendering check does not replace the publisher's original-source replay.
+ *
+ * @param document - Validated full inventory or its streaming projection.
+ */
+export const phpWasmRefinementEntryReference = document => {
+	const references = document.evidence.filter(item => item.id === phpWasmEntryProbeEvidenceId);
+	if(references.length === 0) return phpWasmRefinementEntryBoundary;
+	assert.equal(references.length, 1, "Exactly one hosted probe reference");
+	for(const observation of document.observations)
+		for(const stage of Object.values(observation.stages))
+			assert.ok(!stage.evidence.includes(phpWasmEntryProbeEvidenceId)
+				, "Entry probes cannot establish prepared-package support");
+	return renderPhpWasmEntryProbeBoundary(references[0]);
+};
 
 const callbackSubtypeHostedGuide = (document, profiles, reference) => {
 	if(!hasCallbackSubtypeHostedEvidence(document)) return null;
@@ -459,7 +478,7 @@ export async function renderTypeDocuments({ root, inventory = null })
 			, ""
 			, "Platform integers follow the compiled Lean target: npm and PHP-Wasm use 32-bit words; native packages and native-backed WIT components use 64-bit words. Host adapters check those ranges before calling Lean. The consumer's pointer width does not select the range. Lean arithmetic still wraps at its compiled word width."
 			, ""
-			, phpWasmRefinementEntryBoundary
+			, phpWasmRefinementEntryReference(document)
 			, ""
 			, ...(genericReference ? [genericReference, ""] : [])
 			, "All seventeen profiles have installed checks for synchronous primitive callbacks and returned Lean functions on both source paths. The [npm callable record](../evidence/npm-callables-20260919.md) covers Node, strict TypeScript, Chromium and Firefox, including React and workers. These shared callable checks use one through sixteen primitive arguments and a primitive result. All seventeen profiles also accept acyclic copied callback payloads. All seventeen profiles additionally accept finite recursive callback values. Asynchronous callables require separate contracts."

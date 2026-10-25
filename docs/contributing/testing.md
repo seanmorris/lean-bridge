@@ -61,6 +61,57 @@ The scheduling and tamper controls need no Lean, PHP or Wasm compilation:
 node --test tests/helpers/php-wasm-refinement-entry-promotion-ci-tests.mjs
 ```
 
+### Retain and publish completed entry measurements
+
+Download the original ZIP and run, job and artifact API responses for all 27
+producers and the aggregate verifier. Save a selection JSON file with `runJson`
+and `artifacts` fields. Each artifact entry has `name`, `jobJson`, `artifactJson`
+and `artifactZip`; all file paths are absolute. Use the order returned by
+`phpWasmRefinementEntryHostedContracts(producerCommit)`, including the aggregate
+last. Keep original API bytes unchanged. The positive archiver accepts only one
+terminal successful run and attempt; partial or failed captures remain diagnostic.
+
+Use a clean checkout with complete Git history and a second clean checkout at the
+exact producer commit. The latter supplies the original verifier. For example,
+with the capture date in the archive directory name:
+
+```sh
+export LEAN_BRIDGE_PRODUCER_CHECKOUT=/absolute/path/to/original-producer
+export LEAN_BRIDGE_ENTRY_ARCHIVE=docs/evidence/php-wasm-entry-hosted-20261025
+node --max-old-space-size=512 scripts/archive-php-wasm-refinement-entry-hosted.mjs \
+  --selection /absolute/path/to/selection.json \
+  --output "$PWD/$LEAN_BRIDGE_ENTRY_ARCHIVE" \
+  --producer-checkout "$LEAN_BRIDGE_PRODUCER_CHECKOUT"
+node --max-old-space-size=512 scripts/check-php-wasm-refinement-entry-hosted-archive.mjs \
+  --directory "$PWD/$LEAN_BRIDGE_ENTRY_ARCHIVE" \
+  --producer-checkout "$LEAN_BRIDGE_PRODUCER_CHECKOUT"
+```
+
+The archive includes original APIs, ZIP parts, extracted output and producer and
+archiver source snapshots. The checker reconstructs those bytes and runs all
+thirty original route verifiers. Neither command compiles Lean or PHP. Commit the
+complete archive, including generated files normally ignored by Git, before
+preparing publication:
+
+```sh
+git add --force -- "$LEAN_BRIDGE_ENTRY_ARCHIVE"
+git commit -m "Retain the complete PHP-Wasm entry measurement archive"
+node --max-old-space-size=512 scripts/publish-php-wasm-refinement-entry-probes.mjs \
+  --archive "$LEAN_BRIDGE_ENTRY_ARCHIVE" \
+  --producer-checkout "$LEAN_BRIDGE_PRODUCER_CHECKOUT" \
+  --check
+```
+
+`--check` requires a clean checkout, repeats the complete replay, authenticates
+every archive byte against the fixed commit and stages the proposed update without
+installing it. Omit `--check` to append the probe evidence, replace the four
+measurement paragraphs and write a publication receipt. Prepared-package support
+observations and earlier evidence stay unchanged. The command checks generated
+tables and stages rollback copies before writing; if installation fails, it
+retains recovery files and does not overwrite concurrent edits during rollback.
+Review the diff and its source-history update before committing. The receipt does
+not replace final Core checks or default-branch recurring workflow activation.
+
 ## Capture owned checked-record npm and browser evidence
 
 The `Owned checked-record npm and browser producer` workflow runs the complete

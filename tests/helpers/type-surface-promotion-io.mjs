@@ -50,18 +50,24 @@ async function* lines(input, identity, limit)
 }
 
 /**
- * Validate every complete evidence entry but keep only its semantic metadata
- * and first file/archive in memory. Complete lists remain in the source file.
+ * Validate every complete evidence entry. By default, retain only its metadata
+ * and first file/archive; a bounded explicit selection can keep full references.
+ * All original lists remain in the source file.
  *
  * @param input - Readable original inventory bytes.
  * @param contracts - Independent IR schema and consumer contract.
  * @param limits - Limits for canonical JSON sections and individual lines.
  * @param limits.section - Maximum bytes per evidence entry or semantic section.
  * @param limits.line - Maximum bytes per canonical JSON line.
+ * @param limits.retainEvidence - Evidence IDs whose complete references are needed.
  */
 export const readPromotionInventory = async (
-	input, contracts, { section = 32 * 1024 * 1024, line = 1024 * 1024 } = {}
+	input, contracts, { section = 32 * 1024 * 1024, line = 1024 * 1024, retainEvidence = [] } = {}
 ) => {
+	assert.ok(Array.isArray(retainEvidence) && retainEvidence.length <= 8);
+	assert.ok(retainEvidence.every(id => typeof id === "string" && id.length > 0));
+	const retained = new Set(retainEvidence);
+	assert.equal(retained.size, retainEvidence.length, "Unique retained evidence IDs");
 	const identity = { digest: hash(), bytes: 0 };
 	let state = "prefix", prefix = "", suffix = "", entry = "";
 	let prefixBytes = 0, entryBytes = 0, suffixBytes = 0;
@@ -112,7 +118,8 @@ export const readPromotionInventory = async (
 					validateTypeSurface({ ...skeleton
 						, baseline: { ...skeleton.baseline, exclusions: [] }
 						, evidence: [value] }, contracts);
-					evidence.push({ ...value, files: value.files.slice(0, 1)
+					evidence.push(retained.has(value.id) ? value : { ...value
+						, files: value.files.slice(0, 1)
 						, artifacts: value.artifacts.slice(0, 1) });
 					appendAt = position + bytes - 1;
 					entry = "";
@@ -135,6 +142,8 @@ export const readPromotionInventory = async (
 	assert.equal(pretty(document) + "\n", semanticSource, "Noncanonical inventory semantics");
 	assert.deepEqual(Object.keys(document).slice(-2), ["evidence", "observations"]);
 	document.evidence = evidence;
+	assert.ok(retainEvidence.every(id => evidence.some(item => item.id === id))
+		, "Retained evidence must exist");
 	validateTypeSurface(document, contracts);
 	return { document, contracts, appendAt, suffixAt
 		, source: { bytes: identity.bytes, sha256: identity.digest.digest("hex") } };
