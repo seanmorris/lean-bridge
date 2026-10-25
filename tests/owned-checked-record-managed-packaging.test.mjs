@@ -40,6 +40,8 @@ import {
 import {
 	copyPackageSetHandoff, retainPackageSetEvidence
 } from "./helpers/package-set.mjs";
+import { workflowRunScalars } from "./helpers/native-observation-split.mjs";
+import { checkWasmtimeCapiBootstrap } from "./helpers/wasmtime-capi-bootstrap.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_OWNED_CHECKED_RECORD_MANAGED_TEST === "1";
 const groupVariable = "LEAN_BRIDGE_OWNED_CHECKED_RECORD_MANAGED_GROUPS";
@@ -124,7 +126,7 @@ test("managed owned checked-record generators preserve exact API modes", async t
 	await checkManagedWitCallers(t);
 });
 
-test("managed owned checked-record consumers are independently authored", async () => {
+test("managed owned checked-record consumers are independently authored", async t => {
 	for(const profile of ["dotnet", "java", "kotlin", "php-native"])
 		for(const resultOnly of [false, true])
 		{
@@ -146,7 +148,8 @@ test("managed owned checked-record consumers are independently authored", async 
 	for(const required of [
 		"on:\n  push:\n  pull_request:\n  workflow_dispatch:\n"
 		, "cancel-in-progress: true"
-		, "group: [dotnet, jvm, php, wit]"
+		, 'group: ${{ fromJSON(github.event_name == \'workflow_dispatch\' && inputs.wit_only && \'["wit"]\' || \'["dotnet","jvm","php","wit"]\') }}'
+		, "      wit_only:\n        description: Run only the WIT repair probe; push and pull requests still run all hosts\n        type: boolean\n        default: false"
 		, "npm run test:owned-checked-record-managed"
 		, "rg '^# fail 0$'"
 		, "rg '^# skipped 0$'"
@@ -158,6 +161,11 @@ test("managed owned checked-record consumers are independently authored", async 
 		, "if: always() && steps.acceptance.outcome != 'success'"
 	]) assert.ok(workflow.includes(required), required);
 	assert.doesNotMatch(workflow, /continue-on-error:\s*true/u);
+	assert.doesNotMatch(workflow, /nix build|cachix\/install-nix/u);
+	const bootstrap = workflowRunScalars(workflow).filter(run =>
+		run.source.includes("WASMTIME_CAPI_STAGING"));
+	assert.equal(bootstrap.length, 1);
+	await checkWasmtimeCapiBootstrap(t, bootstrap[0].source);
 });
 
 const checkManagedWitCallers = async t => {

@@ -4,6 +4,11 @@ on:
   push:
   pull_request:
   workflow_dispatch:
+    inputs:
+      wit_only:
+        description: Run only the WIT repair probe; push and pull requests still run all hosts
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -20,7 +25,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        group: [dotnet, jvm, php, wit]
+        group: ${{ fromJSON(github.event_name == 'workflow_dispatch' && inputs.wit_only && '["wit"]' || '["dotnet","jvm","php","wit"]') }}
     env:
       LEAN_NUM_THREADS: "1"
       LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR: "2.38"
@@ -73,11 +78,6 @@ jobs:
             packages+=(composer php-cli php-common php-dev php-mbstring php-zip)
           fi
           sudo apt-get install -y "${packages[@]}"
-      - name: Install the documented Nix CLI
-        if: matrix.group == 'wit'
-        uses: cachix/install-nix-action@v31
-        with:
-          install_url: https://releases.nixos.org/nix/nix-2.24.11/install
       - name: Install dependencies and pinned Lean tools
         timeout-minutes: 35
         shell: bash
@@ -93,7 +93,24 @@ jobs:
         if: matrix.group == 'wit'
         timeout-minutes: 30
         shell: bash
-        run: nix build .#wasmtime-c-api --out-link build/wasmtime-c-api
+        run: |
+          set -euo pipefail
+          test "$(uname -sm)" = 'Linux x86_64'
+          mkdir -p build
+          test ! -e build/wasmtime-c-api && test ! -L build/wasmtime-c-api
+          WASMTIME_CAPI_STAGING=$(mktemp -d build/wasmtime-c-api.XXXXXX)
+          trap 'rm -rf -- "$WASMTIME_CAPI_STAGING"' EXIT
+          curl --fail --location --retry 3 --retry-delay 2 --connect-timeout 20 --max-time 300 \
+            --output "$WASMTIME_CAPI_STAGING/wasmtime.tar.xz" \
+            'https://github.com/bytecodealliance/wasmtime/releases/download/v42.0.1/wasmtime-v42.0.1-x86_64-linux-c-api.tar.xz'
+          echo '2097a47351918a446b26c7e65f487278f63bc947591b71897db547cd90c05082'"  $WASMTIME_CAPI_STAGING/wasmtime.tar.xz" | sha256sum --check --status
+          mkdir "$WASMTIME_CAPI_STAGING/unpacked"
+          tar -xJf "$WASMTIME_CAPI_STAGING/wasmtime.tar.xz" --strip-components=1 -C "$WASMTIME_CAPI_STAGING/unpacked"
+          test -s "$WASMTIME_CAPI_STAGING/unpacked/include/wasmtime.h"
+          test -s "$WASMTIME_CAPI_STAGING/unpacked/include/wasm.h"
+          test -s "$WASMTIME_CAPI_STAGING/unpacked/lib/libwasmtime.so"
+          test -s "$WASMTIME_CAPI_STAGING/unpacked/lib/libwasmtime.a"
+          mv -T "$WASMTIME_CAPI_STAGING/unpacked" build/wasmtime-c-api
       - name: Execute source-free managed acceptance
         id: acceptance
         timeout-minutes: 220
@@ -109,11 +126,13 @@ jobs:
               export LEAN_BRIDGE_JAVA="$JAVA_HOME/bin/java"
               export LEAN_BRIDGE_JAVAC="$JAVA_HOME/bin/javac"
               export LEAN_BRIDGE_KOTLINC="$PWD/build/kotlin-tools/kotlinc/bin/kotlinc"
-              export LEAN_BRIDGE_MAVEN="$(command -v mvn)"
+              LEAN_BRIDGE_MAVEN="$(command -v mvn)"
+              export LEAN_BRIDGE_MAVEN
               ;;
             php)
-              export LEAN_BRIDGE_PHP="$(command -v php)"
-              export LEAN_BRIDGE_COMPOSER="$(command -v composer)"
+              LEAN_BRIDGE_PHP="$(command -v php)"
+              LEAN_BRIDGE_COMPOSER="$(command -v composer)"
+              export LEAN_BRIDGE_PHP LEAN_BRIDGE_COMPOSER
               ;;
             wit)
               export CC=/usr/bin/cc

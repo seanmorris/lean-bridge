@@ -1,0 +1,156 @@
+{
+  "schemaVersion": 1,
+  "profile": "owned-checked-wit-bootstrap-source-qualification",
+  "predecessorCommit": "e3b041b916a4c5818ab6404617fe7c5c1458217f",
+  "sourceIdentity": {
+    "kind": "pre-implementation-working-tree-bytes",
+    "files": [
+      {
+        "path": ".github/workflows/owned-checked-record-managed.yml",
+        "bytes": 7126,
+        "sha256": "b0a4fc70135a72b65b5a2c7fb3fc67bd8cb10b93ffa1e0dd0e2dbc2976ce51a3"
+      },
+      {
+        "path": "tests/helpers/wasmtime-capi-bootstrap.mjs",
+        "bytes": 6439,
+        "sha256": "42c5cd10f58a6f4cbfcd00c67270a04840f55cb288e1da0e643b7184fc6440e4"
+      },
+      {
+        "path": "tests/owned-checked-record-managed-packaging.test.mjs",
+        "bytes": 20493,
+        "sha256": "0f5e2da1028b857dd180d109da91bf48ec775997e8e0de6c9398c2ef00de54f5"
+      }
+    ]
+  },
+  "scope": "Repair the owned checked-record WIT producer setup without changing Wasmtime SDK bytes, compiled Lean code, installed assertions or published support. Local bootstrap checks are not installed WIT package acceptance.",
+  "failure": {
+    "root": "docs/evidence/owned-wit-bootstrap-failure-20261025",
+    "producer": "83d8de7c2d69efede5a3cf701790cce71bdc9a48",
+    "run": 40209972746,
+    "job": 121218910962,
+    "artifact": 12605812923,
+    "accepted": false,
+    "files": [
+      {
+        "path": "docs/evidence/owned-wit-bootstrap-failure-20261025/run.json",
+        "bytes": 12516,
+        "sha256": "cdc55aa2be29d50349d421aefb77fa644696845aa45b1145c885ffc316435911"
+      },
+      {
+        "path": "docs/evidence/owned-wit-bootstrap-failure-20261025/job.json",
+        "bytes": 3865,
+        "sha256": "a085f6985e4b7f6f254d68f26e6c0b7e4e4ab9cd3c2e7cdb9afe7729dec3fc9a"
+      },
+      {
+        "path": "docs/evidence/owned-wit-bootstrap-failure-20261025/artifact.json",
+        "bytes": 759,
+        "sha256": "7d7499bb72f263b975c3066ec3a3321445558db67cd28f1283c9f04393e7cf66"
+      },
+      {
+        "path": "docs/evidence/owned-wit-bootstrap-failure-20261025/job.log",
+        "bytes": 112785,
+        "sha256": "bbf284c9f68245ec8ccfd173fbfba1785f79cb6f9a824166801668fd5496eb3d"
+      },
+      {
+        "path": "docs/evidence/owned-wit-bootstrap-failure-20261025/artifact.zip",
+        "bytes": 560,
+        "sha256": "6cdab3c9ffadde1649c35fef49ef80412afa2d6c6e5132b92605fc767523196a"
+      }
+    ],
+    "stage": "Build the pinned Wasmtime C API",
+    "acceptance": "skipped",
+    "diagnostic": "error: writing to file: No space left on device",
+    "cause": "Nix fetched the local Git repository as a flake input before evaluating the pinned binary archive output.",
+    "artifactMembers": [
+      "owned-checked-record-managed-ci/toolchain.log"
+    ]
+  },
+  "changes": [
+    "Replace nix build .#wasmtime-c-api with a bounded HTTPS download, fixed SHA-256 check, staged extraction, required SDK files and atomic installation. Remove the unused Nix installation step from this workflow.",
+    "Preserve Wasmtime 42.0.1, the exact archive SHA-256 and all downstream SDK-file identity checks. Do not rebuild or substitute the runtime.",
+    "Reject existing or symlinked destinations; remove only mktemp staging on failure or success. Retain the prior 30-minute setup bound.",
+    "Add an optional manual wit_only boolean for a single repair probe. Default dispatch, pushes and pull requests retain all four managed/WIT jobs. Every selected job still executes all ordinary/reviewed full/result-only routes.",
+    "Separate Maven/PHP/Composer discovery from export so a missing executable does not mask its failure. Keep versions, environment selections and installed acceptance commands unchanged.",
+    "Keep exact hosted TAP test names; exercise the shared bootstrap controls inside the existing source check."
+  ],
+  "validation": {
+    "executionLimits": {
+      "heavyCommands": "serial",
+      "cpuAffinity": [
+        2
+      ],
+      "nice": 15,
+      "nodeMaxOldSpaceMiB": 512
+    },
+    "sourceChecks": {
+      "tests": 2,
+      "pass": 2,
+      "fail": 0,
+      "skipped": 0,
+      "durationMs": 895.629057,
+      "file": "tests/owned-checked-record-managed-packaging.test.mjs",
+      "selection": "managed owned checked-record (generators|consumers)"
+    },
+    "offlineBootstrapCases": [
+      "valid inert archive",
+      "wrong SHA-256",
+      "failed download with partial bytes",
+      "existing destination preserved",
+      "symlink destination preserved",
+      "incomplete SDK refused"
+    ],
+    "actualBootstrap": {
+      "actualArchiveDownloaded": true,
+      "workflowBootstrapUnchanged": true,
+      "installedFiles": 162,
+      "installedBytes": 77793060,
+      "selectedFiles": 38,
+      "version": "42.0.1",
+      "archiveSha256": "2097a47351918a446b26c7e65f487278f63bc947591b71897db547cd90c05082",
+      "filesSha256": "ec43764474c7f9cedf469659d0c5cc9401f65b79f5df88acda772280ae81fe01",
+      "leanBuilds": 0,
+      "installedPackageAcceptance": false
+    },
+    "sourceQuality": [
+      "Scoped ESLint",
+      "actionlint 1.7.12 including shellcheck",
+      "Configured strict checked-JavaScript typecheck (adopted subset only)",
+      "git diff --check"
+    ],
+    "liveInventoryAudit": {
+      "liveReferences": 16055,
+      "uniquePaths": 2555,
+      "stalePins": 0
+    },
+    "acceptedRuntimeRuns": 0
+  },
+  "inventory": {
+    "identity": {
+      "bytes": 102579190,
+      "sha256": "745526bc0d4c5ec213274f12c269766fa31155344fae9cc02009aaae8353a605"
+    },
+    "changed": false,
+    "refreshedPins": 0,
+    "supportObservationsChanged": false,
+    "originalArchivesChanged": false
+  },
+  "pending": [
+    "Run the new manual WIT-only probe and retain its original hosted result; run the independent expanded PHP-Wasm producer.",
+    "Apply the same validated setup to the twelve remaining workflows that invoke nix build .#wasmtime-c-api, preserving each workflow's specific original policy and source-history boundaries.",
+    "Complete the single-producer-revision native/managed matrix and independent PHP-Wasm acceptance, immutable artifact retention/replay, exact support/docs reconciliation and final-revision Core/required hosted gates."
+  ],
+  "remainingNixWasmtimeWorkflows": [
+    ".github/workflows/callback-checked-record-remaining.yml",
+    ".github/workflows/callback-subtype-remaining.yml",
+    ".github/workflows/checked-record-value-index-wit.yml",
+    ".github/workflows/consumer-matrix.yml",
+    ".github/workflows/dependent-checked-record-wit.yml",
+    ".github/workflows/generic-subtype-managed-wit.yml",
+    ".github/workflows/inherited-checked-record-wit.yml",
+    ".github/workflows/nested-checked-record-wit.yml",
+    ".github/workflows/nominal-primitive-subtype-wit.yml",
+    ".github/workflows/owned-subtype-remaining.yml",
+    ".github/workflows/recursive-checked-record-wit.yml",
+    ".github/workflows/zero-payload-checked-record-wit.yml"
+  ]
+}
