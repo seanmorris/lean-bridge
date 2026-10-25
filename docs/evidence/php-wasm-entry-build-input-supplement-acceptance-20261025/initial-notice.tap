@@ -1,0 +1,124 @@
+TAP version 13
+# Subtest: PHP-Wasm replay scopes retain runtime, packaging and preflight data
+ok 1 - PHP-Wasm replay scopes retain runtime, packaging and preflight data
+  ---
+  duration_ms: 100.016678
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm replay sources hash exact Git blobs including non-module assets
+ok 2 - PHP-Wasm replay sources hash exact Git blobs including non-module assets
+  ---
+  duration_ms: 443.876189
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm replay source snapshots reproduce and reject forged identities
+ok 3 - PHP-Wasm replay source snapshots reproduce and reject forged identities
+  ---
+  duration_ms: 1096.436813
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm replay refuses tracked symlinks before creating a source snapshot
+ok 4 - PHP-Wasm replay refuses tracked symlinks before creating a source snapshot
+  ---
+  duration_ms: 152.944698
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm replay source extraction rejects substituted bytes and omitted members
+ok 5 - PHP-Wasm replay source extraction rejects substituted bytes and omitted members
+  ---
+  duration_ms: 676.673464
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm replay checkout detects hidden edits and ignored source inputs
+ok 6 - PHP-Wasm replay checkout detects hidden edits and ignored source inputs
+  ---
+  duration_ms: 424.12243
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm replay refuses wrong or dirty source before invoking a verifier
+ok 7 - PHP-Wasm replay refuses wrong or dirty source before invoking a verifier
+  ---
+  duration_ms: 251.078091
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm replay snapshots refuse existing or symlinked destinations
+ok 8 - PHP-Wasm replay snapshots refuse existing or symlinked destinations
+  ---
+  duration_ms: 252.287715
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm replay authenticates both imported site modules before execution
+ok 9 - PHP-Wasm replay authenticates both imported site modules before execution
+  ---
+  duration_ms: 710.568901
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm replay supplements only three complete immutable source snapshots
+ok 10 - PHP-Wasm replay supplements only three complete immutable source snapshots
+  ---
+  duration_ms: 13811.646048
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm replay new snapshots cannot omit an imported module or repository input
+ok 11 - PHP-Wasm replay new snapshots cannot omit an imported module or repository input
+  ---
+  duration_ms: 286.02653
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm replay rejects malformed compressed supplemental input
+ok 12 - PHP-Wasm replay rejects malformed compressed supplemental input
+  ---
+  duration_ms: 90.218598
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm replay checks every supplemental input before invoking the verifier
+ok 13 - PHP-Wasm replay checks every supplemental input before invoking the verifier
+  ---
+  duration_ms: 6254.475645
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm replay scopes contain producer imports and tracked literal inputs
+not ok 14 - PHP-Wasm replay scopes contain producer imports and tracked literal inputs
+  ---
+  duration_ms: 2817.76281
+  type: 'test'
+  location: '/app/build/worktrees/codex-vo1824-dispatch/tests/helpers/php-wasm-refinement-entry-hosted-replay-tests.mjs:317:1'
+  failureType: 'testCodeFailure'
+  error: 'notices/php-wasm.txt'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'blob'
+  actual: 'blob'
+  operator: 'notStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///app/build/worktrees/codex-vo1824-dispatch/tests/helpers/php-wasm-refinement-entry-hosted-replay-tests.mjs:375:11)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: every owned source module has one explicit typecheck disposition
+ok 15 - every owned source module has one explicit typecheck disposition
+  ---
+  duration_ms: 12.411808
+  type: 'test'
+  ...
+# Subtest: the required typecheck uses strict checkJs for exactly the adopted modules
+ok 16 - the required typecheck uses strict checkJs for exactly the adopted modules
+  ---
+  duration_ms: 1.230769
+  type: 'test'
+  ...
+# Subtest: the default and CI quality gates cover the same core contract
+ok 17 - the default and CI quality gates cover the same core contract
+  ---
+  duration_ms: 2.713478
+  type: 'test'
+  ...
+1..17
+# tests 17
+# suites 0
+# pass 16
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 30159.055061

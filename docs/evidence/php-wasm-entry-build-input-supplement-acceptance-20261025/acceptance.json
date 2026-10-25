@@ -1,0 +1,237 @@
+{
+  "schemaVersion": 1,
+  "kind": "php-wasm-entry-build-input-supplement-local-acceptance-v1",
+  "baseCommit": "337744bc2a7c1761fa742ce4eb8f7758a00d63f8",
+  "sourcePins": [
+    {
+      "path": "tests/helpers/php-wasm-refinement-entry-hosted-replay.mjs",
+      "previous": "b82c38fd4967d8cc2c6269b6d904bc180ade03dd5367a436840525e5d297a40f",
+      "current": "dd19db364000b77f4398959e63a34e44cf2ac5c301b27acdf43d30a8b4883a64",
+      "count": 1
+    },
+    {
+      "path": "tests/helpers/php-wasm-refinement-entry-hosted-replay-tests.mjs",
+      "previous": "ba479678992bc5c1662791defb907cf309b65a023b35d467cfd7992992bb8eca",
+      "current": "8f8a2138a85377951e112a9af9a8036a23680619abf6564c2a2779ab7fac40b4",
+      "count": 0
+    },
+    {
+      "path": "docs/contributing/testing.md",
+      "previous": "d41fbb57b509a24324162da82d00bd80788faf8997b7cafa39a2a15d89082c1a",
+      "current": "35229bc22d131919b94a6a3922e0cb3a2e8c2cb7a7d0149dc4390106d0c80aa2",
+      "count": 11
+    }
+  ],
+  "inventory": {
+    "previous": {
+      "bytes": 102577221,
+      "sha256": "66d8a954207550372f8b41fe59aa06f497bf829b174293f5e714ecc806da8a63"
+    },
+    "current": {
+      "bytes": 102577221,
+      "sha256": "a3dd3938b125bd0abc97ef2e838d4932a5e5a5ffddbbcf77f2f57db17ba135d2"
+    },
+    "refreshedPins": 12,
+    "exactInverse": true
+  },
+  "sourceSupplement": {
+    "path": "docs/evidence/php-wasm-entry-build-input-supplement-20261025.json",
+    "bytes": 498094,
+    "sha256": "19333471b6904ef61f99e6bf8ba2dc04a3eb4786114d5e209fc9a6e9d780d6e0",
+    "historicalSnapshots": 3,
+    "originalFiles": 17,
+    "originalBytes": 4699292,
+    "compressedBytes": 367520,
+    "module": {
+      "path": "tests/helpers/php-wasm-entry-build-input-supplement.mjs",
+      "bytes": 497949,
+      "sha256": "83612e04cfb3b670346826c09556908c51e6452c9312663c695c692f70188980"
+    }
+  },
+  "diagnosis": {
+    "originalFailures": [
+      {
+        "path": "docs/evidence/php-wasm-entry-build-input-supplement-acceptance-20261025/initial-license.tap",
+        "bytes": 904,
+        "sha256": "a0cc912efb8724c8f4dd5176060791de58eccb8b4c5d86e23bfc6d6a767ea518",
+        "exitCode": 1,
+        "reason": "The original source scopes omitted LICENSE and other build/data inputs."
+      },
+      {
+        "path": "docs/evidence/php-wasm-entry-build-input-supplement-acceptance-20261025/initial-notice.tap",
+        "bytes": 4402,
+        "sha256": "5c3b7ebf000b2a9e1dc2ac7815dd0a728b0f47d441ca4f6203ceb57cd11bccc5",
+        "exitCode": 1,
+        "reason": "The expanded Git-object-backed literal audit found notices/php-wasm.txt after the first sixteen omissions were covered."
+      }
+    ],
+    "firstCheckoutCheck": {
+      "exitCode": 1,
+      "reason": "The original sparse producer checkout lacked LICENSE and the other newly required inputs.",
+      "log": {
+        "path": "docs/evidence/php-wasm-entry-build-input-supplement-acceptance-20261025/initial-checkout.log",
+        "bytes": 770,
+        "sha256": "8f67620e80fa36fe5beab15eb3ee8cee0d4e7833ed5299a3dbc6469cb5a7c94f"
+      }
+    },
+    "remedy": "Restored only missing tracked input files from each checkout's existing HEAD. Original producer remains a003269808c43a2a3a509a23c8a8ab8def07b610 and clean. No existing source bytes, original source ZIP or archive index was changed."
+  },
+  "originalSourceAcceptance": {
+    "path": "docs/evidence/php-wasm-entry-build-input-supplement-acceptance-20261025/source-audit.json",
+    "bytes": 5807,
+    "sha256": "896344376f112ed90f5a4e5fdd014c31c9e0a0459a1b41961728d96e350acc58",
+    "script": {
+      "path": "docs/evidence/php-wasm-entry-build-input-supplement-acceptance-20261025/source-audit.mjs",
+      "bytes": 6231,
+      "sha256": "df430be417f3e783e0615bbc6d5a522408751a6b4d6726b0cdbe763697b7c97e"
+    },
+    "buildInputFiles": 17,
+    "comparedCommit": "337744bc2a7c1761fa742ce4eb8f7758a00d63f8",
+    "entryRoots": [
+      "scripts/check-php-wasm-callback-entry-records.mjs",
+      "scripts/check-php-wasm-refinement-entry-records.mjs",
+      "scripts/summarize-php-wasm-refinement-entry-hosted.mjs",
+      "tests/helpers/owned-php-wasm-runtime.mjs",
+      "tests/helpers/php-wasm-callback-entry-c-tests.mjs",
+      "tests/helpers/php-wasm-callback-entry-ci-tests.mjs",
+      "tests/helpers/php-wasm-callback-entry-driver-tests.mjs",
+      "tests/helpers/php-wasm-callback-entry-fixtures-tests.mjs",
+      "tests/helpers/php-wasm-callback-entry-plan-tests.mjs",
+      "tests/helpers/php-wasm-callback-entry-report-tests.mjs",
+      "tests/helpers/php-wasm-callback-entry-selection-tests.mjs",
+      "tests/helpers/php-wasm-callback-entry-source-tests.mjs",
+      "tests/helpers/php-wasm-entry-probe-deployment-tests.mjs",
+      "tests/helpers/php-wasm-indexed-refinement-entry-ci-tests.mjs",
+      "tests/helpers/php-wasm-owned-refinement-entry-ci-tests.mjs",
+      "tests/helpers/php-wasm-owned-refinement-entry-fixtures-tests.mjs",
+      "tests/helpers/php-wasm-owned-refinement-entry-installed-tests.mjs",
+      "tests/helpers/php-wasm-owned-refinement-entry-plan-tests.mjs",
+      "tests/helpers/php-wasm-owned-refinement-entry-selection-tests.mjs",
+      "tests/helpers/php-wasm-owned-refinement-entry-source-tests.mjs",
+      "tests/helpers/php-wasm-refinement-entry-build-tests.mjs",
+      "tests/helpers/php-wasm-refinement-entry-callers-tests.mjs",
+      "tests/helpers/php-wasm-refinement-entry-ci-tests.mjs",
+      "tests/helpers/php-wasm-refinement-entry-driver-tests.mjs",
+      "tests/helpers/php-wasm-refinement-entry-installed-tests.mjs",
+      "tests/helpers/php-wasm-refinement-entry-plan-tests.mjs",
+      "tests/helpers/php-wasm-refinement-entry-report-tests.mjs",
+      "tests/helpers/php-wasm-refinement-entry-selection-tests.mjs",
+      "tests/helpers/php-wasm-refinement-entry-source-tests.mjs",
+      "tests/php-wasm-callback-entry-installed.test.mjs"
+    ],
+    "kind": "php-wasm-entry-build-input-source-audit-v1",
+    "moduleIdentitiesSha256": "df1895991dbf01e8932a9762a0f0e8e784ad83817a68fc1adf9511f8457280c1",
+    "producerCheckoutBytes": 71199920,
+    "producerCheckoutFiles": 9666,
+    "producerCommit": "a003269808c43a2a3a509a23c8a8ab8def07b610",
+    "reachableModules": 620,
+    "schemaVersion": 1,
+    "scope": "Repository source and data identity plus original ZIP extraction. The literal-import audit is supplemented by unchanged complete source, fixture, schema, configuration, notice, patch and metadata trees, explicit workflow/shell inputs and two retained preflight models. External compilers and hosts remain described by the original run and runtime receipts. This audit does not execute a new build or replace the thirty-route verifier or final hosted acceptance.",
+    "snapshots": [
+      {
+        "archiveFiles": 9647,
+        "reconstructedAndExtracted": true,
+        "revision": "a003269808c43a2a3a509a23c8a8ab8def07b610",
+        "snapshotSha256": "a6e01ac7f1a68895670b93f6f98be897110c8e61e5f4987a26ea934858966d88",
+        "zip": {
+          "bytes": 26369339,
+          "sha256": "48add54f5f0790d004d80c723729ccd075b20b8f91df8c818bb20f96a3672143"
+        }
+      },
+      {
+        "archiveFiles": 9694,
+        "reconstructedAndExtracted": true,
+        "revision": "2e00c60aa4555377b4f17eb1f5eb2d2a812596c2",
+        "snapshotSha256": "7733b57765cc5c85e642e70397d9901b4e675f7c797951e89b61e399bc9cd422",
+        "zip": {
+          "bytes": 26502464,
+          "sha256": "0df4875207035b1b42d686db21e4e76807ac614823e4fb0d23c8b866aa34cd88"
+        }
+      },
+      {
+        "archiveFiles": 9667,
+        "reconstructedAndExtracted": true,
+        "revision": "700fea2378ffd59b61611deaaa6a1d15ba5d38d2",
+        "snapshotSha256": "a908b4daee7ad2c82ab8d5114babe876319fc0ed3c99fbb969cad5afef09e50e",
+        "zip": {
+          "bytes": 26429605,
+          "sha256": "db6374d5ef81078d858cd54f9576d013c5da3e8b0962f3829a609cd807a95a70"
+        }
+      }
+    ],
+    "unchangedRepositoryInputs": [
+      ".github/actions/bounded-apt",
+      ".github/workflows/php-wasm-callback-entry.yml",
+      ".github/workflows/php-wasm-indexed-refinement-entry.yml",
+      ".github/workflows/php-wasm-owned-refinement-entry.yml",
+      ".github/workflows/php-wasm-refinement-entry-promotion.yml",
+      ".github/workflows/php-wasm-refinement-entry.yml",
+      "LICENSE",
+      "config",
+      "docs/consumer-support.v1.json",
+      "docs/evidence/callback-refinements-php-wasm-20261023/hosted/output/records/checked-record/reviewed/build-0/model.json",
+      "docs/evidence/owned-php-wasm-transfers-20260930.json",
+      "flake.lock",
+      "flake.nix",
+      "lean-toolchain",
+      "notices",
+      "notices/php-wasm.txt",
+      "notices/runtime/NOTICE.txt",
+      "notices/runtime/emscripten.txt",
+      "notices/runtime/lean-bundled.txt",
+      "notices/runtime/lean.txt",
+      "notices/runtime/libuv.txt",
+      "notices/runtime/llvm.txt",
+      "notices/runtime/musl.txt",
+      "package-lock.json",
+      "package.json",
+      "patches",
+      "patches/lean4-4.32.2-emscripten-conditional-pthreads.patch",
+      "patches/lean4-4.32.2-emscripten-runtime-signatures.patch",
+      "patches/lean4-4.32.2-offline-libuv-source.patch",
+      "poc",
+      "poc/lean-link-spike/bindings/alpha.binding-ir.json",
+      "poc/lean-link-spike/bindings/php-wasm.package.json",
+      "poc/lean-link-spike/graph-lock.json",
+      "schema",
+      "scripts/bootstrap-php-wasm-ci.sh",
+      "scripts/bootstrap-toolchains.sh",
+      "scripts/build-lean-runtime.sh",
+      "scripts/env.sh",
+      "scripts/install-playwright-browsers.sh",
+      "scripts/lean-runtime-config.sh",
+      "scripts/run-php-wasm-callback-entry-ci.sh",
+      "scripts/run-php-wasm-owned-refinement-entry-ci.sh",
+      "scripts/run-php-wasm-refinement-entry-ci.sh",
+      "site/paths.mjs",
+      "site/serve.mjs",
+      "src",
+      "tests/fixtures"
+    ]
+  },
+  "validation": {
+    "tests": {
+      "path": "docs/evidence/php-wasm-entry-build-input-supplement-acceptance-20261025/run.tap",
+      "bytes": 3794,
+      "sha256": "b5e00e1126b8da094d63549e24e31c965f89865c5e0ec12550e1b2ffe0cccbc2",
+      "passed": 17,
+      "failed": 0,
+      "skipped": 0,
+      "command": "node --test --test-concurrency=1 '--test-name-pattern=^PHP-Wasm replay|^every owned source module|^the required typecheck|^the default and CI quality' tests/checked-javascript.test.mjs"
+    },
+    "inventoryAudit": {
+      "path": "docs/evidence/php-wasm-entry-build-input-supplement-acceptance-20261025/pin-audit.mjs",
+      "bytes": 2603,
+      "sha256": "b88d335063c5b70a20a80e641ecd2225fa8884b853b71ead3a828169143e8882"
+    },
+    "lintExitCode": 0,
+    "typecheckExitCode": 0,
+    "negativeControls": {
+      "compressedInputs": 204,
+      "hiddenMissingSymlinkInputs": 51,
+      "mandatorySupplementalPathsInNewSnapshots": 19
+    },
+    "resourcePolicy": "Serialized heavy work on one low-priority CPU with a 512 MiB Node heap cap. No runtime rebuild or full local Core suite."
+  },
+  "remaining": "Source-history integration, original thirty-route replay under the completed checker, full final-head Core and recurring/default-branch activation remain. This receipt is not complete VO #2062/#1220 acceptance."
+}

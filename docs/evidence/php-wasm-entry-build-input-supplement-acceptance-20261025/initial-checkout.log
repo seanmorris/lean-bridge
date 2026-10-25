@@ -1,0 +1,16 @@
+node:internal/fs/promises:1028
+  const result = await PromisePrototypeThen(
+                 ^
+
+Error: ENOENT: no such file or directory, lstat '/app/build/worktrees/vo2061-producer-kreTbG/LICENSE'
+    at async lstat (node:internal/fs/promises:1028:18)
+    at async checkSources (file:///app/build/worktrees/codex-vo1824-dispatch/tests/helpers/php-wasm-refinement-entry-hosted-replay.mjs:146:53)
+    at async assertPhpWasmEntryReplayCheckout (file:///app/build/worktrees/codex-vo1824-dispatch/tests/helpers/php-wasm-refinement-entry-hosted-replay.mjs:252:2)
+    at async file:///app/build/worktrees/codex-vo1824-dispatch/[eval1]:1:111 {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'lstat',
+  path: '/app/build/worktrees/vo2061-producer-kreTbG/LICENSE'
+}
+
+Node.js v22.23.2

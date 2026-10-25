@@ -91,13 +91,17 @@ The archive includes original APIs, ZIP parts, extracted output and producer and
 archiver source snapshots. The checker reconstructs those bytes and runs all
 thirty original route verifiers. Neither command compiles Lean or PHP.
 
-Source snapshots include `site/serve.mjs` and `site/paths.mjs`, which the producer
-imports through its browser helpers. The original 25 October complete and
-diagnostic archives omitted these two files. The checker supplements their three
-exact source snapshots with [the original Git bytes](../evidence/php-wasm-entry-source-supplement-20261025.json).
-Keep those archives unchanged. New snapshots must include both files directly;
-checkout verification rejects hidden edits, missing files and symlinks before
-running the original verifier.
+Source snapshots include the browser helper modules, applied Lean patches,
+runtime notices, repository license, package metadata and preflight model data.
+The original 25 October complete and diagnostic archives omitted two imported
+modules and seventeen build or data inputs. The checker supplements only their
+three exact historical snapshots with the original Git bytes retained in the
+[module supplement](../evidence/php-wasm-entry-source-supplement-20261025.json)
+and [build-input supplement](../evidence/php-wasm-entry-build-input-supplement-20261025.json).
+Keep those archives unchanged. New snapshots must include every input directly.
+Checkout verification rejects hidden edits, missing files and symlinks before
+running the original verifier. Compressed supplemental inputs are size-limited
+and checked against their compressed hash, decoded hash and original Git object.
 
 Commit the complete archive, including generated files normally ignored by Git,
 before preparing publication:

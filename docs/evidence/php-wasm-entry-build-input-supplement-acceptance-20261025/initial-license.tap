@@ -1,0 +1,28 @@
+TAP version 13
+# Subtest: PHP-Wasm replay scopes retain runtime, packaging and preflight data
+not ok 1 - PHP-Wasm replay scopes retain runtime, packaging and preflight data
+  ---
+  duration_ms: 4.27245
+  type: 'test'
+  location: '/app/build/worktrees/codex-vo1824-dispatch/tests/helpers/php-wasm-refinement-entry-hosted-replay-tests.mjs:59:1'
+  failureType: 'testCodeFailure'
+  error: 'LICENSE'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (file:///app/build/worktrees/codex-vo1824-dispatch/tests/helpers/php-wasm-refinement-entry-hosted-replay-tests.mjs:70:10)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 556.638689
