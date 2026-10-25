@@ -10,6 +10,14 @@ static size_t checks;
 } } while (0)
 #define OK(call) CHECK((call) == OWNED_CHECKED_RECORDS_OK)
 
+/* The WIT fixture also uses this caller with its smaller, independently
+   selected API. Native packaging requires the expanded header explicitly. */
+#ifdef OWNED_CHECKED_RECORDS_TRANSFER_WITH_CLAIM_CALLBACK_ARGUMENT1_T_REQUIRES_RECOVERY
+typedef owned_checked_records_transfer_with_claim_callback_argument1_t_host claim_callback;
+#else
+typedef owned_checked_records_with_claim_callback_argument1_t_host claim_callback;
+#endif
+
 static void release(owned_checked_records_result **owner) {
   OK(owned_checked_records_result_release(owner)); CHECK(*owner == NULL);
 }
@@ -118,7 +126,7 @@ int main(void) {
 
   callback_state state = {.calls = 0, .fail = 0};
   mpz_init_set_ui(state.quota, 10);
-  owned_checked_records_with_claim_callback_argument1_t_host callback = {
+  claim_callback callback = {
     .call = callback_claim, .context = &state, .closure = NULL, .recovery = NULL
   };
   OK(owned_checked_records_with_claim_callback(
@@ -156,6 +164,96 @@ int main(void) {
   OK(owned_checked_records_claim_closure_result_t_call(
     session, closure, &claim, &out, &owner));
   CHECK(mpz_cmp_ui(out.quota, 7) == 0); release(&owner);
+
+#ifdef OWNED_CHECKED_RECORDS_TRANSFER_WITH_CLAIM_CALLBACK_ARGUMENT1_T_REQUIRES_RECOVERY
+  mpz_srcptr scalar = NULL;
+  OK(owned_checked_records_booking_span(session, &booking, &scalar, &owner));
+  CHECK(mpz_cmp_ui(scalar, 5) == 0); release(&owner);
+  OK(owned_checked_records_claim_quota(session, &claim, &scalar, &owner));
+  CHECK(mpz_cmp_ui(scalar, 7) == 0); release(&owner);
+
+  mpz_t zero; mpz_init_set_ui(zero, 0);
+  owned_checked_records_grant_t grant = {ticket, valid, hi}, grant_out;
+  OK(owned_checked_records_echo_grant(session, &grant, &grant_out, &owner));
+  CHECK(mpz_cmp_ui(grant_out.weight, 7) == 0
+    && mpz_cmp_ui(grant_out.limit, 8) == 0);
+  expect_serial(session, grant_out.holder, 41); release(&owner);
+  memset(&grant_out, 0xa5, sizeof(grant_out));
+  unsigned char grant_saved[sizeof(grant_out)];
+  memcpy(grant_saved, &grant_out, sizeof(grant_out));
+  const owned_checked_records_grant_t invalid_grants[] = {
+    {ticket, zero, hi}, {ticket, valid, lo}
+  };
+  for(size_t i = 0; i < 2; ++i) {
+    CHECK(owned_checked_records_echo_grant(session, &invalid_grants[i], &grant_out, &owner)
+      == OWNED_CHECKED_RECORDS_INVALID_ARGUMENT);
+    CHECK(owner == NULL && memcmp(grant_saved, &grant_out, sizeof(grant_out)) == 0);
+    expect_serial(session, ticket, 41);
+  }
+
+  owned_checked_records_claim_t entries[] = {claim, claim};
+  owned_checked_records_echo_claims_argument0_t claims = {entries, 2};
+  owned_checked_records_echo_claims_result_t claims_out;
+  OK(owned_checked_records_echo_claims(session, &claims, &claims_out, &owner));
+  CHECK(claims_out.length == 2 && mpz_cmp_ui(claims_out.data[1].quota, 7) == 0);
+  expect_serial(session, claims_out.data[0].holder, 41); release(&owner);
+  entries[1] = bad;
+  memset(&claims_out, 0xa5, sizeof(claims_out));
+  unsigned char claims_saved[sizeof(claims_out)];
+  memcpy(claims_saved, &claims_out, sizeof(claims_out));
+  for(size_t i = 0; i < 10; ++i) {
+    CHECK(owned_checked_records_echo_claims(session, &claims, &claims_out, &owner)
+      == OWNED_CHECKED_RECORDS_INVALID_ARGUMENT);
+    CHECK(owner == NULL && memcmp(claims_saved, &claims_out, sizeof(claims_out)) == 0);
+    expect_serial(session, ticket, 41);
+  }
+  entries[1] = claim;
+  OK(owned_checked_records_echo_claims(session, &claims, &claims_out, &owner));
+  CHECK(claims_out.length == 2); release(&owner);
+  claims.data = NULL; claims.length = 0;
+  OK(owned_checked_records_echo_claims(session, &claims, &claims_out, &owner));
+  CHECK(claims_out.length == 0); release(&owner);
+
+  owned_checked_records_booking_t moving_booking;
+  owned_checked_records_result *booking_owner = NULL;
+  OK(owned_checked_records_booking_t_copy(session, &booking, &moving_booking, &booking_owner));
+  OK(owned_checked_records_claim_t_copy(session, &bad, &moving, &move_owner));
+  owned_checked_records_result *original_booking_owner = booking_owner;
+  owned_checked_records_result *original_claim_owner = move_owner;
+  memset(&out, 0xa5, sizeof(out)); save_claim(&out, saved);
+  CHECK(owned_checked_records_transfer_pair_claim(session, &moving_booking,
+    &booking_owner, &moving, &move_owner, &out, &owner)
+    == OWNED_CHECKED_RECORDS_INVALID_ARGUMENT);
+  CHECK(booking_owner == original_booking_owner && move_owner == original_claim_owner);
+  CHECK(owner == NULL && memcmp(saved, &out, sizeof(out)) == 0);
+  expect_serial(session, moving_booking.holder, 41);
+  expect_serial(session, moving.holder, 41);
+  release(&move_owner);
+  OK(owned_checked_records_claim_t_copy(session, &claim, &moving, &move_owner));
+  OK(owned_checked_records_transfer_pair_claim(session, &moving_booking,
+    &booking_owner, &moving, &move_owner, &out, &owner));
+  CHECK(booking_owner == NULL && move_owner == NULL && mpz_cmp_ui(out.quota, 7) == 0);
+  release(&owner);
+
+  /* Once Lean invokes the host, a failed reply must not restore the input
+     owner. Output bytes remain untouched, and an independent retain survives. */
+  for(int failure = 0; failure < 2; ++failure) {
+    OK(owned_checked_records_claim_t_copy(session, &claim, &moving, &move_owner));
+    state.fail = failure; mpz_set_ui(state.quota, 99);
+    memset(&out, 0xa5, sizeof(out)); save_claim(&out, saved);
+    CHECK(owned_checked_records_transfer_with_claim_callback(session, &moving,
+      &move_owner, &callback, &out, &owner) == (failure
+        ? OWNED_CHECKED_RECORDS_CALLBACK_FAILED : OWNED_CHECKED_RECORDS_INVALID_ARGUMENT));
+    CHECK(move_owner == NULL && owner == NULL && memcmp(saved, &out, sizeof(out)) == 0);
+    expect_serial(session, retained, 41);
+  }
+  state.fail = 0; mpz_set_ui(state.quota, 9);
+  OK(owned_checked_records_claim_t_copy(session, &claim, &moving, &move_owner));
+  OK(owned_checked_records_transfer_with_claim_callback(session, &moving,
+    &move_owner, &callback, &out, &owner));
+  CHECK(move_owner == NULL && mpz_cmp_ui(out.quota, 9) == 0);
+  release(&owner); mpz_clear(zero);
+#endif
 
   owned_checked_records_claim_for_result_t produced = {0};
   OK(owned_checked_records_claim_for(session, retained, &produced, &owner));

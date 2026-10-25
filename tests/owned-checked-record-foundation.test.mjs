@@ -26,8 +26,10 @@ import { generateOwnedCValues } from "../src/backends/c/owned-values.mjs";
 import { generateOwnedNativeBindingAdapters } from "../src/backends/native/owned-value-adapters.mjs";
 import { ownedAggregateTransferLeaseSource } from "../src/backends/native/owned-aggregate-transfers.mjs";
 import { brokerHeader } from "../src/backends/native/runtime-broker.mjs";
+import { nativeCallbackHeader } from "../src/backends/native/callback-broker.mjs";
 import { processBuildRunner } from "../src/build/process-runner.mjs";
 import { ownedCheckedRecordModule, ownedCheckedRecordReviewedIr, ownedCheckedRecordTrees } from "./helpers/owned-checked-record-fixture.mjs";
+import { ownedCheckedRecordNativeSelection } from "./helpers/owned-checked-record-native-fixture.mjs";
 import "./helpers/owned-checked-record-php-wasm-source-history-tests.mjs";
 import "./helpers/owned-subtype-php-wasm-qualification-source-history-tests.mjs";
 import "./helpers/owned-checked-record-language-source-history-tests.mjs";
@@ -308,11 +310,15 @@ test("complete owned checked-record carriers compile in full and result-only mod
 	};
 	const compile = args => run({ command: join(leanPrefix, "bin/lean"), args });
 	await compile(["-o", `${module}.olean`, `${module}.lean`]);
-	await writeFile(join(directory, "lean_bridge_native_runtime.h"), brokerHeader);
+	await writeFile(join(directory, "lean_bridge_native_runtime.h"), brokerHeader.replace(
+		"#ifdef __cplusplus\n}", `${nativeCallbackHeader}\n#ifdef __cplusplus\n}`));
 	await writeFile(join(directory, "owned-leases.h"), ownedAggregateTransferLeaseSource);
-	for(const resultOnly of [false, true])
+	for(const mode of ["full", "result-only", "native-full"])
 	{
-		const document = ownedCheckedRecordReviewedIr({ resultOnly });
+		const resultOnly = mode === "result-only";
+		const document = mode === "native-full"
+			? ownedCheckedRecordNativeSelection("reviewed-full", ["c", "cpp"]).reviewedIr
+			: ownedCheckedRecordReviewedIr({ resultOnly });
 		assert.deepEqual(validateReviewedOwnedSource(capture(document)), document);
 		const generated = generateOwnedNativeBindingAdapters({
 			document, sourceIdentity: {}
@@ -320,6 +326,7 @@ test("complete owned checked-record carriers compile in full and result-only mod
 				name: item.source.declaration, module
 			}))
 			, metadataSha256: "c".repeat(64), transferredInputs: !resultOnly
+			, hostCallbacks: mode === "native-full"
 		});
 		assert.equal(Object.keys(generated.carriers.symbols.exports).length
 			, document.declarations.length);
@@ -337,7 +344,7 @@ test("complete owned checked-record carriers compile in full and result-only mod
 			for(const name of ["echoBooking", "echoGrant", "echoClaims", "transferClaim"])
 				assert.ok(generated.carriers.symbols.exports[`lean:${q(name)}`], name);
 		}
-		const file = resultOnly ? "GeneratedResult.lean" : "GeneratedFull.lean";
+		const file = `Generated${mode.replaceAll("-", "")}.lean`;
 		await writeFile(join(directory, file), generated.carriers.leanSource);
 		await compile([file]);
 		await writeFile(join(directory, "carriers.h"), generated.carriers.header);

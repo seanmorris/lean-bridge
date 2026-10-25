@@ -1,0 +1,185 @@
+{
+  "schemaVersion": 1,
+  "kind": "owned-checked-native-mixed-coverage-qualification-v1",
+  "predecessorCommit": "29ae6d8f74722b6c667ad874ce5646599fc9625b",
+  "sourceIdentity": "Validation ran on the exact modified source bytes identified below before the implementation commit.",
+  "limits": {
+    "cpu": 2,
+    "nice": 15,
+    "nodeHeapMiB": 512,
+    "leanThreads": 1,
+    "outerTimeoutSeconds": 90
+  },
+  "sources": [
+    {
+      "path": "tests/fixtures/onboarding/owned-checked-records/OwnedCheckedRecords.lean",
+      "sha256": "65226b9f8cafb1ff9e5c54dd680efc2939158fd9c4be1da2aaf8c069c1e1eb89"
+    },
+    {
+      "path": "tests/fixtures/structured-types/owned-checked-record-installed.c",
+      "sha256": "7faf494caf91115be7ef68b9f56418e1e0096ad1fb7d9d77c24ece84185e3f70"
+    },
+    {
+      "path": "tests/fixtures/structured-types/owned-checked-record-installed.cpp",
+      "sha256": "fcf65f4f4effdef04e6ec2efa8ba047f0f6e260cfa77f367ac156aea457a8022"
+    },
+    {
+      "path": "tests/fixtures/structured-types/owned-checked-record-installed.pl",
+      "sha256": "0b38fe46c8a7cb1085549715e979e6786e3050f5b99644380276dd2a37dab20e"
+    },
+    {
+      "path": "tests/helpers/owned-checked-record-native-fixture.mjs",
+      "sha256": "6ee7fb49b1291a942afaf6569cefecdd9981476baf6ab5a9089efaf84938c523"
+    },
+    {
+      "path": "tests/owned-checked-record-foundation.test.mjs",
+      "sha256": "433041fb3fb0738ee1de4ce1e96b2d6f70d639f4043a3727ae315809f11d94f3"
+    },
+    {
+      "path": "tests/owned-checked-record-native-packaging.test.mjs",
+      "sha256": "f726a1e29e4884c7ce518892a0b94e4239a6b19fde1f9bafd644454e29e2213c"
+    },
+    {
+      "path": "tests/owned-checked-record-perl-packaging.test.mjs",
+      "sha256": "50bd5ce927547e784f2287d0ac58eab723eb3e6c046c137fda0c685fcb971cd4"
+    }
+  ],
+  "changes": [
+    "Retain Grant with its nested Positive Subtype, arrays of Claim and scalar consumers in ordinary and independently reviewed native/CPAN full APIs.",
+    "Add proof-carrying Lean exports for two-input transactional transfer and a host callback invoked after input transfer.",
+    "Expand C, C++ and Perl installed callers to exercise nested and later-array rejection, unchanged rejected inputs, two-owner rollback and commit, post-transfer callback failure, independent retains, atomic C outputs and recovery.",
+    "Compile the expanded native carrier set in the existing required carrier test and syntax-check the actual C/C++ callers against generated headers.",
+    "Preserve the smaller result-only APIs and the independently selected WIT C surface.",
+    "Refresh only eight source pins without changing any installed-support observation or previous archive."
+  ],
+  "validation": {
+    "focused": {
+      "passed": 16,
+      "failed": 0,
+      "skipped": 0,
+      "durationMs": 7384.480005,
+      "tap": "TAP version 13\n# Subtest: reviewed side: full and result-only owned builds admit checked records only with their exact per-site decisions\nok 1 - reviewed side: full and result-only owned builds admit checked records only with their exact per-site decisions\n  ---\n  duration_ms: 153.068587\n  type: 'test'\n  ...\n# Subtest: reviewed owned callbacks preserve exact host and closure checked-record directions\nok 2 - reviewed owned callbacks preserve exact host and closure checked-record directions\n  ---\n  duration_ms: 37.32698\n  type: 'test'\n  ...\n# Subtest: reviewed owned callback carriers elaborate against their proof-carrying Lean values\nok 3 - reviewed owned callback carriers elaborate against their proof-carrying Lean values\n  ---\n  duration_ms: 1180.888309\n  type: 'test'\n  ...\n# Subtest: complete owned checked-record carriers compile in full and result-only modes\nok 4 - complete owned checked-record carriers compile in full and result-only modes\n  ---\n  duration_ms: 2307.504795\n  type: 'test'\n  ...\n# Subtest: required owned carrier CI checks full, result-only and both callback roles\nok 5 - required owned carrier CI checks full, result-only and both callback roles\n  ---\n  duration_ms: 2.120498\n  type: 'test'\n  ...\n# Subtest: owned checked-record receivers and incomplete callback decisions have located refusals\nok 6 - owned checked-record receivers and incomplete callback decisions have located refusals\n  ---\n  duration_ms: 9.929589\n  type: 'test'\n  ...\n# Subtest: owned checked-record callbacks follow the declaration rule at every callable position\nok 7 - owned checked-record callbacks follow the declaration rule at every callable position\n  ---\n  duration_ms: 61.542087\n  type: 'test'\n  ...\n# Subtest: owned checked-record refinement trees require the explicit ownership-aware boundary\nok 8 - owned checked-record refinement trees require the explicit ownership-aware boundary\n  ---\n  duration_ms: 1.383968\n  type: 'test'\n  ...\n# Subtest: ordinary side: native owned graphs carry erased proof names on their checked record definitions\nok 9 - ordinary side: native owned graphs carry erased proof names on their checked record definitions\n  ---\n  duration_ms: 4.647647\n  type: 'test'\n  ...\n# Subtest: ordinary side: every consumed checked-record occurrence in an owned graph names its constructor\nok 10 - ordinary side: every consumed checked-record occurrence in an owned graph names its constructor\n  ---\n  duration_ms: 3.571397\n  type: 'test'\n  ...\n# Subtest: late failure: a later owned checked-record rejection aborts after an earlier borrowed or transferred conversion\nok 11 - late failure: a later owned checked-record rejection aborts after an earlier borrowed or transferred conversion\n  ---\n  duration_ms: 7.83269\n  type: 'test'\n  ...\n# Subtest: owned checked-record adapters construct before transfer and erase produced records\nok 12 - owned checked-record adapters construct before transfer and erase produced records\n  ---\n  duration_ms: 21.778684\n  type: 'test'\n  ...\n# Subtest: owned checked-record C and C++ generators retain exact callback directions\nok 13 - owned checked-record C and C++ generators retain exact callback directions\n  ---\n  duration_ms: 2310.051199\n  type: 'test'\n  ...\n# Subtest: owned checked-record native acceptance is a required recurring job\nok 14 - owned checked-record native acceptance is a required recurring job\n  ---\n  duration_ms: 1.63808\n  type: 'test'\n  ...\n# Subtest: owned checked-record CPAN projection retains mixed transport\nok 15 - owned checked-record CPAN projection retains mixed transport\n  ---\n  duration_ms: 76.795272\n  type: 'test'\n  ...\n# Subtest: owned checked-record Perl acceptance is a required recurring job\nok 16 - owned checked-record Perl acceptance is a required recurring job\n  ---\n  duration_ms: 5.153017\n  type: 'test'\n  ...\n1..16\n# tests 16\n# suites 0\n# pass 16\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 7384.480005\n"
+    },
+    "scopedEslint": "passed",
+    "configuredCheckedJavaScriptTypecheck": "passed"
+  },
+  "inventory": {
+    "base": "29ae6d8f74722b6c667ad874ce5646599fc9625b",
+    "applied": true,
+    "original": {
+      "bytes": 102579190,
+      "sha256": "e2c8af3be42bd903a44c809b82898dd50555658602a53818ed15373b43b0720e"
+    },
+    "current": {
+      "bytes": 102579190,
+      "sha256": "f54874f57390e6d795415f498beba2e9433596f015411c8eaea6e75643e56a7e"
+    },
+    "pins": [
+      {
+        "path": "tests/fixtures/onboarding/owned-checked-records/OwnedCheckedRecords.lean",
+        "count": 4,
+        "alreadyCurrent": 0,
+        "previousSha256": "b5c2e10c7ccb18859da182d63d7f664e2cc12d2a748f8943ab3e6dc603ddf57f",
+        "currentSha256": "65226b9f8cafb1ff9e5c54dd680efc2939158fd9c4be1da2aaf8c069c1e1eb89"
+      },
+      {
+        "path": "tests/fixtures/structured-types/owned-checked-record-installed.c",
+        "count": 0,
+        "alreadyCurrent": 0,
+        "previousSha256": "7a79317cb29509ea28e3a63cea98d85895cdd798e4648180b834fb7d29ea7dcc",
+        "currentSha256": "7faf494caf91115be7ef68b9f56418e1e0096ad1fb7d9d77c24ece84185e3f70"
+      },
+      {
+        "path": "tests/fixtures/structured-types/owned-checked-record-installed.cpp",
+        "count": 0,
+        "alreadyCurrent": 0,
+        "previousSha256": "49e3fa1367ce31d9f13139896c083176ea0473d8c63af1e24afda06345384a3c",
+        "currentSha256": "fcf65f4f4effdef04e6ec2efa8ba047f0f6e260cfa77f367ac156aea457a8022"
+      },
+      {
+        "path": "tests/fixtures/structured-types/owned-checked-record-installed.pl",
+        "count": 0,
+        "alreadyCurrent": 0,
+        "previousSha256": "189e5fd13efff72dd8eac4beee838e04e0e0d0c01d55bc9836d167b674d5737a",
+        "currentSha256": "0b38fe46c8a7cb1085549715e979e6786e3050f5b99644380276dd2a37dab20e"
+      },
+      {
+        "path": "tests/helpers/owned-checked-record-native-fixture.mjs",
+        "count": 0,
+        "alreadyCurrent": 0,
+        "previousSha256": "25bf7ba8abf74d42dfa0be1fcb8a28b1ccc741bb77e549d7b75e222de78bb41c",
+        "currentSha256": "6ee7fb49b1291a942afaf6569cefecdd9981476baf6ab5a9089efaf84938c523"
+      },
+      {
+        "path": "tests/owned-checked-record-foundation.test.mjs",
+        "count": 4,
+        "alreadyCurrent": 0,
+        "previousSha256": "c6a2a1fc68d52658a56bbc0eb925f6993c20a323b9feb8c8fcfeab497ab82569",
+        "currentSha256": "433041fb3fb0738ee1de4ce1e96b2d6f70d639f4043a3727ae315809f11d94f3"
+      },
+      {
+        "path": "tests/owned-checked-record-native-packaging.test.mjs",
+        "count": 0,
+        "alreadyCurrent": 0,
+        "previousSha256": "64af30d159ca2469464570d7f8423d124696be2bdf9bd0bec0e1f016249b48bc",
+        "currentSha256": "f726a1e29e4884c7ce518892a0b94e4239a6b19fde1f9bafd644454e29e2213c"
+      },
+      {
+        "path": "tests/owned-checked-record-perl-packaging.test.mjs",
+        "count": 0,
+        "alreadyCurrent": 0,
+        "previousSha256": "c2b99696e184e1f62091a166c92565d3a5253bf024c8bf51ec4bd33b2b608d23",
+        "currentSha256": "50bd5ce927547e784f2287d0ac58eab723eb3e6c046c137fda0c685fcb971cd4"
+      }
+    ],
+    "refreshedPins": 8,
+    "alreadyCurrent": 0
+  },
+  "audit": [
+    {
+      "requirement": "Ordinary and reviewed inputs select matching resource, checked-record and callback policies.",
+      "evidence": [
+        "tests/helpers/owned-checked-record-native-fixture.mjs",
+        "tests/owned-checked-record-native-packaging.test.mjs"
+      ],
+      "result": "Configuration validation, exact export-set equality, transfer-site assertions and reviewed source validation passed. Fresh compiler extraction and installed route reconciliation remain hosted gates."
+    },
+    {
+      "requirement": "Nested checked values and later array elements reject before input consumption and before outputs publish.",
+      "evidence": [
+        "tests/fixtures/structured-types/owned-checked-record-installed.c",
+        "tests/fixtures/structured-types/owned-checked-record-installed.cpp",
+        "tests/fixtures/structured-types/owned-checked-record-installed.pl"
+      ],
+      "result": "Added executable installed assertions for both nested constructors, repeated later-element rejection, empty and recovered arrays, and unchanged C output bytes. C/C++ caller syntax passed; execution remains pending."
+    },
+    {
+      "requirement": "All transfer inputs validate before any move; failures after movement do not resurrect consumed leases.",
+      "evidence": [
+        "tests/fixtures/onboarding/owned-checked-records/OwnedCheckedRecords.lean",
+        "tests/fixtures/structured-types/owned-checked-record-installed.c",
+        "tests/fixtures/structured-types/owned-checked-record-installed.cpp",
+        "tests/fixtures/structured-types/owned-checked-record-installed.pl"
+      ],
+      "result": "Added two-owner rollback/success and post-transfer invalid callback reply/exception/recovery assertions. Expanded proof-carrying carriers elaborate in Lean and generated native adapters pass strict C syntax."
+    },
+    {
+      "requirement": "Installed host lifetimes, source-free relocation and independent retained artifacts prove execution.",
+      "evidence": [
+        "tests/owned-checked-record-native-packaging.test.mjs",
+        "tests/owned-checked-record-perl-packaging.test.mjs"
+      ],
+      "result": "Existing four-route packaging, C++ sanitizer differential and four-ABI Perl lifetime/installed-asset gates execute the expanded callers when dispatched. They have not executed these modified bytes yet."
+    }
+  ],
+  "notEstablished": [
+    "Expanded installed C/C++/Perl execution and sanitizer/lifetime acceptance",
+    "Expanded original artifact retention and independent replay",
+    "Final-head Core and required cross-target hosted acceptance",
+    "Default-branch recurring activation"
+  ],
+  "remaining": [
+    "Run and retain the expanded native/Perl matrix after existing run 40195989684 finishes; do not cancel it or dispatch a duplicate.",
+    "Audit original #1725 requirements against observed results, and preserve all remaining #1484/#1220 scope."
+  ]
+}

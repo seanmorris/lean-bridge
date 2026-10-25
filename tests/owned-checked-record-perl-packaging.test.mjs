@@ -68,6 +68,8 @@ test("owned checked-record CPAN projection retains mixed transport", () => {
 		"new_ticket", "serial", "echo_booking", "echo_claim"
 		, "transfer_claim", "claim_for", "pair_claim"
 		, "with_claim_callback", "claim_closure"
+		, "booking_span", "claim_quota", "echo_grant", "echo_claims"
+		, "transfer_with_claim_callback", "transfer_pair_claim"
 	]);
 	assert.match(generated.xs, /\nwith_claim_callback\(\.\.\.\)/u);
 	assert.match(generated.xs, /\nclaim_closure\(\.\.\.\)/u);

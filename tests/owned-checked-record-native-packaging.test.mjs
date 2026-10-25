@@ -8,6 +8,7 @@ import { access, cp, mkdtemp, readFile, rename, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
+import { validateExportConfiguration } from "../src/analyze/export-configuration.mjs";
 import { generateOwnedCppPackage } from "../src/backends/cpp/owned-package.mjs";
 import { buildCanonicalProject } from "../src/build/canonical-build.mjs";
 import {
@@ -22,6 +23,7 @@ import {
 } from "./helpers/copied-fixture-install.mjs";
 import { lakeInputState, saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { ownedCheckedRecordFixture } from "./helpers/owned-checked-record-fixture.mjs";
+import { ownedCheckedRecordJavaScriptSelection } from "./helpers/owned-checked-record-javascript-fixture.mjs";
 import {
 	ownedCheckedRecordNativeRoutes, ownedCheckedRecordNativeSelection
 } from "./helpers/owned-checked-record-native-fixture.mjs";
@@ -45,8 +47,24 @@ test.before(async () => {
 	if(enabled) await rm(packagingRoot, { recursive: true, force: true });
 });
 
-test("owned checked-record C and C++ generators retain exact callback directions", () => {
+test("owned checked-record C and C++ generators retain exact callback directions", async t => {
 	const selected = ownedCheckedRecordNativeSelection("reviewed-full", ["c", "cpp"]);
+	const ordinary = ownedCheckedRecordNativeSelection("ordinary-full", ["c", "cpp"]);
+	validateExportConfiguration(ordinary.configuration);
+	validateExportConfiguration(selected.configuration);
+	assert.deepEqual(ordinary.configuration.exports
+		, selected.reviewedIr.declarations.map(item => item.source.declaration));
+	assert.deepEqual(ordinary.configuration.contracts["OwnedCheckedRecords.transferPairClaim"]
+		.parameters.map(parameter => parameter.ownership), ["transfer", "transfer"]);
+	assert.deepEqual(ordinary.configuration.contracts["OwnedCheckedRecords.transferWithClaimCallback"]
+		.parameters.map(parameter => parameter.ownership), ["transfer", "borrow"]);
+	for(const route of ["ordinary-result-only", "reviewed-result-only"])
+	{
+		const result = ownedCheckedRecordNativeSelection(route, ["c", "cpp"]);
+		validateExportConfiguration(result.configuration);
+		assert.deepEqual(result.reviewedIr.declarations.map(item => item.name)
+			, ["newTicket", "serial", "claimFor"]);
+	}
 	const generated = generateOwnedCppPackage(selected.reviewedIr, {
 		transferredInputs: true, anchoredResults: true, hostCallbacks: true
 	});
@@ -59,6 +77,30 @@ test("owned checked-record C and C++ generators retain exact callback directions
 		, /owned_checked_records_claim_closure\(/u);
 	assert.match(generated.files["include/owned_checked_records.hpp"]
 		, /inline Claim with_claim_callback/u);
+	for(const name of ["echo_grant", "echo_claims", "transfer_pair_claim"
+		, "transfer_with_claim_callback"])
+		assert.ok(generated.c.header.includes(`owned_checked_records_${name}(`), name);
+	const directory = await mkdtemp(join(tmpdir(), "lean-owned-checked-native-headers-"));
+	t.after(() => rm(directory, { recursive: true, force: true }));
+	for(const [path, source] of Object.entries({
+		...generated.files, [`include/${generated.c.prefix}.h`]: generated.c.header
+	})) await saveLakeFile(directory, path, source);
+	for(const [profile, compiler, standard] of [
+		["c", "/usr/bin/cc", "c11"], ["cpp", "/usr/bin/c++", "c++20"]
+	]) {
+		await saveLakeFile(directory, `consumer.${profile}`, await consumerSource(profile, false));
+		await runCopied(compiler, [`-std=${standard}`, "-Wall", "-Wextra", "-Werror"
+			, "-I", "include", "-fsyntax-only", `consumer.${profile}`], directory
+		, { PATH: "/usr/bin:/bin" });
+	}
+	// WIT shares the C caller but retains its own smaller API and acceptance.
+	const shared = generateOwnedCppPackage(
+		ownedCheckedRecordJavaScriptSelection("reviewed-full").reviewedIr
+		, { transferredInputs: true, anchoredResults: true, hostCallbacks: true });
+	await saveLakeFile(directory, `include/${shared.c.prefix}.h`, shared.c.header);
+	await runCopied("/usr/bin/cc", ["-std=c11", "-Wall", "-Wextra", "-Werror"
+		, "-I", "include", "-fsyntax-only", "consumer.c"], directory
+	, { PATH: "/usr/bin:/bin" });
 });
 
 test("owned checked-record native acceptance is a required recurring job", async () => {

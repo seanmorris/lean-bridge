@@ -43,6 +43,10 @@ sub booking {
     holder => $_[0], window => LeanBridge::OwnedCheckedRecords::Window->new(
       lo => n($_[1]), hi => n($_[2])));
 }
+sub grant {
+  LeanBridge::OwnedCheckedRecords::Grant->new(
+    holder => $_[0], weight => n($_[1]), limit => n($_[2]));
+}
 sub serial_is {
   check(invoke('serial', $_[0])->bcmp($_[1]) == 0, $_[2]);
 }
@@ -65,6 +69,26 @@ my $echoed_booking = invoke('echo_booking', $valid_booking);
 check($echoed_booking->window->hi->bcmp(8) == 0, 'nested copied record accepted');
 serial_is($echoed_booking->holder, 41, 'booking resource retained');
 release($echoed); release($echoed_booking);
+check(invoke('booking_span', $valid_booking)->bcmp(5) == 0, 'copied payload consumed');
+check(invoke('claim_quota', $valid)->bcmp(7) == 0, 'owned payload consumed');
+my $grant = invoke('echo_grant', grant($ticket, 7, 8));
+check($grant->weight->bcmp(7) == 0 && $grant->limit->bcmp(8) == 0,
+  'nested Subtype and outer checked record accepted');
+serial_is($grant->holder, 41, 'grant retains resource'); release($grant);
+rejected(sub { invoke('echo_grant', grant($ticket, 0, 8)) }, 1);
+rejected(sub { invoke('echo_grant', grant($ticket, 7, 3)) }, 1);
+my $claims = invoke('echo_claims', [$valid, $valid]);
+check(@$claims == 2 && $claims->[1]->quota->bcmp(7) == 0,
+  'owned checked-record array round trips');
+serial_is($claims->[0]->holder, 41, 'array retains resource'); release($claims);
+for (1 .. 10) {
+  rejected(sub { invoke('echo_claims', [$valid, claim($ticket, 99)]) }, 1);
+  check(!$ticket->closed, 'later array rejection preserves owner');
+}
+my $empty = invoke('echo_claims', []);
+check(@$empty == 0, 'empty owned array');
+my $array_recovery = invoke('echo_claims', [$valid]);
+check(@$array_recovery == 1, 'array rejection recovers'); release($array_recovery);
 
 my $invalid = claim($ticket, 99);
 rejected(sub { invoke('echo_claim', $invalid) }, 1);
@@ -83,6 +107,53 @@ check($moving->closed, 'successful transfer consumes input');
 check($moved->quota->bcmp(9) == 0, 'successful transfer preserves payload');
 serial_is($moved->holder, 51, 'transferred result is usable');
 serial_is($kept, 51, 'independent retain survives transfer');
+
+my $first = invoke('new_ticket', n(61), 'first');
+my $second = invoke('new_ticket', n(71), 'second');
+my $first_kept = $first->retain; my $second_kept = $second->retain;
+my $moving_booking = booking($first, 3, 8);
+my $moving_claim = claim($second, 99);
+rejected(sub { invoke('transfer_pair_claim', $moving_booking, $moving_claim) }, 1);
+check(!$first->closed && !$second->closed, 'late failure aborts both transfers');
+serial_is($first, 61, 'first rejected transfer intact');
+serial_is($second, 71, 'second rejected transfer intact');
+my $pair = invoke('transfer_pair_claim', $moving_booking, claim($second, 7));
+check($first->closed && $second->closed && $pair->quota->bcmp(7) == 0,
+  'both transfers commit together');
+serial_is($first_kept, 61, 'first independent retain survives');
+serial_is($second_kept, 71, 'second independent retain survives');
+release($pair); $first_kept->close; $second_kept->close;
+
+for my $throws (0, 1) {
+  my $input = invoke('new_ticket', n(81), 'post-transfer');
+  my $independent = $input->retain;
+  my $transferred = claim($input, 7);
+  my $entered = 0;
+  my $sentinel = bless({message => 'post-transfer'}, 'OwnedCheckedTransferError');
+  my $callback = descriptor(sub {
+    my ($incoming) = @_; ++$entered;
+    die $sentinel if $throws;
+    return claim($incoming->holder, 99);
+  }, claim($independent, 7));
+  if($throws) {
+    eval { invoke('transfer_with_claim_callback', $transferred, $callback); 1 };
+    my $error = $@;
+    check(ref($error) && refaddr($error) == refaddr($sentinel),
+      'post-transfer callback exception identity preserved');
+  } else {
+    rejected(sub { invoke('transfer_with_claim_callback', $transferred, $callback) }, 1);
+  }
+  check($entered == 1 && $input->closed, 'failure after transfer consumes input');
+  serial_is($independent, 81, 'post-transfer failure preserves independent retain');
+  my $recover = descriptor(sub {
+    my ($incoming) = @_; return claim($incoming->holder, 9);
+  }, claim($independent, 7));
+  my $recovered = invoke('transfer_with_claim_callback', claim($independent, 7), $recover);
+  check($independent->closed && $recovered->quota->bcmp(9) == 0,
+    'post-transfer callback failure recovers on next call');
+  serial_is($recovered->holder, 81, 'recovered transfer resource is usable');
+  release($recovered);
+}
 
 my $calls = 0;
 my $host = descriptor(sub {

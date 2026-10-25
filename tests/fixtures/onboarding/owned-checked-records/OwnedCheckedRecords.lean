@@ -80,6 +80,14 @@ def pairClaim (_booking : Booking) (claim : Claim) : Claim := claim
 def withClaimCallback (claim : Claim) (callback : Claim → Claim) : Claim :=
   callback claim
 
+/-- Transfer completes before the callback runs; a callback failure cannot
+restore the host's consumed input lease. -/
+def transferWithClaimCallback (claim : Claim) (callback : Claim → Claim) : Claim :=
+  callback claim
+
+/-- Both inputs must validate before either transfer commits. -/
+def transferPairClaim (_booking : Booking) (claim : Claim) : Claim := claim
+
 /-- A leased Lean closure consumes host claims and returns proved claims. -/
 def claimClosure : Claim → Claim := id
 

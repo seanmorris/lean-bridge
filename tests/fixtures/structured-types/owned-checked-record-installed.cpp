@@ -34,6 +34,17 @@ int main(void) {
     CHECK(echoed.quota == 7 && api::serial(echoed.holder) == 41);
     CHECK(echoed_booking.window.hi == 8
       && api::serial(echoed_booking.holder) == 41);
+    CHECK(api::booking_span(booking) == 5 && api::claim_quota(claim) == 7);
+    const auto grant = api::echo_grant({ticket, 7, 8});
+    CHECK(grant.weight == 7 && grant.limit == 8 && api::serial(grant.holder) == 41);
+    rejects([&] { (void)api::echo_grant({ticket, 0, 8}); });
+    rejects([&] { (void)api::echo_grant({ticket, 7, 3}); });
+    const auto claims = api::echo_claims({claim, claim});
+    CHECK(claims.size() == 2 && claims[1].quota == 7
+      && api::serial(claims[0].holder) == 41);
+    for(size_t i = 0; i < 10; ++i)
+      rejects([&] { (void)api::echo_claims({claim, {ticket, 99}}); });
+    CHECK(api::echo_claims({}).empty() && api::echo_claims({claim}).size() == 1);
     for(size_t i = 0; i < 100; ++i) {
       const auto repeated = api::echo_claim(claim);
       CHECK(repeated.quota == 7 && api::serial(repeated.holder) == 41);
@@ -53,6 +64,45 @@ int main(void) {
     CHECK(accepted.holder.is_closed() && moving.is_closed());
     CHECK(moved.quota == 9 && api::serial(moved.holder) == 51
       && api::serial(kept) == 51);
+
+    auto first = api::new_ticket(61, "first"), second = api::new_ticket(71, "second");
+    auto first_kept = first.retain(), second_kept = second.retain();
+    api::Booking moving_booking{first, {3, 8}};
+    api::Claim moving_claim{second, 99};
+    rejects([&] { (void)api::transfer_pair_claim(std::move(moving_booking), std::move(moving_claim)); });
+    CHECK(!first.is_closed() && !second.is_closed()
+      && api::serial(moving_booking.holder) == 61 && api::serial(moving_claim.holder) == 71);
+    moving_claim.quota = 7;
+    const auto pair = api::transfer_pair_claim(std::move(moving_booking), std::move(moving_claim));
+    CHECK(first.is_closed() && second.is_closed() && pair.quota == 7);
+    CHECK(api::serial(first_kept) == 61 && api::serial(second_kept) == 71);
+
+    for(bool throws : {false, true}) {
+      auto input = api::new_ticket(81, "post-transfer"), independent = input.retain();
+      api::Claim transferred{input, 7};
+      size_t entered = 0;
+      bool failed = false;
+      try {
+        (void)api::transfer_with_claim_callback(std::move(transferred), [&](const api::Claim& incoming) {
+          ++entered;
+          if(throws) throw std::runtime_error("post-transfer callback");
+          return api::Claim{incoming.holder, 99};
+        });
+      }
+      catch(const api::Error& error) {
+        CHECK(!throws && error.status == OWNED_CHECKED_RECORDS_INVALID_ARGUMENT); failed = true;
+      }
+      catch(const std::runtime_error& error) {
+        CHECK(throws && std::string(error.what()) == "post-transfer callback"); failed = true;
+      }
+      CHECK(failed && entered == 1 && input.is_closed() && transferred.holder.is_closed());
+      CHECK(api::serial(independent) == 81);
+      api::Claim recovery{independent, 7};
+      const auto recovered = api::transfer_with_claim_callback(std::move(recovery), [](const api::Claim& incoming) {
+        return api::Claim{incoming.holder, 9};
+      });
+      CHECK(independent.is_closed() && recovered.quota == 9 && api::serial(recovered.holder) == 81);
+    }
 
     size_t callback_calls = 0;
     auto callback_result = api::with_claim_callback(claim
