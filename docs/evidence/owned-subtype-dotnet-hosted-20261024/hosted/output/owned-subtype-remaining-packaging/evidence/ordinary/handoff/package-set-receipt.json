@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "owned-subtypes@1.0.0",
+    "name": "owned-subtypes",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 53956210,
+          "path": "archives/LeanBridge.OwnedSubtypes.1.0.0.nupkg",
+          "sha256": "a813888a79703d9991b3b5cad180a6a9dea4b1fed5273414833775244bee8ad1"
+        }
+      ],
+      "ecosystem": "nuget",
+      "name": "LeanBridge.OwnedSubtypes",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "nuget",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "83ec107bf62c1950e5eeab36f228e686009d8ac316bd4a29f02c8e7fd7d991be",
+      "id": "native-library-v1",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "ff5ccf94ec8ed52428e70e80b33c2c059241c5924801387ceba24419456ba03e"
+  }
+}

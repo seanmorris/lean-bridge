@@ -1,0 +1,87 @@
+{
+  "lane": "dotnet",
+  "profile": "installed-owned-subtype-remaining",
+  "reports": [
+    {
+      "compilerSelectedConstructors": true,
+      "deterministicReassembly": true,
+      "handoffRemovedBeforeRelocatedExecution": true,
+      "immutableInstalledInputs": true,
+      "lane": "dotnet",
+      "lifecycle": {
+        "dotnet": {
+          "affinity": "foreign-thread-status-5",
+          "fallback": "gc-finalizer"
+        }
+      },
+      "observations": {
+        "dotnet": {
+          "checks": 121,
+          "consumerSha256": "20a74adfafad4e78f9c8e43a4111b336b83370aeecd58bd13b230f2daac1ffa4"
+        }
+      },
+      "packageSetReceiptSha256": "9f05b1a526ce96978c9b633cef32744e08a0cc3e41b40652438e3dadc9e9593a",
+      "reassembled": {
+        "componentReceiptSha256": "8f30f67c669c30a20d6ce5dfa66d896a89f5119169982e8d3b4f7e510ec0e45d",
+        "packages": [
+          {
+            "archive": "LeanBridge.OwnedSubtypes.1.0.0.nupkg",
+            "sha256": "a813888a79703d9991b3b5cad180a6a9dea4b1fed5273414833775244bee8ad1"
+          }
+        ]
+      },
+      "relocatedInstallation": true,
+      "repeated": {
+        "dotnet": {
+          "checks": 121,
+          "runs": 1
+        }
+      },
+      "route": "ordinary",
+      "sourceFreeInstallation": true,
+      "sourceUnchanged": true,
+      "transferredInputCheckedBeforeHandoff": true
+    },
+    {
+      "compilerSelectedConstructors": true,
+      "deterministicReassembly": true,
+      "handoffRemovedBeforeRelocatedExecution": true,
+      "immutableInstalledInputs": true,
+      "lane": "dotnet",
+      "lifecycle": {
+        "dotnet": {
+          "affinity": "foreign-thread-status-5",
+          "fallback": "gc-finalizer"
+        }
+      },
+      "observations": {
+        "dotnet": {
+          "checks": 121,
+          "consumerSha256": "20a74adfafad4e78f9c8e43a4111b336b83370aeecd58bd13b230f2daac1ffa4"
+        }
+      },
+      "packageSetReceiptSha256": "c8d57fa3f1b31667fab940b5a5889c3a3c29eba82c7be1d49ee0ec7ec3cd3ed0",
+      "reassembled": {
+        "componentReceiptSha256": "f1a1ff86d84d672e5688018acc85dae61c98ccd76e22d50a7d22c9842071dcbd",
+        "packages": [
+          {
+            "archive": "LeanBridge.OwnedSubtypes.1.0.0.nupkg",
+            "sha256": "61a9e59d3989ea85221b0d33ff8d02a116415325cc76cdb431cb97988f5c796f"
+          }
+        ]
+      },
+      "relocatedInstallation": true,
+      "repeated": {
+        "dotnet": {
+          "checks": 121,
+          "runs": 1
+        }
+      },
+      "route": "reviewed",
+      "sourceFreeInstallation": true,
+      "sourceUnchanged": true,
+      "transferredInputCheckedBeforeHandoff": true
+    }
+  ],
+  "schemaVersion": 1
+}

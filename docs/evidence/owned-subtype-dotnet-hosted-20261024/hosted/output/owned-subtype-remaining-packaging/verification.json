@@ -1,0 +1,31 @@
+{
+  "kind": "owned-subtype-dotnet",
+  "producerCommit": "390ae18d3a2607bc73463767a33fea0cfb9350b0",
+  "profiles": [
+    "dotnet"
+  ],
+  "reportSha256": "6c335b469719d667525e628d239d154a245a4120855fc1c2c50f9d5070dfeab2",
+  "reports": 2,
+  "retainedPackages": {
+    "routes": [
+      {
+        "archiveBytes": 53956210,
+        "archives": 1,
+        "receiptSha256": "9f05b1a526ce96978c9b633cef32744e08a0cc3e41b40652438e3dadc9e9593a",
+        "route": "ordinary"
+      },
+      {
+        "archiveBytes": 53959064,
+        "archives": 1,
+        "receiptSha256": "c8d57fa3f1b31667fab940b5a5889c3a3c29eba82c7be1d49ee0ec7ec3cd3ed0",
+        "route": "reviewed"
+      }
+    ],
+    "schemaVersion": 1
+  },
+  "routes": [
+    "ordinary",
+    "reviewed"
+  ],
+  "schemaVersion": 1
+}

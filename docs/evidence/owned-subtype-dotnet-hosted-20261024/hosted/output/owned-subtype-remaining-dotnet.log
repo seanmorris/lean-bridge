@@ -1,0 +1,54 @@
+
+> @lean-wasm/bridge-poc@0.0.0-poc test:owned-subtype-remaining
+> LEAN_BRIDGE_OWNED_SUBTYPE_REMAINING_TEST=1 node --test --test-concurrency=1 tests/owned-subtype-remaining-packaging.test.mjs
+
+TAP version 13
+# Subtest: remaining hosts generate callback-free checked transfer copies
+ok 1 - remaining hosts generate callback-free checked transfer copies
+  ---
+  duration_ms: 72.846157
+  type: 'test'
+  ...
+# Subtest: callback-free WIT consumer matches the checked native header
+ok 2 - callback-free WIT consumer matches the checked native header
+  ---
+  duration_ms: 953.293601
+  type: 'test'
+  ...
+# Subtest: remaining owned Subtype fixtures and required matrix stay registered
+ok 3 - remaining owned Subtype fixtures and required matrix stay registered
+  ---
+  duration_ms: 3.236151
+  type: 'test'
+  ...
+# Subtest: owned Subtype WIT consumer names the installed host API
+ok 4 - owned Subtype WIT consumer names the installed host API
+  ---
+  duration_ms: 50.635242
+  type: 'test'
+  ...
+# Subtest: installed ordinary checked owned Subtypes execute in dotnet
+ok 5 - installed ordinary checked owned Subtypes execute in dotnet
+  ---
+  duration_ms: 163270.023352
+  type: 'test'
+  ...
+# ordinary/dotnet: Compiling checked native Lean exports
+# ordinary/dotnet: dotnet=121
+# Subtest: installed reviewed checked owned Subtypes execute in dotnet
+ok 6 - installed reviewed checked owned Subtypes execute in dotnet
+  ---
+  duration_ms: 148870.814071
+  type: 'test'
+  ...
+# reviewed/dotnet: Compiling checked native Lean exports
+# reviewed/dotnet: dotnet=121
+1..6
+# tests 6
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 313650.461481
