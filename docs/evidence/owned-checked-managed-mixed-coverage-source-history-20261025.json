@@ -1,0 +1,407 @@
+{
+  "additions": [
+    {
+      "currentSha256": "16c0ae0fc8969efd71b35a1d0dc0c8f0e8ea12fa62904c096333ce3e2b2dfed3",
+      "path": "docs/evidence/owned-checked-managed-mixed-coverage-20261025.json"
+    },
+    {
+      "currentSha256": "e323c4402df32c8cf5dc52ba25bf518f9dd8bb3bf16ba5bbae86d26f70dedbb7",
+      "path": "scripts/update-owned-checked-managed-mixed-coverage-source-history.mjs"
+    },
+    {
+      "currentSha256": "711ae936537169bb1f63a99c4a47933144e6ce7562e8bde66fbf6a7f30e45ac3",
+      "path": "tests/helpers/owned-checked-managed-mixed-coverage-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "0cac753c0d30c2f06a179f1f6b186c7c787bfae4547d9384397228f536c96707",
+      "path": "tests/helpers/owned-checked-managed-mixed-coverage-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "16be744dbb02923e0b3905097c6cfb018167e6ff",
+  "implementationCommits": [
+    "16be744dbb02923e0b3905097c6cfb018167e6ff"
+  ],
+  "integrationBaseCommit": "16be744dbb02923e0b3905097c6cfb018167e6ff",
+  "integrationUpdates": [
+    {
+      "currentSha256": "3290ede8b4071d86c273bdc5acd1da6518ba6e73a31d9c37cb6d32538eda43d2",
+      "edits": [
+        {
+          "current": "import { beforeOwnedCheckedManagedMixedCoverageSource, ownedCheckedManagedMixedCoverageNormalizationPaths } from \"./owned-checked-managed-mixed-coverage-source-history.mjs\";\n",
+          "previous": "",
+          "start": 14239
+        },
+        {
+          "current": "\t...ownedCheckedManagedMixedCoverageNormalizationPaths\n\t, ...ownedCheckedWindowRejectionNormalizationPaths\n",
+          "previous": "\t...ownedCheckedWindowRejectionNormalizationPaths\n",
+          "start": 187452
+        },
+        {
+          "current": "\tlet stage = beforeOwnedCheckedManagedMixedCoverageSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeOwnedCheckedWindowRejectionSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeOwnedCheckedWindowRejectionSource(path, text, expected);\n",
+          "start": 232390
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "0303050d37da9a1f8ad6a926e26579ff241495c6e841e1e16ce39d724786f549"
+    },
+    {
+      "currentSha256": "4ba21782bc3df6c15c7dcf7878315f733f4cb5fa01d3a8f40806c9bc9cb6c1e3",
+      "edits": [
+        {
+          "current": "import \"./helpers/owned-checked-managed-mixed-coverage-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 9642
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "f60ec3ae6d22982101de245e9a01422c58f4e234b2c8b9dd7ebde9624fb87680"
+    }
+  ],
+  "milestone": "owned-checked-managed-mixed-coverage-source-v1",
+  "predecessorCommit": "19b9dd408f4f21fd111653620642c21a32e27b6d",
+  "schemaVersion": 1,
+  "scope": "Expand .NET, Java, Kotlin, native PHP and WIT source qualification to the complete mixed owned checked-record selection. Exercise nested copied Window rejection/equality, Grant with a nested Subtype, arrays of Claim, two-input transfer rollback and post-transfer callback failure/recovery. Keep all standalone result-only selections and callers unchanged. Preserve the original managed TAP contract, existing lifetime/thread/process/relocation gates, runtime sources, original evidence and published support claims. Four focused generator/boundary checks pass; generated .NET and JVM APIs and actual callers compile in both modes, PHP syntax passes, and both WIT-prefixed C callers compile with valid generated Component Model binaries. Refresh exactly eleven live test-source pins. These are source checks, not installed runtime acceptance. Require one authenticated producer revision for the nine native/managed lanes and independent original artifact retention/replay before promotion.",
+  "updates": [
+    {
+      "currentSha256": "603f565ced92597ae077e66b735f57b7148346fcbd9ac13339b2752a9d2ecf66",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"b257df31252c8007f2dfb5dc041c0deaa870bfc51d7b0c357fd6ed4a60132bf4\"\n",
+          "previous": "          \"sha256\": \"b159b87f91c8a44aa2629380063fab1b8ac981c3d3a6e318a3fc50d374693c1c\"\n",
+          "start": 89524257
+        },
+        {
+          "current": "          \"sha256\": \"b257df31252c8007f2dfb5dc041c0deaa870bfc51d7b0c357fd6ed4a60132bf4\"\n",
+          "previous": "          \"sha256\": \"b159b87f91c8a44aa2629380063fab1b8ac981c3d3a6e318a3fc50d374693c1c\"\n",
+          "start": 89531295
+        },
+        {
+          "current": "          \"sha256\": \"b257df31252c8007f2dfb5dc041c0deaa870bfc51d7b0c357fd6ed4a60132bf4\"\n",
+          "previous": "          \"sha256\": \"b159b87f91c8a44aa2629380063fab1b8ac981c3d3a6e318a3fc50d374693c1c\"\n",
+          "start": 89537676
+        },
+        {
+          "current": "          \"sha256\": \"b257df31252c8007f2dfb5dc041c0deaa870bfc51d7b0c357fd6ed4a60132bf4\"\n",
+          "previous": "          \"sha256\": \"b159b87f91c8a44aa2629380063fab1b8ac981c3d3a6e318a3fc50d374693c1c\"\n",
+          "start": 89544045
+        },
+        {
+          "current": "          \"sha256\": \"b257df31252c8007f2dfb5dc041c0deaa870bfc51d7b0c357fd6ed4a60132bf4\"\n",
+          "previous": "          \"sha256\": \"b159b87f91c8a44aa2629380063fab1b8ac981c3d3a6e318a3fc50d374693c1c\"\n",
+          "start": 89550406
+        },
+        {
+          "current": "          \"sha256\": \"b257df31252c8007f2dfb5dc041c0deaa870bfc51d7b0c357fd6ed4a60132bf4\"\n",
+          "previous": "          \"sha256\": \"b159b87f91c8a44aa2629380063fab1b8ac981c3d3a6e318a3fc50d374693c1c\"\n",
+          "start": 89556787
+        },
+        {
+          "current": "          \"sha256\": \"b257df31252c8007f2dfb5dc041c0deaa870bfc51d7b0c357fd6ed4a60132bf4\"\n",
+          "previous": "          \"sha256\": \"b159b87f91c8a44aa2629380063fab1b8ac981c3d3a6e318a3fc50d374693c1c\"\n",
+          "start": 89563146
+        },
+        {
+          "current": "          \"sha256\": \"b257df31252c8007f2dfb5dc041c0deaa870bfc51d7b0c357fd6ed4a60132bf4\"\n",
+          "previous": "          \"sha256\": \"b159b87f91c8a44aa2629380063fab1b8ac981c3d3a6e318a3fc50d374693c1c\"\n",
+          "start": 89569493
+        },
+        {
+          "current": "          \"sha256\": \"b257df31252c8007f2dfb5dc041c0deaa870bfc51d7b0c357fd6ed4a60132bf4\"\n",
+          "previous": "          \"sha256\": \"b159b87f91c8a44aa2629380063fab1b8ac981c3d3a6e318a3fc50d374693c1c\"\n",
+          "start": 89575840
+        },
+        {
+          "current": "          \"sha256\": \"b257df31252c8007f2dfb5dc041c0deaa870bfc51d7b0c357fd6ed4a60132bf4\"\n",
+          "previous": "          \"sha256\": \"b159b87f91c8a44aa2629380063fab1b8ac981c3d3a6e318a3fc50d374693c1c\"\n",
+          "start": 89581576
+        },
+        {
+          "current": "          \"sha256\": \"b257df31252c8007f2dfb5dc041c0deaa870bfc51d7b0c357fd6ed4a60132bf4\"\n",
+          "previous": "          \"sha256\": \"b159b87f91c8a44aa2629380063fab1b8ac981c3d3a6e318a3fc50d374693c1c\"\n",
+          "start": 89586947
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "461aafdb9246c6187cfbd9951987f1200dc8ec68b7b9cb8bd4aad1c5746d6f3b"
+    },
+    {
+      "currentSha256": "46a4d50dd459acb43fc77e2e573e1ed79d1e1aaa3fa79bccfd937ea51a459d89",
+      "edits": [
+        {
+          "current": "    private static void Close(Grant value) => value.Holder.Dispose();\n",
+          "previous": "",
+          "start": 1266
+        },
+        {
+          "current": "    private static void PostTransfer(bool throws)\n    {\n        using var input = Api.NewTicket(N(91), \"post-transfer\");\n        using var independent = input.Retain();\n        var transferred = Claim(input, 7);\n        var entered = 0;\n        var sentinel = new InvalidOperationException(\"post-transfer callback\");\n        TransferWithClaimCallbackArgument1ClosureCallback reply = incoming => {\n            entered++;\n            Check(incoming.Quota == N(7), \"post-transfer callback input\");\n            if (throws) throw sentinel;\n            return Claim(incoming.Holder, 99);\n        };\n        var callback = OwnedCallbacks.WithRecovery(reply, Claim(independent, 7));\n        Claim? output = null;\n        if (throws)\n            Check(ReferenceEquals(Reject<InvalidOperationException>(() =>\n                output = Api.TransferWithClaimCallback(transferred, callback)), sentinel),\n                \"post-transfer callback exception identity\");\n        else\n            Check(Reject<LeanBridgeException>(() =>\n                output = Api.TransferWithClaimCallback(transferred, callback)).Status == 1,\n                \"post-transfer invalid callback reply rejects\");\n        Check(output is null && entered == 1 && input.IsClosed && transferred.Holder.IsClosed,\n            \"post-transfer failure consumes input without publishing output\");\n        SerialIs(independent, 91, \"post-transfer failure preserves independent retain\");\n        var recovered = Api.TransferWithClaimCallback(Claim(independent, 7),\n            OwnedCallbacks.WithRecovery(\n                (TransferWithClaimCallbackArgument1ClosureCallback)(incoming => Claim(incoming.Holder, 9)),\n                Claim(independent, 7)));\n        Check(independent.IsClosed && recovered.Quota == N(9), \"post-transfer failure recovers\");\n        SerialIs(recovered.Holder, 91, \"recovered transfer resource\");\n        Close(recovered);\n    }\n\n",
+          "previous": "",
+          "start": 1589
+        },
+        {
+          "current": "        var invalidBooking = Booking(ticket, 8, 3);\n        for (var index = 0; index < 10; index++)\n        {\n            Reject<LeanBridgeException>(() => Api.EchoBooking(invalidBooking));\n            Check(invalidBooking.Window.Lo == N(8) && invalidBooking.Window.Hi == N(3),\n                \"nested copied rejection preserves input fields\");\n            SerialIs(invalidBooking.Holder, 41, \"nested copied rejection preserves owner\");\n        }\n        var equalBooking = Api.EchoBooking(Booking(ticket, 3, 3));\n        Check(equalBooking.Window.Lo == N(3) && equalBooking.Window.Hi == N(3),\n            \"nested copied equality and recovery\");\n        SerialIs(equalBooking.Holder, 41, \"nested copied recovery resource\");\n        Close(equalBooking);\n        Check(Api.BookingSpan(validBooking) == N(5), \"copied payload consumed\");\n        Check(Api.ClaimQuota(valid) == N(7), \"owned payload consumed\");\n        var grant = Api.EchoGrant(new Grant(ticket, N(7), N(8)));\n        Check(grant.Weight == N(7) && grant.Limit == N(8), \"nested Subtype and outer record accepted\");\n        SerialIs(grant.Holder, 41, \"grant resource\"); Close(grant);\n        Reject<LeanBridgeException>(() => Api.EchoGrant(new Grant(ticket, N(0), N(8))));\n        Reject<LeanBridgeException>(() => Api.EchoGrant(new Grant(ticket, N(7), N(3))));\n        SerialIs(ticket, 41, \"both grant rejections preserve owner\");\n        var claims = Api.EchoClaims(new[] { valid, valid });\n        Check(claims.Length == 2 && claims[0].Quota == N(7) && claims[1].Quota == N(7), \"owned array\");\n        Close(claims[0]); SerialIs(claims[1].Holder, 41, \"array element owners are independent\");\n        Close(claims[1]);\n        for (var index = 0; index < 10; index++)\n        {\n            Claim[]? partial = null;\n            Reject<LeanBridgeException>(() => partial = Api.EchoClaims(new[] { valid, Claim(ticket, 99) }));\n            Check(partial is null && !ticket.IsClosed, \"late array rejection publishes no partial result\");\n        }\n        Check(Api.EchoClaims(Array.Empty<Claim>()).Length == 0, \"empty owned array\");\n        var arrayRecovery = Api.EchoClaims(new[] { valid });\n        Check(arrayRecovery.Length == 1 && arrayRecovery[0].Quota == N(7), \"array recovery\");\n        Close(arrayRecovery[0]);\n\n",
+          "previous": "",
+          "start": 4399
+        },
+        {
+          "current": "        using (var first = Api.NewTicket(N(71), \"first\"))\n        using (var second = Api.NewTicket(N(81), \"second\"))\n        using (var firstKept = first.Retain())\n        using (var secondKept = second.Retain())\n        {\n            var firstInput = Booking(first, 3, 8);\n            var secondInput = Claim(second, 99);\n            Reject<LeanBridgeException>(() => Api.TransferPairClaim(firstInput, secondInput));\n            Check(!first.IsClosed && !second.IsClosed, \"late failure aborts both transfers\");\n            SerialIs(first, 71, \"first rejected transfer intact\");\n            SerialIs(second, 81, \"second rejected transfer intact\");\n            var pair = Api.TransferPairClaim(firstInput, Claim(second, 7));\n            Check(first.IsClosed && second.IsClosed && pair.Quota == N(7), \"both transfers commit\");\n            SerialIs(pair.Holder, 81, \"pair transfer result\");\n            SerialIs(firstKept, 71, \"first independent retain survives\");\n            SerialIs(secondKept, 81, \"second independent retain survives\");\n            Close(pair);\n        }\n        PostTransfer(false); PostTransfer(true);\n\n        TransferWithClaimCallbackArgument1ClosureCallback reply = incoming => {\n",
+          "previous": "        WithClaimCallbackArgument1ClosureCallback reply = incoming => {\n",
+          "start": 7879
+        },
+        {
+          "current": "                (TransferWithClaimCallbackArgument1ClosureCallback)(_ => Claim(ticket, 99)),\n",
+          "previous": "                (WithClaimCallbackArgument1ClosureCallback)(_ => Claim(ticket, 99)),\n",
+          "start": 10023
+        },
+        {
+          "current": "                (TransferWithClaimCallbackArgument1ClosureCallback)(_ => throw sentinel),\n",
+          "previous": "                (WithClaimCallbackArgument1ClosureCallback)(_ => throw sentinel),\n",
+          "start": 10423
+        }
+      ],
+      "path": "tests/fixtures/structured-types/owned-checked-record-dotnet.cs",
+      "previousSha256": "0213927e6ae1640024f94b26db6294ba096071a42f95c8e49d96bd93bf468058"
+    },
+    {
+      "currentSha256": "3eaad154a0f871bc58d23c9a40ace054b843f9d2475b138f73df4d2c424c5d21",
+      "edits": [
+        {
+          "current": "/* Keep compatibility with the original smaller API. Current native and WIT\n   packaging tests require the expanded header explicitly. */\n",
+          "previous": "/* The WIT fixture also uses this caller with its smaller, independently\n   selected API. Native packaging requires the expanded header explicitly. */\n",
+          "start": 424
+        }
+      ],
+      "path": "tests/fixtures/structured-types/owned-checked-record-installed.c",
+      "previousSha256": "addfa6ad186f7e682950d2024473d5d879ff231e45b3b825775257102e45ba43"
+    },
+    {
+      "currentSha256": "e1166b8845d6d9f3218b669002875aef4b89d44a26849faa9938ada31c6399d3",
+      "edits": [
+        {
+          "current": "    private static void close(Grant value) { value.holder().close(); }\n",
+          "previous": "",
+          "start": 1332
+        },
+        {
+          "current": "    private static void postTransfer(boolean throwsError) {\n        try (var input = newTicket(n(91), \"post-transfer\"); var independent = input.retain()) {\n            var transferred = claim(input, 7);\n            int[] entered = {0}; Claim[] output = {null};\n            var sentinel = new IllegalStateException(\"post-transfer callback\");\n            TransferWithClaimCallbackArgument1ClosureCallback reply = incoming -> {\n                entered[0]++; check(incoming.quota().equals(n(7)), \"post-transfer callback input\");\n                if (throwsError) throw sentinel;\n                return claim(incoming.holder(), 99);\n            };\n            var callback = OwnedCallbacks.withRecovery(reply, claim(independent, 7));\n            if (throwsError)\n                check(reject(IllegalStateException.class, () ->\n                    output[0] = transferWithClaimCallback(transferred, callback)) == sentinel,\n                    \"post-transfer callback exception identity\");\n            else\n                check(reject(LeanBridgeException.class, () ->\n                    output[0] = transferWithClaimCallback(transferred, callback)).status() == 1,\n                    \"post-transfer invalid callback reply rejects\");\n            check(output[0] == null && entered[0] == 1 && input.isClosed() && transferred.holder().isClosed(),\n                \"post-transfer failure consumes input without publishing output\");\n            serialIs(independent, 91, \"post-transfer failure preserves independent retain\");\n            var recovered = transferWithClaimCallback(claim(independent, 7), OwnedCallbacks.withRecovery(\n                (TransferWithClaimCallbackArgument1ClosureCallback)(incoming -> claim(incoming.holder(), 9)),\n                claim(independent, 7)));\n            check(independent.isClosed() && recovered.quota().equals(n(9)), \"post-transfer failure recovers\");\n            serialIs(recovered.holder(), 91, \"recovered transfer resource\"); close(recovered);\n        }\n    }\n\n",
+          "previous": "",
+          "start": 2047
+        },
+        {
+          "current": "            var invalidBooking = booking(ticket, 8, 3);\n            for (int index = 0; index < 10; index++) {\n                reject(LeanBridgeException.class, () -> echoBooking(invalidBooking));\n                check(invalidBooking.window().lo().equals(n(8)) && invalidBooking.window().hi().equals(n(3)),\n                    \"nested copied rejection preserves input fields\");\n                serialIs(invalidBooking.holder(), 41, \"nested copied rejection preserves owner\");\n            }\n            var equalBooking = echoBooking(booking(ticket, 3, 3));\n            check(equalBooking.window().lo().equals(n(3)) && equalBooking.window().hi().equals(n(3)),\n                \"nested copied equality and recovery\");\n            serialIs(equalBooking.holder(), 41, \"nested copied recovery resource\"); close(equalBooking);\n            check(bookingSpan(validBooking).equals(n(5)), \"copied payload consumed\");\n            check(claimQuota(valid).equals(n(7)), \"owned payload consumed\");\n            var grant = echoGrant(new Grant(ticket, n(7), n(8)));\n            check(grant.weight().equals(n(7)) && grant.limit().equals(n(8)), \"nested Subtype and outer record accepted\");\n            serialIs(grant.holder(), 41, \"grant resource\"); close(grant);\n            reject(LeanBridgeException.class, () -> echoGrant(new Grant(ticket, n(0), n(8))));\n            reject(LeanBridgeException.class, () -> echoGrant(new Grant(ticket, n(7), n(3))));\n            serialIs(ticket, 41, \"both grant rejections preserve owner\");\n            var claims = echoClaims(new Claim[] {valid, valid});\n            check(claims.length == 2 && claims[0].quota().equals(n(7)) && claims[1].quota().equals(n(7)), \"owned array\");\n            close(claims[0]); serialIs(claims[1].holder(), 41, \"array element owners are independent\"); close(claims[1]);\n            for (int index = 0; index < 10; index++) {\n                Claim[][] partial = {null};\n                reject(LeanBridgeException.class, () -> partial[0] = echoClaims(new Claim[] {valid, claim(ticket, 99)}));\n                check(partial[0] == null && !ticket.isClosed(), \"late array rejection publishes no partial result\");\n            }\n            check(echoClaims(new Claim[0]).length == 0, \"empty owned array\");\n            var arrayRecovery = echoClaims(new Claim[] {valid});\n            check(arrayRecovery.length == 1 && arrayRecovery[0].quota().equals(n(7)), \"array recovery\"); close(arrayRecovery[0]);\n",
+          "previous": "",
+          "start": 4812
+        },
+        {
+          "current": "            try (var first = newTicket(n(71), \"first\"); var second = newTicket(n(81), \"second\");\n                 var firstKept = first.retain(); var secondKept = second.retain()) {\n                var firstInput = booking(first, 3, 8); var secondInput = claim(second, 99);\n                reject(LeanBridgeException.class, () -> transferPairClaim(firstInput, secondInput));\n                check(!first.isClosed() && !second.isClosed(), \"late failure aborts both transfers\");\n                serialIs(first, 71, \"first rejected transfer intact\"); serialIs(second, 81, \"second rejected transfer intact\");\n                var pair = transferPairClaim(firstInput, claim(second, 7));\n                check(first.isClosed() && second.isClosed() && pair.quota().equals(n(7)), \"both transfers commit\");\n                serialIs(pair.holder(), 81, \"pair transfer result\"); serialIs(firstKept, 71, \"first independent retain survives\");\n                serialIs(secondKept, 81, \"second independent retain survives\"); close(pair);\n            }\n            postTransfer(false); postTransfer(true);\n\n",
+          "previous": "",
+          "start": 8212
+        },
+        {
+          "current": "            TransferWithClaimCallbackArgument1ClosureCallback reply = incoming -> { calls[0]++; return claim(incoming.holder(), 10); };\n",
+          "previous": "            WithClaimCallbackArgument1ClosureCallback reply = incoming -> { calls[0]++; return claim(incoming.holder(), 10); };\n",
+          "start": 9332
+        },
+        {
+          "current": "                    (TransferWithClaimCallbackArgument1ClosureCallback)(incoming -> claim(ticket, 99)),\n",
+          "previous": "                    (WithClaimCallbackArgument1ClosureCallback)(incoming -> claim(ticket, 99)),\n",
+          "start": 10088
+        },
+        {
+          "current": "                    (TransferWithClaimCallbackArgument1ClosureCallback)(incoming -> { throw sentinel; }),\n",
+          "previous": "                    (WithClaimCallbackArgument1ClosureCallback)(incoming -> { throw sentinel; }),\n",
+          "start": 10423
+        }
+      ],
+      "path": "tests/fixtures/structured-types/owned-checked-record-java.java",
+      "previousSha256": "0084e6ffa552c8277692cb7a52e7cc44bf96563a6e60712ccfa73269a98e26e2"
+    },
+    {
+      "currentSha256": "5bf43b83c92beecc356d2e14c872a2f9ab64bb1881d74fa94003055749f73d63",
+      "edits": [
+        {
+          "current": "private fun close(value: Grant) = value.holder.close()\n",
+          "previous": "",
+          "start": 778
+        },
+        {
+          "current": "private fun postTransfer(throwsError: Boolean) {\n    Api.newTicket(n(91), \"post-transfer\").use { input -> input.retain().use { independent ->\n        val transferred = claim(input, 7)\n        var entered = 0; var output: Claim? = null\n        val sentinel = IllegalStateException(\"post-transfer callback\")\n        val reply = TransferWithClaimCallbackArgument1ClosureCallback { incoming ->\n            entered++; check(incoming.quota == n(7), \"post-transfer callback input\")\n            if (throwsError) throw sentinel\n            claim(incoming.holder, 99)\n        }\n        val callback = OwnedCallbacks.withRecovery(reply, claim(independent, 7))\n        if (throwsError)\n            check(reject<IllegalStateException> { output = Api.transferWithClaimCallback(transferred, callback) } === sentinel,\n                \"post-transfer callback exception identity\")\n        else\n            check(reject<LeanBridgeException> { output = Api.transferWithClaimCallback(transferred, callback) }.status() == 1,\n                \"post-transfer invalid callback reply rejects\")\n        check(output == null && entered == 1 && input.isClosed && transferred.holder.isClosed,\n            \"post-transfer failure consumes input without publishing output\")\n        check(Api.serial(independent) == n(91), \"post-transfer failure preserves independent retain\")\n        val recovered = Api.transferWithClaimCallback(claim(independent, 7), OwnedCallbacks.withRecovery(\n            TransferWithClaimCallbackArgument1ClosureCallback { incoming -> claim(incoming.holder, 9) }, claim(independent, 7)))\n        check(independent.isClosed && recovered.quota == n(9), \"post-transfer failure recovers\")\n        check(Api.serial(recovered.holder) == n(91), \"recovered transfer resource\"); close(recovered)\n    } }\n}\n\n",
+          "previous": "",
+          "start": 1287
+        },
+        {
+          "current": "            val invalidBooking = booking(ticket, 8, 3)\n            repeat(10) {\n                reject<LeanBridgeException> { Api.echoBooking(invalidBooking) }\n                check(invalidBooking.window.lo == n(8) && invalidBooking.window.hi == n(3), \"nested copied rejection preserves input fields\")\n                check(Api.serial(invalidBooking.holder) == n(41), \"nested copied rejection preserves owner\")\n            }\n            val equalBooking = Api.echoBooking(booking(ticket, 3, 3))\n            check(equalBooking.window.lo == n(3) && equalBooking.window.hi == n(3), \"nested copied equality and recovery\")\n            check(Api.serial(equalBooking.holder) == n(41), \"nested copied recovery resource\"); close(equalBooking)\n            check(Api.bookingSpan(validBooking) == n(5), \"copied payload consumed\")\n            check(Api.claimQuota(valid) == n(7), \"owned payload consumed\")\n            val grant = Api.echoGrant(Grant(ticket, n(7), n(8)))\n            check(grant.weight == n(7) && grant.limit == n(8), \"nested Subtype and outer record accepted\")\n            check(Api.serial(grant.holder) == n(41), \"grant resource\"); close(grant)\n            reject<LeanBridgeException> { Api.echoGrant(Grant(ticket, n(0), n(8))) }\n            reject<LeanBridgeException> { Api.echoGrant(Grant(ticket, n(7), n(3))) }\n            check(Api.serial(ticket) == n(41), \"both grant rejections preserve owner\")\n            val claims = Api.echoClaims(arrayOf(valid, valid))\n            check(claims.size == 2 && claims[0].quota == n(7) && claims[1].quota == n(7), \"owned array\")\n            close(claims[0]); check(Api.serial(claims[1].holder) == n(41), \"array element owners are independent\"); close(claims[1])\n            repeat(10) {\n                var partial: Array<Claim>? = null\n                reject<LeanBridgeException> { partial = Api.echoClaims(arrayOf(valid, claim(ticket, 99))) }\n                check(partial == null && !ticket.isClosed, \"late array rejection publishes no partial result\")\n            }\n            check(Api.echoClaims(emptyArray()).isEmpty(), \"empty owned array\")\n            val arrayRecovery = Api.echoClaims(arrayOf(valid))\n            check(arrayRecovery.size == 1 && arrayRecovery[0].quota == n(7), \"array recovery\"); close(arrayRecovery[0])\n",
+          "previous": "",
+          "start": 3806
+        },
+        {
+          "current": "            Api.newTicket(n(71), \"first\").use { first -> Api.newTicket(n(81), \"second\").use { second ->\n                first.retain().use { firstKept -> second.retain().use { secondKept ->\n                    val firstInput = booking(first, 3, 8); val secondInput = claim(second, 99)\n                    reject<LeanBridgeException> { Api.transferPairClaim(firstInput, secondInput) }\n                    check(!first.isClosed && !second.isClosed, \"late failure aborts both transfers\")\n                    check(Api.serial(first) == n(71) && Api.serial(second) == n(81), \"both rejected transfers intact\")\n                    val pair = Api.transferPairClaim(firstInput, claim(second, 7))\n                    check(first.isClosed && second.isClosed && pair.quota == n(7), \"both transfers commit\")\n                    check(Api.serial(pair.holder) == n(81), \"pair transfer result\")\n                    check(Api.serial(firstKept) == n(71) && Api.serial(secondKept) == n(81), \"both independent retains survive\"); close(pair)\n                } }\n            } }\n            postTransfer(false); postTransfer(true)\n\n",
+          "previous": "",
+          "start": 7023
+        },
+        {
+          "current": "            val reply = TransferWithClaimCallbackArgument1ClosureCallback { incoming -> calls++; claim(incoming.holder, 10) }\n",
+          "previous": "            val reply = WithClaimCallbackArgument1ClosureCallback { incoming -> calls++; claim(incoming.holder, 10) }\n",
+          "start": 8159
+        },
+        {
+          "current": "            reject<LeanBridgeException> { Api.withClaimCallback(valid, OwnedCallbacks.withRecovery(TransferWithClaimCallbackArgument1ClosureCallback { claim(ticket, 99) }, valid)) }\n",
+          "previous": "            reject<LeanBridgeException> { Api.withClaimCallback(valid, OwnedCallbacks.withRecovery(WithClaimCallbackArgument1ClosureCallback { claim(ticket, 99) }, valid)) }\n",
+          "start": 8765
+        },
+        {
+          "current": "            check(reject<IllegalStateException> { Api.withClaimCallback(valid, OwnedCallbacks.withRecovery(TransferWithClaimCallbackArgument1ClosureCallback { throw sentinel }, valid)) } === sentinel, \"exception identity\")\n",
+          "previous": "            check(reject<IllegalStateException> { Api.withClaimCallback(valid, OwnedCallbacks.withRecovery(WithClaimCallbackArgument1ClosureCallback { throw sentinel }, valid)) } === sentinel, \"exception identity\")\n",
+          "start": 9015
+        }
+      ],
+      "path": "tests/fixtures/structured-types/owned-checked-record-kotlin.kt",
+      "previousSha256": "6f6e341a5c6e124f156b38dd78ab4bddbdc9f30bbc55ac9d47ac7a1122887ac6"
+    },
+    {
+      "currentSha256": "50f83314cded9a9c317802f4bb53d30a8b1bb636f8b36c88d5e1f0947fbcca4b",
+      "edits": [
+        {
+          "current": "use LeanOwnedCheckedRecords\\{Booking, Claim, Grant, LeanBridgeError, Ticket, Window};\n",
+          "previous": "use LeanOwnedCheckedRecords\\{Booking, Claim, LeanBridgeError, Ticket, Window};\n",
+          "start": 108
+        },
+        {
+          "current": "use function LeanOwnedCheckedRecords\\{booking_span, claim_closure, claim_for, claim_quota,\n    echo_booking, echo_claim, echo_claims, echo_grant, new_ticket, pair_claim, serial,\n    transfer_claim, transfer_pair_claim, transfer_with_claim_callback, with_claim_callback, with_recovery};\n",
+          "previous": "use function LeanOwnedCheckedRecords\\{claim_closure, claim_for, echo_booking, echo_claim,\n    new_ticket, pair_claim, serial, transfer_claim, with_claim_callback, with_recovery};\n",
+          "start": 247
+        },
+        {
+          "current": "function close_value(Claim|Booking|Grant $value): void { $value->holder->close(); }\n\nfunction post_transfer(bool $throws): void {\n    $input = new_ticket(Big::of(91), 'post-transfer'); $independent = $input->retain();\n    $transferred = claim($input, 7); $entered = 0; $output = null;\n    $sentinel = new RuntimeException('post-transfer callback');\n    $reply = function(Claim $incoming) use (&$entered, $throws, $sentinel): Claim {\n        $entered++; check($incoming->quota->isEqualTo(7), 'post-transfer callback input');\n        if ($throws) throw $sentinel;\n        return claim($incoming->holder, 99);\n    };\n    $callback = with_recovery($reply, claim($independent, 7));\n    $operation = function() use (&$output, $transferred, $callback): void {\n        $output = transfer_with_claim_callback($transferred, $callback);\n    };\n    if ($throws) check(rejected($operation, RuntimeException::class) === $sentinel, 'post-transfer callback exception identity');\n    else check(rejected($operation)->getCode() === 1, 'post-transfer invalid callback reply rejects');\n    check($output === null && $entered === 1 && resource_closed($input) && resource_closed($transferred->holder),\n        'post-transfer failure consumes input without publishing output');\n    serial_is($independent, 91, 'post-transfer failure preserves independent retain');\n    $recovered = transfer_with_claim_callback(claim($independent, 7), with_recovery(\n        fn(Claim $incoming) => claim($incoming->holder, 9), claim($independent, 7)));\n    check(resource_closed($independent) && $recovered->quota->isEqualTo(9), 'post-transfer failure recovers');\n    serial_is($recovered->holder, 91, 'recovered transfer resource'); close_value($recovered);\n    $input->close(); $independent->close();\n}\n",
+          "previous": "function close_value(Claim|Booking $value): void { $value->holder->close(); }\n",
+          "start": 1647
+        },
+        {
+          "current": "$invalidBooking = booking($ticket, 8, 3);\nfor ($index = 0; $index < 10; $index++) {\n    rejected(fn() => echo_booking($invalidBooking));\n    check($invalidBooking->window->lo->isEqualTo(8) && $invalidBooking->window->hi->isEqualTo(3), 'nested copied rejection preserves input fields');\n    serial_is($invalidBooking->holder, 41, 'nested copied rejection preserves owner');\n}\n$equalBooking = echo_booking(booking($ticket, 3, 3));\ncheck($equalBooking->window->lo->isEqualTo(3) && $equalBooking->window->hi->isEqualTo(3), 'nested copied equality and recovery');\nserial_is($equalBooking->holder, 41, 'nested copied recovery resource'); close_value($equalBooking);\ncheck(booking_span($validBooking)->isEqualTo(5), 'copied payload consumed');\ncheck(claim_quota($valid)->isEqualTo(7), 'owned payload consumed');\n$grant = echo_grant(new Grant($ticket, Big::of(7), Big::of(8)));\ncheck($grant->weight->isEqualTo(7) && $grant->limit->isEqualTo(8), 'nested Subtype and outer record accepted');\nserial_is($grant->holder, 41, 'grant resource'); close_value($grant);\nrejected(fn() => echo_grant(new Grant($ticket, Big::of(0), Big::of(8))));\nrejected(fn() => echo_grant(new Grant($ticket, Big::of(7), Big::of(3))));\nserial_is($ticket, 41, 'both grant rejections preserve owner');\n$claims = echo_claims([$valid, $valid]);\ncheck(count($claims) === 2 && $claims[0]->quota->isEqualTo(7) && $claims[1]->quota->isEqualTo(7), 'owned array');\nclose_value($claims[0]); serial_is($claims[1]->holder, 41, 'array element owners are independent'); close_value($claims[1]);\nfor ($index = 0; $index < 10; $index++) {\n    $partial = null;\n    rejected(function() use (&$partial, $valid, $ticket): void { $partial = echo_claims([$valid, claim($ticket, 99)]); });\n    check($partial === null && !resource_closed($ticket), 'late array rejection publishes no partial result');\n}\ncheck(echo_claims([]) === [], 'empty owned array');\n$arrayRecovery = echo_claims([$valid]);\ncheck(count($arrayRecovery) === 1 && $arrayRecovery[0]->quota->isEqualTo(7), 'array recovery'); close_value($arrayRecovery[0]);\n",
+          "previous": "",
+          "start": 4030
+        },
+        {
+          "current": "$first = new_ticket(Big::of(71), 'first'); $second = new_ticket(Big::of(81), 'second');\n$firstKept = $first->retain(); $secondKept = $second->retain();\n$firstInput = booking($first, 3, 8); $secondInput = claim($second, 99);\nrejected(fn() => transfer_pair_claim($firstInput, $secondInput));\ncheck(!resource_closed($first) && !resource_closed($second), 'late failure aborts both transfers');\nserial_is($first, 71, 'first rejected transfer intact'); serial_is($second, 81, 'second rejected transfer intact');\n$pair = transfer_pair_claim($firstInput, claim($second, 7));\ncheck(resource_closed($first) && resource_closed($second) && $pair->quota->isEqualTo(7), 'both transfers commit');\nserial_is($pair->holder, 81, 'pair transfer result'); serial_is($firstKept, 71, 'first independent retain survives');\nserial_is($secondKept, 81, 'second independent retain survives'); close_value($pair);\n$first->close(); $second->close(); $firstKept->close(); $secondKept->close();\npost_transfer(false); post_transfer(true);\n\n",
+          "previous": "",
+          "start": 6849
+        }
+      ],
+      "path": "tests/fixtures/structured-types/owned-checked-record-php.php",
+      "previousSha256": "2fa22fdab0831387f2b340cf3b88df00976cf302078e5d81a52428d33ea6e2ea"
+    },
+    {
+      "currentSha256": "46bf54806cacd492946b79fbc3076ce51197e2ee67ca19dc1a60c8d35b674fab",
+      "edits": [
+        {
+          "current": "",
+          "previous": "\t, ownedCheckedRecordJavaScriptSelection\n",
+          "start": 184
+        },
+        {
+          "current": "import { ownedCheckedRecordMixedSelection } from \"./owned-checked-record-mixed-fixture.mjs\";\n",
+          "previous": "",
+          "start": 240
+        },
+        {
+          "current": "\tconst selected = ownedCheckedRecordMixedSelection(route);\n",
+          "previous": "\tconst selected = ownedCheckedRecordJavaScriptSelection(route);\n",
+          "start": 1339
+        }
+      ],
+      "path": "tests/helpers/owned-checked-record-managed-fixture.mjs",
+      "previousSha256": "98636899b9be31b4768f391188072fdbbe73101ebb9b018eb65fefb588166939"
+    },
+    {
+      "currentSha256": "b257df31252c8007f2dfb5dc041c0deaa870bfc51d7b0c357fd6ed4a60132bf4",
+      "edits": [
+        {
+          "current": "\t\tconst native = ownedCheckedRecordNativeSelection(route, [\"c\", \"cpp\", \"cpan\"]);\n",
+          "previous": "",
+          "start": 12885
+        },
+        {
+          "current": "\t\t\townedCheckedRecordLanguageSelection(route, [\"python\", \"ruby\", \"rust\"])\n",
+          "previous": "\t\t\tjavascript\n",
+          "start": 12989
+        },
+        {
+          "current": "\t\t\tassert.deepEqual(selected.reviewedIr, native.reviewedIr);\n\t\t\tassert.deepEqual(selected.configuration.exports, native.configuration.exports);\n\t\t\tassert.deepEqual(selected.configuration.contracts, native.configuration.contracts);\n",
+          "previous": "\t\t\tassert.deepEqual(selected.reviewedIr, javascript.reviewedIr);\n\t\t\tassert.deepEqual(selected.configuration.exports, javascript.configuration.exports);\n",
+          "start": 13208
+        },
+        {
+          "current": "",
+          "previous": "\t\tconst native = ownedCheckedRecordNativeSelection(route, [\"c\", \"cpp\", \"cpan\"]);\n\t\tconst languages = ownedCheckedRecordLanguageSelection(route, [\"python\", \"ruby\", \"rust\"]);\n\t\tassert.deepEqual(languages.reviewedIr, native.reviewedIr);\n\t\tassert.deepEqual(languages.configuration.exports, native.configuration.exports);\n\t\tassert.deepEqual(languages.configuration.contracts, native.configuration.contracts);\n",
+          "start": 13443
+        },
+        {
+          "current": "\t\t\t// Expanded native/language/managed coverage needs its own hosted evidence.\n",
+          "previous": "\t\t\t// Expanded native/language coverage awaits independent hosted acceptance.\n",
+          "start": 13638
+        }
+      ],
+      "path": "tests/helpers/owned-checked-record-promotion-tests.mjs",
+      "previousSha256": "b159b87f91c8a44aa2629380063fab1b8ac981c3d3a6e318a3fc50d374693c1c"
+    },
+    {
+      "currentSha256": "1a2c93d1533fe99a540d3eca4db0c28a7de968517ae320b05b8adde1ae11fe28",
+      "edits": [
+        {
+          "current": "import { validateExportConfiguration } from \"../src/analyze/export-configuration.mjs\";\nimport { generateOwnedCValues } from \"../src/backends/c/owned-values.mjs\";\n",
+          "previous": "",
+          "start": 362
+        },
+        {
+          "current": "import { compileOwnedWitGraphModel } from \"../src/backends/wit/owned-graph-model.mjs\";\nimport { ownedWitPublicPrefix } from \"../src/backends/wit/owned-package.mjs\";\n",
+          "previous": "",
+          "start": 773
+        },
+        {
+          "current": "test(\"managed owned checked-record generators preserve exact API modes\", async t => {\n\tfor(const group of allGroups) for(const route of ownedCheckedRecordManagedRoutes)\n\t{\n\t\tconst selected = ownedCheckedRecordManagedSelection(route, group);\n\t\tvalidateExportConfiguration(selected.configuration);\n\t\tif(selected.authorRoute !== \"ordinary\") continue;\n\t\tassert.deepEqual(selected.configuration.exports\n\t\t\t, selected.reviewedIr.declarations.map(item => item.source.declaration));\n\t\tif(selected.resultOnly) continue;\n\t\tassert.deepEqual(selected.configuration.contracts[\"OwnedCheckedRecords.transferPairClaim\"]\n\t\t\t.parameters.map(parameter => parameter.ownership), [\"transfer\", \"transfer\"]);\n\t\tassert.deepEqual(selected.configuration.contracts[\"OwnedCheckedRecords.transferWithClaimCallback\"]\n\t\t\t.parameters.map(parameter => parameter.ownership), [\"transfer\", \"borrow\"]);\n\t}\n",
+          "previous": "test(\"managed owned checked-record generators preserve exact API modes\", () => {\n",
+          "start": 4074
+        },
+        {
+          "current": "\t\t\t\t\t\t, \"withClaimCallback\", \"claimClosure\", \"bookingSpan\", \"claimQuota\"\n\t\t\t\t\t\t, \"echoGrant\", \"echoClaims\", \"transferWithClaimCallback\"\n\t\t\t\t\t\t, \"transferPairClaim\"], profile);\n",
+          "previous": "\t\t\t\t\t\t, \"withClaimCallback\", \"claimClosure\"], profile);\n",
+          "start": 5817
+        },
+        {
+          "current": "\tawait checkManagedWitCallers(t);\n",
+          "previous": "",
+          "start": 6181
+        },
+        {
+          "current": "const checkManagedWitCallers = async t => {\n\tconst directory = await mkdtemp(join(tmpdir(), \"lean-owned-checked-wit-headers-\"));\n\tt.after(() => rm(directory, { recursive: true, force: true }));\n\tconst options = { transferredInputs: true, anchoredResults: true, hostCallbacks: true };\n\tfor(const resultOnly of [false, true])\n\t{\n\t\tconst selected = ownedCheckedRecordManagedSelection(\n\t\t\tresultOnly ? \"reviewed-result-only\" : \"reviewed-full\", \"wit\");\n\t\tconst ir = selected.reviewedIr;\n\t\tconst values = generateOwnedCValues(ir, { ...options\n\t\t\t, publicPrefix: ownedWitPublicPrefix(ir, options) });\n\t\tconst model = compileOwnedWitGraphModel(ir, {}, options);\n\t\tassert.deepEqual(model.manifest.declarations.map(item => item.name)\n\t\t\t, ir.declarations.map(item => item.name));\n\t\tconst fixture = await fixtureFor(\"wit-wasi\", resultOnly);\n\t\tfor(const required of fixture.wit) assert.match(model.wit, required);\n\t\tif(!resultOnly)\n\t\t\tassert.ok(values.header.includes(\n\t\t\t\t\"OWNED_CHECKED_RECORDS_WASMTIME_TRANSFER_WITH_CLAIM_CALLBACK_ARGUMENT1_T_REQUIRES_RECOVERY\"));\n\t\tconst root = join(directory, resultOnly ? \"result-only\" : \"full\");\n\t\tawait saveLakeFile(root, `include/${values.prefix}.h`, values.header);\n\t\tawait saveLakeFile(root, \"consumer.c\", fixture.source());\n\t\tawait runCopied(\"/usr/bin/cc\", [\"-std=c11\", \"-Wall\", \"-Wextra\", \"-Werror\"\n\t\t\t, \"-I\", \"include\", \"-fsyntax-only\", \"consumer.c\"], root\n\t\t, { PATH: \"/usr/bin:/bin\" });\n\t}\n};\n\n",
+          "previous": "",
+          "start": 8015
+        },
+        {
+          "current": "\t\t\t\t\t, /claim-closure: func/u, /echo-grant: func/u, /echo-claims: func/u\n\t\t\t\t\t, /transfer-pair-claim: func/u, /transfer-with-claim-callback: func/u]]\n",
+          "previous": "\t\t\t\t\t, /claim-closure: func/u]]\n",
+          "start": 12879
+        },
+        {
+          "current": "\t\t\t\t\t, \"withClaimCallback\", \"claimClosure\", \"bookingSpan\", \"claimQuota\"\n\t\t\t\t\t, \"echoGrant\", \"echoClaims\", \"transferWithClaimCallback\"\n\t\t\t\t\t, \"transferPairClaim\"]).toSorted());\n",
+          "previous": "\t\t\t\t\t, \"withClaimCallback\", \"claimClosure\"]).toSorted());\n",
+          "start": 17219
+        }
+      ],
+      "path": "tests/owned-checked-record-managed-packaging.test.mjs",
+      "previousSha256": "f1c1e5ca6acb44602921703f2cc9ab029ad026c3cc83b7aef081d25e270ad8cc"
+    },
+    {
+      "currentSha256": "7595ab7e8c68ad6d3fc4b2a50154cc8e3fba31244a61a692ffd19cb8146bfd05",
+      "edits": [
+        {
+          "current": "\t// Keep the shared C caller compatible with the original smaller API too.\n",
+          "previous": "\t// WIT shares the C caller but retains its own smaller API and acceptance.\n",
+          "start": 4847
+        }
+      ],
+      "path": "tests/owned-checked-record-native-packaging.test.mjs",
+      "previousSha256": "f726a1e29e4884c7ce518892a0b94e4239a6b19fde1f9bafd644454e29e2213c"
+    }
+  ]
+}
