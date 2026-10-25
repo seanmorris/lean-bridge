@@ -109,6 +109,7 @@ import "./helpers/php-wasm-entry-hosted-replay-source-history-tests.mjs";
 import "./helpers/php-wasm-refinement-entry-hosted-storage-tests.mjs";
 import "./helpers/php-wasm-refinement-entry-hosted-diagnostic-tests.mjs";
 import "./helpers/php-wasm-entry-diagnostic-retention-source-history-tests.mjs";
+import "./helpers/php-wasm-refinement-entry-hosted-archive-tests.mjs";
 
 const root = resolve(".");
 
