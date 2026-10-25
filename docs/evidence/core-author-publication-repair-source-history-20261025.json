@@ -1,0 +1,136 @@
+{
+  "additions": [
+    {
+      "currentSha256": "7d91151c76817f3ad9c1e35d32b1f33e0314e86559f8abc2403297196f5006a5",
+      "path": "docs/evidence/core-author-publication-repair-20261025/acceptance.json"
+    },
+    {
+      "currentSha256": "f201312500e0054dfc7d10d610ec3a7b56b74d5d44bdabe12138e9e9fbc79134",
+      "path": "docs/evidence/core-author-publication-repair-20261025/author.tap"
+    },
+    {
+      "currentSha256": "f3c96ca29f6fba1cb643fb67a7cdb03727209289d8e0ae4f7699976826da5e0c",
+      "path": "docs/evidence/core-author-publication-repair-20261025/diagnostics.json"
+    },
+    {
+      "currentSha256": "12293c8019ad7c3133924ae2677ad97880ebce5cb9299f1faf2b7a36606547ca",
+      "path": "docs/evidence/core-author-publication-repair-20261025/owned-publication.tap"
+    },
+    {
+      "currentSha256": "ac068db539a34b65f473d4b7a28a53e4e007a7ae6defd05c2c1321cc9493b780",
+      "path": "docs/evidence/core-author-publication-repair-20261025/probe-publication.tap"
+    },
+    {
+      "currentSha256": "09312801d0f89ee0a9002580bd745d0f237b461fd3c4878dc123b3f22cedac77",
+      "path": "docs/evidence/core-author-publication-repair-20261025/reproduction.tap"
+    },
+    {
+      "currentSha256": "ffdb5955661170d93ad0d2199e85c055af4f6bd4f0e10ffa06b06d53c28774a2",
+      "path": "scripts/update-core-author-publication-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "4a5a4423e54d4555fa6b45f65653d461375d798290477e48a51830356c3d1402",
+      "path": "tests/helpers/core-author-publication-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "8e5b46b84ff2a4e56b8915367fe72a1d9444296ce730869f555fa08e7d3dce3d",
+      "path": "tests/helpers/core-author-publication-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "d8980f1026e9e021ef87d880f36163ad42a71582",
+  "implementationCommits": [
+    "d8980f1026e9e021ef87d880f36163ad42a71582"
+  ],
+  "integrationBaseCommit": "d8980f1026e9e021ef87d880f36163ad42a71582",
+  "integrationUpdates": [
+    {
+      "currentSha256": "82dc7032dd25b552f51ff3bb6896a2b83af4dca93730fb27f33156484f4bf53b",
+      "edits": [
+        {
+          "current": "import { beforeCoreAuthorPublicationRepairSource, coreAuthorPublicationRepairNormalizationPaths } from \"./core-author-publication-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 12055
+        },
+        {
+          "current": "\t...coreAuthorPublicationRepairNormalizationPaths\n\t, ...corePublicationRecursiveRepairNormalizationPaths\n",
+          "previous": "\t...corePublicationRecursiveRepairNormalizationPaths\n",
+          "start": 185252
+        },
+        {
+          "current": "\tlet stage = beforeCoreAuthorPublicationRepairSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCorePublicationRecursiveRepairSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeCorePublicationRecursiveRepairSource(path, text, expected);\n",
+          "start": 229467
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "5ca007e15e01865f81395a697375982b0a72ea6c6ed7cf7e4719e584a7583f90"
+    },
+    {
+      "currentSha256": "db1b7fef1059adc30e01998a282f450435401335c1f67ae6ce2ff820f8a23756",
+      "edits": [
+        {
+          "current": "import \"./helpers/core-author-publication-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 8586
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "ef0bb502d63318f3426914550c05db6145a66b87be11e4e1472a48bd8d8bffad"
+    }
+  ],
+  "milestone": "core-author-publication-repair-source-v1",
+  "predecessorCommit": "f52e87af22c65d21c526c2b7fe58a9c7fe3c8ea8",
+  "schemaVersion": 1,
+  "scope": "Repair the two live author checks exposed by Core shard 4 after the accepted PHP-Wasm probe and owned-record publications. Preserve historical pending guidance, all seventeen installed-profile assertions, original runtime and archive bytes, and every support observation. Validate the current inventory through its bounded streaming projection. Retain the original failing TAP, nine passing checks, and original shard-4/5 log identities with shutdown diagnostics. No inventory pins change. Full final-head Core, complete producer-input reconciliation and recurring default-branch activation remain open.",
+  "updates": [
+    {
+      "currentSha256": "156f0ca6b5eb536da0d27a15322f4fd4c53bc66f0ede7643ef025c22f14eb68f",
+      "edits": [
+        {
+          "current": "import { createReadStream } from \"node:fs\";\n",
+          "previous": "",
+          "start": 141
+        },
+        {
+          "current": "import {\n\tphpWasmRefinementEntryBoundary, phpWasmRefinementEntryReference\n} from \"../../scripts/generate-type-docs.mjs\";\nimport { readPromotionInventory } from \"./type-surface-promotion-io.mjs\";\n",
+          "previous": "import { phpWasmRefinementEntryBoundary } from \"../../scripts/generate-type-docs.mjs\";\n",
+          "start": 260
+        },
+        {
+          "current": "\tconst contracts = {\n\t\tirSchema: JSON.parse(await readFile(\"schema/binding-ir.schema.json\", \"utf8\"))\n\t\t, consumers: JSON.parse(await readFile(\"docs/consumer-support.v1.json\", \"utf8\"))\n\t};\n\tconst { document } = await readPromotionInventory(\n\t\tcreateReadStream(\"docs/type-surface.v1.json\"), contracts\n\t);\n\tconst published = phpWasmRefinementEntryReference(document);\n\tassert.notEqual(published, phpWasmRefinementEntryBoundary);\n\tassert.ok(published.includes(\n\t\t`${matrix.length} ordinary/reviewed routes in ${artifacts.size} retained artifacts`));\n\tassert.match(published, /six callback routes/u);\n\tassert.match(published, /leave unmodified prepared packages and their supported types unchanged/u);\n\tassert.doesNotMatch(published, /is not a hosted result/u);\n\tconst reference = await readFile(\"docs/reference/types.md\", \"utf8\");\n\tassert.equal(reference.split(published).length, 2);\n\tassert.ok(!reference.includes(phpWasmRefinementEntryBoundary));\n",
+          "previous": "\tassert.ok((await readFile(\"docs/reference/types.md\", \"utf8\"))\n\t\t.includes(phpWasmRefinementEntryBoundary));\n",
+          "start": 1439
+        }
+      ],
+      "path": "tests/helpers/author-refinement-consistency-tests.mjs",
+      "previousSha256": "82094c380bb0bac58e95c016bd2455bdd811ccd67353f74cbfb062a97592bb48"
+    },
+    {
+      "currentSha256": "bf0310e07de09fc97d79b0f53590012b49d947a6b4be3e53ca163a9a482f0894",
+      "edits": [
+        {
+          "current": "import { createReadStream } from \"node:fs\";\n",
+          "previous": "",
+          "start": 504
+        },
+        {
+          "current": "import { readPromotionInventory } from \"./helpers/type-surface-promotion-io.mjs\";\n",
+          "previous": "",
+          "start": 2202
+        },
+        {
+          "current": "\tassert.equal(row, \"| Record with erased proof fields and a checked input constructor | Node, browser, React and worker installed for the archived nested fields/containers, both source routes | C/C++, Python, Rust, Ruby, .NET, Java, Kotlin, native PHP and WIT/WASI installed for the archived nested fields/containers, both source routes | Installed for the archived nested fields/containers, both source routes on four ABIs | Installed for the archived nested fields/containers in Node/Chromium, both source routes | All seventeen profiles have installed nested parameter/result/field checks for the archived acyclic forms; separately archived synchronous callback parameter/result checks cover all seventeen profiles on both source routes; the separately archived owned Booking/Window and Ticket/Claim forms are documented below; unarchived combinations remain separate |\");\n",
+          "previous": "\tassert.equal(row, \"| Record with erased proof fields and a checked input constructor | Node, browser, React and worker installed for the archived nested fields/containers, both source routes | C/C++, Python, Rust, Ruby, .NET, Java, Kotlin, native PHP and WIT/WASI installed for the archived nested fields/containers, both source routes | Installed for the archived nested fields/containers, both source routes on four ABIs | Installed for the archived nested fields/containers in Node/Chromium, both source routes | All seventeen profiles have installed nested parameter/result/field checks for the archived acyclic forms; separately archived synchronous callback parameter/result checks cover all seventeen profiles on both source routes; owned and unarchived combinations remain separate |\");\n",
+          "start": 14164
+        },
+        {
+          "current": "\tconst { document: inventory } = await readPromotionInventory(\n\t\tcreateReadStream(\"docs/type-surface.v1.json\"), {\n\t\t\tirSchema: JSON.parse(await readFile(\"schema/binding-ir.schema.json\", \"utf8\"))\n\t\t\t, consumers: JSON.parse(await readFile(\"docs/consumer-support.v1.json\", \"utf8\"))\n\t\t}\n\t);\n",
+          "previous": "\tconst inventory = JSON.parse(await readFile(\"docs/type-surface.v1.json\"));\n",
+          "start": 16295
+        }
+      ],
+      "path": "tests/lean-author-documentation.test.mjs",
+      "previousSha256": "2a7600c13492ab4f406479638e0f875c7c7c569944a0ce0e2394ec6472a5f7ae"
+    }
+  ]
+}
