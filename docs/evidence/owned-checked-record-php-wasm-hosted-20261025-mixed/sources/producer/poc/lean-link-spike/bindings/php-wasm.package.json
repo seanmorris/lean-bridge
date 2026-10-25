@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "packageId": "poc/lean-alpha-php-wasm@0.0.0",
+  "bindingIr": {
+    "path": "poc/lean-link-spike/bindings/alpha.binding-ir.json",
+    "fileSha256": "c4eb8f6c2ae538f58dd634914e6b9b0f527bad9a84d79276e91d39adc74877cb",
+    "semanticSha256": "154b11f957639e1180ec0a59d20a85bdea7af2ddfab50d670f06c5bea1d6198b"
+  },
+  "graphLock": {
+    "path": "poc/lean-link-spike/graph-lock.json",
+    "fileSha256": "7a10491995e8023cb271521499049834437f6bddec7c2ce26f9a7aadf6156789",
+    "profile": "side-lazy",
+    "target": "php-wasm-emscripten-3.1.68"
+  },
+  "phpWasm": {
+    "sourceCommit": "bd9a46bf4984bfbdfef4bb6f5b04b7dcd6264c89",
+    "packageVersion": "0.1.0",
+    "packageIntegrity": "sha512-8mqAUqYugBMT6YR8RC/5K2juvm31zO+KPdWI1Aij6KqFroCoDYSq2tLWTuIpJKx6Nq8o6gnI2jq5yjo3tK62hw==",
+    "emscripten": {
+      "version": "3.1.68",
+      "emsdkCommit": "54ef088329e5a329614b3659a579d2ccd31fd621",
+      "sourceCommit": "ceee49d2ecdab36a3feb85a684f8e5a453dde910",
+      "runtimeVariant": "php-wasm-3.1.68"
+    },
+    "phpVersions": ["8.4"]
+  },
+  "weaker": {
+    "sourceCommit": "8e147cc8832589f582ab61a12b9c429dee1e15b0",
+    "packageVersion": "0.0.10",
+    "packageIntegrity": "sha512-CKGIahCmDnPY1QghUiUczONrAsTXaoUdk7KxJryc0E/fcq6dVEvfVs9M2+PyOCKE4AnLDBzY3U7pgURy9NTX4Q=="
+  },
+  "artifacts": {
+    "runtimeLibrary": "lib/liblean_bridge_runtime.so",
+    "componentDirectory": "lib/components",
+    "extensionPattern": "lib/php{version}-lean-alpha.so",
+    "composerPackage": "composer",
+    "metadata": "metadata/release"
+  },
+  "sourceDateEpoch": 1786261809
+}

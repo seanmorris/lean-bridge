@@ -1,0 +1,200 @@
+
+> @lean-wasm/bridge-poc@0.0.0-poc test:owned-checked-record-php-wasm
+> LEAN_BRIDGE_OWNED_CHECKED_RECORD_PHP_WASM_TEST=1 node --test --test-concurrency=1 tests/owned-checked-record-php-wasm-packaging.test.mjs
+
+TAP version 13
+# Installing the standalone CLI with verified PHP-Wasm compiler inputs
+# ordinary: installed CLI builds the PHP-Wasm ownership release
+# ordinary: independently rebuilding and comparing package bytes
+# Installing the original npm archives and companion Composer ZIP offline
+# ordinary: installed embedded/startup/strict0
+# ordinary: installed embedded/startup/strict1
+# ordinary: installed embedded/lazy/strict0
+# ordinary: installed embedded/lazy/strict1
+# ordinary: installed composer/startup/strict0
+# ordinary: installed composer/startup/strict1
+# ordinary: installed composer/lazy/strict0
+# ordinary: installed composer/lazy/strict1
+# owned/embedded: PHP-Wasm Chromium bundled/startup/weak
+# owned/embedded: PHP-Wasm Chromium bundled/startup/strict
+# owned/embedded: PHP-Wasm Chromium bundled/lazy/weak
+# owned/embedded: PHP-Wasm Chromium bundled/lazy/strict
+# owned/composer: PHP-Wasm Chromium bundled/startup/weak
+# owned/composer: PHP-Wasm Chromium bundled/startup/strict
+# owned/composer: PHP-Wasm Chromium bundled/lazy/weak
+# owned/composer: PHP-Wasm Chromium bundled/lazy/strict
+# reviewed: installed CLI builds the PHP-Wasm ownership release
+# reviewed: independently rebuilding and comparing package bytes
+# Installing the original npm archives and companion Composer ZIP offline
+# reviewed: installed embedded/startup/strict0
+# reviewed: installed embedded/startup/strict1
+# reviewed: installed embedded/lazy/strict0
+# reviewed: installed embedded/lazy/strict1
+# reviewed: installed composer/startup/strict0
+# reviewed: installed composer/startup/strict1
+# reviewed: installed composer/lazy/strict0
+# reviewed: installed composer/lazy/strict1
+# owned/embedded: PHP-Wasm Chromium bundled/startup/weak
+# owned/embedded: PHP-Wasm Chromium bundled/startup/strict
+# owned/embedded: PHP-Wasm Chromium bundled/lazy/weak
+# owned/embedded: PHP-Wasm Chromium bundled/lazy/strict
+# owned/composer: PHP-Wasm Chromium bundled/startup/weak
+# owned/composer: PHP-Wasm Chromium bundled/startup/strict
+# owned/composer: PHP-Wasm Chromium bundled/lazy/weak
+# owned/composer: PHP-Wasm Chromium bundled/lazy/strict
+# Subtest: installed PHP-Wasm full owned checked records execute in Node and Chromium
+ok 1 - installed PHP-Wasm full owned checked records execute in Node and Chromium
+  ---
+  duration_ms: 286744.100779
+  type: 'test'
+  ...
+# Installing the standalone CLI with verified PHP-Wasm compiler inputs
+# ordinary: installed CLI builds the PHP-Wasm ownership release
+# ordinary: independently rebuilding and comparing package bytes
+# Installing the original npm archives and companion Composer ZIP offline
+# ordinary: installed embedded/startup/strict0
+# ordinary: installed embedded/startup/strict1
+# ordinary: installed embedded/lazy/strict0
+# ordinary: installed embedded/lazy/strict1
+# ordinary: installed composer/startup/strict0
+# ordinary: installed composer/startup/strict1
+# ordinary: installed composer/lazy/strict0
+# ordinary: installed composer/lazy/strict1
+# owned/embedded: PHP-Wasm Chromium bundled/startup/weak
+# owned/embedded: PHP-Wasm Chromium bundled/startup/strict
+# owned/embedded: PHP-Wasm Chromium bundled/lazy/weak
+# owned/embedded: PHP-Wasm Chromium bundled/lazy/strict
+# owned/composer: PHP-Wasm Chromium bundled/startup/weak
+# owned/composer: PHP-Wasm Chromium bundled/startup/strict
+# owned/composer: PHP-Wasm Chromium bundled/lazy/weak
+# owned/composer: PHP-Wasm Chromium bundled/lazy/strict
+# reviewed: installed CLI builds the PHP-Wasm ownership release
+# reviewed: independently rebuilding and comparing package bytes
+# Installing the original npm archives and companion Composer ZIP offline
+# reviewed: installed embedded/startup/strict0
+# reviewed: installed embedded/startup/strict1
+# reviewed: installed embedded/lazy/strict0
+# reviewed: installed embedded/lazy/strict1
+# reviewed: installed composer/startup/strict0
+# reviewed: installed composer/startup/strict1
+# reviewed: installed composer/lazy/strict0
+# reviewed: installed composer/lazy/strict1
+# owned/embedded: PHP-Wasm Chromium bundled/startup/weak
+# owned/embedded: PHP-Wasm Chromium bundled/startup/strict
+# owned/embedded: PHP-Wasm Chromium bundled/lazy/weak
+# owned/embedded: PHP-Wasm Chromium bundled/lazy/strict
+# owned/composer: PHP-Wasm Chromium bundled/startup/weak
+# owned/composer: PHP-Wasm Chromium bundled/startup/strict
+# owned/composer: PHP-Wasm Chromium bundled/lazy/weak
+# owned/composer: PHP-Wasm Chromium bundled/lazy/strict
+# Installing the standalone CLI with verified PHP-Wasm compiler inputs
+# ordinary: installed CLI builds the PHP-Wasm ownership release
+# ordinary: independently rebuilding and comparing package bytes
+# Installing the original npm archives and companion Composer ZIP offline
+# ordinary: installed embedded/startup/strict0
+# ordinary: installed embedded/startup/strict1
+# ordinary: installed embedded/lazy/strict0
+# ordinary: installed embedded/lazy/strict1
+# ordinary: installed composer/startup/strict0
+# ordinary: installed composer/startup/strict1
+# ordinary: installed composer/lazy/strict0
+# ordinary: installed composer/lazy/strict1
+# owned/embedded: PHP-Wasm Chromium bundled/startup/weak
+# owned/embedded: PHP-Wasm Chromium bundled/startup/strict
+# owned/embedded: PHP-Wasm Chromium bundled/lazy/weak
+# owned/embedded: PHP-Wasm Chromium bundled/lazy/strict
+# owned/composer: PHP-Wasm Chromium bundled/startup/weak
+# owned/composer: PHP-Wasm Chromium bundled/startup/strict
+# owned/composer: PHP-Wasm Chromium bundled/lazy/weak
+# owned/composer: PHP-Wasm Chromium bundled/lazy/strict
+# reviewed: installed CLI builds the PHP-Wasm ownership release
+# reviewed: independently rebuilding and comparing package bytes
+# Installing the original npm archives and companion Composer ZIP offline
+# reviewed: installed embedded/startup/strict0
+# reviewed: installed embedded/startup/strict1
+# reviewed: installed embedded/lazy/strict0
+# reviewed: installed embedded/lazy/strict1
+# reviewed: installed composer/startup/strict0
+# reviewed: installed composer/startup/strict1
+# reviewed: installed composer/lazy/strict0
+# reviewed: installed composer/lazy/strict1
+# owned/embedded: PHP-Wasm Chromium bundled/startup/weak
+# owned/embedded: PHP-Wasm Chromium bundled/startup/strict
+# owned/embedded: PHP-Wasm Chromium bundled/lazy/weak
+# owned/embedded: PHP-Wasm Chromium bundled/lazy/strict
+# owned/composer: PHP-Wasm Chromium bundled/startup/weak
+# owned/composer: PHP-Wasm Chromium bundled/startup/strict
+# owned/composer: PHP-Wasm Chromium bundled/lazy/weak
+# owned/composer: PHP-Wasm Chromium bundled/lazy/strict
+# Subtest: installed PHP-Wasm result-only owned checked records execute in Node and Chromium
+ok 2 - installed PHP-Wasm result-only owned checked records execute in Node and Chromium
+  ---
+  duration_ms: 244212.740448
+  type: 'test'
+  ...
+# Installing the standalone CLI with verified PHP-Wasm compiler inputs
+# ordinary: installed CLI builds the PHP-Wasm ownership release
+# ordinary: independently rebuilding and comparing package bytes
+# Installing the original npm archives and companion Composer ZIP offline
+# ordinary: installed embedded/startup/strict0
+# ordinary: installed embedded/startup/strict1
+# ordinary: installed embedded/lazy/strict0
+# ordinary: installed embedded/lazy/strict1
+# ordinary: installed composer/startup/strict0
+# ordinary: installed composer/startup/strict1
+# ordinary: installed composer/lazy/strict0
+# ordinary: installed composer/lazy/strict1
+# owned/embedded: PHP-Wasm Chromium bundled/startup/weak
+# owned/embedded: PHP-Wasm Chromium bundled/startup/strict
+# owned/embedded: PHP-Wasm Chromium bundled/lazy/weak
+# owned/embedded: PHP-Wasm Chromium bundled/lazy/strict
+# owned/composer: PHP-Wasm Chromium bundled/startup/weak
+# owned/composer: PHP-Wasm Chromium bundled/startup/strict
+# owned/composer: PHP-Wasm Chromium bundled/lazy/weak
+# owned/composer: PHP-Wasm Chromium bundled/lazy/strict
+# reviewed: installed CLI builds the PHP-Wasm ownership release
+# reviewed: independently rebuilding and comparing package bytes
+# Installing the original npm archives and companion Composer ZIP offline
+# reviewed: installed embedded/startup/strict0
+# reviewed: installed embedded/startup/strict1
+# reviewed: installed embedded/lazy/strict0
+# reviewed: installed embedded/lazy/strict1
+# reviewed: installed composer/startup/strict0
+# reviewed: installed composer/startup/strict1
+# reviewed: installed composer/lazy/strict0
+# reviewed: installed composer/lazy/strict1
+# owned/embedded: PHP-Wasm Chromium bundled/startup/weak
+# owned/embedded: PHP-Wasm Chromium bundled/startup/strict
+# owned/embedded: PHP-Wasm Chromium bundled/lazy/weak
+# owned/embedded: PHP-Wasm Chromium bundled/lazy/strict
+# owned/composer: PHP-Wasm Chromium bundled/startup/weak
+# owned/composer: PHP-Wasm Chromium bundled/startup/strict
+# owned/composer: PHP-Wasm Chromium bundled/lazy/weak
+# owned/composer: PHP-Wasm Chromium bundled/lazy/strict
+# Subtest: owned checked-record PHP-Wasm acceptance remains a separate recurring gate
+ok 3 - owned checked-record PHP-Wasm acceptance remains a separate recurring gate
+  ---
+  duration_ms: 22.958498
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm receipt handoff binds exactly the verified archive bytes
+ok 4 - PHP-Wasm receipt handoff binds exactly the verified archive bytes
+  ---
+  duration_ms: 19.253477
+  type: 'test'
+  ...
+# Subtest: owned PHP-Wasm consumers install the same receipt-only bytes that are retained
+ok 5 - owned PHP-Wasm consumers install the same receipt-only bytes that are retained
+  ---
+  duration_ms: 3.88104
+  type: 'test'
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 5
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 532144.410214
