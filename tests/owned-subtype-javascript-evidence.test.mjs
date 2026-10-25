@@ -12,56 +12,14 @@ import { join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import test from "node:test";
 import { canonicalJson } from "../src/capsule/node.mjs";
-import { ownedSubtypePackageReviewedIr } from "./helpers/owned-aggregate-fixture.mjs";
-import { writeSyntheticOwnedCheckedRecordJavaScriptRoute } from "./helpers/owned-checked-record-javascript-evidence-fixture.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
-import {
-	ownedSubtypeJavaScriptObserved, verifyOwnedSubtypeJavaScriptEvidence
-} from "./helpers/owned-subtype-javascript-evidence.mjs";
-import {
-	retainOwnedSubtypeRoute, writeOwnedSubtypeRetainedPackages
-} from "./helpers/owned-subtype-retained-packages.mjs";
+import { verifyOwnedSubtypeJavaScriptEvidence } from "./helpers/owned-subtype-javascript-evidence.mjs";
+import { writeSyntheticOwnedSubtypeJavaScriptEvidence } from "./helpers/owned-subtype-javascript-evidence-fixture.mjs";
 
 const fixture = async t => {
 	const root = await mkdtemp(join(tmpdir(), "lean-subtype-npm-evidence-"));
 	t.after(() => rm(root, { recursive: true, force: true }));
-	const reportPath = join(root, "acceptance/report.json"), reports = [], retained = [];
-	for(const route of ["ordinary", "reviewed"])
-	{
-		const original = await writeSyntheticOwnedCheckedRecordJavaScriptRoute(
-			join(root, "producer"), route, {
-				bindingIr: ownedSubtypePackageReviewedIr()
-				, component: { id: "owned-subtypes@1.0.0", name: "owned-subtypes", version: "1.0.0" }
-				, componentName: "@example/owned-subtypes"
-			}
-		);
-		const { entry } = await retainOwnedSubtypeRoute({ output: reportPath, route
-			, source: join(root, `producer/evidence/${route}/handoff`)
-			, handoff: join(root, `${route}-consumer`) });
-		retained.push(entry);
-		const report = Object.fromEntries(Object.entries(original).filter(([key]) =>
-			!["route", "authorRoute", "mode", "retainedPackageSet"].includes(key)));
-		report.reviewed = route === "reviewed";
-		report.observed = { ...ownedSubtypeJavaScriptObserved };
-		report.transferredInputCheckedBeforeHandoff = true;
-		report.independentBuilds = [0, 1].map(attempt => structuredClone({
-			authorRoot: `author-${attempt}`, componentIdentity: report.componentIdentity
-			, bindingIrSha256: report.bindingIrSha256
-			, sourceIdentity: report.sourceIdentity
-			, wasm: report.wasm, archives: report.archives
-			, sourceUnchanged: true, removedBeforeInstall: true
-		}));
-		report.browser.executions = report.browser.executions.flatMap(execution => [
-			{ ...execution, checks: 18, variant: "production" }
-			, ...execution.profile === "react" ? [{ ...execution, checks: 18, variant: "strict" }] : []
-		]);
-		reports.push(report);
-	}
-	await writeOwnedSubtypeRetainedPackages(reportPath, retained);
-	const report = { schemaVersion: 2, profile: "installed-owned-subtype-javascript", reports };
-	await writeFile(reportPath, canonicalJson(report));
-	await rm(join(root, "producer"), { recursive: true });
-	return { root, reportPath, report };
+	return writeSyntheticOwnedSubtypeJavaScriptEvidence(root);
 };
 
 test("owned Subtype npm verifier binds retained packages, rebuilds and all browser cells", async t => {

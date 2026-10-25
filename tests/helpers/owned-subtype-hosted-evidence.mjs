@@ -4,7 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { constants } from "node:fs";
+import { constants, readFileSync } from "node:fs";
 import {
 	copyFile, lstat, mkdir, mkdtemp, readFile, readdir, realpath, rm, stat
 	, writeFile
@@ -29,6 +29,9 @@ import {
 import {
 	replayOwnedSubtypeHostedOutput
 } from "./owned-subtype-hosted-output.mjs";
+import {
+	ownedCheckedRecordHostedWorkflowContract
+} from "./owned-checked-record-hosted-evidence.mjs";
 
 const limitations = Object.freeze([
 	"The fixture covers the tested owned Bundle with selected Nat Subtype fields, checked transferred inputs and each lane's synchronous public API on ordinary and reviewed routes."
@@ -37,6 +40,21 @@ const limitations = Object.freeze([
 	, "Browser and PHP-Wasm packages, recursive owned graphs, retained or asynchronous callbacks, arbitrary predicates, dispatch cost and peak memory remain separate work."
 	, "External runtimes, compilers, package managers and operating-system distributions remain trusted recorded inputs rather than copied toolchains."
 ]);
+const javascriptLimitations = Object.freeze([
+	"The fixture covers the tested acyclic owned Bundle with selected Nat Subtype fields, borrowed and transferred inputs, leased and retained results, rejection recovery and explicit disposal on ordinary and reviewed author routes."
+	, "Each route retains the exact receipt-closed component and shared-runtime npm archives installed after deleting two independent author builds. Node, strict TypeScript and twelve unique Chromium/Firefox/WebKit production page, production React, production worker and development StrictMode React cells are checked against those bytes."
+	, "The complete original job ZIP and API records are retained. Only the owned-Subtype packaging directory and its complete twelve-test installed log are selected as extracted acceptance evidence; other job outputs do not establish additional Subtype coverage. Exact producer, consumer, checker and archiver source closures are retained."
+	, "PHP-Wasm, recursive owned graphs, retained or asynchronous callbacks, arbitrary predicates, dispatch cost and peak memory remain separate work."
+	, "External runtimes, compilers, package managers and browser distributions remain trusted recorded inputs rather than copied toolchains."
+]);
+const limitationsFor = contract => contract.kind === "javascript"
+	? javascriptLimitations : limitations;
+const retainedOutputPaths = (contract, paths) => contract.retainedRoots
+	? paths.filter(path => contract.retainedRoots.some(root => path.startsWith(root))
+		|| contract.retainedFiles.includes(path)) : paths;
+const hostedContract = (contract, selected, conclusions) =>
+	ownedCheckedRecordHostedWorkflowContract(contract
+		, JSON.parse(readFileSync(selected["run-json"], "utf8")), conclusions);
 
 /**
  * Require successful acceptance followed by skipped failure enforcement.
@@ -53,11 +71,21 @@ export const assertOwnedSubtypeHostedSteps = (contract, jobBytes) => {
 		return matches[0];
 	};
 	const acceptance = named(contract.acceptanceStep);
-	const enforce = named(contract.enforceStep);
 	assert.equal(acceptance.status, "completed", contract.acceptanceStep);
 	assert.equal(acceptance.conclusion, "success", contract.acceptanceStep);
-	assert.equal(enforce.conclusion, "skipped", contract.enforceStep);
-	assert.ok(enforce.number > acceptance.number);
+	if(contract.enforceStep)
+	{
+		const enforce = named(contract.enforceStep);
+		assert.equal(enforce.conclusion, "skipped", contract.enforceStep);
+		assert.ok(enforce.number > acceptance.number);
+	}
+	else
+	{
+		const archive = named(contract.archiveStep);
+		assert.equal(archive.status, "completed", contract.archiveStep);
+		assert.equal(archive.conclusion, "success", contract.archiveStep);
+		assert.ok(archive.number > acceptance.number);
+	}
 	for(const step of job.steps)
 		assert.ok(["success", "skipped"].includes(step.conclusion)
 			, `Hosted step did not succeed: ${step.name}`);
@@ -96,10 +124,8 @@ export const writeOwnedSubtypeHostedEvidence = async ({
 	await assert.rejects(lstat(destination), { code: "ENOENT" }
 		, "Hosted evidence destination must be new");
 	const contract = ownedSubtypeHostedContracts[lane];
-	const hosted = await inspectCallbackSubtypeHostedArtifact(selected, {
-		workflow: contract.workflow, jobName: contract.job
-		, artifactPrefix: contract.prefix
-	});
+	const hosted = await inspectCallbackSubtypeHostedArtifact(selected
+		, hostedContract(contract, selected));
 	assertOwnedSubtypeHostedSteps(contract, hosted.api.job.bytes);
 	const revision = hosted.revision;
 	const revisions = { producer: revision, consumer: revision
@@ -127,7 +153,7 @@ export const writeOwnedSubtypeHostedEvidence = async ({
 	{
 		const accepted = await replayOwnedSubtypeHostedOutput(
 			lane, extracted.root, revision);
-		for(const path of await regularFiles(extracted.root))
+		for(const path of retainedOutputPaths(contract, await regularFiles(extracted.root)))
 			await putFile(`hosted/output/${path}`, join(extracted.root, path));
 		for(const [name, item] of Object.entries(hosted.api))
 			putBytes(`hosted/api/${name}.json`, item.bytes);
@@ -135,7 +161,8 @@ export const writeOwnedSubtypeHostedEvidence = async ({
 			selected["artifact-zip"], partsRoot);
 		for(const part of parts)
 			await putFile(`hosted/artifact.zip.parts/${part.name}`, part.path);
-		const selectedSources = ownedSubtypeEvidenceSources(lane, revisions);
+		const selectedSources = ownedSubtypeEvidenceSources(lane, revisions
+			, hosted.hostedRun.workflow);
 		for(const source of selectedSources)
 			putBytes(`sources/${source.role}/${source.path}`
 				, ownedSubtypeHostedOriginal(source.revision, source.path));
@@ -160,7 +187,7 @@ export const writeOwnedSubtypeHostedEvidence = async ({
 					}))
 				}
 			}
-			, selectedSources, files, limitations
+			, selectedSources, files, limitations: limitationsFor(contract)
 		};
 		await mkdir(destination, { recursive: true });
 		for(const [path, descriptor] of descriptors)
@@ -206,7 +233,7 @@ export const checkOwnedSubtypeHostedEvidence = async (lane, evidenceRoot) => {
 	assert.equal(index.kind, `owned-subtype-${lane}-hosted-v1`);
 	assert.equal(index.lane, lane);
 	assert.deepEqual(index.profiles, contract.profiles);
-	assert.deepEqual(index.limitations, limitations);
+	assert.deepEqual(index.limitations, limitationsFor(contract));
 	for(const key of ["producerCommit", "consumerCommit", "checkerCommit"
 		, "archiveCommit"]) assert.match(index[key], /^[a-f0-9]{40}$/u, key);
 	assert.equal(index.producerCommit, index.consumerCommit);
@@ -228,7 +255,7 @@ export const checkOwnedSubtypeHostedEvidence = async (lane, evidenceRoot) => {
 		, consumer: index.consumerCommit, checker: index.checkerCommit
 		, archiver: index.archiveCommit };
 	assert.deepEqual(index.selectedSources
-		, ownedSubtypeEvidenceSources(lane, revisions));
+		, ownedSubtypeEvidenceSources(lane, revisions, index.hostedRun.workflow));
 	for(const source of index.selectedSources)
 		assert.deepEqual(await readFile(join(root
 			, `sources/${source.role}/${source.path}`))
@@ -250,17 +277,18 @@ export const checkOwnedSubtypeHostedEvidence = async (lane, evidenceRoot) => {
 		assert.equal(await callbackSubtypeHostedDigest(zip)
 			, index.hostedRun.artifact.sha256);
 		const api = name => join(root, `hosted/api/${name}.json`);
-		const hosted = await inspectCallbackSubtypeHostedArtifact({
+		const selected = {
 			"artifact-zip": zip, "run-json": api("run")
 			, "job-json": api("job"), "artifact-json": api("artifact")
-		}, { workflow: contract.workflow, jobName: contract.job
-			, artifactPrefix: contract.prefix });
+		};
+		const hosted = await inspectCallbackSubtypeHostedArtifact(selected
+			, hostedContract(contract, selected, index.hostedRun.conclusions));
 		assert.equal(hosted.revision, index.producerCommit);
 		assertCallbackSubtypeHostedApiBinding(index, hosted);
 		assertOwnedSubtypeHostedSteps(contract, hosted.api.job.bytes);
 		extracted = await extractCallbackSubtypeHostedArtifact(zip);
 		assert.deepEqual(extracted.entries, index.hostedRun.artifact.members);
-		const paths = await regularFiles(extracted.root);
+		const paths = retainedOutputPaths(contract, await regularFiles(extracted.root));
 		assertCallbackSubtypeHostedOutputSet(index, paths);
 		for(const path of paths)
 			assert.deepEqual(await readFile(join(extracted.root, path))

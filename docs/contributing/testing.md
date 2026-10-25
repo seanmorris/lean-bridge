@@ -212,6 +212,30 @@ source closure. Every route must retain the package archives actually installed
 and executed. Cancelled, incomplete or failed scoped runs cannot establish
 acceptance. Archive capture alone does not promote type support.
 
+Use the same original ZIP and API records to capture owned-Subtype acceptance:
+
+```sh
+node scripts/archive-owned-subtype-evidence.mjs \
+  --lane javascript \
+  --artifact-zip /absolute/path/to/artifact.zip \
+  --run-json /absolute/path/to/run.json \
+  --job-json /absolute/path/to/job.json \
+  --artifact-json /absolute/path/to/artifact.json
+```
+
+The Subtype archive keeps the complete original ZIP, selects its retained npm
+packages and twelve-test installed log, and records the producer, consumer,
+checker and archiver sources. Its independent checker reconstructs the ZIP,
+checks the API identities, compares the extracted bytes, and verifies both
+author routes and all twelve browser cells per route. Other families in the
+shared job artifact do not count as Subtype acceptance. From a checkout with
+the committed archive materialized, replay it with:
+
+```sh
+node --test --test-name-pattern='^retained javascript owned Subtype hosted evidence replays$' \
+  tests/owned-subtype-hosted-ci.test.mjs
+```
+
 ### Verify the complete owned checked-record matrix
 
 Commit all eleven captures before preparing a support promotion. Save an explicit

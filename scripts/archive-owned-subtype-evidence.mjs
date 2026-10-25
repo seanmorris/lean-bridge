@@ -52,7 +52,7 @@ const date = run.created_at.slice(0, 10).replaceAll("-", "");
 for(const source of ownedSubtypeEvidenceSources(lane, {
 	producer: archiveCommit, consumer: archiveCommit
 	, checker: archiveCommit, archiver: archiveCommit
-}).filter(item => ["checker", "archiver"].includes(item.role)))
+}, run.path).filter(item => ["checker", "archiver"].includes(item.role)))
 	assert.deepEqual(await readFile(source.path)
 		, ownedSubtypeHostedOriginal(archiveCommit, source.path)
 		, `Current checker differs from the archiver revision: ${source.path}`);
@@ -66,5 +66,6 @@ process.stdout.write(canonicalJson({
 	, producerCommit: index.producerCommit, archiveCommit
 	, hostedRun: { runId: index.hostedRun.runId, job: index.hostedRun.job.id
 		, artifact: index.hostedRun.artifact.id }
-	, routes: index.accepted.accepted.retainedPackages.routes
+	, routes: lane === "javascript" ? index.accepted.accepted.routes
+		: index.accepted.accepted.retainedPackages.routes
 }));

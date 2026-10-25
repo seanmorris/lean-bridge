@@ -16,6 +16,7 @@ import {
 import {
 	ownedSubtypeRetainedPackagesName, verifyOwnedSubtypeRetainedPackages
 } from "./owned-subtype-retained-packages.mjs";
+import { replayOwnedSubtypeJavaScriptHostedOutput } from "./owned-subtype-javascript-hosted-output.mjs";
 
 const regularFiles = async (root, prefix = "") => {
 	const files = [];
@@ -45,6 +46,8 @@ export const replayOwnedSubtypeHostedOutput = async (
 ) => {
 	assert.ok(ownedSubtypeHostedLaneNames.includes(lane), lane);
 	assert.match(producer, /^[a-f0-9]{40}$/u);
+	if(lane === "javascript")
+		return replayOwnedSubtypeJavaScriptHostedOutput(root, producer);
 	const contract = ownedSubtypeHostedContracts[lane];
 	const reportPath = `${contract.packaging}/${contract.report}`;
 	const reportBytes = await readFile(join(root, reportPath));

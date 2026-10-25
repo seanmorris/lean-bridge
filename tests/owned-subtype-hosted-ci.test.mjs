@@ -225,16 +225,16 @@ test("owned Subtype hosted checker accepts only closed invocations", () => {
 	]) assert.throws(() => parseOwnedSubtypeHostedCiArgs(args), /Usage:/u);
 });
 
-test("owned Subtype archive contracts close all seven hosted lanes", async () => {
+test("owned Subtype archive contracts preserve seven native lanes beside npm", async () => {
 	assert.deepEqual(ownedSubtypeHostedLaneNames, ["native", "perl"
-		, "languages", "dotnet", "jvm", "php-native", "wit-wasi"]);
-	assert.deepEqual(ownedSubtypeHostedLaneNames
+		, "languages", "dotnet", "jvm", "php-native", "wit-wasi", "javascript"]);
+	assert.deepEqual(ownedSubtypeHostedLaneNames.filter(lane => lane !== "javascript")
 		, [...ownedSubtypeHostedLanes]);
-	const profiles = ownedSubtypeHostedLaneNames.flatMap(lane =>
+	const profiles = ownedSubtypeHostedLanes.flatMap(lane =>
 		ownedSubtypeHostedContracts[lane].profiles).toSorted();
 	assert.deepEqual(profiles, ["c", "cpp", "dotnet", "java", "kotlin"
 		, "perl", "php-native", "python", "ruby", "rust", "wit-wasi"]);
-	for(const lane of ownedSubtypeHostedLaneNames)
+	for(const lane of ownedSubtypeHostedLanes)
 	{
 		const contract = ownedSubtypeHostedContracts[lane];
 		const workflow = await readFile(contract.workflow, "utf8");

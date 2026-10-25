@@ -1,5 +1,5 @@
 /**
- * Closed hosted contracts for every non-browser owned-Subtype lane.
+ * Closed hosted contracts for owned-Subtype package and browser evidence.
  *
  * @file
  */
@@ -71,6 +71,23 @@ export const ownedSubtypeHostedContracts = freeze({
 	, jvm: remaining("jvm", ["java", "kotlin"])
 	, "php-native": remaining("php-native", ["php-native"])
 	, "wit-wasi": remaining("wit-wasi", ["wit-wasi"])
+	, javascript: freeze({
+		lane: "javascript", kind: "javascript"
+		, workflow: ".github/workflows/consumer-matrix.yml"
+		, job: "Owned JavaScript and production Wasm runtime"
+		, prefix: "owned-javascript-wasm"
+		, packaging: "owned-subtype-javascript-packaging"
+		, report: "report.json"
+		, profiles: freeze(["node-javascript", "node-typescript"
+			, "browser-javascript", "browser-react", "browser-worker"])
+		, test: "tests/owned-subtype-javascript-packaging.test.mjs"
+		, acceptanceStep: "Build and install owned npm packages through the standalone CLI"
+		, archiveStep: "Preserve owned JavaScript and runtime execution logs"
+		, runConclusions: freeze(["success", "failure"])
+		, tap: "owned-javascript-wasm/installed.log"
+		, retainedRoots: freeze(["owned-subtype-javascript-packaging/"])
+		, retainedFiles: freeze(["owned-javascript-wasm/installed.log"])
+	})
 });
 
 export const ownedSubtypeHostedLaneNames
