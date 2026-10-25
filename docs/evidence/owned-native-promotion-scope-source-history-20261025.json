@@ -1,0 +1,142 @@
+{
+  "additions": [
+    {
+      "currentSha256": "906bf9e99397f14398c5e02bcea3a7e8f9a6f5f5fb2ef17ce7e0613ac5c49ed6",
+      "path": "scripts/update-owned-native-promotion-scope-source-history.mjs"
+    },
+    {
+      "currentSha256": "97a44302fc908d429937f8c59049e88199b7a756290d9238b37b96924c098276",
+      "path": "tests/helpers/owned-native-promotion-scope-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "771688a89501cb003423394282ae2bc893fed8557c0a5f8cf144bde88159105a",
+      "path": "tests/helpers/owned-native-promotion-scope-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "fda54b6986ef2179e494565d0587f0eef99bb9be",
+  "implementationCommits": [
+    "fda54b6986ef2179e494565d0587f0eef99bb9be"
+  ],
+  "integrationBaseCommit": "fda54b6986ef2179e494565d0587f0eef99bb9be",
+  "integrationUpdates": [
+    {
+      "currentSha256": "f8cc2bfc624529acb871e14eb618abc49606b2dc011eab8935bcddc656406d88",
+      "edits": [
+        {
+          "current": "import { beforeOwnedNativePromotionScopeSource, ownedNativePromotionScopeNormalizationPaths } from \"./owned-native-promotion-scope-source-history.mjs\";\n",
+          "previous": "",
+          "start": 13609
+        },
+        {
+          "current": "\t, ...ownedNativePromotionScopeNormalizationPaths\n",
+          "previous": "",
+          "start": 186853
+        },
+        {
+          "current": "\tlet stage = beforeOwnedNativePromotionScopeSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeOwnedCheckedNativeMixedCoverageSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeOwnedCheckedNativeMixedCoverageSource(path, text, expected);\n",
+          "start": 231524
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "fe4f2964b5c9afb41d3232d2bd2885f368384e4e49811ac064bb0144df1448b3"
+    },
+    {
+      "currentSha256": "bdba99d16118750e03fccbb2ff4492def291d097e8e18c268046510df10b1e09",
+      "edits": [
+        {
+          "current": "import \"./helpers/owned-native-promotion-scope-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 9338
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "55d652a952af0608152825e38a851e91b04008906e06818cdbaae978924e282e"
+    }
+  ],
+  "milestone": "owned-native-promotion-scope-source-v1",
+  "predecessorCommit": "b747b8ff943fefce0290b29b7313c6d983be10bf",
+  "schemaVersion": 1,
+  "scope": "Keep the already admitted shared owned checked-record API byte-for-byte equivalent across targets and preserve the standalone result-only boundary. Explicitly require exactly Grant and six new declarations in the expanded native full fixture while keeping every shared definition and declaration unchanged. Preserve all published support claims: the promotion still does not establish the new cases until original hosted execution and replay prove them. Four focused promotion controls pass, including refusal of partial, forged, widened and incomplete references. Refresh exactly eleven live source pins. No runtime source, support observation, original archive, prior receipt or documentation claim changes.",
+  "updates": [
+    {
+      "currentSha256": "929f3bed60d3eb7d2ac429fb62899e3a9bd9780e79bddd6c2a24d798114f210d",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"16e8101a1b6b73ee48f3a45e59bdaa2253b067f5cf6f8f590a80c4f142b39e91\"\n",
+          "previous": "          \"sha256\": \"cf59c07fa898a0a6287bc4e190acb4d99972b50f0e6f0116f74d35f24df70189\"\n",
+          "start": 89524257
+        },
+        {
+          "current": "          \"sha256\": \"16e8101a1b6b73ee48f3a45e59bdaa2253b067f5cf6f8f590a80c4f142b39e91\"\n",
+          "previous": "          \"sha256\": \"cf59c07fa898a0a6287bc4e190acb4d99972b50f0e6f0116f74d35f24df70189\"\n",
+          "start": 89531295
+        },
+        {
+          "current": "          \"sha256\": \"16e8101a1b6b73ee48f3a45e59bdaa2253b067f5cf6f8f590a80c4f142b39e91\"\n",
+          "previous": "          \"sha256\": \"cf59c07fa898a0a6287bc4e190acb4d99972b50f0e6f0116f74d35f24df70189\"\n",
+          "start": 89537676
+        },
+        {
+          "current": "          \"sha256\": \"16e8101a1b6b73ee48f3a45e59bdaa2253b067f5cf6f8f590a80c4f142b39e91\"\n",
+          "previous": "          \"sha256\": \"cf59c07fa898a0a6287bc4e190acb4d99972b50f0e6f0116f74d35f24df70189\"\n",
+          "start": 89544045
+        },
+        {
+          "current": "          \"sha256\": \"16e8101a1b6b73ee48f3a45e59bdaa2253b067f5cf6f8f590a80c4f142b39e91\"\n",
+          "previous": "          \"sha256\": \"cf59c07fa898a0a6287bc4e190acb4d99972b50f0e6f0116f74d35f24df70189\"\n",
+          "start": 89550406
+        },
+        {
+          "current": "          \"sha256\": \"16e8101a1b6b73ee48f3a45e59bdaa2253b067f5cf6f8f590a80c4f142b39e91\"\n",
+          "previous": "          \"sha256\": \"cf59c07fa898a0a6287bc4e190acb4d99972b50f0e6f0116f74d35f24df70189\"\n",
+          "start": 89556787
+        },
+        {
+          "current": "          \"sha256\": \"16e8101a1b6b73ee48f3a45e59bdaa2253b067f5cf6f8f590a80c4f142b39e91\"\n",
+          "previous": "          \"sha256\": \"cf59c07fa898a0a6287bc4e190acb4d99972b50f0e6f0116f74d35f24df70189\"\n",
+          "start": 89563146
+        },
+        {
+          "current": "          \"sha256\": \"16e8101a1b6b73ee48f3a45e59bdaa2253b067f5cf6f8f590a80c4f142b39e91\"\n",
+          "previous": "          \"sha256\": \"cf59c07fa898a0a6287bc4e190acb4d99972b50f0e6f0116f74d35f24df70189\"\n",
+          "start": 89569493
+        },
+        {
+          "current": "          \"sha256\": \"16e8101a1b6b73ee48f3a45e59bdaa2253b067f5cf6f8f590a80c4f142b39e91\"\n",
+          "previous": "          \"sha256\": \"cf59c07fa898a0a6287bc4e190acb4d99972b50f0e6f0116f74d35f24df70189\"\n",
+          "start": 89575840
+        },
+        {
+          "current": "          \"sha256\": \"16e8101a1b6b73ee48f3a45e59bdaa2253b067f5cf6f8f590a80c4f142b39e91\"\n",
+          "previous": "          \"sha256\": \"cf59c07fa898a0a6287bc4e190acb4d99972b50f0e6f0116f74d35f24df70189\"\n",
+          "start": 89581576
+        },
+        {
+          "current": "          \"sha256\": \"16e8101a1b6b73ee48f3a45e59bdaa2253b067f5cf6f8f590a80c4f142b39e91\"\n",
+          "previous": "          \"sha256\": \"cf59c07fa898a0a6287bc4e190acb4d99972b50f0e6f0116f74d35f24df70189\"\n",
+          "start": 89586947
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "f54874f57390e6d795415f498beba2e9433596f015411c8eaea6e75643e56a7e"
+    },
+    {
+      "currentSha256": "16e8101a1b6b73ee48f3a45e59bdaa2253b067f5cf6f8f590a80c4f142b39e91",
+      "edits": [
+        {
+          "current": "",
+          "previous": "\t\t\t, ownedCheckedRecordNativeSelection(route, [\"c\", \"cpp\", \"cpan\"])\n",
+          "start": 12922
+        },
+        {
+          "current": "\t\tconst native = ownedCheckedRecordNativeSelection(route, [\"c\", \"cpp\", \"cpan\"]);\n\t\tif(javascript.resultOnly)\n\t\t{\n\t\t\tassert.deepEqual(native.reviewedIr, javascript.reviewedIr);\n\t\t\tassert.deepEqual(native.configuration.exports, javascript.configuration.exports);\n\t\t}\n\t\telse\n\t\t{\n\t\t\t// New native coverage is awaiting hosted execution. Keep the admitted\n\t\t\t// shared boundary exact without promoting the additional cases here.\n\t\t\tconst types = new Set(javascript.reviewedIr.types.map(type => type.id));\n\t\t\tconst declarations = new Set(javascript.reviewedIr.declarations.map(item => item.id));\n\t\t\tassert.deepEqual({ ...native.reviewedIr\n\t\t\t\t, types: native.reviewedIr.types.filter(type => types.has(type.id))\n\t\t\t\t, declarations: native.reviewedIr.declarations.filter(item => declarations.has(item.id))\n\t\t\t}, javascript.reviewedIr);\n\t\t\tassert.deepEqual(native.reviewedIr.types.filter(type => !types.has(type.id))\n\t\t\t\t.map(type => type.name), [\"Grant\"]);\n\t\t\tconst additional = [\"bookingSpan\", \"claimQuota\", \"echoGrant\", \"echoClaims\"\n\t\t\t\t, \"transferWithClaimCallback\", \"transferPairClaim\"];\n\t\t\tassert.deepEqual(native.reviewedIr.declarations.filter(item => !declarations.has(item.id))\n\t\t\t\t.map(item => item.name), additional);\n\t\t\tassert.deepEqual(native.configuration.exports, javascript.configuration.exports?.concat(\n\t\t\t\tadditional.map(name => `OwnedCheckedRecords.${name}`)));\n\t\t}\n",
+          "previous": "",
+          "start": 13299
+        }
+      ],
+      "path": "tests/helpers/owned-checked-record-promotion-tests.mjs",
+      "previousSha256": "cf59c07fa898a0a6287bc4e190acb4d99972b50f0e6f0116f74d35f24df70189"
+    }
+  ]
+}

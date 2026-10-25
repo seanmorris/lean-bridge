@@ -135,6 +135,7 @@ import "./helpers/owned-matrix-isolation-source-history-tests.mjs";
 import "./helpers/owned-matrix-refresh-source-history-tests.mjs";
 import "./helpers/owned-checked-carrier-compilation-source-history-tests.mjs";
 import "./helpers/owned-checked-native-mixed-coverage-source-history-tests.mjs";
+import "./helpers/owned-native-promotion-scope-source-history-tests.mjs";
 
 const root = resolve(".");
 

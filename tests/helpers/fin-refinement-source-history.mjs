@@ -92,6 +92,7 @@ import { beforeOwnedMatrixIsolationSource, ownedMatrixIsolationNormalizationPath
 import { beforeOwnedMatrixRefreshSource, ownedMatrixRefreshNormalizationPaths } from "./owned-matrix-refresh-source-history.mjs";
 import { beforeOwnedCheckedCarrierCompilationSource, ownedCheckedCarrierCompilationNormalizationPaths } from "./owned-checked-carrier-compilation-source-history.mjs";
 import { beforeOwnedCheckedNativeMixedCoverageSource, ownedCheckedNativeMixedCoverageNormalizationPaths } from "./owned-checked-native-mixed-coverage-source-history.mjs";
+import { beforeOwnedNativePromotionScopeSource, ownedNativePromotionScopeNormalizationPaths } from "./owned-native-promotion-scope-source-history.mjs";
 import { beforeCoreEvidenceMemoryRepairSource, coreEvidenceMemoryRepairNormalizationPaths } from "./core-evidence-memory-repair-source-history.mjs";
 import { beforeValueIndexPromotionMilestoneRepairSource, valueIndexPromotionMilestoneRepairNormalizationPaths } from "./value-index-promotion-milestone-repair-source-history.mjs";
 import { beforeCoreMilestoneReplayRepairSource, coreMilestoneReplayRepairNormalizationPaths } from "./core-milestone-replay-repair-source-history.mjs";
@@ -2186,6 +2187,7 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	...ownedCheckedCarrierCompilationNormalizationPaths
+	, ...ownedNativePromotionScopeNormalizationPaths
 	, ...ownedCheckedNativeMixedCoverageNormalizationPaths
 	, ...ownedMatrixRefreshNormalizationPaths
 	, ...ownedMatrixIsolationNormalizationPaths
@@ -3113,7 +3115,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeOwnedCheckedNativeMixedCoverageSource(path, text, expected);
+	let stage = beforeOwnedNativePromotionScopeSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeOwnedCheckedNativeMixedCoverageSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;
