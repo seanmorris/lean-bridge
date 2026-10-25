@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { consumerToolCommands, consumerToolExportLines } from "./consumer-tool-lookups.mjs";
 import { assertOwnedJvmEnforced, ownedJvmStep, ownedJvmUpload } from "./owned-jvm-job.mjs";
 import { assertOwnedDotnetReceiverCi } from "./owned-dotnet-receiver-ci.mjs";
 import { assertOwnedJvmBorrowCi } from "./owned-jvm-borrow-evidence.mjs";
@@ -32,7 +33,10 @@ export const assertOwnedJvmReceiverCi = (workflow, manifest) => {
 		, ...ownedJvmReceiverReports.map(path => "test -s " + path)
 	]) assert.ok(step.split("\n").includes("          " + line), line);
 	for(const name of ["RUSTC", "CARGO", "PYTHON", "RUBY", "GEM", "DOTNET", "JAVA", "JAVAC", "KOTLINC", "MAVEN"])
-		assert.ok(step.includes(`export LEAN_BRIDGE_${name}=`), name);
+		if(Object.hasOwn(consumerToolCommands, name))
+			assert.ok(step.includes(consumerToolExportLines(name).join("\n          ")), name);
+		else
+			assert.ok(step.includes(`export LEAN_BRIDGE_${name}=`), name);
 	const upload = ownedJvmUpload(workflow);
 	for(const path of ["build/owned-jvm-receiver-core/", "build/owned-jvm-receivers.log"])
 		assert.ok(upload.split("\n").includes("            " + path));

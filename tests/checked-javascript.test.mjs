@@ -120,6 +120,7 @@ import "./helpers/php-wasm-entry-publisher-source-history-tests.mjs";
 import "./helpers/php-wasm-entry-publication-pin-repair-source-history-tests.mjs";
 import "./helpers/php-wasm-entry-published-probe-tests.mjs";
 import "./helpers/php-wasm-entry-probe-publication-source-history-tests.mjs";
+import "./helpers/consumer-tool-lookups-tests.mjs";
 
 const root = resolve(".");
 

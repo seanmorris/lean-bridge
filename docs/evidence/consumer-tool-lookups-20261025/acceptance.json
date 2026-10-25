@@ -1,0 +1,158 @@
+{
+  "schemaVersion": 1,
+  "kind": "consumer-tool-lookups-acceptance-v1",
+  "baseCommit": "8db80ea109610468c1e509037a6f1771371fa5cf",
+  "scope": "Separate 41 executable lookups from exports in 14 existing consumer run steps so Bash stops before using missing tools. Preserve every other workflow byte, existing installed evidence and every support claim.",
+  "workflow": {
+    "path": ".github/workflows/consumer-matrix.yml",
+    "previous": {
+      "bytes": 347172,
+      "sha256": "6cb56e3b6b828d02642c2cd402f3f30e9293dcd00c10097421de7dacd132dac7"
+    },
+    "current": {
+      "bytes": 348305,
+      "sha256": "0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1"
+    },
+    "declarations": 41,
+    "exactInverse": true
+  },
+  "inventory": {
+    "previous": {
+      "bytes": 102577221,
+      "sha256": "6ca898b6f172236b1c93549184ba7cfada0924b6bacb43e653925806b038f722"
+    },
+    "current": {
+      "bytes": 102577221,
+      "sha256": "03f00b29636bc9a1af28e7da47577226bd51dd3ba3f716ab6b81000d2952d226"
+    },
+    "refreshedPins": 117,
+    "exactInverse": true
+  },
+  "sourcePins": [
+    {
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previous": "6cb56e3b6b828d02642c2cd402f3f30e9293dcd00c10097421de7dacd132dac7",
+      "current": "0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1",
+      "count": 92
+    },
+    {
+      "path": "tests/helpers/owned-php-receiver-ci.mjs",
+      "previous": "2a63eccb7afe52097212ef214001a498d3b5199e4c46591d86f2e4c07b222536",
+      "current": "6e1c6dc15ba50ba9411c1f368b9ee1cfd1f1671c4df4a472f761924e0f27ad83",
+      "count": 0
+    },
+    {
+      "path": "tests/helpers/owned-dotnet-callback-result-ci.mjs",
+      "previous": "c985f1c9a635513910a469319f8d05b47376f9fe91aeff370e0928417d68bb0a",
+      "current": "a066eb5b980f653a22e4324585c7e9d5cbbce97978088f4f3a0b51d049f51deb",
+      "count": 0
+    },
+    {
+      "path": "tests/helpers/owned-jvm-callback-result-ci.mjs",
+      "previous": "1330ee83debc2d48854d9b05e221773be29d93b0aafea2494ac1383e9c69e077",
+      "current": "c5489eaf41df8455a84ddab0473e8c28f67ab4817aa75785bc260383f7e9c90b",
+      "count": 0
+    },
+    {
+      "path": "tests/helpers/owned-perl-callback-result-ci.mjs",
+      "previous": "f25e77b8683f118e30a3dcdfbd1a35dfa20ffae954a8d968191e9e941e285234",
+      "current": "19ab023b53992cc76e4cd95f36188946d6ed0751bf771a1a5f74ede395f4ba03",
+      "count": 0
+    },
+    {
+      "path": "tests/helpers/owned-ruby-callback-result-ci.mjs",
+      "previous": "03b30c13114d4e424c72ddd27e04835eb5f09b316f27afd642ab7724b6c31c10",
+      "current": "aa48f31cca00b030876a6a12568d38f91bab252db7d86af17101cbeb9ca58c08",
+      "count": 0
+    },
+    {
+      "path": "tests/helpers/owned-jvm-receiver-ci.mjs",
+      "previous": "9b0fc784101ed7b1f126d6b1545da51dd446aa3d32a6215a831d52557638aaab",
+      "current": "377c977158cadd2d463b830d798073cf8c714e478e24cc0a02ac4017d59f8234",
+      "count": 0
+    },
+    {
+      "path": "tests/documentation.test.mjs",
+      "previous": "653d29f1f9e64355953abd8325dd27bef7d422036bbb9873d4d8d7727e89d6e3",
+      "current": "cc1ecfbf9d3809b8736dc84da3b9a8f1712d103e879a768ec7c331a546f5c35c",
+      "count": 25
+    },
+    {
+      "path": "tests/checked-javascript.test.mjs",
+      "previous": "455a40f7b693a8917ad179bb8df9e49aee2afb0709c30992f6a4bb4aa5daa363",
+      "current": "229473b6f423d53637cff442420611ebfdedf2fcfda8300e52eb732980aa3a97",
+      "count": 0
+    }
+  ],
+  "validation": {
+    "tests": {
+      "path": "docs/evidence/consumer-tool-lookups-20261025/run.tap",
+      "bytes": 3951,
+      "sha256": "3759525594d93e66d5268ce0d0d0cdc46f042686894a19a01f32428f47240949",
+      "total": 17,
+      "passed": 17,
+      "failed": 0,
+      "skipped": 0,
+      "command": "node --test --test-concurrency=1 '--test-name-pattern=^consumer tool lookups|^every owned source module|^the required typecheck|^the default and CI quality|^CI requires|^Native PHP receiver CI|^JVM receiver (CI|GC CI)|^owned C# transfer docs|^owned Ruby documentation' tests/checked-javascript.test.mjs tests/owned-php-receiver-ci.test.mjs tests/owned-jvm-callback-result-ci.test.mjs tests/owned-dotnet-callback-result-ci.test.mjs tests/owned-ruby-callback-result-ci.test.mjs tests/owned-jvm-receiver-evidence.test.mjs tests/owned-jvm-receiver-gc-ci.test.mjs tests/owned-perl-xs.test.mjs tests/documentation.test.mjs",
+      "workflowMutationRefusals": 246,
+      "bashControls": {
+        "successfulExports": 7,
+        "missingToolStops": 7,
+        "legacyMaskingReproductions": 7
+      }
+    },
+    "audit": {
+      "path": "docs/evidence/consumer-tool-lookups-20261025/audit.mjs",
+      "bytes": 4460,
+      "sha256": "0e73a1e52905268ec62195b04277da9e1104f24a262989bddc2f7dc3c193fabd"
+    },
+    "actionlint": {
+      "version": "1.7.12",
+      "shellcheckVersion": "0.9.0",
+      "command": "actionlint -no-color -oneline -shellcheck /usr/bin/shellcheck .github/workflows/consumer-matrix.yml",
+      "source": "https://github.com/rhysd/actionlint/releases/tag/v1.7.12",
+      "archive": {
+        "name": "actionlint_1.7.12_linux_amd64.tar.gz",
+        "bytes": 2353908,
+        "sha256": "8aca8db96f1b94770f1b0d72b6dddcb1ebb8123cb3712530b08cc387b349a3d8"
+      },
+      "checksums": {
+        "name": "actionlint_1.7.12_checksums.txt",
+        "bytes": 1130,
+        "sha256": "433028cf0ba3c42163ea1a668dedce30fcdbe84fe912b1a5e288c006eab8a4f5"
+      },
+      "binary": {
+        "bytes": 6074530,
+        "sha256": "c872d6db8c6bf83a8eaa704fc93999f027d55dffbc63b8a6abdccb47df5f4cd4"
+      },
+      "shellcheck": {
+        "bytes": 19411920,
+        "sha256": "59d20b9f02f59d8bf09fff75c01d9c23c31dac93242b1829588ea6b24d2e43ce"
+      },
+      "before": {
+        "path": "docs/evidence/consumer-tool-lookups-20261025/actionlint-before.log",
+        "bytes": 7451,
+        "sha256": "ebe68bfbe8a8242d47ff48e12ba383153948ecc95039842fb7c3798db55720ae",
+        "exitCode": 1,
+        "sc2155Warnings": 41
+      },
+      "after": {
+        "path": "docs/evidence/consumer-tool-lookups-20261025/actionlint-after.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "exitCode": 0,
+        "warnings": 0
+      }
+    },
+    "lint": {
+      "exitCode": 0,
+      "scope": "The two new lookup modules, six affected consumer CI helpers, documentation tests and checked-JavaScript test root."
+    },
+    "typecheck": {
+      "command": "node /app/node_modules/typescript/bin/tsc -p jsconfig.checked.json --pretty false",
+      "exitCode": 0
+    },
+    "resourcePolicy": "Serialized checks, one low-priority CPU, at most 512 MiB Node heap; no installed consumer rebuild or full local Core run."
+  },
+  "remaining": "This is local workflow and checker acceptance, not a final hosted run. The separate immutable history receipt, commits, exact-head hosted/Core gates and full VO #1463/#1220 acceptance remain required."
+}

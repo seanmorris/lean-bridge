@@ -1,0 +1,112 @@
+TAP version 13
+# Subtest: consumer tool lookups require all 41 fail-fast exports in their fourteen run steps
+ok 1 - consumer tool lookups require all 41 fail-fast exports in their fourteen run steps
+  ---
+  duration_ms: 96.890988
+  type: 'test'
+  ...
+# Subtest: consumer tool lookups reject masking, missing, reordered and substituted setup at every site
+ok 2 - consumer tool lookups reject masking, missing, reordered and substituted setup at every site
+  ---
+  duration_ms: 459.401214
+  type: 'test'
+  ...
+# Subtest: consumer tool lookups export discovered paths and stop real Bash before using a missing tool
+ok 3 - consumer tool lookups export discovered paths and stop real Bash before using a missing tool
+  ---
+  duration_ms: 520.089652
+  type: 'test'
+  ...
+# Subtest: consumer tool lookups limit legacy formatting to an explicit closed tool declaration
+ok 4 - consumer tool lookups limit legacy formatting to an explicit closed tool declaration
+  ---
+  duration_ms: 7.682063
+  type: 'test'
+  ...
+# Subtest: every owned source module has one explicit typecheck disposition
+ok 5 - every owned source module has one explicit typecheck disposition
+  ---
+  duration_ms: 18.134587
+  type: 'test'
+  ...
+# Subtest: the required typecheck uses strict checkJs for exactly the adopted modules
+ok 6 - the required typecheck uses strict checkJs for exactly the adopted modules
+  ---
+  duration_ms: 1.382783
+  type: 'test'
+  ...
+# Subtest: the default and CI quality gates cover the same core contract
+ok 7 - the default and CI quality gates cover the same core contract
+  ---
+  duration_ms: 1.431647
+  type: 'test'
+  ...
+# Subtest: owned C\# transfer docs and CI require offline packages and the combined consumer tools
+ok 8 - owned C\# transfer docs and CI require offline packages and the combined consumer tools
+  ---
+  duration_ms: 6.700902
+  type: 'test'
+  ...
+# Subtest: owned Ruby documentation and CI require installed gems, companions and runtime coexistence
+ok 9 - owned Ruby documentation and CI require installed gems, companions and runtime coexistence
+  ---
+  duration_ms: 5.69249
+  type: 'test'
+  ...
+# Subtest: CI requires installed .NET callback execution and authenticated reports
+ok 10 - CI requires installed .NET callback execution and authenticated reports
+  ---
+  duration_ms: 86.030109
+  type: 'test'
+  ...
+# Subtest: CI requires JVM callback execution and authenticated reports
+ok 11 - CI requires JVM callback execution and authenticated reports
+  ---
+  duration_ms: 62.432499
+  type: 'test'
+  ...
+# Subtest: JVM receiver CI retains complete gates, explicit tools and all twelve reports
+ok 12 - JVM receiver CI retains complete gates, explicit tools and all twelve reports
+  ---
+  duration_ms: 230.986737
+  type: 'test'
+  ...
+# Subtest: JVM receiver GC CI runs both source paths and retains their evidence
+ok 13 - JVM receiver GC CI runs both source paths and retains their evidence
+  ---
+  duration_ms: 14.622835
+  type: 'test'
+  ...
+# Subtest: JVM receiver GC CI rejects omitted gates, reports and container execution
+ok 14 - JVM receiver GC CI rejects omitted gates, reports and container execution
+  ---
+  duration_ms: 133.865472
+  type: 'test'
+  ...
+# Subtest: CI requires four-ABI Perl callback execution and reconstructed reports
+ok 15 - CI requires four-ABI Perl callback execution and reconstructed reports
+  ---
+  duration_ms: 104.324093
+  type: 'test'
+  ...
+# Subtest: Native PHP receiver CI requires sixteen tests and thirteen reports
+ok 16 - Native PHP receiver CI requires sixteen tests and thirteen reports
+  ---
+  duration_ms: 37.63871
+  type: 'test'
+  ...
+# Subtest: CI requires both Ruby callback source paths, installed archives and every runtime report
+ok 17 - CI requires both Ruby callback source paths, installed archives and every runtime report
+  ---
+  duration_ms: 42.40855
+  type: 'test'
+  ...
+1..17
+# tests 17
+# suites 0
+# pass 17
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 11253.416264

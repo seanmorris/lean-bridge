@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { consumerToolExportLines } from "./consumer-tool-lookups.mjs";
 
 export const ownedRubyCallbackResultTestNames = [
 	"owned-ruby-callback-results", "owned-ruby-callback-result-runtime"
@@ -48,8 +49,8 @@ export const assertOwnedRubyCallbackResultCi = (workflow, manifest) => {
 	assert.match(step, /^ {8}shell: bash$/mu);
 	const lines = step.split("        run: |\n")[1]?.trim().replace(/^ {10}/gmu, "");
 	assert.equal(lines, ["set -euo pipefail", "source scripts/env.sh"
-		, 'export LEAN_BRIDGE_RUBY="$(command -v ruby)"'
-		, 'export LEAN_BRIDGE_GEM="$(command -v gem)"'
+		, ...consumerToolExportLines("RUBY")
+		, ...consumerToolExportLines("GEM")
 		, "npm run test:owned-ruby-callback-results 2>&1 | tee build/owned-ruby-callback-results.log"
 		, ...["tests 12", "pass 12", "fail 0", "cancelled 0", "skipped 0"].map(value => `rg '^# ${value}$' build/owned-ruby-callback-results.log`)
 		, ...ownedRubyCallbackResultReports.map(path => "test -s " + path)].join("\n"));

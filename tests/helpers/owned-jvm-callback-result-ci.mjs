@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { consumerToolExportLines } from "./consumer-tool-lookups.mjs";
 
 const executionNames = ["owned-jvm-callback-results"
 	, "owned-jvm-callback-mixed-signatures"
@@ -66,11 +67,11 @@ export const assertOwnedJvmCallbackResultCi = (workflow, manifest) => {
 		const environment = kind === "results" ? ["source scripts/env.sh"
 			, 'export LEAN_BRIDGE_JAVAC="$JAVA_HOME/bin/javac"'
 			, 'export LEAN_BRIDGE_JAVA="$JAVA_HOME/bin/java"'
-			, 'export LEAN_BRIDGE_MAVEN="$(command -v mvn)"'
+			, ...consumerToolExportLines("MAVEN")
 			, 'export LEAN_BRIDGE_KOTLINC="$PWD/build/kotlin-tools/kotlinc/bin/kotlinc"'
-			, 'export LEAN_BRIDGE_DOTNET="$(command -v dotnet)"'
-			, 'export LEAN_BRIDGE_RUBY="$(command -v ruby)"'
-			, 'export LEAN_BRIDGE_GEM="$(command -v gem)"'] : [];
+			, ...consumerToolExportLines("DOTNET")
+			, ...consumerToolExportLines("RUBY")
+			, ...consumerToolExportLines("GEM")] : [];
 		const log = `build/owned-jvm-callback-${kind}.log`;
 		const lines = ["set -euo pipefail", ...environment
 			, `npm run test:owned-jvm-callback-${kind} 2>&1 | tee ${log}`

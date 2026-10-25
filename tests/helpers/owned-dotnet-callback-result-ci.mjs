@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { consumerToolExportLines } from "./consumer-tool-lookups.mjs";
 
 const names = ["owned-dotnet-callback-results", "owned-dotnet-callback-lifetime"
 	, "owned-dotnet-callback-process", "owned-dotnet-callback-sanitizers"
@@ -53,9 +54,9 @@ export const assertOwnedDotnetCallbackResultCi = (workflow, manifest) => {
 		const path = `build/owned-dotnet-callback-${command}.log`;
 		const execution = command === "results" ? "test:owned-dotnet-callback-results" : "test:owned-dotnet-callback-evidence";
 		const environment = command === "results" ? ["source scripts/env.sh"
-			, 'export LEAN_BRIDGE_DOTNET="$(command -v dotnet)"'
-			, 'export LEAN_BRIDGE_RUBY="$(command -v ruby)"'
-			, 'export LEAN_BRIDGE_GEM="$(command -v gem)"'] : [];
+			, ...consumerToolExportLines("DOTNET")
+			, ...consumerToolExportLines("RUBY")
+			, ...consumerToolExportLines("GEM")] : [];
 		const lines = ["set -euo pipefail", ...environment
 			, `npm run ${execution} 2>&1 | tee ${path}`
 			, ...[`tests ${count}`, `pass ${count}`, "fail 0", "cancelled 0", "skipped 0"].map(value => `rg '^# ${value}$' ${path}`)

@@ -1,0 +1,22 @@
+import assert from 'node:assert/strict';
+import {execFileSync} from 'node:child_process';
+import {createHash} from 'node:crypto';
+import {createReadStream,readFileSync} from 'node:fs';
+import {createInterface} from 'node:readline';
+const before={"bytes":102577221,"sha256":"6ca898b6f172236b1c93549184ba7cfada0924b6bacb43e653925806b038f722"};
+const changes=[{"path":".github/workflows/consumer-matrix.yml","previous":"6cb56e3b6b828d02642c2cd402f3f30e9293dcd00c10097421de7dacd132dac7","current":"0211aa8c975ea078125f11c6f060159986dc083bc4e63bb9e13b1342e4f565a1","count":92},{"path":"tests/helpers/owned-php-receiver-ci.mjs","previous":"2a63eccb7afe52097212ef214001a498d3b5199e4c46591d86f2e4c07b222536","current":"6e1c6dc15ba50ba9411c1f368b9ee1cfd1f1671c4df4a472f761924e0f27ad83","count":0},{"path":"tests/helpers/owned-dotnet-callback-result-ci.mjs","previous":"c985f1c9a635513910a469319f8d05b47376f9fe91aeff370e0928417d68bb0a","current":"a066eb5b980f653a22e4324585c7e9d5cbbce97978088f4f3a0b51d049f51deb","count":0},{"path":"tests/helpers/owned-jvm-callback-result-ci.mjs","previous":"1330ee83debc2d48854d9b05e221773be29d93b0aafea2494ac1383e9c69e077","current":"c5489eaf41df8455a84ddab0473e8c28f67ab4817aa75785bc260383f7e9c90b","count":0},{"path":"tests/helpers/owned-perl-callback-result-ci.mjs","previous":"f25e77b8683f118e30a3dcdfbd1a35dfa20ffae954a8d968191e9e941e285234","current":"19ab023b53992cc76e4cd95f36188946d6ed0751bf771a1a5f74ede395f4ba03","count":0},{"path":"tests/helpers/owned-ruby-callback-result-ci.mjs","previous":"03b30c13114d4e424c72ddd27e04835eb5f09b316f27afd642ab7724b6c31c10","current":"aa48f31cca00b030876a6a12568d38f91bab252db7d86af17101cbeb9ca58c08","count":0},{"path":"tests/helpers/owned-jvm-receiver-ci.mjs","previous":"9b0fc784101ed7b1f126d6b1545da51dd446aa3d32a6215a831d52557638aaab","current":"377c977158cadd2d463b830d798073cf8c714e478e24cc0a02ac4017d59f8234","count":0},{"path":"tests/documentation.test.mjs","previous":"653d29f1f9e64355953abd8325dd27bef7d422036bbb9873d4d8d7727e89d6e3","current":"cc1ecfbf9d3809b8736dc84da3b9a8f1712d103e879a768ec7c331a546f5c35c","count":25},{"path":"tests/checked-javascript.test.mjs","previous":"455a40f7b693a8917ad179bb8df9e49aee2afb0709c30992f6a4bb4aa5daa363","current":"229473b6f423d53637cff442420611ebfdedf2fcfda8300e52eb732980aa3a97","count":0}];
+const hash=bytes=>createHash('sha256').update(bytes).digest('hex');
+for(const c of changes)assert.equal(hash(readFileSync(c.path)),c.current,c.path);
+const selected=new Map(changes.filter(c=>c.count).map(c=>[c.path,{...c,seen:0}]));
+const input=createReadStream('docs/type-surface.v1.json'),original=createHash('sha256'),current=createHash('sha256');let size=0,restoredSize=0,mode,pending;
+input.on('data',chunk=>{current.update(chunk);size+=chunk.length;});
+for await(const source of createInterface({input,crlfDelay:Infinity})){
+let line=source;if(line==='      "files": [')mode='files';if(line==='      "artifacts": [')mode='artifacts';if(line==='      ]'||line==='      ],')mode=undefined;
+if(pending){assert.equal(mode,'files');assert.equal(line,'          "sha256": "'+pending.current+'"');line='          "sha256": "'+pending.previous+'"';pending.seen++;}
+const match=/^ {10}"path": "([^"]+)",$/.exec(source);pending=match?selected.get(match[1]):undefined;const bytes=Buffer.from(line+'\n');original.update(bytes);restoredSize+=bytes.length;}
+for(const c of selected.values())assert.equal(c.seen,c.count,c.path);
+assert.deepEqual({bytes:restoredSize,sha256:original.digest('hex')},before);
+assert.equal(size,before.bytes);
+const path='.github/workflows/consumer-matrix.yml',prior=execFileSync('git',['show','8db80ea109610468c1e509037a6f1771371fa5cf:'+path],{maxBuffer:1024*1024}),source=readFileSync(path,'utf8');let reversed=0;
+const restored=source.replace(/^          (LEAN_BRIDGE_[A-Z]+)="\$\(command -v ([a-z0-9]+)\)"\n          export \1$/gm,(_m,name,tool)=>{reversed++;return '          export '+name+'="$(command -v '+tool+')"';});assert.equal(reversed,41);assert.equal(restored,prior.toString());
+console.log(JSON.stringify({baseCommit:'8db80ea109610468c1e509037a6f1771371fa5cf',inventory:{previous:before,current:{bytes:size,sha256:current.digest('hex')},refreshedPins:[...selected.values()].reduce((n,c)=>n+c.seen,0),exactInverse:true},workflow:{path,previous:{bytes:prior.length,sha256:hash(prior)},current:{bytes:Buffer.byteLength(source),sha256:hash(source)},declarations:reversed,exactInverse:true},sources:changes}));

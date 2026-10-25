@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { consumerToolExportLines } from "./consumer-tool-lookups.mjs";
 
 export const ownedPhpReceiverScript = "LEAN_BRIDGE_OWNED_PHP_RECEIVER_TEST=1 LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-php-receivers.test.mjs tests/owned-php-receiver-packaging.test.mjs tests/owned-php-receiver-resource-packaging.test.mjs tests/owned-php-receiver-documentation.test.mjs";
 export const ownedPhpReceiverReports = ["ordinary", "reviewed"].flatMap(mode => [
@@ -32,8 +33,8 @@ export const assertOwnedPhpReceiverCi = (workflow, manifest) => {
 	assert.equal(steps.length, 2); const gate = steps[1].split("      - name: ")[0];
 	assert.doesNotMatch(gate, /^ {8}(?:if|continue-on-error):/mu);
 	for(const line of [
-		'export LEAN_BRIDGE_PHP="$(command -v php)"'
-		, 'export LEAN_BRIDGE_COMPOSER="$(command -v composer)"'
+		...consumerToolExportLines("PHP")
+		, ...consumerToolExportLines("COMPOSER")
 		, "source scripts/env.sh"
 		, "npm run test:owned-php-receivers > build/owned-php-receivers.log 2>&1"
 		, "cat build/owned-php-receivers.log"

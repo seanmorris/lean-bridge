@@ -5,6 +5,7 @@
  */
 
 import assert from "node:assert/strict";
+import { consumerToolExportLines } from "./helpers/consumer-tool-lookups.mjs";
 import { access, readFile, readdir, stat } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import test from "node:test";
@@ -183,8 +184,10 @@ test("native and managed borrow gates install ripgrep before inspecting TAP logs
 test("owned C# transfer docs and CI require offline packages and the combined consumer tools", async () => {
 	const workflow = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
 	const step = workflow.split("- name: Compare installed NuGet corpus packages with fresh Lean results\n")[1].split("      - name:")[0];
-	for(const marker of ["bootstrap-rust-ci.sh", "export LEAN_BRIDGE_PYTHON="
-		, "export LEAN_BRIDGE_RUBY=", "export LEAN_BRIDGE_GEM="
+	for(const marker of ["bootstrap-rust-ci.sh"
+		, consumerToolExportLines("PYTHON").join("\n          ")
+		, consumerToolExportLines("RUBY").join("\n          ")
+		, consumerToolExportLines("GEM").join("\n          ")
 		, "npm run test:owned-dotnet-transfers\n"])
 		assert.ok(step.includes(marker), marker);
 	assertDependencyStep(workflow, "type_corpus_dotnet", "sudo apt-get install -y python3-venv pkg-config", "matrix.profile == 'dotnet'");
@@ -210,7 +213,7 @@ test("owned Ruby documentation and CI require installed gems, companions and run
 	const workflow = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
 	const step = workflow.split("- name: Compare installed Ruby corpus packages with fresh Lean results\n")[1].split("      - name:")[0];
 	assert.match(step, /bootstrap-rust-ci\.sh/u);
-	assert.match(step, /export LEAN_BRIDGE_PYTHON=/u);
+	assert.ok(step.includes(consumerToolExportLines("PYTHON").join("\n          ")));
 	assertDependencyStep(workflow, "type_corpus_ruby", "sudo apt-get install -y python3-venv pkg-config", "matrix.profile == 'ruby'");
 	for(const command of ["tests/owned-ruby-runtime.test.mjs tests/owned-ruby-values.test.mjs tests/owned-ruby-layout.test.mjs tests/owned-ruby-conversions.test.mjs"
 		, "tests/owned-ruby-gmp.test.mjs tests/owned-ruby-package.test.mjs tests/owned-ruby-packaging.test.mjs tests/owned-ruby-coexistence.test.mjs"])

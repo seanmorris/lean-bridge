@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { consumerToolExportLines } from "./consumer-tool-lookups.mjs";
 
 const helper = name => `tests/helpers/owned-perl-callback-result-${name}.mjs`;
 const command = paths => "node --test --test-concurrency=1 " + paths.join(" ");
@@ -85,11 +86,11 @@ export const assertOwnedPerlCallbackResultCi = (workflow, manifest, legacy = fal
 		const environment = kind === "results" ? ["source scripts/env.sh"
 			, 'export LEAN_BRIDGE_JAVAC="$JAVA_HOME/bin/javac"'
 			, 'export LEAN_BRIDGE_JAVA="$JAVA_HOME/bin/java"'
-			, 'export LEAN_BRIDGE_MAVEN="$(command -v mvn)"'
+			, ...consumerToolExportLines("MAVEN", legacy)
 			, 'export LEAN_BRIDGE_KOTLINC="$PWD/build/kotlin-tools/kotlinc/bin/kotlinc"'
-			, 'export LEAN_BRIDGE_DOTNET="$(command -v dotnet)"'
-			, 'export LEAN_BRIDGE_RUBY="$(command -v ruby)"'
-			, 'export LEAN_BRIDGE_GEM="$(command -v gem)"'] : [];
+			, ...consumerToolExportLines("DOTNET", legacy)
+			, ...consumerToolExportLines("RUBY", legacy)
+			, ...consumerToolExportLines("GEM", legacy)] : [];
 		const log = `build/owned-perl-callback-${kind}.log`;
 		const lines = ["set -euo pipefail", ...environment
 			, `npm run test:owned-perl-callback-${kind} 2>&1 | tee ${log}`
