@@ -1,0 +1,84 @@
+{
+  "additions": [
+    {
+      "currentSha256": "d3f9c372a4bc2cd8c436c50fd02ae89610518cd97e057adf2f3194d50bdf33bd",
+      "path": "docs/evidence/owned-checked-retained-identity-20261025.json"
+    },
+    {
+      "currentSha256": "29b82c4b8a0acb5abfdc7159abe213c717f28efa985ebece766495924096aa46",
+      "path": "scripts/update-owned-checked-retained-identity-source-history.mjs"
+    },
+    {
+      "currentSha256": "2d6a7760e188aa77d6be791a78dffb797b4f3f365198fe9e4e692566b39cc9f0",
+      "path": "tests/helpers/owned-checked-retained-identity-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "b19f48c13478c70d05f8029c95148adacb1b362cef17507271a9b1bc3525c13a",
+      "path": "tests/helpers/owned-checked-retained-identity-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "fc834d89d38057616934d3b43ac327807e4d8c8b",
+  "implementationCommits": [
+    "fc834d89d38057616934d3b43ac327807e4d8c8b"
+  ],
+  "integrationBaseCommit": "fc834d89d38057616934d3b43ac327807e4d8c8b",
+  "integrationUpdates": [
+    {
+      "currentSha256": "b96e741bf7651358b45ef66bb0f32291ae9e72e0a22aef4d5f9195767b3af24d",
+      "edits": [
+        {
+          "current": "import { beforeOwnedCheckedRetainedIdentitySource, ownedCheckedRetainedIdentityNormalizationPaths } from \"./owned-checked-retained-identity-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...ownedCheckedRetainedIdentityNormalizationPaths\n\t, ...ownedSubtypeNpmCompleteAcceptanceNormalizationPaths\n",
+          "previous": "\t...ownedSubtypeNpmCompleteAcceptanceNormalizationPaths\n",
+          "start": 188577
+        },
+        {
+          "current": "\tlet stage = beforeOwnedCheckedRetainedIdentitySource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeOwnedSubtypeNpmCompleteAcceptanceSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeOwnedSubtypeNpmCompleteAcceptanceSource(path, text, expected);\n",
+          "start": 233883
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "b09e82c6c23c84fa440df655adee6bccf7ecc17832f87c581c5b1683fbc0e849"
+    },
+    {
+      "currentSha256": "f2280c34135490a0ef3f838eed4e7e0730b03a432218ce6ebe44f21820af2cae",
+      "edits": [
+        {
+          "current": "import \"./helpers/owned-checked-retained-identity-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 10147
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "0a11d0933a1aa34be236b4c24feb286aee63aa8f13670fbd06e2350d1b9735be"
+    }
+  ],
+  "milestone": "owned-checked-retained-identity-source-v1",
+  "predecessorCommit": "8d61534c178feedb831fc48041e327caa1f56dbc",
+  "schemaVersion": 1,
+  "scope": "Correct a test that treated a resource with an independent owning lease as expired. Preserve the retained identity and validate it after the original owner is released; allocate a different unretained resource for true expiry, invalid-input rejection and output atomicity. All other cross-session, callback, transfer, closure, shutdown, non-reuse and recovery assertions remain. Runtime, Lean code, inventory, support and old evidence are unchanged. The original WIT failure remains recorded and corrected installed acceptance is pending.",
+  "updates": [
+    {
+      "currentSha256": "078331d85c63142a5ef5bd465ee868b997a343e22609261d805c5963797f91f7",
+      "edits": [
+        {
+          "current": "  /* Ordinary retained resources share an identity while any owning lease is\n     live. This is not an anchored view: peer_kept still owns foreign.holder. */\n  OK(owned_checked_records_echo_claim(peer, &foreign, &out, &owner));\n  expect_serial(peer, out.holder, 73); release(&owner);\n  /* Use a different resource with no retained lease to test actual expiry. */\n  owned_checked_records_result *expired_owner = NULL;\n  owned_checked_records_ticket_t expired_ticket = make_ticket(peer, 74, &expired_owner);\n  owned_checked_records_claim_t expired = {expired_ticket, quota};\n  release(&expired_owner);\n",
+          "previous": "",
+          "start": 9138
+        },
+        {
+          "current": "  CHECK(owned_checked_records_echo_claim(peer, &expired, &out, &owner)\n",
+          "previous": "  CHECK(owned_checked_records_echo_claim(peer, &foreign, &out, &owner)\n",
+          "start": 9798
+        }
+      ],
+      "path": "tests/fixtures/structured-types/owned-checked-record-installed.c",
+      "previousSha256": "620ee5f83e411b7826955f94d93ce2844e4afc42291ad132b6f6bfc29f3b6f26"
+    }
+  ]
+}
