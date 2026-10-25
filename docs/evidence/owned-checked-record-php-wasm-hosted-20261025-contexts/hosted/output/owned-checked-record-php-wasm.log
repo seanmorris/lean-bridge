@@ -1,0 +1,720 @@
+
+> @lean-wasm/bridge-poc@0.0.0-poc test:owned-checked-record-php-wasm
+> LEAN_BRIDGE_OWNED_CHECKED_RECORD_PHP_WASM_TEST=1 node --test --test-concurrency=1 tests/owned-checked-record-php-wasm-packaging.test.mjs
+
+TAP version 13
+# Installing the standalone CLI with verified PHP-Wasm compiler inputs
+# ordinary: installed CLI builds the PHP-Wasm ownership release
+# ordinary: independently rebuilding and comparing package bytes
+# Installing the original npm archives and companion Composer ZIP offline
+# Installing the original npm archives and companion Composer ZIP offline
+# ordinary: installed embedded/startup/strict0
+# ordinary: installed embedded/startup/strict1
+# ordinary: installed embedded/lazy/strict0
+# ordinary: installed embedded/lazy/strict1
+# ordinary: installed composer/startup/strict0
+# ordinary: installed composer/startup/strict1
+# ordinary: installed composer/lazy/strict0
+# ordinary: installed composer/lazy/strict1
+# owned/embedded: PHP-Wasm Chromium bundled/startup/weak
+# owned/embedded: PHP-Wasm Chromium bundled/startup/strict
+# owned/embedded: PHP-Wasm Chromium bundled/lazy/weak
+# owned/embedded: PHP-Wasm Chromium bundled/lazy/strict
+# owned/composer: PHP-Wasm Chromium bundled/startup/weak
+# owned/composer: PHP-Wasm Chromium bundled/startup/strict
+# owned/composer: PHP-Wasm Chromium bundled/lazy/weak
+# owned/composer: PHP-Wasm Chromium bundled/lazy/strict
+# checked contexts: full/embedded/startup/startup/primary-first/strict0
+# checked contexts: full/embedded/startup/startup/primary-first/strict1
+# checked contexts: full/embedded/startup/startup/peer-first/strict0
+# checked contexts: full/embedded/startup/startup/peer-first/strict1
+# checked contexts: full/embedded/startup/lazy/primary-first/strict0
+# checked contexts: full/embedded/startup/lazy/primary-first/strict1
+# checked contexts: full/embedded/startup/lazy/peer-first/strict0
+# checked contexts: full/embedded/startup/lazy/peer-first/strict1
+# checked contexts: full/embedded/lazy/startup/primary-first/strict0
+# checked contexts: full/embedded/lazy/startup/primary-first/strict1
+# checked contexts: full/embedded/lazy/startup/peer-first/strict0
+# checked contexts: full/embedded/lazy/startup/peer-first/strict1
+# checked contexts: full/embedded/lazy/lazy/primary-first/strict0
+# checked contexts: full/embedded/lazy/lazy/primary-first/strict1
+# checked contexts: full/embedded/lazy/lazy/peer-first/strict0
+# checked contexts: full/embedded/lazy/lazy/peer-first/strict1
+# checked contexts: full/composer/startup/startup/primary-first/strict0
+# checked contexts: full/composer/startup/startup/primary-first/strict1
+# checked contexts: full/composer/startup/startup/peer-first/strict0
+# checked contexts: full/composer/startup/startup/peer-first/strict1
+# checked contexts: full/composer/startup/lazy/primary-first/strict0
+# checked contexts: full/composer/startup/lazy/primary-first/strict1
+# checked contexts: full/composer/startup/lazy/peer-first/strict0
+# checked contexts: full/composer/startup/lazy/peer-first/strict1
+# checked contexts: full/composer/lazy/startup/primary-first/strict0
+# checked contexts: full/composer/lazy/startup/primary-first/strict1
+# checked contexts: full/composer/lazy/startup/peer-first/strict0
+# checked contexts: full/composer/lazy/startup/peer-first/strict1
+# checked contexts: full/composer/lazy/lazy/primary-first/strict0
+# checked contexts: full/composer/lazy/lazy/primary-first/strict1
+# checked contexts: full/composer/lazy/lazy/peer-first/strict0
+# checked contexts: full/composer/lazy/lazy/peer-first/strict1
+# owned-checked-contexts/full/embedded/startup/primary-first: PHP-Wasm Chromium bundled/startup/weak
+# owned-checked-contexts/full/embedded/startup/primary-first: PHP-Wasm Chromium bundled/startup/strict
+# owned-checked-contexts/full/embedded/startup/primary-first: PHP-Wasm Chromium bundled/lazy/weak
+# owned-checked-contexts/full/embedded/startup/primary-first: PHP-Wasm Chromium bundled/lazy/strict
+# owned-checked-contexts/full/embedded/startup/peer-first: PHP-Wasm Chromium bundled/startup/weak
+# owned-checked-contexts/full/embedded/startup/peer-first: PHP-Wasm Chromium bundled/startup/strict
+# owned-checked-contexts/full/embedded/startup/peer-first: PHP-Wasm Chromium bundled/lazy/weak
+# owned-checked-contexts/full/embedded/startup/peer-first: PHP-Wasm Chromium bundled/lazy/strict
+# owned-checked-contexts/full/embedded/lazy/primary-first: PHP-Wasm Chromium bundled/startup/weak
+# owned-checked-contexts/full/embedded/lazy/primary-first: PHP-Wasm Chromium bundled/startup/strict
+# owned-checked-contexts/full/embedded/lazy/primary-first: PHP-Wasm Chromium bundled/lazy/weak
+# owned-checked-contexts/full/embedded/lazy/primary-first: PHP-Wasm Chromium bundled/lazy/strict
+# owned-checked-contexts/full/embedded/lazy/peer-first: PHP-Wasm Chromium bundled/startup/weak
+# owned-checked-contexts/full/embedded/lazy/peer-first: PHP-Wasm Chromium bundled/startup/strict
+# owned-checked-contexts/full/embedded/lazy/peer-first: PHP-Wasm Chromium bundled/lazy/weak
+# owned-checked-contexts/full/embedded/lazy/peer-first: PHP-Wasm Chromium bundled/lazy/strict
+# owned-checked-contexts/full/composer/startup/primary-first: PHP-Wasm Chromium bundled/startup/weak
+# owned-checked-contexts/full/composer/startup/primary-first: PHP-Wasm Chromium bundled/startup/strict
+# owned-checked-contexts/full/composer/startup/primary-first: PHP-Wasm Chromium bundled/lazy/weak
+# owned-checked-contexts/full/composer/startup/primary-first: PHP-Wasm Chromium bundled/lazy/strict
+# owned-checked-contexts/full/composer/startup/peer-first: PHP-Wasm Chromium bundled/startup/weak
+# owned-checked-contexts/full/composer/startup/peer-first: PHP-Wasm Chromium bundled/startup/strict
+# owned-checked-contexts/full/composer/startup/peer-first: PHP-Wasm Chromium bundled/lazy/weak
+# owned-checked-contexts/full/composer/startup/peer-first: PHP-Wasm Chromium bundled/lazy/strict
+# owned-checked-contexts/full/composer/lazy/primary-first: PHP-Wasm Chromium bundled/startup/weak
+# owned-checked-contexts/full/composer/lazy/primary-first: PHP-Wasm Chromium bundled/startup/strict
+# owned-checked-contexts/full/composer/lazy/primary-first: PHP-Wasm Chromium bundled/lazy/weak
+# owned-checked-contexts/full/composer/lazy/primary-first: PHP-Wasm Chromium bundled/lazy/strict
+# owned-checked-contexts/full/composer/lazy/peer-first: PHP-Wasm Chromium bundled/startup/weak
+# owned-checked-contexts/full/composer/lazy/peer-first: PHP-Wasm Chromium bundled/startup/strict
+# owned-checked-contexts/full/composer/lazy/peer-first: PHP-Wasm Chromium bundled/lazy/weak
+# owned-checked-contexts/full/composer/lazy/peer-first: PHP-Wasm Chromium bundled/lazy/strict
+# reviewed: installed CLI builds the PHP-Wasm ownership release
+# reviewed: independently rebuilding and comparing package bytes
+# Installing the original npm archives and companion Composer ZIP offline
+# Installing the original npm archives and companion Composer ZIP offline
+# reviewed: installed embedded/startup/strict0
+# reviewed: installed embedded/startup/strict1
+# reviewed: installed embedded/lazy/strict0
+# reviewed: installed embedded/lazy/strict1
+# reviewed: installed composer/startup/strict0
+# reviewed: installed composer/startup/strict1
+# reviewed: installed composer/lazy/strict0
+# reviewed: installed composer/lazy/strict1
+# owned/embedded: PHP-Wasm Chromium bundled/startup/weak
+# owned/embedded: PHP-Wasm Chromium bundled/startup/strict
+# owned/embedded: PHP-Wasm Chromium bundled/lazy/weak
+# owned/embedded: PHP-Wasm Chromium bundled/lazy/strict
+# owned/composer: PHP-Wasm Chromium bundled/startup/weak
+# owned/composer: PHP-Wasm Chromium bundled/startup/strict
+# owned/composer: PHP-Wasm Chromium bundled/lazy/weak
+# owned/composer: PHP-Wasm Chromium bundled/lazy/strict
+# checked contexts: full/embedded/startup/startup/primary-first/strict0
+# checked contexts: full/embedded/startup/startup/primary-first/strict1
+# checked contexts: full/embedded/startup/startup/peer-first/strict0
+# checked contexts: full/embedded/startup/startup/peer-first/strict1
+# checked contexts: full/embedded/startup/lazy/primary-first/strict0
+# checked contexts: full/embedded/startup/lazy/primary-first/strict1
+# checked contexts: full/embedded/startup/lazy/peer-first/strict0
+# checked contexts: full/embedded/startup/lazy/peer-first/strict1
+# checked contexts: full/embedded/lazy/startup/primary-first/strict0
+# checked contexts: full/embedded/lazy/startup/primary-first/strict1
+# checked contexts: full/embedded/lazy/startup/peer-first/strict0
+# checked contexts: full/embedded/lazy/startup/peer-first/strict1
+# checked contexts: full/embedded/lazy/lazy/primary-first/strict0
+# checked contexts: full/embedded/lazy/lazy/primary-first/strict1
+# checked contexts: full/embedded/lazy/lazy/peer-first/strict0
+# checked contexts: full/embedded/lazy/lazy/peer-first/strict1
+# checked contexts: full/composer/startup/startup/primary-first/strict0
+# checked contexts: full/composer/startup/startup/primary-first/strict1
+# checked contexts: full/composer/startup/startup/peer-first/strict0
+# checked contexts: full/composer/startup/startup/peer-first/strict1
+# checked contexts: full/composer/startup/lazy/primary-first/strict0
+# checked contexts: full/composer/startup/lazy/primary-first/strict1
+# checked contexts: full/composer/startup/lazy/peer-first/strict0
+# checked contexts: full/composer/startup/lazy/peer-first/strict1
+# checked contexts: full/composer/lazy/startup/primary-first/strict0
+# checked contexts: full/composer/lazy/startup/primary-first/strict1
+# checked contexts: full/composer/lazy/startup/peer-first/strict0
+# checked contexts: full/composer/lazy/startup/peer-first/strict1
+# checked contexts: full/composer/lazy/lazy/primary-first/strict0
+# checked contexts: full/composer/lazy/lazy/primary-first/strict1
+# checked contexts: full/composer/lazy/lazy/peer-first/strict0
+# checked contexts: full/composer/lazy/lazy/peer-first/strict1
+# owned-checked-contexts/full/embedded/startup/primary-first: PHP-Wasm Chromium bundled/startup/weak
+# owned-checked-contexts/full/embedded/startup/primary-first: PHP-Wasm Chromium bundled/startup/strict
+# owned-checked-contexts/full/embedded/startup/primary-first: PHP-Wasm Chromium bundled/lazy/weak
+# owned-checked-contexts/full/embedded/startup/primary-first: PHP-Wasm Chromium bundled/lazy/strict
+# owned-checked-contexts/full/embedded/startup/peer-first: PHP-Wasm Chromium bundled/startup/weak
+# owned-checked-contexts/full/embedded/startup/peer-first: PHP-Wasm Chromium bundled/startup/strict
+# owned-checked-contexts/full/embedded/startup/peer-first: PHP-Wasm Chromium bundled/lazy/weak
+# owned-checked-contexts/full/embedded/startup/peer-first: PHP-Wasm Chromium bundled/lazy/strict
+# owned-checked-contexts/full/embedded/lazy/primary-first: PHP-Wasm Chromium bundled/startup/weak
+# owned-checked-contexts/full/embedded/lazy/primary-first: PHP-Wasm Chromium bundled/startup/strict
+# owned-checked-contexts/full/embedded/lazy/primary-first: PHP-Wasm Chromium bundled/lazy/weak
+# owned-checked-contexts/full/embedded/lazy/primary-first: PHP-Wasm Chromium bundled/lazy/strict
+# owned-checked-contexts/full/embedded/lazy/peer-first: PHP-Wasm Chromium bundled/startup/weak
+# owned-checked-contexts/full/embedded/lazy/peer-first: PHP-Wasm Chromium bundled/startup/strict
+# owned-checked-contexts/full/embedded/lazy/peer-first: PHP-Wasm Chromium bundled/lazy/weak
+# owned-checked-contexts/full/embedded/lazy/peer-first: PHP-Wasm Chromium bundled/lazy/strict
+# owned-checked-contexts/full/composer/startup/primary-first: PHP-Wasm Chromium bundled/startup/weak
+# owned-checked-contexts/full/composer/startup/primary-first: PHP-Wasm Chromium bundled/startup/strict
+# owned-checked-contexts/full/composer/startup/primary-first: PHP-Wasm Chromium bundled/lazy/weak
+# owned-checked-contexts/full/composer/startup/primary-first: PHP-Wasm Chromium bundled/lazy/strict
+# owned-checked-contexts/full/composer/startup/peer-first: PHP-Wasm Chromium bundled/startup/weak
+# owned-checked-contexts/full/composer/startup/peer-first: PHP-Wasm Chromium bundled/startup/strict
+# owned-checked-contexts/full/composer/startup/peer-first: PHP-Wasm Chromium bundled/lazy/weak
+# owned-checked-contexts/full/composer/startup/peer-first: PHP-Wasm Chromium bundled/lazy/strict
+# owned-checked-contexts/full/composer/lazy/primary-first: PHP-Wasm Chromium bundled/startup/weak
+# owned-checked-contexts/full/composer/lazy/primary-first: PHP-Wasm Chromium bundled/startup/strict
+# owned-checked-contexts/full/composer/lazy/primary-first: PHP-Wasm Chromium bundled/lazy/weak
+# owned-checked-contexts/full/composer/lazy/primary-first: PHP-Wasm Chromium bundled/lazy/strict
+# owned-checked-contexts/full/composer/lazy/peer-first: PHP-Wasm Chromium bundled/startup/weak
+# owned-checked-contexts/full/composer/lazy/peer-first: PHP-Wasm Chromium bundled/startup/strict
+# owned-checked-contexts/full/composer/lazy/peer-first: PHP-Wasm Chromium bundled/lazy/weak
+# owned-checked-contexts/full/composer/lazy/peer-first: PHP-Wasm Chromium bundled/lazy/strict
+# Subtest: installed PHP-Wasm full owned checked records execute in Node and Chromium
+ok 1 - installed PHP-Wasm full owned checked records execute in Node and Chromium
+  ---
+  duration_ms: 748665.877578
+  type: 'test'
+  ...
+# Installing the standalone CLI with verified PHP-Wasm compiler inputs
+# ordinary: installed CLI builds the PHP-Wasm ownership release
+# ordinary: independently rebuilding and comparing package bytes
+# Installing the original npm archives and companion Composer ZIP offline
+# Installing the original npm archives and companion Composer ZIP offline
+# ordinary: installed embedded/startup/strict0
+# ordinary: installed embedded/startup/strict1
+# ordinary: installed embedded/lazy/strict0
+# ordinary: installed embedded/lazy/strict1
+# ordinary: installed composer/startup/strict0
+# ordinary: installed composer/startup/strict1
+# ordinary: installed composer/lazy/strict0
+# ordinary: installed composer/lazy/strict1
+# owned/embedded: PHP-Wasm Chromium bundled/startup/weak
+# owned/embedded: PHP-Wasm Chromium bundled/startup/strict
+# owned/embedded: PHP-Wasm Chromium bundled/lazy/weak
+# owned/embedded: PHP-Wasm Chromium bundled/lazy/strict
+# owned/composer: PHP-Wasm Chromium bundled/startup/weak
+# owned/composer: PHP-Wasm Chromium bundled/startup/strict
+# owned/composer: PHP-Wasm Chromium bundled/lazy/weak
+# owned/composer: PHP-Wasm Chromium bundled/lazy/strict
+# checked contexts: full/embedded/startup/startup/primary-first/strict0
+# checked contexts: full/embedded/startup/startup/primary-first/strict1
+# checked contexts: full/embedded/startup/startup/peer-first/strict0
+# checked contexts: full/embedded/startup/startup/peer-first/strict1
+# checked contexts: full/embedded/startup/lazy/primary-first/strict0
+# checked contexts: full/embedded/startup/lazy/primary-first/strict1
+# checked contexts: full/embedded/startup/lazy/peer-first/strict0
+# checked contexts: full/embedded/startup/lazy/peer-first/strict1
+# checked contexts: full/embedded/lazy/startup/primary-first/strict0
+# checked contexts: full/embedded/lazy/startup/primary-first/strict1
+# checked contexts: full/embedded/lazy/startup/peer-first/strict0
+# checked contexts: full/embedded/lazy/startup/peer-first/strict1
+# checked contexts: full/embedded/lazy/lazy/primary-first/strict0
+# checked contexts: full/embedded/lazy/lazy/primary-first/strict1
+# checked contexts: full/embedded/lazy/lazy/peer-first/strict0
+# checked contexts: full/embedded/lazy/lazy/peer-first/strict1
+# checked contexts: full/composer/startup/startup/primary-first/strict0
+# checked contexts: full/composer/startup/startup/primary-first/strict1
+# checked contexts: full/composer/startup/startup/peer-first/strict0
+# checked contexts: full/composer/startup/startup/peer-first/strict1
+# checked contexts: full/composer/startup/lazy/primary-first/strict0
+# checked contexts: full/composer/startup/lazy/primary-first/strict1
+# checked contexts: full/composer/startup/lazy/peer-first/strict0
+# checked contexts: full/composer/startup/lazy/peer-first/strict1
+# checked contexts: full/composer/lazy/startup/primary-first/strict0
+# checked contexts: full/composer/lazy/startup/primary-first/strict1
+# checked contexts: full/composer/lazy/startup/peer-first/strict0
+# checked contexts: full/composer/lazy/startup/peer-first/strict1
+# checked contexts: full/composer/lazy/lazy/primary-first/strict0
+# checked contexts: full/composer/lazy/lazy/primary-first/strict1
+# checked contexts: full/composer/lazy/lazy/peer-first/strict0
+# checked contexts: full/composer/lazy/lazy/peer-first/strict1
+# owned-checked-contexts/full/embedded/startup/primary-first: PHP-Wasm Chromium bundled/startup/weak
+# owned-checked-contexts/full/embedded/startup/primary-first: PHP-Wasm Chromium bundled/startup/strict
+# owned-checked-contexts/full/embedded/startup/primary-first: PHP-Wasm Chromium bundled/lazy/weak
+# owned-checked-contexts/full/embedded/startup/primary-first: PHP-Wasm Chromium bundled/lazy/strict
+# owned-checked-contexts/full/embedded/startup/peer-first: PHP-Wasm Chromium bundled/startup/weak
+# owned-checked-contexts/full/embedded/startup/peer-first: PHP-Wasm Chromium bundled/startup/strict
+# owned-checked-contexts/full/embedded/startup/peer-first: PHP-Wasm Chromium bundled/lazy/weak
+# owned-checked-contexts/full/embedded/startup/peer-first: PHP-Wasm Chromium bundled/lazy/strict
+# owned-checked-contexts/full/embedded/lazy/primary-first: PHP-Wasm Chromium bundled/startup/weak
+# owned-checked-contexts/full/embedded/lazy/primary-first: PHP-Wasm Chromium bundled/startup/strict
+# owned-checked-contexts/full/embedded/lazy/primary-first: PHP-Wasm Chromium bundled/lazy/weak
+# owned-checked-contexts/full/embedded/lazy/primary-first: PHP-Wasm Chromium bundled/lazy/strict
+# owned-checked-contexts/full/embedded/lazy/peer-first: PHP-Wasm Chromium bundled/startup/weak
+# owned-checked-contexts/full/embedded/lazy/peer-first: PHP-Wasm Chromium bundled/startup/strict
+# owned-checked-contexts/full/embedded/lazy/peer-first: PHP-Wasm Chromium bundled/lazy/weak
+# owned-checked-contexts/full/embedded/lazy/peer-first: PHP-Wasm Chromium bundled/lazy/strict
+# owned-checked-contexts/full/composer/startup/primary-first: PHP-Wasm Chromium bundled/startup/weak
+# owned-checked-contexts/full/composer/startup/primary-first: PHP-Wasm Chromium bundled/startup/strict
+# owned-checked-contexts/full/composer/startup/primary-first: PHP-Wasm Chromium bundled/lazy/weak
+# owned-checked-contexts/full/composer/startup/primary-first: PHP-Wasm Chromium bundled/lazy/strict
+# owned-checked-contexts/full/composer/startup/peer-first: PHP-Wasm Chromium bundled/startup/weak
+# owned-checked-contexts/full/composer/startup/peer-first: PHP-Wasm Chromium bundled/startup/strict
+# owned-checked-contexts/full/composer/startup/peer-first: PHP-Wasm Chromium bundled/lazy/weak
+# owned-checked-contexts/full/composer/startup/peer-first: PHP-Wasm Chromium bundled/lazy/strict
+# owned-checked-contexts/full/composer/lazy/primary-first: PHP-Wasm Chromium bundled/startup/weak
+# owned-checked-contexts/full/composer/lazy/primary-first: PHP-Wasm Chromium bundled/startup/strict
+# owned-checked-contexts/full/composer/lazy/primary-first: PHP-Wasm Chromium bundled/lazy/weak
+# owned-checked-contexts/full/composer/lazy/primary-first: PHP-Wasm Chromium bundled/lazy/strict
+# owned-checked-contexts/full/composer/lazy/peer-first: PHP-Wasm Chromium bundled/startup/weak
+# owned-checked-contexts/full/composer/lazy/peer-first: PHP-Wasm Chromium bundled/startup/strict
+# owned-checked-contexts/full/composer/lazy/peer-first: PHP-Wasm Chromium bundled/lazy/weak
+# owned-checked-contexts/full/composer/lazy/peer-first: PHP-Wasm Chromium bundled/lazy/strict
+# reviewed: installed CLI builds the PHP-Wasm ownership release
+# reviewed: independently rebuilding and comparing package bytes
+# Installing the original npm archives and companion Composer ZIP offline
+# Installing the original npm archives and companion Composer ZIP offline
+# reviewed: installed embedded/startup/strict0
+# reviewed: installed embedded/startup/strict1
+# reviewed: installed embedded/lazy/strict0
+# reviewed: installed embedded/lazy/strict1
+# reviewed: installed composer/startup/strict0
+# reviewed: installed composer/startup/strict1
+# reviewed: installed composer/lazy/strict0
+# reviewed: installed composer/lazy/strict1
+# owned/embedded: PHP-Wasm Chromium bundled/startup/weak
+# owned/embedded: PHP-Wasm Chromium bundled/startup/strict
+# owned/embedded: PHP-Wasm Chromium bundled/lazy/weak
+# owned/embedded: PHP-Wasm Chromium bundled/lazy/strict
+# owned/composer: PHP-Wasm Chromium bundled/startup/weak
+# owned/composer: PHP-Wasm Chromium bundled/startup/strict
+# owned/composer: PHP-Wasm Chromium bundled/lazy/weak
+# owned/composer: PHP-Wasm Chromium bundled/lazy/strict
+# checked contexts: full/embedded/startup/startup/primary-first/strict0
+# checked contexts: full/embedded/startup/startup/primary-first/strict1
+# checked contexts: full/embedded/startup/startup/peer-first/strict0
+# checked contexts: full/embedded/startup/startup/peer-first/strict1
+# checked contexts: full/embedded/startup/lazy/primary-first/strict0
+# checked contexts: full/embedded/startup/lazy/primary-first/strict1
+# checked contexts: full/embedded/startup/lazy/peer-first/strict0
+# checked contexts: full/embedded/startup/lazy/peer-first/strict1
+# checked contexts: full/embedded/lazy/startup/primary-first/strict0
+# checked contexts: full/embedded/lazy/startup/primary-first/strict1
+# checked contexts: full/embedded/lazy/startup/peer-first/strict0
+# checked contexts: full/embedded/lazy/startup/peer-first/strict1
+# checked contexts: full/embedded/lazy/lazy/primary-first/strict0
+# checked contexts: full/embedded/lazy/lazy/primary-first/strict1
+# checked contexts: full/embedded/lazy/lazy/peer-first/strict0
+# checked contexts: full/embedded/lazy/lazy/peer-first/strict1
+# checked contexts: full/composer/startup/startup/primary-first/strict0
+# checked contexts: full/composer/startup/startup/primary-first/strict1
+# checked contexts: full/composer/startup/startup/peer-first/strict0
+# checked contexts: full/composer/startup/startup/peer-first/strict1
+# checked contexts: full/composer/startup/lazy/primary-first/strict0
+# checked contexts: full/composer/startup/lazy/primary-first/strict1
+# checked contexts: full/composer/startup/lazy/peer-first/strict0
+# checked contexts: full/composer/startup/lazy/peer-first/strict1
+# checked contexts: full/composer/lazy/startup/primary-first/strict0
+# checked contexts: full/composer/lazy/startup/primary-first/strict1
+# checked contexts: full/composer/lazy/startup/peer-first/strict0
+# checked contexts: full/composer/lazy/startup/peer-first/strict1
+# checked contexts: full/composer/lazy/lazy/primary-first/strict0
+# checked contexts: full/composer/lazy/lazy/primary-first/strict1
+# checked contexts: full/composer/lazy/lazy/peer-first/strict0
+# checked contexts: full/composer/lazy/lazy/peer-first/strict1
+# owned-checked-contexts/full/embedded/startup/primary-first: PHP-Wasm Chromium bundled/startup/weak
+# owned-checked-contexts/full/embedded/startup/primary-first: PHP-Wasm Chromium bundled/startup/strict
+# owned-checked-contexts/full/embedded/startup/primary-first: PHP-Wasm Chromium bundled/lazy/weak
+# owned-checked-contexts/full/embedded/startup/primary-first: PHP-Wasm Chromium bundled/lazy/strict
+# owned-checked-contexts/full/embedded/startup/peer-first: PHP-Wasm Chromium bundled/startup/weak
+# owned-checked-contexts/full/embedded/startup/peer-first: PHP-Wasm Chromium bundled/startup/strict
+# owned-checked-contexts/full/embedded/startup/peer-first: PHP-Wasm Chromium bundled/lazy/weak
+# owned-checked-contexts/full/embedded/startup/peer-first: PHP-Wasm Chromium bundled/lazy/strict
+# owned-checked-contexts/full/embedded/lazy/primary-first: PHP-Wasm Chromium bundled/startup/weak
+# owned-checked-contexts/full/embedded/lazy/primary-first: PHP-Wasm Chromium bundled/startup/strict
+# owned-checked-contexts/full/embedded/lazy/primary-first: PHP-Wasm Chromium bundled/lazy/weak
+# owned-checked-contexts/full/embedded/lazy/primary-first: PHP-Wasm Chromium bundled/lazy/strict
+# owned-checked-contexts/full/embedded/lazy/peer-first: PHP-Wasm Chromium bundled/startup/weak
+# owned-checked-contexts/full/embedded/lazy/peer-first: PHP-Wasm Chromium bundled/startup/strict
+# owned-checked-contexts/full/embedded/lazy/peer-first: PHP-Wasm Chromium bundled/lazy/weak
+# owned-checked-contexts/full/embedded/lazy/peer-first: PHP-Wasm Chromium bundled/lazy/strict
+# owned-checked-contexts/full/composer/startup/primary-first: PHP-Wasm Chromium bundled/startup/weak
+# owned-checked-contexts/full/composer/startup/primary-first: PHP-Wasm Chromium bundled/startup/strict
+# owned-checked-contexts/full/composer/startup/primary-first: PHP-Wasm Chromium bundled/lazy/weak
+# owned-checked-contexts/full/composer/startup/primary-first: PHP-Wasm Chromium bundled/lazy/strict
+# owned-checked-contexts/full/composer/startup/peer-first: PHP-Wasm Chromium bundled/startup/weak
+# owned-checked-contexts/full/composer/startup/peer-first: PHP-Wasm Chromium bundled/startup/strict
+# owned-checked-contexts/full/composer/startup/peer-first: PHP-Wasm Chromium bundled/lazy/weak
+# owned-checked-contexts/full/composer/startup/peer-first: PHP-Wasm Chromium bundled/lazy/strict
+# owned-checked-contexts/full/composer/lazy/primary-first: PHP-Wasm Chromium bundled/startup/weak
+# owned-checked-contexts/full/composer/lazy/primary-first: PHP-Wasm Chromium bundled/startup/strict
+# owned-checked-contexts/full/composer/lazy/primary-first: PHP-Wasm Chromium bundled/lazy/weak
+# owned-checked-contexts/full/composer/lazy/primary-first: PHP-Wasm Chromium bundled/lazy/strict
+# owned-checked-contexts/full/composer/lazy/peer-first: PHP-Wasm Chromium bundled/startup/weak
+# owned-checked-contexts/full/composer/lazy/peer-first: PHP-Wasm Chromium bundled/startup/strict
+# owned-checked-contexts/full/composer/lazy/peer-first: PHP-Wasm Chromium bundled/lazy/weak
+# owned-checked-contexts/full/composer/lazy/peer-first: PHP-Wasm Chromium bundled/lazy/strict
+# Installing the standalone CLI with verified PHP-Wasm compiler inputs
+# ordinary: installed CLI builds the PHP-Wasm ownership release
+# ordinary: independently rebuilding and comparing package bytes
+# Installing the original npm archives and companion Composer ZIP offline
+# Installing the original npm archives and companion Composer ZIP offline
+# ordinary: installed embedded/startup/strict0
+# ordinary: installed embedded/startup/strict1
+# ordinary: installed embedded/lazy/strict0
+# ordinary: installed embedded/lazy/strict1
+# ordinary: installed composer/startup/strict0
+# ordinary: installed composer/startup/strict1
+# ordinary: installed composer/lazy/strict0
+# ordinary: installed composer/lazy/strict1
+# owned/embedded: PHP-Wasm Chromium bundled/startup/weak
+# owned/embedded: PHP-Wasm Chromium bundled/startup/strict
+# owned/embedded: PHP-Wasm Chromium bundled/lazy/weak
+# owned/embedded: PHP-Wasm Chromium bundled/lazy/strict
+# owned/composer: PHP-Wasm Chromium bundled/startup/weak
+# owned/composer: PHP-Wasm Chromium bundled/startup/strict
+# owned/composer: PHP-Wasm Chromium bundled/lazy/weak
+# owned/composer: PHP-Wasm Chromium bundled/lazy/strict
+# checked contexts: result-only/embedded/startup/startup/primary-first/strict0
+# checked contexts: result-only/embedded/startup/startup/primary-first/strict1
+# checked contexts: result-only/embedded/startup/startup/peer-first/strict0
+# checked contexts: result-only/embedded/startup/startup/peer-first/strict1
+# checked contexts: result-only/embedded/startup/lazy/primary-first/strict0
+# checked contexts: result-only/embedded/startup/lazy/primary-first/strict1
+# checked contexts: result-only/embedded/startup/lazy/peer-first/strict0
+# checked contexts: result-only/embedded/startup/lazy/peer-first/strict1
+# checked contexts: result-only/embedded/lazy/startup/primary-first/strict0
+# checked contexts: result-only/embedded/lazy/startup/primary-first/strict1
+# checked contexts: result-only/embedded/lazy/startup/peer-first/strict0
+# checked contexts: result-only/embedded/lazy/startup/peer-first/strict1
+# checked contexts: result-only/embedded/lazy/lazy/primary-first/strict0
+# checked contexts: result-only/embedded/lazy/lazy/primary-first/strict1
+# checked contexts: result-only/embedded/lazy/lazy/peer-first/strict0
+# checked contexts: result-only/embedded/lazy/lazy/peer-first/strict1
+# checked contexts: result-only/composer/startup/startup/primary-first/strict0
+# checked contexts: result-only/composer/startup/startup/primary-first/strict1
+# checked contexts: result-only/composer/startup/startup/peer-first/strict0
+# checked contexts: result-only/composer/startup/startup/peer-first/strict1
+# checked contexts: result-only/composer/startup/lazy/primary-first/strict0
+# checked contexts: result-only/composer/startup/lazy/primary-first/strict1
+# checked contexts: result-only/composer/startup/lazy/peer-first/strict0
+# checked contexts: result-only/composer/startup/lazy/peer-first/strict1
+# checked contexts: result-only/composer/lazy/startup/primary-first/strict0
+# checked contexts: result-only/composer/lazy/startup/primary-first/strict1
+# checked contexts: result-only/composer/lazy/startup/peer-first/strict0
+# checked contexts: result-only/composer/lazy/startup/peer-first/strict1
+# checked contexts: result-only/composer/lazy/lazy/primary-first/strict0
+# checked contexts: result-only/composer/lazy/lazy/primary-first/strict1
+# checked contexts: result-only/composer/lazy/lazy/peer-first/strict0
+# checked contexts: result-only/composer/lazy/lazy/peer-first/strict1
+# owned-checked-contexts/result-only/embedded/startup/primary-first: PHP-Wasm Chromium bundled/startup/weak
+# owned-checked-contexts/result-only/embedded/startup/primary-first: PHP-Wasm Chromium bundled/startup/strict
+# owned-checked-contexts/result-only/embedded/startup/primary-first: PHP-Wasm Chromium bundled/lazy/weak
+# owned-checked-contexts/result-only/embedded/startup/primary-first: PHP-Wasm Chromium bundled/lazy/strict
+# owned-checked-contexts/result-only/embedded/startup/peer-first: PHP-Wasm Chromium bundled/startup/weak
+# owned-checked-contexts/result-only/embedded/startup/peer-first: PHP-Wasm Chromium bundled/startup/strict
+# owned-checked-contexts/result-only/embedded/startup/peer-first: PHP-Wasm Chromium bundled/lazy/weak
+# owned-checked-contexts/result-only/embedded/startup/peer-first: PHP-Wasm Chromium bundled/lazy/strict
+# owned-checked-contexts/result-only/embedded/lazy/primary-first: PHP-Wasm Chromium bundled/startup/weak
+# owned-checked-contexts/result-only/embedded/lazy/primary-first: PHP-Wasm Chromium bundled/startup/strict
+# owned-checked-contexts/result-only/embedded/lazy/primary-first: PHP-Wasm Chromium bundled/lazy/weak
+# owned-checked-contexts/result-only/embedded/lazy/primary-first: PHP-Wasm Chromium bundled/lazy/strict
+# owned-checked-contexts/result-only/embedded/lazy/peer-first: PHP-Wasm Chromium bundled/startup/weak
+# owned-checked-contexts/result-only/embedded/lazy/peer-first: PHP-Wasm Chromium bundled/startup/strict
+# owned-checked-contexts/result-only/embedded/lazy/peer-first: PHP-Wasm Chromium bundled/lazy/weak
+# owned-checked-contexts/result-only/embedded/lazy/peer-first: PHP-Wasm Chromium bundled/lazy/strict
+# owned-checked-contexts/result-only/composer/startup/primary-first: PHP-Wasm Chromium bundled/startup/weak
+# owned-checked-contexts/result-only/composer/startup/primary-first: PHP-Wasm Chromium bundled/startup/strict
+# owned-checked-contexts/result-only/composer/startup/primary-first: PHP-Wasm Chromium bundled/lazy/weak
+# owned-checked-contexts/result-only/composer/startup/primary-first: PHP-Wasm Chromium bundled/lazy/strict
+# owned-checked-contexts/result-only/composer/startup/peer-first: PHP-Wasm Chromium bundled/startup/weak
+# owned-checked-contexts/result-only/composer/startup/peer-first: PHP-Wasm Chromium bundled/startup/strict
+# owned-checked-contexts/result-only/composer/startup/peer-first: PHP-Wasm Chromium bundled/lazy/weak
+# owned-checked-contexts/result-only/composer/startup/peer-first: PHP-Wasm Chromium bundled/lazy/strict
+# owned-checked-contexts/result-only/composer/lazy/primary-first: PHP-Wasm Chromium bundled/startup/weak
+# owned-checked-contexts/result-only/composer/lazy/primary-first: PHP-Wasm Chromium bundled/startup/strict
+# owned-checked-contexts/result-only/composer/lazy/primary-first: PHP-Wasm Chromium bundled/lazy/weak
+# owned-checked-contexts/result-only/composer/lazy/primary-first: PHP-Wasm Chromium bundled/lazy/strict
+# owned-checked-contexts/result-only/composer/lazy/peer-first: PHP-Wasm Chromium bundled/startup/weak
+# owned-checked-contexts/result-only/composer/lazy/peer-first: PHP-Wasm Chromium bundled/startup/strict
+# owned-checked-contexts/result-only/composer/lazy/peer-first: PHP-Wasm Chromium bundled/lazy/weak
+# owned-checked-contexts/result-only/composer/lazy/peer-first: PHP-Wasm Chromium bundled/lazy/strict
+# reviewed: installed CLI builds the PHP-Wasm ownership release
+# reviewed: independently rebuilding and comparing package bytes
+# Installing the original npm archives and companion Composer ZIP offline
+# Installing the original npm archives and companion Composer ZIP offline
+# reviewed: installed embedded/startup/strict0
+# reviewed: installed embedded/startup/strict1
+# reviewed: installed embedded/lazy/strict0
+# reviewed: installed embedded/lazy/strict1
+# reviewed: installed composer/startup/strict0
+# reviewed: installed composer/startup/strict1
+# reviewed: installed composer/lazy/strict0
+# reviewed: installed composer/lazy/strict1
+# owned/embedded: PHP-Wasm Chromium bundled/startup/weak
+# owned/embedded: PHP-Wasm Chromium bundled/startup/strict
+# owned/embedded: PHP-Wasm Chromium bundled/lazy/weak
+# owned/embedded: PHP-Wasm Chromium bundled/lazy/strict
+# owned/composer: PHP-Wasm Chromium bundled/startup/weak
+# owned/composer: PHP-Wasm Chromium bundled/startup/strict
+# owned/composer: PHP-Wasm Chromium bundled/lazy/weak
+# owned/composer: PHP-Wasm Chromium bundled/lazy/strict
+# checked contexts: result-only/embedded/startup/startup/primary-first/strict0
+# checked contexts: result-only/embedded/startup/startup/primary-first/strict1
+# checked contexts: result-only/embedded/startup/startup/peer-first/strict0
+# checked contexts: result-only/embedded/startup/startup/peer-first/strict1
+# checked contexts: result-only/embedded/startup/lazy/primary-first/strict0
+# checked contexts: result-only/embedded/startup/lazy/primary-first/strict1
+# checked contexts: result-only/embedded/startup/lazy/peer-first/strict0
+# checked contexts: result-only/embedded/startup/lazy/peer-first/strict1
+# checked contexts: result-only/embedded/lazy/startup/primary-first/strict0
+# checked contexts: result-only/embedded/lazy/startup/primary-first/strict1
+# checked contexts: result-only/embedded/lazy/startup/peer-first/strict0
+# checked contexts: result-only/embedded/lazy/startup/peer-first/strict1
+# checked contexts: result-only/embedded/lazy/lazy/primary-first/strict0
+# checked contexts: result-only/embedded/lazy/lazy/primary-first/strict1
+# checked contexts: result-only/embedded/lazy/lazy/peer-first/strict0
+# checked contexts: result-only/embedded/lazy/lazy/peer-first/strict1
+# checked contexts: result-only/composer/startup/startup/primary-first/strict0
+# checked contexts: result-only/composer/startup/startup/primary-first/strict1
+# checked contexts: result-only/composer/startup/startup/peer-first/strict0
+# checked contexts: result-only/composer/startup/startup/peer-first/strict1
+# checked contexts: result-only/composer/startup/lazy/primary-first/strict0
+# checked contexts: result-only/composer/startup/lazy/primary-first/strict1
+# checked contexts: result-only/composer/startup/lazy/peer-first/strict0
+# checked contexts: result-only/composer/startup/lazy/peer-first/strict1
+# checked contexts: result-only/composer/lazy/startup/primary-first/strict0
+# checked contexts: result-only/composer/lazy/startup/primary-first/strict1
+# checked contexts: result-only/composer/lazy/startup/peer-first/strict0
+# checked contexts: result-only/composer/lazy/startup/peer-first/strict1
+# checked contexts: result-only/composer/lazy/lazy/primary-first/strict0
+# checked contexts: result-only/composer/lazy/lazy/primary-first/strict1
+# checked contexts: result-only/composer/lazy/lazy/peer-first/strict0
+# checked contexts: result-only/composer/lazy/lazy/peer-first/strict1
+# owned-checked-contexts/result-only/embedded/startup/primary-first: PHP-Wasm Chromium bundled/startup/weak
+# owned-checked-contexts/result-only/embedded/startup/primary-first: PHP-Wasm Chromium bundled/startup/strict
+# owned-checked-contexts/result-only/embedded/startup/primary-first: PHP-Wasm Chromium bundled/lazy/weak
+# owned-checked-contexts/result-only/embedded/startup/primary-first: PHP-Wasm Chromium bundled/lazy/strict
+# owned-checked-contexts/result-only/embedded/startup/peer-first: PHP-Wasm Chromium bundled/startup/weak
+# owned-checked-contexts/result-only/embedded/startup/peer-first: PHP-Wasm Chromium bundled/startup/strict
+# owned-checked-contexts/result-only/embedded/startup/peer-first: PHP-Wasm Chromium bundled/lazy/weak
+# owned-checked-contexts/result-only/embedded/startup/peer-first: PHP-Wasm Chromium bundled/lazy/strict
+# owned-checked-contexts/result-only/embedded/lazy/primary-first: PHP-Wasm Chromium bundled/startup/weak
+# owned-checked-contexts/result-only/embedded/lazy/primary-first: PHP-Wasm Chromium bundled/startup/strict
+# owned-checked-contexts/result-only/embedded/lazy/primary-first: PHP-Wasm Chromium bundled/lazy/weak
+# owned-checked-contexts/result-only/embedded/lazy/primary-first: PHP-Wasm Chromium bundled/lazy/strict
+# owned-checked-contexts/result-only/embedded/lazy/peer-first: PHP-Wasm Chromium bundled/startup/weak
+# owned-checked-contexts/result-only/embedded/lazy/peer-first: PHP-Wasm Chromium bundled/startup/strict
+# owned-checked-contexts/result-only/embedded/lazy/peer-first: PHP-Wasm Chromium bundled/lazy/weak
+# owned-checked-contexts/result-only/embedded/lazy/peer-first: PHP-Wasm Chromium bundled/lazy/strict
+# owned-checked-contexts/result-only/composer/startup/primary-first: PHP-Wasm Chromium bundled/startup/weak
+# owned-checked-contexts/result-only/composer/startup/primary-first: PHP-Wasm Chromium bundled/startup/strict
+# owned-checked-contexts/result-only/composer/startup/primary-first: PHP-Wasm Chromium bundled/lazy/weak
+# owned-checked-contexts/result-only/composer/startup/primary-first: PHP-Wasm Chromium bundled/lazy/strict
+# owned-checked-contexts/result-only/composer/startup/peer-first: PHP-Wasm Chromium bundled/startup/weak
+# owned-checked-contexts/result-only/composer/startup/peer-first: PHP-Wasm Chromium bundled/startup/strict
+# owned-checked-contexts/result-only/composer/startup/peer-first: PHP-Wasm Chromium bundled/lazy/weak
+# owned-checked-contexts/result-only/composer/startup/peer-first: PHP-Wasm Chromium bundled/lazy/strict
+# owned-checked-contexts/result-only/composer/lazy/primary-first: PHP-Wasm Chromium bundled/startup/weak
+# owned-checked-contexts/result-only/composer/lazy/primary-first: PHP-Wasm Chromium bundled/startup/strict
+# owned-checked-contexts/result-only/composer/lazy/primary-first: PHP-Wasm Chromium bundled/lazy/weak
+# owned-checked-contexts/result-only/composer/lazy/primary-first: PHP-Wasm Chromium bundled/lazy/strict
+# owned-checked-contexts/result-only/composer/lazy/peer-first: PHP-Wasm Chromium bundled/startup/weak
+# owned-checked-contexts/result-only/composer/lazy/peer-first: PHP-Wasm Chromium bundled/startup/strict
+# owned-checked-contexts/result-only/composer/lazy/peer-first: PHP-Wasm Chromium bundled/lazy/weak
+# owned-checked-contexts/result-only/composer/lazy/peer-first: PHP-Wasm Chromium bundled/lazy/strict
+# Subtest: installed PHP-Wasm result-only owned checked records execute in Node and Chromium
+ok 2 - installed PHP-Wasm result-only owned checked records execute in Node and Chromium
+  ---
+  duration_ms: 692417.035105
+  type: 'test'
+  ...
+# Installing the standalone CLI with verified PHP-Wasm compiler inputs
+# ordinary: installed CLI builds the PHP-Wasm ownership release
+# ordinary: independently rebuilding and comparing package bytes
+# Installing the original npm archives and companion Composer ZIP offline
+# Installing the original npm archives and companion Composer ZIP offline
+# ordinary: installed embedded/startup/strict0
+# ordinary: installed embedded/startup/strict1
+# ordinary: installed embedded/lazy/strict0
+# ordinary: installed embedded/lazy/strict1
+# ordinary: installed composer/startup/strict0
+# ordinary: installed composer/startup/strict1
+# ordinary: installed composer/lazy/strict0
+# ordinary: installed composer/lazy/strict1
+# owned/embedded: PHP-Wasm Chromium bundled/startup/weak
+# owned/embedded: PHP-Wasm Chromium bundled/startup/strict
+# owned/embedded: PHP-Wasm Chromium bundled/lazy/weak
+# owned/embedded: PHP-Wasm Chromium bundled/lazy/strict
+# owned/composer: PHP-Wasm Chromium bundled/startup/weak
+# owned/composer: PHP-Wasm Chromium bundled/startup/strict
+# owned/composer: PHP-Wasm Chromium bundled/lazy/weak
+# owned/composer: PHP-Wasm Chromium bundled/lazy/strict
+# checked contexts: result-only/embedded/startup/startup/primary-first/strict0
+# checked contexts: result-only/embedded/startup/startup/primary-first/strict1
+# checked contexts: result-only/embedded/startup/startup/peer-first/strict0
+# checked contexts: result-only/embedded/startup/startup/peer-first/strict1
+# checked contexts: result-only/embedded/startup/lazy/primary-first/strict0
+# checked contexts: result-only/embedded/startup/lazy/primary-first/strict1
+# checked contexts: result-only/embedded/startup/lazy/peer-first/strict0
+# checked contexts: result-only/embedded/startup/lazy/peer-first/strict1
+# checked contexts: result-only/embedded/lazy/startup/primary-first/strict0
+# checked contexts: result-only/embedded/lazy/startup/primary-first/strict1
+# checked contexts: result-only/embedded/lazy/startup/peer-first/strict0
+# checked contexts: result-only/embedded/lazy/startup/peer-first/strict1
+# checked contexts: result-only/embedded/lazy/lazy/primary-first/strict0
+# checked contexts: result-only/embedded/lazy/lazy/primary-first/strict1
+# checked contexts: result-only/embedded/lazy/lazy/peer-first/strict0
+# checked contexts: result-only/embedded/lazy/lazy/peer-first/strict1
+# checked contexts: result-only/composer/startup/startup/primary-first/strict0
+# checked contexts: result-only/composer/startup/startup/primary-first/strict1
+# checked contexts: result-only/composer/startup/startup/peer-first/strict0
+# checked contexts: result-only/composer/startup/startup/peer-first/strict1
+# checked contexts: result-only/composer/startup/lazy/primary-first/strict0
+# checked contexts: result-only/composer/startup/lazy/primary-first/strict1
+# checked contexts: result-only/composer/startup/lazy/peer-first/strict0
+# checked contexts: result-only/composer/startup/lazy/peer-first/strict1
+# checked contexts: result-only/composer/lazy/startup/primary-first/strict0
+# checked contexts: result-only/composer/lazy/startup/primary-first/strict1
+# checked contexts: result-only/composer/lazy/startup/peer-first/strict0
+# checked contexts: result-only/composer/lazy/startup/peer-first/strict1
+# checked contexts: result-only/composer/lazy/lazy/primary-first/strict0
+# checked contexts: result-only/composer/lazy/lazy/primary-first/strict1
+# checked contexts: result-only/composer/lazy/lazy/peer-first/strict0
+# checked contexts: result-only/composer/lazy/lazy/peer-first/strict1
+# owned-checked-contexts/result-only/embedded/startup/primary-first: PHP-Wasm Chromium bundled/startup/weak
+# owned-checked-contexts/result-only/embedded/startup/primary-first: PHP-Wasm Chromium bundled/startup/strict
+# owned-checked-contexts/result-only/embedded/startup/primary-first: PHP-Wasm Chromium bundled/lazy/weak
+# owned-checked-contexts/result-only/embedded/startup/primary-first: PHP-Wasm Chromium bundled/lazy/strict
+# owned-checked-contexts/result-only/embedded/startup/peer-first: PHP-Wasm Chromium bundled/startup/weak
+# owned-checked-contexts/result-only/embedded/startup/peer-first: PHP-Wasm Chromium bundled/startup/strict
+# owned-checked-contexts/result-only/embedded/startup/peer-first: PHP-Wasm Chromium bundled/lazy/weak
+# owned-checked-contexts/result-only/embedded/startup/peer-first: PHP-Wasm Chromium bundled/lazy/strict
+# owned-checked-contexts/result-only/embedded/lazy/primary-first: PHP-Wasm Chromium bundled/startup/weak
+# owned-checked-contexts/result-only/embedded/lazy/primary-first: PHP-Wasm Chromium bundled/startup/strict
+# owned-checked-contexts/result-only/embedded/lazy/primary-first: PHP-Wasm Chromium bundled/lazy/weak
+# owned-checked-contexts/result-only/embedded/lazy/primary-first: PHP-Wasm Chromium bundled/lazy/strict
+# owned-checked-contexts/result-only/embedded/lazy/peer-first: PHP-Wasm Chromium bundled/startup/weak
+# owned-checked-contexts/result-only/embedded/lazy/peer-first: PHP-Wasm Chromium bundled/startup/strict
+# owned-checked-contexts/result-only/embedded/lazy/peer-first: PHP-Wasm Chromium bundled/lazy/weak
+# owned-checked-contexts/result-only/embedded/lazy/peer-first: PHP-Wasm Chromium bundled/lazy/strict
+# owned-checked-contexts/result-only/composer/startup/primary-first: PHP-Wasm Chromium bundled/startup/weak
+# owned-checked-contexts/result-only/composer/startup/primary-first: PHP-Wasm Chromium bundled/startup/strict
+# owned-checked-contexts/result-only/composer/startup/primary-first: PHP-Wasm Chromium bundled/lazy/weak
+# owned-checked-contexts/result-only/composer/startup/primary-first: PHP-Wasm Chromium bundled/lazy/strict
+# owned-checked-contexts/result-only/composer/startup/peer-first: PHP-Wasm Chromium bundled/startup/weak
+# owned-checked-contexts/result-only/composer/startup/peer-first: PHP-Wasm Chromium bundled/startup/strict
+# owned-checked-contexts/result-only/composer/startup/peer-first: PHP-Wasm Chromium bundled/lazy/weak
+# owned-checked-contexts/result-only/composer/startup/peer-first: PHP-Wasm Chromium bundled/lazy/strict
+# owned-checked-contexts/result-only/composer/lazy/primary-first: PHP-Wasm Chromium bundled/startup/weak
+# owned-checked-contexts/result-only/composer/lazy/primary-first: PHP-Wasm Chromium bundled/startup/strict
+# owned-checked-contexts/result-only/composer/lazy/primary-first: PHP-Wasm Chromium bundled/lazy/weak
+# owned-checked-contexts/result-only/composer/lazy/primary-first: PHP-Wasm Chromium bundled/lazy/strict
+# owned-checked-contexts/result-only/composer/lazy/peer-first: PHP-Wasm Chromium bundled/startup/weak
+# owned-checked-contexts/result-only/composer/lazy/peer-first: PHP-Wasm Chromium bundled/startup/strict
+# owned-checked-contexts/result-only/composer/lazy/peer-first: PHP-Wasm Chromium bundled/lazy/weak
+# owned-checked-contexts/result-only/composer/lazy/peer-first: PHP-Wasm Chromium bundled/lazy/strict
+# reviewed: installed CLI builds the PHP-Wasm ownership release
+# reviewed: independently rebuilding and comparing package bytes
+# Installing the original npm archives and companion Composer ZIP offline
+# Installing the original npm archives and companion Composer ZIP offline
+# reviewed: installed embedded/startup/strict0
+# reviewed: installed embedded/startup/strict1
+# reviewed: installed embedded/lazy/strict0
+# reviewed: installed embedded/lazy/strict1
+# reviewed: installed composer/startup/strict0
+# reviewed: installed composer/startup/strict1
+# reviewed: installed composer/lazy/strict0
+# reviewed: installed composer/lazy/strict1
+# owned/embedded: PHP-Wasm Chromium bundled/startup/weak
+# owned/embedded: PHP-Wasm Chromium bundled/startup/strict
+# owned/embedded: PHP-Wasm Chromium bundled/lazy/weak
+# owned/embedded: PHP-Wasm Chromium bundled/lazy/strict
+# owned/composer: PHP-Wasm Chromium bundled/startup/weak
+# owned/composer: PHP-Wasm Chromium bundled/startup/strict
+# owned/composer: PHP-Wasm Chromium bundled/lazy/weak
+# owned/composer: PHP-Wasm Chromium bundled/lazy/strict
+# checked contexts: result-only/embedded/startup/startup/primary-first/strict0
+# checked contexts: result-only/embedded/startup/startup/primary-first/strict1
+# checked contexts: result-only/embedded/startup/startup/peer-first/strict0
+# checked contexts: result-only/embedded/startup/startup/peer-first/strict1
+# checked contexts: result-only/embedded/startup/lazy/primary-first/strict0
+# checked contexts: result-only/embedded/startup/lazy/primary-first/strict1
+# checked contexts: result-only/embedded/startup/lazy/peer-first/strict0
+# checked contexts: result-only/embedded/startup/lazy/peer-first/strict1
+# checked contexts: result-only/embedded/lazy/startup/primary-first/strict0
+# checked contexts: result-only/embedded/lazy/startup/primary-first/strict1
+# checked contexts: result-only/embedded/lazy/startup/peer-first/strict0
+# checked contexts: result-only/embedded/lazy/startup/peer-first/strict1
+# checked contexts: result-only/embedded/lazy/lazy/primary-first/strict0
+# checked contexts: result-only/embedded/lazy/lazy/primary-first/strict1
+# checked contexts: result-only/embedded/lazy/lazy/peer-first/strict0
+# checked contexts: result-only/embedded/lazy/lazy/peer-first/strict1
+# checked contexts: result-only/composer/startup/startup/primary-first/strict0
+# checked contexts: result-only/composer/startup/startup/primary-first/strict1
+# checked contexts: result-only/composer/startup/startup/peer-first/strict0
+# checked contexts: result-only/composer/startup/startup/peer-first/strict1
+# checked contexts: result-only/composer/startup/lazy/primary-first/strict0
+# checked contexts: result-only/composer/startup/lazy/primary-first/strict1
+# checked contexts: result-only/composer/startup/lazy/peer-first/strict0
+# checked contexts: result-only/composer/startup/lazy/peer-first/strict1
+# checked contexts: result-only/composer/lazy/startup/primary-first/strict0
+# checked contexts: result-only/composer/lazy/startup/primary-first/strict1
+# checked contexts: result-only/composer/lazy/startup/peer-first/strict0
+# checked contexts: result-only/composer/lazy/startup/peer-first/strict1
+# checked contexts: result-only/composer/lazy/lazy/primary-first/strict0
+# checked contexts: result-only/composer/lazy/lazy/primary-first/strict1
+# checked contexts: result-only/composer/lazy/lazy/peer-first/strict0
+# checked contexts: result-only/composer/lazy/lazy/peer-first/strict1
+# owned-checked-contexts/result-only/embedded/startup/primary-first: PHP-Wasm Chromium bundled/startup/weak
+# owned-checked-contexts/result-only/embedded/startup/primary-first: PHP-Wasm Chromium bundled/startup/strict
+# owned-checked-contexts/result-only/embedded/startup/primary-first: PHP-Wasm Chromium bundled/lazy/weak
+# owned-checked-contexts/result-only/embedded/startup/primary-first: PHP-Wasm Chromium bundled/lazy/strict
+# owned-checked-contexts/result-only/embedded/startup/peer-first: PHP-Wasm Chromium bundled/startup/weak
+# owned-checked-contexts/result-only/embedded/startup/peer-first: PHP-Wasm Chromium bundled/startup/strict
+# owned-checked-contexts/result-only/embedded/startup/peer-first: PHP-Wasm Chromium bundled/lazy/weak
+# owned-checked-contexts/result-only/embedded/startup/peer-first: PHP-Wasm Chromium bundled/lazy/strict
+# owned-checked-contexts/result-only/embedded/lazy/primary-first: PHP-Wasm Chromium bundled/startup/weak
+# owned-checked-contexts/result-only/embedded/lazy/primary-first: PHP-Wasm Chromium bundled/startup/strict
+# owned-checked-contexts/result-only/embedded/lazy/primary-first: PHP-Wasm Chromium bundled/lazy/weak
+# owned-checked-contexts/result-only/embedded/lazy/primary-first: PHP-Wasm Chromium bundled/lazy/strict
+# owned-checked-contexts/result-only/embedded/lazy/peer-first: PHP-Wasm Chromium bundled/startup/weak
+# owned-checked-contexts/result-only/embedded/lazy/peer-first: PHP-Wasm Chromium bundled/startup/strict
+# owned-checked-contexts/result-only/embedded/lazy/peer-first: PHP-Wasm Chromium bundled/lazy/weak
+# owned-checked-contexts/result-only/embedded/lazy/peer-first: PHP-Wasm Chromium bundled/lazy/strict
+# owned-checked-contexts/result-only/composer/startup/primary-first: PHP-Wasm Chromium bundled/startup/weak
+# owned-checked-contexts/result-only/composer/startup/primary-first: PHP-Wasm Chromium bundled/startup/strict
+# owned-checked-contexts/result-only/composer/startup/primary-first: PHP-Wasm Chromium bundled/lazy/weak
+# owned-checked-contexts/result-only/composer/startup/primary-first: PHP-Wasm Chromium bundled/lazy/strict
+# owned-checked-contexts/result-only/composer/startup/peer-first: PHP-Wasm Chromium bundled/startup/weak
+# owned-checked-contexts/result-only/composer/startup/peer-first: PHP-Wasm Chromium bundled/startup/strict
+# owned-checked-contexts/result-only/composer/startup/peer-first: PHP-Wasm Chromium bundled/lazy/weak
+# owned-checked-contexts/result-only/composer/startup/peer-first: PHP-Wasm Chromium bundled/lazy/strict
+# owned-checked-contexts/result-only/composer/lazy/primary-first: PHP-Wasm Chromium bundled/startup/weak
+# owned-checked-contexts/result-only/composer/lazy/primary-first: PHP-Wasm Chromium bundled/startup/strict
+# owned-checked-contexts/result-only/composer/lazy/primary-first: PHP-Wasm Chromium bundled/lazy/weak
+# owned-checked-contexts/result-only/composer/lazy/primary-first: PHP-Wasm Chromium bundled/lazy/strict
+# owned-checked-contexts/result-only/composer/lazy/peer-first: PHP-Wasm Chromium bundled/startup/weak
+# owned-checked-contexts/result-only/composer/lazy/peer-first: PHP-Wasm Chromium bundled/startup/strict
+# owned-checked-contexts/result-only/composer/lazy/peer-first: PHP-Wasm Chromium bundled/lazy/weak
+# owned-checked-contexts/result-only/composer/lazy/peer-first: PHP-Wasm Chromium bundled/lazy/strict
+# Subtest: owned checked-record PHP-Wasm acceptance remains a separate recurring gate
+ok 3 - owned checked-record PHP-Wasm acceptance remains a separate recurring gate
+  ---
+  duration_ms: 32.833847
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm receipt handoff binds exactly the verified archive bytes
+ok 4 - PHP-Wasm receipt handoff binds exactly the verified archive bytes
+  ---
+  duration_ms: 20.159653
+  type: 'test'
+  ...
+# Subtest: owned PHP-Wasm consumers install the same receipt-only bytes that are retained
+ok 5 - owned PHP-Wasm consumers install the same receipt-only bytes that are retained
+  ---
+  duration_ms: 2.041568
+  type: 'test'
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 5
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1442345.208413
