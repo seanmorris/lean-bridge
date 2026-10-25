@@ -1,0 +1,225 @@
+{
+  "additions": [
+    {
+      "currentSha256": "31aa1c26df04c3fa96d9e575624994288f9d1094863e5c0296e68c08c64b8b82",
+      "path": "docs/evidence/php-wasm-entry-source-supplement-20261025.json"
+    },
+    {
+      "currentSha256": "e6a44b05d16ab93612b5f7645268f03316f30a06eb3f10e72f0bef0866e7b887",
+      "path": "tests/helpers/php-wasm-entry-source-supplement.mjs"
+    },
+    {
+      "currentSha256": "a632d798d6dfd773a742767bc818a3240e941de0cfab7d8620dd849d04d26885",
+      "path": "docs/evidence/php-wasm-entry-source-supplement-acceptance-20261025/acceptance.json"
+    },
+    {
+      "currentSha256": "31f97cf524b76547d80a124f254a22d04e2aedcb129bc55a417e9cd1b27b7a60",
+      "path": "docs/evidence/php-wasm-entry-source-supplement-acceptance-20261025/run.tap"
+    },
+    {
+      "currentSha256": "d57811b4d936fb0c80e9082a620d3edeacf06acd32902dfd89982a79ad6e00af",
+      "path": "docs/evidence/php-wasm-entry-source-supplement-acceptance-20261025/pin-audit.mjs"
+    },
+    {
+      "currentSha256": "ebe083c0ee5fdf15ea28924a6978c9d73ec3b8471fbf8e9bd91fab3c16e9d151",
+      "path": "docs/evidence/php-wasm-entry-source-supplement-acceptance-20261025/initial-check.log"
+    },
+    {
+      "currentSha256": "ae4bb602dd4fd4139eab8c2dcc51073634d9fcde8d3e8b1366c0c8f9b67a8185",
+      "path": "scripts/update-php-wasm-entry-source-supplement-source-history.mjs"
+    },
+    {
+      "currentSha256": "8e2281e3895dc3dfa8ac9a209ad17ae33de0a50bfb98a603540d29cfceb9b0c8",
+      "path": "tests/helpers/php-wasm-entry-source-supplement-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "d697c924e8c2c190ef72cd0cceed621348ff938149c0c50f79071c394020b766",
+      "path": "tests/helpers/php-wasm-entry-source-supplement-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "d0c9470af7a70e64f25f715508fc5ba793d1187e",
+  "implementationCommits": [
+    "d0c9470af7a70e64f25f715508fc5ba793d1187e"
+  ],
+  "integrationBaseCommit": "d0c9470af7a70e64f25f715508fc5ba793d1187e",
+  "integrationUpdates": [
+    {
+      "currentSha256": "cc1ee4f0a59a76c56f1360885ed88fd2113e521ba4c299f206c6c81864e76fa6",
+      "edits": [
+        {
+          "current": "import { beforePhpWasmEntrySourceSupplementSource, phpWasmEntrySourceSupplementNormalizationPaths } from \"./php-wasm-entry-source-supplement-source-history.mjs\";\n",
+          "previous": "",
+          "start": 11726
+        },
+        {
+          "current": "\t...phpWasmEntrySourceSupplementNormalizationPaths\n\t, ...consumerToolLookupsNormalizationPaths\n",
+          "previous": "\t...consumerToolLookupsNormalizationPaths\n",
+          "start": 184927
+        },
+        {
+          "current": "\tlet stage = beforePhpWasmEntrySourceSupplementSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeConsumerToolLookupsSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeConsumerToolLookupsSource(path, text, expected);\n",
+          "start": 229035
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "09bdf87c603b0acbf994db6d5e02c9d873bb88e736304580f4a648a478140b58"
+    },
+    {
+      "currentSha256": "c8a7d03fd551f4b35a322fe11c738e402dc4dbc09310139300bf3c335e639d41",
+      "edits": [
+        {
+          "current": "import \"./helpers/php-wasm-entry-source-supplement-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 8375
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "881673825cd9611b3f6dc6901ed4a8de51291a2c9911d5fe3a40104cab5dc6ee"
+    }
+  ],
+  "milestone": "php-wasm-entry-source-supplement-source-v1",
+  "predecessorCommit": "de7630309f4836ac8a9a82cd4a2e687177cbc97b",
+  "schemaVersion": 1,
+  "scope": "Require site/paths.mjs and site/serve.mjs in PHP-Wasm source snapshots and before original-producer execution. Retain their exact original Git bytes in a captured module and independent evidence receipt; only three complete pinned historical snapshots may use that supplement. Preserve both original archives, actual source bytes, workflows and production runtime. Reject hidden edits, missing files, symlinks, altered snapshots and new snapshots that omit either module. Authenticate actual reconstruction of the original 26 MB producer ZIP and all 9,649 checkout sources after restoring only its omitted sparse files. Record fourteen passing checks, initial refusal, documentation and an exact twelve-pin inventory inverse with unchanged support observations. Final full source reconciliation, Core, hosted and recurring activation remain open.",
+  "updates": [
+    {
+      "currentSha256": "d41fbb57b509a24324162da82d00bd80788faf8997b7cafa39a2a15d89082c1a",
+      "edits": [
+        {
+          "current": "thirty original route verifiers. Neither command compiles Lean or PHP.\n\nSource snapshots include `site/serve.mjs` and `site/paths.mjs`, which the producer\nimports through its browser helpers. The original 25 October complete and\ndiagnostic archives omitted these two files. The checker supplements their three\nexact source snapshots with [the original Git bytes](../evidence/php-wasm-entry-source-supplement-20261025.json).\nKeep those archives unchanged. New snapshots must include both files directly;\ncheckout verification rejects hidden edits, missing files and symlinks before\nrunning the original verifier.\n\nCommit the complete archive, including generated files normally ignored by Git,\nbefore preparing publication:\n",
+          "previous": "thirty original route verifiers. Neither command compiles Lean or PHP. Commit the\ncomplete archive, including generated files normally ignored by Git, before\npreparing publication:\n",
+          "start": 4864
+        }
+      ],
+      "path": "docs/contributing/testing.md",
+      "previousSha256": "a0231d42c30f635b9b2a2ed2dd19636adbf307f60d3cc4590ef39b86e2d1a4ac"
+    },
+    {
+      "currentSha256": "d201e69262339b996ee4eb1c8aeee69e0730d6d853e8b6d7daaf7b9d52cd21bf",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"d41fbb57b509a24324162da82d00bd80788faf8997b7cafa39a2a15d89082c1a\"\n",
+          "previous": "          \"sha256\": \"a0231d42c30f635b9b2a2ed2dd19636adbf307f60d3cc4590ef39b86e2d1a4ac\"\n",
+          "start": 1167697
+        },
+        {
+          "current": "          \"sha256\": \"d41fbb57b509a24324162da82d00bd80788faf8997b7cafa39a2a15d89082c1a\"\n",
+          "previous": "          \"sha256\": \"a0231d42c30f635b9b2a2ed2dd19636adbf307f60d3cc4590ef39b86e2d1a4ac\"\n",
+          "start": 1177811
+        },
+        {
+          "current": "          \"sha256\": \"d41fbb57b509a24324162da82d00bd80788faf8997b7cafa39a2a15d89082c1a\"\n",
+          "previous": "          \"sha256\": \"a0231d42c30f635b9b2a2ed2dd19636adbf307f60d3cc4590ef39b86e2d1a4ac\"\n",
+          "start": 1189747
+        },
+        {
+          "current": "          \"sha256\": \"d41fbb57b509a24324162da82d00bd80788faf8997b7cafa39a2a15d89082c1a\"\n",
+          "previous": "          \"sha256\": \"a0231d42c30f635b9b2a2ed2dd19636adbf307f60d3cc4590ef39b86e2d1a4ac\"\n",
+          "start": 1222308
+        },
+        {
+          "current": "          \"sha256\": \"d41fbb57b509a24324162da82d00bd80788faf8997b7cafa39a2a15d89082c1a\"\n",
+          "previous": "          \"sha256\": \"a0231d42c30f635b9b2a2ed2dd19636adbf307f60d3cc4590ef39b86e2d1a4ac\"\n",
+          "start": 1252587
+        },
+        {
+          "current": "          \"sha256\": \"d41fbb57b509a24324162da82d00bd80788faf8997b7cafa39a2a15d89082c1a\"\n",
+          "previous": "          \"sha256\": \"a0231d42c30f635b9b2a2ed2dd19636adbf307f60d3cc4590ef39b86e2d1a4ac\"\n",
+          "start": 1285738
+        },
+        {
+          "current": "          \"sha256\": \"d41fbb57b509a24324162da82d00bd80788faf8997b7cafa39a2a15d89082c1a\"\n",
+          "previous": "          \"sha256\": \"a0231d42c30f635b9b2a2ed2dd19636adbf307f60d3cc4590ef39b86e2d1a4ac\"\n",
+          "start": 1325841
+        },
+        {
+          "current": "          \"sha256\": \"d41fbb57b509a24324162da82d00bd80788faf8997b7cafa39a2a15d89082c1a\"\n",
+          "previous": "          \"sha256\": \"a0231d42c30f635b9b2a2ed2dd19636adbf307f60d3cc4590ef39b86e2d1a4ac\"\n",
+          "start": 1352261
+        },
+        {
+          "current": "          \"sha256\": \"d41fbb57b509a24324162da82d00bd80788faf8997b7cafa39a2a15d89082c1a\"\n",
+          "previous": "          \"sha256\": \"a0231d42c30f635b9b2a2ed2dd19636adbf307f60d3cc4590ef39b86e2d1a4ac\"\n",
+          "start": 1374941
+        },
+        {
+          "current": "          \"sha256\": \"d41fbb57b509a24324162da82d00bd80788faf8997b7cafa39a2a15d89082c1a\"\n",
+          "previous": "          \"sha256\": \"a0231d42c30f635b9b2a2ed2dd19636adbf307f60d3cc4590ef39b86e2d1a4ac\"\n",
+          "start": 1394608
+        },
+        {
+          "current": "          \"sha256\": \"d41fbb57b509a24324162da82d00bd80788faf8997b7cafa39a2a15d89082c1a\"\n",
+          "previous": "          \"sha256\": \"a0231d42c30f635b9b2a2ed2dd19636adbf307f60d3cc4590ef39b86e2d1a4ac\"\n",
+          "start": 1417696
+        },
+        {
+          "current": "          \"sha256\": \"b82c38fd4967d8cc2c6269b6d904bc180ade03dd5367a436840525e5d297a40f\"\n",
+          "previous": "          \"sha256\": \"5249b76489cadc27f75fd5aa193f6c0ffc622fd2db3b375bafef5ea80cfa4044\"\n",
+          "start": 89611146
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "03f00b29636bc9a1af28e7da47577226bd51dd3ba3f716ab6b81000d2952d226"
+    },
+    {
+      "currentSha256": "ba479678992bc5c1662791defb907cf309b65a023b35d467cfd7992992bb8eca",
+      "edits": [
+        {
+          "current": "import { dirname, join, posix } from \"node:path\";\n",
+          "previous": "import { dirname, join } from \"node:path\";\n",
+          "start": 424
+        },
+        {
+          "current": "import { canonicalJson, sha256 } from \"../../src/capsule/node.mjs\";\nimport {\n\tphpWasmEntryReplaySourceScopes, phpWasmEntryReplaySourceManifest\n\t, phpWasmEntryReplaySnapshotFiles, phpWasmEntryReplaySourceSupplementPath\n\t, phpWasmEntryReplaySourceSupplementSha256\n} from \"./php-wasm-refinement-entry-hosted-replay.mjs\";\nimport { phpWasmEntryReplaySourceSupplement } from \"./php-wasm-entry-source-supplement.mjs\";\nimport { moduleSpecifiers } from \"./module-closure.mjs\";\n",
+          "previous": "import { sha256 } from \"../../src/capsule/node.mjs\";\nimport { phpWasmEntryReplaySourceScopes } from \"./php-wasm-refinement-entry-hosted-replay.mjs\";\n",
+          "start": 504
+        },
+        {
+          "current": "\ntest(\"PHP-Wasm replay authenticates both imported site modules before execution\", async t => {\n\tconst { root, revision, files } = await fixture(t);\n\tconst records = join(root, \"records\"); await mkdir(records);\n\tconst invoke = `await source.replayPhpWasmEntryHostedArtifacts(${JSON.stringify(root)},'${revision}',${JSON.stringify(records)});`;\n\tfor(const path of [\"site/paths.mjs\", \"site/serve.mjs\"])\n\t{\n\t\tassert.ok(phpWasmEntryReplaySourceScopes.includes(path));\n\t\tgit(root, [\"update-index\", \"--assume-unchanged\", path]);\n\t\tawait writeFile(join(root, path), \"x\" + files[path].slice(1));\n\t\tassert.equal(git(root, [\"diff\", \"--name-only\", \"HEAD\"]), \"\");\n\t\tassert.throws(() => run(root, invoke));\n\t\tassert.equal(existsSync(join(root, \"executed\")), false);\n\t\tawait writeFile(join(root, path), files[path]);\n\t\tgit(root, [\"update-index\", \"--no-assume-unchanged\", path]);\n\t\tawait rm(join(root, path));\n\t\tassert.throws(() => run(root, invoke));\n\t\tawait symlink(\"../src/example.txt\", join(root, path));\n\t\tassert.throws(() => run(root, invoke));\n\t\tassert.equal(existsSync(join(root, \"executed\")), false);\n\t\tawait rm(join(root, path)); await writeFile(join(root, path), files[path]);\n\t}\n});\n\ntest(\"PHP-Wasm replay supplements only three complete immutable source snapshots\", async () => {\n\tconst supplement = phpWasmEntryReplaySourceSupplement;\n\tconst bytes = await readFile(phpWasmEntryReplaySourceSupplementPath);\n\tassert.equal(sha256(bytes), phpWasmEntryReplaySourceSupplementSha256);\n\tassert.equal(bytes.toString(), canonicalJson(supplement));\n\tconst snapshots = new Map();\n\tfor(const archive of supplement.archives)\n\t{\n\t\tconst bytes = await readFile(archive.path);\n\t\tassert.equal(bytes.length, archive.bytes); assert.equal(sha256(bytes), archive.sha256);\n\t\tfor(const { snapshot } of JSON.parse(bytes).sources)\n\t\t\tsnapshots.set(sha256(canonicalJson(snapshot)), snapshot);\n\t}\n\tassert.equal(snapshots.size, 3);\n\tassert.deepEqual([...snapshots.keys()], supplement.snapshots.map(item => item.snapshotSha256));\n\tfor(const [identity, snapshot] of snapshots)\n\t{\n\t\tconst files = await phpWasmEntryReplaySourceManifest(snapshot.revision);\n\t\tassert.equal(files.length, snapshot.files.length + 2);\n\t\tassert.deepEqual(phpWasmEntryReplaySnapshotFiles(snapshot, files), snapshot.files);\n\t\tassert.equal(sha256(canonicalJson(snapshot)), identity);\n\t\tfor(const file of supplement.files)\n\t\t{\n\t\t\tconst original = git(process.cwd(), [\"show\", snapshot.revision + \":\" + file.path]);\n\t\t\tassert.equal(original, file.source);\n\t\t\tassert.equal(sha256(original), file.sha256);\n\t\t\tassert.equal(Buffer.byteLength(original), file.bytes);\n\t\t\tassert.throws(() => phpWasmEntryReplaySnapshotFiles(snapshot, files.filter(item => item.path !== file.path)));\n\t\t\tassert.throws(() => phpWasmEntryReplaySnapshotFiles(snapshot, files.map(item => item.path === file.path\n\t\t\t\t? { ...item, sha256: \"0\".repeat(64) } : item)));\n\t\t}\n\t\tfor(const mutate of [\n\t\t\tvalue => { value.files.pop(); }\n\t\t\t, value => { value.files[0].sha256 = \"0\".repeat(64); }\n\t\t\t, value => { value.zip.sha256 = \"0\".repeat(64); }\n\t\t\t, value => { value.revision = \"0\".repeat(40); }\n\t\t\t, value => { value.extra = true; }\n\t\t]) {\n\t\t\tconst changed = structuredClone(snapshot); mutate(changed);\n\t\t\tassert.throws(() => phpWasmEntryReplaySnapshotFiles(changed, files));\n\t\t}\n\t}\n});\n\ntest(\"PHP-Wasm replay new snapshots cannot omit an imported site module\", async t => {\n\tconst { root, revision } = await fixture(t);\n\tconst snapshot = JSON.parse(run(root, `console.log(JSON.stringify(await source.writePhpWasmEntryReplaySourceSnapshot('${revision}',${JSON.stringify(join(root, \"complete.zip\"))})));`));\n\tfor(const path of [\"site/paths.mjs\", \"site/serve.mjs\"])\n\t{\n\t\tassert.ok(snapshot.files.some(file => file.path === path));\n\t\tconst changed = { ...snapshot, files: snapshot.files.filter(file => file.path !== path) };\n\t\tassert.throws(() => phpWasmEntryReplaySnapshotFiles(changed, snapshot.files));\n\t}\n});\n\ntest(\"PHP-Wasm replay scopes contain every producer and preflight literal import\", async () => {\n\tconst entries = new Set([\n\t\t\"tests/helpers/php-wasm-refinement-entry-installed-tests.mjs\"\n\t\t, \"tests/helpers/php-wasm-owned-refinement-entry-installed-tests.mjs\"\n\t\t, \"tests/php-wasm-callback-entry-installed.test.mjs\"\n\t\t, \"tests/helpers/owned-php-wasm-runtime.mjs\"\n\t\t, \"scripts/check-php-wasm-refinement-entry-records.mjs\"\n\t\t, \"scripts/check-php-wasm-callback-entry-records.mjs\"\n\t\t, \"scripts/summarize-php-wasm-refinement-entry-hosted.mjs\"\n\t]);\n\tfor(const name of [\n\t\t\"php-wasm-refinement-entry-promotion\", \"php-wasm-refinement-entry\"\n\t\t, \"php-wasm-owned-refinement-entry\", \"php-wasm-callback-entry\"\n\t\t, \"php-wasm-indexed-refinement-entry\"\n\t]) {\n\t\tconst workflow = await readFile(\".github/workflows/\" + name + \".yml\", \"utf8\");\n\t\tfor(const match of workflow.matchAll(/(?:tests|scripts)\\/[A-Za-z0-9_./-]+\\.mjs\\b/gu)) entries.add(match[0]);\n\t}\n\tconst seen = new Set();\n\tconst visit = async path => {\n\t\tif(seen.has(path)) return;\n\t\tassert.ok(phpWasmEntryReplaySourceScopes.some(scope => path === scope || path.startsWith(scope + \"/\")), path);\n\t\tseen.add(path);\n\t\tfor(const specifier of moduleSpecifiers(await readFile(path, \"utf8\"), path))\n\t\t\tawait visit(posix.normalize(posix.join(posix.dirname(path), posix.extname(specifier) ? specifier : specifier + \".mjs\")));\n\t};\n\tfor(const entry of entries) await visit(entry);\n\tassert.ok(seen.has(\"site/serve.mjs\") && seen.has(\"site/paths.mjs\"));\n});\n",
+          "previous": "",
+          "start": 9634
+        }
+      ],
+      "path": "tests/helpers/php-wasm-refinement-entry-hosted-replay-tests.mjs",
+      "previousSha256": "ae3012098eebe79bd3132b354dd1c26868d45e46324aef0628a2f1355b796409"
+    },
+    {
+      "currentSha256": "b82c38fd4967d8cc2c6269b6d904bc180ade03dd5367a436840525e5d297a40f",
+      "edits": [
+        {
+          "current": "import { canonicalJson, sha256 } from \"../../src/capsule/node.mjs\";\nimport { phpWasmEntryReplaySourceSupplement } from \"./php-wasm-entry-source-supplement.mjs\";\n",
+          "previous": "import { canonicalJson } from \"../../src/capsule/node.mjs\";\n",
+          "start": 676
+        },
+        {
+          "current": "\t, \"site/paths.mjs\", \"site/serve.mjs\"\n",
+          "previous": "",
+          "start": 1432
+        },
+        {
+          "current": "export const phpWasmEntryReplaySourceSupplementPath\n\t= \"docs/evidence/php-wasm-entry-source-supplement-20261025.json\";\nexport const phpWasmEntryReplaySourceSupplementSha256\n\t= \"31aa1c26df04c3fa96d9e575624994288f9d1094863e5c0296e68c08c64b8b82\";\n",
+          "previous": "",
+          "start": 1474
+        },
+        {
+          "current": "\n/**\n * Retain the two omitted imports without changing the original archive bytes.\n * Only the three complete, independently pinned snapshots use the supplement.\n * Every new snapshot must contain the entire current source manifest.\n *\n * @param snapshot - Exact original snapshot identity and members.\n * @param files - Independently hashed complete Git source manifest.\n */\nexport const phpWasmEntryReplaySnapshotFiles = (snapshot, files) => {\n\tassert.deepEqual(Object.keys(snapshot).sort(), [\"files\", \"revision\", \"zip\"]);\n\tconst supplement = phpWasmEntryReplaySourceSupplement;\n\tassert.equal(sha256(canonicalJson(supplement)), phpWasmEntryReplaySourceSupplementSha256);\n\tconst identity = sha256(canonicalJson(snapshot));\n\tconst retained = supplement.snapshots.find(item => item.snapshotSha256 === identity);\n\tif(retained === undefined)\n\t{\n\t\tassert.deepEqual(snapshot.files, files, \"source closure must equal original Git bytes\");\n\t\treturn files;\n\t}\n\tassert.equal(snapshot.revision, retained.revision);\n\tconst omitted = new Set();\n\tfor(const file of supplement.files)\n\t{\n\t\tassert.equal(Buffer.byteLength(file.source), file.bytes);\n\t\tassert.equal(sha256(file.source), file.sha256);\n\t\tconst original = files.find(item => item.path === file.path);\n\t\tassert.ok(original, file.path);\n\t\tassert.equal(original.bytes, file.bytes, file.path);\n\t\tassert.equal(original.sha256, file.sha256, file.path);\n\t\tomitted.add(file.path);\n\t}\n\tconst archived = files.filter(file => !omitted.has(file.path));\n\tassert.deepEqual(snapshot.files, archived, \"exact supplemented archive source closure\");\n\treturn archived;\n};\n",
+          "previous": "",
+          "start": 5901
+        },
+        {
+          "current": "\tconst archived = phpWasmEntryReplaySnapshotFiles(snapshot, files);\n",
+          "previous": "\tassert.deepEqual(snapshot.files, files, \"source closure must equal original Git bytes\");\n",
+          "start": 10700
+        },
+        {
+          "current": "\t\tassert.deepEqual(await nativeArtifactPaths(extracted.root), archived.map(file => file.path).sort());\n\t\tawait checkSources(extracted.root, archived);\n",
+          "previous": "\t\tassert.deepEqual(await nativeArtifactPaths(extracted.root), files.map(file => file.path).sort());\n\t\tawait checkSources(extracted.root, files);\n",
+          "start": 10996
+        }
+      ],
+      "path": "tests/helpers/php-wasm-refinement-entry-hosted-replay.mjs",
+      "previousSha256": "5249b76489cadc27f75fd5aa193f6c0ffc622fd2db3b375bafef5ea80cfa4044"
+    }
+  ]
+}
