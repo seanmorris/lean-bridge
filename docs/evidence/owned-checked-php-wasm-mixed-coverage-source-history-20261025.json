@@ -1,0 +1,485 @@
+{
+  "additions": [
+    {
+      "currentSha256": "29da02f85bfb224b5c9f8877a90d85636017233d09afc8858bf775974268c225",
+      "path": "docs/evidence/owned-checked-php-wasm-mixed-coverage-20261025.json"
+    },
+    {
+      "currentSha256": "efb2ff391cfe82018eba5a36aa94ea3a21d09146be4dd6a6cf438bd6eb015c72",
+      "path": "tests/helpers/owned-checked-record-php-wasm-corpus.mjs"
+    },
+    {
+      "currentSha256": "214ac11436850aabb21bcf97a609bfc3cc6568c5dce4c871e7f4eac49bb0917b",
+      "path": "scripts/update-owned-checked-php-wasm-mixed-coverage-source-history.mjs"
+    },
+    {
+      "currentSha256": "fc83cbfe0d05389caac24e1340e3969a0416b6676f140336cc265b7dc0910907",
+      "path": "tests/helpers/owned-checked-php-wasm-mixed-coverage-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "4804be77ae6eb2d1c79022548fb4fc3937db82b1a46100afb1ee6a552716d909",
+      "path": "tests/helpers/owned-checked-php-wasm-mixed-coverage-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "ebe348e56acd2f9aa721a48f9e43df9518914a0b",
+  "implementationCommits": [
+    "ebe348e56acd2f9aa721a48f9e43df9518914a0b"
+  ],
+  "integrationBaseCommit": "ebe348e56acd2f9aa721a48f9e43df9518914a0b",
+  "integrationUpdates": [
+    {
+      "currentSha256": "9264d4c263372a512b867ccb536f89c11aae7428c3bc42e04122ad732841c943",
+      "edits": [
+        {
+          "current": "import { beforeOwnedCheckedPhpWasmMixedCoverageSource, ownedCheckedPhpWasmMixedCoverageNormalizationPaths } from \"./owned-checked-php-wasm-mixed-coverage-source-history.mjs\";\n",
+          "previous": "",
+          "start": 14413
+        },
+        {
+          "current": "\t...ownedCheckedPhpWasmMixedCoverageNormalizationPaths\n\t, ...ownedCheckedManagedMixedCoverageNormalizationPaths\n",
+          "previous": "\t...ownedCheckedManagedMixedCoverageNormalizationPaths\n",
+          "start": 187627
+        },
+        {
+          "current": "\tlet stage = beforeOwnedCheckedPhpWasmMixedCoverageSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeOwnedCheckedManagedMixedCoverageSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeOwnedCheckedManagedMixedCoverageSource(path, text, expected);\n",
+          "start": 232622
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "3290ede8b4071d86c273bdc5acd1da6518ba6e73a31d9c37cb6d32538eda43d2"
+    },
+    {
+      "currentSha256": "37621268eabc5e79ae2efd3d2e1bbbcdf0a2c1198e4c4bfad41f478ecaab0568",
+      "edits": [
+        {
+          "current": "import \"./helpers/owned-checked-php-wasm-mixed-coverage-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 9724
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "4ba21782bc3df6c15c7dcf7878315f733f4cb5fa01d3a8f40806c9bc9cb6c1e3"
+    }
+  ],
+  "milestone": "owned-checked-php-wasm-mixed-coverage-source-v1",
+  "predecessorCommit": "83d8de7c2d69efede5a3cf701790cce71bdc9a48",
+  "schemaVersion": 1,
+  "scope": "Expand PHP-Wasm source qualification to fifteen full exports and three transfer operations. Exercise Window rejection/equality, Grant with nested Subtype, Claim arrays, two-input transfer rollback and post-transfer callback failure/recovery. Preserve result-only callers, source-free Node/browser modes, cleanup and independent-rebuild gates, runtime sources and original archives. Bind the replay contract to exact original full-caller bytes and reject changed exports or transfer positions. Four source/package checks and six synthetic hosted-checker controls pass; twelve generated PHP/caller syntax checks pass. Refresh exactly thirty-seven live source pins without changing support observations. These are source checks, not installed runtime acceptance. Require independent hosted PHP-Wasm acceptance, immutable original artifact replay, the full original semantic audit and final support/docs/Core gates.",
+  "updates": [
+    {
+      "currentSha256": "745526bc0d4c5ec213274f12c269766fa31155344fae9cc02009aaae8353a605",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"264d6d33b27fd5b508f2e89c7dcdcf0801a19906fe6d179b8ad3c247a707c3b0\"\n",
+          "previous": "          \"sha256\": \"cd8d2c8c672babfc1f601f7008ddf479913f6b6d6550198f016ff2f7795dbee0\"\n",
+          "start": 1429856
+        },
+        {
+          "current": "          \"sha256\": \"264d6d33b27fd5b508f2e89c7dcdcf0801a19906fe6d179b8ad3c247a707c3b0\"\n",
+          "previous": "          \"sha256\": \"cd8d2c8c672babfc1f601f7008ddf479913f6b6d6550198f016ff2f7795dbee0\"\n",
+          "start": 75699928
+        },
+        {
+          "current": "          \"sha256\": \"264d6d33b27fd5b508f2e89c7dcdcf0801a19906fe6d179b8ad3c247a707c3b0\"\n",
+          "previous": "          \"sha256\": \"cd8d2c8c672babfc1f601f7008ddf479913f6b6d6550198f016ff2f7795dbee0\"\n",
+          "start": 75704763
+        },
+        {
+          "current": "          \"sha256\": \"ca67f744050815ecb10a84867045a9718aed20debeb08888c681bc5c95fd69d3\"\n",
+          "previous": "          \"sha256\": \"587502c1489137797675c9c4ecc7f1d9b12a32f2464d6046ed2f33ee9ce18fdc\"\n",
+          "start": 75710472
+        },
+        {
+          "current": "          \"sha256\": \"264d6d33b27fd5b508f2e89c7dcdcf0801a19906fe6d179b8ad3c247a707c3b0\"\n",
+          "previous": "          \"sha256\": \"cd8d2c8c672babfc1f601f7008ddf479913f6b6d6550198f016ff2f7795dbee0\"\n",
+          "start": 75711213
+        },
+        {
+          "current": "          \"sha256\": \"a9e4cfbd64568662011273a0a10c7b543081980ea1cb5d3dec0ad71b2fa512ef\"\n",
+          "previous": "          \"sha256\": \"f6ca6ea5118059d63bc2c21b1f42b03070f458d7a8180819908c01e2a78760c6\"\n",
+          "start": 75711573
+        },
+        {
+          "current": "          \"sha256\": \"ca67f744050815ecb10a84867045a9718aed20debeb08888c681bc5c95fd69d3\"\n",
+          "previous": "          \"sha256\": \"587502c1489137797675c9c4ecc7f1d9b12a32f2464d6046ed2f33ee9ce18fdc\"\n",
+          "start": 75717346
+        },
+        {
+          "current": "          \"sha256\": \"264d6d33b27fd5b508f2e89c7dcdcf0801a19906fe6d179b8ad3c247a707c3b0\"\n",
+          "previous": "          \"sha256\": \"cd8d2c8c672babfc1f601f7008ddf479913f6b6d6550198f016ff2f7795dbee0\"\n",
+          "start": 75718087
+        },
+        {
+          "current": "          \"sha256\": \"a9e4cfbd64568662011273a0a10c7b543081980ea1cb5d3dec0ad71b2fa512ef\"\n",
+          "previous": "          \"sha256\": \"f6ca6ea5118059d63bc2c21b1f42b03070f458d7a8180819908c01e2a78760c6\"\n",
+          "start": 75718447
+        },
+        {
+          "current": "          \"sha256\": \"ca67f744050815ecb10a84867045a9718aed20debeb08888c681bc5c95fd69d3\"\n",
+          "previous": "          \"sha256\": \"587502c1489137797675c9c4ecc7f1d9b12a32f2464d6046ed2f33ee9ce18fdc\"\n",
+          "start": 75724231
+        },
+        {
+          "current": "          \"sha256\": \"264d6d33b27fd5b508f2e89c7dcdcf0801a19906fe6d179b8ad3c247a707c3b0\"\n",
+          "previous": "          \"sha256\": \"cd8d2c8c672babfc1f601f7008ddf479913f6b6d6550198f016ff2f7795dbee0\"\n",
+          "start": 75724972
+        },
+        {
+          "current": "          \"sha256\": \"a9e4cfbd64568662011273a0a10c7b543081980ea1cb5d3dec0ad71b2fa512ef\"\n",
+          "previous": "          \"sha256\": \"f6ca6ea5118059d63bc2c21b1f42b03070f458d7a8180819908c01e2a78760c6\"\n",
+          "start": 75725332
+        },
+        {
+          "current": "          \"sha256\": \"ca67f744050815ecb10a84867045a9718aed20debeb08888c681bc5c95fd69d3\"\n",
+          "previous": "          \"sha256\": \"587502c1489137797675c9c4ecc7f1d9b12a32f2464d6046ed2f33ee9ce18fdc\"\n",
+          "start": 75731157
+        },
+        {
+          "current": "          \"sha256\": \"264d6d33b27fd5b508f2e89c7dcdcf0801a19906fe6d179b8ad3c247a707c3b0\"\n",
+          "previous": "          \"sha256\": \"cd8d2c8c672babfc1f601f7008ddf479913f6b6d6550198f016ff2f7795dbee0\"\n",
+          "start": 75731898
+        },
+        {
+          "current": "          \"sha256\": \"a9e4cfbd64568662011273a0a10c7b543081980ea1cb5d3dec0ad71b2fa512ef\"\n",
+          "previous": "          \"sha256\": \"f6ca6ea5118059d63bc2c21b1f42b03070f458d7a8180819908c01e2a78760c6\"\n",
+          "start": 75732258
+        },
+        {
+          "current": "          \"sha256\": \"06e71de8da8c60c07ea561806c53b64770b038f61e8a001b097400b2eb6d078c\"\n",
+          "previous": "          \"sha256\": \"bbe381f19f70166312731bf151f21da56c8374857c7c7d9cb1098ce56f0e44c0\"\n",
+          "start": 89523713
+        },
+        {
+          "current": "          \"sha256\": \"721cb21bb45200b09c15bb225a12e2e18644cacf087e78c26a74c57aee24a3d0\"\n",
+          "previous": "          \"sha256\": \"b257df31252c8007f2dfb5dc041c0deaa870bfc51d7b0c357fd6ed4a60132bf4\"\n",
+          "start": 89524257
+        },
+        {
+          "current": "          \"sha256\": \"06e71de8da8c60c07ea561806c53b64770b038f61e8a001b097400b2eb6d078c\"\n",
+          "previous": "          \"sha256\": \"bbe381f19f70166312731bf151f21da56c8374857c7c7d9cb1098ce56f0e44c0\"\n",
+          "start": 89530751
+        },
+        {
+          "current": "          \"sha256\": \"721cb21bb45200b09c15bb225a12e2e18644cacf087e78c26a74c57aee24a3d0\"\n",
+          "previous": "          \"sha256\": \"b257df31252c8007f2dfb5dc041c0deaa870bfc51d7b0c357fd6ed4a60132bf4\"\n",
+          "start": 89531295
+        },
+        {
+          "current": "          \"sha256\": \"06e71de8da8c60c07ea561806c53b64770b038f61e8a001b097400b2eb6d078c\"\n",
+          "previous": "          \"sha256\": \"bbe381f19f70166312731bf151f21da56c8374857c7c7d9cb1098ce56f0e44c0\"\n",
+          "start": 89537132
+        },
+        {
+          "current": "          \"sha256\": \"721cb21bb45200b09c15bb225a12e2e18644cacf087e78c26a74c57aee24a3d0\"\n",
+          "previous": "          \"sha256\": \"b257df31252c8007f2dfb5dc041c0deaa870bfc51d7b0c357fd6ed4a60132bf4\"\n",
+          "start": 89537676
+        },
+        {
+          "current": "          \"sha256\": \"06e71de8da8c60c07ea561806c53b64770b038f61e8a001b097400b2eb6d078c\"\n",
+          "previous": "          \"sha256\": \"bbe381f19f70166312731bf151f21da56c8374857c7c7d9cb1098ce56f0e44c0\"\n",
+          "start": 89543501
+        },
+        {
+          "current": "          \"sha256\": \"721cb21bb45200b09c15bb225a12e2e18644cacf087e78c26a74c57aee24a3d0\"\n",
+          "previous": "          \"sha256\": \"b257df31252c8007f2dfb5dc041c0deaa870bfc51d7b0c357fd6ed4a60132bf4\"\n",
+          "start": 89544045
+        },
+        {
+          "current": "          \"sha256\": \"06e71de8da8c60c07ea561806c53b64770b038f61e8a001b097400b2eb6d078c\"\n",
+          "previous": "          \"sha256\": \"bbe381f19f70166312731bf151f21da56c8374857c7c7d9cb1098ce56f0e44c0\"\n",
+          "start": 89549862
+        },
+        {
+          "current": "          \"sha256\": \"721cb21bb45200b09c15bb225a12e2e18644cacf087e78c26a74c57aee24a3d0\"\n",
+          "previous": "          \"sha256\": \"b257df31252c8007f2dfb5dc041c0deaa870bfc51d7b0c357fd6ed4a60132bf4\"\n",
+          "start": 89550406
+        },
+        {
+          "current": "          \"sha256\": \"06e71de8da8c60c07ea561806c53b64770b038f61e8a001b097400b2eb6d078c\"\n",
+          "previous": "          \"sha256\": \"bbe381f19f70166312731bf151f21da56c8374857c7c7d9cb1098ce56f0e44c0\"\n",
+          "start": 89556243
+        },
+        {
+          "current": "          \"sha256\": \"721cb21bb45200b09c15bb225a12e2e18644cacf087e78c26a74c57aee24a3d0\"\n",
+          "previous": "          \"sha256\": \"b257df31252c8007f2dfb5dc041c0deaa870bfc51d7b0c357fd6ed4a60132bf4\"\n",
+          "start": 89556787
+        },
+        {
+          "current": "          \"sha256\": \"06e71de8da8c60c07ea561806c53b64770b038f61e8a001b097400b2eb6d078c\"\n",
+          "previous": "          \"sha256\": \"bbe381f19f70166312731bf151f21da56c8374857c7c7d9cb1098ce56f0e44c0\"\n",
+          "start": 89562602
+        },
+        {
+          "current": "          \"sha256\": \"721cb21bb45200b09c15bb225a12e2e18644cacf087e78c26a74c57aee24a3d0\"\n",
+          "previous": "          \"sha256\": \"b257df31252c8007f2dfb5dc041c0deaa870bfc51d7b0c357fd6ed4a60132bf4\"\n",
+          "start": 89563146
+        },
+        {
+          "current": "          \"sha256\": \"06e71de8da8c60c07ea561806c53b64770b038f61e8a001b097400b2eb6d078c\"\n",
+          "previous": "          \"sha256\": \"bbe381f19f70166312731bf151f21da56c8374857c7c7d9cb1098ce56f0e44c0\"\n",
+          "start": 89568949
+        },
+        {
+          "current": "          \"sha256\": \"721cb21bb45200b09c15bb225a12e2e18644cacf087e78c26a74c57aee24a3d0\"\n",
+          "previous": "          \"sha256\": \"b257df31252c8007f2dfb5dc041c0deaa870bfc51d7b0c357fd6ed4a60132bf4\"\n",
+          "start": 89569493
+        },
+        {
+          "current": "          \"sha256\": \"06e71de8da8c60c07ea561806c53b64770b038f61e8a001b097400b2eb6d078c\"\n",
+          "previous": "          \"sha256\": \"bbe381f19f70166312731bf151f21da56c8374857c7c7d9cb1098ce56f0e44c0\"\n",
+          "start": 89575296
+        },
+        {
+          "current": "          \"sha256\": \"721cb21bb45200b09c15bb225a12e2e18644cacf087e78c26a74c57aee24a3d0\"\n",
+          "previous": "          \"sha256\": \"b257df31252c8007f2dfb5dc041c0deaa870bfc51d7b0c357fd6ed4a60132bf4\"\n",
+          "start": 89575840
+        },
+        {
+          "current": "          \"sha256\": \"06e71de8da8c60c07ea561806c53b64770b038f61e8a001b097400b2eb6d078c\"\n",
+          "previous": "          \"sha256\": \"bbe381f19f70166312731bf151f21da56c8374857c7c7d9cb1098ce56f0e44c0\"\n",
+          "start": 89581032
+        },
+        {
+          "current": "          \"sha256\": \"721cb21bb45200b09c15bb225a12e2e18644cacf087e78c26a74c57aee24a3d0\"\n",
+          "previous": "          \"sha256\": \"b257df31252c8007f2dfb5dc041c0deaa870bfc51d7b0c357fd6ed4a60132bf4\"\n",
+          "start": 89581576
+        },
+        {
+          "current": "          \"sha256\": \"06e71de8da8c60c07ea561806c53b64770b038f61e8a001b097400b2eb6d078c\"\n",
+          "previous": "          \"sha256\": \"bbe381f19f70166312731bf151f21da56c8374857c7c7d9cb1098ce56f0e44c0\"\n",
+          "start": 89586403
+        },
+        {
+          "current": "          \"sha256\": \"721cb21bb45200b09c15bb225a12e2e18644cacf087e78c26a74c57aee24a3d0\"\n",
+          "previous": "          \"sha256\": \"b257df31252c8007f2dfb5dc041c0deaa870bfc51d7b0c357fd6ed4a60132bf4\"\n",
+          "start": 89586947
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "603f565ced92597ae077e66b735f57b7148346fcbd9ac13339b2752a9d2ecf66"
+    },
+    {
+      "currentSha256": "ca67f744050815ecb10a84867045a9718aed20debeb08888c681bc5c95fd69d3",
+      "edits": [
+        {
+          "current": "use LeanOwnedCheckedRecords\\{Booking, Claim, Grant, LeanBridgeError, Ticket, Window};\nuse function LeanOwnedCheckedRecords\\{booking_span, claim_closure, claim_for, claim_quota,\n    echo_booking, echo_claim, echo_claims, echo_grant, new_ticket, pair_claim, serial,\n    transfer_claim, transfer_pair_claim, transfer_with_claim_callback, with_claim_callback, with_recovery};\n",
+          "previous": "use LeanOwnedCheckedRecords\\{Booking, Claim, LeanBridgeError, Ticket, Window};\nuse function LeanOwnedCheckedRecords\\{claim_closure, claim_for, echo_booking, echo_claim,\n    new_ticket, pair_claim, serial, transfer_claim, with_claim_callback, with_recovery};\n",
+          "start": 215
+        },
+        {
+          "current": "function close_value(Claim|Booking|Grant $value): void { $value->holder->close(); }\n\nfunction post_transfer(bool $throws): void {\n    $input = new_ticket(Big::of(91), 'post-transfer');\n    $independent = $input->retain();\n    $transferred = claim($input, 7); $entered = 0; $output = null;\n    $sentinel = new RuntimeException('php-wasm post-transfer callback');\n    $reply = function(Claim $incoming) use (&$entered, $throws, $sentinel): Claim {\n        $entered++;\n        check($incoming->quota->isEqualTo(Big::of(7)), 'post-transfer callback input');\n        if ($throws) throw $sentinel;\n        return claim($incoming->holder, 99);\n    };\n    $callback = with_recovery($reply, claim($independent, 7));\n    $operation = function() use (&$output, $transferred, $callback): void {\n        $output = transfer_with_claim_callback($transferred, $callback);\n    };\n    if ($throws) {\n        check(rejected($operation, null, RuntimeException::class) === $sentinel,\n            'post-transfer callback exception identity');\n    } else {\n        rejected($operation, 1, LeanBridgeError::class);\n    }\n    check($output === null && $entered === 1 && closed($input) && closed($transferred->holder),\n        'post-transfer failure consumes input without publishing output');\n    serial_is($independent, 91, 'post-transfer failure preserves an independent retain');\n    $recovered = transfer_with_claim_callback(claim($independent, 7), with_recovery(\n        fn(Claim $incoming) => claim($incoming->holder, 9), claim($independent, 7)));\n    check(closed($independent) && $recovered->quota->isEqualTo(Big::of(9)),\n        'post-transfer failure recovers');\n    serial_is($recovered->holder, 91, 'recovered transfer resource');\n    close_value($recovered); $input->close(); $independent->close();\n}\n",
+          "previous": "function close_value(Claim|Booking $value): void { $value->holder->close(); }\n",
+          "start": 1874
+        },
+        {
+          "current": "$invalidBooking = booking($ticket, 8, 3);\nfor ($index = 0; $index < 10; $index++) {\n    rejected(fn() => echo_booking($invalidBooking), 1, LeanBridgeError::class);\n    check($invalidBooking->window->lo->isEqualTo(Big::of(8))\n        && $invalidBooking->window->hi->isEqualTo(Big::of(3)),\n        'nested copied rejection preserves input fields');\n    serial_is($invalidBooking->holder, 41, 'nested copied rejection preserves owner');\n}\n$equalBooking = echo_booking(booking($ticket, 3, 3));\ncheck($equalBooking->window->lo->isEqualTo(Big::of(3))\n    && $equalBooking->window->hi->isEqualTo(Big::of(3)), 'nested copied equality and recovery');\nserial_is($equalBooking->holder, 41, 'nested copied recovery resource');\nclose_value($equalBooking);\ncheck(booking_span($validBooking)->isEqualTo(Big::of(5)), 'copied payload consumed');\ncheck(claim_quota($valid)->isEqualTo(Big::of(7)), 'owned payload consumed');\n\n$grant = echo_grant(new Grant($ticket, Big::of(7), Big::of(8)));\ncheck($grant->weight->isEqualTo(Big::of(7)) && $grant->limit->isEqualTo(Big::of(8)),\n    'nested Subtype and outer record accepted');\nserial_is($grant->holder, 41, 'grant resource'); close_value($grant);\nrejected(fn() => echo_grant(new Grant($ticket, Big::of(0), Big::of(8))), 1, LeanBridgeError::class);\nrejected(fn() => echo_grant(new Grant($ticket, Big::of(7), Big::of(3))), 1, LeanBridgeError::class);\nserial_is($ticket, 41, 'both grant rejections preserve owner');\n\n$claims = echo_claims([$valid, $valid]);\ncheck(count($claims) === 2 && $claims[0]->quota->isEqualTo(Big::of(7))\n    && $claims[1]->quota->isEqualTo(Big::of(7)), 'owned array');\nclose_value($claims[0]);\nserial_is($claims[1]->holder, 41, 'array element owners are independent');\nclose_value($claims[1]);\nfor ($index = 0; $index < 10; $index++) {\n    $partial = null;\n    rejected(function() use (&$partial, $valid, $ticket): void {\n        $partial = echo_claims([$valid, claim($ticket, 99)]);\n    }, 1, LeanBridgeError::class);\n    check($partial === null && !closed($ticket), 'late array rejection publishes no partial result');\n}\ncheck(echo_claims([]) === [], 'empty owned array');\n$arrayRecovery = echo_claims([$valid]);\ncheck(count($arrayRecovery) === 1 && $arrayRecovery[0]->quota->isEqualTo(Big::of(7)), 'array recovery');\nclose_value($arrayRecovery[0]);\n\n",
+          "previous": "",
+          "start": 4507
+        },
+        {
+          "current": "$first = new_ticket(Big::of(71), 'first'); $second = new_ticket(Big::of(81), 'second');\n$firstKept = $first->retain(); $secondKept = $second->retain();\n$firstInput = booking($first, 3, 8); $secondInput = claim($second, 99);\nrejected(fn() => transfer_pair_claim($firstInput, $secondInput), 1, LeanBridgeError::class);\ncheck(!closed($first) && !closed($second), 'late failure aborts both transfers');\nserial_is($first, 71, 'first rejected transfer intact');\nserial_is($second, 81, 'second rejected transfer intact');\n$pair = transfer_pair_claim($firstInput, claim($second, 7));\ncheck(closed($first) && closed($second) && $pair->quota->isEqualTo(Big::of(7)), 'both transfers commit');\nserial_is($pair->holder, 81, 'pair transfer result');\nserial_is($firstKept, 71, 'first independent retain survives');\nserial_is($secondKept, 81, 'second independent retain survives');\nclose_value($pair); $first->close(); $second->close(); $firstKept->close(); $secondKept->close();\npost_transfer(false); post_transfer(true);\n\n",
+          "previous": "",
+          "start": 7872
+        }
+      ],
+      "path": "tests/fixtures/structured-types/owned-checked-record-php-wasm.php",
+      "previousSha256": "587502c1489137797675c9c4ecc7f1d9b12a32f2464d6046ed2f33ee9ce18fdc"
+    },
+    {
+      "currentSha256": "06e71de8da8c60c07ea561806c53b64770b038f61e8a001b097400b2eb6d078c",
+      "edits": [
+        {
+          "current": "import {\n\tassertOwnedCheckedRecordPhpWasmModelCorpus, ownedCheckedRecordPhpWasmCorpus\n} from \"./owned-checked-record-php-wasm-corpus.mjs\";\n",
+          "previous": "",
+          "start": 1324
+        },
+        {
+          "current": " * @param corpus - Contract selected from the producer's original full caller.\n",
+          "previous": "",
+          "start": 10746
+        },
+        {
+          "current": "const checkPhpWasmModel = (label, observation, mode, lean, corpus) => {\n",
+          "previous": "const checkPhpWasmModel = (label, observation, mode, lean) => {\n",
+          "start": 10829
+        },
+        {
+          "current": "\tassertOwnedCheckedRecordPhpWasmModelCorpus(model, mode, corpus, label);\n",
+          "previous": "\tassert.equal(model.exports.length, resultOnly ? 3 : 9, label);\n",
+          "start": 11160
+        },
+        {
+          "current": "",
+          "previous": "\t\tassert.equal(model.ownedGraph.inputTransfers.exports.length, 1, label);\n",
+          "start": 11397
+        },
+        {
+          "current": "\tconst corpus = ownedCheckedRecordPhpWasmCorpus(original(\n\t\t\"tests/fixtures/structured-types/owned-checked-record-php-wasm.php\"));\n",
+          "previous": "",
+          "start": 21818
+        },
+        {
+          "current": "\t\t\tcheckPhpWasmModel(label, observation, mode, lean, corpus);\n",
+          "previous": "\t\t\tcheckPhpWasmModel(label, observation, mode, lean);\n",
+          "start": 25234
+        }
+      ],
+      "path": "tests/helpers/owned-checked-record-hosted-output.mjs",
+      "previousSha256": "bbe381f19f70166312731bf151f21da56c8374857c7c7d9cb1098ce56f0e44c0"
+    },
+    {
+      "currentSha256": "77157eef7389121e6214ed6a4dd11abb9dc281b74e3fc4b01c6ff18d45833833",
+      "edits": [
+        {
+          "current": "import {\n\tassertOwnedCheckedRecordPhpWasmModelCorpus, ownedCheckedRecordPhpWasmCorpora\n\t, ownedCheckedRecordPhpWasmCorpus\n} from \"./owned-checked-record-php-wasm-corpus.mjs\";\n",
+          "previous": "",
+          "start": 1384
+        },
+        {
+          "current": "const corpusModel = (mode, corpus) => ({\n\texports: (mode === \"full\" ? corpus.exports\n\t\t: [\"newTicket\", \"serial\", \"claimFor\"].map(name => `lean:OwnedCheckedRecords.${name}`))\n\t\t.map(bindingId => ({ bindingId }))\n\t, ownedGraph: { transport: \"owned-zend-v1\", ...mode === \"result-only\" ? {} : {\n\t\tinputTransfers: { exports: structuredClone(corpus.transfers) }\n\t\t, hostCallbacks: { signatures: [{ index: 0 }, { index: 1 }] } } }\n});\n\nconst observationFor = async (packagingRoot, mode, reviewed, readOriginal) => {\n",
+          "previous": "const observationFor = async (packagingRoot, mode, reviewed) => {\n",
+          "start": 5835
+        },
+        {
+          "current": "\t\t, ...corpusModel(mode, ownedCheckedRecordPhpWasmCorpus(readOriginal(\n\t\t\t\"tests/fixtures/structured-types/owned-checked-record-php-wasm.php\")))\n",
+          "previous": "\t\t, exports: Array.from({ length: resultOnly ? 3 : 9 }, (_, index) => ({ index }))\n\t\t, ownedGraph: { transport: \"owned-zend-v1\", ...resultOnly ? {} : {\n\t\t\tinputTransfers: { exports: [{ index: 0 }] }\n\t\t\t, hostCallbacks: { signatures: [{ index: 0 }, { index: 1 }] } } }\n",
+          "start": 6929
+        },
+        {
+          "current": "\tconst consumer = readOriginal(\"tests/fixtures/structured-types/\"\n",
+          "previous": "\tconst consumer = original(\"tests/fixtures/structured-types/\"\n",
+          "start": 7175
+        },
+        {
+          "current": " * @param readOriginal - Source reader used only to create synthetic observations.\n",
+          "previous": "",
+          "start": 9210
+        },
+        {
+          "current": "const synthesizePhpWasmOutput = async (root, readOriginal = original) => {\n",
+          "previous": "const synthesizePhpWasmOutput = async root => {\n",
+          "start": 9297
+        },
+        {
+          "current": "\t\t\t, observations: [await observationFor(packagingRoot, mode, false, readOriginal)\n\t\t\t\t, await observationFor(packagingRoot, mode, true, readOriginal)] };\n",
+          "previous": "\t\t\t, observations: [await observationFor(packagingRoot, mode, false)\n\t\t\t\t, await observationFor(packagingRoot, mode, true)] };\n",
+          "start": 9779
+        },
+        {
+          "current": "const synthesize = async (t, readOriginal = original) => {\n",
+          "previous": "const synthesize = async t => {\n",
+          "start": 11110
+        },
+        {
+          "current": "\tawait synthesizePhpWasmOutput(root, readOriginal);\n",
+          "previous": "\tawait synthesizePhpWasmOutput(root);\n",
+          "start": 11234
+        },
+        {
+          "current": "test(\"owned checked-record PHP-Wasm corpus requires exact old or expanded consumer bytes\", async t => {\n\tconst path = \"tests/fixtures/structured-types/owned-checked-record-php-wasm.php\";\n\tconst legacy = execFileSync(\"git\", [\"show\", `83d8de7c2d69efede5a3cf701790cce71bdc9a48:${path}`]);\n\tconst mixed = await readFile(path);\n\tassert.equal(ownedCheckedRecordPhpWasmCorpus(legacy), ownedCheckedRecordPhpWasmCorpora.legacy);\n\tassert.equal(ownedCheckedRecordPhpWasmCorpus(mixed), ownedCheckedRecordPhpWasmCorpora.mixed);\n\tfor(const source of [Buffer.concat([legacy, Buffer.from(\"\\n\")]), Buffer.concat([mixed, Buffer.from(\"\\n\")])])\n\t\tassert.throws(() => ownedCheckedRecordPhpWasmCorpus(source), /Unknown.*consumer/u);\n\tfor(const [name, source] of [[\"legacy\", legacy], [\"mixed\", mixed]])\n\t{\n\t\tconst corpus = ownedCheckedRecordPhpWasmCorpus(source);\n\t\tconst other = ownedCheckedRecordPhpWasmCorpora[name === \"legacy\" ? \"mixed\" : \"legacy\"];\n\t\tconst model = corpusModel(\"full\", corpus);\n\t\tassertOwnedCheckedRecordPhpWasmModelCorpus(model, \"full\", corpus);\n\t\tassert.throws(() => assertOwnedCheckedRecordPhpWasmModelCorpus(model, \"full\", other), /exact PHP-Wasm corpus exports/u);\n\t\tassert.throws(() => assertOwnedCheckedRecordPhpWasmModelCorpus(model, \"full\", { ...corpus }), /exact producer source/u);\n\t\tconst badTransfer = structuredClone(model);\n\t\tbadTransfer.ownedGraph.inputTransfers.exports[0].parameters = [1];\n\t\tassert.throws(() => assertOwnedCheckedRecordPhpWasmModelCorpus(badTransfer, \"full\", corpus), /transfer bindings and positions/u);\n\t\tconst duplicate = structuredClone(model);\n\t\tduplicate.exports[1] = duplicate.exports[0];\n\t\tassert.throws(() => assertOwnedCheckedRecordPhpWasmModelCorpus(duplicate, \"full\", corpus), /exact PHP-Wasm corpus exports/u);\n\t\tassertOwnedCheckedRecordPhpWasmModelCorpus(corpusModel(\"result-only\", corpus), \"result-only\", other);\n\t\t// These inert archives exercise the checker, not installed runtime acceptance.\n\t\tconst reader = name => name === path ? source : original(name);\n\t\tconst root = await synthesize(t, reader);\n\t\tassert.equal((await replayOwnedCheckedRecordHostedOutput(\"php-wasm\", root, revision, reader)).routes.length, 4);\n\t\tawait rewriteMode(root, \"full\", report => {\n\t\t\tfor(const observation of report.observations)\n\t\t\t\tObject.assign(observation.model, corpusModel(\"full\", other));\n\t\t});\n\t\tawait assert.rejects(replayOwnedCheckedRecordHostedOutput(\"php-wasm\", root, revision, reader), /exact PHP-Wasm corpus exports/u);\n\t}\n});\n\n",
+          "previous": "",
+          "start": 12281
+        }
+      ],
+      "path": "tests/helpers/owned-checked-record-php-wasm-hosted-tests.mjs",
+      "previousSha256": "4f2ec03d4d29bd16270eaf13a20235d4973e732d4d207c23eb5017b7b786bf3a"
+    },
+    {
+      "currentSha256": "721cb21bb45200b09c15bb225a12e2e18644cacf087e78c26a74c57aee24a3d0",
+      "edits": [
+        {
+          "current": "import { ownedCheckedRecordMixedSelection } from \"./owned-checked-record-mixed-fixture.mjs\";\n",
+          "previous": "",
+          "start": 1609
+        },
+        {
+          "current": "\t\t\t, ownedCheckedRecordMixedSelection(route)\n",
+          "previous": "",
+          "start": 13156
+        },
+        {
+          "current": "\t\t\t// Expanded native/language/managed/PHP-Wasm coverage needs its own hosted evidence.\n",
+          "previous": "\t\t\t// Expanded native/language/managed coverage needs its own hosted evidence.\n",
+          "start": 13776
+        },
+        {
+          "current": "\tassert.ok(php.includes('ownedCheckedRecordMixedSelection('));\n\tassert.ok(php.includes(\"checkedSelection.configuration\"));\n\tassert.ok(php.includes(\"checkedSelection.reviewedIr\"));\n",
+          "previous": "\tassert.ok(php.includes('ownedCheckedRecordJavaScriptConfiguration(reviewed ? \"reviewed\" : \"ordinary\", { resultOnly })'));\n\tassert.ok(php.includes(\"ownedCheckedRecordJavaScriptReviewedIr({ resultOnly })\"));\n",
+          "start": 16024
+        }
+      ],
+      "path": "tests/helpers/owned-checked-record-promotion-tests.mjs",
+      "previousSha256": "b257df31252c8007f2dfb5dc041c0deaa870bfc51d7b0c357fd6ed4a60132bf4"
+    },
+    {
+      "currentSha256": "264d6d33b27fd5b508f2e89c7dcdcf0801a19906fe6d179b8ad3c247a707c3b0",
+      "edits": [
+        {
+          "current": "import { ownedCheckedRecordMixedSelection } from \"./owned-checked-record-mixed-fixture.mjs\";\n",
+          "previous": "",
+          "start": 2826
+        },
+        {
+          "current": "\tassertOwnedCheckedRecordPhpWasmModelCorpus, ownedCheckedRecordPhpWasmCorpora\n\t, ownedCheckedRecordPhpWasmCorpus\n} from \"./owned-checked-record-php-wasm-corpus.mjs\";\n",
+          "previous": "\townedCheckedRecordJavaScriptConfiguration\n\t, ownedCheckedRecordJavaScriptReviewedIr\n} from \"./owned-checked-record-javascript-fixture.mjs\";\n",
+          "start": 2928
+        },
+        {
+          "current": "\tif(checkedRecords && !resultOnly)\n\t\tassert.equal(ownedCheckedRecordPhpWasmCorpus(consumer), ownedCheckedRecordPhpWasmCorpora.mixed);\n",
+          "previous": "",
+          "start": 15108
+        },
+        {
+          "current": "\t\tconst checkedSelection = checkedRecords ? ownedCheckedRecordMixedSelection(\n\t\t\t`${reviewed ? \"reviewed\" : \"ordinary\"}-${resultOnly ? \"result-only\" : \"full\"}`) : null;\n",
+          "previous": "",
+          "start": 16374
+        },
+        {
+          "current": "\t\t\t? checkedSelection.configuration\n",
+          "previous": "\t\t\t? ownedCheckedRecordJavaScriptConfiguration(reviewed ? \"reviewed\" : \"ordinary\", { resultOnly })\n",
+          "start": 16575
+        },
+        {
+          "current": "\t\t\t? checkedSelection.reviewedIr\n",
+          "previous": "\t\t\t? ownedCheckedRecordJavaScriptReviewedIr({ resultOnly })\n",
+          "start": 17950
+        },
+        {
+          "current": "\t\tassert.equal(model.ownedGraph.transport, \"owned-zend-v1\"); assert.equal(model.exports.length, checkedRecords ? resultOnly ? 3 : 15 : checkedRefinements ? 5 : callbackResultAnchors ? callbackVariant === \"combined\" ? 30 : 27 : receiverExports ? 27 : transferredInputs ? 26 : 51);\n\t\tif(transferredInputs) assert.equal(model.ownedGraph.inputTransfers.exports.length, checkedRecords ? 3 : checkedRefinements ? 1 : callbackResultAnchors ? 2 : anchoredResults ? 4 : 20);\n",
+          "previous": "\t\tassert.equal(model.ownedGraph.transport, \"owned-zend-v1\"); assert.equal(model.exports.length, checkedRecords ? resultOnly ? 3 : 9 : checkedRefinements ? 5 : callbackResultAnchors ? callbackVariant === \"combined\" ? 30 : 27 : receiverExports ? 27 : transferredInputs ? 26 : 51);\n\t\tif(transferredInputs) assert.equal(model.ownedGraph.inputTransfers.exports.length, checkedRecords || checkedRefinements ? 1 : callbackResultAnchors ? 2 : anchoredResults ? 4 : 20);\n",
+          "start": 18992
+        },
+        {
+          "current": "\t\t\tassertOwnedCheckedRecordPhpWasmModelCorpus(model, resultOnly ? \"result-only\" : \"full\"\n\t\t\t\t, ownedCheckedRecordPhpWasmCorpora.mixed);\n",
+          "previous": "",
+          "start": 20647
+        },
+        {
+          "current": "\t\t\t\tassert.equal(refinement(\"echoGrant\").parameters[0].constructor\n\t\t\t\t\t, \"OwnedCheckedRecords.mkGrant\");\n\t\t\t\tassert.equal(refinement(\"echoGrant\").parameters[0].fields[1].refinement.constructor\n\t\t\t\t\t, \"OwnedCheckedRecords.checkedPositive\");\n\t\t\t\tassert.equal(refinement(\"echoClaims\").parameters[0].arguments[0].constructor\n\t\t\t\t\t, \"OwnedCheckedRecords.mkClaim\");\n\t\t\t\tassert.equal(refinement(\"transferWithClaimCallback\").parameters[0].constructor\n\t\t\t\t\t, \"OwnedCheckedRecords.mkClaim\");\n\t\t\t\tassert.equal(refinement(\"transferPairClaim\").parameters[1].constructor\n\t\t\t\t\t, \"OwnedCheckedRecords.mkClaim\");\n",
+          "previous": "",
+          "start": 21809
+        }
+      ],
+      "path": "tests/helpers/owned-php-wasm-packages.mjs",
+      "previousSha256": "cd8d2c8c672babfc1f601f7008ddf479913f6b6d6550198f016ff2f7795dbee0"
+    },
+    {
+      "currentSha256": "a9e4cfbd64568662011273a0a10c7b543081980ea1cb5d3dec0ad71b2fa512ef",
+      "edits": [
+        {
+          "current": "import { compileOwnedPhpZendModel } from \"../src/backends/php/owned-zend-model.mjs\";\nimport { generateOwnedPhpZendPhp } from \"../src/backends/php/owned-zend-php.mjs\";\nimport { ownedCheckedRecordMixedSelection } from \"./helpers/owned-checked-record-mixed-fixture.mjs\";\nimport {\n\tassertOwnedCheckedRecordPhpWasmModelCorpus, ownedCheckedRecordPhpWasmCorpora\n\t, ownedCheckedRecordPhpWasmCorpus\n} from \"./helpers/owned-checked-record-php-wasm-corpus.mjs\";\n",
+          "previous": "",
+          "start": 634
+        },
+        {
+          "current": "\tconst consumer = await readFile(\"tests/fixtures/structured-types/owned-checked-record-php-wasm.php\");\n\tassert.equal(ownedCheckedRecordPhpWasmCorpus(consumer), ownedCheckedRecordPhpWasmCorpora.mixed);\n\tfor(const mode of allModes)\n\t{\n\t\tconst full = mode === \"full\";\n\t\tconst ir = ownedCheckedRecordMixedSelection(`reviewed-${mode}`).reviewedIr;\n\t\tconst model = compileOwnedPhpZendModel(ir, { transferredInputs: full, hostCallbacks: full });\n\t\tconst php = generateOwnedPhpZendPhp(model);\n\t\tassert.equal(model.integerBits, 32); assert.equal(model.wordBits, 32);\n\t\tassert.equal(model.callbacks.length, full ? 2 : 0);\n\t\tassertOwnedCheckedRecordPhpWasmModelCorpus({\n\t\t\texports: model.functions.map(fn => ({ bindingId: fn.id }))\n\t\t\t, ownedGraph: full ? { inputTransfers: { exports: model.functions.filter(fn => fn.transfers?.length)\n\t\t\t\t.map(fn => ({ bindingId: fn.id, parameters: fn.transfers })) } } : {}\n\t\t}, mode, ownedCheckedRecordPhpWasmCorpora.mixed);\n\t\tif(full)\n\t\t\tfor(const symbol of [\n\t\t\t\t\"booking_span\", \"claim_quota\", \"echo_grant\", \"echo_claims\"\n\t\t\t\t, \"transfer_pair_claim\", \"transfer_with_claim_callback\"\n\t\t\t])\n\t\t\t\tassert.ok(php[\"src/Api.php\"].includes(`function ${symbol}(`), symbol);\n\t}\n",
+          "previous": "",
+          "start": 3638
+        }
+      ],
+      "path": "tests/owned-checked-record-php-wasm-packaging.test.mjs",
+      "previousSha256": "f6ca6ea5118059d63bc2c21b1f42b03070f458d7a8180819908c01e2a78760c6"
+    }
+  ]
+}

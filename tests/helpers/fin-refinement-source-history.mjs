@@ -97,6 +97,7 @@ import { beforeOwnedCheckedLanguageMixedCoverageSource, ownedCheckedLanguageMixe
 import { beforeDependentMatrixDocGateSource, dependentMatrixDocGateNormalizationPaths } from "./dependent-matrix-doc-gate-source-history.mjs";
 import { beforeOwnedCheckedWindowRejectionSource, ownedCheckedWindowRejectionNormalizationPaths } from "./owned-checked-window-rejection-source-history.mjs";
 import { beforeOwnedCheckedManagedMixedCoverageSource, ownedCheckedManagedMixedCoverageNormalizationPaths } from "./owned-checked-managed-mixed-coverage-source-history.mjs";
+import { beforeOwnedCheckedPhpWasmMixedCoverageSource, ownedCheckedPhpWasmMixedCoverageNormalizationPaths } from "./owned-checked-php-wasm-mixed-coverage-source-history.mjs";
 import { beforeCoreEvidenceMemoryRepairSource, coreEvidenceMemoryRepairNormalizationPaths } from "./core-evidence-memory-repair-source-history.mjs";
 import { beforeValueIndexPromotionMilestoneRepairSource, valueIndexPromotionMilestoneRepairNormalizationPaths } from "./value-index-promotion-milestone-repair-source-history.mjs";
 import { beforeCoreMilestoneReplayRepairSource, coreMilestoneReplayRepairNormalizationPaths } from "./core-milestone-replay-repair-source-history.mjs";
@@ -2190,7 +2191,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...ownedCheckedManagedMixedCoverageNormalizationPaths
+	...ownedCheckedPhpWasmMixedCoverageNormalizationPaths
+	, ...ownedCheckedManagedMixedCoverageNormalizationPaths
 	, ...ownedCheckedWindowRejectionNormalizationPaths
 	, ...ownedCheckedCarrierCompilationNormalizationPaths
 	, ...ownedNativePromotionScopeNormalizationPaths
@@ -3123,7 +3125,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeOwnedCheckedManagedMixedCoverageSource(path, text, expected);
+	let stage = beforeOwnedCheckedPhpWasmMixedCoverageSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeOwnedCheckedManagedMixedCoverageSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;
