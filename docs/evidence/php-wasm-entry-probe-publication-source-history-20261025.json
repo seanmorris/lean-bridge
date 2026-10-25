@@ -1,0 +1,289 @@
+{
+  "additions": [
+    {
+      "currentSha256": "1441cb55c118f38ae2b92eb9d4d165ca0ae224281f22b02e0a7f7fb21c70a08f",
+      "path": "docs/evidence/php-wasm-entry-probe-publication-20261025.json"
+    },
+    {
+      "currentSha256": "4fbb09ffc6ffc948f63c07a9b0a8581f8bf0bd26c78858dd28f9807652c04f76",
+      "path": "tests/helpers/php-wasm-entry-published-probe-tests.mjs"
+    },
+    {
+      "currentSha256": "674d29fa2f19f8cfe5374adbae59ffbba93a4ce429d54983ad621ebcd91d33f4",
+      "path": "scripts/update-php-wasm-entry-probe-publication-source-history.mjs"
+    },
+    {
+      "currentSha256": "2c50cb832aa3124940510cae442e808a4ef857cdae358f8fbc95da34fa96714d",
+      "path": "tests/helpers/php-wasm-entry-probe-publication-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "ae443fa5f230114848d7f8945dd8ce1dced40db8ff54a1f3743389ec0a18ff73",
+      "path": "tests/helpers/php-wasm-entry-probe-publication-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "dc52c5f2f18b306daa109f275b31f7b5ccb0baba",
+  "implementationCommits": [
+    "07af61489bf126c0867d5317884e0c99c788cbd6",
+    "dc52c5f2f18b306daa109f275b31f7b5ccb0baba"
+  ],
+  "integrationBaseCommit": "dc52c5f2f18b306daa109f275b31f7b5ccb0baba",
+  "integrationUpdates": [
+    {
+      "currentSha256": "37d547a33d2d957d96f53180d3963370661e03c0c773349943d79edf844ff7b3",
+      "edits": [
+        {
+          "current": "import { beforePhpWasmEntryProbePublicationSource, phpWasmEntryProbePublicationNormalizationPaths } from \"./php-wasm-entry-probe-publication-source-history.mjs\";\n",
+          "previous": "",
+          "start": 11431
+        },
+        {
+          "current": "\t...phpWasmEntryProbePublicationNormalizationPaths\n\t, ...phpWasmEntryPublicationPinRepairNormalizationPaths\n",
+          "previous": "\t...phpWasmEntryPublicationPinRepairNormalizationPaths\n",
+          "start": 184632
+        },
+        {
+          "current": "\tlet stage = beforePhpWasmEntryProbePublicationSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforePhpWasmEntryPublicationPinRepairSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforePhpWasmEntryPublicationPinRepairSource(path, text, expected);\n",
+          "start": 228643
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "20cc4a9c4b6431cfefe37ac0e6e4f6ce8faa6540416ea404d6cf9a48a342d82e"
+    },
+    {
+      "currentSha256": "455a40f7b693a8917ad179bb8df9e49aee2afb0709c30992f6a4bb4aa5daa363",
+      "edits": [
+        {
+          "current": "import \"./helpers/php-wasm-entry-probe-publication-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 8178
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "376ff867cd5d3a41d0270b981e3e65cc4a05c4e4fc9a2d4eb70fdb956073aab9"
+    }
+  ],
+  "milestone": "php-wasm-entry-probe-publication-source-v1",
+  "predecessorCommit": "f2b19e9f539086ee45d4b918a9579285eb4acb78",
+  "schemaVersion": 1,
+  "scope": "Publish one test-only reference to the complete committed PHP-Wasm entry archive after original-source thirty-route replay, 17 independent-copy negative controls, restored-positive replay and committed-byte authentication. The archive retains 28 original producer/aggregate artifacts and exact sources. Replace only four measurement paragraphs, refresh exactly 29 documentation source pins, and preserve every prepared-package observation, existing evidence identity and unrelated inventory byte. Add registered live checks for all compact archive references, generated documentation and revision-pinned site links. Authenticate the complete inventory through bounded streams and permit only the single probe append plus the named fixed-width hash changes. Keep original archives, verifiers and workflows unchanged. Final required Core/hosted/recurring gates and the complete original VO #1220 scope remain separate.",
+  "updates": [
+    {
+      "currentSha256": "6ca898b6f172236b1c93549184ba7cfada0924b6bacb43e653925806b038f722",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"e16ef39494f582377027c07204be4ac60d5f111f43dd2a04d8f2a0b2e2f74ae8\"\n",
+          "previous": "          \"sha256\": \"2dfdc4e1afc1d87d856453f0aae18761c1b56a6c176c315c95894bca30b577e4\"\n",
+          "start": 49820
+        },
+        {
+          "current": "          \"sha256\": \"e16ef39494f582377027c07204be4ac60d5f111f43dd2a04d8f2a0b2e2f74ae8\"\n",
+          "previous": "          \"sha256\": \"2dfdc4e1afc1d87d856453f0aae18761c1b56a6c176c315c95894bca30b577e4\"\n",
+          "start": 182032
+        },
+        {
+          "current": "          \"sha256\": \"e16ef39494f582377027c07204be4ac60d5f111f43dd2a04d8f2a0b2e2f74ae8\"\n",
+          "previous": "          \"sha256\": \"2dfdc4e1afc1d87d856453f0aae18761c1b56a6c176c315c95894bca30b577e4\"\n",
+          "start": 196931
+        },
+        {
+          "current": "          \"sha256\": \"6f2c73fb18712ee023f122375f20c425d84d2bde39fec106003942d8f0be9f8d\"\n",
+          "previous": "          \"sha256\": \"c15b6b4fce1001120661ab9d919a279fa16252f45c0f868d3a9cd1afdc106459\"\n",
+          "start": 1072789
+        },
+        {
+          "current": "          \"sha256\": \"6f2c73fb18712ee023f122375f20c425d84d2bde39fec106003942d8f0be9f8d\"\n",
+          "previous": "          \"sha256\": \"c15b6b4fce1001120661ab9d919a279fa16252f45c0f868d3a9cd1afdc106459\"\n",
+          "start": 1080378
+        },
+        {
+          "current": "          \"sha256\": \"6f2c73fb18712ee023f122375f20c425d84d2bde39fec106003942d8f0be9f8d\"\n",
+          "previous": "          \"sha256\": \"c15b6b4fce1001120661ab9d919a279fa16252f45c0f868d3a9cd1afdc106459\"\n",
+          "start": 1086979
+        },
+        {
+          "current": "          \"sha256\": \"6f2c73fb18712ee023f122375f20c425d84d2bde39fec106003942d8f0be9f8d\"\n",
+          "previous": "          \"sha256\": \"c15b6b4fce1001120661ab9d919a279fa16252f45c0f868d3a9cd1afdc106459\"\n",
+          "start": 1094087
+        },
+        {
+          "current": "          \"sha256\": \"6f2c73fb18712ee023f122375f20c425d84d2bde39fec106003942d8f0be9f8d\"\n",
+          "previous": "          \"sha256\": \"c15b6b4fce1001120661ab9d919a279fa16252f45c0f868d3a9cd1afdc106459\"\n",
+          "start": 1101581
+        },
+        {
+          "current": "          \"sha256\": \"6f2c73fb18712ee023f122375f20c425d84d2bde39fec106003942d8f0be9f8d\"\n",
+          "previous": "          \"sha256\": \"c15b6b4fce1001120661ab9d919a279fa16252f45c0f868d3a9cd1afdc106459\"\n",
+          "start": 1108637
+        },
+        {
+          "current": "          \"sha256\": \"6f2c73fb18712ee023f122375f20c425d84d2bde39fec106003942d8f0be9f8d\"\n",
+          "previous": "          \"sha256\": \"c15b6b4fce1001120661ab9d919a279fa16252f45c0f868d3a9cd1afdc106459\"\n",
+          "start": 1116238
+        },
+        {
+          "current": "          \"sha256\": \"6f2c73fb18712ee023f122375f20c425d84d2bde39fec106003942d8f0be9f8d\"\n",
+          "previous": "          \"sha256\": \"c15b6b4fce1001120661ab9d919a279fa16252f45c0f868d3a9cd1afdc106459\"\n",
+          "start": 1126519
+        },
+        {
+          "current": "          \"sha256\": \"6f2c73fb18712ee023f122375f20c425d84d2bde39fec106003942d8f0be9f8d\"\n",
+          "previous": "          \"sha256\": \"c15b6b4fce1001120661ab9d919a279fa16252f45c0f868d3a9cd1afdc106459\"\n",
+          "start": 1138852
+        },
+        {
+          "current": "          \"sha256\": \"58db6f137ccde6e003af2c2d08323f97af043622cc640a932a4389dbbbeba353\"\n",
+          "previous": "          \"sha256\": \"abfe3b5f9567dd722a2a4bea61efb7526f5c23283c43d9de558aed026ffe9fb2\"\n",
+          "start": 1150248
+        },
+        {
+          "current": "          \"sha256\": \"58db6f137ccde6e003af2c2d08323f97af043622cc640a932a4389dbbbeba353\"\n",
+          "previous": "          \"sha256\": \"abfe3b5f9567dd722a2a4bea61efb7526f5c23283c43d9de558aed026ffe9fb2\"\n",
+          "start": 1158134
+        },
+        {
+          "current": "          \"sha256\": \"6f2c73fb18712ee023f122375f20c425d84d2bde39fec106003942d8f0be9f8d\"\n",
+          "previous": "          \"sha256\": \"c15b6b4fce1001120661ab9d919a279fa16252f45c0f868d3a9cd1afdc106459\"\n",
+          "start": 1192311
+        },
+        {
+          "current": "          \"sha256\": \"6f2c73fb18712ee023f122375f20c425d84d2bde39fec106003942d8f0be9f8d\"\n",
+          "previous": "          \"sha256\": \"c15b6b4fce1001120661ab9d919a279fa16252f45c0f868d3a9cd1afdc106459\"\n",
+          "start": 1224854
+        },
+        {
+          "current": "          \"sha256\": \"6f2c73fb18712ee023f122375f20c425d84d2bde39fec106003942d8f0be9f8d\"\n",
+          "previous": "          \"sha256\": \"c15b6b4fce1001120661ab9d919a279fa16252f45c0f868d3a9cd1afdc106459\"\n",
+          "start": 1255133
+        },
+        {
+          "current": "          \"sha256\": \"6f2c73fb18712ee023f122375f20c425d84d2bde39fec106003942d8f0be9f8d\"\n",
+          "previous": "          \"sha256\": \"c15b6b4fce1001120661ab9d919a279fa16252f45c0f868d3a9cd1afdc106459\"\n",
+          "start": 1288100
+        },
+        {
+          "current": "          \"sha256\": \"6f2c73fb18712ee023f122375f20c425d84d2bde39fec106003942d8f0be9f8d\"\n",
+          "previous": "          \"sha256\": \"c15b6b4fce1001120661ab9d919a279fa16252f45c0f868d3a9cd1afdc106459\"\n",
+          "start": 1329510
+        },
+        {
+          "current": "          \"sha256\": \"e16ef39494f582377027c07204be4ac60d5f111f43dd2a04d8f2a0b2e2f74ae8\"\n",
+          "previous": "          \"sha256\": \"2dfdc4e1afc1d87d856453f0aae18761c1b56a6c176c315c95894bca30b577e4\"\n",
+          "start": 1329810
+        },
+        {
+          "current": "          \"sha256\": \"6f2c73fb18712ee023f122375f20c425d84d2bde39fec106003942d8f0be9f8d\"\n",
+          "previous": "          \"sha256\": \"c15b6b4fce1001120661ab9d919a279fa16252f45c0f868d3a9cd1afdc106459\"\n",
+          "start": 1355358
+        },
+        {
+          "current": "          \"sha256\": \"e16ef39494f582377027c07204be4ac60d5f111f43dd2a04d8f2a0b2e2f74ae8\"\n",
+          "previous": "          \"sha256\": \"2dfdc4e1afc1d87d856453f0aae18761c1b56a6c176c315c95894bca30b577e4\"\n",
+          "start": 1355658
+        },
+        {
+          "current": "          \"sha256\": \"6f2c73fb18712ee023f122375f20c425d84d2bde39fec106003942d8f0be9f8d\"\n",
+          "previous": "          \"sha256\": \"c15b6b4fce1001120661ab9d919a279fa16252f45c0f868d3a9cd1afdc106459\"\n",
+          "start": 1378038
+        },
+        {
+          "current": "          \"sha256\": \"58db6f137ccde6e003af2c2d08323f97af043622cc640a932a4389dbbbeba353\"\n",
+          "previous": "          \"sha256\": \"abfe3b5f9567dd722a2a4bea61efb7526f5c23283c43d9de558aed026ffe9fb2\"\n",
+          "start": 1378346
+        },
+        {
+          "current": "          \"sha256\": \"6f2c73fb18712ee023f122375f20c425d84d2bde39fec106003942d8f0be9f8d\"\n",
+          "previous": "          \"sha256\": \"c15b6b4fce1001120661ab9d919a279fa16252f45c0f868d3a9cd1afdc106459\"\n",
+          "start": 1397730
+        },
+        {
+          "current": "          \"sha256\": \"58db6f137ccde6e003af2c2d08323f97af043622cc640a932a4389dbbbeba353\"\n",
+          "previous": "          \"sha256\": \"abfe3b5f9567dd722a2a4bea61efb7526f5c23283c43d9de558aed026ffe9fb2\"\n",
+          "start": 1398038
+        },
+        {
+          "current": "          \"sha256\": \"6f2c73fb18712ee023f122375f20c425d84d2bde39fec106003942d8f0be9f8d\"\n",
+          "previous": "          \"sha256\": \"c15b6b4fce1001120661ab9d919a279fa16252f45c0f868d3a9cd1afdc106459\"\n",
+          "start": 1418215
+        },
+        {
+          "current": "          \"sha256\": \"e16ef39494f582377027c07204be4ac60d5f111f43dd2a04d8f2a0b2e2f74ae8\"\n",
+          "previous": "          \"sha256\": \"2dfdc4e1afc1d87d856453f0aae18761c1b56a6c176c315c95894bca30b577e4\"\n",
+          "start": 1429038
+        },
+        {
+          "current": "          \"sha256\": \"58db6f137ccde6e003af2c2d08323f97af043622cc640a932a4389dbbbeba353\"\n",
+          "previous": "          \"sha256\": \"abfe3b5f9567dd722a2a4bea61efb7526f5c23283c43d9de558aed026ffe9fb2\"\n",
+          "start": 1429187
+        },
+        {
+          "current": "    },\n    {\n      \"id\": \"php-wasm-refinement-entry-hosted-probes\",\n      \"kind\": \"test\",\n      \"revision\": \"a003269808c43a2a3a509a23c8a8ab8def07b610\",\n      \"command\": \"node scripts/check-php-wasm-refinement-entry-hosted-archive.mjs --directory \\\"$PWD/docs/evidence/php-wasm-entry-hosted-20261025\\\" --producer-checkout \\\"$LEAN_BRIDGE_PRODUCER_CHECKOUT\\\"\",\n      \"scope\": \"GitHub Actions run 40144947516, attempt 1, at a003269808c43a2a3a509a23c8a8ab8def07b610: 30 ordinary/reviewed routes in 27 retained producer artifacts plus the aggregate verifier artifact. All original API/ZIP/output bytes and producer/archiver sources are committed and independently reconstructed; the original producer's real thirty-route verifier replays every retained record. Separate instrumented PHP-Wasm fixture packages measure validator, constructor, adapter and Lean-source entries on 24 copied, owned and indexed routes; six callback routes record callback control totals. This test evidence does not change prepared-package support states, instrument unmodified consumer packages, establish performance or memory bounds, or prove unmeasured signatures. External runtimes, toolchains and operating-system distributions remain recorded inputs.\",\n      \"files\": [\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/index.json\",\n          \"sha256\": \"581b034fd9dc2c8c59b60b571df2c7861bac8eed576d5d39f4cd3f2adf2f97a8\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/api/run.json\",\n          \"sha256\": \"128e2737d9a1ba25e07d7be132950352feda29caa5d079c4a887ca3ee1bcc068\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/replay.json\",\n          \"sha256\": \"920aaed619ed0458c59214b5e32a425673d82a3f721ab777ed7a41abd8d22f0e\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0000/index.json\",\n          \"sha256\": \"9faa440a1c383885b04210c97e7f538e7d49c5ff58467f51889d901dbd4c658e\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/api/jobs/0000.json\",\n          \"sha256\": \"138a3d922a4535382eaff4d6ee36467a9c251a4472ea88eedd5c8eb72eebf337\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/api/artifacts/0000.json\",\n          \"sha256\": \"8348995954eee574c480fe9301fb3546926d9cfa9763d7fd0feac3434832d6bc\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0000/zip/0000.part\",\n          \"sha256\": \"3aa25602e2f82d0c7806b5d062eb0d94826c5e19f66d6fdcb275305df7a6393d\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0001/index.json\",\n          \"sha256\": \"9c8fe9076c5e7681c10abf1dc65ad4a19ff7be270d5f664cb5641944fa29d55f\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/api/jobs/0001.json\",\n          \"sha256\": \"508f92edb99a907316637f40ca420a7b06dfaa2e3ddeb7f25f96d7be56fa8c0f\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/api/artifacts/0001.json\",\n          \"sha256\": \"265defcf33c5353505917212b3273a73488fd88d710e29597daaa3b63c3da5cc\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0001/zip/0000.part\",\n          \"sha256\": \"5621e499072443c3018fb8ec66038fb3f1c39a0a73e67c826b0edc3a25dd7e86\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0002/index.json\",\n          \"sha256\": \"e2d23606226645d11cb29209bad4d92c2a4ec6741198db30985213fb0451481f\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/api/jobs/0002.json\",\n          \"sha256\": \"061fc58709abb6e7a018322192fb8a58bd882cc221ac945130d0699cc2daa15f\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/api/artifacts/0002.json\",\n          \"sha256\": \"c5b9e5e3ad3b094b7d2c135392f99ee6377de14602f4c31cbbc643174325e4b6\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0002/zip/0000.part\",\n          \"sha256\": \"6a9d27be120856665350c2fec1271c566bbfa6a77129d21d9c7147f5c78434d5\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0003/index.json\",\n          \"sha256\": \"937b6b7825eb3495887055e6c288c40da65811dc28e792ac408c1d581215af91\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/api/jobs/0003.json\",\n          \"sha256\": \"bc4b157bae26508ae9cc6a42b7d0c83387a46321ac886368ca5b058aa1e1dfb4\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/api/artifacts/0003.json\",\n          \"sha256\": \"45699205cb06c10ae1a7db56f91cb7432764f1275690d26310e53ff5ad98dc08\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0003/zip/0000.part\",\n          \"sha256\": \"7af24db4ccb325b696bfe7f3c91f5b062d898db8f0a39048553e6d81b02118b8\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0004/index.json\",\n          \"sha256\": \"e526072ef3c99b86d340f1332d7d85b8e3147b3c68a37b7a2dc31d466038baf6\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/api/jobs/0004.json\",\n          \"sha256\": \"0b3fb7392538940e103acc6f0c253e56a2f4c74d345505b15dd1cbe3ea6faa19\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/api/artifacts/0004.json\",\n          \"sha256\": \"ceddbf227382594eb27bcd71e5d37eabaa27d6c83cda1fd70656a7e9e17115f6\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0004/zip/0000.part\",\n          \"sha256\": \"95040f2ec0396d685e3a3c0cdb92e4dcb0b3f3218210330d11625246ac7a311a\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0005/index.json\",\n          \"sha256\": \"95302b419841b10c6591e6657b226050172026aae2c28a6fa597c7b2e9c48193\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/api/jobs/0005.json\",\n          \"sha256\": \"2661b5018648f14ebe291447b5c4de69d7a0cadc7496b35887fa4058be03e386\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/api/artifacts/0005.json\",\n          \"sha256\": \"c714d53c741eb0270b7bbda92068af036f6a375910d4794909a0472a7da4509f\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0005/zip/0000.part\",\n          \"sha256\": \"179b852067651a9941aad47345e9b05cfb86430477ae09ffeab2d6aa62dadce8\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0006/index.json\",\n          \"sha256\": \"26749cf771afb250c14fc64464fdbde59638efa6eb1f8ee869c794f1b779811e\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/api/jobs/0006.json\",\n          \"sha256\": \"4d16889fd1b7f917a6608f92c81aeec218ae7ac6ac8b3cb0aed0791bf95e8e05\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/api/artifacts/0006.json\",\n          \"sha256\": \"ea69acf9447af5b260084bf10c9f2616f38bb953c66553d89272297fec5c31a4\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0006/zip/0000.part\",\n          \"sha256\": \"e126fe9c750628fe9ef282a49e1ac849594b7428f1c56d10bcc1c823f3366f21\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0007/index.json\",\n          \"sha256\": \"c4fb92ea72839e42355afdde8ad00d667991688ac8f4fedf9860748d4549fcde\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/api/jobs/0007.json\",\n          \"sha256\": \"c7ccce27d69ae90d6fcf67d7b44b1929e510268dd295368d6c06b779f29dd139\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/api/artifacts/0007.json\",\n          \"sha256\": \"cf0387744dde8d229ecb3bf6c4c1bc908c28543ed3c35916f1ff3b1367fe23f0\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0007/zip/0000.part\",\n          \"sha256\": \"15e21237b7800be717e4592b1719000f843bb519e80d706d26681b8d4938a7e7\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0008/index.json\",\n          \"sha256\": \"990b368bac3768fced83650576c699a173eff0a6622cdb64dbe02507fafee74d\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/api/jobs/0008.json\",\n          \"sha256\": \"13712df86dfb13873df02c1b717246d7142d5bc2b329bd3729877e0cb2ad2871\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/api/artifacts/0008.json\",\n          \"sha256\": \"26f64944e5a0d0640c9830088978fae1314905a1a98192210875dbb2d7cfcaed\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0008/zip/0000.part\",\n          \"sha256\": \"bf82c9c9d2c2d8483452f6bedd135b8742ed919c4e6ec641c1da4789f0c11850\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0009/index.json\",\n          \"sha256\": \"a36989c1add615bbd641a6d4dbaa0d72bfec98233d053e7a1307ac0da917f3f1\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/api/jobs/0009.json\",\n          \"sha256\": \"8b789935a8440155de116b817a8e61fddd52ccde53a89500cb777980559ddba3\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/api/artifacts/0009.json\",\n          \"sha256\": \"85683843e4d8ea1567854d1bef89c7e23f445ed2cfc3da893aabf01460081d3e\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0009/zip/0000.part\",\n          \"sha256\": \"3a5bae1d379abcb6d20a018a25b57ea77c437220d451d76a94a105dd1e30e970\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0010/index.json\",\n          \"sha256\": \"e26fa47fe3f14f9af891ebd0ab38567a0cdad4a29ede382e455124c1fc7aa2a4\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/api/jobs/0010.json\",\n          \"sha256\": \"23bf7659d1346529adf99054e68ff945d199e0ed9f98ecdd4a529d2514458711\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/api/artifacts/0010.json\",\n          \"sha256\": \"4e913af522630db64193f6779d9b63c9f5048933e3c744d0e007c5816dd3a5c4\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0010/zip/0000.part\",\n          \"sha256\": \"128b46e2343d7b544a66272885f4ad9051281dd7142965053c77d6b809fb0645\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0011/index.json\",\n          \"sha256\": \"10a65b9921a1f8231b77e4ba859b87c2a977e5f66ceed8ad1b77ac9c5cc10dc6\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/api/jobs/0011.json\",\n          \"sha256\": \"e152e94d819a1f51e3dea3087f4f5b15bab5edb35d1631a40ab062f81eb1b97b\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/api/artifacts/0011.json\",\n          \"sha256\": \"2848c4d09334ac2c8f9c65f062bdd73b0c9012718fc86d7f285b56d5e70aa312\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0011/zip/0000.part\",\n          \"sha256\": \"fea5bfaab27e374281ba4f5d46d8b7b10999dc757315f2294d7d8f92722712b6\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0012/index.json\",\n          \"sha256\": \"0e96a6380889c4301327137f8f167e36e696782d4b4a2bf84d007ad62269dc7e\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/api/jobs/0012.json\",\n          \"sha256\": \"532bd9643a2e0c6d18e5ba25a509cf02bdb2089828a2d8a9873f08465151ae18\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/api/artifacts/0012.json\",\n          \"sha256\": \"f5acfc8374e04eb107eb563b1f37e82caf9bbba8e553e2dcb9af63cdf2196f0b\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0012/zip/0000.part\",\n          \"sha256\": \"a9e8bcef79cb24ebe1fae1e3ebe62d1979c7619d823ff9206bfe639177759c64\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0013/index.json\",\n          \"sha256\": \"23897f6a086cbb52b193855109a523b21338540af18087af7a8478ef859c31ca\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/api/jobs/0013.json\",\n          \"sha256\": \"97f841c917fc1b01b1f028ad3d3bb48c29b6d4d708f57d669186a491a72f1cac\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/api/artifacts/0013.json\",\n          \"sha256\": \"209f54395cd3475ce1511000884252e30e123187d622afea666e2163444cf865\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0013/zip/0000.part\",\n          \"sha256\": \"4f2cf7d584c2420eeea6973eb5a5a1d590f504a927313bae46a92362aa9b5762\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0014/index.json\",\n          \"sha256\": \"9d22be8470707b7d548f0204021b10439f0c81d5c87d5dd0952213ed587834e8\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/api/jobs/0014.json\",\n          \"sha256\": \"89ce49f98b7bc99f6228d3a8ea22bdca15237dd1874a9b1fd33f749151d0c3e9\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/api/artifacts/0014.json\",\n          \"sha256\": \"cd49944019d4ae3948447dff24059086d2b9bd9c3fede814ea29b2ba1088ea25\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0014/zip/0000.part\",\n          \"sha256\": \"6c78a54c0b7775a34b19452c6ae245f01623a320ac545a75f8d1f42d5aa09816\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0015/index.json\",\n          \"sha256\": \"b4a9844a12594b4bf8720fbb3e49ad027027bef03886f32c846f5224b9923696\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/api/jobs/0015.json\",\n          \"sha256\": \"c8a702fcb8bf7c5c1f570b81a4843b19bd563df6623d50ec13c5e8d7322a7353\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/api/artifacts/0015.json\",\n          \"sha256\": \"30f05e837a03dcc8e69d08778b711c7b7dcb31cd09c55a4c870a909df070e8a2\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0015/zip/0000.part\",\n          \"sha256\": \"9660cf49f7eb4bd397abacd2104031461c43f8e2daaa1bed74947bea91db7188\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0016/index.json\",\n          \"sha256\": \"9960b3b868c16bfa26a21e02747f460ead7f2e94a131a1b22db05d90a3d4555d\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/api/jobs/0016.json\",\n          \"sha256\": \"40506c38cee51e2f3e50b4cb6f3642fba039cf24b9f3a75d4f894a0fded5aaf5\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/api/artifacts/0016.json\",\n          \"sha256\": \"eb4f6b3b3dc9224875a69d9e12bf35e2fc0ef6494d076421faa171753d6733d7\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0016/zip/0000.part\",\n          \"sha256\": \"d879413bbbfc437cead2634a3c932f94c5da8f5b5f4195ec5e5615fb96c66b44\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0017/index.json\",\n          \"sha256\": \"99019575888df85200df87e2bf5111f4fbe762ad0aa9b73bd6c1737bcac17ec9\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/api/jobs/0017.json\",\n          \"sha256\": \"6d6ba11f336724a55e80dab48ab4f2eff7731349fab77c699e4630f85bc1c256\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/api/artifacts/0017.json\",\n          \"sha256\": \"8a1b76d3dc9f93a27f6a987e74dbde6f647eaeb240a9ea5418dfc03e9f1b25df\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0017/zip/0000.part\",\n          \"sha256\": \"e67fb5326e467bcc64f4ca21fb0e690660bb1b4554162367d5076f6e31f0feac\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0018/index.json\",\n          \"sha256\": \"975fe77bb5603cde00e0d94b6aedd2dbab8e6fbec9e9ac8bf895164af0242b72\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/api/jobs/0018.json\",\n          \"sha256\": \"b8e669bc6a5d8e5f481b845560edda2c18f164bb3ba0ada9cd8879ecc6eaa788\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/api/artifacts/0018.json\",\n          \"sha256\": \"6bb13d4bad397c1ec84ea7599f660b102d79e5fcc4da12ea2309fbe71eca0c41\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0018/zip/0000.part\",\n          \"sha256\": \"d3088ffd5f8a5a624bda674754b4d7c7c23c409ee432b032f4a9c98e33c12a60\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0019/index.json\",\n          \"sha256\": \"eea249f2f58e4907a56e378c9f296d88a916ffc082472e90d5b429d68232de05\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/api/jobs/0019.json\",\n          \"sha256\": \"95288075370b0edb4fe7a8649e76d4576acd7347ef71788c4c6340a36000b053\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/api/artifacts/0019.json\",\n          \"sha256\": \"dbe80b0c9cca4e4f396e20e9b5958110f0249de5771f257e485b02ae5aa9f473\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0019/zip/0000.part\",\n          \"sha256\": \"b13de2010038d3ae873a1ade7626db5b3117d43a69329ef5636e5869ef056fa4\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0020/index.json\",\n          \"sha256\": \"cc5ca3bf4c85fed1188d173f51eebfc8ef3edf9804dda849193b954b6902a0d8\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/api/jobs/0020.json\",\n          \"sha256\": \"a74edab407890e21490581b7f15fb4401b601b1a9b760d2fb6e5df2735992884\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/api/artifacts/0020.json\",\n          \"sha256\": \"7bee2275551798fe700ff406a3c183464f3f6aac692ad555849c091b283d937c\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0020/zip/0000.part\",\n          \"sha256\": \"c202f9beda0e8cc96ab0217725567af8333039b9b1e8f82d59f44ab7ba8dd8ce\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0021/index.json\",\n          \"sha256\": \"e7eacc626cb85f5d406e08f664865c8c25ed8b110650c375cb5cee57b5f77d23\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/api/jobs/0021.json\",\n          \"sha256\": \"651efbee529f5d30ff54f40ec839ddab8abf317e9b95512df3f170fe0679edcd\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/api/artifacts/0021.json\",\n          \"sha256\": \"a5d645a4dbdfc318d82124c5beac1684aac23fd71e3bc5b26211968d48cd46d6\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0021/zip/0000.part\",\n          \"sha256\": \"3307637a210f7379a4a5f51cf3cf84d24226cc9604d1a92a54a0449e6c7db214\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0022/index.json\",\n          \"sha256\": \"f7549abbc48739a008a786bf4ca9d4e07947ccd9773edf6e6df39951f9d75b9c\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/api/jobs/0022.json\",\n          \"sha256\": \"ea555ee854c56961bd8fd87988fdd4e9c259df0adf81240ebc97b7cb82144742\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/api/artifacts/0022.json\",\n          \"sha256\": \"0a690c7aa4150936877c1edeef78f2b86a939bea5150a867f8549a8666676faa\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0022/zip/0000.part\",\n          \"sha256\": \"98d5e75256ee257b49fe2aca29a3535f5d7c6e21270f5f7705a79a36189cfc32\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0023/index.json\",\n          \"sha256\": \"0da8dd2914de549685e25b04debd3fb07d044c443b13832da958c87820bcc678\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/api/jobs/0023.json\",\n          \"sha256\": \"f7effdc4d6e30a822d4f26365375125e497b3981da28336c84bb5398103c9836\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/api/artifacts/0023.json\",\n          \"sha256\": \"fe8fc942a69cf7d6084907bb5379ddae5b63f8fe5df4ffbda84a485031dc827d\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0023/zip/0000.part\",\n          \"sha256\": \"b6edcd8bc1a9d766bb35111ea494cbc028af57dcdf415c8f6a4575f7b02baff2\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0024/index.json\",\n          \"sha256\": \"8327498c5881892496670af457fd954da3849c66962233f34b7e3b3a12c75d1d\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/api/jobs/0024.json\",\n          \"sha256\": \"c91107163992288855cf4fd1076b34485a3ff43d24c3904e21762a7dbab62a03\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/api/artifacts/0024.json\",\n          \"sha256\": \"f6df2ab8c84cde0f9f21271fd2a2201764b33cc721d0d371e4beb4595715d8ec\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0024/zip/0000.part\",\n          \"sha256\": \"0b77f66d6bc31a2b1c42a796ab469582e7341662f8cc3c72a85bf1e85f2295b1\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0025/index.json\",\n          \"sha256\": \"57676d5a51b508765027f6a350c6ffbcdf01722d03c22152893db92444456977\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/api/jobs/0025.json\",\n          \"sha256\": \"a51adc1770f5edb12723180a695e4b7dff2aea1b11018f5b33e5d3e2dceae24a\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/api/artifacts/0025.json\",\n          \"sha256\": \"41bcc8f613989c1a054d7e7a53ab4bcd7dd0018f61587c84dc301a5dc783870b\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0025/zip/0000.part\",\n          \"sha256\": \"38827d0c1a59f60416b4d9314df8825866aef7f089886252de08d93e57a90498\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0026/index.json\",\n          \"sha256\": \"b05dfbe279425e6c2ffd007a6e2bcfcbceb3359fa272f0503e17b7589b1d9061\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/api/jobs/0026.json\",\n          \"sha256\": \"bad0d92ef1109af095055876c59b7ee9bfdb54e1e9c14107f978de834879eeeb\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/api/artifacts/0026.json\",\n          \"sha256\": \"c78daa356a3395ca7d4e3d6d7bb55add2018a9d83ca83546c0b690b485091bcd\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0026/zip/0000.part\",\n          \"sha256\": \"d659d14e0e312a60cd729183759ff14da809e029a7ad94d349b9d78f2d8147b8\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0027/index.json\",\n          \"sha256\": \"b4b8fda024bee1cab8c719a831ae694466dde8c6928d7ae52c8bd01e52e60dbb\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/api/jobs/0027.json\",\n          \"sha256\": \"3355ee5a305cfa3a9fe35ce26688ec470bdeacbc528f802683b01f3ac7e959d9\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/api/artifacts/0027.json\",\n          \"sha256\": \"122dd98dbea70f5eb3f351818777f245ca64f47fa5f5e3fe9e74a42b5f7a6145\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0027/zip/0000.part\",\n          \"sha256\": \"3ca855ec17059a0ee8bf9d8c338c58f9f9bc926cce376081f77b95bb1f60e1d7\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/sources/producer/0000.part\",\n          \"sha256\": \"48add54f5f0790d004d80c723729ccd075b20b8f91df8c818bb20f96a3672143\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/sources/archiver/0000.part\",\n          \"sha256\": \"0df4875207035b1b42d686db21e4e76807ac614823e4fb0d23c8b866aa34cd88\"\n        },\n        {\n          \"path\": \"scripts/check-php-wasm-refinement-entry-hosted-archive.mjs\",\n          \"sha256\": \"e1132b001d1aaea0d7f6641898e81f70b7b16071ec67b1eb17cdf3978433b653\"\n        },\n        {\n          \"path\": \"tests/helpers/php-wasm-refinement-entry-publication.mjs\",\n          \"sha256\": \"204ed3ee2d3d95616f60c9ae1470a96b5a6684f70118b6052be1f82782c4cdb7\"\n        },\n        {\n          \"path\": \"tests/helpers/php-wasm-refinement-entry-hosted-archive.mjs\",\n          \"sha256\": \"e7519c9cebebc70e5b1d23c3e5273b490c13e747aebb710e6f430afcdb3d6bdc\"\n        },\n        {\n          \"path\": \"tests/helpers/php-wasm-refinement-entry-hosted-identities.mjs\",\n          \"sha256\": \"2b39abfaaa469cefb1d00a447a711daa9d434b5ee2db2ff4032a09722b21a1ee\"\n        },\n        {\n          \"path\": \"tests/helpers/php-wasm-refinement-entry-hosted-replay.mjs\",\n          \"sha256\": \"5249b76489cadc27f75fd5aa193f6c0ffc622fd2db3b375bafef5ea80cfa4044\"\n        },\n        {\n          \"path\": \"tests/helpers/php-wasm-refinement-entry-hosted-storage.mjs\",\n          \"sha256\": \"dc419a097b36910f1fd97aed47896d83f5151cb9586c90b0d55723738b848812\"\n        }\n      ],\n      \"artifacts\": [\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0000/zip/0000.part\",\n          \"sha256\": \"3aa25602e2f82d0c7806b5d062eb0d94826c5e19f66d6fdcb275305df7a6393d\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0001/zip/0000.part\",\n          \"sha256\": \"5621e499072443c3018fb8ec66038fb3f1c39a0a73e67c826b0edc3a25dd7e86\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0002/zip/0000.part\",\n          \"sha256\": \"6a9d27be120856665350c2fec1271c566bbfa6a77129d21d9c7147f5c78434d5\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0003/zip/0000.part\",\n          \"sha256\": \"7af24db4ccb325b696bfe7f3c91f5b062d898db8f0a39048553e6d81b02118b8\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0004/zip/0000.part\",\n          \"sha256\": \"95040f2ec0396d685e3a3c0cdb92e4dcb0b3f3218210330d11625246ac7a311a\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0005/zip/0000.part\",\n          \"sha256\": \"179b852067651a9941aad47345e9b05cfb86430477ae09ffeab2d6aa62dadce8\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0006/zip/0000.part\",\n          \"sha256\": \"e126fe9c750628fe9ef282a49e1ac849594b7428f1c56d10bcc1c823f3366f21\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0007/zip/0000.part\",\n          \"sha256\": \"15e21237b7800be717e4592b1719000f843bb519e80d706d26681b8d4938a7e7\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0008/zip/0000.part\",\n          \"sha256\": \"bf82c9c9d2c2d8483452f6bedd135b8742ed919c4e6ec641c1da4789f0c11850\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0009/zip/0000.part\",\n          \"sha256\": \"3a5bae1d379abcb6d20a018a25b57ea77c437220d451d76a94a105dd1e30e970\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0010/zip/0000.part\",\n          \"sha256\": \"128b46e2343d7b544a66272885f4ad9051281dd7142965053c77d6b809fb0645\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0011/zip/0000.part\",\n          \"sha256\": \"fea5bfaab27e374281ba4f5d46d8b7b10999dc757315f2294d7d8f92722712b6\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0012/zip/0000.part\",\n          \"sha256\": \"a9e8bcef79cb24ebe1fae1e3ebe62d1979c7619d823ff9206bfe639177759c64\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0013/zip/0000.part\",\n          \"sha256\": \"4f2cf7d584c2420eeea6973eb5a5a1d590f504a927313bae46a92362aa9b5762\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0014/zip/0000.part\",\n          \"sha256\": \"6c78a54c0b7775a34b19452c6ae245f01623a320ac545a75f8d1f42d5aa09816\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0015/zip/0000.part\",\n          \"sha256\": \"9660cf49f7eb4bd397abacd2104031461c43f8e2daaa1bed74947bea91db7188\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0016/zip/0000.part\",\n          \"sha256\": \"d879413bbbfc437cead2634a3c932f94c5da8f5b5f4195ec5e5615fb96c66b44\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0017/zip/0000.part\",\n          \"sha256\": \"e67fb5326e467bcc64f4ca21fb0e690660bb1b4554162367d5076f6e31f0feac\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0018/zip/0000.part\",\n          \"sha256\": \"d3088ffd5f8a5a624bda674754b4d7c7c23c409ee432b032f4a9c98e33c12a60\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0019/zip/0000.part\",\n          \"sha256\": \"b13de2010038d3ae873a1ade7626db5b3117d43a69329ef5636e5869ef056fa4\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0020/zip/0000.part\",\n          \"sha256\": \"c202f9beda0e8cc96ab0217725567af8333039b9b1e8f82d59f44ab7ba8dd8ce\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0021/zip/0000.part\",\n          \"sha256\": \"3307637a210f7379a4a5f51cf3cf84d24226cc9604d1a92a54a0449e6c7db214\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0022/zip/0000.part\",\n          \"sha256\": \"98d5e75256ee257b49fe2aca29a3535f5d7c6e21270f5f7705a79a36189cfc32\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0023/zip/0000.part\",\n          \"sha256\": \"b6edcd8bc1a9d766bb35111ea494cbc028af57dcdf415c8f6a4575f7b02baff2\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0024/zip/0000.part\",\n          \"sha256\": \"0b77f66d6bc31a2b1c42a796ab469582e7341662f8cc3c72a85bf1e85f2295b1\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0025/zip/0000.part\",\n          \"sha256\": \"38827d0c1a59f60416b4d9314df8825866aef7f089886252de08d93e57a90498\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0026/zip/0000.part\",\n          \"sha256\": \"d659d14e0e312a60cd729183759ff14da809e029a7ad94d349b9d78f2d8147b8\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0027/zip/0000.part\",\n          \"sha256\": \"3ca855ec17059a0ee8bf9d8c338c58f9f9bc926cce376081f77b95bb1f60e1d7\"\n        }\n      ]\n",
+          "previous": "",
+          "start": 89585866
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "9474d841eaccdf8b1ecf39ab6f1a22ec0d21d0ffc8e5a0372aa123e9d8632c1d"
+    },
+    {
+      "currentSha256": "e16ef39494f582377027c07204be4ac60d5f111f43dd2a04d8f2a0b2e2f74ae8",
+      "edits": [
+        {
+          "current": "[Hosted entry probes](evidence/php-wasm-entry-hosted-20261025/index.json) cover 30 ordinary/reviewed routes in 27 retained artifacts, plus the aggregate verifier artifact, at producer `a003269808c43a2a3a509a23c8a8ab8def07b610`. The archive checker reconstructs the original artifacts and sources and reruns all thirty route verifiers. The 24 copied, owned and indexed routes count validator, constructor, adapter and Lean-source entries; six callback routes record callback control totals for Fin, selected Subtype and checked-record families. These separate instrumented fixture packages leave unmodified prepared packages and their supported types unchanged. The [promotion workflow](https://github.com/seanmorris/lean-bridge/actions/workflows/php-wasm-refinement-entry-promotion.yml) defines the complete matrix.\n",
+          "previous": "Entry measurements use separate instrumented fixture packages. The 24 copied,\nowned and indexed routes count named validator, constructor, adapter and\nLean-source entries; the six callback routes record callback control totals.\nThe callback routes cover Fin, selected Subtype and checked-record families.\nTogether they form 30 ordinary/reviewed routes in 27 retained artifacts. These\nmeasurements do not change a consumer package or widen its supported types. The [promotion\nworkflow](https://github.com/seanmorris/lean-bridge/actions/workflows/php-wasm-refinement-entry-promotion.yml)\nis configured to rebuild the complete matrix at one revision and recheck the\nretained artifacts. Until a completed run publishes that verified summary, the\ndocumentation makes no hosted entry-count claim.\n",
+          "start": 43860
+        }
+      ],
+      "path": "docs/php.md",
+      "previousSha256": "2dfdc4e1afc1d87d856453f0aae18761c1b56a6c176c315c95894bca30b577e4"
+    },
+    {
+      "currentSha256": "58db6f137ccde6e003af2c2d08323f97af043622cc640a932a4389dbbbeba353",
+      "edits": [
+        {
+          "current": "[Hosted entry probes](../evidence/php-wasm-entry-hosted-20261025/index.json) cover 30 ordinary/reviewed routes in 27 retained artifacts, plus the aggregate verifier artifact, at producer `a003269808c43a2a3a509a23c8a8ab8def07b610`. The archive checker reconstructs the original artifacts and sources and reruns all thirty route verifiers. The 24 copied, owned and indexed routes count validator, constructor, adapter and Lean-source entries; six callback routes record callback control totals for Fin, selected Subtype and checked-record families. These separate instrumented fixture packages leave unmodified prepared packages and their supported types unchanged. The [promotion workflow](https://github.com/seanmorris/lean-bridge/actions/workflows/php-wasm-refinement-entry-promotion.yml) defines the complete matrix.\n",
+          "previous": "Lean Bridge uses separate instrumented fixture packages for measurement. The\n24 copied, owned and indexed routes count validator, constructor, adapter and\nLean-source entries; the six callback routes record callback control totals.\nTogether they form 30 ordinary/reviewed routes in 27 retained artifacts. The\nmatrix does not widen the prepared-package type surface or become part of a\nconsumer release. The [promotion\nworkflow](https://github.com/seanmorris/lean-bridge/actions/workflows/php-wasm-refinement-entry-promotion.yml)\nis configured to rebuild all four producer groups at one revision and verify\ntheir retained bytes. Do not describe its counts as hosted evidence until a\ncompleted promotion run publishes the verified summary.\n",
+          "start": 2298
+        }
+      ],
+      "path": "docs/publish/php.md",
+      "previousSha256": "abfe3b5f9567dd722a2a4bea61efb7526f5c23283c43d9de558aed026ffe9fb2"
+    },
+    {
+      "currentSha256": "6f2c73fb18712ee023f122375f20c425d84d2bde39fec106003942d8f0be9f8d",
+      "edits": [
+        {
+          "current": "Native source rejections name the declaration in `native-elaboration-unsupported`. Readers without a checked adapter reject refined metadata with `native-refinements-unsupported`. PHP-Wasm's [installed Subtype checks](../evidence/php-wasm-subtype-installed-20261010.md) cover ordinary and reviewed top-level parameters and results: twelve exports, twelve Node/Chromium configurations per route, and 2,024 checks per execution. Constructors and adapters compile with fresh Lean. Those unmodified prepared packages do not contain runtime entry counters. [Hosted entry probes](../evidence/php-wasm-entry-hosted-20261025/index.json) cover 30 ordinary/reviewed routes in 27 retained artifacts, plus the aggregate verifier artifact, at producer `a003269808c43a2a3a509a23c8a8ab8def07b610`. The archive checker reconstructs the original artifacts and sources and reruns all thirty route verifiers. The 24 copied, owned and indexed routes count validator, constructor, adapter and Lean-source entries; six callback routes record callback control totals for Fin, selected Subtype and checked-record families. These separate instrumented fixture packages leave unmodified prepared packages and their supported types unchanged. The [promotion workflow](https://github.com/seanmorris/lean-bridge/actions/workflows/php-wasm-refinement-entry-promotion.yml) defines the complete matrix. PHP-Wasm accepts the listed structural containers, acyclic nominal fields, [finite recursive copied graphs](../evidence/recursive-subtype-php-wasm-20261015.md), and the tested [acyclic owned record](../evidence/owned-subtype-php-wasm-local-qualification-20261022.md). The owned-record checks preserve exact constructor choices, reject an invalid transferred value before moving its resources, exercise explicit and fallback cleanup, and recover on later requests across both source routes. Synchronous Fin, selected Subtype and checked-record callbacks use the separately documented installed-package paths. Retained/asynchronous refined callbacks and recursive owned graphs remain rejected. A consumer that does not declare checked support cannot read a verified refined component (`native-refinements-unavailable`). Python's [installed CI reports](../evidence/python-refinements-20261007/receipt.json) cover scalar and container `Fin`, top-level checked `Subtype`, and finite function specializations. Local acceptance does not establish a hosted CI result for a later revision.\n",
+          "previous": "Native source rejections name the declaration in `native-elaboration-unsupported`. Readers without a checked adapter reject refined metadata with `native-refinements-unsupported`. PHP-Wasm's [installed Subtype checks](../evidence/php-wasm-subtype-installed-20261010.md) cover ordinary and reviewed top-level parameters and results: twelve exports, twelve Node/Chromium configurations per route, and 2,024 checks per execution. Constructors and adapters compile with fresh Lean. Those unmodified prepared packages do not contain runtime entry counters. Separate instrumented fixture packages use 24 copied, owned and indexed routes to count named validator, constructor, adapter and Lean-source entries; six callback routes record callback control totals. Together they form 30 ordinary/reviewed routes in 27 retained artifacts without widening the consumer type surface. The [promotion workflow](https://github.com/seanmorris/lean-bridge/actions/workflows/php-wasm-refinement-entry-promotion.yml) is configured to rebuild that matrix at one revision, but no hosted count claim exists until a completed run publishes its verified summary. PHP-Wasm accepts the listed structural containers, acyclic nominal fields, [finite recursive copied graphs](../evidence/recursive-subtype-php-wasm-20261015.md), and the tested [acyclic owned record](../evidence/owned-subtype-php-wasm-local-qualification-20261022.md). The owned-record checks preserve exact constructor choices, reject an invalid transferred value before moving its resources, exercise explicit and fallback cleanup, and recover on later requests across both source routes. Synchronous Fin, selected Subtype and checked-record callbacks use the separately documented installed-package paths. Retained/asynchronous refined callbacks and recursive owned graphs remain rejected. A consumer that does not declare checked support cannot read a verified refined component (`native-refinements-unavailable`). Python's [installed CI reports](../evidence/python-refinements-20261007/receipt.json) cover scalar and container `Fin`, top-level checked `Subtype`, and finite function specializations. Local acceptance does not establish a hosted CI result for a later revision.\n",
+          "start": 107841
+        }
+      ],
+      "path": "docs/lean/existing-package.md",
+      "previousSha256": "c15b6b4fce1001120661ab9d919a279fa16252f45c0f868d3a9cd1afdc106459"
+    },
+    {
+      "currentSha256": "5c557be1a574b299e591210822466c47d58b4bd9ea4db854e2db3b2b20891470",
+      "edits": [
+        {
+          "current": "\n[Hosted entry probes](../evidence/php-wasm-entry-hosted-20261025/index.json) cover 30 ordinary/reviewed routes in 27 retained artifacts, plus the aggregate verifier artifact, at producer `a003269808c43a2a3a509a23c8a8ab8def07b610`. The archive checker reconstructs the original artifacts and sources and reruns all thirty route verifiers. The 24 copied, owned and indexed routes count validator, constructor, adapter and Lean-source entries; six callback routes record callback control totals for Fin, selected Subtype and checked-record families. These separate instrumented fixture packages leave unmodified prepared packages and their supported types unchanged. The [promotion workflow](https://github.com/seanmorris/lean-bridge/actions/workflows/php-wasm-refinement-entry-promotion.yml) defines the complete matrix.\n",
+          "previous": "The separate entry-measurement probes instrument fixture packages only: their\n24 copied, owned and indexed routes count validator, constructor, adapter and\nLean-source entries, while six callback routes record callback control totals.\nTogether they form 30 ordinary/reviewed routes in 27 retained artifacts and do\nnot widen any type-support cell. The configured [promotion\nworkflow](https://github.com/seanmorris/lean-bridge/actions/workflows/php-wasm-refinement-entry-promotion.yml)\nis not a hosted result; entry counts become hosted evidence only when a\ncompleted run publishes a verified summary for one revision.\n",
+          "start": 51312
+        }
+      ],
+      "path": "docs/reference/types.md",
+      "previousSha256": "5d4f003e25be3be72b0670d24a31845da7fbf8b5cae8f4ec88707b533e255b86"
+    },
+    {
+      "currentSha256": "376ff867cd5d3a41d0270b981e3e65cc4a05c4e4fc9a2d4eb70fdb956073aab9",
+      "edits": [
+        {
+          "current": "import \"./helpers/php-wasm-entry-published-probe-tests.mjs\";\n",
+          "previous": "",
+          "start": 8117
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "0c7293233d8794ca03c96d7f6d324d255fe6b5f7abf09de217a08f28b873c404"
+    }
+  ]
+}
