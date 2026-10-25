@@ -1,0 +1,120 @@
+{
+  "additions": [
+    {
+      "currentSha256": "6e9cb3891c69efbb63d7becc4e8fafffa56bbab30550d8318bc9ddaac8e0e2f2",
+      "path": "tests/helpers/php-wasm-refinement-entry-publication-pins.mjs"
+    },
+    {
+      "currentSha256": "57271280358734b75a85954b1f33d7281871a48555610bfc2923b25f181f0693",
+      "path": "tests/helpers/php-wasm-refinement-entry-publication-pins-tests.mjs"
+    },
+    {
+      "currentSha256": "675638fbfde045d343cc52e985e1666861a58e46c00dc329944d7ac3e294d47d",
+      "path": "scripts/update-php-wasm-entry-publication-pin-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "f90d3ba1cb3e4d0faabec4f12956eadf7c036880fb88770fb20ed1666ba5a209",
+      "path": "tests/helpers/php-wasm-entry-publication-pin-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "ba339fdcc408710068adb00b6d56fdc478df740b18d310fffabe1e638d57fda6",
+      "path": "tests/helpers/php-wasm-entry-publication-pin-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "2ed4ec693448dcdf70c928618c16aa334f50ec5d",
+  "implementationCommits": [
+    "2ed4ec693448dcdf70c928618c16aa334f50ec5d"
+  ],
+  "integrationBaseCommit": "2ed4ec693448dcdf70c928618c16aa334f50ec5d",
+  "integrationUpdates": [
+    {
+      "currentSha256": "20cc4a9c4b6431cfefe37ac0e6e4f6ce8faa6540416ea404d6cf9a48a342d82e",
+      "edits": [
+        {
+          "current": "import { beforePhpWasmEntryPublicationPinRepairSource, phpWasmEntryPublicationPinRepairNormalizationPaths } from \"./php-wasm-entry-publication-pin-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 11256
+        },
+        {
+          "current": "\t...phpWasmEntryPublicationPinRepairNormalizationPaths\n\t, ...phpWasmEntryPublisherNormalizationPaths\n",
+          "previous": "\t...phpWasmEntryPublisherNormalizationPaths\n",
+          "start": 184470
+        },
+        {
+          "current": "\tlet stage = beforePhpWasmEntryPublicationPinRepairSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforePhpWasmEntryPublisherSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforePhpWasmEntryPublisherSource(path, text, expected);\n",
+          "start": 228428
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "89b16135506477f90c495a2dbc7d2b6c3ab14d4c3f0f22cf5f72f5005829f4ed"
+    },
+    {
+      "currentSha256": "0c7293233d8794ca03c96d7f6d324d255fe6b5f7abf09de217a08f28b873c404",
+      "edits": [
+        {
+          "current": "import \"./helpers/php-wasm-entry-publication-pin-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 8034
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "f33129bf5aaad214d48e8e68a1dd4f4e27af81a668badfec0c0f3cea82a2c7ac"
+    }
+  ],
+  "milestone": "php-wasm-entry-publication-pin-repair-source-v1",
+  "predecessorCommit": "febe63cfcf0d5e1c5ae0df11c3e6a56bb25d9c57",
+  "schemaVersion": 1,
+  "scope": "Repair transactional PHP-Wasm probe publication so its four changed documentation pages and 29 live documentation pins move together. Stream exact fixed-width replacements only inside evidence files arrays; preserve artifact references, evidence identities, observations, UTF-8 and every unrelated byte. Authenticate the complete staged input, reject stale or malformed hashes, restrict changes to all four distinct pages, remove failed fresh outputs and preserve existing targets. Record source-pin counts in the publication receipt. Delete the intermediate unpinned stage before rollback backups to preserve the existing disk reserve. Four registered regressions exercise byte-sized Unicode chunks, stale/malformed/source/destination refusals, exact replacement authority and today's refresher against immutable predecessor input; the inverse restores every original inventory byte. No public measurement, inventory support state, archive, original record verifier or workflow changes in this repair. Actual complete retained acceptance, probe publication and final required hosted/Core/recurring gates remain under VO #2061/#1828.",
+  "updates": [
+    {
+      "currentSha256": "aa9a9ab5fa9cb322cd4b9c2306c70ba47ddb5e81ef7eae49b51c70c0aea5d71f",
+      "edits": [
+        {
+          "current": " * Prepared-package observations and historical archive bytes stay unchanged.\n",
+          "previous": " * Prepared-package support observations and historical evidence stay unchanged.\n",
+          "start": 103
+        },
+        {
+          "current": "import { stagePhpWasmEntryProbePins } from \"../tests/helpers/php-wasm-refinement-entry-publication-pins.mjs\";\n",
+          "previous": "",
+          "start": 1363
+        },
+        {
+          "current": "\tconst unpinned = join(staging, \"inventory-unpinned.json\");\n",
+          "previous": "",
+          "start": 5974
+        },
+        {
+          "current": "\tconst projected = await stagePromotionInventory(path, unpinned, original, promoted);\n\tconst updates = Object.entries(documents).map(([path, content]) => ({ path\n\t\t, previous: previousDocuments[path].sha256\n\t\t, current: sha256(Buffer.from(content)) }));\n\tconst { pins, ...next } = await stagePhpWasmEntryProbePins(\n\t\tcreateReadStream(unpinned), staged, projected, updates\n\t);\n\tawait rm(unpinned);\n",
+          "previous": "\tconst next = await stagePromotionInventory(path, staged, original, promoted);\n",
+          "start": 6083
+        },
+        {
+          "current": "\t\t, sourcePins: pins\n",
+          "previous": "",
+          "start": 7208
+        },
+        {
+          "current": "\t\t, refreshedSourcePins: pins.reduce((sum, pin) => sum + pin.count, 0)\n",
+          "previous": "",
+          "start": 7944
+        }
+      ],
+      "path": "scripts/publish-php-wasm-refinement-entry-probes.mjs",
+      "previousSha256": "b0415a0ba6e5cbbf246b66fdb3c87ec842e42d6de94f3ed3a57c01c16392f0f1"
+    },
+    {
+      "currentSha256": "f33129bf5aaad214d48e8e68a1dd4f4e27af81a668badfec0c0f3cea82a2c7ac",
+      "edits": [
+        {
+          "current": "import \"./helpers/php-wasm-refinement-entry-publication-pins-tests.mjs\";\n",
+          "previous": "",
+          "start": 7891
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "331e9b6e5599a352bd628e3554a4b6b8f4427d0c7c3bffb8831242201c17aea2"
+    }
+  ]
+}
