@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "owned-checked-records@1.0.0",
+    "name": "owned-checked-records",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 53915159,
+          "path": "archives/LeanBridge.OwnedCheckedRecords.ResultOnly.1.0.0.nupkg",
+          "sha256": "89bd9c8627da1724734f2355e126770c3224e83630d1e7f5670957fc4aed61bf"
+        }
+      ],
+      "ecosystem": "nuget",
+      "name": "LeanBridge.OwnedCheckedRecords.ResultOnly",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "nuget",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "9bbafcac4f495b4d19da31e9b9c8a98d74ab90fab1f798c14530e2abc15de81b",
+      "id": "native-library-v1",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "5e7dba5d43e3aa05c2c05df4fc49d5916114af6abb722d0aa7041c8a8a6d0222"
+  }
+}
