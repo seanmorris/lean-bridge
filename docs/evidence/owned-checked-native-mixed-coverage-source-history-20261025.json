@@ -1,0 +1,337 @@
+{
+  "additions": [
+    {
+      "currentSha256": "a8b39b0e6e61858fc822086a1751b212df2818fef72fa30964660768c3c5bea8",
+      "path": "docs/evidence/owned-checked-native-mixed-coverage-20261025.json"
+    },
+    {
+      "currentSha256": "ba6cbfcd24b3a7a4d4c91e755f0b5fbf06baf184e94553260ac0a665332b9436",
+      "path": "scripts/update-owned-checked-native-mixed-coverage-source-history.mjs"
+    },
+    {
+      "currentSha256": "8ca180436b072a6b1cc4c94bde65b9890e674916c8d4927a6e8a3163853bf4b5",
+      "path": "tests/helpers/owned-checked-native-mixed-coverage-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "b7409cdaa1d3766bf240fefeeb24dc9e9fc2f02053becf27624e00c7593e149f",
+      "path": "tests/helpers/owned-checked-native-mixed-coverage-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "bff034c316fd916533f301802ab57594689c3b50",
+  "implementationCommits": [
+    "bff034c316fd916533f301802ab57594689c3b50"
+  ],
+  "integrationBaseCommit": "bff034c316fd916533f301802ab57594689c3b50",
+  "integrationUpdates": [
+    {
+      "currentSha256": "fe4f2964b5c9afb41d3232d2bd2885f368384e4e49811ac064bb0144df1448b3",
+      "edits": [
+        {
+          "current": "import { beforeOwnedCheckedNativeMixedCoverageSource, ownedCheckedNativeMixedCoverageNormalizationPaths } from \"./owned-checked-native-mixed-coverage-source-history.mjs\";\n",
+          "previous": "",
+          "start": 13438
+        },
+        {
+          "current": "\t, ...ownedCheckedNativeMixedCoverageNormalizationPaths\n",
+          "previous": "",
+          "start": 186701
+        },
+        {
+          "current": "\tlet stage = beforeOwnedCheckedNativeMixedCoverageSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeOwnedCheckedCarrierCompilationSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeOwnedCheckedCarrierCompilationSource(path, text, expected);\n",
+          "start": 231322
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "9d40c706b568b1b7de979d681b5d92f626654f8ac2371070f069af6278ed26b3"
+    },
+    {
+      "currentSha256": "55d652a952af0608152825e38a851e91b04008906e06818cdbaae978924e282e",
+      "edits": [
+        {
+          "current": "import \"./helpers/owned-checked-native-mixed-coverage-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 9257
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "1e27b16dc72357d9e41885ac1a1a96a91a4575ad2d2aac58d8f0cc06778a2d18"
+    },
+    {
+      "currentSha256": "01a3c50c2362ccf82e4c1d3fa8235d6bb2993a5e8cdad5206675d46e9690d236",
+      "edits": [
+        {
+          "current": "import { createHash } from \"node:crypto\";\n",
+          "previous": "",
+          "start": 199
+        },
+        {
+          "current": "import { authenticateSourceHistoryReverse, gitSourceBytes } from \"./source-history-stream.mjs\";\n",
+          "previous": "",
+          "start": 1142
+        },
+        {
+          "current": "// Registration refreshed inventory pins after the implementation commit.\n// Stream that exact history blob instead of rebuilding all later inventories.\nconst inventoryRevision = \"c45304fba9e85b562a30ad466a4aeea7f1a546fc\";\n\n",
+          "previous": "",
+          "start": 1405
+        },
+        {
+          "current": "\tassert.equal(execFileSync(\"git\", [\"show\", \"-s\", \"--format=%P\", inventoryRevision]\n\t\t, { encoding: \"utf8\" }).trim(), ownedCheckedRecordNativePerlImplementation);\n\tassert.deepEqual(JSON.parse(execFileSync(\"git\", [\"show\"\n\t\t, `${inventoryRevision}:${ownedCheckedRecordNativePerlHistoryPath}`]\n\t, { encoding: \"utf8\", maxBuffer: 4 * 1024 * 1024 })), record);\n",
+          "previous": "",
+          "start": 2110
+        },
+        {
+          "current": "\t\tif(update.path === \"docs/type-surface.v1.json\")\n\t\t{\n\t\t\tassert.equal(await authenticateSourceHistoryReverse(gitSourceBytes(\n\t\t\t\tinventoryRevision, update.path\n\t\t\t), update), true);\n\t\t\tconst previous = createHash(\"sha256\");\n\t\t\tfor await(const chunk of gitSourceBytes(\n\t\t\t\townedCheckedRecordNativePerlPredecessor, update.path\n\t\t\t)) previous.update(chunk);\n\t\t\tassert.equal(previous.digest(\"hex\"), update.previousSha256);\n\t\t\tassert.ok(finRefinementNormalizationPaths.includes(update.path));\n\t\t\tcontinue;\n\t\t}\n",
+          "previous": "",
+          "start": 2973
+        },
+        {
+          "current": "\t\tconst update = structuredClone(record.updates.find(item =>\n\t\t\titem.path !== \"docs/type-surface.v1.json\"));\n",
+          "previous": "\t\tconst update = structuredClone(record.updates[0]);\n",
+          "start": 6443
+        },
+        {
+          "current": "test(\"native/Perl owned checked-record inventory rejects changed endpoints and spans\", async () => {\n\tconst record = JSON.parse(await readFile(ownedCheckedRecordNativePerlHistoryPath, \"utf8\"));\n\tconst update = record.updates.find(item => item.path === \"docs/type-surface.v1.json\");\n\tfor(const change of [\n\t\t{ ...update, currentSha256: \"0\".repeat(64) }\n\t\t, { ...update, previousSha256: \"0\".repeat(64) }\n\t\t, { ...update, edits: [] }\n\t\t, { ...update, edits: [\n\t\t\t{ ...update.edits[0], current: \"changed\" + update.edits[0].current }\n\t\t\t, ...update.edits.slice(1)\n\t\t] }\n\t])\n\t\tawait assert.rejects(() => authenticateSourceHistoryReverse(gitSourceBytes(\n\t\t\tinventoryRevision, update.path\n\t\t), change));\n});\n\n",
+          "previous": "",
+          "start": 6997
+        }
+      ],
+      "path": "tests/helpers/owned-checked-record-native-perl-source-history-tests.mjs",
+      "previousSha256": "9b9ef05d7795957c7806331faf030c5a685e05deb0225b53fc9e845d0c803975"
+    }
+  ],
+  "milestone": "owned-checked-native-mixed-coverage-source-v1",
+  "predecessorCommit": "29ae6d8f74722b6c667ad874ce5646599fc9625b",
+  "schemaVersion": 1,
+  "scope": "Expand ordinary and reviewed native/CPAN full APIs to retain Grant with nested Positive Subtype, arrays of Claim, scalar consumers, two-input transactional transfer and a host callback after transfer. Add C/C++/Perl installed assertions for early and late rejection, untouched outputs, rollback, consumed-input failures, independent retains and recovery. Compile all expanded proof-carrying Lean carriers and actual C/C++ consumers, including the smaller shared WIT C surface. Retain sixteen passing focused source checks and eight exact changed source hashes. Refresh eight live source pins only. Original installed support observations, archives and receipts are unchanged. Expanded hosted installed/sanitizer/lifetime execution, immutable capture/replay, final Core and recurring activation remain pending.",
+  "updates": [
+    {
+      "currentSha256": "f54874f57390e6d795415f498beba2e9433596f015411c8eaea6e75643e56a7e",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"65226b9f8cafb1ff9e5c54dd680efc2939158fd9c4be1da2aaf8c069c1e1eb89\"\n",
+          "previous": "          \"sha256\": \"b5c2e10c7ccb18859da182d63d7f664e2cc12d2a748f8943ab3e6dc603ddf57f\"\n",
+          "start": 75710277
+        },
+        {
+          "current": "          \"sha256\": \"433041fb3fb0738ee1de4ce1e96b2d6f70d639f4043a3727ae315809f11d94f3\"\n",
+          "previous": "          \"sha256\": \"c6a2a1fc68d52658a56bbc0eb925f6993c20a323b9feb8c8fcfeab497ab82569\"\n",
+          "start": 75711389
+        },
+        {
+          "current": "          \"sha256\": \"65226b9f8cafb1ff9e5c54dd680efc2939158fd9c4be1da2aaf8c069c1e1eb89\"\n",
+          "previous": "          \"sha256\": \"b5c2e10c7ccb18859da182d63d7f664e2cc12d2a748f8943ab3e6dc603ddf57f\"\n",
+          "start": 75717151
+        },
+        {
+          "current": "          \"sha256\": \"433041fb3fb0738ee1de4ce1e96b2d6f70d639f4043a3727ae315809f11d94f3\"\n",
+          "previous": "          \"sha256\": \"c6a2a1fc68d52658a56bbc0eb925f6993c20a323b9feb8c8fcfeab497ab82569\"\n",
+          "start": 75718263
+        },
+        {
+          "current": "          \"sha256\": \"65226b9f8cafb1ff9e5c54dd680efc2939158fd9c4be1da2aaf8c069c1e1eb89\"\n",
+          "previous": "          \"sha256\": \"b5c2e10c7ccb18859da182d63d7f664e2cc12d2a748f8943ab3e6dc603ddf57f\"\n",
+          "start": 75724036
+        },
+        {
+          "current": "          \"sha256\": \"433041fb3fb0738ee1de4ce1e96b2d6f70d639f4043a3727ae315809f11d94f3\"\n",
+          "previous": "          \"sha256\": \"c6a2a1fc68d52658a56bbc0eb925f6993c20a323b9feb8c8fcfeab497ab82569\"\n",
+          "start": 75725148
+        },
+        {
+          "current": "          \"sha256\": \"65226b9f8cafb1ff9e5c54dd680efc2939158fd9c4be1da2aaf8c069c1e1eb89\"\n",
+          "previous": "          \"sha256\": \"b5c2e10c7ccb18859da182d63d7f664e2cc12d2a748f8943ab3e6dc603ddf57f\"\n",
+          "start": 75730962
+        },
+        {
+          "current": "          \"sha256\": \"433041fb3fb0738ee1de4ce1e96b2d6f70d639f4043a3727ae315809f11d94f3\"\n",
+          "previous": "          \"sha256\": \"c6a2a1fc68d52658a56bbc0eb925f6993c20a323b9feb8c8fcfeab497ab82569\"\n",
+          "start": 75732074
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "e2c8af3be42bd903a44c809b82898dd50555658602a53818ed15373b43b0720e"
+    },
+    {
+      "currentSha256": "65226b9f8cafb1ff9e5c54dd680efc2939158fd9c4be1da2aaf8c069c1e1eb89",
+      "edits": [
+        {
+          "current": "/-- Transfer completes before the callback runs; a callback failure cannot\nrestore the host's consumed input lease. -/\ndef transferWithClaimCallback (claim : Claim) (callback : Claim → Claim) : Claim :=\n  callback claim\n\n/-- Both inputs must validate before either transfer commits. -/\ndef transferPairClaim (_booking : Booking) (claim : Claim) : Claim := claim\n\n",
+          "previous": "",
+          "start": 2832
+        }
+      ],
+      "path": "tests/fixtures/onboarding/owned-checked-records/OwnedCheckedRecords.lean",
+      "previousSha256": "b5c2e10c7ccb18859da182d63d7f664e2cc12d2a748f8943ab3e6dc603ddf57f"
+    },
+    {
+      "currentSha256": "7faf494caf91115be7ef68b9f56418e1e0096ad1fb7d9d77c24ece84185e3f70",
+      "edits": [
+        {
+          "current": "/* The WIT fixture also uses this caller with its smaller, independently\n   selected API. Native packaging requires the expanded header explicitly. */\n#ifdef OWNED_CHECKED_RECORDS_TRANSFER_WITH_CLAIM_CALLBACK_ARGUMENT1_T_REQUIRES_RECOVERY\ntypedef owned_checked_records_transfer_with_claim_callback_argument1_t_host claim_callback;\n#else\ntypedef owned_checked_records_with_claim_callback_argument1_t_host claim_callback;\n#endif\n\n",
+          "previous": "",
+          "start": 424
+        },
+        {
+          "current": "  claim_callback callback = {\n",
+          "previous": "  owned_checked_records_with_claim_callback_argument1_t_host callback = {\n",
+          "start": 5576
+        },
+        {
+          "current": "#ifdef OWNED_CHECKED_RECORDS_TRANSFER_WITH_CLAIM_CALLBACK_ARGUMENT1_T_REQUIRES_RECOVERY\n  mpz_srcptr scalar = NULL;\n  OK(owned_checked_records_booking_span(session, &booking, &scalar, &owner));\n  CHECK(mpz_cmp_ui(scalar, 5) == 0); release(&owner);\n  OK(owned_checked_records_claim_quota(session, &claim, &scalar, &owner));\n  CHECK(mpz_cmp_ui(scalar, 7) == 0); release(&owner);\n\n  mpz_t zero; mpz_init_set_ui(zero, 0);\n  owned_checked_records_grant_t grant = {ticket, valid, hi}, grant_out;\n  OK(owned_checked_records_echo_grant(session, &grant, &grant_out, &owner));\n  CHECK(mpz_cmp_ui(grant_out.weight, 7) == 0\n    && mpz_cmp_ui(grant_out.limit, 8) == 0);\n  expect_serial(session, grant_out.holder, 41); release(&owner);\n  memset(&grant_out, 0xa5, sizeof(grant_out));\n  unsigned char grant_saved[sizeof(grant_out)];\n  memcpy(grant_saved, &grant_out, sizeof(grant_out));\n  const owned_checked_records_grant_t invalid_grants[] = {\n    {ticket, zero, hi}, {ticket, valid, lo}\n  };\n  for(size_t i = 0; i < 2; ++i) {\n    CHECK(owned_checked_records_echo_grant(session, &invalid_grants[i], &grant_out, &owner)\n      == OWNED_CHECKED_RECORDS_INVALID_ARGUMENT);\n    CHECK(owner == NULL && memcmp(grant_saved, &grant_out, sizeof(grant_out)) == 0);\n    expect_serial(session, ticket, 41);\n  }\n\n  owned_checked_records_claim_t entries[] = {claim, claim};\n  owned_checked_records_echo_claims_argument0_t claims = {entries, 2};\n  owned_checked_records_echo_claims_result_t claims_out;\n  OK(owned_checked_records_echo_claims(session, &claims, &claims_out, &owner));\n  CHECK(claims_out.length == 2 && mpz_cmp_ui(claims_out.data[1].quota, 7) == 0);\n  expect_serial(session, claims_out.data[0].holder, 41); release(&owner);\n  entries[1] = bad;\n  memset(&claims_out, 0xa5, sizeof(claims_out));\n  unsigned char claims_saved[sizeof(claims_out)];\n  memcpy(claims_saved, &claims_out, sizeof(claims_out));\n  for(size_t i = 0; i < 10; ++i) {\n    CHECK(owned_checked_records_echo_claims(session, &claims, &claims_out, &owner)\n      == OWNED_CHECKED_RECORDS_INVALID_ARGUMENT);\n    CHECK(owner == NULL && memcmp(claims_saved, &claims_out, sizeof(claims_out)) == 0);\n    expect_serial(session, ticket, 41);\n  }\n  entries[1] = claim;\n  OK(owned_checked_records_echo_claims(session, &claims, &claims_out, &owner));\n  CHECK(claims_out.length == 2); release(&owner);\n  claims.data = NULL; claims.length = 0;\n  OK(owned_checked_records_echo_claims(session, &claims, &claims_out, &owner));\n  CHECK(claims_out.length == 0); release(&owner);\n\n  owned_checked_records_booking_t moving_booking;\n  owned_checked_records_result *booking_owner = NULL;\n  OK(owned_checked_records_booking_t_copy(session, &booking, &moving_booking, &booking_owner));\n  OK(owned_checked_records_claim_t_copy(session, &bad, &moving, &move_owner));\n  owned_checked_records_result *original_booking_owner = booking_owner;\n  owned_checked_records_result *original_claim_owner = move_owner;\n  memset(&out, 0xa5, sizeof(out)); save_claim(&out, saved);\n  CHECK(owned_checked_records_transfer_pair_claim(session, &moving_booking,\n    &booking_owner, &moving, &move_owner, &out, &owner)\n    == OWNED_CHECKED_RECORDS_INVALID_ARGUMENT);\n  CHECK(booking_owner == original_booking_owner && move_owner == original_claim_owner);\n  CHECK(owner == NULL && memcmp(saved, &out, sizeof(out)) == 0);\n  expect_serial(session, moving_booking.holder, 41);\n  expect_serial(session, moving.holder, 41);\n  release(&move_owner);\n  OK(owned_checked_records_claim_t_copy(session, &claim, &moving, &move_owner));\n  OK(owned_checked_records_transfer_pair_claim(session, &moving_booking,\n    &booking_owner, &moving, &move_owner, &out, &owner));\n  CHECK(booking_owner == NULL && move_owner == NULL && mpz_cmp_ui(out.quota, 7) == 0);\n  release(&owner);\n\n  /* Once Lean invokes the host, a failed reply must not restore the input\n     owner. Output bytes remain untouched, and an independent retain survives. */\n  for(int failure = 0; failure < 2; ++failure) {\n    OK(owned_checked_records_claim_t_copy(session, &claim, &moving, &move_owner));\n    state.fail = failure; mpz_set_ui(state.quota, 99);\n    memset(&out, 0xa5, sizeof(out)); save_claim(&out, saved);\n    CHECK(owned_checked_records_transfer_with_claim_callback(session, &moving,\n      &move_owner, &callback, &out, &owner) == (failure\n        ? OWNED_CHECKED_RECORDS_CALLBACK_FAILED : OWNED_CHECKED_RECORDS_INVALID_ARGUMENT));\n    CHECK(move_owner == NULL && owner == NULL && memcmp(saved, &out, sizeof(out)) == 0);\n    expect_serial(session, retained, 41);\n  }\n  state.fail = 0; mpz_set_ui(state.quota, 9);\n  OK(owned_checked_records_claim_t_copy(session, &claim, &moving, &move_owner));\n  OK(owned_checked_records_transfer_with_claim_callback(session, &moving,\n    &move_owner, &callback, &out, &owner));\n  CHECK(move_owner == NULL && mpz_cmp_ui(out.quota, 9) == 0);\n  release(&owner); mpz_clear(zero);\n#endif\n\n",
+          "previous": "",
+          "start": 7486
+        }
+      ],
+      "path": "tests/fixtures/structured-types/owned-checked-record-installed.c",
+      "previousSha256": "7a79317cb29509ea28e3a63cea98d85895cdd798e4648180b834fb7d29ea7dcc"
+    },
+    {
+      "currentSha256": "fcf65f4f4effdef04e6ec2efa8ba047f0f6e260cfa77f367ac156aea457a8022",
+      "edits": [
+        {
+          "current": "    CHECK(api::booking_span(booking) == 5 && api::claim_quota(claim) == 7);\n    const auto grant = api::echo_grant({ticket, 7, 8});\n    CHECK(grant.weight == 7 && grant.limit == 8 && api::serial(grant.holder) == 41);\n    rejects([&] { (void)api::echo_grant({ticket, 0, 8}); });\n    rejects([&] { (void)api::echo_grant({ticket, 7, 3}); });\n    const auto claims = api::echo_claims({claim, claim});\n    CHECK(claims.size() == 2 && claims[1].quota == 7\n      && api::serial(claims[0].holder) == 41);\n    for(size_t i = 0; i < 10; ++i)\n      rejects([&] { (void)api::echo_claims({claim, {ticket, 99}}); });\n    CHECK(api::echo_claims({}).empty() && api::echo_claims({claim}).size() == 1);\n",
+          "previous": "",
+          "start": 1357
+        },
+        {
+          "current": "    auto first = api::new_ticket(61, \"first\"), second = api::new_ticket(71, \"second\");\n    auto first_kept = first.retain(), second_kept = second.retain();\n    api::Booking moving_booking{first, {3, 8}};\n    api::Claim moving_claim{second, 99};\n    rejects([&] { (void)api::transfer_pair_claim(std::move(moving_booking), std::move(moving_claim)); });\n    CHECK(!first.is_closed() && !second.is_closed()\n      && api::serial(moving_booking.holder) == 61 && api::serial(moving_claim.holder) == 71);\n    moving_claim.quota = 7;\n    const auto pair = api::transfer_pair_claim(std::move(moving_booking), std::move(moving_claim));\n    CHECK(first.is_closed() && second.is_closed() && pair.quota == 7);\n    CHECK(api::serial(first_kept) == 61 && api::serial(second_kept) == 71);\n\n    for(bool throws : {false, true}) {\n      auto input = api::new_ticket(81, \"post-transfer\"), independent = input.retain();\n      api::Claim transferred{input, 7};\n      size_t entered = 0;\n      bool failed = false;\n      try {\n        (void)api::transfer_with_claim_callback(std::move(transferred), [&](const api::Claim& incoming) {\n          ++entered;\n          if(throws) throw std::runtime_error(\"post-transfer callback\");\n          return api::Claim{incoming.holder, 99};\n        });\n      }\n      catch(const api::Error& error) {\n        CHECK(!throws && error.status == OWNED_CHECKED_RECORDS_INVALID_ARGUMENT); failed = true;\n      }\n      catch(const std::runtime_error& error) {\n        CHECK(throws && std::string(error.what()) == \"post-transfer callback\"); failed = true;\n      }\n      CHECK(failed && entered == 1 && input.is_closed() && transferred.holder.is_closed());\n      CHECK(api::serial(independent) == 81);\n      api::Claim recovery{independent, 7};\n      const auto recovered = api::transfer_with_claim_callback(std::move(recovery), [](const api::Claim& incoming) {\n        return api::Claim{incoming.holder, 9};\n      });\n      CHECK(independent.is_closed() && recovered.quota == 9 && api::serial(recovered.holder) == 81);\n    }\n\n",
+          "previous": "",
+          "start": 2932
+        }
+      ],
+      "path": "tests/fixtures/structured-types/owned-checked-record-installed.cpp",
+      "previousSha256": "49e3fa1367ce31d9f13139896c083176ea0473d8c63af1e24afda06345384a3c"
+    },
+    {
+      "currentSha256": "0b38fe46c8a7cb1085549715e979e6786e3050f5b99644380276dd2a37dab20e",
+      "edits": [
+        {
+          "current": "sub grant {\n  LeanBridge::OwnedCheckedRecords::Grant->new(\n    holder => $_[0], weight => n($_[1]), limit => n($_[2]));\n}\n",
+          "previous": "",
+          "start": 1405
+        },
+        {
+          "current": "check(invoke('booking_span', $valid_booking)->bcmp(5) == 0, 'copied payload consumed');\ncheck(invoke('claim_quota', $valid)->bcmp(7) == 0, 'owned payload consumed');\nmy $grant = invoke('echo_grant', grant($ticket, 7, 8));\ncheck($grant->weight->bcmp(7) == 0 && $grant->limit->bcmp(8) == 0,\n  'nested Subtype and outer checked record accepted');\nserial_is($grant->holder, 41, 'grant retains resource'); release($grant);\nrejected(sub { invoke('echo_grant', grant($ticket, 0, 8)) }, 1);\nrejected(sub { invoke('echo_grant', grant($ticket, 7, 3)) }, 1);\nmy $claims = invoke('echo_claims', [$valid, $valid]);\ncheck(@$claims == 2 && $claims->[1]->quota->bcmp(7) == 0,\n  'owned checked-record array round trips');\nserial_is($claims->[0]->holder, 41, 'array retains resource'); release($claims);\nfor (1 .. 10) {\n  rejected(sub { invoke('echo_claims', [$valid, claim($ticket, 99)]) }, 1);\n  check(!$ticket->closed, 'later array rejection preserves owner');\n}\nmy $empty = invoke('echo_claims', []);\ncheck(@$empty == 0, 'empty owned array');\nmy $array_recovery = invoke('echo_claims', [$valid]);\ncheck(@$array_recovery == 1, 'array rejection recovers'); release($array_recovery);\n",
+          "previous": "",
+          "start": 2461
+        },
+        {
+          "current": "my $first = invoke('new_ticket', n(61), 'first');\nmy $second = invoke('new_ticket', n(71), 'second');\nmy $first_kept = $first->retain; my $second_kept = $second->retain;\nmy $moving_booking = booking($first, 3, 8);\nmy $moving_claim = claim($second, 99);\nrejected(sub { invoke('transfer_pair_claim', $moving_booking, $moving_claim) }, 1);\ncheck(!$first->closed && !$second->closed, 'late failure aborts both transfers');\nserial_is($first, 61, 'first rejected transfer intact');\nserial_is($second, 71, 'second rejected transfer intact');\nmy $pair = invoke('transfer_pair_claim', $moving_booking, claim($second, 7));\ncheck($first->closed && $second->closed && $pair->quota->bcmp(7) == 0,\n  'both transfers commit together');\nserial_is($first_kept, 61, 'first independent retain survives');\nserial_is($second_kept, 71, 'second independent retain survives');\nrelease($pair); $first_kept->close; $second_kept->close;\n\nfor my $throws (0, 1) {\n  my $input = invoke('new_ticket', n(81), 'post-transfer');\n  my $independent = $input->retain;\n  my $transferred = claim($input, 7);\n  my $entered = 0;\n  my $sentinel = bless({message => 'post-transfer'}, 'OwnedCheckedTransferError');\n  my $callback = descriptor(sub {\n    my ($incoming) = @_; ++$entered;\n    die $sentinel if $throws;\n    return claim($incoming->holder, 99);\n  }, claim($independent, 7));\n  if($throws) {\n    eval { invoke('transfer_with_claim_callback', $transferred, $callback); 1 };\n    my $error = $@;\n    check(ref($error) && refaddr($error) == refaddr($sentinel),\n      'post-transfer callback exception identity preserved');\n  } else {\n    rejected(sub { invoke('transfer_with_claim_callback', $transferred, $callback) }, 1);\n  }\n  check($entered == 1 && $input->closed, 'failure after transfer consumes input');\n  serial_is($independent, 81, 'post-transfer failure preserves independent retain');\n  my $recover = descriptor(sub {\n    my ($incoming) = @_; return claim($incoming->holder, 9);\n  }, claim($independent, 7));\n  my $recovered = invoke('transfer_with_claim_callback', claim($independent, 7), $recover);\n  check($independent->closed && $recovered->quota->bcmp(9) == 0,\n    'post-transfer callback failure recovers on next call');\n  serial_is($recovered->holder, 81, 'recovered transfer resource is usable');\n  release($recovered);\n}\n\n",
+          "previous": "",
+          "start": 4577
+        }
+      ],
+      "path": "tests/fixtures/structured-types/owned-checked-record-installed.pl",
+      "previousSha256": "189e5fd13efff72dd8eac4beee838e04e0e0d0c01d55bc9836d167b674d5737a"
+    },
+    {
+      "currentSha256": "6ee7fb49b1291a942afaf6569cefecdd9981476baf6ab5a9089efaf84938c523",
+      "edits": [
+        {
+          "current": "import { checkedRefinementSelection } from \"../../src/analyze/checked-refinement-selection.mjs\";\nimport {\n\townedCheckedRecordModule, ownedCheckedRecordReviewedIr\n} from \"./owned-checked-record-fixture.mjs\";\n",
+          "previous": "",
+          "start": 142
+        },
+        {
+          "current": "const qualified = name => `${ownedCheckedRecordModule}.${name}`;\n\n/**\n * Keep the complete mixed-shape corpus in native and Perl full APIs.\n *\n * @param selected - Independent ordinary/reviewed full API selection.\n */\nconst extendFullSelection = selected => {\n\tconst reviewedIr = structuredClone(selected.reviewedIr);\n\tconst configuration = structuredClone(selected.configuration);\n\tconst complete = ownedCheckedRecordReviewedIr();\n\treviewedIr.types.push(complete.types.find(type => type.name === \"Grant\"));\n\tconst additions = [\"bookingSpan\", \"claimQuota\", \"echoGrant\", \"echoClaims\"]\n\t\t.map(name => complete.declarations.find(item => item.name === name));\n\tfor(const [source, name] of [\n\t\t[\"withClaimCallback\", \"transferWithClaimCallback\"]\n\t\t, [\"pairClaim\", \"transferPairClaim\"]\n\t]) {\n\t\tconst declaration = structuredClone(reviewedIr.declarations.find(item =>\n\t\t\titem.name === source));\n\t\tObject.assign(declaration, { id: `lean:${qualified(name)}`, name\n\t\t\t, overloadKey: qualified(name) });\n\t\tdeclaration.source.declaration = qualified(name);\n\t\tfor(const parameter of declaration.parameters)\n\t\t\tif(parameter.type.kind === \"named\"\n\t\t\t\t&& parameter.type.id.startsWith(\"lean:\"))\n\t\t\t\tparameter.ownership = \"transfer\";\n\t\tadditions.push(declaration);\n\t}\n\treviewedIr.declarations.push(...additions);\n\tif(selected.authorRoute === \"ordinary\")\n\t\tfor(const declaration of additions)\n\t\t{\n\t\t\tconst name = qualified(declaration.name);\n\t\t\tconfiguration.exports.push(name);\n\t\t\tif([\"transferWithClaimCallback\", \"transferPairClaim\"].includes(declaration.name))\n\t\t\t{\n\t\t\t\tconst source = declaration.name === \"transferWithClaimCallback\"\n\t\t\t\t\t? \"withClaimCallback\" : \"pairClaim\";\n\t\t\t\tconst contract = structuredClone(configuration.contracts[qualified(source)]);\n\t\t\t\tfor(const [index, parameter] of declaration.parameters.entries())\n\t\t\t\t\tcontract.parameters[index].ownership = parameter.ownership;\n\t\t\t\tconfiguration.contracts[name] = contract;\n\t\t\t}\n\t\t\telse\n\t\t\t{\n\t\t\t\tconst refinements = declaration.source.extensions[\"lean-lang.org/refinements\"];\n\t\t\t\tconfiguration.contracts[name] = {\n\t\t\t\t\tparameters: declaration.parameters.map((parameter, index) => ({\n\t\t\t\t\t\townership: parameter.ownership, lifetime: parameter.lifetime\n\t\t\t\t\t\t, refinement: checkedRefinementSelection(refinements.parameters[index])\n\t\t\t\t\t}))\n\t\t\t\t\t, result: { ownership: declaration.result.ownership\n\t\t\t\t\t\t, lifetime: declaration.result.lifetime }\n\t\t\t\t};\n\t\t\t}\n\t\t}\n\treturn { ...selected, reviewedIr, configuration };\n};\n\n",
+          "previous": "",
+          "start": 576
+        },
+        {
+          "current": "\tconst base = ownedCheckedRecordJavaScriptSelection(route);\n\tconst selected = base.resultOnly ? base : extendFullSelection(base);\n",
+          "previous": "\tconst selected = ownedCheckedRecordJavaScriptSelection(route);\n",
+          "start": 3452
+        }
+      ],
+      "path": "tests/helpers/owned-checked-record-native-fixture.mjs",
+      "previousSha256": "25bf7ba8abf74d42dfa0be1fcb8a28b1ccc741bb77e549d7b75e222de78bb41c"
+    },
+    {
+      "currentSha256": "433041fb3fb0738ee1de4ce1e96b2d6f70d639f4043a3727ae315809f11d94f3",
+      "edits": [
+        {
+          "current": "import { nativeCallbackHeader } from \"../src/backends/native/callback-broker.mjs\";\n",
+          "previous": "",
+          "start": 1501
+        },
+        {
+          "current": "import { ownedCheckedRecordNativeSelection } from \"./helpers/owned-checked-record-native-fixture.mjs\";\n",
+          "previous": "",
+          "start": 1796
+        },
+        {
+          "current": "\tawait writeFile(join(directory, \"lean_bridge_native_runtime.h\"), brokerHeader.replace(\n\t\t\"#ifdef __cplusplus\\n}\", `${nativeCallbackHeader}\\n#ifdef __cplusplus\\n}`));\n",
+          "previous": "\tawait writeFile(join(directory, \"lean_bridge_native_runtime.h\"), brokerHeader);\n",
+          "start": 16556
+        },
+        {
+          "current": "\tfor(const mode of [\"full\", \"result-only\", \"native-full\"])\n",
+          "previous": "\tfor(const resultOnly of [false, true])\n",
+          "start": 16811
+        },
+        {
+          "current": "\t\tconst resultOnly = mode === \"result-only\";\n\t\tconst document = mode === \"native-full\"\n\t\t\t? ownedCheckedRecordNativeSelection(\"reviewed-full\", [\"c\", \"cpp\"]).reviewedIr\n\t\t\t: ownedCheckedRecordReviewedIr({ resultOnly });\n",
+          "previous": "\t\tconst document = ownedCheckedRecordReviewedIr({ resultOnly });\n",
+          "start": 16873
+        },
+        {
+          "current": "\t\t\t, hostCallbacks: mode === \"native-full\"\n",
+          "previous": "",
+          "start": 17432
+        },
+        {
+          "current": "\t\tconst file = `Generated${mode.replaceAll(\"-\", \"\")}.lean`;\n",
+          "previous": "\t\tconst file = resultOnly ? \"GeneratedResult.lean\" : \"GeneratedFull.lean\";\n",
+          "start": 18243
+        }
+      ],
+      "path": "tests/owned-checked-record-foundation.test.mjs",
+      "previousSha256": "c6a2a1fc68d52658a56bbc0eb925f6993c20a323b9feb8c8fcfeab497ab82569"
+    },
+    {
+      "currentSha256": "f726a1e29e4884c7ce518892a0b94e4239a6b19fde1f9bafd644454e29e2213c",
+      "edits": [
+        {
+          "current": "import { validateExportConfiguration } from \"../src/analyze/export-configuration.mjs\";\n",
+          "previous": "",
+          "start": 322
+        },
+        {
+          "current": "import { ownedCheckedRecordJavaScriptSelection } from \"./helpers/owned-checked-record-javascript-fixture.mjs\";\n",
+          "previous": "",
+          "start": 1201
+        },
+        {
+          "current": "test(\"owned checked-record C and C++ generators retain exact callback directions\", async t => {\n",
+          "previous": "test(\"owned checked-record C and C++ generators retain exact callback directions\", () => {\n",
+          "start": 2209
+        },
+        {
+          "current": "\tconst ordinary = ownedCheckedRecordNativeSelection(\"ordinary-full\", [\"c\", \"cpp\"]);\n\tvalidateExportConfiguration(ordinary.configuration);\n\tvalidateExportConfiguration(selected.configuration);\n\tassert.deepEqual(ordinary.configuration.exports\n\t\t, selected.reviewedIr.declarations.map(item => item.source.declaration));\n\tassert.deepEqual(ordinary.configuration.contracts[\"OwnedCheckedRecords.transferPairClaim\"]\n\t\t.parameters.map(parameter => parameter.ownership), [\"transfer\", \"transfer\"]);\n\tassert.deepEqual(ordinary.configuration.contracts[\"OwnedCheckedRecords.transferWithClaimCallback\"]\n\t\t.parameters.map(parameter => parameter.ownership), [\"transfer\", \"borrow\"]);\n\tfor(const route of [\"ordinary-result-only\", \"reviewed-result-only\"])\n\t{\n\t\tconst result = ownedCheckedRecordNativeSelection(route, [\"c\", \"cpp\"]);\n\t\tvalidateExportConfiguration(result.configuration);\n\t\tassert.deepEqual(result.reviewedIr.declarations.map(item => item.name)\n\t\t\t, [\"newTicket\", \"serial\", \"claimFor\"]);\n\t}\n",
+          "previous": "",
+          "start": 2389
+        },
+        {
+          "current": "\tfor(const name of [\"echo_grant\", \"echo_claims\", \"transfer_pair_claim\"\n\t\t, \"transfer_with_claim_callback\"])\n\t\tassert.ok(generated.c.header.includes(`owned_checked_records_${name}(`), name);\n\tconst directory = await mkdtemp(join(tmpdir(), \"lean-owned-checked-native-headers-\"));\n\tt.after(() => rm(directory, { recursive: true, force: true }));\n\tfor(const [path, source] of Object.entries({\n\t\t...generated.files, [`include/${generated.c.prefix}.h`]: generated.c.header\n\t})) await saveLakeFile(directory, path, source);\n\tfor(const [profile, compiler, standard] of [\n\t\t[\"c\", \"/usr/bin/cc\", \"c11\"], [\"cpp\", \"/usr/bin/c++\", \"c++20\"]\n\t]) {\n\t\tawait saveLakeFile(directory, `consumer.${profile}`, await consumerSource(profile, false));\n\t\tawait runCopied(compiler, [`-std=${standard}`, \"-Wall\", \"-Wextra\", \"-Werror\"\n\t\t\t, \"-I\", \"include\", \"-fsyntax-only\", `consumer.${profile}`], directory\n\t\t, { PATH: \"/usr/bin:/bin\" });\n\t}\n\t// WIT shares the C caller but retains its own smaller API and acceptance.\n\tconst shared = generateOwnedCppPackage(\n\t\townedCheckedRecordJavaScriptSelection(\"reviewed-full\").reviewedIr\n\t\t, { transferredInputs: true, anchoredResults: true, hostCallbacks: true });\n\tawait saveLakeFile(directory, `include/${shared.c.prefix}.h`, shared.c.header);\n\tawait runCopied(\"/usr/bin/cc\", [\"-std=c11\", \"-Wall\", \"-Wextra\", \"-Werror\"\n\t\t, \"-I\", \"include\", \"-fsyntax-only\", \"consumer.c\"], directory\n\t, { PATH: \"/usr/bin:/bin\" });\n",
+          "previous": "",
+          "start": 3933
+        }
+      ],
+      "path": "tests/owned-checked-record-native-packaging.test.mjs",
+      "previousSha256": "64af30d159ca2469464570d7f8423d124696be2bdf9bd0bec0e1f016249b48bc"
+    },
+    {
+      "currentSha256": "50bd5ce927547e784f2287d0ac58eab723eb3e6c046c137fda0c685fcb971cd4",
+      "edits": [
+        {
+          "current": "\t\t, \"booking_span\", \"claim_quota\", \"echo_grant\", \"echo_claims\"\n\t\t, \"transfer_with_claim_callback\", \"transfer_pair_claim\"\n",
+          "previous": "",
+          "start": 3056
+        }
+      ],
+      "path": "tests/owned-checked-record-perl-packaging.test.mjs",
+      "previousSha256": "c2b99696e184e1f62091a166c92565d3a5253bf024c8bf51ec4bd33b2b608d23"
+    }
+  ]
+}

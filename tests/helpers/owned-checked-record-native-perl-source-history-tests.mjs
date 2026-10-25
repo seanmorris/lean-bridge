@@ -5,6 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { execFileSync, spawnSync } from "node:child_process";
+import { createHash } from "node:crypto";
 import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
@@ -25,10 +26,15 @@ import {
 } from "./owned-checked-record-native-perl-source-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
+import { authenticateSourceHistoryReverse, gitSourceBytes } from "./source-history-stream.mjs";
 
 const original = path => execFileSync("git", ["show"
 	, `${ownedCheckedRecordNativePerlPredecessor}:${path}`]
 , { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
+
+// Registration refreshed inventory pins after the implementation commit.
+// Stream that exact history blob instead of rebuilding all later inventories.
+const inventoryRevision = "c45304fba9e85b562a30ad466a4aeea7f1a546fc";
 
 test("native/Perl owned checked-record history restores every source", async () => {
 	const record = JSON.parse(await readFile(
@@ -41,6 +47,11 @@ test("native/Perl owned checked-record history restores every source", async () 
 		, ownedCheckedRecordNativePerlPredecessor);
 	assert.equal(record.implementationCommit
 		, ownedCheckedRecordNativePerlImplementation);
+	assert.equal(execFileSync("git", ["show", "-s", "--format=%P", inventoryRevision]
+		, { encoding: "utf8" }).trim(), ownedCheckedRecordNativePerlImplementation);
+	assert.deepEqual(JSON.parse(execFileSync("git", ["show"
+		, `${inventoryRevision}:${ownedCheckedRecordNativePerlHistoryPath}`]
+	, { encoding: "utf8", maxBuffer: 4 * 1024 * 1024 })), record);
 	assert.deepEqual(record.updates.map(item => item.path)
 		, ownedCheckedRecordNativePerlChangedPaths);
 	assert.deepEqual(record.additions.map(item => item.path)
@@ -52,6 +63,19 @@ test("native/Perl owned checked-record history restores every source", async () 
 		, sha256(await readFile(ownedCheckedRecordNativePerlEvidencePath)));
 	for(const update of record.updates)
 	{
+		if(update.path === "docs/type-surface.v1.json")
+		{
+			assert.equal(await authenticateSourceHistoryReverse(gitSourceBytes(
+				inventoryRevision, update.path
+			), update), true);
+			const previous = createHash("sha256");
+			for await(const chunk of gitSourceBytes(
+				ownedCheckedRecordNativePerlPredecessor, update.path
+			)) previous.update(chunk);
+			assert.equal(previous.digest("hex"), update.previousSha256);
+			assert.ok(finRefinementNormalizationPaths.includes(update.path));
+			continue;
+		}
 		const current = await sourceAtFinHistoryMilestone(
 			update.path, update.currentSha256
 			, beforeOwnedCheckedRecordNativePerlSource
@@ -123,7 +147,8 @@ test("native/Perl owned checked-record history rejects altered transitions"
 		const record = JSON.parse(await readFile(
 			ownedCheckedRecordNativePerlHistoryPath, "utf8"
 		));
-		const update = structuredClone(record.updates[0]);
+		const update = structuredClone(record.updates.find(item =>
+			item.path !== "docs/type-surface.v1.json"));
 		const current = await sourceAtFinHistoryMilestone(
 			update.path, update.currentSha256
 			, beforeOwnedCheckedRecordNativePerlSource
@@ -137,6 +162,23 @@ test("native/Perl owned checked-record history rejects altered transitions"
 			current, update));
 	}
 );
+
+test("native/Perl owned checked-record inventory rejects changed endpoints and spans", async () => {
+	const record = JSON.parse(await readFile(ownedCheckedRecordNativePerlHistoryPath, "utf8"));
+	const update = record.updates.find(item => item.path === "docs/type-surface.v1.json");
+	for(const change of [
+		{ ...update, currentSha256: "0".repeat(64) }
+		, { ...update, previousSha256: "0".repeat(64) }
+		, { ...update, edits: [] }
+		, { ...update, edits: [
+			{ ...update.edits[0], current: "changed" + update.edits[0].current }
+			, ...update.edits.slice(1)
+		] }
+	])
+		await assert.rejects(() => authenticateSourceHistoryReverse(gitSourceBytes(
+			inventoryRevision, update.path
+		), change));
+});
 
 test("native/Perl owned checked-record writer refuses unrelated checkouts"
 	, async t => {
