@@ -152,6 +152,7 @@ import "./helpers/owned-subtype-npm-hosted-source-history-tests.mjs";
 import "./helpers/owned-subtype-hosted-promotion-source-history-tests.mjs";
 import "./helpers/owned-subtype-promotion-transaction-source-history-tests.mjs";
 import "./helpers/owned-subtype-published-matrix-tests.mjs";
+import "./helpers/owned-subtype-matrix-publication-source-history-tests.mjs";
 import "./helpers/owned-checked-c-session-boundaries-source-history-tests.mjs";
 
 const root = resolve(".");
