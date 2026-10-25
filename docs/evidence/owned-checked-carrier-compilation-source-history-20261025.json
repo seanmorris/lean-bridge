@@ -1,0 +1,180 @@
+{
+  "additions": [
+    {
+      "currentSha256": "8b965a0cf4e644d0037bd51648af6794a664f815ee284ab7e05de0700fa744d8",
+      "path": "docs/evidence/owned-checked-carrier-compilation-20261025.json"
+    },
+    {
+      "currentSha256": "d084291d342ffd8a0499156b0ae01d420daa4873a784baeb970c6fc68d4c6d02",
+      "path": "scripts/update-owned-checked-carrier-compilation-source-history.mjs"
+    },
+    {
+      "currentSha256": "e2ec386fca73e4a8b50536988b04024f00c54ffd40fc47194c1fe3695362625b",
+      "path": "tests/helpers/owned-checked-carrier-compilation-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "ee38ec17a40fe8325a410f46fd2386c28203fc8136482f784dd9eddbcd6a9657",
+      "path": "tests/helpers/owned-checked-carrier-compilation-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "8d6aebd031f916f4ee0d2e0bd73fdaea3fef2413",
+  "implementationCommits": [
+    "8d6aebd031f916f4ee0d2e0bd73fdaea3fef2413"
+  ],
+  "integrationBaseCommit": "8d6aebd031f916f4ee0d2e0bd73fdaea3fef2413",
+  "integrationUpdates": [
+    {
+      "currentSha256": "9d40c706b568b1b7de979d681b5d92f626654f8ac2371070f069af6278ed26b3",
+      "edits": [
+        {
+          "current": "import { beforeOwnedCheckedCarrierCompilationSource, ownedCheckedCarrierCompilationNormalizationPaths } from \"./owned-checked-carrier-compilation-source-history.mjs\";\n",
+          "previous": "",
+          "start": 13271
+        },
+        {
+          "current": "\t...ownedCheckedCarrierCompilationNormalizationPaths\n\t, ...ownedMatrixRefreshNormalizationPaths\n",
+          "previous": "\t...ownedMatrixRefreshNormalizationPaths\n",
+          "start": 186477
+        },
+        {
+          "current": "\tlet stage = beforeOwnedCheckedCarrierCompilationSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeOwnedMatrixRefreshSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeOwnedMatrixRefreshSource(path, text, expected);\n",
+          "start": 231095
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "f64705e2db2c3ffcfbce48fa58ac117e341a6ee19fd8948489fce6b903d30dbc"
+    },
+    {
+      "currentSha256": "1e27b16dc72357d9e41885ac1a1a96a91a4575ad2d2aac58d8f0cc06778a2d18",
+      "edits": [
+        {
+          "current": "import \"./helpers/owned-checked-carrier-compilation-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 9178
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "57147963fb7c5b893a32bcdf984755f32682dbcef790dbe7414ec9415e05a6c0"
+    },
+    {
+      "currentSha256": "23d3090909db006f234ee02067569aba322bc2aad1d22fa3036a18d81e424ac2",
+      "edits": [
+        {
+          "current": "import { createHash } from \"node:crypto\";\n",
+          "previous": "",
+          "start": 228
+        },
+        {
+          "current": "import { createInterface } from \"node:readline\";\nimport { Readable } from \"node:stream\";\n",
+          "previous": "",
+          "start": 414
+        },
+        {
+          "current": "import { authenticateSourceHistoryReverse, gitSourceBytes } from \"./source-history-stream.mjs\";\n",
+          "previous": "",
+          "start": 1122
+        },
+        {
+          "current": "// The old writer refreshed inventory pins in its history commit, after the\n// implementation commit. Authenticate that exact later blob without rebuilding\n// every subsequent inventory in memory.\nconst inventoryRevision = \"d5b2b31e640de6be9dc00188de8c793b126b2136\";\n\n",
+          "previous": "",
+          "start": 1385
+        },
+        {
+          "current": "\tassert.equal(execFileSync(\"git\", [\"show\", \"-s\", \"--format=%P\", inventoryRevision]\n\t\t, { encoding: \"utf8\" }).trim(), ownedCheckedRecordFoundationImplementation);\n\tassert.deepEqual(JSON.parse(execFileSync(\"git\", [\"show\"\n\t\t, `${inventoryRevision}:${ownedCheckedRecordFoundationHistoryPath}`]\n\t, { encoding: \"utf8\", maxBuffer: 4 * 1024 * 1024 })), record);\n",
+          "previous": "",
+          "start": 2146
+        },
+        {
+          "current": "\t\tif(update.path === \"docs/type-surface.v1.json\")\n\t\t{\n\t\t\tassert.equal(await authenticateSourceHistoryReverse(gitSourceBytes(\n\t\t\t\tinventoryRevision, update.path\n\t\t\t), update), true);\n\t\t\tconst previous = createHash(\"sha256\");\n\t\t\tfor await(const chunk of gitSourceBytes(\n\t\t\t\townedCheckedRecordFoundationPredecessor, update.path\n\t\t\t)) previous.update(chunk);\n\t\t\tassert.equal(previous.digest(\"hex\"), update.previousSha256);\n\t\t\tassert.ok(finRefinementNormalizationPaths.includes(update.path));\n\t\t\tcontinue;\n\t\t}\n",
+          "previous": "",
+          "start": 2643
+        },
+        {
+          "current": "\t\tassert.equal(pin.path, \"docs/type-surface.v1.json\");\n\t\tconst replacements = [...pin.replacements].reverse();\n\t\tfor(const replacement of replacements)\n",
+          "previous": "\t\tlet current = await sourceAtFinHistoryMilestone(\n\t\t\tpin.path, pin.currentSha256\n\t\t);\n\t\tassert.equal(sha256(current), pin.currentSha256, pin.path);\n\t\tfor(const replacement of [...pin.replacements].reverse())\n",
+          "start": 4237
+        },
+        {
+          "current": "\t\t\tassert.match(replacement.current, /^[a-f0-9]{64}$/u);\n\t\t\tassert.match(replacement.previous, /^[a-f0-9]{64}$/u);\n",
+          "previous": "\t\t\tassert.equal(current.split(replacement.current).length - 1\n\t\t\t\t, replacement.count, `${pin.path}: ${replacement.sourcePath}`);\n\t\t\tcurrent = current.replaceAll(\n\t\t\t\treplacement.current, replacement.previous\n\t\t\t);\n",
+          "start": 4393
+        },
+        {
+          "current": "\t\tconst counts = new Map(replacements.map(replacement => [replacement.sourcePath, 0]));\n\t\tconst current = createHash(\"sha256\"), previous = createHash(\"sha256\");\n\t\tconst input = Readable.from(gitSourceBytes(\n\t\t\tinventoryRevision, pin.path\n\t\t));\n\t\tinput.on(\"data\", chunk => current.update(chunk));\n\t\tfor await(const line of createInterface({ input, crlfDelay: Infinity }))\n\t\t{\n\t\t\tlet restored = line;\n\t\t\tfor(const replacement of replacements)\n\t\t\t{\n\t\t\t\tcounts.set(replacement.sourcePath, counts.get(replacement.sourcePath)\n\t\t\t\t\t+ restored.split(replacement.current).length - 1);\n\t\t\t\trestored = restored.replaceAll(replacement.current, replacement.previous);\n\t\t\t}\n\t\t\tprevious.update(restored + \"\\n\");\n\t\t}\n\t\tassert.equal(current.digest(\"hex\"), pin.currentSha256, pin.path);\n\t\tassert.equal(previous.digest(\"hex\"), pin.previousSha256, pin.path);\n\t\tfor(const replacement of replacements)\n\t\t\tassert.equal(counts.get(replacement.sourcePath)\n\t\t\t\t, replacement.count, `${pin.path}: ${replacement.sourcePath}`);\n",
+          "previous": "\t\tassert.equal(sha256(current), pin.previousSha256, pin.path);\n",
+          "start": 4512
+        },
+        {
+          "current": "test(\"owned checked-record foundation inventory stream rejects changed endpoints and spans\", async () => {\n\tconst record = JSON.parse(await readFile(\n\t\townedCheckedRecordFoundationHistoryPath, \"utf8\"\n\t));\n\tconst update = record.updates.find(item => item.path === \"docs/type-surface.v1.json\");\n\tfor(const change of [\n\t\t{ ...update, currentSha256: \"0\".repeat(64) }\n\t\t, { ...update, previousSha256: \"0\".repeat(64) }\n\t\t, { ...update, edits: [] }\n\t\t, { ...update, edits: [\n\t\t\t{ ...update.edits[0], current: \"changed\" + update.edits[0].current }\n\t\t\t, ...update.edits.slice(1)\n\t\t] }\n\t])\n\t\tawait assert.rejects(() => authenticateSourceHistoryReverse(gitSourceBytes(\n\t\t\tinventoryRevision, update.path\n\t\t), change));\n});\n\n",
+          "previous": "",
+          "start": 5519
+        }
+      ],
+      "path": "tests/helpers/owned-checked-record-foundation-source-history-tests.mjs",
+      "previousSha256": "0f6ec24bde96d2e0469ece375245eee486dac6659ec101f333503515aca042aa"
+    }
+  ],
+  "milestone": "owned-checked-carrier-compilation-source-v1",
+  "predecessorCommit": "57c92b462a91d0384273bf7e152bb416061613d6",
+  "schemaVersion": 1,
+  "scope": "Compile the complete independent owned checked-record contract in full and result-only modes against the original Lean proof-carrying source, including Booking, Claim, Grant with a nested Subtype, arrays and transfers. Syntax-check both generated C adapters with strict warnings. Require these checks and both callback directions in the existing native hosted job, asserting exactly two passes and zero failures/skips before installed acceptance. Retain twelve passing source/foundation checks, twenty-six adjacent ownership checks, the exact two-test CI selection and nineteen inspected source identities. Refresh only four live test-source hashes. All support observations, original archives, previous receipts and runtime source remain unchanged. Installed coverage for broader combinations, current-head Core and required hosted acceptance, and default-branch recurring activation remain open.",
+  "updates": [
+    {
+      "currentSha256": "e625220f8e5aedf30b9986231cd0e63750231eed51a2136c041fef7d3c04da4c",
+      "edits": [
+        {
+          "current": "      - name: Compile complete owned checked-record carriers\n        timeout-minutes: 5\n        env:\n          LEAN_BRIDGE_ELABORATED_METADATA_TEST: \"1\"\n        shell: bash\n        run: |\n          set -euo pipefail\n          source scripts/env.sh\n          node --max-old-space-size=512 --test --test-name-pattern='^(complete owned checked-record carriers|reviewed owned callback carriers elaborate)' tests/owned-checked-record-foundation.test.mjs 2>&1 | tee build/owned-checked-record-foundation.tap\n          rg '^# tests 2$' build/owned-checked-record-foundation.tap\n          rg '^# pass 2$' build/owned-checked-record-foundation.tap\n          rg '^# fail 0$' build/owned-checked-record-foundation.tap\n          rg '^# skipped 0$' build/owned-checked-record-foundation.tap\n",
+          "previous": "",
+          "start": 1423
+        }
+      ],
+      "path": ".github/workflows/owned-checked-record-native-perl.yml",
+      "previousSha256": "ec209fe817265091e0d2d90179ed2deed2d2afb6d5412cfebeba50177a51408f"
+    },
+    {
+      "currentSha256": "e2c8af3be42bd903a44c809b82898dd50555658602a53818ed15373b43b0720e",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"c6a2a1fc68d52658a56bbc0eb925f6993c20a323b9feb8c8fcfeab497ab82569\"\n",
+          "previous": "          \"sha256\": \"e8242f8dcca2562ef4fdadfe8da7a9072ec3022e33083c1c88bba8b69ff130c1\"\n",
+          "start": 75711389
+        },
+        {
+          "current": "          \"sha256\": \"c6a2a1fc68d52658a56bbc0eb925f6993c20a323b9feb8c8fcfeab497ab82569\"\n",
+          "previous": "          \"sha256\": \"e8242f8dcca2562ef4fdadfe8da7a9072ec3022e33083c1c88bba8b69ff130c1\"\n",
+          "start": 75718263
+        },
+        {
+          "current": "          \"sha256\": \"c6a2a1fc68d52658a56bbc0eb925f6993c20a323b9feb8c8fcfeab497ab82569\"\n",
+          "previous": "          \"sha256\": \"e8242f8dcca2562ef4fdadfe8da7a9072ec3022e33083c1c88bba8b69ff130c1\"\n",
+          "start": 75725148
+        },
+        {
+          "current": "          \"sha256\": \"c6a2a1fc68d52658a56bbc0eb925f6993c20a323b9feb8c8fcfeab497ab82569\"\n",
+          "previous": "          \"sha256\": \"e8242f8dcca2562ef4fdadfe8da7a9072ec3022e33083c1c88bba8b69ff130c1\"\n",
+          "start": 75732074
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "a74ff33edc7b919f90e0f4c497fe452c879ffcb5a165309862e2057ec5f85aed"
+    },
+    {
+      "currentSha256": "c6a2a1fc68d52658a56bbc0eb925f6993c20a323b9feb8c8fcfeab497ab82569",
+      "edits": [
+        {
+          "current": "import { ownedAggregateTransferLeaseSource } from \"../src/backends/native/owned-aggregate-transfers.mjs\";\nimport { brokerHeader } from \"../src/backends/native/runtime-broker.mjs\";\n",
+          "previous": "",
+          "start": 1321
+        },
+        {
+          "current": "test(\"complete owned checked-record carriers compile in full and result-only modes\", {\n\tskip: process.env.LEAN_BRIDGE_ELABORATED_METADATA_TEST !== \"1\"\n\t, timeout: 120000\n}, async t => {\n\tconst directory = await mkdtemp(join(tmpdir()\n\t\t, \"lean-bridge-owned-checked-carriers-\"));\n\tt.after(() => rm(directory, { recursive: true, force: true }));\n\tconst fixture = resolve(\n\t\t\"tests/fixtures/onboarding/owned-checked-records/OwnedCheckedRecords.lean\"\n\t);\n\tawait writeFile(join(directory, `${module}.lean`), await readFile(fixture));\n\tconst leanPrefix = resolve(process.env.LEAN_BRIDGE_LEAN_PREFIX\n\t\t?? \".toolchains/elan/toolchains/leanprover--lean4---v4.32.2\");\n\tconst env = { ...process.env, LEAN_PATH: directory\n\t\t, PATH: `${join(leanPrefix, \"bin\")}:${process.env.PATH}` };\n\tconst run = async input => {\n\t\ttry\n\t\t{ await processBuildRunner.capture({ ...input, cwd: directory, env }); }\n\t\tcatch(error)\n\t\t{ throw new Error(error.details?.stderr || error.details?.stdout || error.message, { cause: error }); }\n\t};\n\tconst compile = args => run({ command: join(leanPrefix, \"bin/lean\"), args });\n\tawait compile([\"-o\", `${module}.olean`, `${module}.lean`]);\n\tawait writeFile(join(directory, \"lean_bridge_native_runtime.h\"), brokerHeader);\n\tawait writeFile(join(directory, \"owned-leases.h\"), ownedAggregateTransferLeaseSource);\n\tfor(const resultOnly of [false, true])\n\t{\n\t\tconst document = ownedCheckedRecordReviewedIr({ resultOnly });\n\t\tassert.deepEqual(validateReviewedOwnedSource(capture(document)), document);\n\t\tconst generated = generateOwnedNativeBindingAdapters({\n\t\t\tdocument, sourceIdentity: {}\n\t\t\t, declarations: document.declarations.map(item => ({\n\t\t\t\tname: item.source.declaration, module\n\t\t\t}))\n\t\t\t, metadataSha256: \"c\".repeat(64), transferredInputs: !resultOnly\n\t\t});\n\t\tassert.equal(Object.keys(generated.carriers.symbols.exports).length\n\t\t\t, document.declarations.length);\n\t\tassert.doesNotMatch(generated.carriers.leanSource, /sorry|unsafeCast|axiom/u);\n\t\tif(resultOnly)\n\t\t{\n\t\t\tassert.deepEqual(Object.keys(generated.carriers.refinementValidators), []);\n\t\t\tassert.doesNotMatch(generated.carriers.leanSource\n\t\t\t\t, /_root_\\.OwnedCheckedRecords\\.(?:mkClaim|mkWindow|mkGrant|checkedPositive) /u);\n\t\t}\n\t\telse\n\t\t{\n\t\t\tfor(const name of [\"mkWindow\", \"mkClaim\", \"mkGrant\", \"checkedPositive\"])\n\t\t\t\tassert.ok(generated.carriers.leanSource.includes(`_root_.${q(name)} `), name);\n\t\t\tfor(const name of [\"echoBooking\", \"echoGrant\", \"echoClaims\", \"transferClaim\"])\n\t\t\t\tassert.ok(generated.carriers.symbols.exports[`lean:${q(name)}`], name);\n\t\t}\n\t\tconst file = resultOnly ? \"GeneratedResult.lean\" : \"GeneratedFull.lean\";\n\t\tawait writeFile(join(directory, file), generated.carriers.leanSource);\n\t\tawait compile([file]);\n\t\tawait writeFile(join(directory, \"carriers.h\"), generated.carriers.header);\n\t\tawait writeFile(join(directory, \"owned-values.h\"), generated.typesHeader);\n\t\tawait writeFile(join(directory, \"owned-values.c\"), generated.source);\n\t\tawait run({ command: process.env.CC ?? \"cc\"\n\t\t\t, args: [\"-std=c11\", \"-Wall\", \"-Wextra\", \"-Werror\", \"-fsyntax-only\"\n\t\t\t\t, \"-I\", directory, \"-I\", join(leanPrefix, \"include\"), \"owned-values.c\"] });\n\t}\n});\n\ntest(\"required owned carrier CI checks full, result-only and both callback roles\", async () => {\n\tconst workflow = await readFile(\n\t\t\".github/workflows/owned-checked-record-native-perl.yml\", \"utf8\"\n\t);\n\tconst native = workflow.split(\"\\n  native:\\n\")[1]?.split(\"\\n  perl:\\n\")[0];\n\tassert.equal(typeof native, \"string\");\n\tassert.doesNotMatch(native, /^ {4}(?:if|continue-on-error):/mu);\n\tconst steps = native.split(/^ {6}- name: /mu).slice(1);\n\tconst selected = steps.filter(step => step.startsWith(\"Compile complete owned checked-record carriers\\n\"));\n\tassert.equal(selected.length, 1);\n\tconst step = selected[0];\n\tassert.doesNotMatch(step, /^ {8}(?:if|continue-on-error):/mu);\n\tassert.match(step, /^ {8}env:\\n {10}LEAN_BRIDGE_ELABORATED_METADATA_TEST: \"1\"$/mu);\n\tassert.match(step, /^ {8}shell: bash$/mu);\n\tassert.match(step, /^ {8}timeout-minutes: 5$/mu);\n\tconst install = steps.findIndex(item => item.startsWith(\"Install dependencies and pinned Lean\\n\"));\n\tconst acceptance = steps.findIndex(item => item.startsWith(\"Execute source-free C and C++ acceptance\\n\"));\n\tassert.ok(install >= 0 && steps.indexOf(step) > install);\n\tassert.ok(acceptance > steps.indexOf(step));\n\tconst run = step.split(\"        run: |\\n\")[1];\n\tassert.equal(typeof run, \"string\");\n\tassert.match(run, /set -euo pipefail/u);\n\tassert.match(run, /source scripts\\/env\\.sh/u);\n\tassert.ok(run.includes(\n\t\t\"--test-name-pattern='^(complete owned checked-record carriers|reviewed owned callback carriers elaborate)'\"\n\t));\n\tassert.ok(run.includes(\"tests/owned-checked-record-foundation.test.mjs\"));\n\tfor(const point of [\"tests 2\", \"pass 2\", \"fail 0\", \"skipped 0\"])\n\t\tassert.ok(run.includes(`rg '^# ${point}$' build/owned-checked-record-foundation.tap`));\n});\n\n",
+          "previous": "",
+          "start": 15223
+        }
+      ],
+      "path": "tests/owned-checked-record-foundation.test.mjs",
+      "previousSha256": "e8242f8dcca2562ef4fdadfe8da7a9072ec3022e33083c1c88bba8b69ff130c1"
+    }
+  ]
+}

@@ -90,6 +90,7 @@ import { beforePhpClosureProducerReplaySource, phpClosureProducerReplayNormaliza
 import { beforeOwnedReceiptProducerReplaySource, ownedReceiptProducerReplayNormalizationPaths } from "./owned-receipt-producer-replay-source-history.mjs";
 import { beforeOwnedMatrixIsolationSource, ownedMatrixIsolationNormalizationPaths } from "./owned-matrix-isolation-source-history.mjs";
 import { beforeOwnedMatrixRefreshSource, ownedMatrixRefreshNormalizationPaths } from "./owned-matrix-refresh-source-history.mjs";
+import { beforeOwnedCheckedCarrierCompilationSource, ownedCheckedCarrierCompilationNormalizationPaths } from "./owned-checked-carrier-compilation-source-history.mjs";
 import { beforeCoreEvidenceMemoryRepairSource, coreEvidenceMemoryRepairNormalizationPaths } from "./core-evidence-memory-repair-source-history.mjs";
 import { beforeValueIndexPromotionMilestoneRepairSource, valueIndexPromotionMilestoneRepairNormalizationPaths } from "./value-index-promotion-milestone-repair-source-history.mjs";
 import { beforeCoreMilestoneReplayRepairSource, coreMilestoneReplayRepairNormalizationPaths } from "./core-milestone-replay-repair-source-history.mjs";
@@ -2183,7 +2184,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...ownedMatrixRefreshNormalizationPaths
+	...ownedCheckedCarrierCompilationNormalizationPaths
+	, ...ownedMatrixRefreshNormalizationPaths
 	, ...ownedMatrixIsolationNormalizationPaths
 	, ...ownedReceiptProducerReplayNormalizationPaths
 	, ...phpClosureProducerReplayNormalizationPaths
@@ -3109,7 +3111,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeOwnedMatrixRefreshSource(path, text, expected);
+	let stage = beforeOwnedCheckedCarrierCompilationSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeOwnedMatrixRefreshSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;
