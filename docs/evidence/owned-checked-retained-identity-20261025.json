@@ -1,0 +1,100 @@
+{
+  "changes": [
+    "Keep the existing independent retain and prove the shared identity is usable after the original owner is released.",
+    "Allocate a separate serial-74 resource without any retained owner, release its sole owner, and require INVALID_ARGUMENT plus unchanged output for that genuinely expired handle.",
+    "Preserve foreign-session, partial conversion, transfer, callback, closure, closed-session, identity non-reuse and recovery assertions; do not modify runtime semantics or other host callers."
+  ],
+  "contractReferences": [
+    {
+      "bytes": 18788,
+      "path": "src/backends/native/owned-aggregate-leases.mjs",
+      "sha256": "f13148cef15496c088da53156b77f7ecef106d30d4e8208cb7363327d833b2b5"
+    },
+    {
+      "bytes": 16142,
+      "path": "src/backends/c/owned-package.mjs",
+      "sha256": "533692ac61f799493843b353b1afba22921f036fb111245ea6656c24e7588c3c"
+    },
+    {
+      "bytes": 14129,
+      "path": "src/backends/c/owned-runtime.mjs",
+      "sha256": "526cac9dbc5ded0095b4d3a750d755995f90ada544e52bacfde43d46362377ac"
+    },
+    {
+      "bytes": 16173,
+      "path": "tests/fixtures/structured-types/owned-aggregate-leases.c",
+      "sha256": "0bf8d82de10e11b54633f2b13b418cd824a5db43d0d86d9ea975c3cab16cd765"
+    },
+    {
+      "bytes": 98185,
+      "path": "docs/consume/c.md",
+      "sha256": "3ca3d47ca3c51788d9ec94ba5f41a14bf5dd34e9b23e3d47fc724246047985ff"
+    }
+  ],
+  "failure": {
+    "artifact": {
+      "accepted": false,
+      "bytes": 246798457,
+      "id": 12610710698,
+      "immutableArchivePending": true,
+      "sha256": "a238d7e15508ec9b5f9a5d3ede683fdd857d343a3374fa9fdfa6be4b0a636b21"
+    },
+    "assertion": "consumer.c:195: owned_checked_records_wasmtime_echo_claim(peer, &foreign, &out, &owner) == OWNED_CHECKED_RECORDS_WASMTIME_INVALID_ARGUMENT",
+    "conclusion": "failure",
+    "failed": [
+      "ordinary-full",
+      "reviewed-full"
+    ],
+    "job": 121254115511,
+    "passed": [
+      "ordinary-result-only",
+      "reviewed-result-only"
+    ],
+    "producer": "34f6bde6410c0c2b95c59fdf0db855c5a1e0085a",
+    "rootCause": "The test expected a normal resource identity to expire after releasing one owner even though peer_kept_owner still retained it. lb_owned_scope_hold reuses the identity and increments its reference count; lb_owned_drop removes it only when the last reference is released. This differs from an explicitly anchored borrowed view.",
+    "run": 40221585405,
+    "signal": "SIGABRT",
+    "status": "completed"
+  },
+  "kind": "owned-checked-retained-identity-source-v1",
+  "pending": [
+    "Run corrected installed ordinary/reviewed WIT acceptance; native C runtime acceptance remains part of the final aligned matrix.",
+    "Retain original failed/partial run bytes without treating them as acceptance; capture and independently replay corrected successful producers.",
+    "Complete the original owned checked-record semantic, support/docs and final CI gates."
+  ],
+  "schemaVersion": 1,
+  "sourceBaseCommit": "8d61534c178feedb831fc48041e327caa1f56dbc",
+  "sources": [
+    {
+      "bytes": 22939,
+      "path": "tests/fixtures/structured-types/owned-checked-record-installed.c",
+      "sha256": "078331d85c63142a5ef5bd465ee868b997a343e22609261d805c5963797f91f7"
+    }
+  ],
+  "validation": {
+    "generatedHeaderChecks": {
+      "durationMs": 3882.933832,
+      "failed": 0,
+      "passed": 2,
+      "skipped": 0,
+      "tests": 2
+    },
+    "installedRuntimeExecutions": 0,
+    "inventory": {
+      "archivedReferences": 352995,
+      "checkedBytes": 24710097,
+      "diskFiles": 0,
+      "gitFiles": 2555,
+      "head": "8d61534c178feedb831fc48041e327caa1f56dbc",
+      "inventory": {
+        "bytes": 102579190,
+        "sha256": "150a717310e9fbdd2435117582c909e655467ac6a551aa7dae8fb52d001322c4"
+      },
+      "liveReferences": 16055,
+      "scope": "All live non-archived source pins; immutable archive replay is a separate gate",
+      "stalePins": 0,
+      "uniqueObjects": 2526,
+      "uniquePaths": 2555
+    }
+  }
+}

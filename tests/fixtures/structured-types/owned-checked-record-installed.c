@@ -191,8 +191,17 @@ static void check_session_boundaries(
   expect_serial(session, out.holder, 41); release(&owner); release(&closure_owner);
 
   release(&peer_owner);
+  /* Ordinary retained resources share an identity while any owning lease is
+     live. This is not an anchored view: peer_kept still owns foreign.holder. */
+  OK(owned_checked_records_echo_claim(peer, &foreign, &out, &owner));
+  expect_serial(peer, out.holder, 73); release(&owner);
+  /* Use a different resource with no retained lease to test actual expiry. */
+  owned_checked_records_result *expired_owner = NULL;
+  owned_checked_records_ticket_t expired_ticket = make_ticket(peer, 74, &expired_owner);
+  owned_checked_records_claim_t expired = {expired_ticket, quota};
+  release(&expired_owner);
   memset(&out, 0xa5, sizeof(out)); save_claim(&out, saved);
-  CHECK(owned_checked_records_echo_claim(peer, &foreign, &out, &owner)
+  CHECK(owned_checked_records_echo_claim(peer, &expired, &out, &owner)
     == OWNED_CHECKED_RECORDS_INVALID_ARGUMENT);
   CHECK(owner == NULL && memcmp(saved, &out, sizeof(out)) == 0);
   expect_serial(peer, peer_kept, 73);
