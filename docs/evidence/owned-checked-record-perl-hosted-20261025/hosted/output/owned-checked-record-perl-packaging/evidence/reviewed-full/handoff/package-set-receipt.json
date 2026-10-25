@@ -1,0 +1,63 @@
+{
+  "component": {
+    "id": "owned-checked-records@1.0.0",
+    "name": "owned-checked-records",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 3246610,
+          "path": "archives/LeanBridge-OwnedCheckedRecords-1.000.tar.gz",
+          "sha256": "f44973d87578354975596808fb7229b314ffd2e5fbe369b932db3b683b651cb3"
+        }
+      ],
+      "ecosystem": "cpan",
+      "name": "LeanBridge-OwnedCheckedRecords",
+      "profile": "native-library-v1",
+      "requires": [
+        {
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Runtime",
+          "version": "0.0020873093885122476990213970161242772861093089627532315710208989625599780543964681"
+        }
+      ],
+      "role": "component",
+      "runtimeDelivery": "dependency",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "cpan",
+      "version": "1.000"
+    },
+    {
+      "artifacts": [
+        {
+          "bytes": 51397546,
+          "path": "archives/LeanBridge-Runtime-0.0020873093885122476990213970161242772861093089627532315710208989625599780543964681.tar.gz",
+          "sha256": "484ac7525e65a991241645388ddcdad082a580e14f2b2447b3c5ce9bb7d58c26"
+        }
+      ],
+      "ecosystem": "cpan",
+      "name": "LeanBridge-Runtime",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "runtime",
+      "runtimeDelivery": "provided",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "cpan",
+      "version": "0.0020873093885122476990213970161242772861093089627532315710208989625599780543964681"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "7e4e4299d5b83eeea5ec2b3c1da2bf73400374b982b4c452a41a77cba08dc8a9",
+      "id": "native-library-v1",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "6a7624b16f64213c1172da18e794744e732fb2352c400c75662eb442688d46d2"
+  }
+}
