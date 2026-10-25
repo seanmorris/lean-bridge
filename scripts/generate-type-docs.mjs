@@ -143,7 +143,7 @@ const hasCallbackSubtypeHostedEvidence = document =>
 		document.evidence.some(item => item.id === id));
 const callbackSubtypeHostedReference = "[Hosted synchronous callback Subtype acceptance](../evidence/callback-subtype-promotion-20261022.md) establishes proof-erased selected Nat Subtypes in host callback replies and returned Lean closure inputs across all sixteen non-PHP-Wasm consumer profiles and both source routes. Lean-produced values cross as base values. Host-produced replies use the target's exact typed recovery wrapper; invalid or missing recovery prevents callback entry, caller values remain unchanged and a later valid call succeeds. Retained or asynchronous callbacks, checked-record and owned callback positions, arbitrary predicates, recursive or generic refined payloads, dispatch cost and peak memory remain separate work.";
 const ownedSubtypeHostedEvidenceIds = Object.freeze([
-	"owned-subtype-javascript-local-installed"
+	"owned-subtype-javascript-hosted-installed"
 	, "owned-subtype-native-hosted-installed"
 	, "owned-subtype-perl-hosted-installed"
 	, "owned-subtype-languages-hosted-installed"

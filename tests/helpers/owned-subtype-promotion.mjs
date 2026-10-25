@@ -11,6 +11,13 @@ import { verifyOwnedJavaScriptBrowserEvidence } from "./owned-javascript-package
 import {
 	checkOwnedSubtypeHostedEvidence
 } from "./owned-subtype-hosted-evidence.mjs";
+import {
+	assertOwnedSubtypePromotionIndex, mapOwnedSubtypePromotionLanes
+	, ownedSubtypePromotionArchiveRoot, ownedSubtypePromotionEvidenceId
+	, ownedSubtypePromotionLanes, ownedSubtypePromotionReplayCommand
+} from "./owned-subtype-promotion-catalog.mjs";
+
+export { ownedSubtypePromotionLanes };
 
 export const ownedSubtypePromotionPredecessor
 	= "da5bae8a9e48c3afb2f905c052cc3410f56faf86";
@@ -27,48 +34,31 @@ const javascriptHistoryPath
 const javascriptImplementation
 	= "c95b9ca0bcfcc5138cc50072a868dc37942291b4";
 
-export const ownedSubtypePromotionLanes = Object.freeze([
-	{ lane: "javascript"
-		, profiles: [
-			"node-javascript", "node-typescript", "browser-javascript"
-			, "browser-react", "browser-worker"
-		]
-	}
-	, { lane: "native", profiles: ["c", "cpp"] }
-	, { lane: "perl", profiles: ["perl"] }
-	, { lane: "languages", profiles: ["python", "ruby", "rust"] }
-	, { lane: "dotnet", profiles: ["dotnet"] }
-	, { lane: "jvm", profiles: ["java", "kotlin"] }
-	, { lane: "php-native", profiles: ["php-native"] }
-	, { lane: "wit-wasi", profiles: ["wit-wasi"] }
-].map(item => Object.freeze({
-	...item, profiles: Object.freeze(item.profiles)
-})));
-
 export const ownedSubtypePromotionLimit
 	= "Owned Subtype acceptance covers one selected Nat Subtype field in the tested acyclic Bundle, borrowed and transferred inputs, leased or retained results, rejection before ownership movement, exact cleanup and recovery through the named public package APIs. Recursive owned graphs, owned checked-record fields, owned callback positions, arbitrary predicates, dispatch cost and peak memory remain separate work. PHP-Wasm has separate owned-Subtype evidence and is not widened by this promotion. External runtimes, compilers, package managers and operating-system distributions remain trusted recorded inputs.";
 
 const validators = Object.freeze([
 	"scripts/promote-owned-subtype-evidence.mjs"
+	, "scripts/check-owned-subtype-hosted-evidence.mjs"
 	, "tests/owned-subtype-hosted-ci.test.mjs"
 	, "tests/owned-subtype-promotion.test.mjs"
+	, "tests/owned-subtype-hosted-promotion.test.mjs"
 	, "tests/owned-subtype-retained-packages.test.mjs"
 	, "tests/helpers/owned-subtype-hosted-evidence.mjs"
 	, "tests/helpers/owned-subtype-hosted-output.mjs"
 	, "tests/helpers/owned-subtype-promotion.mjs"
+	, "tests/helpers/owned-subtype-promotion-catalog.mjs"
 ]);
 
-const hostedRoot = lane => `docs/evidence/owned-subtype-${lane}-hosted-20261023`;
-const evidenceId = lane => `owned-subtype-${lane}-${lane === "javascript"
-	? "local" : "hosted"}-installed`;
+const evidenceId = ownedSubtypePromotionEvidenceId;
 const artifactRecord = (route, artifact) => ({
 	path: `owned-subtype-javascript/${route}/${artifact.path}`
 	, sha256: artifact.sha256
 });
 
 /**
- * Recheck the authenticated relocated JavaScript package record used by the
- * five npm/browser profiles.
+ * Recheck the historical relocated JavaScript qualification.
+ * Live promotion requires the complete hosted archive instead.
  */
 export const ownedSubtypeJavaScriptPromotionReference = async () => {
 	const [evidenceBytes, historyBytes] = await Promise.all([
@@ -113,7 +103,7 @@ export const ownedSubtypeJavaScriptPromotionReference = async () => {
 	return {
 		lane: "javascript"
 		, profiles: [...ownedSubtypePromotionLanes[0].profiles]
-		, routes: [...routes], id: evidenceId("javascript")
+		, routes: [...routes], id: "owned-subtype-javascript-local-installed"
 		, kind: "installed", revision: javascriptImplementation
 		, command: evidence.command
 		, scope: "Two independently authored npm package sets execute after source removal and relocation through Node JavaScript, strict TypeScript, browser pages, React Strict Mode and dedicated workers. Chromium, Firefox and WebKit each replay page, React and worker consumers twice per route. The authenticated record binds valid borrowed, retained and transferred values, rejection before ownership movement, later recovery and explicit disposal to the exact package archive digests."
@@ -126,13 +116,13 @@ export const ownedSubtypeJavaScriptPromotionReference = async () => {
 };
 
 const hostedPromotionReference = async lane => {
-	const root = hostedRoot(lane);
+	const root = ownedSubtypePromotionArchiveRoot(lane);
 	const index = await checkOwnedSubtypeHostedEvidence(lane, root);
+	assertOwnedSubtypePromotionIndex(lane, index);
 	const definition = ownedSubtypePromotionLanes.find(item =>
 		item.lane === lane);
 	assert.ok(definition, lane);
 	assert.deepEqual(index.profiles, definition.profiles);
-	assert.deepEqual(index.accepted.accepted.routes, routes);
 	assert.equal(index.accepted.producerCommit, index.producerCommit);
 	const indexPath = `${root}/index.json`;
 	const files = [
@@ -153,18 +143,15 @@ const hostedPromotionReference = async lane => {
 		lane, profiles: [...definition.profiles], routes: [...routes]
 		, id: evidenceId(lane), kind: "installed"
 		, revision: index.producerCommit
-		, command: `node --test --test-name-pattern='^retained ${lane} owned Subtype evidence replays$' tests/owned-subtype-hosted-ci.test.mjs`
+		, command: ownedSubtypePromotionReplayCommand(lane)
 		, scope: `GitHub Actions run ${index.hostedRun.runId}, job ${index.hostedRun.job.id}, artifact ${index.hostedRun.artifact.id} executes ordinary Lean source and independently reviewed Binding IR through installed ${definition.profiles.join(", ")} packages. ${index.limitations.join(" ")}`
 		, files, artifacts
 	};
 };
 
 /** Replay every evidence lane and derive exact inventory references. */
-export const ownedSubtypePromotionReferences = async () => Promise.all(
-	ownedSubtypePromotionLanes.map(definition => definition.lane === "javascript"
-		? ownedSubtypeJavaScriptPromotionReference()
-		: hostedPromotionReference(definition.lane))
-);
+export const ownedSubtypePromotionReferences = async () =>
+	mapOwnedSubtypePromotionLanes(hostedPromotionReference);
 
 const groups = Object.freeze([
 	{ prefix: "nominal-subtype-npm-fields"
@@ -223,7 +210,9 @@ export const promoteOwnedSubtypes = (original, references) => {
 		assert.match(reference.revision, /^[a-f0-9]{40}$/u);
 		assert.ok(reference.files.length > 0 && reference.artifacts.length > 0);
 	}
-	const inventory = structuredClone(original);
+	// Preserve all archived evidence without cloning its unchanged payload lists.
+	const inventory = { ...original, evidence: [...original.evidence]
+		, observations: [...original.observations] };
 	for(const reference of references)
 	{
 		assert.ok(!inventory.evidence.some(item => item.id === reference.id)
@@ -236,9 +225,11 @@ export const promoteOwnedSubtypes = (original, references) => {
 		assert.ok(reference, group.lane);
 		for(const path of paths)
 		{
-			const observation = inventory.observations.find(item =>
+			const at = inventory.observations.findIndex(item =>
 				item.id === `${group.prefix}-${path}`);
-			assert.ok(observation, `${group.prefix}-${path}`);
+			assert.ok(at >= 0, `${group.prefix}-${path}`);
+			const observation = structuredClone(inventory.observations[at]);
+			inventory.observations[at] = observation;
 			assert.deepEqual(observation.profiles, group.profiles);
 			assert.deepEqual(observation.shapes, ["subtype"]);
 			assert.deepEqual(observation.positions, [position]);
@@ -272,9 +263,8 @@ export const renderOwnedSubtypePromotion = references => {
 		assert.deepEqual(reference.profiles
 			, ownedSubtypePromotionLanes[index].profiles);
 		assert.deepEqual(reference.routes, routes);
-		const link = reference.lane === "javascript"
-			? "owned-subtype-javascript-transfer-acceptance-20261020.json"
-			: `owned-subtype-${reference.lane}-hosted-20261023/index.json`;
+		const link = `${ownedSubtypePromotionArchiveRoot(reference.lane)
+			.slice("docs/evidence/".length)}/index.json`;
 		return `| ${reference.lane} | ${reference.profiles.join(", ")} | ${reference.routes.join(", ")} | [evidence](${link}) | \`${reference.revision}\` |`;
 	});
 	return `# Checked fields inside owned resource values

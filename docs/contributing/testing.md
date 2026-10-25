@@ -232,9 +232,15 @@ shared job artifact do not count as Subtype acceptance. From a checkout with
 the committed archive materialized, replay it with:
 
 ```sh
-node --test --test-name-pattern='^retained javascript owned Subtype hosted evidence replays$' \
-  tests/owned-subtype-hosted-ci.test.mjs
+node scripts/check-owned-subtype-hosted-evidence.mjs --lane javascript
 ```
+
+The same command accepts `native`, `perl`, `languages`, `dotnet`, `jvm`,
+`php-native` and `wit-wasi`. It requires the selected original producer and its
+complete committed archive. Missing or incomplete evidence fails the command.
+The promotion catalog selects the actual archive date for each lane and replays
+one lane at a time. Historical local JavaScript qualifications remain available
+for historical checks; live promotion requires the hosted npm archive.
 
 ### Verify the complete owned checked-record matrix
 

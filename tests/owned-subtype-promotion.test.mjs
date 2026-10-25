@@ -23,6 +23,9 @@ import {
 import {
 	ownedSubtypeDocumentationPaths, renderOwnedSubtypeDocumentation
 } from "./helpers/owned-subtype-documentation.mjs";
+import {
+	ownedSubtypePromotionArchiveRoot, ownedSubtypePromotionEvidenceId
+} from "./helpers/owned-subtype-promotion-catalog.mjs";
 
 const readJson = async path => JSON.parse(await readFile(path, "utf8"));
 const baseline = execFileSync("git", [
@@ -39,8 +42,7 @@ const digest = "0".repeat(64), revision = "0".repeat(40);
 const references = ownedSubtypePromotionLanes.map(item => ({
 	lane: item.lane, profiles: [...item.profiles]
 	, routes: ["ordinary", "reviewed"]
-	, id: `owned-subtype-${item.lane}-${item.lane === "javascript"
-		? "local" : "hosted"}-installed`
+	, id: ownedSubtypePromotionEvidenceId(item.lane)
 	, kind: "installed", revision
 	, command: `Replay ${item.lane} owned Subtype evidence.`
 	, scope: `Test-only ${item.lane} evidence scope.`
@@ -57,6 +59,11 @@ test("owned Subtype promotion closes exactly 32 non-PHP-Wasm cells", () => {
 	const promoted = promoteOwnedSubtypes(document, references);
 	assert.equal(validateTypeSurface(promoted, contracts), true);
 	assert.equal(target.size, 32);
+	assert.notEqual(promoted, document);
+	assert.notEqual(promoted.evidence, document.evidence);
+	assert.notEqual(promoted.observations, document.observations);
+	for(const [index, evidence] of document.evidence.entries())
+		assert.equal(promoted.evidence[index], evidence);
 	const before = new Map(typeSurfaceCells(document, contracts).map(cell =>
 		[cell.id, cell]));
 	let changed = 0;
@@ -100,6 +107,10 @@ test("owned Subtype promotion binds exact lanes and refuses repetition", () => {
 	const wrong = structuredClone(references);
 	wrong[0].profiles = ["php-wasm"];
 	assert.throws(() => promoteOwnedSubtypes(document, wrong)
+		, assert.AssertionError);
+	const historical = structuredClone(references);
+	historical[0].id = "owned-subtype-javascript-local-installed";
+	assert.throws(() => promoteOwnedSubtypes(document, historical)
 		, assert.AssertionError);
 });
 
@@ -167,7 +178,7 @@ test("owned Subtype promotion removes exact stale manual boundaries", async () =
 		, /Expected one owned-Subtype documentation marker/u);
 });
 
-test("JavaScript owned Subtype promotion rechecks both relocated routes"
+test("historical JavaScript owned Subtype qualification rechecks both relocated routes"
 	, async () => {
 		const reference = await ownedSubtypeJavaScriptPromotionReference();
 		assert.deepEqual(reference.profiles
@@ -178,8 +189,8 @@ test("JavaScript owned Subtype promotion rechecks both relocated routes"
 	}
 );
 
-const hostedAvailable = ownedSubtypePromotionLanes.slice(1).every(item =>
-	existsSync(`docs/evidence/owned-subtype-${item.lane}-hosted-20261023/index.json`));
+const hostedAvailable = ownedSubtypePromotionLanes.every(item =>
+	existsSync(`${ownedSubtypePromotionArchiveRoot(item.lane)}/index.json`));
 test("all retained owned Subtype lanes independently replay for promotion"
 	, { skip: !hostedAvailable }, async () => {
 		const actual = await ownedSubtypePromotionReferences();

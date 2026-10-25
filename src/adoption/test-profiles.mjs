@@ -64,6 +64,7 @@ const profileManifest = Object.freeze({
 		, "owned-checked-record-php-wasm-packaging"
 		, "owned-subtype-host-registration-history"
 		, "owned-subtype-hosted-ci"
+		, "owned-subtype-hosted-promotion"
 		, "owned-subtype-javascript-evidence"
 		, "owned-subtype-javascript-hosted"
 		, "owned-subtype-javascript-packaging"
