@@ -64,6 +64,164 @@ static void save_claim(
   unsigned char saved[sizeof(owned_checked_records_claim_t)]
 ) { memcpy(saved, value, sizeof(*value)); }
 
+#ifdef OWNED_CHECKED_RECORDS_TRANSFER_WITH_CLAIM_CALLBACK_ARGUMENT1_T_REQUIRES_RECOVERY
+typedef struct {
+  size_t calls;
+  owned_checked_records_ticket_t holder;
+  mpz_srcptr quota;
+} foreign_callback_state;
+
+static owned_checked_records_status foreign_claim_reply(
+  void *context, owned_checked_records_session *session,
+  const owned_checked_records_claim_t *input,
+  owned_checked_records_claim_t *out, owned_checked_records_result **owner
+) {
+  (void)session; (void)owner;
+  foreign_callback_state *state = context;
+  ++state->calls;
+  CHECK(mpz_cmp_ui(input->quota, 7) == 0);
+  out->holder = state->holder; out->quota = state->quota;
+  return OWNED_CHECKED_RECORDS_OK;
+}
+
+/* The same installed caller exercises native C sessions and independent
+   Wasmtime instances. Every foreign value comes from a real second session. */
+static void check_session_boundaries(
+  owned_checked_records_session *session,
+  owned_checked_records_ticket_t ticket,
+  owned_checked_records_ticket_t retained
+) {
+  owned_checked_records_session *peer = NULL;
+  OK(owned_checked_records_session_open(&peer));
+  CHECK(peer != session);
+  owned_checked_records_result *peer_owner = NULL, *peer_kept_owner = NULL;
+  owned_checked_records_ticket_t peer_ticket = make_ticket(peer, 73, &peer_owner);
+  owned_checked_records_ticket_t peer_kept = NULL;
+  OK(owned_checked_records_ticket_t_retain(peer, peer_ticket,
+    &peer_kept, &peer_kept_owner));
+  mpz_t lo, hi, quota;
+  mpz_init_set_ui(lo, 3); mpz_init_set_ui(hi, 8); mpz_init_set_ui(quota, 7);
+  owned_checked_records_window_t window = {lo, hi};
+  owned_checked_records_booking_t booking = {ticket, &window};
+  owned_checked_records_claim_t valid = {ticket, quota};
+  owned_checked_records_claim_t foreign = {peer_ticket, quota};
+  owned_checked_records_claim_t out;
+  memset(&out, 0xa5, sizeof(out));
+  unsigned char saved[sizeof(out)]; save_claim(&out, saved);
+  owned_checked_records_result *owner = NULL;
+
+  for(size_t iteration = 0; iteration < 10; ++iteration) {
+    CHECK(owned_checked_records_echo_claim(session, &foreign, &out, &owner)
+      == OWNED_CHECKED_RECORDS_INVALID_ARGUMENT);
+    CHECK(owner == NULL && memcmp(saved, &out, sizeof(out)) == 0);
+    CHECK(owned_checked_records_echo_claim(peer, &valid, &out, &owner)
+      == OWNED_CHECKED_RECORDS_INVALID_ARGUMENT);
+    CHECK(owner == NULL && memcmp(saved, &out, sizeof(out)) == 0);
+    CHECK(owned_checked_records_pair_claim(session, &booking, &foreign,
+      &out, &owner) == OWNED_CHECKED_RECORDS_INVALID_ARGUMENT);
+    CHECK(owner == NULL && memcmp(saved, &out, sizeof(out)) == 0);
+
+    owned_checked_records_claim_t entries[] = {valid, foreign};
+    owned_checked_records_echo_claims_argument0_t input = {entries, 2};
+    owned_checked_records_echo_claims_result_t array_out;
+    memset(&array_out, 0xa5, sizeof(array_out));
+    unsigned char array_saved[sizeof(array_out)];
+    memcpy(array_saved, &array_out, sizeof(array_out));
+    CHECK(owned_checked_records_echo_claims(session, &input, &array_out, &owner)
+      == OWNED_CHECKED_RECORDS_INVALID_ARGUMENT);
+    CHECK(owner == NULL && memcmp(array_saved, &array_out, sizeof(array_out)) == 0);
+    CHECK(entries[0].holder == ticket && entries[1].holder == peer_ticket
+      && entries[0].quota == quota && entries[1].quota == quota);
+
+    owned_checked_records_booking_t moving_booking;
+    owned_checked_records_claim_t moving_claim;
+    owned_checked_records_result *first_owner = NULL, *second_owner = NULL;
+    OK(owned_checked_records_booking_t_copy(session, &booking,
+      &moving_booking, &first_owner));
+    OK(owned_checked_records_claim_t_copy(peer, &foreign,
+      &moving_claim, &second_owner));
+    owned_checked_records_result *first_saved = first_owner, *second_saved = second_owner;
+    CHECK(owned_checked_records_transfer_pair_claim(session, &moving_booking,
+      &first_owner, &moving_claim, &second_owner, &out, &owner)
+      == OWNED_CHECKED_RECORDS_INVALID_ARGUMENT);
+    CHECK(first_owner == first_saved && second_owner == second_saved);
+    CHECK(owner == NULL && memcmp(saved, &out, sizeof(out)) == 0);
+    expect_serial(session, moving_booking.holder, 41);
+    expect_serial(peer, moving_claim.holder, 73);
+    release(&first_owner); release(&second_owner);
+    CHECK(booking.holder == ticket && booking.window == &window
+      && mpz_cmp_ui(lo, 3) == 0 && mpz_cmp_ui(hi, 8) == 0
+      && mpz_cmp_ui(quota, 7) == 0);
+    expect_serial(session, retained, 41); expect_serial(peer, peer_kept, 73);
+  }
+
+  foreign_callback_state state = {.calls = 0, .holder = peer_ticket, .quota = quota};
+  claim_callback callback = {
+    .call = foreign_claim_reply, .context = &state, .closure = NULL, .recovery = NULL
+  };
+  CHECK(owned_checked_records_with_claim_callback(session, &valid, &callback,
+    &out, &owner) == OWNED_CHECKED_RECORDS_INVALID_ARGUMENT);
+  CHECK(state.calls == 1 && owner == NULL && memcmp(saved, &out, sizeof(out)) == 0);
+  expect_serial(session, ticket, 41); expect_serial(peer, peer_ticket, 73);
+
+  owned_checked_records_claim_t moving;
+  owned_checked_records_result *moving_owner = NULL;
+  OK(owned_checked_records_claim_t_copy(session, &valid, &moving, &moving_owner));
+  owned_checked_records_result *consumed_owner = moving_owner;
+  CHECK(owned_checked_records_transfer_with_claim_callback(session, &moving,
+    &moving_owner, &callback, &out, &owner) == OWNED_CHECKED_RECORDS_INVALID_ARGUMENT);
+  CHECK(state.calls == 2 && moving_owner == NULL && owner == NULL
+    && memcmp(saved, &out, sizeof(out)) == 0);
+  CHECK(owned_checked_records_result_release(&consumed_owner)
+    == OWNED_CHECKED_RECORDS_INVALID_ARGUMENT);
+  expect_serial(session, retained, 41); expect_serial(peer, peer_kept, 73);
+
+  owned_checked_records_claim_closure_result_t closure = NULL;
+  owned_checked_records_result *closure_owner = NULL;
+  OK(owned_checked_records_claim_closure(session, &closure, &closure_owner));
+  CHECK(owned_checked_records_claim_closure_result_t_call(peer, closure,
+    &foreign, &out, &owner) == OWNED_CHECKED_RECORDS_INVALID_ARGUMENT);
+  CHECK(owner == NULL && memcmp(saved, &out, sizeof(out)) == 0);
+  CHECK(owned_checked_records_claim_closure_result_t_call(session, closure,
+    &foreign, &out, &owner) == OWNED_CHECKED_RECORDS_INVALID_ARGUMENT);
+  CHECK(owner == NULL && memcmp(saved, &out, sizeof(out)) == 0);
+  OK(owned_checked_records_claim_closure_result_t_call(session, closure,
+    &valid, &out, &owner));
+  CHECK(mpz_cmp_ui(out.quota, 7) == 0);
+  expect_serial(session, out.holder, 41); release(&owner); release(&closure_owner);
+
+  release(&peer_owner);
+  memset(&out, 0xa5, sizeof(out)); save_claim(&out, saved);
+  CHECK(owned_checked_records_echo_claim(peer, &foreign, &out, &owner)
+    == OWNED_CHECKED_RECORDS_INVALID_ARGUMENT);
+  CHECK(owner == NULL && memcmp(saved, &out, sizeof(out)) == 0);
+  expect_serial(peer, peer_kept, 73);
+  owned_checked_records_claim_t peer_valid = {peer_kept, quota};
+  owned_checked_records_session *closed_peer = peer;
+  OK(owned_checked_records_session_close(&peer)); CHECK(peer == NULL);
+  CHECK(owned_checked_records_echo_claim(closed_peer, &peer_valid, &out, &owner)
+    == OWNED_CHECKED_RECORDS_CLOSED);
+  CHECK(owner == NULL && memcmp(saved, &out, sizeof(out)) == 0);
+  release(&peer_kept_owner);
+  CHECK(owned_checked_records_session_close(&closed_peer)
+    == OWNED_CHECKED_RECORDS_INVALID_ARGUMENT);
+  expect_serial(session, retained, 41);
+
+  OK(owned_checked_records_session_open(&peer));
+  CHECK(peer != closed_peer);
+  peer_ticket = make_ticket(peer, 89, &peer_owner);
+  CHECK(owned_checked_records_echo_claim(peer, &foreign, &out, &owner)
+    == OWNED_CHECKED_RECORDS_INVALID_ARGUMENT);
+  CHECK(owner == NULL && memcmp(saved, &out, sizeof(out)) == 0);
+  expect_serial(peer, peer_ticket, 89);
+  OK(owned_checked_records_echo_claim(session, &valid, &out, &owner));
+  CHECK(mpz_cmp_ui(out.quota, 7) == 0); expect_serial(session, out.holder, 41);
+  release(&owner); release(&peer_owner);
+  OK(owned_checked_records_session_close(&peer)); CHECK(peer == NULL);
+  mpz_clear(lo); mpz_clear(hi); mpz_clear(quota);
+}
+#endif
+
 int main(void) {
   owned_checked_records_session *session = NULL;
   OK(owned_checked_records_session_open(&session));
@@ -272,6 +430,7 @@ int main(void) {
     &move_owner, &callback, &out, &owner));
   CHECK(move_owner == NULL && mpz_cmp_ui(out.quota, 9) == 0);
   release(&owner); mpz_clear(zero);
+  check_session_boundaries(session, ticket, retained);
 #endif
 
   owned_checked_records_claim_for_result_t produced = {0};

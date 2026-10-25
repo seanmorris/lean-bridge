@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "kind": "owned-checked-c-session-boundaries-source-v1",
+  "sourceBaseCommit": "9f021dd7ea1ab3d7ff5af8a5c815b677e001bd2c",
+  "scope": "Exercise the installed full checked-record C caller through two real native sessions or two real Wasmtime instances. Source qualification does not establish installed runtime acceptance.",
+  "sources": [
+    {
+      "path": "tests/fixtures/structured-types/owned-checked-record-installed.c",
+      "bytes": 22339,
+      "sha256": "620ee5f83e411b7826955f94d93ce2844e4afc42291ad132b6f6bfc29f3b6f26"
+    }
+  ],
+  "cases": {
+    "foreignSessions": {
+      "serials": [
+        41,
+        73,
+        89
+      ],
+      "repetitions": 10,
+      "checks": [
+        "Reject borrowed checked Claims in both session directions without changing output bytes or publishing an owner.",
+        "Reject a foreign second argument and a foreign later array element; preserve the copied and owned input fields.",
+        "Reject a foreign second transfer owner before consuming either input; preserve both original owner identities and recover.",
+        "Reject foreign callback replies both before and after transfer. A post-transfer failure must consume its input owner, reject a stale release, preserve an independent retain and leave output untouched.",
+        "Reject a returned closure in another session and a foreign input to a local closure; then accept a valid local call.",
+        "Reject a resource after its original owner is released while an independent retain remains usable.",
+        "Reject calls through a closed session, release its remaining owner, reopen a distinct session and reject old resource identities.",
+        "Keep the primary session usable after every failure and peer shutdown."
+      ]
+    }
+  },
+  "validation": {
+    "headerChecks": {
+      "tests": 2,
+      "durationMs": 3470.884117,
+      "description": "Existing generator checks compile the complete C and C++ callers against generated native headers, the shared C caller against the original smaller native header, and the transformed C caller against full/result-only WIT headers with -Wall -Wextra -Werror -fsyntax-only."
+    },
+    "inventory": {
+      "bytes": 102579190,
+      "sha256": "6840fa1c4c02d8352bb872c1b0ea5ba0db3f7f49dc2561311b087749391151b6",
+      "liveReferences": 16055,
+      "uniquePaths": 2555,
+      "archivedReferences": 352995,
+      "stalePins": 0,
+      "changedLivePins": 0
+    },
+    "installedRuntimeExecutions": 0
+  },
+  "unchanged": [
+    "Runtime implementation, Lean fixture and selected exports.",
+    "Every result-only caller and its exact observed check-count contract.",
+    "All other host callers, source-free installation, independent rebuild, relocation and recurring CI gates.",
+    "The complete support inventory, author/consumer docs and all original hosted evidence bytes."
+  ],
+  "pending": [
+    "Execute the expanded installed C and WIT consumers through ordinary and reviewed full/result-only hosted packages, retain the original artifacts and independently replay them.",
+    "Complete the original per-host semantic and lifetime audits; these direct session assertions do not establish the remaining hosts.",
+    "Align the final nine-lane producer matrix, reconcile exact evidence/support/docs and satisfy final Core/hosted/recurring gates."
+  ]
+}
