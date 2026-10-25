@@ -1,0 +1,106 @@
+
+> @lean-wasm/bridge-poc@0.0.0-poc test:owned-checked-record-perl
+> LEAN_BRIDGE_OWNED_CHECKED_RECORD_PERL_TEST=1 node --test --test-concurrency=1 tests/owned-checked-record-perl-packaging.test.mjs
+
+TAP version 13
+# Subtest: owned checked-record CPAN projection retains mixed transport
+ok 1 - owned checked-record CPAN projection retains mixed transport
+  ---
+  duration_ms: 58.673737
+  type: 'test'
+  ...
+# Subtest: owned checked-record Perl acceptance is a required recurring job
+ok 2 - owned checked-record Perl acceptance is a required recurring job
+  ---
+  duration_ms: 2.420101
+  type: 'test'
+  ...
+# Subtest: installed ordinary-full owned checked records execute through CPAN archives
+ok 3 - installed ordinary-full owned checked records execute through CPAN archives
+  ---
+  duration_ms: 301907.596398
+  type: 'test'
+  ...
+# ordinary-full: building for 4 Perl ABIs
+# ordinary-full: Compiling checked native Lean exports
+# ordinary-full: Compiling XS for /home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-threaded/bin/perl
+# ordinary-full: Compiling XS for /home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-unthreaded/bin/perl
+# ordinary-full: Compiling XS for /home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-threaded/bin/perl
+# ordinary-full: Compiling XS for /home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-unthreaded/bin/perl
+# {"route":"ordinary-full","perl":"/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-threaded/bin/perl","mode":"prebuilt-only","checks":202}
+# {"route":"ordinary-full","perl":"/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-threaded/bin/perl","mode":"build-xs","checks":202}
+# {"route":"ordinary-full","perl":"/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-unthreaded/bin/perl","mode":"prebuilt-only","checks":202}
+# {"route":"ordinary-full","perl":"/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-unthreaded/bin/perl","mode":"build-xs","checks":202}
+# {"route":"ordinary-full","perl":"/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-threaded/bin/perl","mode":"prebuilt-only","checks":202}
+# {"route":"ordinary-full","perl":"/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-threaded/bin/perl","mode":"build-xs","checks":202}
+# {"route":"ordinary-full","perl":"/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-unthreaded/bin/perl","mode":"prebuilt-only","checks":202}
+# {"route":"ordinary-full","perl":"/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-unthreaded/bin/perl","mode":"build-xs","checks":202}
+# Subtest: installed ordinary-result-only owned checked records execute through CPAN archives
+ok 4 - installed ordinary-result-only owned checked records execute through CPAN archives
+  ---
+  duration_ms: 280059.282438
+  type: 'test'
+  ...
+# ordinary-result-only: building for 4 Perl ABIs
+# ordinary-result-only: Compiling checked native Lean exports
+# ordinary-result-only: Compiling XS for /home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-threaded/bin/perl
+# ordinary-result-only: Compiling XS for /home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-unthreaded/bin/perl
+# ordinary-result-only: Compiling XS for /home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-threaded/bin/perl
+# ordinary-result-only: Compiling XS for /home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-unthreaded/bin/perl
+# {"route":"ordinary-result-only","perl":"/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-threaded/bin/perl","mode":"prebuilt-only","checks":9}
+# {"route":"ordinary-result-only","perl":"/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-threaded/bin/perl","mode":"build-xs","checks":9}
+# {"route":"ordinary-result-only","perl":"/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-unthreaded/bin/perl","mode":"prebuilt-only","checks":9}
+# {"route":"ordinary-result-only","perl":"/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-unthreaded/bin/perl","mode":"build-xs","checks":9}
+# {"route":"ordinary-result-only","perl":"/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-threaded/bin/perl","mode":"prebuilt-only","checks":9}
+# {"route":"ordinary-result-only","perl":"/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-threaded/bin/perl","mode":"build-xs","checks":9}
+# {"route":"ordinary-result-only","perl":"/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-unthreaded/bin/perl","mode":"prebuilt-only","checks":9}
+# {"route":"ordinary-result-only","perl":"/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-unthreaded/bin/perl","mode":"build-xs","checks":9}
+# Subtest: installed reviewed-full owned checked records execute through CPAN archives
+ok 5 - installed reviewed-full owned checked records execute through CPAN archives
+  ---
+  duration_ms: 295735.694242
+  type: 'test'
+  ...
+# reviewed-full: building for 4 Perl ABIs
+# reviewed-full: Compiling checked native Lean exports
+# reviewed-full: Compiling XS for /home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-threaded/bin/perl
+# reviewed-full: Compiling XS for /home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-unthreaded/bin/perl
+# reviewed-full: Compiling XS for /home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-threaded/bin/perl
+# reviewed-full: Compiling XS for /home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-unthreaded/bin/perl
+# {"route":"reviewed-full","perl":"/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-threaded/bin/perl","mode":"prebuilt-only","checks":202}
+# {"route":"reviewed-full","perl":"/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-threaded/bin/perl","mode":"build-xs","checks":202}
+# {"route":"reviewed-full","perl":"/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-unthreaded/bin/perl","mode":"prebuilt-only","checks":202}
+# {"route":"reviewed-full","perl":"/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-unthreaded/bin/perl","mode":"build-xs","checks":202}
+# {"route":"reviewed-full","perl":"/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-threaded/bin/perl","mode":"prebuilt-only","checks":202}
+# {"route":"reviewed-full","perl":"/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-threaded/bin/perl","mode":"build-xs","checks":202}
+# {"route":"reviewed-full","perl":"/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-unthreaded/bin/perl","mode":"prebuilt-only","checks":202}
+# {"route":"reviewed-full","perl":"/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-unthreaded/bin/perl","mode":"build-xs","checks":202}
+# Subtest: installed reviewed-result-only owned checked records execute through CPAN archives
+ok 6 - installed reviewed-result-only owned checked records execute through CPAN archives
+  ---
+  duration_ms: 279467.792185
+  type: 'test'
+  ...
+# reviewed-result-only: building for 4 Perl ABIs
+# reviewed-result-only: Compiling checked native Lean exports
+# reviewed-result-only: Compiling XS for /home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-threaded/bin/perl
+# reviewed-result-only: Compiling XS for /home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-unthreaded/bin/perl
+# reviewed-result-only: Compiling XS for /home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-threaded/bin/perl
+# reviewed-result-only: Compiling XS for /home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-unthreaded/bin/perl
+# {"route":"reviewed-result-only","perl":"/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-threaded/bin/perl","mode":"prebuilt-only","checks":9}
+# {"route":"reviewed-result-only","perl":"/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-threaded/bin/perl","mode":"build-xs","checks":9}
+# {"route":"reviewed-result-only","perl":"/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-unthreaded/bin/perl","mode":"prebuilt-only","checks":9}
+# {"route":"reviewed-result-only","perl":"/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-unthreaded/bin/perl","mode":"build-xs","checks":9}
+# {"route":"reviewed-result-only","perl":"/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-threaded/bin/perl","mode":"prebuilt-only","checks":9}
+# {"route":"reviewed-result-only","perl":"/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-threaded/bin/perl","mode":"build-xs","checks":9}
+# {"route":"reviewed-result-only","perl":"/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-unthreaded/bin/perl","mode":"prebuilt-only","checks":9}
+# {"route":"reviewed-result-only","perl":"/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-unthreaded/bin/perl","mode":"build-xs","checks":9}
+1..6
+# tests 6
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1157575.474711
