@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeOwnedCheckedCSessionBoundariesSource, ownedCheckedCSessionBoundariesNormalizationPaths } from "./owned-checked-c-session-boundaries-source-history.mjs";
 import { beforeEntryFixtureRepairSource, entryFixtureRepairNormalizationPaths } from "./entry-fixture-repair-source-history.mjs";
 import { beforeOwnedCProducerRepairSource, ownedCProducerRepairNormalizationPaths } from "./owned-c-producer-repair-source-history.mjs";
 import { beforeOwnedDotnetProducerRepairSource, ownedDotnetProducerRepairNormalizationPaths } from "./owned-dotnet-producer-repair-source-history.mjs";
@@ -2194,7 +2195,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...ownedCheckedPhpWasmContextsNormalizationPaths
+	...ownedCheckedCSessionBoundariesNormalizationPaths
+	, ...ownedCheckedPhpWasmContextsNormalizationPaths
 	, ...wasmtimeCapiRolloutNormalizationPaths
 	, ...ownedCheckedWitBootstrapNormalizationPaths
 	, ...ownedCheckedPhpWasmMixedCoverageNormalizationPaths
@@ -3131,7 +3133,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeOwnedCheckedPhpWasmContextsSource(path, text, expected);
+	let stage = beforeOwnedCheckedCSessionBoundariesSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeOwnedCheckedPhpWasmContextsSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;

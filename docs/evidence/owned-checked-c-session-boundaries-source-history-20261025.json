@@ -1,0 +1,84 @@
+{
+  "additions": [
+    {
+      "currentSha256": "59c8360f7489cf15d978675812f2cb13efe731ee41e87eb9291eee28fb5a6c44",
+      "path": "docs/evidence/owned-checked-c-session-boundaries-20261025.json"
+    },
+    {
+      "currentSha256": "5aac316a9b3b6e0f052125f09c6da6cd5b36f1367bc848600cb4ea52736ffa0f",
+      "path": "scripts/update-owned-checked-c-session-boundaries-source-history.mjs"
+    },
+    {
+      "currentSha256": "d18ff2300e1b8698a502be923367681ec2eed44477bf4651fe4c6ab4e6d0718a",
+      "path": "tests/helpers/owned-checked-c-session-boundaries-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "e3cc954646d83d86123ca1bd639b4f4c20caca478348710184890528338da37c",
+      "path": "tests/helpers/owned-checked-c-session-boundaries-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "fb5269796450ad3f500f22c7619f982d64c3cea2",
+  "implementationCommits": [
+    "fb5269796450ad3f500f22c7619f982d64c3cea2"
+  ],
+  "integrationBaseCommit": "fb5269796450ad3f500f22c7619f982d64c3cea2",
+  "integrationUpdates": [
+    {
+      "currentSha256": "792f8a5eca6cab35a4a9f045fd772f9c895cf58dcc67916379f8cd97d9fbddeb",
+      "edits": [
+        {
+          "current": "import { beforeOwnedCheckedCSessionBoundariesSource, ownedCheckedCSessionBoundariesNormalizationPaths } from \"./owned-checked-c-session-boundaries-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...ownedCheckedCSessionBoundariesNormalizationPaths\n\t, ...ownedCheckedPhpWasmContextsNormalizationPaths\n",
+          "previous": "\t...ownedCheckedPhpWasmContextsNormalizationPaths\n",
+          "start": 188239
+        },
+        {
+          "current": "\tlet stage = beforeOwnedCheckedCSessionBoundariesSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeOwnedCheckedPhpWasmContextsSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeOwnedCheckedPhpWasmContextsSource(path, text, expected);\n",
+          "start": 233434
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "e85845a63a0ff40110986e3228ba3b0cadcb8b4b6b0d810de60971f414891c7d"
+    },
+    {
+      "currentSha256": "8645c3219dc80718288712ec410dc992e2fe56cbcc4f5afb5a626d78f8c434cf",
+      "edits": [
+        {
+          "current": "import \"./helpers/owned-checked-c-session-boundaries-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 10147
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "6d9991e45c2eae193aca6109b51554e670716134f994659227583d009c0664a0"
+    }
+  ],
+  "milestone": "owned-checked-c-session-boundaries-source-v1",
+  "predecessorCommit": "9f021dd7ea1ab3d7ff5af8a5c815b677e001bd2c",
+  "schemaVersion": 1,
+  "scope": "Add real foreign-session rejection to the full checked-record C caller, reused by WIT with independently opened Wasmtime instances. Cover both borrowed directions, a later array element, a foreign second transfer owner, callback replies before and after transfer, closure affinity, released and closed identities, independent retains and recovery. Preserve runtime, Lean selections, every result-only caller, inventory/support and original evidence. Strict generated-header checks pass; actual installed native/WIT execution, original artifacts and final matrix gates remain pending.",
+  "updates": [
+    {
+      "currentSha256": "620ee5f83e411b7826955f94d93ce2844e4afc42291ad132b6f6bfc29f3b6f26",
+      "edits": [
+        {
+          "current": "#ifdef OWNED_CHECKED_RECORDS_TRANSFER_WITH_CLAIM_CALLBACK_ARGUMENT1_T_REQUIRES_RECOVERY\ntypedef struct {\n  size_t calls;\n  owned_checked_records_ticket_t holder;\n  mpz_srcptr quota;\n} foreign_callback_state;\n\nstatic owned_checked_records_status foreign_claim_reply(\n  void *context, owned_checked_records_session *session,\n  const owned_checked_records_claim_t *input,\n  owned_checked_records_claim_t *out, owned_checked_records_result **owner\n) {\n  (void)session; (void)owner;\n  foreign_callback_state *state = context;\n  ++state->calls;\n  CHECK(mpz_cmp_ui(input->quota, 7) == 0);\n  out->holder = state->holder; out->quota = state->quota;\n  return OWNED_CHECKED_RECORDS_OK;\n}\n\n/* The same installed caller exercises native C sessions and independent\n   Wasmtime instances. Every foreign value comes from a real second session. */\nstatic void check_session_boundaries(\n  owned_checked_records_session *session,\n  owned_checked_records_ticket_t ticket,\n  owned_checked_records_ticket_t retained\n) {\n  owned_checked_records_session *peer = NULL;\n  OK(owned_checked_records_session_open(&peer));\n  CHECK(peer != session);\n  owned_checked_records_result *peer_owner = NULL, *peer_kept_owner = NULL;\n  owned_checked_records_ticket_t peer_ticket = make_ticket(peer, 73, &peer_owner);\n  owned_checked_records_ticket_t peer_kept = NULL;\n  OK(owned_checked_records_ticket_t_retain(peer, peer_ticket,\n    &peer_kept, &peer_kept_owner));\n  mpz_t lo, hi, quota;\n  mpz_init_set_ui(lo, 3); mpz_init_set_ui(hi, 8); mpz_init_set_ui(quota, 7);\n  owned_checked_records_window_t window = {lo, hi};\n  owned_checked_records_booking_t booking = {ticket, &window};\n  owned_checked_records_claim_t valid = {ticket, quota};\n  owned_checked_records_claim_t foreign = {peer_ticket, quota};\n  owned_checked_records_claim_t out;\n  memset(&out, 0xa5, sizeof(out));\n  unsigned char saved[sizeof(out)]; save_claim(&out, saved);\n  owned_checked_records_result *owner = NULL;\n\n  for(size_t iteration = 0; iteration < 10; ++iteration) {\n    CHECK(owned_checked_records_echo_claim(session, &foreign, &out, &owner)\n      == OWNED_CHECKED_RECORDS_INVALID_ARGUMENT);\n    CHECK(owner == NULL && memcmp(saved, &out, sizeof(out)) == 0);\n    CHECK(owned_checked_records_echo_claim(peer, &valid, &out, &owner)\n      == OWNED_CHECKED_RECORDS_INVALID_ARGUMENT);\n    CHECK(owner == NULL && memcmp(saved, &out, sizeof(out)) == 0);\n    CHECK(owned_checked_records_pair_claim(session, &booking, &foreign,\n      &out, &owner) == OWNED_CHECKED_RECORDS_INVALID_ARGUMENT);\n    CHECK(owner == NULL && memcmp(saved, &out, sizeof(out)) == 0);\n\n    owned_checked_records_claim_t entries[] = {valid, foreign};\n    owned_checked_records_echo_claims_argument0_t input = {entries, 2};\n    owned_checked_records_echo_claims_result_t array_out;\n    memset(&array_out, 0xa5, sizeof(array_out));\n    unsigned char array_saved[sizeof(array_out)];\n    memcpy(array_saved, &array_out, sizeof(array_out));\n    CHECK(owned_checked_records_echo_claims(session, &input, &array_out, &owner)\n      == OWNED_CHECKED_RECORDS_INVALID_ARGUMENT);\n    CHECK(owner == NULL && memcmp(array_saved, &array_out, sizeof(array_out)) == 0);\n    CHECK(entries[0].holder == ticket && entries[1].holder == peer_ticket\n      && entries[0].quota == quota && entries[1].quota == quota);\n\n    owned_checked_records_booking_t moving_booking;\n    owned_checked_records_claim_t moving_claim;\n    owned_checked_records_result *first_owner = NULL, *second_owner = NULL;\n    OK(owned_checked_records_booking_t_copy(session, &booking,\n      &moving_booking, &first_owner));\n    OK(owned_checked_records_claim_t_copy(peer, &foreign,\n      &moving_claim, &second_owner));\n    owned_checked_records_result *first_saved = first_owner, *second_saved = second_owner;\n    CHECK(owned_checked_records_transfer_pair_claim(session, &moving_booking,\n      &first_owner, &moving_claim, &second_owner, &out, &owner)\n      == OWNED_CHECKED_RECORDS_INVALID_ARGUMENT);\n    CHECK(first_owner == first_saved && second_owner == second_saved);\n    CHECK(owner == NULL && memcmp(saved, &out, sizeof(out)) == 0);\n    expect_serial(session, moving_booking.holder, 41);\n    expect_serial(peer, moving_claim.holder, 73);\n    release(&first_owner); release(&second_owner);\n    CHECK(booking.holder == ticket && booking.window == &window\n      && mpz_cmp_ui(lo, 3) == 0 && mpz_cmp_ui(hi, 8) == 0\n      && mpz_cmp_ui(quota, 7) == 0);\n    expect_serial(session, retained, 41); expect_serial(peer, peer_kept, 73);\n  }\n\n  foreign_callback_state state = {.calls = 0, .holder = peer_ticket, .quota = quota};\n  claim_callback callback = {\n    .call = foreign_claim_reply, .context = &state, .closure = NULL, .recovery = NULL\n  };\n  CHECK(owned_checked_records_with_claim_callback(session, &valid, &callback,\n    &out, &owner) == OWNED_CHECKED_RECORDS_INVALID_ARGUMENT);\n  CHECK(state.calls == 1 && owner == NULL && memcmp(saved, &out, sizeof(out)) == 0);\n  expect_serial(session, ticket, 41); expect_serial(peer, peer_ticket, 73);\n\n  owned_checked_records_claim_t moving;\n  owned_checked_records_result *moving_owner = NULL;\n  OK(owned_checked_records_claim_t_copy(session, &valid, &moving, &moving_owner));\n  owned_checked_records_result *consumed_owner = moving_owner;\n  CHECK(owned_checked_records_transfer_with_claim_callback(session, &moving,\n    &moving_owner, &callback, &out, &owner) == OWNED_CHECKED_RECORDS_INVALID_ARGUMENT);\n  CHECK(state.calls == 2 && moving_owner == NULL && owner == NULL\n    && memcmp(saved, &out, sizeof(out)) == 0);\n  CHECK(owned_checked_records_result_release(&consumed_owner)\n    == OWNED_CHECKED_RECORDS_INVALID_ARGUMENT);\n  expect_serial(session, retained, 41); expect_serial(peer, peer_kept, 73);\n\n  owned_checked_records_claim_closure_result_t closure = NULL;\n  owned_checked_records_result *closure_owner = NULL;\n  OK(owned_checked_records_claim_closure(session, &closure, &closure_owner));\n  CHECK(owned_checked_records_claim_closure_result_t_call(peer, closure,\n    &foreign, &out, &owner) == OWNED_CHECKED_RECORDS_INVALID_ARGUMENT);\n  CHECK(owner == NULL && memcmp(saved, &out, sizeof(out)) == 0);\n  CHECK(owned_checked_records_claim_closure_result_t_call(session, closure,\n    &foreign, &out, &owner) == OWNED_CHECKED_RECORDS_INVALID_ARGUMENT);\n  CHECK(owner == NULL && memcmp(saved, &out, sizeof(out)) == 0);\n  OK(owned_checked_records_claim_closure_result_t_call(session, closure,\n    &valid, &out, &owner));\n  CHECK(mpz_cmp_ui(out.quota, 7) == 0);\n  expect_serial(session, out.holder, 41); release(&owner); release(&closure_owner);\n\n  release(&peer_owner);\n  memset(&out, 0xa5, sizeof(out)); save_claim(&out, saved);\n  CHECK(owned_checked_records_echo_claim(peer, &foreign, &out, &owner)\n    == OWNED_CHECKED_RECORDS_INVALID_ARGUMENT);\n  CHECK(owner == NULL && memcmp(saved, &out, sizeof(out)) == 0);\n  expect_serial(peer, peer_kept, 73);\n  owned_checked_records_claim_t peer_valid = {peer_kept, quota};\n  owned_checked_records_session *closed_peer = peer;\n  OK(owned_checked_records_session_close(&peer)); CHECK(peer == NULL);\n  CHECK(owned_checked_records_echo_claim(closed_peer, &peer_valid, &out, &owner)\n    == OWNED_CHECKED_RECORDS_CLOSED);\n  CHECK(owner == NULL && memcmp(saved, &out, sizeof(out)) == 0);\n  release(&peer_kept_owner);\n  CHECK(owned_checked_records_session_close(&closed_peer)\n    == OWNED_CHECKED_RECORDS_INVALID_ARGUMENT);\n  expect_serial(session, retained, 41);\n\n  OK(owned_checked_records_session_open(&peer));\n  CHECK(peer != closed_peer);\n  peer_ticket = make_ticket(peer, 89, &peer_owner);\n  CHECK(owned_checked_records_echo_claim(peer, &foreign, &out, &owner)\n    == OWNED_CHECKED_RECORDS_INVALID_ARGUMENT);\n  CHECK(owner == NULL && memcmp(saved, &out, sizeof(out)) == 0);\n  expect_serial(peer, peer_ticket, 89);\n  OK(owned_checked_records_echo_claim(session, &valid, &out, &owner));\n  CHECK(mpz_cmp_ui(out.quota, 7) == 0); expect_serial(session, out.holder, 41);\n  release(&owner); release(&peer_owner);\n  OK(owned_checked_records_session_close(&peer)); CHECK(peer == NULL);\n  mpz_clear(lo); mpz_clear(hi); mpz_clear(quota);\n}\n#endif\n\n",
+          "previous": "",
+          "start": 2571
+        },
+        {
+          "current": "  check_session_boundaries(session, ticket, retained);\n",
+          "previous": "",
+          "start": 21642
+        }
+      ],
+      "path": "tests/fixtures/structured-types/owned-checked-record-installed.c",
+      "previousSha256": "3eaad154a0f871bc58d23c9a40ace054b843f9d2475b138f73df4d2c424c5d21"
+    }
+  ]
+}
