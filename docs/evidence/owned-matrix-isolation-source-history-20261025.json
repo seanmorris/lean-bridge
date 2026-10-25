@@ -1,0 +1,169 @@
+{
+  "additions": [
+    {
+      "currentSha256": "2807296d6ecf51e0c2f3870d859db8661039a0d7d13f42df4725265303ab6530",
+      "path": "scripts/update-owned-matrix-isolation-source-history.mjs"
+    },
+    {
+      "currentSha256": "d676d24feb0510d25816e8c8033c49eec277388dc2f3b376b7a1b50a0ea4abf2",
+      "path": "tests/helpers/owned-matrix-isolation-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "4baa74d619bef4354025557a0540f8470a3a3cd4aeed8c406c1ef91c833f59bb",
+      "path": "tests/helpers/owned-matrix-isolation-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "d768942c5a38aa9907dfc98101418876d8040343",
+  "implementationCommits": [
+    "d768942c5a38aa9907dfc98101418876d8040343"
+  ],
+  "integrationBaseCommit": "d768942c5a38aa9907dfc98101418876d8040343",
+  "integrationUpdates": [
+    {
+      "currentSha256": "b5d2095a5b6f53e669232cd273484d06c18ecf229ca8776d3cfc5eccc94eb16a",
+      "edits": [
+        {
+          "current": "import { beforeOwnedMatrixIsolationSource, ownedMatrixIsolationNormalizationPaths } from \"./owned-matrix-isolation-source-history.mjs\";\n",
+          "previous": "",
+          "start": 13005
+        },
+        {
+          "current": "\t...ownedMatrixIsolationNormalizationPaths\n\t, ...ownedReceiptProducerReplayNormalizationPaths\n",
+          "previous": "\t...ownedReceiptProducerReplayNormalizationPaths\n",
+          "start": 186180
+        },
+        {
+          "current": "\tlet stage = beforeOwnedMatrixIsolationSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeOwnedReceiptProducerReplaySource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeOwnedReceiptProducerReplaySource(path, text, expected);\n",
+          "start": 230700
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "882dbb2f86e3daf804136b3d6e362bf1a5fb6e5299367985cd01561f3bd446e9"
+    },
+    {
+      "currentSha256": "5f504ea2b6144fae48328eb91f5ee98df98e2c2b37040d8f3cc0149d4c036458",
+      "edits": [
+        {
+          "current": "import \"./helpers/owned-matrix-isolation-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 9044
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "535049f4f15a75cf750f0b1bfcec6c775306ce5c07a6a445a127f938b14aeadc"
+    }
+  ],
+  "milestone": "owned-matrix-isolation-source-v1",
+  "predecessorCommit": "2b876ce4326265099d04d427c55cb9f20c7a6ebb",
+  "schemaVersion": 1,
+  "scope": "Authenticate each selected owned archive directly from Git, then materialize and fully replay only that archive in an isolated temporary directory. This removes the requirement to materialize all eleven archive trees in a sparse checkout and preserves all API, original ZIP, package, TAP and source checks. Drain tar padding to EOF, check both subprocesses, and remove temporary copies on success or rejection without touching checkout files. Ten matrix tests and a complete real native archive replay pass under one low-priority CPU and a 512 MiB heap. Refresh exactly eleven live verifier hashes; all support cells, documentation, original archives and prior selection bytes remain unchanged. The stronger npm/browser selection is retained separately. Complete matrix rollover and final hosted gates remain open.",
+  "updates": [
+    {
+      "currentSha256": "ed178af18a7e5d4034613a3c8973f44bef058c5c3ab64b99298199691b64380d",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"6e004e92ee882c3d441ef3d252666ff950477e559af2fb4e34b4e89f84c14c94\"\n",
+          "previous": "          \"sha256\": \"484c06ad5ca07ec0a56c4e26d49a738f8ef4e9bf17aef7432ff04e7020037400\"\n",
+          "start": 89523716
+        },
+        {
+          "current": "          \"sha256\": \"6e004e92ee882c3d441ef3d252666ff950477e559af2fb4e34b4e89f84c14c94\"\n",
+          "previous": "          \"sha256\": \"484c06ad5ca07ec0a56c4e26d49a738f8ef4e9bf17aef7432ff04e7020037400\"\n",
+          "start": 89530575
+        },
+        {
+          "current": "          \"sha256\": \"6e004e92ee882c3d441ef3d252666ff950477e559af2fb4e34b4e89f84c14c94\"\n",
+          "previous": "          \"sha256\": \"484c06ad5ca07ec0a56c4e26d49a738f8ef4e9bf17aef7432ff04e7020037400\"\n",
+          "start": 89536777
+        },
+        {
+          "current": "          \"sha256\": \"6e004e92ee882c3d441ef3d252666ff950477e559af2fb4e34b4e89f84c14c94\"\n",
+          "previous": "          \"sha256\": \"484c06ad5ca07ec0a56c4e26d49a738f8ef4e9bf17aef7432ff04e7020037400\"\n",
+          "start": 89542967
+        },
+        {
+          "current": "          \"sha256\": \"6e004e92ee882c3d441ef3d252666ff950477e559af2fb4e34b4e89f84c14c94\"\n",
+          "previous": "          \"sha256\": \"484c06ad5ca07ec0a56c4e26d49a738f8ef4e9bf17aef7432ff04e7020037400\"\n",
+          "start": 89549149
+        },
+        {
+          "current": "          \"sha256\": \"6e004e92ee882c3d441ef3d252666ff950477e559af2fb4e34b4e89f84c14c94\"\n",
+          "previous": "          \"sha256\": \"484c06ad5ca07ec0a56c4e26d49a738f8ef4e9bf17aef7432ff04e7020037400\"\n",
+          "start": 89555351
+        },
+        {
+          "current": "          \"sha256\": \"6e004e92ee882c3d441ef3d252666ff950477e559af2fb4e34b4e89f84c14c94\"\n",
+          "previous": "          \"sha256\": \"484c06ad5ca07ec0a56c4e26d49a738f8ef4e9bf17aef7432ff04e7020037400\"\n",
+          "start": 89561531
+        },
+        {
+          "current": "          \"sha256\": \"6e004e92ee882c3d441ef3d252666ff950477e559af2fb4e34b4e89f84c14c94\"\n",
+          "previous": "          \"sha256\": \"484c06ad5ca07ec0a56c4e26d49a738f8ef4e9bf17aef7432ff04e7020037400\"\n",
+          "start": 89567699
+        },
+        {
+          "current": "          \"sha256\": \"6e004e92ee882c3d441ef3d252666ff950477e559af2fb4e34b4e89f84c14c94\"\n",
+          "previous": "          \"sha256\": \"484c06ad5ca07ec0a56c4e26d49a738f8ef4e9bf17aef7432ff04e7020037400\"\n",
+          "start": 89573867
+        },
+        {
+          "current": "          \"sha256\": \"6e004e92ee882c3d441ef3d252666ff950477e559af2fb4e34b4e89f84c14c94\"\n",
+          "previous": "          \"sha256\": \"484c06ad5ca07ec0a56c4e26d49a738f8ef4e9bf17aef7432ff04e7020037400\"\n",
+          "start": 89579424
+        },
+        {
+          "current": "          \"sha256\": \"6e004e92ee882c3d441ef3d252666ff950477e559af2fb4e34b4e89f84c14c94\"\n",
+          "previous": "          \"sha256\": \"484c06ad5ca07ec0a56c4e26d49a738f8ef4e9bf17aef7432ff04e7020037400\"\n",
+          "start": 89584616
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "779d28b0b7f980f24f0a9cb4b1fdd85a6dd6e3a80447bcf18b2514fcb482e7a5"
+    },
+    {
+      "currentSha256": "182954aed1884cb6d51b198808c9639f08a527b7038d3f98c2fd3f24e6987be0",
+      "edits": [
+        {
+          "current": "import { access, chmod, mkdir, mkdtemp, readFile, rm, writeFile } from \"node:fs/promises\";\n",
+          "previous": "import { chmod, mkdir, mkdtemp, rm, writeFile } from \"node:fs/promises\";\n",
+          "start": 184
+        },
+        {
+          "current": "\t, withOwnedCheckedRecordCommittedArchive\n",
+          "previous": "",
+          "start": 775
+        },
+        {
+          "current": "\ntest(\"owned matrix isolated replay uses committed bytes and removes only its temporary tree\", async t => {\n\tconst { repository, root, index, revision } = await committedFixture(t);\n\tawait writeFile(join(repository, root, \"text\"), \"leave this local edit intact\");\n\tlet temporary;\n\tconst result = await withOwnedCheckedRecordCommittedArchive(\n\t\trevision, root, index, async path => {\n\t\t\ttemporary = path;\n\t\t\tassert.deepEqual(await readFile(join(path, \"index.json\")), index);\n\t\t\tassert.equal(await readFile(join(path, \"text\"), \"utf8\"), \"alpha\\n\\0omega\\n\");\n\t\t\tassert.equal((await readFile(join(path, \"binary\"))).length, 256 * 1024 + 17);\n\t\t\treturn \"inspected\";\n\t\t}, repository\n\t);\n\tassert.equal(result.committed.files, 4);\n\tassert.equal(result.result, \"inspected\");\n\tawait assert.rejects(access(temporary), { code: \"ENOENT\" });\n\tassert.equal(await readFile(join(repository, root, \"text\"), \"utf8\"), \"leave this local edit intact\");\n});\n\ntest(\"owned matrix isolated replay cleans failed inspection and refuses uncommitted evidence\", async t => {\n\tconst { repository, root, index, revision } = await committedFixture(t);\n\tlet temporary, calls = 0;\n\tconst failure = new Error(\"inspection rejected\");\n\tawait assert.rejects(withOwnedCheckedRecordCommittedArchive(\n\t\trevision, root, index, path => {\n\t\t\ttemporary = path; calls++; throw failure;\n\t\t}, repository\n\t), error => error === failure);\n\tawait assert.rejects(access(temporary), { code: \"ENOENT\" });\n\tawait assert.rejects(withOwnedCheckedRecordCommittedArchive(\n\t\trevision, root, Buffer.concat([index, Buffer.from(\" \")]), () => { calls++; }, repository\n\t));\n\tassert.equal(calls, 1);\n});\n\ntest(\"owned matrix isolated replay drains large padded archives before accepting extraction\", async t => {\n\tconst fixture = await committedFixture(t);\n\tconst bytes = Buffer.alloc(9 * 1024 * 1024 + 511, 137);\n\tawait writeFile(join(fixture.repository, fixture.root, \"binary\"), bytes);\n\tconst index = JSON.parse(fixture.index);\n\tconst file = index.files.find(item => item.path === \"binary\");\n\tfile.bytes = bytes.length; file.sha256 = sha256(bytes);\n\tconst indexBytes = Buffer.from(canonicalJson(index));\n\tawait writeFile(join(fixture.repository, fixture.root, \"index.json\"), indexBytes);\n\tconst { committed } = await withOwnedCheckedRecordCommittedArchive(\n\t\tfixture.commit(), fixture.root, indexBytes, async path => {\n\t\t\tassert.deepEqual(await readFile(join(path, \"binary\")), bytes);\n\t\t}, fixture.repository\n\t);\n\tassert.equal(committed.files, 4);\n});\n",
+          "previous": "",
+          "start": 8230
+        }
+      ],
+      "path": "tests/helpers/owned-checked-record-hosted-matrix-tests.mjs",
+      "previousSha256": "df5b0068a99dc33f8b1ae56eb47d8ae6a89c3c0c0919ef068a8315b61a4ae036"
+    },
+    {
+      "currentSha256": "6e004e92ee882c3d441ef3d252666ff950477e559af2fb4e34b4e89f84c14c94",
+      "edits": [
+        {
+          "current": "import { mkdtemp, readFile, rm } from \"node:fs/promises\";\nimport { tmpdir } from \"node:os\";\nimport { dirname, join } from \"node:path\";\nimport { pipeline } from \"node:stream/promises\";\n",
+          "previous": "import { readFile } from \"node:fs/promises\";\nimport { dirname } from \"node:path\";\n",
+          "start": 241
+        },
+        {
+          "current": "/**\n * Replay one authenticated Git archive in an isolated temporary directory.\n * Sparse checkouts need not retain all eleven multi-gigabyte archive trees.\n * The callback still performs the full API/ZIP/package/source verification.\n *\n * @param revision - Exact committed revision.\n * @param root - Closed repository-relative archive root.\n * @param indexBytes - Selected original index bytes.\n * @param inspect - Archive consumer, never a replacement for the Git audit.\n * @param repository - Git repository location for isolated tests.\n */\nexport const withOwnedCheckedRecordCommittedArchive = async (\n\trevision, root, indexBytes, inspect, repository = process.cwd()\n) => {\n\tassert.equal(typeof inspect, \"function\");\n\tconst committed = await assertOwnedCheckedRecordCommittedArchive(\n\t\trevision, root, indexBytes, repository\n\t);\n\tconst temporary = await mkdtemp(join(tmpdir(), \"lean-owned-matrix-\"));\n\tconst children = [], completions = [];\n\tconst start = (command, arguments_) => {\n\t\tconst child = spawn(command, arguments_, { stdio: [\"pipe\", \"pipe\", \"pipe\"] });\n\t\tchildren.push(child);\n\t\tlet errors = \"\";\n\t\tchild.stderr.setEncoding(\"utf8\");\n\t\tchild.stderr.on(\"data\", text => { errors = (errors + text).slice(-4096); });\n\t\tconst completed = new Promise((accept, reject) => {\n\t\t\tchild.once(\"error\", reject);\n\t\t\tchild.once(\"close\", (code, signal) => {\n\t\t\t\tif(code === 0) accept();\n\t\t\t\telse reject(new Error(`${command} failed: ${code}/${signal}: ${errors}`));\n\t\t\t});\n\t\t});\n\t\tcompleted.catch(() => {});\n\t\tcompletions.push(completed);\n\t\treturn child;\n\t};\n\ttry\n\t{\n\t\tconst source = start(\"git\", [\"-C\", repository, \"archive\", \"--format=tar\", revision, \"--\", root]);\n\t\t// Read through the final padding to EOF before closing the pipe.\n\t\tconst extract = start(\"tar\", [\"-x\", \"-i\", \"-f\", \"-\", \"-C\", temporary]);\n\t\tsource.stdin.end(); extract.stdout.resume();\n\t\tconst outcomes = await Promise.allSettled([\n\t\t\t...completions, pipeline(source.stdout, extract.stdin)\n\t\t]);\n\t\tconst failures = outcomes.filter(outcome => outcome.status === \"rejected\")\n\t\t\t.map(outcome => outcome.reason);\n\t\tif(failures.length) throw new AggregateError(failures, \"Committed archive extraction failed\");\n\t\tconst result = await inspect(join(temporary, root));\n\t\treturn { committed, result };\n\t}\n\tfinally\n\t{\n\t\tfor(const child of children)\n\t\t{\n\t\t\tchild.stdin.destroy(); child.stdout.destroy();\n\t\t\tif(child.exitCode === null) child.kill();\n\t\t}\n\t\tawait Promise.allSettled(completions);\n\t\tawait rm(temporary, { recursive: true });\n\t}\n};\n\n",
+          "previous": "",
+          "start": 7758
+        },
+        {
+          "current": "\t\tconst { committed, result: index } = await withOwnedCheckedRecordCommittedArchive(\n\t\t\trevision, root, bytes[position]\n\t\t\t, temporary => checkOwnedCheckedRecordHostedEvidence(entry.lane, temporary)\n\t\t);\n",
+          "previous": "\t\tconst committed = await assertOwnedCheckedRecordCommittedArchive(revision, root, bytes[position]);\n\t\tconst index = await checkOwnedCheckedRecordHostedEvidence(entry.lane, root);\n",
+          "start": 11238
+        }
+      ],
+      "path": "tests/helpers/owned-checked-record-hosted-matrix.mjs",
+      "previousSha256": "484c06ad5ca07ec0a56c4e26d49a738f8ef4e9bf17aef7432ff04e7020037400"
+    }
+  ]
+}
