@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 1,
+  "kind": "owned-subtype-promotion-transaction-source-v1",
+  "sourceBaseCommit": "9e571b4214df98e1b8d0319f24fe7b6729ab34ba",
+  "implementationCommit": "5d284895f6dc32b5ad855cee8a621f4779db91e0",
+  "implementationCommits": [
+    "5d284895f6dc32b5ad855cee8a621f4779db91e0"
+  ],
+  "scope": "Bind all eight independently replayed original owned-Subtype archives through their canonical complete index, original run/job/artifact API records and every original ZIP part. Keep all original byte-level replay and exact lane coverage. Stage the inventory and every rendered document before installation, enforce the existing 100 MiB guard, and roll back only this transaction's own changes. Add required clean-HEAD and no-write preflight controls. Freeze regression inputs at 9e571b4 while testing the current transformation, validators and renderers. Preserve separately qualified owned checked-record documentation. Refresh exactly eleven live documentation pins and preserve every previous evidence entry and support observation. This source milestone does not itself publish the 32-cell support update or establish new installed-runtime execution.",
+  "sources": [
+    {
+      "path": "docs/contributing/testing.md",
+      "bytes": 266188,
+      "sha256": "cab259e552316b78b66f1bfcd53dd58537d04f7216edcce2a1fe40fad74cfc40"
+    },
+    {
+      "path": "docs/type-surface.v1.json",
+      "bytes": 102579190,
+      "sha256": "b7157a9bd3718717127c82564991d7611d02deefd9af303aa63f8649e073eb27"
+    },
+    {
+      "path": "scripts/promote-owned-subtype-evidence.mjs",
+      "bytes": 4424,
+      "sha256": "e5a7631fcc4f6100bd07d401dd0dbaf8e32764f2379528a8a11b542b27516194"
+    },
+    {
+      "path": "tests/helpers/owned-subtype-documentation.mjs",
+      "bytes": 5625,
+      "sha256": "a1dcb6e6b07e57d389f203f5bf015e10c7898f1cc9b8225e7ef2d50e172c70b9"
+    },
+    {
+      "path": "tests/helpers/owned-subtype-promotion.mjs",
+      "bytes": 14155,
+      "sha256": "17723722394de0cd7c2036bda0910ff65fc48555f9d47b65635190e2f55dd3f8"
+    },
+    {
+      "path": "tests/owned-subtype-hosted-promotion.test.mjs",
+      "bytes": 9783,
+      "sha256": "188b4dee9e49f0c1f7f9170a5e45a834ff6881e6f27dbb45c90d1b0471c79db3"
+    },
+    {
+      "path": "tests/owned-subtype-promotion.test.mjs",
+      "bytes": 9706,
+      "sha256": "ac532b078ab407921395b45c979dbc3600f36339ee16a15fe47f3ab825270e99"
+    },
+    {
+      "path": "tests/helpers/owned-subtype-promotion-archive-references.mjs",
+      "bytes": 2804,
+      "sha256": "ada6ae987eee5ee034526d39ed0d17dbf0df3bccddde3c2679dc67bfaa08766f"
+    },
+    {
+      "path": "tests/helpers/owned-subtype-promotion-transaction-tests.mjs",
+      "bytes": 9256,
+      "sha256": "482c74e60b0bc7a544590920385c18d78503f342d7579c33b4522c31c3bd77d1"
+    }
+  ],
+  "contract": {
+    "hostedLanes": 8,
+    "consumerProfiles": 16,
+    "promotionCells": 32,
+    "serialReplay": true,
+    "missingEvidenceFails": true,
+    "compactManifestBinding": true,
+    "streamingInventory": true,
+    "preflightBeforeInstall": true,
+    "rollbackPreservesExternalEdits": true
+  },
+  "validation": {
+    "focused": {
+      "passed": 35,
+      "failed": 0,
+      "skipped": 0,
+      "durationMs": 139648.95861,
+      "archiveReplayMs": 99235.17846,
+      "fullOriginalLanes": 8,
+      "command": "node --max-old-space-size=512 --test --test-concurrency=1 --test-name-pattern='^(?!all retained owned Subtype lanes)' tests/owned-subtype-hosted-promotion.test.mjs tests/owned-subtype-promotion.test.mjs tests/helpers/promotion-file-transaction-tests.mjs tests/helpers/type-surface-promotion-io-tests.mjs",
+      "note": "Actual runner selected all 35 tests, including the complete original archive replay. No skipped or narrowed coverage.",
+      "scope": "Compact-reference corruption controls, exact hosted identity/refusal/scheduling, frozen-input/current-code 32-cell and documentation regressions, transaction/streaming controls and complete original eight-lane replay."
+    },
+    "scopedEslint": "passed all seven implementation JavaScript files",
+    "checkedJavaScriptTypecheck": "passed jsconfig.checked.json",
+    "diffCheck": "passed",
+    "installedRuntimeExecutions": 0,
+    "inventory": {
+      "head": "5d284895f6dc32b5ad855cee8a621f4779db91e0",
+      "inventory": {
+        "bytes": 102579190,
+        "sha256": "b7157a9bd3718717127c82564991d7611d02deefd9af303aa63f8649e073eb27"
+      },
+      "liveReferences": 16055,
+      "archivedReferences": 352995,
+      "uniquePaths": 2555,
+      "stalePins": 0,
+      "refreshedPins": 11
+    },
+    "originalArchiveReplay": {
+      "lanes": 8,
+      "skipped": 0,
+      "sourceBaseCommit": "9e571b4214df98e1b8d0319f24fe7b6729ab34ba",
+      "durationMs": 99235.17846,
+      "scope": "Full original archive replay using the compact live reference implementation; no new installed-runtime build or execution."
+    },
+    "earlierFailure": "Initial focused run passed 19 tests and failed one because copied renderer import names did not exist. Corrected names and tightened rejection/source-order controls before the successful runs.",
+    "fixtureBoundary": "Synthetic records establish rejection behavior only. Original hosted package bytes are independently authenticated and replayed; local replay does not establish final-head runtime acceptance."
+  },
+  "registration": {
+    "source": {
+      "path": "tests/owned-subtype-hosted-promotion.test.mjs",
+      "bytes": 9783,
+      "sha256": "188b4dee9e49f0c1f7f9170a5e45a834ff6881e6f27dbb45c90d1b0471c79db3"
+    },
+    "partition": {
+      "schemaVersion": 1,
+      "partition": "sorted-index-modulo-v1",
+      "shards": 6,
+      "contractFiles": 1009,
+      "contractSha256": "afe5a6ac37f1f7e080c089f0cef88d803d4b7a802de712d463458f39d151693b"
+    }
+  },
+  "pending": [
+    "Run the clean committed preflight, then transactionally publish exactly 32 support cells and all affected documentation with reversible history and zero stale pins.",
+    "Pass final current-source integration, required hosted/Core gates and recurring CI activation without narrowing #1220."
+  ]
+}
+

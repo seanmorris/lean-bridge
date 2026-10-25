@@ -1,0 +1,329 @@
+{
+  "additions": [
+    {
+      "currentSha256": "ada6ae987eee5ee034526d39ed0d17dbf0df3bccddde3c2679dc67bfaa08766f",
+      "path": "tests/helpers/owned-subtype-promotion-archive-references.mjs"
+    },
+    {
+      "currentSha256": "482c74e60b0bc7a544590920385c18d78503f342d7579c33b4522c31c3bd77d1",
+      "path": "tests/helpers/owned-subtype-promotion-transaction-tests.mjs"
+    },
+    {
+      "currentSha256": "2646138e22f732dea8c4e6f6a3217a2e8d1d973876269a669c8b3a9ca2e423b7",
+      "path": "docs/evidence/owned-subtype-promotion-transaction-20261025.json"
+    },
+    {
+      "currentSha256": "92ade3f842a9204acacb1e9bbf95c18b583d2f46790c006985a34e468ff55c30",
+      "path": "scripts/update-owned-subtype-promotion-transaction-source-history.mjs"
+    },
+    {
+      "currentSha256": "1c76e0191dbdfb02b0053c8acef072ce6158357004492a6c446354d73d38e4a4",
+      "path": "tests/helpers/owned-subtype-promotion-transaction-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "f970bff42b2e779a112d94c4058fd4f2458dd9066859e3fbdd5ce5edff1d36c7",
+      "path": "tests/helpers/owned-subtype-promotion-transaction-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "5d284895f6dc32b5ad855cee8a621f4779db91e0",
+  "implementationCommits": [
+    "5d284895f6dc32b5ad855cee8a621f4779db91e0"
+  ],
+  "integrationBaseCommit": "5d284895f6dc32b5ad855cee8a621f4779db91e0",
+  "integrationUpdates": [
+    {
+      "currentSha256": "305af8c953fc5aa7a255b6d53119df8dfe0124de76eccdc69b68acaeb04ca057",
+      "edits": [
+        {
+          "current": "import { beforeOwnedSubtypePromotionTransactionSource, ownedSubtypePromotionTransactionNormalizationPaths } from \"./owned-subtype-promotion-transaction-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...ownedSubtypePromotionTransactionNormalizationPaths\n\t, ...ownedSubtypeHostedPromotionNormalizationPaths\n",
+          "previous": "\t...ownedSubtypeHostedPromotionNormalizationPaths\n",
+          "start": 189048
+        },
+        {
+          "current": "\tlet stage = beforeOwnedSubtypePromotionTransactionSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeOwnedSubtypeHostedPromotionSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeOwnedSubtypeHostedPromotionSource(path, text, expected);\n",
+          "start": 234509
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "b52d18f26ba949253ff495284bafec7112162e893e99807113ac9fb8d517c2f1"
+    },
+    {
+      "currentSha256": "9c85fc04e748130c088b68878322612509a44d8d277dafbfbe0447516f413c13",
+      "edits": [
+        {
+          "current": "import \"./helpers/owned-subtype-promotion-transaction-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 10453
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "263a086e2aae25b8b8bf61a79dbe901e65ee9d85b1663f8e14f8f954f6c9edcd"
+    }
+  ],
+  "milestone": "owned-subtype-promotion-transaction-source-v1",
+  "predecessorCommit": "9e571b4214df98e1b8d0319f24fe7b6729ab34ba",
+  "schemaVersion": 1,
+  "scope": "Bind all eight independently replayed original owned-Subtype archives through their canonical complete index, original run/job/artifact API records and every original ZIP part. Keep all original byte-level replay and exact lane coverage. Stage the inventory and every rendered document before installation, enforce the existing 100 MiB guard, and roll back only this transaction's own changes. Add required clean-HEAD and no-write preflight controls. Freeze regression inputs at 9e571b4 while testing the current transformation, validators and renderers. Preserve separately qualified owned checked-record documentation. Refresh exactly eleven live documentation pins and preserve every previous evidence entry and support observation. This source milestone does not itself publish the 32-cell support update or establish new installed-runtime execution.",
+  "updates": [
+    {
+      "currentSha256": "cab259e552316b78b66f1bfcd53dd58537d04f7216edcce2a1fe40fad74cfc40",
+      "edits": [
+        {
+          "current": "After committing all eight captures, preflight the support and documentation\nupdate from a clean checkout:\n\n```sh\nnode scripts/promote-owned-subtype-evidence.mjs --check\n```\n\nRun the same command without `--check` to install the staged update. Both modes\nreplay every complete archive. The inventory binds each canonical index, its\noriginal API records and every ZIP part; the index retains the full file list.\nPreflight preserves the existing evidence bytes, enforces GitHub's file-size\nlimit, and renders every document before installation. Failed installation rolls\nback its own changes without overwriting concurrent user edits.\n\nThe promotion regressions read the original inventory and documentation from\nthe committed pre-promotion revision. They exercise the current transformation,\nvalidators and renderers, so publishing the guides does not erase their test inputs.\n\n",
+          "previous": "",
+          "start": 12642
+        }
+      ],
+      "path": "docs/contributing/testing.md",
+      "previousSha256": "dabb64c8b65335a612378da0cb3b8cfbc87c6960e4121fa593a7727f067a6379"
+    },
+    {
+      "currentSha256": "b7157a9bd3718717127c82564991d7611d02deefd9af303aa63f8649e073eb27",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"cab259e552316b78b66f1bfcd53dd58537d04f7216edcce2a1fe40fad74cfc40\"\n",
+          "previous": "          \"sha256\": \"dabb64c8b65335a612378da0cb3b8cfbc87c6960e4121fa593a7727f067a6379\"\n",
+          "start": 1167697
+        },
+        {
+          "current": "          \"sha256\": \"cab259e552316b78b66f1bfcd53dd58537d04f7216edcce2a1fe40fad74cfc40\"\n",
+          "previous": "          \"sha256\": \"dabb64c8b65335a612378da0cb3b8cfbc87c6960e4121fa593a7727f067a6379\"\n",
+          "start": 1177811
+        },
+        {
+          "current": "          \"sha256\": \"cab259e552316b78b66f1bfcd53dd58537d04f7216edcce2a1fe40fad74cfc40\"\n",
+          "previous": "          \"sha256\": \"dabb64c8b65335a612378da0cb3b8cfbc87c6960e4121fa593a7727f067a6379\"\n",
+          "start": 1189747
+        },
+        {
+          "current": "          \"sha256\": \"cab259e552316b78b66f1bfcd53dd58537d04f7216edcce2a1fe40fad74cfc40\"\n",
+          "previous": "          \"sha256\": \"dabb64c8b65335a612378da0cb3b8cfbc87c6960e4121fa593a7727f067a6379\"\n",
+          "start": 1222308
+        },
+        {
+          "current": "          \"sha256\": \"cab259e552316b78b66f1bfcd53dd58537d04f7216edcce2a1fe40fad74cfc40\"\n",
+          "previous": "          \"sha256\": \"dabb64c8b65335a612378da0cb3b8cfbc87c6960e4121fa593a7727f067a6379\"\n",
+          "start": 1252587
+        },
+        {
+          "current": "          \"sha256\": \"cab259e552316b78b66f1bfcd53dd58537d04f7216edcce2a1fe40fad74cfc40\"\n",
+          "previous": "          \"sha256\": \"dabb64c8b65335a612378da0cb3b8cfbc87c6960e4121fa593a7727f067a6379\"\n",
+          "start": 1285738
+        },
+        {
+          "current": "          \"sha256\": \"cab259e552316b78b66f1bfcd53dd58537d04f7216edcce2a1fe40fad74cfc40\"\n",
+          "previous": "          \"sha256\": \"dabb64c8b65335a612378da0cb3b8cfbc87c6960e4121fa593a7727f067a6379\"\n",
+          "start": 1325841
+        },
+        {
+          "current": "          \"sha256\": \"cab259e552316b78b66f1bfcd53dd58537d04f7216edcce2a1fe40fad74cfc40\"\n",
+          "previous": "          \"sha256\": \"dabb64c8b65335a612378da0cb3b8cfbc87c6960e4121fa593a7727f067a6379\"\n",
+          "start": 1352261
+        },
+        {
+          "current": "          \"sha256\": \"cab259e552316b78b66f1bfcd53dd58537d04f7216edcce2a1fe40fad74cfc40\"\n",
+          "previous": "          \"sha256\": \"dabb64c8b65335a612378da0cb3b8cfbc87c6960e4121fa593a7727f067a6379\"\n",
+          "start": 1374941
+        },
+        {
+          "current": "          \"sha256\": \"cab259e552316b78b66f1bfcd53dd58537d04f7216edcce2a1fe40fad74cfc40\"\n",
+          "previous": "          \"sha256\": \"dabb64c8b65335a612378da0cb3b8cfbc87c6960e4121fa593a7727f067a6379\"\n",
+          "start": 1394608
+        },
+        {
+          "current": "          \"sha256\": \"cab259e552316b78b66f1bfcd53dd58537d04f7216edcce2a1fe40fad74cfc40\"\n",
+          "previous": "          \"sha256\": \"dabb64c8b65335a612378da0cb3b8cfbc87c6960e4121fa593a7727f067a6379\"\n",
+          "start": 1417696
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "a1c0e7d484f135d38f18aab9a8ea9b7c2e6c1b4313440379c90713c76fc1c7f8"
+    },
+    {
+      "currentSha256": "e5a7631fcc4f6100bd07d401dd0dbaf8e32764f2379528a8a11b542b27516194",
+      "edits": [
+        {
+          "current": " * Replay all eight original Subtype archives before staging support and docs.\n",
+          "previous": " * Promote only the owned-Subtype cells closed by authenticated evidence.\n",
+          "start": 24
+        },
+        {
+          "current": "import { execFileSync } from \"node:child_process\";\nimport { createReadStream } from \"node:fs\";\nimport { mkdir, mkdtemp, readFile, rm, writeFile } from \"node:fs/promises\";\nimport { join } from \"node:path\";\nimport { renderReferenceDocuments } from \"./generate-reference-docs.mjs\";\n",
+          "previous": "import { readFile, writeFile } from \"node:fs/promises\";\nimport { generateReferenceDocs } from \"./generate-reference-docs.mjs\";\n",
+          "start": 160
+        },
+        {
+          "current": "\t, promoteOwnedSubtypes\n\t, renderOwnedSubtypePromotion\n",
+          "previous": "\t, promoteOwnedSubtypes, renderOwnedSubtypePromotion\n",
+          "start": 508
+        },
+        {
+          "current": "import { readPromotionInventory, stagePromotionInventory } from \"../tests/helpers/type-surface-promotion-io.mjs\";\nimport { commitPromotionFiles, promotionFileIdentity } from \"../tests/helpers/promotion-file-transaction.mjs\";\n",
+          "previous": "",
+          "start": 751
+        },
+        {
+          "current": "assert.ok(process.argv.length === 2 || (process.argv.length === 3 && process.argv[2] === \"--check\")\n\t, \"Use no arguments to promote, or --check to preflight without changing files\");\nconst checkOnly = process.argv[2] === \"--check\";\nconst root = process.cwd();\nconst git = arguments_ => execFileSync(\"git\", arguments_, { encoding: \"utf8\", maxBuffer: 1024 * 1024 });\nconst head = git([\"rev-parse\", \"HEAD\"]).trim();\nconst clean = () => {\n\tassert.equal(git([\"rev-parse\", \"HEAD\"]).trim(), head, \"Promotion HEAD changed\");\n\tassert.equal(git([\"status\", \"--porcelain=v1\", \"--untracked-files=all\"]), \"\"\n\t\t, \"Owned Subtype promotion requires a clean committed checkout\");\n};\nclean();\n",
+          "previous": "assert.equal(process.argv.length, 2, \"This promotion command accepts no arguments\");\n",
+          "start": 977
+        },
+        {
+          "current": "const [irSchema, consumers] = await Promise.all([\n\treadFile(\"schema/binding-ir.schema.json\", \"utf8\").then(JSON.parse)\n",
+          "previous": "const [inventory, irSchema, consumers] = await Promise.all([\n\treadFile(path, \"utf8\").then(JSON.parse)\n\t, readFile(\"schema/binding-ir.schema.json\", \"utf8\").then(JSON.parse)\n",
+          "start": 1693
+        },
+        {
+          "current": "const original = await readPromotionInventory(createReadStream(path), { irSchema, consumers });\nconst sources = {};\nfor(const [name, documentPath] of Object.entries(ownedSubtypeDocumentationPaths))\n\tsources[name] = await readFile(documentPath, \"utf8\");\nrenderOwnedSubtypeDocumentation(sources);\nassert.equal(await promotionFileIdentity(ownedSubtypePromotionPath), null, \"Owned Subtype promotion already published\");\n",
+          "previous": "",
+          "start": 1885
+        },
+        {
+          "current": "const promoted = promoteOwnedSubtypes(original.document, references);\nconst generated = await renderReferenceDocuments({ root, inventory: { document: promoted, irSchema, consumers } });\nconst documentation = renderOwnedSubtypeDocumentation(Object.fromEntries(\n\tObject.entries(ownedSubtypeDocumentationPaths).map(([name, documentPath]) =>\n\t\t[name, generated[documentPath] ?? sources[name]])\n",
+          "previous": "const promoted = promoteOwnedSubtypes(inventory, references);\nawait Promise.all([\n\twriteFile(path, JSON.stringify(promoted, null, 2) + \"\\n\")\n\t, writeFile(ownedSubtypePromotionPath\n\t\t, renderOwnedSubtypePromotion(references))\n]);\nawait generateReferenceDocs({\n\troot: process.cwd(), write: true\n\t, inventory: { document: promoted, irSchema, consumers }\n});\nconst documentationSources = Object.fromEntries(await Promise.all(\n\tObject.entries(ownedSubtypeDocumentationPaths).map(\n\t\tasync ([name, documentPath]) => [\n\t\t\tname, await readFile(documentPath, \"utf8\")\n\t\t]\n\t)\n",
+          "start": 2361
+        },
+        {
+          "current": "const documents = { ...generated\n\t, ...Object.fromEntries(Object.entries(ownedSubtypeDocumentationPaths)\n\t\t.map(([name, documentPath]) => [documentPath, documentation[name]]))\n\t, [ownedSubtypePromotionPath]: renderOwnedSubtypePromotion(references) };\nclean();\nawait mkdir(join(root, \"build\"), { recursive: true });\nconst staging = await mkdtemp(join(root, \"build/owned-subtype-promotion-\"));\nlet installing = false, completed = false;\ntry\n{\n\tconst staged = join(staging, \"inventory.json\");\n\tconst next = await stagePromotionInventory(path, staged, original, promoted);\n\tconst files = [{ path, staged, previous: original.source, next }];\n\tfor(const [number, [documentPath, content]] of Object.entries(documents).entries())\n\t{\n\t\tconst previous = await promotionFileIdentity(documentPath);\n\t\tconst staged = join(staging, `document-${number}.md`);\n\t\tawait writeFile(staged, content, { flag: \"wx\" });\n\t\tconst next = await promotionFileIdentity(staged);\n\t\tif(previous?.sha256 === next.sha256) continue;\n\t\tfiles.push({ path: documentPath, staged, previous, next });\n\t}\n\tclean();\n\tif(!checkOnly)\n\t{\n\t\tinstalling = true;\n\t\tawait commitPromotionFiles({ root, staging, files });\n\t}\n\tcompleted = true;\n\tprocess.stdout.write(JSON.stringify({ mode: checkOnly ? \"check\" : \"promote\"\n\t\t, cells: 32\n\t\t, observations: promoted.observations.filter((item, number) =>\n\t\t\titem !== original.document.observations[number]).length\n\t\t, inventory: next\n\t\t, files: files.map(file => file.path), head }, null, 2) + \"\\n\");\n}\nfinally\n{\n\tif(!installing || completed) await rm(staging, { recursive: true });\n\telse process.stderr.write(`Owned Subtype promotion recovery files retained: ${staging}\\n`);\n}\n",
+          "previous": "const documentation = renderOwnedSubtypeDocumentation(documentationSources);\nawait Promise.all(Object.entries(ownedSubtypeDocumentationPaths)\n\t.map(([name, documentPath]) => writeFile(documentPath\n\t\t, documentation[name])));\nprocess.stdout.write(\"Promoted 32 owned-Subtype cells from eight authenticated evidence lanes.\\n\");\n",
+          "start": 2755
+        }
+      ],
+      "path": "scripts/promote-owned-subtype-evidence.mjs",
+      "previousSha256": "f84b0f73093291e539e5c6c20062e0db04181c709036e593ab45d305f1e180eb"
+    },
+    {
+      "currentSha256": "a1dcb6e6b07e57d389f203f5bf015e10c7898f1cc9b8225e7ef2d50e172c70b9",
+      "edits": [
+        {
+          "current": "const installedBoundary = `The [hosted owned-Subtype matrix](${evidence}) covers one selected \\`Nat\\` Subtype field in the tested acyclic \\`Bundle\\` owner on both source routes. Host input is validated before ownership transfer; rejection keeps ownership with the caller. Leased or retained results preserve the owner lifetime, explicit close or release performs cleanup, and later valid calls recover. Recursive owned graphs and owned Subtype callback positions remain separate work. Owned checked-record fields have [separate acceptance](../evidence/owned-checked-record-promotion-20261025.md).`;\n",
+          "previous": "const installedBoundary = `The [hosted owned-Subtype matrix](${evidence}) covers one selected \\`Nat\\` Subtype field in the tested acyclic \\`Bundle\\` owner on both source routes. Host input is validated before ownership transfer; rejection keeps ownership with the caller. Leased or retained results preserve the owner lifetime, explicit close or release performs cleanup, and later valid calls recover. Recursive owned graphs, owned callback positions and owned checked-record fields remain unsupported.`;\n",
+          "start": 725
+        }
+      ],
+      "path": "tests/helpers/owned-subtype-documentation.mjs",
+      "previousSha256": "3660571a2bec968a0a66721102f46100d9a440a193ebd21207f37034919e14f3"
+    },
+    {
+      "currentSha256": "17723722394de0cd7c2036bda0910ff65fc48555f9d47b65635190e2f55dd3f8",
+      "edits": [
+        {
+          "current": "import { ownedSubtypePromotionArchiveReferences } from \"./owned-subtype-promotion-archive-references.mjs\";\n",
+          "previous": "",
+          "start": 722
+        },
+        {
+          "current": "\t, \"scripts/generate-reference-docs.mjs\"\n\t, \"scripts/generate-type-docs.mjs\"\n",
+          "previous": "",
+          "start": 2239
+        },
+        {
+          "current": "\t, \"tests/helpers/owned-subtype-documentation.mjs\"\n",
+          "previous": "",
+          "start": 2711
+        },
+        {
+          "current": "\t, \"tests/helpers/owned-subtype-promotion-archive-references.mjs\"\n\t, \"tests/helpers/owned-subtype-promotion-transaction-tests.mjs\"\n\t, \"tests/helpers/type-surface-promotion-io.mjs\"\n\t, \"tests/helpers/promotion-file-transaction.mjs\"\n\t, \"tests/helpers/source-history-stream.mjs\"\n",
+          "previous": "",
+          "start": 2817
+        },
+        {
+          "current": "\tconst compact = ownedSubtypePromotionArchiveReferences(index, root, await readFile(indexPath));\n",
+          "previous": "",
+          "start": 6663
+        },
+        {
+          "current": "\t\t...compact.files\n",
+          "previous": "\t\t{ path: indexPath, sha256: sha256(await readFile(indexPath)) }\n\t\t, ...index.files.map(file => ({\n\t\t\tpath: `${root}/${file.path}`, sha256: file.sha256\n\t\t}))\n",
+          "start": 6777
+        },
+        {
+          "current": "\tconst artifacts = compact.artifacts;\n",
+          "previous": "\tconst artifacts = index.hostedRun.artifact.parts.map(part => ({\n\t\tpath: `${root}/${part.path}`, sha256: part.sha256\n\t}));\n",
+          "start": 6983
+        }
+      ],
+      "path": "tests/helpers/owned-subtype-promotion.mjs",
+      "previousSha256": "844e08004eb70c0fd70cee12432eaa370ded757979e5b04f16160f3ed9bf257c"
+    },
+    {
+      "currentSha256": "188b4dee9e49f0c1f7f9170a5e45a834ff6881e6f27dbb45c90d1b0471c79db3",
+      "edits": [
+        {
+          "current": "import \"./helpers/owned-subtype-promotion-transaction-tests.mjs\";\n",
+          "previous": "",
+          "start": 486
+        }
+      ],
+      "path": "tests/owned-subtype-hosted-promotion.test.mjs",
+      "previousSha256": "ecc00cd365398f952251e8bdfc4bebf47da12c7eaedfdc0f9f8f51bb787a1c2d"
+    },
+    {
+      "currentSha256": "ac532b078ab407921395b45c979dbc3600f36339ee16a15fe47f3ab825270e99",
+      "edits": [
+        {
+          "current": "import { mkdir, mkdtemp, rm, writeFile } from \"node:fs/promises\";\nimport { tmpdir } from \"node:os\";\nimport { dirname, join } from \"node:path\";\n",
+          "previous": "import { readFile } from \"node:fs/promises\";\n",
+          "start": 219
+        },
+        {
+          "current": "\trenderTypeDocuments, typeGuideProfiles\n",
+          "previous": "\trenderTypeDocuments\n",
+          "start": 492
+        },
+        {
+          "current": "\t, ownedSubtypePromotionReferences\n",
+          "previous": "\t, ownedSubtypePromotionPredecessor, ownedSubtypePromotionReferences\n",
+          "start": 685
+        },
+        {
+          "current": "import { readPromotionInventory } from \"./helpers/type-surface-promotion-io.mjs\";\nimport { gitSourceBytes } from \"./helpers/source-history-stream.mjs\";\n\n// Freeze only the pre-promotion inputs. Every test invokes the current renderer,\n// transformation and validator, including after the published guides change.\nconst baselineCommit = \"9e571b4214df98e1b8d0319f24fe7b6729ab34ba\";\nconst baselinePaths = new Set([\"schema/binding-ir.schema.json\"\n\t, \"docs/consumer-support.v1.json\", ...Object.keys(typeGuideProfiles)\n\t, ...Object.values(ownedSubtypeDocumentationPaths)]);\nconst baselineText = path => {\n\tassert.ok(baselinePaths.has(path), path);\n\treturn execFileSync(\"git\", [\"show\", `${baselineCommit}:${path}`]\n\t\t, { encoding: \"utf8\", maxBuffer: 2 * 1024 ** 2 });\n};\nconst irSchema = JSON.parse(baselineText(\"schema/binding-ir.schema.json\"));\nconst consumers = JSON.parse(baselineText(\"docs/consumer-support.v1.json\"));\n",
+          "previous": "const readJson = async path => JSON.parse(await readFile(path, \"utf8\"));\nconst baseline = execFileSync(\"git\", [\n\t\"show\"\n\t, `${ownedSubtypePromotionPredecessor}:docs/type-surface.v1.json`\n], { encoding: \"utf8\", maxBuffer: 512 * 1024 ** 2 });\nconst document = JSON.parse(baseline);\nconst [irSchema, consumers] = await Promise.all([\n\treadJson(\"schema/binding-ir.schema.json\")\n\t, readJson(\"docs/consumer-support.v1.json\")\n]);\n",
+          "start": 1080
+        },
+        {
+          "current": "const original = await readPromotionInventory(\n\tgitSourceBytes(baselineCommit, \"docs/type-surface.v1.json\"), contracts);\nassert.deepEqual(original.source, { bytes: 102579190\n\t, sha256: \"a1c0e7d484f135d38f18aab9a8ea9b7c2e6c1b4313440379c90713c76fc1c7f8\" });\nconst document = original.document;\n",
+          "previous": "",
+          "start": 2040
+        },
+        {
+          "current": "test(\"owned Subtype promotion documents every affected consumer\", async t => {\n\tconst root = await mkdtemp(join(tmpdir(), \"lean-owned-subtype-doc-baseline-\"));\n\tt.after(() => rm(root, { recursive: true }));\n\tfor(const path of Object.keys(typeGuideProfiles))\n\t{\n\t\tawait mkdir(dirname(join(root, path)), { recursive: true });\n\t\tawait writeFile(join(root, path), baselineText(path), { flag: \"wx\" });\n\t}\n",
+          "previous": "test(\"owned Subtype promotion documents every affected consumer\", async () => {\n",
+          "start": 5989
+        },
+        {
+          "current": "\t\troot, inventory: { document, ...contracts }\n",
+          "previous": "\t\troot: \".\", inventory: { document, ...contracts }\n",
+          "start": 6433
+        },
+        {
+          "current": "\t\troot, inventory: { document: promoted, ...contracts }\n",
+          "previous": "\t\troot: \".\", inventory: { document: promoted, ...contracts }\n",
+          "start": 6589
+        },
+        {
+          "current": "test(\"owned Subtype promotion removes exact stale manual boundaries\", () => {\n\tconst sources = Object.fromEntries(Object.entries(\n",
+          "previous": "test(\"owned Subtype promotion removes exact stale manual boundaries\", async () => {\n\tconst sources = Object.fromEntries(await Promise.all(Object.entries(\n",
+          "start": 7456
+        },
+        {
+          "current": "\t).map(([name, path]) => [name, baselineText(path)]));\n",
+          "previous": "\t).map(async ([name, path]) => [name, await readFile(path, \"utf8\")])));\n",
+          "start": 7619
+        },
+        {
+          "current": "\t\tassert.match(rendered[name], /Owned checked-record fields have \\[separate acceptance\\]/u, name);\n\t\tassert.doesNotMatch(rendered[name], /owned checked-record fields remain unsupported/u, name);\n",
+          "previous": "",
+          "start": 8363
+        }
+      ],
+      "path": "tests/owned-subtype-promotion.test.mjs",
+      "previousSha256": "e0ee7f2e6ad121f9283fffd6ad525efd96d484c38a126c14950b9e873af20574"
+    }
+  ]
+}

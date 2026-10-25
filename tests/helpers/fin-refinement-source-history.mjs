@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeOwnedSubtypePromotionTransactionSource, ownedSubtypePromotionTransactionNormalizationPaths } from "./owned-subtype-promotion-transaction-source-history.mjs";
 import { beforeOwnedSubtypeHostedPromotionSource, ownedSubtypeHostedPromotionNormalizationPaths } from "./owned-subtype-hosted-promotion-source-history.mjs";
 import { beforeOwnedSubtypeNpmHostedSource, ownedSubtypeNpmHostedNormalizationPaths } from "./owned-subtype-npm-hosted-source-history.mjs";
 import { beforeOwnedCheckedRetainedIdentitySource, ownedCheckedRetainedIdentityNormalizationPaths } from "./owned-checked-retained-identity-source-history.mjs";
@@ -2199,7 +2200,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...ownedSubtypeHostedPromotionNormalizationPaths
+	...ownedSubtypePromotionTransactionNormalizationPaths
+	, ...ownedSubtypeHostedPromotionNormalizationPaths
 	, ...ownedSubtypeNpmHostedNormalizationPaths
 	, ...ownedCheckedRetainedIdentityNormalizationPaths
 	, ...ownedSubtypeNpmCompleteAcceptanceNormalizationPaths
@@ -3141,7 +3143,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeOwnedSubtypeHostedPromotionSource(path, text, expected);
+	let stage = beforeOwnedSubtypePromotionTransactionSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeOwnedSubtypeHostedPromotionSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;
