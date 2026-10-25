@@ -138,6 +138,7 @@ import "./helpers/owned-checked-native-mixed-coverage-source-history-tests.mjs";
 import "./helpers/owned-native-promotion-scope-source-history-tests.mjs";
 import "./helpers/owned-checked-language-mixed-coverage-source-history-tests.mjs";
 import "./helpers/dependent-matrix-doc-gate-source-history-tests.mjs";
+import "./helpers/owned-checked-window-rejection-source-history-tests.mjs";
 
 const root = resolve(".");
 

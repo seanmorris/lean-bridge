@@ -1,0 +1,139 @@
+{
+  "additions": [
+    {
+      "currentSha256": "875eb0fb881b34a203f77fbd34ead8a6ae2440ff88ccd937fc2cb66e3b2bd46d",
+      "path": "docs/evidence/owned-checked-window-rejection-20261025.json"
+    },
+    {
+      "currentSha256": "04b77fc75c0267ec93389acb84f655024f6766887d00613a2598510e44c0f2f2",
+      "path": "scripts/update-owned-checked-window-rejection-source-history.mjs"
+    },
+    {
+      "currentSha256": "312696dcf8646a72ad04fe21de38de4b7334f25626267653ccbfbb18b1e69333",
+      "path": "tests/helpers/owned-checked-window-rejection-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "4b25595e345e31a26cdcf04bc919b47f2b0f9f22d28e938771bde8bd6c5428b1",
+      "path": "tests/helpers/owned-checked-window-rejection-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "e379b33e15d353e0b1ab257d924906877b78551c",
+  "implementationCommits": [
+    "e379b33e15d353e0b1ab257d924906877b78551c"
+  ],
+  "integrationBaseCommit": "e379b33e15d353e0b1ab257d924906877b78551c",
+  "integrationUpdates": [
+    {
+      "currentSha256": "0303050d37da9a1f8ad6a926e26579ff241495c6e841e1e16ce39d724786f549",
+      "edits": [
+        {
+          "current": "import { beforeOwnedCheckedWindowRejectionSource, ownedCheckedWindowRejectionNormalizationPaths } from \"./owned-checked-window-rejection-source-history.mjs\";\n",
+          "previous": "",
+          "start": 14081
+        },
+        {
+          "current": "\t...ownedCheckedWindowRejectionNormalizationPaths\n\t, ...ownedCheckedCarrierCompilationNormalizationPaths\n",
+          "previous": "\t...ownedCheckedCarrierCompilationNormalizationPaths\n",
+          "start": 187278
+        },
+        {
+          "current": "\tlet stage = beforeOwnedCheckedWindowRejectionSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeDependentMatrixDocGateSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeDependentMatrixDocGateSource(path, text, expected);\n",
+          "start": 232159
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "bf4ccaf46e096cfde656794b71b40c3fa7d5547395d270d5f466074b78a0d30f"
+    },
+    {
+      "currentSha256": "f60ec3ae6d22982101de245e9a01422c58f4e234b2c8b9dd7ebde9624fb87680",
+      "edits": [
+        {
+          "current": "import \"./helpers/owned-checked-window-rejection-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 9566
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "e682a4b0efece95778c141d3f2aa6b3c4696e8b0a74df96f9466e4c401101985"
+    }
+  ],
+  "milestone": "owned-checked-window-rejection-source-v1",
+  "predecessorCommit": "45af94285dfe9bd819997bbbcfae3d9b512393e4",
+  "schemaVersion": 1,
+  "scope": "Add repeated rejection of an invalid copied Window nested in an owned Booking and accept equality on the recovery call, independently in C, C++, Perl, Python, Ruby and Rust. Check rejected payload and resource preservation and C output atomicity. Preserve runtime sources, Lean fixtures, full/result-only selections, the complete inventory, original archived observations and all existing guarantees. Source checks passed; attempted local existing-package probes stopped before assertions because this container has glibc 2.36 and hosted private GMP requires 2.38. The new runtime cases remain pending supported hosted execution and the final aligned matrix.",
+  "updates": [
+    {
+      "currentSha256": "addfa6ad186f7e682950d2024473d5d879ff231e45b3b825775257102e45ba43",
+      "edits": [
+        {
+          "current": "  owned_checked_records_window_t invalid_window = {hi, lo};\n  owned_checked_records_booking_t invalid_booking = {ticket, &invalid_window};\n  memset(&echoed_booking, 0xa5, sizeof(echoed_booking));\n  unsigned char booking_saved[sizeof(echoed_booking)];\n  memcpy(booking_saved, &echoed_booking, sizeof(echoed_booking));\n  for(size_t i = 0; i < 10; ++i) {\n    CHECK(owned_checked_records_echo_booking(session, &invalid_booking,\n      &echoed_booking, &owner) == OWNED_CHECKED_RECORDS_INVALID_ARGUMENT);\n    CHECK(owner == NULL && memcmp(booking_saved, &echoed_booking, sizeof(echoed_booking)) == 0);\n    CHECK(invalid_booking.holder == ticket && invalid_booking.window == &invalid_window\n      && mpz_cmp_ui(invalid_window.lo, 8) == 0 && mpz_cmp_ui(invalid_window.hi, 3) == 0);\n    expect_serial(session, ticket, 41);\n  }\n  owned_checked_records_window_t equal_window = {lo, lo};\n  owned_checked_records_booking_t equal_booking = {ticket, &equal_window};\n  OK(owned_checked_records_echo_booking(session, &equal_booking, &echoed_booking, &owner));\n  CHECK(mpz_cmp_ui(echoed_booking.window->lo, 3) == 0\n    && mpz_cmp_ui(echoed_booking.window->hi, 3) == 0);\n  expect_serial(session, echoed_booking.holder, 41); release(&owner);\n",
+          "previous": "",
+          "start": 3776
+        }
+      ],
+      "path": "tests/fixtures/structured-types/owned-checked-record-installed.c",
+      "previousSha256": "7faf494caf91115be7ef68b9f56418e1e0096ad1fb7d9d77c24ece84185e3f70"
+    },
+    {
+      "currentSha256": "374b91f33527c46fd5ea435e517d66b9056cc1842dd7591defb48c99e272a763",
+      "edits": [
+        {
+          "current": "    const api::Booking invalid_booking{ticket, {8, 3}};\n    for(size_t i = 0; i < 10; ++i) {\n      rejects([&] { (void)api::echo_booking(invalid_booking); });\n      CHECK(invalid_booking.window.lo == 8 && invalid_booking.window.hi == 3\n        && api::serial(invalid_booking.holder) == 41);\n    }\n    const auto equal_booking = api::echo_booking({ticket, {3, 3}});\n    CHECK(equal_booking.window.lo == 3 && equal_booking.window.hi == 3\n      && api::serial(equal_booking.holder) == 41);\n",
+          "previous": "",
+          "start": 1357
+        }
+      ],
+      "path": "tests/fixtures/structured-types/owned-checked-record-installed.cpp",
+      "previousSha256": "fcf65f4f4effdef04e6ec2efa8ba047f0f6e260cfa77f367ac156aea457a8022"
+    },
+    {
+      "currentSha256": "b87c34624102dd6ff08a282fd9be4b0bac1eeb22682ac74af7f78741048645c9",
+      "edits": [
+        {
+          "current": "my $invalid_booking = booking($ticket, 8, 3);\nfor (1 .. 10) {\n  rejected(sub { invoke('echo_booking', $invalid_booking) }, 1);\n  check($invalid_booking->window->lo->bcmp(8) == 0\n    && $invalid_booking->window->hi->bcmp(3) == 0,\n    'nested copied rejection preserves both input fields');\n  serial_is($invalid_booking->holder, 41, 'nested copied rejection preserves owner');\n}\nmy $equal_booking = invoke('echo_booking', booking($ticket, 3, 3));\ncheck($equal_booking->window->lo->bcmp(3) == 0 && $equal_booking->window->hi->bcmp(3) == 0,\n  'nested copied constructor accepts equality and recovers');\nserial_is($equal_booking->holder, 41, 'nested copied recovery retains resource');\nrelease($equal_booking);\n",
+          "previous": "",
+          "start": 2461
+        }
+      ],
+      "path": "tests/fixtures/structured-types/owned-checked-record-installed.pl",
+      "previousSha256": "0b38fe46c8a7cb1085549715e979e6786e3050f5b99644380276dd2a37dab20e"
+    },
+    {
+      "currentSha256": "7f49311c20febb75fc924ee25db27ec64ee525028a853ac39831ff4c35922c8f",
+      "edits": [
+        {
+          "current": "invalid_booking = booking(ticket, 8, 3)\nfor _ in range(10):\n    rejected(lambda: api.echo_booking(invalid_booking))\n    check(invalid_booking.window.lo == 8 and invalid_booking.window.hi == 3,\n          \"nested copied rejection preserves both input fields\")\n    serial_is(invalid_booking.holder, 41, \"nested copied rejection preserves owner\")\nequal_booking = api.echo_booking(booking(ticket, 3, 3))\ncheck(equal_booking.window.lo == 3 and equal_booking.window.hi == 3,\n      \"nested copied constructor accepts equality and recovers\")\nserial_is(equal_booking.holder, 41, \"nested copied recovery retains resource\")\nrelease(equal_booking)\n\n",
+          "previous": "",
+          "start": 2511
+        }
+      ],
+      "path": "tests/fixtures/structured-types/owned-checked-record-python.py",
+      "previousSha256": "4579e9da1c4824edddf224269096f8cb5d3a09d0d45262747dd1b67a94828856"
+    },
+    {
+      "currentSha256": "a55e86fbf55432cf34ee0e2593f7ea5bb80c94389dc1590798851a137fb20749",
+      "edits": [
+        {
+          "current": "invalid_booking = booking(ticket, 8, 3)\n10.times do\n  rejected { API.echo_booking(invalid_booking) }\n  check(invalid_booking.window.lo == 8 && invalid_booking.window.hi == 3,\n        \"nested copied rejection preserves both input fields\")\n  serial_is(invalid_booking.holder, 41, \"nested copied rejection preserves owner\")\nend\nequal_booking = API.echo_booking(booking(ticket, 3, 3))\ncheck(equal_booking.window.lo == 3 && equal_booking.window.hi == 3,\n      \"nested copied constructor accepts equality and recovers\")\nserial_is(equal_booking.holder, 41, \"nested copied recovery retains resource\")\nrelease(equal_booking)\n\n",
+          "previous": "",
+          "start": 2089
+        }
+      ],
+      "path": "tests/fixtures/structured-types/owned-checked-record-ruby.rb",
+      "previousSha256": "f8abfe57fd43beab4156894d1efb8a6cbd54b08785512319fe49d7073e7f4acd"
+    },
+    {
+      "currentSha256": "b2d7ba85bfca3f24bec610b2b5b2d0a2f50de24920d0788c6a9c3074ff2265ee",
+      "edits": [
+        {
+          "current": "    let invalid_booking = booking(&ticket, 8, 3);\n    for _ in 0..10 {\n        rejected(&mut checks, echo_booking(&invalid_booking));\n        check(&mut checks, invalid_booking.window.lo == BigUint::from(8u32)\n            && invalid_booking.window.hi == BigUint::from(3u32),\n            \"nested copied rejection preserves both input fields\");\n        serial_is(&mut checks, &invalid_booking.holder, 41,\n            \"nested copied rejection preserves owner\");\n    }\n    let equal_booking = echo_booking(&booking(&ticket, 3, 3)).expect(\"equal window\");\n    check(&mut checks, equal_booking.window.lo == BigUint::from(3u32)\n        && equal_booking.window.hi == BigUint::from(3u32),\n        \"nested copied constructor accepts equality and recovers\");\n    serial_is(&mut checks, &equal_booking.holder, 41,\n        \"nested copied recovery retains resource\");\n    close_booking(equal_booking);\n\n",
+          "previous": "",
+          "start": 2392
+        }
+      ],
+      "path": "tests/fixtures/structured-types/owned-checked-record-rust.rs",
+      "previousSha256": "32b4781e41d2b6650df76cdae4c30ac0ef994aef7f6d4a3cb70c7d8f0122081e"
+    }
+  ]
+}
