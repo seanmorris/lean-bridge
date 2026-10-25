@@ -46,8 +46,10 @@ test("PHP-Wasm published probes bind all 28 original artifact slots without wide
 	assert.equal(evidence.kind, "test");
 	assert.match(evidence.scope, /30 ordinary\/reviewed routes in 27 retained producer artifacts plus the aggregate verifier artifact/u);
 	assert.match(evidence.scope, /does not change prepared-package support states/u);
-	assert.deepEqual(appendPhpWasmEntryProbe({ ...document
-		, evidence: document.evidence.filter(entry => entry.id !== evidence.id) }, evidence), document);
+	const projected = appendPhpWasmEntryProbe({ ...document
+		, evidence: document.evidence.filter(entry => entry.id !== evidence.id) }, evidence);
+	assert.deepEqual(projected.evidence.at(-1), evidence);
+	assert.deepEqual({ ...projected, evidence: document.evidence }, document);
 	const expected = [root + "/index.json", root + "/api/run.json", root + "/replay.json"];
 	const artifacts = [];
 	assert.equal(index.artifacts.length, 28);
