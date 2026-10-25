@@ -1,0 +1,83 @@
+{
+  "additions": [
+    {
+      "currentSha256": "2b39abfaaa469cefb1d00a447a711daa9d434b5ee2db2ff4032a09722b21a1ee",
+      "path": "tests/helpers/php-wasm-refinement-entry-hosted-identities.mjs"
+    },
+    {
+      "currentSha256": "d3f19b634b7fe984cb9bea8ed9dd812b671711928d8fc6fbc718f5f41bac36cd",
+      "path": "tests/helpers/php-wasm-refinement-entry-hosted-identities-tests.mjs"
+    },
+    {
+      "currentSha256": "4770fba045df2c13be1dd83d355164e7ac8d573009e44ccf5e2d1a66271e3939",
+      "path": "scripts/update-php-wasm-entry-hosted-identity-source-history.mjs"
+    },
+    {
+      "currentSha256": "2357aff8f3414eaa68763e1b1d5fa1fb95adf759321da40683e1fa6d57540b19",
+      "path": "tests/helpers/php-wasm-entry-hosted-identity-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "4867c901c159233c0557cc3f7bb94e38d0a600ae2dd49ccaa1717e0fc5deef98",
+      "path": "tests/helpers/php-wasm-entry-hosted-identity-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "70d3166981c95ade7f4b773a676581228a0e3901",
+  "implementationCommits": [
+    "70d3166981c95ade7f4b773a676581228a0e3901"
+  ],
+  "integrationBaseCommit": "70d3166981c95ade7f4b773a676581228a0e3901",
+  "integrationUpdates": [
+    {
+      "currentSha256": "97bcfb718fbb41c57fbadd65e3d3a7aa141f54c68b18261df4c04cbd8f1bfb70",
+      "edits": [
+        {
+          "current": "import { beforePhpWasmEntryHostedIdentitySource, phpWasmEntryHostedIdentityNormalizationPaths } from \"./php-wasm-entry-hosted-identity-source-history.mjs\";\n",
+          "previous": "",
+          "start": 10300
+        },
+        {
+          "current": "\t...phpWasmEntryHostedIdentityNormalizationPaths\n\t, ...ownedCheckedRecordMatrixPublicationNormalizationPaths\n",
+          "previous": "\t...ownedCheckedRecordMatrixPublicationNormalizationPaths\n",
+          "start": 183495
+        },
+        {
+          "current": "\tlet stage = beforePhpWasmEntryHostedIdentitySource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeOwnedCheckedRecordMatrixPublicationSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeOwnedCheckedRecordMatrixPublicationSource(path, text, expected);\n",
+          "start": 227134
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "182ebd45d4fa01227616ac61282b58eb57b3be6cf170702b8dd0f2411fccfb2f"
+    },
+    {
+      "currentSha256": "0f971d53fd33d103f1c36da251c43b2810245fe988b151e08231a120d567da9f",
+      "edits": [
+        {
+          "current": "import \"./helpers/php-wasm-entry-hosted-identity-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 7006
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "8c05fe62e2222eec4153eee23cd6f8e768ea12172d19a013f966812bd23efddd"
+    }
+  ],
+  "milestone": "php-wasm-entry-hosted-identity-source-v1",
+  "predecessorCommit": "00a6ce3631dcfb6f14014a881266e2e7fe3a12f2",
+  "schemaVersion": 1,
+  "scope": "Add a read-only original-API/ZIP identity preflight for the complete PHP-Wasm refinement-entry aggregate: 27 distinct reusable producer jobs plus the final verifier artifact, one exact revision/run/attempt, monthly/manual/exact-tag events, ordered successful acceptance/upload steps and skipped failure enforcement. Preserve raw API bytes and stream ZIP digests; reject incomplete, missing, duplicate, reordered, stale-attempt, foreign-repository, timestamp-inconsistent and substituted inputs. Explicitly report zero replayed routes: original ZIP extraction, source closure, real thirty-route replay, diagnostic-only partial retention, immutable archive acceptance and support/docs promotion remain separate required work under VO #2061/#1828. Add six registered focused tests. Change no existing workflow, support inventory, source hash or retained archive. Authenticate the single root-test registration and every new implementation/integration source.",
+  "updates": [
+    {
+      "currentSha256": "8c05fe62e2222eec4153eee23cd6f8e768ea12172d19a013f966812bd23efddd",
+      "edits": [
+        {
+          "current": "import \"./helpers/php-wasm-refinement-entry-hosted-identities-tests.mjs\";\n",
+          "previous": "",
+          "start": 6932
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "89e9318a41319414b3bc0691e6be0021c7b09ad6aaa7dcd2a95b2d86e1efa46c"
+    }
+  ]
+}
