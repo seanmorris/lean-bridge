@@ -21,14 +21,15 @@ import {
 	ownedCheckedRecordPromotionArchiveReferences, ownedCheckedRecordPromotionLimit
 	, ownedCheckedRecordPromotionProfiles, ownedCheckedRecordPromotionReferences
 	, ownedCheckedRecordPromotionSelectionPath, promoteOwnedCheckedRecords
-	, renderOwnedCheckedRecordPromotion
+	, refreshOwnedCheckedRecords, renderOwnedCheckedRecordPromotion
 } from "./owned-checked-record-promotion.mjs";
 import { ownedCheckedRecordJavaScriptSelection } from "./owned-checked-record-javascript-fixture.mjs";
 import { ownedCheckedRecordNativeSelection } from "./owned-checked-record-native-fixture.mjs";
 import { ownedCheckedRecordLanguageSelection } from "./owned-checked-record-language-fixture.mjs";
 import { ownedCheckedRecordManagedSelection } from "./owned-checked-record-managed-fixture.mjs";
 import {
-	ownedCheckedRecordDocumentationPaths, renderOwnedCheckedRecordDocumentation
+	ownedCheckedRecordDocumentationPaths, refreshOwnedCheckedRecordDocumentation
+	, renderOwnedCheckedRecordDocumentation
 } from "./owned-checked-record-documentation.mjs";
 import { ownedCheckedRecordMatrixReference } from "../../scripts/generate-type-docs.mjs";
 
@@ -323,7 +324,7 @@ test("owned checked-record promotion prepares all fourteen guides without changi
 	{
 		const output = rendered[name];
 		assert.equal(output.split("## Owned checked records\n").length, 2);
-		assert.ok(output.includes("owned-checked-record-promotion-20261024.md"));
+		assert.ok(output.includes("owned-checked-record-promotion-20261025.md"));
 		assert.ok(output.includes("without checked-input, transfer or callback metadata"));
 		assert.ok(output.includes("does not cover `Grant` and its nested Subtype"));
 		const start = output.indexOf("## Owned checked records\n");
@@ -350,7 +351,47 @@ test("owned checked-record promotion prepares all fourteen guides without changi
 	}
 });
 
-test("owned checked-record promotion command refuses dirty or missing capture selections before writing", async t => {
+test("owned checked-record refresh replaces only eleven evidence references", async () => {
+	const original = promoteOwnedCheckedRecords(await originalInventory(), references);
+	const snapshot = structuredClone(original);
+	const next = references.map(reference => ({ ...reference
+		, scope: "New independently verified capture, represented synthetically in this projection test." }));
+	const refreshed = refreshOwnedCheckedRecords(original, next);
+	assert.deepEqual(original, snapshot);
+	assert.equal(validateTypeSurface(refreshed, contracts), true);
+	assert.deepEqual({ ...refreshed, evidence: original.evidence }, original);
+	assert.equal(refreshed.evidence.length, original.evidence.length);
+	const ids = new Set(references.map(reference => reference.id));
+	for(const [number, entry] of original.evidence.entries())
+		if(!ids.has(entry.id)) assert.deepEqual(refreshed.evidence[number], entry);
+	assert.deepEqual(refreshed.observations, original.observations);
+	for(const selected of [next.slice(1), [...next, next[0]], next.toReversed()])
+		assert.throws(() => refreshOwnedCheckedRecords(original, selected));
+	for(const mutate of [
+		value => { value.evidence = value.evidence.filter(entry => entry.id !== references[0].id); }
+		, value => { value.evidence.push(value.evidence.find(entry => entry.id === references[0].id)); }
+		, value => { value.evidence.find(entry => entry.id === references[0].id).kind = "test"; }
+	]) {
+		const changed = structuredClone(original); mutate(changed);
+		assert.throws(() => refreshOwnedCheckedRecords(changed, next));
+	}
+});
+
+test("owned checked-record refresh replaces only each guide's existing owned section", () => {
+	const rendered = renderOwnedCheckedRecordDocumentation(baselineDocumentation());
+	const old = Object.fromEntries(Object.entries(rendered).map(([name, source]) =>
+		[name, source.replaceAll("owned-checked-record-promotion-20261025.md", "owned-checked-record-promotion-20261024.md")]));
+	assert.deepEqual(refreshOwnedCheckedRecordDocumentation(old), rendered);
+	assert.deepEqual(refreshOwnedCheckedRecordDocumentation(rendered), rendered);
+	assert.throws(() => refreshOwnedCheckedRecordDocumentation(baselineDocumentation()));
+	assert.throws(() => refreshOwnedCheckedRecordDocumentation({ ...old, php: old.php + "\n## Owned checked records\n" }));
+	const marker = "## Start from a raw Lean package\n";
+	assert.throws(() => refreshOwnedCheckedRecordDocumentation({ ...old, php: old.php.replace(marker, "") }));
+	const unrelated = "\nKeep this unrelated text and link: owned-checked-record-promotion-20261024.md\n";
+	assert.equal(refreshOwnedCheckedRecordDocumentation({ ...old, php: old.php + unrelated }).php, rendered.php + unrelated);
+});
+
+test("owned checked-record publication commands refuse dirty or missing capture selections before writing", async t => {
 	const repository = await mkdtemp(join(tmpdir(), "lean-owned-promotion-cli-"));
 	t.after(() => rm(repository, { recursive: true, force: true }));
 	const environment = Object.fromEntries(Object.entries(process.env).filter(([key]) => !key.startsWith("GIT_")));
@@ -361,14 +402,18 @@ test("owned checked-record promotion command refuses dirty or missing capture se
 		"-c", "user.name=Test", "-c", "user.email=test@example.invalid"
 		, "-c", "commit.gpgsign=false"
 		, "commit", "--allow-empty", "--quiet", "-m", "fixture"]);
-	const cli = resolve("scripts/promote-owned-checked-record-evidence.mjs");
-	const invoke = arguments_ => execFileSync(process.execPath, ["--max-old-space-size=512", cli, ...arguments_]
+	const invoke = (name, arguments_) => execFileSync(process.execPath
+		, ["--max-old-space-size=512", resolve(`scripts/${name}-owned-checked-record-evidence.mjs`), ...arguments_]
 		, { cwd: repository, env: environment, encoding: "utf8", stdio: ["ignore", "pipe", "pipe"], timeout: 10000 });
-	assert.throws(() => invoke(["--check"]), error => error.status !== 0
-		&& error.stderr.includes("ENOENT") && error.stderr.includes(ownedCheckedRecordPromotionSelectionPath));
+	for(const name of ["promote", "refresh"])
+		assert.throws(() => invoke(name, ["--check"]), error => error.status !== 0
+			&& error.stderr.includes("ENOENT") && error.stderr.includes(ownedCheckedRecordPromotionSelectionPath));
 	assert.equal(git(["status", "--porcelain=v1", "--untracked-files=all"]), "");
 	await writeFile(join(repository, "user-edit"), "preserve me");
-	assert.throws(() => invoke([]), error => error.status !== 0 && error.stderr.includes("clean committed checkout"));
+	for(const name of ["promote", "refresh"])
+	{
+		assert.throws(() => invoke(name, []), error => error.status !== 0 && error.stderr.includes("clean committed checkout"));
+		assert.throws(() => invoke(name, ["--trust-receipt"]), error => error.status !== 0 && error.stderr.includes("Use no arguments"));
+	}
 	assert.equal(await readFile(join(repository, "user-edit"), "utf8"), "preserve me");
-	assert.throws(() => invoke(["--trust-receipt"]), error => error.status !== 0 && error.stderr.includes("Use no arguments"));
 });

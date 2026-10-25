@@ -16,9 +16,9 @@ import {
 } from "./owned-checked-record-hosted-matrix.mjs";
 
 export const ownedCheckedRecordPromotionSelectionPath
-	= "docs/evidence/owned-checked-record-matrix-selection-20261024.json";
+	= "docs/evidence/owned-checked-record-matrix-selection-20261025.json";
 export const ownedCheckedRecordPromotionPath
-	= "docs/evidence/owned-checked-record-promotion-20261024.md";
+	= "docs/evidence/owned-checked-record-promotion-20261025.md";
 export const ownedCheckedRecordPromotionProfiles = Object.freeze({
 	native: Object.freeze(["c", "cpp"])
 	, perl: Object.freeze(["perl"])
@@ -42,6 +42,7 @@ const command = `node scripts/check-owned-checked-record-matrix.mjs --selection 
 const validators = Object.freeze([
 	"scripts/check-owned-checked-record-matrix.mjs"
 	, "scripts/promote-owned-checked-record-evidence.mjs"
+	, "scripts/refresh-owned-checked-record-evidence.mjs"
 	, "scripts/generate-type-docs.mjs"
 	, "tests/helpers/owned-checked-record-hosted-contracts.mjs"
 	, "tests/helpers/owned-checked-record-hosted-evidence.mjs"
@@ -277,6 +278,27 @@ export const promoteOwnedCheckedRecords = (original, references) => {
 	assert.equal(cells.length, 114);
 	assert.equal(cells.reduce((sum, cell) => sum + cell.profiles.length * cell.positions.length, 0), 170);
 	return inventory;
+};
+
+/**
+ * Replace the complete matrix's evidence bindings without widening support.
+ * Only a full independent replay may supply production references.
+ *
+ * @param original - Previously published validated inventory projection.
+ * @param references - New complete, independently replayed matrix references.
+ */
+export const refreshOwnedCheckedRecords = (original, references) => {
+	assertReferences(references);
+	const selected = new Map(references.map(reference => [reference.id
+		, Object.fromEntries(Object.entries(reference)
+			.filter(([key]) => !["lane", "profiles", "routes"].includes(key)))]));
+	const owned = original.evidence.filter(entry =>
+		/^owned-checked-record-[a-z-]+-hosted-installed$/u.test(entry.id));
+	assert.deepEqual(owned.map(entry => entry.id), [...selected.keys()]
+		, "Refresh requires the previously published complete owned matrix");
+	assert.ok(owned.every(entry => entry.kind === "installed"));
+	return { ...structuredClone(original), evidence: original.evidence.map(entry =>
+		structuredClone(selected.get(entry.id) ?? entry)) };
 };
 
 /**

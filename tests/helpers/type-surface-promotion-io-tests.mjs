@@ -12,7 +12,7 @@ import { createInterface } from "node:readline";
 import { Readable } from "node:stream";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { readPromotionInventory, stagePromotionInventory }
+import { readPromotionInventory, stageEvidenceRefresh, stagePromotionInventory }
 	from "./type-surface-promotion-io.mjs";
 
 const contracts = {
@@ -151,4 +151,54 @@ test("promotion inventory staging refuses drift and preserves existing destinati
 		, /metadata must remain unchanged/u);
 	const wrong = structuredClone(promoted); wrong.profiles[0].context += " rewrite";
 	await assert.rejects(stagePromotionInventory(source, target, original, wrong));
+});
+
+test("evidence refresh preserves full unselected entries and every support byte", async t => {
+	const root = await directory(t), source = join(root, "source.json");
+	const target = join(root, "staged.json"), value = fixture();
+	await writeFile(source, bytes(value));
+	const original = await read(value), refreshed = structuredClone(original.document);
+	const replacement = { ...entry("second"), scope: "Updated evidence: λ, 🭼, ◆."
+		, revision: "b".repeat(40) };
+	refreshed.evidence[1] = replacement;
+	const identity = await stageEvidenceRefresh(source, target, original, refreshed);
+	const expected = bytes({ ...value, evidence: [value.evidence[0], replacement] });
+	assert.deepEqual(await readFile(target), expected);
+	assert.deepEqual(identity, { bytes: expected.length, sha256: sha256(expected) });
+	assert.deepEqual(await readFile(source), bytes(value));
+	assert.equal((await read(expected)).document.evidence[0].files.length, 1);
+	assert.equal(JSON.parse(expected).evidence[0].files.length, 2);
+});
+
+test("evidence refresh rejects support changes, replacement drift and malformed selections", async t => {
+	const root = await directory(t), source = join(root, "source.json");
+	const target = join(root, "staged.json"), value = fixture();
+	await writeFile(source, bytes(value));
+	const original = await read(value), refreshed = structuredClone(original.document);
+	refreshed.evidence[0] = { ...entry("first"), scope: "New evidence" };
+	for(const mutate of [
+		item => { item.profiles[0].context += " changed"; }
+		, item => { item.evidence.push(entry("new")); }
+		, item => { item.evidence.pop(); }
+		, item => { item.evidence.reverse(); }
+		, item => { item.observations.push({ id: "new-support" }); }
+		, item => { item.evidence[0].files[1].sha256 = "invalid"; }
+	]) {
+		const changed = structuredClone(refreshed); mutate(changed);
+		await assert.rejects(stageEvidenceRefresh(source, target, original, changed));
+	}
+	await assert.rejects(stageEvidenceRefresh(source, target, original, original.document)
+		, /must replace evidence/u);
+	const invalid = { ...original, evidenceRanges: original.evidenceRanges.toReversed() };
+	await assert.rejects(stageEvidenceRefresh(source, target, invalid, refreshed));
+	await assert.rejects(stageEvidenceRefresh(source, target, original, refreshed, 100)
+		, /file size limit/u);
+	await writeFile(source, bytes({ ...value, evidence: [entry("first"), { ...entry("second"), scope: "Changed after preflight" }] }));
+	await assert.rejects(stageEvidenceRefresh(source, target, original, refreshed)
+		, /changed after preflight/u);
+	assert.deepEqual(await readdir(root), ["source.json"]);
+	await writeFile(source, bytes(value));
+	await writeFile(target, "Keep this user file");
+	await assert.rejects(stageEvidenceRefresh(source, target, original, refreshed), { code: "EEXIST" });
+	assert.equal(await readFile(target, "utf8"), "Keep this user file");
 });

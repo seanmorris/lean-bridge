@@ -25,7 +25,7 @@ import { gitSourceBytes } from "./source-history-stream.mjs";
 import { readPromotionInventory } from "./type-surface-promotion-io.mjs";
 
 const predecessor = "a9cad3b18a244d7e74918e6e8964455e073e2453";
-const selectionSha256 = "8e1f7b6c3d5430c51bff31b316e1cffcc6f6dbed1942f7ded32029d43c90f64a";
+const selectionSha256 = "8959dae7243d65ad0e5a204091c4cf1fdc99d963bdcd0b061622f82472608f14";
 const ownedId = id => /^owned-checked-record-[a-z-]+-hosted-installed$/u.test(id);
 const hostTypes = {
 	parameter: "borrowed or transferred Booking/Claim payload with a live Ticket owner"

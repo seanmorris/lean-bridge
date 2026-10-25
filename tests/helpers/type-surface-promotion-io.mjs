@@ -10,6 +10,7 @@ import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { createReadStream } from "node:fs";
 import { open, unlink } from "node:fs/promises";
+import { isDeepStrictEqual } from "node:util";
 import { validateTypeSurface } from "../../src/adoption/type-surface.mjs";
 
 const pretty = value => JSON.stringify(value, null, 2);
@@ -71,8 +72,8 @@ export const readPromotionInventory = async (
 	const identity = { digest: hash(), bytes: 0 };
 	let state = "prefix", prefix = "", suffix = "", entry = "";
 	let prefixBytes = 0, entryBytes = 0, suffixBytes = 0;
-	let skeleton, position = 0, appendAt, suffixAt, entryComma = false;
-	const evidence = [];
+	let skeleton, position = 0, appendAt, suffixAt, entryAt, entryComma = false;
+	const evidence = [], evidenceRanges = [];
 	for await(const text of lines(input, identity, line))
 	{
 		const bytes = Buffer.byteLength(text) + 1;
@@ -105,6 +106,7 @@ export const readPromotionInventory = async (
 				{
 					assert.equal(text, "    {", "Expected a canonical evidence entry");
 					assert.ok(evidence.length === 0 || entryComma, "Missing evidence separator");
+					entryAt = position;
 				}
 				entry += text + "\n";
 				entryBytes += bytes;
@@ -121,6 +123,8 @@ export const readPromotionInventory = async (
 					evidence.push(retained.has(value.id) ? value : { ...value
 						, files: value.files.slice(0, 1)
 						, artifacts: value.artifacts.slice(0, 1) });
+					evidenceRanges.push({ id: value.id, at: entryAt
+						, end: position + bytes, comma: entryComma });
 					appendAt = position + bytes - 1;
 					entry = "";
 					entryBytes = 0;
@@ -145,7 +149,7 @@ export const readPromotionInventory = async (
 	assert.ok(retainEvidence.every(id => evidence.some(item => item.id === id))
 		, "Retained evidence must exist");
 	validateTypeSurface(document, contracts);
-	return { document, contracts, appendAt, suffixAt
+	return { document, contracts, appendAt, suffixAt, evidenceRanges
 		, source: { bytes: identity.bytes, sha256: identity.digest.digest("hex") } };
 };
 
@@ -179,6 +183,52 @@ export const stagePromotionInventory = async (
 			, text: pretty({ observations: promoted.observations }).slice(2) + "\n" }
 	];
 	assert.ok(edits[0].at < edits[1].at && edits[1].at < edits[1].end);
+	return writeInventoryEdits(filename, destination, original, edits, maximumBytes);
+};
+
+/**
+ * Refresh named evidence entries without changing a support observation.
+ * Every unselected entry and all non-evidence bytes remain byte-identical.
+ * This stages metadata only; callers must independently verify new evidence.
+ *
+ * @param filename - Original complete inventory.
+ * @param destination - Exclusive staging file.
+ * @param original - Validated inventory projection and byte coordinates.
+ * @param refreshed - Validated replacement metadata with identical support.
+ * @param maximumBytes - Maximum Git-compatible output size.
+ */
+export const stageEvidenceRefresh = async (
+	filename, destination, original, refreshed, maximumBytes = 100 * 1024 * 1024
+) => {
+	assert.ok(Number.isSafeInteger(maximumBytes) && maximumBytes > 0);
+	validateTypeSurface(refreshed, original.contracts);
+	assert.deepEqual(Object.keys(refreshed), Object.keys(original.document));
+	for(const key of Object.keys(original.document))
+		if(key !== "evidence") assert.deepEqual(refreshed[key], original.document[key], key);
+	assert.deepEqual(refreshed.evidence.map(entry => entry.id)
+		, original.document.evidence.map(entry => entry.id), "Refresh cannot add, remove or reorder evidence");
+	assert.deepEqual(original.evidenceRanges.map(range => range.id)
+		, original.document.evidence.map(entry => entry.id));
+	const edits = [];
+	for(const [index, entry] of refreshed.evidence.entries())
+	{
+		if(isDeepStrictEqual(entry, original.document.evidence[index])) continue;
+		const range = original.evidenceRanges[index];
+		edits.push({ at: range.at, end: range.end
+			, text: evidenceText(entry) + (range.comma ? ",\n" : "\n") });
+	}
+	assert.ok(edits.length > 0, "Refresh must replace evidence");
+	return writeInventoryEdits(filename, destination, original, edits, maximumBytes);
+};
+
+const writeInventoryEdits = async (filename, destination, original, edits, maximumBytes) => {
+	let end = 0;
+	for(const edit of edits)
+	{
+		assert.ok(Number.isSafeInteger(edit.at) && Number.isSafeInteger(edit.end)
+			&& edit.at >= end && edit.end >= edit.at && edit.end <= original.source.bytes);
+		end = edit.end;
+	}
 	const sourceHash = hash(), outputHash = hash();
 	let outputBytes = 0, position = 0, next = 0, skipUntil = 0;
 	const output = await open(destination, "wx");
