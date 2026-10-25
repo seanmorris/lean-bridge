@@ -1,0 +1,87 @@
+{
+  "schemaVersion": 1,
+  "id": "poc/lean-gamma@0.0.0",
+  "runtime": {
+    "abiVersion": 1,
+    "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+    "patchSetSha256": "743765bf566f43ec2f7b4eb84a85686880b3797efe83bf244d6fc7281e4f85a3",
+    "profiles": ["side-startup", "side-lazy", "final-static"],
+    "sharedRuntime": true
+  },
+  "artifacts": {
+    "targets": [
+      {
+        "target": "browser",
+        "sideModule": {
+          "file": "gamma.so.wasm",
+          "mediaType": "application/wasm",
+        "sha256": "cff5bd84b30c64dd7ff2b199202f45f7b79c23936f51e3661bae1190eff096a5"
+        },
+        "staticObjects": [
+          {
+            "file": "gamma.generated.o",
+            "mediaType": "application/wasm-object",
+            "sha256": "e48e8450c7a46726d30d9403792e85b5e8a783c77e875bf2b4df4f7b31aadc7b"
+          },
+          {
+            "file": "gamma.shim.o",
+            "mediaType": "application/wasm-object",
+            "sha256": "ecf20bd16d84345f3c956bff521a6bc749d81b27403e78b9e5bae398583fe77a"
+          }
+        ]
+      },
+      {
+        "target": "threaded",
+        "sideModule": {
+          "file": "gamma.so.wasm",
+          "mediaType": "application/wasm",
+        "sha256": "b4fe836032a02aa0b3427e1ab4ec082d53372626616253040baf4aa1c842c051"
+        },
+        "staticObjects": [
+          {
+            "file": "gamma.generated.o",
+            "mediaType": "application/wasm-object",
+            "sha256": "6fc1135abe112b2cdd26f3235d1e528dd7c0b7d8bff0f8355b88b01d01520196"
+          },
+          {
+            "file": "gamma.shim.o",
+            "mediaType": "application/wasm-object",
+            "sha256": "546e108cd7295294ebd9593d60146465216324180a66f32d7e2a789b3773f9a4"
+          }
+        ]
+      },
+      {
+        "target": "php-wasm-emscripten-3.1.68",
+        "sideModule": {
+          "file": "gamma.so.wasm",
+          "mediaType": "application/wasm",
+          "sha256": "7ef7c6511cf56be2da63f580163fe4836fd521f59b03aa9499588611dcc72071"
+        },
+        "staticObjects": [
+          {
+            "file": "gamma.generated.o",
+            "mediaType": "application/wasm-object",
+            "sha256": "4e75aa931a39cb7e50a0f1f3a097b4289b5d47532620e3424db42883751c0cda"
+          },
+          {
+            "file": "gamma.shim.o",
+            "mediaType": "application/wasm-object",
+            "sha256": "3c80832c08e578f740997b44be04d32f20506a31f080c3b7ac5b409990bbd6a6"
+          }
+        ]
+      }
+    ]
+  },
+  "symbols": {
+    "exports": ["lean_link_gamma_identity", "lean_link_gamma_read"],
+    "requires": []
+  },
+  "initializer": { "mode": "none" },
+  "dependencies": [{ "id": "poc/lean-beta@0.0.0" }],
+  "fragments": { "bindings": null, "schema": null, "assurance": null },
+  "capabilities": {
+    "hosts": ["javascript", "host-neutral-abi"],
+    "threads": ["single", "shared"],
+    "effects": []
+  }
+}

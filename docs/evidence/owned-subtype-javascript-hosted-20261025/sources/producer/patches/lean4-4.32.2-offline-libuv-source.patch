@@ -1,0 +1,39 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -343,17 +343,31 @@ if("${CMAKE_SYSTEM_NAME}" MATCHES "Emscripten")
+   )
+   string(REPLACE "\n" "\\n" LIBUV_PATCH ${LIBUV_PATCH_IN})
+ 
++  if(LEAN_WASM_LIBUV_SOURCE)
++    set(
++      LIBUV_SOURCE_ARGS
++      DOWNLOAD_COMMAND ${CMAKE_COMMAND} -E copy_directory "${LEAN_WASM_LIBUV_SOURCE}" <SOURCE_DIR>
++      UPDATE_COMMAND ""
++      PATCH_COMMAND chmod -R u+w <SOURCE_DIR> && printf "${LIBUV_PATCH}" > patch.diff && git apply patch.diff
++    )
++  else()
++    set(
++      LIBUV_SOURCE_ARGS
++      GIT_REPOSITORY https://github.com/libuv/libuv
++      # Sync version with flake.nix
++      GIT_TAG v1.48.0
++      PATCH_COMMAND git reset --hard HEAD && printf "${LIBUV_PATCH}" > patch.diff && git apply patch.diff
++    )
++  endif()
++
+   ExternalProject_Add(
+     libuv
+     PREFIX libuv
+-    GIT_REPOSITORY https://github.com/libuv/libuv
+-    # Sync version with flake.nix
+-    GIT_TAG v1.48.0
++    ${LIBUV_SOURCE_ARGS}
+     CMAKE_ARGS
+       -DCMAKE_BUILD_TYPE=Release -DLIBUV_BUILD_TESTS=OFF -DLIBUV_BUILD_SHARED=OFF -DCMAKE_AR=${CMAKE_AR}
+       -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE} -DCMAKE_POSITION_INDEPENDENT_CODE=ON
+       -DCMAKE_C_FLAGS=${LIBUV_EMSCRIPTEN_FLAGS}
+-    PATCH_COMMAND git reset --hard HEAD && printf "${LIBUV_PATCH}" > patch.diff && git apply patch.diff
+     BUILD_IN_SOURCE ON
+     INSTALL_COMMAND ""
+   )

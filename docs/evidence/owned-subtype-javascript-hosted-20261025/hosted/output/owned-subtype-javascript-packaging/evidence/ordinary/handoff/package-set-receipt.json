@@ -1,0 +1,63 @@
+{
+  "component": {
+    "id": "owned-subtypes@1.0.0",
+    "name": "owned-subtypes",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 106001,
+          "path": "@lean-bridge-owned-subtypes-1.0.0.tgz",
+          "sha256": "d89fdbd03b44f0adb3957fe04f56f1fd17eefaeceb66ef5686798421ff50ca99"
+        }
+      ],
+      "ecosystem": "npm",
+      "name": "@lean-bridge/owned-subtypes",
+      "profile": "javascript-wasm-owned-v1",
+      "requires": [
+        {
+          "ecosystem": "npm",
+          "name": "@lean-bridge/runtime",
+          "version": "0.0.0-abi2.61c8e5f1e7381182f2d9cac436e1a247efd41cb856443534a238e31515708de1"
+        }
+      ],
+      "role": "component",
+      "runtimeDelivery": "dependency",
+      "runtimeIdentity": "61c8e5f1e7381182f2d9cac436e1a247efd41cb856443534a238e31515708de1",
+      "target": "npm",
+      "version": "1.0.0"
+    },
+    {
+      "artifacts": [
+        {
+          "bytes": 1642686,
+          "path": "lean-bridge-runtime-0.0.0-abi2.61c8e5f1e7381182f2d9cac436e1a247efd41cb856443534a238e31515708de1.tgz",
+          "sha256": "2d0542b611e1eb34730711e0feb87ab26e3e9cea6f364acd6fc648d0d5976d6a"
+        }
+      ],
+      "ecosystem": "npm",
+      "name": "@lean-bridge/runtime",
+      "profile": "javascript-wasm-owned-v1",
+      "requires": [],
+      "role": "runtime",
+      "runtimeDelivery": "provided",
+      "runtimeIdentity": "61c8e5f1e7381182f2d9cac436e1a247efd41cb856443534a238e31515708de1",
+      "target": "npm",
+      "version": "0.0.0-abi2.61c8e5f1e7381182f2d9cac436e1a247efd41cb856443534a238e31515708de1"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "d18d8be33f0e7cbe61f995dccac6512ab176fd961fc1a9c00c23c39d0cc63882",
+      "id": "javascript-wasm-owned-v1",
+      "runtimeIdentity": "61c8e5f1e7381182f2d9cac436e1a247efd41cb856443534a238e31515708de1"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "6d8b45ffd1de21164aa9566728d5a299c55f9ed36b8fed6f3d33c9ffd03a45aa"
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "routes": [
+    {
+      "archiveBytes": 1748687,
+      "archives": 2,
+      "files": [
+        "@lean-bridge-owned-subtypes-1.0.0.tgz",
+        "lean-bridge-runtime-0.0.0-abi2.61c8e5f1e7381182f2d9cac436e1a247efd41cb856443534a238e31515708de1.tgz",
+        "package-set-receipt.json",
+        "package-set-receipt.json.sha256"
+      ],
+      "path": "evidence/ordinary/handoff",
+      "receiptSha256": "a8fee9a46b12f65588d0e2a646503000c58e7f057af94bdfbbe2d8febb649da2",
+      "route": "ordinary"
+    },
+    {
+      "archiveBytes": 1750405,
+      "archives": 2,
+      "files": [
+        "@lean-bridge-owned-subtypes-1.0.0.tgz",
+        "lean-bridge-runtime-0.0.0-abi2.61c8e5f1e7381182f2d9cac436e1a247efd41cb856443534a238e31515708de1.tgz",
+        "package-set-receipt.json",
+        "package-set-receipt.json.sha256"
+      ],
+      "path": "evidence/reviewed/handoff",
+      "receiptSha256": "6f4ccfee0a5ed22321b781ffa759aa060ff6bcbb0900bc32b2aa079cd3a98f75",
+      "route": "reviewed"
+    }
+  ],
+  "schemaVersion": 1
+}

@@ -1,0 +1,99 @@
+{
+  "schemaVersion": 1,
+  "id": "poc/lean-alpha@0.0.0",
+  "runtime": {
+    "abiVersion": 1,
+    "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+    "patchSetSha256": "743765bf566f43ec2f7b4eb84a85686880b3797efe83bf244d6fc7281e4f85a3",
+    "profiles": ["side-startup", "side-lazy", "final-static"],
+    "sharedRuntime": true
+  },
+  "artifacts": {
+    "targets": [
+      {
+        "target": "browser",
+        "sideModule": {
+          "file": "alpha.so.wasm",
+          "mediaType": "application/wasm",
+          "sha256": "df3c7c6da8f919a3c0bb6748ec2a265841fa4ade4e69fdf9fed53e7f3f15beda"
+        },
+        "staticObjects": [
+          {
+            "file": "alpha.generated.o",
+            "mediaType": "application/wasm-object",
+            "sha256": "88ef8a6f6719608a6e05e3e98a5074854e90ddd4cc0d638ee55850eafb80ba67"
+          },
+          {
+            "file": "alpha.shim.o",
+            "mediaType": "application/wasm-object",
+            "sha256": "cb96624f6e7daa15a45e5e37a8db6bf5c2100914d066c95a2181ee5f3799ec02"
+          }
+        ]
+      },
+      {
+        "target": "threaded",
+        "sideModule": {
+          "file": "alpha.so.wasm",
+          "mediaType": "application/wasm",
+          "sha256": "694b29bd35bc374792385fcbe014221cdf76efe48599beeb8ca158e5bdfa7d82"
+        },
+        "staticObjects": [
+          {
+            "file": "alpha.generated.o",
+            "mediaType": "application/wasm-object",
+            "sha256": "38751248d603bedb49b78f1df7cfd097c8ef468e33d2b632fd2d66698a9371e2"
+          },
+          {
+            "file": "alpha.shim.o",
+            "mediaType": "application/wasm-object",
+            "sha256": "a97a6f72009a3a2a77819ffa88c85f3200cf856d54cf33cf22075e016bec775c"
+          }
+        ]
+      },
+      {
+        "target": "php-wasm-emscripten-3.1.68",
+        "sideModule": {
+          "file": "alpha.so.wasm",
+          "mediaType": "application/wasm",
+          "sha256": "707b37be0dbcd96794c815a32a94a07961a8381596623feeb19ca859c984aa7a"
+        },
+        "staticObjects": [
+          {
+            "file": "alpha.generated.o",
+            "mediaType": "application/wasm-object",
+            "sha256": "d075295dad488fb2a3c77d905d8c722fafef6aa3794e7f3f323a2102aaf8a43e"
+          },
+          {
+            "file": "alpha.shim.o",
+            "mediaType": "application/wasm-object",
+            "sha256": "b90217a6aedb4ec355a0fabd8e85eabe2e1ff85ca74676e755073bc93e602752"
+          }
+        ]
+      }
+    ]
+  },
+  "symbols": {
+    "exports": [
+      "lean_link_alpha_box",
+      "lean_link_alpha_read",
+      "lean_link_alpha_payload",
+      "lean_link_alpha_round_trip",
+      "lean_link_alpha_with_callback",
+      "lean_link_alpha_make_adder",
+      "lean_link_alpha_payload_enabled",
+      "lean_link_alpha_payload_count",
+      "lean_link_alpha_payload_label",
+      "lean_link_alpha_payload_bytes",
+      "lean_link_alpha_payload_values"
+    ],
+    "requires": []
+  },
+  "initializer": { "mode": "required", "symbol": "initialize_Alpha" },
+  "dependencies": [],
+  "fragments": { "bindings": "bindings/alpha.binding-ir.json", "schema": null, "assurance": null },
+  "capabilities": {
+    "hosts": ["javascript", "host-neutral-abi"],
+    "threads": ["single", "shared"],
+    "effects": []
+  }
+}
