@@ -160,8 +160,11 @@ extends the same fields and constructor-free results to Java and Kotlin
 packages with 64-bit machine words. Both author routes and API modes reproduce
 the complete Maven package, install offline, and run Java and Kotlin callers
 after relocation and from a source-free deployment. Synchronous `Fin` callbacks outside C/C++, retained or asynchronous refined
-callbacks, owned and recursive Subtypes, and Subtype fields in generic records
-remain unfinished.
+callbacks, recursive owned Subtypes, and Subtype fields in generic records remain
+unfinished. The [hosted owned-Subtype matrix](../evidence/owned-subtype-promotion-20261023.md) establishes one selected
+`Nat` field in the tested acyclic `Bundle` owner across all sixteen non-PHP-Wasm
+profiles and both author routes. PHP-Wasm retains its separate selected-`Int`
+owned-Subtype qualification.
 
 ### Select constructors inside containers
 

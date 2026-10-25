@@ -1,0 +1,321 @@
+{
+  "schemaVersion": 1,
+  "kind": "owned-subtype-published-matrix-acceptance-v1",
+  "sourceCommit": "2b551be77be7638bb7979522c30cbc418800d179",
+  "command": "node --max-old-space-size=512 scripts/promote-owned-subtype-evidence.mjs",
+  "localLimits": {
+    "cpus": 1,
+    "nice": 15,
+    "maxOldSpaceMiB": 512
+  },
+  "before": {
+    "bytes": 102579190,
+    "sha256": "b7157a9bd3718717127c82564991d7611d02deefd9af303aa63f8649e073eb27"
+  },
+  "staged": {
+    "bytes": 102676066,
+    "sha256": "3021a62601812e3e286cce662e4ab757daae94de530d62099224b91291db96cc"
+  },
+  "published": {
+    "bytes": 102676066,
+    "sha256": "466ad4d9ce09ae5ed071f8ca67c8f4ccb110f85f35d983814a79ba33996cba22"
+  },
+  "coverage": {
+    "archives": 8,
+    "profiles": 16,
+    "cells": 32,
+    "changedObservations": 22,
+    "totalObservations": 655,
+    "evidenceBefore": 881,
+    "evidenceAfter": 889,
+    "retainedFiles": 10269,
+    "projectedFiles": 197
+  },
+  "preservedOriginalEvidence": {
+    "entries": 881,
+    "comparedLines": 1494517,
+    "changes": "Exactly seventy declared live documentation hashes and the append separator; every other previous header/evidence byte matches."
+  },
+  "archives": [
+    {
+      "lane": "javascript",
+      "profiles": [
+        "node-javascript",
+        "node-typescript",
+        "browser-javascript",
+        "browser-react",
+        "browser-worker"
+      ],
+      "routes": [
+        "ordinary",
+        "reviewed"
+      ],
+      "producerCommit": "ab133c88b7fe0ec2c18cb453bccbde203968f7c6",
+      "index": {
+        "path": "docs/evidence/owned-subtype-javascript-hosted-20261025/index.json",
+        "bytes": 673084,
+        "sha256": "2588414932d6d9bbc0d056c0bcb02d4e362a944f6dd89c027241ce44f549d6f8"
+      },
+      "runId": 40228624969,
+      "jobId": 121275380746,
+      "artifactId": 12614538380,
+      "retainedFiles": 1935,
+      "projectedFiles": 23
+    },
+    {
+      "lane": "native",
+      "profiles": [
+        "c",
+        "cpp"
+      ],
+      "routes": [
+        "ordinary",
+        "reviewed"
+      ],
+      "producerCommit": "c70a657c69b64d4ca53c28e2c9b84cae31dc1c8e",
+      "index": {
+        "path": "docs/evidence/owned-subtype-native-hosted-20261023/index.json",
+        "bytes": 228512,
+        "sha256": "817d5155b83ca335e061a5cc40f7a0e9ef8e6819d49040155020ade6a710e4f0"
+      },
+      "runId": 39957447434,
+      "jobId": 120426964753,
+      "artifactId": 12505471323,
+      "retainedFiles": 656,
+      "projectedFiles": 26
+    },
+    {
+      "lane": "perl",
+      "profiles": [
+        "perl"
+      ],
+      "routes": [
+        "ordinary",
+        "reviewed"
+      ],
+      "producerCommit": "23ae28e37befcdf245e94f5f841ed50254fc869c",
+      "index": {
+        "path": "docs/evidence/owned-subtype-perl-hosted-20261023/index.json",
+        "bytes": 95337,
+        "sha256": "c9564fd4096e45751d8ed7c85a643989ecfc135e0676509f7e0fdf9f902eb835"
+      },
+      "runId": 39965393116,
+      "jobId": 120453800717,
+      "artifactId": 12511004918,
+      "retainedFiles": 270,
+      "projectedFiles": 24
+    },
+    {
+      "lane": "languages",
+      "profiles": [
+        "python",
+        "ruby",
+        "rust"
+      ],
+      "routes": [
+        "ordinary",
+        "reviewed"
+      ],
+      "producerCommit": "23ae28e37befcdf245e94f5f841ed50254fc869c",
+      "index": {
+        "path": "docs/evidence/owned-subtype-languages-hosted-20261023/index.json",
+        "bytes": 232718,
+        "sha256": "3f173a9049db5cf56b03c2aa04cac63fda8d257e162c4d8af142da888d87dcb2"
+      },
+      "runId": 39965392366,
+      "jobId": 120453798428,
+      "artifactId": 12510737765,
+      "retainedFiles": 667,
+      "projectedFiles": 27
+    },
+    {
+      "lane": "dotnet",
+      "profiles": [
+        "dotnet"
+      ],
+      "routes": [
+        "ordinary",
+        "reviewed"
+      ],
+      "producerCommit": "390ae18d3a2607bc73463767a33fea0cfb9350b0",
+      "index": {
+        "path": "docs/evidence/owned-subtype-dotnet-hosted-20261024/index.json",
+        "bytes": 582235,
+        "sha256": "f3053383377a467ec51fca861d69531cabad04f299b701aa5bc798cb06c7c99b"
+      },
+      "runId": 40047586162,
+      "jobId": 120732735924,
+      "artifactId": 12544037803,
+      "retainedFiles": 1683,
+      "projectedFiles": 24
+    },
+    {
+      "lane": "jvm",
+      "profiles": [
+        "java",
+        "kotlin"
+      ],
+      "routes": [
+        "ordinary",
+        "reviewed"
+      ],
+      "producerCommit": "390ae18d3a2607bc73463767a33fea0cfb9350b0",
+      "index": {
+        "path": "docs/evidence/owned-subtype-jvm-hosted-20261024/index.json",
+        "bytes": 583645,
+        "sha256": "a47d6f3950a3f6c695009fd7f26f859fc6f4b7f0fca705c280df01ce745bf017"
+      },
+      "runId": 40047586162,
+      "jobId": 120732735830,
+      "artifactId": 12542878796,
+      "retainedFiles": 1687,
+      "projectedFiles": 24
+    },
+    {
+      "lane": "php-native",
+      "profiles": [
+        "php-native"
+      ],
+      "routes": [
+        "ordinary",
+        "reviewed"
+      ],
+      "producerCommit": "390ae18d3a2607bc73463767a33fea0cfb9350b0",
+      "index": {
+        "path": "docs/evidence/owned-subtype-php-native-hosted-20261024/index.json",
+        "bytes": 582339,
+        "sha256": "69cf91e30f366439da57a72390e5c18cb05134c1f78f6bd82e035f7d0c04600a"
+      },
+      "runId": 40047586162,
+      "jobId": 120732735535,
+      "artifactId": 12541954058,
+      "retainedFiles": 1683,
+      "projectedFiles": 24
+    },
+    {
+      "lane": "wit-wasi",
+      "profiles": [
+        "wit-wasi"
+      ],
+      "routes": [
+        "ordinary",
+        "reviewed"
+      ],
+      "producerCommit": "390ae18d3a2607bc73463767a33fea0cfb9350b0",
+      "index": {
+        "path": "docs/evidence/owned-subtype-wit-wasi-hosted-20261024/index.json",
+        "bytes": 583926,
+        "sha256": "641787460dee2ff58d700713b17e89403da301ae6878db0ee9388446df64d03c"
+      },
+      "runId": 40047586162,
+      "jobId": 120732735801,
+      "artifactId": 12543656380,
+      "retainedFiles": 1688,
+      "projectedFiles": 25
+    }
+  ],
+  "sourcePins": [
+    {
+      "path": "docs/consume/c.md",
+      "count": 1,
+      "previousSha256": "3ca3d47ca3c51788d9ec94ba5f41a14bf5dd34e9b23e3d47fc724246047985ff",
+      "currentSha256": "279ec116aeb218a90bd0ceee5e095d4646464eebc3abd2035999382ea56b23b0"
+    },
+    {
+      "path": "docs/consume/cpp.md",
+      "count": 1,
+      "previousSha256": "c17271115bc670f643836bcb7289173a5fef1186c14d1ab75ea40639c536371a",
+      "currentSha256": "83e3a140faa9ee83374a6fb6333d2d5d23584952e523ff1ce0c6e20bc5f56321"
+    },
+    {
+      "path": "docs/consume/dotnet.md",
+      "count": 5,
+      "previousSha256": "58c3d43b7e61e946386762a2007a4f681dc9b7bf2f59c32e10b90df12e12d1f0",
+      "currentSha256": "ded51e955df934508d4b771c828d7754021aa10df039ed311761eebb9edf0917"
+    },
+    {
+      "path": "docs/consume/java.md",
+      "count": 5,
+      "previousSha256": "ea6191fa75426cc95f3768645038d4e049acc18aaa8c91399d36567926a45976",
+      "currentSha256": "8ce3dcf20aa8423de1098dc7a81bedfbe2b40027cc201f7b348241faa12c1160"
+    },
+    {
+      "path": "docs/consume/kotlin.md",
+      "count": 6,
+      "previousSha256": "19ab2a19b0a7d8cd3eb76218b528db9153b3b273617a8c3aa059e0c0cc2b5d56",
+      "currentSha256": "7c21a25b5492fe5c80339d23582116876221184e214f786137375e8b8cb430cd"
+    },
+    {
+      "path": "docs/consume/perl.md",
+      "count": 1,
+      "previousSha256": "24925f276f4187a75622c50e7965b16de5774535294ef259ba50bb310ffa78f4",
+      "currentSha256": "da69fdfb5b1e85e93a5b8a936202d6f46849380ad3b153f99f36325c9335427b"
+    },
+    {
+      "path": "docs/consume/python.md",
+      "count": 1,
+      "previousSha256": "f2b19805b249dab6d81691d3c8a6ac9ddbb6cf3840c0842737d57fbd50debcc4",
+      "currentSha256": "6b4b81e9639cb57ab0a5238c1bcba418498ecebc1a58e910592044f63f04bbd5"
+    },
+    {
+      "path": "docs/consume/ruby.md",
+      "count": 1,
+      "previousSha256": "9dde7184e97b9a316a004ceac45f38f33ef7c0a3d130afe16b0d92f027eabc2f",
+      "currentSha256": "0d8c8133bc9777717e002393578db4d56e4b4a2cab7d36319e8349ab7e64c60a"
+    },
+    {
+      "path": "docs/consume/rust.md",
+      "count": 1,
+      "previousSha256": "62bd264acdf3d31a832d24decb5c3f72635df0dd7f9f5fde00eefbe97422f15e",
+      "currentSha256": "22e213dbe141e2ff99ae8be99db5a8eac012c7ce54295fc9b45aa5249d007260"
+    },
+    {
+      "path": "docs/consume/wit-wasi.md",
+      "count": 2,
+      "previousSha256": "8289583edab34ef75320b8db5e936adef156c86f3d16c17b27b9329a4802d1aa",
+      "currentSha256": "7fc695c7ffc7bbdf665a9754435a25ab828c5cfa1b0c77ab1e2a74c8b6e919cd"
+    },
+    {
+      "path": "docs/lean/existing-package.md",
+      "count": 18,
+      "previousSha256": "22f73f360ba0244adb41b53c7f7ee741d5a583c5c12a275cbd06f21563b7f455",
+      "currentSha256": "4a3337349ba80b02b76f67784833fea3d800dc6523ace8a614816af72a1be81f"
+    },
+    {
+      "path": "docs/lean/export-decisions.md",
+      "count": 22,
+      "previousSha256": "ba50af0a22c5c3cf5b2df19ebf818111ec20cdc31c5b3586262e4171a676c2e3",
+      "currentSha256": "188aa879d25be9d97d8d3b469bfc9b3a28d10b7914bed902da84ff8ff85dffba"
+    },
+    {
+      "path": "docs/php.md",
+      "count": 6,
+      "previousSha256": "1b2cb29b63e93734b794c7d981678200d3c2c670111fe7dbbdfb71b516fceda9",
+      "currentSha256": "f81aa0299c0aecbb773ccec45dcb595405febcc0e6c6608abc0fcc7262db048d"
+    }
+  ],
+  "validation": {
+    "preflight": "Passed from clean committed 2b551be; identical 32-cell, 22-observation output with no tracked writes.",
+    "promotion": "Passed after a second complete serial replay of all eight original hosted archives.",
+    "publishedMatrix": {
+      "passed": 3,
+      "skipped": 0,
+      "durationMs": 17852.329196,
+      "registeredHarness": "tests/checked-javascript.test.mjs",
+      "scope": "Current full evidence bindings, missing/forged/widened controls, all generated references and affected manual guidance."
+    },
+    "livePins": {
+      "references": 16199,
+      "archivedReferences": 353048,
+      "uniquePaths": 2569,
+      "stalePins": 0,
+      "refreshed": 70
+    },
+    "eslint": "passed publication test and registered harness",
+    "installedRuntimeExecutions": 0
+  },
+  "pending": [
+    "Final current-source hosted/Core integration and recurring CI acceptance for #1695/#1472 remain open.",
+    "The separate owned checked-record matrix #1993 is still collecting its aligned native producer results; this Subtype publication does not close it."
+  ]
+}
