@@ -1,0 +1,91 @@
+{
+  "additions": [
+    {
+      "currentSha256": "59a44e574e982282eac9dda0354f306a8f2ee6651cbeb50e4e8f8694b955f828",
+      "path": "tests/helpers/php-wasm-refinement-entry-publication-docs-tests.mjs"
+    },
+    {
+      "currentSha256": "66283bd0c4661433a731e7e4ce38592ee8583901ea033f61d682aac6ca322e03",
+      "path": "tests/helpers/php-wasm-refinement-entry-publication-docs.mjs"
+    },
+    {
+      "currentSha256": "8514a704fa6edc8467e336d4ec44caf999e870ad4b207879e4267ef9943bb4ab",
+      "path": "tests/helpers/php-wasm-refinement-entry-publication-tests.mjs"
+    },
+    {
+      "currentSha256": "204ed3ee2d3d95616f60c9ae1470a96b5a6684f70118b6052be1f82782c4cdb7",
+      "path": "tests/helpers/php-wasm-refinement-entry-publication.mjs"
+    },
+    {
+      "currentSha256": "a7b236ade255456be310787d8563899a4940cc861193488465920c50fc49cda6",
+      "path": "scripts/update-php-wasm-entry-publication-preparation-source-history.mjs"
+    },
+    {
+      "currentSha256": "af26d73bdbade3be0f6b170afa7759074a82a657b31f5f4fb91e2526e82a3177",
+      "path": "tests/helpers/php-wasm-entry-publication-preparation-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "d0899f783bc3418669889838b520340f0f1f40f4950ec19f42afe6e31fcd38a1",
+      "path": "tests/helpers/php-wasm-entry-publication-preparation-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "a13254bee44fddc65a72b9be5647752c441a8d15",
+  "implementationCommits": [
+    "a13254bee44fddc65a72b9be5647752c441a8d15"
+  ],
+  "integrationBaseCommit": "a13254bee44fddc65a72b9be5647752c441a8d15",
+  "integrationUpdates": [
+    {
+      "currentSha256": "18b70fa5141806bf3102422c32b1f7df02980319dd95d74ecb1dec0e1b17ee2f",
+      "edits": [
+        {
+          "current": "import { beforePhpWasmEntryPublicationPreparationSource, phpWasmEntryPublicationPreparationNormalizationPaths } from \"./php-wasm-entry-publication-preparation-source-history.mjs\";\n",
+          "previous": "",
+          "start": 10936
+        },
+        {
+          "current": "\t...phpWasmEntryPublicationPreparationNormalizationPaths\n\t, ...phpWasmEntryCompleteArchiveNormalizationPaths\n",
+          "previous": "\t...phpWasmEntryCompleteArchiveNormalizationPaths\n",
+          "start": 184155
+        },
+        {
+          "current": "\tlet stage = beforePhpWasmEntryPublicationPreparationSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforePhpWasmEntryCompleteArchiveSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforePhpWasmEntryCompleteArchiveSource(path, text, expected);\n",
+          "start": 228010
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "21f34da9f9642e7160f86c6310b712e5bdd366afb4b93e9861bba4df41f5d493"
+    },
+    {
+      "currentSha256": "a3cd31f20d11c22f6ea6e1d1421851cf4e429e4a372db987a60ee36b93c269aa",
+      "edits": [
+        {
+          "current": "import \"./helpers/php-wasm-entry-publication-preparation-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 7741
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "3fbba34c90cfedcee6e0d2dbc1d120610176b10620227aae98a73f5e4c08f225"
+    }
+  ],
+  "milestone": "php-wasm-entry-publication-preparation-source-v1",
+  "predecessorCommit": "0e4ee2db1f0e00e1a279d6de593907b656f54d55",
+  "schemaVersion": 1,
+  "scope": "Prepare exact probe-only inventory and documentation publication after real complete-archive acceptance. The production reader runs the real thirty-route verifier, authenticates every committed archive member and byte at an exact commit, rejects branch/tree/tag-object references, and pins its committed validator sources. Pure projection appends test evidence without changing prepared-package observations; exact paragraph replacement covers PHP consumer, publisher, author and type-reference pages only. Eight focused tests cover actual Git byte audits and negative controls plus synthetic projection/rendering; synthetic references establish no hosted result. Actual terminal-run acceptance, complete committed matrix capture, real docs/inventory publication and final hosted/Core/recurring gates remain required under VO #2061/#1828. No existing inventory, public documentation, workflow or original record-verifier bytes change in this preparation.",
+  "updates": [
+    {
+      "currentSha256": "3fbba34c90cfedcee6e0d2dbc1d120610176b10620227aae98a73f5e4c08f225",
+      "edits": [
+        {
+          "current": "import \"./helpers/php-wasm-refinement-entry-publication-tests.mjs\";\nimport \"./helpers/php-wasm-refinement-entry-publication-docs-tests.mjs\";\n",
+          "previous": "",
+          "start": 7600
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "f0940723968ab9f7344b06b60586d90fd567f900b046e7ab44368e3d6c3aab83"
+    }
+  ]
+}
