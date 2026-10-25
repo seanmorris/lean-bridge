@@ -105,6 +105,7 @@ import "./helpers/owned-checked-record-matrix-publication-source-history-tests.m
 import "./helpers/php-wasm-refinement-entry-hosted-identities-tests.mjs";
 import "./helpers/php-wasm-entry-hosted-identity-source-history-tests.mjs";
 import "./helpers/php-wasm-refinement-entry-hosted-replay-tests.mjs";
+import "./helpers/php-wasm-entry-hosted-replay-source-history-tests.mjs";
 
 const root = resolve(".");
 

@@ -1,0 +1,83 @@
+{
+  "additions": [
+    {
+      "currentSha256": "5249b76489cadc27f75fd5aa193f6c0ffc622fd2db3b375bafef5ea80cfa4044",
+      "path": "tests/helpers/php-wasm-refinement-entry-hosted-replay.mjs"
+    },
+    {
+      "currentSha256": "ae3012098eebe79bd3132b354dd1c26868d45e46324aef0628a2f1355b796409",
+      "path": "tests/helpers/php-wasm-refinement-entry-hosted-replay-tests.mjs"
+    },
+    {
+      "currentSha256": "ddd863ee6013d4800aa4ee8afabc8b5a47207ce2d086229a29d574b95cff0afa",
+      "path": "scripts/update-php-wasm-entry-hosted-replay-source-history.mjs"
+    },
+    {
+      "currentSha256": "42ffe02b22fed85e6ffa0ba4ff62b803674edaff5e4449e7e085e6167b51153c",
+      "path": "tests/helpers/php-wasm-entry-hosted-replay-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "57dec5815f8c3cc47f9de74e6a32a01f4b87552e7058f002246a969630dc5079",
+      "path": "tests/helpers/php-wasm-entry-hosted-replay-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "760c17a7e5cecb0b62008ccbfc5e532b3ab5cfa1",
+  "implementationCommits": [
+    "760c17a7e5cecb0b62008ccbfc5e532b3ab5cfa1"
+  ],
+  "integrationBaseCommit": "760c17a7e5cecb0b62008ccbfc5e532b3ab5cfa1",
+  "integrationUpdates": [
+    {
+      "currentSha256": "72a61ce5399395c3e64d82d632865c75fe8437054f3782f76e872e8ba9a9bda9",
+      "edits": [
+        {
+          "current": "import { beforePhpWasmEntryHostedReplaySource, phpWasmEntryHostedReplayNormalizationPaths } from \"./php-wasm-entry-hosted-replay-source-history.mjs\";\n",
+          "previous": "",
+          "start": 10456
+        },
+        {
+          "current": "\t...phpWasmEntryHostedReplayNormalizationPaths\n\t, ...phpWasmEntryHostedIdentityNormalizationPaths\n",
+          "previous": "\t...phpWasmEntryHostedIdentityNormalizationPaths\n",
+          "start": 183645
+        },
+        {
+          "current": "\tlet stage = beforePhpWasmEntryHostedReplaySource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforePhpWasmEntryHostedIdentitySource(path, text, expected);\n",
+          "previous": "\tlet stage = beforePhpWasmEntryHostedIdentitySource(path, text, expected);\n",
+          "start": 227333
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "97bcfb718fbb41c57fbadd65e3d3a7aa141f54c68b18261df4c04cbd8f1bfb70"
+    },
+    {
+      "currentSha256": "143df32de30b8c957ab39d705e47017164600f34b819e394f72700f7f77cd2f6",
+      "edits": [
+        {
+          "current": "import \"./helpers/php-wasm-entry-hosted-replay-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 7152
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "18a27ecca6516b6c83c5edaca682b00005714e9f124a642f661acc5d3a3b4d8a"
+    }
+  ],
+  "milestone": "php-wasm-entry-hosted-replay-source-v1",
+  "predecessorCommit": "9600df719bd008e64bf89ee79b0247bd38477b9b",
+  "schemaVersion": 1,
+  "scope": "Bind original PHP-Wasm producer replay to exact Git source bytes: retain src/tests/scripts/config/schema/workflows, manifests, toolchain metadata and the consumer-support contract including non-module assets. Stream original Git blobs into a closed SHA256 manifest; write reproducible source ZIPs and independently verify membership and content. Reject tracked symlinks, hidden assume-unchanged edits, ignored untracked source files, wrong revisions, forged manifests, substituted or omitted ZIP members and existing or symlinked destinations. Invoke the original thirty-route CLI only in its clean Node 22 producer checkout, without injected checkers or saved-success shortcuts, and recheck source bytes after execution. Seven focused controls are registered. Actual original-producer source snapshot independently checked 9,647 files / 66,497,862 bytes. complete matrix acceptance remains separate required work under VO #2061/#1828, as do original artifact retention, diagnostic-only partial retention, committed byte audit, support/docs promotion and final gates. No existing workflow, inventory, record verifier or archived evidence changes.",
+  "updates": [
+    {
+      "currentSha256": "18a27ecca6516b6c83c5edaca682b00005714e9f124a642f661acc5d3a3b4d8a",
+      "edits": [
+        {
+          "current": "import \"./helpers/php-wasm-refinement-entry-hosted-replay-tests.mjs\";\n",
+          "previous": "",
+          "start": 7082
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "0f971d53fd33d103f1c36da251c43b2810245fe988b151e08231a120d567da9f"
+    }
+  ]
+}
