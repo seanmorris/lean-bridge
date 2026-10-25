@@ -1,0 +1,30 @@
+{
+  "routes": [
+    {
+      "archiveBytes": 61792037,
+      "archives": 1,
+      "files": [
+        "archives/owned-subtypes-1.0.0-wit-wasi.tar.gz",
+        "package-set-receipt.json",
+        "package-set-receipt.json.sha256"
+      ],
+      "path": "evidence/ordinary/handoff",
+      "receiptSha256": "f9add87f3f872067acb894e405f37c533aba78823c92efbe04a074635379470d",
+      "route": "ordinary"
+    },
+    {
+      "archiveBytes": 115666467,
+      "archives": 2,
+      "files": [
+        "archives/owned-subtypes-1.0.0-c.tar.gz",
+        "archives/owned-subtypes-1.0.0-wit-wasi.tar.gz",
+        "package-set-receipt.json",
+        "package-set-receipt.json.sha256"
+      ],
+      "path": "evidence/reviewed/handoff",
+      "receiptSha256": "cc06e61c1a1ebb466de41a35fea60a0d4ad64ef5da5d5c0aac009ea7db4043bf",
+      "route": "reviewed"
+    }
+  ],
+  "schemaVersion": 1
+}

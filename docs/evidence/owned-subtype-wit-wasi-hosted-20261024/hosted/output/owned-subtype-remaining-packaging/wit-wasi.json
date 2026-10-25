@@ -1,0 +1,87 @@
+{
+  "lane": "wit-wasi",
+  "profile": "installed-owned-subtype-remaining",
+  "reports": [
+    {
+      "compilerSelectedConstructors": true,
+      "deterministicReassembly": true,
+      "handoffRemovedBeforeRelocatedExecution": true,
+      "immutableInstalledInputs": true,
+      "lane": "wit-wasi",
+      "lifecycle": {
+        "wit-wasi": {
+          "fallback": "explicit-release",
+          "observation": "independent-owner-survives"
+        }
+      },
+      "observations": {
+        "wit-wasi": {
+          "checks": 141,
+          "consumerSha256": "85a488e66929ed76f61d558cd6f33c95031ebb50f6f800149787b433a020a019"
+        }
+      },
+      "packageSetReceiptSha256": "f9add87f3f872067acb894e405f37c533aba78823c92efbe04a074635379470d",
+      "reassembled": {
+        "componentReceiptSha256": "be0e6fcbaa91ef3163e837fd108250790501e9a601ccc32e414cd4a0dcb2308d",
+        "packages": [
+          {
+            "archive": "owned-subtypes-1.0.0-wit-wasi.tar.gz",
+            "sha256": "7f1cd5817dcbd4cea3098ce68bd0c4ee545ead12ac39c0bdf3b768973b60e77f"
+          }
+        ]
+      },
+      "relocatedInstallation": true,
+      "repeated": {
+        "wit-wasi": {
+          "checks": 141,
+          "runs": 1
+        }
+      },
+      "route": "ordinary",
+      "sourceFreeInstallation": true,
+      "sourceUnchanged": true,
+      "transferredInputCheckedBeforeHandoff": true
+    },
+    {
+      "compilerSelectedConstructors": true,
+      "deterministicReassembly": true,
+      "handoffRemovedBeforeRelocatedExecution": true,
+      "immutableInstalledInputs": true,
+      "lane": "wit-wasi",
+      "lifecycle": {
+        "wit-wasi": {
+          "fallback": "explicit-release",
+          "observation": "independent-owner-survives"
+        }
+      },
+      "observations": {
+        "wit-wasi": {
+          "checks": 141,
+          "consumerSha256": "85a488e66929ed76f61d558cd6f33c95031ebb50f6f800149787b433a020a019"
+        }
+      },
+      "packageSetReceiptSha256": "cc06e61c1a1ebb466de41a35fea60a0d4ad64ef5da5d5c0aac009ea7db4043bf",
+      "reassembled": {
+        "componentReceiptSha256": "e895849eabe4ddbd501380370e6d36a569062bfdfeb33151ed26ebf988b06a77",
+        "packages": [
+          {
+            "archive": "owned-subtypes-1.0.0-wit-wasi.tar.gz",
+            "sha256": "bba2dd600c2bc41fb13db140b08afdcc127bbffa158ad56d8943fbd56ee23905"
+          }
+        ]
+      },
+      "relocatedInstallation": true,
+      "repeated": {
+        "wit-wasi": {
+          "checks": 141,
+          "runs": 1
+        }
+      },
+      "route": "reviewed",
+      "sourceFreeInstallation": true,
+      "sourceUnchanged": true,
+      "transferredInputCheckedBeforeHandoff": true
+    }
+  ],
+  "schemaVersion": 1
+}

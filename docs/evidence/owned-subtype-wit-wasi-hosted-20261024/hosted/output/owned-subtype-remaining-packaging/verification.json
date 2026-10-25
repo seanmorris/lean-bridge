@@ -1,0 +1,31 @@
+{
+  "kind": "owned-subtype-wit-wasi",
+  "producerCommit": "390ae18d3a2607bc73463767a33fea0cfb9350b0",
+  "profiles": [
+    "wit-wasi"
+  ],
+  "reportSha256": "5fd1311ea2c698d971605803cbce1f1f50758443b9ce7ddbc2af51ad3bd72448",
+  "reports": 2,
+  "retainedPackages": {
+    "routes": [
+      {
+        "archiveBytes": 61792037,
+        "archives": 1,
+        "receiptSha256": "f9add87f3f872067acb894e405f37c533aba78823c92efbe04a074635379470d",
+        "route": "ordinary"
+      },
+      {
+        "archiveBytes": 115666467,
+        "archives": 2,
+        "receiptSha256": "cc06e61c1a1ebb466de41a35fea60a0d4ad64ef5da5d5c0aac009ea7db4043bf",
+        "route": "reviewed"
+      }
+    ],
+    "schemaVersion": 1
+  },
+  "routes": [
+    "ordinary",
+    "reviewed"
+  ],
+  "schemaVersion": 1
+}

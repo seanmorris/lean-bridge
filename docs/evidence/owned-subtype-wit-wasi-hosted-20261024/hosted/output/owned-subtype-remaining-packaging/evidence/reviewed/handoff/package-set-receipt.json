@@ -1,0 +1,57 @@
+{
+  "component": {
+    "id": "owned-subtypes@1.0.0",
+    "name": "owned-subtypes",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 53870400,
+          "path": "archives/owned-subtypes-1.0.0-c.tar.gz",
+          "sha256": "881939c18177b7471208ec9779cda369fb28d9308d70c4dd5467dbe7a5cbdccd"
+        }
+      ],
+      "ecosystem": "c",
+      "name": "owned-subtypes",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "c",
+      "version": "1.0.0"
+    },
+    {
+      "artifacts": [
+        {
+          "bytes": 61796067,
+          "path": "archives/owned-subtypes-1.0.0-wit-wasi.tar.gz",
+          "sha256": "bba2dd600c2bc41fb13db140b08afdcc127bbffa158ad56d8943fbd56ee23905"
+        }
+      ],
+      "ecosystem": "wit-wasi",
+      "name": "owned-subtypes",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "wit-wasi",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "aed6bc1917801bda6f746e638f061a9fe2ed3a92c0a96f8ff0ab5970d2cd94ca",
+      "id": "native-library-v1",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "855af90d8afc13037a7882ad08831414cfc844519a3f6fbd8b7b025b5ca05fbc"
+  }
+}
