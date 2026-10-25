@@ -11,12 +11,8 @@ import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { jvmProbeRepairBytes } from "./jvm-probe-repair-history.mjs";
 import { readTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { historicalTypeSurfaceCells as typeSurfaceCells } from "./historical-type-surface-cells.mjs";
-import { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from "../../src/build/native-graph-model.mjs";
-import { generateOwnedCPackage } from "../../src/backends/c/owned-package.mjs";
 import { gmpIdentity } from "../../src/backends/c/gmp.mjs";
-import { generateOwnedJvmPackage } from "../../src/backends/jvm/owned-package.mjs";
 import { generateCopiedJvmKotlinPackage } from "../../src/backends/jvm/copied-kotlin.mjs";
-import { ownedJvmAdapterSources } from "../../src/build/owned-jvm-artifacts.mjs";
 import { validateKotlinCompilation } from "../../src/build/compile-jvm-sources.mjs";
 import { ownedJvmInstalledFixture, ownedJvmDocumentationExamples } from "./owned-jvm-installed.mjs";
 import { assertOwnedJvmCalls, ownedJvmCallReceipt, ownedJvmCallSources } from "./owned-jvm-call-evidence.mjs";
@@ -29,6 +25,18 @@ import { jvmStructuredRegressionFixtures } from "./jvm-structured-callable-regre
 import { assertManagedCiIsolationEvidence } from "./managed-ci-isolation-evidence.mjs";
 import { managedCiIsolationPath } from "./managed-ci-isolation-history.mjs";
 import { ownedJvmBaseline, ownedJvmExecutionPath, ownedJvmChangedPaths, ownedJvmAddedPaths, ownedJvmGeneratedPaths, ownedJvmSortedGeneratedPaths, reverseOwnedJvmUpdate } from "./owned-jvm-source-history.mjs";
+import { moduleAtProducerWithSourceReads } from "./producer-module.mjs";
+
+export const ownedJvmPackageProducer = "578f04d09320e6998959390a3a0218ac6fd66d02";
+export const ownedJvmPackageProducerEntries = Object.freeze([
+	"src/build/native-graph-model.mjs", "src/backends/c/owned-package.mjs"
+	, "src/backends/jvm/owned-package.mjs", "src/build/owned-jvm-artifacts.mjs"
+]);
+let producerPromise;
+const producerModules = () => producerPromise ??= Promise.all(
+	ownedJvmPackageProducerEntries.map(path =>
+		moduleAtProducerWithSourceReads(ownedJvmPackageProducer, path))
+).then(modules => Object.assign({}, ...modules));
 
 const predecessor = JSON.parse(readFileSync(managedCiIsolationPath, "utf8"));
 export const ownedJvmExecutionSources = [...new Set([
@@ -141,6 +149,9 @@ export const assertOwnedJvmPackageReport = async (report, scalar, reviewed) => {
 		"src/analyze/NativeExports.lean", await readFile("src/analyze/NativeExports.lean"), input.sourceIdentity.extractorSha256)));
 	assert.equal(input.sourceIdentity.modules[0].source.sha256, sha256(await readFile(
 		"tests/fixtures/onboarding/" + (scalar ? "owned-scalars" : "owned-dotnet-callables") + "/Owned.lean")));
+	const { createCompiledNativeModel, generateCompiledNativeLeanAdapters
+		, generateOwnedCPackage, generateOwnedJvmPackage, ownedJvmAdapterSources }
+		= await producerModules();
 	const model = createCompiledNativeModel(input, { ownedGraphs: true, ownedHostCallbacks: true });
 	const native = generateCompiledNativeLeanAdapters(model), c = generateOwnedCPackage({ ...input, hostCallbacks: true });
 	const projection = generateOwnedJvmPackage(model.bindingIr), generated = generateOwnedJvmPackage(model.bindingIr, compiled.evidence);

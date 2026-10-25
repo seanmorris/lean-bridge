@@ -6,11 +6,12 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforePostPerlCallbackStaging } from "./post-perl-callback-staging-history.mjs";
+import { bytesAtProducer } from "./producer-source.mjs";
+import { moduleAtProducerWithSourceReads } from "./producer-module.mjs";
 import { unpackOwnedCallbackReports } from "./owned-callback-result-evidence.mjs";
 import { ownedPerlCallbackBaseline, ownedPerlCallbackChangedPaths
 	, ownedPerlCallbackHistoryPath, ownedPerlCallbackHistorySha256
-	, ownedPerlCallbackCompletedPredecessor } from "./owned-perl-callback-result-history.mjs";
+	, ownedPerlCallbackCompletedPredecessor, ownedPerlCallbackProducer } from "./owned-perl-callback-result-history.mjs";
 import { assertOwnedPerlCallbackResultCi, ownedPerlCallbackResultReports
 	, ownedPerlCallbackEvidencePaths } from "./owned-perl-callback-result-ci.mjs";
 import { assertOwnedPerlCallbackRuntime } from "./owned-perl-callback-result-runtime-evidence.mjs";
@@ -26,6 +27,16 @@ const frozen = value => {
 	return Object.freeze(value);
 };
 const keys = (value, names) => assert.deepEqual(Object.keys(value).sort(), names.split(" ").sort());
+let producerPromise;
+export const ownedPerlCallbackProducerEntries = Object.freeze([
+	"tests/helpers/owned-perl-callback-result-acceptance.mjs"
+	, "tests/helpers/owned-perl-callback-result-package-evidence.mjs"
+	, "tests/helpers/owned-perl-callback-result-combined-evidence.mjs"
+]);
+const producerModule = () => producerPromise ??= Promise.all(
+	ownedPerlCallbackProducerEntries.map(path =>
+		moduleAtProducerWithSourceReads(ownedPerlCallbackProducer, path)))
+	.then(modules => Object.assign({}, ...modules));
 export const ownedPerlCallbackEvidencePath = "docs/evidence/owned-perl-callback-results-20261003.json";
 export const ownedPerlCallbackPrevious = ownedPerlCallbackCompletedPredecessor;
 export const ownedPerlCallbackScope = frozen({
@@ -136,11 +147,11 @@ const runtimeTitles = {
 	, installed: modes.map(mode => `installed CPAN callback-result matrix preserves combined owners (${mode})`)
 	, "combined-release": ["installed CPAN and eight peer targets share callback-result contracts"]
 };
-const literalTitles = async paths => {
+const literalTitles = async (paths, readSource) => {
 	const titles = [];
 	for(const path of paths)
 	{
-		const source = await readFile(path, "utf8");
+		const source = (await readSource(path)).toString();
 		if(path === helper("combined-evidence-tests"))
 		{
 			assert.ok(source.includes('for(const mode of ["ordinary", "reviewed"])'));
@@ -185,6 +196,28 @@ export const assertOwnedPerlCallbackReport = async (path, item, readSource = rea
 };
 
 /**
+ * Replay only the frozen receipt with its original validators and generators.
+ * Fresh runtime reports continue through assertOwnedPerlCallbackReport.
+ *
+ * @param path - Original required report slot.
+ * @param item - Retained observation, checked without changing its contents.
+ * @param readSource - Exact producer bytes, overridable for rejection controls.
+ */
+export const assertOwnedPerlCallbackHistoricalReport = async (
+	path, item, readSource = source => bytesAtProducer(ownedPerlCallbackProducer, source)
+) => {
+	assert.ok(originalReports.includes(path), path);
+	const name = path.split("/").at(-1);
+	assert.equal(item.mode, name.startsWith("ordinary") ? "ordinary" : "reviewed");
+	const { assertOwnedPerlCallbackReport: historicalReport
+		, assertOwnedPerlCallbackPackage: historicalPackage
+		, assertOwnedPerlCallbackCombinedRelease: historicalCombined } = await producerModule();
+	if(name.endsWith("-combined-package.json")) return historicalPackage(name, item, readSource);
+	if(name.endsWith("-combined-release.json")) return historicalCombined(name, item, readSource);
+	return historicalReport(path, item);
+};
+
+/**
  * Require all 37 executions, 14 verifier tests, and 18 source-bound reports.
  *
  * @param record - Candidate frozen receipt. No file is created by this checker.
@@ -200,10 +233,9 @@ export const assertOwnedPerlCallbackAcceptance = async record => {
 	assert.equal(sha256(await readFile(record.sourceHistory.path)), record.sourceHistory.sha256);
 	assert.deepEqual(Object.keys(record.sources).sort(), await ownedPerlCallbackSourcePaths());
 	const readSource = async path => {
-		if(!Object.hasOwn(record.sources, path)) return readFile(path);
 		const digest = record.sources[path];
-		const source = beforePostPerlCallbackStaging(path, await readFile(path), digest);
-		assert.equal(sha256(source), digest, path); return source;
+		if(Object.hasOwn(record.sources, path)) assert.match(digest, /^[a-f0-9]{64}$/u, path);
+		return bytesAtProducer(ownedPerlCallbackProducer, path, digest);
 	};
 	for(const path of Object.keys(record.sources)) await readSource(path);
 	assert.deepEqual(record.runs.map(({ name, tests }) => ({ name, tests })), ownedPerlCallbackRuns);
@@ -211,17 +243,18 @@ export const assertOwnedPerlCallbackAcceptance = async record => {
 	{
 		keys(run, "name tests exitCode sha256 text");
 		const titles = run.name === "contracts"
-			? await literalTitles(["factory", "xs", "contract", "package", "installer"].map(name => helper(name + "-tests")))
+			? await literalTitles(["factory", "xs", "contract", "package", "installer"].map(name => helper(name + "-tests")), readSource)
 			: runtimeTitles[run.name];
 		passed(run, run.tests, titles);
 	}
 	keys(record.verification, "command exitCode sha256 text");
 	assert.equal(record.verification.command, "npm run test:owned-perl-callback-evidence");
-	passed(record.verification, 14, await literalTitles([...originalEvidence].sort()));
+	passed(record.verification, 14, await literalTitles([...originalEvidence].sort(), readSource));
 	keys(record.archive, "format nodes reports");
 	for(const entry of Object.values(record.archive.reports)) keys(entry, "bytes sha256 data");
 	const reports = unpackOwnedCallbackReports(record.archive);
 	assert.deepEqual(Object.keys(reports).sort(), [...originalReports].sort());
-	for(const [path, item] of Object.entries(reports)) await assertOwnedPerlCallbackReport(path, item, readSource);
+	for(const [path, item] of Object.entries(reports))
+		await assertOwnedPerlCallbackHistoricalReport(path, item, readSource);
 	assertOwnedPerlCallbackResultCi((await readSource(".github/workflows/consumer-matrix.yml")).toString(), JSON.parse(await readSource("package.json")), true);
 };

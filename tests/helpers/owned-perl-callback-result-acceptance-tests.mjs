@@ -9,7 +9,8 @@ import { dirname, join } from "node:path";
 import test from "node:test";
 import ts from "typescript";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforePostPerlCallbackStaging } from "./post-perl-callback-staging-history.mjs";
+import { bytesAtProducer } from "./producer-source.mjs";
+import { ownedPerlCallbackProducer } from "./owned-perl-callback-result-history.mjs";
 import { unpackOwnedCallbackReports } from "./owned-callback-result-evidence.mjs";
 import { assertOwnedPerlCallbackAcceptance, assertOwnedPerlCallbackReport
 	, ownedPerlCallbackEvidencePath, ownedPerlCallbackSourcePaths } from "./owned-perl-callback-result-acceptance.mjs";
@@ -17,6 +18,7 @@ import { ownedPerlCallbackExecutionPaths, ownedPerlCallbackEvidencePaths } from 
 
 const receipt = async () => JSON.parse(await readFile(ownedPerlCallbackEvidencePath, "utf8"));
 test("Perl acceptance covers the execution and verifier import closure", async () => {
+	const record = await receipt();
 	const paths = new Set(await ownedPerlCallbackSourcePaths());
 	const pending = [...ownedPerlCallbackExecutionPaths.filter(path => !path.includes("-variant-"))
 		, ...ownedPerlCallbackEvidencePaths.filter(path => !path.includes("-variant-"))
@@ -30,7 +32,8 @@ test("Perl acceptance covers the execution and verifier import closure", async (
 		assert.ok(paths.has(path), `Unrecorded imported source: ${path}`);
 		visited.add(path);
 		if(!path.endsWith(".mjs")) continue;
-		const source = beforePostPerlCallbackStaging(path, await readFile(path, "utf8"));
+		assert.match(record.sources[path], /^[a-f0-9]{64}$/u, path);
+		const source = bytesAtProducer(ownedPerlCallbackProducer, path, record.sources[path]).toString();
 		const tree = ts.createSourceFile(path, source, ts.ScriptTarget.Latest, true, ts.ScriptKind.JS);
 		const visit = node => {
 			const specifier = ts.isImportDeclaration(node) || ts.isExportDeclaration(node) ? node.moduleSpecifier
@@ -58,6 +61,7 @@ test("Perl acceptance rejects skipped runs, changed sources and inflated guarant
 		, item => item.previous.sha256 = "0".repeat(64)
 		, item => item.sourceHistory.sha256 = "0".repeat(64)
 		, item => item.sources[Object.keys(item.sources)[0]] = "0".repeat(64)
+		, item => item.sources[Object.keys(item.sources)[0]] = undefined
 		, item => delete item.sources[Object.keys(item.sources)[0]]
 		, item => item.sources["unrecorded-source.mjs"] = "a".repeat(64)
 		, item => item.runs.pop()

@@ -29,22 +29,28 @@ test("native PHP transfers preserve frozen receipts without promoting unrelated 
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path]);
 		assert.equal(update.currentSha256, record.sources[update.path]);
-		const source = beforeOwnedPhpWasmTransfer(update.path, await readFile(update.path, "utf8")), prior = beforeOwnedPhpTransfer(update.path, source);
+		const source = beforeOwnedPhpWasmTransfer(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const prior = beforeOwnedPhpTransfer(update.path, source, update.previousSha256);
 		assert.equal(sha256(prior), update.previousSha256);
-		assert.equal(beforeOwnedPhpTransfer(update.path, prior), prior);
+		assert.equal(beforeOwnedPhpTransfer(update.path, prior, update.previousSha256), prior);
 		assert.equal(beforeOwnedPhpTransfer(update.path, source, update.currentSha256), source);
 	}
-	const current = beforeOwnedPhpWasmTransfer("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8"));
-	const prior = JSON.parse(beforeOwnedPhpTransfer("docs/type-surface.v1.json", current));
-	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedPhpWasmTransferHistoricalBytes(file.path, await readFile(file.path)));
+	const inventoryPath = "docs/type-surface.v1.json";
+	const inventory = record.updates.find(update => update.path === inventoryPath);
+	const current = beforeOwnedPhpWasmTransfer(inventoryPath, await readFile(inventoryPath, "utf8"), inventory.currentSha256);
+	const prior = JSON.parse(beforeOwnedPhpTransfer(inventoryPath, current, inventory.previousSha256));
+	for(const evidence of prior.evidence) for(const file of evidence.files)
+		file.sha256 = sha256(ownedPhpWasmTransferHistoricalBytes(file.path
+			, await readFile(file.path), record.sources[file.path] ?? file.sha256));
 	assert.deepEqual(JSON.parse(current), prior);
 });
 
 test("native PHP transfer history rejects unknown edits and forged reversal spans", async () => {
 	for(const update of (await read()).updates)
 	{
-		const source = beforeOwnedPhpWasmTransfer(update.path, await readFile(update.path, "utf8")), unknown = source + "\n/* unrelated */\n";
-		assert.equal(beforeOwnedPhpTransfer(update.path, unknown), unknown);
+		const source = beforeOwnedPhpWasmTransfer(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const unknown = source + "\n/* unrelated */\n";
+		assert.equal(beforeOwnedPhpTransfer(update.path, unknown, update.previousSha256), unknown);
 		assert.throws(() => reverseOwnedPhpTransferUpdate(unknown, update));
 		for(const changed of [{ ...update, previousSha256: "0".repeat(64) }
 			, { ...update, path: "unknown.mjs" }

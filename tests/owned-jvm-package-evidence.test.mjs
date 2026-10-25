@@ -13,6 +13,7 @@ import { generateCopiedJvmKotlinPackage } from "../src/backends/jvm/copied-kotli
 import { jvmStructuredRegressionFixtures } from "./helpers/jvm-structured-callable-regression.mjs";
 import { assertOwnedJvmGeneratedHistory, assertOwnedJvmPackageExecution, assertOwnedJvmPackageIntegration } from "./helpers/owned-jvm-package-evidence.mjs";
 import { beforeOwnedJvmPackages, beforeOwnedJvmGenerated, ownedJvmHistoricalBytes, ownedJvmHistoryPath, ownedJvmExecutionPath, reverseOwnedJvmUpdate } from "./helpers/owned-jvm-source-history.mjs";
+import "./helpers/owned-receipt-producer-replay-tests.mjs";
 
 const json = async path => JSON.parse(await readFile(path, "utf8"));
 
