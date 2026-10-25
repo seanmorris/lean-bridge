@@ -1,0 +1,91 @@
+{
+  "additions": [
+    {
+      "currentSha256": "e2b9ba3d051a08ec4e9c8fe96786678e1d62b1d349ccc65a6dbb73a75641b3d5",
+      "path": "scripts/archive-php-wasm-refinement-entry-hosted.mjs"
+    },
+    {
+      "currentSha256": "e1132b001d1aaea0d7f6641898e81f70b7b16071ec67b1eb17cdf3978433b653",
+      "path": "scripts/check-php-wasm-refinement-entry-hosted-archive.mjs"
+    },
+    {
+      "currentSha256": "6ee7c09a8e5967b303941b2be340bf67676656cb9ecec11f672bfd756b9c0504",
+      "path": "tests/helpers/php-wasm-refinement-entry-hosted-archive-tests.mjs"
+    },
+    {
+      "currentSha256": "e7519c9cebebc70e5b1d23c3e5273b490c13e747aebb710e6f430afcdb3d6bdc",
+      "path": "tests/helpers/php-wasm-refinement-entry-hosted-archive.mjs"
+    },
+    {
+      "currentSha256": "02bc28bead18f44f7e05245a9ffc5c0fce497cdf417ff9a0249576c20ad4416e",
+      "path": "scripts/update-php-wasm-entry-complete-archive-source-history.mjs"
+    },
+    {
+      "currentSha256": "3b67f1737247876b6fe431ca1a1de4c52a6139b94415ab96e56ea4d475918b27",
+      "path": "tests/helpers/php-wasm-entry-complete-archive-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "05564735ba73fe2588f779c6352250ab9f06448cd7587f249e007709068eac12",
+      "path": "tests/helpers/php-wasm-entry-complete-archive-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "a0fb9a8459d4bccd5416637f6e73d75bcb2e4f4d",
+  "implementationCommits": [
+    "a0fb9a8459d4bccd5416637f6e73d75bcb2e4f4d"
+  ],
+  "integrationBaseCommit": "a0fb9a8459d4bccd5416637f6e73d75bcb2e4f4d",
+  "integrationUpdates": [
+    {
+      "currentSha256": "21f34da9f9642e7160f86c6310b712e5bdd366afb4b93e9861bba4df41f5d493",
+      "edits": [
+        {
+          "current": "import { beforePhpWasmEntryCompleteArchiveSource, phpWasmEntryCompleteArchiveNormalizationPaths } from \"./php-wasm-entry-complete-archive-source-history.mjs\";\n",
+          "previous": "",
+          "start": 10777
+        },
+        {
+          "current": "\t...phpWasmEntryCompleteArchiveNormalizationPaths\n\t, ...phpWasmEntryDiagnosticRetentionNormalizationPaths\n",
+          "previous": "\t...phpWasmEntryDiagnosticRetentionNormalizationPaths\n",
+          "start": 183975
+        },
+        {
+          "current": "\tlet stage = beforePhpWasmEntryCompleteArchiveSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforePhpWasmEntryDiagnosticRetentionSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforePhpWasmEntryDiagnosticRetentionSource(path, text, expected);\n",
+          "start": 227771
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "d66b79718b350c73d0bc7f80aa86aff307f565dbd60f38bb0095fcf378198434"
+    },
+    {
+      "currentSha256": "f0940723968ab9f7344b06b60586d90fd567f900b046e7ab44368e3d6c3aab83",
+      "edits": [
+        {
+          "current": "import \"./helpers/php-wasm-entry-complete-archive-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 7523
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "39f34f8a55c3859891400eb89e3ee1eb4dcfd8f1cb948e9c4b130184dde0459c"
+    }
+  ],
+  "milestone": "php-wasm-entry-complete-archive-source-v1",
+  "predecessorCommit": "042b9b177217c992bd01a4d708a83c654bb7267e",
+  "schemaVersion": 1,
+  "scope": "Retain all 27 original producer artifacts and the aggregate artifact from one terminal successful PHP-Wasm entry run. Preserve unchanged raw APIs, original ZIP ranges, exact extracted output, and shared producer/archiver source snapshots split into Git-safe ranges. Independently reconstruct every artifact and source snapshot, close paths and byte identities, require the exact clean original producer checkout, and execute its real thirty-route verifier with no caller-supplied checker or saved-success shortcut. Compare all hosted and capture-time summary semantics against fresh replay, allowing only independently validated Node 22 patch/minor version differences and retaining both originals. Register six structural/comparison/pre-execution refusal tests; these synthetic fixtures establish no installed result. Actual terminal-run capture, committed-byte audit, adversarial retained acceptance, support/docs promotion and final hosted/Core/recurring gates remain required under VO #2061/#1828. No support inventory, existing workflow, record verifier or historical evidence changes.",
+  "updates": [
+    {
+      "currentSha256": "39f34f8a55c3859891400eb89e3ee1eb4dcfd8f1cb948e9c4b130184dde0459c",
+      "edits": [
+        {
+          "current": "import \"./helpers/php-wasm-refinement-entry-hosted-archive-tests.mjs\";\n",
+          "previous": "",
+          "start": 7452
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "8463c7831da3c0ec93ea9a115d29d0af931577f9d473fa894629bee86096e4b7"
+    }
+  ]
+}
