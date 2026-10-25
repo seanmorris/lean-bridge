@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertIsolatedWasmtimeCapiBootstraps } from "./wasmtime-capi-bootstrap.mjs";
 import { assertOwnedWitBorrowCi } from "./wit-owned-borrow-ci.mjs";
 
 export const ownedWitReceiverScript = "LEAN_BRIDGE_WIT_OWNED_RECEIVER_TEST=1 node --test --test-concurrency=1 tests/wit-owned-receiver-model.test.mjs tests/wit-owned-receivers.test.mjs tests/wit-owned-receiver-resource.test.mjs tests/wit-owned-receiver-packaging.test.mjs tests/wit-owned-receiver-resource-packaging.test.mjs";
@@ -29,10 +30,9 @@ export const assertOwnedWitReceiverCi = (workflow, manifest) => {
 		, "ripgrep", "libgmp-dev"
 		, "bash scripts/bootstrap-toolchains.sh --lean-only"
 		, "bash scripts/bootstrap-toolchains.sh --wasm-tools-only"
-		, "nix build .#wasmtime-c-api --out-link build/wasmtime-c-api"
 		, "npm ci --ignore-scripts"])
 		assert.ok(job.includes(required), required);
-	assert.match(job, /uses: cachix\/install-nix-action@v31/u);
+	assertIsolatedWasmtimeCapiBootstraps(job);
 	const step = job.split("      - name: Execute WIT receiver acceptance\n")[1]?.split("      - name: ")[0];
 	assert.ok(step); assert.doesNotMatch(step, /^ {8}(?:if|continue-on-error):/mu);
 	assert.match(step, /^ {8}shell: bash$/mu);

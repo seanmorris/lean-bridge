@@ -65,7 +65,7 @@ test("nominal WIT CI refuses dropped gates, partial uploads and weakened bootstr
 		, ["build-essential cmake pkg-config zstd ripgrep", "pkg-config ripgrep"]
 		, ["          bash scripts/bootstrap-toolchains.sh --lean-only\n", ""]
 		, ["          bash scripts/bootstrap-toolchains.sh --wasm-tools-only\n", ""]
-		, ["          nix build .#wasmtime-c-api --out-link build/wasmtime-c-api\n", ""]
+		, ["sha256sum --check --status", "true"]
 		, ["if: always() && (steps.consumer.outcome", "if: (steps.consumer.outcome"]
 	]) {
 		const changed = source.replace(body, () => body.replace(from, () => to)); assert.notEqual(changed, source);

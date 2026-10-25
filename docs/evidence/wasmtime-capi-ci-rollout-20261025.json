@@ -1,0 +1,324 @@
+{
+  "schemaVersion": 1,
+  "profile": "wasmtime-capi-ci-rollout-source-qualification",
+  "predecessorCommit": "9b6cd8048433479b5f09eeb328afb301fa1ad9b2",
+  "sourceIdentity": {
+    "kind": "pre-implementation-working-tree-bytes",
+    "files": [
+      {
+        "path": ".github/workflows/callback-checked-record-remaining.yml",
+        "bytes": 6341,
+        "sha256": "88611860d7112eb29308347cfef9733b03478db803da1d6b57c9e7240915342f"
+      },
+      {
+        "path": ".github/workflows/callback-subtype-remaining.yml",
+        "bytes": 6229,
+        "sha256": "3d2c383e600158978a28f0724e988ca75da191c5ccca087cfbda9386d2440505"
+      },
+      {
+        "path": ".github/workflows/checked-record-value-index-wit.yml",
+        "bytes": 4018,
+        "sha256": "e2582db7a7b9db417ba5eead833f7f9517b8d2bbfb1db851681f7451921f5807"
+      },
+      {
+        "path": ".github/workflows/consumer-matrix.yml",
+        "bytes": 352067,
+        "sha256": "7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3"
+      },
+      {
+        "path": ".github/workflows/dependent-checked-record-wit.yml",
+        "bytes": 4027,
+        "sha256": "195a03368ea50a17099412d30f812a6f8d90d326bcc1fc879c52ef52dd72d1db"
+      },
+      {
+        "path": ".github/workflows/generic-subtype-managed-wit.yml",
+        "bytes": 10502,
+        "sha256": "2dd49b42235ecbd49db1a99435a0dfb149fc990779a1ec3e58db1b8127ff632e"
+      },
+      {
+        "path": ".github/workflows/inherited-checked-record-wit.yml",
+        "bytes": 3996,
+        "sha256": "cd1c2ced7175dc2a4b8bf2da3bc3639ed8a09f15f14074937e42701c1946aece"
+      },
+      {
+        "path": ".github/workflows/nested-checked-record-wit.yml",
+        "bytes": 3963,
+        "sha256": "315a2de3dccc79de79090ab084edda55a1a9f678c974bb5fdb7dce63e384b3ca"
+      },
+      {
+        "path": ".github/workflows/nominal-primitive-subtype-wit.yml",
+        "bytes": 3998,
+        "sha256": "783c18a05989136f5ffa30597d61b0b81683adc519b54e9a93d15edd022f2571"
+      },
+      {
+        "path": ".github/workflows/owned-subtype-remaining.yml",
+        "bytes": 7321,
+        "sha256": "5d3e5dae5ecc87abd03d26a41f8f97bc403ea53c42355f5554195d3acb5c756b"
+      },
+      {
+        "path": ".github/workflows/recursive-checked-record-wit.yml",
+        "bytes": 3994,
+        "sha256": "712f77d6542fdf8e3e9f5e7898a103fc9e4fe32d6966b81c097d7a427ba84e84"
+      },
+      {
+        "path": ".github/workflows/zero-payload-checked-record-wit.yml",
+        "bytes": 4015,
+        "sha256": "66ad4f3303e653eaaf692a3cd35d98055e36144053613e2eddc6a8e6d11a1dc2"
+      },
+      {
+        "path": "docs/consume/wit-wasi.md",
+        "bytes": 107647,
+        "sha256": "8289583edab34ef75320b8db5e936adef156c86f3d16c17b27b9329a4802d1aa"
+      },
+      {
+        "path": "docs/contributing/testing.md",
+        "bytes": 261119,
+        "sha256": "09ca6df5f173172191d89cd852be4345620a9409c05108bd52e696d62926fdbf"
+      },
+      {
+        "path": "tests/helpers/checked-record-value-index-wit-ci-workflow-tests.mjs",
+        "bytes": 4605,
+        "sha256": "f80480bb8b97d6829db99c7a4615f8069f108eceb773a61c55a30db2a824d67e"
+      },
+      {
+        "path": "tests/helpers/checked-record-value-index-wit-ci-workflow.mjs",
+        "bytes": 5135,
+        "sha256": "e029c50ceac9a4e88965c27c4b7cdfd6ef4c2179bce405a23e82416bb8b4099c"
+      },
+      {
+        "path": "tests/helpers/dependent-checked-record-wit-ci-workflow-tests.mjs",
+        "bytes": 4645,
+        "sha256": "91f10db776c44cb41bc1eb10ccf9f4dc59fa2e632bfe673cdba0c7c382c45a4d"
+      },
+      {
+        "path": "tests/helpers/dependent-checked-record-wit-ci-workflow.mjs",
+        "bytes": 5158,
+        "sha256": "b487a1aaa2ae37af4f0e58a8a9208705b8d3e73b7ed7c4259185c43cbfdb26ad"
+      },
+      {
+        "path": "tests/helpers/inherited-checked-record-wit-ci-workflow-tests.mjs",
+        "bytes": 4587,
+        "sha256": "fb30a5fc72319c80479f73ff2a67f355f1bad6cf222f6e685158628f3e1255ac"
+      },
+      {
+        "path": "tests/helpers/inherited-checked-record-wit-ci-workflow.mjs",
+        "bytes": 5123,
+        "sha256": "5dc2df2c6c1139d160dbc659857e1340f03320e705559c1c08f5364938355358"
+      },
+      {
+        "path": "tests/helpers/nested-checked-record-wit-ci-workflow-tests.mjs",
+        "bytes": 4530,
+        "sha256": "9aeb787753275479c4061c74ebb5b24858f1a74acdf5187a9c0528fffa3d963c"
+      },
+      {
+        "path": "tests/helpers/nested-checked-record-wit-ci-workflow.mjs",
+        "bytes": 5081,
+        "sha256": "fe521ae08fae949a91d8baef36655066913bdf6fe22817e7ab554d98700d9d2f"
+      },
+      {
+        "path": "tests/helpers/nominal-primitive-subtype-wit-ci-workflow-tests.mjs",
+        "bytes": 4584,
+        "sha256": "d83e222ee004809246cb5309ba14974767681e0624dd47f54486a229a40a6da7"
+      },
+      {
+        "path": "tests/helpers/nominal-primitive-subtype-wit-ci-workflow.mjs",
+        "bytes": 5119,
+        "sha256": "7331d348ec928c3415751665869a0524b066d6eed533a2d70049de6f02cb1ce0"
+      },
+      {
+        "path": "tests/helpers/nominal-subtype-wit-ci-workflow-tests.mjs",
+        "bytes": 6098,
+        "sha256": "eb2b068bb8adcce5a875d14d8cda15d6a75c7e9b4d0dca0c8eb14b764cda68a2"
+      },
+      {
+        "path": "tests/helpers/nominal-subtype-wit-ci-workflow.mjs",
+        "bytes": 4980,
+        "sha256": "f88a28381cb7a80d8460d57afa3b0c0605c3f975ffe197bf3f8fb77e64e0791c"
+      },
+      {
+        "path": "tests/helpers/recursive-checked-record-wit-ci-workflow-tests.mjs",
+        "bytes": 4606,
+        "sha256": "05776ffde8adeb98aa5fe855247168afc24851b81e6d3723a7dc46c04f300f0b"
+      },
+      {
+        "path": "tests/helpers/recursive-checked-record-wit-ci-workflow.mjs",
+        "bytes": 5121,
+        "sha256": "f932d7a9c9b7566453e4aa4f00d2755ff990cf458a19d89cd12a07d8a649c71b"
+      },
+      {
+        "path": "tests/helpers/wasmtime-capi-bootstrap.mjs",
+        "bytes": 7763,
+        "sha256": "24035f3692218b8b3c4912921e71cf06a019973657968db7c6bbfc0962523ba8"
+      },
+      {
+        "path": "tests/helpers/wasmtime-capi-rollout-tests.mjs",
+        "bytes": 4711,
+        "sha256": "51f89a6b6cc1ddefed6ddbf15564a5eb716d6e22ad8acf1ea42901da87d1151b"
+      },
+      {
+        "path": "tests/helpers/wit-owned-receiver-ci.mjs",
+        "bytes": 3286,
+        "sha256": "b87f5ee320b6454ffe772c8c9d70a0a8dd0f3716d5ddf74b4c37a36856a2b62a"
+      },
+      {
+        "path": "tests/helpers/zero-payload-checked-record-wit-ci-workflow-tests.mjs",
+        "bytes": 4585,
+        "sha256": "bed15b6017e09ca0a97bb6b4f1708cb949c1bd6ec6ebd9ee60dc569132d1be63"
+      },
+      {
+        "path": "tests/helpers/zero-payload-checked-record-wit-ci-workflow.mjs",
+        "bytes": 5126,
+        "sha256": "bf9ee3997cafd07cf70b8455565d71fb98f39d35769a9b62014f94ed9a3a6607"
+      }
+    ]
+  },
+  "scope": "Replace all fourteen remaining repository-importing Wasmtime SDK installations in twelve CI workflows with the identical checksummed official archive. Preserve every installed route, acceptance command, job/matrix, budget, upload and enforcement gate. Isolate shell flags and cleanup in a subshell. Fix three existing masked tool-discovery statuses in owned-subtype CI. Update two documentation passages and live source hashes only; do not change runtime implementations, support observations or original archives.",
+  "priorQualification": {
+    "commit": "9b6cd8048433479b5f09eeb328afb301fa1ad9b2",
+    "path": "docs/evidence/owned-checked-wit-bootstrap-20261025.json",
+    "kind": "same verified archive and canonical installer; prior real download is not new installed acceptance"
+  },
+  "sdk": {
+    "version": "42.0.1",
+    "archiveSha256": "2097a47351918a446b26c7e65f487278f63bc947591b71897db547cd90c05082",
+    "filesSha256": "ec43764474c7f9cedf469659d0c5cc9401f65b79f5df88acda772280ae81fe01",
+    "runtimeSourcesChanged": false
+  },
+  "workflows": [
+    {
+      "path": ".github/workflows/callback-checked-record-remaining.yml",
+      "installations": 1,
+      "unusedNixStepRemoved": true
+    },
+    {
+      "path": ".github/workflows/callback-subtype-remaining.yml",
+      "installations": 1,
+      "unusedNixStepRemoved": true
+    },
+    {
+      "path": ".github/workflows/checked-record-value-index-wit.yml",
+      "installations": 1,
+      "unusedNixStepRemoved": true
+    },
+    {
+      "path": ".github/workflows/consumer-matrix.yml",
+      "installations": 3,
+      "unusedNixStepRemoved": false
+    },
+    {
+      "path": ".github/workflows/dependent-checked-record-wit.yml",
+      "installations": 1,
+      "unusedNixStepRemoved": true
+    },
+    {
+      "path": ".github/workflows/generic-subtype-managed-wit.yml",
+      "installations": 1,
+      "unusedNixStepRemoved": true
+    },
+    {
+      "path": ".github/workflows/inherited-checked-record-wit.yml",
+      "installations": 1,
+      "unusedNixStepRemoved": true
+    },
+    {
+      "path": ".github/workflows/nested-checked-record-wit.yml",
+      "installations": 1,
+      "unusedNixStepRemoved": true
+    },
+    {
+      "path": ".github/workflows/nominal-primitive-subtype-wit.yml",
+      "installations": 1,
+      "unusedNixStepRemoved": true
+    },
+    {
+      "path": ".github/workflows/owned-subtype-remaining.yml",
+      "installations": 1,
+      "unusedNixStepRemoved": true
+    },
+    {
+      "path": ".github/workflows/recursive-checked-record-wit.yml",
+      "installations": 1,
+      "unusedNixStepRemoved": true
+    },
+    {
+      "path": ".github/workflows/zero-payload-checked-record-wit.yml",
+      "installations": 1,
+      "unusedNixStepRemoved": true
+    }
+  ],
+  "validation": {
+    "executionLimits": {
+      "heavyCommands": "serial",
+      "cpuAffinity": [
+        2
+      ],
+      "nice": 15,
+      "nodeMaxOldSpaceMiB": 512
+    },
+    "focusedSourceChecks": {
+      "tests": 23,
+      "pass": 23,
+      "fail": 0,
+      "skipped": 0,
+      "durationMs": 2359.585172,
+      "scope": "Twelve-workflow policy preservation, installer isolation, altered/duplicate controls, seven exact WIT validators, nominal gate outcomes and existing receiver gates"
+    },
+    "originalManagedChecks": {
+      "tests": 2,
+      "pass": 2,
+      "fail": 0,
+      "skipped": 0,
+      "durationMs": 794.569142
+    },
+    "offlineBootstrapCases": 6,
+    "parentShellOptionsPreserved": true,
+    "parentExitTrapPreservedOnSuccessAndFailure": true,
+    "installerMutationControls": 84,
+    "originalWorkflowBypassControls": 254,
+    "gateOutcomeControls": 117,
+    "sourceQuality": [
+      "Scoped ESLint",
+      "actionlint 1.7.12 including shellcheck for all twelve workflows",
+      "Configured strict checked-JavaScript typecheck (adopted subset only)",
+      "Both modified Markdown files parsed with Markdown mode",
+      "git diff --check"
+    ],
+    "liveInventoryAudit": {
+      "liveReferences": 16055,
+      "uniquePaths": 2555,
+      "archivedReferences": 352995,
+      "stalePins": 0
+    },
+    "acceptedRuntimeRuns": 0,
+    "leanBuilds": 0
+  },
+  "inventory": {
+    "previous": {
+      "bytes": 102579190,
+      "sha256": "745526bc0d4c5ec213274f12c269766fa31155344fae9cc02009aaae8353a605"
+    },
+    "current": {
+      "bytes": 102579190,
+      "sha256": "71967061e9958d35bca2e07e793ce16ac495d7e7a6094c5fc3c95eb9de5b20da"
+    },
+    "refreshedPins": 214,
+    "supportObservationsChanged": false,
+    "originalArchivesChanged": false
+  },
+  "hostedAtQualification": {
+    "sourceCommit": "9b6cd8048433479b5f09eeb328afb301fa1ad9b2",
+    "witRun": 40214678934,
+    "witJob": 121233144869,
+    "witSetup": "success",
+    "witAcceptance": "in_progress",
+    "phpWasmRun": 40214681084,
+    "phpWasmJob": 121233150505,
+    "phpWasmStage": "Build the pinned PHP-Wasm runtime and host",
+    "scope": "Older exact-revision producers. Neither establishes installed acceptance for this uncommitted rollout."
+  },
+  "pending": [
+    "Seal this rollout's exact source history and authenticate original evidence without rewriting it.",
+    "Retain and replay actual successful WIT/PHP-Wasm producer evidence; finish PHP-Wasm cross-runtime/lifetime acceptance.",
+    "Complete the required final single-revision matrix, exact support/docs reconciliation, final Core/hosted gates and recurring default-branch activation."
+  ]
+}

@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
+import { assertIsolatedWasmtimeCapiBootstraps } from "./wasmtime-capi-bootstrap.mjs";
 import { assertNominalPrimitiveSubtypeWitWorkflow } from "./nominal-primitive-subtype-wit-ci-workflow.mjs";
 
 test("primitive-base WIT workflow requires four source/API selections on the pinned wasm-tools and Wasmtime C API", async () => {
@@ -23,10 +24,9 @@ test("primitive-base WIT workflow requires four source/API selections on the pin
 		, "export CC LEAN_BRIDGE_WASM_TOOLS LEAN_BRIDGE_WASMTIME_C_API"
 	]) assert.ok(shell.includes(command), command);
 	assert.ok(shell.indexOf('mkdir "$output_root"') < shell.indexOf("export LEAN_BRIDGE_NOMINAL_PRIMITIVE_SUBTYPE_WIT_TEST=1"));
-	// The same Nix CLI, wasm-tools bootstrap and C API derivation as the consumer matrix.
+	// The same pinned SDK bytes and isolated installer as the consumer matrix.
 	const consumer = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
-	assert.ok(consumer.includes("        uses: cachix/install-nix-action@v31\n        with:\n          install_url: https://releases.nixos.org/nix/nix-2.24.11/install\n"));
-	assert.ok(consumer.includes("          nix build .#wasmtime-c-api --out-link build/wasmtime-c-api\n"));
+	assertIsolatedWasmtimeCapiBootstraps(consumer, 3);
 	assert.ok(consumer.includes("          bash scripts/bootstrap-toolchains.sh --wasm-tools-only\n"));
 });
 
@@ -42,9 +42,9 @@ test("primitive-base WIT workflow rejects unpinned tools and acceptance bypasses
 		, ["npm ci --ignore-scripts", "npm install"]
 		, ["bash scripts/bootstrap-toolchains.sh --lean-only", "true missing-lean"]
 		, ["bash scripts/bootstrap-toolchains.sh --wasm-tools-only 2>&1 | tee -a build/nominal-primitive-subtype-wit-toolchain.log\n", ""]
-		, ["nix-2.24.11", "nix-2.30.0"]
-		, ["        uses: cachix/install-nix-action@v31\n        with:\n          install_url: https://releases.nixos.org/nix/nix-2.24.11/install\n", "        run: curl -L https://nixos.org/nix/install | sh\n"]
-		, ["nix build .#wasmtime-c-api --out-link build/wasmtime-c-api", "mkdir -p build/wasmtime-c-api"]
+		, ["wasmtime-v42.0.1", "wasmtime-v42.0.2"]
+		, ["sha256sum --check --status", "true"]
+		, ["mv -T", "mkdir -p"]
 		, ["        id: acceptance\n", "        id: acceptance\n        if: false\n"]
 		, ["        id: acceptance\n", "        id: acceptance\n        continue-on-error: true\n"]
 		, ["run-nominal-primitive-subtype-wit-ci.sh", "missing-matrix.sh"]

@@ -35,6 +35,25 @@ test -s "$WASMTIME_CAPI_STAGING/unpacked/lib/libwasmtime.a"
 mv -T "$WASMTIME_CAPI_STAGING/unpacked" build/wasmtime-c-api
 `;
 
+// A subshell confines strict options and staging cleanup in combined CI steps.
+export const isolatedWasmtimeCapiBootstrap = "(\n"
+	+ wasmtimeCapiBootstrap.trimEnd().split("\n").map(line => "  " + line).join("\n")
+	+ "\n)\n";
+
+/**
+ * Require every fixed SDK installer in a workflow or isolated job body.
+ *
+ * @param source - Workflow YAML whose run blocks use ten-space indentation.
+ * @param count - Exact number of independent SDK installation sites.
+ */
+export const assertIsolatedWasmtimeCapiBootstraps = (source, count = 1) => {
+	const block = isolatedWasmtimeCapiBootstrap.trimEnd().split("\n")
+		.map(line => "          " + line + "\n").join("");
+	assert.equal(source.split(block).length - 1, count, "exact isolated Wasmtime installers");
+	assert.equal(source.split("WASMTIME_CAPI_STAGING=$(mktemp").length - 1, count);
+	assert.doesNotMatch(source, /nix build \.#wasmtime-c-api/u);
+};
+
 /**
  * Run the real bootstrap control flow with small inert archive bytes and a
  * local curl stand-in. The fixture hash substitution is test-only; production
@@ -42,9 +61,11 @@ mv -T "$WASMTIME_CAPI_STAGING/unpacked" build/wasmtime-c-api
  *
  * @param t - Parent test lifecycle for scratch cleanup.
  * @param source - Actual executable workflow run scalar.
+ * @param isolated - Require the subshell form used inside combined steps.
  */
-export const checkWasmtimeCapiBootstrap = async (t, source) => {
-	assert.equal(source, wasmtimeCapiBootstrap, "exact pinned Wasmtime bootstrap");
+export const checkWasmtimeCapiBootstrap = async (t, source, isolated = false) => {
+	assert.equal(source, isolated ? isolatedWasmtimeCapiBootstrap : wasmtimeCapiBootstrap
+		, "exact pinned Wasmtime bootstrap");
 	const flake = await readFile("flake.nix", "utf8");
 	assert.ok(flake.includes(`url = "${url}";`), "same Wasmtime archive as Nix");
 	assert.ok(flake.includes(`hash = "sha256-${Buffer.from(archiveSha256, "hex").toString("base64")}";`)
@@ -77,12 +98,17 @@ exit "\${BOOTSTRAP_CURL_STATUS:-0}"
 		const directory = join(root, name);
 		await saveLakeFile(directory, "sentinel", "preserve\n");
 		await prepare(directory);
-		const result = spawnSync("/usr/bin/bash", ["-c", script], {
+		const guarded = isolated
+			? "set -e\nset +u\nBOOTSTRAP_CALLER_FLAGS=$-\ntrap 'printf retained > parent-exit' EXIT\n"
+				+ script + '\ntest "$-" = "$BOOTSTRAP_CALLER_FLAGS"\n'
+			: script;
+		const result = spawnSync("/usr/bin/bash", ["-c", guarded], {
 			cwd: directory, encoding: "utf8", timeout: 10_000
 			, env: { PATH: join(root, "bin"), LANG: "C.UTF-8"
 				, BOOTSTRAP_FIXTURE_ARCHIVE: compressed, BOOTSTRAP_CURL_STATUS: status }
 		});
 		assert.equal(result.signal, null, name);
+		if(isolated) assert.equal(await readFile(join(directory, "parent-exit"), "utf8"), "retained");
 		assert.equal(await readFile(join(directory, "sentinel"), "utf8"), "preserve\n");
 		assert.ok(!(await readdir(join(directory, "build"))).some(path =>
 			path.startsWith("wasmtime-c-api.")), `${name}: staging cleanup`);

@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertIsolatedWasmtimeCapiBootstraps } from "./wasmtime-capi-bootstrap.mjs";
 
 export const nominalSubtypeWitCiBlock = `      - name: Require nominal WIT packages
         id: nominal_wit
@@ -81,9 +82,9 @@ export const assertNominalSubtypeWitWorkflow = source => {
 	assert.doesNotMatch(body, /^ {4}(?:if:|continue-on-error:)|LEAN_BRIDGE_NOMINAL_SUBTYPE_WIT_/mu);
 	for(const required of ["build-essential cmake pkg-config zstd ripgrep"
 		, "          bash scripts/bootstrap-toolchains.sh --lean-only\n"
-		, "          bash scripts/bootstrap-toolchains.sh --wasm-tools-only\n"
-		, "          nix build .#wasmtime-c-api --out-link build/wasmtime-c-api\n"])
+		, "          bash scripts/bootstrap-toolchains.sh --wasm-tools-only\n"])
 		assert.ok(body.includes(required));
+	assertIsolatedWasmtimeCapiBootstraps(body);
 	assert.ok(body.includes(updatedCommand)); assert.ok(body.includes(updatedGate));
 	assert.ok(body.indexOf("        id: type_corpus_wit\n") < body.indexOf(nominalSubtypeWitCiBlock));
 	assert.ok(body.indexOf(nominalSubtypeWitCiBlock) < body.indexOf(anchor));

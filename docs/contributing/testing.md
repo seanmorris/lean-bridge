@@ -645,7 +645,7 @@ source scripts/env.sh
 npm run test:type-corpus:wit-wasi
 ```
 
-The local default is `.toolchains/wasmtime42`. `LEAN_BRIDGE_WASM_TOOLS` selects the wasm-tools executable; the installed-consumer check otherwise uses `.toolchains/wasm-tools/bin/wasm-tools`. CI obtains the C API from `nix build .#wasmtime-c-api`. Consumers receive both Wasmtime and Lean libraries in their prepared archives.
+The local default is `.toolchains/wasmtime42`. `LEAN_BRIDGE_WASM_TOOLS` selects the wasm-tools executable; the installed-consumer check otherwise uses `.toolchains/wasm-tools/bin/wasm-tools`. CI downloads the official Wasmtime 42.0.1 C API archive, verifies its pinned SHA-256 and extracts the same SDK files as the Nix output. This avoids copying the repository's evidence archives into the Nix store. Consumers receive both Wasmtime and Lean libraries in their prepared archives.
 
 Each WIT consumer compiles a C11 caller against the installed public Wasmtime header and pkg-config file. Parsed WIT and binary component interfaces must match the independent catalog, including nested record fields. The harness removes author, oracle and consumer build trees before running the relocated executable twice without compilers or runtime overrides. The process must load the exact packaged native libraries.
 

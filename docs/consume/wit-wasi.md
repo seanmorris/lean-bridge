@@ -51,7 +51,7 @@ Wasmtime 42.0.1 and wasm-tools 1.245.1 on Linux x64/glibc 2.36 with an explicit
 local load-admission ceiling of 8.
 
 The [required WIT workflow](https://github.com/seanmorris/lean-bridge/actions/workflows/nominal-primitive-subtype-wit.yml)
-runs those four selections on the pinned Nix-built Wasmtime C API. The local
+runs those four selections on the pinned Wasmtime 42.0.1 C API. The local
 archive does not establish its hosted glibc 2.38 result. Synchronous `Fin` callbacks, retained or asynchronous refined callbacks, owned
 values, recursive graphs, dependent Subtypes, generic Subtypes beyond the closed `GenericNat` alias,
 plus constructor/source entry counts, remain separate work.
