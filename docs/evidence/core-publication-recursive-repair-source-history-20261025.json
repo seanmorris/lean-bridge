@@ -1,0 +1,374 @@
+{
+  "additions": [
+    {
+      "currentSha256": "36933e10efb0effd2e0699c4a821262134c651d38b602a37f66f44b741cf1fb4",
+      "path": "docs/evidence/core-publication-recursive-repair-20261025/acceptance.json"
+    },
+    {
+      "currentSha256": "454863c0d95a21856868fdda8f77cc1b3da0e9353da2b7389cafcbd3638da6b7",
+      "path": "docs/evidence/core-publication-recursive-repair-20261025/callback.tap"
+    },
+    {
+      "currentSha256": "11b4502b3cf4fe3b857e76263c50a7871a959a2415380be7cd1b721bbe5d2993",
+      "path": "docs/evidence/core-publication-recursive-repair-20261025/diagnostics.json"
+    },
+    {
+      "currentSha256": "22f46d3ea8c790e2d529d23e75415615c7d1a91ef54f404b5faeeae1c701abd1",
+      "path": "docs/evidence/core-publication-recursive-repair-20261025/pin-audit.mjs"
+    },
+    {
+      "currentSha256": "e3e0fd5fc48a58a05441cd5c20ffac44fc38c0e30904b175fd1caf65be0f6b8f",
+      "path": "docs/evidence/core-publication-recursive-repair-20261025/published-probes.tap"
+    },
+    {
+      "currentSha256": "81a2b7a36cc49b56483d79d974f4614c36bec72857c6f9f88037c106516cad9c",
+      "path": "docs/evidence/core-publication-recursive-repair-20261025/recursive-endpoints.tap"
+    },
+    {
+      "currentSha256": "d423cd209e90bd85901876db8ffdb36edb21184f4ad7d5a08df1c3eafea6259a",
+      "path": "docs/evidence/core-publication-recursive-repair-20261025/registration.tap"
+    },
+    {
+      "currentSha256": "db011b08980c8b7c6c6fa6e73ac34286149e40024019fd3bbaa83110ae2bb447",
+      "path": "tests/helpers/core-recursive-endpoint-tests.mjs"
+    },
+    {
+      "currentSha256": "2261562a8fd7b1a999199f7060f8f60c2bfd9ad6f0b8ad61c7175dfcc956d958",
+      "path": "scripts/update-core-publication-recursive-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "c043115f5eff8f23a002bb873daa3988dcce66caad2ab4c740b95375cfecbcb8",
+      "path": "tests/helpers/core-publication-recursive-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "727e09d5fa2d4a079687ab1e86a108be1d189e5cdf2ab0969c00e3bbee4a8330",
+      "path": "tests/helpers/core-publication-recursive-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "913fed01d4b3e0ff4f2d89ec4f1097f874667686",
+  "implementationCommits": [
+    "913fed01d4b3e0ff4f2d89ec4f1097f874667686"
+  ],
+  "integrationBaseCommit": "913fed01d4b3e0ff4f2d89ec4f1097f874667686",
+  "integrationUpdates": [
+    {
+      "currentSha256": "5ca007e15e01865f81395a697375982b0a72ea6c6ed7cf7e4719e584a7583f90",
+      "edits": [
+        {
+          "current": "import { beforeCorePublicationRecursiveRepairSource, corePublicationRecursiveRepairNormalizationPaths } from \"./core-publication-recursive-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 11888
+        },
+        {
+          "current": "\t...corePublicationRecursiveRepairNormalizationPaths\n\t, ...phpWasmEntrySourceSupplementNormalizationPaths\n",
+          "previous": "\t...phpWasmEntrySourceSupplementNormalizationPaths\n",
+          "start": 185094
+        },
+        {
+          "current": "\tlet stage = beforeCorePublicationRecursiveRepairSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforePhpWasmEntrySourceSupplementSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforePhpWasmEntrySourceSupplementSource(path, text, expected);\n",
+          "start": 229257
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "cc1ee4f0a59a76c56f1360885ed88fd2113e521ba4c299f206c6c81864e76fa6"
+    },
+    {
+      "currentSha256": "ef0bb502d63318f3426914550c05db6145a66b87be11e4e1472a48bd8d8bffad",
+      "edits": [
+        {
+          "current": "import \"./helpers/core-publication-recursive-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 8507
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "f1ff6a462cad4a83d4dd6dbbd14e2c7dfa46e94e544fdc4bfd0ea08a0f1669ec"
+    }
+  ],
+  "milestone": "core-publication-recursive-repair-source-v1",
+  "predecessorCommit": "0d7af8b94573484ece7b4dd75f9526550c2b964a",
+  "schemaVersion": 1,
+  "scope": "Check historical and currently published PHP-Wasm probe prose against their actual evidence while streaming both inventories. Supply exact recorded stop digests in the Ruby, Rust, Python and C/C++ recursive evidence readers. Preserve original receipts, production runtime, workflows and all support observations. Retain the two hosted assertion diagnoses and both runner shutdowns, four exact small-inventory reproductions, seventeen passing checks and resource-limit failures. Authenticate only twenty live source-pin changes. Full final-head Core, complete producer-input reconciliation and recurring default-branch activation remain open.",
+  "updates": [
+    {
+      "currentSha256": "66d8a954207550372f8b41fe59aa06f497bf829b174293f5e714ecc806da8a63",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"84288616e6eeb63e6239bb8cf79475f2abb373abb4fc08ff30d972137feb78c4\"\n",
+          "previous": "          \"sha256\": \"a8ff9904a755f3b4203c4f338a2dbb0b680225e125233226a1e4d70e2023b3b3\"\n",
+          "start": 1184639
+        },
+        {
+          "current": "          \"sha256\": \"84288616e6eeb63e6239bb8cf79475f2abb373abb4fc08ff30d972137feb78c4\"\n",
+          "previous": "          \"sha256\": \"a8ff9904a755f3b4203c4f338a2dbb0b680225e125233226a1e4d70e2023b3b3\"\n",
+          "start": 1212131
+        },
+        {
+          "current": "          \"sha256\": \"7208a9f1a6ddb8296d41255b9aa0f7f7fd0f5815c4fe6793fefbf62bab086022\"\n",
+          "previous": "          \"sha256\": \"446a696ff2f2a94edc727befa742f87b8cbbe1498568bd747765649c7a2bd869\"\n",
+          "start": 1214073
+        },
+        {
+          "current": "          \"sha256\": \"84288616e6eeb63e6239bb8cf79475f2abb373abb4fc08ff30d972137feb78c4\"\n",
+          "previous": "          \"sha256\": \"a8ff9904a755f3b4203c4f338a2dbb0b680225e125233226a1e4d70e2023b3b3\"\n",
+          "start": 1241887
+        },
+        {
+          "current": "          \"sha256\": \"7208a9f1a6ddb8296d41255b9aa0f7f7fd0f5815c4fe6793fefbf62bab086022\"\n",
+          "previous": "          \"sha256\": \"446a696ff2f2a94edc727befa742f87b8cbbe1498568bd747765649c7a2bd869\"\n",
+          "start": 1243128
+        },
+        {
+          "current": "          \"sha256\": \"20b3717c84d789acdd10f53dd2788096307a33223e126f668ed5f930d09d3a74\"\n",
+          "previous": "          \"sha256\": \"5bb1161dbd76f0ec884d4f9cc12201fe49ac9c928303924c51a62271b079fa59\"\n",
+          "start": 1244004
+        },
+        {
+          "current": "          \"sha256\": \"84288616e6eeb63e6239bb8cf79475f2abb373abb4fc08ff30d972137feb78c4\"\n",
+          "previous": "          \"sha256\": \"a8ff9904a755f3b4203c4f338a2dbb0b680225e125233226a1e4d70e2023b3b3\"\n",
+          "start": 1275142
+        },
+        {
+          "current": "          \"sha256\": \"7ca8ba2865d5755702058520bc3a36a41cadfc4718b0fad1e347f8c0fe0c2a3b\"\n",
+          "previous": "          \"sha256\": \"79ba7ea6e90fb1387bac77ae08677a2742e94e4f4e63e223d54f8035330af70f\"\n",
+          "start": 1277437
+        },
+        {
+          "current": "          \"sha256\": \"20b3717c84d789acdd10f53dd2788096307a33223e126f668ed5f930d09d3a74\"\n",
+          "previous": "          \"sha256\": \"5bb1161dbd76f0ec884d4f9cc12201fe49ac9c928303924c51a62271b079fa59\"\n",
+          "start": 1278713
+        },
+        {
+          "current": "          \"sha256\": \"84288616e6eeb63e6239bb8cf79475f2abb373abb4fc08ff30d972137feb78c4\"\n",
+          "previous": "          \"sha256\": \"a8ff9904a755f3b4203c4f338a2dbb0b680225e125233226a1e4d70e2023b3b3\"\n",
+          "start": 1311691
+        },
+        {
+          "current": "          \"sha256\": \"7ca8ba2865d5755702058520bc3a36a41cadfc4718b0fad1e347f8c0fe0c2a3b\"\n",
+          "previous": "          \"sha256\": \"79ba7ea6e90fb1387bac77ae08677a2742e94e4f4e63e223d54f8035330af70f\"\n",
+          "start": 1317333
+        },
+        {
+          "current": "          \"sha256\": \"84288616e6eeb63e6239bb8cf79475f2abb373abb4fc08ff30d972137feb78c4\"\n",
+          "previous": "          \"sha256\": \"a8ff9904a755f3b4203c4f338a2dbb0b680225e125233226a1e4d70e2023b3b3\"\n",
+          "start": 1344452
+        },
+        {
+          "current": "          \"sha256\": \"e7fec5e09864b4c8fba7b095ff49a45467eddc8446e55ea6e0dc872b9252eaaa\"\n",
+          "previous": "          \"sha256\": \"7f0e8af04431736f05b730ee943053174ba7d189a28c75541093686842b92133\"\n",
+          "start": 88383286
+        },
+        {
+          "current": "          \"sha256\": \"e7fec5e09864b4c8fba7b095ff49a45467eddc8446e55ea6e0dc872b9252eaaa\"\n",
+          "previous": "          \"sha256\": \"7f0e8af04431736f05b730ee943053174ba7d189a28c75541093686842b92133\"\n",
+          "start": 88535881
+        },
+        {
+          "current": "          \"sha256\": \"e7fec5e09864b4c8fba7b095ff49a45467eddc8446e55ea6e0dc872b9252eaaa\"\n",
+          "previous": "          \"sha256\": \"7f0e8af04431736f05b730ee943053174ba7d189a28c75541093686842b92133\"\n",
+          "start": 88693879
+        },
+        {
+          "current": "          \"sha256\": \"e7fec5e09864b4c8fba7b095ff49a45467eddc8446e55ea6e0dc872b9252eaaa\"\n",
+          "previous": "          \"sha256\": \"7f0e8af04431736f05b730ee943053174ba7d189a28c75541093686842b92133\"\n",
+          "start": 88847683
+        },
+        {
+          "current": "          \"sha256\": \"e7fec5e09864b4c8fba7b095ff49a45467eddc8446e55ea6e0dc872b9252eaaa\"\n",
+          "previous": "          \"sha256\": \"7f0e8af04431736f05b730ee943053174ba7d189a28c75541093686842b92133\"\n",
+          "start": 89001273
+        },
+        {
+          "current": "          \"sha256\": \"e7fec5e09864b4c8fba7b095ff49a45467eddc8446e55ea6e0dc872b9252eaaa\"\n",
+          "previous": "          \"sha256\": \"7f0e8af04431736f05b730ee943053174ba7d189a28c75541093686842b92133\"\n",
+          "start": 89153905
+        },
+        {
+          "current": "          \"sha256\": \"e7fec5e09864b4c8fba7b095ff49a45467eddc8446e55ea6e0dc872b9252eaaa\"\n",
+          "previous": "          \"sha256\": \"7f0e8af04431736f05b730ee943053174ba7d189a28c75541093686842b92133\"\n",
+          "start": 89310187
+        },
+        {
+          "current": "          \"sha256\": \"e7fec5e09864b4c8fba7b095ff49a45467eddc8446e55ea6e0dc872b9252eaaa\"\n",
+          "previous": "          \"sha256\": \"7f0e8af04431736f05b730ee943053174ba7d189a28c75541093686842b92133\"\n",
+          "start": 89465530
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "d201e69262339b996ee4eb1c8aeee69e0730d6d853e8b6d7daaf7b9d52cd21bf"
+    },
+    {
+      "currentSha256": "e7fec5e09864b4c8fba7b095ff49a45467eddc8446e55ea6e0dc872b9252eaaa",
+      "edits": [
+        {
+          "current": "import { createReadStream } from \"node:fs\";\n",
+          "previous": "",
+          "start": 185
+        },
+        {
+          "current": "import { gitSourceBytes } from \"./helpers/source-history-stream.mjs\";\nimport { readPromotionInventory } from \"./helpers/type-surface-promotion-io.mjs\";\nimport { phpWasmEntryProbeEvidenceId } from \"./helpers/php-wasm-refinement-entry-publication.mjs\";\nimport { renderPhpWasmEntryProbeBoundary } from \"./helpers/php-wasm-refinement-entry-publication-docs.mjs\";\n",
+          "previous": "",
+          "start": 981
+        },
+        {
+          "current": "",
+          "previous": "const baselineArgs = [\"show\"\n\t, `${promotionPredecessor}:docs/type-surface.v1.json`];\nconst baseline = execFileSync(\n\t\"git\", baselineArgs, { encoding: \"utf8\", maxBuffer: 512 * 1024 ** 2 }\n);\n",
+          "start": 1487
+        },
+        {
+          "current": "",
+          "previous": "const document = JSON.parse(baseline);\n",
+          "start": 1641
+        },
+        {
+          "current": "const { document } = await readPromotionInventory(\n\tgitSourceBytes(promotionPredecessor, \"docs/type-surface.v1.json\"), contracts\n);\n",
+          "previous": "",
+          "start": 1826
+        },
+        {
+          "current": "\tconst { document: currentDocument } = await readPromotionInventory(\n\t\tcreateReadStream(\"docs/type-surface.v1.json\"), contracts\n\t);\n",
+          "previous": "",
+          "start": 5937
+        },
+        {
+          "current": "\t\troot: \".\", inventory: { document: currentDocument, ...contracts }\n",
+          "previous": "\t\troot: \".\"\n\t\t, inventory: {\n\t\t\tdocument: await readJson(\"docs/type-surface.v1.json\"), ...contracts\n\t\t}\n",
+          "start": 6114
+        },
+        {
+          "current": "\t// Historical inventories predate hosted probe publication. The current\n\t// reference must instead bind its retained archive without promoting support.\n\tfor(const source of [before.reference, after.reference])\n",
+          "previous": "\t// These are rendered with today's documentation generator. The configured\n\t// measurement topology is independent of the historical support observations.\n\tfor(const source of [before.reference, after.reference, current.reference])\n",
+          "start": 7355
+        },
+        {
+          "current": "\tfor(const inventory of [document, promoted])\n\t\tassert.ok(!inventory.evidence.some(entry => entry.id === phpWasmEntryProbeEvidenceId));\n\tconst probes = currentDocument.evidence.filter(entry => entry.id === phpWasmEntryProbeEvidenceId);\n\tassert.equal(probes.length, 1);\n\tassert.equal(current.reference.split(renderPhpWasmEntryProbeBoundary(probes[0])).length, 2);\n\tassert.match(current.reference, /leave unmodified prepared packages and their supported types unchanged/u);\n\tassert.doesNotMatch(current.reference, /is not a hosted result/u);\n\tfor(const observation of currentDocument.observations)\n\t\tfor(const stage of Object.values(observation.stages))\n\t\t\tassert.ok(!stage.evidence.includes(phpWasmEntryProbeEvidenceId));\n",
+          "previous": "",
+          "start": 7770
+        }
+      ],
+      "path": "tests/callback-subtype-promotion.test.mjs",
+      "previousSha256": "7f0e8af04431736f05b730ee943053174ba7d189a28c75541093686842b92133"
+    },
+    {
+      "currentSha256": "f1ff6a462cad4a83d4dd6dbbd14e2c7dfa46e94e544fdc4bfd0ea08a0f1669ec",
+      "edits": [
+        {
+          "current": "import \"./helpers/core-recursive-endpoint-tests.mjs\";\n",
+          "previous": "",
+          "start": 8453
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "c8a7d03fd551f4b35a322fe11c738e402dc4dbc09310139300bf3c335e639d41"
+    },
+    {
+      "currentSha256": "84288616e6eeb63e6239bb8cf79475f2abb373abb4fc08ff30d972137feb78c4",
+      "edits": [
+        {
+          "current": "const priorSource = async (path, expected) => beforeClosureThreadLifetime(path, await readFile(path, \"utf8\"), expected);\n",
+          "previous": "const priorSource = async path => beforeClosureThreadLifetime(path, await readFile(path, \"utf8\"));\n",
+          "start": 1182
+        },
+        {
+          "current": "\tfor(const path of paths) assert.equal(sha256(await priorSource(path, record.sourceHashes[path])), record.sourceHashes[path], path);\n",
+          "previous": "\tfor(const path of paths) assert.equal(sha256(await priorSource(path)), record.sourceHashes[path], path);\n",
+          "start": 15606
+        },
+        {
+          "current": "\t\trestored[update.path] = reverseNativeRecursiveCallableUpdate(await priorSource(update.path, update.currentSha256), update);\n",
+          "previous": "\t\trestored[update.path] = reverseNativeRecursiveCallableUpdate(await priorSource(update.path), update);\n",
+          "start": 15873
+        },
+        {
+          "current": "\tconst document = JSON.parse(await priorSource(\"docs/type-surface.v1.json\", record.sourceHashes[\"docs/type-surface.v1.json\"]));\n",
+          "previous": "\tconst document = JSON.parse(await priorSource(\"docs/type-surface.v1.json\"));\n",
+          "start": 16508
+        }
+      ],
+      "path": "tests/helpers/native-recursive-callable-evidence.mjs",
+      "previousSha256": "a8ff9904a755f3b4203c4f338a2dbb0b680225e125233226a1e4d70e2023b3b3"
+    },
+    {
+      "currentSha256": "7208a9f1a6ddb8296d41255b9aa0f7f7fd0f5815c4fe6793fefbf62bab086022",
+      "edits": [
+        {
+          "current": "const priorSource = async (path, expected) => beforeRustRecursiveCallables(path, await readFile(path, \"utf8\"), expected);\n",
+          "previous": "const priorSource = async path => beforeRustRecursiveCallables(path, await readFile(path, \"utf8\"));\n",
+          "start": 1147
+        },
+        {
+          "current": "\tfor(const path of paths) assert.equal(sha256(await priorSource(path, record.sourceHashes[path])), record.sourceHashes[path], path);\n",
+          "previous": "\tfor(const path of paths) assert.equal(sha256(await priorSource(path)), record.sourceHashes[path], path);\n",
+          "start": 10657
+        },
+        {
+          "current": "\t\trestored[update.path] = reversePythonRecursiveCallableUpdate(await priorSource(update.path, update.currentSha256), update);\n",
+          "previous": "\t\trestored[update.path] = reversePythonRecursiveCallableUpdate(await priorSource(update.path), update);\n",
+          "start": 11038
+        },
+        {
+          "current": "\tconst document = JSON.parse(await priorSource(\"docs/type-surface.v1.json\", record.sourceHashes[\"docs/type-surface.v1.json\"])), old = JSON.parse(restored[\"docs/type-surface.v1.json\"]);\n",
+          "previous": "\tconst document = JSON.parse(await priorSource(\"docs/type-surface.v1.json\")), old = JSON.parse(restored[\"docs/type-surface.v1.json\"]);\n",
+          "start": 11381
+        }
+      ],
+      "path": "tests/helpers/python-recursive-callable-evidence.mjs",
+      "previousSha256": "446a696ff2f2a94edc727befa742f87b8cbbe1498568bd747765649c7a2bd869"
+    },
+    {
+      "currentSha256": "7ca8ba2865d5755702058520bc3a36a41cadfc4718b0fad1e347f8c0fe0c2a3b",
+      "edits": [
+        {
+          "current": "const priorSource = async (path, expected) => beforePerlRecursiveCallables(path, await readFile(path, \"utf8\"), expected);\n",
+          "previous": "const priorSource = async path => beforePerlRecursiveCallables(path, await readFile(path, \"utf8\"));\n",
+          "start": 1167
+        },
+        {
+          "current": "\tfor(const path of paths) assert.equal(sha256(await priorSource(path, record.sourceHashes[path])), record.sourceHashes[path], path);\n",
+          "previous": "\tfor(const path of paths) assert.equal(sha256(await priorSource(path)), record.sourceHashes[path], path);\n",
+          "start": 9663
+        },
+        {
+          "current": "\t\trestored[update.path] = reverseRubyRecursiveCallableUpdate(await priorSource(update.path, update.currentSha256), update);\n",
+          "previous": "\t\trestored[update.path] = reverseRubyRecursiveCallableUpdate(await priorSource(update.path), update);\n",
+          "start": 10044
+        },
+        {
+          "current": "\tconst document = JSON.parse(await priorSource(\"docs/type-surface.v1.json\", record.sourceHashes[\"docs/type-surface.v1.json\"])), old = JSON.parse(restored[\"docs/type-surface.v1.json\"]);\n",
+          "previous": "\tconst document = JSON.parse(await priorSource(\"docs/type-surface.v1.json\")), old = JSON.parse(restored[\"docs/type-surface.v1.json\"]);\n",
+          "start": 10363
+        }
+      ],
+      "path": "tests/helpers/ruby-recursive-callable-evidence.mjs",
+      "previousSha256": "79ba7ea6e90fb1387bac77ae08677a2742e94e4f4e63e223d54f8035330af70f"
+    },
+    {
+      "currentSha256": "20b3717c84d789acdd10f53dd2788096307a33223e126f668ed5f930d09d3a74",
+      "edits": [
+        {
+          "current": "const priorSource = async (path, expected) => beforeRubyRecursiveCallables(path, await readFile(path, \"utf8\"), expected);\n",
+          "previous": "const priorSource = async path => beforeRubyRecursiveCallables(path, await readFile(path, \"utf8\"));\n",
+          "start": 1372
+        },
+        {
+          "current": "\tfor(const path of paths) assert.equal(sha256(await priorSource(path, record.sourceHashes[path])), record.sourceHashes[path], path);\n",
+          "previous": "\tfor(const path of paths) assert.equal(sha256(await priorSource(path)), record.sourceHashes[path], path);\n",
+          "start": 11160
+        },
+        {
+          "current": "\t\trestored[update.path] = reverseRustRecursiveCallableUpdate(await priorSource(update.path, update.currentSha256), update);\n",
+          "previous": "\t\trestored[update.path] = reverseRustRecursiveCallableUpdate(await priorSource(update.path), update);\n",
+          "start": 11541
+        },
+        {
+          "current": "\tconst document = JSON.parse(await priorSource(\"docs/type-surface.v1.json\", record.sourceHashes[\"docs/type-surface.v1.json\"])), old = JSON.parse(restored[\"docs/type-surface.v1.json\"]);\n",
+          "previous": "\tconst document = JSON.parse(await priorSource(\"docs/type-surface.v1.json\")), old = JSON.parse(restored[\"docs/type-surface.v1.json\"]);\n",
+          "start": 11860
+        }
+      ],
+      "path": "tests/helpers/rust-recursive-callable-evidence.mjs",
+      "previousSha256": "5bb1161dbd76f0ec884d4f9cc12201fe49ac9c928303924c51a62271b079fa59"
+    }
+  ]
+}

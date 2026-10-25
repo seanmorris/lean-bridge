@@ -124,6 +124,7 @@ import "./helpers/consumer-tool-lookups-tests.mjs";
 import "./helpers/consumer-tool-lookups-source-history-tests.mjs";
 import "./helpers/php-wasm-entry-source-supplement-source-history-tests.mjs";
 import "./helpers/core-recursive-endpoint-tests.mjs";
+import "./helpers/core-publication-recursive-repair-source-history-tests.mjs";
 
 const root = resolve(".");
 
