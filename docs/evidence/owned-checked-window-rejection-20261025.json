@@ -1,0 +1,87 @@
+{
+  "schemaVersion": 1,
+  "kind": "owned-checked-window-rejection-source-v1",
+  "sourceBaseCommit": "45af94285dfe9bd819997bbbcfae3d9b512393e4",
+  "scope": "Add actual installed-consumer assertions for a copied checked Window nested in an owned Booking. Do not infer that source checks execute the new runtime cases.",
+  "cases": {
+    "invalidWindow": {
+      "lo": 8,
+      "hi": 3,
+      "repetitions": 10
+    },
+    "acceptedEquality": {
+      "lo": 3,
+      "hi": 3
+    },
+    "assertions": [
+      "The selected nested constructor rejects lo > hi.",
+      "Rejected input fields and their resource remain usable and unchanged.",
+      "C output bytes and result owner remain untouched on rejection.",
+      "The next call accepts lo = hi and returns a usable resource."
+    ]
+  },
+  "sources": [
+    {
+      "path": "tests/fixtures/structured-types/owned-checked-record-installed.c",
+      "bytes": 14221,
+      "sha256": "addfa6ad186f7e682950d2024473d5d879ff231e45b3b825775257102e45ba43"
+    },
+    {
+      "path": "tests/fixtures/structured-types/owned-checked-record-installed.cpp",
+      "bytes": 7303,
+      "sha256": "374b91f33527c46fd5ea435e517d66b9056cc1842dd7591defb48c99e272a763"
+    },
+    {
+      "path": "tests/fixtures/structured-types/owned-checked-record-installed.pl",
+      "bytes": 10327,
+      "sha256": "b87c34624102dd6ff08a282fd9be4b0bac1eeb22682ac74af7f78741048645c9"
+    },
+    {
+      "path": "tests/fixtures/structured-types/owned-checked-record-python.py",
+      "bytes": 10651,
+      "sha256": "7f49311c20febb75fc924ee25db27ec64ee525028a853ac39831ff4c35922c8f"
+    },
+    {
+      "path": "tests/fixtures/structured-types/owned-checked-record-ruby.rb",
+      "bytes": 9838,
+      "sha256": "a55e86fbf55432cf34ee0e2593f7ea5bb80c94389dc1590798851a137fb20749"
+    },
+    {
+      "path": "tests/fixtures/structured-types/owned-checked-record-rust.rs",
+      "bytes": 14632,
+      "sha256": "b2d7ba85bfca3f24bec610b2b5b2d0a2f50de24920d0788c6a9c3074ff2265ee"
+    }
+  ],
+  "validation": {
+    "native": {
+      "tests": 2,
+      "description": "C/C++ caller compilation against generated full and smaller shared WIT headers; CPAN projection.",
+      "durationMs": 3464.051579
+    },
+    "pythonRuby": "Generated API and actual caller syntax checks passed.",
+    "rust": "The generated crate and actual caller passed cargo check --offline --jobs 1 --all-targets in 3.92 seconds; no Lean runtime loaded.",
+    "perl": "Syntax check passed with the unavailable generated module declared loaded; this is neither an installed run nor an API typecheck."
+  },
+  "installedProbes": {
+    "archiveProducer": "a005b6f0f8ac3f978cb2d749832de14b3b7d070e",
+    "nativeArchiveCommit": "b4bb4b5da35378d97c1ea5ab24f97fd1a36dff5e",
+    "perlArchiveCommit": "45af94285dfe9bd819997bbbcfae3d9b512393e4",
+    "localGlibc": "2.36",
+    "nativeManifestMinimumGlibc": "2.38",
+    "native": "Stopped at the C link before executing assertions: bundled libgmp.so.10 requires __isoc23_strtol@GLIBC_2.38.",
+    "perl": "Stopped during prebuilt XS installation before executing assertions: private libgmp-lean-bridge.so.10 requires GLIBC_2.38.",
+    "acceptedRuntimeRuns": 0,
+    "cleanup": "Both task-owned temporary installation trees were removed after their terminal failures."
+  },
+  "unchanged": [
+    "Runtime source, Lean fixture and export selections.",
+    "All result-only consumers and APIs.",
+    "Published support observations and the live inventory.",
+    "Original hosted archives and their observed check counts."
+  ],
+  "pending": [
+    "Execute all new callers against supported hosted runtime environments.",
+    "Finish remaining original per-host semantic/lifetime acceptance.",
+    "Produce and retain the final aligned nine-lane native/managed matrix and complete Core gates."
+  ]
+}

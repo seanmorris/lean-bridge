@@ -69,6 +69,19 @@ my $echoed_booking = invoke('echo_booking', $valid_booking);
 check($echoed_booking->window->hi->bcmp(8) == 0, 'nested copied record accepted');
 serial_is($echoed_booking->holder, 41, 'booking resource retained');
 release($echoed); release($echoed_booking);
+my $invalid_booking = booking($ticket, 8, 3);
+for (1 .. 10) {
+  rejected(sub { invoke('echo_booking', $invalid_booking) }, 1);
+  check($invalid_booking->window->lo->bcmp(8) == 0
+    && $invalid_booking->window->hi->bcmp(3) == 0,
+    'nested copied rejection preserves both input fields');
+  serial_is($invalid_booking->holder, 41, 'nested copied rejection preserves owner');
+}
+my $equal_booking = invoke('echo_booking', booking($ticket, 3, 3));
+check($equal_booking->window->lo->bcmp(3) == 0 && $equal_booking->window->hi->bcmp(3) == 0,
+  'nested copied constructor accepts equality and recovers');
+serial_is($equal_booking->holder, 41, 'nested copied recovery retains resource');
+release($equal_booking);
 check(invoke('booking_span', $valid_booking)->bcmp(5) == 0, 'copied payload consumed');
 check(invoke('claim_quota', $valid)->bcmp(7) == 0, 'owned payload consumed');
 my $grant = invoke('echo_grant', grant($ticket, 7, 8));

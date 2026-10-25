@@ -34,6 +34,15 @@ int main(void) {
     CHECK(echoed.quota == 7 && api::serial(echoed.holder) == 41);
     CHECK(echoed_booking.window.hi == 8
       && api::serial(echoed_booking.holder) == 41);
+    const api::Booking invalid_booking{ticket, {8, 3}};
+    for(size_t i = 0; i < 10; ++i) {
+      rejects([&] { (void)api::echo_booking(invalid_booking); });
+      CHECK(invalid_booking.window.lo == 8 && invalid_booking.window.hi == 3
+        && api::serial(invalid_booking.holder) == 41);
+    }
+    const auto equal_booking = api::echo_booking({ticket, {3, 3}});
+    CHECK(equal_booking.window.lo == 3 && equal_booking.window.hi == 3
+      && api::serial(equal_booking.holder) == 41);
     CHECK(api::booking_span(booking) == 5 && api::claim_quota(claim) == 7);
     const auto grant = api::echo_grant({ticket, 7, 8});
     CHECK(grant.weight == 7 && grant.limit == 8 && api::serial(grant.holder) == 41);

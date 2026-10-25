@@ -88,6 +88,25 @@ int main(void) {
     session, &booking, &echoed_booking, &owner));
   CHECK(mpz_cmp_ui(echoed_booking.window->hi, 8) == 0);
   expect_serial(session, echoed_booking.holder, 41); release(&owner);
+  owned_checked_records_window_t invalid_window = {hi, lo};
+  owned_checked_records_booking_t invalid_booking = {ticket, &invalid_window};
+  memset(&echoed_booking, 0xa5, sizeof(echoed_booking));
+  unsigned char booking_saved[sizeof(echoed_booking)];
+  memcpy(booking_saved, &echoed_booking, sizeof(echoed_booking));
+  for(size_t i = 0; i < 10; ++i) {
+    CHECK(owned_checked_records_echo_booking(session, &invalid_booking,
+      &echoed_booking, &owner) == OWNED_CHECKED_RECORDS_INVALID_ARGUMENT);
+    CHECK(owner == NULL && memcmp(booking_saved, &echoed_booking, sizeof(echoed_booking)) == 0);
+    CHECK(invalid_booking.holder == ticket && invalid_booking.window == &invalid_window
+      && mpz_cmp_ui(invalid_window.lo, 8) == 0 && mpz_cmp_ui(invalid_window.hi, 3) == 0);
+    expect_serial(session, ticket, 41);
+  }
+  owned_checked_records_window_t equal_window = {lo, lo};
+  owned_checked_records_booking_t equal_booking = {ticket, &equal_window};
+  OK(owned_checked_records_echo_booking(session, &equal_booking, &echoed_booking, &owner));
+  CHECK(mpz_cmp_ui(echoed_booking.window->lo, 3) == 0
+    && mpz_cmp_ui(echoed_booking.window->hi, 3) == 0);
+  expect_serial(session, echoed_booking.holder, 41); release(&owner);
   OK(owned_checked_records_echo_claim(session, &claim, &out, &owner));
   CHECK(mpz_cmp_ui(out.quota, 7) == 0); expect_serial(session, out.holder, 41);
   release(&owner);

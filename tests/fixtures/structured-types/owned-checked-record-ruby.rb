@@ -69,6 +69,19 @@ valid_booking = booking(ticket, 3, 8)
   release(echoed_booking)
 end
 
+invalid_booking = booking(ticket, 8, 3)
+10.times do
+  rejected { API.echo_booking(invalid_booking) }
+  check(invalid_booking.window.lo == 8 && invalid_booking.window.hi == 3,
+        "nested copied rejection preserves both input fields")
+  serial_is(invalid_booking.holder, 41, "nested copied rejection preserves owner")
+end
+equal_booking = API.echo_booking(booking(ticket, 3, 3))
+check(equal_booking.window.lo == 3 && equal_booking.window.hi == 3,
+      "nested copied constructor accepts equality and recovers")
+serial_is(equal_booking.holder, 41, "nested copied recovery retains resource")
+release(equal_booking)
+
 check(API.booking_span(valid_booking) == 5, "copied payload consumed")
 check(API.claim_quota(valid) == 7, "owned payload consumed")
 echoed_grant = API.echo_grant(grant(ticket, 7, 8))

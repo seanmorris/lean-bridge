@@ -62,6 +62,23 @@ fn main() {
         close_booking(echoed_booking);
     }
 
+    let invalid_booking = booking(&ticket, 8, 3);
+    for _ in 0..10 {
+        rejected(&mut checks, echo_booking(&invalid_booking));
+        check(&mut checks, invalid_booking.window.lo == BigUint::from(8u32)
+            && invalid_booking.window.hi == BigUint::from(3u32),
+            "nested copied rejection preserves both input fields");
+        serial_is(&mut checks, &invalid_booking.holder, 41,
+            "nested copied rejection preserves owner");
+    }
+    let equal_booking = echo_booking(&booking(&ticket, 3, 3)).expect("equal window");
+    check(&mut checks, equal_booking.window.lo == BigUint::from(3u32)
+        && equal_booking.window.hi == BigUint::from(3u32),
+        "nested copied constructor accepts equality and recovers");
+    serial_is(&mut checks, &equal_booking.holder, 41,
+        "nested copied recovery retains resource");
+    close_booking(equal_booking);
+
     check(&mut checks, booking_span(&valid_booking).expect("span") == BigUint::from(5u32),
         "copied payload consumed");
     check(&mut checks, claim_quota(&valid).expect("quota") == BigUint::from(7u32),
