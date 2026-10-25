@@ -1,0 +1,28 @@
+TAP version 13
+# Subtest: generated entry guidance agrees with the configured matrix and reference page
+ok 1 - generated entry guidance agrees with the configured matrix and reference page
+  ---
+  duration_ms: 10073.514233
+  type: 'test'
+  ...
+# Subtest: author callback guidance distinguishes the Fin archive from PHP-Wasm acceptance
+ok 2 - author callback guidance distinguishes the Fin archive from PHP-Wasm acceptance
+  ---
+  duration_ms: 3.36671
+  type: 'test'
+  ...
+# Subtest: the checked-record author table agrees with all seventeen installed consumer profiles
+ok 3 - the checked-record author table agrees with all seventeen installed consumer profiles
+  ---
+  duration_ms: 14257.870324
+  type: 'test'
+  ...
+1..3
+# tests 3
+# suites 0
+# pass 3
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 26172.103917

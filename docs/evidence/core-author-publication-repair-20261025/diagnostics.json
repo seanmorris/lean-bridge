@@ -1,0 +1,129 @@
+{
+  "schemaVersion": 1,
+  "remote": {
+    "run": 40160209518,
+    "head": "8db80ea109610468c1e509037a6f1771371fa5cf",
+    "scope": "Original terminal failure-log identities and selected diagnostic lines, not a passing result or full retained log.",
+    "logs": [
+      {
+        "job": 121069998011,
+        "url": "https://github.com/seanmorris/lean-bridge/actions/runs/40160209518/job/121069998011",
+        "originalLog": {
+          "bytes": 363509,
+          "sha256": "91d87973b48accd6048ba2465d14ecc3ba8238b978b1c0f05cb8970a9bea35c1",
+          "lineCount": 5264
+        },
+        "selectedLines": [
+          {
+            "line": 2679,
+            "text": "2026-10-25T04:45:19.3177537Z not ok 348 - generated entry guidance agrees with the configured matrix and reference page"
+          },
+          {
+            "line": 2683,
+            "text": "2026-10-25T04:45:19.3180155Z   location: '/home/runner/work/lean-bridge/lean-bridge/tests/helpers/author-refinement-consistency-tests.mjs:14:1'"
+          },
+          {
+            "line": 2684,
+            "text": "2026-10-25T04:45:19.3181050Z   failureType: 'testCodeFailure'"
+          },
+          {
+            "line": 2685,
+            "text": "2026-10-25T04:45:19.3182034Z   error: |-"
+          },
+          {
+            "line": 2692,
+            "text": "2026-10-25T04:45:19.3185687Z   expected: true"
+          },
+          {
+            "line": 2693,
+            "text": "2026-10-25T04:45:19.3186137Z   actual: false"
+          },
+          {
+            "line": 2696,
+            "text": "2026-10-25T04:45:19.3188050Z     TestContext.<anonymous> (file:///home/runner/work/lean-bridge/lean-bridge/tests/helpers/author-refinement-consistency-tests.mjs:27:9)"
+          },
+          {
+            "line": 2749,
+            "text": "2026-10-25T04:45:19.3499786Z not ok 357 - the checked-record author table agrees with all seventeen installed consumer profiles"
+          },
+          {
+            "line": 2753,
+            "text": "2026-10-25T04:45:19.3503059Z   location: '/home/runner/work/lean-bridge/lean-bridge/tests/lean-author-documentation.test.mjs:187:1'"
+          },
+          {
+            "line": 2754,
+            "text": "2026-10-25T04:45:19.3504126Z   failureType: 'testCodeFailure'"
+          },
+          {
+            "line": 2755,
+            "text": "2026-10-25T04:45:19.3504663Z   error: |-"
+          },
+          {
+            "line": 2764,
+            "text": "2026-10-25T04:45:19.3527077Z   expected: '| Record with erased proof fields and a checked input constructor | Node, browser, React and worker installed for the archived nested fields/containers, both source routes | C/C++, Python, Rust, Ruby, .NET, Java, Kotlin, native PHP and WIT/WASI installed for the archived nested fields/containers, both source routes | Installed for the archived nested fields/containers, both source routes on four ABIs | Installed for the archived nested fields/containers in Node/Chromium, both source routes | All seventeen profiles have installed nested parameter/result/field checks for the archived acyclic forms; separately archived synchronous callback parameter/result checks cover all seventeen profiles on both source routes; owned and unarchived combinations remain separate |'"
+          },
+          {
+            "line": 2765,
+            "text": "2026-10-25T04:45:19.3534365Z   actual: '| Record with erased proof fields and a checked input constructor | Node, browser, React and worker installed for the archived nested fields/containers, both source routes | C/C++, Python, Rust, Ruby, .NET, Java, Kotlin, native PHP and WIT/WASI installed for the archived nested fields/containers, both source routes | Installed for the archived nested fields/containers, both source routes on four ABIs | Installed for the archived nested fields/containers in Node/Chromium, both source routes | All seventeen profiles have installed nested parameter/result/field checks for the archived acyclic forms; separately archived synchronous callback parameter/result checks cover all seventeen profiles on both source routes; the separately archived owned Booking/Window and Ticket/Claim forms are documented below; unarchived combinations remain separate |'"
+          },
+          {
+            "line": 2768,
+            "text": "2026-10-25T04:45:19.3539391Z     TestContext.<anonymous> (file:///home/runner/work/lean-bridge/lean-bridge/tests/lean-author-documentation.test.mjs:190:9)"
+          },
+          {
+            "line": 5261,
+            "text": "2026-10-25T05:26:49.4114965Z ##[error]The runner has received a shutdown signal. This can happen when the runner service is stopped, or a manually started runner is canceled."
+          },
+          {
+            "line": 5262,
+            "text": "2026-10-25T05:26:49.5522898Z ##[error]The operation was canceled."
+          }
+        ]
+      },
+      {
+        "job": 121069998314,
+        "url": "https://github.com/seanmorris/lean-bridge/actions/runs/40160209518/job/121069998314",
+        "originalLog": {
+          "bytes": 562439,
+          "sha256": "048138cc5f09ec880d1aa70b99bf5d73a200fa688cf31dd768d7c7bbb1a51748",
+          "lineCount": 8315
+        },
+        "selectedLines": [
+          {
+            "line": 8311,
+            "text": "2026-10-25T05:27:30.5925708Z ##[error]The runner has received a shutdown signal. This can happen when the runner service is stopped, or a manually started runner is canceled."
+          },
+          {
+            "line": 8312,
+            "text": "2026-10-25T05:27:30.7694321Z ##[error]The operation was canceled."
+          }
+        ]
+      }
+    ]
+  },
+  "local": [
+    {
+      "kind": "original-documentation-assertions",
+      "revision": "f52e87af22c65d21c526c2b7fe58a9c7fe3c8ea8",
+      "command": "node --max-old-space-size=512 --test --test-name-pattern='generated entry guidance agrees|the checked-record author table agrees' tests/lean-author-documentation.test.mjs",
+      "exitCode": 1,
+      "tests": 2,
+      "pass": 0,
+      "fail": 2,
+      "tap": "docs/evidence/core-author-publication-repair-20261025/reproduction.tap"
+    },
+    {
+      "kind": "sparse-checkout-missing-original-evidence",
+      "exitCode": 1,
+      "path": "docs/evidence/checked-record-python-hosts-20261010/3.11/ordinary-source/build-0/CheckedRecords.lean",
+      "resolution": "Restored the original tracked archive files with git sparse-checkout add. The complete checked-record author test then passed without changing any archive reader or original evidence."
+    },
+    {
+      "kind": "sparse-checkout-missing-probe-archive",
+      "exitCode": 1,
+      "path": "docs/evidence/php-wasm-entry-hosted-20261025/artifacts/0000/index.json",
+      "resolution": "Restored the original tracked probe archive with git sparse-checkout add before rerunning its unchanged three-test checker."
+    }
+  ],
+  "scope": "The two original assertions expected documentation from before the retained owned-record and hosted-probe publications. Only their live documentation checks change. Historical documentation and source receipts remain immutable. Runner shutdown causes remain unknown."
+}

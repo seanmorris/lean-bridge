@@ -1,0 +1,56 @@
+TAP version 13
+# Subtest: generated entry guidance agrees with the configured matrix and reference page
+not ok 1 - generated entry guidance agrees with the configured matrix and reference page
+  ---
+  duration_ms: 17.336489
+  type: 'test'
+  location: '/app/build/worktrees/codex-vo1824-dispatch/tests/helpers/author-refinement-consistency-tests.mjs:14:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The expression evaluated to a falsy value:
+    
+      assert.ok((await readFile("docs/reference/types.md", "utf8"))
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (file:///app/build/worktrees/codex-vo1824-dispatch/tests/helpers/author-refinement-consistency-tests.mjs:27:9)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+# Subtest: the checked-record author table agrees with all seventeen installed consumer profiles
+not ok 2 - the checked-record author table agrees with all seventeen installed consumer profiles
+  ---
+  duration_ms: 6.960758
+  type: 'test'
+  location: '/app/build/worktrees/codex-vo1824-dispatch/tests/lean-author-documentation.test.mjs:187:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + '| Record with erased proof fields and a checked input constructor | Node, browser, React and worker installed for the archived nested fields/containers, both source routes | C/C++, Python, Rust, Ruby, .NET, Java, Kotlin, native PHP and WIT/WASI installed for the archived nested fields/containers, both source routes | Installed for the archived nested fields/containers, both source routes on four ABIs | Installed for the archived nested fields/containers in Node/Chromium, both source routes | All seventeen profiles have installed nested parameter/result/field checks for the archived acyclic forms; separately archived synchronous callback parameter/result checks cover all seventeen profiles on both source routes; the separately archived owned Booking/Window and Ticket/Claim forms are documented below; unarchived combinations remain separate |'
+    - '| Record with erased proof fields and a checked input constructor | Node, browser, React and worker installed for the archived nested fields/containers, both source routes | C/C++, Python, Rust, Ruby, .NET, Java, Kotlin, native PHP and WIT/WASI installed for the archived nested fields/containers, both source routes | Installed for the archived nested fields/containers, both source routes on four ABIs | Installed for the archived nested fields/containers in Node/Chromium, both source routes | All seventeen profiles have installed nested parameter/result/field checks for the archived acyclic forms; separately archived synchronous callback parameter/result checks cover all seventeen profiles on both source routes; owned and unarchived combinations remain separate |'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: '| Record with erased proof fields and a checked input constructor | Node, browser, React and worker installed for the archived nested fields/containers, both source routes | C/C++, Python, Rust, Ruby, .NET, Java, Kotlin, native PHP and WIT/WASI installed for the archived nested fields/containers, both source routes | Installed for the archived nested fields/containers, both source routes on four ABIs | Installed for the archived nested fields/containers in Node/Chromium, both source routes | All seventeen profiles have installed nested parameter/result/field checks for the archived acyclic forms; separately archived synchronous callback parameter/result checks cover all seventeen profiles on both source routes; owned and unarchived combinations remain separate |'
+  actual: '| Record with erased proof fields and a checked input constructor | Node, browser, React and worker installed for the archived nested fields/containers, both source routes | C/C++, Python, Rust, Ruby, .NET, Java, Kotlin, native PHP and WIT/WASI installed for the archived nested fields/containers, both source routes | Installed for the archived nested fields/containers, both source routes on four ABIs | Installed for the archived nested fields/containers in Node/Chromium, both source routes | All seventeen profiles have installed nested parameter/result/field checks for the archived acyclic forms; separately archived synchronous callback parameter/result checks cover all seventeen profiles on both source routes; the separately archived owned Booking/Window and Ticket/Claim forms are documented below; unarchived combinations remain separate |'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///app/build/worktrees/codex-vo1824-dispatch/tests/lean-author-documentation.test.mjs:190:9)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+1..2
+# tests 2
+# suites 0
+# pass 0
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2024.777254

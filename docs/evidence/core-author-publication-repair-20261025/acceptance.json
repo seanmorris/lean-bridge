@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "baseCommit": "f52e87af22c65d21c526c2b7fe58a9c7fe3c8ea8",
+  "scope": "Repair two stale live Lean-author documentation assertions after the independently accepted hosted-probe and owned-record publications. Retain the exact pre-publication boundary checks, immutable source archives, all seventeen installed-profile checks and the limits on unarchived forms. Stream the full validated inventory projection instead of retaining its repeated file lists.",
+  "sourcePins": [
+    {
+      "path": "tests/helpers/author-refinement-consistency-tests.mjs",
+      "previous": "82094c380bb0bac58e95c016bd2455bdd811ccd67353f74cbfb062a97592bb48",
+      "current": "156f0ca6b5eb536da0d27a15322f4fd4c53bc66f0ede7643ef025c22f14eb68f",
+      "count": 0
+    },
+    {
+      "path": "tests/lean-author-documentation.test.mjs",
+      "previous": "2a7600c13492ab4f406479638e0f875c7c7c569944a0ce0e2394ec6472a5f7ae",
+      "current": "bf0310e07de09fc97d79b0f53590012b49d947a6b4be3e53ca163a9a482f0894",
+      "count": 0
+    }
+  ],
+  "inventory": {
+    "bytes": 102577221,
+    "sha256": "66d8a954207550372f8b41fe59aa06f497bf829b174293f5e714ecc806da8a63",
+    "refreshedPins": 0,
+    "unchanged": true
+  },
+  "validation": {
+    "tests": [
+      {
+        "name": "author documentation",
+        "count": 3,
+        "file": {
+          "path": "docs/evidence/core-author-publication-repair-20261025/author.tap",
+          "bytes": 823,
+          "sha256": "f201312500e0054dfc7d10d610ec3a7b56b74d5d44bdabe12138e9e9fbc79134"
+        }
+      },
+      {
+        "name": "owned publication and negative controls",
+        "count": 3,
+        "file": {
+          "path": "docs/evidence/core-author-publication-repair-20261025/owned-publication.tap",
+          "bytes": 857,
+          "sha256": "12293c8019ad7c3133924ae2677ad97880ebce5cb9299f1faf2b7a36606547ca"
+        }
+      },
+      {
+        "name": "PHP-Wasm probe publication",
+        "count": 3,
+        "file": {
+          "path": "docs/evidence/core-author-publication-repair-20261025/probe-publication.tap",
+          "bytes": 836,
+          "sha256": "ac068db539a34b65f473d4b7a28a53e4e007a7ae6defd05c2c1321cc9493b780"
+        }
+      }
+    ],
+    "originalFailures": {
+      "path": "docs/evidence/core-author-publication-repair-20261025/reproduction.tap",
+      "bytes": 5138,
+      "sha256": "09312801d0f89ee0a9002580bd745d0f237b461fd3c4878dc123b3f22cedac77"
+    },
+    "diagnostics": {
+      "path": "docs/evidence/core-author-publication-repair-20261025/diagnostics.json",
+      "bytes": 7162,
+      "sha256": "f3c96ca29f6fba1cb643fb67a7cdb03727209289d8e0ae4f7699976826da5e0c"
+    },
+    "lint": {
+      "command": "node /app/node_modules/eslint/bin/eslint.js tests/helpers/author-refinement-consistency-tests.mjs tests/lean-author-documentation.test.mjs --max-warnings 0",
+      "exitCode": 0
+    },
+    "typecheck": {
+      "command": "node /app/node_modules/typescript/bin/tsc -p jsconfig.checked.json --pretty false",
+      "exitCode": 0
+    },
+    "resourceGuard": "One low-priority CPU; 512 MiB Node heap cap; no local full-Core run"
+  },
+  "pending": [
+    "full-final-head-Core",
+    "complete-producer-input-reconciliation",
+    "recurring-default-branch-activation"
+  ]
+}

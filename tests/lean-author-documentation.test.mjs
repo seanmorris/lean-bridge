@@ -10,6 +10,7 @@ import "./helpers/checked-record-perl-author-docs-history-tests.mjs";
 import "./helpers/inherited-checked-record-docs-closure-source-history-tests.mjs";
 import "./helpers/inherited-docs-replay-repair-source-history-tests.mjs";
 import "./helpers/author-refinement-consistency-tests.mjs";
+import { createReadStream } from "node:fs";
 import { access, readFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import test from "node:test";
@@ -30,6 +31,7 @@ import { sha256 } from "../src/capsule/node.mjs";
 import { finHostedReceiptSha256 } from "./helpers/fin-native-hosted-evidence.mjs";
 import { phpWasmSubtypePromotionReferences } from "./helpers/php-wasm-subtype-promotion.mjs";
 import { reviewedSubtypeNativeReferences } from "./helpers/reviewed-subtype-native-promotion.mjs";
+import { readPromotionInventory } from "./helpers/type-surface-promotion-io.mjs";
 
 const fixture = "tests/fixtures/documentation/lean-author";
 const documents = [
@@ -187,7 +189,7 @@ test("checked-record guidance uses the tested payload and per-site constructor c
 test("the checked-record author table agrees with all seventeen installed consumer profiles", async () => {
 	const document = await readFile("docs/lean/existing-package.md", "utf8");
 	const row = document.split("\n").find(line => line.startsWith("| Record with erased proof fields"));
-	assert.equal(row, "| Record with erased proof fields and a checked input constructor | Node, browser, React and worker installed for the archived nested fields/containers, both source routes | C/C++, Python, Rust, Ruby, .NET, Java, Kotlin, native PHP and WIT/WASI installed for the archived nested fields/containers, both source routes | Installed for the archived nested fields/containers, both source routes on four ABIs | Installed for the archived nested fields/containers in Node/Chromium, both source routes | All seventeen profiles have installed nested parameter/result/field checks for the archived acyclic forms; separately archived synchronous callback parameter/result checks cover all seventeen profiles on both source routes; owned and unarchived combinations remain separate |");
+	assert.equal(row, "| Record with erased proof fields and a checked input constructor | Node, browser, React and worker installed for the archived nested fields/containers, both source routes | C/C++, Python, Rust, Ruby, .NET, Java, Kotlin, native PHP and WIT/WASI installed for the archived nested fields/containers, both source routes | Installed for the archived nested fields/containers, both source routes on four ABIs | Installed for the archived nested fields/containers in Node/Chromium, both source routes | All seventeen profiles have installed nested parameter/result/field checks for the archived acyclic forms; separately archived synchronous callback parameter/result checks cover all seventeen profiles on both source routes; the separately archived owned Booking/Window and Ticket/Claim forms are documented below; unarchived combinations remain separate |");
 	const python = await readCheckedRecordPythonArchive();
 	assert.equal(python.reports.length, 8);
 	assert.deepEqual([...new Set(python.index.runs.map(run => run.floor))], ["3.11", "3.12"]);
@@ -209,7 +211,12 @@ test("the checked-record author table agrees with all seventeen installed consum
 		, "checked-record-perl-result-only-ordinary-source-installed"
 		, "checked-record-perl-result-only-reviewed-ir-installed"
 	]);
-	const inventory = JSON.parse(await readFile("docs/type-surface.v1.json"));
+	const { document: inventory } = await readPromotionInventory(
+		createReadStream("docs/type-surface.v1.json"), {
+			irSchema: JSON.parse(await readFile("schema/binding-ir.schema.json", "utf8"))
+			, consumers: JSON.parse(await readFile("docs/consumer-support.v1.json", "utf8"))
+		}
+	);
 	const browserReferences = await checkedRecordBrowserReferences();
 	assert.equal(browserReferences.length, 4);
 	assert.equal(browserReferences.filter(reference => reference.resultOnly).length, 2);

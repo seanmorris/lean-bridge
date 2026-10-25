@@ -4,9 +4,13 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { createReadStream } from "node:fs";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
-import { phpWasmRefinementEntryBoundary } from "../../scripts/generate-type-docs.mjs";
+import {
+	phpWasmRefinementEntryBoundary, phpWasmRefinementEntryReference
+} from "../../scripts/generate-type-docs.mjs";
+import { readPromotionInventory } from "./type-surface-promotion-io.mjs";
 import {
 	phpWasmRefinementEntryMatrix, phpWasmRefinementEntryMatrixLocation
 } from "./php-wasm-refinement-entry-matrix.mjs";
@@ -24,8 +28,23 @@ test("generated entry guidance agrees with the configured matrix and reference p
 	assert.match(phpWasmRefinementEntryBoundary, /six callback routes/u);
 	assert.match(phpWasmRefinementEntryBoundary, /do\s+not widen any type-support cell/u);
 	assert.match(phpWasmRefinementEntryBoundary, /is not a hosted result/u);
-	assert.ok((await readFile("docs/reference/types.md", "utf8"))
-		.includes(phpWasmRefinementEntryBoundary));
+	const contracts = {
+		irSchema: JSON.parse(await readFile("schema/binding-ir.schema.json", "utf8"))
+		, consumers: JSON.parse(await readFile("docs/consumer-support.v1.json", "utf8"))
+	};
+	const { document } = await readPromotionInventory(
+		createReadStream("docs/type-surface.v1.json"), contracts
+	);
+	const published = phpWasmRefinementEntryReference(document);
+	assert.notEqual(published, phpWasmRefinementEntryBoundary);
+	assert.ok(published.includes(
+		`${matrix.length} ordinary/reviewed routes in ${artifacts.size} retained artifacts`));
+	assert.match(published, /six callback routes/u);
+	assert.match(published, /leave unmodified prepared packages and their supported types unchanged/u);
+	assert.doesNotMatch(published, /is not a hosted result/u);
+	const reference = await readFile("docs/reference/types.md", "utf8");
+	assert.equal(reference.split(published).length, 2);
+	assert.ok(!reference.includes(phpWasmRefinementEntryBoundary));
 });
 
 test("author callback guidance distinguishes the Fin archive from PHP-Wasm acceptance", async () => {
