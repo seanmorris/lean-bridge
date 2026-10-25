@@ -10,6 +10,28 @@ import test from "node:test";
 const workflowPath
 	= ".github/workflows/dependent-checked-record-matrix.yml";
 
+const documentationInputs = Object.freeze([
+	"docs/consume/**", "docs/reference/**", "site/reference/**"
+	, "scripts/generate-reference-docs.mjs", "scripts/generate-type-docs.mjs"
+]);
+const documentationStep = [
+	"      - name: Audit all 68 promoted inventory cells and generated documentation"
+	, "        shell: bash"
+	, "        run: |"
+	, "          set -o pipefail"
+	, "          node --test --test-concurrency=1 \\"
+	, "            tests/dependent-checked-record-matrix-inventory.test.mjs \\"
+	, "            | tee build/dependent-checked-record-matrix/inventory.tap"
+].join("\n") + "\n";
+const assertDocumentationGate = workflow => {
+	for(const input of documentationInputs)
+		assert.equal(workflow.split(`      - "${input}"\n`).length - 1
+			, 2, `${input} must trigger both push and pull_request`);
+	assert.ok(workflow.includes(documentationStep)
+		, "Generated documentation must be checked without rewriting it");
+	assert.doesNotMatch(workflow, /continue-on-error|\|\| true/u);
+};
+
 test("dependent checked-record matrix replays evidence and inventory weekly"
 	, async () => {
 	const workflow = await readFile(workflowPath, "utf8");
@@ -41,5 +63,31 @@ test("dependent checked-record matrix replays evidence and inventory weekly"
 	assert.match(workflow, /if: always\(\)\n {8}uses: actions\/upload-artifact@v7/u);
 	assert.match(workflow, /if-no-files-found: error/u);
 	assert.doesNotMatch(workflow, /continue-on-error|\|\| true/u);
+	}
+);
+
+test("dependent checked-record matrix checks generated documentation on both triggers"
+	, async () => assertDocumentationGate(await readFile(workflowPath, "utf8"))
+);
+
+test("dependent documentation gate rejects missing triggers and bypassed checks"
+	, async () => {
+	const workflow = await readFile(workflowPath, "utf8");
+	assertDocumentationGate(workflow);
+	for(const input of documentationInputs)
+	{
+		const line = `      - "${input}"\n`;
+		assert.throws(() => assertDocumentationGate(workflow.replace(line, "")));
+		assert.throws(() => assertDocumentationGate(workflow.replaceAll(line, "")));
+	}
+	for(const changed of [
+		workflow.replace(documentationStep, "")
+		, workflow.replace(documentationStep
+			, documentationStep.replace("node --test --test-concurrency=1", "true"))
+		, workflow.replace(documentationStep
+			, documentationStep.replace("          set -o pipefail\n", ""))
+		, workflow.replace("inventory.tap", "discarded.log")
+		, workflow.replace("        shell: bash", "        continue-on-error: true\n        shell: bash")
+	]) assert.throws(() => assertDocumentationGate(changed));
 	}
 );

@@ -4,13 +4,18 @@ on:
   push:
     paths:
       - ".github/workflows/dependent-checked-record-matrix.yml"
+      - "docs/consume/**"
       - "docs/evidence/dependent-checked-record-*/**"
+      - "docs/reference/**"
       - "docs/consumer-support.v1.json"
       - "docs/type-surface.v1.json"
       - "package-lock.json"
       - "package.json"
       - "schema/binding-ir.schema.json"
       - "scripts/*dependent-checked-record*.mjs"
+      - "scripts/generate-reference-docs.mjs"
+      - "scripts/generate-type-docs.mjs"
+      - "site/reference/**"
       - "src/adoption/type-surface.mjs"
       - "src/capsule/node.mjs"
       - "tests/dependent-checked-record-matrix.test.mjs"
@@ -20,13 +25,18 @@ on:
   pull_request:
     paths:
       - ".github/workflows/dependent-checked-record-matrix.yml"
+      - "docs/consume/**"
       - "docs/evidence/dependent-checked-record-*/**"
+      - "docs/reference/**"
       - "docs/consumer-support.v1.json"
       - "docs/type-surface.v1.json"
       - "package-lock.json"
       - "package.json"
       - "schema/binding-ir.schema.json"
       - "scripts/*dependent-checked-record*.mjs"
+      - "scripts/generate-reference-docs.mjs"
+      - "scripts/generate-type-docs.mjs"
+      - "site/reference/**"
       - "src/adoption/type-surface.mjs"
       - "src/capsule/node.mjs"
       - "tests/dependent-checked-record-matrix.test.mjs"
@@ -67,7 +77,7 @@ jobs:
           node --test --test-concurrency=1 \
             tests/dependent-checked-record-matrix.test.mjs \
             | tee build/dependent-checked-record-matrix/evidence.tap
-      - name: Audit all 68 promoted inventory cells
+      - name: Audit all 68 promoted inventory cells and generated documentation
         shell: bash
         run: |
           set -o pipefail
