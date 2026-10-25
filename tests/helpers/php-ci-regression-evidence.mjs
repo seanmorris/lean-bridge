@@ -6,16 +6,27 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
-import { readTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { historicalTypeSurfaceCells as typeSurfaceCells } from "./historical-type-surface-cells.mjs";
 import { assertClosureThreadIntegration } from "./closure-thread-evidence.mjs";
 import { closureThreadHistoryPath } from "./closure-thread-source-history.mjs";
 import { assertPhpStructuredCallableExecution, phpStructuredCallableExecutionPath } from "./php-structured-callable-evidence.mjs";
 import { assertPhpWasmLegacyPackageComparison, phpWasmPreGraphSources } from "./php-wasm-legacy-comparison.mjs";
 import { phpCiChangedPaths, reversePhpCiUpdate } from "./php-ci-regression-source-history.mjs";
-import { beforePythonRecursiveCallables } from "./python-recursive-callable-source-history.mjs";
+import { sourceAtProducer, typeSurfaceContractsAtProducer } from "./producer-source.mjs";
 
-const priorSource = async path => beforePythonRecursiveCallables(path, await readFile(path, "utf8"));
+export const phpCiProducer = "53ccb05a9ad93cebf37c17a5b4ea2415275ee287";
+
+/**
+ * Read an original PHP repair source and require its recorded identity.
+ *
+ * @param path - Repository-relative source path.
+ * @param expected - Required SHA-256 from the original receipt.
+ */
+export const phpCiProducerSource = (path, expected) => {
+	assert.match(expected, /^[a-f0-9]{64}$/u);
+	return sourceAtProducer(phpCiProducer, path, expected);
+};
+const priorSource = phpCiProducerSource;
 
 export const phpCiBaseline = "f61063252acf464ba4306885ddbf141b29bbdf73";
 export const phpCiExecutionPath = "docs/evidence/php-ci-regressions-20260925.json";
@@ -80,7 +91,8 @@ export const assertPhpCiExecution = async record => {
 	assert.deepEqual(probeResults[0], probeResults[1]);
 	assert.ok(record.php.installed.command.includes("LEAN_BRIDGE_PHP_STRUCTURED_CALLABLE_TEST=1"));
 	await assertPhpStructuredCallableExecution({ ...old, installed: record.php.installed, report: record.php.report }
-		, { probeSource: await readFile("tests/fixtures/structured-callable-consumers/php-faults.php", "utf8") });
+		, { probeSource: priorSource("tests/fixtures/structured-callable-consumers/php-faults.php"
+			, record.php.report.reports[0].faults.sourceSha256) });
 	passed(record.wasm.installed, 5);
 	for(const flag of ["LEAN_BRIDGE_PHP_WASM_ORDINARY_TEST=1", "LEAN_BRIDGE_PHP_WASM_BROWSER_TEST=1"])
 		assert.ok(record.wasm.installed.command.includes(flag));
@@ -92,12 +104,15 @@ export const assertPhpCiExecution = async record => {
 	assert.deepEqual(report.packages.map(run => run.name), ["Willow", "Aspen"]);
 	const { sources } = await phpWasmPreGraphSources();
 	const packagePath = "src/release/php-wasm-copied-package.mjs";
-	const packagingSource = await priorSource(packagePath);
-	const hostPath = "src/backends/php/php-wasm-copied-host.mjs", hostSource = await priorSource(hostPath);
+	const packagingSource = priorSource(packagePath, report.sourceHashes[packagePath]);
+	const hostPath = "src/backends/php/php-wasm-copied-host.mjs";
+	const hostSource = priorSource(hostPath, report.sourceHashes[hostPath]);
 	assert.equal(report.sourceHashes[hostPath], sha256(hostSource));
 	for(const run of report.packages) await assertPhpWasmLegacyPackageComparison(run, sources, { packagingSource, hostSource });
 	assert.equal(report.sourceHashes[packagePath], sha256(packagingSource));
-	assert.equal(report.sourceHashes["tests/helpers/php-wasm-legacy-comparison.mjs"], sha256(await priorSource("tests/helpers/php-wasm-legacy-comparison.mjs")));
+	const comparisonPath = "tests/helpers/php-wasm-legacy-comparison.mjs";
+	assert.equal(report.sourceHashes[comparisonPath]
+		, sha256(priorSource(comparisonPath, report.sourceHashes[comparisonPath])));
 };
 
 /**
@@ -115,17 +130,19 @@ export const assertPhpCiIntegration = async record => {
 	assert.deepEqual(Object.keys(record.additions).sort(), phpCiAddedPaths);
 	const paths = [...new Set([...Object.keys(previous.sourceHashes), ...phpCiChangedPaths, ...phpCiAddedPaths])].sort();
 	assert.deepEqual(Object.keys(record.sourceHashes).sort(), paths);
-	for(const path of paths) assert.equal(sha256(await priorSource(path)), record.sourceHashes[path], path);
+	for(const path of paths) assert.equal(sha256(priorSource(path, record.sourceHashes[path])), record.sourceHashes[path], path);
 	const restored = {};
 	for(const update of record.updates)
 	{
 		assert.equal(update.currentSha256, record.sourceHashes[update.path]);
 		assert.equal(update.previousSha256, previous.sourceHashes[update.path]);
-		restored[update.path] = reversePhpCiUpdate(await priorSource(update.path), update);
+		restored[update.path] = reversePhpCiUpdate(priorSource(update.path, update.currentSha256), update);
 	}
 	for(const [path, hash] of Object.entries(record.additions)) assert.equal(hash, record.sourceHashes[path]);
-	const { document: current, ...contracts } = await readTypeSurface(); void current;
-	const document = JSON.parse(await priorSource("docs/type-surface.v1.json")), old = JSON.parse(restored["docs/type-surface.v1.json"]);
+	const contracts = typeSurfaceContractsAtProducer(phpCiProducer);
+	const inventoryPath = "docs/type-surface.v1.json";
+	const document = JSON.parse(priorSource(inventoryPath, record.sourceHashes[inventoryPath]));
+	const old = JSON.parse(restored[inventoryPath]);
 	assert.equal(old.contractVersion, "0.98.1"); assert.equal(document.contractVersion, "0.98.2");
 	const cells = typeSurfaceCells(document, contracts);
 	assert.deepEqual(cells, typeSurfaceCells(old, contracts)); assert.equal(cells.length, 6562);

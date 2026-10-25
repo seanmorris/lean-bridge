@@ -6,7 +6,6 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
-import { readTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { historicalTypeSurfaceCells as typeSurfaceCells } from "./historical-type-surface-cells.mjs";
 import { generateNativePrimitiveC } from "../../src/backends/c/native-primitives.mjs";
 import { closureThreadConsumer } from "./closure-thread-fixture.mjs";
@@ -15,10 +14,22 @@ import { witStructuredNativeModels, witStructuredNativeReceipt } from "./wit-str
 import { assertNativeRecursiveCallableIntegration } from "./native-recursive-callable-evidence.mjs";
 import { nativeRecursiveCallableHistoryPath } from "./native-recursive-callable-source-history.mjs";
 import { closureThreadChangedPaths, reverseClosureThreadUpdate } from "./closure-thread-source-history.mjs";
-import { beforePhpCiRegression } from "./php-ci-regression-source-history.mjs";
 import { beforeCallableErrorCode } from "./callable-error-code-history.mjs";
+import { sourceAtProducer, typeSurfaceContractsAtProducer } from "./producer-source.mjs";
 
-const priorSource = async path => beforePhpCiRegression(path, await readFile(path, "utf8"));
+export const closureThreadProducer = "f61063252acf464ba4306885ddbf141b29bbdf73";
+
+/**
+ * Read an original closure repair source and require its recorded identity.
+ *
+ * @param path - Repository-relative source path.
+ * @param expected - Required SHA-256 from the original receipt.
+ */
+export const closureThreadProducerSource = (path, expected) => {
+	assert.match(expected, /^[a-f0-9]{64}$/u);
+	return sourceAtProducer(closureThreadProducer, path, expected);
+};
+const priorSource = closureThreadProducerSource;
 
 export const closureThreadBaseline = "2273d357fc959cf88bf7b0e1aea70e908ba1ba4d";
 export const closureThreadExecutionPath = "docs/evidence/closure-thread-lifetime-20260925.json";
@@ -98,7 +109,9 @@ export const assertClosureThreadExecution = async record => {
 		}
 	}
 	assert.notEqual(record.baseline.generatorSha256, record.fixed.generatorSha256);
-	assert.equal(record.fixed.generatorSha256, sha256(await priorSource("src/backends/c/native-callables.mjs")));
+	assert.equal(record.fixed.generatorSha256, sha256(priorSource(
+		"src/backends/c/native-callables.mjs", record.fixed.generatorSha256
+	)));
 	const registries = record.installed.text.split("\n").filter(line => line.startsWith('# {"pointerBits"')).map(line => JSON.parse(line.slice(2)));
 	assert.deepEqual(registries.map(row => row.pointerBits), [32, 64]);
 	for(const row of registries)
@@ -147,18 +160,20 @@ export const assertClosureThreadIntegration = async record => {
 	assert.deepEqual(Object.keys(record.additions).sort(), closureThreadAddedPaths);
 	const sources = [...new Set([...Object.keys(previous.sourceHashes), ...closureThreadChangedPaths, ...closureThreadAddedPaths])].sort();
 	assert.deepEqual(Object.keys(record.sourceHashes).sort(), sources);
-	for(const path of sources) assert.equal(sha256(await priorSource(path)), record.sourceHashes[path], path);
+	for(const path of sources) assert.equal(sha256(priorSource(path, record.sourceHashes[path])), record.sourceHashes[path], path);
 	const restored = {};
 	for(const update of record.updates)
 	{
 		assert.equal(update.currentSha256, record.sourceHashes[update.path]);
-		restored[update.path] = reverseClosureThreadUpdate(await priorSource(update.path), update);
+		restored[update.path] = reverseClosureThreadUpdate(priorSource(update.path, update.currentSha256), update);
 		if(previous.sourceHashes[update.path]) assert.equal(update.previousSha256, previous.sourceHashes[update.path]);
 	}
 	assert.equal(sha256(restored["src/backends/c/native-callables.mjs"]), execution.baseline.generatorSha256);
 	for(const [path, hash] of Object.entries(record.additions)) assert.equal(hash, record.sourceHashes[path]);
-	const contracts = await readTypeSurface(), old = JSON.parse(restored["docs/type-surface.v1.json"]);
-	const document = JSON.parse(await priorSource("docs/type-surface.v1.json"));
+	const contracts = typeSurfaceContractsAtProducer(closureThreadProducer);
+	const inventoryPath = "docs/type-surface.v1.json";
+	const old = JSON.parse(restored[inventoryPath]);
+	const document = JSON.parse(priorSource(inventoryPath, record.sourceHashes[inventoryPath]));
 	assert.equal(old.contractVersion, "0.98.0"); assert.equal(document.contractVersion, "0.98.1");
 	const cells = typeSurfaceCells(document, contracts);
 	assert.deepEqual(cells, typeSurfaceCells(old, contracts)); assert.equal(cells.length, 6562);

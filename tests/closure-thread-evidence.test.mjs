@@ -8,9 +8,8 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import "./helpers/closure-history-ci-repair-source-history-tests.mjs";
 import { sha256 } from "../src/capsule/node.mjs";
-import { assertClosureThreadCodegen, assertClosureThreadExecution, assertClosureThreadIntegration, closureThreadCodegenPath, closureThreadExecutionPath } from "./helpers/closure-thread-evidence.mjs";
+import { assertClosureThreadCodegen, assertClosureThreadExecution, assertClosureThreadIntegration, closureThreadCodegenPath, closureThreadExecutionPath, closureThreadProducerSource } from "./helpers/closure-thread-evidence.mjs";
 import { beforeClosureThreadLifetime, closureThreadHistoryPath, reverseClosureThreadUpdate } from "./helpers/closure-thread-source-history.mjs";
-import { beforePhpCiRegression } from "./helpers/php-ci-regression-source-history.mjs";
 
 const json = async path => JSON.parse(await readFile(path, "utf8"));
 
@@ -57,12 +56,12 @@ test("closure lifetime source history rejects unknown edits and predecessor iden
 	const record = await json(closureThreadHistoryPath);
 	for(const update of record.updates)
 	{
-		const source = beforePhpCiRegression(update.path, await readFile(update.path, "utf8"));
+		const source = closureThreadProducerSource(update.path, update.currentSha256);
 		assert.equal(sha256(reverseClosureThreadUpdate(source, update)), update.previousSha256);
-		assert.equal(sha256(beforeClosureThreadLifetime(update.path, source)), update.previousSha256);
+		assert.equal(sha256(beforeClosureThreadLifetime(update.path, source, update.previousSha256)), update.previousSha256);
 		assert.equal(beforeClosureThreadLifetime(update.path, source, update.currentSha256), source);
 		const altered = source + "\n/* unrelated */\n";
-		assert.equal(beforeClosureThreadLifetime(update.path, altered), altered);
+		assert.equal(beforeClosureThreadLifetime(update.path, altered, update.previousSha256), altered);
 		assert.throws(() => reverseClosureThreadUpdate(altered, update));
 		assert.throws(() => reverseClosureThreadUpdate(source, { ...update, previousSha256: "0".repeat(64) }));
 	}
