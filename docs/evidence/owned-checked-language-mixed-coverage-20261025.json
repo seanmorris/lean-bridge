@@ -1,0 +1,144 @@
+{
+  "schemaVersion": 1,
+  "profile": "owned-checked-language-mixed-source-qualification",
+  "predecessorCommit": "a005b6f0f8ac3f978cb2d749832de14b3b7d070e",
+  "sourceIdentity": {
+    "kind": "pre-implementation-working-tree-bytes",
+    "files": [
+      {
+        "path": "tests/fixtures/structured-types/owned-checked-record-python.py",
+        "bytes": 10015,
+        "sha256": "4579e9da1c4824edddf224269096f8cb5d3a09d0d45262747dd1b67a94828856"
+      },
+      {
+        "path": "tests/fixtures/structured-types/owned-checked-record-ruby.rb",
+        "bytes": 9221,
+        "sha256": "f8abfe57fd43beab4156894d1efb8a6cbd54b08785512319fe49d7073e7f4acd"
+      },
+      {
+        "path": "tests/fixtures/structured-types/owned-checked-record-rust.rs",
+        "bytes": 13743,
+        "sha256": "32b4781e41d2b6650df76cdae4c30ac0ef994aef7f6d4a3cb70c7d8f0122081e"
+      },
+      {
+        "path": "tests/helpers/owned-checked-record-language-fixture.mjs",
+        "bytes": 1535,
+        "sha256": "9043629f016c051d2492bf88a05bede98ad717a8a3223c4785eee73561f90887"
+      },
+      {
+        "path": "tests/helpers/owned-checked-record-native-fixture.mjs",
+        "bytes": 1343,
+        "sha256": "e44bd71baf4e0ddbab0a740ca78c6e61982b892796b711b4348ac16e44bdec88"
+      },
+      {
+        "path": "tests/helpers/owned-checked-record-promotion-tests.mjs",
+        "bytes": 24834,
+        "sha256": "b159b87f91c8a44aa2629380063fab1b8ac981c3d3a6e318a3fc50d374693c1c"
+      },
+      {
+        "path": "tests/owned-checked-record-language-packaging.test.mjs",
+        "bytes": 20546,
+        "sha256": "2552c387ee847a06ab7eea0019567a545828dedf872cad6832b99298bfe554e3"
+      },
+      {
+        "path": "tests/helpers/owned-checked-record-mixed-fixture.mjs",
+        "bytes": 3214,
+        "sha256": "e97d5c7f314d2656dd3f567dbf33fb2064a2d28eeb9c1e359ce808a5e5c93bca"
+      }
+    ]
+  },
+  "scope": "Source-only qualification of expanded Python, Ruby and Rust owned checked-record callers. This is not installed runtime or lifetime acceptance. Preserve the full original scope of VO 1726 and 1484.",
+  "changes": [
+    "Extract the existing native full mixed selection into a target-independent shared test helper. All four native/CPAN selections compare exactly with predecessor a005b6f.",
+    "Extend ordinary/reviewed language full APIs with Grant, bookingSpan, claimQuota, echoGrant, echoClaims, transferWithClaimCallback and transferPairClaim; retain the exact standalone result-only API.",
+    "Require each Python/Ruby/Rust caller to test nested Subtype and outer checked-record rejection, repeated late array failure, empty and recovered arrays, two-owner transfer rollback and success, and callback failure after transfer.",
+    "Require independent retains to survive post-transfer failure and a subsequent transfer/callback to recover. Python/Ruby preserve exception identity; Rust checks error and original panic payload identity.",
+    "Extend Python/Ruby slot-baseline cleanup assertions; retain GC/finalizer, Rust Drop, source-free installation and relocated-consumer gates.",
+    "Preserve the previously admitted shared API and every published support observation while the expanded cases await each host's independent execution."
+  ],
+  "validation": {
+    "executionLimits": {
+      "heavyCommands": "serial",
+      "cpuAffinity": [
+        2
+      ],
+      "nice": 15,
+      "nodeMaxOldSpaceMiB": 512
+    },
+    "focusedGenerators": {
+      "tests": 4,
+      "pass": 4,
+      "fail": 0,
+      "skipped": 0,
+      "durationMs": 3380.641378,
+      "files": [
+        "tests/owned-checked-record-language-packaging.test.mjs",
+        "tests/owned-checked-record-native-packaging.test.mjs"
+      ],
+      "selection": "^owned checked-record (language generators|language consumers|C and C\\+\\+ generators|native acceptance)"
+    },
+    "promotionControls": {
+      "tests": 4,
+      "pass": 4,
+      "fail": 0,
+      "skipped": 0,
+      "durationMs": 15457.609879,
+      "selection": "^owned checked-record promotion (keeps the installed fixture|refuses partial|reference refuses|refuses changed)"
+    },
+    "realLeanCarriers": {
+      "tests": 2,
+      "pass": 2,
+      "fail": 0,
+      "skipped": 0,
+      "durationMs": 4415.456283,
+      "selection": "^(complete owned checked-record carriers|reviewed owned callback carriers elaborate)",
+      "leanToolchain": "leanprover/lean4:v4.32.2"
+    },
+    "callerCompilation": {
+      "nativeSelectionsUnchanged": 4,
+      "python": "Generated Python files and actual consumer parse with ast.parse; no package import or runtime execution.",
+      "ruby": "Generated Ruby files and actual consumer pass ruby -c.",
+      "rust": "Actual generated crate and consumer pass cargo check --offline --jobs 1 --all-targets with Rust 1.90.0 in 4.56 seconds; generated source-only loader is not executed.",
+      "native": "Existing expanded C and C++ consumers pass strict syntax compilation; shared smaller WIT C header also compiles."
+    },
+    "sourceQuality": [
+      "Scoped ESLint",
+      "Configured checked-JavaScript typecheck (adopted subset only)",
+      "git diff --check"
+    ],
+    "liveInventoryAudit": {
+      "liveReferences": 16055,
+      "uniquePaths": 2555,
+      "stalePins": 0
+    },
+    "suitesOverlap": true
+  },
+  "inventory": {
+    "original": {
+      "bytes": 102579190,
+      "sha256": "929f3bed60d3eb7d2ac429fb62899e3a9bd9780e79bddd6c2a24d798114f210d"
+    },
+    "current": {
+      "bytes": 102579190,
+      "sha256": "461aafdb9246c6187cfbd9951987f1200dc8ec68b7b9cb8bd4aad1c5746d6f3b"
+    },
+    "refreshedPins": 11,
+    "pins": [
+      {
+        "path": "tests/helpers/owned-checked-record-promotion-tests.mjs",
+        "count": 11,
+        "alreadyCurrent": 0,
+        "previousSha256": "16e8101a1b6b73ee48f3a45e59bdaa2253b067f5cf6f8f590a80c4f142b39e91",
+        "currentSha256": "b159b87f91c8a44aa2629380063fab1b8ac981c3d3a6e318a3fc50d374693c1c"
+      }
+    ],
+    "supportObservationsChanged": false,
+    "originalArchivesChanged": false
+  },
+  "pending": [
+    "Independent current-head Python, Ruby and Rust installed ordinary/reviewed full/result-only execution, including actual finalizer/drop and failure-recovery behavior.",
+    "Immutable original hosted artifacts and independent source-free replay for the expanded cases.",
+    "Remaining original per-host semantic requirements and exact support/documentation promotion only after acceptance.",
+    "Final-head Core and all required hosted gates; default-branch recurring activation."
+  ]
+}

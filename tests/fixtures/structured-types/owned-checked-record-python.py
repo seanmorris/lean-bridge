@@ -49,6 +49,10 @@ def booking(ticket, lo: int, hi: int) -> api.Booking:
     return api.Booking(holder=ticket, window=api.Window(lo=lo, hi=hi))
 
 
+def grant(ticket, weight: int, limit: int) -> api.Grant:
+    return api.Grant(holder=ticket, weight=weight, limit=limit)
+
+
 def serial_is(ticket, expected: int, message: str) -> None:
     check(api.serial(ticket) == expected, message)
 
@@ -60,6 +64,7 @@ def owning_state(ticket):
 
 
 ticket = api.new_ticket(41, "python\x00checked")
+initial_slots = len(owning_state(ticket).slots) - 1
 retained = ticket.retain()
 serial_is(ticket, 41, "fresh resource is usable")
 serial_is(retained, 41, "explicit retain is independent")
@@ -76,6 +81,28 @@ for _ in range(25):
     serial_is(echoed_booking.holder, 41, "booking preserves its resource")
     release(echoed)
     release(echoed_booking)
+
+check(api.booking_span(valid_booking) == 5, "copied payload consumed")
+check(api.claim_quota(valid) == 7, "owned payload consumed")
+echoed_grant = api.echo_grant(grant(ticket, 7, 8))
+check(echoed_grant.weight == 7 and echoed_grant.limit == 8,
+      "nested Subtype and outer checked record accepted")
+serial_is(echoed_grant.holder, 41, "grant retains resource")
+release(echoed_grant)
+rejected(lambda: api.echo_grant(grant(ticket, 0, 8)))
+rejected(lambda: api.echo_grant(grant(ticket, 7, 3)))
+claims = api.echo_claims([valid, valid])
+check(len(claims) == 2 and claims[1].quota == 7,
+      "owned checked-record array round trips")
+serial_is(claims[0].holder, 41, "array retains resource")
+release(claims)
+for _ in range(10):
+    rejected(lambda: api.echo_claims([valid, claim(ticket, 99)]))
+    check(not ticket.is_closed, "later array rejection preserves owner")
+check(len(api.echo_claims([])) == 0, "empty owned array")
+array_recovery = api.echo_claims([valid])
+check(len(array_recovery) == 1, "array rejection recovers")
+release(array_recovery)
 
 invalid = claim(ticket, 99)
 rejected(lambda: api.echo_claim(invalid))
@@ -98,6 +125,63 @@ check(moving.is_closed and accepted_transfer.holder.is_closed,
 check(moved.quota == 9, "successful transfer preserves payload")
 serial_is(moved.holder, 51, "transferred result is usable")
 serial_is(kept, 51, "independent retain survives transfer")
+
+first = api.new_ticket(71, "first")
+second = api.new_ticket(81, "second")
+first_kept = first.retain()
+second_kept = second.retain()
+moving_booking = booking(first, 3, 8)
+moving_claim = claim(second, 99)
+rejected(lambda: api.transfer_pair_claim(moving_booking, moving_claim))
+check(not first.is_closed and not second.is_closed,
+      "late failure aborts both transfers")
+serial_is(first, 71, "first rejected transfer intact")
+serial_is(second, 81, "second rejected transfer intact")
+pair = api.transfer_pair_claim(moving_booking, claim(second, 7))
+check(first.is_closed and second.is_closed and pair.quota == 7,
+      "both transfers commit together")
+serial_is(first_kept, 71, "first independent retain survives")
+serial_is(second_kept, 81, "second independent retain survives")
+release(pair)
+first_kept.close()
+second_kept.close()
+
+for throws in (False, True):
+    post_input = api.new_ticket(91, "post-transfer")
+    independent = post_input.retain()
+    transferred = claim(post_input, 7)
+    entered = 0
+    post_sentinel = RuntimeError("post-transfer callback")
+
+    def post_reply(incoming):
+        global entered
+        entered += 1
+        if throws:
+            raise post_sentinel
+        return claim(incoming.holder, 99)
+
+    post_callback = api.with_recovery(post_reply, claim(independent, 7))
+    if throws:
+        try:
+            api.transfer_with_claim_callback(transferred, post_callback)
+        except RuntimeError as error:
+            check(error is post_sentinel,
+                  "post-transfer callback exception identity preserved")
+        else:
+            raise AssertionError("post-transfer exception was swallowed")
+        post_sentinel.__traceback__ = None
+    else:
+        rejected(lambda: api.transfer_with_claim_callback(transferred, post_callback))
+    check(entered == 1 and post_input.is_closed,
+          "failure after transfer consumes input")
+    serial_is(independent, 91, "post-transfer failure preserves independent retain")
+    recovered = api.transfer_with_claim_callback(claim(independent, 7),
+        api.with_recovery(lambda incoming: claim(incoming.holder, 9),
+                          claim(independent, 7)))
+    check(independent.is_closed and recovered.quota == 9,
+          "post-transfer callback failure recovers on next call")
+    serial_is(recovered.holder, 91, "recovered transfer resource is usable")
+    release(recovered)
 
 calls = 0
 
@@ -141,6 +225,7 @@ except RuntimeError as error:
     check(error is sentinel, "callback exception identity preserved")
 else:
     raise AssertionError("callback exception was swallowed")
+sentinel.__traceback__ = None
 
 closure = api.claim_closure()
 from_closure = closure(valid)
@@ -185,5 +270,7 @@ moving.close()
 kept.close()
 check(all(value.is_closed for value in (ticket, retained, moving, kept)),
       "cleanup is explicit and idempotent")
+gc.collect()
+check(len(state.slots) == initial_slots, "all runtime slots return to baseline")
 
 print(f"owned-checked-record-python:{checks}")

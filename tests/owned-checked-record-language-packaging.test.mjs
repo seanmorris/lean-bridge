@@ -11,6 +11,7 @@ import {
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
+import { validateExportConfiguration } from "../src/analyze/export-configuration.mjs";
 import { generateOwnedPythonPackage } from "../src/backends/python/owned-package.mjs";
 import { generateOwnedRubyPackage } from "../src/backends/ruby/owned-package.mjs";
 import { generateOwnedRustPackage } from "../src/backends/rust/owned-package.mjs";
@@ -33,6 +34,7 @@ import {
 	ownedCheckedRecordLanguageRoutes, ownedCheckedRecordLanguageSelection
 	, ownedCheckedRecordLanguageTargets
 } from "./helpers/owned-checked-record-language-fixture.mjs";
+import { ownedCheckedRecordNativeSelection } from "./helpers/owned-checked-record-native-fixture.mjs";
 import {
 	copyPackageSetHandoff, retainPackageSetEvidence
 } from "./helpers/package-set.mjs";
@@ -92,9 +94,23 @@ test.after(async () => {
 });
 
 test("owned checked-record language generators preserve the exact API modes", () => {
-	for(const route of ["reviewed-full", "reviewed-result-only"])
+	for(const route of ownedCheckedRecordLanguageRoutes)
 	{
 		const selected = ownedCheckedRecordLanguageSelection(route, allProfiles);
+		validateExportConfiguration(selected.configuration);
+		const native = ownedCheckedRecordNativeSelection(route, ["c", "cpp", "cpan"]);
+		assert.deepEqual(selected.reviewedIr, native.reviewedIr);
+		assert.deepEqual(selected.configuration.exports, native.configuration.exports);
+		assert.deepEqual(selected.configuration.contracts, native.configuration.contracts);
+		if(!selected.resultOnly && selected.authorRoute === "ordinary")
+		{
+			assert.deepEqual(selected.configuration.exports
+				, selected.reviewedIr.declarations.map(item => item.source.declaration));
+			assert.deepEqual(selected.configuration.contracts["OwnedCheckedRecords.transferPairClaim"]
+				.parameters.map(parameter => parameter.ownership), ["transfer", "transfer"]);
+			assert.deepEqual(selected.configuration.contracts["OwnedCheckedRecords.transferWithClaimCallback"]
+				.parameters.map(parameter => parameter.ownership), ["transfer", "borrow"]);
+		}
 		const before = structuredClone(selected.reviewedIr);
 		const options = { transferredInputs: true, anchoredResults: true
 			, hostCallbacks: true };
@@ -111,11 +127,21 @@ test("owned checked-record language generators preserve the exact API modes", ()
 					? ["newTicket", "serial", "claimFor"]
 					: ["newTicket", "serial", "echoBooking", "echoClaim"
 						, "transferClaim", "claimFor", "pairClaim"
-						, "withClaimCallback", "claimClosure"], profile);
+						, "withClaimCallback", "claimClosure", "bookingSpan", "claimQuota"
+						, "echoGrant", "echoClaims", "transferWithClaimCallback"
+						, "transferPairClaim"], profile);
 			assert.equal(output.c.callbacks.length, selected.resultOnly ? 0 : 2
 				, profile);
 			assert.equal(Boolean(output.contract.inputTransfers)
 				, !selected.resultOnly, profile);
+			if(!selected.resultOnly)
+			{
+				const source = Object.entries(output.files).filter(([path]) =>
+					path.endsWith(`.${extensions[profile]}`)).map(([, text]) => text).join("\n");
+				for(const name of ["echo_grant", "echo_claims", "transfer_pair_claim"
+					, "transfer_with_claim_callback"])
+					assert.ok(source.includes(name), `${profile}: ${name}`);
+			}
 			if(profile === "rust" && selected.resultOnly)
 				assert.doesNotMatch(output.apiSource, /WithRecovery|with_recovery/u);
 		}
@@ -133,6 +159,15 @@ test("owned checked-record language consumers and recurring workflow stay regist
 			assert.match(source, new RegExp(marker, "u"));
 			if(!resultOnly) assert.match(source, profile === "python" ? /gc\.collect\(\)/u
 				: profile === "ruby" ? /GC\.start/u : /drop\(dropped\)/u);
+			if(!resultOnly)
+				for(const expected of ["echo_grant", "echo_claims", "transfer_pair_claim"
+					, "transfer_with_claim_callback"
+					, "nested Subtype and outer checked record accepted"
+					, "later array rejection preserves owner"
+					, "late failure aborts both transfers"
+					, "failure after transfer consumes input"
+					, "post-transfer callback failure recovers on next call"])
+					assert.ok(source.includes(expected), `${profile}: ${expected}`);
 		}
 	const source = await readFile(
 		".github/workflows/owned-checked-record-languages.yml", "utf8"
@@ -310,7 +345,9 @@ for(const route of routes)
 			, (resultOnly ? ["newTicket", "serial", "claimFor"]
 				: ["newTicket", "serial", "echoBooking", "echoClaim"
 					, "transferClaim", "claimFor", "pairClaim"
-					, "withClaimCallback", "claimClosure"]).toSorted());
+					, "withClaimCallback", "claimClosure", "bookingSpan", "claimQuota"
+					, "echoGrant", "echoClaims", "transferWithClaimCallback"
+					, "transferPairClaim"]).toSorted());
 		assert.equal(model.bindingIr.types.filter(type =>
 			type.kind === "callback").length, resultOnly ? 0 : 2);
 		assert.equal(model.bindingIr.declarations.some(item =>

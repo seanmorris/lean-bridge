@@ -36,6 +36,10 @@ def booking(ticket, lo, hi)
   API::Booking.new(holder: ticket, window: API::Window.new(lo: lo, hi: hi))
 end
 
+def grant(ticket, weight, limit)
+  API::Grant.new(holder: ticket, weight: weight, limit: limit)
+end
+
 def serial_is(ticket, expected, message)
   check(API.serial(ticket) == expected, message)
 end
@@ -47,6 +51,7 @@ def owning_state(ticket)
 end
 
 ticket = API.new_ticket(41, "ruby\0checked")
+initial_slots = owning_state(ticket).slots.length - 1
 retained = ticket.retain
 serial_is(ticket, 41, "fresh resource is usable")
 serial_is(retained, 41, "explicit retain is independent")
@@ -63,6 +68,29 @@ valid_booking = booking(ticket, 3, 8)
   release(echoed)
   release(echoed_booking)
 end
+
+check(API.booking_span(valid_booking) == 5, "copied payload consumed")
+check(API.claim_quota(valid) == 7, "owned payload consumed")
+echoed_grant = API.echo_grant(grant(ticket, 7, 8))
+check(echoed_grant.weight == 7 && echoed_grant.limit == 8,
+      "nested Subtype and outer checked record accepted")
+serial_is(echoed_grant.holder, 41, "grant retains resource")
+release(echoed_grant)
+rejected { API.echo_grant(grant(ticket, 0, 8)) }
+rejected { API.echo_grant(grant(ticket, 7, 3)) }
+claims = API.echo_claims([valid, valid])
+check(claims.length == 2 && claims[1].quota == 7,
+      "owned checked-record array round trips")
+serial_is(claims[0].holder, 41, "array retains resource")
+release(claims)
+10.times do
+  rejected { API.echo_claims([valid, claim(ticket, 99)]) }
+  check(!ticket.closed?, "later array rejection preserves owner")
+end
+check(API.echo_claims([]).empty?, "empty owned array")
+array_recovery = API.echo_claims([valid])
+check(array_recovery.length == 1, "array rejection recovers")
+release(array_recovery)
 
 invalid = claim(ticket, 99)
 rejected { API.echo_claim(invalid) }
@@ -85,6 +113,59 @@ check(moving.closed? && accepted_transfer.holder.closed?,
 check(moved.quota == 9, "successful transfer preserves payload")
 serial_is(moved.holder, 51, "transferred result is usable")
 serial_is(kept, 51, "independent retain survives transfer")
+
+first = API.new_ticket(71, "first")
+second = API.new_ticket(81, "second")
+first_kept = first.retain
+second_kept = second.retain
+moving_booking = booking(first, 3, 8)
+moving_claim = claim(second, 99)
+rejected { API.transfer_pair_claim(moving_booking, moving_claim) }
+check(!first.closed? && !second.closed?, "late failure aborts both transfers")
+serial_is(first, 71, "first rejected transfer intact")
+serial_is(second, 81, "second rejected transfer intact")
+pair = API.transfer_pair_claim(moving_booking, claim(second, 7))
+check(first.closed? && second.closed? && pair.quota == 7,
+      "both transfers commit together")
+serial_is(first_kept, 71, "first independent retain survives")
+serial_is(second_kept, 81, "second independent retain survives")
+release(pair)
+first_kept.close
+second_kept.close
+
+[false, true].each do |throws|
+  post_input = API.new_ticket(91, "post-transfer")
+  independent = post_input.retain
+  transferred = claim(post_input, 7)
+  entered = 0
+  post_sentinel = Class.new(StandardError).new("post-transfer callback")
+  post_reply = proc do |incoming|
+    entered += 1
+    raise post_sentinel if throws
+    claim(incoming.holder, 99)
+  end
+  post_callback = API.with_recovery(post_reply, claim(independent, 7))
+  if throws
+    caught = begin
+      API.transfer_with_claim_callback(transferred, post_callback)
+      nil
+    rescue StandardError => error
+      error
+    end
+    check(caught.equal?(post_sentinel),
+          "post-transfer callback exception identity preserved")
+  else
+    rejected { API.transfer_with_claim_callback(transferred, post_callback) }
+  end
+  check(entered == 1 && post_input.closed?, "failure after transfer consumes input")
+  serial_is(independent, 91, "post-transfer failure preserves independent retain")
+  recovered = API.transfer_with_claim_callback(claim(independent, 7),
+    API.with_recovery(proc { |incoming| claim(incoming.holder, 9) }, claim(independent, 7)))
+  check(independent.closed? && recovered.quota == 9,
+        "post-transfer callback failure recovers on next call")
+  serial_is(recovered.holder, 91, "recovered transfer resource is usable")
+  release(recovered)
+end
 
 $calls = 0
 reply = proc do |incoming|
@@ -164,5 +245,7 @@ moving.close
 kept.close
 check([ticket, retained, moving, kept].all?(&:closed?),
       "cleanup is explicit and idempotent")
+3.times { GC.start(full_mark: true, immediate_sweep: true) }
+check(state.slots.length == initial_slots, "all runtime slots return to baseline")
 
 puts "owned-checked-record-ruby:#{$checks}"

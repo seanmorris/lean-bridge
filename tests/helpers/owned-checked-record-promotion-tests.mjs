@@ -249,7 +249,6 @@ test("owned checked-record promotion keeps the installed fixture and result-only
 		const javascript = ownedCheckedRecordJavaScriptSelection(route);
 		const selections = [
 			javascript
-			, ownedCheckedRecordLanguageSelection(route, ["python", "ruby", "rust"])
 			, ...["dotnet", "jvm", "php", "wit"].map(group => ownedCheckedRecordManagedSelection(route, group))];
 		for(const selected of selections)
 		{
@@ -257,6 +256,10 @@ test("owned checked-record promotion keeps the installed fixture and result-only
 			assert.deepEqual(selected.configuration.exports, javascript.configuration.exports);
 		}
 		const native = ownedCheckedRecordNativeSelection(route, ["c", "cpp", "cpan"]);
+		const languages = ownedCheckedRecordLanguageSelection(route, ["python", "ruby", "rust"]);
+		assert.deepEqual(languages.reviewedIr, native.reviewedIr);
+		assert.deepEqual(languages.configuration.exports, native.configuration.exports);
+		assert.deepEqual(languages.configuration.contracts, native.configuration.contracts);
 		if(javascript.resultOnly)
 		{
 			assert.deepEqual(native.reviewedIr, javascript.reviewedIr);
@@ -264,8 +267,8 @@ test("owned checked-record promotion keeps the installed fixture and result-only
 		}
 		else
 		{
-			// New native coverage is awaiting hosted execution. Keep the admitted
-			// shared boundary exact without promoting the additional cases here.
+			// Expanded native/language coverage awaits independent hosted acceptance.
+			// Keep the admitted shared boundary exact without promoting new cases.
 			const types = new Set(javascript.reviewedIr.types.map(type => type.id));
 			const declarations = new Set(javascript.reviewedIr.declarations.map(item => item.id));
 			assert.deepEqual({ ...native.reviewedIr

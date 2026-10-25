@@ -4,10 +4,8 @@
  * @file
  */
 import assert from "node:assert/strict";
-import {
-	ownedCheckedRecordJavaScriptRoutes
-	, ownedCheckedRecordJavaScriptSelection
-} from "./owned-checked-record-javascript-fixture.mjs";
+import { ownedCheckedRecordJavaScriptRoutes } from "./owned-checked-record-javascript-fixture.mjs";
+import { ownedCheckedRecordMixedSelection } from "./owned-checked-record-mixed-fixture.mjs";
 
 export const ownedCheckedRecordLanguageRoutes
 	= ownedCheckedRecordJavaScriptRoutes;
@@ -28,7 +26,7 @@ export const ownedCheckedRecordLanguageSelection = (route, profiles) => {
 	assert.ok(profiles.every(profile =>
 		Object.hasOwn(ownedCheckedRecordLanguageTargets, profile)
 	));
-	const selected = ownedCheckedRecordJavaScriptSelection(route);
+	const selected = ownedCheckedRecordMixedSelection(route);
 	const configuration = structuredClone(selected.configuration);
 	configuration.targets = Object.fromEntries(profiles.map(profile => {
 		const [target, name] = ownedCheckedRecordLanguageTargets[profile];
