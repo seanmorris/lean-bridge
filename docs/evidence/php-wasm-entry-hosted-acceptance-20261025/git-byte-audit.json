@@ -1,0 +1,157 @@
+{
+  "archive": {
+    "bytes": 150263986,
+    "files": 1371,
+    "revision": "f2e5f59a5930d7813172ec7ce3ae7cf20edcbe88",
+    "scope": "committed-archive-bytes-only"
+  },
+  "controls": {
+    "files": [
+      {
+        "bytes": 12741,
+        "path": "docs/evidence/php-wasm-entry-hosted-acceptance-20261025/acceptance-runner.mjs",
+        "sha256": "2ca931941295c8cc8ad02fc88222759374c35069e0e4ce5a33c5122a9bbce908"
+      },
+      {
+        "bytes": 4161,
+        "path": "docs/evidence/php-wasm-entry-hosted-acceptance-20261025/audit-committed.mjs",
+        "sha256": "81b93e61146044fd1afc2003a6a137dc9612721430d025ee098121866b5d1187"
+      },
+      {
+        "bytes": 922,
+        "path": "docs/evidence/php-wasm-entry-hosted-acceptance-20261025/capture-execution.json",
+        "sha256": "fb770aa24d4c9619f253bd09a0dad6fe3cb73e2f930179859597f6741db0fb8b"
+      },
+      {
+        "bytes": 2374,
+        "path": "docs/evidence/php-wasm-entry-hosted-acceptance-20261025/capture-runner.mjs",
+        "sha256": "25ee42875910666046cbbbc0368a1dc34eb15527f6344f98d1ae05ba6416fc5d"
+      },
+      {
+        "bytes": 1028,
+        "path": "docs/evidence/php-wasm-entry-hosted-acceptance-20261025/capture.json",
+        "sha256": "1b52e5422ba2f67631d5784325d71c39f9e6ec17c71e19902841282da0e17659"
+      },
+      {
+        "bytes": 697,
+        "path": "docs/evidence/php-wasm-entry-hosted-acceptance-20261025/r1/01-malformed-index.json",
+        "sha256": "fdf8741a463655e92a6eaefad02094c6909de82eed132b0acb0e1412fd65fe0d"
+      },
+      {
+        "bytes": 566,
+        "path": "docs/evidence/php-wasm-entry-hosted-acceptance-20261025/r1/02-missing-artifact.json",
+        "sha256": "d196fbecb8b722288f760305309406ba945d944f3175b4fae7c18464b1aeeb45"
+      },
+      {
+        "bytes": 764,
+        "path": "docs/evidence/php-wasm-entry-hosted-acceptance-20261025/r1/03-reordered-artifacts.json",
+        "sha256": "355f75264e3930da0aac06d84cc21a32cf4ee6251e8d6fc08e69391e19f52c59"
+      },
+      {
+        "bytes": 766,
+        "path": "docs/evidence/php-wasm-entry-hosted-acceptance-20261025/r1/04-duplicate-artifact.json",
+        "sha256": "3a5a143892c2dc7eacb87f74d23fc2d40f6ec35d596046c118c23771861c3809"
+      },
+      {
+        "bytes": 1069,
+        "path": "docs/evidence/php-wasm-entry-hosted-acceptance-20261025/r1/05-wrong-producer.json",
+        "sha256": "0649f0d77370c0c1ce61ac0a8fdcda748b6f714d66a8f89ae902242502d0da12"
+      },
+      {
+        "bytes": 916,
+        "path": "docs/evidence/php-wasm-entry-hosted-acceptance-20261025/r1/06-stale-attempt.json",
+        "sha256": "b34bc36cc2a40e28e0ee85ba8888128974ac5ddafee66cdf8e4f67de8421c999"
+      },
+      {
+        "bytes": 1026,
+        "path": "docs/evidence/php-wasm-entry-hosted-acceptance-20261025/r1/07-wrong-job.json",
+        "sha256": "c96b93d339de93494dbc91bd2cb06ca23dc9bdf8f3d28b3394ee19dccba2458b"
+      },
+      {
+        "bytes": 934,
+        "path": "docs/evidence/php-wasm-entry-hosted-acceptance-20261025/r1/08-expired-artifact.json",
+        "sha256": "329866e20b9064b2300e4bceda5d4c43571980179d29626c6a8b22b239b2900f"
+      },
+      {
+        "bytes": 918,
+        "path": "docs/evidence/php-wasm-entry-hosted-acceptance-20261025/r1/09-failed-upload.json",
+        "sha256": "2f866c790601b7754fb3650d1b922d6fec3ebc56c49272ea1debc96cc0443266"
+      },
+      {
+        "bytes": 720,
+        "path": "docs/evidence/php-wasm-entry-hosted-acceptance-20261025/r1/10-zip-tamper.json",
+        "sha256": "35561cd5bf105d38858d2c11a21804d11666f6d3c2a1d97ab7171f89852d4c9a"
+      },
+      {
+        "bytes": 797,
+        "path": "docs/evidence/php-wasm-entry-hosted-acceptance-20261025/r1/11-output-tamper.json",
+        "sha256": "bb5521caf9b508829decd086a96106c8295c487db0bb96ca9664322d9f9a0cf7"
+      },
+      {
+        "bytes": 751,
+        "path": "docs/evidence/php-wasm-entry-hosted-acceptance-20261025/r1/12-source-zip-tamper.json",
+        "sha256": "90adf7aae6094976054a07f7d1b5d323e1592b6c9e01cea397f6ce2e3ece147c"
+      },
+      {
+        "bytes": 1037,
+        "path": "docs/evidence/php-wasm-entry-hosted-acceptance-20261025/r1/13-source-manifest-tamper.json",
+        "sha256": "6a4c3d9dada972f796f41ac372cf4f7a1fa8d6f92c0e4b7f9545070679c5b4eb"
+      },
+      {
+        "bytes": 708,
+        "path": "docs/evidence/php-wasm-entry-hosted-acceptance-20261025/r1/14-source-symlink.json",
+        "sha256": "ece195433b80e77411342078774c709e989b509c0b7dd68a4403e662b75edec9"
+      },
+      {
+        "bytes": 646,
+        "path": "docs/evidence/php-wasm-entry-hosted-acceptance-20261025/r1/15-extra-member.json",
+        "sha256": "90813b0572fa52374be0c4d5d8ac98f6e746d4799bc2b594b9c17805692c1224"
+      },
+      {
+        "bytes": 1094,
+        "path": "docs/evidence/php-wasm-entry-hosted-acceptance-20261025/r1/16-forged-replay-summary.json",
+        "sha256": "ab26b2668e3f800481c5e1245121c37961969e6b28d2ec8a2a039f3d92e46de1"
+      },
+      {
+        "bytes": 321,
+        "path": "docs/evidence/php-wasm-entry-hosted-acceptance-20261025/r1/17-wrong-source-checkout.json",
+        "sha256": "0876d26db844e3e53fb2cfe157d10a0d92db66c4f48179c5eb4267f226c285cb"
+      },
+      {
+        "bytes": 1613,
+        "path": "docs/evidence/php-wasm-entry-hosted-acceptance-20261025/r1/acceptance.json",
+        "sha256": "1961bd11ae3acd5d750eda2016687688b6567c17e4f2624f264f88084eab40be"
+      },
+      {
+        "bytes": 312707,
+        "path": "docs/evidence/php-wasm-entry-hosted-acceptance-20261025/r1/original-files.json",
+        "sha256": "c18c392cbc3b12d84f815a81c26583f537e8fde245fef0881207c7a14c8a4a1a"
+      },
+      {
+        "bytes": 1028,
+        "path": "docs/evidence/php-wasm-entry-hosted-acceptance-20261025/r1/positive-restored.json",
+        "sha256": "1b52e5422ba2f67631d5784325d71c39f9e6ec17c71e19902841282da0e17659"
+      },
+      {
+        "bytes": 1028,
+        "path": "docs/evidence/php-wasm-entry-hosted-acceptance-20261025/r1/positive.json",
+        "sha256": "1b52e5422ba2f67631d5784325d71c39f9e6ec17c71e19902841282da0e17659"
+      },
+      {
+        "bytes": 12741,
+        "path": "docs/evidence/php-wasm-entry-hosted-acceptance-20261025/r1/runner.mjs",
+        "sha256": "2ca931941295c8cc8ad02fc88222759374c35069e0e4ce5a33c5122a9bbce908"
+      }
+    ],
+    "negativeControls": 17,
+    "replayedRoutes": 30
+  },
+  "kind": "php-wasm-entry-committed-acceptance-audit-v1",
+  "revision": "f2e5f59a5930d7813172ec7ce3ae7cf20edcbe88",
+  "schemaVersion": 1,
+  "scope": "committed-original-archive-and-control-bytes",
+  "source": {
+    "path": "docs/evidence/php-wasm-entry-hosted-acceptance-20261025/audit-committed.mjs",
+    "sha256": "81b93e61146044fd1afc2003a6a137dc9612721430d025ee098121866b5d1187"
+  }
+}
