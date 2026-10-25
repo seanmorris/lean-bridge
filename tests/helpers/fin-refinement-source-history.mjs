@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeOwnedSubtypeNpmHostedSource, ownedSubtypeNpmHostedNormalizationPaths } from "./owned-subtype-npm-hosted-source-history.mjs";
 import { beforeOwnedCheckedRetainedIdentitySource, ownedCheckedRetainedIdentityNormalizationPaths } from "./owned-checked-retained-identity-source-history.mjs";
 import { beforeOwnedSubtypeNpmCompleteAcceptanceSource, ownedSubtypeNpmCompleteAcceptanceNormalizationPaths } from "./owned-subtype-npm-complete-acceptance-source-history.mjs";
 import { beforeOwnedCheckedCSessionBoundariesSource, ownedCheckedCSessionBoundariesNormalizationPaths } from "./owned-checked-c-session-boundaries-source-history.mjs";
@@ -2197,7 +2198,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...ownedCheckedRetainedIdentityNormalizationPaths
+	...ownedSubtypeNpmHostedNormalizationPaths
+	, ...ownedCheckedRetainedIdentityNormalizationPaths
 	, ...ownedSubtypeNpmCompleteAcceptanceNormalizationPaths
 	, ...ownedCheckedCSessionBoundariesNormalizationPaths
 	, ...ownedCheckedPhpWasmContextsNormalizationPaths
@@ -3137,7 +3139,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeOwnedCheckedRetainedIdentitySource(path, text, expected);
+	let stage = beforeOwnedSubtypeNpmHostedSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeOwnedCheckedRetainedIdentitySource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;

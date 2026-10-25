@@ -1,0 +1,152 @@
+{
+  "schemaVersion": 1,
+  "kind": "owned-subtype-npm-hosted-source-v1",
+  "sourceBaseCommit": "37e485c73fa0bae2c0baac3a434b959293d689f5",
+  "implementationCommit": "d45cd191867b74c6532a4c2cdeb63b9b27260fe5",
+  "scope": "Authenticate complete owned-Subtype npm/browser acceptance from original GitHub run/job/artifact API bytes and the original ZIP. Reuse the existing seven-lane archiver, retain exact receipt-closed npm packages and the full twelve-test installed log, preserve unrelated original ZIP members without widening Subtype claims, reconstruct source roles and require twelve production/StrictMode cells per author. Keep historical native source selection unchanged. Register both npm verifier suites in the closed Core contract profile and refresh exactly 109 live source pins. Actual hosted execution, immutable runtime evidence, support promotion and final gates remain pending.",
+  "sources": [
+    {
+      "path": "docs/contributing/testing.md",
+      "bytes": 264914,
+      "sha256": "1a85cc6972b45ad40a707d7b9932d934ab1fdd0f2c818d70cb2cb9f53d87b8ac"
+    },
+    {
+      "path": "docs/type-surface.v1.json",
+      "bytes": 102579190,
+      "sha256": "b54c2ce0028c1a5ec94d03e792b0c6cab352732c9a67e6612580f6766338bf57"
+    },
+    {
+      "path": "scripts/archive-owned-subtype-evidence.mjs",
+      "bytes": 3161,
+      "sha256": "1b5f8744d1249905137c4bf9c5eeabc5e15839c6ee99579022b64914f0bba32e"
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "bytes": 43121,
+      "sha256": "5e0411d2d1cec05cc0171baccde0cf7d01a1a88b6c1cac8ee7b9ca238867fa20"
+    },
+    {
+      "path": "tests/helpers/owned-subtype-hosted-contracts.mjs",
+      "bytes": 3865,
+      "sha256": "8ac8427571b683f2864e76716144c9579b64bb38ea400d61bbe7e626075ebdce"
+    },
+    {
+      "path": "tests/helpers/owned-subtype-hosted-evidence-sources.mjs",
+      "bytes": 6316,
+      "sha256": "d9b4deb3860b45488127cc1065aa08c835cc035c3f1e5e804adc3165f2d02621"
+    },
+    {
+      "path": "tests/helpers/owned-subtype-hosted-evidence.mjs",
+      "bytes": 14181,
+      "sha256": "fba589930ba2c0d4ca67c72e4849ed27fc10d9c570254d53af14419ebcfb75f0"
+    },
+    {
+      "path": "tests/helpers/owned-subtype-hosted-output.mjs",
+      "bytes": 3567,
+      "sha256": "02c3bbb568777e67f1893af63f0f9dd755b4c02347adc3eb129322852091e17c"
+    },
+    {
+      "path": "tests/helpers/owned-subtype-javascript-evidence-fixture.mjs",
+      "bytes": 2925,
+      "sha256": "5c7f022927f345cdef7f61cf0f64baf5be94db009732df003f6de4709c9a9963"
+    },
+    {
+      "path": "tests/helpers/owned-subtype-javascript-hosted-output.mjs",
+      "bytes": 4017,
+      "sha256": "27fe6d6c7a8a76e8365d6a81635019935cbb1426f2211e0e0515d6d78b0dab36"
+    },
+    {
+      "path": "tests/owned-subtype-hosted-ci.test.mjs",
+      "bytes": 13241,
+      "sha256": "cf4aca9d38a4ebf408716af4e7a413c10a8cce8457f076cc401b210c74086ea2"
+    },
+    {
+      "path": "tests/owned-subtype-javascript-evidence.test.mjs",
+      "bytes": 7570,
+      "sha256": "2eeb1354e50994bd562d5afd4c2e73821246badb9d35804f84ffd8b6e9915e9f"
+    },
+    {
+      "path": "tests/owned-subtype-javascript-hosted.test.mjs",
+      "bytes": 14141,
+      "sha256": "75c34c464fdc5f6f956385f620f04902b68bdad0e257168d50396fae847939ab"
+    }
+  ],
+  "contract": {
+    "lane": "javascript",
+    "authorRoutes": [
+      "ordinary",
+      "reviewed"
+    ],
+    "independentBuildsPerRoute": 2,
+    "installedTests": 12,
+    "browserCellsPerRoute": 12,
+    "legacyBrowserCellsPerRoute": 9,
+    "originalZipRetained": true,
+    "selectedOutput": [
+      "owned-subtype-javascript-packaging/",
+      "owned-javascript-wasm/installed.log"
+    ],
+    "sourceRoles": [
+      "producer",
+      "consumer",
+      "checker",
+      "archiver"
+    ],
+    "workflows": [
+      ".github/workflows/consumer-matrix.yml",
+      ".github/workflows/owned-checked-record-npm-browser.yml"
+    ],
+    "nativeLanesUnchanged": 7
+  },
+  "validation": {
+    "focused": {
+      "passed": 16,
+      "seconds": 37.564236878,
+      "skipped": 0,
+      "revision": "2b9105cc526f637a6af25008cbfc683169a77da0",
+      "syntheticOnly": true
+    },
+    "nativeContracts": {
+      "passed": 5,
+      "seconds": 1.84687802,
+      "skipped": 0
+    },
+    "scopedEslint": "passed for ten implementation JavaScript files",
+    "installedRuntimeExecutions": 0,
+    "inventory": {
+      "head": "d45cd191867b74c6532a4c2cdeb63b9b27260fe5",
+      "inventory": {
+        "bytes": 102579190,
+        "sha256": "b54c2ce0028c1a5ec94d03e792b0c6cab352732c9a67e6612580f6766338bf57"
+      },
+      "liveReferences": 16055,
+      "archivedReferences": 352995,
+      "uniquePaths": 2555,
+      "stalePins": 0,
+      "refreshedPins": 109
+    },
+    "fixtureBoundary": "Generated ZIP/API/package fixtures test the checker and never establish installed runtime acceptance."
+  },
+  "pending": [
+    "Run the corrected pushed npm producer once against current source.",
+    "Authenticate, retain and independently replay its original GitHub API records, ZIP, installed logs, packages and source closures.",
+    "Bind current hosted acceptance into support/docs promotion and pass final aligned hosted/Core and recurring activation gates."
+  ],
+  "registration": {
+    "source": {
+      "path": "src/adoption/test-profiles.mjs",
+      "bytes": 43121,
+      "sha256": "5e0411d2d1cec05cc0171baccde0cf7d01a1a88b6c1cac8ee7b9ca238867fa20"
+    },
+    "scope": "Register the current hosted archive test and the preceding npm package-verifier test in Core's closed contract profile.",
+    "partition": {
+      "shards": 6,
+      "contractFiles": 1008,
+      "contractSha256": "fb8662814786248396f39eb2c23caad6de827acdea15ae9736d351bb7d9bc5e3"
+    }
+  },
+  "implementationCommits": [
+    "2b9105cc526f637a6af25008cbfc683169a77da0",
+    "d45cd191867b74c6532a4c2cdeb63b9b27260fe5"
+  ]
+}
