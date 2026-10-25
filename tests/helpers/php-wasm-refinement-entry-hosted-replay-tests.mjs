@@ -9,10 +9,16 @@ import { execFileSync } from "node:child_process";
 import { existsSync } from "node:fs";
 import { mkdir, mkdtemp, readFile, rm, symlink, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { dirname, join } from "node:path";
+import { dirname, join, posix } from "node:path";
 import test from "node:test";
-import { sha256 } from "../../src/capsule/node.mjs";
-import { phpWasmEntryReplaySourceScopes } from "./php-wasm-refinement-entry-hosted-replay.mjs";
+import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
+import {
+	phpWasmEntryReplaySourceScopes, phpWasmEntryReplaySourceManifest
+	, phpWasmEntryReplaySnapshotFiles, phpWasmEntryReplaySourceSupplementPath
+	, phpWasmEntryReplaySourceSupplementSha256
+} from "./php-wasm-refinement-entry-hosted-replay.mjs";
+import { phpWasmEntryReplaySourceSupplement } from "./php-wasm-entry-source-supplement.mjs";
+import { moduleSpecifiers } from "./module-closure.mjs";
 
 const moduleUrl = new URL("php-wasm-refinement-entry-hosted-replay.mjs", import.meta.url).href;
 const cleanEnvironment = () => Object.fromEntries(Object.entries(process.env)
@@ -152,4 +158,112 @@ test("PHP-Wasm replay snapshots refuse existing or symlinked destinations", asyn
 	const link = join(root, "link"); await symlink(root, link);
 	assert.throws(() => run(root, `await source.writePhpWasmEntryReplaySourceSnapshot('${revision}',${JSON.stringify(join(link, "missing.zip"))});`));
 	assert.equal(existsSync(join(root, "missing.zip")), false);
+});
+
+test("PHP-Wasm replay authenticates both imported site modules before execution", async t => {
+	const { root, revision, files } = await fixture(t);
+	const records = join(root, "records"); await mkdir(records);
+	const invoke = `await source.replayPhpWasmEntryHostedArtifacts(${JSON.stringify(root)},'${revision}',${JSON.stringify(records)});`;
+	for(const path of ["site/paths.mjs", "site/serve.mjs"])
+	{
+		assert.ok(phpWasmEntryReplaySourceScopes.includes(path));
+		git(root, ["update-index", "--assume-unchanged", path]);
+		await writeFile(join(root, path), "x" + files[path].slice(1));
+		assert.equal(git(root, ["diff", "--name-only", "HEAD"]), "");
+		assert.throws(() => run(root, invoke));
+		assert.equal(existsSync(join(root, "executed")), false);
+		await writeFile(join(root, path), files[path]);
+		git(root, ["update-index", "--no-assume-unchanged", path]);
+		await rm(join(root, path));
+		assert.throws(() => run(root, invoke));
+		await symlink("../src/example.txt", join(root, path));
+		assert.throws(() => run(root, invoke));
+		assert.equal(existsSync(join(root, "executed")), false);
+		await rm(join(root, path)); await writeFile(join(root, path), files[path]);
+	}
+});
+
+test("PHP-Wasm replay supplements only three complete immutable source snapshots", async () => {
+	const supplement = phpWasmEntryReplaySourceSupplement;
+	const bytes = await readFile(phpWasmEntryReplaySourceSupplementPath);
+	assert.equal(sha256(bytes), phpWasmEntryReplaySourceSupplementSha256);
+	assert.equal(bytes.toString(), canonicalJson(supplement));
+	const snapshots = new Map();
+	for(const archive of supplement.archives)
+	{
+		const bytes = await readFile(archive.path);
+		assert.equal(bytes.length, archive.bytes); assert.equal(sha256(bytes), archive.sha256);
+		for(const { snapshot } of JSON.parse(bytes).sources)
+			snapshots.set(sha256(canonicalJson(snapshot)), snapshot);
+	}
+	assert.equal(snapshots.size, 3);
+	assert.deepEqual([...snapshots.keys()], supplement.snapshots.map(item => item.snapshotSha256));
+	for(const [identity, snapshot] of snapshots)
+	{
+		const files = await phpWasmEntryReplaySourceManifest(snapshot.revision);
+		assert.equal(files.length, snapshot.files.length + 2);
+		assert.deepEqual(phpWasmEntryReplaySnapshotFiles(snapshot, files), snapshot.files);
+		assert.equal(sha256(canonicalJson(snapshot)), identity);
+		for(const file of supplement.files)
+		{
+			const original = git(process.cwd(), ["show", snapshot.revision + ":" + file.path]);
+			assert.equal(original, file.source);
+			assert.equal(sha256(original), file.sha256);
+			assert.equal(Buffer.byteLength(original), file.bytes);
+			assert.throws(() => phpWasmEntryReplaySnapshotFiles(snapshot, files.filter(item => item.path !== file.path)));
+			assert.throws(() => phpWasmEntryReplaySnapshotFiles(snapshot, files.map(item => item.path === file.path
+				? { ...item, sha256: "0".repeat(64) } : item)));
+		}
+		for(const mutate of [
+			value => { value.files.pop(); }
+			, value => { value.files[0].sha256 = "0".repeat(64); }
+			, value => { value.zip.sha256 = "0".repeat(64); }
+			, value => { value.revision = "0".repeat(40); }
+			, value => { value.extra = true; }
+		]) {
+			const changed = structuredClone(snapshot); mutate(changed);
+			assert.throws(() => phpWasmEntryReplaySnapshotFiles(changed, files));
+		}
+	}
+});
+
+test("PHP-Wasm replay new snapshots cannot omit an imported site module", async t => {
+	const { root, revision } = await fixture(t);
+	const snapshot = JSON.parse(run(root, `console.log(JSON.stringify(await source.writePhpWasmEntryReplaySourceSnapshot('${revision}',${JSON.stringify(join(root, "complete.zip"))})));`));
+	for(const path of ["site/paths.mjs", "site/serve.mjs"])
+	{
+		assert.ok(snapshot.files.some(file => file.path === path));
+		const changed = { ...snapshot, files: snapshot.files.filter(file => file.path !== path) };
+		assert.throws(() => phpWasmEntryReplaySnapshotFiles(changed, snapshot.files));
+	}
+});
+
+test("PHP-Wasm replay scopes contain every producer and preflight literal import", async () => {
+	const entries = new Set([
+		"tests/helpers/php-wasm-refinement-entry-installed-tests.mjs"
+		, "tests/helpers/php-wasm-owned-refinement-entry-installed-tests.mjs"
+		, "tests/php-wasm-callback-entry-installed.test.mjs"
+		, "tests/helpers/owned-php-wasm-runtime.mjs"
+		, "scripts/check-php-wasm-refinement-entry-records.mjs"
+		, "scripts/check-php-wasm-callback-entry-records.mjs"
+		, "scripts/summarize-php-wasm-refinement-entry-hosted.mjs"
+	]);
+	for(const name of [
+		"php-wasm-refinement-entry-promotion", "php-wasm-refinement-entry"
+		, "php-wasm-owned-refinement-entry", "php-wasm-callback-entry"
+		, "php-wasm-indexed-refinement-entry"
+	]) {
+		const workflow = await readFile(".github/workflows/" + name + ".yml", "utf8");
+		for(const match of workflow.matchAll(/(?:tests|scripts)\/[A-Za-z0-9_./-]+\.mjs\b/gu)) entries.add(match[0]);
+	}
+	const seen = new Set();
+	const visit = async path => {
+		if(seen.has(path)) return;
+		assert.ok(phpWasmEntryReplaySourceScopes.some(scope => path === scope || path.startsWith(scope + "/")), path);
+		seen.add(path);
+		for(const specifier of moduleSpecifiers(await readFile(path, "utf8"), path))
+			await visit(posix.normalize(posix.join(posix.dirname(path), posix.extname(specifier) ? specifier : specifier + ".mjs")));
+	};
+	for(const entry of entries) await visit(entry);
+	assert.ok(seen.has("site/serve.mjs") && seen.has("site/paths.mjs"));
 });

@@ -13,7 +13,8 @@ import { lstat, realpath, rm } from "node:fs/promises";
 import { dirname, isAbsolute, join, resolve } from "node:path";
 import { pipeline } from "node:stream/promises";
 import { nativeArtifactPaths } from "../../src/build/native-artifacts.mjs";
-import { canonicalJson } from "../../src/capsule/node.mjs";
+import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
+import { phpWasmEntryReplaySourceSupplement } from "./php-wasm-entry-source-supplement.mjs";
 import {
 	checkedRecordValueIndexHostedDigest, checkedRecordValueIndexHostedSafeZipPath
 	, extractCheckedRecordValueIndexHostedArtifact
@@ -25,7 +26,12 @@ export const phpWasmEntryReplaySourceScopes = Object.freeze([
 	"src", "tests", "scripts", "config", "schema", ".github"
 	, "package.json", "package-lock.json", "lean-toolchain"
 	, "flake.nix", "flake.lock", "docs/consumer-support.v1.json"
+	, "site/paths.mjs", "site/serve.mjs"
 ]);
+export const phpWasmEntryReplaySourceSupplementPath
+	= "docs/evidence/php-wasm-entry-source-supplement-20261025.json";
+export const phpWasmEntryReplaySourceSupplementSha256
+	= "31aa1c26df04c3fa96d9e575624994288f9d1094863e5c0296e68c08c64b8b82";
 const sourceLimit = 128 * 1024 * 1024;
 const environment = () => Object.fromEntries(Object.entries(process.env)
 	.filter(([key]) => !key.startsWith("GIT_") && !key.startsWith("LEAN_BRIDGE_")
@@ -125,6 +131,42 @@ const checkSources = async (root, files) => {
 		assert.equal(await checkedRecordValueIndexHostedDigest(path), file.sha256, file.path);
 	}
 };
+
+/**
+ * Retain the two omitted imports without changing the original archive bytes.
+ * Only the three complete, independently pinned snapshots use the supplement.
+ * Every new snapshot must contain the entire current source manifest.
+ *
+ * @param snapshot - Exact original snapshot identity and members.
+ * @param files - Independently hashed complete Git source manifest.
+ */
+export const phpWasmEntryReplaySnapshotFiles = (snapshot, files) => {
+	assert.deepEqual(Object.keys(snapshot).sort(), ["files", "revision", "zip"]);
+	const supplement = phpWasmEntryReplaySourceSupplement;
+	assert.equal(sha256(canonicalJson(supplement)), phpWasmEntryReplaySourceSupplementSha256);
+	const identity = sha256(canonicalJson(snapshot));
+	const retained = supplement.snapshots.find(item => item.snapshotSha256 === identity);
+	if(retained === undefined)
+	{
+		assert.deepEqual(snapshot.files, files, "source closure must equal original Git bytes");
+		return files;
+	}
+	assert.equal(snapshot.revision, retained.revision);
+	const omitted = new Set();
+	for(const file of supplement.files)
+	{
+		assert.equal(Buffer.byteLength(file.source), file.bytes);
+		assert.equal(sha256(file.source), file.sha256);
+		const original = files.find(item => item.path === file.path);
+		assert.ok(original, file.path);
+		assert.equal(original.bytes, file.bytes, file.path);
+		assert.equal(original.sha256, file.sha256, file.path);
+		omitted.add(file.path);
+	}
+	const archived = files.filter(file => !omitted.has(file.path));
+	assert.deepEqual(snapshot.files, archived, "exact supplemented archive source closure");
+	return archived;
+};
 const canonicalRoot = async root => {
 	assert.ok(typeof root === "string" && isAbsolute(root) && resolve(root) === root);
 	assert.equal(await realpath(root), root, "canonical source checkout");
@@ -192,14 +234,14 @@ export const checkPhpWasmEntryReplaySourceSnapshot = async (snapshot, zip) => {
 	assert.equal(await realpath(zip), zip);
 	assert.ok((await lstat(zip)).isFile());
 	const files = await phpWasmEntryReplaySourceManifest(snapshot.revision);
-	assert.deepEqual(snapshot.files, files, "source closure must equal original Git bytes");
+	const archived = phpWasmEntryReplaySnapshotFiles(snapshot, files);
 	assert.equal((await lstat(zip)).size, snapshot.zip.bytes);
 	assert.equal(await checkedRecordValueIndexHostedDigest(zip), snapshot.zip.sha256);
 	const extracted = await extractCheckedRecordValueIndexHostedArtifact(zip);
 	try
 	{
-		assert.deepEqual(await nativeArtifactPaths(extracted.root), files.map(file => file.path).sort());
-		await checkSources(extracted.root, files);
+		assert.deepEqual(await nativeArtifactPaths(extracted.root), archived.map(file => file.path).sort());
+		await checkSources(extracted.root, archived);
 	}
 	finally
 	{ await rm(extracted.root, { recursive: true, force: true }); }

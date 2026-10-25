@@ -89,9 +89,18 @@ node --max-old-space-size=512 scripts/check-php-wasm-refinement-entry-hosted-arc
 
 The archive includes original APIs, ZIP parts, extracted output and producer and
 archiver source snapshots. The checker reconstructs those bytes and runs all
-thirty original route verifiers. Neither command compiles Lean or PHP. Commit the
-complete archive, including generated files normally ignored by Git, before
-preparing publication:
+thirty original route verifiers. Neither command compiles Lean or PHP.
+
+Source snapshots include `site/serve.mjs` and `site/paths.mjs`, which the producer
+imports through its browser helpers. The original 25 October complete and
+diagnostic archives omitted these two files. The checker supplements their three
+exact source snapshots with [the original Git bytes](../evidence/php-wasm-entry-source-supplement-20261025.json).
+Keep those archives unchanged. New snapshots must include both files directly;
+checkout verification rejects hidden edits, missing files and symlinks before
+running the original verifier.
+
+Commit the complete archive, including generated files normally ignored by Git,
+before preparing publication:
 
 ```sh
 git add --force -- "$LEAN_BRIDGE_ENTRY_ARCHIVE"

@@ -1,0 +1,94 @@
+TAP version 13
+# Subtest: PHP-Wasm replay sources hash exact Git blobs including non-module assets
+ok 1 - PHP-Wasm replay sources hash exact Git blobs including non-module assets
+  ---
+  duration_ms: 499.35037
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm replay source snapshots reproduce and reject forged identities
+ok 2 - PHP-Wasm replay source snapshots reproduce and reject forged identities
+  ---
+  duration_ms: 1022.959813
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm replay refuses tracked symlinks before creating a source snapshot
+ok 3 - PHP-Wasm replay refuses tracked symlinks before creating a source snapshot
+  ---
+  duration_ms: 149.687184
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm replay source extraction rejects substituted bytes and omitted members
+ok 4 - PHP-Wasm replay source extraction rejects substituted bytes and omitted members
+  ---
+  duration_ms: 642.259067
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm replay checkout detects hidden edits and ignored source inputs
+ok 5 - PHP-Wasm replay checkout detects hidden edits and ignored source inputs
+  ---
+  duration_ms: 427.795799
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm replay refuses wrong or dirty source before invoking a verifier
+ok 6 - PHP-Wasm replay refuses wrong or dirty source before invoking a verifier
+  ---
+  duration_ms: 283.17187
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm replay snapshots refuse existing or symlinked destinations
+ok 7 - PHP-Wasm replay snapshots refuse existing or symlinked destinations
+  ---
+  duration_ms: 235.968243
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm replay authenticates both imported site modules before execution
+ok 8 - PHP-Wasm replay authenticates both imported site modules before execution
+  ---
+  duration_ms: 719.491604
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm replay supplements only three complete immutable source snapshots
+ok 9 - PHP-Wasm replay supplements only three complete immutable source snapshots
+  ---
+  duration_ms: 6049.95679
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm replay new snapshots cannot omit an imported site module
+ok 10 - PHP-Wasm replay new snapshots cannot omit an imported site module
+  ---
+  duration_ms: 267.085902
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm replay scopes contain every producer and preflight literal import
+ok 11 - PHP-Wasm replay scopes contain every producer and preflight literal import
+  ---
+  duration_ms: 1803.27028
+  type: 'test'
+  ...
+# Subtest: every owned source module has one explicit typecheck disposition
+ok 12 - every owned source module has one explicit typecheck disposition
+  ---
+  duration_ms: 12.537631
+  type: 'test'
+  ...
+# Subtest: the required typecheck uses strict checkJs for exactly the adopted modules
+ok 13 - the required typecheck uses strict checkJs for exactly the adopted modules
+  ---
+  duration_ms: 1.243554
+  type: 'test'
+  ...
+# Subtest: the default and CI quality gates cover the same core contract
+ok 14 - the default and CI quality gates cover the same core contract
+  ---
+  duration_ms: 2.88548
+  type: 'test'
+  ...
+1..14
+# tests 14
+# suites 0
+# pass 14
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 15063.516592

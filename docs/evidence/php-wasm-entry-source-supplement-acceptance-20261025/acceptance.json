@@ -1,0 +1,117 @@
+{
+  "schemaVersion": 1,
+  "kind": "php-wasm-entry-source-supplement-local-acceptance-v1",
+  "baseCommit": "de7630309f4836ac8a9a82cd4a2e687177cbc97b",
+  "sourcePins": [
+    {
+      "path": "tests/helpers/php-wasm-refinement-entry-hosted-replay.mjs",
+      "previous": "5249b76489cadc27f75fd5aa193f6c0ffc622fd2db3b375bafef5ea80cfa4044",
+      "current": "b82c38fd4967d8cc2c6269b6d904bc180ade03dd5367a436840525e5d297a40f",
+      "count": 1
+    },
+    {
+      "path": "tests/helpers/php-wasm-refinement-entry-hosted-replay-tests.mjs",
+      "previous": "ae3012098eebe79bd3132b354dd1c26868d45e46324aef0628a2f1355b796409",
+      "current": "ba479678992bc5c1662791defb907cf309b65a023b35d467cfd7992992bb8eca",
+      "count": 0
+    },
+    {
+      "path": "docs/contributing/testing.md",
+      "previous": "a0231d42c30f635b9b2a2ed2dd19636adbf307f60d3cc4590ef39b86e2d1a4ac",
+      "current": "d41fbb57b509a24324162da82d00bd80788faf8997b7cafa39a2a15d89082c1a",
+      "count": 11
+    }
+  ],
+  "inventory": {
+    "previous": {
+      "bytes": 102577221,
+      "sha256": "03f00b29636bc9a1af28e7da47577226bd51dd3ba3f716ab6b81000d2952d226"
+    },
+    "current": {
+      "bytes": 102577221,
+      "sha256": "d201e69262339b996ee4eb1c8aeee69e0730d6d853e8b6d7daaf7b9d52cd21bf"
+    },
+    "refreshedPins": 12,
+    "exactInverse": true
+  },
+  "sourceSupplement": {
+    "path": "docs/evidence/php-wasm-entry-source-supplement-20261025.json",
+    "sha256": "31aa1c26df04c3fa96d9e575624994288f9d1094863e5c0296e68c08c64b8b82",
+    "historicalSnapshots": 3,
+    "originalFiles": 2
+  },
+  "diagnosis": {
+    "archivedSourceFiles": 9647,
+    "missingImportedSources": [
+      "site/paths.mjs",
+      "site/serve.mjs"
+    ],
+    "literalImportComparisons": [
+      {
+        "revision": "a003269808c43a2a3a509a23c8a8ab8def07b610",
+        "count": 587,
+        "manifestSha256": "478a8b52018430eda556b6426ab6ca2ceee289895b0e8df80703d1204b2f3d88",
+        "changed": [],
+        "added": []
+      },
+      {
+        "revision": "8db80ea109610468c1e509037a6f1771371fa5cf",
+        "count": 587,
+        "manifestSha256": "478a8b52018430eda556b6426ab6ca2ceee289895b0e8df80703d1204b2f3d88",
+        "changed": [],
+        "added": []
+      },
+      {
+        "revision": "de7630309f4836ac8a9a82cd4a2e687177cbc97b",
+        "count": 587,
+        "manifestSha256": "478a8b52018430eda556b6426ab6ca2ceee289895b0e8df80703d1204b2f3d88",
+        "changed": [],
+        "added": []
+      }
+    ],
+    "firstCheckoutCheck": {
+      "exitCode": 1,
+      "reason": "The sparse producer checkout omitted the same two tracked site modules.",
+      "log": {
+        "path": "docs/evidence/php-wasm-entry-source-supplement-acceptance-20261025/initial-check.log",
+        "bytes": 784,
+        "sha256": "ebe083c0ee5fdf15ea28924a6978c9d73ec3b8471fbf8e9bd91fab3c16e9d151"
+      }
+    },
+    "remedy": "Add only /site/paths.mjs and /site/serve.mjs to the owned original checkout's non-cone sparse selection. The exact producer remains a003269808c43a2a3a509a23c8a8ab8def07b610 and clean; no original source bytes or archive files are changed."
+  },
+  "originalSourceAcceptance": {
+    "kind": "php-wasm-original-source-supplement-acceptance-v1",
+    "producerCommit": "a003269808c43a2a3a509a23c8a8ab8def07b610",
+    "archive": "/app/build/worktrees/codex-vo1824-dispatch/docs/evidence/php-wasm-entry-hosted-20261025",
+    "originalZip": {
+      "bytes": 26369339,
+      "sha256": "48add54f5f0790d004d80c723729ccd075b20b8f91df8c818bb20f96a3672143"
+    },
+    "archivedSourceFiles": 9647,
+    "authenticatedCheckoutFiles": 9649,
+    "supplementSha256": "31aa1c26df04c3fa96d9e575624994288f9d1094863e5c0296e68c08c64b8b82",
+    "originalSnapshotCheck": true,
+    "exactProducerCheckoutCheck": true
+  },
+  "validation": {
+    "tests": {
+      "path": "docs/evidence/php-wasm-entry-source-supplement-acceptance-20261025/run.tap",
+      "bytes": 3126,
+      "sha256": "31f97cf524b76547d80a124f254a22d04e2aedcb129bc55a417e9cd1b27b7a60",
+      "passed": 14,
+      "failed": 0,
+      "skipped": 0,
+      "command": "node --test --test-concurrency=1 '--test-name-pattern=^PHP-Wasm replay|^every owned source module|^the required typecheck|^the default and CI quality' tests/checked-javascript.test.mjs"
+    },
+    "inventoryAudit": {
+      "path": "docs/evidence/php-wasm-entry-source-supplement-acceptance-20261025/pin-audit.mjs",
+      "bytes": 2603,
+      "sha256": "d57811b4d936fb0c80e9082a620d3edeacf06acd32902dfd89982a79ad6e00af"
+    },
+    "lintExitCode": 0,
+    "typecheckExitCode": 0,
+    "resourcePolicy": "Serialized on one low-priority CPU with a 512 MiB Node heap cap; no producer rebuild or full local Core suite."
+  },
+  "remaining": "Source-history integration, final required Core/hosted checks, complete producer-input reconciliation and default-branch recurring activation remain. This repair does not claim a new thirty-route replay or complete VO #2062/#1220 acceptance."
+}
