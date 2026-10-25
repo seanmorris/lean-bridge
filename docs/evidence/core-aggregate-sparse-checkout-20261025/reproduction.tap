@@ -1,0 +1,62 @@
+TAP version 13
+# Subtest: Core quality has bounded static, sharded contract, and aggregate gates
+not ok 1 - Core quality has bounded static, sharded contract, and aggregate gates
+  ---
+  duration_ms: 5.557887
+  type: 'test'
+  location: '/app/build/worktrees/codex-vo1824-dispatch/tests/helpers/core-quality-budget-tests.mjs:194:1'
+  failureType: 'testCodeFailure'
+  error: 'The aggregate needs the complete test tree and verifier source, not retained evidence'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual: |-
+    
+      quality:
+        name: quality
+        if: always()
+        needs: [static, contract]
+        runs-on: ubuntu-24.04
+        timeout-minutes: 10
+        steps:
+          - name: Check out the exact aggregate revision
+            uses: actions/checkout@v6
+            with:
+              fetch-depth: 1
+              persist-credentials: false
+          - name: Install Node.js
+            uses: actions/setup-node@v6
+            with:
+              node-version: 22
+          - name: Download every shard manifest
+            uses: actions/download-artifact@v8
+            with:
+              pattern: core-shard-*-${{ github.sha }}
+              path: build/core-shards
+              merge-multiple: true
+          - name: Authenticate the complete contract partition
+            run: node scripts/check-core-contract-shards.mjs build/core-shards
+          - name: Require static quality and every contract shard
+            env:
+              STATIC_RESULT: ${{ needs.static.result }}
+              CONTRACT_RESULT: ${{ needs.contract.result }}
+            run: |
+              test "$STATIC_RESULT" = success
+              test "$CONTRACT_RESULT" = success
+    
+  operator: 'match'
+  stack: |-
+    assertCoreQualityBudget (file:///app/build/worktrees/codex-vo1824-dispatch/tests/helpers/core-quality-budget-tests.mjs:44:9)
+    TestContext.<anonymous> (file:///app/build/worktrees/codex-vo1824-dispatch/tests/helpers/core-quality-budget-tests.mjs:196:2)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 89.206625

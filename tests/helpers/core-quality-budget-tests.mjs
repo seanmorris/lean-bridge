@@ -5,10 +5,11 @@
  */
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { access, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { join, resolve } from "node:path";
 import test from "node:test";
+import { canonicalJson } from "../../src/capsule/node.mjs";
 import {
 	collectCoreContractTestPaths, collectRepositoryTestPaths
 	, coreContractShardLabels
@@ -39,6 +40,13 @@ const assertCoreQualityBudget = source => {
 		, "Static and contract jobs must retain all producer history");
 	assert.equal([...source.matchAll(/^\s+fetch-depth:\s*1\s*$/gmu)].length, 1
 		, "The aggregate must recompute closure from the exact current tree");
+	const aggregate = source.slice(source.indexOf("\n  quality:\n"));
+	assert.match(aggregate, /fetch-depth: 1\n {10}persist-credentials: false\n {10}sparse-checkout: \|\n {12}scripts\n {12}src\n {12}tests\n {10}sparse-checkout-cone-mode: true\n/u
+		, "The aggregate needs the complete test tree and verifier source, not retained evidence");
+	assert.equal([...source.matchAll(/^\s+sparse-checkout: \|\s*$/gmu)].length, 1
+		, "Only the aggregate may omit archived evidence from its checkout");
+	assert.doesNotMatch(aggregate, /^\s+filter:/mu
+		, "Use checkout's sparse blob filter without overriding it");
 	assert.equal([...source.matchAll(/^\s+persist-credentials:\s*false\s*$/gmu)].length, 3
 		, "No checkout may persist credentials");
 	assert.equal([...source.matchAll(/^\s+- name: Free hosted runner disk for the evidence checkout\s*$/gmu)].length, 1
@@ -198,6 +206,11 @@ test("Core quality has bounded static, sharded contract, and aggregate gates", a
 			, '--test-name-pattern "${{ matrix.shard }}/6"')
 		, source.replace("fetch-depth: 0", "fetch-depth: 1")
 		, source.replace("persist-credentials: false", "persist-credentials: true")
+		, source.replace("            tests\n", "            tests/helpers\n")
+		, source.replace("            src\n", "            docs/evidence\n")
+		, source.replace("            scripts\n", "")
+		, source.replace("sparse-checkout-cone-mode: true", "sparse-checkout-cone-mode: false")
+		, source.replace("          sparse-checkout: |", "          filter: tree:0\n          sparse-checkout: |")
 		, source.replace("/opt/hostedtoolcache/CodeQL", "/opt/hostedtoolcache")
 		, source.replace('df -h / "$GITHUB_WORKSPACE"', "true")
 		, source.replace("Report disk and memory after the shard\n        if: always()"
@@ -282,6 +295,42 @@ test("Core shard manifests cover every contract file exactly once", async () => 
 		const changed = structuredClone(manifests); mutate(changed);
 		assert.throws(() => verifyCoreContractShardManifests(paths, changed));
 	}
+});
+
+test("Core aggregate authenticates every manifest from an evidence-free sparse checkout", async t => {
+	const root = resolve(".");
+	const directory = await mkdtemp(join(tmpdir(), "lean-core-aggregate-sparse-"));
+	t.after(() => rm(directory, { recursive: true, force: true }));
+	const checkout = join(directory, "repository");
+	const git = (arguments_, cwd = root) => execFileSync("git", arguments_
+		, { cwd, encoding: "utf8", maxBuffer: 1024 * 1024, timeout: 30000 });
+	const revision = git(["rev-parse", "HEAD"]).trim();
+	git(["clone", "--quiet", "--shared", "--no-checkout", root, checkout]);
+	git(["sparse-checkout", "set", "--cone", "scripts", "src", "tests"], checkout);
+	git(["checkout", "--quiet", "--detach", revision], checkout);
+	assert.equal(git(["rev-parse", "HEAD"], checkout).trim(), revision);
+	await assert.rejects(access(join(checkout, "docs")), { code: "ENOENT" });
+	assert.deepEqual(await collectRepositoryTestPaths(checkout)
+		, await collectRepositoryTestPaths(root));
+	const paths = await collectCoreContractTestPaths(root);
+	assert.deepEqual(await collectCoreContractTestPaths(checkout), paths);
+	const manifests = coreContractShardLabels.map(label =>
+		coreContractShardManifest(paths, label));
+	const manifestDirectory = join(directory, "manifests");
+	await mkdir(manifestDirectory);
+	for(const manifest of manifests)
+		await writeFile(join(manifestDirectory
+			, `core-shard-${manifest.shard.index}.json`), canonicalJson(manifest));
+	const verify = () => execFileSync(process.execPath
+		, ["scripts/check-core-contract-shards.mjs", manifestDirectory]
+		, { cwd: checkout, encoding: "utf8", stdio: "pipe", maxBuffer: 1024 * 1024, timeout: 30000 });
+	assert.deepEqual(JSON.parse(verify())
+		, verifyCoreContractShardManifests(paths, manifests));
+	t.diagnostic(`Complete sparse aggregate: ${paths.length} contract files across six shards at ${revision}`);
+	const changed = structuredClone(manifests[0]);
+	changed.selection.files.pop();
+	await writeFile(join(manifestDirectory, "core-shard-1.json"), canonicalJson(changed));
+	assert.throws(verify, /Core shard 1\/6/u);
 });
 
 test("checked-record evidence runs in bounded process-isolated partitions", async () => {

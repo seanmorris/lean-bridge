@@ -1,0 +1,67 @@
+{
+  "sourcePins": [
+    {
+      "path": ".github/workflows/quality.yml",
+      "previous": "d35f122c03c600842f4cfcbf167d9fbd33a143dd2005635234ea623f4af7fda1",
+      "current": "b1daab5edc29356b4428e1446a73a862c10d54d36fa0be429e69e2b85649465f"
+    },
+    {
+      "path": "tests/helpers/core-quality-budget-tests.mjs",
+      "previous": "66bc3acd96b6e00ec01ad0d7016f551cae0f9d2a2d5a2cd020a216efacd1d734",
+      "current": "1e5a2fa9a807bb873fb14a1ee6be0cc238504824bce9902e866cdecb58b12267"
+    }
+  ],
+  "remote": {
+    "run": 40160209518,
+    "head": "8db80ea109610468c1e509037a6f1771371fa5cf",
+    "status": "completed",
+    "conclusion": "failure",
+    "jobs": [
+      {
+        "id": 121069998089,
+        "status": "completed",
+        "conclusion": "cancelled",
+        "startedAt": "2026-10-25T03:59:14Z",
+        "completedAt": "2026-10-25T07:04:14Z",
+        "annotations": [
+          {
+            "level": "failure",
+            "message": "The job has exceeded the maximum execution time of 3h0m0s",
+            "path": ".github"
+          }
+        ]
+      },
+      {
+        "id": 121102779708,
+        "status": "completed",
+        "conclusion": "cancelled",
+        "startedAt": "2026-10-25T07:04:16Z",
+        "completedAt": "2026-10-25T07:14:18Z",
+        "annotations": [
+          {
+            "level": "failure",
+            "message": "The job has exceeded the maximum execution time of 10m0s",
+            "path": ".github"
+          },
+          {
+            "level": "failure",
+            "message": "The operation was canceled.",
+            "path": ".github"
+          }
+        ]
+      }
+    ]
+  },
+  "checkoutTag": {
+    "sha": "d23441a48e516b6c34aea4fa41551a30e30af803",
+    "type": "commit",
+    "url": "https://api.github.com/repos/actions/checkout/git/commits/d23441a48e516b6c34aea4fa41551a30e30af803"
+  },
+  "limitations": [
+    "The aggregate timed out while checking out its exact revision. This repair only narrows that checkout.",
+    "Shard 2 independently exceeded three hours. Its hosted log endpoint returned HTTP 404; further assertions cannot be ruled out.",
+    "Four other shards received runner shutdown signals. Their cause remains unknown; observed assertion corrections are separate earlier commits.",
+    "A first local full test attempt lacked the unchanged tracked .gitattributes file in the sparse worktree. It passed after restoring that exact HEAD file.",
+    "Final-head Core, remaining target gates, and default-branch activation remain open."
+  ]
+}

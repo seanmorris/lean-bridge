@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "baseCommit": "c9c6435b7616807cfa9c97280bd9a49848b810dc",
+  "scope": "Limit only the Core aggregate checkout to the complete scripts, src and tests trees. Preserve full static/contract producer history, all six contract shards, test selection, concurrency, heap limits and job timeouts. Authenticate all 1006 contract-file manifests from a real evidence-free sparse checkout and reject an incomplete manifest. Refresh exactly one live workflow source pin without changing any support observation or archived bytes.",
+  "sourcePins": [
+    {
+      "path": ".github/workflows/quality.yml",
+      "previous": "d35f122c03c600842f4cfcbf167d9fbd33a143dd2005635234ea623f4af7fda1",
+      "current": "b1daab5edc29356b4428e1446a73a862c10d54d36fa0be429e69e2b85649465f",
+      "count": 1
+    },
+    {
+      "path": "tests/helpers/core-quality-budget-tests.mjs",
+      "previous": "66bc3acd96b6e00ec01ad0d7016f551cae0f9d2a2d5a2cd020a216efacd1d734",
+      "current": "1e5a2fa9a807bb873fb14a1ee6be0cc238504824bce9902e866cdecb58b12267",
+      "count": 0
+    }
+  ],
+  "inventory": {
+    "previous": {
+      "bytes": 102577221,
+      "sha256": "a3dd3938b125bd0abc97ef2e838d4932a5e5a5ffddbbcf77f2f57db17ba135d2"
+    },
+    "current": {
+      "bytes": 102577221,
+      "sha256": "68fd0a7a321eeda0637cba71f33284aea66b78f5e2e29686ae0c088559736582"
+    },
+    "refreshedPins": 1,
+    "exactInverse": true
+  },
+  "validation": {
+    "tests": [
+      {
+        "name": "Core budget, closed partition and real sparse aggregate",
+        "count": 7,
+        "file": {
+          "path": "docs/evidence/core-aggregate-sparse-checkout-20261025/run.tap",
+          "bytes": 1679,
+          "sha256": "807fe468523326dd20d62d1beb097ab13ca4b163bc77741595225fb62bbbc91b"
+        }
+      }
+    ],
+    "originalFailures": {
+      "path": "docs/evidence/core-aggregate-sparse-checkout-20261025/reproduction.tap",
+      "bytes": 2248,
+      "sha256": "5fd9654202537d635b745e8a093dcc09b4e5bcade5d228ab8bc51f6444f25fe3"
+    },
+    "diagnostics": {
+      "path": "docs/evidence/core-aggregate-sparse-checkout-20261025/diagnostics.json",
+      "bytes": 2509,
+      "sha256": "e332ee169c7bc6660c45a00624399c87bceaa47ceb22584aa0941639c4ecef84"
+    },
+    "pinAudit": {
+      "script": {
+        "path": "docs/evidence/core-aggregate-sparse-checkout-20261025/pin-audit.mjs",
+        "bytes": 2348,
+        "sha256": "cacd0d82a93bc97c37758b20d10f950430a3be858fbc870e72f6dbf476f76e29"
+      },
+      "report": {
+        "path": "docs/evidence/core-aggregate-sparse-checkout-20261025/pin-audit.json",
+        "bytes": 933,
+        "sha256": "14ee28fad10dcdd94951a5a94a1c44565ae7e8b07e93a5a220dbbfa930096b1b"
+      },
+      "exactInverse": true
+    },
+    "lint": {
+      "command": "node node_modules/eslint/bin/eslint.js tests/helpers/core-quality-budget-tests.mjs --max-warnings 0",
+      "exitCode": 0
+    },
+    "typecheck": {
+      "command": "node node_modules/typescript/bin/tsc -p jsconfig.checked.json --pretty false",
+      "exitCode": 0
+    },
+    "actionlint": {
+      "version": "1.7.12",
+      "command": "actionlint .github/workflows/quality.yml",
+      "exitCode": 0
+    },
+    "resourceGuard": "Serial local checks on one low-priority CPU; 512 MiB Node heap cap; no local full-Core run"
+  },
+  "pending": [
+    "full-final-head-Core",
+    "remaining-final-head-target-gates",
+    "recurring-default-branch-activation"
+  ]
+}

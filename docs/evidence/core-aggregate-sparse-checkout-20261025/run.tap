@@ -1,0 +1,53 @@
+TAP version 13
+# Subtest: Core quality has bounded static, sharded contract, and aggregate gates
+ok 1 - Core quality has bounded static, sharded contract, and aggregate gates
+  ---
+  duration_ms: 17.270481
+  type: 'test'
+  ...
+# Subtest: Hosted Core bounds each closed shard without truncating the profile
+ok 2 - Hosted Core bounds each closed shard without truncating the profile
+  ---
+  duration_ms: 3.079017
+  type: 'test'
+  ...
+# Subtest: Core shard enumeration has one repository-wide code-unit order
+ok 3 - Core shard enumeration has one repository-wide code-unit order
+  ---
+  duration_ms: 5.137874
+  type: 'test'
+  ...
+# Subtest: Core shard manifests cover every contract file exactly once
+ok 4 - Core shard manifests cover every contract file exactly once
+  ---
+  duration_ms: 87.068573
+  type: 'test'
+  ...
+# Subtest: Core aggregate authenticates every manifest from an evidence-free sparse checkout
+ok 5 - Core aggregate authenticates every manifest from an evidence-free sparse checkout
+  ---
+  duration_ms: 1810.610469
+  type: 'test'
+  ...
+# Complete sparse aggregate: 1006 contract files across six shards at c9c6435b7616807cfa9c97280bd9a49848b810dc
+# Subtest: checked-record evidence runs in bounded process-isolated partitions
+ok 6 - checked-record evidence runs in bounded process-isolated partitions
+  ---
+  duration_ms: 3.673426
+  type: 'test'
+  ...
+# Subtest: recursive checked-record whitespace rules stay inside each archive
+ok 7 - recursive checked-record whitespace rules stay inside each archive
+  ---
+  duration_ms: 145.810871
+  type: 'test'
+  ...
+1..7
+# tests 7
+# suites 0
+# pass 7
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2164.233243

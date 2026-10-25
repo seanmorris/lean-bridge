@@ -1,0 +1,29 @@
+{
+  "baseCommit": "c9c6435b7616807cfa9c97280bd9a49848b810dc",
+  "sourcePins": [
+    {
+      "path": ".github/workflows/quality.yml",
+      "previous": "d35f122c03c600842f4cfcbf167d9fbd33a143dd2005635234ea623f4af7fda1",
+      "current": "b1daab5edc29356b4428e1446a73a862c10d54d36fa0be429e69e2b85649465f",
+      "count": 1
+    },
+    {
+      "path": "tests/helpers/core-quality-budget-tests.mjs",
+      "previous": "66bc3acd96b6e00ec01ad0d7016f551cae0f9d2a2d5a2cd020a216efacd1d734",
+      "current": "1e5a2fa9a807bb873fb14a1ee6be0cc238504824bce9902e866cdecb58b12267",
+      "count": 0
+    }
+  ],
+  "inventory": {
+    "previous": {
+      "bytes": 102577221,
+      "sha256": "a3dd3938b125bd0abc97ef2e838d4932a5e5a5ffddbbcf77f2f57db17ba135d2"
+    },
+    "current": {
+      "bytes": 102577221,
+      "sha256": "68fd0a7a321eeda0637cba71f33284aea66b78f5e2e29686ae0c088559736582"
+    },
+    "refreshedPins": 1,
+    "exactInverse": true
+  }
+}

@@ -124,6 +124,11 @@ jobs:
         with:
           fetch-depth: 1
           persist-credentials: false
+          sparse-checkout: |
+            scripts
+            src
+            tests
+          sparse-checkout-cone-mode: true
       - name: Install Node.js
         uses: actions/setup-node@v6
         with:
