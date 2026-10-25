@@ -1,0 +1,257 @@
+{
+  "additions": [
+    {
+      "currentSha256": "3929df3c91fd6c97912d59e663642d49cc6cde6291bba9ad2af9d2b1ca026ccf",
+      "path": "tests/helpers/php-closure-producer-replay-tests.mjs"
+    },
+    {
+      "currentSha256": "46457934bb10783df7e0c96db98cb69b840976148060386474e06975854cceab",
+      "path": "scripts/update-php-closure-producer-replay-source-history.mjs"
+    },
+    {
+      "currentSha256": "de60c1b73317c284d421b0b0acf81acc082fc11fa938a2fe25dd73b4cc380ba5",
+      "path": "tests/helpers/php-closure-producer-replay-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "635c2f2e4ee48e00eef6336f5d1ec31fa74770a1b40149188e1c4d27b8ac4ce6",
+      "path": "tests/helpers/php-closure-producer-replay-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "44e71a78c5ab2700dc4511e5d5b88b991ed5cf74",
+  "implementationCommits": [
+    "44e71a78c5ab2700dc4511e5d5b88b991ed5cf74"
+  ],
+  "integrationBaseCommit": "44e71a78c5ab2700dc4511e5d5b88b991ed5cf74",
+  "integrationUpdates": [
+    {
+      "currentSha256": "d189a05bacc3debc11418749c6d97cc1a84eaddad7332ec12a8d02086a2e5c93",
+      "edits": [
+        {
+          "current": "import { beforePhpClosureProducerReplaySource, phpClosureProducerReplayNormalizationPaths } from \"./php-closure-producer-replay-source-history.mjs\";\n",
+          "previous": "",
+          "start": 12701
+        },
+        {
+          "current": "\t...phpClosureProducerReplayNormalizationPaths\n\t, ...ownedNpmCompleteAcceptanceNormalizationPaths\n",
+          "previous": "\t...ownedNpmCompleteAcceptanceNormalizationPaths\n",
+          "start": 185889
+        },
+        {
+          "current": "\tlet stage = beforePhpClosureProducerReplaySource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeOwnedNpmCompleteAcceptanceSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeOwnedNpmCompleteAcceptanceSource(path, text, expected);\n",
+          "start": 230313
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "c9683f8e8fe2bbdd1e7cc3f1148c7be01e90102fcc01e39485b00c8ceecf03dd"
+    },
+    {
+      "currentSha256": "a1d76171f838809f8f44c9a9a10239a84f9e9e7ce3a650b6b5fc7827cc4cdc87",
+      "edits": [
+        {
+          "current": "import \"./helpers/php-closure-producer-replay-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 8896
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "575fdc34f6e7666751f3ef8b50a0b5408ee087cd5e8ec0a172ae6d50fabe98c3"
+    }
+  ],
+  "milestone": "php-closure-producer-replay-source-v1",
+  "predecessorCommit": "a615a9c0e9586bdd6716a447e845b3a85146e7b1",
+  "schemaVersion": 1,
+  "scope": "Replay the original PHP CI regression and closure-thread receipts from their exact Git producers. Require the recorded SHA-256 at every source read, authenticate all original transitions and unchanged support cells, and retain the existing execution controls and recursive predecessor checks. Refresh exactly three live test-source pins without changing runtime code, workflows, original receipts or support observations. Full hosted Core acceptance remains required.",
+  "updates": [
+    {
+      "currentSha256": "779d28b0b7f980f24f0a9cb4b1fdd85a6dd6e3a80447bcf18b2514fcb482e7a5",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"0a25177d465ca652f5c6fbac101010e46783093d9a5fc76a97a8d127ffe0e2de\"\n",
+          "previous": "          \"sha256\": \"1ec2bb17b430d9001252a56c3fc712ea37c2a76ec0edb4d8ba71a2056f6581be\"\n",
+          "start": 1213364
+        },
+        {
+          "current": "          \"sha256\": \"56f32ba86917df95c664f1d508c640e98619a888e4a3a14af99a24a54202e543\"\n",
+          "previous": "          \"sha256\": \"fdd26b81ab0b45ba6fabfc36a19518a7409e5462fb9a66a25918a23f288bbc24\"\n",
+          "start": 1217458
+        },
+        {
+          "current": "          \"sha256\": \"0a25177d465ca652f5c6fbac101010e46783093d9a5fc76a97a8d127ffe0e2de\"\n",
+          "previous": "          \"sha256\": \"1ec2bb17b430d9001252a56c3fc712ea37c2a76ec0edb4d8ba71a2056f6581be\"\n",
+          "start": 1403878
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "68fd0a7a321eeda0637cba71f33284aea66b78f5e2e29686ae0c088559736582"
+    },
+    {
+      "currentSha256": "2add47d5a6cfa53d180acb384cb3e2678caf125df2d4ebb7d13834c64ba5f999",
+      "edits": [
+        {
+          "current": "import { assertClosureThreadCodegen, assertClosureThreadExecution, assertClosureThreadIntegration, closureThreadCodegenPath, closureThreadExecutionPath, closureThreadProducerSource } from \"./helpers/closure-thread-evidence.mjs\";\n",
+          "previous": "import { assertClosureThreadCodegen, assertClosureThreadExecution, assertClosureThreadIntegration, closureThreadCodegenPath, closureThreadExecutionPath } from \"./helpers/closure-thread-evidence.mjs\";\n",
+          "start": 335
+        },
+        {
+          "current": "",
+          "previous": "import { beforePhpCiRegression } from \"./helpers/php-ci-regression-source-history.mjs\";\n",
+          "start": 709
+        },
+        {
+          "current": "\t\tconst source = closureThreadProducerSource(update.path, update.currentSha256);\n",
+          "previous": "\t\tconst source = beforePhpCiRegression(update.path, await readFile(update.path, \"utf8\"));\n",
+          "start": 3158
+        },
+        {
+          "current": "\t\tassert.equal(sha256(beforeClosureThreadLifetime(update.path, source, update.previousSha256)), update.previousSha256);\n",
+          "previous": "\t\tassert.equal(sha256(beforeClosureThreadLifetime(update.path, source)), update.previousSha256);\n",
+          "start": 3330
+        },
+        {
+          "current": "\t\tassert.equal(beforeClosureThreadLifetime(update.path, altered, update.previousSha256), altered);\n",
+          "previous": "\t\tassert.equal(beforeClosureThreadLifetime(update.path, altered), altered);\n",
+          "start": 3596
+        }
+      ],
+      "path": "tests/closure-thread-evidence.test.mjs",
+      "previousSha256": "c8bc4c1b388d5566c3a5a9b633dd2e24e23c6bf90447118b628ae64fc4fa3003"
+    },
+    {
+      "currentSha256": "2af7cbcb26cd07f8c9f7113759109432c48b174609608183c8178a0522db9759",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { readTypeSurface } from \"../../src/adoption/type-surface.mjs\";\n",
+          "start": 257
+        },
+        {
+          "current": "",
+          "previous": "import { beforePhpCiRegression } from \"./php-ci-regression-source-history.mjs\";\n",
+          "start": 1046
+        },
+        {
+          "current": "import { sourceAtProducer, typeSurfaceContractsAtProducer } from \"./producer-source.mjs\";\n",
+          "previous": "",
+          "start": 1123
+        },
+        {
+          "current": "export const closureThreadProducer = \"f61063252acf464ba4306885ddbf141b29bbdf73\";\n\n/**\n * Read an original closure repair source and require its recorded identity.\n *\n * @param path - Repository-relative source path.\n * @param expected - Required SHA-256 from the original receipt.\n */\nexport const closureThreadProducerSource = (path, expected) => {\n\tassert.match(expected, /^[a-f0-9]{64}$/u);\n\treturn sourceAtProducer(closureThreadProducer, path, expected);\n};\nconst priorSource = closureThreadProducerSource;\n",
+          "previous": "const priorSource = async path => beforePhpCiRegression(path, await readFile(path, \"utf8\"));\n",
+          "start": 1214
+        },
+        {
+          "current": "\tassert.equal(record.fixed.generatorSha256, sha256(priorSource(\n\t\t\"src/backends/c/native-callables.mjs\", record.fixed.generatorSha256\n\t)));\n",
+          "previous": "\tassert.equal(record.fixed.generatorSha256, sha256(await priorSource(\"src/backends/c/native-callables.mjs\")));\n",
+          "start": 6027
+        },
+        {
+          "current": "\tfor(const path of sources) assert.equal(sha256(priorSource(path, record.sourceHashes[path])), record.sourceHashes[path], path);\n",
+          "previous": "\tfor(const path of sources) assert.equal(sha256(await priorSource(path)), record.sourceHashes[path], path);\n",
+          "start": 9033
+        },
+        {
+          "current": "\t\trestored[update.path] = reverseClosureThreadUpdate(priorSource(update.path, update.currentSha256), update);\n",
+          "previous": "\t\trestored[update.path] = reverseClosureThreadUpdate(await priorSource(update.path), update);\n",
+          "start": 9296
+        },
+        {
+          "current": "\tconst contracts = typeSurfaceContractsAtProducer(closureThreadProducer);\n\tconst inventoryPath = \"docs/type-surface.v1.json\";\n\tconst old = JSON.parse(restored[inventoryPath]);\n\tconst document = JSON.parse(priorSource(inventoryPath, record.sourceHashes[inventoryPath]));\n",
+          "previous": "\tconst contracts = await readTypeSurface(), old = JSON.parse(restored[\"docs/type-surface.v1.json\"]);\n\tconst document = JSON.parse(await priorSource(\"docs/type-surface.v1.json\"));\n",
+          "start": 9739
+        }
+      ],
+      "path": "tests/helpers/closure-thread-evidence.mjs",
+      "previousSha256": "0da4eea6baf495c136c5847a3b963c534852f80e7b5cc07b8645d10d07306282"
+    },
+    {
+      "currentSha256": "0a25177d465ca652f5c6fbac101010e46783093d9a5fc76a97a8d127ffe0e2de",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { readTypeSurface } from \"../../src/adoption/type-surface.mjs\";\n",
+          "start": 255
+        },
+        {
+          "current": "import { sourceAtProducer, typeSurfaceContractsAtProducer } from \"./producer-source.mjs\";\n",
+          "previous": "import { beforePythonRecursiveCallables } from \"./python-recursive-callable-source-history.mjs\";\n",
+          "start": 857
+        },
+        {
+          "current": "export const phpCiProducer = \"53ccb05a9ad93cebf37c17a5b4ea2415275ee287\";\n\n/**\n * Read an original PHP repair source and require its recorded identity.\n *\n * @param path - Repository-relative source path.\n * @param expected - Required SHA-256 from the original receipt.\n */\nexport const phpCiProducerSource = (path, expected) => {\n\tassert.match(expected, /^[a-f0-9]{64}$/u);\n\treturn sourceAtProducer(phpCiProducer, path, expected);\n};\nconst priorSource = phpCiProducerSource;\n",
+          "previous": "const priorSource = async path => beforePythonRecursiveCallables(path, await readFile(path, \"utf8\"));\n",
+          "start": 948
+        },
+        {
+          "current": "\t\t, { probeSource: priorSource(\"tests/fixtures/structured-callable-consumers/php-faults.php\"\n\t\t\t, record.php.report.reports[0].faults.sourceSha256) });\n",
+          "previous": "\t\t, { probeSource: await readFile(\"tests/fixtures/structured-callable-consumers/php-faults.php\", \"utf8\") });\n",
+          "start": 4866
+        },
+        {
+          "current": "\tconst packagingSource = priorSource(packagePath, report.sourceHashes[packagePath]);\n\tconst hostPath = \"src/backends/php/php-wasm-copied-host.mjs\";\n\tconst hostSource = priorSource(hostPath, report.sourceHashes[hostPath]);\n",
+          "previous": "\tconst packagingSource = await priorSource(packagePath);\n\tconst hostPath = \"src/backends/php/php-wasm-copied-host.mjs\", hostSource = await priorSource(hostPath);\n",
+          "start": 5868
+        },
+        {
+          "current": "\tconst comparisonPath = \"tests/helpers/php-wasm-legacy-comparison.mjs\";\n\tassert.equal(report.sourceHashes[comparisonPath]\n\t\t, sha256(priorSource(comparisonPath, report.sourceHashes[comparisonPath])));\n",
+          "previous": "\tassert.equal(report.sourceHashes[\"tests/helpers/php-wasm-legacy-comparison.mjs\"], sha256(await priorSource(\"tests/helpers/php-wasm-legacy-comparison.mjs\")));\n",
+          "start": 6356
+        },
+        {
+          "current": "\tfor(const path of paths) assert.equal(sha256(priorSource(path, record.sourceHashes[path])), record.sourceHashes[path], path);\n",
+          "previous": "\tfor(const path of paths) assert.equal(sha256(await priorSource(path)), record.sourceHashes[path], path);\n",
+          "start": 7528
+        },
+        {
+          "current": "\t\trestored[update.path] = reversePhpCiUpdate(priorSource(update.path, update.currentSha256), update);\n",
+          "previous": "\t\trestored[update.path] = reversePhpCiUpdate(await priorSource(update.path), update);\n",
+          "start": 7864
+        },
+        {
+          "current": "\tconst contracts = typeSurfaceContractsAtProducer(phpCiProducer);\n\tconst inventoryPath = \"docs/type-surface.v1.json\";\n\tconst document = JSON.parse(priorSource(inventoryPath, record.sourceHashes[inventoryPath]));\n\tconst old = JSON.parse(restored[inventoryPath]);\n",
+          "previous": "\tconst { document: current, ...contracts } = await readTypeSurface(); void current;\n\tconst document = JSON.parse(await priorSource(\"docs/type-surface.v1.json\")), old = JSON.parse(restored[\"docs/type-surface.v1.json\"]);\n",
+          "start": 8077
+        }
+      ],
+      "path": "tests/helpers/php-ci-regression-evidence.mjs",
+      "previousSha256": "1ec2bb17b430d9001252a56c3fc712ea37c2a76ec0edb4d8ba71a2056f6581be"
+    },
+    {
+      "currentSha256": "56f32ba86917df95c664f1d508c640e98619a888e4a3a14af99a24a54202e543",
+      "edits": [
+        {
+          "current": "import \"./helpers/php-closure-producer-replay-tests.mjs\";\n",
+          "previous": "",
+          "start": 218
+        },
+        {
+          "current": "import { assertPhpCiExecution, assertPhpCiIntegration, phpCiExecutionPath, phpCiProducerSource } from \"./helpers/php-ci-regression-evidence.mjs\";\n",
+          "previous": "import { assertPhpCiExecution, assertPhpCiIntegration, phpCiExecutionPath } from \"./helpers/php-ci-regression-evidence.mjs\";\n",
+          "start": 326
+        },
+        {
+          "current": "",
+          "previous": "import { beforePythonRecursiveCallables } from \"./helpers/python-recursive-callable-source-history.mjs\";\n",
+          "start": 598
+        },
+        {
+          "current": "\t\tconst source = phpCiProducerSource(update.path, update.currentSha256);\n",
+          "previous": "\t\tconst source = beforePythonRecursiveCallables(update.path, await readFile(update.path, \"utf8\"));\n",
+          "start": 2327
+        },
+        {
+          "current": "\t\tassert.equal(sha256(beforePhpCiRegression(update.path, source, update.previousSha256)), update.previousSha256);\n",
+          "previous": "\t\tassert.equal(sha256(beforePhpCiRegression(update.path, source)), update.previousSha256);\n",
+          "start": 2483
+        },
+        {
+          "current": "\t\tassert.equal(beforePhpCiRegression(update.path, unrelated, update.previousSha256), unrelated);\n",
+          "previous": "\t\tassert.equal(beforePhpCiRegression(update.path, unrelated), unrelated);\n",
+          "start": 2739
+        }
+      ],
+      "path": "tests/php-ci-regression-evidence.test.mjs",
+      "previousSha256": "fdd26b81ab0b45ba6fabfc36a19518a7409e5462fb9a66a25918a23f288bbc24"
+    }
+  ]
+}

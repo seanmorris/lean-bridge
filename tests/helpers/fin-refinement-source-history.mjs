@@ -86,6 +86,7 @@ import { beforeCoreAuthorPublicationRepairSource, coreAuthorPublicationRepairNor
 import { beforePhpWasmEntryBuildInputSupplementSource, phpWasmEntryBuildInputSupplementNormalizationPaths } from "./php-wasm-entry-build-input-supplement-source-history.mjs";
 import { beforeCoreAggregateSparseCheckoutSource, coreAggregateSparseCheckoutNormalizationPaths } from "./core-aggregate-sparse-checkout-source-history.mjs";
 import { beforeOwnedNpmCompleteAcceptanceSource, ownedNpmCompleteAcceptanceNormalizationPaths } from "./owned-npm-complete-acceptance-source-history.mjs";
+import { beforePhpClosureProducerReplaySource, phpClosureProducerReplayNormalizationPaths } from "./php-closure-producer-replay-source-history.mjs";
 import { beforeCoreEvidenceMemoryRepairSource, coreEvidenceMemoryRepairNormalizationPaths } from "./core-evidence-memory-repair-source-history.mjs";
 import { beforeValueIndexPromotionMilestoneRepairSource, valueIndexPromotionMilestoneRepairNormalizationPaths } from "./value-index-promotion-milestone-repair-source-history.mjs";
 import { beforeCoreMilestoneReplayRepairSource, coreMilestoneReplayRepairNormalizationPaths } from "./core-milestone-replay-repair-source-history.mjs";
@@ -2179,7 +2180,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...ownedNpmCompleteAcceptanceNormalizationPaths
+	...phpClosureProducerReplayNormalizationPaths
+	, ...ownedNpmCompleteAcceptanceNormalizationPaths
 	, ...coreAggregateSparseCheckoutNormalizationPaths
 	, ...phpWasmEntryBuildInputSupplementNormalizationPaths
 	, ...coreAuthorPublicationRepairNormalizationPaths
@@ -3101,7 +3103,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeOwnedNpmCompleteAcceptanceSource(path, text, expected);
+	let stage = beforePhpClosureProducerReplaySource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeOwnedNpmCompleteAcceptanceSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;
