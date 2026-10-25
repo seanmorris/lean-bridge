@@ -181,6 +181,11 @@ jobs:
           test -s build/owned-javascript-wasm/installed.log
           rg '^# fail 0$' build/owned-javascript-wasm/installed.log
           rg '^# skipped 0$' build/owned-javascript-wasm/installed.log
+          test -s build/owned-subtype-javascript-packaging/retained-packages.json
+          node scripts/check-owned-subtype-javascript-ci.mjs \
+            --report build/owned-subtype-javascript-packaging/report.json \
+            > build/owned-subtype-javascript-packaging/verification.json
+          test -s build/owned-subtype-javascript-packaging/verification.json
           test -s build/owned-subtype-javascript-packaging/report.json
           checked_record_log=build/owned-javascript-wasm/checked-record-acceptance.log
           checked_record_status=0
@@ -292,7 +297,7 @@ jobs:
             build/owned-javascript-wasm/runtime.log
             build/owned-javascript-wasm/execution.log
             build/owned-javascript-wasm/installed.log
-            build/owned-subtype-javascript-packaging/report.json
+            build/owned-subtype-javascript-packaging/
             build/owned-checked-record-javascript-packaging/
             build/owned-javascript-wasm/transfers.log
             build/owned-javascript-transfers/ordinary.json

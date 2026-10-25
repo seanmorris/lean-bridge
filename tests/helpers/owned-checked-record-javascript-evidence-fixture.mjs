@@ -27,11 +27,15 @@ const archive = files => createDeterministicTarGzFromFiles({
  *
  * @param root - Synthetic packaging directory.
  * @param route - One ordinary/reviewed full/result-only route.
+ * @param options - Optional inert compiler identities for another owned fixture.
+ * @param options.bindingIr - Exact synthetic owned Binding IR.
+ * @param options.component - Synthetic Lean package coordinate.
+ * @param options.componentName - Synthetic npm component name.
  */
-export const writeSyntheticOwnedCheckedRecordJavaScriptRoute = async (root, route) => {
+export const writeSyntheticOwnedCheckedRecordJavaScriptRoute = async (root, route, options = {}) => {
 	const resultOnly = route.endsWith("result-only");
 	const reviewed = route.startsWith("reviewed");
-	const component = { id: "owned-checked-records@1.0.0"
+	const component = options.component ?? { id: "owned-checked-records@1.0.0"
 		, name: "owned-checked-records", version: "1.0.0" };
 	const sourceIdentity = { sourceTreeSha256: digest(route + "/source")
 		, extractorSha256: digest(route + "/extractor")
@@ -42,7 +46,7 @@ export const writeSyntheticOwnedCheckedRecordJavaScriptRoute = async (root, rout
 		, exportConfigurationSha256: sha256(canonicalJson({ schemaVersion: 1 }))
 		, sourceNoticesSha256: digest(route + "/notices")
 		, ...(reviewed ? { reviewedBindingIr: { synthetic: true } } : {}) };
-	const bindingIr = ownedCheckedRecordJavaScriptReviewedIr({ resultOnly });
+	const bindingIr = options.bindingIr ?? ownedCheckedRecordJavaScriptReviewedIr({ resultOnly });
 	const profile = { id: "javascript-wasm-owned-v1"
 		, bindingIrSha256: sha256(canonicalizeJsonValue(bindingIr))
 		, runtimeIdentity: digest(route + "/runtime") };
@@ -56,7 +60,7 @@ export const writeSyntheticOwnedCheckedRecordJavaScriptRoute = async (root, rout
 		, modelSha256: sha256(canonicalJson(model))
 		, library: "lib/component.so.wasm", wasmLibrary: wasm };
 	const componentIdentity = sha256(canonicalJson(compiler));
-	const runtimeName = "@lean-bridge/runtime", componentName = "@example/owned-records";
+	const runtimeName = "@lean-bridge/runtime", componentName = options.componentName ?? "@example/owned-records";
 	const runtimeBytes = archive({
 		"package.json": canonicalJson({ name: runtimeName, version: "1.0.0"
 			, leanBridge: { runtimeIdentity: profile.runtimeIdentity

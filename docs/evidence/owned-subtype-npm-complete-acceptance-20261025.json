@@ -1,0 +1,157 @@
+{
+  "contract": {
+    "authorRoutes": [
+      "ordinary",
+      "reviewed"
+    ],
+    "browserCellsPerRoute": 12,
+    "browsers": [
+      "chromium",
+      "firefox",
+      "webkit"
+    ],
+    "checksPerProbe": 18,
+    "independentBuildsPerRoute": 2,
+    "legacyBrowserCellsPerRoute": 9,
+    "legacyScope": "Development/StrictMode only. Duplicate cells are rejected; historical missing archive bytes are not synthesized.",
+    "reruns": 2,
+    "retainedFiles": "Exact receipt, receipt digest sidecar and two receipt-named npm archives; consumer handoff derives from the retained copies.",
+    "variants": {
+      "production": [
+        "page",
+        "react",
+        "worker"
+      ],
+      "strict": [
+        "react"
+      ]
+    }
+  },
+  "kind": "owned-subtype-npm-complete-acceptance-source-v1",
+  "pending": [
+    "Authenticate a corrected hosted npm producer with both author routes and twelve browser cells per route.",
+    "Extend the immutable owned-Subtype JavaScript archive/replay and promotion path to retain original GitHub API, log, package and source evidence.",
+    "Complete the original #1691/#1695 semantic, support/docs and recurring/final CI requirements."
+  ],
+  "schemaVersion": 1,
+  "scope": "Complete source-free owned-Subtype npm package retention, independent author rebuilds and production/StrictMode browser acceptance; qualify checker refusals without claiming a new installed result.",
+  "sourceBaseCommit": "34f6bde6410c0c2b95c59fdf0db855c5a1e0085a",
+  "sources": [
+    {
+      "bytes": 352427,
+      "path": ".github/workflows/consumer-matrix.yml",
+      "sha256": "7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7"
+    },
+    {
+      "bytes": 13152,
+      "path": ".github/workflows/owned-checked-record-npm-browser.yml",
+      "sha256": "f72b7965915b2ce9c5d8d3de53cd113acf205bc356c9547e590dfa428701c2a5"
+    },
+    {
+      "bytes": 263908,
+      "path": "docs/contributing/testing.md",
+      "sha256": "4f9cee69df225f2cc40c666e68a72400b0f81b63e9f2494655ba01f8d98122fc"
+    },
+    {
+      "bytes": 102579190,
+      "path": "docs/type-surface.v1.json",
+      "sha256": "150a717310e9fbdd2435117582c909e655467ac6a551aa7dae8fb52d001322c4"
+    },
+    {
+      "bytes": 668,
+      "path": "scripts/check-owned-subtype-javascript-ci.mjs",
+      "sha256": "3dc9a8f6b17f251f9e66e4810448f50936b358015881309d3f4396e2fc66590f"
+    },
+    {
+      "bytes": 7019,
+      "path": "tests/helpers/owned-checked-record-javascript-evidence-fixture.mjs",
+      "sha256": "fc2c3ea6659e1ece262c388e3e5981913e429a3028ccfcad79aeace8d041180a"
+    },
+    {
+      "bytes": 7224,
+      "path": "tests/helpers/owned-checked-record-javascript-evidence.mjs",
+      "sha256": "b01a863afcf730c2e4c72b5fa72c1c1a3d73d721d2b46ffc2146d3d6776e159e"
+    },
+    {
+      "bytes": 7549,
+      "path": "tests/helpers/owned-javascript-package-evidence.mjs",
+      "sha256": "01952e4b5d786c8bd1a96866b9e41066c4eb096bad278c01b764c27bb21607ee"
+    },
+    {
+      "bytes": 13548,
+      "path": "tests/helpers/owned-javascript-wasm-ci.mjs",
+      "sha256": "bca87d571926e9df00fb48875cf3f0f05af02f69870341c1e082579b01f1420f"
+    },
+    {
+      "bytes": 5372,
+      "path": "tests/helpers/owned-subtype-javascript-evidence.mjs",
+      "sha256": "5bfbcb41ed8f7dbae8885c6d8aa2e8eef48a0d9de814133a862a02358d843755"
+    },
+    {
+      "bytes": 14064,
+      "path": "tests/helpers/owned-subtype-promotion.mjs",
+      "sha256": "b427a70c42d2784034ecb6a449d432c4cb1d62cec64a22f52f2c9e033d5da0f5"
+    },
+    {
+      "bytes": 9926,
+      "path": "tests/owned-javascript-wasm-ci.test.mjs",
+      "sha256": "6ff593d13870b034ebfedc41c51bfc8abb84cf69d5d5be24386b872a7e42c59d"
+    },
+    {
+      "bytes": 9645,
+      "path": "tests/owned-subtype-javascript-evidence.test.mjs",
+      "sha256": "036fa4e624f05545b3da12c1edba4c8a2d3241db00ae4ee7ddda0bad1a77f803"
+    },
+    {
+      "bytes": 12096,
+      "path": "tests/owned-subtype-javascript-packaging.test.mjs",
+      "sha256": "a1230c795f734be046035fff2f91c2c8036f84d88c3cfb97acea718ecea0a52b"
+    },
+    {
+      "bytes": 6354,
+      "path": "tests/owned-subtype-retained-packages.test.mjs",
+      "sha256": "f91a1b8d6224500efa8b0753ddb0b94578059028575fe7e78f67881c9889f1b5"
+    }
+  ],
+  "unchanged": [
+    "Lean fixture and compiler/runtime sources",
+    "Every existing ownership assertion and author route",
+    "Original archived reports, package bytes and source histories",
+    "Published support cells and consumer claims"
+  ],
+  "validation": {
+    "eslint": "All eleven changed or added JavaScript source/test/checker files pass scoped ESLint.",
+    "focused": {
+      "command": "node --test --test-concurrency=1 tests/owned-subtype-javascript-evidence.test.mjs tests/helpers/owned-checked-record-javascript-evidence-tests.mjs tests/owned-subtype-retained-packages.test.mjs tests/owned-javascript-wasm-ci.test.mjs",
+      "durationMs": 7692.906118,
+      "failed": 0,
+      "passed": 23,
+      "runtimeExecutions": 0,
+      "skipped": 0,
+      "tests": 23
+    },
+    "installedRuntimeExecutions": 0,
+    "inventory": {
+      "archivedReferences": 352995,
+      "checkedBytes": 24710097,
+      "diskFiles": 2,
+      "gitFiles": 2553,
+      "head": "34f6bde6410c0c2b95c59fdf0db855c5a1e0085a",
+      "inventory": {
+        "bytes": 102579190,
+        "sha256": "150a717310e9fbdd2435117582c909e655467ac6a551aa7dae8fb52d001322c4"
+      },
+      "liveReferences": 16055,
+      "previous": {
+        "bytes": 102579190,
+        "sha256": "6840fa1c4c02d8352bb872c1b0ea5ba0db3f7f49dc2561311b087749391151b6"
+      },
+      "refreshedPins": 103,
+      "scope": "All live non-archived source pins; immutable archive replay is a separate gate",
+      "stalePins": 0,
+      "uniqueObjects": 2524,
+      "uniquePaths": 2555
+    },
+    "strictTypecheck": "The repository's adopted strict checked-JavaScript subset passes unchanged."
+  }
+}

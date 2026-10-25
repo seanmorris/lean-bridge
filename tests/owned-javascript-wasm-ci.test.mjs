@@ -10,7 +10,7 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import { runInNewContext } from "node:vm";
-import { assertOwnedJavaScriptWasmCi, ownedJavaScriptWasmCiLogs, ownedJavaScriptWasmCiTests, ownedJavaScriptNpmCiTests, ownedJavaScriptInstalledReports, ownedJavaScriptCoexistenceCiTests, ownedAnalysisCiTests, ownedJavaScriptEngineCiTests, ownedJavaScriptPublicationCiTests, ownedCheckedRecordJavaScriptAcceptanceLog } from "./helpers/owned-javascript-wasm-ci.mjs";
+import { assertOwnedJavaScriptWasmCi, ownedJavaScriptWasmCiLogs, ownedJavaScriptWasmCiTests, ownedJavaScriptNpmCiTests, ownedJavaScriptCoexistenceCiTests, ownedAnalysisCiTests, ownedJavaScriptEngineCiTests, ownedJavaScriptPublicationCiTests, ownedCheckedRecordJavaScriptAcceptanceLog } from "./helpers/owned-javascript-wasm-ci.mjs";
 
 test("owned checked-record npm runtime defaults follow the checkout and honor overrides", async () => {
 	const source = await readFile("tests/owned-checked-record-javascript-packaging.test.mjs", "utf8");
@@ -93,7 +93,9 @@ test("owned JavaScript CI rejects disabled execution, missing observations and s
 		, ...ownedJavaScriptPublicationCiTests.map(path => [path, ""])
 		, ["tests/owned-checked-record-javascript-packaging.test.mjs", ""]
 		, ...ownedJavaScriptWasmCiLogs.map(path => ["            " + path + "\n", ""])
-		, ["            " + ownedJavaScriptInstalledReports[0] + "\n", ""]
+		, ["            build/owned-subtype-javascript-packaging/\n", ""]
+		, ["          test -s build/owned-subtype-javascript-packaging/retained-packages.json\n", ""]
+		, ["          node scripts/check-owned-subtype-javascript-ci.mjs \\\n", ""]
 		, ["            build/owned-checked-record-javascript-packaging/\n", ""]
 		, ['tee "$checked_record_log" || checked_record_status=$?'
 			, 'tee "$checked_record_log" || true']

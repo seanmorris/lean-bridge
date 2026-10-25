@@ -17,21 +17,36 @@ import { processBuildRunner } from "../src/build/process-runner.mjs";
 import { checkOwnedJavaScriptBrowsers } from "./helpers/owned-javascript-npm-browser.mjs";
 import { ownedSubtypePackageReviewedIr } from "./helpers/owned-aggregate-fixture.mjs";
 import { lakeInputState, saveLakeFile } from "./helpers/lake-workspace.mjs";
+import {
+	clearOwnedSubtypeRetainedPackages, retainOwnedSubtypeRoute
+	, writeOwnedSubtypeRetainedPackages
+} from "./helpers/owned-subtype-retained-packages.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_OWNED_SUBTYPE_JS_TEST === "1";
 const target = resolve(process.env.LEAN_BRIDGE_JS_TARGET_RUNTIME
 	?? "build/lean-runtime/f3b06c705e6c85f5314019d5d3baab0fec5b580c-743765bf566f43ec2f7b4eb84a85686880b3797efe83bf244d6fc7281e4f85a3-browser");
 const prepared = resolve(process.env.LEAN_BRIDGE_OWNED_JS_WASM_PREPARED_ROOT
 	?? "build/lean-link-spike", "lazy");
-const reports = [];
+const output = resolve("build/owned-subtype-javascript-packaging/report.json");
+const reports = [], retainedEntries = [];
+
+test.before(async () => {
+	if(!enabled) return;
+	await clearOwnedSubtypeRetainedPackages(output);
+	await rm(output, { force: true });
+	await rm(resolve("build/owned-subtype-javascript-packaging/verification.json"), { force: true });
+});
 
 test.after(async () => {
 	if(enabled && reports.length === 2)
+	{
+		await writeOwnedSubtypeRetainedPackages(output, retainedEntries);
 		await saveLakeFile("build/owned-subtype-javascript-packaging", "report.json"
 			, canonicalJson({
-				schemaVersion: 1
+				schemaVersion: 2
 				, profile: "installed-owned-subtype-javascript"
 				, reports: reports.toSorted((left, right) => Number(left.reviewed) - Number(right.reviewed)) }));
+	}
 });
 
 const probe = name => `import api from ${JSON.stringify(name)};
@@ -82,27 +97,40 @@ for(const reviewed of [false, true]) test(`installed ${reviewed ? "reviewed" : "
 }, async t => {
 	const scratch = await mkdtemp(join(tmpdir(), "lean-owned-subtype-javascript-"));
 	t.after(() => rm(scratch, { recursive: true, force: true }));
-	const project = join(scratch, "author"), componentRoot = join(scratch, "component");
-	await cp(resolve("tests/fixtures/onboarding/owned-subtypes"), project, { recursive: true });
-	if(reviewed)
+	const builds = [];
+	for(const attempt of [0, 1])
 	{
-		await saveLakeFile(project, "lean-bridge.exports.json", canonicalJson({
-			schemaVersion: 1, modules: ["Owned"]
-			, targets: { npm: { name: "@lean-bridge/owned-subtypes", version: "1.0.0" } }
-		}));
-		await saveLakeFile(project, "reviewed.binding-ir.json", canonicalJson(ownedSubtypePackageReviewedIr()));
+		const authorRoot = `author-${attempt}`, author = join(scratch, authorRoot);
+		const project = join(author, "project"), componentRoot = join(author, "component");
+		await cp(resolve("tests/fixtures/onboarding/owned-subtypes"), project, { recursive: true });
+		if(reviewed)
+		{
+			await saveLakeFile(project, "lean-bridge.exports.json", canonicalJson({
+				schemaVersion: 1, modules: ["Owned"]
+				, targets: { npm: { name: "@lean-bridge/owned-subtypes", version: "1.0.0" } }
+			}));
+			await saveLakeFile(project, "reviewed.binding-ir.json", canonicalJson(ownedSubtypePackageReviewedIr()));
+		}
+		const before = await lakeInputState(project);
+		const built = await buildOwnedJavaScriptWasmComponent({
+			projectRoot: project, outputRoot: componentRoot
+			, leanPrefix: resolve(process.env.LEAN_BRIDGE_LEAN_PREFIX
+				?? ".toolchains/elan/toolchains/leanprover--lean4---v4.32.2")
+			, leanRuntimeRoot: target
+			, emsdkRoot: resolve(process.env.LEAN_WASM_EMSDK ?? ".toolchains/emsdk")
+		});
+		assert.deepEqual(await lakeInputState(project), before, "builds must not modify authored inputs");
+		const verified = await readVerifiedOwnedJavaScriptWasmComponent(componentRoot);
+		assert.deepEqual(verified.model, built.model);
+		const packages = await buildOwnedJavaScriptNpmPackages({
+			componentRoot, runtimeRoot: prepared, outputRoot: join(author, "packages")
+		});
+		builds.push({ author, authorRoot, verified, packages });
 	}
-	const before = await lakeInputState(project);
-	const built = await buildOwnedJavaScriptWasmComponent({
-		projectRoot: project, outputRoot: componentRoot
-		, leanPrefix: resolve(process.env.LEAN_BRIDGE_LEAN_PREFIX
-			?? ".toolchains/elan/toolchains/leanprover--lean4---v4.32.2")
-		, leanRuntimeRoot: target
-		, emsdkRoot: resolve(process.env.LEAN_WASM_EMSDK ?? ".toolchains/emsdk")
-	});
-	assert.deepEqual(await lakeInputState(project), before, "builds must not modify authored inputs");
-	const verified = await readVerifiedOwnedJavaScriptWasmComponent(componentRoot);
-	assert.deepEqual(verified.model, built.model);
+	const [{ verified, packages: first }, { verified: repeatedVerified, packages: repeated }] = builds;
+	assert.deepEqual(repeatedVerified.model, verified.model, "Independent author roots must compile the same model");
+	assert.deepEqual(repeatedVerified.receipt.wasmLibrary, verified.receipt.wasmLibrary
+		, "Independent author roots must compile the same Wasm");
 	const echo = verified.model.bindingIr.declarations.find(item => item.name === "echoRecord");
 	const transfer = verified.model.bindingIr.declarations.find(
 		item => item.name === "transferRecord"
@@ -113,14 +141,6 @@ for(const reviewed of [false, true]) test(`installed ${reviewed ? "reviewed" : "
 	assert.equal(transfer.source.extensions["lean-lang.org/refinements"]
 		.parameters[0].fields[4].refinement.fields[0]
 		.refinement.constructor, "Owned.checkedCount");
-	const first = await buildOwnedJavaScriptNpmPackages({
-		componentRoot, runtimeRoot: prepared, outputRoot: join(scratch, "packages")
-	});
-	const repeated = await buildOwnedJavaScriptNpmPackages({
-		componentRoot
-		, runtimeRoot: prepared
-		, outputRoot: join(scratch, "packages-repeated")
-	});
 	assert.deepEqual(await readFile(first.runtimeArchive), await readFile(repeated.runtimeArchive));
 	assert.deepEqual(await readFile(first.componentArchive), await readFile(repeated.componentArchive));
 	const receipt = await readVerifiedPackageSetReceipt({
@@ -129,6 +149,13 @@ for(const reviewed of [false, true]) test(`installed ${reviewed ? "reviewed" : "
 	assert.deepEqual(receipt.result.profiles, ["javascript-wasm-owned-v1"]);
 	const archives = { runtime: sha256(await readFile(first.runtimeArchive))
 		, component: sha256(await readFile(first.componentArchive)) };
+	const independentBuilds = builds.map(build => ({
+		authorRoot: build.authorRoot, componentIdentity: build.verified.identity
+		, bindingIrSha256: build.verified.model.bindingIrSha256
+		, sourceIdentity: build.verified.receipt.sourceIdentity
+		, wasm: build.verified.receipt.wasmLibrary, archives
+		, sourceUnchanged: true, removedBeforeInstall: true
+	}));
 	let consumer = join(scratch, "consumer");
 	const handoff = join(consumer, "handoff");
 	await saveLakeFile(consumer, "package.json", canonicalJson({
@@ -137,10 +164,13 @@ for(const reviewed of [false, true]) test(`installed ${reviewed ? "reviewed" : "
 		, private: true
 		, type: "module"
 	}));
-	await saveLakeFile(handoff, "runtime.tgz", await readFile(first.runtimeArchive));
-	await saveLakeFile(handoff, "component.tgz", await readFile(first.componentArchive));
-	await rm(project, { recursive: true }); await rm(componentRoot, { recursive: true });
-	await rm(first.output, { recursive: true }); await rm(repeated.output, { recursive: true });
+	const { receipt: handoffReceipt, entry } = await retainOwnedSubtypeRoute({
+		output, route: reviewed ? "reviewed" : "ordinary"
+		, source: first.output, handoff
+	});
+	assert.deepEqual(handoffReceipt, receipt.receipt);
+	retainedEntries.push(entry);
+	for(const build of builds) await rm(build.author, { recursive: true });
 	const run = (command, args) => processBuildRunner.capture({
 		command, args, cwd: consumer, timeoutMs: 180000
 	}).catch(error => {
@@ -152,8 +182,8 @@ for(const reviewed of [false, true]) test(`installed ${reviewed ? "reviewed" : "
 		, "--ignore-scripts"
 		, "--no-audit"
 		, "--no-fund"
-		, "./handoff/runtime.tgz"
-		, "./handoff/component.tgz"]);
+		, ...handoffReceipt.packages.flatMap(pkg => pkg.artifacts.map(
+			artifact => join(handoff, artifact.path)))]);
 	await rm(handoff, { recursive: true });
 	await saveLakeFile(consumer, "probe.mjs", probe(first.coordinate.name));
 	await saveLakeFile(consumer, "call.mjs", `import {run,close} from "./probe.mjs";
@@ -191,11 +221,11 @@ ticket.dispose(); api.close(); void count;
 			, name: first.coordinate.name
 			, run
 			, probeSource: probe(first.coordinate.name)
-			, expected: observed }) : null;
+			, expected: observed, productionReact: true }) : null;
 	reports.push({ reviewed, componentIdentity: verified.identity
 		, bindingIrSha256: verified.model.bindingIrSha256
 		, sourceIdentity: verified.receipt.sourceIdentity
-		, packageSetReceipt: receipt.receipt, archives, observed
+		, packageSetReceipt: receipt.receipt, archives, observed, independentBuilds
 		, installedNode: true
 		, installedTypeScript: true
 		, sourceRemovedBeforeInstall: true

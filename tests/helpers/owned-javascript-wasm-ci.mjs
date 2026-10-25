@@ -125,6 +125,9 @@ export const assertOwnedJavaScriptWasmCi = workflow => {
 		, "test -s " + ownedJavaScriptWasmCiLogs[2]
 		, "rg '^# fail 0$' " + ownedJavaScriptWasmCiLogs[2]
 		, "rg '^# skipped 0$' " + ownedJavaScriptWasmCiLogs[2]
+		, "test -s build/owned-subtype-javascript-packaging/retained-packages.json"
+		, "node scripts/check-owned-subtype-javascript-ci.mjs --report build/owned-subtype-javascript-packaging/report.json > build/owned-subtype-javascript-packaging/verification.json"
+		, "test -s build/owned-subtype-javascript-packaging/verification.json"
 		, "test -s " + ownedJavaScriptInstalledReports[0]
 		, "checked_record_log=build/owned-javascript-wasm/checked-record-acceptance.log"
 		, "checked_record_status=0"
@@ -189,8 +192,7 @@ export const assertOwnedJavaScriptWasmCi = workflow => {
 	assert.match(upload, /^ {8}uses: actions\/upload-artifact@v7$/mu);
 	assert.match(upload, /^ {10}if-no-files-found: error$/mu);
 	for(const path of ownedJavaScriptWasmCiLogs) assert.ok(upload.includes("            " + path + "\n"));
-	assert.ok(upload.includes("            "
-		+ ownedJavaScriptInstalledReports[0] + "\n"));
+	assert.ok(upload.includes("            build/owned-subtype-javascript-packaging/\n"));
 	assert.ok(upload.includes("            build/owned-checked-record-javascript-packaging/\n"));
 	const summary = workflow.split("  support-summary:\n")[1]; assert.ok(summary);
 	assert.ok(summary.split("    runs-on:")[0].includes("      - owned-javascript-wasm\n"));

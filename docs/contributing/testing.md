@@ -146,6 +146,30 @@ inside its retained npm archive. It binds the compiled IR, component receipt,
 package coordinates, shared runtime and browser Wasm assets to that package set.
 It reads archive contents without executing them.
 
+The same job also retains the owned-Subtype npm packages under
+`build/owned-subtype-javascript-packaging/`. Each ordinary/reviewed author route
+builds in two independent directories, compares the compiled model, Wasm and
+package archives, then removes both author trees before offline installation.
+The consumer installs the exact receipt-named files retained in
+`evidence/<route>/handoff/` and runs after relocation.
+
+The version 2 Subtype report requires twelve browser executions per author
+route: production pages, React and workers, plus development React StrictMode,
+in Chromium, Firefox and WebKit. Each execution runs the ownership probe and
+repeats it twice. The checker rejects duplicated or missing cells, wrong Wasm
+assets, changed packages and incomplete independent builds:
+
+```sh
+node scripts/check-owned-subtype-javascript-ci.mjs \
+  --report build/owned-subtype-javascript-packaging/report.json
+```
+
+Both the scoped workflow and Consumer Matrix verify this report and upload
+the full package directory. The older nine-cell Subtype reports cover the
+development/StrictMode bundle only; their archive hashes do not supply missing
+package bytes. New hosted acceptance and authenticated archival replay are
+required before promoting the expanded coverage.
+
 Once GitHub has registered the workflow, run it against a pushed branch:
 
 ```sh

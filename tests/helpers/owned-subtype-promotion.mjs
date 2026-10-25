@@ -7,6 +7,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { verifyOwnedJavaScriptBrowserEvidence } from "./owned-javascript-package-evidence.mjs";
 import {
 	checkOwnedSubtypeHostedEvidence
 } from "./owned-subtype-hosted-evidence.mjs";
@@ -95,17 +96,13 @@ export const ownedSubtypeJavaScriptPromotionReference = async () => {
 			checks: 18, first: true, retainedRejected: true, second: true
 			, serial: "41", transferRejected: true, transferred: true
 		});
-		assert.equal(report.browser.externalNetworkBlocked, true);
-		assert.equal(report.browser.installedSourcesRemoved, true);
-		assert.equal(report.browser.executions.length, 9);
-		for(const execution of report.browser.executions)
-		{
-			assert.ok(["chromium", "firefox", "webkit"].includes(
-				execution.engine));
-			assert.ok(["page", "react", "worker"].includes(execution.profile));
-			assert.equal(execution.checks, 18);
-			assert.equal(execution.reruns, 2);
-		}
+		// The historical report has nine development/StrictMode cells. It
+		// cannot establish production coverage or retain missing package bytes.
+		const assets = report.browser.executions[0]?.assets;
+		assert.ok(Array.isArray(assets) && assets.includes(report.wasm.sha256));
+		verifyOwnedJavaScriptBrowserEvidence(report.browser, {
+			checks: 18, assets, version: 1
+		});
 		const route = report.reviewed ? "reviewed" : "ordinary";
 		for(const pkg of report.packageSetReceipt.packages)
 			for(const artifact of pkg.artifacts)

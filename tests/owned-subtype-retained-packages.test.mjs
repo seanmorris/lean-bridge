@@ -128,6 +128,7 @@ test("owned Subtype workflows upload retained package directories", async () => 
 	}
 	for(const path of [
 		"tests/owned-subtype-native-packaging.test.mjs"
+		, "tests/owned-subtype-javascript-packaging.test.mjs"
 		, "tests/owned-subtype-perl-packaging.test.mjs"
 		, "tests/owned-subtype-language-packaging.test.mjs"
 		, "tests/owned-subtype-remaining-packaging.test.mjs"
@@ -136,5 +137,13 @@ test("owned Subtype workflows upload retained package directories", async () => 
 		assert.match(source, /await retainOwnedSubtypeRoute\(\{/u, path);
 		assert.match(source, /await writeOwnedSubtypeRetainedPackages\(/u, path);
 		assert.doesNotMatch(source, /copyPackageSetHandoff\(/u, path);
+	}
+	for(const workflow of ["consumer-matrix", "owned-checked-record-npm-browser"])
+	{
+		const source = await readFile(`.github/workflows/${workflow}.yml`, "utf8");
+		assert.ok(source.includes("test -s build/owned-subtype-javascript-packaging/retained-packages.json"));
+		assert.ok(source.includes("node scripts/check-owned-subtype-javascript-ci.mjs"));
+		assert.ok(source.includes("            build/owned-subtype-javascript-packaging/\n"));
+		assert.ok(!source.includes("            build/owned-subtype-javascript-packaging/report.json\n"));
 	}
 });
