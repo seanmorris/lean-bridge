@@ -1,0 +1,135 @@
+{
+  "archive": {
+    "bytes": 6087819,
+    "path": "docs/evidence/php-wasm-entry-hosted-20261025/index.json",
+    "sha256": "581b034fd9dc2c8c59b60b571df2c7861bac8eed576d5d39f4cd3f2adf2f97a8"
+  },
+  "committed": {
+    "bytes": 150263986,
+    "files": 1371,
+    "revision": "f2b19e9f539086ee45d4b918a9579285eb4acb78",
+    "scope": "committed-archive-bytes-only"
+  },
+  "documents": [
+    {
+      "current": {
+        "bytes": 164435,
+        "sha256": "e16ef39494f582377027c07204be4ac60d5f111f43dd2a04d8f2a0b2e2f74ae8"
+      },
+      "path": "docs/php.md",
+      "previous": {
+        "bytes": 164410,
+        "sha256": "2dfdc4e1afc1d87d856453f0aae18761c1b56a6c176c315c95894bca30b577e4"
+      }
+    },
+    {
+      "current": {
+        "bytes": 52829,
+        "sha256": "58db6f137ccde6e003af2c2d08323f97af043622cc640a932a4389dbbbeba353"
+      },
+      "path": "docs/publish/php.md",
+      "previous": {
+        "bytes": 52748,
+        "sha256": "abfe3b5f9567dd722a2a4bea61efb7526f5c23283c43d9de558aed026ffe9fb2"
+      }
+    },
+    {
+      "current": {
+        "bytes": 127231,
+        "sha256": "6f2c73fb18712ee023f122375f20c425d84d2bde39fec106003942d8f0be9f8d"
+      },
+      "path": "docs/lean/existing-package.md",
+      "previous": {
+        "bytes": 126998,
+        "sha256": "c15b6b4fce1001120661ab9d919a279fa16252f45c0f868d3a9cd1afdc106459"
+      }
+    },
+    {
+      "current": {
+        "bytes": 67686,
+        "sha256": "5c557be1a574b299e591210822466c47d58b4bd9ea4db854e2db3b2b20891470"
+      },
+      "path": "docs/reference/types.md",
+      "previous": {
+        "bytes": 67483,
+        "sha256": "5d4f003e25be3be72b0670d24a31845da7fbf8b5cae8f4ec88707b533e255b86"
+      }
+    }
+  ],
+  "evidenceId": "php-wasm-refinement-entry-hosted-probes",
+  "inventory": {
+    "current": {
+      "bytes": 102577221,
+      "sha256": "6ca898b6f172236b1c93549184ba7cfada0924b6bacb43e653925806b038f722"
+    },
+    "previous": {
+      "bytes": 102545935,
+      "sha256": "9474d841eaccdf8b1ecf39ab6f1a22ec0d21d0ffc8e5a0372aa123e9d8632c1d"
+    }
+  },
+  "kind": "php-wasm-entry-probe-publication-v1",
+  "preparedPackageObservationsChanged": false,
+  "publisherCommit": "f2b19e9f539086ee45d4b918a9579285eb4acb78",
+  "replay": {
+    "aggregateArtifacts": 1,
+    "archiverCommit": "2e00c60aa4555377b4f17eb1f5eb2d2a812596c2",
+    "checkerCommit": "f2b19e9f539086ee45d4b918a9579285eb4acb78",
+    "files": 1371,
+    "kind": "php-wasm-entry-hosted-archive-acceptance-v1",
+    "matrix": {
+      "artifacts": 27,
+      "calls": 180,
+      "cells": 30,
+      "controls": 72,
+      "executions": 360,
+      "producerCommit": "a003269808c43a2a3a509a23c8a8ab8def07b610",
+      "records": 1111,
+      "schemaVersion": 1,
+      "scope": "separate-instrumented-probe",
+      "workflows": 4
+    },
+    "outputBytes": 82218662,
+    "producerArtifacts": 27,
+    "producerCommit": "a003269808c43a2a3a509a23c8a8ab8def07b610",
+    "replayedRoutes": 30,
+    "runAttempt": 1,
+    "runId": 40144947516,
+    "schemaVersion": 1,
+    "scope": "separate-instrumented-probe",
+    "summaryComparison": {
+      "recordedNodeVersion": "22.23.3",
+      "replayNodeVersion": "22.23.2",
+      "scope": "summary-comparison-only",
+      "semanticSha256": "5968adf7a8fb0a5083b9fdbddb88e0894749e4c895d434b6aee4c82afde86c26"
+    },
+    "zipBytes": 8617356
+  },
+  "schemaVersion": 1,
+  "scope": "separate-instrumented-probe",
+  "sourcePins": [
+    {
+      "count": 6,
+      "current": "e16ef39494f582377027c07204be4ac60d5f111f43dd2a04d8f2a0b2e2f74ae8",
+      "path": "docs/php.md",
+      "previous": "2dfdc4e1afc1d87d856453f0aae18761c1b56a6c176c315c95894bca30b577e4"
+    },
+    {
+      "count": 5,
+      "current": "58db6f137ccde6e003af2c2d08323f97af043622cc640a932a4389dbbbeba353",
+      "path": "docs/publish/php.md",
+      "previous": "abfe3b5f9567dd722a2a4bea61efb7526f5c23283c43d9de558aed026ffe9fb2"
+    },
+    {
+      "count": 18,
+      "current": "6f2c73fb18712ee023f122375f20c425d84d2bde39fec106003942d8f0be9f8d",
+      "path": "docs/lean/existing-package.md",
+      "previous": "c15b6b4fce1001120661ab9d919a279fa16252f45c0f868d3a9cd1afdc106459"
+    },
+    {
+      "count": 0,
+      "current": "5c557be1a574b299e591210822466c47d58b4bd9ea4db854e2db3b2b20891470",
+      "path": "docs/reference/types.md",
+      "previous": "5d4f003e25be3be72b0670d24a31845da7fbf8b5cae8f4ec88707b533e255b86"
+    }
+  ]
+}

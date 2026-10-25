@@ -91,14 +91,8 @@ Both ordinary-source and compiler-checked reviewed packages have installed corpu
 Platform integers follow the compiled Lean target: npm and PHP-Wasm use 32-bit words; native packages and native-backed WIT components use 64-bit words. Host adapters check those ranges before calling Lean. The consumer's pointer width does not select the range. Lean arithmetic still wraps at its compiled word width.
 
 PHP-Wasm refinement support is established by unmodified prepared packages.
-The separate entry-measurement probes instrument fixture packages only: their
-24 copied, owned and indexed routes count validator, constructor, adapter and
-Lean-source entries, while six callback routes record callback control totals.
-Together they form 30 ordinary/reviewed routes in 27 retained artifacts and do
-not widen any type-support cell. The configured [promotion
-workflow](https://github.com/seanmorris/lean-bridge/actions/workflows/php-wasm-refinement-entry-promotion.yml)
-is not a hosted result; entry counts become hosted evidence only when a
-completed run publishes a verified summary for one revision.
+
+[Hosted entry probes](../evidence/php-wasm-entry-hosted-20261025/index.json) cover 30 ordinary/reviewed routes in 27 retained artifacts, plus the aggregate verifier artifact, at producer `a003269808c43a2a3a509a23c8a8ab8def07b610`. The archive checker reconstructs the original artifacts and sources and reruns all thirty route verifiers. The 24 copied, owned and indexed routes count validator, constructor, adapter and Lean-source entries; six callback routes record callback control totals for Fin, selected Subtype and checked-record families. These separate instrumented fixture packages leave unmodified prepared packages and their supported types unchanged. The [promotion workflow](https://github.com/seanmorris/lean-bridge/actions/workflows/php-wasm-refinement-entry-promotion.yml) defines the complete matrix.
 
 [Hosted closed generic-Subtype acceptance](../evidence/generic-subtype-promotion-20261023.md) covers the closed `GenericNat` alias of `GenericCarrier Nat` across sixteen non-PHP-Wasm profiles on both author routes. Its `Positive` value field crosses without a proof, the Nat marker remains payload, the two named specializations retain their distinct `plusOne` and `plusTwo` constructors, and copied results carry no constructor. The twelve original archives establish exactly 32 Subtype field cells. PHP-Wasm, open generic host types, arbitrary arguments or predicates, generic Fin, callbacks, ownership and recursive generic graphs are not covered. The separate compiler/review foundation checks retained Nat, Bool and String indices; it does not establish installed host support for those dependent shapes.
 

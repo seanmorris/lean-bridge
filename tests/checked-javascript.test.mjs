@@ -118,6 +118,7 @@ import "./helpers/php-wasm-refinement-entry-publisher-tests.mjs";
 import "./helpers/php-wasm-refinement-entry-publication-pins-tests.mjs";
 import "./helpers/php-wasm-entry-publisher-source-history-tests.mjs";
 import "./helpers/php-wasm-entry-publication-pin-repair-source-history-tests.mjs";
+import "./helpers/php-wasm-entry-published-probe-tests.mjs";
 
 const root = resolve(".");
 
