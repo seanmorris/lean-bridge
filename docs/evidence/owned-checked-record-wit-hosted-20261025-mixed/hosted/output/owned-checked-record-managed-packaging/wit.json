@@ -1,0 +1,199 @@
+{
+  "group": "wit",
+  "profile": "installed-owned-checked-record-managed",
+  "reports": [
+    {
+      "authorRoute": "ordinary",
+      "deterministicReassembly": true,
+      "group": "wit",
+      "handoffRemovedBeforeRelocatedExecution": true,
+      "immutableInstalledInputs": true,
+      "mode": "full",
+      "observations": {
+        "wit-wasi": {
+          "checks": 482,
+          "consumerSha256": "71341ff3775f855d8aa20d2af261f0dfbc4fe565516a055d2fd61230ad4510b9"
+        }
+      },
+      "packageSetReceiptSha256": "babef9689107e6724ddd3a88df87b48b18177c83b419b08fbcee8be1600c4bce",
+      "profiles": [
+        "wit-wasi"
+      ],
+      "reassembled": {
+        "componentReceiptSha256": "694c045b264b49f5d928fbe2afca7b39716cd023bbae150f857a34a6cb9e4eeb",
+        "packages": [
+          {
+            "archive": "owned-checked-records-1.0.0-wit-wasi.tar.gz",
+            "sha256": "06f3be7053b4d0d67650d9c9edf682b0532014799910d2d8e7f98c4bd0440e7b"
+          }
+        ]
+      },
+      "relocatedInstallation": true,
+      "repeated": {
+        "wit-wasi": {
+          "checks": 482,
+          "stdout": "owned-checked-record-wit-wasi:482\n"
+        }
+      },
+      "retainedPackageSet": {
+        "archiveBytes": 61869391,
+        "archives": 1,
+        "files": [
+          "archives/owned-checked-records-1.0.0-wit-wasi.tar.gz",
+          "package-set-receipt.json",
+          "package-set-receipt.json.sha256"
+        ],
+        "path": "evidence/wit/ordinary-full/handoff",
+        "receiptSha256": "babef9689107e6724ddd3a88df87b48b18177c83b419b08fbcee8be1600c4bce"
+      },
+      "route": "ordinary-full",
+      "sourceFreeInstallation": true,
+      "sourceUnchanged": true
+    },
+    {
+      "authorRoute": "ordinary",
+      "deterministicReassembly": true,
+      "group": "wit",
+      "handoffRemovedBeforeRelocatedExecution": true,
+      "immutableInstalledInputs": true,
+      "mode": "result-only",
+      "observations": {
+        "wit-wasi": {
+          "checks": 14,
+          "consumerSha256": "04357184d94362f7ce86e52a33c4fdf2b6617b07fdc6959e1f5b642af54377e6"
+        }
+      },
+      "packageSetReceiptSha256": "dcea9a8c0d7a8ec422c6f26533937697d57599a9094db5e66e3ced9ade3403b3",
+      "profiles": [
+        "wit-wasi"
+      ],
+      "reassembled": {
+        "componentReceiptSha256": "0a67e4a83a36385dd11f428cf4160cd1a9f62592c2ab99685c8ab0ae66bd3d7f",
+        "packages": [
+          {
+            "archive": "owned-checked-records-result-only-1.0.0-wit-wasi.tar.gz",
+            "sha256": "f4502411777d4bd6bd5587e6362b71e31f5797dab833c9dfe1b40b755a72edc9"
+          }
+        ]
+      },
+      "relocatedInstallation": true,
+      "repeated": {
+        "wit-wasi": {
+          "checks": 14,
+          "stdout": "owned-checked-record-result-only-wit-wasi:14\n"
+        }
+      },
+      "retainedPackageSet": {
+        "archiveBytes": 61753492,
+        "archives": 1,
+        "files": [
+          "archives/owned-checked-records-result-only-1.0.0-wit-wasi.tar.gz",
+          "package-set-receipt.json",
+          "package-set-receipt.json.sha256"
+        ],
+        "path": "evidence/wit/ordinary-result-only/handoff",
+        "receiptSha256": "dcea9a8c0d7a8ec422c6f26533937697d57599a9094db5e66e3ced9ade3403b3"
+      },
+      "route": "ordinary-result-only",
+      "sourceFreeInstallation": true,
+      "sourceUnchanged": true
+    },
+    {
+      "authorRoute": "reviewed",
+      "deterministicReassembly": true,
+      "group": "wit",
+      "handoffRemovedBeforeRelocatedExecution": true,
+      "immutableInstalledInputs": true,
+      "mode": "full",
+      "observations": {
+        "wit-wasi": {
+          "checks": 482,
+          "consumerSha256": "71341ff3775f855d8aa20d2af261f0dfbc4fe565516a055d2fd61230ad4510b9"
+        }
+      },
+      "packageSetReceiptSha256": "a1714f23831d738e13a7f22b5dba43ed7187fc9a96bf3a01f1d04204381cd19f",
+      "profiles": [
+        "wit-wasi"
+      ],
+      "reassembled": {
+        "componentReceiptSha256": "4088f10cce53d11594f4f3ba9b8102684af6d0c0abf8de60b4e195f033f0336c",
+        "packages": [
+          {
+            "archive": "owned-checked-records-1.0.0-wit-wasi.tar.gz",
+            "sha256": "9c43064df088efeed2b5d357a587bf5542dd61a5d2b825d386ccef79b3cf1553"
+          }
+        ]
+      },
+      "relocatedInstallation": true,
+      "repeated": {
+        "wit-wasi": {
+          "checks": 482,
+          "stdout": "owned-checked-record-wit-wasi:482\n"
+        }
+      },
+      "retainedPackageSet": {
+        "archiveBytes": 61869512,
+        "archives": 1,
+        "files": [
+          "archives/owned-checked-records-1.0.0-wit-wasi.tar.gz",
+          "package-set-receipt.json",
+          "package-set-receipt.json.sha256"
+        ],
+        "path": "evidence/wit/reviewed-full/handoff",
+        "receiptSha256": "a1714f23831d738e13a7f22b5dba43ed7187fc9a96bf3a01f1d04204381cd19f"
+      },
+      "route": "reviewed-full",
+      "sourceFreeInstallation": true,
+      "sourceUnchanged": true
+    },
+    {
+      "authorRoute": "reviewed",
+      "deterministicReassembly": true,
+      "group": "wit",
+      "handoffRemovedBeforeRelocatedExecution": true,
+      "immutableInstalledInputs": true,
+      "mode": "result-only",
+      "observations": {
+        "wit-wasi": {
+          "checks": 14,
+          "consumerSha256": "04357184d94362f7ce86e52a33c4fdf2b6617b07fdc6959e1f5b642af54377e6"
+        }
+      },
+      "packageSetReceiptSha256": "9affcf2633a9a6003a88972e37db0baa63c3b6b57e0c9ead4cf93303acd99801",
+      "profiles": [
+        "wit-wasi"
+      ],
+      "reassembled": {
+        "componentReceiptSha256": "e0adc741cf71334e90e44a4dfdb0fe51c612a4ebd052b53bec514eea93101654",
+        "packages": [
+          {
+            "archive": "owned-checked-records-result-only-1.0.0-wit-wasi.tar.gz",
+            "sha256": "f942d6b38efb4a69d3794b26bfa429757cb7d8ef25634c10e563f6aecf785f16"
+          }
+        ]
+      },
+      "relocatedInstallation": true,
+      "repeated": {
+        "wit-wasi": {
+          "checks": 14,
+          "stdout": "owned-checked-record-result-only-wit-wasi:14\n"
+        }
+      },
+      "retainedPackageSet": {
+        "archiveBytes": 61754960,
+        "archives": 1,
+        "files": [
+          "archives/owned-checked-records-result-only-1.0.0-wit-wasi.tar.gz",
+          "package-set-receipt.json",
+          "package-set-receipt.json.sha256"
+        ],
+        "path": "evidence/wit/reviewed-result-only/handoff",
+        "receiptSha256": "9affcf2633a9a6003a88972e37db0baa63c3b6b57e0c9ead4cf93303acd99801"
+      },
+      "route": "reviewed-result-only",
+      "sourceFreeInstallation": true,
+      "sourceUnchanged": true
+    }
+  ],
+  "schemaVersion": 1
+}
