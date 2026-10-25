@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeOwnedPublicationCoexistenceSource, ownedPublicationCoexistenceNormalizationPaths } from "./owned-publication-coexistence-source-history.mjs";
 import { beforeOwnedCheckedArchiveRootsSource, ownedCheckedArchiveRootsNormalizationPaths } from "./owned-checked-record-archive-roots-source-history.mjs";
 import { beforeOwnedSubtypeMatrixPublicationSource, ownedSubtypeMatrixPublicationNormalizationPaths } from "./owned-subtype-matrix-publication-source-history.mjs";
 import { beforeOwnedSubtypePromotionTransactionSource, ownedSubtypePromotionTransactionNormalizationPaths } from "./owned-subtype-promotion-transaction-source-history.mjs";
@@ -2202,7 +2203,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...ownedCheckedArchiveRootsNormalizationPaths
+	...ownedPublicationCoexistenceNormalizationPaths
+	, ...ownedCheckedArchiveRootsNormalizationPaths
 	, ...ownedSubtypeMatrixPublicationNormalizationPaths
 	, ...ownedSubtypePromotionTransactionNormalizationPaths
 	, ...ownedSubtypeHostedPromotionNormalizationPaths
@@ -3147,7 +3149,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeOwnedCheckedArchiveRootsSource(path, text, expected);
+	let stage = beforeOwnedPublicationCoexistenceSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeOwnedCheckedArchiveRootsSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;

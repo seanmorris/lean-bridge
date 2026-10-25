@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "kind": "owned-publication-coexistence-source-v1",
+  "sourceBaseCommit": "ac83585983bda8b424224e7470d77d6faea9908f",
+  "implementationCommit": "aceaf8286737091de930baf44c6c872d3ac93e66",
+  "failure": {
+    "head": "ac83585983bda8b424224e7470d77d6faea9908f",
+    "passed": 0,
+    "failed": 1,
+    "skipped": 0,
+    "ms": 20199.726809,
+    "test": "published owned checked-record support binds eleven captures to exactly 170 cells",
+    "location": "tests/helpers/owned-checked-record-published-matrix-tests.mjs:98",
+    "cause": "Preservation assertion uses a9cad3b before independent owned Subtype publication; rejects legitimately expanded nominal-subtype-npm-fields-ordinary-source observation at c447fbd."
+  },
+  "independentPublication": "c447fbd2edadda605d98012d15c52550bfc5d2b5",
+  "originalCheckedRecordCells": 170,
+  "independentSubtypeCells": 32,
+  "independentSubtypeObservations": 22,
+  "validation": {
+    "passed": 4,
+    "failed": 0,
+    "skipped": 0,
+    "ms": 32913.443847,
+    "lint": true,
+    "installedRuntimeExecutions": 0,
+    "inventory": {
+      "live": 16199,
+      "archived": 353048,
+      "stale": 0,
+      "refreshed": 0,
+      "inventorySha256": "2f5ba18624b6a92026fcd502c515ae7474a08e86a7ebe364be7ad06f5ab4e50c"
+    }
+  },
+  "sources": [
+    {
+      "path": "tests/helpers/owned-checked-record-published-matrix-tests.mjs",
+      "sha256": "7a239fc5fe0a7c96dc72fe290ceb7a3062139a09dd953cd635aeb83463a975eb"
+    }
+  ],
+  "scope": "Use the original pre-checked-record baseline for its exact 170 cells and immutable c447fbd for every other observation. Reject mutations to independently accepted Subtype support and unrelated observations. Preserve all current capture, documentation and generation checks.",
+  "unchanged": [
+    "all runtime and Lean code",
+    "complete support inventory and source hashes",
+    "original hosted archives",
+    "installed package producers and consumers"
+  ],
+  "finalCoreAccepted": false
+}

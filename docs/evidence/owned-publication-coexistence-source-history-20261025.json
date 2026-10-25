@@ -1,0 +1,129 @@
+{
+  "additions": [
+    {
+      "currentSha256": "a2abf816d38e339219dbd61b07356a57bd64116d030699487cb636918e1a3b91",
+      "path": "docs/evidence/owned-publication-coexistence-20261025.json"
+    },
+    {
+      "currentSha256": "4162aa7864ba1aebb9231c27cd7c5280ac9ef9b37cd44b4e30044b427403b3ac",
+      "path": "scripts/update-owned-publication-coexistence-source-history.mjs"
+    },
+    {
+      "currentSha256": "732ca5b6d350bd78709deabacbc6fd815f8d2f3f18a39188128a2251ecd4e5dd",
+      "path": "tests/helpers/owned-publication-coexistence-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "122a2d9aa289857b1c78ed2888537486d941806db6f65c42ec4277bf8c40dc6d",
+      "path": "tests/helpers/owned-publication-coexistence-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "aceaf8286737091de930baf44c6c872d3ac93e66",
+  "implementationCommits": [
+    "aceaf8286737091de930baf44c6c872d3ac93e66"
+  ],
+  "integrationBaseCommit": "aceaf8286737091de930baf44c6c872d3ac93e66",
+  "integrationUpdates": [
+    {
+      "currentSha256": "343903dc4307beee4d6f0318ab6f34954b658a1722ff43fd8ff3db908b10f7a3",
+      "edits": [
+        {
+          "current": "import { beforeOwnedPublicationCoexistenceSource, ownedPublicationCoexistenceNormalizationPaths } from \"./owned-publication-coexistence-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...ownedPublicationCoexistenceNormalizationPaths\n\t, ...ownedCheckedArchiveRootsNormalizationPaths\n",
+          "previous": "\t...ownedCheckedArchiveRootsNormalizationPaths\n",
+          "start": 189525
+        },
+        {
+          "current": "\tlet stage = beforeOwnedPublicationCoexistenceSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeOwnedCheckedArchiveRootsSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeOwnedCheckedArchiveRootsSource(path, text, expected);\n",
+          "start": 235141
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "80a42f40a05a3a9cc531bb0cc7568cf9a22cfbed01397cb13addc5bc254233fa"
+    },
+    {
+      "currentSha256": "9d4697d42625a0de7c5eaa9f9040077cd12559f2cf8cda80138d40a51f55af28",
+      "edits": [
+        {
+          "current": "import \"./helpers/owned-publication-coexistence-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 10753
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "5f43752fa7af3638e085dfd9788ff747cfd6fde3bd5c906614ae1d3396bf28d8"
+    }
+  ],
+  "milestone": "owned-publication-coexistence-source-v1",
+  "predecessorCommit": "ac83585983bda8b424224e7470d77d6faea9908f",
+  "schemaVersion": 1,
+  "scope": "Correct the current owned checked-record publication assertion after the separately accepted owned Subtype publication. Keep the original pre-checked-record baseline for all 170 checked-record cells; require every other observation to match immutable c447fbd, whose exact 22-observation/32-cell update has independent source-history and current-state checks. Add mutations proving unrelated and independently accepted support cannot drift. Keep the existing complete eleven-capture identities, forged/missing/widened controls and current documentation/generation checks. Do not change any inventory, source pin, runtime, package, original archive, or support claim. Final Core and complete aligned capture/promotion gates remain open.",
+  "updates": [
+    {
+      "currentSha256": "7a239fc5fe0a7c96dc72fe290ceb7a3062139a09dd953cd635aeb83463a975eb",
+      "edits": [
+        {
+          "current": "import { ownedSubtypeMatrixPublicationImplementation } from \"./owned-subtype-matrix-publication-source-history.mjs\";\n",
+          "previous": "",
+          "start": 1427
+        },
+        {
+          "current": "\t// Owned checked-record changes still compare with their original baseline.\n\t// Other observations must preserve the separately authenticated Subtype publication.\n\tconst { document: independent } = await readPromotionInventory(gitSourceBytes(\n\t\townedSubtypeMatrixPublicationImplementation, \"docs/type-surface.v1.json\"), contracts);\n",
+          "previous": "",
+          "start": 2802
+        },
+        {
+          "current": "\treturn { document, before, independent, contracts, references };\n",
+          "previous": "\treturn { document, before, contracts, references };\n",
+          "start": 4360
+        },
+        {
+          "current": "const assertPublished = (document, before, contracts, references, independent) => {\n",
+          "previous": "const assertPublished = (document, before, contracts, references) => {\n",
+          "start": 4433
+        },
+        {
+          "current": "\tassert.deepEqual(independent.observations.map(item => item.id)\n\t\t, before.observations.map(item => item.id));\n",
+          "previous": "",
+          "start": 5811
+        },
+        {
+          "current": "\t\t\tassert.deepEqual(observation, independent.observations[index]); continue;\n",
+          "previous": "\t\t\tassert.deepEqual(observation, prior); continue;\n",
+          "start": 6155
+        },
+        {
+          "current": "\tconst { document, before, independent, contracts, references } = await current();\n\tassert.equal(assertPublished(document, before, contracts, references, independent), true);\n",
+          "previous": "\tconst { document, before, contracts, references } = await current();\n\tassert.equal(assertPublished(document, before, contracts, references), true);\n",
+          "start": 7669
+        },
+        {
+          "current": "\tconst { document, before, independent, contracts, references } = await current();\n",
+          "previous": "\tconst { document, before, contracts, references } = await current();\n",
+          "start": 7958
+        },
+        {
+          "current": "\t\tassert.throws(() => assertPublished({ ...document, evidence }, before, contracts, references, independent));\n",
+          "previous": "\t\tassert.throws(() => assertPublished({ ...document, evidence }, before, contracts, references));\n",
+          "start": 8334
+        },
+        {
+          "current": "\tassert.throws(() => assertPublished({ ...document, evidence: document.evidence.filter(entry => entry.id !== first) }, before, contracts, references, independent));\n",
+          "previous": "\tassert.throws(() => assertPublished({ ...document, evidence: document.evidence.filter(entry => entry.id !== first) }, before, contracts, references));\n",
+          "start": 8448
+        },
+        {
+          "current": "\t\tassert.throws(() => assertPublished({ ...document, observations }, before, contracts, references, independent));\n\t}\n});\n\ntest(\"published owned checked-record support preserves independently accepted and unrelated observations\", async () => {\n\tconst { document, before, independent, contracts, references } = await current();\n\tconst subtypeId = id => /^owned-subtype-[a-z-]+-hosted-installed$/u.test(id);\n\tconst selected = independent.observations.filter(observation =>\n\t\tObject.values(observation.stages).some(stage => stage.evidence.some(subtypeId)));\n\tassert.equal(selected.length, 22);\n\tassert.equal(selected.reduce((sum, item) => sum + item.profiles.length * item.positions.length, 0), 32);\n\tconst unrelated = document.observations.find(observation =>\n\t\t!Object.values(observation.stages).some(stage => stage.evidence.some(value => ownedId(value) || subtypeId(value))));\n\tassert.ok(unrelated);\n\tfor(const id of [selected[0].id, unrelated.id])\n\t{\n\t\tconst original = document.observations.find(item => item.id === id);\n\t\tfor(const mutate of [\n\t\t\tentry => { entry.scope += \" unsupported claim\"; }\n\t\t\t, entry => { entry.stages.installedExecution.evidence = []; }\n\t\t\t, entry => { entry.limitations.push(\"unsupported claim\"); }\n\t\t]) {\n\t\t\tconst altered = structuredClone(original); mutate(altered);\n\t\t\tconst observations = document.observations.map(entry => entry.id === id ? altered : entry);\n\t\t\tassert.throws(() => assertPublished({ ...document, observations }\n\t\t\t\t, before, contracts, references, independent), assert.AssertionError, id);\n\t\t}\n",
+          "previous": "\t\tassert.throws(() => assertPublished({ ...document, observations }, before, contracts, references));\n",
+          "start": 9403
+        }
+      ],
+      "path": "tests/helpers/owned-checked-record-published-matrix-tests.mjs",
+      "previousSha256": "2808910e7cb95d1809514c920bc2291fd54e553c727aaed39f905f88fb4958d5"
+    }
+  ]
+}

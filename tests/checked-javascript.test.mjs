@@ -154,6 +154,7 @@ import "./helpers/owned-subtype-promotion-transaction-source-history-tests.mjs";
 import "./helpers/owned-subtype-published-matrix-tests.mjs";
 import "./helpers/owned-subtype-matrix-publication-source-history-tests.mjs";
 import "./helpers/owned-checked-record-archive-roots-source-history-tests.mjs";
+import "./helpers/owned-publication-coexistence-source-history-tests.mjs";
 import "./helpers/owned-checked-c-session-boundaries-source-history-tests.mjs";
 
 const root = resolve(".");
