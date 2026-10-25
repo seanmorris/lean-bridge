@@ -1,0 +1,155 @@
+{
+  "additions": [
+    {
+      "currentSha256": "66775d53942b39a27a09a02c866ea65526a648780d23fb048a6e9de837f715b5",
+      "path": "scripts/update-dependent-matrix-doc-gate-source-history.mjs"
+    },
+    {
+      "currentSha256": "b289aef71b32cb532b7506b3ce40dfb907d030ed6fd76f02e71806048da683ce",
+      "path": "tests/helpers/dependent-matrix-doc-gate-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "f1f90d63e5a5b780807b0c9f40a4cc0768f0d4abcc61ae2bde32fd40b6928caf",
+      "path": "tests/helpers/dependent-matrix-doc-gate-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "6ca01c96fe3960a54e6709768caea7464c1adc6a",
+  "implementationCommits": [
+    "89c6f207deed48755bd46b9b1f161d5a3e8da4ee",
+    "6ca01c96fe3960a54e6709768caea7464c1adc6a"
+  ],
+  "integrationBaseCommit": "1a5c98c1ab02b710ac79b0b688b72e7a28ef406f",
+  "integrationUpdates": [
+    {
+      "currentSha256": "bf4ccaf46e096cfde656794b71b40c3fa7d5547395d270d5f466074b78a0d30f",
+      "edits": [
+        {
+          "current": "import { beforeDependentMatrixDocGateSource, dependentMatrixDocGateNormalizationPaths } from \"./dependent-matrix-doc-gate-source-history.mjs\";\n",
+          "previous": "",
+          "start": 13938
+        },
+        {
+          "current": "\t, ...dependentMatrixDocGateNormalizationPaths\n",
+          "previous": "",
+          "start": 187281
+        },
+        {
+          "current": "\tlet stage = beforeDependentMatrixDocGateSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeOwnedCheckedLanguageMixedCoverageSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeOwnedCheckedLanguageMixedCoverageSource(path, text, expected);\n",
+          "start": 231949
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "9df81b42b27591a2fdc2c6511a8e48b5835615f7c4bfeb86c478e53a44ccdbca"
+    },
+    {
+      "currentSha256": "e682a4b0efece95778c141d3f2aa6b3c4696e8b0a74df96f9466e4c401101985",
+      "edits": [
+        {
+          "current": "import \"./helpers/dependent-matrix-doc-gate-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 9495
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "0b76d93020098aa7380e780b9aa766847d345ade710cd5e80fb7c2416e6eb685"
+    }
+  ],
+  "milestone": "dependent-matrix-doc-gate-source-v1",
+  "predecessorCommit": "f601af865a137e60f9a62f0ec9bdc6ec2debc6dc",
+  "schemaVersion": 1,
+  "scope": "Authenticate the exact previously unrecorded commits 89c6f20 and 6ca01c9: the recurring dependent-record matrix documentation gate and immutable archive-index checks. Record all three original source transitions and current history registration without changing the live workflow, inventory tests, runtime sources, original evidence or support claims. Preserve every original checked-refinement gate expectation. The original Core shard-2 workflow hash assertion reproduced at 1a5c98c; reconstruct its exact original endpoint instead of weakening the assertion.",
+  "updates": [
+    {
+      "currentSha256": "2e9c45834933a66ca3868251ffe24b6d3d89fed1f21ffbd69eb9ec37243fca58",
+      "edits": [
+        {
+          "current": "      - \"docs/consume/**\"\n",
+          "previous": "",
+          "start": 126
+        },
+        {
+          "current": "      - \"docs/reference/**\"\n",
+          "previous": "",
+          "start": 206
+        },
+        {
+          "current": "      - \"scripts/generate-reference-docs.mjs\"\n      - \"scripts/generate-type-docs.mjs\"\n      - \"site/reference/**\"\n",
+          "previous": "",
+          "start": 450
+        },
+        {
+          "current": "      - \"docs/consume/**\"\n",
+          "previous": "",
+          "start": 966
+        },
+        {
+          "current": "      - \"docs/reference/**\"\n",
+          "previous": "",
+          "start": 1046
+        },
+        {
+          "current": "      - \"scripts/generate-reference-docs.mjs\"\n      - \"scripts/generate-type-docs.mjs\"\n      - \"site/reference/**\"\n",
+          "previous": "",
+          "start": 1290
+        },
+        {
+          "current": "      - name: Audit all 68 promoted inventory cells and generated documentation\n",
+          "previous": "      - name: Audit all 68 promoted inventory cells\n",
+          "start": 2641
+        }
+      ],
+      "path": ".github/workflows/dependent-checked-record-matrix.yml",
+      "previousSha256": "1691c7a965d371f980341d1f31979ded63d1d8139871b5d5a7fea410d627677b"
+    },
+    {
+      "currentSha256": "9dee54f22fc5d18abc0aaf6b1b52417676bd32129ac6e0c9c89bae5e08be073e",
+      "edits": [
+        {
+          "current": "import { mkdir, mkdtemp, readFile, rm, symlink, writeFile } from \"node:fs/promises\";\nimport { tmpdir } from \"node:os\";\nimport { dirname, join, resolve } from \"node:path\";\n",
+          "previous": "import { readFile } from \"node:fs/promises\";\n",
+          "start": 137
+        },
+        {
+          "current": "import ts from \"typescript\";\nimport { generateReferenceDocs } from \"../scripts/generate-reference-docs.mjs\";\nimport { typeGuideProfiles } from \"../scripts/generate-type-docs.mjs\";\nimport { sha256 } from \"../src/capsule/node.mjs\";\n",
+          "previous": "",
+          "start": 338
+        },
+        {
+          "current": "let inventoryPromise;\nconst readInventory = () => inventoryPromise ??= Promise.all([\n\treadJson(\"docs/type-surface.v1.json\")\n\t, readJson(\"schema/binding-ir.schema.json\")\n\t, readJson(\"docs/consumer-support.v1.json\")\n]);\n",
+          "previous": "",
+          "start": 1047
+        },
+        {
+          "current": "// Read only the verifier's literal index identity here. Importing each complete\n// verifier repeats its historical source-closure setup; the preceding matrix\n// step already executes every real verifier and remains required.\nconst literalExport = (source, name, path) => {\n\tconst ast = ts.createSourceFile(path, source, ts.ScriptTarget.Latest\n\t\t, true, ts.ScriptKind.JS);\n\tassert.equal(ast.parseDiagnostics.length, 0, path);\n\tconst declarations = ast.statements.filter(statement =>\n\t\tts.isVariableStatement(statement)\n\t\t&& (statement.declarationList.flags & ts.NodeFlags.Const) !== 0\n\t\t&& statement.modifiers?.some(modifier =>\n\t\t\tmodifier.kind === ts.SyntaxKind.ExportKeyword))\n\t\t.flatMap(statement => statement.declarationList.declarations)\n\t\t.filter(declaration => ts.isIdentifier(declaration.name)\n\t\t\t&& declaration.name.text === name);\n\tassert.equal(declarations.length, 1, `${path}: ${name}`);\n\tconst value = declarations[0].initializer;\n\tassert.ok(value && ts.isStringLiteral(value), `${path}: literal ${name}`);\n\treturn value.text;\n};\n\nconst readExpectedEvidenceBindings = async (read = readFile) => {\n\tconst bindings = [];\n\tfor(const definition of dependentCheckedRecordPromotionLanes)\n\t{\n\t\tconst { lane, name, profiles } = definition;\n\t\tconst verifier = `tests/helpers/dependent-checked-record-${lane}-evidence.mjs`;\n\t\tconst source = (await read(verifier)).toString();\n\t\tconst root = literalExport(source, `dependentCheckedRecord${name}Evidence`, verifier);\n\t\tassert.equal(root, `docs/evidence/dependent-checked-record-${lane}-20261021`);\n\t\tconst indexSha256 = literalExport(source\n\t\t\t, `dependentCheckedRecord${name}EvidenceSha256`, verifier);\n\t\tassert.match(indexSha256, /^[a-f0-9]{64}$/u);\n\t\tconst indexPath = `${root}/index.json`, bytes = await read(indexPath);\n\t\tassert.equal(sha256(bytes), indexSha256, indexPath);\n\t\tconst index = JSON.parse(bytes);\n\t\tassert.deepEqual(index.runs.map(run => run.route)\n\t\t\t, dependentCheckedRecordPromotionRoutes, lane);\n\t\tconst hosted = index.hostedRun;\n\t\tconst artifacts = hosted.artifact.parts.map(part => ({\n\t\t\tpath: `${root}/${part.path}`, sha256: part.sha256\n\t\t}));\n\t\tfor(const route of dependentCheckedRecordPromotionRoutes)\n\t\t{\n\t\t\tconst mode = resultOnly(route) ? \"result-only\" : \"full\";\n\t\t\tconst files = index.files.filter(file =>\n\t\t\t\tfile.path.startsWith(`${route}/`)\n\t\t\t\t|| file.path.startsWith(\"sources/\") || file.path.startsWith(\"hosted/\"));\n\t\t\tbindings.push({\n\t\t\t\tid: evidenceId(lane, route), kind: \"installed\"\n\t\t\t\t, revision: index.producerCommit\n\t\t\t\t, command: `node --input-type=module -e \"await (await import('./${verifier}')).checkDependentCheckedRecord${name}Evidence()\"`\n\t\t\t\t, scope: [\n\t\t\t\t\t`Hosted GitHub Actions run ${hosted.runId}, job ${hosted.job.id}, artifact ${hosted.artifact.id} rebuilt the ${mode} ${sourcePath(route)} ${profiles.join(\"/\")} package selection.`\n\t\t\t\t\t, \"The author routes reproduce the package, remove author sources, install without network access and replay unchanged typed callers.\"\n\t\t\t\t\t, resultOnly(route)\n\t\t\t\t\t\t? \"The standalone result-only API exposes Lean-produced proof-free dependent results without checked-input metadata.\"\n\t\t\t\t\t\t: \"The full API exercises valid and rejected dependent inputs through the selected constructor, unchanged rejected values, recovery and proof-free results.\"\n\t\t\t\t\t, \"The retained archive authenticates every original artifact byte, route result, package, caller observation and selected source.\"\n\t\t\t\t\t, dependentCheckedRecordPromotionLimit\n\t\t\t\t].join(\" \")\n\t\t\t\t, files: [{ path: indexPath, sha256: indexSha256 }\n\t\t\t\t\t, ...files.map(file => ({ path: `${root}/${file.path}`, sha256: file.sha256 }))]\n\t\t\t\t, artifacts\n\t\t\t});\n\t\t}\n\t}\n\treturn bindings;\n};\nlet bindingsPromise;\nconst expectedEvidenceBindings = () => bindingsPromise ??= readExpectedEvidenceBindings();\n\nconst assertInventory = async (inventory, irSchema, consumers) => {\n\tconst bindings = await expectedEvidenceBindings();\n\tassert.equal(bindings.length, 44);\n\tconst retained = inventory.evidence.filter(item =>\n\t\titem.id.startsWith(\"dependent-checked-record-\")\n\t\t&& item.id.endsWith(\"-hosted-installed\"));\n\tassert.deepEqual(retained.map(item => item.id), bindings.map(item => item.id)\n\t\t, \"Dependent evidence must contain exactly the pinned archive routes\");\n\tfor(const [index, expected] of bindings.entries())\n\t{\n\t\tconst actual = retained[index];\n\t\tassert.deepEqual(Object.keys(actual).sort(), Object.keys(expected).sort(), expected.id);\n\t\tfor(const key of [\"kind\", \"revision\", \"command\", \"scope\"])\n\t\t\tassert.equal(actual[key], expected[key], `${expected.id}/${key}`);\n\t\tassert.deepEqual(actual.files, expected.files, `${expected.id}/files`);\n\t\tassert.deepEqual(actual.artifacts, expected.artifacts, `${expected.id}/artifacts`);\n\t}\n",
+          "previous": "test(\"public inventory contains exactly 68 dependent checked-record cells\"\n\t, async () => {\n\tconst [inventory, irSchema, consumers] = await Promise.all([\n\t\treadJson(\"docs/type-surface.v1.json\")\n\t\t, readJson(\"schema/binding-ir.schema.json\")\n\t\t, readJson(\"docs/consumer-support.v1.json\")\n\t]);\n",
+          "start": 1492
+        },
+        {
+          "current": "};\n\ntest(\"public inventory contains exactly 68 dependent checked-record cells\"\n\t, async () => assertInventory(...await readInventory())\n);\n\ntest(\"dependent inventory rejects altered retained source digests\"\n\t, async () => {\n\tconst [inventory, irSchema, consumers] = await readInventory();\n\tconst target = evidenceId(\"browser\", \"ordinary-source\");\n\tconst changed = {\n\t\t...inventory, evidence: inventory.evidence.map(item => item.id !== target\n\t\t\t? item : { ...item, files: item.files.map((file, index) => index === 0\n\t\t\t\t? { ...file, sha256: \"0\".repeat(64) } : file) })\n\t};\n\tawait assert.rejects(assertInventory(changed, irSchema, consumers));\n\t}\n);\n\ntest(\"dependent inventory rejects incomplete, forged and cross-route evidence bindings\"\n\t, async () => {\n\tconst [inventory, irSchema, consumers] = await readInventory();\n\tconst target = evidenceId(\"browser\", \"ordinary-source\");\n\tconst original = inventory.evidence.find(item => item.id === target);\n\tconst foreign = inventory.evidence.find(item =>\n\t\titem.id === evidenceId(\"native\", \"ordinary-source\"));\n\tconst otherRoute = inventory.evidence.find(item =>\n\t\titem.id === evidenceId(\"browser\", \"result-only-reviewed-ir\"));\n\tassert.ok(original && foreign && otherRoute);\n\tconst replace = changed => ({ ...inventory, evidence: inventory.evidence.map(item =>\n\t\titem.id === target ? changed : item) });\n\tfor(const changed of [\n\t\t{ ...original, revision: \"0\".repeat(40) }\n\t\t, { ...original, command: \"true\" }\n\t\t, { ...original, scope: original.scope + \" Unobserved extra support.\" }\n\t\t, { ...original, kind: \"inspection\" }\n\t\t, { ...original, files: original.files.slice(1) }\n\t\t, { ...original, files: [...original.files].reverse() }\n\t\t, { ...original, files: [...original.files, foreign.files[0]] }\n\t\t, { ...original, files: original.files.map((file, index) => index === 1\n\t\t\t? { ...file, sha256: \"0\".repeat(64) } : file) }\n\t\t, { ...original, files: foreign.files }\n\t\t, { ...original, files: otherRoute.files }\n\t\t, { ...original, artifacts: foreign.artifacts }\n\t\t, { ...original, artifacts: original.artifacts.map(item =>\n\t\t\t({ ...item, sha256: \"0\".repeat(64) })) }\n\t\t, { ...original, artifacts: [] }\n\t\t, { ...original, extra: true }\n\t]) await assert.rejects(assertInventory(replace(changed), irSchema, consumers));\n\tfor(const evidence of [\n\t\tinventory.evidence.filter(item => item.id !== target)\n\t\t, [...inventory.evidence, original]\n\t\t, [...inventory.evidence, { ...original\n\t\t\t, id: \"dependent-checked-record-browser-extra-hosted-installed\" }]\n\t]) await assert.rejects(assertInventory({ ...inventory, evidence }, irSchema, consumers));\n\t}\n);\n\ntest(\"dependent index metadata requires literal verifier pins and exact archive bytes\"\n\t, async () => {\n\tconst index = \"docs/evidence/dependent-checked-record-browser-20261021/index.json\";\n\tconst verifier = \"tests/helpers/dependent-checked-record-browser-evidence.mjs\";\n\tfor(const mutate of [\n\t\t(path, bytes) => path === index ? Buffer.concat([bytes, Buffer.from(\" \")]) : bytes\n\t\t, (path, bytes) => path === verifier ? Buffer.from(bytes.toString().replace(\n\t\t\t\"export const dependentCheckedRecordBrowserEvidenceSha256\"\n\t\t\t, \"export let dependentCheckedRecordBrowserEvidenceSha256\")) : bytes\n\t\t, (path, bytes) => path === verifier ? Buffer.from(bytes.toString().replace(\n\t\t\t/dependentCheckedRecordBrowserEvidenceSha256\\s*= \"([a-f0-9]+)\"/u\n\t\t\t, \"dependentCheckedRecordBrowserEvidenceSha256 = String('$1')\")) : bytes\n\t]) await assert.rejects(readExpectedEvidenceBindings(async path =>\n\t\tmutate(path, await readFile(path))));\n\tawait assert.rejects(readExpectedEvidenceBindings(async path => {\n\t\tif(path === index) throw new Error(\"Missing original archive index\");\n\t\treturn readFile(path);\n\t}), /Missing original archive index/u);\n\t}\n);\n\ntest(\"dependent matrix generated references and consumer guides match their contracts\"\n\t, async () => {\n\tconst [document, irSchema, consumers] = await readInventory();\n\tassert.equal(validateTypeSurface(document, { irSchema, consumers }), true);\n\tconst documents = await generateReferenceDocs({\n\t\tinventory: { document, irSchema, consumers }\n\t});\n\tassert.equal(Object.keys(documents).length\n\t\t, 4 + Object.keys(typeGuideProfiles).length);\n\t}\n);\n\ntest(\"dependent matrix rejects a stale generated consumer type section\"\n\t, async () => {\n\tconst [document, irSchema, consumers] = await readInventory();\n\tassert.equal(validateTypeSurface(document, { irSchema, consumers }), true);\n\tconst temporary = await mkdtemp(join(tmpdir(), \"lean-dependent-matrix-docs-\"));\n\tconst guides = Object.keys(typeGuideProfiles), target = guides[0];\n\ttry\n\t{\n\t\tfor(const directory of [\"demos\", \"schema\", \"site\", \"tests\"])\n\t\t\tawait symlink(resolve(directory), join(temporary, directory), \"dir\");\n\t\tawait mkdir(join(temporary, \"docs\"));\n\t\tawait symlink(resolve(\"docs/reference\")\n\t\t\t, join(temporary, \"docs/reference\"), \"dir\");\n\t\tfor(const guide of guides)\n\t\t{\n\t\t\tconst destination = join(temporary, guide);\n\t\t\tawait mkdir(dirname(destination), { recursive: true });\n\t\t\tif(guide !== target)\n\t\t\t\tawait symlink(resolve(guide), destination, \"file\");\n\t\t\telse\n\t\t\t{\n\t\t\t\tconst source = await readFile(guide, \"utf8\");\n\t\t\t\tassert.ok(source.includes(\"### Type conversions\\n\"));\n\t\t\t\tawait writeFile(destination, source.replace(\"### Type conversions\\n\"\n\t\t\t\t\t, \"### Type conversions\\nDeliberately stale generated text.\\n\"));\n\t\t\t}\n\t\t}\n\t\tawait assert.rejects(generateReferenceDocs({\n\t\t\troot: temporary, inventory: { document, irSchema, consumers }\n\t\t}), error => error.message.includes(`${target} is stale`));\n\t}\n\tfinally\n\t{\n\t\tawait rm(temporary, { recursive: true, force: true });\n\t}\n",
+          "previous": "",
+          "start": 8690
+        }
+      ],
+      "path": "tests/dependent-checked-record-matrix-inventory.test.mjs",
+      "previousSha256": "9665042255445dd77206014b006ff936666414b206735b02040d784e7039f78e"
+    },
+    {
+      "currentSha256": "fa4bc3165ca3972b2dfac280f08585b83de81a80bbe7a2b54f536993a7962f85",
+      "edits": [
+        {
+          "current": "const documentationInputs = Object.freeze([\n\t\"docs/consume/**\", \"docs/reference/**\", \"site/reference/**\"\n\t, \"scripts/generate-reference-docs.mjs\", \"scripts/generate-type-docs.mjs\"\n]);\nconst documentationStep = [\n\t\"      - name: Audit all 68 promoted inventory cells and generated documentation\"\n\t, \"        shell: bash\"\n\t, \"        run: |\"\n\t, \"          set -o pipefail\"\n\t, \"          node --test --test-concurrency=1 \\\\\"\n\t, \"            tests/dependent-checked-record-matrix-inventory.test.mjs \\\\\"\n\t, \"            | tee build/dependent-checked-record-matrix/inventory.tap\"\n].join(\"\\n\") + \"\\n\";\nconst assertDocumentationGate = workflow => {\n\tfor(const input of documentationInputs)\n\t\tassert.equal(workflow.split(`      - \"${input}\"\\n`).length - 1\n\t\t\t, 2, `${input} must trigger both push and pull_request`);\n\tassert.ok(workflow.includes(documentationStep)\n\t\t, \"Generated documentation must be checked without rewriting it\");\n\tassert.doesNotMatch(workflow, /continue-on-error|\\|\\| true/u);\n};\n\n",
+          "previous": "",
+          "start": 284
+        },
+        {
+          "current": "\ntest(\"dependent checked-record matrix checks generated documentation on both triggers\"\n\t, async () => assertDocumentationGate(await readFile(workflowPath, \"utf8\"))\n);\n\ntest(\"dependent documentation gate rejects missing triggers and bypassed checks\"\n\t, async () => {\n\tconst workflow = await readFile(workflowPath, \"utf8\");\n\tassertDocumentationGate(workflow);\n\tfor(const input of documentationInputs)\n\t{\n\t\tconst line = `      - \"${input}\"\\n`;\n\t\tassert.throws(() => assertDocumentationGate(workflow.replace(line, \"\")));\n\t\tassert.throws(() => assertDocumentationGate(workflow.replaceAll(line, \"\")));\n\t}\n\tfor(const changed of [\n\t\tworkflow.replace(documentationStep, \"\")\n\t\t, workflow.replace(documentationStep\n\t\t\t, documentationStep.replace(\"node --test --test-concurrency=1\", \"true\"))\n\t\t, workflow.replace(documentationStep\n\t\t\t, documentationStep.replace(\"          set -o pipefail\\n\", \"\"))\n\t\t, workflow.replace(\"inventory.tap\", \"discarded.log\")\n\t\t, workflow.replace(\"        shell: bash\", \"        continue-on-error: true\\n        shell: bash\")\n\t]) assert.throws(() => assertDocumentationGate(changed));\n\t}\n);\n",
+          "previous": "",
+          "start": 3081
+        }
+      ],
+      "path": "tests/helpers/dependent-checked-record-matrix-ci-tests.mjs",
+      "previousSha256": "14aed5d856ecb67c5d33f3e453e5389ba5a31ea7ef31e8f593a00c735055f8e1"
+    }
+  ]
+}

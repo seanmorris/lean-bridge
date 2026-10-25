@@ -94,6 +94,7 @@ import { beforeOwnedCheckedCarrierCompilationSource, ownedCheckedCarrierCompilat
 import { beforeOwnedCheckedNativeMixedCoverageSource, ownedCheckedNativeMixedCoverageNormalizationPaths } from "./owned-checked-native-mixed-coverage-source-history.mjs";
 import { beforeOwnedNativePromotionScopeSource, ownedNativePromotionScopeNormalizationPaths } from "./owned-native-promotion-scope-source-history.mjs";
 import { beforeOwnedCheckedLanguageMixedCoverageSource, ownedCheckedLanguageMixedCoverageNormalizationPaths } from "./owned-checked-language-mixed-coverage-source-history.mjs";
+import { beforeDependentMatrixDocGateSource, dependentMatrixDocGateNormalizationPaths } from "./dependent-matrix-doc-gate-source-history.mjs";
 import { beforeCoreEvidenceMemoryRepairSource, coreEvidenceMemoryRepairNormalizationPaths } from "./core-evidence-memory-repair-source-history.mjs";
 import { beforeValueIndexPromotionMilestoneRepairSource, valueIndexPromotionMilestoneRepairNormalizationPaths } from "./value-index-promotion-milestone-repair-source-history.mjs";
 import { beforeCoreMilestoneReplayRepairSource, coreMilestoneReplayRepairNormalizationPaths } from "./core-milestone-replay-repair-source-history.mjs";
@@ -2190,6 +2191,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	...ownedCheckedCarrierCompilationNormalizationPaths
 	, ...ownedNativePromotionScopeNormalizationPaths
 	, ...ownedCheckedLanguageMixedCoverageNormalizationPaths
+	, ...dependentMatrixDocGateNormalizationPaths
 	, ...ownedCheckedNativeMixedCoverageNormalizationPaths
 	, ...ownedMatrixRefreshNormalizationPaths
 	, ...ownedMatrixIsolationNormalizationPaths
@@ -3117,7 +3119,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeOwnedCheckedLanguageMixedCoverageSource(path, text, expected);
+	let stage = beforeDependentMatrixDocGateSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeOwnedCheckedLanguageMixedCoverageSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;
