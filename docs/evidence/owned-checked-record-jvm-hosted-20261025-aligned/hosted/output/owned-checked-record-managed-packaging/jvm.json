@@ -1,0 +1,255 @@
+{
+  "group": "jvm",
+  "profile": "installed-owned-checked-record-managed",
+  "reports": [
+    {
+      "authorRoute": "ordinary",
+      "deterministicReassembly": true,
+      "group": "jvm",
+      "handoffRemovedBeforeRelocatedExecution": true,
+      "immutableInstalledInputs": true,
+      "mode": "full",
+      "observations": {
+        "java": {
+          "checks": 181,
+          "consumerSha256": "e1166b8845d6d9f3218b669002875aef4b89d44a26849faa9938ada31c6399d3"
+        },
+        "kotlin": {
+          "checks": 177,
+          "consumerSha256": "5bf43b83c92beecc356d2e14c872a2f9ab64bb1881d74fa94003055749f73d63"
+        }
+      },
+      "packageSetReceiptSha256": "73d97154173350a86804f5678e5a3a03eeeeb0b720a28e900fcc76bc8ea24fa6",
+      "profiles": [
+        "java",
+        "kotlin"
+      ],
+      "reassembled": {
+        "componentReceiptSha256": "4db7435b75b0f255b5093015192a0d9ec70a2cb600719cca5c38647995f10d4e",
+        "packages": [
+          {
+            "archive": "owned-checked-records-1.0.0.jar",
+            "sha256": "fc02b7c2d818dc1ccead1737efa15026fcab5e06527296b0b9a9a80a6082800d"
+          },
+          {
+            "archive": "owned-checked-records-1.0.0.pom",
+            "sha256": "5d51fa437372d63161a44500d61f6d177e164f0008a21d00d818082914b2cc2f"
+          }
+        ]
+      },
+      "relocatedInstallation": true,
+      "repeated": {
+        "java": {
+          "checks": 181,
+          "stdout": "owned-checked-record-java:181\n"
+        },
+        "kotlin": {
+          "checks": 177,
+          "stdout": "owned-checked-record-kotlin:177\n"
+        }
+      },
+      "retainedPackageSet": {
+        "archiveBytes": 54186555,
+        "archives": 2,
+        "files": [
+          "archives/owned-checked-records-1.0.0.jar",
+          "archives/owned-checked-records-1.0.0.pom",
+          "package-set-receipt.json",
+          "package-set-receipt.json.sha256"
+        ],
+        "path": "evidence/jvm/ordinary-full/handoff",
+        "receiptSha256": "73d97154173350a86804f5678e5a3a03eeeeb0b720a28e900fcc76bc8ea24fa6"
+      },
+      "route": "ordinary-full",
+      "sourceFreeInstallation": true,
+      "sourceUnchanged": true
+    },
+    {
+      "authorRoute": "ordinary",
+      "deterministicReassembly": true,
+      "group": "jvm",
+      "handoffRemovedBeforeRelocatedExecution": true,
+      "immutableInstalledInputs": true,
+      "mode": "result-only",
+      "observations": {
+        "java": {
+          "checks": 4,
+          "consumerSha256": "e6c60a630d3b1f8a34af86278c6ce33d90bb0d542c3e0f18291baa77987d15f5"
+        },
+        "kotlin": {
+          "checks": 4,
+          "consumerSha256": "a8d9668b5c41009adfe3660b12da37f064f714b4a2f4e6ccdde77f95b860e296"
+        }
+      },
+      "packageSetReceiptSha256": "d1488cabaeccf58747a62a425b8d409c9ca9c35f77e603e50534499486a3f824",
+      "profiles": [
+        "java",
+        "kotlin"
+      ],
+      "reassembled": {
+        "componentReceiptSha256": "448e43ae4374c1fedd6d8a4813aa6fde3b452f14d1c3858c908fa52fef2a6736",
+        "packages": [
+          {
+            "archive": "owned-checked-records-result-only-1.0.0.jar",
+            "sha256": "62cb7faa17c403eadcb0276fba4bddb926658a713a557a41a15d988bb6da8ebb"
+          },
+          {
+            "archive": "owned-checked-records-result-only-1.0.0.pom",
+            "sha256": "e9185b5d9bdd08bd039ae81486e816ff65e0295dca018ce5eab5cff73cfa8479"
+          }
+        ]
+      },
+      "relocatedInstallation": true,
+      "repeated": {
+        "java": {
+          "checks": 4,
+          "stdout": "owned-checked-record-result-only-java:4\n"
+        },
+        "kotlin": {
+          "checks": 4,
+          "stdout": "owned-checked-record-result-only-kotlin:4\n"
+        }
+      },
+      "retainedPackageSet": {
+        "archiveBytes": 54026067,
+        "archives": 2,
+        "files": [
+          "archives/owned-checked-records-result-only-1.0.0.jar",
+          "archives/owned-checked-records-result-only-1.0.0.pom",
+          "package-set-receipt.json",
+          "package-set-receipt.json.sha256"
+        ],
+        "path": "evidence/jvm/ordinary-result-only/handoff",
+        "receiptSha256": "d1488cabaeccf58747a62a425b8d409c9ca9c35f77e603e50534499486a3f824"
+      },
+      "route": "ordinary-result-only",
+      "sourceFreeInstallation": true,
+      "sourceUnchanged": true
+    },
+    {
+      "authorRoute": "reviewed",
+      "deterministicReassembly": true,
+      "group": "jvm",
+      "handoffRemovedBeforeRelocatedExecution": true,
+      "immutableInstalledInputs": true,
+      "mode": "full",
+      "observations": {
+        "java": {
+          "checks": 181,
+          "consumerSha256": "e1166b8845d6d9f3218b669002875aef4b89d44a26849faa9938ada31c6399d3"
+        },
+        "kotlin": {
+          "checks": 177,
+          "consumerSha256": "5bf43b83c92beecc356d2e14c872a2f9ab64bb1881d74fa94003055749f73d63"
+        }
+      },
+      "packageSetReceiptSha256": "cbd5373ce0bc6d9ab998de634e5d282f0ea9dff15ba08f311fd4d832bb12b55c",
+      "profiles": [
+        "java",
+        "kotlin"
+      ],
+      "reassembled": {
+        "componentReceiptSha256": "22c16c5135d5795bc6cdb7512c8436e2c4577f6f4f2a518cd09dfff30f2f8deb",
+        "packages": [
+          {
+            "archive": "owned-checked-records-1.0.0.jar",
+            "sha256": "64e4b2d9b3c1b86e53c8123671555b0a12e2b265125988868ae4c4b90e069019"
+          },
+          {
+            "archive": "owned-checked-records-1.0.0.pom",
+            "sha256": "b2b1301c6bbb5ec2c9306aaf152484c75d1ebcaa7f8521b7dc9165aee475e2b2"
+          }
+        ]
+      },
+      "relocatedInstallation": true,
+      "repeated": {
+        "java": {
+          "checks": 181,
+          "stdout": "owned-checked-record-java:181\n"
+        },
+        "kotlin": {
+          "checks": 177,
+          "stdout": "owned-checked-record-kotlin:177\n"
+        }
+      },
+      "retainedPackageSet": {
+        "archiveBytes": 54190476,
+        "archives": 2,
+        "files": [
+          "archives/owned-checked-records-1.0.0.jar",
+          "archives/owned-checked-records-1.0.0.pom",
+          "package-set-receipt.json",
+          "package-set-receipt.json.sha256"
+        ],
+        "path": "evidence/jvm/reviewed-full/handoff",
+        "receiptSha256": "cbd5373ce0bc6d9ab998de634e5d282f0ea9dff15ba08f311fd4d832bb12b55c"
+      },
+      "route": "reviewed-full",
+      "sourceFreeInstallation": true,
+      "sourceUnchanged": true
+    },
+    {
+      "authorRoute": "reviewed",
+      "deterministicReassembly": true,
+      "group": "jvm",
+      "handoffRemovedBeforeRelocatedExecution": true,
+      "immutableInstalledInputs": true,
+      "mode": "result-only",
+      "observations": {
+        "java": {
+          "checks": 4,
+          "consumerSha256": "e6c60a630d3b1f8a34af86278c6ce33d90bb0d542c3e0f18291baa77987d15f5"
+        },
+        "kotlin": {
+          "checks": 4,
+          "consumerSha256": "a8d9668b5c41009adfe3660b12da37f064f714b4a2f4e6ccdde77f95b860e296"
+        }
+      },
+      "packageSetReceiptSha256": "07828ff1addbddeae82c8cfc66a556756e35a7d86227a2292e7de6486b31c23a",
+      "profiles": [
+        "java",
+        "kotlin"
+      ],
+      "reassembled": {
+        "componentReceiptSha256": "c6d30bed0f810b2c8f25edc735b7f3f76651afc881f7ab2a19ad3f50bdb030ee",
+        "packages": [
+          {
+            "archive": "owned-checked-records-result-only-1.0.0.jar",
+            "sha256": "b0cca85467d1355242d217b271541da6db11df909d9095dcfabce959f5a62a70"
+          },
+          {
+            "archive": "owned-checked-records-result-only-1.0.0.pom",
+            "sha256": "7df89732e291ee89f3b99c305838666e1ae5a854c4bdd4751e6f67761aa8fe54"
+          }
+        ]
+      },
+      "relocatedInstallation": true,
+      "repeated": {
+        "java": {
+          "checks": 4,
+          "stdout": "owned-checked-record-result-only-java:4\n"
+        },
+        "kotlin": {
+          "checks": 4,
+          "stdout": "owned-checked-record-result-only-kotlin:4\n"
+        }
+      },
+      "retainedPackageSet": {
+        "archiveBytes": 54029337,
+        "archives": 2,
+        "files": [
+          "archives/owned-checked-records-result-only-1.0.0.jar",
+          "archives/owned-checked-records-result-only-1.0.0.pom",
+          "package-set-receipt.json",
+          "package-set-receipt.json.sha256"
+        ],
+        "path": "evidence/jvm/reviewed-result-only/handoff",
+        "receiptSha256": "07828ff1addbddeae82c8cfc66a556756e35a7d86227a2292e7de6486b31c23a"
+      },
+      "route": "reviewed-result-only",
+      "sourceFreeInstallation": true,
+      "sourceUnchanged": true
+    }
+  ],
+  "schemaVersion": 1
+}
