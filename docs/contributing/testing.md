@@ -214,6 +214,30 @@ npm/browser and PHP-Wasm keep their independent producer identities. Progress go
 to stderr, and the verification receipt appears on stdout only after every lane
 passes. This command runs no compilers and changes no support claims or archives.
 
+### Check PHP-Wasm owned-context isolation
+
+`npm run test:owned-checked-record-php-wasm` includes a separately built
+resource-owning peer for each ordinary/reviewed and full/result-only route.
+The peer uses the same Lean declarations under a different component identity.
+Both components install from original npm and Composer archives after the author
+directories have been removed. The peer is independently rebuilt, and its
+receipt-only archive handoff is retained beside the primary handoff.
+
+Each route exercises 32 Node and 32 Chromium configurations: both autoload
+arrangements, all startup/lazy loading pairs, both initialization orders and
+weak/strict callers. Every configuration repeats after request refresh. Checks
+cover foreign owners at the PHP and Zend boundaries, retained-owner isolation,
+serialization refusal, stale contexts and zero live identities after cleanup.
+Full APIs also reject foreign owners after partial argument conversion and
+foreign callback replies after transfer. Rejection must leave no partial output.
+
+These are separate ownership contexts inside one PHP-Wasm interpreter. PHP
+resource wrappers cannot be serialized into another interpreter's Wasm memory.
+The hosted replay requires the peer's original archives and all context results
+only for producer revisions containing this acceptance runner. Earlier archives
+retain their original scope. Source checks alone do not establish these installed
+results; retain and replay the successful hosted run before promoting coverage.
+
 ### Prepare owned checked-record support and documentation
 
 The promotion command requires the complete selection committed as

@@ -38,6 +38,8 @@ import {
 	assertOwnedCheckedRecordPhpWasmModelCorpus, ownedCheckedRecordPhpWasmCorpora
 	, ownedCheckedRecordPhpWasmCorpus
 } from "./owned-checked-record-php-wasm-corpus.mjs";
+import { buildOwnedCheckedRecordPhpWasmPeer } from "./owned-checked-record-php-wasm-peer.mjs";
+import { checkOwnedCheckedRecordPhpWasmContexts } from "./owned-checked-record-php-wasm-contexts.mjs";
 
 /**
  * Run an installed package with both autoload and extension-loading modes.
@@ -355,21 +357,36 @@ export const checkOwnedPhpWasmPackages = async (directory, diagnostic, { transfe
 		assert.deepEqual(JSON.parse(await readFile(join(repeatedRoot, "package-set-receipt.json"), "utf8")), packageSetReceipt);
 		if(!sourceFree) diagnostic(`${reviewed ? "reviewed" : "ordinary"}: building the independent copied peer`);
 		const peer = sourceFree ? null : await buildOwnedPhpWasmPeer({ author, leanPrefix, runtimeRoot, emsdkRoot, phpSource, runtimeIdentity: runtime.identity });
+		const checkedPeer = checkedRecords ? await buildOwnedCheckedRecordPhpWasmPeer({
+			author, reviewed, cli, runtimeIdentity: runtime.identity
+			, handoff: retainedRoot === null ? join(root, "checked-peer-handoff")
+				: join(evidenceRoot, reviewed ? "reviewed" : "ordinary", "checked-peer-handoff")
+		}) : null;
 		const observer = await buildOwnedPhpWasmObserver({ directory: join(author, "observer"), runtimeRoot, emsdkRoot, phpSource });
 		const packageHandoff = join(root, "package-handoff");
+		const checkedPeerHandoff = join(root, "checked-peer-packages");
 		if(sourceFree)
 		{
 			await cp(releaseRoot, packageHandoff, { recursive: true });
+			if(checkedPeer) await cp(checkedPeer.release.output, checkedPeerHandoff, { recursive: true });
 			await rm(author, { recursive: true }); await assert.rejects(() => readdir(author), { code: "ENOENT" });
 		}
 		const installed = await installPhpWasmGraphPackages({ root
 			, release: { ...release, output: sourceFree ? packageHandoff : releaseRoot, archiveRoot }
 			, host, diagnostic, companions: peer ? [peer.release] : [] });
 		if(sourceFree) installed.inventory = await phpWasmInventory(installed.deployment);
+		const contextsInstalled = checkedPeer ? await installPhpWasmGraphPackages({
+			root: join(root, "contexts"), host, diagnostic
+			, release: { ...release, output: packageHandoff, archiveRoot }
+			, companions: [{ ...checkedPeer.release, output: checkedPeerHandoff }]
+		}) : null;
+		if(checkedPeer) await rm(checkedPeerHandoff, { recursive: true });
 		if(sourceFree) await rm(packageHandoff, { recursive: true });
 		else await rm(author, { recursive: true });
 		await assert.rejects(() => readdir(author), { code: "ENOENT" });
 		const verification = await cli.verify(join(handoff, "package-set-receipt.json"));
+		if(checkedPeer) checkedPeer.observation.verification = await cli.verify(join(
+			checkedPeer.release.archiveRoot, "../../..", "package-set-receipt.json"));
 		if(retainedRoot !== null) await bindPhpWasmReceiptArchives(retainedRoot, release.report);
 		await rm(handoff, { recursive: true });
 		await saveLakeFile(installed.deployment, "observer.so", observer.bytes);
@@ -397,7 +414,19 @@ export const checkOwnedPhpWasmPackages = async (directory, diagnostic, { transfe
 		});
 		const coexistence = peer ? await checkOwnedPhpWasmCoexistence(installed.deployment, diagnostic) : null;
 		const coexistenceBrowser = peer ? await checkOwnedPhpWasmCoexistenceBrowser(installed.deployment, diagnostic) : null;
+		let crossRuntime;
+		if(checkedPeer)
+		{
+			await saveLakeFile(contextsInstalled.deployment, "observer.so", observer.bytes);
+			crossRuntime = { ...await checkOwnedCheckedRecordPhpWasmContexts({
+				deployment: contextsInstalled.deployment, name: npmSettings.name
+				, primary: model, peer: checkedPeer.observation.model
+				, mode: resultOnly ? "result-only" : "full", diagnostic
+			}), peer: checkedPeer.observation, installed: contextsInstalled
+			, sourceFreeInstallation: true, authorRemoved: true };
+		}
 		observations.push({ reviewed, inputs, model, receipt, rejected, browser
+			, ...checkedRecords ? { crossRuntime } : {}
 			, ...sourceFree ? { sourceFreeInstallation: true, handoffRemoved: true } : {}
 			, cliBuild, repeatedCliBuild, packageSetReceipt, verification
 			, deterministicReassembly: true, receiptVerifiedWithoutProducer: true

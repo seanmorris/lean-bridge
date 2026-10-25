@@ -29,6 +29,11 @@ import { moduleAtProducerWithSourceReads } from "./producer-module.mjs";
 import {
 	assertOwnedCheckedRecordPhpWasmModelCorpus, ownedCheckedRecordPhpWasmCorpus
 } from "./owned-checked-record-php-wasm-corpus.mjs";
+import {
+	checkOwnedCheckedRecordPhpWasmContextsEvidence
+	, ownedCheckedRecordPhpWasmContextModule
+	, requiresOwnedCheckedRecordPhpWasmContexts
+} from "./owned-checked-record-php-wasm-context-evidence.mjs";
 
 const summaryKeys = Object.freeze(["tests", "suites", "pass", "fail"
 	, "cancelled", "skipped", "todo"]);
@@ -276,11 +281,13 @@ const checkPhpWasmModel = (label, observation, mode, lean, corpus) => {
  * @param packagingRoot - Extracted packaging directory.
  * @param mode - Full or result-only owned checked-record mode.
  * @param observation - One author's installed observation.
+ * @param handoffName - Primary or independently owned peer receipt directory.
  */
-const checkPhpWasmPackageSet = async (lane, packagingRoot, mode, observation) => {
+const checkPhpWasmPackageSet = async (lane, packagingRoot, mode, observation, handoffName = "handoff") => {
 	const author = observation.reviewed ? "reviewed" : "ordinary";
 	const label = `${mode}/${author}`;
-	const path = `${lane.evidence}/${mode}/${author}/handoff`;
+	assert.ok(["handoff", "checked-peer-handoff"].includes(handoffName));
+	const path = `${lane.evidence}/${mode}/${author}/${handoffName}`;
 	const root = join(packagingRoot, path);
 	const { receipt, result } = await readVerifiedPackageSetReceipt({
 		receiptPath: join(root, packageSetReceiptName)
@@ -463,6 +470,9 @@ const checkPhpWasmRuntime = async (identity, manifest, producer) => {
  * @param original - Reader of committed source bytes at `producer`.
  */
 const replayPhpWasm = async (lane, root, producer, original) => {
+	const contexts = requiresOwnedCheckedRecordPhpWasmContexts(original);
+	const contextGenerator = contexts
+		? await moduleAtProducerWithSourceReads(producer, ownedCheckedRecordPhpWasmContextModule) : null;
 	const corpus = ownedCheckedRecordPhpWasmCorpus(original(
 		"tests/fixtures/structured-types/owned-checked-record-php-wasm.php"));
 	const packagingRoot = join(root, lane.packaging);
@@ -521,7 +531,8 @@ const replayPhpWasm = async (lane, root, producer, original) => {
 			const author = observation.reviewed ? "reviewed" : "ordinary";
 			const label = `${mode}/${author}`;
 			assert.deepEqual(Object.keys(observation).toSorted()
-				, [...phpWasmObservationKeys], `${label}: exact observation fields`);
+				, [...phpWasmObservationKeys, ...contexts ? ["crossRuntime"] : []].sort()
+				, `${label}: exact observation fields`);
 			for(const key of phpWasmFlags)
 				assert.equal(observation[key], true, `${label}: ${key}`);
 			assert.equal(observation.consumerSha256, consumer
@@ -545,6 +556,14 @@ const replayPhpWasm = async (lane, root, producer, original) => {
 				lane, packagingRoot, mode, observation);
 			members.push(...files.map(file =>
 				`${lane.packaging}/${retained.path}/${file}`));
+			if(contexts)
+			{
+				checkOwnedCheckedRecordPhpWasmContextsEvidence(observation.crossRuntime,
+					observation, mode, original, contextGenerator);
+				const peer = await checkPhpWasmPackageSet(lane, packagingRoot, mode,
+					observation.crossRuntime.peer, "checked-peer-handoff");
+				members.push(...peer.files.map(file => `${lane.packaging}/${peer.path}/${file}`));
+			}
 			routes.set(`${author}-${mode}`, { route: `${author}-${mode}`
 				, ...retained, checks: checkPhpWasmExecutions(label, observation, mode) });
 		}

@@ -32,6 +32,10 @@ import {
 	assertOwnedCheckedRecordPhpWasmModelCorpus, ownedCheckedRecordPhpWasmCorpora
 	, ownedCheckedRecordPhpWasmCorpus
 } from "./owned-checked-record-php-wasm-corpus.mjs";
+import { ownedCheckedRecordMixedSelection } from "./owned-checked-record-mixed-fixture.mjs";
+import { ownedCheckedRecordPhpWasmPeerSelection } from "./owned-checked-record-php-wasm-peer.mjs";
+import { requiresOwnedCheckedRecordPhpWasmContexts } from "./owned-checked-record-php-wasm-context-evidence.mjs";
+import { syntheticOwnedCheckedRecordPhpWasmContexts } from "./owned-checked-record-php-wasm-context-fixture.mjs";
 
 const revision = execFileSync("git", ["rev-parse", "HEAD"], {
 	encoding: "utf8"
@@ -81,7 +85,7 @@ const { manifest: runtimeManifest, identity: runtimeIdentity } = runtimeFor();
 const lean = original(
 	"tests/fixtures/onboarding/owned-checked-records/OwnedCheckedRecords.lean");
 
-const writeHandoff = async (root, mode, author) => {
+const writeHandoff = async (root, mode, author, peer = false) => {
 	const suffix = mode === "result-only" ? "-checked-record-result-only" : "-checked-record";
 	const profile = { id: "php-wasm-copied-v1"
 		, bindingIrSha256: sha256(`${mode}/${author}/binding`), runtimeIdentity };
@@ -100,12 +104,13 @@ const writeHandoff = async (root, mode, author) => {
 		return { ecosystem, name, version: "1.0.0" };
 	};
 	const runtime = await add("npm", "@lean-bridge/php-wasm-runtime", "runtime");
-	const component = await add("npm", `@lean-bridge-test/owned-php-wasm${suffix}`
+	const component = await add("npm", peer ? "@lean-bridge-test/owned-checked-record-peer" : `@lean-bridge-test/owned-php-wasm${suffix}`
 		, "component", [runtime]);
-	await add("composer", `lean-bridge-test/owned-php-wasm${suffix}`, "api"
+	await add("composer", peer ? "lean-bridge-test/owned-checked-record-peer" : `lean-bridge-test/owned-php-wasm${suffix}`, "api"
 		, [runtime, component]);
 	const receipt = await writePackageSetReceipt({ root
-		, component: { id: "ownedcheckedrecords@1.0.0", name: "ownedcheckedrecords"
+		, component: { id: `owned-checked-records${peer ? "-peer" : ""}@1.0.0`
+			, name: `owned-checked-records${peer ? "-peer" : ""}`
 			, version: "1.0.0" }
 		, source: { treeSha256: sha256(`${mode}/${author}/tree`) }
 		, profiles: [profile], packages });
@@ -155,7 +160,7 @@ const observationFor = async (packagingRoot, mode, reviewed, readOriginal) => {
 	const phases = loading => ["ready", "autoload", "invalid", "complete", "recovered"]
 		.map((stage, index) => ({ stage
 			, libraries: loading === "lazy" && index < 3 ? [] : loaded }));
-	return { reviewed
+	const observation = { reviewed
 		, inputs: { metadata: { synthetic: true }, sourceIdentity, component }
 		, model, receipt: { runtimeIdentity }, rejected: ["php-wasm-component.json"]
 		, browser: { bundleSha256: sha256(`${mode}/bundle`)
@@ -170,11 +175,33 @@ const observationFor = async (packagingRoot, mode, reviewed, readOriginal) => {
 		, cliBuild: build, repeatedCliBuild: build, packageSetReceipt: receipt
 		, verification: { status: "ok", result: { verificationType: "local-package-set" } }
 		, deterministicReassembly: true, receiptVerifiedWithoutProducer: true
-		, packageReceipt: { archives }, reproducedArchives: archives
+		, packageReceipt: { archives, npmSettings: { name: receipt.packages.find(item => item.role === "component").name } }
+		, reproducedArchives: archives
 		, observer: { synthetic: true }, independentlyRebuiltExactly: true
 		, sourceUnchanged: true, installed: { synthetic: true }, authorRemoved: true
 		, consumerSha256: sha256(consumer), runnerSha256: sha256(`${mode}/runner`)
 		, executions };
+	if(requiresOwnedCheckedRecordPhpWasmContexts(readOriginal))
+	{
+		model.bindingIr = ownedCheckedRecordMixedSelection(`${author}-${mode}`).reviewedIr;
+		const peerRoot = join(packagingRoot, lane.evidence, mode, author, "checked-peer-handoff");
+		const peerHandoff = await writeHandoff(peerRoot, mode, author, true);
+		const peer = { reviewed
+			, model: { pointerBits: 32, schemaVersion: 6
+				, component: peerHandoff.receipt.component, sourceIdentity
+				, bindingIr: ownedCheckedRecordPhpWasmPeerSelection(reviewed).reviewedIr
+				, bindingIrSha256: peerHandoff.receipt.profiles[0].bindingIrSha256
+				, ...corpusModel("result-only", ownedCheckedRecordPhpWasmCorpora.mixed) }
+			, receipt: { runtimeIdentity }, packageSetReceipt: peerHandoff.receipt
+			, packageReceipt: { archives: peerHandoff.archives
+				, npmSettings: { name: "@lean-bridge-test/owned-checked-record-peer" } }
+			, reproducedArchives: peerHandoff.archives
+			, cliBuild: build, repeatedCliBuild: build
+			, sourceUnchanged: true, independentlyRebuiltExactly: true
+			, verification: observation.verification };
+		observation.crossRuntime = syntheticOwnedCheckedRecordPhpWasmContexts(observation, peer, mode, readOriginal);
+	}
+	return observation;
 };
 
 /**
@@ -600,6 +627,10 @@ test("owned checked-record PHP-Wasm source roles retain its workflow inputs and 
 	assert.deepEqual(sources.filter(item => item.role === "consumer").map(item => item.path), [
 		"tests/fixtures/structured-types/owned-checked-record-php-wasm.php"
 		, "tests/fixtures/structured-types/owned-checked-record-result-only-php-wasm.php"
-	]);
+		, ...requiresOwnedCheckedRecordPhpWasmContexts(original)
+			? ["tests/fixtures/structured-types/owned-checked-record-php-wasm-contexts.php"] : []
+	].sort());
+	if(requiresOwnedCheckedRecordPhpWasmContexts(original))
+		assert.ok(has("producer", "tests/fixtures/structured-types/owned-checked-record-php-wasm-contexts.php"));
 	assert.ok(!sources.some(item => item.path.endsWith("owned-checked-record-php.php")));
 });

@@ -1,0 +1,139 @@
+{
+  "schemaVersion": 1,
+  "profile": "owned-checked-php-wasm-context-source-qualification",
+  "predecessorCommit": "aac4044c0596954713c06d6ffc876a989bfcedbc",
+  "sourceIdentity": {
+    "kind": "pre-implementation-working-tree-bytes",
+    "files": [
+      {
+        "path": "docs/contributing/testing.md",
+        "bytes": 262638,
+        "sha256": "e4ddf05a33b6be9203ab5f189583e71c0ed5f48997aba1599e67b39d7e7ce2fb"
+      },
+      {
+        "path": "tests/fixtures/structured-types/owned-checked-record-php-wasm-contexts.php",
+        "bytes": 5907,
+        "sha256": "2bfb8fcae2fc04f1941d10a8b151c99d63e4805ad885dd133c2d97d2032d9638"
+      },
+      {
+        "path": "tests/helpers/owned-checked-record-hosted-evidence-sources.mjs",
+        "bytes": 6636,
+        "sha256": "5242c7bc9eb9aa74135de5c607a6a14a2d45321a2edb61a9f91807aecc8a8193"
+      },
+      {
+        "path": "tests/helpers/owned-checked-record-hosted-output.mjs",
+        "bytes": 37227,
+        "sha256": "19f2beca3e34dbb527e1a693b51d10209afe16016bea8ee9e0991023c5c13318"
+      },
+      {
+        "path": "tests/helpers/owned-checked-record-php-wasm-context-evidence.mjs",
+        "bytes": 6258,
+        "sha256": "427a6693ee94948c5ccc8bb4119ec40897c93e5af094fccb2ab43260b4e54e59"
+      },
+      {
+        "path": "tests/helpers/owned-checked-record-php-wasm-context-fixture.mjs",
+        "bytes": 3605,
+        "sha256": "136e94b2d2d2de3c4033f3c04e3541d9a903853238cf046e97bfbe0f165a2791"
+      },
+      {
+        "path": "tests/helpers/owned-checked-record-php-wasm-context-tests.mjs",
+        "bytes": 7719,
+        "sha256": "e7c65eff5431363f6bdef8992877ee2237600184a8bc6fd1fc341f8fa0dc7200"
+      },
+      {
+        "path": "tests/helpers/owned-checked-record-php-wasm-contexts.mjs",
+        "bytes": 13240,
+        "sha256": "c6f8c0fc9728afffa34c45a59bcda09f1465ae2d384348eab7ec401aff78a053"
+      },
+      {
+        "path": "tests/helpers/owned-checked-record-php-wasm-hosted-tests.mjs",
+        "bytes": 34155,
+        "sha256": "845c3d2e26a3a5804beb748c3fa55a07cb703661fe333ee3171262e9b683e5f0"
+      },
+      {
+        "path": "tests/helpers/owned-checked-record-php-wasm-peer.mjs",
+        "bytes": 4783,
+        "sha256": "037050eb50c62a1b9d8941a8a9976d3731345ea7c8eba30bbc61115fe745f0a6"
+      },
+      {
+        "path": "tests/helpers/owned-php-wasm-packages.mjs",
+        "bytes": 32125,
+        "sha256": "0f0b3c35e6e32dd44063f1527fc981d66479623824d663e7b9870c5ab402e6e9"
+      }
+    ]
+  },
+  "scope": "VO #1728 and #1484: installed two-component ownership context acceptance, with source-only local qualification pending hosted execution.",
+  "changes": [
+    "Build and independently rebuild a result-only resource-owning peer through the installed CLI for all four ordinary/reviewed full/result-only routes. Preserve the exact main 15-export/three-transfer and three-export result-only selections.",
+    "Retain the peer's exact receipt-named package archives, remove authors before both installations, and execute both installed components in 32 Node and 32 Chromium configurations per route, each repeated after request refresh.",
+    "Reject foreign owners at public PHP and private installed Zend boundaries. In full APIs, reject after partially converting arrays and two-argument calls without consuming the first owner or publishing a partial result.",
+    "Reject foreign callback results before and after transfer, preserve independent retains, retire only the peer context, reject its stale handles, create a replacement context, and require zero live identities after both requests.",
+    "Refuse serialization of resource wrappers. These are separate component ownership contexts in one interpreter, not an exchange of PHP objects between independent Wasm heaps.",
+    "Require the additional original peer handoff, exact caller and generated selector bindings, complete execution matrices and cleanup counters only for producer revisions containing the new runner. Preserve every older archive and its original source coverage.",
+    "Document the contributor command, all modes, the ownership boundary and the requirement for original hosted acceptance before promoting support."
+  ],
+  "validation": {
+    "executionLimits": {
+      "heavyCommands": "serial",
+      "cpuAffinity": [
+        2
+      ],
+      "nice": 15,
+      "nodeMaxOldSpaceMiB": 512
+    },
+    "focusedSourceChecks": {
+      "tests": 10,
+      "pass": 10,
+      "fail": 0,
+      "skipped": 0,
+      "durationMs": 22853.5382,
+      "files": [
+        "tests/helpers/owned-checked-record-php-wasm-context-tests.mjs",
+        "tests/helpers/owned-checked-record-php-wasm-hosted-tests.mjs"
+      ],
+      "scope": "Four new source/contract controls plus six historical synthetic archive controls; no installed execution."
+    },
+    "existingPackageSourceChecks": {
+      "tests": 3,
+      "pass": 3,
+      "fail": 0,
+      "skipped": 0,
+      "durationMs": 1215.634006
+    },
+    "contextNegativeControls": 64,
+    "generatedJavaScriptSyntaxChecks": 6,
+    "phpCallerSyntaxChecks": 1,
+    "scopedEslint": "pass",
+    "configuredStrictTypecheck": "pass (four adopted modules only)",
+    "gitDiffCheck": "pass",
+    "liveInventoryAudit": {
+      "head": "aac4044c0596954713c06d6ffc876a989bfcedbc",
+      "inventory": {
+        "bytes": 102579190,
+        "sha256": "6840fa1c4c02d8352bb872c1b0ea5ba0db3f7f49dc2561311b087749391151b6"
+      },
+      "scope": "All live non-archived source pins; immutable archive replay is a separate gate",
+      "liveReferences": 16055,
+      "archivedReferences": 352995,
+      "uniquePaths": 2555,
+      "diskFiles": 3,
+      "gitFiles": 2552,
+      "uniqueObjects": 2523,
+      "checkedBytes": 24708467,
+      "stalePins": 0
+    },
+    "acceptedRuntimeRuns": 0
+  },
+  "inventory": {
+    "bytes": 102579190,
+    "sha256": "6840fa1c4c02d8352bb872c1b0ea5ba0db3f7f49dc2561311b087749391151b6",
+    "refreshedLivePins": 29,
+    "supportObservationsChanged": false,
+    "originalArchivesChanged": false
+  },
+  "pending": [
+    "Execute and authenticate the new installed PHP-Wasm context acceptance at a pushed source revision; the earlier green 9b6cd80 run does not execute these new cases.",
+    "Capture original PHP-Wasm and WIT artifacts, independently replay complete evidence, finish the original per-host lifetime audit and align the nine native/managed lanes at one producer revision.",
+    "Promote only verified support/docs and complete final-revision Core, required hosted and recurring CI gates before closing #1220."
+  ]
+}

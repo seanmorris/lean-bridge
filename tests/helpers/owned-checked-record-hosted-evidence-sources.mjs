@@ -18,6 +18,7 @@ import {
 import {
 	assertOwnedCheckedRecordNpmProducer, selectOwnedCheckedRecordWorkflow
 } from "./owned-checked-record-npm-producer.mjs";
+import { requiresOwnedCheckedRecordPhpWasmContexts } from "./owned-checked-record-php-wasm-context-evidence.mjs";
 
 export const ownedCheckedRecordHostedOriginal = callbackSubtypeHostedOriginal;
 
@@ -62,9 +63,12 @@ const phpWasmWorkflowInputs = ["config/cli-package.v1.json", "flake.lock"
 	, "scripts/install-playwright-browsers.sh", "scripts/lean-runtime-config.sh"
 	, "tests/helpers/owned-php-wasm-runtime.mjs"];
 
-const consumers = lane => {
+const consumers = (lane, revision) => {
 	if(lane.kind === "php-wasm")
-		return ["php-wasm.php", "result-only-php-wasm.php"]
+		return ["php-wasm.php", "result-only-php-wasm.php"
+			, ...requiresOwnedCheckedRecordPhpWasmContexts(path =>
+				ownedCheckedRecordHostedOriginal(revision, path))
+				? ["php-wasm-contexts.php"] : []]
 			.map(name => structured(`owned-checked-record-${name}`));
 	if(lane.kind === "javascript")
 		return ["tests/owned-checked-record-javascript-packaging.test.mjs"];
@@ -114,7 +118,7 @@ export const ownedCheckedRecordEvidenceSources = (laneName, value, workflow) => 
 			ownedCheckedRecordHostedOriginal(value.producer, selectedWorkflow).toString("utf8")
 			, ownedCheckedRecordHostedOriginal(value.producer, lane.workflow).toString("utf8")
 		);
-	const selectedConsumers = consumers(lane);
+	const selectedConsumers = consumers(lane, value.producer);
 	return freeze([
 		{
 			role: "producer", revision: value.producer
@@ -138,7 +142,7 @@ export const ownedCheckedRecordEvidenceSources = (laneName, value, workflow) => 
 		}
 		, { role: "consumer", revision: value.consumer
 			, paths: lane.kind === "javascript"
-				? closure(value.consumer, selectedConsumers) : selectedConsumers }
+				? closure(value.consumer, selectedConsumers) : consumers(lane, value.consumer) }
 		, {
 			role: "checker", revision: value.checker
 			, paths: closure(value.checker, [
