@@ -23,6 +23,7 @@ import {
 } from "./owned-checked-record-promotion.mjs";
 import { gitSourceBytes } from "./source-history-stream.mjs";
 import { readPromotionInventory } from "./type-surface-promotion-io.mjs";
+import { ownedSubtypeMatrixPublicationImplementation } from "./owned-subtype-matrix-publication-source-history.mjs";
 
 const predecessor = "a9cad3b18a244d7e74918e6e8964455e073e2453";
 const selectionSha256 = "8959dae7243d65ad0e5a204091c4cf1fdc99d963bdcd0b061622f82472608f14";
@@ -42,6 +43,10 @@ const current = () => loaded ??= (async () => {
 	};
 	const { document } = await readPromotionInventory(createReadStream("docs/type-surface.v1.json"), contracts);
 	const { document: before } = await readPromotionInventory(gitSourceBytes(predecessor, "docs/type-surface.v1.json"), contracts);
+	// Owned checked-record changes still compare with their original baseline.
+	// Other observations must preserve the separately authenticated Subtype publication.
+	const { document: independent } = await readPromotionInventory(gitSourceBytes(
+		ownedSubtypeMatrixPublicationImplementation, "docs/type-surface.v1.json"), contracts);
 	const selected = await readFile(ownedCheckedRecordPromotionSelectionPath);
 	assert.equal(sha256(selected), selectionSha256);
 	const selection = JSON.parse(selected); assert.equal(selected.toString(), canonicalJson(selection));
@@ -59,10 +64,10 @@ const current = () => loaded ??= (async () => {
 		, ...ownedCheckedRecordPromotionArchiveReferences(index
 			, dirname(selection.archives[number].index.path), bytes[number])
 	}));
-	return { document, before, contracts, references };
+	return { document, before, independent, contracts, references };
 })();
 
-const assertPublished = (document, before, contracts, references) => {
+const assertPublished = (document, before, contracts, references, independent) => {
 	assert.equal(references.length, 11);
 	assert.deepEqual(document.evidence.filter(entry => ownedId(entry.id)).map(entry => entry.id), references.map(entry => entry.id));
 	for(const reference of references)
@@ -89,13 +94,15 @@ const assertPublished = (document, before, contracts, references) => {
 			assert.equal(stage.state, "passed"); assert.ok(stage.evidence.includes(targets.get(cell.id)));
 		}
 	assert.equal(document.observations.length, before.observations.length);
+	assert.deepEqual(independent.observations.map(item => item.id)
+		, before.observations.map(item => item.id));
 	let changed = 0, count = 0;
 	for(const [index, observation] of document.observations.entries())
 	{
 		const prior = before.observations[index];
 		if(!Object.values(observation.stages).some(stage => stage.evidence.some(ownedId)))
 		{
-			assert.deepEqual(observation, prior); continue;
+			assert.deepEqual(observation, independent.observations[index]); continue;
 		}
 		changed++; count += observation.profiles.length * observation.positions.length;
 		for(const field of ["id", "profiles", "positions", "path", "shapes"]) assert.deepEqual(observation[field], prior[field]);
@@ -119,21 +126,21 @@ const assertPublished = (document, before, contracts, references) => {
 };
 
 test("published owned checked-record support binds eleven captures to exactly 170 cells", async () => {
-	const { document, before, contracts, references } = await current();
-	assert.equal(assertPublished(document, before, contracts, references), true);
+	const { document, before, independent, contracts, references } = await current();
+	assert.equal(assertPublished(document, before, contracts, references, independent), true);
 });
 
 test("published owned checked-record support rejects missing, substituted and widened claims", async () => {
-	const { document, before, contracts, references } = await current();
+	const { document, before, independent, contracts, references } = await current();
 	const first = references[0].id;
 	for(const change of [
 		entry => ({ ...entry, revision: "0".repeat(40) })
 		, entry => ({ ...entry, files: [{ ...entry.files[0], sha256: "0".repeat(64) }] })
 	]) {
 		const evidence = document.evidence.map(entry => entry.id === first ? change(entry) : entry);
-		assert.throws(() => assertPublished({ ...document, evidence }, before, contracts, references));
+		assert.throws(() => assertPublished({ ...document, evidence }, before, contracts, references, independent));
 	}
-	assert.throws(() => assertPublished({ ...document, evidence: document.evidence.filter(entry => entry.id !== first) }, before, contracts, references));
+	assert.throws(() => assertPublished({ ...document, evidence: document.evidence.filter(entry => entry.id !== first) }, before, contracts, references, independent));
 	const selected = document.observations.find(entry => entry.id === "checked-record-c-ordinary-source-parameter"); assert.ok(selected);
 	for(const mutate of [
 		entry => { entry.profiles.push("php-wasm"); }
@@ -145,7 +152,33 @@ test("published owned checked-record support rejects missing, substituted and wi
 	]) {
 		const altered = structuredClone(selected); mutate(altered);
 		const observations = document.observations.map(entry => entry === selected ? altered : entry);
-		assert.throws(() => assertPublished({ ...document, observations }, before, contracts, references));
+		assert.throws(() => assertPublished({ ...document, observations }, before, contracts, references, independent));
+	}
+});
+
+test("published owned checked-record support preserves independently accepted and unrelated observations", async () => {
+	const { document, before, independent, contracts, references } = await current();
+	const subtypeId = id => /^owned-subtype-[a-z-]+-hosted-installed$/u.test(id);
+	const selected = independent.observations.filter(observation =>
+		Object.values(observation.stages).some(stage => stage.evidence.some(subtypeId)));
+	assert.equal(selected.length, 22);
+	assert.equal(selected.reduce((sum, item) => sum + item.profiles.length * item.positions.length, 0), 32);
+	const unrelated = document.observations.find(observation =>
+		!Object.values(observation.stages).some(stage => stage.evidence.some(value => ownedId(value) || subtypeId(value))));
+	assert.ok(unrelated);
+	for(const id of [selected[0].id, unrelated.id])
+	{
+		const original = document.observations.find(item => item.id === id);
+		for(const mutate of [
+			entry => { entry.scope += " unsupported claim"; }
+			, entry => { entry.stages.installedExecution.evidence = []; }
+			, entry => { entry.limitations.push("unsupported claim"); }
+		]) {
+			const altered = structuredClone(original); mutate(altered);
+			const observations = document.observations.map(entry => entry.id === id ? altered : entry);
+			assert.throws(() => assertPublished({ ...document, observations }
+				, before, contracts, references, independent), assert.AssertionError, id);
+		}
 	}
 });
 
