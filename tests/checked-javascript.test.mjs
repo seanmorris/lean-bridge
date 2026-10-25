@@ -130,6 +130,7 @@ import "./helpers/php-wasm-entry-build-input-supplement-source-history-tests.mjs
 import "./helpers/core-aggregate-sparse-checkout-source-history-tests.mjs";
 import "./helpers/owned-npm-complete-acceptance-source-history-tests.mjs";
 import "./helpers/php-closure-producer-replay-source-history-tests.mjs";
+import "./helpers/owned-receipt-producer-replay-source-history-tests.mjs";
 
 const root = resolve(".");
 

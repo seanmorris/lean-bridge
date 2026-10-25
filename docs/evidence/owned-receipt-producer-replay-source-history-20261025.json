@@ -1,0 +1,227 @@
+{
+  "additions": [
+    {
+      "currentSha256": "d2eba294a03d8ba185bb2adab8fb8060782573b604b54679dd9802318d2682a8",
+      "path": "tests/helpers/owned-receipt-producer-replay-tests.mjs"
+    },
+    {
+      "currentSha256": "019dc0a846eb45064fa952cc4cca6c24a854b8cb35aafc8e4d4f1e929a6b8b2f",
+      "path": "scripts/update-owned-receipt-producer-replay-source-history.mjs"
+    },
+    {
+      "currentSha256": "ac98d23c8b5e79e49c18305f917c4fd5a7a1eb9530ebcccfe052b8ff4a7c5c07",
+      "path": "tests/helpers/owned-receipt-producer-replay-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "94876dfd3886e27d4e526e030b07392246f9e6792f2aa6acbc5dedc294204755",
+      "path": "tests/helpers/owned-receipt-producer-replay-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "0f367903fa0733a5426dd8a5649d195f5fade7c2",
+  "implementationCommits": [
+    "0f367903fa0733a5426dd8a5649d195f5fade7c2"
+  ],
+  "integrationBaseCommit": "0f367903fa0733a5426dd8a5649d195f5fade7c2",
+  "integrationUpdates": [
+    {
+      "currentSha256": "882dbb2f86e3daf804136b3d6e362bf1a5fb6e5299367985cd01561f3bd446e9",
+      "edits": [
+        {
+          "current": "import { beforeOwnedReceiptProducerReplaySource, ownedReceiptProducerReplayNormalizationPaths } from \"./owned-receipt-producer-replay-source-history.mjs\";\n",
+          "previous": "",
+          "start": 12850
+        },
+        {
+          "current": "\t...ownedReceiptProducerReplayNormalizationPaths\n\t, ...phpClosureProducerReplayNormalizationPaths\n",
+          "previous": "\t...phpClosureProducerReplayNormalizationPaths\n",
+          "start": 186044
+        },
+        {
+          "current": "\tlet stage = beforeOwnedReceiptProducerReplaySource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforePhpClosureProducerReplaySource(path, text, expected);\n",
+          "previous": "\tlet stage = beforePhpClosureProducerReplaySource(path, text, expected);\n",
+          "start": 230519
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "d189a05bacc3debc11418749c6d97cc1a84eaddad7332ec12a8d02086a2e5c93"
+    },
+    {
+      "currentSha256": "535049f4f15a75cf750f0b1bfcec6c775306ce5c07a6a445a127f938b14aeadc",
+      "edits": [
+        {
+          "current": "import \"./helpers/owned-receipt-producer-replay-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 8969
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "a1d76171f838809f8f44c9a9a10239a84f9e9e7ce3a650b6b5fc7827cc4cdc87"
+    }
+  ],
+  "milestone": "owned-receipt-producer-replay-source-v1",
+  "predecessorCommit": "6d3b9304a4c06a4ba347eaa4535b2cf26c932a99",
+  "schemaVersion": 1,
+  "scope": "Replay the original owned JVM package and Perl callback receipts with their exact Git producers. Preserve the current Perl runtime validators, authenticate copied package files and original report slots, and require explicit native PHP transfer history endpoints. All original execution, refusal and predecessor checks remain required. Runtime, workflows, original receipts and the complete type-surface inventory are unchanged. No live source pins require refresh. Full hosted Core acceptance remains open.",
+  "updates": [
+    {
+      "currentSha256": "7ca581c4ca7f4f149d0d31110bdfe2edc0bd5e5ecdb2edb94bfd396211f67904",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from \"../../src/build/native-graph-model.mjs\";\nimport { generateOwnedCPackage } from \"../../src/backends/c/owned-package.mjs\";\n",
+          "start": 578
+        },
+        {
+          "current": "",
+          "previous": "import { generateOwnedJvmPackage } from \"../../src/backends/jvm/owned-package.mjs\";\n",
+          "start": 638
+        },
+        {
+          "current": "",
+          "previous": "import { ownedJvmAdapterSources } from \"../../src/build/owned-jvm-artifacts.mjs\";\n",
+          "start": 729
+        },
+        {
+          "current": "import { moduleAtProducerWithSourceReads } from \"./producer-module.mjs\";\n\nexport const ownedJvmPackageProducer = \"578f04d09320e6998959390a3a0218ac6fd66d02\";\nexport const ownedJvmPackageProducerEntries = Object.freeze([\n\t\"src/build/native-graph-model.mjs\", \"src/backends/c/owned-package.mjs\"\n\t, \"src/backends/jvm/owned-package.mjs\", \"src/build/owned-jvm-artifacts.mjs\"\n]);\nlet producerPromise;\nconst producerModules = () => producerPromise ??= Promise.all(\n\townedJvmPackageProducerEntries.map(path =>\n\t\tmoduleAtProducerWithSourceReads(ownedJvmPackageProducer, path))\n).then(modules => Object.assign({}, ...modules));\n",
+          "previous": "",
+          "start": 1844
+        },
+        {
+          "current": "\tconst { createCompiledNativeModel, generateCompiledNativeLeanAdapters\n\t\t, generateOwnedCPackage, generateOwnedJvmPackage, ownedJvmAdapterSources }\n\t\t= await producerModules();\n",
+          "previous": "",
+          "start": 9282
+        }
+      ],
+      "path": "tests/helpers/owned-jvm-package-evidence.mjs",
+      "previousSha256": "bd9d67e4305c6dbf8cbf0a92ed8b177159cf33d1854574a462c277f7cc7729ab"
+    },
+    {
+      "currentSha256": "004c227f67dfff0a1d219e779ea3767bc8c1c814d2962807b4197f1b4166907a",
+      "edits": [
+        {
+          "current": "import { bytesAtProducer } from \"./producer-source.mjs\";\nimport { ownedPerlCallbackProducer } from \"./owned-perl-callback-result-history.mjs\";\n",
+          "previous": "import { beforePostPerlCallbackStaging } from \"./post-perl-callback-staging-history.mjs\";\n",
+          "start": 342
+        },
+        {
+          "current": "\tconst record = await receipt();\n",
+          "previous": "",
+          "start": 1061
+        },
+        {
+          "current": "\t\tassert.match(record.sources[path], /^[a-f0-9]{64}$/u, path);\n\t\tconst source = bytesAtProducer(ownedPerlCallbackProducer, path, record.sources[path]).toString();\n",
+          "previous": "\t\tconst source = beforePostPerlCallbackStaging(path, await readFile(path, \"utf8\"));\n",
+          "start": 1705
+        },
+        {
+          "current": "\t\t, item => item.sources[Object.keys(item.sources)[0]] = undefined\n",
+          "previous": "",
+          "start": 3177
+        }
+      ],
+      "path": "tests/helpers/owned-perl-callback-result-acceptance-tests.mjs",
+      "previousSha256": "8ae4bbcc9a830de0fc6ab0ed3c17563c8927e0adb1420c80a69fe27fb03940e6"
+    },
+    {
+      "currentSha256": "9649518925d55a258f57b684a0c50c19e7d9d16bfe4639579a0edc82e648f66a",
+      "edits": [
+        {
+          "current": "import { bytesAtProducer } from \"./producer-source.mjs\";\nimport { moduleAtProducerWithSourceReads } from \"./producer-module.mjs\";\n",
+          "previous": "import { beforePostPerlCallbackStaging } from \"./post-perl-callback-staging-history.mjs\";\n",
+          "start": 233
+        },
+        {
+          "current": "\t, ownedPerlCallbackCompletedPredecessor, ownedPerlCallbackProducer } from \"./owned-perl-callback-result-history.mjs\";\n",
+          "previous": "\t, ownedPerlCallbackCompletedPredecessor } from \"./owned-perl-callback-result-history.mjs\";\n",
+          "start": 576
+        },
+        {
+          "current": "let producerPromise;\nexport const ownedPerlCallbackProducerEntries = Object.freeze([\n\t\"tests/helpers/owned-perl-callback-result-acceptance.mjs\"\n\t, \"tests/helpers/owned-perl-callback-result-package-evidence.mjs\"\n\t, \"tests/helpers/owned-perl-callback-result-combined-evidence.mjs\"\n]);\nconst producerModule = () => producerPromise ??= Promise.all(\n\townedPerlCallbackProducerEntries.map(path =>\n\t\tmoduleAtProducerWithSourceReads(ownedPerlCallbackProducer, path)))\n\t.then(modules => Object.assign({}, ...modules));\n",
+          "previous": "",
+          "start": 1817
+        },
+        {
+          "current": "const literalTitles = async (paths, readSource) => {\n",
+          "previous": "const literalTitles = async paths => {\n",
+          "start": 9169
+        },
+        {
+          "current": "\t\tconst source = (await readSource(path)).toString();\n",
+          "previous": "\t\tconst source = await readFile(path, \"utf8\");\n",
+          "start": 9271
+        },
+        {
+          "current": "/**\n * Replay only the frozen receipt with its original validators and generators.\n * Fresh runtime reports continue through assertOwnedPerlCallbackReport.\n *\n * @param path - Original required report slot.\n * @param item - Retained observation, checked without changing its contents.\n * @param readSource - Exact producer bytes, overridable for rejection controls.\n */\nexport const assertOwnedPerlCallbackHistoricalReport = async (\n\tpath, item, readSource = source => bytesAtProducer(ownedPerlCallbackProducer, source)\n) => {\n\tassert.ok(originalReports.includes(path), path);\n\tconst name = path.split(\"/\").at(-1);\n\tassert.equal(item.mode, name.startsWith(\"ordinary\") ? \"ordinary\" : \"reviewed\");\n\tconst { assertOwnedPerlCallbackReport: historicalReport\n\t\t, assertOwnedPerlCallbackPackage: historicalPackage\n\t\t, assertOwnedPerlCallbackCombinedRelease: historicalCombined } = await producerModule();\n\tif(name.endsWith(\"-combined-package.json\")) return historicalPackage(name, item, readSource);\n\tif(name.endsWith(\"-combined-release.json\")) return historicalCombined(name, item, readSource);\n\treturn historicalReport(path, item);\n};\n\n",
+          "previous": "",
+          "start": 11986
+        },
+        {
+          "current": "",
+          "previous": "\t\tif(!Object.hasOwn(record.sources, path)) return readFile(path);\n",
+          "start": 14202
+        },
+        {
+          "current": "\t\tif(Object.hasOwn(record.sources, path)) assert.match(digest, /^[a-f0-9]{64}$/u, path);\n\t\treturn bytesAtProducer(ownedPerlCallbackProducer, path, digest);\n",
+          "previous": "\t\tconst source = beforePostPerlCallbackStaging(path, await readFile(path), digest);\n\t\tassert.equal(sha256(source), digest, path); return source;\n",
+          "start": 14241
+        },
+        {
+          "current": "\t\t\t? await literalTitles([\"factory\", \"xs\", \"contract\", \"package\", \"installer\"].map(name => helper(name + \"-tests\")), readSource)\n",
+          "previous": "\t\t\t? await literalTitles([\"factory\", \"xs\", \"contract\", \"package\", \"installer\"].map(name => helper(name + \"-tests\")))\n",
+          "start": 14696
+        },
+        {
+          "current": "\tpassed(record.verification, 14, await literalTitles([...originalEvidence].sort(), readSource));\n",
+          "previous": "\tpassed(record.verification, 14, await literalTitles([...originalEvidence].sort()));\n",
+          "start": 15041
+        },
+        {
+          "current": "\tfor(const [path, item] of Object.entries(reports))\n\t\tawait assertOwnedPerlCallbackHistoricalReport(path, item, readSource);\n",
+          "previous": "\tfor(const [path, item] of Object.entries(reports)) await assertOwnedPerlCallbackReport(path, item, readSource);\n",
+          "start": 15416
+        }
+      ],
+      "path": "tests/helpers/owned-perl-callback-result-acceptance.mjs",
+      "previousSha256": "cf7a01c89d1ffe3a4b0f71c6ba03a08a9624d9191ec1abd48e8d9d663ea579e4"
+    },
+    {
+      "currentSha256": "a327c73643300ec54b74702ff11f127f01110465114bfe3c21274342fd7165d1",
+      "edits": [
+        {
+          "current": "import \"./helpers/owned-receipt-producer-replay-tests.mjs\";\n",
+          "previous": "",
+          "start": 1088
+        }
+      ],
+      "path": "tests/owned-jvm-package-evidence.test.mjs",
+      "previousSha256": "b0f0319cd4b9e83d276051b6bce5d5b34ca27a747c6adbdb65698a4f5d04ed18"
+    },
+    {
+      "currentSha256": "274ba9c6c9534fad964b28d276fabdd22546f0ef9c1b993757bce1b60ca96575",
+      "edits": [
+        {
+          "current": "\t\tconst source = beforeOwnedPhpWasmTransfer(update.path, await readFile(update.path, \"utf8\"), update.currentSha256);\n\t\tconst prior = beforeOwnedPhpTransfer(update.path, source, update.previousSha256);\n",
+          "previous": "\t\tconst source = beforeOwnedPhpWasmTransfer(update.path, await readFile(update.path, \"utf8\")), prior = beforeOwnedPhpTransfer(update.path, source);\n",
+          "start": 1915
+        },
+        {
+          "current": "\t\tassert.equal(beforeOwnedPhpTransfer(update.path, prior, update.previousSha256), prior);\n",
+          "previous": "\t\tassert.equal(beforeOwnedPhpTransfer(update.path, prior), prior);\n",
+          "start": 2170
+        },
+        {
+          "current": "\tconst inventoryPath = \"docs/type-surface.v1.json\";\n\tconst inventory = record.updates.find(update => update.path === inventoryPath);\n\tconst current = beforeOwnedPhpWasmTransfer(inventoryPath, await readFile(inventoryPath, \"utf8\"), inventory.currentSha256);\n\tconst prior = JSON.parse(beforeOwnedPhpTransfer(inventoryPath, current, inventory.previousSha256));\n\tfor(const evidence of prior.evidence) for(const file of evidence.files)\n\t\tfile.sha256 = sha256(ownedPhpWasmTransferHistoricalBytes(file.path\n\t\t\t, await readFile(file.path), record.sources[file.path] ?? file.sha256));\n",
+          "previous": "\tconst current = beforeOwnedPhpWasmTransfer(\"docs/type-surface.v1.json\", await readFile(\"docs/type-surface.v1.json\", \"utf8\"));\n\tconst prior = JSON.parse(beforeOwnedPhpTransfer(\"docs/type-surface.v1.json\", current));\n\tfor(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedPhpWasmTransferHistoricalBytes(file.path, await readFile(file.path)));\n",
+          "start": 2354
+        },
+        {
+          "current": "\t\tconst source = beforeOwnedPhpWasmTransfer(update.path, await readFile(update.path, \"utf8\"), update.currentSha256);\n\t\tconst unknown = source + \"\\n/* unrelated */\\n\";\n\t\tassert.equal(beforeOwnedPhpTransfer(update.path, unknown, update.previousSha256), unknown);\n",
+          "previous": "\t\tconst source = beforeOwnedPhpWasmTransfer(update.path, await readFile(update.path, \"utf8\")), unknown = source + \"\\n/* unrelated */\\n\";\n\t\tassert.equal(beforeOwnedPhpTransfer(update.path, unknown), unknown);\n",
+          "start": 3128
+        }
+      ],
+      "path": "tests/owned-php-transfer-evidence.test.mjs",
+      "previousSha256": "9f957c147eb0923b534f1ddd2575af377c12dca0d135561defb87989afe3a830"
+    }
+  ]
+}
