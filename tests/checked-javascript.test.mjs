@@ -132,6 +132,7 @@ import "./helpers/owned-npm-complete-acceptance-source-history-tests.mjs";
 import "./helpers/php-closure-producer-replay-source-history-tests.mjs";
 import "./helpers/owned-receipt-producer-replay-source-history-tests.mjs";
 import "./helpers/owned-matrix-isolation-source-history-tests.mjs";
+import "./helpers/owned-matrix-refresh-source-history-tests.mjs";
 
 const root = resolve(".");
 
