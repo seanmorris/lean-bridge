@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "owned-checked-records@1.0.0",
+    "name": "owned-checked-records",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 53987938,
+          "path": "archives/leanbridge-owned-checked-records-1.0.0-linux-x86_64.zip",
+          "sha256": "981a787e69f2586cd171128df45e4f08d0f652d38800ade1b4821149d4f6ef2a"
+        }
+      ],
+      "ecosystem": "composer",
+      "name": "leanbridge/owned-checked-records",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "php-native",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "1488fdaa3109dc94547a6d4147ee29ae12d84e6cf23e9af6b8a5ed50a8efecec",
+      "id": "native-library-v1",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "bfe1e0a4148a29bd5e6c06703a896a967ff852a447b0fe564156aa25ee19fb69"
+  }
+}

@@ -1,0 +1,199 @@
+{
+  "group": "php",
+  "profile": "installed-owned-checked-record-managed",
+  "reports": [
+    {
+      "authorRoute": "ordinary",
+      "deterministicReassembly": true,
+      "group": "php",
+      "handoffRemovedBeforeRelocatedExecution": true,
+      "immutableInstalledInputs": true,
+      "mode": "full",
+      "observations": {
+        "php-native": {
+          "checks": 180,
+          "consumerSha256": "50f83314cded9a9c317802f4bb53d30a8b1bb636f8b36c88d5e1f0947fbcca4b"
+        }
+      },
+      "packageSetReceiptSha256": "06608fa88168a288727c7fe308f706dac007c09c9379b69b6263a7b1b828baa6",
+      "profiles": [
+        "php-native"
+      ],
+      "reassembled": {
+        "componentReceiptSha256": "bc588b764f732c114293e5388beb17c551bebd07e9128ed93add58b832ecaaa5",
+        "packages": [
+          {
+            "archive": "leanbridge-owned-checked-records-1.0.0-linux-x86_64.zip",
+            "sha256": "981a787e69f2586cd171128df45e4f08d0f652d38800ade1b4821149d4f6ef2a"
+          }
+        ]
+      },
+      "relocatedInstallation": true,
+      "repeated": {
+        "php-native": {
+          "checks": 180,
+          "stdout": "owned-checked-record-php-native:180\n"
+        }
+      },
+      "retainedPackageSet": {
+        "archiveBytes": 53987938,
+        "archives": 1,
+        "files": [
+          "archives/leanbridge-owned-checked-records-1.0.0-linux-x86_64.zip",
+          "package-set-receipt.json",
+          "package-set-receipt.json.sha256"
+        ],
+        "path": "evidence/php/ordinary-full/handoff",
+        "receiptSha256": "06608fa88168a288727c7fe308f706dac007c09c9379b69b6263a7b1b828baa6"
+      },
+      "route": "ordinary-full",
+      "sourceFreeInstallation": true,
+      "sourceUnchanged": true
+    },
+    {
+      "authorRoute": "ordinary",
+      "deterministicReassembly": true,
+      "group": "php",
+      "handoffRemovedBeforeRelocatedExecution": true,
+      "immutableInstalledInputs": true,
+      "mode": "result-only",
+      "observations": {
+        "php-native": {
+          "checks": 4,
+          "consumerSha256": "4f7d9e2170138cc2edcced6498174af61e1d1cc1942da8d37e4434d23b4a8bdb"
+        }
+      },
+      "packageSetReceiptSha256": "21b3be1f6cf90914283e62943ffb949244a3fab03db7d7d74eb8d7858d20577b",
+      "profiles": [
+        "php-native"
+      ],
+      "reassembled": {
+        "componentReceiptSha256": "b3f6ed63e615d2a45093c8ec8fb0397887e674b965ada1473c663644173b2141",
+        "packages": [
+          {
+            "archive": "leanbridge-owned-checked-records-result-only-1.0.0-linux-x86_64.zip",
+            "sha256": "b6f3e2ecc194389ab8686790bd0dca533fa5a84029ae8aaa726c5ae4aeef1e45"
+          }
+        ]
+      },
+      "relocatedInstallation": true,
+      "repeated": {
+        "php-native": {
+          "checks": 4,
+          "stdout": "owned-checked-record-result-only-php-native:4\n"
+        }
+      },
+      "retainedPackageSet": {
+        "archiveBytes": 53897289,
+        "archives": 1,
+        "files": [
+          "archives/leanbridge-owned-checked-records-result-only-1.0.0-linux-x86_64.zip",
+          "package-set-receipt.json",
+          "package-set-receipt.json.sha256"
+        ],
+        "path": "evidence/php/ordinary-result-only/handoff",
+        "receiptSha256": "21b3be1f6cf90914283e62943ffb949244a3fab03db7d7d74eb8d7858d20577b"
+      },
+      "route": "ordinary-result-only",
+      "sourceFreeInstallation": true,
+      "sourceUnchanged": true
+    },
+    {
+      "authorRoute": "reviewed",
+      "deterministicReassembly": true,
+      "group": "php",
+      "handoffRemovedBeforeRelocatedExecution": true,
+      "immutableInstalledInputs": true,
+      "mode": "full",
+      "observations": {
+        "php-native": {
+          "checks": 180,
+          "consumerSha256": "50f83314cded9a9c317802f4bb53d30a8b1bb636f8b36c88d5e1f0947fbcca4b"
+        }
+      },
+      "packageSetReceiptSha256": "d49e2bb831d6cd116053a4ed32309060615221374b533b8e0c5d731c50e13c8d",
+      "profiles": [
+        "php-native"
+      ],
+      "reassembled": {
+        "componentReceiptSha256": "6d0fce46543a50a6f0b8867085915da4ad60e28ef74abe35cd10566b04da8cc9",
+        "packages": [
+          {
+            "archive": "leanbridge-owned-checked-records-1.0.0-linux-x86_64.zip",
+            "sha256": "09c868405ed00686319d86b662e57e8c8fb95c5ef13aa9b78f05d8ebfc62e687"
+          }
+        ]
+      },
+      "relocatedInstallation": true,
+      "repeated": {
+        "php-native": {
+          "checks": 180,
+          "stdout": "owned-checked-record-php-native:180\n"
+        }
+      },
+      "retainedPackageSet": {
+        "archiveBytes": 53991734,
+        "archives": 1,
+        "files": [
+          "archives/leanbridge-owned-checked-records-1.0.0-linux-x86_64.zip",
+          "package-set-receipt.json",
+          "package-set-receipt.json.sha256"
+        ],
+        "path": "evidence/php/reviewed-full/handoff",
+        "receiptSha256": "d49e2bb831d6cd116053a4ed32309060615221374b533b8e0c5d731c50e13c8d"
+      },
+      "route": "reviewed-full",
+      "sourceFreeInstallation": true,
+      "sourceUnchanged": true
+    },
+    {
+      "authorRoute": "reviewed",
+      "deterministicReassembly": true,
+      "group": "php",
+      "handoffRemovedBeforeRelocatedExecution": true,
+      "immutableInstalledInputs": true,
+      "mode": "result-only",
+      "observations": {
+        "php-native": {
+          "checks": 4,
+          "consumerSha256": "4f7d9e2170138cc2edcced6498174af61e1d1cc1942da8d37e4434d23b4a8bdb"
+        }
+      },
+      "packageSetReceiptSha256": "5b57d0448791b6cb0720d5f68774910a9266b50aaa82fb6f901ab491c1b21922",
+      "profiles": [
+        "php-native"
+      ],
+      "reassembled": {
+        "componentReceiptSha256": "603fe51666185f7f1cdcaa8c18dc9fa0bab5f31fd2c4894829c0504645e04e99",
+        "packages": [
+          {
+            "archive": "leanbridge-owned-checked-records-result-only-1.0.0-linux-x86_64.zip",
+            "sha256": "d81835b6a1015452e562934e0465e0f093fa0520d260cf6993e71d926620bb6f"
+          }
+        ]
+      },
+      "relocatedInstallation": true,
+      "repeated": {
+        "php-native": {
+          "checks": 4,
+          "stdout": "owned-checked-record-result-only-php-native:4\n"
+        }
+      },
+      "retainedPackageSet": {
+        "archiveBytes": 53900468,
+        "archives": 1,
+        "files": [
+          "archives/leanbridge-owned-checked-records-result-only-1.0.0-linux-x86_64.zip",
+          "package-set-receipt.json",
+          "package-set-receipt.json.sha256"
+        ],
+        "path": "evidence/php/reviewed-result-only/handoff",
+        "receiptSha256": "5b57d0448791b6cb0720d5f68774910a9266b50aaa82fb6f901ab491c1b21922"
+      },
+      "route": "reviewed-result-only",
+      "sourceFreeInstallation": true,
+      "sourceUnchanged": true
+    }
+  ],
+  "schemaVersion": 1
+}
