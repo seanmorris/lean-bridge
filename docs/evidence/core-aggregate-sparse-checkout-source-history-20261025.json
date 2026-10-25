@@ -1,0 +1,148 @@
+{
+  "additions": [
+    {
+      "currentSha256": "2800149f814fb8d6bb77eddd12ac8ee2fc60fc92d5b2be9a138b39e2eb607a80",
+      "path": "docs/evidence/core-aggregate-sparse-checkout-20261025/acceptance.json"
+    },
+    {
+      "currentSha256": "e332ee169c7bc6660c45a00624399c87bceaa47ceb22584aa0941639c4ecef84",
+      "path": "docs/evidence/core-aggregate-sparse-checkout-20261025/diagnostics.json"
+    },
+    {
+      "currentSha256": "14ee28fad10dcdd94951a5a94a1c44565ae7e8b07e93a5a220dbbfa930096b1b",
+      "path": "docs/evidence/core-aggregate-sparse-checkout-20261025/pin-audit.json"
+    },
+    {
+      "currentSha256": "cacd0d82a93bc97c37758b20d10f950430a3be858fbc870e72f6dbf476f76e29",
+      "path": "docs/evidence/core-aggregate-sparse-checkout-20261025/pin-audit.mjs"
+    },
+    {
+      "currentSha256": "5fd9654202537d635b745e8a093dcc09b4e5bcade5d228ab8bc51f6444f25fe3",
+      "path": "docs/evidence/core-aggregate-sparse-checkout-20261025/reproduction.tap"
+    },
+    {
+      "currentSha256": "807fe468523326dd20d62d1beb097ab13ca4b163bc77741595225fb62bbbc91b",
+      "path": "docs/evidence/core-aggregate-sparse-checkout-20261025/run.tap"
+    },
+    {
+      "currentSha256": "ed0e74623058808118764eb50ca5b77e4539314feaeb349dbd693c67e510353a",
+      "path": "scripts/update-core-aggregate-sparse-checkout-source-history.mjs"
+    },
+    {
+      "currentSha256": "5c84c8d958de200ff68378a91fccd3a7941b0693aedbaf5c9ad18494191bde07",
+      "path": "tests/helpers/core-aggregate-sparse-checkout-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "2e2928128b87ec2899088a695cd90297ddee369e72abb8b2fa83029bac2b0a57",
+      "path": "tests/helpers/core-aggregate-sparse-checkout-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "df8bf8e05351e52eacf922bad46511dd292a63d7",
+  "implementationCommits": [
+    "df8bf8e05351e52eacf922bad46511dd292a63d7"
+  ],
+  "integrationBaseCommit": "df8bf8e05351e52eacf922bad46511dd292a63d7",
+  "integrationUpdates": [
+    {
+      "currentSha256": "a1cf656045c841c1439c79aeecc62f9e03ede04dd4ec28ed6615c4f39c38fa9f",
+      "edits": [
+        {
+          "current": "import { beforeCoreAggregateSparseCheckoutSource, coreAggregateSparseCheckoutNormalizationPaths } from \"./core-aggregate-sparse-checkout-source-history.mjs\";\n",
+          "previous": "",
+          "start": 12388
+        },
+        {
+          "current": "\t...coreAggregateSparseCheckoutNormalizationPaths\n\t, ...phpWasmEntryBuildInputSupplementNormalizationPaths\n",
+          "previous": "\t...phpWasmEntryBuildInputSupplementNormalizationPaths\n",
+          "start": 185585
+        },
+        {
+          "current": "\tlet stage = beforeCoreAggregateSparseCheckoutSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforePhpWasmEntryBuildInputSupplementSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforePhpWasmEntryBuildInputSupplementSource(path, text, expected);\n",
+          "start": 229909
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "57f9ba3cb14c8f17f8afc22d198c418b2a08bcd0eed00957613539e90344aa68"
+    },
+    {
+      "currentSha256": "2f9970c6ebbd30e26281f1ef16cb58bbbf660688961c00b25803883a2808474f",
+      "edits": [
+        {
+          "current": "import \"./helpers/core-aggregate-sparse-checkout-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 8745
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "4e1d9bd7c1b06ff9998b83105a5c1884830622d17c38e86209377fd723cad300"
+    }
+  ],
+  "milestone": "core-aggregate-sparse-checkout-source-v1",
+  "predecessorCommit": "c9c6435b7616807cfa9c97280bd9a49848b810dc",
+  "schemaVersion": 1,
+  "scope": "Repair the timed-out Core aggregate checkout without changing any static or contract shard selection, producer history, timeout, heap or concurrency bound. Retain the original assertion failure and hosted timeout annotations. A real sparse clone authenticates all 1006 contract files and rejects an incomplete manifest. Reverse exactly one inventory source pin, preserving every support observation and every original archive byte. Final-head hosted Core, the remaining target gates and default-branch activation remain open.",
+  "updates": [
+    {
+      "currentSha256": "b1daab5edc29356b4428e1446a73a862c10d54d36fa0be429e69e2b85649465f",
+      "edits": [
+        {
+          "current": "          sparse-checkout: |\n            scripts\n            src\n            tests\n          sparse-checkout-cone-mode: true\n",
+          "previous": "",
+          "start": 4254
+        }
+      ],
+      "path": ".github/workflows/quality.yml",
+      "previousSha256": "d35f122c03c600842f4cfcbf167d9fbd33a143dd2005635234ea623f4af7fda1"
+    },
+    {
+      "currentSha256": "1e5a2fa9a807bb873fb14a1ee6be0cc238504824bce9902e866cdecb58b12267",
+      "edits": [
+        {
+          "current": "import { access, mkdir, mkdtemp, readFile, rm, writeFile } from \"node:fs/promises\";\n",
+          "previous": "import { mkdir, mkdtemp, readFile, rm, writeFile } from \"node:fs/promises\";\n",
+          "start": 195
+        },
+        {
+          "current": "import { join, resolve } from \"node:path\";\n",
+          "previous": "import { join } from \"node:path\";\n",
+          "start": 313
+        },
+        {
+          "current": "import { canonicalJson } from \"../../src/capsule/node.mjs\";\n",
+          "previous": "",
+          "start": 386
+        },
+        {
+          "current": "\tconst aggregate = source.slice(source.indexOf(\"\\n  quality:\\n\"));\n\tassert.match(aggregate, /fetch-depth: 1\\n {10}persist-credentials: false\\n {10}sparse-checkout: \\|\\n {12}scripts\\n {12}src\\n {12}tests\\n {10}sparse-checkout-cone-mode: true\\n/u\n\t\t, \"The aggregate needs the complete test tree and verifier source, not retained evidence\");\n\tassert.equal([...source.matchAll(/^\\s+sparse-checkout: \\|\\s*$/gmu)].length, 1\n\t\t, \"Only the aggregate may omit archived evidence from its checkout\");\n\tassert.doesNotMatch(aggregate, /^\\s+filter:/mu\n\t\t, \"Use checkout's sparse blob filter without overriding it\");\n",
+          "previous": "",
+          "start": 2379
+        },
+        {
+          "current": "\t\t, source.replace(\"            tests\\n\", \"            tests/helpers\\n\")\n\t\t, source.replace(\"            src\\n\", \"            docs/evidence\\n\")\n\t\t, source.replace(\"            scripts\\n\", \"\")\n\t\t, source.replace(\"sparse-checkout-cone-mode: true\", \"sparse-checkout-cone-mode: false\")\n\t\t, source.replace(\"          sparse-checkout: |\", \"          filter: tree:0\\n          sparse-checkout: |\")\n",
+          "previous": "",
+          "start": 12439
+        },
+        {
+          "current": "test(\"Core aggregate authenticates every manifest from an evidence-free sparse checkout\", async t => {\n\tconst root = resolve(\".\");\n\tconst directory = await mkdtemp(join(tmpdir(), \"lean-core-aggregate-sparse-\"));\n\tt.after(() => rm(directory, { recursive: true, force: true }));\n\tconst checkout = join(directory, \"repository\");\n\tconst git = (arguments_, cwd = root) => execFileSync(\"git\", arguments_\n\t\t, { cwd, encoding: \"utf8\", maxBuffer: 1024 * 1024, timeout: 30000 });\n\tconst revision = git([\"rev-parse\", \"HEAD\"]).trim();\n\tgit([\"clone\", \"--quiet\", \"--shared\", \"--no-checkout\", root, checkout]);\n\tgit([\"sparse-checkout\", \"set\", \"--cone\", \"scripts\", \"src\", \"tests\"], checkout);\n\tgit([\"checkout\", \"--quiet\", \"--detach\", revision], checkout);\n\tassert.equal(git([\"rev-parse\", \"HEAD\"], checkout).trim(), revision);\n\tawait assert.rejects(access(join(checkout, \"docs\")), { code: \"ENOENT\" });\n\tassert.deepEqual(await collectRepositoryTestPaths(checkout)\n\t\t, await collectRepositoryTestPaths(root));\n\tconst paths = await collectCoreContractTestPaths(root);\n\tassert.deepEqual(await collectCoreContractTestPaths(checkout), paths);\n\tconst manifests = coreContractShardLabels.map(label =>\n\t\tcoreContractShardManifest(paths, label));\n\tconst manifestDirectory = join(directory, \"manifests\");\n\tawait mkdir(manifestDirectory);\n\tfor(const manifest of manifests)\n\t\tawait writeFile(join(manifestDirectory\n\t\t\t, `core-shard-${manifest.shard.index}.json`), canonicalJson(manifest));\n\tconst verify = () => execFileSync(process.execPath\n\t\t, [\"scripts/check-core-contract-shards.mjs\", manifestDirectory]\n\t\t, { cwd: checkout, encoding: \"utf8\", stdio: \"pipe\", maxBuffer: 1024 * 1024, timeout: 30000 });\n\tassert.deepEqual(JSON.parse(verify())\n\t\t, verifyCoreContractShardManifests(paths, manifests));\n\tt.diagnostic(`Complete sparse aggregate: ${paths.length} contract files across six shards at ${revision}`);\n\tconst changed = structuredClone(manifests[0]);\n\tchanged.selection.files.pop();\n\tawait writeFile(join(manifestDirectory, \"core-shard-1.json\"), canonicalJson(changed));\n\tassert.throws(verify, /Core shard 1\\/6/u);\n});\n\n",
+          "previous": "",
+          "start": 17064
+        }
+      ],
+      "path": "tests/helpers/core-quality-budget-tests.mjs",
+      "previousSha256": "66bc3acd96b6e00ec01ad0d7016f551cae0f9d2a2d5a2cd020a216efacd1d734"
+    },
+    {
+      "currentSha256": "68fd0a7a321eeda0637cba71f33284aea66b78f5e2e29686ae0c088559736582",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"b1daab5edc29356b4428e1446a73a862c10d54d36fa0be429e69e2b85649465f\"\n",
+          "previous": "          \"sha256\": \"d35f122c03c600842f4cfcbf167d9fbd33a143dd2005635234ea623f4af7fda1\"\n",
+          "start": 1351460
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "a3dd3938b125bd0abc97ef2e838d4932a5e5a5ffddbbcf77f2f57db17ba135d2"
+    }
+  ]
+}
