@@ -1,0 +1,63 @@
+{
+  "component": {
+    "id": "owned-checked-records@1.0.0",
+    "name": "owned-checked-records",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 118910,
+          "path": "@lean-bridge-owned-checked-records-1.0.0.tgz",
+          "sha256": "468b9f9bdce9827edece87385b0837137c8ffd29f155d85844f21c5b2efa8054"
+        }
+      ],
+      "ecosystem": "npm",
+      "name": "@lean-bridge/owned-checked-records",
+      "profile": "javascript-wasm-owned-v1",
+      "requires": [
+        {
+          "ecosystem": "npm",
+          "name": "@lean-bridge/runtime",
+          "version": "0.0.0-abi2.61c8e5f1e7381182f2d9cac436e1a247efd41cb856443534a238e31515708de1"
+        }
+      ],
+      "role": "component",
+      "runtimeDelivery": "dependency",
+      "runtimeIdentity": "61c8e5f1e7381182f2d9cac436e1a247efd41cb856443534a238e31515708de1",
+      "target": "npm",
+      "version": "1.0.0"
+    },
+    {
+      "artifacts": [
+        {
+          "bytes": 1642686,
+          "path": "lean-bridge-runtime-0.0.0-abi2.61c8e5f1e7381182f2d9cac436e1a247efd41cb856443534a238e31515708de1.tgz",
+          "sha256": "2d0542b611e1eb34730711e0feb87ab26e3e9cea6f364acd6fc648d0d5976d6a"
+        }
+      ],
+      "ecosystem": "npm",
+      "name": "@lean-bridge/runtime",
+      "profile": "javascript-wasm-owned-v1",
+      "requires": [],
+      "role": "runtime",
+      "runtimeDelivery": "provided",
+      "runtimeIdentity": "61c8e5f1e7381182f2d9cac436e1a247efd41cb856443534a238e31515708de1",
+      "target": "npm",
+      "version": "0.0.0-abi2.61c8e5f1e7381182f2d9cac436e1a247efd41cb856443534a238e31515708de1"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "8a490d0254d8eb2a9c5207c6c42b7e3923f3cc2754c5845ea56999462196d118",
+      "id": "javascript-wasm-owned-v1",
+      "runtimeIdentity": "61c8e5f1e7381182f2d9cac436e1a247efd41cb856443534a238e31515708de1"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "a0a9f6199db07a16948ff745ab863c25ef02c0341597d0dbac459ae297b73c8d"
+  }
+}
