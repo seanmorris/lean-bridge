@@ -83,6 +83,7 @@ import { beforeConsumerToolLookupsSource, consumerToolLookupsNormalizationPaths 
 import { beforePhpWasmEntrySourceSupplementSource, phpWasmEntrySourceSupplementNormalizationPaths } from "./php-wasm-entry-source-supplement-source-history.mjs";
 import { beforeCorePublicationRecursiveRepairSource, corePublicationRecursiveRepairNormalizationPaths } from "./core-publication-recursive-repair-source-history.mjs";
 import { beforeCoreAuthorPublicationRepairSource, coreAuthorPublicationRepairNormalizationPaths } from "./core-author-publication-repair-source-history.mjs";
+import { beforePhpWasmEntryBuildInputSupplementSource, phpWasmEntryBuildInputSupplementNormalizationPaths } from "./php-wasm-entry-build-input-supplement-source-history.mjs";
 import { beforeCoreEvidenceMemoryRepairSource, coreEvidenceMemoryRepairNormalizationPaths } from "./core-evidence-memory-repair-source-history.mjs";
 import { beforeValueIndexPromotionMilestoneRepairSource, valueIndexPromotionMilestoneRepairNormalizationPaths } from "./value-index-promotion-milestone-repair-source-history.mjs";
 import { beforeCoreMilestoneReplayRepairSource, coreMilestoneReplayRepairNormalizationPaths } from "./core-milestone-replay-repair-source-history.mjs";
@@ -2176,7 +2177,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...coreAuthorPublicationRepairNormalizationPaths
+	...phpWasmEntryBuildInputSupplementNormalizationPaths
+	, ...coreAuthorPublicationRepairNormalizationPaths
 	, ...corePublicationRecursiveRepairNormalizationPaths
 	, ...phpWasmEntrySourceSupplementNormalizationPaths
 	, ...consumerToolLookupsNormalizationPaths
@@ -3095,7 +3097,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeCoreAuthorPublicationRepairSource(path, text, expected);
+	let stage = beforePhpWasmEntryBuildInputSupplementSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeCoreAuthorPublicationRepairSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;

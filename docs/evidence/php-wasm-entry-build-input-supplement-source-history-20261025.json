@@ -1,0 +1,350 @@
+{
+  "additions": [
+    {
+      "currentSha256": "19333471b6904ef61f99e6bf8ba2dc04a3eb4786114d5e209fc9a6e9d780d6e0",
+      "path": "docs/evidence/php-wasm-entry-build-input-supplement-20261025.json"
+    },
+    {
+      "currentSha256": "83612e04cfb3b670346826c09556908c51e6452c9312663c695c692f70188980",
+      "path": "tests/helpers/php-wasm-entry-build-input-supplement.mjs"
+    },
+    {
+      "currentSha256": "df67987ea9079f0031fa730a1cbd8cb5b6fafb9057a51867d6784e349ef9bb61",
+      "path": "docs/evidence/php-wasm-entry-build-input-supplement-acceptance-20261025/acceptance.json"
+    },
+    {
+      "currentSha256": "b5e00e1126b8da094d63549e24e31c965f89865c5e0ec12550e1b2ffe0cccbc2",
+      "path": "docs/evidence/php-wasm-entry-build-input-supplement-acceptance-20261025/run.tap"
+    },
+    {
+      "currentSha256": "a0cc912efb8724c8f4dd5176060791de58eccb8b4c5d86e23bfc6d6a767ea518",
+      "path": "docs/evidence/php-wasm-entry-build-input-supplement-acceptance-20261025/initial-license.tap"
+    },
+    {
+      "currentSha256": "5c3b7ebf000b2a9e1dc2ac7815dd0a728b0f47d441ca4f6203ceb57cd11bccc5",
+      "path": "docs/evidence/php-wasm-entry-build-input-supplement-acceptance-20261025/initial-notice.tap"
+    },
+    {
+      "currentSha256": "8f67620e80fa36fe5beab15eb3ee8cee0d4e7833ed5299a3dbc6469cb5a7c94f",
+      "path": "docs/evidence/php-wasm-entry-build-input-supplement-acceptance-20261025/initial-checkout.log"
+    },
+    {
+      "currentSha256": "df430be417f3e783e0615bbc6d5a522408751a6b4d6726b0cdbe763697b7c97e",
+      "path": "docs/evidence/php-wasm-entry-build-input-supplement-acceptance-20261025/source-audit.mjs"
+    },
+    {
+      "currentSha256": "896344376f112ed90f5a4e5fdd014c31c9e0a0459a1b41961728d96e350acc58",
+      "path": "docs/evidence/php-wasm-entry-build-input-supplement-acceptance-20261025/source-audit.json"
+    },
+    {
+      "currentSha256": "b88d335063c5b70a20a80e641ecd2225fa8884b853b71ead3a828169143e8882",
+      "path": "docs/evidence/php-wasm-entry-build-input-supplement-acceptance-20261025/pin-audit.mjs"
+    },
+    {
+      "currentSha256": "e447b4f0b23996848b3d414ca71b64bde4cee83f8faf2fc64e1c9db8baf7e6dd",
+      "path": "scripts/update-php-wasm-entry-build-input-supplement-source-history.mjs"
+    },
+    {
+      "currentSha256": "50dcb3ac0c0025d6bef7ef07605fd08e5891f86df630091f397b85128da321e6",
+      "path": "tests/helpers/php-wasm-entry-build-input-supplement-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "bde9e87018254b00a3d6937720ce492487934e098fe0fc65d9b7187e688205ad",
+      "path": "tests/helpers/php-wasm-entry-build-input-supplement-source-history.mjs"
+    },
+    {
+      "currentSha256": "2c1f956b4b1df2aa210f0530c66a189278d5c28d0f0ae4d4ed3ed45a6f36703c",
+      "path": "docs/evidence/php-wasm-entry-build-input-supplement-acceptance-20261025/hosted-replay.json"
+    }
+  ],
+  "implementationCommit": "4aae9d81d44859b67f5f077805c5c9fe657374cb",
+  "implementationCommits": [
+    "4aae9d81d44859b67f5f077805c5c9fe657374cb"
+  ],
+  "integrationBaseCommit": "4aae9d81d44859b67f5f077805c5c9fe657374cb",
+  "integrationUpdates": [
+    {
+      "currentSha256": "57f9ba3cb14c8f17f8afc22d198c418b2a08bcd0eed00957613539e90344aa68",
+      "edits": [
+        {
+          "current": "import { beforePhpWasmEntryBuildInputSupplementSource, phpWasmEntryBuildInputSupplementNormalizationPaths } from \"./php-wasm-entry-build-input-supplement-source-history.mjs\";\n",
+          "previous": "",
+          "start": 12213
+        },
+        {
+          "current": "\t...phpWasmEntryBuildInputSupplementNormalizationPaths\n\t, ...coreAuthorPublicationRepairNormalizationPaths\n",
+          "previous": "\t...coreAuthorPublicationRepairNormalizationPaths\n",
+          "start": 185427
+        },
+        {
+          "current": "\tlet stage = beforePhpWasmEntryBuildInputSupplementSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCoreAuthorPublicationRepairSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeCoreAuthorPublicationRepairSource(path, text, expected);\n",
+          "start": 229699
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "82dc7032dd25b552f51ff3bb6896a2b83af4dca93730fb27f33156484f4bf53b"
+    },
+    {
+      "currentSha256": "4e1d9bd7c1b06ff9998b83105a5c1884830622d17c38e86209377fd723cad300",
+      "edits": [
+        {
+          "current": "import \"./helpers/php-wasm-entry-build-input-supplement-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 8662
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "db1b7fef1059adc30e01998a282f450435401335c1f67ae6ce2ff820f8a23756"
+    }
+  ],
+  "milestone": "php-wasm-entry-build-input-supplement-source-v1",
+  "predecessorCommit": "337744bc2a7c1761fa742ce4eb8f7758a00d63f8",
+  "schemaVersion": 1,
+  "scope": "Retain seventeen omitted repository build, license, notice, patch, metadata and preflight inputs for exactly three immutable historical source snapshots. Require those inputs in new captures and before producer execution; authenticate compressed and decoded SHA-256, original Git objects and bounded sizes. Preserve original archives, runtime source and all support observations. Retain two original regression failures, sparse-checkout refusal, seventeen passing checks, three real source ZIP validations, 9,666 authenticated producer files, 620 unchanged reachable modules, exact twelve-pin inventory reversal and a fresh thirty-route original-source replay at the implementation commit. Final-head Core and default-branch recurring activation remain open.",
+  "updates": [
+    {
+      "currentSha256": "35229bc22d131919b94a6a3922e0cb3a2e8c2cb7a7d0149dc4390106d0c80aa2",
+      "edits": [
+        {
+          "current": "Source snapshots include the browser helper modules, applied Lean patches,\nruntime notices, repository license, package metadata and preflight model data.\nThe original 25 October complete and diagnostic archives omitted two imported\nmodules and seventeen build or data inputs. The checker supplements only their\nthree exact historical snapshots with the original Git bytes retained in the\n[module supplement](../evidence/php-wasm-entry-source-supplement-20261025.json)\nand [build-input supplement](../evidence/php-wasm-entry-build-input-supplement-20261025.json).\nKeep those archives unchanged. New snapshots must include every input directly.\nCheckout verification rejects hidden edits, missing files and symlinks before\nrunning the original verifier. Compressed supplemental inputs are size-limited\nand checked against their compressed hash, decoded hash and original Git object.\n",
+          "previous": "Source snapshots include `site/serve.mjs` and `site/paths.mjs`, which the producer\nimports through its browser helpers. The original 25 October complete and\ndiagnostic archives omitted these two files. The checker supplements their three\nexact source snapshots with [the original Git bytes](../evidence/php-wasm-entry-source-supplement-20261025.json).\nKeep those archives unchanged. New snapshots must include both files directly;\ncheckout verification rejects hidden edits, missing files and symlinks before\nrunning the original verifier.\n",
+          "start": 4936
+        }
+      ],
+      "path": "docs/contributing/testing.md",
+      "previousSha256": "d41fbb57b509a24324162da82d00bd80788faf8997b7cafa39a2a15d89082c1a"
+    },
+    {
+      "currentSha256": "a3dd3938b125bd0abc97ef2e838d4932a5e5a5ffddbbcf77f2f57db17ba135d2",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"35229bc22d131919b94a6a3922e0cb3a2e8c2cb7a7d0149dc4390106d0c80aa2\"\n",
+          "previous": "          \"sha256\": \"d41fbb57b509a24324162da82d00bd80788faf8997b7cafa39a2a15d89082c1a\"\n",
+          "start": 1167697
+        },
+        {
+          "current": "          \"sha256\": \"35229bc22d131919b94a6a3922e0cb3a2e8c2cb7a7d0149dc4390106d0c80aa2\"\n",
+          "previous": "          \"sha256\": \"d41fbb57b509a24324162da82d00bd80788faf8997b7cafa39a2a15d89082c1a\"\n",
+          "start": 1177811
+        },
+        {
+          "current": "          \"sha256\": \"35229bc22d131919b94a6a3922e0cb3a2e8c2cb7a7d0149dc4390106d0c80aa2\"\n",
+          "previous": "          \"sha256\": \"d41fbb57b509a24324162da82d00bd80788faf8997b7cafa39a2a15d89082c1a\"\n",
+          "start": 1189747
+        },
+        {
+          "current": "          \"sha256\": \"35229bc22d131919b94a6a3922e0cb3a2e8c2cb7a7d0149dc4390106d0c80aa2\"\n",
+          "previous": "          \"sha256\": \"d41fbb57b509a24324162da82d00bd80788faf8997b7cafa39a2a15d89082c1a\"\n",
+          "start": 1222308
+        },
+        {
+          "current": "          \"sha256\": \"35229bc22d131919b94a6a3922e0cb3a2e8c2cb7a7d0149dc4390106d0c80aa2\"\n",
+          "previous": "          \"sha256\": \"d41fbb57b509a24324162da82d00bd80788faf8997b7cafa39a2a15d89082c1a\"\n",
+          "start": 1252587
+        },
+        {
+          "current": "          \"sha256\": \"35229bc22d131919b94a6a3922e0cb3a2e8c2cb7a7d0149dc4390106d0c80aa2\"\n",
+          "previous": "          \"sha256\": \"d41fbb57b509a24324162da82d00bd80788faf8997b7cafa39a2a15d89082c1a\"\n",
+          "start": 1285738
+        },
+        {
+          "current": "          \"sha256\": \"35229bc22d131919b94a6a3922e0cb3a2e8c2cb7a7d0149dc4390106d0c80aa2\"\n",
+          "previous": "          \"sha256\": \"d41fbb57b509a24324162da82d00bd80788faf8997b7cafa39a2a15d89082c1a\"\n",
+          "start": 1325841
+        },
+        {
+          "current": "          \"sha256\": \"35229bc22d131919b94a6a3922e0cb3a2e8c2cb7a7d0149dc4390106d0c80aa2\"\n",
+          "previous": "          \"sha256\": \"d41fbb57b509a24324162da82d00bd80788faf8997b7cafa39a2a15d89082c1a\"\n",
+          "start": 1352261
+        },
+        {
+          "current": "          \"sha256\": \"35229bc22d131919b94a6a3922e0cb3a2e8c2cb7a7d0149dc4390106d0c80aa2\"\n",
+          "previous": "          \"sha256\": \"d41fbb57b509a24324162da82d00bd80788faf8997b7cafa39a2a15d89082c1a\"\n",
+          "start": 1374941
+        },
+        {
+          "current": "          \"sha256\": \"35229bc22d131919b94a6a3922e0cb3a2e8c2cb7a7d0149dc4390106d0c80aa2\"\n",
+          "previous": "          \"sha256\": \"d41fbb57b509a24324162da82d00bd80788faf8997b7cafa39a2a15d89082c1a\"\n",
+          "start": 1394608
+        },
+        {
+          "current": "          \"sha256\": \"35229bc22d131919b94a6a3922e0cb3a2e8c2cb7a7d0149dc4390106d0c80aa2\"\n",
+          "previous": "          \"sha256\": \"d41fbb57b509a24324162da82d00bd80788faf8997b7cafa39a2a15d89082c1a\"\n",
+          "start": 1417696
+        },
+        {
+          "current": "          \"sha256\": \"dd19db364000b77f4398959e63a34e44cf2ac5c301b27acdf43d30a8b4883a64\"\n",
+          "previous": "          \"sha256\": \"b82c38fd4967d8cc2c6269b6d904bc180ade03dd5367a436840525e5d297a40f\"\n",
+          "start": 89611146
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "66d8a954207550372f8b41fe59aa06f497bf829b174293f5e714ecc806da8a63"
+    },
+    {
+      "currentSha256": "8f8a2138a85377951e112a9af9a8036a23680619abf6564c2a2779ab7fac40b4",
+      "edits": [
+        {
+          "current": "import ts from \"typescript\";\n",
+          "previous": "",
+          "start": 504
+        },
+        {
+          "current": "\t, phpWasmEntryReplayBuildInputScopes, readPhpWasmEntryReplayBuildInput\n\t, phpWasmEntryReplayBuildInputSupplementPath\n\t, phpWasmEntryReplayBuildInputSupplementSha256\n",
+          "previous": "",
+          "start": 795
+        },
+        {
+          "current": "import { phpWasmEntryReplayBuildInputSupplement } from \"./php-wasm-entry-build-input-supplement.mjs\";\n",
+          "previous": "",
+          "start": 1110
+        },
+        {
+          "current": "\t, { cwd: root, env: cleanEnvironment(), encoding: \"utf8\"\n\t\t, maxBuffer: 8 * 1024 * 1024\n\t\t, stdio: [\"ignore\", \"pipe\", \"pipe\"] });\n",
+          "previous": "\t, { cwd: root, env: cleanEnvironment(), encoding: \"utf8\", stdio: [\"ignore\", \"pipe\", \"pipe\"] });\n",
+          "start": 1592
+        },
+        {
+          "current": "\t\tconst path = scope === \"LICENSE\" || scope.includes(\".\") && scope !== \".github\"\n\t\t\t? scope : `${scope}/example.txt`;\n",
+          "previous": "\t\tconst path = scope.includes(\".\") && scope !== \".github\" ? scope : `${scope}/example.txt`;\n",
+          "start": 2297
+        },
+        {
+          "current": "\tfor(const file of phpWasmEntryReplayBuildInputSupplement.files)\n\t\tfiles[file.path] = file.path.endsWith(\".json\") ? \"{}\\n\" : `original ${file.path}\\n`;\n",
+          "previous": "",
+          "start": 2490
+        },
+        {
+          "current": "test(\"PHP-Wasm replay scopes retain runtime, packaging and preflight data\", async () => {\n\tconst patches = await readFile(\"scripts/lean-runtime-config.sh\", \"utf8\");\n\tconst patchPaths = [...patches.matchAll(/\\$LEAN_WASM_PROJECT_ROOT\\/(patches\\/[^\"\\n]+)/gu)]\n\t\t.map(match => match[1]);\n\tassert.equal(patchPaths.length, 3);\n\tfor(const path of [\"LICENSE\", \"notices/runtime\", \"notices/php-wasm.txt\"\n\t\t, ...patchPaths\n\t\t, \"poc/lean-link-spike/graph-lock.json\"\n\t\t, \"poc/lean-link-spike/bindings/alpha.binding-ir.json\"\n\t\t, \"poc/lean-link-spike/bindings/php-wasm.package.json\"\n\t\t, \"docs/evidence/owned-php-wasm-transfers-20260930.json\"\n\t\t, \"docs/evidence/callback-refinements-php-wasm-20261023/hosted/output/records/checked-record/reviewed/build-0/model.json\"])\n\t\tassert.ok(phpWasmEntryReplaySourceScopes.some(scope =>\n\t\t\tpath === scope || path.startsWith(scope + \"/\")), path);\n});\n\n",
+          "previous": "",
+          "start": 3443
+        },
+        {
+          "current": "\tconst buildInputs = phpWasmEntryReplayBuildInputSupplement;\n\tconst buildBytes = await readFile(phpWasmEntryReplayBuildInputSupplementPath);\n\tassert.equal(sha256(buildBytes), phpWasmEntryReplayBuildInputSupplementSha256);\n\tassert.equal(buildBytes.toString(), canonicalJson(buildInputs));\n\tassert.deepEqual(buildInputs.archives, supplement.archives);\n\tassert.deepEqual(buildInputs.snapshots, supplement.snapshots);\n\tassert.equal(buildInputs.files.length, 17);\n\tconst omitted = [...supplement.files, ...buildInputs.files];\n",
+          "previous": "",
+          "start": 12554
+        },
+        {
+          "current": "\t\tassert.equal(files.length, snapshot.files.length + omitted.length);\n",
+          "previous": "\t\tassert.equal(files.length, snapshot.files.length + 2);\n",
+          "start": 13661
+        },
+        {
+          "current": "\t\tfor(const file of omitted)\n",
+          "previous": "\t\tfor(const file of supplement.files)\n",
+          "start": 13876
+        },
+        {
+          "current": "\t\t\tconst source = Object.hasOwn(file, \"gzipBase64\")\n\t\t\t\t? readPhpWasmEntryReplayBuildInput(file).toString(\"utf8\") : file.source;\n\t\t\tassert.equal(original, source);\n",
+          "previous": "\t\t\tassert.equal(original, file.source);\n",
+          "start": 13996
+        },
+        {
+          "current": "test(\"PHP-Wasm replay new snapshots cannot omit an imported module or repository input\", async t => {\n",
+          "previous": "test(\"PHP-Wasm replay new snapshots cannot omit an imported site module\", async t => {\n",
+          "start": 14958
+        },
+        {
+          "current": "\tconst required = [\"site/paths.mjs\", \"site/serve.mjs\"\n\t\t, ...phpWasmEntryReplayBuildInputSupplement.files.map(file => file.path)];\n\tfor(const path of required)\n",
+          "previous": "\tfor(const path of [\"site/paths.mjs\", \"site/serve.mjs\"])\n",
+          "start": 15292
+        },
+        {
+          "current": "test(\"PHP-Wasm replay rejects malformed compressed supplemental input\", () => {\n\tfor(const file of phpWasmEntryReplayBuildInputSupplement.files)\n\t{\n\t\tconst source = readPhpWasmEntryReplayBuildInput(file);\n\t\tassert.equal(source.length, file.bytes);\n\t\tfor(const change of [\n\t\t\t{ bytes: 0 }, { bytes: 8 * 1024 * 1024 + 1 }, { bytes: file.bytes - 1 }\n\t\t\t, { gzipBytes: 0 }, { gzipBytes: file.gzipBytes + 1 }\n\t\t\t, { gzipBase64: file.gzipBase64 + \"\\n\" }, { gzipSha256: \"0\".repeat(64) }\n\t\t\t, { sha256: \"0\".repeat(64) }, { object: \"0\".repeat(40) }\n\t\t\t, { mode: \"120000\" }, { path: \"../outside\" }, { extra: true }\n\t\t]) assert.throws(() => readPhpWasmEntryReplayBuildInput({ ...file, ...change }));\n\t}\n});\n\ntest(\"PHP-Wasm replay checks every supplemental input before invoking the verifier\", async t => {\n\tconst { root, revision, files } = await fixture(t);\n\tconst records = join(root, \"records\"); await mkdir(records);\n\tconst invoke = `await source.replayPhpWasmEntryHostedArtifacts(${JSON.stringify(root)},'${revision}',${JSON.stringify(records)});`;\n\tfor(const { path } of phpWasmEntryReplayBuildInputSupplement.files)\n\t{\n\t\tassert.ok(phpWasmEntryReplayBuildInputScopes.some(scope =>\n\t\t\tpath === scope || path.startsWith(scope + \"/\")));\n\t\tgit(root, [\"update-index\", \"--assume-unchanged\", path]);\n\t\tawait writeFile(join(root, path), \"x\" + files[path].slice(1));\n\t\tassert.equal(git(root, [\"diff\", \"--name-only\", \"HEAD\"]), \"\");\n\t\tassert.throws(() => run(root, invoke));\n\t\tassert.equal(existsSync(join(root, \"executed\")), false);\n\t\tawait writeFile(join(root, path), files[path]);\n\t\tgit(root, [\"update-index\", \"--no-assume-unchanged\", path]);\n\t\tawait rm(join(root, path));\n\t\tassert.throws(() => run(root, invoke));\n\t\tawait symlink(join(root, \"src/example.txt\"), join(root, path));\n\t\tassert.throws(() => run(root, invoke));\n\t\tassert.equal(existsSync(join(root, \"executed\")), false);\n\t\tawait rm(join(root, path)); await writeFile(join(root, path), files[path]);\n\t}\n});\n\ntest(\"PHP-Wasm replay scopes contain producer imports and tracked literal inputs\", async () => {\n",
+          "previous": "test(\"PHP-Wasm replay scopes contain every producer and preflight literal import\", async () => {\n",
+          "start": 15699
+        },
+        {
+          "current": "\tconst seen = new Set(), references = new Set(), computedImports = [];\n\tconst captured = path => phpWasmEntryReplaySourceScopes.some(scope =>\n\t\tpath === scope || path.startsWith(scope + \"/\"));\n",
+          "previous": "\tconst seen = new Set();\n",
+          "start": 18592
+        },
+        {
+          "current": "\t\tassert.ok(captured(path), path);\n",
+          "previous": "\t\tassert.ok(phpWasmEntryReplaySourceScopes.some(scope => path === scope || path.startsWith(scope + \"/\")), path);\n",
+          "start": 18845
+        },
+        {
+          "current": "\t\tconst source = await readFile(path, \"utf8\");\n\t\tfor(const specifier of moduleSpecifiers(source, path))\n",
+          "previous": "\t\tfor(const specifier of moduleSpecifiers(await readFile(path, \"utf8\"), path))\n",
+          "start": 18898
+        },
+        {
+          "current": "\t\tconst file = ts.createSourceFile(path, source, ts.ScriptTarget.Latest, true, ts.ScriptKind.JS);\n\t\tconst walk = node => {\n\t\t\tif(ts.isStringLiteralLike(node)\n\t\t\t\t&& /^(?:poc|patches|docs|site|notices)\\/[A-Za-z0-9_./-]+$/u.test(node.text))\n\t\t\t\treferences.add(node.text.replace(/\\/$/u, \"\"));\n\t\t\tif(ts.isNewExpression(node) && node.expression.getText(file) === \"URL\"\n\t\t\t\t&& node.arguments?.length === 2 && ts.isStringLiteralLike(node.arguments[0])\n\t\t\t\t&& node.arguments[1].getText(file) === \"import.meta.url\")\n\t\t\t\treferences.add(posix.normalize(posix.join(posix.dirname(path)\n\t\t\t\t\t, node.arguments[0].text)).replace(/\\/$/u, \"\"));\n\t\t\tif(ts.isCallExpression(node) && node.expression.kind === ts.SyntaxKind.ImportKeyword\n\t\t\t\t&& !ts.isStringLiteralLike(node.arguments[0]))\n\t\t\t\tcomputedImports.push(path);\n\t\t\tts.forEachChild(node, walk);\n\t\t};\n\t\twalk(file);\n",
+          "previous": "",
+          "start": 19127
+        },
+        {
+          "current": "\t// Query Git objects directly. A sparse checkout must not hide an omitted input.\n\t// Directory prefixes and generated paths are not classified as source files.\n\tconst candidates = [...references].filter(path => path !== \".\" && !captured(path));\n\tif(candidates.length)\n\t{\n\t\tconst objects = execFileSync(\"git\", [\"cat-file\", \"--batch-check\"], {\n\t\t\tinput: candidates.map(path => `HEAD:${path}`).join(\"\\n\") + \"\\n\"\n\t\t\t, env: cleanEnvironment(), encoding: \"utf8\", maxBuffer: 1024 * 1024\n\t\t}).trim().split(\"\\n\");\n\t\tassert.equal(objects.length, candidates.length);\n\t\tfor(const [index, object] of objects.entries())\n\t\t\tassert.notEqual(object.split(\" \")[1], \"blob\", candidates[index]);\n\t}\n\t// Both computed imports load captured fixture drivers copied into owned scratch.\n\tassert.deepEqual(computedImports.sort(), [\n\t\t\"tests/helpers/php-wasm-callback-entry-driver-tests.mjs\"\n\t\t, \"tests/helpers/php-wasm-refinement-entry-driver-tests.mjs\"\n\t]);\n\tfor(const family of [\"callback\", \"refinement\"])\n\t{\n\t\tconst source = await readFile(`tests/helpers/php-wasm-${family}-entry-driver-tests.mjs`, \"utf8\");\n\t\tconst path = `tests/fixtures/php-wasm-${family}-entry/driver.mjs`;\n\t\tassert.ok(captured(path));\n\t\tassert.ok(source.includes(`cp(\"${path}\", join(root, \"driver.mjs\"))`));\n\t\tassert.ok(source.includes('import(pathToFileURL(join(root, \"driver.mjs\"))'));\n\t}\n",
+          "previous": "",
+          "start": 20099
+        }
+      ],
+      "path": "tests/helpers/php-wasm-refinement-entry-hosted-replay-tests.mjs",
+      "previousSha256": "ba479678992bc5c1662791defb907cf309b65a023b35d467cfd7992992bb8eca"
+    },
+    {
+      "currentSha256": "dd19db364000b77f4398959e63a34e44cf2ac5c301b27acdf43d30a8b4883a64",
+      "edits": [
+        {
+          "current": "import { gunzipSync } from \"node:zlib\";\n",
+          "previous": "",
+          "start": 600
+        },
+        {
+          "current": "import { phpWasmEntryReplayBuildInputSupplement } from \"./php-wasm-entry-build-input-supplement.mjs\";\n",
+          "previous": "",
+          "start": 877
+        },
+        {
+          "current": "export const phpWasmEntryReplayBuildInputScopes = Object.freeze([\n\t\"LICENSE\"\n\t, \"notices/runtime\"\n\t, \"notices/php-wasm.txt\"\n\t, \"patches/lean4-4.32.2-emscripten-runtime-signatures.patch\"\n\t, \"patches/lean4-4.32.2-emscripten-conditional-pthreads.patch\"\n\t, \"patches/lean4-4.32.2-offline-libuv-source.patch\"\n\t, \"poc/lean-link-spike/graph-lock.json\"\n\t, \"poc/lean-link-spike/bindings/alpha.binding-ir.json\"\n\t, \"poc/lean-link-spike/bindings/php-wasm.package.json\"\n\t, \"docs/evidence/owned-php-wasm-transfers-20260930.json\"\n\t, \"docs/evidence/callback-refinements-php-wasm-20261023/hosted/output/records/checked-record/reviewed/build-0/model.json\"\n]);\n",
+          "previous": "",
+          "start": 1335
+        },
+        {
+          "current": "\t, ...phpWasmEntryReplayBuildInputScopes\n",
+          "previous": "",
+          "start": 2253
+        },
+        {
+          "current": "export const phpWasmEntryReplayBuildInputSupplementPath\n\t= \"docs/evidence/php-wasm-entry-build-input-supplement-20261025.json\";\nexport const phpWasmEntryReplayBuildInputSupplementSha256\n\t= \"19333471b6904ef61f99e6bf8ba2dc04a3eb4786114d5e209fc9a6e9d780d6e0\";\n",
+          "previous": "",
+          "start": 2542
+        },
+        {
+          "current": " * Decode one bounded source payload. This verifies its internal identity;\n * admission also requires the fixed supplement digest and original Git bytes.\n *\n * @param file - One compressed file from the pinned source supplement.\n */\nexport const readPhpWasmEntryReplayBuildInput = file => {\n\tassert.deepEqual(Object.keys(file).sort(), [\"bytes\", \"gzipBase64\", \"gzipBytes\"\n\t\t, \"gzipSha256\", \"mode\", \"object\", \"path\", \"sha256\"]);\n\tassert.ok(checkedRecordValueIndexHostedSafeZipPath(file.path));\n\tassert.equal(file.mode, \"100644\");\n\tassert.match(file.object, /^[a-f0-9]{40}$/u);\n\tfor(const digest of [file.sha256, file.gzipSha256])\n\t\tassert.match(digest, /^[a-f0-9]{64}$/u);\n\tfor(const size of [file.bytes, file.gzipBytes])\n\t\tassert.ok(Number.isSafeInteger(size) && size > 0 && size <= 8 * 1024 * 1024);\n\tassert.equal(typeof file.gzipBase64, \"string\");\n\tassert.equal(file.gzipBase64.length, Math.ceil(file.gzipBytes / 3) * 4);\n\tconst compressed = Buffer.from(file.gzipBase64, \"base64\");\n\tassert.equal(compressed.toString(\"base64\"), file.gzipBase64);\n\tassert.equal(compressed.length, file.gzipBytes);\n\tassert.equal(sha256(compressed), file.gzipSha256);\n\tconst source = gunzipSync(compressed, { maxOutputLength: file.bytes });\n\tassert.equal(source.length, file.bytes);\n\tassert.equal(sha256(source), file.sha256);\n\tassert.equal(createHash(\"sha1\").update(`blob ${source.length}\\0`)\n\t\t.update(source).digest(\"hex\"), file.object);\n\treturn source;\n};\n\n/**\n * Retain omitted imports and data without changing original archive bytes.\n",
+          "previous": " * Retain the two omitted imports without changing the original archive bytes.\n",
+          "start": 6987
+        },
+        {
+          "current": "\tconst buildInputs = phpWasmEntryReplayBuildInputSupplement;\n\tassert.equal(sha256(canonicalJson(buildInputs)), phpWasmEntryReplayBuildInputSupplementSha256);\n",
+          "previous": "",
+          "start": 9098
+        },
+        {
+          "current": "\tassert.deepEqual(buildInputs.snapshots, supplement.snapshots);\n\tassert.deepEqual(buildInputs.archives, supplement.archives);\n",
+          "previous": "",
+          "start": 9588
+        },
+        {
+          "current": "\tfor(const file of [...supplement.files, ...buildInputs.files])\n",
+          "previous": "\tfor(const file of supplement.files)\n",
+          "start": 9742
+        },
+        {
+          "current": "\t\tconst compressed = Object.hasOwn(file, \"gzipBase64\");\n\t\tconst source = compressed ? readPhpWasmEntryReplayBuildInput(file) : Buffer.from(file.source);\n\t\tassert.equal(source.length, file.bytes);\n\t\tassert.equal(sha256(source), file.sha256);\n",
+          "previous": "\t\tassert.equal(Buffer.byteLength(file.source), file.bytes);\n\t\tassert.equal(sha256(file.source), file.sha256);\n",
+          "start": 9809
+        },
+        {
+          "current": "\t\tif(compressed)\n\t\t{\n\t\t\tassert.equal(original.mode, file.mode, file.path);\n\t\t\tassert.equal(original.object, file.object, file.path);\n\t\t}\n\t\tassert.ok(!omitted.has(file.path), \"duplicate omitted input\");\n",
+          "previous": "",
+          "start": 10260
+        }
+      ],
+      "path": "tests/helpers/php-wasm-refinement-entry-hosted-replay.mjs",
+      "previousSha256": "b82c38fd4967d8cc2c6269b6d904bc180ade03dd5367a436840525e5d297a40f"
+    }
+  ]
+}
