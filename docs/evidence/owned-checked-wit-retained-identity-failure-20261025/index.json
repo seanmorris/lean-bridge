@@ -1,0 +1,128 @@
+{
+  "accepted": false,
+  "archiveCommit": "d3516eaecc73984c7c0ba3e3161a3aa03048cbea",
+  "files": [
+    {
+      "bytes": 765,
+      "path": "api/artifact.json",
+      "sha256": "f34b949c03e51a5827f8c2fc4e19a7805837a0b9718c0dc11a0acf10a1446764"
+    },
+    {
+      "bytes": 3693,
+      "path": "api/job.json",
+      "sha256": "0ca02c0acb78a3dbf77af470237f6f4954475bd60a0581acc20dc977c96b877d"
+    },
+    {
+      "bytes": 95487,
+      "path": "api/job.log",
+      "sha256": "356ae7a8a81e16f7906d89fd7bfb76170fd6c4291e68430f523e557b5671af31"
+    },
+    {
+      "bytes": 12509,
+      "path": "api/run.json",
+      "sha256": "caa94d92f9e698c233a70081c59f8b44446495efa4bb1f512dd3ddd196992e48"
+    },
+    {
+      "bytes": 67108864,
+      "path": "artifact.zip.parts/0000.part",
+      "sha256": "fa454bf70568745470fe59e4bbeaeb0490899d5eacdb37bfbc9bd3c2b0799281"
+    },
+    {
+      "bytes": 67108864,
+      "path": "artifact.zip.parts/0001.part",
+      "sha256": "b11c1703f136ac176b50bf4f7b3a3cfc01da3d0e7abdd4d864022749b5aea8aa"
+    },
+    {
+      "bytes": 67108864,
+      "path": "artifact.zip.parts/0002.part",
+      "sha256": "ed2a123313a289e5d1b66679e395120e5950f6275fcb2d76e6b6759b3d000acc"
+    },
+    {
+      "bytes": 45471865,
+      "path": "artifact.zip.parts/0003.part",
+      "sha256": "f5e43f1b4bd8db8fcc6e88fc578826f19fa8f0627c18acc3a95347474aff1e5a"
+    }
+  ],
+  "hostedRun": {
+    "artifact": {
+      "apiDigest": "sha256:a238d7e15508ec9b5f9a5d3ede683fdd857d343a3374fa9fdfa6be4b0a636b21",
+      "bytes": 246798457,
+      "createdAt": "2026-10-25T18:53:46Z",
+      "expiresAt": "2026-11-24T18:53:37Z",
+      "id": 12610710698,
+      "name": "owned-checked-record-managed-wit-34f6bde6410c0c2b95c59fdf0db855c5a1e0085a",
+      "sha256": "a238d7e15508ec9b5f9a5d3ede683fdd857d343a3374fa9fdfa6be4b0a636b21"
+    },
+    "conclusions": {
+      "job": "failure",
+      "run": "failure"
+    },
+    "createdAt": "2026-10-25T18:30:39Z",
+    "event": "workflow_dispatch",
+    "job": {
+      "completedAt": "2026-10-25T18:53:48Z",
+      "id": 121254115511,
+      "labels": [
+        "ubuntu-24.04"
+      ],
+      "name": "Owned checked records in wit packages",
+      "runnerGroup": "GitHub Actions",
+      "runnerName": "GitHub Actions 1000068395",
+      "startedAt": "2026-10-25T18:30:42Z"
+    },
+    "repository": "seanmorris/lean-bridge",
+    "runAttempt": 1,
+    "runId": 40221585405,
+    "updatedAt": "2026-10-25T18:53:48Z",
+    "url": "https://github.com/seanmorris/lean-bridge/actions/runs/40221585405",
+    "workflow": ".github/workflows/owned-checked-record-managed.yml"
+  },
+  "kind": "owned-checked-record-wit-failed-hosted-v1",
+  "members": [
+    "owned-checked-record-managed-ci/acceptance.log",
+    "owned-checked-record-managed-packaging/evidence/wit/ordinary-full/handoff/archives/owned-checked-records-1.0.0-wit-wasi.tar.gz",
+    "owned-checked-record-managed-ci/toolchain.log",
+    "owned-checked-record-managed-packaging/evidence/wit/ordinary-full/handoff/package-set-receipt.json",
+    "owned-checked-record-managed-packaging/evidence/wit/ordinary-full/handoff/package-set-receipt.json.sha256",
+    "owned-checked-record-managed-packaging/evidence/wit/ordinary-result-only/handoff/archives/owned-checked-records-result-only-1.0.0-wit-wasi.tar.gz",
+    "owned-checked-record-managed-packaging/evidence/wit/ordinary-result-only/handoff/package-set-receipt.json",
+    "owned-checked-record-managed-packaging/evidence/wit/ordinary-result-only/handoff/package-set-receipt.json.sha256",
+    "owned-checked-record-managed-packaging/evidence/wit/reviewed-full/handoff/archives/owned-checked-records-1.0.0-wit-wasi.tar.gz",
+    "owned-checked-record-managed-packaging/evidence/wit/reviewed-full/handoff/package-set-receipt.json",
+    "owned-checked-record-managed-packaging/evidence/wit/reviewed-full/handoff/package-set-receipt.json.sha256",
+    "owned-checked-record-managed-packaging/evidence/wit/reviewed-result-only/handoff/archives/owned-checked-records-result-only-1.0.0-wit-wasi.tar.gz",
+    "owned-checked-record-managed-packaging/evidence/wit/reviewed-result-only/handoff/package-set-receipt.json",
+    "owned-checked-record-managed-packaging/evidence/wit/reviewed-result-only/handoff/package-set-receipt.json.sha256"
+  ],
+  "parts": [
+    {
+      "bytes": 67108864,
+      "offset": 0,
+      "path": "artifact.zip.parts/0000.part",
+      "sha256": "fa454bf70568745470fe59e4bbeaeb0490899d5eacdb37bfbc9bd3c2b0799281"
+    },
+    {
+      "bytes": 67108864,
+      "offset": 67108864,
+      "path": "artifact.zip.parts/0001.part",
+      "sha256": "b11c1703f136ac176b50bf4f7b3a3cfc01da3d0e7abdd4d864022749b5aea8aa"
+    },
+    {
+      "bytes": 67108864,
+      "offset": 134217728,
+      "path": "artifact.zip.parts/0002.part",
+      "sha256": "ed2a123313a289e5d1b66679e395120e5950f6275fcb2d76e6b6759b3d000acc"
+    },
+    {
+      "bytes": 45471865,
+      "offset": 201326592,
+      "path": "artifact.zip.parts/0003.part",
+      "sha256": "f5e43f1b4bd8db8fcc6e88fc578826f19fa8f0627c18acc3a95347474aff1e5a"
+    }
+  ],
+  "producerCommit": "34f6bde6410c0c2b95c59fdf0db855c5a1e0085a",
+  "schemaVersion": 1,
+  "scope": "Original failed WIT run, job, artifact and job-log bytes. The original full-route consumer.c:195 assertion rejected a resource still held by an independent retained owner. This archive is failure diagnostics, never installed acceptance.",
+  "sourceCorrectionCommit": "baccaf8724500138c12b5e76e50a9af1255f7870",
+  "sourceDiagnosis": "docs/evidence/owned-checked-retained-identity-20261025.json"
+}
