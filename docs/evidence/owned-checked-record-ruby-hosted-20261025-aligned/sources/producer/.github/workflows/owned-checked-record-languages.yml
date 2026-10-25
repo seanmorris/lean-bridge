@@ -1,0 +1,125 @@
+name: Installed owned checked records in Python, Ruby and Rust
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: owned-checked-record-languages-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  language:
+    name: Owned checked records in ${{ matrix.profile }} packages
+    runs-on: ubuntu-24.04
+    timeout-minutes: 280
+    strategy:
+      fail-fast: false
+      matrix:
+        profile: [python, ruby, rust]
+    env:
+      LEAN_NUM_THREADS: "1"
+      LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR: "2.38"
+      LEAN_BRIDGE_OWNED_CHECKED_RECORD_LANGUAGE_PROFILES: ${{ matrix.profile }}
+    steps:
+      - name: Check out the exact revision
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Select Python 3.11
+        if: matrix.profile == 'python'
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+      - name: Select Ruby 3.3
+        if: matrix.profile == 'ruby'
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3.12'
+      - name: Restore the pinned Rust toolchain
+        if: matrix.profile == 'rust'
+        uses: actions/cache@v4
+        with:
+          path: .toolchains/rust-1.90.0
+          key: rust-owned-checked-record-v1-${{ runner.os }}-${{ hashFiles('scripts/bootstrap-rust-ci.sh') }}
+      - name: Bound apt network waits
+        uses: ./.github/actions/bounded-apt
+        timeout-minutes: 1
+      - name: Install compiler and archive dependencies
+        timeout-minutes: 20
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake curl git jq libgmp-dev libuv1-dev m4 pkg-config ripgrep xz-utils zstd
+      - name: Install dependencies and pinned Lean
+        timeout-minutes: 35
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm ci --ignore-scripts --no-audit --no-fund
+          mkdir -p build/owned-checked-record-language-ci
+          bash scripts/bootstrap-toolchains.sh --lean-only 2>&1 | tee build/owned-checked-record-language-ci/toolchain.log
+      - name: Install pinned Rust
+        if: matrix.profile == 'rust'
+        timeout-minutes: 15
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash scripts/bootstrap-rust-ci.sh 2>&1 | tee -a build/owned-checked-record-language-ci/toolchain.log
+      - name: Prepare the reviewed Python 3.11 dependency wheel
+        if: matrix.profile == 'python'
+        timeout-minutes: 5
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p build/python-typing-wheels/4.16.0
+          python -m pip download --disable-pip-version-check --no-deps --only-binary=:all: \
+            --dest build/python-typing-wheels/4.16.0 typing_extensions==4.16.0
+      - name: Execute source-free language acceptance
+        id: acceptance
+        timeout-minutes: 220
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/env.sh
+          case "${{ matrix.profile }}" in
+            python)
+              export LEAN_BRIDGE_PYTHON=$(command -v python)
+              ;;
+            ruby)
+              export LEAN_BRIDGE_RUBY=$(command -v ruby)
+              export LEAN_BRIDGE_GEM=$(command -v gem)
+              ;;
+            rust)
+              export LEAN_BRIDGE_RUSTC=$PWD/.toolchains/rust-1.90.0/bin/rustc
+              export LEAN_BRIDGE_CARGO=$PWD/.toolchains/rust-1.90.0/bin/cargo
+              ;;
+          esac
+          npm run test:owned-checked-record-languages 2>&1 | tee build/owned-checked-record-language-ci/acceptance.log
+          rg '^# fail 0$' build/owned-checked-record-language-ci/acceptance.log
+          rg '^# skipped 0$' build/owned-checked-record-language-ci/acceptance.log
+          test -s build/owned-checked-record-language-packaging/report.json
+          for route in ordinary-full ordinary-result-only reviewed-full reviewed-result-only; do
+            test -s "build/owned-checked-record-language-packaging/evidence/${{ matrix.profile }}/$route/handoff/package-set-receipt.json"
+          done
+      - name: Preserve language acceptance evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: owned-checked-record-${{ matrix.profile }}-${{ github.sha }}
+          path: |
+            build/owned-checked-record-language-ci/
+            build/owned-checked-record-language-packaging/
+          if-no-files-found: error
+          retention-days: 30
+      - name: Enforce installed language acceptance
+        if: always() && steps.acceptance.outcome != 'success'
+        run: exit 1

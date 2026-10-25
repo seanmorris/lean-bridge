@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "owned-checked-records@1.0.0",
+    "name": "owned-checked-records",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 52703744,
+          "path": "archives/lean_bridge_owned_checked_records-1.0.0-x86_64-linux.gem",
+          "sha256": "f90883f36c75b79a7b18206c036fa8b7200089b8075d54262ef53a0cab127496"
+        }
+      ],
+      "ecosystem": "rubygems",
+      "name": "lean_bridge_owned_checked_records",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "rubygems",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "c36b2bfdecf817584e4d1229f8667c04558826ac672254b4df52ad1d968bba30",
+      "id": "native-library-v1",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "10f10bc6eaa42ed0f440e762cab9e26cc80a339cb9795f1724c0e0b5e3cf3c6d"
+  }
+}

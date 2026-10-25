@@ -1,0 +1,2064 @@
+{
+  "profile": "installed-owned-checked-record-languages",
+  "reports": [
+    {
+      "authorRoute": "ordinary",
+      "bindingIrSha256": "dfd879f42304eba211ebafb8865ffc65b2fdc971967a0783b3cc145fe137d806",
+      "componentReceipts": {
+        "ruby": {
+          "adaptersSha256": "3b394b9872d3cc06a44da51836a413e04c2e3fdcc7e8f550469ebfe81d042e11",
+          "allocationGuardSha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83",
+          "bindingIrSha256": "dfd879f42304eba211ebafb8865ffc65b2fdc971967a0783b3cc145fe137d806",
+          "callbackSourceSha256": "e6a4b27f1c6a592deb33a953f3c10038699b34aed4c7fcbb0692d22a11a124ae",
+          "compiler": "cc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+          "exports": [
+            {
+              "declaration": "OwnedCheckedRecords.bookingSpan",
+              "symbol": "lean_bridge_owned_ed7bcfdb2e530bfca5a19976_f61fa6d001212787ff6aa"
+            },
+            {
+              "declaration": "OwnedCheckedRecords.claimClosure",
+              "symbol": "lean_bridge_owned_ed7bcfdb2e530bfca5a19976_fa3218a29f42862f9b113"
+            },
+            {
+              "declaration": "OwnedCheckedRecords.claimFor",
+              "symbol": "lean_bridge_owned_ed7bcfdb2e530bfca5a19976_f483485736ace9af57086"
+            },
+            {
+              "declaration": "OwnedCheckedRecords.claimQuota",
+              "symbol": "lean_bridge_owned_ed7bcfdb2e530bfca5a19976_f2f69e4eb3cbfdff310da"
+            },
+            {
+              "declaration": "OwnedCheckedRecords.echoBooking",
+              "symbol": "lean_bridge_owned_ed7bcfdb2e530bfca5a19976_f0711e856cfa97d876c9a"
+            },
+            {
+              "declaration": "OwnedCheckedRecords.echoClaim",
+              "symbol": "lean_bridge_owned_ed7bcfdb2e530bfca5a19976_f535babcfd8d0f67ea0e6"
+            },
+            {
+              "declaration": "OwnedCheckedRecords.echoClaims",
+              "symbol": "lean_bridge_owned_ed7bcfdb2e530bfca5a19976_f25326d75f45c4daa9d9d"
+            },
+            {
+              "declaration": "OwnedCheckedRecords.echoGrant",
+              "symbol": "lean_bridge_owned_ed7bcfdb2e530bfca5a19976_feb082cf837ef02082ea8"
+            },
+            {
+              "declaration": "OwnedCheckedRecords.newTicket",
+              "symbol": "lean_bridge_owned_ed7bcfdb2e530bfca5a19976_fa1e5189bd92568e4b939"
+            },
+            {
+              "declaration": "OwnedCheckedRecords.pairClaim",
+              "symbol": "lean_bridge_owned_ed7bcfdb2e530bfca5a19976_feaac3cc8d9197bd7bbca"
+            },
+            {
+              "declaration": "OwnedCheckedRecords.serial",
+              "symbol": "lean_bridge_owned_ed7bcfdb2e530bfca5a19976_fec926afda994fba3abe2"
+            },
+            {
+              "declaration": "OwnedCheckedRecords.transferClaim",
+              "symbol": "lean_bridge_owned_ed7bcfdb2e530bfca5a19976_f040aca3025d850fc12cc"
+            },
+            {
+              "declaration": "OwnedCheckedRecords.transferPairClaim",
+              "symbol": "lean_bridge_owned_ed7bcfdb2e530bfca5a19976_fc4cffe83b4b420b09021"
+            },
+            {
+              "declaration": "OwnedCheckedRecords.transferWithClaimCallback",
+              "symbol": "lean_bridge_owned_ed7bcfdb2e530bfca5a19976_f33442f0a4409864e6a4a"
+            },
+            {
+              "declaration": "OwnedCheckedRecords.withClaimCallback",
+              "symbol": "lean_bridge_owned_ed7bcfdb2e530bfca5a19976_f7d6c8617a0788c12de15"
+            }
+          ],
+          "headerSha256": "8fdaacd57bdf78545846ece736e30f3135b666a0a449a152177f8a809d46ce1c",
+          "initializer": "initialize_LeanBridgeOwned5708fb89427deaf6",
+          "inputTransfers": {
+            "consumption": "before-lean-call",
+            "exports": [
+              {
+                "bindingId": "lean:OwnedCheckedRecords.transferClaim",
+                "parameters": [
+                  0
+                ]
+              },
+              {
+                "bindingId": "lean:OwnedCheckedRecords.transferPairClaim",
+                "parameters": [
+                  0,
+                  1
+                ]
+              },
+              {
+                "bindingId": "lean:OwnedCheckedRecords.transferWithClaimCallback",
+                "parameters": [
+                  0
+                ]
+              }
+            ],
+            "failure": "consumed-after-handoff",
+            "ownership": "whole-result-owner",
+            "schemaVersion": 1,
+            "validation": "before-consumption",
+            "viewLifetime": "until-call-returns"
+          },
+          "library": "libcomponent_161bdaa35ee11fef40c6.so",
+          "metadataSha256": "f11bc04fc6a0cc4a51f6f151ea71140d772489c93b0ce02c1fc48ce859051b1f",
+          "modelSha256": "1455eacc5a7f60b519265fcf376364962df9bc764b8b84e92341105aab453b3b",
+          "nativeLibrary": {
+            "bytes": 130744,
+            "sha256": "d6113f5239b48b4686148c48423e087fd142ff1bfc1bfebd4e9470085219d18a"
+          },
+          "profile": "native-library-v1",
+          "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+          "schemaVersion": 4,
+          "sourceIdentity": {
+            "exportConfigurationSha256": "4890f8892d2f17644c1907ebbd61cc06afe502328bd6139217bb44ca07d6877b",
+            "exportConfigurationSource": "{\n  \"arities\": {\n    \"OwnedCheckedRecords.claimClosure\": 0\n  },\n  \"contracts\": {\n    \"OwnedCheckedRecords.bookingSpan\": {\n      \"parameters\": [\n        {\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"ownership\": \"borrow\",\n          \"refinement\": {\n            \"fields\": [\n              {\n                \"name\": \"holder\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"window\",\n                \"refinement\": {\n                  \"constructor\": \"OwnedCheckedRecords.mkWindow\",\n                  \"fields\": [\n                    {\n                      \"name\": \"lo\",\n                      \"refinement\": null\n                    },\n                    {\n                      \"name\": \"hi\",\n                      \"refinement\": null\n                    }\n                  ],\n                  \"kind\": \"checked-record\",\n                  \"name\": \"OwnedCheckedRecords.Window\"\n                }\n              }\n            ],\n            \"kind\": \"record\",\n            \"name\": \"OwnedCheckedRecords.Booking\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"OwnedCheckedRecords.claimClosure\": {\n      \"result\": {\n        \"callable\": {\n          \"parameters\": [\n            {\n              \"lifetime\": {\n                \"anchor\": null,\n                \"scope\": \"call\"\n              },\n              \"ownership\": \"borrow\",\n              \"refinement\": {\n                \"constructor\": \"OwnedCheckedRecords.mkClaim\",\n                \"fields\": [\n                  {\n                    \"name\": \"holder\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"quota\",\n                    \"refinement\": null\n                  }\n                ],\n                \"kind\": \"checked-record\",\n                \"name\": \"OwnedCheckedRecords.Claim\"\n              }\n            }\n          ],\n          \"result\": {\n            \"lifetime\": {\n              \"anchor\": null,\n              \"scope\": \"explicit\"\n            },\n            \"ownership\": \"lease\"\n          }\n        },\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\"\n      }\n    },\n    \"OwnedCheckedRecords.claimQuota\": {\n      \"parameters\": [\n        {\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"ownership\": \"borrow\",\n          \"refinement\": {\n            \"constructor\": \"OwnedCheckedRecords.mkClaim\",\n            \"fields\": [\n              {\n                \"name\": \"holder\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"quota\",\n                \"refinement\": null\n              }\n            ],\n            \"kind\": \"checked-record\",\n            \"name\": \"OwnedCheckedRecords.Claim\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"OwnedCheckedRecords.echoBooking\": {\n      \"parameters\": [\n        {\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"ownership\": \"borrow\",\n          \"refinement\": {\n            \"fields\": [\n              {\n                \"name\": \"holder\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"window\",\n                \"refinement\": {\n                  \"constructor\": \"OwnedCheckedRecords.mkWindow\",\n                  \"fields\": [\n                    {\n                      \"name\": \"lo\",\n                      \"refinement\": null\n                    },\n                    {\n                      \"name\": \"hi\",\n                      \"refinement\": null\n                    }\n                  ],\n                  \"kind\": \"checked-record\",\n                  \"name\": \"OwnedCheckedRecords.Window\"\n                }\n              }\n            ],\n            \"kind\": \"record\",\n            \"name\": \"OwnedCheckedRecords.Booking\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\"\n      }\n    },\n    \"OwnedCheckedRecords.echoClaim\": {\n      \"parameters\": [\n        {\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"ownership\": \"borrow\",\n          \"refinement\": {\n            \"constructor\": \"OwnedCheckedRecords.mkClaim\",\n            \"fields\": [\n              {\n                \"name\": \"holder\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"quota\",\n                \"refinement\": null\n              }\n            ],\n            \"kind\": \"checked-record\",\n            \"name\": \"OwnedCheckedRecords.Claim\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\"\n      }\n    },\n    \"OwnedCheckedRecords.echoClaims\": {\n      \"parameters\": [\n        {\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"ownership\": \"borrow\",\n          \"refinement\": {\n            \"arguments\": [\n              {\n                \"constructor\": \"OwnedCheckedRecords.mkClaim\",\n                \"fields\": [\n                  {\n                    \"name\": \"holder\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"quota\",\n                    \"refinement\": null\n                  }\n                ],\n                \"kind\": \"checked-record\",\n                \"name\": \"OwnedCheckedRecords.Claim\"\n              }\n            ],\n            \"kind\": \"array\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\"\n      }\n    },\n    \"OwnedCheckedRecords.echoGrant\": {\n      \"parameters\": [\n        {\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"ownership\": \"borrow\",\n          \"refinement\": {\n            \"constructor\": \"OwnedCheckedRecords.mkGrant\",\n            \"fields\": [\n              {\n                \"name\": \"holder\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"weight\",\n                \"refinement\": {\n                  \"constructor\": \"OwnedCheckedRecords.checkedPositive\"\n                }\n              },\n              {\n                \"name\": \"limit\",\n                \"refinement\": null\n              }\n            ],\n            \"kind\": \"checked-record\",\n            \"name\": \"OwnedCheckedRecords.Grant\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\"\n      }\n    },\n    \"OwnedCheckedRecords.pairClaim\": {\n      \"parameters\": [\n        {\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"ownership\": \"borrow\",\n          \"refinement\": {\n            \"fields\": [\n              {\n                \"name\": \"holder\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"window\",\n                \"refinement\": {\n                  \"constructor\": \"OwnedCheckedRecords.mkWindow\",\n                  \"fields\": [\n                    {\n                      \"name\": \"lo\",\n                      \"refinement\": null\n                    },\n                    {\n                      \"name\": \"hi\",\n                      \"refinement\": null\n                    }\n                  ],\n                  \"kind\": \"checked-record\",\n                  \"name\": \"OwnedCheckedRecords.Window\"\n                }\n              }\n            ],\n            \"kind\": \"record\",\n            \"name\": \"OwnedCheckedRecords.Booking\"\n          }\n        },\n        {\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"ownership\": \"borrow\",\n          \"refinement\": {\n            \"constructor\": \"OwnedCheckedRecords.mkClaim\",\n            \"fields\": [\n              {\n                \"name\": \"holder\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"quota\",\n                \"refinement\": null\n              }\n            ],\n            \"kind\": \"checked-record\",\n            \"name\": \"OwnedCheckedRecords.Claim\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\"\n      }\n    },\n    \"OwnedCheckedRecords.transferClaim\": {\n      \"parameters\": [\n        {\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"ownership\": \"transfer\",\n          \"refinement\": {\n            \"constructor\": \"OwnedCheckedRecords.mkClaim\",\n            \"fields\": [\n              {\n                \"name\": \"holder\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"quota\",\n                \"refinement\": null\n              }\n            ],\n            \"kind\": \"checked-record\",\n            \"name\": \"OwnedCheckedRecords.Claim\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\"\n      }\n    },\n    \"OwnedCheckedRecords.transferPairClaim\": {\n      \"parameters\": [\n        {\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"ownership\": \"transfer\",\n          \"refinement\": {\n            \"fields\": [\n              {\n                \"name\": \"holder\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"window\",\n                \"refinement\": {\n                  \"constructor\": \"OwnedCheckedRecords.mkWindow\",\n                  \"fields\": [\n                    {\n                      \"name\": \"lo\",\n                      \"refinement\": null\n                    },\n                    {\n                      \"name\": \"hi\",\n                      \"refinement\": null\n                    }\n                  ],\n                  \"kind\": \"checked-record\",\n                  \"name\": \"OwnedCheckedRecords.Window\"\n                }\n              }\n            ],\n            \"kind\": \"record\",\n            \"name\": \"OwnedCheckedRecords.Booking\"\n          }\n        },\n        {\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"ownership\": \"transfer\",\n          \"refinement\": {\n            \"constructor\": \"OwnedCheckedRecords.mkClaim\",\n            \"fields\": [\n              {\n                \"name\": \"holder\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"quota\",\n                \"refinement\": null\n              }\n            ],\n            \"kind\": \"checked-record\",\n            \"name\": \"OwnedCheckedRecords.Claim\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\"\n      }\n    },\n    \"OwnedCheckedRecords.transferWithClaimCallback\": {\n      \"parameters\": [\n        {\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"ownership\": \"transfer\",\n          \"refinement\": {\n            \"constructor\": \"OwnedCheckedRecords.mkClaim\",\n            \"fields\": [\n              {\n                \"name\": \"holder\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"quota\",\n                \"refinement\": null\n              }\n            ],\n            \"kind\": \"checked-record\",\n            \"name\": \"OwnedCheckedRecords.Claim\"\n          }\n        },\n        {\n          \"callable\": {\n            \"parameters\": [\n              {\n                \"lifetime\": {\n                  \"anchor\": null,\n                  \"scope\": \"call\"\n                },\n                \"ownership\": \"borrow\"\n              }\n            ],\n            \"result\": {\n              \"lifetime\": {\n                \"anchor\": null,\n                \"scope\": \"explicit\"\n              },\n              \"ownership\": \"lease\",\n              \"refinement\": {\n                \"constructor\": \"OwnedCheckedRecords.mkClaim\",\n                \"fields\": [\n                  {\n                    \"name\": \"holder\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"quota\",\n                    \"refinement\": null\n                  }\n                ],\n                \"kind\": \"checked-record\",\n                \"name\": \"OwnedCheckedRecords.Claim\"\n              }\n            }\n          },\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"ownership\": \"borrow\"\n        }\n      ],\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\"\n      }\n    },\n    \"OwnedCheckedRecords.withClaimCallback\": {\n      \"parameters\": [\n        {\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"ownership\": \"borrow\",\n          \"refinement\": {\n            \"constructor\": \"OwnedCheckedRecords.mkClaim\",\n            \"fields\": [\n              {\n                \"name\": \"holder\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"quota\",\n                \"refinement\": null\n              }\n            ],\n            \"kind\": \"checked-record\",\n            \"name\": \"OwnedCheckedRecords.Claim\"\n          }\n        },\n        {\n          \"callable\": {\n            \"parameters\": [\n              {\n                \"lifetime\": {\n                  \"anchor\": null,\n                  \"scope\": \"call\"\n                },\n                \"ownership\": \"borrow\"\n              }\n            ],\n            \"result\": {\n              \"lifetime\": {\n                \"anchor\": null,\n                \"scope\": \"explicit\"\n              },\n              \"ownership\": \"lease\",\n              \"refinement\": {\n                \"constructor\": \"OwnedCheckedRecords.mkClaim\",\n                \"fields\": [\n                  {\n                    \"name\": \"holder\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"quota\",\n                    \"refinement\": null\n                  }\n                ],\n                \"kind\": \"checked-record\",\n                \"name\": \"OwnedCheckedRecords.Claim\"\n              }\n            }\n          },\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"ownership\": \"borrow\"\n        }\n      ],\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\"\n      }\n    }\n  },\n  \"exports\": [\n    \"OwnedCheckedRecords.newTicket\",\n    \"OwnedCheckedRecords.serial\",\n    \"OwnedCheckedRecords.echoBooking\",\n    \"OwnedCheckedRecords.echoClaim\",\n    \"OwnedCheckedRecords.transferClaim\",\n    \"OwnedCheckedRecords.claimFor\",\n    \"OwnedCheckedRecords.pairClaim\",\n    \"OwnedCheckedRecords.withClaimCallback\",\n    \"OwnedCheckedRecords.claimClosure\",\n    \"OwnedCheckedRecords.bookingSpan\",\n    \"OwnedCheckedRecords.claimQuota\",\n    \"OwnedCheckedRecords.echoGrant\",\n    \"OwnedCheckedRecords.echoClaims\",\n    \"OwnedCheckedRecords.transferWithClaimCallback\",\n    \"OwnedCheckedRecords.transferPairClaim\"\n  ],\n  \"modules\": [\n    \"OwnedCheckedRecords\"\n  ],\n  \"ownedAggregates\": {\n    \"cycles\": \"reject\",\n    \"disposal\": \"required\",\n    \"fallback\": \"queued-finalizer\",\n    \"ownership\": \"lease\"\n  },\n  \"package\": {\n    \"description\": \"Owned proof-erased checked records.\"\n  },\n  \"resources\": [\n    \"OwnedCheckedRecords.Ticket\"\n  ],\n  \"schemaVersion\": 1,\n  \"targets\": {\n    \"rubygems\": {\n      \"name\": \"lean_bridge_owned_checked_records\",\n      \"version\": \"1.0.0\"\n    }\n  }\n}\n",
+            "extractorSha256": "00f8ce7a3888339cdb1c36b0dce3d8bc9d4c650ea18c7a4926c2d29d4690443a",
+            "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+            "leanCompilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+            "leanVersion": "4.32.2",
+            "modules": [
+              {
+                "interface": {
+                  "bytes": 182256,
+                  "interfaceSha256": "938f027189969289fe55ee8742d6d0ad29d9615979b625962f4fd455bade54b2",
+                  "sha256": "5426c4ec62f086d863ea881ec77db27c0d8945b7a5c2e2383c82ad1cb2a2939f"
+                },
+                "module": "OwnedCheckedRecords",
+                "source": {
+                  "bytes": 3374,
+                  "path": "OwnedCheckedRecords.lean",
+                  "sha256": "65226b9f8cafb1ff9e5c54dd680efc2939158fd9c4be1da2aaf8c069c1e1eb89"
+                }
+              }
+            ],
+            "request": {
+              "arities": [
+                [
+                  "OwnedCheckedRecords.claimClosure",
+                  0
+                ]
+              ],
+              "contracts": {
+                "OwnedCheckedRecords.bookingSpan": {
+                  "parameters": [
+                    {
+                      "lifetime": {
+                        "anchor": null,
+                        "scope": "call"
+                      },
+                      "ownership": "borrow",
+                      "refinement": {
+                        "fields": [
+                          {
+                            "name": "holder",
+                            "refinement": null
+                          },
+                          {
+                            "name": "window",
+                            "refinement": {
+                              "constructor": "OwnedCheckedRecords.mkWindow",
+                              "fields": [
+                                {
+                                  "name": "lo",
+                                  "refinement": null
+                                },
+                                {
+                                  "name": "hi",
+                                  "refinement": null
+                                }
+                              ],
+                              "kind": "checked-record",
+                              "name": "OwnedCheckedRecords.Window"
+                            }
+                          }
+                        ],
+                        "kind": "record",
+                        "name": "OwnedCheckedRecords.Booking"
+                      }
+                    }
+                  ],
+                  "result": {
+                    "lifetime": null,
+                    "ownership": "copy"
+                  }
+                },
+                "OwnedCheckedRecords.claimClosure": {
+                  "result": {
+                    "callable": {
+                      "parameters": [
+                        {
+                          "lifetime": {
+                            "anchor": null,
+                            "scope": "call"
+                          },
+                          "ownership": "borrow",
+                          "refinement": {
+                            "constructor": "OwnedCheckedRecords.mkClaim",
+                            "fields": [
+                              {
+                                "name": "holder",
+                                "refinement": null
+                              },
+                              {
+                                "name": "quota",
+                                "refinement": null
+                              }
+                            ],
+                            "kind": "checked-record",
+                            "name": "OwnedCheckedRecords.Claim"
+                          }
+                        }
+                      ],
+                      "result": {
+                        "lifetime": {
+                          "anchor": null,
+                          "scope": "explicit"
+                        },
+                        "ownership": "lease"
+                      }
+                    },
+                    "lifetime": {
+                      "anchor": null,
+                      "scope": "explicit"
+                    },
+                    "ownership": "lease"
+                  }
+                },
+                "OwnedCheckedRecords.claimQuota": {
+                  "parameters": [
+                    {
+                      "lifetime": {
+                        "anchor": null,
+                        "scope": "call"
+                      },
+                      "ownership": "borrow",
+                      "refinement": {
+                        "constructor": "OwnedCheckedRecords.mkClaim",
+                        "fields": [
+                          {
+                            "name": "holder",
+                            "refinement": null
+                          },
+                          {
+                            "name": "quota",
+                            "refinement": null
+                          }
+                        ],
+                        "kind": "checked-record",
+                        "name": "OwnedCheckedRecords.Claim"
+                      }
+                    }
+                  ],
+                  "result": {
+                    "lifetime": null,
+                    "ownership": "copy"
+                  }
+                },
+                "OwnedCheckedRecords.echoBooking": {
+                  "parameters": [
+                    {
+                      "lifetime": {
+                        "anchor": null,
+                        "scope": "call"
+                      },
+                      "ownership": "borrow",
+                      "refinement": {
+                        "fields": [
+                          {
+                            "name": "holder",
+                            "refinement": null
+                          },
+                          {
+                            "name": "window",
+                            "refinement": {
+                              "constructor": "OwnedCheckedRecords.mkWindow",
+                              "fields": [
+                                {
+                                  "name": "lo",
+                                  "refinement": null
+                                },
+                                {
+                                  "name": "hi",
+                                  "refinement": null
+                                }
+                              ],
+                              "kind": "checked-record",
+                              "name": "OwnedCheckedRecords.Window"
+                            }
+                          }
+                        ],
+                        "kind": "record",
+                        "name": "OwnedCheckedRecords.Booking"
+                      }
+                    }
+                  ],
+                  "result": {
+                    "lifetime": {
+                      "anchor": null,
+                      "scope": "explicit"
+                    },
+                    "ownership": "lease"
+                  }
+                },
+                "OwnedCheckedRecords.echoClaim": {
+                  "parameters": [
+                    {
+                      "lifetime": {
+                        "anchor": null,
+                        "scope": "call"
+                      },
+                      "ownership": "borrow",
+                      "refinement": {
+                        "constructor": "OwnedCheckedRecords.mkClaim",
+                        "fields": [
+                          {
+                            "name": "holder",
+                            "refinement": null
+                          },
+                          {
+                            "name": "quota",
+                            "refinement": null
+                          }
+                        ],
+                        "kind": "checked-record",
+                        "name": "OwnedCheckedRecords.Claim"
+                      }
+                    }
+                  ],
+                  "result": {
+                    "lifetime": {
+                      "anchor": null,
+                      "scope": "explicit"
+                    },
+                    "ownership": "lease"
+                  }
+                },
+                "OwnedCheckedRecords.echoClaims": {
+                  "parameters": [
+                    {
+                      "lifetime": {
+                        "anchor": null,
+                        "scope": "call"
+                      },
+                      "ownership": "borrow",
+                      "refinement": {
+                        "arguments": [
+                          {
+                            "constructor": "OwnedCheckedRecords.mkClaim",
+                            "fields": [
+                              {
+                                "name": "holder",
+                                "refinement": null
+                              },
+                              {
+                                "name": "quota",
+                                "refinement": null
+                              }
+                            ],
+                            "kind": "checked-record",
+                            "name": "OwnedCheckedRecords.Claim"
+                          }
+                        ],
+                        "kind": "array"
+                      }
+                    }
+                  ],
+                  "result": {
+                    "lifetime": {
+                      "anchor": null,
+                      "scope": "explicit"
+                    },
+                    "ownership": "lease"
+                  }
+                },
+                "OwnedCheckedRecords.echoGrant": {
+                  "parameters": [
+                    {
+                      "lifetime": {
+                        "anchor": null,
+                        "scope": "call"
+                      },
+                      "ownership": "borrow",
+                      "refinement": {
+                        "constructor": "OwnedCheckedRecords.mkGrant",
+                        "fields": [
+                          {
+                            "name": "holder",
+                            "refinement": null
+                          },
+                          {
+                            "name": "weight",
+                            "refinement": {
+                              "constructor": "OwnedCheckedRecords.checkedPositive"
+                            }
+                          },
+                          {
+                            "name": "limit",
+                            "refinement": null
+                          }
+                        ],
+                        "kind": "checked-record",
+                        "name": "OwnedCheckedRecords.Grant"
+                      }
+                    }
+                  ],
+                  "result": {
+                    "lifetime": {
+                      "anchor": null,
+                      "scope": "explicit"
+                    },
+                    "ownership": "lease"
+                  }
+                },
+                "OwnedCheckedRecords.pairClaim": {
+                  "parameters": [
+                    {
+                      "lifetime": {
+                        "anchor": null,
+                        "scope": "call"
+                      },
+                      "ownership": "borrow",
+                      "refinement": {
+                        "fields": [
+                          {
+                            "name": "holder",
+                            "refinement": null
+                          },
+                          {
+                            "name": "window",
+                            "refinement": {
+                              "constructor": "OwnedCheckedRecords.mkWindow",
+                              "fields": [
+                                {
+                                  "name": "lo",
+                                  "refinement": null
+                                },
+                                {
+                                  "name": "hi",
+                                  "refinement": null
+                                }
+                              ],
+                              "kind": "checked-record",
+                              "name": "OwnedCheckedRecords.Window"
+                            }
+                          }
+                        ],
+                        "kind": "record",
+                        "name": "OwnedCheckedRecords.Booking"
+                      }
+                    },
+                    {
+                      "lifetime": {
+                        "anchor": null,
+                        "scope": "call"
+                      },
+                      "ownership": "borrow",
+                      "refinement": {
+                        "constructor": "OwnedCheckedRecords.mkClaim",
+                        "fields": [
+                          {
+                            "name": "holder",
+                            "refinement": null
+                          },
+                          {
+                            "name": "quota",
+                            "refinement": null
+                          }
+                        ],
+                        "kind": "checked-record",
+                        "name": "OwnedCheckedRecords.Claim"
+                      }
+                    }
+                  ],
+                  "result": {
+                    "lifetime": {
+                      "anchor": null,
+                      "scope": "explicit"
+                    },
+                    "ownership": "lease"
+                  }
+                },
+                "OwnedCheckedRecords.transferClaim": {
+                  "parameters": [
+                    {
+                      "lifetime": {
+                        "anchor": null,
+                        "scope": "call"
+                      },
+                      "ownership": "transfer",
+                      "refinement": {
+                        "constructor": "OwnedCheckedRecords.mkClaim",
+                        "fields": [
+                          {
+                            "name": "holder",
+                            "refinement": null
+                          },
+                          {
+                            "name": "quota",
+                            "refinement": null
+                          }
+                        ],
+                        "kind": "checked-record",
+                        "name": "OwnedCheckedRecords.Claim"
+                      }
+                    }
+                  ],
+                  "result": {
+                    "lifetime": {
+                      "anchor": null,
+                      "scope": "explicit"
+                    },
+                    "ownership": "lease"
+                  }
+                },
+                "OwnedCheckedRecords.transferPairClaim": {
+                  "parameters": [
+                    {
+                      "lifetime": {
+                        "anchor": null,
+                        "scope": "call"
+                      },
+                      "ownership": "transfer",
+                      "refinement": {
+                        "fields": [
+                          {
+                            "name": "holder",
+                            "refinement": null
+                          },
+                          {
+                            "name": "window",
+                            "refinement": {
+                              "constructor": "OwnedCheckedRecords.mkWindow",
+                              "fields": [
+                                {
+                                  "name": "lo",
+                                  "refinement": null
+                                },
+                                {
+                                  "name": "hi",
+                                  "refinement": null
+                                }
+                              ],
+                              "kind": "checked-record",
+                              "name": "OwnedCheckedRecords.Window"
+                            }
+                          }
+                        ],
+                        "kind": "record",
+                        "name": "OwnedCheckedRecords.Booking"
+                      }
+                    },
+                    {
+                      "lifetime": {
+                        "anchor": null,
+                        "scope": "call"
+                      },
+                      "ownership": "transfer",
+                      "refinement": {
+                        "constructor": "OwnedCheckedRecords.mkClaim",
+                        "fields": [
+                          {
+                            "name": "holder",
+                            "refinement": null
+                          },
+                          {
+                            "name": "quota",
+                            "refinement": null
+                          }
+                        ],
+                        "kind": "checked-record",
+                        "name": "OwnedCheckedRecords.Claim"
+                      }
+                    }
+                  ],
+                  "result": {
+                    "lifetime": {
+                      "anchor": null,
+                      "scope": "explicit"
+                    },
+                    "ownership": "lease"
+                  }
+                },
+                "OwnedCheckedRecords.transferWithClaimCallback": {
+                  "parameters": [
+                    {
+                      "lifetime": {
+                        "anchor": null,
+                        "scope": "call"
+                      },
+                      "ownership": "transfer",
+                      "refinement": {
+                        "constructor": "OwnedCheckedRecords.mkClaim",
+                        "fields": [
+                          {
+                            "name": "holder",
+                            "refinement": null
+                          },
+                          {
+                            "name": "quota",
+                            "refinement": null
+                          }
+                        ],
+                        "kind": "checked-record",
+                        "name": "OwnedCheckedRecords.Claim"
+                      }
+                    },
+                    {
+                      "callable": {
+                        "parameters": [
+                          {
+                            "lifetime": {
+                              "anchor": null,
+                              "scope": "call"
+                            },
+                            "ownership": "borrow"
+                          }
+                        ],
+                        "result": {
+                          "lifetime": {
+                            "anchor": null,
+                            "scope": "explicit"
+                          },
+                          "ownership": "lease",
+                          "refinement": {
+                            "constructor": "OwnedCheckedRecords.mkClaim",
+                            "fields": [
+                              {
+                                "name": "holder",
+                                "refinement": null
+                              },
+                              {
+                                "name": "quota",
+                                "refinement": null
+                              }
+                            ],
+                            "kind": "checked-record",
+                            "name": "OwnedCheckedRecords.Claim"
+                          }
+                        }
+                      },
+                      "lifetime": {
+                        "anchor": null,
+                        "scope": "call"
+                      },
+                      "ownership": "borrow"
+                    }
+                  ],
+                  "result": {
+                    "lifetime": {
+                      "anchor": null,
+                      "scope": "explicit"
+                    },
+                    "ownership": "lease"
+                  }
+                },
+                "OwnedCheckedRecords.withClaimCallback": {
+                  "parameters": [
+                    {
+                      "lifetime": {
+                        "anchor": null,
+                        "scope": "call"
+                      },
+                      "ownership": "borrow",
+                      "refinement": {
+                        "constructor": "OwnedCheckedRecords.mkClaim",
+                        "fields": [
+                          {
+                            "name": "holder",
+                            "refinement": null
+                          },
+                          {
+                            "name": "quota",
+                            "refinement": null
+                          }
+                        ],
+                        "kind": "checked-record",
+                        "name": "OwnedCheckedRecords.Claim"
+                      }
+                    },
+                    {
+                      "callable": {
+                        "parameters": [
+                          {
+                            "lifetime": {
+                              "anchor": null,
+                              "scope": "call"
+                            },
+                            "ownership": "borrow"
+                          }
+                        ],
+                        "result": {
+                          "lifetime": {
+                            "anchor": null,
+                            "scope": "explicit"
+                          },
+                          "ownership": "lease",
+                          "refinement": {
+                            "constructor": "OwnedCheckedRecords.mkClaim",
+                            "fields": [
+                              {
+                                "name": "holder",
+                                "refinement": null
+                              },
+                              {
+                                "name": "quota",
+                                "refinement": null
+                              }
+                            ],
+                            "kind": "checked-record",
+                            "name": "OwnedCheckedRecords.Claim"
+                          }
+                        }
+                      },
+                      "lifetime": {
+                        "anchor": null,
+                        "scope": "call"
+                      },
+                      "ownership": "borrow"
+                    }
+                  ],
+                  "result": {
+                    "lifetime": {
+                      "anchor": null,
+                      "scope": "explicit"
+                    },
+                    "ownership": "lease"
+                  }
+                }
+              },
+              "exportModules": [
+                "OwnedCheckedRecords"
+              ],
+              "exports": [
+                "OwnedCheckedRecords.newTicket",
+                "OwnedCheckedRecords.serial",
+                "OwnedCheckedRecords.echoBooking",
+                "OwnedCheckedRecords.echoClaim",
+                "OwnedCheckedRecords.transferClaim",
+                "OwnedCheckedRecords.claimFor",
+                "OwnedCheckedRecords.pairClaim",
+                "OwnedCheckedRecords.withClaimCallback",
+                "OwnedCheckedRecords.claimClosure",
+                "OwnedCheckedRecords.bookingSpan",
+                "OwnedCheckedRecords.claimQuota",
+                "OwnedCheckedRecords.echoGrant",
+                "OwnedCheckedRecords.echoClaims",
+                "OwnedCheckedRecords.transferWithClaimCallback",
+                "OwnedCheckedRecords.transferPairClaim"
+              ],
+              "metadata": {
+                "invocationIdentitySha256": "835d2712b62ac2b5176a09b3550d75bc4be227544c00ef783462541bfacc8ed8",
+                "modules": [
+                  {
+                    "interfaceSha256": "938f027189969289fe55ee8742d6d0ad29d9615979b625962f4fd455bade54b2",
+                    "name": "OwnedCheckedRecords",
+                    "sourcePath": "OwnedCheckedRecords.lean",
+                    "sourceSha256": "65226b9f8cafb1ff9e5c54dd680efc2939158fd9c4be1da2aaf8c069c1e1eb89"
+                  }
+                ],
+                "toolchain": "leanprover/lean4:v4.32.2"
+              },
+              "modules": [
+                "OwnedCheckedRecords"
+              ],
+              "ownedAggregates": {
+                "cycles": "reject",
+                "disposal": "required",
+                "fallback": "queued-finalizer",
+                "ownership": "lease"
+              },
+              "profile": "native-library-v1",
+              "resources": [
+                "OwnedCheckedRecords.Ticket"
+              ]
+            },
+            "sourceNoticesSha256": "bc3d071087d3ff0f54f29e79b6425ca8addfde90ef0d59d2d5975b62c1b364e0",
+            "sourceTreeSha256": "8e17cad7331ab2395d9c6b877d5dcd877a2a413ed238843ca9188197d28662c9"
+          }
+        }
+      },
+      "constructorRejectionAndRecovery": true,
+      "deterministicReassembly": true,
+      "earlyAndLateRejection": true,
+      "exactApiMode": true,
+      "handoffRemovedBeforeRelocatedExecution": true,
+      "hostCallbackRecovery": true,
+      "lifecycle": {
+        "ruby": "gc-finalizer-plus-explicit-close"
+      },
+      "mixedOwnedAndCopiedTransport": true,
+      "mode": "full",
+      "observations": {
+        "ruby": {
+          "checks": 219,
+          "consumerSha256": "a55e86fbf55432cf34ee0e2593f7ea5bb80c94389dc1590798851a137fb20749",
+          "relocatedChecks": 219
+        }
+      },
+      "packageSetReceipt": {
+        "component": {
+          "id": "owned-checked-records@1.0.0",
+          "name": "owned-checked-records",
+          "version": "1.0.0"
+        },
+        "kind": "lean-bridge-package-set-receipt",
+        "packages": [
+          {
+            "artifacts": [
+              {
+                "bytes": 52700672,
+                "path": "archives/lean_bridge_owned_checked_records-1.0.0-x86_64-linux.gem",
+                "sha256": "2adbbd5f3a14e88898d653184807543ed28a545484c22d4ecd69811814446556"
+              }
+            ],
+            "ecosystem": "rubygems",
+            "name": "lean_bridge_owned_checked_records",
+            "profile": "native-library-v1",
+            "requires": [],
+            "role": "component",
+            "runtimeDelivery": "embedded",
+            "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+            "target": "rubygems",
+            "version": "1.0.0"
+          }
+        ],
+        "profiles": [
+          {
+            "bindingIrSha256": "dfd879f42304eba211ebafb8865ffc65b2fdc971967a0783b3cc145fe137d806",
+            "id": "native-library-v1",
+            "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+          }
+        ],
+        "schemaVersion": 1,
+        "source": {
+          "treeSha256": "8e17cad7331ab2395d9c6b877d5dcd877a2a413ed238843ca9188197d28662c9"
+        }
+      },
+      "profiles": [
+        "ruby"
+      ],
+      "reassembled": {
+        "ruby": {
+          "archive": "lean_bridge_owned_checked_records-1.0.0-x86_64-linux.gem",
+          "sha256": "2adbbd5f3a14e88898d653184807543ed28a545484c22d4ecd69811814446556"
+        }
+      },
+      "relocatedInstallation": true,
+      "retainedPackageSet": {
+        "archiveBytes": 52700672,
+        "archives": 1,
+        "files": [
+          "archives/lean_bridge_owned_checked_records-1.0.0-x86_64-linux.gem",
+          "package-set-receipt.json",
+          "package-set-receipt.json.sha256"
+        ],
+        "path": "evidence/ruby/ordinary-full/handoff",
+        "receiptSha256": "75e44d177ec2295de8a26f55d7a98468a4787c606af494078e5b3da2182df8a6"
+      },
+      "returnedClosureRecovery": true,
+      "route": "ordinary-full",
+      "sourceFreeInstallation": true,
+      "sourceUnchanged": true,
+      "transferredInputCheckedBeforeHandoff": true,
+      "unchangedRejectedInputs": true,
+      "versions": {
+        "ruby": "ruby 3.3.12 (2026-07-16 revision 0581089df9) [x86_64-linux]"
+      }
+    },
+    {
+      "authorRoute": "ordinary",
+      "bindingIrSha256": "e33581d360d189611cffe7b849dff60bdd14dfed9fd20edd13ac2c4d16e9a93c",
+      "componentReceipts": {
+        "ruby": {
+          "adaptersSha256": "5e58183572607225ce5218b9eb6f7f99d2132cc11aae4ed0dfcacbdff94c2d39",
+          "allocationGuardSha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83",
+          "bindingIrSha256": "e33581d360d189611cffe7b849dff60bdd14dfed9fd20edd13ac2c4d16e9a93c",
+          "callbackSourceSha256": "85a3b3d5c4fa014fa0c21f9b093c4a39f8eee01255070edf7d9eac10b2d843cf",
+          "compiler": "cc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+          "exports": [
+            {
+              "declaration": "OwnedCheckedRecords.claimFor",
+              "symbol": "lean_bridge_owned_714935404435718eda289287_f483485736ace9af57086"
+            },
+            {
+              "declaration": "OwnedCheckedRecords.newTicket",
+              "symbol": "lean_bridge_owned_714935404435718eda289287_fa1e5189bd92568e4b939"
+            },
+            {
+              "declaration": "OwnedCheckedRecords.serial",
+              "symbol": "lean_bridge_owned_714935404435718eda289287_fec926afda994fba3abe2"
+            }
+          ],
+          "headerSha256": "f56b46620c3ebb96f1244d8f84c23a833897ae2f32137c51be21cc384088a9f8",
+          "initializer": "initialize_LeanBridgeOwnedd02d7ce219da10e6",
+          "library": "libcomponent_161bdaa35ee11fef40c6.so",
+          "metadataSha256": "d878e80f2be3cf3d2ef50e348a7526c77af28b1382fe378a7de80f37eb774d6a",
+          "modelSha256": "ac14908730f6222571e10c192aae092655f9b1b80ee862e8f581022021aefe1a",
+          "nativeLibrary": {
+            "bytes": 60840,
+            "sha256": "e3ed49da25c0eb9c7bb478a0fac55a6a7e54f513e547e24d18976c72ddf578fa"
+          },
+          "profile": "native-library-v1",
+          "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+          "schemaVersion": 3,
+          "sourceIdentity": {
+            "exportConfigurationSha256": "00ae216f00e81fa1992b8952f6dfe62cfc508dfe8ba82bd06e23057a31666c16",
+            "exportConfigurationSource": "{\n  \"exports\": [\n    \"OwnedCheckedRecords.newTicket\",\n    \"OwnedCheckedRecords.serial\",\n    \"OwnedCheckedRecords.claimFor\"\n  ],\n  \"modules\": [\n    \"OwnedCheckedRecords\"\n  ],\n  \"ownedAggregates\": {\n    \"cycles\": \"reject\",\n    \"disposal\": \"required\",\n    \"fallback\": \"queued-finalizer\",\n    \"ownership\": \"lease\"\n  },\n  \"package\": {\n    \"description\": \"Lean-produced owned proof-erased checked records.\"\n  },\n  \"resources\": [\n    \"OwnedCheckedRecords.Ticket\"\n  ],\n  \"schemaVersion\": 1,\n  \"targets\": {\n    \"rubygems\": {\n      \"name\": \"lean_bridge_owned_checked_records-result-only\",\n      \"version\": \"1.0.0\"\n    }\n  }\n}\n",
+            "extractorSha256": "00f8ce7a3888339cdb1c36b0dce3d8bc9d4c650ea18c7a4926c2d29d4690443a",
+            "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+            "leanCompilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+            "leanVersion": "4.32.2",
+            "modules": [
+              {
+                "interface": {
+                  "bytes": 182256,
+                  "interfaceSha256": "938f027189969289fe55ee8742d6d0ad29d9615979b625962f4fd455bade54b2",
+                  "sha256": "5426c4ec62f086d863ea881ec77db27c0d8945b7a5c2e2383c82ad1cb2a2939f"
+                },
+                "module": "OwnedCheckedRecords",
+                "source": {
+                  "bytes": 3374,
+                  "path": "OwnedCheckedRecords.lean",
+                  "sha256": "65226b9f8cafb1ff9e5c54dd680efc2939158fd9c4be1da2aaf8c069c1e1eb89"
+                }
+              }
+            ],
+            "request": {
+              "arities": [],
+              "exportModules": [
+                "OwnedCheckedRecords"
+              ],
+              "exports": [
+                "OwnedCheckedRecords.newTicket",
+                "OwnedCheckedRecords.serial",
+                "OwnedCheckedRecords.claimFor"
+              ],
+              "metadata": {
+                "invocationIdentitySha256": "de8027349f936ab3c66084f185ee3554cccb7dddaa215615616256e6c7f2e1b7",
+                "modules": [
+                  {
+                    "interfaceSha256": "938f027189969289fe55ee8742d6d0ad29d9615979b625962f4fd455bade54b2",
+                    "name": "OwnedCheckedRecords",
+                    "sourcePath": "OwnedCheckedRecords.lean",
+                    "sourceSha256": "65226b9f8cafb1ff9e5c54dd680efc2939158fd9c4be1da2aaf8c069c1e1eb89"
+                  }
+                ],
+                "toolchain": "leanprover/lean4:v4.32.2"
+              },
+              "modules": [
+                "OwnedCheckedRecords"
+              ],
+              "ownedAggregates": {
+                "cycles": "reject",
+                "disposal": "required",
+                "fallback": "queued-finalizer",
+                "ownership": "lease"
+              },
+              "profile": "native-library-v1",
+              "resources": [
+                "OwnedCheckedRecords.Ticket"
+              ]
+            },
+            "sourceNoticesSha256": "37090b52a606110f4729ca843915a33957d9b38487ef33ce5548d3dec1632096",
+            "sourceTreeSha256": "ce941bfef6f20ae629a701d2233e3aa55c5294119cda49b3cc701ae88dfb1b5b"
+          }
+        }
+      },
+      "constructorRejectionAndRecovery": false,
+      "deterministicReassembly": true,
+      "earlyAndLateRejection": false,
+      "exactApiMode": true,
+      "handoffRemovedBeforeRelocatedExecution": true,
+      "hostCallbackRecovery": false,
+      "lifecycle": {
+        "ruby": "gc-finalizer-plus-explicit-close"
+      },
+      "mixedOwnedAndCopiedTransport": false,
+      "mode": "result-only",
+      "observations": {
+        "ruby": {
+          "checks": 5,
+          "consumerSha256": "bc741565c03098debca5510f6619715736702506aea5d393a71d973e39b8c83a",
+          "relocatedChecks": 5
+        }
+      },
+      "packageSetReceipt": {
+        "component": {
+          "id": "owned-checked-records@1.0.0",
+          "name": "owned-checked-records",
+          "version": "1.0.0"
+        },
+        "kind": "lean-bridge-package-set-receipt",
+        "packages": [
+          {
+            "artifacts": [
+              {
+                "bytes": 52610560,
+                "path": "archives/lean_bridge_owned_checked_records-result-only-1.0.0-x86_64-linux.gem",
+                "sha256": "af45614d9a818381c01ad51657ed7548c1377a1e8e31b0d765963c8d4fb039b4"
+              }
+            ],
+            "ecosystem": "rubygems",
+            "name": "lean_bridge_owned_checked_records-result-only",
+            "profile": "native-library-v1",
+            "requires": [],
+            "role": "component",
+            "runtimeDelivery": "embedded",
+            "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+            "target": "rubygems",
+            "version": "1.0.0"
+          }
+        ],
+        "profiles": [
+          {
+            "bindingIrSha256": "e33581d360d189611cffe7b849dff60bdd14dfed9fd20edd13ac2c4d16e9a93c",
+            "id": "native-library-v1",
+            "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+          }
+        ],
+        "schemaVersion": 1,
+        "source": {
+          "treeSha256": "ce941bfef6f20ae629a701d2233e3aa55c5294119cda49b3cc701ae88dfb1b5b"
+        }
+      },
+      "profiles": [
+        "ruby"
+      ],
+      "reassembled": {
+        "ruby": {
+          "archive": "lean_bridge_owned_checked_records-result-only-1.0.0-x86_64-linux.gem",
+          "sha256": "af45614d9a818381c01ad51657ed7548c1377a1e8e31b0d765963c8d4fb039b4"
+        }
+      },
+      "relocatedInstallation": true,
+      "retainedPackageSet": {
+        "archiveBytes": 52610560,
+        "archives": 1,
+        "files": [
+          "archives/lean_bridge_owned_checked_records-result-only-1.0.0-x86_64-linux.gem",
+          "package-set-receipt.json",
+          "package-set-receipt.json.sha256"
+        ],
+        "path": "evidence/ruby/ordinary-result-only/handoff",
+        "receiptSha256": "dd7747124b475b9011c548f06455bf94fcc4177bc8de08a5443835cd6cb197e5"
+      },
+      "returnedClosureRecovery": false,
+      "route": "ordinary-result-only",
+      "sourceFreeInstallation": true,
+      "sourceUnchanged": true,
+      "transferredInputCheckedBeforeHandoff": false,
+      "unchangedRejectedInputs": false,
+      "versions": {
+        "ruby": "ruby 3.3.12 (2026-07-16 revision 0581089df9) [x86_64-linux]"
+      }
+    },
+    {
+      "authorRoute": "reviewed",
+      "bindingIrSha256": "c36b2bfdecf817584e4d1229f8667c04558826ac672254b4df52ad1d968bba30",
+      "componentReceipts": {
+        "ruby": {
+          "adaptersSha256": "c7cd23a882ac2de105b2a184e0323c239db9ee574bf06ba5fdea57c510ad5538",
+          "allocationGuardSha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83",
+          "bindingIrSha256": "c36b2bfdecf817584e4d1229f8667c04558826ac672254b4df52ad1d968bba30",
+          "callbackSourceSha256": "53ba2a02d609577b7c054074b593278ca52cd8a8b72b18625838524e0e7e8e48",
+          "compiler": "cc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+          "exports": [
+            {
+              "declaration": "OwnedCheckedRecords.bookingSpan",
+              "symbol": "lean_bridge_owned_785b3e15e52ec518d5fef725_f61fa6d001212787ff6aa"
+            },
+            {
+              "declaration": "OwnedCheckedRecords.claimClosure",
+              "symbol": "lean_bridge_owned_785b3e15e52ec518d5fef725_fa3218a29f42862f9b113"
+            },
+            {
+              "declaration": "OwnedCheckedRecords.claimFor",
+              "symbol": "lean_bridge_owned_785b3e15e52ec518d5fef725_f483485736ace9af57086"
+            },
+            {
+              "declaration": "OwnedCheckedRecords.claimQuota",
+              "symbol": "lean_bridge_owned_785b3e15e52ec518d5fef725_f2f69e4eb3cbfdff310da"
+            },
+            {
+              "declaration": "OwnedCheckedRecords.echoBooking",
+              "symbol": "lean_bridge_owned_785b3e15e52ec518d5fef725_f0711e856cfa97d876c9a"
+            },
+            {
+              "declaration": "OwnedCheckedRecords.echoClaim",
+              "symbol": "lean_bridge_owned_785b3e15e52ec518d5fef725_f535babcfd8d0f67ea0e6"
+            },
+            {
+              "declaration": "OwnedCheckedRecords.echoClaims",
+              "symbol": "lean_bridge_owned_785b3e15e52ec518d5fef725_f25326d75f45c4daa9d9d"
+            },
+            {
+              "declaration": "OwnedCheckedRecords.echoGrant",
+              "symbol": "lean_bridge_owned_785b3e15e52ec518d5fef725_feb082cf837ef02082ea8"
+            },
+            {
+              "declaration": "OwnedCheckedRecords.newTicket",
+              "symbol": "lean_bridge_owned_785b3e15e52ec518d5fef725_fa1e5189bd92568e4b939"
+            },
+            {
+              "declaration": "OwnedCheckedRecords.pairClaim",
+              "symbol": "lean_bridge_owned_785b3e15e52ec518d5fef725_feaac3cc8d9197bd7bbca"
+            },
+            {
+              "declaration": "OwnedCheckedRecords.serial",
+              "symbol": "lean_bridge_owned_785b3e15e52ec518d5fef725_fec926afda994fba3abe2"
+            },
+            {
+              "declaration": "OwnedCheckedRecords.transferClaim",
+              "symbol": "lean_bridge_owned_785b3e15e52ec518d5fef725_f040aca3025d850fc12cc"
+            },
+            {
+              "declaration": "OwnedCheckedRecords.transferPairClaim",
+              "symbol": "lean_bridge_owned_785b3e15e52ec518d5fef725_fc4cffe83b4b420b09021"
+            },
+            {
+              "declaration": "OwnedCheckedRecords.transferWithClaimCallback",
+              "symbol": "lean_bridge_owned_785b3e15e52ec518d5fef725_f33442f0a4409864e6a4a"
+            },
+            {
+              "declaration": "OwnedCheckedRecords.withClaimCallback",
+              "symbol": "lean_bridge_owned_785b3e15e52ec518d5fef725_f7d6c8617a0788c12de15"
+            }
+          ],
+          "headerSha256": "4c00f4f3cc3d3e93dd0792395adfe8004db97a1f34ff4f29362d055c3cbb5b96",
+          "initializer": "initialize_LeanBridgeOwned12184b3553030a4e",
+          "inputTransfers": {
+            "consumption": "before-lean-call",
+            "exports": [
+              {
+                "bindingId": "lean:OwnedCheckedRecords.transferClaim",
+                "parameters": [
+                  0
+                ]
+              },
+              {
+                "bindingId": "lean:OwnedCheckedRecords.transferPairClaim",
+                "parameters": [
+                  0,
+                  1
+                ]
+              },
+              {
+                "bindingId": "lean:OwnedCheckedRecords.transferWithClaimCallback",
+                "parameters": [
+                  0
+                ]
+              }
+            ],
+            "failure": "consumed-after-handoff",
+            "ownership": "whole-result-owner",
+            "schemaVersion": 1,
+            "validation": "before-consumption",
+            "viewLifetime": "until-call-returns"
+          },
+          "library": "libcomponent_161bdaa35ee11fef40c6.so",
+          "metadataSha256": "33db31653b40e1bc2f1434665fc03435a80ab14ee7c9892dbc9d5c6d03739e67",
+          "modelSha256": "29acb293910960ee778f465d32999e94670b2340d4e2ad56aefdb0e4af3f018b",
+          "nativeLibrary": {
+            "bytes": 130744,
+            "sha256": "8d2731f678dd1373f96e5c9a015adb2028ed15e7228b0521b45694d3b825b07b"
+          },
+          "profile": "native-library-v1",
+          "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+          "schemaVersion": 4,
+          "sourceIdentity": {
+            "exportConfigurationSha256": "98bedeee3128045e616ed1bb472d046af3fb955c4c95bcdcc41d092caf5011b5",
+            "exportConfigurationSource": "{\n  \"modules\": [\n    \"OwnedCheckedRecords\"\n  ],\n  \"schemaVersion\": 1,\n  \"targets\": {\n    \"rubygems\": {\n      \"name\": \"lean_bridge_owned_checked_records\",\n      \"version\": \"1.0.0\"\n    }\n  }\n}\n",
+            "extractorSha256": "00f8ce7a3888339cdb1c36b0dce3d8bc9d4c650ea18c7a4926c2d29d4690443a",
+            "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+            "leanCompilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+            "leanVersion": "4.32.2",
+            "modules": [
+              {
+                "interface": {
+                  "bytes": 182256,
+                  "interfaceSha256": "938f027189969289fe55ee8742d6d0ad29d9615979b625962f4fd455bade54b2",
+                  "sha256": "5426c4ec62f086d863ea881ec77db27c0d8945b7a5c2e2383c82ad1cb2a2939f"
+                },
+                "module": "OwnedCheckedRecords",
+                "source": {
+                  "bytes": 3374,
+                  "path": "OwnedCheckedRecords.lean",
+                  "sha256": "65226b9f8cafb1ff9e5c54dd680efc2939158fd9c4be1da2aaf8c069c1e1eb89"
+                }
+              }
+            ],
+            "request": {
+              "arities": [
+                [
+                  "OwnedCheckedRecords.claimClosure",
+                  0
+                ]
+              ],
+              "contracts": {
+                "OwnedCheckedRecords.bookingSpan": {
+                  "parameters": [
+                    {
+                      "lifetime": {
+                        "anchor": null,
+                        "scope": "call"
+                      },
+                      "ownership": "borrow",
+                      "refinement": {
+                        "fields": [
+                          {
+                            "name": "holder",
+                            "refinement": null
+                          },
+                          {
+                            "name": "window",
+                            "refinement": {
+                              "constructor": "OwnedCheckedRecords.mkWindow",
+                              "fields": [
+                                {
+                                  "name": "lo",
+                                  "refinement": null
+                                },
+                                {
+                                  "name": "hi",
+                                  "refinement": null
+                                }
+                              ],
+                              "kind": "checked-record",
+                              "name": "OwnedCheckedRecords.Window"
+                            }
+                          }
+                        ],
+                        "kind": "record",
+                        "name": "OwnedCheckedRecords.Booking"
+                      }
+                    }
+                  ]
+                },
+                "OwnedCheckedRecords.claimClosure": {
+                  "result": {
+                    "callable": {
+                      "parameters": [
+                        {
+                          "lifetime": {
+                            "anchor": null,
+                            "scope": "call"
+                          },
+                          "ownership": "borrow",
+                          "refinement": {
+                            "constructor": "OwnedCheckedRecords.mkClaim",
+                            "fields": [
+                              {
+                                "name": "holder",
+                                "refinement": null
+                              },
+                              {
+                                "name": "quota",
+                                "refinement": null
+                              }
+                            ],
+                            "kind": "checked-record",
+                            "name": "OwnedCheckedRecords.Claim"
+                          }
+                        }
+                      ],
+                      "result": {
+                        "lifetime": {
+                          "anchor": null,
+                          "scope": "explicit"
+                        },
+                        "ownership": "lease"
+                      }
+                    },
+                    "lifetime": {
+                      "anchor": null,
+                      "scope": "explicit"
+                    },
+                    "ownership": "lease"
+                  }
+                },
+                "OwnedCheckedRecords.claimQuota": {
+                  "parameters": [
+                    {
+                      "lifetime": {
+                        "anchor": null,
+                        "scope": "call"
+                      },
+                      "ownership": "borrow",
+                      "refinement": {
+                        "constructor": "OwnedCheckedRecords.mkClaim",
+                        "fields": [
+                          {
+                            "name": "holder",
+                            "refinement": null
+                          },
+                          {
+                            "name": "quota",
+                            "refinement": null
+                          }
+                        ],
+                        "kind": "checked-record",
+                        "name": "OwnedCheckedRecords.Claim"
+                      }
+                    }
+                  ]
+                },
+                "OwnedCheckedRecords.echoBooking": {
+                  "parameters": [
+                    {
+                      "lifetime": {
+                        "anchor": null,
+                        "scope": "call"
+                      },
+                      "ownership": "borrow",
+                      "refinement": {
+                        "fields": [
+                          {
+                            "name": "holder",
+                            "refinement": null
+                          },
+                          {
+                            "name": "window",
+                            "refinement": {
+                              "constructor": "OwnedCheckedRecords.mkWindow",
+                              "fields": [
+                                {
+                                  "name": "lo",
+                                  "refinement": null
+                                },
+                                {
+                                  "name": "hi",
+                                  "refinement": null
+                                }
+                              ],
+                              "kind": "checked-record",
+                              "name": "OwnedCheckedRecords.Window"
+                            }
+                          }
+                        ],
+                        "kind": "record",
+                        "name": "OwnedCheckedRecords.Booking"
+                      }
+                    }
+                  ]
+                },
+                "OwnedCheckedRecords.echoClaim": {
+                  "parameters": [
+                    {
+                      "lifetime": {
+                        "anchor": null,
+                        "scope": "call"
+                      },
+                      "ownership": "borrow",
+                      "refinement": {
+                        "constructor": "OwnedCheckedRecords.mkClaim",
+                        "fields": [
+                          {
+                            "name": "holder",
+                            "refinement": null
+                          },
+                          {
+                            "name": "quota",
+                            "refinement": null
+                          }
+                        ],
+                        "kind": "checked-record",
+                        "name": "OwnedCheckedRecords.Claim"
+                      }
+                    }
+                  ]
+                },
+                "OwnedCheckedRecords.echoClaims": {
+                  "parameters": [
+                    {
+                      "lifetime": {
+                        "anchor": null,
+                        "scope": "call"
+                      },
+                      "ownership": "borrow",
+                      "refinement": {
+                        "arguments": [
+                          {
+                            "constructor": "OwnedCheckedRecords.mkClaim",
+                            "fields": [
+                              {
+                                "name": "holder",
+                                "refinement": null
+                              },
+                              {
+                                "name": "quota",
+                                "refinement": null
+                              }
+                            ],
+                            "kind": "checked-record",
+                            "name": "OwnedCheckedRecords.Claim"
+                          }
+                        ],
+                        "kind": "array"
+                      }
+                    }
+                  ]
+                },
+                "OwnedCheckedRecords.echoGrant": {
+                  "parameters": [
+                    {
+                      "lifetime": {
+                        "anchor": null,
+                        "scope": "call"
+                      },
+                      "ownership": "borrow",
+                      "refinement": {
+                        "constructor": "OwnedCheckedRecords.mkGrant",
+                        "fields": [
+                          {
+                            "name": "holder",
+                            "refinement": null
+                          },
+                          {
+                            "name": "weight",
+                            "refinement": {
+                              "constructor": "OwnedCheckedRecords.checkedPositive"
+                            }
+                          },
+                          {
+                            "name": "limit",
+                            "refinement": null
+                          }
+                        ],
+                        "kind": "checked-record",
+                        "name": "OwnedCheckedRecords.Grant"
+                      }
+                    }
+                  ]
+                },
+                "OwnedCheckedRecords.pairClaim": {
+                  "parameters": [
+                    {
+                      "lifetime": {
+                        "anchor": null,
+                        "scope": "call"
+                      },
+                      "ownership": "borrow",
+                      "refinement": {
+                        "fields": [
+                          {
+                            "name": "holder",
+                            "refinement": null
+                          },
+                          {
+                            "name": "window",
+                            "refinement": {
+                              "constructor": "OwnedCheckedRecords.mkWindow",
+                              "fields": [
+                                {
+                                  "name": "lo",
+                                  "refinement": null
+                                },
+                                {
+                                  "name": "hi",
+                                  "refinement": null
+                                }
+                              ],
+                              "kind": "checked-record",
+                              "name": "OwnedCheckedRecords.Window"
+                            }
+                          }
+                        ],
+                        "kind": "record",
+                        "name": "OwnedCheckedRecords.Booking"
+                      }
+                    },
+                    {
+                      "lifetime": {
+                        "anchor": null,
+                        "scope": "call"
+                      },
+                      "ownership": "borrow",
+                      "refinement": {
+                        "constructor": "OwnedCheckedRecords.mkClaim",
+                        "fields": [
+                          {
+                            "name": "holder",
+                            "refinement": null
+                          },
+                          {
+                            "name": "quota",
+                            "refinement": null
+                          }
+                        ],
+                        "kind": "checked-record",
+                        "name": "OwnedCheckedRecords.Claim"
+                      }
+                    }
+                  ]
+                },
+                "OwnedCheckedRecords.transferClaim": {
+                  "parameters": [
+                    {
+                      "lifetime": {
+                        "anchor": null,
+                        "scope": "call"
+                      },
+                      "ownership": "transfer",
+                      "refinement": {
+                        "constructor": "OwnedCheckedRecords.mkClaim",
+                        "fields": [
+                          {
+                            "name": "holder",
+                            "refinement": null
+                          },
+                          {
+                            "name": "quota",
+                            "refinement": null
+                          }
+                        ],
+                        "kind": "checked-record",
+                        "name": "OwnedCheckedRecords.Claim"
+                      }
+                    }
+                  ]
+                },
+                "OwnedCheckedRecords.transferPairClaim": {
+                  "parameters": [
+                    {
+                      "lifetime": {
+                        "anchor": null,
+                        "scope": "call"
+                      },
+                      "ownership": "transfer",
+                      "refinement": {
+                        "fields": [
+                          {
+                            "name": "holder",
+                            "refinement": null
+                          },
+                          {
+                            "name": "window",
+                            "refinement": {
+                              "constructor": "OwnedCheckedRecords.mkWindow",
+                              "fields": [
+                                {
+                                  "name": "lo",
+                                  "refinement": null
+                                },
+                                {
+                                  "name": "hi",
+                                  "refinement": null
+                                }
+                              ],
+                              "kind": "checked-record",
+                              "name": "OwnedCheckedRecords.Window"
+                            }
+                          }
+                        ],
+                        "kind": "record",
+                        "name": "OwnedCheckedRecords.Booking"
+                      }
+                    },
+                    {
+                      "lifetime": {
+                        "anchor": null,
+                        "scope": "call"
+                      },
+                      "ownership": "transfer",
+                      "refinement": {
+                        "constructor": "OwnedCheckedRecords.mkClaim",
+                        "fields": [
+                          {
+                            "name": "holder",
+                            "refinement": null
+                          },
+                          {
+                            "name": "quota",
+                            "refinement": null
+                          }
+                        ],
+                        "kind": "checked-record",
+                        "name": "OwnedCheckedRecords.Claim"
+                      }
+                    }
+                  ]
+                },
+                "OwnedCheckedRecords.transferWithClaimCallback": {
+                  "parameters": [
+                    {
+                      "lifetime": {
+                        "anchor": null,
+                        "scope": "call"
+                      },
+                      "ownership": "transfer",
+                      "refinement": {
+                        "constructor": "OwnedCheckedRecords.mkClaim",
+                        "fields": [
+                          {
+                            "name": "holder",
+                            "refinement": null
+                          },
+                          {
+                            "name": "quota",
+                            "refinement": null
+                          }
+                        ],
+                        "kind": "checked-record",
+                        "name": "OwnedCheckedRecords.Claim"
+                      }
+                    },
+                    {
+                      "callable": {
+                        "parameters": [
+                          {
+                            "lifetime": {
+                              "anchor": null,
+                              "scope": "call"
+                            },
+                            "ownership": "borrow"
+                          }
+                        ],
+                        "result": {
+                          "lifetime": {
+                            "anchor": null,
+                            "scope": "explicit"
+                          },
+                          "ownership": "lease",
+                          "refinement": {
+                            "constructor": "OwnedCheckedRecords.mkClaim",
+                            "fields": [
+                              {
+                                "name": "holder",
+                                "refinement": null
+                              },
+                              {
+                                "name": "quota",
+                                "refinement": null
+                              }
+                            ],
+                            "kind": "checked-record",
+                            "name": "OwnedCheckedRecords.Claim"
+                          }
+                        }
+                      },
+                      "lifetime": {
+                        "anchor": null,
+                        "scope": "call"
+                      },
+                      "ownership": "borrow"
+                    }
+                  ]
+                },
+                "OwnedCheckedRecords.withClaimCallback": {
+                  "parameters": [
+                    {
+                      "lifetime": {
+                        "anchor": null,
+                        "scope": "call"
+                      },
+                      "ownership": "borrow",
+                      "refinement": {
+                        "constructor": "OwnedCheckedRecords.mkClaim",
+                        "fields": [
+                          {
+                            "name": "holder",
+                            "refinement": null
+                          },
+                          {
+                            "name": "quota",
+                            "refinement": null
+                          }
+                        ],
+                        "kind": "checked-record",
+                        "name": "OwnedCheckedRecords.Claim"
+                      }
+                    },
+                    {
+                      "callable": {
+                        "parameters": [
+                          {
+                            "lifetime": {
+                              "anchor": null,
+                              "scope": "call"
+                            },
+                            "ownership": "borrow"
+                          }
+                        ],
+                        "result": {
+                          "lifetime": {
+                            "anchor": null,
+                            "scope": "explicit"
+                          },
+                          "ownership": "lease",
+                          "refinement": {
+                            "constructor": "OwnedCheckedRecords.mkClaim",
+                            "fields": [
+                              {
+                                "name": "holder",
+                                "refinement": null
+                              },
+                              {
+                                "name": "quota",
+                                "refinement": null
+                              }
+                            ],
+                            "kind": "checked-record",
+                            "name": "OwnedCheckedRecords.Claim"
+                          }
+                        }
+                      },
+                      "lifetime": {
+                        "anchor": null,
+                        "scope": "call"
+                      },
+                      "ownership": "borrow"
+                    }
+                  ]
+                }
+              },
+              "exportModules": [
+                "OwnedCheckedRecords"
+              ],
+              "exports": [
+                "OwnedCheckedRecords.bookingSpan",
+                "OwnedCheckedRecords.claimClosure",
+                "OwnedCheckedRecords.claimFor",
+                "OwnedCheckedRecords.claimQuota",
+                "OwnedCheckedRecords.echoBooking",
+                "OwnedCheckedRecords.echoClaim",
+                "OwnedCheckedRecords.echoClaims",
+                "OwnedCheckedRecords.echoGrant",
+                "OwnedCheckedRecords.newTicket",
+                "OwnedCheckedRecords.pairClaim",
+                "OwnedCheckedRecords.serial",
+                "OwnedCheckedRecords.transferClaim",
+                "OwnedCheckedRecords.transferPairClaim",
+                "OwnedCheckedRecords.transferWithClaimCallback",
+                "OwnedCheckedRecords.withClaimCallback"
+              ],
+              "metadata": {
+                "invocationIdentitySha256": "30a5bcc528d0e33e8603df29e4b1d1048527b444936f8adc23c087fbf7248d61",
+                "modules": [
+                  {
+                    "interfaceSha256": "938f027189969289fe55ee8742d6d0ad29d9615979b625962f4fd455bade54b2",
+                    "name": "OwnedCheckedRecords",
+                    "sourcePath": "OwnedCheckedRecords.lean",
+                    "sourceSha256": "65226b9f8cafb1ff9e5c54dd680efc2939158fd9c4be1da2aaf8c069c1e1eb89"
+                  }
+                ],
+                "toolchain": "leanprover/lean4:v4.32.2"
+              },
+              "modules": [
+                "OwnedCheckedRecords"
+              ],
+              "ownedAggregates": {
+                "cycles": "reject",
+                "disposal": "required",
+                "fallback": "queued-finalizer",
+                "ownership": "lease"
+              },
+              "profile": "native-library-v1",
+              "resources": [
+                "OwnedCheckedRecords.Ticket"
+              ]
+            },
+            "reviewedBindingIr": {
+              "path": "api.binding-ir.json",
+              "schemaVersion": 1,
+              "semanticSha256": "86401641443623cea08adec1cd66864e3b0015fba3cb0ca5e32194a682a3e01c",
+              "source": "{\n  \"aggregatePolicy\": {\n    \"cycles\": \"reject\",\n    \"disposal\": \"required\",\n    \"fallback\": \"queued-finalizer\",\n    \"ownership\": \"lease\"\n  },\n  \"assurance\": [],\n  \"capabilities\": [],\n  \"component\": {\n    \"id\": \"owned-checked-records@1.0.0\",\n    \"name\": \"owned-checked-records\",\n    \"version\": \"1.0.0\"\n  },\n  \"declarations\": [\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [\n        \"allocates\"\n      ],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:OwnedCheckedRecords.newTicket\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"newTicket\",\n      \"overloadKey\": \"OwnedCheckedRecords.newTicket\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"arg0\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        },\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"arg1\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"string\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\",\n        \"type\": {\n          \"id\": \"lean:OwnedCheckedRecords.Ticket\",\n          \"kind\": \"named\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"OwnedCheckedRecords.newTicket\",\n        \"extensions\": {},\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [\n        \"reads-resource\"\n      ],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:OwnedCheckedRecords.serial\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"serial\",\n      \"overloadKey\": \"OwnedCheckedRecords.serial\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"arg0\",\n          \"optional\": false,\n          \"ownership\": \"borrow\",\n          \"type\": {\n            \"id\": \"lean:OwnedCheckedRecords.Ticket\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"kind\": \"primitive\",\n          \"name\": \"nat\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"OwnedCheckedRecords.serial\",\n        \"extensions\": {},\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [\n        \"allocates\",\n        \"reads-resource\"\n      ],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:OwnedCheckedRecords.echoBooking\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"echoBooking\",\n      \"overloadKey\": \"OwnedCheckedRecords.echoBooking\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"arg0\",\n          \"optional\": false,\n          \"ownership\": \"borrow\",\n          \"type\": {\n            \"id\": \"lean:OwnedCheckedRecords.Booking\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\",\n        \"type\": {\n          \"id\": \"lean:OwnedCheckedRecords.Booking\",\n          \"kind\": \"named\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"OwnedCheckedRecords.echoBooking\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"fields\": [\n                  {\n                    \"name\": \"holder\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"window\",\n                    \"refinement\": {\n                      \"constructor\": \"OwnedCheckedRecords.mkWindow\",\n                      \"fields\": [\n                        {\n                          \"name\": \"lo\",\n                          \"refinement\": null\n                        },\n                        {\n                          \"name\": \"hi\",\n                          \"refinement\": null\n                        }\n                      ],\n                      \"kind\": \"checked-record\",\n                      \"name\": \"OwnedCheckedRecords.Window\"\n                    }\n                  }\n                ],\n                \"kind\": \"record\",\n                \"name\": \"OwnedCheckedRecords.Booking\"\n              }\n            ],\n            \"result\": {\n              \"fields\": [\n                {\n                  \"name\": \"holder\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"window\",\n                  \"refinement\": {\n                    \"constructor\": null,\n                    \"fields\": [\n                      {\n                        \"name\": \"lo\",\n                        \"refinement\": null\n                      },\n                      {\n                        \"name\": \"hi\",\n                        \"refinement\": null\n                      }\n                    ],\n                    \"kind\": \"checked-record\",\n                    \"name\": \"OwnedCheckedRecords.Window\"\n                  }\n                }\n              ],\n              \"kind\": \"record\",\n              \"name\": \"OwnedCheckedRecords.Booking\"\n            }\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [\n        \"allocates\",\n        \"reads-resource\"\n      ],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:OwnedCheckedRecords.echoClaim\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"echoClaim\",\n      \"overloadKey\": \"OwnedCheckedRecords.echoClaim\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"arg0\",\n          \"optional\": false,\n          \"ownership\": \"borrow\",\n          \"type\": {\n            \"id\": \"lean:OwnedCheckedRecords.Claim\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\",\n        \"type\": {\n          \"id\": \"lean:OwnedCheckedRecords.Claim\",\n          \"kind\": \"named\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"OwnedCheckedRecords.echoClaim\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"constructor\": \"OwnedCheckedRecords.mkClaim\",\n                \"fields\": [\n                  {\n                    \"name\": \"holder\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"quota\",\n                    \"refinement\": null\n                  }\n                ],\n                \"kind\": \"checked-record\",\n                \"name\": \"OwnedCheckedRecords.Claim\"\n              }\n            ],\n            \"result\": {\n              \"constructor\": null,\n              \"fields\": [\n                {\n                  \"name\": \"holder\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"quota\",\n                  \"refinement\": null\n                }\n              ],\n              \"kind\": \"checked-record\",\n              \"name\": \"OwnedCheckedRecords.Claim\"\n            }\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [\n        \"allocates\",\n        \"reads-resource\"\n      ],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:OwnedCheckedRecords.transferClaim\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"transferClaim\",\n      \"overloadKey\": \"OwnedCheckedRecords.transferClaim\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"arg0\",\n          \"optional\": false,\n          \"ownership\": \"transfer\",\n          \"type\": {\n            \"id\": \"lean:OwnedCheckedRecords.Claim\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\",\n        \"type\": {\n          \"id\": \"lean:OwnedCheckedRecords.Claim\",\n          \"kind\": \"named\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"OwnedCheckedRecords.transferClaim\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"constructor\": \"OwnedCheckedRecords.mkClaim\",\n                \"fields\": [\n                  {\n                    \"name\": \"holder\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"quota\",\n                    \"refinement\": null\n                  }\n                ],\n                \"kind\": \"checked-record\",\n                \"name\": \"OwnedCheckedRecords.Claim\"\n              }\n            ],\n            \"result\": {\n              \"constructor\": null,\n              \"fields\": [\n                {\n                  \"name\": \"holder\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"quota\",\n                  \"refinement\": null\n                }\n              ],\n              \"kind\": \"checked-record\",\n              \"name\": \"OwnedCheckedRecords.Claim\"\n            }\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [\n        \"allocates\",\n        \"reads-resource\"\n      ],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:OwnedCheckedRecords.claimFor\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"claimFor\",\n      \"overloadKey\": \"OwnedCheckedRecords.claimFor\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"arg0\",\n          \"optional\": false,\n          \"ownership\": \"borrow\",\n          \"type\": {\n            \"id\": \"lean:OwnedCheckedRecords.Ticket\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\",\n        \"type\": {\n          \"arguments\": [\n            {\n              \"id\": \"lean:OwnedCheckedRecords.Claim\",\n              \"kind\": \"named\"\n            }\n          ],\n          \"constructor\": \"option\",\n          \"kind\": \"apply\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"OwnedCheckedRecords.claimFor\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              null\n            ],\n            \"result\": {\n              \"arguments\": [\n                {\n                  \"constructor\": null,\n                  \"fields\": [\n                    {\n                      \"name\": \"holder\",\n                      \"refinement\": null\n                    },\n                    {\n                      \"name\": \"quota\",\n                      \"refinement\": null\n                    }\n                  ],\n                  \"kind\": \"checked-record\",\n                  \"name\": \"OwnedCheckedRecords.Claim\"\n                }\n              ],\n              \"kind\": \"option\"\n            }\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [\n        \"allocates\",\n        \"reads-resource\"\n      ],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:OwnedCheckedRecords.pairClaim\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"pairClaim\",\n      \"overloadKey\": \"OwnedCheckedRecords.pairClaim\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"arg0\",\n          \"optional\": false,\n          \"ownership\": \"borrow\",\n          \"type\": {\n            \"id\": \"lean:OwnedCheckedRecords.Booking\",\n            \"kind\": \"named\"\n          }\n        },\n        {\n          \"default\": null,\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"arg1\",\n          \"optional\": false,\n          \"ownership\": \"borrow\",\n          \"type\": {\n            \"id\": \"lean:OwnedCheckedRecords.Claim\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\",\n        \"type\": {\n          \"id\": \"lean:OwnedCheckedRecords.Claim\",\n          \"kind\": \"named\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"OwnedCheckedRecords.pairClaim\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"fields\": [\n                  {\n                    \"name\": \"holder\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"window\",\n                    \"refinement\": {\n                      \"constructor\": \"OwnedCheckedRecords.mkWindow\",\n                      \"fields\": [\n                        {\n                          \"name\": \"lo\",\n                          \"refinement\": null\n                        },\n                        {\n                          \"name\": \"hi\",\n                          \"refinement\": null\n                        }\n                      ],\n                      \"kind\": \"checked-record\",\n                      \"name\": \"OwnedCheckedRecords.Window\"\n                    }\n                  }\n                ],\n                \"kind\": \"record\",\n                \"name\": \"OwnedCheckedRecords.Booking\"\n              },\n              {\n                \"constructor\": \"OwnedCheckedRecords.mkClaim\",\n                \"fields\": [\n                  {\n                    \"name\": \"holder\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"quota\",\n                    \"refinement\": null\n                  }\n                ],\n                \"kind\": \"checked-record\",\n                \"name\": \"OwnedCheckedRecords.Claim\"\n              }\n            ],\n            \"result\": {\n              \"constructor\": null,\n              \"fields\": [\n                {\n                  \"name\": \"holder\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"quota\",\n                  \"refinement\": null\n                }\n              ],\n              \"kind\": \"checked-record\",\n              \"name\": \"OwnedCheckedRecords.Claim\"\n            }\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [\n        \"allocates\",\n        \"fails\",\n        \"host-call\",\n        \"reads-resource\"\n      ],\n      \"failure\": {\n        \"errors\": [\n          \"error:native-callback\"\n        ],\n        \"mode\": \"declared\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:OwnedCheckedRecords.withClaimCallback\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"withClaimCallback\",\n      \"overloadKey\": \"OwnedCheckedRecords.withClaimCallback\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"arg0\",\n          \"optional\": false,\n          \"ownership\": \"borrow\",\n          \"type\": {\n            \"id\": \"lean:OwnedCheckedRecords.Claim\",\n            \"kind\": \"named\"\n          }\n        },\n        {\n          \"default\": null,\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"arg1\",\n          \"optional\": false,\n          \"ownership\": \"borrow\",\n          \"type\": {\n            \"id\": \"bridge:Callbackb2d3d6fd4e031785f278\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\",\n        \"type\": {\n          \"id\": \"lean:OwnedCheckedRecords.Claim\",\n          \"kind\": \"named\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"OwnedCheckedRecords.withClaimCallback\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"constructor\": \"OwnedCheckedRecords.mkClaim\",\n                \"fields\": [\n                  {\n                    \"name\": \"holder\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"quota\",\n                    \"refinement\": null\n                  }\n                ],\n                \"kind\": \"checked-record\",\n                \"name\": \"OwnedCheckedRecords.Claim\"\n              },\n              null\n            ],\n            \"result\": {\n              \"constructor\": null,\n              \"fields\": [\n                {\n                  \"name\": \"holder\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"quota\",\n                  \"refinement\": null\n                }\n              ],\n              \"kind\": \"checked-record\",\n              \"name\": \"OwnedCheckedRecords.Claim\"\n            }\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [\n        \"allocates\"\n      ],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:OwnedCheckedRecords.claimClosure\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"claimClosure\",\n      \"overloadKey\": \"OwnedCheckedRecords.claimClosure\",\n      \"owner\": null,\n      \"parameters\": [],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\",\n        \"type\": {\n          \"id\": \"bridge:Callback26621c40b48fce52ca37\",\n          \"kind\": \"named\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"OwnedCheckedRecords.claimClosure\",\n        \"extensions\": {},\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [\n        \"reads-resource\"\n      ],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:OwnedCheckedRecords.bookingSpan\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"bookingSpan\",\n      \"overloadKey\": \"OwnedCheckedRecords.bookingSpan\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"arg0\",\n          \"optional\": false,\n          \"ownership\": \"borrow\",\n          \"type\": {\n            \"id\": \"lean:OwnedCheckedRecords.Booking\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"kind\": \"primitive\",\n          \"name\": \"nat\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"OwnedCheckedRecords.bookingSpan\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"fields\": [\n                  {\n                    \"name\": \"holder\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"window\",\n                    \"refinement\": {\n                      \"constructor\": \"OwnedCheckedRecords.mkWindow\",\n                      \"fields\": [\n                        {\n                          \"name\": \"lo\",\n                          \"refinement\": null\n                        },\n                        {\n                          \"name\": \"hi\",\n                          \"refinement\": null\n                        }\n                      ],\n                      \"kind\": \"checked-record\",\n                      \"name\": \"OwnedCheckedRecords.Window\"\n                    }\n                  }\n                ],\n                \"kind\": \"record\",\n                \"name\": \"OwnedCheckedRecords.Booking\"\n              }\n            ],\n            \"result\": null\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [\n        \"reads-resource\"\n      ],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:OwnedCheckedRecords.claimQuota\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"claimQuota\",\n      \"overloadKey\": \"OwnedCheckedRecords.claimQuota\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"arg0\",\n          \"optional\": false,\n          \"ownership\": \"borrow\",\n          \"type\": {\n            \"id\": \"lean:OwnedCheckedRecords.Claim\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"kind\": \"primitive\",\n          \"name\": \"nat\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"OwnedCheckedRecords.claimQuota\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"constructor\": \"OwnedCheckedRecords.mkClaim\",\n                \"fields\": [\n                  {\n                    \"name\": \"holder\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"quota\",\n                    \"refinement\": null\n                  }\n                ],\n                \"kind\": \"checked-record\",\n                \"name\": \"OwnedCheckedRecords.Claim\"\n              }\n            ],\n            \"result\": null\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [\n        \"allocates\",\n        \"reads-resource\"\n      ],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:OwnedCheckedRecords.echoGrant\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"echoGrant\",\n      \"overloadKey\": \"OwnedCheckedRecords.echoGrant\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"arg0\",\n          \"optional\": false,\n          \"ownership\": \"borrow\",\n          \"type\": {\n            \"id\": \"lean:OwnedCheckedRecords.Grant\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\",\n        \"type\": {\n          \"id\": \"lean:OwnedCheckedRecords.Grant\",\n          \"kind\": \"named\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"OwnedCheckedRecords.echoGrant\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"constructor\": \"OwnedCheckedRecords.mkGrant\",\n                \"fields\": [\n                  {\n                    \"name\": \"holder\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"weight\",\n                    \"refinement\": {\n                      \"constructor\": \"OwnedCheckedRecords.checkedPositive\",\n                      \"kind\": \"subtype\"\n                    }\n                  },\n                  {\n                    \"name\": \"limit\",\n                    \"refinement\": null\n                  }\n                ],\n                \"kind\": \"checked-record\",\n                \"name\": \"OwnedCheckedRecords.Grant\"\n              }\n            ],\n            \"result\": {\n              \"constructor\": null,\n              \"fields\": [\n                {\n                  \"name\": \"holder\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"weight\",\n                  \"refinement\": {\n                    \"constructor\": null,\n                    \"kind\": \"subtype\"\n                  }\n                },\n                {\n                  \"name\": \"limit\",\n                  \"refinement\": null\n                }\n              ],\n              \"kind\": \"checked-record\",\n              \"name\": \"OwnedCheckedRecords.Grant\"\n            }\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [\n        \"allocates\",\n        \"reads-resource\"\n      ],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:OwnedCheckedRecords.echoClaims\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"echoClaims\",\n      \"overloadKey\": \"OwnedCheckedRecords.echoClaims\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"arg0\",\n          \"optional\": false,\n          \"ownership\": \"borrow\",\n          \"type\": {\n            \"arguments\": [\n              {\n                \"id\": \"lean:OwnedCheckedRecords.Claim\",\n                \"kind\": \"named\"\n              }\n            ],\n            \"constructor\": \"array\",\n            \"kind\": \"apply\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\",\n        \"type\": {\n          \"arguments\": [\n            {\n              \"id\": \"lean:OwnedCheckedRecords.Claim\",\n              \"kind\": \"named\"\n            }\n          ],\n          \"constructor\": \"array\",\n          \"kind\": \"apply\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"OwnedCheckedRecords.echoClaims\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"arguments\": [\n                  {\n                    \"constructor\": \"OwnedCheckedRecords.mkClaim\",\n                    \"fields\": [\n                      {\n                        \"name\": \"holder\",\n                        \"refinement\": null\n                      },\n                      {\n                        \"name\": \"quota\",\n                        \"refinement\": null\n                      }\n                    ],\n                    \"kind\": \"checked-record\",\n                    \"name\": \"OwnedCheckedRecords.Claim\"\n                  }\n                ],\n                \"kind\": \"array\"\n              }\n            ],\n            \"result\": {\n              \"arguments\": [\n                {\n                  \"constructor\": null,\n                  \"fields\": [\n                    {\n                      \"name\": \"holder\",\n                      \"refinement\": null\n                    },\n                    {\n                      \"name\": \"quota\",\n                      \"refinement\": null\n                    }\n                  ],\n                  \"kind\": \"checked-record\",\n                  \"name\": \"OwnedCheckedRecords.Claim\"\n                }\n              ],\n              \"kind\": \"array\"\n            }\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [\n        \"allocates\",\n        \"fails\",\n        \"host-call\",\n        \"reads-resource\"\n      ],\n      \"failure\": {\n        \"errors\": [\n          \"error:native-callback\"\n        ],\n        \"mode\": \"declared\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:OwnedCheckedRecords.transferWithClaimCallback\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"transferWithClaimCallback\",\n      \"overloadKey\": \"OwnedCheckedRecords.transferWithClaimCallback\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"arg0\",\n          \"optional\": false,\n          \"ownership\": \"transfer\",\n          \"type\": {\n            \"id\": \"lean:OwnedCheckedRecords.Claim\",\n            \"kind\": \"named\"\n          }\n        },\n        {\n          \"default\": null,\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"arg1\",\n          \"optional\": false,\n          \"ownership\": \"borrow\",\n          \"type\": {\n            \"id\": \"bridge:Callbackb2d3d6fd4e031785f278\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\",\n        \"type\": {\n          \"id\": \"lean:OwnedCheckedRecords.Claim\",\n          \"kind\": \"named\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"OwnedCheckedRecords.transferWithClaimCallback\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"constructor\": \"OwnedCheckedRecords.mkClaim\",\n                \"fields\": [\n                  {\n                    \"name\": \"holder\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"quota\",\n                    \"refinement\": null\n                  }\n                ],\n                \"kind\": \"checked-record\",\n                \"name\": \"OwnedCheckedRecords.Claim\"\n              },\n              null\n            ],\n            \"result\": {\n              \"constructor\": null,\n              \"fields\": [\n                {\n                  \"name\": \"holder\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"quota\",\n                  \"refinement\": null\n                }\n              ],\n              \"kind\": \"checked-record\",\n              \"name\": \"OwnedCheckedRecords.Claim\"\n            }\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [\n        \"allocates\",\n        \"reads-resource\"\n      ],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:OwnedCheckedRecords.transferPairClaim\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"transferPairClaim\",\n      \"overloadKey\": \"OwnedCheckedRecords.transferPairClaim\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"arg0\",\n          \"optional\": false,\n          \"ownership\": \"transfer\",\n          \"type\": {\n            \"id\": \"lean:OwnedCheckedRecords.Booking\",\n            \"kind\": \"named\"\n          }\n        },\n        {\n          \"default\": null,\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"arg1\",\n          \"optional\": false,\n          \"ownership\": \"transfer\",\n          \"type\": {\n            \"id\": \"lean:OwnedCheckedRecords.Claim\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\",\n        \"type\": {\n          \"id\": \"lean:OwnedCheckedRecords.Claim\",\n          \"kind\": \"named\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"OwnedCheckedRecords.transferPairClaim\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"fields\": [\n                  {\n                    \"name\": \"holder\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"window\",\n                    \"refinement\": {\n                      \"constructor\": \"OwnedCheckedRecords.mkWindow\",\n                      \"fields\": [\n                        {\n                          \"name\": \"lo\",\n                          \"refinement\": null\n                        },\n                        {\n                          \"name\": \"hi\",\n                          \"refinement\": null\n                        }\n                      ],\n                      \"kind\": \"checked-record\",\n                      \"name\": \"OwnedCheckedRecords.Window\"\n                    }\n                  }\n                ],\n                \"kind\": \"record\",\n                \"name\": \"OwnedCheckedRecords.Booking\"\n              },\n              {\n                \"constructor\": \"OwnedCheckedRecords.mkClaim\",\n                \"fields\": [\n                  {\n                    \"name\": \"holder\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"quota\",\n                    \"refinement\": null\n                  }\n                ],\n                \"kind\": \"checked-record\",\n                \"name\": \"OwnedCheckedRecords.Claim\"\n              }\n            ],\n            \"result\": {\n              \"constructor\": null,\n              \"fields\": [\n                {\n                  \"name\": \"holder\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"quota\",\n                  \"refinement\": null\n                }\n              ],\n              \"kind\": \"checked-record\",\n              \"name\": \"OwnedCheckedRecords.Claim\"\n            }\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    }\n  ],\n  \"documentation\": {\n    \"details\": \"\",\n    \"summary\": \"Independent corpus contract.\"\n  },\n  \"errors\": [\n    {\n      \"category\": \"boundary\",\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent owned checked-record callback failure.\"\n      },\n      \"id\": \"error:native-callback\",\n      \"name\": \"NativeCallbackFailure\",\n      \"payload\": null\n    }\n  ],\n  \"producers\": [\n    {\n      \"adapter\": \"independent-corpus-contract\",\n      \"adapterVersion\": 1,\n      \"extensions\": {},\n      \"id\": \"corpusReview\",\n      \"tool\": \"Corpus contract review\",\n      \"toolVersion\": \"1\"\n    }\n  ],\n  \"schemaVersion\": 4,\n  \"types\": [\n    {\n      \"aggregate\": null,\n      \"assurance\": [],\n      \"callable\": null,\n      \"cases\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent owned checked-record contract.\"\n      },\n      \"fields\": [],\n      \"host\": null,\n      \"id\": \"lean:OwnedCheckedRecords.Ticket\",\n      \"kind\": \"resource\",\n      \"mutability\": \"read\",\n      \"name\": \"Ticket\",\n      \"representation\": \"identity\",\n      \"resource\": {\n        \"cycles\": \"explicit-cut\",\n        \"disposal\": \"required\",\n        \"fallback\": \"queued-finalizer\",\n        \"kindId\": \"resource:OwnedCheckedRecords.Ticket\"\n      },\n      \"source\": {\n        \"declaration\": \"OwnedCheckedRecords.Ticket\",\n        \"extensions\": {},\n        \"producer\": \"corpusReview\"\n      },\n      \"target\": null,\n      \"typeParameters\": []\n    },\n    {\n      \"aggregate\": null,\n      \"assurance\": [],\n      \"callable\": null,\n      \"cases\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent owned checked-record contract.\"\n      },\n      \"fields\": [\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent owned checked-record contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"lo\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        },\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent owned checked-record contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"hi\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        }\n      ],\n      \"host\": null,\n      \"id\": \"lean:OwnedCheckedRecords.Window\",\n      \"kind\": \"record\",\n      \"mutability\": \"immutable\",\n      \"name\": \"Window\",\n      \"representation\": \"copied\",\n      \"resource\": null,\n      \"source\": {\n        \"declaration\": \"OwnedCheckedRecords.Window\",\n        \"extensions\": {\n          \"lean-lang.org/erased-proofs\": {\n            \"fields\": [\n              \"ordered\"\n            ]\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"target\": null,\n      \"typeParameters\": []\n    },\n    {\n      \"aggregate\": {\n        \"cycles\": \"reject\",\n        \"disposal\": \"required\",\n        \"fallback\": \"queued-finalizer\",\n        \"ownership\": \"lease\"\n      },\n      \"assurance\": [],\n      \"callable\": null,\n      \"cases\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent owned checked-record contract.\"\n      },\n      \"fields\": [\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent owned checked-record contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"holder\",\n          \"type\": {\n            \"id\": \"lean:OwnedCheckedRecords.Ticket\",\n            \"kind\": \"named\"\n          }\n        },\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent owned checked-record contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"window\",\n          \"type\": {\n            \"id\": \"lean:OwnedCheckedRecords.Window\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"host\": null,\n      \"id\": \"lean:OwnedCheckedRecords.Booking\",\n      \"kind\": \"record\",\n      \"mutability\": \"immutable\",\n      \"name\": \"Booking\",\n      \"representation\": \"owned\",\n      \"resource\": null,\n      \"source\": {\n        \"declaration\": \"OwnedCheckedRecords.Booking\",\n        \"extensions\": {},\n        \"producer\": \"corpusReview\"\n      },\n      \"target\": null,\n      \"typeParameters\": []\n    },\n    {\n      \"aggregate\": {\n        \"cycles\": \"reject\",\n        \"disposal\": \"required\",\n        \"fallback\": \"queued-finalizer\",\n        \"ownership\": \"lease\"\n      },\n      \"assurance\": [],\n      \"callable\": null,\n      \"cases\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent owned checked-record contract.\"\n      },\n      \"fields\": [\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent owned checked-record contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"holder\",\n          \"type\": {\n            \"id\": \"lean:OwnedCheckedRecords.Ticket\",\n            \"kind\": \"named\"\n          }\n        },\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent owned checked-record contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"quota\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        }\n      ],\n      \"host\": null,\n      \"id\": \"lean:OwnedCheckedRecords.Claim\",\n      \"kind\": \"record\",\n      \"mutability\": \"immutable\",\n      \"name\": \"Claim\",\n      \"representation\": \"owned\",\n      \"resource\": null,\n      \"source\": {\n        \"declaration\": \"OwnedCheckedRecords.Claim\",\n        \"extensions\": {\n          \"lean-lang.org/erased-proofs\": {\n            \"fields\": [\n              \"bounded\"\n            ]\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"target\": null,\n      \"typeParameters\": []\n    },\n    {\n      \"aggregate\": null,\n      \"assurance\": [],\n      \"callable\": {\n        \"effects\": [\n          \"host-call\",\n          \"fails\"\n        ],\n        \"failure\": {\n          \"errors\": [\n            \"error:native-callback\"\n          ],\n          \"mode\": \"declared\",\n          \"unexpected\": \"poison-runtime\"\n        },\n        \"invocation\": \"many\",\n        \"parameters\": [\n          {\n            \"default\": null,\n            \"lifetime\": {\n              \"anchor\": null,\n              \"scope\": \"call\"\n            },\n            \"mutability\": \"immutable\",\n            \"name\": \"arg0\",\n            \"optional\": false,\n            \"ownership\": \"borrow\",\n            \"type\": {\n              \"id\": \"lean:OwnedCheckedRecords.Claim\",\n              \"kind\": \"named\"\n            }\n          }\n        ],\n        \"reentry\": \"same-agent\",\n        \"result\": {\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"explicit\"\n          },\n          \"ownership\": \"lease\",\n          \"type\": {\n            \"id\": \"lean:OwnedCheckedRecords.Claim\",\n            \"kind\": \"named\"\n          }\n        },\n        \"resultMode\": \"value\",\n        \"selfDisposal\": \"defer\"\n      },\n      \"cases\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent owned checked-record contract.\"\n      },\n      \"fields\": [],\n      \"host\": null,\n      \"id\": \"bridge:Callbackb2d3d6fd4e031785f278\",\n      \"kind\": \"callback\",\n      \"mutability\": \"immutable\",\n      \"name\": \"Callbackb2d3d6fd4e031785f278\",\n      \"representation\": \"identity\",\n      \"resource\": null,\n      \"source\": {\n        \"declaration\": \"Callbackb2d3d6fd4e031785f278\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"constructor\": null,\n                \"fields\": [\n                  {\n                    \"name\": \"holder\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"quota\",\n                    \"refinement\": null\n                  }\n                ],\n                \"kind\": \"checked-record\",\n                \"name\": \"OwnedCheckedRecords.Claim\"\n              }\n            ],\n            \"result\": {\n              \"constructor\": \"OwnedCheckedRecords.mkClaim\",\n              \"fields\": [\n                {\n                  \"name\": \"holder\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"quota\",\n                  \"refinement\": null\n                }\n              ],\n              \"kind\": \"checked-record\",\n              \"name\": \"OwnedCheckedRecords.Claim\"\n            }\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"target\": null,\n      \"typeParameters\": []\n    },\n    {\n      \"aggregate\": null,\n      \"assurance\": [],\n      \"callable\": {\n        \"effects\": [\n          \"host-call\",\n          \"fails\"\n        ],\n        \"failure\": {\n          \"errors\": [\n            \"error:native-callback\"\n          ],\n          \"mode\": \"declared\",\n          \"unexpected\": \"poison-runtime\"\n        },\n        \"invocation\": \"many\",\n        \"parameters\": [\n          {\n            \"default\": null,\n            \"lifetime\": {\n              \"anchor\": null,\n              \"scope\": \"call\"\n            },\n            \"mutability\": \"immutable\",\n            \"name\": \"arg0\",\n            \"optional\": false,\n            \"ownership\": \"borrow\",\n            \"type\": {\n              \"id\": \"lean:OwnedCheckedRecords.Claim\",\n              \"kind\": \"named\"\n            }\n          }\n        ],\n        \"reentry\": \"same-agent\",\n        \"result\": {\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"explicit\"\n          },\n          \"ownership\": \"lease\",\n          \"type\": {\n            \"id\": \"lean:OwnedCheckedRecords.Claim\",\n            \"kind\": \"named\"\n          }\n        },\n        \"resultMode\": \"value\",\n        \"selfDisposal\": \"defer\"\n      },\n      \"cases\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent owned checked-record contract.\"\n      },\n      \"fields\": [],\n      \"host\": null,\n      \"id\": \"bridge:Callback26621c40b48fce52ca37\",\n      \"kind\": \"callback\",\n      \"mutability\": \"immutable\",\n      \"name\": \"Callback26621c40b48fce52ca37\",\n      \"representation\": \"identity\",\n      \"resource\": null,\n      \"source\": {\n        \"declaration\": \"Callback26621c40b48fce52ca37\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"constructor\": \"OwnedCheckedRecords.mkClaim\",\n                \"fields\": [\n                  {\n                    \"name\": \"holder\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"quota\",\n                    \"refinement\": null\n                  }\n                ],\n                \"kind\": \"checked-record\",\n                \"name\": \"OwnedCheckedRecords.Claim\"\n              }\n            ],\n            \"result\": {\n              \"constructor\": null,\n              \"fields\": [\n                {\n                  \"name\": \"holder\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"quota\",\n                  \"refinement\": null\n                }\n              ],\n              \"kind\": \"checked-record\",\n              \"name\": \"OwnedCheckedRecords.Claim\"\n            }\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"target\": null,\n      \"typeParameters\": []\n    },\n    {\n      \"aggregate\": {\n        \"cycles\": \"reject\",\n        \"disposal\": \"required\",\n        \"fallback\": \"queued-finalizer\",\n        \"ownership\": \"lease\"\n      },\n      \"assurance\": [],\n      \"callable\": null,\n      \"cases\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent owned checked-record contract.\"\n      },\n      \"fields\": [\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent owned checked-record contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"holder\",\n          \"type\": {\n            \"id\": \"lean:OwnedCheckedRecords.Ticket\",\n            \"kind\": \"named\"\n          }\n        },\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent owned checked-record contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"weight\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        },\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent owned checked-record contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"limit\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        }\n      ],\n      \"host\": null,\n      \"id\": \"lean:OwnedCheckedRecords.Grant\",\n      \"kind\": \"record\",\n      \"mutability\": \"immutable\",\n      \"name\": \"Grant\",\n      \"representation\": \"owned\",\n      \"resource\": null,\n      \"source\": {\n        \"declaration\": \"OwnedCheckedRecords.Grant\",\n        \"extensions\": {\n          \"lean-lang.org/erased-proofs\": {\n            \"fields\": [\n              \"within\"\n            ]\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"target\": null,\n      \"typeParameters\": []\n    }\n  ]\n}\n",
+              "sourceSha256": "8f6bb1d448ee28e42376f72d162acb25cb7e0f7e37e3a16ea1a50eaa73b8cae2"
+            },
+            "sourceNoticesSha256": "ed8d0d95f4c7c39ee603259a97caaf39dda165b089fa06587405f496ee07813b",
+            "sourceTreeSha256": "10f10bc6eaa42ed0f440e762cab9e26cc80a339cb9795f1724c0e0b5e3cf3c6d"
+          }
+        }
+      },
+      "constructorRejectionAndRecovery": true,
+      "deterministicReassembly": true,
+      "earlyAndLateRejection": true,
+      "exactApiMode": true,
+      "handoffRemovedBeforeRelocatedExecution": true,
+      "hostCallbackRecovery": true,
+      "lifecycle": {
+        "ruby": "gc-finalizer-plus-explicit-close"
+      },
+      "mixedOwnedAndCopiedTransport": true,
+      "mode": "full",
+      "observations": {
+        "ruby": {
+          "checks": 219,
+          "consumerSha256": "a55e86fbf55432cf34ee0e2593f7ea5bb80c94389dc1590798851a137fb20749",
+          "relocatedChecks": 219
+        }
+      },
+      "packageSetReceipt": {
+        "component": {
+          "id": "owned-checked-records@1.0.0",
+          "name": "owned-checked-records",
+          "version": "1.0.0"
+        },
+        "kind": "lean-bridge-package-set-receipt",
+        "packages": [
+          {
+            "artifacts": [
+              {
+                "bytes": 52703744,
+                "path": "archives/lean_bridge_owned_checked_records-1.0.0-x86_64-linux.gem",
+                "sha256": "f90883f36c75b79a7b18206c036fa8b7200089b8075d54262ef53a0cab127496"
+              }
+            ],
+            "ecosystem": "rubygems",
+            "name": "lean_bridge_owned_checked_records",
+            "profile": "native-library-v1",
+            "requires": [],
+            "role": "component",
+            "runtimeDelivery": "embedded",
+            "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+            "target": "rubygems",
+            "version": "1.0.0"
+          }
+        ],
+        "profiles": [
+          {
+            "bindingIrSha256": "c36b2bfdecf817584e4d1229f8667c04558826ac672254b4df52ad1d968bba30",
+            "id": "native-library-v1",
+            "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+          }
+        ],
+        "schemaVersion": 1,
+        "source": {
+          "treeSha256": "10f10bc6eaa42ed0f440e762cab9e26cc80a339cb9795f1724c0e0b5e3cf3c6d"
+        }
+      },
+      "profiles": [
+        "ruby"
+      ],
+      "reassembled": {
+        "ruby": {
+          "archive": "lean_bridge_owned_checked_records-1.0.0-x86_64-linux.gem",
+          "sha256": "f90883f36c75b79a7b18206c036fa8b7200089b8075d54262ef53a0cab127496"
+        }
+      },
+      "relocatedInstallation": true,
+      "retainedPackageSet": {
+        "archiveBytes": 52703744,
+        "archives": 1,
+        "files": [
+          "archives/lean_bridge_owned_checked_records-1.0.0-x86_64-linux.gem",
+          "package-set-receipt.json",
+          "package-set-receipt.json.sha256"
+        ],
+        "path": "evidence/ruby/reviewed-full/handoff",
+        "receiptSha256": "182d3551178809487351afd4e553043e295607d9eb506d8a35e1469021a709fb"
+      },
+      "returnedClosureRecovery": true,
+      "route": "reviewed-full",
+      "sourceFreeInstallation": true,
+      "sourceUnchanged": true,
+      "transferredInputCheckedBeforeHandoff": true,
+      "unchangedRejectedInputs": true,
+      "versions": {
+        "ruby": "ruby 3.3.12 (2026-07-16 revision 0581089df9) [x86_64-linux]"
+      }
+    },
+    {
+      "authorRoute": "reviewed",
+      "bindingIrSha256": "3d36d3be2f2138b626dde5d0f63afdfa3f0a5d69cb8558cad2f8e0801c384036",
+      "componentReceipts": {
+        "ruby": {
+          "adaptersSha256": "c7b549856cfcb52d75e6eb87ed5c2ad3deedb3d317fe8184bc3f2d71746f21a3",
+          "allocationGuardSha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83",
+          "bindingIrSha256": "3d36d3be2f2138b626dde5d0f63afdfa3f0a5d69cb8558cad2f8e0801c384036",
+          "callbackSourceSha256": "2291786d11fadef8c1b3301edf54b220542d5a4fac38270edcdef617716fe6a7",
+          "compiler": "cc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+          "exports": [
+            {
+              "declaration": "OwnedCheckedRecords.claimFor",
+              "symbol": "lean_bridge_owned_cf2125495964e00d0559652f_f483485736ace9af57086"
+            },
+            {
+              "declaration": "OwnedCheckedRecords.newTicket",
+              "symbol": "lean_bridge_owned_cf2125495964e00d0559652f_fa1e5189bd92568e4b939"
+            },
+            {
+              "declaration": "OwnedCheckedRecords.serial",
+              "symbol": "lean_bridge_owned_cf2125495964e00d0559652f_fec926afda994fba3abe2"
+            }
+          ],
+          "headerSha256": "4f1fa7c97fa06eb765a6fb64dea23f3deef728d9bb364049719cec52add5a0be",
+          "initializer": "initialize_LeanBridgeOwned25d11f058ab45610",
+          "library": "libcomponent_161bdaa35ee11fef40c6.so",
+          "metadataSha256": "4ad846051669c683fc8a8742d1e702c93ddc455767bd8c819f72f1a5c89418e4",
+          "modelSha256": "9a1ccf41aff8da0f6c912b22f3816782794e1d89d8cdaf7952067ae5e6b0460d",
+          "nativeLibrary": {
+            "bytes": 60840,
+            "sha256": "6b868b695ab911115cf10416ee0ea2db96072fb29ad1896c528b4d8a5d566d9d"
+          },
+          "profile": "native-library-v1",
+          "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+          "schemaVersion": 3,
+          "sourceIdentity": {
+            "exportConfigurationSha256": "bae488c73b1d9a7343a12a65e19ce8db69e7564bbdb6b9bf84b8c3c443dd6b6d",
+            "exportConfigurationSource": "{\n  \"modules\": [\n    \"OwnedCheckedRecords\"\n  ],\n  \"schemaVersion\": 1,\n  \"targets\": {\n    \"rubygems\": {\n      \"name\": \"lean_bridge_owned_checked_records-result-only\",\n      \"version\": \"1.0.0\"\n    }\n  }\n}\n",
+            "extractorSha256": "00f8ce7a3888339cdb1c36b0dce3d8bc9d4c650ea18c7a4926c2d29d4690443a",
+            "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+            "leanCompilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+            "leanVersion": "4.32.2",
+            "modules": [
+              {
+                "interface": {
+                  "bytes": 182256,
+                  "interfaceSha256": "938f027189969289fe55ee8742d6d0ad29d9615979b625962f4fd455bade54b2",
+                  "sha256": "5426c4ec62f086d863ea881ec77db27c0d8945b7a5c2e2383c82ad1cb2a2939f"
+                },
+                "module": "OwnedCheckedRecords",
+                "source": {
+                  "bytes": 3374,
+                  "path": "OwnedCheckedRecords.lean",
+                  "sha256": "65226b9f8cafb1ff9e5c54dd680efc2939158fd9c4be1da2aaf8c069c1e1eb89"
+                }
+              }
+            ],
+            "request": {
+              "arities": [],
+              "exportModules": [
+                "OwnedCheckedRecords"
+              ],
+              "exports": [
+                "OwnedCheckedRecords.claimFor",
+                "OwnedCheckedRecords.newTicket",
+                "OwnedCheckedRecords.serial"
+              ],
+              "metadata": {
+                "invocationIdentitySha256": "688d5c817665d35f6e651f275b0c43098e0c662958a3d10812d8a7150d4fe2b8",
+                "modules": [
+                  {
+                    "interfaceSha256": "938f027189969289fe55ee8742d6d0ad29d9615979b625962f4fd455bade54b2",
+                    "name": "OwnedCheckedRecords",
+                    "sourcePath": "OwnedCheckedRecords.lean",
+                    "sourceSha256": "65226b9f8cafb1ff9e5c54dd680efc2939158fd9c4be1da2aaf8c069c1e1eb89"
+                  }
+                ],
+                "toolchain": "leanprover/lean4:v4.32.2"
+              },
+              "modules": [
+                "OwnedCheckedRecords"
+              ],
+              "ownedAggregates": {
+                "cycles": "reject",
+                "disposal": "required",
+                "fallback": "queued-finalizer",
+                "ownership": "lease"
+              },
+              "profile": "native-library-v1",
+              "resources": [
+                "OwnedCheckedRecords.Ticket"
+              ]
+            },
+            "reviewedBindingIr": {
+              "path": "api.binding-ir.json",
+              "schemaVersion": 1,
+              "semanticSha256": "442975d7cd0fc63332f8fdfc2097f912b352ff932b0e8ac7e14d4952eb8ae6da",
+              "source": "{\n  \"aggregatePolicy\": {\n    \"cycles\": \"reject\",\n    \"disposal\": \"required\",\n    \"fallback\": \"queued-finalizer\",\n    \"ownership\": \"lease\"\n  },\n  \"assurance\": [],\n  \"capabilities\": [],\n  \"component\": {\n    \"id\": \"owned-checked-records@1.0.0\",\n    \"name\": \"owned-checked-records\",\n    \"version\": \"1.0.0\"\n  },\n  \"declarations\": [\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [\n        \"allocates\"\n      ],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:OwnedCheckedRecords.newTicket\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"newTicket\",\n      \"overloadKey\": \"OwnedCheckedRecords.newTicket\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"arg0\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        },\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"arg1\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"string\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\",\n        \"type\": {\n          \"id\": \"lean:OwnedCheckedRecords.Ticket\",\n          \"kind\": \"named\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"OwnedCheckedRecords.newTicket\",\n        \"extensions\": {},\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [\n        \"reads-resource\"\n      ],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:OwnedCheckedRecords.serial\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"serial\",\n      \"overloadKey\": \"OwnedCheckedRecords.serial\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"arg0\",\n          \"optional\": false,\n          \"ownership\": \"borrow\",\n          \"type\": {\n            \"id\": \"lean:OwnedCheckedRecords.Ticket\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"kind\": \"primitive\",\n          \"name\": \"nat\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"OwnedCheckedRecords.serial\",\n        \"extensions\": {},\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [\n        \"allocates\",\n        \"reads-resource\"\n      ],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:OwnedCheckedRecords.claimFor\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"claimFor\",\n      \"overloadKey\": \"OwnedCheckedRecords.claimFor\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": {\n            \"anchor\": null,\n            \"scope\": \"call\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"arg0\",\n          \"optional\": false,\n          \"ownership\": \"borrow\",\n          \"type\": {\n            \"id\": \"lean:OwnedCheckedRecords.Ticket\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": {\n          \"anchor\": null,\n          \"scope\": \"explicit\"\n        },\n        \"ownership\": \"lease\",\n        \"type\": {\n          \"arguments\": [\n            {\n              \"id\": \"lean:OwnedCheckedRecords.Claim\",\n              \"kind\": \"named\"\n            }\n          ],\n          \"constructor\": \"option\",\n          \"kind\": \"apply\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"OwnedCheckedRecords.claimFor\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              null\n            ],\n            \"result\": {\n              \"arguments\": [\n                {\n                  \"constructor\": null,\n                  \"fields\": [\n                    {\n                      \"name\": \"holder\",\n                      \"refinement\": null\n                    },\n                    {\n                      \"name\": \"quota\",\n                      \"refinement\": null\n                    }\n                  ],\n                  \"kind\": \"checked-record\",\n                  \"name\": \"OwnedCheckedRecords.Claim\"\n                }\n              ],\n              \"kind\": \"option\"\n            }\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    }\n  ],\n  \"documentation\": {\n    \"details\": \"\",\n    \"summary\": \"Independent corpus contract.\"\n  },\n  \"errors\": [],\n  \"producers\": [\n    {\n      \"adapter\": \"independent-corpus-contract\",\n      \"adapterVersion\": 1,\n      \"extensions\": {},\n      \"id\": \"corpusReview\",\n      \"tool\": \"Corpus contract review\",\n      \"toolVersion\": \"1\"\n    }\n  ],\n  \"schemaVersion\": 4,\n  \"types\": [\n    {\n      \"aggregate\": null,\n      \"assurance\": [],\n      \"callable\": null,\n      \"cases\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent owned checked-record contract.\"\n      },\n      \"fields\": [],\n      \"host\": null,\n      \"id\": \"lean:OwnedCheckedRecords.Ticket\",\n      \"kind\": \"resource\",\n      \"mutability\": \"read\",\n      \"name\": \"Ticket\",\n      \"representation\": \"identity\",\n      \"resource\": {\n        \"cycles\": \"explicit-cut\",\n        \"disposal\": \"required\",\n        \"fallback\": \"queued-finalizer\",\n        \"kindId\": \"resource:OwnedCheckedRecords.Ticket\"\n      },\n      \"source\": {\n        \"declaration\": \"OwnedCheckedRecords.Ticket\",\n        \"extensions\": {},\n        \"producer\": \"corpusReview\"\n      },\n      \"target\": null,\n      \"typeParameters\": []\n    },\n    {\n      \"aggregate\": {\n        \"cycles\": \"reject\",\n        \"disposal\": \"required\",\n        \"fallback\": \"queued-finalizer\",\n        \"ownership\": \"lease\"\n      },\n      \"assurance\": [],\n      \"callable\": null,\n      \"cases\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent owned checked-record contract.\"\n      },\n      \"fields\": [\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent owned checked-record contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"holder\",\n          \"type\": {\n            \"id\": \"lean:OwnedCheckedRecords.Ticket\",\n            \"kind\": \"named\"\n          }\n        },\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent owned checked-record contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"quota\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        }\n      ],\n      \"host\": null,\n      \"id\": \"lean:OwnedCheckedRecords.Claim\",\n      \"kind\": \"record\",\n      \"mutability\": \"immutable\",\n      \"name\": \"Claim\",\n      \"representation\": \"owned\",\n      \"resource\": null,\n      \"source\": {\n        \"declaration\": \"OwnedCheckedRecords.Claim\",\n        \"extensions\": {\n          \"lean-lang.org/erased-proofs\": {\n            \"fields\": [\n              \"bounded\"\n            ]\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"target\": null,\n      \"typeParameters\": []\n    }\n  ]\n}\n",
+              "sourceSha256": "2b788dc047c67a7d13bbefffe9d507356bc83263544d832f59a88c66bad5f832"
+            },
+            "sourceNoticesSha256": "e9e4675ddda27c94ee2c62c5a0df6a28b89aa86f9252f0dabc0f2e982cfede11",
+            "sourceTreeSha256": "32feb5e3d349b2d841f45c7f699880e41cd3a34ed5a46b4ee30a2bf866c91b86"
+          }
+        }
+      },
+      "constructorRejectionAndRecovery": false,
+      "deterministicReassembly": true,
+      "earlyAndLateRejection": false,
+      "exactApiMode": true,
+      "handoffRemovedBeforeRelocatedExecution": true,
+      "hostCallbackRecovery": false,
+      "lifecycle": {
+        "ruby": "gc-finalizer-plus-explicit-close"
+      },
+      "mixedOwnedAndCopiedTransport": false,
+      "mode": "result-only",
+      "observations": {
+        "ruby": {
+          "checks": 5,
+          "consumerSha256": "bc741565c03098debca5510f6619715736702506aea5d393a71d973e39b8c83a",
+          "relocatedChecks": 5
+        }
+      },
+      "packageSetReceipt": {
+        "component": {
+          "id": "owned-checked-records@1.0.0",
+          "name": "owned-checked-records",
+          "version": "1.0.0"
+        },
+        "kind": "lean-bridge-package-set-receipt",
+        "packages": [
+          {
+            "artifacts": [
+              {
+                "bytes": 52611072,
+                "path": "archives/lean_bridge_owned_checked_records-result-only-1.0.0-x86_64-linux.gem",
+                "sha256": "6b7aa1611ad576666758ca0a9f1722f9156ce5048e64a4823417d96cc2969219"
+              }
+            ],
+            "ecosystem": "rubygems",
+            "name": "lean_bridge_owned_checked_records-result-only",
+            "profile": "native-library-v1",
+            "requires": [],
+            "role": "component",
+            "runtimeDelivery": "embedded",
+            "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+            "target": "rubygems",
+            "version": "1.0.0"
+          }
+        ],
+        "profiles": [
+          {
+            "bindingIrSha256": "3d36d3be2f2138b626dde5d0f63afdfa3f0a5d69cb8558cad2f8e0801c384036",
+            "id": "native-library-v1",
+            "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+          }
+        ],
+        "schemaVersion": 1,
+        "source": {
+          "treeSha256": "32feb5e3d349b2d841f45c7f699880e41cd3a34ed5a46b4ee30a2bf866c91b86"
+        }
+      },
+      "profiles": [
+        "ruby"
+      ],
+      "reassembled": {
+        "ruby": {
+          "archive": "lean_bridge_owned_checked_records-result-only-1.0.0-x86_64-linux.gem",
+          "sha256": "6b7aa1611ad576666758ca0a9f1722f9156ce5048e64a4823417d96cc2969219"
+        }
+      },
+      "relocatedInstallation": true,
+      "retainedPackageSet": {
+        "archiveBytes": 52611072,
+        "archives": 1,
+        "files": [
+          "archives/lean_bridge_owned_checked_records-result-only-1.0.0-x86_64-linux.gem",
+          "package-set-receipt.json",
+          "package-set-receipt.json.sha256"
+        ],
+        "path": "evidence/ruby/reviewed-result-only/handoff",
+        "receiptSha256": "90a5faa3b00f8d9b5cea7b9e18dd590046f27ce1075a5f684ae4f4b9bc14ba5b"
+      },
+      "returnedClosureRecovery": false,
+      "route": "reviewed-result-only",
+      "sourceFreeInstallation": true,
+      "sourceUnchanged": true,
+      "transferredInputCheckedBeforeHandoff": false,
+      "unchangedRejectedInputs": false,
+      "versions": {
+        "ruby": "ruby 3.3.12 (2026-07-16 revision 0581089df9) [x86_64-linux]"
+      }
+    }
+  ],
+  "schemaVersion": 1,
+  "selectedProfiles": [
+    "ruby"
+  ]
+}
