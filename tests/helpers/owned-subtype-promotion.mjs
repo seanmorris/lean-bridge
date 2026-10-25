@@ -16,6 +16,7 @@ import {
 	, ownedSubtypePromotionArchiveRoot, ownedSubtypePromotionEvidenceId
 	, ownedSubtypePromotionLanes, ownedSubtypePromotionReplayCommand
 } from "./owned-subtype-promotion-catalog.mjs";
+import { ownedSubtypePromotionArchiveReferences } from "./owned-subtype-promotion-archive-references.mjs";
 
 export { ownedSubtypePromotionLanes };
 
@@ -39,6 +40,8 @@ export const ownedSubtypePromotionLimit
 
 const validators = Object.freeze([
 	"scripts/promote-owned-subtype-evidence.mjs"
+	, "scripts/generate-reference-docs.mjs"
+	, "scripts/generate-type-docs.mjs"
 	, "scripts/check-owned-subtype-hosted-evidence.mjs"
 	, "tests/owned-subtype-hosted-ci.test.mjs"
 	, "tests/owned-subtype-promotion.test.mjs"
@@ -47,7 +50,13 @@ const validators = Object.freeze([
 	, "tests/helpers/owned-subtype-hosted-evidence.mjs"
 	, "tests/helpers/owned-subtype-hosted-output.mjs"
 	, "tests/helpers/owned-subtype-promotion.mjs"
+	, "tests/helpers/owned-subtype-documentation.mjs"
 	, "tests/helpers/owned-subtype-promotion-catalog.mjs"
+	, "tests/helpers/owned-subtype-promotion-archive-references.mjs"
+	, "tests/helpers/owned-subtype-promotion-transaction-tests.mjs"
+	, "tests/helpers/type-surface-promotion-io.mjs"
+	, "tests/helpers/promotion-file-transaction.mjs"
+	, "tests/helpers/source-history-stream.mjs"
 ]);
 
 const evidenceId = ownedSubtypePromotionEvidenceId;
@@ -125,19 +134,15 @@ const hostedPromotionReference = async lane => {
 	assert.deepEqual(index.profiles, definition.profiles);
 	assert.equal(index.accepted.producerCommit, index.producerCommit);
 	const indexPath = `${root}/index.json`;
+	const compact = ownedSubtypePromotionArchiveReferences(index, root, await readFile(indexPath));
 	const files = [
-		{ path: indexPath, sha256: sha256(await readFile(indexPath)) }
-		, ...index.files.map(file => ({
-			path: `${root}/${file.path}`, sha256: file.sha256
-		}))
+		...compact.files
 		, ...await Promise.all(validators.map(async path => ({
 			path, sha256: sha256(await readFile(path))
 		})))
 	];
 	assert.equal(new Set(files.map(file => file.path)).size, files.length);
-	const artifacts = index.hostedRun.artifact.parts.map(part => ({
-		path: `${root}/${part.path}`, sha256: part.sha256
-	}));
+	const artifacts = compact.artifacts;
 	assert.ok(artifacts.length > 0);
 	return {
 		lane, profiles: [...definition.profiles], routes: [...routes]

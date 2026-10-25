@@ -11,6 +11,7 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import test from "node:test";
+import "./helpers/owned-subtype-promotion-transaction-tests.mjs";
 import {
 	collectCoreContractTestPaths, coreContractShardLabels, coreContractShardManifest
 	, verifyCoreContractShardManifests

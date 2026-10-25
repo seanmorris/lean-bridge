@@ -21,7 +21,7 @@ const replaceOnce = (source, previous, next, label) => {
 };
 
 const evidence = "../evidence/owned-subtype-promotion-20261023.md";
-const installedBoundary = `The [hosted owned-Subtype matrix](${evidence}) covers one selected \`Nat\` Subtype field in the tested acyclic \`Bundle\` owner on both source routes. Host input is validated before ownership transfer; rejection keeps ownership with the caller. Leased or retained results preserve the owner lifetime, explicit close or release performs cleanup, and later valid calls recover. Recursive owned graphs, owned callback positions and owned checked-record fields remain unsupported.`;
+const installedBoundary = `The [hosted owned-Subtype matrix](${evidence}) covers one selected \`Nat\` Subtype field in the tested acyclic \`Bundle\` owner on both source routes. Host input is validated before ownership transfer; rejection keeps ownership with the caller. Leased or retained results preserve the owner lifetime, explicit close or release performs cleanup, and later valid calls recover. Recursive owned graphs and owned Subtype callback positions remain separate work. Owned checked-record fields have [separate acceptance](../evidence/owned-checked-record-promotion-20261025.md).`;
 
 /**
  * Render the exact prose transition without mutating unrelated documentation.

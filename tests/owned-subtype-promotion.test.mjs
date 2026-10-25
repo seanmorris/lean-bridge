@@ -6,18 +6,20 @@
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { existsSync } from "node:fs";
-import { readFile } from "node:fs/promises";
+import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { dirname, join } from "node:path";
 import test from "node:test";
 import {
 	typeSurfaceCells, validateTypeSurface
 } from "../src/adoption/type-surface.mjs";
 import {
-	renderTypeDocuments
+	renderTypeDocuments, typeGuideProfiles
 } from "../scripts/generate-type-docs.mjs";
 import {
 	ownedSubtypeJavaScriptPromotionReference
 	, ownedSubtypePromotionLanes, ownedSubtypePromotionLimit
-	, ownedSubtypePromotionPredecessor, ownedSubtypePromotionReferences
+	, ownedSubtypePromotionReferences
 	, promoteOwnedSubtypes, renderOwnedSubtypePromotion
 } from "./helpers/owned-subtype-promotion.mjs";
 import {
@@ -27,17 +29,28 @@ import {
 	ownedSubtypePromotionArchiveRoot, ownedSubtypePromotionEvidenceId
 } from "./helpers/owned-subtype-promotion-catalog.mjs";
 
-const readJson = async path => JSON.parse(await readFile(path, "utf8"));
-const baseline = execFileSync("git", [
-	"show"
-	, `${ownedSubtypePromotionPredecessor}:docs/type-surface.v1.json`
-], { encoding: "utf8", maxBuffer: 512 * 1024 ** 2 });
-const document = JSON.parse(baseline);
-const [irSchema, consumers] = await Promise.all([
-	readJson("schema/binding-ir.schema.json")
-	, readJson("docs/consumer-support.v1.json")
-]);
+import { readPromotionInventory } from "./helpers/type-surface-promotion-io.mjs";
+import { gitSourceBytes } from "./helpers/source-history-stream.mjs";
+
+// Freeze only the pre-promotion inputs. Every test invokes the current renderer,
+// transformation and validator, including after the published guides change.
+const baselineCommit = "9e571b4214df98e1b8d0319f24fe7b6729ab34ba";
+const baselinePaths = new Set(["schema/binding-ir.schema.json"
+	, "docs/consumer-support.v1.json", ...Object.keys(typeGuideProfiles)
+	, ...Object.values(ownedSubtypeDocumentationPaths)]);
+const baselineText = path => {
+	assert.ok(baselinePaths.has(path), path);
+	return execFileSync("git", ["show", `${baselineCommit}:${path}`]
+		, { encoding: "utf8", maxBuffer: 2 * 1024 ** 2 });
+};
+const irSchema = JSON.parse(baselineText("schema/binding-ir.schema.json"));
+const consumers = JSON.parse(baselineText("docs/consumer-support.v1.json"));
 const contracts = { irSchema, consumers };
+const original = await readPromotionInventory(
+	gitSourceBytes(baselineCommit, "docs/type-surface.v1.json"), contracts);
+assert.deepEqual(original.source, { bytes: 102579190
+	, sha256: "a1c0e7d484f135d38f18aab9a8ea9b7c2e6c1b4313440379c90713c76fc1c7f8" });
+const document = original.document;
 const digest = "0".repeat(64), revision = "0".repeat(40);
 const references = ownedSubtypePromotionLanes.map(item => ({
 	lane: item.lane, profiles: [...item.profiles]
@@ -125,13 +138,20 @@ test("owned Subtype promotion renders the exact boundary", () => {
 		assert.match(summary, new RegExp(reference.revision, "u"));
 });
 
-test("owned Subtype promotion documents every affected consumer", async () => {
+test("owned Subtype promotion documents every affected consumer", async t => {
+	const root = await mkdtemp(join(tmpdir(), "lean-owned-subtype-doc-baseline-"));
+	t.after(() => rm(root, { recursive: true }));
+	for(const path of Object.keys(typeGuideProfiles))
+	{
+		await mkdir(dirname(join(root, path)), { recursive: true });
+		await writeFile(join(root, path), baselineText(path), { flag: "wx" });
+	}
 	const before = await renderTypeDocuments({
-		root: ".", inventory: { document, ...contracts }
+		root, inventory: { document, ...contracts }
 	});
 	const promoted = promoteOwnedSubtypes(document, references);
 	const after = await renderTypeDocuments({
-		root: ".", inventory: { document: promoted, ...contracts }
+		root, inventory: { document: promoted, ...contracts }
 	});
 	const evidence = /owned-subtype-promotion-20261023\.md/u;
 	for(const [path, source] of Object.entries(after.documents))
@@ -150,10 +170,10 @@ test("owned Subtype promotion documents every affected consumer", async () => {
 	assert.match(after.reference, /PHP-Wasm retains its separately audited/u);
 });
 
-test("owned Subtype promotion removes exact stale manual boundaries", async () => {
-	const sources = Object.fromEntries(await Promise.all(Object.entries(
+test("owned Subtype promotion removes exact stale manual boundaries", () => {
+	const sources = Object.fromEntries(Object.entries(
 		ownedSubtypeDocumentationPaths
-	).map(async ([name, path]) => [name, await readFile(path, "utf8")])));
+	).map(([name, path]) => [name, baselineText(path)]));
 	const rendered = renderOwnedSubtypeDocumentation(sources);
 	for(const source of Object.values(rendered))
 	{
@@ -170,6 +190,8 @@ test("owned Subtype promotion removes exact stale manual boundaries", async () =
 	{
 		assert.match(rendered[name], /rejection keeps ownership with the caller/u
 			, name);
+		assert.match(rendered[name], /Owned checked-record fields have \[separate acceptance\]/u, name);
+		assert.doesNotMatch(rendered[name], /owned checked-record fields remain unsupported/u, name);
 		assert.doesNotMatch(rendered[name]
 			, /owned (?:`Subtype` payloads|Subtypes) remain (?:pending|unsupported)/u
 			, name);

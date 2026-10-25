@@ -242,6 +242,24 @@ The promotion catalog selects the actual archive date for each lane and replays
 one lane at a time. Historical local JavaScript qualifications remain available
 for historical checks; live promotion requires the hosted npm archive.
 
+After committing all eight captures, preflight the support and documentation
+update from a clean checkout:
+
+```sh
+node scripts/promote-owned-subtype-evidence.mjs --check
+```
+
+Run the same command without `--check` to install the staged update. Both modes
+replay every complete archive. The inventory binds each canonical index, its
+original API records and every ZIP part; the index retains the full file list.
+Preflight preserves the existing evidence bytes, enforces GitHub's file-size
+limit, and renders every document before installation. Failed installation rolls
+back its own changes without overwriting concurrent user edits.
+
+The promotion regressions read the original inventory and documentation from
+the committed pre-promotion revision. They exercise the current transformation,
+validators and renderers, so publishing the guides does not erase their test inputs.
+
 ### Verify the complete owned checked-record matrix
 
 Commit all eleven captures before preparing a support promotion. Save an explicit
