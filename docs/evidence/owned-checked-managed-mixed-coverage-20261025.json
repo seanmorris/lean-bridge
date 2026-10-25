@@ -1,0 +1,142 @@
+{
+  "schemaVersion": 1,
+  "profile": "owned-checked-managed-mixed-source-qualification",
+  "predecessorCommit": "19b9dd408f4f21fd111653620642c21a32e27b6d",
+  "sourceIdentity": {
+    "kind": "pre-implementation-working-tree-bytes",
+    "files": [
+      {
+        "path": "tests/fixtures/structured-types/owned-checked-record-dotnet.cs",
+        "bytes": 12957,
+        "sha256": "46a4d50dd459acb43fc77e2e573e1ed79d1e1aaa3fa79bccfd937ea51a459d89"
+      },
+      {
+        "path": "tests/fixtures/structured-types/owned-checked-record-installed.c",
+        "bytes": 14208,
+        "sha256": "3eaad154a0f871bc58d23c9a40ace054b843f9d2475b138f73df4d2c424c5d21"
+      },
+      {
+        "path": "tests/fixtures/structured-types/owned-checked-record-java.java",
+        "bytes": 12567,
+        "sha256": "e1166b8845d6d9f3218b669002875aef4b89d44a26849faa9938ada31c6399d3"
+      },
+      {
+        "path": "tests/fixtures/structured-types/owned-checked-record-kotlin.kt",
+        "bytes": 10941,
+        "sha256": "5bf43b83c92beecc356d2e14c872a2f9ab64bb1881d74fa94003055749f73d63"
+      },
+      {
+        "path": "tests/fixtures/structured-types/owned-checked-record-php.php",
+        "bytes": 10173,
+        "sha256": "50f83314cded9a9c317802f4bb53d30a8b1bb636f8b36c88d5e1f0947fbcca4b"
+      },
+      {
+        "path": "tests/helpers/owned-checked-record-managed-fixture.mjs",
+        "bytes": 1950,
+        "sha256": "46bf54806cacd492946b79fbc3076ce51197e2ee67ca19dc1a60c8d35b674fab"
+      },
+      {
+        "path": "tests/helpers/owned-checked-record-promotion-tests.mjs",
+        "bytes": 24651,
+        "sha256": "b257df31252c8007f2dfb5dc041c0deaa870bfc51d7b0c357fd6ed4a60132bf4"
+      },
+      {
+        "path": "tests/owned-checked-record-managed-packaging.test.mjs",
+        "bytes": 19790,
+        "sha256": "1a2c93d1533fe99a540d3eca4db0c28a7de968517ae320b05b8adde1ae11fe28"
+      },
+      {
+        "path": "tests/owned-checked-record-native-packaging.test.mjs",
+        "bytes": 15307,
+        "sha256": "7595ab7e8c68ad6d3fc4b2a50154cc8e3fba31244a61a692ffd19cb8146bfd05"
+      }
+    ]
+  },
+  "scope": "Source-only qualification of expanded .NET, Java, Kotlin, native PHP and WIT owned checked-record consumers. This is not installed runtime or lifetime acceptance. Preserve the original scope of VO 1727 and 1484.",
+  "changes": [
+    "Use the complete shared fifteen-export mixed selection for ordinary/reviewed full managed APIs. Preserve all eight result-only group/route selections exactly.",
+    "Require each .NET, Java, Kotlin and native PHP full caller to reject a copied Window(8,3) ten times without changing its fields or invalidating its owner, then accept Window(3,3).",
+    "Exercise Grant with a nested positive Nat Subtype and an outer checked-record bound, owned Claim arrays with repeated late-element rejection, independent element owners, empty arrays and recovery.",
+    "Exercise two-input transfer rollback, successful joint transfer, surviving independent retains and usable returned resources.",
+    "Exercise invalid replies and original exception identity after transfer; require consumed inputs, no published output, surviving independent retains and a subsequent successful transfer/callback.",
+    "Retain the existing finalizer/Cleaner/destructor, thread/process, source-free installation, relocated execution and deterministic package-reassembly checks.",
+    "Compile the shared C caller against the complete WIT public header and require the additional WIT exports; retain compatibility checks for the original smaller C API.",
+    "Keep the exact historical managed TAP test names and the published nine-export shared boundary. Do not promote the expanded candidate as installed support."
+  ],
+  "validation": {
+    "executionLimits": {
+      "heavyCommands": "serial",
+      "cpuAffinity": [
+        2
+      ],
+      "nice": 15,
+      "nodeMaxOldSpaceMiB": 512,
+      "jvmHeapMiB": 512
+    },
+    "focusedGeneratorsAndBoundary": {
+      "tests": 4,
+      "pass": 4,
+      "fail": 0,
+      "skipped": 0,
+      "durationMs": 5746.360041,
+      "files": [
+        "tests/owned-checked-record-managed-packaging.test.mjs",
+        "tests/owned-checked-record-native-packaging.test.mjs",
+        "tests/helpers/owned-checked-record-promotion-tests.mjs"
+      ],
+      "selection": "^managed owned checked-record|^owned checked-record C and C\\+\\+|^owned checked-record promotion keeps"
+    },
+    "callerCompilation": {
+      "modes": [
+        "full",
+        "result-only"
+      ],
+      "resultOnlySelectionsUnchanged": 8,
+      "dotnet": "Both actual C# callers compile in separate safe consumer assemblies against freshly generated APIs, with warnings as errors and no native library execution.",
+      "jvm": "Both Java and Kotlin callers in both modes typecheck against freshly compiled generated JVM classes, with warnings as errors, JDK 22 and Kotlin 2.2.0. No Lean runtime loaded.",
+      "php": "Generated API sources and both actual PHP callers pass PHP 8.5.10 syntax checks. This does not establish installed runtime behavior.",
+      "wit": "Both actual C callers compile against generated WIT-prefixed headers. Full mode requires the expanded callback macro so its mixed assertions cannot be preprocessed away. Both generated Component Model binaries parse and validate with wasm-tools; no Lean execution.",
+      "native": "The current shared C caller and unchanged C++ caller pass strict header compilation; the original smaller shared C API remains compatible."
+    },
+    "sourceQuality": [
+      "Scoped ESLint",
+      "Configured checked-JavaScript typecheck (adopted subset only)",
+      "git diff --check"
+    ],
+    "liveInventoryAudit": {
+      "liveReferences": 16055,
+      "uniquePaths": 2555,
+      "stalePins": 0
+    },
+    "suitesOverlap": true,
+    "acceptedRuntimeRuns": 0
+  },
+  "inventory": {
+    "original": {
+      "bytes": 102579190,
+      "sha256": "461aafdb9246c6187cfbd9951987f1200dc8ec68b7b9cb8bd4aad1c5746d6f3b"
+    },
+    "current": {
+      "bytes": 102579190,
+      "sha256": "603f565ced92597ae077e66b735f57b7148346fcbd9ac13339b2752a9d2ecf66"
+    },
+    "refreshedPins": 11,
+    "pins": [
+      {
+        "path": "tests/helpers/owned-checked-record-promotion-tests.mjs",
+        "count": 11,
+        "alreadyCurrent": 0,
+        "previousSha256": "b159b87f91c8a44aa2629380063fab1b8ac981c3d3a6e318a3fc50d374693c1c",
+        "currentSha256": "b257df31252c8007f2dfb5dc041c0deaa870bfc51d7b0c357fd6ed4a60132bf4"
+      }
+    ],
+    "supportObservationsChanged": false,
+    "originalArchivesChanged": false
+  },
+  "pending": [
+    "Independent installed ordinary/reviewed full/result-only execution for all managed hosts, including actual lifetime, thread/process, partial-conversion cleanup, transfer and failure-recovery behavior.",
+    "One authenticated producer revision for the nine native/managed lanes, including the earlier six-host nested Window rejection cases.",
+    "Immutable original hosted artifact retention and independent replay, followed by remaining semantic audit and exact support/documentation reconciliation.",
+    "Final-head Core and required hosted gates; default-branch recurring activation."
+  ]
+}

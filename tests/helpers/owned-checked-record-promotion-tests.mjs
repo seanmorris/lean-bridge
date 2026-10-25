@@ -247,19 +247,16 @@ test("owned checked-record promotion keeps the installed fixture and result-only
 	for(const route of ownedCheckedRecordHostedRoutes)
 	{
 		const javascript = ownedCheckedRecordJavaScriptSelection(route);
+		const native = ownedCheckedRecordNativeSelection(route, ["c", "cpp", "cpan"]);
 		const selections = [
-			javascript
+			ownedCheckedRecordLanguageSelection(route, ["python", "ruby", "rust"])
 			, ...["dotnet", "jvm", "php", "wit"].map(group => ownedCheckedRecordManagedSelection(route, group))];
 		for(const selected of selections)
 		{
-			assert.deepEqual(selected.reviewedIr, javascript.reviewedIr);
-			assert.deepEqual(selected.configuration.exports, javascript.configuration.exports);
+			assert.deepEqual(selected.reviewedIr, native.reviewedIr);
+			assert.deepEqual(selected.configuration.exports, native.configuration.exports);
+			assert.deepEqual(selected.configuration.contracts, native.configuration.contracts);
 		}
-		const native = ownedCheckedRecordNativeSelection(route, ["c", "cpp", "cpan"]);
-		const languages = ownedCheckedRecordLanguageSelection(route, ["python", "ruby", "rust"]);
-		assert.deepEqual(languages.reviewedIr, native.reviewedIr);
-		assert.deepEqual(languages.configuration.exports, native.configuration.exports);
-		assert.deepEqual(languages.configuration.contracts, native.configuration.contracts);
 		if(javascript.resultOnly)
 		{
 			assert.deepEqual(native.reviewedIr, javascript.reviewedIr);
@@ -267,7 +264,7 @@ test("owned checked-record promotion keeps the installed fixture and result-only
 		}
 		else
 		{
-			// Expanded native/language coverage awaits independent hosted acceptance.
+			// Expanded native/language/managed coverage needs its own hosted evidence.
 			// Keep the admitted shared boundary exact without promoting new cases.
 			const types = new Set(javascript.reviewedIr.types.map(type => type.id));
 			const declarations = new Set(javascript.reviewedIr.declarations.map(item => item.id));

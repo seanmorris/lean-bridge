@@ -9,9 +9,13 @@ import { access, cp, mkdtemp, readFile, rename, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import test from "node:test";
+import { validateExportConfiguration } from "../src/analyze/export-configuration.mjs";
+import { generateOwnedCValues } from "../src/backends/c/owned-values.mjs";
 import { generateOwnedDotnetPackage } from "../src/backends/dotnet/owned-package.mjs";
 import { generateOwnedJvmPackage } from "../src/backends/jvm/owned-package.mjs";
 import { generateOwnedPhpPackage } from "../src/backends/php/owned-package.mjs";
+import { compileOwnedWitGraphModel } from "../src/backends/wit/owned-graph-model.mjs";
+import { ownedWitPublicPrefix } from "../src/backends/wit/owned-package.mjs";
 import { buildCanonicalProject } from "../src/build/canonical-build.mjs";
 import { ownedDotnetEvidence } from "../src/build/owned-dotnet-artifacts.mjs";
 import { ownedJvmEvidence } from "../src/build/owned-jvm-artifacts.mjs";
@@ -76,7 +80,20 @@ test.after(async () => {
 	}
 });
 
-test("managed owned checked-record generators preserve exact API modes", () => {
+test("managed owned checked-record generators preserve exact API modes", async t => {
+	for(const group of allGroups) for(const route of ownedCheckedRecordManagedRoutes)
+	{
+		const selected = ownedCheckedRecordManagedSelection(route, group);
+		validateExportConfiguration(selected.configuration);
+		if(selected.authorRoute !== "ordinary") continue;
+		assert.deepEqual(selected.configuration.exports
+			, selected.reviewedIr.declarations.map(item => item.source.declaration));
+		if(selected.resultOnly) continue;
+		assert.deepEqual(selected.configuration.contracts["OwnedCheckedRecords.transferPairClaim"]
+			.parameters.map(parameter => parameter.ownership), ["transfer", "transfer"]);
+		assert.deepEqual(selected.configuration.contracts["OwnedCheckedRecords.transferWithClaimCallback"]
+			.parameters.map(parameter => parameter.ownership), ["transfer", "borrow"]);
+	}
 	for(const route of ["reviewed-full", "reviewed-result-only"])
 	{
 		const selected = ownedCheckedRecordManagedSelection(route, "dotnet");
@@ -95,13 +112,16 @@ test("managed owned checked-record generators preserve exact API modes", () => {
 				, selected.resultOnly ? ["newTicket", "serial", "claimFor"]
 					: ["newTicket", "serial", "echoBooking", "echoClaim"
 						, "transferClaim", "claimFor", "pairClaim"
-						, "withClaimCallback", "claimClosure"], profile);
+						, "withClaimCallback", "claimClosure", "bookingSpan", "claimQuota"
+						, "echoGrant", "echoClaims", "transferWithClaimCallback"
+						, "transferPairClaim"], profile);
 			assert.equal(output.c.callbacks.length, selected.resultOnly ? 0 : 2
 				, profile);
 			assert.equal(Boolean(output.contract.inputTransfers)
 				, !selected.resultOnly, profile);
 		}
 	}
+	await checkManagedWitCallers(t);
 });
 
 test("managed owned checked-record consumers are independently authored", async () => {
@@ -139,6 +159,34 @@ test("managed owned checked-record consumers are independently authored", async 
 	]) assert.ok(workflow.includes(required), required);
 	assert.doesNotMatch(workflow, /continue-on-error:\s*true/u);
 });
+
+const checkManagedWitCallers = async t => {
+	const directory = await mkdtemp(join(tmpdir(), "lean-owned-checked-wit-headers-"));
+	t.after(() => rm(directory, { recursive: true, force: true }));
+	const options = { transferredInputs: true, anchoredResults: true, hostCallbacks: true };
+	for(const resultOnly of [false, true])
+	{
+		const selected = ownedCheckedRecordManagedSelection(
+			resultOnly ? "reviewed-result-only" : "reviewed-full", "wit");
+		const ir = selected.reviewedIr;
+		const values = generateOwnedCValues(ir, { ...options
+			, publicPrefix: ownedWitPublicPrefix(ir, options) });
+		const model = compileOwnedWitGraphModel(ir, {}, options);
+		assert.deepEqual(model.manifest.declarations.map(item => item.name)
+			, ir.declarations.map(item => item.name));
+		const fixture = await fixtureFor("wit-wasi", resultOnly);
+		for(const required of fixture.wit) assert.match(model.wit, required);
+		if(!resultOnly)
+			assert.ok(values.header.includes(
+				"OWNED_CHECKED_RECORDS_WASMTIME_TRANSFER_WITH_CLAIM_CALLBACK_ARGUMENT1_T_REQUIRES_RECOVERY"));
+		const root = join(directory, resultOnly ? "result-only" : "full");
+		await saveLakeFile(root, `include/${values.prefix}.h`, values.header);
+		await saveLakeFile(root, "consumer.c", fixture.source());
+		await runCopied("/usr/bin/cc", ["-std=c11", "-Wall", "-Wextra", "-Werror"
+			, "-I", "include", "-fsyntax-only", "consumer.c"], root
+		, { PATH: "/usr/bin:/bin" });
+	}
+};
 
 const environmentFor = group => {
 	const profiles = ownedCheckedRecordManagedTargets[group].profiles;
@@ -215,7 +263,8 @@ const fixtureFor = async (profile, resultOnly) => {
 		return { source: () => source, success: successName(profile, resultOnly)
 			, wit: [/resource identity-ticket/u, /claim-for: func/u
 				, ...resultOnly ? [] : [/with-claim-callback: func/u
-					, /claim-closure: func/u]]
+					, /claim-closure: func/u, /echo-grant: func/u, /echo-claims: func/u
+					, /transfer-pair-claim: func/u, /transfer-with-claim-callback: func/u]]
 			, ...resultOnly ? { expectedChecks: 14 } : {} };
 	}
 	const sourceProfile = profile === "php-native" ? "php" : profile;
@@ -302,7 +351,9 @@ for(const group of groups) for(const route of routes)
 			, (resultOnly ? ["newTicket", "serial", "claimFor"]
 				: ["newTicket", "serial", "echoBooking", "echoClaim"
 					, "transferClaim", "claimFor", "pairClaim"
-					, "withClaimCallback", "claimClosure"]).toSorted());
+					, "withClaimCallback", "claimClosure", "bookingSpan", "claimQuota"
+					, "echoGrant", "echoClaims", "transferWithClaimCallback"
+					, "transferPairClaim"]).toSorted());
 		assert.equal(model.bindingIr.types.filter(type => type.kind === "callback").length
 			, resultOnly ? 0 : 2);
 		const reassembled = await reassemble({ group, root: scratch, output

@@ -6,8 +6,8 @@
 import assert from "node:assert/strict";
 import {
 	ownedCheckedRecordJavaScriptRoutes
-	, ownedCheckedRecordJavaScriptSelection
 } from "./owned-checked-record-javascript-fixture.mjs";
+import { ownedCheckedRecordMixedSelection } from "./owned-checked-record-mixed-fixture.mjs";
 
 export const ownedCheckedRecordManagedRoutes
 	= ownedCheckedRecordJavaScriptRoutes;
@@ -34,7 +34,7 @@ export const ownedCheckedRecordManagedTargets = Object.freeze({
  */
 export const ownedCheckedRecordManagedSelection = (route, group) => {
 	assert.ok(Object.hasOwn(ownedCheckedRecordManagedTargets, group));
-	const selected = ownedCheckedRecordJavaScriptSelection(route);
+	const selected = ownedCheckedRecordMixedSelection(route);
 	const specification = ownedCheckedRecordManagedTargets[group];
 	const suffix = selected.resultOnly ? "-result-only" : "";
 	const name = group === "dotnet"

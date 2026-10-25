@@ -10,8 +10,8 @@ static size_t checks;
 } } while (0)
 #define OK(call) CHECK((call) == OWNED_CHECKED_RECORDS_OK)
 
-/* The WIT fixture also uses this caller with its smaller, independently
-   selected API. Native packaging requires the expanded header explicitly. */
+/* Keep compatibility with the original smaller API. Current native and WIT
+   packaging tests require the expanded header explicitly. */
 #ifdef OWNED_CHECKED_RECORDS_TRANSFER_WITH_CLAIM_CALLBACK_ARGUMENT1_T_REQUIRES_RECOVERY
 typedef owned_checked_records_transfer_with_claim_callback_argument1_t_host claim_callback;
 #else

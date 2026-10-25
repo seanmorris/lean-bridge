@@ -93,7 +93,7 @@ test("owned checked-record C and C++ generators retain exact callback directions
 			, "-I", "include", "-fsyntax-only", `consumer.${profile}`], directory
 		, { PATH: "/usr/bin:/bin" });
 	}
-	// WIT shares the C caller but retains its own smaller API and acceptance.
+	// Keep the shared C caller compatible with the original smaller API too.
 	const shared = generateOwnedCppPackage(
 		ownedCheckedRecordJavaScriptSelection("reviewed-full").reviewedIr
 		, { transferredInputs: true, anchoredResults: true, hostCallbacks: true });
