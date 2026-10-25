@@ -65,17 +65,22 @@ const routeShape = route => {
 		, resultOnly: matched[2] === "result-only" };
 };
 
-const verifyBrowser = (browser, resultOnly, assets) => {
+const verifyBrowser = (browser, resultOnly, assets, version) => {
 	assert.deepEqual(Object.keys(browser).toSorted()
 		, ["executions", "externalNetworkBlocked", "installedSourcesRemoved"]);
 	assert.equal(browser.externalNetworkBlocked, true);
 	assert.equal(browser.installedSourcesRemoved, true);
-	assert.equal(browser.executions.length, engines.length * browserProfiles.length);
+	const expectedCells = engines.flatMap(engine => version === 1
+		? browserProfiles.map(profile => `${engine}/${profile}`)
+		: [...browserProfiles.map(profile => `${engine}/${profile}/production`)
+			, `${engine}/react/strict`]);
+	assert.equal(browser.executions.length, expectedCells.length);
 	const cells = [];
 	for(const execution of browser.executions)
 	{
 		assert.deepEqual(Object.keys(execution).toSorted()
-			, ["assets", "checks", "engine", "profile", "reruns", "version"]);
+			, ["assets", "checks", "engine", "profile", "reruns"
+				, ...version === 2 ? ["variant"] : [], "version"]);
 		assert.ok(engines.includes(execution.engine), execution.engine);
 		assert.ok(browserProfiles.includes(execution.profile), execution.profile);
 		assert.equal(typeof execution.version, "string");
@@ -86,10 +91,11 @@ const verifyBrowser = (browser, resultOnly, assets) => {
 		for(const asset of execution.assets) assert.match(asset, digest);
 		assert.deepEqual(execution.assets.toSorted(), assets.toSorted()
 			, "Browser assets must be the retained component and runtime Wasm");
-		cells.push(`${execution.engine}/${execution.profile}`);
+		cells.push(`${execution.engine}/${execution.profile}`
+			+ (version === 2 ? `/${execution.variant}` : ""));
 	}
-	assert.deepEqual(cells.toSorted(), engines.flatMap(engine =>
-		browserProfiles.map(profile => `${engine}/${profile}`)).toSorted());
+	assert.deepEqual(cells.toSorted(), expectedCells.toSorted()
+		, "Browser cells must include every required profile and React variant");
 	return cells.length;
 };
 
@@ -176,14 +182,19 @@ const packageIdentity = async (entry, receipt, root) => {
  * Authenticate one complete npm/browser package-evidence directory.
  *
  * @param reportPath - Canonical report path inside the packaging directory.
+ * @param options - Historical replay or the current mandatory acceptance version.
+ * @param options.minimumVersion - Lowest admitted report version (one for original archives).
  */
-export const verifyOwnedCheckedRecordJavaScriptEvidence = async reportPath => {
+export const verifyOwnedCheckedRecordJavaScriptEvidence = async (reportPath, { minimumVersion = 1 } = {}) => {
+	assert.ok([1, 2].includes(minimumVersion));
 	const bytes = await readFile(reportPath), report = JSON.parse(bytes);
 	assert.equal(bytes.toString("utf8"), canonicalJson(report)
 		, "Owned checked-record JavaScript report must be canonical");
 	assert.deepEqual(Object.keys(report).toSorted()
 		, ["profile", "reports", "schemaVersion"]);
-	assert.equal(report.schemaVersion, 1);
+	assert.ok([1, 2].includes(report.schemaVersion)
+		&& report.schemaVersion >= minimumVersion
+	, `Owned JavaScript acceptance requires report version ${minimumVersion} or later`);
 	assert.equal(report.profile, "installed-owned-checked-record-javascript");
 	assert.deepEqual(report.reports.map(entry => entry.route)
 		, ownedCheckedRecordJavaScriptRoutes);
@@ -192,7 +203,8 @@ export const verifyOwnedCheckedRecordJavaScriptEvidence = async reportPath => {
 	{
 		assert.deepEqual(Object.keys(entry).toSorted(), [
 			"archiveReproduction", "archives", "authorRoute", "bindingIrSha256"
-			, "browser", "componentIdentity", "installedNode"
+			, "browser", "componentIdentity"
+			, ...report.schemaVersion === 2 ? ["independentBuilds"] : [], "installedNode"
 			, "installedTypeScript", "mode", "observed", "packageSetReceipt"
 			, "relocatedInstallation", "retainedPackageSet", "route"
 			, "sourceIdentity", "sourceRemovedBeforeInstall", "wasm"
@@ -240,7 +252,15 @@ export const verifyOwnedCheckedRecordJavaScriptEvidence = async reportPath => {
 			receipt.packages.map(pkg => [pkg.role, pkg.artifacts[0].sha256])
 		));
 		const assets = await packageIdentity(entry, receipt, retainedRoot);
-		const browserExecutions = verifyBrowser(entry.browser, shape.resultOnly, assets);
+		if(report.schemaVersion === 2)
+			assert.deepEqual(entry.independentBuilds, [0, 1].map(attempt => ({
+				authorRoot: `author-${attempt}`, componentIdentity: entry.componentIdentity
+				, bindingIrSha256: entry.bindingIrSha256
+				, sourceIdentity: entry.sourceIdentity
+				, wasm: entry.wasm, archives: entry.archives
+				, sourceUnchanged: true, removedBeforeInstall: true
+			})), "Both independent author builds must reproduce the retained installed package");
+		const browserExecutions = verifyBrowser(entry.browser, shape.resultOnly, assets, report.schemaVersion);
 		evidenceFiles.push(...files.map(file =>
 			`${entry.route}/handoff/${file}`));
 		routes.push({ route: entry.route, receiptSha256: result.receiptSha256
@@ -248,5 +268,5 @@ export const verifyOwnedCheckedRecordJavaScriptEvidence = async reportPath => {
 	}
 	assert.deepEqual(await regularFiles(join(root, "evidence"))
 		, evidenceFiles.toSorted(), "Evidence must contain only retained route sets");
-	return { schemaVersion: 1, profile: report.profile, routes };
+	return { schemaVersion: report.schemaVersion, profile: report.profile, routes };
 };

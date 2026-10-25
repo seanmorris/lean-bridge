@@ -15,5 +15,5 @@ assert.deepEqual(args.slice(0, 1), ["--report"]
 assert.equal(args.length, 2
 	, "Usage: check-owned-checked-record-javascript-ci.mjs --report <path>");
 process.stdout.write(canonicalJson(
-	await verifyOwnedCheckedRecordJavaScriptEvidence(resolve(args[1]))
+	await verifyOwnedCheckedRecordJavaScriptEvidence(resolve(args[1]), { minimumVersion: 2 })
 ));

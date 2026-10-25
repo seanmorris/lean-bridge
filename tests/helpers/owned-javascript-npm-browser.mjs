@@ -78,6 +78,22 @@ createRoot(document.querySelector("#app")).render(React.createElement(StrictMode
 `;
 
 /**
+ * Select the historical bundle or the complete production/StrictMode matrix.
+ *
+ * @param productionReact - Require production React as well as StrictMode.
+ */
+export const ownedJavaScriptBrowserBuilds = (productionReact = false) => {
+	assert.equal(typeof productionReact, "boolean");
+	return productionReact ? [
+		{ variant: "production", mode: "production", directory: "dist-production"
+			, profiles: ["page", "react", "worker"] }
+		, { variant: "strict", mode: "development", directory: "dist-strict"
+			, profiles: ["react"] }
+	] : [{ variant: "strict", mode: "development", directory: "dist"
+		, profiles: ["page", "react", "worker"] }];
+};
+
+/**
  * Bundle only installed dependencies, remove that installation, and serve the
  * static output under a nested path with outside network requests blocked.
  *
@@ -87,8 +103,10 @@ createRoot(document.querySelector("#app")).render(React.createElement(StrictMode
  * @param options.run - Compiler-free npm process runner rooted in the consumer.
  * @param options.probeSource - Optional consuming API checks against that installation.
  * @param options.expected - Exact result expected from the consuming checks.
+ * @param options.productionReact - Include production React alongside StrictMode.
  */
-export const checkOwnedJavaScriptBrowsers = async ({ root, name, run, probeSource, expected }) => {
+export const checkOwnedJavaScriptBrowsers = async ({ root, name, run, probeSource, expected, productionReact = false }) => {
+	const builds = ownedJavaScriptBrowserBuilds(productionReact);
 	const frameworks = await browserFrameworkArchives(root);
 	await run("npm", ["install", "--offline", "--ignore-scripts", "--no-audit", "--no-fund", ...frameworks.map(item => "./" + item.archive)]);
 	const installedAssets = await Promise.all([
@@ -111,27 +129,32 @@ export const checkOwnedJavaScriptBrowsers = async ({ root, name, run, probeSourc
 			return null;
 		}
 	});
-	await build({ root, base, configFile: false, envDir: false, publicDir: false
-		, logLevel: "silent", plugins: [audit()]
-		, define: { "process.env.NODE_ENV": JSON.stringify("development") }
-		, build: { outDir: "dist", target: "esnext", assetsInlineLimit: 0
-			, minify: false
-			, rollupOptions: { input: Object.fromEntries(["page", "react", "worker"].map(profile => [profile, join(root, profile, "index.html")])) } }
-		, worker: { format: "es", plugins: () => [audit()] } });
+	for(const selected of builds)
+		await build({ root, base, configFile: false, envDir: false, publicDir: false
+			, logLevel: "silent", plugins: [audit()]
+			, define: { "process.env.NODE_ENV": JSON.stringify(selected.mode) }
+			, build: { outDir: selected.directory, target: "esnext", assetsInlineLimit: 0
+				, minify: false
+				, rollupOptions: { input: Object.fromEntries(selected.profiles.map(profile => [profile, join(root, profile, "index.html")])) } }
+			, worker: { format: "es", plugins: () => [audit()] } });
 	for(const dependency of [name, "@lean-bridge/runtime", "react"])
 		assert.ok([...modules].some(path => path.startsWith(`node_modules/${dependency}/`)), dependency);
-	for(const path of await readdir(root)) if(path !== "dist") await rm(join(root, path), { recursive: true, force: true });
+	for(const path of await readdir(root)) if(!builds.some(selected => selected.directory === path)) await rm(join(root, path), { recursive: true, force: true });
 	const engines = await import("playwright"), executions = [];
-	const server = await startSiteServer({ root: join(root, "dist"), base });
+	const cells = builds.flatMap(selected => selected.profiles.map(profile => ({ selected, profile })));
+	const servers = new Map();
 	try
 	{
+		for(const selected of builds)
+			servers.set(selected.variant, await startSiteServer({ root: join(root, selected.directory), base }));
 		for(const engine of ["chromium", "firefox", "webkit"])
 		{
 			const browser = await engines[engine].launch({ headless: true, ...(engine === "chromium" ? { args: ["--no-sandbox"] } : {}) });
 			try
 			{
-				for(const profile of ["page", "react", "worker"])
+				for(const { selected, profile } of cells)
 				{
+					const server = servers.get(selected.variant);
 					const context = await browser.newContext({ serviceWorkers: "block" }), errors = [], foreign = [], assets = [], pending = [];
 					try
 					{
@@ -170,13 +193,17 @@ export const checkOwnedJavaScriptBrowsers = async ({ root, name, run, probeSourc
 							await page.waitForFunction(previous => globalThis.ownedResult.sequence > previous, sequence);
 							assert.deepEqual((await page.evaluate(() => globalThis.ownedResult)).value, first.value);
 						}
-						if(profile === "react") assert.deepEqual(await page.evaluate(() => globalThis.ownedLifecycle), { effects: 6, cleanups: 5, commits: 3 });
+						if(profile === "react") assert.deepEqual(await page.evaluate(() => globalThis.ownedLifecycle), selected.variant === "production"
+							? { effects: 3, cleanups: 2, commits: 3 }
+							: { effects: 6, cleanups: 5, commits: 3 });
 						else
 						{ await page.locator("#close").click(); assert.equal(await page.evaluate(() => globalThis.ownedClosed), true); }
 						await Promise.all(pending);
 						assert.deepEqual(errors, []); assert.deepEqual(foreign, []);
 						assert.deepEqual(assets.sort(), [...installedAssets].sort(), "Reruns must reuse the two installed Wasm assets");
-						executions.push({ engine, version: browser.version(), profile, checks: first.value.checks, reruns: 2, assets });
+						executions.push({ engine, version: browser.version(), profile
+							, checks: first.value.checks, reruns: 2, assets
+							, ...productionReact ? { variant: selected.variant } : {} });
 					}
 					finally
 					{ await context.close(); }
@@ -187,6 +214,6 @@ export const checkOwnedJavaScriptBrowsers = async ({ root, name, run, probeSourc
 		}
 	}
 	finally
-	{ await server.close(); }
+	{ for(const server of servers.values()) await server.close(); }
 	return { executions, installedSourcesRemoved: true, externalNetworkBlocked: true };
 };
