@@ -144,6 +144,8 @@ import "./helpers/owned-checked-php-wasm-mixed-coverage-source-history-tests.mjs
 import "./helpers/owned-checked-wit-bootstrap-source-history-tests.mjs";
 import "./helpers/wasmtime-capi-rollout-tests.mjs";
 import "./helpers/wasmtime-capi-ci-rollout-source-history-tests.mjs";
+import "./helpers/owned-checked-record-php-wasm-context-tests.mjs";
+import "./helpers/owned-checked-php-wasm-contexts-source-history-tests.mjs";
 
 const root = resolve(".");
 

@@ -1,0 +1,428 @@
+{
+  "additions": [
+    {
+      "currentSha256": "30a6ebbd92d28f136574d8eebebda1e9ce13b8c3600988d29c2942ff3d4e3fdb",
+      "path": "docs/evidence/owned-checked-php-wasm-contexts-20261025.json"
+    },
+    {
+      "currentSha256": "2bfb8fcae2fc04f1941d10a8b151c99d63e4805ad885dd133c2d97d2032d9638",
+      "path": "tests/fixtures/structured-types/owned-checked-record-php-wasm-contexts.php"
+    },
+    {
+      "currentSha256": "427a6693ee94948c5ccc8bb4119ec40897c93e5af094fccb2ab43260b4e54e59",
+      "path": "tests/helpers/owned-checked-record-php-wasm-context-evidence.mjs"
+    },
+    {
+      "currentSha256": "136e94b2d2d2de3c4033f3c04e3541d9a903853238cf046e97bfbe0f165a2791",
+      "path": "tests/helpers/owned-checked-record-php-wasm-context-fixture.mjs"
+    },
+    {
+      "currentSha256": "e7c65eff5431363f6bdef8992877ee2237600184a8bc6fd1fc341f8fa0dc7200",
+      "path": "tests/helpers/owned-checked-record-php-wasm-context-tests.mjs"
+    },
+    {
+      "currentSha256": "c6f8c0fc9728afffa34c45a59bcda09f1465ae2d384348eab7ec401aff78a053",
+      "path": "tests/helpers/owned-checked-record-php-wasm-contexts.mjs"
+    },
+    {
+      "currentSha256": "037050eb50c62a1b9d8941a8a9976d3731345ea7c8eba30bbc61115fe745f0a6",
+      "path": "tests/helpers/owned-checked-record-php-wasm-peer.mjs"
+    },
+    {
+      "currentSha256": "df965c51536a6c1408b91986dc34b97abe0bf3296721a479d8b56ea61729f691",
+      "path": "scripts/update-owned-checked-php-wasm-contexts-source-history.mjs"
+    },
+    {
+      "currentSha256": "8f37bc6b117b8d34cd272a2cd120bf0eda57b648e56afff13b4f6e6669fee3bd",
+      "path": "tests/helpers/owned-checked-php-wasm-contexts-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "ffc8c15c5b4d26f11119a6119f4ff373b9f2982b736f9d2e17c5bc60caac66f0",
+      "path": "tests/helpers/owned-checked-php-wasm-contexts-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "41f1d0c34f3115566cf7c289f6a2a5f277ee4142",
+  "implementationCommits": [
+    "41f1d0c34f3115566cf7c289f6a2a5f277ee4142"
+  ],
+  "integrationBaseCommit": "41f1d0c34f3115566cf7c289f6a2a5f277ee4142",
+  "integrationUpdates": [
+    {
+      "currentSha256": "e85845a63a0ff40110986e3228ba3b0cadcb8b4b6b0d810de60971f414891c7d",
+      "edits": [
+        {
+          "current": "import { beforeOwnedCheckedPhpWasmContextsSource, ownedCheckedPhpWasmContextsNormalizationPaths } from \"./owned-checked-php-wasm-contexts-source-history.mjs\";\n",
+          "previous": "",
+          "start": 14873
+        },
+        {
+          "current": "\t...ownedCheckedPhpWasmContextsNormalizationPaths\n\t, ...wasmtimeCapiRolloutNormalizationPaths\n",
+          "previous": "\t...wasmtimeCapiRolloutNormalizationPaths\n",
+          "start": 188071
+        },
+        {
+          "current": "\tlet stage = beforeOwnedCheckedPhpWasmContextsSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeWasmtimeCapiRolloutSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeWasmtimeCapiRolloutSource(path, text, expected);\n",
+          "start": 233211
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "0606243dead60fe45cec86a498abc2445ce48de2f73d96463db99d3332ff6495"
+    },
+    {
+      "currentSha256": "6d9991e45c2eae193aca6109b51554e670716134f994659227583d009c0664a0",
+      "edits": [
+        {
+          "current": "import \"./helpers/owned-checked-record-php-wasm-context-tests.mjs\";\nimport \"./helpers/owned-checked-php-wasm-contexts-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 10002
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "a63daf5f1386a2a982625271e07f2960c3f06153510fa5c463342b41de28f743"
+    }
+  ],
+  "milestone": "owned-checked-php-wasm-contexts-source-v1",
+  "predecessorCommit": "aac4044c0596954713c06d6ffc876a989bfcedbc",
+  "schemaVersion": 1,
+  "scope": "Require independently built PHP-Wasm owned checked-record contexts, source-free Node/Chromium isolation and retained peer handoffs. Preserve every original runtime, workflow, primary caller, archive and support observation. Local checks are source-only; hosted installed acceptance and independent replay remain required.",
+  "updates": [
+    {
+      "currentSha256": "e4ddf05a33b6be9203ab5f189583e71c0ed5f48997aba1599e67b39d7e7ce2fb",
+      "edits": [
+        {
+          "current": "### Check PHP-Wasm owned-context isolation\n\n`npm run test:owned-checked-record-php-wasm` includes a separately built\nresource-owning peer for each ordinary/reviewed and full/result-only route.\nThe peer uses the same Lean declarations under a different component identity.\nBoth components install from original npm and Composer archives after the author\ndirectories have been removed. The peer is independently rebuilt, and its\nreceipt-only archive handoff is retained beside the primary handoff.\n\nEach route exercises 32 Node and 32 Chromium configurations: both autoload\narrangements, all startup/lazy loading pairs, both initialization orders and\nweak/strict callers. Every configuration repeats after request refresh. Checks\ncover foreign owners at the PHP and Zend boundaries, retained-owner isolation,\nserialization refusal, stale contexts and zero live identities after cleanup.\nFull APIs also reject foreign owners after partial argument conversion and\nforeign callback replies after transfer. Rejection must leave no partial output.\n\nThese are separate ownership contexts inside one PHP-Wasm interpreter. PHP\nresource wrappers cannot be serialized into another interpreter's Wasm memory.\nThe hosted replay requires the peer's original archives and all context results\nonly for producer revisions containing this acceptance runner. Earlier archives\nretain their original scope. Source checks alone do not establish these installed\nresults; retain and replay the successful hosted run before promoting coverage.\n\n",
+          "previous": "",
+          "start": 11297
+        }
+      ],
+      "path": "docs/contributing/testing.md",
+      "previousSha256": "09ca6df5f173172191d89cd852be4345620a9409c05108bd52e696d62926fdbf"
+    },
+    {
+      "currentSha256": "6840fa1c4c02d8352bb872c1b0ea5ba0db3f7f49dc2561311b087749391151b6",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"e4ddf05a33b6be9203ab5f189583e71c0ed5f48997aba1599e67b39d7e7ce2fb\"\n",
+          "previous": "          \"sha256\": \"09ca6df5f173172191d89cd852be4345620a9409c05108bd52e696d62926fdbf\"\n",
+          "start": 1167697
+        },
+        {
+          "current": "          \"sha256\": \"e4ddf05a33b6be9203ab5f189583e71c0ed5f48997aba1599e67b39d7e7ce2fb\"\n",
+          "previous": "          \"sha256\": \"09ca6df5f173172191d89cd852be4345620a9409c05108bd52e696d62926fdbf\"\n",
+          "start": 1177811
+        },
+        {
+          "current": "          \"sha256\": \"e4ddf05a33b6be9203ab5f189583e71c0ed5f48997aba1599e67b39d7e7ce2fb\"\n",
+          "previous": "          \"sha256\": \"09ca6df5f173172191d89cd852be4345620a9409c05108bd52e696d62926fdbf\"\n",
+          "start": 1189747
+        },
+        {
+          "current": "          \"sha256\": \"e4ddf05a33b6be9203ab5f189583e71c0ed5f48997aba1599e67b39d7e7ce2fb\"\n",
+          "previous": "          \"sha256\": \"09ca6df5f173172191d89cd852be4345620a9409c05108bd52e696d62926fdbf\"\n",
+          "start": 1222308
+        },
+        {
+          "current": "          \"sha256\": \"e4ddf05a33b6be9203ab5f189583e71c0ed5f48997aba1599e67b39d7e7ce2fb\"\n",
+          "previous": "          \"sha256\": \"09ca6df5f173172191d89cd852be4345620a9409c05108bd52e696d62926fdbf\"\n",
+          "start": 1252587
+        },
+        {
+          "current": "          \"sha256\": \"e4ddf05a33b6be9203ab5f189583e71c0ed5f48997aba1599e67b39d7e7ce2fb\"\n",
+          "previous": "          \"sha256\": \"09ca6df5f173172191d89cd852be4345620a9409c05108bd52e696d62926fdbf\"\n",
+          "start": 1285738
+        },
+        {
+          "current": "          \"sha256\": \"e4ddf05a33b6be9203ab5f189583e71c0ed5f48997aba1599e67b39d7e7ce2fb\"\n",
+          "previous": "          \"sha256\": \"09ca6df5f173172191d89cd852be4345620a9409c05108bd52e696d62926fdbf\"\n",
+          "start": 1325841
+        },
+        {
+          "current": "          \"sha256\": \"e4ddf05a33b6be9203ab5f189583e71c0ed5f48997aba1599e67b39d7e7ce2fb\"\n",
+          "previous": "          \"sha256\": \"09ca6df5f173172191d89cd852be4345620a9409c05108bd52e696d62926fdbf\"\n",
+          "start": 1352261
+        },
+        {
+          "current": "          \"sha256\": \"e4ddf05a33b6be9203ab5f189583e71c0ed5f48997aba1599e67b39d7e7ce2fb\"\n",
+          "previous": "          \"sha256\": \"09ca6df5f173172191d89cd852be4345620a9409c05108bd52e696d62926fdbf\"\n",
+          "start": 1374941
+        },
+        {
+          "current": "          \"sha256\": \"e4ddf05a33b6be9203ab5f189583e71c0ed5f48997aba1599e67b39d7e7ce2fb\"\n",
+          "previous": "          \"sha256\": \"09ca6df5f173172191d89cd852be4345620a9409c05108bd52e696d62926fdbf\"\n",
+          "start": 1394608
+        },
+        {
+          "current": "          \"sha256\": \"e4ddf05a33b6be9203ab5f189583e71c0ed5f48997aba1599e67b39d7e7ce2fb\"\n",
+          "previous": "          \"sha256\": \"09ca6df5f173172191d89cd852be4345620a9409c05108bd52e696d62926fdbf\"\n",
+          "start": 1417696
+        },
+        {
+          "current": "          \"sha256\": \"0f0b3c35e6e32dd44063f1527fc981d66479623824d663e7b9870c5ab402e6e9\"\n",
+          "previous": "          \"sha256\": \"264d6d33b27fd5b508f2e89c7dcdcf0801a19906fe6d179b8ad3c247a707c3b0\"\n",
+          "start": 1429856
+        },
+        {
+          "current": "          \"sha256\": \"0f0b3c35e6e32dd44063f1527fc981d66479623824d663e7b9870c5ab402e6e9\"\n",
+          "previous": "          \"sha256\": \"264d6d33b27fd5b508f2e89c7dcdcf0801a19906fe6d179b8ad3c247a707c3b0\"\n",
+          "start": 75699928
+        },
+        {
+          "current": "          \"sha256\": \"0f0b3c35e6e32dd44063f1527fc981d66479623824d663e7b9870c5ab402e6e9\"\n",
+          "previous": "          \"sha256\": \"264d6d33b27fd5b508f2e89c7dcdcf0801a19906fe6d179b8ad3c247a707c3b0\"\n",
+          "start": 75704763
+        },
+        {
+          "current": "          \"sha256\": \"0f0b3c35e6e32dd44063f1527fc981d66479623824d663e7b9870c5ab402e6e9\"\n",
+          "previous": "          \"sha256\": \"264d6d33b27fd5b508f2e89c7dcdcf0801a19906fe6d179b8ad3c247a707c3b0\"\n",
+          "start": 75711213
+        },
+        {
+          "current": "          \"sha256\": \"0f0b3c35e6e32dd44063f1527fc981d66479623824d663e7b9870c5ab402e6e9\"\n",
+          "previous": "          \"sha256\": \"264d6d33b27fd5b508f2e89c7dcdcf0801a19906fe6d179b8ad3c247a707c3b0\"\n",
+          "start": 75718087
+        },
+        {
+          "current": "          \"sha256\": \"0f0b3c35e6e32dd44063f1527fc981d66479623824d663e7b9870c5ab402e6e9\"\n",
+          "previous": "          \"sha256\": \"264d6d33b27fd5b508f2e89c7dcdcf0801a19906fe6d179b8ad3c247a707c3b0\"\n",
+          "start": 75724972
+        },
+        {
+          "current": "          \"sha256\": \"0f0b3c35e6e32dd44063f1527fc981d66479623824d663e7b9870c5ab402e6e9\"\n",
+          "previous": "          \"sha256\": \"264d6d33b27fd5b508f2e89c7dcdcf0801a19906fe6d179b8ad3c247a707c3b0\"\n",
+          "start": 75731898
+        },
+        {
+          "current": "          \"sha256\": \"19f2beca3e34dbb527e1a693b51d10209afe16016bea8ee9e0991023c5c13318\"\n",
+          "previous": "          \"sha256\": \"06e71de8da8c60c07ea561806c53b64770b038f61e8a001b097400b2eb6d078c\"\n",
+          "start": 89523713
+        },
+        {
+          "current": "          \"sha256\": \"19f2beca3e34dbb527e1a693b51d10209afe16016bea8ee9e0991023c5c13318\"\n",
+          "previous": "          \"sha256\": \"06e71de8da8c60c07ea561806c53b64770b038f61e8a001b097400b2eb6d078c\"\n",
+          "start": 89530751
+        },
+        {
+          "current": "          \"sha256\": \"19f2beca3e34dbb527e1a693b51d10209afe16016bea8ee9e0991023c5c13318\"\n",
+          "previous": "          \"sha256\": \"06e71de8da8c60c07ea561806c53b64770b038f61e8a001b097400b2eb6d078c\"\n",
+          "start": 89537132
+        },
+        {
+          "current": "          \"sha256\": \"19f2beca3e34dbb527e1a693b51d10209afe16016bea8ee9e0991023c5c13318\"\n",
+          "previous": "          \"sha256\": \"06e71de8da8c60c07ea561806c53b64770b038f61e8a001b097400b2eb6d078c\"\n",
+          "start": 89543501
+        },
+        {
+          "current": "          \"sha256\": \"19f2beca3e34dbb527e1a693b51d10209afe16016bea8ee9e0991023c5c13318\"\n",
+          "previous": "          \"sha256\": \"06e71de8da8c60c07ea561806c53b64770b038f61e8a001b097400b2eb6d078c\"\n",
+          "start": 89549862
+        },
+        {
+          "current": "          \"sha256\": \"19f2beca3e34dbb527e1a693b51d10209afe16016bea8ee9e0991023c5c13318\"\n",
+          "previous": "          \"sha256\": \"06e71de8da8c60c07ea561806c53b64770b038f61e8a001b097400b2eb6d078c\"\n",
+          "start": 89556243
+        },
+        {
+          "current": "          \"sha256\": \"19f2beca3e34dbb527e1a693b51d10209afe16016bea8ee9e0991023c5c13318\"\n",
+          "previous": "          \"sha256\": \"06e71de8da8c60c07ea561806c53b64770b038f61e8a001b097400b2eb6d078c\"\n",
+          "start": 89562602
+        },
+        {
+          "current": "          \"sha256\": \"19f2beca3e34dbb527e1a693b51d10209afe16016bea8ee9e0991023c5c13318\"\n",
+          "previous": "          \"sha256\": \"06e71de8da8c60c07ea561806c53b64770b038f61e8a001b097400b2eb6d078c\"\n",
+          "start": 89568949
+        },
+        {
+          "current": "          \"sha256\": \"19f2beca3e34dbb527e1a693b51d10209afe16016bea8ee9e0991023c5c13318\"\n",
+          "previous": "          \"sha256\": \"06e71de8da8c60c07ea561806c53b64770b038f61e8a001b097400b2eb6d078c\"\n",
+          "start": 89575296
+        },
+        {
+          "current": "          \"sha256\": \"19f2beca3e34dbb527e1a693b51d10209afe16016bea8ee9e0991023c5c13318\"\n",
+          "previous": "          \"sha256\": \"06e71de8da8c60c07ea561806c53b64770b038f61e8a001b097400b2eb6d078c\"\n",
+          "start": 89581032
+        },
+        {
+          "current": "          \"sha256\": \"19f2beca3e34dbb527e1a693b51d10209afe16016bea8ee9e0991023c5c13318\"\n",
+          "previous": "          \"sha256\": \"06e71de8da8c60c07ea561806c53b64770b038f61e8a001b097400b2eb6d078c\"\n",
+          "start": 89586403
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "71967061e9958d35bca2e07e793ce16ac495d7e7a6094c5fc3c95eb9de5b20da"
+    },
+    {
+      "currentSha256": "5242c7bc9eb9aa74135de5c607a6a14a2d45321a2edb61a9f91807aecc8a8193",
+      "edits": [
+        {
+          "current": "import { requiresOwnedCheckedRecordPhpWasmContexts } from \"./owned-checked-record-php-wasm-context-evidence.mjs\";\n",
+          "previous": "",
+          "start": 896
+        },
+        {
+          "current": "const consumers = (lane, revision) => {\n",
+          "previous": "const consumers = lane => {\n",
+          "start": 2858
+        },
+        {
+          "current": "\t\treturn [\"php-wasm.php\", \"result-only-php-wasm.php\"\n\t\t\t, ...requiresOwnedCheckedRecordPhpWasmContexts(path =>\n\t\t\t\townedCheckedRecordHostedOriginal(revision, path))\n\t\t\t\t? [\"php-wasm-contexts.php\"] : []]\n",
+          "previous": "\t\treturn [\"php-wasm.php\", \"result-only-php-wasm.php\"]\n",
+          "start": 2928
+        },
+        {
+          "current": "\tconst selectedConsumers = consumers(lane, value.producer);\n",
+          "previous": "\tconst selectedConsumers = consumers(lane);\n",
+          "start": 5258
+        },
+        {
+          "current": "\t\t\t\t? closure(value.consumer, selectedConsumers) : consumers(lane, value.consumer) }\n",
+          "previous": "\t\t\t\t? closure(value.consumer, selectedConsumers) : selectedConsumers }\n",
+          "start": 6231
+        }
+      ],
+      "path": "tests/helpers/owned-checked-record-hosted-evidence-sources.mjs",
+      "previousSha256": "30477187d47ef794149270cfbfc51fc1caede24967918de3257de55fc5eff940"
+    },
+    {
+      "currentSha256": "19f2beca3e34dbb527e1a693b51d10209afe16016bea8ee9e0991023c5c13318",
+      "edits": [
+        {
+          "current": "import {\n\tcheckOwnedCheckedRecordPhpWasmContextsEvidence\n\t, ownedCheckedRecordPhpWasmContextModule\n\t, requiresOwnedCheckedRecordPhpWasmContexts\n} from \"./owned-checked-record-php-wasm-context-evidence.mjs\";\n",
+          "previous": "",
+          "start": 1463
+        },
+        {
+          "current": " * @param handoffName - Primary or independently owned peer receipt directory.\n",
+          "previous": "",
+          "start": 12399
+        },
+        {
+          "current": "const checkPhpWasmPackageSet = async (lane, packagingRoot, mode, observation, handoffName = \"handoff\") => {\n",
+          "previous": "const checkPhpWasmPackageSet = async (lane, packagingRoot, mode, observation) => {\n",
+          "start": 12482
+        },
+        {
+          "current": "\tassert.ok([\"handoff\", \"checked-peer-handoff\"].includes(handoffName));\n\tconst path = `${lane.evidence}/${mode}/${author}/${handoffName}`;\n",
+          "previous": "\tconst path = `${lane.evidence}/${mode}/${author}/handoff`;\n",
+          "start": 12690
+        },
+        {
+          "current": "\tconst contexts = requiresOwnedCheckedRecordPhpWasmContexts(original);\n\tconst contextGenerator = contexts\n\t\t? await moduleAtProducerWithSourceReads(producer, ownedCheckedRecordPhpWasmContextModule) : null;\n",
+          "previous": "",
+          "start": 22207
+        },
+        {
+          "current": "\t\t\t\t, [...phpWasmObservationKeys, ...contexts ? [\"crossRuntime\"] : []].sort()\n\t\t\t\t, `${label}: exact observation fields`);\n",
+          "previous": "\t\t\t\t, [...phpWasmObservationKeys], `${label}: exact observation fields`);\n",
+          "start": 25463
+        },
+        {
+          "current": "\t\t\tif(contexts)\n\t\t\t{\n\t\t\t\tcheckOwnedCheckedRecordPhpWasmContextsEvidence(observation.crossRuntime,\n\t\t\t\t\tobservation, mode, original, contextGenerator);\n\t\t\t\tconst peer = await checkPhpWasmPackageSet(lane, packagingRoot, mode,\n\t\t\t\t\tobservation.crossRuntime.peer, \"checked-peer-handoff\");\n\t\t\t\tmembers.push(...peer.files.map(file => `${lane.packaging}/${peer.path}/${file}`));\n\t\t\t}\n",
+          "previous": "",
+          "start": 26741
+        }
+      ],
+      "path": "tests/helpers/owned-checked-record-hosted-output.mjs",
+      "previousSha256": "06e71de8da8c60c07ea561806c53b64770b038f61e8a001b097400b2eb6d078c"
+    },
+    {
+      "currentSha256": "845c3d2e26a3a5804beb748c3fa55a07cb703661fe333ee3171262e9b683e5f0",
+      "edits": [
+        {
+          "current": "import { ownedCheckedRecordMixedSelection } from \"./owned-checked-record-mixed-fixture.mjs\";\nimport { ownedCheckedRecordPhpWasmPeerSelection } from \"./owned-checked-record-php-wasm-peer.mjs\";\nimport { requiresOwnedCheckedRecordPhpWasmContexts } from \"./owned-checked-record-php-wasm-context-evidence.mjs\";\nimport { syntheticOwnedCheckedRecordPhpWasmContexts } from \"./owned-checked-record-php-wasm-context-fixture.mjs\";\n",
+          "previous": "",
+          "start": 1559
+        },
+        {
+          "current": "const writeHandoff = async (root, mode, author, peer = false) => {\n",
+          "previous": "const writeHandoff = async (root, mode, author) => {\n",
+          "start": 4269
+        },
+        {
+          "current": "\tconst component = await add(\"npm\", peer ? \"@lean-bridge-test/owned-checked-record-peer\" : `@lean-bridge-test/owned-php-wasm${suffix}`\n",
+          "previous": "\tconst component = await add(\"npm\", `@lean-bridge-test/owned-php-wasm${suffix}`\n",
+          "start": 5433
+        },
+        {
+          "current": "\tawait add(\"composer\", peer ? \"lean-bridge-test/owned-checked-record-peer\" : `lean-bridge-test/owned-php-wasm${suffix}`, \"api\"\n",
+          "previous": "\tawait add(\"composer\", `lean-bridge-test/owned-php-wasm${suffix}`, \"api\"\n",
+          "start": 5597
+        },
+        {
+          "current": "\t\t, component: { id: `owned-checked-records${peer ? \"-peer\" : \"\"}@1.0.0`\n\t\t\t, name: `owned-checked-records${peer ? \"-peer\" : \"\"}`\n",
+          "previous": "\t\t, component: { id: \"ownedcheckedrecords@1.0.0\", name: \"ownedcheckedrecords\"\n",
+          "start": 5804
+        },
+        {
+          "current": "\tconst observation = { reviewed\n",
+          "previous": "\treturn { reviewed\n",
+          "start": 8438
+        },
+        {
+          "current": "\t\t, packageReceipt: { archives, npmSettings: { name: receipt.packages.find(item => item.role === \"component\").name } }\n\t\t, reproducedArchives: archives\n",
+          "previous": "\t\t, packageReceipt: { archives }, reproducedArchives: archives\n",
+          "start": 9392
+        },
+        {
+          "current": "\tif(requiresOwnedCheckedRecordPhpWasmContexts(readOriginal))\n\t{\n\t\tmodel.bindingIr = ownedCheckedRecordMixedSelection(`${author}-${mode}`).reviewedIr;\n\t\tconst peerRoot = join(packagingRoot, lane.evidence, mode, author, \"checked-peer-handoff\");\n\t\tconst peerHandoff = await writeHandoff(peerRoot, mode, author, true);\n\t\tconst peer = { reviewed\n\t\t\t, model: { pointerBits: 32, schemaVersion: 6\n\t\t\t\t, component: peerHandoff.receipt.component, sourceIdentity\n\t\t\t\t, bindingIr: ownedCheckedRecordPhpWasmPeerSelection(reviewed).reviewedIr\n\t\t\t\t, bindingIrSha256: peerHandoff.receipt.profiles[0].bindingIrSha256\n\t\t\t\t, ...corpusModel(\"result-only\", ownedCheckedRecordPhpWasmCorpora.mixed) }\n\t\t\t, receipt: { runtimeIdentity }, packageSetReceipt: peerHandoff.receipt\n\t\t\t, packageReceipt: { archives: peerHandoff.archives\n\t\t\t\t, npmSettings: { name: \"@lean-bridge-test/owned-checked-record-peer\" } }\n\t\t\t, reproducedArchives: peerHandoff.archives\n\t\t\t, cliBuild: build, repeatedCliBuild: build\n\t\t\t, sourceUnchanged: true, independentlyRebuiltExactly: true\n\t\t\t, verification: observation.verification };\n\t\tobservation.crossRuntime = syntheticOwnedCheckedRecordPhpWasmContexts(observation, peer, mode, readOriginal);\n\t}\n\treturn observation;\n",
+          "previous": "",
+          "start": 9787
+        },
+        {
+          "current": "\t\t, ...requiresOwnedCheckedRecordPhpWasmContexts(original)\n\t\t\t? [\"tests/fixtures/structured-types/owned-checked-record-php-wasm-contexts.php\"] : []\n\t].sort());\n\tif(requiresOwnedCheckedRecordPhpWasmContexts(original))\n\t\tassert.ok(has(\"producer\", \"tests/fixtures/structured-types/owned-checked-record-php-wasm-contexts.php\"));\n",
+          "previous": "\t]);\n",
+          "start": 33739
+        }
+      ],
+      "path": "tests/helpers/owned-checked-record-php-wasm-hosted-tests.mjs",
+      "previousSha256": "77157eef7389121e6214ed6a4dd11abb9dc281b74e3fc4b01c6ff18d45833833"
+    },
+    {
+      "currentSha256": "0f0b3c35e6e32dd44063f1527fc981d66479623824d663e7b9870c5ab402e6e9",
+      "edits": [
+        {
+          "current": "import { buildOwnedCheckedRecordPhpWasmPeer } from \"./owned-checked-record-php-wasm-peer.mjs\";\nimport { checkOwnedCheckedRecordPhpWasmContexts } from \"./owned-checked-record-php-wasm-contexts.mjs\";\n",
+          "previous": "",
+          "start": 3094
+        },
+        {
+          "current": "\t\tconst checkedPeer = checkedRecords ? await buildOwnedCheckedRecordPhpWasmPeer({\n\t\t\tauthor, reviewed, cli, runtimeIdentity: runtime.identity\n\t\t\t, handoff: retainedRoot === null ? join(root, \"checked-peer-handoff\")\n\t\t\t\t: join(evidenceRoot, reviewed ? \"reviewed\" : \"ordinary\", \"checked-peer-handoff\")\n\t\t}) : null;\n",
+          "previous": "",
+          "start": 26168
+        },
+        {
+          "current": "\t\tconst checkedPeerHandoff = join(root, \"checked-peer-packages\");\n",
+          "previous": "",
+          "start": 26665
+        },
+        {
+          "current": "\t\t\tif(checkedPeer) await cp(checkedPeer.release.output, checkedPeerHandoff, { recursive: true });\n",
+          "previous": "",
+          "start": 26815
+        },
+        {
+          "current": "\t\tconst contextsInstalled = checkedPeer ? await installPhpWasmGraphPackages({\n\t\t\troot: join(root, \"contexts\"), host, diagnostic\n\t\t\t, release: { ...release, output: packageHandoff, archiveRoot }\n\t\t\t, companions: [{ ...checkedPeer.release, output: checkedPeerHandoff }]\n\t\t}) : null;\n\t\tif(checkedPeer) await rm(checkedPeerHandoff, { recursive: true });\n",
+          "previous": "",
+          "start": 27329
+        },
+        {
+          "current": "\t\tif(checkedPeer) checkedPeer.observation.verification = await cli.verify(join(\n\t\t\tcheckedPeer.release.archiveRoot, \"../../..\", \"package-set-receipt.json\"));\n",
+          "previous": "",
+          "start": 27940
+        },
+        {
+          "current": "\t\tlet crossRuntime;\n\t\tif(checkedPeer)\n\t\t{\n\t\t\tawait saveLakeFile(contextsInstalled.deployment, \"observer.so\", observer.bytes);\n\t\t\tcrossRuntime = { ...await checkOwnedCheckedRecordPhpWasmContexts({\n\t\t\t\tdeployment: contextsInstalled.deployment, name: npmSettings.name\n\t\t\t\t, primary: model, peer: checkedPeer.observation.model\n\t\t\t\t, mode: resultOnly ? \"result-only\" : \"full\", diagnostic\n\t\t\t}), peer: checkedPeer.observation, installed: contextsInstalled\n\t\t\t, sourceFreeInstallation: true, authorRemoved: true };\n\t\t}\n",
+          "previous": "",
+          "start": 29918
+        },
+        {
+          "current": "\t\t\t, ...checkedRecords ? { crossRuntime } : {}\n",
+          "previous": "",
+          "start": 30504
+        }
+      ],
+      "path": "tests/helpers/owned-php-wasm-packages.mjs",
+      "previousSha256": "264d6d33b27fd5b508f2e89c7dcdcf0801a19906fe6d179b8ad3c247a707c3b0"
+    }
+  ]
+}
