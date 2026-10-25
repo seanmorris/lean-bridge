@@ -1,0 +1,860 @@
+{
+  "additions": [
+    {
+      "currentSha256": "5cc5045c34a0d252f661b8d46ff0ed831aa1b4ca0098e520bc8a325f19fd055c",
+      "path": "docs/evidence/owned-subtype-npm-complete-acceptance-20261025.json"
+    },
+    {
+      "currentSha256": "3dc9a8f6b17f251f9e66e4810448f50936b358015881309d3f4396e2fc66590f",
+      "path": "scripts/check-owned-subtype-javascript-ci.mjs"
+    },
+    {
+      "currentSha256": "01952e4b5d786c8bd1a96866b9e41066c4eb096bad278c01b764c27bb21607ee",
+      "path": "tests/helpers/owned-javascript-package-evidence.mjs"
+    },
+    {
+      "currentSha256": "5bfbcb41ed8f7dbae8885c6d8aa2e8eef48a0d9de814133a862a02358d843755",
+      "path": "tests/helpers/owned-subtype-javascript-evidence.mjs"
+    },
+    {
+      "currentSha256": "036fa4e624f05545b3da12c1edba4c8a2d3241db00ae4ee7ddda0bad1a77f803",
+      "path": "tests/owned-subtype-javascript-evidence.test.mjs"
+    },
+    {
+      "currentSha256": "254fdda6822247569e8ba81d5616e0e95bff2d92297b447ba101ebd6dcf20c80",
+      "path": "scripts/update-owned-subtype-npm-complete-acceptance-source-history.mjs"
+    },
+    {
+      "currentSha256": "dd56feef5dfaf1887a054fb962e9069ce4cb7ca9b4ac2c470b8629fe3e1c81f9",
+      "path": "tests/helpers/owned-subtype-npm-complete-acceptance-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "d6308d3e2f41b8f037470230d92896767e3b90beef3e436ffaffd8cf540b5904",
+      "path": "tests/helpers/owned-subtype-npm-complete-acceptance-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "2ddac7bb50749f067d4c2d0f7825b98c3477fe74",
+  "implementationCommits": [
+    "2ddac7bb50749f067d4c2d0f7825b98c3477fe74"
+  ],
+  "integrationBaseCommit": "2ddac7bb50749f067d4c2d0f7825b98c3477fe74",
+  "integrationUpdates": [
+    {
+      "currentSha256": "b09e82c6c23c84fa440df655adee6bccf7ecc17832f87c581c5b1683fbc0e849",
+      "edits": [
+        {
+          "current": "import { beforeOwnedSubtypeNpmCompleteAcceptanceSource, ownedSubtypeNpmCompleteAcceptanceNormalizationPaths } from \"./owned-subtype-npm-complete-acceptance-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...ownedSubtypeNpmCompleteAcceptanceNormalizationPaths\n\t, ...ownedCheckedCSessionBoundariesNormalizationPaths\n",
+          "previous": "\t...ownedCheckedCSessionBoundariesNormalizationPaths\n",
+          "start": 188416
+        },
+        {
+          "current": "\tlet stage = beforeOwnedSubtypeNpmCompleteAcceptanceSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeOwnedCheckedCSessionBoundariesSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeOwnedCheckedCSessionBoundariesSource(path, text, expected);\n",
+          "start": 233669
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "792f8a5eca6cab35a4a9f045fd772f9c895cf58dcc67916379f8cd97d9fbddeb"
+    },
+    {
+      "currentSha256": "0a11d0933a1aa34be236b4c24feb286aee63aa8f13670fbd06e2350d1b9735be",
+      "edits": [
+        {
+          "current": "import \"./helpers/owned-subtype-npm-complete-acceptance-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 10147
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "8645c3219dc80718288712ec410dc992e2fe56cbcc4f5afb5a626d78f8c434cf"
+    }
+  ],
+  "milestone": "owned-subtype-npm-complete-acceptance-source-v1",
+  "predecessorCommit": "34f6bde6410c0c2b95c59fdf0db855c5a1e0085a",
+  "schemaVersion": 1,
+  "scope": "Retain exact ordinary/reviewed npm handoffs, install from the retained archives after deleting two independent author builds, and require all twelve production/StrictMode browser cells. Reuse the existing package and browser verifier without widening checked-record support. Reject duplicate historical nine-cell reports without inventing missing archive bytes. Refresh exactly 103 live source pins; preserve runtime, Lean fixtures, published support and original archives. Hosted execution, immutable JavaScript API/ZIP/source replay and final promotion gates remain pending.",
+  "updates": [
+    {
+      "currentSha256": "7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7",
+      "edits": [
+        {
+          "current": "          test -s build/owned-subtype-javascript-packaging/retained-packages.json\n          node scripts/check-owned-subtype-javascript-ci.mjs \\\n            --report build/owned-subtype-javascript-packaging/report.json \\\n            > build/owned-subtype-javascript-packaging/verification.json\n          test -s build/owned-subtype-javascript-packaging/verification.json\n",
+          "previous": "",
+          "start": 7219
+        },
+        {
+          "current": "            build/owned-subtype-javascript-packaging/\n",
+          "previous": "            build/owned-subtype-javascript-packaging/report.json\n",
+          "start": 13967
+        }
+      ],
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previousSha256": "7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3"
+    },
+    {
+      "currentSha256": "f72b7965915b2ce9c5d8d3de53cd113acf205bc356c9547e590dfa428701c2a5",
+      "edits": [
+        {
+          "current": "          test -s build/owned-subtype-javascript-packaging/retained-packages.json\n          node scripts/check-owned-subtype-javascript-ci.mjs \\\n            --report build/owned-subtype-javascript-packaging/report.json \\\n            > build/owned-subtype-javascript-packaging/verification.json\n          test -s build/owned-subtype-javascript-packaging/verification.json\n",
+          "previous": "",
+          "start": 4995
+        },
+        {
+          "current": "            build/owned-subtype-javascript-packaging/\n",
+          "previous": "            build/owned-subtype-javascript-packaging/report.json\n",
+          "start": 11743
+        }
+      ],
+      "path": ".github/workflows/owned-checked-record-npm-browser.yml",
+      "previousSha256": "ca34cbd83269cefe9775b1c5f0d32044eaa3785db22ebd44ee393bec1e66f1a1"
+    },
+    {
+      "currentSha256": "4f9cee69df225f2cc40c666e68a72400b0f81b63e9f2494655ba01f8d98122fc",
+      "edits": [
+        {
+          "current": "The same job also retains the owned-Subtype npm packages under\n`build/owned-subtype-javascript-packaging/`. Each ordinary/reviewed author route\nbuilds in two independent directories, compares the compiled model, Wasm and\npackage archives, then removes both author trees before offline installation.\nThe consumer installs the exact receipt-named files retained in\n`evidence/<route>/handoff/` and runs after relocation.\n\nThe version 2 Subtype report requires twelve browser executions per author\nroute: production pages, React and workers, plus development React StrictMode,\nin Chromium, Firefox and WebKit. Each execution runs the ownership probe and\nrepeats it twice. The checker rejects duplicated or missing cells, wrong Wasm\nassets, changed packages and incomplete independent builds:\n\n```sh\nnode scripts/check-owned-subtype-javascript-ci.mjs \\\n  --report build/owned-subtype-javascript-packaging/report.json\n```\n\nBoth the scoped workflow and Consumer Matrix verify this report and upload\nthe full package directory. The older nine-cell Subtype reports cover the\ndevelopment/StrictMode bundle only; their archive hashes do not supply missing\npackage bytes. New hosted acceptance and authenticated archival replay are\nrequired before promoting the expanded coverage.\n\n",
+          "previous": "",
+          "start": 8169
+        }
+      ],
+      "path": "docs/contributing/testing.md",
+      "previousSha256": "e4ddf05a33b6be9203ab5f189583e71c0ed5f48997aba1599e67b39d7e7ce2fb"
+    },
+    {
+      "currentSha256": "150a717310e9fbdd2435117582c909e655467ac6a551aa7dae8fb52d001322c4",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 78013
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 95208
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 111509
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 126277
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 135559
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 145184
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 168568
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 181537
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 196432
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 209216
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 222436
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 230969
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 239399
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 248416
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 256790
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 276070
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 285909
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 298044
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 316642
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 325938
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 338621
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 347876
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 357159
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 366292
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 375151
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 382538
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 390462
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 401108
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 415214
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 422312
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 432541
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 440285
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 446659
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 452822
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 458919
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 465440
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 473106
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 482400
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 493622
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 503319
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 524454
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 533019
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 544027
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 575912
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 582541
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 592800
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 613673
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 622196
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 633146
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 664664
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 673883
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 681223
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 693506
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 700366
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 709394
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 723420
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 734462
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 748510
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 759256
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 771327
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 782615
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 791198
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 797656
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 806042
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 823632
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 844628
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 899969
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 1012031
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 1072272
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 1079666
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 1086264
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 1093366
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 1100866
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 1107916
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 1115526
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 1137500
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 1149387
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 1157258
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 1167223
+        },
+        {
+          "current": "          \"sha256\": \"4f9cee69df225f2cc40c666e68a72400b0f81b63e9f2494655ba01f8d98122fc\"\n",
+          "previous": "          \"sha256\": \"e4ddf05a33b6be9203ab5f189583e71c0ed5f48997aba1599e67b39d7e7ce2fb\"\n",
+          "start": 1167697
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 1177337
+        },
+        {
+          "current": "          \"sha256\": \"4f9cee69df225f2cc40c666e68a72400b0f81b63e9f2494655ba01f8d98122fc\"\n",
+          "previous": "          \"sha256\": \"e4ddf05a33b6be9203ab5f189583e71c0ed5f48997aba1599e67b39d7e7ce2fb\"\n",
+          "start": 1177811
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 1189098
+        },
+        {
+          "current": "          \"sha256\": \"4f9cee69df225f2cc40c666e68a72400b0f81b63e9f2494655ba01f8d98122fc\"\n",
+          "previous": "          \"sha256\": \"e4ddf05a33b6be9203ab5f189583e71c0ed5f48997aba1599e67b39d7e7ce2fb\"\n",
+          "start": 1189747
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 1221659
+        },
+        {
+          "current": "          \"sha256\": \"4f9cee69df225f2cc40c666e68a72400b0f81b63e9f2494655ba01f8d98122fc\"\n",
+          "previous": "          \"sha256\": \"e4ddf05a33b6be9203ab5f189583e71c0ed5f48997aba1599e67b39d7e7ce2fb\"\n",
+          "start": 1222308
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 1251938
+        },
+        {
+          "current": "          \"sha256\": \"4f9cee69df225f2cc40c666e68a72400b0f81b63e9f2494655ba01f8d98122fc\"\n",
+          "previous": "          \"sha256\": \"e4ddf05a33b6be9203ab5f189583e71c0ed5f48997aba1599e67b39d7e7ce2fb\"\n",
+          "start": 1252587
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 1284924
+        },
+        {
+          "current": "          \"sha256\": \"4f9cee69df225f2cc40c666e68a72400b0f81b63e9f2494655ba01f8d98122fc\"\n",
+          "previous": "          \"sha256\": \"e4ddf05a33b6be9203ab5f189583e71c0ed5f48997aba1599e67b39d7e7ce2fb\"\n",
+          "start": 1285738
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 1324725
+        },
+        {
+          "current": "          \"sha256\": \"4f9cee69df225f2cc40c666e68a72400b0f81b63e9f2494655ba01f8d98122fc\"\n",
+          "previous": "          \"sha256\": \"e4ddf05a33b6be9203ab5f189583e71c0ed5f48997aba1599e67b39d7e7ce2fb\"\n",
+          "start": 1325841
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 1351301
+        },
+        {
+          "current": "          \"sha256\": \"4f9cee69df225f2cc40c666e68a72400b0f81b63e9f2494655ba01f8d98122fc\"\n",
+          "previous": "          \"sha256\": \"e4ddf05a33b6be9203ab5f189583e71c0ed5f48997aba1599e67b39d7e7ce2fb\"\n",
+          "start": 1352261
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 1373838
+        },
+        {
+          "current": "          \"sha256\": \"4f9cee69df225f2cc40c666e68a72400b0f81b63e9f2494655ba01f8d98122fc\"\n",
+          "previous": "          \"sha256\": \"e4ddf05a33b6be9203ab5f189583e71c0ed5f48997aba1599e67b39d7e7ce2fb\"\n",
+          "start": 1374941
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 1393505
+        },
+        {
+          "current": "          \"sha256\": \"4f9cee69df225f2cc40c666e68a72400b0f81b63e9f2494655ba01f8d98122fc\"\n",
+          "previous": "          \"sha256\": \"e4ddf05a33b6be9203ab5f189583e71c0ed5f48997aba1599e67b39d7e7ce2fb\"\n",
+          "start": 1394608
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 1416893
+        },
+        {
+          "current": "          \"sha256\": \"4f9cee69df225f2cc40c666e68a72400b0f81b63e9f2494655ba01f8d98122fc\"\n",
+          "previous": "          \"sha256\": \"e4ddf05a33b6be9203ab5f189583e71c0ed5f48997aba1599e67b39d7e7ce2fb\"\n",
+          "start": 1417696
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 1428521
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 1451667
+        },
+        {
+          "current": "          \"sha256\": \"7e9b69e4e08d2f1625d745dc0e1db53db5444c91ef5e1ff20ad0ec0a0d2af2c7\"\n",
+          "previous": "          \"sha256\": \"7c3ea32b921f4fc19767f5f65e565814936b1c006bf8e412fb543ee3f18fa6e3\"\n",
+          "start": 1951804
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "6840fa1c4c02d8352bb872c1b0ea5ba0db3f7f49dc2561311b087749391151b6"
+    },
+    {
+      "currentSha256": "fc2c3ea6659e1ece262c388e3e5981913e429a3028ccfcad79aeace8d041180a",
+      "edits": [
+        {
+          "current": " * @param options - Optional inert compiler identities for another owned fixture.\n * @param options.bindingIr - Exact synthetic owned Binding IR.\n * @param options.component - Synthetic Lean package coordinate.\n * @param options.componentName - Synthetic npm component name.\n",
+          "previous": "",
+          "start": 1216
+        },
+        {
+          "current": "export const writeSyntheticOwnedCheckedRecordJavaScriptRoute = async (root, route, options = {}) => {\n",
+          "previous": "export const writeSyntheticOwnedCheckedRecordJavaScriptRoute = async (root, route) => {\n",
+          "start": 1495
+        },
+        {
+          "current": "\tconst component = options.component ?? { id: \"owned-checked-records@1.0.0\"\n",
+          "previous": "\tconst component = { id: \"owned-checked-records@1.0.0\"\n",
+          "start": 1696
+        },
+        {
+          "current": "\tconst bindingIr = options.bindingIr ?? ownedCheckedRecordJavaScriptReviewedIr({ resultOnly });\n",
+          "previous": "\tconst bindingIr = ownedCheckedRecordJavaScriptReviewedIr({ resultOnly });\n",
+          "start": 2364
+        },
+        {
+          "current": "\tconst runtimeName = \"@lean-bridge/runtime\", componentName = options.componentName ?? \"@example/owned-records\";\n",
+          "previous": "\tconst runtimeName = \"@lean-bridge/runtime\", componentName = \"@example/owned-records\";\n",
+          "start": 3194
+        }
+      ],
+      "path": "tests/helpers/owned-checked-record-javascript-evidence-fixture.mjs",
+      "previousSha256": "1d7daea62fcd9f514c015931ad8d2cb186aa12cc9297a08081dc06607793164c"
+    },
+    {
+      "currentSha256": "b01a863afcf730c2e4c72b5fa72c1c1a3d73d721d2b46ffc2146d3d6776e159e",
+      "edits": [
+        {
+          "current": "import { canonicalJson } from \"../../src/capsule/node.mjs\";\nimport {\n\tverifyOwnedJavaScriptBrowserEvidence, verifyOwnedJavaScriptPackageIdentity\n} from \"./owned-javascript-package-evidence.mjs\";\n",
+          "previous": "import { canonicalJson, sha256 } from \"../../src/capsule/node.mjs\";\nimport { canonicalizeJsonValue } from \"../../src/binding-ir/canonical.mjs\";\nimport { validateOwnedAggregateBindingIr } from \"../../src/binding-ir/contract.mjs\";\nimport { readClosedPackageTarGz } from \"./closed-package-tar.mjs\";\n",
+          "start": 300
+        },
+        {
+          "current": "",
+          "previous": "const engines = Object.freeze([\"chromium\", \"firefox\", \"webkit\"]);\nconst browserProfiles = Object.freeze([\"page\", \"react\", \"worker\"]);\n",
+          "start": 800
+        },
+        {
+          "current": "",
+          "previous": "const verifyBrowser = (browser, resultOnly, assets, version) => {\n\tassert.deepEqual(Object.keys(browser).toSorted()\n\t\t, [\"executions\", \"externalNetworkBlocked\", \"installedSourcesRemoved\"]);\n\tassert.equal(browser.externalNetworkBlocked, true);\n\tassert.equal(browser.installedSourcesRemoved, true);\n\tconst expectedCells = engines.flatMap(engine => version === 1\n\t\t? browserProfiles.map(profile => `${engine}/${profile}`)\n\t\t: [...browserProfiles.map(profile => `${engine}/${profile}/production`)\n\t\t\t, `${engine}/react/strict`]);\n\tassert.equal(browser.executions.length, expectedCells.length);\n\tconst cells = [];\n\tfor(const execution of browser.executions)\n\t{\n\t\tassert.deepEqual(Object.keys(execution).toSorted()\n\t\t\t, [\"assets\", \"checks\", \"engine\", \"profile\", \"reruns\"\n\t\t\t\t, ...version === 2 ? [\"variant\"] : [], \"version\"]);\n\t\tassert.ok(engines.includes(execution.engine), execution.engine);\n\t\tassert.ok(browserProfiles.includes(execution.profile), execution.profile);\n\t\tassert.equal(typeof execution.version, \"string\");\n\t\tassert.ok(execution.version.length > 0);\n\t\tassert.equal(execution.reruns, 2);\n\t\tassert.equal(execution.checks, resultOnly ? 7 : 30);\n\t\tassert.ok(Array.isArray(execution.assets) && execution.assets.length === 2);\n\t\tfor(const asset of execution.assets) assert.match(asset, digest);\n\t\tassert.deepEqual(execution.assets.toSorted(), assets.toSorted()\n\t\t\t, \"Browser assets must be the retained component and runtime Wasm\");\n\t\tcells.push(`${execution.engine}/${execution.profile}`\n\t\t\t+ (version === 2 ? `/${execution.variant}` : \"\"));\n\t}\n\tassert.deepEqual(cells.toSorted(), expectedCells.toSorted()\n\t\t, \"Browser cells must include every required profile and React variant\");\n\treturn cells.length;\n};\n\n\nconst packageIdentity = async (entry, receipt, root) => {\n\tconst component = receipt.packages.find(pkg => pkg.role === \"component\");\n\tconst runtime = receipt.packages.find(pkg => pkg.role === \"runtime\");\n\tconst archive = async pkg => {\n\t\tconst artifact = pkg.artifacts[0];\n\t\tconst bytes = await readFile(join(root, artifact.path));\n\t\tassert.equal(bytes.length, artifact.bytes, \"Retained archive size\");\n\t\tassert.equal(sha256(bytes), artifact.sha256, \"Retained archive identity\");\n\t\treturn readClosedPackageTarGz(bytes, { root: \"package\"\n\t\t\t, maxInput: 64 * 1024 ** 2, maxBytes: 64 * 1024 ** 2 });\n\t};\n\tconst files = await archive(component), runtimeFiles = await archive(runtime);\n\tconst member = (members, path) => {\n\t\tconst bytes = members.get(path);\n\t\tassert.ok(Buffer.isBuffer(bytes), \"Missing retained package member: \" + path);\n\t\treturn bytes;\n\t};\n\tconst json = (members, path) => {\n\t\tconst bytes = member(members, path), value = JSON.parse(bytes);\n\t\tassert.equal(bytes.toString(\"utf8\"), canonicalJson(value)\n\t\t\t, \"Retained metadata must be canonical: \" + path);\n\t\treturn value;\n\t};\n\tconst compilerPath = \"metadata/compiler/javascript-wasm-component.json\";\n\tconst compiler = json(files, compilerPath);\n\tassert.equal(sha256(member(files, compilerPath)), entry.componentIdentity\n\t\t, \"Compiled component identity\");\n\tassert.equal(compiler.schemaVersion, 1);\n\tassert.equal(compiler.profile, \"javascript-wasm-owned-v1\");\n\tassert.equal(compiler.pointerBits, 32);\n\tassert.deepEqual(entry.sourceIdentity, compiler.sourceIdentity\n\t\t, \"Report source identity must match retained compiler metadata\");\n\tassert.match(entry.sourceIdentity.sourceTreeSha256, digest);\n\tassert.equal(receipt.source.treeSha256, entry.sourceIdentity.sourceTreeSha256\n\t\t, \"Package-set source tree\");\n\tassert.equal(Boolean(entry.sourceIdentity.reviewedBindingIr)\n\t\t, entry.authorRoute === \"reviewed\", \"Compiled author route\");\n\tassert.equal(compiler.bindingIrSha256, entry.bindingIrSha256\n\t\t, \"Compiled binding IR identity\");\n\tconst model = json(files, \"metadata/compiler/model.json\");\n\tassert.equal(sha256(member(files, \"metadata/compiler/model.json\"))\n\t\t, compiler.modelSha256, \"Compiled model identity\");\n\tassert.deepEqual(model.component, receipt.component, \"Compiled component coordinate\");\n\tassert.deepEqual(model.sourceIdentity, entry.sourceIdentity, \"Compiled model source\");\n\tassert.equal(model.bindingIrSha256, entry.bindingIrSha256);\n\tconst bindingIr = json(files, \"metadata/compiler/binding-ir.json\");\n\tvalidateOwnedAggregateBindingIr(bindingIr);\n\tassert.deepEqual(model.bindingIr, bindingIr, \"Compiled model binding IR\");\n\tassert.equal(sha256(canonicalizeJsonValue(bindingIr))\n\t\t, entry.bindingIrSha256, \"Retained binding IR identity\");\n\tassert.deepEqual(receipt.profiles, [{ id: \"javascript-wasm-owned-v1\"\n\t\t, bindingIrSha256: entry.bindingIrSha256\n\t\t, runtimeIdentity: runtime.runtimeIdentity }], \"Installed package profile\");\n\tconst metadata = json(files, \"package.json\");\n\tassert.equal(metadata.name, component.name);\n\tassert.equal(metadata.version, component.version);\n\tassert.deepEqual(metadata.leanBridge, {\n\t\tcomponent: receipt.component.id, profile: \"javascript-wasm-owned-v1\"\n\t\t, bindingIrSha256: entry.bindingIrSha256\n\t\t, componentIdentitySha256: entry.componentIdentity\n\t\t, runtimeIdentity: runtime.runtimeIdentity, sharedRuntime: true\n\t}, \"Installed component metadata\");\n\tconst runtimeMetadata = json(runtimeFiles, \"package.json\");\n\tassert.equal(runtimeMetadata.name, runtime.name);\n\tassert.equal(runtimeMetadata.version, runtime.version);\n\tassert.equal(runtimeMetadata.leanBridge.runtimeIdentity, runtime.runtimeIdentity);\n\tassert.equal(runtimeMetadata.leanBridge.sharedRuntime, true);\n\tassert.equal(runtimeMetadata.leanBridge.profile, \"side-lazy\");\n\tassert.equal(compiler.library, \"lib/component.so.wasm\");\n\tconst side = member(files, \"internal/component.so.wasm\");\n\tassert.deepEqual(side, member(files, \"metadata/compiler/lib/component.so.wasm\")\n\t\t, \"Installed Wasm must be the retained compiled binary\");\n\tassert.deepEqual(compiler.wasmLibrary, entry.wasm, \"Compiled Wasm identity\");\n\tassert.deepEqual(entry.wasm, { bytes: side.length, sha256: sha256(side) }\n\t\t, \"Installed Wasm identity\");\n\treturn [entry.wasm.sha256, sha256(member(runtimeFiles, \"internal/main.wasm\"))];\n};\n\n",
+          "start": 2092
+        },
+        {
+          "current": "\t\tconst { assets } = await verifyOwnedJavaScriptPackageIdentity(entry, receipt, retainedRoot);\n",
+          "previous": "\t\tconst assets = await packageIdentity(entry, receipt, retainedRoot);\n",
+          "start": 6049
+        },
+        {
+          "current": "\t\tconst browserExecutions = verifyOwnedJavaScriptBrowserEvidence(entry.browser, {\n\t\t\tchecks: shape.resultOnly ? 7 : 30, assets, version: report.schemaVersion\n\t\t});\n",
+          "previous": "\t\tconst browserExecutions = verifyBrowser(entry.browser, shape.resultOnly, assets, report.schemaVersion);\n",
+          "start": 6609
+        }
+      ],
+      "path": "tests/helpers/owned-checked-record-javascript-evidence.mjs",
+      "previousSha256": "b3a9866820e74275fbac0de1f175b5183bda15f469deb62d87837bb6901b5c6e"
+    },
+    {
+      "currentSha256": "bca87d571926e9df00fb48875cf3f0f05af02f69870341c1e082579b01f1420f",
+      "edits": [
+        {
+          "current": "\t\t, \"test -s build/owned-subtype-javascript-packaging/retained-packages.json\"\n\t\t, \"node scripts/check-owned-subtype-javascript-ci.mjs --report build/owned-subtype-javascript-packaging/report.json > build/owned-subtype-javascript-packaging/verification.json\"\n\t\t, \"test -s build/owned-subtype-javascript-packaging/verification.json\"\n",
+          "previous": "",
+          "start": 7982
+        },
+        {
+          "current": "\tassert.ok(upload.includes(\"            build/owned-subtype-javascript-packaging/\\n\"));\n",
+          "previous": "\tassert.ok(upload.includes(\"            \"\n\t\t+ ownedJavaScriptInstalledReports[0] + \"\\n\"));\n",
+          "start": 12425
+        }
+      ],
+      "path": "tests/helpers/owned-javascript-wasm-ci.mjs",
+      "previousSha256": "24d3f765c3d1a8433597953f2a79fd6a68a6723766a7cad822747908a16a6fa7"
+    },
+    {
+      "currentSha256": "b427a70c42d2784034ecb6a449d432c4cb1d62cec64a22f52f2c9e033d5da0f5",
+      "edits": [
+        {
+          "current": "import { verifyOwnedJavaScriptBrowserEvidence } from \"./owned-javascript-package-evidence.mjs\";\n",
+          "previous": "",
+          "start": 281
+        },
+        {
+          "current": "\t\t// The historical report has nine development/StrictMode cells. It\n\t\t// cannot establish production coverage or retain missing package bytes.\n\t\tconst assets = report.browser.executions[0]?.assets;\n\t\tassert.ok(Array.isArray(assets) && assets.includes(report.wasm.sha256));\n\t\tverifyOwnedJavaScriptBrowserEvidence(report.browser, {\n\t\t\tchecks: 18, assets, version: 1\n\t\t});\n",
+          "previous": "\t\tassert.equal(report.browser.externalNetworkBlocked, true);\n\t\tassert.equal(report.browser.installedSourcesRemoved, true);\n\t\tassert.equal(report.browser.executions.length, 9);\n\t\tfor(const execution of report.browser.executions)\n\t\t{\n\t\t\tassert.ok([\"chromium\", \"firefox\", \"webkit\"].includes(\n\t\t\t\texecution.engine));\n\t\t\tassert.ok([\"page\", \"react\", \"worker\"].includes(execution.profile));\n\t\t\tassert.equal(execution.checks, 18);\n\t\t\tassert.equal(execution.reruns, 2);\n\t\t}\n",
+          "start": 4384
+        }
+      ],
+      "path": "tests/helpers/owned-subtype-promotion.mjs",
+      "previousSha256": "a09fe0916057ce8b62299baa9bddd33e5ff69f6ed6a3058bbbf2a188116cf887"
+    },
+    {
+      "currentSha256": "6ff593d13870b034ebfedc41c51bfc8abb84cf69d5d5be24386b872a7e42c59d",
+      "edits": [
+        {
+          "current": "import { assertOwnedJavaScriptWasmCi, ownedJavaScriptWasmCiLogs, ownedJavaScriptWasmCiTests, ownedJavaScriptNpmCiTests, ownedJavaScriptCoexistenceCiTests, ownedAnalysisCiTests, ownedJavaScriptEngineCiTests, ownedJavaScriptPublicationCiTests, ownedCheckedRecordJavaScriptAcceptanceLog } from \"./helpers/owned-javascript-wasm-ci.mjs\";\n",
+          "previous": "import { assertOwnedJavaScriptWasmCi, ownedJavaScriptWasmCiLogs, ownedJavaScriptWasmCiTests, ownedJavaScriptNpmCiTests, ownedJavaScriptInstalledReports, ownedJavaScriptCoexistenceCiTests, ownedAnalysisCiTests, ownedJavaScriptEngineCiTests, ownedJavaScriptPublicationCiTests, ownedCheckedRecordJavaScriptAcceptanceLog } from \"./helpers/owned-javascript-wasm-ci.mjs\";\n",
+          "start": 397
+        },
+        {
+          "current": "\t\t, [\"            build/owned-subtype-javascript-packaging/\\n\", \"\"]\n\t\t, [\"          test -s build/owned-subtype-javascript-packaging/retained-packages.json\\n\", \"\"]\n\t\t, [\"          node scripts/check-owned-subtype-javascript-ci.mjs \\\\\\n\", \"\"]\n",
+          "previous": "\t\t, [\"            \" + ownedJavaScriptInstalledReports[0] + \"\\n\", \"\"]\n",
+          "start": 5074
+        }
+      ],
+      "path": "tests/owned-javascript-wasm-ci.test.mjs",
+      "previousSha256": "e64148f1f892068cc50cac6b4146a2fdbd0e7a69f8036afaeed2616340985e59"
+    },
+    {
+      "currentSha256": "a1230c795f734be046035fff2f91c2c8036f84d88c3cfb97acea718ecea0a52b",
+      "edits": [
+        {
+          "current": "import {\n\tclearOwnedSubtypeRetainedPackages, retainOwnedSubtypeRoute\n\t, writeOwnedSubtypeRetainedPackages\n} from \"./helpers/owned-subtype-retained-packages.mjs\";\n",
+          "previous": "",
+          "start": 1107
+        },
+        {
+          "current": "const output = resolve(\"build/owned-subtype-javascript-packaging/report.json\");\nconst reports = [], retainedEntries = [];\n\ntest.before(async () => {\n\tif(!enabled) return;\n\tawait clearOwnedSubtypeRetainedPackages(output);\n\tawait rm(output, { force: true });\n\tawait rm(resolve(\"build/owned-subtype-javascript-packaging/verification.json\"), { force: true });\n});\n",
+          "previous": "const reports = [];\n",
+          "start": 1662
+        },
+        {
+          "current": "\t{\n\t\tawait writeOwnedSubtypeRetainedPackages(output, retainedEntries);\n",
+          "previous": "",
+          "start": 2085
+        },
+        {
+          "current": "\t\t\t\tschemaVersion: 2\n",
+          "previous": "\t\t\t\tschemaVersion: 1\n",
+          "start": 2256
+        },
+        {
+          "current": "\t}\n",
+          "previous": "",
+          "start": 2431
+        },
+        {
+          "current": "\tconst builds = [];\n\tfor(const attempt of [0, 1])\n",
+          "previous": "\tconst project = join(scratch, \"author\"), componentRoot = join(scratch, \"component\");\n\tawait cp(resolve(\"tests/fixtures/onboarding/owned-subtypes\"), project, { recursive: true });\n\tif(reviewed)\n",
+          "start": 5270
+        },
+        {
+          "current": "\t\tconst authorRoot = `author-${attempt}`, author = join(scratch, authorRoot);\n\t\tconst project = join(author, \"project\"), componentRoot = join(author, \"component\");\n\t\tawait cp(resolve(\"tests/fixtures/onboarding/owned-subtypes\"), project, { recursive: true });\n\t\tif(reviewed)\n\t\t{\n\t\t\tawait saveLakeFile(project, \"lean-bridge.exports.json\", canonicalJson({\n\t\t\t\tschemaVersion: 1, modules: [\"Owned\"]\n\t\t\t\t, targets: { npm: { name: \"@lean-bridge/owned-subtypes\", version: \"1.0.0\" } }\n\t\t\t}));\n\t\t\tawait saveLakeFile(project, \"reviewed.binding-ir.json\", canonicalJson(ownedSubtypePackageReviewedIr()));\n\t\t}\n\t\tconst before = await lakeInputState(project);\n\t\tconst built = await buildOwnedJavaScriptWasmComponent({\n\t\t\tprojectRoot: project, outputRoot: componentRoot\n\t\t\t, leanPrefix: resolve(process.env.LEAN_BRIDGE_LEAN_PREFIX\n\t\t\t\t?? \".toolchains/elan/toolchains/leanprover--lean4---v4.32.2\")\n\t\t\t, leanRuntimeRoot: target\n\t\t\t, emsdkRoot: resolve(process.env.LEAN_WASM_EMSDK ?? \".toolchains/emsdk\")\n\t\t});\n\t\tassert.deepEqual(await lakeInputState(project), before, \"builds must not modify authored inputs\");\n\t\tconst verified = await readVerifiedOwnedJavaScriptWasmComponent(componentRoot);\n\t\tassert.deepEqual(verified.model, built.model);\n\t\tconst packages = await buildOwnedJavaScriptNpmPackages({\n\t\t\tcomponentRoot, runtimeRoot: prepared, outputRoot: join(author, \"packages\")\n\t\t});\n\t\tbuilds.push({ author, authorRoot, verified, packages });\n",
+          "previous": "\t\tawait saveLakeFile(project, \"lean-bridge.exports.json\", canonicalJson({\n\t\t\tschemaVersion: 1, modules: [\"Owned\"]\n\t\t\t, targets: { npm: { name: \"@lean-bridge/owned-subtypes\", version: \"1.0.0\" } }\n\t\t}));\n\t\tawait saveLakeFile(project, \"reviewed.binding-ir.json\", canonicalJson(ownedSubtypePackageReviewedIr()));\n",
+          "start": 5323
+        },
+        {
+          "current": "\tconst [{ verified, packages: first }, { verified: repeatedVerified, packages: repeated }] = builds;\n\tassert.deepEqual(repeatedVerified.model, verified.model, \"Independent author roots must compile the same model\");\n\tassert.deepEqual(repeatedVerified.receipt.wasmLibrary, verified.receipt.wasmLibrary\n\t\t, \"Independent author roots must compile the same Wasm\");\n",
+          "previous": "\tconst before = await lakeInputState(project);\n\tconst built = await buildOwnedJavaScriptWasmComponent({\n\t\tprojectRoot: project, outputRoot: componentRoot\n\t\t, leanPrefix: resolve(process.env.LEAN_BRIDGE_LEAN_PREFIX\n\t\t\t?? \".toolchains/elan/toolchains/leanprover--lean4---v4.32.2\")\n\t\t, leanRuntimeRoot: target\n\t\t, emsdkRoot: resolve(process.env.LEAN_WASM_EMSDK ?? \".toolchains/emsdk\")\n\t});\n\tassert.deepEqual(await lakeInputState(project), before, \"builds must not modify authored inputs\");\n\tconst verified = await readVerifiedOwnedJavaScriptWasmComponent(componentRoot);\n\tassert.deepEqual(verified.model, built.model);\n",
+          "start": 6751
+        },
+        {
+          "current": "",
+          "previous": "\tconst first = await buildOwnedJavaScriptNpmPackages({\n\t\tcomponentRoot, runtimeRoot: prepared, outputRoot: join(scratch, \"packages\")\n\t});\n\tconst repeated = await buildOwnedJavaScriptNpmPackages({\n\t\tcomponentRoot\n\t\t, runtimeRoot: prepared\n\t\t, outputRoot: join(scratch, \"packages-repeated\")\n\t});\n",
+          "start": 7662
+        },
+        {
+          "current": "\tconst independentBuilds = builds.map(build => ({\n\t\tauthorRoot: build.authorRoot, componentIdentity: build.verified.identity\n\t\t, bindingIrSha256: build.verified.model.bindingIrSha256\n\t\t, sourceIdentity: build.verified.receipt.sourceIdentity\n\t\t, wasm: build.verified.receipt.wasmLibrary, archives\n\t\t, sourceUnchanged: true, removedBeforeInstall: true\n\t}));\n",
+          "previous": "",
+          "start": 8197
+        },
+        {
+          "current": "\tconst { receipt: handoffReceipt, entry } = await retainOwnedSubtypeRoute({\n\t\toutput, route: reviewed ? \"reviewed\" : \"ordinary\"\n\t\t, source: first.output, handoff\n\t});\n\tassert.deepEqual(handoffReceipt, receipt.receipt);\n\tretainedEntries.push(entry);\n\tfor(const build of builds) await rm(build.author, { recursive: true });\n",
+          "previous": "\tawait saveLakeFile(handoff, \"runtime.tgz\", await readFile(first.runtimeArchive));\n\tawait saveLakeFile(handoff, \"component.tgz\", await readFile(first.componentArchive));\n\tawait rm(project, { recursive: true }); await rm(componentRoot, { recursive: true });\n\tawait rm(first.output, { recursive: true }); await rm(repeated.output, { recursive: true });\n",
+          "start": 8799
+        },
+        {
+          "current": "\t\t, ...handoffReceipt.packages.flatMap(pkg => pkg.artifacts.map(\n\t\t\tartifact => join(handoff, artifact.path)))]);\n",
+          "previous": "\t\t, \"./handoff/runtime.tgz\"\n\t\t, \"./handoff/component.tgz\"]);\n",
+          "start": 9438
+        },
+        {
+          "current": "\t\t\t, expected: observed, productionReact: true }) : null;\n",
+          "previous": "\t\t\t, expected: observed }) : null;\n",
+          "start": 11280
+        },
+        {
+          "current": "\t\t, packageSetReceipt: receipt.receipt, archives, observed, independentBuilds\n",
+          "previous": "\t\t, packageSetReceipt: receipt.receipt, archives, observed\n",
+          "start": 11505
+        }
+      ],
+      "path": "tests/owned-subtype-javascript-packaging.test.mjs",
+      "previousSha256": "ef82b36ac5f5f22a888987086b8348cb195fa75d9011c80cf863be6ee7bd60c6"
+    },
+    {
+      "currentSha256": "f91a1b8d6224500efa8b0753ddb0b94578059028575fe7e78f67881c9889f1b5",
+      "edits": [
+        {
+          "current": "\t\t, \"tests/owned-subtype-javascript-packaging.test.mjs\"\n",
+          "previous": "",
+          "start": 5327
+        },
+        {
+          "current": "\tfor(const workflow of [\"consumer-matrix\", \"owned-checked-record-npm-browser\"])\n\t{\n\t\tconst source = await readFile(`.github/workflows/${workflow}.yml`, \"utf8\");\n\t\tassert.ok(source.includes(\"test -s build/owned-subtype-javascript-packaging/retained-packages.json\"));\n\t\tassert.ok(source.includes(\"node scripts/check-owned-subtype-javascript-ci.mjs\"));\n\t\tassert.ok(source.includes(\"            build/owned-subtype-javascript-packaging/\\n\"));\n\t\tassert.ok(!source.includes(\"            build/owned-subtype-javascript-packaging/report.json\\n\"));\n\t}\n",
+          "previous": "",
+          "start": 5807
+        }
+      ],
+      "path": "tests/owned-subtype-retained-packages.test.mjs",
+      "previousSha256": "7234a098daa6b4dcfb02b411bd6614f7593b3799ca04820b7e1bb25fc255cd67"
+    }
+  ]
+}
