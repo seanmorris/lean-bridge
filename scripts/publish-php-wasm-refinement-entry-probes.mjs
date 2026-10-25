@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Replay a complete committed probe archive before publishing its references.
- * Prepared-package support observations and historical evidence stay unchanged.
+ * Prepared-package observations and historical archive bytes stay unchanged.
  *
  * @file
  */
@@ -25,6 +25,7 @@ import {
 import { readPromotionInventory, stagePromotionInventory } from "../tests/helpers/type-surface-promotion-io.mjs";
 import { commitPromotionFiles, promotionFileIdentity } from "../tests/helpers/promotion-file-transaction.mjs";
 import { gitSourceBytes } from "../tests/helpers/source-history-stream.mjs";
+import { stagePhpWasmEntryProbePins } from "../tests/helpers/php-wasm-refinement-entry-publication-pins.mjs";
 
 const usage = "Usage: publish-php-wasm-refinement-entry-probes.mjs --archive <repository-relative-archive> --producer-checkout <exact-absolute-worktree> [--check]";
 const args = process.argv.slice(2), options = {};
@@ -99,8 +100,16 @@ const staging = await mkdtemp(join(root, "build/php-wasm-entry-publication-"));
 let installing = false, completed = false;
 try
 {
+	const unpinned = join(staging, "inventory-unpinned.json");
 	const staged = join(staging, "inventory.json");
-	const next = await stagePromotionInventory(path, staged, original, promoted);
+	const projected = await stagePromotionInventory(path, unpinned, original, promoted);
+	const updates = Object.entries(documents).map(([path, content]) => ({ path
+		, previous: previousDocuments[path].sha256
+		, current: sha256(Buffer.from(content)) }));
+	const { pins, ...next } = await stagePhpWasmEntryProbePins(
+		createReadStream(unpinned), staged, projected, updates
+	);
+	await rm(unpinned);
 	const files = [{ path, staged, previous: original.source, next }];
 	for(const [position, [documentPath, content]] of Object.entries(documents).entries())
 	{
@@ -116,6 +125,7 @@ try
 		, archive: accepted.archive, replay: accepted.replay
 		, committed: accepted.committed
 		, evidenceId: accepted.evidence.id, preparedPackageObservationsChanged: false
+		, sourcePins: pins
 		, inventory: { previous: original.source, current: next }
 		, documents: files.slice(1).map(file => ({ path: file.path
 			, previous: file.previous, current: file.next }))
@@ -134,6 +144,7 @@ try
 	const result = { mode: checkOnly ? "check" : "publish"
 		, head, evidenceId: accepted.evidence.id
 		, replayedRoutes: accepted.replay.replayedRoutes
+		, refreshedSourcePins: pins.reduce((sum, pin) => sum + pin.count, 0)
 		, preparedPackageObservationsChanged: false, inventory: next
 		, files: files.map(file => file.path) };
 	process.stdout.write(canonicalJson(result));
