@@ -1,0 +1,155 @@
+{
+  "additions": [
+    {
+      "currentSha256": "ad867ef7cc0aee32bb5b60479394d313dd747bbca97fda8b4f3f7fee092fe8a1",
+      "path": "docs/evidence/owned-checked-wit-bootstrap-20261025.json"
+    },
+    {
+      "currentSha256": "7d7499bb72f263b975c3066ec3a3321445558db67cd28f1283c9f04393e7cf66",
+      "path": "docs/evidence/owned-wit-bootstrap-failure-20261025/artifact.json"
+    },
+    {
+      "currentSha256": "6cdab3c9ffadde1649c35fef49ef80412afa2d6c6e5132b92605fc767523196a",
+      "path": "docs/evidence/owned-wit-bootstrap-failure-20261025/artifact.zip"
+    },
+    {
+      "currentSha256": "a085f6985e4b7f6f254d68f26e6c0b7e4e4ab9cd3c2e7cdb9afe7729dec3fc9a",
+      "path": "docs/evidence/owned-wit-bootstrap-failure-20261025/job.json"
+    },
+    {
+      "currentSha256": "bbf284c9f68245ec8ccfd173fbfba1785f79cb6f9a824166801668fd5496eb3d",
+      "path": "docs/evidence/owned-wit-bootstrap-failure-20261025/job.log"
+    },
+    {
+      "currentSha256": "cdc55aa2be29d50349d421aefb77fa644696845aa45b1145c885ffc316435911",
+      "path": "docs/evidence/owned-wit-bootstrap-failure-20261025/run.json"
+    },
+    {
+      "currentSha256": "42c5cd10f58a6f4cbfcd00c67270a04840f55cb288e1da0e643b7184fc6440e4",
+      "path": "tests/helpers/wasmtime-capi-bootstrap.mjs"
+    },
+    {
+      "currentSha256": "24f94c02cc0fd4e3371c076d24d8f218b35a09d0496800e6915fad5dfef1e032",
+      "path": "scripts/update-owned-checked-wit-bootstrap-source-history.mjs"
+    },
+    {
+      "currentSha256": "3138846d9db19ffd1149cccdbe49ccfbf1dfb0deb08faf998ab80df5dd07aba4",
+      "path": "tests/helpers/owned-checked-wit-bootstrap-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "df22f9a593c3a8c88dd3b5e92bf44b3ec9f49b2a2d15ae88e29c391fd508dd1a",
+      "path": "tests/helpers/owned-checked-wit-bootstrap-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "511133455a579d2ccb137bc0babb0c8a3e8082de",
+  "implementationCommits": [
+    "511133455a579d2ccb137bc0babb0c8a3e8082de"
+  ],
+  "integrationBaseCommit": "511133455a579d2ccb137bc0babb0c8a3e8082de",
+  "integrationUpdates": [
+    {
+      "currentSha256": "88ff5dd35c6cde75517c5d3b80b5adb6a398156a8b8211cb4b0212296af77d1a",
+      "edits": [
+        {
+          "current": "import { beforeOwnedCheckedWitBootstrapSource, ownedCheckedWitBootstrapNormalizationPaths } from \"./owned-checked-wit-bootstrap-source-history.mjs\";\n",
+          "previous": "",
+          "start": 14588
+        },
+        {
+          "current": "\t...ownedCheckedWitBootstrapNormalizationPaths\n\t, ...ownedCheckedPhpWasmMixedCoverageNormalizationPaths\n",
+          "previous": "\t...ownedCheckedPhpWasmMixedCoverageNormalizationPaths\n",
+          "start": 187776
+        },
+        {
+          "current": "\tlet stage = beforeOwnedCheckedWitBootstrapSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeOwnedCheckedPhpWasmMixedCoverageSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeOwnedCheckedPhpWasmMixedCoverageSource(path, text, expected);\n",
+          "start": 232820
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "9264d4c263372a512b867ccb536f89c11aae7428c3bc42e04122ad732841c943"
+    },
+    {
+      "currentSha256": "a03a2e3bf3f53e1f0378bf97d71647d2d70eeac0ffef345dd7565c1dd0d26ef3",
+      "edits": [
+        {
+          "current": "import \"./helpers/owned-checked-wit-bootstrap-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 9807
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "37621268eabc5e79ae2efd3d2e1bbbcdf0a2c1198e4c4bfad41f478ecaab0568"
+    }
+  ],
+  "milestone": "owned-checked-wit-bootstrap-source-v1",
+  "predecessorCommit": "e3b041b916a4c5818ab6404617fe7c5c1458217f",
+  "schemaVersion": 1,
+  "scope": "Replace the owned checked-record WIT producer's Nix flake import with a verified download of the identical Wasmtime 42.0.1 archive. Preserve all SDK-file identities, installed assertions, author/API routes and original TAP names. Add offline checksum, failure, cleanup and destination controls, and a manual WIT-only probe without narrowing default push/PR matrices. Retain the failed setup's original API records, log and artifact as non-accepted evidence. An actual clean download reproduces all 38 SDK file identities; no Lean or installed consumer execution is claimed. Leave every inventory byte, runtime source and older archive unchanged. Record the remaining twelve Nix-based Wasmtime workflows for rollout after the scoped probe.",
+  "updates": [
+    {
+      "currentSha256": "b0a4fc70135a72b65b5a2c7fb3fc67bd8cb10b93ffa1e0dd0e2dbc2976ce51a3",
+      "edits": [
+        {
+          "current": "    inputs:\n      wit_only:\n        description: Run only the WIT repair probe; push and pull requests still run all hosts\n        type: boolean\n        default: false\n",
+          "previous": "",
+          "start": 113
+        },
+        {
+          "current": "        group: ${{ fromJSON(github.event_name == 'workflow_dispatch' && inputs.wit_only && '[\"wit\"]' || '[\"dotnet\",\"jvm\",\"php\",\"wit\"]') }}\n",
+          "previous": "        group: [dotnet, jvm, php, wit]\n",
+          "start": 593
+        },
+        {
+          "current": "",
+          "previous": "      - name: Install the documented Nix CLI\n        if: matrix.group == 'wit'\n        uses: cachix/install-nix-action@v31\n        with:\n          install_url: https://releases.nixos.org/nix/nix-2.24.11/install\n",
+          "start": 2832
+        },
+        {
+          "current": "        run: |\n          set -euo pipefail\n          test \"$(uname -sm)\" = 'Linux x86_64'\n          mkdir -p build\n          test ! -e build/wasmtime-c-api && test ! -L build/wasmtime-c-api\n          WASMTIME_CAPI_STAGING=$(mktemp -d build/wasmtime-c-api.XXXXXX)\n          trap 'rm -rf -- \"$WASMTIME_CAPI_STAGING\"' EXIT\n          curl --fail --location --retry 3 --retry-delay 2 --connect-timeout 20 --max-time 300 \\\n            --output \"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" \\\n            'https://github.com/bytecodealliance/wasmtime/releases/download/v42.0.1/wasmtime-v42.0.1-x86_64-linux-c-api.tar.xz'\n          echo '2097a47351918a446b26c7e65f487278f63bc947591b71897db547cd90c05082'\"  $WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" | sha256sum --check --status\n          mkdir \"$WASMTIME_CAPI_STAGING/unpacked\"\n          tar -xJf \"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" --strip-components=1 -C \"$WASMTIME_CAPI_STAGING/unpacked\"\n          test -s \"$WASMTIME_CAPI_STAGING/unpacked/include/wasmtime.h\"\n          test -s \"$WASMTIME_CAPI_STAGING/unpacked/include/wasm.h\"\n          test -s \"$WASMTIME_CAPI_STAGING/unpacked/lib/libwasmtime.so\"\n          test -s \"$WASMTIME_CAPI_STAGING/unpacked/lib/libwasmtime.a\"\n          mv -T \"$WASMTIME_CAPI_STAGING/unpacked\" build/wasmtime-c-api\n",
+          "previous": "        run: nix build .#wasmtime-c-api --out-link build/wasmtime-c-api\n",
+          "start": 3542
+        },
+        {
+          "current": "              LEAN_BRIDGE_MAVEN=\"$(command -v mvn)\"\n              export LEAN_BRIDGE_MAVEN\n",
+          "previous": "              export LEAN_BRIDGE_MAVEN=\"$(command -v mvn)\"\n",
+          "start": 5419
+        },
+        {
+          "current": "              LEAN_BRIDGE_PHP=\"$(command -v php)\"\n              LEAN_BRIDGE_COMPOSER=\"$(command -v composer)\"\n              export LEAN_BRIDGE_PHP LEAN_BRIDGE_COMPOSER\n",
+          "previous": "              export LEAN_BRIDGE_PHP=\"$(command -v php)\"\n              export LEAN_BRIDGE_COMPOSER=\"$(command -v composer)\"\n",
+          "start": 5544
+        }
+      ],
+      "path": ".github/workflows/owned-checked-record-managed.yml",
+      "previousSha256": "38c4621087c443ac8ffdcaa4eae49c31d446bfef3b013d4174323fcfa3a8fbb9"
+    },
+    {
+      "currentSha256": "0f5e2da1028b857dd180d109da91bf48ec775997e8e0de6c9398c2ef00de54f5",
+      "edits": [
+        {
+          "current": "import { workflowRunScalars } from \"./helpers/native-observation-split.mjs\";\nimport { checkWasmtimeCapiBootstrap } from \"./helpers/wasmtime-capi-bootstrap.mjs\";\n",
+          "previous": "",
+          "start": 2312
+        },
+        {
+          "current": "test(\"managed owned checked-record consumers are independently authored\", async t => {\n",
+          "previous": "test(\"managed owned checked-record consumers are independently authored\", async () => {\n",
+          "start": 6381
+        },
+        {
+          "current": "\t\t, 'group: ${{ fromJSON(github.event_name == \\'workflow_dispatch\\' && inputs.wit_only && \\'[\"wit\"]\\' || \\'[\"dotnet\",\"jvm\",\"php\",\"wit\"]\\') }}'\n\t\t, \"      wit_only:\\n        description: Run only the WIT repair probe; push and pull requests still run all hosts\\n        type: boolean\\n        default: false\"\n",
+          "previous": "\t\t, \"group: [dotnet, jvm, php, wit]\"\n",
+          "start": 7422
+        },
+        {
+          "current": "\tassert.doesNotMatch(workflow, /nix build|cachix\\/install-nix/u);\n\tconst bootstrap = workflowRunScalars(workflow).filter(run =>\n\t\trun.source.includes(\"WASMTIME_CAPI_STAGING\"));\n\tassert.equal(bootstrap.length, 1);\n\tawait checkWasmtimeCapiBootstrap(t, bootstrap[0].source);\n",
+          "previous": "",
+          "start": 8441
+        }
+      ],
+      "path": "tests/owned-checked-record-managed-packaging.test.mjs",
+      "previousSha256": "1a2c93d1533fe99a540d3eca4db0c28a7de968517ae320b05b8adde1ae11fe28"
+    }
+  ]
+}
