@@ -45,6 +45,19 @@ jobs:
           npm ci --ignore-scripts --no-audit --no-fund
           mkdir -p build/owned-checked-record-native-ci
           bash scripts/bootstrap-toolchains.sh --lean-only 2>&1 | tee build/owned-checked-record-native-ci/toolchain.log
+      - name: Compile complete owned checked-record carriers
+        timeout-minutes: 5
+        env:
+          LEAN_BRIDGE_ELABORATED_METADATA_TEST: "1"
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/env.sh
+          node --max-old-space-size=512 --test --test-name-pattern='^(complete owned checked-record carriers|reviewed owned callback carriers elaborate)' tests/owned-checked-record-foundation.test.mjs 2>&1 | tee build/owned-checked-record-foundation.tap
+          rg '^# tests 2$' build/owned-checked-record-foundation.tap
+          rg '^# pass 2$' build/owned-checked-record-foundation.tap
+          rg '^# fail 0$' build/owned-checked-record-foundation.tap
+          rg '^# skipped 0$' build/owned-checked-record-foundation.tap
       - name: Execute source-free C and C++ acceptance
         id: acceptance
         timeout-minutes: 130

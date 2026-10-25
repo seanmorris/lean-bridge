@@ -24,6 +24,8 @@ import {
 import { ownedCCallbacks } from "../src/backends/c/owned-callbacks.mjs";
 import { generateOwnedCValues } from "../src/backends/c/owned-values.mjs";
 import { generateOwnedNativeBindingAdapters } from "../src/backends/native/owned-value-adapters.mjs";
+import { ownedAggregateTransferLeaseSource } from "../src/backends/native/owned-aggregate-transfers.mjs";
+import { brokerHeader } from "../src/backends/native/runtime-broker.mjs";
 import { processBuildRunner } from "../src/build/process-runner.mjs";
 import { ownedCheckedRecordModule, ownedCheckedRecordReviewedIr, ownedCheckedRecordTrees } from "./helpers/owned-checked-record-fixture.mjs";
 import "./helpers/owned-checked-record-php-wasm-source-history-tests.mjs";
@@ -281,6 +283,101 @@ test("reviewed owned callback carriers elaborate against their proof-carrying Le
 		await writeFile(join(directory, file), generated.carriers.leanSource);
 		await compile([file]);
 	}
+});
+
+test("complete owned checked-record carriers compile in full and result-only modes", {
+	skip: process.env.LEAN_BRIDGE_ELABORATED_METADATA_TEST !== "1"
+	, timeout: 120000
+}, async t => {
+	const directory = await mkdtemp(join(tmpdir()
+		, "lean-bridge-owned-checked-carriers-"));
+	t.after(() => rm(directory, { recursive: true, force: true }));
+	const fixture = resolve(
+		"tests/fixtures/onboarding/owned-checked-records/OwnedCheckedRecords.lean"
+	);
+	await writeFile(join(directory, `${module}.lean`), await readFile(fixture));
+	const leanPrefix = resolve(process.env.LEAN_BRIDGE_LEAN_PREFIX
+		?? ".toolchains/elan/toolchains/leanprover--lean4---v4.32.2");
+	const env = { ...process.env, LEAN_PATH: directory
+		, PATH: `${join(leanPrefix, "bin")}:${process.env.PATH}` };
+	const run = async input => {
+		try
+		{ await processBuildRunner.capture({ ...input, cwd: directory, env }); }
+		catch(error)
+		{ throw new Error(error.details?.stderr || error.details?.stdout || error.message, { cause: error }); }
+	};
+	const compile = args => run({ command: join(leanPrefix, "bin/lean"), args });
+	await compile(["-o", `${module}.olean`, `${module}.lean`]);
+	await writeFile(join(directory, "lean_bridge_native_runtime.h"), brokerHeader);
+	await writeFile(join(directory, "owned-leases.h"), ownedAggregateTransferLeaseSource);
+	for(const resultOnly of [false, true])
+	{
+		const document = ownedCheckedRecordReviewedIr({ resultOnly });
+		assert.deepEqual(validateReviewedOwnedSource(capture(document)), document);
+		const generated = generateOwnedNativeBindingAdapters({
+			document, sourceIdentity: {}
+			, declarations: document.declarations.map(item => ({
+				name: item.source.declaration, module
+			}))
+			, metadataSha256: "c".repeat(64), transferredInputs: !resultOnly
+		});
+		assert.equal(Object.keys(generated.carriers.symbols.exports).length
+			, document.declarations.length);
+		assert.doesNotMatch(generated.carriers.leanSource, /sorry|unsafeCast|axiom/u);
+		if(resultOnly)
+		{
+			assert.deepEqual(Object.keys(generated.carriers.refinementValidators), []);
+			assert.doesNotMatch(generated.carriers.leanSource
+				, /_root_\.OwnedCheckedRecords\.(?:mkClaim|mkWindow|mkGrant|checkedPositive) /u);
+		}
+		else
+		{
+			for(const name of ["mkWindow", "mkClaim", "mkGrant", "checkedPositive"])
+				assert.ok(generated.carriers.leanSource.includes(`_root_.${q(name)} `), name);
+			for(const name of ["echoBooking", "echoGrant", "echoClaims", "transferClaim"])
+				assert.ok(generated.carriers.symbols.exports[`lean:${q(name)}`], name);
+		}
+		const file = resultOnly ? "GeneratedResult.lean" : "GeneratedFull.lean";
+		await writeFile(join(directory, file), generated.carriers.leanSource);
+		await compile([file]);
+		await writeFile(join(directory, "carriers.h"), generated.carriers.header);
+		await writeFile(join(directory, "owned-values.h"), generated.typesHeader);
+		await writeFile(join(directory, "owned-values.c"), generated.source);
+		await run({ command: process.env.CC ?? "cc"
+			, args: ["-std=c11", "-Wall", "-Wextra", "-Werror", "-fsyntax-only"
+				, "-I", directory, "-I", join(leanPrefix, "include"), "owned-values.c"] });
+	}
+});
+
+test("required owned carrier CI checks full, result-only and both callback roles", async () => {
+	const workflow = await readFile(
+		".github/workflows/owned-checked-record-native-perl.yml", "utf8"
+	);
+	const native = workflow.split("\n  native:\n")[1]?.split("\n  perl:\n")[0];
+	assert.equal(typeof native, "string");
+	assert.doesNotMatch(native, /^ {4}(?:if|continue-on-error):/mu);
+	const steps = native.split(/^ {6}- name: /mu).slice(1);
+	const selected = steps.filter(step => step.startsWith("Compile complete owned checked-record carriers\n"));
+	assert.equal(selected.length, 1);
+	const step = selected[0];
+	assert.doesNotMatch(step, /^ {8}(?:if|continue-on-error):/mu);
+	assert.match(step, /^ {8}env:\n {10}LEAN_BRIDGE_ELABORATED_METADATA_TEST: "1"$/mu);
+	assert.match(step, /^ {8}shell: bash$/mu);
+	assert.match(step, /^ {8}timeout-minutes: 5$/mu);
+	const install = steps.findIndex(item => item.startsWith("Install dependencies and pinned Lean\n"));
+	const acceptance = steps.findIndex(item => item.startsWith("Execute source-free C and C++ acceptance\n"));
+	assert.ok(install >= 0 && steps.indexOf(step) > install);
+	assert.ok(acceptance > steps.indexOf(step));
+	const run = step.split("        run: |\n")[1];
+	assert.equal(typeof run, "string");
+	assert.match(run, /set -euo pipefail/u);
+	assert.match(run, /source scripts\/env\.sh/u);
+	assert.ok(run.includes(
+		"--test-name-pattern='^(complete owned checked-record carriers|reviewed owned callback carriers elaborate)'"
+	));
+	assert.ok(run.includes("tests/owned-checked-record-foundation.test.mjs"));
+	for(const point of ["tests 2", "pass 2", "fail 0", "skipped 0"])
+		assert.ok(run.includes(`rg '^# ${point}$' build/owned-checked-record-foundation.tap`));
 });
 
 test("owned checked-record receivers and incomplete callback decisions have located refusals", () => {

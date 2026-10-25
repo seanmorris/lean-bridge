@@ -1,0 +1,211 @@
+{
+  "schemaVersion": 1,
+  "kind": "owned-checked-carrier-compilation-acceptance-v1",
+  "predecessorCommit": "57c92b462a91d0384273bf7e152bb416061613d6",
+  "sourceIdentity": "The two modified workflow/test files are identified by exact hashes below; other inspected implementation sources match the predecessor. Tests ran on these bytes before the implementation commit.",
+  "limits": {
+    "cpu": 2,
+    "nice": 15,
+    "nodeHeapMiB": 512,
+    "leanThreads": 1,
+    "outerTimeoutSeconds": 90
+  },
+  "changes": [
+    "Compile the complete independently reviewed owned checked-record carrier set in full and result-only API modes against the original proof-carrying Lean fixture.",
+    "Check generated C with -std=c11 -Wall -Wextra -Werror -fsyntax-only for both modes, including the transfer ledger.",
+    "Require the full/result-only and two callback-direction elaboration tests in the existing native hosted job. Enforce exactly two passes, zero failures and zero skips without adding a parallel CI job.",
+    "Refresh four source hashes without changing any support observation, original archive, prior receipt or runtime source."
+  ],
+  "sources": [
+    {
+      "path": ".github/workflows/owned-checked-record-native-perl.yml",
+      "sha256": "e625220f8e5aedf30b9986231cd0e63750231eed51a2136c041fef7d3c04da4c"
+    },
+    {
+      "path": "tests/owned-checked-record-foundation.test.mjs",
+      "sha256": "c6a2a1fc68d52658a56bbc0eb925f6993c20a323b9feb8c8fcfeab497ab82569"
+    },
+    {
+      "path": "tests/helpers/owned-checked-record-fixture.mjs",
+      "sha256": "9808cd3908e8a5ba004c64d6258f502a8f3f48a17890959588b4647ec92b5c12"
+    },
+    {
+      "path": "tests/fixtures/onboarding/owned-checked-records/OwnedCheckedRecords.lean",
+      "sha256": "b5c2e10c7ccb18859da182d63d7f664e2cc12d2a748f8943ab3e6dc603ddf57f"
+    },
+    {
+      "path": "src/abi/refinements.mjs",
+      "sha256": "c78ac91ba4eda4c54544fbd4e10ffc3ff50eccc611e38a494a600a3cb3bc4deb"
+    },
+    {
+      "path": "src/abi/owned-aggregate-model.mjs",
+      "sha256": "a75949616a1d2e46d5c7fdbfb1ae23d2b7b4b845313a9df2bc5829066f4f8cab"
+    },
+    {
+      "path": "src/abi/owned-refinement-model.mjs",
+      "sha256": "503adec33376f81c2de92b61855cd1482ffef0124fec9461a05be674b1740488"
+    },
+    {
+      "path": "src/analyze/native-types.mjs",
+      "sha256": "70f7c151fa74a192b8d8e8fdec3cc0dbebcdace68d05d944be025254f72d1b95"
+    },
+    {
+      "path": "src/analyze/reviewed-owned-source.mjs",
+      "sha256": "03f78e24f4531ead6747c34a56b04a1defe7a5aab34f7c2f7c1b66d71fbbbc3f"
+    },
+    {
+      "path": "src/build/owned-aggregate-carriers.mjs",
+      "sha256": "61fbf0a6c8de295a0fc0586910ee9858440f3ab79b601e98753b5685b5f52383"
+    },
+    {
+      "path": "src/build/owned-refinement-carriers.mjs",
+      "sha256": "0eeca228c1fb34818ce26544dd5a7b72b53cdd17cbead04c789b7b334220b2c1"
+    },
+    {
+      "path": "src/build/owned-callback-carriers.mjs",
+      "sha256": "f099ca68b8409c584651437a65ea0a2fab225b160772842e18daaae362bc8266"
+    },
+    {
+      "path": "src/backends/native/owned-value-adapters.mjs",
+      "sha256": "cae8df1df60d46b2a141baa04361ab2279343ebf4b073095db973cd7fffb03a6"
+    },
+    {
+      "path": "src/backends/native/owned-value-transfers.mjs",
+      "sha256": "7571473b1428237e4ebaa5ea9c8e5ddbf4a033e5141335e999477eb89631029d"
+    },
+    {
+      "path": "src/backends/native/owned-value-runtime.mjs",
+      "sha256": "f982c0649dd9ba7cd95e4481a10258d5f1ef710bafb403e192f90fd95d0001af"
+    },
+    {
+      "path": "src/backends/native/owned-aggregate-leases.mjs",
+      "sha256": "f13148cef15496c088da53156b77f7ecef106d30d4e8208cb7363327d833b2b5"
+    },
+    {
+      "path": "src/backends/native/owned-aggregate-transfers.mjs",
+      "sha256": "3d85638528bc671dff9164d653cb21b2cb4f5da667b661249e67594c738a03b1"
+    },
+    {
+      "path": "src/backends/c/owned-callbacks.mjs",
+      "sha256": "a5a832b0ca6b465bf985ccf0a892a46ec16881832bdf0499c0600378b5262159"
+    },
+    {
+      "path": "src/binding-ir/contract.mjs",
+      "sha256": "51f39115f198cadb22edcee1bc09d9205024c1ba622f86588056bca7aac6faf6"
+    }
+  ],
+  "inventory": {
+    "base": "57c92b462a91d0384273bf7e152bb416061613d6",
+    "applied": true,
+    "original": {
+      "bytes": 102579190,
+      "sha256": "a74ff33edc7b919f90e0f4c497fe452c879ffcb5a165309862e2057ec5f85aed"
+    },
+    "current": {
+      "bytes": 102579190,
+      "sha256": "e2c8af3be42bd903a44c809b82898dd50555658602a53818ed15373b43b0720e"
+    },
+    "pins": [
+      {
+        "path": ".github/workflows/owned-checked-record-native-perl.yml",
+        "count": 0,
+        "alreadyCurrent": 0,
+        "previousSha256": "ec209fe817265091e0d2d90179ed2deed2d2afb6d5412cfebeba50177a51408f",
+        "currentSha256": "e625220f8e5aedf30b9986231cd0e63750231eed51a2136c041fef7d3c04da4c"
+      },
+      {
+        "path": "tests/owned-checked-record-foundation.test.mjs",
+        "count": 4,
+        "alreadyCurrent": 0,
+        "previousSha256": "e8242f8dcca2562ef4fdadfe8da7a9072ec3022e33083c1c88bba8b69ff130c1",
+        "currentSha256": "c6a2a1fc68d52658a56bbc0eb925f6993c20a323b9feb8c8fcfeab497ab82569"
+      }
+    ],
+    "refreshedPins": 4,
+    "alreadyCurrent": 0
+  },
+  "validation": {
+    "foundation": {
+      "passed": 12,
+      "failed": 0,
+      "skipped": 0,
+      "durationMs": 3427.915554,
+      "tap": "TAP version 13\n# Subtest: reviewed side: full and result-only owned builds admit checked records only with their exact per-site decisions\nok 1 - reviewed side: full and result-only owned builds admit checked records only with their exact per-site decisions\n  ---\n  duration_ms: 143.239493\n  type: 'test'\n  ...\n# Subtest: reviewed owned callbacks preserve exact host and closure checked-record directions\nok 2 - reviewed owned callbacks preserve exact host and closure checked-record directions\n  ---\n  duration_ms: 31.799406\n  type: 'test'\n  ...\n# Subtest: reviewed owned callback carriers elaborate against their proof-carrying Lean values\nok 3 - reviewed owned callback carriers elaborate against their proof-carrying Lean values\n  ---\n  duration_ms: 1130.485578\n  type: 'test'\n  ...\n# Subtest: complete owned checked-record carriers compile in full and result-only modes\nok 4 - complete owned checked-record carriers compile in full and result-only modes\n  ---\n  duration_ms: 1498.646524\n  type: 'test'\n  ...\n# Subtest: required owned carrier CI checks full, result-only and both callback roles\nok 5 - required owned carrier CI checks full, result-only and both callback roles\n  ---\n  duration_ms: 1.693037\n  type: 'test'\n  ...\n# Subtest: owned checked-record receivers and incomplete callback decisions have located refusals\nok 6 - owned checked-record receivers and incomplete callback decisions have located refusals\n  ---\n  duration_ms: 9.661428\n  type: 'test'\n  ...\n# Subtest: owned checked-record callbacks follow the declaration rule at every callable position\nok 7 - owned checked-record callbacks follow the declaration rule at every callable position\n  ---\n  duration_ms: 36.285596\n  type: 'test'\n  ...\n# Subtest: owned checked-record refinement trees require the explicit ownership-aware boundary\nok 8 - owned checked-record refinement trees require the explicit ownership-aware boundary\n  ---\n  duration_ms: 1.175254\n  type: 'test'\n  ...\n# Subtest: ordinary side: native owned graphs carry erased proof names on their checked record definitions\nok 9 - ordinary side: native owned graphs carry erased proof names on their checked record definitions\n  ---\n  duration_ms: 8.229372\n  type: 'test'\n  ...\n# Subtest: ordinary side: every consumed checked-record occurrence in an owned graph names its constructor\nok 10 - ordinary side: every consumed checked-record occurrence in an owned graph names its constructor\n  ---\n  duration_ms: 3.556139\n  type: 'test'\n  ...\n# Subtest: late failure: a later owned checked-record rejection aborts after an earlier borrowed or transferred conversion\nok 11 - late failure: a later owned checked-record rejection aborts after an earlier borrowed or transferred conversion\n  ---\n  duration_ms: 5.303948\n  type: 'test'\n  ...\n# Subtest: owned checked-record adapters construct before transfer and erase produced records\nok 12 - owned checked-record adapters construct before transfer and erase produced records\n  ---\n  duration_ms: 23.390038\n  type: 'test'\n  ...\n1..12\n# tests 12\n# suites 0\n# pass 12\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 3427.915554\n"
+    },
+    "adjacent": {
+      "passed": 26,
+      "failed": 0,
+      "skipped": 0,
+      "durationMs": 2905.40227,
+      "tap": "TAP version 13\n# Subtest: owner-anchored lifetimes require an explicit runtime capability\nok 1 - owner-anchored lifetimes require an explicit runtime capability\n  ---\n  duration_ms: 0.828913\n  type: 'test'\n  ...\n# Subtest: owned aggregate contracts preserve all resource-bearing shapes and callable positions\nok 2 - owned aggregate contracts preserve all resource-bearing shapes and callable positions\n  ---\n  duration_ms: 16.774973\n  type: 'test'\n  ...\n# Subtest: new ownership semantics cannot enter a v3 backend or masquerade as copied records\nok 3 - new ownership semantics cannot enter a v3 backend or masquerade as copied records\n  ---\n  duration_ms: 5.218116\n  type: 'test'\n  ...\n# Subtest: owned fields require a closed explicit retention and disposal policy\nok 4 - owned fields require a closed explicit retention and disposal policy\n  ---\n  duration_ms: 3.415382\n  type: 'test'\n  ...\n# Subtest: ownership validation follows resource containers through exports and callbacks\nok 5 - ownership validation follows resource containers through exports and callbacks\n  ---\n  duration_ms: 25.316819\n  type: 'test'\n  ...\n# Subtest: owned type recursion preserves alias termination and known nominal references\nok 6 - owned type recursion preserves alias termination and known nominal references\n  ---\n  duration_ms: 2.415254\n  type: 'test'\n  ...\n# Subtest: borrowed aggregate results require a live non-transferred owner\nok 7 - borrowed aggregate results require a live non-transferred owner\n  ---\n  duration_ms: 4.269301\n  type: 'test'\n  ...\n# Subtest: an owned record can anchor a typed resource property without becoming a copied value\nok 8 - an owned record can anchor a typed resource property without becoming a copied value\n  ---\n  duration_ms: 1.4432\n  type: 'test'\n  ...\n# Subtest: aggregate author policy is explicit, closed, source-bound and unavailable to unowned adapters\nok 9 - aggregate author policy is explicit, closed, source-bound and unavailable to unowned adapters\n  ---\n  duration_ms: 281.394347\n  type: 'test'\n  ...\n# Subtest: owned graphs retain resources and recursive references without copied admission\nok 10 - owned graphs retain resources and recursive references without copied admission\n  ---\n  duration_ms: 103.703087\n  type: 'test'\n  ...\n# Subtest: owned graph validation rejects malformed topology, hidden callbacks and policy drift\nok 11 - owned graph validation rejects malformed topology, hidden callbacks and policy drift\n  ---\n  duration_ms: 2.94082\n  type: 'test'\n  ...\n# Subtest: owned graph validation admits directional Subtype leaves only at explicit sites\nok 12 - owned graph validation admits directional Subtype leaves only at explicit sites\n  ---\n  duration_ms: 1.388656\n  type: 'test'\n  ...\n# Subtest: owned compiler graphs enforce finite schema budgets without expanding recursive aliases\nok 13 - owned compiler graphs enforce finite schema budgets without expanding recursive aliases\n  ---\n  duration_ms: 108.812209\n  type: 'test'\n  ...\n# Subtest: anonymous resource containers preserve the authored disposal fallback in their IR identity\nok 14 - anonymous resource containers preserve the authored disposal fallback in their IR identity\n  ---\n  duration_ms: 59.167211\n  type: 'test'\n  ...\n# Subtest: owned models preserve complete contracts and exact copied-versus-retained field decisions\nok 15 - owned models preserve complete contracts and exact copied-versus-retained field decisions\n  ---\n  duration_ms: 67.81206\n  type: 'test'\n  ...\n# Subtest: recursive types and repeated resources share type references without copying identity\nok 16 - recursive types and repeated resources share type references without copying identity\n  ---\n  duration_ms: 15.002119\n  type: 'test'\n  ...\n# Subtest: owned models authenticate and retain per-use Subtype decisions without opening copied contracts\nok 17 - owned models authenticate and retain per-use Subtype decisions without opening copied contracts\n  ---\n  duration_ms: 34.863444\n  type: 'test'\n  ...\n# Subtest: owned refinement carriers share erased shape without sharing constructors\nok 18 - owned refinement carriers share erased shape without sharing constructors\n  ---\n  duration_ms: 12.176126\n  type: 'test'\n  ...\n# Subtest: owned refinement carriers emit shared validator symbols once\nok 19 - owned refinement carriers emit shared validator symbols once\n  ---\n  duration_ms: 3.27337\n  type: 'test'\n  ...\n# Subtest: owned refinement mirrors compile against the proof-carrying Lean source\nok 20 - owned refinement mirrors compile against the proof-carrying Lean source\n  ---\n  duration_ms: 934.825978\n  type: 'test'\n  ...\n# Subtest: owned refinement preflight runs before transfer handoff\nok 21 - owned refinement preflight runs before transfer handoff\n  ---\n  duration_ms: 5.226871\n  type: 'test'\n  ...\n# Subtest: callback arguments, returned closures and borrowed anchors retain ownership sites\nok 22 - callback arguments, returned closures and borrowed anchors retain ownership sites\n  ---\n  duration_ms: 7.453625\n  type: 'test'\n  ...\n# Subtest: contract drift changes identity and incomplete or unowned inputs cannot generate a model\nok 23 - contract drift changes identity and incomplete or unowned inputs cannot generate a model\n  ---\n  duration_ms: 14.724098\n  type: 'test'\n  ...\n# Subtest: long owned aliases use a finite work queue and fail at the stated type budget\nok 24 - long owned aliases use a finite work queue and fail at the stated type budget\n  ---\n  duration_ms: 234.292311\n  type: 'test'\n  ...\n# Subtest: unresolved generic parameters cannot acquire a concrete ownership layout\nok 25 - unresolved generic parameters cannot acquire a concrete ownership layout\n  ---\n  duration_ms: 1.285742\n  type: 'test'\n  ...\n# Subtest: transfer transactions preserve the existing non-transfer ledger byte for byte\nok 26 - transfer transactions preserve the existing non-transfer ledger byte for byte\n  ---\n  duration_ms: 0.811886\n  type: 'test'\n  ...\n1..26\n# tests 26\n# suites 0\n# pass 26\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 2905.40227\n"
+    },
+    "requiredCiSelection": {
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0,
+      "durationMs": 3159.171422,
+      "tap": "TAP version 13\n# Subtest: reviewed owned callback carriers elaborate against their proof-carrying Lean values\nok 1 - reviewed owned callback carriers elaborate against their proof-carrying Lean values\n  ---\n  duration_ms: 1383.489608\n  type: 'test'\n  ...\n# Subtest: complete owned checked-record carriers compile in full and result-only modes\nok 2 - complete owned checked-record carriers compile in full and result-only modes\n  ---\n  duration_ms: 1324.295215\n  type: 'test'\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 3159.171422\n"
+    },
+    "scopedEslint": "passed",
+    "actionlint": "1.7.12 passed",
+    "configuredCheckedJavaScriptTypecheck": "passed"
+  },
+  "audit": [
+    {
+      "requirement": "Ordinary compiler graphs and independently reviewed Binding IR preserve per-site checked constructors and proof fields.",
+      "evidence": [
+        "src/analyze/native-types.mjs",
+        "src/analyze/reviewed-owned-source.mjs",
+        "src/abi/refinements.mjs",
+        "tests/owned-checked-record-foundation.test.mjs"
+      ],
+      "result": "Source inspected and positive/negative source-contract tests passed. Fresh package compiler reconciliation belongs to the separately archived installed matrices."
+    },
+    {
+      "requirement": "Mixed copied/owned records, nested Subtype fields and owned containers retain erased carrier shapes.",
+      "evidence": [
+        "tests/helpers/owned-checked-record-fixture.mjs",
+        "src/build/owned-refinement-carriers.mjs"
+      ],
+      "result": "All full-fixture declarations, including Booking, Claim, Grant, Array Claim and transferred Claim, generate together and pass Lean elaboration and C syntax checking; standalone result-only mode has no input validators."
+    },
+    {
+      "requirement": "Host callbacks and returned Lean closures retain opposite constructor/projection directions, exact rejection and recovery behavior.",
+      "evidence": [
+        "src/abi/owned-refinement-model.mjs",
+        "src/build/owned-callback-carriers.mjs",
+        "src/backends/c/owned-callbacks.mjs"
+      ],
+      "result": "Current source tests validate both directional models and C reply/recovery guards. Both generated callback roles elaborate against proof-carrying Lean."
+    },
+    {
+      "requirement": "Borrowed, retained and transferred resource identity, late rejection cleanup and atomic outputs remain intact.",
+      "evidence": [
+        "src/backends/native/owned-value-adapters.mjs",
+        "src/backends/native/owned-value-runtime.mjs",
+        "src/backends/native/owned-value-transfers.mjs",
+        "tests/owned-aggregate-contract.test.mjs",
+        "tests/owned-aggregate-model.test.mjs"
+      ],
+      "result": "Adjacent ownership-contract tests passed. Inspection confirms conversion and every constructor precede batch movement, rejection aborts the transaction, and output assignment follows successful commit. No fresh native lifetime/sanitizer execution is claimed by this source audit."
+    },
+    {
+      "requirement": "Required recurring coverage includes fresh carrier elaboration.",
+      "evidence": [
+        ".github/workflows/owned-checked-record-native-perl.yml"
+      ],
+      "result": "The existing native job contains an unconditional, bounded compile step before installed acceptance. Its exact two-test selection passed locally. Hosted execution and default-branch activation remain pending."
+    }
+  ],
+  "notEstablished": [
+    "Installed support for Grant or general owned containers across downstream hosts",
+    "Fresh runtime allocator/sanitizer acceptance",
+    "Current-head Core or hosted acceptance",
+    "Default-branch recurring activation"
+  ],
+  "remaining": [
+    "Complete the full original #1723 and #1484 acceptance audit; do not equate source checks with installed runtime coverage.",
+    "Obtain current-head Core and all required hosted outcomes without duplicating live runs.",
+    "Preserve remaining original #1220 workstreams and default-branch recurring activation."
+  ]
+}
