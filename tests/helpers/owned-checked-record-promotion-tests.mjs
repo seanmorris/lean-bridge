@@ -130,6 +130,81 @@ test("owned checked-record promotion changes exactly 170 cells and preserves eve
 	assert.equal(changed, 170);
 });
 
+test("owned checked-record promotion and refresh preserve labeled archive references", async () => {
+	const original = await originalInventory();
+	const published = promoteOwnedCheckedRecords(original, references);
+	for(const variant of ["mixed", "a".repeat(64)])
+	{
+		const labeled = references.map(reference => {
+			const { lane } = reference, index = syntheticIndex(lane);
+			const label = variant === "mixed" ? lane === "javascript" ? "complete"
+				: lane === "php-wasm" ? "contexts" : "aligned-v2" : variant;
+			return { ...reference, ...ownedCheckedRecordPromotionArchiveReferences(index
+				, rootFor(lane) + "-" + label, Buffer.from(canonicalJson(index))) };
+		});
+		const promoted = promoteOwnedCheckedRecords(original, labeled);
+		assert.equal(validateTypeSurface(promoted, contracts), true);
+		assert.deepEqual(refreshOwnedCheckedRecords(published, labeled), promoted);
+		assert.deepEqual(promoted.observations, published.observations);
+		assert.equal(labeled.length, 11);
+		assert.equal(labeled.reduce((sum, item) => sum + item.routes.length, 0), 44);
+		assert.equal(labeled.reduce((sum, item) => sum + item.profiles.length * 10, 0), 170);
+		const rendered = renderOwnedCheckedRecordPromotion(labeled);
+		for(const [position, reference] of labeled.entries())
+		{
+			assert.equal(reference.files[0].sha256, references[position].files[0].sha256);
+			assert.equal(reference.revision, references[position].revision);
+			assert.ok(rendered.includes(reference.files[0].path.slice("docs/evidence/".length)));
+			assert.deepEqual(reference.artifacts, reference.files.slice(4));
+		}
+		const forged = structuredClone(labeled);
+		forged[0].revision = "d".repeat(40);
+		assert.throws(() => refreshOwnedCheckedRecords(published, forged), /share one revision/u);
+	}
+});
+
+test("owned checked-record promotion rejects unsafe archive labels at every projection boundary", async () => {
+	const original = await originalInventory(), published = promoteOwnedCheckedRecords(original, references);
+	const index = syntheticIndex("native"), bytes = Buffer.from(canonicalJson(index));
+	const root = rootFor("native");
+	const invalid = ["-", "--aligned", "-aligned--retry", "-Aligned", "-a_b"
+		, "-../other", "-a/../b", "-a\\b", "-a%2fb", "-a:b", "-a?b", "-a#b"
+		, "-a\0b", "-a\nb", "-" + "a".repeat(65), "-" + "a".repeat(201)]
+		.map(suffix => root + suffix);
+	invalid.push(root + "\n", root + "\r", " " + root, root + "/"
+		, root.replace("-native-", "-unknown-")
+		, rootFor("php-wasm") + "-aligned", root.replace("docs/evidence/", "/tmp/"));
+	const reject = changed => {
+		assert.throws(() => promoteOwnedCheckedRecords(original, changed), assert.AssertionError);
+		assert.throws(() => refreshOwnedCheckedRecords(published, changed), assert.AssertionError);
+		assert.throws(() => renderOwnedCheckedRecordPromotion(changed), assert.AssertionError);
+	};
+	for(const path of invalid)
+	{
+		assert.throws(() => ownedCheckedRecordPromotionArchiveReferences(index, path, bytes)
+			, assert.AssertionError, path);
+		const changed = structuredClone(references);
+		for(const collection of ["files", "artifacts"])
+			changed[0][collection] = changed[0][collection].map(file => ({ ...file
+				, path: file.path.replace(root, path) }));
+		reject(changed);
+	}
+	for(const suffix of ["\n", ".backup", "/extra"])
+	{
+		const changed = structuredClone(references);
+		changed[0].files[0].path += suffix;
+		reject(changed);
+	}
+});
+
+test("owned checked-record promotion guide names the configured selection", async () => {
+	const source = await readFile("docs/contributing/testing.md", "utf8");
+	const heading = "### Prepare owned checked-record support and documentation\n";
+	assert.equal(source.split(heading).length, 2);
+	const section = source.split(heading)[1].split("\n### ")[0];
+	assert.ok(section.includes("`" + ownedCheckedRecordPromotionSelectionPath + "`"));
+});
+
 test("owned checked-record promotion refuses partial, duplicate, forged or widened references", async () => {
 	const original = await originalInventory();
 	for(const mutate of [

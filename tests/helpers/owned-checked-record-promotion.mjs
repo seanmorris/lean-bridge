@@ -12,7 +12,8 @@ import {
 	ownedCheckedRecordHostedLaneNames, ownedCheckedRecordHostedRoutes
 } from "./owned-checked-record-hosted-contracts.mjs";
 import {
-	assertOwnedCheckedRecordMatrixIndexes, verifyOwnedCheckedRecordHostedMatrix
+	assertOwnedCheckedRecordMatrixIndexes, ownedCheckedRecordArchiveRootLane
+	, verifyOwnedCheckedRecordHostedMatrix
 } from "./owned-checked-record-hosted-matrix.mjs";
 
 export const ownedCheckedRecordPromotionSelectionPath
@@ -73,7 +74,8 @@ const closedPath = path => {
  */
 export const ownedCheckedRecordPromotionArchiveReferences = (index, root, bytes) => {
 	assert.ok(ownedCheckedRecordHostedLaneNames.includes(index.lane));
-	assert.match(root, new RegExp(`^docs/evidence/owned-checked-record-${index.lane}-hosted-[0-9]{8}$`, "u"));
+	assert.equal(ownedCheckedRecordArchiveRootLane(root), index.lane
+		, "Archive root must match the selected lane");
 	assert.ok(Buffer.isBuffer(bytes));
 	assert.equal(bytes.toString(), canonicalJson(index), "Index changed after replay");
 	const manifest = new Map();
@@ -138,8 +140,10 @@ const assertReferences = references => {
 				assert.match(file.sha256, /^[a-f0-9]{64}$/u);
 			}
 		}
-		assert.match(reference.files[0].path, new RegExp(
-			`^docs/evidence/owned-checked-record-${reference.lane}-hosted-[0-9]{8}/index\\.json$`, "u"));
+		const indexPath = reference.files[0].path;
+		assert.ok(indexPath.endsWith("/index.json"), "Select the original capture index.json");
+		assert.equal(ownedCheckedRecordArchiveRootLane(indexPath.slice(0, -"/index.json".length))
+			, reference.lane, "Archive root must match the selected lane");
 		for(const artifact of reference.artifacts)
 		{
 			assert.ok(artifact.path.startsWith(dirname(reference.files[0].path) + "/hosted/artifact.zip.parts/"));

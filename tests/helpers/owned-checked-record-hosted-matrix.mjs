@@ -26,9 +26,13 @@ const keys = (value, expected) => {
 	assert.deepEqual(Object.keys(value).sort(), [...expected].sort());
 };
 
-// A label distinguishes immutable captures from the same day. It conveys no
-// acceptance: the selected index, producer and every committed byte still bind.
-const archiveRootLane = root => {
+/**
+ * Validate the closed archive path grammar shared by replay and promotion.
+ * Labels distinguish immutable captures; they do not establish acceptance.
+ *
+ * @param root - Repository-relative original archive root.
+ */
+export const ownedCheckedRecordArchiveRootLane = root => {
 	assert.equal(typeof root, "string");
 	assert.ok(root.length <= 200, "Invalid owned checked-record archive root");
 	const match = /^docs\/evidence\/owned-checked-record-([a-z-]+)-hosted-([0-9]{8})(?:-([a-z0-9]+(?:-[a-z0-9]+)*))?$/u.exec(root);
@@ -60,7 +64,7 @@ export const assertOwnedCheckedRecordMatrixSelection = selection => {
 		assert.equal(typeof entry.index.path, "string");
 		assert.ok(entry.index.path.endsWith("/index.json")
 			, "Select the original capture index.json");
-		assert.equal(archiveRootLane(entry.index.path.slice(0, -"/index.json".length))
+		assert.equal(ownedCheckedRecordArchiveRootLane(entry.index.path.slice(0, -"/index.json".length))
 			, entry.lane, "Archive root must match the selected lane");
 		assert.match(entry.index.sha256, /^[a-f0-9]{64}$/u);
 	}
@@ -113,7 +117,7 @@ export const assertOwnedCheckedRecordCommittedArchive = async (
 	revision, root, indexBytes, repository = process.cwd()
 ) => {
 	assert.match(revision, /^[a-f0-9]{40}$/u);
-	archiveRootLane(root);
+	ownedCheckedRecordArchiveRootLane(root);
 	const index = JSON.parse(indexBytes);
 	const files = [...index.files, { path: "index.json", bytes: indexBytes.length
 		, sha256: sha256(indexBytes) }];

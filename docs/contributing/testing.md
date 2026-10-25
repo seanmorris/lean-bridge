@@ -320,9 +320,14 @@ results; retain and replay the successful hosted run before promoting coverage.
 ### Prepare owned checked-record support and documentation
 
 The promotion command requires the complete selection committed as
-`docs/evidence/owned-checked-record-matrix-selection-20261024.json` and a clean
-checkout containing every indexed archive file. It independently runs the whole
-matrix verifier; a previously saved success receipt cannot bypass that replay.
+`docs/evidence/owned-checked-record-matrix-selection-20261025.json` and a clean
+checkout with every indexed archive byte committed in Git. The matrix verifier
+restores each capture into an isolated temporary directory, so a sparse checkout
+need not materialize every ZIP part. Replay and promotion use the same closed
+archive-path grammar, including bounded labels such as `-aligned`, `-complete`
+and `-contexts`. A label cannot substitute for the selected index hash, producer
+identity or original evidence. The command independently runs the whole matrix
+verifier; a previously saved success receipt cannot bypass that replay.
 On an unpromoted checkout with all eleven captures available, inspect the update without
 installing it:
 
@@ -340,8 +345,11 @@ restore a concurrently edited file. It refuses an already-promoted inventory.
 The tested forms are the copied `Window` inside an owned `Booking`, and `Claim`
 with its live `Ticket` resource. Full routes cover inputs, results, fields and
 synchronous callbacks; result-only routes cover Lean-produced results only.
-`Grant`, nested owned Subtypes, arbitrary owned containers, recursive owned
-graphs, retained/asynchronous callbacks and performance remain separate work.
+This shared checked-record publication does not establish `Grant`, nested
+Subtype fields, arbitrary owned containers, recursive owned graphs,
+retained/asynchronous callbacks or performance. The independently accepted
+[owned Subtype matrix](../evidence/owned-subtype-promotion-20261023.md) records
+its own field, profile and constructor coverage.
 Native PHP and PHP-Wasm retain separate archives and profile bindings.
 
 Lightweight controls run the current projection and documentation code against
