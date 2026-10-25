@@ -76,6 +76,7 @@ import { beforePhpWasmEntryHostedReplaySource, phpWasmEntryHostedReplayNormaliza
 import { beforePhpWasmEntryDiagnosticRetentionSource, phpWasmEntryDiagnosticRetentionNormalizationPaths } from "./php-wasm-entry-diagnostic-retention-source-history.mjs";
 import { beforePhpWasmEntryCompleteArchiveSource, phpWasmEntryCompleteArchiveNormalizationPaths } from "./php-wasm-entry-complete-archive-source-history.mjs";
 import { beforePhpWasmEntryPublicationPreparationSource, phpWasmEntryPublicationPreparationNormalizationPaths } from "./php-wasm-entry-publication-preparation-source-history.mjs";
+import { beforePhpWasmEntryPublisherSource, phpWasmEntryPublisherNormalizationPaths } from "./php-wasm-entry-publisher-source-history.mjs";
 import { beforeCoreEvidenceMemoryRepairSource, coreEvidenceMemoryRepairNormalizationPaths } from "./core-evidence-memory-repair-source-history.mjs";
 import { beforeValueIndexPromotionMilestoneRepairSource, valueIndexPromotionMilestoneRepairNormalizationPaths } from "./value-index-promotion-milestone-repair-source-history.mjs";
 import { beforeCoreMilestoneReplayRepairSource, coreMilestoneReplayRepairNormalizationPaths } from "./core-milestone-replay-repair-source-history.mjs";
@@ -2169,7 +2170,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...phpWasmEntryPublicationPreparationNormalizationPaths
+	...phpWasmEntryPublisherNormalizationPaths
+	, ...phpWasmEntryPublicationPreparationNormalizationPaths
 	, ...phpWasmEntryCompleteArchiveNormalizationPaths
 	, ...phpWasmEntryDiagnosticRetentionNormalizationPaths
 	, ...phpWasmEntryHostedReplayNormalizationPaths
@@ -3081,7 +3083,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforePhpWasmEntryPublicationPreparationSource(path, text, expected);
+	let stage = beforePhpWasmEntryPublisherSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforePhpWasmEntryPublicationPreparationSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;
