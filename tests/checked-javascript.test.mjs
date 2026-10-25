@@ -123,6 +123,7 @@ import "./helpers/php-wasm-entry-probe-publication-source-history-tests.mjs";
 import "./helpers/consumer-tool-lookups-tests.mjs";
 import "./helpers/consumer-tool-lookups-source-history-tests.mjs";
 import "./helpers/php-wasm-entry-source-supplement-source-history-tests.mjs";
+import "./helpers/core-recursive-endpoint-tests.mjs";
 
 const root = resolve(".");
 

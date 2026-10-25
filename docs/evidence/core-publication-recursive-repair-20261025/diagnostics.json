@@ -1,0 +1,175 @@
+{
+  "schemaVersion": 1,
+  "scope": "Failure diagnosis only. No full Core or installed consumer acceptance is claimed.",
+  "remote": {
+    "run": 40160209518,
+    "head": "8db80ea109610468c1e509037a6f1771371fa5cf",
+    "scope": "Original terminal failure-log identities and selected diagnostic lines, not a passing result or full retained log.",
+    "logs": [
+      {
+        "job": 121069998049,
+        "url": "https://github.com/seanmorris/lean-bridge/actions/runs/40160209518/job/121069998049",
+        "originalLog": {
+          "bytes": 330385,
+          "sha256": "d68888ea12d8c621f3561a4dec8015ae82ec2e5c44809e3584fcb13f7b0b6949",
+          "lineCount": 3806
+        },
+        "selectedLines": [
+          {
+            "line": 789,
+            "text": "2026-10-25T04:08:13.3279546Z not ok 25 - callback Subtype promotion documents every affected consumer"
+          },
+          {
+            "line": 793,
+            "text": "2026-10-25T04:08:13.3281992Z   location: '/home/runner/work/lean-bridge/lean-bridge/tests/callback-subtype-promotion.test.mjs:138:1'"
+          },
+          {
+            "line": 794,
+            "text": "2026-10-25T04:08:13.3282530Z   failureType: 'testCodeFailure'"
+          },
+          {
+            "line": 795,
+            "text": "2026-10-25T04:08:13.3282806Z   error: |-"
+          },
+          {
+            "line": 826,
+            "text": "2026-10-25T04:08:13.3360861Z   expected:"
+          },
+          {
+            "line": 827,
+            "text": "2026-10-25T04:08:13.3361053Z   actual: |-"
+          },
+          {
+            "line": 925,
+            "text": "2026-10-25T04:08:13.3784099Z     TestContext.<anonymous> (file:///home/runner/work/lean-bridge/lean-bridge/tests/callback-subtype-promotion.test.mjs:179:10)"
+          },
+          {
+            "line": 2397,
+            "text": "2026-10-25T04:28:27.7896059Z not ok 246 - recursive C\\# acceptance adds exactly four cells and preserves authenticated history"
+          },
+          {
+            "line": 2401,
+            "text": "2026-10-25T04:28:27.7897352Z   location: '/home/runner/work/lean-bridge/lean-bridge/tests/dotnet-recursive-callable-evidence.test.mjs:17:1'"
+          },
+          {
+            "line": 2402,
+            "text": "2026-10-25T04:28:27.7897836Z   failureType: 'testCodeFailure'"
+          },
+          {
+            "line": 2403,
+            "text": "2026-10-25T04:28:27.7898111Z   error: |-"
+          },
+          {
+            "line": 2412,
+            "text": "2026-10-25T04:28:27.7899773Z   expected: '9590a355c8c43ccba7ca6ddf03e0ef92b2458442271a5e5e215a48f3380bd857'"
+          },
+          {
+            "line": 2413,
+            "text": "2026-10-25T04:28:27.7900084Z   actual: 'f8e255a8b7787aaa41c586ad5965068e1701e06887074113de680b71aeb0c72e'"
+          },
+          {
+            "line": 2416,
+            "text": "2026-10-25T04:28:27.7900832Z     assertRubyRecursiveCallableIntegration (file:///home/runner/work/lean-bridge/lean-bridge/tests/helpers/ruby-recursive-callable-evidence.mjs:142:34)"
+          },
+          {
+            "line": 2419,
+            "text": "2026-10-25T04:28:27.7903187Z     async TestContext.<anonymous> (file:///home/runner/work/lean-bridge/lean-bridge/tests/dotnet-recursive-callable-evidence.test.mjs:18:2)"
+          },
+          {
+            "line": 3803,
+            "text": "2026-10-25T04:57:09.5676595Z ##[error]The runner has received a shutdown signal. This can happen when the runner service is stopped, or a manually started runner is canceled."
+          },
+          {
+            "line": 3804,
+            "text": "2026-10-25T04:57:09.8970306Z ##[error]The operation was canceled."
+          }
+        ]
+      },
+      {
+        "job": 121069998106,
+        "url": "https://github.com/seanmorris/lean-bridge/actions/runs/40160209518/job/121069998106",
+        "originalLog": {
+          "bytes": 289265,
+          "sha256": "188baf12e1b6c16c9fa80cc8d2433e4b32fa78949ff6dd278debddcd65a726a8",
+          "lineCount": 4127
+        },
+        "selectedLines": [
+          {
+            "line": 4124,
+            "text": "2026-10-25T05:03:23.9682131Z ##[error]The runner has received a shutdown signal. This can happen when the runner service is stopped, or a manually started runner is canceled."
+          },
+          {
+            "line": 4125,
+            "text": "2026-10-25T05:03:24.2378896Z ##[error]The operation was canceled."
+          }
+        ]
+      }
+    ]
+  },
+  "local": [
+    {
+      "kind": "callback documentation reproduction",
+      "exitCode": 1,
+      "heapLimitMiB": 512,
+      "assertion": "The input did not match /do\\s+not widen any type-support cell/u.",
+      "file": "tests/callback-subtype-promotion.test.mjs",
+      "line": 179,
+      "phase": "Streaming input adopted; stale historical assertion not yet corrected.",
+      "source": "Direct observed terminal node:test result. The long rendered-reference dump is not retained in full."
+    },
+    {
+      "kind": "initial unstreamed callback documentation check",
+      "exitCode": 1,
+      "signal": "SIGABRT",
+      "heapLimitMiB": 512,
+      "reason": "Reached heap limit while parsing complete inventories.",
+      "coreDumpsEnabled": false
+    },
+    {
+      "kind": "combined registered recursive checks",
+      "exitCode": 1,
+      "signal": "SIGABRT",
+      "heapLimitMiB": 512,
+      "reason": "Reached heap limit after Ruby and Rust endpoints passed.",
+      "coreDumpsEnabled": false
+    },
+    {
+      "kind": "small original inventory reproduction",
+      "exitCode": 0,
+      "results": [
+        {
+          "language": "ruby",
+          "producer": "7cf6ee0bf049502eb9b581c8cc6efb88dc9aeddc",
+          "bytes": 3306531,
+          "expected": "9590a355c8c43ccba7ca6ddf03e0ef92b2458442271a5e5e215a48f3380bd857",
+          "withoutStop": "f8e255a8b7787aaa41c586ad5965068e1701e06887074113de680b71aeb0c72e",
+          "withStop": "9590a355c8c43ccba7ca6ddf03e0ef92b2458442271a5e5e215a48f3380bd857"
+        },
+        {
+          "language": "rust",
+          "producer": "8dcaf9b69beb73b756743e36c075f58c2bc82f86",
+          "bytes": 3259089,
+          "expected": "85f5753f45d4550c6777d23cc4533fbc120d0d7156d6f85e15a7c3849c36a8d5",
+          "withoutStop": "f8e255a8b7787aaa41c586ad5965068e1701e06887074113de680b71aeb0c72e",
+          "withStop": "85f5753f45d4550c6777d23cc4533fbc120d0d7156d6f85e15a7c3849c36a8d5"
+        },
+        {
+          "language": "python",
+          "producer": "172baa67067a549454fb79449d205f939474e58b",
+          "bytes": 3216318,
+          "expected": "b38209c67c75d671b0f854cc40557e4d0f3bbeb2c4314d9f7a4bc61fcee92d7d",
+          "withoutStop": "f8e255a8b7787aaa41c586ad5965068e1701e06887074113de680b71aeb0c72e",
+          "withStop": "b38209c67c75d671b0f854cc40557e4d0f3bbeb2c4314d9f7a4bc61fcee92d7d"
+        },
+        {
+          "language": "native",
+          "producer": "2273d357fc959cf88bf7b0e1aea70e908ba1ba4d",
+          "bytes": 3163551,
+          "expected": "4c5d20691313af0dfd6d6c2c3ebf7f5ad9e3dc372dcf8997813ffba9503e8abe",
+          "withoutStop": "f8e255a8b7787aaa41c586ad5965068e1701e06887074113de680b71aeb0c72e",
+          "withStop": "4c5d20691313af0dfd6d6c2c3ebf7f5ad9e3dc372dcf8997813ffba9503e8abe"
+        }
+      ]
+    }
+  ]
+}

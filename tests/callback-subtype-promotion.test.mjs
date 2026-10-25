@@ -5,6 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
+import { createReadStream } from "node:fs";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import {
@@ -28,23 +29,24 @@ import {
 import {
 	sourceAtFinHistoryMilestone
 } from "./helpers/source-at-fin-history-milestone.mjs";
+import { gitSourceBytes } from "./helpers/source-history-stream.mjs";
+import { readPromotionInventory } from "./helpers/type-surface-promotion-io.mjs";
+import { phpWasmEntryProbeEvidenceId } from "./helpers/php-wasm-refinement-entry-publication.mjs";
+import { renderPhpWasmEntryProbeBoundary } from "./helpers/php-wasm-refinement-entry-publication-docs.mjs";
 
 const readJson = async path => JSON.parse(await readFile(path, "utf8"));
 const promotionPredecessor = "5b9ca827d621b2bcf8e67c73f85b8d9c8a84b5f0";
-const baselineArgs = ["show"
-	, `${promotionPredecessor}:docs/type-surface.v1.json`];
-const baseline = execFileSync(
-	"git", baselineArgs, { encoding: "utf8", maxBuffer: 512 * 1024 ** 2 }
-);
 const predecessorSource = path => execFileSync("git", ["show"
 	, `${promotionPredecessor}:${path}`], { encoding: "utf8"
 	, maxBuffer: 512 * 1024 ** 2 });
-const document = JSON.parse(baseline);
 const [irSchema, consumers] = await Promise.all([
 	readJson("schema/binding-ir.schema.json")
 	, readJson("docs/consumer-support.v1.json")
 ]);
 const contracts = { irSchema, consumers };
+const { document } = await readPromotionInventory(
+	gitSourceBytes(promotionPredecessor, "docs/type-surface.v1.json"), contracts
+);
 const digest = "0".repeat(64), revision = "0".repeat(40);
 const references = callbackSubtypePromotionLanes.map(item => ({
 	lane: item.lane, profiles: [...item.profiles]
@@ -143,11 +145,11 @@ test("callback Subtype promotion documents every affected consumer", async () =>
 	const after = await renderTypeDocuments({
 		root: ".", inventory: { document: promoted, ...contracts }
 	});
+	const { document: currentDocument } = await readPromotionInventory(
+		createReadStream("docs/type-surface.v1.json"), contracts
+	);
 	const current = await renderTypeDocuments({
-		root: "."
-		, inventory: {
-			document: await readJson("docs/type-surface.v1.json"), ...contracts
-		}
+		root: ".", inventory: { document: currentDocument, ...contracts }
 	});
 	const evidence = /callback-subtype-promotion-20261022\.md/u;
 	for(const [path, source] of Object.entries(after.documents))
@@ -171,14 +173,24 @@ test("callback Subtype promotion documents every affected consumer", async () =>
 	assert.ok(referenceStart >= 0 && referenceEnd > referenceStart);
 	assert.equal(referenceSource.slice(referenceStart, referenceEnd).trimEnd()
 		, current.reference.trimEnd());
-	// These are rendered with today's documentation generator. The configured
-	// measurement topology is independent of the historical support observations.
-	for(const source of [before.reference, after.reference, current.reference])
+	// Historical inventories predate hosted probe publication. The current
+	// reference must instead bind its retained archive without promoting support.
+	for(const source of [before.reference, after.reference])
 	{
 		assert.match(source, /30 ordinary\/reviewed routes in 27 retained artifacts/u);
 		assert.match(source, /do\s+not widen any type-support cell/u);
 		assert.match(source, /is not a hosted result/u);
 	}
+	for(const inventory of [document, promoted])
+		assert.ok(!inventory.evidence.some(entry => entry.id === phpWasmEntryProbeEvidenceId));
+	const probes = currentDocument.evidence.filter(entry => entry.id === phpWasmEntryProbeEvidenceId);
+	assert.equal(probes.length, 1);
+	assert.equal(current.reference.split(renderPhpWasmEntryProbeBoundary(probes[0])).length, 2);
+	assert.match(current.reference, /leave unmodified prepared packages and their supported types unchanged/u);
+	assert.doesNotMatch(current.reference, /is not a hosted result/u);
+	for(const observation of currentDocument.observations)
+		for(const stage of Object.values(observation.stages))
+			assert.ok(!stage.evidence.includes(phpWasmEntryProbeEvidenceId));
 });
 
 test("callback Subtype promotion repairs stale Lean-author and consumer boundaries", async () => {

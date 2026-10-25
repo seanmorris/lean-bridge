@@ -1,0 +1,40 @@
+TAP version 13
+# Subtest: callback Subtype promotion closes exactly 64 non-PHP-Wasm cells
+ok 1 - callback Subtype promotion closes exactly 64 non-PHP-Wasm cells
+  ---
+  duration_ms: 2265.013187
+  type: 'test'
+  ...
+# Subtest: callback Subtype promotion binds exact lanes and refuses repetition
+ok 2 - callback Subtype promotion binds exact lanes and refuses repetition
+  ---
+  duration_ms: 98.89887
+  type: 'test'
+  ...
+# Subtest: callback Subtype promotion renders the exact hosted boundary
+ok 3 - callback Subtype promotion renders the exact hosted boundary
+  ---
+  duration_ms: 0.508927
+  type: 'test'
+  ...
+# Subtest: callback Subtype promotion documents every affected consumer
+ok 4 - callback Subtype promotion documents every affected consumer
+  ---
+  duration_ms: 21453.118525
+  type: 'test'
+  ...
+# Subtest: callback Subtype promotion repairs stale Lean-author and consumer boundaries
+ok 5 - callback Subtype promotion repairs stale Lean-author and consumer boundaries
+  ---
+  duration_ms: 190.663786
+  type: 'test'
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 5
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 31200.261478
