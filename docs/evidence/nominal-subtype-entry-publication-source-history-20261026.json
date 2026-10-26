@@ -1,0 +1,275 @@
+{
+  "additions": [
+    {
+      "commit": "6eadf7e1a23d196a64a74531e2fa5c5e94e76616",
+      "currentSha256": "a355451986fc761057faa6bdede72c9ae09af7d81c89ac2e676a542beb8d8ba8",
+      "path": "scripts/archive-nominal-subtype-entry-evidence.mjs"
+    },
+    {
+      "commit": "6eadf7e1a23d196a64a74531e2fa5c5e94e76616",
+      "currentSha256": "4302387b3bb242d90efa88f937449448b35b5813a3784d01af4c060a3adb9d22",
+      "path": "tests/helpers/nominal-subtype-entry-hosted-evidence-tests.mjs"
+    },
+    {
+      "commit": "6eadf7e1a23d196a64a74531e2fa5c5e94e76616",
+      "currentSha256": "99283726a62e6c96d7caffff7f359da0cad684c358a70f30cfe741db088f797e",
+      "path": "tests/helpers/nominal-subtype-entry-hosted-evidence.mjs"
+    },
+    {
+      "commit": "0c14f487d58f5d247e302203096d8495d7249fa7",
+      "currentSha256": "1eefc74f136832f2c4b26cab22cbd1d8bf01dd429993d0d19a3239844f5d4d48",
+      "path": "tests/nominal-subtype-entry-hosted-evidence.test.mjs"
+    },
+    {
+      "commit": "8594bc6a43fdf28bf3b80da64d31938226d0f0b9",
+      "currentSha256": "15156201931892edc754074bc67cc89826bc99c42dc62d345f0062f02ca4052d",
+      "path": "scripts/promote-nominal-subtype-entry-evidence.mjs"
+    },
+    {
+      "commit": "8594bc6a43fdf28bf3b80da64d31938226d0f0b9",
+      "currentSha256": "e07b8a2072b8c945cf9017f6a4ddab9c206a2d4f872c0a39af9b62ac9bde88bd",
+      "path": "tests/helpers/nominal-subtype-entry-promotion-tests.mjs"
+    },
+    {
+      "commit": "8594bc6a43fdf28bf3b80da64d31938226d0f0b9",
+      "currentSha256": "96f5048f8e6a925a31fa6239f54876889d796f4562955bb2d4f884491ba569b1",
+      "path": "tests/helpers/nominal-subtype-entry-promotion.mjs"
+    },
+    {
+      "commit": "a553cca8d493f167841d413a2c58576f8281b7bb",
+      "currentSha256": "54cfebb8abe2ca90d82eb55dc46e6489d6dfe5ec0835044b82b4d4e5bf1bf290",
+      "path": "docs/evidence/nominal-subtype-entry-promotion-20261026.md"
+    },
+    {
+      "currentSha256": "e19bc4ab48afed15449aa58d94d1a654eaa0d9569a1affc45884e70579207ae1",
+      "path": "scripts/update-nominal-subtype-entry-publication-source-history.mjs"
+    },
+    {
+      "currentSha256": "0b853c326fd43aa878f51647347621095585d38f7389f7a35a267e299f297440",
+      "path": "tests/helpers/nominal-subtype-entry-publication-source-history.mjs"
+    },
+    {
+      "currentSha256": "4d9b75f68bd19ccf83aad75873ac2541efd49f454f6b0490ba065d5cc9d55459",
+      "path": "tests/helpers/nominal-subtype-entry-publication-source-history-tests.mjs"
+    }
+  ],
+  "archives": [
+    {
+      "commit": "df942ba02a891d83cb6fac60ff30572a33e34e8e",
+      "committedBytes": 21890840,
+      "committedFiles": 1637,
+      "indexSha256": "84117788b03fed4ec21fbd7c7fd67e42eb4dbf2abe4ef4da2254aee747e8eafb",
+      "lane": "native",
+      "manifestFiles": 1636,
+      "producerCommit": "390ae18d3a2607bc73463767a33fea0cfb9350b0",
+      "root": "docs/evidence/nominal-subtype-entry-native-hosted-20261024"
+    },
+    {
+      "commit": "9e5c697891996ff721f9f761f50c5da33255e8e0",
+      "committedBytes": 32674943,
+      "committedFiles": 2409,
+      "indexSha256": "66ec4ffe09cb7216170f0d5b5c77829c5a88152793d4a533d02681e71aa3c219",
+      "lane": "browser",
+      "manifestFiles": 2408,
+      "producerCommit": "4a5f3ad87b829e6363cd655d8d39d252344ba8a5",
+      "root": "docs/evidence/nominal-subtype-entry-browser-hosted-20261024"
+    }
+  ],
+  "commits": [
+    "6eadf7e1a23d196a64a74531e2fa5c5e94e76616",
+    "df942ba02a891d83cb6fac60ff30572a33e34e8e",
+    "9e5c697891996ff721f9f761f50c5da33255e8e0",
+    "0c14f487d58f5d247e302203096d8495d7249fa7",
+    "8594bc6a43fdf28bf3b80da64d31938226d0f0b9",
+    "a553cca8d493f167841d413a2c58576f8281b7bb"
+  ],
+  "integrationCommit": "6c4e4fccb16c7ec63ea61e00e00404d3f9d72229",
+  "integrationUpdates": [
+    {
+      "currentSha256": "7646d2c74f6cbbd621113d68538d87a30268b59736f45dd2eba363f779e4cdc7",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"5e23a0eca2ba58b57b80799fc7066db2d35ce1abd7e3e00d1483ed6ab1ec754b\"\n",
+          "previous": "          \"sha256\": \"9c8cfc7b1b986cc98d646943ac6e18afe15fa058997bb475bb9babf3af1634dd\"\n",
+          "start": 685394
+        },
+        {
+          "current": "          \"sha256\": \"5e23a0eca2ba58b57b80799fc7066db2d35ce1abd7e3e00d1483ed6ab1ec754b\"\n",
+          "previous": "          \"sha256\": \"9c8cfc7b1b986cc98d646943ac6e18afe15fa058997bb475bb9babf3af1634dd\"\n",
+          "start": 1440962
+        },
+        {
+          "current": "          \"sha256\": \"5e23a0eca2ba58b57b80799fc7066db2d35ce1abd7e3e00d1483ed6ab1ec754b\"\n",
+          "previous": "          \"sha256\": \"9c8cfc7b1b986cc98d646943ac6e18afe15fa058997bb475bb9babf3af1634dd\"\n",
+          "start": 1447496
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "e554e0e81af0de5010338727e1cebf48175269d879fac25c236b551b938d2198"
+    },
+    {
+      "currentSha256": "5e23a0eca2ba58b57b80799fc7066db2d35ce1abd7e3e00d1483ed6ab1ec754b",
+      "edits": [
+        {
+          "current": "import \"./helpers/nominal-subtype-entry-publication-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 8524
+        }
+      ],
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "29dc4359e21c33dba6026aa205a6b8b3679de1dfb920309fe37b9d10aa379240"
+    },
+    {
+      "currentSha256": "7a2667c61494a5feb7b2e34e3c95d34f9993bd0a2cc293ff99bbfd35c869305e",
+      "edits": [
+        {
+          "current": "import { beforeNominalSubtypeEntryPublicationSource, nominalSubtypeEntryPublicationNormalizationPaths } from \"./nominal-subtype-entry-publication-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...nominalSubtypeEntryPublicationNormalizationPaths\n\t, ...ownedCheckedSemanticAuditNormalizationPaths\n",
+          "previous": "\t...ownedCheckedSemanticAuditNormalizationPaths\n",
+          "start": 190190
+        },
+        {
+          "current": "\tlet stage = beforeNominalSubtypeEntryPublicationSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeOwnedCheckedSemanticAuditSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeOwnedCheckedSemanticAuditSource(path, text, expected);\n",
+          "start": 236018
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "c47b932c45ee02703243c0c3a5b9529a6dc050497669561de7c4816dac1820a5"
+    }
+  ],
+  "milestone": "nominal-subtype-entry-publication-source-v1",
+  "predecessorCommit": "0ab9a0fd3d650ea924c50e8d83ae163746a4954f",
+  "publicationCommit": "a553cca8d493f167841d413a2c58576f8281b7bb",
+  "schemaVersion": 1,
+  "scope": "Retain and independently replay the original native and browser nominal Subtype constructor/source-entry measurements, publish exactly two test-only evidence records without changing any support observation, document the instrumented/unmodified and C/C++ measurement boundaries, and authenticate every source, archive, publication and live-pin transition.",
+  "updates": [
+    {
+      "currentSha256": "1658975e92fa04fd3fbd932aa7abb0fdb54e37300749cf6b03112b0898f6c14e",
+      "edits": [
+        {
+          "current": "import \"./helpers/nominal-subtype-entry-hosted-summary-tests.mjs\";\nimport \"./helpers/nominal-subtype-entry-hosted-evidence-tests.mjs\";\n",
+          "previous": "",
+          "start": 8327
+        }
+      ],
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "9c8cfc7b1b986cc98d646943ac6e18afe15fa058997bb475bb9babf3af1634dd"
+    },
+    {
+      "currentSha256": "df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba",
+      "edits": [
+        {
+          "current": "\t\t, \"nominal-subtype-entry-hosted-evidence\"\n",
+          "previous": "",
+          "start": 1537
+        }
+      ],
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "c9d875ffc7e5983666e24a169b0f01f01a88f1125a9ba668ebb988b8bacf5d81"
+    },
+    {
+      "currentSha256": "29dc4359e21c33dba6026aa205a6b8b3679de1dfb920309fe37b9d10aa379240",
+      "edits": [
+        {
+          "current": "import \"./helpers/nominal-subtype-entry-promotion-tests.mjs\";\n",
+          "previous": "",
+          "start": 8462
+        }
+      ],
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "1658975e92fa04fd3fbd932aa7abb0fdb54e37300749cf6b03112b0898f6c14e"
+    },
+    {
+      "currentSha256": "002f2d4ca00317b317de78e21eec41e46f20e6e4ab48e86808f26da2c9b0c4c8",
+      "edits": [
+        {
+          "current": "The separate [hosted nominal entry measurement](../evidence/nominal-subtype-entry-promotion-20261026.md) executes ordinary-source and reviewed-IR full and result-only C and C++ packages after source-free offline installation and relocation on Linux x64/glibc 2.39, above the declared 2.38 floor. Full C probes distinguish public entry, validator, the selected `plusOne` or `plusTwo` constructor, adapter and Lean source; invalid and inactive paths stop at their proper boundary, late failures preserve the earlier entries, and later valid calls recover. C++ executes the same consumers without claiming entry counters. Result-only packages explicitly record no constructor or source measurement. These instrumented probes do not change the unmodified installed-package support claim.\n\n",
+          "previous": "",
+          "start": 36589
+        }
+      ],
+      "path": "docs/consume/c.md",
+      "previousSha256": "c83a611277c2292c350b4ac75dbacf85fd4c399b015c1401e304db1c747d709c"
+    },
+    {
+      "currentSha256": "f7425cb2e1286f668bc8e235e578e2b9a94e0868bf5c430150ea374e199112d1",
+      "edits": [
+        {
+          "current": "A separate [hosted nominal entry measurement](../evidence/nominal-subtype-entry-promotion-20261026.md) runs the ordinary-source and reviewed-IR full and result-only C++ consumers after source-free offline installation and relocation on Linux x64/glibc 2.39. The same artifact measures C full-package public, validator, selected-constructor, adapter and Lean-source entries, but C++ is explicitly classified as executed without entry counters. Result-only packages record no constructor or source measurement. These test-only instrumented packages do not change the unmodified C++ support claim.\n\n",
+          "previous": "",
+          "start": 36713
+        }
+      ],
+      "path": "docs/consume/cpp.md",
+      "previousSha256": "127d7044d45e47783f790e70df6829068644a4ca5545fbce4d17f5e2aa58c5af"
+    },
+    {
+      "currentSha256": "04949f48578e129b35a6af70bdc66a7f0613c6301dd2c93334c2117c0cf3efb2",
+      "edits": [
+        {
+          "current": "The separate [hosted constructor/source-entry measurement](evidence/nominal-subtype-entry-promotion-20261026.md) replays instrumented ordinary-source and reviewed-IR full and result-only packages. Full packages record public JavaScript entry, the selected validator and constructor, the direct component adapter and Lean source in Node, strict TypeScript, pages, React and workers across Chromium, Firefox and WebKit. Result-only packages record explicit entry nonmeasurement. These test probes do not add counters to unmodified releases or change their installed support.\n\n",
+          "previous": "",
+          "start": 21020
+        }
+      ],
+      "path": "docs/javascript-typescript.md",
+      "previousSha256": "77142135cb1d647c1ee56717f6479fa40c15e30365d7497bb6a91abc967f5a03"
+    },
+    {
+      "currentSha256": "7c5136da0dde86302ac2d0e3e1cffe5953f8968662f6f5cd6ed8b9ffc58c5f60",
+      "edits": [
+        {
+          "current": "The separate [hosted nominal constructor/source-entry measurement](../evidence/nominal-subtype-entry-promotion-20261026.md) retains ordinary-source and reviewed-IR full and result-only instrumented packages. Native execution covers C and C++ after relocation at the glibc 2.38 release floor: full C records public, validator, selected-constructor, adapter and Lean-source entries, while C++ is explicitly executed without counters. Browser execution covers Node, strict TypeScript and twelve Chromium, Firefox and WebKit page, React and worker contexts per route and mode; full packages record entry observations and result-only packages record explicit nonmeasurement. These test probes leave all unmodified support observations unchanged.\n\n",
+          "previous": "",
+          "start": 99508
+        }
+      ],
+      "path": "docs/lean/existing-package.md",
+      "previousSha256": "0966a145bd1bdda391e63ca43f3d74aaaab1fcee3bb1cd60dbaa693204f1744d"
+    },
+    {
+      "currentSha256": "e554e0e81af0de5010338727e1cebf48175269d879fac25c236b551b938d2198",
+      "edits": [
+        {
+          "current": "    },\n    {\n      \"id\": \"nominal-subtype-entry-native-hosted-instrumented\",\n      \"kind\": \"test\",\n      \"revision\": \"390ae18d3a2607bc73463767a33fea0cfb9350b0\",\n      \"command\": \"node --test --test-name-pattern='^retained native nominal Subtype entry evidence replays$' tests/nominal-subtype-entry-hosted-evidence.test.mjs\",\n      \"scope\": \"GitHub Actions run 40047587455, job 120732738789, artifact 12545325934 retains ordinary-source and reviewed-IR full and result-only instrumented packages. The full C package measures public entry, validator, selected plusOne/plusTwo constructor, adapter and Lean source across valid, invalid, inactive-branch, late-failure and recovery cases on Linux x64/glibc 2.39 against the declared 2.38 floor. Both C++ package modes execute, but C++ entry counters are explicitly unmeasured; result-only packages are explicitly classified as having no constructor/source measurement. This is test-only entry evidence for separate instrumented packages; it does not change any installed support state or imply counters in an unmodified release. External toolchains and runtimes remain trusted recorded inputs.\",\n      \"files\": [\n        {\n          \"path\": \"docs/evidence/nominal-subtype-entry-native-hosted-20261024/index.json\",\n          \"sha256\": \"84117788b03fed4ec21fbd7c7fd67e42eb4dbf2abe4ef4da2254aee747e8eafb\"\n        },\n        {\n          \"path\": \"docs/evidence/nominal-subtype-entry-native-hosted-20261024/hosted/api/artifact.json\",\n          \"sha256\": \"ffe0ae433127a959f0f86aff757a5e4264c29fa48c6743900d326588bb143261\"\n        },\n        {\n          \"path\": \"docs/evidence/nominal-subtype-entry-native-hosted-20261024/hosted/api/job.json\",\n          \"sha256\": \"12261a9e7091f6e5edb76977e04981df0456cfb4479954eaddd74935c19291a4\"\n        },\n        {\n          \"path\": \"docs/evidence/nominal-subtype-entry-native-hosted-20261024/hosted/api/run.json\",\n          \"sha256\": \"b8a76c072f7d536be84f628175f160356f0ce4d46a49473dc649ca655674bd64\"\n        },\n        {\n          \"path\": \"docs/evidence/nominal-subtype-entry-native-hosted-20261024/hosted/artifact.zip.parts/0000.part\",\n          \"sha256\": \"74f8b3c822ffb14c1b1a5c7dbac38d464b7477845660d2cfb1805e3a9d1cb56c\"\n        },\n        {\n          \"path\": \"scripts/archive-nominal-subtype-entry-evidence.mjs\",\n          \"sha256\": \"a355451986fc761057faa6bdede72c9ae09af7d81c89ac2e676a542beb8d8ba8\"\n        },\n        {\n          \"path\": \"scripts/promote-nominal-subtype-entry-evidence.mjs\",\n          \"sha256\": \"15156201931892edc754074bc67cc89826bc99c42dc62d345f0062f02ca4052d\"\n        },\n        {\n          \"path\": \"tests/nominal-subtype-entry-hosted-evidence.test.mjs\",\n          \"sha256\": \"1eefc74f136832f2c4b26cab22cbd1d8bf01dd429993d0d19a3239844f5d4d48\"\n        },\n        {\n          \"path\": \"tests/helpers/nominal-subtype-entry-hosted-evidence.mjs\",\n          \"sha256\": \"99283726a62e6c96d7caffff7f359da0cad684c358a70f30cfe741db088f797e\"\n        },\n        {\n          \"path\": \"tests/helpers/nominal-subtype-entry-hosted-summary.mjs\",\n          \"sha256\": \"f9008534d3c852a2722434ab859c06cf790e4e61899a692cb4c56f0b8c2465df\"\n        },\n        {\n          \"path\": \"tests/helpers/nominal-subtype-entry-promotion.mjs\",\n          \"sha256\": \"96f5048f8e6a925a31fa6239f54876889d796f4562955bb2d4f884491ba569b1\"\n        },\n        {\n          \"path\": \"tests/helpers/type-surface-promotion-io.mjs\",\n          \"sha256\": \"89c4b392fbf482e453e48552de977790a783691ee7f28dba07bf58ec5c0db296\"\n        },\n        {\n          \"path\": \"tests/helpers/promotion-file-transaction.mjs\",\n          \"sha256\": \"00181a5537d811a32ed39ff61093356b7f9af72a774026c3860e70b551a2df72\"\n        }\n      ],\n      \"artifacts\": [\n        {\n          \"path\": \"docs/evidence/nominal-subtype-entry-native-hosted-20261024/hosted/artifact.zip.parts/0000.part\",\n          \"sha256\": \"74f8b3c822ffb14c1b1a5c7dbac38d464b7477845660d2cfb1805e3a9d1cb56c\"\n        }\n      ]\n    },\n    {\n      \"id\": \"nominal-subtype-entry-browser-hosted-instrumented\",\n      \"kind\": \"test\",\n      \"revision\": \"4a5f3ad87b829e6363cd655d8d39d252344ba8a5\",\n      \"command\": \"node --test --test-name-pattern='^retained browser nominal Subtype entry evidence replays$' tests/nominal-subtype-entry-hosted-evidence.test.mjs\",\n      \"scope\": \"GitHub Actions run 40063486749, job 120781764266, artifact 12549471396 retains ordinary-source and reviewed-IR full and result-only instrumented packages. The full package measures public JavaScript entry, selected validator and plusOne/plusTwo constructor, direct component adapter and Lean source in Node, strict TypeScript, Chromium, Firefox and WebKit pages, React effects and workers, including valid, invalid, inactive-branch, late-failure and recovery cases. Result-only packages retain explicit entry nonmeasurement. This is test-only entry evidence for separate instrumented packages; it does not change any installed support state or imply counters in an unmodified release. External toolchains and runtimes remain trusted recorded inputs.\",\n      \"files\": [\n        {\n          \"path\": \"docs/evidence/nominal-subtype-entry-browser-hosted-20261024/index.json\",\n          \"sha256\": \"66ec4ffe09cb7216170f0d5b5c77829c5a88152793d4a533d02681e71aa3c219\"\n        },\n        {\n          \"path\": \"docs/evidence/nominal-subtype-entry-browser-hosted-20261024/hosted/api/artifact.json\",\n          \"sha256\": \"d9c9eda6178be12bec36c25cac059e8cb1523d7927f1bc3c83cb9e25d8f92a0a\"\n        },\n        {\n          \"path\": \"docs/evidence/nominal-subtype-entry-browser-hosted-20261024/hosted/api/job.json\",\n          \"sha256\": \"9177bfe7de66b6e2822fea39089755b220f3dc4e981a4d33e2dcc94b1877b83a\"\n        },\n        {\n          \"path\": \"docs/evidence/nominal-subtype-entry-browser-hosted-20261024/hosted/api/run.json\",\n          \"sha256\": \"222efb7e190a08ca57cfc397b47dab479aa478c5144429ac3583503f5c1244bc\"\n        },\n        {\n          \"path\": \"docs/evidence/nominal-subtype-entry-browser-hosted-20261024/hosted/artifact.zip.parts/0000.part\",\n          \"sha256\": \"c940b802217dfc637012e372991450e8f7cf1b818347e640fcc28cdb3a784cb5\"\n        },\n        {\n          \"path\": \"scripts/archive-nominal-subtype-entry-evidence.mjs\",\n          \"sha256\": \"a355451986fc761057faa6bdede72c9ae09af7d81c89ac2e676a542beb8d8ba8\"\n        },\n        {\n          \"path\": \"scripts/promote-nominal-subtype-entry-evidence.mjs\",\n          \"sha256\": \"15156201931892edc754074bc67cc89826bc99c42dc62d345f0062f02ca4052d\"\n        },\n        {\n          \"path\": \"tests/nominal-subtype-entry-hosted-evidence.test.mjs\",\n          \"sha256\": \"1eefc74f136832f2c4b26cab22cbd1d8bf01dd429993d0d19a3239844f5d4d48\"\n        },\n        {\n          \"path\": \"tests/helpers/nominal-subtype-entry-hosted-evidence.mjs\",\n          \"sha256\": \"99283726a62e6c96d7caffff7f359da0cad684c358a70f30cfe741db088f797e\"\n        },\n        {\n          \"path\": \"tests/helpers/nominal-subtype-entry-hosted-summary.mjs\",\n          \"sha256\": \"f9008534d3c852a2722434ab859c06cf790e4e61899a692cb4c56f0b8c2465df\"\n        },\n        {\n          \"path\": \"tests/helpers/nominal-subtype-entry-promotion.mjs\",\n          \"sha256\": \"96f5048f8e6a925a31fa6239f54876889d796f4562955bb2d4f884491ba569b1\"\n        },\n        {\n          \"path\": \"tests/helpers/type-surface-promotion-io.mjs\",\n          \"sha256\": \"89c4b392fbf482e453e48552de977790a783691ee7f28dba07bf58ec5c0db296\"\n        },\n        {\n          \"path\": \"tests/helpers/promotion-file-transaction.mjs\",\n          \"sha256\": \"00181a5537d811a32ed39ff61093356b7f9af72a774026c3860e70b551a2df72\"\n        }\n      ],\n      \"artifacts\": [\n        {\n          \"path\": \"docs/evidence/nominal-subtype-entry-browser-hosted-20261024/hosted/artifact.zip.parts/0000.part\",\n          \"sha256\": \"c940b802217dfc637012e372991450e8f7cf1b818347e640fcc28cdb3a784cb5\"\n        }\n      ]\n",
+          "previous": "",
+          "start": 89671981
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "3f8296969661cd6587f90e4ae49eb9af3508036f13114bcdcc8825e82eaa07e6"
+    },
+    {
+      "currentSha256": "e07b8a2072b8c945cf9017f6a4ddab9c206a2d4f872c0a39af9b62ac9bde88bd",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { createReadStream } from \"node:fs\";\n",
+          "start": 125
+        },
+        {
+          "current": "import { gitSourceBytes } from \"./source-history-stream.mjs\";\n",
+          "previous": "",
+          "start": 571
+        },
+        {
+          "current": "const implementation = \"8594bc6a43fdf28bf3b80da64d31938226d0f0b9\";\n",
+          "previous": "",
+          "start": 766
+        },
+        {
+          "current": "\t\tgitSourceBytes(implementation, \"docs/type-surface.v1.json\")\n\t\t, { irSchema, consumers });\n",
+          "previous": "\t\tcreateReadStream(\"docs/type-surface.v1.json\"), { irSchema, consumers });\n",
+          "start": 1775
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-entry-promotion-tests.mjs",
+      "previousSha256": "4fc382788f4043a5fc711c7f7e83fa93fe74a898fac0bf9142aeed52330c66e6"
+    }
+  ]
+}
