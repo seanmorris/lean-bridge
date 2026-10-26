@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeCoreWitBorrowStopBoundarySource, coreWitBorrowStopBoundaryNormalizationPaths } from "./core-wit-borrow-stop-boundary-source-history.mjs";
 import { beforeCoreReceiverCiProducerReplaySource, coreReceiverCiProducerReplayNormalizationPaths } from "./core-receiver-ci-producer-replay-source-history.mjs";
 import { beforeCoreWitBorrowProducerReplaySource, coreWitBorrowProducerReplayNormalizationPaths } from "./core-wit-borrow-producer-replay-source-history.mjs";
 import { beforeCoreExactHeadLivePinRepairSource, coreExactHeadLivePinRepairNormalizationPaths } from "./core-exact-head-live-pin-repair-source-history.mjs";
@@ -2213,7 +2214,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...coreReceiverCiProducerReplayNormalizationPaths
+	...coreWitBorrowStopBoundaryNormalizationPaths
+	, ...coreReceiverCiProducerReplayNormalizationPaths
 	, ...coreWitBorrowProducerReplayNormalizationPaths
 	, ...coreExactHeadLivePinRepairNormalizationPaths
 	, ...coreHistoricalEvidenceReplayNormalizationPaths
@@ -3169,7 +3171,13 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeCoreReceiverCiProducerReplaySource(
+	let stage = beforeCoreWitBorrowStopBoundarySource(
+		path, text, expected
+	);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeCoreReceiverCiProducerReplaySource(
 		path, text, expected
 	);
 	if(expected !== undefined && sha256(stage) === expected)

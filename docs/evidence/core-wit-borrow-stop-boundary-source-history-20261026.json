@@ -1,0 +1,87 @@
+{
+  "additions": [
+    {
+      "currentSha256": "7299dbd46b95de0dc1156c6c6aac950941fcaad6cd39e8612a8e34abb3c0ee82",
+      "path": "scripts/update-core-wit-borrow-stop-boundary-source-history.mjs"
+    },
+    {
+      "currentSha256": "16dca3351303eb4dce375fce844e7df02f32aa5138604a0b80f9a674381362cf",
+      "path": "tests/helpers/core-wit-borrow-stop-boundary-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "d3e8339d46b03e9351c27847d72ff13c195b3cfb",
+  "integrationUpdates": [
+    {
+      "currentSha256": "680d60038f9762f6d1efad59c4092e91c16307ab1bb38cc1b27841f60c5a4087",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeCoreWitBorrowStopBoundarySource\n\t, coreWitBorrowStopBoundaryAddedPaths\n\t, coreWitBorrowStopBoundaryHistoryPath\n\t, coreWitBorrowStopBoundaryImplementation\n\t, coreWitBorrowStopBoundaryImplementationPaths\n\t, coreWitBorrowStopBoundaryIntegrationPaths\n\t, coreWitBorrowStopBoundaryPredecessor\n\t, reverseCoreWitBorrowStopBoundaryUpdate\n} from \"./core-wit-borrow-stop-boundary-source-history.mjs\";\n",
+          "previous": "",
+          "start": 357
+        },
+        {
+          "current": "const readWitBorrowStopBoundary = async () => JSON.parse(await readFile(\n\tcoreWitBorrowStopBoundaryHistoryPath, \"utf8\"\n));\n",
+          "previous": "",
+          "start": 3313
+        },
+        {
+          "current": "\ntest(\"Core WIT stop boundary records its exact source range\", async () => {\n\tconst record = await readWitBorrowStopBoundary();\n\tassert.equal(record.schemaVersion, 1);\n\tassert.equal(record.milestone\n\t\t, \"core-wit-borrow-stop-boundary-source-v1\");\n\tassert.equal(record.predecessorCommit\n\t\t, coreWitBorrowStopBoundaryPredecessor);\n\tassert.equal(record.implementationCommit\n\t\t, coreWitBorrowStopBoundaryImplementation);\n\tassert.deepEqual(record.updates.map(update => update.path)\n\t\t, coreWitBorrowStopBoundaryImplementationPaths);\n\tassert.deepEqual(record.integrationUpdates.map(update => update.path)\n\t\t, coreWitBorrowStopBoundaryIntegrationPaths);\n\tassert.deepEqual(record.additions.map(addition => addition.path)\n\t\t, coreWitBorrowStopBoundaryAddedPaths);\n\tassert.equal(git([\"rev-parse\"\n\t\t, `${coreWitBorrowStopBoundaryImplementation}^`]).trim()\n\t, coreWitBorrowStopBoundaryPredecessor);\n});\n\ntest(\"Core WIT stop boundary reverses every source transition\", async () => {\n\tconst record = await readWitBorrowStopBoundary();\n\tfor(const update of [...record.updates, ...record.integrationUpdates])\n\t{\n\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256\n\t\t\t, beforeCoreWitBorrowStopBoundarySource);\n\t\tconst base = record.integrationUpdates.includes(update)\n\t\t\t? coreWitBorrowStopBoundaryImplementation\n\t\t\t: coreWitBorrowStopBoundaryPredecessor;\n\t\tconst previous = git([\"show\", `${base}:${update.path}`]);\n\t\tassert.equal(reverseCoreWitBorrowStopBoundaryUpdate(\n\t\t\tcurrent, update), previous, update.path);\n\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n\t\tassert.ok(finRefinementNormalizationPaths.includes(update.path));\n\t}\n});\n\ntest(\"Core WIT stop boundary selects exact transition endpoints\", () => {\n\tconst source = git([\"show\"\n\t\t, `${coreWitBorrowStopBoundaryImplementation}:tests/wit-owned-borrow-evidence.test.mjs`]);\n\tassert.match(source\n\t\t, /prior = reverseOwnedWitBorrowUpdate\\(source, update\\)/u);\n\tassert.match(source\n\t\t, /update\\.path, source, update\\.previousSha256\\), prior/u);\n\tassert.match(source\n\t\t, /update\\.path, prior, update\\.previousSha256\\), prior/u);\n\tassert.match(source\n\t\t, /const prior = JSON\\.parse\\(reverseOwnedWitBorrowUpdate\\(current, update\\)\\)/u);\n});\n\ntest(\"Core WIT stop boundary rejects altered transitions\", async () => {\n\tconst update = (await readWitBorrowStopBoundary()).updates[0];\n\tconst current = await sourceAtFinHistoryMilestone(\n\t\tupdate.path, update.currentSha256\n\t\t, beforeCoreWitBorrowStopBoundarySource);\n\tfor(const forged of [{ ...update, currentSha256: \"0\".repeat(64) }\n\t\t, { ...update, previousSha256: \"0\".repeat(64) }\n\t\t, { ...update, path: \"unrelated.mjs\" }\n\t\t, { ...update, edits: [] }\n\t\t, { ...update, edits: [...update.edits, update.edits[0]] }])\n\t\tassert.throws(() => reverseCoreWitBorrowStopBoundaryUpdate(\n\t\t\tcurrent, forged));\n\tassert.equal(beforeCoreWitBorrowStopBoundarySource(\n\t\tupdate.path, current + \"unknown\"), current + \"unknown\");\n});\n\ntest(\"Core WIT stop-boundary writer refuses another checkout\", async t => {\n\tconst root = await mkdtemp(join(\n\t\ttmpdir(), \"lean-core-wit-stop-boundary-guard-\"\n\t));\n\tt.after(() => rm(root, { recursive: true }));\n\tconst result = spawnSync(process.execPath, [resolve(\n\t\t\"scripts/update-core-wit-borrow-stop-boundary-source-history.mjs\"\n\t)], { cwd: root, encoding: \"utf8\", timeout: 15_000 });\n\tassert.notEqual(result.status, 0);\n\tassert.equal(result.stdout, \"\");\n\tassert.deepEqual(await readdir(root), []);\n});\n",
+          "previous": "",
+          "start": 18351
+        }
+      ],
+      "path": "tests/helpers/core-historical-evidence-replay-source-history-tests.mjs",
+      "previousSha256": "9de889b9bff3bab701e5649ea7c3dc50ab34f8bfbb976b92e0e2183ce5716eac"
+    },
+    {
+      "currentSha256": "c86a341f70958ee80776655c38f14979d09d505f77522d75acebf00e282131ff",
+      "edits": [
+        {
+          "current": "import { beforeCoreWitBorrowStopBoundarySource, coreWitBorrowStopBoundaryNormalizationPaths } from \"./core-wit-borrow-stop-boundary-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...coreWitBorrowStopBoundaryNormalizationPaths\n\t, ...coreReceiverCiProducerReplayNormalizationPaths\n",
+          "previous": "\t...coreReceiverCiProducerReplayNormalizationPaths\n",
+          "start": 191293
+        },
+        {
+          "current": "\tlet stage = beforeCoreWitBorrowStopBoundarySource(\n\t\tpath, text, expected\n\t);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCoreReceiverCiProducerReplaySource(\n",
+          "previous": "\tlet stage = beforeCoreReceiverCiProducerReplaySource(\n",
+          "start": 237482
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "c39359c3d0230d56edad87a3485773b8d4bfcce745682c3c586f5b8942abbb43"
+    }
+  ],
+  "milestone": "core-wit-borrow-stop-boundary-source-v1",
+  "predecessorCommit": "93db05fd5cae64a43dab09e16fdc459265798e8a",
+  "schemaVersion": 1,
+  "scope": "Reverse the exact retained WIT borrowed-result transition directly at its immutable producer and stop the composite history chain at the explicit predecessor identity. Preserve the original receipt, runtime implementation, packages, evidence payloads and support claims. Final exact-head Core acceptance remains required.",
+  "updates": [
+    {
+      "currentSha256": "623ee94d71b791525c4179f61b772a1a5ede7022f3e7b46dfd1ef8273c92cc6a",
+      "edits": [
+        {
+          "current": "\t\t), prior = reverseOwnedWitBorrowUpdate(source, update);\n",
+          "previous": "\t\t), prior = beforeOwnedWitBorrow(\n\t\t\tupdate.path, source, update.previousSha256\n\t\t);\n",
+          "start": 2127
+        },
+        {
+          "current": "\t\tassert.equal(beforeOwnedWitBorrow(\n\t\t\tupdate.path, source, update.previousSha256), prior);\n\t\tassert.equal(beforeOwnedWitBorrow(\n\t\t\tupdate.path, prior, update.previousSha256), prior);\n",
+          "previous": "\t\tassert.equal(beforeOwnedWitBorrow(update.path, prior), prior);\n",
+          "start": 2239
+        },
+        {
+          "current": "\tconst update = record.updates.find(value => value.path === path);\n\tassert.ok(update);\n\tconst prior = JSON.parse(reverseOwnedWitBorrowUpdate(current, update));\n",
+          "previous": "\tconst prior = JSON.parse(beforeOwnedWitBorrow(path, current\n\t\t, record.updates.find(update => update.path === path)?.previousSha256));\n",
+          "start": 3070
+        }
+      ],
+      "path": "tests/wit-owned-borrow-evidence.test.mjs",
+      "previousSha256": "850c58f2cdcb1b397424705c71f13f19e8232e124e21ed15af51d6b15a1cd531"
+    }
+  ]
+}
