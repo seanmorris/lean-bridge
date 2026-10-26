@@ -10,6 +10,16 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import {
+	beforeCoreExactHeadLivePinRepairSource
+	, coreExactHeadLivePinRepairAddedPaths
+	, coreExactHeadLivePinRepairHistoryPath
+	, coreExactHeadLivePinRepairImplementation
+	, coreExactHeadLivePinRepairImplementationPaths
+	, coreExactHeadLivePinRepairIntegrationPaths
+	, coreExactHeadLivePinRepairPredecessor
+	, reverseCoreExactHeadLivePinRepairUpdate
+} from "./core-exact-head-live-pin-repair-source-history.mjs";
+import {
 	beforeCoreHistoricalEvidenceReplaySource
 	, coreHistoricalEvidenceReplayAddedPaths
 	, coreHistoricalEvidenceReplayHistoryPath
@@ -26,9 +36,12 @@ import { sha256 } from "./source-history-digest.mjs";
 import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
 
 const git = arguments_ => execFileSync("git", arguments_
-	, { encoding: "utf8", maxBuffer: 8 * 1024 * 1024 });
+	, { encoding: "utf8", maxBuffer: 128 * 1024 * 1024 });
 const read = async () => JSON.parse(await readFile(
 	coreHistoricalEvidenceReplayHistoryPath, "utf8"
+));
+const readLivePinRepair = async () => JSON.parse(await readFile(
+	coreExactHeadLivePinRepairHistoryPath, "utf8"
 ));
 
 test("Core historical replay records its exact source range", async () => {
@@ -119,6 +132,84 @@ test("Core historical replay writer refuses another checkout", async t => {
 	t.after(() => rm(root, { recursive: true }));
 	const result = spawnSync(process.execPath, [resolve(
 		"scripts/update-core-historical-evidence-replay-source-history.mjs"
+	)], { cwd: root, encoding: "utf8", timeout: 15_000 });
+	assert.notEqual(result.status, 0);
+	assert.equal(result.stdout, "");
+	assert.deepEqual(await readdir(root), []);
+});
+
+test("exact-head Core live-pin repair changes three references only", async () => {
+	const previous = git(["show"
+		, `${coreExactHeadLivePinRepairPredecessor}:docs/type-surface.v1.json`]);
+	const current = git(["show"
+		, `${coreExactHeadLivePinRepairImplementation}:docs/type-surface.v1.json`]);
+	const oldDigest
+		= "5f0c703ca8eea060a7fdcfa1bfbf5d9d1413f935091064e859ccc013127b7632";
+	const newDigest
+		= "205e9c7a110260c81b27447db39b479d2957431bee9e54116d49023f1f4cc46b";
+	assert.equal(previous.split(oldDigest).length - 1, 3);
+	assert.equal(current.split(newDigest).length - 1, 3);
+	assert.equal(previous.replaceAll(oldDigest, newDigest), current);
+	assert.equal(sha256(current), sha256(await readFile(
+		"docs/type-surface.v1.json"
+	)));
+});
+
+test("exact-head Core live-pin repair records and reverses its range", async () => {
+	const record = await readLivePinRepair();
+	assert.equal(record.schemaVersion, 1);
+	assert.equal(record.milestone
+		, "core-exact-head-live-pin-repair-source-v1");
+	assert.equal(record.predecessorCommit
+		, coreExactHeadLivePinRepairPredecessor);
+	assert.equal(record.implementationCommit
+		, coreExactHeadLivePinRepairImplementation);
+	assert.deepEqual(record.updates.map(update => update.path)
+		, coreExactHeadLivePinRepairImplementationPaths);
+	assert.deepEqual(record.integrationUpdates.map(update => update.path)
+		, coreExactHeadLivePinRepairIntegrationPaths);
+	assert.deepEqual(record.additions.map(addition => addition.path)
+		, coreExactHeadLivePinRepairAddedPaths);
+	for(const update of [...record.updates, ...record.integrationUpdates])
+	{
+		const current = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256
+			, beforeCoreExactHeadLivePinRepairSource);
+		const base = record.integrationUpdates.includes(update)
+			? coreExactHeadLivePinRepairImplementation
+			: coreExactHeadLivePinRepairPredecessor;
+		const previous = git(["show", `${base}:${update.path}`]);
+		assert.equal(reverseCoreExactHeadLivePinRepairUpdate(
+			current, update), previous, update.path);
+		assert.equal(beforeFinRefinementSource(
+			update.path, current, update.previousSha256), previous, update.path);
+		assert.ok(finRefinementNormalizationPaths.includes(update.path));
+	}
+});
+
+test("exact-head Core live-pin repair rejects altered transitions", async () => {
+	const update = (await readLivePinRepair()).updates[0];
+	const current = await sourceAtFinHistoryMilestone(
+		update.path, update.currentSha256
+		, beforeCoreExactHeadLivePinRepairSource);
+	for(const forged of [{ ...update, currentSha256: "0".repeat(64) }
+		, { ...update, previousSha256: "0".repeat(64) }
+		, { ...update, path: "unrelated.mjs" }
+		, { ...update, edits: [] }
+		, { ...update, edits: [...update.edits, update.edits[0]] }])
+		assert.throws(() => reverseCoreExactHeadLivePinRepairUpdate(
+			current, forged));
+	assert.equal(beforeCoreExactHeadLivePinRepairSource(
+		update.path, current + "unknown"), current + "unknown");
+});
+
+test("exact-head Core live-pin writer refuses another checkout", async t => {
+	const root = await mkdtemp(join(
+		tmpdir(), "lean-core-exact-head-live-pin-guard-"
+	));
+	t.after(() => rm(root, { recursive: true }));
+	const result = spawnSync(process.execPath, [resolve(
+		"scripts/update-core-exact-head-live-pin-repair-source-history.mjs"
 	)], { cwd: root, encoding: "utf8", timeout: 15_000 });
 	assert.notEqual(result.status, 0);
 	assert.equal(result.stdout, "");
