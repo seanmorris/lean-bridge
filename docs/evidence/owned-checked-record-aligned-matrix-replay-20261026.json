@@ -1,0 +1,1370 @@
+{
+  "checkerSources": [
+    {
+      "path": "scripts/check-owned-checked-record-matrix.mjs",
+      "sha256": "a1313774f8a44ea29f09566b37fc6b6d778a1b93ab1803b8c45a82fd3cf2053f"
+    },
+    {
+      "path": "tests/helpers/owned-checked-record-hosted-matrix.mjs",
+      "sha256": "e12472bd8eebeb13f3b98d70395346cf89bd1937ebefe321f78ee1297a985b48"
+    },
+    {
+      "path": "tests/helpers/owned-checked-record-hosted-evidence.mjs",
+      "sha256": "a62f02fea376bd4f717ca8a782f87767928399dc1b3a76fcc72346115555929c"
+    },
+    {
+      "path": "tests/helpers/owned-checked-record-hosted-output.mjs",
+      "sha256": "19f2beca3e34dbb527e1a693b51d10209afe16016bea8ee9e0991023c5c13318"
+    },
+    {
+      "path": "tests/helpers/owned-checked-record-promotion.mjs",
+      "sha256": "e22e5b30baa39fb2c2a38542a45aed63fa3de6aff1912f7ed687ec76f82d87da"
+    }
+  ],
+  "elapsedMs": 225987.09049099998,
+  "finishedAt": "2026-10-26T00:06:45.427Z",
+  "kind": "owned-checked-record-aligned-matrix-replay",
+  "lanes": [
+    {
+      "bytes": 887071746,
+      "elapsedMs": 32887.129367,
+      "files": 1685,
+      "lane": "native"
+    },
+    {
+      "bytes": 457997036,
+      "elapsedMs": 50827.081844,
+      "files": 1690,
+      "lane": "perl"
+    },
+    {
+      "bytes": 452823021,
+      "elapsedMs": 67957.158278,
+      "files": 1679,
+      "lane": "python"
+    },
+    {
+      "bytes": 442771998,
+      "elapsedMs": 90508.217392,
+      "files": 1679,
+      "lane": "ruby"
+    },
+    {
+      "bytes": 452605515,
+      "elapsedMs": 108729.919596,
+      "files": 1681,
+      "lane": "rust"
+    },
+    {
+      "bytes": 453040062,
+      "elapsedMs": 131574.377454,
+      "files": 1676,
+      "lane": "dotnet"
+    },
+    {
+      "bytes": 454129591,
+      "elapsedMs": 151848.128608,
+      "files": 1684,
+      "lane": "jvm"
+    },
+    {
+      "bytes": 452889808,
+      "elapsedMs": 170871.164115,
+      "files": 1676,
+      "lane": "php"
+    },
+    {
+      "bytes": 515872661,
+      "elapsedMs": 189861.161237,
+      "files": 1679,
+      "lane": "wit"
+    },
+    {
+      "bytes": 39093967,
+      "elapsedMs": 200462.90123199997,
+      "files": 1520,
+      "lane": "javascript"
+    },
+    {
+      "bytes": 67765676,
+      "elapsedMs": 224669.870218,
+      "files": 1753,
+      "lane": "php-wasm"
+    }
+  ],
+  "localLimits": {
+    "cpus": 1,
+    "maxOldSpaceMiB": 512,
+    "nice": 15
+  },
+  "replay": {
+    "captures": [
+      {
+        "accepted": {
+          "acceptanceLogSha256": "0f062fd5940002d39e5380671b28ab11b7e5e7fa74d1ca24799b542e4168705b",
+          "kind": "owned-checked-record-hosted-replay",
+          "lane": "native",
+          "producerCommit": "9e571b4214df98e1b8d0319f24fe7b6729ab34ba",
+          "reportSha256": "cf9a77fccc53505fe8cc81e1553659a3528dadb303973dac06a50093dca3a9ff",
+          "routes": [
+            {
+              "archiveBytes": 108263843,
+              "archives": 2,
+              "checks": {
+                "c": 928,
+                "cpp": 197
+              },
+              "packages": [
+                {
+                  "ecosystem": "c",
+                  "name": "owned-checked-records",
+                  "target": "c",
+                  "version": "1.0.0"
+                },
+                {
+                  "ecosystem": "cpp",
+                  "name": "owned-checked-records",
+                  "target": "cpp",
+                  "version": "1.0.0"
+                }
+              ],
+              "path": "evidence/ordinary-full/handoff",
+              "receiptSha256": "ba8f64af031c4e1780692a2c4fffe59e1439b1d1665c4a3306f0b7d6d8237bb3",
+              "route": "ordinary-full"
+            },
+            {
+              "archiveBytes": 108120100,
+              "archives": 2,
+              "checks": {
+                "c": 14,
+                "cpp": 3
+              },
+              "packages": [
+                {
+                  "ecosystem": "c",
+                  "name": "owned-checked-records-result-only",
+                  "target": "c",
+                  "version": "1.0.0"
+                },
+                {
+                  "ecosystem": "cpp",
+                  "name": "owned-checked-records-result-only",
+                  "target": "cpp",
+                  "version": "1.0.0"
+                }
+              ],
+              "path": "evidence/ordinary-result-only/handoff",
+              "receiptSha256": "d710704cb0580cfc38cc760c024e70b66fd250848f934fb9711f6a33c394e763",
+              "route": "ordinary-result-only"
+            },
+            {
+              "archiveBytes": 108267879,
+              "archives": 2,
+              "checks": {
+                "c": 928,
+                "cpp": 197
+              },
+              "packages": [
+                {
+                  "ecosystem": "c",
+                  "name": "owned-checked-records",
+                  "target": "c",
+                  "version": "1.0.0"
+                },
+                {
+                  "ecosystem": "cpp",
+                  "name": "owned-checked-records",
+                  "target": "cpp",
+                  "version": "1.0.0"
+                }
+              ],
+              "path": "evidence/reviewed-full/handoff",
+              "receiptSha256": "e25285c769d3c94e2b005c5306a26c1c727ad97cc3b9ecddcff6eada171b33bf",
+              "route": "reviewed-full"
+            },
+            {
+              "archiveBytes": 108121816,
+              "archives": 2,
+              "checks": {
+                "c": 14,
+                "cpp": 3
+              },
+              "packages": [
+                {
+                  "ecosystem": "c",
+                  "name": "owned-checked-records-result-only",
+                  "target": "c",
+                  "version": "1.0.0"
+                },
+                {
+                  "ecosystem": "cpp",
+                  "name": "owned-checked-records-result-only",
+                  "target": "cpp",
+                  "version": "1.0.0"
+                }
+              ],
+              "path": "evidence/reviewed-result-only/handoff",
+              "receiptSha256": "08654d75eb756731381316ce98c37707d80c5068ec73591b5a8550ce1785bf47",
+              "route": "reviewed-result-only"
+            }
+          ],
+          "schemaVersion": 1,
+          "tests": 6
+        },
+        "archiveCommit": "19353f1f5935129ac2209e1246f461fb227911ab",
+        "artifactId": 12615598910,
+        "committed": {
+          "bytes": 887071746,
+          "files": 1685
+        },
+        "index": {
+          "path": "docs/evidence/owned-checked-record-native-hosted-20261025-aligned/index.json",
+          "sha256": "18da6d498baad9a45f39a46f8d977824db27646d726de689f946bf1f643fabe7"
+        },
+        "jobId": 121298431391,
+        "lane": "native",
+        "producerCommit": "9e571b4214df98e1b8d0319f24fe7b6729ab34ba",
+        "runId": 40236273660
+      },
+      {
+        "accepted": {
+          "acceptanceLogSha256": "154527dd9a56f6da07feecfc92cd3c492a2c38700c0692b37b10d74b754f65a9",
+          "kind": "owned-checked-record-hosted-replay",
+          "lane": "perl",
+          "producerCommit": "9e571b4214df98e1b8d0319f24fe7b6729ab34ba",
+          "reportSha256": "69dbc61b95fa30a693178d06487ad6f118a1258534bec3c1ea9161c9de6a2d83",
+          "routes": [
+            {
+              "archiveBytes": 54642388,
+              "archives": 2,
+              "checks": {
+                "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-threaded/bin/perl/build-xs": 202,
+                "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-threaded/bin/perl/prebuilt-only": 202,
+                "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-unthreaded/bin/perl/build-xs": 202,
+                "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-unthreaded/bin/perl/prebuilt-only": 202,
+                "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-threaded/bin/perl/build-xs": 202,
+                "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-threaded/bin/perl/prebuilt-only": 202,
+                "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-unthreaded/bin/perl/build-xs": 202,
+                "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-unthreaded/bin/perl/prebuilt-only": 202
+              },
+              "packages": [
+                {
+                  "ecosystem": "cpan",
+                  "name": "LeanBridge-OwnedCheckedRecords",
+                  "target": "cpan",
+                  "version": "1.000"
+                },
+                {
+                  "ecosystem": "cpan",
+                  "name": "LeanBridge-Runtime",
+                  "target": "cpan",
+                  "version": "0.0020873093885122476990213970161242772861093089627532315710208989625599780543964681"
+                }
+              ],
+              "path": "evidence/ordinary-full/handoff",
+              "receiptSha256": "77a4dcc264a9f918f6c89cee42f48d37f160ff6d6533d3bb54c65d56380339b5",
+              "route": "ordinary-full"
+            },
+            {
+              "archiveBytes": 54427000,
+              "archives": 2,
+              "checks": {
+                "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-threaded/bin/perl/build-xs": 9,
+                "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-threaded/bin/perl/prebuilt-only": 9,
+                "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-unthreaded/bin/perl/build-xs": 9,
+                "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-unthreaded/bin/perl/prebuilt-only": 9,
+                "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-threaded/bin/perl/build-xs": 9,
+                "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-threaded/bin/perl/prebuilt-only": 9,
+                "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-unthreaded/bin/perl/build-xs": 9,
+                "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-unthreaded/bin/perl/prebuilt-only": 9
+              },
+              "packages": [
+                {
+                  "ecosystem": "cpan",
+                  "name": "LeanBridge-OwnedCheckedRecords",
+                  "target": "cpan",
+                  "version": "1.000"
+                },
+                {
+                  "ecosystem": "cpan",
+                  "name": "LeanBridge-Runtime",
+                  "target": "cpan",
+                  "version": "0.0020873093885122476990213970161242772861093089627532315710208989625599780543964681"
+                }
+              ],
+              "path": "evidence/ordinary-result-only/handoff",
+              "receiptSha256": "c5384bdbfad1b9bdf8e15955d9ffa95edc41ecfc3026db7ca08445b85c667c8d",
+              "route": "ordinary-result-only"
+            },
+            {
+              "archiveBytes": 54644156,
+              "archives": 2,
+              "checks": {
+                "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-threaded/bin/perl/build-xs": 202,
+                "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-threaded/bin/perl/prebuilt-only": 202,
+                "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-unthreaded/bin/perl/build-xs": 202,
+                "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-unthreaded/bin/perl/prebuilt-only": 202,
+                "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-threaded/bin/perl/build-xs": 202,
+                "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-threaded/bin/perl/prebuilt-only": 202,
+                "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-unthreaded/bin/perl/build-xs": 202,
+                "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-unthreaded/bin/perl/prebuilt-only": 202
+              },
+              "packages": [
+                {
+                  "ecosystem": "cpan",
+                  "name": "LeanBridge-OwnedCheckedRecords",
+                  "target": "cpan",
+                  "version": "1.000"
+                },
+                {
+                  "ecosystem": "cpan",
+                  "name": "LeanBridge-Runtime",
+                  "target": "cpan",
+                  "version": "0.0020873093885122476990213970161242772861093089627532315710208989625599780543964681"
+                }
+              ],
+              "path": "evidence/reviewed-full/handoff",
+              "receiptSha256": "434532dd60c9d9d7ffd1969a6c66a0d200ac69c93384c8bc06e667a33b992fa0",
+              "route": "reviewed-full"
+            },
+            {
+              "archiveBytes": 54428059,
+              "archives": 2,
+              "checks": {
+                "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-threaded/bin/perl/build-xs": 9,
+                "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-threaded/bin/perl/prebuilt-only": 9,
+                "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-unthreaded/bin/perl/build-xs": 9,
+                "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-unthreaded/bin/perl/prebuilt-only": 9,
+                "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-threaded/bin/perl/build-xs": 9,
+                "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-threaded/bin/perl/prebuilt-only": 9,
+                "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-unthreaded/bin/perl/build-xs": 9,
+                "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-unthreaded/bin/perl/prebuilt-only": 9
+              },
+              "packages": [
+                {
+                  "ecosystem": "cpan",
+                  "name": "LeanBridge-OwnedCheckedRecords",
+                  "target": "cpan",
+                  "version": "1.000"
+                },
+                {
+                  "ecosystem": "cpan",
+                  "name": "LeanBridge-Runtime",
+                  "target": "cpan",
+                  "version": "0.0020873093885122476990213970161242772861093089627532315710208989625599780543964681"
+                }
+              ],
+              "path": "evidence/reviewed-result-only/handoff",
+              "receiptSha256": "09cf5155c7efdd5cca76192ebdc63c3732eee232eaaaa212e85d257b27b5c798",
+              "route": "reviewed-result-only"
+            }
+          ],
+          "schemaVersion": 1,
+          "tests": 6
+        },
+        "archiveCommit": "6e402114efcb157b6e023a0254d64c3ce8c4e788",
+        "artifactId": 12616921063,
+        "committed": {
+          "bytes": 457997036,
+          "files": 1690
+        },
+        "index": {
+          "path": "docs/evidence/owned-checked-record-perl-hosted-20261025-aligned/index.json",
+          "sha256": "0ff15f3158d7106f2091a239e0b3cb24bfc778a939f1b74eb25d023cbea6713b"
+        },
+        "jobId": 121298431428,
+        "lane": "perl",
+        "producerCommit": "9e571b4214df98e1b8d0319f24fe7b6729ab34ba",
+        "runId": 40236273660
+      },
+      {
+        "accepted": {
+          "acceptanceLogSha256": "bf7023216cd113996c4da54a07147398b821e77f4e31d66c5bc3e912cb0d5af1",
+          "kind": "owned-checked-record-hosted-replay",
+          "lane": "python",
+          "producerCommit": "9e571b4214df98e1b8d0319f24fe7b6729ab34ba",
+          "reportSha256": "49ec0f8c049e138d9d56ceb96d45c0d220a7b01307776e382a9791468656682a",
+          "routes": [
+            {
+              "archiveBytes": 53948875,
+              "archives": 1,
+              "checks": {
+                "python": 219
+              },
+              "packages": [
+                {
+                  "ecosystem": "pypi",
+                  "name": "lean-owned-checked-records",
+                  "target": "pypi",
+                  "version": "1.0.0"
+                }
+              ],
+              "path": "evidence/python/ordinary-full/handoff",
+              "receiptSha256": "c80f593280046aeee3b8eeea33fbcc898d16856e87fb273df9c7da2ca0dcab56",
+              "route": "ordinary-full"
+            },
+            {
+              "archiveBytes": 53872762,
+              "archives": 1,
+              "checks": {
+                "python": 5
+              },
+              "packages": [
+                {
+                  "ecosystem": "pypi",
+                  "name": "lean-owned-checked-records-result-only",
+                  "target": "pypi",
+                  "version": "1.0.0"
+                }
+              ],
+              "path": "evidence/python/ordinary-result-only/handoff",
+              "receiptSha256": "161149b7b842472cfdc7abefe730594c8301132f62d8d902fbe6510bd5de8bf6",
+              "route": "ordinary-result-only"
+            },
+            {
+              "archiveBytes": 53952618,
+              "archives": 1,
+              "checks": {
+                "python": 219
+              },
+              "packages": [
+                {
+                  "ecosystem": "pypi",
+                  "name": "lean-owned-checked-records",
+                  "target": "pypi",
+                  "version": "1.0.0"
+                }
+              ],
+              "path": "evidence/python/reviewed-full/handoff",
+              "receiptSha256": "daf96081f0e9d8d7c341139cd78796f8661cc394133316c474d7f6e993d82dcd",
+              "route": "reviewed-full"
+            },
+            {
+              "archiveBytes": 53875948,
+              "archives": 1,
+              "checks": {
+                "python": 5
+              },
+              "packages": [
+                {
+                  "ecosystem": "pypi",
+                  "name": "lean-owned-checked-records-result-only",
+                  "target": "pypi",
+                  "version": "1.0.0"
+                }
+              ],
+              "path": "evidence/python/reviewed-result-only/handoff",
+              "receiptSha256": "b35af5024f817a1fe17c2e2f1d048b8a43756066e3fdfc5b4921a166b74ffff4",
+              "route": "reviewed-result-only"
+            }
+          ],
+          "schemaVersion": 1,
+          "tests": 6
+        },
+        "archiveCommit": "fae1a3d03f901805515a6351416ba1e64b61692b",
+        "artifactId": 12615882524,
+        "committed": {
+          "bytes": 452823021,
+          "files": 1679
+        },
+        "index": {
+          "path": "docs/evidence/owned-checked-record-python-hosted-20261025-aligned/index.json",
+          "sha256": "cf4126841375fd468401e7f0e153156989edb0160779bfa15711beda05999ce4"
+        },
+        "jobId": 121298494305,
+        "lane": "python",
+        "producerCommit": "9e571b4214df98e1b8d0319f24fe7b6729ab34ba",
+        "runId": 40236294611
+      },
+      {
+        "accepted": {
+          "acceptanceLogSha256": "8636b0b2c11f292741e9ddb9dbbcd623f00e8eee278b3612de80469b51b75ff8",
+          "kind": "owned-checked-record-hosted-replay",
+          "lane": "ruby",
+          "producerCommit": "9e571b4214df98e1b8d0319f24fe7b6729ab34ba",
+          "reportSha256": "6a786a692256bfe267c6b9dd1a1e8a7c38db5e2674a41696a0fdad58f3b84e08",
+          "routes": [
+            {
+              "archiveBytes": 52700672,
+              "archives": 1,
+              "checks": {
+                "ruby": 219
+              },
+              "packages": [
+                {
+                  "ecosystem": "rubygems",
+                  "name": "lean_bridge_owned_checked_records",
+                  "target": "rubygems",
+                  "version": "1.0.0"
+                }
+              ],
+              "path": "evidence/ruby/ordinary-full/handoff",
+              "receiptSha256": "75e44d177ec2295de8a26f55d7a98468a4787c606af494078e5b3da2182df8a6",
+              "route": "ordinary-full"
+            },
+            {
+              "archiveBytes": 52610560,
+              "archives": 1,
+              "checks": {
+                "ruby": 5
+              },
+              "packages": [
+                {
+                  "ecosystem": "rubygems",
+                  "name": "lean_bridge_owned_checked_records-result-only",
+                  "target": "rubygems",
+                  "version": "1.0.0"
+                }
+              ],
+              "path": "evidence/ruby/ordinary-result-only/handoff",
+              "receiptSha256": "dd7747124b475b9011c548f06455bf94fcc4177bc8de08a5443835cd6cb197e5",
+              "route": "ordinary-result-only"
+            },
+            {
+              "archiveBytes": 52703744,
+              "archives": 1,
+              "checks": {
+                "ruby": 219
+              },
+              "packages": [
+                {
+                  "ecosystem": "rubygems",
+                  "name": "lean_bridge_owned_checked_records",
+                  "target": "rubygems",
+                  "version": "1.0.0"
+                }
+              ],
+              "path": "evidence/ruby/reviewed-full/handoff",
+              "receiptSha256": "182d3551178809487351afd4e553043e295607d9eb506d8a35e1469021a709fb",
+              "route": "reviewed-full"
+            },
+            {
+              "archiveBytes": 52611072,
+              "archives": 1,
+              "checks": {
+                "ruby": 5
+              },
+              "packages": [
+                {
+                  "ecosystem": "rubygems",
+                  "name": "lean_bridge_owned_checked_records-result-only",
+                  "target": "rubygems",
+                  "version": "1.0.0"
+                }
+              ],
+              "path": "evidence/ruby/reviewed-result-only/handoff",
+              "receiptSha256": "90a5faa3b00f8d9b5cea7b9e18dd590046f27ce1075a5f684ae4f4b9bc14ba5b",
+              "route": "reviewed-result-only"
+            }
+          ],
+          "schemaVersion": 1,
+          "tests": 6
+        },
+        "archiveCommit": "c7ccbab88d3d988248bdab92e4a605fd0274e975",
+        "artifactId": 12615234328,
+        "committed": {
+          "bytes": 442771998,
+          "files": 1679
+        },
+        "index": {
+          "path": "docs/evidence/owned-checked-record-ruby-hosted-20261025-aligned/index.json",
+          "sha256": "a19b6e7d6e14726af2beec855719d900058c5e26efbdd499a7f9bf1c741abbb9"
+        },
+        "jobId": 121298494525,
+        "lane": "ruby",
+        "producerCommit": "9e571b4214df98e1b8d0319f24fe7b6729ab34ba",
+        "runId": 40236294611
+      },
+      {
+        "accepted": {
+          "acceptanceLogSha256": "b9005e7a299a54da9453cce9666a9b9b0f33210c3c87f39ed6d3d14401703b27",
+          "kind": "owned-checked-record-hosted-replay",
+          "lane": "rust",
+          "producerCommit": "9e571b4214df98e1b8d0319f24fe7b6729ab34ba",
+          "reportSha256": "69adc2c02321a9b4c4cd168c4d56da672126595dda04e8cc45ecbde1a859be7f",
+          "routes": [
+            {
+              "archiveBytes": 53911601,
+              "archives": 1,
+              "checks": {
+                "rust": 218
+              },
+              "packages": [
+                {
+                  "ecosystem": "cargo",
+                  "name": "owned-checked-records",
+                  "target": "cargo",
+                  "version": "1.0.0"
+                }
+              ],
+              "path": "evidence/rust/ordinary-full/handoff",
+              "receiptSha256": "6350f283fb996e259931aa8b9e4215f30f127a2c2ad311c3446b64d0ccffccf0",
+              "route": "ordinary-full"
+            },
+            {
+              "archiveBytes": 53833458,
+              "archives": 1,
+              "checks": {
+                "rust": 3
+              },
+              "packages": [
+                {
+                  "ecosystem": "cargo",
+                  "name": "owned-checked-records-result-only",
+                  "target": "cargo",
+                  "version": "1.0.0"
+                }
+              ],
+              "path": "evidence/rust/ordinary-result-only/handoff",
+              "receiptSha256": "a82c27441357bc700b0e76dbb01d497f08816d1123386847c6726df245ad2a09",
+              "route": "ordinary-result-only"
+            },
+            {
+              "archiveBytes": 53914558,
+              "archives": 1,
+              "checks": {
+                "rust": 218
+              },
+              "packages": [
+                {
+                  "ecosystem": "cargo",
+                  "name": "owned-checked-records",
+                  "target": "cargo",
+                  "version": "1.0.0"
+                }
+              ],
+              "path": "evidence/rust/reviewed-full/handoff",
+              "receiptSha256": "ecf6bc4d931cdbd39e52266f87a47518e83d812750c1c485ddc6f1136a0d3b63",
+              "route": "reviewed-full"
+            },
+            {
+              "archiveBytes": 53835283,
+              "archives": 1,
+              "checks": {
+                "rust": 3
+              },
+              "packages": [
+                {
+                  "ecosystem": "cargo",
+                  "name": "owned-checked-records-result-only",
+                  "target": "cargo",
+                  "version": "1.0.0"
+                }
+              ],
+              "path": "evidence/rust/reviewed-result-only/handoff",
+              "receiptSha256": "7166a7c3ad0d5b1bf23063cc317dbe4ebdf219c35b2d6158c7a547a585814a91",
+              "route": "reviewed-result-only"
+            }
+          ],
+          "schemaVersion": 1,
+          "tests": 6
+        },
+        "archiveCommit": "abcaaa79eaad9a660915b481c525b14c9130ec1b",
+        "artifactId": 12615748799,
+        "committed": {
+          "bytes": 452605515,
+          "files": 1681
+        },
+        "index": {
+          "path": "docs/evidence/owned-checked-record-rust-hosted-20261025-aligned/index.json",
+          "sha256": "3ff5d269cbc10a99964d38fb8aee8ab544b394c245d691634c6f43627fe37518"
+        },
+        "jobId": 121298494478,
+        "lane": "rust",
+        "producerCommit": "9e571b4214df98e1b8d0319f24fe7b6729ab34ba",
+        "runId": 40236294611
+      },
+      {
+        "accepted": {
+          "acceptanceLogSha256": "3ff3537657c0a7b538c2570893beb89e1ab937e663e5da8a8ed1a9b5e53493ee",
+          "kind": "owned-checked-record-hosted-replay",
+          "lane": "dotnet",
+          "producerCommit": "9e571b4214df98e1b8d0319f24fe7b6729ab34ba",
+          "reportSha256": "7c00614644f2ad47269621ef2fe0c64a3c364f3d3279b5013d43b2203070e931",
+          "routes": [
+            {
+              "archiveBytes": 54010760,
+              "archives": 1,
+              "checks": {
+                "dotnet": 190
+              },
+              "packages": [
+                {
+                  "ecosystem": "nuget",
+                  "name": "LeanBridge.OwnedCheckedRecords",
+                  "target": "nuget",
+                  "version": "1.0.0"
+                }
+              ],
+              "path": "evidence/dotnet/ordinary-full/handoff",
+              "receiptSha256": "8bc3e269147b80c418f94c1dd23c460b180249df3197f678c45007004ddfb3fd",
+              "route": "ordinary-full"
+            },
+            {
+              "archiveBytes": 53911964,
+              "archives": 1,
+              "checks": {
+                "dotnet": 4
+              },
+              "packages": [
+                {
+                  "ecosystem": "nuget",
+                  "name": "LeanBridge.OwnedCheckedRecords.ResultOnly",
+                  "target": "nuget",
+                  "version": "1.0.0"
+                }
+              ],
+              "path": "evidence/dotnet/ordinary-result-only/handoff",
+              "receiptSha256": "68480958916427ef32566004a75a575ce2f6f1dc44a737fcde4c125608ab57c4",
+              "route": "ordinary-result-only"
+            },
+            {
+              "archiveBytes": 54014491,
+              "archives": 1,
+              "checks": {
+                "dotnet": 190
+              },
+              "packages": [
+                {
+                  "ecosystem": "nuget",
+                  "name": "LeanBridge.OwnedCheckedRecords",
+                  "target": "nuget",
+                  "version": "1.0.0"
+                }
+              ],
+              "path": "evidence/dotnet/reviewed-full/handoff",
+              "receiptSha256": "068087b5a17b70bb48242918e4ae45816897694faa072e04b24457a4a4331572",
+              "route": "reviewed-full"
+            },
+            {
+              "archiveBytes": 53915159,
+              "archives": 1,
+              "checks": {
+                "dotnet": 4
+              },
+              "packages": [
+                {
+                  "ecosystem": "nuget",
+                  "name": "LeanBridge.OwnedCheckedRecords.ResultOnly",
+                  "target": "nuget",
+                  "version": "1.0.0"
+                }
+              ],
+              "path": "evidence/dotnet/reviewed-result-only/handoff",
+              "receiptSha256": "74b6bc9d36bd752d4643b9847dd142f4b65aa29be04a582eea2b037e7933242e",
+              "route": "reviewed-result-only"
+            }
+          ],
+          "schemaVersion": 1,
+          "tests": 6
+        },
+        "archiveCommit": "6a336af4291d925cb5420ace0d2be09601ed81ee",
+        "artifactId": 12615334092,
+        "committed": {
+          "bytes": 453040062,
+          "files": 1676
+        },
+        "index": {
+          "path": "docs/evidence/owned-checked-record-dotnet-hosted-20261025-aligned/index.json",
+          "sha256": "87102e162fb12c0ee1e70ae1e549340a647d197cf9eb7af6511890b596182635"
+        },
+        "jobId": 121298672764,
+        "lane": "dotnet",
+        "producerCommit": "9e571b4214df98e1b8d0319f24fe7b6729ab34ba",
+        "runId": 40236352466
+      },
+      {
+        "accepted": {
+          "acceptanceLogSha256": "72fd66e5294151b2d8ce4f8492ce6e4c7ebc2d9bac7ac341143c393986d9eb91",
+          "kind": "owned-checked-record-hosted-replay",
+          "lane": "jvm",
+          "producerCommit": "9e571b4214df98e1b8d0319f24fe7b6729ab34ba",
+          "reportSha256": "f868128f8cf04db373e2053ed976e390e45d97b3f935b2e5235d41fcb28c7cc1",
+          "routes": [
+            {
+              "archiveBytes": 54186555,
+              "archives": 2,
+              "checks": {
+                "java": 181,
+                "kotlin": 177
+              },
+              "packages": [
+                {
+                  "ecosystem": "maven",
+                  "name": "org.leanbridge:owned-checked-records",
+                  "target": "maven",
+                  "version": "1.0.0"
+                }
+              ],
+              "path": "evidence/jvm/ordinary-full/handoff",
+              "receiptSha256": "73d97154173350a86804f5678e5a3a03eeeeb0b720a28e900fcc76bc8ea24fa6",
+              "route": "ordinary-full"
+            },
+            {
+              "archiveBytes": 54026067,
+              "archives": 2,
+              "checks": {
+                "java": 4,
+                "kotlin": 4
+              },
+              "packages": [
+                {
+                  "ecosystem": "maven",
+                  "name": "org.leanbridge:owned-checked-records-result-only",
+                  "target": "maven",
+                  "version": "1.0.0"
+                }
+              ],
+              "path": "evidence/jvm/ordinary-result-only/handoff",
+              "receiptSha256": "d1488cabaeccf58747a62a425b8d409c9ca9c35f77e603e50534499486a3f824",
+              "route": "ordinary-result-only"
+            },
+            {
+              "archiveBytes": 54190476,
+              "archives": 2,
+              "checks": {
+                "java": 181,
+                "kotlin": 177
+              },
+              "packages": [
+                {
+                  "ecosystem": "maven",
+                  "name": "org.leanbridge:owned-checked-records",
+                  "target": "maven",
+                  "version": "1.0.0"
+                }
+              ],
+              "path": "evidence/jvm/reviewed-full/handoff",
+              "receiptSha256": "cbd5373ce0bc6d9ab998de634e5d282f0ea9dff15ba08f311fd4d832bb12b55c",
+              "route": "reviewed-full"
+            },
+            {
+              "archiveBytes": 54029337,
+              "archives": 2,
+              "checks": {
+                "java": 4,
+                "kotlin": 4
+              },
+              "packages": [
+                {
+                  "ecosystem": "maven",
+                  "name": "org.leanbridge:owned-checked-records-result-only",
+                  "target": "maven",
+                  "version": "1.0.0"
+                }
+              ],
+              "path": "evidence/jvm/reviewed-result-only/handoff",
+              "receiptSha256": "07828ff1addbddeae82c8cfc66a556756e35a7d86227a2292e7de6486b31c23a",
+              "route": "reviewed-result-only"
+            }
+          ],
+          "schemaVersion": 1,
+          "tests": 6
+        },
+        "archiveCommit": "bdecb136424733f712c3bca731e85366e43ff070",
+        "artifactId": 12616421690,
+        "committed": {
+          "bytes": 454129591,
+          "files": 1684
+        },
+        "index": {
+          "path": "docs/evidence/owned-checked-record-jvm-hosted-20261025-aligned/index.json",
+          "sha256": "e811cd58404141a0ba77af26ae7a9179a848cc2140a2cc4f12e98003c608bcca"
+        },
+        "jobId": 121298672624,
+        "lane": "jvm",
+        "producerCommit": "9e571b4214df98e1b8d0319f24fe7b6729ab34ba",
+        "runId": 40236352466
+      },
+      {
+        "accepted": {
+          "acceptanceLogSha256": "60ea025fee574a946ad70a9cbe869cf7f7526f49e15d0ae521bf506b882feb1e",
+          "kind": "owned-checked-record-hosted-replay",
+          "lane": "php",
+          "producerCommit": "9e571b4214df98e1b8d0319f24fe7b6729ab34ba",
+          "reportSha256": "f7dd5042c80a914169f5f97e2cfca900e47f83fa19dc787fde5f690bc9578034",
+          "routes": [
+            {
+              "archiveBytes": 53987938,
+              "archives": 1,
+              "checks": {
+                "php-native": 180
+              },
+              "packages": [
+                {
+                  "ecosystem": "composer",
+                  "name": "leanbridge/owned-checked-records",
+                  "target": "php-native",
+                  "version": "1.0.0"
+                }
+              ],
+              "path": "evidence/php/ordinary-full/handoff",
+              "receiptSha256": "06608fa88168a288727c7fe308f706dac007c09c9379b69b6263a7b1b828baa6",
+              "route": "ordinary-full"
+            },
+            {
+              "archiveBytes": 53897289,
+              "archives": 1,
+              "checks": {
+                "php-native": 4
+              },
+              "packages": [
+                {
+                  "ecosystem": "composer",
+                  "name": "leanbridge/owned-checked-records-result-only",
+                  "target": "php-native",
+                  "version": "1.0.0"
+                }
+              ],
+              "path": "evidence/php/ordinary-result-only/handoff",
+              "receiptSha256": "21b3be1f6cf90914283e62943ffb949244a3fab03db7d7d74eb8d7858d20577b",
+              "route": "ordinary-result-only"
+            },
+            {
+              "archiveBytes": 53991734,
+              "archives": 1,
+              "checks": {
+                "php-native": 180
+              },
+              "packages": [
+                {
+                  "ecosystem": "composer",
+                  "name": "leanbridge/owned-checked-records",
+                  "target": "php-native",
+                  "version": "1.0.0"
+                }
+              ],
+              "path": "evidence/php/reviewed-full/handoff",
+              "receiptSha256": "d49e2bb831d6cd116053a4ed32309060615221374b533b8e0c5d731c50e13c8d",
+              "route": "reviewed-full"
+            },
+            {
+              "archiveBytes": 53900468,
+              "archives": 1,
+              "checks": {
+                "php-native": 4
+              },
+              "packages": [
+                {
+                  "ecosystem": "composer",
+                  "name": "leanbridge/owned-checked-records-result-only",
+                  "target": "php-native",
+                  "version": "1.0.0"
+                }
+              ],
+              "path": "evidence/php/reviewed-result-only/handoff",
+              "receiptSha256": "5b57d0448791b6cb0720d5f68774910a9266b50aaa82fb6f901ab491c1b21922",
+              "route": "reviewed-result-only"
+            }
+          ],
+          "schemaVersion": 1,
+          "tests": 6
+        },
+        "archiveCommit": "fb5ad7a5a70819cd9c9e47c3e87a9d5bba76f797",
+        "artifactId": 12615658472,
+        "committed": {
+          "bytes": 452889808,
+          "files": 1676
+        },
+        "index": {
+          "path": "docs/evidence/owned-checked-record-php-hosted-20261025-aligned/index.json",
+          "sha256": "9afd15fa365fa26d529404140c83226eaedc5b6687b5437e663998dfaa0d6452"
+        },
+        "jobId": 121298672790,
+        "lane": "php",
+        "producerCommit": "9e571b4214df98e1b8d0319f24fe7b6729ab34ba",
+        "runId": 40236352466
+      },
+      {
+        "accepted": {
+          "acceptanceLogSha256": "e45fd2458c70ddc85832e38775f221e39ec87ee0e67045e7694d4d307a724167",
+          "kind": "owned-checked-record-hosted-replay",
+          "lane": "wit",
+          "producerCommit": "9e571b4214df98e1b8d0319f24fe7b6729ab34ba",
+          "reportSha256": "42db2292763a19ba00cbc68f099f853b7282375265a56b5f22528ffedefc89db",
+          "routes": [
+            {
+              "archiveBytes": 61869391,
+              "archives": 1,
+              "checks": {
+                "wit-wasi": 928
+              },
+              "packages": [
+                {
+                  "ecosystem": "wit-wasi",
+                  "name": "owned-checked-records",
+                  "target": "wit-wasi",
+                  "version": "1.0.0"
+                }
+              ],
+              "path": "evidence/wit/ordinary-full/handoff",
+              "receiptSha256": "babef9689107e6724ddd3a88df87b48b18177c83b419b08fbcee8be1600c4bce",
+              "route": "ordinary-full"
+            },
+            {
+              "archiveBytes": 61753492,
+              "archives": 1,
+              "checks": {
+                "wit-wasi": 14
+              },
+              "packages": [
+                {
+                  "ecosystem": "wit-wasi",
+                  "name": "owned-checked-records-result-only",
+                  "target": "wit-wasi",
+                  "version": "1.0.0"
+                }
+              ],
+              "path": "evidence/wit/ordinary-result-only/handoff",
+              "receiptSha256": "dcea9a8c0d7a8ec422c6f26533937697d57599a9094db5e66e3ced9ade3403b3",
+              "route": "ordinary-result-only"
+            },
+            {
+              "archiveBytes": 61869512,
+              "archives": 1,
+              "checks": {
+                "wit-wasi": 928
+              },
+              "packages": [
+                {
+                  "ecosystem": "wit-wasi",
+                  "name": "owned-checked-records",
+                  "target": "wit-wasi",
+                  "version": "1.0.0"
+                }
+              ],
+              "path": "evidence/wit/reviewed-full/handoff",
+              "receiptSha256": "a1714f23831d738e13a7f22b5dba43ed7187fc9a96bf3a01f1d04204381cd19f",
+              "route": "reviewed-full"
+            },
+            {
+              "archiveBytes": 61754960,
+              "archives": 1,
+              "checks": {
+                "wit-wasi": 14
+              },
+              "packages": [
+                {
+                  "ecosystem": "wit-wasi",
+                  "name": "owned-checked-records-result-only",
+                  "target": "wit-wasi",
+                  "version": "1.0.0"
+                }
+              ],
+              "path": "evidence/wit/reviewed-result-only/handoff",
+              "receiptSha256": "9affcf2633a9a6003a88972e37db0baa63c3b6b57e0c9ead4cf93303acd99801",
+              "route": "reviewed-result-only"
+            }
+          ],
+          "schemaVersion": 1,
+          "tests": 6
+        },
+        "archiveCommit": "59d3fa332261f6c58ebe98c0c356559c170cef96",
+        "artifactId": 12615188979,
+        "committed": {
+          "bytes": 515872661,
+          "files": 1679
+        },
+        "index": {
+          "path": "docs/evidence/owned-checked-record-wit-hosted-20261025-aligned/index.json",
+          "sha256": "36002dfb64afec83c1e895028922d0deedab141177bcaf1f98bddee03c7de4d8"
+        },
+        "jobId": 121298672736,
+        "lane": "wit",
+        "producerCommit": "9e571b4214df98e1b8d0319f24fe7b6729ab34ba",
+        "runId": 40236352466
+      },
+      {
+        "accepted": {
+          "acceptanceLogSha256": "014a080cfae1a5453d04b124ca9b5a65e84bea55a9470c200d8e71f654cd39fc",
+          "kind": "owned-checked-record-hosted-replay",
+          "lane": "javascript",
+          "producerCommit": "ab133c88b7fe0ec2c18cb453bccbde203968f7c6",
+          "reportSha256": "8aa69e9f043282cc8bb23b15ce2807838673292ff5cafa0bd3244689c3660c33",
+          "routes": [
+            {
+              "archiveBytes": 1761777,
+              "archives": 2,
+              "browserExecutions": 12,
+              "receiptSha256": "91731331752acd49c10bba429a835ab72a89d35d7169306204e48a8347b2216a",
+              "route": "ordinary-full"
+            },
+            {
+              "archiveBytes": 1719087,
+              "archives": 2,
+              "browserExecutions": 12,
+              "receiptSha256": "b597a1cf78c070497356924d3b2667f3c3a743675dab538760ca13a3569cd865",
+              "route": "ordinary-result-only"
+            },
+            {
+              "archiveBytes": 1762786,
+              "archives": 2,
+              "browserExecutions": 12,
+              "receiptSha256": "0d6445cb165f914f14862f6af5d5b75276bf922521471f6492e2013be026585b",
+              "route": "reviewed-full"
+            },
+            {
+              "archiveBytes": 1720963,
+              "archives": 2,
+              "browserExecutions": 12,
+              "receiptSha256": "b19d00ab49ea8aaea1a18dd88b4abd63479e51d6eb84da47c63bd29a10c7148d",
+              "route": "reviewed-result-only"
+            }
+          ],
+          "schemaVersion": 1,
+          "tests": 5
+        },
+        "archiveCommit": "06e2064421ca127a7a1f744de8a44148868ad183",
+        "artifactId": 12614538380,
+        "committed": {
+          "bytes": 39093967,
+          "files": 1520
+        },
+        "index": {
+          "path": "docs/evidence/owned-checked-record-javascript-hosted-20261025-complete/index.json",
+          "sha256": "c85010a0079ec8815b3d83b7f203b7f2f60f92d656e284318935574a55c111ff"
+        },
+        "jobId": 121275380746,
+        "lane": "javascript",
+        "producerCommit": "ab133c88b7fe0ec2c18cb453bccbde203968f7c6",
+        "runId": 40228624969
+      },
+      {
+        "accepted": {
+          "acceptanceLogSha256": "067ba44cc6f051dc028c45b1ebaefae7e2c7c224fd8ff8e7302f1b15a6bebc1a",
+          "kind": "owned-checked-record-hosted-replay",
+          "lane": "php-wasm",
+          "producerCommit": "3f124208c4b8eb0c96dde5dde28ac5ec38540868",
+          "reportSha256": "ffcb623fbe94c62c431e9b484118cfefc10f40a0fc0b1727df6df847f1d66a88",
+          "routes": [
+            {
+              "archiveBytes": 1942953,
+              "archives": 3,
+              "checks": {
+                "chromium": [
+                  246,
+                  246,
+                  246,
+                  246,
+                  246,
+                  246,
+                  246,
+                  246
+                ],
+                "node": [
+                  246,
+                  246,
+                  246,
+                  246,
+                  246,
+                  246,
+                  246,
+                  246
+                ]
+              },
+              "packages": [
+                {
+                  "ecosystem": "composer",
+                  "name": "lean-bridge-test/owned-php-wasm-checked-record",
+                  "target": "php-wasm",
+                  "version": "1.0.0"
+                },
+                {
+                  "ecosystem": "npm",
+                  "name": "@lean-bridge-test/owned-php-wasm-checked-record",
+                  "target": "php-wasm",
+                  "version": "1.0.0"
+                },
+                {
+                  "ecosystem": "npm",
+                  "name": "@lean-bridge/php-wasm-copied-runtime",
+                  "target": "php-wasm",
+                  "version": "0.0.0-copied1.a01f27ff8abc302e781ded2cad03992af20457e406e5ee58b47e101db107cfeb"
+                }
+              ],
+              "path": "evidence/full/ordinary/handoff",
+              "receiptSha256": "dc10288f23d8ef61963e22ae347d8d91ee392283ba090eff177d09629850e914",
+              "route": "ordinary-full"
+            },
+            {
+              "archiveBytes": 1891175,
+              "archives": 3,
+              "checks": {
+                "chromium": [
+                  4,
+                  4,
+                  4,
+                  4,
+                  4,
+                  4,
+                  4,
+                  4
+                ],
+                "node": [
+                  4,
+                  4,
+                  4,
+                  4,
+                  4,
+                  4,
+                  4,
+                  4
+                ]
+              },
+              "packages": [
+                {
+                  "ecosystem": "composer",
+                  "name": "lean-bridge-test/owned-php-wasm-checked-record-result-only",
+                  "target": "php-wasm",
+                  "version": "1.0.0"
+                },
+                {
+                  "ecosystem": "npm",
+                  "name": "@lean-bridge-test/owned-php-wasm-checked-record-result-only",
+                  "target": "php-wasm",
+                  "version": "1.0.0"
+                },
+                {
+                  "ecosystem": "npm",
+                  "name": "@lean-bridge/php-wasm-copied-runtime",
+                  "target": "php-wasm",
+                  "version": "0.0.0-copied1.a01f27ff8abc302e781ded2cad03992af20457e406e5ee58b47e101db107cfeb"
+                }
+              ],
+              "path": "evidence/result-only/ordinary/handoff",
+              "receiptSha256": "12f606638c8676ec0acfffd45e72af176135c4466d40d134f4796754d9cd6f2b",
+              "route": "ordinary-result-only"
+            },
+            {
+              "archiveBytes": 1944834,
+              "archives": 3,
+              "checks": {
+                "chromium": [
+                  246,
+                  246,
+                  246,
+                  246,
+                  246,
+                  246,
+                  246,
+                  246
+                ],
+                "node": [
+                  246,
+                  246,
+                  246,
+                  246,
+                  246,
+                  246,
+                  246,
+                  246
+                ]
+              },
+              "packages": [
+                {
+                  "ecosystem": "composer",
+                  "name": "lean-bridge-test/owned-php-wasm-checked-record",
+                  "target": "php-wasm",
+                  "version": "1.0.0"
+                },
+                {
+                  "ecosystem": "npm",
+                  "name": "@lean-bridge-test/owned-php-wasm-checked-record",
+                  "target": "php-wasm",
+                  "version": "1.0.0"
+                },
+                {
+                  "ecosystem": "npm",
+                  "name": "@lean-bridge/php-wasm-copied-runtime",
+                  "target": "php-wasm",
+                  "version": "0.0.0-copied1.a01f27ff8abc302e781ded2cad03992af20457e406e5ee58b47e101db107cfeb"
+                }
+              ],
+              "path": "evidence/full/reviewed/handoff",
+              "receiptSha256": "9f0a16d730d93242b41f1186877b049e6ebd9fb2b21b93aaeb3932ea6e41d659",
+              "route": "reviewed-full"
+            },
+            {
+              "archiveBytes": 1894374,
+              "archives": 3,
+              "checks": {
+                "chromium": [
+                  4,
+                  4,
+                  4,
+                  4,
+                  4,
+                  4,
+                  4,
+                  4
+                ],
+                "node": [
+                  4,
+                  4,
+                  4,
+                  4,
+                  4,
+                  4,
+                  4,
+                  4
+                ]
+              },
+              "packages": [
+                {
+                  "ecosystem": "composer",
+                  "name": "lean-bridge-test/owned-php-wasm-checked-record-result-only",
+                  "target": "php-wasm",
+                  "version": "1.0.0"
+                },
+                {
+                  "ecosystem": "npm",
+                  "name": "@lean-bridge-test/owned-php-wasm-checked-record-result-only",
+                  "target": "php-wasm",
+                  "version": "1.0.0"
+                },
+                {
+                  "ecosystem": "npm",
+                  "name": "@lean-bridge/php-wasm-copied-runtime",
+                  "target": "php-wasm",
+                  "version": "0.0.0-copied1.a01f27ff8abc302e781ded2cad03992af20457e406e5ee58b47e101db107cfeb"
+                }
+              ],
+              "path": "evidence/result-only/reviewed/handoff",
+              "receiptSha256": "c9405917bcccc58b28d3845f47d98c66cea7bd27408f8969dc326dd8ef58909c",
+              "route": "reviewed-result-only"
+            }
+          ],
+          "schemaVersion": 1,
+          "tests": 5
+        },
+        "archiveCommit": "baccaf8724500138c12b5e76e50a9af1255f7870",
+        "artifactId": 12610337377,
+        "committed": {
+          "bytes": 67765676,
+          "files": 1753
+        },
+        "index": {
+          "path": "docs/evidence/owned-checked-record-php-wasm-hosted-20261025-contexts/index.json",
+          "sha256": "86ecd4acae54c691cf2ee68b3166a1ffd52d7ca9759daa806de53a1ca777f3c8"
+        },
+        "jobId": 121248065031,
+        "lane": "php-wasm",
+        "producerCommit": "3f124208c4b8eb0c96dde5dde28ac5ec38540868",
+        "runId": 40219596387
+      }
+    ],
+    "kind": "owned-checked-record-hosted-matrix-replay",
+    "lanes": 11,
+    "revision": "b4787d3f9c25facc6bc12ad5db6c412feadaf5af",
+    "routes": 44,
+    "schemaVersion": 1,
+    "selectionSha256": "296b2f51bb2c8f4c66588002554219356b7fa123f1999c681db4c60ced5be5d6",
+    "supportPromoted": false
+  },
+  "schemaVersion": 1,
+  "selection": {
+    "path": "docs/evidence/owned-checked-record-matrix-selection-20261026-aligned.json",
+    "sha256": "296b2f51bb2c8f4c66588002554219356b7fa123f1999c681db4c60ced5be5d6"
+  },
+  "startedAt": "2026-10-26T00:02:59.440Z"
+}
