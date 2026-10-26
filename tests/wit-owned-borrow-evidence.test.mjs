@@ -36,11 +36,12 @@ test("WIT borrowed results preserve predecessor sources without support promotio
 		assert.equal(update.currentSha256, record.sources[update.path]);
 		const source = sourceAtProducer(
 			producer, update.path, update.currentSha256
-		), prior = beforeOwnedWitBorrow(
-			update.path, source, update.previousSha256
-		);
+		), prior = reverseOwnedWitBorrowUpdate(source, update);
 		assert.equal(sha256(prior), update.previousSha256);
-		assert.equal(beforeOwnedWitBorrow(update.path, prior), prior);
+		assert.equal(beforeOwnedWitBorrow(
+			update.path, source, update.previousSha256), prior);
+		assert.equal(beforeOwnedWitBorrow(
+			update.path, prior, update.previousSha256), prior);
 		assert.equal(beforeOwnedWitBorrow(update.path, source, update.currentSha256), source);
 		const unknown = source + "\n/* unrecorded edit */\n";
 		assert.equal(beforeOwnedWitBorrow(update.path, unknown), unknown);
@@ -53,8 +54,9 @@ test("WIT borrowed results preserve predecessor sources without support promotio
 	const path = "docs/type-surface.v1.json", current = sourceAtProducer(
 		producer, path, record.sources[path]
 	);
-	const prior = JSON.parse(beforeOwnedWitBorrow(path, current
-		, record.updates.find(update => update.path === path)?.previousSha256));
+	const update = record.updates.find(value => value.path === path);
+	assert.ok(update);
+	const prior = JSON.parse(reverseOwnedWitBorrowUpdate(current, update));
 	for(const evidence of prior.evidence) for(const file of evidence.files)
 		file.sha256 = record.sources[file.path]
 			?? sha256(bytesAtProducer(producer, file.path));
