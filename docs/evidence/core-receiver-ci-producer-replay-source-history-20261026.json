@@ -1,0 +1,107 @@
+{
+  "additions": [
+    {
+      "currentSha256": "d2ee059241a11adc8e935f34c6737649febfdc1b221ed37f90592f428dcc9632",
+      "path": "scripts/update-core-receiver-ci-producer-replay-source-history.mjs"
+    },
+    {
+      "currentSha256": "660fc181de1be5c70d298a5456730d92f93ec28d82bc2bb011a6a0c2a41a0992",
+      "path": "tests/helpers/core-receiver-ci-producer-replay-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "1a11a1c4ebdc91fc914f2519abde5d251e64bc26",
+  "integrationUpdates": [
+    {
+      "currentSha256": "9de889b9bff3bab701e5649ea7c3dc50ab34f8bfbb976b92e0e2183ce5716eac",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeCoreReceiverCiProducerReplaySource\n\t, coreReceiverCiProducerReplayAddedPaths\n\t, coreReceiverCiProducerReplayHistoryPath\n\t, coreReceiverCiProducerReplayImplementation\n\t, coreReceiverCiProducerReplayImplementationPaths\n\t, coreReceiverCiProducerReplayIntegrationPaths\n\t, coreReceiverCiProducerReplayPredecessor\n\t, reverseCoreReceiverCiProducerReplayUpdate\n} from \"./core-receiver-ci-producer-replay-source-history.mjs\";\n",
+          "previous": "",
+          "start": 357
+        },
+        {
+          "current": "const readReceiverCiProducerReplay = async () => JSON.parse(await readFile(\n\tcoreReceiverCiProducerReplayHistoryPath, \"utf8\"\n));\n",
+          "previous": "",
+          "start": 2778
+        },
+        {
+          "current": "\ntest(\"Core receiver-CI replay records its exact source range\", async () => {\n\tconst record = await readReceiverCiProducerReplay();\n\tassert.equal(record.schemaVersion, 1);\n\tassert.equal(record.milestone\n\t\t, \"core-receiver-ci-producer-replay-source-v1\");\n\tassert.equal(record.predecessorCommit\n\t\t, coreReceiverCiProducerReplayPredecessor);\n\tassert.equal(record.implementationCommit\n\t\t, coreReceiverCiProducerReplayImplementation);\n\tassert.deepEqual(record.updates.map(update => update.path)\n\t\t, coreReceiverCiProducerReplayImplementationPaths);\n\tassert.deepEqual(record.integrationUpdates.map(update => update.path)\n\t\t, coreReceiverCiProducerReplayIntegrationPaths);\n\tassert.deepEqual(record.additions.map(addition => addition.path)\n\t\t, coreReceiverCiProducerReplayAddedPaths);\n\tassert.equal(git([\"rev-parse\"\n\t\t, `${coreReceiverCiProducerReplayImplementation}^`]).trim()\n\t, coreReceiverCiProducerReplayPredecessor);\n});\n\ntest(\"Core receiver-CI replay reverses every source transition\", async () => {\n\tconst record = await readReceiverCiProducerReplay();\n\tfor(const update of [...record.updates, ...record.integrationUpdates])\n\t{\n\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256\n\t\t\t, beforeCoreReceiverCiProducerReplaySource);\n\t\tconst base = record.integrationUpdates.includes(update)\n\t\t\t? coreReceiverCiProducerReplayImplementation\n\t\t\t: coreReceiverCiProducerReplayPredecessor;\n\t\tconst previous = git([\"show\", `${base}:${update.path}`]);\n\t\tassert.equal(reverseCoreReceiverCiProducerReplayUpdate(\n\t\t\tcurrent, update), previous, update.path);\n\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n\t\tassert.ok(finRefinementNormalizationPaths.includes(update.path));\n\t}\n});\n\ntest(\"Core receiver-CI replay binds the immutable producer\", () => {\n\tassert.equal(git([\"show\", \"-s\", \"--format=%H\"\n\t\t, \"c1725cc2ed8122cf656bfc62446f36069987c53a\"]).trim()\n\t, \"c1725cc2ed8122cf656bfc62446f36069987c53a\");\n\tconst source = git([\"show\"\n\t\t, `${coreReceiverCiProducerReplayImplementation}:tests/owned-perl-receiver-ci.test.mjs`]);\n\tassert.match(source\n\t\t, /const producer = \"c1725cc2ed8122cf656bfc62446f36069987c53a\"/u);\n\tassert.match(source, /bytesAtProducer\\(producer, path, digest\\)/u);\n\tassert.match(source, /sourceAtProducer\\(/u);\n\tassert.doesNotMatch(source, /ownedPhpWasmReceiverHistoricalBytes/u);\n});\n\ntest(\"Core receiver-CI replay rejects altered transitions\", async () => {\n\tconst update = (await readReceiverCiProducerReplay()).updates[0];\n\tconst current = await sourceAtFinHistoryMilestone(\n\t\tupdate.path, update.currentSha256\n\t\t, beforeCoreReceiverCiProducerReplaySource);\n\tfor(const forged of [{ ...update, currentSha256: \"0\".repeat(64) }\n\t\t, { ...update, previousSha256: \"0\".repeat(64) }\n\t\t, { ...update, path: \"unrelated.mjs\" }\n\t\t, { ...update, edits: [] }\n\t\t, { ...update, edits: [...update.edits, update.edits[0]] }])\n\t\tassert.throws(() => reverseCoreReceiverCiProducerReplayUpdate(\n\t\t\tcurrent, forged));\n\tassert.equal(beforeCoreReceiverCiProducerReplaySource(\n\t\tupdate.path, current + \"unknown\"), current + \"unknown\");\n});\n\ntest(\"Core receiver-CI replay writer refuses another checkout\", async t => {\n\tconst root = await mkdtemp(join(\n\t\ttmpdir(), \"lean-core-receiver-ci-replay-guard-\"\n\t));\n\tt.after(() => rm(root, { recursive: true }));\n\tconst result = spawnSync(process.execPath, [resolve(\n\t\t\"scripts/update-core-receiver-ci-producer-replay-source-history.mjs\"\n\t)], { cwd: root, encoding: \"utf8\", timeout: 15_000 });\n\tassert.notEqual(result.status, 0);\n\tassert.equal(result.stdout, \"\");\n\tassert.deepEqual(await readdir(root), []);\n});\n",
+          "previous": "",
+          "start": 14184
+        }
+      ],
+      "path": "tests/helpers/core-historical-evidence-replay-source-history-tests.mjs",
+      "previousSha256": "d74c0e9b17f2f707e1fddad87e9f27a16ca13bb583f0724c4459e32004acc6c4"
+    },
+    {
+      "currentSha256": "c39359c3d0230d56edad87a3485773b8d4bfcce745682c3c586f5b8942abbb43",
+      "edits": [
+        {
+          "current": "import { beforeCoreReceiverCiProducerReplaySource, coreReceiverCiProducerReplayNormalizationPaths } from \"./core-receiver-ci-producer-replay-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...coreReceiverCiProducerReplayNormalizationPaths\n\t, ...coreWitBorrowProducerReplayNormalizationPaths\n",
+          "previous": "\t...coreWitBorrowProducerReplayNormalizationPaths\n",
+          "start": 191140
+        },
+        {
+          "current": "\tlet stage = beforeCoreReceiverCiProducerReplaySource(\n\t\tpath, text, expected\n\t);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCoreWitBorrowProducerReplaySource(\n",
+          "previous": "\tlet stage = beforeCoreWitBorrowProducerReplaySource(\n",
+          "start": 237279
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "d49e081df9ae9318c0b0f7a2abbbf2fb2dc7637ea03d9a282b00aa67c2e7d63d"
+    }
+  ],
+  "milestone": "core-receiver-ci-producer-replay-source-v1",
+  "predecessorCommit": "c5d8c39dab4d303c1ed57d8a9a46bf4c5fc81125",
+  "schemaVersion": 1,
+  "scope": "Authenticate the retained receiver-CI repair against every exact source byte at its immutable producer instead of traversing the known incomplete pre-October history graph. Preserve the original receipt, update endpoints, runtime implementation, packages, evidence payloads and support claims. Final exact-head Core acceptance remains required.",
+  "updates": [
+    {
+      "currentSha256": "312509c7bac49d38b75efe3455e92dff57f118f90854ef797481a59379a9a3be",
+      "edits": [
+        {
+          "current": "import { bytesAtProducer, sourceAtProducer } from \"./helpers/producer-source.mjs\";\n",
+          "previous": "import { beforeOwnedPhpWasmReceiver, ownedPhpWasmReceiverHistoricalBytes } from \"./helpers/owned-php-wasm-receiver-history.mjs\";\n",
+          "start": 268
+        },
+        {
+          "current": "const producer = \"c1725cc2ed8122cf656bfc62446f36069987c53a\";\n\n",
+          "previous": "",
+          "start": 783
+        },
+        {
+          "current": "\tassert.deepEqual(record, JSON.parse(sourceAtProducer(\n\t\tproducer, ownedReceiverCiRepairPath\n\t)));\n",
+          "previous": "",
+          "start": 2755
+        },
+        {
+          "current": "\tconst bytes = bytesAtProducer(\n\t\tproducer, record.previous.path, record.previous.sha256\n\t), previous = JSON.parse(bytes);\n",
+          "previous": "\tconst bytes = await readFile(record.previous.path), previous = JSON.parse(bytes);\n",
+          "start": 3124
+        },
+        {
+          "current": "\tfor(const [path, digest] of Object.entries(record.sources))\n\t\tassert.equal(sha256(bytesAtProducer(producer, path, digest))\n\t\t\t, digest, path);\n",
+          "previous": "\tfor(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(ownedPhpWasmReceiverHistoricalBytes(path, await readFile(path), digest)), digest, path);\n",
+          "start": 3532
+        },
+        {
+          "current": "\t\tconst source = sourceAtProducer(\n\t\t\tproducer, update.path, update.currentSha256\n\t\t);\n\t\tconst prior = beforeOwnedReceiverCiRepair(\n\t\t\tupdate.path, source, update.previousSha256\n\t\t);\n",
+          "previous": "\t\tconst source = beforeOwnedPhpWasmReceiver(update.path, await readFile(update.path, \"utf8\"), update.currentSha256);\n\t\tconst prior = beforeOwnedReceiverCiRepair(update.path, source);\n",
+          "start": 3853
+        },
+        {
+          "current": "\tconst path = \"docs/type-surface.v1.json\", current = sourceAtProducer(\n\t\tproducer, path, record.sources[path]\n\t);\n\tconst prior = JSON.parse(beforeOwnedReceiverCiRepair(path, current\n\t\t, record.updates.find(update => update.path === path)?.previousSha256));\n\tfor(const evidence of prior.evidence) for(const file of evidence.files)\n\t\tfile.sha256 = record.sources[file.path]\n\t\t\t?? sha256(bytesAtProducer(producer, file.path));\n",
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", current = beforeOwnedPhpWasmReceiver(path, await readFile(path, \"utf8\"), record.sources[path]);\n\tconst prior = JSON.parse(beforeOwnedReceiverCiRepair(path, current));\n\tfor(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedPhpWasmReceiverHistoricalBytes(file.path, await readFile(file.path), record.sources[file.path]));\n",
+          "start": 4839
+        }
+      ],
+      "path": "tests/owned-perl-receiver-ci.test.mjs",
+      "previousSha256": "c49741b8ca580dbb379745917380a14be32507aef49b4ae848d25d4ee36fc199"
+    }
+  ]
+}

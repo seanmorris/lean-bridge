@@ -10,6 +10,16 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import {
+	beforeCoreReceiverCiProducerReplaySource
+	, coreReceiverCiProducerReplayAddedPaths
+	, coreReceiverCiProducerReplayHistoryPath
+	, coreReceiverCiProducerReplayImplementation
+	, coreReceiverCiProducerReplayImplementationPaths
+	, coreReceiverCiProducerReplayIntegrationPaths
+	, coreReceiverCiProducerReplayPredecessor
+	, reverseCoreReceiverCiProducerReplayUpdate
+} from "./core-receiver-ci-producer-replay-source-history.mjs";
+import {
 	beforeCoreWitBorrowProducerReplaySource
 	, coreWitBorrowProducerReplayAddedPaths
 	, coreWitBorrowProducerReplayHistoryPath
@@ -55,6 +65,9 @@ const readLivePinRepair = async () => JSON.parse(await readFile(
 ));
 const readWitBorrowProducerReplay = async () => JSON.parse(await readFile(
 	coreWitBorrowProducerReplayHistoryPath, "utf8"
+));
+const readReceiverCiProducerReplay = async () => JSON.parse(await readFile(
+	coreReceiverCiProducerReplayHistoryPath, "utf8"
 ));
 
 test("Core historical replay records its exact source range", async () => {
@@ -303,6 +316,87 @@ test("Core WIT borrow replay writer refuses another checkout", async t => {
 	t.after(() => rm(root, { recursive: true }));
 	const result = spawnSync(process.execPath, [resolve(
 		"scripts/update-core-wit-borrow-producer-replay-source-history.mjs"
+	)], { cwd: root, encoding: "utf8", timeout: 15_000 });
+	assert.notEqual(result.status, 0);
+	assert.equal(result.stdout, "");
+	assert.deepEqual(await readdir(root), []);
+});
+
+test("Core receiver-CI replay records its exact source range", async () => {
+	const record = await readReceiverCiProducerReplay();
+	assert.equal(record.schemaVersion, 1);
+	assert.equal(record.milestone
+		, "core-receiver-ci-producer-replay-source-v1");
+	assert.equal(record.predecessorCommit
+		, coreReceiverCiProducerReplayPredecessor);
+	assert.equal(record.implementationCommit
+		, coreReceiverCiProducerReplayImplementation);
+	assert.deepEqual(record.updates.map(update => update.path)
+		, coreReceiverCiProducerReplayImplementationPaths);
+	assert.deepEqual(record.integrationUpdates.map(update => update.path)
+		, coreReceiverCiProducerReplayIntegrationPaths);
+	assert.deepEqual(record.additions.map(addition => addition.path)
+		, coreReceiverCiProducerReplayAddedPaths);
+	assert.equal(git(["rev-parse"
+		, `${coreReceiverCiProducerReplayImplementation}^`]).trim()
+	, coreReceiverCiProducerReplayPredecessor);
+});
+
+test("Core receiver-CI replay reverses every source transition", async () => {
+	const record = await readReceiverCiProducerReplay();
+	for(const update of [...record.updates, ...record.integrationUpdates])
+	{
+		const current = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256
+			, beforeCoreReceiverCiProducerReplaySource);
+		const base = record.integrationUpdates.includes(update)
+			? coreReceiverCiProducerReplayImplementation
+			: coreReceiverCiProducerReplayPredecessor;
+		const previous = git(["show", `${base}:${update.path}`]);
+		assert.equal(reverseCoreReceiverCiProducerReplayUpdate(
+			current, update), previous, update.path);
+		assert.equal(beforeFinRefinementSource(
+			update.path, current, update.previousSha256), previous, update.path);
+		assert.ok(finRefinementNormalizationPaths.includes(update.path));
+	}
+});
+
+test("Core receiver-CI replay binds the immutable producer", () => {
+	assert.equal(git(["show", "-s", "--format=%H"
+		, "c1725cc2ed8122cf656bfc62446f36069987c53a"]).trim()
+	, "c1725cc2ed8122cf656bfc62446f36069987c53a");
+	const source = git(["show"
+		, `${coreReceiverCiProducerReplayImplementation}:tests/owned-perl-receiver-ci.test.mjs`]);
+	assert.match(source
+		, /const producer = "c1725cc2ed8122cf656bfc62446f36069987c53a"/u);
+	assert.match(source, /bytesAtProducer\(producer, path, digest\)/u);
+	assert.match(source, /sourceAtProducer\(/u);
+	assert.doesNotMatch(source, /ownedPhpWasmReceiverHistoricalBytes/u);
+});
+
+test("Core receiver-CI replay rejects altered transitions", async () => {
+	const update = (await readReceiverCiProducerReplay()).updates[0];
+	const current = await sourceAtFinHistoryMilestone(
+		update.path, update.currentSha256
+		, beforeCoreReceiverCiProducerReplaySource);
+	for(const forged of [{ ...update, currentSha256: "0".repeat(64) }
+		, { ...update, previousSha256: "0".repeat(64) }
+		, { ...update, path: "unrelated.mjs" }
+		, { ...update, edits: [] }
+		, { ...update, edits: [...update.edits, update.edits[0]] }])
+		assert.throws(() => reverseCoreReceiverCiProducerReplayUpdate(
+			current, forged));
+	assert.equal(beforeCoreReceiverCiProducerReplaySource(
+		update.path, current + "unknown"), current + "unknown");
+});
+
+test("Core receiver-CI replay writer refuses another checkout", async t => {
+	const root = await mkdtemp(join(
+		tmpdir(), "lean-core-receiver-ci-replay-guard-"
+	));
+	t.after(() => rm(root, { recursive: true }));
+	const result = spawnSync(process.execPath, [resolve(
+		"scripts/update-core-receiver-ci-producer-replay-source-history.mjs"
 	)], { cwd: root, encoding: "utf8", timeout: 15_000 });
 	assert.notEqual(result.status, 0);
 	assert.equal(result.stdout, "");
