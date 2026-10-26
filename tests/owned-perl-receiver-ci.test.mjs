@@ -64,11 +64,14 @@ test("receiver CI repair preserves frozen receipts and rejects unrelated source 
 		const source = sourceAtProducer(
 			producer, update.path, update.currentSha256
 		);
-		const prior = beforeOwnedReceiverCiRepair(
-			update.path, source, update.previousSha256
-		);
+		const prior = reverseOwnedReceiverCiRepair(source, update);
 		assert.equal(sha256(prior), update.previousSha256);
-		assert.equal(beforeOwnedReceiverCiRepair(update.path, prior), prior);
+		assert.equal(beforeOwnedReceiverCiRepair(
+			update.path, source, update.previousSha256
+		), prior);
+		assert.equal(beforeOwnedReceiverCiRepair(
+			update.path, prior, update.previousSha256
+		), prior);
 		assert.equal(beforeOwnedReceiverCiRepair(update.path, source, update.currentSha256), source);
 		const unknown = source + "\n/* unrelated */\n";
 		assert.equal(beforeOwnedReceiverCiRepair(update.path, unknown), unknown);
@@ -83,8 +86,9 @@ test("receiver CI repair preserves frozen receipts and rejects unrelated source 
 	const path = "docs/type-surface.v1.json", current = sourceAtProducer(
 		producer, path, record.sources[path]
 	);
-	const prior = JSON.parse(beforeOwnedReceiverCiRepair(path, current
-		, record.updates.find(update => update.path === path)?.previousSha256));
+	const update = record.updates.find(value => value.path === path);
+	assert.ok(update);
+	const prior = JSON.parse(reverseOwnedReceiverCiRepair(current, update));
 	for(const evidence of prior.evidence) for(const file of evidence.files)
 		file.sha256 = record.sources[file.path]
 			?? sha256(bytesAtProducer(producer, file.path));
