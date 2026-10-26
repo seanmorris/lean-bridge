@@ -10,6 +10,16 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import {
+	beforeCoreTypeSurfaceEvidenceClosureRepairSource
+	, coreTypeSurfaceEvidenceClosureRepairAddedPaths
+	, coreTypeSurfaceEvidenceClosureRepairHistoryPath
+	, coreTypeSurfaceEvidenceClosureRepairImplementation
+	, coreTypeSurfaceEvidenceClosureRepairImplementationPaths
+	, coreTypeSurfaceEvidenceClosureRepairIntegrationPaths
+	, coreTypeSurfaceEvidenceClosureRepairPredecessor
+	, reverseCoreTypeSurfaceEvidenceClosureRepairUpdate
+} from "./core-type-surface-evidence-closure-repair-source-history.mjs";
+import {
 	beforeCoreSparseConeModeRepairSource
 	, coreSparseConeModeRepairAddedPaths
 	, coreSparseConeModeRepairHistoryPath
@@ -166,6 +176,9 @@ import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.m
 
 const git = arguments_ => execFileSync("git", arguments_
 	, { encoding: "utf8", maxBuffer: 128 * 1024 * 1024 });
+const readCoreTypeSurfaceEvidenceClosureRepair = async () => JSON.parse(
+	await readFile(coreTypeSurfaceEvidenceClosureRepairHistoryPath, "utf8")
+);
 const readCoreSparseConeModeRepair = async () => JSON.parse(await readFile(
 	coreSparseConeModeRepairHistoryPath, "utf8"));
 const readCoreContractEvidenceCheckout = async () => JSON.parse(await readFile(
@@ -374,6 +387,83 @@ test("exact-head Core live-pin writer refuses another checkout", async t => {
 	t.after(() => rm(root, { recursive: true }));
 	const result = spawnSync(process.execPath, [resolve(
 		"scripts/update-core-exact-head-live-pin-repair-source-history.mjs"
+	)], { cwd: root, encoding: "utf8", timeout: 15_000 });
+	assert.notEqual(result.status, 0);
+	assert.equal(result.stdout, "");
+	assert.deepEqual(await readdir(root), []);
+});
+
+test("Core type-surface closure records its source range", async () => {
+	const record = await readCoreTypeSurfaceEvidenceClosureRepair();
+	assert.equal(record.schemaVersion, 1);
+	assert.equal(record.milestone
+		, "core-type-surface-evidence-closure-repair-source-v1");
+	assert.equal(record.predecessorCommit
+		, coreTypeSurfaceEvidenceClosureRepairPredecessor);
+	assert.equal(record.implementationCommit
+		, coreTypeSurfaceEvidenceClosureRepairImplementation);
+	assert.deepEqual(record.updates.map(update => update.path)
+		, coreTypeSurfaceEvidenceClosureRepairImplementationPaths);
+	assert.deepEqual(record.integrationUpdates.map(update => update.path)
+		, coreTypeSurfaceEvidenceClosureRepairIntegrationPaths);
+	assert.deepEqual(record.additions.map(addition => addition.path)
+		, coreTypeSurfaceEvidenceClosureRepairAddedPaths);
+	assert.equal(git(["rev-parse"
+		, `${coreTypeSurfaceEvidenceClosureRepairImplementation}^`]).trim()
+	, coreTypeSurfaceEvidenceClosureRepairPredecessor);
+	assert.deepEqual(git(["diff", "--name-only"
+		, coreTypeSurfaceEvidenceClosureRepairPredecessor
+		, coreTypeSurfaceEvidenceClosureRepairImplementation])
+		.trim().split("\n").sort()
+	, [...coreTypeSurfaceEvidenceClosureRepairImplementationPaths].sort());
+});
+
+test("Core type-surface closure reverses every transition", async () => {
+	const record = await readCoreTypeSurfaceEvidenceClosureRepair();
+	for(const update of [...record.updates, ...record.integrationUpdates])
+	{
+		const current = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256
+			, beforeCoreTypeSurfaceEvidenceClosureRepairSource);
+		const base = record.integrationUpdates.includes(update)
+			? coreTypeSurfaceEvidenceClosureRepairImplementation
+			: coreTypeSurfaceEvidenceClosureRepairPredecessor;
+		const previous = git(["show", `${base}:${update.path}`]);
+		assert.equal(reverseCoreTypeSurfaceEvidenceClosureRepairUpdate(
+			current, update), previous, update.path);
+		assert.equal(beforeFinRefinementSource(
+			update.path, current, update.previousSha256), previous, update.path);
+		assert.ok(finRefinementNormalizationPaths.includes(update.path));
+	}
+	for(const addition of record.additions)
+		assert.equal(sha256(await sourceAtFinHistoryMilestone(
+			addition.path, addition.currentSha256))
+		, addition.currentSha256, addition.path);
+});
+
+test("Core type-surface closure rejects altered transitions", async () => {
+	const update = (await readCoreTypeSurfaceEvidenceClosureRepair()).updates[0];
+	const current = await sourceAtFinHistoryMilestone(
+		update.path, update.currentSha256
+		, beforeCoreTypeSurfaceEvidenceClosureRepairSource);
+	for(const forged of [{ ...update, currentSha256: "0".repeat(64) }
+		, { ...update, previousSha256: "0".repeat(64) }
+		, { ...update, path: "unrelated.mjs" }
+		, { ...update, edits: [] }
+		, { ...update, edits: [...update.edits, update.edits[0]] }])
+		assert.throws(() => reverseCoreTypeSurfaceEvidenceClosureRepairUpdate(
+			current, forged));
+	assert.equal(beforeCoreTypeSurfaceEvidenceClosureRepairSource(
+		update.path, current + "unknown"), current + "unknown");
+});
+
+test("Core type-surface closure writer rejects another checkout", async t => {
+	const root = await mkdtemp(join(
+		tmpdir(), "lean-core-type-surface-closure-guard-"
+	));
+	t.after(() => rm(root, { recursive: true }));
+	const result = spawnSync(process.execPath, [resolve(
+		"scripts/update-core-type-surface-evidence-closure-repair-source-history.mjs"
 	)], { cwd: root, encoding: "utf8", timeout: 15_000 });
 	assert.notEqual(result.status, 0);
 	assert.equal(result.stdout, "");

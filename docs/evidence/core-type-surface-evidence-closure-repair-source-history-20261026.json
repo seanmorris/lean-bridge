@@ -1,0 +1,119 @@
+{
+  "additions": [
+    {
+      "currentSha256": "787820d19e13abd12df4877ab77c1656d142bde4041d2c33b216022c50174d23",
+      "path": "scripts/update-core-type-surface-evidence-closure-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "d40ae6574796711a76b498de2784b3dabaf309fb3d19d01193ab75db849d2962",
+      "path": "tests/helpers/core-type-surface-evidence-closure-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "f5f0b516461429fbff47b2e8d7184971312d91bc",
+  "integrationUpdates": [
+    {
+      "currentSha256": "a380a717be46a1a9653c1cd2ed210737bca15fe00ffcd19d89aa6ec2ca3a7746",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeCoreTypeSurfaceEvidenceClosureRepairSource\n\t, coreTypeSurfaceEvidenceClosureRepairAddedPaths\n\t, coreTypeSurfaceEvidenceClosureRepairHistoryPath\n\t, coreTypeSurfaceEvidenceClosureRepairImplementation\n\t, coreTypeSurfaceEvidenceClosureRepairImplementationPaths\n\t, coreTypeSurfaceEvidenceClosureRepairIntegrationPaths\n\t, coreTypeSurfaceEvidenceClosureRepairPredecessor\n\t, reverseCoreTypeSurfaceEvidenceClosureRepairUpdate\n} from \"./core-type-surface-evidence-closure-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 357
+        },
+        {
+          "current": "const readCoreTypeSurfaceEvidenceClosureRepair = async () => JSON.parse(\n\tawait readFile(coreTypeSurfaceEvidenceClosureRepairHistoryPath, \"utf8\")\n);\n",
+          "previous": "",
+          "start": 7662
+        },
+        {
+          "current": "test(\"Core type-surface closure records its source range\", async () => {\n\tconst record = await readCoreTypeSurfaceEvidenceClosureRepair();\n\tassert.equal(record.schemaVersion, 1);\n\tassert.equal(record.milestone\n\t\t, \"core-type-surface-evidence-closure-repair-source-v1\");\n\tassert.equal(record.predecessorCommit\n\t\t, coreTypeSurfaceEvidenceClosureRepairPredecessor);\n\tassert.equal(record.implementationCommit\n\t\t, coreTypeSurfaceEvidenceClosureRepairImplementation);\n\tassert.deepEqual(record.updates.map(update => update.path)\n\t\t, coreTypeSurfaceEvidenceClosureRepairImplementationPaths);\n\tassert.deepEqual(record.integrationUpdates.map(update => update.path)\n\t\t, coreTypeSurfaceEvidenceClosureRepairIntegrationPaths);\n\tassert.deepEqual(record.additions.map(addition => addition.path)\n\t\t, coreTypeSurfaceEvidenceClosureRepairAddedPaths);\n\tassert.equal(git([\"rev-parse\"\n\t\t, `${coreTypeSurfaceEvidenceClosureRepairImplementation}^`]).trim()\n\t, coreTypeSurfaceEvidenceClosureRepairPredecessor);\n\tassert.deepEqual(git([\"diff\", \"--name-only\"\n\t\t, coreTypeSurfaceEvidenceClosureRepairPredecessor\n\t\t, coreTypeSurfaceEvidenceClosureRepairImplementation])\n\t\t.trim().split(\"\\n\").sort()\n\t, [...coreTypeSurfaceEvidenceClosureRepairImplementationPaths].sort());\n});\n\ntest(\"Core type-surface closure reverses every transition\", async () => {\n\tconst record = await readCoreTypeSurfaceEvidenceClosureRepair();\n\tfor(const update of [...record.updates, ...record.integrationUpdates])\n\t{\n\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256\n\t\t\t, beforeCoreTypeSurfaceEvidenceClosureRepairSource);\n\t\tconst base = record.integrationUpdates.includes(update)\n\t\t\t? coreTypeSurfaceEvidenceClosureRepairImplementation\n\t\t\t: coreTypeSurfaceEvidenceClosureRepairPredecessor;\n\t\tconst previous = git([\"show\", `${base}:${update.path}`]);\n\t\tassert.equal(reverseCoreTypeSurfaceEvidenceClosureRepairUpdate(\n\t\t\tcurrent, update), previous, update.path);\n\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n\t\tassert.ok(finRefinementNormalizationPaths.includes(update.path));\n\t}\n\tfor(const addition of record.additions)\n\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256))\n\t\t, addition.currentSha256, addition.path);\n});\n\ntest(\"Core type-surface closure rejects altered transitions\", async () => {\n\tconst update = (await readCoreTypeSurfaceEvidenceClosureRepair()).updates[0];\n\tconst current = await sourceAtFinHistoryMilestone(\n\t\tupdate.path, update.currentSha256\n\t\t, beforeCoreTypeSurfaceEvidenceClosureRepairSource);\n\tfor(const forged of [{ ...update, currentSha256: \"0\".repeat(64) }\n\t\t, { ...update, previousSha256: \"0\".repeat(64) }\n\t\t, { ...update, path: \"unrelated.mjs\" }\n\t\t, { ...update, edits: [] }\n\t\t, { ...update, edits: [...update.edits, update.edits[0]] }])\n\t\tassert.throws(() => reverseCoreTypeSurfaceEvidenceClosureRepairUpdate(\n\t\t\tcurrent, forged));\n\tassert.equal(beforeCoreTypeSurfaceEvidenceClosureRepairSource(\n\t\tupdate.path, current + \"unknown\"), current + \"unknown\");\n});\n\ntest(\"Core type-surface closure writer rejects another checkout\", async t => {\n\tconst root = await mkdtemp(join(\n\t\ttmpdir(), \"lean-core-type-surface-closure-guard-\"\n\t));\n\tt.after(() => rm(root, { recursive: true }));\n\tconst result = spawnSync(process.execPath, [resolve(\n\t\t\"scripts/update-core-type-surface-evidence-closure-repair-source-history.mjs\"\n\t)], { cwd: root, encoding: \"utf8\", timeout: 15_000 });\n\tassert.notEqual(result.status, 0);\n\tassert.equal(result.stdout, \"\");\n\tassert.deepEqual(await readdir(root), []);\n});\n\n",
+          "previous": "",
+          "start": 17340
+        }
+      ],
+      "path": "tests/helpers/core-historical-evidence-replay-source-history-tests.mjs",
+      "previousSha256": "3a565f4d62e74aedbe4dd72c66e4c1b03bbdee7b0b5dd4b7096579bcf3be0614"
+    },
+    {
+      "currentSha256": "6aafb766d0987dc0990b6ef1a9bd29a626583dd2aeafbc82b51b834667475f4e",
+      "edits": [
+        {
+          "current": "import { beforeCoreTypeSurfaceEvidenceClosureRepairSource, coreTypeSurfaceEvidenceClosureRepairNormalizationPaths } from \"./core-type-surface-evidence-closure-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...coreTypeSurfaceEvidenceClosureRepairNormalizationPaths\n\t, ...coreSparseConeModeRepairNormalizationPaths\n",
+          "previous": "\t...coreSparseConeModeRepairNormalizationPaths\n",
+          "start": 193077
+        },
+        {
+          "current": "\tlet stage = beforeCoreTypeSurfaceEvidenceClosureRepairSource(\n\t\tpath, text, expected\n\t);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCoreSparseConeModeRepairSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeCoreSparseConeModeRepairSource(path, text, expected);\n",
+          "start": 239850
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "09ff807ea5bd6b7b9300c4e736e1563da200e326829e0d862ac509493dff792a"
+    }
+  ],
+  "milestone": "core-type-surface-evidence-closure-repair-source-v1",
+  "predecessorCommit": "b352ccc3929ec8383f4ade0cffac58ace8fd293f",
+  "schemaVersion": 1,
+  "scope": "Detect executable readTypeSurface calls in each Core contract's transitive source graph and materialize every tracked evidence directory named by the live type-surface inventory. Preserve the exact shard plan and reject unknown evidence directories so each sparse shard runs the same authenticated inventory validation as a complete checkout.",
+  "updates": [
+    {
+      "currentSha256": "801dd044d5a0387d14918fd3621f5f46f772db9ea1f9880dd26a61a55cdaaa9b",
+      "edits": [
+        {
+          "current": "/**\n * Detect executable calls that require `readTypeSurface` to authenticate every\n * source named by the live inventory. Merely importing or defining the\n * function does not require the complete retained-evidence closure.\n *\n * @param source - JavaScript source.\n * @param path - Diagnostic source path.\n */\nexport const coreContractReadsTypeSurface = (source, path = \"source.mjs\") => {\n\tif(!/[.]?(?:c|m)?js$/u.test(extname(path))) return false;\n\tconst file = ts.createSourceFile(path, source, ts.ScriptTarget.Latest, true\n\t\t, ts.ScriptKind.JS);\n\tlet found = false;\n\tconst visit = node => {\n\t\tif(found) return;\n\t\tif(ts.isCallExpression(node))\n\t\t{\n\t\t\tconst callee = node.expression;\n\t\t\tif((ts.isIdentifier(callee) && callee.text === \"readTypeSurface\")\n\t\t\t\t|| (ts.isPropertyAccessExpression(callee)\n\t\t\t\t\t&& callee.name.text === \"readTypeSurface\")\n\t\t\t\t|| (ts.isElementAccessExpression(callee)\n\t\t\t\t\t&& ts.isStringLiteralLike(callee.argumentExpression)\n\t\t\t\t\t&& callee.argumentExpression.text === \"readTypeSurface\"))\n\t\t\t\tfound = true;\n\t\t}\n\t\tts.forEachChild(node, visit);\n\t};\n\tvisit(file);\n\treturn found;\n};\n\n/**\n * Return every retained evidence directory needed by `readTypeSurface`'s\n * complete file-hash pass. Root evidence records remain part of the baseline;\n * source paths outside `docs/evidence` remain in the source checkout.\n *\n * @param document - Parsed live type-surface inventory.\n * @param directories - Tracked top-level evidence directory names.\n */\nexport const coreTypeSurfaceEvidenceDirectories = (document, directories) => {\n\tassert.ok(Array.isArray(document?.evidence));\n\tconst tracked = new Set(directories);\n\tconst selected = new Set();\n\tfor(const evidence of document.evidence)\n\t{\n\t\tassert.ok(Array.isArray(evidence?.files));\n\t\tfor(const file of evidence.files)\n\t\t{\n\t\t\tassert.equal(typeof file?.path, \"string\");\n\t\t\tconst match = /^docs\\/evidence\\/([^/]+)\\//u.exec(file.path);\n\t\t\tif(!match) continue;\n\t\t\tassert.ok(tracked.has(match[1])\n\t\t\t\t, `Type-surface evidence directory is not tracked: ${match[1]}`);\n\t\t\tselected.add(match[1]);\n\t\t}\n\t}\n\treturn selected;\n};\n\n",
+          "previous": "",
+          "start": 3335
+        },
+        {
+          "current": "\tlet completeTypeSurface = false;\n",
+          "previous": "",
+          "start": 9979
+        },
+        {
+          "current": "\t\tif(coreContractReadsTypeSurface(source, path)) completeTypeSurface = true;\n",
+          "previous": "",
+          "start": 10326
+        },
+        {
+          "current": "\tif(completeTypeSurface)\n\t{\n\t\tconst document = JSON.parse(await readFile(\n\t\t\tjoin(root, \"docs/type-surface.v1.json\"), \"utf8\"));\n\t\tfor(const directory of coreTypeSurfaceEvidenceDirectories(\n\t\t\tdocument, directories)) selectedDirectories.add(directory);\n\t}\n",
+          "previous": "",
+          "start": 11010
+        },
+        {
+          "current": "\t\t\tcompleteTypeSurface, directoryCount: evidenceDirectories.length\n",
+          "previous": "\t\t\tdirectoryCount: evidenceDirectories.length\n",
+          "start": 11754
+        }
+      ],
+      "path": "scripts/core-contract-evidence.mjs",
+      "previousSha256": "abda6d8e2737a41d1c9c413ba96439ace30524d1b7d2b445b66453f0f5808759"
+    },
+    {
+      "currentSha256": "5f1930ac52c3a389f38434dbd593d89b9d744270796af1cc55ef3db2b4c51ce9",
+      "edits": [
+        {
+          "current": "\t, coreContractEvidenceFragments, coreContractReadsTypeSurface\n",
+          "previous": "\t, coreContractEvidenceFragments\n",
+          "start": 462
+        },
+        {
+          "current": "\t, coreTypeSurfaceEvidenceDirectories\n",
+          "previous": "",
+          "start": 551
+        },
+        {
+          "current": "test(\"Core evidence planning recognizes executable type-surface reads\", () => {\n\tassert.equal(coreContractReadsTypeSurface(\n\t\t\"const value = await readTypeSurface();\", \"direct.mjs\"), true);\n\tassert.equal(coreContractReadsTypeSurface(\n\t\t\"const value = await producer.readTypeSurface();\", \"property.mjs\"), true);\n\tassert.equal(coreContractReadsTypeSurface(\n\t\t\"const value = await producer['readTypeSurface']();\", \"element.mjs\"), true);\n\tassert.equal(coreContractReadsTypeSurface(\n\t\t\"export function readTypeSurface() {}\", \"definition.mjs\"), false);\n\tassert.equal(coreContractReadsTypeSurface(\n\t\t\"// readTypeSurface()\", \"comment.mjs\"), false);\n});\n\ntest(\"type-surface reads retain every named evidence directory\", () => {\n\tconst document = { evidence: [\n\t\t{ files: [\n\t\t\t{ path: \"docs/evidence/root-record.json\" }\n\t\t\t, { path: \"docs/evidence/owned-subtype-jvm-hosted-20990101/report.json\" }\n\t\t\t, { path: \"src/adoption/type-surface.mjs\" }\n\t\t] }\n\t\t, { files: [\n\t\t\t{ path: \"docs/evidence/zero-payload-checked-record-rust-20990101/result.json\" }\n\t\t] }\n\t] };\n\tconst expected = [\n\t\t\"owned-subtype-jvm-hosted-20990101\"\n\t\t, \"zero-payload-checked-record-rust-20990101\"\n\t];\n\tassert.deepEqual([...coreTypeSurfaceEvidenceDirectories(\n\t\tdocument, directories)], expected);\n\tassert.throws(() => coreTypeSurfaceEvidenceDirectories({ evidence: [\n\t\t{ files: [{ path: \"docs/evidence/missing-archive-20990101/report.json\" }] }\n\t] }, directories), /not tracked: missing-archive-20990101/u);\n});\n\n",
+          "previous": "",
+          "start": 3225
+        }
+      ],
+      "path": "tests/helpers/core-contract-evidence-tests.mjs",
+      "previousSha256": "eeb0f9df7684a41a18376fe4572423f059bcc544ef7c802bb80080137143ada6"
+    }
+  ]
+}
