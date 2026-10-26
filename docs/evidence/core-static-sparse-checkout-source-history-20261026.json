@@ -1,0 +1,111 @@
+{
+  "additions": [
+    {
+      "currentSha256": "82d0ddd9dc0ed7a87c54df3c3c75066406d9da6ee70a2c4052762f98a96b3e08",
+      "path": "scripts/update-core-static-sparse-checkout-source-history.mjs"
+    },
+    {
+      "currentSha256": "84ee6a007854efaecf0545d4391c4b51ac55c3f19b5d12f926a65577fc9d36d4",
+      "path": "tests/helpers/core-static-sparse-checkout-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "3d68a64365d574a8a19f79e20563616eb465f2d8",
+  "integrationUpdates": [
+    {
+      "currentSha256": "39a8722819c24b8a977b1b440037d0a142d82a0a9b0971cb3cd6da949cb2ef1b",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeCoreStaticSparseCheckoutSource\n\t, coreStaticSparseCheckoutAddedPaths\n\t, coreStaticSparseCheckoutHistoryPath\n\t, coreStaticSparseCheckoutImplementation\n\t, coreStaticSparseCheckoutImplementationPaths\n\t, coreStaticSparseCheckoutIntegrationPaths\n\t, coreStaticSparseCheckoutPredecessor\n\t, reverseCoreStaticSparseCheckoutUpdate\n} from \"./core-static-sparse-checkout-source-history.mjs\";\n",
+          "previous": "",
+          "start": 357
+        },
+        {
+          "current": "const readStaticSparseCheckout = async () => JSON.parse(await readFile(\n\tcoreStaticSparseCheckoutHistoryPath, \"utf8\"\n));\n",
+          "previous": "",
+          "start": 5427
+        },
+        {
+          "current": "\tassert.deepEqual(await readdir(root), []);\n});\n\ntest(\"Core static sparse checkout records its exact source range\", async () => {\n\tconst record = await readStaticSparseCheckout();\n\tassert.equal(record.schemaVersion, 1);\n\tassert.equal(record.milestone, \"core-static-sparse-checkout-source-v1\");\n\tassert.equal(record.predecessorCommit, coreStaticSparseCheckoutPredecessor);\n\tassert.equal(record.implementationCommit, coreStaticSparseCheckoutImplementation);\n\tassert.deepEqual(record.updates.map(update => update.path)\n\t\t, coreStaticSparseCheckoutImplementationPaths);\n\tassert.deepEqual(record.integrationUpdates.map(update => update.path)\n\t\t, coreStaticSparseCheckoutIntegrationPaths);\n\tassert.deepEqual(record.additions.map(addition => addition.path)\n\t\t, coreStaticSparseCheckoutAddedPaths);\n\tassert.equal(git([\"rev-parse\"\n\t\t, `${coreStaticSparseCheckoutImplementation}^`]).trim()\n\t, coreStaticSparseCheckoutPredecessor);\n\tassert.deepEqual(git([\"diff\", \"--name-only\"\n\t\t, coreStaticSparseCheckoutPredecessor\n\t\t, coreStaticSparseCheckoutImplementation]).trim().split(\"\\n\")\n\t, [...coreStaticSparseCheckoutImplementationPaths].sort());\n});\n\ntest(\"Core static sparse checkout reverses every transition\", async () => {\n\tconst record = await readStaticSparseCheckout();\n\tfor(const update of [...record.updates, ...record.integrationUpdates])\n\t{\n\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256\n\t\t\t, beforeCoreStaticSparseCheckoutSource);\n\t\tconst base = record.integrationUpdates.includes(update)\n\t\t\t? coreStaticSparseCheckoutImplementation\n\t\t\t: coreStaticSparseCheckoutPredecessor;\n\t\tconst previous = git([\"show\", `${base}:${update.path}`]);\n\t\tassert.equal(reverseCoreStaticSparseCheckoutUpdate(current, update)\n\t\t\t, previous, update.path);\n\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n\t\tassert.ok(finRefinementNormalizationPaths.includes(update.path));\n\t}\n\tfor(const addition of record.additions)\n\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256))\n\t\t, addition.currentSha256, addition.path);\n});\n\ntest(\"Core static sparse checkout preserves every static source root\", () => {\n\tconst workflow = git([\"show\"\n\t\t, `${coreStaticSparseCheckoutImplementation}:.github/workflows/quality.yml`]);\n\tconst staticJob = workflow.slice(workflow.indexOf(\"\\n  static:\\n\")\n\t\t, workflow.indexOf(\"\\n  contract:\\n\"));\n\tconst sparse = /sparse-checkout: \\|\\n((?: {12}\\S+\\n)+)/u.exec(staticJob);\n\tassert.ok(sparse);\n\tassert.deepEqual(sparse[1].trim().split(\"\\n\").map(line => line.trim()), [\n\t\t\".github\", \"acceptance\", \"config\", \"containers\", \"demos\", \"nix\"\n\t\t, \"notices\", \"patches\", \"poc\", \"schema\", \"scripts\", \"site\", \"src\"\n\t\t, \"tests\"\n\t]);\n\tassert.doesNotMatch(staticJob, /^ {12}docs$/mu);\n\tassert.match(staticJob, /fetch-depth: 1/u);\n\tassert.match(staticJob, /sparse-checkout-cone-mode: true/u);\n\tfor(const command of [\"env:check:core\", \"lint\", \"typecheck\"])\n\t\tassert.match(staticJob, new RegExp(`npm run ${command}`, \"u\"));\n\tconst budget = git([\"show\"\n\t\t, `${coreStaticSparseCheckoutImplementation}:`\n\t\t\t+ \"tests/helpers/core-quality-budget-tests.mjs\"]);\n\tassert.match(budget, /Static and aggregate jobs must omit archived evidence payloads/u);\n});\n\ntest(\"Core static sparse checkout rejects alteration\", async () => {\n\tconst update = (await readStaticSparseCheckout()).updates[0];\n\tconst current = await sourceAtFinHistoryMilestone(\n\t\tupdate.path, update.currentSha256, beforeCoreStaticSparseCheckoutSource);\n\tfor(const forged of [{ ...update, currentSha256: \"0\".repeat(64) }\n\t\t, { ...update, previousSha256: \"0\".repeat(64) }\n\t\t, { ...update, path: \"unrelated.mjs\" }\n\t\t, { ...update, edits: [] }\n\t\t, { ...update, edits: [...update.edits, update.edits[0]] }])\n\t\tassert.throws(() => reverseCoreStaticSparseCheckoutUpdate(current, forged));\n\tassert.equal(beforeCoreStaticSparseCheckoutSource(\n\t\tupdate.path, current + \"unknown\"), current + \"unknown\");\n});\n\ntest(\"Core static sparse-checkout writer refuses another checkout\", async t => {\n\tconst root = await mkdtemp(join(tmpdir(), \"lean-core-static-sparse-guard-\"));\n\tt.after(() => rm(root, { recursive: true }));\n\tconst result = spawnSync(process.execPath, [resolve(\n\t\t\"scripts/update-core-static-sparse-checkout-source-history.mjs\"\n\t)], { cwd: root, encoding: \"utf8\", timeout: 15_000 });\n\tassert.notEqual(result.status, 0);\n\tassert.equal(result.stdout, \"\");\n",
+          "previous": "",
+          "start": 14499
+        }
+      ],
+      "path": "tests/helpers/core-historical-evidence-replay-source-history-tests.mjs",
+      "previousSha256": "9641333f15001b7538742231fe5651b5d942ff80a42aa590d5c5566b9770b848"
+    },
+    {
+      "currentSha256": "b9caba1da15a0bb14b605cbc31368010d61bee5e17b763baa713be7ac8b41166",
+      "edits": [
+        {
+          "current": "import { beforeCoreStaticSparseCheckoutSource, coreStaticSparseCheckoutNormalizationPaths } from \"./core-static-sparse-checkout-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...coreStaticSparseCheckoutNormalizationPaths\n\t, ...coreStaticHistoryDeferralNormalizationPaths\n",
+          "previous": "\t...coreStaticHistoryDeferralNormalizationPaths\n",
+          "start": 192390
+        },
+        {
+          "current": "\tlet stage = beforeCoreStaticSparseCheckoutSource(\n\t\tpath, text, expected\n\t);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCoreStaticHistoryDeferralSource(\n",
+          "previous": "\tlet stage = beforeCoreStaticHistoryDeferralSource(\n",
+          "start": 238938
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "508ed5e7da1f3a65e5b5dfff64bf59b1899c15674f98d4ddd7b4cb83a2f32034"
+    }
+  ],
+  "milestone": "core-static-sparse-checkout-source-v1",
+  "predecessorCommit": "2aba3c511fa582be26a2063635aa2e1ec5c3fd88",
+  "schemaVersion": 1,
+  "scope": "Fetch only the source roots read by Core inventory, lint, and checked JavaScript during the prerequisite static job. Keep immutable documentation evidence out of that runner while preserving every static command, the full-history contract matrix, aggregate closure, and exact-head acceptance requirements.",
+  "updates": [
+    {
+      "currentSha256": "c769821c62bfd172cb3bb6ea9b132d5c2c37bb17f9cb377b6e23e17ff9cce607",
+      "edits": [
+        {
+          "current": "          # deferred to the contract matrix after this gate succeeds. Its three\n          # checks do not read retained docs/evidence payloads, so sparse checkout\n          # also keeps those 44 GB of immutable archives off the runner.\n",
+          "previous": "          # deferred to the contract matrix after this gate succeeds.\n",
+          "start": 476
+        },
+        {
+          "current": "          sparse-checkout: |\n            .github\n            acceptance\n            config\n            containers\n            demos\n            nix\n            notices\n            patches\n            poc\n            schema\n            scripts\n            site\n            src\n            tests\n          sparse-checkout-cone-mode: true\n",
+          "previous": "",
+          "start": 774
+        }
+      ],
+      "path": ".github/workflows/quality.yml",
+      "previousSha256": "82083116deb0ef994b5b24e96689eafccb17fe5e94785c498e6fa5654effd3d0"
+    },
+    {
+      "currentSha256": "0ae9d27c5f7af5d52d38ca4c056959e431cc776bd90b51efcee3b168eb5d6111",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"c769821c62bfd172cb3bb6ea9b132d5c2c37bb17f9cb377b6e23e17ff9cce607\"\n",
+          "previous": "          \"sha256\": \"82083116deb0ef994b5b24e96689eafccb17fe5e94785c498e6fa5654effd3d0\"\n",
+          "start": 1351460
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "d4471d4d78dd0015439b5aaeec25def3a64bc33a8984b04fbb669a003037bd5a"
+    },
+    {
+      "currentSha256": "ef2fd9e7b697dfd4071b9bd0e00652efb5829c1f8aed5e4dbdeaf35bbb9a4178",
+      "edits": [
+        {
+          "current": "\tconst staticSparse = /sparse-checkout: \\|\\n((?: {12}\\S+\\n)+)/u.exec(\n\t\tstaticJob);\n\tassert.ok(staticSparse, \"Static analysis must declare its complete source roots\");\n\tassert.deepEqual(staticSparse[1].trim().split(\"\\n\").map(line => line.trim()), [\n\t\t\".github\", \"acceptance\", \"config\", \"containers\", \"demos\", \"nix\"\n\t\t, \"notices\", \"patches\", \"poc\", \"schema\", \"scripts\", \"site\", \"src\"\n\t\t, \"tests\"\n\t], \"Static analysis must omit only the retained documentation payload tree\");\n\tassert.match(staticJob, /sparse-checkout-cone-mode: true/u);\n\tassert.doesNotMatch(staticJob, /^\\s+filter:/mu\n\t\t, \"Checkout must derive blob:none from the sparse source roots\");\n",
+          "previous": "",
+          "start": 2915
+        },
+        {
+          "current": "\tassert.equal([...source.matchAll(/^\\s+sparse-checkout: \\|\\s*$/gmu)].length, 2\n\t\t, \"Static and aggregate jobs must omit archived evidence payloads\");\n\tassert.equal([...source.matchAll(/^\\s+sparse-checkout-cone-mode: true\\s*$/gmu)].length, 2);\n",
+          "previous": "\tassert.equal([...source.matchAll(/^\\s+sparse-checkout: \\|\\s*$/gmu)].length, 1\n\t\t, \"Only the aggregate may omit archived evidence from its checkout\");\n",
+          "start": 3906
+        }
+      ],
+      "path": "tests/helpers/core-quality-budget-tests.mjs",
+      "previousSha256": "117175197e70f19ee891f7e14bdf001f619d73769ceb37962e2bc6751ee99037"
+    }
+  ]
+}

@@ -10,6 +10,16 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import {
+	beforeCoreStaticSparseCheckoutSource
+	, coreStaticSparseCheckoutAddedPaths
+	, coreStaticSparseCheckoutHistoryPath
+	, coreStaticSparseCheckoutImplementation
+	, coreStaticSparseCheckoutImplementationPaths
+	, coreStaticSparseCheckoutIntegrationPaths
+	, coreStaticSparseCheckoutPredecessor
+	, reverseCoreStaticSparseCheckoutUpdate
+} from "./core-static-sparse-checkout-source-history.mjs";
+import {
 	beforeCoreStaticHistoryDeferralSource
 	, coreStaticHistoryDeferralAddedPaths
 	, coreStaticHistoryDeferralHistoryPath
@@ -118,6 +128,9 @@ import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.m
 
 const git = arguments_ => execFileSync("git", arguments_
 	, { encoding: "utf8", maxBuffer: 128 * 1024 * 1024 });
+const readStaticSparseCheckout = async () => JSON.parse(await readFile(
+	coreStaticSparseCheckoutHistoryPath, "utf8"
+));
 const readStaticHistoryDeferral = async () => JSON.parse(await readFile(
 	coreStaticHistoryDeferralHistoryPath, "utf8"
 ));
@@ -316,6 +329,98 @@ test("exact-head Core live-pin writer refuses another checkout", async t => {
 	t.after(() => rm(root, { recursive: true }));
 	const result = spawnSync(process.execPath, [resolve(
 		"scripts/update-core-exact-head-live-pin-repair-source-history.mjs"
+	)], { cwd: root, encoding: "utf8", timeout: 15_000 });
+	assert.notEqual(result.status, 0);
+	assert.equal(result.stdout, "");
+	assert.deepEqual(await readdir(root), []);
+});
+
+test("Core static sparse checkout records its exact source range", async () => {
+	const record = await readStaticSparseCheckout();
+	assert.equal(record.schemaVersion, 1);
+	assert.equal(record.milestone, "core-static-sparse-checkout-source-v1");
+	assert.equal(record.predecessorCommit, coreStaticSparseCheckoutPredecessor);
+	assert.equal(record.implementationCommit, coreStaticSparseCheckoutImplementation);
+	assert.deepEqual(record.updates.map(update => update.path)
+		, coreStaticSparseCheckoutImplementationPaths);
+	assert.deepEqual(record.integrationUpdates.map(update => update.path)
+		, coreStaticSparseCheckoutIntegrationPaths);
+	assert.deepEqual(record.additions.map(addition => addition.path)
+		, coreStaticSparseCheckoutAddedPaths);
+	assert.equal(git(["rev-parse"
+		, `${coreStaticSparseCheckoutImplementation}^`]).trim()
+	, coreStaticSparseCheckoutPredecessor);
+	assert.deepEqual(git(["diff", "--name-only"
+		, coreStaticSparseCheckoutPredecessor
+		, coreStaticSparseCheckoutImplementation]).trim().split("\n")
+	, [...coreStaticSparseCheckoutImplementationPaths].sort());
+});
+
+test("Core static sparse checkout reverses every transition", async () => {
+	const record = await readStaticSparseCheckout();
+	for(const update of [...record.updates, ...record.integrationUpdates])
+	{
+		const current = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256
+			, beforeCoreStaticSparseCheckoutSource);
+		const base = record.integrationUpdates.includes(update)
+			? coreStaticSparseCheckoutImplementation
+			: coreStaticSparseCheckoutPredecessor;
+		const previous = git(["show", `${base}:${update.path}`]);
+		assert.equal(reverseCoreStaticSparseCheckoutUpdate(current, update)
+			, previous, update.path);
+		assert.equal(beforeFinRefinementSource(
+			update.path, current, update.previousSha256), previous, update.path);
+		assert.ok(finRefinementNormalizationPaths.includes(update.path));
+	}
+	for(const addition of record.additions)
+		assert.equal(sha256(await sourceAtFinHistoryMilestone(
+			addition.path, addition.currentSha256))
+		, addition.currentSha256, addition.path);
+});
+
+test("Core static sparse checkout preserves every static source root", () => {
+	const workflow = git(["show"
+		, `${coreStaticSparseCheckoutImplementation}:.github/workflows/quality.yml`]);
+	const staticJob = workflow.slice(workflow.indexOf("\n  static:\n")
+		, workflow.indexOf("\n  contract:\n"));
+	const sparse = /sparse-checkout: \|\n((?: {12}\S+\n)+)/u.exec(staticJob);
+	assert.ok(sparse);
+	assert.deepEqual(sparse[1].trim().split("\n").map(line => line.trim()), [
+		".github", "acceptance", "config", "containers", "demos", "nix"
+		, "notices", "patches", "poc", "schema", "scripts", "site", "src"
+		, "tests"
+	]);
+	assert.doesNotMatch(staticJob, /^ {12}docs$/mu);
+	assert.match(staticJob, /fetch-depth: 1/u);
+	assert.match(staticJob, /sparse-checkout-cone-mode: true/u);
+	for(const command of ["env:check:core", "lint", "typecheck"])
+		assert.match(staticJob, new RegExp(`npm run ${command}`, "u"));
+	const budget = git(["show"
+		, `${coreStaticSparseCheckoutImplementation}:`
+			+ "tests/helpers/core-quality-budget-tests.mjs"]);
+	assert.match(budget, /Static and aggregate jobs must omit archived evidence payloads/u);
+});
+
+test("Core static sparse checkout rejects alteration", async () => {
+	const update = (await readStaticSparseCheckout()).updates[0];
+	const current = await sourceAtFinHistoryMilestone(
+		update.path, update.currentSha256, beforeCoreStaticSparseCheckoutSource);
+	for(const forged of [{ ...update, currentSha256: "0".repeat(64) }
+		, { ...update, previousSha256: "0".repeat(64) }
+		, { ...update, path: "unrelated.mjs" }
+		, { ...update, edits: [] }
+		, { ...update, edits: [...update.edits, update.edits[0]] }])
+		assert.throws(() => reverseCoreStaticSparseCheckoutUpdate(current, forged));
+	assert.equal(beforeCoreStaticSparseCheckoutSource(
+		update.path, current + "unknown"), current + "unknown");
+});
+
+test("Core static sparse-checkout writer refuses another checkout", async t => {
+	const root = await mkdtemp(join(tmpdir(), "lean-core-static-sparse-guard-"));
+	t.after(() => rm(root, { recursive: true }));
+	const result = spawnSync(process.execPath, [resolve(
+		"scripts/update-core-static-sparse-checkout-source-history.mjs"
 	)], { cwd: root, encoding: "utf8", timeout: 15_000 });
 	assert.notEqual(result.status, 0);
 	assert.equal(result.stdout, "");
