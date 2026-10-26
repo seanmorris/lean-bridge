@@ -45,9 +45,10 @@ test("reviewed owned evidence rejects weakened execution and unsupported scope c
 test("reviewed owned source history rejects unknown text and overlapping edits", async () => {
 	for(const update of (await json(ownedReviewedHistoryPath)).updates)
 	{
-		const source = beforeOwnedPackage(update.path, await readFile(update.path, "utf8"));
+		const live = await readFile(update.path, "utf8");
+		const source = beforeOwnedPackage(update.path, live, update.currentSha256);
 		assert.equal(sha256(reverseOwnedReviewedUpdate(source, update)), update.previousSha256);
-		assert.equal(sha256(beforeOwnedReviewed(update.path, source)), update.previousSha256);
+		assert.equal(sha256(beforeOwnedReviewed(update.path, live, update.previousSha256)), update.previousSha256);
 		assert.equal(beforeOwnedReviewed(update.path, source, update.currentSha256), source);
 		const unknown = source + "\n/* unrecorded */\n";
 		assert.equal(beforeOwnedReviewed(update.path, unknown), unknown);
