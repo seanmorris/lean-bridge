@@ -1,0 +1,82 @@
+{
+  "additions": [
+    {
+      "currentSha256": "74e963a1b6724220f42a347fee3124121be24b13b45c83aeec3a9b61e382a2c8",
+      "path": "scripts/update-core-owned-reviewed-exact-stop-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "c40797828f38daf67e1df6967f528675d6ea75a23af3e6f6072c7029a21ef472",
+      "path": "tests/helpers/core-owned-reviewed-exact-stop-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "d33c8639c3d42169b5e9b13b89557e9bd7e6c93d",
+  "integrationUpdates": [
+    {
+      "currentSha256": "63857e5d51c2ed6f04f635e4bdf95439180ae1b91af488acdccadd1c15227d4a",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeCoreOwnedReviewedExactStopRepairSource\n\t, coreOwnedReviewedExactStopRepairAddedPaths\n\t, coreOwnedReviewedExactStopRepairHistoryPath\n\t, coreOwnedReviewedExactStopRepairImplementation\n\t, coreOwnedReviewedExactStopRepairImplementationPaths\n\t, coreOwnedReviewedExactStopRepairIntegrationPaths\n\t, coreOwnedReviewedExactStopRepairPredecessor\n\t, reverseCoreOwnedReviewedExactStopRepairUpdate\n} from \"./core-owned-reviewed-exact-stop-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 357
+        },
+        {
+          "current": "const readOwnedReviewedExactStopRepair = async () => JSON.parse(await readFile(\n\tcoreOwnedReviewedExactStopRepairHistoryPath, \"utf8\"\n));\n",
+          "previous": "",
+          "start": 4626
+        },
+        {
+          "current": "\tassert.notEqual(result.status, 0);\n\tassert.equal(result.stdout, \"\");\n\tassert.deepEqual(await readdir(root), []);\n});\n\ntest(\"Core owned-reviewed exact-stop repair records its range\", async () => {\n\tconst record = await readOwnedReviewedExactStopRepair();\n\tassert.equal(record.schemaVersion, 1);\n\tassert.equal(record.milestone\n\t\t, \"core-owned-reviewed-exact-stop-repair-source-v1\");\n\tassert.equal(record.predecessorCommit\n\t\t, coreOwnedReviewedExactStopRepairPredecessor);\n\tassert.equal(record.implementationCommit\n\t\t, coreOwnedReviewedExactStopRepairImplementation);\n\tassert.deepEqual(record.updates.map(update => update.path)\n\t\t, coreOwnedReviewedExactStopRepairImplementationPaths);\n\tassert.deepEqual(record.integrationUpdates.map(update => update.path)\n\t\t, coreOwnedReviewedExactStopRepairIntegrationPaths);\n\tassert.deepEqual(record.additions.map(addition => addition.path)\n\t\t, coreOwnedReviewedExactStopRepairAddedPaths);\n\tassert.equal(git([\"rev-parse\"\n\t\t, `${coreOwnedReviewedExactStopRepairImplementation}^`]).trim()\n\t, coreOwnedReviewedExactStopRepairPredecessor);\n\tassert.deepEqual(git([\"diff\", \"--name-only\"\n\t\t, coreOwnedReviewedExactStopRepairPredecessor\n\t\t, coreOwnedReviewedExactStopRepairImplementation]).trim().split(\"\\n\")\n\t, [...coreOwnedReviewedExactStopRepairImplementationPaths].sort());\n});\n\ntest(\"Core owned-reviewed exact-stop reverses every transition\", async () => {\n\tconst record = await readOwnedReviewedExactStopRepair();\n\tfor(const update of [...record.updates, ...record.integrationUpdates])\n\t{\n\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256\n\t\t\t, beforeCoreOwnedReviewedExactStopRepairSource);\n\t\tconst base = record.integrationUpdates.includes(update)\n\t\t\t? coreOwnedReviewedExactStopRepairImplementation\n\t\t\t: coreOwnedReviewedExactStopRepairPredecessor;\n\t\tconst previous = git([\"show\", `${base}:${update.path}`]);\n\t\tassert.equal(reverseCoreOwnedReviewedExactStopRepairUpdate(\n\t\t\tcurrent, update), previous, update.path);\n\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n\t\tassert.ok(finRefinementNormalizationPaths.includes(update.path));\n\t}\n\tfor(const addition of record.additions)\n\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256))\n\t\t, addition.currentSha256, addition.path);\n});\n\ntest(\"Core owned-reviewed exact-stop selects requested endpoints\", () => {\n\tconst source = git([\"show\"\n\t\t, `${coreOwnedReviewedExactStopRepairImplementation}:`\n\t\t\t+ \"tests/owned-reviewed-evidence.test.mjs\"]);\n\tassert.match(source\n\t\t, /beforeOwnedPackage\\(update\\.path, live, update\\.currentSha256\\)/u);\n\tassert.match(source\n\t\t, /beforeOwnedReviewed\\(update\\.path, live, update\\.previousSha256\\)/u);\n});\n\ntest(\"Core owned-reviewed exact-stop rejects alteration\", async () => {\n\tconst update = (await readOwnedReviewedExactStopRepair()).updates[0];\n\tconst current = await sourceAtFinHistoryMilestone(\n\t\tupdate.path, update.currentSha256\n\t\t, beforeCoreOwnedReviewedExactStopRepairSource);\n\tfor(const forged of [{ ...update, currentSha256: \"0\".repeat(64) }\n\t\t, { ...update, previousSha256: \"0\".repeat(64) }\n\t\t, { ...update, path: \"unrelated.mjs\" }\n\t\t, { ...update, edits: [] }\n\t\t, { ...update, edits: [...update.edits, update.edits[0]] }])\n\t\tassert.throws(() => reverseCoreOwnedReviewedExactStopRepairUpdate(\n\t\t\tcurrent, forged));\n\tassert.equal(beforeCoreOwnedReviewedExactStopRepairSource(\n\t\tupdate.path, current + \"unknown\"), current + \"unknown\");\n});\n\ntest(\"Core owned-reviewed exact-stop writer refuses another checkout\", async t => {\n\tconst root = await mkdtemp(join(\n\t\ttmpdir(), \"lean-core-owned-reviewed-exact-stop-guard-\"\n\t));\n\tt.after(() => rm(root, { recursive: true }));\n\tconst result = spawnSync(process.execPath, [resolve(\n\t\t\"scripts/update-core-owned-reviewed-exact-stop-repair-source-history.mjs\"\n\t)], { cwd: root, encoding: \"utf8\", timeout: 15_000 });\n",
+          "previous": "",
+          "start": 13384
+        }
+      ],
+      "path": "tests/helpers/core-historical-evidence-replay-source-history-tests.mjs",
+      "previousSha256": "e41bf419e7fa2ab130990871661252349b4879adc993105ab6da6f5de620ba98"
+    },
+    {
+      "currentSha256": "470d49648e52a5aac00974b4be9bfb3c9e58097039010cbcfcc9a9ff223dcf09",
+      "edits": [
+        {
+          "current": "import { beforeCoreOwnedReviewedExactStopRepairSource, coreOwnedReviewedExactStopRepairNormalizationPaths } from \"./core-owned-reviewed-exact-stop-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...coreOwnedReviewedExactStopRepairNormalizationPaths\n\t, ...coreWitExactStopRepairNormalizationPaths\n",
+          "previous": "\t...coreWitExactStopRepairNormalizationPaths\n",
+          "start": 192089
+        },
+        {
+          "current": "\tlet stage = beforeCoreOwnedReviewedExactStopRepairSource(\n\t\tpath, text, expected\n\t);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCoreWitExactStopRepairSource(\n",
+          "previous": "\tlet stage = beforeCoreWitExactStopRepairSource(\n",
+          "start": 238538
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "cef919a7e591879628c5af8473459e1f2d849de49e69b856fa75aabe1ce44b3f"
+    }
+  ],
+  "milestone": "core-owned-reviewed-exact-stop-repair-source-v1",
+  "predecessorCommit": "c3750e65905c25b4feb76c842edfeaa68d661712",
+  "schemaVersion": 1,
+  "scope": "Stop retained owned-reviewed evidence reconstruction at each authenticated current and predecessor digest. Preserve every historical receipt and reject unknown source drift. Reproduce exact-head Core run 40348721524 shard 9's unbounded-reader failure and keep final hosted Core acceptance open.",
+  "updates": [
+    {
+      "currentSha256": "74e534d46ebc2f649523f94cb02483852ffef4545fe590f127ca6528f3cd361a",
+      "edits": [
+        {
+          "current": "\t\tconst live = await readFile(update.path, \"utf8\");\n\t\tconst source = beforeOwnedPackage(update.path, live, update.currentSha256);\n",
+          "previous": "\t\tconst source = beforeOwnedPackage(update.path, await readFile(update.path, \"utf8\"));\n",
+          "start": 2370
+        },
+        {
+          "current": "\t\tassert.equal(sha256(beforeOwnedReviewed(update.path, live, update.previousSha256)), update.previousSha256);\n",
+          "previous": "\t\tassert.equal(sha256(beforeOwnedReviewed(update.path, source)), update.previousSha256);\n",
+          "start": 2591
+        }
+      ],
+      "path": "tests/owned-reviewed-evidence.test.mjs",
+      "previousSha256": "1d912e018b73870cf6e67a8d464dfe2514c2d4eadc25866bf91d35cde7d0603a"
+    }
+  ]
+}

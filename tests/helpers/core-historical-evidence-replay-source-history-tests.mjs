@@ -10,6 +10,16 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import {
+	beforeCoreOwnedReviewedExactStopRepairSource
+	, coreOwnedReviewedExactStopRepairAddedPaths
+	, coreOwnedReviewedExactStopRepairHistoryPath
+	, coreOwnedReviewedExactStopRepairImplementation
+	, coreOwnedReviewedExactStopRepairImplementationPaths
+	, coreOwnedReviewedExactStopRepairIntegrationPaths
+	, coreOwnedReviewedExactStopRepairPredecessor
+	, reverseCoreOwnedReviewedExactStopRepairUpdate
+} from "./core-owned-reviewed-exact-stop-repair-source-history.mjs";
+import {
 	beforeCoreWitExactStopRepairSource
 	, coreWitExactStopRepairAddedPaths
 	, coreWitExactStopRepairHistoryPath
@@ -98,6 +108,9 @@ import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.m
 
 const git = arguments_ => execFileSync("git", arguments_
 	, { encoding: "utf8", maxBuffer: 128 * 1024 * 1024 });
+const readOwnedReviewedExactStopRepair = async () => JSON.parse(await readFile(
+	coreOwnedReviewedExactStopRepairHistoryPath, "utf8"
+));
 const readWitExactStopRepair = async () => JSON.parse(await readFile(
 	coreWitExactStopRepairHistoryPath, "utf8"
 ));
@@ -290,6 +303,92 @@ test("exact-head Core live-pin writer refuses another checkout", async t => {
 	t.after(() => rm(root, { recursive: true }));
 	const result = spawnSync(process.execPath, [resolve(
 		"scripts/update-core-exact-head-live-pin-repair-source-history.mjs"
+	)], { cwd: root, encoding: "utf8", timeout: 15_000 });
+	assert.notEqual(result.status, 0);
+	assert.equal(result.stdout, "");
+	assert.deepEqual(await readdir(root), []);
+});
+
+test("Core owned-reviewed exact-stop repair records its range", async () => {
+	const record = await readOwnedReviewedExactStopRepair();
+	assert.equal(record.schemaVersion, 1);
+	assert.equal(record.milestone
+		, "core-owned-reviewed-exact-stop-repair-source-v1");
+	assert.equal(record.predecessorCommit
+		, coreOwnedReviewedExactStopRepairPredecessor);
+	assert.equal(record.implementationCommit
+		, coreOwnedReviewedExactStopRepairImplementation);
+	assert.deepEqual(record.updates.map(update => update.path)
+		, coreOwnedReviewedExactStopRepairImplementationPaths);
+	assert.deepEqual(record.integrationUpdates.map(update => update.path)
+		, coreOwnedReviewedExactStopRepairIntegrationPaths);
+	assert.deepEqual(record.additions.map(addition => addition.path)
+		, coreOwnedReviewedExactStopRepairAddedPaths);
+	assert.equal(git(["rev-parse"
+		, `${coreOwnedReviewedExactStopRepairImplementation}^`]).trim()
+	, coreOwnedReviewedExactStopRepairPredecessor);
+	assert.deepEqual(git(["diff", "--name-only"
+		, coreOwnedReviewedExactStopRepairPredecessor
+		, coreOwnedReviewedExactStopRepairImplementation]).trim().split("\n")
+	, [...coreOwnedReviewedExactStopRepairImplementationPaths].sort());
+});
+
+test("Core owned-reviewed exact-stop reverses every transition", async () => {
+	const record = await readOwnedReviewedExactStopRepair();
+	for(const update of [...record.updates, ...record.integrationUpdates])
+	{
+		const current = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256
+			, beforeCoreOwnedReviewedExactStopRepairSource);
+		const base = record.integrationUpdates.includes(update)
+			? coreOwnedReviewedExactStopRepairImplementation
+			: coreOwnedReviewedExactStopRepairPredecessor;
+		const previous = git(["show", `${base}:${update.path}`]);
+		assert.equal(reverseCoreOwnedReviewedExactStopRepairUpdate(
+			current, update), previous, update.path);
+		assert.equal(beforeFinRefinementSource(
+			update.path, current, update.previousSha256), previous, update.path);
+		assert.ok(finRefinementNormalizationPaths.includes(update.path));
+	}
+	for(const addition of record.additions)
+		assert.equal(sha256(await sourceAtFinHistoryMilestone(
+			addition.path, addition.currentSha256))
+		, addition.currentSha256, addition.path);
+});
+
+test("Core owned-reviewed exact-stop selects requested endpoints", () => {
+	const source = git(["show"
+		, `${coreOwnedReviewedExactStopRepairImplementation}:`
+			+ "tests/owned-reviewed-evidence.test.mjs"]);
+	assert.match(source
+		, /beforeOwnedPackage\(update\.path, live, update\.currentSha256\)/u);
+	assert.match(source
+		, /beforeOwnedReviewed\(update\.path, live, update\.previousSha256\)/u);
+});
+
+test("Core owned-reviewed exact-stop rejects alteration", async () => {
+	const update = (await readOwnedReviewedExactStopRepair()).updates[0];
+	const current = await sourceAtFinHistoryMilestone(
+		update.path, update.currentSha256
+		, beforeCoreOwnedReviewedExactStopRepairSource);
+	for(const forged of [{ ...update, currentSha256: "0".repeat(64) }
+		, { ...update, previousSha256: "0".repeat(64) }
+		, { ...update, path: "unrelated.mjs" }
+		, { ...update, edits: [] }
+		, { ...update, edits: [...update.edits, update.edits[0]] }])
+		assert.throws(() => reverseCoreOwnedReviewedExactStopRepairUpdate(
+			current, forged));
+	assert.equal(beforeCoreOwnedReviewedExactStopRepairSource(
+		update.path, current + "unknown"), current + "unknown");
+});
+
+test("Core owned-reviewed exact-stop writer refuses another checkout", async t => {
+	const root = await mkdtemp(join(
+		tmpdir(), "lean-core-owned-reviewed-exact-stop-guard-"
+	));
+	t.after(() => rm(root, { recursive: true }));
+	const result = spawnSync(process.execPath, [resolve(
+		"scripts/update-core-owned-reviewed-exact-stop-repair-source-history.mjs"
 	)], { cwd: root, encoding: "utf8", timeout: 15_000 });
 	assert.notEqual(result.status, 0);
 	assert.equal(result.stdout, "");
