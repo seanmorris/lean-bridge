@@ -120,6 +120,7 @@ import "./helpers/nominal-subtype-entry-live-pin-repair-source-history-tests.mjs
 import "./helpers/php-wasm-entry-call-path-source-history-tests.mjs";
 import "./helpers/php-wasm-entry-unreached-source-source-history-tests.mjs";
 import "./helpers/php-wasm-entry-flat-position-source-history-tests.mjs";
+import "./helpers/core-contract-runtime-budget-source-history-tests.mjs";
 import "./helpers/core-runner-headroom-source-history-tests.mjs";
 import "./helpers/core-runner-resilience-source-history-tests.mjs";
 import "./helpers/core-historical-evidence-replay-source-history-tests.mjs";

@@ -1,0 +1,112 @@
+{
+  "additions": [
+    {
+      "currentSha256": "fcc22818ae826ec900ecc31911144c5cf16a22952b678489600dce68dfd0f9ae",
+      "path": "scripts/update-core-contract-runtime-budget-source-history.mjs"
+    },
+    {
+      "currentSha256": "f7abb5a1d85a1ea3176ec0e5693cefd041b539ea5f84eb15ebfac085058ff059",
+      "path": "tests/helpers/core-contract-runtime-budget-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "1cbeabaf860b2194b2bf1471bd232705fbcffb3a82de78671b9d5e1f09d1bb66",
+      "path": "tests/helpers/core-contract-runtime-budget-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "fe4c631bae8e7cf3047b62aaa6434df98aaf1e53",
+  "integrationUpdates": [
+    {
+      "currentSha256": "38906f02fa9e17c275d7785526e042e4819f5b6e15881d76dae2326e73277368",
+      "edits": [
+        {
+          "current": "import \"./helpers/core-contract-runtime-budget-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 8907
+        }
+      ],
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "205e9c7a110260c81b27447db39b479d2957431bee9e54116d49023f1f4cc46b"
+    },
+    {
+      "currentSha256": "fe8103f0b4737c7f32d768765f5e30c01df22d564c005692b25095a2d3c2a582",
+      "edits": [
+        {
+          "current": "\tconst path = \"docs/type-surface.v1.json\";\n\tassert.equal(sha256(current), sha256(beforeFinRefinementSource(\n\t\tpath, await readFile(path, \"utf8\"), sha256(current)\n",
+          "previous": "\tassert.equal(sha256(current), sha256(await readFile(\n\t\t\"docs/type-surface.v1.json\"\n",
+          "start": 8857
+        }
+      ],
+      "path": "tests/helpers/core-historical-evidence-replay-source-history-tests.mjs",
+      "previousSha256": "56d322aaa639ad910fc1a9d6ec451b347857efcae6de822c417641d6f431ddeb"
+    },
+    {
+      "currentSha256": "7a4cc572ed00ed42f0aa432e7779d3f0c8fac98c4a4657a604c8a72b3084e345",
+      "edits": [
+        {
+          "current": "import { beforeCoreContractRuntimeBudgetSource, coreContractRuntimeBudgetNormalizationPaths } from \"./core-contract-runtime-budget-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...coreContractRuntimeBudgetNormalizationPaths\n\t, ...coreReceiverCiStopBoundaryNormalizationPaths\n",
+          "previous": "\t...coreReceiverCiStopBoundaryNormalizationPaths\n",
+          "start": 191601
+        },
+        {
+          "current": "\tlet stage = beforeCoreContractRuntimeBudgetSource(\n\t\tpath, text, expected\n\t);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCoreReceiverCiStopBoundarySource(\n",
+          "previous": "\tlet stage = beforeCoreReceiverCiStopBoundarySource(\n",
+          "start": 237891
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "fd231e3d14c249a0add578ceca8964309689578bd2905626dc2f25f52fbd23f2"
+    }
+  ],
+  "milestone": "core-contract-runtime-budget-source-v1",
+  "predecessorCommit": "36aebfedc3fa0991e35a84a6c212d564e153ce33",
+  "schemaVersion": 1,
+  "scope": "Raise the twelve Core contract shards from 180 to 240 minutes after exact-head run 40306481801 exhausted the old job budget with passing output after a normal full-history checkout. Preserve all 1,010 selected files, twelve disjoint manifests, six-job concurrency, static and aggregate gates, process limits, source-history authentication, runtime behavior, packages and support claims. Refresh exactly the existing workflow source pin. Final current-head hosted Core acceptance remains required.",
+  "updates": [
+    {
+      "currentSha256": "e327f6b2bfad66ae47d075cb563e863d3c6400da8238375ef63aedb4e0521919",
+      "edits": [
+        {
+          "current": "    # Run 40306481801 showed that a 20–25 minute full-history checkout left\n    # shard 5 only 156 minutes; its complete, still-passing evidence replay was\n    # then cancelled by the job budget. Keep the shard bounded while leaving\n    # enough time for the authenticated test selection after checkout.\n    timeout-minutes: 240\n",
+          "previous": "    timeout-minutes: 180\n",
+          "start": 1567
+        }
+      ],
+      "path": ".github/workflows/quality.yml",
+      "previousSha256": "9cad06e4b728d7c41ab76174d2cdf6c0a4acb64b552d73d6ee96924a7e42e463"
+    },
+    {
+      "currentSha256": "2c2aee082fabe5d79228827786cb24339a46f17518ce1604ad5c662019939e5d",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"e327f6b2bfad66ae47d075cb563e863d3c6400da8238375ef63aedb4e0521919\"\n",
+          "previous": "          \"sha256\": \"9cad06e4b728d7c41ab76174d2cdf6c0a4acb64b552d73d6ee96924a7e42e463\"\n",
+          "start": 1351460
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "422d6c773100ed3b16dfcc636db54dd140a304b122b1be26b93131d27cb69b5f"
+    },
+    {
+      "currentSha256": "101682218dd738f10f738cd6739cf7c9329d1d2bd2574c97f421bc0eee192544",
+      "edits": [
+        {
+          "current": "\tassert.deepEqual(timeouts, [30, 240, 10]\n",
+          "previous": "\tassert.deepEqual(timeouts, [30, 180, 10]\n",
+          "start": 810
+        },
+        {
+          "current": "\t\tsource.replace(\"timeout-minutes: 240\", \"timeout-minutes: 90\")\n",
+          "previous": "\t\tsource.replace(\"timeout-minutes: 180\", \"timeout-minutes: 90\")\n",
+          "start": 11827
+        }
+      ],
+      "path": "tests/helpers/core-quality-budget-tests.mjs",
+      "previousSha256": "4422cfe4a08fc0cb3bed84ea214b321007ff06bcd70b2a0f05807ab3bb0a13b7"
+    }
+  ]
+}

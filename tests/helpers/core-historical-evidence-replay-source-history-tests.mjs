@@ -202,8 +202,9 @@ test("exact-head Core live-pin repair changes three references only", async () =
 	assert.equal(previous.split(oldDigest).length - 1, 3);
 	assert.equal(current.split(newDigest).length - 1, 3);
 	assert.equal(previous.replaceAll(oldDigest, newDigest), current);
-	assert.equal(sha256(current), sha256(await readFile(
-		"docs/type-surface.v1.json"
+	const path = "docs/type-surface.v1.json";
+	assert.equal(sha256(current), sha256(beforeFinRefinementSource(
+		path, await readFile(path, "utf8"), sha256(current)
 	)));
 });
 
