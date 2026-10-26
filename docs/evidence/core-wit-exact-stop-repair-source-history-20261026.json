@@ -1,0 +1,219 @@
+{
+  "additions": [
+    {
+      "currentSha256": "e99ec41756f7eb0522c4fc0030c17103d42594afddb0c84f77fdca67df01f4d5",
+      "path": "scripts/update-core-wit-exact-stop-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "6602a28dcc4cc4720a5fe937e65e8c3016b8141680fc606455389be93c49fc4e",
+      "path": "tests/helpers/core-wit-exact-stop-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "9e4f128de937ee7767dd537d2d71081134035f34",
+  "integrationUpdates": [
+    {
+      "currentSha256": "e41bf419e7fa2ab130990871661252349b4879adc993105ab6da6f5de620ba98",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeCoreWitExactStopRepairSource\n\t, coreWitExactStopRepairAddedPaths\n\t, coreWitExactStopRepairHistoryPath\n\t, coreWitExactStopRepairImplementation\n\t, coreWitExactStopRepairImplementationPaths\n\t, coreWitExactStopRepairIntegrationPaths\n\t, coreWitExactStopRepairPredecessor\n\t, reverseCoreWitExactStopRepairUpdate\n} from \"./core-wit-exact-stop-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 357
+        },
+        {
+          "current": "const readWitExactStopRepair = async () => JSON.parse(await readFile(\n\tcoreWitExactStopRepairHistoryPath, \"utf8\"\n));\n",
+          "previous": "",
+          "start": 4156
+        },
+        {
+          "current": "test(\"Core WIT exact-stop repair records its exact source range\", async () => {\n\tconst record = await readWitExactStopRepair();\n\tassert.equal(record.schemaVersion, 1);\n\tassert.equal(record.milestone\n\t\t, \"core-wit-exact-stop-repair-source-v1\");\n\tassert.equal(record.predecessorCommit\n\t\t, coreWitExactStopRepairPredecessor);\n\tassert.equal(record.implementationCommit\n\t\t, coreWitExactStopRepairImplementation);\n\tassert.deepEqual(record.updates.map(update => update.path)\n\t\t, coreWitExactStopRepairImplementationPaths);\n\tassert.deepEqual(record.integrationUpdates.map(update => update.path)\n\t\t, coreWitExactStopRepairIntegrationPaths);\n\tassert.deepEqual(record.additions.map(addition => addition.path)\n\t\t, coreWitExactStopRepairAddedPaths);\n\tassert.equal(git([\"rev-parse\"\n\t\t, `${coreWitExactStopRepairImplementation}^`]).trim()\n\t, coreWitExactStopRepairPredecessor);\n\tassert.deepEqual(git([\"diff\", \"--name-only\"\n\t\t, coreWitExactStopRepairPredecessor\n\t\t, coreWitExactStopRepairImplementation]).trim().split(\"\\n\")\n\t, [...coreWitExactStopRepairImplementationPaths].sort());\n});\n\ntest(\"Core WIT exact-stop repair reverses every source transition\", async () => {\n\tconst record = await readWitExactStopRepair();\n\tfor(const update of [...record.updates, ...record.integrationUpdates])\n\t{\n\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256\n\t\t\t, beforeCoreWitExactStopRepairSource);\n\t\tconst base = record.integrationUpdates.includes(update)\n\t\t\t? coreWitExactStopRepairImplementation\n\t\t\t: coreWitExactStopRepairPredecessor;\n\t\tconst previous = git([\"show\", `${base}:${update.path}`]);\n\t\tassert.equal(reverseCoreWitExactStopRepairUpdate(\n\t\t\tcurrent, update), previous, update.path);\n\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n\t\tassert.ok(finRefinementNormalizationPaths.includes(update.path));\n\t}\n\tfor(const addition of record.additions)\n\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256))\n\t\t, addition.currentSha256, addition.path);\n});\n\ntest(\"Core WIT exact-stop repair selects requested endpoints\", () => {\n\tfor(const path of coreWitExactStopRepairImplementationPaths)\n\t{\n\t\tconst source = git([\"show\"\n\t\t\t, `${coreWitExactStopRepairImplementation}:${path}`]);\n\t\tassert.match(source, /update\\.currentSha256/u, path);\n\t\tassert.match(source, /update\\.previousSha256/u, path);\n\t\tassert.match(source, /await readFile\\(file\\.path\\), target/u, path);\n\t}\n});\n\ntest(\"Core WIT exact-stop repair rejects alteration\", async () => {\n\tconst update = (await readWitExactStopRepair()).updates[0];\n\tconst current = await sourceAtFinHistoryMilestone(\n\t\tupdate.path, update.currentSha256\n\t\t, beforeCoreWitExactStopRepairSource);\n\tfor(const forged of [{ ...update, currentSha256: \"0\".repeat(64) }\n\t\t, { ...update, previousSha256: \"0\".repeat(64) }\n\t\t, { ...update, path: \"unrelated.mjs\" }\n\t\t, { ...update, edits: [] }\n\t\t, { ...update, edits: [...update.edits, update.edits[0]] }])\n\t\tassert.throws(() => reverseCoreWitExactStopRepairUpdate(\n\t\t\tcurrent, forged));\n\tassert.equal(beforeCoreWitExactStopRepairSource(\n\t\tupdate.path, current + \"unknown\"), current + \"unknown\");\n});\n\ntest(\"Core WIT exact-stop writer refuses another checkout\", async t => {\n\tconst root = await mkdtemp(join(tmpdir(), \"lean-core-wit-exact-stop-guard-\"));\n\tt.after(() => rm(root, { recursive: true }));\n\tconst result = spawnSync(process.execPath, [resolve(\n\t\t\"scripts/update-core-wit-exact-stop-repair-source-history.mjs\"\n\t)], { cwd: root, encoding: \"utf8\", timeout: 15_000 });\n\tassert.notEqual(result.status, 0);\n\tassert.equal(result.stdout, \"\");\n\tassert.deepEqual(await readdir(root), []);\n});\n\n",
+          "previous": "",
+          "start": 12896
+        }
+      ],
+      "path": "tests/helpers/core-historical-evidence-replay-source-history-tests.mjs",
+      "previousSha256": "20a8a80dbc5baa66473fd1c556184616c068ad02750427113302180dde404873"
+    },
+    {
+      "currentSha256": "cef919a7e591879628c5af8473459e1f2d849de49e69b856fa75aabe1ce44b3f",
+      "edits": [
+        {
+          "current": "import { beforeCoreWitExactStopRepairSource, coreWitExactStopRepairNormalizationPaths } from \"./core-wit-exact-stop-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...coreWitExactStopRepairNormalizationPaths\n\t, ...coreRuntimeBudgetLivePinRepairNormalizationPaths\n",
+          "previous": "\t...coreRuntimeBudgetLivePinRepairNormalizationPaths\n",
+          "start": 191914
+        },
+        {
+          "current": "\tlet stage = beforeCoreWitExactStopRepairSource(\n\t\tpath, text, expected\n\t);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCoreRuntimeBudgetLivePinRepairSource(\n",
+          "previous": "\tlet stage = beforeCoreRuntimeBudgetLivePinRepairSource(\n",
+          "start": 238306
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "82af2b2a5a86a68c93b318463edcd9c811e36c733ccced0be813a169d204a12c"
+    },
+    {
+      "currentSha256": "b462034880b0f79ac2049196873ff8ffb99d5c194716e3a149761e0e5996d07a",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeCoreWitExactStopRepairSource\n\t, coreWitExactStopRepairNormalizationPaths\n} from \"./core-wit-exact-stop-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 235
+        },
+        {
+          "current": "export const ownedWitBuildRepairNormalizationPaths = [...new Set([\n\t...coreWitExactStopRepairNormalizationPaths\n\t, ...ownedWitBuildRepairChangedPaths\n\t, ...ownedTransferCNormalizationPaths\n])].sort();\n",
+          "previous": "export const ownedWitBuildRepairNormalizationPaths = [...new Set([...ownedWitBuildRepairChangedPaths, ...ownedTransferCNormalizationPaths])].sort();\n",
+          "start": 1534
+        },
+        {
+          "current": "\tsource = beforeCoreWitExactStopRepairSource(path, source, expected);\n",
+          "previous": "",
+          "start": 3154
+        }
+      ],
+      "path": "tests/helpers/wit-owned-build-repair-history.mjs",
+      "previousSha256": "2b5f8ca36a701cfa451f2a57b1fa5f5e8be728612d8fa74967f6a29ba7c59e05"
+    },
+    {
+      "currentSha256": "5049c004b862a0097dc78b9f643885ffa686d9b838d998b85bf1f4ea685b76ba",
+      "edits": [
+        {
+          "current": "\tconst files = new Map(document.evidence.map(evidence => [evidence.id\n\t\t, new Map(evidence.files.map(file => [file.path, file.sha256]))]));\n",
+          "previous": "",
+          "start": 2659
+        },
+        {
+          "current": "\t\tconst target = files.get(evidence.id)?.get(file.path);\n",
+          "previous": "\t\tconst target = document.evidence.find(item => item.id === evidence.id)\n\t\t\t?.files.find(item => item.path === file.path)?.sha256;\n",
+          "start": 2875
+        },
+        {
+          "current": "\t\tif(file.sha256 === target) continue;\n",
+          "previous": "",
+          "start": 2985
+        }
+      ],
+      "path": "tests/wit-owned-native-evidence.test.mjs",
+      "previousSha256": "e5fc91625aecdd577f60f33c79cdfe4df2eb53b2a5077fbba174273153321e8b"
+    },
+    {
+      "currentSha256": "fd12e668fb507af469a6e6209cfc77655851da937fbc871241b0f6edaf6489c2",
+      "edits": [
+        {
+          "current": "\tconst files = new Map(document.evidence.map(evidence => [evidence.id\n\t\t, new Map(evidence.files.map(file => [file.path, file.sha256]))]));\n",
+          "previous": "",
+          "start": 2744
+        },
+        {
+          "current": "\t\tconst target = files.get(evidence.id)?.get(file.path);\n",
+          "previous": "\t\tconst target = document.evidence.find(item => item.id === evidence.id)\n\t\t\t?.files.find(item => item.path === file.path)?.sha256;\n",
+          "start": 2960
+        },
+        {
+          "current": "\t\tif(file.sha256 === target) continue;\n",
+          "previous": "",
+          "start": 3070
+        }
+      ],
+      "path": "tests/wit-owned-package-evidence.test.mjs",
+      "previousSha256": "fe49e46b55fa9a16da31033756efcbd7a13b9ea419ea8f669699b8ac33a760b0"
+    },
+    {
+      "currentSha256": "db3006620d18943910cba50b5c8cec42ec919049ba64d77f57a1bd0fe4fb42ee",
+      "edits": [
+        {
+          "current": "\tconst files = new Map(document.evidence.map(evidence => [evidence.id\n\t\t, new Map(evidence.files.map(file => [file.path, file.sha256]))]));\n",
+          "previous": "",
+          "start": 2686
+        },
+        {
+          "current": "\t\tconst target = files.get(evidence.id)?.get(file.path);\n",
+          "previous": "\t\tconst target = document.evidence.find(item => item.id === evidence.id)\n\t\t\t?.files.find(item => item.path === file.path)?.sha256;\n",
+          "start": 2902
+        },
+        {
+          "current": "\t\tif(file.sha256 === target) continue;\n",
+          "previous": "",
+          "start": 3012
+        }
+      ],
+      "path": "tests/wit-owned-session-evidence.test.mjs",
+      "previousSha256": "40db99c8300ba81505e349c59b45821d5fb47242a80fabb2dcf65ccf213ec711"
+    }
+  ],
+  "milestone": "core-wit-exact-stop-repair-source-v1",
+  "predecessorCommit": "1f643208e02c50f3ae97a2e7872771507b8eb1f1",
+  "schemaVersion": 1,
+  "scope": "Stop retained WIT evidence readers at every explicitly requested source and evidence digest. Preserve all historical receipts, artifacts, support claims and runtime observations. Reproduce exact-head Core run 40332938294 shard 6's two unbounded-reader failures and keep final hosted Core acceptance open.",
+  "updates": [
+    {
+      "currentSha256": "e5fc91625aecdd577f60f33c79cdfe4df2eb53b2a5077fbba174273153321e8b",
+      "edits": [
+        {
+          "current": "\t\tconst current = beforeOwnedWitSession(update.path\n\t\t\t, await readFile(update.path, \"utf8\"), update.currentSha256);\n\t\tassert.equal(sha256(beforeOwnedWitNative(\n\t\t\tupdate.path, current, update.previousSha256)), update.previousSha256);\n",
+          "previous": "\t\tconst current = beforeOwnedWitSession(update.path, await readFile(update.path, \"utf8\"));\n\t\tassert.equal(sha256(beforeOwnedWitNative(update.path, current)), update.previousSha256);\n",
+          "start": 1944
+        },
+        {
+          "current": "\tconst inventory = record.updates.find(update =>\n\t\tupdate.path === \"docs/type-surface.v1.json\");\n\tassert.ok(inventory);\n\tconst current = beforeOwnedWitSession(inventory.path\n\t\t, await readFile(inventory.path, \"utf8\"), inventory.currentSha256);\n\tconst document = JSON.parse(current);\n\tconst prior = JSON.parse(beforeOwnedWitNative(\n\t\tinventory.path, current, inventory.previousSha256));\n\tfor(const evidence of prior.evidence) for(const file of evidence.files)\n\t{\n\t\tconst target = document.evidence.find(item => item.id === evidence.id)\n\t\t\t?.files.find(item => item.path === file.path)?.sha256;\n\t\tassert.ok(target, `${evidence.id}: ${file.path}`);\n\t\tassert.equal(sha256(ownedWitSessionHistoricalBytes(\n\t\t\tfile.path, await readFile(file.path), target)), target, file.path);\n\t\tfile.sha256 = target;\n\t}\n\tassert.deepEqual(document, prior\n\t\t, \"A private host cannot establish installed package support\");\n",
+          "previous": "\tconst current = beforeOwnedWitSession(\"docs/type-surface.v1.json\", await readFile(\"docs/type-surface.v1.json\", \"utf8\"));\n\tconst prior = JSON.parse(beforeOwnedWitNative(\"docs/type-surface.v1.json\", current));\n\tfor(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedWitSessionHistoricalBytes(file.path, await readFile(file.path)));\n\tassert.deepEqual(JSON.parse(current), prior, \"A private host cannot establish installed package support\");\n",
+          "start": 2273
+        },
+        {
+          "current": "\t\tconst current = beforeOwnedWitSession(update.path\n\t\t\t, await readFile(update.path, \"utf8\"), update.currentSha256);\n\t\tconst unknown = current + \"\\n/* unrelated */\\n\";\n",
+          "previous": "\t\tconst current = beforeOwnedWitSession(update.path, await readFile(update.path, \"utf8\")), unknown = current + \"\\n/* unrelated */\\n\";\n",
+          "start": 3332
+        }
+      ],
+      "path": "tests/wit-owned-native-evidence.test.mjs",
+      "previousSha256": "39afd064f37152b446ae99134ed1c6d403e16178a2bf321cc413b0cd880bc951"
+    },
+    {
+      "currentSha256": "fe49e46b55fa9a16da31033756efcbd7a13b9ea419ea8f669699b8ac33a760b0",
+      "edits": [
+        {
+          "current": "\t\tconst current = beforeOwnedWitBuildRepair(update.path\n\t\t\t, await readFile(update.path, \"utf8\"), update.currentSha256);\n\t\tassert.equal(sha256(beforeOwnedWitPackage(\n\t\t\tupdate.path, current, update.previousSha256)), update.previousSha256);\n",
+          "previous": "\t\tconst current = beforeOwnedWitBuildRepair(update.path, await readFile(update.path, \"utf8\"));\n\t\tassert.equal(sha256(beforeOwnedWitPackage(update.path, current)), update.previousSha256);\n",
+          "start": 2018
+        },
+        {
+          "current": "\tconst inventory = record.updates.find(update =>\n\t\tupdate.path === \"docs/type-surface.v1.json\");\n\tassert.ok(inventory);\n\tconst current = beforeOwnedWitBuildRepair(inventory.path\n\t\t, await readFile(inventory.path, \"utf8\"), inventory.currentSha256);\n\tconst document = JSON.parse(current);\n\tconst prior = JSON.parse(beforeOwnedWitPackage(\n\t\tinventory.path, current, inventory.previousSha256));\n\tfor(const evidence of prior.evidence) for(const file of evidence.files)\n\t{\n\t\tconst target = document.evidence.find(item => item.id === evidence.id)\n\t\t\t?.files.find(item => item.path === file.path)?.sha256;\n\t\tassert.ok(target, `${evidence.id}: ${file.path}`);\n\t\tassert.equal(sha256(ownedWitBuildRepairHistoricalBytes(\n\t\t\tfile.path, await readFile(file.path), target)), target, file.path);\n\t\tfile.sha256 = target;\n\t}\n\tassert.deepEqual(document, prior\n\t\t, \"Final cross-language support cells are a separate acceptance step\");\n",
+          "previous": "\tconst current = beforeOwnedWitBuildRepair(\"docs/type-surface.v1.json\", await readFile(\"docs/type-surface.v1.json\", \"utf8\"));\n\tconst prior = JSON.parse(beforeOwnedWitPackage(\"docs/type-surface.v1.json\", current));\n\tfor(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedWitBuildRepairHistoricalBytes(file.path, await readFile(file.path)));\n\tassert.deepEqual(JSON.parse(current), prior, \"Final cross-language support cells are a separate acceptance step\");\n",
+          "start": 2353
+        },
+        {
+          "current": "\t\tconst current = beforeOwnedWitBuildRepair(update.path\n\t\t\t, await readFile(update.path, \"utf8\"), update.currentSha256);\n\t\tconst unknown = current + \"\\n/* unrelated */\\n\";\n",
+          "previous": "\t\tconst current = beforeOwnedWitBuildRepair(update.path, await readFile(update.path, \"utf8\")), unknown = current + \"\\n/* unrelated */\\n\";\n",
+          "start": 3432
+        }
+      ],
+      "path": "tests/wit-owned-package-evidence.test.mjs",
+      "previousSha256": "7cc1f7d13b5e254412d53438ca94621bb87226bc053366311b212f3725c8ed84"
+    },
+    {
+      "currentSha256": "40db99c8300ba81505e349c59b45821d5fb47242a80fabb2dcf65ccf213ec711",
+      "edits": [
+        {
+          "current": "\t\tconst current = beforeOwnedWitPackage(update.path\n\t\t\t, await readFile(update.path, \"utf8\"), update.currentSha256);\n\t\tassert.equal(sha256(beforeOwnedWitSession(\n\t\t\tupdate.path, current, update.previousSha256)), update.previousSha256);\n",
+          "previous": "\t\tconst current = beforeOwnedWitPackage(update.path, await readFile(update.path, \"utf8\"));\n\t\tassert.equal(sha256(beforeOwnedWitSession(update.path, current)), update.previousSha256);\n",
+          "start": 1968
+        },
+        {
+          "current": "\tconst inventory = record.updates.find(update =>\n\t\tupdate.path === \"docs/type-surface.v1.json\");\n\tassert.ok(inventory);\n\tconst current = beforeOwnedWitPackage(inventory.path\n\t\t, await readFile(inventory.path, \"utf8\"), inventory.currentSha256);\n\tconst document = JSON.parse(current);\n\tconst prior = JSON.parse(beforeOwnedWitSession(\n\t\tinventory.path, current, inventory.previousSha256));\n\tfor(const evidence of prior.evidence) for(const file of evidence.files)\n\t{\n\t\tconst target = document.evidence.find(item => item.id === evidence.id)\n\t\t\t?.files.find(item => item.path === file.path)?.sha256;\n\t\tassert.ok(target, `${evidence.id}: ${file.path}`);\n\t\tassert.equal(sha256(ownedWitPackageHistoricalBytes(\n\t\t\tfile.path, await readFile(file.path), target)), target, file.path);\n\t\tfile.sha256 = target;\n\t}\n\tassert.deepEqual(document, prior\n\t\t, \"A session probe cannot establish installed package support\");\n",
+          "previous": "\tconst current = beforeOwnedWitPackage(\"docs/type-surface.v1.json\", await readFile(\"docs/type-surface.v1.json\", \"utf8\"));\n\tconst prior = JSON.parse(beforeOwnedWitSession(\"docs/type-surface.v1.json\", current));\n\tfor(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedWitPackageHistoricalBytes(file.path, await readFile(file.path)));\n\tassert.deepEqual(JSON.parse(current), prior, \"A session probe cannot establish installed package support\");\n",
+          "start": 2299
+        },
+        {
+          "current": "\t\tconst current = beforeOwnedWitPackage(update.path\n\t\t\t, await readFile(update.path, \"utf8\"), update.currentSha256);\n\t\tconst unknown = current + \"\\n/* unrelated */\\n\";\n",
+          "previous": "\t\tconst current = beforeOwnedWitPackage(update.path, await readFile(update.path, \"utf8\")), unknown = current + \"\\n/* unrelated */\\n\";\n",
+          "start": 3368
+        }
+      ],
+      "path": "tests/wit-owned-session-evidence.test.mjs",
+      "previousSha256": "2fb51706851b5cdfdee1a11fb5ac37d353129c155109441211f914229d04a5af"
+    }
+  ]
+}

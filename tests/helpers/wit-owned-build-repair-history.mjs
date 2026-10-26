@@ -6,6 +6,10 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import {
+	beforeCoreWitExactStopRepairSource
+	, coreWitExactStopRepairNormalizationPaths
+} from "./core-wit-exact-stop-repair-source-history.mjs";
 import { beforeOwnedTransferC, ownedTransferCNormalizationPaths } from "./owned-transfer-c-history.mjs";
 
 export const ownedWitBuildRepairBaseline = "2313a9d9a95ba980191a0c516db6ae7da7745a7e";
@@ -29,7 +33,11 @@ export const ownedWitBuildRepairAddedPaths = [
 	, "tests/wit-owned-build-repair-evidence.test.mjs"
 ].sort();
 let cached;
-export const ownedWitBuildRepairNormalizationPaths = [...new Set([...ownedWitBuildRepairChangedPaths, ...ownedTransferCNormalizationPaths])].sort();
+export const ownedWitBuildRepairNormalizationPaths = [...new Set([
+	...coreWitExactStopRepairNormalizationPaths
+	, ...ownedWitBuildRepairChangedPaths
+	, ...ownedTransferCNormalizationPaths
+])].sort();
 
 /**
  * Reverse ordered spans only after authenticating both complete file versions.
@@ -62,6 +70,7 @@ export const reverseOwnedWitBuildRepairUpdate = (source, update) => {
  * @param expected - Optional exact historical stopping identity.
  */
 export const beforeOwnedWitBuildRepair = (path, source, expected) => {
+	source = beforeCoreWitExactStopRepairSource(path, source, expected);
 	source = beforeOwnedTransferC(path, source, expected);
 	if(!ownedWitBuildRepairChangedPaths.includes(path)) return source;
 	const digest = sha256(source); if(digest === expected) return source;

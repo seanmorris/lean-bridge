@@ -10,6 +10,16 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import {
+	beforeCoreWitExactStopRepairSource
+	, coreWitExactStopRepairAddedPaths
+	, coreWitExactStopRepairHistoryPath
+	, coreWitExactStopRepairImplementation
+	, coreWitExactStopRepairImplementationPaths
+	, coreWitExactStopRepairIntegrationPaths
+	, coreWitExactStopRepairPredecessor
+	, reverseCoreWitExactStopRepairUpdate
+} from "./core-wit-exact-stop-repair-source-history.mjs";
+import {
 	beforeCoreRuntimeBudgetLivePinRepairSource
 	, coreRuntimeBudgetLivePinRepairAddedPaths
 	, coreRuntimeBudgetLivePinRepairHistoryPath
@@ -88,6 +98,9 @@ import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.m
 
 const git = arguments_ => execFileSync("git", arguments_
 	, { encoding: "utf8", maxBuffer: 128 * 1024 * 1024 });
+const readWitExactStopRepair = async () => JSON.parse(await readFile(
+	coreWitExactStopRepairHistoryPath, "utf8"
+));
 const read = async () => JSON.parse(await readFile(
 	coreHistoricalEvidenceReplayHistoryPath, "utf8"
 ));
@@ -277,6 +290,91 @@ test("exact-head Core live-pin writer refuses another checkout", async t => {
 	t.after(() => rm(root, { recursive: true }));
 	const result = spawnSync(process.execPath, [resolve(
 		"scripts/update-core-exact-head-live-pin-repair-source-history.mjs"
+	)], { cwd: root, encoding: "utf8", timeout: 15_000 });
+	assert.notEqual(result.status, 0);
+	assert.equal(result.stdout, "");
+	assert.deepEqual(await readdir(root), []);
+});
+
+test("Core WIT exact-stop repair records its exact source range", async () => {
+	const record = await readWitExactStopRepair();
+	assert.equal(record.schemaVersion, 1);
+	assert.equal(record.milestone
+		, "core-wit-exact-stop-repair-source-v1");
+	assert.equal(record.predecessorCommit
+		, coreWitExactStopRepairPredecessor);
+	assert.equal(record.implementationCommit
+		, coreWitExactStopRepairImplementation);
+	assert.deepEqual(record.updates.map(update => update.path)
+		, coreWitExactStopRepairImplementationPaths);
+	assert.deepEqual(record.integrationUpdates.map(update => update.path)
+		, coreWitExactStopRepairIntegrationPaths);
+	assert.deepEqual(record.additions.map(addition => addition.path)
+		, coreWitExactStopRepairAddedPaths);
+	assert.equal(git(["rev-parse"
+		, `${coreWitExactStopRepairImplementation}^`]).trim()
+	, coreWitExactStopRepairPredecessor);
+	assert.deepEqual(git(["diff", "--name-only"
+		, coreWitExactStopRepairPredecessor
+		, coreWitExactStopRepairImplementation]).trim().split("\n")
+	, [...coreWitExactStopRepairImplementationPaths].sort());
+});
+
+test("Core WIT exact-stop repair reverses every source transition", async () => {
+	const record = await readWitExactStopRepair();
+	for(const update of [...record.updates, ...record.integrationUpdates])
+	{
+		const current = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256
+			, beforeCoreWitExactStopRepairSource);
+		const base = record.integrationUpdates.includes(update)
+			? coreWitExactStopRepairImplementation
+			: coreWitExactStopRepairPredecessor;
+		const previous = git(["show", `${base}:${update.path}`]);
+		assert.equal(reverseCoreWitExactStopRepairUpdate(
+			current, update), previous, update.path);
+		assert.equal(beforeFinRefinementSource(
+			update.path, current, update.previousSha256), previous, update.path);
+		assert.ok(finRefinementNormalizationPaths.includes(update.path));
+	}
+	for(const addition of record.additions)
+		assert.equal(sha256(await sourceAtFinHistoryMilestone(
+			addition.path, addition.currentSha256))
+		, addition.currentSha256, addition.path);
+});
+
+test("Core WIT exact-stop repair selects requested endpoints", () => {
+	for(const path of coreWitExactStopRepairImplementationPaths)
+	{
+		const source = git(["show"
+			, `${coreWitExactStopRepairImplementation}:${path}`]);
+		assert.match(source, /update\.currentSha256/u, path);
+		assert.match(source, /update\.previousSha256/u, path);
+		assert.match(source, /await readFile\(file\.path\), target/u, path);
+	}
+});
+
+test("Core WIT exact-stop repair rejects alteration", async () => {
+	const update = (await readWitExactStopRepair()).updates[0];
+	const current = await sourceAtFinHistoryMilestone(
+		update.path, update.currentSha256
+		, beforeCoreWitExactStopRepairSource);
+	for(const forged of [{ ...update, currentSha256: "0".repeat(64) }
+		, { ...update, previousSha256: "0".repeat(64) }
+		, { ...update, path: "unrelated.mjs" }
+		, { ...update, edits: [] }
+		, { ...update, edits: [...update.edits, update.edits[0]] }])
+		assert.throws(() => reverseCoreWitExactStopRepairUpdate(
+			current, forged));
+	assert.equal(beforeCoreWitExactStopRepairSource(
+		update.path, current + "unknown"), current + "unknown");
+});
+
+test("Core WIT exact-stop writer refuses another checkout", async t => {
+	const root = await mkdtemp(join(tmpdir(), "lean-core-wit-exact-stop-guard-"));
+	t.after(() => rm(root, { recursive: true }));
+	const result = spawnSync(process.execPath, [resolve(
+		"scripts/update-core-wit-exact-stop-repair-source-history.mjs"
 	)], { cwd: root, encoding: "utf8", timeout: 15_000 });
 	assert.notEqual(result.status, 0);
 	assert.equal(result.stdout, "");

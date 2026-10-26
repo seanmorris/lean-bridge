@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeCoreWitExactStopRepairSource, coreWitExactStopRepairNormalizationPaths } from "./core-wit-exact-stop-repair-source-history.mjs";
 import { beforeCoreRuntimeBudgetLivePinRepairSource, coreRuntimeBudgetLivePinRepairNormalizationPaths } from "./core-runtime-budget-live-pin-repair-source-history.mjs";
 import { beforeCoreContractRuntimeBudgetSource, coreContractRuntimeBudgetNormalizationPaths } from "./core-contract-runtime-budget-source-history.mjs";
 import { beforeCoreReceiverCiStopBoundarySource, coreReceiverCiStopBoundaryNormalizationPaths } from "./core-receiver-ci-stop-boundary-source-history.mjs";
@@ -2217,7 +2218,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...coreRuntimeBudgetLivePinRepairNormalizationPaths
+	...coreWitExactStopRepairNormalizationPaths
+	, ...coreRuntimeBudgetLivePinRepairNormalizationPaths
 	, ...coreContractRuntimeBudgetNormalizationPaths
 	, ...coreReceiverCiStopBoundaryNormalizationPaths
 	, ...coreWitBorrowStopBoundaryNormalizationPaths
@@ -3177,7 +3179,13 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeCoreRuntimeBudgetLivePinRepairSource(
+	let stage = beforeCoreWitExactStopRepairSource(
+		path, text, expected
+	);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeCoreRuntimeBudgetLivePinRepairSource(
 		path, text, expected
 	);
 	if(expected !== undefined && sha256(stage) === expected)

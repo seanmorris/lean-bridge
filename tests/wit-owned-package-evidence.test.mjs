@@ -44,11 +44,13 @@ test("owned WIT installed successor authenticates source and preserves earlier s
 	const document = JSON.parse(current);
 	const prior = JSON.parse(beforeOwnedWitPackage(
 		inventory.path, current, inventory.previousSha256));
+	const files = new Map(document.evidence.map(evidence => [evidence.id
+		, new Map(evidence.files.map(file => [file.path, file.sha256]))]));
 	for(const evidence of prior.evidence) for(const file of evidence.files)
 	{
-		const target = document.evidence.find(item => item.id === evidence.id)
-			?.files.find(item => item.path === file.path)?.sha256;
+		const target = files.get(evidence.id)?.get(file.path);
 		assert.ok(target, `${evidence.id}: ${file.path}`);
+		if(file.sha256 === target) continue;
 		assert.equal(sha256(ownedWitBuildRepairHistoricalBytes(
 			file.path, await readFile(file.path), target)), target, file.path);
 		file.sha256 = target;
