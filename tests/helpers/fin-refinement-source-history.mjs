@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeCoreBrowserWorkflowEvidencePinRepairSource, coreBrowserWorkflowEvidencePinRepairNormalizationPaths } from "./core-browser-workflow-evidence-pin-repair-source-history.mjs";
 import { beforeCoreTypeSurfaceEvidenceClosureRepairSource, coreTypeSurfaceEvidenceClosureRepairNormalizationPaths } from "./core-type-surface-evidence-closure-repair-source-history.mjs";
 import { beforeCoreSparseConeModeRepairSource, coreSparseConeModeRepairNormalizationPaths } from "./core-sparse-cone-mode-repair-source-history.mjs";
 import { beforeCoreContractEvidenceCheckoutSource, coreContractEvidenceCheckoutNormalizationPaths } from "./core-contract-evidence-checkout-source-history.mjs";
@@ -2225,7 +2226,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...coreTypeSurfaceEvidenceClosureRepairNormalizationPaths
+	...coreBrowserWorkflowEvidencePinRepairNormalizationPaths
+	, ...coreTypeSurfaceEvidenceClosureRepairNormalizationPaths
 	, ...coreSparseConeModeRepairNormalizationPaths
 	, ...coreContractEvidenceCheckoutNormalizationPaths
 	, ...nominalPrimitiveSubtypeSparseCheckoutNormalizationPaths
@@ -3193,7 +3195,13 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeCoreTypeSurfaceEvidenceClosureRepairSource(
+	let stage = beforeCoreBrowserWorkflowEvidencePinRepairSource(
+		path, text, expected
+	);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeCoreTypeSurfaceEvidenceClosureRepairSource(
 		path, text, expected
 	);
 	if(expected !== undefined && sha256(stage) === expected)

@@ -10,6 +10,16 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import {
+	beforeCoreBrowserWorkflowEvidencePinRepairSource
+	, coreBrowserWorkflowEvidencePinRepairAddedPaths
+	, coreBrowserWorkflowEvidencePinRepairHistoryPath
+	, coreBrowserWorkflowEvidencePinRepairImplementation
+	, coreBrowserWorkflowEvidencePinRepairImplementationPaths
+	, coreBrowserWorkflowEvidencePinRepairIntegrationPaths
+	, coreBrowserWorkflowEvidencePinRepairPredecessor
+	, reverseCoreBrowserWorkflowEvidencePinRepairUpdate
+} from "./core-browser-workflow-evidence-pin-repair-source-history.mjs";
+import {
 	beforeCoreTypeSurfaceEvidenceClosureRepairSource
 	, coreTypeSurfaceEvidenceClosureRepairAddedPaths
 	, coreTypeSurfaceEvidenceClosureRepairHistoryPath
@@ -176,6 +186,9 @@ import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.m
 
 const git = arguments_ => execFileSync("git", arguments_
 	, { encoding: "utf8", maxBuffer: 128 * 1024 * 1024 });
+const readCoreBrowserWorkflowEvidencePinRepair = async () => JSON.parse(
+	await readFile(coreBrowserWorkflowEvidencePinRepairHistoryPath, "utf8")
+);
 const readCoreTypeSurfaceEvidenceClosureRepair = async () => JSON.parse(
 	await readFile(coreTypeSurfaceEvidenceClosureRepairHistoryPath, "utf8")
 );
@@ -387,6 +400,84 @@ test("exact-head Core live-pin writer refuses another checkout", async t => {
 	t.after(() => rm(root, { recursive: true }));
 	const result = spawnSync(process.execPath, [resolve(
 		"scripts/update-core-exact-head-live-pin-repair-source-history.mjs"
+	)], { cwd: root, encoding: "utf8", timeout: 15_000 });
+	assert.notEqual(result.status, 0);
+	assert.equal(result.stdout, "");
+	assert.deepEqual(await readdir(root), []);
+});
+
+test("Core browser workflow pin records its source range", async () => {
+	const record = await readCoreBrowserWorkflowEvidencePinRepair();
+	assert.equal(record.schemaVersion, 1);
+	assert.equal(record.milestone
+		, "core-browser-workflow-evidence-pin-repair-source-v1");
+	assert.equal(record.predecessorCommit
+		, coreBrowserWorkflowEvidencePinRepairPredecessor);
+	assert.equal(record.implementationCommit
+		, coreBrowserWorkflowEvidencePinRepairImplementation);
+	assert.deepEqual(record.updates.map(update => update.path)
+		, coreBrowserWorkflowEvidencePinRepairImplementationPaths);
+	assert.deepEqual(record.integrationUpdates.map(update => update.path)
+		, coreBrowserWorkflowEvidencePinRepairIntegrationPaths);
+	assert.deepEqual(record.additions.map(addition => addition.path)
+		, coreBrowserWorkflowEvidencePinRepairAddedPaths);
+	assert.equal(git(["rev-parse"
+		, `${coreBrowserWorkflowEvidencePinRepairImplementation}^`]).trim()
+	, coreBrowserWorkflowEvidencePinRepairPredecessor);
+	assert.deepEqual(git(["diff", "--name-only"
+		, coreBrowserWorkflowEvidencePinRepairPredecessor
+		, coreBrowserWorkflowEvidencePinRepairImplementation])
+		.trim().split("\n").sort()
+	, [...coreBrowserWorkflowEvidencePinRepairImplementationPaths].sort());
+});
+
+test("Core browser workflow pin reverses every transition", async () => {
+	const record = await readCoreBrowserWorkflowEvidencePinRepair();
+	for(const update of [...record.updates, ...record.integrationUpdates])
+	{
+		const current = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256
+			, beforeCoreBrowserWorkflowEvidencePinRepairSource);
+		const base = record.integrationUpdates.includes(update)
+			? coreBrowserWorkflowEvidencePinRepairImplementation
+			: coreBrowserWorkflowEvidencePinRepairPredecessor;
+		const previous = git(["show", `${base}:${update.path}`]);
+		assert.equal(reverseCoreBrowserWorkflowEvidencePinRepairUpdate(
+			current, update), previous, update.path);
+		assert.equal(beforeFinRefinementSource(
+			update.path, current, update.previousSha256), previous, update.path);
+		assert.ok(finRefinementNormalizationPaths.includes(update.path));
+	}
+	for(const addition of record.additions)
+		assert.equal(sha256(await sourceAtFinHistoryMilestone(
+			addition.path, addition.currentSha256))
+		, addition.currentSha256, addition.path);
+});
+
+test("Core browser workflow pin rejects altered transitions", async () => {
+	const update
+		= (await readCoreBrowserWorkflowEvidencePinRepair()).updates[0];
+	const current = await sourceAtFinHistoryMilestone(
+		update.path, update.currentSha256
+		, beforeCoreBrowserWorkflowEvidencePinRepairSource);
+	for(const forged of [{ ...update, currentSha256: "0".repeat(64) }
+		, { ...update, previousSha256: "0".repeat(64) }
+		, { ...update, path: "unrelated.mjs" }
+		, { ...update, edits: [] }
+		, { ...update, edits: [...update.edits, update.edits[0]] }])
+		assert.throws(() => reverseCoreBrowserWorkflowEvidencePinRepairUpdate(
+			current, forged));
+	assert.equal(beforeCoreBrowserWorkflowEvidencePinRepairSource(
+		update.path, current + "unknown"), current + "unknown");
+});
+
+test("Core browser workflow pin writer rejects another checkout", async t => {
+	const root = await mkdtemp(join(
+		tmpdir(), "lean-core-browser-workflow-pin-guard-"
+	));
+	t.after(() => rm(root, { recursive: true }));
+	const result = spawnSync(process.execPath, [resolve(
+		"scripts/update-core-browser-workflow-evidence-pin-repair-source-history.mjs"
 	)], { cwd: root, encoding: "utf8", timeout: 15_000 });
 	assert.notEqual(result.status, 0);
 	assert.equal(result.stdout, "");

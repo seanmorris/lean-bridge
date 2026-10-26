@@ -1,0 +1,104 @@
+{
+  "additions": [
+    {
+      "currentSha256": "1ebb09baf073354806152a0d011199999cfd3c6060eb3c9da8b87f0c76ba9a5a",
+      "path": "scripts/update-core-browser-workflow-evidence-pin-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "bf31032a0e9cc246efb2da0e52fb5b56e2705a13fb225881b48a2f5fd0ad173c",
+      "path": "tests/helpers/core-browser-workflow-evidence-pin-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "8cb686ccd2e02ee5f963d79c1977bd80057715ca",
+  "integrationUpdates": [
+    {
+      "currentSha256": "9ffdebd206a948be290313b7092b42ed980606119711a509b6a864c7f3218b27",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeCoreBrowserWorkflowEvidencePinRepairSource\n\t, coreBrowserWorkflowEvidencePinRepairAddedPaths\n\t, coreBrowserWorkflowEvidencePinRepairHistoryPath\n\t, coreBrowserWorkflowEvidencePinRepairImplementation\n\t, coreBrowserWorkflowEvidencePinRepairImplementationPaths\n\t, coreBrowserWorkflowEvidencePinRepairIntegrationPaths\n\t, coreBrowserWorkflowEvidencePinRepairPredecessor\n\t, reverseCoreBrowserWorkflowEvidencePinRepairUpdate\n} from \"./core-browser-workflow-evidence-pin-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 357
+        },
+        {
+          "current": "const readCoreBrowserWorkflowEvidencePinRepair = async () => JSON.parse(\n\tawait readFile(coreBrowserWorkflowEvidencePinRepairHistoryPath, \"utf8\")\n);\n",
+          "previous": "",
+          "start": 8168
+        },
+        {
+          "current": "test(\"Core browser workflow pin records its source range\", async () => {\n\tconst record = await readCoreBrowserWorkflowEvidencePinRepair();\n\tassert.equal(record.schemaVersion, 1);\n\tassert.equal(record.milestone\n\t\t, \"core-browser-workflow-evidence-pin-repair-source-v1\");\n\tassert.equal(record.predecessorCommit\n\t\t, coreBrowserWorkflowEvidencePinRepairPredecessor);\n\tassert.equal(record.implementationCommit\n\t\t, coreBrowserWorkflowEvidencePinRepairImplementation);\n\tassert.deepEqual(record.updates.map(update => update.path)\n\t\t, coreBrowserWorkflowEvidencePinRepairImplementationPaths);\n\tassert.deepEqual(record.integrationUpdates.map(update => update.path)\n\t\t, coreBrowserWorkflowEvidencePinRepairIntegrationPaths);\n\tassert.deepEqual(record.additions.map(addition => addition.path)\n\t\t, coreBrowserWorkflowEvidencePinRepairAddedPaths);\n\tassert.equal(git([\"rev-parse\"\n\t\t, `${coreBrowserWorkflowEvidencePinRepairImplementation}^`]).trim()\n\t, coreBrowserWorkflowEvidencePinRepairPredecessor);\n\tassert.deepEqual(git([\"diff\", \"--name-only\"\n\t\t, coreBrowserWorkflowEvidencePinRepairPredecessor\n\t\t, coreBrowserWorkflowEvidencePinRepairImplementation])\n\t\t.trim().split(\"\\n\").sort()\n\t, [...coreBrowserWorkflowEvidencePinRepairImplementationPaths].sort());\n});\n\ntest(\"Core browser workflow pin reverses every transition\", async () => {\n\tconst record = await readCoreBrowserWorkflowEvidencePinRepair();\n\tfor(const update of [...record.updates, ...record.integrationUpdates])\n\t{\n\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256\n\t\t\t, beforeCoreBrowserWorkflowEvidencePinRepairSource);\n\t\tconst base = record.integrationUpdates.includes(update)\n\t\t\t? coreBrowserWorkflowEvidencePinRepairImplementation\n\t\t\t: coreBrowserWorkflowEvidencePinRepairPredecessor;\n\t\tconst previous = git([\"show\", `${base}:${update.path}`]);\n\t\tassert.equal(reverseCoreBrowserWorkflowEvidencePinRepairUpdate(\n\t\t\tcurrent, update), previous, update.path);\n\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n\t\tassert.ok(finRefinementNormalizationPaths.includes(update.path));\n\t}\n\tfor(const addition of record.additions)\n\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256))\n\t\t, addition.currentSha256, addition.path);\n});\n\ntest(\"Core browser workflow pin rejects altered transitions\", async () => {\n\tconst update\n\t\t= (await readCoreBrowserWorkflowEvidencePinRepair()).updates[0];\n\tconst current = await sourceAtFinHistoryMilestone(\n\t\tupdate.path, update.currentSha256\n\t\t, beforeCoreBrowserWorkflowEvidencePinRepairSource);\n\tfor(const forged of [{ ...update, currentSha256: \"0\".repeat(64) }\n\t\t, { ...update, previousSha256: \"0\".repeat(64) }\n\t\t, { ...update, path: \"unrelated.mjs\" }\n\t\t, { ...update, edits: [] }\n\t\t, { ...update, edits: [...update.edits, update.edits[0]] }])\n\t\tassert.throws(() => reverseCoreBrowserWorkflowEvidencePinRepairUpdate(\n\t\t\tcurrent, forged));\n\tassert.equal(beforeCoreBrowserWorkflowEvidencePinRepairSource(\n\t\tupdate.path, current + \"unknown\"), current + \"unknown\");\n});\n\ntest(\"Core browser workflow pin writer rejects another checkout\", async t => {\n\tconst root = await mkdtemp(join(\n\t\ttmpdir(), \"lean-core-browser-workflow-pin-guard-\"\n\t));\n\tt.after(() => rm(root, { recursive: true }));\n\tconst result = spawnSync(process.execPath, [resolve(\n\t\t\"scripts/update-core-browser-workflow-evidence-pin-repair-source-history.mjs\"\n\t)], { cwd: root, encoding: \"utf8\", timeout: 15_000 });\n\tassert.notEqual(result.status, 0);\n\tassert.equal(result.stdout, \"\");\n\tassert.deepEqual(await readdir(root), []);\n});\n\n",
+          "previous": "",
+          "start": 17995
+        }
+      ],
+      "path": "tests/helpers/core-historical-evidence-replay-source-history-tests.mjs",
+      "previousSha256": "a380a717be46a1a9653c1cd2ed210737bca15fe00ffcd19d89aa6ec2ca3a7746"
+    },
+    {
+      "currentSha256": "7900f5f00d2e63be4c408c449233173c13d0c35eb4250ac0522ad32df5a271d8",
+      "edits": [
+        {
+          "current": "import { beforeCoreBrowserWorkflowEvidencePinRepairSource, coreBrowserWorkflowEvidencePinRepairNormalizationPaths } from \"./core-browser-workflow-evidence-pin-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...coreBrowserWorkflowEvidencePinRepairNormalizationPaths\n\t, ...coreTypeSurfaceEvidenceClosureRepairNormalizationPaths\n",
+          "previous": "\t...coreTypeSurfaceEvidenceClosureRepairNormalizationPaths\n",
+          "start": 193264
+        },
+        {
+          "current": "\tlet stage = beforeCoreBrowserWorkflowEvidencePinRepairSource(\n\t\tpath, text, expected\n\t);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCoreTypeSurfaceEvidenceClosureRepairSource(\n",
+          "previous": "\tlet stage = beforeCoreTypeSurfaceEvidenceClosureRepairSource(\n",
+          "start": 240098
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "6aafb766d0987dc0990b6ef1a9bd29a626583dd2aeafbc82b51b834667475f4e"
+    }
+  ],
+  "milestone": "core-browser-workflow-evidence-pin-repair-source-v1",
+  "predecessorCommit": "69b041a6ce35ff18e18b1eb04f4728fdb82caed1",
+  "schemaVersion": 1,
+  "scope": "Refresh the four live nominal primitive-base browser evidence entries to the exact sparse-checkout workflow bytes already authenticated by the Core checkout source history. Add a direct count-and-digest regression without changing observations, archived evidence, runtime behavior or support claims.",
+  "updates": [
+    {
+      "currentSha256": "55b11d5918786caf1557776e74a4404d5da208abff1961b1b7e3ab27514cf92b",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"279a109da11192cb1fa7d59d28b7e7abba956e3a1344b3f84293ba1c40d6d63a\"\n",
+          "previous": "          \"sha256\": \"fcfe42007679b5f65441860379e15b42595056dd4cce44d4523d35bee27e6afd\"\n",
+          "start": 7021261
+        },
+        {
+          "current": "          \"sha256\": \"279a109da11192cb1fa7d59d28b7e7abba956e3a1344b3f84293ba1c40d6d63a\"\n",
+          "previous": "          \"sha256\": \"fcfe42007679b5f65441860379e15b42595056dd4cce44d4523d35bee27e6afd\"\n",
+          "start": 7082908
+        },
+        {
+          "current": "          \"sha256\": \"279a109da11192cb1fa7d59d28b7e7abba956e3a1344b3f84293ba1c40d6d63a\"\n",
+          "previous": "          \"sha256\": \"fcfe42007679b5f65441860379e15b42595056dd4cce44d4523d35bee27e6afd\"\n",
+          "start": 7144971
+        },
+        {
+          "current": "          \"sha256\": \"279a109da11192cb1fa7d59d28b7e7abba956e3a1344b3f84293ba1c40d6d63a\"\n",
+          "previous": "          \"sha256\": \"fcfe42007679b5f65441860379e15b42595056dd4cce44d4523d35bee27e6afd\"\n",
+          "start": 7206618
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "a7497cfa9277252561f49c815d15785f60b0781680b400e1af02be7f18c1008d"
+    },
+    {
+      "currentSha256": "30e0e7dd615f86454f4e3e4726bcdf46434fadfd35da52f6dae24601b8122c89",
+      "edits": [
+        {
+          "current": "test(\"type surface binds every live nominal browser workflow pin\", async () => {\n\tconst path = \".github/workflows/nominal-primitive-subtype-browser.yml\";\n\tconst [workflow, inventorySource] = await Promise.all([\n\t\treadFile(path), readFile(\"docs/type-surface.v1.json\", \"utf8\")\n\t]);\n\tconst currentSha256 = createHash(\"sha256\").update(workflow).digest(\"hex\");\n\tconst inventory = JSON.parse(inventorySource);\n\tconst pins = inventory.evidence.flatMap(evidence => evidence.files)\n\t\t.filter(file => file.path === path);\n\tassert.equal(pins.length, 4);\n\tassert.ok(pins.every(file => file.sha256 === currentSha256));\n});\n\n",
+          "previous": "",
+          "start": 6661
+        }
+      ],
+      "path": "tests/helpers/core-contract-evidence-tests.mjs",
+      "previousSha256": "5f1930ac52c3a389f38434dbd593d89b9d744270796af1cc55ef3db2b4c51ce9"
+    }
+  ]
+}
