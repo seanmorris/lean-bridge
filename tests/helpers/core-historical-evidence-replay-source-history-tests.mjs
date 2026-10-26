@@ -10,6 +10,16 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import {
+	beforeCoreRuntimeBudgetLivePinRepairSource
+	, coreRuntimeBudgetLivePinRepairAddedPaths
+	, coreRuntimeBudgetLivePinRepairHistoryPath
+	, coreRuntimeBudgetLivePinRepairImplementation
+	, coreRuntimeBudgetLivePinRepairImplementationPaths
+	, coreRuntimeBudgetLivePinRepairIntegrationPaths
+	, coreRuntimeBudgetLivePinRepairPredecessor
+	, reverseCoreRuntimeBudgetLivePinRepairUpdate
+} from "./core-runtime-budget-live-pin-repair-source-history.mjs";
+import {
 	beforeCoreReceiverCiStopBoundarySource
 	, coreReceiverCiStopBoundaryAddedPaths
 	, coreReceiverCiStopBoundaryHistoryPath
@@ -73,12 +83,16 @@ import {
 	beforeFinRefinementSource, finRefinementNormalizationPaths
 } from "./fin-refinement-source-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
+import { gitSourceHistoryTransition } from "./source-history-stream.mjs";
 import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
 
 const git = arguments_ => execFileSync("git", arguments_
 	, { encoding: "utf8", maxBuffer: 128 * 1024 * 1024 });
 const read = async () => JSON.parse(await readFile(
 	coreHistoricalEvidenceReplayHistoryPath, "utf8"
+));
+const readRuntimeBudgetLivePinRepair = async () => JSON.parse(await readFile(
+	coreRuntimeBudgetLivePinRepairHistoryPath, "utf8"
 ));
 const readLivePinRepair = async () => JSON.parse(await readFile(
 	coreExactHeadLivePinRepairHistoryPath, "utf8"
@@ -263,6 +277,101 @@ test("exact-head Core live-pin writer refuses another checkout", async t => {
 	t.after(() => rm(root, { recursive: true }));
 	const result = spawnSync(process.execPath, [resolve(
 		"scripts/update-core-exact-head-live-pin-repair-source-history.mjs"
+	)], { cwd: root, encoding: "utf8", timeout: 15_000 });
+	assert.notEqual(result.status, 0);
+	assert.equal(result.stdout, "");
+	assert.deepEqual(await readdir(root), []);
+});
+
+test("Core runtime-budget registration repairs exactly three live pins", async () => {
+	const path = "docs/type-surface.v1.json";
+	const previous = git(["show"
+		, `${coreRuntimeBudgetLivePinRepairPredecessor}:${path}`]);
+	const current = git(["show"
+		, `${coreRuntimeBudgetLivePinRepairImplementation}:${path}`]);
+	const oldDigest
+		= "205e9c7a110260c81b27447db39b479d2957431bee9e54116d49023f1f4cc46b";
+	const newDigest
+		= "38906f02fa9e17c275d7785526e042e4819f5b6e15881d76dae2326e73277368";
+	assert.equal(previous.split(oldDigest).length - 1, 3);
+	assert.equal(current.split(newDigest).length - 1, 3);
+	assert.equal(previous.replaceAll(oldDigest, newDigest), current);
+	const componentPath = "tests/component-array-contract.test.mjs";
+	const component = git(["show"
+		, `${coreRuntimeBudgetLivePinRepairImplementation}:${componentPath}`]);
+	assert.equal(sha256(component), newDigest);
+	assert.equal(component, git(["show"
+		, `${coreRuntimeBudgetLivePinRepairPredecessor}:${componentPath}`]));
+	assert.equal(sha256(current), sha256(beforeFinRefinementSource(
+		path, await readFile(path, "utf8"), sha256(current)
+	)));
+});
+
+test("Core runtime-budget live-pin repair records and reverses its range", async () => {
+	const record = await readRuntimeBudgetLivePinRepair();
+	assert.equal(record.schemaVersion, 1);
+	assert.equal(record.milestone
+		, "core-runtime-budget-live-pin-repair-source-v1");
+	assert.equal(record.predecessorCommit
+		, coreRuntimeBudgetLivePinRepairPredecessor);
+	assert.equal(record.implementationCommit
+		, coreRuntimeBudgetLivePinRepairImplementation);
+	assert.deepEqual(record.updates.map(update => update.path)
+		, coreRuntimeBudgetLivePinRepairImplementationPaths);
+	assert.deepEqual(record.integrationUpdates.map(update => update.path)
+		, coreRuntimeBudgetLivePinRepairIntegrationPaths);
+	assert.deepEqual(record.additions.map(addition => addition.path)
+		, coreRuntimeBudgetLivePinRepairAddedPaths);
+	assert.equal(git(["rev-parse"
+		, `${coreRuntimeBudgetLivePinRepairImplementation}^`]).trim()
+	, coreRuntimeBudgetLivePinRepairPredecessor);
+	assert.deepEqual(await gitSourceHistoryTransition(
+		"docs/type-surface.v1.json"
+		, coreRuntimeBudgetLivePinRepairPredecessor
+		, coreRuntimeBudgetLivePinRepairImplementation), record.updates[0]);
+	for(const update of record.integrationUpdates)
+	{
+		const current = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256
+			, beforeCoreRuntimeBudgetLivePinRepairSource);
+		const previous = git(["show"
+			, `${coreRuntimeBudgetLivePinRepairImplementation}:${update.path}`]);
+		assert.equal(reverseCoreRuntimeBudgetLivePinRepairUpdate(
+			current, update), previous, update.path);
+		assert.equal(beforeFinRefinementSource(
+			update.path, current, update.previousSha256), previous, update.path);
+		assert.ok(finRefinementNormalizationPaths.includes(update.path));
+	}
+	for(const addition of record.additions)
+		assert.equal(sha256(await sourceAtFinHistoryMilestone(
+			addition.path, addition.currentSha256))
+		, addition.currentSha256, addition.path);
+});
+
+test("Core runtime-budget live-pin repair rejects alteration", async () => {
+	const update = (await readRuntimeBudgetLivePinRepair())
+		.integrationUpdates[0];
+	const current = await sourceAtFinHistoryMilestone(
+		update.path, update.currentSha256
+		, beforeCoreRuntimeBudgetLivePinRepairSource);
+	for(const forged of [{ ...update, currentSha256: "0".repeat(64) }
+		, { ...update, previousSha256: "0".repeat(64) }
+		, { ...update, path: "unrelated.mjs" }
+		, { ...update, edits: [] }
+		, { ...update, edits: [...update.edits, update.edits[0]] }])
+		assert.throws(() => reverseCoreRuntimeBudgetLivePinRepairUpdate(
+			current, forged));
+	assert.equal(beforeCoreRuntimeBudgetLivePinRepairSource(
+		update.path, current + "unknown"), current + "unknown");
+});
+
+test("Core runtime-budget live-pin writer refuses another checkout", async t => {
+	const root = await mkdtemp(join(
+		tmpdir(), "lean-core-runtime-budget-live-pin-guard-"
+	));
+	t.after(() => rm(root, { recursive: true }));
+	const result = spawnSync(process.execPath, [resolve(
+		"scripts/update-core-runtime-budget-live-pin-repair-source-history.mjs"
 	)], { cwd: root, encoding: "utf8", timeout: 15_000 });
 	assert.notEqual(result.status, 0);
 	assert.equal(result.stdout, "");

@@ -1,0 +1,92 @@
+{
+  "additions": [
+    {
+      "currentSha256": "53d16dc35dcaa9ea516ff413ee3ee3944f84da42fe88128a0258149478d8ecd5",
+      "path": "scripts/update-core-runtime-budget-live-pin-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "d6c484fac1188b51247e76147dfb65dd34e553af4abc6fd5169f146fa74226e1",
+      "path": "tests/helpers/core-runtime-budget-live-pin-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "31730530ddba198417dd1f75c8e0074f007b061d",
+  "integrationUpdates": [
+    {
+      "currentSha256": "20a8a80dbc5baa66473fd1c556184616c068ad02750427113302180dde404873",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeCoreRuntimeBudgetLivePinRepairSource\n\t, coreRuntimeBudgetLivePinRepairAddedPaths\n\t, coreRuntimeBudgetLivePinRepairHistoryPath\n\t, coreRuntimeBudgetLivePinRepairImplementation\n\t, coreRuntimeBudgetLivePinRepairImplementationPaths\n\t, coreRuntimeBudgetLivePinRepairIntegrationPaths\n\t, coreRuntimeBudgetLivePinRepairPredecessor\n\t, reverseCoreRuntimeBudgetLivePinRepairUpdate\n} from \"./core-runtime-budget-live-pin-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 357
+        },
+        {
+          "current": "import { gitSourceHistoryTransition } from \"./source-history-stream.mjs\";\n",
+          "previous": "",
+          "start": 3504
+        },
+        {
+          "current": "const readRuntimeBudgetLivePinRepair = async () => JSON.parse(await readFile(\n\tcoreRuntimeBudgetLivePinRepairHistoryPath, \"utf8\"\n));\n",
+          "previous": "",
+          "start": 3882
+        },
+        {
+          "current": "\ntest(\"Core runtime-budget registration repairs exactly three live pins\", async () => {\n\tconst path = \"docs/type-surface.v1.json\";\n\tconst previous = git([\"show\"\n\t\t, `${coreRuntimeBudgetLivePinRepairPredecessor}:${path}`]);\n\tconst current = git([\"show\"\n\t\t, `${coreRuntimeBudgetLivePinRepairImplementation}:${path}`]);\n\tconst oldDigest\n\t\t= \"205e9c7a110260c81b27447db39b479d2957431bee9e54116d49023f1f4cc46b\";\n\tconst newDigest\n\t\t= \"38906f02fa9e17c275d7785526e042e4819f5b6e15881d76dae2326e73277368\";\n\tassert.equal(previous.split(oldDigest).length - 1, 3);\n\tassert.equal(current.split(newDigest).length - 1, 3);\n\tassert.equal(previous.replaceAll(oldDigest, newDigest), current);\n\tconst componentPath = \"tests/component-array-contract.test.mjs\";\n\tconst component = git([\"show\"\n\t\t, `${coreRuntimeBudgetLivePinRepairImplementation}:${componentPath}`]);\n\tassert.equal(sha256(component), newDigest);\n\tassert.equal(component, git([\"show\"\n\t\t, `${coreRuntimeBudgetLivePinRepairPredecessor}:${componentPath}`]));\n\tassert.equal(sha256(current), sha256(beforeFinRefinementSource(\n\t\tpath, await readFile(path, \"utf8\"), sha256(current)\n\t)));\n});\n\ntest(\"Core runtime-budget live-pin repair records and reverses its range\", async () => {\n\tconst record = await readRuntimeBudgetLivePinRepair();\n\tassert.equal(record.schemaVersion, 1);\n\tassert.equal(record.milestone\n\t\t, \"core-runtime-budget-live-pin-repair-source-v1\");\n\tassert.equal(record.predecessorCommit\n\t\t, coreRuntimeBudgetLivePinRepairPredecessor);\n\tassert.equal(record.implementationCommit\n\t\t, coreRuntimeBudgetLivePinRepairImplementation);\n\tassert.deepEqual(record.updates.map(update => update.path)\n\t\t, coreRuntimeBudgetLivePinRepairImplementationPaths);\n\tassert.deepEqual(record.integrationUpdates.map(update => update.path)\n\t\t, coreRuntimeBudgetLivePinRepairIntegrationPaths);\n\tassert.deepEqual(record.additions.map(addition => addition.path)\n\t\t, coreRuntimeBudgetLivePinRepairAddedPaths);\n\tassert.equal(git([\"rev-parse\"\n\t\t, `${coreRuntimeBudgetLivePinRepairImplementation}^`]).trim()\n\t, coreRuntimeBudgetLivePinRepairPredecessor);\n\tassert.deepEqual(await gitSourceHistoryTransition(\n\t\t\"docs/type-surface.v1.json\"\n\t\t, coreRuntimeBudgetLivePinRepairPredecessor\n\t\t, coreRuntimeBudgetLivePinRepairImplementation), record.updates[0]);\n\tfor(const update of record.integrationUpdates)\n\t{\n\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256\n\t\t\t, beforeCoreRuntimeBudgetLivePinRepairSource);\n\t\tconst previous = git([\"show\"\n\t\t\t, `${coreRuntimeBudgetLivePinRepairImplementation}:${update.path}`]);\n\t\tassert.equal(reverseCoreRuntimeBudgetLivePinRepairUpdate(\n\t\t\tcurrent, update), previous, update.path);\n\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n\t\tassert.ok(finRefinementNormalizationPaths.includes(update.path));\n\t}\n\tfor(const addition of record.additions)\n\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256))\n\t\t, addition.currentSha256, addition.path);\n});\n\ntest(\"Core runtime-budget live-pin repair rejects alteration\", async () => {\n\tconst update = (await readRuntimeBudgetLivePinRepair())\n\t\t.integrationUpdates[0];\n\tconst current = await sourceAtFinHistoryMilestone(\n\t\tupdate.path, update.currentSha256\n\t\t, beforeCoreRuntimeBudgetLivePinRepairSource);\n\tfor(const forged of [{ ...update, currentSha256: \"0\".repeat(64) }\n\t\t, { ...update, previousSha256: \"0\".repeat(64) }\n\t\t, { ...update, path: \"unrelated.mjs\" }\n\t\t, { ...update, edits: [] }\n\t\t, { ...update, edits: [...update.edits, update.edits[0]] }])\n\t\tassert.throws(() => reverseCoreRuntimeBudgetLivePinRepairUpdate(\n\t\t\tcurrent, forged));\n\tassert.equal(beforeCoreRuntimeBudgetLivePinRepairSource(\n\t\tupdate.path, current + \"unknown\"), current + \"unknown\");\n});\n\ntest(\"Core runtime-budget live-pin writer refuses another checkout\", async t => {\n\tconst root = await mkdtemp(join(\n\t\ttmpdir(), \"lean-core-runtime-budget-live-pin-guard-\"\n\t));\n\tt.after(() => rm(root, { recursive: true }));\n\tconst result = spawnSync(process.execPath, [resolve(\n\t\t\"scripts/update-core-runtime-budget-live-pin-repair-source-history.mjs\"\n\t)], { cwd: root, encoding: \"utf8\", timeout: 15_000 });\n\tassert.notEqual(result.status, 0);\n\tassert.equal(result.stdout, \"\");\n\tassert.deepEqual(await readdir(root), []);\n});\n",
+          "previous": "",
+          "start": 12399
+        }
+      ],
+      "path": "tests/helpers/core-historical-evidence-replay-source-history-tests.mjs",
+      "previousSha256": "fe8103f0b4737c7f32d768765f5e30c01df22d564c005692b25095a2d3c2a582"
+    },
+    {
+      "currentSha256": "82af2b2a5a86a68c93b318463edcd9c811e36c733ccced0be813a169d204a12c",
+      "edits": [
+        {
+          "current": "import { beforeCoreRuntimeBudgetLivePinRepairSource, coreRuntimeBudgetLivePinRepairNormalizationPaths } from \"./core-runtime-budget-live-pin-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...coreRuntimeBudgetLivePinRepairNormalizationPaths\n\t, ...coreContractRuntimeBudgetNormalizationPaths\n",
+          "previous": "\t...coreContractRuntimeBudgetNormalizationPaths\n",
+          "start": 191770
+        },
+        {
+          "current": "\tlet stage = beforeCoreRuntimeBudgetLivePinRepairSource(\n\t\tpath, text, expected\n\t);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCoreContractRuntimeBudgetSource(\n",
+          "previous": "\tlet stage = beforeCoreContractRuntimeBudgetSource(\n",
+          "start": 238115
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "7a4cc572ed00ed42f0aa432e7779d3f0c8fac98c4a4657a604c8a72b3084e345"
+    }
+  ],
+  "milestone": "core-runtime-budget-live-pin-repair-source-v1",
+  "predecessorCommit": "6f93b3f19f9a17107ca5aa4ad753b17de0b390b3",
+  "schemaVersion": 1,
+  "scope": "Repair exactly three live type-surface references after the Core runtime-budget history registration changed the component-array contract digest. Preserve every observation, artifact, support claim, runtime, package and historical evidence byte. Reproduce exact-head Core run 40332938294 shard 1's nine stale-source assertion failures and keep final hosted Core acceptance open.",
+  "updates": [
+    {
+      "currentSha256": "903df2644aa4fa9e925e4a09a61731008622acf77cffdfeafdb9f08c6cc4d99a",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"38906f02fa9e17c275d7785526e042e4819f5b6e15881d76dae2326e73277368\"\n",
+          "previous": "          \"sha256\": \"205e9c7a110260c81b27447db39b479d2957431bee9e54116d49023f1f4cc46b\"\n",
+          "start": 685394
+        },
+        {
+          "current": "          \"sha256\": \"38906f02fa9e17c275d7785526e042e4819f5b6e15881d76dae2326e73277368\"\n",
+          "previous": "          \"sha256\": \"205e9c7a110260c81b27447db39b479d2957431bee9e54116d49023f1f4cc46b\"\n",
+          "start": 1440962
+        },
+        {
+          "current": "          \"sha256\": \"38906f02fa9e17c275d7785526e042e4819f5b6e15881d76dae2326e73277368\"\n",
+          "previous": "          \"sha256\": \"205e9c7a110260c81b27447db39b479d2957431bee9e54116d49023f1f4cc46b\"\n",
+          "start": 1447496
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "2c2aee082fabe5d79228827786cb24339a46f17518ce1604ad5c662019939e5d"
+    }
+  ]
+}
