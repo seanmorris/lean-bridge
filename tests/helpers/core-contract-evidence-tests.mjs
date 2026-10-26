@@ -12,8 +12,9 @@ import { join } from "node:path";
 import test from "node:test";
 import {
 	coreContractEvidenceBaseline, coreContractEvidenceDirectoryReferences
-	, coreContractEvidenceFragments
+	, coreContractEvidenceFragments, coreContractReadsTypeSurface
 	, coreSparseCheckoutMode
+	, coreTypeSurfaceEvidenceDirectories
 } from "../../scripts/core-contract-evidence.mjs";
 import { ownedCheckedRecordHostedLaneNames } from "./owned-checked-record-hosted-contracts.mjs";
 
@@ -76,6 +77,41 @@ test("Core evidence prefixes do not broaden non-enumerating source", () => {
 	assert.ok(coreContractEvidenceFragments(
 		'const path = `owned-subtype-${lane}-hosted`;'
 		, "template.mjs").includes("owned-subtype-"));
+});
+
+test("Core evidence planning recognizes executable type-surface reads", () => {
+	assert.equal(coreContractReadsTypeSurface(
+		"const value = await readTypeSurface();", "direct.mjs"), true);
+	assert.equal(coreContractReadsTypeSurface(
+		"const value = await producer.readTypeSurface();", "property.mjs"), true);
+	assert.equal(coreContractReadsTypeSurface(
+		"const value = await producer['readTypeSurface']();", "element.mjs"), true);
+	assert.equal(coreContractReadsTypeSurface(
+		"export function readTypeSurface() {}", "definition.mjs"), false);
+	assert.equal(coreContractReadsTypeSurface(
+		"// readTypeSurface()", "comment.mjs"), false);
+});
+
+test("type-surface reads retain every named evidence directory", () => {
+	const document = { evidence: [
+		{ files: [
+			{ path: "docs/evidence/root-record.json" }
+			, { path: "docs/evidence/owned-subtype-jvm-hosted-20990101/report.json" }
+			, { path: "src/adoption/type-surface.mjs" }
+		] }
+		, { files: [
+			{ path: "docs/evidence/zero-payload-checked-record-rust-20990101/result.json" }
+		] }
+	] };
+	const expected = [
+		"owned-subtype-jvm-hosted-20990101"
+		, "zero-payload-checked-record-rust-20990101"
+	];
+	assert.deepEqual([...coreTypeSurfaceEvidenceDirectories(
+		document, directories)], expected);
+	assert.throws(() => coreTypeSurfaceEvidenceDirectories({ evidence: [
+		{ files: [{ path: "docs/evidence/missing-archive-20990101/report.json" }] }
+	] }, directories), /not tracked: missing-archive-20990101/u);
 });
 
 test("checked-JavaScript partitions preserve the exact legacy test inventory", async () => {

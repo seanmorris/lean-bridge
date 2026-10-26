@@ -97,6 +97,66 @@ const enumeratesEvidenceDirectories = (source, path) => {
 };
 
 /**
+ * Detect executable calls that require `readTypeSurface` to authenticate every
+ * source named by the live inventory. Merely importing or defining the
+ * function does not require the complete retained-evidence closure.
+ *
+ * @param source - JavaScript source.
+ * @param path - Diagnostic source path.
+ */
+export const coreContractReadsTypeSurface = (source, path = "source.mjs") => {
+	if(!/[.]?(?:c|m)?js$/u.test(extname(path))) return false;
+	const file = ts.createSourceFile(path, source, ts.ScriptTarget.Latest, true
+		, ts.ScriptKind.JS);
+	let found = false;
+	const visit = node => {
+		if(found) return;
+		if(ts.isCallExpression(node))
+		{
+			const callee = node.expression;
+			if((ts.isIdentifier(callee) && callee.text === "readTypeSurface")
+				|| (ts.isPropertyAccessExpression(callee)
+					&& callee.name.text === "readTypeSurface")
+				|| (ts.isElementAccessExpression(callee)
+					&& ts.isStringLiteralLike(callee.argumentExpression)
+					&& callee.argumentExpression.text === "readTypeSurface"))
+				found = true;
+		}
+		ts.forEachChild(node, visit);
+	};
+	visit(file);
+	return found;
+};
+
+/**
+ * Return every retained evidence directory needed by `readTypeSurface`'s
+ * complete file-hash pass. Root evidence records remain part of the baseline;
+ * source paths outside `docs/evidence` remain in the source checkout.
+ *
+ * @param document - Parsed live type-surface inventory.
+ * @param directories - Tracked top-level evidence directory names.
+ */
+export const coreTypeSurfaceEvidenceDirectories = (document, directories) => {
+	assert.ok(Array.isArray(document?.evidence));
+	const tracked = new Set(directories);
+	const selected = new Set();
+	for(const evidence of document.evidence)
+	{
+		assert.ok(Array.isArray(evidence?.files));
+		for(const file of evidence.files)
+		{
+			assert.equal(typeof file?.path, "string");
+			const match = /^docs\/evidence\/([^/]+)\//u.exec(file.path);
+			if(!match) continue;
+			assert.ok(tracked.has(match[1])
+				, `Type-surface evidence directory is not tracked: ${match[1]}`);
+			selected.add(match[1]);
+		}
+	}
+	return selected;
+};
+
+/**
  * Resolve exact archive names and stable name prefixes from one source file.
  * Prefix recognition is intentionally conservative: a selector must contain a
  * hyphen and at least twelve characters, which admits the three reviewed
@@ -215,6 +275,7 @@ export const collectCoreContractEvidencePlan = async (
 	const directories = trackedEvidenceDirectories(root);
 	const selectedDirectories = new Set();
 	const sources = new Set();
+	let completeTypeSurface = false;
 	const pending = [...shard.selection.files];
 	while(pending.length)
 	{
@@ -223,6 +284,7 @@ export const collectCoreContractEvidencePlan = async (
 		assert.ok(!path.startsWith("../") && !isAbsolute(path), path);
 		const source = await readFile(join(root, path), "utf8");
 		sources.add(path);
+		if(coreContractReadsTypeSurface(source, path)) completeTypeSurface = true;
 		// Source-history implementations consume the root JSON transition record,
 		// which is part of the baseline. Archive-looking strings inside those
 		// modules describe historical changed paths; they are not working-tree
@@ -232,6 +294,13 @@ export const collectCoreContractEvidencePlan = async (
 				source, path, directories)) selectedDirectories.add(directory);
 		for(const reference of await repositorySourceReferences(source, path, root))
 			if(!sources.has(reference)) pending.push(reference);
+	}
+	if(completeTypeSurface)
+	{
+		const document = JSON.parse(await readFile(
+			join(root, "docs/type-surface.v1.json"), "utf8"));
+		for(const directory of coreTypeSurfaceEvidenceDirectories(
+			document, directories)) selectedDirectories.add(directory);
 	}
 	const sourceFiles = [...sources].toSorted();
 	const evidenceDirectories = [...selectedDirectories].toSorted();
@@ -248,7 +317,7 @@ export const collectCoreContractEvidencePlan = async (
 			, sha256: sha256(canonicalJson(sourceFiles)), files: sourceFiles
 		}
 		, evidence: {
-			directoryCount: evidenceDirectories.length
+			completeTypeSurface, directoryCount: evidenceDirectories.length
 			, sha256: sha256(canonicalJson(evidenceDirectories))
 			, directories: evidenceDirectories, patterns
 		}
