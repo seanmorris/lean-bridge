@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeCoreContractEvidenceCheckoutSource, coreContractEvidenceCheckoutNormalizationPaths } from "./core-contract-evidence-checkout-source-history.mjs";
 import { beforeNominalPrimitiveSubtypeSparseCheckoutSource, nominalPrimitiveSubtypeSparseCheckoutNormalizationPaths } from "./nominal-primitive-subtype-sparse-checkout-source-history.mjs";
 import { beforeCoreStaticSparseCheckoutSource, coreStaticSparseCheckoutNormalizationPaths } from "./core-static-sparse-checkout-source-history.mjs";
 import { beforeCoreStaticHistoryDeferralSource, coreStaticHistoryDeferralNormalizationPaths } from "./core-static-history-deferral-source-history.mjs";
@@ -2222,7 +2223,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...nominalPrimitiveSubtypeSparseCheckoutNormalizationPaths
+	...coreContractEvidenceCheckoutNormalizationPaths
+	, ...nominalPrimitiveSubtypeSparseCheckoutNormalizationPaths
 	, ...coreStaticSparseCheckoutNormalizationPaths
 	, ...coreStaticHistoryDeferralNormalizationPaths
 	, ...coreOwnedReviewedExactStopRepairNormalizationPaths
@@ -3187,7 +3189,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeNominalPrimitiveSubtypeSparseCheckoutSource(
+	let stage = beforeCoreContractEvidenceCheckoutSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeNominalPrimitiveSubtypeSparseCheckoutSource(
 		path, text, expected
 	);
 	if(expected !== undefined && sha256(stage) === expected)

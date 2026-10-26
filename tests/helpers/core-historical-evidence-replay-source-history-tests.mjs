@@ -10,6 +10,18 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import {
+	beforeCoreContractEvidenceCheckoutSource
+	, coreContractEvidenceCheckoutAddedPaths
+	, coreContractEvidenceCheckoutHistoryPath
+	, coreContractEvidenceCheckoutImplementation
+	, coreContractEvidenceCheckoutImplementationAdditions
+	, coreContractEvidenceCheckoutImplementationPaths
+	, coreContractEvidenceCheckoutIntegrationPaths
+	, coreContractEvidenceCheckoutModifiedPaths
+	, coreContractEvidenceCheckoutPredecessor
+	, reverseCoreContractEvidenceCheckoutUpdate
+} from "./core-contract-evidence-checkout-source-history.mjs";
+import {
 	beforeNominalPrimitiveSubtypeSparseCheckoutSource
 	, nominalPrimitiveSubtypeSparseCheckoutAddedPaths
 	, nominalPrimitiveSubtypeSparseCheckoutHistoryPath
@@ -144,6 +156,8 @@ import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.m
 
 const git = arguments_ => execFileSync("git", arguments_
 	, { encoding: "utf8", maxBuffer: 128 * 1024 * 1024 });
+const readCoreContractEvidenceCheckout = async () => JSON.parse(await readFile(
+	coreContractEvidenceCheckoutHistoryPath, "utf8"));
 const readNominalPrimitiveSubtypeSparseCheckout = async () =>
 	JSON.parse(await readFile(
 		nominalPrimitiveSubtypeSparseCheckoutHistoryPath, "utf8"));
@@ -348,6 +362,91 @@ test("exact-head Core live-pin writer refuses another checkout", async t => {
 	t.after(() => rm(root, { recursive: true }));
 	const result = spawnSync(process.execPath, [resolve(
 		"scripts/update-core-exact-head-live-pin-repair-source-history.mjs"
+	)], { cwd: root, encoding: "utf8", timeout: 15_000 });
+	assert.notEqual(result.status, 0);
+	assert.equal(result.stdout, "");
+	assert.deepEqual(await readdir(root), []);
+});
+
+test("Core evidence checkout records its exact 47-file implementation", async () => {
+	const record = await readCoreContractEvidenceCheckout();
+	assert.equal(record.schemaVersion, 1);
+	assert.equal(record.milestone
+		, "core-contract-evidence-checkout-source-v1");
+	assert.equal(record.predecessorCommit
+		, coreContractEvidenceCheckoutPredecessor);
+	assert.equal(record.implementationCommit
+		, coreContractEvidenceCheckoutImplementation);
+	assert.deepEqual(record.updates.map(update => update.path)
+		, coreContractEvidenceCheckoutModifiedPaths);
+	assert.deepEqual(record.implementationAdditions.map(addition => addition.path)
+		, coreContractEvidenceCheckoutImplementationAdditions);
+	assert.deepEqual(record.integrationUpdates.map(update => update.path)
+		, coreContractEvidenceCheckoutIntegrationPaths);
+	assert.deepEqual(record.additions.map(addition => addition.path)
+		, coreContractEvidenceCheckoutAddedPaths);
+	assert.equal(git(["rev-parse"
+		, `${coreContractEvidenceCheckoutImplementation}^`]).trim()
+	, coreContractEvidenceCheckoutPredecessor);
+	assert.deepEqual(git(["diff", "--name-only"
+		, coreContractEvidenceCheckoutPredecessor
+		, coreContractEvidenceCheckoutImplementation]).trim()
+		.split("\n").sort()
+	, [...coreContractEvidenceCheckoutImplementationPaths].sort());
+	assert.deepEqual(git(["diff", "--name-only", "--diff-filter=M"
+		, coreContractEvidenceCheckoutPredecessor
+		, coreContractEvidenceCheckoutImplementation]).trim()
+		.split("\n").sort()
+	, [...coreContractEvidenceCheckoutModifiedPaths].sort());
+});
+
+test("Core evidence checkout reverses every source transition", async () => {
+	const record = await readCoreContractEvidenceCheckout();
+	for(const update of [...record.updates, ...record.integrationUpdates])
+	{
+		const current = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256
+			, beforeCoreContractEvidenceCheckoutSource);
+		const base = record.integrationUpdates.includes(update)
+			? coreContractEvidenceCheckoutImplementation
+			: coreContractEvidenceCheckoutPredecessor;
+		const previous = git(["show", `${base}:${update.path}`]);
+		assert.equal(reverseCoreContractEvidenceCheckoutUpdate(
+			current, update), previous, update.path);
+		assert.equal(beforeFinRefinementSource(
+			update.path, current, update.previousSha256), previous, update.path);
+		assert.ok(finRefinementNormalizationPaths.includes(update.path));
+	}
+	for(const addition of [
+		...record.implementationAdditions, ...record.additions
+	]) assert.equal(sha256(await sourceAtFinHistoryMilestone(
+		addition.path, addition.currentSha256))
+	, addition.currentSha256, addition.path);
+});
+
+test("Core evidence checkout rejects altered transitions", async () => {
+	const update = (await readCoreContractEvidenceCheckout()).updates[0];
+	const current = await sourceAtFinHistoryMilestone(
+		update.path, update.currentSha256
+		, beforeCoreContractEvidenceCheckoutSource);
+	for(const forged of [{ ...update, currentSha256: "0".repeat(64) }
+		, { ...update, previousSha256: "0".repeat(64) }
+		, { ...update, path: "unrelated.mjs" }
+		, { ...update, edits: [] }
+		, { ...update, edits: [...update.edits, update.edits[0]] }])
+		assert.throws(() => reverseCoreContractEvidenceCheckoutUpdate(
+			current, forged));
+	assert.equal(beforeCoreContractEvidenceCheckoutSource(
+		update.path, current + "unknown"), current + "unknown");
+});
+
+test("Core evidence-checkout writer refuses another checkout", async t => {
+	const root = await mkdtemp(join(
+		tmpdir(), "lean-core-contract-evidence-checkout-guard-"
+	));
+	t.after(() => rm(root, { recursive: true }));
+	const result = spawnSync(process.execPath, [resolve(
+		"scripts/update-core-contract-evidence-checkout-source-history.mjs"
 	)], { cwd: root, encoding: "utf8", timeout: 15_000 });
 	assert.notEqual(result.status, 0);
 	assert.equal(result.stdout, "");

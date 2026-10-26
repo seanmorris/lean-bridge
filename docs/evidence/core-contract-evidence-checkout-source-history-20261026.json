@@ -1,0 +1,1265 @@
+{
+  "additions": [
+    {
+      "currentSha256": "a1001a7882795d144c5fb5b107d8e0583f164e80c1a98f4b7c9a147959779134",
+      "path": "scripts/update-core-contract-evidence-checkout-source-history.mjs"
+    },
+    {
+      "currentSha256": "0a284589d3f5960a26ed8ec1d052200d3384d14ab0fb77e3b0156934bd2f388a",
+      "path": "tests/helpers/core-contract-evidence-checkout-source-history.mjs"
+    }
+  ],
+  "implementationAdditions": [
+    {
+      "currentSha256": "ed09b408288f0fbfaac64a7d751e527ef047794490d4ea44f557b33b6b2a309b",
+      "path": "scripts/core-contract-evidence.mjs"
+    },
+    {
+      "currentSha256": "c74d2c62c241239467ffbd1f067ad6d60c777b3752a3c9f8c3fe12fe4dfd5a27",
+      "path": "scripts/materialize-core-contract-evidence.mjs"
+    },
+    {
+      "currentSha256": "2086454878faba92d279efeba94b83670c06c8038b62e2c38c8f16d1944ac0c7",
+      "path": "tests/checked-javascript-partition-01.test.mjs"
+    },
+    {
+      "currentSha256": "e15a91dfb549963e2d7ec475dc5d98fd850a75d7b9d2c5cf1cd038f3d473d3c4",
+      "path": "tests/checked-javascript-partition-02.test.mjs"
+    },
+    {
+      "currentSha256": "918dd4c2359d72c93b540d80a4691674778a67982bdb9bc19481f9b3cb8410c5",
+      "path": "tests/checked-javascript-partition-03.test.mjs"
+    },
+    {
+      "currentSha256": "c0ac9a4899e92114500817ae332057b401814fc76acfa5ca5fea68ed93774430",
+      "path": "tests/checked-javascript-partition-04.test.mjs"
+    },
+    {
+      "currentSha256": "d637ddf2e8129ca49a80dd82641335a6b48386e3655f3782492d64b6662a1288",
+      "path": "tests/checked-javascript-partition-05.test.mjs"
+    },
+    {
+      "currentSha256": "a3a9e13ec308d3ccc23cf93f9ae7d0a4993b5ac457c30a6f0d759e20268e1910",
+      "path": "tests/checked-javascript-partition-06.test.mjs"
+    },
+    {
+      "currentSha256": "57832c901bde32921148afede7583433a007e1ba2f632d1b61123aa0f08268a5",
+      "path": "tests/checked-javascript-partition-07.test.mjs"
+    },
+    {
+      "currentSha256": "9485a39ce209bd4e9e6d156727b532931b490872f22d464fc78e467005eb6bd5",
+      "path": "tests/checked-javascript-partition-08.test.mjs"
+    },
+    {
+      "currentSha256": "7f392d91c06ff6a835191f50de9424d2537627b0a737b898009d2241a3f2aaa5",
+      "path": "tests/checked-javascript-partition-09.test.mjs"
+    },
+    {
+      "currentSha256": "b4953c7b71e9ac569ef32a58e9817334ca635ac2bba916ec787a4c17e03de636",
+      "path": "tests/checked-javascript-partition-10.test.mjs"
+    },
+    {
+      "currentSha256": "9364f020567e5c0f0dd54ecd10b74161b761f3dec62e16c8b9300ded87f437bd",
+      "path": "tests/checked-javascript-partition-11.test.mjs"
+    },
+    {
+      "currentSha256": "f9119499b9d65b3e0d6505f37eb1ae2c4d6fd73cbd03b4f77fb7fd9125498834",
+      "path": "tests/checked-javascript-partition-12.test.mjs"
+    },
+    {
+      "currentSha256": "7cf818ad1c121f8eaa58fe12ff346652199c18c41eccc425bb2c86766a43ff07",
+      "path": "tests/helpers/core-contract-evidence-tests.mjs"
+    },
+    {
+      "currentSha256": "9c1ba8025eb75fa1024eae999f2aeec0f935e7ddfa3d65c2add8362e16616f75",
+      "path": "tests/helpers/owned-checked-record-hosted-replay-tests.mjs"
+    },
+    {
+      "currentSha256": "2687c77dc7f43930ee3a874a6a8c06b4253a8a2bb49fbae74b09c4c586fd1ad9",
+      "path": "tests/owned-checked-record-hosted-evidence-dotnet.test.mjs"
+    },
+    {
+      "currentSha256": "75ac2e93651c58042f749d88d3ac881ed44999e47fdbaca3516ab4315dac48db",
+      "path": "tests/owned-checked-record-hosted-evidence-javascript.test.mjs"
+    },
+    {
+      "currentSha256": "21dfbc8b917a02ec440e26ee2b2d3cfce459903e7828db9e6b06a870e21b966f",
+      "path": "tests/owned-checked-record-hosted-evidence-jvm.test.mjs"
+    },
+    {
+      "currentSha256": "9bc80709cf5fb6354e64a2fc504e95cdf2815bc5e4bf16d5bfad3cae27ec2e4c",
+      "path": "tests/owned-checked-record-hosted-evidence-native.test.mjs"
+    },
+    {
+      "currentSha256": "9090f3dd61ce1c0e18ae2a4e85d9bf223142c9a5ff91478d467c50fd3016b512",
+      "path": "tests/owned-checked-record-hosted-evidence-perl.test.mjs"
+    },
+    {
+      "currentSha256": "14b1e4fb3de6acbc12912e0fd3d6cd9106781991c0980459000d918493ea5cf2",
+      "path": "tests/owned-checked-record-hosted-evidence-php-wasm.test.mjs"
+    },
+    {
+      "currentSha256": "b4be0a12752b9a804223f7b14965252bb7060384aea9b02d1b4d4f9505a258dc",
+      "path": "tests/owned-checked-record-hosted-evidence-php.test.mjs"
+    },
+    {
+      "currentSha256": "4828ce610f592768003891a1f9fe974b0e35191c8bec5218566a51f928a8369f",
+      "path": "tests/owned-checked-record-hosted-evidence-python.test.mjs"
+    },
+    {
+      "currentSha256": "af2f889dee5f02f21115a0bf72731b75f3b57bed48ab17d7e37111239a631d95",
+      "path": "tests/owned-checked-record-hosted-evidence-ruby.test.mjs"
+    },
+    {
+      "currentSha256": "78327fcf983df35569aa920a5c26948ba98daef2f13c434bb50a59ed700ee7c7",
+      "path": "tests/owned-checked-record-hosted-evidence-rust.test.mjs"
+    },
+    {
+      "currentSha256": "c2ec06f64b29594e09a5e075fb8d2f9f125bf7bbfc7ad2ada984ce4c7ee05b2d",
+      "path": "tests/owned-checked-record-hosted-evidence-wit.test.mjs"
+    }
+  ],
+  "implementationCommit": "ee99d0b30784e0402d59eaa7d326865d98d59051",
+  "integrationUpdates": [
+    {
+      "currentSha256": "b138ed47e8b11d3427c2ebafe639c81a09e87910db8477435c3441463d78cbfa",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeCoreContractEvidenceCheckoutSource\n\t, coreContractEvidenceCheckoutAddedPaths\n\t, coreContractEvidenceCheckoutHistoryPath\n\t, coreContractEvidenceCheckoutImplementation\n\t, coreContractEvidenceCheckoutImplementationAdditions\n\t, coreContractEvidenceCheckoutImplementationPaths\n\t, coreContractEvidenceCheckoutIntegrationPaths\n\t, coreContractEvidenceCheckoutModifiedPaths\n\t, coreContractEvidenceCheckoutPredecessor\n\t, reverseCoreContractEvidenceCheckoutUpdate\n} from \"./core-contract-evidence-checkout-source-history.mjs\";\n",
+          "previous": "",
+          "start": 357
+        },
+        {
+          "current": "const readCoreContractEvidenceCheckout = async () => JSON.parse(await readFile(\n\tcoreContractEvidenceCheckoutHistoryPath, \"utf8\"));\n",
+          "previous": "",
+          "start": 6759
+        },
+        {
+          "current": "test(\"Core evidence checkout records its exact 47-file implementation\", async () => {\n\tconst record = await readCoreContractEvidenceCheckout();\n\tassert.equal(record.schemaVersion, 1);\n\tassert.equal(record.milestone\n\t\t, \"core-contract-evidence-checkout-source-v1\");\n\tassert.equal(record.predecessorCommit\n\t\t, coreContractEvidenceCheckoutPredecessor);\n\tassert.equal(record.implementationCommit\n\t\t, coreContractEvidenceCheckoutImplementation);\n\tassert.deepEqual(record.updates.map(update => update.path)\n\t\t, coreContractEvidenceCheckoutModifiedPaths);\n\tassert.deepEqual(record.implementationAdditions.map(addition => addition.path)\n\t\t, coreContractEvidenceCheckoutImplementationAdditions);\n\tassert.deepEqual(record.integrationUpdates.map(update => update.path)\n\t\t, coreContractEvidenceCheckoutIntegrationPaths);\n\tassert.deepEqual(record.additions.map(addition => addition.path)\n\t\t, coreContractEvidenceCheckoutAddedPaths);\n\tassert.equal(git([\"rev-parse\"\n\t\t, `${coreContractEvidenceCheckoutImplementation}^`]).trim()\n\t, coreContractEvidenceCheckoutPredecessor);\n\tassert.deepEqual(git([\"diff\", \"--name-only\"\n\t\t, coreContractEvidenceCheckoutPredecessor\n\t\t, coreContractEvidenceCheckoutImplementation]).trim()\n\t\t.split(\"\\n\").sort()\n\t, [...coreContractEvidenceCheckoutImplementationPaths].sort());\n\tassert.deepEqual(git([\"diff\", \"--name-only\", \"--diff-filter=M\"\n\t\t, coreContractEvidenceCheckoutPredecessor\n\t\t, coreContractEvidenceCheckoutImplementation]).trim()\n\t\t.split(\"\\n\").sort()\n\t, [...coreContractEvidenceCheckoutModifiedPaths].sort());\n});\n\ntest(\"Core evidence checkout reverses every source transition\", async () => {\n\tconst record = await readCoreContractEvidenceCheckout();\n\tfor(const update of [...record.updates, ...record.integrationUpdates])\n\t{\n\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256\n\t\t\t, beforeCoreContractEvidenceCheckoutSource);\n\t\tconst base = record.integrationUpdates.includes(update)\n\t\t\t? coreContractEvidenceCheckoutImplementation\n\t\t\t: coreContractEvidenceCheckoutPredecessor;\n\t\tconst previous = git([\"show\", `${base}:${update.path}`]);\n\t\tassert.equal(reverseCoreContractEvidenceCheckoutUpdate(\n\t\t\tcurrent, update), previous, update.path);\n\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n\t\tassert.ok(finRefinementNormalizationPaths.includes(update.path));\n\t}\n\tfor(const addition of [\n\t\t...record.implementationAdditions, ...record.additions\n\t]) assert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\taddition.path, addition.currentSha256))\n\t, addition.currentSha256, addition.path);\n});\n\ntest(\"Core evidence checkout rejects altered transitions\", async () => {\n\tconst update = (await readCoreContractEvidenceCheckout()).updates[0];\n\tconst current = await sourceAtFinHistoryMilestone(\n\t\tupdate.path, update.currentSha256\n\t\t, beforeCoreContractEvidenceCheckoutSource);\n\tfor(const forged of [{ ...update, currentSha256: \"0\".repeat(64) }\n\t\t, { ...update, previousSha256: \"0\".repeat(64) }\n\t\t, { ...update, path: \"unrelated.mjs\" }\n\t\t, { ...update, edits: [] }\n\t\t, { ...update, edits: [...update.edits, update.edits[0]] }])\n\t\tassert.throws(() => reverseCoreContractEvidenceCheckoutUpdate(\n\t\t\tcurrent, forged));\n\tassert.equal(beforeCoreContractEvidenceCheckoutSource(\n\t\tupdate.path, current + \"unknown\"), current + \"unknown\");\n});\n\ntest(\"Core evidence-checkout writer refuses another checkout\", async t => {\n\tconst root = await mkdtemp(join(\n\t\ttmpdir(), \"lean-core-contract-evidence-checkout-guard-\"\n\t));\n\tt.after(() => rm(root, { recursive: true }));\n\tconst result = spawnSync(process.execPath, [resolve(\n\t\t\"scripts/update-core-contract-evidence-checkout-source-history.mjs\"\n\t)], { cwd: root, encoding: \"utf8\", timeout: 15_000 });\n\tassert.notEqual(result.status, 0);\n\tassert.equal(result.stdout, \"\");\n\tassert.deepEqual(await readdir(root), []);\n});\n\n",
+          "previous": "",
+          "start": 16164
+        }
+      ],
+      "path": "tests/helpers/core-historical-evidence-replay-source-history-tests.mjs",
+      "previousSha256": "3e856bb6cb4d4d1c9264a55a3d45694a3785f10ebe71f0ef20600e8c4ddd8309"
+    },
+    {
+      "currentSha256": "3e4cb6a5115eadb649d43553d145c95aaa627953366ab64b79a5c7063ad33b34",
+      "edits": [
+        {
+          "current": "import { beforeCoreContractEvidenceCheckoutSource, coreContractEvidenceCheckoutNormalizationPaths } from \"./core-contract-evidence-checkout-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...coreContractEvidenceCheckoutNormalizationPaths\n\t, ...nominalPrimitiveSubtypeSparseCheckoutNormalizationPaths\n",
+          "previous": "\t...nominalPrimitiveSubtypeSparseCheckoutNormalizationPaths\n",
+          "start": 192740
+        },
+        {
+          "current": "\tlet stage = beforeCoreContractEvidenceCheckoutSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeNominalPrimitiveSubtypeSparseCheckoutSource(\n",
+          "previous": "\tlet stage = beforeNominalPrimitiveSubtypeSparseCheckoutSource(\n",
+          "start": 239403
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "9cc48bf01d24e40d079c20c66084c8d61ee70da65b407603330d3f80f2eed264"
+    }
+  ],
+  "milestone": "core-contract-evidence-checkout-source-v1",
+  "predecessorCommit": "eed699f87bef4a8ec552d9dd01bf6d853418f3f2",
+  "schemaVersion": 1,
+  "scope": "Materialize only the retained evidence payloads selected by each of twelve independently scheduled Core contract shards. Preserve every contract test exactly once, retain complete producer history, record each shard's exact source and archive closure, and keep the aggregate verifier independent of evidence payloads. Split the previously hidden 152-suite JavaScript aggregate and eleven hosted archive lanes without changing their tests. Retain the exact source-history record required by primitive-base browser and npm preflight without broadening their two-archive acceptance checkout.",
+  "updates": [
+    {
+      "currentSha256": "279a109da11192cb1fa7d59d28b7e7abba956e3a1344b3f84293ba1c40d6d63a",
+      "edits": [
+        {
+          "current": "          # Retain every producer commit while materializing live source, the\n          # authenticated transition record, and two immutable acceptance archives.\n",
+          "previous": "          # Retain every producer commit while materializing only live source\n          # and the two immutable archives read by this acceptance cohort.\n",
+          "start": 819
+        },
+        {
+          "current": "            /docs/evidence/ci-contract-repair-source-history-20261017.json\n",
+          "previous": "",
+          "start": 1515
+        }
+      ],
+      "path": ".github/workflows/nominal-primitive-subtype-browser.yml",
+      "previousSha256": "fcfe42007679b5f65441860379e15b42595056dd4cce44d4523d35bee27e6afd"
+    },
+    {
+      "currentSha256": "00633a7766ff02e2e6a5799d58932885066b6df34b686d8c36571c217edd810c",
+      "edits": [
+        {
+          "current": "          # Retain every producer commit while materializing live source, the\n          # authenticated transition record, and two immutable acceptance archives.\n",
+          "previous": "          # Retain every producer commit while materializing only live source\n          # and the two immutable archives read by this acceptance cohort.\n",
+          "start": 620
+        },
+        {
+          "current": "            /docs/evidence/ci-contract-repair-source-history-20261017.json\n",
+          "previous": "",
+          "start": 1316
+        }
+      ],
+      "path": ".github/workflows/nominal-primitive-subtype-dotnet.yml",
+      "previousSha256": "c431d9c754c07671cc6bb494afa6f0345bcdafd0f619f588cb773d0307b7754b"
+    },
+    {
+      "currentSha256": "1cdbf6e0a8ec27c96637926b9dda5b6209762b8ff2d0ffda696063212a9f8d7e",
+      "edits": [
+        {
+          "current": "          # Retain every producer commit while materializing live source, the\n          # authenticated transition record, and two immutable acceptance archives.\n",
+          "previous": "          # Retain every producer commit while materializing only live source\n          # and the two immutable archives read by this acceptance cohort.\n",
+          "start": 636
+        },
+        {
+          "current": "            /docs/evidence/ci-contract-repair-source-history-20261017.json\n",
+          "previous": "",
+          "start": 1332
+        }
+      ],
+      "path": ".github/workflows/nominal-primitive-subtype-jvm.yml",
+      "previousSha256": "0d88eb331cf2ac55c64d42ccc3be9e5f46826d73d7668ca0760c126f7adf3cba"
+    },
+    {
+      "currentSha256": "4104846cbfc5e96ada77f90cdf52453322c3985188a91f79fc28f1e8e210adec",
+      "edits": [
+        {
+          "current": "          # Retain every producer commit while materializing live source, the\n          # authenticated transition record, and two immutable acceptance archives.\n",
+          "previous": "          # Retain every producer commit while materializing only live source\n          # and the two immutable archives read by this acceptance cohort.\n",
+          "start": 630
+        },
+        {
+          "current": "            /docs/evidence/ci-contract-repair-source-history-20261017.json\n",
+          "previous": "",
+          "start": 1326
+        }
+      ],
+      "path": ".github/workflows/nominal-primitive-subtype-native.yml",
+      "previousSha256": "709e03f6ef2a6c98dfb5d5b06c3783beb01a48450bcd28deee33f0bb6e301f1d"
+    },
+    {
+      "currentSha256": "56a76f4495a47a192a4203c184fa492ff59c910de26692bba38da8488f6e23e5",
+      "edits": [
+        {
+          "current": "          # Retain every producer commit while materializing live source, the\n          # authenticated transition record, and two immutable acceptance archives.\n",
+          "previous": "          # Retain every producer commit while materializing only live source\n          # and the two immutable archives read by this acceptance cohort.\n",
+          "start": 786
+        },
+        {
+          "current": "            /docs/evidence/ci-contract-repair-source-history-20261017.json\n",
+          "previous": "",
+          "start": 1482
+        }
+      ],
+      "path": ".github/workflows/nominal-primitive-subtype-npm.yml",
+      "previousSha256": "953536f2e89009b7127ec514db02365e9c88421f055653f93777f27838c6abb0"
+    },
+    {
+      "currentSha256": "90f33470cd1c2e323f63d7b7cd459ad28b95b273339b15516ec290722b94ecc2",
+      "edits": [
+        {
+          "current": "          # Retain every producer commit while materializing live source, the\n          # authenticated transition record, and two immutable acceptance archives.\n",
+          "previous": "          # Retain every producer commit while materializing only live source\n          # and the two immutable archives read by this acceptance cohort.\n",
+          "start": 630
+        },
+        {
+          "current": "            /docs/evidence/ci-contract-repair-source-history-20261017.json\n",
+          "previous": "",
+          "start": 1326
+        }
+      ],
+      "path": ".github/workflows/nominal-primitive-subtype-perl.yml",
+      "previousSha256": "f3297fcc6a942d54ad42357526a285f9fcef64ce137078178f4cf5e5f3707dfa"
+    },
+    {
+      "currentSha256": "7661cfa201f5a76ebf96644d826ccb1d47aaa097d780cbd101e793c67a5a8c2f",
+      "edits": [
+        {
+          "current": "          # Retain every producer commit while materializing live source, the\n          # authenticated transition record, and two immutable acceptance archives.\n",
+          "previous": "          # Retain every producer commit while materializing only live source\n          # and the two immutable archives read by this acceptance cohort.\n",
+          "start": 879
+        },
+        {
+          "current": "            /docs/evidence/ci-contract-repair-source-history-20261017.json\n",
+          "previous": "",
+          "start": 1575
+        }
+      ],
+      "path": ".github/workflows/nominal-primitive-subtype-php-wasm.yml",
+      "previousSha256": "5ac61738538f196aa35d529caf8eba1b27710c948f82a1f9c72a9e7a0496013d"
+    },
+    {
+      "currentSha256": "116d688855a5c6c70fa5baf5a9e202a1f3a5a8386a476d208252960a34a993c4",
+      "edits": [
+        {
+          "current": "          # Retain every producer commit while materializing live source, the\n          # authenticated transition record, and two immutable acceptance archives.\n",
+          "previous": "          # Retain every producer commit while materializing only live source\n          # and the two immutable archives read by this acceptance cohort.\n",
+          "start": 626
+        },
+        {
+          "current": "            /docs/evidence/ci-contract-repair-source-history-20261017.json\n",
+          "previous": "",
+          "start": 1322
+        }
+      ],
+      "path": ".github/workflows/nominal-primitive-subtype-php.yml",
+      "previousSha256": "cc665452537fd6ea5d8dfd152055a5e94a26183425ae7add78b13e6b21e98500"
+    },
+    {
+      "currentSha256": "bf077fbc66a9b9c9c8f676c1a4c234b477bb1908127e170ac4996c4b49826844",
+      "edits": [
+        {
+          "current": "          # Retain every producer commit while materializing live source, the\n          # authenticated transition record, and two immutable acceptance archives.\n",
+          "previous": "          # Retain every producer commit while materializing only live source\n          # and the two immutable archives read by this acceptance cohort.\n",
+          "start": 725
+        },
+        {
+          "current": "            /docs/evidence/ci-contract-repair-source-history-20261017.json\n",
+          "previous": "",
+          "start": 1421
+        }
+      ],
+      "path": ".github/workflows/nominal-primitive-subtype-python.yml",
+      "previousSha256": "edb842873bab720cb749ab105de3212fa57b057971cf2b99a7235b0dde7bdd2c"
+    },
+    {
+      "currentSha256": "28e582e376c784228454dbe6fb215d88fbe47a5249a1400c0189fb81ca591714",
+      "edits": [
+        {
+          "current": "          # Retain every producer commit while materializing live source, the\n          # authenticated transition record, and two immutable acceptance archives.\n",
+          "previous": "          # Retain every producer commit while materializing only live source\n          # and the two immutable archives read by this acceptance cohort.\n",
+          "start": 616
+        },
+        {
+          "current": "            /docs/evidence/ci-contract-repair-source-history-20261017.json\n",
+          "previous": "",
+          "start": 1312
+        }
+      ],
+      "path": ".github/workflows/nominal-primitive-subtype-ruby.yml",
+      "previousSha256": "c0876cd352d4dbafa94ea5a4cfd76e617fac25ffff1f8516cc74ebf0049a6301"
+    },
+    {
+      "currentSha256": "19c7e8980be8482c3fbb79deebf5bd05bcfe16ebe2e08961acd8ccacaca81bac",
+      "edits": [
+        {
+          "current": "          # Retain every producer commit while materializing live source, the\n          # authenticated transition record, and two immutable acceptance archives.\n",
+          "previous": "          # Retain every producer commit while materializing only live source\n          # and the two immutable archives read by this acceptance cohort.\n",
+          "start": 616
+        },
+        {
+          "current": "            /docs/evidence/ci-contract-repair-source-history-20261017.json\n",
+          "previous": "",
+          "start": 1312
+        }
+      ],
+      "path": ".github/workflows/nominal-primitive-subtype-rust.yml",
+      "previousSha256": "b9f31c30f9c9b0098fd05c704bb3d17b189fe18437679ed5fbdd749f93dc3630"
+    },
+    {
+      "currentSha256": "63790f5c7538b29afd74b515a2adc9617d0ad9585a428a2b4795cf20b1c045ca",
+      "edits": [
+        {
+          "current": "          # Retain every producer commit while materializing live source, the\n          # authenticated transition record, and two immutable acceptance archives.\n",
+          "previous": "          # Retain every producer commit while materializing only live source\n          # and the two immutable archives read by this acceptance cohort.\n",
+          "start": 623
+        },
+        {
+          "current": "            /docs/evidence/ci-contract-repair-source-history-20261017.json\n",
+          "previous": "",
+          "start": 1319
+        }
+      ],
+      "path": ".github/workflows/nominal-primitive-subtype-supplement.yml",
+      "previousSha256": "66815618d7c099bebf47a2221058c1b28d34a3c1913ba94a8eb17ad889a649b6"
+    },
+    {
+      "currentSha256": "0d220a75a7fc3b40c6471a3e94b7ed08c32393cc548a447b703704aec1a5f69d",
+      "edits": [
+        {
+          "current": "          # Retain every producer commit while materializing live source, the\n          # authenticated transition record, and two immutable acceptance archives.\n",
+          "previous": "          # Retain every producer commit while materializing only live source\n          # and the two immutable archives read by this acceptance cohort.\n",
+          "start": 642
+        },
+        {
+          "current": "            /docs/evidence/ci-contract-repair-source-history-20261017.json\n",
+          "previous": "",
+          "start": 1338
+        }
+      ],
+      "path": ".github/workflows/nominal-primitive-subtype-wit.yml",
+      "previousSha256": "2ee6772418b23c652b9b085ebb42af023695b3f0df44cffa27a92b070acc0655"
+    },
+    {
+      "currentSha256": "70d6d52c30c2bb0fce5d18d0535a287d3a0c5d5921b2faffb589129ad2e6da06",
+      "edits": [
+        {
+          "current": "      # Some selected archives are still multi-gigabyte, and replay tests make\n      # bounded copies. Preserve headroom without broadening the checkout.\n",
+          "previous": "      # The full-history evidence checkout needs about 18 GB; hosted runners start\n      # with roughly 20 GB free, and archive-copying tests then exhaust the disk.\n",
+          "start": 2619
+        },
+        {
+          "current": "          # Retain that history while initially materializing only live source,\n          # documentation, root records, and archive indexes. A checked planner\n          # adds this shard's exact retained payload closure after npm install.\n",
+          "previous": "",
+          "start": 3186
+        },
+        {
+          "current": "          sparse-checkout: |\n            /*\n            !/*/\n            /.github/\n            /acceptance/\n            /config/\n            /containers/\n            /demos/\n            /nix/\n            /notices/\n            /patches/\n            /poc/\n            /schema/\n            /scripts/\n            /site/\n            /src/\n            /tests/\n            /docs/\n            !/docs/evidence/*\n            /docs/evidence/*.json\n            /docs/evidence/*.md\n            /docs/evidence/*.xml\n            /docs/evidence/*/index.json\n          sparse-checkout-cone-mode: false\n      - name: Report disk after the evidence baseline checkout\n",
+          "previous": "      - name: Report disk after the evidence checkout\n",
+          "start": 3488
+        },
+        {
+          "current": "      - name: Materialize this shard's retained evidence\n        run: |\n          node scripts/materialize-core-contract-evidence.mjs \\\n            --shard \"${{ matrix.shard }}/12\" \\\n            --manifest \"build/core-evidence/core-shard-${{ matrix.shard }}-evidence.json\"\n      - name: Report disk after shard evidence materialization\n        run: df -h / \"$GITHUB_WORKSPACE\"\n",
+          "previous": "",
+          "start": 4803
+        },
+        {
+          "current": "          path: |\n            build/core-shards/core-shard-${{ matrix.shard }}.json\n            build/core-evidence/core-shard-${{ matrix.shard }}-evidence.json\n",
+          "previous": "          path: build/core-shards/core-shard-${{ matrix.shard }}.json\n",
+          "start": 5767
+        }
+      ],
+      "path": ".github/workflows/quality.yml",
+      "previousSha256": "c769821c62bfd172cb3bb6ea9b132d5c2c37bb17f9cb377b6e23e17ff9cce607"
+    },
+    {
+      "currentSha256": "a7497cfa9277252561f49c815d15785f60b0781680b400e1af02be7f18c1008d",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 57293
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 79851
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 97054
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 113347
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 145997
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 169226
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 182192
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 197091
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 210024
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 223243
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 231781
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 240212
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 249226
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 257892
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 267467
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 276568
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 286417
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 298556
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 308590
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 317142
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 326436
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 339125
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 348376
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 357663
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 366786
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 375649
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 383034
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 390968
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 401618
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 408503
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 415712
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 422808
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 433667
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 440783
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 447161
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 453324
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 460083
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 466925
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 473767
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 483071
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 494305
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 503994
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 513587
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 525117
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 533680
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 544694
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 577224
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 583220
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 593483
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 602796
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 614344
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 622865
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 633821
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 683237
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 693339
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 700199
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 708171
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 722202
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 733415
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 747635
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 759089
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 771160
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 782448
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 791031
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 797489
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 805875
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 814010
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 825982
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 845120
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 900638
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 1016213
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 1073415
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 1081159
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 1087609
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 1094869
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 1102214
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 1109267
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 1116868
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 1127148
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 1140310
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 1150568
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 1158454
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 1169191
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 1179451
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 1193870
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 1226414
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 1256696
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 1289659
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 1330885
+        },
+        {
+          "current": "          \"sha256\": \"70d6d52c30c2bb0fce5d18d0535a287d3a0c5d5921b2faffb589129ad2e6da06\"\n",
+          "previous": "          \"sha256\": \"c769821c62bfd172cb3bb6ea9b132d5c2c37bb17f9cb377b6e23e17ff9cce607\"\n",
+          "start": 1351460
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 1356437
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 1378974
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 1398666
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 1419309
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 1451827
+        },
+        {
+          "current": "          \"sha256\": \"56a76f4495a47a192a4203c184fa492ff59c910de26692bba38da8488f6e23e5\"\n",
+          "previous": "          \"sha256\": \"953536f2e89009b7127ec514db02365e9c88421f055653f93777f27838c6abb0\"\n",
+          "start": 6789736
+        },
+        {
+          "current": "          \"sha256\": \"56a76f4495a47a192a4203c184fa492ff59c910de26692bba38da8488f6e23e5\"\n",
+          "previous": "          \"sha256\": \"953536f2e89009b7127ec514db02365e9c88421f055653f93777f27838c6abb0\"\n",
+          "start": 6815256
+        },
+        {
+          "current": "          \"sha256\": \"56a76f4495a47a192a4203c184fa492ff59c910de26692bba38da8488f6e23e5\"\n",
+          "previous": "          \"sha256\": \"953536f2e89009b7127ec514db02365e9c88421f055653f93777f27838c6abb0\"\n",
+          "start": 6840804
+        },
+        {
+          "current": "          \"sha256\": \"56a76f4495a47a192a4203c184fa492ff59c910de26692bba38da8488f6e23e5\"\n",
+          "previous": "          \"sha256\": \"953536f2e89009b7127ec514db02365e9c88421f055653f93777f27838c6abb0\"\n",
+          "start": 6866324
+        },
+        {
+          "current": "          \"sha256\": \"bf077fbc66a9b9c9c8f676c1a4c234b477bb1908127e170ac4996c4b49826844\"\n",
+          "previous": "          \"sha256\": \"edb842873bab720cb749ab105de3212fa57b057971cf2b99a7235b0dde7bdd2c\"\n",
+          "start": 6892006
+        },
+        {
+          "current": "          \"sha256\": \"bf077fbc66a9b9c9c8f676c1a4c234b477bb1908127e170ac4996c4b49826844\"\n",
+          "previous": "          \"sha256\": \"edb842873bab720cb749ab105de3212fa57b057971cf2b99a7235b0dde7bdd2c\"\n",
+          "start": 6923719
+        },
+        {
+          "current": "          \"sha256\": \"bf077fbc66a9b9c9c8f676c1a4c234b477bb1908127e170ac4996c4b49826844\"\n",
+          "previous": "          \"sha256\": \"edb842873bab720cb749ab105de3212fa57b057971cf2b99a7235b0dde7bdd2c\"\n",
+          "start": 6955906
+        },
+        {
+          "current": "          \"sha256\": \"bf077fbc66a9b9c9c8f676c1a4c234b477bb1908127e170ac4996c4b49826844\"\n",
+          "previous": "          \"sha256\": \"edb842873bab720cb749ab105de3212fa57b057971cf2b99a7235b0dde7bdd2c\"\n",
+          "start": 6988089
+        },
+        {
+          "current": "          \"sha256\": \"4104846cbfc5e96ada77f90cdf52453322c3985188a91f79fc28f1e8e210adec\"\n",
+          "previous": "          \"sha256\": \"709e03f6ef2a6c98dfb5d5b06c3783beb01a48450bcd28deee33f0bb6e301f1d\"\n",
+          "start": 7268139
+        },
+        {
+          "current": "          \"sha256\": \"4104846cbfc5e96ada77f90cdf52453322c3985188a91f79fc28f1e8e210adec\"\n",
+          "previous": "          \"sha256\": \"709e03f6ef2a6c98dfb5d5b06c3783beb01a48450bcd28deee33f0bb6e301f1d\"\n",
+          "start": 7301887
+        },
+        {
+          "current": "          \"sha256\": \"4104846cbfc5e96ada77f90cdf52453322c3985188a91f79fc28f1e8e210adec\"\n",
+          "previous": "          \"sha256\": \"709e03f6ef2a6c98dfb5d5b06c3783beb01a48450bcd28deee33f0bb6e301f1d\"\n",
+          "start": 7335906
+        },
+        {
+          "current": "          \"sha256\": \"4104846cbfc5e96ada77f90cdf52453322c3985188a91f79fc28f1e8e210adec\"\n",
+          "previous": "          \"sha256\": \"709e03f6ef2a6c98dfb5d5b06c3783beb01a48450bcd28deee33f0bb6e301f1d\"\n",
+          "start": 7370124
+        },
+        {
+          "current": "          \"sha256\": \"90f33470cd1c2e323f63d7b7cd459ad28b95b273339b15516ec290722b94ecc2\"\n",
+          "previous": "          \"sha256\": \"f3297fcc6a942d54ad42357526a285f9fcef64ce137078178f4cf5e5f3707dfa\"\n",
+          "start": 7405344
+        },
+        {
+          "current": "          \"sha256\": \"90f33470cd1c2e323f63d7b7cd459ad28b95b273339b15516ec290722b94ecc2\"\n",
+          "previous": "          \"sha256\": \"f3297fcc6a942d54ad42357526a285f9fcef64ce137078178f4cf5e5f3707dfa\"\n",
+          "start": 7479540
+        },
+        {
+          "current": "          \"sha256\": \"90f33470cd1c2e323f63d7b7cd459ad28b95b273339b15516ec290722b94ecc2\"\n",
+          "previous": "          \"sha256\": \"f3297fcc6a942d54ad42357526a285f9fcef64ce137078178f4cf5e5f3707dfa\"\n",
+          "start": 7554700
+        },
+        {
+          "current": "          \"sha256\": \"90f33470cd1c2e323f63d7b7cd459ad28b95b273339b15516ec290722b94ecc2\"\n",
+          "previous": "          \"sha256\": \"f3297fcc6a942d54ad42357526a285f9fcef64ce137078178f4cf5e5f3707dfa\"\n",
+          "start": 7629147
+        },
+        {
+          "current": "          \"sha256\": \"28e582e376c784228454dbe6fb215d88fbe47a5249a1400c0189fb81ca591714\"\n",
+          "previous": "          \"sha256\": \"c0876cd352d4dbafa94ea5a4cfd76e617fac25ffff1f8516cc74ebf0049a6301\"\n",
+          "start": 7704082
+        },
+        {
+          "current": "          \"sha256\": \"28e582e376c784228454dbe6fb215d88fbe47a5249a1400c0189fb81ca591714\"\n",
+          "previous": "          \"sha256\": \"c0876cd352d4dbafa94ea5a4cfd76e617fac25ffff1f8516cc74ebf0049a6301\"\n",
+          "start": 7735214
+        },
+        {
+          "current": "          \"sha256\": \"28e582e376c784228454dbe6fb215d88fbe47a5249a1400c0189fb81ca591714\"\n",
+          "previous": "          \"sha256\": \"c0876cd352d4dbafa94ea5a4cfd76e617fac25ffff1f8516cc74ebf0049a6301\"\n",
+          "start": 7766730
+        },
+        {
+          "current": "          \"sha256\": \"28e582e376c784228454dbe6fb215d88fbe47a5249a1400c0189fb81ca591714\"\n",
+          "previous": "          \"sha256\": \"c0876cd352d4dbafa94ea5a4cfd76e617fac25ffff1f8516cc74ebf0049a6301\"\n",
+          "start": 7798328
+        },
+        {
+          "current": "          \"sha256\": \"19c7e8980be8482c3fbb79deebf5bd05bcfe16ebe2e08961acd8ccacaca81bac\"\n",
+          "previous": "          \"sha256\": \"b9f31c30f9c9b0098fd05c704bb3d17b189fe18437679ed5fbdd749f93dc3630\"\n",
+          "start": 7830715
+        },
+        {
+          "current": "          \"sha256\": \"19c7e8980be8482c3fbb79deebf5bd05bcfe16ebe2e08961acd8ccacaca81bac\"\n",
+          "previous": "          \"sha256\": \"b9f31c30f9c9b0098fd05c704bb3d17b189fe18437679ed5fbdd749f93dc3630\"\n",
+          "start": 7979995
+        },
+        {
+          "current": "          \"sha256\": \"19c7e8980be8482c3fbb79deebf5bd05bcfe16ebe2e08961acd8ccacaca81bac\"\n",
+          "previous": "          \"sha256\": \"b9f31c30f9c9b0098fd05c704bb3d17b189fe18437679ed5fbdd749f93dc3630\"\n",
+          "start": 8129813
+        },
+        {
+          "current": "          \"sha256\": \"19c7e8980be8482c3fbb79deebf5bd05bcfe16ebe2e08961acd8ccacaca81bac\"\n",
+          "previous": "          \"sha256\": \"b9f31c30f9c9b0098fd05c704bb3d17b189fe18437679ed5fbdd749f93dc3630\"\n",
+          "start": 8279559
+        },
+        {
+          "current": "          \"sha256\": \"00633a7766ff02e2e6a5799d58932885066b6df34b686d8c36571c217edd810c\"\n",
+          "previous": "          \"sha256\": \"c431d9c754c07671cc6bb494afa6f0345bcdafd0f619f588cb773d0307b7754b\"\n",
+          "start": 8429846
+        },
+        {
+          "current": "          \"sha256\": \"00633a7766ff02e2e6a5799d58932885066b6df34b686d8c36571c217edd810c\"\n",
+          "previous": "          \"sha256\": \"c431d9c754c07671cc6bb494afa6f0345bcdafd0f619f588cb773d0307b7754b\"\n",
+          "start": 8582521
+        },
+        {
+          "current": "          \"sha256\": \"00633a7766ff02e2e6a5799d58932885066b6df34b686d8c36571c217edd810c\"\n",
+          "previous": "          \"sha256\": \"c431d9c754c07671cc6bb494afa6f0345bcdafd0f619f588cb773d0307b7754b\"\n",
+          "start": 8735538
+        },
+        {
+          "current": "          \"sha256\": \"00633a7766ff02e2e6a5799d58932885066b6df34b686d8c36571c217edd810c\"\n",
+          "previous": "          \"sha256\": \"c431d9c754c07671cc6bb494afa6f0345bcdafd0f619f588cb773d0307b7754b\"\n",
+          "start": 8888683
+        },
+        {
+          "current": "          \"sha256\": \"116d688855a5c6c70fa5baf5a9e202a1f3a5a8386a476d208252960a34a993c4\"\n",
+          "previous": "          \"sha256\": \"cc665452537fd6ea5d8dfd152055a5e94a26183425ae7add78b13e6b21e98500\"\n",
+          "start": 9042256
+        },
+        {
+          "current": "          \"sha256\": \"116d688855a5c6c70fa5baf5a9e202a1f3a5a8386a476d208252960a34a993c4\"\n",
+          "previous": "          \"sha256\": \"cc665452537fd6ea5d8dfd152055a5e94a26183425ae7add78b13e6b21e98500\"\n",
+          "start": 9185987
+        },
+        {
+          "current": "          \"sha256\": \"116d688855a5c6c70fa5baf5a9e202a1f3a5a8386a476d208252960a34a993c4\"\n",
+          "previous": "          \"sha256\": \"cc665452537fd6ea5d8dfd152055a5e94a26183425ae7add78b13e6b21e98500\"\n",
+          "start": 9330212
+        },
+        {
+          "current": "          \"sha256\": \"116d688855a5c6c70fa5baf5a9e202a1f3a5a8386a476d208252960a34a993c4\"\n",
+          "previous": "          \"sha256\": \"cc665452537fd6ea5d8dfd152055a5e94a26183425ae7add78b13e6b21e98500\"\n",
+          "start": 9474407
+        },
+        {
+          "current": "          \"sha256\": \"7661cfa201f5a76ebf96644d826ccb1d47aaa097d780cbd101e793c67a5a8c2f\"\n",
+          "previous": "          \"sha256\": \"5ac61738538f196aa35d529caf8eba1b27710c948f82a1f9c72a9e7a0496013d\"\n",
+          "start": 9619693
+        },
+        {
+          "current": "          \"sha256\": \"7661cfa201f5a76ebf96644d826ccb1d47aaa097d780cbd101e793c67a5a8c2f\"\n",
+          "previous": "          \"sha256\": \"5ac61738538f196aa35d529caf8eba1b27710c948f82a1f9c72a9e7a0496013d\"\n",
+          "start": 9765049
+        },
+        {
+          "current": "          \"sha256\": \"7661cfa201f5a76ebf96644d826ccb1d47aaa097d780cbd101e793c67a5a8c2f\"\n",
+          "previous": "          \"sha256\": \"5ac61738538f196aa35d529caf8eba1b27710c948f82a1f9c72a9e7a0496013d\"\n",
+          "start": 9910808
+        },
+        {
+          "current": "          \"sha256\": \"7661cfa201f5a76ebf96644d826ccb1d47aaa097d780cbd101e793c67a5a8c2f\"\n",
+          "previous": "          \"sha256\": \"5ac61738538f196aa35d529caf8eba1b27710c948f82a1f9c72a9e7a0496013d\"\n",
+          "start": 10056638
+        },
+        {
+          "current": "          \"sha256\": \"0d220a75a7fc3b40c6471a3e94b7ed08c32393cc548a447b703704aec1a5f69d\"\n",
+          "previous": "          \"sha256\": \"2ee6772418b23c652b9b085ebb42af023695b3f0df44cffa27a92b070acc0655\"\n",
+          "start": 10384955
+        },
+        {
+          "current": "          \"sha256\": \"0d220a75a7fc3b40c6471a3e94b7ed08c32393cc548a447b703704aec1a5f69d\"\n",
+          "previous": "          \"sha256\": \"2ee6772418b23c652b9b085ebb42af023695b3f0df44cffa27a92b070acc0655\"\n",
+          "start": 10431173
+        },
+        {
+          "current": "          \"sha256\": \"0d220a75a7fc3b40c6471a3e94b7ed08c32393cc548a447b703704aec1a5f69d\"\n",
+          "previous": "          \"sha256\": \"2ee6772418b23c652b9b085ebb42af023695b3f0df44cffa27a92b070acc0655\"\n",
+          "start": 10478249
+        },
+        {
+          "current": "          \"sha256\": \"0d220a75a7fc3b40c6471a3e94b7ed08c32393cc548a447b703704aec1a5f69d\"\n",
+          "previous": "          \"sha256\": \"2ee6772418b23c652b9b085ebb42af023695b3f0df44cffa27a92b070acc0655\"\n",
+          "start": 10524931
+        },
+        {
+          "current": "          \"sha256\": \"1cdbf6e0a8ec27c96637926b9dda5b6209762b8ff2d0ffda696063212a9f8d7e\"\n",
+          "previous": "          \"sha256\": \"0d88eb331cf2ac55c64d42ccc3be9e5f46826d73d7668ca0760c126f7adf3cba\"\n",
+          "start": 10571992
+        },
+        {
+          "current": "          \"sha256\": \"1cdbf6e0a8ec27c96637926b9dda5b6209762b8ff2d0ffda696063212a9f8d7e\"\n",
+          "previous": "          \"sha256\": \"0d88eb331cf2ac55c64d42ccc3be9e5f46826d73d7668ca0760c126f7adf3cba\"\n",
+          "start": 10632011
+        },
+        {
+          "current": "          \"sha256\": \"1cdbf6e0a8ec27c96637926b9dda5b6209762b8ff2d0ffda696063212a9f8d7e\"\n",
+          "previous": "          \"sha256\": \"0d88eb331cf2ac55c64d42ccc3be9e5f46826d73d7668ca0760c126f7adf3cba\"\n",
+          "start": 10692442
+        },
+        {
+          "current": "          \"sha256\": \"1cdbf6e0a8ec27c96637926b9dda5b6209762b8ff2d0ffda696063212a9f8d7e\"\n",
+          "previous": "          \"sha256\": \"0d88eb331cf2ac55c64d42ccc3be9e5f46826d73d7668ca0760c126f7adf3cba\"\n",
+          "start": 10752925
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 75709226
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 75716100
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 75722985
+        },
+        {
+          "current": "          \"sha256\": \"01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447\"\n",
+          "previous": "          \"sha256\": \"df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba\"\n",
+          "start": 75729911
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "9355720f5d2abf61a985c3250f5d438019af711f3284a3b3bb4880e80f8d9250"
+    },
+    {
+      "currentSha256": "01828c56d290e3ce5c3f8dc5ec79d09c5638db76ab45bdc35ddfabb26f0c8447",
+      "edits": [
+        {
+          "current": "\t\t, \"owned-checked-record-hosted-evidence-native\"\n\t\t, \"owned-checked-record-hosted-evidence-perl\"\n\t\t, \"owned-checked-record-hosted-evidence-python\"\n\t\t, \"owned-checked-record-hosted-evidence-ruby\"\n\t\t, \"owned-checked-record-hosted-evidence-rust\"\n\t\t, \"owned-checked-record-hosted-evidence-dotnet\"\n\t\t, \"owned-checked-record-hosted-evidence-jvm\"\n\t\t, \"owned-checked-record-hosted-evidence-php\"\n\t\t, \"owned-checked-record-hosted-evidence-wit\"\n\t\t, \"owned-checked-record-hosted-evidence-javascript\"\n\t\t, \"owned-checked-record-hosted-evidence-php-wasm\"\n",
+          "previous": "",
+          "start": 2142
+        },
+        {
+          "current": "\t\t, \"checked-javascript-partition-01\"\n\t\t, \"checked-javascript-partition-02\"\n\t\t, \"checked-javascript-partition-03\"\n\t\t, \"checked-javascript-partition-04\"\n\t\t, \"checked-javascript-partition-05\"\n\t\t, \"checked-javascript-partition-06\"\n\t\t, \"checked-javascript-partition-07\"\n\t\t, \"checked-javascript-partition-08\"\n\t\t, \"checked-javascript-partition-09\"\n\t\t, \"checked-javascript-partition-10\"\n\t\t, \"checked-javascript-partition-11\"\n\t\t, \"checked-javascript-partition-12\"\n",
+          "previous": "",
+          "start": 12470
+        }
+      ],
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "df4e89f141e8a2b5a404805f6bf977391cd6b483e2681580db1505e9c4918bba"
+    },
+    {
+      "currentSha256": "0e3e82542316272632c708d5699e61cfb34e516940b33a2440143ebb7dbff922",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import \"./helpers/core-contract-repair-history-tests.mjs\";\nimport \"./helpers/checked-javascript-disposition-history-tests.mjs\";\nimport \"./helpers/core-evidence-memory-repair-source-history-tests.mjs\";\nimport \"./helpers/entry-fixture-repair-source-history-tests.mjs\";\nimport \"./helpers/owned-c-producer-repair-source-history-tests.mjs\";\nimport \"./helpers/owned-dotnet-producer-repair-source-history-tests.mjs\";\nimport \"./helpers/documentation-workflow-repair-source-history-tests.mjs\";\nimport \"./helpers/owned-javascript-producer-repair-source-history-tests.mjs\";\nimport \"./helpers/owned-subtype-delegation-repair-source-history-tests.mjs\";\nimport \"./helpers/native-fork-transfer-producer-repair-source-history-tests.mjs\";\nimport \"./helpers/fin-history-rolling-repair-source-history-tests.mjs\";\nimport \"./helpers/fin-history-rolling-stage-tests.mjs\";\nimport \"./helpers/perl-callback-admission-repair-source-history-tests.mjs\";\nimport \"./helpers/owned-jvm-transfer-producer-repair-source-history-tests.mjs\";\nimport \"./helpers/owned-c-receiver-producer-repair-source-history-tests.mjs\";\nimport \"./helpers/php-wasm-callback-subtype-entry-source-history-tests.mjs\";\nimport \"./helpers/php-wasm-callback-fin-mixed-entry-source-history-tests.mjs\";\nimport \"./helpers/owned-javascript-transfer-nix-producer-repair-source-history-tests.mjs\";\nimport \"./helpers/owned-milestone-producer-repair-source-history-tests.mjs\";\nimport \"./helpers/php-wasm-callback-tiles-trace-repair-source-history-tests.mjs\";\nimport \"./helpers/author-refinement-guidance-repair-source-history-tests.mjs\";\nimport \"./helpers/wit-transfer-copy-gap-source-history-tests.mjs\";\nimport \"./helpers/core-evidence-repair-integration-source-history-tests.mjs\";\nimport \"./helpers/jvm-npm-producer-binding-tests.mjs\";\nimport \"./helpers/jvm-npm-producer-repair-source-history-tests.mjs\";\nimport \"./helpers/feature-admission-producer-binding-tests.mjs\";\nimport \"./helpers/admission-archive-producer-repair-source-history-tests.mjs\";\nimport \"./helpers/borrow-receiver-producer-binding-tests.mjs\";\nimport \"./helpers/borrow-receiver-producer-repair-source-history-tests.mjs\";\nimport \"./helpers/generic-subtype-archive-boundary-tests.mjs\";\nimport \"./helpers/generic-subtype-archive-boundary-source-history-tests.mjs\";\nimport \"./helpers/core-producer-live-pin-repair-source-history-tests.mjs\";\nimport \"./helpers/ruby-transfer-copy-gap-source-history-tests.mjs\";\nimport \"./helpers/ruby-transfer-copy-gap-integration-source-history-tests.mjs\";\nimport \"./helpers/perl-promotion-live-pin-repair-source-history-tests.mjs\";\nimport \"./helpers/php-wasm-callback-endpoint-stop-source-history-tests.mjs\";\nimport \"./helpers/zero-payload-dotnet-archive-gap-source-history-tests.mjs\";\nimport \"./helpers/core-history-endpoint-integration-source-history-tests.mjs\";\nimport \"./helpers/owned-producer-replay-source-history-tests.mjs\";\nimport \"./helpers/php-recursive-milestone-stop-tests.mjs\";\nimport \"./helpers/owned-history-followup-source-history-tests.mjs\";\nimport \"./helpers/perl-callback-contract-gap-source-history-tests.mjs\";\nimport \"./helpers/milestone-control-repair-source-history-tests.mjs\";\nimport \"./helpers/php-recursive-producer-replay-tests.mjs\";\nimport \"./helpers/php-recursive-replay-source-history-tests.mjs\";\nimport \"./helpers/zero-payload-rust-producer-replay-tests.mjs\";\nimport \"./helpers/zero-payload-rust-producer-replay-source-history-tests.mjs\";\nimport \"./helpers/owned-callback-result-producer-tests.mjs\";\nimport \"./helpers/owned-callback-inventory-endpoint-tests.mjs\";\nimport \"./helpers/callback-producer-replay-source-history-tests.mjs\";\nimport \"./helpers/owned-transfer-borrow-producer-tests.mjs\";\nimport \"./helpers/transfer-borrow-producer-replay-source-history-tests.mjs\";\nimport \"./helpers/owned-lifetime-producer-tests.mjs\";\nimport \"./helpers/owned-lifetime-replay-control-tests.mjs\";\nimport \"./helpers/owned-lifetime-producer-replay-source-history-tests.mjs\";\nimport \"./helpers/owned-php-wasm-hosted-archive-source-history-tests.mjs\";\nimport \"./helpers/owned-npm-ci-environment-repair-source-history-tests.mjs\";\nimport \"./helpers/core-inventory-endpoint-tests.mjs\";\nimport \"./helpers/core-inventory-endpoint-repair-source-history-tests.mjs\";\nimport \"./helpers/core-inventory-followup-endpoint-tests.mjs\";\nimport \"./helpers/core-inventory-followup-repair-source-history-tests.mjs\";\nimport \"./helpers/core-fin-cpp-repair-source-history-tests.mjs\";\nimport \"./helpers/dotnet-callback-producer-replay-source-history-tests.mjs\";\nimport \"./helpers/python-callback-producer-replay-source-history-tests.mjs\";\nimport \"./helpers/jvm-callback-producer-replay-source-history-tests.mjs\";\nimport \"./helpers/php-wasm-callback-producer-replay-source-history-tests.mjs\";\nimport \"./helpers/core-receiver-endpoint-tests.mjs\";\nimport \"./helpers/core-receiver-endpoint-repair-source-history-tests.mjs\";\nimport \"./helpers/core-perl-consumer-endpoint-tests.mjs\";\nimport \"./helpers/core-perl-consumer-endpoint-repair-source-history-tests.mjs\";\nimport \"./helpers/owned-checked-record-npm-producer-tests.mjs\";\nimport \"./helpers/owned-npm-scoped-producer-source-history-tests.mjs\";\nimport \"./helpers/core-php-structured-endpoint-tests.mjs\";\nimport \"./helpers/core-php-structured-endpoint-repair-source-history-tests.mjs\";\nimport \"./helpers/owned-checked-record-hosted-matrix-tests.mjs\";\nimport \"./helpers/owned-checked-record-matrix-gate-source-history-tests.mjs\";\nimport \"./helpers/core-structured-history-endpoint-tests.mjs\";\nimport \"./helpers/core-structured-history-repair-source-history-tests.mjs\";\nimport \"./helpers/owned-npm-source-identity-repair-source-history-tests.mjs\";\nimport \"./helpers/generic-subtype-compact-reference-source-history-tests.mjs\";\nimport \"./helpers/type-surface-promotion-io-tests.mjs\";\nimport \"./helpers/promotion-file-transaction-tests.mjs\";\nimport \"./helpers/generic-subtype-promotion-transaction-source-history-tests.mjs\";\nimport \"./helpers/generic-subtype-promotion-baseline-tests.mjs\";\nimport \"./helpers/source-history-stream-tests.mjs\";\nimport \"./helpers/generic-subtype-promotion-baseline-source-history-tests.mjs\";\nimport \"./helpers/owned-npm-history-checkout-source-history-tests.mjs\";\nimport \"./helpers/generic-subtype-published-matrix-tests.mjs\";\nimport \"./helpers/owned-checked-record-promotion-tests.mjs\";\nimport \"./helpers/generic-subtype-matrix-publication-source-history-tests.mjs\";\nimport \"./helpers/owned-checked-record-promotion-preparation-source-history-tests.mjs\";\nimport \"./helpers/php-wasm-entry-tag-dispatch-source-history-tests.mjs\";\nimport \"./helpers/owned-checked-record-published-matrix-tests.mjs\";\nimport \"./helpers/owned-checked-record-semantic-audit-tests.mjs\";\nimport \"./helpers/owned-checked-record-semantic-audit-source-history-tests.mjs\";\nimport \"./helpers/owned-checked-record-matrix-publication-source-history-tests.mjs\";\nimport \"./helpers/php-wasm-refinement-entry-hosted-identities-tests.mjs\";\nimport \"./helpers/php-wasm-entry-hosted-identity-source-history-tests.mjs\";\nimport \"./helpers/php-wasm-refinement-entry-hosted-replay-tests.mjs\";\nimport \"./helpers/php-wasm-entry-hosted-replay-source-history-tests.mjs\";\nimport \"./helpers/php-wasm-refinement-entry-hosted-storage-tests.mjs\";\nimport \"./helpers/php-wasm-refinement-entry-hosted-diagnostic-tests.mjs\";\nimport \"./helpers/php-wasm-entry-diagnostic-retention-source-history-tests.mjs\";\nimport \"./helpers/php-wasm-refinement-entry-hosted-archive-tests.mjs\";\nimport \"./helpers/php-wasm-entry-complete-archive-source-history-tests.mjs\";\nimport \"./helpers/php-wasm-refinement-entry-publication-tests.mjs\";\nimport \"./helpers/php-wasm-refinement-entry-publication-docs-tests.mjs\";\nimport \"./helpers/php-wasm-entry-publication-preparation-source-history-tests.mjs\";\nimport \"./helpers/php-wasm-refinement-entry-publisher-tests.mjs\";\nimport \"./helpers/php-wasm-refinement-entry-publication-pins-tests.mjs\";\nimport \"./helpers/php-wasm-entry-publisher-source-history-tests.mjs\";\nimport \"./helpers/php-wasm-entry-publication-pin-repair-source-history-tests.mjs\";\nimport \"./helpers/php-wasm-entry-published-probe-tests.mjs\";\nimport \"./helpers/php-wasm-entry-probe-publication-source-history-tests.mjs\";\nimport \"./helpers/consumer-tool-lookups-tests.mjs\";\nimport \"./helpers/consumer-tool-lookups-source-history-tests.mjs\";\nimport \"./helpers/php-wasm-entry-source-supplement-source-history-tests.mjs\";\nimport \"./helpers/core-recursive-endpoint-tests.mjs\";\nimport \"./helpers/core-publication-recursive-repair-source-history-tests.mjs\";\nimport \"./helpers/core-author-publication-repair-source-history-tests.mjs\";\nimport \"./helpers/php-wasm-entry-build-input-supplement-source-history-tests.mjs\";\nimport \"./helpers/core-aggregate-sparse-checkout-source-history-tests.mjs\";\nimport \"./helpers/owned-npm-complete-acceptance-source-history-tests.mjs\";\nimport \"./helpers/php-closure-producer-replay-source-history-tests.mjs\";\nimport \"./helpers/owned-receipt-producer-replay-source-history-tests.mjs\";\nimport \"./helpers/owned-matrix-isolation-source-history-tests.mjs\";\nimport \"./helpers/owned-matrix-refresh-source-history-tests.mjs\";\nimport \"./helpers/owned-checked-carrier-compilation-source-history-tests.mjs\";\nimport \"./helpers/owned-checked-native-mixed-coverage-source-history-tests.mjs\";\nimport \"./helpers/owned-native-promotion-scope-source-history-tests.mjs\";\nimport \"./helpers/owned-checked-language-mixed-coverage-source-history-tests.mjs\";\nimport \"./helpers/dependent-matrix-doc-gate-source-history-tests.mjs\";\nimport \"./helpers/owned-checked-window-rejection-source-history-tests.mjs\";\nimport \"./helpers/owned-checked-managed-mixed-coverage-source-history-tests.mjs\";\nimport \"./helpers/owned-checked-php-wasm-mixed-coverage-source-history-tests.mjs\";\nimport \"./helpers/owned-checked-wit-bootstrap-source-history-tests.mjs\";\nimport \"./helpers/wasmtime-capi-rollout-tests.mjs\";\nimport \"./helpers/wasmtime-capi-ci-rollout-source-history-tests.mjs\";\nimport \"./helpers/owned-checked-record-php-wasm-context-tests.mjs\";\nimport \"./helpers/owned-checked-php-wasm-contexts-source-history-tests.mjs\";\nimport \"./helpers/owned-checked-retained-identity-source-history-tests.mjs\";\nimport \"./helpers/owned-subtype-npm-complete-acceptance-source-history-tests.mjs\";\nimport \"./helpers/owned-subtype-npm-hosted-source-history-tests.mjs\";\nimport \"./helpers/owned-subtype-hosted-promotion-source-history-tests.mjs\";\nimport \"./helpers/owned-subtype-promotion-transaction-source-history-tests.mjs\";\nimport \"./helpers/owned-subtype-published-matrix-tests.mjs\";\nimport \"./helpers/owned-subtype-matrix-publication-source-history-tests.mjs\";\nimport \"./helpers/owned-checked-record-archive-roots-source-history-tests.mjs\";\nimport \"./helpers/owned-publication-coexistence-source-history-tests.mjs\";\nimport \"./helpers/owned-checked-record-aligned-publication-source-history-tests.mjs\";\nimport \"./helpers/owned-checked-record-promotion-labels-source-history-tests.mjs\";\nimport \"./helpers/owned-checked-c-session-boundaries-source-history-tests.mjs\";\n",
+          "start": 253
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "6ad3f74852c9b0a73649c9d7ca4a97b1512af8ccf7cb03c1e8f8754c28b642e0"
+    },
+    {
+      "currentSha256": "97db3b610881431733721e6ad894d3f2a0e1b50ee298dd0bb90c3a4d5cf246d8",
+      "edits": [
+        {
+          "current": "\tconst contractJob = source.slice(source.indexOf(\"\\n  contract:\\n\")\n\t\t, source.indexOf(\"\\n  quality:\\n\"));\n",
+          "previous": "",
+          "start": 2748
+        },
+        {
+          "current": "\tconst contractSparse = /sparse-checkout: \\|\\n((?: {12}\\S+\\n)+)/u.exec(\n\t\tcontractJob);\n\tassert.ok(contractSparse\n\t\t, \"Contract shards must declare the common evidence baseline\");\n\tassert.deepEqual(contractSparse[1].trim().split(\"\\n\").map(line => line.trim()), [\n\t\t\"/*\", \"!/*/\", \"/.github/\", \"/acceptance/\", \"/config/\"\n\t\t, \"/containers/\", \"/demos/\", \"/nix/\", \"/notices/\", \"/patches/\"\n\t\t, \"/poc/\", \"/schema/\", \"/scripts/\", \"/site/\", \"/src/\", \"/tests/\"\n\t\t, \"/docs/\", \"!/docs/evidence/*\", \"/docs/evidence/*.json\"\n\t\t, \"/docs/evidence/*.md\", \"/docs/evidence/*.xml\"\n\t\t, \"/docs/evidence/*/index.json\"\n\t], \"Contract baseline must retain source, docs, root records, and every archive index\");\n\tassert.match(contractJob, /fetch-depth: 0/u);\n\tassert.match(contractJob, /sparse-checkout-cone-mode: false/u);\n\tassert.doesNotMatch(contractJob, /^\\s+filter:/mu\n\t\t, \"Contract checkout must derive blob:none from non-cone sparse patterns\");\n\tassert.equal([...contractJob.matchAll(/^\\s+node scripts\\/materialize-core-contract-evidence\\.mjs \\\\\\n\\s+--shard \"\\$\\{\\{ matrix\\.shard \\}\\}\\/12\" \\\\\\n\\s+--manifest \"build\\/core-evidence\\/core-shard-\\$\\{\\{ matrix\\.shard \\}\\}-evidence\\.json\"\\s*$/gmu)].length, 1\n\t\t, \"Every shard must materialize and record its exact retained evidence closure\");\n",
+          "previous": "",
+          "start": 3674
+        },
+        {
+          "current": "\tassert.equal([...source.matchAll(/^\\s+sparse-checkout: \\|\\s*$/gmu)].length, 3\n\t\t, \"Static, contract, and aggregate jobs must all bound materialization\");\n",
+          "previous": "\tassert.equal([...source.matchAll(/^\\s+sparse-checkout: \\|\\s*$/gmu)].length, 2\n\t\t, \"Static and aggregate jobs must omit archived evidence payloads\");\n",
+          "start": 5280
+        },
+        {
+          "current": "\tassert.equal([...source.matchAll(/^\\s+sparse-checkout-cone-mode: false\\s*$/gmu)].length, 1);\n",
+          "previous": "",
+          "start": 5528
+        },
+        {
+          "current": "\tassert.equal([...source.matchAll(/^\\s+- name: Report disk after the evidence baseline checkout\\s*$/gmu)].length, 1);\n\tassert.match(source, /- name: Report disk after the evidence baseline checkout\\n {8}run: df -h \\/ \"\\$GITHUB_WORKSPACE\"/u);\n\tassert.equal([...source.matchAll(/^\\s+- name: Report disk after shard evidence materialization\\s*$/gmu)].length, 1);\n\tassert.match(source, /- name: Report disk after shard evidence materialization\\n {8}run: df -h \\/ \"\\$GITHUB_WORKSPACE\"/u);\n",
+          "previous": "\tassert.equal([...source.matchAll(/^\\s+- name: Report disk after the evidence checkout\\s*$/gmu)].length, 1);\n\tassert.match(source, /- name: Report disk after the evidence checkout\\n {8}run: df -h \\/ \"\\$GITHUB_WORKSPACE\"/u);\n",
+          "start": 6455
+        },
+        {
+          "current": "\tassert.match(source\n\t\t, /build\\/core-shards\\/core-shard-\\$\\{\\{ matrix\\.shard \\}\\}\\.json\\n {12}build\\/core-evidence\\/core-shard-\\$\\{\\{ matrix\\.shard \\}\\}-evidence\\.json/u\n\t\t, \"Failure artifacts must preserve both execution and evidence manifests\");\n",
+          "previous": "",
+          "start": 7480
+        },
+        {
+          "current": "\t\t, source.replace(\"          sparse-checkout-cone-mode: false\"\n\t\t\t, \"          sparse-checkout-cone-mode: true\")\n\t\t, source.replace(\"            /docs/evidence/*/index.json\\n\", \"\")\n\t\t, source.replace(\"node scripts/materialize-core-contract-evidence.mjs\"\n\t\t\t, \"node scripts/snapshot-core-contract-evidence.mjs\")\n\t\t, source.replace(\"build/core-evidence/core-shard-${{ matrix.shard }}-evidence.json\"\n\t\t\t, \"build/core-shards/core-shard-${{ matrix.shard }}.json\")\n",
+          "previous": "",
+          "start": 16267
+        }
+      ],
+      "path": "tests/helpers/core-quality-budget-tests.mjs",
+      "previousSha256": "ef2fd9e7b697dfd4071b9bd0e00652efb5829c1f8aed5e4dbdeaf35bbb9a4178"
+    },
+    {
+      "currentSha256": "a85f1301a186941b7d16488b47cd863761b1bd060237a6ebe180b668858e46be",
+      "edits": [
+        {
+          "current": "\t+ \"          # Retain every producer commit while materializing live source, the\\n\"\n\t+ \"          # authenticated transition record, and two immutable acceptance archives.\\n\"\n",
+          "previous": "\t+ \"          # Retain every producer commit while materializing only live source\\n\"\n\t+ \"          # and the two immutable archives read by this acceptance cohort.\\n\"\n",
+          "start": 354
+        },
+        {
+          "current": "\t+ \"            /docs/evidence/ci-contract-repair-source-history-20261017.json\\n\"\n",
+          "previous": "",
+          "start": 1225
+        }
+      ],
+      "path": "tests/helpers/nominal-primitive-subtype-history-checkout.mjs",
+      "previousSha256": "b68835a8920051f5418bf41a07cd4ae8e2b2a4f32d44218f31a60bb9c997234c"
+    },
+    {
+      "currentSha256": "7aec253c098a25100871ae975dee8d1dc7816f4b11b73cd5d2c1b89f3599d5bb",
+      "edits": [
+        {
+          "current": " * Authenticate the independently schedulable owned checked-record replays.\n",
+          "previous": " * Replay every retained owned checked-record hosted archive.\n *\n * The named tests exist before capture so each archive records the same\n * verifier path. A lane without a retained archive is skipped here; promotion\n * must require every lane's archive and cannot skip it.\n",
+          "start": 4
+        },
+        {
+          "current": "import assert from \"node:assert/strict\";\n",
+          "previous": "import { readdirSync } from \"node:fs\";\n",
+          "start": 96
+        },
+        {
+          "current": "import { ownedCheckedRecordReplayPartitions } from \"./helpers/owned-checked-record-hosted-replay-tests.mjs\";\n",
+          "previous": "import { checkOwnedCheckedRecordHostedEvidence } from \"./helpers/owned-checked-record-hosted-evidence.mjs\";\n\nconst archives = readdirSync(\"docs/evidence\", { withFileTypes: true })\n\t.filter(entry => entry.isDirectory()).map(entry => entry.name);\n",
+          "start": 272
+        },
+        {
+          "current": "test(\"owned checked-record replay partitions cover every hosted lane once\", () => {\n\tassert.deepEqual(ownedCheckedRecordReplayPartitions\n\t\t, ownedCheckedRecordHostedLaneNames);\n\tassert.equal(new Set(ownedCheckedRecordReplayPartitions).size\n\t\t, ownedCheckedRecordHostedLaneNames.length);\n});\n",
+          "previous": "for(const lane of ownedCheckedRecordHostedLaneNames)\n{\n\tconst roots = archives.filter(name =>\n\t\tnew RegExp(`^owned-checked-record-${lane}-hosted-\\\\d{8}$`, \"u\").test(name))\n\t\t.map(name => `docs/evidence/${name}`);\n\ttest(`retained ${lane} owned checked-record hosted evidence replays`, {\n\t\tskip: roots.length === 0, timeout: 600_000\n\t}, async () => {\n\t\tfor(const root of roots)\n\t\t\tawait checkOwnedCheckedRecordHostedEvidence(lane, root);\n\t});\n}\n",
+          "start": 382
+        }
+      ],
+      "path": "tests/owned-checked-record-hosted-evidence.test.mjs",
+      "previousSha256": "7048b690a4c1939dcaca199adf8d9eea89041578760b07d8206ee5486aeab390"
+    }
+  ]
+}
