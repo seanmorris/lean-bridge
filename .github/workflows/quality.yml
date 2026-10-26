@@ -21,8 +21,9 @@ jobs:
       - name: Check out the exact revision
         uses: actions/checkout@v6
         with:
-          # Evidence tests authenticate source bytes at their original producer commits.
-          fetch-depth: 0
+          # Static analysis reads only the exact current tree. Producer history is
+          # deferred to the contract matrix after this gate succeeds.
+          fetch-depth: 1
           persist-credentials: false
       - name: Install Node.js
         uses: actions/setup-node@v6
@@ -51,6 +52,7 @@ jobs:
 
   contract:
     name: Contract shard ${{ matrix.shard }}/12
+    needs: static
     runs-on: ubuntu-24.04
     # Run 40306481801 showed that a 20–25 minute full-history checkout left
     # shard 5 only 156 minutes; its complete, still-passing evidence replay was

@@ -36,10 +36,18 @@ const assertCoreQualityBudget = source => {
 		, "Every matrix cell must execute its exact contract shard");
 	assert.doesNotMatch(source, /^\s+npm run check:core\s*$/mu
 		, "Static checks and contract shards must not be recombined in one timed job");
-	assert.equal([...source.matchAll(/^\s+fetch-depth:\s*0\s*$/gmu)].length, 2
-		, "Static and contract jobs must retain all producer history");
-	assert.equal([...source.matchAll(/^\s+fetch-depth:\s*1\s*$/gmu)].length, 1
-		, "The aggregate must recompute closure from the exact current tree");
+	assert.match(source
+		, / {2}contract:\n {4}name: Contract shard \$\{\{ matrix\.shard \}\}\/12\n {4}needs: static\n/u
+		, "History-heavy contract shards must wait for the static gate");
+	assert.equal([...source.matchAll(/^\s+fetch-depth:\s*0\s*$/gmu)].length, 1
+		, "Only contract shards may retain all producer history");
+	assert.equal([...source.matchAll(/^\s+fetch-depth:\s*1\s*$/gmu)].length, 2
+		, "Static and aggregate jobs must read only the exact current tree");
+	const staticJob = source.slice(source.indexOf("\n  static:\n")
+		, source.indexOf("\n  contract:\n"));
+	assert.match(staticJob, /fetch-depth: 1/u
+		, "Static analysis must not download historical evidence producers");
+	assert.doesNotMatch(staticJob, /fetch-depth: 0/u);
 	const aggregate = source.slice(source.indexOf("\n  quality:\n"));
 	assert.match(aggregate, /fetch-depth: 1\n {10}persist-credentials: false\n {10}sparse-checkout: \|\n {12}scripts\n {12}src\n {12}tests\n {10}sparse-checkout-cone-mode: true\n/u
 		, "The aggregate needs the complete test tree and verifier source, not retained evidence");
@@ -205,7 +213,10 @@ test("Core quality has bounded static, sharded contract, and aggregate gates", a
 		, source.replace("npm run typecheck", "npm run lint")
 		, source.replace('--shard "${{ matrix.shard }}/12"'
 			, '--test-name-pattern "${{ matrix.shard }}/12"')
+		, source.replace("    needs: static\n    runs-on: ubuntu-24.04"
+			, "    runs-on: ubuntu-24.04")
 		, source.replace("fetch-depth: 0", "fetch-depth: 1")
+		, source.replace("fetch-depth: 1", "fetch-depth: 0")
 		, source.replace("persist-credentials: false", "persist-credentials: true")
 		, source.replace("            tests\n", "            tests/helpers\n")
 		, source.replace("            src\n", "            docs/evidence\n")
