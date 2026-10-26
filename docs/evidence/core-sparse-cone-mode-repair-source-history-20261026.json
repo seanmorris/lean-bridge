@@ -1,0 +1,131 @@
+{
+  "additions": [
+    {
+      "currentSha256": "51761ccc884e4dbc4460cc9e0157193d94389bee2d9598a979e4e70d78299981",
+      "path": "scripts/update-core-sparse-cone-mode-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "bbe53479d3ec6a5dcd2d00c9b9dc8f9dddb55b48a5c4c6b5e402314fe82ff28a",
+      "path": "tests/helpers/core-sparse-cone-mode-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "54f67e3f2ea34d1876008f4609fb13aeb9a1871d",
+  "integrationUpdates": [
+    {
+      "currentSha256": "3a565f4d62e74aedbe4dd72c66e4c1b03bbdee7b0b5dd4b7096579bcf3be0614",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeCoreSparseConeModeRepairSource\n\t, coreSparseConeModeRepairAddedPaths\n\t, coreSparseConeModeRepairHistoryPath\n\t, coreSparseConeModeRepairImplementation\n\t, coreSparseConeModeRepairImplementationPaths\n\t, coreSparseConeModeRepairIntegrationPaths\n\t, coreSparseConeModeRepairPredecessor\n\t, reverseCoreSparseConeModeRepairUpdate\n} from \"./core-sparse-cone-mode-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 357
+        },
+        {
+          "current": "const readCoreSparseConeModeRepair = async () => JSON.parse(await readFile(\n\tcoreSparseConeModeRepairHistoryPath, \"utf8\"));\n",
+          "previous": "",
+          "start": 7156
+        },
+        {
+          "current": "\tassert.deepEqual(await readdir(root), []);\n});\n\ntest(\"Core sparse cone-mode repair records its exact source range\", async () => {\n\tconst record = await readCoreSparseConeModeRepair();\n\tassert.equal(record.schemaVersion, 1);\n\tassert.equal(record.milestone\n\t\t, \"core-sparse-cone-mode-repair-source-v1\");\n\tassert.equal(record.predecessorCommit\n\t\t, coreSparseConeModeRepairPredecessor);\n\tassert.equal(record.implementationCommit\n\t\t, coreSparseConeModeRepairImplementation);\n\tassert.deepEqual(record.updates.map(update => update.path)\n\t\t, coreSparseConeModeRepairImplementationPaths);\n\tassert.deepEqual(record.integrationUpdates.map(update => update.path)\n\t\t, coreSparseConeModeRepairIntegrationPaths);\n\tassert.deepEqual(record.additions.map(addition => addition.path)\n\t\t, coreSparseConeModeRepairAddedPaths);\n\tassert.equal(git([\"rev-parse\"\n\t\t, `${coreSparseConeModeRepairImplementation}^`]).trim()\n\t, coreSparseConeModeRepairPredecessor);\n\tassert.deepEqual(git([\"diff\", \"--name-only\"\n\t\t, coreSparseConeModeRepairPredecessor\n\t\t, coreSparseConeModeRepairImplementation]).trim().split(\"\\n\").sort()\n\t, [...coreSparseConeModeRepairImplementationPaths].sort());\n});\n\ntest(\"Core sparse cone-mode repair reverses every transition\", async () => {\n\tconst record = await readCoreSparseConeModeRepair();\n\tfor(const update of [...record.updates, ...record.integrationUpdates])\n\t{\n\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256\n\t\t\t, beforeCoreSparseConeModeRepairSource);\n\t\tconst base = record.integrationUpdates.includes(update)\n\t\t\t? coreSparseConeModeRepairImplementation\n\t\t\t: coreSparseConeModeRepairPredecessor;\n\t\tconst previous = git([\"show\", `${base}:${update.path}`]);\n\t\tassert.equal(reverseCoreSparseConeModeRepairUpdate(current, update)\n\t\t\t, previous, update.path);\n\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n\t\tassert.ok(finRefinementNormalizationPaths.includes(update.path));\n\t}\n\tfor(const addition of record.additions)\n\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256))\n\t\t, addition.currentSha256, addition.path);\n});\n\ntest(\"Core sparse cone-mode repair rejects altered transitions\", async () => {\n\tconst update = (await readCoreSparseConeModeRepair()).updates[0];\n\tconst current = await sourceAtFinHistoryMilestone(\n\t\tupdate.path, update.currentSha256\n\t\t, beforeCoreSparseConeModeRepairSource);\n\tfor(const forged of [{ ...update, currentSha256: \"0\".repeat(64) }\n\t\t, { ...update, previousSha256: \"0\".repeat(64) }\n\t\t, { ...update, path: \"unrelated.mjs\" }\n\t\t, { ...update, edits: [] }\n\t\t, { ...update, edits: [...update.edits, update.edits[0]] }])\n\t\tassert.throws(() => reverseCoreSparseConeModeRepairUpdate(\n\t\t\tcurrent, forged));\n\tassert.equal(beforeCoreSparseConeModeRepairSource(\n\t\tupdate.path, current + \"unknown\"), current + \"unknown\");\n});\n\ntest(\"Core sparse cone-mode writer refuses another checkout\", async t => {\n\tconst root = await mkdtemp(join(\n\t\ttmpdir(), \"lean-core-sparse-cone-mode-guard-\"\n\t));\n\tt.after(() => rm(root, { recursive: true }));\n\tconst result = spawnSync(process.execPath, [resolve(\n\t\t\"scripts/update-core-sparse-cone-mode-repair-source-history.mjs\"\n\t)], { cwd: root, encoding: \"utf8\", timeout: 15_000 });\n\tassert.notEqual(result.status, 0);\n\tassert.equal(result.stdout, \"\");\n",
+          "previous": "",
+          "start": 16636
+        }
+      ],
+      "path": "tests/helpers/core-historical-evidence-replay-source-history-tests.mjs",
+      "previousSha256": "b138ed47e8b11d3427c2ebafe639c81a09e87910db8477435c3441463d78cbfa"
+    },
+    {
+      "currentSha256": "09ff807ea5bd6b7b9300c4e736e1563da200e326829e0d862ac509493dff792a",
+      "edits": [
+        {
+          "current": "import { beforeCoreSparseConeModeRepairSource, coreSparseConeModeRepairNormalizationPaths } from \"./core-sparse-cone-mode-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...coreSparseConeModeRepairNormalizationPaths\n\t, ...coreContractEvidenceCheckoutNormalizationPaths\n",
+          "previous": "\t...coreContractEvidenceCheckoutNormalizationPaths\n",
+          "start": 192890
+        },
+        {
+          "current": "\tlet stage = beforeCoreSparseConeModeRepairSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCoreContractEvidenceCheckoutSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeCoreContractEvidenceCheckoutSource(path, text, expected);\n",
+          "start": 239602
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "3e4cb6a5115eadb649d43553d145c95aaa627953366ab64b79a5c7063ad33b34"
+    }
+  ],
+  "milestone": "core-sparse-cone-mode-repair-source-v1",
+  "predecessorCommit": "278ede16fa6e361dcc60093094bbdc1b97997e68",
+  "schemaVersion": 1,
+  "scope": "Treat actions/checkout's omitted core.sparseCheckoutCone configuration as false while still rejecting cone and non-sparse Core evidence checkouts. Preserve the exact shard plan, selected evidence, contract inventory, runtime and support claims. Add an executable temporary-repository regression for both absent and true cone configuration.",
+  "updates": [
+    {
+      "currentSha256": "abda6d8e2737a41d1c9c413ba96439ace30524d1b7d2b445b66453f0f5808759",
+      "edits": [
+        {
+          "current": "import { execFileSync, spawnSync } from \"node:child_process\";\n",
+          "previous": "import { execFileSync } from \"node:child_process\";\n",
+          "start": 428
+        },
+        {
+          "current": "/**\n * Read Git's sparse-checkout booleans without conflating an unset false value\n * with command failure. Actions/checkout omits core.sparseCheckoutCone for a\n * non-cone checkout.\n *\n * @param root - Repository root.\n */\nexport const coreSparseCheckoutMode = (root = resolve(\".\")) => {\n\tconst read = key => {\n\t\tconst result = spawnSync(\"git\", [\n\t\t\t\"-C\", resolve(root), \"config\", \"--bool\", \"--get\", key\n\t\t], { encoding: \"utf8\" });\n\t\tassert.equal(result.signal, null, key);\n\t\tassert.ok(result.status === 0 || result.status === 1\n\t\t\t, result.stderr || key);\n\t\treturn result.status === 0 ? result.stdout.trim() : undefined;\n\t};\n\treturn Object.freeze({\n\t\tsparse: read(\"core.sparseCheckout\") === \"true\"\n\t\t, cone: read(\"core.sparseCheckoutCone\") === \"true\"\n\t});\n};\n\n",
+          "previous": "",
+          "start": 6514
+        }
+      ],
+      "path": "scripts/core-contract-evidence.mjs",
+      "previousSha256": "ed09b408288f0fbfaac64a7d751e527ef047794490d4ea44f557b33b6b2a309b"
+    },
+    {
+      "currentSha256": "ffbb9418f29983b6a4b5f5c9689e986c83ff49a3d8fdd924898db5ca0ac1fb76",
+      "edits": [
+        {
+          "current": "import {\n\tcollectCoreContractEvidencePlan, coreSparseCheckoutMode\n} from \"./core-contract-evidence.mjs\";\n",
+          "previous": "import { collectCoreContractEvidencePlan } from \"./core-contract-evidence.mjs\";\n",
+          "start": 431
+        },
+        {
+          "current": "const sparse = coreSparseCheckoutMode();\nassert.equal(sparse.sparse, true\n\t, \"Core evidence materialization requires a sparse checkout\");\nassert.equal(sparse.cone, false\n\t, \"Core evidence materialization requires non-cone patterns\");\n",
+          "previous": "assert.equal(execFileSync(\"git\", [\"config\", \"--bool\", \"core.sparseCheckout\"], {\n\tencoding: \"utf8\"\n}).trim(), \"true\", \"Core evidence materialization requires a sparse checkout\");\nassert.notEqual(execFileSync(\"git\", [\"config\", \"--bool\", \"core.sparseCheckoutCone\"], {\n\tencoding: \"utf8\"\n}).trim(), \"true\", \"Core evidence materialization requires non-cone patterns\");\n",
+          "start": 978
+        }
+      ],
+      "path": "scripts/materialize-core-contract-evidence.mjs",
+      "previousSha256": "c74d2c62c241239467ffbd1f067ad6d60c777b3752a3c9f8c3fe12fe4dfd5a27"
+    },
+    {
+      "currentSha256": "eeb0f9df7684a41a18376fe4572423f059bcc544ef7c802bb80080137143ada6",
+      "edits": [
+        {
+          "current": "import { execFileSync } from \"node:child_process\";\n",
+          "previous": "",
+          "start": 133
+        },
+        {
+          "current": "import { mkdtemp, readFile, rm } from \"node:fs/promises\";\nimport { tmpdir } from \"node:os\";\nimport { join } from \"node:path\";\n",
+          "previous": "import { readFile } from \"node:fs/promises\";\n",
+          "start": 226
+        },
+        {
+          "current": "\t, coreSparseCheckoutMode\n",
+          "previous": "",
+          "start": 495
+        },
+        {
+          "current": "\tassert.match(source, /const sparse = coreSparseCheckoutMode\\(\\)/u);\n\tassert.match(source, /assert\\.equal\\(sparse\\.sparse, true/u);\n\tassert.match(source, /assert\\.equal\\(sparse\\.cone, false/u);\n",
+          "previous": "\tassert.match(source\n\t\t, /assert\\.equal\\(execFileSync\\(\"git\", \\[\"config\", \"--bool\", \"core\\.sparseCheckout\"\\]/u);\n\tassert.match(source\n\t\t, /assert\\.notEqual\\(execFileSync\\(\"git\", \\[\"config\", \"--bool\", \"core\\.sparseCheckoutCone\"\\]/u);\n",
+          "start": 4752
+        },
+        {
+          "current": "\ntest(\"Core sparse mode treats checkout's absent cone key as false\", async t => {\n\tconst root = await mkdtemp(join(tmpdir(), \"lean-core-sparse-mode-\"));\n\tt.after(() => rm(root, { recursive: true, force: true }));\n\texecFileSync(\"git\", [\"init\", \"--quiet\", root]);\n\texecFileSync(\"git\", [\"-C\", root, \"config\", \"core.sparseCheckout\", \"true\"]);\n\tassert.deepEqual(coreSparseCheckoutMode(root)\n\t\t, { sparse: true, cone: false });\n\texecFileSync(\"git\", [\"-C\", root, \"config\", \"core.sparseCheckoutCone\", \"true\"]);\n\tassert.deepEqual(coreSparseCheckoutMode(root)\n\t\t, { sparse: true, cone: true });\n});\n",
+          "previous": "",
+          "start": 5120
+        }
+      ],
+      "path": "tests/helpers/core-contract-evidence-tests.mjs",
+      "previousSha256": "7cf818ad1c121f8eaa58fe12ff346652199c18c41eccc425bb2c86766a43ff07"
+    }
+  ]
+}
