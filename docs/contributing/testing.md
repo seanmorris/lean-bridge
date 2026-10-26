@@ -320,7 +320,7 @@ results; retain and replay the successful hosted run before promoting coverage.
 ### Prepare owned checked-record support and documentation
 
 The promotion command requires the complete selection committed as
-`docs/evidence/owned-checked-record-matrix-selection-20261025.json` and a clean
+`docs/evidence/owned-checked-record-matrix-selection-20261026-aligned.json` and a clean
 checkout with every indexed archive byte committed in Git. The matrix verifier
 restores each capture into an isolated temporary directory, so a sparse checkout
 need not materialize every ZIP part. Replay and promotion use the same closed

@@ -42,7 +42,7 @@ export const renderOwnedCheckedRecordDocumentation = sources => {
 		let source = sources[name];
 		assert.equal(typeof source, "string", name);
 		assert.ok(!source.includes(heading), `Owned checked-record documentation already published: ${name}`);
-		const link = `${path.split("/").length === 2 ? "" : "../"}evidence/owned-checked-record-promotion-20261025.md`;
+		const link = `${path.split("/").length === 2 ? "" : "../"}evidence/owned-checked-record-promotion-20261026-aligned.md`;
 		const author = name === "existingPackage" || name === "exportDecisions";
 		const scope = author ? "all seventeen consumer profiles" : consumer[name];
 		const introduction = `[Hosted owned checked-record acceptance](${link}) covers ${scope} on ordinary Lean-source and independently reviewed package routes. The tested forms are \`Booking\`, whose \`Window\` field is copied and checked, and \`Claim\`, whose \`Ticket\` resource stays owned while its quota is checked. Proof fields do not cross the boundary.`;

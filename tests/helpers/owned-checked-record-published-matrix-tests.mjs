@@ -26,7 +26,7 @@ import { readPromotionInventory } from "./type-surface-promotion-io.mjs";
 import { ownedSubtypeMatrixPublicationImplementation } from "./owned-subtype-matrix-publication-source-history.mjs";
 
 const predecessor = "a9cad3b18a244d7e74918e6e8964455e073e2453";
-const selectionSha256 = "8959dae7243d65ad0e5a204091c4cf1fdc99d963bdcd0b061622f82472608f14";
+const selectionSha256 = "296b2f51bb2c8f4c66588002554219356b7fa123f1999c681db4c60ced5be5d6";
 const ownedId = id => /^owned-checked-record-[a-z-]+-hosted-installed$/u.test(id);
 const hostTypes = {
 	parameter: "borrowed or transferred Booking/Claim payload with a live Ticket owner"

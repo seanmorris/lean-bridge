@@ -17,9 +17,9 @@ import {
 } from "./owned-checked-record-hosted-matrix.mjs";
 
 export const ownedCheckedRecordPromotionSelectionPath
-	= "docs/evidence/owned-checked-record-matrix-selection-20261025.json";
+	= "docs/evidence/owned-checked-record-matrix-selection-20261026-aligned.json";
 export const ownedCheckedRecordPromotionPath
-	= "docs/evidence/owned-checked-record-promotion-20261025.md";
+	= "docs/evidence/owned-checked-record-promotion-20261026-aligned.md";
 export const ownedCheckedRecordPromotionProfiles = Object.freeze({
 	native: Object.freeze(["c", "cpp"])
 	, perl: Object.freeze(["perl"])

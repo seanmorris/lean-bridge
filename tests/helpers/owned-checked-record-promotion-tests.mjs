@@ -8,7 +8,7 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { join, resolve } from "node:path";
+import { basename, join, resolve } from "node:path";
 import test from "node:test";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
@@ -19,6 +19,7 @@ import {
 } from "./owned-checked-record-hosted-contracts.mjs";
 import {
 	ownedCheckedRecordPromotionArchiveReferences, ownedCheckedRecordPromotionLimit
+	, ownedCheckedRecordPromotionPath
 	, ownedCheckedRecordPromotionProfiles, ownedCheckedRecordPromotionReferences
 	, ownedCheckedRecordPromotionSelectionPath, promoteOwnedCheckedRecords
 	, refreshOwnedCheckedRecords, renderOwnedCheckedRecordPromotion
@@ -426,7 +427,7 @@ test("owned checked-record promotion prepares all fourteen guides without changi
 	{
 		const output = rendered[name];
 		assert.equal(output.split("## Owned checked records\n").length, 2);
-		assert.ok(output.includes("owned-checked-record-promotion-20261025.md"));
+		assert.ok(output.includes(basename(ownedCheckedRecordPromotionPath)));
 		assert.ok(output.includes("without checked-input, transfer or callback metadata"));
 		assert.ok(output.includes("does not cover `Grant` and its nested Subtype"));
 		const start = output.indexOf("## Owned checked records\n");
@@ -482,7 +483,7 @@ test("owned checked-record refresh replaces only eleven evidence references", as
 test("owned checked-record refresh replaces only each guide's existing owned section", () => {
 	const rendered = renderOwnedCheckedRecordDocumentation(baselineDocumentation());
 	const old = Object.fromEntries(Object.entries(rendered).map(([name, source]) =>
-		[name, source.replaceAll("owned-checked-record-promotion-20261025.md", "owned-checked-record-promotion-20261024.md")]));
+		[name, source.replaceAll(basename(ownedCheckedRecordPromotionPath), "owned-checked-record-promotion-20261024.md")]));
 	assert.deepEqual(refreshOwnedCheckedRecordDocumentation(old), rendered);
 	assert.deepEqual(refreshOwnedCheckedRecordDocumentation(rendered), rendered);
 	assert.throws(() => refreshOwnedCheckedRecordDocumentation(baselineDocumentation()));
