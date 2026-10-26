@@ -1,0 +1,207 @@
+{
+  "additions": [
+    {
+      "currentSha256": "955c6f6e3c94c687a5ee9d6f08f732ff1cd289ef7c4dfdf6fdb65ec14b15ef97",
+      "path": "scripts/update-core-runner-resilience-source-history.mjs"
+    },
+    {
+      "currentSha256": "d0c2cc5750404ad6d2b20982fab4d4c008e335403b482fec93c2cd919d57b51f",
+      "path": "tests/helpers/core-runner-resilience-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "dfdf8340d5ab3d55b899f9b8b3a190eb24362191825e81ff886086ff0d822a28",
+      "path": "tests/helpers/core-runner-resilience-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "810c8fe089bd26e997fb45424f15665eaf7d98c5",
+  "implementationCommits": [
+    "e80a4ce601320cbf8ba131ff6a55eb8452d4af3c",
+    "03046a24dc4d026179f01fcca02dd228467b1d06",
+    "810c8fe089bd26e997fb45424f15665eaf7d98c5"
+  ],
+  "integrationBaseCommit": "810c8fe089bd26e997fb45424f15665eaf7d98c5",
+  "integrationUpdates": [
+    {
+      "currentSha256": "d083d8e19daf8ae00678ceb11c36f0c6dd19281c01f8e05527fd113a0f44d2a3",
+      "edits": [
+        {
+          "current": "import \"./helpers/core-runner-resilience-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 8973
+        }
+      ],
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "5f0c703ca8eea060a7fdcfa1bfbf5d9d1413f935091064e859ccc013127b7632"
+    },
+    {
+      "currentSha256": "ecc841b050a0ea760ef8756b5b689688976eb9e13668312cb1092c234671699b",
+      "edits": [
+        {
+          "current": "import { beforeCoreRunnerResilienceSource, coreRunnerResilienceNormalizationPaths } from \"./core-runner-resilience-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...coreRunnerResilienceNormalizationPaths\n\t, ...nominalSubtypeEntryLivePinRepairNormalizationPaths\n",
+          "previous": "\t...nominalSubtypeEntryLivePinRepairNormalizationPaths\n",
+          "start": 190501
+        },
+        {
+          "current": "\tlet stage = beforeCoreRunnerResilienceSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeNominalSubtypeEntryLivePinRepairSource(\n",
+          "previous": "\tlet stage = beforeNominalSubtypeEntryLivePinRepairSource(\n",
+          "start": 236431
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "6cfe0b441aabef61a2f32387d8dad98a24f58760d3321d70135ecb5f9dc5333a"
+    }
+  ],
+  "milestone": "core-runner-resilience-source-v1",
+  "predecessorCommit": "a60d56145aec317887426f8b4c6d43c2232d9e5d",
+  "schemaVersion": 1,
+  "scope": "Replace six long-lived Core contract runners with twelve exact, disjoint shards while retaining all 1,010 selected test files, the complete aggregate closure, two-file test concurrency, the 4 GiB process heap bound, full producer history, static checks and fatal failure semantics. Cap the matrix at six concurrent jobs so shorter runner exposure does not increase simultaneous runner pressure. Refresh exactly the existing workflow source pin; change no runtime, package, support observation or original evidence byte. Final current-head hosted Core remains required.",
+  "updates": [
+    {
+      "currentSha256": "9cad06e4b728d7c41ab76174d2cdf6c0a4acb64b552d73d6ee96924a7e42e463",
+      "edits": [
+        {
+          "current": "    name: Contract shard ${{ matrix.shard }}/12\n",
+          "previous": "    name: Contract shard ${{ matrix.shard }}/6\n",
+          "start": 1493
+        },
+        {
+          "current": "      max-parallel: 6\n",
+          "previous": "",
+          "start": 1629
+        },
+        {
+          "current": "        shard: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]\n",
+          "previous": "        shard: [1, 2, 3, 4, 5, 6]\n",
+          "start": 1665
+        },
+        {
+          "current": "            --shard \"${{ matrix.shard }}/12\" \\\n",
+          "previous": "            --shard \"${{ matrix.shard }}/6\" \\\n",
+          "start": 3358
+        }
+      ],
+      "path": ".github/workflows/quality.yml",
+      "previousSha256": "b1daab5edc29356b4428e1446a73a862c10d54d36fa0be429e69e2b85649465f"
+    },
+    {
+      "currentSha256": "99db33399e328cf14c48dc19579b30f320e1d0668a04b03e0806febc551ce0d7",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"9cad06e4b728d7c41ab76174d2cdf6c0a4acb64b552d73d6ee96924a7e42e463\"\n",
+          "previous": "          \"sha256\": \"b1daab5edc29356b4428e1446a73a862c10d54d36fa0be429e69e2b85649465f\"\n",
+          "start": 1351460
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "6418c1844a7ecec51c2041841bdf49e2f879e7921abae6939f41314c3bfb25b8"
+    },
+    {
+      "currentSha256": "30fa4b85d7b10364980a733eb8fb38f3a8c8e66a295f3206ca3aec17dfadd9f1",
+      "edits": [
+        {
+          "current": "export const coreContractShardCount = 12;\n",
+          "previous": "export const coreContractShardCount = 6;\n",
+          "start": 372
+        },
+        {
+          "current": " * @param label - One-based shard label `k/12`.\n",
+          "previous": " * @param label - One-based shard label `k/6`.\n",
+          "start": 2074
+        }
+      ],
+      "path": "scripts/core-contract-shards.mjs",
+      "previousSha256": "15bf6abdea80f7355261ce0194210a2678d65f18d92baf24784eef072c5c4d81"
+    },
+    {
+      "currentSha256": "643a8717a711cc226f6c74e22f15fb550e1962181f2f7fac2a1b1f7ef7e348c7",
+      "edits": [
+        {
+          "current": "\t\tprocess.stderr.write(`Usage: run-test-profile.mjs [profile] [--shard <${coreContractShardLabels.join(\"|\")}> --shard-manifest <path>]\\n`);\n",
+          "previous": "\t\tprocess.stderr.write(\"Usage: run-test-profile.mjs [profile] [--shard <1/6|2/6|3/6|4/6|5/6|6/6> --shard-manifest <path>]\\n\");\n",
+          "start": 1267
+        }
+      ],
+      "path": "scripts/run-test-profile.mjs",
+      "previousSha256": "693877adc70b3981b4999ef149168ad965d4f19619c1a72ccb19b4e9c78155d0"
+    },
+    {
+      "currentSha256": "ea509dcfcc9085dc0d93ac5861d6a008dca96a1d6764fb73c3cc729cc90497c0",
+      "edits": [
+        {
+          "current": "\t\t, /run-test-profile\\.sh contract \\\\\\n\\s+--shard \"\\$\\{\\{ matrix\\.shard \\}\\}\\/12\"/u);\n",
+          "previous": "\t\t, /run-test-profile\\.sh contract \\\\\\n\\s+--shard \"\\$\\{\\{ matrix\\.shard \\}\\}\\/6\"/u);\n",
+          "start": 13661
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "cd5a54ff1480434b22fdc714baa501c31d11d6b47082811174c960692d4041db"
+    },
+    {
+      "currentSha256": "4422cfe4a08fc0cb3bed84ea214b321007ff06bcd70b2a0f05807ab3bb0a13b7",
+      "edits": [
+        {
+          "current": "\t\t, /strategy:\\n {6}fail-fast: false\\n {6}max-parallel: 6\\n {6}matrix:\\n {8}shard: \\[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12\\]/u\n\t\t, \"Core must run one closed twelve-shard matrix with at most six concurrent jobs and without cancelling siblings\");\n\tassert.match(source, /name: Contract shard \\$\\{\\{ matrix\\.shard \\}\\}\\/12/u\n",
+          "previous": "\t\t, /strategy:\\n {6}fail-fast: false\\n {6}matrix:\\n {8}shard: \\[1, 2, 3, 4, 5, 6\\]/u\n\t\t, \"Core must run one closed six-shard matrix without cancelling siblings\");\n\tassert.match(source, /name: Contract shard \\$\\{\\{ matrix\\.shard \\}\\}\\/6/u\n",
+          "start": 947
+        },
+        {
+          "current": "\tassert.equal([...source.matchAll(/^\\s+bash scripts\\/run-test-profile\\.sh contract \\\\\\n\\s+--shard \"\\$\\{\\{ matrix\\.shard \\}\\}\\/12\" \\\\\\n\\s+--shard-manifest \"build\\/core-shards\\/core-shard-\\$\\{\\{ matrix\\.shard \\}\\}\\.json\"\\s*$/gmu)].length, 1\n",
+          "previous": "\tassert.equal([...source.matchAll(/^\\s+bash scripts\\/run-test-profile\\.sh contract \\\\\\n\\s+--shard \"\\$\\{\\{ matrix\\.shard \\}\\}\\/6\" \\\\\\n\\s+--shard-manifest \"build\\/core-shards\\/core-shard-\\$\\{\\{ matrix\\.shard \\}\\}\\.json\"\\s*$/gmu)].length, 1\n",
+          "start": 1727
+        },
+        {
+          "current": "\tassert.match(shards, /export const coreContractShardCount = 12;/u);\n",
+          "previous": "\tassert.match(shards, /export const coreContractShardCount = 6;/u);\n",
+          "start": 6555
+        },
+        {
+          "current": "\t\t, source.replace(\"shard: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]\", \"shard: [1, 2, 3, 4, 5, 6]\")\n\t\t, source.replace(\"shard: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]\", \"shard: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 11]\")\n\t\t, source.replace(\"${{ matrix.shard }}/12\", \"${{ matrix.shard }}/11\")\n",
+          "previous": "\t\t, source.replace(\"shard: [1, 2, 3, 4, 5, 6]\", \"shard: [1, 2, 3, 4, 5]\")\n\t\t, source.replace(\"shard: [1, 2, 3, 4, 5, 6]\", \"shard: [1, 2, 3, 4, 5, 5]\")\n\t\t, source.replace(\"${{ matrix.shard }}/6\", \"${{ matrix.shard }}/5\")\n",
+          "start": 11891
+        },
+        {
+          "current": "\t\t, source.replace(\"max-parallel: 6\", \"max-parallel: 12\")\n",
+          "previous": "",
+          "start": 12237
+        },
+        {
+          "current": "\t\t, source.replace('--shard \"${{ matrix.shard }}/12\"'\n\t\t\t, '--test-name-pattern \"${{ matrix.shard }}/12\"')\n",
+          "previous": "\t\t, source.replace('--shard \"${{ matrix.shard }}/6\"'\n\t\t\t, '--test-name-pattern \"${{ matrix.shard }}/6\"')\n",
+          "start": 12412
+        },
+        {
+          "current": "\t\tschemaVersion: 1, partition: \"sorted-index-modulo-v1\", shards: 12\n",
+          "previous": "\t\tschemaVersion: 1, partition: \"sorted-index-modulo-v1\", shards: 6\n",
+          "start": 16533
+        },
+        {
+          "current": "\t\t, Array.from({ length: 12 }, (_, index) =>\n\t\t\tMath.ceil((paths.length - index) / 12)));\n",
+          "previous": "\t\t, Array.from({ length: 6 }, (_, index) =>\n\t\t\tMath.ceil((paths.length - index) / 6)));\n",
+          "start": 16746
+        },
+        {
+          "current": "\t\t, values => { values[11] = structuredClone(values[10]); }\n",
+          "previous": "\t\t, values => { values[5] = structuredClone(values[4]); }\n",
+          "start": 16884
+        },
+        {
+          "current": "\tt.diagnostic(`Complete sparse aggregate: ${paths.length} contract files across twelve shards at ${revision}`);\n",
+          "previous": "\tt.diagnostic(`Complete sparse aggregate: ${paths.length} contract files across six shards at ${revision}`);\n",
+          "start": 19053
+        },
+        {
+          "current": "\tassert.throws(verify, /Core shard 1\\/12/u);\n",
+          "previous": "\tassert.throws(verify, /Core shard 1\\/6/u);\n",
+          "start": 19333
+        }
+      ],
+      "path": "tests/helpers/core-quality-budget-tests.mjs",
+      "previousSha256": "1e5a2fa9a807bb873fb14a1ee6be0cc238504824bce9902e866cdecb58b12267"
+    }
+  ]
+}
