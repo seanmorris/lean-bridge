@@ -40,6 +40,7 @@ const profileManifest = Object.freeze({
 		, "callback-subtype-remaining-installed"
 		, "nominal-primitive-subtype-supplement-ci"
 		, "nominal-primitive-subtype-supplement-evidence"
+		, "nominal-subtype-entry-hosted-evidence"
 		, "structural-subtype-entry-evidence"
 		, "structural-subtype-entry-installed"
 		, "structural-subtype-entry"
