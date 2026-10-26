@@ -116,6 +116,7 @@ import "./helpers/nominal-subtype-entry-hosted-summary-tests.mjs";
 import "./helpers/nominal-subtype-entry-hosted-evidence-tests.mjs";
 import "./helpers/nominal-subtype-entry-promotion-tests.mjs";
 import "./helpers/nominal-subtype-entry-publication-source-history-tests.mjs";
+import "./helpers/nominal-subtype-entry-live-pin-repair-source-history-tests.mjs";
 import "./helpers/php-wasm-entry-call-path-source-history-tests.mjs";
 import "./helpers/php-wasm-entry-unreached-source-source-history-tests.mjs";
 import "./helpers/php-wasm-entry-flat-position-source-history-tests.mjs";

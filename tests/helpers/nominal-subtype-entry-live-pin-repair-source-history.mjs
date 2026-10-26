@@ -13,7 +13,7 @@ export const nominalSubtypeEntryLivePinRepairPredecessor
 	= "1b10806737bd0e06a441443f9b6e2741b3b6614c";
 // Replaced with the exact implementation commit in the integration commit.
 export const nominalSubtypeEntryLivePinRepairImplementation
-	= "PENDING_IMPLEMENTATION_COMMIT";
+	= "d6ae0b349473e675dd1dc3c140623d8b171d8e44";
 
 export const nominalSubtypeEntryLivePinRepairPins = Object.freeze([
 	Object.freeze({ path: "docs/consume/c.md", count: 1
