@@ -29,20 +29,39 @@ test("owned WIT public session successor authenticates all sources and preserves
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path], update.path);
 		assert.equal(update.currentSha256, record.sources[update.path], update.path);
-		const current = beforeOwnedWitPackage(update.path, await readFile(update.path, "utf8"));
-		assert.equal(sha256(beforeOwnedWitSession(update.path, current)), update.previousSha256);
+		const current = beforeOwnedWitPackage(update.path
+			, await readFile(update.path, "utf8"), update.currentSha256);
+		assert.equal(sha256(beforeOwnedWitSession(
+			update.path, current, update.previousSha256)), update.previousSha256);
 		assert.equal(beforeOwnedWitSession(update.path, current, update.currentSha256), current);
 	}
-	const current = beforeOwnedWitPackage("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8"));
-	const prior = JSON.parse(beforeOwnedWitSession("docs/type-surface.v1.json", current));
-	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedWitPackageHistoricalBytes(file.path, await readFile(file.path)));
-	assert.deepEqual(JSON.parse(current), prior, "A session probe cannot establish installed package support");
+	const inventory = record.updates.find(update =>
+		update.path === "docs/type-surface.v1.json");
+	assert.ok(inventory);
+	const current = beforeOwnedWitPackage(inventory.path
+		, await readFile(inventory.path, "utf8"), inventory.currentSha256);
+	const document = JSON.parse(current);
+	const prior = JSON.parse(beforeOwnedWitSession(
+		inventory.path, current, inventory.previousSha256));
+	for(const evidence of prior.evidence) for(const file of evidence.files)
+	{
+		const target = document.evidence.find(item => item.id === evidence.id)
+			?.files.find(item => item.path === file.path)?.sha256;
+		assert.ok(target, `${evidence.id}: ${file.path}`);
+		assert.equal(sha256(ownedWitPackageHistoricalBytes(
+			file.path, await readFile(file.path), target)), target, file.path);
+		file.sha256 = target;
+	}
+	assert.deepEqual(document, prior
+		, "A session probe cannot establish installed package support");
 });
 
 test("owned WIT public session history rejects unknown text, forged ancestors and overlapping edits", async () => {
 	for(const update of (await read()).updates)
 	{
-		const current = beforeOwnedWitPackage(update.path, await readFile(update.path, "utf8")), unknown = current + "\n/* unrelated */\n";
+		const current = beforeOwnedWitPackage(update.path
+			, await readFile(update.path, "utf8"), update.currentSha256);
+		const unknown = current + "\n/* unrelated */\n";
 		assert.equal(beforeOwnedWitSession(update.path, unknown), unknown);
 		assert.throws(() => reverseOwnedWitSessionUpdate(unknown, update));
 		for(const changed of [{ ...update, previousSha256: "0".repeat(64) }

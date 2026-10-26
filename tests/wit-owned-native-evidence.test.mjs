@@ -29,20 +29,39 @@ test("owned WIT native successor authenticates all sources and preserves install
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path], update.path);
 		assert.equal(update.currentSha256, record.sources[update.path], update.path);
-		const current = beforeOwnedWitSession(update.path, await readFile(update.path, "utf8"));
-		assert.equal(sha256(beforeOwnedWitNative(update.path, current)), update.previousSha256);
+		const current = beforeOwnedWitSession(update.path
+			, await readFile(update.path, "utf8"), update.currentSha256);
+		assert.equal(sha256(beforeOwnedWitNative(
+			update.path, current, update.previousSha256)), update.previousSha256);
 		assert.equal(beforeOwnedWitNative(update.path, current, update.currentSha256), current);
 	}
-	const current = beforeOwnedWitSession("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8"));
-	const prior = JSON.parse(beforeOwnedWitNative("docs/type-surface.v1.json", current));
-	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedWitSessionHistoricalBytes(file.path, await readFile(file.path)));
-	assert.deepEqual(JSON.parse(current), prior, "A private host cannot establish installed package support");
+	const inventory = record.updates.find(update =>
+		update.path === "docs/type-surface.v1.json");
+	assert.ok(inventory);
+	const current = beforeOwnedWitSession(inventory.path
+		, await readFile(inventory.path, "utf8"), inventory.currentSha256);
+	const document = JSON.parse(current);
+	const prior = JSON.parse(beforeOwnedWitNative(
+		inventory.path, current, inventory.previousSha256));
+	for(const evidence of prior.evidence) for(const file of evidence.files)
+	{
+		const target = document.evidence.find(item => item.id === evidence.id)
+			?.files.find(item => item.path === file.path)?.sha256;
+		assert.ok(target, `${evidence.id}: ${file.path}`);
+		assert.equal(sha256(ownedWitSessionHistoricalBytes(
+			file.path, await readFile(file.path), target)), target, file.path);
+		file.sha256 = target;
+	}
+	assert.deepEqual(document, prior
+		, "A private host cannot establish installed package support");
 });
 
 test("owned WIT native history rejects unknown text, forged ancestors and overlapping edits", async () => {
 	for(const update of (await read()).updates)
 	{
-		const current = beforeOwnedWitSession(update.path, await readFile(update.path, "utf8")), unknown = current + "\n/* unrelated */\n";
+		const current = beforeOwnedWitSession(update.path
+			, await readFile(update.path, "utf8"), update.currentSha256);
+		const unknown = current + "\n/* unrelated */\n";
 		assert.equal(beforeOwnedWitNative(update.path, unknown), unknown);
 		assert.throws(() => reverseOwnedWitNativeUpdate(unknown, update));
 		for(const changed of [{ ...update, previousSha256: "0".repeat(64) }
