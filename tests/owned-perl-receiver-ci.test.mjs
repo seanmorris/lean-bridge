@@ -7,11 +7,13 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
-import { beforeOwnedPhpWasmReceiver, ownedPhpWasmReceiverHistoricalBytes } from "./helpers/owned-php-wasm-receiver-history.mjs";
+import { bytesAtProducer, sourceAtProducer } from "./helpers/producer-source.mjs";
 import { assertOwnedPerlReceiverCi, ownedPerlReceiverReports } from "./helpers/owned-perl-receiver-ci.mjs";
 import { beforeOwnedReceiverCiRepair, ownedReceiverCiRepairPath, ownedReceiverCiRepairBaseline
 	, ownedReceiverCiRepairPrevious, ownedReceiverCiRepairChangedPaths, ownedReceiverCiRepairAddedPaths
 	, ownedReceiverCiRepairHistoricalBytes, reverseOwnedReceiverCiRepair } from "./helpers/owned-receiver-ci-repair-history.mjs";
+
+const producer = "c1725cc2ed8122cf656bfc62446f36069987c53a";
 
 test("Perl receiver CI requires four complete ABI runs and thirteen reports", async () => {
 	const workflow = await readFile(".github/workflows/perl-consumer.yml", "utf8");
@@ -40,20 +42,31 @@ test("Perl receiver CI requires four complete ABI runs and thirteen reports", as
 
 test("receiver CI repair preserves frozen receipts and rejects unrelated source changes", async () => {
 	const record = JSON.parse(await readFile(ownedReceiverCiRepairPath, "utf8"));
+	assert.deepEqual(record, JSON.parse(sourceAtProducer(
+		producer, ownedReceiverCiRepairPath
+	)));
 	assert.equal(record.schemaVersion, 1); assert.equal(record.kind, "owned-receiver-ci-repair");
 	assert.equal(record.planNode, 1219); assert.equal(record.baselineRevision, ownedReceiverCiRepairBaseline);
 	assert.deepEqual(record.previous, ownedReceiverCiRepairPrevious);
-	const bytes = await readFile(record.previous.path), previous = JSON.parse(bytes);
+	const bytes = bytesAtProducer(
+		producer, record.previous.path, record.previous.sha256
+	), previous = JSON.parse(bytes);
 	assert.equal(sha256(bytes), record.previous.sha256);
 	assert.deepEqual(Object.keys(record.sources).sort(), [...Object.keys(previous.sources), ...ownedReceiverCiRepairAddedPaths].sort());
 	assert.deepEqual(record.updates.map(update => update.path), ownedReceiverCiRepairChangedPaths);
-	for(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(ownedPhpWasmReceiverHistoricalBytes(path, await readFile(path), digest)), digest, path);
+	for(const [path, digest] of Object.entries(record.sources))
+		assert.equal(sha256(bytesAtProducer(producer, path, digest))
+			, digest, path);
 	for(const update of record.updates)
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path]);
 		assert.equal(update.currentSha256, record.sources[update.path]);
-		const source = beforeOwnedPhpWasmReceiver(update.path, await readFile(update.path, "utf8"), update.currentSha256);
-		const prior = beforeOwnedReceiverCiRepair(update.path, source);
+		const source = sourceAtProducer(
+			producer, update.path, update.currentSha256
+		);
+		const prior = beforeOwnedReceiverCiRepair(
+			update.path, source, update.previousSha256
+		);
 		assert.equal(sha256(prior), update.previousSha256);
 		assert.equal(beforeOwnedReceiverCiRepair(update.path, prior), prior);
 		assert.equal(beforeOwnedReceiverCiRepair(update.path, source, update.currentSha256), source);
@@ -67,8 +80,13 @@ test("receiver CI repair preserves frozen receipts and rejects unrelated source 
 	}
 	const binary = Buffer.from([0, 255, 128, 192]);
 	assert.equal(ownedReceiverCiRepairHistoricalBytes("unrelated.bin", binary), binary);
-	const path = "docs/type-surface.v1.json", current = beforeOwnedPhpWasmReceiver(path, await readFile(path, "utf8"), record.sources[path]);
-	const prior = JSON.parse(beforeOwnedReceiverCiRepair(path, current));
-	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedPhpWasmReceiverHistoricalBytes(file.path, await readFile(file.path), record.sources[file.path]));
+	const path = "docs/type-surface.v1.json", current = sourceAtProducer(
+		producer, path, record.sources[path]
+	);
+	const prior = JSON.parse(beforeOwnedReceiverCiRepair(path, current
+		, record.updates.find(update => update.path === path)?.previousSha256));
+	for(const evidence of prior.evidence) for(const file of evidence.files)
+		file.sha256 = record.sources[file.path]
+			?? sha256(bytesAtProducer(producer, file.path));
 	assert.deepEqual(JSON.parse(current), prior);
 });
