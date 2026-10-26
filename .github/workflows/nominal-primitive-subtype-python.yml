@@ -26,6 +26,34 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
+          # Retain every producer commit while materializing only live source
+          # and the two immutable archives read by this acceptance cohort.
+          sparse-checkout: |
+            /*
+            !/*/
+            /.github/
+            /acceptance/
+            /config/
+            /containers/
+            /demos/
+            /nix/
+            /notices/
+            /patches/
+            /poc/
+            /schema/
+            /scripts/
+            /site/
+            /src/
+            /tests/
+            /docs/
+            !/docs/*
+            /docs/type-surface.v1.json
+            /docs/consumer-support.v1.json
+            /docs/evidence/
+            !/docs/evidence/*
+            /docs/evidence/nominal-primitive-subtype-python-20261014/
+            /docs/evidence/nominal-primitive-subtype-npm-20261014/
+          sparse-checkout-cone-mode: false
       - name: Install Node.js
         uses: actions/setup-node@v6
         with:

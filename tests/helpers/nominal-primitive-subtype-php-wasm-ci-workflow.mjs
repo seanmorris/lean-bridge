@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertNominalPrimitiveSubtypeHistoryCheckout } from "./nominal-primitive-subtype-history-checkout.mjs";
 import { assertWorkflowRunBudget, workflowRunScalars } from "./native-observation-split.mjs";
 
 /**
@@ -37,7 +38,7 @@ export const assertNominalPrimitiveSubtypePhpWasmWorkflow = source => {
 		, "Enforce installed primitive-base nominal PHP-Wasm acceptance"
 	]);
 	const step = name => source.split("      - name: " + name + "\n")[1].split("      - name: ")[0];
-	assert.equal(step(names[0]), "        uses: actions/checkout@v6\n        with:\n          fetch-depth: 0\n          persist-credentials: false\n");
+	assertNominalPrimitiveSubtypeHistoryCheckout(step(names[0]));
 	assert.equal(step(names[1]), '        uses: actions/setup-node@v6\n        with:\n          node-version: "22"\n          cache: npm\n');
 	assert.equal(step(names[2]), "        uses: cachix/install-nix-action@v31\n");
 	assert.equal(step(names[3]), "        uses: actions/cache@v5\n        with:\n          path: |\n            .toolchains\n            build/php-wasm-sdk\n            build/php-wasm-host\n          key: nominal-primitive-subtype-php-wasm-${{ runner.os }}-${{ hashFiles('flake.lock', 'lean-toolchain', 'scripts/bootstrap-toolchains.sh', 'scripts/bootstrap-php-wasm-ci.sh', 'poc/lean-link-spike/bindings/php-wasm.package.json') }}\n");

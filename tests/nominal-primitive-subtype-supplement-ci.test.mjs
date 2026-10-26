@@ -7,11 +7,16 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
+import { assertNominalPrimitiveSubtypeHistoryCheckout } from "./helpers/nominal-primitive-subtype-history-checkout.mjs";
 
 const path
 	= ".github/workflows/nominal-primitive-subtype-supplement.yml";
 
 const assertWorkflow = source => {
+	const checkout = source.split(
+		"      - name: Check out the exact revision and original evidence history\n"
+	)[1].split("      - name: ")[0];
+	assertNominalPrimitiveSubtypeHistoryCheckout(checkout);
 	for(const required of [
 		"  push:\n", "  pull_request:\n", "  workflow_dispatch:\n"
 		, "contents: read", "cancel-in-progress: true"

@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertNominalPrimitiveSubtypeHistoryCheckout } from "./nominal-primitive-subtype-history-checkout.mjs";
 import { assertWorkflowRunBudget, workflowRunScalars } from "./native-observation-split.mjs";
 
 export const nominalPrimitiveSubtypePerlToolchains = Object.freeze(["5.36.3 threaded", "5.36.3 unthreaded", "5.38.2 threaded", "5.38.2 unthreaded"]);
@@ -39,7 +40,7 @@ export const assertNominalPrimitiveSubtypePerlWorkflow = source => {
 		, "Enforce installed primitive-base Perl acceptance"
 	]);
 	const step = name => source.split("      - name: " + name + "\n")[1].split("      - name: ")[0];
-	assert.equal(step(names[0]), "        uses: actions/checkout@v6\n        with:\n          fetch-depth: 0\n          persist-credentials: false\n");
+	assertNominalPrimitiveSubtypeHistoryCheckout(step(names[0]));
 	assert.equal(step(names[1]), '        uses: actions/setup-node@v6\n        with:\n          node-version: "22"\n          cache: npm\n');
 	assert.equal(step(names[2]), "        run: npm ci --ignore-scripts --no-audit --no-fund\n");
 	assert.equal(step(names[3]), "        uses: ./.github/actions/bounded-apt\n        timeout-minutes: 1\n");

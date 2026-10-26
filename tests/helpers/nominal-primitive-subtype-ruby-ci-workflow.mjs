@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertNominalPrimitiveSubtypeHistoryCheckout } from "./nominal-primitive-subtype-history-checkout.mjs";
 import { assertWorkflowRunBudget, workflowRunScalars } from "./native-observation-split.mjs";
 
 /**
@@ -33,7 +34,7 @@ export const assertNominalPrimitiveSubtypeRubyWorkflow = source => {
 		, "Enforce installed primitive-base Ruby acceptance"
 	]);
 	const step = name => source.split("      - name: " + name + "\n")[1].split("      - name: ")[0];
-	assert.equal(step(names[0]), "        uses: actions/checkout@v6\n        with:\n          fetch-depth: 0\n          persist-credentials: false\n");
+	assertNominalPrimitiveSubtypeHistoryCheckout(step(names[0]));
 	assert.equal(step(names[1]), '        uses: actions/setup-node@v6\n        with:\n          node-version: "22"\n          cache: npm\n');
 	assert.equal(step(names[2]), "        uses: ruby/setup-ruby@v1\n        with:\n          ruby-version: '3.3.12'\n");
 	assert.equal(step(names[3]), "        uses: ./.github/actions/bounded-apt\n        timeout-minutes: 1\n");

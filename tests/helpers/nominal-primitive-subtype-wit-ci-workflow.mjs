@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertNominalPrimitiveSubtypeHistoryCheckout } from "./nominal-primitive-subtype-history-checkout.mjs";
 import { isolatedWasmtimeCapiBootstrap } from "./wasmtime-capi-bootstrap.mjs";
 import { assertWorkflowRunBudget, workflowRunScalars } from "./native-observation-split.mjs";
 
@@ -45,7 +46,7 @@ export const assertNominalPrimitiveSubtypeWitWorkflow = source => {
 		, "Enforce installed primitive-base WIT acceptance"
 	]);
 	const step = name => source.split("      - name: " + name + "\n")[1].split("      - name: ")[0];
-	assert.equal(step(names[0]), "        uses: actions/checkout@v6\n        with:\n          fetch-depth: 0\n          persist-credentials: false\n");
+	assertNominalPrimitiveSubtypeHistoryCheckout(step(names[0]));
 	assert.equal(step(names[1]), '        uses: actions/setup-node@v6\n        with:\n          node-version: "22"\n          cache: npm\n');
 	assert.equal(step(names[2]), "        uses: ./.github/actions/bounded-apt\n        timeout-minutes: 1\n");
 	assert.equal(step(names[3]), "        timeout-minutes: 20\n        run: |\n          sudo apt-get update\n          sudo apt-get install -y build-essential cmake git jq libgmp-dev libuv1-dev m4 pkg-config ripgrep xz-utils zstd\n");

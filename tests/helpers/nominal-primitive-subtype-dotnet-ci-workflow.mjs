@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertNominalPrimitiveSubtypeHistoryCheckout } from "./nominal-primitive-subtype-history-checkout.mjs";
 import { assertWorkflowRunBudget, workflowRunScalars } from "./native-observation-split.mjs";
 
 /**
@@ -41,7 +42,7 @@ export const assertNominalPrimitiveSubtypeDotnetWorkflow = source => {
 		, "Enforce installed primitive-base .NET acceptance"
 	]);
 	const step = name => source.split("      - name: " + name + "\n")[1].split("      - name: ")[0];
-	assert.equal(step(names[0]), "        uses: actions/checkout@v6\n        with:\n          fetch-depth: 0\n          persist-credentials: false\n");
+	assertNominalPrimitiveSubtypeHistoryCheckout(step(names[0]));
 	assert.equal(step(names[1]), '        uses: actions/setup-node@v6\n        with:\n          node-version: "22"\n          cache: npm\n');
 	assert.equal(step(names[2]), "        uses: ./.github/actions/bounded-apt\n        timeout-minutes: 1\n");
 	assert.equal(step(names[5]), "        timeout-minutes: 20\n        uses: actions/setup-dotnet@v6\n        env:\n          DOTNET_INSTALL_DIR: ${{ runner.temp }}/lean-bridge-nominal-primitive-dotnet-8.0.424\n        with:\n          dotnet-version: '8.0.424'\n");
