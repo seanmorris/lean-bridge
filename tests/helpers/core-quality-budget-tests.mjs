@@ -22,9 +22,9 @@ const assertCoreQualityBudget = source => {
 	assert.deepEqual(timeouts, [30, 180, 10]
 		, "Static, contract-shard, and aggregate jobs retain explicit bounds");
 	assert.match(source
-		, /strategy:\n {6}fail-fast: false\n {6}matrix:\n {8}shard: \[1, 2, 3, 4, 5, 6\]/u
-		, "Core must run one closed six-shard matrix without cancelling siblings");
-	assert.match(source, /name: Contract shard \$\{\{ matrix\.shard \}\}\/6/u
+		, /strategy:\n {6}fail-fast: false\n {6}max-parallel: 6\n {6}matrix:\n {8}shard: \[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12\]/u
+		, "Core must run one closed twelve-shard matrix with at most six concurrent jobs and without cancelling siblings");
+	assert.match(source, /name: Contract shard \$\{\{ matrix\.shard \}\}\/12/u
 		, "Every shard must expose its fixed denominator in the hosted job name");
 	assert.equal([...source.matchAll(/^\s+npm run env:check:core\s*$/gmu)].length, 1
 		, "Core inventory must execute exactly once");
@@ -32,7 +32,7 @@ const assertCoreQualityBudget = source => {
 		, "Core lint must execute exactly once");
 	assert.equal([...source.matchAll(/^\s+npm run typecheck\s*$/gmu)].length, 1
 		, "Core checked JavaScript must execute exactly once");
-	assert.equal([...source.matchAll(/^\s+bash scripts\/run-test-profile\.sh contract \\\n\s+--shard "\$\{\{ matrix\.shard \}\}\/6" \\\n\s+--shard-manifest "build\/core-shards\/core-shard-\$\{\{ matrix\.shard \}\}\.json"\s*$/gmu)].length, 1
+	assert.equal([...source.matchAll(/^\s+bash scripts\/run-test-profile\.sh contract \\\n\s+--shard "\$\{\{ matrix\.shard \}\}\/12" \\\n\s+--shard-manifest "build\/core-shards\/core-shard-\$\{\{ matrix\.shard \}\}\.json"\s*$/gmu)].length, 1
 		, "Every matrix cell must execute its exact contract shard");
 	assert.doesNotMatch(source, /^\s+npm run check:core\s*$/mu
 		, "Static checks and contract shards must not be recombined in one timed job");
@@ -87,7 +87,7 @@ const assertCoreProcessBudget = (source, shards) => {
 	assert.match(source, /const selected = manifest\?\.selection\.files \?\? complete/u
 		, "The runner must execute the exact authenticated selection");
 	assert.match(source, /await writeFile\(shardManifestPath, canonicalJson\(manifest\)\)/u);
-	assert.match(shards, /export const coreContractShardCount = 6;/u);
+	assert.match(shards, /export const coreContractShardCount = 12;/u);
 	assert.match(shards, /position % coreContractShardCount === index - 1/u);
 	assert.match(shards, /assert\.deepEqual\(files\.toSorted\(\), paths\)/u
 		, "The aggregate must require a disjoint full-file union");
@@ -196,14 +196,15 @@ test("Core quality has bounded static, sharded contract, and aggregate gates", a
 	assertCoreQualityBudget(source);
 	for(const [index, changed] of [
 		source.replace("timeout-minutes: 180", "timeout-minutes: 90")
-		, source.replace("shard: [1, 2, 3, 4, 5, 6]", "shard: [1, 2, 3, 4, 5]")
-		, source.replace("shard: [1, 2, 3, 4, 5, 6]", "shard: [1, 2, 3, 4, 5, 5]")
-		, source.replace("${{ matrix.shard }}/6", "${{ matrix.shard }}/5")
+		, source.replace("shard: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]", "shard: [1, 2, 3, 4, 5, 6]")
+		, source.replace("shard: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]", "shard: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 11]")
+		, source.replace("${{ matrix.shard }}/12", "${{ matrix.shard }}/11")
 		, source.replace("fail-fast: false", "fail-fast: true")
+		, source.replace("max-parallel: 6", "max-parallel: 12")
 		, source.replace("npm run env:check:core", "npm run lint")
 		, source.replace("npm run typecheck", "npm run lint")
-		, source.replace('--shard "${{ matrix.shard }}/6"'
-			, '--test-name-pattern "${{ matrix.shard }}/6"')
+		, source.replace('--shard "${{ matrix.shard }}/12"'
+			, '--test-name-pattern "${{ matrix.shard }}/12"')
 		, source.replace("fetch-depth: 0", "fetch-depth: 1")
 		, source.replace("persist-credentials: false", "persist-credentials: true")
 		, source.replace("            tests\n", "            tests/helpers\n")
@@ -279,15 +280,15 @@ test("Core shard manifests cover every contract file exactly once", async () => 
 		coreContractShardManifest(paths, label));
 	const accepted = verifyCoreContractShardManifests(paths, manifests);
 	assert.deepEqual(accepted, {
-		schemaVersion: 1, partition: "sorted-index-modulo-v1", shards: 6
+		schemaVersion: 1, partition: "sorted-index-modulo-v1", shards: 12
 		, contractFiles: paths.length, contractSha256: manifests[0].contract.sha256
 	});
 	assert.deepEqual(manifests.map(item => item.selection.count)
-		, Array.from({ length: 6 }, (_, index) =>
-			Math.ceil((paths.length - index) / 6)));
+		, Array.from({ length: 12 }, (_, index) =>
+			Math.ceil((paths.length - index) / 12)));
 	for(const mutate of [
 		values => values.pop()
-		, values => { values[5] = structuredClone(values[4]); }
+		, values => { values[11] = structuredClone(values[10]); }
 		, values => { values[0].selection.files[0] = values[1].selection.files[0]; }
 		, values => { values[0].contract.sha256 = "0".repeat(64); }
 		, values => { values[0].unexpected = true; }
@@ -326,11 +327,11 @@ test("Core aggregate authenticates every manifest from an evidence-free sparse c
 		, { cwd: checkout, encoding: "utf8", stdio: "pipe", maxBuffer: 1024 * 1024, timeout: 30000 });
 	assert.deepEqual(JSON.parse(verify())
 		, verifyCoreContractShardManifests(paths, manifests));
-	t.diagnostic(`Complete sparse aggregate: ${paths.length} contract files across six shards at ${revision}`);
+	t.diagnostic(`Complete sparse aggregate: ${paths.length} contract files across twelve shards at ${revision}`);
 	const changed = structuredClone(manifests[0]);
 	changed.selection.files.pop();
 	await writeFile(join(manifestDirectory, "core-shard-1.json"), canonicalJson(changed));
-	assert.throws(verify, /Core shard 1\/6/u);
+	assert.throws(verify, /Core shard 1\/12/u);
 });
 
 test("checked-record evidence runs in bounded process-isolated partitions", async () => {

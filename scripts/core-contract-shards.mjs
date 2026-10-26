@@ -9,7 +9,7 @@ import { relative, resolve } from "node:path";
 import { groupRepositoryTests } from "../src/adoption/test-profiles.mjs";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 
-export const coreContractShardCount = 6;
+export const coreContractShardCount = 12;
 export const coreContractShardLabels = Object.freeze(
 	Array.from({ length: coreContractShardCount }
 		, (_, index) => `${index + 1}/${coreContractShardCount}`));
@@ -58,7 +58,7 @@ export const collectCoreContractTestPaths = async (root = resolve(".")) => {
  * Construct one exact shard manifest from the complete contract profile.
  *
  * @param paths - Every sorted Core contract test path.
- * @param label - One-based shard label `k/6`.
+ * @param label - One-based shard label `k/12`.
  */
 export const coreContractShardManifest = (paths, label) => {
 	assertPaths(paths);

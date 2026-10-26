@@ -31,7 +31,7 @@ if(arguments_.length)
 		|| arguments_[2] !== "--shard-manifest" || requested !== "contract"
 		|| !coreContractShardLabels.includes(arguments_[1])
 		|| !arguments_[3] || /[\0\r\n]/u.test(arguments_[3])) {
-		process.stderr.write("Usage: run-test-profile.mjs [profile] [--shard <1/6|2/6|3/6|4/6|5/6|6/6> --shard-manifest <path>]\n");
+		process.stderr.write(`Usage: run-test-profile.mjs [profile] [--shard <${coreContractShardLabels.join("|")}> --shard-manifest <path>]\n`);
 		process.exit(64);
 		}
 	shard = arguments_[1]; shardManifestPath = resolve(arguments_[3]);
