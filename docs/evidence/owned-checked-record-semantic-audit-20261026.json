@@ -1,0 +1,1294 @@
+{
+  "boundary": "This joins exact retained consumer source to executed hosted reports. The complete aligned matrix verifier separately authenticates package bytes, source-free installation, API records, artifact ZIPs and report structure. The audit covers the tested acyclic Booking, Window, Claim, Ticket and Grant corpus; it does not claim recursive owned graphs, retained or asynchronous callbacks, arbitrary predicates, dispatch cost or peak memory.",
+  "coverage": {
+    "consumerSources": 25,
+    "executedCells": 52,
+    "lanes": 11,
+    "profiles": 17,
+    "routes": 44
+  },
+  "kind": "owned-checked-record-semantic-audit-v1",
+  "lanes": [
+    {
+      "index": {
+        "path": "docs/evidence/owned-checked-record-native-hosted-20261025-aligned/index.json",
+        "sha256": "18da6d498baad9a45f39a46f8d977824db27646d726de689f946bf1f643fabe7"
+      },
+      "lane": "native",
+      "producerCommit": "9e571b4214df98e1b8d0319f24fe7b6729ab34ba",
+      "profiles": [
+        "c",
+        "cpp"
+      ],
+      "report": {
+        "bytes": 415504,
+        "path": "docs/evidence/owned-checked-record-native-hosted-20261025-aligned/hosted/output/owned-checked-record-native-packaging/report.json",
+        "sha256": "cf9a77fccc53505fe8cc81e1553659a3528dadb303973dac06a50093dca3a9ff"
+      },
+      "routes": [
+        {
+          "mode": "full",
+          "profiles": {
+            "c": {
+              "checks": 928,
+              "consumerSha256": "078331d85c63142a5ef5bd465ee868b997a343e22609261d805c5963797f91f7",
+              "executions": 1
+            },
+            "cpp": {
+              "checks": 197,
+              "consumerSha256": "374b91f33527c46fd5ea435e517d66b9056cc1842dd7591defb48c99e272a763",
+              "executions": 1
+            }
+          },
+          "route": "ordinary-full"
+        },
+        {
+          "mode": "result-only",
+          "profiles": {
+            "c": {
+              "checks": 14,
+              "consumerSha256": "d63e0f4fc99b804abcdf53582f29bd66cbbc81a737d57896b370bc78d1b9340f",
+              "executions": 1
+            },
+            "cpp": {
+              "checks": 3,
+              "consumerSha256": "c97173d1b8c82cc061b67c50c242a9c8bab4dac302f480833a53ff5b8dd7ba03",
+              "executions": 1
+            }
+          },
+          "route": "ordinary-result-only"
+        },
+        {
+          "mode": "full",
+          "profiles": {
+            "c": {
+              "checks": 928,
+              "consumerSha256": "078331d85c63142a5ef5bd465ee868b997a343e22609261d805c5963797f91f7",
+              "executions": 1
+            },
+            "cpp": {
+              "checks": 197,
+              "consumerSha256": "374b91f33527c46fd5ea435e517d66b9056cc1842dd7591defb48c99e272a763",
+              "executions": 1
+            }
+          },
+          "route": "reviewed-full"
+        },
+        {
+          "mode": "result-only",
+          "profiles": {
+            "c": {
+              "checks": 14,
+              "consumerSha256": "d63e0f4fc99b804abcdf53582f29bd66cbbc81a737d57896b370bc78d1b9340f",
+              "executions": 1
+            },
+            "cpp": {
+              "checks": 3,
+              "consumerSha256": "c97173d1b8c82cc061b67c50c242a9c8bab4dac302f480833a53ff5b8dd7ba03",
+              "executions": 1
+            }
+          },
+          "route": "reviewed-result-only"
+        }
+      ],
+      "sources": [
+        {
+          "bytes": 22939,
+          "mode": "full",
+          "operations": {
+            "claimClosure": 10,
+            "claimFor": 2,
+            "echoBooking": 3,
+            "echoClaims": 14,
+            "newTicket": 1,
+            "pairClaim": 5,
+            "retain": 19,
+            "transferClaim": 2,
+            "transferPairClaim": 3,
+            "transferWithClaimCallback": 7,
+            "withClaimCallback": 13
+          },
+          "path": "tests/fixtures/structured-types/owned-checked-record-installed.c",
+          "profile": "c",
+          "sha256": "078331d85c63142a5ef5bd465ee868b997a343e22609261d805c5963797f91f7"
+        },
+        {
+          "bytes": 1549,
+          "mode": "result-only",
+          "operations": {
+            "claimClosure": 0,
+            "claimFor": 2,
+            "echoBooking": 0,
+            "echoClaims": 0,
+            "newTicket": 1,
+            "pairClaim": 0,
+            "retain": 0,
+            "transferClaim": 0,
+            "transferPairClaim": 0,
+            "transferWithClaimCallback": 0,
+            "withClaimCallback": 0
+          },
+          "path": "tests/fixtures/structured-types/owned-checked-record-result-only.c",
+          "profile": "c",
+          "sha256": "d63e0f4fc99b804abcdf53582f29bd66cbbc81a737d57896b370bc78d1b9340f"
+        },
+        {
+          "bytes": 7303,
+          "mode": "full",
+          "operations": {
+            "claimClosure": 1,
+            "claimFor": 1,
+            "echoBooking": 3,
+            "echoClaims": 4,
+            "newTicket": 5,
+            "pairClaim": 3,
+            "retain": 10,
+            "transferClaim": 2,
+            "transferPairClaim": 2,
+            "transferWithClaimCallback": 2,
+            "withClaimCallback": 5
+          },
+          "path": "tests/fixtures/structured-types/owned-checked-record-installed.cpp",
+          "profile": "cpp",
+          "sha256": "374b91f33527c46fd5ea435e517d66b9056cc1842dd7591defb48c99e272a763"
+        },
+        {
+          "bytes": 714,
+          "mode": "result-only",
+          "operations": {
+            "claimClosure": 0,
+            "claimFor": 1,
+            "echoBooking": 0,
+            "echoClaims": 0,
+            "newTicket": 1,
+            "pairClaim": 0,
+            "retain": 0,
+            "transferClaim": 0,
+            "transferPairClaim": 0,
+            "transferWithClaimCallback": 0,
+            "withClaimCallback": 0
+          },
+          "path": "tests/fixtures/structured-types/owned-checked-record-result-only.cpp",
+          "profile": "cpp",
+          "sha256": "c97173d1b8c82cc061b67c50c242a9c8bab4dac302f480833a53ff5b8dd7ba03"
+        }
+      ]
+    },
+    {
+      "index": {
+        "path": "docs/evidence/owned-checked-record-perl-hosted-20261025-aligned/index.json",
+        "sha256": "0ff15f3158d7106f2091a239e0b3cb24bfc778a939f1b74eb25d023cbea6713b"
+      },
+      "lane": "perl",
+      "producerCommit": "9e571b4214df98e1b8d0319f24fe7b6729ab34ba",
+      "profiles": [
+        "perl"
+      ],
+      "report": {
+        "bytes": 241470,
+        "path": "docs/evidence/owned-checked-record-perl-hosted-20261025-aligned/hosted/output/owned-checked-record-perl-packaging/report.json",
+        "sha256": "69dbc61b95fa30a693178d06487ad6f118a1258534bec3c1ea9161c9de6a2d83"
+      },
+      "routes": [
+        {
+          "mode": "full",
+          "profiles": {
+            "perl": {
+              "checks": 202,
+              "consumerSha256": "b87c34624102dd6ff08a282fd9be4b0bac1eeb22682ac74af7f78741048645c9",
+              "executions": 8
+            }
+          },
+          "route": "ordinary-full"
+        },
+        {
+          "mode": "result-only",
+          "profiles": {
+            "perl": {
+              "checks": 9,
+              "consumerSha256": "ae9402cc4d05ba4809c3605490d11216310d5bd31c6030f1a27485dd20d39c7d",
+              "executions": 8
+            }
+          },
+          "route": "ordinary-result-only"
+        },
+        {
+          "mode": "full",
+          "profiles": {
+            "perl": {
+              "checks": 202,
+              "consumerSha256": "b87c34624102dd6ff08a282fd9be4b0bac1eeb22682ac74af7f78741048645c9",
+              "executions": 8
+            }
+          },
+          "route": "reviewed-full"
+        },
+        {
+          "mode": "result-only",
+          "profiles": {
+            "perl": {
+              "checks": 9,
+              "consumerSha256": "ae9402cc4d05ba4809c3605490d11216310d5bd31c6030f1a27485dd20d39c7d",
+              "executions": 8
+            }
+          },
+          "route": "reviewed-result-only"
+        }
+      ],
+      "sources": [
+        {
+          "bytes": 10327,
+          "mode": "full",
+          "operations": {
+            "claimClosure": 1,
+            "claimFor": 1,
+            "echoBooking": 3,
+            "echoClaims": 4,
+            "newTicket": 5,
+            "pairClaim": 3,
+            "retain": 24,
+            "transferClaim": 2,
+            "transferPairClaim": 2,
+            "transferWithClaimCallback": 3,
+            "withClaimCallback": 6
+          },
+          "path": "tests/fixtures/structured-types/owned-checked-record-installed.pl",
+          "profile": "perl",
+          "sha256": "b87c34624102dd6ff08a282fd9be4b0bac1eeb22682ac74af7f78741048645c9"
+        },
+        {
+          "bytes": 1053,
+          "mode": "result-only",
+          "operations": {
+            "claimClosure": 0,
+            "claimFor": 1,
+            "echoBooking": 0,
+            "echoClaims": 0,
+            "newTicket": 1,
+            "pairClaim": 0,
+            "retain": 0,
+            "transferClaim": 0,
+            "transferPairClaim": 0,
+            "transferWithClaimCallback": 0,
+            "withClaimCallback": 0
+          },
+          "path": "tests/fixtures/structured-types/owned-checked-record-result-only.pl",
+          "profile": "perl",
+          "sha256": "ae9402cc4d05ba4809c3605490d11216310d5bd31c6030f1a27485dd20d39c7d"
+        }
+      ]
+    },
+    {
+      "index": {
+        "path": "docs/evidence/owned-checked-record-python-hosted-20261025-aligned/index.json",
+        "sha256": "cf4126841375fd468401e7f0e153156989edb0160779bfa15711beda05999ce4"
+      },
+      "lane": "python",
+      "producerCommit": "9e571b4214df98e1b8d0319f24fe7b6729ab34ba",
+      "profiles": [
+        "python"
+      ],
+      "report": {
+        "bytes": 170643,
+        "path": "docs/evidence/owned-checked-record-python-hosted-20261025-aligned/hosted/output/owned-checked-record-language-packaging/report.json",
+        "sha256": "49ec0f8c049e138d9d56ceb96d45c0d220a7b01307776e382a9791468656682a"
+      },
+      "routes": [
+        {
+          "mode": "full",
+          "profiles": {
+            "python": {
+              "checks": 219,
+              "consumerSha256": "7f49311c20febb75fc924ee25db27ec64ee525028a853ac39831ff4c35922c8f",
+              "executions": 1
+            }
+          },
+          "route": "ordinary-full"
+        },
+        {
+          "mode": "result-only",
+          "profiles": {
+            "python": {
+              "checks": 5,
+              "consumerSha256": "b1e0b1cbb7b25387d6897a9b723a42de919ebf5bc1f50aa2c28e3dd07c6dc227",
+              "executions": 1
+            }
+          },
+          "route": "ordinary-result-only"
+        },
+        {
+          "mode": "full",
+          "profiles": {
+            "python": {
+              "checks": 219,
+              "consumerSha256": "7f49311c20febb75fc924ee25db27ec64ee525028a853ac39831ff4c35922c8f",
+              "executions": 1
+            }
+          },
+          "route": "reviewed-full"
+        },
+        {
+          "mode": "result-only",
+          "profiles": {
+            "python": {
+              "checks": 5,
+              "consumerSha256": "b1e0b1cbb7b25387d6897a9b723a42de919ebf5bc1f50aa2c28e3dd07c6dc227",
+              "executions": 1
+            }
+          },
+          "route": "reviewed-result-only"
+        }
+      ],
+      "sources": [
+        {
+          "bytes": 10651,
+          "mode": "full",
+          "operations": {
+            "claimClosure": 1,
+            "claimFor": 1,
+            "echoBooking": 3,
+            "echoClaims": 4,
+            "newTicket": 7,
+            "pairClaim": 3,
+            "retain": 23,
+            "transferClaim": 4,
+            "transferPairClaim": 2,
+            "transferWithClaimCallback": 3,
+            "withClaimCallback": 8
+          },
+          "path": "tests/fixtures/structured-types/owned-checked-record-python.py",
+          "profile": "python",
+          "sha256": "7f49311c20febb75fc924ee25db27ec64ee525028a853ac39831ff4c35922c8f"
+        },
+        {
+          "bytes": 720,
+          "mode": "result-only",
+          "operations": {
+            "claimClosure": 0,
+            "claimFor": 1,
+            "echoBooking": 0,
+            "echoClaims": 0,
+            "newTicket": 1,
+            "pairClaim": 0,
+            "retain": 0,
+            "transferClaim": 0,
+            "transferPairClaim": 0,
+            "transferWithClaimCallback": 0,
+            "withClaimCallback": 0
+          },
+          "path": "tests/fixtures/structured-types/owned-checked-record-result-only-python.py",
+          "profile": "python",
+          "sha256": "b1e0b1cbb7b25387d6897a9b723a42de919ebf5bc1f50aa2c28e3dd07c6dc227"
+        }
+      ]
+    },
+    {
+      "index": {
+        "path": "docs/evidence/owned-checked-record-ruby-hosted-20261025-aligned/index.json",
+        "sha256": "a19b6e7d6e14726af2beec855719d900058c5e26efbdd499a7f9bf1c741abbb9"
+      },
+      "lane": "ruby",
+      "producerCommit": "9e571b4214df98e1b8d0319f24fe7b6729ab34ba",
+      "profiles": [
+        "ruby"
+      ],
+      "report": {
+        "bytes": 168597,
+        "path": "docs/evidence/owned-checked-record-ruby-hosted-20261025-aligned/hosted/output/owned-checked-record-language-packaging/report.json",
+        "sha256": "6a786a692256bfe267c6b9dd1a1e8a7c38db5e2674a41696a0fdad58f3b84e08"
+      },
+      "routes": [
+        {
+          "mode": "full",
+          "profiles": {
+            "ruby": {
+              "checks": 219,
+              "consumerSha256": "a55e86fbf55432cf34ee0e2593f7ea5bb80c94389dc1590798851a137fb20749",
+              "executions": 1
+            }
+          },
+          "route": "ordinary-full"
+        },
+        {
+          "mode": "result-only",
+          "profiles": {
+            "ruby": {
+              "checks": 5,
+              "consumerSha256": "bc741565c03098debca5510f6619715736702506aea5d393a71d973e39b8c83a",
+              "executions": 1
+            }
+          },
+          "route": "ordinary-result-only"
+        },
+        {
+          "mode": "full",
+          "profiles": {
+            "ruby": {
+              "checks": 219,
+              "consumerSha256": "a55e86fbf55432cf34ee0e2593f7ea5bb80c94389dc1590798851a137fb20749",
+              "executions": 1
+            }
+          },
+          "route": "reviewed-full"
+        },
+        {
+          "mode": "result-only",
+          "profiles": {
+            "ruby": {
+              "checks": 5,
+              "consumerSha256": "bc741565c03098debca5510f6619715736702506aea5d393a71d973e39b8c83a",
+              "executions": 1
+            }
+          },
+          "route": "reviewed-result-only"
+        }
+      ],
+      "sources": [
+        {
+          "bytes": 9838,
+          "mode": "full",
+          "operations": {
+            "claimClosure": 1,
+            "claimFor": 1,
+            "echoBooking": 3,
+            "echoClaims": 4,
+            "newTicket": 7,
+            "pairClaim": 3,
+            "retain": 23,
+            "transferClaim": 4,
+            "transferPairClaim": 2,
+            "transferWithClaimCallback": 3,
+            "withClaimCallback": 8
+          },
+          "path": "tests/fixtures/structured-types/owned-checked-record-ruby.rb",
+          "profile": "ruby",
+          "sha256": "a55e86fbf55432cf34ee0e2593f7ea5bb80c94389dc1590798851a137fb20749"
+        },
+        {
+          "bytes": 696,
+          "mode": "result-only",
+          "operations": {
+            "claimClosure": 0,
+            "claimFor": 1,
+            "echoBooking": 0,
+            "echoClaims": 0,
+            "newTicket": 1,
+            "pairClaim": 0,
+            "retain": 0,
+            "transferClaim": 0,
+            "transferPairClaim": 0,
+            "transferWithClaimCallback": 0,
+            "withClaimCallback": 0
+          },
+          "path": "tests/fixtures/structured-types/owned-checked-record-result-only-ruby.rb",
+          "profile": "ruby",
+          "sha256": "bc741565c03098debca5510f6619715736702506aea5d393a71d973e39b8c83a"
+        }
+      ]
+    },
+    {
+      "index": {
+        "path": "docs/evidence/owned-checked-record-rust-hosted-20261025-aligned/index.json",
+        "sha256": "3ff5d269cbc10a99964d38fb8aee8ab544b394c245d691634c6f43627fe37518"
+      },
+      "lane": "rust",
+      "producerCommit": "9e571b4214df98e1b8d0319f24fe7b6729ab34ba",
+      "profiles": [
+        "rust"
+      ],
+      "report": {
+        "bytes": 185101,
+        "path": "docs/evidence/owned-checked-record-rust-hosted-20261025-aligned/hosted/output/owned-checked-record-language-packaging/report.json",
+        "sha256": "69adc2c02321a9b4c4cd168c4d56da672126595dda04e8cc45ecbde1a859be7f"
+      },
+      "routes": [
+        {
+          "mode": "full",
+          "profiles": {
+            "rust": {
+              "checks": 218,
+              "consumerSha256": "b2d7ba85bfca3f24bec610b2b5b2d0a2f50de24920d0788c6a9c3074ff2265ee",
+              "executions": 1
+            }
+          },
+          "route": "ordinary-full"
+        },
+        {
+          "mode": "result-only",
+          "profiles": {
+            "rust": {
+              "checks": 3,
+              "consumerSha256": "18ca2ec119059cc5a590e885dea66620352baefad4390559815a6e8c557639cc",
+              "executions": 1
+            }
+          },
+          "route": "ordinary-result-only"
+        },
+        {
+          "mode": "full",
+          "profiles": {
+            "rust": {
+              "checks": 218,
+              "consumerSha256": "b2d7ba85bfca3f24bec610b2b5b2d0a2f50de24920d0788c6a9c3074ff2265ee",
+              "executions": 1
+            }
+          },
+          "route": "reviewed-full"
+        },
+        {
+          "mode": "result-only",
+          "profiles": {
+            "rust": {
+              "checks": 3,
+              "consumerSha256": "18ca2ec119059cc5a590e885dea66620352baefad4390559815a6e8c557639cc",
+              "executions": 1
+            }
+          },
+          "route": "reviewed-result-only"
+        }
+      ],
+      "sources": [
+        {
+          "bytes": 14632,
+          "mode": "full",
+          "operations": {
+            "claimClosure": 2,
+            "claimFor": 1,
+            "echoBooking": 4,
+            "echoClaims": 4,
+            "newTicket": 7,
+            "pairClaim": 5,
+            "retain": 30,
+            "transferClaim": 2,
+            "transferPairClaim": 2,
+            "transferWithClaimCallback": 2,
+            "withClaimCallback": 8
+          },
+          "path": "tests/fixtures/structured-types/owned-checked-record-rust.rs",
+          "profile": "rust",
+          "sha256": "b2d7ba85bfca3f24bec610b2b5b2d0a2f50de24920d0788c6a9c3074ff2265ee"
+        },
+        {
+          "bytes": 823,
+          "mode": "result-only",
+          "operations": {
+            "claimClosure": 0,
+            "claimFor": 1,
+            "echoBooking": 0,
+            "echoClaims": 0,
+            "newTicket": 1,
+            "pairClaim": 0,
+            "retain": 0,
+            "transferClaim": 0,
+            "transferPairClaim": 0,
+            "transferWithClaimCallback": 0,
+            "withClaimCallback": 0
+          },
+          "path": "tests/fixtures/structured-types/owned-checked-record-result-only-rust.rs",
+          "profile": "rust",
+          "sha256": "18ca2ec119059cc5a590e885dea66620352baefad4390559815a6e8c557639cc"
+        }
+      ]
+    },
+    {
+      "index": {
+        "path": "docs/evidence/owned-checked-record-dotnet-hosted-20261025-aligned/index.json",
+        "sha256": "87102e162fb12c0ee1e70ae1e549340a647d197cf9eb7af6511890b596182635"
+      },
+      "lane": "dotnet",
+      "producerCommit": "9e571b4214df98e1b8d0319f24fe7b6729ab34ba",
+      "profiles": [
+        "dotnet"
+      ],
+      "report": {
+        "bytes": 6630,
+        "path": "docs/evidence/owned-checked-record-dotnet-hosted-20261025-aligned/hosted/output/owned-checked-record-managed-packaging/dotnet.json",
+        "sha256": "7c00614644f2ad47269621ef2fe0c64a3c364f3d3279b5013d43b2203070e931"
+      },
+      "routes": [
+        {
+          "mode": "full",
+          "profiles": {
+            "dotnet": {
+              "checks": 190,
+              "consumerSha256": "46a4d50dd459acb43fc77e2e573e1ed79d1e1aaa3fa79bccfd937ea51a459d89",
+              "executions": 1
+            }
+          },
+          "route": "ordinary-full"
+        },
+        {
+          "mode": "result-only",
+          "profiles": {
+            "dotnet": {
+              "checks": 4,
+              "consumerSha256": "499f93bc714b3d30fabc7b76feea7aaf357585328f7130babccf12222fd16f01",
+              "executions": 1
+            }
+          },
+          "route": "ordinary-result-only"
+        },
+        {
+          "mode": "full",
+          "profiles": {
+            "dotnet": {
+              "checks": 190,
+              "consumerSha256": "46a4d50dd459acb43fc77e2e573e1ed79d1e1aaa3fa79bccfd937ea51a459d89",
+              "executions": 1
+            }
+          },
+          "route": "reviewed-full"
+        },
+        {
+          "mode": "result-only",
+          "profiles": {
+            "dotnet": {
+              "checks": 4,
+              "consumerSha256": "499f93bc714b3d30fabc7b76feea7aaf357585328f7130babccf12222fd16f01",
+              "executions": 1
+            }
+          },
+          "route": "reviewed-result-only"
+        }
+      ],
+      "sources": [
+        {
+          "bytes": 12957,
+          "mode": "full",
+          "operations": {
+            "claimClosure": 1,
+            "claimFor": 1,
+            "echoBooking": 3,
+            "echoClaims": 4,
+            "newTicket": 6,
+            "pairClaim": 3,
+            "retain": 20,
+            "transferClaim": 2,
+            "transferPairClaim": 2,
+            "transferWithClaimCallback": 8,
+            "withClaimCallback": 13
+          },
+          "path": "tests/fixtures/structured-types/owned-checked-record-dotnet.cs",
+          "profile": "dotnet",
+          "sha256": "46a4d50dd459acb43fc77e2e573e1ed79d1e1aaa3fa79bccfd937ea51a459d89"
+        },
+        {
+          "bytes": 726,
+          "mode": "result-only",
+          "operations": {
+            "claimClosure": 0,
+            "claimFor": 1,
+            "echoBooking": 0,
+            "echoClaims": 0,
+            "newTicket": 1,
+            "pairClaim": 0,
+            "retain": 0,
+            "transferClaim": 0,
+            "transferPairClaim": 0,
+            "transferWithClaimCallback": 0,
+            "withClaimCallback": 0
+          },
+          "path": "tests/fixtures/structured-types/owned-checked-record-result-only-dotnet.cs",
+          "profile": "dotnet",
+          "sha256": "499f93bc714b3d30fabc7b76feea7aaf357585328f7130babccf12222fd16f01"
+        }
+      ]
+    },
+    {
+      "index": {
+        "path": "docs/evidence/owned-checked-record-jvm-hosted-20261025-aligned/index.json",
+        "sha256": "e811cd58404141a0ba77af26ae7a9179a848cc2140a2cc4f12e98003c608bcca"
+      },
+      "lane": "jvm",
+      "producerCommit": "9e571b4214df98e1b8d0319f24fe7b6729ab34ba",
+      "profiles": [
+        "java",
+        "kotlin"
+      ],
+      "report": {
+        "bytes": 8575,
+        "path": "docs/evidence/owned-checked-record-jvm-hosted-20261025-aligned/hosted/output/owned-checked-record-managed-packaging/jvm.json",
+        "sha256": "f868128f8cf04db373e2053ed976e390e45d97b3f935b2e5235d41fcb28c7cc1"
+      },
+      "routes": [
+        {
+          "mode": "full",
+          "profiles": {
+            "java": {
+              "checks": 181,
+              "consumerSha256": "e1166b8845d6d9f3218b669002875aef4b89d44a26849faa9938ada31c6399d3",
+              "executions": 1
+            },
+            "kotlin": {
+              "checks": 177,
+              "consumerSha256": "5bf43b83c92beecc356d2e14c872a2f9ab64bb1881d74fa94003055749f73d63",
+              "executions": 1
+            }
+          },
+          "route": "ordinary-full"
+        },
+        {
+          "mode": "result-only",
+          "profiles": {
+            "java": {
+              "checks": 4,
+              "consumerSha256": "e6c60a630d3b1f8a34af86278c6ce33d90bb0d542c3e0f18291baa77987d15f5",
+              "executions": 1
+            },
+            "kotlin": {
+              "checks": 4,
+              "consumerSha256": "a8d9668b5c41009adfe3660b12da37f064f714b4a2f4e6ccdde77f95b860e296",
+              "executions": 1
+            }
+          },
+          "route": "ordinary-result-only"
+        },
+        {
+          "mode": "full",
+          "profiles": {
+            "java": {
+              "checks": 181,
+              "consumerSha256": "e1166b8845d6d9f3218b669002875aef4b89d44a26849faa9938ada31c6399d3",
+              "executions": 1
+            },
+            "kotlin": {
+              "checks": 177,
+              "consumerSha256": "5bf43b83c92beecc356d2e14c872a2f9ab64bb1881d74fa94003055749f73d63",
+              "executions": 1
+            }
+          },
+          "route": "reviewed-full"
+        },
+        {
+          "mode": "result-only",
+          "profiles": {
+            "java": {
+              "checks": 4,
+              "consumerSha256": "e6c60a630d3b1f8a34af86278c6ce33d90bb0d542c3e0f18291baa77987d15f5",
+              "executions": 1
+            },
+            "kotlin": {
+              "checks": 4,
+              "consumerSha256": "a8d9668b5c41009adfe3660b12da37f064f714b4a2f4e6ccdde77f95b860e296",
+              "executions": 1
+            }
+          },
+          "route": "reviewed-result-only"
+        }
+      ],
+      "sources": [
+        {
+          "bytes": 12567,
+          "mode": "full",
+          "operations": {
+            "claimClosure": 1,
+            "claimFor": 1,
+            "echoBooking": 3,
+            "echoClaims": 4,
+            "newTicket": 6,
+            "pairClaim": 3,
+            "retain": 18,
+            "transferClaim": 2,
+            "transferPairClaim": 2,
+            "transferWithClaimCallback": 8,
+            "withClaimCallback": 13
+          },
+          "path": "tests/fixtures/structured-types/owned-checked-record-java.java",
+          "profile": "java",
+          "sha256": "e1166b8845d6d9f3218b669002875aef4b89d44a26849faa9938ada31c6399d3"
+        },
+        {
+          "bytes": 792,
+          "mode": "result-only",
+          "operations": {
+            "claimClosure": 0,
+            "claimFor": 1,
+            "echoBooking": 0,
+            "echoClaims": 0,
+            "newTicket": 1,
+            "pairClaim": 0,
+            "retain": 0,
+            "transferClaim": 0,
+            "transferPairClaim": 0,
+            "transferWithClaimCallback": 0,
+            "withClaimCallback": 0
+          },
+          "path": "tests/fixtures/structured-types/owned-checked-record-result-only-java.java",
+          "profile": "java",
+          "sha256": "e6c60a630d3b1f8a34af86278c6ce33d90bb0d542c3e0f18291baa77987d15f5"
+        },
+        {
+          "bytes": 10941,
+          "mode": "full",
+          "operations": {
+            "claimClosure": 1,
+            "claimFor": 1,
+            "echoBooking": 3,
+            "echoClaims": 4,
+            "newTicket": 6,
+            "pairClaim": 3,
+            "retain": 17,
+            "transferClaim": 2,
+            "transferPairClaim": 2,
+            "transferWithClaimCallback": 8,
+            "withClaimCallback": 13
+          },
+          "path": "tests/fixtures/structured-types/owned-checked-record-kotlin.kt",
+          "profile": "kotlin",
+          "sha256": "5bf43b83c92beecc356d2e14c872a2f9ab64bb1881d74fa94003055749f73d63"
+        },
+        {
+          "bytes": 584,
+          "mode": "result-only",
+          "operations": {
+            "claimClosure": 0,
+            "claimFor": 1,
+            "echoBooking": 0,
+            "echoClaims": 0,
+            "newTicket": 1,
+            "pairClaim": 0,
+            "retain": 0,
+            "transferClaim": 0,
+            "transferPairClaim": 0,
+            "transferWithClaimCallback": 0,
+            "withClaimCallback": 0
+          },
+          "path": "tests/fixtures/structured-types/owned-checked-record-result-only-kotlin.kt",
+          "profile": "kotlin",
+          "sha256": "a8d9668b5c41009adfe3660b12da37f064f714b4a2f4e6ccdde77f95b860e296"
+        }
+      ]
+    },
+    {
+      "index": {
+        "path": "docs/evidence/owned-checked-record-php-hosted-20261025-aligned/index.json",
+        "sha256": "9afd15fa365fa26d529404140c83226eaedc5b6687b5437e663998dfaa0d6452"
+      },
+      "lane": "php",
+      "producerCommit": "9e571b4214df98e1b8d0319f24fe7b6729ab34ba",
+      "profiles": [
+        "php-native"
+      ],
+      "report": {
+        "bytes": 6775,
+        "path": "docs/evidence/owned-checked-record-php-hosted-20261025-aligned/hosted/output/owned-checked-record-managed-packaging/php.json",
+        "sha256": "f7dd5042c80a914169f5f97e2cfca900e47f83fa19dc787fde5f690bc9578034"
+      },
+      "routes": [
+        {
+          "mode": "full",
+          "profiles": {
+            "php-native": {
+              "checks": 180,
+              "consumerSha256": "50f83314cded9a9c317802f4bb53d30a8b1bb636f8b36c88d5e1f0947fbcca4b",
+              "executions": 1
+            }
+          },
+          "route": "ordinary-full"
+        },
+        {
+          "mode": "result-only",
+          "profiles": {
+            "php-native": {
+              "checks": 4,
+              "consumerSha256": "4f7d9e2170138cc2edcced6498174af61e1d1cc1942da8d37e4434d23b4a8bdb",
+              "executions": 1
+            }
+          },
+          "route": "ordinary-result-only"
+        },
+        {
+          "mode": "full",
+          "profiles": {
+            "php-native": {
+              "checks": 180,
+              "consumerSha256": "50f83314cded9a9c317802f4bb53d30a8b1bb636f8b36c88d5e1f0947fbcca4b",
+              "executions": 1
+            }
+          },
+          "route": "reviewed-full"
+        },
+        {
+          "mode": "result-only",
+          "profiles": {
+            "php-native": {
+              "checks": 4,
+              "consumerSha256": "4f7d9e2170138cc2edcced6498174af61e1d1cc1942da8d37e4434d23b4a8bdb",
+              "executions": 1
+            }
+          },
+          "route": "reviewed-result-only"
+        }
+      ],
+      "sources": [
+        {
+          "bytes": 10173,
+          "mode": "full",
+          "operations": {
+            "claimClosure": 2,
+            "claimFor": 2,
+            "echoBooking": 4,
+            "echoClaims": 5,
+            "newTicket": 7,
+            "pairClaim": 5,
+            "retain": 16,
+            "transferClaim": 3,
+            "transferPairClaim": 3,
+            "transferWithClaimCallback": 3,
+            "withClaimCallback": 9
+          },
+          "path": "tests/fixtures/structured-types/owned-checked-record-php.php",
+          "profile": "php-native",
+          "sha256": "50f83314cded9a9c317802f4bb53d30a8b1bb636f8b36c88d5e1f0947fbcca4b"
+        },
+        {
+          "bytes": 688,
+          "mode": "result-only",
+          "operations": {
+            "claimClosure": 0,
+            "claimFor": 2,
+            "echoBooking": 0,
+            "echoClaims": 0,
+            "newTicket": 2,
+            "pairClaim": 0,
+            "retain": 0,
+            "transferClaim": 0,
+            "transferPairClaim": 0,
+            "transferWithClaimCallback": 0,
+            "withClaimCallback": 0
+          },
+          "path": "tests/fixtures/structured-types/owned-checked-record-result-only-php.php",
+          "profile": "php-native",
+          "sha256": "4f7d9e2170138cc2edcced6498174af61e1d1cc1942da8d37e4434d23b4a8bdb"
+        }
+      ]
+    },
+    {
+      "index": {
+        "path": "docs/evidence/owned-checked-record-wit-hosted-20261025-aligned/index.json",
+        "sha256": "36002dfb64afec83c1e895028922d0deedab141177bcaf1f98bddee03c7de4d8"
+      },
+      "lane": "wit",
+      "producerCommit": "9e571b4214df98e1b8d0319f24fe7b6729ab34ba",
+      "profiles": [
+        "wit-wasi"
+      ],
+      "report": {
+        "bytes": 6653,
+        "path": "docs/evidence/owned-checked-record-wit-hosted-20261025-aligned/hosted/output/owned-checked-record-managed-packaging/wit.json",
+        "sha256": "42db2292763a19ba00cbc68f099f853b7282375265a56b5f22528ffedefc89db"
+      },
+      "routes": [
+        {
+          "mode": "full",
+          "profiles": {
+            "wit-wasi": {
+              "checks": 928,
+              "consumerSha256": "96dc47fa1082bd4a9962019f9bee9748c382b564df9e832ebcab425fc558c196",
+              "executions": 1
+            }
+          },
+          "route": "ordinary-full"
+        },
+        {
+          "mode": "result-only",
+          "profiles": {
+            "wit-wasi": {
+              "checks": 14,
+              "consumerSha256": "04357184d94362f7ce86e52a33c4fdf2b6617b07fdc6959e1f5b642af54377e6",
+              "executions": 1
+            }
+          },
+          "route": "ordinary-result-only"
+        },
+        {
+          "mode": "full",
+          "profiles": {
+            "wit-wasi": {
+              "checks": 928,
+              "consumerSha256": "96dc47fa1082bd4a9962019f9bee9748c382b564df9e832ebcab425fc558c196",
+              "executions": 1
+            }
+          },
+          "route": "reviewed-full"
+        },
+        {
+          "mode": "result-only",
+          "profiles": {
+            "wit-wasi": {
+              "checks": 14,
+              "consumerSha256": "04357184d94362f7ce86e52a33c4fdf2b6617b07fdc6959e1f5b642af54377e6",
+              "executions": 1
+            }
+          },
+          "route": "reviewed-result-only"
+        }
+      ],
+      "sources": [
+        {
+          "bytes": 22939,
+          "mode": "full",
+          "operations": {
+            "claimClosure": 10,
+            "claimFor": 2,
+            "echoBooking": 3,
+            "echoClaims": 14,
+            "newTicket": 1,
+            "pairClaim": 5,
+            "retain": 19,
+            "transferClaim": 2,
+            "transferPairClaim": 3,
+            "transferWithClaimCallback": 7,
+            "withClaimCallback": 13
+          },
+          "path": "tests/fixtures/structured-types/owned-checked-record-installed.c",
+          "profile": "wit-wasi",
+          "sha256": "078331d85c63142a5ef5bd465ee868b997a343e22609261d805c5963797f91f7"
+        },
+        {
+          "bytes": 1549,
+          "mode": "result-only",
+          "operations": {
+            "claimClosure": 0,
+            "claimFor": 2,
+            "echoBooking": 0,
+            "echoClaims": 0,
+            "newTicket": 1,
+            "pairClaim": 0,
+            "retain": 0,
+            "transferClaim": 0,
+            "transferPairClaim": 0,
+            "transferWithClaimCallback": 0,
+            "withClaimCallback": 0
+          },
+          "path": "tests/fixtures/structured-types/owned-checked-record-result-only.c",
+          "profile": "wit-wasi",
+          "sha256": "d63e0f4fc99b804abcdf53582f29bd66cbbc81a737d57896b370bc78d1b9340f"
+        }
+      ]
+    },
+    {
+      "index": {
+        "path": "docs/evidence/owned-checked-record-javascript-hosted-20261025-complete/index.json",
+        "sha256": "c85010a0079ec8815b3d83b7f203b7f2f60f92d656e284318935574a55c111ff"
+      },
+      "lane": "javascript",
+      "producerCommit": "ab133c88b7fe0ec2c18cb453bccbde203968f7c6",
+      "profiles": [
+        "node-javascript",
+        "node-typescript",
+        "browser-javascript",
+        "browser-react",
+        "browser-worker"
+      ],
+      "report": {
+        "bytes": 310651,
+        "path": "docs/evidence/owned-checked-record-javascript-hosted-20261025-complete/hosted/output/owned-checked-record-javascript-packaging/report.json",
+        "sha256": "8aa69e9f043282cc8bb23b15ce2807838673292ff5cafa0bd3244689c3660c33"
+      },
+      "routes": [
+        {
+          "mode": "full",
+          "profiles": {
+            "javascript": {
+              "checks": 30,
+              "executions": 1
+            }
+          },
+          "route": "ordinary-full"
+        },
+        {
+          "mode": "result-only",
+          "profiles": {
+            "javascript": {
+              "checks": 7,
+              "executions": 1
+            }
+          },
+          "route": "ordinary-result-only"
+        },
+        {
+          "mode": "full",
+          "profiles": {
+            "javascript": {
+              "checks": 30,
+              "executions": 1
+            }
+          },
+          "route": "reviewed-full"
+        },
+        {
+          "mode": "result-only",
+          "profiles": {
+            "javascript": {
+              "checks": 7,
+              "executions": 1
+            }
+          },
+          "route": "reviewed-result-only"
+        }
+      ],
+      "sources": [
+        {
+          "bytes": 18646,
+          "mode": "combined",
+          "operations": {
+            "claimClosure": 6,
+            "claimFor": 4,
+            "echoBooking": 3,
+            "echoClaims": 0,
+            "newTicket": 6,
+            "pairClaim": 2,
+            "retain": 41,
+            "transferClaim": 3,
+            "transferPairClaim": 0,
+            "transferWithClaimCallback": 0,
+            "withClaimCallback": 8
+          },
+          "path": "tests/owned-checked-record-javascript-packaging.test.mjs",
+          "profile": "javascript",
+          "sha256": "db880e22e58166972795dedebfdb065b143b357724c1ce3bb0e1e26d3a12f7f9"
+        }
+      ]
+    },
+    {
+      "index": {
+        "path": "docs/evidence/owned-checked-record-php-wasm-hosted-20261025-contexts/index.json",
+        "sha256": "86ecd4acae54c691cf2ee68b3166a1ffd52d7ca9759daa806de53a1ca777f3c8"
+      },
+      "lane": "php-wasm",
+      "producerCommit": "3f124208c4b8eb0c96dde5dde28ac5ec38540868",
+      "profiles": [
+        "php-wasm"
+      ],
+      "report": {
+        "bytes": 7451820,
+        "path": "docs/evidence/owned-checked-record-php-wasm-hosted-20261025-contexts/hosted/output/owned-checked-record-php-wasm/packages.json",
+        "sha256": "ffcb623fbe94c62c431e9b484118cfefc10f40a0fc0b1727df6df847f1d66a88"
+      },
+      "routes": [
+        {
+          "mode": "full",
+          "profiles": {
+            "php-wasm": {
+              "checks": 246,
+              "consumerSha256": "ca67f744050815ecb10a84867045a9718aed20debeb08888c681bc5c95fd69d3",
+              "executions": 16
+            }
+          },
+          "route": "ordinary-full"
+        },
+        {
+          "mode": "result-only",
+          "profiles": {
+            "php-wasm": {
+              "checks": 4,
+              "consumerSha256": "152b726f3f1308cb88faf56de0da49abd965775eada7ed8015524e7894bdd2f8",
+              "executions": 16
+            }
+          },
+          "route": "ordinary-result-only"
+        },
+        {
+          "mode": "full",
+          "profiles": {
+            "php-wasm": {
+              "checks": 246,
+              "consumerSha256": "ca67f744050815ecb10a84867045a9718aed20debeb08888c681bc5c95fd69d3",
+              "executions": 16
+            }
+          },
+          "route": "reviewed-full"
+        },
+        {
+          "mode": "result-only",
+          "profiles": {
+            "php-wasm": {
+              "checks": 4,
+              "consumerSha256": "152b726f3f1308cb88faf56de0da49abd965775eada7ed8015524e7894bdd2f8",
+              "executions": 16
+            }
+          },
+          "route": "reviewed-result-only"
+        }
+      ],
+      "sources": [
+        {
+          "bytes": 11646,
+          "mode": "full",
+          "operations": {
+            "claimClosure": 2,
+            "claimFor": 2,
+            "echoBooking": 5,
+            "echoClaims": 5,
+            "newTicket": 7,
+            "pairClaim": 5,
+            "retain": 19,
+            "transferClaim": 3,
+            "transferPairClaim": 3,
+            "transferWithClaimCallback": 3,
+            "withClaimCallback": 8
+          },
+          "path": "tests/fixtures/structured-types/owned-checked-record-php-wasm.php",
+          "profile": "php-wasm",
+          "sha256": "ca67f744050815ecb10a84867045a9718aed20debeb08888c681bc5c95fd69d3"
+        },
+        {
+          "bytes": 1156,
+          "mode": "result-only",
+          "operations": {
+            "claimClosure": 0,
+            "claimFor": 2,
+            "echoBooking": 0,
+            "echoClaims": 0,
+            "newTicket": 2,
+            "pairClaim": 0,
+            "retain": 0,
+            "transferClaim": 0,
+            "transferPairClaim": 0,
+            "transferWithClaimCallback": 0,
+            "withClaimCallback": 0
+          },
+          "path": "tests/fixtures/structured-types/owned-checked-record-result-only-php-wasm.php",
+          "profile": "php-wasm",
+          "sha256": "152b726f3f1308cb88faf56de0da49abd965775eada7ed8015524e7894bdd2f8"
+        }
+      ]
+    }
+  ],
+  "requirements": {
+    "full": [
+      "echoBooking",
+      "echoClaims",
+      "pairClaim",
+      "transferClaim",
+      "transferPairClaim",
+      "transferWithClaimCallback",
+      "withClaimCallback",
+      "claimClosure",
+      "retain",
+      "claimFor"
+    ],
+    "resultOnly": [
+      "claimFor",
+      "newTicket"
+    ],
+    "resultOnlyForbidden": [
+      "echoBooking",
+      "echoClaims",
+      "pairClaim",
+      "transferClaim",
+      "transferPairClaim",
+      "transferWithClaimCallback",
+      "withClaimCallback",
+      "claimClosure",
+      "retain"
+    ]
+  },
+  "schemaVersion": 1,
+  "selection": {
+    "bytes": 2753,
+    "path": "docs/evidence/owned-checked-record-matrix-selection-20261026-aligned.json",
+    "sha256": "296b2f51bb2c8f4c66588002554219356b7fa123f1999c681db4c60ced5be5d6"
+  }
+}
