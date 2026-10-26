@@ -10,6 +10,16 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import {
+	beforeCoreReceiverCiStopBoundarySource
+	, coreReceiverCiStopBoundaryAddedPaths
+	, coreReceiverCiStopBoundaryHistoryPath
+	, coreReceiverCiStopBoundaryImplementation
+	, coreReceiverCiStopBoundaryImplementationPaths
+	, coreReceiverCiStopBoundaryIntegrationPaths
+	, coreReceiverCiStopBoundaryPredecessor
+	, reverseCoreReceiverCiStopBoundaryUpdate
+} from "./core-receiver-ci-stop-boundary-source-history.mjs";
+import {
 	beforeCoreWitBorrowStopBoundarySource
 	, coreWitBorrowStopBoundaryAddedPaths
 	, coreWitBorrowStopBoundaryHistoryPath
@@ -81,6 +91,9 @@ const readReceiverCiProducerReplay = async () => JSON.parse(await readFile(
 ));
 const readWitBorrowStopBoundary = async () => JSON.parse(await readFile(
 	coreWitBorrowStopBoundaryHistoryPath, "utf8"
+));
+const readReceiverCiStopBoundary = async () => JSON.parse(await readFile(
+	coreReceiverCiStopBoundaryHistoryPath, "utf8"
 ));
 
 test("Core historical replay records its exact source range", async () => {
@@ -491,6 +504,87 @@ test("Core WIT stop-boundary writer refuses another checkout", async t => {
 	t.after(() => rm(root, { recursive: true }));
 	const result = spawnSync(process.execPath, [resolve(
 		"scripts/update-core-wit-borrow-stop-boundary-source-history.mjs"
+	)], { cwd: root, encoding: "utf8", timeout: 15_000 });
+	assert.notEqual(result.status, 0);
+	assert.equal(result.stdout, "");
+	assert.deepEqual(await readdir(root), []);
+});
+
+test("Core receiver-CI stop boundary records its exact source range", async () => {
+	const record = await readReceiverCiStopBoundary();
+	assert.equal(record.schemaVersion, 1);
+	assert.equal(record.milestone
+		, "core-receiver-ci-stop-boundary-source-v1");
+	assert.equal(record.predecessorCommit
+		, coreReceiverCiStopBoundaryPredecessor);
+	assert.equal(record.implementationCommit
+		, coreReceiverCiStopBoundaryImplementation);
+	assert.deepEqual(record.updates.map(update => update.path)
+		, coreReceiverCiStopBoundaryImplementationPaths);
+	assert.deepEqual(record.integrationUpdates.map(update => update.path)
+		, coreReceiverCiStopBoundaryIntegrationPaths);
+	assert.deepEqual(record.additions.map(addition => addition.path)
+		, coreReceiverCiStopBoundaryAddedPaths);
+	assert.equal(git(["rev-parse"
+		, `${coreReceiverCiStopBoundaryImplementation}^`]).trim()
+	, coreReceiverCiStopBoundaryPredecessor);
+});
+
+test("Core receiver-CI stop boundary reverses every source transition", async () => {
+	const record = await readReceiverCiStopBoundary();
+	for(const update of [...record.updates, ...record.integrationUpdates])
+	{
+		const current = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256
+			, beforeCoreReceiverCiStopBoundarySource);
+		const base = record.integrationUpdates.includes(update)
+			? coreReceiverCiStopBoundaryImplementation
+			: coreReceiverCiStopBoundaryPredecessor;
+		const previous = git(["show", `${base}:${update.path}`]);
+		assert.equal(reverseCoreReceiverCiStopBoundaryUpdate(
+			current, update), previous, update.path);
+		assert.equal(beforeFinRefinementSource(
+			update.path, current, update.previousSha256), previous, update.path);
+		assert.ok(finRefinementNormalizationPaths.includes(update.path));
+	}
+});
+
+test("Core receiver-CI stop boundary selects exact transition endpoints", () => {
+	const source = git(["show"
+		, `${coreReceiverCiStopBoundaryImplementation}:tests/owned-perl-receiver-ci.test.mjs`]);
+	assert.match(source
+		, /prior = reverseOwnedReceiverCiRepair\(source, update\)/u);
+	assert.match(source
+		, /update\.path, source, update\.previousSha256\n\t\t\), prior/u);
+	assert.match(source
+		, /update\.path, prior, update\.previousSha256\n\t\t\), prior/u);
+	assert.match(source
+		, /const prior = JSON\.parse\(reverseOwnedReceiverCiRepair\(current, update\)\)/u);
+});
+
+test("Core receiver-CI stop boundary rejects altered transitions", async () => {
+	const update = (await readReceiverCiStopBoundary()).updates[0];
+	const current = await sourceAtFinHistoryMilestone(
+		update.path, update.currentSha256
+		, beforeCoreReceiverCiStopBoundarySource);
+	for(const forged of [{ ...update, currentSha256: "0".repeat(64) }
+		, { ...update, previousSha256: "0".repeat(64) }
+		, { ...update, path: "unrelated.mjs" }
+		, { ...update, edits: [] }
+		, { ...update, edits: [...update.edits, update.edits[0]] }])
+		assert.throws(() => reverseCoreReceiverCiStopBoundaryUpdate(
+			current, forged));
+	assert.equal(beforeCoreReceiverCiStopBoundarySource(
+		update.path, current + "unknown"), current + "unknown");
+});
+
+test("Core receiver-CI stop-boundary writer refuses another checkout", async t => {
+	const root = await mkdtemp(join(
+		tmpdir(), "lean-core-receiver-ci-stop-boundary-guard-"
+	));
+	t.after(() => rm(root, { recursive: true }));
+	const result = spawnSync(process.execPath, [resolve(
+		"scripts/update-core-receiver-ci-stop-boundary-source-history.mjs"
 	)], { cwd: root, encoding: "utf8", timeout: 15_000 });
 	assert.notEqual(result.status, 0);
 	assert.equal(result.stdout, "");

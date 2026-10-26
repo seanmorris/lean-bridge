@@ -1,0 +1,87 @@
+{
+  "additions": [
+    {
+      "currentSha256": "b7e49f77c24b33f0ada5904ff32ae08dd4162bd73dfb24fb5e1d2b17a487fb09",
+      "path": "scripts/update-core-receiver-ci-stop-boundary-source-history.mjs"
+    },
+    {
+      "currentSha256": "c2c67f8c66f23c519db9be3359bdbf9d0e9212d66cf9fdb81dc99e53dda78d72",
+      "path": "tests/helpers/core-receiver-ci-stop-boundary-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "bd18c1bccde75e824b23ce05ba830a44b1d713a1",
+  "integrationUpdates": [
+    {
+      "currentSha256": "56d322aaa639ad910fc1a9d6ec451b347857efcae6de822c417641d6f431ddeb",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeCoreReceiverCiStopBoundarySource\n\t, coreReceiverCiStopBoundaryAddedPaths\n\t, coreReceiverCiStopBoundaryHistoryPath\n\t, coreReceiverCiStopBoundaryImplementation\n\t, coreReceiverCiStopBoundaryImplementationPaths\n\t, coreReceiverCiStopBoundaryIntegrationPaths\n\t, coreReceiverCiStopBoundaryPredecessor\n\t, reverseCoreReceiverCiStopBoundaryUpdate\n} from \"./core-receiver-ci-stop-boundary-source-history.mjs\";\n",
+          "previous": "",
+          "start": 357
+        },
+        {
+          "current": "const readReceiverCiStopBoundary = async () => JSON.parse(await readFile(\n\tcoreReceiverCiStopBoundaryHistoryPath, \"utf8\"\n));\n",
+          "previous": "",
+          "start": 3851
+        },
+        {
+          "current": "\ntest(\"Core receiver-CI stop boundary records its exact source range\", async () => {\n\tconst record = await readReceiverCiStopBoundary();\n\tassert.equal(record.schemaVersion, 1);\n\tassert.equal(record.milestone\n\t\t, \"core-receiver-ci-stop-boundary-source-v1\");\n\tassert.equal(record.predecessorCommit\n\t\t, coreReceiverCiStopBoundaryPredecessor);\n\tassert.equal(record.implementationCommit\n\t\t, coreReceiverCiStopBoundaryImplementation);\n\tassert.deepEqual(record.updates.map(update => update.path)\n\t\t, coreReceiverCiStopBoundaryImplementationPaths);\n\tassert.deepEqual(record.integrationUpdates.map(update => update.path)\n\t\t, coreReceiverCiStopBoundaryIntegrationPaths);\n\tassert.deepEqual(record.additions.map(addition => addition.path)\n\t\t, coreReceiverCiStopBoundaryAddedPaths);\n\tassert.equal(git([\"rev-parse\"\n\t\t, `${coreReceiverCiStopBoundaryImplementation}^`]).trim()\n\t, coreReceiverCiStopBoundaryPredecessor);\n});\n\ntest(\"Core receiver-CI stop boundary reverses every source transition\", async () => {\n\tconst record = await readReceiverCiStopBoundary();\n\tfor(const update of [...record.updates, ...record.integrationUpdates])\n\t{\n\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256\n\t\t\t, beforeCoreReceiverCiStopBoundarySource);\n\t\tconst base = record.integrationUpdates.includes(update)\n\t\t\t? coreReceiverCiStopBoundaryImplementation\n\t\t\t: coreReceiverCiStopBoundaryPredecessor;\n\t\tconst previous = git([\"show\", `${base}:${update.path}`]);\n\t\tassert.equal(reverseCoreReceiverCiStopBoundaryUpdate(\n\t\t\tcurrent, update), previous, update.path);\n\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n\t\tassert.ok(finRefinementNormalizationPaths.includes(update.path));\n\t}\n});\n\ntest(\"Core receiver-CI stop boundary selects exact transition endpoints\", () => {\n\tconst source = git([\"show\"\n\t\t, `${coreReceiverCiStopBoundaryImplementation}:tests/owned-perl-receiver-ci.test.mjs`]);\n\tassert.match(source\n\t\t, /prior = reverseOwnedReceiverCiRepair\\(source, update\\)/u);\n\tassert.match(source\n\t\t, /update\\.path, source, update\\.previousSha256\\n\\t\\t\\), prior/u);\n\tassert.match(source\n\t\t, /update\\.path, prior, update\\.previousSha256\\n\\t\\t\\), prior/u);\n\tassert.match(source\n\t\t, /const prior = JSON\\.parse\\(reverseOwnedReceiverCiRepair\\(current, update\\)\\)/u);\n});\n\ntest(\"Core receiver-CI stop boundary rejects altered transitions\", async () => {\n\tconst update = (await readReceiverCiStopBoundary()).updates[0];\n\tconst current = await sourceAtFinHistoryMilestone(\n\t\tupdate.path, update.currentSha256\n\t\t, beforeCoreReceiverCiStopBoundarySource);\n\tfor(const forged of [{ ...update, currentSha256: \"0\".repeat(64) }\n\t\t, { ...update, previousSha256: \"0\".repeat(64) }\n\t\t, { ...update, path: \"unrelated.mjs\" }\n\t\t, { ...update, edits: [] }\n\t\t, { ...update, edits: [...update.edits, update.edits[0]] }])\n\t\tassert.throws(() => reverseCoreReceiverCiStopBoundaryUpdate(\n\t\t\tcurrent, forged));\n\tassert.equal(beforeCoreReceiverCiStopBoundarySource(\n\t\tupdate.path, current + \"unknown\"), current + \"unknown\");\n});\n\ntest(\"Core receiver-CI stop-boundary writer refuses another checkout\", async t => {\n\tconst root = await mkdtemp(join(\n\t\ttmpdir(), \"lean-core-receiver-ci-stop-boundary-guard-\"\n\t));\n\tt.after(() => rm(root, { recursive: true }));\n\tconst result = spawnSync(process.execPath, [resolve(\n\t\t\"scripts/update-core-receiver-ci-stop-boundary-source-history.mjs\"\n\t)], { cwd: root, encoding: \"utf8\", timeout: 15_000 });\n\tassert.notEqual(result.status, 0);\n\tassert.equal(result.stdout, \"\");\n\tassert.deepEqual(await readdir(root), []);\n});\n",
+          "previous": "",
+          "start": 22403
+        }
+      ],
+      "path": "tests/helpers/core-historical-evidence-replay-source-history-tests.mjs",
+      "previousSha256": "680d60038f9762f6d1efad59c4092e91c16307ab1bb38cc1b27841f60c5a4087"
+    },
+    {
+      "currentSha256": "fd231e3d14c249a0add578ceca8964309689578bd2905626dc2f25f52fbd23f2",
+      "edits": [
+        {
+          "current": "import { beforeCoreReceiverCiStopBoundarySource, coreReceiverCiStopBoundaryNormalizationPaths } from \"./core-receiver-ci-stop-boundary-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...coreReceiverCiStopBoundaryNormalizationPaths\n\t, ...coreWitBorrowStopBoundaryNormalizationPaths\n",
+          "previous": "\t...coreWitBorrowStopBoundaryNormalizationPaths\n",
+          "start": 191449
+        },
+        {
+          "current": "\tlet stage = beforeCoreReceiverCiStopBoundarySource(\n\t\tpath, text, expected\n\t);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCoreWitBorrowStopBoundarySource(\n",
+          "previous": "\tlet stage = beforeCoreWitBorrowStopBoundarySource(\n",
+          "start": 237689
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "c86a341f70958ee80776655c38f14979d09d505f77522d75acebf00e282131ff"
+    }
+  ],
+  "milestone": "core-receiver-ci-stop-boundary-source-v1",
+  "predecessorCommit": "67768f748b24df629ef9d0dbde9c84d956c4c57c",
+  "schemaVersion": 1,
+  "scope": "Reverse the exact retained receiver-CI repair directly at its immutable producer and stop the composite history chain at the explicit predecessor identity. Preserve the original receipt, runtime implementation, packages, evidence payloads and support claims. Final exact-head Core acceptance remains required.",
+  "updates": [
+    {
+      "currentSha256": "8bc81ee7cecce103363d0f56c4d83591fc0263594529967aca4bf7fe17db4ebc",
+      "edits": [
+        {
+          "current": "\t\tconst prior = reverseOwnedReceiverCiRepair(source, update);\n",
+          "previous": "\t\tconst prior = beforeOwnedReceiverCiRepair(\n\t\t\tupdate.path, source, update.previousSha256\n\t\t);\n",
+          "start": 3940
+        },
+        {
+          "current": "\t\tassert.equal(beforeOwnedReceiverCiRepair(\n\t\t\tupdate.path, source, update.previousSha256\n\t\t), prior);\n\t\tassert.equal(beforeOwnedReceiverCiRepair(\n\t\t\tupdate.path, prior, update.previousSha256\n\t\t), prior);\n",
+          "previous": "\t\tassert.equal(beforeOwnedReceiverCiRepair(update.path, prior), prior);\n",
+          "start": 4056
+        },
+        {
+          "current": "\tconst update = record.updates.find(value => value.path === path);\n\tassert.ok(update);\n\tconst prior = JSON.parse(reverseOwnedReceiverCiRepair(current, update));\n",
+          "previous": "\tconst prior = JSON.parse(beforeOwnedReceiverCiRepair(path, current\n\t\t, record.updates.find(update => update.path === path)?.previousSha256));\n",
+          "start": 5052
+        }
+      ],
+      "path": "tests/owned-perl-receiver-ci.test.mjs",
+      "previousSha256": "312509c7bac49d38b75efe3455e92dff57f118f90854ef797481a59379a9a3be"
+    }
+  ]
+}
