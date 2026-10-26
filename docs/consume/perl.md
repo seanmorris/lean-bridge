@@ -948,7 +948,7 @@ Use `perl -MLeanBridge::Workshop -e 'print LeanBridge::Workshop::add(19,23), "\n
 
 ## Owned checked records
 
-[Hosted owned checked-record acceptance](../evidence/owned-checked-record-promotion-20261025.md) covers Perl on ordinary Lean-source and independently reviewed package routes. The tested forms are `Booking`, whose `Window` field is copied and checked, and `Claim`, whose `Ticket` resource stays owned while its quota is checked. Proof fields do not cross the boundary.
+[Hosted owned checked-record acceptance](../evidence/owned-checked-record-promotion-20261026-aligned.md) covers Perl on ordinary Lean-source and independently reviewed package routes. The tested forms are `Booking`, whose `Window` field is copied and checked, and `Claim`, whose `Ticket` resource stays owned while its quota is checked. Proof fields do not cross the boundary.
 
 Use the generated record carriers and keep the `Ticket` owner alive for the call. A borrowed call leaves the caller's owner intact. A transferred call validates the record before moving that owner; rejected inputs remain usable. Leased results require the cleanup described by this language's ownership API. Synchronous callbacks exchange proof-free `Claim` values: host-produced replies and inputs to a returned Lean closure are checked, while Lean-produced arguments and results are projected without proof fields.
 

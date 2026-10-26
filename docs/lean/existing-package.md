@@ -890,7 +890,7 @@ The [Perl target guide](../publish/cpan.md#build-an-ordinary-lean-project) conta
 
 ## Owned checked records
 
-[Hosted owned checked-record acceptance](../evidence/owned-checked-record-promotion-20261025.md) covers all seventeen consumer profiles on ordinary Lean-source and independently reviewed package routes. The tested forms are `Booking`, whose `Window` field is copied and checked, and `Claim`, whose `Ticket` resource stays owned while its quota is checked. Proof fields do not cross the boundary.
+[Hosted owned checked-record acceptance](../evidence/owned-checked-record-promotion-20261026-aligned.md) covers all seventeen consumer profiles on ordinary Lean-source and independently reviewed package routes. The tested forms are `Booking`, whose `Window` field is copied and checked, and `Claim`, whose `Ticket` resource stays owned while its quota is checked. Proof fields do not cross the boundary.
 
 Select `mkWindow` at the consumed `Booking.window` site and `mkClaim` at each consumed `Claim` site. Mark resource-bearing records as owned, and choose borrowed or transferred parameters and leased results explicitly. The generated boundary checks `lo ≤ hi` and `quota ≤ holder.serial` before the input enters Lean or its ownership moves. Synchronous host replies and returned-closure inputs keep their own constructor selections. Lean-produced values project payloads without running input constructors.
 

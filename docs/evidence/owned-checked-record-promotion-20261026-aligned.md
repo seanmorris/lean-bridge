@@ -1,0 +1,23 @@
+# Owned checked records
+
+Eleven immutable hosted archives cover seventeen consumer profiles, four ordinary/reviewed full/result-only package routes per lane, and exactly 170 existing parameter, result, field and synchronous callback cells. Native PHP and PHP-Wasm have independent archives.
+
+| Evidence lane | Consumer profiles | Retained evidence | Producer revision |
+| --- | --- | --- | --- |
+| native | c, cpp | [archive index](owned-checked-record-native-hosted-20261025-aligned/index.json) | `9e571b4214df98e1b8d0319f24fe7b6729ab34ba` |
+| perl | perl | [archive index](owned-checked-record-perl-hosted-20261025-aligned/index.json) | `9e571b4214df98e1b8d0319f24fe7b6729ab34ba` |
+| python | python | [archive index](owned-checked-record-python-hosted-20261025-aligned/index.json) | `9e571b4214df98e1b8d0319f24fe7b6729ab34ba` |
+| ruby | ruby | [archive index](owned-checked-record-ruby-hosted-20261025-aligned/index.json) | `9e571b4214df98e1b8d0319f24fe7b6729ab34ba` |
+| rust | rust | [archive index](owned-checked-record-rust-hosted-20261025-aligned/index.json) | `9e571b4214df98e1b8d0319f24fe7b6729ab34ba` |
+| dotnet | dotnet | [archive index](owned-checked-record-dotnet-hosted-20261025-aligned/index.json) | `9e571b4214df98e1b8d0319f24fe7b6729ab34ba` |
+| jvm | java, kotlin | [archive index](owned-checked-record-jvm-hosted-20261025-aligned/index.json) | `9e571b4214df98e1b8d0319f24fe7b6729ab34ba` |
+| php | php-native | [archive index](owned-checked-record-php-hosted-20261025-aligned/index.json) | `9e571b4214df98e1b8d0319f24fe7b6729ab34ba` |
+| wit | wit-wasi | [archive index](owned-checked-record-wit-hosted-20261025-aligned/index.json) | `9e571b4214df98e1b8d0319f24fe7b6729ab34ba` |
+| javascript | node-javascript, node-typescript, browser-javascript, browser-react, browser-worker | [archive index](owned-checked-record-javascript-hosted-20261025-complete/index.json) | `ab133c88b7fe0ec2c18cb453bccbde203968f7c6` |
+| php-wasm | php-wasm | [archive index](owned-checked-record-php-wasm-hosted-20261025-contexts/index.json) | `3f124208c4b8eb0c96dde5dde28ac5ec38540868` |
+
+Independent owned checked-record acceptance adds the acyclic Booking/Window and Ticket/Claim forms only. Host-produced inputs use the selected mkWindow or mkClaim before ownership transfer or Lean entry; Lean-produced values omit proofs. Full packages also check synchronous host replies and returned-closure inputs, preserve rejected caller values and recover on later valid calls. Standalone result-only packages expose Claim results without input-constructor, transfer or callback metadata. Earlier composition limits still apply to those earlier fixtures.
+
+Owned checked-record acceptance covers the tested acyclic Booking with its copied checked Window, and Claim with its Ticket resource and checked quota. Full packages cover borrowed and transferred inputs, leased results, synchronous host callbacks and returned Lean closures. Standalone result-only packages expose Lean-produced Claim results without checked-input, transfer or callback metadata. This does not establish Grant or its nested Subtype, arbitrary owned containers, recursive owned graphs, retained or asynchronous callbacks, other predicates, dispatch cost or peak memory. PHP-Wasm and native PHP require their own distinct archives. External runtimes, compilers, package managers and operating-system distributions remain trusted recorded inputs.
+
+Every selected index and retained byte is authenticated from Git before the original hosted ZIP, API records, package receipts, reports and source closure are independently replayed. A partial matrix, a local qualification or an expiring Actions artifact alone cannot authorize this promotion.
