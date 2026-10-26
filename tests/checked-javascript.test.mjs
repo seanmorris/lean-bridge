@@ -211,7 +211,7 @@ test("the default and CI quality gates cover the same core contract", async () =
 	for(const command of ["env:check:core", "lint", "typecheck"])
 		assert.equal(workflow.match(new RegExp(`npm run ${command}`, "gu"))?.length, 1);
 	assert.match(workflow
-		, /run-test-profile\.sh contract \\\n\s+--shard "\$\{\{ matrix\.shard \}\}\/6"/u);
+		, /run-test-profile\.sh contract \\\n\s+--shard "\$\{\{ matrix\.shard \}\}\/12"/u);
 	assert.match(workflow, /check-core-contract-shards\.mjs build\/core-shards/u);
 	assert.match(workflow, /permissions:\n\s+contents: read/);
 });
