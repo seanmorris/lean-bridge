@@ -30,13 +30,29 @@ test("Python transfers bind current sources without promoting unrelated type cel
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path]);
 		assert.equal(update.currentSha256, record.sources[update.path]);
-		const current = beforeOwnedRubyTransfer(update.path, await readFile(update.path, "utf8")), prior = beforeOwnedPythonTransfer(update.path, current);
-		assert.equal(sha256(prior), update.previousSha256);
-		assert.equal(beforeOwnedPythonTransfer(update.path, prior), prior);
+		const current = beforeOwnedRubyTransfer(
+			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		), prior = beforeOwnedPythonTransfer(
+			update.path, current, update.previousSha256
+		);
+		assert.equal(sha256(prior), update.previousSha256, update.path);
+		assert.equal(beforeOwnedPythonTransfer(
+			update.path, prior, update.previousSha256
+		), prior);
 		assert.equal(beforeOwnedPythonTransfer(update.path, current, update.currentSha256), current);
 	}
-	const current = beforeOwnedRubyTransfer("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8"));
-	const previousIndex = JSON.parse(beforeOwnedPythonTransfer("docs/type-surface.v1.json", current));
+	const typeSurfaceUpdate = record.updates.find(update =>
+		update.path === "docs/type-surface.v1.json");
+	assert.ok(typeSurfaceUpdate);
+	const current = beforeOwnedRubyTransfer(
+		"docs/type-surface.v1.json"
+		, await readFile("docs/type-surface.v1.json", "utf8")
+		, typeSurfaceUpdate.currentSha256
+	);
+	const previousIndex = JSON.parse(beforeOwnedPythonTransfer(
+		"docs/type-surface.v1.json", current
+		, typeSurfaceUpdate.previousSha256
+	));
 	for(const evidence of previousIndex.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedRubyTransferHistoricalBytes(file.path, await readFile(file.path)));
 	assert.deepEqual(JSON.parse(current), previousIndex);
 });

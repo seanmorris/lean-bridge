@@ -8,14 +8,21 @@ import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { readTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { historicalTypeSurfaceCells as typeSurfaceCells } from "./historical-type-surface-cells.mjs";
-import { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from "../../src/build/native-graph-model.mjs";
-import { generateOwnedCPackage } from "../../src/backends/c/owned-package.mjs";
-import { generateOwnedCppPackage } from "../../src/backends/cpp/owned-package.mjs";
+import { moduleAtProducer } from "./producer-module.mjs";
 import { ownedHostExecutionSources, assertOwnedHostIntegration } from "./owned-host-evidence.mjs";
 import { ownedHostHistoryPath } from "./owned-host-source-history.mjs";
 import { ownedCiHistoryPath } from "./owned-ci-source-history.mjs";
 import { ownedCppBaseline, ownedCppChangedPaths, ownedCppAddedPaths, ownedCppExecutionPath, reverseOwnedCppUpdate } from "./owned-cpp-source-history.mjs";
 import { ownedCppOrderHistoricalBytes } from "./owned-cpp-order-history.mjs";
+
+const ownedCppProducer = "511f43f1b02a6bddb5517f47a497e8eda766a065";
+let producerPromise;
+const producerAtMilestone = () => producerPromise ??= Promise.all([
+	"src/build/native-graph-model.mjs"
+	, "src/backends/c/owned-package.mjs"
+	, "src/backends/cpp/owned-package.mjs"
+].map(path => moduleAtProducer(ownedCppProducer, path))).then(modules =>
+	Object.assign({}, ...modules));
 
 export const ownedCppCommands = {
 	core: "LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-cpp-runtime.test.mjs tests/owned-cpp-callables.test.mjs"
@@ -54,7 +61,7 @@ const identity = (input, mode, fixture, sources) => {
 	assert.equal(input.sourceIdentity.extractorSha256, sources["src/analyze/NativeExports.lean"]);
 	assert.equal(input.sourceIdentity.modules[0].source.sha256, sources[`tests/fixtures/onboarding/${fixture}/Owned.lean`]);
 };
-const packageReport = (report, mode, sources, kind) => {
+const packageReport = (report, mode, sources, kind, producer) => {
 	const cpp = kind === "cpp", callbacks = kind === "callbacks";
 	const checks = cpp ? 577 : callbacks ? 693 : 500;
 	const fixture = cpp ? "owned-cpp-composition" : callbacks ? "owned-host-callbacks" : "owned-aggregates";
@@ -69,9 +76,14 @@ const packageReport = (report, mode, sources, kind) => {
 	assert.deepEqual(report.checks, cpp ? { pkgConfig: checks, cmake: checks, sanitized: checks, c: 693 } : { pkgConfig: checks, cmake: checks });
 	assert.equal(report.consumerSha256, sources[`tests/fixtures/structured-types/${consumer}`]);
 	identity(report.input, mode, fixture, sources);
-	const model = createCompiledNativeModel(report.input, { ownedGraphs: true, ownedHostCallbacks: true });
+	const model = producer.createCompiledNativeModel(
+		report.input, { ownedGraphs: true, ownedHostCallbacks: true }
+	);
 	assert.equal(model.schemaVersion, 7); assert.equal(model.exports.length, cpp ? 31 : callbacks ? 11 : 22);
-	const native = generateCompiledNativeLeanAdapters(model), c = generateOwnedCPackage({ ...report.input, hostCallbacks: true });
+	const native = producer.generateCompiledNativeLeanAdapters(model);
+	const c = producer.generateOwnedCPackage({
+		...report.input, hostCallbacks: true
+	});
 	const component = report.componentReceipt, adapter = report.adapterReceipt, manifest = report.manifest;
 	assert.equal(component.schemaVersion, 3); assert.equal(component.modelSha256, sha256(canonicalJson(model)));
 	assert.equal(component.bindingIrSha256, model.bindingIrSha256); assert.deepEqual(component.sourceIdentity, model.sourceIdentity);
@@ -96,7 +108,7 @@ const packageReport = (report, mode, sources, kind) => {
 		assert.deepEqual(manifest.files[path], adapter.files[`gmp/${path}`]);
 	if(cpp)
 	{
-		const generated = generateOwnedCppPackage(model.bindingIr);
+		const generated = producer.generateOwnedCppPackage(model.bindingIr);
 		assert.deepEqual(adapter.cppValues, generated.contract); assert.deepEqual(manifest.cppValues, generated.contract);
 		assert.equal(manifest.exactIntegers, "boost-multiprecision-1.90.0");
 		assert.equal(manifest.cmakePackage, "LeanBridgeOwnedAggregatesCpp"); assert.equal(manifest.cmakeTarget, "LeanBridge::owned_aggregates_cpp");
@@ -128,6 +140,11 @@ const packageReport = (report, mode, sources, kind) => {
  * @param record - Original executions, compiler inputs and installed receipts.
  */
 export const assertOwnedCppExecution = async record => {
+	const producer = await producerAtMilestone();
+	for(const name of [
+		"createCompiledNativeModel", "generateCompiledNativeLeanAdapters"
+		, "generateOwnedCPackage", "generateOwnedCppPackage"
+	]) assert.equal(typeof producer[name], "function", name);
 	assert.equal(record.schemaVersion, 1); assert.equal(record.planNode, 1219);
 	assert.equal(record.kind, "owned-cpp-execution"); assert.equal(record.baselineRevision, ownedCppBaseline);
 	assert.deepEqual(record.scope, ownedCppScope);
@@ -148,7 +165,12 @@ export const assertOwnedCppExecution = async record => {
 		{
 			const input = inputs[mode], report = record.callables[fixture][mode];
 			identity(input, mode, fixture, record.sources);
-			const c = generateOwnedCPackage({ ...input, hostCallbacks: true }), generated = generateOwnedCppPackage(c.layout.model.bindingIr);
+			const c = producer.generateOwnedCPackage({
+				...input, hostCallbacks: true
+			});
+			const generated = producer.generateOwnedCppPackage(
+				c.layout.model.bindingIr
+			);
 			assert.equal(report.sourceIdentitySha256, sha256(canonicalJson(input.sourceIdentity)));
 			assert.equal(report.headerSha256, sha256(generated.header)); assert.equal(report.valuesSha256, sha256(generated.valuesHeader));
 			assert.equal(report.conversionsSha256, sha256(generated.conversionsHeader));
@@ -171,9 +193,11 @@ export const assertOwnedCppExecution = async record => {
 	}
 	for(const mode of ["ordinary", "reviewed"])
 	{
-		packageReport(record.packages[mode], mode, record.sources, "cpp");
-		packageReport(record.cPackages.aggregates[mode], mode, record.sources, "aggregates");
-		packageReport(record.cPackages.callbacks[mode], mode, record.sources, "callbacks");
+		packageReport(record.packages[mode], mode, record.sources, "cpp", producer);
+		packageReport(record.cPackages.aggregates[mode], mode
+			, record.sources, "aggregates", producer);
+		packageReport(record.cPackages.callbacks[mode], mode
+			, record.sources, "callbacks", producer);
 	}
 };
 

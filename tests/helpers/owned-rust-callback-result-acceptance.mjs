@@ -24,6 +24,15 @@ import { ownedRustCallbackBaseline, ownedRustCallbackChangedPaths
 import { assertOwnedRustCallbackResultCi, ownedRustCallbackResultReports } from "./owned-rust-callback-result-ci.mjs";
 import { unpackOwnedCallbackReports } from "./owned-callback-result-evidence.mjs";
 import { beforeOwnedPythonCallbackResults } from "./owned-python-callback-result-history.mjs";
+import { moduleAtProducerWithSourceReads } from "./producer-module.mjs";
+
+const ownedRustCallbackProducer = "a3100134f1853102fc2cbf0c2f12839ac480af12";
+let historicalAcceptancePromise;
+const historicalAcceptance = () => historicalAcceptancePromise
+	??= moduleAtProducerWithSourceReads(
+		ownedRustCallbackProducer
+		, "tests/helpers/owned-rust-callback-result-acceptance.mjs"
+	);
 
 export const ownedRustCallbackEvidencePath = "docs/evidence/owned-rust-callback-results-20261002.json";
 export const ownedRustCallbackPrevious = Object.freeze({
@@ -384,6 +393,18 @@ export const assertOwnedRustCallbackReport = async (path, item) => {
 };
 
 /**
+ * Reconstruct one retained report with the exact generator that produced it.
+ *
+ * @param path - Original report path.
+ * @param item - Original retained report.
+ */
+export const assertOwnedRustCallbackReportAtProducer = async (path, item) => {
+	const producer = await historicalAcceptance();
+	assert.equal(typeof producer.assertOwnedRustCallbackReport, "function");
+	return producer.assertOwnedRustCallbackReport(path, item);
+};
+
+/**
  * Require the complete gate, source history and all twelve original reports.
  *
  * @param record - Frozen Rust callback-result acceptance record.
@@ -404,6 +425,7 @@ export const assertOwnedRustCallbackAcceptance = async record => {
 	assert.doesNotMatch(record.run.text, /^not ok|# SKIP|# TODO/mu);
 	const reports = unpackOwnedCallbackReports(record.archive);
 	assert.deepEqual(Object.keys(reports).sort(), [...ownedRustCallbackResultReports].sort());
-	for(const [path, item] of Object.entries(reports)) await assertOwnedRustCallbackReport(path, item);
+	for(const [path, item] of Object.entries(reports))
+		await assertOwnedRustCallbackReportAtProducer(path, item);
 	assertOwnedRustCallbackResultCi(await readFile(".github/workflows/consumer-matrix.yml", "utf8"), JSON.parse(await readFile("package.json", "utf8")));
 };

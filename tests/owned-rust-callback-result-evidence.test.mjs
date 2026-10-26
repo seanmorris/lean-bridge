@@ -10,7 +10,7 @@ import { sha256 } from "../src/capsule/node.mjs";
 import { classifyRepositoryTest } from "../src/adoption/test-profiles.mjs";
 import { unpackOwnedCallbackReports } from "./helpers/owned-callback-result-evidence.mjs";
 import { ownedRustCallbackEvidencePath, assertOwnedRustCallbackAcceptance
-	, assertOwnedRustCallbackReport } from "./helpers/owned-rust-callback-result-acceptance.mjs";
+	, assertOwnedRustCallbackReportAtProducer } from "./helpers/owned-rust-callback-result-acceptance.mjs";
 
 const read = async () => JSON.parse(await readFile(ownedRustCallbackEvidencePath, "utf8"));
 
@@ -79,6 +79,8 @@ test("Rust callback reports reject forged lifetime, fault, package and browser o
 	]) {
 		const path = `build/owned-rust-callback-results/${name}.json`;
 		const item = structuredClone(reports[path]); mutate(item);
-		await assert.rejects(() => assertOwnedRustCallbackReport(path, item), undefined, name + ": " + mutate.toString());
+		await assert.rejects(() =>
+			assertOwnedRustCallbackReportAtProducer(path, item)
+		, undefined, name + ": " + mutate.toString());
 	}
 });
