@@ -1,0 +1,257 @@
+/**
+ * Account for constructor and Lean source entry on the wasm nominal Subtype hosts (npm and browser),
+ * following the scalar Fin source-entry precedent: a probe variant of the Nat fixture wraps each selected
+ * constructor and each measured source in dbgTrace, and the probe consumer brackets every public call on
+ * the same stderr stream, so each marker belongs to exactly one step. In the copied-graph frame ABI the
+ * side-module entry first runs each selected constructor through its exported carrier validator. An
+ * accepted call then runs the constructors again inside the `_lean` adapter guard before entering the
+ * complete Lean source call graph; a refused call stops in the validator pass. Package JavaScript
+ * cannot call those private validator symbols directly. Probe packages are instrumented builds; they are not the
+ * unmodified packages the acceptance suites install.
+ *
+ * @file
+ */
+import assert from "node:assert/strict";
+import { nominalSubtypeDispatchConstructors, nominalSubtypeDispatchExports, nominalSubtypeDispatchSteps } from "./nominal-subtype-dispatch.mjs";
+
+export const nominalSubtypeEntryMarker = "lean-bridge-nominal-entry";
+export const nominalSubtypeEntryBegin = "lean-bridge-nominal-begin";
+export const nominalSubtypeEntryEnd = "lean-bridge-nominal-end";
+/**
+ * Exact console lines an engine may add beside the entry trace. Firefox warns that the legacy
+ * WebAssembly exception-handling encoding of the Lean runtime is deprecated; nothing else is allowed.
+ */
+export const nominalSubtypeEntryBrowserWarnings = Object.freeze({
+	firefox: Object.freeze([
+		"[JavaScript Warning: \"The WebAssembly exception handling 'try' instruction is deprecated and should no longer be used. Please recompile to use the 'try_table' instruction instead.\"]"
+	])
+});
+
+/**
+ * Move only the exact allowed engine warnings out of a page console stream; every other line stays
+ * in the trace, so unexpected noise still fails the accounting.
+ *
+ * @param engine - Browser engine name.
+ * @param lines - Page console lines in arrival order.
+ */
+export const splitNominalSubtypeEntryConsole = (engine, lines) => {
+	const allowed = nominalSubtypeEntryBrowserWarnings[engine] ?? [];
+	return { trace: lines.filter(line => !allowed.includes(line))
+		, warnings: lines.filter(line => allowed.includes(line)) };
+};
+export const nominalSubtypeEntryInstrumentation = "probe build: dbgTrace markers on the selected constructors and measured sources of the fixture, call brackets in the consumer; not the unmodified packages of the acceptance suites";
+const measuredSources = nominalSubtypeDispatchExports.map(item => item.name);
+
+/**
+ * Wrap each selected constructor and measured source body in a marker naming its role and definition.
+ * A pattern-matching definition keeps its equations under a renamed body and gains a marked wrapper.
+ *
+ * @param lean - Uninstrumented fixture source.
+ */
+export const instrumentNominalSubtypeLean = lean => {
+	assert.equal(typeof lean, "string"); assert.ok(!lean.includes(nominalSubtypeEntryMarker), "already instrumented");
+	const lines = lean.split("\n"), marked = new Set();
+	const marker = (role, name) => `dbgTrace "${nominalSubtypeEntryMarker} ${role} ${name}" fun _ =>`;
+	const roles = [...nominalSubtypeDispatchConstructors.map(name => [name, "constructor"]), ...measuredSources.map(name => [name, "source"])];
+	for(const [name, role] of roles)
+	{
+		const definition = new RegExp(`^(?:@\\[[^\\]\\n]+\\] )?def ${name}(?: | :)`, "u");
+		const index = lines.findIndex(line => definition.test(line));
+		assert.ok(index >= 0 && !marked.has(name), `definition ${name}`); marked.add(name);
+		const line = lines[index];
+		if(line.endsWith(" :=")) lines[index] = `${line} ${marker(role, name)}`;
+		else if(line.includes(" := ")) lines[index] = line.replace(" := ", ` := ${marker(role, name)} `);
+		else
+		{
+			const header = /^(?<attribute>@\[[^\]\n]+\] )?def (?<name>\w+) : (?<input>\S+) → (?<result>\S+)$/u.exec(line);
+			assert.ok(header, `unsupported definition shape for ${name}: ${line}`);
+			// Keep source-level attributes such as `noinline` on the marked definition being
+			// measured. The renamed equation body is private probe scaffolding.
+			// Lean resolves names in order, so the renamed body keeps its equations in place and the
+			// marked wrapper follows its last equation, before any later definition that calls it.
+			lines[index] = `def ${name}Body : ${header.groups.input} → ${header.groups.result}`;
+			const end = lines.findIndex((value, position) => position > index && /^\S/u.test(value));
+			lines.splice(end < 0 ? lines.length : end, 0, `${header.groups.attribute ?? ""}def ${name} (value : ${header.groups.input}) : ${header.groups.result} := ${marker(role, name)} ${name}Body value`);
+		}
+	}
+	return lines.join("\n");
+};
+
+/**
+ * The entries one step must produce, derived from the same step list, leaf table and source call graph
+ * as the native lane. Every reached leaf enters its constructor once in the carrier validator. An
+ * accepted call repeats those constructors in the `_lean` adapter and then enters every measured source
+ * in call order; a refused call has neither the adapter pass nor a source entry.
+ */
+export const nominalSubtypeEntryExpected = () => nominalSubtypeDispatchSteps.filter(item => item.step !== "start").map(item => {
+	const target = nominalSubtypeDispatchExports.find(entry => entry.name === item.name);
+	assert.ok(target, item.name); assert.equal(item.entered.length, target.parameters.length, item.step);
+	const validated = target.parameters.flatMap((leaves, index) => item.entered[index].map(leaf => `constructor ${leaves[leaf][1]}`));
+	const entries = [...validated];
+	if(item.status === 0)
+	{
+		assert.ok(Array.isArray(item.sources) && item.sources.length > 0, item.step);
+		entries.push(...validated, ...item.sources.map(source => `source ${source}`));
+	}
+	else assert.equal(item.sources, undefined, item.step);
+	return { step: item.step, status: item.status, entries };
+});
+
+const consumerCalls = {
+	"public-valid-first": "api.first(box(40n))"
+	, "public-valid-second": "api.second(box(40n))"
+	, "public-invalid-first": "api.first(box(100n))"
+	, "public-valid-combine": "api.combine(box(40n), box(40n))"
+	, "public-late-combine": "api.combine(box(40n), box(95n))"
+	, "public-early-combine": "api.combine(box(100n), box(40n))"
+	, "public-valid-nested": "api.nested({ left: box(40n), right: box(40n) })"
+	, "public-late-nested": "api.nested({ left: box(40n), right: box(95n) })"
+	, "public-inactive-event": "api.eventFirst({ kind: \"empty\" })"
+	, "public-active-event-box": "api.eventFirst({ kind: \"box\", value: box(40n) })"
+	, "public-valid-event-choices": "api.eventFirst(choices(40n))"
+	, "public-invalid-event-choices": "api.eventFirst(choices(100n))"
+	, "public-valid-echo": "api.echo(box(40n))"
+	, "public-recovery-first": "api.first(box(40n))"
+};
+
+/**
+ * Probe consumer over the installed public API: each step is bracketed on stderr and reported on stdout
+ * as one row, status 0 for an accepted call and 1 for a refused one. Payload 95 is accepted by plusOne
+ * only, 100 by neither; the choices array walks its ok leaf before its error leaf.
+ *
+ * @param packageName - Installed npm package name exporting the public API.
+ * @param target - "node" prints the rows to stdout; "page" publishes them on globalThis and the #result element.
+ */
+export const nominalSubtypeEntryConsumer = (packageName, target = "node") => {
+	const steps = nominalSubtypeDispatchSteps.filter(item => item.step !== "start").map(item => item.step);
+	assert.deepEqual(Object.keys(consumerCalls), steps, "consumer calls must cover the step list exactly once, in order");
+	assert.match(packageName, /^[a-z][a-z0-9-]*$/u); assert.ok(["node", "page"].includes(target), target);
+	const prologue = target === "node" ? `import * as api from ${JSON.stringify(packageName)};` : `const api = await import(${JSON.stringify(packageName)});
+const output = document.querySelector("#result");`;
+	const epilogue = target === "node" ? "console.log(JSON.stringify(rows));" : `globalThis.nominalEntryRows = rows;
+output.textContent = String(rows.length); output.dataset.status = "ready";`;
+	return `${prologue}
+const box = payload => ({ payload, digit: 2n });
+const some = value => ({ tag: "some", value }), none = { tag: "none" };
+const choices = payload => ({ kind: "choices", values: [none, some({ ok: payload }), some({ error: 40n })] });
+const rows = [];
+// Begin and end share the stderr stream that Lean's dbgTrace writes, so each marker falls inside its step.
+const step = (name, call) => {
+  console.error("${nominalSubtypeEntryBegin} " + name);
+  let status = 0;
+  try { call(); } catch (error) { if (!/failed \\(5\\)/u.test(String(error?.message))) throw error; status = 1; }
+  finally { console.error("${nominalSubtypeEntryEnd} " + name); }
+  rows.push([name, status]);
+};
+${steps.map(name => `step(${JSON.stringify(name)}, () => ${consumerCalls[name]});`).join("\n")}
+${epilogue}
+`;
+};
+
+/**
+ * Assign every stderr line to one bracketed step and require exactly the expected entries per step,
+ * nothing outside a bracket and nothing else on stderr.
+ *
+ * @param stderr - Probe consumer stderr.
+ * @param rows - Parsed stdout rows, [step, status].
+ * @param expected - Rows from nominalSubtypeEntryExpected.
+ */
+export const accountNominalSubtypeEntry = (stderr, rows, expected = nominalSubtypeEntryExpected()) => {
+	assert.equal(typeof stderr, "string");
+	const lines = stderr.split("\n");
+	assert.equal(lines.pop(), "", "stderr ends with a newline");
+	const segments = []; let open = null;
+	for(const line of lines)
+	{
+		const parts = line.split(" ");
+		if(parts[0] === nominalSubtypeEntryBegin)
+		{
+			assert.equal(parts.length, 2, line); assert.equal(open, null, `nested or unclosed step: ${line}`);
+			open = { step: parts[1], entries: [] };
+		}
+		else if(parts[0] === nominalSubtypeEntryEnd)
+		{
+			assert.equal(parts.length, 2, line); assert.ok(open && parts[1] === open.step, `unmatched end: ${line}`);
+			segments.push(open); open = null;
+		}
+		else if(parts[0] === nominalSubtypeEntryMarker)
+		{
+			assert.equal(parts.length, 3, line); assert.ok(open, `entry outside any step: ${line}`);
+			assert.ok(["constructor", "source"].includes(parts[1]), line);
+			open.entries.push(`${parts[1]} ${parts[2]}`);
+		}
+		else assert.fail(`unexpected stderr line: ${line}`);
+	}
+	assert.equal(open, null, "unclosed step");
+	assert.ok(Array.isArray(rows)); assert.equal(rows.length, expected.length, "every step reported one row");
+	assert.equal(segments.length, expected.length, "every step has one bracket");
+	const observed = expected.map((item, index) => {
+		assert.deepEqual(rows[index], [item.step, item.status], item.step);
+		assert.equal(segments[index].step, item.step);
+		assert.deepEqual(segments[index].entries, item.entries, item.step);
+		return { step: item.step, status: item.status, entries: segments[index].entries };
+	});
+	const counts = {};
+	for(const item of observed) for(const entry of item.entries) counts[entry] = (counts[entry] ?? 0) + 1;
+	for(const name of nominalSubtypeDispatchConstructors) assert.ok(counts[`constructor ${name}`] > 0, `${name} never entered`);
+	for(const name of measuredSources) assert.ok(counts[`source ${name}`] > 0, `${name} never entered`);
+	return { observed, counts };
+};
+
+/**
+ * Check a recorded npm or browser entry probe: its stated instrumentation, distinct fixture identities,
+ * the exact expected rows and entries, and an explicit statement about the exported validators.
+ *
+ * @param entry - The entry section of an installed report.
+ */
+export const assertNominalSubtypeEntryReport = entry => {
+	assert.equal(entry.instrumentation, nominalSubtypeEntryInstrumentation);
+	assert.match(entry.fixture.originalSha256, /^[0-9a-f]{64}$/u); assert.match(entry.fixture.probeSha256, /^[0-9a-f]{64}$/u);
+	assert.notEqual(entry.fixture.originalSha256, entry.fixture.probeSha256, "the probe fixture is a distinct identity");
+	for(const key of ["receiptSha256", "packageSha256", "runtimeSha256", "bindingIrSha256"]) assert.match(entry.probe[key], /^[0-9a-f]{64}$/u, key);
+	assert.match(entry.probe.sideModule.sha256, /^[0-9a-f]{64}$/u); assert.equal(typeof entry.probe.linkManifest, "object");
+	assert.equal(entry.unmodifiedReleasePackages, true);
+	const expected = nominalSubtypeEntryExpected();
+	assert.deepEqual(entry.rows, expected.map(item => [item.step, item.status]));
+	assert.deepEqual(entry.observed, expected);
+	assert.deepEqual(entry.counts, accountNominalSubtypeEntry(entry.observed.map(item => [`${nominalSubtypeEntryBegin} ${item.step}`, ...item.entries.map(value => `${nominalSubtypeEntryMarker} ${value}`), `${nominalSubtypeEntryEnd} ${item.step}`].join("\n")).join("\n") + "\n", entry.rows, expected).counts);
+	const manifestExports = entry.probe.linkManifest.exports;
+	assert.deepEqual(Object.keys(manifestExports ?? {}).sort()
+		, ["directSymbols", "initializer", "internalInitializer"]);
+	const directSymbols = [...manifestExports.directSymbols].sort();
+	const initializers = [manifestExports.initializer
+		, manifestExports.internalInitializer].sort();
+	const emscriptenInternals = [
+		"__wasm_apply_data_relocs", "__wasm_call_ctors"
+	];
+	assert.ok(Array.isArray(entry.sideModuleExports.adapters.exported)
+		&& entry.sideModuleExports.adapters.exported.length > 0
+	, "direct adapter exports are listed");
+	assert.deepEqual(entry.sideModuleExports.adapters.exported, directSymbols);
+	assert.deepEqual(entry.sideModuleExports.adapters.referencedByPackageJavaScript
+		, directSymbols);
+	assert.deepEqual(entry.sideModuleExports.initializers, initializers);
+	assert.deepEqual(entry.sideModuleExports.emscriptenInternals
+		, emscriptenInternals);
+	assert.deepEqual(entry.sideModuleExports.validators
+		, { exported: [], referencedByPackageJavaScript: [] });
+	assert.equal(entry.sideModuleExports.exports
+		, directSymbols.length + initializers.length + emscriptenInternals.length);
+	assert.equal(entry.validatorExportsPrivate, true);
+	// A browser section repeats the same rows and entries per engine through the page console stream.
+	if(entry.browser !== undefined)
+	{
+		assert.match(entry.browser.deployment.sha256, /^[0-9a-f]{64}$/u); assert.match(entry.browser.pageSha256, /^[0-9a-f]{64}$/u);
+		assert.ok(Array.isArray(entry.browser.engines) && entry.browser.engines.length > 0, "at least one engine");
+		for(const engine of entry.browser.engines)
+		{
+			assert.match(engine.engine, /^(chromium|firefox|webkit)$/u); assert.ok(typeof engine.hostVersion === "string" && engine.hostVersion.length > 0);
+			assert.deepEqual(engine.rows, entry.rows, engine.engine); assert.deepEqual(engine.observed, expected, engine.engine);
+			assert.deepEqual(engine.counts, entry.counts, engine.engine); assert.deepEqual(engine.errors, [], engine.engine);
+			const allowed = nominalSubtypeEntryBrowserWarnings[engine.engine] ?? [];
+			assert.ok(Array.isArray(engine.warnings) && engine.warnings.every(line => allowed.includes(line))
+				, `${engine.engine} warnings`);
+		}
+	}
+	return entry.counts;
+};
