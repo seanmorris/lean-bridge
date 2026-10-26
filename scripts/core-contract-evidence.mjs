@@ -9,7 +9,7 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { execFileSync } from "node:child_process";
+import { execFileSync, spawnSync } from "node:child_process";
 import { readFile, stat } from "node:fs/promises";
 import { dirname, extname, isAbsolute, join, normalize, relative, resolve } from "node:path";
 import ts from "typescript";
@@ -174,6 +174,29 @@ const trackedEvidenceDirectories = root => execFileSync("git", [
 		assert.ok(match, `Malformed evidence tree entry: ${line}`);
 		return match[1] === "tree" ? [match[2]] : [];
 	}).toSorted();
+
+/**
+ * Read Git's sparse-checkout booleans without conflating an unset false value
+ * with command failure. Actions/checkout omits core.sparseCheckoutCone for a
+ * non-cone checkout.
+ *
+ * @param root - Repository root.
+ */
+export const coreSparseCheckoutMode = (root = resolve(".")) => {
+	const read = key => {
+		const result = spawnSync("git", [
+			"-C", resolve(root), "config", "--bool", "--get", key
+		], { encoding: "utf8" });
+		assert.equal(result.signal, null, key);
+		assert.ok(result.status === 0 || result.status === 1
+			, result.stderr || key);
+		return result.status === 0 ? result.stdout.trim() : undefined;
+	};
+	return Object.freeze({
+		sparse: read("core.sparseCheckout") === "true"
+		, cone: read("core.sparseCheckoutCone") === "true"
+	});
+};
 
 /**
  * Compute a deterministic source and evidence closure without changing the

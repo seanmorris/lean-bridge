@@ -4,12 +4,16 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import { readFile } from "node:fs/promises";
+import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import test from "node:test";
 import {
 	coreContractEvidenceBaseline, coreContractEvidenceDirectoryReferences
 	, coreContractEvidenceFragments
+	, coreSparseCheckoutMode
 } from "../../scripts/core-contract-evidence.mjs";
 import { ownedCheckedRecordHostedLaneNames } from "./owned-checked-record-hosted-contracts.mjs";
 
@@ -111,10 +115,21 @@ test("owned checked-record replay partitions bind every lane to its exact archiv
 test("Core evidence materializer refuses a non-sparse checkout", async () => {
 	const source = await readFile(
 		"scripts/materialize-core-contract-evidence.mjs", "utf8");
-	assert.match(source
-		, /assert\.equal\(execFileSync\("git", \["config", "--bool", "core\.sparseCheckout"\]/u);
-	assert.match(source
-		, /assert\.notEqual\(execFileSync\("git", \["config", "--bool", "core\.sparseCheckoutCone"\]/u);
+	assert.match(source, /const sparse = coreSparseCheckoutMode\(\)/u);
+	assert.match(source, /assert\.equal\(sparse\.sparse, true/u);
+	assert.match(source, /assert\.equal\(sparse\.cone, false/u);
 	assert.match(source, /execFileSync\("git", \["sparse-checkout", "add", "--stdin"\]/u);
 	assert.match(source, /await writeFile\(manifestPath, canonicalJson\(plan\)\)/u);
+});
+
+test("Core sparse mode treats checkout's absent cone key as false", async t => {
+	const root = await mkdtemp(join(tmpdir(), "lean-core-sparse-mode-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
+	execFileSync("git", ["init", "--quiet", root]);
+	execFileSync("git", ["-C", root, "config", "core.sparseCheckout", "true"]);
+	assert.deepEqual(coreSparseCheckoutMode(root)
+		, { sparse: true, cone: false });
+	execFileSync("git", ["-C", root, "config", "core.sparseCheckoutCone", "true"]);
+	assert.deepEqual(coreSparseCheckoutMode(root)
+		, { sparse: true, cone: true });
 });

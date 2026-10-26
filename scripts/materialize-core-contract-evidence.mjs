@@ -10,7 +10,9 @@ import { mkdir, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { canonicalJson } from "../src/capsule/node.mjs";
 import { coreContractShardLabels } from "./core-contract-shards.mjs";
-import { collectCoreContractEvidencePlan } from "./core-contract-evidence.mjs";
+import {
+	collectCoreContractEvidencePlan, coreSparseCheckoutMode
+} from "./core-contract-evidence.mjs";
 
 const arguments_ = process.argv.slice(2);
 if(arguments_.length !== 4 || arguments_[0] !== "--shard"
@@ -21,12 +23,11 @@ if(arguments_.length !== 4 || arguments_[0] !== "--shard"
 	process.exit(64);
 	}
 const label = arguments_[1], manifestPath = resolve(arguments_[3]);
-assert.equal(execFileSync("git", ["config", "--bool", "core.sparseCheckout"], {
-	encoding: "utf8"
-}).trim(), "true", "Core evidence materialization requires a sparse checkout");
-assert.notEqual(execFileSync("git", ["config", "--bool", "core.sparseCheckoutCone"], {
-	encoding: "utf8"
-}).trim(), "true", "Core evidence materialization requires non-cone patterns");
+const sparse = coreSparseCheckoutMode();
+assert.equal(sparse.sparse, true
+	, "Core evidence materialization requires a sparse checkout");
+assert.equal(sparse.cone, false
+	, "Core evidence materialization requires non-cone patterns");
 const plan = await collectCoreContractEvidencePlan(label);
 await mkdir(dirname(manifestPath), { recursive: true });
 await writeFile(manifestPath, canonicalJson(plan));
