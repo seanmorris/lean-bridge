@@ -158,6 +158,19 @@ test("Core evidence materializer refuses a non-sparse checkout", async () => {
 	assert.match(source, /await writeFile\(manifestPath, canonicalJson\(plan\)\)/u);
 });
 
+test("type surface binds every live nominal browser workflow pin", async () => {
+	const path = ".github/workflows/nominal-primitive-subtype-browser.yml";
+	const [workflow, inventorySource] = await Promise.all([
+		readFile(path), readFile("docs/type-surface.v1.json", "utf8")
+	]);
+	const currentSha256 = createHash("sha256").update(workflow).digest("hex");
+	const inventory = JSON.parse(inventorySource);
+	const pins = inventory.evidence.flatMap(evidence => evidence.files)
+		.filter(file => file.path === path);
+	assert.equal(pins.length, 4);
+	assert.ok(pins.every(file => file.sha256 === currentSha256));
+});
+
 test("Core sparse mode treats checkout's absent cone key as false", async t => {
 	const root = await mkdtemp(join(tmpdir(), "lean-core-sparse-mode-"));
 	t.after(() => rm(root, { recursive: true, force: true }));
