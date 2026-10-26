@@ -1,0 +1,836 @@
+{
+  "additions": [
+    {
+      "currentSha256": "96fe0d129433273f52966f82397ace1ea33171162478fcedd48ac32eb49c4098",
+      "path": "scripts/update-nominal-primitive-subtype-sparse-checkout-source-history.mjs"
+    },
+    {
+      "currentSha256": "f8fddbe567f920492e9c5430520016ef21e9138189973861147f110b3ecbe0a5",
+      "path": "tests/helpers/nominal-primitive-subtype-sparse-checkout-source-history.mjs"
+    }
+  ],
+  "implementationAdditions": [
+    {
+      "currentSha256": "225a61c8d5a1aa105c46f198fb1c661e0233029d474a0848f00506551cbcd38d",
+      "path": "tests/helpers/nominal-primitive-subtype-history-checkout-tests.mjs"
+    },
+    {
+      "currentSha256": "b68835a8920051f5418bf41a07cd4ae8e2b2a4f32d44218f31a60bb9c997234c",
+      "path": "tests/helpers/nominal-primitive-subtype-history-checkout.mjs"
+    }
+  ],
+  "implementationCommit": "a937a09921fa099c0d9618468af19d52e58f3666",
+  "integrationUpdates": [
+    {
+      "currentSha256": "3e856bb6cb4d4d1c9264a55a3d45694a3785f10ebe71f0ef20600e8c4ddd8309",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeNominalPrimitiveSubtypeSparseCheckoutSource\n\t, nominalPrimitiveSubtypeSparseCheckoutAddedPaths\n\t, nominalPrimitiveSubtypeSparseCheckoutHistoryPath\n\t, nominalPrimitiveSubtypeSparseCheckoutImplementation\n\t, nominalPrimitiveSubtypeSparseCheckoutImplementationAdditions\n\t, nominalPrimitiveSubtypeSparseCheckoutImplementationPaths\n\t, nominalPrimitiveSubtypeSparseCheckoutIntegrationPaths\n\t, nominalPrimitiveSubtypeSparseCheckoutModifiedPaths\n\t, nominalPrimitiveSubtypeSparseCheckoutPredecessor\n\t, nominalPrimitiveSubtypeSparseCheckoutWorkflowPaths\n\t, reverseNominalPrimitiveSubtypeSparseCheckoutUpdate\n} from \"./nominal-primitive-subtype-sparse-checkout-source-history.mjs\";\n",
+          "previous": "",
+          "start": 357
+        },
+        {
+          "current": "import {\n\tassertNominalPrimitiveSubtypeHistoryCheckout\n} from \"./nominal-primitive-subtype-history-checkout.mjs\";\n",
+          "previous": "",
+          "start": 5671
+        },
+        {
+          "current": "const readNominalPrimitiveSubtypeSparseCheckout = async () =>\n\tJSON.parse(await readFile(\n\t\tnominalPrimitiveSubtypeSparseCheckoutHistoryPath, \"utf8\"));\n",
+          "previous": "",
+          "start": 6227
+        },
+        {
+          "current": "test(\"primitive Subtype sparse checkout records its exact source range\", async () => {\n\tconst record = await readNominalPrimitiveSubtypeSparseCheckout();\n\tassert.equal(record.schemaVersion, 1);\n\tassert.equal(record.milestone\n\t\t, \"nominal-primitive-subtype-sparse-checkout-source-v1\");\n\tassert.equal(record.predecessorCommit\n\t\t, nominalPrimitiveSubtypeSparseCheckoutPredecessor);\n\tassert.equal(record.implementationCommit\n\t\t, nominalPrimitiveSubtypeSparseCheckoutImplementation);\n\tassert.deepEqual(record.updates.map(update => update.path)\n\t\t, nominalPrimitiveSubtypeSparseCheckoutModifiedPaths);\n\tassert.deepEqual(record.implementationAdditions.map(addition => addition.path)\n\t\t, nominalPrimitiveSubtypeSparseCheckoutImplementationAdditions);\n\tassert.deepEqual(record.integrationUpdates.map(update => update.path)\n\t\t, nominalPrimitiveSubtypeSparseCheckoutIntegrationPaths);\n\tassert.deepEqual(record.additions.map(addition => addition.path)\n\t\t, nominalPrimitiveSubtypeSparseCheckoutAddedPaths);\n\tassert.equal(git([\"rev-parse\"\n\t\t, `${nominalPrimitiveSubtypeSparseCheckoutImplementation}^`]).trim()\n\t, nominalPrimitiveSubtypeSparseCheckoutPredecessor);\n\tassert.deepEqual(git([\"diff\", \"--name-only\"\n\t\t, nominalPrimitiveSubtypeSparseCheckoutPredecessor\n\t\t, nominalPrimitiveSubtypeSparseCheckoutImplementation]).trim()\n\t\t.split(\"\\n\").sort()\n\t, [...nominalPrimitiveSubtypeSparseCheckoutImplementationPaths].sort());\n\tassert.deepEqual(git([\"diff\", \"--name-only\", \"--diff-filter=M\"\n\t\t, nominalPrimitiveSubtypeSparseCheckoutPredecessor\n\t\t, nominalPrimitiveSubtypeSparseCheckoutImplementation]).trim()\n\t\t.split(\"\\n\").sort()\n\t, [...nominalPrimitiveSubtypeSparseCheckoutModifiedPaths].sort());\n});\n\ntest(\"primitive Subtype sparse checkout reverses every transition\", async () => {\n\tconst record = await readNominalPrimitiveSubtypeSparseCheckout();\n\tfor(const update of [...record.updates, ...record.integrationUpdates])\n\t{\n\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256\n\t\t\t, beforeNominalPrimitiveSubtypeSparseCheckoutSource);\n\t\tconst base = record.integrationUpdates.includes(update)\n\t\t\t? nominalPrimitiveSubtypeSparseCheckoutImplementation\n\t\t\t: nominalPrimitiveSubtypeSparseCheckoutPredecessor;\n\t\tconst previous = git([\"show\", `${base}:${update.path}`]);\n\t\tassert.equal(reverseNominalPrimitiveSubtypeSparseCheckoutUpdate(\n\t\t\tcurrent, update), previous, update.path);\n\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n\t\tassert.ok(finRefinementNormalizationPaths.includes(update.path));\n\t}\n\tfor(const addition of [\n\t\t...record.implementationAdditions, ...record.additions\n\t]) assert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\taddition.path, addition.currentSha256))\n\t, addition.currentSha256, addition.path);\n});\n\ntest(\"primitive Subtype acceptance uses one exact bounded history checkout\", () => {\n\tfor(const path of nominalPrimitiveSubtypeSparseCheckoutWorkflowPaths)\n\t{\n\t\tconst workflow = git([\"show\"\n\t\t\t, `${nominalPrimitiveSubtypeSparseCheckoutImplementation}:${path}`]);\n\t\tconst checkout = workflow.split(\n\t\t\t\"      - name: Check out the exact revision and original evidence history\\n\"\n\t\t)[1].split(\"      - name: \")[0];\n\t\tassertNominalPrimitiveSubtypeHistoryCheckout(checkout);\n\t}\n\tconst helper = git([\"show\"\n\t\t, `${nominalPrimitiveSubtypeSparseCheckoutImplementation}:`\n\t\t\t+ \"tests/helpers/nominal-primitive-subtype-history-checkout.mjs\"]);\n\tassert.match(helper\n\t\t, /Retain every producer commit while materializing only live source/u);\n\tassert.match(helper\n\t\t, /nominal-primitive-subtype-python-20261014/u);\n\tassert.match(helper\n\t\t, /nominal-primitive-subtype-npm-20261014/u);\n});\n\ntest(\"primitive Subtype sparse checkout rejects alteration\", async () => {\n\tconst update\n\t\t= (await readNominalPrimitiveSubtypeSparseCheckout()).updates[0];\n\tconst current = await sourceAtFinHistoryMilestone(\n\t\tupdate.path, update.currentSha256\n\t\t, beforeNominalPrimitiveSubtypeSparseCheckoutSource);\n\tfor(const forged of [{ ...update, currentSha256: \"0\".repeat(64) }\n\t\t, { ...update, previousSha256: \"0\".repeat(64) }\n\t\t, { ...update, path: \"unrelated.mjs\" }\n\t\t, { ...update, edits: [] }\n\t\t, { ...update, edits: [...update.edits, update.edits[0]] }])\n\t\tassert.throws(() =>\n\t\t\treverseNominalPrimitiveSubtypeSparseCheckoutUpdate(current, forged));\n\tassert.equal(beforeNominalPrimitiveSubtypeSparseCheckoutSource(\n\t\tupdate.path, current + \"unknown\"), current + \"unknown\");\n});\n\ntest(\"primitive Subtype sparse-checkout writer refuses another checkout\", async t => {\n\tconst root = await mkdtemp(join(\n\t\ttmpdir(), \"lean-primitive-subtype-sparse-guard-\"\n\t));\n\tt.after(() => rm(root, { recursive: true }));\n\tconst result = spawnSync(process.execPath, [resolve(\n\t\t\"scripts/update-nominal-primitive-subtype-sparse-checkout-source-history.mjs\"\n\t)], { cwd: root, encoding: \"utf8\", timeout: 15_000 });\n\tassert.notEqual(result.status, 0);\n\tassert.equal(result.stdout, \"\");\n\tassert.deepEqual(await readdir(root), []);\n});\n\n",
+          "previous": "",
+          "start": 15500
+        }
+      ],
+      "path": "tests/helpers/core-historical-evidence-replay-source-history-tests.mjs",
+      "previousSha256": "39a8722819c24b8a977b1b440037d0a142d82a0a9b0971cb3cd6da949cb2ef1b"
+    },
+    {
+      "currentSha256": "9cc48bf01d24e40d079c20c66084c8d61ee70da65b407603330d3f80f2eed264",
+      "edits": [
+        {
+          "current": "import { beforeNominalPrimitiveSubtypeSparseCheckoutSource, nominalPrimitiveSubtypeSparseCheckoutNormalizationPaths } from \"./nominal-primitive-subtype-sparse-checkout-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...nominalPrimitiveSubtypeSparseCheckoutNormalizationPaths\n\t, ...coreStaticSparseCheckoutNormalizationPaths\n",
+          "previous": "\t...coreStaticSparseCheckoutNormalizationPaths\n",
+          "start": 192579
+        },
+        {
+          "current": "\tlet stage = beforeNominalPrimitiveSubtypeSparseCheckoutSource(\n\t\tpath, text, expected\n\t);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCoreStaticSparseCheckoutSource(\n",
+          "previous": "\tlet stage = beforeCoreStaticSparseCheckoutSource(\n",
+          "start": 239189
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "b9caba1da15a0bb14b605cbc31368010d61bee5e17b763baa713be7ac8b41166"
+    }
+  ],
+  "milestone": "nominal-primitive-subtype-sparse-checkout-source-v1",
+  "predecessorCommit": "a6e785dd9961af4d0a68225eb96eff4a8161965f",
+  "schemaVersion": 1,
+  "scope": "Retain complete producer history while reducing each of the thirteen primitive-base nominal Subtype acceptance worktrees from 44.5 GB to 464 MB. Materialize every live source root, both current documentation manifests and exactly the two immutable evidence archives read by the cohort. Preserve all acceptance commands, runtime budgets, artifacts, support claims and original evidence bytes.",
+  "updates": [
+    {
+      "currentSha256": "fcfe42007679b5f65441860379e15b42595056dd4cce44d4523d35bee27e6afd",
+      "edits": [
+        {
+          "current": "          # Retain every producer commit while materializing only live source\n          # and the two immutable archives read by this acceptance cohort.\n          sparse-checkout: |\n            /*\n            !/*/\n            /.github/\n            /acceptance/\n            /config/\n            /containers/\n            /demos/\n            /nix/\n            /notices/\n            /patches/\n            /poc/\n            /schema/\n            /scripts/\n            /site/\n            /src/\n            /tests/\n            /docs/\n            !/docs/*\n            /docs/type-surface.v1.json\n            /docs/consumer-support.v1.json\n            /docs/evidence/\n            !/docs/evidence/*\n            /docs/evidence/nominal-primitive-subtype-python-20261014/\n            /docs/evidence/nominal-primitive-subtype-npm-20261014/\n          sparse-checkout-cone-mode: false\n",
+          "previous": "",
+          "start": 819
+        }
+      ],
+      "path": ".github/workflows/nominal-primitive-subtype-browser.yml",
+      "previousSha256": "44d7a31213cf2dd9480c7341acad89619893804e3fb1e172f02aedecaf0cdd21"
+    },
+    {
+      "currentSha256": "c431d9c754c07671cc6bb494afa6f0345bcdafd0f619f588cb773d0307b7754b",
+      "edits": [
+        {
+          "current": "          # Retain every producer commit while materializing only live source\n          # and the two immutable archives read by this acceptance cohort.\n          sparse-checkout: |\n            /*\n            !/*/\n            /.github/\n            /acceptance/\n            /config/\n            /containers/\n            /demos/\n            /nix/\n            /notices/\n            /patches/\n            /poc/\n            /schema/\n            /scripts/\n            /site/\n            /src/\n            /tests/\n            /docs/\n            !/docs/*\n            /docs/type-surface.v1.json\n            /docs/consumer-support.v1.json\n            /docs/evidence/\n            !/docs/evidence/*\n            /docs/evidence/nominal-primitive-subtype-python-20261014/\n            /docs/evidence/nominal-primitive-subtype-npm-20261014/\n          sparse-checkout-cone-mode: false\n",
+          "previous": "",
+          "start": 620
+        }
+      ],
+      "path": ".github/workflows/nominal-primitive-subtype-dotnet.yml",
+      "previousSha256": "51368467b238bf3fb79e222b3cd493ef39d3d2e1aef0d4776720b019547dd553"
+    },
+    {
+      "currentSha256": "0d88eb331cf2ac55c64d42ccc3be9e5f46826d73d7668ca0760c126f7adf3cba",
+      "edits": [
+        {
+          "current": "          # Retain every producer commit while materializing only live source\n          # and the two immutable archives read by this acceptance cohort.\n          sparse-checkout: |\n            /*\n            !/*/\n            /.github/\n            /acceptance/\n            /config/\n            /containers/\n            /demos/\n            /nix/\n            /notices/\n            /patches/\n            /poc/\n            /schema/\n            /scripts/\n            /site/\n            /src/\n            /tests/\n            /docs/\n            !/docs/*\n            /docs/type-surface.v1.json\n            /docs/consumer-support.v1.json\n            /docs/evidence/\n            !/docs/evidence/*\n            /docs/evidence/nominal-primitive-subtype-python-20261014/\n            /docs/evidence/nominal-primitive-subtype-npm-20261014/\n          sparse-checkout-cone-mode: false\n",
+          "previous": "",
+          "start": 636
+        }
+      ],
+      "path": ".github/workflows/nominal-primitive-subtype-jvm.yml",
+      "previousSha256": "aac60d11400e9f3338a8667666849376b71edb384d7cb094ae26ec7836e400e4"
+    },
+    {
+      "currentSha256": "709e03f6ef2a6c98dfb5d5b06c3783beb01a48450bcd28deee33f0bb6e301f1d",
+      "edits": [
+        {
+          "current": "          # Retain every producer commit while materializing only live source\n          # and the two immutable archives read by this acceptance cohort.\n          sparse-checkout: |\n            /*\n            !/*/\n            /.github/\n            /acceptance/\n            /config/\n            /containers/\n            /demos/\n            /nix/\n            /notices/\n            /patches/\n            /poc/\n            /schema/\n            /scripts/\n            /site/\n            /src/\n            /tests/\n            /docs/\n            !/docs/*\n            /docs/type-surface.v1.json\n            /docs/consumer-support.v1.json\n            /docs/evidence/\n            !/docs/evidence/*\n            /docs/evidence/nominal-primitive-subtype-python-20261014/\n            /docs/evidence/nominal-primitive-subtype-npm-20261014/\n          sparse-checkout-cone-mode: false\n",
+          "previous": "",
+          "start": 630
+        }
+      ],
+      "path": ".github/workflows/nominal-primitive-subtype-native.yml",
+      "previousSha256": "48e0241e393706a7654527d04267c3967cc40d4b4d271d846d1249cca903249f"
+    },
+    {
+      "currentSha256": "953536f2e89009b7127ec514db02365e9c88421f055653f93777f27838c6abb0",
+      "edits": [
+        {
+          "current": "          # Retain every producer commit while materializing only live source\n          # and the two immutable archives read by this acceptance cohort.\n          sparse-checkout: |\n            /*\n            !/*/\n            /.github/\n            /acceptance/\n            /config/\n            /containers/\n            /demos/\n            /nix/\n            /notices/\n            /patches/\n            /poc/\n            /schema/\n            /scripts/\n            /site/\n            /src/\n            /tests/\n            /docs/\n            !/docs/*\n            /docs/type-surface.v1.json\n            /docs/consumer-support.v1.json\n            /docs/evidence/\n            !/docs/evidence/*\n            /docs/evidence/nominal-primitive-subtype-python-20261014/\n            /docs/evidence/nominal-primitive-subtype-npm-20261014/\n          sparse-checkout-cone-mode: false\n",
+          "previous": "",
+          "start": 786
+        }
+      ],
+      "path": ".github/workflows/nominal-primitive-subtype-npm.yml",
+      "previousSha256": "8840fb985eff511f69af58faa270d62d8e4cb017e9b22ec788d381c4fd536695"
+    },
+    {
+      "currentSha256": "f3297fcc6a942d54ad42357526a285f9fcef64ce137078178f4cf5e5f3707dfa",
+      "edits": [
+        {
+          "current": "          # Retain every producer commit while materializing only live source\n          # and the two immutable archives read by this acceptance cohort.\n          sparse-checkout: |\n            /*\n            !/*/\n            /.github/\n            /acceptance/\n            /config/\n            /containers/\n            /demos/\n            /nix/\n            /notices/\n            /patches/\n            /poc/\n            /schema/\n            /scripts/\n            /site/\n            /src/\n            /tests/\n            /docs/\n            !/docs/*\n            /docs/type-surface.v1.json\n            /docs/consumer-support.v1.json\n            /docs/evidence/\n            !/docs/evidence/*\n            /docs/evidence/nominal-primitive-subtype-python-20261014/\n            /docs/evidence/nominal-primitive-subtype-npm-20261014/\n          sparse-checkout-cone-mode: false\n",
+          "previous": "",
+          "start": 630
+        }
+      ],
+      "path": ".github/workflows/nominal-primitive-subtype-perl.yml",
+      "previousSha256": "2de4247b42da56bc36fe904069a2d265d24e4be9d30707c8120a0e4909bc4980"
+    },
+    {
+      "currentSha256": "5ac61738538f196aa35d529caf8eba1b27710c948f82a1f9c72a9e7a0496013d",
+      "edits": [
+        {
+          "current": "          # Retain every producer commit while materializing only live source\n          # and the two immutable archives read by this acceptance cohort.\n          sparse-checkout: |\n            /*\n            !/*/\n            /.github/\n            /acceptance/\n            /config/\n            /containers/\n            /demos/\n            /nix/\n            /notices/\n            /patches/\n            /poc/\n            /schema/\n            /scripts/\n            /site/\n            /src/\n            /tests/\n            /docs/\n            !/docs/*\n            /docs/type-surface.v1.json\n            /docs/consumer-support.v1.json\n            /docs/evidence/\n            !/docs/evidence/*\n            /docs/evidence/nominal-primitive-subtype-python-20261014/\n            /docs/evidence/nominal-primitive-subtype-npm-20261014/\n          sparse-checkout-cone-mode: false\n",
+          "previous": "",
+          "start": 879
+        }
+      ],
+      "path": ".github/workflows/nominal-primitive-subtype-php-wasm.yml",
+      "previousSha256": "e64f46ef236f9176232fa84fff421ded8e4b6fbeddb77784600ad2707090d145"
+    },
+    {
+      "currentSha256": "cc665452537fd6ea5d8dfd152055a5e94a26183425ae7add78b13e6b21e98500",
+      "edits": [
+        {
+          "current": "          # Retain every producer commit while materializing only live source\n          # and the two immutable archives read by this acceptance cohort.\n          sparse-checkout: |\n            /*\n            !/*/\n            /.github/\n            /acceptance/\n            /config/\n            /containers/\n            /demos/\n            /nix/\n            /notices/\n            /patches/\n            /poc/\n            /schema/\n            /scripts/\n            /site/\n            /src/\n            /tests/\n            /docs/\n            !/docs/*\n            /docs/type-surface.v1.json\n            /docs/consumer-support.v1.json\n            /docs/evidence/\n            !/docs/evidence/*\n            /docs/evidence/nominal-primitive-subtype-python-20261014/\n            /docs/evidence/nominal-primitive-subtype-npm-20261014/\n          sparse-checkout-cone-mode: false\n",
+          "previous": "",
+          "start": 626
+        }
+      ],
+      "path": ".github/workflows/nominal-primitive-subtype-php.yml",
+      "previousSha256": "71feb78faedd85012c99d80fca7a3e534cdcb692a88e6ffe1ca0224d5a205bee"
+    },
+    {
+      "currentSha256": "edb842873bab720cb749ab105de3212fa57b057971cf2b99a7235b0dde7bdd2c",
+      "edits": [
+        {
+          "current": "          # Retain every producer commit while materializing only live source\n          # and the two immutable archives read by this acceptance cohort.\n          sparse-checkout: |\n            /*\n            !/*/\n            /.github/\n            /acceptance/\n            /config/\n            /containers/\n            /demos/\n            /nix/\n            /notices/\n            /patches/\n            /poc/\n            /schema/\n            /scripts/\n            /site/\n            /src/\n            /tests/\n            /docs/\n            !/docs/*\n            /docs/type-surface.v1.json\n            /docs/consumer-support.v1.json\n            /docs/evidence/\n            !/docs/evidence/*\n            /docs/evidence/nominal-primitive-subtype-python-20261014/\n            /docs/evidence/nominal-primitive-subtype-npm-20261014/\n          sparse-checkout-cone-mode: false\n",
+          "previous": "",
+          "start": 725
+        }
+      ],
+      "path": ".github/workflows/nominal-primitive-subtype-python.yml",
+      "previousSha256": "8a749690287ce2ff4e5d5487466ec11b4efc62bd74d8ab8158f098ba57cd3bd6"
+    },
+    {
+      "currentSha256": "c0876cd352d4dbafa94ea5a4cfd76e617fac25ffff1f8516cc74ebf0049a6301",
+      "edits": [
+        {
+          "current": "          # Retain every producer commit while materializing only live source\n          # and the two immutable archives read by this acceptance cohort.\n          sparse-checkout: |\n            /*\n            !/*/\n            /.github/\n            /acceptance/\n            /config/\n            /containers/\n            /demos/\n            /nix/\n            /notices/\n            /patches/\n            /poc/\n            /schema/\n            /scripts/\n            /site/\n            /src/\n            /tests/\n            /docs/\n            !/docs/*\n            /docs/type-surface.v1.json\n            /docs/consumer-support.v1.json\n            /docs/evidence/\n            !/docs/evidence/*\n            /docs/evidence/nominal-primitive-subtype-python-20261014/\n            /docs/evidence/nominal-primitive-subtype-npm-20261014/\n          sparse-checkout-cone-mode: false\n",
+          "previous": "",
+          "start": 616
+        }
+      ],
+      "path": ".github/workflows/nominal-primitive-subtype-ruby.yml",
+      "previousSha256": "4c3b11e1ba54f474d78230d34445e6d73fcbda5dca726f1316c40b273d5d5293"
+    },
+    {
+      "currentSha256": "b9f31c30f9c9b0098fd05c704bb3d17b189fe18437679ed5fbdd749f93dc3630",
+      "edits": [
+        {
+          "current": "          # Retain every producer commit while materializing only live source\n          # and the two immutable archives read by this acceptance cohort.\n          sparse-checkout: |\n            /*\n            !/*/\n            /.github/\n            /acceptance/\n            /config/\n            /containers/\n            /demos/\n            /nix/\n            /notices/\n            /patches/\n            /poc/\n            /schema/\n            /scripts/\n            /site/\n            /src/\n            /tests/\n            /docs/\n            !/docs/*\n            /docs/type-surface.v1.json\n            /docs/consumer-support.v1.json\n            /docs/evidence/\n            !/docs/evidence/*\n            /docs/evidence/nominal-primitive-subtype-python-20261014/\n            /docs/evidence/nominal-primitive-subtype-npm-20261014/\n          sparse-checkout-cone-mode: false\n",
+          "previous": "",
+          "start": 616
+        }
+      ],
+      "path": ".github/workflows/nominal-primitive-subtype-rust.yml",
+      "previousSha256": "17f9f91587f49735603cc688ea185d6386429f71448a8a44620f09621d2556c3"
+    },
+    {
+      "currentSha256": "66815618d7c099bebf47a2221058c1b28d34a3c1913ba94a8eb17ad889a649b6",
+      "edits": [
+        {
+          "current": "          # Retain every producer commit while materializing only live source\n          # and the two immutable archives read by this acceptance cohort.\n          sparse-checkout: |\n            /*\n            !/*/\n            /.github/\n            /acceptance/\n            /config/\n            /containers/\n            /demos/\n            /nix/\n            /notices/\n            /patches/\n            /poc/\n            /schema/\n            /scripts/\n            /site/\n            /src/\n            /tests/\n            /docs/\n            !/docs/*\n            /docs/type-surface.v1.json\n            /docs/consumer-support.v1.json\n            /docs/evidence/\n            !/docs/evidence/*\n            /docs/evidence/nominal-primitive-subtype-python-20261014/\n            /docs/evidence/nominal-primitive-subtype-npm-20261014/\n          sparse-checkout-cone-mode: false\n",
+          "previous": "",
+          "start": 623
+        }
+      ],
+      "path": ".github/workflows/nominal-primitive-subtype-supplement.yml",
+      "previousSha256": "537cacc6f7a64622c6563b09387222ba6cfea111edcecd6add67e278e595ede9"
+    },
+    {
+      "currentSha256": "2ee6772418b23c652b9b085ebb42af023695b3f0df44cffa27a92b070acc0655",
+      "edits": [
+        {
+          "current": "          # Retain every producer commit while materializing only live source\n          # and the two immutable archives read by this acceptance cohort.\n          sparse-checkout: |\n            /*\n            !/*/\n            /.github/\n            /acceptance/\n            /config/\n            /containers/\n            /demos/\n            /nix/\n            /notices/\n            /patches/\n            /poc/\n            /schema/\n            /scripts/\n            /site/\n            /src/\n            /tests/\n            /docs/\n            !/docs/*\n            /docs/type-surface.v1.json\n            /docs/consumer-support.v1.json\n            /docs/evidence/\n            !/docs/evidence/*\n            /docs/evidence/nominal-primitive-subtype-python-20261014/\n            /docs/evidence/nominal-primitive-subtype-npm-20261014/\n          sparse-checkout-cone-mode: false\n",
+          "previous": "",
+          "start": 642
+        }
+      ],
+      "path": ".github/workflows/nominal-primitive-subtype-wit.yml",
+      "previousSha256": "783c18a05989136f5ffa30597d61b0b81683adc519b54e9a93d15edd022f2571"
+    },
+    {
+      "currentSha256": "9355720f5d2abf61a985c3250f5d438019af711f3284a3b3bb4880e80f8d9250",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"953536f2e89009b7127ec514db02365e9c88421f055653f93777f27838c6abb0\"\n",
+          "previous": "          \"sha256\": \"8840fb985eff511f69af58faa270d62d8e4cb017e9b22ec788d381c4fd536695\"\n",
+          "start": 6789736
+        },
+        {
+          "current": "          \"sha256\": \"953536f2e89009b7127ec514db02365e9c88421f055653f93777f27838c6abb0\"\n",
+          "previous": "          \"sha256\": \"8840fb985eff511f69af58faa270d62d8e4cb017e9b22ec788d381c4fd536695\"\n",
+          "start": 6815256
+        },
+        {
+          "current": "          \"sha256\": \"953536f2e89009b7127ec514db02365e9c88421f055653f93777f27838c6abb0\"\n",
+          "previous": "          \"sha256\": \"8840fb985eff511f69af58faa270d62d8e4cb017e9b22ec788d381c4fd536695\"\n",
+          "start": 6840804
+        },
+        {
+          "current": "          \"sha256\": \"953536f2e89009b7127ec514db02365e9c88421f055653f93777f27838c6abb0\"\n",
+          "previous": "          \"sha256\": \"8840fb985eff511f69af58faa270d62d8e4cb017e9b22ec788d381c4fd536695\"\n",
+          "start": 6866324
+        },
+        {
+          "current": "          \"sha256\": \"edb842873bab720cb749ab105de3212fa57b057971cf2b99a7235b0dde7bdd2c\"\n",
+          "previous": "          \"sha256\": \"8a749690287ce2ff4e5d5487466ec11b4efc62bd74d8ab8158f098ba57cd3bd6\"\n",
+          "start": 6892006
+        },
+        {
+          "current": "          \"sha256\": \"edb842873bab720cb749ab105de3212fa57b057971cf2b99a7235b0dde7bdd2c\"\n",
+          "previous": "          \"sha256\": \"8a749690287ce2ff4e5d5487466ec11b4efc62bd74d8ab8158f098ba57cd3bd6\"\n",
+          "start": 6923719
+        },
+        {
+          "current": "          \"sha256\": \"edb842873bab720cb749ab105de3212fa57b057971cf2b99a7235b0dde7bdd2c\"\n",
+          "previous": "          \"sha256\": \"8a749690287ce2ff4e5d5487466ec11b4efc62bd74d8ab8158f098ba57cd3bd6\"\n",
+          "start": 6955906
+        },
+        {
+          "current": "          \"sha256\": \"edb842873bab720cb749ab105de3212fa57b057971cf2b99a7235b0dde7bdd2c\"\n",
+          "previous": "          \"sha256\": \"8a749690287ce2ff4e5d5487466ec11b4efc62bd74d8ab8158f098ba57cd3bd6\"\n",
+          "start": 6988089
+        },
+        {
+          "current": "          \"sha256\": \"fcfe42007679b5f65441860379e15b42595056dd4cce44d4523d35bee27e6afd\"\n",
+          "previous": "          \"sha256\": \"44d7a31213cf2dd9480c7341acad89619893804e3fb1e172f02aedecaf0cdd21\"\n",
+          "start": 7021261
+        },
+        {
+          "current": "          \"sha256\": \"fcfe42007679b5f65441860379e15b42595056dd4cce44d4523d35bee27e6afd\"\n",
+          "previous": "          \"sha256\": \"44d7a31213cf2dd9480c7341acad89619893804e3fb1e172f02aedecaf0cdd21\"\n",
+          "start": 7082908
+        },
+        {
+          "current": "          \"sha256\": \"fcfe42007679b5f65441860379e15b42595056dd4cce44d4523d35bee27e6afd\"\n",
+          "previous": "          \"sha256\": \"44d7a31213cf2dd9480c7341acad89619893804e3fb1e172f02aedecaf0cdd21\"\n",
+          "start": 7144971
+        },
+        {
+          "current": "          \"sha256\": \"fcfe42007679b5f65441860379e15b42595056dd4cce44d4523d35bee27e6afd\"\n",
+          "previous": "          \"sha256\": \"44d7a31213cf2dd9480c7341acad89619893804e3fb1e172f02aedecaf0cdd21\"\n",
+          "start": 7206618
+        },
+        {
+          "current": "          \"sha256\": \"709e03f6ef2a6c98dfb5d5b06c3783beb01a48450bcd28deee33f0bb6e301f1d\"\n",
+          "previous": "          \"sha256\": \"48e0241e393706a7654527d04267c3967cc40d4b4d271d846d1249cca903249f\"\n",
+          "start": 7268139
+        },
+        {
+          "current": "          \"sha256\": \"709e03f6ef2a6c98dfb5d5b06c3783beb01a48450bcd28deee33f0bb6e301f1d\"\n",
+          "previous": "          \"sha256\": \"48e0241e393706a7654527d04267c3967cc40d4b4d271d846d1249cca903249f\"\n",
+          "start": 7301887
+        },
+        {
+          "current": "          \"sha256\": \"709e03f6ef2a6c98dfb5d5b06c3783beb01a48450bcd28deee33f0bb6e301f1d\"\n",
+          "previous": "          \"sha256\": \"48e0241e393706a7654527d04267c3967cc40d4b4d271d846d1249cca903249f\"\n",
+          "start": 7335906
+        },
+        {
+          "current": "          \"sha256\": \"709e03f6ef2a6c98dfb5d5b06c3783beb01a48450bcd28deee33f0bb6e301f1d\"\n",
+          "previous": "          \"sha256\": \"48e0241e393706a7654527d04267c3967cc40d4b4d271d846d1249cca903249f\"\n",
+          "start": 7370124
+        },
+        {
+          "current": "          \"sha256\": \"f3297fcc6a942d54ad42357526a285f9fcef64ce137078178f4cf5e5f3707dfa\"\n",
+          "previous": "          \"sha256\": \"2de4247b42da56bc36fe904069a2d265d24e4be9d30707c8120a0e4909bc4980\"\n",
+          "start": 7405344
+        },
+        {
+          "current": "          \"sha256\": \"f3297fcc6a942d54ad42357526a285f9fcef64ce137078178f4cf5e5f3707dfa\"\n",
+          "previous": "          \"sha256\": \"2de4247b42da56bc36fe904069a2d265d24e4be9d30707c8120a0e4909bc4980\"\n",
+          "start": 7479540
+        },
+        {
+          "current": "          \"sha256\": \"f3297fcc6a942d54ad42357526a285f9fcef64ce137078178f4cf5e5f3707dfa\"\n",
+          "previous": "          \"sha256\": \"2de4247b42da56bc36fe904069a2d265d24e4be9d30707c8120a0e4909bc4980\"\n",
+          "start": 7554700
+        },
+        {
+          "current": "          \"sha256\": \"f3297fcc6a942d54ad42357526a285f9fcef64ce137078178f4cf5e5f3707dfa\"\n",
+          "previous": "          \"sha256\": \"2de4247b42da56bc36fe904069a2d265d24e4be9d30707c8120a0e4909bc4980\"\n",
+          "start": 7629147
+        },
+        {
+          "current": "          \"sha256\": \"c0876cd352d4dbafa94ea5a4cfd76e617fac25ffff1f8516cc74ebf0049a6301\"\n",
+          "previous": "          \"sha256\": \"4c3b11e1ba54f474d78230d34445e6d73fcbda5dca726f1316c40b273d5d5293\"\n",
+          "start": 7704082
+        },
+        {
+          "current": "          \"sha256\": \"c0876cd352d4dbafa94ea5a4cfd76e617fac25ffff1f8516cc74ebf0049a6301\"\n",
+          "previous": "          \"sha256\": \"4c3b11e1ba54f474d78230d34445e6d73fcbda5dca726f1316c40b273d5d5293\"\n",
+          "start": 7735214
+        },
+        {
+          "current": "          \"sha256\": \"c0876cd352d4dbafa94ea5a4cfd76e617fac25ffff1f8516cc74ebf0049a6301\"\n",
+          "previous": "          \"sha256\": \"4c3b11e1ba54f474d78230d34445e6d73fcbda5dca726f1316c40b273d5d5293\"\n",
+          "start": 7766730
+        },
+        {
+          "current": "          \"sha256\": \"c0876cd352d4dbafa94ea5a4cfd76e617fac25ffff1f8516cc74ebf0049a6301\"\n",
+          "previous": "          \"sha256\": \"4c3b11e1ba54f474d78230d34445e6d73fcbda5dca726f1316c40b273d5d5293\"\n",
+          "start": 7798328
+        },
+        {
+          "current": "          \"sha256\": \"8b503f7341c101b08b283c898c423a0ebe077e538a26a6e92603007a89ed868e\"\n",
+          "previous": "          \"sha256\": \"e46a151e70caf0fed2c92d53e216bcd0b3f2ccf140ef093f8b082eb9728ec3cd\"\n",
+          "start": 7830174
+        },
+        {
+          "current": "          \"sha256\": \"b9f31c30f9c9b0098fd05c704bb3d17b189fe18437679ed5fbdd749f93dc3630\"\n",
+          "previous": "          \"sha256\": \"17f9f91587f49735603cc688ea185d6386429f71448a8a44620f09621d2556c3\"\n",
+          "start": 7830715
+        },
+        {
+          "current": "          \"sha256\": \"8b503f7341c101b08b283c898c423a0ebe077e538a26a6e92603007a89ed868e\"\n",
+          "previous": "          \"sha256\": \"e46a151e70caf0fed2c92d53e216bcd0b3f2ccf140ef093f8b082eb9728ec3cd\"\n",
+          "start": 7979454
+        },
+        {
+          "current": "          \"sha256\": \"b9f31c30f9c9b0098fd05c704bb3d17b189fe18437679ed5fbdd749f93dc3630\"\n",
+          "previous": "          \"sha256\": \"17f9f91587f49735603cc688ea185d6386429f71448a8a44620f09621d2556c3\"\n",
+          "start": 7979995
+        },
+        {
+          "current": "          \"sha256\": \"8b503f7341c101b08b283c898c423a0ebe077e538a26a6e92603007a89ed868e\"\n",
+          "previous": "          \"sha256\": \"e46a151e70caf0fed2c92d53e216bcd0b3f2ccf140ef093f8b082eb9728ec3cd\"\n",
+          "start": 8129272
+        },
+        {
+          "current": "          \"sha256\": \"b9f31c30f9c9b0098fd05c704bb3d17b189fe18437679ed5fbdd749f93dc3630\"\n",
+          "previous": "          \"sha256\": \"17f9f91587f49735603cc688ea185d6386429f71448a8a44620f09621d2556c3\"\n",
+          "start": 8129813
+        },
+        {
+          "current": "          \"sha256\": \"8b503f7341c101b08b283c898c423a0ebe077e538a26a6e92603007a89ed868e\"\n",
+          "previous": "          \"sha256\": \"e46a151e70caf0fed2c92d53e216bcd0b3f2ccf140ef093f8b082eb9728ec3cd\"\n",
+          "start": 8279018
+        },
+        {
+          "current": "          \"sha256\": \"b9f31c30f9c9b0098fd05c704bb3d17b189fe18437679ed5fbdd749f93dc3630\"\n",
+          "previous": "          \"sha256\": \"17f9f91587f49735603cc688ea185d6386429f71448a8a44620f09621d2556c3\"\n",
+          "start": 8279559
+        },
+        {
+          "current": "          \"sha256\": \"e22b493e880598b5f8ebd8d79964ff540365fbff9eb2c69a360f834c9cbec651\"\n",
+          "previous": "          \"sha256\": \"443cc5c2c97a95edb9e2fe1c0a209ac9eb68aa53c784d1c26381be239bc9098f\"\n",
+          "start": 8429299
+        },
+        {
+          "current": "          \"sha256\": \"c431d9c754c07671cc6bb494afa6f0345bcdafd0f619f588cb773d0307b7754b\"\n",
+          "previous": "          \"sha256\": \"51368467b238bf3fb79e222b3cd493ef39d3d2e1aef0d4776720b019547dd553\"\n",
+          "start": 8429846
+        },
+        {
+          "current": "          \"sha256\": \"e22b493e880598b5f8ebd8d79964ff540365fbff9eb2c69a360f834c9cbec651\"\n",
+          "previous": "          \"sha256\": \"443cc5c2c97a95edb9e2fe1c0a209ac9eb68aa53c784d1c26381be239bc9098f\"\n",
+          "start": 8581974
+        },
+        {
+          "current": "          \"sha256\": \"c431d9c754c07671cc6bb494afa6f0345bcdafd0f619f588cb773d0307b7754b\"\n",
+          "previous": "          \"sha256\": \"51368467b238bf3fb79e222b3cd493ef39d3d2e1aef0d4776720b019547dd553\"\n",
+          "start": 8582521
+        },
+        {
+          "current": "          \"sha256\": \"e22b493e880598b5f8ebd8d79964ff540365fbff9eb2c69a360f834c9cbec651\"\n",
+          "previous": "          \"sha256\": \"443cc5c2c97a95edb9e2fe1c0a209ac9eb68aa53c784d1c26381be239bc9098f\"\n",
+          "start": 8734991
+        },
+        {
+          "current": "          \"sha256\": \"c431d9c754c07671cc6bb494afa6f0345bcdafd0f619f588cb773d0307b7754b\"\n",
+          "previous": "          \"sha256\": \"51368467b238bf3fb79e222b3cd493ef39d3d2e1aef0d4776720b019547dd553\"\n",
+          "start": 8735538
+        },
+        {
+          "current": "          \"sha256\": \"e22b493e880598b5f8ebd8d79964ff540365fbff9eb2c69a360f834c9cbec651\"\n",
+          "previous": "          \"sha256\": \"443cc5c2c97a95edb9e2fe1c0a209ac9eb68aa53c784d1c26381be239bc9098f\"\n",
+          "start": 8888136
+        },
+        {
+          "current": "          \"sha256\": \"c431d9c754c07671cc6bb494afa6f0345bcdafd0f619f588cb773d0307b7754b\"\n",
+          "previous": "          \"sha256\": \"51368467b238bf3fb79e222b3cd493ef39d3d2e1aef0d4776720b019547dd553\"\n",
+          "start": 8888683
+        },
+        {
+          "current": "          \"sha256\": \"90fe5027d70d03b4a01d97fa8b361fabbc7799df93ace292d570078f895f0ed1\"\n",
+          "previous": "          \"sha256\": \"d74e48f78515e0b783a3fb433226dfb5cd305c1e29cf98a2dd999752a652ad01\"\n",
+          "start": 9041718
+        },
+        {
+          "current": "          \"sha256\": \"cc665452537fd6ea5d8dfd152055a5e94a26183425ae7add78b13e6b21e98500\"\n",
+          "previous": "          \"sha256\": \"71feb78faedd85012c99d80fca7a3e534cdcb692a88e6ffe1ca0224d5a205bee\"\n",
+          "start": 9042256
+        },
+        {
+          "current": "          \"sha256\": \"90fe5027d70d03b4a01d97fa8b361fabbc7799df93ace292d570078f895f0ed1\"\n",
+          "previous": "          \"sha256\": \"d74e48f78515e0b783a3fb433226dfb5cd305c1e29cf98a2dd999752a652ad01\"\n",
+          "start": 9185449
+        },
+        {
+          "current": "          \"sha256\": \"cc665452537fd6ea5d8dfd152055a5e94a26183425ae7add78b13e6b21e98500\"\n",
+          "previous": "          \"sha256\": \"71feb78faedd85012c99d80fca7a3e534cdcb692a88e6ffe1ca0224d5a205bee\"\n",
+          "start": 9185987
+        },
+        {
+          "current": "          \"sha256\": \"90fe5027d70d03b4a01d97fa8b361fabbc7799df93ace292d570078f895f0ed1\"\n",
+          "previous": "          \"sha256\": \"d74e48f78515e0b783a3fb433226dfb5cd305c1e29cf98a2dd999752a652ad01\"\n",
+          "start": 9329674
+        },
+        {
+          "current": "          \"sha256\": \"cc665452537fd6ea5d8dfd152055a5e94a26183425ae7add78b13e6b21e98500\"\n",
+          "previous": "          \"sha256\": \"71feb78faedd85012c99d80fca7a3e534cdcb692a88e6ffe1ca0224d5a205bee\"\n",
+          "start": 9330212
+        },
+        {
+          "current": "          \"sha256\": \"90fe5027d70d03b4a01d97fa8b361fabbc7799df93ace292d570078f895f0ed1\"\n",
+          "previous": "          \"sha256\": \"d74e48f78515e0b783a3fb433226dfb5cd305c1e29cf98a2dd999752a652ad01\"\n",
+          "start": 9473869
+        },
+        {
+          "current": "          \"sha256\": \"cc665452537fd6ea5d8dfd152055a5e94a26183425ae7add78b13e6b21e98500\"\n",
+          "previous": "          \"sha256\": \"71feb78faedd85012c99d80fca7a3e534cdcb692a88e6ffe1ca0224d5a205bee\"\n",
+          "start": 9474407
+        },
+        {
+          "current": "          \"sha256\": \"06bf7d58d2eb27d4af4b9294e378ba1e88f81221ace8a06a1ef7a58d67ef7691\"\n",
+          "previous": "          \"sha256\": \"32d2a14fea8f979ce86c06b8df38fe8d24dec54838b8e80d381d46923d9ea08a\"\n",
+          "start": 9619140
+        },
+        {
+          "current": "          \"sha256\": \"5ac61738538f196aa35d529caf8eba1b27710c948f82a1f9c72a9e7a0496013d\"\n",
+          "previous": "          \"sha256\": \"e64f46ef236f9176232fa84fff421ded8e4b6fbeddb77784600ad2707090d145\"\n",
+          "start": 9619693
+        },
+        {
+          "current": "          \"sha256\": \"06bf7d58d2eb27d4af4b9294e378ba1e88f81221ace8a06a1ef7a58d67ef7691\"\n",
+          "previous": "          \"sha256\": \"32d2a14fea8f979ce86c06b8df38fe8d24dec54838b8e80d381d46923d9ea08a\"\n",
+          "start": 9764496
+        },
+        {
+          "current": "          \"sha256\": \"5ac61738538f196aa35d529caf8eba1b27710c948f82a1f9c72a9e7a0496013d\"\n",
+          "previous": "          \"sha256\": \"e64f46ef236f9176232fa84fff421ded8e4b6fbeddb77784600ad2707090d145\"\n",
+          "start": 9765049
+        },
+        {
+          "current": "          \"sha256\": \"06bf7d58d2eb27d4af4b9294e378ba1e88f81221ace8a06a1ef7a58d67ef7691\"\n",
+          "previous": "          \"sha256\": \"32d2a14fea8f979ce86c06b8df38fe8d24dec54838b8e80d381d46923d9ea08a\"\n",
+          "start": 9910255
+        },
+        {
+          "current": "          \"sha256\": \"5ac61738538f196aa35d529caf8eba1b27710c948f82a1f9c72a9e7a0496013d\"\n",
+          "previous": "          \"sha256\": \"e64f46ef236f9176232fa84fff421ded8e4b6fbeddb77784600ad2707090d145\"\n",
+          "start": 9910808
+        },
+        {
+          "current": "          \"sha256\": \"06bf7d58d2eb27d4af4b9294e378ba1e88f81221ace8a06a1ef7a58d67ef7691\"\n",
+          "previous": "          \"sha256\": \"32d2a14fea8f979ce86c06b8df38fe8d24dec54838b8e80d381d46923d9ea08a\"\n",
+          "start": 10056085
+        },
+        {
+          "current": "          \"sha256\": \"5ac61738538f196aa35d529caf8eba1b27710c948f82a1f9c72a9e7a0496013d\"\n",
+          "previous": "          \"sha256\": \"e64f46ef236f9176232fa84fff421ded8e4b6fbeddb77784600ad2707090d145\"\n",
+          "start": 10056638
+        },
+        {
+          "current": "          \"sha256\": \"2b2d9252405535f0bf61444daaf977ebb9081838d15a1bf269c6d3deb046a951\"\n",
+          "previous": "          \"sha256\": \"7331d348ec928c3415751665869a0524b066d6eed533a2d70049de6f02cb1ce0\"\n",
+          "start": 10384417
+        },
+        {
+          "current": "          \"sha256\": \"2ee6772418b23c652b9b085ebb42af023695b3f0df44cffa27a92b070acc0655\"\n",
+          "previous": "          \"sha256\": \"783c18a05989136f5ffa30597d61b0b81683adc519b54e9a93d15edd022f2571\"\n",
+          "start": 10384955
+        },
+        {
+          "current": "          \"sha256\": \"2b2d9252405535f0bf61444daaf977ebb9081838d15a1bf269c6d3deb046a951\"\n",
+          "previous": "          \"sha256\": \"7331d348ec928c3415751665869a0524b066d6eed533a2d70049de6f02cb1ce0\"\n",
+          "start": 10430635
+        },
+        {
+          "current": "          \"sha256\": \"2ee6772418b23c652b9b085ebb42af023695b3f0df44cffa27a92b070acc0655\"\n",
+          "previous": "          \"sha256\": \"783c18a05989136f5ffa30597d61b0b81683adc519b54e9a93d15edd022f2571\"\n",
+          "start": 10431173
+        },
+        {
+          "current": "          \"sha256\": \"2b2d9252405535f0bf61444daaf977ebb9081838d15a1bf269c6d3deb046a951\"\n",
+          "previous": "          \"sha256\": \"7331d348ec928c3415751665869a0524b066d6eed533a2d70049de6f02cb1ce0\"\n",
+          "start": 10477711
+        },
+        {
+          "current": "          \"sha256\": \"2ee6772418b23c652b9b085ebb42af023695b3f0df44cffa27a92b070acc0655\"\n",
+          "previous": "          \"sha256\": \"783c18a05989136f5ffa30597d61b0b81683adc519b54e9a93d15edd022f2571\"\n",
+          "start": 10478249
+        },
+        {
+          "current": "          \"sha256\": \"2b2d9252405535f0bf61444daaf977ebb9081838d15a1bf269c6d3deb046a951\"\n",
+          "previous": "          \"sha256\": \"7331d348ec928c3415751665869a0524b066d6eed533a2d70049de6f02cb1ce0\"\n",
+          "start": 10524393
+        },
+        {
+          "current": "          \"sha256\": \"2ee6772418b23c652b9b085ebb42af023695b3f0df44cffa27a92b070acc0655\"\n",
+          "previous": "          \"sha256\": \"783c18a05989136f5ffa30597d61b0b81683adc519b54e9a93d15edd022f2571\"\n",
+          "start": 10524931
+        },
+        {
+          "current": "          \"sha256\": \"51a2ebbcb3c63ceb53266476f52e1d13d3617775cfb2c8fb25e5bda17dedc8c9\"\n",
+          "previous": "          \"sha256\": \"5f3c057f16cb7d82feb4e74f89223a595b832454c9a25aefa785d9af307db332\"\n",
+          "start": 10571454
+        },
+        {
+          "current": "          \"sha256\": \"0d88eb331cf2ac55c64d42ccc3be9e5f46826d73d7668ca0760c126f7adf3cba\"\n",
+          "previous": "          \"sha256\": \"aac60d11400e9f3338a8667666849376b71edb384d7cb094ae26ec7836e400e4\"\n",
+          "start": 10571992
+        },
+        {
+          "current": "          \"sha256\": \"51a2ebbcb3c63ceb53266476f52e1d13d3617775cfb2c8fb25e5bda17dedc8c9\"\n",
+          "previous": "          \"sha256\": \"5f3c057f16cb7d82feb4e74f89223a595b832454c9a25aefa785d9af307db332\"\n",
+          "start": 10631473
+        },
+        {
+          "current": "          \"sha256\": \"0d88eb331cf2ac55c64d42ccc3be9e5f46826d73d7668ca0760c126f7adf3cba\"\n",
+          "previous": "          \"sha256\": \"aac60d11400e9f3338a8667666849376b71edb384d7cb094ae26ec7836e400e4\"\n",
+          "start": 10632011
+        },
+        {
+          "current": "          \"sha256\": \"51a2ebbcb3c63ceb53266476f52e1d13d3617775cfb2c8fb25e5bda17dedc8c9\"\n",
+          "previous": "          \"sha256\": \"5f3c057f16cb7d82feb4e74f89223a595b832454c9a25aefa785d9af307db332\"\n",
+          "start": 10691904
+        },
+        {
+          "current": "          \"sha256\": \"0d88eb331cf2ac55c64d42ccc3be9e5f46826d73d7668ca0760c126f7adf3cba\"\n",
+          "previous": "          \"sha256\": \"aac60d11400e9f3338a8667666849376b71edb384d7cb094ae26ec7836e400e4\"\n",
+          "start": 10692442
+        },
+        {
+          "current": "          \"sha256\": \"51a2ebbcb3c63ceb53266476f52e1d13d3617775cfb2c8fb25e5bda17dedc8c9\"\n",
+          "previous": "          \"sha256\": \"5f3c057f16cb7d82feb4e74f89223a595b832454c9a25aefa785d9af307db332\"\n",
+          "start": 10752387
+        },
+        {
+          "current": "          \"sha256\": \"0d88eb331cf2ac55c64d42ccc3be9e5f46826d73d7668ca0760c126f7adf3cba\"\n",
+          "previous": "          \"sha256\": \"aac60d11400e9f3338a8667666849376b71edb384d7cb094ae26ec7836e400e4\"\n",
+          "start": 10752925
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "0ae9d27c5f7af5d52d38ca4c056959e431cc776bd90b51efcee3b168eb5d6111"
+    },
+    {
+      "currentSha256": "2d791c352e158e0e0b8e8595b9644daf52b9e703ca8520ede17883af094a03aa",
+      "edits": [
+        {
+          "current": "import { assertNominalPrimitiveSubtypeHistoryCheckout } from \"./nominal-primitive-subtype-history-checkout.mjs\";\n",
+          "previous": "",
+          "start": 150
+        },
+        {
+          "current": "\tassertNominalPrimitiveSubtypeHistoryCheckout(step(names[0]));\n",
+          "previous": "\tassert.equal(step(names[0]), \"        uses: actions/checkout@v6\\n        with:\\n          fetch-depth: 0\\n          persist-credentials: false\\n\");\n",
+          "start": 2531
+        }
+      ],
+      "path": "tests/helpers/nominal-primitive-subtype-browser-ci-workflow.mjs",
+      "previousSha256": "7a764fe2d0357f7c3339474abb203c05b52b9b2eac96eeff6b3d058522d93009"
+    },
+    {
+      "currentSha256": "e22b493e880598b5f8ebd8d79964ff540365fbff9eb2c69a360f834c9cbec651",
+      "edits": [
+        {
+          "current": "import { assertNominalPrimitiveSubtypeHistoryCheckout } from \"./nominal-primitive-subtype-history-checkout.mjs\";\n",
+          "previous": "",
+          "start": 140
+        },
+        {
+          "current": "\tassertNominalPrimitiveSubtypeHistoryCheckout(step(names[0]));\n",
+          "previous": "\tassert.equal(step(names[0]), \"        uses: actions/checkout@v6\\n        with:\\n          fetch-depth: 0\\n          persist-credentials: false\\n\");\n",
+          "start": 2411
+        }
+      ],
+      "path": "tests/helpers/nominal-primitive-subtype-dotnet-ci-workflow.mjs",
+      "previousSha256": "443cc5c2c97a95edb9e2fe1c0a209ac9eb68aa53c784d1c26381be239bc9098f"
+    },
+    {
+      "currentSha256": "51a2ebbcb3c63ceb53266476f52e1d13d3617775cfb2c8fb25e5bda17dedc8c9",
+      "edits": [
+        {
+          "current": "import { assertNominalPrimitiveSubtypeHistoryCheckout } from \"./nominal-primitive-subtype-history-checkout.mjs\";\n",
+          "previous": "",
+          "start": 175
+        },
+        {
+          "current": "\tassertNominalPrimitiveSubtypeHistoryCheckout(step(names[0]));\n",
+          "previous": "\tassert.equal(step(names[0]), \"        uses: actions/checkout@v6\\n        with:\\n          fetch-depth: 0\\n          persist-credentials: false\\n\");\n",
+          "start": 3003
+        }
+      ],
+      "path": "tests/helpers/nominal-primitive-subtype-jvm-ci-workflow.mjs",
+      "previousSha256": "5f3c057f16cb7d82feb4e74f89223a595b832454c9a25aefa785d9af307db332"
+    },
+    {
+      "currentSha256": "65368e037761acfb455f0143d582d4ee97b6916f81a1f9af9c90e6ef49e30092",
+      "edits": [
+        {
+          "current": "import { assertNominalPrimitiveSubtypeHistoryCheckout } from \"./nominal-primitive-subtype-history-checkout.mjs\";\n",
+          "previous": "",
+          "start": 145
+        },
+        {
+          "current": "\tassertNominalPrimitiveSubtypeHistoryCheckout(step(names[0]));\n",
+          "previous": "\tassert.equal(step(names[0]), \"        uses: actions/checkout@v6\\n        with:\\n          fetch-depth: 0\\n          persist-credentials: false\\n\");\n",
+          "start": 2379
+        }
+      ],
+      "path": "tests/helpers/nominal-primitive-subtype-native-ci-workflow.mjs",
+      "previousSha256": "a4a327e7bf6f4a16900a4516a941a3003499327e8cd10edb81fd0b3c3961df11"
+    },
+    {
+      "currentSha256": "5880e333511a36fe88b2bf2c55fe0d1b2310c09b38f2963f8996922d93350ac7",
+      "edits": [
+        {
+          "current": "import { assertNominalPrimitiveSubtypeHistoryCheckout } from \"./nominal-primitive-subtype-history-checkout.mjs\";\n",
+          "previous": "",
+          "start": 146
+        },
+        {
+          "current": "\tassertNominalPrimitiveSubtypeHistoryCheckout(step(names[0]));\n",
+          "previous": "\tassert.equal(step(names[0]), \"        uses: actions/checkout@v6\\n        with:\\n          fetch-depth: 0\\n          persist-credentials: false\\n\");\n",
+          "start": 2459
+        }
+      ],
+      "path": "tests/helpers/nominal-primitive-subtype-npm-ci-workflow.mjs",
+      "previousSha256": "b7ec34e6e9d2276788b201775989934b7461cc240e438d4d39ff28143e200623"
+    },
+    {
+      "currentSha256": "56938beeb5d2dc4a6d735898b29f12981bd7594f22342496b0651b5f35e132bd",
+      "edits": [
+        {
+          "current": "import { assertNominalPrimitiveSubtypeHistoryCheckout } from \"./nominal-primitive-subtype-history-checkout.mjs\";\n",
+          "previous": "",
+          "start": 169
+        },
+        {
+          "current": "\tassertNominalPrimitiveSubtypeHistoryCheckout(step(names[0]));\n",
+          "previous": "\tassert.equal(step(names[0]), \"        uses: actions/checkout@v6\\n        with:\\n          fetch-depth: 0\\n          persist-credentials: false\\n\");\n",
+          "start": 2714
+        }
+      ],
+      "path": "tests/helpers/nominal-primitive-subtype-perl-ci-workflow.mjs",
+      "previousSha256": "d09c549cf9409841244eb75aab2a60c35ead5061eefc61bcafcd2eaa34cc7309"
+    },
+    {
+      "currentSha256": "90fe5027d70d03b4a01d97fa8b361fabbc7799df93ace292d570078f895f0ed1",
+      "edits": [
+        {
+          "current": "import { assertNominalPrimitiveSubtypeHistoryCheckout } from \"./nominal-primitive-subtype-history-checkout.mjs\";\n",
+          "previous": "",
+          "start": 137
+        },
+        {
+          "current": "\tassertNominalPrimitiveSubtypeHistoryCheckout(step(names[0]));\n",
+          "previous": "\tassert.equal(step(names[0]), \"        uses: actions/checkout@v6\\n        with:\\n          fetch-depth: 0\\n          persist-credentials: false\\n\");\n",
+          "start": 2364
+        }
+      ],
+      "path": "tests/helpers/nominal-primitive-subtype-php-ci-workflow.mjs",
+      "previousSha256": "d74e48f78515e0b783a3fb433226dfb5cd305c1e29cf98a2dd999752a652ad01"
+    },
+    {
+      "currentSha256": "06bf7d58d2eb27d4af4b9294e378ba1e88f81221ace8a06a1ef7a58d67ef7691",
+      "edits": [
+        {
+          "current": "import { assertNominalPrimitiveSubtypeHistoryCheckout } from \"./nominal-primitive-subtype-history-checkout.mjs\";\n",
+          "previous": "",
+          "start": 155
+        },
+        {
+          "current": "\tassertNominalPrimitiveSubtypeHistoryCheckout(step(names[0]));\n",
+          "previous": "\tassert.equal(step(names[0]), \"        uses: actions/checkout@v6\\n        with:\\n          fetch-depth: 0\\n          persist-credentials: false\\n\");\n",
+          "start": 2610
+        }
+      ],
+      "path": "tests/helpers/nominal-primitive-subtype-php-wasm-ci-workflow.mjs",
+      "previousSha256": "32d2a14fea8f979ce86c06b8df38fe8d24dec54838b8e80d381d46923d9ea08a"
+    },
+    {
+      "currentSha256": "979fa4ff0ea3bc06cd45578e5bb36372c354eddadaed455aef2e9608cd345701",
+      "edits": [
+        {
+          "current": "import { assertNominalPrimitiveSubtypeHistoryCheckout } from \"./nominal-primitive-subtype-history-checkout.mjs\";\n",
+          "previous": "",
+          "start": 145
+        },
+        {
+          "current": "\tassertNominalPrimitiveSubtypeHistoryCheckout(step(names[0]));\n",
+          "previous": "\tassert.equal(step(names[0]), \"        uses: actions/checkout@v6\\n        with:\\n          fetch-depth: 0\\n          persist-credentials: false\\n\");\n",
+          "start": 2516
+        }
+      ],
+      "path": "tests/helpers/nominal-primitive-subtype-python-ci-workflow.mjs",
+      "previousSha256": "89ad562fa040b75cb2db2580110e68335385bd0941d85e18e7ae6ec3f4616e87"
+    },
+    {
+      "currentSha256": "8fb6f120649e3f4a9d69eeea28bd67f3658d2b34c5a819a6448ec50002d08412",
+      "edits": [
+        {
+          "current": "import { assertNominalPrimitiveSubtypeHistoryCheckout } from \"./nominal-primitive-subtype-history-checkout.mjs\";\n",
+          "previous": "",
+          "start": 141
+        },
+        {
+          "current": "\tassertNominalPrimitiveSubtypeHistoryCheckout(step(names[0]));\n",
+          "previous": "\tassert.equal(step(names[0]), \"        uses: actions/checkout@v6\\n        with:\\n          fetch-depth: 0\\n          persist-credentials: false\\n\");\n",
+          "start": 2375
+        }
+      ],
+      "path": "tests/helpers/nominal-primitive-subtype-ruby-ci-workflow.mjs",
+      "previousSha256": "1129acdb4dd828c250f6b6fddb74f250f3e6630b370f32d5ddbe6cf58944355a"
+    },
+    {
+      "currentSha256": "8b503f7341c101b08b283c898c423a0ebe077e538a26a6e92603007a89ed868e",
+      "edits": [
+        {
+          "current": "import { assertNominalPrimitiveSubtypeHistoryCheckout } from \"./nominal-primitive-subtype-history-checkout.mjs\";\n",
+          "previous": "",
+          "start": 139
+        },
+        {
+          "current": "\tassertNominalPrimitiveSubtypeHistoryCheckout(step(names[0]));\n",
+          "previous": "\tassert.equal(step(names[0]), \"        uses: actions/checkout@v6\\n        with:\\n          fetch-depth: 0\\n          persist-credentials: false\\n\");\n",
+          "start": 2371
+        }
+      ],
+      "path": "tests/helpers/nominal-primitive-subtype-rust-ci-workflow.mjs",
+      "previousSha256": "e46a151e70caf0fed2c92d53e216bcd0b3f2ccf140ef093f8b082eb9728ec3cd"
+    },
+    {
+      "currentSha256": "b97419491632b615b67ec7a3f9c8aa27dba851fd9ba78178453d471ce8dc8574",
+      "edits": [
+        {
+          "current": "import \"./nominal-primitive-subtype-history-checkout-tests.mjs\";\n",
+          "previous": "",
+          "start": 160
+        }
+      ],
+      "path": "tests/helpers/nominal-primitive-subtype-tests.mjs",
+      "previousSha256": "c14c4dfb596cebee7f09dcd4be57783c3ce6882591527e7e428d47d608b56427"
+    },
+    {
+      "currentSha256": "2b2d9252405535f0bf61444daaf977ebb9081838d15a1bf269c6d3deb046a951",
+      "edits": [
+        {
+          "current": "import { assertNominalPrimitiveSubtypeHistoryCheckout } from \"./nominal-primitive-subtype-history-checkout.mjs\";\n",
+          "previous": "",
+          "start": 179
+        },
+        {
+          "current": "\tassertNominalPrimitiveSubtypeHistoryCheckout(step(names[0]));\n",
+          "previous": "\tassert.equal(step(names[0]), \"        uses: actions/checkout@v6\\n        with:\\n          fetch-depth: 0\\n          persist-credentials: false\\n\");\n",
+          "start": 3297
+        }
+      ],
+      "path": "tests/helpers/nominal-primitive-subtype-wit-ci-workflow.mjs",
+      "previousSha256": "7331d348ec928c3415751665869a0524b066d6eed533a2d70049de6f02cb1ce0"
+    },
+    {
+      "currentSha256": "f656271dd7e859cf4d1741de2efe8d2df92503538fb7b42145dd6fa4621e1c63",
+      "edits": [
+        {
+          "current": "import { assertNominalPrimitiveSubtypeHistoryCheckout } from \"./helpers/nominal-primitive-subtype-history-checkout.mjs\";\n",
+          "previous": "",
+          "start": 256
+        },
+        {
+          "current": "\tconst checkout = source.split(\n\t\t\"      - name: Check out the exact revision and original evidence history\\n\"\n\t)[1].split(\"      - name: \")[0];\n\tassertNominalPrimitiveSubtypeHistoryCheckout(checkout);\n",
+          "previous": "",
+          "start": 490
+        }
+      ],
+      "path": "tests/nominal-primitive-subtype-supplement-ci.test.mjs",
+      "previousSha256": "0e0ecf0a05f5f44555b8fdadab1d60265faa72ffd2b04bdb2be7769cf3472ba6"
+    }
+  ]
+}

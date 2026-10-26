@@ -10,6 +10,19 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import {
+	beforeNominalPrimitiveSubtypeSparseCheckoutSource
+	, nominalPrimitiveSubtypeSparseCheckoutAddedPaths
+	, nominalPrimitiveSubtypeSparseCheckoutHistoryPath
+	, nominalPrimitiveSubtypeSparseCheckoutImplementation
+	, nominalPrimitiveSubtypeSparseCheckoutImplementationAdditions
+	, nominalPrimitiveSubtypeSparseCheckoutImplementationPaths
+	, nominalPrimitiveSubtypeSparseCheckoutIntegrationPaths
+	, nominalPrimitiveSubtypeSparseCheckoutModifiedPaths
+	, nominalPrimitiveSubtypeSparseCheckoutPredecessor
+	, nominalPrimitiveSubtypeSparseCheckoutWorkflowPaths
+	, reverseNominalPrimitiveSubtypeSparseCheckoutUpdate
+} from "./nominal-primitive-subtype-sparse-checkout-source-history.mjs";
+import {
 	beforeCoreStaticSparseCheckoutSource
 	, coreStaticSparseCheckoutAddedPaths
 	, coreStaticSparseCheckoutHistoryPath
@@ -120,6 +133,9 @@ import {
 	, reverseCoreHistoricalEvidenceReplayUpdate
 } from "./core-historical-evidence-replay-source-history.mjs";
 import {
+	assertNominalPrimitiveSubtypeHistoryCheckout
+} from "./nominal-primitive-subtype-history-checkout.mjs";
+import {
 	beforeFinRefinementSource, finRefinementNormalizationPaths
 } from "./fin-refinement-source-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
@@ -128,6 +144,9 @@ import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.m
 
 const git = arguments_ => execFileSync("git", arguments_
 	, { encoding: "utf8", maxBuffer: 128 * 1024 * 1024 });
+const readNominalPrimitiveSubtypeSparseCheckout = async () =>
+	JSON.parse(await readFile(
+		nominalPrimitiveSubtypeSparseCheckoutHistoryPath, "utf8"));
 const readStaticSparseCheckout = async () => JSON.parse(await readFile(
 	coreStaticSparseCheckoutHistoryPath, "utf8"
 ));
@@ -329,6 +348,113 @@ test("exact-head Core live-pin writer refuses another checkout", async t => {
 	t.after(() => rm(root, { recursive: true }));
 	const result = spawnSync(process.execPath, [resolve(
 		"scripts/update-core-exact-head-live-pin-repair-source-history.mjs"
+	)], { cwd: root, encoding: "utf8", timeout: 15_000 });
+	assert.notEqual(result.status, 0);
+	assert.equal(result.stdout, "");
+	assert.deepEqual(await readdir(root), []);
+});
+
+test("primitive Subtype sparse checkout records its exact source range", async () => {
+	const record = await readNominalPrimitiveSubtypeSparseCheckout();
+	assert.equal(record.schemaVersion, 1);
+	assert.equal(record.milestone
+		, "nominal-primitive-subtype-sparse-checkout-source-v1");
+	assert.equal(record.predecessorCommit
+		, nominalPrimitiveSubtypeSparseCheckoutPredecessor);
+	assert.equal(record.implementationCommit
+		, nominalPrimitiveSubtypeSparseCheckoutImplementation);
+	assert.deepEqual(record.updates.map(update => update.path)
+		, nominalPrimitiveSubtypeSparseCheckoutModifiedPaths);
+	assert.deepEqual(record.implementationAdditions.map(addition => addition.path)
+		, nominalPrimitiveSubtypeSparseCheckoutImplementationAdditions);
+	assert.deepEqual(record.integrationUpdates.map(update => update.path)
+		, nominalPrimitiveSubtypeSparseCheckoutIntegrationPaths);
+	assert.deepEqual(record.additions.map(addition => addition.path)
+		, nominalPrimitiveSubtypeSparseCheckoutAddedPaths);
+	assert.equal(git(["rev-parse"
+		, `${nominalPrimitiveSubtypeSparseCheckoutImplementation}^`]).trim()
+	, nominalPrimitiveSubtypeSparseCheckoutPredecessor);
+	assert.deepEqual(git(["diff", "--name-only"
+		, nominalPrimitiveSubtypeSparseCheckoutPredecessor
+		, nominalPrimitiveSubtypeSparseCheckoutImplementation]).trim()
+		.split("\n").sort()
+	, [...nominalPrimitiveSubtypeSparseCheckoutImplementationPaths].sort());
+	assert.deepEqual(git(["diff", "--name-only", "--diff-filter=M"
+		, nominalPrimitiveSubtypeSparseCheckoutPredecessor
+		, nominalPrimitiveSubtypeSparseCheckoutImplementation]).trim()
+		.split("\n").sort()
+	, [...nominalPrimitiveSubtypeSparseCheckoutModifiedPaths].sort());
+});
+
+test("primitive Subtype sparse checkout reverses every transition", async () => {
+	const record = await readNominalPrimitiveSubtypeSparseCheckout();
+	for(const update of [...record.updates, ...record.integrationUpdates])
+	{
+		const current = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256
+			, beforeNominalPrimitiveSubtypeSparseCheckoutSource);
+		const base = record.integrationUpdates.includes(update)
+			? nominalPrimitiveSubtypeSparseCheckoutImplementation
+			: nominalPrimitiveSubtypeSparseCheckoutPredecessor;
+		const previous = git(["show", `${base}:${update.path}`]);
+		assert.equal(reverseNominalPrimitiveSubtypeSparseCheckoutUpdate(
+			current, update), previous, update.path);
+		assert.equal(beforeFinRefinementSource(
+			update.path, current, update.previousSha256), previous, update.path);
+		assert.ok(finRefinementNormalizationPaths.includes(update.path));
+	}
+	for(const addition of [
+		...record.implementationAdditions, ...record.additions
+	]) assert.equal(sha256(await sourceAtFinHistoryMilestone(
+		addition.path, addition.currentSha256))
+	, addition.currentSha256, addition.path);
+});
+
+test("primitive Subtype acceptance uses one exact bounded history checkout", () => {
+	for(const path of nominalPrimitiveSubtypeSparseCheckoutWorkflowPaths)
+	{
+		const workflow = git(["show"
+			, `${nominalPrimitiveSubtypeSparseCheckoutImplementation}:${path}`]);
+		const checkout = workflow.split(
+			"      - name: Check out the exact revision and original evidence history\n"
+		)[1].split("      - name: ")[0];
+		assertNominalPrimitiveSubtypeHistoryCheckout(checkout);
+	}
+	const helper = git(["show"
+		, `${nominalPrimitiveSubtypeSparseCheckoutImplementation}:`
+			+ "tests/helpers/nominal-primitive-subtype-history-checkout.mjs"]);
+	assert.match(helper
+		, /Retain every producer commit while materializing only live source/u);
+	assert.match(helper
+		, /nominal-primitive-subtype-python-20261014/u);
+	assert.match(helper
+		, /nominal-primitive-subtype-npm-20261014/u);
+});
+
+test("primitive Subtype sparse checkout rejects alteration", async () => {
+	const update
+		= (await readNominalPrimitiveSubtypeSparseCheckout()).updates[0];
+	const current = await sourceAtFinHistoryMilestone(
+		update.path, update.currentSha256
+		, beforeNominalPrimitiveSubtypeSparseCheckoutSource);
+	for(const forged of [{ ...update, currentSha256: "0".repeat(64) }
+		, { ...update, previousSha256: "0".repeat(64) }
+		, { ...update, path: "unrelated.mjs" }
+		, { ...update, edits: [] }
+		, { ...update, edits: [...update.edits, update.edits[0]] }])
+		assert.throws(() =>
+			reverseNominalPrimitiveSubtypeSparseCheckoutUpdate(current, forged));
+	assert.equal(beforeNominalPrimitiveSubtypeSparseCheckoutSource(
+		update.path, current + "unknown"), current + "unknown");
+});
+
+test("primitive Subtype sparse-checkout writer refuses another checkout", async t => {
+	const root = await mkdtemp(join(
+		tmpdir(), "lean-primitive-subtype-sparse-guard-"
+	));
+	t.after(() => rm(root, { recursive: true }));
+	const result = spawnSync(process.execPath, [resolve(
+		"scripts/update-nominal-primitive-subtype-sparse-checkout-source-history.mjs"
 	)], { cwd: root, encoding: "utf8", timeout: 15_000 });
 	assert.notEqual(result.status, 0);
 	assert.equal(result.stdout, "");
