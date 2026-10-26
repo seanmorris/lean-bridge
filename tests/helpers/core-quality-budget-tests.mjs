@@ -48,11 +48,23 @@ const assertCoreQualityBudget = source => {
 	assert.match(staticJob, /fetch-depth: 1/u
 		, "Static analysis must not download historical evidence producers");
 	assert.doesNotMatch(staticJob, /fetch-depth: 0/u);
+	const staticSparse = /sparse-checkout: \|\n((?: {12}\S+\n)+)/u.exec(
+		staticJob);
+	assert.ok(staticSparse, "Static analysis must declare its complete source roots");
+	assert.deepEqual(staticSparse[1].trim().split("\n").map(line => line.trim()), [
+		".github", "acceptance", "config", "containers", "demos", "nix"
+		, "notices", "patches", "poc", "schema", "scripts", "site", "src"
+		, "tests"
+	], "Static analysis must omit only the retained documentation payload tree");
+	assert.match(staticJob, /sparse-checkout-cone-mode: true/u);
+	assert.doesNotMatch(staticJob, /^\s+filter:/mu
+		, "Checkout must derive blob:none from the sparse source roots");
 	const aggregate = source.slice(source.indexOf("\n  quality:\n"));
 	assert.match(aggregate, /fetch-depth: 1\n {10}persist-credentials: false\n {10}sparse-checkout: \|\n {12}scripts\n {12}src\n {12}tests\n {10}sparse-checkout-cone-mode: true\n/u
 		, "The aggregate needs the complete test tree and verifier source, not retained evidence");
-	assert.equal([...source.matchAll(/^\s+sparse-checkout: \|\s*$/gmu)].length, 1
-		, "Only the aggregate may omit archived evidence from its checkout");
+	assert.equal([...source.matchAll(/^\s+sparse-checkout: \|\s*$/gmu)].length, 2
+		, "Static and aggregate jobs must omit archived evidence payloads");
+	assert.equal([...source.matchAll(/^\s+sparse-checkout-cone-mode: true\s*$/gmu)].length, 2);
 	assert.doesNotMatch(aggregate, /^\s+filter:/mu
 		, "Use checkout's sparse blob filter without overriding it");
 	assert.equal([...source.matchAll(/^\s+persist-credentials:\s*false\s*$/gmu)].length, 3
