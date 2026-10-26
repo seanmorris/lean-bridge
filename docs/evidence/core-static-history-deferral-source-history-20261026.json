@@ -1,0 +1,128 @@
+{
+  "additions": [
+    {
+      "currentSha256": "45ff44fa6dbed26dd04cbc9916feed207b84eaafd9bbd3eab30df60f02055ae1",
+      "path": "scripts/update-core-static-history-deferral-source-history.mjs"
+    },
+    {
+      "currentSha256": "567fb11c81e657a6993fe29e767b77ac466aa6cccc4c000d706d784f12d4970e",
+      "path": "tests/helpers/core-static-history-deferral-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "82e57bc21c62d0728ea3f97266a3809340b08293",
+  "integrationUpdates": [
+    {
+      "currentSha256": "9641333f15001b7538742231fe5651b5d942ff80a42aa590d5c5566b9770b848",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeCoreStaticHistoryDeferralSource\n\t, coreStaticHistoryDeferralAddedPaths\n\t, coreStaticHistoryDeferralHistoryPath\n\t, coreStaticHistoryDeferralImplementation\n\t, coreStaticHistoryDeferralImplementationPaths\n\t, coreStaticHistoryDeferralIntegrationPaths\n\t, coreStaticHistoryDeferralPredecessor\n\t, reverseCoreStaticHistoryDeferralUpdate\n} from \"./core-static-history-deferral-source-history.mjs\";\n",
+          "previous": "",
+          "start": 357
+        },
+        {
+          "current": "const readStaticHistoryDeferral = async () => JSON.parse(await readFile(\n\tcoreStaticHistoryDeferralHistoryPath, \"utf8\"\n));\n",
+          "previous": "",
+          "start": 5031
+        },
+        {
+          "current": "test(\"Core static-history deferral records its exact source range\", async () => {\n\tconst record = await readStaticHistoryDeferral();\n\tassert.equal(record.schemaVersion, 1);\n\tassert.equal(record.milestone, \"core-static-history-deferral-source-v1\");\n\tassert.equal(record.predecessorCommit, coreStaticHistoryDeferralPredecessor);\n\tassert.equal(record.implementationCommit, coreStaticHistoryDeferralImplementation);\n\tassert.deepEqual(record.updates.map(update => update.path)\n\t\t, coreStaticHistoryDeferralImplementationPaths);\n\tassert.deepEqual(record.integrationUpdates.map(update => update.path)\n\t\t, coreStaticHistoryDeferralIntegrationPaths);\n\tassert.deepEqual(record.additions.map(addition => addition.path)\n\t\t, coreStaticHistoryDeferralAddedPaths);\n\tassert.equal(git([\"rev-parse\"\n\t\t, `${coreStaticHistoryDeferralImplementation}^`]).trim()\n\t, coreStaticHistoryDeferralPredecessor);\n\tassert.deepEqual(git([\"diff\", \"--name-only\"\n\t\t, coreStaticHistoryDeferralPredecessor\n\t\t, coreStaticHistoryDeferralImplementation]).trim().split(\"\\n\")\n\t, [...coreStaticHistoryDeferralImplementationPaths].sort());\n});\n\ntest(\"Core static-history deferral reverses every transition\", async () => {\n\tconst record = await readStaticHistoryDeferral();\n\tfor(const update of [...record.updates, ...record.integrationUpdates])\n\t{\n\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256\n\t\t\t, beforeCoreStaticHistoryDeferralSource);\n\t\tconst base = record.integrationUpdates.includes(update)\n\t\t\t? coreStaticHistoryDeferralImplementation\n\t\t\t: coreStaticHistoryDeferralPredecessor;\n\t\tconst previous = git([\"show\", `${base}:${update.path}`]);\n\t\tassert.equal(reverseCoreStaticHistoryDeferralUpdate(current, update)\n\t\t\t, previous, update.path);\n\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n\t\tassert.ok(finRefinementNormalizationPaths.includes(update.path));\n\t}\n\tfor(const addition of record.additions)\n\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256))\n\t\t, addition.currentSha256, addition.path);\n});\n\ntest(\"Core static-history deferral preserves the closed contract\", () => {\n\tconst workflow = git([\"show\"\n\t\t, `${coreStaticHistoryDeferralImplementation}:.github/workflows/quality.yml`]);\n\tconst staticJob = workflow.slice(workflow.indexOf(\"\\n  static:\\n\")\n\t\t, workflow.indexOf(\"\\n  contract:\\n\"));\n\tconst contractJob = workflow.slice(workflow.indexOf(\"\\n  contract:\\n\")\n\t\t, workflow.indexOf(\"\\n  quality:\\n\"));\n\tassert.match(staticJob, /fetch-depth: 1/u);\n\tassert.doesNotMatch(staticJob, /fetch-depth: 0/u);\n\tassert.match(contractJob, /needs: static/u);\n\tassert.match(contractJob, /fetch-depth: 0/u);\n\tassert.match(contractJob\n\t\t, /shard: \\[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12\\]/u);\n\tassert.match(contractJob, /max-parallel: 6/u);\n\tconst budget = git([\"show\"\n\t\t, `${coreStaticHistoryDeferralImplementation}:`\n\t\t\t+ \"tests/helpers/core-quality-budget-tests.mjs\"]);\n\tassert.match(budget, /History-heavy contract shards must wait for the static gate/u);\n\tassert.match(budget, /Only contract shards may retain all producer history/u);\n});\n\ntest(\"Core static-history deferral rejects alteration\", async () => {\n\tconst update = (await readStaticHistoryDeferral()).updates[0];\n\tconst current = await sourceAtFinHistoryMilestone(\n\t\tupdate.path, update.currentSha256, beforeCoreStaticHistoryDeferralSource);\n\tfor(const forged of [{ ...update, currentSha256: \"0\".repeat(64) }\n\t\t, { ...update, previousSha256: \"0\".repeat(64) }\n\t\t, { ...update, path: \"unrelated.mjs\" }\n\t\t, { ...update, edits: [] }\n\t\t, { ...update, edits: [...update.edits, update.edits[0]] }])\n\t\tassert.throws(() => reverseCoreStaticHistoryDeferralUpdate(current, forged));\n\tassert.equal(beforeCoreStaticHistoryDeferralSource(\n\t\tupdate.path, current + \"unknown\"), current + \"unknown\");\n});\n\ntest(\"Core static-history deferral writer refuses another checkout\", async t => {\n\tconst root = await mkdtemp(join(tmpdir(), \"lean-core-static-history-guard-\"));\n\tt.after(() => rm(root, { recursive: true }));\n\tconst result = spawnSync(process.execPath, [resolve(\n\t\t\"scripts/update-core-static-history-deferral-source-history.mjs\"\n\t)], { cwd: root, encoding: \"utf8\", timeout: 15_000 });\n\tassert.notEqual(result.status, 0);\n\tassert.equal(result.stdout, \"\");\n\tassert.deepEqual(await readdir(root), []);\n});\n\n",
+          "previous": "",
+          "start": 14031
+        }
+      ],
+      "path": "tests/helpers/core-historical-evidence-replay-source-history-tests.mjs",
+      "previousSha256": "63857e5d51c2ed6f04f635e4bdf95439180ae1b91af488acdccadd1c15227d4a"
+    },
+    {
+      "currentSha256": "508ed5e7da1f3a65e5b5dfff64bf59b1899c15674f98d4ddd7b4cb83a2f32034",
+      "edits": [
+        {
+          "current": "import { beforeCoreStaticHistoryDeferralSource, coreStaticHistoryDeferralNormalizationPaths } from \"./core-static-history-deferral-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...coreStaticHistoryDeferralNormalizationPaths\n\t, ...coreOwnedReviewedExactStopRepairNormalizationPaths\n",
+          "previous": "\t...coreOwnedReviewedExactStopRepairNormalizationPaths\n",
+          "start": 192241
+        },
+        {
+          "current": "\tlet stage = beforeCoreStaticHistoryDeferralSource(\n\t\tpath, text, expected\n\t);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCoreOwnedReviewedExactStopRepairSource(\n",
+          "previous": "\tlet stage = beforeCoreOwnedReviewedExactStopRepairSource(\n",
+          "start": 238740
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "470d49648e52a5aac00974b4be9bfb3c9e58097039010cbcfcc9a9ff223dcf09"
+    }
+  ],
+  "milestone": "core-static-history-deferral-source-v1",
+  "predecessorCommit": "9169d2c3f6222374239fbd1a13c49525a6dc81b8",
+  "schemaVersion": 1,
+  "scope": "Require current-tree Core inventory, lint, and checked JavaScript to pass before launching the full-history contract matrix. Preserve all twelve authenticated shards, their six-way concurrency cap, explicit budgets, aggregate closure, exact-head identity, and historical evidence. Keep exact-head hosted Core and the bounded hosted acceptance wave open.",
+  "updates": [
+    {
+      "currentSha256": "82083116deb0ef994b5b24e96689eafccb17fe5e94785c498e6fa5654effd3d0",
+      "edits": [
+        {
+          "current": "          # Static analysis reads only the exact current tree. Producer history is\n          # deferred to the contract matrix after this gate succeeds.\n          fetch-depth: 1\n",
+          "previous": "          # Evidence tests authenticate source bytes at their original producer commits.\n          fetch-depth: 0\n",
+          "start": 393
+        },
+        {
+          "current": "    needs: static\n",
+          "previous": "",
+          "start": 1605
+        }
+      ],
+      "path": ".github/workflows/quality.yml",
+      "previousSha256": "e327f6b2bfad66ae47d075cb563e863d3c6400da8238375ef63aedb4e0521919"
+    },
+    {
+      "currentSha256": "d4471d4d78dd0015439b5aaeec25def3a64bc33a8984b04fbb669a003037bd5a",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"82083116deb0ef994b5b24e96689eafccb17fe5e94785c498e6fa5654effd3d0\"\n",
+          "previous": "          \"sha256\": \"e327f6b2bfad66ae47d075cb563e863d3c6400da8238375ef63aedb4e0521919\"\n",
+          "start": 1351460
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "903df2644aa4fa9e925e4a09a61731008622acf77cffdfeafdb9f08c6cc4d99a"
+    },
+    {
+      "currentSha256": "6ad3f74852c9b0a73649c9d7ca4a97b1512af8ccf7cb03c1e8f8754c28b642e0",
+      "edits": [
+        {
+          "current": "\tassert.match(workflow\n\t\t, /contract:\\n\\s+name: Contract shard \\$\\{\\{ matrix\\.shard \\}\\}\\/12\\n\\s+needs: static/u);\n",
+          "previous": "",
+          "start": 13747
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "ea509dcfcc9085dc0d93ac5861d6a008dca96a1d6764fb73c3cc729cc90497c0"
+    },
+    {
+      "currentSha256": "117175197e70f19ee891f7e14bdf001f619d73769ceb37962e2bc6751ee99037",
+      "edits": [
+        {
+          "current": "\tassert.match(source\n\t\t, / {2}contract:\\n {4}name: Contract shard \\$\\{\\{ matrix\\.shard \\}\\}\\/12\\n {4}needs: static\\n/u\n\t\t, \"History-heavy contract shards must wait for the static gate\");\n\tassert.equal([...source.matchAll(/^\\s+fetch-depth:\\s*0\\s*$/gmu)].length, 1\n\t\t, \"Only contract shards may retain all producer history\");\n\tassert.equal([...source.matchAll(/^\\s+fetch-depth:\\s*1\\s*$/gmu)].length, 2\n\t\t, \"Static and aggregate jobs must read only the exact current tree\");\n\tconst staticJob = source.slice(source.indexOf(\"\\n  static:\\n\")\n\t\t, source.indexOf(\"\\n  contract:\\n\"));\n\tassert.match(staticJob, /fetch-depth: 1/u\n\t\t, \"Static analysis must not download historical evidence producers\");\n\tassert.doesNotMatch(staticJob, /fetch-depth: 0/u);\n",
+          "previous": "\tassert.equal([...source.matchAll(/^\\s+fetch-depth:\\s*0\\s*$/gmu)].length, 2\n\t\t, \"Static and contract jobs must retain all producer history\");\n\tassert.equal([...source.matchAll(/^\\s+fetch-depth:\\s*1\\s*$/gmu)].length, 1\n\t\t, \"The aggregate must recompute closure from the exact current tree\");\n",
+          "start": 2172
+        },
+        {
+          "current": "\t\t, source.replace(\"    needs: static\\n    runs-on: ubuntu-24.04\"\n\t\t\t, \"    runs-on: ubuntu-24.04\")\n",
+          "previous": "",
+          "start": 12971
+        },
+        {
+          "current": "\t\t, source.replace(\"fetch-depth: 1\", \"fetch-depth: 0\")\n",
+          "previous": "",
+          "start": 13126
+        }
+      ],
+      "path": "tests/helpers/core-quality-budget-tests.mjs",
+      "previousSha256": "101682218dd738f10f738cd6739cf7c9329d1d2bd2574c97f421bc0eee192544"
+    }
+  ]
+}

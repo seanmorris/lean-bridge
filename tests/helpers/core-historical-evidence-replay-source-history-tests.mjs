@@ -10,6 +10,16 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import {
+	beforeCoreStaticHistoryDeferralSource
+	, coreStaticHistoryDeferralAddedPaths
+	, coreStaticHistoryDeferralHistoryPath
+	, coreStaticHistoryDeferralImplementation
+	, coreStaticHistoryDeferralImplementationPaths
+	, coreStaticHistoryDeferralIntegrationPaths
+	, coreStaticHistoryDeferralPredecessor
+	, reverseCoreStaticHistoryDeferralUpdate
+} from "./core-static-history-deferral-source-history.mjs";
+import {
 	beforeCoreOwnedReviewedExactStopRepairSource
 	, coreOwnedReviewedExactStopRepairAddedPaths
 	, coreOwnedReviewedExactStopRepairHistoryPath
@@ -108,6 +118,9 @@ import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.m
 
 const git = arguments_ => execFileSync("git", arguments_
 	, { encoding: "utf8", maxBuffer: 128 * 1024 * 1024 });
+const readStaticHistoryDeferral = async () => JSON.parse(await readFile(
+	coreStaticHistoryDeferralHistoryPath, "utf8"
+));
 const readOwnedReviewedExactStopRepair = async () => JSON.parse(await readFile(
 	coreOwnedReviewedExactStopRepairHistoryPath, "utf8"
 ));
@@ -303,6 +316,96 @@ test("exact-head Core live-pin writer refuses another checkout", async t => {
 	t.after(() => rm(root, { recursive: true }));
 	const result = spawnSync(process.execPath, [resolve(
 		"scripts/update-core-exact-head-live-pin-repair-source-history.mjs"
+	)], { cwd: root, encoding: "utf8", timeout: 15_000 });
+	assert.notEqual(result.status, 0);
+	assert.equal(result.stdout, "");
+	assert.deepEqual(await readdir(root), []);
+});
+
+test("Core static-history deferral records its exact source range", async () => {
+	const record = await readStaticHistoryDeferral();
+	assert.equal(record.schemaVersion, 1);
+	assert.equal(record.milestone, "core-static-history-deferral-source-v1");
+	assert.equal(record.predecessorCommit, coreStaticHistoryDeferralPredecessor);
+	assert.equal(record.implementationCommit, coreStaticHistoryDeferralImplementation);
+	assert.deepEqual(record.updates.map(update => update.path)
+		, coreStaticHistoryDeferralImplementationPaths);
+	assert.deepEqual(record.integrationUpdates.map(update => update.path)
+		, coreStaticHistoryDeferralIntegrationPaths);
+	assert.deepEqual(record.additions.map(addition => addition.path)
+		, coreStaticHistoryDeferralAddedPaths);
+	assert.equal(git(["rev-parse"
+		, `${coreStaticHistoryDeferralImplementation}^`]).trim()
+	, coreStaticHistoryDeferralPredecessor);
+	assert.deepEqual(git(["diff", "--name-only"
+		, coreStaticHistoryDeferralPredecessor
+		, coreStaticHistoryDeferralImplementation]).trim().split("\n")
+	, [...coreStaticHistoryDeferralImplementationPaths].sort());
+});
+
+test("Core static-history deferral reverses every transition", async () => {
+	const record = await readStaticHistoryDeferral();
+	for(const update of [...record.updates, ...record.integrationUpdates])
+	{
+		const current = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256
+			, beforeCoreStaticHistoryDeferralSource);
+		const base = record.integrationUpdates.includes(update)
+			? coreStaticHistoryDeferralImplementation
+			: coreStaticHistoryDeferralPredecessor;
+		const previous = git(["show", `${base}:${update.path}`]);
+		assert.equal(reverseCoreStaticHistoryDeferralUpdate(current, update)
+			, previous, update.path);
+		assert.equal(beforeFinRefinementSource(
+			update.path, current, update.previousSha256), previous, update.path);
+		assert.ok(finRefinementNormalizationPaths.includes(update.path));
+	}
+	for(const addition of record.additions)
+		assert.equal(sha256(await sourceAtFinHistoryMilestone(
+			addition.path, addition.currentSha256))
+		, addition.currentSha256, addition.path);
+});
+
+test("Core static-history deferral preserves the closed contract", () => {
+	const workflow = git(["show"
+		, `${coreStaticHistoryDeferralImplementation}:.github/workflows/quality.yml`]);
+	const staticJob = workflow.slice(workflow.indexOf("\n  static:\n")
+		, workflow.indexOf("\n  contract:\n"));
+	const contractJob = workflow.slice(workflow.indexOf("\n  contract:\n")
+		, workflow.indexOf("\n  quality:\n"));
+	assert.match(staticJob, /fetch-depth: 1/u);
+	assert.doesNotMatch(staticJob, /fetch-depth: 0/u);
+	assert.match(contractJob, /needs: static/u);
+	assert.match(contractJob, /fetch-depth: 0/u);
+	assert.match(contractJob
+		, /shard: \[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12\]/u);
+	assert.match(contractJob, /max-parallel: 6/u);
+	const budget = git(["show"
+		, `${coreStaticHistoryDeferralImplementation}:`
+			+ "tests/helpers/core-quality-budget-tests.mjs"]);
+	assert.match(budget, /History-heavy contract shards must wait for the static gate/u);
+	assert.match(budget, /Only contract shards may retain all producer history/u);
+});
+
+test("Core static-history deferral rejects alteration", async () => {
+	const update = (await readStaticHistoryDeferral()).updates[0];
+	const current = await sourceAtFinHistoryMilestone(
+		update.path, update.currentSha256, beforeCoreStaticHistoryDeferralSource);
+	for(const forged of [{ ...update, currentSha256: "0".repeat(64) }
+		, { ...update, previousSha256: "0".repeat(64) }
+		, { ...update, path: "unrelated.mjs" }
+		, { ...update, edits: [] }
+		, { ...update, edits: [...update.edits, update.edits[0]] }])
+		assert.throws(() => reverseCoreStaticHistoryDeferralUpdate(current, forged));
+	assert.equal(beforeCoreStaticHistoryDeferralSource(
+		update.path, current + "unknown"), current + "unknown");
+});
+
+test("Core static-history deferral writer refuses another checkout", async t => {
+	const root = await mkdtemp(join(tmpdir(), "lean-core-static-history-guard-"));
+	t.after(() => rm(root, { recursive: true }));
+	const result = spawnSync(process.execPath, [resolve(
+		"scripts/update-core-static-history-deferral-source-history.mjs"
 	)], { cwd: root, encoding: "utf8", timeout: 15_000 });
 	assert.notEqual(result.status, 0);
 	assert.equal(result.stdout, "");
