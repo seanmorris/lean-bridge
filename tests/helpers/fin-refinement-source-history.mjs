@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeOwnedCheckedAlignedPublicationSource, ownedCheckedAlignedPublicationNormalizationPaths } from "./owned-checked-record-aligned-publication-source-history.mjs";
 import { beforeOwnedCheckedPromotionLabelsSource, ownedCheckedPromotionLabelsNormalizationPaths } from "./owned-checked-record-promotion-labels-source-history.mjs";
 import { beforeOwnedPublicationCoexistenceSource, ownedPublicationCoexistenceNormalizationPaths } from "./owned-publication-coexistence-source-history.mjs";
 import { beforeOwnedCheckedArchiveRootsSource, ownedCheckedArchiveRootsNormalizationPaths } from "./owned-checked-record-archive-roots-source-history.mjs";
@@ -2204,7 +2205,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...ownedCheckedPromotionLabelsNormalizationPaths
+	...ownedCheckedAlignedPublicationNormalizationPaths
+	, ...ownedCheckedPromotionLabelsNormalizationPaths
 	, ...ownedPublicationCoexistenceNormalizationPaths
 	, ...ownedCheckedArchiveRootsNormalizationPaths
 	, ...ownedSubtypeMatrixPublicationNormalizationPaths
@@ -3151,7 +3153,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeOwnedCheckedPromotionLabelsSource(path, text, expected);
+	let stage = beforeOwnedCheckedAlignedPublicationSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeOwnedCheckedPromotionLabelsSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;
