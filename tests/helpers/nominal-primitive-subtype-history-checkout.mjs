@@ -11,8 +11,8 @@ export const nominalPrimitiveSubtypeHistoryCheckout
 	+ "        with:\n"
 	+ "          fetch-depth: 0\n"
 	+ "          persist-credentials: false\n"
-	+ "          # Retain every producer commit while materializing only live source\n"
-	+ "          # and the two immutable archives read by this acceptance cohort.\n"
+	+ "          # Retain every producer commit while materializing live source, the\n"
+	+ "          # authenticated transition record, and two immutable acceptance archives.\n"
 	+ "          sparse-checkout: |\n"
 	+ "            /*\n"
 	+ "            !/*/\n"
@@ -36,6 +36,7 @@ export const nominalPrimitiveSubtypeHistoryCheckout
 	+ "            /docs/consumer-support.v1.json\n"
 	+ "            /docs/evidence/\n"
 	+ "            !/docs/evidence/*\n"
+	+ "            /docs/evidence/ci-contract-repair-source-history-20261017.json\n"
 	+ "            /docs/evidence/nominal-primitive-subtype-python-20261014/\n"
 	+ "            /docs/evidence/nominal-primitive-subtype-npm-20261014/\n"
 	+ "          sparse-checkout-cone-mode: false\n";

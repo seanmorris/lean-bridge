@@ -27,8 +27,8 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
-          # Retain every producer commit while materializing only live source
-          # and the two immutable archives read by this acceptance cohort.
+          # Retain every producer commit while materializing live source, the
+          # authenticated transition record, and two immutable acceptance archives.
           sparse-checkout: |
             /*
             !/*/
@@ -52,6 +52,7 @@ jobs:
             /docs/consumer-support.v1.json
             /docs/evidence/
             !/docs/evidence/*
+            /docs/evidence/ci-contract-repair-source-history-20261017.json
             /docs/evidence/nominal-primitive-subtype-python-20261014/
             /docs/evidence/nominal-primitive-subtype-npm-20261014/
           sparse-checkout-cone-mode: false

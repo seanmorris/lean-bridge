@@ -83,8 +83,8 @@ jobs:
       matrix:
         shard: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
     steps:
-      # The full-history evidence checkout needs about 18 GB; hosted runners start
-      # with roughly 20 GB free, and archive-copying tests then exhaust the disk.
+      # Some selected archives are still multi-gigabyte, and replay tests make
+      # bounded copies. Preserve headroom without broadening the checkout.
       - name: Free hosted runner disk for the evidence checkout
         run: |
           df -h /
@@ -94,9 +94,36 @@ jobs:
         uses: actions/checkout@v6
         with:
           # Evidence tests authenticate source bytes at their original producer commits.
+          # Retain that history while initially materializing only live source,
+          # documentation, root records, and archive indexes. A checked planner
+          # adds this shard's exact retained payload closure after npm install.
           fetch-depth: 0
           persist-credentials: false
-      - name: Report disk after the evidence checkout
+          sparse-checkout: |
+            /*
+            !/*/
+            /.github/
+            /acceptance/
+            /config/
+            /containers/
+            /demos/
+            /nix/
+            /notices/
+            /patches/
+            /poc/
+            /schema/
+            /scripts/
+            /site/
+            /src/
+            /tests/
+            /docs/
+            !/docs/evidence/*
+            /docs/evidence/*.json
+            /docs/evidence/*.md
+            /docs/evidence/*.xml
+            /docs/evidence/*/index.json
+          sparse-checkout-cone-mode: false
+      - name: Report disk after the evidence baseline checkout
         run: df -h / "$GITHUB_WORKSPACE"
       - name: Install Node.js
         uses: actions/setup-node@v6
@@ -114,6 +141,13 @@ jobs:
         run: bash scripts/bootstrap-toolchains.sh --wasm-tools-only
       - name: Install dependencies without lifecycle scripts
         run: npm ci --ignore-scripts
+      - name: Materialize this shard's retained evidence
+        run: |
+          node scripts/materialize-core-contract-evidence.mjs \
+            --shard "${{ matrix.shard }}/12" \
+            --manifest "build/core-evidence/core-shard-${{ matrix.shard }}-evidence.json"
+      - name: Report disk after shard evidence materialization
+        run: df -h / "$GITHUB_WORKSPACE"
       - name: Install C/GMP contract-test headers
         run: sudo apt-get update && sudo apt-get install -y libgmp-dev
       - name: Run one closed contract shard
@@ -127,7 +161,9 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: core-shard-${{ matrix.shard }}-${{ github.sha }}
-          path: build/core-shards/core-shard-${{ matrix.shard }}.json
+          path: |
+            build/core-shards/core-shard-${{ matrix.shard }}.json
+            build/core-evidence/core-shard-${{ matrix.shard }}-evidence.json
           if-no-files-found: error
           overwrite: true
           retention-days: 7

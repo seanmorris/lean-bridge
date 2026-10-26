@@ -45,6 +45,8 @@ const assertCoreQualityBudget = source => {
 		, "Static and aggregate jobs must read only the exact current tree");
 	const staticJob = source.slice(source.indexOf("\n  static:\n")
 		, source.indexOf("\n  contract:\n"));
+	const contractJob = source.slice(source.indexOf("\n  contract:\n")
+		, source.indexOf("\n  quality:\n"));
 	assert.match(staticJob, /fetch-depth: 1/u
 		, "Static analysis must not download historical evidence producers");
 	assert.doesNotMatch(staticJob, /fetch-depth: 0/u);
@@ -59,12 +61,31 @@ const assertCoreQualityBudget = source => {
 	assert.match(staticJob, /sparse-checkout-cone-mode: true/u);
 	assert.doesNotMatch(staticJob, /^\s+filter:/mu
 		, "Checkout must derive blob:none from the sparse source roots");
+	const contractSparse = /sparse-checkout: \|\n((?: {12}\S+\n)+)/u.exec(
+		contractJob);
+	assert.ok(contractSparse
+		, "Contract shards must declare the common evidence baseline");
+	assert.deepEqual(contractSparse[1].trim().split("\n").map(line => line.trim()), [
+		"/*", "!/*/", "/.github/", "/acceptance/", "/config/"
+		, "/containers/", "/demos/", "/nix/", "/notices/", "/patches/"
+		, "/poc/", "/schema/", "/scripts/", "/site/", "/src/", "/tests/"
+		, "/docs/", "!/docs/evidence/*", "/docs/evidence/*.json"
+		, "/docs/evidence/*.md", "/docs/evidence/*.xml"
+		, "/docs/evidence/*/index.json"
+	], "Contract baseline must retain source, docs, root records, and every archive index");
+	assert.match(contractJob, /fetch-depth: 0/u);
+	assert.match(contractJob, /sparse-checkout-cone-mode: false/u);
+	assert.doesNotMatch(contractJob, /^\s+filter:/mu
+		, "Contract checkout must derive blob:none from non-cone sparse patterns");
+	assert.equal([...contractJob.matchAll(/^\s+node scripts\/materialize-core-contract-evidence\.mjs \\\n\s+--shard "\$\{\{ matrix\.shard \}\}\/12" \\\n\s+--manifest "build\/core-evidence\/core-shard-\$\{\{ matrix\.shard \}\}-evidence\.json"\s*$/gmu)].length, 1
+		, "Every shard must materialize and record its exact retained evidence closure");
 	const aggregate = source.slice(source.indexOf("\n  quality:\n"));
 	assert.match(aggregate, /fetch-depth: 1\n {10}persist-credentials: false\n {10}sparse-checkout: \|\n {12}scripts\n {12}src\n {12}tests\n {10}sparse-checkout-cone-mode: true\n/u
 		, "The aggregate needs the complete test tree and verifier source, not retained evidence");
-	assert.equal([...source.matchAll(/^\s+sparse-checkout: \|\s*$/gmu)].length, 2
-		, "Static and aggregate jobs must omit archived evidence payloads");
+	assert.equal([...source.matchAll(/^\s+sparse-checkout: \|\s*$/gmu)].length, 3
+		, "Static, contract, and aggregate jobs must all bound materialization");
 	assert.equal([...source.matchAll(/^\s+sparse-checkout-cone-mode: true\s*$/gmu)].length, 2);
+	assert.equal([...source.matchAll(/^\s+sparse-checkout-cone-mode: false\s*$/gmu)].length, 1);
 	assert.doesNotMatch(aggregate, /^\s+filter:/mu
 		, "Use checkout's sparse blob filter without overriding it");
 	assert.equal([...source.matchAll(/^\s+persist-credentials:\s*false\s*$/gmu)].length, 3
@@ -73,14 +94,19 @@ const assertCoreQualityBudget = source => {
 		, "Only the archive-heavy contract matrix must remove unused hosted SDKs");
 	assert.match(source, /- name: Free hosted runner disk for the evidence checkout\n {8}run: \|\n {10}df -h \/\n {10}sudo rm -rf \/usr\/share\/dotnet \/usr\/local\/lib\/android \/opt\/ghc \/usr\/local\/\.ghcup \/opt\/hostedtoolcache\/CodeQL\n {10}df -h \/\n {6}- name: Check out the exact revision/u
 		, "Core must reclaim only reviewed preinstalled SDK roots before its full-history checkout");
-	assert.equal([...source.matchAll(/^\s+- name: Report disk after the evidence checkout\s*$/gmu)].length, 1);
-	assert.match(source, /- name: Report disk after the evidence checkout\n {8}run: df -h \/ "\$GITHUB_WORKSPACE"/u);
+	assert.equal([...source.matchAll(/^\s+- name: Report disk after the evidence baseline checkout\s*$/gmu)].length, 1);
+	assert.match(source, /- name: Report disk after the evidence baseline checkout\n {8}run: df -h \/ "\$GITHUB_WORKSPACE"/u);
+	assert.equal([...source.matchAll(/^\s+- name: Report disk after shard evidence materialization\s*$/gmu)].length, 1);
+	assert.match(source, /- name: Report disk after shard evidence materialization\n {8}run: df -h \/ "\$GITHUB_WORKSPACE"/u);
 	assert.equal([...source.matchAll(/^\s+- name: Report disk and memory after the shard\s*$/gmu)].length, 1);
 	assert.match(source, /- name: Report disk and memory after the shard\n {8}if: always\(\)\n {8}run: \|\n {10}df -h \/ "\$RUNNER_TEMP" "\$GITHUB_WORKSPACE"\n {10}free -m/u
 		, "Core must retain terminal disk and memory diagnostics even when a shard fails");
 	assert.match(source, /if: always\(\)\n {8}uses: actions\/upload-artifact@v7/u);
 	assert.match(source, /if-no-files-found: error/u);
 	assert.match(source, /overwrite: true/u);
+	assert.match(source
+		, /build\/core-shards\/core-shard-\$\{\{ matrix\.shard \}\}\.json\n {12}build\/core-evidence\/core-shard-\$\{\{ matrix\.shard \}\}-evidence\.json/u
+		, "Failure artifacts must preserve both execution and evidence manifests");
 	assert.match(source, /uses: actions\/download-artifact@v8/u);
 	assert.match(source, /pattern: core-shard-\*-\$\{\{ github\.sha \}\}/u);
 	assert.match(source, /merge-multiple: true/u);
@@ -234,6 +260,13 @@ test("Core quality has bounded static, sharded contract, and aggregate gates", a
 		, source.replace("            src\n", "            docs/evidence\n")
 		, source.replace("            scripts\n", "")
 		, source.replace("sparse-checkout-cone-mode: true", "sparse-checkout-cone-mode: false")
+		, source.replace("          sparse-checkout-cone-mode: false"
+			, "          sparse-checkout-cone-mode: true")
+		, source.replace("            /docs/evidence/*/index.json\n", "")
+		, source.replace("node scripts/materialize-core-contract-evidence.mjs"
+			, "node scripts/snapshot-core-contract-evidence.mjs")
+		, source.replace("build/core-evidence/core-shard-${{ matrix.shard }}-evidence.json"
+			, "build/core-shards/core-shard-${{ matrix.shard }}.json")
 		, source.replace("          sparse-checkout: |", "          filter: tree:0\n          sparse-checkout: |")
 		, source.replace("/opt/hostedtoolcache/CodeQL", "/opt/hostedtoolcache")
 		, source.replace('df -h / "$GITHUB_WORKSPACE"', "true")
