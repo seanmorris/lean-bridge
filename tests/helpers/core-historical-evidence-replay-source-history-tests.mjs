@@ -10,6 +10,16 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import {
+	beforeCoreWitBorrowProducerReplaySource
+	, coreWitBorrowProducerReplayAddedPaths
+	, coreWitBorrowProducerReplayHistoryPath
+	, coreWitBorrowProducerReplayImplementation
+	, coreWitBorrowProducerReplayImplementationPaths
+	, coreWitBorrowProducerReplayIntegrationPaths
+	, coreWitBorrowProducerReplayPredecessor
+	, reverseCoreWitBorrowProducerReplayUpdate
+} from "./core-wit-borrow-producer-replay-source-history.mjs";
+import {
 	beforeCoreExactHeadLivePinRepairSource
 	, coreExactHeadLivePinRepairAddedPaths
 	, coreExactHeadLivePinRepairHistoryPath
@@ -42,6 +52,9 @@ const read = async () => JSON.parse(await readFile(
 ));
 const readLivePinRepair = async () => JSON.parse(await readFile(
 	coreExactHeadLivePinRepairHistoryPath, "utf8"
+));
+const readWitBorrowProducerReplay = async () => JSON.parse(await readFile(
+	coreWitBorrowProducerReplayHistoryPath, "utf8"
 ));
 
 test("Core historical replay records its exact source range", async () => {
@@ -210,6 +223,86 @@ test("exact-head Core live-pin writer refuses another checkout", async t => {
 	t.after(() => rm(root, { recursive: true }));
 	const result = spawnSync(process.execPath, [resolve(
 		"scripts/update-core-exact-head-live-pin-repair-source-history.mjs"
+	)], { cwd: root, encoding: "utf8", timeout: 15_000 });
+	assert.notEqual(result.status, 0);
+	assert.equal(result.stdout, "");
+	assert.deepEqual(await readdir(root), []);
+});
+
+test("Core WIT borrow replay records its exact source range", async () => {
+	const record = await readWitBorrowProducerReplay();
+	assert.equal(record.schemaVersion, 1);
+	assert.equal(record.milestone
+		, "core-wit-borrow-producer-replay-source-v1");
+	assert.equal(record.predecessorCommit
+		, coreWitBorrowProducerReplayPredecessor);
+	assert.equal(record.implementationCommit
+		, coreWitBorrowProducerReplayImplementation);
+	assert.deepEqual(record.updates.map(update => update.path)
+		, coreWitBorrowProducerReplayImplementationPaths);
+	assert.deepEqual(record.integrationUpdates.map(update => update.path)
+		, coreWitBorrowProducerReplayIntegrationPaths);
+	assert.deepEqual(record.additions.map(addition => addition.path)
+		, coreWitBorrowProducerReplayAddedPaths);
+	assert.equal(git(["rev-parse"
+		, `${coreWitBorrowProducerReplayImplementation}^`]).trim()
+	, coreWitBorrowProducerReplayPredecessor);
+});
+
+test("Core WIT borrow replay reverses every source transition", async () => {
+	const record = await readWitBorrowProducerReplay();
+	for(const update of [...record.updates, ...record.integrationUpdates])
+	{
+		const current = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256
+			, beforeCoreWitBorrowProducerReplaySource);
+		const base = record.integrationUpdates.includes(update)
+			? coreWitBorrowProducerReplayImplementation
+			: coreWitBorrowProducerReplayPredecessor;
+		const previous = git(["show", `${base}:${update.path}`]);
+		assert.equal(reverseCoreWitBorrowProducerReplayUpdate(
+			current, update), previous, update.path);
+		assert.equal(beforeFinRefinementSource(
+			update.path, current, update.previousSha256), previous, update.path);
+		assert.ok(finRefinementNormalizationPaths.includes(update.path));
+	}
+});
+
+test("Core WIT borrow replay binds the immutable producer", () => {
+	assert.equal(git(["show", "-s", "--format=%H"
+		, "1e6f7f5f5f916461dae4a567916db3dc6d4cfa6d"]).trim()
+	, "1e6f7f5f5f916461dae4a567916db3dc6d4cfa6d");
+	const source = git(["show"
+		, `${coreWitBorrowProducerReplayImplementation}:tests/wit-owned-borrow-evidence.test.mjs`]);
+	assert.match(source, /ownedTransferBorrowProducers\.wit\.revision/u);
+	assert.match(source, /bytesAtProducer\(producer, path, identity\)/u);
+	assert.match(source, /sourceAtProducer\(/u);
+	assert.doesNotMatch(source, /ownedReceiverHistoricalBytes/u);
+});
+
+test("Core WIT borrow replay rejects altered transitions", async () => {
+	const update = (await readWitBorrowProducerReplay()).updates[0];
+	const current = await sourceAtFinHistoryMilestone(
+		update.path, update.currentSha256
+		, beforeCoreWitBorrowProducerReplaySource);
+	for(const forged of [{ ...update, currentSha256: "0".repeat(64) }
+		, { ...update, previousSha256: "0".repeat(64) }
+		, { ...update, path: "unrelated.mjs" }
+		, { ...update, edits: [] }
+		, { ...update, edits: [...update.edits, update.edits[0]] }])
+		assert.throws(() => reverseCoreWitBorrowProducerReplayUpdate(
+			current, forged));
+	assert.equal(beforeCoreWitBorrowProducerReplaySource(
+		update.path, current + "unknown"), current + "unknown");
+});
+
+test("Core WIT borrow replay writer refuses another checkout", async t => {
+	const root = await mkdtemp(join(
+		tmpdir(), "lean-core-wit-borrow-replay-guard-"
+	));
+	t.after(() => rm(root, { recursive: true }));
+	const result = spawnSync(process.execPath, [resolve(
+		"scripts/update-core-wit-borrow-producer-replay-source-history.mjs"
 	)], { cwd: root, encoding: "utf8", timeout: 15_000 });
 	assert.notEqual(result.status, 0);
 	assert.equal(result.stdout, "");

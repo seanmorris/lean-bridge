@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeCoreWitBorrowProducerReplaySource, coreWitBorrowProducerReplayNormalizationPaths } from "./core-wit-borrow-producer-replay-source-history.mjs";
 import { beforeCoreExactHeadLivePinRepairSource, coreExactHeadLivePinRepairNormalizationPaths } from "./core-exact-head-live-pin-repair-source-history.mjs";
 import { beforeCoreHistoricalEvidenceReplaySource, coreHistoricalEvidenceReplayNormalizationPaths } from "./core-historical-evidence-replay-source-history.mjs";
 import { beforeCoreRunnerResilienceSource, coreRunnerResilienceNormalizationPaths } from "./core-runner-resilience-source-history.mjs";
@@ -2211,7 +2212,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...coreExactHeadLivePinRepairNormalizationPaths
+	...coreWitBorrowProducerReplayNormalizationPaths
+	, ...coreExactHeadLivePinRepairNormalizationPaths
 	, ...coreHistoricalEvidenceReplayNormalizationPaths
 	, ...coreRunnerResilienceNormalizationPaths
 	, ...nominalSubtypeEntryLivePinRepairNormalizationPaths
@@ -3165,9 +3167,13 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeCoreExactHeadLivePinRepairSource(
+	let stage = beforeCoreWitBorrowProducerReplaySource(
 		path, text, expected
 	);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeCoreExactHeadLivePinRepairSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;

@@ -1,0 +1,102 @@
+{
+  "additions": [
+    {
+      "currentSha256": "592a104d3ed6016da3b47a5ee64aa094f415816ddb86b2355f22493965f41bd1",
+      "path": "scripts/update-core-wit-borrow-producer-replay-source-history.mjs"
+    },
+    {
+      "currentSha256": "564f3a14aa8a88070bdaa921a4cfda5e854a1e3c129d35d803b53b7fe9a7d45e",
+      "path": "tests/helpers/core-wit-borrow-producer-replay-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "1250c5b2bb2fa514aba6df5f756145ecfa6228a2",
+  "integrationUpdates": [
+    {
+      "currentSha256": "d74c0e9b17f2f707e1fddad87e9f27a16ca13bb583f0724c4459e32004acc6c4",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeCoreWitBorrowProducerReplaySource\n\t, coreWitBorrowProducerReplayAddedPaths\n\t, coreWitBorrowProducerReplayHistoryPath\n\t, coreWitBorrowProducerReplayImplementation\n\t, coreWitBorrowProducerReplayImplementationPaths\n\t, coreWitBorrowProducerReplayIntegrationPaths\n\t, coreWitBorrowProducerReplayPredecessor\n\t, reverseCoreWitBorrowProducerReplayUpdate\n} from \"./core-wit-borrow-producer-replay-source-history.mjs\";\n",
+          "previous": "",
+          "start": 357
+        },
+        {
+          "current": "const readWitBorrowProducerReplay = async () => JSON.parse(await readFile(\n\tcoreWitBorrowProducerReplayHistoryPath, \"utf8\"\n));\n",
+          "previous": "",
+          "start": 2218
+        },
+        {
+          "current": "\ntest(\"Core WIT borrow replay records its exact source range\", async () => {\n\tconst record = await readWitBorrowProducerReplay();\n\tassert.equal(record.schemaVersion, 1);\n\tassert.equal(record.milestone\n\t\t, \"core-wit-borrow-producer-replay-source-v1\");\n\tassert.equal(record.predecessorCommit\n\t\t, coreWitBorrowProducerReplayPredecessor);\n\tassert.equal(record.implementationCommit\n\t\t, coreWitBorrowProducerReplayImplementation);\n\tassert.deepEqual(record.updates.map(update => update.path)\n\t\t, coreWitBorrowProducerReplayImplementationPaths);\n\tassert.deepEqual(record.integrationUpdates.map(update => update.path)\n\t\t, coreWitBorrowProducerReplayIntegrationPaths);\n\tassert.deepEqual(record.additions.map(addition => addition.path)\n\t\t, coreWitBorrowProducerReplayAddedPaths);\n\tassert.equal(git([\"rev-parse\"\n\t\t, `${coreWitBorrowProducerReplayImplementation}^`]).trim()\n\t, coreWitBorrowProducerReplayPredecessor);\n});\n\ntest(\"Core WIT borrow replay reverses every source transition\", async () => {\n\tconst record = await readWitBorrowProducerReplay();\n\tfor(const update of [...record.updates, ...record.integrationUpdates])\n\t{\n\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256\n\t\t\t, beforeCoreWitBorrowProducerReplaySource);\n\t\tconst base = record.integrationUpdates.includes(update)\n\t\t\t? coreWitBorrowProducerReplayImplementation\n\t\t\t: coreWitBorrowProducerReplayPredecessor;\n\t\tconst previous = git([\"show\", `${base}:${update.path}`]);\n\t\tassert.equal(reverseCoreWitBorrowProducerReplayUpdate(\n\t\t\tcurrent, update), previous, update.path);\n\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n\t\tassert.ok(finRefinementNormalizationPaths.includes(update.path));\n\t}\n});\n\ntest(\"Core WIT borrow replay binds the immutable producer\", () => {\n\tassert.equal(git([\"show\", \"-s\", \"--format=%H\"\n\t\t, \"1e6f7f5f5f916461dae4a567916db3dc6d4cfa6d\"]).trim()\n\t, \"1e6f7f5f5f916461dae4a567916db3dc6d4cfa6d\");\n\tconst source = git([\"show\"\n\t\t, `${coreWitBorrowProducerReplayImplementation}:tests/wit-owned-borrow-evidence.test.mjs`]);\n\tassert.match(source, /ownedTransferBorrowProducers\\.wit\\.revision/u);\n\tassert.match(source, /bytesAtProducer\\(producer, path, identity\\)/u);\n\tassert.match(source, /sourceAtProducer\\(/u);\n\tassert.doesNotMatch(source, /ownedReceiverHistoricalBytes/u);\n});\n\ntest(\"Core WIT borrow replay rejects altered transitions\", async () => {\n\tconst update = (await readWitBorrowProducerReplay()).updates[0];\n\tconst current = await sourceAtFinHistoryMilestone(\n\t\tupdate.path, update.currentSha256\n\t\t, beforeCoreWitBorrowProducerReplaySource);\n\tfor(const forged of [{ ...update, currentSha256: \"0\".repeat(64) }\n\t\t, { ...update, previousSha256: \"0\".repeat(64) }\n\t\t, { ...update, path: \"unrelated.mjs\" }\n\t\t, { ...update, edits: [] }\n\t\t, { ...update, edits: [...update.edits, update.edits[0]] }])\n\t\tassert.throws(() => reverseCoreWitBorrowProducerReplayUpdate(\n\t\t\tcurrent, forged));\n\tassert.equal(beforeCoreWitBorrowProducerReplaySource(\n\t\tupdate.path, current + \"unknown\"), current + \"unknown\");\n});\n\ntest(\"Core WIT borrow replay writer refuses another checkout\", async t => {\n\tconst root = await mkdtemp(join(\n\t\ttmpdir(), \"lean-core-wit-borrow-replay-guard-\"\n\t));\n\tt.after(() => rm(root, { recursive: true }));\n\tconst result = spawnSync(process.execPath, [resolve(\n\t\t\"scripts/update-core-wit-borrow-producer-replay-source-history.mjs\"\n\t)], { cwd: root, encoding: \"utf8\", timeout: 15_000 });\n\tassert.notEqual(result.status, 0);\n\tassert.equal(result.stdout, \"\");\n\tassert.deepEqual(await readdir(root), []);\n});\n",
+          "previous": "",
+          "start": 10031
+        }
+      ],
+      "path": "tests/helpers/core-historical-evidence-replay-source-history-tests.mjs",
+      "previousSha256": "2f70a6b3f11fca0d93ba75fe2363de9194ab7244177b92afe11a46b573071dfc"
+    },
+    {
+      "currentSha256": "d49e081df9ae9318c0b0f7a2abbbf2fb2dc7637ea03d9a282b00aa67c2e7d63d",
+      "edits": [
+        {
+          "current": "import { beforeCoreWitBorrowProducerReplaySource, coreWitBorrowProducerReplayNormalizationPaths } from \"./core-wit-borrow-producer-replay-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...coreWitBorrowProducerReplayNormalizationPaths\n\t, ...coreExactHeadLivePinRepairNormalizationPaths\n",
+          "previous": "\t...coreExactHeadLivePinRepairNormalizationPaths\n",
+          "start": 190978
+        },
+        {
+          "current": "\tlet stage = beforeCoreWitBorrowProducerReplaySource(\n",
+          "previous": "\tlet stage = beforeCoreExactHeadLivePinRepairSource(\n",
+          "start": 237064
+        },
+        {
+          "current": "\tstage = beforeCoreExactHeadLivePinRepairSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n",
+          "previous": "",
+          "start": 237234
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "49d6f2ab3434b4d73876d755abf1c325a6e5fd76885c7d94b89f17e978d87398"
+    }
+  ],
+  "milestone": "core-wit-borrow-producer-replay-source-v1",
+  "predecessorCommit": "6284544f9fcca324b841a13a17e00948dfc9293f",
+  "schemaVersion": 1,
+  "scope": "Authenticate the retained WIT borrowed-result receipt against every exact source byte at its immutable producer instead of traversing the known incomplete pre-October history graph. Preserve the original receipt, update endpoints, runtime implementation, packages, evidence payloads and support claims. Final exact-head Core acceptance remains required.",
+  "updates": [
+    {
+      "currentSha256": "850c58f2cdcb1b397424705c71f13f19e8232e124e21ed15af51d6b15a1cd531",
+      "edits": [
+        {
+          "current": "import { ownedTransferBorrowProducers } from \"./helpers/owned-transfer-borrow-producers.mjs\";\nimport { bytesAtProducer, sourceAtProducer } from \"./helpers/producer-source.mjs\";\n",
+          "previous": "import { beforeOwnedReceiver, ownedReceiverHistoricalBytes } from \"./helpers/owned-receiver-history.mjs\";\n",
+          "start": 432
+        },
+        {
+          "current": "const producer = ownedTransferBorrowProducers.wit.revision;\n",
+          "previous": "",
+          "start": 925
+        },
+        {
+          "current": "\tfor(const [path, identity] of Object.entries(record.sources))\n\t\tassert.equal(sha256(bytesAtProducer(producer, path, identity))\n\t\t\t, identity, path);\n",
+          "previous": "\tfor(const [path, identity] of Object.entries(record.sources)) assert.equal(sha256(ownedReceiverHistoricalBytes(path, await readFile(path), identity)), identity, path);\n",
+          "start": 1628
+        },
+        {
+          "current": "\t\tconst source = sourceAtProducer(\n\t\t\tproducer, update.path, update.currentSha256\n\t\t), prior = beforeOwnedWitBorrow(\n\t\t\tupdate.path, source, update.previousSha256\n\t\t);\n",
+          "previous": "\t\tconst source = beforeOwnedReceiver(update.path, await readFile(update.path, \"utf8\"), update.currentSha256), prior = beforeOwnedWitBorrow(update.path, source);\n",
+          "start": 2045
+        },
+        {
+          "current": "\tconst path = \"docs/type-surface.v1.json\", current = sourceAtProducer(\n\t\tproducer, path, record.sources[path]\n\t);\n\tconst prior = JSON.parse(beforeOwnedWitBorrow(path, current\n\t\t, record.updates.find(update => update.path === path)?.previousSha256));\n\tfor(const evidence of prior.evidence) for(const file of evidence.files)\n\t\tfile.sha256 = record.sources[file.path]\n\t\t\t?? sha256(bytesAtProducer(producer, file.path));\n",
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", current = beforeOwnedReceiver(path, await readFile(path, \"utf8\"), record.sources[path]);\n\tconst prior = JSON.parse(beforeOwnedWitBorrow(path, current));\n\tfor(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedReceiverHistoricalBytes(file.path, await readFile(file.path), record.sources[file.path]));\n",
+          "start": 2864
+        }
+      ],
+      "path": "tests/wit-owned-borrow-evidence.test.mjs",
+      "previousSha256": "b92b3dabd0e004e94b6e2720fdb367f050edeb675e67f7c4a4cd5ebf17e380e6"
+    }
+  ]
+}
