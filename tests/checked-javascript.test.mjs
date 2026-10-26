@@ -102,6 +102,7 @@ import "./helpers/owned-checked-record-promotion-preparation-source-history-test
 import "./helpers/php-wasm-entry-tag-dispatch-source-history-tests.mjs";
 import "./helpers/owned-checked-record-published-matrix-tests.mjs";
 import "./helpers/owned-checked-record-semantic-audit-tests.mjs";
+import "./helpers/owned-checked-record-semantic-audit-source-history-tests.mjs";
 import "./helpers/owned-checked-record-matrix-publication-source-history-tests.mjs";
 import "./helpers/php-wasm-refinement-entry-hosted-identities-tests.mjs";
 import "./helpers/php-wasm-entry-hosted-identity-source-history-tests.mjs";

@@ -1,0 +1,88 @@
+{
+  "additions": [
+    {
+      "currentSha256": "f469b3557f28415e2bc21f2f01769c35105cbaefb9b808e564e1a2f1a1b12c1c",
+      "path": "docs/evidence/owned-checked-record-semantic-audit-20261026.json"
+    },
+    {
+      "currentSha256": "893b203c1c69d4de89e4a80ea5c611265d4ab0dfe44a45aa875abfc7fc54c991",
+      "path": "scripts/check-owned-checked-record-semantics.mjs"
+    },
+    {
+      "currentSha256": "25638f6c00d6e69884baa3b5f48dc1af38ffd7638b36d85b8c427798f27a4074",
+      "path": "tests/helpers/owned-checked-record-semantic-audit-tests.mjs"
+    },
+    {
+      "currentSha256": "cc3ff2d4b4b80cb4f2f92188c48871c630ad3edaf06678e633c24b4b14ed510c",
+      "path": "tests/helpers/owned-checked-record-semantic-audit.mjs"
+    },
+    {
+      "currentSha256": "39210a2ba5e5bf60f278d9c020a91719e9bace11d34d1ccf5922866af4ec907d",
+      "path": "scripts/update-owned-checked-record-semantic-audit-source-history.mjs"
+    },
+    {
+      "currentSha256": "c6d3ebb9f6c0503257276dd8981c712cb17b874a214c0ccbbb2bf05e6be4be13",
+      "path": "tests/helpers/owned-checked-record-semantic-audit-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "f32edaf01deeec48ae74517a3d5da7a8327a3396954f02e9d6c808de47f8ff40",
+      "path": "tests/helpers/owned-checked-record-semantic-audit-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "c2939439e1d73ada29ac2a44f2b21b868f9bcdad",
+  "integrationBaseCommit": "c2939439e1d73ada29ac2a44f2b21b868f9bcdad",
+  "integrationUpdates": [
+    {
+      "currentSha256": "c47b932c45ee02703243c0c3a5b9529a6dc050497669561de7c4816dac1820a5",
+      "edits": [
+        {
+          "current": "import { beforeOwnedCheckedSemanticAuditSource, ownedCheckedSemanticAuditNormalizationPaths } from \"./owned-checked-record-semantic-audit-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...ownedCheckedSemanticAuditNormalizationPaths\n\t, ...ownedCheckedAlignedPublicationNormalizationPaths\n",
+          "previous": "\t...ownedCheckedAlignedPublicationNormalizationPaths\n",
+          "start": 190023
+        },
+        {
+          "current": "\tlet stage = beforeOwnedCheckedSemanticAuditSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeOwnedCheckedAlignedPublicationSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeOwnedCheckedAlignedPublicationSource(path, text, expected);\n",
+          "start": 235796
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "89dc860440e26d35a60da4de2beaa8d290a77caa59c5c46abb9f525bb0ec85ba"
+    },
+    {
+      "currentSha256": "cd5a54ff1480434b22fdc714baa501c31d11d6b47082811174c960692d4041db",
+      "edits": [
+        {
+          "current": "import \"./helpers/owned-checked-record-semantic-audit-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 6913
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "9ea9408d5292d69b74982b3ef040b9ca4576019a202c3943330e4703a3c41780"
+    }
+  ],
+  "milestone": "owned-checked-record-semantic-audit-source-v1",
+  "predecessorCommit": "5d21a53e63676c6844639e41f86d5a8084563e00",
+  "schemaVersion": 1,
+  "scope": "Join 25 exact retained consumer sources to 44 installed hosted routes across eleven lanes, seventeen published profiles and 52 executed host/runtime cells. Require the full mixed copied, owned, borrowed, transferred, callback and returned-closure surface, while proving result-only sources omit all input, transfer, callback and retain operations. Bind every source and report to the selected immutable Git archive and independently reject changed retained bytes. Preserve the separately verified complete package/archive replay and its documented boundary.",
+  "updates": [
+    {
+      "currentSha256": "9ea9408d5292d69b74982b3ef040b9ca4576019a202c3943330e4703a3c41780",
+      "edits": [
+        {
+          "current": "import \"./helpers/owned-checked-record-semantic-audit-tests.mjs\";\n",
+          "previous": "",
+          "start": 6847
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "697977b128533ea51754ce5bee3f4a760d0b5c31c9cc77dfb38a0080d1677951"
+    }
+  ]
+}
