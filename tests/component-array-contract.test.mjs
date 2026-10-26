@@ -122,6 +122,7 @@ import "./helpers/php-wasm-entry-unreached-source-source-history-tests.mjs";
 import "./helpers/php-wasm-entry-flat-position-source-history-tests.mjs";
 import "./helpers/core-runner-headroom-source-history-tests.mjs";
 import "./helpers/core-runner-resilience-source-history-tests.mjs";
+import "./helpers/core-historical-evidence-replay-source-history-tests.mjs";
 import "./helpers/generic-subtype-npm-browser-source-history-tests.mjs";
 import "./helpers/structural-subtype-partition-validator-source-history-tests.mjs";
 import "./helpers/owned-subtype-core-registration-source-history-tests.mjs";

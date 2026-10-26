@@ -1,0 +1,167 @@
+{
+  "additions": [
+    {
+      "currentSha256": "1a5a4faa5b216416a97446c5828c71e125848e1ea0927fbb5c7c6242c59bb99c",
+      "path": "scripts/update-core-historical-evidence-replay-source-history.mjs"
+    },
+    {
+      "currentSha256": "0abc34d696640091029d7164ce7ba5ebe94d8daf4425302a6fe824f8b202135f",
+      "path": "tests/helpers/core-historical-evidence-replay-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "5e733f61a2ea466f7f20fd5efbda471282ebd62a59aae169895fb5f0d5363e89",
+      "path": "tests/helpers/core-historical-evidence-replay-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "678bd2e6de0277abd7801d8edd69f83e5689c277",
+  "integrationUpdates": [
+    {
+      "currentSha256": "205e9c7a110260c81b27447db39b479d2957431bee9e54116d49023f1f4cc46b",
+      "edits": [
+        {
+          "current": "import \"./helpers/core-historical-evidence-replay-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 9041
+        }
+      ],
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "d083d8e19daf8ae00678ceb11c36f0c6dd19281c01f8e05527fd113a0f44d2a3"
+    },
+    {
+      "currentSha256": "55f1d31a80aca5f63eb8413c8b1d2499677af10ae3c5de8600fdf594cd673f65",
+      "edits": [
+        {
+          "current": "import { beforeCoreHistoricalEvidenceReplaySource, coreHistoricalEvidenceReplayNormalizationPaths } from \"./core-historical-evidence-replay-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...coreHistoricalEvidenceReplayNormalizationPaths\n\t, ...coreRunnerResilienceNormalizationPaths\n",
+          "previous": "\t...coreRunnerResilienceNormalizationPaths\n",
+          "start": 190662
+        },
+        {
+          "current": "\tlet stage = beforeCoreHistoricalEvidenceReplaySource(\n\t\tpath, text, expected\n\t);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCoreRunnerResilienceSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeCoreRunnerResilienceSource(path, text, expected);\n",
+          "start": 236645
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "ecc841b050a0ea760ef8756b5b689688976eb9e13668312cb1092c234671699b"
+    }
+  ],
+  "milestone": "core-historical-evidence-replay-source-v1",
+  "predecessorCommit": "de0395f0834471099be186463dc2b262a3a8fa88",
+  "schemaVersion": 1,
+  "scope": "Replay immutable C++ and Rust evidence with the exact committed generators that produced it, stop Python transfer reversal at its recorded current endpoint, and retain current-generator runtime tests separately. Change no original evidence, runtime implementation, package, support observation or published claim. Final exact-head Core acceptance remains required.",
+  "updates": [
+    {
+      "currentSha256": "05f511d9c345366bf0ff1ac4427c2876d113a885cedbdfb23398dc655d2a0af7",
+      "edits": [
+        {
+          "current": "import { moduleAtProducer } from \"./producer-module.mjs\";\n",
+          "previous": "import { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from \"../../src/build/native-graph-model.mjs\";\nimport { generateOwnedCPackage } from \"../../src/backends/c/owned-package.mjs\";\nimport { generateOwnedCppPackage } from \"../../src/backends/cpp/owned-package.mjs\";\n",
+          "start": 429
+        },
+        {
+          "current": "const ownedCppProducer = \"511f43f1b02a6bddb5517f47a497e8eda766a065\";\nlet producerPromise;\nconst producerAtMilestone = () => producerPromise ??= Promise.all([\n\t\"src/build/native-graph-model.mjs\"\n\t, \"src/backends/c/owned-package.mjs\"\n\t, \"src/backends/cpp/owned-package.mjs\"\n].map(path => moduleAtProducer(ownedCppProducer, path))).then(modules =>\n\tObject.assign({}, ...modules));\n\n",
+          "previous": "",
+          "start": 960
+        },
+        {
+          "current": "const packageReport = (report, mode, sources, kind, producer) => {\n",
+          "previous": "const packageReport = (report, mode, sources, kind) => {\n",
+          "start": 3731
+        },
+        {
+          "current": "\tconst model = producer.createCompiledNativeModel(\n\t\treport.input, { ownedGraphs: true, ownedHostCallbacks: true }\n\t);\n",
+          "previous": "\tconst model = createCompiledNativeModel(report.input, { ownedGraphs: true, ownedHostCallbacks: true });\n",
+          "start": 5078
+        },
+        {
+          "current": "\tconst native = producer.generateCompiledNativeLeanAdapters(model);\n\tconst c = producer.generateOwnedCPackage({\n\t\t...report.input, hostCallbacks: true\n\t});\n",
+          "previous": "\tconst native = generateCompiledNativeLeanAdapters(model), c = generateOwnedCPackage({ ...report.input, hostCallbacks: true });\n",
+          "start": 5304
+        },
+        {
+          "current": "\t\tconst generated = producer.generateOwnedCppPackage(model.bindingIr);\n",
+          "previous": "\t\tconst generated = generateOwnedCppPackage(model.bindingIr);\n",
+          "start": 7764
+        },
+        {
+          "current": "\tconst producer = await producerAtMilestone();\n\tfor(const name of [\n\t\t\"createCompiledNativeModel\", \"generateCompiledNativeLeanAdapters\"\n\t\t, \"generateOwnedCPackage\", \"generateOwnedCppPackage\"\n\t]) assert.equal(typeof producer[name], \"function\", name);\n",
+          "previous": "",
+          "start": 9771
+        },
+        {
+          "current": "\t\t\tconst c = producer.generateOwnedCPackage({\n\t\t\t\t...input, hostCallbacks: true\n\t\t\t});\n\t\t\tconst generated = producer.generateOwnedCppPackage(\n\t\t\t\tc.layout.model.bindingIr\n\t\t\t);\n",
+          "previous": "\t\t\tconst c = generateOwnedCPackage({ ...input, hostCallbacks: true }), generated = generateOwnedCppPackage(c.layout.model.bindingIr);\n",
+          "start": 11543
+        },
+        {
+          "current": "\t\tpackageReport(record.packages[mode], mode, record.sources, \"cpp\", producer);\n\t\tpackageReport(record.cPackages.aggregates[mode], mode\n\t\t\t, record.sources, \"aggregates\", producer);\n\t\tpackageReport(record.cPackages.callbacks[mode], mode\n\t\t\t, record.sources, \"callbacks\", producer);\n",
+          "previous": "\t\tpackageReport(record.packages[mode], mode, record.sources, \"cpp\");\n\t\tpackageReport(record.cPackages.aggregates[mode], mode, record.sources, \"aggregates\");\n\t\tpackageReport(record.cPackages.callbacks[mode], mode, record.sources, \"callbacks\");\n",
+          "start": 13281
+        }
+      ],
+      "path": "tests/helpers/owned-cpp-evidence.mjs",
+      "previousSha256": "fc87ae352e3443b01928f7e44e3c4e80cc13b4c4b6fd022de4d2b1f2b2de0a41"
+    },
+    {
+      "currentSha256": "f9e112237c58e3f691d7ed9ecc295638ce6f58da50931643c62136fc9dc9954a",
+      "edits": [
+        {
+          "current": "import { moduleAtProducerWithSourceReads } from \"./producer-module.mjs\";\n\nconst ownedRustCallbackProducer = \"a3100134f1853102fc2cbf0c2f12839ac480af12\";\nlet historicalAcceptancePromise;\nconst historicalAcceptance = () => historicalAcceptancePromise\n\t??= moduleAtProducerWithSourceReads(\n\t\townedRustCallbackProducer\n\t\t, \"tests/helpers/owned-rust-callback-result-acceptance.mjs\"\n\t);\n",
+          "previous": "",
+          "start": 1955
+        },
+        {
+          "current": "/**\n * Reconstruct one retained report with the exact generator that produced it.\n *\n * @param path - Original report path.\n * @param item - Original retained report.\n */\nexport const assertOwnedRustCallbackReportAtProducer = async (path, item) => {\n\tconst producer = await historicalAcceptance();\n\tassert.equal(typeof producer.assertOwnedRustCallbackReport, \"function\");\n\treturn producer.assertOwnedRustCallbackReport(path, item);\n};\n\n",
+          "previous": "",
+          "start": 26484
+        },
+        {
+          "current": "\tfor(const [path, item] of Object.entries(reports))\n\t\tawait assertOwnedRustCallbackReportAtProducer(path, item);\n",
+          "previous": "\tfor(const [path, item] of Object.entries(reports)) await assertOwnedRustCallbackReport(path, item);\n",
+          "start": 28574
+        }
+      ],
+      "path": "tests/helpers/owned-rust-callback-result-acceptance.mjs",
+      "previousSha256": "731618d8d634d66221762be8ac072707f257758a09a58712bd0f263601d42faa"
+    },
+    {
+      "currentSha256": "14fa3de2bef59979934e0fd7f61e5a9384d8b09b0eb04e01fc57322aba804c2b",
+      "edits": [
+        {
+          "current": "\t\tconst current = beforeOwnedRubyTransfer(\n\t\t\tupdate.path, await readFile(update.path, \"utf8\"), update.currentSha256\n\t\t), prior = beforeOwnedPythonTransfer(\n\t\t\tupdate.path, current, update.previousSha256\n\t\t);\n\t\tassert.equal(sha256(prior), update.previousSha256, update.path);\n\t\tassert.equal(beforeOwnedPythonTransfer(\n\t\t\tupdate.path, prior, update.previousSha256\n\t\t), prior);\n",
+          "previous": "\t\tconst current = beforeOwnedRubyTransfer(update.path, await readFile(update.path, \"utf8\")), prior = beforeOwnedPythonTransfer(update.path, current);\n\t\tassert.equal(sha256(prior), update.previousSha256);\n\t\tassert.equal(beforeOwnedPythonTransfer(update.path, prior), prior);\n",
+          "start": 2101
+        },
+        {
+          "current": "\tconst typeSurfaceUpdate = record.updates.find(update =>\n\t\tupdate.path === \"docs/type-surface.v1.json\");\n\tassert.ok(typeSurfaceUpdate);\n\tconst current = beforeOwnedRubyTransfer(\n\t\t\"docs/type-surface.v1.json\"\n\t\t, await readFile(\"docs/type-surface.v1.json\", \"utf8\")\n\t\t, typeSurfaceUpdate.currentSha256\n\t);\n\tconst previousIndex = JSON.parse(beforeOwnedPythonTransfer(\n\t\t\"docs/type-surface.v1.json\", current\n\t\t, typeSurfaceUpdate.previousSha256\n\t));\n",
+          "previous": "\tconst current = beforeOwnedRubyTransfer(\"docs/type-surface.v1.json\", await readFile(\"docs/type-surface.v1.json\", \"utf8\"));\n\tconst previousIndex = JSON.parse(beforeOwnedPythonTransfer(\"docs/type-surface.v1.json\", current));\n",
+          "start": 2576
+        }
+      ],
+      "path": "tests/owned-python-transfer-evidence.test.mjs",
+      "previousSha256": "758b7658e52e951c477cba1c3c2b6cd54fca067390b346fa7e702761c5150c2a"
+    },
+    {
+      "currentSha256": "f2128e2b00893cf8da12ee0ebb92d5cfb273339f9adb82f8fa2aee37b467cf6d",
+      "edits": [
+        {
+          "current": "\t, assertOwnedRustCallbackReportAtProducer } from \"./helpers/owned-rust-callback-result-acceptance.mjs\";\n",
+          "previous": "\t, assertOwnedRustCallbackReport } from \"./helpers/owned-rust-callback-result-acceptance.mjs\";\n",
+          "start": 506
+        },
+        {
+          "current": "\t\tawait assert.rejects(() =>\n\t\t\tassertOwnedRustCallbackReportAtProducer(path, item)\n\t\t, undefined, name + \": \" + mutate.toString());\n",
+          "previous": "\t\tawait assert.rejects(() => assertOwnedRustCallbackReport(path, item), undefined, name + \": \" + mutate.toString());\n",
+          "start": 5330
+        }
+      ],
+      "path": "tests/owned-rust-callback-result-evidence.test.mjs",
+      "previousSha256": "d72cebed100108a32173c1066e4179260cfac7875a8e14d218913c2fed294bbc"
+    }
+  ]
+}
