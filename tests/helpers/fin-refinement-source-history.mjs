@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeNominalSubtypeEntryPublicationSource, nominalSubtypeEntryPublicationNormalizationPaths } from "./nominal-subtype-entry-publication-source-history.mjs";
 import { beforeOwnedCheckedSemanticAuditSource, ownedCheckedSemanticAuditNormalizationPaths } from "./owned-checked-record-semantic-audit-source-history.mjs";
 import { beforeOwnedCheckedAlignedPublicationSource, ownedCheckedAlignedPublicationNormalizationPaths } from "./owned-checked-record-aligned-publication-source-history.mjs";
 import { beforeOwnedCheckedPromotionLabelsSource, ownedCheckedPromotionLabelsNormalizationPaths } from "./owned-checked-record-promotion-labels-source-history.mjs";
@@ -2206,7 +2207,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...ownedCheckedSemanticAuditNormalizationPaths
+	...nominalSubtypeEntryPublicationNormalizationPaths
+	, ...ownedCheckedSemanticAuditNormalizationPaths
 	, ...ownedCheckedAlignedPublicationNormalizationPaths
 	, ...ownedCheckedPromotionLabelsNormalizationPaths
 	, ...ownedPublicationCoexistenceNormalizationPaths
@@ -3155,7 +3157,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeOwnedCheckedSemanticAuditSource(path, text, expected);
+	let stage = beforeNominalSubtypeEntryPublicationSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeOwnedCheckedSemanticAuditSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;
