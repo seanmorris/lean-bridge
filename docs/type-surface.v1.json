@@ -1495474,6 +1495474,140 @@
           "sha256": "e4ec2acaba3a4e81a7a9134c4f9265a7044186c3775bc399e1ea7f6d757cbdb6"
         }
       ]
+    },
+    {
+      "id": "nominal-subtype-entry-native-hosted-instrumented",
+      "kind": "test",
+      "revision": "390ae18d3a2607bc73463767a33fea0cfb9350b0",
+      "command": "node --test --test-name-pattern='^retained native nominal Subtype entry evidence replays$' tests/nominal-subtype-entry-hosted-evidence.test.mjs",
+      "scope": "GitHub Actions run 40047587455, job 120732738789, artifact 12545325934 retains ordinary-source and reviewed-IR full and result-only instrumented packages. The full C package measures public entry, validator, selected plusOne/plusTwo constructor, adapter and Lean source across valid, invalid, inactive-branch, late-failure and recovery cases on Linux x64/glibc 2.39 against the declared 2.38 floor. Both C++ package modes execute, but C++ entry counters are explicitly unmeasured; result-only packages are explicitly classified as having no constructor/source measurement. This is test-only entry evidence for separate instrumented packages; it does not change any installed support state or imply counters in an unmodified release. External toolchains and runtimes remain trusted recorded inputs.",
+      "files": [
+        {
+          "path": "docs/evidence/nominal-subtype-entry-native-hosted-20261024/index.json",
+          "sha256": "84117788b03fed4ec21fbd7c7fd67e42eb4dbf2abe4ef4da2254aee747e8eafb"
+        },
+        {
+          "path": "docs/evidence/nominal-subtype-entry-native-hosted-20261024/hosted/api/artifact.json",
+          "sha256": "ffe0ae433127a959f0f86aff757a5e4264c29fa48c6743900d326588bb143261"
+        },
+        {
+          "path": "docs/evidence/nominal-subtype-entry-native-hosted-20261024/hosted/api/job.json",
+          "sha256": "12261a9e7091f6e5edb76977e04981df0456cfb4479954eaddd74935c19291a4"
+        },
+        {
+          "path": "docs/evidence/nominal-subtype-entry-native-hosted-20261024/hosted/api/run.json",
+          "sha256": "b8a76c072f7d536be84f628175f160356f0ce4d46a49473dc649ca655674bd64"
+        },
+        {
+          "path": "docs/evidence/nominal-subtype-entry-native-hosted-20261024/hosted/artifact.zip.parts/0000.part",
+          "sha256": "74f8b3c822ffb14c1b1a5c7dbac38d464b7477845660d2cfb1805e3a9d1cb56c"
+        },
+        {
+          "path": "scripts/archive-nominal-subtype-entry-evidence.mjs",
+          "sha256": "a355451986fc761057faa6bdede72c9ae09af7d81c89ac2e676a542beb8d8ba8"
+        },
+        {
+          "path": "scripts/promote-nominal-subtype-entry-evidence.mjs",
+          "sha256": "15156201931892edc754074bc67cc89826bc99c42dc62d345f0062f02ca4052d"
+        },
+        {
+          "path": "tests/nominal-subtype-entry-hosted-evidence.test.mjs",
+          "sha256": "1eefc74f136832f2c4b26cab22cbd1d8bf01dd429993d0d19a3239844f5d4d48"
+        },
+        {
+          "path": "tests/helpers/nominal-subtype-entry-hosted-evidence.mjs",
+          "sha256": "99283726a62e6c96d7caffff7f359da0cad684c358a70f30cfe741db088f797e"
+        },
+        {
+          "path": "tests/helpers/nominal-subtype-entry-hosted-summary.mjs",
+          "sha256": "f9008534d3c852a2722434ab859c06cf790e4e61899a692cb4c56f0b8c2465df"
+        },
+        {
+          "path": "tests/helpers/nominal-subtype-entry-promotion.mjs",
+          "sha256": "96f5048f8e6a925a31fa6239f54876889d796f4562955bb2d4f884491ba569b1"
+        },
+        {
+          "path": "tests/helpers/type-surface-promotion-io.mjs",
+          "sha256": "89c4b392fbf482e453e48552de977790a783691ee7f28dba07bf58ec5c0db296"
+        },
+        {
+          "path": "tests/helpers/promotion-file-transaction.mjs",
+          "sha256": "00181a5537d811a32ed39ff61093356b7f9af72a774026c3860e70b551a2df72"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "docs/evidence/nominal-subtype-entry-native-hosted-20261024/hosted/artifact.zip.parts/0000.part",
+          "sha256": "74f8b3c822ffb14c1b1a5c7dbac38d464b7477845660d2cfb1805e3a9d1cb56c"
+        }
+      ]
+    },
+    {
+      "id": "nominal-subtype-entry-browser-hosted-instrumented",
+      "kind": "test",
+      "revision": "4a5f3ad87b829e6363cd655d8d39d252344ba8a5",
+      "command": "node --test --test-name-pattern='^retained browser nominal Subtype entry evidence replays$' tests/nominal-subtype-entry-hosted-evidence.test.mjs",
+      "scope": "GitHub Actions run 40063486749, job 120781764266, artifact 12549471396 retains ordinary-source and reviewed-IR full and result-only instrumented packages. The full package measures public JavaScript entry, selected validator and plusOne/plusTwo constructor, direct component adapter and Lean source in Node, strict TypeScript, Chromium, Firefox and WebKit pages, React effects and workers, including valid, invalid, inactive-branch, late-failure and recovery cases. Result-only packages retain explicit entry nonmeasurement. This is test-only entry evidence for separate instrumented packages; it does not change any installed support state or imply counters in an unmodified release. External toolchains and runtimes remain trusted recorded inputs.",
+      "files": [
+        {
+          "path": "docs/evidence/nominal-subtype-entry-browser-hosted-20261024/index.json",
+          "sha256": "66ec4ffe09cb7216170f0d5b5c77829c5a88152793d4a533d02681e71aa3c219"
+        },
+        {
+          "path": "docs/evidence/nominal-subtype-entry-browser-hosted-20261024/hosted/api/artifact.json",
+          "sha256": "d9c9eda6178be12bec36c25cac059e8cb1523d7927f1bc3c83cb9e25d8f92a0a"
+        },
+        {
+          "path": "docs/evidence/nominal-subtype-entry-browser-hosted-20261024/hosted/api/job.json",
+          "sha256": "9177bfe7de66b6e2822fea39089755b220f3dc4e981a4d33e2dcc94b1877b83a"
+        },
+        {
+          "path": "docs/evidence/nominal-subtype-entry-browser-hosted-20261024/hosted/api/run.json",
+          "sha256": "222efb7e190a08ca57cfc397b47dab479aa478c5144429ac3583503f5c1244bc"
+        },
+        {
+          "path": "docs/evidence/nominal-subtype-entry-browser-hosted-20261024/hosted/artifact.zip.parts/0000.part",
+          "sha256": "c940b802217dfc637012e372991450e8f7cf1b818347e640fcc28cdb3a784cb5"
+        },
+        {
+          "path": "scripts/archive-nominal-subtype-entry-evidence.mjs",
+          "sha256": "a355451986fc761057faa6bdede72c9ae09af7d81c89ac2e676a542beb8d8ba8"
+        },
+        {
+          "path": "scripts/promote-nominal-subtype-entry-evidence.mjs",
+          "sha256": "15156201931892edc754074bc67cc89826bc99c42dc62d345f0062f02ca4052d"
+        },
+        {
+          "path": "tests/nominal-subtype-entry-hosted-evidence.test.mjs",
+          "sha256": "1eefc74f136832f2c4b26cab22cbd1d8bf01dd429993d0d19a3239844f5d4d48"
+        },
+        {
+          "path": "tests/helpers/nominal-subtype-entry-hosted-evidence.mjs",
+          "sha256": "99283726a62e6c96d7caffff7f359da0cad684c358a70f30cfe741db088f797e"
+        },
+        {
+          "path": "tests/helpers/nominal-subtype-entry-hosted-summary.mjs",
+          "sha256": "f9008534d3c852a2722434ab859c06cf790e4e61899a692cb4c56f0b8c2465df"
+        },
+        {
+          "path": "tests/helpers/nominal-subtype-entry-promotion.mjs",
+          "sha256": "96f5048f8e6a925a31fa6239f54876889d796f4562955bb2d4f884491ba569b1"
+        },
+        {
+          "path": "tests/helpers/type-surface-promotion-io.mjs",
+          "sha256": "89c4b392fbf482e453e48552de977790a783691ee7f28dba07bf58ec5c0db296"
+        },
+        {
+          "path": "tests/helpers/promotion-file-transaction.mjs",
+          "sha256": "00181a5537d811a32ed39ff61093356b7f9af72a774026c3860e70b551a2df72"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "docs/evidence/nominal-subtype-entry-browser-hosted-20261024/hosted/artifact.zip.parts/0000.part",
+          "sha256": "c940b802217dfc637012e372991450e8f7cf1b818347e640fcc28cdb3a784cb5"
+        }
+      ]
     }
   ],
   "observations": [

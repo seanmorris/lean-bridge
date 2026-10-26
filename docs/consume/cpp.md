@@ -638,6 +638,8 @@ They cover both author routes.
 These structural runs do not measure dispatch counts or establish hosted
 release-floor acceptance.
 
+A separate [hosted nominal entry measurement](../evidence/nominal-subtype-entry-promotion-20261026.md) runs the ordinary-source and reviewed-IR full and result-only C++ consumers after source-free offline installation and relocation on Linux x64/glibc 2.39. The same artifact measures C full-package public, validator, selected-constructor, adapter and Lean-source entries, but C++ is explicitly classified as executed without entry counters. Result-only packages record no constructor or source measurement. These test-only instrumented packages do not change the unmodified C++ support claim.
+
 ### Subtypes in copied records
 
 Ordinary-source and reviewed packages also accept primitive-base Subtype

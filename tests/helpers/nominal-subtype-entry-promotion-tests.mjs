@@ -4,7 +4,6 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { createReadStream } from "node:fs";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { validateTypeSurface } from "../../src/adoption/type-surface.mjs";
@@ -14,9 +13,11 @@ import {
 	, nominalSubtypeEntryPromotionRoots, promoteNominalSubtypeEntryEvidence
 	, renderNominalSubtypeEntryDocumentation, renderNominalSubtypeEntryPromotion
 } from "./nominal-subtype-entry-promotion.mjs";
+import { gitSourceBytes } from "./source-history-stream.mjs";
 import { readPromotionInventory } from "./type-surface-promotion-io.mjs";
 
 const digest = "0".repeat(64), revision = "0".repeat(40);
+const implementation = "8594bc6a43fdf28bf3b80da64d31938226d0f0b9";
 const laneProfiles = Object.freeze({
 	native: ["c", "cpp"]
 	, browser: ["node-javascript", "node-typescript", "browser-javascript"
@@ -37,7 +38,8 @@ test("nominal Subtype entry promotion adds evidence without support", async () =
 		, readFile("docs/consumer-support.v1.json", "utf8").then(JSON.parse)
 	]);
 	const { document } = await readPromotionInventory(
-		createReadStream("docs/type-surface.v1.json"), { irSchema, consumers });
+		gitSourceBytes(implementation, "docs/type-surface.v1.json")
+		, { irSchema, consumers });
 	const promoted = promoteNominalSubtypeEntryEvidence(document, references);
 	assert.equal(validateTypeSurface(promoted, { irSchema, consumers }), true);
 	assert.deepEqual(promoted.observations, document.observations);

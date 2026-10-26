@@ -476,6 +476,8 @@ These local runs do not measure dispatch counts or establish hosted release-floo
 acceptance. Refined callback signatures remain separate work. Owned Subtypes have
 the narrower installed boundary described next.
 
+The separate [hosted constructor/source-entry measurement](evidence/nominal-subtype-entry-promotion-20261026.md) replays instrumented ordinary-source and reviewed-IR full and result-only packages. Full packages record public JavaScript entry, the selected validator and constructor, the direct component adapter and Lean source in Node, strict TypeScript, pages, React and workers across Chromium, Firefox and WebKit. Result-only packages record explicit entry nonmeasurement. These test probes do not add counters to unmodified releases or change their installed support.
+
 ### Subtypes in owned records
 
 Ordinary-source and independently reviewed npm packages accept the tested
