@@ -2,6 +2,9 @@ name: Generic Subtypes in .NET, JVM, native PHP and WIT
 
 on:
   workflow_dispatch:
+  # One lane in the bounded weekly default-branch acceptance sweep.
+  schedule:
+    - cron: "47 7 * * 2"
 
 permissions:
   contents: read

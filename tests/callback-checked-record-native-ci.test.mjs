@@ -306,9 +306,10 @@ test("callback checked-record native workflows preserve failures and cannot narr
 	for(const [source, required] of workflows)
 	{
 		for(const value of [
-			"push:"
-			, "pull_request:"
-			, "workflow_dispatch:"
+			"workflow_dispatch:"
+			, "# One lane in the bounded weekly default-branch acceptance sweep."
+			, "schedule:"
+			, "cron:"
 			, "persist-credentials: false"
 			, "if: always()"
 			, "if-no-files-found: error"

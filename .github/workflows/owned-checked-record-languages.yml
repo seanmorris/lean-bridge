@@ -2,6 +2,9 @@ name: Installed owned checked records in Python, Ruby and Rust
 
 on:
   workflow_dispatch:
+  # One lane in the bounded weekly default-branch acceptance sweep.
+  schedule:
+    - cron: "47 22 * * 4"
 
 permissions:
   contents: read

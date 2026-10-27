@@ -2,6 +2,9 @@ name: Installed recursive checked records in Ruby
 
 on:
   workflow_dispatch:
+  # One lane in the bounded weekly default-branch acceptance sweep.
+  schedule:
+    - cron: "47 1 * * 6"
 
 permissions:
   contents: read

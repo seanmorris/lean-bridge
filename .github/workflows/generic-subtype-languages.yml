@@ -2,6 +2,9 @@ name: Generic Subtypes in Python, Ruby and Rust
 
 on:
   workflow_dispatch:
+  # One lane in the bounded weekly default-branch acceptance sweep.
+  schedule:
+    - cron: "17 6 * * 2"
 
 permissions:
   contents: read

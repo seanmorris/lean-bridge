@@ -41,6 +41,7 @@ export const assertCheckedRecordValueIndexDotnetWorkflow = source => {
 		[...source.matchAll(/^ {2}([a-z][a-z0-9_-]*):\n/gmu)]
 			.map(match => match[1])
 		, ["workflow_dispatch"
+			, "schedule"
 			, "checked-record-value-index-dotnet"]
 	);
 	assert.doesNotMatch(source

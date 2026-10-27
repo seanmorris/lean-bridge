@@ -19,6 +19,7 @@ export const assertZeroPayloadPerlWorkflow = source => {
 	assert.deepEqual([...source.matchAll(/^ {2}([a-z][a-z0-9_-]*):\n/gmu)]
 		.map(match => match[1]), [
 		"workflow_dispatch"
+		, "schedule"
 		, "zero-payload-checked-record-perl"]
 	);
 	assert.doesNotMatch(source, /continue-on-error:|needs:|strategy:|defaults:|set \+e|\|\| true/u);

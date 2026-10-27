@@ -9,10 +9,13 @@ import test from "node:test";
 import { assertPhpWasmSubtypeWorkflow, disablePhpWasmSubtypeWorkflow, enablePhpWasmSubtypeWorkflow, phpWasmSubtypeCiBlock, phpWasmSubtypeCiCheck, phpWasmSubtypeCiInvocation, phpWasmSubtypeCiReports } from "./php-wasm-subtype-ci.mjs";
 import { beforePhpWasmSubtypeAcceptanceSource } from "./php-wasm-subtype-acceptance-history.mjs";
 import { assertPhpWasmDirectFinWorkflow } from "./php-wasm-fin-direct-ci.mjs";
-import { beforePhpWasmEntryCiSource } from "./php-wasm-entry-ci-history.mjs";
+import { beforePhpWasmEntryCiSource, phpWasmEntryCiHistoryPath } from "./php-wasm-entry-ci-history.mjs";
+import { sourceBeforeFinHistoryRecord } from "./source-at-fin-history-milestone.mjs";
 
 test("PHP-Wasm Subtype CI preserves the earlier workflow and requires both installed source routes and fresh constructor analysis", async () => {
-	const path = ".github/workflows/consumer-matrix.yml", current = beforePhpWasmEntryCiSource(path, await readFile(path, "utf8"));
+	const path = ".github/workflows/consumer-matrix.yml";
+	const current = await sourceBeforeFinHistoryRecord(
+		phpWasmEntryCiHistoryPath, path, beforePhpWasmEntryCiSource);
 	assertPhpWasmSubtypeWorkflow(current);
 	const previous = beforePhpWasmSubtypeAcceptanceSource(path, current);
 	assertPhpWasmDirectFinWorkflow(previous);

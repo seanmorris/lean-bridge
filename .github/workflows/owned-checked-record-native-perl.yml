@@ -2,6 +2,9 @@ name: Installed owned checked records in native and Perl consumers
 
 on:
   workflow_dispatch:
+  # One lane in the bounded weekly default-branch acceptance sweep.
+  schedule:
+    - cron: "47 1 * * 5"
 
 permissions:
   contents: read

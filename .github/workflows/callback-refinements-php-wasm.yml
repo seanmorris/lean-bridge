@@ -2,6 +2,9 @@ name: Checked Fin and record callbacks in PHP-Wasm
 
 on:
   workflow_dispatch:
+  # One lane in the bounded weekly default-branch acceptance sweep.
+  schedule:
+    - cron: "47 7 * * 0"
 
 permissions:
   contents: read

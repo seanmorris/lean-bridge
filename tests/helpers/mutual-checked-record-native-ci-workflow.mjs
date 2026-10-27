@@ -23,6 +23,7 @@ export const assertMutualCheckedRecordNativeWorkflow = source => {
 		.map(match => match[1]);
 	assert.deepEqual(jobKeys, [
 		"workflow_dispatch"
+		, "schedule"
 		, "recursive-checked-record-native"
 	]);
 	assert.doesNotMatch(source

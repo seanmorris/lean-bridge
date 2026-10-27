@@ -27,6 +27,26 @@ const pathScopedAutomaticWorkflows = new Set([
 	, "dependent-checked-record-matrix.yml"
 ]);
 
+const nonSweepWorkflows = new Set([
+	"checked-record-value-index-matrix.yml"
+	, "consumer-matrix.yml"
+	, "demos-pages.yml"
+	, "dependent-checked-record-matrix.yml"
+	, "owned-checked-record-npm-browser.yml"
+	, "performance.yml"
+	, "perl-consumer.yml"
+	, "php-wasm-refinement-entry-promotion.yml"
+	, "quality.yml"
+	, "reproducible-release.yml"
+]);
+
+const sweepCron = index => {
+	assert.ok(Number.isSafeInteger(index) && index >= 0 && index < 112);
+	const day = Math.floor(index / 16);
+	const minutes = index % 16 * 90 + 17;
+	return `${minutes % 60} ${Math.floor(minutes / 60)} * * ${day}`;
+};
+
 const workflowEvents = source => {
 	const start = source.indexOf("on:\n");
 	assert.notEqual(start, -1, "workflow has an on block");
@@ -46,6 +66,24 @@ const eventBody = (block, event) => {
 	const following = block.slice(start).replace(/^.*\n/u, "");
 	const end = following.search(/^ {2}[a-z][a-z0-9_-]*:\s*$/mu);
 	return end === -1 ? following : following.slice(0, end);
+};
+
+const scheduleCrons = source => {
+	const { block, events } = workflowEvents(source);
+	if(!events.includes("schedule")) return [];
+	return [...eventBody(block, "schedule").matchAll(
+		/^ {4}- cron: ["']([^"']+)["']\s*$/gmu
+	)].map(match => match[1]);
+};
+
+const assertSweepSlot = (name, source, index) => {
+	assert.ok(source.includes(
+		"# One lane in the bounded weekly default-branch acceptance sweep."
+	), `${name} documents its recurring sweep role`);
+	const actual = scheduleCrons(source);
+	assert.deepEqual(actual, [sweepCron(index)]
+		, `${name} has its unique bounded weekly sweep slot`);
+	return actual[0];
 };
 
 const assertWorkflowTriggerPolicy = (name, source) => {
@@ -74,15 +112,24 @@ test("all workflows obey the reviewed automatic-trigger budget", async () => {
 		.filter(name => name.endsWith(".yml"))
 		.sort();
 	assert.equal(names.length, 122, "review every workflow added to the repository");
+	const sources = new Map();
 
 	for(const name of names)
 	{
 		const source = await readFile(`${workflowDirectory}/${name}`, "utf8");
+		sources.set(name, source);
 		assertWorkflowTriggerPolicy(name, source);
 	}
+	const sweep = names.filter(name => !nonSweepWorkflows.has(name));
+	assert.equal(sweep.length, 112);
+	const crons = sweep.map((name, index) =>
+		assertSweepSlot(name, sources.get(name), index));
+	assert.equal(new Set(crons).size, sweep.length
+		, "weekly sweep slots do not overlap");
 
 	assert.equal(approvedAutomaticEvents.size, 7);
 	assert.equal(pathScopedAutomaticWorkflows.size, 2);
+	assert.equal(nonSweepWorkflows.size, 10);
 });
 
 test("the trigger policy fails closed on accidental dedicated-workflow fan-out", async () => {
@@ -95,4 +142,20 @@ test("the trigger policy fails closed on accidental dedicated-workflow fan-out",
 		assert.notEqual(altered, source);
 		assert.throws(() => assertWorkflowTriggerPolicy(name, altered));
 	}
+});
+
+test("the recurring sweep fails closed on a removed or duplicate slot", async () => {
+	const names = (await readdir(workflowDirectory))
+		.filter(name => name.endsWith(".yml") && !nonSweepWorkflows.has(name))
+		.sort();
+	assert.equal(names.length, 112);
+	const first = await readFile(`${workflowDirectory}/${names[0]}`, "utf8");
+	const second = await readFile(`${workflowDirectory}/${names[1]}`, "utf8");
+	const removed = first.replace(
+		/ {2}# One lane in the bounded weekly default-branch acceptance sweep\.\n {2}schedule:\n {4}- cron: [^\n]+\n/u, "");
+	assert.throws(() => assertSweepSlot(names[0], removed, 0));
+	const duplicate = second.replace(`"${sweepCron(1)}"`
+		, `"${sweepCron(0)}"`);
+	assert.notEqual(duplicate, second);
+	assert.throws(() => assertSweepSlot(names[1], duplicate, 1));
 });

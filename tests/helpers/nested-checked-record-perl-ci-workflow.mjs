@@ -20,7 +20,7 @@ export const assertNestedCheckedRecordPerlWorkflow = source => {
 	assert.ok(source.includes("concurrency:\n  group: nested-checked-record-perl-${{ github.ref }}\n  cancel-in-progress: true\n"));
 	assert.deepEqual([...source.matchAll(/^ {2}([a-z][a-z0-9_-]*):\n/gmu)]
 		.map(match => match[1]), [
-		"workflow_dispatch", "nested-checked-record-perl"]
+		"workflow_dispatch", "schedule", "nested-checked-record-perl"]
 	);
 	assert.doesNotMatch(source
 		, /continue-on-error:|needs:|strategy:|defaults:|set \+e|\|\| true/u);

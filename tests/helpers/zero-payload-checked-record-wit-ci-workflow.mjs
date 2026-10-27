@@ -25,7 +25,7 @@ export const assertZeroPayloadWitWorkflow = source => {
 	assert.ok(source.includes("on:\n  workflow_dispatch:\n"));
 	assert.ok(source.includes("permissions:\n  contents: read\n"));
 	assert.ok(source.includes("concurrency:\n  group: zero-payload-checked-record-wit-${{ github.ref }}\n  cancel-in-progress: true\n"));
-	assert.deepEqual([...source.matchAll(/^ {2}([a-z][a-z0-9_-]*):\n/gmu)].map(match => match[1]), ["workflow_dispatch", "zero-payload-checked-record-wit"]);
+	assert.deepEqual([...source.matchAll(/^ {2}([a-z][a-z0-9_-]*):\n/gmu)].map(match => match[1]), ["workflow_dispatch", "schedule", "zero-payload-checked-record-wit"]);
 	assert.doesNotMatch(source, /continue-on-error:|needs:|strategy:|defaults:|set \+e|\|\| true/u);
 	assert.doesNotMatch(source, /LEAN_BRIDGE_(?:NATIVE_TEST_GLIBC_FLOOR|ZERO_PAYLOAD_WIT_|NOMINAL_SUBTYPE_WIT_|WASM_TOOLS|WASMTIME_C_API)|CC:/u);
 	assert.deepEqual(source.match(/^\s+if:.*$/gmu), ["        if: always()", "        if: always() && steps.acceptance.outcome != 'success'"]);

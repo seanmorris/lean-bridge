@@ -2,6 +2,9 @@ name: Generic Subtypes in C, C++ and Perl
 
 on:
   workflow_dispatch:
+  # One lane in the bounded weekly default-branch acceptance sweep.
+  schedule:
+    - cron: "17 9 * * 2"
 
 permissions:
   contents: read

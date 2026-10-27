@@ -2,6 +2,9 @@ name: Synchronous callback refinement entry in PHP-Wasm
 
 on:
   workflow_dispatch:
+  # One lane in the bounded weekly default-branch acceptance sweep.
+  schedule:
+    - cron: "17 12 * * 5"
   workflow_call:
 
 permissions:

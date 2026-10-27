@@ -23,6 +23,7 @@ export const assertInheritedCheckedRecordNativeWorkflow = source => {
 		[...source.matchAll(/^ {2}([a-z][a-z0-9_-]*):\n/gmu)]
 			.map(match => match[1]), [
 			"workflow_dispatch"
+			, "schedule"
 			, "inherited-checked-record-native"
 			]
 	);

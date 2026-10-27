@@ -2,6 +2,9 @@ name: Generic Subtypes in npm and browsers
 
 on:
   workflow_dispatch:
+  # One lane in the bounded weekly default-branch acceptance sweep.
+  schedule:
+    - cron: "47 10 * * 2"
 
 permissions:
   contents: read

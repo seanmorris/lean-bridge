@@ -11,6 +11,10 @@ import {
 	assertIsolatedWasmtimeCapiBootstraps, checkWasmtimeCapiBootstrap
 	, isolatedWasmtimeCapiBootstrap
 } from "./wasmtime-capi-bootstrap.mjs";
+import {
+	beforeWasmtimeCapiRolloutSource, wasmtimeCapiRolloutHistoryPath
+} from "./wasmtime-capi-ci-rollout-source-history.mjs";
+import { sourceAtFinHistoryRecord } from "./source-at-fin-history-milestone.mjs";
 
 export const wasmtimeCapiRolloutWorkflows = [
 	"callback-checked-record-remaining", "callback-subtype-remaining"
@@ -29,7 +33,10 @@ test("Wasmtime C API rollout preserves all twelve workflows outside SDK setup an
 	let sites = 0;
 	for(const path of wasmtimeCapiRolloutWorkflows)
 	{
-		const current = await readFile(path, "utf8");
+		const current = await sourceAtFinHistoryRecord(
+			wasmtimeCapiRolloutHistoryPath, path
+			, beforeWasmtimeCapiRolloutSource
+		);
 		const previous = execFileSync("git", ["show", `${predecessor}:${path}`]
 			, { encoding: "utf8", maxBuffer: 2 * 1024 ** 2 });
 		const count = path.endsWith("/consumer-matrix.yml") ? 3 : 1;

@@ -8,11 +8,14 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { assertPhpWasmDirectFinWorkflow, disablePhpWasmDirectFinWorkflow, enablePhpWasmDirectFinWorkflow, phpWasmDirectCiBlock, phpWasmDirectCiCheck, phpWasmDirectCiInvocation, phpWasmDirectCiReports } from "./php-wasm-fin-direct-ci.mjs";
 import { beforePhpWasmDirectFinSource } from "./php-wasm-fin-direct-history.mjs";
-import { beforePhpWasmSubtypeAcceptanceSource } from "./php-wasm-subtype-acceptance-history.mjs";
+import { beforePhpWasmSubtypeAcceptanceSource, phpWasmSubtypeAcceptanceHistoryPath } from "./php-wasm-subtype-acceptance-history.mjs";
+import { sourceBeforeFinHistoryRecord } from "./source-at-fin-history-milestone.mjs";
 
 test("direct PHP-Wasm Fin CI preserves the earlier workflow and requires both installed source routes", async () => {
-	const path = ".github/workflows/consumer-matrix.yml", latest = await readFile(path, "utf8");
-	const current = beforePhpWasmSubtypeAcceptanceSource(path, latest);
+	const path = ".github/workflows/consumer-matrix.yml";
+	const current = await sourceBeforeFinHistoryRecord(
+		phpWasmSubtypeAcceptanceHistoryPath, path
+		, beforePhpWasmSubtypeAcceptanceSource);
 	assertPhpWasmDirectFinWorkflow(current);
 	const previous = beforePhpWasmDirectFinSource(path, current);
 	assert.notEqual(previous, current);

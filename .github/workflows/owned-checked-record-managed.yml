@@ -7,6 +7,9 @@ on:
         description: Run only the WIT repair probe; the default dispatch runs all hosts
         type: boolean
         default: false
+  # One lane in the bounded weekly default-branch acceptance sweep.
+  schedule:
+    - cron: "17 0 * * 5"
 
 permissions:
   contents: read

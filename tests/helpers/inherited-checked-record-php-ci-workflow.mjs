@@ -17,7 +17,7 @@ export const assertInheritedCheckedRecordPhpWorkflow = source => {
 	assert.ok(source.includes("permissions:\n  contents: read\n"));
 	assert.ok(source.includes("concurrency:\n  group: inherited-checked-record-php-${{ github.ref }}\n  cancel-in-progress: true\n"));
 	assert.deepEqual([...source.matchAll(/^ {2}([a-z][a-z0-9_-]*):\n/gmu)].map(match => match[1])
-		, ["workflow_dispatch", "inherited-checked-record-php"]);
+		, ["workflow_dispatch", "schedule", "inherited-checked-record-php"]);
 	assert.doesNotMatch(source, /continue-on-error:|needs:|strategy:|defaults:|LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR:|LEAN_BRIDGE_INHERITED_CHECKED_RECORD_PHP_|install-nix|nix build|setup-python|setup-ruby/u);
 	assert.deepEqual(source.match(/^\s+if:.*$/gmu), ["        if: always()", "        if: always() && steps.acceptance.outcome != 'success'"]);
 	assert.equal((source.match(/^\s+env:/gmu) ?? []).length, 1);

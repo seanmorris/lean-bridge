@@ -41,6 +41,7 @@ export const assertDependentCheckedRecordJvmWorkflow = source => {
 		[...source.matchAll(/^ {2}([a-z][a-z0-9_-]*):\n/gmu)]
 			.map(match => match[1])
 		, ["workflow_dispatch"
+			, "schedule"
 			, "dependent-checked-record-jvm"]
 	);
 	assert.doesNotMatch(source

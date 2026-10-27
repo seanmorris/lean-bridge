@@ -2,6 +2,9 @@ name: Dependent checked-record checked records in WIT and WASI components
 
 on:
   workflow_dispatch:
+  # One lane in the bounded weekly default-branch acceptance sweep.
+  schedule:
+    - cron: "47 4 * * 2"
 
 permissions:
   contents: read

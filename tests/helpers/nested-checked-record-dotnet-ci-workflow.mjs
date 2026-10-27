@@ -18,6 +18,7 @@ export const assertNestedCheckedRecordDotnetWorkflow = source => {
 	assert.ok(source.includes("concurrency:\n  group: nested-checked-record-dotnet-${{ github.ref }}\n  cancel-in-progress: true\n"));
 	assert.deepEqual([...source.matchAll(/^ {2}([a-z][a-z0-9_-]*):\n/gmu)].map(match => match[1]), [
 		"workflow_dispatch"
+		, "schedule"
 		, "nested-checked-record-dotnet"
 	]);
 	assert.doesNotMatch(source, /continue-on-error:|needs:|strategy:|defaults:|LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR:|LEAN_BRIDGE_NESTED_CHECKED_RECORD_DOTNET_|install-nix|nix build|setup-python|setup-ruby/u);

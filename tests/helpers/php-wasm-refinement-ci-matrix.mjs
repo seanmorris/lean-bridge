@@ -243,10 +243,13 @@ export const assertPhpWasmRefinementCiWorkflow = (lane, source) => {
 	assert.equal(typeof source, "string");
 	const triggers = /\non:\n[\s\S]*?\npermissions:\n/u.exec(source);
 	assert.ok(triggers);
-	assert.equal(triggers[0]
-		, "\non:\n  workflow_dispatch:\n"
-			+ (lane.kind === "measurement" ? "  workflow_call:\n" : "")
-			+ "\npermissions:\n");
+	assert.deepEqual([...triggers[0].matchAll(
+		/^ {2}([a-z][a-z0-9_-]*):\n/gmu
+	)].map(match => match[1]), ["workflow_dispatch", "schedule"
+		, ...lane.kind === "measurement" ? ["workflow_call"] : []]);
+	assert.match(triggers[0]
+		, /^\non:\n {2}workflow_dispatch:\n {2}# One lane in the bounded weekly default-branch acceptance sweep\.\n {2}schedule:\n {4}- cron: "[0-9]+ [0-9]+ \* \* [0-6]"\n/mu);
+	assert.match(triggers[0], /\npermissions:\n$/u);
 	assert.match(source, /\npermissions:\n {2}contents: read\n/u);
 	assert.match(source, new RegExp("\\nconcurrency:\\n {2}group: "
 		+ escape(lane.id)

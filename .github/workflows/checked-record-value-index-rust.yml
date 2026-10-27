@@ -2,6 +2,9 @@ name: Value-indexed checked records in Rust
 
 on:
   workflow_dispatch:
+  # One lane in the bounded weekly default-branch acceptance sweep.
+  schedule:
+    - cron: "47 10 * * 1"
 
 permissions:
   contents: read

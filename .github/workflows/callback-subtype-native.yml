@@ -2,6 +2,9 @@ name: Installed callback Subtypes in C and C++
 
 on:
   workflow_dispatch:
+  # One lane in the bounded weekly default-branch acceptance sweep.
+  schedule:
+    - cron: "17 12 * * 0"
 
 permissions:
   contents: read

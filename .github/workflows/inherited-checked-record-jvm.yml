@@ -2,6 +2,9 @@ name: Installed inherited checked records in Java and Kotlin
 
 on:
   workflow_dispatch:
+  # One lane in the bounded weekly default-branch acceptance sweep.
+  schedule:
+    - cron: "17 15 * * 2"
 
 permissions:
   contents: read

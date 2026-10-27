@@ -2,6 +2,9 @@ name: Installed primitive-base nominal Subtypes in native PHP
 
 on:
   workflow_dispatch:
+  # One lane in the bounded weekly default-branch acceptance sweep.
+  schedule:
+    - cron: "47 7 * * 4"
 
 permissions:
   contents: read

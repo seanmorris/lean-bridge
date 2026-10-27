@@ -22,7 +22,7 @@ export const assertNestedCheckedRecordNativeWorkflow = source => {
 	assert.deepEqual(
 		[...source.matchAll(/^ {2}([a-z][a-z0-9_-]*):\n/gmu)]
 			.map(match => match[1]), [
-			"workflow_dispatch", "nested-checked-record-native"
+			"workflow_dispatch", "schedule", "nested-checked-record-native"
 			]
 	);
 	assert.doesNotMatch(source, /continue-on-error:|needs:|strategy:|defaults:|LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR:|LEAN_BRIDGE_NESTED_CHECKED_RECORD_NATIVE_|install-nix|nix build|setup-python/u);

@@ -2,6 +2,9 @@ name: Installed primitive-base nominal Subtypes in Ruby
 
 on:
   workflow_dispatch:
+  # One lane in the bounded weekly default-branch acceptance sweep.
+  schedule:
+    - cron: "47 10 * * 4"
 
 permissions:
   contents: read

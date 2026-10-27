@@ -2,6 +2,9 @@ name: Installed owned checked records in PHP-Wasm
 
 on:
   workflow_dispatch:
+  # One lane in the bounded weekly default-branch acceptance sweep.
+  schedule:
+    - cron: "17 3 * * 5"
 
 permissions:
   contents: read
