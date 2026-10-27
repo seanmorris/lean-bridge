@@ -1,0 +1,126 @@
+{
+  "additions": [
+    {
+      "currentSha256": "9ff2e50833d82de1092902af2fba50729b68a7098d7461ddb03e38262eb2c3e6",
+      "path": "scripts/update-core-documentation-evidence-closure-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "3d4d585013094c0a67c8d9f0f38b48849eb144e894610fb3aaf8e96036ddc837",
+      "path": "tests/helpers/core-documentation-evidence-closure-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "efa447bc51d3953b3214b962bf7ac013d3e806e9",
+  "integrationUpdates": [
+    {
+      "currentSha256": "397d22b72623138a7fd01cdc00a9e6ec7ddfc089a34f68f162b5808626a98d11",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeCoreDocumentationEvidenceClosureRepairSource\n\t, coreDocumentationEvidenceClosureRepairAddedPaths\n\t, coreDocumentationEvidenceClosureRepairHistoryPath\n\t, coreDocumentationEvidenceClosureRepairImplementation\n\t, coreDocumentationEvidenceClosureRepairImplementationPaths\n\t, coreDocumentationEvidenceClosureRepairIntegrationPaths\n\t, coreDocumentationEvidenceClosureRepairPredecessor\n\t, reverseCoreDocumentationEvidenceClosureRepairUpdate\n} from \"./core-documentation-evidence-closure-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 357
+        },
+        {
+          "current": "const readCoreDocumentationEvidenceClosureRepair = async () => JSON.parse(\n\tawait readFile(coreDocumentationEvidenceClosureRepairHistoryPath, \"utf8\")\n);\n",
+          "previous": "",
+          "start": 8691
+        },
+        {
+          "current": "test(\"Core documentation evidence closure records its source range\", async () => {\n\tconst record = await readCoreDocumentationEvidenceClosureRepair();\n\tassert.equal(record.schemaVersion, 1);\n\tassert.equal(record.milestone\n\t\t, \"core-documentation-evidence-closure-repair-source-v1\");\n\tassert.equal(record.predecessorCommit\n\t\t, coreDocumentationEvidenceClosureRepairPredecessor);\n\tassert.equal(record.implementationCommit\n\t\t, coreDocumentationEvidenceClosureRepairImplementation);\n\tassert.deepEqual(record.updates.map(update => update.path)\n\t\t, coreDocumentationEvidenceClosureRepairImplementationPaths);\n\tassert.deepEqual(record.integrationUpdates.map(update => update.path)\n\t\t, coreDocumentationEvidenceClosureRepairIntegrationPaths);\n\tassert.deepEqual(record.additions.map(addition => addition.path)\n\t\t, coreDocumentationEvidenceClosureRepairAddedPaths);\n\tassert.equal(git([\"rev-parse\"\n\t\t, `${coreDocumentationEvidenceClosureRepairImplementation}^`]).trim()\n\t, coreDocumentationEvidenceClosureRepairPredecessor);\n\tassert.deepEqual(git([\"diff\", \"--name-only\"\n\t\t, coreDocumentationEvidenceClosureRepairPredecessor\n\t\t, coreDocumentationEvidenceClosureRepairImplementation])\n\t\t.trim().split(\"\\n\").sort()\n\t, [...coreDocumentationEvidenceClosureRepairImplementationPaths].sort());\n});\n\ntest(\"Core documentation evidence closure reverses every transition\", async () => {\n\tconst record = await readCoreDocumentationEvidenceClosureRepair();\n\tfor(const update of [...record.updates, ...record.integrationUpdates])\n\t{\n\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256\n\t\t\t, beforeCoreDocumentationEvidenceClosureRepairSource);\n\t\tconst base = record.integrationUpdates.includes(update)\n\t\t\t? coreDocumentationEvidenceClosureRepairImplementation\n\t\t\t: coreDocumentationEvidenceClosureRepairPredecessor;\n\t\tconst previous = git([\"show\", `${base}:${update.path}`]);\n\t\tassert.equal(reverseCoreDocumentationEvidenceClosureRepairUpdate(\n\t\t\tcurrent, update), previous, update.path);\n\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n\t\tassert.ok(finRefinementNormalizationPaths.includes(update.path));\n\t}\n});\n\ntest(\"Core documentation evidence closure rejects altered transitions\", async () => {\n\tconst update\n\t\t= (await readCoreDocumentationEvidenceClosureRepair()).updates[0];\n\tconst current = await sourceAtFinHistoryMilestone(\n\t\tupdate.path, update.currentSha256\n\t\t, beforeCoreDocumentationEvidenceClosureRepairSource);\n\tfor(const forged of [{ ...update, currentSha256: \"0\".repeat(64) }\n\t\t, { ...update, previousSha256: \"0\".repeat(64) }\n\t\t, { ...update, path: \"unrelated.mjs\" }\n\t\t, { ...update, edits: [] }\n\t\t, { ...update, edits: [...update.edits, update.edits[0]] }])\n\t\tassert.throws(() => reverseCoreDocumentationEvidenceClosureRepairUpdate(\n\t\t\tcurrent, forged));\n\tassert.equal(beforeCoreDocumentationEvidenceClosureRepairSource(\n\t\tupdate.path, current + \"unknown\"), current + \"unknown\");\n});\n\ntest(\"Core documentation evidence-closure writer rejects another checkout\", async t => {\n\tconst root = await mkdtemp(join(\n\t\ttmpdir(), \"lean-core-documentation-evidence-closure-guard-\"\n\t));\n\tt.after(() => rm(root, { recursive: true }));\n\tconst result = spawnSync(process.execPath, [resolve(\n\t\t\"scripts/update-core-documentation-evidence-closure-repair-source-history.mjs\"\n\t)], { cwd: root, encoding: \"utf8\", timeout: 15_000 });\n\tassert.notEqual(result.status, 0);\n\tassert.equal(result.stdout, \"\");\n\tassert.deepEqual(await readdir(root), []);\n});\n\n",
+          "previous": "",
+          "start": 18671
+        }
+      ],
+      "path": "tests/helpers/core-historical-evidence-replay-source-history-tests.mjs",
+      "previousSha256": "9ffdebd206a948be290313b7092b42ed980606119711a509b6a864c7f3218b27"
+    },
+    {
+      "currentSha256": "9f925bb9367df96e9a8f7fb3d4ad6d3b6024e0acce9f7fbf313beaeaaafeafba",
+      "edits": [
+        {
+          "current": "import { beforeCoreDocumentationEvidenceClosureRepairSource, coreDocumentationEvidenceClosureRepairNormalizationPaths } from \"./core-documentation-evidence-closure-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...coreDocumentationEvidenceClosureRepairNormalizationPaths\n\t, ...coreBrowserWorkflowEvidencePinRepairNormalizationPaths\n",
+          "previous": "\t...coreBrowserWorkflowEvidencePinRepairNormalizationPaths\n",
+          "start": 193456
+        },
+        {
+          "current": "\tlet stage = beforeCoreDocumentationEvidenceClosureRepairSource(\n\t\tpath, text, expected\n\t);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCoreBrowserWorkflowEvidencePinRepairSource(\n",
+          "previous": "\tlet stage = beforeCoreBrowserWorkflowEvidencePinRepairSource(\n",
+          "start": 240353
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "7900f5f00d2e63be4c408c449233173c13d0c35eb4250ac0522ad32df5a271d8"
+    }
+  ],
+  "milestone": "core-documentation-evidence-closure-repair-source-v1",
+  "predecessorCommit": "c0d2f445ea9d3434362b856a6e7ab24679d10781",
+  "schemaVersion": 1,
+  "scope": "Follow the exact documentation files named by executable Core contracts so sparse evidence planning retains every local link target those contracts validate. Keep the consolidated JavaScript, TypeScript, React, browser and worker guide as the only current guide while preserving its section coverage.",
+  "updates": [
+    {
+      "currentSha256": "e99cfc2c8459d1cb6935d5a1589ad95040b73ffc863072ebea036362e2fee5e2",
+      "edits": [
+        {
+          "current": "const documentationExtensions = new Set([\".md\"]);\n",
+          "previous": "",
+          "start": 1228
+        },
+        {
+          "current": "/**\n * Return repository documentation named literally by one executable source.\n * Documentation contracts read these files and then resolve their local links,\n * so their evidence-directory names belong to the same static closure as an\n * imported helper. Limit traversal to tracked Markdown under `docs/`; archived\n * payloads are selected separately by directory and never followed as text.\n *\n * @param source - Executable JavaScript or shell source.\n * @param path - Repository-relative source path.\n * @param root - Repository root.\n */\nexport const coreContractDocumentationReferences = async (\n\tsource, path, root = resolve(\".\")\n) => {\n\tif(!sourceExtensions.has(extname(path))) return new Set();\n\troot = resolve(root);\n\tconst references = new Set();\n\tfor(const fragment of coreContractEvidenceFragments(source, path))\n\t{\n\t\tif(!documentationExtensions.has(extname(fragment))) continue;\n\t\tconst absolute = fragment.startsWith(\"./\") || fragment.startsWith(\"../\")\n\t\t\t? resolve(dirname(resolve(root, path)), fragment)\n\t\t\t: resolve(root, fragment.replace(/^\\//u, \"\"));\n\t\tconst repositoryPath = relative(root, absolute).replaceAll(\"\\\\\", \"/\");\n\t\tif(!inside(root, absolute) || !repositoryPath.startsWith(\"docs/\")\n\t\t\t|| repositoryPath.startsWith(\"docs/evidence/\")\n\t\t\t|| !await exists(absolute)) continue;\n\t\treferences.add(repositoryPath);\n\t}\n\treturn references;\n};\n\n",
+          "previous": "",
+          "start": 8240
+        },
+        {
+          "current": "\t\tfor(const reference of await coreContractDocumentationReferences(\n\t\t\tsource, path, root))\n\t\t\tif(!sources.has(reference)) pending.push(reference);\n",
+          "previous": "",
+          "start": 12422
+        }
+      ],
+      "path": "scripts/core-contract-evidence.mjs",
+      "previousSha256": "801dd044d5a0387d14918fd3621f5f46f772db9ea1f9880dd26a61a55cdaaa9b"
+    },
+    {
+      "currentSha256": "a25604524fcfa8e0791732d315fecf289d8969e78e9896d23f85bf2bb9ca9e25",
+      "edits": [
+        {
+          "current": "const docs = [\n\t\"docs/javascript-typescript.md\", \"docs/consume/javascript.md\"\n\t, \"docs/consume/typescript.md\", \"docs/consume/browser.md\"\n];\n",
+          "previous": "const docs = [\"docs/javascript-typescript.md\", \"docs/consume/javascript.md\", \"docs/consume/typescript.md\", \"docs/consume/browser.md\", \"docs/react.md\", \"docs/browser-workers.md\"];\n",
+          "start": 359
+        },
+        {
+          "current": "\tconst consolidated = await readFile(\"docs/javascript-typescript.md\", \"utf8\");\n\tassert.match(consolidated, /^## React$/mu);\n\tassert.match(consolidated, /^## Browser workers$/mu);\n",
+          "previous": "",
+          "start": 1150
+        }
+      ],
+      "path": "tests/component-consumer-docs.test.mjs",
+      "previousSha256": "e31762a1b728d6376a6aea6a343c4a257385fdc6ea1b7e4d2ce5ff9196c85a01"
+    },
+    {
+      "currentSha256": "eca1d84b240578261db501b7e2ddcaa6b57e02822a38743efbd83ca4ca3eef32",
+      "edits": [
+        {
+          "current": "import { dirname, join, relative, resolve } from \"node:path\";\n",
+          "previous": "import { join } from \"node:path\";\n",
+          "start": 318
+        },
+        {
+          "current": "\tcoreContractDocumentationReferences, coreContractEvidenceBaseline\n\t, coreContractEvidenceDirectoryReferences\n",
+          "previous": "\tcoreContractEvidenceBaseline, coreContractEvidenceDirectoryReferences\n",
+          "start": 419
+        },
+        {
+          "current": "test(\"Core evidence planning follows documentation named by contracts\", async () => {\n\tconst path = \"tests/component-consumer-docs.test.mjs\";\n\tconst source = await readFile(path, \"utf8\");\n\tconst references = await coreContractDocumentationReferences(source, path);\n\tassert.deepEqual([...references].sort(), [\n\t\t\"docs/consume/browser.md\"\n\t\t, \"docs/consume/javascript.md\"\n\t\t, \"docs/consume/typescript.md\"\n\t\t, \"docs/javascript-typescript.md\"\n\t].sort());\n\tconst documents = await Promise.all([...references].map(async reference => ({\n\t\treference, source: await readFile(reference, \"utf8\")\n\t})));\n\tconst expected = new Set();\n\tfor(const { reference, source: document } of documents)\n\t\tfor(const match of document.matchAll(/\\[[^\\]]+\\]\\(([^)]+)\\)/gu))\n\t\t{\n\t\t\tconst target = match[1].split(\"#\")[0];\n\t\t\tif(!target || /^[a-z]+:/u.test(target)) continue;\n\t\t\tconst path = relative(resolve(\".\")\n\t\t\t\t, resolve(dirname(reference), target)).replaceAll(\"\\\\\", \"/\");\n\t\t\tconst archive = /^docs\\/evidence\\/([^/]+)\\//u.exec(path);\n\t\t\tif(archive) expected.add(archive[1]);\n\t\t}\n\tassert.ok(expected.size > 20);\n\tassert.ok(expected.has(\"scalar-fin-source-entry-20261008\"));\n\tassert.ok(expected.has(\"browser-callback-fin-20261008\"));\n\tconst selected = new Set();\n\tfor(const { reference, source: document } of documents)\n\t\tfor(const value of coreContractEvidenceDirectoryReferences(\n\t\t\tdocument, reference, [...expected]))\n\t\t\tselected.add(value);\n\tassert.deepEqual([...selected].sort(), [...expected].sort());\n\tassert.deepEqual([...await coreContractDocumentationReferences(\n\t\t'const paths = [\"docs/evidence/archive/report.md\"'\n\t\t\t+ ', \"outside.md\", \"docs/missing.md\"];', path)], []);\n});\n\n",
+          "previous": "",
+          "start": 3292
+        }
+      ],
+      "path": "tests/helpers/core-contract-evidence-tests.mjs",
+      "previousSha256": "30e0e7dd615f86454f4e3e4726bcdf46434fadfd35da52f6dae24601b8122c89"
+    }
+  ]
+}

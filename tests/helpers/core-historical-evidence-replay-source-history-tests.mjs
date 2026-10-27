@@ -10,6 +10,16 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import {
+	beforeCoreDocumentationEvidenceClosureRepairSource
+	, coreDocumentationEvidenceClosureRepairAddedPaths
+	, coreDocumentationEvidenceClosureRepairHistoryPath
+	, coreDocumentationEvidenceClosureRepairImplementation
+	, coreDocumentationEvidenceClosureRepairImplementationPaths
+	, coreDocumentationEvidenceClosureRepairIntegrationPaths
+	, coreDocumentationEvidenceClosureRepairPredecessor
+	, reverseCoreDocumentationEvidenceClosureRepairUpdate
+} from "./core-documentation-evidence-closure-repair-source-history.mjs";
+import {
 	beforeCoreBrowserWorkflowEvidencePinRepairSource
 	, coreBrowserWorkflowEvidencePinRepairAddedPaths
 	, coreBrowserWorkflowEvidencePinRepairHistoryPath
@@ -186,6 +196,9 @@ import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.m
 
 const git = arguments_ => execFileSync("git", arguments_
 	, { encoding: "utf8", maxBuffer: 128 * 1024 * 1024 });
+const readCoreDocumentationEvidenceClosureRepair = async () => JSON.parse(
+	await readFile(coreDocumentationEvidenceClosureRepairHistoryPath, "utf8")
+);
 const readCoreBrowserWorkflowEvidencePinRepair = async () => JSON.parse(
 	await readFile(coreBrowserWorkflowEvidencePinRepairHistoryPath, "utf8")
 );
@@ -400,6 +413,80 @@ test("exact-head Core live-pin writer refuses another checkout", async t => {
 	t.after(() => rm(root, { recursive: true }));
 	const result = spawnSync(process.execPath, [resolve(
 		"scripts/update-core-exact-head-live-pin-repair-source-history.mjs"
+	)], { cwd: root, encoding: "utf8", timeout: 15_000 });
+	assert.notEqual(result.status, 0);
+	assert.equal(result.stdout, "");
+	assert.deepEqual(await readdir(root), []);
+});
+
+test("Core documentation evidence closure records its source range", async () => {
+	const record = await readCoreDocumentationEvidenceClosureRepair();
+	assert.equal(record.schemaVersion, 1);
+	assert.equal(record.milestone
+		, "core-documentation-evidence-closure-repair-source-v1");
+	assert.equal(record.predecessorCommit
+		, coreDocumentationEvidenceClosureRepairPredecessor);
+	assert.equal(record.implementationCommit
+		, coreDocumentationEvidenceClosureRepairImplementation);
+	assert.deepEqual(record.updates.map(update => update.path)
+		, coreDocumentationEvidenceClosureRepairImplementationPaths);
+	assert.deepEqual(record.integrationUpdates.map(update => update.path)
+		, coreDocumentationEvidenceClosureRepairIntegrationPaths);
+	assert.deepEqual(record.additions.map(addition => addition.path)
+		, coreDocumentationEvidenceClosureRepairAddedPaths);
+	assert.equal(git(["rev-parse"
+		, `${coreDocumentationEvidenceClosureRepairImplementation}^`]).trim()
+	, coreDocumentationEvidenceClosureRepairPredecessor);
+	assert.deepEqual(git(["diff", "--name-only"
+		, coreDocumentationEvidenceClosureRepairPredecessor
+		, coreDocumentationEvidenceClosureRepairImplementation])
+		.trim().split("\n").sort()
+	, [...coreDocumentationEvidenceClosureRepairImplementationPaths].sort());
+});
+
+test("Core documentation evidence closure reverses every transition", async () => {
+	const record = await readCoreDocumentationEvidenceClosureRepair();
+	for(const update of [...record.updates, ...record.integrationUpdates])
+	{
+		const current = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256
+			, beforeCoreDocumentationEvidenceClosureRepairSource);
+		const base = record.integrationUpdates.includes(update)
+			? coreDocumentationEvidenceClosureRepairImplementation
+			: coreDocumentationEvidenceClosureRepairPredecessor;
+		const previous = git(["show", `${base}:${update.path}`]);
+		assert.equal(reverseCoreDocumentationEvidenceClosureRepairUpdate(
+			current, update), previous, update.path);
+		assert.equal(beforeFinRefinementSource(
+			update.path, current, update.previousSha256), previous, update.path);
+		assert.ok(finRefinementNormalizationPaths.includes(update.path));
+	}
+});
+
+test("Core documentation evidence closure rejects altered transitions", async () => {
+	const update
+		= (await readCoreDocumentationEvidenceClosureRepair()).updates[0];
+	const current = await sourceAtFinHistoryMilestone(
+		update.path, update.currentSha256
+		, beforeCoreDocumentationEvidenceClosureRepairSource);
+	for(const forged of [{ ...update, currentSha256: "0".repeat(64) }
+		, { ...update, previousSha256: "0".repeat(64) }
+		, { ...update, path: "unrelated.mjs" }
+		, { ...update, edits: [] }
+		, { ...update, edits: [...update.edits, update.edits[0]] }])
+		assert.throws(() => reverseCoreDocumentationEvidenceClosureRepairUpdate(
+			current, forged));
+	assert.equal(beforeCoreDocumentationEvidenceClosureRepairSource(
+		update.path, current + "unknown"), current + "unknown");
+});
+
+test("Core documentation evidence-closure writer rejects another checkout", async t => {
+	const root = await mkdtemp(join(
+		tmpdir(), "lean-core-documentation-evidence-closure-guard-"
+	));
+	t.after(() => rm(root, { recursive: true }));
+	const result = spawnSync(process.execPath, [resolve(
+		"scripts/update-core-documentation-evidence-closure-repair-source-history.mjs"
 	)], { cwd: root, encoding: "utf8", timeout: 15_000 });
 	assert.notEqual(result.status, 0);
 	assert.equal(result.stdout, "");
