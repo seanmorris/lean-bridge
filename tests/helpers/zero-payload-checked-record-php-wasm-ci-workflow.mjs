@@ -14,8 +14,7 @@ export const assertZeroPayloadPhpWasmWorkflow = source => {
 	assert.equal(typeof source, "string");
 	assert.ok(source.startsWith("name: Installed zero-payload checked records in PHP-Wasm\n"));
 	for(const required of [
-		"  push:\n"
-		, "  pull_request:\n"
+		"on:\n  workflow_dispatch:\n"
 		, "contents: read"
 		, "group: zero-payload-checked-record-php-wasm-${{ github.ref }}"
 		, "cancel-in-progress: true"

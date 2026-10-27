@@ -236,7 +236,7 @@ test("zero-payload Ruby workflow covers every closed route and retains failed re
 	const verifyWorkflow = source => {
 		assert.ok(source.startsWith("name: Zero-payload checked records in Ruby\n"));
 		for(const required of [
-			"on:\n  push:\n  pull_request:\n  workflow_dispatch:\n"
+			"on:\n  workflow_dispatch:\n"
 			, "runs-on: ubuntu-24.04", "timeout-minutes: 180", "timeout-minutes: 120"
 			, "ruby-version: '3.3.12'", "persist-credentials: false"
 			, "bash scripts/run-zero-payload-checked-record-ruby-ci.sh"

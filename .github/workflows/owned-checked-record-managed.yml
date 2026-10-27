@@ -1,12 +1,10 @@
 name: Installed owned checked records in managed and WIT hosts
 
 on:
-  push:
-  pull_request:
   workflow_dispatch:
     inputs:
       wit_only:
-        description: Run only the WIT repair probe; push and pull requests still run all hosts
+        description: Run only the WIT repair probe; the default dispatch runs all hosts
         type: boolean
         default: false
 

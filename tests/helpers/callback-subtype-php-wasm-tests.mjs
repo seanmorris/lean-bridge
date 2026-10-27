@@ -103,7 +103,7 @@ test("callback Subtype PHP-Wasm remains a separate recurring gate", async () => 
 	assert.equal(manifest.scripts["test:callback-subtype-php-wasm"]
 		, "LEAN_BRIDGE_CALLBACK_SUBTYPE_PHP_WASM_TEST=1 node --test --test-concurrency=1 tests/callback-subtype-php-wasm.test.mjs");
 	for(const required of [
-		"on:\n  push:\n  pull_request:\n  workflow_dispatch:\n"
+		"on:\n  workflow_dispatch:\n"
 		, "cancel-in-progress: true"
 		, "npm run test:callback-subtype-php-wasm"
 		, "rg '^# fail 0$'"

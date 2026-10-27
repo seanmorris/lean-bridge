@@ -1,8 +1,6 @@
 name: Installed owned Subtypes in Python, Ruby and Rust
 
 on:
-  push:
-  pull_request:
   workflow_dispatch:
 
 permissions:

@@ -143,7 +143,7 @@ test("callback checked-record browser workflow cannot narrow engines, routes or 
 	const source = await readFile(".github/workflows/callback-checked-record-browser.yml", "utf8");
 	assert.ok(source.startsWith("name: Callback checked records in installed npm browser consumers\n"));
 	for(const required of [
-		"on:\n  push:\n  pull_request:\n  workflow_dispatch:\n"
+		"on:\n  workflow_dispatch:\n"
 		, "permissions:\n  contents: read\n"
 		, "group: callback-checked-record-browser-${{ github.ref }}"
 		, "cancel-in-progress: true"
@@ -166,7 +166,8 @@ test("callback checked-record browser workflow cannot narrow engines, routes or 
 	]) assert.ok(source.includes(required), required);
 	assert.doesNotMatch(source, /continue-on-error:|strategy:|needs:|LEAN_BRIDGE_LAKE_RUNTIME_ROOT:/u);
 	const mutations = [
-		["  push:\n", ""], ["  pull_request:\n", ""]
+		["  workflow_dispatch:\n", "  push:\n  workflow_dispatch:\n"]
+		, ["  workflow_dispatch:\n", "  pull_request:\n  workflow_dispatch:\n"]
 		, ["contents: read", "contents: write"]
 		, ["persist-credentials: false", "persist-credentials: true"]
 		, ["chromium firefox webkit", "chromium"]
@@ -185,7 +186,7 @@ test("callback checked-record browser workflow cannot narrow engines, routes or 
 		assert.notEqual(changed, source);
 		const stillValid = required => changed.includes(required);
 		assert.equal([
-			"on:\n  push:\n  pull_request:\n  workflow_dispatch:\n"
+			"on:\n  workflow_dispatch:\n"
 			, "permissions:\n  contents: read\n"
 			, "persist-credentials: false"
 			, "bash scripts/install-playwright-browsers.sh chromium firefox webkit"

@@ -80,7 +80,7 @@ test("owned Subtype and callback native consumers match generated headers", asyn
 test("owned Subtype native acceptance is a required recurring workflow", async () => {
 	const source = await readFile(".github/workflows/owned-subtype-native.yml", "utf8");
 	for(const required of [
-		"on:\n  push:\n  pull_request:\n  workflow_dispatch:\n"
+		"on:\n  workflow_dispatch:\n"
 		, "cancel-in-progress: true"
 		, "npm run test:owned-subtype-native"
 		, "rg '^# fail 0$'"

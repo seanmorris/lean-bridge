@@ -13,11 +13,11 @@ import { assertWorkflowRunBudget, workflowRunScalars } from "./native-observatio
  */
 export const assertNestedCheckedRecordDotnetWorkflow = source => {
 	assert.ok(source.startsWith("name: Installed nested checked records in .NET\n"));
-	assert.ok(source.includes("on:\n  push:\n  pull_request:\n  workflow_dispatch:\n"));
+	assert.ok(source.includes("on:\n  workflow_dispatch:\n"));
 	assert.ok(source.includes("permissions:\n  contents: read\n"));
 	assert.ok(source.includes("concurrency:\n  group: nested-checked-record-dotnet-${{ github.ref }}\n  cancel-in-progress: true\n"));
 	assert.deepEqual([...source.matchAll(/^ {2}([a-z][a-z0-9_-]*):\n/gmu)].map(match => match[1]), [
-		"push", "pull_request", "workflow_dispatch"
+		"workflow_dispatch"
 		, "nested-checked-record-dotnet"
 	]);
 	assert.doesNotMatch(source, /continue-on-error:|needs:|strategy:|defaults:|LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR:|LEAN_BRIDGE_NESTED_CHECKED_RECORD_DOTNET_|install-nix|nix build|setup-python|setup-ruby/u);

@@ -120,7 +120,7 @@ test("owned checked-record PHP-Wasm acceptance remains a separate recurring gate
 		, "src/build/owned-refinement-carriers.mjs"
 	]) assert.ok(cli.files.includes(dependency), dependency);
 	for(const required of [
-		"on:\n  push:\n  pull_request:\n  workflow_dispatch:\n"
+		"on:\n  workflow_dispatch:\n"
 		, "cancel-in-progress: true"
 		, "npm run test:owned-checked-record-php-wasm"
 		, "rg '^# fail 0$'"

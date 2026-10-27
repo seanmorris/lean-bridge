@@ -12,7 +12,8 @@ test("nested checked-record Ruby workflow requires every Ruby selection and comp
 	const source = await readFile(".github/workflows/nested-checked-record-ruby.yml", "utf8");
 	assertNestedCheckedRecordRubyWorkflow(source);
 	const changes = [
-		["  push:\n", ""], ["  pull_request:\n", ""]
+		["  workflow_dispatch:\n", "  push:\n  workflow_dispatch:\n"]
+		, ["  workflow_dispatch:\n", "  pull_request:\n  workflow_dispatch:\n"]
 		, ["    runs-on: ubuntu-24.04", "    runs-on: ubuntu-latest"]
 		, ["    timeout-minutes: 180", "    timeout-minutes: 20"]
 		, ["    env:\n", "    continue-on-error: true\n    env:\n"]

@@ -20,7 +20,8 @@ test("the dedicated checked-record workflow requires pinned inputs, four routes 
 test("browser workflow controls refuse skipped acceptance, narrowed records and unlocked inputs", async t => {
 	const source = await readFile(".github/workflows/checked-record-browser.yml", "utf8");
 	const replacements = [
-		["  push:\n", ""], ["  pull_request:\n", ""]
+		["  workflow_dispatch:\n", "  push:\n  workflow_dispatch:\n"]
+		, ["  workflow_dispatch:\n", "  pull_request:\n  workflow_dispatch:\n"]
 		, ["contents: read", "contents: write"]
 		, ["fetch-depth: 0", "fetch-depth: 1"]
 		, ["persist-credentials: false", "persist-credentials: true"]

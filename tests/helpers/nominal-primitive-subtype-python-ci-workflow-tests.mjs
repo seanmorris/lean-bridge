@@ -25,7 +25,8 @@ test("primitive-base Python workflow requires four source/API selections on both
 test("primitive-base Python workflow rejects missing floors and acceptance bypasses", async t => {
 	const source = await readFile(".github/workflows/nominal-primitive-subtype-python.yml", "utf8");
 	const replacements = [
-		["  push:\n", ""], ["  pull_request:\n", ""]
+		["  workflow_dispatch:\n", "  push:\n  workflow_dispatch:\n"]
+		, ["  workflow_dispatch:\n", "  pull_request:\n  workflow_dispatch:\n"]
 		, ["contents: read", "contents: write"]
 		, ["fetch-depth: 0", "fetch-depth: 1"]
 		, ["persist-credentials: false", "persist-credentials: true"]

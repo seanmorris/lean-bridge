@@ -502,7 +502,7 @@ test("value-index hosted workflow requires every route and retains failures", as
 	const assertWorkflow = source => {
 		assert.ok(source.startsWith(
 			"name: Value-indexed checked records in npm and browsers\n"));
-		assert.ok(source.includes("on:\n  push:\n  pull_request:\n  workflow_dispatch:\n"));
+		assert.ok(source.includes("on:\n  workflow_dispatch:\n"));
 		assert.ok(source.includes("permissions:\n  contents: read\n"));
 		assert.ok(source.includes("runs-on: ubuntu-24.04"));
 		assert.ok(source.includes("timeout-minutes: 240"));
@@ -535,7 +535,8 @@ test("value-index hosted workflow requires every route and retains failures", as
 	]) assert.ok(shell.includes(required), required);
 	execFileSync("bash", ["-n", "scripts/run-checked-record-value-index-browser-ci.sh"]);
 	const replacements = [
-		["  push:\n", ""], ["  pull_request:\n", ""]
+		["  workflow_dispatch:\n", "  push:\n  workflow_dispatch:\n"]
+		, ["  workflow_dispatch:\n", "  pull_request:\n  workflow_dispatch:\n"]
 		, ["contents: read", "contents: write"]
 		, ["fetch-depth: 0", "fetch-depth: 1"]
 		, ["persist-credentials: false", "persist-credentials: true"]

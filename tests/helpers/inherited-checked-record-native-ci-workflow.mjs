@@ -16,13 +16,13 @@ import {
 export const assertInheritedCheckedRecordNativeWorkflow = source => {
 	assert.ok(source.startsWith(
 		"name: Installed inherited checked records in C and C++\n"));
-	assert.ok(source.includes("on:\n  push:\n  pull_request:\n  workflow_dispatch:\n"));
+	assert.ok(source.includes("on:\n  workflow_dispatch:\n"));
 	assert.ok(source.includes("permissions:\n  contents: read\n"));
 	assert.ok(source.includes("concurrency:\n  group: inherited-checked-record-native-${{ github.ref }}\n  cancel-in-progress: true\n"));
 	assert.deepEqual(
 		[...source.matchAll(/^ {2}([a-z][a-z0-9_-]*):\n/gmu)]
 			.map(match => match[1]), [
-			"push", "pull_request", "workflow_dispatch"
+			"workflow_dispatch"
 			, "inherited-checked-record-native"
 			]
 	);

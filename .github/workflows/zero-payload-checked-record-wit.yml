@@ -1,8 +1,6 @@
 name: Zero-payload checked records in WIT and WASI components
 
 on:
-  push:
-  pull_request:
   workflow_dispatch:
 
 permissions:

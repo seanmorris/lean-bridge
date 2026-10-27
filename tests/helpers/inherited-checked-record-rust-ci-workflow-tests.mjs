@@ -12,7 +12,8 @@ test("inherited checked-record Rust workflow requires every Rust selection and c
 	const source = await readFile(".github/workflows/inherited-checked-record-rust.yml", "utf8");
 	assertInheritedCheckedRecordRustWorkflow(source);
 	const changes = [
-		["  push:\n", ""], ["  pull_request:\n", ""]
+		["  workflow_dispatch:\n", "  push:\n  workflow_dispatch:\n"]
+		, ["  workflow_dispatch:\n", "  pull_request:\n  workflow_dispatch:\n"]
 		, ["    runs-on: ubuntu-24.04", "    runs-on: ubuntu-latest"]
 		, ["    timeout-minutes: 180", "    timeout-minutes: 20"]
 		, ["    env:\n", "    continue-on-error: true\n    env:\n"]

@@ -14,11 +14,11 @@ import { assertWorkflowRunBudget, workflowRunScalars } from "./native-observatio
  */
 export const assertNominalPrimitiveSubtypePhpWorkflow = source => {
 	assert.ok(source.startsWith("name: Installed primitive-base nominal Subtypes in native PHP\n"));
-	assert.ok(source.includes("on:\n  push:\n  pull_request:\n  workflow_dispatch:\n"));
+	assert.ok(source.includes("on:\n  workflow_dispatch:\n"));
 	assert.ok(source.includes("permissions:\n  contents: read\n"));
 	assert.ok(source.includes("concurrency:\n  group: nominal-primitive-subtype-php-${{ github.ref }}\n  cancel-in-progress: true\n"));
 	assert.deepEqual([...source.matchAll(/^ {2}([a-z][a-z0-9_-]*):\n/gmu)].map(match => match[1])
-		, ["push", "pull_request", "workflow_dispatch", "nominal-primitive-subtype-php"]);
+		, ["workflow_dispatch", "nominal-primitive-subtype-php"]);
 	assert.doesNotMatch(source, /continue-on-error:|needs:|strategy:|defaults:|LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR:|LEAN_BRIDGE_NOMINAL_PRIMITIVE_SUBTYPE_PHP_|install-nix|nix build|setup-python|setup-ruby/u);
 	assert.deepEqual(source.match(/^\s+if:.*$/gmu), ["        if: always()", "        if: always() && steps.acceptance.outcome != 'success'"]);
 	assert.equal((source.match(/^\s+env:/gmu) ?? []).length, 1);

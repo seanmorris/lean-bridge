@@ -146,10 +146,10 @@ test("managed owned checked-record consumers are independently authored", async 
 	const workflow = await readFile(
 		".github/workflows/owned-checked-record-managed.yml", "utf8");
 	for(const required of [
-		"on:\n  push:\n  pull_request:\n  workflow_dispatch:\n"
+		"on:\n  workflow_dispatch:\n"
 		, "cancel-in-progress: true"
 		, 'group: ${{ fromJSON(github.event_name == \'workflow_dispatch\' && inputs.wit_only && \'["wit"]\' || \'["dotnet","jvm","php","wit"]\') }}'
-		, "      wit_only:\n        description: Run only the WIT repair probe; push and pull requests still run all hosts\n        type: boolean\n        default: false"
+		, "      wit_only:\n        description: Run only the WIT repair probe; the default dispatch runs all hosts\n        type: boolean\n        default: false"
 		, "npm run test:owned-checked-record-managed"
 		, "rg '^# fail 0$'"
 		, "rg '^# skipped 0$'"

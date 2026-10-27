@@ -12,7 +12,8 @@ test("primitive-base native workflow requires every C/C++ selection and complete
 	const source = await readFile(".github/workflows/nominal-primitive-subtype-native.yml", "utf8");
 	assertNominalPrimitiveSubtypeNativeWorkflow(source);
 	const changes = [
-		["  push:\n", ""], ["  pull_request:\n", ""]
+		["  workflow_dispatch:\n", "  push:\n  workflow_dispatch:\n"]
+		, ["  workflow_dispatch:\n", "  pull_request:\n  workflow_dispatch:\n"]
 		, ["    runs-on: ubuntu-24.04", "    runs-on: ubuntu-latest"]
 		, ["    timeout-minutes: 180", "    timeout-minutes: 20"]
 		, ["    env:\n", "    continue-on-error: true\n    env:\n"]

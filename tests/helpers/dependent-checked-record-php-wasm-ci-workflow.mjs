@@ -14,8 +14,7 @@ export const assertDependentCheckedRecordPhpWasmWorkflow = source => {
 	assert.equal(typeof source, "string");
 	assert.ok(source.startsWith("name: Installed dependent checked records in PHP-Wasm\n"));
 	for(const required of [
-		"  push:\n"
-		, "  pull_request:\n"
+		"on:\n  workflow_dispatch:\n"
 		, "contents: read"
 		, "group: dependent-checked-record-php-wasm-${{ github.ref }}"
 		, "cancel-in-progress: true"

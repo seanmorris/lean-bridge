@@ -13,14 +13,12 @@ import { assertWorkflowRunBudget, workflowRunScalars } from "./native-observatio
  */
 export const assertZeroPayloadPerlWorkflow = source => {
 	assert.ok(source.startsWith("name: Installed zero-payload checked records in Perl\n"));
-	assert.ok(source.includes("on:\n  push:\n  pull_request:\n  workflow_dispatch:\n"));
+	assert.ok(source.includes("on:\n  workflow_dispatch:\n"));
 	assert.ok(source.includes("permissions:\n  contents: read\n"));
 	assert.ok(source.includes("concurrency:\n  group: zero-payload-checked-record-perl-${{ github.ref }}\n  cancel-in-progress: true\n"));
 	assert.deepEqual([...source.matchAll(/^ {2}([a-z][a-z0-9_-]*):\n/gmu)]
 		.map(match => match[1]), [
-		"push"
-		, "pull_request"
-		, "workflow_dispatch"
+		"workflow_dispatch"
 		, "zero-payload-checked-record-perl"]
 	);
 	assert.doesNotMatch(source, /continue-on-error:|needs:|strategy:|defaults:|set \+e|\|\| true/u);

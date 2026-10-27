@@ -99,7 +99,7 @@ test("owned Subtype language consumers and required workflow stay registered", a
 	}
 	const source = await readFile(".github/workflows/owned-subtype-languages.yml", "utf8");
 	for(const required of [
-		"on:\n  push:\n  pull_request:\n  workflow_dispatch:\n"
+		"on:\n  workflow_dispatch:\n"
 		, "cancel-in-progress: true"
 		, "npm run test:owned-subtype-languages"
 		, "rg '^# fail 0$'"

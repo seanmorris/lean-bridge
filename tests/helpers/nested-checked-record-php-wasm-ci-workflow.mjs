@@ -13,10 +13,10 @@ import { assertWorkflowRunBudget, workflowRunScalars } from "./native-observatio
  */
 export const assertNestedCheckedRecordPhpWasmWorkflow = source => {
 	assert.ok(source.startsWith("name: Installed nested checked records in PHP-Wasm\n"));
-	assert.ok(source.includes("on:\n  push:\n  pull_request:\n  workflow_dispatch:\n"));
+	assert.ok(source.includes("on:\n  workflow_dispatch:\n"));
 	assert.ok(source.includes("permissions:\n  contents: read\n"));
 	assert.ok(source.includes("concurrency:\n  group: nested-checked-record-php-wasm-${{ github.ref }}\n  cancel-in-progress: true\n"));
-	assert.deepEqual([...source.matchAll(/^ {2}([a-z][a-z0-9_-]*):\n/gmu)].map(match => match[1]), ["push", "pull_request", "workflow_dispatch", "nested-checked-record-php-wasm"]);
+	assert.deepEqual([...source.matchAll(/^ {2}([a-z][a-z0-9_-]*):\n/gmu)].map(match => match[1]), ["workflow_dispatch", "nested-checked-record-php-wasm"]);
 	assert.doesNotMatch(source, /continue-on-error:|needs:|strategy:|defaults:/u);
 	assert.deepEqual(source.match(/^\s+if:.*$/gmu), ["        if: always()", "        if: always() && steps.acceptance.outcome != 'success'"]);
 	assert.equal((source.match(/^\s+env:/gmu) ?? []).length, 2);

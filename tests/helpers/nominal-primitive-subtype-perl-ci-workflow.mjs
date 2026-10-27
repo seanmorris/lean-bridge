@@ -16,10 +16,10 @@ export const nominalPrimitiveSubtypePerlToolchains = Object.freeze(["5.36.3 thre
  */
 export const assertNominalPrimitiveSubtypePerlWorkflow = source => {
 	assert.ok(source.startsWith("name: Installed primitive-base nominal Subtypes in Perl\n"));
-	assert.ok(source.includes("on:\n  push:\n  pull_request:\n  workflow_dispatch:\n"));
+	assert.ok(source.includes("on:\n  workflow_dispatch:\n"));
 	assert.ok(source.includes("permissions:\n  contents: read\n"));
 	assert.ok(source.includes("concurrency:\n  group: nominal-primitive-subtype-perl-${{ github.ref }}\n  cancel-in-progress: true\n"));
-	assert.deepEqual([...source.matchAll(/^ {2}([a-z][a-z0-9_-]*):\n/gmu)].map(match => match[1]), ["push", "pull_request", "workflow_dispatch", "nominal-primitive-subtype-perl"]);
+	assert.deepEqual([...source.matchAll(/^ {2}([a-z][a-z0-9_-]*):\n/gmu)].map(match => match[1]), ["workflow_dispatch", "nominal-primitive-subtype-perl"]);
 	assert.doesNotMatch(source, /continue-on-error:|needs:|strategy:|defaults:|set \+e|\|\| true/u);
 	assert.doesNotMatch(source, /LEAN_BRIDGE_(?:(?:NATIVE|PERL)_TEST_GLIBC_FLOOR|NOMINAL_PRIMITIVE_SUBTYPE_PERLS|NOMINAL_SUBTYPE_PERLS|PERLS|CORPUS_PERL)/u);
 	assert.deepEqual(source.match(/^\s+if:.*$/gmu), ["        if: always()", "        if: always() && steps.acceptance.outcome != 'success'"]);

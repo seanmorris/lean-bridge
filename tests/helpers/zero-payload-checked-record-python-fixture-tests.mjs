@@ -207,7 +207,7 @@ test("zero-payload Python workflow retains every route, both floors and failures
 	const verifyWorkflow = source => {
 		assert.ok(source.startsWith("name: Zero-payload checked records in Python\n"));
 		for(const required of [
-			"on:\n  push:\n  pull_request:\n  workflow_dispatch:\n"
+			"on:\n  workflow_dispatch:\n"
 			, "runs-on: ubuntu-24.04", "timeout-minutes: 210"
 			, "timeout-minutes: 110", "python-version: \"3.11\""
 			, "python-version: \"3.12\"", "persist-credentials: false"

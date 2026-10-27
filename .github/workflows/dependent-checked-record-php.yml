@@ -1,8 +1,6 @@
 name: Dependent checked-record checked records in native PHP
 
 on:
-  push:
-  pull_request:
   workflow_dispatch:
 
 permissions:

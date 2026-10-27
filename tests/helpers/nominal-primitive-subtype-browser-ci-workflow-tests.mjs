@@ -31,7 +31,8 @@ test("primitive-base browser workflow controls reject acceptance bypasses and am
 	const source = await readFile(".github/workflows/nominal-primitive-subtype-browser.yml", "utf8");
 	const replacements = [
 		["bash scripts/install-playwright-browsers.sh chromium firefox webkit", "bash scripts/install-playwright-browsers.sh chromium"]
-		, ["  push:\n", ""], ["  pull_request:\n", ""]
+		, ["  workflow_dispatch:\n", "  push:\n  workflow_dispatch:\n"]
+		, ["  workflow_dispatch:\n", "  pull_request:\n  workflow_dispatch:\n"]
 		, ["contents: read", "contents: write"]
 		, ["fetch-depth: 0", "fetch-depth: 1"]
 		, ["persist-credentials: false", "persist-credentials: true"]

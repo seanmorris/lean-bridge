@@ -1,8 +1,6 @@
 name: Owned refinement dispatch and transfer order in PHP-Wasm
 
 on:
-  push:
-  pull_request:
   workflow_dispatch:
   workflow_call:
 

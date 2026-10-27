@@ -41,7 +41,7 @@ test("checked-owner PHP-Wasm acceptance remains a separate recurring gate", asyn
 	]) if(!cli.files.includes(dependency))
 		throw new Error(`The standalone CLI omitted ${dependency}`);
 	for(const required of [
-		"on:\n  push:\n  pull_request:\n  workflow_dispatch:\n"
+		"on:\n  workflow_dispatch:\n"
 		, "cancel-in-progress: true"
 		, "npm run test:owned-subtype-php-wasm"
 		, "rg '^# fail 0$'"

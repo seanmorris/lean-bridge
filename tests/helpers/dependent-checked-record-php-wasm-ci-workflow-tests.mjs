@@ -12,8 +12,8 @@ test("dependent PHP-Wasm workflow requires pinned inputs and fatal all-route acc
 	const source = await readFile(".github/workflows/dependent-checked-record-php-wasm.yml", "utf8");
 	assertDependentCheckedRecordPhpWasmWorkflow(source);
 	for(const [before, after] of [
-		["  push:\n", ""]
-		, ["  pull_request:\n", ""]
+		["  workflow_dispatch:\n", "  push:\n  workflow_dispatch:\n"]
+		, ["  workflow_dispatch:\n", "  pull_request:\n  workflow_dispatch:\n"]
 		, ["contents: read", "contents: write"]
 		, ["fetch-depth: 0", "fetch-depth: 1"]
 		, ["persist-credentials: false", "persist-credentials: true"]

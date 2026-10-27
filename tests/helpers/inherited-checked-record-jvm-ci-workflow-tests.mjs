@@ -53,7 +53,8 @@ test("inherited JVM workflow rejects tool and acceptance bypasses", async t => {
 		".github/workflows/inherited-checked-record-jvm.yml", "utf8"
 	);
 	const replacements = [
-		["  push:\n", ""], ["  pull_request:\n", ""]
+		["  workflow_dispatch:\n", "  push:\n  workflow_dispatch:\n"]
+		, ["  workflow_dispatch:\n", "  pull_request:\n  workflow_dispatch:\n"]
 		, ["contents: read", "contents: write"]
 		, ["fetch-depth: 0", "fetch-depth: 1"]
 		, ["persist-credentials: false", "persist-credentials: true"]

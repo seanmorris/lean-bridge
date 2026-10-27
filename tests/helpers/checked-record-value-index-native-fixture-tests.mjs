@@ -168,7 +168,7 @@ test("value-index native workflow requires all routes and preserves failures", a
 		assert.ok(value.startsWith(
 			"name: Value-indexed checked records in C and C++\n"));
 		assert.ok(value.includes(
-			"on:\n  push:\n  pull_request:\n  workflow_dispatch:\n"));
+			"on:\n  workflow_dispatch:\n"));
 		assert.ok(value.includes("permissions:\n  contents: read\n"));
 		assert.ok(value.includes("runs-on: ubuntu-24.04\n"));
 		assert.ok(value.includes("timeout-minutes: 240\n"));

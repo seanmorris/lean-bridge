@@ -16,13 +16,13 @@ import {
 export const assertMutualCheckedRecordNativeWorkflow = source => {
 	assert.ok(source.startsWith(
 		"name: Installed recursive checked records in C and C++\n"));
-	assert.ok(source.includes("on:\n  push:\n  pull_request:\n  workflow_dispatch:\n"));
+	assert.ok(source.includes("on:\n  workflow_dispatch:\n"));
 	assert.ok(source.includes("permissions:\n  contents: read\n"));
 	assert.ok(source.includes("concurrency:\n  group: recursive-checked-record-native-${{ github.ref }}\n  cancel-in-progress: true\n"));
 	const jobKeys = [...source.matchAll(/^ {2}([a-z][a-z0-9_-]*):\n/gmu)]
 		.map(match => match[1]);
 	assert.deepEqual(jobKeys, [
-		"push", "pull_request", "workflow_dispatch"
+		"workflow_dispatch"
 		, "recursive-checked-record-native"
 	]);
 	assert.doesNotMatch(source

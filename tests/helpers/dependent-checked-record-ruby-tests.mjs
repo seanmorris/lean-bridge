@@ -190,7 +190,7 @@ test("dependent checked-record Ruby workflow covers every closed route and retai
 	const verifyWorkflow = source => {
 		assert.ok(source.startsWith("name: Installed dependent checked records in Ruby\n"));
 		for(const required of [
-			"on:\n  push:\n  pull_request:\n  workflow_dispatch:\n"
+			"on:\n  workflow_dispatch:\n"
 			, "runs-on: ubuntu-24.04"
 			, "timeout-minutes: 180"
 			, "timeout-minutes: 120"

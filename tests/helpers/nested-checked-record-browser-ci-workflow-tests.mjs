@@ -10,7 +10,7 @@ import test from "node:test";
 
 const assertWorkflow = source => {
 	assert.ok(source.startsWith("name: Nested checked records in npm and browsers\n"));
-	assert.ok(source.includes("on:\n  push:\n  pull_request:\n  workflow_dispatch:\n"));
+	assert.ok(source.includes("on:\n  workflow_dispatch:\n"));
 	assert.ok(source.includes("permissions:\n  contents: read\n"));
 	assert.ok(source.includes("runs-on: ubuntu-24.04"));
 	assert.ok(source.includes("timeout-minutes: 240"));
@@ -46,7 +46,8 @@ test("nested checked-record browser workflow requires every route and retains fa
 test("nested checked-record browser workflow refuses common acceptance bypasses", async t => {
 	const source = await readFile(".github/workflows/nested-checked-record-browser.yml", "utf8");
 	const replacements = [
-		["  push:\n", ""], ["  pull_request:\n", ""]
+		["  workflow_dispatch:\n", "  push:\n  workflow_dispatch:\n"]
+		, ["  workflow_dispatch:\n", "  pull_request:\n  workflow_dispatch:\n"]
 		, ["contents: read", "contents: write"]
 		, ["fetch-depth: 0", "fetch-depth: 1"]
 		, ["persist-credentials: false", "persist-credentials: true"]

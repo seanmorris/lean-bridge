@@ -13,10 +13,10 @@ import { assertWorkflowRunBudget, workflowRunScalars } from "./native-observatio
  */
 export const assertInheritedCheckedRecordPythonWorkflow = source => {
 	assert.ok(source.startsWith("name: Installed inherited checked records in Python\n"));
-	assert.ok(source.includes("on:\n  push:\n  pull_request:\n  workflow_dispatch:\n"));
+	assert.ok(source.includes("on:\n  workflow_dispatch:\n"));
 	assert.ok(source.includes("permissions:\n  contents: read\n"));
 	assert.ok(source.includes("concurrency:\n  group: inherited-checked-record-python-${{ github.ref }}\n  cancel-in-progress: true\n"));
-	assert.deepEqual([...source.matchAll(/^ {2}([a-z][a-z0-9_-]*):\n/gmu)].map(match => match[1]), ["push", "pull_request", "workflow_dispatch", "inherited-checked-record-python"]);
+	assert.deepEqual([...source.matchAll(/^ {2}([a-z][a-z0-9_-]*):\n/gmu)].map(match => match[1]), ["workflow_dispatch", "inherited-checked-record-python"]);
 	assert.doesNotMatch(source, /continue-on-error:|needs:|strategy:|defaults:|LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR:|LEAN_BRIDGE_INHERITED_CHECKED_RECORD_PYTHONS:|LEAN_BRIDGE_INHERITED_CHECKED_RECORD_PYTHON_MAX_LOAD:/u);
 	assert.deepEqual(source.match(/^\s+if:.*$/gmu), ["        if: always()", "        if: always() && steps.acceptance.outcome != 'success'"]);
 	assert.equal((source.match(/^\s+env:/gmu) ?? []).length, 2);

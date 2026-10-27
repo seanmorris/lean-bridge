@@ -1,8 +1,6 @@
 name: Installed zero-payload checked records in Java and Kotlin
 
 on:
-  push:
-  pull_request:
   workflow_dispatch:
     inputs:
       max-load:

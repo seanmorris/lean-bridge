@@ -28,7 +28,8 @@ test("nominal PHP-Wasm workflow requires pinned inputs and all four selections",
 test("nominal PHP-Wasm workflow controls refuse skipped acceptance, altered tools and narrowed records", async t => {
 	const source = await readFile(".github/workflows/nominal-subtype-php-wasm.yml", "utf8");
 	const replacements = [
-		["  push:\n", ""], ["  pull_request:\n", ""]
+		["  workflow_dispatch:\n", "  push:\n  workflow_dispatch:\n"]
+		, ["  workflow_dispatch:\n", "  pull_request:\n  workflow_dispatch:\n"]
 		, ["contents: read", "contents: write"]
 		, ["fetch-depth: 0", "fetch-depth: 1"]
 		, ["persist-credentials: false", "persist-credentials: true"]

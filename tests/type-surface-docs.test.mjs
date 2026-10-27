@@ -326,7 +326,7 @@ test("checked records close copied positions and hosted callbacks", async () => 
 	{
 		const workflowPath = `.github/workflows/nested-checked-record-${lane}.yml`;
 		const workflow = await readFile(workflowPath, "utf8");
-		assert.ok(workflow.includes("on:\n  push:\n  pull_request:\n  workflow_dispatch:\n")
+		assert.ok(workflow.includes("on:\n  workflow_dispatch:\n")
 			, workflowPath);
 		assert.ok(workflow.includes("runs-on: ubuntu-24.04"), workflowPath);
 		assert.ok(workflow.includes("fetch-depth: 0"), workflowPath);

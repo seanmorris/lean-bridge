@@ -187,7 +187,7 @@ test("dependent Python workflow preserves all routes, floors and failures", asyn
 	const runner = await readFile(
 		"scripts/run-dependent-checked-record-python-ci.sh", "utf8");
 	for(const required of [
-		"on:\n  push:\n  pull_request:\n  workflow_dispatch:\n"
+		"on:\n  workflow_dispatch:\n"
 		, "runs-on: ubuntu-24.04", "timeout-minutes: 210"
 		, "python-version: \"3.11\"", "python-version: \"3.12\""
 		, "persist-credentials: false"

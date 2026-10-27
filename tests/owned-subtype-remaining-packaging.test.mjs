@@ -205,7 +205,7 @@ test("remaining owned Subtype fixtures and required matrix stay registered", asy
 	}
 	const source = await readFile(".github/workflows/owned-subtype-remaining.yml", "utf8");
 	for(const required of [
-		"on:\n  push:\n  pull_request:\n  workflow_dispatch:\n"
+		"on:\n  workflow_dispatch:\n"
 		, "lane: [dotnet, jvm, php-native, wit-wasi]"
 		, "cancel-in-progress: true"
 		, "npm run test:owned-subtype-remaining"

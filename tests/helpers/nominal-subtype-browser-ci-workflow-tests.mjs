@@ -28,7 +28,8 @@ test("nominal browser workflow requires pinned tools, both routes and API modes,
 test("nominal browser workflow controls reject narrowed coverage and acceptance bypasses", async t => {
 	const source = await readFile(".github/workflows/nominal-subtype-browser.yml", "utf8");
 	const replacements = [
-		["  push:\n", ""], ["  pull_request:\n", ""]
+		["  workflow_dispatch:\n", "  push:\n  workflow_dispatch:\n"]
+		, ["  workflow_dispatch:\n", "  pull_request:\n  workflow_dispatch:\n"]
 		, ["contents: read", "contents: write"]
 		, ["fetch-depth: 0", "fetch-depth: 1"]
 		, ["persist-credentials: false", "persist-credentials: true"]

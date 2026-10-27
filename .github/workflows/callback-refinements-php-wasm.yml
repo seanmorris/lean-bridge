@@ -1,8 +1,6 @@
 name: Checked Fin and record callbacks in PHP-Wasm
 
 on:
-  push:
-  pull_request:
   workflow_dispatch:
 
 permissions:

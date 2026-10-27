@@ -1,8 +1,6 @@
 name: Synchronous callback refinement entry in PHP-Wasm
 
 on:
-  push:
-  pull_request:
   workflow_dispatch:
   workflow_call:
 

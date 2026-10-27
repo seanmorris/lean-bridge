@@ -32,7 +32,8 @@ test("nested checked-record JVM workflow requires four source/API selections on 
 test("nested checked-record JVM workflow rejects unpinned tools and acceptance bypasses", async t => {
 	const source = await readFile(".github/workflows/nested-checked-record-jvm.yml", "utf8");
 	const replacements = [
-		["  push:\n", ""], ["  pull_request:\n", ""]
+		["  workflow_dispatch:\n", "  push:\n  workflow_dispatch:\n"]
+		, ["  workflow_dispatch:\n", "  pull_request:\n  workflow_dispatch:\n"]
 		, ["contents: read", "contents: write"]
 		, ["fetch-depth: 0", "fetch-depth: 1"]
 		, ["persist-credentials: false", "persist-credentials: true"]

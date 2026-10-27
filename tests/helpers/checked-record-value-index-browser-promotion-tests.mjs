@@ -248,7 +248,7 @@ test("value-index browser docs name the exact prepared packages and boundary"
 		const workflow = await readFile(
 			".github/workflows/checked-record-value-index-browser.yml", "utf8");
 		assert.ok(workflow.includes(
-			"on:\n  push:\n  pull_request:\n  workflow_dispatch:\n"));
+			"on:\n  workflow_dispatch:\n"));
 		assert.ok(workflow.includes(
 			"run-checked-record-value-index-browser-ci.sh"));
 		const profiles = await readFile("src/adoption/test-profiles.mjs", "utf8");

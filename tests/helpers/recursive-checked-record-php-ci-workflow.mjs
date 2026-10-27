@@ -13,11 +13,11 @@ import { assertWorkflowRunBudget, workflowRunScalars } from "./native-observatio
  */
 export const assertRecursiveCheckedRecordPhpWorkflow = source => {
 	assert.ok(source.startsWith("name: Installed recursive checked records in native PHP\n"));
-	assert.ok(source.includes("on:\n  push:\n  pull_request:\n  workflow_dispatch:\n"));
+	assert.ok(source.includes("on:\n  workflow_dispatch:\n"));
 	assert.ok(source.includes("permissions:\n  contents: read\n"));
 	assert.ok(source.includes("concurrency:\n  group: recursive-checked-record-php-${{ github.ref }}\n  cancel-in-progress: true\n"));
 	assert.deepEqual([...source.matchAll(/^ {2}([a-z][a-z0-9_-]*):\n/gmu)].map(match => match[1])
-		, ["push", "pull_request", "workflow_dispatch", "recursive-checked-record-php"]);
+		, ["workflow_dispatch", "recursive-checked-record-php"]);
 	assert.doesNotMatch(source, /continue-on-error:|needs:|strategy:|defaults:|LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR:|LEAN_BRIDGE_RECURSIVE_CHECKED_RECORD_PHP_|install-nix|nix build|setup-python|setup-ruby/u);
 	assert.deepEqual(source.match(/^\s+if:.*$/gmu), ["        if: always()", "        if: always() && steps.acceptance.outcome != 'success'"]);
 	assert.equal((source.match(/^\s+env:/gmu) ?? []).length, 1);

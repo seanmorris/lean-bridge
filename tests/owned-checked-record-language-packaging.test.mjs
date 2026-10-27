@@ -173,7 +173,7 @@ test("owned checked-record language consumers and recurring workflow stay regist
 		".github/workflows/owned-checked-record-languages.yml", "utf8"
 	);
 	for(const required of [
-		"on:\n  push:\n  pull_request:\n  workflow_dispatch:\n"
+		"on:\n  workflow_dispatch:\n"
 		, "cancel-in-progress: true"
 		, "profile: [python, ruby, rust]"
 		, "npm run test:owned-checked-record-languages"

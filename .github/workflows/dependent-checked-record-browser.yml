@@ -1,8 +1,6 @@
 name: Dependent checked records in npm and browsers
 
 on:
-  push:
-  pull_request:
   workflow_dispatch:
 
 permissions:

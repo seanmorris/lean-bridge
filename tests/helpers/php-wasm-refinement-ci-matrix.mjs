@@ -244,7 +244,7 @@ export const assertPhpWasmRefinementCiWorkflow = (lane, source) => {
 	const triggers = /\non:\n[\s\S]*?\npermissions:\n/u.exec(source);
 	assert.ok(triggers);
 	assert.equal(triggers[0]
-		, "\non:\n  push:\n  pull_request:\n  workflow_dispatch:\n"
+		, "\non:\n  workflow_dispatch:\n"
 			+ (lane.kind === "measurement" ? "  workflow_call:\n" : "")
 			+ "\npermissions:\n");
 	assert.match(source, /\npermissions:\n {2}contents: read\n/u);

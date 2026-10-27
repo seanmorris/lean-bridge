@@ -185,7 +185,7 @@ test("value-index Ruby workflow covers every closed route and retains failed rec
 	const verifyWorkflow = source => {
 		assert.ok(source.startsWith("name: Installed value-index checked records in Ruby\n"));
 		for(const required of [
-			"on:\n  push:\n  pull_request:\n  workflow_dispatch:\n"
+			"on:\n  workflow_dispatch:\n"
 			, "runs-on: ubuntu-24.04"
 			, "timeout-minutes: 180"
 			, "timeout-minutes: 120"

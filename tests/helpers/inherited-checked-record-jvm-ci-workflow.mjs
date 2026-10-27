@@ -24,14 +24,14 @@ export const assertInheritedCheckedRecordJvmWorkflow = source => {
 		"name: Installed inherited checked records in Java and Kotlin\n"
 	));
 	assert.ok(source.includes(
-		"on:\n  push:\n  pull_request:\n  workflow_dispatch:\n"
+		"on:\n  workflow_dispatch:\n"
 	));
 	assert.ok(source.includes("permissions:\n  contents: read\n"));
 	assert.ok(source.includes("concurrency:\n  group: inherited-checked-record-jvm-${{ github.ref }}\n  cancel-in-progress: true\n"));
 	assert.deepEqual([...source.matchAll(
 		/^ {2}([a-z][a-z0-9_-]*):\n/gmu
 	)].map(match => match[1]), [
-		"push", "pull_request", "workflow_dispatch"
+		"workflow_dispatch"
 		, "inherited-checked-record-jvm"
 	]);
 	assert.doesNotMatch(source

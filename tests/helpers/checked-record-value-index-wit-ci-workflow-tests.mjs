@@ -33,7 +33,8 @@ test("value-index checked-record WIT workflow requires four source/API selection
 test("value-index checked-record WIT workflow rejects unpinned tools and acceptance bypasses", async t => {
 	const source = await readFile(".github/workflows/checked-record-value-index-wit.yml", "utf8");
 	const replacements = [
-		["  push:\n", ""], ["  pull_request:\n", ""]
+		["  workflow_dispatch:\n", "  push:\n  workflow_dispatch:\n"]
+		, ["  workflow_dispatch:\n", "  pull_request:\n  workflow_dispatch:\n"]
 		, ["contents: read", "contents: write"]
 		, ["    runs-on: ubuntu-24.04", "    runs-on: ubuntu-latest"]
 		, ["fetch-depth: 0", "fetch-depth: 1"]

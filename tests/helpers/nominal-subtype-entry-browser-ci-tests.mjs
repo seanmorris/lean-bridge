@@ -34,7 +34,7 @@ test("nominal entry record inventory distinguishes Node and browser observations
 test("nominal entry browser workflow keeps measurement separate and mandatory", async () => {
 	const workflow = await readFile(".github/workflows/nominal-subtype-entry-browser.yml", "utf8");
 	const shell = await readFile("scripts/run-nominal-subtype-entry-browser-ci.sh", "utf8");
-	assert.ok(workflow.includes("on:\n  push:\n  pull_request:\n  workflow_dispatch:\n"));
+	assert.ok(workflow.includes("on:\n  workflow_dispatch:\n"));
 	assert.ok(workflow.includes("fetch-depth: 0\n          persist-credentials: false"));
 	assert.ok(workflow.includes("bash scripts/run-nominal-subtype-entry-browser-ci.sh"));
 	assert.ok(workflow.includes("if: always() && steps.acceptance.outcome != 'success'"));

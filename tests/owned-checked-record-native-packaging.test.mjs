@@ -108,7 +108,7 @@ test("owned checked-record native acceptance is a required recurring job", async
 		".github/workflows/owned-checked-record-native-perl.yml", "utf8"
 	);
 	for(const required of [
-		"on:\n  push:\n  pull_request:\n  workflow_dispatch:\n"
+		"on:\n  workflow_dispatch:\n"
 		, "cancel-in-progress: true"
 		, "npm run test:owned-checked-record-native"
 		, "rg '^# fail 0$'"

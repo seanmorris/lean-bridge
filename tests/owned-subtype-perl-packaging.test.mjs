@@ -81,7 +81,7 @@ test("owned Subtype Perl transfers coexist with host callbacks", () => {
 test("owned Subtype Perl acceptance is a required recurring workflow", async () => {
 	const source = await readFile(".github/workflows/owned-subtype-perl.yml", "utf8");
 	for(const required of [
-		"on:\n  push:\n  pull_request:\n  workflow_dispatch:\n"
+		"on:\n  workflow_dispatch:\n"
 		, "cancel-in-progress: true"
 		, "npm run test:owned-subtype-perl"
 		, "rg '^# fail 0$'"

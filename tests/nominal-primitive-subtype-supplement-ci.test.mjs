@@ -18,7 +18,7 @@ const assertWorkflow = source => {
 	)[1].split("      - name: ")[0];
 	assertNominalPrimitiveSubtypeHistoryCheckout(checkout);
 	for(const required of [
-		"  push:\n", "  pull_request:\n", "  workflow_dispatch:\n"
+		"  workflow_dispatch:\n"
 		, "contents: read", "cancel-in-progress: true"
 		, "runs-on: ubuntu-24.04", "timeout-minutes: 180"
 		, "actions/checkout@v6", "fetch-depth: 0"
@@ -44,6 +44,7 @@ const assertWorkflow = source => {
 		, "if-no-files-found: error", "retention-days: 30"
 		, "steps.acceptance.outcome != 'success'", "run: exit 1"
 	]) assert.ok(source.includes(required), required);
+	assert.doesNotMatch(source, /^ {2}(?:push|pull_request):/mu);
 	assert.equal(source.match(/actions\/setup-python@v7/gu)?.length, 2);
 	assert.equal(source.match(/id: acceptance/gu)?.length, 1);
 	assert.equal(source.match(/if: always\(\)/gu)?.length, 2);
@@ -58,7 +59,7 @@ test("supplemental primitive-base workflow replays every archived caller", async
 test("supplemental primitive-base workflow refuses narrowed and optional gates", async t => {
 	const source = await readFile(path, "utf8");
 	const replacements = [
-		["  push:\n", ""]
+		["  workflow_dispatch:\n", "  push:\n  workflow_dispatch:\n"]
 		, ["contents: read", "contents: write"]
 		, ["cancel-in-progress: true", "cancel-in-progress: false"]
 		, ["actions/checkout@v6", "actions/checkout@main"]

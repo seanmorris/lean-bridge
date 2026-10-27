@@ -18,7 +18,7 @@ export const assertInheritedCheckedRecordPerlWorkflow = source => {
 		"name: Installed inherited checked records in Perl\n"
 	));
 	assert.ok(source.includes(
-		"on:\n  push:\n  pull_request:\n  workflow_dispatch:\n"
+		"on:\n  workflow_dispatch:\n"
 	));
 	assert.ok(source.includes("permissions:\n  contents: read\n"));
 	assert.ok(source.includes(
@@ -26,7 +26,7 @@ export const assertInheritedCheckedRecordPerlWorkflow = source => {
 	));
 	assert.deepEqual([...source.matchAll(/^ {2}([a-z][a-z0-9_-]*):\n/gmu)]
 		.map(match => match[1]), [
-		"push", "pull_request", "workflow_dispatch"
+		"workflow_dispatch"
 		, "inherited-checked-record-perl"]
 	);
 	assert.doesNotMatch(source

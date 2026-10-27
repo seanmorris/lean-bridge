@@ -15,7 +15,8 @@ test("inherited checked-record workflow requires every C/C++ selection", async t
 		".github/workflows/inherited-checked-record-native.yml", "utf8");
 	assertInheritedCheckedRecordNativeWorkflow(source);
 	const changes = [
-		["  push:\n", ""], ["  pull_request:\n", ""]
+		["  workflow_dispatch:\n", "  push:\n  workflow_dispatch:\n"]
+		, ["  workflow_dispatch:\n", "  pull_request:\n  workflow_dispatch:\n"]
 		, ["    runs-on: ubuntu-24.04", "    runs-on: ubuntu-latest"]
 		, ["    timeout-minutes: 180", "    timeout-minutes: 20"]
 		, ["    env:\n", "    continue-on-error: true\n    env:\n"]

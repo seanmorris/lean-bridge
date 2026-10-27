@@ -17,10 +17,10 @@ const kotlinInstall = "set -euo pipefail\nmkdir -p build\ncurl -fL --retry 3 --o
  */
 export const assertNestedCheckedRecordJvmWorkflow = source => {
 	assert.ok(source.startsWith("name: Installed nested checked records in Java and Kotlin\n"));
-	assert.ok(source.includes("on:\n  push:\n  pull_request:\n  workflow_dispatch:\n"));
+	assert.ok(source.includes("on:\n  workflow_dispatch:\n"));
 	assert.ok(source.includes("permissions:\n  contents: read\n"));
 	assert.ok(source.includes("concurrency:\n  group: nested-checked-record-jvm-${{ github.ref }}\n  cancel-in-progress: true\n"));
-	assert.deepEqual([...source.matchAll(/^ {2}([a-z][a-z0-9_-]*):\n/gmu)].map(match => match[1]), ["push", "pull_request", "workflow_dispatch", "nested-checked-record-jvm"]);
+	assert.deepEqual([...source.matchAll(/^ {2}([a-z][a-z0-9_-]*):\n/gmu)].map(match => match[1]), ["workflow_dispatch", "nested-checked-record-jvm"]);
 	assert.doesNotMatch(source, /continue-on-error:|needs:|strategy:|defaults:|set \+e|\|\| true/u);
 	assert.doesNotMatch(source, /LEAN_BRIDGE_(?:NATIVE_TEST_GLIBC_FLOOR|NESTED_CHECKED_RECORD_JVM_|NOMINAL_SUBTYPE_JVM_|JAVA|JAVAC|KOTLINC)/u);
 	assert.deepEqual(source.match(/^\s+if:.*$/gmu), ["        if: always()", "        if: always() && steps.acceptance.outcome != 'success'"]);
