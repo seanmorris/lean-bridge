@@ -10,6 +10,16 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import {
+	beforeCoreRecursiveCallableEvidencePinRepairSource
+	, coreRecursiveCallableEvidencePinRepairHistoryAdditions
+	, coreRecursiveCallableEvidencePinRepairHistoryPath
+	, coreRecursiveCallableEvidencePinRepairImplementation
+	, coreRecursiveCallableEvidencePinRepairImplementationPaths
+	, coreRecursiveCallableEvidencePinRepairIntegrationPaths
+	, coreRecursiveCallableEvidencePinRepairPredecessor
+	, reverseCoreRecursiveCallableEvidencePinRepairUpdate
+} from "./core-recursive-callable-evidence-pin-repair-source-history.mjs";
+import {
 	beforeCoreRecursiveCallableReplayBoundSource
 	, coreRecursiveCallableReplayBoundHistoryAdditions
 	, coreRecursiveCallableReplayBoundHistoryPath
@@ -325,6 +335,9 @@ import { sourceAtFinHistoryMilestone, sourceAtFinHistoryRecord, sourceAtFinHisto
 
 const git = arguments_ => execFileSync("git", arguments_
 	, { encoding: "utf8", maxBuffer: 128 * 1024 * 1024 });
+const readCoreRecursiveCallableEvidencePinRepair = async () => JSON.parse(
+	await readFile(coreRecursiveCallableEvidencePinRepairHistoryPath, "utf8")
+);
 const readCoreRecursiveCallableReplayBound = async () => JSON.parse(
 	await readFile(coreRecursiveCallableReplayBoundHistoryPath, "utf8")
 );
@@ -413,6 +426,92 @@ const readWitBorrowStopBoundary = async () => JSON.parse(await readFile(
 const readReceiverCiStopBoundary = async () => JSON.parse(await readFile(
 	coreReceiverCiStopBoundaryHistoryPath, "utf8"
 ));
+
+test("Core recursive-callable evidence pins record their exact repair", async () => {
+	const record = await readCoreRecursiveCallableEvidencePinRepair();
+	assert.equal(record.schemaVersion, 1);
+	assert.equal(record.milestone
+		, "core-recursive-callable-evidence-pin-repair-source-v1");
+	assert.equal(record.predecessorCommit
+		, coreRecursiveCallableEvidencePinRepairPredecessor);
+	assert.equal(record.implementationCommit
+		, coreRecursiveCallableEvidencePinRepairImplementation);
+	assert.deepEqual(record.updates.map(update => update.path)
+		, coreRecursiveCallableEvidencePinRepairImplementationPaths);
+	assert.deepEqual(record.historyAdditions.map(addition => addition.path)
+		, coreRecursiveCallableEvidencePinRepairHistoryAdditions);
+	assert.deepEqual(record.integrationUpdates.map(update => update.path)
+		, coreRecursiveCallableEvidencePinRepairIntegrationPaths);
+	assert.equal(git(["rev-parse"
+		, `${coreRecursiveCallableEvidencePinRepairImplementation}^`]).trim()
+	, coreRecursiveCallableEvidencePinRepairPredecessor);
+	assert.deepEqual(git(["diff", "--name-only", "--diff-filter=M"
+		, coreRecursiveCallableEvidencePinRepairPredecessor
+		, coreRecursiveCallableEvidencePinRepairImplementation])
+		.trim().split("\n").sort()
+	, [...coreRecursiveCallableEvidencePinRepairImplementationPaths].sort());
+});
+
+test("Core recursive-callable evidence-pin repair reverses every transition", async () => {
+	const record = await readCoreRecursiveCallableEvidencePinRepair();
+	for(const update of [...record.updates, ...record.integrationUpdates])
+	{
+		const integration = record.integrationUpdates.includes(update);
+		const current = integration
+			? await sourceAtFinHistoryRecordSource(
+				coreRecursiveCallableEvidencePinRepairHistoryPath, update.path
+					, update.currentSha256
+					, beforeCoreRecursiveCallableEvidencePinRepairSource
+			)
+			: await sourceAtFinHistoryRecord(
+				coreRecursiveCallableEvidencePinRepairHistoryPath, update.path
+					, beforeCoreRecursiveCallableEvidencePinRepairSource
+			);
+		const base = integration
+			? coreRecursiveCallableEvidencePinRepairImplementation
+			: coreRecursiveCallableEvidencePinRepairPredecessor;
+		const previous = git(["show", `${base}:${update.path}`]);
+		assert.equal(reverseCoreRecursiveCallableEvidencePinRepairUpdate(
+			current, update), previous, update.path);
+		assert.equal(beforeFinRefinementSource(
+			update.path, current, update.previousSha256), previous, update.path);
+		assert.ok(finRefinementNormalizationPaths.includes(update.path));
+	}
+	for(const addition of record.historyAdditions)
+		assert.equal(sha256(await sourceAtFinHistoryRecordSource(
+			coreRecursiveCallableEvidencePinRepairHistoryPath
+			, addition.path, addition.currentSha256
+		)), addition.currentSha256, addition.path);
+});
+
+test("Core recursive-callable evidence-pin repair rejects altered transitions", async () => {
+	const update = (await readCoreRecursiveCallableEvidencePinRepair()).updates[0];
+	const current = await sourceAtFinHistoryRecord(
+		coreRecursiveCallableEvidencePinRepairHistoryPath, update.path
+		, beforeCoreRecursiveCallableEvidencePinRepairSource
+	);
+	for(const forged of [{ ...update, currentSha256: "0".repeat(64) }
+		, { ...update, previousSha256: "0".repeat(64) }
+		, { ...update, path: "unrelated.mjs" }
+		, { ...update, edits: [] }
+		, { ...update, edits: [...update.edits, update.edits[0]] }])
+		assert.throws(() => reverseCoreRecursiveCallableEvidencePinRepairUpdate(
+			current, forged));
+	assert.equal(beforeCoreRecursiveCallableEvidencePinRepairSource(
+		update.path, current + "unknown"), current + "unknown");
+});
+
+test("Core recursive-callable evidence-pin writer refuses another checkout", async t => {
+	const root = await mkdtemp(join(
+		tmpdir(), "lean-core-recursive-evidence-pin-history-guard-"));
+	t.after(() => rm(root, { recursive: true }));
+	const result = spawnSync(process.execPath, [resolve(
+		"scripts/update-core-recursive-callable-evidence-pin-repair-source-history.mjs"
+	)], { cwd: root, encoding: "utf8", timeout: 15_000 });
+	assert.notEqual(result.status, 0);
+	assert.equal(result.stdout, "");
+	assert.deepEqual(await readdir(root), []);
+});
 
 test("Core recursive-callable replay bound records its exact range", async () => {
 	const record = await readCoreRecursiveCallableReplayBound();
