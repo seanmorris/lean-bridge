@@ -10,6 +10,9 @@ import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { assertHostedArrayArchive, hostedArrayDirectory } from "./generic-record-array-hosted-evidence.mjs";
 import { assertHostedSpecializationArchive, assertHostedSpecializationReport, hostedSpecializationDirectory, strictArtifactZipMembers } from "./hosted-specialization-evidence.mjs";
 
+// The inventory reconciliation below follows this archive through dynamic
+// evidence entries rather than a literal path in executable source.
+// core-evidence-prefix: generic-record-specializations-
 export const specializationClosureDirectory = "docs/evidence/native-specialization-closure-20261010";
 export const specializationClosureSha256 = "2aba48bbfbd00fc3bd885e0ec5c450d16bd3e09e1eecdf5bfce72041c1ca3ce8";
 const title = "relocated source-free native packages install concrete specializations without the generic declaration";

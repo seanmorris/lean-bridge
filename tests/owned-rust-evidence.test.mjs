@@ -8,8 +8,8 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
 import { assertOwnedRustExecution, assertOwnedRustIntegration } from "./helpers/owned-rust-evidence.mjs";
-import { beforeOwnedRust, reverseOwnedRustUpdate, ownedRustHistoryPath, ownedRustExecutionPath } from "./helpers/owned-rust-source-history.mjs";
-import { beforeOwnedPython } from "./helpers/owned-python-source-history.mjs";
+import { beforeOwnedRust, reverseOwnedRustUpdate, ownedRustHistoryPath, ownedRustExecutionPath, ownedRustProducer } from "./helpers/owned-rust-source-history.mjs";
+import { bytesAtProducer } from "./helpers/producer-source.mjs";
 
 const json = async path => JSON.parse(await readFile(path, "utf8"));
 
@@ -53,10 +53,12 @@ test("Rust ownership evidence rejects altered lifetimes, execution and package c
 test("Rust source history preserves exact predecessors and rejects unrecorded edits", async () => {
 	for(const update of (await json(ownedRustHistoryPath)).updates)
 	{
-		const source = beforeOwnedPython(update.path
-			, await readFile(update.path, "utf8"), update.currentSha256);
-		assert.equal(sha256(reverseOwnedRustUpdate(source, update)), update.previousSha256);
-		assert.equal(sha256(beforeOwnedRust(update.path, source)), update.previousSha256);
+		const source = bytesAtProducer(ownedRustProducer, update.path
+			, update.currentSha256).toString("utf8");
+		const previous = reverseOwnedRustUpdate(source, update);
+		assert.equal(sha256(previous), update.previousSha256);
+		assert.equal(beforeOwnedRust(update.path, source
+			, update.previousSha256), previous);
 		assert.equal(beforeOwnedRust(update.path, source, update.currentSha256), source);
 		const unknown = source + "\n/* unrecorded */\n";
 		assert.equal(beforeOwnedRust(update.path, unknown), unknown);

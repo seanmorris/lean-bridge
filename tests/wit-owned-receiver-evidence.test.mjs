@@ -9,10 +9,11 @@ import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
 import { classifyRepositoryTest } from "../src/adoption/test-profiles.mjs";
 import { assertOwnedWitReceiverExecution } from "./helpers/wit-owned-receiver-evidence.mjs";
-import { beforeOwnedJvmReceiverGc, ownedJvmReceiverGcHistoricalBytes } from "./helpers/owned-jvm-receiver-gc-history.mjs";
 import { ownedWitReceiverPath, ownedWitReceiverBaseline, ownedWitReceiverPrevious
 	, ownedWitReceiverChangedPaths, ownedWitReceiverAddedPaths
-	, beforeOwnedWitReceiver, reverseOwnedWitReceiverUpdate } from "./helpers/wit-owned-receiver-history.mjs";
+	, ownedWitReceiverProducer, beforeOwnedWitReceiver
+	, reverseOwnedWitReceiverUpdate } from "./helpers/wit-owned-receiver-history.mjs";
+import { bytesAtProducer } from "./helpers/producer-source.mjs";
 
 const read = async () => JSON.parse(await readFile(ownedWitReceiverPath, "utf8"));
 
@@ -24,16 +25,22 @@ test("WIT receiver history authenticates sources without inflating support", asy
 	const bytes = await readFile(record.previous.path), previous = JSON.parse(bytes);
 	assert.equal(sha256(bytes), record.previous.sha256);
 	assert.deepEqual(Object.keys(record.sources).sort(), [...Object.keys(previous.sources), ...ownedWitReceiverAddedPaths].sort());
-	for(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(ownedJvmReceiverGcHistoricalBytes(path, await readFile(path), digest)), digest, path);
+	for(const [path, digest] of Object.entries(record.sources))
+		assert.equal(sha256(bytesAtProducer(
+			ownedWitReceiverProducer, path, digest)), digest, path);
 	assert.deepEqual(record.updates.map(update => update.path), ownedWitReceiverChangedPaths);
 	for(const update of record.updates)
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path]);
 		assert.equal(update.currentSha256, record.sources[update.path]);
-		const source = beforeOwnedJvmReceiverGc(update.path, await readFile(update.path, "utf8"), update.currentSha256);
-		const prior = beforeOwnedWitReceiver(update.path, source);
+		const source = bytesAtProducer(ownedWitReceiverProducer, update.path
+			, update.currentSha256).toString("utf8");
+		const prior = reverseOwnedWitReceiverUpdate(source, update);
 		assert.equal(sha256(prior), update.previousSha256);
-		assert.equal(beforeOwnedWitReceiver(update.path, prior), prior);
+		assert.equal(beforeOwnedWitReceiver(update.path, source
+			, update.previousSha256), prior);
+		assert.equal(beforeOwnedWitReceiver(update.path, prior
+			, update.previousSha256), prior);
 		assert.equal(beforeOwnedWitReceiver(update.path, source, update.currentSha256), source);
 		const unknown = source + "\n/* unrecorded edit */\n";
 		assert.equal(beforeOwnedWitReceiver(update.path, unknown), unknown);
@@ -43,11 +50,14 @@ test("WIT receiver history authenticates sources without inflating support", asy
 			, { ...update, path: "unknown.mjs" }])
 			assert.throws(() => reverseOwnedWitReceiverUpdate(source, changed));
 	}
-	const path = "docs/type-surface.v1.json", current = beforeOwnedJvmReceiverGc(path, await readFile(path, "utf8"), record.sources[path]);
-	const prior = JSON.parse(beforeOwnedWitReceiver(path, current));
+	const path = "docs/type-surface.v1.json";
+	const update = record.updates.find(item => item.path === path);
+	const current = bytesAtProducer(ownedWitReceiverProducer, path
+		, record.sources[path]).toString("utf8");
+	const prior = JSON.parse(reverseOwnedWitReceiverUpdate(current, update));
 	for(const evidence of prior.evidence) for(const file of evidence.files)
-		file.sha256 = sha256(ownedJvmReceiverGcHistoricalBytes(file.path
-			, await readFile(file.path), record.sources[file.path] ?? file.sha256));
+		file.sha256 = sha256(bytesAtProducer(ownedWitReceiverProducer
+			, file.path, record.sources[file.path] ?? file.sha256));
 	assert.deepEqual(JSON.parse(current), prior);
 	for(const name of ["model", "resource", "packaging", "resource-packaging", "ci", "evidence"])
 		assert.equal(classifyRepositoryTest(`tests/wit-owned-receiver-${name}.test.mjs`), "contract");

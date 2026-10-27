@@ -98,7 +98,8 @@ test("nominal-entry live-pin repair changes exactly 118 named hashes"
 		for(const pin of nominalSubtypeEntryLivePinRepairPins)
 		{
 			assert.equal(counts.get(pin.path), pin.count, pin.path);
-			assert.equal(sha256(await readFile(pin.path))
+			assert.equal(sha256(git(["show"
+				, `${record.implementationCommit}:${pin.path}`]))
 				, pin.currentSha256, pin.path);
 		}
 	}

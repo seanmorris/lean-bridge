@@ -5,7 +5,6 @@
  */
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { readFile } from "node:fs/promises";
 import test from "node:test";
 import {
 	readTypeSurface, typeSurfaceCells, validateTypeSurface
@@ -19,7 +18,6 @@ import {
 import {
 	sourceAtHistoryMilestone, withHistoryMilestoneSourcePins
 } from "./source-history-test-source.mjs";
-import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import {
 	beforeNestedCheckedRecordNativeCorrectionPins
 } from "./nested-checked-record-native-correction-source-history.mjs";
@@ -163,12 +161,10 @@ test("primitive-base PHP-Wasm promotion supplements six cells only", async () =>
 					beforeNestedCheckedRecordNativeCorrectionPins(
 						await promoteNominalPrimitiveSubtypePhpWasm(original, references)))))));
 	const { document: live, ...contracts } = await readTypeSurface();
-	const history = JSON.parse(await readFile(
-		nominalPrimitiveSubtypePhpWasmPromotionHistoryPath, "utf8"));
-	const expected = history.updates.find(item =>
-		item.path === "docs/type-surface.v1.json").currentSha256;
-	const document = JSON.parse(beforeFinRefinementSource("docs/type-surface.v1.json"
-		, await readFile("docs/type-surface.v1.json", "utf8"), expected));
+	const document = JSON.parse(sourceAtHistoryMilestone(
+		nominalPrimitiveSubtypePhpWasmPromotionHistoryPath
+		, "docs/type-surface.v1.json"
+	));
 	assert.ok(live.evidence.length >= document.evidence.length);
 	validateTypeSurface(proposed, contracts);
 	assert.equal(proposed.evidence.length, original.evidence.length + 4);

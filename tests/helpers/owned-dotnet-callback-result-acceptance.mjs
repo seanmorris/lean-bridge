@@ -5,16 +5,18 @@
  */
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
-import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeOwnedJvmCallbackResults } from "./owned-jvm-callback-result-history.mjs";
+import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { unpackOwnedCallbackReports } from "./owned-callback-result-evidence.mjs";
-import { ownedDotnetCallbackReplay } from "./owned-dotnet-callback-result-replay.mjs";
+import {
+	ownedDotnetCallbackProducer, ownedDotnetCallbackReplay
+} from "./owned-dotnet-callback-result-replay.mjs";
 import { assertOwnedDotnetCallbackRuntime } from "./owned-dotnet-callback-result-evidence.mjs";
 import { assertOwnedDotnetCallbackPackageExecution } from "./owned-dotnet-callback-result-package-execution.mjs";
 import { assertOwnedDotnetCallbackCombinedRelease } from "./owned-dotnet-callback-result-combined-evidence.mjs";
 import { assertOwnedDotnetCallbackResultCi, ownedDotnetCallbackResultReports } from "./owned-dotnet-callback-result-ci.mjs";
 import { ownedDotnetCallbackBaseline, ownedDotnetCallbackChangedPaths
 	, ownedDotnetCallbackHistoryPath, ownedDotnetCallbackHistorySha256 } from "./owned-dotnet-callback-result-history.mjs";
+import { bytesAtProducer } from "./producer-source.mjs";
 
 export const ownedDotnetCallbackEvidencePath = "docs/evidence/owned-dotnet-callback-results-20261002.json";
 export const ownedDotnetCallbackPrevious = Object.freeze({
@@ -59,6 +61,36 @@ const addedPaths = [
 	, ...["results", "combined-results", "host-results", "lifetimes", "host-lifetimes", "transfer-lifetimes", "process"].map(name => `tests/fixtures/structured-types/owned-dotnet-callback-${name}.cs`)
 	, ...["results", "replies"].map(name => `tests/fixtures/documentation/consumers/dotnet/owned-callback-${name}.cs`)
 ];
+const producerReplays = new Map();
+
+const replayAtProducer = async sources => {
+	const canonical = canonicalJson(sources);
+	const identity = sha256(canonical);
+	const cached = producerReplays.get(identity);
+	if(cached !== undefined)
+	{
+		assert.equal(cached.canonical, canonical);
+		return cached.replay;
+	}
+	const snapshot = JSON.parse(canonical);
+	const replay = (async () => {
+		for(const [path, digest] of Object.entries(snapshot))
+			assert.equal(sha256(bytesAtProducer(
+				ownedDotnetCallbackProducer, path, digest)), digest, path);
+		return ownedDotnetCallbackReplay(snapshot);
+	})();
+	producerReplays.set(identity, { canonical, replay });
+	try
+	{
+		return await replay;
+	}
+	catch(error)
+	{
+		if(producerReplays.get(identity)?.replay === replay)
+			producerReplays.delete(identity);
+		throw error;
+	}
+};
 
 /** Preserve every predecessor source and add the .NET compiler and probes. */
 export const ownedDotnetCallbackSourcePaths = async () => {
@@ -116,15 +148,13 @@ export const assertOwnedDotnetCallbackAcceptance = async record => {
 	assert.deepEqual(record.sourceHistory, { path: ownedDotnetCallbackHistoryPath, sha256: ownedDotnetCallbackHistorySha256 });
 	assert.equal(sha256(await readFile(record.sourceHistory.path)), record.sourceHistory.sha256);
 	assert.deepEqual(Object.keys(record.sources).sort(), await ownedDotnetCallbackSourcePaths());
-	for(const [path, digest] of Object.entries(record.sources))
-		assert.equal(sha256(beforeOwnedJvmCallbackResults(path, await readFile(path), digest)), digest, path);
+	const replay = await replayAtProducer(record.sources);
 	assert.deepEqual(record.runs.map(({ name, tests }) => ({ name, tests })), ownedDotnetCallbackRuns);
 	for(const run of record.runs) passed(run, run.tests);
 	assert.equal(record.verification.command, "npm run test:owned-dotnet-callback-evidence");
 	passed(record.verification, 8);
 	const reports = unpackOwnedCallbackReports(record.archive);
 	assert.deepEqual(Object.keys(reports).sort(), [...ownedDotnetCallbackResultReports].sort());
-	const replay = await ownedDotnetCallbackReplay(record.sources);
 	for(const [path, item] of Object.entries(reports)) await assertOwnedDotnetCallbackReport(path, item, replay);
 	assertOwnedDotnetCallbackResultCi(await readFile(".github/workflows/consumer-matrix.yml", "utf8"), JSON.parse(await readFile("package.json", "utf8")));
 };

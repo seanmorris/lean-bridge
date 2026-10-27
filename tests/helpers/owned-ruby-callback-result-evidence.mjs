@@ -16,6 +16,14 @@ import { ownedRubyCallbackMutations } from "./owned-ruby-callback-result-mutatio
 import { ownedRubyCallbackInstalledProbe } from "./owned-ruby-callback-result-installed.mjs";
 import { normalizeOwnedRubySanitizer } from "./owned-ruby-callback-result-sanitizers.mjs";
 
+const current = {
+	createCompiledNativeModel, generateOwnedCPackage, generateOwnedRubyPackage
+	, ownedRubyCallbackResultSource, ownedRubyCallbackResultCombinedSource
+	, ownedRubyCallbackNativeSource, ownedRubyCallbackMutations
+	, ownedRubyCallbackInstalledProbe, normalizeOwnedRubySanitizer
+	, readSource: path => readFile(path, "utf8")
+};
+
 const faults = hostCallbacks => Object.fromEntries([
 	["nativeRecord", 59, 33], ["nativeArgument", 59, 33]
 	, ["nativePassback", 56, 32], ["nativeRawPassback", 56, 32]
@@ -35,8 +43,17 @@ const transfers = () => ["raw", "whole", "native"].flatMap(reply => [
  * Require fresh compiler inputs, exact ownership results and active detectors.
  *
  * @param item - One complete compiled Ruby runtime report.
+ * @param replay - Optional authenticated producer dependencies.
  */
-export const assertOwnedRubyCallbackRuntime = async item => {
+export const assertOwnedRubyCallbackRuntime = async (item, replay) => {
+	const {
+		createCompiledNativeModel, generateOwnedCPackage
+		, generateOwnedRubyPackage, ownedRubyCallbackResultSource
+		, ownedRubyCallbackResultCombinedSource
+		, ownedRubyCallbackNativeSource, ownedRubyCallbackMutations
+		, ownedRubyCallbackInstalledProbe, normalizeOwnedRubySanitizer
+		, readSource
+	} = replay ?? current;
 	assert.ok(["ordinary", "reviewed"].includes(item.mode));
 	assert.ok(["no-host", "host", "combined"].includes(item.name));
 	const combined = item.name === "combined", hostCallbacks = item.name !== "no-host";
@@ -55,8 +72,8 @@ export const assertOwnedRubyCallbackRuntime = async item => {
 	for(const key of ["resultAnchors", "inputTransfers", "receiverExports"])
 		assert.equal(Boolean(model.ownedGraph[key]), combined, key);
 	assert.equal(Boolean(item.input.sourceIdentity.reviewedBindingIr), item.mode === "reviewed");
-	assert.equal(item.input.sourceIdentity.extractorSha256, sha256(beforeFinRefinementSource("src/analyze/NativeExports.lean", await readFile("src/analyze/NativeExports.lean"), item.input.sourceIdentity.extractorSha256)));
-	const lean = await readFile("tests/fixtures/onboarding/owned-aggregates/Owned.lean", "utf8");
+	assert.equal(item.input.sourceIdentity.extractorSha256, sha256(beforeFinRefinementSource("src/analyze/NativeExports.lean", await readSource("src/analyze/NativeExports.lean"), item.input.sourceIdentity.extractorSha256)));
+	const lean = await readSource("tests/fixtures/onboarding/owned-aggregates/Owned.lean");
 	assert.equal(item.input.sourceIdentity.modules.find(value => value.module === "Owned").source.sha256
 		, sha256(lean + (combined ? ownedRubyCallbackResultCombinedSource : ownedRubyCallbackResultSource)));
 	const c = generateOwnedCPackage(item.input);
@@ -70,8 +87,8 @@ export const assertOwnedRubyCallbackRuntime = async item => {
 		, ["runtimeSha256", generated.files[`lib/${generated.requirePath}/owned.rb`]]
 	]) assert.equal(item[field], sha256(text), field);
 	const prefix = `HOST_CALLBACKS = ${hostCallbacks}\nCOMBINED = ${combined}\n`;
-	assert.equal(item.probeSha256, sha256(prefix + await readFile("tests/fixtures/structured-types/owned-ruby-callback-results.rb", "utf8")));
-	assert.equal(item.helpersSha256, sha256(await readFile("tests/fixtures/structured-types/owned-ruby-probe.rb")));
+	assert.equal(item.probeSha256, sha256(prefix + await readSource("tests/fixtures/structured-types/owned-ruby-callback-results.rb")));
+	assert.equal(item.helpersSha256, sha256(await readSource("tests/fixtures/structured-types/owned-ruby-probe.rb")));
 	assert.deepEqual(item.contract, generated.contract); assert.equal(item.contract.schemaVersion, 5);
 	assert.equal(item.actualLean, true); assert.equal(item.installedPackage, false); assert.equal(item.restored, true);
 	const mutations = ownedRubyCallbackMutations(generated, hostCallbacks)

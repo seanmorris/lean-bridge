@@ -5,6 +5,10 @@
  *
  * @file
  */
+// Type-surface history checks enumerate this original archive through dynamic
+// file paths rather than a literal path in their executable source closure.
+// core-evidence-prefix: reviewed-fin-
+// core-evidence-prefix: python-refinements-
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";

@@ -11,6 +11,7 @@ import { beforePostPerlCallbackStaging
 	, postPerlCallbackNormalizationPaths } from "./post-perl-callback-staging-history.mjs";
 
 export const ownedWitProjectionBaseline = "4103db9893bd8addb0715cd74f856b3c961bafe9";
+export const ownedWitProjectionProducer = "f79432dac08bcaf4a7ff6d6c369956961ad2d391";
 export const ownedWitProjectionPath = "docs/evidence/wit-owned-projection-20260928.json";
 export const ownedWitProjectionPrevious = Object.freeze({
 	path: "docs/evidence/core-history-performance-20260928.json"

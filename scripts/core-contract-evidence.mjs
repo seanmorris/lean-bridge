@@ -38,6 +38,16 @@ const selectorPattern = /[A-Za-z0-9][A-Za-z0-9-]{10,}/gu;
 const explicitPrefixPattern
 	= /core-evidence-prefix:\s*([A-Za-z0-9][A-Za-z0-9-]{10,})/gu;
 
+const explicitEvidenceDirectoryReferences = (source, directories) => {
+	const selected = new Set();
+	for(const match of source.matchAll(explicitPrefixPattern))
+		for(const directory of directories)
+			if(directory.startsWith(match[1])
+				&& /^\d{8}$/u.test(directory.slice(match[1].length)))
+				selected.add(directory);
+	return selected;
+};
+
 const exists = async path => {
 	try
 	{ return (await stat(path)).isFile(); }
@@ -210,11 +220,8 @@ export const coreContractEvidenceDirectoryReferences = (
 			|| fragment.endsWith(`/docs/evidence/${name}`)
 			|| fragment.startsWith(`docs/evidence/${name}/`)
 			|| fragment === `docs/evidence/${name}`)));
-	for(const match of source.matchAll(explicitPrefixPattern))
-		for(const directory of directories)
-			if(directory.startsWith(match[1])
-				&& /^\d{8}$/u.test(directory.slice(match[1].length)))
-				selected.add(directory);
+	for(const directory of explicitEvidenceDirectoryReferences(
+		source, directories)) selected.add(directory);
 	const enumeratesEvidence = enumeratesEvidenceDirectories(source, path);
 	const selectors = new Set((enumeratesEvidence
 		&& replaysEnumeratedEvidenceDirectories(source, path) ? fragments : [])
@@ -491,9 +498,10 @@ export const collectCoreContractEvidencePlan = async (
 		{
 			for(const file of coreContractExecutableEvidenceFiles(
 				source, path, evidenceFileSet)) selectedFiles.add(file);
-			if(!/-source-history[.]mjs$/u.test(path))
-				for(const directory of coreContractEvidenceDirectoryReferences(
-					source, path, directories)) selectedDirectories.add(directory);
+			const references = /-source-history[.]mjs$/u.test(path)
+				? explicitEvidenceDirectoryReferences(source, directories)
+				: coreContractEvidenceDirectoryReferences(source, path, directories);
+			for(const directory of references) selectedDirectories.add(directory);
 		}
 		for(const reference of await repositorySourceReferences(source, path, root))
 			if(!sources.has(reference)) pending.push(reference);

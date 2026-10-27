@@ -5,19 +5,21 @@
  */
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
-import { dirname, join } from "node:path";
-import ts from "typescript";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { packOwnedCallbackReports, unpackOwnedCallbackReports } from "./owned-callback-result-evidence.mjs";
-import { beforePostPerlCallbackStaging } from "./post-perl-callback-staging-history.mjs";
-import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
-import { assertOwnedPerlCallbackVariantMatrix, assertOwnedPerlCallbackVariantLog
+import { beforePostPerlCallbackStaging }
+	from "./post-perl-callback-staging-history.mjs";
+import { assertOwnedPerlCallbackVariantLog
 	, assertOwnedPerlCallbackVariantTap
 	, ownedPerlCallbackVariantReports } from "./owned-perl-callback-result-variant-evidence.mjs";
-import { assertOwnedPerlCallbackResultCi, ownedPerlCallbackExecutionPaths
-	, ownedPerlCallbackEvidencePaths } from "./owned-perl-callback-result-ci.mjs";
+import { ownedPerlCallbackExecutionPaths, ownedPerlCallbackEvidencePaths }
+	from "./owned-perl-callback-result-ci.mjs";
 import { perlVariantBaseline, perlVariantHistoryPath, perlVariantHistorySha256
-	, perlVariantPredecessor, perlVariantChangedPaths, readPerlVariantHistory } from "./owned-perl-callback-result-variant-history.mjs";
+	, perlVariantPredecessor, readPerlVariantHistory } from "./owned-perl-callback-result-variant-history.mjs";
+import { moduleAtProducerWithSourceReads } from "./producer-module.mjs";
+import {
+	authenticateProducerSources, bytesAtProducer
+} from "./producer-source.mjs";
 
 const keys = (value, names) => assert.deepEqual(Object.keys(value).sort(), names.split(" ").sort());
 const freeze = value => {
@@ -55,6 +57,7 @@ export const perlVariantRunSlots = freeze([
 	, { name: "remaining-three", reports: ownedPerlCallbackVariantReports.slice(1) }
 ]);
 export const perlVariantVerificationCommand = "LEAN_BRIDGE_OWNED_PERL_CALLBACK_RESULT_EVIDENCE_TEST=1 node --test tests/helpers/owned-perl-callback-result-variant-evidence-tests.mjs";
+export const perlVariantProducer = "fa51434d712136f38b6b0f88d9361494a32eda3a";
 const helper = name => `tests/helpers/owned-perl-callback-result-variant-${name}.mjs`;
 export const perlVariantClosureRoots = freeze([
 	...ownedPerlCallbackExecutionPaths, ...ownedPerlCallbackEvidencePaths
@@ -63,42 +66,89 @@ export const perlVariantClosureRoots = freeze([
 	, "scripts/update-owned-perl-callback-variant-history.mjs"
 	, "scripts/record-owned-perl-callback-variants.mjs"
 ]);
+let producerPromise;
+const producerModule = () => producerPromise ??= Promise.all([
+	moduleAtProducerWithSourceReads(perlVariantProducer
+		, helper("acceptance"))
+	, moduleAtProducerWithSourceReads(perlVariantProducer
+		, helper("evidence"))
+	, moduleAtProducerWithSourceReads(perlVariantProducer
+		, "tests/helpers/owned-perl-callback-result-ci.mjs")
+]).then(([acceptance, evidence, ci]) => ({
+	sourcePaths: acceptance.perlVariantSourcePaths
+	, assertMatrix: evidence.assertOwnedPerlCallbackVariantMatrix
+	, assertCi: ci.assertOwnedPerlCallbackResultCi
+}));
 
 /** Bind predecessor coverage, installed CLI inputs, and the full local import closure. */
-export const perlVariantSourcePaths = async () => {
-	const predecessor = await readFile(perlVariantPredecessor.path);
-	assert.equal(sha256(predecessor), perlVariantPredecessor.sha256);
-	const paths = new Set([...Object.keys(JSON.parse(predecessor).sources)
-		, ...perlVariantChangedPaths, perlVariantHistoryPath
-		, perlVariantPredecessor.path
-		, perlVariantEvidenceDocument, "config/cli-package.v1.json"
-		, "docs/evidence/post-perl-callback-staging-source-history-20261003.json"
-		, "docs/evidence/wit-callback-runtime-staging-source-history-20261003.json"
-		, "tests/fixtures/structured-types/owned-perl-callback-results-variants-installed.pl"
-		, ...JSON.parse(beforeFinRefinementSource("config/cli-package.v1.json", await readFile("config/cli-package.v1.json", "utf8"))).files]);
-	const pending = [...perlVariantClosureRoots], visited = new Set();
-	while(pending.length)
+export const perlVariantSourcePaths = async () =>
+	[...await (await producerModule()).sourcePaths()];
+
+const producerReplays = new Map();
+const replayAtProducer = async sources => {
+	const canonical = canonicalJson(sources), identity = sha256(canonical);
+	const cached = producerReplays.get(identity);
+	if(cached !== undefined)
 	{
-		const path = pending.pop();
-		if(visited.has(path)) continue;
-		visited.add(path); paths.add(path);
-		if(!path.endsWith(".mjs")) continue;
-		const tree = ts.createSourceFile(path, beforeFinRefinementSource(path, await readFile(path, "utf8")), ts.ScriptTarget.Latest, true, ts.ScriptKind.JS);
-		const visit = node => {
-			const specifier = ts.isImportDeclaration(node) || ts.isExportDeclaration(node) ? node.moduleSpecifier
-				: ts.isCallExpression(node) && node.expression.kind === ts.SyntaxKind.ImportKeyword ? node.arguments[0] : null;
-			if(specifier && ts.isStringLiteral(specifier) && specifier.text.startsWith(".")) pending.push(join(dirname(path), specifier.text));
-			ts.forEachChild(node, visit);
-		};
-		visit(tree);
+		assert.equal(cached.canonical, canonical);
+		return cached.replay;
 	}
-	assert.equal(paths.delete("tests/helpers/php-callback-installed-staging-history.mjs"), true);
-	assert.equal(paths.delete("tests/helpers/php-callback-acceptance-history.mjs"), true);
-	assert.equal(paths.delete("tests/helpers/php-wasm-callback-result-acceptance-history.mjs"), true);
-	assert.equal(paths.delete("tests/helpers/wit-callback-acceptance-history.mjs"), true);
-	assert.equal(paths.delete("tests/helpers/wit-callback-installed-acceptance-history.mjs"), true);
-	assert.equal(paths.has(perlVariantEvidencePath), false);
-	return [...paths].sort();
+	const snapshot = JSON.parse(canonical);
+	const replay = (async () => {
+		const producer = await producerModule();
+		assert.deepEqual(Object.keys(snapshot), await producer.sourcePaths());
+		authenticateProducerSources(perlVariantProducer, snapshot);
+		const readSource = async path => {
+			assert.ok(Object.hasOwn(snapshot, path), path);
+			return bytesAtProducer(perlVariantProducer, path, snapshot[path]);
+		};
+		return { identity, readSource
+			, assertMatrix: producer.assertMatrix, assertCi: producer.assertCi };
+	})();
+	producerReplays.set(identity, { canonical, replay });
+	try
+	{
+		return await replay;
+	}
+	catch(error)
+	{
+		if(producerReplays.get(identity)?.replay === replay)
+			producerReplays.delete(identity);
+		throw error;
+	}
+};
+
+const matrixReplays = new Map();
+const matrixAtProducer = async (archive, reports, replay) => {
+	const canonical = canonicalJson(archive);
+	const identity = sha256(replay.identity + canonical);
+	const cached = matrixReplays.get(identity);
+	if(cached !== undefined)
+	{
+		assert.equal(cached.canonical, canonical);
+		return cached.result;
+	}
+	const expected = new Map(
+		reports[ownedPerlCallbackVariantReports[0]].cli.files
+			.map(item => [item.path, item.sha256]));
+	const readSource = async path => {
+		const source = await replay.readSource(path);
+		const digest = expected.get(path);
+		return digest === undefined ? source
+			: beforePostPerlCallbackStaging(path, source, digest);
+	};
+	const result = replay.assertMatrix(reports, readSource);
+	matrixReplays.set(identity, { canonical, result });
+	try
+	{
+		return await result;
+	}
+	catch(error)
+	{
+		if(matrixReplays.get(identity)?.result === result)
+			matrixReplays.delete(identity);
+		throw error;
+	}
 };
 
 /**
@@ -166,15 +216,10 @@ export const assertPerlVariantAcceptance = async record => {
 		assertOwnedPerlCallbackVariantLog(raw, names, reports);
 	}
 	await assertPerlVariantVerification(record.verification);
-	assert.deepEqual(Object.keys(record.sources), await perlVariantSourcePaths());
-	for(const [path, digest] of Object.entries(record.sources))
-		assert.equal(sha256(beforePostPerlCallbackStaging(path, await readFile(path), digest)), digest, path);
-	assertOwnedPerlCallbackResultCi(await readFile(".github/workflows/consumer-matrix.yml", "utf8"), JSON.parse(await readFile("package.json", "utf8")));
-	const expected = new Map(reports[ownedPerlCallbackVariantReports[0]].cli.files.map(value => [value.path, value.sha256]));
-	const readSource = async path => {
-		assert.ok(Object.hasOwn(record.sources, path), path);
-		const bytes = await readFile(path), digest = expected.get(path) ?? record.sources[path];
-		return beforePostPerlCallbackStaging(path, bytes, digest);
-	};
-	assert.deepEqual(await assertOwnedPerlCallbackVariantMatrix(reports, readSource), perlVariantCounts);
+	const replay = await replayAtProducer(record.sources);
+	replay.assertCi(
+		(await replay.readSource(".github/workflows/consumer-matrix.yml")).toString()
+		, JSON.parse(await replay.readSource("package.json")));
+	assert.deepEqual(await matrixAtProducer(record.archive, reports, replay)
+		, perlVariantCounts);
 };

@@ -10,20 +10,13 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import {
-	beforeDefaultBranchCiTriggerBudgetSource
-} from "./default-branch-ci-trigger-budget-source-history.mjs";
-import {
-	beforeBoundedRecurringAcceptanceSweepSource
-} from "./bounded-recurring-acceptance-sweep-source-history.mjs";
-import {
-	beforeCallbackSubtypeBrowserArtifactSource
-} from "./callback-subtype-browser-artifact-source-history.mjs";
-import {
 	callbackSubtypeBrowserCiAddedPaths
+	, callbackSubtypeBrowserCiHistoryCommit
 	, callbackSubtypeBrowserCiHistoryPath
 	, callbackSubtypeBrowserCiImplementation
 	, callbackSubtypeBrowserCiPredecessor
 } from "./callback-subtype-browser-ci-source-history.mjs";
+import { sourceAtProducer } from "./producer-source.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 
 test("callback Subtype browser CI history authenticates every added source", async () => {
@@ -44,17 +37,8 @@ test("callback Subtype browser CI history authenticates every added source", asy
 		assert.equal(execFileSync("git", ["ls-tree", "--name-only"
 			, callbackSubtypeBrowserCiPredecessor, "--", addition.path]
 		, { encoding: "utf8" }).trim(), "", addition.path);
-		const recurring = beforeBoundedRecurringAcceptanceSweepSource(
-			addition.path, await readFile(addition.path, "utf8")
-			, addition.currentSha256
-		);
-		const current = beforeDefaultBranchCiTriggerBudgetSource(
-			addition.path, recurring, addition.currentSha256
-		);
-		const source = beforeCallbackSubtypeBrowserArtifactSource(
-			addition.path, current
-			, addition.currentSha256
-		);
+		const source = sourceAtProducer(callbackSubtypeBrowserCiHistoryCommit
+			, addition.path, addition.currentSha256);
 		assert.equal(sha256(source)
 			, addition.currentSha256, addition.path);
 	}

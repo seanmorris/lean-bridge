@@ -8,9 +8,11 @@ import { execFileSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
-import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { recursiveSubtypePhpWasmProducer } from "./recursive-subtype-php-wasm-evidence.mjs";
 import { recursiveSubtypePhpWasmPromotionHistoryPath } from "./recursive-subtype-php-wasm-promotion-history.mjs";
+import {
+	sourceAtHistoryMilestone, withHistoryMilestoneSourcePins
+} from "./source-history-test-source.mjs";
 import {
 	promoteRecursiveSubtypePhpWasm
 	, recursiveSubtypePhpWasmConversion
@@ -74,14 +76,16 @@ test("recursive checked PHP-Wasm promotion rejects narrowed or changed reference
 
 test("recursive checked PHP-Wasm promotion supplements exactly six existing cells", async () => {
 	const original = predecessor(), references = await recursiveSubtypePhpWasmReferences();
-	const proposed = await promoteRecursiveSubtypePhpWasm(original, references);
+	const proposed = withHistoryMilestoneSourcePins(
+		recursiveSubtypePhpWasmPromotionHistoryPath
+		, await promoteRecursiveSubtypePhpWasm(original, references)
+	);
 	const { document: published, ...contracts } = await readTypeSurface();
 	validateTypeSurface(proposed, contracts);
 	const inventoryPath = "docs/type-surface.v1.json";
-	const ledger = JSON.parse(await readFile(recursiveSubtypePhpWasmPromotionHistoryPath, "utf8"));
-	// Newer layers append receipts and supplement cells; strip them before comparing this layer's exact output.
-	const document = JSON.parse(beforeFinRefinementSource(inventoryPath, await readFile(inventoryPath, "utf8")
-		, ledger.updates.find(item => item.path === inventoryPath).currentSha256));
+	const document = JSON.parse(sourceAtHistoryMilestone(
+		recursiveSubtypePhpWasmPromotionHistoryPath, inventoryPath
+	));
 	assert.deepEqual(published.evidence.slice(0, document.evidence.length).map(entry => entry.id)
 		, document.evidence.map(entry => entry.id));
 	assert.deepEqual(document.observations, proposed.observations);

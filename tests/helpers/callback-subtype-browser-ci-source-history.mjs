@@ -10,6 +10,8 @@ export const callbackSubtypeBrowserCiPredecessor
 	= "0d757d45caa8118e62ab7dad4a1f6a49ff665147";
 export const callbackSubtypeBrowserCiImplementation
 	= "228cbffa2c746b150df2a1deafe4fbb03abfcbaf";
+export const callbackSubtypeBrowserCiHistoryCommit
+	= "fd80f73a1d9ac1d4e006dd98a77dccaad9ae25db";
 export const callbackSubtypeBrowserCiAddedPaths = Object.freeze([
 	".github/workflows/callback-subtype-browser.yml"
 	, "scripts/check-callback-subtype-browser-ci.mjs"

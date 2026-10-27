@@ -5,12 +5,10 @@
  */
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { compileDocumentationPage } from "../../scripts/generate-site-content.mjs";
 import { docPages } from "../../site/registry.mjs";
-import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeNominalPrimitiveSubtypeJvmPromotionPins } from "./nominal-primitive-subtype-jvm-promotion-history.mjs";
 import { nominalPrimitiveSubtypeWitPromotionHistoryPath, nominalPrimitiveSubtypeWitPromotionPredecessor } from "./nominal-primitive-subtype-wit-promotion-history.mjs";
 import {
@@ -123,10 +121,9 @@ test("primitive-base WIT promotion supplements six cells only", async () => {
 	const { document: published, ...contracts } = await readTypeSurface();
 	validateTypeSurface(proposed, contracts);
 	const inventoryPath = "docs/type-surface.v1.json";
-	const ledger = JSON.parse(await readFile(nominalPrimitiveSubtypeWitPromotionHistoryPath, "utf8"));
-	// Newer layers append receipts and supplement cells; strip them before comparing this layer's exact output.
-	const document = JSON.parse(beforeFinRefinementSource(inventoryPath, await readFile(inventoryPath, "utf8")
-		, ledger.updates.find(item => item.path === inventoryPath).currentSha256));
+	const document = JSON.parse(sourceAtHistoryMilestone(
+		nominalPrimitiveSubtypeWitPromotionHistoryPath, inventoryPath
+	));
 	assert.deepEqual(published.evidence.slice(0, document.evidence.length).map(entry => entry.id)
 		, document.evidence.map(entry => entry.id));
 	assert.equal(proposed.evidence.length, original.evidence.length + 4);

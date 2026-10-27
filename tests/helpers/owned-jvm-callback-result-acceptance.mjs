@@ -5,7 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
-import { sha256 } from "../../src/capsule/node.mjs";
+import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { unpackOwnedCallbackReports } from "./owned-callback-result-evidence.mjs";
 import { assertOwnedJvmCallbackRuntime } from "./owned-jvm-callback-result-runtime-evidence.mjs";
 import { assertOwnedJvmCallbackPackageExecution } from "./owned-jvm-callback-result-package-evidence.mjs";
@@ -121,6 +121,35 @@ const addedPaths = [
 	, "tests/owned-jvm-callback-result-sanitizers.test.mjs"
 	, "tests/owned-jvm-callback-results.test.mjs"
 ];
+const producerReplays = new Map();
+
+const replayAtProducer = async sources => {
+	const canonical = canonicalJson(sources);
+	const identity = sha256(canonical);
+	const cached = producerReplays.get(identity);
+	if(cached !== undefined)
+	{
+		assert.equal(cached.canonical, canonical);
+		return cached.replay;
+	}
+	const snapshot = JSON.parse(canonical);
+	const replay = (async () => {
+		const historical = await ownedJvmCallbackReplay(snapshot);
+		for(const path of Object.keys(snapshot)) await historical.readBytes(path);
+		return historical;
+	})();
+	producerReplays.set(identity, { canonical, replay });
+	try
+	{
+		return await replay;
+	}
+	catch(error)
+	{
+		if(producerReplays.get(identity)?.replay === replay)
+			producerReplays.delete(identity);
+		throw error;
+	}
+};
 
 /** Preserve all predecessor source coverage and require every new JVM input. */
 export const ownedJvmCallbackSourcePaths = async () => {
@@ -220,9 +249,8 @@ export const assertOwnedJvmCallbackAcceptance = async record => {
 	assert.deepEqual(record.sourceHistory, { path: ownedJvmCallbackHistoryPath, sha256: ownedJvmCallbackHistorySha256 });
 	assert.equal(sha256(await readFile(record.sourceHistory.path)), record.sourceHistory.sha256);
 	assert.deepEqual(Object.keys(record.sources).sort(), await ownedJvmCallbackSourcePaths());
-	const replay = await ownedJvmCallbackReplay(record.sources);
+	const replay = await replayAtProducer(record.sources);
 	const readSource = replay.readBytes;
-	for(const path of Object.keys(record.sources)) await readSource(path);
 	assert.deepEqual(record.runs.map(({ name, tests }) => ({ name, tests })), ownedJvmCallbackRuns);
 	for(const run of record.runs)
 	{

@@ -132,6 +132,28 @@ test("Core evidence planning closes dynamic callback and dependent lanes", async
 		, ownedDirectories)].sort(), ownedDirectories.sort());
 });
 
+test("Core evidence planning closes native specialization inventory files", async () => {
+	const source = await readFile(
+		"tests/helpers/native-specialization-closure.mjs", "utf8");
+	const available = [
+		"generic-record-specializations-20990101"
+		, "unrelated-specializations-20990101"
+	];
+	assert.deepEqual([...coreContractEvidenceDirectoryReferences(
+		source, "tests/helpers/native-specialization-closure.mjs", available)]
+		, ["generic-record-specializations-20990101"]);
+});
+
+test("Core evidence planning closes the original reviewed Fin archive", async () => {
+	const source = await readFile(
+		"tests/helpers/fin-refinement-source-history.mjs", "utf8");
+	const available = ["python-refinements-20990101"
+		, "reviewed-fin-20990101", "reviewed-fin-hosts-20990101"];
+	assert.deepEqual([...coreContractEvidenceDirectoryReferences(
+		source, "tests/helpers/fin-refinement-source-history.mjs", available)]
+		, ["reviewed-fin-20990101", "python-refinements-20990101"]);
+});
+
 test("Core evidence planning ignores rendered documentation links in code", () => {
 	const source = 'const prose = "[record](../evidence/owned-subtype-jvm-hosted-20990101/index.json)";';
 	assert.deepEqual([...coreContractEvidenceDirectoryReferences(
@@ -257,15 +279,24 @@ test("one exact workflow receipt closes repeated type-surface reads", async t =>
 	assert.deepEqual(await coreTypeSurfaceEvidenceReceipt(path), receipt);
 	assert.equal((await readTypeSurface({ evidenceReceipt: path }))
 		.document.contractVersion, document.contractVersion);
-	const [shard, corpus] = await Promise.all([
+	const [shard, reviewedFinShard, pythonRefinementShard, corpus]
+		= await Promise.all([
 		collectCoreContractEvidencePlan("1/12", resolve(".")
 			, { evidenceReceipt: path })
+		, collectCoreContractEvidencePlan("10/12", resolve(".")
+			, { evidenceReceipt: path })
+		, collectCoreContractEvidencePlan("11/12", resolve(".")
+			, { evidenceReceipt: path })
 		, collectCoreTypeSurfaceEvidencePlan()
-	]);
+		]);
 	assert.equal(shard.evidence.completeTypeSurface, true);
 	assert.equal(shard.evidence.typeSurfaceAuthentication
 		, "workflow-receipt-v1");
 	assert.ok(shard.evidence.directoryCount < corpus.evidence.directoryCount);
+	assert.ok(reviewedFinShard.evidence.directories.includes(
+		"reviewed-fin-20261007"));
+	assert.ok(pythonRefinementShard.evidence.directories.includes(
+		"python-refinements-20261007"));
 	for(const forged of [
 		{ ...receipt, commit: "0".repeat(40) }
 		, { ...receipt, evidence: { ...receipt.evidence, count: 0 } }

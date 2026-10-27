@@ -11,6 +11,7 @@ import { beforeOwnedJvmReceiverGc, ownedJvmReceiverGcNormalizationPaths } from "
 
 export const ownedWitReceiverPath = "docs/evidence/wit-owned-receivers-20261001.json";
 export const ownedWitReceiverBaseline = "3195b47fc2ef224a6b4d92501e0dadefb3b9a1f0";
+export const ownedWitReceiverProducer = "2ce50a51702a6510821197c0476eb95b08a0e359";
 export const ownedWitReceiverPrevious = Object.freeze({
 	path: "docs/evidence/owned-javascript-receivers-20261001.json"
 	, sha256: "ae137472164b6ae655dd6ace10465673fda2448b2d9dabfbeb0d5253e2e8b51d"

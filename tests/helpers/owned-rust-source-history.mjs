@@ -9,6 +9,7 @@ import { sha256 } from "./source-history-digest.mjs";
 import { beforeOwnedPython } from "./owned-python-source-history.mjs";
 
 export const ownedRustBaseline = "16e4ef6994b2594bf87e0b2805a85b437c53f091";
+export const ownedRustProducer = "78d2e09252d81f0b123d6175bb6ea454c9205577";
 export const ownedRustHistoryPath = "docs/evidence/owned-rust-integration-20260927.json";
 export const ownedRustExecutionPath = "docs/evidence/owned-rust-execution-20260927.json";
 export const ownedRustChangedPaths = [

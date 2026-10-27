@@ -5,7 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
-import { sha256 } from "../../src/capsule/node.mjs";
+import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { validatePackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
 import { assertOwnedRubyCallbackRuntime } from "./owned-ruby-callback-result-evidence.mjs";
 import { assertOwnedRubyCallbackPackage, assertOwnedRubyCallbackPackageInputs } from "./owned-ruby-callback-result-package-evidence.mjs";
@@ -15,8 +15,10 @@ import { assertOwnedRubyCallbackResultCi, ownedRubyCallbackResultReports } from 
 import { ownedRubyCallbackBaseline, ownedRubyCallbackChangedPaths
 	, ownedRubyCallbackHistoryPath, ownedRubyCallbackHistorySha256 } from "./owned-ruby-callback-result-history.mjs";
 import { unpackOwnedCallbackReports } from "./owned-callback-result-evidence.mjs";
-import { beforeOwnedDotnetCallbackResults } from "./owned-dotnet-callback-result-history.mjs";
-import { ownedDotnetCallbackReplay } from "./owned-dotnet-callback-result-replay.mjs";
+import {
+	ownedDotnetCallbackReplay, ownedRubyCallbackProducer
+} from "./owned-dotnet-callback-result-replay.mjs";
+import { bytesAtProducer } from "./producer-source.mjs";
 
 export const ownedRubyCallbackEvidencePath = "docs/evidence/owned-ruby-callback-results-20261002.json";
 export const ownedRubyCallbackPrevious = Object.freeze({
@@ -69,6 +71,36 @@ const addedPaths = [
 const current = {
 	ownedRubyCallbackInstalledProbe
 	, readSource: path => readFile(path, "utf8")
+};
+const producerReplays = new Map();
+
+const replayAtProducer = async sources => {
+	const canonical = canonicalJson(sources);
+	const identity = sha256(canonical);
+	const cached = producerReplays.get(identity);
+	if(cached !== undefined)
+	{
+		assert.equal(cached.canonical, canonical);
+		return cached.replay;
+	}
+	const snapshot = JSON.parse(canonical);
+	const replay = (async () => {
+		for(const [path, digest] of Object.entries(snapshot))
+			assert.equal(sha256(bytesAtProducer(
+				ownedRubyCallbackProducer, path, digest)), digest, path);
+		return ownedDotnetCallbackReplay(snapshot);
+	})();
+	producerReplays.set(identity, { canonical, replay });
+	try
+	{
+		return await replay;
+	}
+	catch(error)
+	{
+		if(producerReplays.get(identity)?.replay === replay)
+			producerReplays.delete(identity);
+		throw error;
+	}
 };
 
 /** Preserve predecessor coverage and include all Ruby acceptance inputs. */
@@ -130,7 +162,7 @@ export const assertOwnedRubyCallbackReport = async (path, item, replay) => {
 	if(name.startsWith("runtime-"))
 	{
 		assert.equal(name, `runtime-${item.mode}-${item.name}`);
-		return assertOwnedRubyCallbackRuntime(item);
+		return assertOwnedRubyCallbackRuntime(item, replay);
 	}
 	const mode = name.startsWith("ordinary-") ? "ordinary" : "reviewed";
 	assert.equal(item.mode, mode);
@@ -152,8 +184,7 @@ export const assertOwnedRubyCallbackAcceptance = async record => {
 	assert.deepEqual(record.sourceHistory, { path: ownedRubyCallbackHistoryPath, sha256: ownedRubyCallbackHistorySha256 });
 	assert.equal(sha256(await readFile(record.sourceHistory.path)), record.sourceHistory.sha256);
 	assert.deepEqual(Object.keys(record.sources).sort(), await ownedRubyCallbackSourcePaths());
-	for(const [path, digest] of Object.entries(record.sources))
-		assert.equal(sha256(beforeOwnedDotnetCallbackResults(path, await readFile(path), digest)), digest, path);
+	const replay = await replayAtProducer(record.sources);
 	assert.equal(record.run.command, "npm run test:owned-ruby-callback-results"); assert.equal(record.run.exitCode, 0);
 	assert.equal(record.run.sha256, sha256(record.run.text));
 	for(const [key, count] of Object.entries({ tests: 12, pass: 12, fail: 0, cancelled: 0, skipped: 0, todo: 0 }))
@@ -161,7 +192,6 @@ export const assertOwnedRubyCallbackAcceptance = async record => {
 	assert.doesNotMatch(record.run.text, /^not ok|# SKIP|# TODO/mu);
 	const reports = unpackOwnedCallbackReports(record.archive);
 	assert.deepEqual(Object.keys(reports).sort(), [...ownedRubyCallbackResultReports].sort());
-	const replay = await ownedDotnetCallbackReplay(record.sources);
 	for(const [path, item] of Object.entries(reports))
 		await assertOwnedRubyCallbackReport(path, item, replay);
 	assertOwnedRubyCallbackResultCi(await readFile(".github/workflows/consumer-matrix.yml", "utf8"), JSON.parse(await readFile("package.json", "utf8")));
