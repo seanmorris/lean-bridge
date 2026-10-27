@@ -6,16 +6,17 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
-import { readTypeSurface } from "../../src/adoption/type-surface.mjs";
-import { historicalTypeSurfaceCells as typeSurfaceCells } from "./historical-type-surface-cells.mjs";
 import { moduleAtProducer } from "./producer-module.mjs";
+import {
+	bytesAtProducer, sourceAtProducer, typeSurfaceContractsAtProducer
+} from "./producer-source.mjs";
 import { ownedHostExecutionSources, assertOwnedHostIntegration } from "./owned-host-evidence.mjs";
 import { ownedHostHistoryPath } from "./owned-host-source-history.mjs";
 import { ownedCiHistoryPath } from "./owned-ci-source-history.mjs";
 import { ownedCppBaseline, ownedCppChangedPaths, ownedCppAddedPaths, ownedCppExecutionPath, reverseOwnedCppUpdate } from "./owned-cpp-source-history.mjs";
 import { ownedCppOrderHistoricalBytes } from "./owned-cpp-order-history.mjs";
 
-const ownedCppProducer = "511f43f1b02a6bddb5517f47a497e8eda766a065";
+export const ownedCppProducer = "511f43f1b02a6bddb5517f47a497e8eda766a065";
 let producerPromise;
 const producerAtMilestone = () => producerPromise ??= Promise.all([
 	"src/build/native-graph-model.mjs"
@@ -23,6 +24,11 @@ const producerAtMilestone = () => producerPromise ??= Promise.all([
 	, "src/backends/cpp/owned-package.mjs"
 ].map(path => moduleAtProducer(ownedCppProducer, path))).then(modules =>
 	Object.assign({}, ...modules));
+const historicalBytes = (path, expected) => {
+	const bytes = bytesAtProducer(ownedCppProducer, path);
+	return sha256(bytes) === expected ? bytes
+		: ownedCppOrderHistoricalBytes(path, bytes, expected);
+};
 
 export const ownedCppCommands = {
 	core: "LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-cpp-runtime.test.mjs tests/owned-cpp-callables.test.mjs"
@@ -152,7 +158,8 @@ export const assertOwnedCppExecution = async record => {
 	for(const [name, count] of Object.entries({ core: 13, packages: 5, cPackages: 8, contracts: 55 }))
 		passing(record.runs[name], ownedCppCommands[name], count);
 	assert.deepEqual(Object.keys(record.sources).sort(), ownedCppExecutionSources);
-	for(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(ownedCppOrderHistoricalBytes(path, await readFile(path), digest)), digest, path);
+	for(const [path, digest] of Object.entries(record.sources))
+		assert.equal(sha256(historicalBytes(path, digest)), digest, path);
 	for(const collection of [record.runtime, record.packages, record.cPackages.aggregates, record.cPackages.callbacks])
 		assert.deepEqual(Object.keys(collection).sort(), ["ordinary", "reviewed"]);
 	assert.deepEqual(Object.keys(record.inputs).sort(), ["owned-aggregates", "owned-host-callbacks"]);
@@ -181,7 +188,11 @@ export const assertOwnedCppExecution = async record => {
 			assert.deepEqual(report.sanitizedResult, { checks: functional + 94, faultChecks: 94, allocationFailures: 45, live: 0, identities: 0 });
 			if(fixture === "owned-host-callbacks")
 			{
-				const runtime = record.runtime[mode], template = await readFile("tests/fixtures/structured-types/owned-cpp-runtime.cpp", "utf8");
+				const runtime = record.runtime[mode], template = sourceAtProducer(
+					ownedCppProducer
+					, "tests/fixtures/structured-types/owned-cpp-runtime.cpp"
+					, record.sources["tests/fixtures/structured-types/owned-cpp-runtime.cpp"]
+				);
 				assert.equal(runtime.sourceIdentitySha256, report.sourceIdentitySha256);
 				assert.equal(runtime.headerSha256, report.valuesSha256);
 				assert.equal(runtime.templateSha256, sha256(template));
@@ -224,7 +235,8 @@ export const assertOwnedCppIntegration = async record => {
 	const updates = new Map(record.updates.map(update => [update.path, update])), restored = {};
 	for(const path of paths)
 	{
-		const current = ownedCppOrderHistoricalBytes(path, await readFile(path), record.sourceHashes[path]); assert.equal(sha256(current), record.sourceHashes[path], path);
+		const current = historicalBytes(path, record.sourceHashes[path]);
+		assert.equal(sha256(current), record.sourceHashes[path], path);
 		const update = updates.get(path);
 		if(update)
 		{
@@ -234,8 +246,12 @@ export const assertOwnedCppIntegration = async record => {
 		if(previousSources[path]) assert.equal(sha256(restored[path] ?? current), previousSources[path], path);
 		if(record.additions[path]) assert.equal(record.additions[path], record.sourceHashes[path], path);
 	}
-	const { irSchema, consumers } = await readTypeSurface(), contracts = { irSchema, consumers };
-	const document = JSON.parse(ownedCppOrderHistoricalBytes("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json"), record.sourceHashes["docs/type-surface.v1.json"]));
+	const contracts = typeSurfaceContractsAtProducer(ownedCppProducer);
+	const { typeSurfaceCells } = await moduleAtProducer(
+		ownedCppProducer, "src/adoption/type-surface.mjs");
+	const document = JSON.parse(sourceAtProducer(ownedCppProducer
+		, "docs/type-surface.v1.json"
+		, record.sourceHashes["docs/type-surface.v1.json"]));
 	const previousDocument = JSON.parse(restored["docs/type-surface.v1.json"]);
 	const expected = structuredClone(previousDocument);
 	for(const evidence of expected.evidence) for(const file of evidence.files)

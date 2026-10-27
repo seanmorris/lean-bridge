@@ -6,21 +6,28 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
-import { readTypeSurface } from "../../src/adoption/type-surface.mjs";
-import { historicalTypeSurfaceCells as typeSurfaceCells } from "./historical-type-surface-cells.mjs";
-import { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from "../../src/build/native-graph-model.mjs";
-import { generateOwnedCPackage } from "../../src/backends/c/owned-package.mjs";
-import { generateOwnedCppPackage } from "../../src/backends/cpp/owned-package.mjs";
-import { generateOwnedRustPackage } from "../../src/backends/rust/owned-package.mjs";
-import { copiedRustLock } from "../../src/backends/rust/copied-values.mjs";
-import { generateOwnedPythonPackage } from "../../src/backends/python/owned-package.mjs";
-import { generateOwnedPythonConversions } from "../../src/backends/python/owned-conversions.mjs";
-import { ownedPythonRuntime } from "../../src/backends/python/owned-runtime.mjs";
-import { ownedPythonInstalledProbe } from "./owned-python-installed-probes.mjs";
+import { moduleAtProducer } from "./producer-module.mjs";
+import {
+	bytesAtProducer, sourceAtProducer, typeSurfaceContractsAtProducer
+} from "./producer-source.mjs";
 import { ownedRustExecutionSources, assertOwnedRustIntegration } from "./owned-rust-evidence.mjs";
 import { ownedRustHistoryPath, ownedRustExecutionPath } from "./owned-rust-source-history.mjs";
 import { ownedPythonBaseline, ownedPythonChangedPaths, ownedPythonAddedPaths, ownedPythonExecutionPath, reverseOwnedPythonUpdate } from "./owned-python-source-history.mjs";
-import { beforeOwnedRuby, ownedRubyHistoricalBytes } from "./owned-ruby-source-history.mjs";
+
+/** The immutable source tree named by every owned-Python source digest. */
+export const ownedPythonProducer = "ef9bd830d49a932a13bbc0d683a7a14cd7139b62";
+let producerPromise;
+const producerAtMilestone = () => producerPromise ??= Promise.all([
+	"src/backends/c/owned-package.mjs"
+	, "src/backends/cpp/owned-package.mjs"
+	, "src/backends/python/owned-conversions.mjs"
+	, "src/backends/python/owned-package.mjs"
+	, "src/backends/python/owned-runtime.mjs"
+	, "src/backends/rust/owned-package.mjs"
+	, "src/build/native-graph-model.mjs"
+	, "tests/helpers/owned-python-installed-probes.mjs"
+].map(path => moduleAtProducer(ownedPythonProducer, path))).then(modules =>
+	Object.assign({}, ...modules));
 
 export const ownedPythonCommands = {
 	core: "LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-python-runtime.test.mjs tests/owned-python-values.test.mjs"
@@ -46,7 +53,12 @@ export const ownedPythonExecutionSources = [...new Set([
 	, "tests/fixtures/onboarding/owned-scalars/lean-bridge.exports.json"
 ])].sort();
 const json = async path => JSON.parse(await readFile(path, "utf8"));
-const nativeModel = input => createCompiledNativeModel(input, { ownedGraphs: true, ownedHostCallbacks: true });
+const copiedRustLockAtProducer = (name, version) => sourceAtProducer(
+	ownedPythonProducer, "src/backends/rust/dependencies.lock"
+).replace('name = "lean_bridge_generated"\nversion = "0.0.0"'
+	, `name = "${name}"\nversion = "${version}"`);
+const nativeModel = (producer, input) => producer.createCompiledNativeModel(
+	input, { ownedGraphs: true, ownedHostCallbacks: true });
 const environments = ["3.11-minimum", "3.11-current", "3.12-standard"];
 const typing = ["4.6.0", "4.16.0", null];
 const passing = (run, command, count) => {
@@ -71,7 +83,7 @@ const installation = (value, index) => {
 	}
 };
 
-const compiled = (report, mode, scalar, sources) => {
+const compiled = (report, mode, scalar, sources, producer) => {
 	assert.equal(report.schemaVersion, 1); assert.equal(report.planNode, 1219); assert.equal(report.mode, mode);
 	for(const flag of ["compiledLean", "installedPackage", "sourceUnchanged"
 		, "sourceFreeInstallation", "sourceFreeRelocatedExecution"
@@ -82,10 +94,11 @@ const compiled = (report, mode, scalar, sources) => {
 	assert.equal(input.sourceIdentity.extractorSha256, sources["src/analyze/NativeExports.lean"]);
 	const fixture = scalar ? "owned-scalars" : "owned-cpp-composition";
 	assert.equal(input.sourceIdentity.modules[0].source.sha256, sources[`tests/fixtures/onboarding/${fixture}/Owned.lean`]);
-	const model = nativeModel(input), native = generateCompiledNativeLeanAdapters(model);
+	const model = nativeModel(producer, input);
+	const native = producer.generateCompiledNativeLeanAdapters(model);
 	assert.equal(model.schemaVersion, 7); assert.equal(model.exports.length, scalar ? 8 : 31);
-	const c = generateOwnedCPackage({ ...input, hostCallbacks: true });
-	const python = generateOwnedPythonPackage(model.bindingIr);
+	const c = producer.generateOwnedCPackage({ ...input, hostCallbacks: true });
+	const python = producer.generateOwnedPythonPackage(model.bindingIr);
 	assert.equal(component.modelSha256, sha256(canonicalJson(model)));
 	assert.equal(component.bindingIrSha256, model.bindingIrSha256); assert.deepEqual(component.sourceIdentity, model.sourceIdentity);
 	assert.equal(component.metadataSha256, sha256(canonicalJson(input.metadata)));
@@ -98,8 +111,10 @@ const compiled = (report, mode, scalar, sources) => {
 	assert.deepEqual(adapter.ownedValues.hostCallbacks, model.ownedGraph.hostCallbacks);
 	assert.deepEqual(adapter.pythonValues, python.contract);
 	const companions = mode === "reviewed" && !scalar;
-	const cpp = companions ? generateOwnedCppPackage(model.bindingIr) : null;
-	const rust = companions ? generateOwnedRustPackage(model.bindingIr) : null;
+	const cpp = companions
+		? producer.generateOwnedCppPackage(model.bindingIr) : null;
+	const rust = companions
+		? producer.generateOwnedRustPackage(model.bindingIr) : null;
 	assert.deepEqual(adapter.cppValues ?? null, cpp?.contract ?? null);
 	assert.deepEqual(adapter.rustValues ?? null, rust?.contract ?? null);
 	const files = { ...c.files, ...cpp?.files, "internal/python-abi.h": python.abiHeader
@@ -116,17 +131,19 @@ const compiled = (report, mode, scalar, sources) => {
 	return { model, python, component, adapter };
 };
 
-const packageReport = async (report, mode, sources) => {
-	const { model, python, component, adapter } = compiled(report, mode, false, sources);
+const packageReport = async (report, mode, sources, producer) => {
+	const { model, python, component, adapter } = compiled(
+		report, mode, false, sources, producer);
 	assert.equal(report.deterministicReassembly, true);
 	assert.deepEqual(report.companions, mode === "reviewed" ? { c: 693, cpp: 577, rust: 596 } : {});
 	assert.deepEqual(report.tamperRejected, ["lifetime", "source", "abi", "library"]);
 	assert.equal(report.consumerSha256, sources["tests/fixtures/structured-types/owned-installed-python.py"]);
-	assert.equal(report.loaderProbeSha256, sha256(ownedPythonInstalledProbe));
+	assert.equal(report.loaderProbeSha256
+		, sha256(producer.ownedPythonInstalledProbe));
 	if(mode === "ordinary") assert.equal(report.dependencies, null);
 	else
 	{
-		const lock = await copiedRustLock("owned-values", "1.2.3");
+		const lock = copiedRustLockAtProducer("owned-values", "1.2.3");
 		assert.equal(report.dependencies.lockSha256, sha256(lock));
 		assert.equal(report.dependencies.archive, "rust-dependencies.tar.gz");
 		assert.match(report.dependencies.sha256, /^[a-f0-9]{64}$/u);
@@ -141,7 +158,8 @@ const packageReport = async (report, mode, sources) => {
 			assert.match(dependency.manifestSha256, /^[0-9a-f]{64}$/u);
 		}
 	}
-	const docs = await readFile("docs/consume/python.md", "utf8");
+	const docs = sourceAtProducer(ownedPythonProducer, "docs/consume/python.md"
+		, sources["docs/consume/python.md"]);
 	const example = docs.split("### Resource-containing values\n")[1].split("```python\n")[1].split("\n```\n")[0] + "\n";
 	assert.equal(report.documentationSha256, sha256(example));
 	assert.deepEqual(report.observations.map(item => item.name), environments);
@@ -169,7 +187,8 @@ const packageReport = async (report, mode, sources) => {
 		assert.equal(libraries[component.library], component.nativeLibrary.sha256);
 		assert.equal(libraries["libgmp.so.10"], adapter.files["gmp/lib/libgmp.so.10"].sha256);
 		assert.ok(libraries["liblean_bridge_native.so"]); assert.ok(libraries["libleanshared.so"]);
-		const generated = generateOwnedPythonPackage(model.bindingIr, evidence);
+		const generated = producer.generateOwnedPythonPackage(
+			model.bindingIr, evidence);
 		for(const [path, source] of Object.entries(generated.files))
 			assert.deepEqual(manifest.files[path.startsWith(`${module}/`) ? path : `${module}/lean_bridge/${path}`], fileIdentity(source));
 		for(const path of ["component/callbacks.c", "internal/python-abi.h", "sources/gmp-6.3.0.tar.xz"])
@@ -184,13 +203,23 @@ const packageReport = async (report, mode, sources) => {
  * @param record - Immutable executions, inputs, source identities and receipts.
  */
 export const assertOwnedPythonExecution = async record => {
+	const producer = await producerAtMilestone();
+	for(const name of [
+		"createCompiledNativeModel", "generateCompiledNativeLeanAdapters"
+		, "generateOwnedCPackage", "generateOwnedCppPackage"
+		, "generateOwnedPythonConversions", "generateOwnedPythonPackage"
+		, "generateOwnedRustPackage", "ownedPythonRuntime"
+	]) assert.equal(typeof producer[name], "function", name);
+	assert.equal(typeof producer.ownedPythonInstalledProbe, "string");
 	assert.equal(record.schemaVersion, 1); assert.equal(record.planNode, 1219);
 	assert.equal(record.kind, "owned-python-execution"); assert.equal(record.baselineRevision, ownedPythonBaseline);
 	assert.deepEqual(record.scope, ownedPythonScope);
 	assert.deepEqual(Object.keys(record.runs).sort(), Object.keys(ownedPythonCommands).sort());
 	for(const [name, count] of Object.entries({ core: 9, packages: 4, contracts: 57 })) passing(record.runs[name], ownedPythonCommands[name], count);
 	assert.deepEqual(Object.keys(record.sources).sort(), ownedPythonExecutionSources);
-	for(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(ownedRubyHistoricalBytes(path, await readFile(path), digest)), digest, path);
+	for(const [path, digest] of Object.entries(record.sources))
+		assert.equal(sha256(bytesAtProducer(
+			ownedPythonProducer, path, digest)), digest, path);
 	const historicalRust = await json(ownedRustExecutionPath);
 	const foundation = await json("docs/evidence/owned-python-values-20260927.json");
 	for(const collection of [record.runtime, record.values, record.scalars, record.packages, record.scalarPackages])
@@ -200,7 +229,8 @@ export const assertOwnedPythonExecution = async record => {
 		const runtime = record.runtime[mode];
 		assert.equal(runtime.compiledLean, true); assert.equal(runtime.installedPackage, false);
 		assert.equal(runtime.sourceIdentitySha256, sha256(canonicalJson(historicalRust.inputs.runtime[mode].sourceIdentity)));
-		assert.equal(runtime.runtimeSha256, sha256(ownedPythonRuntime("owned_aggregates")));
+		assert.equal(runtime.runtimeSha256
+			, sha256(producer.ownedPythonRuntime("owned_aggregates")));
 		assert.equal(runtime.probeSha256, record.sources["tests/fixtures/structured-types/owned-python-runtime.py"]);
 		assert.deepEqual(runtime.observations, [
 			{ python: "3.11.16", checks: 324, pythonFailures: 5, nativeFailures: 4, live: 0, identities: 0 }
@@ -212,9 +242,11 @@ export const assertOwnedPythonExecution = async record => {
 			const original = foundation.reports[`${fixture}${mode === "ordinary" ? "Ordinary" : "Reviewed"}`];
 			assert.equal(report.sourceIdentitySha256, original.sourceIdentitySha256);
 			assert.deepEqual(report.bindingIr, foundation.bindingInputs[original.bindingIrSha256]);
-			const generated = generateOwnedPythonConversions(report.bindingIr);
+			const generated = producer.generateOwnedPythonConversions(
+				report.bindingIr);
 			assert.equal(report.compiledLean, true); assert.equal(report.installedPackage, false);
-			assert.equal(report.runtimeSha256, sha256(ownedPythonRuntime(generated.c.prefix)));
+			assert.equal(report.runtimeSha256
+				, sha256(producer.ownedPythonRuntime(generated.c.prefix)));
 			assert.equal(report.valuesSha256, sha256(generated.valuesSource)); assert.equal(report.conversionsSha256, sha256(generated.source));
 			assert.equal(report.probeSha256, record.sources[`tests/fixtures/structured-types/owned-python-${fixture}.py`]);
 			const expected = environments.flatMap((name, index) => {
@@ -227,11 +259,16 @@ export const assertOwnedPythonExecution = async record => {
 			assert.deepEqual(report.observations, expected);
 			if(!scalar) assert.equal(report.callbacksSha256, record.sources["tests/fixtures/structured-types/owned-python-callables.py"]);
 		}
-		await packageReport(record.packages[mode], mode, record.sources);
+		await packageReport(
+			record.packages[mode], mode, record.sources, producer);
 		const scalars = record.scalarPackages[mode];
-		const { model, python } = compiled(scalars, mode, true, record.sources);
+		const { model, python } = compiled(
+			scalars, mode, true, record.sources, producer);
 		assert.deepEqual(scalars.bindingIr, model.bindingIr); assert.equal(scalars.primitives, 19);
-		const source = (await readFile("tests/fixtures/structured-types/owned-installed-python-scalars.py", "utf8")).replace("__PACKAGE__", python.packageDir);
+		const source = sourceAtProducer(ownedPythonProducer
+			, "tests/fixtures/structured-types/owned-installed-python-scalars.py"
+			, record.sources["tests/fixtures/structured-types/owned-installed-python-scalars.py"]
+		).replace("__PACKAGE__", python.packageDir);
 		assert.equal(scalars.consumerSha256, sha256(source));
 		assert.deepEqual(scalars.observations.map(item => item.name), environments);
 		for(const [index, observed] of scalars.observations.entries())
@@ -262,15 +299,20 @@ export const assertOwnedPythonIntegration = async record => {
 	const updates = new Map(record.updates.map(update => [update.path, update])), restored = {};
 	for(const path of paths)
 	{
-		const current = ownedRubyHistoricalBytes(path, await readFile(path), record.sourceHashes[path]);
+		const current = bytesAtProducer(
+			ownedPythonProducer, path, record.sourceHashes[path]);
 		assert.equal(sha256(current), record.sourceHashes[path], path);
 		const update = updates.get(path);
 		if(update) restored[path] = reverseOwnedPythonUpdate(current.toString("utf8"), update);
 		if(previous.sourceHashes[path]) assert.equal(sha256(restored[path] ?? current), previous.sourceHashes[path], path);
 		if(record.additions[path]) assert.equal(record.additions[path], record.sourceHashes[path], path);
 	}
-	const { irSchema, consumers } = await readTypeSurface(), contracts = { irSchema, consumers };
-	const document = JSON.parse(beforeOwnedRuby("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8")));
+	const contracts = typeSurfaceContractsAtProducer(ownedPythonProducer);
+	const { typeSurfaceCells } = await moduleAtProducer(
+		ownedPythonProducer, "src/adoption/type-surface.mjs");
+	const document = JSON.parse(sourceAtProducer(ownedPythonProducer
+		, "docs/type-surface.v1.json"
+		, record.sourceHashes["docs/type-surface.v1.json"]));
 	const previousDocument = JSON.parse(restored["docs/type-surface.v1.json"]);
 	const expected = structuredClone(previousDocument);
 	for(const evidence of expected.evidence) for(const file of evidence.files)

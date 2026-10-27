@@ -412,6 +412,31 @@ test("owned callback negatives reuse only an authenticated source identity", asy
 		, "Exact producer runtime sources must stop before the history hub");
 });
 
+test("legacy owned projections authenticate immutable producer trees", async () => {
+	const milestones = [
+		["tests/helpers/owned-host-evidence.mjs"
+			, "650641c1274543a334aa7d50c43c70de945984a0"]
+		, ["tests/helpers/owned-cpp-evidence.mjs"
+			, "511f43f1b02a6bddb5517f47a497e8eda766a065"]
+		, ["tests/helpers/owned-rust-evidence.mjs"
+			, "78d2e09252d81f0b123d6175bb6ea454c9205577"]
+		, ["tests/helpers/owned-python-evidence.mjs"
+			, "ef9bd830d49a932a13bbc0d683a7a14cd7139b62"]
+	];
+	for(const [path, producer] of milestones)
+	{
+		const source = await readFile(path, "utf8");
+		assert.ok(source.includes(`Producer = "${producer}"`), path);
+		assert.match(source, /bytesAtProducer\(/u, path);
+		assert.match(source, /typeSurfaceContractsAtProducer\(/u, path);
+		assert.match(source
+			, /moduleAtProducer\([\s\S]*"src\/adoption\/type-surface[.]mjs"/u
+			, path);
+		assert.doesNotMatch(source
+			, /const current = [^;]*await readFile\(path\)/u, path);
+	}
+});
+
 test("Core shard enumeration has one repository-wide code-unit order", async t => {
 	const root = await mkdtemp(join(tmpdir(), "lean-bridge-core-shards-"));
 	t.after(() => rm(root, { recursive: true, force: true }));

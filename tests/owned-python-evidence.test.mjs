@@ -7,9 +7,12 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
-import { assertOwnedPythonExecution, assertOwnedPythonIntegration } from "./helpers/owned-python-evidence.mjs";
+import {
+	assertOwnedPythonExecution, assertOwnedPythonIntegration
+	, ownedPythonProducer
+} from "./helpers/owned-python-evidence.mjs";
 import { beforeOwnedPython, reverseOwnedPythonUpdate, ownedPythonHistoryPath, ownedPythonExecutionPath } from "./helpers/owned-python-source-history.mjs";
-import { beforeOwnedRuby } from "./helpers/owned-ruby-source-history.mjs";
+import { bytesAtProducer } from "./helpers/producer-source.mjs";
 
 const json = async path => JSON.parse(await readFile(path, "utf8"));
 
@@ -58,9 +61,13 @@ test("Python ownership evidence rejects altered lifetimes, execution and package
 test("Python source history preserves exact predecessors and rejects unrecorded edits", async () => {
 	for(const update of (await json(ownedPythonHistoryPath)).updates)
 	{
-		const source = beforeOwnedRuby(update.path, await readFile(update.path, "utf8"));
+		const source = bytesAtProducer(
+			ownedPythonProducer, update.path, update.currentSha256
+		).toString("utf8");
 		assert.equal(sha256(reverseOwnedPythonUpdate(source, update)), update.previousSha256);
-		assert.equal(sha256(beforeOwnedPython(update.path, source)), update.previousSha256);
+		assert.equal(sha256(beforeOwnedPython(
+			update.path, source, update.previousSha256
+		)), update.previousSha256);
 		assert.equal(beforeOwnedPython(update.path, source, update.currentSha256), source);
 		const unknown = source + "\n/* unrecorded */\n";
 		assert.equal(beforeOwnedPython(update.path, unknown), unknown);
