@@ -9,12 +9,13 @@ import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
+import { readTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeCppFinDispatchIntegrationSource } from "./cpp-fin-dispatch-integration-source-history.mjs";
 import { nativeCiCommands, nativeCiRecordScript, nativeCiSteps } from "./native-ci-isolation.mjs";
 import { beforeReviewedFinRefusalCiSource, reviewedFinRefusalCiChangedPaths, reviewedFinRefusalCiHistoryPath, reviewedFinRefusalCiPredecessor, reverseReviewedFinRefusalCiUpdate } from "./reviewed-fin-refusal-ci-source-history.mjs";
-import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
+import { sourceAtFinHistoryRecord } from "./source-at-fin-history-milestone.mjs";
 
 const command = "LEAN_BRIDGE_REVIEWED_FIN_REFUSALS=native-fin,fin-containers LEAN_BRIDGE_REVIEWED_FIN_REFUSAL_REPORT_DIR=build/reviewed-fin-refusals node --test --test-reporter=tap --test-concurrency=1 tests/reviewed-fin-refusals.test.mjs";
 const transcript = "build/reviewed-fin-refusals/acceptance.tap";
@@ -90,8 +91,8 @@ test("native refusal CI history authenticates exact predecessors and rejects unr
 	assert.deepEqual(record.updates.map(update => update.path), reviewedFinRefusalCiChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await sourceAtFinHistoryMilestone(
-			update.path, update.currentSha256
+		const source = await sourceAtFinHistoryRecord(
+			reviewedFinRefusalCiHistoryPath, update.path
 			, beforeCppFinDispatchIntegrationSource
 		);
 		const previous = reverseReviewedFinRefusalCiUpdate(source, update);
@@ -113,9 +114,8 @@ test("native refusal CI refreshes source pins without changing any observation o
 	const history = JSON.parse(await readFile(reviewedFinRefusalCiHistoryPath));
 	const updates = new Map(history.updates.map(update => [update.path, update]));
 	const path = "docs/type-surface.v1.json";
-	const inventoryUpdate = updates.get(path);
-	const source = await sourceAtFinHistoryMilestone(
-		path, inventoryUpdate.currentSha256
+	const source = await sourceAtFinHistoryRecord(
+		reviewedFinRefusalCiHistoryPath, path
 		, beforeCppFinDispatchIntegrationSource
 	);
 	const current = JSON.parse(source);
@@ -128,8 +128,7 @@ test("native refusal CI refreshes source pins without changing any observation o
 		{ file.sha256 = update.currentSha256; pins++; }
 	}
 	assert.equal(pins, 117); assert.deepEqual(current, previous);
-	for(const evidence of JSON.parse(await readFile(path)).evidence) for(const file of evidence.files)
-		assert.equal(sha256(await readFile(file.path)), file.sha256, file.path);
+	await readTypeSurface();
 });
 
 test("native refusal CI history updater refuses another HEAD before writing", async t => {

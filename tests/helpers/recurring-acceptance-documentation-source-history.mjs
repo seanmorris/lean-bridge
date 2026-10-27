@@ -29,7 +29,8 @@ export const recurringAcceptanceDocumentationHistoryAdditions = Object.freeze([
 
 let history;
 const record = () => history ??= JSON.parse(readFileSync(
-	recurringAcceptanceDocumentationHistoryPath, "utf8"
+	new URL(`../../${recurringAcceptanceDocumentationHistoryPath}`
+		, import.meta.url), "utf8"
 ));
 
 /**
@@ -102,4 +103,3 @@ export const beforeRecurringAcceptanceDocumentationSource = (
 	}
 	return current;
 };
-

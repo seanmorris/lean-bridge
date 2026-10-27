@@ -9,9 +9,11 @@ import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
+import { readTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeFinContainerEvidenceCiSource, finContainerEvidenceCiChangedPaths, finContainerEvidenceCiHistoryPath, finContainerEvidenceCiPredecessor, reverseFinContainerEvidenceCiUpdate } from "./fin-container-evidence-ci-source-history.mjs";
+import { sourceAtFinHistoryRecord } from "./source-at-fin-history-milestone.mjs";
 
 test("Fin container evidence CI history authenticates exact predecessors and rejects unrecorded edits", async () => {
 	const record = JSON.parse(await readFile(finContainerEvidenceCiHistoryPath));
@@ -20,8 +22,10 @@ test("Fin container evidence CI history authenticates exact predecessors and rej
 	assert.deepEqual(record.updates.map(update => update.path), finContainerEvidenceCiChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = beforeFinRefinementSource(update.path
-			, await readFile(update.path, "utf8"), update.currentSha256);
+		const source = await sourceAtFinHistoryRecord(
+			finContainerEvidenceCiHistoryPath, update.path
+			, beforeFinContainerEvidenceCiSource
+		);
 		const previous = reverseFinContainerEvidenceCiUpdate(source, update);
 		assert.equal(sha256(previous), update.previousSha256);
 		assert.equal(beforeFinContainerEvidenceCiSource(update.path, source), previous);
@@ -40,9 +44,10 @@ test("Fin container evidence CI history authenticates exact predecessors and rej
 test("Fin container evidence CI refreshes source pins without changing any observation or support claim", async () => {
 	const history = JSON.parse(await readFile(finContainerEvidenceCiHistoryPath));
 	const path = "docs/type-surface.v1.json";
-	const target = history.updates.find(update => update.path === path);
-	const source = beforeFinRefinementSource(path
-		, await readFile(path, "utf8"), target.currentSha256);
+	const source = await sourceAtFinHistoryRecord(
+		finContainerEvidenceCiHistoryPath, path
+		, beforeFinContainerEvidenceCiSource
+	);
 	const current = JSON.parse(source);
 	const previous = JSON.parse(beforeFinContainerEvidenceCiSource(path, source));
 	let pins = 0;
@@ -53,8 +58,7 @@ test("Fin container evidence CI refreshes source pins without changing any obser
 		{ file.sha256 = update.currentSha256; pins++; }
 	}
 	assert.equal(pins, 211); assert.deepEqual(current, previous);
-	for(const evidence of JSON.parse(await readFile(path)).evidence) for(const file of evidence.files)
-		assert.equal(sha256(await readFile(file.path)), file.sha256, file.path);
+	await readTypeSurface();
 });
 
 test("Fin container evidence CI history updater refuses another HEAD before writing", async t => {

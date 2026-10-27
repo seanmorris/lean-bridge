@@ -9,12 +9,13 @@ import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
-import { sha256 } from "../src/capsule/node.mjs";
 import { classifyRepositoryTest } from "../src/adoption/test-profiles.mjs";
+import { readTypeSurface } from "../src/adoption/type-surface.mjs";
+import { sha256 } from "../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./helpers/fin-refinement-source-history.mjs";
 import { beforeReviewedFinRefusalCiSource } from "./helpers/reviewed-fin-refusal-ci-source-history.mjs";
 import { beforeReviewedFinRefusalSource, reviewedFinRefusalChangedPaths, reviewedFinRefusalHistoryPath, reviewedFinRefusalPredecessor, reverseReviewedFinRefusalUpdate } from "./helpers/reviewed-fin-refusal-source-history.mjs";
-import { sourceAtFinHistoryMilestone } from "./helpers/source-at-fin-history-milestone.mjs";
+import { sourceAtFinHistoryRecord } from "./helpers/source-at-fin-history-milestone.mjs";
 import "./helpers/reviewed-fin-native-refusal-evidence-tests.mjs";
 import "./helpers/reviewed-fin-wasm-refusal-evidence-tests.mjs";
 import "./helpers/reviewed-fin-refusal-ci-tests.mjs";
@@ -27,8 +28,8 @@ test("reviewed Fin refusal history authenticates exact predecessors and refuses 
 	assert.deepEqual(record.updates.map(update => update.path), reviewedFinRefusalChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await sourceAtFinHistoryMilestone(
-			update.path, update.currentSha256
+		const source = await sourceAtFinHistoryRecord(
+			reviewedFinRefusalHistoryPath, update.path
 			, beforeReviewedFinRefusalCiSource
 		);
 		const previous = reverseReviewedFinRefusalUpdate(source, update);
@@ -50,9 +51,8 @@ test("reviewed Fin refusal integration changes only exact inventory source pins"
 	const record = JSON.parse(await readFile(reviewedFinRefusalHistoryPath));
 	const updates = new Map(record.updates.map(update => [update.path, update]));
 	const path = "docs/type-surface.v1.json";
-	const inventoryUpdate = updates.get(path);
-	const text = await sourceAtFinHistoryMilestone(
-		path, inventoryUpdate.currentSha256
+	const text = await sourceAtFinHistoryRecord(
+		reviewedFinRefusalHistoryPath, path
 		, beforeReviewedFinRefusalCiSource
 	);
 	const current = JSON.parse(text);
@@ -65,8 +65,8 @@ test("reviewed Fin refusal integration changes only exact inventory source pins"
 		if(update && file.sha256 === update.previousSha256)
 		{
 			if(!milestoneSources.has(file.path)) milestoneSources.set(
-				file.path, await sourceAtFinHistoryMilestone(
-					file.path, update.currentSha256
+				file.path, await sourceAtFinHistoryRecord(
+					reviewedFinRefusalHistoryPath, file.path
 					, beforeReviewedFinRefusalCiSource
 				)
 			);
@@ -77,8 +77,7 @@ test("reviewed Fin refusal integration changes only exact inventory source pins"
 	}
 	assert.equal(pins, 122);
 	assert.deepEqual(current, previous, "no observation, support state or evidence claim changes");
-	for(const evidence of JSON.parse(await readFile(path)).evidence) for(const file of evidence.files)
-		assert.equal(sha256(await readFile(file.path)), file.sha256, file.path);
+	await readTypeSurface();
 	assert.equal(current.observations.length, 497); assert.equal(current.evidence.length, 284);
 	assert.equal(classifyRepositoryTest("tests/reviewed-fin-refusals.test.mjs"), "component");
 	assert.equal(classifyRepositoryTest("tests/reviewed-fin-refusal-history.test.mjs"), "contract");

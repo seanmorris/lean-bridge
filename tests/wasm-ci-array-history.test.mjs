@@ -9,6 +9,7 @@ import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
+import { readTypeSurface } from "../src/adoption/type-surface.mjs";
 import { sha256 } from "../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./helpers/fin-refinement-source-history.mjs";
 import { beforePerlScalarPromotionSource } from "./helpers/perl-scalar-promotion-source-history.mjs";
@@ -54,8 +55,7 @@ test("Wasm CI and Array archive refresh source pins without changing any observa
 		{ file.sha256 = update.currentSha256; pins++; }
 	}
 	assert.equal(pins, 186); assert.deepEqual(current, previous);
-	for(const evidence of JSON.parse(await readFile(path)).evidence) for(const file of evidence.files)
-		assert.equal(sha256(await readFile(file.path)), file.sha256, file.path);
+	await readTypeSurface();
 });
 
 test("Wasm CI and Array archive history updater refuses another HEAD before writing", async t => {

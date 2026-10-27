@@ -16,14 +16,14 @@ import { beforeFinRefinementSource } from "./helpers/fin-refinement-source-histo
 import { beforeWasmEntryControlsSource } from "./helpers/wasm-entry-controls-source-history.mjs";
 import { assertHostedContainerInventory, assertHostedContainerReferences, hostedContainerCounterScope, hostedContainerObservationIds, hostedContainerReferences, hostedContainerSelectionIds, supplementHostedContainerInventory } from "./helpers/hosted-container-inventory.mjs";
 import { beforeHostedContainerInventorySource, hostedContainerInventoryChangedPaths, hostedContainerInventoryHistoryPath, hostedContainerInventoryPredecessor, reverseHostedContainerInventoryUpdate } from "./helpers/hosted-container-inventory-source-history.mjs";
-import { sourceAtFinHistoryMilestone } from "./helpers/source-at-fin-history-milestone.mjs";
+import { sourceAtFinHistoryRecord, sourceAtFinHistoryRecordSource } from "./helpers/source-at-fin-history-milestone.mjs";
 
 const snapshot = async () => {
 	const history = JSON.parse(await readFile(hostedContainerInventoryHistoryPath));
 	const path = "docs/type-surface.v1.json";
-	const update = history.updates.find(item => item.path === path);
-	const source = await sourceAtFinHistoryMilestone(
-		path, update.currentSha256, beforeWasmEntryControlsSource
+	const source = await sourceAtFinHistoryRecord(
+		hostedContainerInventoryHistoryPath, path
+		, beforeWasmEntryControlsSource
 	);
 	const current = JSON.parse(source);
 	const milestoneDigests = new Map();
@@ -39,8 +39,9 @@ const snapshot = async () => {
 	const sourceAtMilestone = async sourcePath => {
 		const expected = milestoneDigests.get(sourcePath);
 		assert.ok(expected, sourcePath);
-		return sourceAtFinHistoryMilestone(
-			sourcePath, expected, beforeHostedContainerInventorySource
+		return sourceAtFinHistoryRecordSource(
+			hostedContainerInventoryHistoryPath, sourcePath, expected
+			, beforeHostedContainerInventorySource
 		);
 	};
 	return { current
@@ -57,8 +58,9 @@ test("hosted container inventory authenticates exact predecessors and refuses un
 	assert.deepEqual(record.updates.map(update => update.path), hostedContainerInventoryChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await sourceAtFinHistoryMilestone(
-			update.path, update.currentSha256, beforeWasmEntryControlsSource
+		const source = await sourceAtFinHistoryRecord(
+			hostedContainerInventoryHistoryPath, update.path
+			, beforeWasmEntryControlsSource
 		);
 		const previous = reverseHostedContainerInventoryUpdate(source, update);
 		assert.equal(sha256(previous), update.previousSha256);
@@ -104,8 +106,6 @@ test("hosted container inventory supplements exactly four existing observations 
 	const { document: unused, ...contracts } = await readTypeSurface(); void unused;
 	const states = inventory => typeSurfaceCells(inventory, contracts).map(cell => [cell.id, Object.fromEntries(Object.entries(cell.stages).map(([key, value]) => [key, value.state]))]);
 	assert.deepEqual(states(current), states(previous));
-	for(const evidence of JSON.parse(await readFile("docs/type-surface.v1.json")).evidence) for(const file of evidence.files)
-		assert.equal(sha256(await readFile(file.path)), file.sha256, file.path);
 	assert.equal(classifyRepositoryTest("tests/hosted-container-inventory.test.mjs"), "contract");
 });
 

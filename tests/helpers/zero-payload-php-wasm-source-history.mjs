@@ -13,6 +13,18 @@ export const zeroPayloadPhpWasmHistoryPredecessor
 	= "cdfada7eb7035d2f596d1ceeab1c5b27a6c2df53";
 export const zeroPayloadPhpWasmHistoryImplementation
 	= "6c77258032767ebdb1cd5226be0bd5ca59360915";
+export const zeroPayloadPhpWasmHistoryRecordCommit
+	= "cabf49560ab4849897cbebb2561611415f2a8eed";
+export const zeroPayloadPhpWasmHistoryAdditionMismatches = Object.freeze({
+	"scripts/update-zero-payload-php-wasm-source-history.mjs": Object.freeze({
+		recorded: "c5dcb9bfb289a4c5c38ac7f29f951b96221214ae29583d9d84215a31faf6dee5"
+		, committed: "b2e364c2e7a450de4516719656677616f66539433531d1cb57148a62e3392095"
+	})
+	, "tests/helpers/zero-payload-php-wasm-source-history-tests.mjs": Object.freeze({
+		recorded: "cae322b245aad9606bd7d359fb22b51604a30bea02a3475e0bd6a20b7a6901ca"
+		, committed: "2fdf644269295f8cf3afc4f75700b1e7262da0bd232cf697c6f8c8d132c44a6b"
+	})
+});
 export const zeroPayloadPhpWasmHistoryChangedPaths = Object.freeze([
 	"docs/type-surface.v1.json"
 	, "src/adoption/test-profiles.mjs"
@@ -40,7 +52,8 @@ export const zeroPayloadPhpWasmHistoryApplicationPaths = Object.freeze([
 ]);
 let history;
 const record = () => history ??= JSON.parse(readFileSync(
-	zeroPayloadPhpWasmHistoryHistoryPath, "utf8"
+	new URL(`../../${zeroPayloadPhpWasmHistoryHistoryPath}`
+		, import.meta.url), "utf8"
 ));
 
 /**

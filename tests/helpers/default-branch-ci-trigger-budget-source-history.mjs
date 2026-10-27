@@ -28,7 +28,8 @@ export const defaultBranchCiTriggerBudgetHistoryAdditions = Object.freeze([
 
 let history;
 const record = () => history ??= JSON.parse(readFileSync(
-	defaultBranchCiTriggerBudgetHistoryPath, "utf8"
+	new URL(`../../${defaultBranchCiTriggerBudgetHistoryPath}`
+		, import.meta.url), "utf8"
 ));
 
 /**

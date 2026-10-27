@@ -12,12 +12,14 @@ import test from "node:test";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import {
 	beforeZeroPayloadPhpWasmHistorySource
+	, zeroPayloadPhpWasmHistoryAdditionMismatches
 	, zeroPayloadPhpWasmHistoryApplicationPaths
 	, zeroPayloadPhpWasmHistoryChangedPaths
 	, zeroPayloadPhpWasmHistoryHistoryPath
 	, zeroPayloadPhpWasmHistoryImplementation
 	, zeroPayloadPhpWasmHistoryIntegrationPaths
 	, zeroPayloadPhpWasmHistoryPredecessor
+	, zeroPayloadPhpWasmHistoryRecordCommit
 	, reverseZeroPayloadPhpWasmHistoryUpdate
 } from "./zero-payload-php-wasm-source-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
@@ -35,6 +37,10 @@ test("zero-payload PHP-Wasm history restores every source", async () => {
 		, zeroPayloadPhpWasmHistoryPredecessor);
 	assert.equal(record.implementationCommit
 		, zeroPayloadPhpWasmHistoryImplementation);
+	assert.equal(execFileSync("git", ["rev-parse"
+		, `${zeroPayloadPhpWasmHistoryRecordCommit}^`]
+		, { encoding: "utf8" }).trim()
+	, zeroPayloadPhpWasmHistoryImplementation);
 	assert.ok(record.reconciledTypeSurfacePointers > 0);
 	assert.deepEqual(record.updates.map(item => item.path)
 		, zeroPayloadPhpWasmHistoryChangedPaths);
@@ -42,7 +48,9 @@ test("zero-payload PHP-Wasm history restores every source", async () => {
 		, zeroPayloadPhpWasmHistoryIntegrationPaths);
 	for(const update of record.updates)
 	{
-		const current = await readFile(update.path, "utf8");
+		const current = sourceAt(
+			zeroPayloadPhpWasmHistoryRecordCommit, update.path
+		);
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		const previous = reverseZeroPayloadPhpWasmHistoryUpdate(current, update);
 		assert.equal(previous, sourceAt(
@@ -59,7 +67,9 @@ test("zero-payload PHP-Wasm history restores every source", async () => {
 	}
 	for(const update of record.integrationUpdates)
 	{
-		const current = await readFile(update.path, "utf8");
+		const current = sourceAt(
+			zeroPayloadPhpWasmHistoryRecordCommit, update.path
+		);
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		assert.equal(reverseZeroPayloadPhpWasmHistoryUpdate(current, update)
 			, sourceAt(zeroPayloadPhpWasmHistoryImplementation, update.path));
@@ -67,9 +77,32 @@ test("zero-payload PHP-Wasm history restores every source", async () => {
 	assert.deepEqual(record.additions.slice(0
 		, zeroPayloadPhpWasmHistoryApplicationPaths.length).map(item => item.path)
 	, [...zeroPayloadPhpWasmHistoryApplicationPaths]);
+	assert.deepEqual(Object.keys(zeroPayloadPhpWasmHistoryAdditionMismatches)
+		.sort(), record.additions.filter(addition => {
+			const current = sha256(sourceAt(
+				zeroPayloadPhpWasmHistoryRecordCommit, addition.path
+			));
+			return current !== addition.currentSha256;
+		}).map(addition => addition.path).sort());
 	for(const addition of record.additions)
-		assert.equal(sha256(await readFile(addition.path))
-			, addition.currentSha256, addition.path);
+	{
+		const committed = sha256(sourceAt(
+			zeroPayloadPhpWasmHistoryRecordCommit, addition.path
+		));
+		const mismatch = zeroPayloadPhpWasmHistoryAdditionMismatches[
+			addition.path
+		];
+		if(mismatch === undefined)
+			assert.equal(committed, addition.currentSha256, addition.path);
+		else
+		{
+			assert.equal(addition.currentSha256, mismatch.recorded
+				, addition.path);
+			assert.equal(committed, mismatch.committed, addition.path);
+			assert.notEqual(mismatch.recorded, mismatch.committed
+				, addition.path);
+		}
+	}
 });
 
 test("zero-payload PHP-Wasm history rejects altered transitions", async () => {

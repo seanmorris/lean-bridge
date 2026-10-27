@@ -198,7 +198,8 @@ export const boundedRecurringAcceptanceSweepHistoryAdditions = Object.freeze([
 
 let history;
 const record = () => history ??= JSON.parse(readFileSync(
-	boundedRecurringAcceptanceSweepHistoryPath, "utf8"
+	new URL(`../../${boundedRecurringAcceptanceSweepHistoryPath}`
+		, import.meta.url), "utf8"
 ));
 
 /**

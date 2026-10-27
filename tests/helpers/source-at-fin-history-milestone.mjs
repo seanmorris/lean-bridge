@@ -5,17 +5,89 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 
 const digestPattern = /^[0-9a-f]{64}$/u;
 const historyRecords = new Map();
+const historyRecordCommits = new Map();
 const historySources = new Map();
 const readerIds = new WeakMap();
 const maxHistorySourceBytes = 64 * 1024 * 1024;
 let nextReaderId = 1;
 let retainedHistorySourceBytes = 0;
+
+const historyRecordCommit = historyPath => {
+	if(!historyRecordCommits.has(historyPath))
+	{
+		const commits = execFileSync("git", ["log", "--diff-filter=A"
+			, "--format=%H", "--", historyPath], { encoding: "utf8" })
+			.trim().split("\n").filter(Boolean);
+		assert.equal(commits.length, 1
+			, `Expected one immutable history introduction for ${historyPath}`);
+		historyRecordCommits.set(historyPath, commits[0]);
+	}
+	return historyRecordCommits.get(historyPath);
+};
+
+const sourceAtRevision = (revision, path) => {
+	try
+	{
+		return execFileSync("git", ["show", `${revision}:${path}`]
+			, { encoding: "utf8", maxBuffer: 256 * 1024 * 1024 });
+	}
+	catch
+	{
+		return undefined;
+	}
+};
+
+/**
+ * Read one exact source from the commit that introduced an immutable record.
+ *
+ * @param historyPath - Repository-relative immutable history record.
+ * @param path - Repository-relative source path at that milestone.
+ * @param expected - Exact authenticated source SHA-256.
+ * @param reader - Optional milestone-specific source reader.
+ */
+export const sourceAtFinHistoryRecordSource = async (
+	historyPath, path, expected, reader = undefined
+) => {
+	assert.equal(typeof historyPath, "string");
+	assert.equal(typeof path, "string");
+	assert.match(expected, digestPattern);
+	const source = sourceAtRevision(historyRecordCommit(historyPath), path);
+	assert.equal(typeof source, "string", `${historyPath}: missing ${path}`);
+	assert.equal(sha256(source), expected, path);
+	if(reader !== undefined)
+	{
+		assert.equal(typeof reader, "function");
+		assert.equal(reader(path, source, expected), source
+			, `${path} exact immutable-record stop`);
+	}
+	return source;
+};
+
+const sourceAtHistoryRecordEndpoint = async (
+	historyPath, record, path, digestField, expected, reader
+) => {
+	const recordCommit = historyRecordCommit(historyPath);
+	const revisions = digestField === "currentSha256"
+		? [recordCommit]
+		: [record.implementationCommit, record.predecessorCommit
+			, `${recordCommit}^`].filter(Boolean);
+	for(const revision of new Set(revisions))
+	{
+		const source = sourceAtRevision(revision, path);
+		if(source === undefined || sha256(source) !== expected) continue;
+		assert.equal(reader(path, source, expected), source
+			, `${path} exact immutable-record stop`);
+		return source;
+	}
+	return sourceAtFinHistoryMilestone(path, expected, reader);
+};
 
 /**
  * Read the live file, reverse the complete history to an exact digest and,
@@ -82,8 +154,9 @@ const sourceAtFinHistoryRecordDigest = async (
 	}
 	const entry = {
 		bytes: 0
-		, promise: sourceAtFinHistoryMilestone(
-			path, matches[0][digestField], reader
+		, promise: sourceAtHistoryRecordEndpoint(
+			historyPath, record, path, digestField
+			, matches[0][digestField], reader
 		)
 	};
 	historySources.set(key, entry);

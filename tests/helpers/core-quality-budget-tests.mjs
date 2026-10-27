@@ -341,6 +341,32 @@ test("Hosted Core bounds each closed shard without truncating the profile", asyn
 	}
 });
 
+test("history inventory checks reuse the authenticated type-surface pass", async () => {
+	const paths = [
+		"tests/hosted-container-inventory.test.mjs"
+		, "tests/native-edge-array-harness-history.test.mjs"
+		, "tests/perl-relocated-promotion.test.mjs"
+		, "tests/reviewed-fin-refusal-history.test.mjs"
+		, "tests/wasm-ci-array-history.test.mjs"
+		, "tests/wasm-entry-archive-history.test.mjs"
+		, "tests/wasm-entry-controls-history.test.mjs"
+		, "tests/wasm-entry-harness-history.test.mjs"
+		, "tests/helpers/cpp-fin-dispatch-integration-tests.mjs"
+		, "tests/helpers/fin-container-evidence-ci-tests.mjs"
+		, "tests/helpers/fin-entry-integration-tests.mjs"
+		, "tests/helpers/perl-closure-native-budget-tests.mjs"
+		, "tests/helpers/reviewed-fin-refusal-ci-tests.mjs"
+	];
+	for(const path of paths)
+	{
+		const source = await readFile(path, "utf8");
+		assert.match(source, /await readTypeSurface\(\)/u, path);
+		assert.doesNotMatch(source
+			, /sha256\(await readFile\(file[.]path\)\), file[.]sha256/u
+			, `${path}: do not rehash the complete live corpus`);
+	}
+});
+
 test("Core shard enumeration has one repository-wide code-unit order", async t => {
 	const root = await mkdtemp(join(tmpdir(), "lean-bridge-core-shards-"));
 	t.after(() => rm(root, { recursive: true, force: true }));

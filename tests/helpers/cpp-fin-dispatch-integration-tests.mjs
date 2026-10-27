@@ -9,11 +9,12 @@ import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
+import { readTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforePerlRelocatedPromotionSource } from "./perl-relocated-promotion-source-history.mjs";
 import { beforeCppFinDispatchIntegrationSource, cppFinDispatchIntegrationChangedPaths, cppFinDispatchIntegrationHistoryPath, cppFinDispatchIntegrationPredecessor, reverseCppFinDispatchIntegrationUpdate } from "./cpp-fin-dispatch-integration-source-history.mjs";
-import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
+import { sourceAtFinHistoryRecord } from "./source-at-fin-history-milestone.mjs";
 
 test("C++ Fin dispatch integration history authenticates exact predecessors and rejects unrecorded edits", async () => {
 	const record = JSON.parse(await readFile(cppFinDispatchIntegrationHistoryPath));
@@ -22,8 +23,8 @@ test("C++ Fin dispatch integration history authenticates exact predecessors and 
 	assert.deepEqual(record.updates.map(update => update.path), cppFinDispatchIntegrationChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await sourceAtFinHistoryMilestone(
-			update.path, update.currentSha256
+		const source = await sourceAtFinHistoryRecord(
+			cppFinDispatchIntegrationHistoryPath, update.path
 			, beforePerlRelocatedPromotionSource
 		);
 		const previous = reverseCppFinDispatchIntegrationUpdate(source, update);
@@ -45,9 +46,8 @@ test("C++ Fin dispatch integration refreshes source pins without changing any ob
 	const history = JSON.parse(await readFile(cppFinDispatchIntegrationHistoryPath));
 	const updates = new Map(history.updates.map(update => [update.path, update]));
 	const path = "docs/type-surface.v1.json";
-	const inventoryUpdate = updates.get(path);
-	const source = await sourceAtFinHistoryMilestone(
-		path, inventoryUpdate.currentSha256
+	const source = await sourceAtFinHistoryRecord(
+		cppFinDispatchIntegrationHistoryPath, path
 		, beforePerlRelocatedPromotionSource
 	);
 	const current = JSON.parse(source);
@@ -60,8 +60,7 @@ test("C++ Fin dispatch integration refreshes source pins without changing any ob
 		{ file.sha256 = update.currentSha256; pins++; }
 	}
 	assert.equal(pins, 2); assert.deepEqual(current, previous);
-	for(const evidence of JSON.parse(await readFile(path)).evidence) for(const file of evidence.files)
-		assert.equal(sha256(await readFile(file.path)), file.sha256, file.path);
+	await readTypeSurface();
 });
 
 test("C++ Fin dispatch integration history updater refuses another HEAD before writing", async t => {

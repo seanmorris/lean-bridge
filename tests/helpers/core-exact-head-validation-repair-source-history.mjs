@@ -31,7 +31,8 @@ export const coreExactHeadValidationRepairHistoryAdditions = Object.freeze([
 
 let history;
 const record = () => history ??= JSON.parse(readFileSync(
-	coreExactHeadValidationRepairHistoryPath, "utf8"
+	new URL(`../../${coreExactHeadValidationRepairHistoryPath}`
+		, import.meta.url), "utf8"
 ));
 
 /**

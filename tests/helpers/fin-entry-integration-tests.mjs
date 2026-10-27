@@ -9,9 +9,11 @@ import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
+import { readTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeFinEntryIntegrationSource, finEntryIntegrationChangedPaths, finEntryIntegrationHistoryPath, finEntryIntegrationPredecessor, reverseFinEntryIntegrationUpdate } from "./fin-entry-integration-source-history.mjs";
+import { sourceAtFinHistoryRecord } from "./source-at-fin-history-milestone.mjs";
 
 test("Fin entry integration history authenticates exact predecessors and rejects unrecorded edits", async () => {
 	const record = JSON.parse(await readFile(finEntryIntegrationHistoryPath));
@@ -20,8 +22,10 @@ test("Fin entry integration history authenticates exact predecessors and rejects
 	assert.deepEqual(record.updates.map(update => update.path), finEntryIntegrationChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = beforeFinRefinementSource(update.path
-			, await readFile(update.path, "utf8"), update.currentSha256);
+		const source = await sourceAtFinHistoryRecord(
+			finEntryIntegrationHistoryPath, update.path
+			, beforeFinEntryIntegrationSource
+		);
 		const previous = reverseFinEntryIntegrationUpdate(source, update);
 		assert.equal(sha256(previous), update.previousSha256);
 		assert.equal(beforeFinEntryIntegrationSource(update.path, source), previous);
@@ -40,9 +44,10 @@ test("Fin entry integration history authenticates exact predecessors and rejects
 test("Fin entry integration refreshes source pins without changing any observation or support claim", async () => {
 	const history = JSON.parse(await readFile(finEntryIntegrationHistoryPath));
 	const path = "docs/type-surface.v1.json";
-	const target = history.updates.find(update => update.path === path);
-	const source = beforeFinRefinementSource(path
-		, await readFile(path, "utf8"), target.currentSha256);
+	const source = await sourceAtFinHistoryRecord(
+		finEntryIntegrationHistoryPath, path
+		, beforeFinEntryIntegrationSource
+	);
 	const current = JSON.parse(source);
 	const previous = JSON.parse(beforeFinEntryIntegrationSource(path, source));
 	let pins = 0;
@@ -53,8 +58,7 @@ test("Fin entry integration refreshes source pins without changing any observati
 		{ file.sha256 = update.currentSha256; pins++; }
 	}
 	assert.equal(pins, 103); assert.deepEqual(current, previous);
-	for(const evidence of JSON.parse(await readFile(path)).evidence) for(const file of evidence.files)
-		assert.equal(sha256(await readFile(file.path)), file.sha256, file.path);
+	await readTypeSurface();
 });
 
 test("Fin entry integration history updater refuses another HEAD before writing", async t => {

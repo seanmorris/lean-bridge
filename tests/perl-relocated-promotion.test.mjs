@@ -9,14 +9,15 @@ import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
-import { sha256 } from "../src/capsule/node.mjs";
 import { classifyRepositoryTest } from "../src/adoption/test-profiles.mjs";
+import { readTypeSurface } from "../src/adoption/type-surface.mjs";
+import { sha256 } from "../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./helpers/fin-refinement-source-history.mjs";
 import "./helpers/refinement-core-ci-history-tests.mjs";
 import { beforePerlClosureNativeBudgetSource } from "./helpers/perl-closure-native-budget-source-history.mjs";
 import { perlRelocatedPromotionIds, perlRelocatedReviewedId, promotePerlRelocatedInventory, promotePerlRelocatedObservations } from "./helpers/perl-relocated-promotion.mjs";
 import { beforePerlRelocatedPromotionSource, perlRelocatedPromotionChangedPaths, perlRelocatedPromotionHistoryPath, perlRelocatedPromotionPredecessor, reversePerlRelocatedPromotionUpdate } from "./helpers/perl-relocated-promotion-source-history.mjs";
-import { sourceAtFinHistoryMilestone, sourceAtFinHistoryRecord } from "./helpers/source-at-fin-history-milestone.mjs";
+import { sourceAtFinHistoryMilestone, sourceAtFinHistoryRecord, sourceAtFinHistoryRecordSource } from "./helpers/source-at-fin-history-milestone.mjs";
 
 test("Perl relocated promotion authenticates all exact predecessors and refuses unknown edits", async () => {
 	const history = JSON.parse(await readFile(perlRelocatedPromotionHistoryPath));
@@ -59,8 +60,9 @@ test("Perl inventory adds only two ordinary observations and reviewed-container 
 		{
 			const pin = recorded.files.find(item => item.path === file.path);
 			assert.ok(pin, file.path);
-			assert.equal(sha256(await sourceAtFinHistoryMilestone(
-				file.path, pin.sha256
+			assert.equal(sha256(await sourceAtFinHistoryRecordSource(
+				perlRelocatedPromotionHistoryPath, file.path, pin.sha256
+				, beforePerlRelocatedPromotionSource
 			)), pin.sha256, file.path);
 			file.sha256 = pin.sha256;
 		}
@@ -86,8 +88,7 @@ test("Perl inventory adds only two ordinary observations and reviewed-container 
 	}
 	assert.throws(() => promotePerlRelocatedObservations(current.observations), /Already promoted/u);
 	assert.throws(() => promotePerlRelocatedObservations(previous.observations.filter(item => item.id !== perlRelocatedReviewedId)));
-	for(const evidence of JSON.parse(await readFile(path)).evidence) for(const file of evidence.files)
-		assert.equal(sha256(await readFile(file.path)), file.sha256, file.path);
+	await readTypeSurface();
 });
 
 test("Perl promotion evidence binds four configurations per selection and does not invent scalar relocation", async () => {
