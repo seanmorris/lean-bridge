@@ -90,11 +90,13 @@ jobs:
           source scripts/env.sh
           case "${{ matrix.profile }}" in
             python)
-              export LEAN_BRIDGE_PYTHON=$(command -v python)
+              LEAN_BRIDGE_PYTHON=$(command -v python)
+              export LEAN_BRIDGE_PYTHON
               ;;
             ruby)
-              export LEAN_BRIDGE_RUBY=$(command -v ruby)
-              export LEAN_BRIDGE_GEM=$(command -v gem)
+              LEAN_BRIDGE_RUBY=$(command -v ruby)
+              LEAN_BRIDGE_GEM=$(command -v gem)
+              export LEAN_BRIDGE_RUBY LEAN_BRIDGE_GEM
               ;;
             rust)
               export LEAN_BRIDGE_RUSTC=$PWD/.toolchains/rust-1.90.0/bin/rustc

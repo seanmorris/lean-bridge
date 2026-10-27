@@ -227,9 +227,6 @@ import {
 	, reverseCoreHistoricalEvidenceReplayUpdate
 } from "./core-historical-evidence-replay-source-history.mjs";
 import {
-	assertNominalPrimitiveSubtypeHistoryCheckout
-} from "./nominal-primitive-subtype-history-checkout.mjs";
-import {
 	beforeFinRefinementSource, finRefinementNormalizationPaths
 } from "./fin-refinement-source-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
@@ -1244,7 +1241,12 @@ test("primitive Subtype sparse checkout reverses every transition", async () => 
 	, addition.currentSha256, addition.path);
 });
 
-test("primitive Subtype acceptance uses one exact bounded history checkout", () => {
+test("primitive Subtype acceptance uses one exact bounded history checkout", async () => {
+	const helper = git(["show"
+		, `${nominalPrimitiveSubtypeSparseCheckoutImplementation}:`
+			+ "tests/helpers/nominal-primitive-subtype-history-checkout.mjs"]);
+	const historical = await import("data:text/javascript;base64,"
+		+ Buffer.from(helper).toString("base64"));
 	for(const path of nominalPrimitiveSubtypeSparseCheckoutWorkflowPaths)
 	{
 		const workflow = git(["show"
@@ -1252,11 +1254,8 @@ test("primitive Subtype acceptance uses one exact bounded history checkout", () 
 		const checkout = workflow.split(
 			"      - name: Check out the exact revision and original evidence history\n"
 		)[1].split("      - name: ")[0];
-		assertNominalPrimitiveSubtypeHistoryCheckout(checkout);
+		historical.assertNominalPrimitiveSubtypeHistoryCheckout(checkout);
 	}
-	const helper = git(["show"
-		, `${nominalPrimitiveSubtypeSparseCheckoutImplementation}:`
-			+ "tests/helpers/nominal-primitive-subtype-history-checkout.mjs"]);
 	assert.match(helper
 		, /Retain every producer commit while materializing only live source/u);
 	assert.match(helper

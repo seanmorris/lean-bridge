@@ -49,6 +49,7 @@ const profileManifest = Object.freeze({
 		, "structural-subtype-npm-evidence"
 		, "structural-subtype-npm-installed"
 		, "structural-subtype-npm"
+		, "workflow-trigger-policy"
 		, "binding-ir-contract"
 		, "binding-ir-structured"
 		, "owned-aggregate-contract"
