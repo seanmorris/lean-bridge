@@ -367,6 +367,19 @@ test("history inventory checks reuse the authenticated type-surface pass", async
 	}
 });
 
+test("inherited-record history reads its immutable record endpoint", async () => {
+	const source = await readFile(
+		"tests/helpers/inherited-checked-record-promotion-source-history-tests.mjs"
+		, "utf8"
+	);
+	assert.match(source
+		, /import \{ sourceAtFinHistoryRecordSource \} from "[.]\/source-at-fin-history-milestone[.]mjs";/u);
+	assert.equal([...source.matchAll(/sourceAtFinHistoryRecordSource\(/gu)].length, 2
+		, "Both updated and added sources must use the immutable record endpoint");
+	assert.doesNotMatch(source, /sourceAtFinHistoryMilestone/u
+		, "The inherited-record replay must not reconstruct the complete Fin history hub");
+});
+
 test("Core shard enumeration has one repository-wide code-unit order", async t => {
 	const root = await mkdtemp(join(tmpdir(), "lean-bridge-core-shards-"));
 	t.after(() => rm(root, { recursive: true, force: true }));

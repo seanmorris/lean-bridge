@@ -23,7 +23,7 @@ import {
 	inheritedCheckedRecordReferences, promoteInheritedCheckedRecords
 } from "./inherited-checked-record-promotion.mjs";
 import { sha256 } from "./source-history-digest.mjs";
-import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
+import { sourceAtFinHistoryRecordSource } from "./source-at-fin-history-milestone.mjs";
 import {
 	sourceAtHistoryMilestone, withHistoryMilestoneSourcePins
 } from "./source-history-test-source.mjs";
@@ -50,8 +50,9 @@ test("inherited checked-record promotion has one exact reversible lineage", asyn
 		inheritedCheckedRecordPromotionChangedPaths)));
 	for(const update of record.updates)
 	{
-		const current = await sourceAtFinHistoryMilestone(
-			update.path, update.currentSha256
+		const current = await sourceAtFinHistoryRecordSource(
+			inheritedCheckedRecordPromotionHistoryPath
+			, update.path, update.currentSha256
 			, beforeInheritedCheckedRecordPromotionSource
 		);
 		const previous = git(["show"
@@ -89,8 +90,9 @@ test("inherited checked-record promotion closes additions", async () => {
 		inheritedCheckedRecordPromotionHistoryPath, "utf8"));
 	for(const addition of record.additions)
 	{
-		assert.equal(sha256(await sourceAtFinHistoryMilestone(
-			addition.path, addition.currentSha256))
+		assert.equal(sha256(await sourceAtFinHistoryRecordSource(
+			inheritedCheckedRecordPromotionHistoryPath
+			, addition.path, addition.currentSha256))
 			, addition.currentSha256, addition.path);
 		assert.notEqual(spawnSync("git", ["cat-file", "-e"
 			, `${inheritedCheckedRecordPromotionPredecessor}:${addition.path}`]
