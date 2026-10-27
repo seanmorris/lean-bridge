@@ -1,0 +1,880 @@
+{
+  "historyAdditions": [
+    {
+      "currentSha256": "4fce78c7138e245dc9f43bd89852e5443578437ad8d906db2a515586078c387b",
+      "path": "scripts/update-core-recursive-callable-replay-bound-source-history.mjs"
+    },
+    {
+      "currentSha256": "9e692b4c606da5d20755fa7a593d426728cdb6dbd6ec6784276125c9b9f68917",
+      "path": "tests/helpers/core-recursive-callable-replay-bound-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "75f8eeb8389b22dcd0fa28bd13437c633eb59df2",
+  "integrationUpdates": [
+    {
+      "currentSha256": "3b90bd754128148b4f117e1abc09723fad6fa7ee692fc399e86a6050b61dcd91",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeCoreRecursiveCallableReplayBoundSource\n\t, coreRecursiveCallableReplayBoundHistoryAdditions\n\t, coreRecursiveCallableReplayBoundHistoryPath\n\t, coreRecursiveCallableReplayBoundImplementation\n\t, coreRecursiveCallableReplayBoundImplementationPaths\n\t, coreRecursiveCallableReplayBoundIntegrationPaths\n\t, coreRecursiveCallableReplayBoundPredecessor\n\t, reverseCoreRecursiveCallableReplayBoundUpdate\n} from \"./core-recursive-callable-replay-bound-source-history.mjs\";\n",
+          "previous": "",
+          "start": 357
+        },
+        {
+          "current": "const readCoreRecursiveCallableReplayBound = async () => JSON.parse(\n\tawait readFile(coreRecursiveCallableReplayBoundHistoryPath, \"utf8\")\n);\n",
+          "previous": "",
+          "start": 14771
+        },
+        {
+          "current": "test(\"Core recursive-callable replay bound records its exact range\", async () => {\n\tconst record = await readCoreRecursiveCallableReplayBound();\n\tassert.equal(record.schemaVersion, 1);\n\tassert.equal(record.milestone\n\t\t, \"core-recursive-callable-replay-bound-source-v1\");\n\tassert.equal(record.predecessorCommit\n\t\t, coreRecursiveCallableReplayBoundPredecessor);\n\tassert.equal(record.implementationCommit\n\t\t, coreRecursiveCallableReplayBoundImplementation);\n\tassert.deepEqual(record.updates.map(update => update.path)\n\t\t, coreRecursiveCallableReplayBoundImplementationPaths);\n\tassert.deepEqual(record.historyAdditions.map(addition => addition.path)\n\t\t, coreRecursiveCallableReplayBoundHistoryAdditions);\n\tassert.deepEqual(record.integrationUpdates.map(update => update.path)\n\t\t, coreRecursiveCallableReplayBoundIntegrationPaths);\n\tassert.equal(git([\"rev-parse\"\n\t\t, `${coreRecursiveCallableReplayBoundImplementation}^`]).trim()\n\t, coreRecursiveCallableReplayBoundPredecessor);\n\tassert.deepEqual(git([\"diff\", \"--name-only\", \"--diff-filter=M\"\n\t\t, coreRecursiveCallableReplayBoundPredecessor\n\t\t, coreRecursiveCallableReplayBoundImplementation])\n\t\t.trim().split(\"\\n\").sort()\n\t, [...coreRecursiveCallableReplayBoundImplementationPaths].sort());\n});\n\ntest(\"Core recursive-callable replay bound reverses every transition\", async () => {\n\tconst record = await readCoreRecursiveCallableReplayBound();\n\tfor(const update of [...record.updates, ...record.integrationUpdates])\n\t{\n\t\tconst integration = record.integrationUpdates.includes(update);\n\t\tconst current = integration\n\t\t\t? await sourceAtFinHistoryRecordSource(\n\t\t\t\tcoreRecursiveCallableReplayBoundHistoryPath, update.path\n\t\t\t\t, update.currentSha256\n\t\t\t\t, beforeCoreRecursiveCallableReplayBoundSource\n\t\t\t)\n\t\t\t: await sourceAtFinHistoryRecord(\n\t\t\t\tcoreRecursiveCallableReplayBoundHistoryPath, update.path\n\t\t\t\t, beforeCoreRecursiveCallableReplayBoundSource\n\t\t\t);\n\t\tconst base = integration\n\t\t\t? coreRecursiveCallableReplayBoundImplementation\n\t\t\t: coreRecursiveCallableReplayBoundPredecessor;\n\t\tconst previous = git([\"show\", `${base}:${update.path}`]);\n\t\tassert.equal(reverseCoreRecursiveCallableReplayBoundUpdate(\n\t\t\tcurrent, update), previous, update.path);\n\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n\t\tassert.ok(finRefinementNormalizationPaths.includes(update.path));\n\t}\n\tfor(const addition of record.historyAdditions)\n\t\tassert.equal(sha256(await sourceAtFinHistoryRecordSource(\n\t\t\tcoreRecursiveCallableReplayBoundHistoryPath\n\t\t\t, addition.path, addition.currentSha256\n\t\t)), addition.currentSha256, addition.path);\n});\n\ntest(\"Core recursive-callable replay bound rejects altered transitions\", async () => {\n\tconst update = (await readCoreRecursiveCallableReplayBound()).updates[0];\n\tconst current = await sourceAtFinHistoryRecord(\n\t\tcoreRecursiveCallableReplayBoundHistoryPath, update.path\n\t\t, beforeCoreRecursiveCallableReplayBoundSource\n\t);\n\tfor(const forged of [{ ...update, currentSha256: \"0\".repeat(64) }\n\t\t, { ...update, previousSha256: \"0\".repeat(64) }\n\t\t, { ...update, path: \"unrelated.mjs\" }\n\t\t, { ...update, edits: [] }\n\t\t, { ...update, edits: [...update.edits, update.edits[0]] }])\n\t\tassert.throws(() => reverseCoreRecursiveCallableReplayBoundUpdate(\n\t\t\tcurrent, forged));\n\tassert.equal(beforeCoreRecursiveCallableReplayBoundSource(\n\t\tupdate.path, current + \"unknown\"), current + \"unknown\");\n});\n\ntest(\"Core recursive-callable replay-bound writer refuses another checkout\", async t => {\n\tconst root = await mkdtemp(join(\n\t\ttmpdir(), \"lean-core-recursive-replay-history-guard-\"));\n\tt.after(() => rm(root, { recursive: true }));\n\tconst result = spawnSync(process.execPath, [resolve(\n\t\t\"scripts/update-core-recursive-callable-replay-bound-source-history.mjs\"\n\t)], { cwd: root, encoding: \"utf8\", timeout: 15_000 });\n\tassert.notEqual(result.status, 0);\n\tassert.equal(result.stdout, \"\");\n\tassert.deepEqual(await readdir(root), []);\n});\n\n",
+          "previous": "",
+          "start": 18794
+        }
+      ],
+      "path": "tests/helpers/core-historical-evidence-replay-source-history-tests.mjs",
+      "previousSha256": "3bb2bb7a52dc836dbe2b02df9a654d34ce28751813374ccabb6cc5b959929d7d"
+    },
+    {
+      "currentSha256": "6749dcd2c2297ff0babb3561d6c79db080a0d808e2fb5b640cbd0b936791466b",
+      "edits": [
+        {
+          "current": "import { beforeCoreRecursiveCallableReplayBoundSource, coreRecursiveCallableReplayBoundNormalizationPaths } from \"./core-recursive-callable-replay-bound-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...coreRecursiveCallableReplayBoundNormalizationPaths()\n\t, ...coreLegacyOwnedEvidenceReplayBoundNormalizationPaths()\n",
+          "previous": "\t...coreLegacyOwnedEvidenceReplayBoundNormalizationPaths()\n",
+          "start": 195677
+        },
+        {
+          "current": "\tlet stage = beforeCoreRecursiveCallableReplayBoundSource(\n\t\tpath, text, expected\n\t);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCoreLegacyOwnedEvidenceReplayBoundSource(\n",
+          "previous": "\tlet stage = beforeCoreLegacyOwnedEvidenceReplayBoundSource(\n",
+          "start": 243322
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "cd38d177e20dd268e21f1a130674ddc217261c8e2d58b4a4e766d564b1d6f764"
+    }
+  ],
+  "milestone": "core-recursive-callable-replay-bound-source-v1",
+  "predecessorCommit": "a897eab54811e622111a63ff5c85b30eb54544fa",
+  "schemaVersion": 1,
+  "scope": "Authenticate the recursive-callable and structured-callable history chain from each immutable producer tree instead of replaying the 98 MiB live type surface through every later milestone. Validate predecessor gates before allocating current milestone inventories; bind the WIT composition boundary directly to its producer; retain exact mutation refusal, reversible transitions, source identities, inventory classification and the complete Core contract.",
+  "updates": [
+    {
+      "currentSha256": "2e038edcbcbf765e51f27ddd8c9bdd937efcb8e5f0b1c544f00e7f6351e96d50",
+      "edits": [
+        {
+          "current": "import { assertDotnetRecursiveCallableExecution, assertDotnetRecursiveCallableIntegration, dotnetRecursiveCallableExecutionPath, dotnetRecursiveCallableProducer } from \"./helpers/dotnet-recursive-callable-evidence.mjs\";\n",
+          "previous": "import { assertDotnetRecursiveCallableExecution, assertDotnetRecursiveCallableIntegration, dotnetRecursiveCallableExecutionPath } from \"./helpers/dotnet-recursive-callable-evidence.mjs\";\n",
+          "start": 260
+        },
+        {
+          "current": "import { bytesAtProducer } from \"./helpers/producer-source.mjs\";\n",
+          "previous": "import { beforeJvmRecursiveCallables } from \"./helpers/jvm-recursive-callable-source-history.mjs\";\n",
+          "start": 753
+        },
+        {
+          "current": "\t\tconst source = bytesAtProducer(dotnetRecursiveCallableProducer\n\t\t\t, update.path, update.currentSha256).toString(\"utf8\");\n",
+          "previous": "\t\t// The hub reverses every recognized state, so live reads and predecessor reads name their stops.\n\t\tconst source = beforeJvmRecursiveCallables(update.path, await readFile(update.path, \"utf8\"), update.currentSha256);\n",
+          "start": 5882
+        }
+      ],
+      "path": "tests/dotnet-recursive-callable-evidence.test.mjs",
+      "previousSha256": "a5432e0b6fe3a5bb9471bca3d9e05e9cf7af45e173939786d805d05c0c6d395a"
+    },
+    {
+      "currentSha256": "ffeaac4910674df99d8205d335fefc5abec730a0b9c28064622af62337459113",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { readFile } from \"node:fs/promises\";\n",
+          "start": 139
+        },
+        {
+          "current": "\tconst previousBytes = await priorSource(\n\t\twitAcceptancePath, record.previous.sha256);\n",
+          "previous": "\tconst previousBytes = await readFile(witAcceptancePath); assert.equal(sha256(previousBytes), record.previous.sha256);\n",
+          "start": 6004
+        },
+        {
+          "current": "\tawait assertWitRecursiveAcceptance(previous);\n",
+          "previous": "",
+          "start": 6137
+        },
+        {
+          "current": "\tconst bytes = await priorSource(record.execution.path, record.execution.sha256);\n",
+          "previous": "\tconst bytes = await readFile(record.execution.path); assert.equal(sha256(bytes), record.execution.sha256);\n",
+          "start": 6256
+        },
+        {
+          "current": "",
+          "previous": "\tawait assertWitRecursiveAcceptance(previous);\n",
+          "start": 9469
+        }
+      ],
+      "path": "tests/helpers/c-structured-callable-evidence.mjs",
+      "previousSha256": "9f717501a8c422740c1bf507ddaea52fdfc8f4f7c563b932791dc5ba994dcdaf"
+    },
+    {
+      "currentSha256": "fe2dee26d2ac65048914657eec09869972631e110491cbfdb898885c726706b3",
+      "edits": [
+        {
+          "current": "\tawait assertNativeRecursiveCallableIntegration(previous);\n",
+          "previous": "",
+          "start": 8240
+        },
+        {
+          "current": "",
+          "previous": "\tawait assertNativeRecursiveCallableIntegration(previous);\n",
+          "start": 10413
+        }
+      ],
+      "path": "tests/helpers/closure-thread-evidence.mjs",
+      "previousSha256": "2af7cbcb26cd07f8c9f7113759109432c48b174609608183c8178a0522db9759"
+    },
+    {
+      "currentSha256": "5c87e92c05b947493f09fbcb03de66c8e8848ae7a17dbe4749956cc7f0f5eb89",
+      "edits": [
+        {
+          "current": "test(\"recursive callable history authenticates its immutable producer chain\", async () => {\n\tconst recursiveMilestones = [\n\t\t[\"dotnet\", \"e3ebe7870a10e98d0215b3b09fc3910d719ddc0b\"]\n\t\t, [\"perl\", \"a8a255329c102155add79169d71a05246190b8fd\"]\n\t\t, [\"ruby\", \"7cf6ee0bf049502eb9b581c8cc6efb88dc9aeddc\"]\n\t\t, [\"rust\", \"8dcaf9b69beb73b756743e36c075f58c2bc82f86\"]\n\t\t, [\"python\", \"172baa67067a549454fb79449d205f939474e58b\"]\n\t];\n\tfor(const [name, producer] of recursiveMilestones)\n\t{\n\t\tconst helper = await readFile(\n\t\t\t`tests/helpers/${name}-recursive-callable-evidence.mjs`, \"utf8\");\n\t\tconst testSource = await readFile(\n\t\t\t`tests/${name}-recursive-callable-evidence.test.mjs`, \"utf8\");\n\t\tassert.ok(helper.includes(`Producer\\n\\t= \"${producer}\"`), name);\n\t\tassert.match(helper, /sourceAtProducer\\(/u, name);\n\t\tassert.match(helper, /typeSurfaceContractsAtProducer\\(/u, name);\n\t\tassert.match(helper\n\t\t\t, /moduleAtProducer\\([\\s\\S]*\"src\\/adoption\\/type-surface[.]mjs\"/u\n\t\t\t, name);\n\t\tassert.doesNotMatch(helper\n\t\t\t, /const priorSource = async[^;]*await readFile\\(path/u, name);\n\t\tassert.match(testSource, /bytesAtProducer\\(/u, name);\n\t}\n\tconst structuredMilestones = [\n\t\t[\"native-recursive-callable-evidence.mjs\"\n\t\t\t, \"2273d357fc959cf88bf7b0e1aea70e908ba1ba4d\"]\n\t\t, [\"wit-structured-callable-evidence.mjs\"\n\t\t\t, \"136e4942ed32bd923cb721eb80aa038cfaa07f74\"]\n\t\t, [\"php-wasm-structured-callable-evidence.mjs\"\n\t\t\t, \"7294b0cc57153e53e118789ed83a300d43236f18\"]\n\t\t, [\"php-structured-callable-evidence.mjs\"\n\t\t\t, \"89c43a33eb639bc8a2ca19df697ba56e9cfacae9\"]\n\t\t, [\"npm-structured-callable-evidence.mjs\"\n\t\t\t, \"073ccdf8eb399e419bdafd233f40d9c55273ebb0\"]\n\t\t, [\"perl-structured-callable-evidence.mjs\"\n\t\t\t, \"8538d3f67b0cdfffabf35b95153a15ecd56d84f5\"]\n\t];\n\tfor(const [name, producer] of structuredMilestones)\n\t{\n\t\tconst helper = await readFile(`tests/helpers/${name}`, \"utf8\");\n\t\tassert.ok(helper.includes(`Producer\\n\\t= \"${producer}\"`), name);\n\t\tassert.match(helper, /sourceAtProducer\\(/u, name);\n\t\tassert.match(helper, /typeSurfaceContractsAtProducer\\(/u, name);\n\t\tassert.match(helper\n\t\t\t, /moduleAtProducer\\([\\s\\S]*\"src\\/adoption\\/type-surface[.]mjs\"/u\n\t\t\t, name);\n\t\tassert.doesNotMatch(helper\n\t\t\t, /const priorSource = async[^;]*await readFile\\(path/u, name);\n\t}\n\tfor(const [name, producer] of [\n\t\t[\"c-structured-callable-evidence.mjs\"\n\t\t\t, \"9e6eb510535a6907c37d63f89ecbe0ac66927c32\"]\n\t\t, [\"wit-recursive-acceptance.mjs\"\n\t\t\t, \"ef6ff9ff0e03a659ffe1e9d12b821453399bff9d\"]\n\t\t, [\"wit-composition-evidence.mjs\"\n\t\t\t, \"60c4262eacacc6b668f16a6778b535a3f2d68a54\"]\n\t]) {\n\t\tconst helper = await readFile(`tests/helpers/${name}`, \"utf8\");\n\t\tassert.ok(helper.includes(`Producer\\n\\t= \"${producer}\"`), name);\n\t\tassert.match(helper, /sourceAtProducer\\(/u, name);\n\t\tassert.doesNotMatch(helper\n\t\t\t, /beforeWitAcceptance\\([^;]*await readFile/u, name);\n\t}\n\tconst historical = await readFile(\n\t\t\"tests/helpers/historical-type-surface-cells.mjs\", \"utf8\");\n\tassert.match(historical\n\t\t, /const checkedRecordShape = Object[.]freeze\\(/u);\n\tassert.doesNotMatch(historical, /readFile/u\n\t\t, \"Historical classification must not parse the live 98 MiB inventory\");\n});\n\n",
+          "previous": "",
+          "start": 25670
+        }
+      ],
+      "path": "tests/helpers/core-quality-budget-tests.mjs",
+      "previousSha256": "16b56e9bc45f2d6749a0e4939394185317d14093993d2647a63dee6fea6d11e9"
+    },
+    {
+      "currentSha256": "de3d398932beee5839422e10d16b94e383df774094c25c914c1a180e3336d93e",
+      "edits": [
+        {
+          "current": "\tawait assertCStructuredCallableIntegration(previous);\n",
+          "previous": "",
+          "start": 7262
+        },
+        {
+          "current": "",
+          "previous": "\tawait assertCStructuredCallableIntegration(previous);\n",
+          "start": 11191
+        }
+      ],
+      "path": "tests/helpers/cpp-structured-callable-evidence.mjs",
+      "previousSha256": "ea29bd696b431b7e286035292705838eaee081a607323cc2ed25cd3b0c96b2fb"
+    },
+    {
+      "currentSha256": "de676b02c034415345d841f554ab5d374a2d8b8cb9309d1dbf4fd7999d60b261",
+      "edits": [
+        {
+          "current": "import { moduleAtProducer } from \"./producer-module.mjs\";\nimport {\n\tsourceAtProducer, typeSurfaceContractsAtProducer\n} from \"./producer-source.mjs\";\n",
+          "previous": "import { readTypeSurface } from \"../../src/adoption/type-surface.mjs\";\nimport { historicalTypeSurfaceCells as typeSurfaceCells } from \"./historical-type-surface-cells.mjs\";\n",
+          "start": 241
+        },
+        {
+          "current": "export const dotnetRecursiveCallableProducer\n\t= \"e3ebe7870a10e98d0215b3b09fc3910d719ddc0b\";\nconst priorSource = async (path, expected) => {\n\tconst source = sourceAtProducer(dotnetRecursiveCallableProducer, path);\n\treturn sha256(source) === expected ? source\n\t\t: beforeJvmRecursiveCallables(path, source, expected);\n};\n",
+          "previous": "// The hub reverses every recognized state, so each read names the milestone digest it stops at.\nconst priorSource = async (path, expected) => beforeJvmRecursiveCallables(path, await readFile(path, \"utf8\"), expected);\n",
+          "start": 1298
+        },
+        {
+          "current": "\tawait assertPerlRecursiveCallableIntegration(previous);\n",
+          "previous": "",
+          "start": 3680
+        },
+        {
+          "current": "\tconst contracts = typeSurfaceContractsAtProducer(\n\t\tdotnetRecursiveCallableProducer);\n\tconst { typeSurfaceCells } = await moduleAtProducer(\n\t\tdotnetRecursiveCallableProducer, \"src/adoption/type-surface.mjs\");\n",
+          "previous": "\tconst { document: current, ...contracts } = await readTypeSurface(); void current;\n",
+          "start": 4929
+        },
+        {
+          "current": "",
+          "previous": "\tawait assertPerlRecursiveCallableIntegration(previous);\n",
+          "start": 6950
+        }
+      ],
+      "path": "tests/helpers/dotnet-recursive-callable-evidence.mjs",
+      "previousSha256": "9a760536b0d599d2cb686edccd35989072b6ee5e7b5581c205ce8b3b6291a9c2"
+    },
+    {
+      "currentSha256": "9f7f6c70f5865f65b79e7f35f3840c01cb6ea801f259e531808f3af0871948fd",
+      "edits": [
+        {
+          "current": "\tawait assertRubyStructuredCallableIntegration(previous);\n",
+          "previous": "",
+          "start": 10599
+        },
+        {
+          "current": "",
+          "previous": "\tawait assertRubyStructuredCallableIntegration(previous);\n",
+          "start": 14588
+        }
+      ],
+      "path": "tests/helpers/dotnet-structured-callable-evidence.mjs",
+      "previousSha256": "8a5b79f09720aa95eed4e139d95556a7b9d2dbc53c05549f26188f700b068a12"
+    },
+    {
+      "currentSha256": "f5032282bf0aff3a7d864e6458277b1bfc2ed9f39b265253a7a42ccbda193984",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { readFileSync } from \"node:fs\";\n",
+          "start": 163
+        },
+        {
+          "current": "const checkedRecordShape = Object.freeze({\n\tid: \"checked-record\"\n\t, lean: \"Checked records and closed Nat indices\"\n\t, family: \"checked-value\"\n\t, ir: null\n\t, meaning: \"A structure with zero or more runtime payload fields and erased proofs, optionally specialized at closed Nat literal indices. A proof-only record crosses as an empty carrier and a Unit-bearing record keeps its unit field; neither is an absent, null or default value.\"\n\t, bounds: \"Construct inputs only through the selected safe Lean constructor over the exact payload fields. Preserve closed indices and per-site choices; project proof-backed results without fabricating proofs.\"\n});\n\n",
+          "previous": "",
+          "start": 236
+        },
+        {
+          "current": "\tassert.ok(!document.observations.some(item => item.shapes.includes(checkedRecordShape.id)));\n\tconst classified = typeSurfaceCells({\n\t\t...document, shapes: [...document.shapes, checkedRecordShape]\n\t}, contracts);\n\tfor(const cell of classified.filter(\n\t\titem => item.shape === checkedRecordShape.id))\n",
+          "previous": "\tconst shape = JSON.parse(readFileSync(\"docs/type-surface.v1.json\", \"utf8\")).shapes.find(item => item.id === \"checked-record\");\n\tassert.ok(shape); assert.equal(shape.family, \"checked-value\");\n\tassert.ok(!document.observations.some(item => item.shapes.includes(shape.id)));\n\tconst classified = typeSurfaceCells({ ...document, shapes: [...document.shapes, shape] }, contracts);\n\tfor(const cell of classified.filter(item => item.shape === shape.id))\n",
+          "start": 1428
+        }
+      ],
+      "path": "tests/helpers/historical-type-surface-cells.mjs",
+      "previousSha256": "8e501313c6be8459ab0c6858935270b6dce6c23c49c39d4fea98a1c380f52aab"
+    },
+    {
+      "currentSha256": "6f305f50cdd8b4d0b59d40b43d201c5e90968d0c3bdd2336b1b9bae95585353c",
+      "edits": [
+        {
+          "current": "\tawait assertDotnetStructuredCallableIntegration(previous);\n",
+          "previous": "",
+          "start": 3985
+        },
+        {
+          "current": "",
+          "previous": "\tawait assertDotnetStructuredCallableIntegration(previous);\n",
+          "start": 7973
+        }
+      ],
+      "path": "tests/helpers/jvm-structured-callable-evidence.mjs",
+      "previousSha256": "0d6e0cde0cf98339856241af8f8a63795c3903a3145f82102532a5b2684e2928"
+    },
+    {
+      "currentSha256": "da263bb42164cdcc45b23123110f7799528b98758f684e790a5a0deaf0af0657",
+      "edits": [
+        {
+          "current": "import { moduleAtProducer } from \"./producer-module.mjs\";\nimport {\n\tsourceAtProducer, typeSurfaceContractsAtProducer\n} from \"./producer-source.mjs\";\n",
+          "previous": "import { readTypeSurface } from \"../../src/adoption/type-surface.mjs\";\nimport { historicalTypeSurfaceCells as typeSurfaceCells } from \"./historical-type-surface-cells.mjs\";\n",
+          "start": 257
+        },
+        {
+          "current": "export const nativeRecursiveCallableProducer\n\t= \"2273d357fc959cf88bf7b0e1aea70e908ba1ba4d\";\nconst priorSource = async (path, expected) => {\n\tconst source = sourceAtProducer(nativeRecursiveCallableProducer, path);\n\treturn sha256(source) === expected ? source\n\t\t: beforeClosureThreadLifetime(path, source, expected);\n};\n",
+          "previous": "const priorSource = async (path, expected) => beforeClosureThreadLifetime(path, await readFile(path, \"utf8\"), expected);\n",
+          "start": 1158
+        },
+        {
+          "current": "\tawait assertWitStructuredCallableIntegration(previous);\n",
+          "previous": "",
+          "start": 15101
+        },
+        {
+          "current": "\tconst contracts = typeSurfaceContractsAtProducer(nativeRecursiveCallableProducer);\n\tconst { typeSurfaceCells } = await moduleAtProducer(\n\t\tnativeRecursiveCallableProducer, \"src/adoption/type-surface.mjs\");\n\tconst old = JSON.parse(restored[\"docs/type-surface.v1.json\"]);\n",
+          "previous": "\tconst contracts = await readTypeSurface(), old = JSON.parse(restored[\"docs/type-surface.v1.json\"]);\n",
+          "start": 16637
+        },
+        {
+          "current": "",
+          "previous": "\tawait assertWitStructuredCallableIntegration(previous);\n",
+          "start": 18321
+        }
+      ],
+      "path": "tests/helpers/native-recursive-callable-evidence.mjs",
+      "previousSha256": "84288616e6eeb63e6239bb8cf79475f2abb373abb4fc08ff30d972137feb78c4"
+    },
+    {
+      "currentSha256": "9bc986d6c3d84a5952313899e7b821c50b02fc729ca827874196960179c03290",
+      "edits": [
+        {
+          "current": "import { moduleAtProducer } from \"./producer-module.mjs\";\nimport {\n\tsourceAtProducer, typeSurfaceContractsAtProducer\n} from \"./producer-source.mjs\";\n",
+          "previous": "import { readTypeSurface } from \"../../src/adoption/type-surface.mjs\";\nimport { historicalTypeSurfaceCells as typeSurfaceCells } from \"./historical-type-surface-cells.mjs\";\n",
+          "start": 289
+        },
+        {
+          "current": "export const npmStructuredCallableProducer\n\t= \"073ccdf8eb399e419bdafd233f40d9c55273ebb0\";\nconst priorSource = async (path, expected) => {\n\tconst source = sourceAtProducer(npmStructuredCallableProducer, path);\n\treturn sha256(source) === expected ? source\n\t\t: beforePhpStructuredCallables(path, source, expected);\n};\n",
+          "previous": "// The hub reverses every recognized state, so each read names the milestone digest it stops at.\nconst priorSource = async (path, expected) => beforePhpStructuredCallables(path, await readFile(path, \"utf8\"), expected);\n",
+          "start": 962
+        },
+        {
+          "current": "\tawait assertPerlStructuredCallableIntegration(previous);\n",
+          "previous": "",
+          "start": 10169
+        },
+        {
+          "current": "\tconst contracts = typeSurfaceContractsAtProducer(npmStructuredCallableProducer);\n\tconst { typeSurfaceCells } = await moduleAtProducer(\n\t\tnpmStructuredCallableProducer, \"src/adoption/type-surface.mjs\");\n\tconst document = JSON.parse(await priorSource(\"docs/type-surface.v1.json\"\n\t\t, record.sourceHashes[\"docs/type-surface.v1.json\"]));\n",
+          "previous": "\tconst { document, ...contracts } = { ...await readTypeSurface()\n\t\t, document: JSON.parse(await priorSource(\"docs/type-surface.v1.json\", record.sourceHashes[\"docs/type-surface.v1.json\"])) };\n",
+          "start": 11557
+        },
+        {
+          "current": "",
+          "previous": "\tawait assertPerlStructuredCallableIntegration(previous);\n",
+          "start": 13705
+        }
+      ],
+      "path": "tests/helpers/npm-structured-callable-evidence.mjs",
+      "previousSha256": "2c36d8a24a6a99c7448a70344d6491919fb61a233137ee48471b5bfe9b8608aa"
+    },
+    {
+      "currentSha256": "949896dfe93ede4a5eef221d12a67bfac5dd8992259fe0a843c36d0690d62898",
+      "edits": [
+        {
+          "current": "import { moduleAtProducer } from \"./producer-module.mjs\";\nimport {\n\tsourceAtProducer, typeSurfaceContractsAtProducer\n} from \"./producer-source.mjs\";\n",
+          "previous": "import { readTypeSurface } from \"../../src/adoption/type-surface.mjs\";\nimport { historicalTypeSurfaceCells as typeSurfaceCells } from \"./historical-type-surface-cells.mjs\";\n",
+          "start": 240
+        },
+        {
+          "current": "export const perlRecursiveCallableProducer\n\t= \"a8a255329c102155add79169d71a05246190b8fd\";\nconst priorSource = async (path, expected) => {\n\tconst source = sourceAtProducer(perlRecursiveCallableProducer, path);\n\treturn sha256(source) === expected ? source\n\t\t: beforeDotnetRecursiveCallables(path, source, expected);\n};\n",
+          "previous": "const priorSource = async (path, expected) => beforeDotnetRecursiveCallables(path, await readFile(path, \"utf8\"), expected);\n",
+          "start": 1228
+        },
+        {
+          "current": "\tawait assertRubyRecursiveCallableIntegration(previous);\n",
+          "previous": "",
+          "start": 10639
+        },
+        {
+          "current": "\tconst contracts = typeSurfaceContractsAtProducer(perlRecursiveCallableProducer);\n\tconst { typeSurfaceCells } = await moduleAtProducer(\n\t\tperlRecursiveCallableProducer, \"src/adoption/type-surface.mjs\");\n",
+          "previous": "\tconst { document: current, ...contracts } = await readTypeSurface(); void current;\n",
+          "start": 11874
+        },
+        {
+          "current": "",
+          "previous": "\tawait assertRubyRecursiveCallableIntegration(previous);\n",
+          "start": 13962
+        }
+      ],
+      "path": "tests/helpers/perl-recursive-callable-evidence.mjs",
+      "previousSha256": "6aa017c86214bb96221759b610a2846e633ec2c1dc85042f34abe315bf80d344"
+    },
+    {
+      "currentSha256": "ff62b6529ef22e91f7a8b85a7e53b5f7f7d96636a4841c25d2c62b08bdf26f87",
+      "edits": [
+        {
+          "current": "import { moduleAtProducer } from \"./producer-module.mjs\";\nimport {\n\tsourceAtProducer, typeSurfaceContractsAtProducer\n} from \"./producer-source.mjs\";\n",
+          "previous": "import { readTypeSurface } from \"../../src/adoption/type-surface.mjs\";\nimport { historicalTypeSurfaceCells as typeSurfaceCells } from \"./historical-type-surface-cells.mjs\";\n",
+          "start": 240
+        },
+        {
+          "current": "export const perlStructuredCallableProducer\n\t= \"8538d3f67b0cdfffabf35b95153a15ecd56d84f5\";\nconst priorSource = async (path, expected) => {\n\tconst source = sourceAtProducer(perlStructuredCallableProducer, path);\n\treturn sha256(source) === expected ? source\n\t\t: beforeNpmStructuredCallables(path, source, expected);\n};\n",
+          "previous": "const priorSource = async (path, expected) => beforeNpmStructuredCallables(path, await readFile(path, \"utf8\"), expected);\n",
+          "start": 1591
+        },
+        {
+          "current": "\tawait assertJvmStructuredCallableIntegration(previous);\n",
+          "previous": "",
+          "start": 14555
+        },
+        {
+          "current": "\tconst contracts = typeSurfaceContractsAtProducer(perlStructuredCallableProducer);\n\tconst { typeSurfaceCells } = await moduleAtProducer(\n\t\tperlStructuredCallableProducer, \"src/adoption/type-surface.mjs\");\n\tconst document = JSON.parse(await priorSource(\"docs/type-surface.v1.json\"\n\t\t, record.sourceHashes[\"docs/type-surface.v1.json\"]));\n",
+          "previous": "\tconst { document, ...contracts } = { ...await readTypeSurface()\n\t\t, document: JSON.parse(await priorSource(\"docs/type-surface.v1.json\", record.sourceHashes[\"docs/type-surface.v1.json\"])) };\n",
+          "start": 16398
+        },
+        {
+          "current": "",
+          "previous": "\tawait assertJvmStructuredCallableIntegration(previous);\n",
+          "start": 18651
+        }
+      ],
+      "path": "tests/helpers/perl-structured-callable-evidence.mjs",
+      "previousSha256": "e8066bfc6e8e3aba3112f4d59f97f348134f250e46d9680569bb58c8187d8564"
+    },
+    {
+      "currentSha256": "be45331feeda1d5f7562ed153d268159c1e239be7397ddab84844fed408e46ae",
+      "edits": [
+        {
+          "current": "\tawait assertClosureThreadIntegration(previous);\n",
+          "previous": "",
+          "start": 7062
+        },
+        {
+          "current": "",
+          "previous": "\tawait assertClosureThreadIntegration(previous);\n",
+          "start": 8880
+        }
+      ],
+      "path": "tests/helpers/php-ci-regression-evidence.mjs",
+      "previousSha256": "0a25177d465ca652f5c6fbac101010e46783093d9a5fc76a97a8d127ffe0e2de"
+    },
+    {
+      "currentSha256": "26bf33d7266081bc18b67cd6d2463e8e07b97bcb66916b96fa8f5f2e5e221be4",
+      "edits": [
+        {
+          "current": "import { moduleAtProducer } from \"./producer-module.mjs\";\nimport {\n\tsourceAtProducer, typeSurfaceContractsAtProducer\n} from \"./producer-source.mjs\";\n",
+          "previous": "import { readTypeSurface } from \"../../src/adoption/type-surface.mjs\";\nimport { historicalTypeSurfaceCells as typeSurfaceCells } from \"./historical-type-surface-cells.mjs\";\n",
+          "start": 259
+        },
+        {
+          "current": "export const phpStructuredCallableProducer\n\t= \"89c43a33eb639bc8a2ca19df697ba56e9cfacae9\";\nconst priorSource = async (path, expected) => {\n\tconst source = sourceAtProducer(phpStructuredCallableProducer, path);\n\treturn sha256(source) === expected ? source\n\t\t: beforePhpWasmStructuredCallables(path, source, expected);\n};\n",
+          "previous": "const priorSource = async (path, expected) => beforePhpWasmStructuredCallables(path, await readFile(path, \"utf8\"), expected);\n",
+          "start": 2615
+        },
+        {
+          "current": "\tawait assertNpmStructuredCallableIntegration(previous);\n",
+          "previous": "",
+          "start": 12430
+        },
+        {
+          "current": "\tconst contracts = typeSurfaceContractsAtProducer(phpStructuredCallableProducer);\n\tconst { typeSurfaceCells } = await moduleAtProducer(\n\t\tphpStructuredCallableProducer, \"src/adoption/type-surface.mjs\");\n\tconst document = JSON.parse(await priorSource(\"docs/type-surface.v1.json\"\n\t\t, record.sourceHashes[\"docs/type-surface.v1.json\"]));\n",
+          "previous": "\tconst { document, ...contracts } = { ...await readTypeSurface()\n\t\t, document: JSON.parse(await priorSource(\"docs/type-surface.v1.json\", record.sourceHashes[\"docs/type-surface.v1.json\"])) };\n",
+          "start": 13983
+        },
+        {
+          "current": "",
+          "previous": "\tawait assertNpmStructuredCallableIntegration(previous);\n",
+          "start": 16171
+        }
+      ],
+      "path": "tests/helpers/php-structured-callable-evidence.mjs",
+      "previousSha256": "2cef8269b2b767664bc04f2f89eab1ac5494210af33ec6626cba23c244fa9005"
+    },
+    {
+      "currentSha256": "1b302383d0dd31874927796a6056cdb7a89a465661fde5c90d9bec6f5e2927a6",
+      "edits": [
+        {
+          "current": "import { moduleAtProducer } from \"./producer-module.mjs\";\nimport {\n\tsourceAtProducer, typeSurfaceContractsAtProducer\n} from \"./producer-source.mjs\";\n",
+          "previous": "import { readTypeSurface } from \"../../src/adoption/type-surface.mjs\";\nimport { historicalTypeSurfaceCells as typeSurfaceCells } from \"./historical-type-surface-cells.mjs\";\n",
+          "start": 255
+        },
+        {
+          "current": "export const phpWasmStructuredCallableProducer\n\t= \"7294b0cc57153e53e118789ed83a300d43236f18\";\nconst priorSource = async (path, expected) => {\n\tconst source = sourceAtProducer(phpWasmStructuredCallableProducer, path);\n\treturn sha256(source) === expected ? source\n\t\t: beforeWitStructuredCallables(path, source, expected);\n};\n",
+          "previous": "const priorSource = async (path, expected) => beforeWitStructuredCallables(path, await readFile(path, \"utf8\"), expected);\n",
+          "start": 2851
+        },
+        {
+          "current": "\tawait assertPhpStructuredCallableIntegration(previous);\n",
+          "previous": "",
+          "start": 13394
+        },
+        {
+          "current": "\tconst contracts = typeSurfaceContractsAtProducer(\n\t\tphpWasmStructuredCallableProducer);\n\tconst { typeSurfaceCells } = await moduleAtProducer(\n\t\tphpWasmStructuredCallableProducer, \"src/adoption/type-surface.mjs\");\n\tconst document = JSON.parse(await priorSource(\"docs/type-surface.v1.json\"\n\t\t, record.sourceHashes[\"docs/type-surface.v1.json\"]));\n",
+          "previous": "\tconst { document, ...contracts } = { ...await readTypeSurface()\n\t\t, document: JSON.parse(await priorSource(\"docs/type-surface.v1.json\", record.sourceHashes[\"docs/type-surface.v1.json\"])) };\n",
+          "start": 14989
+        },
+        {
+          "current": "",
+          "previous": "\tawait assertPhpStructuredCallableIntegration(previous);\n",
+          "start": 17171
+        }
+      ],
+      "path": "tests/helpers/php-wasm-structured-callable-evidence.mjs",
+      "previousSha256": "78fe1ccfbac2c304fdbb5dba37af6510753fa09373a4bc767fe3f0fc06cd43cd"
+    },
+    {
+      "currentSha256": "26fd9543e94530bb4462c14add44f73f46408da57a66bba1a04eb0d8686e7504",
+      "edits": [
+        {
+          "current": "import { moduleAtProducer } from \"./producer-module.mjs\";\nimport {\n\tsourceAtProducer, typeSurfaceContractsAtProducer\n} from \"./producer-source.mjs\";\n",
+          "previous": "import { readTypeSurface } from \"../../src/adoption/type-surface.mjs\";\nimport { historicalTypeSurfaceCells as typeSurfaceCells } from \"./historical-type-surface-cells.mjs\";\n",
+          "start": 240
+        },
+        {
+          "current": "export const pythonRecursiveCallableProducer\n\t= \"172baa67067a549454fb79449d205f939474e58b\";\nconst priorSource = async (path, expected) => {\n\tconst source = sourceAtProducer(pythonRecursiveCallableProducer, path);\n\treturn sha256(source) === expected ? source\n\t\t: beforeRustRecursiveCallables(path, source, expected);\n};\n",
+          "previous": "const priorSource = async (path, expected) => beforeRustRecursiveCallables(path, await readFile(path, \"utf8\"), expected);\n",
+          "start": 1123
+        },
+        {
+          "current": "\tawait assertPhpCiIntegration(previous);\n",
+          "previous": "",
+          "start": 10256
+        },
+        {
+          "current": "\tconst contracts = typeSurfaceContractsAtProducer(\n\t\tpythonRecursiveCallableProducer);\n\tconst { typeSurfaceCells } = await moduleAtProducer(\n\t\tpythonRecursiveCallableProducer, \"src/adoption/type-surface.mjs\");\n",
+          "previous": "\tconst { document: current, ...contracts } = await readTypeSurface(); assert.ok(current.contractVersion);\n",
+          "start": 11489
+        },
+        {
+          "current": "",
+          "previous": "\tawait assertPhpCiIntegration(previous);\n",
+          "start": 13508
+        }
+      ],
+      "path": "tests/helpers/python-recursive-callable-evidence.mjs",
+      "previousSha256": "7208a9f1a6ddb8296d41255b9aa0f7f7fd0f5815c4fe6793fefbf62bab086022"
+    },
+    {
+      "currentSha256": "02c8bffcd7523e99fb8ec40b5ab4efb103055df1de516bb790cd8fc03e936a0d",
+      "edits": [
+        {
+          "current": "\tawait assertRustStructuredCallableIntegration(previous);\n",
+          "previous": "",
+          "start": 8997
+        },
+        {
+          "current": "",
+          "previous": "\tawait assertRustStructuredCallableIntegration(previous);\n",
+          "start": 12986
+        }
+      ],
+      "path": "tests/helpers/python-structured-callable-evidence.mjs",
+      "previousSha256": "a903245f183afbeb4b3a00989de0fb7c3613078b5d6651372a1b47b3711adbc2"
+    },
+    {
+      "currentSha256": "ba3f95570f1f47185b858f332d8c81ef2dcc968f548d9d1f724723ba604588d9",
+      "edits": [
+        {
+          "current": "import { moduleAtProducer } from \"./producer-module.mjs\";\nimport {\n\tsourceAtProducer, typeSurfaceContractsAtProducer\n} from \"./producer-source.mjs\";\n",
+          "previous": "import { readTypeSurface } from \"../../src/adoption/type-surface.mjs\";\nimport { historicalTypeSurfaceCells as typeSurfaceCells } from \"./historical-type-surface-cells.mjs\";\n",
+          "start": 236
+        },
+        {
+          "current": "export const rubyRecursiveCallableProducer\n\t= \"7cf6ee0bf049502eb9b581c8cc6efb88dc9aeddc\";\nconst priorSource = async (path, expected) => {\n\tconst source = sourceAtProducer(rubyRecursiveCallableProducer, path);\n\treturn sha256(source) === expected ? source\n\t\t: beforePerlRecursiveCallables(path, source, expected);\n};\n",
+          "previous": "const priorSource = async (path, expected) => beforePerlRecursiveCallables(path, await readFile(path, \"utf8\"), expected);\n",
+          "start": 1143
+        },
+        {
+          "current": "\tawait assertRustRecursiveCallableIntegration(previous);\n",
+          "previous": "",
+          "start": 9270
+        },
+        {
+          "current": "\tconst contracts = typeSurfaceContractsAtProducer(rubyRecursiveCallableProducer);\n\tconst { typeSurfaceCells } = await moduleAtProducer(\n\t\trubyRecursiveCallableProducer, \"src/adoption/type-surface.mjs\");\n",
+          "previous": "\tconst { document: current, ...contracts } = await readTypeSurface(); void current;\n",
+          "start": 10505
+        },
+        {
+          "current": "",
+          "previous": "\tawait assertRustRecursiveCallableIntegration(previous);\n",
+          "start": 12507
+        }
+      ],
+      "path": "tests/helpers/ruby-recursive-callable-evidence.mjs",
+      "previousSha256": "7ca8ba2865d5755702058520bc3a36a41cadfc4718b0fad1e347f8c0fe0c2a3b"
+    },
+    {
+      "currentSha256": "20760c582d8942b1e556c210dff783932b4f88eab0215599d220b84cde0ac738",
+      "edits": [
+        {
+          "current": "\tawait assertPythonStructuredCallableIntegration(previous);\n",
+          "previous": "",
+          "start": 8062
+        },
+        {
+          "current": "",
+          "previous": "\tawait assertPythonStructuredCallableIntegration(previous);\n",
+          "start": 12015
+        }
+      ],
+      "path": "tests/helpers/ruby-structured-callable-evidence.mjs",
+      "previousSha256": "de52c5114128cbf9fc168633f4a28ff305ec7d2596f2ae3dc9ca51da5222e609"
+    },
+    {
+      "currentSha256": "a70ab64855a6a6f464dba7f3cdc6847f655a3eea45eaac784ff9d5adee07a8ab",
+      "edits": [
+        {
+          "current": "import { moduleAtProducer } from \"./producer-module.mjs\";\nimport {\n\tsourceAtProducer, typeSurfaceContractsAtProducer\n} from \"./producer-source.mjs\";\n",
+          "previous": "import { readTypeSurface } from \"../../src/adoption/type-surface.mjs\";\nimport { historicalTypeSurfaceCells as typeSurfaceCells } from \"./historical-type-surface-cells.mjs\";\n",
+          "start": 238
+        },
+        {
+          "current": "export const rustRecursiveCallableProducer\n\t= \"8dcaf9b69beb73b756743e36c075f58c2bc82f86\";\nconst priorSource = async (path, expected) => {\n\tconst source = sourceAtProducer(rustRecursiveCallableProducer, path);\n\treturn sha256(source) === expected ? source\n\t\t: beforeRubyRecursiveCallables(path, source, expected);\n};\n",
+          "previous": "const priorSource = async (path, expected) => beforeRubyRecursiveCallables(path, await readFile(path, \"utf8\"), expected);\n",
+          "start": 1348
+        },
+        {
+          "current": "\tawait assertPythonRecursiveCallableIntegration(previous);\n",
+          "previous": "",
+          "start": 10767
+        },
+        {
+          "current": "\tconst contracts = typeSurfaceContractsAtProducer(rustRecursiveCallableProducer);\n\tconst { typeSurfaceCells } = await moduleAtProducer(\n\t\trustRecursiveCallableProducer, \"src/adoption/type-surface.mjs\");\n",
+          "previous": "\tconst { document: current, ...contracts } = await readTypeSurface(); void current;\n",
+          "start": 12004
+        },
+        {
+          "current": "",
+          "previous": "\tawait assertPythonRecursiveCallableIntegration(previous);\n",
+          "start": 14005
+        }
+      ],
+      "path": "tests/helpers/rust-recursive-callable-evidence.mjs",
+      "previousSha256": "20b3717c84d789acdd10f53dd2788096307a33223e126f668ed5f930d09d3a74"
+    },
+    {
+      "currentSha256": "2ef81e312fc0519966589548728844e2b3263f51754cd6e218bee5bc26f4d886",
+      "edits": [
+        {
+          "current": "\tawait assertCppStructuredCallableIntegration(previous);\n",
+          "previous": "",
+          "start": 7875
+        },
+        {
+          "current": "",
+          "previous": "\tawait assertCppStructuredCallableIntegration(previous);\n",
+          "start": 11825
+        }
+      ],
+      "path": "tests/helpers/rust-structured-callable-evidence.mjs",
+      "previousSha256": "923f587bcde0beb885c614e725c98c6d2d2d80d330b64cbaf13b54cd293f7aca"
+    },
+    {
+      "currentSha256": "d79845138d2f775bfd4a82216b627329461fb057b5a60e2046cf31d5656c63a8",
+      "edits": [
+        {
+          "current": "import { sourceAtProducer } from \"./producer-source.mjs\";\n\nexport const witCompositionProducer\n\t= \"60c4262eacacc6b668f16a6778b535a3f2d68a54\";\n",
+          "previous": "import { beforeWitAcceptance } from \"./wit-acceptance-source-history.mjs\";\n",
+          "start": 431
+        },
+        {
+          "current": " * @param readSource - Source reader bound to the evidence epoch.\n",
+          "previous": "",
+          "start": 5304
+        },
+        {
+          "current": "export const assertWitCompositionExecution = async (\n\trecord, readSource = (path, options) => readFile(path, options)\n) => {\n",
+          "previous": "export const assertWitCompositionExecution = async record => {\n",
+          "start": 5374
+        },
+        {
+          "current": "\tconst prior = JSON.parse(await readSource(\n\t\t\"docs/evidence/wit-host-isolation-20260924.json\", \"utf8\"));\n",
+          "previous": "\tconst prior = JSON.parse(await readFile(\"docs/evidence/wit-host-isolation-20260924.json\", \"utf8\"));\n",
+          "start": 6974
+        },
+        {
+          "current": "\tconst source = await readSource(\n\t\t\"tests/fixtures/recursive-consumers/wit-composition.c\");\n\tconst faultSource = await readSource(\n\t\t\"tests/fixtures/recursive-consumers/wit-result-fault.c\");\n\tconst documentation = (await readSource(\n\t\t\"docs/consume/wit-wasi.md\", \"utf8\"\n\t)).match(/```c file=wit-wasi\\/recursive\\.c\\n([^]*?)\\n```/)[1] + \"\\n\";\n\tassert.equal(documentation, await readSource(\n\t\t\"tests/fixtures/documentation/consumers/wit-wasi/recursive.c\", \"utf8\"));\n",
+          "previous": "\tconst source = await readFile(\"tests/fixtures/recursive-consumers/wit-composition.c\");\n\tconst faultSource = await readFile(\"tests/fixtures/recursive-consumers/wit-result-fault.c\");\n\tconst documentation = (await readFile(\"docs/consume/wit-wasi.md\", \"utf8\")).match(/```c file=wit-wasi\\/recursive\\.c\\n([^]*?)\\n```/)[1] + \"\\n\";\n\tassert.equal(documentation, await readFile(\"tests/fixtures/documentation/consumers/wit-wasi/recursive.c\", \"utf8\"));\n",
+          "start": 7418
+        },
+        {
+          "current": "\t\tconst expected = sha256(await readSource(\n\t\t\t`tests/fixtures/recursive-consumers/wit-mixed-${name}.c`));\n",
+          "previous": "\t\tconst expected = sha256(await readFile(`tests/fixtures/recursive-consumers/wit-mixed-${name}.c`));\n",
+          "start": 8172
+        },
+        {
+          "current": "\tconst priorSource = (path, expected) => sourceAtProducer(\n\t\twitCompositionProducer, path, expected\n\t);\n",
+          "previous": "",
+          "start": 8612
+        },
+        {
+          "current": "\tconst bytes = await priorSource(record.previous.path, record.previous.sha256);\n",
+          "previous": "\tconst bytes = await readFile(record.previous.path); assert.equal(sha256(bytes), record.previous.sha256);\n",
+          "start": 9091
+        },
+        {
+          "current": "\tfor(const path of paths) assert.equal(\n\t\tsha256(await priorSource(path, record.sourceHashes[path]))\n\t\t, record.sourceHashes[path], path);\n",
+          "previous": "\tfor(const path of paths) assert.equal(sha256(beforeWitAcceptance(path, await readFile(path, \"utf8\"), record.sourceHashes[path])), record.sourceHashes[path], path);\n",
+          "start": 9592
+        },
+        {
+          "current": "\t\treverseWitCompositionUpdate(\n\t\t\tawait priorSource(update.path, update.currentSha256), update);\n",
+          "previous": "\t\treverseWitCompositionUpdate(beforeWitAcceptance(update.path, await readFile(update.path, \"utf8\"), update.currentSha256), update);\n",
+          "start": 9846
+        },
+        {
+          "current": "\tconst executionBytes = await priorSource(\n\t\trecord.execution.path, record.execution.sha256);\n",
+          "previous": "\tconst executionBytes = await readFile(record.execution.path); assert.equal(sha256(executionBytes), record.execution.sha256);\n",
+          "start": 10129
+        },
+        {
+          "current": "\tawait assertWitCompositionExecution(execution, (path, options) => {\n\t\tconst source = priorSource(path, record.sourceHashes[path]);\n\t\treturn typeof options === \"string\" ? source : Buffer.from(source);\n\t});\n",
+          "previous": "\tawait assertWitCompositionExecution(execution);\n",
+          "start": 10334
+        }
+      ],
+      "path": "tests/helpers/wit-composition-evidence.mjs",
+      "previousSha256": "c5dceb1e71cfbd5bac3d7987d181fc33fd1cc8184fb86432ecf661771104a6c6"
+    },
+    {
+      "currentSha256": "243ac4e4dbe2a63727cb159f4803865da4b9dda084b1047da30819bebaa9cbb0",
+      "edits": [
+        {
+          "current": "const referencedJson = async (\n\treference, path, readSource = source => readFile(source)\n) => {\n",
+          "previous": "const referencedJson = async (reference, path) => {\n",
+          "start": 1458
+        },
+        {
+          "current": "\tconst bytes = await readSource(path, reference.sha256);\n\tassert.equal(sha256(bytes), reference.sha256, path);\n",
+          "previous": "\tconst bytes = await readFile(path); assert.equal(sha256(bytes), reference.sha256, path);\n",
+          "start": 1591
+        },
+        {
+          "current": "\tconst priorSource = (path, expected = record.sourceHashes[path]) =>\n\t\tsourceAtProducer(witRecursiveAcceptanceProducer, path, expected);\n",
+          "previous": "",
+          "start": 3541
+        },
+        {
+          "current": "\tconst previous = await referencedJson(\n\t\trecord.previous, witCompositionHistoryPath, priorSource);\n\tawait assertWitCompositionIntegration(previous);\n\tconst execution = await referencedJson(\n\t\trecord.execution, witCompositionExecutionPath, priorSource);\n",
+          "previous": "\tconst previous = await referencedJson(record.previous, witCompositionHistoryPath);\n\tconst execution = await referencedJson(record.execution, witCompositionExecutionPath);\n",
+          "start": 4106
+        },
+        {
+          "current": "\tconst regression = await referencedJson(\n\t\trecord.ordinaryRegression, witOrdinaryRegressionPath, priorSource);\n",
+          "previous": "\tconst regression = await referencedJson(record.ordinaryRegression, witOrdinaryRegressionPath);\n",
+          "start": 4417
+        },
+        {
+          "current": "",
+          "previous": "\tconst priorSource = (path, expected = record.sourceHashes[path]) =>\n\t\tsourceAtProducer(witRecursiveAcceptanceProducer, path, expected);\n",
+          "start": 4951
+        },
+        {
+          "current": "",
+          "previous": "\tawait assertWitCompositionIntegration(previous);\n",
+          "start": 8392
+        }
+      ],
+      "path": "tests/helpers/wit-recursive-acceptance.mjs",
+      "previousSha256": "aaa0952043bdb0bdf4871ea883aa11851694069f1b033d7a4de2a5cc5f999e69"
+    },
+    {
+      "currentSha256": "77e36a50d163b5cbac26d2145e63118edb0a6acc0ef6b1a6028d8474d6eedc7f",
+      "edits": [
+        {
+          "current": "import { moduleAtProducer } from \"./producer-module.mjs\";\nimport {\n\tsourceAtProducer, typeSurfaceContractsAtProducer\n} from \"./producer-source.mjs\";\n",
+          "previous": "import { readTypeSurface } from \"../../src/adoption/type-surface.mjs\";\nimport { historicalTypeSurfaceCells as typeSurfaceCells } from \"./historical-type-surface-cells.mjs\";\n",
+          "start": 322
+        },
+        {
+          "current": "export const witStructuredCallableProducer\n\t= \"136e4942ed32bd923cb721eb80aa038cfaa07f74\";\nconst priorSource = async (path, expected) => {\n\tconst source = sourceAtProducer(witStructuredCallableProducer, path);\n\treturn sha256(source) === expected ? source\n\t\t: beforeNativeRecursiveCallables(path, source, expected);\n};\n",
+          "previous": "// The hub reverses every recognized state, so each read names the milestone digest it stops at.\nconst priorSource = async (path, expected) => beforeNativeRecursiveCallables(path, await readFile(path, \"utf8\"), expected);\n",
+          "start": 1608
+        },
+        {
+          "current": "\tawait assertPhpWasmStructuredCallableIntegration(previous);\n",
+          "previous": "",
+          "start": 11538
+        },
+        {
+          "current": "\tconst contracts = typeSurfaceContractsAtProducer(witStructuredCallableProducer);\n\tconst { typeSurfaceCells } = await moduleAtProducer(\n\t\twitStructuredCallableProducer, \"src/adoption/type-surface.mjs\");\n",
+          "previous": "\tconst contracts = await readTypeSurface();\n",
+          "start": 13161
+        },
+        {
+          "current": "",
+          "previous": "\tawait assertPhpWasmStructuredCallableIntegration(previous);\n",
+          "start": 15325
+        }
+      ],
+      "path": "tests/helpers/wit-structured-callable-evidence.mjs",
+      "previousSha256": "234a0d67693a9d7788513222ab7427ae1321f20cee68fca96bcab150ad23d55d"
+    },
+    {
+      "currentSha256": "388eb2e0b3347beeeb85a4297868cab8584af7c282606d2e4ee7affcf0ed14cf",
+      "edits": [
+        {
+          "current": "import { assertPerlRecursiveCallableExecution, assertPerlRecursiveCallableIntegration, perlRecursiveCallableExecutionPath, perlRecursiveCallableProducer } from \"./helpers/perl-recursive-callable-evidence.mjs\";\n",
+          "previous": "import { assertPerlRecursiveCallableExecution, assertPerlRecursiveCallableIntegration, perlRecursiveCallableExecutionPath } from \"./helpers/perl-recursive-callable-evidence.mjs\";\n",
+          "start": 262
+        },
+        {
+          "current": "import { bytesAtProducer } from \"./helpers/producer-source.mjs\";\n",
+          "previous": "import { beforeDotnetRecursiveCallables } from \"./helpers/dotnet-recursive-callable-source-history.mjs\";\n",
+          "start": 643
+        },
+        {
+          "current": "\t\tconst source = bytesAtProducer(perlRecursiveCallableProducer\n\t\t\t, update.path, update.currentSha256).toString(\"utf8\");\n",
+          "previous": "\t\tconst source = beforeDotnetRecursiveCallables(update.path, await readFile(update.path, \"utf8\"));\n",
+          "start": 3398
+        },
+        {
+          "current": "\t\tassert.equal(sha256(beforePerlRecursiveCallables(\n\t\t\tupdate.path, source, update.previousSha256\n\t\t)), update.previousSha256);\n",
+          "previous": "\t\tassert.equal(sha256(beforePerlRecursiveCallables(update.path, source)), update.previousSha256);\n",
+          "start": 3618
+        }
+      ],
+      "path": "tests/perl-recursive-callable-evidence.test.mjs",
+      "previousSha256": "51ad384759ec00a57d2e1c55d1c42a0a55b096684b09252a38cb1b1587c8b1b8"
+    },
+    {
+      "currentSha256": "03d5fb64d0b0190d7eb5023ba1e1fe6bbfca6399ceea8ed897657c028b6ceda2",
+      "edits": [
+        {
+          "current": "import { assertPythonRecursiveCallableExecution, assertPythonRecursiveCallableIntegration, pythonRecursiveCallableExecutionPath, pythonRecursiveCallableProducer } from \"./helpers/python-recursive-callable-evidence.mjs\";\n",
+          "previous": "import { assertPythonRecursiveCallableExecution, assertPythonRecursiveCallableIntegration, pythonRecursiveCallableExecutionPath } from \"./helpers/python-recursive-callable-evidence.mjs\";\n",
+          "start": 264
+        },
+        {
+          "current": "import { bytesAtProducer } from \"./helpers/producer-source.mjs\";\n",
+          "previous": "import { beforeRustRecursiveCallables } from \"./helpers/rust-recursive-callable-source-history.mjs\";\n",
+          "start": 663
+        },
+        {
+          "current": "\t\tconst source = bytesAtProducer(pythonRecursiveCallableProducer\n\t\t\t, update.path, update.currentSha256).toString(\"utf8\");\n",
+          "previous": "\t\tconst source = beforeRustRecursiveCallables(update.path, await readFile(update.path, \"utf8\"));\n",
+          "start": 2703
+        },
+        {
+          "current": "\t\tassert.equal(sha256(beforePythonRecursiveCallables(\n\t\t\tupdate.path, source, update.previousSha256\n\t\t)), update.previousSha256);\n",
+          "previous": "\t\tassert.equal(sha256(beforePythonRecursiveCallables(update.path, source)), update.previousSha256);\n",
+          "start": 2927
+        }
+      ],
+      "path": "tests/python-recursive-callable-evidence.test.mjs",
+      "previousSha256": "318a765c9c73d09e3c7faf7d990fe4445e16455ae7842ced11f34fdea43faaee"
+    },
+    {
+      "currentSha256": "a2df4ae52246b02b29f9c1bc457022563962e421d9e6dc99e9e53ff0b3be2b12",
+      "edits": [
+        {
+          "current": "import { assertRubyRecursiveCallableExecution, assertRubyRecursiveCallableIntegration, rubyRecursiveCallableExecutionPath, rubyRecursiveCallableProducer } from \"./helpers/ruby-recursive-callable-evidence.mjs\";\n",
+          "previous": "import { assertRubyRecursiveCallableExecution, assertRubyRecursiveCallableIntegration, rubyRecursiveCallableExecutionPath } from \"./helpers/ruby-recursive-callable-evidence.mjs\";\n",
+          "start": 262
+        },
+        {
+          "current": "import { bytesAtProducer } from \"./helpers/producer-source.mjs\";\n",
+          "previous": "import { beforePerlRecursiveCallables } from \"./helpers/perl-recursive-callable-source-history.mjs\";\n",
+          "start": 643
+        },
+        {
+          "current": "\t\tconst source = bytesAtProducer(rubyRecursiveCallableProducer\n\t\t\t, update.path, update.currentSha256).toString(\"utf8\");\n",
+          "previous": "\t\tconst source = beforePerlRecursiveCallables(update.path, await readFile(update.path, \"utf8\"));\n",
+          "start": 3132
+        },
+        {
+          "current": "\t\tassert.equal(sha256(beforeRubyRecursiveCallables(\n\t\t\tupdate.path, source, update.previousSha256\n\t\t)), update.previousSha256);\n",
+          "previous": "\t\tassert.equal(sha256(beforeRubyRecursiveCallables(update.path, source)), update.previousSha256);\n",
+          "start": 3352
+        }
+      ],
+      "path": "tests/ruby-recursive-callable-evidence.test.mjs",
+      "previousSha256": "87d805f634bb0e82de56fecec493e6823c43ef15d1b8938d0cae0ab5e0fbd288"
+    },
+    {
+      "currentSha256": "c4841bf260a4015b42b7af1f33c907185012e0dcd7c894917d8ec227a9a4b6e7",
+      "edits": [
+        {
+          "current": "import { assertRustRecursiveCallableExecution, assertRustRecursiveCallableIntegration, rustRecursiveCallableExecutionPath, rustRecursiveCallableProducer } from \"./helpers/rust-recursive-callable-evidence.mjs\";\n",
+          "previous": "import { assertRustRecursiveCallableExecution, assertRustRecursiveCallableIntegration, rustRecursiveCallableExecutionPath } from \"./helpers/rust-recursive-callable-evidence.mjs\";\n",
+          "start": 557
+        },
+        {
+          "current": "import { bytesAtProducer } from \"./helpers/producer-source.mjs\";\n",
+          "previous": "import { beforeRubyRecursiveCallables } from \"./helpers/ruby-recursive-callable-source-history.mjs\";\n",
+          "start": 938
+        },
+        {
+          "current": "\t\tconst source = bytesAtProducer(rustRecursiveCallableProducer\n\t\t\t, update.path, update.currentSha256).toString(\"utf8\");\n",
+          "previous": "\t\tconst source = beforeRubyRecursiveCallables(update.path, await readFile(update.path, \"utf8\"));\n",
+          "start": 3745
+        },
+        {
+          "current": "\t\tassert.equal(sha256(beforeRustRecursiveCallables(\n\t\t\tupdate.path, source, update.previousSha256\n\t\t)), update.previousSha256);\n",
+          "previous": "\t\tassert.equal(sha256(beforeRustRecursiveCallables(update.path, source)), update.previousSha256);\n",
+          "start": 3965
+        }
+      ],
+      "path": "tests/rust-recursive-callable-evidence.test.mjs",
+      "previousSha256": "0aa1cb9513a963d0f99e718626f96dbfd693b8202c9d5f0445efb94fde914498"
+    },
+    {
+      "currentSha256": "be4bd8ab0a07cb917b422efe95d81feedb956c7816bd26aa193ebc04b17baaa3",
+      "edits": [
+        {
+          "current": "import { assertWitComposition, assertWitMixedPackages, assertWitCompositionExecution, assertWitCompositionIntegration, witCompositionExecutionPath, witCompositionProducer } from \"./helpers/wit-composition-evidence.mjs\";\n",
+          "previous": "import { assertWitComposition, assertWitMixedPackages, assertWitCompositionExecution, assertWitCompositionIntegration, witCompositionExecutionPath } from \"./helpers/wit-composition-evidence.mjs\";\n",
+          "start": 278
+        },
+        {
+          "current": "import { bytesAtProducer } from \"./helpers/producer-source.mjs\";\n",
+          "previous": "import { beforeWitAcceptance } from \"./helpers/wit-acceptance-source-history.mjs\";\n",
+          "start": 650
+        },
+        {
+          "current": "\t\tconst source = bytesAtProducer(witCompositionProducer\n\t\t\t, update.path, update.currentSha256).toString(\"utf8\");\n",
+          "previous": "\t\tconst source = beforeWitAcceptance(update.path, await readFile(update.path, \"utf8\"), update.currentSha256);\n",
+          "start": 5159
+        }
+      ],
+      "path": "tests/wit-composition-evidence.test.mjs",
+      "previousSha256": "4034aa601fb057ab39a3bf2f47134cf01e638d04213bf362eefdfce71139d484"
+    }
+  ]
+}

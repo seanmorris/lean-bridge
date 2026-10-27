@@ -10,6 +10,16 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import {
+	beforeCoreRecursiveCallableReplayBoundSource
+	, coreRecursiveCallableReplayBoundHistoryAdditions
+	, coreRecursiveCallableReplayBoundHistoryPath
+	, coreRecursiveCallableReplayBoundImplementation
+	, coreRecursiveCallableReplayBoundImplementationPaths
+	, coreRecursiveCallableReplayBoundIntegrationPaths
+	, coreRecursiveCallableReplayBoundPredecessor
+	, reverseCoreRecursiveCallableReplayBoundUpdate
+} from "./core-recursive-callable-replay-bound-source-history.mjs";
+import {
 	beforeCoreLegacyOwnedEvidenceReplayBoundSource
 	, coreLegacyOwnedEvidenceReplayBoundHistoryAdditions
 	, coreLegacyOwnedEvidenceReplayBoundHistoryPath
@@ -315,6 +325,9 @@ import { sourceAtFinHistoryMilestone, sourceAtFinHistoryRecord, sourceAtFinHisto
 
 const git = arguments_ => execFileSync("git", arguments_
 	, { encoding: "utf8", maxBuffer: 128 * 1024 * 1024 });
+const readCoreRecursiveCallableReplayBound = async () => JSON.parse(
+	await readFile(coreRecursiveCallableReplayBoundHistoryPath, "utf8")
+);
 const readCoreLegacyOwnedEvidenceReplayBound = async () => JSON.parse(
 	await readFile(coreLegacyOwnedEvidenceReplayBoundHistoryPath, "utf8")
 );
@@ -400,6 +413,92 @@ const readWitBorrowStopBoundary = async () => JSON.parse(await readFile(
 const readReceiverCiStopBoundary = async () => JSON.parse(await readFile(
 	coreReceiverCiStopBoundaryHistoryPath, "utf8"
 ));
+
+test("Core recursive-callable replay bound records its exact range", async () => {
+	const record = await readCoreRecursiveCallableReplayBound();
+	assert.equal(record.schemaVersion, 1);
+	assert.equal(record.milestone
+		, "core-recursive-callable-replay-bound-source-v1");
+	assert.equal(record.predecessorCommit
+		, coreRecursiveCallableReplayBoundPredecessor);
+	assert.equal(record.implementationCommit
+		, coreRecursiveCallableReplayBoundImplementation);
+	assert.deepEqual(record.updates.map(update => update.path)
+		, coreRecursiveCallableReplayBoundImplementationPaths);
+	assert.deepEqual(record.historyAdditions.map(addition => addition.path)
+		, coreRecursiveCallableReplayBoundHistoryAdditions);
+	assert.deepEqual(record.integrationUpdates.map(update => update.path)
+		, coreRecursiveCallableReplayBoundIntegrationPaths);
+	assert.equal(git(["rev-parse"
+		, `${coreRecursiveCallableReplayBoundImplementation}^`]).trim()
+	, coreRecursiveCallableReplayBoundPredecessor);
+	assert.deepEqual(git(["diff", "--name-only", "--diff-filter=M"
+		, coreRecursiveCallableReplayBoundPredecessor
+		, coreRecursiveCallableReplayBoundImplementation])
+		.trim().split("\n").sort()
+	, [...coreRecursiveCallableReplayBoundImplementationPaths].sort());
+});
+
+test("Core recursive-callable replay bound reverses every transition", async () => {
+	const record = await readCoreRecursiveCallableReplayBound();
+	for(const update of [...record.updates, ...record.integrationUpdates])
+	{
+		const integration = record.integrationUpdates.includes(update);
+		const current = integration
+			? await sourceAtFinHistoryRecordSource(
+				coreRecursiveCallableReplayBoundHistoryPath, update.path
+				, update.currentSha256
+				, beforeCoreRecursiveCallableReplayBoundSource
+			)
+			: await sourceAtFinHistoryRecord(
+				coreRecursiveCallableReplayBoundHistoryPath, update.path
+				, beforeCoreRecursiveCallableReplayBoundSource
+			);
+		const base = integration
+			? coreRecursiveCallableReplayBoundImplementation
+			: coreRecursiveCallableReplayBoundPredecessor;
+		const previous = git(["show", `${base}:${update.path}`]);
+		assert.equal(reverseCoreRecursiveCallableReplayBoundUpdate(
+			current, update), previous, update.path);
+		assert.equal(beforeFinRefinementSource(
+			update.path, current, update.previousSha256), previous, update.path);
+		assert.ok(finRefinementNormalizationPaths.includes(update.path));
+	}
+	for(const addition of record.historyAdditions)
+		assert.equal(sha256(await sourceAtFinHistoryRecordSource(
+			coreRecursiveCallableReplayBoundHistoryPath
+			, addition.path, addition.currentSha256
+		)), addition.currentSha256, addition.path);
+});
+
+test("Core recursive-callable replay bound rejects altered transitions", async () => {
+	const update = (await readCoreRecursiveCallableReplayBound()).updates[0];
+	const current = await sourceAtFinHistoryRecord(
+		coreRecursiveCallableReplayBoundHistoryPath, update.path
+		, beforeCoreRecursiveCallableReplayBoundSource
+	);
+	for(const forged of [{ ...update, currentSha256: "0".repeat(64) }
+		, { ...update, previousSha256: "0".repeat(64) }
+		, { ...update, path: "unrelated.mjs" }
+		, { ...update, edits: [] }
+		, { ...update, edits: [...update.edits, update.edits[0]] }])
+		assert.throws(() => reverseCoreRecursiveCallableReplayBoundUpdate(
+			current, forged));
+	assert.equal(beforeCoreRecursiveCallableReplayBoundSource(
+		update.path, current + "unknown"), current + "unknown");
+});
+
+test("Core recursive-callable replay-bound writer refuses another checkout", async t => {
+	const root = await mkdtemp(join(
+		tmpdir(), "lean-core-recursive-replay-history-guard-"));
+	t.after(() => rm(root, { recursive: true }));
+	const result = spawnSync(process.execPath, [resolve(
+		"scripts/update-core-recursive-callable-replay-bound-source-history.mjs"
+	)], { cwd: root, encoding: "utf8", timeout: 15_000 });
+	assert.notEqual(result.status, 0);
+	assert.equal(result.stdout, "");
+	assert.deepEqual(await readdir(root), []);
+});
 
 test("Core legacy owned-evidence replay bound records its exact range", async () => {
 	const record = await readCoreLegacyOwnedEvidenceReplayBound();

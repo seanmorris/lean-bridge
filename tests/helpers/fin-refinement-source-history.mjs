@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeCoreRecursiveCallableReplayBoundSource, coreRecursiveCallableReplayBoundNormalizationPaths } from "./core-recursive-callable-replay-bound-source-history.mjs";
 import { beforeCoreLegacyOwnedEvidenceReplayBoundSource, coreLegacyOwnedEvidenceReplayBoundNormalizationPaths } from "./core-legacy-owned-evidence-replay-bound-source-history.mjs";
 import { beforeCoreCallbackEvidenceReplayBoundSource, coreCallbackEvidenceReplayBoundNormalizationPaths } from "./core-callback-evidence-replay-bound-source-history.mjs";
 import { beforeCoreInheritedRecordReplayBoundSource, coreInheritedRecordReplayBoundNormalizationPaths } from "./core-inherited-record-replay-bound-source-history.mjs";
@@ -2239,7 +2240,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...coreLegacyOwnedEvidenceReplayBoundNormalizationPaths()
+	...coreRecursiveCallableReplayBoundNormalizationPaths()
+	, ...coreLegacyOwnedEvidenceReplayBoundNormalizationPaths()
 	, ...coreCallbackEvidenceReplayBoundNormalizationPaths()
 	, ...coreInheritedRecordReplayBoundNormalizationPaths()
 	, ...coreReplayIntegrationEndpointRepairNormalizationPaths()
@@ -3221,7 +3223,13 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeCoreLegacyOwnedEvidenceReplayBoundSource(
+	let stage = beforeCoreRecursiveCallableReplayBoundSource(
+		path, text, expected
+	);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeCoreLegacyOwnedEvidenceReplayBoundSource(
 		path, text, expected
 	);
 	if(expected !== undefined && sha256(stage) === expected)
