@@ -1,0 +1,805 @@
+{
+  "historyAdditions": [
+    {
+      "currentSha256": "5b1090586bb8687669fdac55280c3f3c4db05b5deacbeab37798f1fdc5d44320",
+      "path": "scripts/update-core-historical-evidence-reuse-source-history.mjs"
+    },
+    {
+      "currentSha256": "ef68de6086a7308d2e3e4cf440f1ff964e14438bf5a64f9cb081c689c32d1413",
+      "path": "tests/helpers/core-historical-evidence-reuse-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "667c7b7615e326e5cc016d8ea8e3c08445c28279",
+  "integrationUpdates": [
+    {
+      "currentSha256": "1ae9daf8df09f9bbe6cc6554d6446456a33da1588a7798516cd607d0404ede57",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeCoreHistoricalEvidenceReuseSource\n\t, coreHistoricalEvidenceReuseHistoryAdditions\n\t, coreHistoricalEvidenceReuseHistoryPath\n\t, coreHistoricalEvidenceReuseImplementation\n\t, coreHistoricalEvidenceReuseImplementationPaths\n\t, coreHistoricalEvidenceReuseIntegrationPaths\n\t, coreHistoricalEvidenceReusePredecessor\n\t, reverseCoreHistoricalEvidenceReuseUpdate\n} from \"./core-historical-evidence-reuse-source-history.mjs\";\n",
+          "previous": "",
+          "start": 357
+        },
+        {
+          "current": "const readCoreHistoricalEvidenceReuse = async () => JSON.parse(\n\tawait readFile(coreHistoricalEvidenceReuseHistoryPath, \"utf8\")\n);\n",
+          "previous": "",
+          "start": 17637
+        },
+        {
+          "current": "test(\"Core historical-evidence reuse records its exact change\", async () => {\n\tconst record = await readCoreHistoricalEvidenceReuse();\n\tassert.equal(record.schemaVersion, 1);\n\tassert.equal(record.milestone\n\t\t, \"core-historical-evidence-reuse-source-v1\");\n\tassert.equal(record.predecessorCommit\n\t\t, coreHistoricalEvidenceReusePredecessor);\n\tassert.equal(record.implementationCommit\n\t\t, coreHistoricalEvidenceReuseImplementation);\n\tassert.deepEqual(record.updates.map(update => update.path)\n\t\t, coreHistoricalEvidenceReuseImplementationPaths);\n\tassert.deepEqual(record.integrationUpdates.map(update => update.path)\n\t\t, coreHistoricalEvidenceReuseIntegrationPaths);\n\tassert.deepEqual(record.historyAdditions.map(addition => addition.path)\n\t\t, coreHistoricalEvidenceReuseHistoryAdditions);\n\tassert.equal(git([\"rev-parse\"\n\t\t, `${coreHistoricalEvidenceReuseImplementation}^`]).trim()\n\t\t, coreHistoricalEvidenceReusePredecessor);\n\tassert.deepEqual(git([\"diff\", \"--name-only\"\n\t\t, coreHistoricalEvidenceReusePredecessor\n\t\t, coreHistoricalEvidenceReuseImplementation])\n\t\t.trim().split(\"\\n\").sort()\n\t\t, [...coreHistoricalEvidenceReuseImplementationPaths].sort());\n});\n\ntest(\"Core historical-evidence reuse reverses every transition\", async () => {\n\tconst record = await readCoreHistoricalEvidenceReuse();\n\tfor(const update of [...record.updates, ...record.integrationUpdates])\n\t{\n\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256\n\t\t\t, beforeCoreHistoricalEvidenceReuseSource);\n\t\tconst base = record.integrationUpdates.includes(update)\n\t\t\t? coreHistoricalEvidenceReuseImplementation\n\t\t\t: coreHistoricalEvidenceReusePredecessor;\n\t\tconst previous = git([\"show\", `${base}:${update.path}`]);\n\t\tassert.equal(reverseCoreHistoricalEvidenceReuseUpdate(current, update)\n\t\t\t, previous, update.path);\n\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n\t\tassert.ok(finRefinementNormalizationPaths.includes(update.path));\n\t}\n});\n\ntest(\"Core historical-evidence reuse rejects altered transitions\", async () => {\n\tconst update = (await readCoreHistoricalEvidenceReuse()).updates[0];\n\tconst current = await sourceAtFinHistoryMilestone(\n\t\tupdate.path, update.currentSha256\n\t\t, beforeCoreHistoricalEvidenceReuseSource);\n\tfor(const forged of [{ ...update, currentSha256: \"0\".repeat(64) }\n\t\t, { ...update, previousSha256: \"0\".repeat(64) }\n\t\t, { ...update, path: \"unrelated.mjs\" }\n\t\t, { ...update, edits: [] }\n\t\t, { ...update, edits: [...update.edits, update.edits[0]] }])\n\t\tassert.throws(() => reverseCoreHistoricalEvidenceReuseUpdate(\n\t\t\tcurrent, forged));\n\tassert.equal(beforeCoreHistoricalEvidenceReuseSource(\n\t\tupdate.path, current + \"unknown\"), current + \"unknown\");\n});\n\ntest(\"Core historical-evidence reuse writer rejects another checkout\", async t => {\n\tconst root = await mkdtemp(join(\n\t\ttmpdir(), \"lean-core-historical-evidence-reuse-guard-\"\n\t));\n\tt.after(() => rm(root, { recursive: true }));\n\tconst result = spawnSync(process.execPath, [resolve(\n\t\t\"scripts/update-core-historical-evidence-reuse-source-history.mjs\"\n\t)], { cwd: root, encoding: \"utf8\", timeout: 15_000 });\n\tassert.notEqual(result.status, 0);\n\tassert.equal(result.stdout, \"\");\n\tassert.deepEqual(await readdir(root), []);\n});\n\n",
+          "previous": "",
+          "start": 22496
+        }
+      ],
+      "path": "tests/helpers/core-historical-evidence-replay-source-history-tests.mjs",
+      "previousSha256": "88cf69bec9613b0d0d4e5705bf12f8c60a07fec7851e5785eefe3199c4701bb6"
+    },
+    {
+      "currentSha256": "90c12d36cc2ccd34a488b9fb3e736803c9dbbee96c9dbef5d1ed733ac005d47e",
+      "edits": [
+        {
+          "current": "import { beforeCoreHistoricalEvidenceReuseSource, coreHistoricalEvidenceReuseNormalizationPaths } from \"./core-historical-evidence-reuse-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...coreHistoricalEvidenceReuseNormalizationPaths\n\t, ...coreExactHeadMatrixRepairNormalizationPaths\n",
+          "previous": "\t...coreExactHeadMatrixRepairNormalizationPaths\n",
+          "start": 196949
+        },
+        {
+          "current": "\tlet stage = beforeCoreHistoricalEvidenceReuseSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCoreExactHeadMatrixRepairSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeCoreExactHeadMatrixRepairSource(path, text, expected);\n",
+          "start": 244939
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "642862aead046ab37b911016916c804d4c44f3709d1fd86120043060bde56df2"
+    }
+  ],
+  "milestone": "core-historical-evidence-reuse-source-v1",
+  "predecessorCommit": "55354cb90895682941dd37fd2988a614b1f6e799",
+  "schemaVersion": 1,
+  "scope": "Reuse one exact-head live type-surface authentication across historical inventories, reconstruct only changed source-history pins from immutable Git blobs, close every callback Subtype archive root, and preserve structured callback stop checks.",
+  "updates": [
+    {
+      "currentSha256": "29ebe491495a86fc13f0aaaa9b9e4b246c6d8833ada1d7050959437f4cdb2e8b",
+      "edits": [
+        {
+          "current": "\tcallbackSubtypeHostedEvidenceRoots, callbackSubtypeHostedLanes\n",
+          "previous": "\tcallbackSubtypeHostedLanes\n",
+          "start": 405
+        },
+        {
+          "current": "\tconst root = callbackSubtypeHostedEvidenceRoots[lane];\n",
+          "previous": "\tconst root = `docs/evidence/callback-subtype-${lane}-20261022`;\n",
+          "start": 685
+        }
+      ],
+      "path": "tests/callback-subtype-hosted-evidence.test.mjs",
+      "previousSha256": "1019ba367eb7609f1c3a24354cb7394191e86143af20a66f3916bdcfe6653e48"
+    },
+    {
+      "currentSha256": "61132c4c668c47ca4573be1153eb58fa3176bf8b2490c9fafdfca86eae8f8b29",
+      "edits": [
+        {
+          "current": "export const callbackSubtypeHostedEvidenceRoots = Object.freeze({\n\tbrowser: \"docs/evidence/callback-subtype-browser-20261022\"\n\t, native: \"docs/evidence/callback-subtype-native-20261022\"\n\t, languages: \"docs/evidence/callback-subtype-languages-20261022\"\n\t, perl: \"docs/evidence/callback-subtype-perl-20261022\"\n\t, dotnet: \"docs/evidence/callback-subtype-dotnet-20261022\"\n\t, jvm: \"docs/evidence/callback-subtype-jvm-20261022\"\n\t, \"php-native\": \"docs/evidence/callback-subtype-php-native-20261022\"\n\t, \"wit-wasi\": \"docs/evidence/callback-subtype-wit-wasi-20261022\"\n});\n\n",
+          "previous": "",
+          "start": 302
+        }
+      ],
+      "path": "tests/helpers/callback-subtype-hosted-evidence-sources.mjs",
+      "previousSha256": "645bfdca47c13ae4244bdc00e371bf32afa0c485e602d1e2b5d408de0b87b933"
+    },
+    {
+      "currentSha256": "297b5b645095975beee28e0eda8ae09988b3caae4b8d7ee6999a59700af896af",
+      "edits": [
+        {
+          "current": "import { assertHistoricalTypeSurfaceEvidence } from \"./type-surface-historical-evidence.mjs\";\n",
+          "previous": "",
+          "start": 812
+        },
+        {
+          "current": "\tawait assertHistoricalTypeSurfaceEvidence(current);\n",
+          "previous": "\tconst hashes = new Map();\n\tfor(const file of current.evidence.flatMap(entry => entry.files))\n\t{\n\t\tconst key = file.path + \":\" + file.sha256;\n\t\tif(!hashes.has(key)) hashes.set(key, sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)));\n\t\tassert.equal(hashes.get(key), file.sha256, file.path);\n\t}\n",
+          "start": 3652
+        }
+      ],
+      "path": "tests/helpers/checked-record-host-ci-history-tests.mjs",
+      "previousSha256": "879b4a1f057f5e05a0baf0499bbb0b3c5e26695bd63d87783db16be954f69aa2"
+    },
+    {
+      "currentSha256": "97151bbfcb6cfccf3915bbb6b94b552b57f9d8930eb573c94a34b28934f235bd",
+      "edits": [
+        {
+          "current": "import { assertHistoricalTypeSurfaceEvidence } from \"./type-surface-historical-evidence.mjs\";\n",
+          "previous": "",
+          "start": 809
+        },
+        {
+          "current": "\tconst historicalEvidence = await assertHistoricalTypeSurfaceEvidence(inventory);\n\tassert.equal(historicalEvidence.count, 3893);\n",
+          "previous": "\tconst checked = new Map();\n\tfor(const file of inventory.evidence.flatMap(entry => entry.files))\n\t{\n\t\tconst key = file.path + \":\" + file.sha256;\n\t\tif(!checked.has(key)) checked.set(key, sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)));\n\t\tassert.equal(checked.get(key), file.sha256, file.path);\n\t}\n\tassert.equal(checked.size, 3893);\n",
+          "start": 3744
+        }
+      ],
+      "path": "tests/helpers/checked-record-perl-ci-history-tests.mjs",
+      "previousSha256": "e4c9be551286ec70ea79335f2978eb1aeb1dcc1ffb01ed88979567c307e41b44"
+    },
+    {
+      "currentSha256": "b54780ed8160b8617a56eb0cf3d99bc9fde5294fcb088e2b49dac5775c555757",
+      "edits": [
+        {
+          "current": "import { assertHistoricalTypeSurfaceEvidence } from \"./type-surface-historical-evidence.mjs\";\n",
+          "previous": "",
+          "start": 800
+        },
+        {
+          "current": "\tawait assertHistoricalTypeSurfaceEvidence(current);\n",
+          "previous": "\tconst hashes = new Map();\n\tfor(const file of current.evidence.flatMap(entry => entry.files))\n\t{\n\t\tconst key = file.path + \":\" + file.sha256;\n\t\tif(!hashes.has(key)) hashes.set(key, sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)));\n\t\tassert.equal(hashes.get(key), file.sha256, file.path);\n\t}\n",
+          "start": 3598
+        }
+      ],
+      "path": "tests/helpers/checked-record-perl-history-tests.mjs",
+      "previousSha256": "4cf2cc406fa56814e770239717dda8cea4ac3f3f0b2d0a887cf7148d01b4ae4e"
+    },
+    {
+      "currentSha256": "b3b457817ea0e8707d0171a22463bdcf83c4837a982f813a4f127a585327f868",
+      "edits": [
+        {
+          "current": "import { assertHistoricalTypeSurfaceEvidence } from \"./type-surface-historical-evidence.mjs\";\n",
+          "previous": "",
+          "start": 866
+        },
+        {
+          "current": "\tawait assertHistoricalTypeSurfaceEvidence(current);\n",
+          "previous": "\tconst hashes = new Map();\n\tfor(const file of current.evidence.flatMap(entry => entry.files))\n\t{\n\t\tconst key = file.path + \":\" + file.sha256;\n\t\tif(!hashes.has(key)) hashes.set(key, sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)));\n\t\tassert.equal(hashes.get(key), file.sha256, file.path);\n\t}\n",
+          "start": 3865
+        }
+      ],
+      "path": "tests/helpers/checked-record-perl-installed-history-tests.mjs",
+      "previousSha256": "4d149d93bef0bf92a2e2d0b3622dd8559c10bcd05e8412c536154c106daa3799"
+    },
+    {
+      "currentSha256": "c8e74d23abdc289deeba34295310254209bad2844d3462614e5c0e2a85963349",
+      "edits": [
+        {
+          "current": "import { assertHistoricalTypeSurfaceEvidence } from \"./type-surface-historical-evidence.mjs\";\n",
+          "previous": "",
+          "start": 842
+        },
+        {
+          "current": "\tawait assertHistoricalTypeSurfaceEvidence(current);\n",
+          "previous": "\tconst hashes = new Map();\n\tfor(const file of current.evidence.flatMap(entry => entry.files))\n\t{\n\t\tconst key = file.path + \":\" + file.sha256;\n\t\tif(!hashes.has(key)) hashes.set(key, sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)));\n\t\tassert.equal(hashes.get(key), file.sha256, file.path);\n\t}\n",
+          "start": 3756
+        }
+      ],
+      "path": "tests/helpers/checked-record-python-history-tests.mjs",
+      "previousSha256": "dd4de5039cf263f19912bb05d2b38f4ae676f2c73c7f4d1f4b5019ab5b488221"
+    },
+    {
+      "currentSha256": "19aac2b4cada3b099251f4bed7daec3e0362544a2d6da5120c39d73abf9321d5",
+      "edits": [
+        {
+          "current": "import { assertHistoricalTypeSurfaceEvidence } from \"./type-surface-historical-evidence.mjs\";\n",
+          "previous": "",
+          "start": 851
+        },
+        {
+          "current": "\tawait assertHistoricalTypeSurfaceEvidence(current);\n",
+          "previous": "\tconst hashes = new Map();\n\tfor(const file of current.evidence.flatMap(entry => entry.files))\n\t{\n\t\tconst key = file.path + \":\" + file.sha256;\n\t\tif(!hashes.has(key)) hashes.set(key, sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)));\n\t\tassert.equal(hashes.get(key), file.sha256, file.path);\n\t}\n",
+          "start": 3783
+        }
+      ],
+      "path": "tests/helpers/checked-record-ruby-jvm-history-tests.mjs",
+      "previousSha256": "cdd7e269219d335b2635b460192486265ef63a3b25617d2a4f84d69051253deb"
+    },
+    {
+      "currentSha256": "b259611dac0462bee766cb0f782a54bceb33d3227fb80f05076cfe34afb7bd67",
+      "edits": [
+        {
+          "current": "import { sha256 } from \"../../src/capsule/node.mjs\";\nimport {\n\tassertHistoricalTypeSurfaceEvidence, historicalTypeSurfaceGitSources\n} from \"./type-surface-historical-evidence.mjs\";\n",
+          "previous": "",
+          "start": 1171
+        },
+        {
+          "current": "\tconst callbackSubtypeDirectories = [\n\t\t\"callback-subtype-browser-20261022\"\n\t\t, \"callback-subtype-native-20261020\"\n\t\t, \"callback-subtype-native-20261022\"\n\t\t, \"callback-subtype-languages-20261022\"\n\t\t, \"callback-subtype-perl-20261022\"\n\t\t, \"callback-subtype-dotnet-20261022\"\n\t\t, \"callback-subtype-jvm-20261022\"\n\t\t, \"callback-subtype-php-native-20261022\"\n\t\t, \"callback-subtype-wit-wasi-20261022\"\n\t];\n\tconst callbackSubtypeSource = await readFile(\n\t\t\"tests/helpers/callback-subtype-hosted-evidence-sources.mjs\"\n\t\t, \"utf8\");\n\tassert.deepEqual([...coreContractEvidenceDirectoryReferences(\n\t\tcallbackSubtypeSource\n\t\t, \"tests/helpers/callback-subtype-hosted-evidence-sources.mjs\"\n\t\t, callbackSubtypeDirectories)].sort()\n\t, callbackSubtypeDirectories.filter(directory =>\n\t\tdirectory !== \"callback-subtype-native-20261020\").sort());\n",
+          "previous": "",
+          "start": 4994
+        },
+        {
+          "current": "test(\"historical type-surface checks reuse live pins and reconstruct only changed Git sources\", async () => {\n\tconst same = Buffer.from(\"same\\n\"), liveBytes = Buffer.from(\"live\\n\");\n\tconst oldBytes = Buffer.from(\"old\\n\");\n\tconst live = { evidence: [{ files: [\n\t\t{ path: \"same.txt\", sha256: sha256(same) }\n\t\t, { path: \"changed.txt\", sha256: sha256(liveBytes) }\n\t] }] };\n\tconst historical = { evidence: [{ files: [\n\t\t{ path: \"same.txt\", sha256: sha256(same) }\n\t\t, { path: \"changed.txt\", sha256: sha256(oldBytes) }\n\t] }] };\n\tconst reads = [];\n\tconst readSources = (paths, revision) => {\n\t\treads.push(paths); assert.match(revision, /^[a-f0-9]{40}$/u);\n\t\treturn new Map([[\"changed.txt\", liveBytes]]);\n\t};\n\tconst normalize = (path, source, expected) => {\n\t\tassert.equal(path, \"changed.txt\"); assert.deepEqual(source, liveBytes);\n\t\tassert.equal(expected, sha256(oldBytes)); return oldBytes;\n\t};\n\tassert.deepEqual(await assertHistoricalTypeSurfaceEvidence(historical, {\n\t\tlive, normalize, readSources\n\t}), { count: 2, inherited: 1, reconstructed: 1 });\n\tassert.deepEqual(reads, [[\"changed.txt\"]]);\n\tawait assert.rejects(() => assertHistoricalTypeSurfaceEvidence(historical, {\n\t\tlive, normalize: () => Buffer.from(\"forged\\n\"), readSources\n\t}), /changed[.]txt/u);\n});\n\ntest(\"historical type-surface Git reads are exact, bounded and isolated from callers\", async () => {\n\tconst revision = execFileSync(\"git\", [\"rev-parse\", \"HEAD\"])\n\t\t.toString().trim();\n\tconst expected = await readFile(\"package.json\");\n\tconst first = historicalTypeSurfaceGitSources([\n\t\t\"package.json\", \"package.json\"\n\t], revision);\n\tassert.equal(first.size, 1);\n\tassert.deepEqual(first.get(\"package.json\"), expected);\n\tfirst.get(\"package.json\")[0] ^= 255;\n\tassert.deepEqual(historicalTypeSurfaceGitSources([\n\t\t\"package.json\"\n\t], revision).get(\"package.json\"), expected);\n\tfor(const paths of [[\"../package.json\"], [\"/package.json\"]\n\t\t, [\"package.json\\nHEAD:package-lock.json\"]])\n\t\tassert.throws(() => historicalTypeSurfaceGitSources(paths, revision));\n\tassert.throws(() => historicalTypeSurfaceGitSources(\n\t\t[\"package.json\"], \"HEAD\"));\n});\n\n",
+          "previous": "",
+          "start": 14499
+        }
+      ],
+      "path": "tests/helpers/core-contract-evidence-tests.mjs",
+      "previousSha256": "8a42deafd02f0078599fd2efcaae93e31d1bb0152a98480567e63afc6a3ffd57"
+    },
+    {
+      "currentSha256": "5de56b64e158716a0d1fabd2577aaa71c5e847cdde0ee3dfd14a54eeef19f310",
+      "edits": [
+        {
+          "current": "\t\t\t\tlet wrapper = node.parent;\n\t\t\t\twhile(wrapper && !ts.isArrowFunction(wrapper)) wrapper = wrapper.parent;\n\t\t\t\tassert.ok(ts.isArrowFunction(wrapper));\n\t\t\t\tconst parameters = wrapper.parameters.map(p => p.name.getText(tree));\n",
+          "previous": "\t\t\t\tassert.ok(ts.isArrowFunction(node.parent));\n\t\t\t\tconst parameters = node.parent.parameters.map(p => p.name.getText(tree));\n",
+          "start": 2792
+        }
+      ],
+      "path": "tests/helpers/core-php-structured-endpoint-tests.mjs",
+      "previousSha256": "8fafb604a7d893d6ddd518590783324b6416fb8733dc8aa3b68f196427e27cb4"
+    },
+    {
+      "currentSha256": "a9fcc339aa082a10c748f540c10e6d4339fc2ce4b5138ab4302ed4fe8873be95",
+      "edits": [
+        {
+          "current": "import { assertHistoricalTypeSurfaceEvidence } from \"./type-surface-historical-evidence.mjs\";\n",
+          "previous": "",
+          "start": 785
+        },
+        {
+          "current": "\tawait assertHistoricalTypeSurfaceEvidence(current);\n",
+          "previous": "\tconst digests = new Map();\n\tfor(const file of current.evidence.flatMap(entry => entry.files))\n\t{\n\t\tif(!digests.has(file.path))\n\t\t{\n\t\t\tdigests.set(file.path, sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)));\n\t\t}\n\t\tassert.equal(file.sha256, digests.get(file.path), file.path);\n\t}\n",
+          "start": 6263
+        }
+      ],
+      "path": "tests/helpers/fin-alias-closure-history-tests.mjs",
+      "previousSha256": "847ba80c6f55c4bbb2417500e21583b07f8816d1f3f0e5d020087086d9237c28"
+    },
+    {
+      "currentSha256": "02ad43a7ed3df157e1924fda6f1fd642e6a248e541da79d32604159f687df4bb",
+      "edits": [
+        {
+          "current": "import { assertHistoricalTypeSurfaceEvidence } from \"./type-surface-historical-evidence.mjs\";\n",
+          "previous": "",
+          "start": 836
+        },
+        {
+          "current": "\tawait assertHistoricalTypeSurfaceEvidence(current);\n",
+          "previous": "\tconst digests = new Map();\n\tfor(const file of current.evidence.flatMap(entry => entry.files))\n\t{\n\t\tif(!digests.has(file.path))\n\t\t{\n\t\t\tconst bytes = await readFile(file.path);\n\t\t\tconst source = beforeFinRefinementSource(file.path, bytes, file.sha256);\n\t\t\tdigests.set(file.path, sha256(source));\n\t\t}\n\t\tassert.equal(digests.get(file.path), file.sha256, file.path);\n\t}\n",
+          "start": 3764
+        }
+      ],
+      "path": "tests/helpers/fin-container-edge-ci-history-tests.mjs",
+      "previousSha256": "12504c454968827d448d0ccef7afcec671f7766a4534cb6b51acdf22eeaa0880"
+    },
+    {
+      "currentSha256": "3c260ec8b35e7bd11f17a4ab614898fb95e2c587519d8b5b44522d81e994065e",
+      "edits": [
+        {
+          "current": "import { assertHistoricalTypeSurfaceEvidence } from \"./type-surface-historical-evidence.mjs\";\n",
+          "previous": "",
+          "start": 841
+        },
+        {
+          "current": "\tawait assertHistoricalTypeSurfaceEvidence(current);\n",
+          "previous": "\tconst digests = new Map();\n\tfor(const file of current.evidence.flatMap(entry => entry.files))\n\t{\n\t\tif(!digests.has(file.path))\n\t\t{\n\t\t\tconst bytes = await readFile(file.path);\n\t\t\tconst source = beforeFinRefinementSource(file.path, bytes, file.sha256);\n\t\t\tdigests.set(file.path, sha256(source));\n\t\t}\n\t\tassert.equal(digests.get(file.path), file.sha256, file.path);\n\t}\n",
+          "start": 3807
+        }
+      ],
+      "path": "tests/helpers/fin-container-foreign-history-tests.mjs",
+      "previousSha256": "9444dab3e43d63bc1fdb25a764216c0788aa6b96b4b7352e9e207dcb79d20929"
+    },
+    {
+      "currentSha256": "5fea6966317d24232c5ec3b9fa0d82960546acd4ef7cb8165f7a8a6e7698dc2b",
+      "edits": [
+        {
+          "current": "import { assertHistoricalTypeSurfaceEvidence } from \"./type-surface-historical-evidence.mjs\";\n",
+          "previous": "",
+          "start": 889
+        },
+        {
+          "current": "\tawait assertHistoricalTypeSurfaceEvidence(current);\n",
+          "previous": "\tconst digests = new Map();\n\tfor(const file of current.evidence.flatMap(entry => entry.files))\n\t{\n\t\tif(!digests.has(file.path)) digests.set(file.path, sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)));\n\t\tassert.equal(file.sha256, digests.get(file.path), file.path);\n\t}\n",
+          "start": 6660
+        }
+      ],
+      "path": "tests/helpers/fin-core-repair-history-tests.mjs",
+      "previousSha256": "8fdd9b20bb46d00e953f198b605d566d0d40008a865ee424a2fbefc5d795b0bc"
+    },
+    {
+      "currentSha256": "e53f35e1213b7aabd382e5304221246ded1a0fb7619e777d05d8cc81586711a2",
+      "edits": [
+        {
+          "current": "import { assertHistoricalTypeSurfaceEvidence } from \"./type-surface-historical-evidence.mjs\";\n",
+          "previous": "",
+          "start": 780
+        },
+        {
+          "current": "\tawait assertHistoricalTypeSurfaceEvidence(current);\n",
+          "previous": "\tconst digests = new Map();\n\tfor(const file of current.evidence.flatMap(entry => entry.files))\n\t{\n\t\tif(!digests.has(file.path)) digests.set(file.path, sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)));\n\t\tassert.equal(digests.get(file.path), file.sha256, file.path);\n\t}\n",
+          "start": 6318
+        }
+      ],
+      "path": "tests/helpers/fin-dotnet-sdk-history-tests.mjs",
+      "previousSha256": "093521fc142720e4bac860a3e48b6863d8851daf8d128cb63a5d44f576faaacc"
+    },
+    {
+      "currentSha256": "c840472ee4ab30311eac9408a2a0285d76cd008e5d2eaa519f2dcb3ce0a159a9",
+      "edits": [
+        {
+          "current": "import { assertHistoricalTypeSurfaceEvidence } from \"./type-surface-historical-evidence.mjs\";\n",
+          "previous": "",
+          "start": 815
+        },
+        {
+          "current": "\tawait assertHistoricalTypeSurfaceEvidence(current);\n",
+          "previous": "\tconst digests = new Map();\n\tfor(const file of current.evidence.flatMap(entry => entry.files))\n\t{\n\t\tif(!digests.has(file.path)) digests.set(file.path, sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)));\n\t\tassert.equal(digests.get(file.path), file.sha256, file.path);\n\t}\n",
+          "start": 6592
+        }
+      ],
+      "path": "tests/helpers/fin-jvm-diagnostics-history-tests.mjs",
+      "previousSha256": "9f228f96397c09eaa0573fae8b2e480e965d5370093197f6c4a814527fbd39f2"
+    },
+    {
+      "currentSha256": "95aae06f28ee37bdc0a8db187a2089b97e3f6e41129815083e52c7a8b7b17234",
+      "edits": [
+        {
+          "current": "import { assertHistoricalTypeSurfaceEvidence } from \"./type-surface-historical-evidence.mjs\";\n",
+          "previous": "",
+          "start": 796
+        },
+        {
+          "current": "\tawait assertHistoricalTypeSurfaceEvidence(current);\n",
+          "previous": "\tconst digests = new Map();\n\tfor(const file of current.evidence.flatMap(entry => entry.files))\n\t{\n\t\tif(!digests.has(file.path))\n\t\t{\n\t\t\tdigests.set(file.path, sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)));\n\t\t}\n\t\tassert.equal(file.sha256, digests.get(file.path), file.path);\n\t}\n",
+          "start": 6183
+        }
+      ],
+      "path": "tests/helpers/fin-nominal-refusal-history-tests.mjs",
+      "previousSha256": "329db133983fa153a8020469eb77bd5af91c18b7a83581ade6d14eb36b12c713"
+    },
+    {
+      "currentSha256": "4f057e8aef624b2a5ee8aa859276374d515f3889885ded03d050b30212206733",
+      "edits": [
+        {
+          "current": "import { assertHistoricalTypeSurfaceEvidence } from \"./type-surface-historical-evidence.mjs\";\n",
+          "previous": "",
+          "start": 834
+        },
+        {
+          "current": "\tawait assertHistoricalTypeSurfaceEvidence(current);\n",
+          "previous": "\tconst digests = new Map();\n\tfor(const file of current.evidence.flatMap(entry => entry.files))\n\t{\n\t\tif(!digests.has(file.path))\n\t\t{\n\t\t\tconst bytes = await readFile(file.path);\n\t\t\tdigests.set(file.path, sha256(beforeFinRefinementSource(file.path, bytes, file.sha256)));\n\t\t}\n\t\tassert.equal(file.sha256, digests.get(file.path), file.path);\n\t}\n",
+          "start": 6098
+        }
+      ],
+      "path": "tests/helpers/fin-record-zero-ci-history-tests.mjs",
+      "previousSha256": "0d3c2fe6b4e392d9c11d55996dd475f53dbaa4f9e1ad153a496f336516ef54ca"
+    },
+    {
+      "currentSha256": "076ccc3df7a586cf13e72375bf3569465a689dc4756bcfa065c353d56a18727c",
+      "edits": [
+        {
+          "current": "import { assertHistoricalTypeSurfaceEvidence } from \"./type-surface-historical-evidence.mjs\";\n",
+          "previous": "",
+          "start": 798
+        },
+        {
+          "current": "\tawait assertHistoricalTypeSurfaceEvidence(current);\n",
+          "previous": "\tconst hashes = new Map();\n\tfor(const file of current.evidence.flatMap(entry => entry.files))\n\t{\n\t\tif(!hashes.has(file.path)) hashes.set(file.path, sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)));\n\t\tassert.equal(hashes.get(file.path), file.sha256, file.path);\n\t}\n",
+          "start": 3449
+        }
+      ],
+      "path": "tests/helpers/maven-prerequisite-history-tests.mjs",
+      "previousSha256": "44f6f56087e7d1843a06f1eabf3a8b72ee06afd061ab73c0bb3e11f90f7043a0"
+    },
+    {
+      "currentSha256": "acb9776e3c8365d15470854b95372f388b040851abc2e3e71478e0375b158980",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { sha256 } from \"../../src/capsule/node.mjs\";\n",
+          "start": 382
+        },
+        {
+          "current": "import { assertHistoricalTypeSurfaceEvidence } from \"./type-surface-historical-evidence.mjs\";\n",
+          "previous": "",
+          "start": 782
+        },
+        {
+          "current": "\tawait assertHistoricalTypeSurfaceEvidence(expected);\n",
+          "previous": "\tfor(const evidence of expected.evidence) for(const file of evidence.files)\n\t\tassert.equal(sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)), file.sha256, file.path);\n",
+          "start": 3385
+        }
+      ],
+      "path": "tests/helpers/native-consumer-partition-history-tests.mjs",
+      "previousSha256": "ea83f25ea98df3792fffc5527cd1cf5ea3f7d752f7189c4b32cb3fc262e1e931"
+    },
+    {
+      "currentSha256": "1c67cb1a301462b44be54804612762ae24a9b8e754087258f103c72486f043a0",
+      "edits": [
+        {
+          "current": "import { assertHistoricalTypeSurfaceEvidence } from \"./type-surface-historical-evidence.mjs\";\n",
+          "previous": "",
+          "start": 712
+        },
+        {
+          "current": "\tawait assertHistoricalTypeSurfaceEvidence(current);\n",
+          "previous": "\tfor(const file of current.evidence.flatMap(entry => entry.files))\n\t{\n\t\tconst bytes = await readFile(file.path);\n\t\tconst source = beforeFinRefinementSource(file.path, bytes, file.sha256);\n\t\tassert.equal(sha256(source), file.sha256, file.path);\n\t}\n",
+          "start": 3497
+        }
+      ],
+      "path": "tests/helpers/native-fin-diagnostic-ci-tests.mjs",
+      "previousSha256": "face772e762d0efeb75dfc4c9e316cca2e781e0e8e783ca135eecd317c6bc8bd"
+    },
+    {
+      "currentSha256": "d55e8a8d0d181f1682d3c14d9925e7c05e6dd61d920e3bb75dd8874cacdc4dac",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { sha256 } from \"../../src/capsule/node.mjs\";\n",
+          "start": 387
+        },
+        {
+          "current": "import { assertHistoricalTypeSurfaceEvidence } from \"./type-surface-historical-evidence.mjs\";\n",
+          "previous": "",
+          "start": 740
+        },
+        {
+          "current": "\tawait assertHistoricalTypeSurfaceEvidence(current);\n",
+          "previous": "\tconst files = new Map();\n\tfor(const entry of current.evidence) for(const file of entry.files)\n\t{\n\t\tconst key = `${file.path}:${file.sha256}`;\n\t\tif(!files.has(key)) files.set(key, sha256(beforeFinRefinementSource(\n\t\t\tfile.path, await readFile(file.path), file.sha256\n\t\t)));\n\t\tassert.equal(files.get(key), file.sha256, file.path);\n\t}\n",
+          "start": 3520
+        }
+      ],
+      "path": "tests/helpers/native-fin-diagnostic-source-history-tests.mjs",
+      "previousSha256": "846ca79dc63b95d6274ae747f32930cb5da8f8e97cd5f93e75bd59e09dcf73f3"
+    },
+    {
+      "currentSha256": "ced68b0c4d803e4df0f53baf440e22b26aa55793a20a0a7bd3548ef39e900b9e",
+      "edits": [
+        {
+          "current": "import { assertHistoricalTypeSurfaceEvidence } from \"./type-surface-historical-evidence.mjs\";\n",
+          "previous": "",
+          "start": 984
+        },
+        {
+          "current": "\tawait assertHistoricalTypeSurfaceEvidence(current.document);\n",
+          "previous": "\tfor(const entry of current.document.evidence) for(const file of entry.files)\n\t\tassert.equal(sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)), file.sha256, file.path);\n",
+          "start": 5709
+        }
+      ],
+      "path": "tests/helpers/php-wasm-direct-fin-promotion-tests.mjs",
+      "previousSha256": "d72dbaa31ff6ae89c6fc38ab482aa071c0a0dc2d8236589e519f16007125b9b1"
+    },
+    {
+      "currentSha256": "e166c231a333a24626792af0457a83f79ea491145bcb5448a6d994b7a77666fa",
+      "edits": [
+        {
+          "current": "import { assertHistoricalTypeSurfaceEvidence } from \"./type-surface-historical-evidence.mjs\";\n",
+          "previous": "",
+          "start": 725
+        },
+        {
+          "current": "\tawait assertHistoricalTypeSurfaceEvidence(current);\n",
+          "previous": "\tconst digests = new Map();\n\tfor(const file of current.evidence.flatMap(entry => entry.files))\n\t{\n\t\tif(!digests.has(file.path)) digests.set(file.path, sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)));\n\t\tassert.equal(digests.get(file.path), file.sha256, file.path);\n\t}\n",
+          "start": 7057
+        }
+      ],
+      "path": "tests/helpers/php-wasm-entry-ci-history-tests.mjs",
+      "previousSha256": "fc4950634fb9f8e5dafd31c7e1ae9a6067103b36f281c8a651ca5df5316b263f"
+    },
+    {
+      "currentSha256": "8bb89ca1e07b239a6227b0fd6eb058cc0036b2b85452d464f48533986ef54d21",
+      "edits": [
+        {
+          "current": "import { assertHistoricalTypeSurfaceEvidence } from \"./type-surface-historical-evidence.mjs\";\n",
+          "previous": "",
+          "start": 760
+        },
+        {
+          "current": "\tawait assertHistoricalTypeSurfaceEvidence(current);\n",
+          "previous": "\tconst digests = new Map();\n\tfor(const file of current.evidence.flatMap(entry => entry.files))\n\t{\n\t\tconst key = `${file.path}:${file.sha256}`;\n\t\tif(!digests.has(key)) digests.set(key, sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)));\n\t\tassert.equal(digests.get(key), file.sha256, file.path);\n\t}\n",
+          "start": 7045
+        }
+      ],
+      "path": "tests/helpers/php-wasm-entry-harness-history-tests.mjs",
+      "previousSha256": "78ddc4c4221f9abfcf89f0562dfff026e537a80a1288d73cff7fb85349bd17d5"
+    },
+    {
+      "currentSha256": "3c1832e7604f053700e90c2e5617d221954d7a2d348089f07dceb73610a0276d",
+      "edits": [
+        {
+          "current": "import { assertHistoricalTypeSurfaceEvidence } from \"./type-surface-historical-evidence.mjs\";\n",
+          "previous": "",
+          "start": 721
+        },
+        {
+          "current": "\tawait assertHistoricalTypeSurfaceEvidence(current);\n",
+          "previous": "\tconst digests = new Map();\n\tfor(const file of current.evidence.flatMap(entry => entry.files))\n\t{\n\t\tif(!digests.has(file.path)) digests.set(file.path, sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)));\n\t\tassert.equal(file.sha256, digests.get(file.path), file.path);\n\t}\n",
+          "start": 6545
+        }
+      ],
+      "path": "tests/helpers/php-wasm-fin-direct-history-tests.mjs",
+      "previousSha256": "83ba431a4bcf47abec2b28810fd96599c71562c8560fbfb0fafb110b77051bb9"
+    },
+    {
+      "currentSha256": "8d7c87c00a7659e7f5a0fca2025bab50d8f12fc04daffba225deb410eac3d43f",
+      "edits": [
+        {
+          "current": "import { assertHistoricalTypeSurfaceEvidence } from \"./type-surface-historical-evidence.mjs\";\n",
+          "previous": "",
+          "start": 777
+        },
+        {
+          "current": "\tawait assertHistoricalTypeSurfaceEvidence(current);\n",
+          "previous": "\tfor(const file of current.evidence.flatMap(entry => entry.files))\n\t\tassert.equal(sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)), file.sha256, file.path);\n",
+          "start": 7327
+        }
+      ],
+      "path": "tests/helpers/php-wasm-subtype-acceptance-history-tests.mjs",
+      "previousSha256": "28766a855b82a2e1590527a43b3346e4ba108630c38a949313952094cdb85c34"
+    },
+    {
+      "currentSha256": "6a63b2e007195e064e627bcca9133ae95ad83d04a61364e28d80659551e7fc88",
+      "edits": [
+        {
+          "current": "import { assertHistoricalTypeSurfaceEvidence } from \"./type-surface-historical-evidence.mjs\";\n",
+          "previous": "",
+          "start": 748
+        },
+        {
+          "current": "\tawait assertHistoricalTypeSurfaceEvidence(current);\n",
+          "previous": "\tconst digests = new Map();\n\tfor(const file of current.evidence.flatMap(entry => entry.files))\n\t{\n\t\tif(!digests.has(file.path)) digests.set(file.path, sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)));\n\t\tassert.equal(digests.get(file.path), file.sha256, file.path);\n\t}\n",
+          "start": 6855
+        }
+      ],
+      "path": "tests/helpers/php-wasm-subtype-entry-history-tests.mjs",
+      "previousSha256": "0f0ca60cec1e6aaec85960a377eba8a05525b10ab3a194c00e462038c3e3fd32"
+    },
+    {
+      "currentSha256": "90cd5073430ea23c8845f6ee1c544ad403b95ec6a95a240e64f45c4e9d9dcfd3",
+      "edits": [
+        {
+          "current": "import { assertHistoricalTypeSurfaceEvidence } from \"./type-surface-historical-evidence.mjs\";\n",
+          "previous": "",
+          "start": 705
+        },
+        {
+          "current": "\tawait assertHistoricalTypeSurfaceEvidence(current);\n",
+          "previous": "\tfor(const file of current.evidence.flatMap(entry => entry.files))\n\t\tassert.equal(sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)), file.sha256, file.path);\n",
+          "start": 6894
+        }
+      ],
+      "path": "tests/helpers/php-wasm-subtype-history-tests.mjs",
+      "previousSha256": "5dbec12988449e3e78f6b7ad07eb7daa690877bd06a2af3777a4ab4d42f01bc0"
+    },
+    {
+      "currentSha256": "4b46b3fc650e3eef8d2dbd1c27ebdb84462c6071c6643270a8f6754bf6dd90a5",
+      "edits": [
+        {
+          "current": "import { assertHistoricalTypeSurfaceEvidence } from \"./type-surface-historical-evidence.mjs\";\n",
+          "previous": "",
+          "start": 909
+        },
+        {
+          "current": "\tawait assertHistoricalTypeSurfaceEvidence(current.document);\n",
+          "previous": "\tfor(const entry of current.document.evidence) for(const file of entry.files)\n\t\tassert.equal(sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)), file.sha256, file.path);\n",
+          "start": 5335
+        }
+      ],
+      "path": "tests/helpers/php-wasm-subtype-promotion-tests.mjs",
+      "previousSha256": "e8ec53b2b86999b9e55da32722357970e9918b1f94fd95625b9dd0488a3afb07"
+    },
+    {
+      "currentSha256": "da4015648b22c033f353cf84cc54b386cc026f8c258e4b09970eeed15c485e14",
+      "edits": [
+        {
+          "current": "import { assertHistoricalTypeSurfaceEvidence } from \"./type-surface-historical-evidence.mjs\";\n",
+          "previous": "",
+          "start": 803
+        },
+        {
+          "current": "\tawait assertHistoricalTypeSurfaceEvidence(current);\n",
+          "previous": "\tconst hashes = new Map();\n\tfor(const file of current.evidence.flatMap(entry => entry.files))\n\t{\n\t\tif(!hashes.has(file.path)) hashes.set(file.path, sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)));\n\t\tassert.equal(hashes.get(file.path), file.sha256, file.path);\n\t}\n",
+          "start": 3649
+        }
+      ],
+      "path": "tests/helpers/refinement-followup-history-tests.mjs",
+      "previousSha256": "274eeb108a5f1abd367a98e946cf95b58c55976da944da3d7ad412d0c98534d7"
+    },
+    {
+      "currentSha256": "dce03a1cdcd5de63fecc62c2accccf265ebeef85386518114540601bcb232e49",
+      "edits": [
+        {
+          "current": "import { assertHistoricalTypeSurfaceEvidence } from \"./type-surface-historical-evidence.mjs\";\n",
+          "previous": "",
+          "start": 832
+        },
+        {
+          "current": "\tawait assertHistoricalTypeSurfaceEvidence(JSON.parse(latest));\n",
+          "previous": "\tconst hashes = new Map();\n\tfor(const file of JSON.parse(latest).evidence.flatMap(entry => entry.files))\n\t{\n\t\tif(!hashes.has(file.path)) hashes.set(file.path, sha256(await readFile(file.path)));\n\t\tassert.equal(hashes.get(file.path), file.sha256, file.path);\n\t}\n",
+          "start": 3798
+        }
+      ],
+      "path": "tests/helpers/reviewed-perl-diagnostic-history-tests.mjs",
+      "previousSha256": "10bb8d811a9e50f8df3a4305dc389224c99ddb8091ceb543ff22e73527af56f0"
+    },
+    {
+      "currentSha256": "b63d1f2dc0de20a21af84ef9c2eb0d689bdd90c2d1fe9089cee2476e81a7ecfb",
+      "edits": [
+        {
+          "current": "import { assertHistoricalTypeSurfaceEvidence } from \"./type-surface-historical-evidence.mjs\";\n",
+          "previous": "",
+          "start": 828
+        },
+        {
+          "current": "\tawait assertHistoricalTypeSurfaceEvidence(current);\n",
+          "previous": "\tconst hashes = new Map();\n\tfor(const file of current.evidence.flatMap(entry => entry.files))\n\t{\n\t\tconst key = file.path + \":\" + file.sha256;\n\t\tif(!hashes.has(key)) hashes.set(key, sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)));\n\t\tassert.equal(hashes.get(key), file.sha256, file.path);\n\t}\n",
+          "start": 3581
+        }
+      ],
+      "path": "tests/helpers/reviewed-subtype-browser-ci-history-tests.mjs",
+      "previousSha256": "40e2c898212c79aa437e5afa0c15454fae6ec34e40fae59a404f32ebb3f1d1cc"
+    },
+    {
+      "currentSha256": "34ff2a8e4407016bfed3e928018294c8448731c061786cbb8082c919aa129ee3",
+      "edits": [
+        {
+          "current": "import { assertHistoricalTypeSurfaceEvidence } from \"./type-surface-historical-evidence.mjs\";\n",
+          "previous": "",
+          "start": 812
+        },
+        {
+          "current": "\tawait assertHistoricalTypeSurfaceEvidence(current);\n",
+          "previous": "\tconst hashes = new Map();\n\tfor(const file of current.evidence.flatMap(entry => entry.files))\n\t{\n\t\tif(!hashes.has(file.path)) hashes.set(file.path, sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)));\n\t\tassert.equal(hashes.get(file.path), file.sha256, file.path);\n\t}\n",
+          "start": 3525
+        }
+      ],
+      "path": "tests/helpers/reviewed-subtype-browser-history-tests.mjs",
+      "previousSha256": "40aba9a94ec02b71f89d528bf81fa262f660480bb17e361d118b05f49a2e4800"
+    },
+    {
+      "currentSha256": "b454b53e58f083893586dbf70850f912c1157e658a4df78df249db15ded912b2",
+      "edits": [
+        {
+          "current": "import { assertHistoricalTypeSurfaceEvidence } from \"./type-surface-historical-evidence.mjs\";\n",
+          "previous": "",
+          "start": 818
+        },
+        {
+          "current": "\tawait assertHistoricalTypeSurfaceEvidence(current);\n",
+          "previous": "\tconst hashes = new Map();\n\tfor(const file of current.evidence.flatMap(entry => entry.files))\n\t{\n\t\tif(!hashes.has(file.path)) hashes.set(file.path, sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)));\n\t\tassert.equal(hashes.get(file.path), file.sha256, file.path);\n\t}\n",
+          "start": 3541
+        }
+      ],
+      "path": "tests/helpers/reviewed-subtype-host-ci-history-tests.mjs",
+      "previousSha256": "4b1aa05ecf63810900d17d04d87dbb5a76810e961ada2e54c8cd81be46353a7b"
+    },
+    {
+      "currentSha256": "73920a0e75c1054b7b07a354996a397d8d9fa5402f463d804a3e71bdfc4b682c",
+      "edits": [
+        {
+          "current": "import { assertHistoricalTypeSurfaceEvidence } from \"./type-surface-historical-evidence.mjs\";\n",
+          "previous": "",
+          "start": 853
+        },
+        {
+          "current": "\tawait assertHistoricalTypeSurfaceEvidence(current);\n",
+          "previous": "\tconst hashes = new Map();\n\tfor(const file of current.evidence.flatMap(entry => entry.files))\n\t{\n\t\tif(!hashes.has(file.path)) hashes.set(file.path, sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)));\n\t\tassert.equal(hashes.get(file.path), file.sha256, file.path);\n\t}\n",
+          "start": 3651
+        }
+      ],
+      "path": "tests/helpers/reviewed-subtype-host-ci-report-history-tests.mjs",
+      "previousSha256": "db54fcc5e4f358fa7948affc9539e0f2a055252397c6297172ff633780880c56"
+    },
+    {
+      "currentSha256": "74e721d80398b38ee1746e8bbbb552313ad93ad2aaece94df4ec9138938990a4",
+      "edits": [
+        {
+          "current": "import { assertHistoricalTypeSurfaceEvidence } from \"./type-surface-historical-evidence.mjs\";\n",
+          "previous": "",
+          "start": 824
+        },
+        {
+          "current": "\tawait assertHistoricalTypeSurfaceEvidence(current);\n",
+          "previous": "\tconst digests = new Map();\n\tfor(const file of current.evidence.flatMap(entry => entry.files))\n\t{\n\t\tif(!digests.has(file.path))\n\t\t{\n\t\t\tdigests.set(file.path, sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)));\n\t\t}\n\t\tassert.equal(digests.get(file.path), file.sha256, file.path);\n\t}\n",
+          "start": 7186
+        }
+      ],
+      "path": "tests/helpers/reviewed-subtype-host-history-tests.mjs",
+      "previousSha256": "1d54255ee31c3f636ae3e3d6e4d968329e5f48a9418e5799adf05cce93d659b2"
+    },
+    {
+      "currentSha256": "e1515de1f285e874b25240ae04a84911c77204648dfbb6ba37f4a2d12d856751",
+      "edits": [
+        {
+          "current": "import { assertHistoricalTypeSurfaceEvidence } from \"./type-surface-historical-evidence.mjs\";\n",
+          "previous": "",
+          "start": 828
+        },
+        {
+          "current": "\tawait assertHistoricalTypeSurfaceEvidence(current);\n",
+          "previous": "\tconst hashes = new Map();\n\tfor(const file of current.evidence.flatMap(entry => entry.files))\n\t{\n\t\tif(!hashes.has(file.path)) hashes.set(file.path, sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)));\n\t\tassert.equal(hashes.get(file.path), file.sha256, file.path);\n\t}\n",
+          "start": 3574
+        }
+      ],
+      "path": "tests/helpers/reviewed-subtype-package-ci-history-tests.mjs",
+      "previousSha256": "28bb4718cfbf33a4d547c7a2618a01dbd7ea3b7b95d19d8a1d439ddf8c096786"
+    },
+    {
+      "currentSha256": "d3e2330f7112bd88c32ec15401080b98da2c6802beadbe624134f0b0b08252c1",
+      "edits": [
+        {
+          "current": "import { assertHistoricalTypeSurfaceEvidence } from \"./type-surface-historical-evidence.mjs\";\n",
+          "previous": "",
+          "start": 864
+        },
+        {
+          "current": "\tawait assertHistoricalTypeSurfaceEvidence(current);\n",
+          "previous": "\tconst hashes = new Map();\n\tfor(const file of current.evidence.flatMap(entry => entry.files))\n\t{\n\t\tif(!hashes.has(file.path)) hashes.set(file.path, sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)));\n\t\tassert.equal(hashes.get(file.path), file.sha256, file.path);\n\t}\n",
+          "start": 3690
+        }
+      ],
+      "path": "tests/helpers/reviewed-subtype-package-record-history-tests.mjs",
+      "previousSha256": "64914615b4608b6c96dac66ce9a4faa58ef9f8e0a546a6554dca7a0078e28c9a"
+    },
+    {
+      "currentSha256": "047e468208ccbfeacb907a8b4e18dcd730605a97b0d677fb5451c06016ad511d",
+      "edits": [
+        {
+          "current": " * Authenticate historical type-surface inventories without rereading every\n * unchanged evidence byte in each Core shard.\n *\n * The Core prerequisite authenticates the complete live corpus and binds that\n * pass to the exact commit. Historical inventories may retain older source\n * hashes, so changed paths are reconstructed from the same immutable Git tree\n * and passed through the source-history normalizer. Unchanged paths remain\n * covered directly by the authenticated live inventory.\n",
+          "previous": " * Reuse the authenticated live type-surface pass while checking historical\n * inventories. Immutable files whose historical digest still equals the live\n * digest need no second read; changed files are reconstructed from their\n * current bytes by the caller's exact source-history reader.\n",
+          "start": 4
+        },
+        {
+          "current": "import { execFileSync } from \"node:child_process\";\nimport { posix, resolve } from \"node:path\";\n",
+          "previous": "import { readFile } from \"node:fs/promises\";\nimport { sha256 } from \"../../src/capsule/node.mjs\";\n",
+          "start": 554
+        },
+        {
+          "current": "import { typeSurfaceEvidenceFiles } from \"../../src/adoption/type-surface-evidence-receipt.mjs\";\nimport { sha256 } from \"../../src/capsule/node.mjs\";\nimport { beforeFinRefinementSource } from \"./fin-refinement-source-history.mjs\";\n\nconst revisionPattern = /^[a-f0-9]{40}$/u;\nconst objectPattern = /^[a-f0-9]{40,64}$/u;\nconst digestPattern = /^[a-f0-9]{64}$/u;\nconst maxObjectBytes = 64 * 1024 * 1024;\nconst maxBatchBytes = 32 * 1024 * 1024;\nconst maxCacheBytes = 64 * 1024 * 1024;\nconst liveDocuments = new Map(), gitSources = new Map();\nlet retainedGitSourceBytes = 0;\n",
+          "previous": "import {\n\ttypeSurfaceEvidenceFiles\n} from \"../../src/adoption/type-surface-evidence-receipt.mjs\";\n",
+          "start": 720
+        },
+        {
+          "current": "const safePath = path => {\n\tassert.equal(typeof path, \"string\");\n\tassert.equal(posix.normalize(path), path);\n\tassert.ok(path && !path.startsWith(\"/\") && !path.split(\"/\").includes(\"..\"));\n\tassert.doesNotMatch(path, /[:\\0\\r\\n]/u);\n\treturn path;\n};\n",
+          "previous": "let authenticated;\n",
+          "start": 1291
+        },
+        {
+          "current": "const revisionAt = repository => {\n\tconst revision = execFileSync(\"git\", [\n\t\t\"-C\", repository, \"rev-parse\", \"HEAD\"\n\t], { encoding: \"utf8\", stdio: [\"ignore\", \"pipe\", \"pipe\"] }).trim();\n\tassert.match(revision, revisionPattern);\n\treturn revision;\n};\n\nconst liveDocument = async (repository, revision) => {\n\tconst receipt = process.env.LEAN_BRIDGE_TYPE_SURFACE_EVIDENCE_RECEIPT ?? \"\";\n\tconst key = `${repository}\\0${revision}\\0${receipt}`;\n\tlet pending = liveDocuments.get(key);\n\tif(pending === undefined)\n\t{\n\t\tpending = readTypeSurface({ repository }).then(result => result.document);\n\t\tliveDocuments.set(key, pending);\n\t\tpending.catch(() => liveDocuments.delete(key));\n\t}\n\treturn pending;\n",
+          "previous": "/** Return exact live path/digest pairs after the normal byte or receipt pass. */\nexport const authenticatedTypeSurfaceEvidence = async () => {\n\tauthenticated ??= readTypeSurface().then(({ document }) => new Map(\n\t\ttypeSurfaceEvidenceFiles(document).map(file => [file.path, file.sha256])\n\t));\n\treturn authenticated;\n",
+          "start": 1538
+        },
+        {
+          "current": " * Return exact live path/digest pairs after the normal byte or receipt pass.\n",
+          "previous": " * Authenticate every file cited by one historical inventory.\n",
+          "start": 2233
+        },
+        {
+          "current": " * @param options - Repository selection.\n * @param options.repository - Repository root.\n",
+          "previous": " * @param document - Historical type-surface inventory.\n * @param historicalBytes - Exact source-history decoder.\n",
+          "start": 2314
+        },
+        {
+          "current": "export const authenticatedTypeSurfaceEvidence = async (options = {}) => {\n\tlet { repository = resolve(\".\") } = options;\n\trepository = resolve(repository);\n\tconst document = await liveDocument(repository, revisionAt(repository));\n\treturn new Map(typeSurfaceEvidenceFiles(document)\n\t\t.map(file => [file.path, file.sha256]));\n};\n\n/**\n * Read a bounded set of exact Git blobs with one object query and bounded\n * batches. Callers already hold authenticated expected hashes for HEAD.\n *\n * @param paths - Safe repository-relative paths.\n * @param revision - Exact Git commit.\n * @param root - Repository root.\n */\nexport const historicalTypeSurfaceGitSources = (\n\tpaths, revision, root = resolve(\".\")\n",
+          "previous": "export const assertHistoricalTypeSurfaceEvidence = async (\n\tdocument, historicalBytes\n",
+          "start": 2408
+        },
+        {
+          "current": "\tassert.match(revision, revisionPattern);\n\tassert.ok(Array.isArray(paths));\n\troot = resolve(root);\n\tconst selected = [...new Set(paths.map(safePath))].toSorted();\n\tif(selected.length === 0) return new Map();\n\tconst sources = new Map(), missing = [];\n\tfor(const path of selected)\n",
+          "previous": "\tassert.equal(typeof historicalBytes, \"function\");\n\tconst live = await authenticatedTypeSurfaceEvidence();\n\tconst checked = new Map();\n\tfor(const file of typeSurfaceEvidenceFiles(document))\n",
+          "start": 3111
+        },
+        {
+          "current": "\t\tconst key = `${root}\\0${revision}\\0${path}`, cached = gitSources.get(key);\n\t\tif(cached === undefined) missing.push(path);\n\t\telse\n",
+          "previous": "\t\tconst key = `${file.path}:${file.sha256}`;\n\t\tlet actual = checked.get(key);\n\t\tif(actual === undefined)\n",
+          "start": 3393
+        },
+        {
+          "current": "\t\t\tgitSources.delete(key); gitSources.set(key, cached);\n\t\t\tsources.set(path, Buffer.from(cached));\n",
+          "previous": "\t\t\tactual = live.get(file.path) === file.sha256 ? file.sha256\n\t\t\t\t: sha256(await historicalBytes(\n\t\t\t\t\tfile.path, await readFile(file.path), file.sha256\n\t\t\t\t));\n\t\t\tchecked.set(key, actual);\n",
+          "start": 3528
+        },
+        {
+          "current": "",
+          "previous": "\t\tassert.equal(actual, file.sha256, file.path);\n",
+          "start": 3631
+        },
+        {
+          "current": "\tif(missing.length === 0) return sources;\n\tconst expressions = missing.map(path => `${revision}:${path}`);\n\tconst checked = execFileSync(\"git\", [\n\t\t\"-C\", root, \"cat-file\"\n\t\t, \"--batch-check=%(objectname) %(objecttype) %(objectsize)\"\n\t], {\n\t\tinput: `${expressions.join(\"\\n\")}\\n`, encoding: \"utf8\"\n\t\t, maxBuffer: 16 * 1024 * 1024\n\t\t, stdio: [\"pipe\", \"pipe\", \"pipe\"]\n\t}).trimEnd().split(\"\\n\");\n\tassert.equal(checked.length, missing.length);\n\tconst requests = checked.map((line, index) => {\n\t\tconst [object, type, sizeText, ...extra] = line.split(\" \");\n\t\tassert.deepEqual(extra, []); assert.match(object, objectPattern);\n\t\tassert.equal(type, \"blob\", missing[index]);\n\t\tassert.match(sizeText, /^(?:0|[1-9][0-9]*)$/u);\n\t\tconst size = Number(sizeText);\n\t\tassert.ok(Number.isSafeInteger(size) && size <= maxObjectBytes\n\t\t\t, `${missing[index]} exceeds the historical source bound`);\n\t\treturn { expression: expressions[index], object, path: missing[index], size };\n\t});\n\tconst batches = []; let batch = []; let bytes = 0;\n\tfor(const request of requests)\n\t{\n\t\tif(batch.length && bytes + request.size > maxBatchBytes)\n\t\t{ batches.push(batch); batch = []; bytes = 0; }\n\t\tbatch.push(request); bytes += request.size;\n\t}\n\tif(batch.length) batches.push(batch);\n\tfor(const group of batches)\n\t{\n\t\tconst expectedBytes = group.reduce((total, item) => total + item.size, 0);\n\t\tconst output = execFileSync(\"git\", [\"-C\", root, \"cat-file\", \"--batch\"], {\n\t\t\tinput: `${group.map(item => item.expression).join(\"\\n\")}\\n`\n\t\t\t, maxBuffer: expectedBytes + group.length * 256 + 1024\n\t\t\t, stdio: [\"pipe\", \"pipe\", \"pipe\"]\n\t\t});\n\t\tlet offset = 0;\n\t\tfor(const request of group)\n\t\t{\n\t\t\tconst newline = output.indexOf(10, offset);\n\t\t\tassert.ok(newline > offset);\n\t\t\tconst [object, type, sizeText, ...extra] = output.subarray(\n\t\t\t\toffset, newline).toString().split(\" \");\n\t\t\tassert.deepEqual(extra, []); assert.equal(object, request.object);\n\t\t\tassert.equal(type, \"blob\"); assert.equal(Number(sizeText), request.size);\n\t\t\tconst start = newline + 1, end = start + request.size;\n\t\t\tassert.ok(end < output.length); assert.equal(output[end], 10);\n\t\t\tconst source = Buffer.from(output.subarray(start, end));\n\t\t\tsources.set(request.path, Buffer.from(source));\n\t\t\tconst key = `${root}\\0${revision}\\0${request.path}`;\n\t\t\tgitSources.set(key, source); retainedGitSourceBytes += source.length;\n\t\t\twhile(retainedGitSourceBytes > maxCacheBytes)\n\t\t\t{\n\t\t\t\tconst oldest = gitSources.keys().next().value;\n\t\t\t\tconst removed = gitSources.get(oldest);\n\t\t\t\tgitSources.delete(oldest); retainedGitSourceBytes -= removed.length;\n\t\t\t}\n\t\t\toffset = end + 1;\n\t\t}\n\t\tassert.equal(offset, output.length);\n\t}\n\treturn sources;\n};\n\n/**\n * Require every historical evidence pin to be either the already-authenticated\n * live pin or a valid source-history projection of the exact live Git blob.\n *\n * @param historical - Historical type-surface document.\n * @param input - Legacy normalizer or injectable controls.\n */\nexport const assertHistoricalTypeSurfaceEvidence = async (\n\thistorical, input = {}\n) => {\n\tassert.ok(historical && typeof historical === \"object\");\n\tconst options = typeof input === \"function\" ? { normalize: input } : input;\n\tlet { live, normalize = beforeFinRefinementSource\n\t\t, readSources = historicalTypeSurfaceGitSources\n\t\t, repository = resolve(\".\") } = options;\n\trepository = resolve(repository);\n\tconst revision = revisionAt(repository);\n\tif(live === undefined) live = await liveDocument(repository, revision);\n\tconst liveFiles = new Map(typeSurfaceEvidenceFiles(live)\n\t\t.map(file => [file.path, file.sha256]));\n\tconst historicalFiles = typeSurfaceEvidenceFiles(historical);\n\tconst changed = historicalFiles.filter(file =>\n\t\tliveFiles.get(file.path) !== file.sha256);\n\tconst sources = readSources(changed.map(file => file.path), revision, repository);\n\tassert.ok(sources instanceof Map);\n\tassert.equal(sources.size, changed.length);\n\tfor(const file of changed)\n\t{\n\t\tassert.match(file.sha256, digestPattern);\n\t\tconst source = sources.get(file.path);\n\t\tassert.ok(Buffer.isBuffer(source), file.path);\n\t\tconst liveDigest = liveFiles.get(file.path);\n\t\tif(liveDigest !== undefined)\n\t\t\tassert.equal(sha256(source), liveDigest, file.path);\n\t\tassert.equal(sha256(normalize(\n\t\t\tfile.path, source, file.sha256\n\t\t)), file.sha256, file.path);\n\t}\n\treturn Object.freeze({\n\t\tcount: historicalFiles.length\n\t\t, inherited: historicalFiles.length - changed.length\n\t\t, reconstructed: changed.length\n\t});\n",
+          "previous": "\treturn checked.size;\n",
+          "start": 3634
+        }
+      ],
+      "path": "tests/helpers/type-surface-historical-evidence.mjs",
+      "previousSha256": "8817339cf6d6412d8e59f06246ac055621b53b5a6dd12e8f2b10462aeca531b0"
+    }
+  ]
+}
