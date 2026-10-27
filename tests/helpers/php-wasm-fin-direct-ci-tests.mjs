@@ -28,7 +28,9 @@ test("direct PHP-Wasm Fin CI preserves the earlier workflow and requires both in
 
 test("direct PHP-Wasm Fin CI refuses lost producers, checks, uploads and failure suppression", async () => {
 	const path = ".github/workflows/consumer-matrix.yml";
-	const current = beforePhpWasmSubtypeAcceptanceSource(path, await readFile(path, "utf8"));
+	const current = await sourceBeforeFinHistoryRecord(
+		phpWasmSubtypeAcceptanceHistoryPath, path
+		, beforePhpWasmSubtypeAcceptanceSource);
 	assertPhpWasmDirectFinWorkflow(current);
 	for(const changed of [
 		current.replace(phpWasmDirectCiBlock, "")
