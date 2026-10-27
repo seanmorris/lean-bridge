@@ -380,6 +380,38 @@ test("inherited-record history reads its immutable record endpoint", async () =>
 		, "The inherited-record replay must not reconstruct the complete Fin history hub");
 });
 
+test("owned callback negatives reuse only an authenticated source identity", async () => {
+	const source = await readFile(
+		"tests/helpers/owned-callback-result-evidence.mjs", "utf8");
+	const producer = await readFile(
+		"tests/helpers/owned-callback-result-producer.mjs", "utf8");
+	const start = source.indexOf("const assertOwnedCallbackResultSources");
+	const end = source.indexOf("\n};", start) + 3;
+	assert.ok(start >= 0 && end > start);
+	const helper = source.slice(start, end);
+	assert.match(source, /let authenticatedSourceIdentity;/u);
+	assert.match(helper, /const identity = hash\(sources\);/u
+		, "Cache selection must include every supplied source digest");
+	assert.match(helper
+		, /if\(authenticatedSourceIdentity === identity\) return;/u);
+	assert.match(helper
+		, /for\(const \[path, value\] of Object\.entries\(sources\)\)[\s\S]*bytesAtProducer\([\s\S]*ownedCallbackResultProducer, path, value/u
+		, "A new identity must authenticate every source at the immutable producer");
+	assert.ok(helper.indexOf("authenticatedSourceIdentity = identity;")
+		> helper.indexOf("for(const [path, value] of Object.entries(sources))")
+		, "The cache must publish only after complete byte authentication");
+	assert.equal([...source.matchAll(
+		/await assertOwnedCallbackResultSources\(record\.sources\);/gu
+	)].length, 1);
+	assert.match(producer
+		, /readBytes: async \(path, expected = sources\[path\]\) => \{[\s\S]*bytesAtProducer\(ownedCallbackResultProducer, path, expected\)/u);
+	assert.equal([...source.matchAll(/replay\.readBytes, sources/gu)].length, 3
+		, "Every retained CLI inventory must read exact producer bytes");
+	assert.match(source
+		, /if\(sha256\(text\) !== sources\[path\]\)\n\t+text = beforeCallbackInventoryRepair/u
+		, "Exact producer runtime sources must stop before the history hub");
+});
+
 test("Core shard enumeration has one repository-wide code-unit order", async t => {
 	const root = await mkdtemp(join(tmpdir(), "lean-bridge-core-shards-"));
 	t.after(() => rm(root, { recursive: true, force: true }));

@@ -7,7 +7,10 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { beforeCallbackInventoryRepair } from "./owned-callback-inventory-history.mjs";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
-import { ownedCallbackResultReplay } from "./owned-callback-result-producer.mjs";
+import {
+	ownedCallbackResultProducer, ownedCallbackResultReplay
+} from "./owned-callback-result-producer.mjs";
+import { bytesAtProducer } from "./producer-source.mjs";
 import { assertOwnedCallbackResultCi, ownedCallbackResultReports, ownedCallbackResultTestNames } from "./owned-callback-result-ci.mjs";
 import { ownedCallbackResultBaseline, ownedCallbackResultChangedPaths
 	, ownedCallbackResultHistoryPath, ownedCallbackResultHistorySha256 } from "./owned-callback-result-history.mjs";
@@ -58,6 +61,19 @@ export const ownedCallbackResultScope = Object.freeze({
 const hash = value => sha256(canonicalJson(value));
 const digest = value => { assert.match(value, /^[a-f0-9]{64}$/u); assert.notEqual(value, "0".repeat(64)); };
 const flags = (value, names) => { for(const name of names) assert.equal(value[name], true, name); };
+let authenticatedSourceIdentity;
+
+const assertOwnedCallbackResultSources = async sources => {
+	assert.deepEqual(Object.keys(sources).sort()
+		, await ownedCallbackResultSourcePaths());
+	const identity = hash(sources);
+	if(authenticatedSourceIdentity === identity) return;
+	for(const [path, value] of Object.entries(sources))
+		assert.equal(sha256(bytesAtProducer(
+			ownedCallbackResultProducer, path, value
+		)), value, path);
+	authenticatedSourceIdentity = identity;
+};
 
 /**
  * Share repeated JSON subtrees without dropping any original report fields.
@@ -166,19 +182,26 @@ const browser = (item, name, checks) => {
 		assert.deepEqual(execution.assets, assets);
 	}
 };
-const cli = async report => {
+const cli = async (report, readBytes = path => readFile(path), sources) => {
 	const { archive, inventorySha256, externalRegistryWrites, ...inventory } = report;
 	assert.equal(report.schemaVersion, 1); assert.equal(report.kind, "lean-bridge-cli-package");
 	assert.equal(report.productionApproved, false); assert.equal(externalRegistryWrites, false);
 	assert.equal(inventorySha256, hash(inventory)); digest(archive.sha256); assert.ok(archive.bytes > 0);
 	const configPath = "config/cli-package.v1.json";
-	const config = JSON.parse(beforeCallbackInventoryRepair(configPath, await readFile(configPath, "utf8")));
+	let configBytes = await readBytes(configPath, sources?.[configPath]);
+	if(sources?.[configPath] !== sha256(configBytes))
+		configBytes = beforeCallbackInventoryRepair(
+			configPath, configBytes, sources?.[configPath]);
+	const config = JSON.parse(configBytes);
 	assert.deepEqual(report.package, { name: config.name, version: config.version });
 	assert.equal(new Set(report.files.map(file => file.path)).size, report.files.length);
 	for(const path of config.files)
 	{
 		const file = report.files.find(entry => entry.path === path); assert.ok(file, path);
-		const bytes = Buffer.from(beforeCallbackInventoryRepair(path, await readFile(path), file.sha256));
+		let bytes = await readBytes(path, file.sha256);
+		if(sha256(bytes) !== file.sha256)
+			bytes = Buffer.from(beforeCallbackInventoryRepair(
+				path, bytes, file.sha256));
 		assert.equal(file.bytes, bytes.length, path); assert.equal(file.sha256, sha256(bytes), path);
 	}
 };
@@ -199,7 +222,8 @@ export const assertOwnedCallbackRuntimeInventory = async (inventory, sources, re
 		{
 			assert.ok(Object.hasOwn(sources, path), `Missing runtime source identity: ${path}`);
 			digest(sources[path]);
-			text = beforeCallbackInventoryRepair(path, text, sources[path]);
+			if(sha256(text) !== sources[path])
+				text = beforeCallbackInventoryRepair(path, text, sources[path]);
 			assert.equal(sha256(text), sources[path], path);
 		}
 		for(const module of ["component-scalars", "component-callables"
@@ -232,7 +256,8 @@ const installedWasm = async (replay, item, combined = false, sources) => {
 	assert.equal(item.inventory[name + "/internal/component.so.wasm"].sha256, item.receipt.wasmLibrary.sha256);
 	for(const path of ["index.mjs", "index.d.ts"])
 		assert.equal(item.inventory[name + "/" + path].sha256, sha256(publicFiles[path]));
-	await assertOwnedCallbackRuntimeInventory(item.inventory, sources);
+	await assertOwnedCallbackRuntimeInventory(
+		item.inventory, sources, replay.readSource);
 };
 
 const installedC = async (replay, item, input, model, combined = false) => {
@@ -370,7 +395,8 @@ export const assertOwnedCallbackReportData = async (reports, sources) => {
 		assert.equal(composition.callbackCalls, 1); assert.deepEqual(composition.live, [0, 0, 0, 0]);
 		flags(composition, ["transferredReceiver", "nestedExpiration", "failedTransferConsumesOwner", "borrowedTransferRejected"]);
 		const c = get(`${mode}-c-package.json`); assert.equal(c.mode, mode);
-		await cli(c.cli); assert.equal(c.cliFilesVerified, c.cli.files.length);
+		await cli(c.cli, replay.readBytes, sources);
+		assert.equal(c.cliFilesVerified, c.cli.files.length);
 		await installedC(replay, c, { metadata: c.metadata, sourceIdentity: c.model.sourceIdentity, component: c.model.component }, c.model);
 		flags(c, ["relocated", "sourceRemovedBeforeInstall", "cliRemovedBeforeConsumerInstall", "independentRebuild", "deterministicReassembly"]);
 		assert.equal(c.rejected, 12); assert.equal(c.builds.length, 2);
@@ -378,7 +404,8 @@ export const assertOwnedCallbackReportData = async (reports, sources) => {
 		assert.equal(c.probeSha256, sha256(cProbe)); assert.deepEqual(c.manifest.ownedValues, c.adapter.ownedValues);
 		assert.equal(c.installed.consumerSha256, sha256(cProbe));
 		const combined = get(`${mode}-combined-package.json`); assert.equal(combined.mode, mode);
-		await cli(combined.cli); assert.equal(combined.cliFilesVerified, combined.cli.files.length);
+		await cli(combined.cli, replay.readBytes, sources);
+		assert.equal(combined.cliFilesVerified, combined.cli.files.length);
 		flags(combined, ["sourceUnchanged", "producerAndCliRemovedBeforeInstall", "compilerFreeConsumerEnvironment", "installedTypeScript"]);
 		await installedC(replay, combined, combined.nativeInput, combined.native.model, true);
 		await source(replay, combined.wasmInput, mode, true);
@@ -396,7 +423,8 @@ export const assertOwnedCallbackReportData = async (reports, sources) => {
 		assert.deepEqual(combined.documentation, { sourceSha256: sha256(example), output: "42n\ntrue\n42n\n" });
 		assert.equal(combined.receipt.packages.length, 3);
 	}
-	const npm = get("npm-package.json"); await cli(npm.cli);
+	const npm = get("npm-package.json");
+	await cli(npm.cli, replay.readBytes, sources);
 	assert.equal(npm.schemaVersion, 1); assert.equal(npm.profile, "installed-owned-callback-results");
 	digest(npm.compilerInputsIdentity); assert.deepEqual(npm.reports.map(item => item.reviewed), [false, true]);
 	for(const item of npm.reports)
@@ -432,8 +460,7 @@ export const assertOwnedCallbackResultAcceptance = async record => {
 	assert.deepEqual(record.scope, ownedCallbackResultScope);
 	assert.deepEqual(record.sourceHistory, { path: ownedCallbackResultHistoryPath, sha256: ownedCallbackResultHistorySha256 });
 	assert.equal(sha256(await readFile(record.sourceHistory.path)), record.sourceHistory.sha256);
-	assert.deepEqual(Object.keys(record.sources).sort(), await ownedCallbackResultSourcePaths());
-	for(const [path, value] of Object.entries(record.sources)) assert.equal(sha256(beforeCallbackInventoryRepair(path, await readFile(path), value)), value, path);
+	await assertOwnedCallbackResultSources(record.sources);
 	run(record.run, "npm run test:owned-callback-results", 33);
 	run(record.combinedRun, "LEAN_BRIDGE_OWNED_CALLBACK_RESULT_TEST=1 node --test tests/owned-callback-result-combined-packaging.test.mjs", 1);
 	const reports = unpackOwnedCallbackReports(record.archive);

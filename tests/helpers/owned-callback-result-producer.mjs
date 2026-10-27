@@ -72,7 +72,8 @@ export const ownedCallbackResultProducerClosure = sources => {
  */
 export const ownedCallbackResultReplay = async sources => {
 	if(sources === undefined) return {
-		...current, readSource: path => readFile(path, "utf8")
+		...current, readBytes: path => readFile(path)
+		, readSource: path => readFile(path, "utf8")
 	};
 	ownedCallbackResultProducerClosure(sources);
 	const modules = await Promise.all(ownedCallbackResultProducerEntries
@@ -82,7 +83,11 @@ export const ownedCallbackResultReplay = async sources => {
 		assert.equal(typeof exports[name], typeof value, name);
 		return [name, exports[name]];
 	}));
-	return { ...selected, readSource: async path => {
+	return { ...selected, readBytes: async (path, expected = sources[path]) => {
+		assert.match(expected ?? "", /^[a-f0-9]{64}$/u, path);
+		return bytesAtProducer(ownedCallbackResultProducer, path, expected);
+	}
+	, readSource: async path => {
 		assert.match(sources[path] ?? "", /^[a-f0-9]{64}$/u, path);
 		return sourceAtProducer(ownedCallbackResultProducer, path, sources[path]);
 	} };
