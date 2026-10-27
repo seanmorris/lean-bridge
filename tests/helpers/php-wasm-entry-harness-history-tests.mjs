@@ -12,6 +12,7 @@ import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforePhpWasmEntryHarnessSource, phpWasmEntryHarnessChangedPaths, phpWasmEntryHarnessHistoryPath, phpWasmEntryHarnessPredecessor, reversePhpWasmEntryHarnessUpdate } from "./php-wasm-entry-harness-history.mjs";
+import { assertHistoricalTypeSurfaceEvidence } from "./type-surface-historical-evidence.mjs";
 
 test("PHP-Wasm Subtype installed probe harness integration authenticates every transition and refuses unrecorded edits", async () => {
 	const history = JSON.parse(await readFile(phpWasmEntryHarnessHistoryPath, "utf8"));
@@ -89,13 +90,7 @@ test("PHP-Wasm Subtype installed probe harness changes source pins without chang
 	assert.deepEqual(current, expected);
 	assert.deepEqual(current.observations, previous.observations);
 	assert.equal(current.evidence.length, 407); assert.equal(current.observations.length, 509);
-	const digests = new Map();
-	for(const file of current.evidence.flatMap(entry => entry.files))
-	{
-		const key = `${file.path}:${file.sha256}`;
-		if(!digests.has(key)) digests.set(key, sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)));
-		assert.equal(digests.get(key), file.sha256, file.path);
-	}
+	await assertHistoricalTypeSurfaceEvidence(current);
 });
 
 test("PHP-Wasm Subtype installed probe harness integration history writer refuses an unrelated HEAD before writing", async t => {

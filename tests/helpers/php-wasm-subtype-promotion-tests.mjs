@@ -12,6 +12,7 @@ import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../sr
 import { phpWasmSubtypeArchiveRoot, phpWasmSubtypeProducer } from "./php-wasm-subtype-archive.mjs";
 import { beforePhpWasmSubtypePromotionSource, phpWasmSubtypePromotionHistoryPath } from "./php-wasm-subtype-promotion-history.mjs";
 import { phpWasmSubtypePromotionConversion, phpWasmSubtypePromotionEnvironment, phpWasmSubtypePromotionLimit, phpWasmSubtypePromotionReferences, promotePhpWasmSubtype } from "./php-wasm-subtype-promotion.mjs";
+import { assertHistoricalTypeSurfaceEvidence } from "./type-surface-historical-evidence.mjs";
 
 const promotionSource = async path => {
 	const history = JSON.parse(await readFile(phpWasmSubtypePromotionHistoryPath));
@@ -85,8 +86,7 @@ test("PHP-Wasm Subtype promotion changes only four cells and preserves every old
 	const expected = structuredClone(proposed);
 	restoreHistoricalPins(expected, current.document);
 	assert.deepEqual(current.document, expected);
-	for(const entry of current.document.evidence) for(const file of entry.files)
-		assert.equal(sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)), file.sha256, file.path);
+	await assertHistoricalTypeSurfaceEvidence(current.document);
 });
 
 test("PHP-Wasm Subtype promotion refuses missing, duplicate, weakened or repeated evidence selections", async () => {

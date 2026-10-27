@@ -13,6 +13,7 @@ import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import { beforeMavenPrerequisiteSource, mavenPrerequisiteChangedPaths, mavenPrerequisiteHistoryPath, mavenPrerequisitePredecessor, reverseMavenPrerequisiteUpdate } from "./maven-prerequisite-history.mjs";
+import { assertHistoricalTypeSurfaceEvidence } from "./type-surface-historical-evidence.mjs";
 
 test("Maven prerequisite history authenticates exact transitions and refuses unknown edits", async () => {
 	const history = JSON.parse(await readFile(mavenPrerequisiteHistoryPath));
@@ -58,12 +59,7 @@ test("Maven prerequisite gate changes source pins without adding or changing ins
 	assert.ok(pins > 0); assert.deepEqual(current, expected);
 	assert.equal(current.evidence.length, 419); assert.equal(current.observations.length, 518);
 	assert.deepEqual(current.observations, previous.observations);
-	const hashes = new Map();
-	for(const file of current.evidence.flatMap(entry => entry.files))
-	{
-		if(!hashes.has(file.path)) hashes.set(file.path, sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)));
-		assert.equal(hashes.get(file.path), file.sha256, file.path);
-	}
+	await assertHistoricalTypeSurfaceEvidence(current);
 	assert.equal(sha256(await readFile("docs/evidence/reviewed-subtype-host-ci-source-history-20261010.json")), "5e13607300b651bb48ba6567efa65a4d8327b652afb4d2b1c613f43b92780177");
 });
 

@@ -13,6 +13,7 @@ import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import { beforeCheckedRecordPerlInstalledSource, checkedRecordPerlInstalledChangedPaths, checkedRecordPerlInstalledHistoryPath, checkedRecordPerlInstalledPredecessor, reverseCheckedRecordPerlInstalledUpdate } from "./checked-record-perl-installed-history.mjs";
+import { assertHistoricalTypeSurfaceEvidence } from "./type-surface-historical-evidence.mjs";
 
 test("Perl checked-record installed harness history authenticates exact transitions and refuses unknown edits", async () => {
 	const history = JSON.parse(await readFile(checkedRecordPerlInstalledHistoryPath));
@@ -64,13 +65,7 @@ test("Perl checked-record installed harness changes only source pins and preserv
 	assert.equal(pins, 0); assert.deepEqual(current, expected);
 	assert.equal(current.evidence.length, 436); assert.equal(current.observations.length, 551);
 	assert.deepEqual(current.observations, previous.observations);
-	const hashes = new Map();
-	for(const file of current.evidence.flatMap(entry => entry.files))
-	{
-		const key = file.path + ":" + file.sha256;
-		if(!hashes.has(key)) hashes.set(key, sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)));
-		assert.equal(hashes.get(key), file.sha256, file.path);
-	}
+	await assertHistoricalTypeSurfaceEvidence(current);
 	assert.equal(sha256(await readFile("docs/evidence/checked-record-perl-source-history-20261011.json")), "1b5fdfca3cbf9e35d65c622e0eb7e932878274d16418549d981f4d8a5818b19e");
 });
 

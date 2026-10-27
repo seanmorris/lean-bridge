@@ -13,6 +13,7 @@ import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import { beforeCheckedRecordPerlCiSource, checkedRecordPerlCiChangedPaths, checkedRecordPerlCiHistoryPath, checkedRecordPerlCiPredecessor, reverseCheckedRecordPerlCiUpdate } from "./checked-record-perl-ci-history.mjs";
+import { assertHistoricalTypeSurfaceEvidence } from "./type-surface-historical-evidence.mjs";
 
 test("Perl installed CI history restores exact workflow predecessors and rejects unrecorded edits", async () => {
 	const history = JSON.parse(await readFile(checkedRecordPerlCiHistoryPath));
@@ -63,14 +64,8 @@ test("Perl installed CI refreshes only workflow pins and preserves every support
 	}
 	assert.equal(pins, 13); assert.deepEqual(inventory, expected);
 	assert.equal(inventory.evidence.length, 436); assert.equal(inventory.observations.length, 551);
-	const checked = new Map();
-	for(const file of inventory.evidence.flatMap(entry => entry.files))
-	{
-		const key = file.path + ":" + file.sha256;
-		if(!checked.has(key)) checked.set(key, sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)));
-		assert.equal(checked.get(key), file.sha256, file.path);
-	}
-	assert.equal(checked.size, 3893);
+	const historicalEvidence = await assertHistoricalTypeSurfaceEvidence(inventory);
+	assert.equal(historicalEvidence.count, 3893);
 });
 
 test("Perl installed CI history writer refuses another checkout before creating files", async t => {

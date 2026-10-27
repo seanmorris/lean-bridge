@@ -9,10 +9,10 @@ import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
-import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeNativeConsumerPartitionSource, nativeConsumerPartitionChangedPaths, nativeConsumerPartitionHistoryPath, nativeConsumerPartitionPredecessor, reverseNativeConsumerPartitionUpdate } from "./native-consumer-partition-history.mjs";
 import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
+import { assertHistoricalTypeSurfaceEvidence } from "./type-surface-historical-evidence.mjs";
 
 test("native CI partition history authenticates every exact predecessor and preserves all support claims", async t => {
 	const record = JSON.parse(await readFile(nativeConsumerPartitionHistoryPath));
@@ -57,8 +57,7 @@ test("native CI partition history authenticates every exact predecessor and pres
 		path, sourceAtHistoryMilestone(nativeConsumerPartitionHistoryPath, path)
 		, checkpoint
 	)), expected);
-	for(const evidence of expected.evidence) for(const file of evidence.files)
-		assert.equal(sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)), file.sha256, file.path);
+	await assertHistoricalTypeSurfaceEvidence(expected);
 	t.diagnostic(`${pins} source pins refreshed; every support claim and observation unchanged`);
 });
 

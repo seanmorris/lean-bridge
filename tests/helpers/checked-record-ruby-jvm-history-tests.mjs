@@ -13,6 +13,7 @@ import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import { beforeCheckedRecordRubyJvmArchiveSource, checkedRecordRubyJvmArchiveChangedPaths, checkedRecordRubyJvmArchiveHistoryPath, checkedRecordRubyJvmArchivePredecessor, reverseCheckedRecordRubyJvmArchiveUpdate } from "./checked-record-ruby-jvm-history.mjs";
+import { assertHistoricalTypeSurfaceEvidence } from "./type-surface-historical-evidence.mjs";
 
 test("Checked-record Ruby/JVM archive history authenticates exact transitions and refuses unknown edits", async () => {
 	const history = JSON.parse(await readFile(checkedRecordRubyJvmArchiveHistoryPath));
@@ -61,13 +62,7 @@ test("Checked-record Ruby/JVM archive changes only source pins and preserves all
 	assert.equal(pins, 18); assert.deepEqual(current, expected);
 	assert.equal(current.evidence.length, 420); assert.equal(current.observations.length, 519);
 	assert.deepEqual(current.observations, previous.observations);
-	const hashes = new Map();
-	for(const file of current.evidence.flatMap(entry => entry.files))
-	{
-		const key = file.path + ":" + file.sha256;
-		if(!hashes.has(key)) hashes.set(key, sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)));
-		assert.equal(hashes.get(key), file.sha256, file.path);
-	}
+	await assertHistoricalTypeSurfaceEvidence(current);
 	assert.equal(sha256(await readFile("docs/evidence/checked-record-python-source-history-20261010.json")), "09f90b179bc965f4e262843ab680c86764eb44307ebfaad0ab0bee2ed814b31c");
 });
 

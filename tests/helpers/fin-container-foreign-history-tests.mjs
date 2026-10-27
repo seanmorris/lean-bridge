@@ -14,6 +14,7 @@ import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import { beforeFinForeignSource, finForeignChangedPaths, finForeignHistoryPath, finForeignPredecessor, reverseFinForeignUpdate } from "./fin-container-foreign-history.mjs";
+import { assertHistoricalTypeSurfaceEvidence } from "./type-surface-historical-evidence.mjs";
 
 test("foreign-carrier integration authenticates every transition and refuses unrecorded edits", async () => {
 	const history = JSON.parse(await readFile(finForeignHistoryPath, "utf8"));
@@ -63,17 +64,7 @@ test("foreign-carrier integration refreshes exact source pins without changing s
 	assert.equal(refreshed, 186);
 	assert.deepEqual(current, expected);
 	assert.deepEqual(current.observations, previous.observations);
-	const digests = new Map();
-	for(const file of current.evidence.flatMap(entry => entry.files))
-	{
-		if(!digests.has(file.path))
-		{
-			const bytes = await readFile(file.path);
-			const source = beforeFinRefinementSource(file.path, bytes, file.sha256);
-			digests.set(file.path, sha256(source));
-		}
-		assert.equal(digests.get(file.path), file.sha256, file.path);
-	}
+	await assertHistoricalTypeSurfaceEvidence(current);
 	for(const [path, digest] of [
 		["docs/evidence/fin-container-edge-ci-source-history-20261010.json", "df5b0fcaef151ea18c128b4d5d9acfbdc6f250caad88d4613b6c526308b1f42c"]
 		, ["docs/evidence/fin-container-edge-integration-source-history-20261010.json", "a9fa371246d50339037ad0c1ded08f5d3c83b7802817dd93980e1669cc27a4b1"]

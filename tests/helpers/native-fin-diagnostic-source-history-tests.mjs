@@ -9,10 +9,10 @@ import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
-import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import { beforeFinDiagnosticSource, finDiagnosticChangedPaths, finDiagnosticHistoryPath, finDiagnosticPredecessor, reverseFinDiagnosticUpdate } from "./native-fin-diagnostic-source-history.mjs";
+import { assertHistoricalTypeSurfaceEvidence } from "./type-surface-historical-evidence.mjs";
 
 test("native Fin diagnostic history restores exact predecessors and rejects unrelated edits", async () => {
 	const history = JSON.parse(await readFile(finDiagnosticHistoryPath, "utf8"));
@@ -58,15 +58,7 @@ test("native Fin diagnostic inventory refreshes only current source pins, not ob
 	assert.equal(refreshed, 246);
 	assert.deepEqual(current, expected);
 	assert.deepEqual(current.observations, previous.observations);
-	const files = new Map();
-	for(const entry of current.evidence) for(const file of entry.files)
-	{
-		const key = `${file.path}:${file.sha256}`;
-		if(!files.has(key)) files.set(key, sha256(beforeFinRefinementSource(
-			file.path, await readFile(file.path), file.sha256
-		)));
-		assert.equal(files.get(key), file.sha256, file.path);
-	}
+	await assertHistoricalTypeSurfaceEvidence(current);
 });
 
 test("native Fin diagnostic history writer refuses an unrelated revision before writing", async t => {

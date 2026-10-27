@@ -13,6 +13,7 @@ import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import { beforeReviewedSubtypeBrowserSource, reviewedSubtypeBrowserChangedPaths, reviewedSubtypeBrowserHistoryPath, reviewedSubtypeBrowserPredecessor, reverseReviewedSubtypeBrowserUpdate } from "./reviewed-subtype-browser-history.mjs";
+import { assertHistoricalTypeSurfaceEvidence } from "./type-surface-historical-evidence.mjs";
 
 test("Reviewed browser history authenticates exact transitions and refuses unknown edits", async () => {
 	const history = JSON.parse(await readFile(reviewedSubtypeBrowserHistoryPath));
@@ -58,12 +59,7 @@ test("Reviewed browser gate changes source pins without adding or changing insta
 	assert.ok(pins > 0); assert.deepEqual(current, expected);
 	assert.equal(current.evidence.length, 419); assert.equal(current.observations.length, 518);
 	assert.deepEqual(current.observations, previous.observations);
-	const hashes = new Map();
-	for(const file of current.evidence.flatMap(entry => entry.files))
-	{
-		if(!hashes.has(file.path)) hashes.set(file.path, sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)));
-		assert.equal(hashes.get(file.path), file.sha256, file.path);
-	}
+	await assertHistoricalTypeSurfaceEvidence(current);
 	assert.equal(sha256(await readFile("docs/evidence/reviewed-subtype-package-ci-source-history-20261010.json")), "c7ec3c041f06c1b6d85b04cd1c4c9b03b87c59709be7c009a4d338a43a017a3f");
 });
 

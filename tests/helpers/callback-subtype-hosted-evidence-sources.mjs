@@ -9,6 +9,17 @@ import { execFileSync } from "node:child_process";
 import { extname, posix } from "node:path";
 import { moduleSpecifiers } from "./module-closure.mjs";
 
+export const callbackSubtypeHostedEvidenceRoots = Object.freeze({
+	browser: "docs/evidence/callback-subtype-browser-20261022"
+	, native: "docs/evidence/callback-subtype-native-20261022"
+	, languages: "docs/evidence/callback-subtype-languages-20261022"
+	, perl: "docs/evidence/callback-subtype-perl-20261022"
+	, dotnet: "docs/evidence/callback-subtype-dotnet-20261022"
+	, jvm: "docs/evidence/callback-subtype-jvm-20261022"
+	, "php-native": "docs/evidence/callback-subtype-php-native-20261022"
+	, "wit-wasi": "docs/evidence/callback-subtype-wit-wasi-20261022"
+});
+
 const sourceCache = new Map();
 
 /**

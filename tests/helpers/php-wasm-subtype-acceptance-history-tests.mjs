@@ -12,6 +12,7 @@ import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforePhpWasmSubtypeAcceptanceSource, phpWasmSubtypeAcceptanceChangedPaths, phpWasmSubtypeAcceptanceHistoryPath, phpWasmSubtypeAcceptancePredecessor, reversePhpWasmSubtypeAcceptanceUpdate } from "./php-wasm-subtype-acceptance-history.mjs";
+import { assertHistoricalTypeSurfaceEvidence } from "./type-surface-historical-evidence.mjs";
 
 test("PHP-Wasm Subtype acceptance integration authenticates every transition and refuses unrecorded edits", async () => {
 	const history = JSON.parse(await readFile(phpWasmSubtypeAcceptanceHistoryPath, "utf8"));
@@ -96,6 +97,5 @@ test("PHP-Wasm Subtype acceptance archive and CI refresh source pins without cha
 	}
 	assert.ok(refreshed > 0); assert.deepEqual(current, expected);
 	assert.deepEqual(current.observations, previous.observations);
-	for(const file of current.evidence.flatMap(entry => entry.files))
-		assert.equal(sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)), file.sha256, file.path);
+	await assertHistoricalTypeSurfaceEvidence(current);
 });

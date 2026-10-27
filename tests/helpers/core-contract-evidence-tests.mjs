@@ -24,6 +24,10 @@ import {
 	assertTypeSurfaceEvidenceReceipt, createTypeSurfaceEvidenceReceipt
 	, typeSurfaceEvidenceFiles, typeSurfaceEvidenceSourcePaths
 } from "../../src/adoption/type-surface-evidence-receipt.mjs";
+import { sha256 } from "../../src/capsule/node.mjs";
+import {
+	assertHistoricalTypeSurfaceEvidence, historicalTypeSurfaceGitSources
+} from "./type-surface-historical-evidence.mjs";
 import { ownedCheckedRecordHostedLaneNames } from "./owned-checked-record-hosted-contracts.mjs";
 
 const directories = Object.freeze([
@@ -107,6 +111,26 @@ test("Core evidence planning closes dynamic callback and dependent lanes", async
 		callbackSource
 		, "tests/helpers/callback-checked-record-hosted-evidence-sources.mjs"
 		, callbackDirectories)].sort(), callbackDirectories.sort());
+	const callbackSubtypeDirectories = [
+		"callback-subtype-browser-20261022"
+		, "callback-subtype-native-20261020"
+		, "callback-subtype-native-20261022"
+		, "callback-subtype-languages-20261022"
+		, "callback-subtype-perl-20261022"
+		, "callback-subtype-dotnet-20261022"
+		, "callback-subtype-jvm-20261022"
+		, "callback-subtype-php-native-20261022"
+		, "callback-subtype-wit-wasi-20261022"
+	];
+	const callbackSubtypeSource = await readFile(
+		"tests/helpers/callback-subtype-hosted-evidence-sources.mjs"
+		, "utf8");
+	assert.deepEqual([...coreContractEvidenceDirectoryReferences(
+		callbackSubtypeSource
+		, "tests/helpers/callback-subtype-hosted-evidence-sources.mjs"
+		, callbackSubtypeDirectories)].sort()
+	, callbackSubtypeDirectories.filter(directory =>
+		directory !== "callback-subtype-native-20261020").sort());
 
 	const dependentLanes = [
 		"browser", "native", "dotnet", "jvm", "php", "php-wasm"
@@ -307,6 +331,55 @@ test("one exact workflow receipt closes repeated type-surface reads", async t =>
 	]) assert.throws(() => assertTypeSurfaceEvidenceReceipt(forged, {
 		commit, document, sourceSha256
 	}));
+});
+
+test("historical type-surface checks reuse live pins and reconstruct only changed Git sources", async () => {
+	const same = Buffer.from("same\n"), liveBytes = Buffer.from("live\n");
+	const oldBytes = Buffer.from("old\n");
+	const live = { evidence: [{ files: [
+		{ path: "same.txt", sha256: sha256(same) }
+		, { path: "changed.txt", sha256: sha256(liveBytes) }
+	] }] };
+	const historical = { evidence: [{ files: [
+		{ path: "same.txt", sha256: sha256(same) }
+		, { path: "changed.txt", sha256: sha256(oldBytes) }
+	] }] };
+	const reads = [];
+	const readSources = (paths, revision) => {
+		reads.push(paths); assert.match(revision, /^[a-f0-9]{40}$/u);
+		return new Map([["changed.txt", liveBytes]]);
+	};
+	const normalize = (path, source, expected) => {
+		assert.equal(path, "changed.txt"); assert.deepEqual(source, liveBytes);
+		assert.equal(expected, sha256(oldBytes)); return oldBytes;
+	};
+	assert.deepEqual(await assertHistoricalTypeSurfaceEvidence(historical, {
+		live, normalize, readSources
+	}), { count: 2, inherited: 1, reconstructed: 1 });
+	assert.deepEqual(reads, [["changed.txt"]]);
+	await assert.rejects(() => assertHistoricalTypeSurfaceEvidence(historical, {
+		live, normalize: () => Buffer.from("forged\n"), readSources
+	}), /changed[.]txt/u);
+});
+
+test("historical type-surface Git reads are exact, bounded and isolated from callers", async () => {
+	const revision = execFileSync("git", ["rev-parse", "HEAD"])
+		.toString().trim();
+	const expected = await readFile("package.json");
+	const first = historicalTypeSurfaceGitSources([
+		"package.json", "package.json"
+	], revision);
+	assert.equal(first.size, 1);
+	assert.deepEqual(first.get("package.json"), expected);
+	first.get("package.json")[0] ^= 255;
+	assert.deepEqual(historicalTypeSurfaceGitSources([
+		"package.json"
+	], revision).get("package.json"), expected);
+	for(const paths of [["../package.json"], ["/package.json"]
+		, ["package.json\nHEAD:package-lock.json"]])
+		assert.throws(() => historicalTypeSurfaceGitSources(paths, revision));
+	assert.throws(() => historicalTypeSurfaceGitSources(
+		["package.json"], "HEAD"));
 });
 
 test("checked-JavaScript partitions preserve the exact legacy test inventory", async () => {

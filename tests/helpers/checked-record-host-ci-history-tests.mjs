@@ -13,6 +13,7 @@ import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import { beforeCheckedRecordHostCiSource, checkedRecordHostCiChangedPaths, checkedRecordHostCiHistoryPath, checkedRecordHostCiPredecessor, reverseCheckedRecordHostCiUpdate } from "./checked-record-host-ci-history.mjs";
+import { assertHistoricalTypeSurfaceEvidence } from "./type-surface-historical-evidence.mjs";
 
 test("Checked-record native CI workflow history authenticates exact transitions and refuses unknown edits", async () => {
 	const history = JSON.parse(await readFile(checkedRecordHostCiHistoryPath));
@@ -61,13 +62,7 @@ test("Checked-record native CI workflow changes only source pins and preserves a
 	assert.equal(pins, 133); assert.deepEqual(current, expected);
 	assert.equal(current.evidence.length, 436); assert.equal(current.observations.length, 551);
 	assert.deepEqual(current.observations, previous.observations);
-	const hashes = new Map();
-	for(const file of current.evidence.flatMap(entry => entry.files))
-	{
-		const key = file.path + ":" + file.sha256;
-		if(!hashes.has(key)) hashes.set(key, sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)));
-		assert.equal(hashes.get(key), file.sha256, file.path);
-	}
+	await assertHistoricalTypeSurfaceEvidence(current);
 	assert.equal(sha256(await readFile("docs/evidence/checked-record-native-promotion-source-history-20261011.json")), "022b0f0d207d056a3602c66497d415d428de9fa972a7802adb6d7199b8ae6b41");
 });
 

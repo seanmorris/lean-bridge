@@ -13,6 +13,7 @@ import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import { beforeReviewedSubtypeHostCiSource, reviewedSubtypeHostCiChangedPaths, reviewedSubtypeHostCiHistoryPath, reviewedSubtypeHostCiPredecessor, reverseReviewedSubtypeHostCiUpdate } from "./reviewed-subtype-host-ci-history.mjs";
+import { assertHistoricalTypeSurfaceEvidence } from "./type-surface-historical-evidence.mjs";
 
 test("reviewed native CI workflow history authenticates exact transitions and refuses unknown edits", async () => {
 	const history = JSON.parse(await readFile(reviewedSubtypeHostCiHistoryPath));
@@ -58,12 +59,7 @@ test("reviewed native CI workflow gate changes source pins without adding or cha
 	assert.ok(pins > 0); assert.deepEqual(current, expected);
 	assert.equal(current.evidence.length, 419); assert.equal(current.observations.length, 518);
 	assert.deepEqual(current.observations, previous.observations);
-	const hashes = new Map();
-	for(const file of current.evidence.flatMap(entry => entry.files))
-	{
-		if(!hashes.has(file.path)) hashes.set(file.path, sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)));
-		assert.equal(hashes.get(file.path), file.sha256, file.path);
-	}
+	await assertHistoricalTypeSurfaceEvidence(current);
 	assert.equal(sha256(await readFile("docs/evidence/reviewed-subtype-host-ci-report-source-history-20261010.json")), "5e827c8b3c2cd9223f6634b1c523f4b0bf0fd7782812d0f1c755e7e2a5f6224f");
 });
 

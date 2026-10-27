@@ -13,6 +13,7 @@ import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import { beforeReviewedPerlDiagnosticSource, reviewedPerlDiagnosticChangedPaths, reviewedPerlDiagnosticHistoryPath, reviewedPerlDiagnosticPredecessor, reverseReviewedPerlDiagnosticUpdate } from "./reviewed-perl-diagnostic-history.mjs";
+import { assertHistoricalTypeSurfaceEvidence } from "./type-surface-historical-evidence.mjs";
 
 test("reviewed Perl diagnostic history authenticates exact transitions and preserves requested epochs", async () => {
 	const history = JSON.parse(await readFile(reviewedPerlDiagnosticHistoryPath));
@@ -64,12 +65,7 @@ test("reviewed Perl diagnostics preserve every support claim and authenticate al
 	}
 	assert.ok(refreshed > 0); assert.deepEqual(current, expected);
 	assert.equal(current.evidence.length, 407); assert.equal(current.observations.length, 509);
-	const hashes = new Map();
-	for(const file of JSON.parse(latest).evidence.flatMap(entry => entry.files))
-	{
-		if(!hashes.has(file.path)) hashes.set(file.path, sha256(await readFile(file.path)));
-		assert.equal(hashes.get(file.path), file.sha256, file.path);
-	}
+	await assertHistoricalTypeSurfaceEvidence(JSON.parse(latest));
 	assert.equal(sha256(await readFile("docs/evidence/reviewed-subtype-host-source-history-20261010.json")), "f246d63f87ee8e131aa48eee9732a31adddbe58673e997d0f9cb95cdc6f169c6");
 });
 

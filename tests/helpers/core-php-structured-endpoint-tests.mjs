@@ -78,8 +78,10 @@ test("Core structured callback chain supplies every exact source stop", async ()
 		await inspect(`tests/helpers/${item.slug}-evidence.mjs`, (node, tree) => {
 			if(node.expression.text === item.reader)
 			{
-				assert.ok(ts.isArrowFunction(node.parent));
-				const parameters = node.parent.parameters.map(p => p.name.getText(tree));
+				let wrapper = node.parent;
+				while(wrapper && !ts.isArrowFunction(wrapper)) wrapper = wrapper.parent;
+				assert.ok(ts.isArrowFunction(wrapper));
+				const parameters = wrapper.parameters.map(p => p.name.getText(tree));
 				if(JSON.stringify(parameters) !== JSON.stringify(["path", "expected"]))
 					violations.push(item.label + ": wrapper must accept the stop digest");
 				return "expected";

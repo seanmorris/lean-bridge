@@ -13,6 +13,7 @@ import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import { beforeCheckedRecordPerlSource, checkedRecordPerlChangedPaths, checkedRecordPerlHistoryPath, checkedRecordPerlPredecessor, reverseCheckedRecordPerlUpdate } from "./checked-record-perl-history.mjs";
+import { assertHistoricalTypeSurfaceEvidence } from "./type-surface-historical-evidence.mjs";
 
 test("Perl checked-record source history authenticates exact transitions and refuses unknown edits", async () => {
 	const history = JSON.parse(await readFile(checkedRecordPerlHistoryPath));
@@ -61,13 +62,7 @@ test("Perl checked-record source changes only source pins and preserves all inst
 	assert.equal(pins, 31); assert.deepEqual(current, expected);
 	assert.equal(current.evidence.length, 436); assert.equal(current.observations.length, 551);
 	assert.deepEqual(current.observations, previous.observations);
-	const hashes = new Map();
-	for(const file of current.evidence.flatMap(entry => entry.files))
-	{
-		const key = file.path + ":" + file.sha256;
-		if(!hashes.has(key)) hashes.set(key, sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)));
-		assert.equal(hashes.get(key), file.sha256, file.path);
-	}
+	await assertHistoricalTypeSurfaceEvidence(current);
 	assert.equal(sha256(await readFile("docs/evidence/refinement-core-ci-source-history-20261011.json")), "7966304b44718f88e0f6a13a6e12ae34497098788a4aa2edf356b26cc6e5499d");
 });
 

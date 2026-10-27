@@ -11,6 +11,7 @@ import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeFinEdgeIntegrationSource } from "./fin-container-edge-integration-history.mjs";
 import { beforeFinDiagnosticCiSource, finDiagnosticCiChangedPaths, finDiagnosticCiHistoryPath, finDiagnosticCiPredecessor, reverseFinDiagnosticCiUpdate } from "./native-fin-diagnostic-ci-history.mjs";
 import "./fin-history-buffer-repair-tests.mjs";
+import { assertHistoricalTypeSurfaceEvidence } from "./type-surface-historical-evidence.mjs";
 
 test("diagnostic CI history authenticates exact repairs and refuses unknown source changes", async () => {
 	const history = JSON.parse(await readFile(finDiagnosticCiHistoryPath, "utf8"));
@@ -51,11 +52,6 @@ test("diagnostic CI repair changes source pins only and preserves earlier ledger
 	assert.equal(refreshed, 12);
 	assert.deepEqual(current, expected);
 	assert.deepEqual(current.observations, previous.observations);
-	for(const file of current.evidence.flatMap(entry => entry.files))
-	{
-		const bytes = await readFile(file.path);
-		const source = beforeFinRefinementSource(file.path, bytes, file.sha256);
-		assert.equal(sha256(source), file.sha256, file.path);
-	}
+	await assertHistoricalTypeSurfaceEvidence(current);
 	assert.equal(sha256(await readFile("docs/evidence/native-fin-diagnostic-source-history-20261010.json")), "2bc3b1217601bb0eb0c19b9f1496d00ab5df831e3a1bd1881a4429b28fd210ab");
 });

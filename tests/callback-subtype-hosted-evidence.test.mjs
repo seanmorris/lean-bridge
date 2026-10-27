@@ -10,7 +10,7 @@
 import { existsSync } from "node:fs";
 import test from "node:test";
 import {
-	callbackSubtypeHostedLanes
+	callbackSubtypeHostedEvidenceRoots, callbackSubtypeHostedLanes
 } from "./helpers/callback-subtype-hosted-evidence-sources.mjs";
 import {
 	checkCallbackSubtypeHostedEvidence
@@ -18,7 +18,7 @@ import {
 
 for(const lane of callbackSubtypeHostedLanes)
 {
-	const root = `docs/evidence/callback-subtype-${lane}-20261022`;
+	const root = callbackSubtypeHostedEvidenceRoots[lane];
 	test(`retained ${lane} callback Subtype evidence replays`, {
 		skip: !existsSync(`${root}/index.json`), timeout: 120_000
 	}, async () => {

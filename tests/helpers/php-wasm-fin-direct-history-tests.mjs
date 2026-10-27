@@ -12,6 +12,7 @@ import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforePhpWasmDirectFinSource, phpWasmDirectFinChangedPaths, phpWasmDirectFinHistoryPath, phpWasmDirectFinPredecessor, reversePhpWasmDirectFinUpdate } from "./php-wasm-fin-direct-history.mjs";
+import { assertHistoricalTypeSurfaceEvidence } from "./type-surface-historical-evidence.mjs";
 
 test("Direct PHP-Wasm Fin integration authenticates every transition and refuses unrecorded edits", async () => {
 	const history = JSON.parse(await readFile(phpWasmDirectFinHistoryPath, "utf8"));
@@ -92,10 +93,5 @@ test("Direct PHP-Wasm Fin integration changes current source pins only and adds 
 	}
 	assert.ok(refreshed > 0); assert.deepEqual(current, expected);
 	assert.deepEqual(current.observations, previous.observations);
-	const digests = new Map();
-	for(const file of current.evidence.flatMap(entry => entry.files))
-	{
-		if(!digests.has(file.path)) digests.set(file.path, sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)));
-		assert.equal(file.sha256, digests.get(file.path), file.path);
-	}
+	await assertHistoricalTypeSurfaceEvidence(current);
 });

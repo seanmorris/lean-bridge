@@ -14,6 +14,7 @@ import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import { beforeFinEdgeCiSource, finEdgeCiChangedPaths, finEdgeCiHistoryPath, finEdgeCiPredecessor, reverseFinEdgeCiUpdate } from "./fin-container-edge-ci-history.mjs";
+import { assertHistoricalTypeSurfaceEvidence } from "./type-surface-historical-evidence.mjs";
 
 test("container edge CI authenticates every transition and refuses unrecorded edits", async () => {
 	const history = JSON.parse(await readFile(finEdgeCiHistoryPath, "utf8"));
@@ -63,17 +64,7 @@ test("container edge CI refreshes exact source pins without changing support cla
 	assert.equal(refreshed, 92);
 	assert.deepEqual(current, expected);
 	assert.deepEqual(current.observations, previous.observations);
-	const digests = new Map();
-	for(const file of current.evidence.flatMap(entry => entry.files))
-	{
-		if(!digests.has(file.path))
-		{
-			const bytes = await readFile(file.path);
-			const source = beforeFinRefinementSource(file.path, bytes, file.sha256);
-			digests.set(file.path, sha256(source));
-		}
-		assert.equal(digests.get(file.path), file.sha256, file.path);
-	}
+	await assertHistoricalTypeSurfaceEvidence(current);
 	for(const [path, digest] of [
 		["docs/evidence/fin-container-edge-integration-source-history-20261010.json", "a9fa371246d50339037ad0c1ded08f5d3c83b7802817dd93980e1669cc27a4b1"]
 		, ["docs/evidence/native-fin-diagnostic-ci-source-history-20261010.json", "77d1716708d41789f6dced955d6764d3ca2c86c88a1f2eea8b8df356e1dea8c6"]

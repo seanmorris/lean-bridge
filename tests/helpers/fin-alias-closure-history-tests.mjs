@@ -13,6 +13,7 @@ import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import { beforeFinAliasClosureSource, finAliasClosureChangedPaths, finAliasClosureHistoryPath, finAliasClosurePredecessor, reverseFinAliasClosureUpdate } from "./fin-alias-closure-history.mjs";
+import { assertHistoricalTypeSurfaceEvidence } from "./type-surface-historical-evidence.mjs";
 
 test("Fin alias closure integration authenticates every transition and refuses unrecorded edits", async () => {
 	const history = JSON.parse(await readFile(finAliasClosureHistoryPath, "utf8"));
@@ -88,13 +89,5 @@ test("Fin alias closure integration changes current source pins only and adds no
 	}
 	assert.ok(refreshed > 0); assert.deepEqual(current, expected);
 	assert.deepEqual(current.observations, previous.observations);
-	const digests = new Map();
-	for(const file of current.evidence.flatMap(entry => entry.files))
-	{
-		if(!digests.has(file.path))
-		{
-			digests.set(file.path, sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)));
-		}
-		assert.equal(file.sha256, digests.get(file.path), file.path);
-	}
+	await assertHistoricalTypeSurfaceEvidence(current);
 });

@@ -13,6 +13,7 @@ import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import { beforeFinDotnetSdkSource, finDotnetSdkChangedPaths, finDotnetSdkHistoryPath, finDotnetSdkPredecessor, reverseFinDotnetSdkUpdate } from "./fin-dotnet-sdk-history.mjs";
+import { assertHistoricalTypeSurfaceEvidence } from "./type-surface-historical-evidence.mjs";
 
 test("Native Fin .NET SDK repair integration authenticates every transition and refuses unrecorded edits", async () => {
 	const history = JSON.parse(await readFile(finDotnetSdkHistoryPath, "utf8"));
@@ -84,12 +85,7 @@ test("Native Fin .NET SDK repair changes source pins without changing any suppor
 	assert.deepEqual(current, expected);
 	assert.deepEqual(current.observations, previous.observations);
 	assert.equal(current.evidence.length, 407); assert.equal(current.observations.length, 509);
-	const digests = new Map();
-	for(const file of current.evidence.flatMap(entry => entry.files))
-	{
-		if(!digests.has(file.path)) digests.set(file.path, sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)));
-		assert.equal(digests.get(file.path), file.sha256, file.path);
-	}
+	await assertHistoricalTypeSurfaceEvidence(current);
 });
 
 test("Native Fin .NET SDK repair integration history writer refuses an unrelated HEAD before writing", async t => {

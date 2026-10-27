@@ -13,6 +13,7 @@ import { phpWasmDirectArchiveRoot, phpWasmDirectProducer } from "./php-wasm-fin-
 import { beforePhpWasmDirectPromotionSource, phpWasmDirectPromotionHistoryPath } from "./php-wasm-direct-fin-promotion-history.mjs";
 import { phpWasmDirectPromotionConversion, phpWasmDirectPromotionEnvironment, phpWasmDirectPromotionLimit, phpWasmDirectPromotionReferences, promotePhpWasmDirectFin } from "./php-wasm-direct-fin-promotion.mjs";
 import "./php-wasm-direct-fin-promotion-history-tests.mjs";
+import { assertHistoricalTypeSurfaceEvidence } from "./type-surface-historical-evidence.mjs";
 
 const promotionSource = async path => {
 	const history = JSON.parse(await readFile(phpWasmDirectPromotionHistoryPath));
@@ -100,8 +101,7 @@ test("direct PHP-Wasm promotion supplements only its existing six Fin cells and 
 	const expected = structuredClone(proposed);
 	restoreHistoricalPins(expected, current.document);
 	assert.deepEqual(current.document, expected);
-	for(const entry of current.document.evidence) for(const file of entry.files)
-		assert.equal(sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)), file.sha256, file.path);
+	await assertHistoricalTypeSurfaceEvidence(current.document);
 });
 
 test("direct PHP-Wasm promotion refuses incomplete, duplicated or repeated supplements", async () => {
