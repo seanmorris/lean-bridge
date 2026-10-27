@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeCoreExactHeadReplayRepairSource, coreExactHeadReplayRepairNormalizationPaths } from "./core-exact-head-replay-repair-source-history.mjs";
 import { beforeRecurringAcceptanceDocumentationSource, recurringAcceptanceDocumentationNormalizationPaths } from "./recurring-acceptance-documentation-source-history.mjs";
 import { beforeBoundedRecurringAcceptanceSweepSource, boundedRecurringAcceptanceSweepNormalizationPaths } from "./bounded-recurring-acceptance-sweep-source-history.mjs";
 import { beforeCoreExactHeadValidationRepairSource, coreExactHeadValidationRepairNormalizationPaths } from "./core-exact-head-validation-repair-source-history.mjs";
@@ -2234,7 +2235,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...recurringAcceptanceDocumentationNormalizationPaths()
+	...coreExactHeadReplayRepairNormalizationPaths()
+	, ...recurringAcceptanceDocumentationNormalizationPaths()
 	, ...boundedRecurringAcceptanceSweepNormalizationPaths()
 	, ...coreExactHeadValidationRepairNormalizationPaths()
 	, ...defaultBranchCiTriggerBudgetNormalizationPaths()
@@ -3211,7 +3213,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeRecurringAcceptanceDocumentationSource(
+	let stage = beforeCoreExactHeadReplayRepairSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeRecurringAcceptanceDocumentationSource(
 		path, text, expected
 	);
 	if(expected !== undefined && sha256(stage) === expected)

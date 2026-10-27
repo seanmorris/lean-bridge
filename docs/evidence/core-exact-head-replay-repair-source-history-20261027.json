@@ -1,0 +1,618 @@
+{
+  "historyAdditions": [
+    {
+      "currentSha256": "9360a5e2240e4adea3c8c44108811b096ee5e52d43d03300b2b4998dced81c78",
+      "path": "scripts/update-core-exact-head-replay-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "a694651d7cca17c3d16f92acf9db6ac5af9bb8902a64801a24dd5e2a63a38f75",
+      "path": "tests/helpers/core-exact-head-replay-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "a2b04e87687437395de1362f3d4504eed1115b15",
+  "integrationUpdates": [
+    {
+      "currentSha256": "0985a4d4373398814a0583c175bf2f50332f9e6cf5477475b4989f891d4cbe99",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"09686bb466f4b89c62fc5fb5df7b11542ae40d8f90b8c5897f2e0ba1ebe78fb4\"\n",
+          "previous": "          \"sha256\": \"f66b3a8097d92293fd2b3f78a2640e66b0a6f9cf822e08cde176bd1bc30d1927\"\n",
+          "start": 2027313
+        },
+        {
+          "current": "          \"sha256\": \"09686bb466f4b89c62fc5fb5df7b11542ae40d8f90b8c5897f2e0ba1ebe78fb4\"\n",
+          "previous": "          \"sha256\": \"f66b3a8097d92293fd2b3f78a2640e66b0a6f9cf822e08cde176bd1bc30d1927\"\n",
+          "start": 2049463
+        },
+        {
+          "current": "          \"sha256\": \"09686bb466f4b89c62fc5fb5df7b11542ae40d8f90b8c5897f2e0ba1ebe78fb4\"\n",
+          "previous": "          \"sha256\": \"f66b3a8097d92293fd2b3f78a2640e66b0a6f9cf822e08cde176bd1bc30d1927\"\n",
+          "start": 2071677
+        },
+        {
+          "current": "          \"sha256\": \"09686bb466f4b89c62fc5fb5df7b11542ae40d8f90b8c5897f2e0ba1ebe78fb4\"\n",
+          "previous": "          \"sha256\": \"f66b3a8097d92293fd2b3f78a2640e66b0a6f9cf822e08cde176bd1bc30d1927\"\n",
+          "start": 2093704
+        },
+        {
+          "current": "          \"sha256\": \"fe96a36b0440ee23d5cfa9ba8c4fee6c5633974e898c04642066efbbccc9cb52\"\n",
+          "previous": "          \"sha256\": \"8185a9119fd88665bcdf3b052974b7b25dd92319745d1adecc45cae4e8f4bc8f\"\n",
+          "start": 2114906
+        },
+        {
+          "current": "          \"sha256\": \"fe96a36b0440ee23d5cfa9ba8c4fee6c5633974e898c04642066efbbccc9cb52\"\n",
+          "previous": "          \"sha256\": \"8185a9119fd88665bcdf3b052974b7b25dd92319745d1adecc45cae4e8f4bc8f\"\n",
+          "start": 2125739
+        },
+        {
+          "current": "          \"sha256\": \"fe96a36b0440ee23d5cfa9ba8c4fee6c5633974e898c04642066efbbccc9cb52\"\n",
+          "previous": "          \"sha256\": \"8185a9119fd88665bcdf3b052974b7b25dd92319745d1adecc45cae4e8f4bc8f\"\n",
+          "start": 2136589
+        },
+        {
+          "current": "          \"sha256\": \"fe96a36b0440ee23d5cfa9ba8c4fee6c5633974e898c04642066efbbccc9cb52\"\n",
+          "previous": "          \"sha256\": \"8185a9119fd88665bcdf3b052974b7b25dd92319745d1adecc45cae4e8f4bc8f\"\n",
+          "start": 2147404
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "c3a4ea5e2479764624397179bae05390ed243d6bc4357b2d94c385b6a441c22f"
+    },
+    {
+      "currentSha256": "27eb14724f2726d87a5c86ed7c61607134edf331ca74b71b3d810fad9bbad61c",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeCoreExactHeadReplayRepairSource\n\t, coreExactHeadReplayRepairHistoryAdditions\n\t, coreExactHeadReplayRepairHistoryPath\n\t, coreExactHeadReplayRepairImplementation\n\t, coreExactHeadReplayRepairImplementationPaths\n\t, coreExactHeadReplayRepairIntegrationPaths\n\t, coreExactHeadReplayRepairPredecessor\n\t, reverseCoreExactHeadReplayRepairUpdate\n} from \"./core-exact-head-replay-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 357
+        },
+        {
+          "current": "import { sourceAtFinHistoryMilestone, sourceAtFinHistoryRecord, sourceAtFinHistoryRecordSource } from \"./source-at-fin-history-milestone.mjs\";\n",
+          "previous": "import { sourceAtFinHistoryMilestone } from \"./source-at-fin-history-milestone.mjs\";\n",
+          "start": 12120
+        },
+        {
+          "current": "const readCoreExactHeadReplayRepair = async () => JSON.parse(\n\tawait readFile(coreExactHeadReplayRepairHistoryPath, \"utf8\")\n);\n",
+          "previous": "",
+          "start": 12377
+        },
+        {
+          "current": "test(\"exact-head historical replay repair records its exact range\", async () => {\n\tconst record = await readCoreExactHeadReplayRepair();\n\tassert.equal(record.schemaVersion, 1);\n\tassert.equal(record.milestone\n\t\t, \"core-exact-head-replay-repair-source-v1\");\n\tassert.equal(record.predecessorCommit\n\t\t, coreExactHeadReplayRepairPredecessor);\n\tassert.equal(record.implementationCommit\n\t\t, coreExactHeadReplayRepairImplementation);\n\tassert.deepEqual(record.updates.map(update => update.path)\n\t\t, coreExactHeadReplayRepairImplementationPaths);\n\tassert.deepEqual(record.historyAdditions.map(addition => addition.path)\n\t\t, coreExactHeadReplayRepairHistoryAdditions);\n\tassert.deepEqual(record.integrationUpdates.map(update => update.path)\n\t\t, coreExactHeadReplayRepairIntegrationPaths);\n\tassert.ok(record.pointerUpdates.length > 0);\n\tassert.ok(record.pointerUpdates.every(update => update.citations > 0));\n\tassert.equal(git([\"rev-parse\"\n\t\t, `${coreExactHeadReplayRepairImplementation}^`]).trim()\n\t, coreExactHeadReplayRepairPredecessor);\n\tassert.deepEqual(git([\"diff\", \"--name-only\", \"--diff-filter=M\"\n\t\t, coreExactHeadReplayRepairPredecessor\n\t\t, coreExactHeadReplayRepairImplementation])\n\t\t.trim().split(\"\\n\").sort()\n\t, [...coreExactHeadReplayRepairImplementationPaths].sort());\n});\n\ntest(\"exact-head historical replay repair reverses every transition\", async () => {\n\tconst record = await readCoreExactHeadReplayRepair();\n\tfor(const update of [...record.updates, ...record.integrationUpdates])\n\t{\n\t\tconst current = await sourceAtFinHistoryRecord(\n\t\t\tcoreExactHeadReplayRepairHistoryPath, update.path\n\t\t\t, beforeCoreExactHeadReplayRepairSource\n\t\t);\n\t\tconst base = record.integrationUpdates.includes(update)\n\t\t\t? coreExactHeadReplayRepairImplementation\n\t\t\t: coreExactHeadReplayRepairPredecessor;\n\t\tconst previous = git([\"show\", `${base}:${update.path}`]);\n\t\tassert.equal(reverseCoreExactHeadReplayRepairUpdate(\n\t\t\tcurrent, update), previous, update.path);\n\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n\t\tassert.ok(finRefinementNormalizationPaths.includes(update.path));\n\t}\n\tfor(const addition of record.historyAdditions)\n\t\tassert.equal(sha256(await sourceAtFinHistoryRecordSource(\n\t\t\tcoreExactHeadReplayRepairHistoryPath\n\t\t\t, addition.path, addition.currentSha256\n\t\t)), addition.currentSha256, addition.path);\n});\n\ntest(\"exact-head historical replay repair rejects altered transitions\", async () => {\n\tconst update = (await readCoreExactHeadReplayRepair()).updates[0];\n\tconst current = await sourceAtFinHistoryRecord(\n\t\tcoreExactHeadReplayRepairHistoryPath, update.path\n\t\t, beforeCoreExactHeadReplayRepairSource\n\t);\n\tfor(const forged of [{ ...update, currentSha256: \"0\".repeat(64) }\n\t\t, { ...update, previousSha256: \"0\".repeat(64) }\n\t\t, { ...update, path: \"unrelated.mjs\" }\n\t\t, { ...update, edits: [] }\n\t\t, { ...update, edits: [...update.edits, update.edits[0]] }])\n\t\tassert.throws(() => reverseCoreExactHeadReplayRepairUpdate(\n\t\t\tcurrent, forged));\n\tassert.equal(beforeCoreExactHeadReplayRepairSource(\n\t\tupdate.path, current + \"unknown\"), current + \"unknown\");\n});\n\ntest(\"exact-head historical replay writer refuses another checkout\", async t => {\n\tconst root = await mkdtemp(join(\n\t\ttmpdir(), \"lean-core-exact-head-replay-guard-\"));\n\tt.after(() => rm(root, { recursive: true }));\n\tconst result = spawnSync(process.execPath, [resolve(\n\t\t\"scripts/update-core-exact-head-replay-repair-source-history.mjs\"\n\t)], { cwd: root, encoding: \"utf8\", timeout: 15_000 });\n\tassert.notEqual(result.status, 0);\n\tassert.equal(result.stdout, \"\");\n\tassert.deepEqual(await readdir(root), []);\n});\n\n",
+          "previous": "",
+          "start": 15691
+        }
+      ],
+      "path": "tests/helpers/core-historical-evidence-replay-source-history-tests.mjs",
+      "previousSha256": "cb2c796ba7bd368a65c5599c708d90ead52f83ba143961600479eba68bc958f2"
+    },
+    {
+      "currentSha256": "2d87cd958ccd38815a22955870d8055e6fdc235f12917c2bb4a73d07597f322a",
+      "edits": [
+        {
+          "current": "import { beforeCoreExactHeadReplayRepairSource, coreExactHeadReplayRepairNormalizationPaths } from \"./core-exact-head-replay-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...coreExactHeadReplayRepairNormalizationPaths()\n\t, ...recurringAcceptanceDocumentationNormalizationPaths()\n",
+          "previous": "\t...recurringAcceptanceDocumentationNormalizationPaths()\n",
+          "start": 194800
+        },
+        {
+          "current": "\tlet stage = beforeCoreExactHeadReplayRepairSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeRecurringAcceptanceDocumentationSource(\n",
+          "previous": "\tlet stage = beforeRecurringAcceptanceDocumentationSource(\n",
+          "start": 242148
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "b7677520173d67a5794f1531a273f77abda1a051b8bdcd7e1f620bd7748241e2"
+    }
+  ],
+  "milestone": "core-exact-head-replay-repair-source-v1",
+  "pointerUpdates": [
+    {
+      "citations": 4,
+      "current": "fe96a36b0440ee23d5cfa9ba8c4fee6c5633974e898c04642066efbbccc9cb52",
+      "path": "tests/hosted-container-inventory.test.mjs",
+      "previous": "8185a9119fd88665bcdf3b052974b7b25dd92319745d1adecc45cae4e8f4bc8f"
+    },
+    {
+      "citations": 4,
+      "current": "09686bb466f4b89c62fc5fb5df7b11542ae40d8f90b8c5897f2e0ba1ebe78fb4",
+      "path": "tests/perl-relocated-promotion.test.mjs",
+      "previous": "f66b3a8097d92293fd2b3f78a2640e66b0a6f9cf822e08cde176bd1bc30d1927"
+    }
+  ],
+  "predecessorCommit": "ed3a0cbbdd1138f4365795cae17d56bba9f31d51",
+  "schemaVersion": 1,
+  "scope": "Resolve exact-head historical replay against immutable Git endpoints, reuse the authenticated type-surface receipt in history inventory checks, preserve standalone full-byte validation, and make source-history records independent of the process working directory.",
+  "updates": [
+    {
+      "currentSha256": "cd4024d04bfd40260720b4be236359e8fd186dc1f1126f0a46f565aa9027590d",
+      "edits": [
+        {
+          "current": "\tnew URL(`../../${boundedRecurringAcceptanceSweepHistoryPath}`\n\t\t, import.meta.url), \"utf8\"\n",
+          "previous": "\tboundedRecurringAcceptanceSweepHistoryPath, \"utf8\"\n",
+          "start": 11287
+        }
+      ],
+      "path": "tests/helpers/bounded-recurring-acceptance-sweep-source-history.mjs",
+      "previousSha256": "969a2aae0ea4df29381a20b9d2e87d47b2b764d3205da3c1abf3effe8ac3a526"
+    },
+    {
+      "currentSha256": "f2bd6a724077e8f70c24b2b9682e5665b021731f232190002b446a5e61cdaf6d",
+      "edits": [
+        {
+          "current": "\tnew URL(`../../${coreExactHeadValidationRepairHistoryPath}`\n\t\t, import.meta.url), \"utf8\"\n",
+          "previous": "\tcoreExactHeadValidationRepairHistoryPath, \"utf8\"\n",
+          "start": 1387
+        }
+      ],
+      "path": "tests/helpers/core-exact-head-validation-repair-source-history.mjs",
+      "previousSha256": "79906e169a00dd7d6b8a89853fd74af2af1575911aee07333a7df1bef079cf06"
+    },
+    {
+      "currentSha256": "0e589719a07393552bf226d3813c85f8af193e4d05578cbab4039a028c3799d0",
+      "edits": [
+        {
+          "current": "test(\"history inventory checks reuse the authenticated type-surface pass\", async () => {\n\tconst paths = [\n\t\t\"tests/hosted-container-inventory.test.mjs\"\n\t\t, \"tests/native-edge-array-harness-history.test.mjs\"\n\t\t, \"tests/perl-relocated-promotion.test.mjs\"\n\t\t, \"tests/reviewed-fin-refusal-history.test.mjs\"\n\t\t, \"tests/wasm-ci-array-history.test.mjs\"\n\t\t, \"tests/wasm-entry-archive-history.test.mjs\"\n\t\t, \"tests/wasm-entry-controls-history.test.mjs\"\n\t\t, \"tests/wasm-entry-harness-history.test.mjs\"\n\t\t, \"tests/helpers/cpp-fin-dispatch-integration-tests.mjs\"\n\t\t, \"tests/helpers/fin-container-evidence-ci-tests.mjs\"\n\t\t, \"tests/helpers/fin-entry-integration-tests.mjs\"\n\t\t, \"tests/helpers/perl-closure-native-budget-tests.mjs\"\n\t\t, \"tests/helpers/reviewed-fin-refusal-ci-tests.mjs\"\n\t];\n\tfor(const path of paths)\n\t{\n\t\tconst source = await readFile(path, \"utf8\");\n\t\tassert.match(source, /await readTypeSurface\\(\\)/u, path);\n\t\tassert.doesNotMatch(source\n\t\t\t, /sha256\\(await readFile\\(file[.]path\\)\\), file[.]sha256/u\n\t\t\t, `${path}: do not rehash the complete live corpus`);\n\t}\n});\n\n",
+          "previous": "",
+          "start": 21181
+        }
+      ],
+      "path": "tests/helpers/core-quality-budget-tests.mjs",
+      "previousSha256": "a4fa59eb2f167f6a2def6948f9aceac1000ab2eac48075cd7b63cf78a1e988f0"
+    },
+    {
+      "currentSha256": "c1695446015f2308f776b73132ed5139a18f2a53aed73193c1c0a6a5e4bb5a67",
+      "edits": [
+        {
+          "current": "import { readTypeSurface } from \"../../src/adoption/type-surface.mjs\";\n",
+          "previous": "",
+          "start": 383
+        },
+        {
+          "current": "import { sourceAtFinHistoryRecord } from \"./source-at-fin-history-milestone.mjs\";\n",
+          "previous": "import { sourceAtFinHistoryMilestone } from \"./source-at-fin-history-milestone.mjs\";\n",
+          "start": 950
+        },
+        {
+          "current": "\t\tconst source = await sourceAtFinHistoryRecord(\n\t\t\tcppFinDispatchIntegrationHistoryPath, update.path\n",
+          "previous": "\t\tconst source = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256\n",
+          "start": 1563
+        },
+        {
+          "current": "\tconst source = await sourceAtFinHistoryRecord(\n\t\tcppFinDispatchIntegrationHistoryPath, path\n",
+          "previous": "\tconst inventoryUpdate = updates.get(path);\n\tconst source = await sourceAtFinHistoryMilestone(\n\t\tpath, inventoryUpdate.currentSha256\n",
+          "start": 3152
+        },
+        {
+          "current": "\tawait readTypeSurface();\n",
+          "previous": "\tfor(const evidence of JSON.parse(await readFile(path)).evidence) for(const file of evidence.files)\n\t\tassert.equal(sha256(await readFile(file.path)), file.sha256, file.path);\n",
+          "start": 3711
+        }
+      ],
+      "path": "tests/helpers/cpp-fin-dispatch-integration-tests.mjs",
+      "previousSha256": "eb266b5b194b8c0167a91416eddb8519d654966fc49e3b61a8a95f688cd570e1"
+    },
+    {
+      "currentSha256": "48317f36ca05fc9da37a7276664b1789bc04ff9c426c9726886842235d746b1d",
+      "edits": [
+        {
+          "current": "\tnew URL(`../../${defaultBranchCiTriggerBudgetHistoryPath}`\n\t\t, import.meta.url), \"utf8\"\n",
+          "previous": "\tdefaultBranchCiTriggerBudgetHistoryPath, \"utf8\"\n",
+          "start": 1281
+        }
+      ],
+      "path": "tests/helpers/default-branch-ci-trigger-budget-source-history.mjs",
+      "previousSha256": "5e3958c03febeeb3b9c225cda649108075379e1cfa101abefc36f30fc8146ad7"
+    },
+    {
+      "currentSha256": "72a32762e93bbe0babab1805dd9fb78de485072a9ea5d95a458753aba72c0769",
+      "edits": [
+        {
+          "current": "import { readTypeSurface } from \"../../src/adoption/type-surface.mjs\";\n",
+          "previous": "",
+          "start": 388
+        },
+        {
+          "current": "import { sourceAtFinHistoryRecord } from \"./source-at-fin-history-milestone.mjs\";\n",
+          "previous": "",
+          "start": 837
+        },
+        {
+          "current": "\t\tconst source = await sourceAtFinHistoryRecord(\n\t\t\tfinContainerEvidenceCiHistoryPath, update.path\n\t\t\t, beforeFinContainerEvidenceCiSource\n\t\t);\n",
+          "previous": "\t\tconst source = beforeFinRefinementSource(update.path\n\t\t\t, await readFile(update.path, \"utf8\"), update.currentSha256);\n",
+          "start": 1435
+        },
+        {
+          "current": "\tconst source = await sourceAtFinHistoryRecord(\n\t\tfinContainerEvidenceCiHistoryPath, path\n\t\t, beforeFinContainerEvidenceCiSource\n\t);\n",
+          "previous": "\tconst target = history.updates.find(update => update.path === path);\n\tconst source = beforeFinRefinementSource(path\n\t\t, await readFile(path, \"utf8\"), target.currentSha256);\n",
+          "start": 2911
+        },
+        {
+          "current": "\tawait readTypeSurface();\n",
+          "previous": "\tfor(const evidence of JSON.parse(await readFile(path)).evidence) for(const file of evidence.files)\n\t\tassert.equal(sha256(await readFile(file.path)), file.sha256, file.path);\n",
+          "start": 3501
+        }
+      ],
+      "path": "tests/helpers/fin-container-evidence-ci-tests.mjs",
+      "previousSha256": "524ca12cc9521989f28296963bd7d5c4f6d208c51cae59de47d8d2033107567d"
+    },
+    {
+      "currentSha256": "add588bd1bdc93792802bb54f6b10dc722232508a8ba14bda38523c80950eca9",
+      "edits": [
+        {
+          "current": "import { readTypeSurface } from \"../../src/adoption/type-surface.mjs\";\n",
+          "previous": "",
+          "start": 376
+        },
+        {
+          "current": "import { sourceAtFinHistoryRecord } from \"./source-at-fin-history-milestone.mjs\";\n",
+          "previous": "",
+          "start": 806
+        },
+        {
+          "current": "\t\tconst source = await sourceAtFinHistoryRecord(\n\t\t\tfinEntryIntegrationHistoryPath, update.path\n\t\t\t, beforeFinEntryIntegrationSource\n\t\t);\n",
+          "previous": "\t\tconst source = beforeFinRefinementSource(update.path\n\t\t\t, await readFile(update.path, \"utf8\"), update.currentSha256);\n",
+          "start": 1387
+        },
+        {
+          "current": "\tconst source = await sourceAtFinHistoryRecord(\n\t\tfinEntryIntegrationHistoryPath, path\n\t\t, beforeFinEntryIntegrationSource\n\t);\n",
+          "previous": "\tconst target = history.updates.find(update => update.path === path);\n\tconst source = beforeFinRefinementSource(path\n\t\t, await readFile(path, \"utf8\"), target.currentSha256);\n",
+          "start": 2826
+        },
+        {
+          "current": "\tawait readTypeSurface();\n",
+          "previous": "\tfor(const evidence of JSON.parse(await readFile(path)).evidence) for(const file of evidence.files)\n\t\tassert.equal(sha256(await readFile(file.path)), file.sha256, file.path);\n",
+          "start": 3407
+        }
+      ],
+      "path": "tests/helpers/fin-entry-integration-tests.mjs",
+      "previousSha256": "4b26622d5832e0dbce3cf78fa9c0a7ba17611de994eb963ae177b1ff0c4f7436"
+    },
+    {
+      "currentSha256": "1243ac5b7dbb98afedc2211021c25f6578671540152769d03c2fc34b1d9091d1",
+      "edits": [
+        {
+          "current": "import { readTypeSurface } from \"../../src/adoption/type-surface.mjs\";\n",
+          "previous": "",
+          "start": 392
+        },
+        {
+          "current": "\tawait readTypeSurface();\n",
+          "previous": "\tfor(const evidence of JSON.parse(await readFile(path)).evidence) for(const file of evidence.files)\n\t\tassert.equal(sha256(await readFile(file.path)), file.sha256, file.path);\n",
+          "start": 3603
+        }
+      ],
+      "path": "tests/helpers/perl-closure-native-budget-tests.mjs",
+      "previousSha256": "28e5ba5d1f6508dacedb614923238b2d63665defb994b7b2acb8b703a3762269"
+    },
+    {
+      "currentSha256": "b84ead261c0681496d13c457bb9ecc87822370cbee01a8609ce0db6c20c9ca93",
+      "edits": [
+        {
+          "current": "\tnew URL(`../../${recurringAcceptanceDocumentationHistoryPath}`\n\t\t, import.meta.url), \"utf8\"\n",
+          "previous": "\trecurringAcceptanceDocumentationHistoryPath, \"utf8\"\n",
+          "start": 1269
+        },
+        {
+          "current": "",
+          "previous": "\n",
+          "start": 3993
+        }
+      ],
+      "path": "tests/helpers/recurring-acceptance-documentation-source-history.mjs",
+      "previousSha256": "df6da5d62653f6f4db43f1fba12008aaddf012fdbab39f08e51d7d7f56131da8"
+    },
+    {
+      "currentSha256": "b05d42e8f99f4d9f3db32883c3470416624cbd2e138b60c3f7ab0220610e1497",
+      "edits": [
+        {
+          "current": "import { readTypeSurface } from \"../../src/adoption/type-surface.mjs\";\n",
+          "previous": "",
+          "start": 394
+        },
+        {
+          "current": "import { sourceAtFinHistoryRecord } from \"./source-at-fin-history-milestone.mjs\";\n",
+          "previous": "import { sourceAtFinHistoryMilestone } from \"./source-at-fin-history-milestone.mjs\";\n",
+          "start": 1037
+        },
+        {
+          "current": "\t\tconst source = await sourceAtFinHistoryRecord(\n\t\t\treviewedFinRefusalCiHistoryPath, update.path\n",
+          "previous": "\t\tconst source = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256\n",
+          "start": 6416
+        },
+        {
+          "current": "\tconst source = await sourceAtFinHistoryRecord(\n\t\treviewedFinRefusalCiHistoryPath, path\n",
+          "previous": "\tconst inventoryUpdate = updates.get(path);\n\tconst source = await sourceAtFinHistoryMilestone(\n\t\tpath, inventoryUpdate.currentSha256\n",
+          "start": 7947
+        },
+        {
+          "current": "\tawait readTypeSurface();\n",
+          "previous": "\tfor(const evidence of JSON.parse(await readFile(path)).evidence) for(const file of evidence.files)\n\t\tassert.equal(sha256(await readFile(file.path)), file.sha256, file.path);\n",
+          "start": 8501
+        }
+      ],
+      "path": "tests/helpers/reviewed-fin-refusal-ci-tests.mjs",
+      "previousSha256": "1a54f20b78ce5aa90ef0697497f3d6f60e8ca86201b8d2d345f55bf076eca2ba"
+    },
+    {
+      "currentSha256": "3f2a4c9cd6fc257af416f3dc1e06398b7243fc6aff713cb3aadb4198a7eaf1b9",
+      "edits": [
+        {
+          "current": "import { execFileSync } from \"node:child_process\";\n",
+          "previous": "",
+          "start": 207
+        },
+        {
+          "current": "const historyRecordCommits = new Map();\n",
+          "previous": "",
+          "start": 514
+        },
+        {
+          "current": "const historyRecordCommit = historyPath => {\n\tif(!historyRecordCommits.has(historyPath))\n\t{\n\t\tconst commits = execFileSync(\"git\", [\"log\", \"--diff-filter=A\"\n\t\t\t, \"--format=%H\", \"--\", historyPath], { encoding: \"utf8\" })\n\t\t\t.trim().split(\"\\n\").filter(Boolean);\n\t\tassert.equal(commits.length, 1\n\t\t\t, `Expected one immutable history introduction for ${historyPath}`);\n\t\thistoryRecordCommits.set(historyPath, commits[0]);\n\t}\n\treturn historyRecordCommits.get(historyPath);\n};\n\nconst sourceAtRevision = (revision, path) => {\n\ttry\n\t{\n\t\treturn execFileSync(\"git\", [\"show\", `${revision}:${path}`]\n\t\t\t, { encoding: \"utf8\", maxBuffer: 256 * 1024 * 1024 });\n\t}\n\tcatch\n\t{\n\t\treturn undefined;\n\t}\n};\n\n/**\n * Read one exact source from the commit that introduced an immutable record.\n *\n * @param historyPath - Repository-relative immutable history record.\n * @param path - Repository-relative source path at that milestone.\n * @param expected - Exact authenticated source SHA-256.\n * @param reader - Optional milestone-specific source reader.\n */\nexport const sourceAtFinHistoryRecordSource = async (\n\thistoryPath, path, expected, reader = undefined\n) => {\n\tassert.equal(typeof historyPath, \"string\");\n\tassert.equal(typeof path, \"string\");\n\tassert.match(expected, digestPattern);\n\tconst source = sourceAtRevision(historyRecordCommit(historyPath), path);\n\tassert.equal(typeof source, \"string\", `${historyPath}: missing ${path}`);\n\tassert.equal(sha256(source), expected, path);\n\tif(reader !== undefined)\n\t{\n\t\tassert.equal(typeof reader, \"function\");\n\t\tassert.equal(reader(path, source, expected), source\n\t\t\t, `${path} exact immutable-record stop`);\n\t}\n\treturn source;\n};\n\nconst sourceAtHistoryRecordEndpoint = async (\n\thistoryPath, record, path, digestField, expected, reader\n) => {\n\tconst recordCommit = historyRecordCommit(historyPath);\n\tconst revisions = digestField === \"currentSha256\"\n\t\t? [recordCommit]\n\t\t: [record.implementationCommit, record.predecessorCommit\n\t\t\t, `${recordCommit}^`].filter(Boolean);\n\tfor(const revision of new Set(revisions))\n\t{\n\t\tconst source = sourceAtRevision(revision, path);\n\t\tif(source === undefined || sha256(source) !== expected) continue;\n\t\tassert.equal(reader(path, source, expected), source\n\t\t\t, `${path} exact immutable-record stop`);\n\t\treturn source;\n\t}\n\treturn sourceAtFinHistoryMilestone(path, expected, reader);\n};\n\n",
+          "previous": "",
+          "start": 728
+        },
+        {
+          "current": "\t\t, promise: sourceAtHistoryRecordEndpoint(\n\t\t\thistoryPath, record, path, digestField\n\t\t\t, matches[0][digestField], reader\n",
+          "previous": "\t\t, promise: sourceAtFinHistoryMilestone(\n\t\t\tpath, matches[0][digestField], reader\n",
+          "start": 5461
+        }
+      ],
+      "path": "tests/helpers/source-at-fin-history-milestone.mjs",
+      "previousSha256": "e14f51956642b44f0f9aa3c4f5d556f521f31b809311298763361b6e5507a98e"
+    },
+    {
+      "currentSha256": "739f264141c5bf6dbf86990f000910f35c7ecf2c1729c993297e0ba02cd1aa73",
+      "edits": [
+        {
+          "current": "\t, zeroPayloadPhpWasmHistoryAdditionMismatches\n",
+          "previous": "",
+          "start": 494
+        },
+        {
+          "current": "\t, zeroPayloadPhpWasmHistoryRecordCommit\n",
+          "previous": "",
+          "start": 795
+        },
+        {
+          "current": "\tassert.equal(execFileSync(\"git\", [\"rev-parse\"\n\t\t, `${zeroPayloadPhpWasmHistoryRecordCommit}^`]\n\t\t, { encoding: \"utf8\" }).trim()\n\t, zeroPayloadPhpWasmHistoryImplementation);\n",
+          "previous": "",
+          "start": 1579
+        },
+        {
+          "current": "\t\tconst current = sourceAt(\n\t\t\tzeroPayloadPhpWasmHistoryRecordCommit, update.path\n\t\t);\n",
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 2062
+        },
+        {
+          "current": "\t\tconst current = sourceAt(\n\t\t\tzeroPayloadPhpWasmHistoryRecordCommit, update.path\n\t\t);\n",
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 2863
+        },
+        {
+          "current": "\tassert.deepEqual(Object.keys(zeroPayloadPhpWasmHistoryAdditionMismatches)\n\t\t.sort(), record.additions.filter(addition => {\n\t\t\tconst current = sha256(sourceAt(\n\t\t\t\tzeroPayloadPhpWasmHistoryRecordCommit, addition.path\n\t\t\t));\n\t\t\treturn current !== addition.currentSha256;\n\t\t}).map(addition => addition.path).sort());\n",
+          "previous": "",
+          "start": 3334
+        },
+        {
+          "current": "\t{\n\t\tconst committed = sha256(sourceAt(\n\t\t\tzeroPayloadPhpWasmHistoryRecordCommit, addition.path\n\t\t));\n\t\tconst mismatch = zeroPayloadPhpWasmHistoryAdditionMismatches[\n\t\t\taddition.path\n\t\t];\n\t\tif(mismatch === undefined)\n\t\t\tassert.equal(committed, addition.currentSha256, addition.path);\n\t\telse\n\t\t{\n\t\t\tassert.equal(addition.currentSha256, mismatch.recorded\n\t\t\t\t, addition.path);\n\t\t\tassert.equal(committed, mismatch.committed, addition.path);\n\t\t\tassert.notEqual(mismatch.recorded, mismatch.committed\n\t\t\t\t, addition.path);\n\t\t}\n\t}\n",
+          "previous": "\t\tassert.equal(sha256(await readFile(addition.path))\n\t\t\t, addition.currentSha256, addition.path);\n",
+          "start": 3690
+        }
+      ],
+      "path": "tests/helpers/zero-payload-php-wasm-source-history-tests.mjs",
+      "previousSha256": "2fdf644269295f8cf3afc4f75700b1e7262da0bd232cf697c6f8c8d132c44a6b"
+    },
+    {
+      "currentSha256": "a26c8cb0bd9dbcbae469929e963fa9e2e91cd45bdd118fdf2ba9a24a0831291e",
+      "edits": [
+        {
+          "current": "export const zeroPayloadPhpWasmHistoryRecordCommit\n\t= \"cabf49560ab4849897cbebb2561611415f2a8eed\";\nexport const zeroPayloadPhpWasmHistoryAdditionMismatches = Object.freeze({\n\t\"scripts/update-zero-payload-php-wasm-source-history.mjs\": Object.freeze({\n\t\trecorded: \"c5dcb9bfb289a4c5c38ac7f29f951b96221214ae29583d9d84215a31faf6dee5\"\n\t\t, committed: \"b2e364c2e7a450de4516719656677616f66539433531d1cb57148a62e3392095\"\n\t})\n\t, \"tests/helpers/zero-payload-php-wasm-source-history-tests.mjs\": Object.freeze({\n\t\trecorded: \"cae322b245aad9606bd7d359fb22b51604a30bea02a3475e0bd6a20b7a6901ca\"\n\t\t, committed: \"2fdf644269295f8cf3afc4f75700b1e7262da0bd232cf697c6f8c8d132c44a6b\"\n\t})\n});\n",
+          "previous": "",
+          "start": 551
+        },
+        {
+          "current": "\tnew URL(`../../${zeroPayloadPhpWasmHistoryHistoryPath}`\n\t\t, import.meta.url), \"utf8\"\n",
+          "previous": "\tzeroPayloadPhpWasmHistoryHistoryPath, \"utf8\"\n",
+          "start": 2729
+        }
+      ],
+      "path": "tests/helpers/zero-payload-php-wasm-source-history.mjs",
+      "previousSha256": "d225db8d384223db26ec20925056f6589444d41a9a4dfbd68d178f04b4f72946"
+    },
+    {
+      "currentSha256": "fe96a36b0440ee23d5cfa9ba8c4fee6c5633974e898c04642066efbbccc9cb52",
+      "edits": [
+        {
+          "current": "import { sourceAtFinHistoryRecord, sourceAtFinHistoryRecordSource } from \"./helpers/source-at-fin-history-milestone.mjs\";\n",
+          "previous": "import { sourceAtFinHistoryMilestone } from \"./helpers/source-at-fin-history-milestone.mjs\";\n",
+          "start": 1337
+        },
+        {
+          "current": "\tconst source = await sourceAtFinHistoryRecord(\n\t\thostedContainerInventoryHistoryPath, path\n\t\t, beforeWasmEntryControlsSource\n",
+          "previous": "\tconst update = history.updates.find(item => item.path === path);\n\tconst source = await sourceAtFinHistoryMilestone(\n\t\tpath, update.currentSha256, beforeWasmEntryControlsSource\n",
+          "start": 1616
+        },
+        {
+          "current": "\t\treturn sourceAtFinHistoryRecordSource(\n\t\t\thostedContainerInventoryHistoryPath, sourcePath, expected\n\t\t\t, beforeHostedContainerInventorySource\n",
+          "previous": "\t\treturn sourceAtFinHistoryMilestone(\n\t\t\tsourcePath, expected, beforeHostedContainerInventorySource\n",
+          "start": 2306
+        },
+        {
+          "current": "\t\tconst source = await sourceAtFinHistoryRecord(\n\t\t\thostedContainerInventoryHistoryPath, update.path\n\t\t\t, beforeWasmEntryControlsSource\n",
+          "previous": "\t\tconst source = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256, beforeWasmEntryControlsSource\n",
+          "start": 3165
+        },
+        {
+          "current": "",
+          "previous": "\tfor(const evidence of JSON.parse(await readFile(\"docs/type-surface.v1.json\")).evidence) for(const file of evidence.files)\n\t\tassert.equal(sha256(await readFile(file.path)), file.sha256, file.path);\n",
+          "start": 6224
+        }
+      ],
+      "path": "tests/hosted-container-inventory.test.mjs",
+      "previousSha256": "8185a9119fd88665bcdf3b052974b7b25dd92319745d1adecc45cae4e8f4bc8f"
+    },
+    {
+      "currentSha256": "c18a0c23204b23fdf8802f435798fb39e2e6dbe9775833b3356920eb0259ee5b",
+      "edits": [
+        {
+          "current": "import { readTypeSurface } from \"../src/adoption/type-surface.mjs\";\n",
+          "previous": "",
+          "start": 388
+        },
+        {
+          "current": "\tawait readTypeSurface();\n",
+          "previous": "\tfor(const evidence of JSON.parse(await readFile(path)).evidence) for(const file of evidence.files)\n\t\tassert.equal(sha256(await readFile(file.path)), file.sha256, file.path);\n",
+          "start": 3578
+        }
+      ],
+      "path": "tests/native-edge-array-harness-history.test.mjs",
+      "previousSha256": "61cb1f16943863eedb76cfb54252477e3e4e2e7f17ebf45213d92cf879b1aa6d"
+    },
+    {
+      "currentSha256": "09686bb466f4b89c62fc5fb5df7b11542ae40d8f90b8c5897f2e0ba1ebe78fb4",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { sha256 } from \"../src/capsule/node.mjs\";\n",
+          "start": 389
+        },
+        {
+          "current": "import { readTypeSurface } from \"../src/adoption/type-surface.mjs\";\nimport { sha256 } from \"../src/capsule/node.mjs\";\n",
+          "previous": "",
+          "start": 465
+        },
+        {
+          "current": "import { sourceAtFinHistoryMilestone, sourceAtFinHistoryRecord, sourceAtFinHistoryRecordSource } from \"./helpers/source-at-fin-history-milestone.mjs\";\n",
+          "previous": "import { sourceAtFinHistoryMilestone, sourceAtFinHistoryRecord } from \"./helpers/source-at-fin-history-milestone.mjs\";\n",
+          "start": 1265
+        },
+        {
+          "current": "\t\t\tassert.equal(sha256(await sourceAtFinHistoryRecordSource(\n\t\t\t\tperlRelocatedPromotionHistoryPath, file.path, pin.sha256\n\t\t\t\t, beforePerlRelocatedPromotionSource\n",
+          "previous": "\t\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\t\tfile.path, pin.sha256\n",
+          "start": 3943
+        },
+        {
+          "current": "\tawait readTypeSurface();\n",
+          "previous": "\tfor(const evidence of JSON.parse(await readFile(path)).evidence) for(const file of evidence.files)\n\t\tassert.equal(sha256(await readFile(file.path)), file.sha256, file.path);\n",
+          "start": 5580
+        }
+      ],
+      "path": "tests/perl-relocated-promotion.test.mjs",
+      "previousSha256": "f66b3a8097d92293fd2b3f78a2640e66b0a6f9cf822e08cde176bd1bc30d1927"
+    },
+    {
+      "currentSha256": "359f093872cf26679310ead84336e4cf4f86875f82d1d1d2e8c965c3b4cade79",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { sha256 } from \"../src/capsule/node.mjs\";\n",
+          "start": 395
+        },
+        {
+          "current": "import { readTypeSurface } from \"../src/adoption/type-surface.mjs\";\nimport { sha256 } from \"../src/capsule/node.mjs\";\n",
+          "previous": "",
+          "start": 471
+        },
+        {
+          "current": "import { sourceAtFinHistoryRecord } from \"./helpers/source-at-fin-history-milestone.mjs\";\n",
+          "previous": "import { sourceAtFinHistoryMilestone } from \"./helpers/source-at-fin-history-milestone.mjs\";\n",
+          "start": 1010
+        },
+        {
+          "current": "\t\tconst source = await sourceAtFinHistoryRecord(\n\t\t\treviewedFinRefusalHistoryPath, update.path\n",
+          "previous": "\t\tconst source = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256\n",
+          "start": 1836
+        },
+        {
+          "current": "\tconst text = await sourceAtFinHistoryRecord(\n\t\treviewedFinRefusalHistoryPath, path\n",
+          "previous": "\tconst inventoryUpdate = updates.get(path);\n\tconst text = await sourceAtFinHistoryMilestone(\n\t\tpath, inventoryUpdate.currentSha256\n",
+          "start": 3329
+        },
+        {
+          "current": "\t\t\t\tfile.path, await sourceAtFinHistoryRecord(\n\t\t\t\t\treviewedFinRefusalHistoryPath, file.path\n",
+          "previous": "\t\t\t\tfile.path, await sourceAtFinHistoryMilestone(\n\t\t\t\t\tfile.path, update.currentSha256\n",
+          "start": 3869
+        },
+        {
+          "current": "\tawait readTypeSurface();\n",
+          "previous": "\tfor(const evidence of JSON.parse(await readFile(path)).evidence) for(const file of evidence.files)\n\t\tassert.equal(sha256(await readFile(file.path)), file.sha256, file.path);\n",
+          "start": 4276
+        }
+      ],
+      "path": "tests/reviewed-fin-refusal-history.test.mjs",
+      "previousSha256": "b6f1dd371e9b8c513e006208eaef1fa3b506d7b963edc444f12d761149a55480"
+    },
+    {
+      "currentSha256": "f157f65a1ea25b21f5b210a72f054839bf03df7d950568102a220f7e6085a472",
+      "edits": [
+        {
+          "current": "import { readTypeSurface } from \"../src/adoption/type-surface.mjs\";\n",
+          "previous": "",
+          "start": 388
+        },
+        {
+          "current": "\tawait readTypeSurface();\n",
+          "previous": "\tfor(const evidence of JSON.parse(await readFile(path)).evidence) for(const file of evidence.files)\n\t\tassert.equal(sha256(await readFile(file.path)), file.sha256, file.path);\n",
+          "start": 3347
+        }
+      ],
+      "path": "tests/wasm-ci-array-history.test.mjs",
+      "previousSha256": "c0bf211a895eefa2cde450db3114cc5df8d8c8c5596fdf42330a5c884003adbc"
+    },
+    {
+      "currentSha256": "ba44784f2984ccdd8a6478f96f14a4271b976f2a7866f6aa7a959d0e5cc7184e",
+      "edits": [
+        {
+          "current": "import { readTypeSurface } from \"../src/adoption/type-surface.mjs\";\n",
+          "previous": "",
+          "start": 381
+        },
+        {
+          "current": "\tawait readTypeSurface();\n",
+          "previous": "\tfor(const evidence of JSON.parse(await readFile(path)).evidence) for(const file of evidence.files)\n\t\tassert.equal(sha256(await readFile(file.path)), file.sha256, file.path);\n",
+          "start": 3403
+        }
+      ],
+      "path": "tests/wasm-entry-archive-history.test.mjs",
+      "previousSha256": "2e0f80077c78fa075d0146d6471eb0771fd0a404b2c57387fde8d34bcc657003"
+    },
+    {
+      "currentSha256": "930485be50d9e0564c67933190928017aea5c71d155e79508e963f6b9e99c732",
+      "edits": [
+        {
+          "current": "import { readTypeSurface } from \"../src/adoption/type-surface.mjs\";\n",
+          "previous": "",
+          "start": 382
+        },
+        {
+          "current": "\tawait readTypeSurface();\n",
+          "previous": "\tfor(const evidence of JSON.parse(await readFile(path)).evidence) for(const file of evidence.files)\n\t\tassert.equal(sha256(await readFile(file.path)), file.sha256, file.path);\n",
+          "start": 3448
+        }
+      ],
+      "path": "tests/wasm-entry-controls-history.test.mjs",
+      "previousSha256": "d8548a2128ae061384c2a3b99d21824011b3dd467999a62590edb6d5e994f936"
+    },
+    {
+      "currentSha256": "40fd1906ff9313119635cf31f83e1c2a1bc01373bece6da7e3ca17510639b8e9",
+      "edits": [
+        {
+          "current": "import { readTypeSurface } from \"../src/adoption/type-surface.mjs\";\n",
+          "previous": "",
+          "start": 381
+        },
+        {
+          "current": "\tawait readTypeSurface();\n",
+          "previous": "\tfor(const evidence of JSON.parse(await readFile(path)).evidence) for(const file of evidence.files)\n\t\tassert.equal(sha256(await readFile(file.path)), file.sha256, file.path);\n",
+          "start": 3448
+        }
+      ],
+      "path": "tests/wasm-entry-harness-history.test.mjs",
+      "previousSha256": "73849fe1f14bf9a306bdef01b9ce7bdabd6e0cd868f4115d711438795478c0e5"
+    }
+  ]
+}
