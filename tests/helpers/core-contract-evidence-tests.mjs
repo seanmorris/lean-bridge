@@ -8,10 +8,11 @@ import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { dirname, join, relative, resolve } from "node:path";
 import test from "node:test";
 import {
-	coreContractEvidenceBaseline, coreContractEvidenceDirectoryReferences
+	coreContractDocumentationReferences, coreContractEvidenceBaseline
+	, coreContractEvidenceDirectoryReferences
 	, coreContractEvidenceFragments, coreContractReadsTypeSurface
 	, coreSparseCheckoutMode
 	, coreTypeSurfaceEvidenceDirectories
@@ -77,6 +78,44 @@ test("Core evidence prefixes do not broaden non-enumerating source", () => {
 	assert.ok(coreContractEvidenceFragments(
 		'const path = `owned-subtype-${lane}-hosted`;'
 		, "template.mjs").includes("owned-subtype-"));
+});
+
+test("Core evidence planning follows documentation named by contracts", async () => {
+	const path = "tests/component-consumer-docs.test.mjs";
+	const source = await readFile(path, "utf8");
+	const references = await coreContractDocumentationReferences(source, path);
+	assert.deepEqual([...references].sort(), [
+		"docs/consume/browser.md"
+		, "docs/consume/javascript.md"
+		, "docs/consume/typescript.md"
+		, "docs/javascript-typescript.md"
+	].sort());
+	const documents = await Promise.all([...references].map(async reference => ({
+		reference, source: await readFile(reference, "utf8")
+	})));
+	const expected = new Set();
+	for(const { reference, source: document } of documents)
+		for(const match of document.matchAll(/\[[^\]]+\]\(([^)]+)\)/gu))
+		{
+			const target = match[1].split("#")[0];
+			if(!target || /^[a-z]+:/u.test(target)) continue;
+			const path = relative(resolve(".")
+				, resolve(dirname(reference), target)).replaceAll("\\", "/");
+			const archive = /^docs\/evidence\/([^/]+)\//u.exec(path);
+			if(archive) expected.add(archive[1]);
+		}
+	assert.ok(expected.size > 20);
+	assert.ok(expected.has("scalar-fin-source-entry-20261008"));
+	assert.ok(expected.has("browser-callback-fin-20261008"));
+	const selected = new Set();
+	for(const { reference, source: document } of documents)
+		for(const value of coreContractEvidenceDirectoryReferences(
+			document, reference, [...expected]))
+			selected.add(value);
+	assert.deepEqual([...selected].sort(), [...expected].sort());
+	assert.deepEqual([...await coreContractDocumentationReferences(
+		'const paths = ["docs/evidence/archive/report.md"'
+			+ ', "outside.md", "docs/missing.md"];', path)], []);
 });
 
 test("Core evidence planning recognizes executable type-surface reads", () => {

@@ -29,6 +29,7 @@ export const coreContractEvidenceBaseline = Object.freeze({
 });
 
 const sourceExtensions = new Set([".cjs", ".js", ".mjs", ".sh"]);
+const documentationExtensions = new Set([".md"]);
 const pathPattern = /(?:\.{0,2}\/)?(?:[A-Za-z0-9_.-]+\/)+[A-Za-z0-9_.-]+\.(?:cjs|js|mjs|sh)/gu;
 const selectorPattern = /[A-Za-z0-9][A-Za-z0-9-]{10,}/gu;
 const explicitPrefixPattern
@@ -226,6 +227,38 @@ const repositorySourceReferences = async (source, path, root) => {
 	return references;
 };
 
+/**
+ * Return repository documentation named literally by one executable source.
+ * Documentation contracts read these files and then resolve their local links,
+ * so their evidence-directory names belong to the same static closure as an
+ * imported helper. Limit traversal to tracked Markdown under `docs/`; archived
+ * payloads are selected separately by directory and never followed as text.
+ *
+ * @param source - Executable JavaScript or shell source.
+ * @param path - Repository-relative source path.
+ * @param root - Repository root.
+ */
+export const coreContractDocumentationReferences = async (
+	source, path, root = resolve(".")
+) => {
+	if(!sourceExtensions.has(extname(path))) return new Set();
+	root = resolve(root);
+	const references = new Set();
+	for(const fragment of coreContractEvidenceFragments(source, path))
+	{
+		if(!documentationExtensions.has(extname(fragment))) continue;
+		const absolute = fragment.startsWith("./") || fragment.startsWith("../")
+			? resolve(dirname(resolve(root, path)), fragment)
+			: resolve(root, fragment.replace(/^\//u, ""));
+		const repositoryPath = relative(root, absolute).replaceAll("\\", "/");
+		if(!inside(root, absolute) || !repositoryPath.startsWith("docs/")
+			|| repositoryPath.startsWith("docs/evidence/")
+			|| !await exists(absolute)) continue;
+		references.add(repositoryPath);
+	}
+	return references;
+};
+
 const trackedEvidenceDirectories = root => execFileSync("git", [
 	"-C", root, "ls-tree", "-z", "HEAD:docs/evidence"
 ], { encoding: "utf8", maxBuffer: 16 * 1024 * 1024 }).split("\0")
@@ -293,6 +326,9 @@ export const collectCoreContractEvidencePlan = async (
 			for(const directory of coreContractEvidenceDirectoryReferences(
 				source, path, directories)) selectedDirectories.add(directory);
 		for(const reference of await repositorySourceReferences(source, path, root))
+			if(!sources.has(reference)) pending.push(reference);
+		for(const reference of await coreContractDocumentationReferences(
+			source, path, root))
 			if(!sources.has(reference)) pending.push(reference);
 	}
 	if(completeTypeSurface)

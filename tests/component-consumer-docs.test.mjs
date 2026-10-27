@@ -11,7 +11,10 @@ import test from "node:test";
 import ts from "typescript";
 
 const fixture = "tests/fixtures/component-consumer";
-const docs = ["docs/javascript-typescript.md", "docs/consume/javascript.md", "docs/consume/typescript.md", "docs/consume/browser.md", "docs/react.md", "docs/browser-workers.md"];
+const docs = [
+	"docs/javascript-typescript.md", "docs/consume/javascript.md"
+	, "docs/consume/typescript.md", "docs/consume/browser.md"
+];
 
 test("consumer docs use portable paths, valid local links, and public package imports", async () => {
 	for(const path of docs)
@@ -27,6 +30,9 @@ test("consumer docs use portable paths, valid local links, and public package im
 		for(const match of source.matchAll(/^```[^\n]*\n([\s\S]*?)^```/gmu))
 			assert.doesNotMatch(match[1], /\b(?:ccall|cwrap|WebAssembly)\b|_Lean|@lean-bridge\/alpha|poc\/lean-link/u);
 	}
+	const consolidated = await readFile("docs/javascript-typescript.md", "utf8");
+	assert.match(consolidated, /^## React$/mu);
+	assert.match(consolidated, /^## Browser workers$/mu);
 });
 
 test("React and worker fixtures import the installed component without repository runtime imports", async () => {
