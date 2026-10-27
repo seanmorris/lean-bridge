@@ -1,0 +1,184 @@
+{
+  "historyAdditions": [
+    {
+      "currentSha256": "a2a86e75977036d754dc4f5f97ca3090dd9fc4915a510c3e33a7fb04bd951cfc",
+      "path": "scripts/update-core-exact-head-hosted-static-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "c22d3653eb5e5181119d61afa473d1150ab2043d2872f1f25b0ef98427b54e9e",
+      "path": "tests/helpers/core-exact-head-hosted-static-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "413e5d64c097cc58849b2cffe69d77f4225566ac",
+  "integrationUpdates": [
+    {
+      "currentSha256": "32ee08838e45fcc46035667e35026f85493eacd61baba30ea437b20f79cb0ea5",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"76488d2e9e10acb7aa5daa31eefbf07a493aff524159539c013ba9be7f9394c3\"\n",
+          "previous": "          \"sha256\": \"1a939658b00907a4e12bdf49427831fd11a1175518aea34d79fb1c6376da33da\"\n",
+          "start": 7267402
+        },
+        {
+          "current": "          \"sha256\": \"76488d2e9e10acb7aa5daa31eefbf07a493aff524159539c013ba9be7f9394c3\"\n",
+          "previous": "          \"sha256\": \"1a939658b00907a4e12bdf49427831fd11a1175518aea34d79fb1c6376da33da\"\n",
+          "start": 7301150
+        },
+        {
+          "current": "          \"sha256\": \"76488d2e9e10acb7aa5daa31eefbf07a493aff524159539c013ba9be7f9394c3\"\n",
+          "previous": "          \"sha256\": \"1a939658b00907a4e12bdf49427831fd11a1175518aea34d79fb1c6376da33da\"\n",
+          "start": 7335169
+        },
+        {
+          "current": "          \"sha256\": \"76488d2e9e10acb7aa5daa31eefbf07a493aff524159539c013ba9be7f9394c3\"\n",
+          "previous": "          \"sha256\": \"1a939658b00907a4e12bdf49427831fd11a1175518aea34d79fb1c6376da33da\"\n",
+          "start": 7369387
+        },
+        {
+          "current": "          \"sha256\": \"1251003d627dbb9a9c95c898a99a44acb228e56e06f1c828c53a4ecfa212bd41\"\n",
+          "previous": "          \"sha256\": \"31a1c0234a4ab585f6652548c35c195670016208911626c7b608a8849fa2ed81\"\n",
+          "start": 10571078
+        },
+        {
+          "current": "          \"sha256\": \"1251003d627dbb9a9c95c898a99a44acb228e56e06f1c828c53a4ecfa212bd41\"\n",
+          "previous": "          \"sha256\": \"31a1c0234a4ab585f6652548c35c195670016208911626c7b608a8849fa2ed81\"\n",
+          "start": 10631097
+        },
+        {
+          "current": "          \"sha256\": \"1251003d627dbb9a9c95c898a99a44acb228e56e06f1c828c53a4ecfa212bd41\"\n",
+          "previous": "          \"sha256\": \"31a1c0234a4ab585f6652548c35c195670016208911626c7b608a8849fa2ed81\"\n",
+          "start": 10691528
+        },
+        {
+          "current": "          \"sha256\": \"1251003d627dbb9a9c95c898a99a44acb228e56e06f1c828c53a4ecfa212bd41\"\n",
+          "previous": "          \"sha256\": \"31a1c0234a4ab585f6652548c35c195670016208911626c7b608a8849fa2ed81\"\n",
+          "start": 10752011
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "4470af23efd1e268cd37bee3cd5303d74fffd6852094fb3ab8cd6d0ceeb2cc44"
+    },
+    {
+      "currentSha256": "2d39f06858b18a365cd19bf99fc2ab65bc52a06f0d07fae8ff7375c8148fee2b",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeCoreExactHeadHostedStaticRepairSource\n\t, coreExactHeadHostedStaticRepairHistoryAdditions\n\t, coreExactHeadHostedStaticRepairHistoryPath\n\t, coreExactHeadHostedStaticRepairImplementation\n\t, coreExactHeadHostedStaticRepairImplementationPaths\n\t, coreExactHeadHostedStaticRepairIntegrationPaths\n\t, coreExactHeadHostedStaticRepairPredecessor\n\t, reverseCoreExactHeadHostedStaticRepairUpdate\n} from \"./core-exact-head-hosted-static-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 357
+        },
+        {
+          "current": "const readCoreExactHeadHostedStaticRepair = async () => JSON.parse(\n\tawait readFile(coreExactHeadHostedStaticRepairHistoryPath, \"utf8\")\n);\n",
+          "previous": "",
+          "start": 16796
+        },
+        {
+          "current": "test(\"Core exact-head hosted static repair records its exact change\", async () => {\n\tconst record = await readCoreExactHeadHostedStaticRepair();\n\tassert.equal(record.schemaVersion, 1);\n\tassert.equal(record.milestone\n\t\t, \"core-exact-head-hosted-static-repair-source-v1\");\n\tassert.equal(record.predecessorCommit\n\t\t, coreExactHeadHostedStaticRepairPredecessor);\n\tassert.equal(record.implementationCommit\n\t\t, coreExactHeadHostedStaticRepairImplementation);\n\tassert.deepEqual(record.updates.map(update => update.path)\n\t\t, coreExactHeadHostedStaticRepairImplementationPaths);\n\tassert.deepEqual(record.historyAdditions.map(addition => addition.path)\n\t\t, coreExactHeadHostedStaticRepairHistoryAdditions);\n\tassert.deepEqual(record.integrationUpdates.map(update => update.path)\n\t\t, coreExactHeadHostedStaticRepairIntegrationPaths);\n});\n\ntest(\"Core exact-head hosted static repair reverses every transition\", async () => {\n\tconst record = await readCoreExactHeadHostedStaticRepair();\n\tfor(const update of [...record.updates, ...record.integrationUpdates])\n\t{\n\t\tconst integration = record.integrationUpdates.includes(update);\n\t\tconst current = integration\n\t\t\t? await sourceAtFinHistoryRecordSource(\n\t\t\t\tcoreExactHeadHostedStaticRepairHistoryPath, update.path\n\t\t\t\t\t, update.currentSha256\n\t\t\t\t\t, beforeCoreExactHeadHostedStaticRepairSource)\n\t\t\t: await sourceAtFinHistoryRecord(\n\t\t\t\tcoreExactHeadHostedStaticRepairHistoryPath, update.path\n\t\t\t\t\t, beforeCoreExactHeadHostedStaticRepairSource);\n\t\tconst base = integration\n\t\t\t? coreExactHeadHostedStaticRepairImplementation\n\t\t\t: coreExactHeadHostedStaticRepairPredecessor;\n\t\tconst previous = git([\"show\", `${base}:${update.path}`]);\n\t\tassert.equal(reverseCoreExactHeadHostedStaticRepairUpdate(\n\t\t\tcurrent, update), previous, update.path);\n\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n\t\tassert.ok(finRefinementNormalizationPaths.includes(update.path));\n\t}\n});\n\ntest(\"Core exact-head hosted static repair rejects altered transitions\", async () => {\n\tconst update = (await readCoreExactHeadHostedStaticRepair()).updates[0];\n\tconst current = await sourceAtFinHistoryRecord(\n\t\tcoreExactHeadHostedStaticRepairHistoryPath, update.path\n\t\t, beforeCoreExactHeadHostedStaticRepairSource);\n\tfor(const forged of [{ ...update, currentSha256: \"0\".repeat(64) }\n\t\t, { ...update, previousSha256: \"0\".repeat(64) }\n\t\t, { ...update, path: \"unrelated.mjs\" }\n\t\t, { ...update, edits: [] }])\n\t\tassert.throws(() => reverseCoreExactHeadHostedStaticRepairUpdate(\n\t\t\tcurrent, forged));\n\tassert.equal(beforeCoreExactHeadHostedStaticRepairSource(\n\t\tupdate.path, current + \"unknown\"), current + \"unknown\");\n});\n\ntest(\"Core exact-head hosted static writer refuses another checkout\", async t => {\n\tconst root = await mkdtemp(join(\n\t\ttmpdir(), \"lean-core-exact-head-hosted-static-guard-\"));\n\tt.after(() => rm(root, { recursive: true }));\n\tconst result = spawnSync(process.execPath, [resolve(\n\t\t\"scripts/update-core-exact-head-hosted-static-repair-source-history.mjs\"\n\t)], { cwd: root, encoding: \"utf8\", timeout: 15_000 });\n\tassert.notEqual(result.status, 0);\n\tassert.equal(result.stdout, \"\");\n\tassert.deepEqual(await readdir(root), []);\n});\n\n",
+          "previous": "",
+          "start": 21397
+        }
+      ],
+      "path": "tests/helpers/core-historical-evidence-replay-source-history-tests.mjs",
+      "previousSha256": "14410b14c4e08a84290a6eb86cd04bb3ce621da257958e74d4f730a00f0d5770"
+    },
+    {
+      "currentSha256": "52b1aa5d7c666cfa8c7783b940cd3f5d3d2e37eba95bc277506005951add44fe",
+      "edits": [
+        {
+          "current": "import { beforeCoreExactHeadHostedStaticRepairSource, coreExactHeadHostedStaticRepairNormalizationPaths } from \"./core-exact-head-hosted-static-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 766
+        },
+        {
+          "current": "\t...coreExactHeadHostedStaticRepairNormalizationPaths()\n\t, ...coreExactHeadHostedReplayRepairNormalizationPaths()\n",
+          "previous": "\t...coreExactHeadHostedReplayRepairNormalizationPaths()\n",
+          "start": 196398
+        },
+        {
+          "current": "\tlet stage = beforeCoreExactHeadHostedStaticRepairSource(\n\t\tpath, text, expected\n\t);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCoreExactHeadHostedReplayRepairSource(\n",
+          "previous": "\tlet stage = beforeCoreExactHeadHostedReplayRepairSource(\n",
+          "start": 244286
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "e43335faf9b5bc61876ab7d7185c90a3dd51c2f46b38b731f32acd7ac040cd88"
+    }
+  ],
+  "milestone": "core-exact-head-hosted-static-repair-source-v1",
+  "pointerUpdates": [
+    {
+      "citations": 4,
+      "current": "1251003d627dbb9a9c95c898a99a44acb228e56e06f1c828c53a4ecfa212bd41",
+      "path": "tests/helpers/nominal-primitive-subtype-jvm-promotion-tests.mjs",
+      "previous": "31a1c0234a4ab585f6652548c35c195670016208911626c7b608a8849fa2ed81"
+    },
+    {
+      "citations": 4,
+      "current": "76488d2e9e10acb7aa5daa31eefbf07a493aff524159539c013ba9be7f9394c3",
+      "path": "tests/helpers/nominal-primitive-subtype-native-promotion-tests.mjs",
+      "previous": "1a939658b00907a4e12bdf49427831fd11a1175518aea34d79fb1c6376da33da"
+    }
+  ],
+  "predecessorCommit": "4ad2aeffa59f1a5f20405280de0bbb7fe9eb49b1",
+  "schemaVersion": 1,
+  "scope": "Remove two stale imports and make the exact-head hosted replay history helper and writer satisfy the repository's documented static contracts. Preserve every replay transition, evidence identity, support claim and runtime observation.",
+  "updates": [
+    {
+      "currentSha256": "6b47418e37a985f865041f73ecee5020bfb5f180dea55dee1eb0c5567913c4f4",
+      "edits": [
+        {
+          "current": "/**\n * Record the exact-head hosted Core replay repair.\n *\n * @file\n */\n",
+          "previous": "/** Record the exact-head hosted Core replay repair. */\n",
+          "start": 20
+        },
+        {
+          "current": "\timplementationAdditions.push({\n\t\tpath\n\t\t, currentSha256: sha256(Buffer.from(git([\n\t\t\t\"show\", `${implementation}:${path}`\n\t\t])))\n\t});\n",
+          "previous": "\timplementationAdditions.push({ path, currentSha256: sha256(\n\t\tBuffer.from(git([\"show\", `${implementation}:${path}`]))) });\n",
+          "start": 2437
+        }
+      ],
+      "path": "scripts/update-core-exact-head-hosted-replay-repair-source-history.mjs",
+      "previousSha256": "6a32f74910642f86aab191e49f40ae571852efea63e6b043b5168786523dfa3b"
+    },
+    {
+      "currentSha256": "988f090a3b18ebe622638250efcc4f4b6505ec5dbcc7a39f7449d981ec5225e8",
+      "edits": [
+        {
+          "current": "/**\n * Restore one authenticated source transition.\n *\n * @param source - Complete current source.\n * @param update - Exact recorded transition.\n */\n",
+          "previous": "/** Restore one authenticated source transition. */\n",
+          "start": 3391
+        },
+        {
+          "current": "/**\n * Remove only the authenticated hosted-replay repair layer.\n *\n * @param path - Repository-relative source path.\n * @param source - Complete current or historical source.\n * @param expected - Optional exact digest at which normalization stops.\n */\n",
+          "previous": "/** Remove only the authenticated hosted-replay repair layer. */\n",
+          "start": 4602
+        }
+      ],
+      "path": "tests/helpers/core-exact-head-hosted-replay-repair-source-history.mjs",
+      "previousSha256": "a335bacbdccbd09832654d8d7880ee8e2de7b333e60bfe7c12b22c16b0bfa273"
+    },
+    {
+      "currentSha256": "1251003d627dbb9a9c95c898a99a44acb228e56e06f1c828c53a4ecfa212bd41",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { readFile } from \"node:fs/promises\";\n",
+          "start": 193
+        }
+      ],
+      "path": "tests/helpers/nominal-primitive-subtype-jvm-promotion-tests.mjs",
+      "previousSha256": "31a1c0234a4ab585f6652548c35c195670016208911626c7b608a8849fa2ed81"
+    },
+    {
+      "currentSha256": "76488d2e9e10acb7aa5daa31eefbf07a493aff524159539c013ba9be7f9394c3",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { readFile } from \"node:fs/promises\";\n",
+          "start": 211
+        }
+      ],
+      "path": "tests/helpers/nominal-primitive-subtype-native-promotion-tests.mjs",
+      "previousSha256": "1a939658b00907a4e12bdf49427831fd11a1175518aea34d79fb1c6376da33da"
+    }
+  ]
+}

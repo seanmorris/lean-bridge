@@ -10,6 +10,7 @@ import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
 import { beforeCoreInheritedRecordTypeSurfaceBatchSource, coreInheritedRecordTypeSurfaceBatchNormalizationPaths } from "./core-inherited-record-type-surface-batch-source-history.mjs";
 import { beforeCoreExactHeadHostedReplayRepairSource, coreExactHeadHostedReplayRepairNormalizationPaths } from "./core-exact-head-hosted-replay-repair-source-history.mjs";
+import { beforeCoreExactHeadHostedStaticRepairSource, coreExactHeadHostedStaticRepairNormalizationPaths } from "./core-exact-head-hosted-static-repair-source-history.mjs";
 import { beforeCoreRecursiveCallableEvidencePinRepairSource, coreRecursiveCallableEvidencePinRepairNormalizationPaths } from "./core-recursive-callable-evidence-pin-repair-source-history.mjs";
 import { beforeCoreRecursiveCallableReplayBoundSource, coreRecursiveCallableReplayBoundNormalizationPaths } from "./core-recursive-callable-replay-bound-source-history.mjs";
 import { beforeCoreLegacyOwnedEvidenceReplayBoundSource, coreLegacyOwnedEvidenceReplayBoundNormalizationPaths } from "./core-legacy-owned-evidence-replay-bound-source-history.mjs";
@@ -2243,7 +2244,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...coreExactHeadHostedReplayRepairNormalizationPaths()
+	...coreExactHeadHostedStaticRepairNormalizationPaths()
+	, ...coreExactHeadHostedReplayRepairNormalizationPaths()
 	, ...coreInheritedRecordTypeSurfaceBatchNormalizationPaths()
 	, ...coreRecursiveCallableEvidencePinRepairNormalizationPaths()
 	, ...coreRecursiveCallableReplayBoundNormalizationPaths()
@@ -3229,7 +3231,13 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeCoreExactHeadHostedReplayRepairSource(
+	let stage = beforeCoreExactHeadHostedStaticRepairSource(
+		path, text, expected
+	);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeCoreExactHeadHostedReplayRepairSource(
 		path, text, expected
 	);
 	if(expected !== undefined && sha256(stage) === expected)
