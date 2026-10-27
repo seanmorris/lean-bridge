@@ -1,0 +1,437 @@
+{
+  "historyAdditions": [
+    {
+      "currentSha256": "dfb90b4bfad47bc85aacda85c4085e30d6bff90550ea0126a9c30e4a4f6552ba",
+      "path": "scripts/update-core-legacy-owned-evidence-replay-bound-source-history.mjs"
+    },
+    {
+      "currentSha256": "3a3ab2f531c04e9f01b250b25df4451c88819c4405106e91614ad4c78f01907f",
+      "path": "tests/helpers/core-legacy-owned-evidence-replay-bound-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "8ee9d9b52f0bbf959f02be96257dfc0939490338",
+  "integrationUpdates": [
+    {
+      "currentSha256": "3bb2bb7a52dc836dbe2b02df9a654d34ce28751813374ccabb6cc5b959929d7d",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeCoreLegacyOwnedEvidenceReplayBoundSource\n\t, coreLegacyOwnedEvidenceReplayBoundHistoryAdditions\n\t, coreLegacyOwnedEvidenceReplayBoundHistoryPath\n\t, coreLegacyOwnedEvidenceReplayBoundImplementation\n\t, coreLegacyOwnedEvidenceReplayBoundImplementationPaths\n\t, coreLegacyOwnedEvidenceReplayBoundIntegrationPaths\n\t, coreLegacyOwnedEvidenceReplayBoundPredecessor\n\t, reverseCoreLegacyOwnedEvidenceReplayBoundUpdate\n} from \"./core-legacy-owned-evidence-replay-bound-source-history.mjs\";\n",
+          "previous": "",
+          "start": 357
+        },
+        {
+          "current": "const readCoreLegacyOwnedEvidenceReplayBound = async () => JSON.parse(\n\tawait readFile(coreLegacyOwnedEvidenceReplayBoundHistoryPath, \"utf8\")\n);\n",
+          "previous": "",
+          "start": 14296
+        },
+        {
+          "current": "test(\"Core legacy owned-evidence replay bound records its exact range\", async () => {\n\tconst record = await readCoreLegacyOwnedEvidenceReplayBound();\n\tassert.equal(record.schemaVersion, 1);\n\tassert.equal(record.milestone\n\t\t, \"core-legacy-owned-evidence-replay-bound-source-v1\");\n\tassert.equal(record.predecessorCommit\n\t\t, coreLegacyOwnedEvidenceReplayBoundPredecessor);\n\tassert.equal(record.implementationCommit\n\t\t, coreLegacyOwnedEvidenceReplayBoundImplementation);\n\tassert.deepEqual(record.updates.map(update => update.path)\n\t\t, coreLegacyOwnedEvidenceReplayBoundImplementationPaths);\n\tassert.deepEqual(record.historyAdditions.map(addition => addition.path)\n\t\t, coreLegacyOwnedEvidenceReplayBoundHistoryAdditions);\n\tassert.deepEqual(record.integrationUpdates.map(update => update.path)\n\t\t, coreLegacyOwnedEvidenceReplayBoundIntegrationPaths);\n\tassert.equal(git([\"rev-parse\"\n\t\t, `${coreLegacyOwnedEvidenceReplayBoundImplementation}^`]).trim()\n\t, coreLegacyOwnedEvidenceReplayBoundPredecessor);\n\tassert.deepEqual(git([\"diff\", \"--name-only\", \"--diff-filter=M\"\n\t\t, coreLegacyOwnedEvidenceReplayBoundPredecessor\n\t\t, coreLegacyOwnedEvidenceReplayBoundImplementation])\n\t\t.trim().split(\"\\n\").sort()\n\t, [...coreLegacyOwnedEvidenceReplayBoundImplementationPaths].sort());\n});\n\ntest(\"Core legacy owned-evidence replay bound reverses every transition\", async () => {\n\tconst record = await readCoreLegacyOwnedEvidenceReplayBound();\n\tfor(const update of [...record.updates, ...record.integrationUpdates])\n\t{\n\t\tconst integration = record.integrationUpdates.includes(update);\n\t\tconst current = integration\n\t\t\t? await sourceAtFinHistoryRecordSource(\n\t\t\t\tcoreLegacyOwnedEvidenceReplayBoundHistoryPath, update.path\n\t\t\t\t, update.currentSha256\n\t\t\t\t, beforeCoreLegacyOwnedEvidenceReplayBoundSource\n\t\t\t)\n\t\t\t: await sourceAtFinHistoryRecord(\n\t\t\t\tcoreLegacyOwnedEvidenceReplayBoundHistoryPath, update.path\n\t\t\t\t, beforeCoreLegacyOwnedEvidenceReplayBoundSource\n\t\t\t);\n\t\tconst base = integration\n\t\t\t? coreLegacyOwnedEvidenceReplayBoundImplementation\n\t\t\t: coreLegacyOwnedEvidenceReplayBoundPredecessor;\n\t\tconst previous = git([\"show\", `${base}:${update.path}`]);\n\t\tassert.equal(reverseCoreLegacyOwnedEvidenceReplayBoundUpdate(\n\t\t\tcurrent, update), previous, update.path);\n\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n\t\tassert.ok(finRefinementNormalizationPaths.includes(update.path));\n\t}\n\tfor(const addition of record.historyAdditions)\n\t\tassert.equal(sha256(await sourceAtFinHistoryRecordSource(\n\t\t\tcoreLegacyOwnedEvidenceReplayBoundHistoryPath\n\t\t\t, addition.path, addition.currentSha256\n\t\t)), addition.currentSha256, addition.path);\n});\n\ntest(\"Core legacy owned-evidence replay bound rejects altered transitions\", async () => {\n\tconst update = (await readCoreLegacyOwnedEvidenceReplayBound()).updates[0];\n\tconst current = await sourceAtFinHistoryRecord(\n\t\tcoreLegacyOwnedEvidenceReplayBoundHistoryPath, update.path\n\t\t, beforeCoreLegacyOwnedEvidenceReplayBoundSource\n\t);\n\tfor(const forged of [{ ...update, currentSha256: \"0\".repeat(64) }\n\t\t, { ...update, previousSha256: \"0\".repeat(64) }\n\t\t, { ...update, path: \"unrelated.mjs\" }\n\t\t, { ...update, edits: [] }\n\t\t, { ...update, edits: [...update.edits, update.edits[0]] }])\n\t\tassert.throws(() => reverseCoreLegacyOwnedEvidenceReplayBoundUpdate(\n\t\t\tcurrent, forged));\n\tassert.equal(beforeCoreLegacyOwnedEvidenceReplayBoundSource(\n\t\tupdate.path, current + \"unknown\"), current + \"unknown\");\n});\n\ntest(\"Core legacy owned-evidence replay-bound writer refuses another checkout\", async t => {\n\tconst root = await mkdtemp(join(\n\t\ttmpdir(), \"lean-core-legacy-owned-history-guard-\"));\n\tt.after(() => rm(root, { recursive: true }));\n\tconst result = spawnSync(process.execPath, [resolve(\n\t\t\"scripts/update-core-legacy-owned-evidence-replay-bound-source-history.mjs\"\n\t)], { cwd: root, encoding: \"utf8\", timeout: 15_000 });\n\tassert.notEqual(result.status, 0);\n\tassert.equal(result.stdout, \"\");\n\tassert.deepEqual(await readdir(root), []);\n});\n\n",
+          "previous": "",
+          "start": 18178
+        }
+      ],
+      "path": "tests/helpers/core-historical-evidence-replay-source-history-tests.mjs",
+      "previousSha256": "268fde478439e6c4f3f766fe24627b59b1f84680bba34f0241c82894e2111076"
+    },
+    {
+      "currentSha256": "cd38d177e20dd268e21f1a130674ddc217261c8e2d58b4a4e766d564b1d6f764",
+      "edits": [
+        {
+          "current": "import { beforeCoreLegacyOwnedEvidenceReplayBoundSource, coreLegacyOwnedEvidenceReplayBoundNormalizationPaths } from \"./core-legacy-owned-evidence-replay-bound-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...coreLegacyOwnedEvidenceReplayBoundNormalizationPaths()\n\t, ...coreCallbackEvidenceReplayBoundNormalizationPaths()\n",
+          "previous": "\t...coreCallbackEvidenceReplayBoundNormalizationPaths()\n",
+          "start": 195503
+        },
+        {
+          "current": "\tlet stage = beforeCoreLegacyOwnedEvidenceReplayBoundSource(\n\t\tpath, text, expected\n\t);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCoreCallbackEvidenceReplayBoundSource(\n",
+          "previous": "\tlet stage = beforeCoreCallbackEvidenceReplayBoundSource(\n",
+          "start": 243089
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "ac15b529ef208c165ce15e93e37798a97cdff11d51738e8b2263365b2c05def3"
+    }
+  ],
+  "milestone": "core-legacy-owned-evidence-replay-bound-source-v1",
+  "predecessorCommit": "b827918f050b2db6d7d4cc0cedd76c4f35a08176",
+  "schemaVersion": 1,
+  "scope": "Authenticate the Python, Rust, C++ and host owned-evidence chain from each immutable producer tree instead of replaying the enlarged current type surface through every later milestone. Preserve historical exceptions, exact producer modules and bytes, mutation refusal, reversible transitions, inventory classification, predecessor linkage, and the complete Core contract.",
+  "updates": [
+    {
+      "currentSha256": "16b56e9bc45f2d6749a0e4939394185317d14093993d2647a63dee6fea6d11e9",
+      "edits": [
+        {
+          "current": "test(\"legacy owned projections authenticate immutable producer trees\", async () => {\n\tconst milestones = [\n\t\t[\"tests/helpers/owned-host-evidence.mjs\"\n\t\t\t, \"650641c1274543a334aa7d50c43c70de945984a0\"]\n\t\t, [\"tests/helpers/owned-cpp-evidence.mjs\"\n\t\t\t, \"511f43f1b02a6bddb5517f47a497e8eda766a065\"]\n\t\t, [\"tests/helpers/owned-rust-evidence.mjs\"\n\t\t\t, \"78d2e09252d81f0b123d6175bb6ea454c9205577\"]\n\t\t, [\"tests/helpers/owned-python-evidence.mjs\"\n\t\t\t, \"ef9bd830d49a932a13bbc0d683a7a14cd7139b62\"]\n\t];\n\tfor(const [path, producer] of milestones)\n\t{\n\t\tconst source = await readFile(path, \"utf8\");\n\t\tassert.ok(source.includes(`Producer = \"${producer}\"`), path);\n\t\tassert.match(source, /bytesAtProducer\\(/u, path);\n\t\tassert.match(source, /typeSurfaceContractsAtProducer\\(/u, path);\n\t\tassert.match(source\n\t\t\t, /moduleAtProducer\\([\\s\\S]*\"src\\/adoption\\/type-surface[.]mjs\"/u\n\t\t\t, path);\n\t\tassert.doesNotMatch(source\n\t\t\t, /const current = [^;]*await readFile\\(path\\)/u, path);\n\t}\n});\n\n",
+          "previous": "",
+          "start": 24708
+        }
+      ],
+      "path": "tests/helpers/core-quality-budget-tests.mjs",
+      "previousSha256": "042b4685e45d13dca4866dbc713554f4da84090f4579555d0dfa246badffc15f"
+    },
+    {
+      "currentSha256": "e9a85cfa619fedcc7d65e3bcffc2384c640f38ecb4a8dbba1e1e2ab757717f06",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { readTypeSurface } from \"../../src/adoption/type-surface.mjs\";\nimport { historicalTypeSurfaceCells as typeSurfaceCells } from \"./historical-type-surface-cells.mjs\";\n",
+          "start": 256
+        },
+        {
+          "current": "import {\n\tbytesAtProducer, sourceAtProducer, typeSurfaceContractsAtProducer\n} from \"./producer-source.mjs\";\n",
+          "previous": "",
+          "start": 314
+        },
+        {
+          "current": "export const ownedCppProducer = \"511f43f1b02a6bddb5517f47a497e8eda766a065\";\n",
+          "previous": "const ownedCppProducer = \"511f43f1b02a6bddb5517f47a497e8eda766a065\";\n",
+          "start": 895
+        },
+        {
+          "current": "const historicalBytes = (path, expected) => {\n\tconst bytes = bytesAtProducer(ownedCppProducer, path);\n\treturn sha256(bytes) === expected ? bytes\n\t\t: ownedCppOrderHistoricalBytes(path, bytes, expected);\n};\n",
+          "previous": "",
+          "start": 1280
+        },
+        {
+          "current": "\tfor(const [path, digest] of Object.entries(record.sources))\n\t\tassert.equal(sha256(historicalBytes(path, digest)), digest, path);\n",
+          "previous": "\tfor(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(ownedCppOrderHistoricalBytes(path, await readFile(path), digest)), digest, path);\n",
+          "start": 10733
+        },
+        {
+          "current": "\t\t\t\tconst runtime = record.runtime[mode], template = sourceAtProducer(\n\t\t\t\t\townedCppProducer\n\t\t\t\t\t, \"tests/fixtures/structured-types/owned-cpp-runtime.cpp\"\n\t\t\t\t\t, record.sources[\"tests/fixtures/structured-types/owned-cpp-runtime.cpp\"]\n\t\t\t\t);\n",
+          "previous": "\t\t\t\tconst runtime = record.runtime[mode], template = await readFile(\"tests/fixtures/structured-types/owned-cpp-runtime.cpp\", \"utf8\");\n",
+          "start": 12708
+        },
+        {
+          "current": "\t\tconst current = historicalBytes(path, record.sourceHashes[path]);\n\t\tassert.equal(sha256(current), record.sourceHashes[path], path);\n",
+          "previous": "\t\tconst current = ownedCppOrderHistoricalBytes(path, await readFile(path), record.sourceHashes[path]); assert.equal(sha256(current), record.sourceHashes[path], path);\n",
+          "start": 15245
+        },
+        {
+          "current": "\tconst contracts = typeSurfaceContractsAtProducer(ownedCppProducer);\n\tconst { typeSurfaceCells } = await moduleAtProducer(\n\t\townedCppProducer, \"src/adoption/type-surface.mjs\");\n\tconst document = JSON.parse(sourceAtProducer(ownedCppProducer\n\t\t, \"docs/type-surface.v1.json\"\n\t\t, record.sourceHashes[\"docs/type-surface.v1.json\"]));\n",
+          "previous": "\tconst { irSchema, consumers } = await readTypeSurface(), contracts = { irSchema, consumers };\n\tconst document = JSON.parse(ownedCppOrderHistoricalBytes(\"docs/type-surface.v1.json\", await readFile(\"docs/type-surface.v1.json\"), record.sourceHashes[\"docs/type-surface.v1.json\"]));\n",
+          "start": 15788
+        }
+      ],
+      "path": "tests/helpers/owned-cpp-evidence.mjs",
+      "previousSha256": "05f511d9c345366bf0ff1ac4427c2876d113a885cedbdfb23398dc655d2a0af7"
+    },
+    {
+      "currentSha256": "c67633c08994ca6a4b7de07e845b5be5371646c0820ad8e3b232cf8aa97f88f8",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { readFile } from \"node:fs/promises\";\n",
+          "start": 144
+        },
+        {
+          "current": "import {\n\tmoduleAtProducer, moduleAtProducerWithSourceReads\n} from \"./producer-module.mjs\";\nimport {\n\tbytesAtProducer, sourceAtProducer, typeSurfaceContractsAtProducer\n} from \"./producer-source.mjs\";\n",
+          "previous": "import { readTypeSurface } from \"../../src/adoption/type-surface.mjs\";\nimport { historicalTypeSurfaceCells as typeSurfaceCells } from \"./historical-type-surface-cells.mjs\";\nimport { moduleAtProducerWithSourceReads } from \"./producer-module.mjs\";\n",
+          "start": 212
+        },
+        {
+          "current": "import { ownedCiHistoricalBytes } from \"./owned-ci-source-history.mjs\";\n",
+          "previous": "import { beforeOwnedCi, ownedCiHistoricalBytes } from \"./owned-ci-source-history.mjs\";\n",
+          "start": 759
+        },
+        {
+          "current": "",
+          "previous": "const source = async path => beforeOwnedCi(path, await readFile(path, \"utf8\"));\n",
+          "start": 1938
+        },
+        {
+          "current": "const historicalBytes = (path, expected) => {\n\tconst bytes = bytesAtProducer(ownedHostProducer, path);\n\treturn sha256(bytes) === expected ? bytes\n\t\t: ownedCiHistoricalBytes(path, bytes, expected);\n};\n",
+          "previous": "",
+          "start": 2456
+        },
+        {
+          "current": "\tfor(const [path, digest] of Object.entries(record.sources))\n\t\tassert.equal(sha256(historicalBytes(path, digest)), digest, path);\n",
+          "previous": "\tfor(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(ownedCiHistoricalBytes(path, await readFile(path))), digest, path);\n",
+          "start": 3750
+        },
+        {
+          "current": "\tconst previousText = sourceAtProducer(ownedHostProducer\n\t\t, record.previous.path, record.previous.sha256);\n\tconst executionText = sourceAtProducer(ownedHostProducer\n\t\t, record.execution.path, record.execution.sha256);\n",
+          "previous": "\tconst previousText = await source(record.previous.path), executionText = await source(record.execution.path);\n",
+          "start": 11181
+        },
+        {
+          "current": "\t\tconst current = historicalBytes(path, record.sourceHashes[path]);\n\t\tassert.equal(sha256(current), record.sourceHashes[path], path);\n",
+          "previous": "\t\tconst current = ownedCiHistoricalBytes(path, await readFile(path)); assert.equal(sha256(current), record.sourceHashes[path], path);\n",
+          "start": 12103
+        },
+        {
+          "current": "\tconst contracts = typeSurfaceContractsAtProducer(ownedHostProducer);\n\tconst { typeSurfaceCells } = await moduleAtProducer(\n\t\townedHostProducer, \"src/adoption/type-surface.mjs\");\n",
+          "previous": "\tconst { irSchema, consumers } = await readTypeSurface(), contracts = { irSchema, consumers };\n",
+          "start": 12659
+        },
+        {
+          "current": "\tconst document = JSON.parse(sourceAtProducer(ownedHostProducer\n\t\t, \"docs/type-surface.v1.json\"\n\t\t, record.sourceHashes[\"docs/type-surface.v1.json\"]));\n",
+          "previous": "\tconst document = JSON.parse(await source(\"docs/type-surface.v1.json\"));\n",
+          "start": 12902
+        }
+      ],
+      "path": "tests/helpers/owned-host-evidence.mjs",
+      "previousSha256": "558f1ccbe62f44bd220149f7d6981af46bd0075047fec2513a90e9c119992be6"
+    },
+    {
+      "currentSha256": "aaadce14f691059dc269479c12993f5db050931de5e0ae488eddd28827f78101",
+      "edits": [
+        {
+          "current": "import { moduleAtProducer } from \"./producer-module.mjs\";\nimport {\n\tbytesAtProducer, sourceAtProducer, typeSurfaceContractsAtProducer\n} from \"./producer-source.mjs\";\n",
+          "previous": "import { readTypeSurface } from \"../../src/adoption/type-surface.mjs\";\nimport { historicalTypeSurfaceCells as typeSurfaceCells } from \"./historical-type-surface-cells.mjs\";\nimport { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from \"../../src/build/native-graph-model.mjs\";\nimport { generateOwnedCPackage } from \"../../src/backends/c/owned-package.mjs\";\nimport { generateOwnedCppPackage } from \"../../src/backends/cpp/owned-package.mjs\";\nimport { generateOwnedRustPackage } from \"../../src/backends/rust/owned-package.mjs\";\nimport { copiedRustLock } from \"../../src/backends/rust/copied-values.mjs\";\nimport { generateOwnedPythonPackage } from \"../../src/backends/python/owned-package.mjs\";\nimport { generateOwnedPythonConversions } from \"../../src/backends/python/owned-conversions.mjs\";\nimport { ownedPythonRuntime } from \"../../src/backends/python/owned-runtime.mjs\";\nimport { ownedPythonInstalledProbe } from \"./owned-python-installed-probes.mjs\";\n",
+          "start": 250
+        },
+        {
+          "current": "\n/** The immutable source tree named by every owned-Python source digest. */\nexport const ownedPythonProducer = \"ef9bd830d49a932a13bbc0d683a7a14cd7139b62\";\nlet producerPromise;\nconst producerAtMilestone = () => producerPromise ??= Promise.all([\n\t\"src/backends/c/owned-package.mjs\"\n\t, \"src/backends/cpp/owned-package.mjs\"\n\t, \"src/backends/python/owned-conversions.mjs\"\n\t, \"src/backends/python/owned-package.mjs\"\n\t, \"src/backends/python/owned-runtime.mjs\"\n\t, \"src/backends/rust/owned-package.mjs\"\n\t, \"src/build/native-graph-model.mjs\"\n\t, \"tests/helpers/owned-python-installed-probes.mjs\"\n].map(path => moduleAtProducer(ownedPythonProducer, path))).then(modules =>\n\tObject.assign({}, ...modules));\n",
+          "previous": "import { beforeOwnedRuby, ownedRubyHistoricalBytes } from \"./owned-ruby-source-history.mjs\";\n",
+          "start": 784
+        },
+        {
+          "current": "const copiedRustLockAtProducer = (name, version) => sourceAtProducer(\n\townedPythonProducer, \"src/backends/rust/dependencies.lock\"\n).replace('name = \"lean_bridge_generated\"\\nversion = \"0.0.0\"'\n\t, `name = \"${name}\"\\nversion = \"${version}\"`);\nconst nativeModel = (producer, input) => producer.createCompiledNativeModel(\n\tinput, { ownedGraphs: true, ownedHostCallbacks: true });\n",
+          "previous": "const nativeModel = input => createCompiledNativeModel(input, { ownedGraphs: true, ownedHostCallbacks: true });\n",
+          "start": 3127
+        },
+        {
+          "current": "const compiled = (report, mode, scalar, sources, producer) => {\n",
+          "previous": "const compiled = (report, mode, scalar, sources) => {\n",
+          "start": 4678
+        },
+        {
+          "current": "\tconst model = nativeModel(producer, input);\n\tconst native = producer.generateCompiledNativeLeanAdapters(model);\n",
+          "previous": "\tconst model = nativeModel(input), native = generateCompiledNativeLeanAdapters(model);\n",
+          "start": 5575
+        },
+        {
+          "current": "\tconst c = producer.generateOwnedCPackage({ ...input, hostCallbacks: true });\n\tconst python = producer.generateOwnedPythonPackage(model.bindingIr);\n",
+          "previous": "\tconst c = generateOwnedCPackage({ ...input, hostCallbacks: true });\n\tconst python = generateOwnedPythonPackage(model.bindingIr);\n",
+          "start": 5780
+        },
+        {
+          "current": "\tconst cpp = companions\n\t\t? producer.generateOwnedCppPackage(model.bindingIr) : null;\n\tconst rust = companions\n\t\t? producer.generateOwnedRustPackage(model.bindingIr) : null;\n",
+          "previous": "\tconst cpp = companions ? generateOwnedCppPackage(model.bindingIr) : null;\n\tconst rust = companions ? generateOwnedRustPackage(model.bindingIr) : null;\n",
+          "start": 7000
+        },
+        {
+          "current": "const packageReport = async (report, mode, sources, producer) => {\n\tconst { model, python, component, adapter } = compiled(\n\t\treport, mode, false, sources, producer);\n",
+          "previous": "const packageReport = async (report, mode, sources) => {\n\tconst { model, python, component, adapter } = compiled(report, mode, false, sources);\n",
+          "start": 8494
+        },
+        {
+          "current": "\tassert.equal(report.loaderProbeSha256\n\t\t, sha256(producer.ownedPythonInstalledProbe));\n",
+          "previous": "\tassert.equal(report.loaderProbeSha256, sha256(ownedPythonInstalledProbe));\n",
+          "start": 9004
+        },
+        {
+          "current": "\t\tconst lock = copiedRustLockAtProducer(\"owned-values\", \"1.2.3\");\n",
+          "previous": "\t\tconst lock = await copiedRustLock(\"owned-values\", \"1.2.3\");\n",
+          "start": 9167
+        },
+        {
+          "current": "\tconst docs = sourceAtProducer(ownedPythonProducer, \"docs/consume/python.md\"\n\t\t, sources[\"docs/consume/python.md\"]);\n",
+          "previous": "\tconst docs = await readFile(\"docs/consume/python.md\", \"utf8\");\n",
+          "start": 10055
+        },
+        {
+          "current": "\t\tconst generated = producer.generateOwnedPythonPackage(\n\t\t\tmodel.bindingIr, evidence);\n",
+          "previous": "\t\tconst generated = generateOwnedPythonPackage(model.bindingIr, evidence);\n",
+          "start": 12482
+        },
+        {
+          "current": "\tconst producer = await producerAtMilestone();\n\tfor(const name of [\n\t\t\"createCompiledNativeModel\", \"generateCompiledNativeLeanAdapters\"\n\t\t, \"generateOwnedCPackage\", \"generateOwnedCppPackage\"\n\t\t, \"generateOwnedPythonConversions\", \"generateOwnedPythonPackage\"\n\t\t, \"generateOwnedRustPackage\", \"ownedPythonRuntime\"\n\t]) assert.equal(typeof producer[name], \"function\", name);\n\tassert.equal(typeof producer.ownedPythonInstalledProbe, \"string\");\n",
+          "previous": "",
+          "start": 13279
+        },
+        {
+          "current": "\tfor(const [path, digest] of Object.entries(record.sources))\n\t\tassert.equal(sha256(bytesAtProducer(\n\t\t\townedPythonProducer, path, digest)), digest, path);\n",
+          "previous": "\tfor(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(ownedRubyHistoricalBytes(path, await readFile(path), digest)), digest, path);\n",
+          "start": 14283
+        },
+        {
+          "current": "\t\tassert.equal(runtime.runtimeSha256\n\t\t\t, sha256(producer.ownedPythonRuntime(\"owned_aggregates\")));\n",
+          "previous": "\t\tassert.equal(runtime.runtimeSha256, sha256(ownedPythonRuntime(\"owned_aggregates\")));\n",
+          "start": 15073
+        },
+        {
+          "current": "\t\t\tconst generated = producer.generateOwnedPythonConversions(\n\t\t\t\treport.bindingIr);\n",
+          "previous": "\t\t\tconst generated = generateOwnedPythonConversions(report.bindingIr);\n",
+          "start": 15955
+        },
+        {
+          "current": "\t\t\tassert.equal(report.runtimeSha256\n\t\t\t\t, sha256(producer.ownedPythonRuntime(generated.c.prefix)));\n",
+          "previous": "\t\t\tassert.equal(report.runtimeSha256, sha256(ownedPythonRuntime(generated.c.prefix)));\n",
+          "start": 16130
+        },
+        {
+          "current": "\t\tawait packageReport(\n\t\t\trecord.packages[mode], mode, record.sources, producer);\n",
+          "previous": "\t\tawait packageReport(record.packages[mode], mode, record.sources);\n",
+          "start": 17225
+        },
+        {
+          "current": "\t\tconst { model, python } = compiled(\n\t\t\tscalars, mode, true, record.sources, producer);\n",
+          "previous": "\t\tconst { model, python } = compiled(scalars, mode, true, record.sources);\n",
+          "start": 17354
+        },
+        {
+          "current": "\t\tconst source = sourceAtProducer(ownedPythonProducer\n\t\t\t, \"tests/fixtures/structured-types/owned-installed-python-scalars.py\"\n\t\t\t, record.sources[\"tests/fixtures/structured-types/owned-installed-python-scalars.py\"]\n\t\t).replace(\"__PACKAGE__\", python.packageDir);\n",
+          "previous": "\t\tconst source = (await readFile(\"tests/fixtures/structured-types/owned-installed-python-scalars.py\", \"utf8\")).replace(\"__PACKAGE__\", python.packageDir);\n",
+          "start": 17537
+        },
+        {
+          "current": "\t\tconst current = bytesAtProducer(\n\t\t\townedPythonProducer, path, record.sourceHashes[path]);\n",
+          "previous": "\t\tconst current = ownedRubyHistoricalBytes(path, await readFile(path), record.sourceHashes[path]);\n",
+          "start": 19430
+        },
+        {
+          "current": "\tconst contracts = typeSurfaceContractsAtProducer(ownedPythonProducer);\n\tconst { typeSurfaceCells } = await moduleAtProducer(\n\t\townedPythonProducer, \"src/adoption/type-surface.mjs\");\n\tconst document = JSON.parse(sourceAtProducer(ownedPythonProducer\n\t\t, \"docs/type-surface.v1.json\"\n\t\t, record.sourceHashes[\"docs/type-surface.v1.json\"]));\n",
+          "previous": "\tconst { irSchema, consumers } = await readTypeSurface(), contracts = { irSchema, consumers };\n\tconst document = JSON.parse(beforeOwnedRuby(\"docs/type-surface.v1.json\", await readFile(\"docs/type-surface.v1.json\", \"utf8\")));\n",
+          "start": 19936
+        }
+      ],
+      "path": "tests/helpers/owned-python-evidence.mjs",
+      "previousSha256": "7241afa9414ce34dff0491a9a8724da02a6552fb449166f84b3a4a3d3741e6d2"
+    },
+    {
+      "currentSha256": "7e2c1aa6bbfa369b8f67aaf9c1a1e4e8251e16a292198600449e9e00222f9dd4",
+      "edits": [
+        {
+          "current": "import { moduleAtProducer } from \"./producer-module.mjs\";\nimport {\n\tbytesAtProducer, sourceAtProducer, typeSurfaceContractsAtProducer\n} from \"./producer-source.mjs\";\n",
+          "previous": "import { readTypeSurface } from \"../../src/adoption/type-surface.mjs\";\nimport { historicalTypeSurfaceCells as typeSurfaceCells } from \"./historical-type-surface-cells.mjs\";\nimport { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from \"../../src/build/native-graph-model.mjs\";\nimport { compiledPackageMetadata } from \"../../src/analyze/package-metadata.mjs\";\nimport { generateOwnedCPackage } from \"../../src/backends/c/owned-package.mjs\";\nimport { generateOwnedCppPackage } from \"../../src/backends/cpp/owned-package.mjs\";\nimport { ownedRustRuntime } from \"../../src/backends/rust/owned-runtime.mjs\";\nimport { generateOwnedRustCallables } from \"../../src/backends/rust/owned-callables.mjs\";\nimport { generateOwnedRustPackage } from \"../../src/backends/rust/owned-package.mjs\";\nimport { copiedRustLock } from \"../../src/backends/rust/copied-values.mjs\";\n",
+          "start": 260
+        },
+        {
+          "current": "",
+          "previous": "import { beforeOwnedPython, ownedPythonChangedPaths } from \"./owned-python-source-history.mjs\";\nimport { ownedRubyChangedPaths } from \"./owned-ruby-source-history.mjs\";\nimport { ownedDotnetNormalizationPaths } from \"./owned-dotnet-source-history.mjs\";\n",
+          "start": 666
+        },
+        {
+          "current": "/** The immutable source tree named by every owned-Rust source digest. */\nexport const ownedRustProducer = \"78d2e09252d81f0b123d6175bb6ea454c9205577\";\nlet producerPromise;\nconst producerAtMilestone = () => producerPromise ??= Promise.all([\n\t\"src/analyze/package-metadata.mjs\"\n\t, \"src/backends/c/owned-package.mjs\"\n\t, \"src/backends/cpp/owned-package.mjs\"\n\t, \"src/backends/rust/owned-callables.mjs\"\n\t, \"src/backends/rust/owned-package.mjs\"\n\t, \"src/backends/rust/owned-runtime.mjs\"\n\t, \"src/build/native-graph-model.mjs\"\n].map(path => moduleAtProducer(ownedRustProducer, path))).then(modules =>\n\tObject.assign({}, ...modules));\n\n",
+          "previous": "",
+          "start": 845
+        },
+        {
+          "current": "const copiedRustLockAtProducer = (name, version) => sourceAtProducer(\n\townedRustProducer, \"src/backends/rust/dependencies.lock\"\n).replace('name = \"lean_bridge_generated\"\\nversion = \"0.0.0\"'\n\t, `name = \"${name}\"\\nversion = \"${version}\"`);\nconst historicalBytes = (path, expected) => {\n\tconst bytes = bytesAtProducer(ownedRustProducer, path);\n\treturn sha256(bytes) === expected ? bytes\n\t\t: beforeOwnedRust(path, bytes.toString(\"utf8\"), expected);\n};\n",
+          "previous": "",
+          "start": 2806
+        },
+        {
+          "current": "const nativeModel = (producer, input) => producer.createCompiledNativeModel(\n\tinput, { ownedGraphs: true, ownedHostCallbacks: true });\n",
+          "previous": "const nativeModel = input => createCompiledNativeModel(input, { ownedGraphs: true, ownedHostCallbacks: true });\n",
+          "start": 3951
+        },
+        {
+          "current": "const packageReport = async (report, mode, sources, producer) => {\n",
+          "previous": "const packageReport = async (report, mode, sources) => {\n",
+          "start": 4087
+        },
+        {
+          "current": "\tconst docs = sourceAtProducer(ownedRustProducer, \"docs/consume/rust.md\"\n\t\t, sources[\"docs/consume/rust.md\"]);\n",
+          "previous": "\tconst docs = await readFile(\"docs/consume/rust.md\", \"utf8\");\n",
+          "start": 5091
+        },
+        {
+          "current": "\tconst model = nativeModel(producer, report.input);\n\tconst native = producer.generateCompiledNativeLeanAdapters(model);\n",
+          "previous": "\tconst model = nativeModel(report.input), native = generateCompiledNativeLeanAdapters(model);\n",
+          "start": 5442
+        },
+        {
+          "current": "\tconst c = producer.generateOwnedCPackage({\n\t\t...report.input, hostCallbacks: true });\n",
+          "previous": "\tconst c = generateOwnedCPackage({ ...report.input, hostCallbacks: true });\n",
+          "start": 5641
+        },
+        {
+          "current": "\tconst rust = producer.generateOwnedRustPackage(\n\t\tmodel.bindingIr, compiled.evidence, { name: \"owned-values\"\n\t\t\t, version: \"1.2.3\"\n\t\t\t, metadata: producer.compiledPackageMetadata(model.sourceIdentity) });\n",
+          "previous": "\tconst rust = generateOwnedRustPackage(model.bindingIr, compiled.evidence, { name: \"owned-values\", version: \"1.2.3\", metadata: compiledPackageMetadata(model.sourceIdentity) });\n",
+          "start": 6808
+        },
+        {
+          "current": "\tif(mode === \"reviewed\") assert.deepEqual(adapter.cppValues\n\t\t, producer.generateOwnedCppPackage(model.bindingIr).contract);\n",
+          "previous": "\tif(mode === \"reviewed\") assert.deepEqual(adapter.cppValues, generateOwnedCppPackage(model.bindingIr).contract);\n",
+          "start": 7382
+        },
+        {
+          "current": "\tconst lock = copiedRustLockAtProducer(\"owned-values\", \"1.2.3\");\n",
+          "previous": "\tconst lock = await copiedRustLock(\"owned-values\", \"1.2.3\");\n",
+          "start": 8598
+        },
+        {
+          "current": "\tconst producer = await producerAtMilestone();\n\tfor(const name of [\n\t\t\"compiledPackageMetadata\", \"createCompiledNativeModel\"\n\t\t, \"generateCompiledNativeLeanAdapters\", \"generateOwnedCPackage\"\n\t\t, \"generateOwnedCppPackage\", \"generateOwnedRustCallables\"\n\t\t, \"generateOwnedRustPackage\", \"ownedRustRuntime\"\n\t]) assert.equal(typeof producer[name], \"function\", name);\n",
+          "previous": "",
+          "start": 11003
+        },
+        {
+          "current": "\t\tassert.equal(sha256(historicalBytes(path, digest)), digest, path);\n",
+          "previous": "\t\tassert.equal(sha256(beforeOwnedRust(path, await readFile(path, \"utf8\"), digest)), digest, path);\n",
+          "start": 11979
+        },
+        {
+          "current": "\t\tconst c = producer.generateOwnedCPackage({\n\t\t\t...input, hostCallbacks: true });\n",
+          "previous": "\t\tconst c = generateOwnedCPackage({ ...input, hostCallbacks: true });\n",
+          "start": 12436
+        },
+        {
+          "current": "\t\tassert.equal(runtime.runtimeSha256\n\t\t\t, sha256(producer.ownedRustRuntime(c.values.prefix)));\n",
+          "previous": "\t\tassert.equal(runtime.runtimeSha256, sha256(ownedRustRuntime(c.values.prefix)));\n",
+          "start": 12700
+        },
+        {
+          "current": "\t\tconst generated = producer.generateOwnedRustCallables(\n\t\t\tnativeModel(producer, valuesInput).bindingIr);\n",
+          "previous": "\t\tconst generated = generateOwnedRustCallables(nativeModel(valuesInput).bindingIr);\n",
+          "start": 13246
+        },
+        {
+          "current": "\t\tassert.equal(values.probeSha256, sha256(\n\t\t\tsourceAtProducer(ownedRustProducer\n\t\t\t\t, \"tests/fixtures/structured-types/owned-rust-values.rs\"\n\t\t\t\t, record.sources[\"tests/fixtures/structured-types/owned-rust-values.rs\"])\n\t\t\t+ sourceAtProducer(ownedRustProducer\n\t\t\t\t, \"tests/fixtures/structured-types/owned-rust-callables.rs\"\n\t\t\t\t, record.sources[\"tests/fixtures/structured-types/owned-rust-callables.rs\"])\n\t\t));\n",
+          "previous": "\t\tassert.equal(values.probeSha256, sha256(await readFile(\"tests/fixtures/structured-types/owned-rust-values.rs\", \"utf8\") + await readFile(\"tests/fixtures/structured-types/owned-rust-callables.rs\", \"utf8\")));\n",
+          "start": 13740
+        },
+        {
+          "current": "\t\tawait packageReport(\n\t\t\trecord.packages[mode], mode, record.sources, producer);\n",
+          "previous": "\t\tawait packageReport(record.packages[mode], mode, record.sources);\n",
+          "start": 14371
+        },
+        {
+          "current": "\t\tconst current = historicalBytes(path, record.sourceHashes[path]);\n",
+          "previous": "\t\tconst bytes = await readFile(path);\n\t\tconst current = (ownedPythonChangedPaths.includes(path) || ownedRubyChangedPaths.includes(path) || ownedDotnetNormalizationPaths.includes(path)) ? beforeOwnedPython(path, bytes.toString(\"utf8\")) : bytes;\n",
+          "start": 15914
+        },
+        {
+          "current": "\tconst contracts = typeSurfaceContractsAtProducer(ownedRustProducer);\n\tconst { typeSurfaceCells } = await moduleAtProducer(\n\t\townedRustProducer, \"src/adoption/type-surface.mjs\");\n\tconst document = JSON.parse(sourceAtProducer(ownedRustProducer\n\t\t, \"docs/type-surface.v1.json\"\n\t\t, record.sourceHashes[\"docs/type-surface.v1.json\"]));\n",
+          "previous": "\tconst { irSchema, consumers } = await readTypeSurface(), contracts = { irSchema, consumers };\n\tconst document = JSON.parse(beforeOwnedPython(\"docs/type-surface.v1.json\", await readFile(\"docs/type-surface.v1.json\", \"utf8\")));\n",
+          "start": 16381
+        }
+      ],
+      "path": "tests/helpers/owned-rust-evidence.mjs",
+      "previousSha256": "bb0b07415cb200783b772680021551ed04bd08e946d55d7c891f3ffe900de72e"
+    },
+    {
+      "currentSha256": "6bbc1d9d978cfd3105b2b1aec40dd09dbeefa39769129fbe540ca2a3a9933634",
+      "edits": [
+        {
+          "current": "import {\n\tassertOwnedPythonExecution, assertOwnedPythonIntegration\n\t, ownedPythonProducer\n} from \"./helpers/owned-python-evidence.mjs\";\n",
+          "previous": "import { assertOwnedPythonExecution, assertOwnedPythonIntegration } from \"./helpers/owned-python-evidence.mjs\";\n",
+          "start": 261
+        },
+        {
+          "current": "import { bytesAtProducer } from \"./helpers/producer-source.mjs\";\n",
+          "previous": "import { beforeOwnedRuby } from \"./helpers/owned-ruby-source-history.mjs\";\n",
+          "start": 552
+        },
+        {
+          "current": "\t\tconst source = bytesAtProducer(\n\t\t\townedPythonProducer, update.path, update.currentSha256\n\t\t).toString(\"utf8\");\n",
+          "previous": "\t\tconst source = beforeOwnedRuby(update.path, await readFile(update.path, \"utf8\"));\n",
+          "start": 3683
+        },
+        {
+          "current": "\t\tassert.equal(sha256(beforeOwnedPython(\n\t\t\tupdate.path, source, update.previousSha256\n\t\t)), update.previousSha256);\n",
+          "previous": "\t\tassert.equal(sha256(beforeOwnedPython(update.path, source)), update.previousSha256);\n",
+          "start": 3886
+        }
+      ],
+      "path": "tests/owned-python-evidence.test.mjs",
+      "previousSha256": "fc6c4acbdd7d9c316295fcda4127a54278b45f5426a94281d171ce2b0f29faef"
+    }
+  ]
+}
