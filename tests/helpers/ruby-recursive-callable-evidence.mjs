@@ -6,8 +6,10 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { readTypeSurface } from "../../src/adoption/type-surface.mjs";
-import { historicalTypeSurfaceCells as typeSurfaceCells } from "./historical-type-surface-cells.mjs";
+import { moduleAtProducer } from "./producer-module.mjs";
+import {
+	sourceAtProducer, typeSurfaceContractsAtProducer
+} from "./producer-source.mjs";
 import { assertRustRecursiveCallableIntegration } from "./rust-recursive-callable-evidence.mjs";
 import { rustRecursiveCallableHistoryPath } from "./rust-recursive-callable-source-history.mjs";
 import { assertRubyStructuredCallableExecution, rubyStructuredCallableExecutionPath } from "./ruby-structured-callable-evidence.mjs";
@@ -16,7 +18,13 @@ import { rubyRecursiveCallableDocumentation } from "./ruby-recursive-callable-do
 import { rubyRecursiveCallableChangedPaths, reverseRubyRecursiveCallableUpdate } from "./ruby-recursive-callable-source-history.mjs";
 import { beforePerlRecursiveCallables } from "./perl-recursive-callable-source-history.mjs";
 
-const priorSource = async (path, expected) => beforePerlRecursiveCallables(path, await readFile(path, "utf8"), expected);
+export const rubyRecursiveCallableProducer
+	= "7cf6ee0bf049502eb9b581c8cc6efb88dc9aeddc";
+const priorSource = async (path, expected) => {
+	const source = sourceAtProducer(rubyRecursiveCallableProducer, path);
+	return sha256(source) === expected ? source
+		: beforePerlRecursiveCallables(path, source, expected);
+};
 
 export const rubyRecursiveCallableBaseline = "8dcaf9b69beb73b756743e36c075f58c2bc82f86";
 export const rubyRecursiveCallableExecutionPath = "docs/evidence/ruby-recursive-callables-20260925.json";
@@ -133,6 +141,7 @@ export const assertRubyRecursiveCallableIntegration = async record => {
 	assert.deepEqual(record.scope, rubyRecursiveCallableScope);
 	assert.deepEqual(record.inventory, { previousVersion: "0.100.0", version: "0.101.0", previousInstalled: 4798, installed: 4802, total: 6562 });
 	const previous = await authenticated(record.previous, rustRecursiveCallableHistoryPath);
+	await assertRustRecursiveCallableIntegration(previous);
 	const execution = await authenticated(record.execution, rubyRecursiveCallableExecutionPath);
 	await assertRubyRecursiveCallableExecution(execution);
 	assert.deepEqual(record.updates.map(update => update.path).sort(), rubyRecursiveCallableChangedPaths);
@@ -148,7 +157,9 @@ export const assertRubyRecursiveCallableIntegration = async record => {
 		restored[update.path] = reverseRubyRecursiveCallableUpdate(await priorSource(update.path, update.currentSha256), update);
 	}
 	for(const [path, hash] of Object.entries(record.additions)) assert.equal(hash, record.sourceHashes[path]);
-	const { document: current, ...contracts } = await readTypeSurface(); void current;
+	const contracts = typeSurfaceContractsAtProducer(rubyRecursiveCallableProducer);
+	const { typeSurfaceCells } = await moduleAtProducer(
+		rubyRecursiveCallableProducer, "src/adoption/type-surface.mjs");
 	const document = JSON.parse(await priorSource("docs/type-surface.v1.json", record.sourceHashes["docs/type-surface.v1.json"])), old = JSON.parse(restored["docs/type-surface.v1.json"]);
 	assert.equal(document.contractVersion, "0.101.0"); assert.equal(old.contractVersion, "0.100.0");
 	const cells = typeSurfaceCells(document, contracts), oldCells = typeSurfaceCells(old, contracts);
@@ -169,5 +180,4 @@ export const assertRubyRecursiveCallableIntegration = async record => {
 	const entry = document.evidence.find(item => item.id === "ruby-recursive-callables-installed");
 	assert.deepEqual(entry.artifacts, execution.reports.flatMap(run => run.packages.flatMap(pkg => pkg.artifacts.map(artifact => ({ path: `ruby/${run.path}/${artifact.path}`, sha256: artifact.sha256 })))));
 	assert.ok(entry.files.some(file => file.path === rubyRecursiveCallableExecutionPath));
-	await assertRustRecursiveCallableIntegration(previous);
 };

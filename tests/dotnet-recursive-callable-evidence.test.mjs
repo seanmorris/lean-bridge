@@ -7,10 +7,10 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
-import { assertDotnetRecursiveCallableExecution, assertDotnetRecursiveCallableIntegration, dotnetRecursiveCallableExecutionPath } from "./helpers/dotnet-recursive-callable-evidence.mjs";
+import { assertDotnetRecursiveCallableExecution, assertDotnetRecursiveCallableIntegration, dotnetRecursiveCallableExecutionPath, dotnetRecursiveCallableProducer } from "./helpers/dotnet-recursive-callable-evidence.mjs";
 import { beforeDotnetRecursiveCallables, dotnetRecursiveCallableHistoryPath, reverseDotnetRecursiveCallableUpdate } from "./helpers/dotnet-recursive-callable-source-history.mjs";
 import { assertDotnetRecursiveProbes } from "./helpers/dotnet-recursive-callable-faults.mjs";
-import { beforeJvmRecursiveCallables } from "./helpers/jvm-recursive-callable-source-history.mjs";
+import { bytesAtProducer } from "./helpers/producer-source.mjs";
 
 const json = async path => JSON.parse(await readFile(path, "utf8"));
 
@@ -99,8 +99,8 @@ test("recursive C# probes require every failure path, ownership mutation and typ
 test("recursive C# source transitions reject unknown bytes and substituted predecessors", async () => {
 	for(const update of (await json(dotnetRecursiveCallableHistoryPath)).updates)
 	{
-		// The hub reverses every recognized state, so live reads and predecessor reads name their stops.
-		const source = beforeJvmRecursiveCallables(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const source = bytesAtProducer(dotnetRecursiveCallableProducer
+			, update.path, update.currentSha256).toString("utf8");
 		assert.equal(sha256(reverseDotnetRecursiveCallableUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeDotnetRecursiveCallables(update.path, source, update.previousSha256)), update.previousSha256);
 		assert.equal(beforeDotnetRecursiveCallables(update.path, source, update.currentSha256), source);

@@ -6,8 +6,10 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
-import { readTypeSurface } from "../../src/adoption/type-surface.mjs";
-import { historicalTypeSurfaceCells as typeSurfaceCells } from "./historical-type-surface-cells.mjs";
+import { moduleAtProducer } from "./producer-module.mjs";
+import {
+	sourceAtProducer, typeSurfaceContractsAtProducer
+} from "./producer-source.mjs";
 import { recursiveCallableCConsumer, recursiveCallableCFaultConsumer } from "./c-recursive-callable-fixture.mjs";
 import { recursiveCallableCppConsumer } from "./cpp-recursive-callable-fixture.mjs";
 import { assertWitStructuredCallableIntegration } from "./wit-structured-callable-evidence.mjs";
@@ -16,7 +18,13 @@ import { nativeRecursiveCallableChangedPaths, reverseNativeRecursiveCallableUpda
 import { assertNativeRecursiveCallableCodegen, nativeRecursiveCallableCodegenPath } from "./native-recursive-callable-regression.mjs";
 import { beforeClosureThreadLifetime } from "./closure-thread-source-history.mjs";
 
-const priorSource = async (path, expected) => beforeClosureThreadLifetime(path, await readFile(path, "utf8"), expected);
+export const nativeRecursiveCallableProducer
+	= "2273d357fc959cf88bf7b0e1aea70e908ba1ba4d";
+const priorSource = async (path, expected) => {
+	const source = sourceAtProducer(nativeRecursiveCallableProducer, path);
+	return sha256(source) === expected ? source
+		: beforeClosureThreadLifetime(path, source, expected);
+};
 
 export const nativeRecursiveCallableExecutionPath = "docs/evidence/native-recursive-callables-20260925.json";
 export const nativeRecursiveCallableAddedPaths = [
@@ -237,6 +245,7 @@ export const assertNativeRecursiveCallableIntegration = async record => {
 		assert.equal(sha256(bytes), entry.sha256); return JSON.parse(bytes);
 	};
 	const previous = await authenticated(record.previous, witStructuredCallableHistoryPath);
+	await assertWitStructuredCallableIntegration(previous);
 	await assertNativeRecursiveCallableExecution(await authenticated(record.execution, nativeRecursiveCallableExecutionPath));
 	const codegen = await authenticated(record.codegen, nativeRecursiveCallableCodegenPath);
 	assertNativeRecursiveCallableCodegen(codegen);
@@ -255,7 +264,10 @@ export const assertNativeRecursiveCallableIntegration = async record => {
 	for(const [path, hash] of Object.entries(record.additions)) assert.equal(record.sourceHashes[path], hash);
 	for(const [path, hash] of Object.entries(codegen.predecessors))
 	{ assert.equal(hash, sha256(restored[path])); assert.equal(codegen.sourceHashes[path], record.sourceHashes[path]); }
-	const contracts = await readTypeSurface(), old = JSON.parse(restored["docs/type-surface.v1.json"]);
+	const contracts = typeSurfaceContractsAtProducer(nativeRecursiveCallableProducer);
+	const { typeSurfaceCells } = await moduleAtProducer(
+		nativeRecursiveCallableProducer, "src/adoption/type-surface.mjs");
+	const old = JSON.parse(restored["docs/type-surface.v1.json"]);
 	const document = JSON.parse(await priorSource("docs/type-surface.v1.json", record.sourceHashes["docs/type-surface.v1.json"]));
 	assert.equal(document.contractVersion, record.inventory.version); assert.equal(old.contractVersion, record.inventory.previousVersion);
 	const cells = typeSurfaceCells(document, contracts), oldCells = typeSurfaceCells(old, contracts);
@@ -272,5 +284,4 @@ export const assertNativeRecursiveCallableIntegration = async record => {
 	}
 	const oldById = new Map(oldCells.map(cell => [cell.id, cell]));
 	for(const cell of cells.filter(cell => !promoted.includes(cell))) assert.deepEqual(cell, oldById.get(cell.id), cell.id);
-	await assertWitStructuredCallableIntegration(previous);
 };

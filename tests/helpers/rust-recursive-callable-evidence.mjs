@@ -6,8 +6,10 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { readTypeSurface } from "../../src/adoption/type-surface.mjs";
-import { historicalTypeSurfaceCells as typeSurfaceCells } from "./historical-type-surface-cells.mjs";
+import { moduleAtProducer } from "./producer-module.mjs";
+import {
+	sourceAtProducer, typeSurfaceContractsAtProducer
+} from "./producer-source.mjs";
 import { compileCallableRustGraphPackageModel } from "../../src/backends/rust/callable-graph-model.mjs";
 import { assertPythonRecursiveCallableIntegration } from "./python-recursive-callable-evidence.mjs";
 import { pythonRecursiveCallableHistoryPath } from "./python-recursive-callable-source-history.mjs";
@@ -18,7 +20,13 @@ import { rustRecursiveOwnershipTests, rustRecursivePoisonTests } from "./rust-re
 import { rustRecursiveCallableChangedPaths, reverseRustRecursiveCallableUpdate } from "./rust-recursive-callable-source-history.mjs";
 import { beforeRubyRecursiveCallables } from "./ruby-recursive-callable-source-history.mjs";
 
-const priorSource = async (path, expected) => beforeRubyRecursiveCallables(path, await readFile(path, "utf8"), expected);
+export const rustRecursiveCallableProducer
+	= "8dcaf9b69beb73b756743e36c075f58c2bc82f86";
+const priorSource = async (path, expected) => {
+	const source = sourceAtProducer(rustRecursiveCallableProducer, path);
+	return sha256(source) === expected ? source
+		: beforeRubyRecursiveCallables(path, source, expected);
+};
 
 export const rustRecursiveCallableBaseline = "172baa67067a549454fb79449d205f939474e58b";
 export const rustRecursiveCallableExecutionPath = "docs/evidence/rust-recursive-callables-20260925.json";
@@ -152,6 +160,7 @@ export const assertRustRecursiveCallableIntegration = async record => {
 	assert.deepEqual(record.scope, rustRecursiveCallableScope);
 	assert.deepEqual(record.inventory, { previousVersion: "0.99.0", version: "0.100.0", previousInstalled: 4794, installed: 4798, total: 6562 });
 	const previous = await authenticated(record.previous, pythonRecursiveCallableHistoryPath);
+	await assertPythonRecursiveCallableIntegration(previous);
 	const execution = await authenticated(record.execution, rustRecursiveCallableExecutionPath);
 	await assertRustRecursiveCallableExecution(execution);
 	assert.deepEqual(record.updates.map(update => update.path).sort(), rustRecursiveCallableChangedPaths);
@@ -167,7 +176,9 @@ export const assertRustRecursiveCallableIntegration = async record => {
 		restored[update.path] = reverseRustRecursiveCallableUpdate(await priorSource(update.path, update.currentSha256), update);
 	}
 	for(const [path, hash] of Object.entries(record.additions)) assert.equal(hash, record.sourceHashes[path]);
-	const { document: current, ...contracts } = await readTypeSurface(); void current;
+	const contracts = typeSurfaceContractsAtProducer(rustRecursiveCallableProducer);
+	const { typeSurfaceCells } = await moduleAtProducer(
+		rustRecursiveCallableProducer, "src/adoption/type-surface.mjs");
 	const document = JSON.parse(await priorSource("docs/type-surface.v1.json", record.sourceHashes["docs/type-surface.v1.json"])), old = JSON.parse(restored["docs/type-surface.v1.json"]);
 	assert.equal(document.contractVersion, "0.100.0"); assert.equal(old.contractVersion, "0.99.0");
 	const cells = typeSurfaceCells(document, contracts), oldCells = typeSurfaceCells(old, contracts);
@@ -188,5 +199,4 @@ export const assertRustRecursiveCallableIntegration = async record => {
 	const entry = document.evidence.find(item => item.id === "rust-recursive-callables-installed");
 	assert.deepEqual(entry.artifacts, execution.reports.flatMap(run => run.packages.flatMap(pkg => pkg.artifacts.map(artifact => ({ path: `rust/${run.path}/${artifact.path}`, sha256: artifact.sha256 })))));
 	assert.ok(entry.files.some(file => file.path === rustRecursiveCallableExecutionPath));
-	await assertPythonRecursiveCallableIntegration(previous);
 };

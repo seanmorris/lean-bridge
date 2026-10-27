@@ -8,7 +8,10 @@ import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { assertWitHostExecution } from "./wit-host-evidence.mjs";
 import { reverseWitCompositionUpdate, witCompositionChangedPaths } from "./wit-composition-source-history.mjs";
-import { beforeWitAcceptance } from "./wit-acceptance-source-history.mjs";
+import { sourceAtProducer } from "./producer-source.mjs";
+
+export const witCompositionProducer
+	= "60c4262eacacc6b668f16a6778b535a3f2d68a54";
 
 export const witCompositionExecutionPath = "docs/evidence/wit-recursive-composition-20260924.json";
 export const witCompositionAddedPaths = [
@@ -107,8 +110,11 @@ export const assertWitMixedPackages = report => {
  * Bind real regression reports, the original failure and executed public docs.
  *
  * @param record - Captured execution evidence, not generated expectations.
+ * @param readSource - Source reader bound to the evidence epoch.
  */
-export const assertWitCompositionExecution = async record => {
+export const assertWitCompositionExecution = async (
+	record, readSource = (path, options) => readFile(path, options)
+) => {
 	assert.equal(record.schemaVersion, 1); assert.equal(record.planNode, 1219);
 	assert.equal(record.kind, "wit-recursive-composition-execution");
 	assert.equal(record.finalAcceptance, false);
@@ -125,7 +131,8 @@ export const assertWitCompositionExecution = async record => {
 	for(const [name, report] of Object.entries(record.reports)) assert.equal(digest(report), record.reportHashes[name]);
 	passing(record.logs.composition, 2); passing(record.logs.mixed, 2);
 	assert.deepEqual(record.logs.mixed, record.logs.composition);
-	const prior = JSON.parse(await readFile("docs/evidence/wit-host-isolation-20260924.json", "utf8"));
+	const prior = JSON.parse(await readSource(
+		"docs/evidence/wit-host-isolation-20260924.json", "utf8"));
 	const names = Object.keys(prior.reports);
 	await assertWitHostExecution({
 		...prior
@@ -133,10 +140,15 @@ export const assertWitCompositionExecution = async record => {
 		, logs: Object.fromEntries(names.map(name => [name, record.logs[name]]))
 		, reportHashes: Object.fromEntries(names.map(name => [name, record.reportHashes[name]]))
 	});
-	const source = await readFile("tests/fixtures/recursive-consumers/wit-composition.c");
-	const faultSource = await readFile("tests/fixtures/recursive-consumers/wit-result-fault.c");
-	const documentation = (await readFile("docs/consume/wit-wasi.md", "utf8")).match(/```c file=wit-wasi\/recursive\.c\n([^]*?)\n```/)[1] + "\n";
-	assert.equal(documentation, await readFile("tests/fixtures/documentation/consumers/wit-wasi/recursive.c", "utf8"));
+	const source = await readSource(
+		"tests/fixtures/recursive-consumers/wit-composition.c");
+	const faultSource = await readSource(
+		"tests/fixtures/recursive-consumers/wit-result-fault.c");
+	const documentation = (await readSource(
+		"docs/consume/wit-wasi.md", "utf8"
+	)).match(/```c file=wit-wasi\/recursive\.c\n([^]*?)\n```/)[1] + "\n";
+	assert.equal(documentation, await readSource(
+		"tests/fixtures/documentation/consumers/wit-wasi/recursive.c", "utf8"));
 	for(const run of record.reports.composition.observations)
 	{
 		assert.equal(run.consumerSha256, sha256(source));
@@ -145,7 +157,8 @@ export const assertWitCompositionExecution = async record => {
 	}
 	for(const name of ["host", "native"])
 	{
-		const expected = sha256(await readFile(`tests/fixtures/recursive-consumers/wit-mixed-${name}.c`));
+		const expected = sha256(await readSource(
+			`tests/fixtures/recursive-consumers/wit-mixed-${name}.c`));
 		for(const run of record.reports.mixed.observations) assert.equal(run.sources[name], expected);
 	}
 };
@@ -156,27 +169,37 @@ export const assertWitCompositionExecution = async record => {
  * @param record - This milestone's source and evidence integration record.
  */
 export const assertWitCompositionIntegration = async record => {
+	const priorSource = (path, expected) => sourceAtProducer(
+		witCompositionProducer, path, expected
+	);
 	assert.equal(record.schemaVersion, 1); assert.equal(record.planNode, 1219);
 	assert.equal(record.kind, "wit-recursive-composition-integration");
 	assert.equal(record.finalAcceptance, false);
 	assert.equal(record.baselineRevision, "83be33fb3bcf06236d1247b704421a5c5248b05e");
 	assert.equal(record.previous.path, "docs/evidence/wit-host-isolation-integration-20260924.json");
-	const bytes = await readFile(record.previous.path); assert.equal(sha256(bytes), record.previous.sha256);
+	const bytes = await priorSource(record.previous.path, record.previous.sha256);
 	const previous = JSON.parse(bytes);
 	assert.deepEqual(record.updates.map(update => update.path).sort(), witCompositionChangedPaths);
 	assert.deepEqual(Object.keys(record.additions).sort(), witCompositionAddedPaths);
 	const paths = [...new Set([...Object.keys(previous.sourceHashes), ...witCompositionChangedPaths, ...witCompositionAddedPaths])].sort();
 	assert.deepEqual(Object.keys(record.sourceHashes).sort(), paths);
-	for(const path of paths) assert.equal(sha256(beforeWitAcceptance(path, await readFile(path, "utf8"), record.sourceHashes[path])), record.sourceHashes[path], path);
+	for(const path of paths) assert.equal(
+		sha256(await priorSource(path, record.sourceHashes[path]))
+		, record.sourceHashes[path], path);
 	for(const update of record.updates)
 	{
 		assert.equal(update.previousSha256, previous.sourceHashes[update.path]);
-		reverseWitCompositionUpdate(beforeWitAcceptance(update.path, await readFile(update.path, "utf8"), update.currentSha256), update);
+		reverseWitCompositionUpdate(
+			await priorSource(update.path, update.currentSha256), update);
 	}
 	for(const [path, expected] of Object.entries(record.additions)) assert.equal(expected, record.sourceHashes[path]);
 	assert.equal(record.execution.path, witCompositionExecutionPath);
-	const executionBytes = await readFile(record.execution.path); assert.equal(sha256(executionBytes), record.execution.sha256);
+	const executionBytes = await priorSource(
+		record.execution.path, record.execution.sha256);
 	const execution = JSON.parse(executionBytes);
 	assert.deepEqual(record.sourceHashes, execution.sourceHashes);
-	await assertWitCompositionExecution(execution);
+	await assertWitCompositionExecution(execution, (path, options) => {
+		const source = priorSource(path, record.sourceHashes[path]);
+		return typeof options === "string" ? source : Buffer.from(source);
+	});
 };

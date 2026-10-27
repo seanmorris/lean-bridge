@@ -7,8 +7,10 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { hashBindingIr } from "../../src/binding-ir/canonical.mjs";
-import { readTypeSurface } from "../../src/adoption/type-surface.mjs";
-import { historicalTypeSurfaceCells as typeSurfaceCells } from "./historical-type-surface-cells.mjs";
+import { moduleAtProducer } from "./producer-module.mjs";
+import {
+	sourceAtProducer, typeSurfaceContractsAtProducer
+} from "./producer-source.mjs";
 import { compileCopiedWitModel } from "../../src/backends/wit/copied-model.mjs";
 import { renderWitHostSource } from "../../src/backends/wit/copied-host.mjs";
 import { structuredCallableReviewedIr } from "./structured-callable-fixture.mjs";
@@ -22,8 +24,13 @@ import { phpWasmStructuredCallableHistoryPath } from "./php-wasm-structured-call
 import { witStructuredCallableChangedPaths, reverseWitStructuredCallableUpdate } from "./wit-structured-callable-source-history.mjs";
 import { beforeNativeRecursiveCallables } from "./native-recursive-callable-source-history.mjs";
 
-// The hub reverses every recognized state, so each read names the milestone digest it stops at.
-const priorSource = async (path, expected) => beforeNativeRecursiveCallables(path, await readFile(path, "utf8"), expected);
+export const witStructuredCallableProducer
+	= "136e4942ed32bd923cb721eb80aa038cfaa07f74";
+const priorSource = async (path, expected) => {
+	const source = sourceAtProducer(witStructuredCallableProducer, path);
+	return sha256(source) === expected ? source
+		: beforeNativeRecursiveCallables(path, source, expected);
+};
 
 export const witStructuredCallableExecutionPath = "docs/evidence/wit-structured-callables-20260925.json";
 export const witStructuredCodegenPath = "docs/evidence/wit-structured-codegen-regression-20260925.json";
@@ -186,6 +193,7 @@ export const assertWitStructuredCallableIntegration = async record => {
 		assert.equal(sha256(bytes), entry.sha256); return JSON.parse(bytes);
 	};
 	const previous = await authenticated(record.previous, phpWasmStructuredCallableHistoryPath);
+	await assertPhpWasmStructuredCallableIntegration(previous);
 	const execution = await authenticated(record.execution, witStructuredCallableExecutionPath);
 	await assertWitStructuredCallableExecution(execution);
 	const codegen = await authenticated(record.codegen, witStructuredCodegenPath);
@@ -205,7 +213,9 @@ export const assertWitStructuredCallableIntegration = async record => {
 	for(const [path, digest] of Object.entries(record.additions)) assert.equal(digest, record.sourceHashes[path]);
 	for(const [path, digest] of Object.entries(codegen.predecessors))
 	{ assert.equal(digest, sha256(restored[path])); assert.equal(codegen.sourceHashes[path], record.sourceHashes[path]); }
-	const contracts = await readTypeSurface();
+	const contracts = typeSurfaceContractsAtProducer(witStructuredCallableProducer);
+	const { typeSurfaceCells } = await moduleAtProducer(
+		witStructuredCallableProducer, "src/adoption/type-surface.mjs");
 	const document = JSON.parse(await priorSource("docs/type-surface.v1.json", record.sourceHashes["docs/type-surface.v1.json"]));
 	const old = JSON.parse(restored["docs/type-surface.v1.json"]);
 	assert.equal(document.contractVersion, record.inventory.version); assert.equal(old.contractVersion, record.inventory.previousVersion);
@@ -226,5 +236,4 @@ export const assertWitStructuredCallableIntegration = async record => {
 	const entry = document.evidence.find(item => item.id === "wit-wasi-structured-callables-installed");
 	assert.deepEqual(entry.artifacts, execution.report.reports.flatMap(run => run.packages.flatMap(pkg => pkg.artifacts.map(artifact => ({ path: `${run.path}/${artifact.path}`, sha256: artifact.sha256 })))));
 	assert.ok(entry.files.some(file => file.path === witStructuredCallableExecutionPath));
-	await assertPhpWasmStructuredCallableIntegration(previous);
 };

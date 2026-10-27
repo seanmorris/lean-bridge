@@ -120,6 +120,7 @@ export const assertCppStructuredCallableIntegration = async record => {
 	assert.equal(record.previous.path, cStructuredCallableHistoryPath);
 	const oldBytes = await readFile(record.previous.path); assert.equal(sha256(oldBytes), record.previous.sha256);
 	const previous = JSON.parse(oldBytes);
+	await assertCStructuredCallableIntegration(previous);
 	assert.equal(record.execution.path, cppStructuredCallableExecutionPath);
 	const bytes = await readFile(record.execution.path); assert.equal(sha256(bytes), record.execution.sha256);
 	const execution = JSON.parse(bytes); await assertCppStructuredCallableExecution(execution);
@@ -168,5 +169,4 @@ export const assertCppStructuredCallableIntegration = async record => {
 	const entry = document.evidence.find(item => item.id === "cpp-structured-callables-installed");
 	assert.deepEqual(entry.artifacts, execution.reports.flatMap(run => run.packages.flatMap(pkg => pkg.artifacts.map(artifact => ({ path: `cpp/${run.path}/${artifact.path}`, sha256: artifact.sha256 })))));
 	assert.ok(entry.files.some(file => file.path === cppStructuredCallableExecutionPath));
-	await assertCStructuredCallableIntegration(previous);
 };

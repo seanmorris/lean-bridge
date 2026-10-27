@@ -64,6 +64,7 @@ export const assertJvmStructuredCallableIntegration = async record => {
 	assert.equal(record.previous.path, dotnetStructuredCallableHistoryPath);
 	const oldBytes = await readFile(record.previous.path); assert.equal(sha256(oldBytes), record.previous.sha256);
 	const previous = JSON.parse(oldBytes);
+	await assertDotnetStructuredCallableIntegration(previous);
 	assert.equal(record.execution.path, jvmStructuredCallableExecutionPath);
 	const bytes = await readFile(record.execution.path); assert.equal(sha256(bytes), record.execution.sha256);
 	const execution = JSON.parse(bytes); await assertJvmStructuredCallableExecution(execution);
@@ -113,7 +114,6 @@ export const assertJvmStructuredCallableIntegration = async record => {
 	const entry = document.evidence.find(item => item.id === "jvm-structured-callables-installed");
 	assert.deepEqual(entry.artifacts, execution.reports.flatMap(run => run.packages.flatMap(pkg => pkg.artifacts.map(artifact => ({ path: `${run.profile}/${run.path}/${artifact.path}`, sha256: artifact.sha256 })))));
 	assert.ok(entry.files.some(file => file.path === jvmStructuredCallableExecutionPath));
-	await assertDotnetStructuredCallableIntegration(previous);
 };
 const order = jvmStructuredCallableScope.paths.flatMap(path => jvmStructuredCallableScope.profiles.map(profile => `${path}/${profile}`));
 const hash = value => assert.match(value, /^[a-f0-9]{64}$/u);

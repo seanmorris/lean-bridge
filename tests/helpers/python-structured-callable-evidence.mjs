@@ -145,6 +145,7 @@ export const assertPythonStructuredCallableIntegration = async record => {
 	assert.equal(record.previous.path, rustStructuredCallableHistoryPath);
 	const oldBytes = await readFile(record.previous.path); assert.equal(sha256(oldBytes), record.previous.sha256);
 	const previous = JSON.parse(oldBytes);
+	await assertRustStructuredCallableIntegration(previous);
 	assert.equal(record.execution.path, pythonStructuredCallableExecutionPath);
 	const bytes = await readFile(record.execution.path); assert.equal(sha256(bytes), record.execution.sha256);
 	const execution = JSON.parse(bytes); await assertPythonStructuredCallableExecution(execution);
@@ -193,5 +194,4 @@ export const assertPythonStructuredCallableIntegration = async record => {
 	const entry = document.evidence.find(item => item.id === "python-structured-callables-installed");
 	assert.deepEqual(entry.artifacts, execution.reports.flatMap(run => run.packages.flatMap(pkg => pkg.artifacts.map(artifact => ({ path: `python/${run.path}/${artifact.path}`, sha256: artifact.sha256 })))));
 	assert.ok(entry.files.some(file => file.path === pythonStructuredCallableExecutionPath));
-	await assertRustStructuredCallableIntegration(previous);
 };

@@ -151,6 +151,7 @@ export const assertClosureThreadIntegration = async record => {
 		assert.equal(sha256(bytes), entry.sha256); return JSON.parse(bytes);
 	};
 	const previous = await authenticated(record.previous, nativeRecursiveCallableHistoryPath);
+	await assertNativeRecursiveCallableIntegration(previous);
 	const execution = await authenticated(record.execution, closureThreadExecutionPath);
 	const codegen = await authenticated(record.codegen, closureThreadCodegenPath);
 	await assertClosureThreadExecution(execution); assertClosureThreadCodegen(codegen);
@@ -178,5 +179,4 @@ export const assertClosureThreadIntegration = async record => {
 	const cells = typeSurfaceCells(document, contracts);
 	assert.deepEqual(cells, typeSurfaceCells(old, contracts)); assert.equal(cells.length, 6562);
 	assert.equal(cells.filter(cell => cell.stages.installedExecution.state === "passed").length, 4790);
-	await assertNativeRecursiveCallableIntegration(previous);
 };

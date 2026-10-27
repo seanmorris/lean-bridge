@@ -437,6 +437,78 @@ test("legacy owned projections authenticate immutable producer trees", async () 
 	}
 });
 
+test("recursive callable history authenticates its immutable producer chain", async () => {
+	const recursiveMilestones = [
+		["dotnet", "e3ebe7870a10e98d0215b3b09fc3910d719ddc0b"]
+		, ["perl", "a8a255329c102155add79169d71a05246190b8fd"]
+		, ["ruby", "7cf6ee0bf049502eb9b581c8cc6efb88dc9aeddc"]
+		, ["rust", "8dcaf9b69beb73b756743e36c075f58c2bc82f86"]
+		, ["python", "172baa67067a549454fb79449d205f939474e58b"]
+	];
+	for(const [name, producer] of recursiveMilestones)
+	{
+		const helper = await readFile(
+			`tests/helpers/${name}-recursive-callable-evidence.mjs`, "utf8");
+		const testSource = await readFile(
+			`tests/${name}-recursive-callable-evidence.test.mjs`, "utf8");
+		assert.ok(helper.includes(`Producer\n\t= "${producer}"`), name);
+		assert.match(helper, /sourceAtProducer\(/u, name);
+		assert.match(helper, /typeSurfaceContractsAtProducer\(/u, name);
+		assert.match(helper
+			, /moduleAtProducer\([\s\S]*"src\/adoption\/type-surface[.]mjs"/u
+			, name);
+		assert.doesNotMatch(helper
+			, /const priorSource = async[^;]*await readFile\(path/u, name);
+		assert.match(testSource, /bytesAtProducer\(/u, name);
+	}
+	const structuredMilestones = [
+		["native-recursive-callable-evidence.mjs"
+			, "2273d357fc959cf88bf7b0e1aea70e908ba1ba4d"]
+		, ["wit-structured-callable-evidence.mjs"
+			, "136e4942ed32bd923cb721eb80aa038cfaa07f74"]
+		, ["php-wasm-structured-callable-evidence.mjs"
+			, "7294b0cc57153e53e118789ed83a300d43236f18"]
+		, ["php-structured-callable-evidence.mjs"
+			, "89c43a33eb639bc8a2ca19df697ba56e9cfacae9"]
+		, ["npm-structured-callable-evidence.mjs"
+			, "073ccdf8eb399e419bdafd233f40d9c55273ebb0"]
+		, ["perl-structured-callable-evidence.mjs"
+			, "8538d3f67b0cdfffabf35b95153a15ecd56d84f5"]
+	];
+	for(const [name, producer] of structuredMilestones)
+	{
+		const helper = await readFile(`tests/helpers/${name}`, "utf8");
+		assert.ok(helper.includes(`Producer\n\t= "${producer}"`), name);
+		assert.match(helper, /sourceAtProducer\(/u, name);
+		assert.match(helper, /typeSurfaceContractsAtProducer\(/u, name);
+		assert.match(helper
+			, /moduleAtProducer\([\s\S]*"src\/adoption\/type-surface[.]mjs"/u
+			, name);
+		assert.doesNotMatch(helper
+			, /const priorSource = async[^;]*await readFile\(path/u, name);
+	}
+	for(const [name, producer] of [
+		["c-structured-callable-evidence.mjs"
+			, "9e6eb510535a6907c37d63f89ecbe0ac66927c32"]
+		, ["wit-recursive-acceptance.mjs"
+			, "ef6ff9ff0e03a659ffe1e9d12b821453399bff9d"]
+		, ["wit-composition-evidence.mjs"
+			, "60c4262eacacc6b668f16a6778b535a3f2d68a54"]
+	]) {
+		const helper = await readFile(`tests/helpers/${name}`, "utf8");
+		assert.ok(helper.includes(`Producer\n\t= "${producer}"`), name);
+		assert.match(helper, /sourceAtProducer\(/u, name);
+		assert.doesNotMatch(helper
+			, /beforeWitAcceptance\([^;]*await readFile/u, name);
+	}
+	const historical = await readFile(
+		"tests/helpers/historical-type-surface-cells.mjs", "utf8");
+	assert.match(historical
+		, /const checkedRecordShape = Object[.]freeze\(/u);
+	assert.doesNotMatch(historical, /readFile/u
+		, "Historical classification must not parse the live 98 MiB inventory");
+});
+
 test("Core shard enumeration has one repository-wide code-unit order", async t => {
 	const root = await mkdtemp(join(tmpdir(), "lean-bridge-core-shards-"));
 	t.after(() => rm(root, { recursive: true, force: true }));

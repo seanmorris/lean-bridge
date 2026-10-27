@@ -6,8 +6,10 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { readTypeSurface } from "../../src/adoption/type-surface.mjs";
-import { historicalTypeSurfaceCells as typeSurfaceCells } from "./historical-type-surface-cells.mjs";
+import { moduleAtProducer } from "./producer-module.mjs";
+import {
+	sourceAtProducer, typeSurfaceContractsAtProducer
+} from "./producer-source.mjs";
 import { assertRubyRecursiveCallableIntegration } from "./ruby-recursive-callable-evidence.mjs";
 import { rubyRecursiveCallableHistoryPath } from "./ruby-recursive-callable-source-history.mjs";
 import { assertPerlStructuredCallableExecution, perlStructuredCallableExecutionPath, perlStructuredAbis } from "./perl-structured-callable-evidence.mjs";
@@ -17,7 +19,13 @@ import { perlRecursiveAcyclicConsumer } from "./perl-recursive-callable-consumer
 import { perlRecursiveCallableChangedPaths, reversePerlRecursiveCallableUpdate } from "./perl-recursive-callable-source-history.mjs";
 import { beforeDotnetRecursiveCallables } from "./dotnet-recursive-callable-source-history.mjs";
 
-const priorSource = async (path, expected) => beforeDotnetRecursiveCallables(path, await readFile(path, "utf8"), expected);
+export const perlRecursiveCallableProducer
+	= "a8a255329c102155add79169d71a05246190b8fd";
+const priorSource = async (path, expected) => {
+	const source = sourceAtProducer(perlRecursiveCallableProducer, path);
+	return sha256(source) === expected ? source
+		: beforeDotnetRecursiveCallables(path, source, expected);
+};
 
 export const perlRecursiveCallableBaseline = "7cf6ee0bf049502eb9b581c8cc6efb88dc9aeddc";
 export const perlRecursiveCallableExecutionPath = "docs/evidence/perl-recursive-callables-20260925.json";
@@ -152,6 +160,7 @@ export const assertPerlRecursiveCallableIntegration = async record => {
 	assert.deepEqual(record.scope, perlRecursiveCallableScope);
 	assert.deepEqual(record.inventory, { previousVersion: "0.101.0", version: "0.102.0", previousInstalled: 4802, installed: 4806, total: 6562 });
 	const previous = await authenticated(record.previous, rubyRecursiveCallableHistoryPath);
+	await assertRubyRecursiveCallableIntegration(previous);
 	const execution = await authenticated(record.execution, perlRecursiveCallableExecutionPath);
 	await assertPerlRecursiveCallableExecution(execution);
 	assert.deepEqual(record.updates.map(update => update.path).sort(), perlRecursiveCallableChangedPaths);
@@ -167,7 +176,9 @@ export const assertPerlRecursiveCallableIntegration = async record => {
 		restored[update.path] = reversePerlRecursiveCallableUpdate(await priorSource(update.path, update.currentSha256), update);
 	}
 	for(const [path, hash] of Object.entries(record.additions)) assert.equal(hash, record.sourceHashes[path]);
-	const { document: current, ...contracts } = await readTypeSurface(); void current;
+	const contracts = typeSurfaceContractsAtProducer(perlRecursiveCallableProducer);
+	const { typeSurfaceCells } = await moduleAtProducer(
+		perlRecursiveCallableProducer, "src/adoption/type-surface.mjs");
 	const document = JSON.parse(await priorSource("docs/type-surface.v1.json", record.sourceHashes["docs/type-surface.v1.json"])), old = JSON.parse(restored["docs/type-surface.v1.json"]);
 	assert.equal(document.contractVersion, "0.102.0"); assert.equal(old.contractVersion, "0.101.0");
 	const cells = typeSurfaceCells(document, contracts), oldCells = typeSurfaceCells(old, contracts);
@@ -188,5 +199,4 @@ export const assertPerlRecursiveCallableIntegration = async record => {
 	const entry = document.evidence.find(item => item.id === "perl-recursive-callables-installed");
 	assert.deepEqual(entry.artifacts, execution.reports.filter(run => abiName(run) === perlStructuredAbis[0] && run.mode === "prebuilt-only").flatMap(run => run.packages.flatMap(pkg => pkg.artifacts.map(artifact => ({ path: `perl/${run.path}/${artifact.path}`, sha256: artifact.sha256 })))));
 	assert.ok(entry.files.some(file => file.path === perlRecursiveCallableExecutionPath));
-	await assertRubyRecursiveCallableIntegration(previous);
 };

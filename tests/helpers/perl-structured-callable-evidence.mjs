@@ -6,8 +6,10 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { readTypeSurface } from "../../src/adoption/type-surface.mjs";
-import { historicalTypeSurfaceCells as typeSurfaceCells } from "./historical-type-surface-cells.mjs";
+import { moduleAtProducer } from "./producer-module.mjs";
+import {
+	sourceAtProducer, typeSurfaceContractsAtProducer
+} from "./producer-source.mjs";
 import { structuredCallableReviewedIr } from "./structured-callable-fixture.mjs";
 import { callableSignatures } from "./callable-fixture.mjs";
 import { collectionSignatures } from "./collection-fixture.mjs";
@@ -23,7 +25,13 @@ import { assertJvmStructuredCallableIntegration } from "./jvm-structured-callabl
 import { perlStructuredCallableChangedPaths, reversePerlStructuredCallableUpdate } from "./perl-structured-callable-source-history.mjs";
 import { beforeNpmStructuredCallables } from "./npm-structured-callable-source-history.mjs";
 
-const priorSource = async (path, expected) => beforeNpmStructuredCallables(path, await readFile(path, "utf8"), expected);
+export const perlStructuredCallableProducer
+	= "8538d3f67b0cdfffabf35b95153a15ecd56d84f5";
+const priorSource = async (path, expected) => {
+	const source = sourceAtProducer(perlStructuredCallableProducer, path);
+	return sha256(source) === expected ? source
+		: beforeNpmStructuredCallables(path, source, expected);
+};
 
 export const perlStructuredCallableExecutionPath = "docs/evidence/perl-structured-callables-20260925.json";
 export const perlStructuredCodegenPath = "docs/evidence/perl-structured-codegen-regression-20260925.json";
@@ -226,6 +234,7 @@ export const assertPerlStructuredCallableIntegration = async record => {
 	assert.equal(record.previous.path, jvmStructuredCallableHistoryPath);
 	const oldBytes = await readFile(record.previous.path); assert.equal(sha256(oldBytes), record.previous.sha256);
 	const previous = JSON.parse(oldBytes);
+	await assertJvmStructuredCallableIntegration(previous);
 	assert.equal(record.execution.path, perlStructuredCallableExecutionPath);
 	const bytes = await readFile(record.execution.path); assert.equal(sha256(bytes), record.execution.sha256);
 	const execution = JSON.parse(bytes); await assertPerlStructuredCallableExecution(execution);
@@ -250,8 +259,11 @@ export const assertPerlStructuredCallableIntegration = async record => {
 		assert.equal(expected, sha256(restored[path]));
 		assert.equal(codegen.sourceHashes[path], record.sourceHashes[path]);
 	}
-	const { document, ...contracts } = { ...await readTypeSurface()
-		, document: JSON.parse(await priorSource("docs/type-surface.v1.json", record.sourceHashes["docs/type-surface.v1.json"])) };
+	const contracts = typeSurfaceContractsAtProducer(perlStructuredCallableProducer);
+	const { typeSurfaceCells } = await moduleAtProducer(
+		perlStructuredCallableProducer, "src/adoption/type-surface.mjs");
+	const document = JSON.parse(await priorSource("docs/type-surface.v1.json"
+		, record.sourceHashes["docs/type-surface.v1.json"]));
 	const oldDocument = JSON.parse(restored["docs/type-surface.v1.json"]);
 	assert.equal(document.contractVersion, record.inventory.version); assert.equal(oldDocument.contractVersion, record.inventory.previousVersion);
 	const cells = typeSurfaceCells(document, contracts), oldCells = typeSurfaceCells(oldDocument, contracts);
@@ -272,5 +284,4 @@ export const assertPerlStructuredCallableIntegration = async record => {
 	const entry = document.evidence.find(item => item.id === "perl-structured-callables-installed");
 	assert.deepEqual(entry.artifacts, execution.reports.flatMap(run => run.packages.flatMap(pkg => pkg.artifacts.map(artifact => ({ path: `${run.profile}/${run.path}/${abiName(run)}/${artifact.path}`, sha256: artifact.sha256 })))));
 	assert.ok(entry.files.some(file => file.path === perlStructuredCallableExecutionPath));
-	await assertJvmStructuredCallableIntegration(previous);
 };

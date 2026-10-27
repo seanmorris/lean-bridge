@@ -7,9 +7,9 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
-import { assertPerlRecursiveCallableExecution, assertPerlRecursiveCallableIntegration, perlRecursiveCallableExecutionPath } from "./helpers/perl-recursive-callable-evidence.mjs";
+import { assertPerlRecursiveCallableExecution, assertPerlRecursiveCallableIntegration, perlRecursiveCallableExecutionPath, perlRecursiveCallableProducer } from "./helpers/perl-recursive-callable-evidence.mjs";
 import { beforePerlRecursiveCallables, perlRecursiveCallableHistoryPath, reversePerlRecursiveCallableUpdate } from "./helpers/perl-recursive-callable-source-history.mjs";
-import { beforeDotnetRecursiveCallables } from "./helpers/dotnet-recursive-callable-source-history.mjs";
+import { bytesAtProducer } from "./helpers/producer-source.mjs";
 
 const json = async path => JSON.parse(await readFile(path, "utf8"));
 
@@ -58,9 +58,12 @@ test("recursive Perl receipts reject missing ABIs, modes, faults, ownership and 
 test("recursive Perl source transitions reject unknown bytes and substituted predecessors", async () => {
 	for(const update of (await json(perlRecursiveCallableHistoryPath)).updates)
 	{
-		const source = beforeDotnetRecursiveCallables(update.path, await readFile(update.path, "utf8"));
+		const source = bytesAtProducer(perlRecursiveCallableProducer
+			, update.path, update.currentSha256).toString("utf8");
 		assert.equal(sha256(reversePerlRecursiveCallableUpdate(source, update)), update.previousSha256);
-		assert.equal(sha256(beforePerlRecursiveCallables(update.path, source)), update.previousSha256);
+		assert.equal(sha256(beforePerlRecursiveCallables(
+			update.path, source, update.previousSha256
+		)), update.previousSha256);
 		assert.equal(beforePerlRecursiveCallables(update.path, source, update.currentSha256), source);
 		const unrelated = source + "\n/* unrelated */\n";
 		assert.equal(beforePerlRecursiveCallables(update.path, unrelated), unrelated);

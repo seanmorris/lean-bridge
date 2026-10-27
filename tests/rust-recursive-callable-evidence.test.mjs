@@ -10,9 +10,9 @@ import { sha256 } from "../src/capsule/node.mjs";
 import { compileCallableRustGraphPackageModel } from "../src/backends/rust/callable-graph-model.mjs";
 import { nativeRecursiveCallableReviewedIr } from "./helpers/native-recursive-callable-fixture.mjs";
 import { rustRecursiveOwnershipTests } from "./helpers/rust-recursive-callable-probes.mjs";
-import { assertRustRecursiveCallableExecution, assertRustRecursiveCallableIntegration, rustRecursiveCallableExecutionPath } from "./helpers/rust-recursive-callable-evidence.mjs";
+import { assertRustRecursiveCallableExecution, assertRustRecursiveCallableIntegration, rustRecursiveCallableExecutionPath, rustRecursiveCallableProducer } from "./helpers/rust-recursive-callable-evidence.mjs";
 import { beforeRustRecursiveCallables, rustRecursiveCallableHistoryPath, reverseRustRecursiveCallableUpdate } from "./helpers/rust-recursive-callable-source-history.mjs";
-import { beforeRubyRecursiveCallables } from "./helpers/ruby-recursive-callable-source-history.mjs";
+import { bytesAtProducer } from "./helpers/producer-source.mjs";
 
 const json = async path => JSON.parse(await readFile(path, "utf8"));
 
@@ -59,9 +59,12 @@ test("recursive Rust receipts reject missing paths, faults, ownership and typed 
 test("recursive Rust source transitions reject unknown bytes and substituted predecessors", async () => {
 	for(const update of (await json(rustRecursiveCallableHistoryPath)).updates)
 	{
-		const source = beforeRubyRecursiveCallables(update.path, await readFile(update.path, "utf8"));
+		const source = bytesAtProducer(rustRecursiveCallableProducer
+			, update.path, update.currentSha256).toString("utf8");
 		assert.equal(sha256(reverseRustRecursiveCallableUpdate(source, update)), update.previousSha256);
-		assert.equal(sha256(beforeRustRecursiveCallables(update.path, source)), update.previousSha256);
+		assert.equal(sha256(beforeRustRecursiveCallables(
+			update.path, source, update.previousSha256
+		)), update.previousSha256);
 		assert.equal(beforeRustRecursiveCallables(update.path, source, update.currentSha256), source);
 		const unrelated = source + "\n/* unrelated */\n";
 		assert.equal(beforeRustRecursiveCallables(update.path, unrelated), unrelated);

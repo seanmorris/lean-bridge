@@ -7,16 +7,23 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { readTypeSurface } from "../../src/adoption/type-surface.mjs";
-import { historicalTypeSurfaceCells as typeSurfaceCells } from "./historical-type-surface-cells.mjs";
+import { moduleAtProducer } from "./producer-module.mjs";
+import {
+	sourceAtProducer, typeSurfaceContractsAtProducer
+} from "./producer-source.mjs";
 import { assertPerlStructuredCallableIntegration } from "./perl-structured-callable-evidence.mjs";
 import { perlStructuredCallableHistoryPath } from "./perl-structured-callable-source-history.mjs";
 import { npmStructuredCallableChangedPaths, reverseNpmStructuredCallableUpdate } from "./npm-structured-callable-source-history.mjs";
 import { beforePhpStructuredCallables } from "./php-structured-callable-source-history.mjs";
 import { npmStructuredCallableDocumentation } from "./npm-structured-callable-documentation.mjs";
 
-// The hub reverses every recognized state, so each read names the milestone digest it stops at.
-const priorSource = async (path, expected) => beforePhpStructuredCallables(path, await readFile(path, "utf8"), expected);
+export const npmStructuredCallableProducer
+	= "073ccdf8eb399e419bdafd233f40d9c55273ebb0";
+const priorSource = async (path, expected) => {
+	const source = sourceAtProducer(npmStructuredCallableProducer, path);
+	return sha256(source) === expected ? source
+		: beforePhpStructuredCallables(path, source, expected);
+};
 
 export const npmStructuredCallableExecutionPath = "docs/evidence/npm-structured-callables-20260925.json";
 export const npmStructuredCallableScope = {
@@ -162,6 +169,7 @@ export const assertNpmStructuredCallableIntegration = async record => {
 	assert.equal(record.previous.path, perlStructuredCallableHistoryPath);
 	const previousBytes = await readFile(record.previous.path); assert.equal(sha256(previousBytes), record.previous.sha256);
 	const previous = JSON.parse(previousBytes);
+	await assertPerlStructuredCallableIntegration(previous);
 	assert.equal(record.execution.path, npmStructuredCallableExecutionPath);
 	const executionBytes = await readFile(record.execution.path); assert.equal(sha256(executionBytes), record.execution.sha256);
 	const execution = JSON.parse(executionBytes); await assertNpmStructuredCallableExecution(execution);
@@ -178,8 +186,11 @@ export const assertNpmStructuredCallableIntegration = async record => {
 		if(previous.sourceHashes[update.path]) assert.equal(update.previousSha256, previous.sourceHashes[update.path]);
 	}
 	for(const [path, digest] of Object.entries(record.additions)) assert.equal(digest, record.sourceHashes[path]);
-	const { document, ...contracts } = { ...await readTypeSurface()
-		, document: JSON.parse(await priorSource("docs/type-surface.v1.json", record.sourceHashes["docs/type-surface.v1.json"])) };
+	const contracts = typeSurfaceContractsAtProducer(npmStructuredCallableProducer);
+	const { typeSurfaceCells } = await moduleAtProducer(
+		npmStructuredCallableProducer, "src/adoption/type-surface.mjs");
+	const document = JSON.parse(await priorSource("docs/type-surface.v1.json"
+		, record.sourceHashes["docs/type-surface.v1.json"]));
 	const old = JSON.parse(restored["docs/type-surface.v1.json"]);
 	assert.equal(document.contractVersion, record.inventory.version); assert.equal(old.contractVersion, record.inventory.previousVersion);
 	const cells = typeSurfaceCells(document, contracts), oldCells = typeSurfaceCells(old, contracts);
@@ -199,5 +210,4 @@ export const assertNpmStructuredCallableIntegration = async record => {
 	const entry = document.evidence.find(item => item.id === "npm-structured-callables-installed");
 	assert.deepEqual(entry.artifacts, execution.report.runs.flatMap(run => [run.receipt.package, run.receipt.runtime].map(item => ({ path: `${run.path}/${item.archive}`, sha256: item.sha256 }))));
 	assert.ok(entry.files.some(file => file.path === npmStructuredCallableExecutionPath));
-	await assertPerlStructuredCallableIntegration(previous);
 };

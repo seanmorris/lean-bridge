@@ -6,8 +6,10 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { readTypeSurface } from "../../src/adoption/type-surface.mjs";
-import { historicalTypeSurfaceCells as typeSurfaceCells } from "./historical-type-surface-cells.mjs";
+import { moduleAtProducer } from "./producer-module.mjs";
+import {
+	sourceAtProducer, typeSurfaceContractsAtProducer
+} from "./producer-source.mjs";
 import { assertPhpCiIntegration } from "./php-ci-regression-evidence.mjs";
 import { phpCiHistoryPath } from "./php-ci-regression-source-history.mjs";
 import { assertPythonStructuredCallableExecution, pythonStructuredCallableExecutionPath } from "./python-structured-callable-evidence.mjs";
@@ -16,7 +18,13 @@ import { pythonRecursiveCallableDocumentation } from "./python-recursive-callabl
 import { pythonRecursiveCallableChangedPaths, reversePythonRecursiveCallableUpdate } from "./python-recursive-callable-source-history.mjs";
 import { beforeRustRecursiveCallables } from "./rust-recursive-callable-source-history.mjs";
 
-const priorSource = async (path, expected) => beforeRustRecursiveCallables(path, await readFile(path, "utf8"), expected);
+export const pythonRecursiveCallableProducer
+	= "172baa67067a549454fb79449d205f939474e58b";
+const priorSource = async (path, expected) => {
+	const source = sourceAtProducer(pythonRecursiveCallableProducer, path);
+	return sha256(source) === expected ? source
+		: beforeRustRecursiveCallables(path, source, expected);
+};
 
 export const pythonRecursiveCallableBaseline = "53ccb05a9ad93cebf37c17a5b4ea2415275ee287";
 export const pythonRecursiveCallableExecutionPath = "docs/evidence/python-recursive-callables-20260925.json";
@@ -147,6 +155,7 @@ export const assertPythonRecursiveCallableIntegration = async record => {
 	assert.deepEqual(record.scope, pythonRecursiveCallableScope);
 	assert.deepEqual(record.inventory, { previousVersion: "0.98.2", version: "0.99.0", previousInstalled: 4790, installed: 4794, total: 6562 });
 	const previous = await authenticated(record.previous, phpCiHistoryPath);
+	await assertPhpCiIntegration(previous);
 	const execution = await authenticated(record.execution, pythonRecursiveCallableExecutionPath);
 	await assertPythonRecursiveCallableExecution(execution);
 	assert.deepEqual(record.updates.map(update => update.path).sort(), pythonRecursiveCallableChangedPaths);
@@ -162,7 +171,10 @@ export const assertPythonRecursiveCallableIntegration = async record => {
 		restored[update.path] = reversePythonRecursiveCallableUpdate(await priorSource(update.path, update.currentSha256), update);
 	}
 	for(const [path, hash] of Object.entries(record.additions)) assert.equal(hash, record.sourceHashes[path]);
-	const { document: current, ...contracts } = await readTypeSurface(); assert.ok(current.contractVersion);
+	const contracts = typeSurfaceContractsAtProducer(
+		pythonRecursiveCallableProducer);
+	const { typeSurfaceCells } = await moduleAtProducer(
+		pythonRecursiveCallableProducer, "src/adoption/type-surface.mjs");
 	const document = JSON.parse(await priorSource("docs/type-surface.v1.json", record.sourceHashes["docs/type-surface.v1.json"])), old = JSON.parse(restored["docs/type-surface.v1.json"]);
 	assert.equal(document.contractVersion, "0.99.0"); assert.equal(old.contractVersion, "0.98.2");
 	const cells = typeSurfaceCells(document, contracts), oldCells = typeSurfaceCells(old, contracts);
@@ -183,5 +195,4 @@ export const assertPythonRecursiveCallableIntegration = async record => {
 	const entry = document.evidence.find(item => item.id === "python-recursive-callables-installed");
 	assert.deepEqual(entry.artifacts, execution.reports.flatMap(run => run.packages.flatMap(pkg => pkg.artifacts.map(artifact => ({ path: `python/${run.path}/${artifact.path}`, sha256: artifact.sha256 })))));
 	assert.ok(entry.files.some(file => file.path === pythonRecursiveCallableExecutionPath));
-	await assertPhpCiIntegration(previous);
 };

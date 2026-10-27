@@ -7,9 +7,9 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
-import { assertRubyRecursiveCallableExecution, assertRubyRecursiveCallableIntegration, rubyRecursiveCallableExecutionPath } from "./helpers/ruby-recursive-callable-evidence.mjs";
+import { assertRubyRecursiveCallableExecution, assertRubyRecursiveCallableIntegration, rubyRecursiveCallableExecutionPath, rubyRecursiveCallableProducer } from "./helpers/ruby-recursive-callable-evidence.mjs";
 import { beforeRubyRecursiveCallables, rubyRecursiveCallableHistoryPath, reverseRubyRecursiveCallableUpdate } from "./helpers/ruby-recursive-callable-source-history.mjs";
-import { beforePerlRecursiveCallables } from "./helpers/perl-recursive-callable-source-history.mjs";
+import { bytesAtProducer } from "./helpers/producer-source.mjs";
 
 const json = async path => JSON.parse(await readFile(path, "utf8"));
 
@@ -51,9 +51,12 @@ test("recursive Ruby receipts reject missing paths, faults, ownership and exampl
 test("recursive Ruby source transitions reject unknown bytes and substituted predecessors", async () => {
 	for(const update of (await json(rubyRecursiveCallableHistoryPath)).updates)
 	{
-		const source = beforePerlRecursiveCallables(update.path, await readFile(update.path, "utf8"));
+		const source = bytesAtProducer(rubyRecursiveCallableProducer
+			, update.path, update.currentSha256).toString("utf8");
 		assert.equal(sha256(reverseRubyRecursiveCallableUpdate(source, update)), update.previousSha256);
-		assert.equal(sha256(beforeRubyRecursiveCallables(update.path, source)), update.previousSha256);
+		assert.equal(sha256(beforeRubyRecursiveCallables(
+			update.path, source, update.previousSha256
+		)), update.previousSha256);
 		assert.equal(beforeRubyRecursiveCallables(update.path, source, update.currentSha256), source);
 		const unrelated = source + "\n/* unrelated */\n";
 		assert.equal(beforeRubyRecursiveCallables(update.path, unrelated), unrelated);

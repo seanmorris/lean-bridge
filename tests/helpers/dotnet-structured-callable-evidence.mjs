@@ -151,6 +151,7 @@ export const assertDotnetStructuredCallableIntegration = async record => {
 	assert.equal(record.previous.path, rubyStructuredCallableHistoryPath);
 	const oldBytes = await readFile(record.previous.path); assert.equal(sha256(oldBytes), record.previous.sha256);
 	const previous = JSON.parse(oldBytes);
+	await assertRubyStructuredCallableIntegration(previous);
 	assert.equal(record.execution.path, dotnetStructuredCallableExecutionPath);
 	const bytes = await readFile(record.execution.path); assert.equal(sha256(bytes), record.execution.sha256);
 	const execution = JSON.parse(bytes); await assertDotnetStructuredCallableExecution(execution);
@@ -199,5 +200,4 @@ export const assertDotnetStructuredCallableIntegration = async record => {
 	const entry = document.evidence.find(item => item.id === "dotnet-structured-callables-installed");
 	assert.deepEqual(entry.artifacts, execution.reports.flatMap(run => run.packages.flatMap(pkg => pkg.artifacts.map(artifact => ({ path: `dotnet/${run.path}/${artifact.path}`, sha256: artifact.sha256 })))));
 	assert.ok(entry.files.some(file => file.path === dotnetStructuredCallableExecutionPath));
-	await assertRubyStructuredCallableIntegration(previous);
 };

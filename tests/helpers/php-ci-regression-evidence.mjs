@@ -124,6 +124,7 @@ export const assertPhpCiIntegration = async record => {
 	assert.equal(record.schemaVersion, 1); assert.equal(record.planNode, 1219);
 	assert.equal(record.kind, "php-ci-regression-integration"); assert.equal(record.baselineRevision, phpCiBaseline);
 	const previous = await authenticated(record.previous, closureThreadHistoryPath);
+	await assertClosureThreadIntegration(previous);
 	const execution = await authenticated(record.execution, phpCiExecutionPath);
 	await assertPhpCiExecution(execution);
 	assert.deepEqual(record.updates.map(update => update.path).sort(), phpCiChangedPaths);
@@ -148,5 +149,4 @@ export const assertPhpCiIntegration = async record => {
 	assert.deepEqual(cells, typeSurfaceCells(old, contracts)); assert.equal(cells.length, 6562);
 	assert.equal(cells.filter(cell => cell.stages.installedExecution.state === "passed").length, 4790);
 	assert.deepEqual(record.updates.filter(update => update.path.startsWith("src/")).map(update => update.path), ["src/adoption/test-profiles.mjs"]);
-	await assertClosureThreadIntegration(previous);
 };

@@ -7,9 +7,9 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
-import { assertPythonRecursiveCallableExecution, assertPythonRecursiveCallableIntegration, pythonRecursiveCallableExecutionPath } from "./helpers/python-recursive-callable-evidence.mjs";
+import { assertPythonRecursiveCallableExecution, assertPythonRecursiveCallableIntegration, pythonRecursiveCallableExecutionPath, pythonRecursiveCallableProducer } from "./helpers/python-recursive-callable-evidence.mjs";
 import { beforePythonRecursiveCallables, pythonRecursiveCallableHistoryPath, reversePythonRecursiveCallableUpdate } from "./helpers/python-recursive-callable-source-history.mjs";
-import { beforeRustRecursiveCallables } from "./helpers/rust-recursive-callable-source-history.mjs";
+import { bytesAtProducer } from "./helpers/producer-source.mjs";
 
 const json = async path => JSON.parse(await readFile(path, "utf8"));
 
@@ -45,9 +45,12 @@ test("recursive Python receipts reject missing paths, faults, ownership and type
 test("recursive Python source transitions reject unknown bytes and substituted predecessors", async () => {
 	for(const update of (await json(pythonRecursiveCallableHistoryPath)).updates)
 	{
-		const source = beforeRustRecursiveCallables(update.path, await readFile(update.path, "utf8"));
+		const source = bytesAtProducer(pythonRecursiveCallableProducer
+			, update.path, update.currentSha256).toString("utf8");
 		assert.equal(sha256(reversePythonRecursiveCallableUpdate(source, update)), update.previousSha256);
-		assert.equal(sha256(beforePythonRecursiveCallables(update.path, source)), update.previousSha256);
+		assert.equal(sha256(beforePythonRecursiveCallables(
+			update.path, source, update.previousSha256
+		)), update.previousSha256);
 		assert.equal(beforePythonRecursiveCallables(update.path, source, update.currentSha256), source);
 		const unrelated = source + "\n/* unrelated */\n";
 		assert.equal(beforePythonRecursiveCallables(update.path, unrelated), unrelated);

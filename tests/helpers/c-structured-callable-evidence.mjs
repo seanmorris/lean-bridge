@@ -4,7 +4,6 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { historicalTypeSurfaceCells as typeSurfaceCells } from "./historical-type-surface-cells.mjs";
 import { structuredCallableExports } from "./structured-callable-fixture.mjs";
@@ -105,10 +104,12 @@ export const assertCStructuredCallableIntegration = async record => {
 	assert.deepEqual(record.scope, scope);
 	assert.deepEqual(record.inventory, { previousVersion: "0.85.0", version: "0.86.0", previousInstalled: 4218, installed: 4250, total: 6562 });
 	assert.equal(record.previous.path, witAcceptancePath);
-	const previousBytes = await readFile(witAcceptancePath); assert.equal(sha256(previousBytes), record.previous.sha256);
+	const previousBytes = await priorSource(
+		witAcceptancePath, record.previous.sha256);
 	const previous = JSON.parse(previousBytes);
+	await assertWitRecursiveAcceptance(previous);
 	assert.equal(record.execution.path, cStructuredCallableExecutionPath);
-	const bytes = await readFile(record.execution.path); assert.equal(sha256(bytes), record.execution.sha256);
+	const bytes = await priorSource(record.execution.path, record.execution.sha256);
 	const execution = JSON.parse(bytes); assertCStructuredCallableExecution(execution);
 	assert.deepEqual(record.updates.map(update => update.path).sort(), cStructuredCallableChangedPaths);
 	assert.deepEqual(Object.keys(record.additions).sort(), cStructuredCallableAddedPaths);
@@ -147,5 +148,4 @@ export const assertCStructuredCallableIntegration = async record => {
 	const entry = document.evidence.find(item => item.id === "c-structured-callables-installed");
 	assert.deepEqual(entry.artifacts, execution.reports.flatMap(run => run.packages.flatMap(pkg => pkg.artifacts.map(artifact => ({ path: `c/${run.path}/${artifact.path}`, sha256: artifact.sha256 })))));
 	assert.ok(entry.files.some(file => file.path === cStructuredCallableExecutionPath));
-	await assertWitRecursiveAcceptance(previous);
 };

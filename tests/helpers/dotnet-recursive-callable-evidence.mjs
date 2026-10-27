@@ -6,8 +6,10 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { readTypeSurface } from "../../src/adoption/type-surface.mjs";
-import { historicalTypeSurfaceCells as typeSurfaceCells } from "./historical-type-surface-cells.mjs";
+import { moduleAtProducer } from "./producer-module.mjs";
+import {
+	sourceAtProducer, typeSurfaceContractsAtProducer
+} from "./producer-source.mjs";
 import { assertPerlRecursiveCallableIntegration } from "./perl-recursive-callable-evidence.mjs";
 import { perlRecursiveCallableHistoryPath } from "./perl-recursive-callable-source-history.mjs";
 import { assertDotnetStructuredCallableExecution, dotnetStructuredCallableExecutionPath } from "./dotnet-structured-callable-evidence.mjs";
@@ -18,8 +20,13 @@ import { dotnetRecursiveMixedFixture } from "./dotnet-recursive-callable-mixed.m
 import { dotnetRecursiveCallableChangedPaths, reverseDotnetRecursiveCallableUpdate } from "./dotnet-recursive-callable-source-history.mjs";
 import { beforeJvmRecursiveCallables } from "./jvm-recursive-callable-source-history.mjs";
 
-// The hub reverses every recognized state, so each read names the milestone digest it stops at.
-const priorSource = async (path, expected) => beforeJvmRecursiveCallables(path, await readFile(path, "utf8"), expected);
+export const dotnetRecursiveCallableProducer
+	= "e3ebe7870a10e98d0215b3b09fc3910d719ddc0b";
+const priorSource = async (path, expected) => {
+	const source = sourceAtProducer(dotnetRecursiveCallableProducer, path);
+	return sha256(source) === expected ? source
+		: beforeJvmRecursiveCallables(path, source, expected);
+};
 
 export const dotnetRecursiveCallableBaseline = "a8a255329c102155add79169d71a05246190b8fd";
 export const dotnetRecursiveCallableExecutionPath = "docs/evidence/dotnet-recursive-callables-20260926.json";
@@ -52,6 +59,7 @@ export const assertDotnetRecursiveCallableIntegration = async record => {
 	assert.deepEqual(record.scope, dotnetRecursiveCallableScope);
 	assert.deepEqual(record.inventory, { previousVersion: "0.102.0", version: "0.103.0", previousInstalled: 4806, installed: 4810, total: 6562 });
 	const previous = await authenticated(record.previous, perlRecursiveCallableHistoryPath);
+	await assertPerlRecursiveCallableIntegration(previous);
 	const execution = await authenticated(record.execution, dotnetRecursiveCallableExecutionPath);
 	await assertDotnetRecursiveCallableExecution(execution);
 	assert.deepEqual(record.updates.map(update => update.path).sort(), dotnetRecursiveCallableChangedPaths);
@@ -67,7 +75,10 @@ export const assertDotnetRecursiveCallableIntegration = async record => {
 		restored[update.path] = reverseDotnetRecursiveCallableUpdate(await priorSource(update.path, update.currentSha256), update);
 	}
 	for(const [path, hash] of Object.entries(record.additions)) assert.equal(hash, record.sourceHashes[path]);
-	const { document: current, ...contracts } = await readTypeSurface(); void current;
+	const contracts = typeSurfaceContractsAtProducer(
+		dotnetRecursiveCallableProducer);
+	const { typeSurfaceCells } = await moduleAtProducer(
+		dotnetRecursiveCallableProducer, "src/adoption/type-surface.mjs");
 	const document = JSON.parse(await priorSource("docs/type-surface.v1.json", record.sourceHashes["docs/type-surface.v1.json"])), old = JSON.parse(restored["docs/type-surface.v1.json"]);
 	assert.equal(document.contractVersion, "0.103.0"); assert.equal(old.contractVersion, "0.102.0");
 	const cells = typeSurfaceCells(document, contracts), oldCells = typeSurfaceCells(old, contracts);
@@ -88,7 +99,6 @@ export const assertDotnetRecursiveCallableIntegration = async record => {
 	const entry = document.evidence.find(item => item.id === "dotnet-recursive-callables-installed");
 	assert.deepEqual(entry.artifacts, execution.reports.flatMap(run => run.packages.flatMap(pkg => pkg.artifacts.map(artifact => ({ path: `dotnet/${run.path}/${artifact.path}`, sha256: artifact.sha256 })))));
 	assert.ok(entry.files.some(file => file.path === dotnetRecursiveCallableExecutionPath));
-	await assertPerlRecursiveCallableIntegration(previous);
 };
 export const dotnetRecursiveCallableProjectionPaths = [
 	...["model", "runtime", "calls", "package"].map(name => `src/backends/dotnet/callable-graph-${name}.mjs`)

@@ -29,9 +29,12 @@ const scope = {
 	, structuredCallbacks: false
 	, ownedResourceAggregates: false
 };
-const referencedJson = async (reference, path) => {
+const referencedJson = async (
+	reference, path, readSource = source => readFile(source)
+) => {
 	assert.equal(reference.path, path);
-	const bytes = await readFile(path); assert.equal(sha256(bytes), reference.sha256, path);
+	const bytes = await readSource(path, reference.sha256);
+	assert.equal(sha256(bytes), reference.sha256, path);
 	return JSON.parse(bytes);
 };
 
@@ -68,22 +71,26 @@ export const assertWitOrdinaryRegression = record => {
  * @param record - Acceptance index and exact changes since the composition gate.
  */
 export const assertWitRecursiveAcceptance = async record => {
+	const priorSource = (path, expected = record.sourceHashes[path]) =>
+		sourceAtProducer(witRecursiveAcceptanceProducer, path, expected);
 	assert.equal(record.schemaVersion, 1); assert.equal(record.planNode, 1219);
 	assert.equal(record.kind, "wit-recursive-acceptance");
 	assert.equal(record.baselineRevision, "60c4262eacacc6b668f16a6778b535a3f2d68a54");
 	assert.deepEqual(record.scope, scope);
 	assert.deepEqual(record.inventory, { previousVersion: "0.84.0", version: "0.85.0", previousInstalled: 4212, installed: 4218, total: 6562, copiedRecursiveProfiles: 17 });
-	const previous = await referencedJson(record.previous, witCompositionHistoryPath);
-	const execution = await referencedJson(record.execution, witCompositionExecutionPath);
+	const previous = await referencedJson(
+		record.previous, witCompositionHistoryPath, priorSource);
+	await assertWitCompositionIntegration(previous);
+	const execution = await referencedJson(
+		record.execution, witCompositionExecutionPath, priorSource);
 	assert.deepEqual(record.execution, previous.execution);
-	const regression = await referencedJson(record.ordinaryRegression, witOrdinaryRegressionPath);
+	const regression = await referencedJson(
+		record.ordinaryRegression, witOrdinaryRegressionPath, priorSource);
 	assertWitOrdinaryRegression(regression);
 	assert.deepEqual(record.updates.map(update => update.path).sort(), witAcceptanceChangedPaths);
 	assert.deepEqual(Object.keys(record.additions).sort(), witAcceptanceAddedPaths);
 	const paths = [...new Set([...Object.keys(previous.sourceHashes), ...witAcceptanceChangedPaths, ...witAcceptanceAddedPaths])].sort();
 	assert.deepEqual(Object.keys(record.sourceHashes).sort(), paths);
-	const priorSource = (path, expected = record.sourceHashes[path]) =>
-		sourceAtProducer(witRecursiveAcceptanceProducer, path, expected);
 	for(const path of paths) assert.equal(sha256(await priorSource(path)), record.sourceHashes[path], path);
 	const restored = {};
 	for(const update of record.updates)
@@ -133,5 +140,4 @@ export const assertWitRecursiveAcceptance = async record => {
 	assert.deepEqual(entry.artifacts, artifacts);
 	assert.ok(entry.files.some(file => file.path === witCompositionExecutionPath));
 	assert.ok(entry.files.some(file => file.path === witOrdinaryRegressionPath));
-	await assertWitCompositionIntegration(previous);
 };
