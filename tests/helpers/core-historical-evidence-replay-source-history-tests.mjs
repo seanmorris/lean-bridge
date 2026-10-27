@@ -10,6 +10,17 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import {
+	beforeCoreExactHeadHostedReplayRepairSource
+	, coreExactHeadHostedReplayRepairHistoryAdditions
+	, coreExactHeadHostedReplayRepairHistoryPath
+	, coreExactHeadHostedReplayRepairImplementation
+	, coreExactHeadHostedReplayRepairImplementationAdditions
+	, coreExactHeadHostedReplayRepairImplementationPaths
+	, coreExactHeadHostedReplayRepairIntegrationPaths
+	, coreExactHeadHostedReplayRepairPredecessor
+	, reverseCoreExactHeadHostedReplayRepairUpdate
+} from "./core-exact-head-hosted-replay-repair-source-history.mjs";
+import {
 	beforeCoreInheritedRecordTypeSurfaceBatchSource
 	, coreInheritedRecordTypeSurfaceBatchHistoryAdditions
 	, coreInheritedRecordTypeSurfaceBatchHistoryPath
@@ -345,6 +356,9 @@ import { sourceAtFinHistoryMilestone, sourceAtFinHistoryRecord, sourceAtFinHisto
 
 const git = arguments_ => execFileSync("git", arguments_
 	, { encoding: "utf8", maxBuffer: 128 * 1024 * 1024 });
+const readCoreExactHeadHostedReplayRepair = async () => JSON.parse(
+	await readFile(coreExactHeadHostedReplayRepairHistoryPath, "utf8")
+);
 const readCoreInheritedRecordTypeSurfaceBatch = async () => JSON.parse(
 	await readFile(coreInheritedRecordTypeSurfaceBatchHistoryPath, "utf8")
 );
@@ -439,6 +453,87 @@ const readWitBorrowStopBoundary = async () => JSON.parse(await readFile(
 const readReceiverCiStopBoundary = async () => JSON.parse(await readFile(
 	coreReceiverCiStopBoundaryHistoryPath, "utf8"
 ));
+
+test("Core exact-head hosted replay records its complete repair", async () => {
+	const record = await readCoreExactHeadHostedReplayRepair();
+	assert.equal(record.schemaVersion, 1);
+	assert.equal(record.milestone
+		, "core-exact-head-hosted-replay-repair-source-v1");
+	assert.equal(record.predecessorCommit
+		, coreExactHeadHostedReplayRepairPredecessor);
+	assert.equal(record.implementationCommit
+		, coreExactHeadHostedReplayRepairImplementation);
+	assert.deepEqual(record.updates.map(update => update.path)
+		, coreExactHeadHostedReplayRepairImplementationPaths);
+	assert.deepEqual(record.implementationAdditions.map(addition => addition.path)
+		, coreExactHeadHostedReplayRepairImplementationAdditions);
+	assert.deepEqual(record.historyAdditions.map(addition => addition.path)
+		, coreExactHeadHostedReplayRepairHistoryAdditions);
+	assert.deepEqual(record.integrationUpdates.map(update => update.path)
+		, coreExactHeadHostedReplayRepairIntegrationPaths);
+	assert.equal(git(["rev-parse"
+		, `${coreExactHeadHostedReplayRepairImplementation}^`]).trim()
+	, coreExactHeadHostedReplayRepairPredecessor);
+});
+
+test("Core exact-head hosted replay reverses every source transition", async () => {
+	const record = await readCoreExactHeadHostedReplayRepair();
+	for(const update of [...record.updates, ...record.integrationUpdates])
+	{
+		const integration = record.integrationUpdates.includes(update);
+		const current = integration
+			? await sourceAtFinHistoryRecordSource(
+				coreExactHeadHostedReplayRepairHistoryPath, update.path
+					, update.currentSha256
+					, beforeCoreExactHeadHostedReplayRepairSource)
+			: await sourceAtFinHistoryRecord(
+				coreExactHeadHostedReplayRepairHistoryPath, update.path
+					, beforeCoreExactHeadHostedReplayRepairSource);
+		const base = integration
+			? coreExactHeadHostedReplayRepairImplementation
+			: coreExactHeadHostedReplayRepairPredecessor;
+		const previous = git(["show", `${base}:${update.path}`]);
+		assert.equal(reverseCoreExactHeadHostedReplayRepairUpdate(
+			current, update), previous, update.path);
+		assert.equal(beforeFinRefinementSource(
+			update.path, current, update.previousSha256), previous, update.path);
+		assert.ok(finRefinementNormalizationPaths.includes(update.path));
+	}
+	for(const addition of [
+		...record.implementationAdditions, ...record.historyAdditions
+	]) assert.equal(sha256(await sourceAtFinHistoryRecordSource(
+		coreExactHeadHostedReplayRepairHistoryPath
+		, addition.path, addition.currentSha256
+	)), addition.currentSha256, addition.path);
+});
+
+test("Core exact-head hosted replay rejects altered transitions", async () => {
+	const update = (await readCoreExactHeadHostedReplayRepair()).updates[0];
+	const current = await sourceAtFinHistoryRecord(
+		coreExactHeadHostedReplayRepairHistoryPath, update.path
+		, beforeCoreExactHeadHostedReplayRepairSource);
+	for(const forged of [{ ...update, currentSha256: "0".repeat(64) }
+		, { ...update, previousSha256: "0".repeat(64) }
+		, { ...update, path: "unrelated.mjs" }
+		, { ...update, edits: [] }
+		, { ...update, edits: [...update.edits, update.edits[0]] }])
+		assert.throws(() => reverseCoreExactHeadHostedReplayRepairUpdate(
+			current, forged));
+	assert.equal(beforeCoreExactHeadHostedReplayRepairSource(
+		update.path, current + "unknown"), current + "unknown");
+});
+
+test("Core exact-head hosted replay writer refuses another checkout", async t => {
+	const root = await mkdtemp(join(
+		tmpdir(), "lean-core-exact-head-hosted-replay-guard-"));
+	t.after(() => rm(root, { recursive: true }));
+	const result = spawnSync(process.execPath, [resolve(
+		"scripts/update-core-exact-head-hosted-replay-repair-source-history.mjs"
+	)], { cwd: root, encoding: "utf8", timeout: 15_000 });
+	assert.notEqual(result.status, 0);
+	assert.equal(result.stdout, "");
+	assert.deepEqual(await readdir(root), []);
+});
 
 test("Core inherited-record type-surface batching records its exact repair", async () => {
 	const record = await readCoreInheritedRecordTypeSurfaceBatch();
