@@ -35,20 +35,27 @@ test("owned WIT successor authenticates changes and preserves installed classifi
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path], update.path);
 		assert.equal(update.currentSha256, record.sources[update.path], update.path);
-		const current = beforeOwnedJavaScriptNix(update.path, await readFile(update.path, "utf8"));
+		const current = beforeOwnedJavaScriptNix(update.path
+			, await readFile(update.path, "utf8"), update.currentSha256);
 		assert.equal(sha256(beforeOwnedWitProjection(update.path, current)), update.previousSha256);
 		assert.equal(beforeOwnedWitProjection(update.path, current, update.currentSha256), current);
 	}
-	const current = beforeOwnedJavaScriptNix("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8"));
+	const current = beforeOwnedJavaScriptNix("docs/type-surface.v1.json"
+		, await readFile("docs/type-surface.v1.json", "utf8")
+		, record.sources["docs/type-surface.v1.json"]);
 	const prior = JSON.parse(beforeOwnedWitProjection("docs/type-surface.v1.json", current));
-	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedJavaScriptNixHistoricalBytes(file.path, await readFile(file.path)));
+	for(const evidence of prior.evidence) for(const file of evidence.files)
+		file.sha256 = sha256(ownedJavaScriptNixHistoricalBytes(file.path
+			, await readFile(file.path), record.sources[file.path] ?? file.sha256));
 	assert.deepEqual(JSON.parse(current), prior, "Projection tests cannot promote installed support");
 });
 
 test("owned WIT history rejects unknown edits, altered ancestors and overlapping spans", async () => {
 	for(const update of (await read()).updates)
 	{
-		const current = beforeOwnedJavaScriptNix(update.path, await readFile(update.path, "utf8")), unknown = current + "\n/* unrelated */\n";
+		const current = beforeOwnedJavaScriptNix(update.path
+			, await readFile(update.path, "utf8"), update.currentSha256)
+			, unknown = current + "\n/* unrelated */\n";
 		assert.equal(beforeOwnedWitProjection(update.path, unknown), unknown);
 		assert.throws(() => reverseOwnedWitProjectionUpdate(unknown, update));
 		for(const changed of [{ ...update, previousSha256: "0".repeat(64) }

@@ -38,11 +38,17 @@ const collectIndexPins = (value, pins = new Map()) => {
  * @param {object} options - Audit location.
  * @param {string} options.repository - Repository root.
  * @param {string[]} [options.paths] - Optional exact archive subset.
+ * @param {Map<string, string>} [options.authenticatedFiles] - Exact live
+ * path/digest pairs from a completed type-surface byte or receipt pass.
  * @returns {Promise<object[]>} Unique mismatched archive paths.
  */
 export const auditTypeSurfaceArchivePins = async (
-	inventory, { repository = process.cwd(), paths = null } = {}
+	inventory, {
+		repository = process.cwd(), paths = null, authenticatedFiles = null
+	} = {}
 ) => {
+	assert.ok(authenticatedFiles === null
+		|| authenticatedFiles instanceof Map);
 	const selected = paths === null ? null : new Set(paths);
 	const references = new Map();
 	for(const evidence of inventory.evidence)
@@ -69,8 +75,8 @@ export const auditTypeSurfaceArchivePins = async (
 		while(next < entries.length)
 		{
 			const entry = entries[next++];
-			const actualSha256 = digest(await readFile(path.join(
-				repository, entry.path)));
+			const actualSha256 = authenticatedFiles?.get(entry.path)
+				?? digest(await readFile(path.join(repository, entry.path)));
 			if(entry.expectedSha256.size === 1
 				&& entry.expectedSha256.has(actualSha256)) continue;
 			let pins = indexes.get(entry.archiveRoot);

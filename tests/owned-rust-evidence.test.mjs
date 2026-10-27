@@ -53,7 +53,8 @@ test("Rust ownership evidence rejects altered lifetimes, execution and package c
 test("Rust source history preserves exact predecessors and rejects unrecorded edits", async () => {
 	for(const update of (await json(ownedRustHistoryPath)).updates)
 	{
-		const source = beforeOwnedPython(update.path, await readFile(update.path, "utf8"));
+		const source = beforeOwnedPython(update.path
+			, await readFile(update.path, "utf8"), update.currentSha256);
 		assert.equal(sha256(reverseOwnedRustUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeOwnedRust(update.path, source)), update.previousSha256);
 		assert.equal(beforeOwnedRust(update.path, source, update.currentSha256), source);

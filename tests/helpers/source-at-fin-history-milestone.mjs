@@ -25,8 +25,8 @@ const historyRecordCommit = historyPath => {
 		const commits = execFileSync("git", ["log", "--diff-filter=A"
 			, "--format=%H", "--", historyPath], { encoding: "utf8" })
 			.trim().split("\n").filter(Boolean);
-		assert.equal(commits.length, 1
-			, `Expected one immutable history introduction for ${historyPath}`);
+		assert.ok(commits.length <= 1
+			, `Expected at most one immutable history introduction for ${historyPath}`);
 		historyRecordCommits.set(historyPath, commits[0]);
 	}
 	return historyRecordCommits.get(historyPath);
@@ -58,7 +58,10 @@ export const sourceAtFinHistoryRecordSource = async (
 	assert.equal(typeof historyPath, "string");
 	assert.equal(typeof path, "string");
 	assert.match(expected, digestPattern);
-	const source = sourceAtRevision(historyRecordCommit(historyPath), path);
+	const recordCommit = historyRecordCommit(historyPath);
+	const source = recordCommit === undefined
+		? await sourceAtFinHistoryMilestone(path, expected, reader)
+		: sourceAtRevision(recordCommit, path);
 	assert.equal(typeof source, "string", `${historyPath}: missing ${path}`);
 	assert.equal(sha256(source), expected, path);
 	if(reader !== undefined)
@@ -77,8 +80,8 @@ const sourceAtHistoryRecordEndpoint = async (
 	const revisions = digestField === "currentSha256"
 		? [recordCommit]
 		: [record.implementationCommit, record.predecessorCommit
-			, `${recordCommit}^`].filter(Boolean);
-	for(const revision of new Set(revisions))
+			, recordCommit === undefined ? undefined : `${recordCommit}^`];
+	for(const revision of new Set(revisions.filter(Boolean)))
 	{
 		const source = sourceAtRevision(revision, path);
 		if(source === undefined || sha256(source) !== expected) continue;

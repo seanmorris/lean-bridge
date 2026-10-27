@@ -123,7 +123,8 @@ test("primitive-base Native promotion supplements twelve existing C/C++ cells an
 test("primitive-base Native docs name all nineteen bases without claiming pending host or callback matrices", async () => {
 	for(const path of ["docs/consume/c.md", "docs/consume/cpp.md", "docs/javascript-typescript.md", "docs/lean/existing-package.md", "docs/lean/export-decisions.md", "docs/reference/types.md"])
 	{
-		const source = await readFile(path, "utf8");
+		const source = sourceAtHistoryMilestone(
+			nominalPrimitiveSubtypeNativePromotionHistoryPath, path);
 		assert.ok(source.includes("nominal-primitive-subtype-native-20261014/index.json"), path);
 		const compiled = await compileDocumentationPage(source, docPages.find(item => item.source === path), { revision: nominalPrimitiveSubtypeNativePromotionPredecessor });
 		assert.ok(compiled.links.some(link => link.endsWith("nominal-primitive-subtype-native-20261014/index.json")), path);
@@ -132,7 +133,8 @@ test("primitive-base Native docs name all nineteen bases without claiming pendin
 	}
 	for(const path of ["docs/consume/c.md", "docs/consume/cpp.md"])
 	{
-		const native = await readFile(path, "utf8");
+		const native = sourceAtHistoryMilestone(
+			nominalPrimitiveSubtypeNativePromotionHistoryPath, path);
 		for(const text of ["nineteen primitive bases", "64-bit", "normalization", "Linux x64/glibc 2.36"])
 			assert.ok(native.includes(text), text);
 		assert.doesNotMatch(native, /Other primitive-base nominal fixtures, refined callbacks/u);

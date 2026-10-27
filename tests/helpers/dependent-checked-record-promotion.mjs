@@ -99,6 +99,19 @@ export const reconcileDependentCheckedRecordSourcePins = (
 	return { inventory, refreshed };
 };
 
+// These dynamic lane roots cannot be recovered from a single template literal
+// by the conservative sparse-evidence planner.
+// core-evidence-prefix: dependent-checked-record-browser-
+// core-evidence-prefix: dependent-checked-record-native-
+// core-evidence-prefix: dependent-checked-record-dotnet-
+// core-evidence-prefix: dependent-checked-record-jvm-
+// core-evidence-prefix: dependent-checked-record-php-
+// core-evidence-prefix: dependent-checked-record-php-wasm-
+// core-evidence-prefix: dependent-checked-record-python-
+// core-evidence-prefix: dependent-checked-record-ruby-
+// core-evidence-prefix: dependent-checked-record-rust-
+// core-evidence-prefix: dependent-checked-record-perl-
+// core-evidence-prefix: dependent-checked-record-wit-
 const evidenceRoot = lane => `docs/evidence/dependent-checked-record-${lane}-20261021`;
 const verifierPath = lane => `tests/helpers/dependent-checked-record-${lane}-evidence.mjs`;
 const verifierUrl = path => new URL(`../../${path}`, import.meta.url).href;

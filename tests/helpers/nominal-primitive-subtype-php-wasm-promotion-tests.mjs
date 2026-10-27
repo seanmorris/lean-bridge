@@ -16,7 +16,9 @@ import {
 	nominalPrimitiveSubtypePhpWasmPromotionHistoryPath
 	, nominalPrimitiveSubtypePhpWasmPromotionPredecessor
 } from "./nominal-primitive-subtype-php-wasm-promotion-history.mjs";
-import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
+import {
+	sourceAtHistoryMilestone, withHistoryMilestoneSourcePins
+} from "./source-history-test-source.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import {
 	beforeNestedCheckedRecordNativeCorrectionPins
@@ -152,12 +154,14 @@ test("primitive-base PHP-Wasm promotion rejects narrowed references and overlaps
 test("primitive-base PHP-Wasm promotion supplements six cells only", async () => {
 	const original = predecessor();
 	const references = await nominalPrimitiveSubtypePhpWasmReferences();
-	const proposed = beforeRecursiveSubtypePhpWasmPromotionPins(
+	const proposed = withHistoryMilestoneSourcePins(
+		nominalPrimitiveSubtypePhpWasmPromotionHistoryPath
+		, beforeRecursiveSubtypePhpWasmPromotionPins(
 		beforeNestedCheckedRecordBrowserPromotionPins(
 			beforeNominalPrimitiveSubtypeWitPromotionPins(
 				beforeNominalPrimitiveSubtypeJvmPromotionPins(
 					beforeNestedCheckedRecordNativeCorrectionPins(
-						await promoteNominalPrimitiveSubtypePhpWasm(original, references))))));
+						await promoteNominalPrimitiveSubtypePhpWasm(original, references)))))));
 	const { document: live, ...contracts } = await readTypeSurface();
 	const history = JSON.parse(await readFile(
 		nominalPrimitiveSubtypePhpWasmPromotionHistoryPath, "utf8"));

@@ -50,6 +50,10 @@ const stopDigestViolations = (path, source, reader) => {
 	const tree = ts.createSourceFile(path, source
 		, ts.ScriptTarget.Latest, true, ts.ScriptKind.JS);
 	const violations = [];
+	const enclosingArrow = node => {
+		for(let current = node.parent; current; current = current.parent)
+			if(ts.isArrowFunction(current)) return current;
+	};
 	let calls = 0;
 	const visit = node => {
 		const tracked = ts.isCallExpression(node) && ts.isIdentifier(node.expression)
@@ -60,8 +64,9 @@ const stopDigestViolations = (path, source, reader) => {
 			const wrapper = node.expression.text === reader;
 			if(wrapper)
 			{
-				assert.ok(ts.isArrowFunction(node.parent));
-				if(JSON.stringify(node.parent.parameters.map(p => p.name.getText(tree)))
+				const arrow = enclosingArrow(node);
+				assert.ok(arrow);
+				if(JSON.stringify(arrow.parameters.map(p => p.name.getText(tree)))
 					!== JSON.stringify(["path", "expected"]))
 					violations.push("Wrapper must accept the expected digest");
 			}
@@ -91,7 +96,8 @@ test("Core recursive source callers preserve each recorded stop digest", async (
 		assert.deepEqual(stopDigestViolations(path, source, item.reader), [], path);
 		for(const [before, after] of [
 			["async (path, expected)", "async path"]
-			, ['await readFile(path, "utf8"), expected)', 'await readFile(path, "utf8"))']
+			, [`${item.reader}(path, source, expected)`
+				, `${item.reader}(path, source)`]
 			, ["priorSource(path, record.sourceHashes[path])", "priorSource(path)"]
 			, ["priorSource(update.path, update.currentSha256)", "priorSource(update.path)"]
 			, [`priorSource("${inventory}", record.sourceHashes["${inventory}"])`

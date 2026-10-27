@@ -125,6 +125,16 @@ export const callbackCheckedRecordHostedOriginal = original;
 export const callbackCheckedRecordHostedLanes
 	= Object.freeze(Object.keys(lanes));
 
+// The lane argument is intentionally dynamic. Keep each immutable archive root
+// explicit for Core's conservative sparse-evidence planner.
+// core-evidence-prefix: callback-checked-record-browser-
+// core-evidence-prefix: callback-checked-record-native-
+// core-evidence-prefix: callback-checked-record-languages-
+// core-evidence-prefix: callback-checked-record-perl-
+// core-evidence-prefix: callback-checked-record-dotnet-
+// core-evidence-prefix: callback-checked-record-jvm-
+// core-evidence-prefix: callback-checked-record-php-native-
+// core-evidence-prefix: callback-checked-record-wit-wasi-
 /**
  * Immutable archive root for the retained-package callback acceptance rerun.
  *

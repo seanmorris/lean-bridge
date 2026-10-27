@@ -42,6 +42,16 @@ const definition = lane => {
 	return selected;
 };
 
+// The exact dates vary by lane, so expose each closed archive family to Core's
+// conservative sparse-evidence planner.
+// core-evidence-prefix: owned-subtype-javascript-hosted-
+// core-evidence-prefix: owned-subtype-native-hosted-
+// core-evidence-prefix: owned-subtype-perl-hosted-
+// core-evidence-prefix: owned-subtype-languages-hosted-
+// core-evidence-prefix: owned-subtype-dotnet-hosted-
+// core-evidence-prefix: owned-subtype-jvm-hosted-
+// core-evidence-prefix: owned-subtype-php-native-hosted-
+// core-evidence-prefix: owned-subtype-wit-wasi-hosted-
 /**
  * Exact immutable archive root; never fall back to a local qualification.
  *

@@ -16,6 +16,7 @@ import { ownedRubyCallbackBaseline, ownedRubyCallbackChangedPaths
 	, ownedRubyCallbackHistoryPath, ownedRubyCallbackHistorySha256 } from "./owned-ruby-callback-result-history.mjs";
 import { unpackOwnedCallbackReports } from "./owned-callback-result-evidence.mjs";
 import { beforeOwnedDotnetCallbackResults } from "./owned-dotnet-callback-result-history.mjs";
+import { ownedDotnetCallbackReplay } from "./owned-dotnet-callback-result-replay.mjs";
 
 export const ownedRubyCallbackEvidencePath = "docs/evidence/owned-ruby-callback-results-20261002.json";
 export const ownedRubyCallbackPrevious = Object.freeze({
@@ -121,8 +122,9 @@ export const assertOwnedRubyCallbackCombinedRelease = async (item, mode, additio
  *
  * @param path - Required repository-relative report path.
  * @param item - Complete observed report.
+ * @param replay - Optional authenticated producer dependencies.
  */
-export const assertOwnedRubyCallbackReport = async (path, item) => {
+export const assertOwnedRubyCallbackReport = async (path, item, replay) => {
 	assert.ok(ownedRubyCallbackResultReports.includes(path), path);
 	const name = path.split("/").at(-1).slice(0, -5);
 	if(name.startsWith("runtime-"))
@@ -132,9 +134,9 @@ export const assertOwnedRubyCallbackReport = async (path, item) => {
 	}
 	const mode = name.startsWith("ordinary-") ? "ordinary" : "reviewed";
 	assert.equal(item.mode, mode);
-	if(name === `${mode}-combined-release`) return assertOwnedRubyCallbackCombinedRelease(item, mode);
+	if(name === `${mode}-combined-release`) return assertOwnedRubyCallbackCombinedRelease(item, mode, [], null, replay);
 	assert.equal(item.combined, name === `${mode}-combined-package`);
-	return assertOwnedRubyCallbackPackage(item);
+	return assertOwnedRubyCallbackPackage(item, replay);
 };
 
 /**
@@ -159,6 +161,8 @@ export const assertOwnedRubyCallbackAcceptance = async record => {
 	assert.doesNotMatch(record.run.text, /^not ok|# SKIP|# TODO/mu);
 	const reports = unpackOwnedCallbackReports(record.archive);
 	assert.deepEqual(Object.keys(reports).sort(), [...ownedRubyCallbackResultReports].sort());
-	for(const [path, item] of Object.entries(reports)) await assertOwnedRubyCallbackReport(path, item);
+	const replay = await ownedDotnetCallbackReplay(record.sources);
+	for(const [path, item] of Object.entries(reports))
+		await assertOwnedRubyCallbackReport(path, item, replay);
 	assertOwnedRubyCallbackResultCi(await readFile(".github/workflows/consumer-matrix.yml", "utf8"), JSON.parse(await readFile("package.json", "utf8")));
 };

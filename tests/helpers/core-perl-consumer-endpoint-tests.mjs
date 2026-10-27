@@ -47,6 +47,10 @@ const cases = [
 test("Core Perl and consumer history callers supply exact stop digests", async () => {
 	const violations = [];
 	let calls = 0;
+	const enclosingArrow = node => {
+		for(let current = node.parent; current; current = current.parent)
+			if(ts.isArrowFunction(current)) return current;
+	};
 	const inspect = async (path, expectedFor) => {
 		const tree = ts.createSourceFile(path, await readFile(path, "utf8")
 			, ts.ScriptTarget.Latest, true, ts.ScriptKind.JS);
@@ -71,8 +75,9 @@ test("Core Perl and consumer history callers supply exact stop digests", async (
 		await inspect(`tests/helpers/${item.slug}-evidence.mjs`, (node, tree) => {
 			if(node.expression.text === item.reader)
 			{
-				assert.ok(ts.isArrowFunction(node.parent));
-				const parameters = node.parent.parameters.map(p => p.name.getText(tree));
+				const arrow = enclosingArrow(node);
+				assert.ok(arrow);
+				const parameters = arrow.parameters.map(p => p.name.getText(tree));
 				if(JSON.stringify(parameters) !== JSON.stringify(["path", "expected"]))
 					violations.push(item.label + ": wrapper must accept the stop digest");
 				return "expected";

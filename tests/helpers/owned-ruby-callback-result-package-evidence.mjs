@@ -126,9 +126,10 @@ export const assertOwnedRubyCallbackPackageInputs = async (item, fixture = null,
  * Verify source-free installs, exact public checks, loader probes and relocation.
  *
  * @param item - Original standalone gem execution report.
+ * @param replay - Optional authenticated producer dependencies.
  */
-export const assertOwnedRubyCallbackPackage = async item => {
-	await assertOwnedRubyCallbackPackageInputs(item);
+export const assertOwnedRubyCallbackPackage = async (item, replay) => {
+	await assertOwnedRubyCallbackPackageInputs(item, null, replay);
 	flags(item, ["sourceRemovedBeforeInstall", "cliRemovedBeforeConsumerInstall"
 		, "sourceFreeInstallation", "sourceFreeRelocatedExecution"
 		, "handoffRemovedBeforeRelocatedExecution", "gemCacheRemoved"

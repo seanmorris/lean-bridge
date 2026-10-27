@@ -12,6 +12,7 @@ import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
+import { assertHistoricalTypeSurfaceEvidence } from "./type-surface-historical-evidence.mjs";
 import { beforeCheckedRecordNativeHostSource, checkedRecordNativeHostChangedPaths, checkedRecordNativeHostHistoryPath, checkedRecordNativeHostPredecessor, reverseCheckedRecordNativeHostUpdate } from "./checked-record-native-host-history.mjs";
 
 test("Checked-record native host admission history authenticates exact transitions and refuses unknown edits", async () => {
@@ -59,13 +60,9 @@ test("Checked-record native host admission gate changes source pins without addi
 	assert.ok(pins > 0); assert.deepEqual(current, expected);
 	assert.equal(current.evidence.length, 420); assert.equal(current.observations.length, 519);
 	assert.deepEqual(current.observations, previous.observations);
-	const hashes = new Map();
-	for(const file of current.evidence.flatMap(entry => entry.files))
-	{
-		const key = file.path + ":" + file.sha256;
-		if(!hashes.has(key)) hashes.set(key, sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)));
-		assert.equal(hashes.get(key), file.sha256, file.path);
-	}
+	await assertHistoricalTypeSurfaceEvidence(current
+		, (file, bytes, digest) => beforeFinRefinementSource(
+			file, bytes, digest));
 	assert.equal(sha256(await readFile("docs/evidence/reviewed-subtype-browser-promotion-source-history-20261010.json")), "ade038495212a676ed3a088af8a03e7079bce7b816cbafdff4a5a83494b8333b");
 });
 

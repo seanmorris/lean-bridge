@@ -22,6 +22,9 @@ import {
 import {
 	auditTypeSurfaceArchivePins, reconcileTypeSurfaceArchivePins
 } from "./helpers/type-surface-archive-pins.mjs";
+import {
+	authenticatedTypeSurfaceEvidence
+} from "./helpers/type-surface-historical-evidence.mjs";
 import { alpha } from "../poc/lean-link-spike/descriptors.mjs";
 import { generatePhpBindingPackage } from "../src/backends/php/generate.mjs";
 import { generateRustBindingPackage } from "../src/backends/rust/generate.mjs";
@@ -75,7 +78,10 @@ const callbackCheckedRecordLanes = Object.freeze({
 });
 
 test("immutable archive pins agree with their retained indices", async () => {
-	assert.deepEqual(await auditTypeSurfaceArchivePins(document), []);
+	const authenticatedFiles = await authenticatedTypeSurfaceEvidence();
+	assert.deepEqual(await auditTypeSurfaceArchivePins(document, {
+		authenticatedFiles
+	}), []);
 	const candidate = structuredClone(document);
 	const archivePath
 		= "docs/evidence/zero-payload-checked-record-native-20261021/sources/archiver/src/analyze/owned-metadata-graph.mjs";
@@ -84,7 +90,7 @@ test("immutable archive pins agree with their retained indices", async () => {
 	const file = evidence.files.find(item => item.path === archivePath);
 	file.sha256 = "0".repeat(64);
 	const mismatches = await auditTypeSurfaceArchivePins(candidate, {
-		paths: [archivePath]
+		paths: [archivePath], authenticatedFiles
 	});
 	assert.equal(mismatches.length, 1);
 	assert.equal(mismatches[0].path, file.path);

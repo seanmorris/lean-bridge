@@ -45,7 +45,9 @@ test("WIT receiver history authenticates sources without inflating support", asy
 	}
 	const path = "docs/type-surface.v1.json", current = beforeOwnedJvmReceiverGc(path, await readFile(path, "utf8"), record.sources[path]);
 	const prior = JSON.parse(beforeOwnedWitReceiver(path, current));
-	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedJvmReceiverGcHistoricalBytes(file.path, await readFile(file.path), record.sources[file.path]));
+	for(const evidence of prior.evidence) for(const file of evidence.files)
+		file.sha256 = sha256(ownedJvmReceiverGcHistoricalBytes(file.path
+			, await readFile(file.path), record.sources[file.path] ?? file.sha256));
 	assert.deepEqual(JSON.parse(current), prior);
 	for(const name of ["model", "resource", "packaging", "resource-packaging", "ci", "evidence"])
 		assert.equal(classifyRepositoryTest(`tests/wit-owned-receiver-${name}.test.mjs`), "contract");

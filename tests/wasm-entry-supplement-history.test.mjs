@@ -17,6 +17,7 @@ import { beforeArrayRolloutSource } from "./helpers/generic-record-array-rollout
 import { supplementWasmEntryInventory, wasmEntrySupplementObservations } from "./helpers/wasm-entry-supplement.mjs";
 import { beforeWasmEntrySupplementSource, reverseWasmEntrySupplementUpdate, wasmEntrySupplementChangedPaths, wasmEntrySupplementHistoryPath, wasmEntrySupplementPredecessor } from "./helpers/wasm-entry-supplement-source-history.mjs";
 import { sourceAtFinHistoryMilestone, sourceAtFinHistoryRecord } from "./helpers/source-at-fin-history-milestone.mjs";
+import { authenticatedTypeSurfaceEvidence } from "./helpers/type-surface-historical-evidence.mjs";
 
 const wasmEntrySupplementTestPath = "tests/wasm-entry-supplement.test.mjs";
 const wasmEntrySupplementTestSha256
@@ -80,13 +81,11 @@ test("Wasm entry inventory adds sixteen reports, preserves older claims and auth
 		assert.equal(entry.kind, "test"); assert.deepEqual(entry.artifacts, []);
 		assert.match(entry.scope, /package archives and receipt bytes are not retained here/u);
 	}
-	assert.deepEqual((await readTypeSurface()).document, JSON.parse(await readFile(path, "utf8")));
-	const files = new Map();
-	for(const entry of (await readTypeSurface()).document.evidence) for(const file of entry.files)
-	{
-		if(!files.has(file.path)) files.set(file.path, sha256(await readFile(file.path)));
+	const live = await readTypeSurface();
+	assert.deepEqual(live.document, JSON.parse(await readFile(path, "utf8")));
+	const files = await authenticatedTypeSurfaceEvidence();
+	for(const entry of live.document.evidence) for(const file of entry.files)
 		assert.equal(files.get(file.path), file.sha256, file.path);
-	}
 });
 
 test("Wasm entry evidence is registered and both author and consumer guides explain the two modes", async () => {

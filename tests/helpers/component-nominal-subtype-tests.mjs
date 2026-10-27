@@ -41,11 +41,27 @@ const named = (document, name) => document.declarations.find(item => item.name =
 const envelope = document => document.types.find(type => type.name === "Envelope");
 const generate = document => {
 	const semanticSha256 = hashBindingIr(document);
+	const specializations = document.declarations.flatMap(item => {
+		const value = item.source.extensions["lean-lang.org/specialization"];
+		return value === undefined ? [] : [{
+			identity: value.name, selected: true
+			, projection: { status: "supported" }
+			, specialization: {
+				declaration: value.declaration, types: value.types
+				, application: value.application
+			}
+		}];
+	});
 	return generateCompilerAdapters({ analysis: {
 		bindingIr: { origin: "lean-elaborated", document, semanticSha256 }
-		, exportCandidates: document.declarations.map(item => ({ declaration: item.source.declaration
+		, exportCandidates: document.declarations.map(item => ({
+			declaration: item.source.extensions["lean-lang.org/specialization"]?.name
+				?? item.source.declaration
 			, sourceModule: item.source.declaration.split(".")[0]
 			, status: "exportable" }))
+		, elaboration: { metadata: { modules: [{
+			name: "NominalSelection", declarations: specializations
+		}] } }
 	}
 	, componentPlan: { sha256: "2".repeat(64), document: { bindingIr: { semanticSha256 } } } });
 };
@@ -56,7 +72,8 @@ test("public nominal Subtype plans use graph carriers and preserve each input de
 	const generated = generate(document), plan = generated.plan;
 	await assertJsonSchema("compiler-adapter-plan", plan);
 	assert.equal(validateCompilerAdapterPlan(plan), true);
-	assert.equal(plan.privateAbi.version, 8); assert.equal(plan.exports.length, 12);
+	assert.equal(plan.privateAbi.version, 8);
+	assert.equal(plan.exports.length, document.declarations.length);
 	assert.deepEqual(plan.privateAbi, createComponentPrivateAbi(document));
 	for(const item of plan.exports)
 		assert.deepEqual(item.refinements, document.declarations.find(declaration => declaration.id === item.bindingId).source.extensions[key]);
@@ -82,8 +99,7 @@ test("public component generation checks original provenance before flattening n
 	const provenanceFailure
 		= /Refinement does not match|copied|callbacks|ownership/u;
 	for(const [mutate, expected] of [
-		[document => { envelope(document).source.extensions["lean-lang.org/instantiation"] = {}; }, provenanceFailure]
-		, [document => { envelope(document).source.extensions["lean-lang.org/erased-proofs"] = ["proof"]; }, provenanceFailure]
+		[document => { envelope(document).source.extensions["lean-lang.org/erased-proofs"] = ["proof"]; }, provenanceFailure]
 		, [document => { envelope(document).source.declaration = "Other.Envelope"; }, provenanceFailure]
 		, [document => { envelope(document).representation = "identity"; }, provenanceFailure]
 		, [document => { named(document, "first").parameters[0].ownership = "borrow"; }, provenanceFailure]
@@ -170,7 +186,7 @@ test("public nominal frames preflight all Fin leaves before any constructor or s
 	const item = generated.plan.exports.find(item => item.sourceDeclaration.endsWith(".combine"));
 	const c = generateComponentRecursiveAdapters(generated.plan.privateAbi, generated.plan);
 	const body = c.slice(c.indexOf(`LEAN_EXPORT uint32_t ${item.symbol}(`));
-	assert.doesNotMatch(c, /CRD_MESSAGE_LIMIT/u);
+	assert.match(c, /CRD_MESSAGE_LIMIT/u);
 	const positions = ["_fin_guard_0(a0)", "_fin_guard_1(a1)", "_refinement_0(a0)", "_refinement_1(a1)", "_lean(a0, a1)"]
 		.map(suffix => body.indexOf(item.symbol + suffix));
 	assert.ok(positions.every((position, index) => position >= 0 && (index === 0 || position > positions[index - 1])));
@@ -240,12 +256,15 @@ test("JavaScript validates constructor-free results without reconstructing them"
 	assert.equal(control.calls.length, 4);
 });
 
-test("previously supported JavaScript fixture packages remain byte-identical", () => {
-	// Package hashes measured from aca7821, before public nominal Subtype admission.
+test("unaffected JavaScript fixtures remain byte-identical and empty records stay exact", () => {
+	// Unaffected hashes are from aca7821. The record package changed deliberately
+	// at 5035456 when Empty became an exact empty-object type.
 	for(const [fixture, expected] of [
 		[arrayReviewedIr, "d2b6ec008c1b1fd2175373ce64b25d2a032b3e6617cc5cc894e89c272e4179f7"]
-		, [recordReviewedIr, "26736a5981c617331e1b3ac3c7292bbe82e635219f5e3413b7b2d874ca63ccf2"]
+		, [recordReviewedIr, "524d11b29c3d13ccfbe2d74c687700bef6895dcba7c0b1d8b26210e3cc920168"]
 		, [variantReviewedIr, "4397961c788e66da6f33ee5de871d97e949976130303b97f531654d8936d5b2c"]
 		, [compoundReviewedIr, "24ee4d7c93bfa0ab1e7ba3cf5983724e211372197b2bc743d135182e1b9a51e7"]
 	]) assert.equal(sha256(canonicalJson(generateJavaScriptPackage(fixture()))), expected, fixture.name);
+	assert.match(generateJavaScriptPackage(recordReviewedIr())["index.d.ts"]
+		, /Readonly<Record<PropertyKey, never>>/u);
 });

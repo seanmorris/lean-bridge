@@ -13,7 +13,9 @@ import { docPages } from "../../site/registry.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeNominalPrimitiveSubtypeJvmPromotionPins } from "./nominal-primitive-subtype-jvm-promotion-history.mjs";
 import { nominalPrimitiveSubtypeWitPromotionHistoryPath, nominalPrimitiveSubtypeWitPromotionPredecessor } from "./nominal-primitive-subtype-wit-promotion-history.mjs";
-import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
+import {
+	sourceAtHistoryMilestone, withHistoryMilestoneSourcePins
+} from "./source-history-test-source.mjs";
 import { nominalPrimitiveSubtypeWitProducer } from "./nominal-primitive-subtype-wit-provenance.mjs";
 import {
 	nominalPrimitiveSubtypeWitConversion
@@ -114,7 +116,10 @@ test("primitive-base WIT promotion rejects narrowed references and overlaps", as
 
 test("primitive-base WIT promotion supplements six cells only", async () => {
 	const original = predecessor(), references = await nominalPrimitiveSubtypeWitReferences();
-	const proposed = beforeNominalPrimitiveSubtypeJvmPromotionPins(await promoteNominalPrimitiveSubtypeWit(original, references));
+	const proposed = withHistoryMilestoneSourcePins(
+		nominalPrimitiveSubtypeWitPromotionHistoryPath
+		, beforeNominalPrimitiveSubtypeJvmPromotionPins(
+			await promoteNominalPrimitiveSubtypeWit(original, references)));
 	const { document: published, ...contracts } = await readTypeSurface();
 	validateTypeSurface(proposed, contracts);
 	const inventoryPath = "docs/type-surface.v1.json";

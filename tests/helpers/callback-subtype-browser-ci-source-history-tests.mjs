@@ -13,6 +13,9 @@ import {
 	beforeDefaultBranchCiTriggerBudgetSource
 } from "./default-branch-ci-trigger-budget-source-history.mjs";
 import {
+	beforeBoundedRecurringAcceptanceSweepSource
+} from "./bounded-recurring-acceptance-sweep-source-history.mjs";
+import {
 	beforeCallbackSubtypeBrowserArtifactSource
 } from "./callback-subtype-browser-artifact-source-history.mjs";
 import {
@@ -41,9 +44,12 @@ test("callback Subtype browser CI history authenticates every added source", asy
 		assert.equal(execFileSync("git", ["ls-tree", "--name-only"
 			, callbackSubtypeBrowserCiPredecessor, "--", addition.path]
 		, { encoding: "utf8" }).trim(), "", addition.path);
-		const current = beforeDefaultBranchCiTriggerBudgetSource(
+		const recurring = beforeBoundedRecurringAcceptanceSweepSource(
 			addition.path, await readFile(addition.path, "utf8")
 			, addition.currentSha256
+		);
+		const current = beforeDefaultBranchCiTriggerBudgetSource(
+			addition.path, recurring, addition.currentSha256
 		);
 		const source = beforeCallbackSubtypeBrowserArtifactSource(
 			addition.path, current

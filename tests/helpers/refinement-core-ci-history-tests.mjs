@@ -12,6 +12,7 @@ import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
+import { assertHistoricalTypeSurfaceEvidence } from "./type-surface-historical-evidence.mjs";
 import { beforeRefinementCoreCiSource, refinementCoreCiChangedPaths, refinementCoreCiHistoryPath, refinementCoreCiPredecessor, reverseRefinementCoreCiUpdate } from "./refinement-core-ci-history.mjs";
 
 test("Refinement Core CI repairs history authenticates exact transitions and refuses unknown edits", async () => {
@@ -61,13 +62,9 @@ test("Refinement Core CI repairs changes only source pins and preserves all inst
 	assert.equal(pins, 5); assert.deepEqual(current, expected);
 	assert.equal(current.evidence.length, 436); assert.equal(current.observations.length, 551);
 	assert.deepEqual(current.observations, previous.observations);
-	const hashes = new Map();
-	for(const file of current.evidence.flatMap(entry => entry.files))
-	{
-		const key = file.path + ":" + file.sha256;
-		if(!hashes.has(key)) hashes.set(key, sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)));
-		assert.equal(hashes.get(key), file.sha256, file.path);
-	}
+	await assertHistoricalTypeSurfaceEvidence(current
+		, (file, bytes, digest) => beforeFinRefinementSource(
+			file, bytes, digest));
 	assert.equal(sha256(await readFile("docs/evidence/checked-record-host-ci-source-history-20261011.json")), "9fa30cc51ec6911a0ec43305c252f7be0dba7d3958088ab7e7206bba6d5e9ad2");
 });
 

@@ -93,6 +93,45 @@ test("Core evidence prefixes do not broaden non-enumerating source", () => {
 		, "template.mjs").includes("owned-subtype-"));
 });
 
+test("Core evidence planning closes dynamic callback and dependent lanes", async () => {
+	const callbackLanes = [
+		"browser", "native", "languages", "perl", "dotnet", "jvm"
+		, "php-native", "wit-wasi"
+	];
+	const callbackDirectories = callbackLanes.map(lane =>
+		`callback-checked-record-${lane}-20990101`);
+	const callbackSource = await readFile(
+		"tests/helpers/callback-checked-record-hosted-evidence-sources.mjs"
+		, "utf8");
+	assert.deepEqual([...coreContractEvidenceDirectoryReferences(
+		callbackSource
+		, "tests/helpers/callback-checked-record-hosted-evidence-sources.mjs"
+		, callbackDirectories)].sort(), callbackDirectories.sort());
+
+	const dependentLanes = [
+		"browser", "native", "dotnet", "jvm", "php", "php-wasm"
+		, "python", "ruby", "rust", "perl", "wit"
+	];
+	const dependentDirectories = dependentLanes.map(lane =>
+		`dependent-checked-record-${lane}-20990101`);
+	const dependentSource = await readFile(
+		"tests/helpers/dependent-checked-record-promotion.mjs", "utf8");
+	assert.deepEqual([...coreContractEvidenceDirectoryReferences(
+		dependentSource, "tests/helpers/dependent-checked-record-promotion.mjs"
+		, dependentDirectories)].sort(), dependentDirectories.sort());
+
+	const ownedDirectories = [
+		"javascript", "native", "perl", "languages", "dotnet", "jvm"
+		, "php-native", "wit-wasi"
+	].map(lane =>
+		`owned-subtype-${lane}-hosted-20990101`);
+	const ownedSource = await readFile(
+		"tests/helpers/owned-subtype-promotion-catalog.mjs", "utf8");
+	assert.deepEqual([...coreContractEvidenceDirectoryReferences(
+		ownedSource, "tests/helpers/owned-subtype-promotion-catalog.mjs"
+		, ownedDirectories)].sort(), ownedDirectories.sort());
+});
+
 test("Core evidence planning ignores rendered documentation links in code", () => {
 	const source = 'const prose = "[record](../evidence/owned-subtype-jvm-hosted-20990101/index.json)";';
 	assert.deepEqual([...coreContractEvidenceDirectoryReferences(

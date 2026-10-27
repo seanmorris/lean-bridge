@@ -170,7 +170,8 @@ test("primitive-base JVM promotion supplements twelve cells only", async () => {
 test("primitive-base JVM docs name the accepted boundary", async () => {
 	for(const path of ["docs/consume/java.md", "docs/consume/kotlin.md", "docs/lean/existing-package.md", "docs/lean/export-decisions.md", "docs/reference/types.md"])
 	{
-		const source = await readFile(path, "utf8");
+		const source = sourceAtHistoryMilestone(
+			nominalPrimitiveSubtypeJvmPromotionHistoryPath, path);
 		assert.ok(source.includes("nominal-primitive-subtype-jvm-20261015/index.json"), path);
 		const compiled = await compileDocumentationPage(source, docPages.find(item => item.source === path), { revision: nominalPrimitiveSubtypeJvmPromotionPredecessor });
 		assert.ok(compiled.links.some(link => link.endsWith("nominal-primitive-subtype-jvm-20261015/index.json")), path);
@@ -181,7 +182,8 @@ test("primitive-base JVM docs name the accepted boundary", async () => {
 		["docs/consume/java.md", ["`boolean`", "`byte[]` for `ByteArray`", "`int`\nUnicode scalars"]]
 		, ["docs/consume/kotlin.md", ["`Boolean`", "`ByteArray`, and `Int`\nUnicode scalars"]]
 	]) {
-		const guide = await readFile(path, "utf8");
+		const guide = sourceAtHistoryMilestone(
+			nominalPrimitiveSubtypeJvmPromotionHistoryPath, path);
 		for(const text of [...words, "all nineteen primitive bases", "64-bit machine words", "`PacketPair`", "JDK 22.0.2 and Kotlin 2.2.0", "Linux x64/glibc 2.36", "source-free", "load-admission ceiling of 8"])
 			assert.ok(guide.includes(text), `${path}: ${text}`);
 		assert.doesNotMatch(guide, /Other primitive-base nominal fixtures, refined callbacks, owned, recursive,/u);
