@@ -260,13 +260,20 @@ export async function readTypeSurface(options = {})
 		});
 		return { document, irSchema, consumers };
 	}
-	for(const file of typeSurfaceEvidenceFiles(document))
+	const evidenceFiles = typeSurfaceEvidenceFiles(document);
+	const batchSize = 16;
+	for(let offset = 0; offset < evidenceFiles.length; offset += batchSize)
 	{
-		const filename = await realpath(path.join(canonicalRoot, file.path));
-		const relative = path.relative(canonicalRoot, filename);
-		relativeFile(relative);
-		assert.equal(digest(await readFile(filename)), file.sha256
-			, `stale source evidence: ${file.path}`);
+		const batch = evidenceFiles.slice(offset, offset + batchSize);
+		const actual = await Promise.all(batch.map(async file => {
+			const filename = await realpath(path.join(canonicalRoot, file.path));
+			const relative = path.relative(canonicalRoot, filename);
+			relativeFile(relative);
+			return digest(await readFile(filename));
+		}));
+		for(const [index, file] of batch.entries())
+			assert.equal(actual[index], file.sha256
+				, `stale source evidence: ${file.path}`);
 	}
 	return { document, irSchema, consumers };
 }
