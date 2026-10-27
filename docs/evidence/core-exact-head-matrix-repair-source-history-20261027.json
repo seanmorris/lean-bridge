@@ -1,0 +1,750 @@
+{
+  "additions": [
+    {
+      "currentSha256": "e650bfdcadba7110a77301cdcf991b3af2085291065047f887ec585844aa0a90",
+      "path": "scripts/update-core-exact-head-matrix-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "7166a8ad9c957e3481066a77ffc58d03cee588fd272893347724672e4e6f796c",
+      "path": "tests/helpers/core-exact-head-matrix-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "b77841d9164cd0954ef145e768c6fc18e80e78e2",
+  "integrationUpdates": [
+    {
+      "currentSha256": "88cf69bec9613b0d0d4e5705bf12f8c60a07fec7851e5785eefe3199c4701bb6",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeCoreExactHeadMatrixRepairSource\n\t, coreExactHeadMatrixRepairHistoryAdditions\n\t, coreExactHeadMatrixRepairHistoryPath\n\t, coreExactHeadMatrixRepairImplementation\n\t, coreExactHeadMatrixRepairImplementationPaths\n\t, coreExactHeadMatrixRepairIntegrationPaths\n\t, coreExactHeadMatrixRepairPredecessor\n\t, reverseCoreExactHeadMatrixRepairUpdate\n} from \"./core-exact-head-matrix-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 357
+        },
+        {
+          "current": "const readCoreExactHeadMatrixRepair = async () => JSON.parse(\n\tawait readFile(coreExactHeadMatrixRepairHistoryPath, \"utf8\")\n);\n",
+          "previous": "",
+          "start": 17208
+        },
+        {
+          "current": "test(\"Core exact-head matrix repair records its exact change\", async () => {\n\tconst record = await readCoreExactHeadMatrixRepair();\n\tassert.equal(record.schemaVersion, 1);\n\tassert.equal(record.milestone\n\t\t, \"core-exact-head-matrix-repair-source-v1\");\n\tassert.equal(record.predecessorCommit\n\t\t, coreExactHeadMatrixRepairPredecessor);\n\tassert.equal(record.implementationCommit\n\t\t, coreExactHeadMatrixRepairImplementation);\n\tassert.deepEqual(record.updates.map(update => update.path)\n\t\t, coreExactHeadMatrixRepairImplementationPaths);\n\tassert.deepEqual(record.integrationUpdates.map(update => update.path)\n\t\t, coreExactHeadMatrixRepairIntegrationPaths);\n\tassert.deepEqual(record.additions.map(addition => addition.path)\n\t\t, coreExactHeadMatrixRepairHistoryAdditions);\n\tassert.equal(git([\"rev-parse\"\n\t\t, `${coreExactHeadMatrixRepairImplementation}^`]).trim()\n\t\t, coreExactHeadMatrixRepairPredecessor);\n\tassert.deepEqual(git([\"diff\", \"--name-only\"\n\t\t, coreExactHeadMatrixRepairPredecessor\n\t\t, coreExactHeadMatrixRepairImplementation])\n\t\t.trim().split(\"\\n\").sort()\n\t\t, [...coreExactHeadMatrixRepairImplementationPaths].sort());\n});\n\ntest(\"Core exact-head matrix repair reverses every transition\", async () => {\n\tconst record = await readCoreExactHeadMatrixRepair();\n\tfor(const update of [...record.updates, ...record.integrationUpdates])\n\t{\n\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256\n\t\t\t, beforeCoreExactHeadMatrixRepairSource);\n\t\tconst base = record.integrationUpdates.includes(update)\n\t\t\t? coreExactHeadMatrixRepairImplementation\n\t\t\t: coreExactHeadMatrixRepairPredecessor;\n\t\tconst previous = git([\"show\", `${base}:${update.path}`]);\n\t\tassert.equal(reverseCoreExactHeadMatrixRepairUpdate(current, update)\n\t\t\t, previous, update.path);\n\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n\t\tassert.ok(finRefinementNormalizationPaths.includes(update.path));\n\t}\n});\n\ntest(\"Core exact-head matrix repair rejects altered transitions\", async () => {\n\tconst update = (await readCoreExactHeadMatrixRepair()).updates[0];\n\tconst current = await sourceAtFinHistoryMilestone(\n\t\tupdate.path, update.currentSha256\n\t\t, beforeCoreExactHeadMatrixRepairSource);\n\tfor(const forged of [{ ...update, currentSha256: \"0\".repeat(64) }\n\t\t, { ...update, previousSha256: \"0\".repeat(64) }\n\t\t, { ...update, path: \"unrelated.mjs\" }\n\t\t, { ...update, edits: [] }\n\t\t, { ...update, edits: [...update.edits, update.edits[0]] }])\n\t\tassert.throws(() => reverseCoreExactHeadMatrixRepairUpdate(\n\t\t\tcurrent, forged));\n\tassert.equal(beforeCoreExactHeadMatrixRepairSource(\n\t\tupdate.path, current + \"unknown\"), current + \"unknown\");\n});\n\ntest(\"Core exact-head matrix writer rejects another checkout\", async t => {\n\tconst root = await mkdtemp(join(\n\t\ttmpdir(), \"lean-core-exact-head-matrix-repair-guard-\"\n\t));\n\tt.after(() => rm(root, { recursive: true }));\n\tconst result = spawnSync(process.execPath, [resolve(\n\t\t\"scripts/update-core-exact-head-matrix-repair-source-history.mjs\"\n\t)], { cwd: root, encoding: \"utf8\", timeout: 15_000 });\n\tassert.notEqual(result.status, 0);\n\tassert.equal(result.stdout, \"\");\n\tassert.deepEqual(await readdir(root), []);\n});\n\n",
+          "previous": "",
+          "start": 21936
+        }
+      ],
+      "path": "tests/helpers/core-historical-evidence-replay-source-history-tests.mjs",
+      "previousSha256": "2d39f06858b18a365cd19bf99fc2ab65bc52a06f0d07fae8ff7375c8148fee2b"
+    },
+    {
+      "currentSha256": "642862aead046ab37b911016916c804d4c44f3709d1fd86120043060bde56df2",
+      "edits": [
+        {
+          "current": "import { beforeCoreExactHeadMatrixRepairSource, coreExactHeadMatrixRepairNormalizationPaths } from \"./core-exact-head-matrix-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...coreExactHeadMatrixRepairNormalizationPaths\n\t, ...coreExactHeadHostedStaticRepairNormalizationPaths()\n",
+          "previous": "\t...coreExactHeadHostedStaticRepairNormalizationPaths()\n",
+          "start": 196791
+        },
+        {
+          "current": "\tlet stage = beforeCoreExactHeadMatrixRepairSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCoreExactHeadHostedStaticRepairSource(\n",
+          "previous": "\tlet stage = beforeCoreExactHeadHostedStaticRepairSource(\n",
+          "start": 244729
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "c54e1d9eff163d8a47a6591fcffb16ed7623b4933da31b3c473f4f6d3aa86962"
+    }
+  ],
+  "milestone": "core-exact-head-matrix-repair-source-v1",
+  "predecessorCommit": "69a2758fb51418920576d72f715975b94cec3d85",
+  "schemaVersion": 1,
+  "scope": "Authenticate exact producer-era callback and promotion evidence, preserve explicit sparse evidence prefixes, and keep the current Core shard partition complete without historical live-file assumptions.",
+  "updates": [
+    {
+      "currentSha256": "87917bc5b03862b420db7f969281638f8471bbb2f3a7b7b7653afaeca47ff38f",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"efc610930dc669145148aee926236932ffcef854454d23a5cab273e83e452884\"\n",
+          "previous": "          \"sha256\": \"5e8de6238676dd6ee8457cd92c691812fcb34f2e2ec242d225126da22dc9d61b\"\n",
+          "start": 9618754
+        },
+        {
+          "current": "          \"sha256\": \"efc610930dc669145148aee926236932ffcef854454d23a5cab273e83e452884\"\n",
+          "previous": "          \"sha256\": \"5e8de6238676dd6ee8457cd92c691812fcb34f2e2ec242d225126da22dc9d61b\"\n",
+          "start": 9764110
+        },
+        {
+          "current": "          \"sha256\": \"efc610930dc669145148aee926236932ffcef854454d23a5cab273e83e452884\"\n",
+          "previous": "          \"sha256\": \"5e8de6238676dd6ee8457cd92c691812fcb34f2e2ec242d225126da22dc9d61b\"\n",
+          "start": 9909869
+        },
+        {
+          "current": "          \"sha256\": \"efc610930dc669145148aee926236932ffcef854454d23a5cab273e83e452884\"\n",
+          "previous": "          \"sha256\": \"5e8de6238676dd6ee8457cd92c691812fcb34f2e2ec242d225126da22dc9d61b\"\n",
+          "start": 10055699
+        },
+        {
+          "current": "          \"sha256\": \"8fe72670be8080662d0f52a6f8d494ce90fd59e8c81d192db88f0e11df28a052\"\n",
+          "previous": "          \"sha256\": \"a2c68c2021bdfb92baf8ec185937758df397a0a4017f55af9a165ff269e227c4\"\n",
+          "start": 10384041
+        },
+        {
+          "current": "          \"sha256\": \"8fe72670be8080662d0f52a6f8d494ce90fd59e8c81d192db88f0e11df28a052\"\n",
+          "previous": "          \"sha256\": \"a2c68c2021bdfb92baf8ec185937758df397a0a4017f55af9a165ff269e227c4\"\n",
+          "start": 10430259
+        },
+        {
+          "current": "          \"sha256\": \"8fe72670be8080662d0f52a6f8d494ce90fd59e8c81d192db88f0e11df28a052\"\n",
+          "previous": "          \"sha256\": \"a2c68c2021bdfb92baf8ec185937758df397a0a4017f55af9a165ff269e227c4\"\n",
+          "start": 10477335
+        },
+        {
+          "current": "          \"sha256\": \"8fe72670be8080662d0f52a6f8d494ce90fd59e8c81d192db88f0e11df28a052\"\n",
+          "previous": "          \"sha256\": \"a2c68c2021bdfb92baf8ec185937758df397a0a4017f55af9a165ff269e227c4\"\n",
+          "start": 10524017
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "32ee08838e45fcc46035667e35026f85493eacd61baba30ea437b20f79cb0ea5"
+    },
+    {
+      "currentSha256": "928ef615a6f182ce8b9876185ff6196949dbd689c9c995f43b3a36b32605ce8f",
+      "edits": [
+        {
+          "current": "const explicitEvidenceDirectoryReferences = (source, directories) => {\n\tconst selected = new Set();\n\tfor(const match of source.matchAll(explicitPrefixPattern))\n\t\tfor(const directory of directories)\n\t\t\tif(directory.startsWith(match[1])\n\t\t\t\t&& /^\\d{8}$/u.test(directory.slice(match[1].length)))\n\t\t\t\tselected.add(directory);\n\treturn selected;\n};\n\n",
+          "previous": "",
+          "start": 1659
+        },
+        {
+          "current": "\tfor(const directory of explicitEvidenceDirectoryReferences(\n\t\tsource, directories)) selected.add(directory);\n",
+          "previous": "\tfor(const match of source.matchAll(explicitPrefixPattern))\n\t\tfor(const directory of directories)\n\t\t\tif(directory.startsWith(match[1])\n\t\t\t\t&& /^\\d{8}$/u.test(directory.slice(match[1].length)))\n\t\t\t\tselected.add(directory);\n",
+          "start": 7925
+        },
+        {
+          "current": "\t\t\tconst references = /-source-history[.]mjs$/u.test(path)\n\t\t\t\t? explicitEvidenceDirectoryReferences(source, directories)\n\t\t\t\t: coreContractEvidenceDirectoryReferences(source, path, directories);\n\t\t\tfor(const directory of references) selectedDirectories.add(directory);\n",
+          "previous": "\t\t\tif(!/-source-history[.]mjs$/u.test(path))\n\t\t\t\tfor(const directory of coreContractEvidenceDirectoryReferences(\n\t\t\t\t\tsource, path, directories)) selectedDirectories.add(directory);\n",
+          "start": 18632
+        }
+      ],
+      "path": "scripts/core-contract-evidence.mjs",
+      "previousSha256": "4c22585444acb181d404119f30a9c5cc2fe9494f1f3f9322d2c8cff28ded58ef"
+    },
+    {
+      "currentSha256": "12e06a5d9a85b5f0d322e291b02e6dd6b0588f772d3081d272a680b36cb4df41",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import {\n\tbeforeDefaultBranchCiTriggerBudgetSource\n} from \"./default-branch-ci-trigger-budget-source-history.mjs\";\nimport {\n\tbeforeBoundedRecurringAcceptanceSweepSource\n} from \"./bounded-recurring-acceptance-sweep-source-history.mjs\";\nimport {\n\tbeforeCallbackSubtypeBrowserArtifactSource\n} from \"./callback-subtype-browser-artifact-source-history.mjs\";\n",
+          "start": 370
+        },
+        {
+          "current": "\t, callbackSubtypeBrowserCiHistoryCommit\n",
+          "previous": "",
+          "start": 415
+        },
+        {
+          "current": "import { sourceAtProducer } from \"./producer-source.mjs\";\n",
+          "previous": "",
+          "start": 635
+        },
+        {
+          "current": "\t\tconst source = sourceAtProducer(callbackSubtypeBrowserCiHistoryCommit\n\t\t\t, addition.path, addition.currentSha256);\n",
+          "previous": "\t\tconst recurring = beforeBoundedRecurringAcceptanceSweepSource(\n\t\t\taddition.path, await readFile(addition.path, \"utf8\")\n\t\t\t, addition.currentSha256\n\t\t);\n\t\tconst current = beforeDefaultBranchCiTriggerBudgetSource(\n\t\t\taddition.path, recurring, addition.currentSha256\n\t\t);\n\t\tconst source = beforeCallbackSubtypeBrowserArtifactSource(\n\t\t\taddition.path, current\n\t\t\t, addition.currentSha256\n\t\t);\n",
+          "start": 1517
+        }
+      ],
+      "path": "tests/helpers/callback-subtype-browser-ci-source-history-tests.mjs",
+      "previousSha256": "11d4a15d07370bbfb6ff7d3210eed04543a899017eaea7f2fa816cba04186381"
+    },
+    {
+      "currentSha256": "1b04fc4f1abb6cdd3905275184fb7320a0ecea8f13b1ade444869bef701d56b3",
+      "edits": [
+        {
+          "current": "export const callbackSubtypeBrowserCiHistoryCommit\n\t= \"fd80f73a1d9ac1d4e006dd98a77dccaad9ae25db\";\n",
+          "previous": "",
+          "start": 413
+        }
+      ],
+      "path": "tests/helpers/callback-subtype-browser-ci-source-history.mjs",
+      "previousSha256": "b29546fcc367a6a2293981b6efe38ccc8ca8e2a89ebfe1a64b1a0761dc2311ac"
+    },
+    {
+      "currentSha256": "8a42deafd02f0078599fd2efcaae93e31d1bb0152a98480567e63afc6a3ffd57",
+      "edits": [
+        {
+          "current": "test(\"Core evidence planning closes native specialization inventory files\", async () => {\n\tconst source = await readFile(\n\t\t\"tests/helpers/native-specialization-closure.mjs\", \"utf8\");\n\tconst available = [\n\t\t\"generic-record-specializations-20990101\"\n\t\t, \"unrelated-specializations-20990101\"\n\t];\n\tassert.deepEqual([...coreContractEvidenceDirectoryReferences(\n\t\tsource, \"tests/helpers/native-specialization-closure.mjs\", available)]\n\t\t, [\"generic-record-specializations-20990101\"]);\n});\n\ntest(\"Core evidence planning closes the original reviewed Fin archive\", async () => {\n\tconst source = await readFile(\n\t\t\"tests/helpers/fin-refinement-source-history.mjs\", \"utf8\");\n\tconst available = [\"python-refinements-20990101\"\n\t\t, \"reviewed-fin-20990101\", \"reviewed-fin-hosts-20990101\"];\n\tassert.deepEqual([...coreContractEvidenceDirectoryReferences(\n\t\tsource, \"tests/helpers/fin-refinement-source-history.mjs\", available)]\n\t\t, [\"reviewed-fin-20990101\", \"python-refinements-20990101\"]);\n});\n\n",
+          "previous": "",
+          "start": 5834
+        },
+        {
+          "current": "\tconst [shard, reviewedFinShard, pythonRefinementShard, corpus]\n\t\t= await Promise.all([\n",
+          "previous": "\tconst [shard, corpus] = await Promise.all([\n",
+          "start": 12346
+        },
+        {
+          "current": "\t\t, collectCoreContractEvidencePlan(\"10/12\", resolve(\".\")\n\t\t\t, { evidenceReceipt: path })\n\t\t, collectCoreContractEvidencePlan(\"11/12\", resolve(\".\")\n\t\t\t, { evidenceReceipt: path })\n",
+          "previous": "",
+          "start": 12521
+        },
+        {
+          "current": "\t\t]);\n",
+          "previous": "\t]);\n",
+          "start": 12742
+        },
+        {
+          "current": "\tassert.ok(reviewedFinShard.evidence.directories.includes(\n\t\t\"reviewed-fin-20261007\"));\n\tassert.ok(pythonRefinementShard.evidence.directories.includes(\n\t\t\"python-refinements-20261007\"));\n",
+          "previous": "",
+          "start": 12964
+        }
+      ],
+      "path": "tests/helpers/core-contract-evidence-tests.mjs",
+      "previousSha256": "ec19305db0dca6a964ce7463d8a5598354db4628cde936520811134c0dd96210"
+    },
+    {
+      "currentSha256": "6973ee625f1563ff64ebcef3b1dfccb19883267e82e0b6436bccd03719ada0ff",
+      "edits": [
+        {
+          "current": "\tassert.ok(paths.length > 0);\n",
+          "previous": "\tassert.equal(paths.length, 1010);\n",
+          "start": 4286
+        },
+        {
+          "current": "\tconst counts = manifests.map(item => item.selection.count);\n\tassert.equal(counts.reduce((total, count) => total + count, 0), paths.length);\n\tassert.ok(Math.max(...counts) - Math.min(...counts) <= 1);\n",
+          "previous": "\tassert.deepEqual(manifests.map(item => item.selection.count)\n\t\t, [85, 85, 84, 84, 84, 84, 84, 84, 84, 84, 84, 84]);\n",
+          "start": 4353
+        },
+        {
+          "current": "\t\t, contractFiles: paths.length\n\t\t, contractSha256: manifests[0].contract.sha256\n",
+          "previous": "\t\t, contractFiles: 1010, contractSha256: manifests[0].contract.sha256\n",
+          "start": 4694
+        }
+      ],
+      "path": "tests/helpers/core-runner-resilience-source-history-tests.mjs",
+      "previousSha256": "d0c2cc5750404ad6d2b20982fab4d4c008e335403b482fec93c2cd919d57b51f"
+    },
+    {
+      "currentSha256": "c54e1d9eff163d8a47a6591fcffb16ed7623b4933da31b3c473f4f6d3aa86962",
+      "edits": [
+        {
+          "current": "// Type-surface history checks enumerate this original archive through dynamic\n// file paths rather than a literal path in their executable source closure.\n// core-evidence-prefix: reviewed-fin-\n// core-evidence-prefix: python-refinements-\n",
+          "previous": "",
+          "start": 256
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "52b1aa5d7c666cfa8c7783b940cd3f5d3d2e37eba95bc277506005951add44fe"
+    },
+    {
+      "currentSha256": "c96bde457f674aba587d72649f7ac42fb8260d0d990cb61e1631c0b4572f477f",
+      "edits": [
+        {
+          "current": "// The inventory reconciliation below follows this archive through dynamic\n// evidence entries rather than a literal path in executable source.\n// core-evidence-prefix: generic-record-specializations-\n",
+          "previous": "",
+          "start": 621
+        }
+      ],
+      "path": "tests/helpers/native-specialization-closure.mjs",
+      "previousSha256": "4bd52a623d44a32127093ebf4ca1c4fcda7600d551542d7e8d8287d667706326"
+    },
+    {
+      "currentSha256": "efc610930dc669145148aee926236932ffcef854454d23a5cab273e83e452884",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { readFile } from \"node:fs/promises\";\n",
+          "start": 186
+        },
+        {
+          "current": "",
+          "previous": "import { beforeFinRefinementSource } from \"./fin-refinement-source-history.mjs\";\n",
+          "start": 757
+        },
+        {
+          "current": "\tconst document = JSON.parse(sourceAtHistoryMilestone(\n\t\tnominalPrimitiveSubtypePhpWasmPromotionHistoryPath\n\t\t, \"docs/type-surface.v1.json\"\n\t));\n",
+          "previous": "\tconst history = JSON.parse(await readFile(\n\t\tnominalPrimitiveSubtypePhpWasmPromotionHistoryPath, \"utf8\"));\n\tconst expected = history.updates.find(item =>\n\t\titem.path === \"docs/type-surface.v1.json\").currentSha256;\n\tconst document = JSON.parse(beforeFinRefinementSource(\"docs/type-surface.v1.json\"\n\t\t, await readFile(\"docs/type-surface.v1.json\", \"utf8\"), expected));\n",
+          "start": 7580
+        }
+      ],
+      "path": "tests/helpers/nominal-primitive-subtype-php-wasm-promotion-tests.mjs",
+      "previousSha256": "5e8de6238676dd6ee8457cd92c691812fcb34f2e2ec242d225126da22dc9d61b"
+    },
+    {
+      "currentSha256": "8fe72670be8080662d0f52a6f8d494ce90fd59e8c81d192db88f0e11df28a052",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { readFile } from \"node:fs/promises\";\n",
+          "start": 181
+        },
+        {
+          "current": "",
+          "previous": "import { beforeFinRefinementSource } from \"./fin-refinement-source-history.mjs\";\n",
+          "start": 457
+        },
+        {
+          "current": "\tconst document = JSON.parse(sourceAtHistoryMilestone(\n\t\tnominalPrimitiveSubtypeWitPromotionHistoryPath, inventoryPath\n\t));\n",
+          "previous": "\tconst ledger = JSON.parse(await readFile(nominalPrimitiveSubtypeWitPromotionHistoryPath, \"utf8\"));\n\t// Newer layers append receipts and supplement cells; strip them before comparing this layer's exact output.\n\tconst document = JSON.parse(beforeFinRefinementSource(inventoryPath, await readFile(inventoryPath, \"utf8\")\n\t\t, ledger.updates.find(item => item.path === inventoryPath).currentSha256));\n",
+          "start": 7096
+        }
+      ],
+      "path": "tests/helpers/nominal-primitive-subtype-wit-promotion-tests.mjs",
+      "previousSha256": "a2c68c2021bdfb92baf8ec185937758df397a0a4017f55af9a165ff269e227c4"
+    },
+    {
+      "currentSha256": "1fa2653a50f482a74170ef112fc70a134f61f63293feaddb81dabbed7b2f9199",
+      "edits": [
+        {
+          "current": "\t\t\tassert.equal(sha256(git([\"show\"\n\t\t\t\t, `${record.implementationCommit}:${pin.path}`]))\n",
+          "previous": "\t\t\tassert.equal(sha256(await readFile(pin.path))\n",
+          "start": 4458
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-entry-live-pin-repair-source-history-tests.mjs",
+      "previousSha256": "446f038a79a0b7edb4bb0931763949af709673e30c66b40662e26dbacd6159a1"
+    },
+    {
+      "currentSha256": "f6feb2b15855cf384910ed0d0bdb464d6c5c84e14edc3417db2ea4ee22dd608e",
+      "edits": [
+        {
+          "current": "import { canonicalJson, sha256 } from \"../../src/capsule/node.mjs\";\n",
+          "previous": "import { sha256 } from \"../../src/capsule/node.mjs\";\nimport { beforeOwnedJvmCallbackResults } from \"./owned-jvm-callback-result-history.mjs\";\n",
+          "start": 186
+        },
+        {
+          "current": "import {\n\townedDotnetCallbackProducer, ownedDotnetCallbackReplay\n} from \"./owned-dotnet-callback-result-replay.mjs\";\n",
+          "previous": "import { ownedDotnetCallbackReplay } from \"./owned-dotnet-callback-result-replay.mjs\";\n",
+          "start": 337
+        },
+        {
+          "current": "import { bytesAtProducer } from \"./producer-source.mjs\";\n",
+          "previous": "",
+          "start": 1093
+        },
+        {
+          "current": "const producerReplays = new Map();\n\nconst replayAtProducer = async sources => {\n\tconst canonical = canonicalJson(sources);\n\tconst identity = sha256(canonical);\n\tconst cached = producerReplays.get(identity);\n\tif(cached !== undefined)\n\t{\n\t\tassert.equal(cached.canonical, canonical);\n\t\treturn cached.replay;\n\t}\n\tconst snapshot = JSON.parse(canonical);\n\tconst replay = (async () => {\n\t\tfor(const [path, digest] of Object.entries(snapshot))\n\t\t\tassert.equal(sha256(bytesAtProducer(\n\t\t\t\townedDotnetCallbackProducer, path, digest)), digest, path);\n\t\treturn ownedDotnetCallbackReplay(snapshot);\n\t})();\n\tproducerReplays.set(identity, { canonical, replay });\n\ttry\n\t{\n\t\treturn await replay;\n\t}\n\tcatch(error)\n\t{\n\t\tif(producerReplays.get(identity)?.replay === replay)\n\t\t\tproducerReplays.delete(identity);\n\t\tthrow error;\n\t}\n};\n",
+          "previous": "",
+          "start": 4282
+        },
+        {
+          "current": "\tconst replay = await replayAtProducer(record.sources);\n",
+          "previous": "\tfor(const [path, digest] of Object.entries(record.sources))\n\t\tassert.equal(sha256(beforeOwnedJvmCallbackResults(path, await readFile(path), digest)), digest, path);\n",
+          "start": 7975
+        },
+        {
+          "current": "",
+          "previous": "\tconst replay = await ownedDotnetCallbackReplay(record.sources);\n",
+          "start": 8466
+        }
+      ],
+      "path": "tests/helpers/owned-dotnet-callback-result-acceptance.mjs",
+      "previousSha256": "da1d1e699e0fc7500455a5c004fe522bbe7d85452d2f261d7bc499a3e5d648ab"
+    },
+    {
+      "currentSha256": "077957d59e9a4bce0b6235712146c43d5e12b4fd3c6d97a6234858b9958fcd7b",
+      "edits": [
+        {
+          "current": "import { ownedRubyCallbackNativeSource } from \"./owned-ruby-callback-result-native.mjs\";\nimport { ownedRubyCallbackMutations } from \"./owned-ruby-callback-result-mutations.mjs\";\nimport { normalizeOwnedRubySanitizer } from \"./owned-ruby-callback-result-sanitizers.mjs\";\n",
+          "previous": "",
+          "start": 3442
+        },
+        {
+          "current": "const producerIdentityPath = \"src/backends/dotnet/owned-calls.mjs\";\nconst ownedDotnetCallbackProducerIdentity\n\t= \"ce8c0ece4937825b72b7e223ddf1e3e01b24e5cac4be81d6ea5d2ec24745e74f\";\nexport const ownedRubyCallbackProducer\n\t= \"2dae24728fa2ac81677f6c76b674dbe5c3be3f73\";\nconst ownedRubyCallbackProducerIdentity\n\t= \"a7058d0f5744463ab39aab1ee8ab79c99545cf03b68b750ae6deb6b89cd60558\";\nconst ownedRubyCallbackFixturePath\n\t= \"tests/helpers/owned-ruby-callback-result-fixture.mjs\";\nconst ownedRubyCallbackFixtureIdentity\n\t= \"7cc7e47fcd1da150b9f9656c86a41df8cbef13e89a0feb513460a0a165dc527e\";\n\n",
+          "previous": "",
+          "start": 3986
+        },
+        {
+          "current": "const ownedRubyCallbackProducerEntries = Object.freeze([\n\t\"src/build/native-graph-model.mjs\"\n\t, \"src/backends/c/owned-package.mjs\"\n\t, \"src/backends/rust/owned-package.mjs\"\n\t, \"src/backends/cpp/owned-package.mjs\"\n\t, \"src/analyze/package-metadata.mjs\"\n\t, \"src/backends/rust/copied-values.mjs\"\n\t, \"tests/helpers/owned-rust-receiver-fixture.mjs\"\n\t, \"src/build/javascript-wasm-owned-model.mjs\"\n\t, \"src/build/javascript-wasm-owned-sources.mjs\"\n\t, \"src/backends/python/owned-package.mjs\"\n\t, \"tests/helpers/owned-python-callback-result-fixture.mjs\"\n\t, \"tests/helpers/owned-python-callback-result-typing.mjs\"\n\t, \"tests/helpers/owned-python-callback-result-installed.mjs\"\n\t, \"tests/helpers/owned-python-installed-probes.mjs\"\n\t, \"tests/helpers/python-wheel-install.mjs\"\n\t, \"src/backends/ruby/owned-package.mjs\"\n\t, \"src/build/owned-ruby-artifacts.mjs\"\n\t, ownedRubyCallbackFixturePath\n\t, \"tests/helpers/owned-ruby-callback-result-installed.mjs\"\n\t, \"tests/helpers/owned-ruby-callback-result-native.mjs\"\n\t, \"tests/helpers/owned-ruby-callback-result-mutations.mjs\"\n\t, \"tests/helpers/owned-ruby-callback-result-sanitizers.mjs\"\n]);\n",
+          "previous": "",
+          "start": 6076
+        },
+        {
+          "current": "const ownedDotnetCallbackCurrent = Object.freeze({\n",
+          "previous": "const current = Object.freeze({\n",
+          "start": 7603
+        },
+        {
+          "current": "const current = Object.freeze({\n\t...ownedDotnetCallbackCurrent\n\t, ownedRubyCallbackNativeSource, ownedRubyCallbackMutations\n\t, normalizeOwnedRubySanitizer\n});\nconst ownedRubyCallbackCurrentNames = Object.freeze([\n\t\"createCompiledNativeModel\", \"generateCompiledNativeLeanAdapters\"\n\t, \"generateOwnedCPackage\", \"generateOwnedRustPackage\"\n\t, \"generateOwnedCppPackage\", \"compiledPackageMetadata\"\n\t, \"pythonPackageMetadata\", \"copiedRustLock\", \"ownedRustReceiverLinker\"\n\t, \"createOwnedJavaScriptWasmModel\"\n\t, \"generateOwnedJavaScriptWasmLeanAdapters\"\n\t, \"generateCompiledJavaScriptWasmOwned\", \"generateOwnedPythonPackage\"\n\t, \"ownedPythonCallbackResultSource\"\n\t, \"ownedPythonCallbackResultCombinedSource\"\n\t, \"ownedPythonCallbackResultReviewedIr\"\n\t, \"ownedPythonCallbackResultCombinedReviewedIr\"\n\t, \"ownedPythonCallbackTyping\", \"ownedPythonCallbackInstalledProbe\"\n\t, \"ownedPythonInstalledProbe\", \"pythonTypingWheels\"\n\t, \"generateOwnedRubyPackage\", \"ownedRubyAdapterSources\"\n\t, \"ownedRubyCallbackResultSource\"\n\t, \"ownedRubyCallbackResultCombinedSource\"\n\t, \"ownedRubyCallbackInstalledProbe\"\n\t, \"ownedRubyCallbackNativeSource\", \"ownedRubyCallbackMutations\"\n\t, \"normalizeOwnedRubySanitizer\"\n]);\n\nconst producerProfile = sources => {\n\tconst identity = sources?.[producerIdentityPath];\n\tif(identity === ownedDotnetCallbackProducerIdentity) return {\n\t\tproducer: ownedDotnetCallbackProducer\n\t\t, entries: ownedDotnetCallbackProducerEntries\n\t\t, names: Object.keys(ownedDotnetCallbackCurrent)\n\t};\n\tif(identity === ownedRubyCallbackProducerIdentity\n\t\t&& sources?.[ownedRubyCallbackFixturePath]\n\t\t\t=== ownedRubyCallbackFixtureIdentity)\n\t\treturn {\n\t\t\tproducer: ownedRubyCallbackProducer\n\t\t\t, entries: ownedRubyCallbackProducerEntries\n\t\t\t, names: ownedRubyCallbackCurrentNames\n\t\t};\n\tassert.fail(`Unknown callback producer: ${identity ?? \"missing\"}`);\n};\n",
+          "previous": "",
+          "start": 9237
+        },
+        {
+          "current": "\tconst { producer, entries } = producerProfile(sources);\n",
+          "previous": "",
+          "start": 11356
+        },
+        {
+          "current": "\t\tconst bytes = bytesAtProducer(producer, path, expected);\n",
+          "previous": "\t\tconst bytes = bytesAtProducer(ownedDotnetCallbackProducer, path, expected);\n",
+          "start": 11753
+        },
+        {
+          "current": "\tfor(const entry of entries) visit(entry);\n",
+          "previous": "\tfor(const entry of ownedDotnetCallbackProducerEntries) visit(entry);\n",
+          "start": 12080
+        },
+        {
+          "current": "\tconst { producer, entries, names } = producerProfile(sources);\n",
+          "previous": "",
+          "start": 12563
+        },
+        {
+          "current": "\tconst modules = await Promise.all(entries\n\t\t.map(entry => moduleAtProducerWithSourceReads(producer, entry)));\n",
+          "previous": "\tconst modules = await Promise.all(ownedDotnetCallbackProducerEntries\n\t\t.map(entry => moduleAtProducerWithSourceReads(ownedDotnetCallbackProducer, entry)));\n",
+          "start": 12673
+        },
+        {
+          "current": "\tconst selected = Object.fromEntries(names.map(name => {\n\t\tconst value = current[name];\n",
+          "previous": "\tconst selected = Object.fromEntries(Object.entries(current).map(([name, value]) => {\n",
+          "start": 12832
+        },
+        {
+          "current": "\t\treturn bytesAtProducer(producer, path, expected);\n",
+          "previous": "\t\treturn bytesAtProducer(ownedDotnetCallbackProducer, path, expected);\n",
+          "start": 13449
+        }
+      ],
+      "path": "tests/helpers/owned-dotnet-callback-result-replay.mjs",
+      "previousSha256": "c44403072bf5efe5ea0d0f9865b9c3b0c758e2a44866acd75975f128cfbd72e6"
+    },
+    {
+      "currentSha256": "176f63ee99639ecfa99b563dd1f349d0892635a50ec604a39b851e180ab2f488",
+      "edits": [
+        {
+          "current": "import { canonicalJson, sha256 } from \"../../src/capsule/node.mjs\";\n",
+          "previous": "import { sha256 } from \"../../src/capsule/node.mjs\";\n",
+          "start": 187
+        },
+        {
+          "current": "const producerReplays = new Map();\n\nconst replayAtProducer = async sources => {\n\tconst canonical = canonicalJson(sources);\n\tconst identity = sha256(canonical);\n\tconst cached = producerReplays.get(identity);\n\tif(cached !== undefined)\n\t{\n\t\tassert.equal(cached.canonical, canonical);\n\t\treturn cached.replay;\n\t}\n\tconst snapshot = JSON.parse(canonical);\n\tconst replay = (async () => {\n\t\tconst historical = await ownedJvmCallbackReplay(snapshot);\n\t\tfor(const path of Object.keys(snapshot)) await historical.readBytes(path);\n\t\treturn historical;\n\t})();\n\tproducerReplays.set(identity, { canonical, replay });\n\ttry\n\t{\n\t\treturn await replay;\n\t}\n\tcatch(error)\n\t{\n\t\tif(producerReplays.get(identity)?.replay === replay)\n\t\t\tproducerReplays.delete(identity);\n\t\tthrow error;\n\t}\n};\n",
+          "previous": "",
+          "start": 7360
+        },
+        {
+          "current": "\tconst replay = await replayAtProducer(record.sources);\n",
+          "previous": "\tconst replay = await ownedJvmCallbackReplay(record.sources);\n",
+          "start": 13885
+        },
+        {
+          "current": "",
+          "previous": "\tfor(const path of Object.keys(record.sources)) await readSource(path);\n",
+          "start": 13979
+        }
+      ],
+      "path": "tests/helpers/owned-jvm-callback-result-acceptance.mjs",
+      "previousSha256": "5b0260062f33477a88f157ccbb59e90134585bfb0e1254f162f70086e8da7268"
+    },
+    {
+      "currentSha256": "25651b6b22d0362dd46a04adb420905fd4af29de7abb69d81851088fe8f82075",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { dirname, join } from \"node:path\";\nimport ts from \"typescript\";\n",
+          "start": 186
+        },
+        {
+          "current": "import { beforePostPerlCallbackStaging }\n\tfrom \"./post-perl-callback-staging-history.mjs\";\nimport { assertOwnedPerlCallbackVariantLog\n",
+          "previous": "import { beforePostPerlCallbackStaging } from \"./post-perl-callback-staging-history.mjs\";\nimport { beforeFinRefinementSource } from \"./fin-refinement-source-history.mjs\";\nimport { assertOwnedPerlCallbackVariantMatrix, assertOwnedPerlCallbackVariantLog\n",
+          "start": 363
+        },
+        {
+          "current": "import { ownedPerlCallbackExecutionPaths, ownedPerlCallbackEvidencePaths }\n\tfrom \"./owned-perl-callback-result-ci.mjs\";\n",
+          "previous": "import { assertOwnedPerlCallbackResultCi, ownedPerlCallbackExecutionPaths\n\t, ownedPerlCallbackEvidencePaths } from \"./owned-perl-callback-result-ci.mjs\";\n",
+          "start": 629
+        },
+        {
+          "current": "\t, perlVariantPredecessor, readPerlVariantHistory } from \"./owned-perl-callback-result-variant-history.mjs\";\nimport { moduleAtProducerWithSourceReads } from \"./producer-module.mjs\";\nimport {\n\tauthenticateProducerSources, bytesAtProducer\n} from \"./producer-source.mjs\";\n",
+          "previous": "\t, perlVariantPredecessor, perlVariantChangedPaths, readPerlVariantHistory } from \"./owned-perl-callback-result-variant-history.mjs\";\n",
+          "start": 828
+        },
+        {
+          "current": "export const perlVariantProducer = \"fa51434d712136f38b6b0f88d9361494a32eda3a\";\n",
+          "previous": "",
+          "start": 3536
+        },
+        {
+          "current": "let producerPromise;\nconst producerModule = () => producerPromise ??= Promise.all([\n\tmoduleAtProducerWithSourceReads(perlVariantProducer\n\t\t, helper(\"acceptance\"))\n\t, moduleAtProducerWithSourceReads(perlVariantProducer\n\t\t, helper(\"evidence\"))\n\t, moduleAtProducerWithSourceReads(perlVariantProducer\n\t\t, \"tests/helpers/owned-perl-callback-result-ci.mjs\")\n]).then(([acceptance, evidence, ci]) => ({\n\tsourcePaths: acceptance.perlVariantSourcePaths\n\t, assertMatrix: evidence.assertOwnedPerlCallbackVariantMatrix\n\t, assertCi: ci.assertOwnedPerlCallbackResultCi\n}));\n",
+          "previous": "",
+          "start": 4041
+        },
+        {
+          "current": "export const perlVariantSourcePaths = async () =>\n\t[...await (await producerModule()).sourcePaths()];\n\nconst producerReplays = new Map();\nconst replayAtProducer = async sources => {\n\tconst canonical = canonicalJson(sources), identity = sha256(canonical);\n\tconst cached = producerReplays.get(identity);\n\tif(cached !== undefined)\n",
+          "previous": "export const perlVariantSourcePaths = async () => {\n\tconst predecessor = await readFile(perlVariantPredecessor.path);\n\tassert.equal(sha256(predecessor), perlVariantPredecessor.sha256);\n\tconst paths = new Set([...Object.keys(JSON.parse(predecessor).sources)\n\t\t, ...perlVariantChangedPaths, perlVariantHistoryPath\n\t\t, perlVariantPredecessor.path\n\t\t, perlVariantEvidenceDocument, \"config/cli-package.v1.json\"\n\t\t, \"docs/evidence/post-perl-callback-staging-source-history-20261003.json\"\n\t\t, \"docs/evidence/wit-callback-runtime-staging-source-history-20261003.json\"\n\t\t, \"tests/fixtures/structured-types/owned-perl-callback-results-variants-installed.pl\"\n\t\t, ...JSON.parse(beforeFinRefinementSource(\"config/cli-package.v1.json\", await readFile(\"config/cli-package.v1.json\", \"utf8\"))).files]);\n\tconst pending = [...perlVariantClosureRoots], visited = new Set();\n\twhile(pending.length)\n",
+          "start": 4692
+        },
+        {
+          "current": "\t\tassert.equal(cached.canonical, canonical);\n\t\treturn cached.replay;\n\t}\n\tconst snapshot = JSON.parse(canonical);\n\tconst replay = (async () => {\n\t\tconst producer = await producerModule();\n\t\tassert.deepEqual(Object.keys(snapshot), await producer.sourcePaths());\n\t\tauthenticateProducerSources(perlVariantProducer, snapshot);\n\t\tconst readSource = async path => {\n\t\t\tassert.ok(Object.hasOwn(snapshot, path), path);\n\t\t\treturn bytesAtProducer(perlVariantProducer, path, snapshot[path]);\n",
+          "previous": "\t\tconst path = pending.pop();\n\t\tif(visited.has(path)) continue;\n\t\tvisited.add(path); paths.add(path);\n\t\tif(!path.endsWith(\".mjs\")) continue;\n\t\tconst tree = ts.createSourceFile(path, beforeFinRefinementSource(path, await readFile(path, \"utf8\")), ts.ScriptTarget.Latest, true, ts.ScriptKind.JS);\n\t\tconst visit = node => {\n\t\t\tconst specifier = ts.isImportDeclaration(node) || ts.isExportDeclaration(node) ? node.moduleSpecifier\n\t\t\t\t: ts.isCallExpression(node) && node.expression.kind === ts.SyntaxKind.ImportKeyword ? node.arguments[0] : null;\n\t\t\tif(specifier && ts.isStringLiteral(specifier) && specifier.text.startsWith(\".\")) pending.push(join(dirname(path), specifier.text));\n\t\t\tts.forEachChild(node, visit);\n",
+          "start": 5023
+        },
+        {
+          "current": "\t\treturn { identity, readSource\n\t\t\t, assertMatrix: producer.assertMatrix, assertCi: producer.assertCi };\n\t})();\n\tproducerReplays.set(identity, { canonical, replay });\n\ttry\n\t{\n\t\treturn await replay;\n\t}\n\tcatch(error)\n\t{\n\t\tif(producerReplays.get(identity)?.replay === replay)\n\t\t\tproducerReplays.delete(identity);\n\t\tthrow error;\n\t}\n};\n\nconst matrixReplays = new Map();\nconst matrixAtProducer = async (archive, reports, replay) => {\n\tconst canonical = canonicalJson(archive);\n\tconst identity = sha256(replay.identity + canonical);\n\tconst cached = matrixReplays.get(identity);\n\tif(cached !== undefined)\n\t{\n\t\tassert.equal(cached.canonical, canonical);\n\t\treturn cached.result;\n\t}\n\tconst expected = new Map(\n\t\treports[ownedPerlCallbackVariantReports[0]].cli.files\n\t\t\t.map(item => [item.path, item.sha256]));\n\tconst readSource = async path => {\n\t\tconst source = await replay.readSource(path);\n\t\tconst digest = expected.get(path);\n\t\treturn digest === undefined ? source\n\t\t\t: beforePostPerlCallbackStaging(path, source, digest);\n\t};\n\tconst result = replay.assertMatrix(reports, readSource);\n\tmatrixReplays.set(identity, { canonical, result });\n\ttry\n\t{\n\t\treturn await result;\n\t}\n\tcatch(error)\n\t{\n\t\tif(matrixReplays.get(identity)?.result === result)\n\t\t\tmatrixReplays.delete(identity);\n\t\tthrow error;\n",
+          "previous": "\t\tvisit(tree);\n",
+          "start": 5508
+        },
+        {
+          "current": "",
+          "previous": "\tassert.equal(paths.delete(\"tests/helpers/php-callback-installed-staging-history.mjs\"), true);\n\tassert.equal(paths.delete(\"tests/helpers/php-callback-acceptance-history.mjs\"), true);\n\tassert.equal(paths.delete(\"tests/helpers/php-wasm-callback-result-acceptance-history.mjs\"), true);\n\tassert.equal(paths.delete(\"tests/helpers/wit-callback-acceptance-history.mjs\"), true);\n\tassert.equal(paths.delete(\"tests/helpers/wit-callback-installed-acceptance-history.mjs\"), true);\n\tassert.equal(paths.has(perlVariantEvidencePath), false);\n\treturn [...paths].sort();\n",
+          "start": 6797
+        },
+        {
+          "current": "\tconst replay = await replayAtProducer(record.sources);\n\treplay.assertCi(\n\t\t(await replay.readSource(\".github/workflows/consumer-matrix.yml\")).toString()\n\t\t, JSON.parse(await replay.readSource(\"package.json\")));\n\tassert.deepEqual(await matrixAtProducer(record.archive, reports, replay)\n\t\t, perlVariantCounts);\n",
+          "previous": "\tassert.deepEqual(Object.keys(record.sources), await perlVariantSourcePaths());\n\tfor(const [path, digest] of Object.entries(record.sources))\n\t\tassert.equal(sha256(beforePostPerlCallbackStaging(path, await readFile(path), digest)), digest, path);\n\tassertOwnedPerlCallbackResultCi(await readFile(\".github/workflows/consumer-matrix.yml\", \"utf8\"), JSON.parse(await readFile(\"package.json\", \"utf8\")));\n\tconst expected = new Map(reports[ownedPerlCallbackVariantReports[0]].cli.files.map(value => [value.path, value.sha256]));\n\tconst readSource = async path => {\n\t\tassert.ok(Object.hasOwn(record.sources, path), path);\n\t\tconst bytes = await readFile(path), digest = expected.get(path) ?? record.sources[path];\n\t\treturn beforePostPerlCallbackStaging(path, bytes, digest);\n\t};\n\tassert.deepEqual(await assertOwnedPerlCallbackVariantMatrix(reports, readSource), perlVariantCounts);\n",
+          "start": 10524
+        }
+      ],
+      "path": "tests/helpers/owned-perl-callback-result-variant-acceptance.mjs",
+      "previousSha256": "03973337f46c89b1162a3923864dfad80ad5d009bfc861c19fa90af5d90355bf"
+    },
+    {
+      "currentSha256": "f56098ebbb4be8d2c8040283b106bb067027cfcd7b660922795f2ea19c83f061",
+      "edits": [
+        {
+          "current": "import { canonicalJson, sha256 } from \"../../src/capsule/node.mjs\";\n",
+          "previous": "import { sha256 } from \"../../src/capsule/node.mjs\";\n",
+          "start": 186
+        },
+        {
+          "current": "import {\n\townedDotnetCallbackReplay, ownedRubyCallbackProducer\n} from \"./owned-dotnet-callback-result-replay.mjs\";\nimport { bytesAtProducer } from \"./producer-source.mjs\";\n",
+          "previous": "import { beforeOwnedDotnetCallbackResults } from \"./owned-dotnet-callback-result-history.mjs\";\nimport { ownedDotnetCallbackReplay } from \"./owned-dotnet-callback-result-replay.mjs\";\n",
+          "start": 1154
+        },
+        {
+          "current": "const producerReplays = new Map();\n\nconst replayAtProducer = async sources => {\n\tconst canonical = canonicalJson(sources);\n\tconst identity = sha256(canonical);\n\tconst cached = producerReplays.get(identity);\n\tif(cached !== undefined)\n\t{\n\t\tassert.equal(cached.canonical, canonical);\n\t\treturn cached.replay;\n\t}\n\tconst snapshot = JSON.parse(canonical);\n\tconst replay = (async () => {\n\t\tfor(const [path, digest] of Object.entries(snapshot))\n\t\t\tassert.equal(sha256(bytesAtProducer(\n\t\t\t\townedRubyCallbackProducer, path, digest)), digest, path);\n\t\treturn ownedDotnetCallbackReplay(snapshot);\n\t})();\n\tproducerReplays.set(identity, { canonical, replay });\n\ttry\n\t{\n\t\treturn await replay;\n\t}\n\tcatch(error)\n\t{\n\t\tif(producerReplays.get(identity)?.replay === replay)\n\t\t\tproducerReplays.delete(identity);\n\t\tthrow error;\n\t}\n};\n",
+          "previous": "",
+          "start": 4437
+        },
+        {
+          "current": "\t\treturn assertOwnedRubyCallbackRuntime(item, replay);\n",
+          "previous": "\t\treturn assertOwnedRubyCallbackRuntime(item);\n",
+          "start": 8967
+        },
+        {
+          "current": "\tconst replay = await replayAtProducer(record.sources);\n",
+          "previous": "\tfor(const [path, digest] of Object.entries(record.sources))\n\t\tassert.equal(sha256(beforeOwnedDotnetCallbackResults(path, await readFile(path), digest)), digest, path);\n",
+          "start": 10265
+        },
+        {
+          "current": "",
+          "previous": "\tconst replay = await ownedDotnetCallbackReplay(record.sources);\n",
+          "start": 10912
+        }
+      ],
+      "path": "tests/helpers/owned-ruby-callback-result-acceptance.mjs",
+      "previousSha256": "7d88c705dc3b68404969eb235302a587648dc774fcc3913073228131a34e6c3d"
+    },
+    {
+      "currentSha256": "d5cb2dbed82cef1f6c8999d812e45c31fedcc051392f55f892737300762a619a",
+      "edits": [
+        {
+          "current": "const current = {\n\tcreateCompiledNativeModel, generateOwnedCPackage, generateOwnedRubyPackage\n\t, ownedRubyCallbackResultSource, ownedRubyCallbackResultCombinedSource\n\t, ownedRubyCallbackNativeSource, ownedRubyCallbackMutations\n\t, ownedRubyCallbackInstalledProbe, normalizeOwnedRubySanitizer\n\t, readSource: path => readFile(path, \"utf8\")\n};\n\n",
+          "previous": "",
+          "start": 1062
+        },
+        {
+          "current": " * @param replay - Optional authenticated producer dependencies.\n",
+          "previous": "",
+          "start": 2312
+        },
+        {
+          "current": "export const assertOwnedRubyCallbackRuntime = async (item, replay) => {\n\tconst {\n\t\tcreateCompiledNativeModel, generateOwnedCPackage\n\t\t, generateOwnedRubyPackage, ownedRubyCallbackResultSource\n\t\t, ownedRubyCallbackResultCombinedSource\n\t\t, ownedRubyCallbackNativeSource, ownedRubyCallbackMutations\n\t\t, ownedRubyCallbackInstalledProbe, normalizeOwnedRubySanitizer\n\t\t, readSource\n\t} = replay ?? current;\n",
+          "previous": "export const assertOwnedRubyCallbackRuntime = async item => {\n",
+          "start": 2381
+        },
+        {
+          "current": "\tassert.equal(item.input.sourceIdentity.extractorSha256, sha256(beforeFinRefinementSource(\"src/analyze/NativeExports.lean\", await readSource(\"src/analyze/NativeExports.lean\"), item.input.sourceIdentity.extractorSha256)));\n\tconst lean = await readSource(\"tests/fixtures/onboarding/owned-aggregates/Owned.lean\");\n",
+          "previous": "\tassert.equal(item.input.sourceIdentity.extractorSha256, sha256(beforeFinRefinementSource(\"src/analyze/NativeExports.lean\", await readFile(\"src/analyze/NativeExports.lean\"), item.input.sourceIdentity.extractorSha256)));\n\tconst lean = await readFile(\"tests/fixtures/onboarding/owned-aggregates/Owned.lean\", \"utf8\");\n",
+          "start": 3993
+        },
+        {
+          "current": "\tassert.equal(item.probeSha256, sha256(prefix + await readSource(\"tests/fixtures/structured-types/owned-ruby-callback-results.rb\")));\n\tassert.equal(item.helpersSha256, sha256(await readSource(\"tests/fixtures/structured-types/owned-ruby-probe.rb\")));\n",
+          "previous": "\tassert.equal(item.probeSha256, sha256(prefix + await readFile(\"tests/fixtures/structured-types/owned-ruby-callback-results.rb\", \"utf8\")));\n\tassert.equal(item.helpersSha256, sha256(await readFile(\"tests/fixtures/structured-types/owned-ruby-probe.rb\")));\n",
+          "start": 5169
+        }
+      ],
+      "path": "tests/helpers/owned-ruby-callback-result-evidence.mjs",
+      "previousSha256": "b195298ba8b141d8687c6460120bb9f7cc500abec5720312de86bd669458b7cd"
+    },
+    {
+      "currentSha256": "8f8353f865f459ffd0ac9312c67f3b560361b24064073b5946b080761fabf145",
+      "edits": [
+        {
+          "current": "export const ownedRustProducer = \"78d2e09252d81f0b123d6175bb6ea454c9205577\";\n",
+          "previous": "",
+          "start": 373
+        }
+      ],
+      "path": "tests/helpers/owned-rust-source-history.mjs",
+      "previousSha256": "b49eb083c2a677c63746176e555501771cc495b45e47be8514e8dfeb9f879758"
+    },
+    {
+      "currentSha256": "a385e9f5f11756fa19ca98591b1b99cb6cc364ea47c65bc77260a98ae8bc555c",
+      "edits": [
+        {
+          "current": "/**\n * Authenticate a complete source map with one Git tree read and one batched\n * object read. This is substantially cheaper than spawning Git once per file.\n *\n * @param revision - Full producer commit identity.\n * @param expectedSources - Repository paths mapped to recorded SHA-256 values.\n */\nexport const authenticateProducerSources = (revision, expectedSources) => {\n\tassert.match(revision, revisionPattern);\n\tassert.ok(expectedSources && typeof expectedSources === \"object\"\n\t\t&& !Array.isArray(expectedSources));\n\tconst entries = Object.entries(expectedSources);\n\tassert.ok(entries.length > 0);\n\tconst tree = execFileSync(\"git\", [\"ls-tree\", \"-rz\", revision], {\n\t\tmaxBuffer: 64 * 1024 * 1024\n\t\t, stdio: [\"ignore\", \"pipe\", \"pipe\"]\n\t});\n\tconst blobs = new Map();\n\tfor(const entry of tree.toString().split(\"\\0\").filter(Boolean))\n\t{\n\t\tconst tab = entry.indexOf(\"\\t\");\n\t\tassert.ok(tab > 0);\n\t\tconst [mode, type, object] = entry.slice(0, tab).split(\" \");\n\t\tassert.match(mode, /^[0-7]{6}$/u);\n\t\tif(type === \"blob\") blobs.set(entry.slice(tab + 1), object);\n\t}\n\tconst requests = entries.map(([path, expected]) => {\n\t\tassert.equal(posix.normalize(path), path);\n\t\tassert.ok(!path.startsWith(\"/\") && !path.split(\"/\").includes(\"..\"));\n\t\tassert.match(expected, digestPattern);\n\t\tconst object = blobs.get(path);\n\t\tassert.match(object, /^[a-f0-9]{40,64}$/u, path);\n\t\treturn { path, expected, object };\n\t});\n\tconst objects = [...new Set(requests.map(item => item.object))];\n\tconst output = execFileSync(\"git\", [\"cat-file\", \"--batch\"], {\n\t\tinput: objects.join(\"\\n\") + \"\\n\"\n\t\t, maxBuffer: 512 * 1024 * 1024\n\t\t, stdio: [\"pipe\", \"pipe\", \"pipe\"]\n\t});\n\tconst digests = new Map();\n\tlet offset = 0;\n\tfor(const object of objects)\n\t{\n\t\tconst newline = output.indexOf(10, offset);\n\t\tassert.ok(newline > offset);\n\t\tconst [actual, type, sizeText] = output.subarray(offset, newline)\n\t\t\t.toString().split(\" \");\n\t\tassert.equal(actual, object); assert.equal(type, \"blob\");\n\t\tassert.match(sizeText, /^(?:0|[1-9][0-9]*)$/u);\n\t\tconst size = Number(sizeText), start = newline + 1, end = start + size;\n\t\tassert.ok(Number.isSafeInteger(size) && end < output.length);\n\t\tassert.equal(output[end], 10);\n\t\tdigests.set(object, sha256(output.subarray(start, end)));\n\t\toffset = end + 1;\n\t}\n\tassert.equal(offset, output.length);\n\tfor(const { path, expected, object } of requests)\n\t\tassert.equal(digests.get(object), expected, path);\n\treturn true;\n};\n\n",
+          "previous": "",
+          "start": 666
+        }
+      ],
+      "path": "tests/helpers/producer-source.mjs",
+      "previousSha256": "13947a11c1204864a1fc2b55dc01671a722938a8a7cacc79f8b8fc19bd06b748"
+    },
+    {
+      "currentSha256": "e564a160355f8cb411cbf15e1ff542eb34751f24497fea088661900e7fd921d9",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { beforeFinRefinementSource } from \"./fin-refinement-source-history.mjs\";\n",
+          "start": 378
+        },
+        {
+          "current": "import {\n\tsourceAtHistoryMilestone, withHistoryMilestoneSourcePins\n} from \"./source-history-test-source.mjs\";\n",
+          "previous": "",
+          "start": 585
+        },
+        {
+          "current": "\tconst proposed = withHistoryMilestoneSourcePins(\n\t\trecursiveSubtypePhpWasmPromotionHistoryPath\n\t\t, await promoteRecursiveSubtypePhpWasm(original, references)\n\t);\n",
+          "previous": "\tconst proposed = await promoteRecursiveSubtypePhpWasm(original, references);\n",
+          "start": 3696
+        },
+        {
+          "current": "\tconst document = JSON.parse(sourceAtHistoryMilestone(\n\t\trecursiveSubtypePhpWasmPromotionHistoryPath, inventoryPath\n\t));\n",
+          "previous": "\tconst ledger = JSON.parse(await readFile(recursiveSubtypePhpWasmPromotionHistoryPath, \"utf8\"));\n\t// Newer layers append receipts and supplement cells; strip them before comparing this layer's exact output.\n\tconst document = JSON.parse(beforeFinRefinementSource(inventoryPath, await readFile(inventoryPath, \"utf8\")\n\t\t, ledger.updates.find(item => item.path === inventoryPath).currentSha256));\n",
+          "start": 4026
+        }
+      ],
+      "path": "tests/helpers/recursive-subtype-php-wasm-promotion-tests.mjs",
+      "previousSha256": "3f4565d712c042075b013f86ac06195d53ac865198bf4f89c2c84dfeb34375fc"
+    },
+    {
+      "currentSha256": "3d836bea64f803580f7a2ff691fea3e4c9120c35663ce338e36a006d6f08b7ba",
+      "edits": [
+        {
+          "current": "export const ownedWitProjectionProducer = \"f79432dac08bcaf4a7ff6d6c369956961ad2d391\";\n",
+          "previous": "",
+          "start": 566
+        }
+      ],
+      "path": "tests/helpers/wit-owned-projection-history.mjs",
+      "previousSha256": "0ac0699d1bf4a5c5841cc120001be91860936ba23006f75cb15b679c20f13f5d"
+    },
+    {
+      "currentSha256": "1ec27316a41c874cf1ee0db6527c9b6167df08879293386404e305982f8fb528",
+      "edits": [
+        {
+          "current": "export const ownedWitReceiverProducer = \"2ce50a51702a6510821197c0476eb95b08a0e359\";\n",
+          "previous": "",
+          "start": 563
+        }
+      ],
+      "path": "tests/helpers/wit-owned-receiver-history.mjs",
+      "previousSha256": "c69715874968fefc1b679ef0a1a6a4b789dbdd1cd30c01b793a2f4148fb35125"
+    },
+    {
+      "currentSha256": "fd8eed1ad4cd6a54e83cb253ea9e0fd345a32996fac4a180bafaa361fa3acc1a",
+      "edits": [
+        {
+          "current": "import { beforeOwnedRust, reverseOwnedRustUpdate, ownedRustHistoryPath, ownedRustExecutionPath, ownedRustProducer } from \"./helpers/owned-rust-source-history.mjs\";\nimport { bytesAtProducer } from \"./helpers/producer-source.mjs\";\n",
+          "previous": "import { beforeOwnedRust, reverseOwnedRustUpdate, ownedRustHistoryPath, ownedRustExecutionPath } from \"./helpers/owned-rust-source-history.mjs\";\nimport { beforeOwnedPython } from \"./helpers/owned-python-source-history.mjs\";\n",
+          "start": 369
+        },
+        {
+          "current": "\t\tconst source = bytesAtProducer(ownedRustProducer, update.path\n\t\t\t, update.currentSha256).toString(\"utf8\");\n\t\tconst previous = reverseOwnedRustUpdate(source, update);\n\t\tassert.equal(sha256(previous), update.previousSha256);\n\t\tassert.equal(beforeOwnedRust(update.path, source\n\t\t\t, update.previousSha256), previous);\n",
+          "previous": "\t\tconst source = beforeOwnedPython(update.path\n\t\t\t, await readFile(update.path, \"utf8\"), update.currentSha256);\n\t\tassert.equal(sha256(reverseOwnedRustUpdate(source, update)), update.previousSha256);\n\t\tassert.equal(sha256(beforeOwnedRust(update.path, source)), update.previousSha256);\n",
+          "start": 3078
+        }
+      ],
+      "path": "tests/owned-rust-evidence.test.mjs",
+      "previousSha256": "471d03a4b4b686ec3196759a601d7f50a28161f8a2204452efea89a644a1b748"
+    },
+    {
+      "currentSha256": "a4374ad7e7d7038e58e1aa0a345ca4187496a9af8edd1a90322dfc3c58986475",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { beforeOwnedJavaScriptNix, ownedJavaScriptNixHistoricalBytes } from \"./helpers/owned-javascript-nix-history.mjs\";\n",
+          "start": 797
+        },
+        {
+          "current": "\t, ownedWitProjectionPath, ownedWitProjectionPrevious, ownedWitProjectionProducer\n",
+          "previous": "\t, ownedWitProjectionPath, ownedWitProjectionPrevious\n",
+          "start": 923
+        },
+        {
+          "current": "import { bytesAtProducer } from \"./helpers/producer-source.mjs\";\n",
+          "previous": "",
+          "start": 1093
+        },
+        {
+          "current": "\tfor(const [path, hash] of Object.entries(record.sources))\n\t\tassert.equal(sha256(bytesAtProducer(\n\t\t\townedWitProjectionProducer, path, hash)), hash, path);\n",
+          "previous": "\tfor(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(ownedJavaScriptNixHistoricalBytes(path, await readFile(path), hash)), hash, path);\n",
+          "start": 1945
+        },
+        {
+          "current": "\t\tconst current = bytesAtProducer(ownedWitProjectionProducer, update.path\n\t\t\t, update.currentSha256).toString(\"utf8\");\n\t\tconst prior = reverseOwnedWitProjectionUpdate(current, update);\n\t\tassert.equal(sha256(prior), update.previousSha256);\n\t\tassert.equal(beforeOwnedWitProjection(update.path, current\n\t\t\t, update.previousSha256), prior);\n",
+          "previous": "\t\tconst current = beforeOwnedJavaScriptNix(update.path\n\t\t\t, await readFile(update.path, \"utf8\"), update.currentSha256);\n\t\tassert.equal(sha256(beforeOwnedWitProjection(update.path, current)), update.previousSha256);\n",
+          "start": 2398
+        },
+        {
+          "current": "\tconst path = \"docs/type-surface.v1.json\";\n\tconst update = record.updates.find(item => item.path === path);\n\tconst current = bytesAtProducer(ownedWitProjectionProducer, path\n\t\t, record.sources[path]).toString(\"utf8\");\n\tconst prior = JSON.parse(reverseOwnedWitProjectionUpdate(current, update));\n",
+          "previous": "\tconst current = beforeOwnedJavaScriptNix(\"docs/type-surface.v1.json\"\n\t\t, await readFile(\"docs/type-surface.v1.json\", \"utf8\")\n\t\t, record.sources[\"docs/type-surface.v1.json\"]);\n\tconst prior = JSON.parse(beforeOwnedWitProjection(\"docs/type-surface.v1.json\", current));\n",
+          "start": 2833
+        },
+        {
+          "current": "\t\tfile.sha256 = sha256(bytesAtProducer(ownedWitProjectionProducer\n\t\t\t, file.path, record.sources[file.path] ?? file.sha256));\n",
+          "previous": "\t\tfile.sha256 = sha256(ownedJavaScriptNixHistoricalBytes(file.path\n\t\t\t, await readFile(file.path), record.sources[file.path] ?? file.sha256));\n",
+          "start": 3201
+        },
+        {
+          "current": "\t\tconst current = bytesAtProducer(ownedWitProjectionProducer, update.path\n\t\t\t, update.currentSha256).toString(\"utf8\");\n\t\tconst unknown = current + \"\\n/* unrelated */\\n\";\n",
+          "previous": "\t\tconst current = beforeOwnedJavaScriptNix(update.path\n\t\t\t, await readFile(update.path, \"utf8\"), update.currentSha256)\n\t\t\t, unknown = current + \"\\n/* unrelated */\\n\";\n",
+          "start": 3583
+        }
+      ],
+      "path": "tests/wit-owned-projection-evidence.test.mjs",
+      "previousSha256": "3fb5791a36edb82311a419d48ce8aba13e06ad860a1cce5ad98d0a4b591be0bc"
+    },
+    {
+      "currentSha256": "af0f219bbcde488ffac0356a5693e76e0dd019ca5bcab4e6904a59b17a4d4767",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { beforeOwnedJvmReceiverGc, ownedJvmReceiverGcHistoricalBytes } from \"./helpers/owned-jvm-receiver-gc-history.mjs\";\n",
+          "start": 432
+        },
+        {
+          "current": "\t, ownedWitReceiverProducer, beforeOwnedWitReceiver\n\t, reverseOwnedWitReceiverUpdate } from \"./helpers/wit-owned-receiver-history.mjs\";\nimport { bytesAtProducer } from \"./helpers/producer-source.mjs\";\n",
+          "previous": "\t, beforeOwnedWitReceiver, reverseOwnedWitReceiverUpdate } from \"./helpers/wit-owned-receiver-history.mjs\";\n",
+          "start": 574
+        },
+        {
+          "current": "\tfor(const [path, digest] of Object.entries(record.sources))\n\t\tassert.equal(sha256(bytesAtProducer(\n\t\t\townedWitReceiverProducer, path, digest)), digest, path);\n",
+          "previous": "\tfor(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(ownedJvmReceiverGcHistoricalBytes(path, await readFile(path), digest)), digest, path);\n",
+          "start": 1502
+        },
+        {
+          "current": "\t\tconst source = bytesAtProducer(ownedWitReceiverProducer, update.path\n\t\t\t, update.currentSha256).toString(\"utf8\");\n\t\tconst prior = reverseOwnedWitReceiverUpdate(source, update);\n",
+          "previous": "\t\tconst source = beforeOwnedJvmReceiverGc(update.path, await readFile(update.path, \"utf8\"), update.currentSha256);\n\t\tconst prior = beforeOwnedWitReceiver(update.path, source);\n",
+          "start": 1931
+        },
+        {
+          "current": "\t\tassert.equal(beforeOwnedWitReceiver(update.path, source\n\t\t\t, update.previousSha256), prior);\n\t\tassert.equal(beforeOwnedWitReceiver(update.path, prior\n\t\t\t, update.previousSha256), prior);\n",
+          "previous": "\t\tassert.equal(beforeOwnedWitReceiver(update.path, prior), prior);\n",
+          "start": 2164
+        },
+        {
+          "current": "\tconst path = \"docs/type-surface.v1.json\";\n\tconst update = record.updates.find(item => item.path === path);\n\tconst current = bytesAtProducer(ownedWitReceiverProducer, path\n\t\t, record.sources[path]).toString(\"utf8\");\n\tconst prior = JSON.parse(reverseOwnedWitReceiverUpdate(current, update));\n",
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", current = beforeOwnedJvmReceiverGc(path, await readFile(path, \"utf8\"), record.sources[path]);\n\tconst prior = JSON.parse(beforeOwnedWitReceiver(path, current));\n",
+          "start": 2891
+        },
+        {
+          "current": "\t\tfile.sha256 = sha256(bytesAtProducer(ownedWitReceiverProducer\n\t\t\t, file.path, record.sources[file.path] ?? file.sha256));\n",
+          "previous": "\t\tfile.sha256 = sha256(ownedJvmReceiverGcHistoricalBytes(file.path\n\t\t\t, await readFile(file.path), record.sources[file.path] ?? file.sha256));\n",
+          "start": 3255
+        }
+      ],
+      "path": "tests/wit-owned-receiver-evidence.test.mjs",
+      "previousSha256": "3b7c4a85c5c44671d5942cc2ca222f36ca549146803ed11cb654b9b23f559881"
+    }
+  ]
+}
