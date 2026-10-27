@@ -1,0 +1,77 @@
+{
+  "historyAdditions": [
+    {
+      "currentSha256": "0dd11531d2bddef736c26f777bc0f0b46823ed5004bab5e6302f6eee9375cc44",
+      "path": "scripts/update-core-replay-integration-endpoint-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "8199de365991dd81c6f1a31d03201828cbe4350b0259d5af84f2163a2446a628",
+      "path": "tests/helpers/core-replay-integration-endpoint-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "aabac1b162a9e5d6ff00130af1c26ba5d3828912",
+  "integrationUpdates": [
+    {
+      "currentSha256": "d6a19515ddd29dd53ec2c8419b021b8248d020c6224b9f5d2af6b5c93d392f6e",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeCoreReplayIntegrationEndpointRepairSource\n\t, coreReplayIntegrationEndpointRepairHistoryAdditions\n\t, coreReplayIntegrationEndpointRepairHistoryPath\n\t, coreReplayIntegrationEndpointRepairImplementation\n\t, coreReplayIntegrationEndpointRepairImplementationPaths\n\t, coreReplayIntegrationEndpointRepairIntegrationPaths\n\t, coreReplayIntegrationEndpointRepairPredecessor\n\t, reverseCoreReplayIntegrationEndpointRepairUpdate\n} from \"./core-replay-integration-endpoint-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 357
+        },
+        {
+          "current": "const readCoreReplayIntegrationEndpointRepair = async () => JSON.parse(\n\tawait readFile(coreReplayIntegrationEndpointRepairHistoryPath, \"utf8\")\n);\n",
+          "previous": "",
+          "start": 12879
+        },
+        {
+          "current": "test(\"Core replay integration endpoint repair records its exact range\", async () => {\n\tconst record = await readCoreReplayIntegrationEndpointRepair();\n\tassert.equal(record.schemaVersion, 1);\n\tassert.equal(record.milestone\n\t\t, \"core-replay-integration-endpoint-repair-source-v1\");\n\tassert.equal(record.predecessorCommit\n\t\t, coreReplayIntegrationEndpointRepairPredecessor);\n\tassert.equal(record.implementationCommit\n\t\t, coreReplayIntegrationEndpointRepairImplementation);\n\tassert.deepEqual(record.updates.map(update => update.path)\n\t\t, coreReplayIntegrationEndpointRepairImplementationPaths);\n\tassert.deepEqual(record.historyAdditions.map(addition => addition.path)\n\t\t, coreReplayIntegrationEndpointRepairHistoryAdditions);\n\tassert.deepEqual(record.integrationUpdates.map(update => update.path)\n\t\t, coreReplayIntegrationEndpointRepairIntegrationPaths);\n\tassert.equal(git([\"rev-parse\"\n\t\t, `${coreReplayIntegrationEndpointRepairImplementation}^`]).trim()\n\t, coreReplayIntegrationEndpointRepairPredecessor);\n\tassert.deepEqual(git([\"diff\", \"--name-only\", \"--diff-filter=M\"\n\t\t, coreReplayIntegrationEndpointRepairPredecessor\n\t\t, coreReplayIntegrationEndpointRepairImplementation])\n\t\t.trim().split(\"\\n\").sort()\n\t, [...coreReplayIntegrationEndpointRepairImplementationPaths].sort());\n});\n\ntest(\"Core replay integration endpoint repair reverses every transition\", async () => {\n\tconst record = await readCoreReplayIntegrationEndpointRepair();\n\tfor(const update of [...record.updates, ...record.integrationUpdates])\n\t{\n\t\tconst integration = record.integrationUpdates.includes(update);\n\t\tconst current = integration\n\t\t\t? await sourceAtFinHistoryRecordSource(\n\t\t\t\tcoreReplayIntegrationEndpointRepairHistoryPath, update.path\n\t\t\t\t, update.currentSha256\n\t\t\t\t, beforeCoreReplayIntegrationEndpointRepairSource\n\t\t\t)\n\t\t\t: await sourceAtFinHistoryRecord(\n\t\t\t\tcoreReplayIntegrationEndpointRepairHistoryPath, update.path\n\t\t\t\t, beforeCoreReplayIntegrationEndpointRepairSource\n\t\t\t);\n\t\tconst base = integration\n\t\t\t? coreReplayIntegrationEndpointRepairImplementation\n\t\t\t: coreReplayIntegrationEndpointRepairPredecessor;\n\t\tconst previous = git([\"show\", `${base}:${update.path}`]);\n\t\tassert.equal(reverseCoreReplayIntegrationEndpointRepairUpdate(\n\t\t\tcurrent, update), previous, update.path);\n\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n\t\tassert.ok(finRefinementNormalizationPaths.includes(update.path));\n\t}\n\tfor(const addition of record.historyAdditions)\n\t\tassert.equal(sha256(await sourceAtFinHistoryRecordSource(\n\t\t\tcoreReplayIntegrationEndpointRepairHistoryPath\n\t\t\t, addition.path, addition.currentSha256\n\t\t)), addition.currentSha256, addition.path);\n});\n\ntest(\"Core replay integration endpoint repair rejects altered transitions\", async () => {\n\tconst update = (await readCoreReplayIntegrationEndpointRepair()).updates[0];\n\tconst current = await sourceAtFinHistoryRecord(\n\t\tcoreReplayIntegrationEndpointRepairHistoryPath, update.path\n\t\t, beforeCoreReplayIntegrationEndpointRepairSource\n\t);\n\tfor(const forged of [{ ...update, currentSha256: \"0\".repeat(64) }\n\t\t, { ...update, previousSha256: \"0\".repeat(64) }\n\t\t, { ...update, path: \"unrelated.mjs\" }\n\t\t, { ...update, edits: [] }\n\t\t, { ...update, edits: [...update.edits, update.edits[0]] }])\n\t\tassert.throws(() => reverseCoreReplayIntegrationEndpointRepairUpdate(\n\t\t\tcurrent, forged));\n\tassert.equal(beforeCoreReplayIntegrationEndpointRepairSource(\n\t\tupdate.path, current + \"unknown\"), current + \"unknown\");\n});\n\ntest(\"Core replay integration endpoint writer refuses another checkout\", async t => {\n\tconst root = await mkdtemp(join(\n\t\ttmpdir(), \"lean-core-replay-endpoint-guard-\"));\n\tt.after(() => rm(root, { recursive: true }));\n\tconst result = spawnSync(process.execPath, [resolve(\n\t\t\"scripts/update-core-replay-integration-endpoint-repair-source-history.mjs\"\n\t)], { cwd: root, encoding: \"utf8\", timeout: 15_000 });\n\tassert.notEqual(result.status, 0);\n\tassert.equal(result.stdout, \"\");\n\tassert.deepEqual(await readdir(root), []);\n});\n\n",
+          "previous": "",
+          "start": 16340
+        }
+      ],
+      "path": "tests/helpers/core-historical-evidence-replay-source-history-tests.mjs",
+      "previousSha256": "6782696cec531727b58989a79763ae8a0d9b98740838c2207efcf6d30fd7b061"
+    },
+    {
+      "currentSha256": "a7906054646815b319621417be7fd3de275e66d722722d5ab1ed94d8d308082a",
+      "edits": [
+        {
+          "current": "import { beforeCoreReplayIntegrationEndpointRepairSource, coreReplayIntegrationEndpointRepairNormalizationPaths } from \"./core-replay-integration-endpoint-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...coreReplayIntegrationEndpointRepairNormalizationPaths()\n\t, ...coreExactHeadReplayRepairNormalizationPaths()\n",
+          "previous": "\t...coreExactHeadReplayRepairNormalizationPaths()\n",
+          "start": 194983
+        },
+        {
+          "current": "\tlet stage = beforeCoreReplayIntegrationEndpointRepairSource(\n\t\tpath, text, expected\n\t);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCoreExactHeadReplayRepairSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeCoreExactHeadReplayRepairSource(path, text, expected);\n",
+          "start": 242393
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "2d87cd958ccd38815a22955870d8055e6fdc235f12917c2bb4a73d07597f322a"
+    }
+  ],
+  "milestone": "core-replay-integration-endpoint-repair-source-v1",
+  "predecessorCommit": "39953768a32994d255da0315b2eecec43d022a88",
+  "schemaVersion": 1,
+  "scope": "Verify seal-integration transitions at their immutable record-commit endpoint while keeping implementation transitions on the named update lookup.",
+  "updates": [
+    {
+      "currentSha256": "6782696cec531727b58989a79763ae8a0d9b98740838c2207efcf6d30fd7b061",
+      "edits": [
+        {
+          "current": "\t\tconst integration = record.integrationUpdates.includes(update);\n\t\tconst current = integration\n\t\t\t? await sourceAtFinHistoryRecordSource(\n\t\t\t\tcoreExactHeadReplayRepairHistoryPath, update.path\n\t\t\t\t, update.currentSha256, beforeCoreExactHeadReplayRepairSource\n\t\t\t)\n\t\t\t: await sourceAtFinHistoryRecord(\n\t\t\t\tcoreExactHeadReplayRepairHistoryPath, update.path\n\t\t\t\t, beforeCoreExactHeadReplayRepairSource\n\t\t\t);\n\t\tconst base = integration\n",
+          "previous": "\t\tconst current = await sourceAtFinHistoryRecord(\n\t\t\tcoreExactHeadReplayRepairHistoryPath, update.path\n\t\t\t, beforeCoreExactHeadReplayRepairSource\n\t\t);\n\t\tconst base = record.integrationUpdates.includes(update)\n",
+          "start": 17180
+        }
+      ],
+      "path": "tests/helpers/core-historical-evidence-replay-source-history-tests.mjs",
+      "previousSha256": "27eb14724f2726d87a5c86ed7c61607134edf331ca74b71b3d810fad9bbad61c"
+    }
+  ]
+}
