@@ -14,7 +14,7 @@ import {
 	collectCoreContractEvidencePlan, collectCoreTypeSurfaceEvidencePlan
 	, coreContractDocumentationEvidenceFiles
 	, coreContractDocumentationReferences, coreContractEvidenceBaseline
-	, coreContractEvidenceDirectoryReferences
+	, coreContractEvidenceDirectoryReferences, coreContractExecutableEvidenceFiles
 	, coreContractEvidenceFragments, coreContractReadsTypeSurface
 	, coreSparseCheckoutMode
 	, coreTypeSurfaceEvidenceDirectories, coreTypeSurfaceEvidenceReceipt
@@ -97,6 +97,15 @@ test("Core evidence planning ignores rendered documentation links in code", () =
 	const source = 'const prose = "[record](../evidence/owned-subtype-jvm-hosted-20990101/index.json)";';
 	assert.deepEqual([...coreContractEvidenceDirectoryReferences(
 		source, "generator.mjs", directories)], []);
+});
+
+test("Core evidence planning retains exact historical additions", () => {
+	const path = "docs/evidence/nominal-primitive-subtype-supplement-20990101/.gitattributes";
+	const source = `export const added = ["${path}"];`;
+	assert.deepEqual([...coreContractExecutableEvidenceFiles(
+		source, "repair-source-history.mjs", [path])], [path]);
+	assert.deepEqual([...coreContractExecutableEvidenceFiles(
+		source, "repair-source-history.mjs", [])], []);
 });
 
 test("Core evidence planning follows documentation named by contracts", async () => {

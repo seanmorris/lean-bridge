@@ -325,6 +325,27 @@ export const coreContractDocumentationEvidenceFiles = (
 };
 
 /**
+ * Resolve exact retained-evidence paths named by executable source. This keeps
+ * file-scoped historical additions available without materializing every
+ * sibling payload in their archive directories.
+ *
+ * @param source - Executable source text.
+ * @param path - Repository-relative source path.
+ * @param trackedFiles - Tracked repository evidence paths.
+ */
+export const coreContractExecutableEvidenceFiles = (
+	source, path, trackedFiles
+) => {
+	if(!sourceExtensions.has(extname(path))) return new Set();
+	const tracked = trackedFiles instanceof Set
+		? trackedFiles : new Set(trackedFiles);
+	return new Set(coreContractEvidenceFragments(source, path)
+		.map(fragment => normalize(fragment).replaceAll("\\", "/"))
+		.filter(fragment => fragment.startsWith("docs/evidence/")
+			&& tracked.has(fragment)));
+};
+
+/**
  * List the tracked top-level retained-evidence directories at HEAD.
  *
  * @param root - Repository root.
@@ -445,6 +466,7 @@ export const collectCoreContractEvidencePlan = async (
 	const shard = coreContractShardManifest(contract, label);
 	const directories = trackedEvidenceDirectories(root);
 	const evidenceFiles = trackedEvidenceFiles(root);
+	const evidenceFileSet = new Set(evidenceFiles);
 	const selectedDirectories = new Set();
 	const selectedFiles = new Set();
 	const sources = new Set();
@@ -465,9 +487,14 @@ export const collectCoreContractEvidencePlan = async (
 		if(extname(path) === ".md" && path.startsWith("docs/"))
 			for(const file of coreContractDocumentationEvidenceFiles(
 				source, path, evidenceFiles)) selectedFiles.add(file);
-		else if(!/-source-history[.]mjs$/u.test(path))
-			for(const directory of coreContractEvidenceDirectoryReferences(
-				source, path, directories)) selectedDirectories.add(directory);
+		else
+		{
+			for(const file of coreContractExecutableEvidenceFiles(
+				source, path, evidenceFileSet)) selectedFiles.add(file);
+			if(!/-source-history[.]mjs$/u.test(path))
+				for(const directory of coreContractEvidenceDirectoryReferences(
+					source, path, directories)) selectedDirectories.add(directory);
+		}
 		for(const reference of await repositorySourceReferences(source, path, root))
 			if(!sources.has(reference)) pending.push(reference);
 		for(const reference of await coreContractDocumentationReferences(
