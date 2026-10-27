@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeDefaultBranchCiTriggerBudgetSource, defaultBranchCiTriggerBudgetNormalizationPaths } from "./default-branch-ci-trigger-budget-source-history.mjs";
 import { beforeCoreUniqueTypeSurfaceAuthenticationSource, coreUniqueTypeSurfaceAuthenticationNormalizationPaths } from "./core-unique-type-surface-authentication-source-history.mjs";
 import { beforeCoreHistoricalAdditionCheckoutRepairSource, coreHistoricalAdditionCheckoutRepairNormalizationPaths } from "./core-historical-addition-checkout-repair-source-history.mjs";
 import { beforeCoreTypeSurfaceSinglePassSource, coreTypeSurfaceSinglePassNormalizationPaths } from "./core-type-surface-single-pass-source-history.mjs";
@@ -2230,7 +2231,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...coreUniqueTypeSurfaceAuthenticationNormalizationPaths
+	...defaultBranchCiTriggerBudgetNormalizationPaths()
+	, ...coreUniqueTypeSurfaceAuthenticationNormalizationPaths
 	, ...coreHistoricalAdditionCheckoutRepairNormalizationPaths
 	, ...coreTypeSurfaceSinglePassNormalizationPaths
 	, ...coreDocumentationEvidenceClosureRepairNormalizationPaths
@@ -3203,7 +3205,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeCoreUniqueTypeSurfaceAuthenticationSource(
+	let stage = beforeDefaultBranchCiTriggerBudgetSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeCoreUniqueTypeSurfaceAuthenticationSource(
 		path, text, expected
 	);
 	if(expected !== undefined && sha256(stage) === expected)
