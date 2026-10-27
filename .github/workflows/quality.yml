@@ -68,9 +68,71 @@ jobs:
           npm run lint
           npm run typecheck
 
+  type_surface:
+    name: Type-surface evidence authentication
+    needs: static
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - name: Free hosted runner disk for the evidence checkout
+        run: |
+          df -h /
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/.ghcup /opt/hostedtoolcache/CodeQL
+          df -h /
+      - name: Check out the exact revision
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+          sparse-checkout: |
+            /*
+            !/*/
+            /.github/
+            /acceptance/
+            /config/
+            /containers/
+            /demos/
+            /nix/
+            /notices/
+            /patches/
+            /poc/
+            /schema/
+            /scripts/
+            /site/
+            /src/
+            /tests/
+            /docs/
+            !/docs/evidence/*
+            /docs/evidence/*.json
+            /docs/evidence/*.md
+            /docs/evidence/*.xml
+            /docs/evidence/*/index.json
+          sparse-checkout-cone-mode: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install dependencies without lifecycle scripts
+        run: npm ci --ignore-scripts
+      - name: Authenticate the type-surface corpus once
+        run: |
+          node scripts/create-core-type-surface-evidence-receipt.mjs \
+            --receipt build/core-type-surface/receipt.json \
+            --manifest build/core-type-surface/materialization.json \
+            --commit "${{ github.sha }}"
+      - name: Preserve the exact type-surface receipt
+        uses: actions/upload-artifact@v7
+        with:
+          name: core-type-surface-${{ github.sha }}
+          path: build/core-type-surface
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 7
+
   contract:
     name: Contract shard ${{ matrix.shard }}/12
-    needs: static
+    needs: [static, type_surface]
     runs-on: ubuntu-24.04
     # Run 40306481801 showed that a 20–25 minute full-history checkout left
     # shard 5 only 156 minutes; its complete, still-passing evidence replay was
@@ -141,16 +203,24 @@ jobs:
         run: bash scripts/bootstrap-toolchains.sh --wasm-tools-only
       - name: Install dependencies without lifecycle scripts
         run: npm ci --ignore-scripts
+      - name: Restore the authenticated type-surface receipt
+        uses: actions/download-artifact@v8
+        with:
+          name: core-type-surface-${{ github.sha }}
+          path: build/core-type-surface
       - name: Materialize this shard's retained evidence
         run: |
           node scripts/materialize-core-contract-evidence.mjs \
             --shard "${{ matrix.shard }}/12" \
-            --manifest "build/core-evidence/core-shard-${{ matrix.shard }}-evidence.json"
+            --manifest "build/core-evidence/core-shard-${{ matrix.shard }}-evidence.json" \
+            --type-surface-receipt build/core-type-surface/receipt.json
       - name: Report disk after shard evidence materialization
         run: df -h / "$GITHUB_WORKSPACE"
       - name: Install C/GMP contract-test headers
         run: sudo apt-get update && sudo apt-get install -y libgmp-dev
       - name: Run one closed contract shard
+        env:
+          LEAN_BRIDGE_TYPE_SURFACE_EVIDENCE_RECEIPT: ${{ github.workspace }}/build/core-type-surface/receipt.json
         run: |
           source scripts/env.sh
           bash scripts/run-test-profile.sh contract \
@@ -176,7 +246,7 @@ jobs:
   quality:
     name: quality
     if: always()
-    needs: [static, contract]
+    needs: [static, type_surface, contract]
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
@@ -205,7 +275,9 @@ jobs:
       - name: Require static quality and every contract shard
         env:
           STATIC_RESULT: ${{ needs.static.result }}
+          TYPE_SURFACE_RESULT: ${{ needs.type_surface.result }}
           CONTRACT_RESULT: ${{ needs.contract.result }}
         run: |
           test "$STATIC_RESULT" = success
+          test "$TYPE_SURFACE_RESULT" = success
           test "$CONTRACT_RESULT" = success

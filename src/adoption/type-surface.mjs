@@ -6,11 +6,15 @@
  */
 
 import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { readFile, realpath } from "node:fs/promises";
 import path from "node:path";
 import Ajv from "ajv/dist/2020.js";
 import schema from "../../schema/type-surface.schema.json" with { type: "json" };
+import {
+	assertTypeSurfaceEvidenceReceipt, typeSurfaceEvidenceSourcePaths
+} from "./type-surface-evidence-receipt.mjs";
 
 const root = path.resolve(import.meta.dirname, "../..");
 const validateSchema = new Ajv({ allErrors: true, strict: true }).compile(schema);
@@ -221,17 +225,40 @@ export function validateTypeSurface(document, { irSchema, consumers })
  *
  * @param options - Source location for repository or isolated validation.
  * @param options.repository - Root containing the inventory and its evidence sources.
+ * @param options.evidenceReceipt - Explicit intra-workflow receipt, or null to
+ * force full byte validation. The environment handoff is accepted only for the
+ * live repository, never for isolated validation roots.
  */
-export async function readTypeSurface({ repository = root } = {})
+export async function readTypeSurface(options = {})
 {
-	const read = async relative => JSON.parse(await readFile(path.join(repository, relative), "utf8"));
-	const [document, irSchema, consumers] = await Promise.all([
-		read("docs/type-surface.v1.json")
-		, read("schema/binding-ir.schema.json")
-		, read("docs/consumer-support.v1.json")
-	]);
+	const repository = path.resolve(options.repository ?? root);
+	const sources = Object.fromEntries(await Promise.all(
+		typeSurfaceEvidenceSourcePaths.map(async relative => [
+			relative, await readFile(path.join(repository, relative))
+		])
+	));
+	const [document, irSchema, consumers] = typeSurfaceEvidenceSourcePaths
+		.map(relative => JSON.parse(sources[relative].toString("utf8")));
 	validateTypeSurface(document, { irSchema, consumers });
 	const canonicalRoot = await realpath(repository);
+	const evidenceReceipt = Object.hasOwn(options, "evidenceReceipt")
+		? options.evidenceReceipt : canonicalRoot === await realpath(root)
+			? process.env.LEAN_BRIDGE_TYPE_SURFACE_EVIDENCE_RECEIPT : undefined;
+	if(evidenceReceipt)
+	{
+		assert.equal(typeof evidenceReceipt, "string");
+		assert.ok(!/[\0\r\n]/u.test(evidenceReceipt));
+		const receipt = JSON.parse(await readFile(evidenceReceipt, "utf8"));
+		const commit = execFileSync("git", [
+			"-C", canonicalRoot, "rev-parse", "HEAD"
+		], { encoding: "utf8" }).trim();
+		assertTypeSurfaceEvidenceReceipt(receipt, {
+			commit, document
+			, sourceSha256: Object.fromEntries(typeSurfaceEvidenceSourcePaths
+				.map(relative => [relative, digest(sources[relative])]))
+		});
+		return { document, irSchema, consumers };
+	}
 	for(const evidence of document.evidence)
 		for(const file of evidence.files)
 		{

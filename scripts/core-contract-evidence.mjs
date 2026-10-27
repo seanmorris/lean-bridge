@@ -14,6 +14,9 @@ import { readFile, stat } from "node:fs/promises";
 import { dirname, extname, isAbsolute, join, normalize, relative, resolve } from "node:path";
 import ts from "typescript";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
+import {
+	assertTypeSurfaceEvidenceReceipt, typeSurfaceEvidenceSourcePaths
+} from "../src/adoption/type-surface-evidence-receipt.mjs";
 import { moduleSpecifiers } from "../tests/helpers/module-closure.mjs";
 import {
 	collectCoreContractTestPaths, coreContractShardLabels
@@ -98,6 +101,35 @@ const enumeratesEvidenceDirectories = (source, path) => {
 };
 
 /**
+ * Distinguish enumeration that locates complete archives for replay from an
+ * index-only inventory. The baseline already retains every archive index, so
+ * an enumerator that never passes a selected root to an evidence checker does
+ * not need the archive payloads in its sparse working tree.
+ *
+ * @param source - JavaScript source.
+ * @param path - Diagnostic source path.
+ */
+const replaysEnumeratedEvidenceDirectories = (source, path) => {
+	if(!enumeratesEvidenceDirectories(source, path)) return false;
+	const file = ts.createSourceFile(path, source, ts.ScriptTarget.Latest, true
+		, ts.ScriptKind.JS);
+	let found = false;
+	const visit = node => {
+		if(found) return;
+		if(ts.isCallExpression(node))
+		{
+			const callee = node.expression;
+			const name = ts.isIdentifier(callee) ? callee.text
+				: ts.isPropertyAccessExpression(callee) ? callee.name.text : "";
+			if(/^check[A-Z][A-Za-z0-9]*Evidence$/u.test(name)) found = true;
+		}
+		ts.forEachChild(node, visit);
+	};
+	visit(file);
+	return found;
+};
+
+/**
  * Detect executable calls that require `readTypeSurface` to authenticate every
  * source named by the live inventory. Merely importing or defining the
  * function does not require the complete retained-evidence closure.
@@ -171,7 +203,13 @@ export const coreTypeSurfaceEvidenceDirectories = (document, directories) => {
 export const coreContractEvidenceDirectoryReferences = (
 	source, path, directories
 ) => {
-	const selected = new Set(directories.filter(name => source.includes(name)));
+	const fragments = coreContractEvidenceFragments(source, path);
+	const selected = new Set(directories.filter(name => fragments.some(fragment =>
+		fragment === name || fragment.startsWith(`${name}/`)
+			|| fragment.includes(`/docs/evidence/${name}/`)
+			|| fragment.endsWith(`/docs/evidence/${name}`)
+			|| fragment.startsWith(`docs/evidence/${name}/`)
+			|| fragment === `docs/evidence/${name}`)));
 	for(const match of source.matchAll(explicitPrefixPattern))
 		for(const directory of directories)
 			if(directory.startsWith(match[1])
@@ -179,7 +217,7 @@ export const coreContractEvidenceDirectoryReferences = (
 				selected.add(directory);
 	const enumeratesEvidence = enumeratesEvidenceDirectories(source, path);
 	const selectors = new Set((enumeratesEvidence
-		? coreContractEvidenceFragments(source, path) : [])
+		&& replaysEnumeratedEvidenceDirectories(source, path) ? fragments : [])
 		.flatMap(fragment => [...fragment.matchAll(selectorPattern)]
 			.map(match => match[0]))
 		.filter(fragment => (fragment.match(/-/gu)?.length ?? 0) >= 2
@@ -259,7 +297,39 @@ export const coreContractDocumentationReferences = async (
 	return references;
 };
 
-const trackedEvidenceDirectories = root => execFileSync("git", [
+/**
+ * Resolve the exact retained-evidence files reached by local Markdown links.
+ * Documentation contracts call `access` on these targets; they do not consume
+ * every sibling payload in the target's archive directory.
+ *
+ * @param source - Markdown source.
+ * @param path - Repository-relative documentation path.
+ * @param trackedFiles - Tracked repository evidence paths.
+ */
+export const coreContractDocumentationEvidenceFiles = (
+	source, path, trackedFiles
+) => {
+	if(extname(path) !== ".md" || !path.startsWith("docs/")) return new Set();
+	const tracked = new Set(trackedFiles);
+	const selected = new Set();
+	for(const match of source.matchAll(/\[[^\]]+\]\(([^)]+)\)/gu))
+	{
+		const target = match[1].split("#")[0];
+		if(!target || /^[a-z]+:/u.test(target)) continue;
+		const repositoryPath = normalize(join(dirname(path), target))
+			.replaceAll("\\", "/");
+		if(repositoryPath.startsWith("docs/evidence/")
+			&& tracked.has(repositoryPath)) selected.add(repositoryPath);
+	}
+	return selected;
+};
+
+/**
+ * List the tracked top-level retained-evidence directories at HEAD.
+ *
+ * @param root - Repository root.
+ */
+export const trackedEvidenceDirectories = root => execFileSync("git", [
 	"-C", root, "ls-tree", "-z", "HEAD:docs/evidence"
 ], { encoding: "utf8", maxBuffer: 16 * 1024 * 1024 }).split("\0")
 	.filter(Boolean).flatMap(line => {
@@ -267,6 +337,72 @@ const trackedEvidenceDirectories = root => execFileSync("git", [
 		assert.ok(match, `Malformed evidence tree entry: ${line}`);
 		return match[1] === "tree" ? [match[2]] : [];
 	}).toSorted();
+
+/**
+ * List every tracked retained-evidence file at HEAD.
+ *
+ * @param root - Repository root.
+ */
+export const trackedEvidenceFiles = root => execFileSync("git", [
+	"-C", root, "ls-tree", "-r", "-z", "--name-only", "HEAD:docs/evidence"
+], { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 }).split("\0")
+	.filter(Boolean).map(path => `docs/evidence/${path}`).toSorted();
+
+/**
+ * Authenticate one exact receipt before excluding the full type-surface corpus
+ * from a shard's sparse working tree.
+ *
+ * @param receiptPath - Receipt artifact produced by the prerequisite job.
+ * @param root - Repository root at the same exact revision.
+ */
+export const coreTypeSurfaceEvidenceReceipt = async (receiptPath
+	, root = resolve(".")) => {
+	assert.equal(typeof receiptPath, "string");
+	assert.ok(receiptPath && !/[\0\r\n]/u.test(receiptPath));
+	root = resolve(root);
+	const sources = Object.fromEntries(await Promise.all(
+		typeSurfaceEvidenceSourcePaths.map(async path => [
+			path, await readFile(join(root, path))
+		])
+	));
+	const document = JSON.parse(
+		sources["docs/type-surface.v1.json"].toString("utf8")
+	);
+	const receipt = JSON.parse(await readFile(resolve(receiptPath), "utf8"));
+	const commit = execFileSync("git", ["-C", root, "rev-parse", "HEAD"])
+		.toString().trim();
+	assertTypeSurfaceEvidenceReceipt(receipt, {
+		commit, document
+		, sourceSha256: Object.fromEntries(typeSurfaceEvidenceSourcePaths
+			.map(path => [path, sha256(sources[path])]))
+	});
+	return receipt;
+	};
+
+/**
+ * Plan the one full corpus materialization performed before the shard matrix.
+ *
+ * @param root - Repository root.
+ */
+export const collectCoreTypeSurfaceEvidencePlan = async (
+	root = resolve(".")
+) => {
+	root = resolve(root);
+	const directories = trackedEvidenceDirectories(root);
+	const document = JSON.parse(await readFile(
+		join(root, "docs/type-surface.v1.json"), "utf8"));
+	const selected = [...coreTypeSurfaceEvidenceDirectories(
+		document, directories)].toSorted();
+	const patterns = selected.map(directory => `/docs/evidence/${directory}/`);
+	return {
+		schemaVersion: 1, baseline: coreContractEvidenceBaseline
+		, evidence: {
+			directoryCount: selected.length
+			, sha256: sha256(canonicalJson(selected))
+			, directories: selected, patterns
+		}
+	};
+};
 
 /**
  * Read Git's sparse-checkout booleans without conflating an unset false value
@@ -297,16 +433,20 @@ export const coreSparseCheckoutMode = (root = resolve(".")) => {
  *
  * @param label - One-based Core shard label.
  * @param root - Repository root.
+ * @param options - Exact prerequisite artifacts.
+ * @param options.evidenceReceipt - Optional authenticated type-surface receipt.
  */
 export const collectCoreContractEvidencePlan = async (
-	label, root = resolve(".")
+	label, root = resolve("."), { evidenceReceipt } = {}
 ) => {
 	assert.ok(coreContractShardLabels.includes(label), `Unknown Core shard ${label}`);
 	root = resolve(root);
 	const contract = await collectCoreContractTestPaths(root);
 	const shard = coreContractShardManifest(contract, label);
 	const directories = trackedEvidenceDirectories(root);
+	const evidenceFiles = trackedEvidenceFiles(root);
 	const selectedDirectories = new Set();
+	const selectedFiles = new Set();
 	const sources = new Set();
 	let completeTypeSurface = false;
 	const pending = [...shard.selection.files];
@@ -322,7 +462,10 @@ export const collectCoreContractEvidencePlan = async (
 		// which is part of the baseline. Archive-looking strings inside those
 		// modules describe historical changed paths; they are not working-tree
 		// payload reads. Their executable tests remain eligible below.
-		if(!/-source-history[.]mjs$/u.test(path))
+		if(extname(path) === ".md" && path.startsWith("docs/"))
+			for(const file of coreContractDocumentationEvidenceFiles(
+				source, path, evidenceFiles)) selectedFiles.add(file);
+		else if(!/-source-history[.]mjs$/u.test(path))
 			for(const directory of coreContractEvidenceDirectoryReferences(
 				source, path, directories)) selectedDirectories.add(directory);
 		for(const reference of await repositorySourceReferences(source, path, root))
@@ -331,8 +474,15 @@ export const collectCoreContractEvidencePlan = async (
 			source, path, root))
 			if(!sources.has(reference)) pending.push(reference);
 	}
-	if(completeTypeSurface)
+	let typeSurfaceAuthentication = "not-required";
+	if(completeTypeSurface && evidenceReceipt)
 	{
+		await coreTypeSurfaceEvidenceReceipt(evidenceReceipt, root);
+		typeSurfaceAuthentication = "workflow-receipt-v1";
+	}
+	else if(completeTypeSurface)
+	{
+		typeSurfaceAuthentication = "direct-files-v1";
 		const document = JSON.parse(await readFile(
 			join(root, "docs/type-surface.v1.json"), "utf8"));
 		for(const directory of coreTypeSurfaceEvidenceDirectories(
@@ -340,8 +490,11 @@ export const collectCoreContractEvidencePlan = async (
 	}
 	const sourceFiles = [...sources].toSorted();
 	const evidenceDirectories = [...selectedDirectories].toSorted();
-	const patterns = evidenceDirectories.map(directory =>
-		`/docs/evidence/${directory}/`);
+	const exactEvidenceFiles = [...selectedFiles].toSorted();
+	const patterns = [
+		...evidenceDirectories.map(directory => `/docs/evidence/${directory}/`)
+		, ...exactEvidenceFiles.map(file => `/${file}`)
+	].toSorted();
 	return {
 		schemaVersion: 1
 		, contract: shard.contract
@@ -353,9 +506,13 @@ export const collectCoreContractEvidencePlan = async (
 			, sha256: sha256(canonicalJson(sourceFiles)), files: sourceFiles
 		}
 		, evidence: {
-			completeTypeSurface, directoryCount: evidenceDirectories.length
+			completeTypeSurface, typeSurfaceAuthentication
+			, directoryCount: evidenceDirectories.length
 			, sha256: sha256(canonicalJson(evidenceDirectories))
-			, directories: evidenceDirectories, patterns
+			, directories: evidenceDirectories
+			, fileCount: exactEvidenceFiles.length
+			, fileSha256: sha256(canonicalJson(exactEvidenceFiles))
+			, files: exactEvidenceFiles, patterns
 		}
 	};
 };

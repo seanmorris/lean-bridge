@@ -6,17 +6,24 @@
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join, relative, resolve } from "node:path";
 import test from "node:test";
 import {
-	coreContractDocumentationReferences, coreContractEvidenceBaseline
+	collectCoreContractEvidencePlan, collectCoreTypeSurfaceEvidencePlan
+	, coreContractDocumentationEvidenceFiles
+	, coreContractDocumentationReferences, coreContractEvidenceBaseline
 	, coreContractEvidenceDirectoryReferences
 	, coreContractEvidenceFragments, coreContractReadsTypeSurface
 	, coreSparseCheckoutMode
-	, coreTypeSurfaceEvidenceDirectories
+	, coreTypeSurfaceEvidenceDirectories, coreTypeSurfaceEvidenceReceipt
 } from "../../scripts/core-contract-evidence.mjs";
+import { readTypeSurface } from "../../src/adoption/type-surface.mjs";
+import {
+	assertTypeSurfaceEvidenceReceipt, createTypeSurfaceEvidenceReceipt
+	, typeSurfaceEvidenceSourcePaths
+} from "../../src/adoption/type-surface-evidence-receipt.mjs";
 import { ownedCheckedRecordHostedLaneNames } from "./owned-checked-record-hosted-contracts.mjs";
 
 const directories = Object.freeze([
@@ -55,15 +62,21 @@ test("Core evidence planning resolves exact paths and enumerated prefixes", () =
 	);
 	const enumerated = 'readdirSync("docs/evidence"); new RegExp(`^owned-checked-record-${lane}-hosted-\\d{8}$`, "u")';
 	assert.deepEqual([...coreContractEvidenceDirectoryReferences(
-		enumerated, "enumerated.mjs", directories)].sort(), [
-		"owned-checked-record-native-hosted-20990101"
-		, "owned-checked-record-perl-hosted-20990101"]
+		enumerated, "enumerated.mjs", directories)].sort(), []
+		, "index-only enumeration needs no payload directories"
 	);
+	const replayed = enumerated
+		+ "; await checkOwnedCheckedRecordHostedEvidence(lane, root)";
+	assert.deepEqual([...coreContractEvidenceDirectoryReferences(
+		replayed, "replayed.mjs", directories)].sort(), [
+		"owned-checked-record-native-hosted-20990101"
+		, "owned-checked-record-perl-hosted-20990101"]);
 	const regex = 'readdirSync("docs/evidence"); /^zero-payload-checked-record-.+-20990101$/u';
 	assert.deepEqual([...coreContractEvidenceDirectoryReferences(
-		regex, "regex.mjs", directories)], [
-		"zero-payload-checked-record-rust-20990101"]
-	);
+		regex, "regex.mjs", directories)], []);
+	assert.deepEqual([...coreContractEvidenceDirectoryReferences(
+		regex + "; checkZeroPayloadEvidence(root)", "regex.mjs", directories)], [
+		"zero-payload-checked-record-rust-20990101"]);
 	const partition = "// core-evidence-prefix: owned-subtype-jvm-hosted-";
 	assert.deepEqual([...coreContractEvidenceDirectoryReferences(
 		partition, "partition.mjs", directories)], [
@@ -78,6 +91,12 @@ test("Core evidence prefixes do not broaden non-enumerating source", () => {
 	assert.ok(coreContractEvidenceFragments(
 		'const path = `owned-subtype-${lane}-hosted`;'
 		, "template.mjs").includes("owned-subtype-"));
+});
+
+test("Core evidence planning ignores rendered documentation links in code", () => {
+	const source = 'const prose = "[record](../evidence/owned-subtype-jvm-hosted-20990101/index.json)";';
+	assert.deepEqual([...coreContractEvidenceDirectoryReferences(
+		source, "generator.mjs", directories)], []);
 });
 
 test("Core evidence planning follows documentation named by contracts", async () => {
@@ -101,15 +120,16 @@ test("Core evidence planning follows documentation named by contracts", async ()
 			if(!target || /^[a-z]+:/u.test(target)) continue;
 			const path = relative(resolve(".")
 				, resolve(dirname(reference), target)).replaceAll("\\", "/");
-			const archive = /^docs\/evidence\/([^/]+)\//u.exec(path);
-			if(archive) expected.add(archive[1]);
+			if(/^docs\/evidence\/[^/]+\//u.test(path)) expected.add(path);
 		}
 	assert.ok(expected.size > 20);
-	assert.ok(expected.has("scalar-fin-source-entry-20261008"));
-	assert.ok(expected.has("browser-callback-fin-20261008"));
+	assert.ok(expected.has(
+		"docs/evidence/scalar-fin-source-entry-20261008/receipt.json"));
+	assert.ok(expected.has(
+		"docs/evidence/browser-callback-fin-20261008/receipt.json"));
 	const selected = new Set();
 	for(const { reference, source: document } of documents)
-		for(const value of coreContractEvidenceDirectoryReferences(
+		for(const value of coreContractDocumentationEvidenceFiles(
 			document, reference, [...expected]))
 			selected.add(value);
 	assert.deepEqual([...selected].sort(), [...expected].sort());
@@ -151,6 +171,55 @@ test("type-surface reads retain every named evidence directory", () => {
 	assert.throws(() => coreTypeSurfaceEvidenceDirectories({ evidence: [
 		{ files: [{ path: "docs/evidence/missing-archive-20990101/report.json" }] }
 	] }, directories), /not tracked: missing-archive-20990101/u);
+});
+
+test("one exact workflow receipt closes repeated type-surface reads", async t => {
+	const root = await mkdtemp(join(tmpdir(), "lean-core-type-surface-receipt-"));
+	t.after(() => rm(root, { recursive: true }));
+	const sources = Object.fromEntries(await Promise.all(
+		typeSurfaceEvidenceSourcePaths.map(async path => [
+			path, await readFile(path)
+		])
+	));
+	const document = JSON.parse(
+		sources["docs/type-surface.v1.json"].toString("utf8")
+	);
+	const commit = execFileSync("git", ["rev-parse", "HEAD"])
+		.toString().trim();
+	const sourceSha256 = Object.fromEntries(typeSurfaceEvidenceSourcePaths
+		.map(path => [path
+		, createHash("sha256").update(sources[path])
+			.digest("hex")]));
+	const receipt = createTypeSurfaceEvidenceReceipt({
+		commit, document, sourceSha256
+	});
+	assert.equal(assertTypeSurfaceEvidenceReceipt(receipt, {
+		commit, document, sourceSha256
+	}), true);
+	const path = join(root, "receipt.json");
+	await writeFile(path, JSON.stringify(receipt));
+	assert.deepEqual(await coreTypeSurfaceEvidenceReceipt(path), receipt);
+	assert.equal((await readTypeSurface({ evidenceReceipt: path }))
+		.document.contractVersion, document.contractVersion);
+	const [shard, corpus] = await Promise.all([
+		collectCoreContractEvidencePlan("1/12", resolve(".")
+			, { evidenceReceipt: path })
+		, collectCoreTypeSurfaceEvidencePlan()
+	]);
+	assert.equal(shard.evidence.completeTypeSurface, true);
+	assert.equal(shard.evidence.typeSurfaceAuthentication
+		, "workflow-receipt-v1");
+	assert.ok(shard.evidence.directoryCount < corpus.evidence.directoryCount);
+	for(const forged of [
+		{ ...receipt, commit: "0".repeat(40) }
+		, { ...receipt, evidence: { ...receipt.evidence, count: 0 } }
+		, { ...receipt, sources: {
+			...receipt.sources
+			, "docs/type-surface.v1.json": "0".repeat(64)
+		} }
+	]) assert.throws(() => assertTypeSurfaceEvidenceReceipt(forged, {
+		commit, document, sourceSha256
+	}));
 });
 
 test("checked-JavaScript partitions preserve the exact legacy test inventory", async () => {

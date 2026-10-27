@@ -19,8 +19,8 @@ import {
 const assertCoreQualityBudget = source => {
 	const timeouts = [...source.matchAll(/^\s+timeout-minutes:\s*(\d+)\s*$/gmu)]
 		.map(match => Number(match[1]));
-	assert.deepEqual(timeouts, [30, 240, 10]
-		, "Static, contract-shard, and aggregate jobs retain explicit bounds");
+	assert.deepEqual(timeouts, [30, 90, 240, 10]
+		, "Static, type-surface, contract-shard, and aggregate jobs retain explicit bounds");
 	assert.match(source
 		, /strategy:\n {6}fail-fast: false\n {6}max-parallel: 6\n {6}matrix:\n {8}shard: \[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12\]/u
 		, "Core must run one closed twelve-shard matrix with at most six concurrent jobs and without cancelling siblings");
@@ -37,13 +37,15 @@ const assertCoreQualityBudget = source => {
 	assert.doesNotMatch(source, /^\s+npm run check:core\s*$/mu
 		, "Static checks and contract shards must not be recombined in one timed job");
 	assert.match(source
-		, / {2}contract:\n {4}name: Contract shard \$\{\{ matrix\.shard \}\}\/12\n {4}needs: static\n/u
-		, "History-heavy contract shards must wait for the static gate");
+		, / {2}contract:\n {4}name: Contract shard \$\{\{ matrix\.shard \}\}\/12\n {4}needs: \[static, type_surface\]\n/u
+		, "History-heavy contract shards must wait for static and shared evidence gates");
 	assert.equal([...source.matchAll(/^\s+fetch-depth:\s*0\s*$/gmu)].length, 1
 		, "Only contract shards may retain all producer history");
-	assert.equal([...source.matchAll(/^\s+fetch-depth:\s*1\s*$/gmu)].length, 2
-		, "Static and aggregate jobs must read only the exact current tree");
+	assert.equal([...source.matchAll(/^\s+fetch-depth:\s*1\s*$/gmu)].length, 3
+		, "Static, type-surface, and aggregate jobs must read only the exact current tree");
 	const staticJob = source.slice(source.indexOf("\n  static:\n")
+		, source.indexOf("\n  type_surface:\n"));
+	const typeSurfaceJob = source.slice(source.indexOf("\n  type_surface:\n")
 		, source.indexOf("\n  contract:\n"));
 	const contractJob = source.slice(source.indexOf("\n  contract:\n")
 		, source.indexOf("\n  quality:\n"));
@@ -61,39 +63,57 @@ const assertCoreQualityBudget = source => {
 	assert.match(staticJob, /sparse-checkout-cone-mode: true/u);
 	assert.doesNotMatch(staticJob, /^\s+filter:/mu
 		, "Checkout must derive blob:none from the sparse source roots");
-	const contractSparse = /sparse-checkout: \|\n((?: {12}\S+\n)+)/u.exec(
-		contractJob);
-	assert.ok(contractSparse
-		, "Contract shards must declare the common evidence baseline");
-	assert.deepEqual(contractSparse[1].trim().split("\n").map(line => line.trim()), [
+	assert.match(typeSurfaceJob, /fetch-depth: 1/u);
+	assert.match(typeSurfaceJob
+		, / {2}type_surface:\n {4}name: Type-surface evidence authentication\n {4}needs: static\n/u
+		, "Corpus authentication must wait for the cheap static gate");
+	assert.match(typeSurfaceJob
+		, /create-core-type-surface-evidence-receipt\.mjs \\\n\s+--receipt build\/core-type-surface\/receipt\.json \\\n\s+--manifest build\/core-type-surface\/materialization\.json \\\n\s+--commit "\$\{\{ github\.sha \}\}"/u
+		, "One prerequisite job must authenticate the complete type-surface corpus");
+	assert.match(typeSurfaceJob, /name: core-type-surface-\$\{\{ github\.sha \}\}/u);
+	const evidenceBaseline = [
 		"/*", "!/*/", "/.github/", "/acceptance/", "/config/"
 		, "/containers/", "/demos/", "/nix/", "/notices/", "/patches/"
 		, "/poc/", "/schema/", "/scripts/", "/site/", "/src/", "/tests/"
 		, "/docs/", "!/docs/evidence/*", "/docs/evidence/*.json"
 		, "/docs/evidence/*.md", "/docs/evidence/*.xml"
 		, "/docs/evidence/*/index.json"
-	], "Contract baseline must retain source, docs, root records, and every archive index");
+	];
+	const typeSurfaceSparse = /sparse-checkout: \|\n((?: {12}\S+\n)+)/u.exec(
+		typeSurfaceJob);
+	assert.ok(typeSurfaceSparse);
+	assert.deepEqual(typeSurfaceSparse[1].trim().split("\n")
+		.map(line => line.trim()), evidenceBaseline);
+	const contractSparse = /sparse-checkout: \|\n((?: {12}\S+\n)+)/u.exec(
+		contractJob);
+	assert.ok(contractSparse
+		, "Contract shards must declare the common evidence baseline");
+	assert.deepEqual(contractSparse[1].trim().split("\n").map(line => line.trim())
+		, evidenceBaseline
+		, "Evidence baselines must retain source, docs, root records, and every archive index");
 	assert.match(contractJob, /fetch-depth: 0/u);
 	assert.match(contractJob, /sparse-checkout-cone-mode: false/u);
 	assert.doesNotMatch(contractJob, /^\s+filter:/mu
 		, "Contract checkout must derive blob:none from non-cone sparse patterns");
-	assert.equal([...contractJob.matchAll(/^\s+node scripts\/materialize-core-contract-evidence\.mjs \\\n\s+--shard "\$\{\{ matrix\.shard \}\}\/12" \\\n\s+--manifest "build\/core-evidence\/core-shard-\$\{\{ matrix\.shard \}\}-evidence\.json"\s*$/gmu)].length, 1
+	assert.equal([...contractJob.matchAll(/^\s+node scripts\/materialize-core-contract-evidence\.mjs \\\n\s+--shard "\$\{\{ matrix\.shard \}\}\/12" \\\n\s+--manifest "build\/core-evidence\/core-shard-\$\{\{ matrix\.shard \}\}-evidence\.json" \\\n\s+--type-surface-receipt build\/core-type-surface\/receipt\.json\s*$/gmu)].length, 1
 		, "Every shard must materialize and record its exact retained evidence closure");
+	assert.match(contractJob
+		, /LEAN_BRIDGE_TYPE_SURFACE_EVIDENCE_RECEIPT: \$\{\{ github\.workspace \}\}\/build\/core-type-surface\/receipt\.json/u);
 	const aggregate = source.slice(source.indexOf("\n  quality:\n"));
 	assert.match(aggregate, /fetch-depth: 1\n {10}persist-credentials: false\n {10}sparse-checkout: \|\n {12}scripts\n {12}src\n {12}tests\n {10}sparse-checkout-cone-mode: true\n/u
 		, "The aggregate needs the complete test tree and verifier source, not retained evidence");
-	assert.equal([...source.matchAll(/^\s+sparse-checkout: \|\s*$/gmu)].length, 3
-		, "Static, contract, and aggregate jobs must all bound materialization");
+	assert.equal([...source.matchAll(/^\s+sparse-checkout: \|\s*$/gmu)].length, 4
+		, "Static, type-surface, contract, and aggregate jobs must all bound materialization");
 	assert.equal([...source.matchAll(/^\s+sparse-checkout-cone-mode: true\s*$/gmu)].length, 2);
-	assert.equal([...source.matchAll(/^\s+sparse-checkout-cone-mode: false\s*$/gmu)].length, 1);
+	assert.equal([...source.matchAll(/^\s+sparse-checkout-cone-mode: false\s*$/gmu)].length, 2);
 	assert.doesNotMatch(aggregate, /^\s+filter:/mu
 		, "Use checkout's sparse blob filter without overriding it");
-	assert.equal([...source.matchAll(/^\s+persist-credentials:\s*false\s*$/gmu)].length, 3
+	assert.equal([...source.matchAll(/^\s+persist-credentials:\s*false\s*$/gmu)].length, 4
 		, "No checkout may persist credentials");
-	assert.equal([...source.matchAll(/^\s+- name: Free hosted runner disk for the evidence checkout\s*$/gmu)].length, 1
-		, "Only the archive-heavy contract matrix must remove unused hosted SDKs");
-	assert.match(source, /- name: Free hosted runner disk for the evidence checkout\n {8}run: \|\n {10}df -h \/\n {10}sudo rm -rf \/usr\/share\/dotnet \/usr\/local\/lib\/android \/opt\/ghc \/usr\/local\/\.ghcup \/opt\/hostedtoolcache\/CodeQL\n {10}df -h \/\n {6}- name: Check out the exact revision/u
-		, "Core must reclaim only reviewed preinstalled SDK roots before its full-history checkout");
+	assert.equal([...source.matchAll(/^\s+- name: Free hosted runner disk for the evidence checkout\s*$/gmu)].length, 2
+		, "Both archive-heavy jobs must remove only reviewed unused hosted SDKs");
+	assert.equal([...source.matchAll(/^\s+sudo rm -rf \/usr\/share\/dotnet \/usr\/local\/lib\/android \/opt\/ghc \/usr\/local\/\.ghcup \/opt\/hostedtoolcache\/CodeQL\s*$/gmu)].length, 2
+		, "Both archive-heavy jobs must reclaim the same bounded SDK roots");
 	assert.equal([...source.matchAll(/^\s+- name: Report disk after the evidence baseline checkout\s*$/gmu)].length, 1);
 	assert.match(source, /- name: Report disk after the evidence baseline checkout\n {8}run: df -h \/ "\$GITHUB_WORKSPACE"/u);
 	assert.equal([...source.matchAll(/^\s+- name: Report disk after shard evidence materialization\s*$/gmu)].length, 1);
@@ -102,8 +122,8 @@ const assertCoreQualityBudget = source => {
 	assert.match(source, /- name: Report disk and memory after the shard\n {8}if: always\(\)\n {8}run: \|\n {10}df -h \/ "\$RUNNER_TEMP" "\$GITHUB_WORKSPACE"\n {10}free -m/u
 		, "Core must retain terminal disk and memory diagnostics even when a shard fails");
 	assert.match(source, /if: always\(\)\n {8}uses: actions\/upload-artifact@v7/u);
-	assert.match(source, /if-no-files-found: error/u);
-	assert.match(source, /overwrite: true/u);
+	assert.equal([...source.matchAll(/^\s+if-no-files-found: error\s*$/gmu)].length, 2);
+	assert.equal([...source.matchAll(/^\s+overwrite: true\s*$/gmu)].length, 2);
 	assert.match(source
 		, /build\/core-shards\/core-shard-\$\{\{ matrix\.shard \}\}\.json\n {12}build\/core-evidence\/core-shard-\$\{\{ matrix\.shard \}\}-evidence\.json/u
 		, "Failure artifacts must preserve both execution and evidence manifests");
@@ -112,11 +132,13 @@ const assertCoreQualityBudget = source => {
 	assert.match(source, /merge-multiple: true/u);
 	assert.equal([...source.matchAll(/^\s+run: node scripts\/check-core-contract-shards\.mjs build\/core-shards\s*$/gmu)].length, 1
 		, "The aggregate must authenticate shard closure before accepting results");
-	assert.match(source, / {2}quality:\n {4}name: quality\n {4}if: always\(\)\n {4}needs: \[static, contract\]/u
-		, "The stable quality check must aggregate static and every matrix result");
+	assert.match(source, / {2}quality:\n {4}name: quality\n {4}if: always\(\)\n {4}needs: \[static, type_surface, contract\]/u
+		, "The stable quality check must aggregate static, shared evidence, and every matrix result");
 	assert.match(source, /STATIC_RESULT: \$\{\{ needs\.static\.result \}\}/u);
+	assert.match(source, /TYPE_SURFACE_RESULT: \$\{\{ needs\.type_surface\.result \}\}/u);
 	assert.match(source, /CONTRACT_RESULT: \$\{\{ needs\.contract\.result \}\}/u);
 	assert.equal([...source.matchAll(/^\s+test "\$STATIC_RESULT" = success\s*$/gmu)].length, 1);
+	assert.equal([...source.matchAll(/^\s+test "\$TYPE_SURFACE_RESULT" = success\s*$/gmu)].length, 1);
 	assert.equal([...source.matchAll(/^\s+test "\$CONTRACT_RESULT" = success\s*$/gmu)].length, 1);
 	assert.ok(!/^\s+continue-on-error:\s*true\s*$/mu.test(source), "Core quality failures must remain fatal");
 };
@@ -265,6 +287,10 @@ test("Core quality has bounded static, sharded contract, and aggregate gates", a
 		, source.replace("            /docs/evidence/*/index.json\n", "")
 		, source.replace("node scripts/materialize-core-contract-evidence.mjs"
 			, "node scripts/snapshot-core-contract-evidence.mjs")
+		, source.replace("create-core-type-surface-evidence-receipt.mjs"
+			, "snapshot-core-type-surface-evidence.mjs")
+		, source.replace("--type-surface-receipt build/core-type-surface/receipt.json"
+			, "--type-surface-receipt build/core-type-surface/missing.json")
 		, source.replace("build/core-evidence/core-shard-${{ matrix.shard }}-evidence.json"
 			, "build/core-shards/core-shard-${{ matrix.shard }}.json")
 		, source.replace("          sparse-checkout: |", "          filter: tree:0\n          sparse-checkout: |")
@@ -272,12 +298,14 @@ test("Core quality has bounded static, sharded contract, and aggregate gates", a
 		, source.replace('df -h / "$GITHUB_WORKSPACE"', "true")
 		, source.replace("Report disk and memory after the shard\n        if: always()"
 			, "Report disk and memory after the shard\n        if: success()")
-		, source.replace("needs: [static, contract]", "needs: [static]")
+		, source.replace("needs: [static, type_surface, contract]"
+			, "needs: [static, contract]")
 		, source.replace("if: always()", "if: success()")
 		, source.replace("merge-multiple: true", "merge-multiple: false")
 		, source.replace("overwrite: true", "overwrite: false")
 		, source.replace("check-core-contract-shards.mjs", "snapshot-core-contract-shards.mjs")
 		, source.replace('test "$CONTRACT_RESULT" = success', "true")
+		, source.replace('test "$TYPE_SURFACE_RESULT" = success', "true")
 		, source.replace("        run: |\n          source scripts/env.sh\n", "        continue-on-error: true\n        run: |\n          source scripts/env.sh\n")
 	].entries()) {
 		assert.notEqual(changed, source, `workflow mutation ${index}`);
