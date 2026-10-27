@@ -1,0 +1,156 @@
+{
+  "historyAdditions": [
+    {
+      "currentSha256": "a04204437bcf309a36789dcfbb3c3dccc4e2a2fc900d6b0ebd3873850c995dfb",
+      "path": "scripts/update-core-callback-evidence-replay-bound-source-history.mjs"
+    },
+    {
+      "currentSha256": "0d6f64109a430104a95f800258940d188e09eeaec73467c8e8968b4ddd16bfe2",
+      "path": "tests/helpers/core-callback-evidence-replay-bound-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "bcf1c282c401446b954af28c577c7fd24ab54c13",
+  "integrationUpdates": [
+    {
+      "currentSha256": "268fde478439e6c4f3f766fe24627b59b1f84680bba34f0241c82894e2111076",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeCoreCallbackEvidenceReplayBoundSource\n\t, coreCallbackEvidenceReplayBoundHistoryAdditions\n\t, coreCallbackEvidenceReplayBoundHistoryPath\n\t, coreCallbackEvidenceReplayBoundImplementation\n\t, coreCallbackEvidenceReplayBoundImplementationPaths\n\t, coreCallbackEvidenceReplayBoundIntegrationPaths\n\t, coreCallbackEvidenceReplayBoundPredecessor\n\t, reverseCoreCallbackEvidenceReplayBoundUpdate\n} from \"./core-callback-evidence-replay-bound-source-history.mjs\";\n",
+          "previous": "",
+          "start": 357
+        },
+        {
+          "current": "const readCoreCallbackEvidenceReplayBound = async () => JSON.parse(\n\tawait readFile(coreCallbackEvidenceReplayBoundHistoryPath, \"utf8\")\n);\n",
+          "previous": "",
+          "start": 13802
+        },
+        {
+          "current": "test(\"Core callback-evidence replay bound records its exact range\", async () => {\n\tconst record = await readCoreCallbackEvidenceReplayBound();\n\tassert.equal(record.schemaVersion, 1);\n\tassert.equal(record.milestone\n\t\t, \"core-callback-evidence-replay-bound-source-v1\");\n\tassert.equal(record.predecessorCommit\n\t\t, coreCallbackEvidenceReplayBoundPredecessor);\n\tassert.equal(record.implementationCommit\n\t\t, coreCallbackEvidenceReplayBoundImplementation);\n\tassert.deepEqual(record.updates.map(update => update.path)\n\t\t, coreCallbackEvidenceReplayBoundImplementationPaths);\n\tassert.deepEqual(record.historyAdditions.map(addition => addition.path)\n\t\t, coreCallbackEvidenceReplayBoundHistoryAdditions);\n\tassert.deepEqual(record.integrationUpdates.map(update => update.path)\n\t\t, coreCallbackEvidenceReplayBoundIntegrationPaths);\n\tassert.equal(git([\"rev-parse\"\n\t\t, `${coreCallbackEvidenceReplayBoundImplementation}^`]).trim()\n\t, coreCallbackEvidenceReplayBoundPredecessor);\n\tassert.deepEqual(git([\"diff\", \"--name-only\", \"--diff-filter=M\"\n\t\t, coreCallbackEvidenceReplayBoundPredecessor\n\t\t, coreCallbackEvidenceReplayBoundImplementation])\n\t\t.trim().split(\"\\n\").sort()\n\t, [...coreCallbackEvidenceReplayBoundImplementationPaths].sort());\n});\n\ntest(\"Core callback-evidence replay bound reverses every transition\", async () => {\n\tconst record = await readCoreCallbackEvidenceReplayBound();\n\tfor(const update of [...record.updates, ...record.integrationUpdates])\n\t{\n\t\tconst integration = record.integrationUpdates.includes(update);\n\t\tconst current = integration\n\t\t\t? await sourceAtFinHistoryRecordSource(\n\t\t\t\tcoreCallbackEvidenceReplayBoundHistoryPath, update.path\n\t\t\t\t, update.currentSha256\n\t\t\t\t, beforeCoreCallbackEvidenceReplayBoundSource\n\t\t\t)\n\t\t\t: await sourceAtFinHistoryRecord(\n\t\t\t\tcoreCallbackEvidenceReplayBoundHistoryPath, update.path\n\t\t\t\t, beforeCoreCallbackEvidenceReplayBoundSource\n\t\t\t);\n\t\tconst base = integration\n\t\t\t? coreCallbackEvidenceReplayBoundImplementation\n\t\t\t: coreCallbackEvidenceReplayBoundPredecessor;\n\t\tconst previous = git([\"show\", `${base}:${update.path}`]);\n\t\tassert.equal(reverseCoreCallbackEvidenceReplayBoundUpdate(\n\t\t\tcurrent, update), previous, update.path);\n\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n\t\tassert.ok(finRefinementNormalizationPaths.includes(update.path));\n\t}\n\tfor(const addition of record.historyAdditions)\n\t\tassert.equal(sha256(await sourceAtFinHistoryRecordSource(\n\t\t\tcoreCallbackEvidenceReplayBoundHistoryPath\n\t\t\t, addition.path, addition.currentSha256\n\t\t)), addition.currentSha256, addition.path);\n});\n\ntest(\"Core callback-evidence replay bound rejects altered transitions\", async () => {\n\tconst update = (await readCoreCallbackEvidenceReplayBound()).updates[0];\n\tconst current = await sourceAtFinHistoryRecord(\n\t\tcoreCallbackEvidenceReplayBoundHistoryPath, update.path\n\t\t, beforeCoreCallbackEvidenceReplayBoundSource\n\t);\n\tfor(const forged of [{ ...update, currentSha256: \"0\".repeat(64) }\n\t\t, { ...update, previousSha256: \"0\".repeat(64) }\n\t\t, { ...update, path: \"unrelated.mjs\" }\n\t\t, { ...update, edits: [] }\n\t\t, { ...update, edits: [...update.edits, update.edits[0]] }])\n\t\tassert.throws(() => reverseCoreCallbackEvidenceReplayBoundUpdate(\n\t\t\tcurrent, forged));\n\tassert.equal(beforeCoreCallbackEvidenceReplayBoundSource(\n\t\tupdate.path, current + \"unknown\"), current + \"unknown\");\n});\n\ntest(\"Core callback-evidence replay-bound writer refuses another checkout\", async t => {\n\tconst root = await mkdtemp(join(\n\t\ttmpdir(), \"lean-core-callback-replay-history-guard-\"));\n\tt.after(() => rm(root, { recursive: true }));\n\tconst result = spawnSync(process.execPath, [resolve(\n\t\t\"scripts/update-core-callback-evidence-replay-bound-source-history.mjs\"\n\t)], { cwd: root, encoding: \"utf8\", timeout: 15_000 });\n\tassert.notEqual(result.status, 0);\n\tassert.equal(result.stdout, \"\");\n\tassert.deepEqual(await readdir(root), []);\n});\n\n",
+          "previous": "",
+          "start": 17539
+        }
+      ],
+      "path": "tests/helpers/core-historical-evidence-replay-source-history-tests.mjs",
+      "previousSha256": "217f003857f252ca92f71a39e6f68b86ea0bb8af168ad07abb9ea0455da1d617"
+    },
+    {
+      "currentSha256": "ac15b529ef208c165ce15e93e37798a97cdff11d51738e8b2263365b2c05def3",
+      "edits": [
+        {
+          "current": "import { beforeCoreCallbackEvidenceReplayBoundSource, coreCallbackEvidenceReplayBoundNormalizationPaths } from \"./core-callback-evidence-replay-bound-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...coreCallbackEvidenceReplayBoundNormalizationPaths()\n\t, ...coreInheritedRecordReplayBoundNormalizationPaths()\n",
+          "previous": "\t...coreInheritedRecordReplayBoundNormalizationPaths()\n",
+          "start": 195322
+        },
+        {
+          "current": "\tlet stage = beforeCoreCallbackEvidenceReplayBoundSource(\n\t\tpath, text, expected\n\t);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCoreInheritedRecordReplayBoundSource(\n",
+          "previous": "\tlet stage = beforeCoreInheritedRecordReplayBoundSource(\n",
+          "start": 242847
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "1f282cd7c5348cbb475e185cce7006bb5ef8f2611d0cdb2bc00a7f60dd897c0f"
+    }
+  ],
+  "milestone": "core-callback-evidence-replay-bound-source-v1",
+  "predecessorCommit": "c407dbf3ffd6887e9a0adb09edfa82dbc9435451",
+  "schemaVersion": 1,
+  "scope": "Authenticate callback evidence from its immutable producer commit, cache only a completely authenticated source identity, and retain fail-closed history fallback for changed digests. Preserve exact source and receipt digests, runtime selection, negative controls, and the complete Core contract.",
+  "updates": [
+    {
+      "currentSha256": "042b4685e45d13dca4866dbc713554f4da84090f4579555d0dfa246badffc15f",
+      "edits": [
+        {
+          "current": "test(\"owned callback negatives reuse only an authenticated source identity\", async () => {\n\tconst source = await readFile(\n\t\t\"tests/helpers/owned-callback-result-evidence.mjs\", \"utf8\");\n\tconst producer = await readFile(\n\t\t\"tests/helpers/owned-callback-result-producer.mjs\", \"utf8\");\n\tconst start = source.indexOf(\"const assertOwnedCallbackResultSources\");\n\tconst end = source.indexOf(\"\\n};\", start) + 3;\n\tassert.ok(start >= 0 && end > start);\n\tconst helper = source.slice(start, end);\n\tassert.match(source, /let authenticatedSourceIdentity;/u);\n\tassert.match(helper, /const identity = hash\\(sources\\);/u\n\t\t, \"Cache selection must include every supplied source digest\");\n\tassert.match(helper\n\t\t, /if\\(authenticatedSourceIdentity === identity\\) return;/u);\n\tassert.match(helper\n\t\t, /for\\(const \\[path, value\\] of Object\\.entries\\(sources\\)\\)[\\s\\S]*bytesAtProducer\\([\\s\\S]*ownedCallbackResultProducer, path, value/u\n\t\t, \"A new identity must authenticate every source at the immutable producer\");\n\tassert.ok(helper.indexOf(\"authenticatedSourceIdentity = identity;\")\n\t\t> helper.indexOf(\"for(const [path, value] of Object.entries(sources))\")\n\t\t, \"The cache must publish only after complete byte authentication\");\n\tassert.equal([...source.matchAll(\n\t\t/await assertOwnedCallbackResultSources\\(record\\.sources\\);/gu\n\t)].length, 1);\n\tassert.match(producer\n\t\t, /readBytes: async \\(path, expected = sources\\[path\\]\\) => \\{[\\s\\S]*bytesAtProducer\\(ownedCallbackResultProducer, path, expected\\)/u);\n\tassert.equal([...source.matchAll(/replay\\.readBytes, sources/gu)].length, 3\n\t\t, \"Every retained CLI inventory must read exact producer bytes\");\n\tassert.match(source\n\t\t, /if\\(sha256\\(text\\) !== sources\\[path\\]\\)\\n\\t+text = beforeCallbackInventoryRepair/u\n\t\t, \"Exact producer runtime sources must stop before the history hub\");\n});\n\n",
+          "previous": "",
+          "start": 22892
+        }
+      ],
+      "path": "tests/helpers/core-quality-budget-tests.mjs",
+      "previousSha256": "d80463cae9fceb5a6d93f66d992fd57a7133429e1c33f6aa34ce67fa310dd4a6"
+    },
+    {
+      "currentSha256": "c9426fc5a243cf98d2507ce01489bd12c6b60a1cf7c35a4927abdf87df9589ce",
+      "edits": [
+        {
+          "current": "import {\n\townedCallbackResultProducer, ownedCallbackResultReplay\n} from \"./owned-callback-result-producer.mjs\";\nimport { bytesAtProducer } from \"./producer-source.mjs\";\n",
+          "previous": "import { ownedCallbackResultReplay } from \"./owned-callback-result-producer.mjs\";\n",
+          "start": 341
+        },
+        {
+          "current": "let authenticatedSourceIdentity;\n\nconst assertOwnedCallbackResultSources = async sources => {\n\tassert.deepEqual(Object.keys(sources).sort()\n\t\t, await ownedCallbackResultSourcePaths());\n\tconst identity = hash(sources);\n\tif(authenticatedSourceIdentity === identity) return;\n\tfor(const [path, value] of Object.entries(sources))\n\t\tassert.equal(sha256(bytesAtProducer(\n\t\t\townedCallbackResultProducer, path, value\n\t\t)), value, path);\n\tauthenticatedSourceIdentity = identity;\n};\n",
+          "previous": "",
+          "start": 3655
+        },
+        {
+          "current": "const cli = async (report, readBytes = path => readFile(path), sources) => {\n",
+          "previous": "const cli = async report => {\n",
+          "start": 9685
+        },
+        {
+          "current": "\tlet configBytes = await readBytes(configPath, sources?.[configPath]);\n\tif(sources?.[configPath] !== sha256(configBytes))\n\t\tconfigBytes = beforeCallbackInventoryRepair(\n\t\t\tconfigPath, configBytes, sources?.[configPath]);\n\tconst config = JSON.parse(configBytes);\n",
+          "previous": "\tconst config = JSON.parse(beforeCallbackInventoryRepair(configPath, await readFile(configPath, \"utf8\")));\n",
+          "start": 10187
+        },
+        {
+          "current": "\t\tlet bytes = await readBytes(path, file.sha256);\n\t\tif(sha256(bytes) !== file.sha256)\n\t\t\tbytes = Buffer.from(beforeCallbackInventoryRepair(\n\t\t\t\tpath, bytes, file.sha256));\n",
+          "previous": "\t\tconst bytes = Buffer.from(beforeCallbackInventoryRepair(path, await readFile(path), file.sha256));\n",
+          "start": 10742
+        },
+        {
+          "current": "\t\t\tif(sha256(text) !== sources[path])\n\t\t\t\ttext = beforeCallbackInventoryRepair(path, text, sources[path]);\n",
+          "previous": "\t\t\ttext = beforeCallbackInventoryRepair(path, text, sources[path]);\n",
+          "start": 11907
+        },
+        {
+          "current": "\tawait assertOwnedCallbackRuntimeInventory(\n\t\titem.inventory, sources, replay.readSource);\n",
+          "previous": "\tawait assertOwnedCallbackRuntimeInventory(item.inventory, sources);\n",
+          "start": 14111
+        },
+        {
+          "current": "\t\tawait cli(c.cli, replay.readBytes, sources);\n\t\tassert.equal(c.cliFilesVerified, c.cli.files.length);\n",
+          "previous": "\t\tawait cli(c.cli); assert.equal(c.cliFilesVerified, c.cli.files.length);\n",
+          "start": 23736
+        },
+        {
+          "current": "\t\tawait cli(combined.cli, replay.readBytes, sources);\n\t\tassert.equal(combined.cliFilesVerified, combined.cli.files.length);\n",
+          "previous": "\t\tawait cli(combined.cli); assert.equal(combined.cliFilesVerified, combined.cli.files.length);\n",
+          "start": 24511
+        },
+        {
+          "current": "\tconst npm = get(\"npm-package.json\");\n\tawait cli(npm.cli, replay.readBytes, sources);\n",
+          "previous": "\tconst npm = get(\"npm-package.json\"); await cli(npm.cli);\n",
+          "start": 25954
+        },
+        {
+          "current": "\tawait assertOwnedCallbackResultSources(record.sources);\n",
+          "previous": "\tassert.deepEqual(Object.keys(record.sources).sort(), await ownedCallbackResultSourcePaths());\n\tfor(const [path, value] of Object.entries(record.sources)) assert.equal(sha256(beforeCallbackInventoryRepair(path, await readFile(path), value)), value, path);\n",
+          "start": 28259
+        }
+      ],
+      "path": "tests/helpers/owned-callback-result-evidence.mjs",
+      "previousSha256": "887792f0edb8ddb14921c5c82b95e72e6ca3a2eecc224d1d1811c6f710320d88"
+    },
+    {
+      "currentSha256": "f763a69f60a1d4a6d54b4550dfed7c9e8f1d012162a0b5084315fc784a8f25db",
+      "edits": [
+        {
+          "current": "\t\t...current, readBytes: path => readFile(path)\n\t\t, readSource: path => readFile(path, \"utf8\")\n",
+          "previous": "\t\t...current, readSource: path => readFile(path, \"utf8\")\n",
+          "start": 3630
+        },
+        {
+          "current": "\treturn { ...selected, readBytes: async (path, expected = sources[path]) => {\n\t\tassert.match(expected ?? \"\", /^[a-f0-9]{64}$/u, path);\n\t\treturn bytesAtProducer(ownedCallbackResultProducer, path, expected);\n\t}\n\t, readSource: async path => {\n",
+          "previous": "\treturn { ...selected, readSource: async path => {\n",
+          "start": 4147
+        }
+      ],
+      "path": "tests/helpers/owned-callback-result-producer.mjs",
+      "previousSha256": "c432d771bd8f4c2b0e9f4183916c722f51569b9471e3c07f8d3d20da67d27097"
+    }
+  ]
+}
