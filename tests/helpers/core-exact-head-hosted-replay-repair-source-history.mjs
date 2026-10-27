@@ -74,7 +74,12 @@ const allowedTransitionPath = path =>
 	coreExactHeadHostedReplayRepairImplementationPaths.includes(path)
 	|| coreExactHeadHostedReplayRepairIntegrationPaths.includes(path);
 
-/** Restore one authenticated source transition. */
+/**
+ * Restore one authenticated source transition.
+ *
+ * @param source - Complete current source.
+ * @param update - Exact recorded transition.
+ */
 export const reverseCoreExactHeadHostedReplayRepairUpdate = (
 	source, update
 ) => {
@@ -103,7 +108,13 @@ export const reverseCoreExactHeadHostedReplayRepairUpdate = (
 	return previous;
 };
 
-/** Remove only the authenticated hosted-replay repair layer. */
+/**
+ * Remove only the authenticated hosted-replay repair layer.
+ *
+ * @param path - Repository-relative source path.
+ * @param source - Complete current or historical source.
+ * @param expected - Optional exact digest at which normalization stops.
+ */
 export const beforeCoreExactHeadHostedReplayRepairSource = (
 	path, source, expected
 ) => {

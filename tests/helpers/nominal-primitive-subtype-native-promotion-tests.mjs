@@ -5,7 +5,6 @@
  */
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { compileDocumentationPage } from "../../scripts/generate-site-content.mjs";

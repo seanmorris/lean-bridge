@@ -1,5 +1,9 @@
 #!/usr/bin/env node
-/** Record the exact-head hosted Core replay repair. */
+/**
+ * Record the exact-head hosted Core replay repair.
+ *
+ * @file
+ */
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
@@ -45,8 +49,12 @@ for(const path of coreExactHeadHostedReplayRepairImplementationPaths)
 const transitions = new Map(updates.map(update => [update.path, update]));
 const implementationAdditions = [];
 for(const path of coreExactHeadHostedReplayRepairImplementationAdditions)
-	implementationAdditions.push({ path, currentSha256: sha256(
-		Buffer.from(git(["show", `${implementation}:${path}`]))) });
+	implementationAdditions.push({
+		path
+		, currentSha256: sha256(Buffer.from(git([
+			"show", `${implementation}:${path}`
+		])))
+	});
 
 const typeSurfacePath = "docs/type-surface.v1.json";
 const typeSurfaceSource = await readFile(typeSurfacePath, "utf8");
