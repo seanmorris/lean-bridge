@@ -380,11 +380,17 @@ test("exact-head historical replay repair reverses every transition", async () =
 	const record = await readCoreExactHeadReplayRepair();
 	for(const update of [...record.updates, ...record.integrationUpdates])
 	{
-		const current = await sourceAtFinHistoryRecord(
-			coreExactHeadReplayRepairHistoryPath, update.path
-			, beforeCoreExactHeadReplayRepairSource
-		);
-		const base = record.integrationUpdates.includes(update)
+		const integration = record.integrationUpdates.includes(update);
+		const current = integration
+			? await sourceAtFinHistoryRecordSource(
+				coreExactHeadReplayRepairHistoryPath, update.path
+				, update.currentSha256, beforeCoreExactHeadReplayRepairSource
+			)
+			: await sourceAtFinHistoryRecord(
+				coreExactHeadReplayRepairHistoryPath, update.path
+				, beforeCoreExactHeadReplayRepairSource
+			);
+		const base = integration
 			? coreExactHeadReplayRepairImplementation
 			: coreExactHeadReplayRepairPredecessor;
 		const previous = git(["show", `${base}:${update.path}`]);
