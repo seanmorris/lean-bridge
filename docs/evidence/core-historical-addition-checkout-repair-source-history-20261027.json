@@ -1,0 +1,104 @@
+{
+  "additions": [
+    {
+      "currentSha256": "4c786473c0340253375ac0f422b413e64cac281e3375a4c3bf7fb9bfa0164517",
+      "path": "scripts/update-core-historical-addition-checkout-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "e5264a24b109904625e7a3da0344143ee958c0f3e2ce13ee486aed8b5ae05882",
+      "path": "tests/helpers/core-historical-addition-checkout-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "a715e39cd9337a8eb3fd2d740425e2be6306c3ed",
+  "integrationUpdates": [
+    {
+      "currentSha256": "e386a2b63390d535f1e4369d748369b9eb1f2c953dcb7506d618cb5768613e11",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeCoreHistoricalAdditionCheckoutRepairSource\n\t, coreHistoricalAdditionCheckoutRepairAddedPaths\n\t, coreHistoricalAdditionCheckoutRepairHistoryPath\n\t, coreHistoricalAdditionCheckoutRepairImplementation\n\t, coreHistoricalAdditionCheckoutRepairImplementationPaths\n\t, coreHistoricalAdditionCheckoutRepairIntegrationPaths\n\t, coreHistoricalAdditionCheckoutRepairPredecessor\n\t, reverseCoreHistoricalAdditionCheckoutRepairUpdate\n} from \"./core-historical-addition-checkout-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 357
+        },
+        {
+          "current": "const readCoreHistoricalAdditionCheckoutRepair = async () => JSON.parse(\n\tawait readFile(coreHistoricalAdditionCheckoutRepairHistoryPath, \"utf8\")\n);\n",
+          "previous": "",
+          "start": 9696
+        },
+        {
+          "current": "test(\"Core historical-addition checkout repair records its range\", async () => {\n\tconst record = await readCoreHistoricalAdditionCheckoutRepair();\n\tassert.equal(record.schemaVersion, 1);\n\tassert.equal(record.milestone\n\t\t, \"core-historical-addition-checkout-repair-source-v1\");\n\tassert.equal(record.predecessorCommit\n\t\t, coreHistoricalAdditionCheckoutRepairPredecessor);\n\tassert.equal(record.implementationCommit\n\t\t, coreHistoricalAdditionCheckoutRepairImplementation);\n\tassert.deepEqual(record.updates.map(update => update.path)\n\t\t, coreHistoricalAdditionCheckoutRepairImplementationPaths);\n\tassert.deepEqual(record.integrationUpdates.map(update => update.path)\n\t\t, coreHistoricalAdditionCheckoutRepairIntegrationPaths);\n\tassert.deepEqual(record.additions.map(addition => addition.path)\n\t\t, coreHistoricalAdditionCheckoutRepairAddedPaths);\n\tassert.equal(git([\"rev-parse\"\n\t\t, `${coreHistoricalAdditionCheckoutRepairImplementation}^`]).trim()\n\t, coreHistoricalAdditionCheckoutRepairPredecessor);\n\tassert.deepEqual(git([\"diff\", \"--name-only\"\n\t\t, coreHistoricalAdditionCheckoutRepairPredecessor\n\t\t, coreHistoricalAdditionCheckoutRepairImplementation])\n\t\t.trim().split(\"\\n\").sort()\n\t, [...coreHistoricalAdditionCheckoutRepairImplementationPaths].sort());\n});\n\ntest(\"Core historical-addition checkout repair reverses transitions\", async () => {\n\tconst record = await readCoreHistoricalAdditionCheckoutRepair();\n\tfor(const update of [...record.updates, ...record.integrationUpdates])\n\t{\n\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256\n\t\t\t, beforeCoreHistoricalAdditionCheckoutRepairSource);\n\t\tconst base = record.integrationUpdates.includes(update)\n\t\t\t? coreHistoricalAdditionCheckoutRepairImplementation\n\t\t\t: coreHistoricalAdditionCheckoutRepairPredecessor;\n\t\tconst previous = git([\"show\", `${base}:${update.path}`]);\n\t\tassert.equal(reverseCoreHistoricalAdditionCheckoutRepairUpdate(\n\t\t\tcurrent, update), previous, update.path);\n\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n\t\tassert.ok(finRefinementNormalizationPaths.includes(update.path));\n\t}\n\tfor(const addition of record.additions)\n\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256))\n\t\t, addition.currentSha256, addition.path);\n});\n\ntest(\"Core historical-addition checkout repair rejects alterations\", async () => {\n\tconst update = (await readCoreHistoricalAdditionCheckoutRepair()).updates[0];\n\tconst current = await sourceAtFinHistoryMilestone(\n\t\tupdate.path, update.currentSha256\n\t\t, beforeCoreHistoricalAdditionCheckoutRepairSource);\n\tfor(const forged of [{ ...update, currentSha256: \"0\".repeat(64) }\n\t\t, { ...update, previousSha256: \"0\".repeat(64) }\n\t\t, { ...update, path: \"unrelated.mjs\" }\n\t\t, { ...update, edits: [] }\n\t\t, { ...update, edits: [...update.edits, update.edits[0]] }])\n\t\tassert.throws(() => reverseCoreHistoricalAdditionCheckoutRepairUpdate(\n\t\t\tcurrent, forged));\n\tassert.equal(beforeCoreHistoricalAdditionCheckoutRepairSource(\n\t\tupdate.path, current + \"unknown\"), current + \"unknown\");\n});\n\ntest(\"Core historical-addition writer refuses another checkout\", async t => {\n\tconst root = await mkdtemp(join(\n\t\ttmpdir(), \"lean-core-historical-addition-checkout-guard-\"\n\t));\n\tt.after(() => rm(root, { recursive: true }));\n\tconst result = spawnSync(process.execPath, [resolve(\n\t\t\"scripts/update-core-historical-addition-checkout-repair-source-history.mjs\"\n\t)], { cwd: root, encoding: \"utf8\", timeout: 15_000 });\n\tassert.notEqual(result.status, 0);\n\tassert.equal(result.stdout, \"\");\n\tassert.deepEqual(await readdir(root), []);\n});\n\n",
+          "previous": "",
+          "start": 12188
+        }
+      ],
+      "path": "tests/helpers/core-historical-evidence-replay-source-history-tests.mjs",
+      "previousSha256": "c6811af019377fd5b72b03ecf3da80fb0474e254a2ab93cd170be6271aabfc71"
+    },
+    {
+      "currentSha256": "7f215f7ca7132153d825dcd0a52d44ce8b00d4e6b013bd64a4d119fc4f1c0cf5",
+      "edits": [
+        {
+          "current": "import { beforeCoreHistoricalAdditionCheckoutRepairSource, coreHistoricalAdditionCheckoutRepairNormalizationPaths } from \"./core-historical-addition-checkout-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...coreHistoricalAdditionCheckoutRepairNormalizationPaths\n\t, ...coreTypeSurfaceSinglePassNormalizationPaths\n",
+          "previous": "\t...coreTypeSurfaceSinglePassNormalizationPaths\n",
+          "start": 193795
+        },
+        {
+          "current": "\tlet stage = beforeCoreHistoricalAdditionCheckoutRepairSource(\n\t\tpath, text, expected\n\t);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCoreTypeSurfaceSinglePassSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeCoreTypeSurfaceSinglePassSource(path, text, expected);\n",
+          "start": 240803
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "bd00898663830a0187fe3e20de7bd9638b4d183e36bf8bbef11f955abc056bc3"
+    }
+  ],
+  "milestone": "core-historical-addition-checkout-repair-source-v1",
+  "predecessorCommit": "3c8260b75411fe0e2375e4a43df7eaabf92a80d5",
+  "schemaVersion": 1,
+  "scope": "Retain exact historical evidence additions referenced by executable Core source-history contracts without restoring broad evidence-directory checkout.",
+  "updates": [
+    {
+      "currentSha256": "4c22585444acb181d404119f30a9c5cc2fe9494f1f3f9322d2c8cff28ded58ef",
+      "edits": [
+        {
+          "current": "/**\n * Resolve exact retained-evidence paths named by executable source. This keeps\n * file-scoped historical additions available without materializing every\n * sibling payload in their archive directories.\n *\n * @param source - Executable source text.\n * @param path - Repository-relative source path.\n * @param trackedFiles - Tracked repository evidence paths.\n */\nexport const coreContractExecutableEvidenceFiles = (\n\tsource, path, trackedFiles\n) => {\n\tif(!sourceExtensions.has(extname(path))) return new Set();\n\tconst tracked = trackedFiles instanceof Set\n\t\t? trackedFiles : new Set(trackedFiles);\n\treturn new Set(coreContractEvidenceFragments(source, path)\n\t\t.map(fragment => normalize(fragment).replaceAll(\"\\\\\", \"/\"))\n\t\t.filter(fragment => fragment.startsWith(\"docs/evidence/\")\n\t\t\t&& tracked.has(fragment)));\n};\n\n",
+          "previous": "",
+          "start": 12102
+        },
+        {
+          "current": "\tconst evidenceFileSet = new Set(evidenceFiles);\n",
+          "previous": "",
+          "start": 17227
+        },
+        {
+          "current": "\t\telse\n\t\t{\n\t\t\tfor(const file of coreContractExecutableEvidenceFiles(\n\t\t\t\tsource, path, evidenceFileSet)) selectedFiles.add(file);\n\t\t\tif(!/-source-history[.]mjs$/u.test(path))\n\t\t\t\tfor(const directory of coreContractEvidenceDirectoryReferences(\n\t\t\t\t\tsource, path, directories)) selectedDirectories.add(directory);\n\t\t}\n",
+          "previous": "\t\telse if(!/-source-history[.]mjs$/u.test(path))\n\t\t\tfor(const directory of coreContractEvidenceDirectoryReferences(\n\t\t\t\tsource, path, directories)) selectedDirectories.add(directory);\n",
+          "start": 18270
+        }
+      ],
+      "path": "scripts/core-contract-evidence.mjs",
+      "previousSha256": "74c7dfff7ec907501f652d2fd8a4715e480215ec816e7eccb1f75ddaf677e830"
+    },
+    {
+      "currentSha256": "91183790ca0471bf15567d3770df70e0e99d1ad6d95fd0e9f7f6ddbf34ccaf3e",
+      "edits": [
+        {
+          "current": "\t, coreContractEvidenceDirectoryReferences, coreContractExecutableEvidenceFiles\n",
+          "previous": "\t, coreContractEvidenceDirectoryReferences\n",
+          "start": 610
+        },
+        {
+          "current": "test(\"Core evidence planning retains exact historical additions\", () => {\n\tconst path = \"docs/evidence/nominal-primitive-subtype-supplement-20990101/.gitattributes\";\n\tconst source = `export const added = [\"${path}\"];`;\n\tassert.deepEqual([...coreContractExecutableEvidenceFiles(\n\t\tsource, \"repair-source-history.mjs\", [path])], [path]);\n\tassert.deepEqual([...coreContractExecutableEvidenceFiles(\n\t\tsource, \"repair-source-history.mjs\", [])], []);\n});\n\n",
+          "previous": "",
+          "start": 4442
+        }
+      ],
+      "path": "tests/helpers/core-contract-evidence-tests.mjs",
+      "previousSha256": "165bfde907e89fa53dbde35e3046fe195dab27b90100942c2a0c8a22df7d5ed4"
+    }
+  ]
+}

@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeCoreHistoricalAdditionCheckoutRepairSource, coreHistoricalAdditionCheckoutRepairNormalizationPaths } from "./core-historical-addition-checkout-repair-source-history.mjs";
 import { beforeCoreTypeSurfaceSinglePassSource, coreTypeSurfaceSinglePassNormalizationPaths } from "./core-type-surface-single-pass-source-history.mjs";
 import { beforeCoreDocumentationEvidenceClosureRepairSource, coreDocumentationEvidenceClosureRepairNormalizationPaths } from "./core-documentation-evidence-closure-repair-source-history.mjs";
 import { beforeCoreBrowserWorkflowEvidencePinRepairSource, coreBrowserWorkflowEvidencePinRepairNormalizationPaths } from "./core-browser-workflow-evidence-pin-repair-source-history.mjs";
@@ -2228,7 +2229,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...coreTypeSurfaceSinglePassNormalizationPaths
+	...coreHistoricalAdditionCheckoutRepairNormalizationPaths
+	, ...coreTypeSurfaceSinglePassNormalizationPaths
 	, ...coreDocumentationEvidenceClosureRepairNormalizationPaths
 	, ...coreBrowserWorkflowEvidencePinRepairNormalizationPaths
 	, ...coreTypeSurfaceEvidenceClosureRepairNormalizationPaths
@@ -3199,7 +3201,13 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeCoreTypeSurfaceSinglePassSource(path, text, expected);
+	let stage = beforeCoreHistoricalAdditionCheckoutRepairSource(
+		path, text, expected
+	);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeCoreTypeSurfaceSinglePassSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;

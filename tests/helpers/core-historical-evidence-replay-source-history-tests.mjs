@@ -10,6 +10,16 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import {
+	beforeCoreHistoricalAdditionCheckoutRepairSource
+	, coreHistoricalAdditionCheckoutRepairAddedPaths
+	, coreHistoricalAdditionCheckoutRepairHistoryPath
+	, coreHistoricalAdditionCheckoutRepairImplementation
+	, coreHistoricalAdditionCheckoutRepairImplementationPaths
+	, coreHistoricalAdditionCheckoutRepairIntegrationPaths
+	, coreHistoricalAdditionCheckoutRepairPredecessor
+	, reverseCoreHistoricalAdditionCheckoutRepairUpdate
+} from "./core-historical-addition-checkout-repair-source-history.mjs";
+import {
 	beforeCoreTypeSurfaceSinglePassSource
 	, coreTypeSurfaceSinglePassAddedPaths
 	, coreTypeSurfaceSinglePassHistoryPath
@@ -208,6 +218,9 @@ import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.m
 
 const git = arguments_ => execFileSync("git", arguments_
 	, { encoding: "utf8", maxBuffer: 128 * 1024 * 1024 });
+const readCoreHistoricalAdditionCheckoutRepair = async () => JSON.parse(
+	await readFile(coreHistoricalAdditionCheckoutRepairHistoryPath, "utf8")
+);
 const readCoreTypeSurfaceSinglePass = async () => JSON.parse(
 	await readFile(coreTypeSurfaceSinglePassHistoryPath, "utf8")
 );
@@ -260,6 +273,83 @@ const readWitBorrowStopBoundary = async () => JSON.parse(await readFile(
 const readReceiverCiStopBoundary = async () => JSON.parse(await readFile(
 	coreReceiverCiStopBoundaryHistoryPath, "utf8"
 ));
+
+test("Core historical-addition checkout repair records its range", async () => {
+	const record = await readCoreHistoricalAdditionCheckoutRepair();
+	assert.equal(record.schemaVersion, 1);
+	assert.equal(record.milestone
+		, "core-historical-addition-checkout-repair-source-v1");
+	assert.equal(record.predecessorCommit
+		, coreHistoricalAdditionCheckoutRepairPredecessor);
+	assert.equal(record.implementationCommit
+		, coreHistoricalAdditionCheckoutRepairImplementation);
+	assert.deepEqual(record.updates.map(update => update.path)
+		, coreHistoricalAdditionCheckoutRepairImplementationPaths);
+	assert.deepEqual(record.integrationUpdates.map(update => update.path)
+		, coreHistoricalAdditionCheckoutRepairIntegrationPaths);
+	assert.deepEqual(record.additions.map(addition => addition.path)
+		, coreHistoricalAdditionCheckoutRepairAddedPaths);
+	assert.equal(git(["rev-parse"
+		, `${coreHistoricalAdditionCheckoutRepairImplementation}^`]).trim()
+	, coreHistoricalAdditionCheckoutRepairPredecessor);
+	assert.deepEqual(git(["diff", "--name-only"
+		, coreHistoricalAdditionCheckoutRepairPredecessor
+		, coreHistoricalAdditionCheckoutRepairImplementation])
+		.trim().split("\n").sort()
+	, [...coreHistoricalAdditionCheckoutRepairImplementationPaths].sort());
+});
+
+test("Core historical-addition checkout repair reverses transitions", async () => {
+	const record = await readCoreHistoricalAdditionCheckoutRepair();
+	for(const update of [...record.updates, ...record.integrationUpdates])
+	{
+		const current = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256
+			, beforeCoreHistoricalAdditionCheckoutRepairSource);
+		const base = record.integrationUpdates.includes(update)
+			? coreHistoricalAdditionCheckoutRepairImplementation
+			: coreHistoricalAdditionCheckoutRepairPredecessor;
+		const previous = git(["show", `${base}:${update.path}`]);
+		assert.equal(reverseCoreHistoricalAdditionCheckoutRepairUpdate(
+			current, update), previous, update.path);
+		assert.equal(beforeFinRefinementSource(
+			update.path, current, update.previousSha256), previous, update.path);
+		assert.ok(finRefinementNormalizationPaths.includes(update.path));
+	}
+	for(const addition of record.additions)
+		assert.equal(sha256(await sourceAtFinHistoryMilestone(
+			addition.path, addition.currentSha256))
+		, addition.currentSha256, addition.path);
+});
+
+test("Core historical-addition checkout repair rejects alterations", async () => {
+	const update = (await readCoreHistoricalAdditionCheckoutRepair()).updates[0];
+	const current = await sourceAtFinHistoryMilestone(
+		update.path, update.currentSha256
+		, beforeCoreHistoricalAdditionCheckoutRepairSource);
+	for(const forged of [{ ...update, currentSha256: "0".repeat(64) }
+		, { ...update, previousSha256: "0".repeat(64) }
+		, { ...update, path: "unrelated.mjs" }
+		, { ...update, edits: [] }
+		, { ...update, edits: [...update.edits, update.edits[0]] }])
+		assert.throws(() => reverseCoreHistoricalAdditionCheckoutRepairUpdate(
+			current, forged));
+	assert.equal(beforeCoreHistoricalAdditionCheckoutRepairSource(
+		update.path, current + "unknown"), current + "unknown");
+});
+
+test("Core historical-addition writer refuses another checkout", async t => {
+	const root = await mkdtemp(join(
+		tmpdir(), "lean-core-historical-addition-checkout-guard-"
+	));
+	t.after(() => rm(root, { recursive: true }));
+	const result = spawnSync(process.execPath, [resolve(
+		"scripts/update-core-historical-addition-checkout-repair-source-history.mjs"
+	)], { cwd: root, encoding: "utf8", timeout: 15_000 });
+	assert.notEqual(result.status, 0);
+	assert.equal(result.stdout, "");
+	assert.deepEqual(await readdir(root), []);
+});
 
 test("Core historical replay records its exact source range", async () => {
 	const record = await read();
