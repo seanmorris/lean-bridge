@@ -1,0 +1,182 @@
+{
+  "historyAdditions": [
+    {
+      "currentSha256": "fdda928254ace89498519a9fc39480f27b1402e9523ae366db8849d6fe48be89",
+      "path": "scripts/update-core-historical-evidence-reuse-live-pin-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "55677e536ee5e75298877f4726ca4d9b8a8ccecac105c1c156891d8d93add010",
+      "path": "tests/helpers/core-historical-evidence-reuse-live-pin-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "4b1f098cae4753fd0160fede38cb7233868c2ce9",
+  "integrationUpdates": [
+    {
+      "currentSha256": "2de975e2a22ea081bab77c7e110e9813807e6872b4f74c26cb9c19b3d3fb85b3",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeCoreHistoricalEvidenceReuseLivePinRepairSource\n\t, coreHistoricalEvidenceReuseLivePinRepairHistoryAdditions\n\t, coreHistoricalEvidenceReuseLivePinRepairHistoryPath\n\t, coreHistoricalEvidenceReuseLivePinRepairImplementation\n\t, coreHistoricalEvidenceReuseLivePinRepairImplementationPaths\n\t, coreHistoricalEvidenceReuseLivePinRepairIntegrationPaths\n\t, coreHistoricalEvidenceReuseLivePinRepairPredecessor\n\t, reverseCoreHistoricalEvidenceReuseLivePinRepairUpdate\n} from \"./core-historical-evidence-reuse-live-pin-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 786
+        },
+        {
+          "current": "const readCoreHistoricalEvidenceReuseLivePinRepair = async () => JSON.parse(\n\tawait readFile(coreHistoricalEvidenceReuseLivePinRepairHistoryPath, \"utf8\")\n);\n",
+          "previous": "",
+          "start": 18317
+        },
+        {
+          "current": "test(\"Core historical-reuse live-pin repair records its exact change\", async () => {\n\tconst record = await readCoreHistoricalEvidenceReuseLivePinRepair();\n\tassert.equal(record.schemaVersion, 1);\n\tassert.equal(record.milestone\n\t\t, \"core-historical-evidence-reuse-live-pin-repair-source-v1\");\n\tassert.equal(record.predecessorCommit\n\t\t, coreHistoricalEvidenceReuseLivePinRepairPredecessor);\n\tassert.equal(record.implementationCommit\n\t\t, coreHistoricalEvidenceReuseLivePinRepairImplementation);\n\tassert.deepEqual(record.updates.map(update => update.path)\n\t\t, coreHistoricalEvidenceReuseLivePinRepairImplementationPaths);\n\tassert.deepEqual(record.integrationUpdates.map(update => update.path)\n\t\t, coreHistoricalEvidenceReuseLivePinRepairIntegrationPaths);\n\tassert.deepEqual(record.historyAdditions.map(addition => addition.path)\n\t\t, coreHistoricalEvidenceReuseLivePinRepairHistoryAdditions);\n\tassert.equal(git([\"rev-parse\"\n\t\t, `${coreHistoricalEvidenceReuseLivePinRepairImplementation}^`]).trim()\n\t\t, coreHistoricalEvidenceReuseLivePinRepairPredecessor);\n\tassert.deepEqual(git([\"diff\", \"--name-only\"\n\t\t, coreHistoricalEvidenceReuseLivePinRepairPredecessor\n\t\t, coreHistoricalEvidenceReuseLivePinRepairImplementation])\n\t\t.trim().split(\"\\n\").sort()\n\t\t, [...coreHistoricalEvidenceReuseLivePinRepairImplementationPaths].sort());\n});\n\ntest(\"Core historical-reuse live pins cite the exact current sources\", async () => {\n\tconst document = JSON.parse(await readFile(\"docs/type-surface.v1.json\", \"utf8\"));\n\tconst expected = new Map([\n\t\t[\"tests/callback-subtype-hosted-evidence.test.mjs\", 8]\n\t\t, [\"tests/helpers/callback-subtype-hosted-evidence-sources.mjs\", 8]\n\t\t, [\"tests/helpers/php-wasm-direct-fin-promotion-tests.mjs\", 4]\n\t\t, [\"tests/helpers/php-wasm-subtype-promotion-tests.mjs\", 2]\n\t]);\n\tconst citations = new Map([...expected].map(([path]) => [path, []]));\n\tfor(const evidence of document.evidence)\n\t\tfor(const file of evidence.files)\n\t\t\tif(citations.has(file.path)) citations.get(file.path).push(file.sha256);\n\tfor(const [path, count] of expected)\n\t{\n\t\tassert.equal(citations.get(path).length, count, path);\n\t\tassert.deepEqual([...new Set(citations.get(path))]\n\t\t\t, [sha256(await readFile(path))], path);\n\t}\n});\n\ntest(\"Core historical-reuse live-pin repair reverses every transition\", async () => {\n\tconst record = await readCoreHistoricalEvidenceReuseLivePinRepair();\n\tfor(const update of [...record.updates, ...record.integrationUpdates])\n\t{\n\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256\n\t\t\t, beforeCoreHistoricalEvidenceReuseLivePinRepairSource);\n\t\tconst base = record.integrationUpdates.includes(update)\n\t\t\t? coreHistoricalEvidenceReuseLivePinRepairImplementation\n\t\t\t: coreHistoricalEvidenceReuseLivePinRepairPredecessor;\n\t\tconst previous = git([\"show\", `${base}:${update.path}`]);\n\t\tassert.equal(reverseCoreHistoricalEvidenceReuseLivePinRepairUpdate(\n\t\t\tcurrent, update), previous, update.path);\n\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n\t\tassert.ok(finRefinementNormalizationPaths.includes(update.path));\n\t}\n});\n\ntest(\"Core historical-reuse live-pin repair rejects altered transitions\", async () => {\n\tconst update = (await readCoreHistoricalEvidenceReuseLivePinRepair()).updates[0];\n\tconst current = await sourceAtFinHistoryMilestone(\n\t\tupdate.path, update.currentSha256\n\t\t, beforeCoreHistoricalEvidenceReuseLivePinRepairSource);\n\tfor(const forged of [{ ...update, currentSha256: \"0\".repeat(64) }\n\t\t, { ...update, previousSha256: \"0\".repeat(64) }\n\t\t, { ...update, path: \"unrelated.mjs\" }\n\t\t, { ...update, edits: [] }\n\t\t, { ...update, edits: [...update.edits, update.edits[0]] }])\n\t\tassert.throws(() => reverseCoreHistoricalEvidenceReuseLivePinRepairUpdate(\n\t\t\tcurrent, forged));\n\tassert.equal(beforeCoreHistoricalEvidenceReuseLivePinRepairSource(\n\t\tupdate.path, current + \"unknown\"), current + \"unknown\");\n});\n\ntest(\"Core historical-reuse live-pin writer rejects another checkout\", async t => {\n\tconst root = await mkdtemp(join(\n\t\ttmpdir(), \"lean-core-historical-reuse-live-pin-guard-\"\n\t));\n\tt.after(() => rm(root, { recursive: true }));\n\tconst result = spawnSync(process.execPath, [resolve(\n\t\t\"scripts/update-core-historical-evidence-reuse-live-pin-repair-source-history.mjs\"\n\t)], { cwd: root, encoding: \"utf8\", timeout: 15_000 });\n\tassert.notEqual(result.status, 0);\n\tassert.equal(result.stdout, \"\");\n\tassert.deepEqual(await readdir(root), []);\n});\n\n",
+          "previous": "",
+          "start": 23202
+        }
+      ],
+      "path": "tests/helpers/core-historical-evidence-replay-source-history-tests.mjs",
+      "previousSha256": "1ae9daf8df09f9bbe6cc6554d6446456a33da1588a7798516cd607d0404ede57"
+    },
+    {
+      "currentSha256": "1400a3926d349a359a76302bc8ec085341b93bc6936e76b2399730da2ee3da8e",
+      "edits": [
+        {
+          "current": "import { beforeCoreHistoricalEvidenceReuseLivePinRepairSource, coreHistoricalEvidenceReuseLivePinRepairNormalizationPaths } from \"./core-historical-evidence-reuse-live-pin-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...coreHistoricalEvidenceReuseLivePinRepairNormalizationPaths()\n\t, ...coreHistoricalEvidenceReuseNormalizationPaths\n",
+          "previous": "\t...coreHistoricalEvidenceReuseNormalizationPaths\n",
+          "start": 197149
+        },
+        {
+          "current": "\tlet stage = beforeCoreHistoricalEvidenceReuseLivePinRepairSource(\n\t\tpath, text, expected\n\t);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCoreHistoricalEvidenceReuseSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeCoreHistoricalEvidenceReuseSource(path, text, expected);\n",
+          "start": 245206
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "90c12d36cc2ccd34a488b9fb3e736803c9dbbee96c9dbef5d1ed733ac005d47e"
+    }
+  ],
+  "milestone": "core-historical-evidence-reuse-live-pin-repair-source-v1",
+  "predecessorCommit": "67e691b8fc0938654d314bc7191497cdc2549802",
+  "schemaVersion": 1,
+  "scope": "Refresh exactly 22 live type-surface citations across the four sources changed by the Core historical-evidence reuse optimization. Preserve every evidence identity, archive, observation and support claim while making exact-head authentication reject stale or forged current bytes.",
+  "updates": [
+    {
+      "currentSha256": "1a96739cdc0dba61dfb5a8583b49d1482ee2a993456788f96da2cbeb88980827",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"ced68b0c4d803e4df0f53baf440e22b26aa55793a20a0a7bd3548ef39e900b9e\"\n",
+          "previous": "          \"sha256\": \"d72dbaa31ff6ae89c6fc38ab482aa071c0a0dc2d8236589e519f16007125b9b1\"\n",
+          "start": 3345491
+        },
+        {
+          "current": "          \"sha256\": \"ced68b0c4d803e4df0f53baf440e22b26aa55793a20a0a7bd3548ef39e900b9e\"\n",
+          "previous": "          \"sha256\": \"d72dbaa31ff6ae89c6fc38ab482aa071c0a0dc2d8236589e519f16007125b9b1\"\n",
+          "start": 3358452
+        },
+        {
+          "current": "          \"sha256\": \"ced68b0c4d803e4df0f53baf440e22b26aa55793a20a0a7bd3548ef39e900b9e\"\n",
+          "previous": "          \"sha256\": \"d72dbaa31ff6ae89c6fc38ab482aa071c0a0dc2d8236589e519f16007125b9b1\"\n",
+          "start": 3371417
+        },
+        {
+          "current": "          \"sha256\": \"ced68b0c4d803e4df0f53baf440e22b26aa55793a20a0a7bd3548ef39e900b9e\"\n",
+          "previous": "          \"sha256\": \"d72dbaa31ff6ae89c6fc38ab482aa071c0a0dc2d8236589e519f16007125b9b1\"\n",
+          "start": 3384374
+        },
+        {
+          "current": "          \"sha256\": \"4b46b3fc650e3eef8d2dbd1c27ebdb84462c6071c6643270a8f6754bf6dd90a5\"\n",
+          "previous": "          \"sha256\": \"e8ec53b2b86999b9e55da32722357970e9918b1f94fd95625b9dd0488a3afb07\"\n",
+          "start": 3397578
+        },
+        {
+          "current": "          \"sha256\": \"4b46b3fc650e3eef8d2dbd1c27ebdb84462c6071c6643270a8f6754bf6dd90a5\"\n",
+          "previous": "          \"sha256\": \"e8ec53b2b86999b9e55da32722357970e9918b1f94fd95625b9dd0488a3afb07\"\n",
+          "start": 3410206
+        },
+        {
+          "current": "          \"sha256\": \"29ebe491495a86fc13f0aaaa9b9e4b246c6d8833ada1d7050959437f4cdb2e8b\"\n",
+          "previous": "          \"sha256\": \"1019ba367eb7609f1c3a24354cb7394191e86143af20a66f3916bdcfe6653e48\"\n",
+          "start": 88383115
+        },
+        {
+          "current": "          \"sha256\": \"61132c4c668c47ca4573be1153eb58fa3176bf8b2490c9fafdfca86eae8f8b29\"\n",
+          "previous": "          \"sha256\": \"645bfdca47c13ae4244bdc00e371bf32afa0c485e602d1e2b5d408de0b87b933\"\n",
+          "start": 88383653
+        },
+        {
+          "current": "          \"sha256\": \"29ebe491495a86fc13f0aaaa9b9e4b246c6d8833ada1d7050959437f4cdb2e8b\"\n",
+          "previous": "          \"sha256\": \"1019ba367eb7609f1c3a24354cb7394191e86143af20a66f3916bdcfe6653e48\"\n",
+          "start": 88535710
+        },
+        {
+          "current": "          \"sha256\": \"61132c4c668c47ca4573be1153eb58fa3176bf8b2490c9fafdfca86eae8f8b29\"\n",
+          "previous": "          \"sha256\": \"645bfdca47c13ae4244bdc00e371bf32afa0c485e602d1e2b5d408de0b87b933\"\n",
+          "start": 88536248
+        },
+        {
+          "current": "          \"sha256\": \"29ebe491495a86fc13f0aaaa9b9e4b246c6d8833ada1d7050959437f4cdb2e8b\"\n",
+          "previous": "          \"sha256\": \"1019ba367eb7609f1c3a24354cb7394191e86143af20a66f3916bdcfe6653e48\"\n",
+          "start": 88693708
+        },
+        {
+          "current": "          \"sha256\": \"61132c4c668c47ca4573be1153eb58fa3176bf8b2490c9fafdfca86eae8f8b29\"\n",
+          "previous": "          \"sha256\": \"645bfdca47c13ae4244bdc00e371bf32afa0c485e602d1e2b5d408de0b87b933\"\n",
+          "start": 88694246
+        },
+        {
+          "current": "          \"sha256\": \"29ebe491495a86fc13f0aaaa9b9e4b246c6d8833ada1d7050959437f4cdb2e8b\"\n",
+          "previous": "          \"sha256\": \"1019ba367eb7609f1c3a24354cb7394191e86143af20a66f3916bdcfe6653e48\"\n",
+          "start": 88847512
+        },
+        {
+          "current": "          \"sha256\": \"61132c4c668c47ca4573be1153eb58fa3176bf8b2490c9fafdfca86eae8f8b29\"\n",
+          "previous": "          \"sha256\": \"645bfdca47c13ae4244bdc00e371bf32afa0c485e602d1e2b5d408de0b87b933\"\n",
+          "start": 88848050
+        },
+        {
+          "current": "          \"sha256\": \"29ebe491495a86fc13f0aaaa9b9e4b246c6d8833ada1d7050959437f4cdb2e8b\"\n",
+          "previous": "          \"sha256\": \"1019ba367eb7609f1c3a24354cb7394191e86143af20a66f3916bdcfe6653e48\"\n",
+          "start": 89001102
+        },
+        {
+          "current": "          \"sha256\": \"61132c4c668c47ca4573be1153eb58fa3176bf8b2490c9fafdfca86eae8f8b29\"\n",
+          "previous": "          \"sha256\": \"645bfdca47c13ae4244bdc00e371bf32afa0c485e602d1e2b5d408de0b87b933\"\n",
+          "start": 89001640
+        },
+        {
+          "current": "          \"sha256\": \"29ebe491495a86fc13f0aaaa9b9e4b246c6d8833ada1d7050959437f4cdb2e8b\"\n",
+          "previous": "          \"sha256\": \"1019ba367eb7609f1c3a24354cb7394191e86143af20a66f3916bdcfe6653e48\"\n",
+          "start": 89153734
+        },
+        {
+          "current": "          \"sha256\": \"61132c4c668c47ca4573be1153eb58fa3176bf8b2490c9fafdfca86eae8f8b29\"\n",
+          "previous": "          \"sha256\": \"645bfdca47c13ae4244bdc00e371bf32afa0c485e602d1e2b5d408de0b87b933\"\n",
+          "start": 89154272
+        },
+        {
+          "current": "          \"sha256\": \"29ebe491495a86fc13f0aaaa9b9e4b246c6d8833ada1d7050959437f4cdb2e8b\"\n",
+          "previous": "          \"sha256\": \"1019ba367eb7609f1c3a24354cb7394191e86143af20a66f3916bdcfe6653e48\"\n",
+          "start": 89310016
+        },
+        {
+          "current": "          \"sha256\": \"61132c4c668c47ca4573be1153eb58fa3176bf8b2490c9fafdfca86eae8f8b29\"\n",
+          "previous": "          \"sha256\": \"645bfdca47c13ae4244bdc00e371bf32afa0c485e602d1e2b5d408de0b87b933\"\n",
+          "start": 89310554
+        },
+        {
+          "current": "          \"sha256\": \"29ebe491495a86fc13f0aaaa9b9e4b246c6d8833ada1d7050959437f4cdb2e8b\"\n",
+          "previous": "          \"sha256\": \"1019ba367eb7609f1c3a24354cb7394191e86143af20a66f3916bdcfe6653e48\"\n",
+          "start": 89465359
+        },
+        {
+          "current": "          \"sha256\": \"61132c4c668c47ca4573be1153eb58fa3176bf8b2490c9fafdfca86eae8f8b29\"\n",
+          "previous": "          \"sha256\": \"645bfdca47c13ae4244bdc00e371bf32afa0c485e602d1e2b5d408de0b87b933\"\n",
+          "start": 89465897
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "87917bc5b03862b420db7f969281638f8471bbb2f3a7b7b7653afaeca47ff38f"
+    }
+  ]
+}

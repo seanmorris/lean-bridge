@@ -12,6 +12,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeCoreHistoricalEvidenceReuseLivePinRepairSource, coreHistoricalEvidenceReuseLivePinRepairNormalizationPaths } from "./core-historical-evidence-reuse-live-pin-repair-source-history.mjs";
 import { beforeCoreHistoricalEvidenceReuseSource, coreHistoricalEvidenceReuseNormalizationPaths } from "./core-historical-evidence-reuse-source-history.mjs";
 import { beforeCoreExactHeadMatrixRepairSource, coreExactHeadMatrixRepairNormalizationPaths } from "./core-exact-head-matrix-repair-source-history.mjs";
 import { beforeCoreInheritedRecordTypeSurfaceBatchSource, coreInheritedRecordTypeSurfaceBatchNormalizationPaths } from "./core-inherited-record-type-surface-batch-source-history.mjs";
@@ -2250,7 +2251,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...coreHistoricalEvidenceReuseNormalizationPaths
+	...coreHistoricalEvidenceReuseLivePinRepairNormalizationPaths()
+	, ...coreHistoricalEvidenceReuseNormalizationPaths
 	, ...coreExactHeadMatrixRepairNormalizationPaths
 	, ...coreExactHeadHostedStaticRepairNormalizationPaths()
 	, ...coreExactHeadHostedReplayRepairNormalizationPaths()
@@ -3239,7 +3241,13 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeCoreHistoricalEvidenceReuseSource(path, text, expected);
+	let stage = beforeCoreHistoricalEvidenceReuseLivePinRepairSource(
+		path, text, expected
+	);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeCoreHistoricalEvidenceReuseSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;
