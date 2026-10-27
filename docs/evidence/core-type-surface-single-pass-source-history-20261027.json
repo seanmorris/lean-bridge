@@ -1,0 +1,610 @@
+{
+  "additions": [
+    {
+      "currentSha256": "c796060540ab6d58d852b313f0f8a423165a4c08128f3e82eab00edefb6f86f1",
+      "path": "scripts/update-core-type-surface-single-pass-source-history.mjs"
+    },
+    {
+      "currentSha256": "cc663095e42f231c8dc1c7f758a37f2fc7b7c9623144e482bc487ff4cf6bf651",
+      "path": "tests/helpers/core-type-surface-single-pass-source-history.mjs"
+    }
+  ],
+  "implementationAdditions": [
+    {
+      "currentSha256": "68e76e1b264728e97cdf6aa158d96124a658d32f9e484a14f909d855477d7068",
+      "path": "scripts/create-core-type-surface-evidence-receipt.mjs"
+    },
+    {
+      "currentSha256": "dcf4e8e60d17d477a49eb37e7fe5d3160b3140bdd8009868d0cd637de75bf315",
+      "path": "src/adoption/type-surface-evidence-receipt.mjs"
+    }
+  ],
+  "implementationCommit": "9fc4c5d3ef5d41b274d1a573302b851e244f795e",
+  "integrationUpdates": [
+    {
+      "currentSha256": "c6811af019377fd5b72b03ecf3da80fb0474e254a2ab93cd170be6271aabfc71",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeCoreTypeSurfaceSinglePassSource\n\t, coreTypeSurfaceSinglePassAddedPaths\n\t, coreTypeSurfaceSinglePassHistoryPath\n\t, coreTypeSurfaceSinglePassImplementation\n\t, coreTypeSurfaceSinglePassImplementationAdditions\n\t, coreTypeSurfaceSinglePassImplementationPaths\n\t, coreTypeSurfaceSinglePassIntegrationPaths\n\t, coreTypeSurfaceSinglePassModifiedPaths\n\t, coreTypeSurfaceSinglePassPredecessor\n\t, reverseCoreTypeSurfaceSinglePassUpdate\n} from \"./core-type-surface-single-pass-source-history.mjs\";\n",
+          "previous": "",
+          "start": 357
+        },
+        {
+          "current": "const readCoreTypeSurfaceSinglePass = async () => JSON.parse(\n\tawait readFile(coreTypeSurfaceSinglePassHistoryPath, \"utf8\")\n);\n",
+          "previous": "",
+          "start": 9191
+        },
+        {
+          "current": "test(\"Core type-surface single-pass records its exact source range\", async () => {\n\tconst record = await readCoreTypeSurfaceSinglePass();\n\tassert.equal(record.schemaVersion, 1);\n\tassert.equal(record.milestone, \"core-type-surface-single-pass-source-v1\");\n\tassert.equal(record.predecessorCommit, coreTypeSurfaceSinglePassPredecessor);\n\tassert.equal(record.implementationCommit, coreTypeSurfaceSinglePassImplementation);\n\tassert.deepEqual(record.updates.map(update => update.path)\n\t\t, coreTypeSurfaceSinglePassModifiedPaths);\n\tassert.deepEqual(record.implementationAdditions.map(addition => addition.path)\n\t\t, coreTypeSurfaceSinglePassImplementationAdditions);\n\tassert.deepEqual(record.integrationUpdates.map(update => update.path)\n\t\t, coreTypeSurfaceSinglePassIntegrationPaths);\n\tassert.deepEqual(record.additions.map(addition => addition.path)\n\t\t, coreTypeSurfaceSinglePassAddedPaths);\n\tassert.equal(git([\"rev-parse\"\n\t\t, `${coreTypeSurfaceSinglePassImplementation}^`]).trim()\n\t, coreTypeSurfaceSinglePassPredecessor);\n\tassert.deepEqual(git([\"diff\", \"--name-only\"\n\t\t, coreTypeSurfaceSinglePassPredecessor\n\t\t, coreTypeSurfaceSinglePassImplementation]).trim().split(\"\\n\").sort()\n\t, [...coreTypeSurfaceSinglePassImplementationPaths].sort());\n\tassert.deepEqual(git([\"diff\", \"--name-only\", \"--diff-filter=M\"\n\t\t, coreTypeSurfaceSinglePassPredecessor\n\t\t, coreTypeSurfaceSinglePassImplementation]).trim().split(\"\\n\").sort()\n\t, [...coreTypeSurfaceSinglePassModifiedPaths].sort());\n});\n\ntest(\"Core type-surface single-pass reverses every transition\", async () => {\n\tconst record = await readCoreTypeSurfaceSinglePass();\n\tfor(const update of [...record.updates, ...record.integrationUpdates])\n\t{\n\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256\n\t\t\t, beforeCoreTypeSurfaceSinglePassSource);\n\t\tconst base = record.integrationUpdates.includes(update)\n\t\t\t? coreTypeSurfaceSinglePassImplementation\n\t\t\t: coreTypeSurfaceSinglePassPredecessor;\n\t\tconst previous = git([\"show\", `${base}:${update.path}`]);\n\t\tassert.equal(reverseCoreTypeSurfaceSinglePassUpdate(\n\t\t\tcurrent, update), previous, update.path);\n\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n\t\tassert.ok(finRefinementNormalizationPaths.includes(update.path));\n\t}\n\tfor(const addition of [\n\t\t...record.implementationAdditions, ...record.additions\n\t]) assert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\taddition.path, addition.currentSha256))\n\t, addition.currentSha256, addition.path);\n});\n\ntest(\"Core type-surface single-pass rejects altered transitions\", async () => {\n\tconst update = (await readCoreTypeSurfaceSinglePass()).updates[0];\n\tconst current = await sourceAtFinHistoryMilestone(\n\t\tupdate.path, update.currentSha256\n\t\t, beforeCoreTypeSurfaceSinglePassSource);\n\tfor(const forged of [{ ...update, currentSha256: \"0\".repeat(64) }\n\t\t, { ...update, previousSha256: \"0\".repeat(64) }\n\t\t, { ...update, path: \"unrelated.mjs\" }\n\t\t, { ...update, edits: [] }\n\t\t, { ...update, edits: [...update.edits, update.edits[0]] }])\n\t\tassert.throws(() => reverseCoreTypeSurfaceSinglePassUpdate(\n\t\t\tcurrent, forged));\n\tassert.equal(beforeCoreTypeSurfaceSinglePassSource(\n\t\tupdate.path, current + \"unknown\"), current + \"unknown\");\n});\n\ntest(\"Core type-surface single-pass writer refuses another checkout\", async t => {\n\tconst root = await mkdtemp(join(\n\t\ttmpdir(), \"lean-core-type-surface-single-pass-guard-\"\n\t));\n\tt.after(() => rm(root, { recursive: true }));\n\tconst result = spawnSync(process.execPath, [resolve(\n\t\t\"scripts/update-core-type-surface-single-pass-source-history.mjs\"\n\t)], { cwd: root, encoding: \"utf8\", timeout: 15_000 });\n\tassert.notEqual(result.status, 0);\n\tassert.equal(result.stdout, \"\");\n\tassert.deepEqual(await readdir(root), []);\n});\n\n",
+          "previous": "",
+          "start": 19298
+        }
+      ],
+      "path": "tests/helpers/core-historical-evidence-replay-source-history-tests.mjs",
+      "previousSha256": "397d22b72623138a7fd01cdc00a9e6ec7ddfc089a34f68f162b5808626a98d11"
+    },
+    {
+      "currentSha256": "bd00898663830a0187fe3e20de7bd9638b4d183e36bf8bbef11f955abc056bc3",
+      "edits": [
+        {
+          "current": "import { beforeCoreTypeSurfaceSinglePassSource, coreTypeSurfaceSinglePassNormalizationPaths } from \"./core-type-surface-single-pass-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...coreTypeSurfaceSinglePassNormalizationPaths\n\t, ...coreDocumentationEvidenceClosureRepairNormalizationPaths\n",
+          "previous": "\t...coreDocumentationEvidenceClosureRepairNormalizationPaths\n",
+          "start": 193609
+        },
+        {
+          "current": "\tlet stage = beforeCoreTypeSurfaceSinglePassSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCoreDocumentationEvidenceClosureRepairSource(\n",
+          "previous": "\tlet stage = beforeCoreDocumentationEvidenceClosureRepairSource(\n",
+          "start": 240556
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "9f925bb9367df96e9a8f7fb3d4ad6d3b6024e0acce9f7fbf313beaeaaafeafba"
+    }
+  ],
+  "milestone": "core-type-surface-single-pass-source-v1",
+  "predecessorCommit": "f42912812313b8de525bf9e90e146276389613b5",
+  "schemaVersion": 1,
+  "scope": "Authenticate the complete 123,720-file type-surface evidence contract once at the exact workflow revision, preserve that fail-closed receipt as an intra-run artifact, and let all twelve Core shards validate it instead of independently materializing and hashing the same corpus. Keep standalone and isolated reads on full byte validation, retain complete archives only for tests that replay them, and select exact documentation link targets rather than their sibling payloads.",
+  "updates": [
+    {
+      "currentSha256": "cf4a071d64ae61b1a30b3878eed489055e34d741e8e423380041620067ff0397",
+      "edits": [
+        {
+          "current": "  type_surface:\n    name: Type-surface evidence authentication\n    needs: static\n    runs-on: ubuntu-24.04\n    timeout-minutes: 90\n    steps:\n      - name: Free hosted runner disk for the evidence checkout\n        run: |\n          df -h /\n          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/.ghcup /opt/hostedtoolcache/CodeQL\n          df -h /\n      - name: Check out the exact revision\n        uses: actions/checkout@v6\n        with:\n          fetch-depth: 1\n          persist-credentials: false\n          sparse-checkout: |\n            /*\n            !/*/\n            /.github/\n            /acceptance/\n            /config/\n            /containers/\n            /demos/\n            /nix/\n            /notices/\n            /patches/\n            /poc/\n            /schema/\n            /scripts/\n            /site/\n            /src/\n            /tests/\n            /docs/\n            !/docs/evidence/*\n            /docs/evidence/*.json\n            /docs/evidence/*.md\n            /docs/evidence/*.xml\n            /docs/evidence/*/index.json\n          sparse-checkout-cone-mode: false\n      - name: Install Node.js\n        uses: actions/setup-node@v6\n        with:\n          node-version: 22\n          cache: npm\n      - name: Install dependencies without lifecycle scripts\n        run: npm ci --ignore-scripts\n      - name: Authenticate the type-surface corpus once\n        run: |\n          node scripts/create-core-type-surface-evidence-receipt.mjs \\\n            --receipt build/core-type-surface/receipt.json \\\n            --manifest build/core-type-surface/materialization.json \\\n            --commit \"${{ github.sha }}\"\n      - name: Preserve the exact type-surface receipt\n        uses: actions/upload-artifact@v7\n        with:\n          name: core-type-surface-${{ github.sha }}\n          path: build/core-type-surface\n          if-no-files-found: error\n          overwrite: true\n          retention-days: 7\n\n",
+          "previous": "",
+          "start": 2047
+        },
+        {
+          "current": "    needs: [static, type_surface]\n",
+          "previous": "    needs: static\n",
+          "start": 4051
+        },
+        {
+          "current": "      - name: Restore the authenticated type-surface receipt\n        uses: actions/download-artifact@v8\n        with:\n          name: core-type-surface-${{ github.sha }}\n          path: build/core-type-surface\n",
+          "previous": "",
+          "start": 6763
+        },
+        {
+          "current": "            --manifest \"build/core-evidence/core-shard-${{ matrix.shard }}-evidence.json\" \\\n            --type-surface-receipt build/core-type-surface/receipt.json\n",
+          "previous": "            --manifest \"build/core-evidence/core-shard-${{ matrix.shard }}-evidence.json\"\n",
+          "start": 7156
+        },
+        {
+          "current": "        env:\n          LEAN_BRIDGE_TYPE_SURFACE_EVIDENCE_RECEIPT: ${{ github.workspace }}/build/core-type-surface/receipt.json\n",
+          "previous": "",
+          "start": 7589
+        },
+        {
+          "current": "    needs: [static, type_surface, contract]\n",
+          "previous": "    needs: [static, contract]\n",
+          "start": 8595
+        },
+        {
+          "current": "          TYPE_SURFACE_RESULT: ${{ needs.type_surface.result }}\n",
+          "previous": "",
+          "start": 9572
+        },
+        {
+          "current": "          test \"$TYPE_SURFACE_RESULT\" = success\n",
+          "previous": "",
+          "start": 9749
+        }
+      ],
+      "path": ".github/workflows/quality.yml",
+      "previousSha256": "70d6d52c30c2bb0fce5d18d0535a287d3a0c5d5921b2faffb589129ad2e6da06"
+    },
+    {
+      "currentSha256": "92f4c1a29bd74400d8360833f572eba58f092d4389c9783586f67ec9655839db",
+      "edits": [
+        {
+          "current": "\t\t{\n\t\t\t\"path\": \"src/adoption/type-surface-evidence-receipt.mjs\",\n\t\t\t\"classification\": \"strict-migration-backlog\"\n\t\t},\n",
+          "previous": "",
+          "start": 46715
+        }
+      ],
+      "path": "config/checked-javascript.json",
+      "previousSha256": "6d82259bff3bc5de418a4f909fd3cada384997a678e5b45e9a685585bde4b44a"
+    },
+    {
+      "currentSha256": "efab2b97a48bf543a52546d4a619b1a4ce15e5dfba3836c252587993282e5a64",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"92f4c1a29bd74400d8360833f572eba58f092d4389c9783586f67ec9655839db\"\n",
+          "previous": "          \"sha256\": \"6d82259bff3bc5de418a4f909fd3cada384997a678e5b45e9a685585bde4b44a\"\n",
+          "start": 55615
+        },
+        {
+          "current": "          \"sha256\": \"92f4c1a29bd74400d8360833f572eba58f092d4389c9783586f67ec9655839db\"\n",
+          "previous": "          \"sha256\": \"6d82259bff3bc5de418a4f909fd3cada384997a678e5b45e9a685585bde4b44a\"\n",
+          "start": 78173
+        },
+        {
+          "current": "          \"sha256\": \"92f4c1a29bd74400d8360833f572eba58f092d4389c9783586f67ec9655839db\"\n",
+          "previous": "          \"sha256\": \"6d82259bff3bc5de418a4f909fd3cada384997a678e5b45e9a685585bde4b44a\"\n",
+          "start": 95368
+        },
+        {
+          "current": "          \"sha256\": \"92f4c1a29bd74400d8360833f572eba58f092d4389c9783586f67ec9655839db\"\n",
+          "previous": "          \"sha256\": \"6d82259bff3bc5de418a4f909fd3cada384997a678e5b45e9a685585bde4b44a\"\n",
+          "start": 111669
+        },
+        {
+          "current": "          \"sha256\": \"92f4c1a29bd74400d8360833f572eba58f092d4389c9783586f67ec9655839db\"\n",
+          "previous": "          \"sha256\": \"6d82259bff3bc5de418a4f909fd3cada384997a678e5b45e9a685585bde4b44a\"\n",
+          "start": 432701
+        },
+        {
+          "current": "          \"sha256\": \"95b8e5915702a13ef2601e2fa225809a54d8a694566a5623b2011a73d701dec3\"\n",
+          "previous": "          \"sha256\": \"51536d691adaeaf385cc673ee673f48ee5e5d1e6be3737322d4bec4bdf6c37c1\"\n",
+          "start": 826141
+        },
+        {
+          "current": "          \"sha256\": \"92f4c1a29bd74400d8360833f572eba58f092d4389c9783586f67ec9655839db\"\n",
+          "previous": "          \"sha256\": \"6d82259bff3bc5de418a4f909fd3cada384997a678e5b45e9a685585bde4b44a\"\n",
+          "start": 1012191
+        },
+        {
+          "current": "          \"sha256\": \"92f4c1a29bd74400d8360833f572eba58f092d4389c9783586f67ec9655839db\"\n",
+          "previous": "          \"sha256\": \"6d82259bff3bc5de418a4f909fd3cada384997a678e5b45e9a685585bde4b44a\"\n",
+          "start": 1137823
+        },
+        {
+          "current": "          \"sha256\": \"92f4c1a29bd74400d8360833f572eba58f092d4389c9783586f67ec9655839db\"\n",
+          "previous": "          \"sha256\": \"6d82259bff3bc5de418a4f909fd3cada384997a678e5b45e9a685585bde4b44a\"\n",
+          "start": 1167383
+        },
+        {
+          "current": "          \"sha256\": \"92f4c1a29bd74400d8360833f572eba58f092d4389c9783586f67ec9655839db\"\n",
+          "previous": "          \"sha256\": \"6d82259bff3bc5de418a4f909fd3cada384997a678e5b45e9a685585bde4b44a\"\n",
+          "start": 1177497
+        },
+        {
+          "current": "          \"sha256\": \"92f4c1a29bd74400d8360833f572eba58f092d4389c9783586f67ec9655839db\"\n",
+          "previous": "          \"sha256\": \"6d82259bff3bc5de418a4f909fd3cada384997a678e5b45e9a685585bde4b44a\"\n",
+          "start": 1189258
+        },
+        {
+          "current": "          \"sha256\": \"92f4c1a29bd74400d8360833f572eba58f092d4389c9783586f67ec9655839db\"\n",
+          "previous": "          \"sha256\": \"6d82259bff3bc5de418a4f909fd3cada384997a678e5b45e9a685585bde4b44a\"\n",
+          "start": 1221819
+        },
+        {
+          "current": "          \"sha256\": \"92f4c1a29bd74400d8360833f572eba58f092d4389c9783586f67ec9655839db\"\n",
+          "previous": "          \"sha256\": \"6d82259bff3bc5de418a4f909fd3cada384997a678e5b45e9a685585bde4b44a\"\n",
+          "start": 1252098
+        },
+        {
+          "current": "          \"sha256\": \"92f4c1a29bd74400d8360833f572eba58f092d4389c9783586f67ec9655839db\"\n",
+          "previous": "          \"sha256\": \"6d82259bff3bc5de418a4f909fd3cada384997a678e5b45e9a685585bde4b44a\"\n",
+          "start": 1285249
+        },
+        {
+          "current": "          \"sha256\": \"92f4c1a29bd74400d8360833f572eba58f092d4389c9783586f67ec9655839db\"\n",
+          "previous": "          \"sha256\": \"6d82259bff3bc5de418a4f909fd3cada384997a678e5b45e9a685585bde4b44a\"\n",
+          "start": 1325050
+        },
+        {
+          "current": "          \"sha256\": \"cf4a071d64ae61b1a30b3878eed489055e34d741e8e423380041620067ff0397\"\n",
+          "previous": "          \"sha256\": \"70d6d52c30c2bb0fce5d18d0535a287d3a0c5d5921b2faffb589129ad2e6da06\"\n",
+          "start": 1351460
+        },
+        {
+          "current": "          \"sha256\": \"92f4c1a29bd74400d8360833f572eba58f092d4389c9783586f67ec9655839db\"\n",
+          "previous": "          \"sha256\": \"6d82259bff3bc5de418a4f909fd3cada384997a678e5b45e9a685585bde4b44a\"\n",
+          "start": 1351620
+        },
+        {
+          "current": "          \"sha256\": \"92f4c1a29bd74400d8360833f572eba58f092d4389c9783586f67ec9655839db\"\n",
+          "previous": "          \"sha256\": \"6d82259bff3bc5de418a4f909fd3cada384997a678e5b45e9a685585bde4b44a\"\n",
+          "start": 1373998
+        },
+        {
+          "current": "          \"sha256\": \"92f4c1a29bd74400d8360833f572eba58f092d4389c9783586f67ec9655839db\"\n",
+          "previous": "          \"sha256\": \"6d82259bff3bc5de418a4f909fd3cada384997a678e5b45e9a685585bde4b44a\"\n",
+          "start": 1393665
+        },
+        {
+          "current": "          \"sha256\": \"92f4c1a29bd74400d8360833f572eba58f092d4389c9783586f67ec9655839db\"\n",
+          "previous": "          \"sha256\": \"6d82259bff3bc5de418a4f909fd3cada384997a678e5b45e9a685585bde4b44a\"\n",
+          "start": 1417053
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "55b11d5918786caf1557776e74a4404d5da208abff1961b1b7e3ab27514cf92b"
+    },
+    {
+      "currentSha256": "74c7dfff7ec907501f652d2fd8a4715e480215ec816e7eccb1f75ddaf677e830",
+      "edits": [
+        {
+          "current": "import {\n\tassertTypeSurfaceEvidenceReceipt, typeSurfaceEvidenceSourcePaths\n} from \"../src/adoption/type-surface-evidence-receipt.mjs\";\n",
+          "previous": "",
+          "start": 729
+        },
+        {
+          "current": "/**\n * Distinguish enumeration that locates complete archives for replay from an\n * index-only inventory. The baseline already retains every archive index, so\n * an enumerator that never passes a selected root to an evidence checker does\n * not need the archive payloads in its sparse working tree.\n *\n * @param source - JavaScript source.\n * @param path - Diagnostic source path.\n */\nconst replaysEnumeratedEvidenceDirectories = (source, path) => {\n\tif(!enumeratesEvidenceDirectories(source, path)) return false;\n\tconst file = ts.createSourceFile(path, source, ts.ScriptTarget.Latest, true\n\t\t, ts.ScriptKind.JS);\n\tlet found = false;\n\tconst visit = node => {\n\t\tif(found) return;\n\t\tif(ts.isCallExpression(node))\n\t\t{\n\t\t\tconst callee = node.expression;\n\t\t\tconst name = ts.isIdentifier(callee) ? callee.text\n\t\t\t\t: ts.isPropertyAccessExpression(callee) ? callee.name.text : \"\";\n\t\t\tif(/^check[A-Z][A-Za-z0-9]*Evidence$/u.test(name)) found = true;\n\t\t}\n\t\tts.forEachChild(node, visit);\n\t};\n\tvisit(file);\n\treturn found;\n};\n\n",
+          "previous": "",
+          "start": 3520
+        },
+        {
+          "current": "\tconst fragments = coreContractEvidenceFragments(source, path);\n\tconst selected = new Set(directories.filter(name => fragments.some(fragment =>\n\t\tfragment === name || fragment.startsWith(`${name}/`)\n\t\t\t|| fragment.includes(`/docs/evidence/${name}/`)\n\t\t\t|| fragment.endsWith(`/docs/evidence/${name}`)\n\t\t\t|| fragment.startsWith(`docs/evidence/${name}/`)\n\t\t\t|| fragment === `docs/evidence/${name}`)));\n",
+          "previous": "\tconst selected = new Set(directories.filter(name => source.includes(name)));\n",
+          "start": 7182
+        },
+        {
+          "current": "\t\t&& replaysEnumeratedEvidenceDirectories(source, path) ? fragments : [])\n",
+          "previous": "\t\t? coreContractEvidenceFragments(source, path) : [])\n",
+          "start": 7923
+        },
+        {
+          "current": "/**\n * Resolve the exact retained-evidence files reached by local Markdown links.\n * Documentation contracts call `access` on these targets; they do not consume\n * every sibling payload in the target's archive directory.\n *\n * @param source - Markdown source.\n * @param path - Repository-relative documentation path.\n * @param trackedFiles - Tracked repository evidence paths.\n */\nexport const coreContractDocumentationEvidenceFiles = (\n\tsource, path, trackedFiles\n) => {\n\tif(extname(path) !== \".md\" || !path.startsWith(\"docs/\")) return new Set();\n\tconst tracked = new Set(trackedFiles);\n\tconst selected = new Set();\n\tfor(const match of source.matchAll(/\\[[^\\]]+\\]\\(([^)]+)\\)/gu))\n\t{\n\t\tconst target = match[1].split(\"#\")[0];\n\t\tif(!target || /^[a-z]+:/u.test(target)) continue;\n\t\tconst repositoryPath = normalize(join(dirname(path), target))\n\t\t\t.replaceAll(\"\\\\\", \"/\");\n\t\tif(repositoryPath.startsWith(\"docs/evidence/\")\n\t\t\t&& tracked.has(repositoryPath)) selected.add(repositoryPath);\n\t}\n\treturn selected;\n};\n\n/**\n * List the tracked top-level retained-evidence directories at HEAD.\n *\n * @param root - Repository root.\n */\nexport const trackedEvidenceDirectories = root => execFileSync(\"git\", [\n",
+          "previous": "const trackedEvidenceDirectories = root => execFileSync(\"git\", [\n",
+          "start": 11095
+        },
+        {
+          "current": "/**\n * List every tracked retained-evidence file at HEAD.\n *\n * @param root - Repository root.\n */\nexport const trackedEvidenceFiles = root => execFileSync(\"git\", [\n\t\"-C\", root, \"ls-tree\", \"-r\", \"-z\", \"--name-only\", \"HEAD:docs/evidence\"\n], { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 }).split(\"\\0\")\n\t.filter(Boolean).map(path => `docs/evidence/${path}`).toSorted();\n\n/**\n * Authenticate one exact receipt before excluding the full type-surface corpus\n * from a shard's sparse working tree.\n *\n * @param receiptPath - Receipt artifact produced by the prerequisite job.\n * @param root - Repository root at the same exact revision.\n */\nexport const coreTypeSurfaceEvidenceReceipt = async (receiptPath\n\t, root = resolve(\".\")) => {\n\tassert.equal(typeof receiptPath, \"string\");\n\tassert.ok(receiptPath && !/[\\0\\r\\n]/u.test(receiptPath));\n\troot = resolve(root);\n\tconst sources = Object.fromEntries(await Promise.all(\n\t\ttypeSurfaceEvidenceSourcePaths.map(async path => [\n\t\t\tpath, await readFile(join(root, path))\n\t\t])\n\t));\n\tconst document = JSON.parse(\n\t\tsources[\"docs/type-surface.v1.json\"].toString(\"utf8\")\n\t);\n\tconst receipt = JSON.parse(await readFile(resolve(receiptPath), \"utf8\"));\n\tconst commit = execFileSync(\"git\", [\"-C\", root, \"rev-parse\", \"HEAD\"])\n\t\t.toString().trim();\n\tassertTypeSurfaceEvidenceReceipt(receipt, {\n\t\tcommit, document\n\t\t, sourceSha256: Object.fromEntries(typeSurfaceEvidenceSourcePaths\n\t\t\t.map(path => [path, sha256(sources[path])]))\n\t});\n\treturn receipt;\n\t};\n\n/**\n * Plan the one full corpus materialization performed before the shard matrix.\n *\n * @param root - Repository root.\n */\nexport const collectCoreTypeSurfaceEvidencePlan = async (\n\troot = resolve(\".\")\n) => {\n\troot = resolve(root);\n\tconst directories = trackedEvidenceDirectories(root);\n\tconst document = JSON.parse(await readFile(\n\t\tjoin(root, \"docs/type-surface.v1.json\"), \"utf8\"));\n\tconst selected = [...coreTypeSurfaceEvidenceDirectories(\n\t\tdocument, directories)].toSorted();\n\tconst patterns = selected.map(directory => `/docs/evidence/${directory}/`);\n\treturn {\n\t\tschemaVersion: 1, baseline: coreContractEvidenceBaseline\n\t\t, evidence: {\n\t\t\tdirectoryCount: selected.length\n\t\t\t, sha256: sha256(canonicalJson(selected))\n\t\t\t, directories: selected, patterns\n\t\t}\n\t};\n};\n\n",
+          "previous": "",
+          "start": 12631
+        },
+        {
+          "current": " * @param options - Exact prerequisite artifacts.\n * @param options.evidenceReceipt - Optional authenticated type-surface receipt.\n",
+          "previous": "",
+          "start": 15825
+        },
+        {
+          "current": "\tlabel, root = resolve(\".\"), { evidenceReceipt } = {}\n",
+          "previous": "\tlabel, root = resolve(\".\")\n",
+          "start": 16015
+        },
+        {
+          "current": "\tconst evidenceFiles = trackedEvidenceFiles(root);\n",
+          "previous": "",
+          "start": 16357
+        },
+        {
+          "current": "\tconst selectedFiles = new Set();\n",
+          "previous": "",
+          "start": 16448
+        },
+        {
+          "current": "\t\tif(extname(path) === \".md\" && path.startsWith(\"docs/\"))\n\t\t\tfor(const file of coreContractDocumentationEvidenceFiles(\n\t\t\t\tsource, path, evidenceFiles)) selectedFiles.add(file);\n\t\telse if(!/-source-history[.]mjs$/u.test(path))\n",
+          "previous": "\t\tif(!/-source-history[.]mjs$/u.test(path))\n",
+          "start": 17224
+        },
+        {
+          "current": "\tlet typeSurfaceAuthentication = \"not-required\";\n\tif(completeTypeSurface && evidenceReceipt)\n\t{\n\t\tawait coreTypeSurfaceEvidenceReceipt(evidenceReceipt, root);\n\t\ttypeSurfaceAuthentication = \"workflow-receipt-v1\";\n\t}\n\telse if(completeTypeSurface)\n",
+          "previous": "\tif(completeTypeSurface)\n",
+          "start": 17872
+        },
+        {
+          "current": "\t\ttypeSurfaceAuthentication = \"direct-files-v1\";\n",
+          "previous": "",
+          "start": 18120
+        },
+        {
+          "current": "\tconst exactEvidenceFiles = [...selectedFiles].toSorted();\n\tconst patterns = [\n\t\t...evidenceDirectories.map(directory => `/docs/evidence/${directory}/`)\n\t\t, ...exactEvidenceFiles.map(file => `/${file}`)\n\t].toSorted();\n",
+          "previous": "\tconst patterns = evidenceDirectories.map(directory =>\n\t\t`/docs/evidence/${directory}/`);\n",
+          "start": 18508
+        },
+        {
+          "current": "\t\t\tcompleteTypeSurface, typeSurfaceAuthentication\n\t\t\t, directoryCount: evidenceDirectories.length\n",
+          "previous": "\t\t\tcompleteTypeSurface, directoryCount: evidenceDirectories.length\n",
+          "start": 19013
+        },
+        {
+          "current": "\t\t\t, directories: evidenceDirectories\n\t\t\t, fileCount: exactEvidenceFiles.length\n\t\t\t, fileSha256: sha256(canonicalJson(exactEvidenceFiles))\n\t\t\t, files: exactEvidenceFiles, patterns\n",
+          "previous": "\t\t\t, directories: evidenceDirectories, patterns\n",
+          "start": 19167
+        }
+      ],
+      "path": "scripts/core-contract-evidence.mjs",
+      "previousSha256": "e99cfc2c8459d1cb6935d5a1589ad95040b73ffc863072ebea036362e2fee5e2"
+    },
+    {
+      "currentSha256": "9bd357816bdf25ee6e2be5fb0e7566bcc7be7c1dd6a132d447fbb7015c2dfba3",
+      "edits": [
+        {
+          "current": "if(![4, 6].includes(arguments_.length) || arguments_[0] !== \"--shard\"\n",
+          "previous": "if(arguments_.length !== 4 || arguments_[0] !== \"--shard\"\n",
+          "start": 579
+        },
+        {
+          "current": "\t|| /[\\0\\r\\n]/u.test(arguments_[3])\n\t|| (arguments_.length === 6 && (arguments_[4] !== \"--type-surface-receipt\"\n\t\t|| !arguments_[5] || /[\\0\\r\\n]/u.test(arguments_[5])))){\n\tprocess.stderr.write(\"Usage: materialize-core-contract-evidence.mjs --shard <k/12> --manifest <path> [--type-surface-receipt <path>]\\n\");\n",
+          "previous": "\t|| /[\\0\\r\\n]/u.test(arguments_[3])){\n\tprocess.stderr.write(\"Usage: materialize-core-contract-evidence.mjs --shard <k/12> --manifest <path>\\n\");\n",
+          "start": 755
+        },
+        {
+          "current": "\t\t}\n",
+          "previous": "\t}\n",
+          "start": 1084
+        },
+        {
+          "current": "const evidenceReceipt = arguments_.length === 6 ? resolve(arguments_[5]) : undefined;\n",
+          "previous": "",
+          "start": 1156
+        },
+        {
+          "current": "const plan = await collectCoreContractEvidencePlan(\n\tlabel, resolve(\".\"), { evidenceReceipt }\n);\n",
+          "previous": "const plan = await collectCoreContractEvidencePlan(label);\n",
+          "start": 1476
+        }
+      ],
+      "path": "scripts/materialize-core-contract-evidence.mjs",
+      "previousSha256": "ffbb9418f29983b6a4b5f5c9689e986c83ff49a3d8fdd924898db5ca0ac1fb76"
+    },
+    {
+      "currentSha256": "95b8e5915702a13ef2601e2fa225809a54d8a694566a5623b2011a73d701dec3",
+      "edits": [
+        {
+          "current": "import { execFileSync } from \"node:child_process\";\n",
+          "previous": "",
+          "start": 220
+        },
+        {
+          "current": "import {\n\tassertTypeSurfaceEvidenceReceipt, typeSurfaceEvidenceSourcePaths\n} from \"./type-surface-evidence-receipt.mjs\";\n",
+          "previous": "",
+          "start": 516
+        },
+        {
+          "current": " * @param options.evidenceReceipt - Explicit intra-workflow receipt, or null to\n * force full byte validation. The environment handoff is accepted only for the\n * live repository, never for isolated validation roots.\n",
+          "previous": "",
+          "start": 11235
+        },
+        {
+          "current": "export async function readTypeSurface(options = {})\n",
+          "previous": "export async function readTypeSurface({ repository = root } = {})\n",
+          "start": 11456
+        },
+        {
+          "current": "\tconst repository = path.resolve(options.repository ?? root);\n\tconst sources = Object.fromEntries(await Promise.all(\n\t\ttypeSurfaceEvidenceSourcePaths.map(async relative => [\n\t\t\trelative, await readFile(path.join(repository, relative))\n\t\t])\n\t));\n\tconst [document, irSchema, consumers] = typeSurfaceEvidenceSourcePaths\n\t\t.map(relative => JSON.parse(sources[relative].toString(\"utf8\")));\n",
+          "previous": "\tconst read = async relative => JSON.parse(await readFile(path.join(repository, relative), \"utf8\"));\n\tconst [document, irSchema, consumers] = await Promise.all([\n\t\tread(\"docs/type-surface.v1.json\")\n\t\t, read(\"schema/binding-ir.schema.json\")\n\t\t, read(\"docs/consumer-support.v1.json\")\n\t]);\n",
+          "start": 11510
+        },
+        {
+          "current": "\tconst evidenceReceipt = Object.hasOwn(options, \"evidenceReceipt\")\n\t\t? options.evidenceReceipt : canonicalRoot === await realpath(root)\n\t\t\t? process.env.LEAN_BRIDGE_TYPE_SURFACE_EVIDENCE_RECEIPT : undefined;\n\tif(evidenceReceipt)\n\t{\n\t\tassert.equal(typeof evidenceReceipt, \"string\");\n\t\tassert.ok(!/[\\0\\r\\n]/u.test(evidenceReceipt));\n\t\tconst receipt = JSON.parse(await readFile(evidenceReceipt, \"utf8\"));\n\t\tconst commit = execFileSync(\"git\", [\n\t\t\t\"-C\", canonicalRoot, \"rev-parse\", \"HEAD\"\n\t\t], { encoding: \"utf8\" }).trim();\n\t\tassertTypeSurfaceEvidenceReceipt(receipt, {\n\t\t\tcommit, document\n\t\t\t, sourceSha256: Object.fromEntries(typeSurfaceEvidenceSourcePaths\n\t\t\t\t.map(relative => [relative, digest(sources[relative])]))\n\t\t});\n\t\treturn { document, irSchema, consumers };\n\t}\n",
+          "previous": "",
+          "start": 12003
+        }
+      ],
+      "path": "src/adoption/type-surface.mjs",
+      "previousSha256": "51536d691adaeaf385cc673ee673f48ee5e5d1e6be3737322d4bec4bdf6c37c1"
+    },
+    {
+      "currentSha256": "dd646bddff01d63104201c87bfdc52a31ebd2b8aabcf3a8c49953fb524288bcb",
+      "edits": [
+        {
+          "current": "\t\t, /contract:\\n\\s+name: Contract shard \\$\\{\\{ matrix\\.shard \\}\\}\\/12\\n\\s+needs: \\[static, type_surface\\]/u);\n",
+          "previous": "\t\t, /contract:\\n\\s+name: Contract shard \\$\\{\\{ matrix\\.shard \\}\\}\\/12\\n\\s+needs: static/u);\n",
+          "start": 2799
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "0e3e82542316272632c708d5699e61cfb34e516940b33a2440143ebb7dbff922"
+    },
+    {
+      "currentSha256": "165bfde907e89fa53dbde35e3046fe195dab27b90100942c2a0c8a22df7d5ed4",
+      "edits": [
+        {
+          "current": "import { mkdtemp, readFile, rm, writeFile } from \"node:fs/promises\";\n",
+          "previous": "import { mkdtemp, readFile, rm } from \"node:fs/promises\";\n",
+          "start": 226
+        },
+        {
+          "current": "\tcollectCoreContractEvidencePlan, collectCoreTypeSurfaceEvidencePlan\n\t, coreContractDocumentationEvidenceFiles\n\t, coreContractDocumentationReferences, coreContractEvidenceBaseline\n",
+          "previous": "\tcoreContractDocumentationReferences, coreContractEvidenceBaseline\n",
+          "start": 430
+        },
+        {
+          "current": "\t, coreTypeSurfaceEvidenceDirectories, coreTypeSurfaceEvidenceReceipt\n",
+          "previous": "\t, coreTypeSurfaceEvidenceDirectories\n",
+          "start": 742
+        },
+        {
+          "current": "import { readTypeSurface } from \"../../src/adoption/type-surface.mjs\";\nimport {\n\tassertTypeSurfaceEvidenceReceipt, createTypeSurfaceEvidenceReceipt\n\t, typeSurfaceEvidenceSourcePaths\n} from \"../../src/adoption/type-surface-evidence-receipt.mjs\";\n",
+          "previous": "",
+          "start": 863
+        },
+        {
+          "current": "\t\tenumerated, \"enumerated.mjs\", directories)].sort(), []\n\t\t, \"index-only enumeration needs no payload directories\"\n",
+          "previous": "\t\tenumerated, \"enumerated.mjs\", directories)].sort(), [\n\t\t\"owned-checked-record-native-hosted-20990101\"\n\t\t, \"owned-checked-record-perl-hosted-20990101\"]\n",
+          "start": 2663
+        },
+        {
+          "current": "\tconst replayed = enumerated\n\t\t+ \"; await checkOwnedCheckedRecordHostedEvidence(lane, root)\";\n\tassert.deepEqual([...coreContractEvidenceDirectoryReferences(\n\t\treplayed, \"replayed.mjs\", directories)].sort(), [\n\t\t\"owned-checked-record-native-hosted-20990101\"\n\t\t, \"owned-checked-record-perl-hosted-20990101\"]);\n",
+          "previous": "",
+          "start": 2782
+        },
+        {
+          "current": "\t\tregex, \"regex.mjs\", directories)], []);\n\tassert.deepEqual([...coreContractEvidenceDirectoryReferences(\n\t\tregex + \"; checkZeroPayloadEvidence(root)\", \"regex.mjs\", directories)], [\n\t\t\"zero-payload-checked-record-rust-20990101\"]);\n",
+          "previous": "\t\tregex, \"regex.mjs\", directories)], [\n\t\t\"zero-payload-checked-record-rust-20990101\"]\n\t);\n",
+          "start": 3246
+        },
+        {
+          "current": "test(\"Core evidence planning ignores rendered documentation links in code\", () => {\n\tconst source = 'const prose = \"[record](../evidence/owned-subtype-jvm-hosted-20990101/index.json)\";';\n\tassert.deepEqual([...coreContractEvidenceDirectoryReferences(\n\t\tsource, \"generator.mjs\", directories)], []);\n});\n\n",
+          "previous": "",
+          "start": 4103
+        },
+        {
+          "current": "\t\t\tif(/^docs\\/evidence\\/[^/]+\\//u.test(path)) expected.add(path);\n",
+          "previous": "\t\t\tconst archive = /^docs\\/evidence\\/([^/]+)\\//u.exec(path);\n\t\t\tif(archive) expected.add(archive[1]);\n",
+          "start": 5353
+        },
+        {
+          "current": "\tassert.ok(expected.has(\n\t\t\"docs/evidence/scalar-fin-source-entry-20261008/receipt.json\"));\n\tassert.ok(expected.has(\n\t\t\"docs/evidence/browser-callback-fin-20261008/receipt.json\"));\n",
+          "previous": "\tassert.ok(expected.has(\"scalar-fin-source-entry-20261008\"));\n\tassert.ok(expected.has(\"browser-callback-fin-20261008\"));\n",
+          "start": 5455
+        },
+        {
+          "current": "\t\tfor(const value of coreContractDocumentationEvidenceFiles(\n",
+          "previous": "\t\tfor(const value of coreContractEvidenceDirectoryReferences(\n",
+          "start": 5722
+        },
+        {
+          "current": "test(\"one exact workflow receipt closes repeated type-surface reads\", async t => {\n\tconst root = await mkdtemp(join(tmpdir(), \"lean-core-type-surface-receipt-\"));\n\tt.after(() => rm(root, { recursive: true }));\n\tconst sources = Object.fromEntries(await Promise.all(\n\t\ttypeSurfaceEvidenceSourcePaths.map(async path => [\n\t\t\tpath, await readFile(path)\n\t\t])\n\t));\n\tconst document = JSON.parse(\n\t\tsources[\"docs/type-surface.v1.json\"].toString(\"utf8\")\n\t);\n\tconst commit = execFileSync(\"git\", [\"rev-parse\", \"HEAD\"])\n\t\t.toString().trim();\n\tconst sourceSha256 = Object.fromEntries(typeSurfaceEvidenceSourcePaths\n\t\t.map(path => [path\n\t\t, createHash(\"sha256\").update(sources[path])\n\t\t\t.digest(\"hex\")]));\n\tconst receipt = createTypeSurfaceEvidenceReceipt({\n\t\tcommit, document, sourceSha256\n\t});\n\tassert.equal(assertTypeSurfaceEvidenceReceipt(receipt, {\n\t\tcommit, document, sourceSha256\n\t}), true);\n\tconst path = join(root, \"receipt.json\");\n\tawait writeFile(path, JSON.stringify(receipt));\n\tassert.deepEqual(await coreTypeSurfaceEvidenceReceipt(path), receipt);\n\tassert.equal((await readTypeSurface({ evidenceReceipt: path }))\n\t\t.document.contractVersion, document.contractVersion);\n\tconst [shard, corpus] = await Promise.all([\n\t\tcollectCoreContractEvidencePlan(\"1/12\", resolve(\".\")\n\t\t\t, { evidenceReceipt: path })\n\t\t, collectCoreTypeSurfaceEvidencePlan()\n\t]);\n\tassert.equal(shard.evidence.completeTypeSurface, true);\n\tassert.equal(shard.evidence.typeSurfaceAuthentication\n\t\t, \"workflow-receipt-v1\");\n\tassert.ok(shard.evidence.directoryCount < corpus.evidence.directoryCount);\n\tfor(const forged of [\n\t\t{ ...receipt, commit: \"0\".repeat(40) }\n\t\t, { ...receipt, evidence: { ...receipt.evidence, count: 0 } }\n\t\t, { ...receipt, sources: {\n\t\t\t...receipt.sources\n\t\t\t, \"docs/type-surface.v1.json\": \"0\".repeat(64)\n\t\t} }\n\t]) assert.throws(() => assertTypeSurfaceEvidenceReceipt(forged, {\n\t\tcommit, document, sourceSha256\n\t}));\n});\n\n",
+          "previous": "",
+          "start": 7562
+        }
+      ],
+      "path": "tests/helpers/core-contract-evidence-tests.mjs",
+      "previousSha256": "eca1d84b240578261db501b7e2ddcaa6b57e02822a38743efbd83ca4ca3eef32"
+    },
+    {
+      "currentSha256": "a4fa59eb2f167f6a2def6948f9aceac1000ab2eac48075cd7b63cf78a1e988f0",
+      "edits": [
+        {
+          "current": "\tassert.deepEqual(timeouts, [30, 90, 240, 10]\n\t\t, \"Static, type-surface, contract-shard, and aggregate jobs retain explicit bounds\");\n",
+          "previous": "\tassert.deepEqual(timeouts, [30, 240, 10]\n\t\t, \"Static, contract-shard, and aggregate jobs retain explicit bounds\");\n",
+          "start": 810
+        },
+        {
+          "current": "\t\t, / {2}contract:\\n {4}name: Contract shard \\$\\{\\{ matrix\\.shard \\}\\}\\/12\\n {4}needs: \\[static, type_surface\\]\\n/u\n\t\t, \"History-heavy contract shards must wait for static and shared evidence gates\");\n",
+          "previous": "\t\t, / {2}contract:\\n {4}name: Contract shard \\$\\{\\{ matrix\\.shard \\}\\}\\/12\\n {4}needs: static\\n/u\n\t\t, \"History-heavy contract shards must wait for the static gate\");\n",
+          "start": 2211
+        },
+        {
+          "current": "\tassert.equal([...source.matchAll(/^\\s+fetch-depth:\\s*1\\s*$/gmu)].length, 3\n\t\t, \"Static, type-surface, and aggregate jobs must read only the exact current tree\");\n",
+          "previous": "\tassert.equal([...source.matchAll(/^\\s+fetch-depth:\\s*1\\s*$/gmu)].length, 2\n\t\t, \"Static and aggregate jobs must read only the exact current tree\");\n",
+          "start": 2549
+        },
+        {
+          "current": "\t\t, source.indexOf(\"\\n  type_surface:\\n\"));\n\tconst typeSurfaceJob = source.slice(source.indexOf(\"\\n  type_surface:\\n\")\n",
+          "previous": "",
+          "start": 2776
+        },
+        {
+          "current": "\tassert.match(typeSurfaceJob, /fetch-depth: 1/u);\n\tassert.match(typeSurfaceJob\n\t\t, / {2}type_surface:\\n {4}name: Type-surface evidence authentication\\n {4}needs: static\\n/u\n\t\t, \"Corpus authentication must wait for the cheap static gate\");\n\tassert.match(typeSurfaceJob\n\t\t, /create-core-type-surface-evidence-receipt\\.mjs \\\\\\n\\s+--receipt build\\/core-type-surface\\/receipt\\.json \\\\\\n\\s+--manifest build\\/core-type-surface\\/materialization\\.json \\\\\\n\\s+--commit \"\\$\\{\\{ github\\.sha \\}\\}\"/u\n\t\t, \"One prerequisite job must authenticate the complete type-surface corpus\");\n\tassert.match(typeSurfaceJob, /name: core-type-surface-\\$\\{\\{ github\\.sha \\}\\}/u);\n\tconst evidenceBaseline = [\n",
+          "previous": "\tconst contractSparse = /sparse-checkout: \\|\\n((?: {12}\\S+\\n)+)/u.exec(\n\t\tcontractJob);\n\tassert.ok(contractSparse\n\t\t, \"Contract shards must declare the common evidence baseline\");\n\tassert.deepEqual(contractSparse[1].trim().split(\"\\n\").map(line => line.trim()), [\n",
+          "start": 3861
+        },
+        {
+          "current": "\t];\n\tconst typeSurfaceSparse = /sparse-checkout: \\|\\n((?: {12}\\S+\\n)+)/u.exec(\n\t\ttypeSurfaceJob);\n\tassert.ok(typeSurfaceSparse);\n\tassert.deepEqual(typeSurfaceSparse[1].trim().split(\"\\n\")\n\t\t.map(line => line.trim()), evidenceBaseline);\n\tconst contractSparse = /sparse-checkout: \\|\\n((?: {12}\\S+\\n)+)/u.exec(\n\t\tcontractJob);\n\tassert.ok(contractSparse\n\t\t, \"Contract shards must declare the common evidence baseline\");\n\tassert.deepEqual(contractSparse[1].trim().split(\"\\n\").map(line => line.trim())\n\t\t, evidenceBaseline\n\t\t, \"Evidence baselines must retain source, docs, root records, and every archive index\");\n",
+          "previous": "\t], \"Contract baseline must retain source, docs, root records, and every archive index\");\n",
+          "start": 4870
+        },
+        {
+          "current": "\tassert.equal([...contractJob.matchAll(/^\\s+node scripts\\/materialize-core-contract-evidence\\.mjs \\\\\\n\\s+--shard \"\\$\\{\\{ matrix\\.shard \\}\\}\\/12\" \\\\\\n\\s+--manifest \"build\\/core-evidence\\/core-shard-\\$\\{\\{ matrix\\.shard \\}\\}-evidence\\.json\" \\\\\\n\\s+--type-surface-receipt build\\/core-type-surface\\/receipt\\.json\\s*$/gmu)].length, 1\n",
+          "previous": "\tassert.equal([...contractJob.matchAll(/^\\s+node scripts\\/materialize-core-contract-evidence\\.mjs \\\\\\n\\s+--shard \"\\$\\{\\{ matrix\\.shard \\}\\}\\/12\" \\\\\\n\\s+--manifest \"build\\/core-evidence\\/core-shard-\\$\\{\\{ matrix\\.shard \\}\\}-evidence\\.json\"\\s*$/gmu)].length, 1\n",
+          "start": 5717
+        },
+        {
+          "current": "\tassert.match(contractJob\n\t\t, /LEAN_BRIDGE_TYPE_SURFACE_EVIDENCE_RECEIPT: \\$\\{\\{ github\\.workspace \\}\\}\\/build\\/core-type-surface\\/receipt\\.json/u);\n",
+          "previous": "",
+          "start": 6130
+        },
+        {
+          "current": "\tassert.equal([...source.matchAll(/^\\s+sparse-checkout: \\|\\s*$/gmu)].length, 4\n\t\t, \"Static, type-surface, contract, and aggregate jobs must all bound materialization\");\n",
+          "previous": "\tassert.equal([...source.matchAll(/^\\s+sparse-checkout: \\|\\s*$/gmu)].length, 3\n\t\t, \"Static, contract, and aggregate jobs must all bound materialization\");\n",
+          "start": 6618
+        },
+        {
+          "current": "\tassert.equal([...source.matchAll(/^\\s+sparse-checkout-cone-mode: false\\s*$/gmu)].length, 2);\n",
+          "previous": "\tassert.equal([...source.matchAll(/^\\s+sparse-checkout-cone-mode: false\\s*$/gmu)].length, 1);\n",
+          "start": 6880
+        },
+        {
+          "current": "\tassert.equal([...source.matchAll(/^\\s+persist-credentials:\\s*false\\s*$/gmu)].length, 4\n",
+          "previous": "\tassert.equal([...source.matchAll(/^\\s+persist-credentials:\\s*false\\s*$/gmu)].length, 3\n",
+          "start": 7086
+        },
+        {
+          "current": "\tassert.equal([...source.matchAll(/^\\s+- name: Free hosted runner disk for the evidence checkout\\s*$/gmu)].length, 2\n\t\t, \"Both archive-heavy jobs must remove only reviewed unused hosted SDKs\");\n\tassert.equal([...source.matchAll(/^\\s+sudo rm -rf \\/usr\\/share\\/dotnet \\/usr\\/local\\/lib\\/android \\/opt\\/ghc \\/usr\\/local\\/\\.ghcup \\/opt\\/hostedtoolcache\\/CodeQL\\s*$/gmu)].length, 2\n\t\t, \"Both archive-heavy jobs must reclaim the same bounded SDK roots\");\n",
+          "previous": "\tassert.equal([...source.matchAll(/^\\s+- name: Free hosted runner disk for the evidence checkout\\s*$/gmu)].length, 1\n\t\t, \"Only the archive-heavy contract matrix must remove unused hosted SDKs\");\n\tassert.match(source, /- name: Free hosted runner disk for the evidence checkout\\n {8}run: \\|\\n {10}df -h \\/\\n {10}sudo rm -rf \\/usr\\/share\\/dotnet \\/usr\\/local\\/lib\\/android \\/opt\\/ghc \\/usr\\/local\\/\\.ghcup \\/opt\\/hostedtoolcache\\/CodeQL\\n {10}df -h \\/\\n {6}- name: Check out the exact revision/u\n\t\t, \"Core must reclaim only reviewed preinstalled SDK roots before its full-history checkout\");\n",
+          "start": 7218
+        },
+        {
+          "current": "\tassert.equal([...source.matchAll(/^\\s+if-no-files-found: error\\s*$/gmu)].length, 2);\n\tassert.equal([...source.matchAll(/^\\s+overwrite: true\\s*$/gmu)].length, 2);\n",
+          "previous": "\tassert.match(source, /if-no-files-found: error/u);\n\tassert.match(source, /overwrite: true/u);\n",
+          "start": 8597
+        },
+        {
+          "current": "\tassert.match(source, / {2}quality:\\n {4}name: quality\\n {4}if: always\\(\\)\\n {4}needs: \\[static, type_surface, contract\\]/u\n\t\t, \"The stable quality check must aggregate static, shared evidence, and every matrix result\");\n",
+          "previous": "\tassert.match(source, / {2}quality:\\n {4}name: quality\\n {4}if: always\\(\\)\\n {4}needs: \\[static, contract\\]/u\n\t\t, \"The stable quality check must aggregate static and every matrix result\");\n",
+          "start": 9402
+        },
+        {
+          "current": "\tassert.match(source, /TYPE_SURFACE_RESULT: \\$\\{\\{ needs\\.type_surface\\.result \\}\\}/u);\n",
+          "previous": "",
+          "start": 9699
+        },
+        {
+          "current": "\tassert.equal([...source.matchAll(/^\\s+test \"\\$TYPE_SURFACE_RESULT\" = success\\s*$/gmu)].length, 1);\n",
+          "previous": "",
+          "start": 9961
+        },
+        {
+          "current": "\t\t, source.replace(\"create-core-type-surface-evidence-receipt.mjs\"\n\t\t\t, \"snapshot-core-type-surface-evidence.mjs\")\n\t\t, source.replace(\"--type-surface-receipt build/core-type-surface/receipt.json\"\n\t\t\t, \"--type-surface-receipt build/core-type-surface/missing.json\")\n",
+          "previous": "",
+          "start": 18079
+        },
+        {
+          "current": "\t\t, source.replace(\"needs: [static, type_surface, contract]\"\n\t\t\t, \"needs: [static, contract]\")\n",
+          "previous": "\t\t, source.replace(\"needs: [static, contract]\", \"needs: [static]\")\n",
+          "start": 18884
+        },
+        {
+          "current": "\t\t, source.replace('test \"$TYPE_SURFACE_RESULT\" = success', \"true\")\n",
+          "previous": "",
+          "start": 19311
+        }
+      ],
+      "path": "tests/helpers/core-quality-budget-tests.mjs",
+      "previousSha256": "97db3b610881431733721e6ad894d3f2a0e1b50ee298dd0bb90c3a4d5cf246d8"
+    },
+    {
+      "currentSha256": "3944d8dfa459289d3c7ff67784c45df128df317e25d95456f77030ee9ecae15c",
+      "edits": [
+        {
+          "current": "",
+          "previous": "const checkout = `      - name: Check out the exact revision\n        uses: actions/checkout@v6\n        with:\n          # Evidence tests authenticate source bytes at their original producer commits.\n          fetch-depth: 0\n          persist-credentials: false\n`;\n",
+          "start": 404
+        },
+        {
+          "current": "\tassert.equal(source.split(\"uses: actions/checkout@\").length, 5);\n\tassert.equal([...source.matchAll(/^\\s+fetch-depth: 0\\s*$/gmu)].length, 1\n\t\t, \"Only contract shards fetch every original producer commit\");\n\tconst contract = source.slice(source.indexOf(\"\\n  contract:\\n\")\n\t\t, source.indexOf(\"\\n  quality:\\n\"));\n\tassert.match(contract, /fetch-depth: 0/u);\n\tassert.match(contract, /persist-credentials: false/u);\n\tassert.equal([...source.matchAll(/^\\s+persist-credentials: false\\s*$/gmu)].length, 4);\n\tassert.doesNotMatch(source\n\t\t, /uses: actions\\/checkout@v6\\n\\s+if: false\\n\\s+with:/u);\n",
+          "previous": "\tassert.equal(source.split(\"uses: actions/checkout@\").length, 4);\n\tassert.equal(source.split(checkout).length, 3\n\t\t, \"Static and contract jobs must fetch every original producer commit\");\n",
+          "start": 639
+        },
+        {
+          "current": "\tfor(const [index, changed] of [source.replace(\"          fetch-depth: 0\\n\", \"\")\n",
+          "previous": "\tfor(const changed of [source.replace(\"          fetch-depth: 0\\n\", \"\")\n",
+          "start": 1572
+        },
+        {
+          "current": "\t\t, source.replace(\"        with:\\n\", \"        if: false\\n        with:\\n\")].entries()) {\n",
+          "previous": "\t\t, source.replace(\"        with:\\n\", \"        if: false\\n        with:\\n\")]) {\n",
+          "start": 1898
+        },
+        {
+          "current": "\t\tassert.throws(() => assertHistoryCheckout(changed), undefined\n\t\t\t, `history-checkout mutation ${index}`);\n",
+          "previous": "\t\tassert.throws(() => assertHistoryCheckout(changed));\n",
+          "start": 2024
+        }
+      ],
+      "path": "tests/helpers/structural-subtype-core-ci-tests.mjs",
+      "previousSha256": "fe1ff79e6fb905499bb56659a19ae34e4f3bc4f02e705db92407be3411d352cf"
+    }
+  ]
+}

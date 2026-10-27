@@ -10,6 +10,18 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import {
+	beforeCoreTypeSurfaceSinglePassSource
+	, coreTypeSurfaceSinglePassAddedPaths
+	, coreTypeSurfaceSinglePassHistoryPath
+	, coreTypeSurfaceSinglePassImplementation
+	, coreTypeSurfaceSinglePassImplementationAdditions
+	, coreTypeSurfaceSinglePassImplementationPaths
+	, coreTypeSurfaceSinglePassIntegrationPaths
+	, coreTypeSurfaceSinglePassModifiedPaths
+	, coreTypeSurfaceSinglePassPredecessor
+	, reverseCoreTypeSurfaceSinglePassUpdate
+} from "./core-type-surface-single-pass-source-history.mjs";
+import {
 	beforeCoreDocumentationEvidenceClosureRepairSource
 	, coreDocumentationEvidenceClosureRepairAddedPaths
 	, coreDocumentationEvidenceClosureRepairHistoryPath
@@ -196,6 +208,9 @@ import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.m
 
 const git = arguments_ => execFileSync("git", arguments_
 	, { encoding: "utf8", maxBuffer: 128 * 1024 * 1024 });
+const readCoreTypeSurfaceSinglePass = async () => JSON.parse(
+	await readFile(coreTypeSurfaceSinglePassHistoryPath, "utf8")
+);
 const readCoreDocumentationEvidenceClosureRepair = async () => JSON.parse(
 	await readFile(coreDocumentationEvidenceClosureRepairHistoryPath, "utf8")
 );
@@ -413,6 +428,86 @@ test("exact-head Core live-pin writer refuses another checkout", async t => {
 	t.after(() => rm(root, { recursive: true }));
 	const result = spawnSync(process.execPath, [resolve(
 		"scripts/update-core-exact-head-live-pin-repair-source-history.mjs"
+	)], { cwd: root, encoding: "utf8", timeout: 15_000 });
+	assert.notEqual(result.status, 0);
+	assert.equal(result.stdout, "");
+	assert.deepEqual(await readdir(root), []);
+});
+
+test("Core type-surface single-pass records its exact source range", async () => {
+	const record = await readCoreTypeSurfaceSinglePass();
+	assert.equal(record.schemaVersion, 1);
+	assert.equal(record.milestone, "core-type-surface-single-pass-source-v1");
+	assert.equal(record.predecessorCommit, coreTypeSurfaceSinglePassPredecessor);
+	assert.equal(record.implementationCommit, coreTypeSurfaceSinglePassImplementation);
+	assert.deepEqual(record.updates.map(update => update.path)
+		, coreTypeSurfaceSinglePassModifiedPaths);
+	assert.deepEqual(record.implementationAdditions.map(addition => addition.path)
+		, coreTypeSurfaceSinglePassImplementationAdditions);
+	assert.deepEqual(record.integrationUpdates.map(update => update.path)
+		, coreTypeSurfaceSinglePassIntegrationPaths);
+	assert.deepEqual(record.additions.map(addition => addition.path)
+		, coreTypeSurfaceSinglePassAddedPaths);
+	assert.equal(git(["rev-parse"
+		, `${coreTypeSurfaceSinglePassImplementation}^`]).trim()
+	, coreTypeSurfaceSinglePassPredecessor);
+	assert.deepEqual(git(["diff", "--name-only"
+		, coreTypeSurfaceSinglePassPredecessor
+		, coreTypeSurfaceSinglePassImplementation]).trim().split("\n").sort()
+	, [...coreTypeSurfaceSinglePassImplementationPaths].sort());
+	assert.deepEqual(git(["diff", "--name-only", "--diff-filter=M"
+		, coreTypeSurfaceSinglePassPredecessor
+		, coreTypeSurfaceSinglePassImplementation]).trim().split("\n").sort()
+	, [...coreTypeSurfaceSinglePassModifiedPaths].sort());
+});
+
+test("Core type-surface single-pass reverses every transition", async () => {
+	const record = await readCoreTypeSurfaceSinglePass();
+	for(const update of [...record.updates, ...record.integrationUpdates])
+	{
+		const current = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256
+			, beforeCoreTypeSurfaceSinglePassSource);
+		const base = record.integrationUpdates.includes(update)
+			? coreTypeSurfaceSinglePassImplementation
+			: coreTypeSurfaceSinglePassPredecessor;
+		const previous = git(["show", `${base}:${update.path}`]);
+		assert.equal(reverseCoreTypeSurfaceSinglePassUpdate(
+			current, update), previous, update.path);
+		assert.equal(beforeFinRefinementSource(
+			update.path, current, update.previousSha256), previous, update.path);
+		assert.ok(finRefinementNormalizationPaths.includes(update.path));
+	}
+	for(const addition of [
+		...record.implementationAdditions, ...record.additions
+	]) assert.equal(sha256(await sourceAtFinHistoryMilestone(
+		addition.path, addition.currentSha256))
+	, addition.currentSha256, addition.path);
+});
+
+test("Core type-surface single-pass rejects altered transitions", async () => {
+	const update = (await readCoreTypeSurfaceSinglePass()).updates[0];
+	const current = await sourceAtFinHistoryMilestone(
+		update.path, update.currentSha256
+		, beforeCoreTypeSurfaceSinglePassSource);
+	for(const forged of [{ ...update, currentSha256: "0".repeat(64) }
+		, { ...update, previousSha256: "0".repeat(64) }
+		, { ...update, path: "unrelated.mjs" }
+		, { ...update, edits: [] }
+		, { ...update, edits: [...update.edits, update.edits[0]] }])
+		assert.throws(() => reverseCoreTypeSurfaceSinglePassUpdate(
+			current, forged));
+	assert.equal(beforeCoreTypeSurfaceSinglePassSource(
+		update.path, current + "unknown"), current + "unknown");
+});
+
+test("Core type-surface single-pass writer refuses another checkout", async t => {
+	const root = await mkdtemp(join(
+		tmpdir(), "lean-core-type-surface-single-pass-guard-"
+	));
+	t.after(() => rm(root, { recursive: true }));
+	const result = spawnSync(process.execPath, [resolve(
+		"scripts/update-core-type-surface-single-pass-source-history.mjs"
 	)], { cwd: root, encoding: "utf8", timeout: 15_000 });
 	assert.notEqual(result.status, 0);
 	assert.equal(result.stdout, "");
