@@ -10,6 +10,16 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import {
+	beforeCoreInheritedRecordTypeSurfaceBatchSource
+	, coreInheritedRecordTypeSurfaceBatchHistoryAdditions
+	, coreInheritedRecordTypeSurfaceBatchHistoryPath
+	, coreInheritedRecordTypeSurfaceBatchImplementation
+	, coreInheritedRecordTypeSurfaceBatchImplementationPaths
+	, coreInheritedRecordTypeSurfaceBatchIntegrationPaths
+	, coreInheritedRecordTypeSurfaceBatchPredecessor
+	, reverseCoreInheritedRecordTypeSurfaceBatchUpdate
+} from "./core-inherited-record-type-surface-batch-source-history.mjs";
+import {
 	beforeCoreRecursiveCallableEvidencePinRepairSource
 	, coreRecursiveCallableEvidencePinRepairHistoryAdditions
 	, coreRecursiveCallableEvidencePinRepairHistoryPath
@@ -335,6 +345,9 @@ import { sourceAtFinHistoryMilestone, sourceAtFinHistoryRecord, sourceAtFinHisto
 
 const git = arguments_ => execFileSync("git", arguments_
 	, { encoding: "utf8", maxBuffer: 128 * 1024 * 1024 });
+const readCoreInheritedRecordTypeSurfaceBatch = async () => JSON.parse(
+	await readFile(coreInheritedRecordTypeSurfaceBatchHistoryPath, "utf8")
+);
 const readCoreRecursiveCallableEvidencePinRepair = async () => JSON.parse(
 	await readFile(coreRecursiveCallableEvidencePinRepairHistoryPath, "utf8")
 );
@@ -426,6 +439,92 @@ const readWitBorrowStopBoundary = async () => JSON.parse(await readFile(
 const readReceiverCiStopBoundary = async () => JSON.parse(await readFile(
 	coreReceiverCiStopBoundaryHistoryPath, "utf8"
 ));
+
+test("Core inherited-record type-surface batching records its exact repair", async () => {
+	const record = await readCoreInheritedRecordTypeSurfaceBatch();
+	assert.equal(record.schemaVersion, 1);
+	assert.equal(record.milestone
+		, "core-inherited-record-type-surface-batch-source-v1");
+	assert.equal(record.predecessorCommit
+		, coreInheritedRecordTypeSurfaceBatchPredecessor);
+	assert.equal(record.implementationCommit
+		, coreInheritedRecordTypeSurfaceBatchImplementation);
+	assert.deepEqual(record.updates.map(update => update.path)
+		, coreInheritedRecordTypeSurfaceBatchImplementationPaths);
+	assert.deepEqual(record.historyAdditions.map(addition => addition.path)
+		, coreInheritedRecordTypeSurfaceBatchHistoryAdditions);
+	assert.deepEqual(record.integrationUpdates.map(update => update.path)
+		, coreInheritedRecordTypeSurfaceBatchIntegrationPaths);
+	assert.equal(git(["rev-parse"
+		, `${coreInheritedRecordTypeSurfaceBatchImplementation}^`]).trim()
+	, coreInheritedRecordTypeSurfaceBatchPredecessor);
+	assert.deepEqual(git(["diff", "--name-only", "--diff-filter=M"
+		, coreInheritedRecordTypeSurfaceBatchPredecessor
+		, coreInheritedRecordTypeSurfaceBatchImplementation])
+		.trim().split("\n").sort()
+	, [...coreInheritedRecordTypeSurfaceBatchImplementationPaths].sort());
+});
+
+test("Core inherited-record type-surface batching reverses every transition", async () => {
+	const record = await readCoreInheritedRecordTypeSurfaceBatch();
+	for(const update of [...record.updates, ...record.integrationUpdates])
+	{
+		const integration = record.integrationUpdates.includes(update);
+		const current = integration
+			? await sourceAtFinHistoryRecordSource(
+				coreInheritedRecordTypeSurfaceBatchHistoryPath, update.path
+					, update.currentSha256
+					, beforeCoreInheritedRecordTypeSurfaceBatchSource
+			)
+			: await sourceAtFinHistoryRecord(
+				coreInheritedRecordTypeSurfaceBatchHistoryPath, update.path
+					, beforeCoreInheritedRecordTypeSurfaceBatchSource
+			);
+		const base = integration
+			? coreInheritedRecordTypeSurfaceBatchImplementation
+			: coreInheritedRecordTypeSurfaceBatchPredecessor;
+		const previous = git(["show", `${base}:${update.path}`]);
+		assert.equal(reverseCoreInheritedRecordTypeSurfaceBatchUpdate(
+			current, update), previous, update.path);
+		assert.equal(beforeFinRefinementSource(
+			update.path, current, update.previousSha256), previous, update.path);
+		assert.ok(finRefinementNormalizationPaths.includes(update.path));
+	}
+	for(const addition of record.historyAdditions)
+		assert.equal(sha256(await sourceAtFinHistoryRecordSource(
+			coreInheritedRecordTypeSurfaceBatchHistoryPath
+			, addition.path, addition.currentSha256
+		)), addition.currentSha256, addition.path);
+});
+
+test("Core inherited-record type-surface batching rejects altered transitions", async () => {
+	const update = (await readCoreInheritedRecordTypeSurfaceBatch()).updates[0];
+	const current = await sourceAtFinHistoryRecord(
+		coreInheritedRecordTypeSurfaceBatchHistoryPath, update.path
+		, beforeCoreInheritedRecordTypeSurfaceBatchSource
+	);
+	for(const forged of [{ ...update, currentSha256: "0".repeat(64) }
+		, { ...update, previousSha256: "0".repeat(64) }
+		, { ...update, path: "unrelated.mjs" }
+		, { ...update, edits: [] }
+		, { ...update, edits: [...update.edits, update.edits[0]] }])
+		assert.throws(() => reverseCoreInheritedRecordTypeSurfaceBatchUpdate(
+			current, forged));
+	assert.equal(beforeCoreInheritedRecordTypeSurfaceBatchSource(
+		update.path, current + "unknown"), current + "unknown");
+});
+
+test("Core inherited-record type-surface batch writer refuses another checkout", async t => {
+	const root = await mkdtemp(join(
+		tmpdir(), "lean-core-inherited-type-surface-batch-history-guard-"));
+	t.after(() => rm(root, { recursive: true }));
+	const result = spawnSync(process.execPath, [resolve(
+		"scripts/update-core-inherited-record-type-surface-batch-source-history.mjs"
+	)], { cwd: root, encoding: "utf8", timeout: 15_000 });
+	assert.notEqual(result.status, 0);
+	assert.equal(result.stdout, "");
+	assert.deepEqual(await readdir(root), []);
+});
 
 test("Core recursive-callable evidence pins record their exact repair", async () => {
 	const record = await readCoreRecursiveCallableEvidencePinRepair();

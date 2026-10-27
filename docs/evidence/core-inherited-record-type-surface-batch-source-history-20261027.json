@@ -1,0 +1,314 @@
+{
+  "historyAdditions": [
+    {
+      "currentSha256": "a92eba97476710c11a04e8a88d1a0a612a3a429b995e3df2962afc8cf52ebc67",
+      "path": "scripts/update-core-inherited-record-type-surface-batch-source-history.mjs"
+    },
+    {
+      "currentSha256": "0d0289bc14413d9e663f179da8c310443ecaf8404c76dbf1403f31c1ff3100b0",
+      "path": "tests/helpers/core-inherited-record-type-surface-batch-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "c832aee92708d94320383c6064cf6e605242a055",
+  "integrationUpdates": [
+    {
+      "currentSha256": "b52c93fc0af1fc5159a132ed5299a5fbbadd94bc44f89972656bb1546cd4d904",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeCoreInheritedRecordTypeSurfaceBatchSource\n\t, coreInheritedRecordTypeSurfaceBatchHistoryAdditions\n\t, coreInheritedRecordTypeSurfaceBatchHistoryPath\n\t, coreInheritedRecordTypeSurfaceBatchImplementation\n\t, coreInheritedRecordTypeSurfaceBatchImplementationPaths\n\t, coreInheritedRecordTypeSurfaceBatchIntegrationPaths\n\t, coreInheritedRecordTypeSurfaceBatchPredecessor\n\t, reverseCoreInheritedRecordTypeSurfaceBatchUpdate\n} from \"./core-inherited-record-type-surface-batch-source-history.mjs\";\n",
+          "previous": "",
+          "start": 357
+        },
+        {
+          "current": "const readCoreInheritedRecordTypeSurfaceBatch = async () => JSON.parse(\n\tawait readFile(coreInheritedRecordTypeSurfaceBatchHistoryPath, \"utf8\")\n);\n",
+          "previous": "",
+          "start": 15804
+        },
+        {
+          "current": "test(\"Core inherited-record type-surface batching records its exact repair\", async () => {\n\tconst record = await readCoreInheritedRecordTypeSurfaceBatch();\n\tassert.equal(record.schemaVersion, 1);\n\tassert.equal(record.milestone\n\t\t, \"core-inherited-record-type-surface-batch-source-v1\");\n\tassert.equal(record.predecessorCommit\n\t\t, coreInheritedRecordTypeSurfaceBatchPredecessor);\n\tassert.equal(record.implementationCommit\n\t\t, coreInheritedRecordTypeSurfaceBatchImplementation);\n\tassert.deepEqual(record.updates.map(update => update.path)\n\t\t, coreInheritedRecordTypeSurfaceBatchImplementationPaths);\n\tassert.deepEqual(record.historyAdditions.map(addition => addition.path)\n\t\t, coreInheritedRecordTypeSurfaceBatchHistoryAdditions);\n\tassert.deepEqual(record.integrationUpdates.map(update => update.path)\n\t\t, coreInheritedRecordTypeSurfaceBatchIntegrationPaths);\n\tassert.equal(git([\"rev-parse\"\n\t\t, `${coreInheritedRecordTypeSurfaceBatchImplementation}^`]).trim()\n\t, coreInheritedRecordTypeSurfaceBatchPredecessor);\n\tassert.deepEqual(git([\"diff\", \"--name-only\", \"--diff-filter=M\"\n\t\t, coreInheritedRecordTypeSurfaceBatchPredecessor\n\t\t, coreInheritedRecordTypeSurfaceBatchImplementation])\n\t\t.trim().split(\"\\n\").sort()\n\t, [...coreInheritedRecordTypeSurfaceBatchImplementationPaths].sort());\n});\n\ntest(\"Core inherited-record type-surface batching reverses every transition\", async () => {\n\tconst record = await readCoreInheritedRecordTypeSurfaceBatch();\n\tfor(const update of [...record.updates, ...record.integrationUpdates])\n\t{\n\t\tconst integration = record.integrationUpdates.includes(update);\n\t\tconst current = integration\n\t\t\t? await sourceAtFinHistoryRecordSource(\n\t\t\t\tcoreInheritedRecordTypeSurfaceBatchHistoryPath, update.path\n\t\t\t\t\t, update.currentSha256\n\t\t\t\t\t, beforeCoreInheritedRecordTypeSurfaceBatchSource\n\t\t\t)\n\t\t\t: await sourceAtFinHistoryRecord(\n\t\t\t\tcoreInheritedRecordTypeSurfaceBatchHistoryPath, update.path\n\t\t\t\t\t, beforeCoreInheritedRecordTypeSurfaceBatchSource\n\t\t\t);\n\t\tconst base = integration\n\t\t\t? coreInheritedRecordTypeSurfaceBatchImplementation\n\t\t\t: coreInheritedRecordTypeSurfaceBatchPredecessor;\n\t\tconst previous = git([\"show\", `${base}:${update.path}`]);\n\t\tassert.equal(reverseCoreInheritedRecordTypeSurfaceBatchUpdate(\n\t\t\tcurrent, update), previous, update.path);\n\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n\t\tassert.ok(finRefinementNormalizationPaths.includes(update.path));\n\t}\n\tfor(const addition of record.historyAdditions)\n\t\tassert.equal(sha256(await sourceAtFinHistoryRecordSource(\n\t\t\tcoreInheritedRecordTypeSurfaceBatchHistoryPath\n\t\t\t, addition.path, addition.currentSha256\n\t\t)), addition.currentSha256, addition.path);\n});\n\ntest(\"Core inherited-record type-surface batching rejects altered transitions\", async () => {\n\tconst update = (await readCoreInheritedRecordTypeSurfaceBatch()).updates[0];\n\tconst current = await sourceAtFinHistoryRecord(\n\t\tcoreInheritedRecordTypeSurfaceBatchHistoryPath, update.path\n\t\t, beforeCoreInheritedRecordTypeSurfaceBatchSource\n\t);\n\tfor(const forged of [{ ...update, currentSha256: \"0\".repeat(64) }\n\t\t, { ...update, previousSha256: \"0\".repeat(64) }\n\t\t, { ...update, path: \"unrelated.mjs\" }\n\t\t, { ...update, edits: [] }\n\t\t, { ...update, edits: [...update.edits, update.edits[0]] }])\n\t\tassert.throws(() => reverseCoreInheritedRecordTypeSurfaceBatchUpdate(\n\t\t\tcurrent, forged));\n\tassert.equal(beforeCoreInheritedRecordTypeSurfaceBatchSource(\n\t\tupdate.path, current + \"unknown\"), current + \"unknown\");\n});\n\ntest(\"Core inherited-record type-surface batch writer refuses another checkout\", async t => {\n\tconst root = await mkdtemp(join(\n\t\ttmpdir(), \"lean-core-inherited-type-surface-batch-history-guard-\"));\n\tt.after(() => rm(root, { recursive: true }));\n\tconst result = spawnSync(process.execPath, [resolve(\n\t\t\"scripts/update-core-inherited-record-type-surface-batch-source-history.mjs\"\n\t)], { cwd: root, encoding: \"utf8\", timeout: 15_000 });\n\tassert.notEqual(result.status, 0);\n\tassert.equal(result.stdout, \"\");\n\tassert.deepEqual(await readdir(root), []);\n});\n\n",
+          "previous": "",
+          "start": 20127
+        }
+      ],
+      "path": "tests/helpers/core-historical-evidence-replay-source-history-tests.mjs",
+      "previousSha256": "52247644f76fd2e7d3b72364c617733e978902d81f63afa0e534e9f0748797d8"
+    },
+    {
+      "currentSha256": "57e7d3391bbc1c3ff21c9117cbe4adfa73adb350a36c5bad7f61eb59fd60f3c6",
+      "edits": [
+        {
+          "current": "import { beforeCoreInheritedRecordTypeSurfaceBatchSource, coreInheritedRecordTypeSurfaceBatchNormalizationPaths } from \"./core-inherited-record-type-surface-batch-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...coreInheritedRecordTypeSurfaceBatchNormalizationPaths()\n\t, ...coreRecursiveCallableEvidencePinRepairNormalizationPaths()\n",
+          "previous": "\t...coreRecursiveCallableEvidencePinRepairNormalizationPaths()\n",
+          "start": 196054
+        },
+        {
+          "current": "\tlet stage = beforeCoreInheritedRecordTypeSurfaceBatchSource(\n\t\tpath, text, expected\n\t);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCoreRecursiveCallableEvidencePinRepairSource(\n",
+          "previous": "\tlet stage = beforeCoreRecursiveCallableEvidencePinRepairSource(\n",
+          "start": 243826
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "e26f3a5843dd4112300484686d6d208e7a3b8b5cd09f623c24bb1b2bcc97c5cb"
+    }
+  ],
+  "milestone": "core-inherited-record-type-surface-batch-source-v1",
+  "predecessorCommit": "5805bf4601bb2f777ee3824d55223600cf1a49f7",
+  "schemaVersion": 1,
+  "scope": "Refresh all 44 inherited-record history citations left stale by the earlier replay repair and authenticate the current type-surface reader after replacing 123720 serial realpath/read/hash awaits with deterministic sixteen-file batches. Preserve every evidence identity, archive, observation and semantic claim; retain full-byte validation, path-safety checks, exact stale-source refusal and earliest-path diagnostics while bounding local and hosted I/O pressure.",
+  "updates": [
+    {
+      "currentSha256": "d163953a59baddd4af5a9fe1b099f11629cf5a43bc9c0c2594b9b522e66751c8",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"153c4bbab9f32d97259e1e9ef28d1870bec5e9a402a8b2eca31d5c27f206f10b\"\n",
+          "previous": "          \"sha256\": \"e634a8de3ae196782004c602ec00c0cd46bb367bba39d3c2dcd2e1fb5f51fb7b\"\n",
+          "start": 826141
+        },
+        {
+          "current": "          \"sha256\": \"6677e6ff97c24e0a57f6116ec421334499ad142beb851498e0c4416464db5a76\"\n",
+          "previous": "          \"sha256\": \"434d06429e17b39f2c1972de5e7aff1989a227e2c0abf99c88e86f8e265894db\"\n",
+          "start": 17300233
+        },
+        {
+          "current": "          \"sha256\": \"6677e6ff97c24e0a57f6116ec421334499ad142beb851498e0c4416464db5a76\"\n",
+          "previous": "          \"sha256\": \"434d06429e17b39f2c1972de5e7aff1989a227e2c0abf99c88e86f8e265894db\"\n",
+          "start": 17592304
+        },
+        {
+          "current": "          \"sha256\": \"6677e6ff97c24e0a57f6116ec421334499ad142beb851498e0c4416464db5a76\"\n",
+          "previous": "          \"sha256\": \"434d06429e17b39f2c1972de5e7aff1989a227e2c0abf99c88e86f8e265894db\"\n",
+          "start": 17884685
+        },
+        {
+          "current": "          \"sha256\": \"6677e6ff97c24e0a57f6116ec421334499ad142beb851498e0c4416464db5a76\"\n",
+          "previous": "          \"sha256\": \"434d06429e17b39f2c1972de5e7aff1989a227e2c0abf99c88e86f8e265894db\"\n",
+          "start": 18177224
+        },
+        {
+          "current": "          \"sha256\": \"6677e6ff97c24e0a57f6116ec421334499ad142beb851498e0c4416464db5a76\"\n",
+          "previous": "          \"sha256\": \"434d06429e17b39f2c1972de5e7aff1989a227e2c0abf99c88e86f8e265894db\"\n",
+          "start": 18470374
+        },
+        {
+          "current": "          \"sha256\": \"6677e6ff97c24e0a57f6116ec421334499ad142beb851498e0c4416464db5a76\"\n",
+          "previous": "          \"sha256\": \"434d06429e17b39f2c1972de5e7aff1989a227e2c0abf99c88e86f8e265894db\"\n",
+          "start": 18845256
+        },
+        {
+          "current": "          \"sha256\": \"6677e6ff97c24e0a57f6116ec421334499ad142beb851498e0c4416464db5a76\"\n",
+          "previous": "          \"sha256\": \"434d06429e17b39f2c1972de5e7aff1989a227e2c0abf99c88e86f8e265894db\"\n",
+          "start": 19220861
+        },
+        {
+          "current": "          \"sha256\": \"6677e6ff97c24e0a57f6116ec421334499ad142beb851498e0c4416464db5a76\"\n",
+          "previous": "          \"sha256\": \"434d06429e17b39f2c1972de5e7aff1989a227e2c0abf99c88e86f8e265894db\"\n",
+          "start": 19595743
+        },
+        {
+          "current": "          \"sha256\": \"6677e6ff97c24e0a57f6116ec421334499ad142beb851498e0c4416464db5a76\"\n",
+          "previous": "          \"sha256\": \"434d06429e17b39f2c1972de5e7aff1989a227e2c0abf99c88e86f8e265894db\"\n",
+          "start": 19971095
+        },
+        {
+          "current": "          \"sha256\": \"6677e6ff97c24e0a57f6116ec421334499ad142beb851498e0c4416464db5a76\"\n",
+          "previous": "          \"sha256\": \"434d06429e17b39f2c1972de5e7aff1989a227e2c0abf99c88e86f8e265894db\"\n",
+          "start": 20173205
+        },
+        {
+          "current": "          \"sha256\": \"6677e6ff97c24e0a57f6116ec421334499ad142beb851498e0c4416464db5a76\"\n",
+          "previous": "          \"sha256\": \"434d06429e17b39f2c1972de5e7aff1989a227e2c0abf99c88e86f8e265894db\"\n",
+          "start": 20373402
+        },
+        {
+          "current": "          \"sha256\": \"6677e6ff97c24e0a57f6116ec421334499ad142beb851498e0c4416464db5a76\"\n",
+          "previous": "          \"sha256\": \"434d06429e17b39f2c1972de5e7aff1989a227e2c0abf99c88e86f8e265894db\"\n",
+          "start": 20575974
+        },
+        {
+          "current": "          \"sha256\": \"6677e6ff97c24e0a57f6116ec421334499ad142beb851498e0c4416464db5a76\"\n",
+          "previous": "          \"sha256\": \"434d06429e17b39f2c1972de5e7aff1989a227e2c0abf99c88e86f8e265894db\"\n",
+          "start": 20776593
+        },
+        {
+          "current": "          \"sha256\": \"6677e6ff97c24e0a57f6116ec421334499ad142beb851498e0c4416464db5a76\"\n",
+          "previous": "          \"sha256\": \"434d06429e17b39f2c1972de5e7aff1989a227e2c0abf99c88e86f8e265894db\"\n",
+          "start": 21096791
+        },
+        {
+          "current": "          \"sha256\": \"6677e6ff97c24e0a57f6116ec421334499ad142beb851498e0c4416464db5a76\"\n",
+          "previous": "          \"sha256\": \"434d06429e17b39f2c1972de5e7aff1989a227e2c0abf99c88e86f8e265894db\"\n",
+          "start": 21417370
+        },
+        {
+          "current": "          \"sha256\": \"6677e6ff97c24e0a57f6116ec421334499ad142beb851498e0c4416464db5a76\"\n",
+          "previous": "          \"sha256\": \"434d06429e17b39f2c1972de5e7aff1989a227e2c0abf99c88e86f8e265894db\"\n",
+          "start": 21738036
+        },
+        {
+          "current": "          \"sha256\": \"6677e6ff97c24e0a57f6116ec421334499ad142beb851498e0c4416464db5a76\"\n",
+          "previous": "          \"sha256\": \"434d06429e17b39f2c1972de5e7aff1989a227e2c0abf99c88e86f8e265894db\"\n",
+          "start": 22059189
+        },
+        {
+          "current": "          \"sha256\": \"6677e6ff97c24e0a57f6116ec421334499ad142beb851498e0c4416464db5a76\"\n",
+          "previous": "          \"sha256\": \"434d06429e17b39f2c1972de5e7aff1989a227e2c0abf99c88e86f8e265894db\"\n",
+          "start": 22267779
+        },
+        {
+          "current": "          \"sha256\": \"6677e6ff97c24e0a57f6116ec421334499ad142beb851498e0c4416464db5a76\"\n",
+          "previous": "          \"sha256\": \"434d06429e17b39f2c1972de5e7aff1989a227e2c0abf99c88e86f8e265894db\"\n",
+          "start": 22476903
+        },
+        {
+          "current": "          \"sha256\": \"6677e6ff97c24e0a57f6116ec421334499ad142beb851498e0c4416464db5a76\"\n",
+          "previous": "          \"sha256\": \"434d06429e17b39f2c1972de5e7aff1989a227e2c0abf99c88e86f8e265894db\"\n",
+          "start": 22685961
+        },
+        {
+          "current": "          \"sha256\": \"6677e6ff97c24e0a57f6116ec421334499ad142beb851498e0c4416464db5a76\"\n",
+          "previous": "          \"sha256\": \"434d06429e17b39f2c1972de5e7aff1989a227e2c0abf99c88e86f8e265894db\"\n",
+          "start": 22895529
+        },
+        {
+          "current": "          \"sha256\": \"6677e6ff97c24e0a57f6116ec421334499ad142beb851498e0c4416464db5a76\"\n",
+          "previous": "          \"sha256\": \"434d06429e17b39f2c1972de5e7aff1989a227e2c0abf99c88e86f8e265894db\"\n",
+          "start": 23099294
+        },
+        {
+          "current": "          \"sha256\": \"6677e6ff97c24e0a57f6116ec421334499ad142beb851498e0c4416464db5a76\"\n",
+          "previous": "          \"sha256\": \"434d06429e17b39f2c1972de5e7aff1989a227e2c0abf99c88e86f8e265894db\"\n",
+          "start": 23303467
+        },
+        {
+          "current": "          \"sha256\": \"6677e6ff97c24e0a57f6116ec421334499ad142beb851498e0c4416464db5a76\"\n",
+          "previous": "          \"sha256\": \"434d06429e17b39f2c1972de5e7aff1989a227e2c0abf99c88e86f8e265894db\"\n",
+          "start": 23507696
+        },
+        {
+          "current": "          \"sha256\": \"6677e6ff97c24e0a57f6116ec421334499ad142beb851498e0c4416464db5a76\"\n",
+          "previous": "          \"sha256\": \"434d06429e17b39f2c1972de5e7aff1989a227e2c0abf99c88e86f8e265894db\"\n",
+          "start": 23712358
+        },
+        {
+          "current": "          \"sha256\": \"6677e6ff97c24e0a57f6116ec421334499ad142beb851498e0c4416464db5a76\"\n",
+          "previous": "          \"sha256\": \"434d06429e17b39f2c1972de5e7aff1989a227e2c0abf99c88e86f8e265894db\"\n",
+          "start": 23953381
+        },
+        {
+          "current": "          \"sha256\": \"6677e6ff97c24e0a57f6116ec421334499ad142beb851498e0c4416464db5a76\"\n",
+          "previous": "          \"sha256\": \"434d06429e17b39f2c1972de5e7aff1989a227e2c0abf99c88e86f8e265894db\"\n",
+          "start": 24195428
+        },
+        {
+          "current": "          \"sha256\": \"6677e6ff97c24e0a57f6116ec421334499ad142beb851498e0c4416464db5a76\"\n",
+          "previous": "          \"sha256\": \"434d06429e17b39f2c1972de5e7aff1989a227e2c0abf99c88e86f8e265894db\"\n",
+          "start": 24436915
+        },
+        {
+          "current": "          \"sha256\": \"6677e6ff97c24e0a57f6116ec421334499ad142beb851498e0c4416464db5a76\"\n",
+          "previous": "          \"sha256\": \"434d06429e17b39f2c1972de5e7aff1989a227e2c0abf99c88e86f8e265894db\"\n",
+          "start": 24679435
+        },
+        {
+          "current": "          \"sha256\": \"6677e6ff97c24e0a57f6116ec421334499ad142beb851498e0c4416464db5a76\"\n",
+          "previous": "          \"sha256\": \"434d06429e17b39f2c1972de5e7aff1989a227e2c0abf99c88e86f8e265894db\"\n",
+          "start": 24885822
+        },
+        {
+          "current": "          \"sha256\": \"6677e6ff97c24e0a57f6116ec421334499ad142beb851498e0c4416464db5a76\"\n",
+          "previous": "          \"sha256\": \"434d06429e17b39f2c1972de5e7aff1989a227e2c0abf99c88e86f8e265894db\"\n",
+          "start": 25092750
+        },
+        {
+          "current": "          \"sha256\": \"6677e6ff97c24e0a57f6116ec421334499ad142beb851498e0c4416464db5a76\"\n",
+          "previous": "          \"sha256\": \"434d06429e17b39f2c1972de5e7aff1989a227e2c0abf99c88e86f8e265894db\"\n",
+          "start": 25299599
+        },
+        {
+          "current": "          \"sha256\": \"6677e6ff97c24e0a57f6116ec421334499ad142beb851498e0c4416464db5a76\"\n",
+          "previous": "          \"sha256\": \"434d06429e17b39f2c1972de5e7aff1989a227e2c0abf99c88e86f8e265894db\"\n",
+          "start": 25506980
+        },
+        {
+          "current": "          \"sha256\": \"6677e6ff97c24e0a57f6116ec421334499ad142beb851498e0c4416464db5a76\"\n",
+          "previous": "          \"sha256\": \"434d06429e17b39f2c1972de5e7aff1989a227e2c0abf99c88e86f8e265894db\"\n",
+          "start": 25931934
+        },
+        {
+          "current": "          \"sha256\": \"6677e6ff97c24e0a57f6116ec421334499ad142beb851498e0c4416464db5a76\"\n",
+          "previous": "          \"sha256\": \"434d06429e17b39f2c1972de5e7aff1989a227e2c0abf99c88e86f8e265894db\"\n",
+          "start": 26357373
+        },
+        {
+          "current": "          \"sha256\": \"6677e6ff97c24e0a57f6116ec421334499ad142beb851498e0c4416464db5a76\"\n",
+          "previous": "          \"sha256\": \"434d06429e17b39f2c1972de5e7aff1989a227e2c0abf99c88e86f8e265894db\"\n",
+          "start": 26782799
+        },
+        {
+          "current": "          \"sha256\": \"6677e6ff97c24e0a57f6116ec421334499ad142beb851498e0c4416464db5a76\"\n",
+          "previous": "          \"sha256\": \"434d06429e17b39f2c1972de5e7aff1989a227e2c0abf99c88e86f8e265894db\"\n",
+          "start": 27208685
+        },
+        {
+          "current": "          \"sha256\": \"6677e6ff97c24e0a57f6116ec421334499ad142beb851498e0c4416464db5a76\"\n",
+          "previous": "          \"sha256\": \"434d06429e17b39f2c1972de5e7aff1989a227e2c0abf99c88e86f8e265894db\"\n",
+          "start": 27419282
+        },
+        {
+          "current": "          \"sha256\": \"6677e6ff97c24e0a57f6116ec421334499ad142beb851498e0c4416464db5a76\"\n",
+          "previous": "          \"sha256\": \"434d06429e17b39f2c1972de5e7aff1989a227e2c0abf99c88e86f8e265894db\"\n",
+          "start": 27630490
+        },
+        {
+          "current": "          \"sha256\": \"6677e6ff97c24e0a57f6116ec421334499ad142beb851498e0c4416464db5a76\"\n",
+          "previous": "          \"sha256\": \"434d06429e17b39f2c1972de5e7aff1989a227e2c0abf99c88e86f8e265894db\"\n",
+          "start": 27841551
+        },
+        {
+          "current": "          \"sha256\": \"6677e6ff97c24e0a57f6116ec421334499ad142beb851498e0c4416464db5a76\"\n",
+          "previous": "          \"sha256\": \"434d06429e17b39f2c1972de5e7aff1989a227e2c0abf99c88e86f8e265894db\"\n",
+          "start": 28053233
+        },
+        {
+          "current": "          \"sha256\": \"6677e6ff97c24e0a57f6116ec421334499ad142beb851498e0c4416464db5a76\"\n",
+          "previous": "          \"sha256\": \"434d06429e17b39f2c1972de5e7aff1989a227e2c0abf99c88e86f8e265894db\"\n",
+          "start": 28279149
+        },
+        {
+          "current": "          \"sha256\": \"6677e6ff97c24e0a57f6116ec421334499ad142beb851498e0c4416464db5a76\"\n",
+          "previous": "          \"sha256\": \"434d06429e17b39f2c1972de5e7aff1989a227e2c0abf99c88e86f8e265894db\"\n",
+          "start": 28505767
+        },
+        {
+          "current": "          \"sha256\": \"6677e6ff97c24e0a57f6116ec421334499ad142beb851498e0c4416464db5a76\"\n",
+          "previous": "          \"sha256\": \"434d06429e17b39f2c1972de5e7aff1989a227e2c0abf99c88e86f8e265894db\"\n",
+          "start": 28732145
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "11253af7b98023198819c3a85b8670edf7a04046eac5bc7d19d4ff0577cf28b3"
+    },
+    {
+      "currentSha256": "153c4bbab9f32d97259e1e9ef28d1870bec5e9a402a8b2eca31d5c27f206f10b",
+      "edits": [
+        {
+          "current": "\tconst evidenceFiles = typeSurfaceEvidenceFiles(document);\n\tconst batchSize = 16;\n\tfor(let offset = 0; offset < evidenceFiles.length; offset += batchSize)\n",
+          "previous": "\tfor(const file of typeSurfaceEvidenceFiles(document))\n",
+          "start": 12800
+        },
+        {
+          "current": "\t\tconst batch = evidenceFiles.slice(offset, offset + batchSize);\n\t\tconst actual = await Promise.all(batch.map(async file => {\n\t\t\tconst filename = await realpath(path.join(canonicalRoot, file.path));\n\t\t\tconst relative = path.relative(canonicalRoot, filename);\n\t\t\trelativeFile(relative);\n\t\t\treturn digest(await readFile(filename));\n\t\t}));\n\t\tfor(const [index, file] of batch.entries())\n\t\t\tassert.equal(actual[index], file.sha256\n\t\t\t\t, `stale source evidence: ${file.path}`);\n",
+          "previous": "\t\tconst filename = await realpath(path.join(canonicalRoot, file.path));\n\t\tconst relative = path.relative(canonicalRoot, filename);\n\t\trelativeFile(relative);\n\t\tassert.equal(digest(await readFile(filename)), file.sha256\n\t\t\t, `stale source evidence: ${file.path}`);\n",
+          "start": 12958
+        }
+      ],
+      "path": "src/adoption/type-surface.mjs",
+      "previousSha256": "e634a8de3ae196782004c602ec00c0cd46bb367bba39d3c2dcd2e1fb5f51fb7b"
+    }
+  ]
+}
