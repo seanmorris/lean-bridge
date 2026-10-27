@@ -22,7 +22,7 @@ import {
 import { readTypeSurface } from "../../src/adoption/type-surface.mjs";
 import {
 	assertTypeSurfaceEvidenceReceipt, createTypeSurfaceEvidenceReceipt
-	, typeSurfaceEvidenceSourcePaths
+	, typeSurfaceEvidenceFiles, typeSurfaceEvidenceSourcePaths
 } from "../../src/adoption/type-surface-evidence-receipt.mjs";
 import { ownedCheckedRecordHostedLaneNames } from "./owned-checked-record-hosted-contracts.mjs";
 
@@ -202,6 +202,14 @@ test("one exact workflow receipt closes repeated type-surface reads", async t =>
 	const receipt = createTypeSurfaceEvidenceReceipt({
 		commit, document, sourceSha256
 	});
+	const citations = document.evidence.flatMap(evidence => evidence.files);
+	const uniqueFiles = typeSurfaceEvidenceFiles(document);
+	assert.equal(uniqueFiles.length, receipt.evidence.count);
+	assert.ok(citations.length > uniqueFiles.length);
+	assert.throws(() => typeSurfaceEvidenceFiles({ evidence: [
+		{ files: [{ path: "same", sha256: "0".repeat(64) }] }
+		, { files: [{ path: "same", sha256: "1".repeat(64) }] }
+	] }), /Conflicting evidence digest/u);
 	assert.equal(assertTypeSurfaceEvidenceReceipt(receipt, {
 		commit, document, sourceSha256
 	}), true);

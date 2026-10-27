@@ -14,6 +14,7 @@ import Ajv from "ajv/dist/2020.js";
 import schema from "../../schema/type-surface.schema.json" with { type: "json" };
 import {
 	assertTypeSurfaceEvidenceReceipt, typeSurfaceEvidenceSourcePaths
+	, typeSurfaceEvidenceFiles
 } from "./type-surface-evidence-receipt.mjs";
 
 const root = path.resolve(import.meta.dirname, "../..");
@@ -259,14 +260,14 @@ export async function readTypeSurface(options = {})
 		});
 		return { document, irSchema, consumers };
 	}
-	for(const evidence of document.evidence)
-		for(const file of evidence.files)
-		{
-			const filename = await realpath(path.join(canonicalRoot, file.path));
-			const relative = path.relative(canonicalRoot, filename);
-			relativeFile(relative);
-			assert.equal(digest(await readFile(filename)), file.sha256, `${evidence.id}: stale source evidence ${file.path}`);
-		}
+	for(const file of typeSurfaceEvidenceFiles(document))
+	{
+		const filename = await realpath(path.join(canonicalRoot, file.path));
+		const relative = path.relative(canonicalRoot, filename);
+		relativeFile(relative);
+		assert.equal(digest(await readFile(filename)), file.sha256
+			, `stale source evidence: ${file.path}`);
+	}
 	return { document, irSchema, consumers };
 }
 

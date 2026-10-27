@@ -19,11 +19,11 @@ const sourcePaths = Object.freeze([
 ]);
 
 /**
- * Collapse repeated evidence citations into one exact path/digest contract.
+ * Collapse repeated evidence citations into unique exact path/digest records.
  *
  * @param document - Parsed type-surface inventory.
  */
-export const typeSurfaceEvidenceContract = document => {
+export const typeSurfaceEvidenceFiles = document => {
 	assert.ok(Array.isArray(document?.evidence));
 	const files = new Map();
 	for(const evidence of document.evidence)
@@ -37,8 +37,17 @@ export const typeSurfaceEvidenceContract = document => {
 					, `Conflicting evidence digest: ${file.path}`);
 			files.set(file.path, file.sha256);
 		}
-	const entries = [...files].map(([path, sha256]) => ({ path, sha256 }))
-		.toSorted((left, right) => left.path.localeCompare(right.path));
+	return Object.freeze([...files].map(([path, sha256]) => ({ path, sha256 }))
+		.toSorted((left, right) => left.path.localeCompare(right.path)));
+};
+
+/**
+ * Collapse repeated evidence citations into one exact path/digest contract.
+ *
+ * @param document - Parsed type-surface inventory.
+ */
+export const typeSurfaceEvidenceContract = document => {
+	const entries = typeSurfaceEvidenceFiles(document);
 	return Object.freeze({
 		count: entries.length, sha256: sha256(canonicalJson(entries))
 	});
