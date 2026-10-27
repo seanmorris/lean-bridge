@@ -10,6 +10,16 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import {
+	beforeCoreUniqueTypeSurfaceAuthenticationSource
+	, coreUniqueTypeSurfaceAuthenticationAddedPaths
+	, coreUniqueTypeSurfaceAuthenticationHistoryPath
+	, coreUniqueTypeSurfaceAuthenticationImplementation
+	, coreUniqueTypeSurfaceAuthenticationImplementationPaths
+	, coreUniqueTypeSurfaceAuthenticationIntegrationPaths
+	, coreUniqueTypeSurfaceAuthenticationPredecessor
+	, reverseCoreUniqueTypeSurfaceAuthenticationUpdate
+} from "./core-unique-type-surface-authentication-source-history.mjs";
+import {
 	beforeCoreHistoricalAdditionCheckoutRepairSource
 	, coreHistoricalAdditionCheckoutRepairAddedPaths
 	, coreHistoricalAdditionCheckoutRepairHistoryPath
@@ -218,6 +228,9 @@ import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.m
 
 const git = arguments_ => execFileSync("git", arguments_
 	, { encoding: "utf8", maxBuffer: 128 * 1024 * 1024 });
+const readCoreUniqueTypeSurfaceAuthentication = async () => JSON.parse(
+	await readFile(coreUniqueTypeSurfaceAuthenticationHistoryPath, "utf8")
+);
 const readCoreHistoricalAdditionCheckoutRepair = async () => JSON.parse(
 	await readFile(coreHistoricalAdditionCheckoutRepairHistoryPath, "utf8")
 );
@@ -273,6 +286,87 @@ const readWitBorrowStopBoundary = async () => JSON.parse(await readFile(
 const readReceiverCiStopBoundary = async () => JSON.parse(await readFile(
 	coreReceiverCiStopBoundaryHistoryPath, "utf8"
 ));
+
+test("Core unique type-surface authentication records its range", async () => {
+	const record = await readCoreUniqueTypeSurfaceAuthentication();
+	assert.equal(record.schemaVersion, 1);
+	assert.equal(record.milestone
+		, "core-unique-type-surface-authentication-source-v1");
+	assert.equal(record.predecessorCommit
+		, coreUniqueTypeSurfaceAuthenticationPredecessor);
+	assert.equal(record.implementationCommit
+		, coreUniqueTypeSurfaceAuthenticationImplementation);
+	assert.equal(record.citationCount, 369_273);
+	assert.equal(record.uniqueFileCount, 123_720);
+	assert.deepEqual(record.pointerUpdates.map(update => update.path)
+		, ["src/adoption/type-surface.mjs"]);
+	assert.deepEqual(record.updates.map(update => update.path)
+		, coreUniqueTypeSurfaceAuthenticationImplementationPaths);
+	assert.deepEqual(record.integrationUpdates.map(update => update.path)
+		, coreUniqueTypeSurfaceAuthenticationIntegrationPaths);
+	assert.deepEqual(record.additions.map(addition => addition.path)
+		, coreUniqueTypeSurfaceAuthenticationAddedPaths);
+	assert.equal(git(["rev-parse"
+		, `${coreUniqueTypeSurfaceAuthenticationImplementation}^`]).trim()
+	, coreUniqueTypeSurfaceAuthenticationPredecessor);
+	assert.deepEqual(git(["diff", "--name-only"
+		, coreUniqueTypeSurfaceAuthenticationPredecessor
+		, coreUniqueTypeSurfaceAuthenticationImplementation])
+		.trim().split("\n").sort()
+	, [...coreUniqueTypeSurfaceAuthenticationImplementationPaths].sort());
+});
+
+test("Core unique type-surface authentication reverses transitions", async () => {
+	const record = await readCoreUniqueTypeSurfaceAuthentication();
+	for(const update of [...record.updates, ...record.integrationUpdates])
+	{
+		const current = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256
+			, beforeCoreUniqueTypeSurfaceAuthenticationSource);
+		const base = record.integrationUpdates.includes(update)
+			? coreUniqueTypeSurfaceAuthenticationImplementation
+			: coreUniqueTypeSurfaceAuthenticationPredecessor;
+		const previous = git(["show", `${base}:${update.path}`]);
+		assert.equal(reverseCoreUniqueTypeSurfaceAuthenticationUpdate(
+			current, update), previous, update.path);
+		assert.equal(beforeFinRefinementSource(
+			update.path, current, update.previousSha256), previous, update.path);
+		assert.ok(finRefinementNormalizationPaths.includes(update.path));
+	}
+	for(const addition of record.additions)
+		assert.equal(sha256(await sourceAtFinHistoryMilestone(
+			addition.path, addition.currentSha256))
+		, addition.currentSha256, addition.path);
+});
+
+test("Core unique type-surface authentication rejects alterations", async () => {
+	const update = (await readCoreUniqueTypeSurfaceAuthentication()).updates[0];
+	const current = await sourceAtFinHistoryMilestone(
+		update.path, update.currentSha256
+		, beforeCoreUniqueTypeSurfaceAuthenticationSource);
+	for(const forged of [{ ...update, currentSha256: "0".repeat(64) }
+		, { ...update, previousSha256: "0".repeat(64) }
+		, { ...update, path: "unrelated.mjs" }
+		, { ...update, edits: [] }
+		, { ...update, edits: [...update.edits, update.edits[0]] }])
+		assert.throws(() => reverseCoreUniqueTypeSurfaceAuthenticationUpdate(
+			current, forged));
+	assert.equal(beforeCoreUniqueTypeSurfaceAuthenticationSource(
+		update.path, current + "unknown"), current + "unknown");
+});
+
+test("Core unique type-surface writer refuses another checkout", async t => {
+	const root = await mkdtemp(join(
+		tmpdir(), "lean-core-unique-type-surface-guard-"
+	));
+	t.after(() => rm(root, { recursive: true }));
+	const result = spawnSync(process.execPath, [resolve(
+		"scripts/update-core-unique-type-surface-authentication-source-history.mjs"
+	)], { cwd: root, encoding: "utf8", timeout: 15_000 });
+	assert.notEqual(result.status, 0);
+	assert.equal(result.stdout, "");
+	assert.deepEqual(await readdir(root), []);
+});
 
 test("Core historical-addition checkout repair records its range", async () => {
 	const record = await readCoreHistoricalAdditionCheckoutRepair();

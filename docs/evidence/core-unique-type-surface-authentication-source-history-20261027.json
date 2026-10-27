@@ -1,0 +1,142 @@
+{
+  "additions": [
+    {
+      "currentSha256": "0753bda124a96d159d894e16280fbab098fc83b4b327dabf2bfcdeaf082b54ec",
+      "path": "scripts/update-core-unique-type-surface-authentication-source-history.mjs"
+    },
+    {
+      "currentSha256": "56985d107bc53e5e10639f0ccb30607ccc6dcaebccc00b06a333f02ed7116d28",
+      "path": "tests/helpers/core-unique-type-surface-authentication-source-history.mjs"
+    }
+  ],
+  "citationCount": 369273,
+  "implementationCommit": "01571d3efec8e1cb94b63d4c4fa988e338f3b468",
+  "integrationUpdates": [
+    {
+      "currentSha256": "9161c10b9dfa6c60915848da446a7213de0a324b80a1e2193d3f014650aebcc8",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"e634a8de3ae196782004c602ec00c0cd46bb367bba39d3c2dcd2e1fb5f51fb7b\"\n",
+          "previous": "          \"sha256\": \"95b8e5915702a13ef2601e2fa225809a54d8a694566a5623b2011a73d701dec3\"\n",
+          "start": 826141
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "efab2b97a48bf543a52546d4a619b1a4ce15e5dfba3836c252587993282e5a64"
+    },
+    {
+      "currentSha256": "e5f31e359f0c4871a4cf024f183d77757ce9819bb0a662ec543dbdb43c0deb54",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeCoreUniqueTypeSurfaceAuthenticationSource\n\t, coreUniqueTypeSurfaceAuthenticationAddedPaths\n\t, coreUniqueTypeSurfaceAuthenticationHistoryPath\n\t, coreUniqueTypeSurfaceAuthenticationImplementation\n\t, coreUniqueTypeSurfaceAuthenticationImplementationPaths\n\t, coreUniqueTypeSurfaceAuthenticationIntegrationPaths\n\t, coreUniqueTypeSurfaceAuthenticationPredecessor\n\t, reverseCoreUniqueTypeSurfaceAuthenticationUpdate\n} from \"./core-unique-type-surface-authentication-source-history.mjs\";\n",
+          "previous": "",
+          "start": 357
+        },
+        {
+          "current": "const readCoreUniqueTypeSurfaceAuthentication = async () => JSON.parse(\n\tawait readFile(coreUniqueTypeSurfaceAuthenticationHistoryPath, \"utf8\")\n);\n",
+          "previous": "",
+          "start": 10192
+        },
+        {
+          "current": "test(\"Core unique type-surface authentication records its range\", async () => {\n\tconst record = await readCoreUniqueTypeSurfaceAuthentication();\n\tassert.equal(record.schemaVersion, 1);\n\tassert.equal(record.milestone\n\t\t, \"core-unique-type-surface-authentication-source-v1\");\n\tassert.equal(record.predecessorCommit\n\t\t, coreUniqueTypeSurfaceAuthenticationPredecessor);\n\tassert.equal(record.implementationCommit\n\t\t, coreUniqueTypeSurfaceAuthenticationImplementation);\n\tassert.equal(record.citationCount, 369_273);\n\tassert.equal(record.uniqueFileCount, 123_720);\n\tassert.deepEqual(record.pointerUpdates.map(update => update.path)\n\t\t, [\"src/adoption/type-surface.mjs\"]);\n\tassert.deepEqual(record.updates.map(update => update.path)\n\t\t, coreUniqueTypeSurfaceAuthenticationImplementationPaths);\n\tassert.deepEqual(record.integrationUpdates.map(update => update.path)\n\t\t, coreUniqueTypeSurfaceAuthenticationIntegrationPaths);\n\tassert.deepEqual(record.additions.map(addition => addition.path)\n\t\t, coreUniqueTypeSurfaceAuthenticationAddedPaths);\n\tassert.equal(git([\"rev-parse\"\n\t\t, `${coreUniqueTypeSurfaceAuthenticationImplementation}^`]).trim()\n\t, coreUniqueTypeSurfaceAuthenticationPredecessor);\n\tassert.deepEqual(git([\"diff\", \"--name-only\"\n\t\t, coreUniqueTypeSurfaceAuthenticationPredecessor\n\t\t, coreUniqueTypeSurfaceAuthenticationImplementation])\n\t\t.trim().split(\"\\n\").sort()\n\t, [...coreUniqueTypeSurfaceAuthenticationImplementationPaths].sort());\n});\n\ntest(\"Core unique type-surface authentication reverses transitions\", async () => {\n\tconst record = await readCoreUniqueTypeSurfaceAuthentication();\n\tfor(const update of [...record.updates, ...record.integrationUpdates])\n\t{\n\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256\n\t\t\t, beforeCoreUniqueTypeSurfaceAuthenticationSource);\n\t\tconst base = record.integrationUpdates.includes(update)\n\t\t\t? coreUniqueTypeSurfaceAuthenticationImplementation\n\t\t\t: coreUniqueTypeSurfaceAuthenticationPredecessor;\n\t\tconst previous = git([\"show\", `${base}:${update.path}`]);\n\t\tassert.equal(reverseCoreUniqueTypeSurfaceAuthenticationUpdate(\n\t\t\tcurrent, update), previous, update.path);\n\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n\t\tassert.ok(finRefinementNormalizationPaths.includes(update.path));\n\t}\n\tfor(const addition of record.additions)\n\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256))\n\t\t, addition.currentSha256, addition.path);\n});\n\ntest(\"Core unique type-surface authentication rejects alterations\", async () => {\n\tconst update = (await readCoreUniqueTypeSurfaceAuthentication()).updates[0];\n\tconst current = await sourceAtFinHistoryMilestone(\n\t\tupdate.path, update.currentSha256\n\t\t, beforeCoreUniqueTypeSurfaceAuthenticationSource);\n\tfor(const forged of [{ ...update, currentSha256: \"0\".repeat(64) }\n\t\t, { ...update, previousSha256: \"0\".repeat(64) }\n\t\t, { ...update, path: \"unrelated.mjs\" }\n\t\t, { ...update, edits: [] }\n\t\t, { ...update, edits: [...update.edits, update.edits[0]] }])\n\t\tassert.throws(() => reverseCoreUniqueTypeSurfaceAuthenticationUpdate(\n\t\t\tcurrent, forged));\n\tassert.equal(beforeCoreUniqueTypeSurfaceAuthenticationSource(\n\t\tupdate.path, current + \"unknown\"), current + \"unknown\");\n});\n\ntest(\"Core unique type-surface writer refuses another checkout\", async t => {\n\tconst root = await mkdtemp(join(\n\t\ttmpdir(), \"lean-core-unique-type-surface-guard-\"\n\t));\n\tt.after(() => rm(root, { recursive: true }));\n\tconst result = spawnSync(process.execPath, [resolve(\n\t\t\"scripts/update-core-unique-type-surface-authentication-source-history.mjs\"\n\t)], { cwd: root, encoding: \"utf8\", timeout: 15_000 });\n\tassert.notEqual(result.status, 0);\n\tassert.equal(result.stdout, \"\");\n\tassert.deepEqual(await readdir(root), []);\n});\n\n",
+          "previous": "",
+          "start": 12831
+        }
+      ],
+      "path": "tests/helpers/core-historical-evidence-replay-source-history-tests.mjs",
+      "previousSha256": "e386a2b63390d535f1e4369d748369b9eb1f2c953dcb7506d618cb5768613e11"
+    },
+    {
+      "currentSha256": "2598c218b1f2b879a98f13586baf5d835a4afeba446570e0a5487e511d86d154",
+      "edits": [
+        {
+          "current": "import { beforeCoreUniqueTypeSurfaceAuthenticationSource, coreUniqueTypeSurfaceAuthenticationNormalizationPaths } from \"./core-unique-type-surface-authentication-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...coreUniqueTypeSurfaceAuthenticationNormalizationPaths\n\t, ...coreHistoricalAdditionCheckoutRepairNormalizationPaths\n",
+          "previous": "\t...coreHistoricalAdditionCheckoutRepairNormalizationPaths\n",
+          "start": 193978
+        },
+        {
+          "current": "\tlet stage = beforeCoreUniqueTypeSurfaceAuthenticationSource(\n\t\tpath, text, expected\n\t);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCoreHistoricalAdditionCheckoutRepairSource(\n",
+          "previous": "\tlet stage = beforeCoreHistoricalAdditionCheckoutRepairSource(\n",
+          "start": 241046
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "7f215f7ca7132153d825dcd0a52d44ce8b00d4e6b013bd64a4d119fc4f1c0cf5"
+    }
+  ],
+  "milestone": "core-unique-type-surface-authentication-source-v1",
+  "pointerUpdates": [
+    {
+      "current": "e634a8de3ae196782004c602ec00c0cd46bb367bba39d3c2dcd2e1fb5f51fb7b",
+      "path": "src/adoption/type-surface.mjs",
+      "previous": "95b8e5915702a13ef2601e2fa225809a54d8a694566a5623b2011a73d701dec3"
+    }
+  ],
+  "predecessorCommit": "59ef6ad6eb136c914361e4de62b0b0c19c3f3d24",
+  "schemaVersion": 1,
+  "scope": "Authenticate each unique type-surface evidence path exactly once while rejecting conflicting citations, retaining path-safety checks, exact byte digests and the commit-bound workflow receipt.",
+  "uniqueFileCount": 123720,
+  "updates": [
+    {
+      "currentSha256": "55fac81c57b3cbd2a6d8cd7473595dc601330e0c5d3024c9d366c2971a0fc849",
+      "edits": [
+        {
+          "current": " * Collapse repeated evidence citations into unique exact path/digest records.\n",
+          "previous": " * Collapse repeated evidence citations into one exact path/digest contract.\n",
+          "start": 674
+        },
+        {
+          "current": "export const typeSurfaceEvidenceFiles = document => {\n",
+          "previous": "export const typeSurfaceEvidenceContract = document => {\n",
+          "start": 812
+        },
+        {
+          "current": "\treturn Object.freeze([...files].map(([path, sha256]) => ({ path, sha256 }))\n\t\t.toSorted((left, right) => left.path.localeCompare(right.path)));\n};\n\n/**\n * Collapse repeated evidence citations into one exact path/digest contract.\n *\n * @param document - Parsed type-surface inventory.\n */\nexport const typeSurfaceEvidenceContract = document => {\n\tconst entries = typeSurfaceEvidenceFiles(document);\n",
+          "previous": "\tconst entries = [...files].map(([path, sha256]) => ({ path, sha256 }))\n\t\t.toSorted((left, right) => left.path.localeCompare(right.path));\n",
+          "start": 1318
+        }
+      ],
+      "path": "src/adoption/type-surface-evidence-receipt.mjs",
+      "previousSha256": "dcf4e8e60d17d477a49eb37e7fe5d3160b3140bdd8009868d0cd637de75bf315"
+    },
+    {
+      "currentSha256": "e634a8de3ae196782004c602ec00c0cd46bb367bba39d3c2dcd2e1fb5f51fb7b",
+      "edits": [
+        {
+          "current": "\t, typeSurfaceEvidenceFiles\n",
+          "previous": "",
+          "start": 591
+        },
+        {
+          "current": "\tfor(const file of typeSurfaceEvidenceFiles(document))\n\t{\n\t\tconst filename = await realpath(path.join(canonicalRoot, file.path));\n\t\tconst relative = path.relative(canonicalRoot, filename);\n\t\trelativeFile(relative);\n\t\tassert.equal(digest(await readFile(filename)), file.sha256\n\t\t\t, `stale source evidence: ${file.path}`);\n\t}\n",
+          "previous": "\tfor(const evidence of document.evidence)\n\t\tfor(const file of evidence.files)\n\t\t{\n\t\t\tconst filename = await realpath(path.join(canonicalRoot, file.path));\n\t\t\tconst relative = path.relative(canonicalRoot, filename);\n\t\t\trelativeFile(relative);\n\t\t\tassert.equal(digest(await readFile(filename)), file.sha256, `${evidence.id}: stale source evidence ${file.path}`);\n\t\t}\n",
+          "start": 12800
+        }
+      ],
+      "path": "src/adoption/type-surface.mjs",
+      "previousSha256": "95b8e5915702a13ef2601e2fa225809a54d8a694566a5623b2011a73d701dec3"
+    },
+    {
+      "currentSha256": "7ce4d860516b22686a29e52d03ab5c37057fb7aea44ee7414445fea6f4f07d83",
+      "edits": [
+        {
+          "current": "\t, typeSurfaceEvidenceFiles, typeSurfaceEvidenceSourcePaths\n",
+          "previous": "\t, typeSurfaceEvidenceSourcePaths\n",
+          "start": 1048
+        },
+        {
+          "current": "\tconst citations = document.evidence.flatMap(evidence => evidence.files);\n\tconst uniqueFiles = typeSurfaceEvidenceFiles(document);\n\tassert.equal(uniqueFiles.length, receipt.evidence.count);\n\tassert.ok(citations.length > uniqueFiles.length);\n\tassert.throws(() => typeSurfaceEvidenceFiles({ evidence: [\n\t\t{ files: [{ path: \"same\", sha256: \"0\".repeat(64) }] }\n\t\t, { files: [{ path: \"same\", sha256: \"1\".repeat(64) }] }\n\t] }), /Conflicting evidence digest/u);\n",
+          "previous": "",
+          "start": 8856
+        }
+      ],
+      "path": "tests/helpers/core-contract-evidence-tests.mjs",
+      "previousSha256": "91183790ca0471bf15567d3770df70e0e99d1ad6d95fd0e9f7f6ddbf34ccaf3e"
+    }
+  ]
+}
