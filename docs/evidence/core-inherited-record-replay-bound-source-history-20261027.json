@@ -1,0 +1,99 @@
+{
+  "historyAdditions": [
+    {
+      "currentSha256": "5b9fd3a3a9b29e2f64fa6874aa5d940d9ec47fe9b0d3608ae69253e53253d0fa",
+      "path": "scripts/update-core-inherited-record-replay-bound-source-history.mjs"
+    },
+    {
+      "currentSha256": "3b266b35fb7146b14bee79f7e9c6046baade1d8192823e47601c932f51283089",
+      "path": "tests/helpers/core-inherited-record-replay-bound-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "a2e7a0ea741290554ac8424e82f5c9a9a06f63f7",
+  "integrationUpdates": [
+    {
+      "currentSha256": "217f003857f252ca92f71a39e6f68b86ea0bb8af168ad07abb9ea0455da1d617",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeCoreInheritedRecordReplayBoundSource\n\t, coreInheritedRecordReplayBoundHistoryAdditions\n\t, coreInheritedRecordReplayBoundHistoryPath\n\t, coreInheritedRecordReplayBoundImplementation\n\t, coreInheritedRecordReplayBoundImplementationPaths\n\t, coreInheritedRecordReplayBoundIntegrationPaths\n\t, coreInheritedRecordReplayBoundPredecessor\n\t, reverseCoreInheritedRecordReplayBoundUpdate\n} from \"./core-inherited-record-replay-bound-source-history.mjs\";\n",
+          "previous": "",
+          "start": 357
+        },
+        {
+          "current": "const readCoreInheritedRecordReplayBound = async () => JSON.parse(\n\tawait readFile(coreInheritedRecordReplayBoundHistoryPath, \"utf8\")\n);\n",
+          "previous": "",
+          "start": 13336
+        },
+        {
+          "current": "test(\"Core inherited-record replay bound records its exact range\", async () => {\n\tconst record = await readCoreInheritedRecordReplayBound();\n\tassert.equal(record.schemaVersion, 1);\n\tassert.equal(record.milestone\n\t\t, \"core-inherited-record-replay-bound-source-v1\");\n\tassert.equal(record.predecessorCommit\n\t\t, coreInheritedRecordReplayBoundPredecessor);\n\tassert.equal(record.implementationCommit\n\t\t, coreInheritedRecordReplayBoundImplementation);\n\tassert.deepEqual(record.updates.map(update => update.path)\n\t\t, coreInheritedRecordReplayBoundImplementationPaths);\n\tassert.deepEqual(record.historyAdditions.map(addition => addition.path)\n\t\t, coreInheritedRecordReplayBoundHistoryAdditions);\n\tassert.deepEqual(record.integrationUpdates.map(update => update.path)\n\t\t, coreInheritedRecordReplayBoundIntegrationPaths);\n\tassert.equal(git([\"rev-parse\"\n\t\t, `${coreInheritedRecordReplayBoundImplementation}^`]).trim()\n\t, coreInheritedRecordReplayBoundPredecessor);\n\tassert.deepEqual(git([\"diff\", \"--name-only\", \"--diff-filter=M\"\n\t\t, coreInheritedRecordReplayBoundPredecessor\n\t\t, coreInheritedRecordReplayBoundImplementation])\n\t\t.trim().split(\"\\n\").sort()\n\t, [...coreInheritedRecordReplayBoundImplementationPaths].sort());\n});\n\ntest(\"Core inherited-record replay bound reverses every transition\", async () => {\n\tconst record = await readCoreInheritedRecordReplayBound();\n\tfor(const update of [...record.updates, ...record.integrationUpdates])\n\t{\n\t\tconst integration = record.integrationUpdates.includes(update);\n\t\tconst current = integration\n\t\t\t? await sourceAtFinHistoryRecordSource(\n\t\t\t\tcoreInheritedRecordReplayBoundHistoryPath, update.path\n\t\t\t\t, update.currentSha256\n\t\t\t\t, beforeCoreInheritedRecordReplayBoundSource\n\t\t\t)\n\t\t\t: await sourceAtFinHistoryRecord(\n\t\t\t\tcoreInheritedRecordReplayBoundHistoryPath, update.path\n\t\t\t\t, beforeCoreInheritedRecordReplayBoundSource\n\t\t\t);\n\t\tconst base = integration\n\t\t\t? coreInheritedRecordReplayBoundImplementation\n\t\t\t: coreInheritedRecordReplayBoundPredecessor;\n\t\tconst previous = git([\"show\", `${base}:${update.path}`]);\n\t\tassert.equal(reverseCoreInheritedRecordReplayBoundUpdate(\n\t\t\tcurrent, update), previous, update.path);\n\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n\t\tassert.ok(finRefinementNormalizationPaths.includes(update.path));\n\t}\n\tfor(const addition of record.historyAdditions)\n\t\tassert.equal(sha256(await sourceAtFinHistoryRecordSource(\n\t\t\tcoreInheritedRecordReplayBoundHistoryPath\n\t\t\t, addition.path, addition.currentSha256\n\t\t)), addition.currentSha256, addition.path);\n});\n\ntest(\"Core inherited-record replay bound rejects altered transitions\", async () => {\n\tconst update = (await readCoreInheritedRecordReplayBound()).updates[0];\n\tconst current = await sourceAtFinHistoryRecord(\n\t\tcoreInheritedRecordReplayBoundHistoryPath, update.path\n\t\t, beforeCoreInheritedRecordReplayBoundSource\n\t);\n\tfor(const forged of [{ ...update, currentSha256: \"0\".repeat(64) }\n\t\t, { ...update, previousSha256: \"0\".repeat(64) }\n\t\t, { ...update, path: \"unrelated.mjs\" }\n\t\t, { ...update, edits: [] }\n\t\t, { ...update, edits: [...update.edits, update.edits[0]] }])\n\t\tassert.throws(() => reverseCoreInheritedRecordReplayBoundUpdate(\n\t\t\tcurrent, forged));\n\tassert.equal(beforeCoreInheritedRecordReplayBoundSource(\n\t\tupdate.path, current + \"unknown\"), current + \"unknown\");\n});\n\ntest(\"Core inherited-record replay-bound writer refuses another checkout\", async t => {\n\tconst root = await mkdtemp(join(\n\t\ttmpdir(), \"lean-core-inherited-replay-history-guard-\"));\n\tt.after(() => rm(root, { recursive: true }));\n\tconst result = spawnSync(process.execPath, [resolve(\n\t\t\"scripts/update-core-inherited-record-replay-bound-source-history.mjs\"\n\t)], { cwd: root, encoding: \"utf8\", timeout: 15_000 });\n\tassert.notEqual(result.status, 0);\n\tassert.equal(result.stdout, \"\");\n\tassert.deepEqual(await readdir(root), []);\n});\n\n",
+          "previous": "",
+          "start": 16934
+        }
+      ],
+      "path": "tests/helpers/core-historical-evidence-replay-source-history-tests.mjs",
+      "previousSha256": "d6a19515ddd29dd53ec2c8419b021b8248d020c6224b9f5d2af6b5c93d392f6e"
+    },
+    {
+      "currentSha256": "1f282cd7c5348cbb475e185cce7006bb5ef8f2611d0cdb2bc00a7f60dd897c0f",
+      "edits": [
+        {
+          "current": "import { beforeCoreInheritedRecordReplayBoundSource, coreInheritedRecordReplayBoundNormalizationPaths } from \"./core-inherited-record-replay-bound-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...coreInheritedRecordReplayBoundNormalizationPaths()\n\t, ...coreReplayIntegrationEndpointRepairNormalizationPaths()\n",
+          "previous": "\t...coreReplayIntegrationEndpointRepairNormalizationPaths()\n",
+          "start": 195151
+        },
+        {
+          "current": "\tlet stage = beforeCoreInheritedRecordReplayBoundSource(\n\t\tpath, text, expected\n\t);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCoreReplayIntegrationEndpointRepairSource(\n",
+          "previous": "\tlet stage = beforeCoreReplayIntegrationEndpointRepairSource(\n",
+          "start": 242618
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "a7906054646815b319621417be7fd3de275e66d722722d5ab1ed94d8d308082a"
+    }
+  ],
+  "milestone": "core-inherited-record-replay-bound-source-v1",
+  "predecessorCommit": "8c007be3048765ff0e646b50c7a3a2d95cb872f3",
+  "schemaVersion": 1,
+  "scope": "Read inherited checked-record promotion sources from their immutable record commit instead of reconstructing the complete Fin history hub. Preserve exact source digests, reversal checks, changed-source controls, additions, and the complete Core contract.",
+  "updates": [
+    {
+      "currentSha256": "d80463cae9fceb5a6d93f66d992fd57a7133429e1c33f6aa34ce67fa310dd4a6",
+      "edits": [
+        {
+          "current": "test(\"inherited-record history reads its immutable record endpoint\", async () => {\n\tconst source = await readFile(\n\t\t\"tests/helpers/inherited-checked-record-promotion-source-history-tests.mjs\"\n\t\t, \"utf8\"\n\t);\n\tassert.match(source\n\t\t, /import \\{ sourceAtFinHistoryRecordSource \\} from \"[.]\\/source-at-fin-history-milestone[.]mjs\";/u);\n\tassert.equal([...source.matchAll(/sourceAtFinHistoryRecordSource\\(/gu)].length, 2\n\t\t, \"Both updated and added sources must use the immutable record endpoint\");\n\tassert.doesNotMatch(source, /sourceAtFinHistoryMilestone/u\n\t\t, \"The inherited-record replay must not reconstruct the complete Fin history hub\");\n});\n\n",
+          "previous": "",
+          "start": 22247
+        }
+      ],
+      "path": "tests/helpers/core-quality-budget-tests.mjs",
+      "previousSha256": "0e589719a07393552bf226d3813c85f8af193e4d05578cbab4039a028c3799d0"
+    },
+    {
+      "currentSha256": "6677e6ff97c24e0a57f6116ec421334499ad142beb851498e0c4416464db5a76",
+      "edits": [
+        {
+          "current": "import { sourceAtFinHistoryRecordSource } from \"./source-at-fin-history-milestone.mjs\";\n",
+          "previous": "import { sourceAtFinHistoryMilestone } from \"./source-at-fin-history-milestone.mjs\";\n",
+          "start": 1038
+        },
+        {
+          "current": "\t\tconst current = await sourceAtFinHistoryRecordSource(\n\t\t\tinheritedCheckedRecordPromotionHistoryPath\n\t\t\t, update.path, update.currentSha256\n",
+          "previous": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256\n",
+          "start": 2190
+        },
+        {
+          "current": "\t\tassert.equal(sha256(await sourceAtFinHistoryRecordSource(\n\t\t\tinheritedCheckedRecordPromotionHistoryPath\n\t\t\t, addition.path, addition.currentSha256))\n",
+          "previous": "\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256))\n",
+          "start": 3883
+        }
+      ],
+      "path": "tests/helpers/inherited-checked-record-promotion-source-history-tests.mjs",
+      "previousSha256": "434d06429e17b39f2c1972de5e7aff1989a227e2c0abf99c88e86f8e265894db"
+    }
+  ]
+}
