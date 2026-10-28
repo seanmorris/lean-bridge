@@ -18,7 +18,7 @@ import { createComponentPrivateAbi } from "../../src/build/component-callable-ad
 import { callComponentScalar } from "../../src/release/component-runtime.mjs";
 import { compileComponentCopiedCall } from "../../src/release/component-copied-runtime.mjs";
 import { reviewedContractDifference } from "../../src/analyze/reviewed-source.mjs";
-import { reviewedFinWasmIr, reviewedFinWasmSelections } from "./reviewed-fin-wasm-fixture.mjs";
+import { reviewedFinWasmIr, reviewedFinWasmPreFieldIr, reviewedFinWasmSelections } from "./reviewed-fin-wasm-fixture.mjs";
 import { instrumentReviewedFinWasmIr, reviewedFinWasmSourceControl, reviewedFinWasmSourceControls } from "./reviewed-fin-wasm-source-entry.mjs";
 import { captureConsoleError, entryBegin, entryEnd, measureCorpus, sourceEntryMarker } from "../fixtures/reviewed-fin-wasm/javascript-entry.mjs";
 
@@ -33,11 +33,15 @@ export const reviewedFinWasmEntryModes = Object.freeze(["original", "probe"]);
  *
  * @param selection - Scalar-only or structural corpus.
  * @param mode - Mode: original or probe.
+ * @param options - Contract generation.
+ * @param options.preField - The contract that predates the Box field fixture, for retained historical reports only.
  */
-export const reviewedFinWasmEntryIr = (selection, mode) => {
+export const reviewedFinWasmEntryIr = (selection, mode, { preField = false } = {}) => {
 	assert.ok(reviewedFinWasmSelections.includes(selection), "a known selection");
 	assert.ok(reviewedFinWasmEntryModes.includes(mode), "an explicit measurement mode");
-	return mode === "original" ? reviewedFinWasmIr(selection) : instrumentReviewedFinWasmIr(selection);
+	assert.equal(typeof preField, "boolean", "an explicit contract generation");
+	if(mode === "probe") return instrumentReviewedFinWasmIr(selection, { preField });
+	return preField ? reviewedFinWasmPreFieldIr(selection) : reviewedFinWasmIr(selection);
 };
 const wide = 184467440737095516170n;
 // Scalar ABI 2 reports an adapter-side Fin failure as 6; copied ABI 6 reports it as 5.
@@ -76,8 +80,9 @@ const canonicalAbi = abi => ({ ...abi, exports: [...abi.exports].sort(byBindingI
  *
  * @param selection - Scalar-only or structural corpus.
  * @param mode - Mode: original or probe.
+ * @param options - Contract generation; see {@link reviewedFinWasmEntryIr}.
  */
-export const reviewedFinWasmEntrySymbols = (selection, mode) => canonicalAbi(createComponentPrivateAbi(reviewedFinWasmEntryIr(selection, mode))).exports
+export const reviewedFinWasmEntrySymbols = (selection, mode, options = undefined) => canonicalAbi(createComponentPrivateAbi(reviewedFinWasmEntryIr(selection, mode, options))).exports
 	.map(item => ({ name: item.bindingId.replace(/^lean:ReviewedFin\./u, ""), bindingId: item.bindingId, symbol: item.symbol }));
 
 /**

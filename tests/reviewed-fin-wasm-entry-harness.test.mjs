@@ -98,7 +98,9 @@ test("each mode's measured Node run is accounted in full through the producer's 
 		const { root } = await consumer(t, selection, mode);
 		const report = await runReviewedFinWasmEntryNode(root, "index.mjs");
 		const accounted = accountReviewedFinWasmEntryReport(await expectReviewedFinWasmEntry(selection, mode), report);
-		assert.deepEqual([accounted.mode, accounted.source, accounted.columns.length], [mode, mode === "probe", { scalar: 6, structural: 9 }[selection] + (mode === "probe" ? 1 : 0)]);
+		assert.deepEqual([accounted.mode, accounted.source, accounted.columns.length]
+			, [mode, mode === "probe"
+				, reviewedFinWasmEntrySymbols(selection, mode).length]);
 		assert.equal(Object.hasOwn(report.entry, "lines"), mode === "probe");
 	}
 });
@@ -226,9 +228,9 @@ test("retained transcripts alone recount every run, and an altered or missing tr
 	const stdout = await runReviewedFinWasmEntryNodeOutput(root, "index.mjs"), digest = sha256(stdout);
 	const accounted = accountReviewedFinWasmEntryReport(expected, JSON.parse(stdout));
 	// A Node-only report: the strict TypeScript context's run here is the same consumer with its declared prelude.
-	await writeFile(join(root, "typed.mjs"), `import * as api from "reviewed-fin";\nvoid api.mirror(9n);\nvoid api.label("prefix", 0n, "suffix");\nvoid api.rows([[0n, 9n]]);\nvoid api.nested([{ tag: "some", value: [2n, { error: 1n }] }]);\n${reviewedFinWasmEntryNodeIndex}`);
+	await writeFile(join(root, "typed.mjs"), `import * as api from "reviewed-fin";\nvoid api.mirror(9n);\nvoid api.label("prefix", 0n, "suffix");\nvoid api.rows([[0n, 9n]]);\nvoid api.nested([{ tag: "some", value: [2n, { error: 1n }] }]);\nvoid api.box({ digit: 9n, label: "nine" });\n${reviewedFinWasmEntryNodeIndex}`);
 	const typedOutput = await runReviewedFinWasmEntryNodeOutput(root, "typed.mjs"), typedDigest = sha256(typedOutput);
-	const prelude = ["mirror", "label", "rows", "nested"];
+	const prelude = ["mirror", "label", "rows", "nested", "box"];
 	const typed = accountReviewedFinWasmEntryReport(expected, JSON.parse(typedOutput), prelude);
 	const contexts = [{ profile: "node-javascript", transcriptSha256: digest, ...accounted }, { profile: "node-typescript", transcriptSha256: typedDigest, ...typed }];
 	const report = {

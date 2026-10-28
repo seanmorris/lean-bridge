@@ -1,0 +1,71 @@
+{
+  "additions": [
+    {
+      "currentSha256": "90a7341d390acdc28fa03118347ccf3ba29a72d097d1e8fa88cebccd619725ae",
+      "path": "scripts/update-core-owned-callback-pic-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "3e0f878e36393a31b5aaa0c99062040932a7db215ab90942c2def480fb556ef0",
+      "path": "tests/helpers/core-owned-callback-pic-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "c92d53ebff903cf9bf349385dc67bf85b6ecc750d02ae1d4d7ec645246681f8a",
+      "path": "tests/helpers/core-owned-callback-pic-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "6a81789b2c7e24554f4ea5dee805385f29d0b3b9",
+  "integrationUpdates": [
+    {
+      "currentSha256": "84438888473c6d4e0bde624d6132dff3cf60823239bae9f570cdec33bca7ecba",
+      "edits": [
+        {
+          "current": "import \"./helpers/core-owned-callback-pic-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 170
+        }
+      ],
+      "path": "tests/checked-javascript-partition-10.test.mjs",
+      "previousSha256": "345766c0118f81c2b3d394e1dcab96eab19cce1034e0784dcbca6b876e51847a"
+    },
+    {
+      "currentSha256": "dcf776ff9544baef3c5cbb57fc6863ea3c058f036b05c525e62cbb245e3cde34",
+      "edits": [
+        {
+          "current": "import { beforeCoreOwnedCallbackPicRepairSource, coreOwnedCallbackPicRepairNormalizationPaths } from \"./core-owned-callback-pic-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...coreOwnedCallbackPicRepairNormalizationPaths\n\t, ...corePreBoxRecountRepairNormalizationPaths\n",
+          "previous": "\t...corePreBoxRecountRepairNormalizationPaths\n",
+          "start": 209533
+        },
+        {
+          "current": "\tlet stage = beforeCoreOwnedCallbackPicRepairSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCorePreBoxRecountRepairSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeCorePreBoxRecountRepairSource(path, text, expected);\n",
+          "start": 261653
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "f4cb6fb1a0b96ad1f1e1e3dfe4cb5ad2a5ed7b02e254231685e4e55dc85a3495"
+    }
+  ],
+  "milestone": "core-owned-callback-pic-repair-source-v1",
+  "predecessorCommit": "54380e2cff2d45338887a0a6d1aded0698e04f50",
+  "schemaVersion": 1,
+  "scope": "Compile generated owned-host callback objects as position-independent code before any shared native consumer links them. Preserve every sibling carrier compile, generated adapter, public ABI and support claim byte-for-byte; record the isolated transition newest-first. Hosted Core remains the terminal acceptance gate.",
+  "updates": [
+    {
+      "currentSha256": "98f55f7275a397fc1e25218a3f004bee011cf0bc9045c89e513197cf37fe2878",
+      "edits": [
+        {
+          "current": "\t\tawait run(\"cc\", [\"-O2\", \"-g\", \"-fPIC\"\n\t\t\t, \"-I\", join(runtime.root, \"include\"), \"-c\", \"Callbacks.c\"\n\t\t\t, \"-o\", \"Callbacks.o\"]);\n",
+          "previous": "\t\tawait run(\"cc\", [\"-O2\", \"-g\", \"-I\", join(runtime.root, \"include\"), \"-c\", \"Callbacks.c\", \"-o\", \"Callbacks.o\"]);\n",
+          "start": 7149
+        }
+      ],
+      "path": "tests/helpers/owned-aggregate-native.mjs",
+      "previousSha256": "71f8b9322c5f6a278d16d6a136a00cd9957f7722816a8a07713e8abd864678e8"
+    }
+  ]
+}

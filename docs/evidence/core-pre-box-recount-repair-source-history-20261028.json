@@ -1,0 +1,202 @@
+{
+  "additions": [
+    {
+      "currentSha256": "558f80c6cfd169dba6dff64bb78edc9c53b7b0f95b191b35625eb238c4bb211a",
+      "path": "scripts/update-core-pre-box-recount-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "01ab031569cabb10a4f4078858593f3232a1e26225991dc6013673a39fac5700",
+      "path": "tests/helpers/core-pre-box-recount-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "73db81e7e3e08a9f7299065471d19e749d051a8228ff011cf157b86cefd4d471",
+      "path": "tests/helpers/core-pre-box-recount-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "ced77493b5582a972612bb0db590ebcd1be54976",
+  "integrationUpdates": [
+    {
+      "currentSha256": "345766c0118f81c2b3d394e1dcab96eab19cce1034e0784dcbca6b876e51847a",
+      "edits": [
+        {
+          "current": "import \"./helpers/core-pre-box-recount-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 170
+        }
+      ],
+      "path": "tests/checked-javascript-partition-10.test.mjs",
+      "previousSha256": "254bb5bb2e1ec58db897f13e2d6b53b5b75e63b511ecffce28e6bf8b605379f7"
+    },
+    {
+      "currentSha256": "f4cb6fb1a0b96ad1f1e1e3dfe4cb5ad2a5ed7b02e254231685e4e55dc85a3495",
+      "edits": [
+        {
+          "current": "import { beforeCorePreBoxRecountRepairSource, corePreBoxRecountRepairNormalizationPaths } from \"./core-pre-box-recount-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...corePreBoxRecountRepairNormalizationPaths\n\t, ...coreReviewedFinBoxHarnessRepairNormalizationPaths\n",
+          "previous": "\t...coreReviewedFinBoxHarnessRepairNormalizationPaths\n",
+          "start": 209377
+        },
+        {
+          "current": "\tlet stage = beforeCorePreBoxRecountRepairSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCoreReviewedFinBoxHarnessRepairSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeCoreReviewedFinBoxHarnessRepairSource(path, text, expected);\n",
+          "start": 261446
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "3392d02880d632fbc75d6d96245c2cb7924d7f6be42ccb363ec00c2865f5803e"
+    }
+  ],
+  "milestone": "core-pre-box-recount-repair-source-v1",
+  "predecessorCommit": "500e583e1b9fe71bbd6aefebda889c8a4386752f",
+  "schemaVersion": 1,
+  "scope": "Recount only the immutable 7eae444 browser reports against their authenticated pre-field IR, TypeScript source, prelude and symbol columns. Keep every live report and the newer hosted archive on the current Box path, refuse a pre-field selector on current expectations, and record the complete transition newest-first. Hosted Core remains the terminal acceptance gate.",
+  "updates": [
+    {
+      "currentSha256": "e76c344b164cd03b6d1ffbe40901cc07a26c3f1fe89baa314cadcdceb98984f9",
+      "edits": [
+        {
+          "current": "import { reviewedFinWasmPreFieldTypeScript, reviewedFinWasmTypeScript } from \"./reviewed-fin-wasm-typescript.mjs\";\n",
+          "previous": "import { reviewedFinWasmTypeScript } from \"./reviewed-fin-wasm-typescript.mjs\";\n",
+          "start": 1730
+        },
+        {
+          "current": "import { accountReviewedFinWasmEntry, expectReviewedFinWasmEntry, reviewedFinWasmEntryIr, reviewedFinWasmEntryMarker, reviewedFinWasmEntrySelection, reviewedFinWasmEntrySymbols } from \"./reviewed-fin-wasm-entry.mjs\";\n",
+          "previous": "import { accountReviewedFinWasmEntry, expectReviewedFinWasmEntry, reviewedFinWasmEntryIr, reviewedFinWasmEntryMarker, reviewedFinWasmEntrySelection } from \"./reviewed-fin-wasm-entry.mjs\";\n",
+          "start": 1939
+        },
+        {
+          "current": " * @param coverage.preField - A retained report produced before the Box field fixture: its pre-field expectation is\n * accounted on the pre-field contract's columns against the pre-field TypeScript consumer and prelude. Current\n * reports never take this path.\n",
+          "previous": "",
+          "start": 19179
+        },
+        {
+          "current": "export const recountReviewedFinWasmEntryReport = (report, expected, { engines, preField = false }) => {\n",
+          "previous": "export const recountReviewedFinWasmEntryReport = (report, expected, { engines }) => {\n",
+          "start": 19444
+        },
+        {
+          "current": "\tassert.equal(typeof preField, \"boolean\", \"an explicit contract generation\");\n",
+          "previous": "",
+          "start": 19605
+        },
+        {
+          "current": "\tif(preField) assert.ok(expected.calls.every(call => call[1] !== \"box\"), \"a pre-field recount accepts only a pre-field expectation\");\n\tconst source = (preField ? reviewedFinWasmPreFieldTypeScript : reviewedFinWasmTypeScript)(expected.selection);\n\tconst columns = preField\n\t\t? reviewedFinWasmEntrySymbols(expected.selection, expected.mode, { preField }).map(item => item.name)\n\t\t: undefined;\n",
+          "previous": "\tconst source = reviewedFinWasmTypeScript(expected.selection);\n",
+          "start": 19809
+        },
+        {
+          "current": "\t\t\tassert.deepEqual(accountReviewedFinWasmEntryReport(expected, browser ? parsed.results : parsed, prelude, columns), { mode: observation.mode, calls: observation.calls, columns: observation.columns, source: observation.source, prelude: observation.prelude }, `${context.profile} recount`);\n",
+          "previous": "\t\t\tassert.deepEqual(accountReviewedFinWasmEntryReport(expected, browser ? parsed.results : parsed, prelude), { mode: observation.mode, calls: observation.calls, columns: observation.columns, source: observation.source, prelude: observation.prelude }, `${context.profile} recount`);\n",
+          "start": 21809
+        }
+      ],
+      "path": "tests/helpers/reviewed-fin-wasm-entry-producer.mjs",
+      "previousSha256": "4eb459412ab661c928bcd0e515bd50400128bd8f87e1be7881c64385f81292e2"
+    },
+    {
+      "currentSha256": "f226abfa8d280e2ff402f53894180ed9010ac6264c8066069ef1a9032e159928",
+      "edits": [
+        {
+          "current": "import { reviewedFinWasmIr, reviewedFinWasmPreFieldIr, reviewedFinWasmSelections } from \"./reviewed-fin-wasm-fixture.mjs\";\n",
+          "previous": "import { reviewedFinWasmIr, reviewedFinWasmSelections } from \"./reviewed-fin-wasm-fixture.mjs\";\n",
+          "start": 1305
+        },
+        {
+          "current": " * @param options - Contract generation.\n * @param options.preField - The contract that predates the Box field fixture, for retained historical reports only.\n",
+          "previous": "",
+          "start": 2253
+        },
+        {
+          "current": "export const reviewedFinWasmEntryIr = (selection, mode, { preField = false } = {}) => {\n",
+          "previous": "export const reviewedFinWasmEntryIr = (selection, mode) => {\n",
+          "start": 2415
+        },
+        {
+          "current": "\tassert.equal(typeof preField, \"boolean\", \"an explicit contract generation\");\n\tif(mode === \"probe\") return instrumentReviewedFinWasmIr(selection, { preField });\n\treturn preField ? reviewedFinWasmPreFieldIr(selection) : reviewedFinWasmIr(selection);\n",
+          "previous": "\treturn mode === \"original\" ? reviewedFinWasmIr(selection) : instrumentReviewedFinWasmIr(selection);\n",
+          "start": 2669
+        },
+        {
+          "current": " * @param options - Contract generation; see {@link reviewedFinWasmEntryIr}.\n",
+          "previous": "",
+          "start": 5440
+        },
+        {
+          "current": "export const reviewedFinWasmEntrySymbols = (selection, mode, options = undefined) => canonicalAbi(createComponentPrivateAbi(reviewedFinWasmEntryIr(selection, mode, options))).exports\n",
+          "previous": "export const reviewedFinWasmEntrySymbols = (selection, mode) => canonicalAbi(createComponentPrivateAbi(reviewedFinWasmEntryIr(selection, mode))).exports\n",
+          "start": 5521
+        }
+      ],
+      "path": "tests/helpers/reviewed-fin-wasm-entry.mjs",
+      "previousSha256": "3dd260ee4446f4800a8fe6777fa68c3fbcfbe3de40bb31be35ecc83d3e698305"
+    },
+    {
+      "currentSha256": "09d5b2c035f2b02305e469636acaffe4912e55f1623e90412a6aff0cb5be1634",
+      "edits": [
+        {
+          "current": "import { reviewedFinWasmIr, reviewedFinWasmPreFieldIr, reviewedFinWasmSelections } from \"./reviewed-fin-wasm-fixture.mjs\";\n",
+          "previous": "import { reviewedFinWasmIr, reviewedFinWasmSelections } from \"./reviewed-fin-wasm-fixture.mjs\";\n",
+          "start": 461
+        },
+        {
+          "current": " * @param options - Contract generation.\n * @param options.preField - The contract that predates the Box field fixture, for retained historical reports only.\n",
+          "previous": "",
+          "start": 2791
+        },
+        {
+          "current": "export const instrumentReviewedFinWasmIr = (selection, { preField = false } = {}) => {\n",
+          "previous": "export const instrumentReviewedFinWasmIr = selection => {\n",
+          "start": 2953
+        },
+        {
+          "current": "\tassert.equal(typeof preField, \"boolean\", \"an explicit contract generation\");\n\tconst reviewed = preField ? reviewedFinWasmPreFieldIr : reviewedFinWasmIr;\n\tconst document = reviewed(selection);\n",
+          "previous": "\tconst document = reviewedFinWasmIr(selection);\n",
+          "start": 3099
+        },
+        {
+          "current": "\tassert.deepEqual(instrumented.declarations.slice(0, -1), reviewed(selection).declarations, \"reviewed refinements are unchanged\");\n",
+          "previous": "\tassert.deepEqual(instrumented.declarations.slice(0, -1), reviewedFinWasmIr(selection).declarations, \"reviewed refinements are unchanged\");\n",
+          "start": 3849
+        }
+      ],
+      "path": "tests/helpers/reviewed-fin-wasm-source-entry.mjs",
+      "previousSha256": "0b1d7a9f2715a87be81b00d2cd088752ffd3af6619adb722c96ac9b48423db30"
+    },
+    {
+      "currentSha256": "5d0f40e98eb1bbaf7d02c317b4e64e283355c878aebff023280f36dee1f7a4cc",
+      "edits": [
+        {
+          "current": "import { sha256 } from \"../src/capsule/node.mjs\";\n",
+          "previous": "",
+          "start": 377
+        },
+        {
+          "current": "import { expectReviewedFinWasmEntry, reviewedFinWasmEntrySymbols } from \"./helpers/reviewed-fin-wasm-entry.mjs\";\n",
+          "previous": "import { expectReviewedFinWasmEntry } from \"./helpers/reviewed-fin-wasm-entry.mjs\";\n",
+          "start": 527
+        },
+        {
+          "current": "import { reviewedFinWasmPreFieldTypeScript, reviewedFinWasmTypeScript } from \"./helpers/reviewed-fin-wasm-typescript.mjs\";\nimport { wasmEntryDirectory, wasmEntryEngines, wasmEntryFrozen, wasmEntryRuns } from \"./helpers/wasm-entry-evidence.mjs\";\n",
+          "previous": "import { wasmEntryDirectory } from \"./helpers/wasm-entry-evidence.mjs\";\n",
+          "start": 839
+        },
+        {
+          "current": "// The retained reports are 7eae444's, which predate the Box field fixture: each is recounted against that revision's\n// frozen expectation, authenticated by its pinned digest, on the pre-field contract. Current runs never use it.\nconst frozenExpectation = async (mode, selection) => {\n\tconst path = `expectations/${mode}-${selection}.json.gz`;\n\tconst text = gunzipSync(await readFile(`${wasmEntryDirectory}/${path}`));\n\tassert.equal(sha256(text), wasmEntryFrozen[path].sha256, path);\n\treturn JSON.parse(text);\n};\nconst recount = async (report, mode, selection, engines) => recountReviewedFinWasmEntryReport(report, await frozenExpectation(mode, selection), { engines: [...engines], preField: true });\n",
+          "previous": "const recount = async (report, mode, selection, engines) => recountReviewedFinWasmEntryReport(report, await expectReviewedFinWasmEntry(selection, mode), { engines: [...engines] });\n",
+          "start": 6348
+        },
+        {
+          "current": "\ntest(\"pre-Box reports recount only on the pre-field contract, which never weakens a current recount\", async () => {\n\tconst report = (await retained(\"original\"))[\"original-ordinary-structural\"];\n\tconst frozen = await frozenExpectation(\"original\", \"structural\");\n\tconst current = await expectReviewedFinWasmEntry(\"structural\", \"original\");\n\tconst engines = [...wasmEntryEngines];\n\tassert.equal(recountReviewedFinWasmEntryReport(report, frozen, { engines, preField: true }), wasmEntryRuns(engines));\n\t// Only the current contract and consumer carry the Box field; the pre-field ones are 7eae444's exactly.\n\tassert.deepEqual([\"original\", \"probe\"].map(mode => reviewedFinWasmEntrySymbols(\"structural\", mode).some(item => item.name === \"box\")), [true, true]);\n\tassert.deepEqual([\"original\", \"probe\"].map(mode => reviewedFinWasmEntrySymbols(\"structural\", mode, { preField: true }).some(item => item.name === \"box\")), [false, false]);\n\tassert.equal(sha256(reviewedFinWasmPreFieldTypeScript(\"structural\")), wasmEntryFrozen[\"typescript/structural.ts.txt\"].sha256);\n\tassert.notEqual(sha256(reviewedFinWasmTypeScript(\"structural\")), wasmEntryFrozen[\"typescript/structural.ts.txt\"].sha256);\n\tconst prelude = value => ({ ...report, contexts: report.contexts.map(context => (context.profile === \"node-typescript\" ? { ...context, prelude: value } : context)) });\n\tfor(const [label, refused] of [\n\t\t[\"the current path refuses a pre-Box report\", () => recountReviewedFinWasmEntryReport(report, frozen, { engines })]\n\t\t, [\"the current expectation refuses a pre-Box report\", () => recountReviewedFinWasmEntryReport(report, current, { engines })]\n\t\t, [\"the pre-field path refuses a current expectation\", () => recountReviewedFinWasmEntryReport({ ...report, calls: current.calls.length }, current, { engines, preField: true })]\n\t\t, [\"the pre-field path refuses the current TypeScript consumer\", () => recountReviewedFinWasmEntryReport({ ...report, typescriptSha256: sha256(reviewedFinWasmTypeScript(\"structural\")) }, frozen, { engines, preField: true })]\n\t\t, [\"the pre-field path refuses the current prelude\", () => recountReviewedFinWasmEntryReport(prelude([...report.contexts[1].prelude, \"box\"]), frozen, { engines, preField: true })]\n\t\t, [\"the pre-field path refuses a narrowed engine set\", () => recountReviewedFinWasmEntryReport(report, frozen, { engines: engines.slice(0, 2), preField: true })]\n\t\t, [\"the selector is an explicit boolean\", () => recountReviewedFinWasmEntryReport(report, frozen, { engines, preField: \"true\" })]\n\t]) assert.throws(refused, assert.AssertionError, label);\n});\n",
+          "previous": "",
+          "start": 9768
+        }
+      ],
+      "path": "tests/reviewed-fin-wasm-entry-ci.test.mjs",
+      "previousSha256": "cc765f1d5c045d7d838d59d81cf90d84614652ef3250c6bec9176ced38efea09"
+    }
+  ]
+}

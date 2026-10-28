@@ -384,14 +384,29 @@ test("historical type-surface Git reads are exact, bounded and isolated from cal
 		["package.json"], "HEAD"));
 });
 
+// The 153-import legacy inventory is the partition split's own; later history layers only append.
+const checkedJavaScriptPartitionMilestone = "ee99d0b30784e0402d59eaa7d326865d98d59051";
+const checkedJavaScriptImports = source => [...source.matchAll(
+	checkedJavaScriptImportPattern)].map(match => match[1]);
+const assertCheckedJavaScriptSchedule = (legacy, live) => {
+	assert.equal(new Set(live).size, live.length
+		, "A checked-JavaScript helper must be scheduled exactly once");
+	assert.deepEqual(legacy.filter(path => !live.includes(path)), []
+		, "Every legacy helper-test import must stay scheduled");
+};
+
 test("checked-JavaScript partitions preserve the exact legacy test inventory", async () => {
-	const imports = [];
+	const imports = [], live = [];
 	for(const path of checkedJavaScriptPartitionPaths)
 	{
-		const source = await readFile(path, "utf8");
-		imports.push(...[...source.matchAll(checkedJavaScriptImportPattern)]
-			.map(match => match[1]));
+		imports.push(...checkedJavaScriptImports(execFileSync("git", ["show"
+			, `${checkedJavaScriptPartitionMilestone}:${path}`], { encoding: "utf8" })));
+		live.push(...checkedJavaScriptImports(await readFile(path, "utf8")));
 	}
+	assertCheckedJavaScriptSchedule(imports, live);
+	for(const changed of [live.filter(path => path !== imports[0])
+		, [...live, imports.at(-1)]])
+		assert.throws(() => assertCheckedJavaScriptSchedule(imports, changed));
 	assert.equal(imports.length, 153);
 	assert.equal(new Set(imports).size, imports.length
 		, "A checked-JavaScript helper must be scheduled exactly once");

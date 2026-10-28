@@ -1,0 +1,397 @@
+{
+  "additions": [
+    {
+      "currentSha256": "a8f6392544967bbda247276ff01dd139d2485eb0643150500d4e2611f4ec050b",
+      "path": "scripts/update-core-shard-five-eight-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "417bb0cd8b97d6bc3c7091bc19ea4d3c5c6cc19740a68a037a8243c7ccad83f3",
+      "path": "tests/helpers/core-shard-five-eight-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "e8dcc403d667e0d47379ad437dbd2146c7b0522c107a4f10215186e0f2c17fb3",
+      "path": "tests/helpers/core-shard-five-eight-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "2be00a8568c794cbaa605a0436f25644cac4d8de",
+  "integrationUpdates": [
+    {
+      "currentSha256": "e8d28be7ee17dd52adfbec02142c10f0727b99ba1e7e575d798d1db809af8cd5",
+      "edits": [
+        {
+          "current": "import \"./helpers/core-shard-five-eight-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 170
+        }
+      ],
+      "path": "tests/checked-javascript-partition-10.test.mjs",
+      "previousSha256": "df716f8e243070abcb26cb649277ae60df7547644fd5094b8c134f4672685630"
+    },
+    {
+      "currentSha256": "b675861a6af9972a238d8197a49d3e008286bd4dd5138c8f64f6a40d3a5b77dd",
+      "edits": [
+        {
+          "current": "import { beforeCoreShardFiveEightRepairSource, coreShardFiveEightRepairNormalizationPaths } from \"./core-shard-five-eight-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...coreShardFiveEightRepairNormalizationPaths\n\t, ...witCallbackFrozenClosureChangedPaths\n",
+          "previous": "\t...witCallbackFrozenClosureChangedPaths\n",
+          "start": 208610
+        },
+        {
+          "current": "\tlet stage = beforeCoreShardFiveEightRepairSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeWitCallbackFrozenClosureSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeWitCallbackFrozenClosureSource(path, text, expected);\n",
+          "start": 260428
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "ba5d110b28ca764cb9acee4e066401040f6bf125f61e16ee7303dc155d60c6a0"
+    }
+  ],
+  "milestone": "core-shard-five-eight-repair-source-v1",
+  "predecessorCommit": "f311acff4ab598b6332155a209a10ba8620719ee",
+  "schemaVersion": 1,
+  "scope": "Stop four retained-history checks at their authenticated predecessor digests; teach sparse Core selection about the two dynamically named evidence families; replay the Ruby ownership packages with their exact producer generator closure; and align copied-value and checked-Subtype expectations with the already authenticated generic, owned and hosted-signature promotions. Refresh exactly 37 current-source pins without changing support cells or evidence claims. Register the complete transition newest-first. Hosted Core remains the terminal acceptance gate.",
+  "updates": [
+    {
+      "currentSha256": "223e7da59e70142084d0a2d0de299af4fc2639b30846202e7ff9f61eafb0b048",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"5280d5665666663779a614d2b59a03e09f3855aefb50896da5ad1cf18ebb941a\"\n",
+          "previous": "          \"sha256\": \"2c9b116351acc4d3b266d43ed91004e985a511a71354bb8e343f3539690cc7ca\"\n",
+          "start": 51025
+        },
+        {
+          "current": "          \"sha256\": \"5280d5665666663779a614d2b59a03e09f3855aefb50896da5ad1cf18ebb941a\"\n",
+          "previous": "          \"sha256\": \"2c9b116351acc4d3b266d43ed91004e985a511a71354bb8e343f3539690cc7ca\"\n",
+          "start": 707849
+        },
+        {
+          "current": "          \"sha256\": \"5280d5665666663779a614d2b59a03e09f3855aefb50896da5ad1cf18ebb941a\"\n",
+          "previous": "          \"sha256\": \"2c9b116351acc4d3b266d43ed91004e985a511a71354bb8e343f3539690cc7ca\"\n",
+          "start": 721880
+        },
+        {
+          "current": "          \"sha256\": \"5280d5665666663779a614d2b59a03e09f3855aefb50896da5ad1cf18ebb941a\"\n",
+          "previous": "          \"sha256\": \"2c9b116351acc4d3b266d43ed91004e985a511a71354bb8e343f3539690cc7ca\"\n",
+          "start": 733255
+        },
+        {
+          "current": "          \"sha256\": \"5280d5665666663779a614d2b59a03e09f3855aefb50896da5ad1cf18ebb941a\"\n",
+          "previous": "          \"sha256\": \"2c9b116351acc4d3b266d43ed91004e985a511a71354bb8e343f3539690cc7ca\"\n",
+          "start": 747475
+        },
+        {
+          "current": "          \"sha256\": \"5280d5665666663779a614d2b59a03e09f3855aefb50896da5ad1cf18ebb941a\"\n",
+          "previous": "          \"sha256\": \"2c9b116351acc4d3b266d43ed91004e985a511a71354bb8e343f3539690cc7ca\"\n",
+          "start": 758929
+        },
+        {
+          "current": "          \"sha256\": \"5280d5665666663779a614d2b59a03e09f3855aefb50896da5ad1cf18ebb941a\"\n",
+          "previous": "          \"sha256\": \"2c9b116351acc4d3b266d43ed91004e985a511a71354bb8e343f3539690cc7ca\"\n",
+          "start": 771000
+        },
+        {
+          "current": "          \"sha256\": \"5280d5665666663779a614d2b59a03e09f3855aefb50896da5ad1cf18ebb941a\"\n",
+          "previous": "          \"sha256\": \"2c9b116351acc4d3b266d43ed91004e985a511a71354bb8e343f3539690cc7ca\"\n",
+          "start": 782288
+        },
+        {
+          "current": "          \"sha256\": \"5280d5665666663779a614d2b59a03e09f3855aefb50896da5ad1cf18ebb941a\"\n",
+          "previous": "          \"sha256\": \"2c9b116351acc4d3b266d43ed91004e985a511a71354bb8e343f3539690cc7ca\"\n",
+          "start": 790871
+        },
+        {
+          "current": "          \"sha256\": \"5280d5665666663779a614d2b59a03e09f3855aefb50896da5ad1cf18ebb941a\"\n",
+          "previous": "          \"sha256\": \"2c9b116351acc4d3b266d43ed91004e985a511a71354bb8e343f3539690cc7ca\"\n",
+          "start": 797329
+        },
+        {
+          "current": "          \"sha256\": \"5280d5665666663779a614d2b59a03e09f3855aefb50896da5ad1cf18ebb941a\"\n",
+          "previous": "          \"sha256\": \"2c9b116351acc4d3b266d43ed91004e985a511a71354bb8e343f3539690cc7ca\"\n",
+          "start": 805715
+        },
+        {
+          "current": "          \"sha256\": \"5280d5665666663779a614d2b59a03e09f3855aefb50896da5ad1cf18ebb941a\"\n",
+          "previous": "          \"sha256\": \"2c9b116351acc4d3b266d43ed91004e985a511a71354bb8e343f3539690cc7ca\"\n",
+          "start": 813692
+        },
+        {
+          "current": "          \"sha256\": \"5280d5665666663779a614d2b59a03e09f3855aefb50896da5ad1cf18ebb941a\"\n",
+          "previous": "          \"sha256\": \"2c9b116351acc4d3b266d43ed91004e985a511a71354bb8e343f3539690cc7ca\"\n",
+          "start": 836622
+        },
+        {
+          "current": "          \"sha256\": \"5280d5665666663779a614d2b59a03e09f3855aefb50896da5ad1cf18ebb941a\"\n",
+          "previous": "          \"sha256\": \"2c9b116351acc4d3b266d43ed91004e985a511a71354bb8e343f3539690cc7ca\"\n",
+          "start": 1078215
+        },
+        {
+          "current": "          \"sha256\": \"5280d5665666663779a614d2b59a03e09f3855aefb50896da5ad1cf18ebb941a\"\n",
+          "previous": "          \"sha256\": \"2c9b116351acc4d3b266d43ed91004e985a511a71354bb8e343f3539690cc7ca\"\n",
+          "start": 1084913
+        },
+        {
+          "current": "          \"sha256\": \"5280d5665666663779a614d2b59a03e09f3855aefb50896da5ad1cf18ebb941a\"\n",
+          "previous": "          \"sha256\": \"2c9b116351acc4d3b266d43ed91004e985a511a71354bb8e343f3539690cc7ca\"\n",
+          "start": 1091916
+        },
+        {
+          "current": "          \"sha256\": \"5280d5665666663779a614d2b59a03e09f3855aefb50896da5ad1cf18ebb941a\"\n",
+          "previous": "          \"sha256\": \"2c9b116351acc4d3b266d43ed91004e985a511a71354bb8e343f3539690cc7ca\"\n",
+          "start": 1099422
+        },
+        {
+          "current": "          \"sha256\": \"5280d5665666663779a614d2b59a03e09f3855aefb50896da5ad1cf18ebb941a\"\n",
+          "previous": "          \"sha256\": \"2c9b116351acc4d3b266d43ed91004e985a511a71354bb8e343f3539690cc7ca\"\n",
+          "start": 1106376
+        },
+        {
+          "current": "          \"sha256\": \"5280d5665666663779a614d2b59a03e09f3855aefb50896da5ad1cf18ebb941a\"\n",
+          "previous": "          \"sha256\": \"2c9b116351acc4d3b266d43ed91004e985a511a71354bb8e343f3539690cc7ca\"\n",
+          "start": 1114010
+        },
+        {
+          "current": "          \"sha256\": \"5280d5665666663779a614d2b59a03e09f3855aefb50896da5ad1cf18ebb941a\"\n",
+          "previous": "          \"sha256\": \"2c9b116351acc4d3b266d43ed91004e985a511a71354bb8e343f3539690cc7ca\"\n",
+          "start": 1123248
+        },
+        {
+          "current": "          \"sha256\": \"5280d5665666663779a614d2b59a03e09f3855aefb50896da5ad1cf18ebb941a\"\n",
+          "previous": "          \"sha256\": \"2c9b116351acc4d3b266d43ed91004e985a511a71354bb8e343f3539690cc7ca\"\n",
+          "start": 1132375
+        },
+        {
+          "current": "          \"sha256\": \"5280d5665666663779a614d2b59a03e09f3855aefb50896da5ad1cf18ebb941a\"\n",
+          "previous": "          \"sha256\": \"2c9b116351acc4d3b266d43ed91004e985a511a71354bb8e343f3539690cc7ca\"\n",
+          "start": 1147310
+        },
+        {
+          "current": "          \"sha256\": \"5280d5665666663779a614d2b59a03e09f3855aefb50896da5ad1cf18ebb941a\"\n",
+          "previous": "          \"sha256\": \"2c9b116351acc4d3b266d43ed91004e985a511a71354bb8e343f3539690cc7ca\"\n",
+          "start": 1155357
+        },
+        {
+          "current": "          \"sha256\": \"5280d5665666663779a614d2b59a03e09f3855aefb50896da5ad1cf18ebb941a\"\n",
+          "previous": "          \"sha256\": \"2c9b116351acc4d3b266d43ed91004e985a511a71354bb8e343f3539690cc7ca\"\n",
+          "start": 1164329
+        },
+        {
+          "current": "          \"sha256\": \"5280d5665666663779a614d2b59a03e09f3855aefb50896da5ad1cf18ebb941a\"\n",
+          "previous": "          \"sha256\": \"2c9b116351acc4d3b266d43ed91004e985a511a71354bb8e343f3539690cc7ca\"\n",
+          "start": 1173720
+        },
+        {
+          "current": "          \"sha256\": \"5280d5665666663779a614d2b59a03e09f3855aefb50896da5ad1cf18ebb941a\"\n",
+          "previous": "          \"sha256\": \"2c9b116351acc4d3b266d43ed91004e985a511a71354bb8e343f3539690cc7ca\"\n",
+          "start": 1186743
+        },
+        {
+          "current": "          \"sha256\": \"5280d5665666663779a614d2b59a03e09f3855aefb50896da5ad1cf18ebb941a\"\n",
+          "previous": "          \"sha256\": \"2c9b116351acc4d3b266d43ed91004e985a511a71354bb8e343f3539690cc7ca\"\n",
+          "start": 1219855
+        },
+        {
+          "current": "          \"sha256\": \"5280d5665666663779a614d2b59a03e09f3855aefb50896da5ad1cf18ebb941a\"\n",
+          "previous": "          \"sha256\": \"2c9b116351acc4d3b266d43ed91004e985a511a71354bb8e343f3539690cc7ca\"\n",
+          "start": 1250099
+        },
+        {
+          "current": "          \"sha256\": \"5280d5665666663779a614d2b59a03e09f3855aefb50896da5ad1cf18ebb941a\"\n",
+          "previous": "          \"sha256\": \"2c9b116351acc4d3b266d43ed91004e985a511a71354bb8e343f3539690cc7ca\"\n",
+          "start": 1283035
+        },
+        {
+          "current": "          \"sha256\": \"5280d5665666663779a614d2b59a03e09f3855aefb50896da5ad1cf18ebb941a\"\n",
+          "previous": "          \"sha256\": \"2c9b116351acc4d3b266d43ed91004e985a511a71354bb8e343f3539690cc7ca\"\n",
+          "start": 1322338
+        },
+        {
+          "current": "          \"sha256\": \"5280d5665666663779a614d2b59a03e09f3855aefb50896da5ad1cf18ebb941a\"\n",
+          "previous": "          \"sha256\": \"2c9b116351acc4d3b266d43ed91004e985a511a71354bb8e343f3539690cc7ca\"\n",
+          "start": 1348879
+        },
+        {
+          "current": "          \"sha256\": \"5280d5665666663779a614d2b59a03e09f3855aefb50896da5ad1cf18ebb941a\"\n",
+          "previous": "          \"sha256\": \"2c9b116351acc4d3b266d43ed91004e985a511a71354bb8e343f3539690cc7ca\"\n",
+          "start": 1371259
+        },
+        {
+          "current": "          \"sha256\": \"5280d5665666663779a614d2b59a03e09f3855aefb50896da5ad1cf18ebb941a\"\n",
+          "previous": "          \"sha256\": \"2c9b116351acc4d3b266d43ed91004e985a511a71354bb8e343f3539690cc7ca\"\n",
+          "start": 1391151
+        },
+        {
+          "current": "          \"sha256\": \"5280d5665666663779a614d2b59a03e09f3855aefb50896da5ad1cf18ebb941a\"\n",
+          "previous": "          \"sha256\": \"2c9b116351acc4d3b266d43ed91004e985a511a71354bb8e343f3539690cc7ca\"\n",
+          "start": 1412604
+        },
+        {
+          "current": "          \"sha256\": \"5280d5665666663779a614d2b59a03e09f3855aefb50896da5ad1cf18ebb941a\"\n",
+          "previous": "          \"sha256\": \"2c9b116351acc4d3b266d43ed91004e985a511a71354bb8e343f3539690cc7ca\"\n",
+          "start": 1425623
+        },
+        {
+          "current": "          \"sha256\": \"b8eac395df4a0f230e078ecb7bad2b324dab0d0e4ef4f7c06e2e7f76011157bd\"\n",
+          "previous": "          \"sha256\": \"819b17630ec6ebd0e6bb80c74f4449830d2222cbe914c2b81f13482f543e37e9\"\n",
+          "start": 2159172
+        },
+        {
+          "current": "          \"sha256\": \"b8eac395df4a0f230e078ecb7bad2b324dab0d0e4ef4f7c06e2e7f76011157bd\"\n",
+          "previous": "          \"sha256\": \"819b17630ec6ebd0e6bb80c74f4449830d2222cbe914c2b81f13482f543e37e9\"\n",
+          "start": 2175690
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "64ade93f8a60872fe4257807e87686e1bea467d2ebb5cf4c62d340a45af7ec73"
+    },
+    {
+      "currentSha256": "9204b4aa7377063c735e6fffb2642a3018aeab0790e11acf40b8852257bcdb71",
+      "edits": [
+        {
+          "current": "// core-evidence-prefix: generic-record-array-hosts-\n",
+          "previous": "",
+          "start": 870
+        }
+      ],
+      "path": "tests/helpers/native-specialization-closure.mjs",
+      "previousSha256": "1402afa3e37d357753062f935f8fb3e13f02842cc2990ec4471b5568f7fd5522"
+    },
+    {
+      "currentSha256": "742cd70d2d637d895975832b15b917d51d3a11ff4930b6ae46e66fb00bf15370",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from \"../../src/build/native-graph-model.mjs\";\nimport { generateOwnedCPackage } from \"../../src/backends/c/owned-package.mjs\";\nimport { historicalOwnedRubyCallbackPackage as generateOwnedRubyPackage } from \"./owned-ruby-callback-generated-history.mjs\";\nimport { ownedRubyAdapterSources } from \"../../src/build/owned-ruby-artifacts.mjs\";\nimport { gmpIdentity } from \"../../src/backends/c/gmp.mjs\";\nimport { copiedRustLock } from \"../../src/backends/rust/copied-values.mjs\";\n",
+          "start": 427
+        },
+        {
+          "current": "import { moduleAtProducerWithSourceReads } from \"./producer-module.mjs\";\n\nexport const ownedRubyProducer = \"ab88c3888c3db7d4a1946e79093773233cdfafef\";\nlet producerModules;\nconst ownedRubyProducerModules = async () => producerModules ??= Promise.all([\n\t\"src/build/native-graph-model.mjs\"\n\t, \"src/backends/c/owned-package.mjs\"\n\t, \"src/backends/ruby/owned-package.mjs\"\n\t, \"src/build/owned-ruby-artifacts.mjs\"\n\t, \"src/backends/c/gmp.mjs\"\n\t, \"src/backends/rust/copied-values.mjs\"\n].map(path => moduleAtProducerWithSourceReads(ownedRubyProducer, path))).then(([\n\tnative, c, ruby, artifacts, gmp, rust\n]) => ({\n\tcreateCompiledNativeModel: native.createCompiledNativeModel\n\t, generateCompiledNativeLeanAdapters: native.generateCompiledNativeLeanAdapters\n\t, generateOwnedCPackage: c.generateOwnedCPackage\n\t, generateOwnedRubyPackage: ruby.generateOwnedRubyPackage\n\t, ownedRubyAdapterSources: artifacts.ownedRubyAdapterSources\n\t, gmpIdentity: gmp.gmpIdentity\n\t, copiedRustLock: rust.copiedRustLock\n}));\n",
+          "previous": "",
+          "start": 1096
+        },
+        {
+          "current": "\tconst {\n\t\tcreateCompiledNativeModel, generateCompiledNativeLeanAdapters\n\t\t, generateOwnedCPackage, generateOwnedRubyPackage, ownedRubyAdapterSources\n\t\t, gmpIdentity, copiedRustLock\n\t} = await ownedRubyProducerModules();\n",
+          "previous": "",
+          "start": 6236
+        },
+        {
+          "current": "\tconst { generateOwnedRubyPackage } = await ownedRubyProducerModules();\n",
+          "previous": "",
+          "start": 15302
+        }
+      ],
+      "path": "tests/helpers/owned-ruby-evidence.mjs",
+      "previousSha256": "56a14ccb9ba320f6ee0cf735c8f9a021bb0f284aedb9de8dec99c347b7ed7cdd"
+    },
+    {
+      "currentSha256": "2336e9ca6b872bb30b954a83014d24814989846397ed5b5f50f9d85d9afb486d",
+      "edits": [
+        {
+          "current": "\t\tconst prior = beforeOwnedPerlBorrow(update.path, source, update.previousSha256);\n",
+          "previous": "\t\tconst prior = beforeOwnedPerlBorrow(update.path, source);\n",
+          "start": 2086
+        }
+      ],
+      "path": "tests/owned-perl-borrow-evidence.test.mjs",
+      "previousSha256": "55f5a7afa682bb3a3bf71ed82394db6a8972dc9e8bc1567b93a6c1724894414d"
+    },
+    {
+      "currentSha256": "411499301166a05eb520db1ddf5da4c1a172f6df91502d0cdc96ffe3024d2be2",
+      "edits": [
+        {
+          "current": "\t\tconst current = beforeOwnedConsumerCi(update.path, await readFile(update.path, \"utf8\")), prior = beforeOwnedRustTransfer(update.path, current, update.previousSha256);\n",
+          "previous": "\t\tconst current = beforeOwnedConsumerCi(update.path, await readFile(update.path, \"utf8\")), prior = beforeOwnedRustTransfer(update.path, current);\n",
+          "start": 2048
+        }
+      ],
+      "path": "tests/owned-rust-transfer-evidence.test.mjs",
+      "previousSha256": "21b7a08d22660aa8b1b0236478e6cee17fc39b77d0b9593e8586475ecb866cf0"
+    },
+    {
+      "currentSha256": "b8eac395df4a0f230e078ecb7bad2b324dab0d0e4ef4f7c06e2e7f76011157bd",
+      "edits": [
+        {
+          "current": "// core-evidence-prefix: reviewed-fin-hosts-\n",
+          "previous": "",
+          "start": 113
+        }
+      ],
+      "path": "tests/perl-scalar-promotion.test.mjs",
+      "previousSha256": "819b17630ec6ebd0e6bb80c74f4449830d2222cbe914c2b81f13482f543e37e9"
+    },
+    {
+      "currentSha256": "9aaf88999e7e1b08ef8b8619fd389a2eda9d4fd76674f48011eda6a3aa8ff4eb",
+      "edits": [
+        {
+          "current": "\t\tconst prior = beforePhpNixBoundaryRepair(update.path, current, update.previousSha256);\n",
+          "previous": "\t\tconst prior = beforePhpNixBoundaryRepair(update.path, current);\n",
+          "start": 2222
+        }
+      ],
+      "path": "tests/php-nix-boundary-repair-evidence.test.mjs",
+      "previousSha256": "54a5cd8cb12d6d5e5cbb1cc70d17e304b5b942988437b0ccffd65fb0ea3553c9"
+    },
+    {
+      "currentSha256": "37ac22d5ed426372c1fde0fd91bf94d262081e1f830183662115378dd251bd3a",
+      "edits": [
+        {
+          "current": "\t\tconst prior = beforeStructuredDocsCi(update.path, source, update.previousSha256);\n",
+          "previous": "\t\tconst prior = beforeStructuredDocsCi(update.path, source);\n",
+          "start": 2065
+        }
+      ],
+      "path": "tests/structured-docs-ci-evidence.test.mjs",
+      "previousSha256": "bbed14a5e0d44fcf617f48c577cf1bf1f344a2ecc4f7aa92924e378f7f5c23df"
+    },
+    {
+      "currentSha256": "5280d5665666663779a614d2b59a03e09f3855aefb50896da5ad1cf18ebb941a",
+      "edits": [
+        {
+          "current": "// core-evidence-prefix: reviewed-fin-hosts-\n",
+          "previous": "",
+          "start": 110
+        },
+        {
+          "current": "const genericSubtypeFieldEvidence = (profile, route) => {\n\tif(profile === \"php-wasm\") return [];\n\tconst lane = [\"node-javascript\", \"node-typescript\", \"browser-javascript\", \"browser-react\", \"browser-worker\"].includes(profile)\n\t\t? `npm-${route}` : [\"c\", \"cpp\"].includes(profile) ? \"native\"\n\t\t\t: [\"java\", \"kotlin\"].includes(profile) ? \"jvm\" : profile;\n\treturn [\"generic-subtype-foundation-hosted-installed\", `generic-subtype-${lane}-hosted-installed`];\n};\nconst ownedSubtypeFieldEvidence = (profile, route) => {\n\tif(profile === \"php-wasm\") return [`owned-subtype-php-wasm-${route}-installed`];\n\tconst lane = [\"node-javascript\", \"node-typescript\", \"browser-javascript\", \"browser-react\", \"browser-worker\"].includes(profile)\n\t\t? \"javascript\" : [\"c\", \"cpp\"].includes(profile) ? \"native\"\n\t\t\t: [\"java\", \"kotlin\"].includes(profile) ? \"jvm\"\n\t\t\t\t: [\"python\", \"ruby\", \"rust\"].includes(profile) ? \"languages\" : profile;\n\treturn [`owned-subtype-${lane}-hosted-installed`];\n};\nconst subtypeFieldEvidence = (profile, route) => [\n\t...genericSubtypeFieldEvidence(profile, route)\n\t, ...ownedSubtypeFieldEvidence(profile, route)\n];\nconst subtypeFieldHostSupplement = profile => profile === \"php-wasm\"\n\t? \"; selected Subtype fields are checked at their declared public site before a transfer consumes any resource\"\n\t: \"; the closed GenericNat record carries its proof-erased Positive value beside a retained Nat marker; the tested acyclic owned Bundle preserves this checked field beside explicit resource identities\";\n",
+          "previous": "",
+          "start": 5566
+        },
+        {
+          "current": "\tconst hostedSignatureSpecialized = profile === \"php-wasm\";\n\tconst specialized = specializationEvidence || hostedSignatureSpecialized ? [\"generic\", \"implicit\", \"instance\"] : [];\n",
+          "previous": "\tconst specialized = specializationEvidence ? [\"generic\", \"implicit\", \"instance\"] : [];\n",
+          "start": 33122
+        },
+        {
+          "current": "\t\t\t\tassert.deepEqual(stage.evidence, [...(cell.position === \"field\" ? []\n",
+          "previous": "\t\t\t\t\tassert.deepEqual(stage.evidence, [...(cell.position === \"field\" ? []\n",
+          "start": 42316
+        },
+        {
+          "current": "\t\t\t\t\t\t, ...(profile === \"php-wasm\" ? [\"recursive-subtype-php-wasm-ordinary-installed\"] : [])\n\t\t\t\t\t\t, ...(cell.position === \"field\" ? subtypeFieldEvidence(profile, \"ordinary\") : [])]);\n",
+          "previous": "\t\t\t\t\t\t, ...(profile === \"php-wasm\" ? [\"recursive-subtype-php-wasm-ordinary-installed\"] : [])]);\n",
+          "start": 42640
+        },
+        {
+          "current": "\t\t\t\tassert.deepEqual(stage.evidence, hostedSignatureSpecialized\n\t\t\t\t\t? [\"hosted-signature-specializations-installed\"]\n\t\t\t\t\t: [`native-specializations-${specializationEvidence}-installed`\n\t\t\t\t\t\t, ...genericRecordReports.map(group => `generic-record-specialized-${group}-installed`)\n\t\t\t\t\t\t, ...(stageName === \"installedExecution\" ? (profile === \"python\" ? [\"python311\", \"python312\"] : [[\"java\", \"kotlin\"].includes(profile) ? \"java-kotlin\" : profile]).map(group => `generic-record-array-${group}-local`) : [])]);\n",
+          "previous": "\t\t\t\tassert.deepEqual(stage.evidence, [`native-specializations-${specializationEvidence}-installed`\n\t\t\t\t\t, ...genericRecordReports.map(group => `generic-record-specialized-${group}-installed`)\n\t\t\t\t\t, ...(stageName === \"installedExecution\" ? (profile === \"python\" ? [\"python311\", \"python312\"] : [[\"java\", \"kotlin\"].includes(profile) ? \"java-kotlin\" : profile]).map(group => `generic-record-array-${group}-local`) : [])]);\n",
+          "start": 42889
+        },
+        {
+          "current": "\t\tconst supplement = subtypeFieldHostSupplement(cell.profile);\n\t\tif(nominalPrimitiveSubtypeNpmProfiles.includes(cell.profile)) assert.equal(cell.hostType, nominalPrimitiveSubtypeNpmField + supplement);\n\t\tif(nominalPrimitiveSubtypePythonProfiles.includes(cell.profile)) assert.equal(cell.hostType, nominalPrimitiveSubtypePythonField + supplement);\n\t\tif(nominalPrimitiveSubtypeBrowserProfiles.includes(cell.profile)) assert.equal(cell.hostType, nominalPrimitiveSubtypeBrowserField + supplement);\n\t\tif(nominalPrimitiveSubtypeNativeProfiles.includes(cell.profile)) assert.equal(cell.hostType, nominalPrimitiveSubtypeNativeField + supplement);\n\t\tif(nominalPrimitiveSubtypePerlProfiles.includes(cell.profile)) assert.equal(cell.hostType, nominalPrimitiveSubtypePerlField + supplement);\n\t\tif(nominalPrimitiveSubtypeRubyProfiles.includes(cell.profile)) assert.equal(cell.hostType, nominalPrimitiveSubtypeRubyField + supplement);\n\t\tif(nominalPrimitiveSubtypeRustProfiles.includes(cell.profile)) assert.equal(cell.hostType, nominalPrimitiveSubtypeRustField + supplement);\n\t\tif(nominalPrimitiveSubtypeDotnetProfiles.includes(cell.profile)) assert.equal(cell.hostType, nominalPrimitiveSubtypeDotnetField + supplement);\n\t\tif(nominalPrimitiveSubtypePhpProfiles.includes(cell.profile)) assert.equal(cell.hostType, nominalPrimitiveSubtypePhpField + supplement);\n\t\tif(nominalPrimitiveSubtypePhpWasmProfiles.includes(cell.profile)) assert.equal(cell.hostType, recursiveSubtypePhpWasmField + supplement);\n\t\tif(nominalPrimitiveSubtypeWitProfiles.includes(cell.profile)) assert.equal(cell.hostType, nominalPrimitiveSubtypeWitField + supplement);\n\t\tif(nominalPrimitiveSubtypeJvmProfiles.includes(cell.profile)) assert.equal(cell.hostType, nominalPrimitiveSubtypeJvmField + supplement);\n",
+          "previous": "\t\tif(nominalPrimitiveSubtypeNpmProfiles.includes(cell.profile)) assert.equal(cell.hostType, nominalPrimitiveSubtypeNpmField);\n\t\tif(nominalPrimitiveSubtypePythonProfiles.includes(cell.profile)) assert.equal(cell.hostType, nominalPrimitiveSubtypePythonField);\n\t\tif(nominalPrimitiveSubtypeBrowserProfiles.includes(cell.profile)) assert.equal(cell.hostType, nominalPrimitiveSubtypeBrowserField);\n\t\tif(nominalPrimitiveSubtypeNativeProfiles.includes(cell.profile)) assert.equal(cell.hostType, nominalPrimitiveSubtypeNativeField);\n\t\tif(nominalPrimitiveSubtypePerlProfiles.includes(cell.profile)) assert.equal(cell.hostType, nominalPrimitiveSubtypePerlField);\n\t\tif(nominalPrimitiveSubtypeRubyProfiles.includes(cell.profile)) assert.equal(cell.hostType, nominalPrimitiveSubtypeRubyField);\n\t\tif(nominalPrimitiveSubtypeRustProfiles.includes(cell.profile)) assert.equal(cell.hostType, nominalPrimitiveSubtypeRustField);\n\t\tif(nominalPrimitiveSubtypeDotnetProfiles.includes(cell.profile)) assert.equal(cell.hostType, nominalPrimitiveSubtypeDotnetField);\n\t\tif(nominalPrimitiveSubtypePhpProfiles.includes(cell.profile)) assert.equal(cell.hostType, nominalPrimitiveSubtypePhpField);\n\t\tif(nominalPrimitiveSubtypePhpWasmProfiles.includes(cell.profile)) assert.equal(cell.hostType, recursiveSubtypePhpWasmField);\n\t\tif(nominalPrimitiveSubtypeWitProfiles.includes(cell.profile)) assert.equal(cell.hostType, nominalPrimitiveSubtypeWitField);\n\t\tif(nominalPrimitiveSubtypeJvmProfiles.includes(cell.profile)) assert.equal(cell.hostType, nominalPrimitiveSubtypeJvmField);\n",
+          "start": 50704
+        },
+        {
+          "current": "\t\t\t\t, ...(cell.profile === \"php-wasm\" ? [`recursive-subtype-php-wasm-${cell.path === \"ordinary-source\" ? \"ordinary\" : \"reviewed\"}-installed`] : [])\n\t\t\t\t, ...subtypeFieldEvidence(cell.profile, cell.path === \"ordinary-source\" ? \"ordinary\" : \"reviewed\")]);\n",
+          "previous": "\t\t\t\t, ...(cell.profile === \"php-wasm\" ? [`recursive-subtype-php-wasm-${cell.path === \"ordinary-source\" ? \"ordinary\" : \"reviewed\"}-installed`] : [])]);\n",
+          "start": 52757
+        }
+      ],
+      "path": "tests/type-surface.test.mjs",
+      "previousSha256": "2c9b116351acc4d3b266d43ed91004e985a511a71354bb8e343f3539690cc7ca"
+    }
+  ]
+}

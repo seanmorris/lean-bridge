@@ -6,6 +6,15 @@
 import "./helpers/dependent-signature-completion-source-history-tests.mjs";
 import "./helpers/dependent-signature-hosted-tests.mjs";
 import "./helpers/wit-callback-frozen-closure-source-history-tests.mjs";
+import "./helpers/core-recorded-transition-repair-source-history-tests.mjs";
+import "./helpers/core-read-site-repair-source-history-tests.mjs";
+import "./helpers/core-owned-callback-pic-repair-source-history-tests.mjs";
+import "./helpers/core-pre-box-recount-repair-source-history-tests.mjs";
+import "./helpers/core-reviewed-fin-box-harness-repair-source-history-tests.mjs";
+import "./helpers/core-shard-four-serial-source-history-tests.mjs";
+import "./helpers/core-legacy-fin-archive-repair-source-history-tests.mjs";
+import "./helpers/core-generated-document-repair-source-history-tests.mjs";
+import "./helpers/core-shard-five-eight-repair-source-history-tests.mjs";
 import "./helpers/core-deterministic-boundary-repair-source-history-tests.mjs";
 import "./helpers/core-deterministic-boundary-repair-integration-source-history-tests.mjs";
 import "./helpers/callback-fin-perl-local-join-source-history-tests.mjs";

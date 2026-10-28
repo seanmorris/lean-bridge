@@ -20,6 +20,15 @@ import { beforeDirectProofErasureFixtureSource, directProofErasureFixtureNormali
 import { beforeDirectProofErasureSource, directProofErasureNormalizationPaths } from "./direct-proof-erasure-source-history.mjs";
 import { beforeProofErasureEvidenceAuditSource, proofErasureEvidenceAuditNormalizationPaths } from "./proof-erasure-evidence-audit-source-history.mjs";
 import { beforeDependentSignatureCompletionSource, dependentSignatureCompletionNormalizationPaths } from "./dependent-signature-completion-source-history.mjs";
+import { beforeCoreRecordedTransitionRepairSource, coreRecordedTransitionRepairNormalizationPaths } from "./core-recorded-transition-repair-source-history.mjs";
+import { beforeCoreReadSiteRepairSource, coreReadSiteRepairNormalizationPaths } from "./core-read-site-repair-source-history.mjs";
+import { beforeCoreOwnedCallbackPicRepairSource, coreOwnedCallbackPicRepairNormalizationPaths } from "./core-owned-callback-pic-repair-source-history.mjs";
+import { beforeCorePreBoxRecountRepairSource, corePreBoxRecountRepairNormalizationPaths } from "./core-pre-box-recount-repair-source-history.mjs";
+import { beforeCoreReviewedFinBoxHarnessRepairSource, coreReviewedFinBoxHarnessRepairNormalizationPaths } from "./core-reviewed-fin-box-harness-repair-source-history.mjs";
+import { beforeCoreShardFourSerialSource, coreShardFourSerialNormalizationPaths } from "./core-shard-four-serial-source-history.mjs";
+import { beforeCoreLegacyFinArchiveRepairSource, coreLegacyFinArchiveRepairNormalizationPaths } from "./core-legacy-fin-archive-repair-source-history.mjs";
+import { beforeCoreGeneratedDocumentRepairSource, coreGeneratedDocumentRepairNormalizationPaths } from "./core-generated-document-repair-source-history.mjs";
+import { beforeCoreShardFiveEightRepairSource, coreShardFiveEightRepairNormalizationPaths } from "./core-shard-five-eight-repair-source-history.mjs";
 import { beforeWitCallbackFrozenClosureSource, witCallbackFrozenClosureChangedPaths } from "./wit-callback-frozen-closure-source-history.mjs";
 import { beforeCoreDeterministicBoundaryRepairIntegrationSource, coreDeterministicBoundaryRepairIntegrationNormalizationPaths } from "./core-deterministic-boundary-repair-integration-source-history.mjs";
 import { beforeCoreDeterministicBoundaryRepairSource, coreDeterministicBoundaryRepairNormalizationPaths } from "./core-deterministic-boundary-repair-source-history.mjs";
@@ -2333,6 +2342,15 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...directProofErasureNormalizationPaths
 	, ...proofErasureEvidenceAuditNormalizationPaths
 	, ...dependentSignatureCompletionNormalizationPaths
+	, ...coreRecordedTransitionRepairNormalizationPaths
+	, ...coreReadSiteRepairNormalizationPaths
+	, ...coreOwnedCallbackPicRepairNormalizationPaths
+	, ...corePreBoxRecountRepairNormalizationPaths
+	, ...coreReviewedFinBoxHarnessRepairNormalizationPaths
+	, ...coreShardFourSerialNormalizationPaths
+	, ...coreLegacyFinArchiveRepairNormalizationPaths
+	, ...coreGeneratedDocumentRepairNormalizationPaths
+	, ...coreShardFiveEightRepairNormalizationPaths
 	, ...witCallbackFrozenClosureChangedPaths
 	, ...coreDeterministicBoundaryRepairIntegrationNormalizationPaths
 	, ...coreDeterministicBoundaryRepairNormalizationPaths
@@ -3418,6 +3436,42 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 		return stage;
 	text = stage;
 	stage = beforeDependentSignatureCompletionSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeCoreRecordedTransitionRepairSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeCoreReadSiteRepairSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeCoreOwnedCallbackPicRepairSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeCorePreBoxRecountRepairSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeCoreReviewedFinBoxHarnessRepairSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeCoreShardFourSerialSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeCoreLegacyFinArchiveRepairSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeCoreGeneratedDocumentRepairSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeCoreShardFiveEightRepairSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;

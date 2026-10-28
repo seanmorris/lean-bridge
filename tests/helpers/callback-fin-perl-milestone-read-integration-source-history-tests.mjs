@@ -23,6 +23,7 @@ import {
 } from "./callback-fin-perl-milestone-read-integration-source-history.mjs";
 import { callbackFinPerlMilestoneReadHistoryPath } from "./callback-fin-perl-milestone-read-source-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
+import { sourceAtRecordedTransition } from "./recorded-transition-source.mjs";
 import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
 
 const git = arguments_ => execFileSync("git", arguments_, {
@@ -53,9 +54,9 @@ test("Perl callback Fin milestone-read integration restores its exact hub and pa
 	});
 	for(const update of record.updates)
 	{
-		const current = await sourceAtFinHistoryMilestone(update.path
-			, update.currentSha256
-			, beforeCallbackFinPerlMilestoneReadIntegrationSource);
+		// The recorded integration commit was later re-applied with a join, so it is
+		// rebuilt from its own base rather than reversed from the live tree.
+		const current = sourceAtRecordedTransition(callbackFinPerlMilestoneReadIntegrationBase, update);
 		const previous = git(["show"
 			, `${callbackFinPerlMilestoneReadIntegrationBase}:${update.path}`]);
 		assert.equal(reverseCallbackFinPerlMilestoneReadIntegrationUpdate(
@@ -75,9 +76,10 @@ test("Perl callback Fin milestone-read integration restores its exact hub and pa
 test("Perl callback Fin milestone-read integration rejects altered transitions", async () => {
 	const record = await readRecord();
 	const update = record.updates[0];
-	const current = await sourceAtFinHistoryMilestone(update.path
-		, update.currentSha256
-		, beforeCallbackFinPerlMilestoneReadIntegrationSource);
+	const current = sourceAtRecordedTransition(callbackFinPerlMilestoneReadIntegrationBase, update);
+	assert.throws(() => sourceAtRecordedTransition(callbackFinPerlMilestoneReadIntegrationBase
+		, { ...update, currentSha256: "0".repeat(64) }));
+	assert.throws(() => sourceAtRecordedTransition(callbackFinPerlMilestoneReadIntegrationImplementation, update));
 	assert.throws(() => reverseCallbackFinPerlMilestoneReadIntegrationUpdate(
 		current, { ...update, currentSha256: "0".repeat(64) }));
 	assert.equal(beforeCallbackFinPerlMilestoneReadIntegrationSource(update.path

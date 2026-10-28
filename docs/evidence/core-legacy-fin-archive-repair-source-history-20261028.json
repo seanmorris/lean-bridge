@@ -1,0 +1,120 @@
+{
+  "additions": [
+    {
+      "currentSha256": "1d35b53ecb1cdd551ec5fdb4400a5c09027aaef618c70f5a319a1f95a0d2fddd",
+      "path": "scripts/update-core-legacy-fin-archive-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "819b008af30618241b1de5224ab7c6abc65179355f50d033802b92af1a6753a3",
+      "path": "tests/helpers/core-legacy-fin-archive-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "61bfb183acc68d7287251224df10fb1f99196492f42b93000df1178e24e972a3",
+      "path": "tests/helpers/core-legacy-fin-archive-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "e13521d12f1d542f2c6e84abc2f54578f7c279f0",
+  "integrationUpdates": [
+    {
+      "currentSha256": "a88ae3fc914dbbec3fa619ce3e8c9f27dabb55ee20eaa14d56134a8fe8bc6580",
+      "edits": [
+        {
+          "current": "import \"./helpers/core-legacy-fin-archive-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 170
+        }
+      ],
+      "path": "tests/checked-javascript-partition-10.test.mjs",
+      "previousSha256": "fb1bf859880795f49945214fcd47ec561908c7232db660da7b42722b8dfd4c18"
+    },
+    {
+      "currentSha256": "b74cf37ef238e5395b348e00e55afb1bb4b7688730216b8aa4c95e7b173526bb",
+      "edits": [
+        {
+          "current": "import { beforeCoreLegacyFinArchiveRepairSource, coreLegacyFinArchiveRepairNormalizationPaths } from \"./core-legacy-fin-archive-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...coreLegacyFinArchiveRepairNormalizationPaths\n\t, ...coreGeneratedDocumentRepairNormalizationPaths\n",
+          "previous": "\t...coreGeneratedDocumentRepairNormalizationPaths\n",
+          "start": 208924
+        },
+        {
+          "current": "\tlet stage = beforeCoreLegacyFinArchiveRepairSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCoreGeneratedDocumentRepairSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeCoreGeneratedDocumentRepairSource(path, text, expected);\n",
+          "start": 260845
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "1f28e87a6d86bc975d5e196eda6f9c61dbd65839eda6b172a8d3ba70335970ab"
+    }
+  ],
+  "milestone": "core-legacy-fin-archive-repair-source-v1",
+  "predecessorCommit": "fb217d6a39e77ef96c39f3f82d036bf167293bbc",
+  "schemaVersion": 1,
+  "scope": "Authenticate the immutable October 7 npm Fin archive against the explicit pre-field reviewed IR and TypeScript caller rather than the October 28 Box-extended fixture. Refresh exactly four matching live source pins without changing support cells or archive claims. Register the complete transition newest-first; hosted Core remains the terminal acceptance gate.",
+  "updates": [
+    {
+      "currentSha256": "2b5aa91e174314999af225effa1e4cfd6e52c7776c88ebc497d60dedfd693d02",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"6012e8a8ad7d435359a89a09f15d597b1e52beefc7cf50a5c91bd90212c3203b\"\n",
+          "previous": "          \"sha256\": \"867c9f69e4b73f70d2305778d9570c1171179d5ca51ec6b0564cd938dee5d606\"\n",
+          "start": 1669291
+        },
+        {
+          "current": "          \"sha256\": \"6012e8a8ad7d435359a89a09f15d597b1e52beefc7cf50a5c91bd90212c3203b\"\n",
+          "previous": "          \"sha256\": \"867c9f69e4b73f70d2305778d9570c1171179d5ca51ec6b0564cd938dee5d606\"\n",
+          "start": 1673636
+        },
+        {
+          "current": "          \"sha256\": \"6012e8a8ad7d435359a89a09f15d597b1e52beefc7cf50a5c91bd90212c3203b\"\n",
+          "previous": "          \"sha256\": \"867c9f69e4b73f70d2305778d9570c1171179d5ca51ec6b0564cd938dee5d606\"\n",
+          "start": 1677993
+        },
+        {
+          "current": "          \"sha256\": \"6012e8a8ad7d435359a89a09f15d597b1e52beefc7cf50a5c91bd90212c3203b\"\n",
+          "previous": "          \"sha256\": \"867c9f69e4b73f70d2305778d9570c1171179d5ca51ec6b0564cd938dee5d606\"\n",
+          "start": 1682358
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "df2050dd6bc989294cb95e8077d2d4e2403b056dd1af01827e4e33f973c9d0fd"
+    },
+    {
+      "currentSha256": "6012e8a8ad7d435359a89a09f15d597b1e52beefc7cf50a5c91bd90212c3203b",
+      "edits": [
+        {
+          "current": "import { reviewedFinWasmPreFieldIr } from \"./reviewed-fin-wasm-fixture.mjs\";\nimport { reviewedFinWasmPreFieldTypeScript } from \"./reviewed-fin-wasm-typescript.mjs\";\n",
+          "previous": "import { reviewedFinWasmIr } from \"./reviewed-fin-wasm-fixture.mjs\";\nimport { reviewedFinWasmTypeScript } from \"./reviewed-fin-wasm-typescript.mjs\";\n",
+          "start": 295
+        },
+        {
+          "current": "\t\tconst expected = reviewedFinWasmPreFieldIr(selection);\n",
+          "previous": "\t\tconst expected = reviewedFinWasmIr(selection);\n",
+          "start": 2362
+        },
+        {
+          "current": "\t\tassert.equal(report.typescript.sourceSha256\n\t\t\t, sha256(reviewedFinWasmPreFieldTypeScript(selection)));\n",
+          "previous": "\t\tassert.equal(report.typescript.sourceSha256, sha256(reviewedFinWasmTypeScript(selection)));\n",
+          "start": 3184
+        }
+      ],
+      "path": "tests/helpers/reviewed-fin-wasm-evidence-tests.mjs",
+      "previousSha256": "867c9f69e4b73f70d2305778d9570c1171179d5ca51ec6b0564cd938dee5d606"
+    },
+    {
+      "currentSha256": "135032b76d0795e9cb433da99166551f564b7a195a194f89ab39ab81c1b701cb",
+      "edits": [
+        {
+          "current": "\n/**\n * Recover the exact structural TypeScript caller that predates the nominal\n * Box field fixture. Historical archives authenticate this caller, while new\n * package builds use {@link reviewedFinWasmTypeScript}.\n *\n * @param selection - Scalar-only or pre-field structural selection.\n */\nexport const reviewedFinWasmPreFieldTypeScript = selection => {\n\tconst source = reviewedFinWasmTypeScript(selection);\n\tif(selection === \"scalar\") return source;\n\treturn source\n\t\t.replace(\"type Box = Readonly<{ digit: bigint; label: string }>;\\n\", \"\")\n\t\t.replace(\"export type BoxSignature = Expect<Equal<typeof api.box, (value: Box) => Box>>;\\n\", \"\")\n\t\t.replace(\"const box: Box = api.box({ digit: 9n, label: \\\"nine\\\" });\\n\", \"\")\n\t\t.replace(\"void rows; void nested; void box;\\n\", \"void rows; void nested;\\n\")\n\t\t.replace(\"  // @ts-expect-error A Fin field retains Nat's bigint representation.\\n  api.box({ digit: 9, label: \\\"nine\\\" });\\n\", \"\");\n};\n",
+          "previous": "",
+          "start": 3063
+        }
+      ],
+      "path": "tests/helpers/reviewed-fin-wasm-typescript.mjs",
+      "previousSha256": "6ee795599dbe507aeec877d1dbb9fd99ae28fde26c78f08a271de2b8cf65db02"
+    }
+  ]
+}

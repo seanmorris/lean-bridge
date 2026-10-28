@@ -106,7 +106,9 @@ def treeIdentity (_ : Unit) : Array (Owned.Tree → Owned.Tree) := #[fun value =
 	if(generated.callbackSource)
 	{
 		await saveLakeFile(directory, "Callbacks.c", generated.callbackSource);
-		await run("cc", ["-O2", "-g", "-I", join(runtime.root, "include"), "-c", "Callbacks.c", "-o", "Callbacks.o"]);
+		await run("cc", ["-O2", "-g", "-fPIC"
+			, "-I", join(runtime.root, "include"), "-c", "Callbacks.c"
+			, "-o", "Callbacks.o"]);
 	}
 	const compile = async (name, source, sanitized = false, extraInputs = []) => {
 		await saveLakeFile(directory, name + ".c", source);

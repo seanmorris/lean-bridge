@@ -60,3 +60,21 @@ if (false) {
 console.log(JSON.stringify(executeCorpus(request, await loadApi())));
 `;
 };
+
+/**
+ * Recover the exact structural TypeScript caller that predates the nominal
+ * Box field fixture. Historical archives authenticate this caller, while new
+ * package builds use {@link reviewedFinWasmTypeScript}.
+ *
+ * @param selection - Scalar-only or pre-field structural selection.
+ */
+export const reviewedFinWasmPreFieldTypeScript = selection => {
+	const source = reviewedFinWasmTypeScript(selection);
+	if(selection === "scalar") return source;
+	return source
+		.replace("type Box = Readonly<{ digit: bigint; label: string }>;\n", "")
+		.replace("export type BoxSignature = Expect<Equal<typeof api.box, (value: Box) => Box>>;\n", "")
+		.replace("const box: Box = api.box({ digit: 9n, label: \"nine\" });\n", "")
+		.replace("void rows; void nested; void box;\n", "void rows; void nested;\n")
+		.replace("  // @ts-expect-error A Fin field retains Nat's bigint representation.\n  api.box({ digit: 9, label: \"nine\" });\n", "");
+};

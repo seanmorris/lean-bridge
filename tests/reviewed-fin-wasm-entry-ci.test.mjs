@@ -8,10 +8,12 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { gunzipSync } from "node:zlib";
+import { sha256 } from "../src/capsule/node.mjs";
 import { recountReviewedFinWasmEntryReport } from "./helpers/reviewed-fin-wasm-entry-producer.mjs";
-import { expectReviewedFinWasmEntry } from "./helpers/reviewed-fin-wasm-entry.mjs";
+import { expectReviewedFinWasmEntry, reviewedFinWasmEntrySymbols } from "./helpers/reviewed-fin-wasm-entry.mjs";
 import { assertWasmEntryCi, checkWasmEntryCiRun, insertWasmEntryCi, wasmEntryCiJob, wasmEntryCiJobName, wasmEntryCiReports, wasmEntryCiSummaryFails } from "./helpers/reviewed-fin-wasm-entry-ci.mjs";
-import { wasmEntryDirectory } from "./helpers/wasm-entry-evidence.mjs";
+import { reviewedFinWasmPreFieldTypeScript, reviewedFinWasmTypeScript } from "./helpers/reviewed-fin-wasm-typescript.mjs";
+import { wasmEntryDirectory, wasmEntryEngines, wasmEntryFrozen, wasmEntryRuns } from "./helpers/wasm-entry-evidence.mjs";
 
 const workflowPath = ".github/workflows/consumer-matrix.yml";
 /**
@@ -76,7 +78,15 @@ const retained = async mode => {
 	}
 	return reports;
 };
-const recount = async (report, mode, selection, engines) => recountReviewedFinWasmEntryReport(report, await expectReviewedFinWasmEntry(selection, mode), { engines: [...engines] });
+// The retained reports are 7eae444's, which predate the Box field fixture: each is recounted against that revision's
+// frozen expectation, authenticated by its pinned digest, on the pre-field contract. Current runs never use it.
+const frozenExpectation = async (mode, selection) => {
+	const path = `expectations/${mode}-${selection}.json.gz`;
+	const text = gunzipSync(await readFile(`${wasmEntryDirectory}/${path}`));
+	assert.equal(sha256(text), wasmEntryFrozen[path].sha256, path);
+	return JSON.parse(text);
+};
+const recount = async (report, mode, selection, engines) => recountReviewedFinWasmEntryReport(report, await frozenExpectation(mode, selection), { engines: [...engines], preField: true });
 const run = (mode, reports, change = value => value) => change({ mode, tap: tapOf(mode), files: ["run.tap", ...Object.keys(reports).map(name => `${name}.json`)], reports, recount });
 
 test("the leg checker recounts real reports and refuses missing, extra, skipped or misattributed runs", async () => {
@@ -103,4 +113,27 @@ test("the leg checker recounts real reports and refuses missing, extra, skipped 
 		, value => ({ ...value, recount: async () => 52 })
 		, value => ({ ...value, recount: async (report, mode, selection) => recount(report, mode, selection, ["chromium", "firefox"]) })];
 	for(const [index, mutate] of mutations.entries()) await assert.rejects(checkWasmEntryCiRun(run("original", reports, mutate)), `mutation ${index}`);
+});
+
+test("pre-Box reports recount only on the pre-field contract, which never weakens a current recount", async () => {
+	const report = (await retained("original"))["original-ordinary-structural"];
+	const frozen = await frozenExpectation("original", "structural");
+	const current = await expectReviewedFinWasmEntry("structural", "original");
+	const engines = [...wasmEntryEngines];
+	assert.equal(recountReviewedFinWasmEntryReport(report, frozen, { engines, preField: true }), wasmEntryRuns(engines));
+	// Only the current contract and consumer carry the Box field; the pre-field ones are 7eae444's exactly.
+	assert.deepEqual(["original", "probe"].map(mode => reviewedFinWasmEntrySymbols("structural", mode).some(item => item.name === "box")), [true, true]);
+	assert.deepEqual(["original", "probe"].map(mode => reviewedFinWasmEntrySymbols("structural", mode, { preField: true }).some(item => item.name === "box")), [false, false]);
+	assert.equal(sha256(reviewedFinWasmPreFieldTypeScript("structural")), wasmEntryFrozen["typescript/structural.ts.txt"].sha256);
+	assert.notEqual(sha256(reviewedFinWasmTypeScript("structural")), wasmEntryFrozen["typescript/structural.ts.txt"].sha256);
+	const prelude = value => ({ ...report, contexts: report.contexts.map(context => (context.profile === "node-typescript" ? { ...context, prelude: value } : context)) });
+	for(const [label, refused] of [
+		["the current path refuses a pre-Box report", () => recountReviewedFinWasmEntryReport(report, frozen, { engines })]
+		, ["the current expectation refuses a pre-Box report", () => recountReviewedFinWasmEntryReport(report, current, { engines })]
+		, ["the pre-field path refuses a current expectation", () => recountReviewedFinWasmEntryReport({ ...report, calls: current.calls.length }, current, { engines, preField: true })]
+		, ["the pre-field path refuses the current TypeScript consumer", () => recountReviewedFinWasmEntryReport({ ...report, typescriptSha256: sha256(reviewedFinWasmTypeScript("structural")) }, frozen, { engines, preField: true })]
+		, ["the pre-field path refuses the current prelude", () => recountReviewedFinWasmEntryReport(prelude([...report.contexts[1].prelude, "box"]), frozen, { engines, preField: true })]
+		, ["the pre-field path refuses a narrowed engine set", () => recountReviewedFinWasmEntryReport(report, frozen, { engines: engines.slice(0, 2), preField: true })]
+		, ["the selector is an explicit boolean", () => recountReviewedFinWasmEntryReport(report, frozen, { engines, preField: "true" })]
+	]) assert.throws(refused, assert.AssertionError, label);
 });

@@ -31,9 +31,10 @@ test("PHP-Wasm borrowed-result history preserves authenticated predecessor versi
 		assert.equal(update.previousSha256, previous.sources[update.path]);
 		assert.equal(update.currentSha256, record.sources[update.path]);
 		const source = beforeOwnedJavaScriptBorrow(update.path, await readFile(update.path, "utf8"), update.currentSha256);
-		const prior = beforeOwnedPhpWasmBorrow(update.path, source);
+		// Stop each reversal at its recorded predecessor; the hub otherwise walks past it.
+		const prior = beforeOwnedPhpWasmBorrow(update.path, source, update.previousSha256);
 		assert.equal(sha256(prior), update.previousSha256);
-		assert.equal(beforeOwnedPhpWasmBorrow(update.path, prior), prior);
+		assert.equal(beforeOwnedPhpWasmBorrow(update.path, prior, update.previousSha256), prior);
 		assert.equal(beforeOwnedPhpWasmBorrow(update.path, source, update.currentSha256), source);
 		const unknown = source + "\n/* unrecorded change */\n";
 		assert.equal(beforeOwnedPhpWasmBorrow(update.path, unknown), unknown);
@@ -44,8 +45,9 @@ test("PHP-Wasm borrowed-result history preserves authenticated predecessor versi
 			assert.throws(() => reverseOwnedPhpWasmBorrowUpdate(source, changed));
 	}
 	const path = "docs/type-surface.v1.json", current = beforeOwnedJavaScriptBorrow(path, await readFile(path, "utf8"), record.sources[path]);
-	const prior = JSON.parse(beforeOwnedPhpWasmBorrow(path, current));
-	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedJavaScriptBorrowHistoricalBytes(file.path, await readFile(file.path), record.sources[file.path]));
+	const prior = JSON.parse(beforeOwnedPhpWasmBorrow(path, current, previous.sources[path]));
+	const pins = new Map(JSON.parse(current).evidence.flatMap(evidence => evidence.files.map(file => [file.path, file.sha256])));
+	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedJavaScriptBorrowHistoricalBytes(file.path, await readFile(file.path), record.sources[file.path] ?? pins.get(file.path)));
 	assert.deepEqual(JSON.parse(current), prior, "Source refresh must not promote unrelated support cells");
 	for(const name of ["owned-php-wasm-borrows", "owned-php-wasm-borrow-evidence"
 		, "owned-php-wasm-borrow-packaging", "owned-php-wasm-borrow-documentation"])

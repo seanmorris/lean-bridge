@@ -29,7 +29,7 @@ test("Rust transfer acceptance binds current sources without promoting unrelated
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path], update.path);
 		assert.equal(update.currentSha256, record.sources[update.path], update.path);
-		const current = beforeOwnedConsumerCi(update.path, await readFile(update.path, "utf8")), prior = beforeOwnedRustTransfer(update.path, current);
+		const current = beforeOwnedConsumerCi(update.path, await readFile(update.path, "utf8")), prior = beforeOwnedRustTransfer(update.path, current, update.previousSha256);
 		assert.equal(sha256(prior), update.previousSha256);
 		assert.equal(beforeOwnedRustTransfer(update.path, prior), prior);
 		assert.equal(beforeOwnedRustTransfer(update.path, current, update.currentSha256), current);

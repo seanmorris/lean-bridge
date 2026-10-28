@@ -23,6 +23,7 @@ import {
 } from "./perl-codegen-producer-replay-integration-source-history.mjs";
 import { perlCodegenProducerReplayHistoryPath } from "./perl-codegen-producer-replay-source-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
+import { sourceAtRecordedTransition } from "./recorded-transition-source.mjs";
 import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
 
 const git = arguments_ => execFileSync("git", arguments_, {
@@ -53,9 +54,9 @@ test("Perl codegen producer replay integration restores its exact hub and partit
 	});
 	for(const update of record.updates)
 	{
-		const current = await sourceAtFinHistoryMilestone(update.path
-			, update.currentSha256
-			, beforePerlCodegenProducerReplayIntegrationSource);
+		// The recorded integration commit was later re-applied with a join, so it is
+		// rebuilt from its own base rather than reversed from the live tree.
+		const current = sourceAtRecordedTransition(perlCodegenProducerReplayIntegrationBase, update);
 		const previous = git(["show"
 			, `${perlCodegenProducerReplayIntegrationBase}:${update.path}`]);
 		assert.equal(reversePerlCodegenProducerReplayIntegrationUpdate(
@@ -75,9 +76,10 @@ test("Perl codegen producer replay integration restores its exact hub and partit
 test("Perl codegen producer replay integration rejects altered transitions", async () => {
 	const record = await readRecord();
 	const update = record.updates[0];
-	const current = await sourceAtFinHistoryMilestone(update.path
-		, update.currentSha256
-		, beforePerlCodegenProducerReplayIntegrationSource);
+	const current = sourceAtRecordedTransition(perlCodegenProducerReplayIntegrationBase, update);
+	assert.throws(() => sourceAtRecordedTransition(perlCodegenProducerReplayIntegrationBase
+		, { ...update, currentSha256: "0".repeat(64) }));
+	assert.throws(() => sourceAtRecordedTransition(perlCodegenProducerReplayIntegrationImplementation, update));
 	assert.throws(() => reversePerlCodegenProducerReplayIntegrationUpdate(
 		current, { ...update, currentSha256: "0".repeat(64) }));
 	assert.equal(beforePerlCodegenProducerReplayIntegrationSource(update.path

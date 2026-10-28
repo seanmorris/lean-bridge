@@ -8,12 +8,6 @@ import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { readTypeSurfaceContracts } from "./type-surface-contracts.mjs";
 import { historicalTypeSurfaceCells as typeSurfaceCells } from "./historical-type-surface-cells.mjs";
-import { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from "../../src/build/native-graph-model.mjs";
-import { generateOwnedCPackage } from "../../src/backends/c/owned-package.mjs";
-import { historicalOwnedRubyCallbackPackage as generateOwnedRubyPackage } from "./owned-ruby-callback-generated-history.mjs";
-import { ownedRubyAdapterSources } from "../../src/build/owned-ruby-artifacts.mjs";
-import { gmpIdentity } from "../../src/backends/c/gmp.mjs";
-import { copiedRustLock } from "../../src/backends/rust/copied-values.mjs";
 import { ownedPythonExecutionSources } from "./owned-python-evidence.mjs";
 import { ownedPythonHistoryPath } from "./owned-python-source-history.mjs";
 import { assertOwnedRubyConversions } from "./owned-ruby-conversion-evidence.mjs";
@@ -21,6 +15,28 @@ import { assertRubyRecursiveFaults } from "./ruby-recursive-callable-install.mjs
 import { assertRubyStructuredFaults } from "./ruby-structured-callable-install.mjs";
 import { ownedRubyBaseline, ownedRubyChangedPaths, ownedRubyAddedPaths, ownedRubyExecutionPath, reverseOwnedRubyUpdate, ownedRubyHistoricalBytes } from "./owned-ruby-source-history.mjs";
 import { ownedDotnetHistoricalBytes } from "./owned-dotnet-source-history.mjs";
+import { moduleAtProducerWithSourceReads } from "./producer-module.mjs";
+
+export const ownedRubyProducer = "ab88c3888c3db7d4a1946e79093773233cdfafef";
+let producerModules;
+const ownedRubyProducerModules = async () => producerModules ??= Promise.all([
+	"src/build/native-graph-model.mjs"
+	, "src/backends/c/owned-package.mjs"
+	, "src/backends/ruby/owned-package.mjs"
+	, "src/build/owned-ruby-artifacts.mjs"
+	, "src/backends/c/gmp.mjs"
+	, "src/backends/rust/copied-values.mjs"
+].map(path => moduleAtProducerWithSourceReads(ownedRubyProducer, path))).then(([
+	native, c, ruby, artifacts, gmp, rust
+]) => ({
+	createCompiledNativeModel: native.createCompiledNativeModel
+	, generateCompiledNativeLeanAdapters: native.generateCompiledNativeLeanAdapters
+	, generateOwnedCPackage: c.generateOwnedCPackage
+	, generateOwnedRubyPackage: ruby.generateOwnedRubyPackage
+	, ownedRubyAdapterSources: artifacts.ownedRubyAdapterSources
+	, gmpIdentity: gmp.gmpIdentity
+	, copiedRustLock: rust.copiedRustLock
+}));
 
 export const ownedRubyScope = { profiles: ["rubygems"]
 	, companions: ["c", "cpp", "cargo", "pypi"]
@@ -76,6 +92,11 @@ const files = value => {
  * @param sources - Exact source hashes from the execution record.
  */
 export const assertOwnedRubyPackageReport = async (report, mode, scalar, sources) => {
+	const {
+		createCompiledNativeModel, generateCompiledNativeLeanAdapters
+		, generateOwnedCPackage, generateOwnedRubyPackage, ownedRubyAdapterSources
+		, gmpIdentity, copiedRustLock
+	} = await ownedRubyProducerModules();
 	assert.equal(report.schemaVersion, 1); assert.equal(report.planNode, 1219); assert.equal(report.mode, mode);
 	for(const flag of ["compiledLean", "installedPackage", "sourceUnchanged"
 		, "sourceFreeInstallation", "sourceFreeRelocatedExecution"
@@ -184,6 +205,7 @@ export const assertOwnedRubyPackageReport = async (report, mode, scalar, sources
 };
 
 const predecessors = async record => {
+	const { generateOwnedRubyPackage } = await ownedRubyProducerModules();
 	assert.deepEqual(record.references.map(item => item.path), referencePaths);
 	const records = [];
 	for(const reference of record.references)
