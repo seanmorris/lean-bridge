@@ -1,0 +1,75 @@
+{
+  "component": {
+    "id": "reviewedcallbacks@1.0.0",
+    "name": "reviewedcallbacks",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51366230,
+          "path": "archives/reviewedcallbacks-1.0.0.crate",
+          "sha256": "4dcfff520301c0c3935385e39d74fc96904cfc3c15accf2bfffadceae240528a"
+        }
+      ],
+      "ecosystem": "cargo",
+      "name": "reviewedcallbacks",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "cargo",
+      "version": "1.0.0"
+    },
+    {
+      "artifacts": [
+        {
+          "bytes": 51379948,
+          "path": "archives/reviewedcallbacks-1.0.0-py3-none-manylinux_2_38_x86_64.whl",
+          "sha256": "6464b8757b26af32ac035bbfafc00b3d06f1c0c6c6c4cb4295feb0af88947192"
+        }
+      ],
+      "ecosystem": "pypi",
+      "name": "reviewedcallbacks",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "pypi",
+      "version": "1.0.0"
+    },
+    {
+      "artifacts": [
+        {
+          "bytes": 50112000,
+          "path": "archives/reviewedcallbacks-1.0.0-x86_64-linux.gem",
+          "sha256": "0660eeee9a8c78025ad26c4d7a0b319851dafef0651bb85b58f0c133dd6dada5"
+        }
+      ],
+      "ecosystem": "rubygems",
+      "name": "reviewedcallbacks",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "rubygems",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "3fea721b302f42d142947873b01e400721ef2eba4d9b1f6a440b40c5254a5b6d",
+      "id": "native-library-v1",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "d825e98825844664aa57b252b6e791ceded43e82b803b9329ac8fddc695cf392"
+  }
+}

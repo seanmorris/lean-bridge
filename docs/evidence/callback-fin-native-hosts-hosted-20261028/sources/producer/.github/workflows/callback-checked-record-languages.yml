@@ -1,0 +1,224 @@
+name: Installed callback checked records in Python, Ruby and Rust
+
+on:
+  workflow_dispatch:
+  # One lane in the bounded weekly default-branch acceptance sweep.
+  schedule:
+    - cron: "47 1 * * 0"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: callback-checked-record-languages-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  callback-checked-record-languages:
+    name: Directional callback checked records in three installed language packages
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    steps:
+      - name: Check out the exact revision
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+          # The producer uses current source/package bytes only. Exclude the
+          # 41+ GiB immutable evidence corpus and publication inventory.
+          sparse-checkout: |
+            /*
+            !/*/
+            /.github/
+            /acceptance/
+            /config/
+            /containers/
+            /demos/
+            /nix/
+            /notices/
+            /patches/
+            /poc/
+            /schema/
+            /scripts/
+            /site/
+            /src/
+            /tests/
+            /docs/
+            !/docs/*
+            /docs/consumer-support.v1.json
+          sparse-checkout-cone-mode: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Select Python 3.12
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Select Ruby 3.3
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3.12'
+      - name: Restore the pinned Lean compiler
+        uses: actions/cache@v5
+        with:
+          path: |
+            .toolchains/downloads
+            .toolchains/elan
+            .toolchains/elan-installer
+          key: lean-toolchain-v1-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'scripts/bootstrap-toolchains.sh') }}
+      - name: Restore the pinned Rust compiler
+        uses: actions/cache@v5
+        with:
+          path: .toolchains/rust-1.90.0
+          key: rust-toolchain-v1-${{ runner.os }}-${{ hashFiles('scripts/bootstrap-rust-ci.sh') }}
+      - name: Bound apt network waits
+        uses: ./.github/actions/bounded-apt
+        timeout-minutes: 1
+      - name: Install compiler and archive dependencies
+        timeout-minutes: 20
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake curl git jq libgmp-dev libuv1-dev m4 pkg-config ripgrep xz-utils zstd
+      - name: Install dependencies and pinned Lean and Rust compilers
+        timeout-minutes: 45
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm ci --ignore-scripts --no-audit --no-fund
+          mkdir -p build
+          bash scripts/bootstrap-toolchains.sh --lean-only 2>&1 | tee build/callback-checked-record-languages-toolchain.log
+          bash scripts/bootstrap-rust-ci.sh 2>&1 | tee -a build/callback-checked-record-languages-toolchain.log
+      - name: Require both directions and author routes in all three languages
+        id: acceptance
+        timeout-minutes: 150
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/env.sh
+          python_command=$(command -v python)
+          ruby_command=$(command -v ruby)
+          gem_command=$(command -v gem)
+          bash scripts/run-callback-checked-record-languages-ci.sh \
+            "$python_command" "$ruby_command" "$gem_command" \
+            "$PWD/.toolchains/rust-1.90.0/bin/rustc" \
+            "$PWD/.toolchains/rust-1.90.0/bin/cargo"
+      - name: Preserve original and partial installed records
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: callback-checked-record-languages-${{ github.sha }}
+          path: |
+            build/callback-checked-record-languages-ci/
+            build/callback-checked-record-languages-toolchain.log
+          if-no-files-found: error
+          retention-days: 30
+      - name: Enforce installed language callback checked-record acceptance
+        if: always() && steps.acceptance.outcome != 'success'
+        run: exit 1
+
+  callback-fin-languages:
+    name: Checked Fin callbacks in three installed language packages
+    needs: callback-checked-record-languages
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    steps:
+      - name: Check out the exact revision
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+          # Match the established job's complete executable checkout without
+          # materializing publication-only evidence or the type-surface index.
+          sparse-checkout: |
+            /*
+            !/*/
+            /.github/
+            /acceptance/
+            /config/
+            /containers/
+            /demos/
+            /nix/
+            /notices/
+            /patches/
+            /poc/
+            /schema/
+            /scripts/
+            /site/
+            /src/
+            /tests/
+            /docs/
+            !/docs/*
+            /docs/consumer-support.v1.json
+          sparse-checkout-cone-mode: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Select Python 3.12
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Select Ruby 3.3
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3.12'
+      - name: Restore the pinned Lean compiler
+        uses: actions/cache@v5
+        with:
+          path: |
+            .toolchains/downloads
+            .toolchains/elan
+            .toolchains/elan-installer
+          key: lean-toolchain-v1-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'scripts/bootstrap-toolchains.sh') }}
+      - name: Restore the pinned Rust compiler
+        uses: actions/cache@v5
+        with:
+          path: .toolchains/rust-1.90.0
+          key: rust-toolchain-v1-${{ runner.os }}-${{ hashFiles('scripts/bootstrap-rust-ci.sh') }}
+      - name: Bound apt network waits
+        uses: ./.github/actions/bounded-apt
+        timeout-minutes: 1
+      - name: Install compiler and archive dependencies
+        timeout-minutes: 20
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake curl git jq libgmp-dev libuv1-dev m4 pkg-config ripgrep xz-utils zstd
+      - name: Install dependencies and pinned Lean and Rust compilers
+        timeout-minutes: 45
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm ci --ignore-scripts --no-audit --no-fund
+          mkdir -p build
+          bash scripts/bootstrap-toolchains.sh --lean-only 2>&1 | tee build/callback-fin-languages-toolchain.log
+          bash scripts/bootstrap-rust-ci.sh 2>&1 | tee -a build/callback-fin-languages-toolchain.log
+      - name: Require both author routes in all three languages
+        id: acceptance
+        timeout-minutes: 150
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/env.sh
+          python_command=$(command -v python)
+          ruby_command=$(command -v ruby)
+          gem_command=$(command -v gem)
+          bash scripts/run-callback-fin-languages-ci.sh \
+            "$python_command" "$ruby_command" "$gem_command" \
+            "$PWD/.toolchains/rust-1.90.0/bin/rustc" \
+            "$PWD/.toolchains/rust-1.90.0/bin/cargo"
+      - name: Preserve original and partial installed records
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: callback-fin-languages-${{ github.sha }}
+          path: |
+            build/callback-fin-languages-ci/
+            build/callback-fin-languages-toolchain.log
+          if-no-files-found: error
+          retention-days: 30
+      - name: Enforce installed callback Fin language acceptance
+        if: always() && steps.acceptance.outcome != 'success'
+        run: exit 1

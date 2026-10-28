@@ -1,0 +1,33 @@
+{
+  "interpreterCount": 4,
+  "kind": "perl",
+  "modes": [
+    "prebuilt-only",
+    "build-xs"
+  ],
+  "producerCommit": "be95f599fe2b11c59bc03b4baa48a31eeacf1616",
+  "reportSha256": "c835d046553dcf91da8923f2c9a3a4d57af7e1d79e84a19c65122e88c9a9e4b0",
+  "reports": 16,
+  "retainedPackages": {
+    "routes": [
+      {
+        "archiveBytes": 51531037,
+        "archives": 2,
+        "receiptSha256": "20ed22400a9de3259564ef9a6828fa49a3f29d817f1427182a389e686202c08b",
+        "route": "ordinary"
+      },
+      {
+        "archiveBytes": 51535647,
+        "archives": 2,
+        "receiptSha256": "c88ac1140e9869b865b559148eb17fd1eb254e1c43976cf4f97929202c5f42a1",
+        "route": "reviewed"
+      }
+    ],
+    "schemaVersion": 1
+  },
+  "routes": [
+    "ordinary",
+    "reviewed"
+  ],
+  "schemaVersion": 1
+}
