@@ -88,9 +88,17 @@ export const compileCopiedRubyModel = ir => {
 	}
 	for(const [index, value] of [...surface.callbacks.values()].entries()) Object.assign(value, { index, ffi: "VOIDP", size: 8 });
 	for(const fn of surface.functions)
+	{
 		// Ruby permits qualified methods such as Enumerator#next. Keep keyword
 		// record fields rejected because their initializer uses local variables.
 		if(reserved.has(fn.field) && fn.field !== "next") fail(fn.declaration, `Ruby function name collides: ${fn.field}`);
+		fn.declaration.parameters.forEach((parameter, index) => {
+			if(parameter.optional && fn.declaration.parameters.slice(index + 1)
+				.some(item => !item.optional))
+				fail(fn.declaration
+					, `${fn.declaration.id}.${parameter.name} precedes a required positional parameter`);
+		});
+	}
 	return { ir, surface, componentName, namespace: `LeanBridge::${componentName}`, requirePath: `lean_bridge/${surface.prefix}` };
 };
 

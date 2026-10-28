@@ -10,8 +10,12 @@ import { copiedRubyConversions, copiedRubyHelpers, readRubyValue } from "./copie
 import { rubyCopiedAliases, rubyAliasCatalogDocs, rubyAliasSiteDocs, rubyAliasReadme } from "./copied-aliases.mjs";
 import { rubyValue, rubyClosurePublic, rubyNativeCall, rubyCallableTypes, rubyCallableSupport } from "./callables.mjs";
 import { nativeFinSummary, nativeFinContainerNote, nativeFinRefinements, nativeRefinementReadme } from "../native/fin-refinements.mjs";
+import { renderRubyDefault } from "./default-value.mjs";
 
 const args = fn => fn.declaration.parameters.map((_, index) => `arg${index}`);
+const publicArgs = (model, fn) => fn.declaration.parameters.map((parameter, index) =>
+	`arg${index}${parameter.optional ? ` = ${renderRubyDefault(parameter.default
+		, parameter.type, id => model.ir.types.find(type => type.id === id))}` : ""}`);
 const finBounds = (fn, types) => nativeFinSummary(fn.declaration, args(fn), types);
 // A dependent Fin bound is an earlier Nat argument of the same call, not a constant.
 const dependentFin = (functions, types) => functions.some(fn =>
@@ -66,9 +70,10 @@ ${valueMethods(copy.fields)}
     end`).join("\n")}${variants(model)}
     module_function
 ${model.surface.functions.map((fn, index) => {
-	const parameters = args(fn), last = parameters.at(-1);
+	const parameters = args(fn), signature = publicArgs(model, fn);
+	const last = parameters.at(-1);
 	const block = fn.declaration.parameters.length && model.surface.callbacks.has(fn.declaration.parameters.at(-1).type.id);
-	return `${rubyAliasSiteDocs(model, fn.declaration.parameters.map((site, n) => ({ name: `arg${n}`, type: site.type })), fn.declaration.result.type)}${finComment(fn, model.ir.types)}    def ${fn.field}(${(block ? [...parameters.slice(0, -1), `${last} = nil`, "&block"] : parameters).join(", ")})
+	return `${rubyAliasSiteDocs(model, fn.declaration.parameters.map((site, n) => ({ name: `arg${n}`, type: site.type })), fn.declaration.result.type)}${finComment(fn, model.ir.types)}    def ${fn.field}(${(block ? [...signature.slice(0, -1), `${last} = nil`, "&block"] : signature).join(", ")})
       ${block ? `raise ArgumentError, "Pass a callable or a block, not both" if !${last}.nil? && block\n      ${last} = block if ${last}.nil?` : ""}
       Native.call${index}(${parameters.join(", ")})
     end`;
