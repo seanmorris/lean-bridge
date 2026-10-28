@@ -1,0 +1,110 @@
+{
+  "additions": [
+    {
+      "currentSha256": "1ed445e3d4fe2a5a73aca1619d31a31df19fdf09df6511b231a8e3ce7dfe3dcc",
+      "path": "scripts/update-callback-fin-sparse-checkout-source-history.mjs"
+    },
+    {
+      "currentSha256": "114975b198c0b5aeee834964a6fc49e43bff50365ffea52e36324f119e2ed171",
+      "path": "tests/helpers/callback-fin-sparse-checkout-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "bdde2ae3fb5c8fedaf2e1f2390abdb9727f6c0aee422e724ac86cef507a87ab9",
+      "path": "tests/helpers/callback-fin-sparse-checkout-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "be95f599fe2b11c59bc03b4baa48a31eeacf1616",
+  "integrationCommit": "e5f0d65665b8a963f46fe956521d3e40476c40f0",
+  "integrationUpdates": [
+    {
+      "currentSha256": "fe3a4ddedc0a1f1a7f6897743d23b4fbbcb7f8ce608e4fa8af95cab5c11001cb",
+      "edits": [
+        {
+          "current": "import \"./helpers/callback-fin-sparse-checkout-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 1749
+        }
+      ],
+      "path": "tests/checked-javascript-partition-10.test.mjs",
+      "previousSha256": "b193e19ab51963a4f330d45e62fcbafe688fda2b02fbc9bd8b919a79d32085c0"
+    },
+    {
+      "currentSha256": "535e51cfc2a98e103e6e18307681a4d588782dbcc63550772dfba568792f6ec1",
+      "edits": [
+        {
+          "current": "import { beforeCallbackFinSparseCheckoutSource, callbackFinSparseCheckoutNormalizationPaths } from \"./callback-fin-sparse-checkout-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...callbackFinSparseCheckoutNormalizationPaths\n\t, ...callbackFinShallowCheckoutNormalizationPaths\n",
+          "previous": "\t...callbackFinShallowCheckoutNormalizationPaths\n",
+          "start": 199838
+        },
+        {
+          "current": "\tlet stage = beforeCallbackFinSparseCheckoutSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCallbackFinShallowCheckoutSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeCallbackFinShallowCheckoutSource(path, text, expected);\n",
+          "start": 248779
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "b7a7723cc82fa3d2fba3ff050eb11692ed7b096bd68ae834ded08e826c4795a5"
+    }
+  ],
+  "livePinRefreshes": 1,
+  "milestone": "callback-fin-sparse-checkout-source-v1",
+  "pinRepairCommit": "bc0e1de9cc1460a61cb78ddc8c496cf3dd163ae6",
+  "pinUpdates": [
+    {
+      "currentSha256": "5d0beb94b6f277491d4a6fbecabcb99f75cd1aeedbb3e6c6fd9f31ebcbed0982",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"978d7c7ad6ba72c185ed53453fa3cedbae28a2a1760f3d1bd484bb4a83a44c13\"\n",
+          "previous": "          \"sha256\": \"aaec6ee5695b8741dce4800eed7e8823ab4347abbcc16d30e451a3483830d8a6\"\n",
+          "start": 74240620
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "48d6b23844ff38227d76c07a394b9fc296ffd2b679b7356cdaf40dc501997bca"
+    }
+  ],
+  "predecessorCommit": "174c6f114e563f12f2f346c73b007d6ec5022dd1",
+  "schemaVersion": 1,
+  "scope": "Materialize the complete executable repository while excluding the 41+ GiB immutable docs/evidence corpus and the publication-only type-surface inventory from four callback acceptance checkouts. Retain the current commit, all source, fixtures, scripts and consumer-support contract. Refresh the one live source pin affected by this transition; change no type-surface claim, observation, evidence inventory or runtime contract.",
+  "updates": [
+    {
+      "currentSha256": "978d7c7ad6ba72c185ed53453fa3cedbae28a2a1760f3d1bd484bb4a83a44c13",
+      "edits": [
+        {
+          "current": "          # The producer uses current source/package bytes only. Exclude the\n          # 41+ GiB immutable evidence corpus and publication inventory.\n          sparse-checkout: |\n            /*\n            !/*/\n            /.github/\n            /acceptance/\n            /config/\n            /containers/\n            /demos/\n            /nix/\n            /notices/\n            /patches/\n            /poc/\n            /schema/\n            /scripts/\n            /site/\n            /src/\n            /tests/\n            /docs/\n            !/docs/*\n            /docs/consumer-support.v1.json\n          sparse-checkout-cone-mode: false\n",
+          "previous": "",
+          "start": 673
+        },
+        {
+          "current": "          # Match the established job's complete executable checkout without\n          # materializing publication-only evidence or the type-surface index.\n          sparse-checkout: |\n            /*\n            !/*/\n            /.github/\n            /acceptance/\n            /config/\n            /containers/\n            /demos/\n            /nix/\n            /notices/\n            /patches/\n            /poc/\n            /schema/\n            /scripts/\n            /site/\n            /src/\n            /tests/\n            /docs/\n            !/docs/*\n            /docs/consumer-support.v1.json\n          sparse-checkout-cone-mode: false\n",
+          "previous": "",
+          "start": 4583
+        }
+      ],
+      "path": ".github/workflows/callback-checked-record-languages.yml",
+      "previousSha256": "aaec6ee5695b8741dce4800eed7e8823ab4347abbcc16d30e451a3483830d8a6"
+    },
+    {
+      "currentSha256": "d8a17d1433385bf6414ae31e059260538c86bfad01ef059c50758b6397728018",
+      "edits": [
+        {
+          "current": "          # The producer uses current source/package bytes only. Exclude the\n          # 41+ GiB immutable evidence corpus and publication inventory.\n          sparse-checkout: |\n            /*\n            !/*/\n            /.github/\n            /acceptance/\n            /config/\n            /containers/\n            /demos/\n            /nix/\n            /notices/\n            /patches/\n            /poc/\n            /schema/\n            /scripts/\n            /site/\n            /src/\n            /tests/\n            /docs/\n            !/docs/*\n            /docs/consumer-support.v1.json\n          sparse-checkout-cone-mode: false\n",
+          "previous": "",
+          "start": 631
+        },
+        {
+          "current": "          # Match the established job's complete executable checkout without\n          # materializing publication-only evidence or the type-surface index.\n          sparse-checkout: |\n            /*\n            !/*/\n            /.github/\n            /acceptance/\n            /config/\n            /containers/\n            /demos/\n            /nix/\n            /notices/\n            /patches/\n            /poc/\n            /schema/\n            /scripts/\n            /site/\n            /src/\n            /tests/\n            /docs/\n            !/docs/*\n            /docs/consumer-support.v1.json\n          sparse-checkout-cone-mode: false\n",
+          "previous": "",
+          "start": 4048
+        }
+      ],
+      "path": ".github/workflows/callback-checked-record-perl.yml",
+      "previousSha256": "b302553c7e42f6ffbff26a8f9616da72b9a4dd4bf4cc3940212edeb04d8d187b"
+    }
+  ]
+}
