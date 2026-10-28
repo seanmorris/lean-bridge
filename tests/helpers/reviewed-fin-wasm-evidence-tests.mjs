@@ -7,8 +7,8 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
-import { reviewedFinWasmIr } from "./reviewed-fin-wasm-fixture.mjs";
-import { reviewedFinWasmTypeScript } from "./reviewed-fin-wasm-typescript.mjs";
+import { reviewedFinWasmPreFieldIr } from "./reviewed-fin-wasm-fixture.mjs";
+import { reviewedFinWasmPreFieldTypeScript } from "./reviewed-fin-wasm-typescript.mjs";
 import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
 
 const directory = "docs/evidence/reviewed-fin-npm-20261007";
@@ -42,7 +42,7 @@ test("npm Fin archives retain both routes, exact scalar/structural ABIs and inst
 		assert.equal(report.independentBuilds, 2);
 		for(const flag of ["reproducible", "offlineInstall", "sourceRemovedBeforeInstallation", "compilerFreePath"])
 			assert.equal(report[flag], true, flag);
-		const expected = reviewedFinWasmIr(selection);
+		const expected = reviewedFinWasmPreFieldIr(selection);
 		assert.deepEqual(report.refinements, Object.fromEntries(expected.declarations.map(item => [item.source.declaration, item.source.extensions["lean-lang.org/refinements"]])));
 		assert.equal(sha256(await sourceAtFinHistoryMilestone("tests/fixtures/onboarding/reviewed-fin-wasm/ReviewedFin.lean", report.sourceSha256)), report.sourceSha256);
 		assert.equal(sha256(await sourceAtFinHistoryMilestone("tests/fixtures/reviewed-fin-wasm/javascript.mjs", report.consumerSha256)), report.consumerSha256);
@@ -50,7 +50,8 @@ test("npm Fin archives retain both routes, exact scalar/structural ABIs and inst
 		else assert.equal(Object.hasOwn(report, "reviewedSourceSha256"), false);
 		assert.equal(report.typescript.strict, true);
 		assert.equal(report.typescript.skipLibCheck, false);
-		assert.equal(report.typescript.sourceSha256, sha256(reviewedFinWasmTypeScript(selection)));
+		assert.equal(report.typescript.sourceSha256
+			, sha256(reviewedFinWasmPreFieldTypeScript(selection)));
 		assert.deepEqual(report.executions.map(item => item.profile), ["node-javascript", "node-typescript"]);
 		const result = { module: "reviewed-fin", selection, checks: selection === "scalar" ? 50 : 200, rejections: selection === "scalar" ? 126 : 270 };
 		for(const execution of report.executions) assert.deepEqual(execution.result, result);
