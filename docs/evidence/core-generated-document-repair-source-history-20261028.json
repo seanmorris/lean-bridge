@@ -1,0 +1,326 @@
+{
+  "additions": [
+    {
+      "currentSha256": "b4f06666cc8e51844f260ee5912206785707e6bb1876cf2bebcffe08c16f6d15",
+      "path": "scripts/update-core-generated-document-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "7d700e8b370874f5356c7e88a379582f10efee4c0bbad4dfc6bc75639c4f231a",
+      "path": "tests/helpers/core-generated-document-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "80914ebe7d09cf8a70610427074b543df273ef1d5050dac84d17a6c44de4a395",
+      "path": "tests/helpers/core-generated-document-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "494a9c00adf44e0fc632e32223fe92093808e445",
+  "integrationUpdates": [
+    {
+      "currentSha256": "fb1bf859880795f49945214fcd47ec561908c7232db660da7b42722b8dfd4c18",
+      "edits": [
+        {
+          "current": "import \"./helpers/core-generated-document-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 170
+        }
+      ],
+      "path": "tests/checked-javascript-partition-10.test.mjs",
+      "previousSha256": "e8d28be7ee17dd52adfbec02142c10f0727b99ba1e7e575d798d1db809af8cd5"
+    },
+    {
+      "currentSha256": "1f28e87a6d86bc975d5e196eda6f9c61dbd65839eda6b172a8d3ba70335970ab",
+      "edits": [
+        {
+          "current": "import { beforeCoreGeneratedDocumentRepairSource, coreGeneratedDocumentRepairNormalizationPaths } from \"./core-generated-document-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...coreGeneratedDocumentRepairNormalizationPaths\n\t, ...coreShardFiveEightRepairNormalizationPaths\n",
+          "previous": "\t...coreShardFiveEightRepairNormalizationPaths\n",
+          "start": 208768
+        },
+        {
+          "current": "\tlet stage = beforeCoreGeneratedDocumentRepairSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCoreShardFiveEightRepairSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeCoreShardFiveEightRepairSource(path, text, expected);\n",
+          "start": 260638
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "b675861a6af9972a238d8197a49d3e008286bd4dd5138c8f64f6a40d3a5b77dd"
+    }
+  ],
+  "milestone": "core-generated-document-repair-source-v1",
+  "predecessorCommit": "ade7780d151b2568743ceec7e312e48eed232081",
+  "schemaVersion": 1,
+  "scope": "Regenerate all ten consumer type-guide pages from the validated signature-specialization inventory and refresh exactly 28 matching live-source pins without changing support cells, evidence scope or archived artifacts. Register the complete transition newest-first; hosted Core remains the terminal acceptance gate.",
+  "updates": [
+    {
+      "currentSha256": "5c526f7741e919e1e3d64a36d1c67f8e485be3634979a03e40c1640dfa9b6b9c",
+      "edits": [
+        {
+          "current": "| `Polymorphic exports` | `Concrete static C# method for each configured specialization` (signature); `A concrete exported function over the selected named record, List or Option specialization` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Each configured type application becomes a distinct monomorphic host function. The unspecialized Lean declaration is absent. Name a closed generic structure application with an abbrev to get a host record with instantiated fields. Configured functions over these records, List aliases and Option aliases use ordinary concrete signatures. Array-valued fields and arrays of alias-named records use the host's ordinary array representation with recursive element checks. Call the concrete export with its selected value; Lean fixes the configured type before compilation and no runtime type token crosses the host boundary. Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |\n| `Implicit arguments {α}` | `Concrete host signature with no runtime type argument` (signature); `A concrete exported host signature whose implicit Lean type argument was fixed before compilation` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Lean elaboration supplies configured type arguments before native compilation; the host passes no placeholder value. Call the concrete export with its selected value; Lean fixes the configured type before compilation and no runtime type token crosses the host boundary. Required: Separate erased type arguments from implicit runtime values; resolve them from elaborated information. |\n| `Instance arguments [C α]` | `Concrete host signature with the Lean-selected instance dictionary erased` (signature); `A concrete exported function whose selected type-class dictionary is compiled into the specialization` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Lean synthesizes the selected dictionary before native compilation. The host cannot provide or replace it. Call the concrete export normally; the configured dictionary is already selected and no dictionary token crosses the host boundary. Required: Specialize or supply the selected dictionary without changing runtime behavior. |\n",
+          "previous": "| `Polymorphic exports` | `Concrete static C# method for each configured specialization` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Generation rejected | Each configured type application becomes a distinct monomorphic host function. The unspecialized Lean declaration is absent. Name a closed generic structure application with an abbrev to get a host record with instantiated fields. Configured functions over these records, List aliases and Option aliases use ordinary concrete signatures. Array-valued fields and arrays of alias-named records use the host's ordinary array representation with recursive element checks. Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |\n| `Implicit arguments {α}` | `Concrete host signature with no runtime type argument` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Not audited | Lean elaboration supplies configured type arguments before native compilation; the host passes no placeholder value. Required: Separate erased type arguments from implicit runtime values; resolve them from elaborated information. |\n| `Instance arguments [C α]` | `Concrete host signature with the Lean-selected instance dictionary erased` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Not audited | Lean synthesizes the selected dictionary before native compilation. The host cannot provide or replace it. Required: Specialize or supply the selected dictionary without changing runtime behavior. |\n",
+          "start": 84409
+        }
+      ],
+      "path": "docs/consume/dotnet.md",
+      "previousSha256": "935223b10673a9da3b22e59c5624142a995a2bc490fd584bcf732d16426fdb40"
+    },
+    {
+      "currentSha256": "3ad100a688107168793238eda43eff8a633aa08bb1f30104213346675c95620b",
+      "edits": [
+        {
+          "current": "| `Polymorphic exports` | `Concrete static JVM method for each configured specialization, called from Java and Kotlin` (signature); `A concrete exported function over the selected named record, List or Option specialization` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Each configured type application becomes a distinct monomorphic host function. The unspecialized Lean declaration is absent. Name a closed generic structure application with an abbrev to get a host record with instantiated fields. Configured functions over these records, List aliases and Option aliases use ordinary concrete signatures. Array-valued fields and arrays of alias-named records use the host's ordinary array representation with recursive element checks. Call the concrete export with its selected value; Lean fixes the configured type before compilation and no runtime type token crosses the host boundary. Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |\n| `Implicit arguments {α}` | `Concrete host signature with no runtime type argument` (signature); `A concrete exported host signature whose implicit Lean type argument was fixed before compilation` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Lean elaboration supplies configured type arguments before native compilation; the host passes no placeholder value. Call the concrete export with its selected value; Lean fixes the configured type before compilation and no runtime type token crosses the host boundary. Required: Separate erased type arguments from implicit runtime values; resolve them from elaborated information. |\n| `Instance arguments [C α]` | `Concrete host signature with the Lean-selected instance dictionary erased` (signature); `A concrete exported function whose selected type-class dictionary is compiled into the specialization` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Lean synthesizes the selected dictionary before native compilation. The host cannot provide or replace it. Call the concrete export normally; the configured dictionary is already selected and no dictionary token crosses the host boundary. Required: Specialize or supply the selected dictionary without changing runtime behavior. |\n",
+          "previous": "| `Polymorphic exports` | `Concrete static JVM method for each configured specialization, called from Java and Kotlin` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Generation rejected | Each configured type application becomes a distinct monomorphic host function. The unspecialized Lean declaration is absent. Name a closed generic structure application with an abbrev to get a host record with instantiated fields. Configured functions over these records, List aliases and Option aliases use ordinary concrete signatures. Array-valued fields and arrays of alias-named records use the host's ordinary array representation with recursive element checks. Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |\n| `Implicit arguments {α}` | `Concrete host signature with no runtime type argument` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Not audited | Lean elaboration supplies configured type arguments before native compilation; the host passes no placeholder value. Required: Separate erased type arguments from implicit runtime values; resolve them from elaborated information. |\n| `Instance arguments [C α]` | `Concrete host signature with the Lean-selected instance dictionary erased` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Not audited | Lean synthesizes the selected dictionary before native compilation. The host cannot provide or replace it. Required: Specialize or supply the selected dictionary without changing runtime behavior. |\n",
+          "start": 91194
+        }
+      ],
+      "path": "docs/consume/java.md",
+      "previousSha256": "701902b2ec26ab7fd68c09576d8e0200c03304bb08b2026af2654331b3cd48a1"
+    },
+    {
+      "currentSha256": "9062d91209fe2d38e70dd5de74a56fae9ddc16ffa0213a1fcd440c9180e025cf",
+      "edits": [
+        {
+          "current": "| `Polymorphic exports` | `Concrete static JVM method for each configured specialization, called from Java and Kotlin` (signature); `A concrete exported function over the selected named record, List or Option specialization` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Each configured type application becomes a distinct monomorphic host function. The unspecialized Lean declaration is absent. Name a closed generic structure application with an abbrev to get a host record with instantiated fields. Configured functions over these records, List aliases and Option aliases use ordinary concrete signatures. Array-valued fields and arrays of alias-named records use the host's ordinary array representation with recursive element checks. Call the concrete export with its selected value; Lean fixes the configured type before compilation and no runtime type token crosses the host boundary. Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |\n| `Implicit arguments {α}` | `Concrete host signature with no runtime type argument` (signature); `A concrete exported host signature whose implicit Lean type argument was fixed before compilation` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Lean elaboration supplies configured type arguments before native compilation; the host passes no placeholder value. Call the concrete export with its selected value; Lean fixes the configured type before compilation and no runtime type token crosses the host boundary. Required: Separate erased type arguments from implicit runtime values; resolve them from elaborated information. |\n| `Instance arguments [C α]` | `Concrete host signature with the Lean-selected instance dictionary erased` (signature); `A concrete exported function whose selected type-class dictionary is compiled into the specialization` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Lean synthesizes the selected dictionary before native compilation. The host cannot provide or replace it. Call the concrete export normally; the configured dictionary is already selected and no dictionary token crosses the host boundary. Required: Specialize or supply the selected dictionary without changing runtime behavior. |\n",
+          "previous": "| `Polymorphic exports` | `Concrete static JVM method for each configured specialization, called from Java and Kotlin` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Generation rejected | Each configured type application becomes a distinct monomorphic host function. The unspecialized Lean declaration is absent. Name a closed generic structure application with an abbrev to get a host record with instantiated fields. Configured functions over these records, List aliases and Option aliases use ordinary concrete signatures. Array-valued fields and arrays of alias-named records use the host's ordinary array representation with recursive element checks. Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |\n| `Implicit arguments {α}` | `Concrete host signature with no runtime type argument` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Not audited | Lean elaboration supplies configured type arguments before native compilation; the host passes no placeholder value. Required: Separate erased type arguments from implicit runtime values; resolve them from elaborated information. |\n| `Instance arguments [C α]` | `Concrete host signature with the Lean-selected instance dictionary erased` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Not audited | Lean synthesizes the selected dictionary before native compilation. The host cannot provide or replace it. Required: Specialize or supply the selected dictionary without changing runtime behavior. |\n",
+          "start": 83763
+        }
+      ],
+      "path": "docs/consume/kotlin.md",
+      "previousSha256": "00e75754435a067d18abc3f0f1c786b8fbfe4c4b7c33d7f373a5df4fe552896b"
+    },
+    {
+      "currentSha256": "7c9394cfd462d9484e93b9a5c56056443686386c611be7cbe47b65840d3d3d81",
+      "edits": [
+        {
+          "current": "| `Polymorphic exports` | `Concrete named Perl subroutine for each configured specialization` (signature); `A concrete exported function over the selected named record, List or Option specialization` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Each configured type application becomes a distinct monomorphic Perl subroutine. The unspecialized Lean declaration is absent. Name a closed generic structure application with an abbrev to get a host record with instantiated fields. Configured functions over these records, List aliases and Option aliases use ordinary concrete signatures. Array-valued fields and arrays of alias-named records use the host's ordinary array representation with recursive element checks. Call the concrete export with its selected value; Lean fixes the configured type before compilation and no runtime type token crosses the host boundary. Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |\n| `Implicit arguments {α}` | `Concrete Perl signature with no runtime type argument` (signature); `A concrete exported host signature whose implicit Lean type argument was fixed before compilation` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Lean elaboration supplies configured type arguments before native compilation; Perl passes no placeholder value. Call the concrete export with its selected value; Lean fixes the configured type before compilation and no runtime type token crosses the host boundary. Required: Separate erased type arguments from implicit runtime values; resolve them from elaborated information. |\n| `Instance arguments [C α]` | `Concrete Perl signature with the Lean-selected instance dictionary erased` (signature); `A concrete exported function whose selected type-class dictionary is compiled into the specialization` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Lean synthesizes the selected dictionary before native compilation. Perl cannot provide or replace it. Call the concrete export normally; the configured dictionary is already selected and no dictionary token crosses the host boundary. Required: Specialize or supply the selected dictionary without changing runtime behavior. |\n",
+          "previous": "| `Polymorphic exports` | `Concrete named Perl subroutine for each configured specialization` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Not audited | Each configured type application becomes a distinct monomorphic Perl subroutine. The unspecialized Lean declaration is absent. Name a closed generic structure application with an abbrev to get a host record with instantiated fields. Configured functions over these records, List aliases and Option aliases use ordinary concrete signatures. Array-valued fields and arrays of alias-named records use the host's ordinary array representation with recursive element checks. Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |\n| `Implicit arguments {α}` | `Concrete Perl signature with no runtime type argument` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Not audited | Lean elaboration supplies configured type arguments before native compilation; Perl passes no placeholder value. Required: Separate erased type arguments from implicit runtime values; resolve them from elaborated information. |\n| `Instance arguments [C α]` | `Concrete Perl signature with the Lean-selected instance dictionary erased` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Not audited | Lean synthesizes the selected dictionary before native compilation. Perl cannot provide or replace it. Required: Specialize or supply the selected dictionary without changing runtime behavior. |\n",
+          "start": 79837
+        }
+      ],
+      "path": "docs/consume/perl.md",
+      "previousSha256": "93c408d188ddfcb5c477fd01ec5c18b98fd7dd54448105324b0ce7ab7625a5fa"
+    },
+    {
+      "currentSha256": "2f640d97d3e70523e42f1b4cf357d8731f63eb09125027793e0ad15737ba19e3",
+      "edits": [
+        {
+          "current": "| `Polymorphic exports` | `Concrete Python function for each configured specialization` (signature); `A concrete exported function over the selected named record, List or Option specialization` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Each configured application produces a monomorphic Python function. The open declaration is absent. Name a closed generic structure application with an abbrev to get a host record with instantiated fields. Configured functions over these records, List aliases and Option aliases use ordinary concrete signatures. Array-valued fields and arrays of alias-named records use the host's ordinary array representation with recursive element checks. Call the concrete export with its selected value; Lean fixes the configured type before compilation and no runtime type token crosses the host boundary. Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |\n| `Implicit arguments {α}` | `Concrete host signature with no runtime type argument` (signature); `A concrete exported host signature whose implicit Lean type argument was fixed before compilation` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Lean resolves configured type arguments at build time; Python passes no placeholder. Call the concrete export with its selected value; Lean fixes the configured type before compilation and no runtime type token crosses the host boundary. Required: Separate erased type arguments from implicit runtime values; resolve them from elaborated information. |\n| `Instance arguments [C α]` | `Concrete host signature with the Lean-selected instance dictionary erased` (signature); `A concrete exported function whose selected type-class dictionary is compiled into the specialization` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Lean selects the dictionary before native compilation; Python cannot replace it. Call the concrete export normally; the configured dictionary is already selected and no dictionary token crosses the host boundary. Required: Specialize or supply the selected dictionary without changing runtime behavior. |\n",
+          "previous": "| `Polymorphic exports` | `Concrete Python function for each configured specialization` (signature); `Named finite specializations` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Generator inspected | Each configured application produces a monomorphic Python function. The open declaration is absent. Name a closed generic structure application with an abbrev to get a host record with instantiated fields. Configured functions over these records, List aliases and Option aliases use ordinary concrete signatures. Array-valued fields and arrays of alias-named records use the host's ordinary array representation with recursive element checks. Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |\n| `Implicit arguments {α}` | `Concrete host signature with no runtime type argument` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Not audited | Lean resolves configured type arguments at build time; Python passes no placeholder. Required: Separate erased type arguments from implicit runtime values; resolve them from elaborated information. |\n| `Instance arguments [C α]` | `Concrete host signature with the Lean-selected instance dictionary erased` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Not audited | Lean selects the dictionary before native compilation; Python cannot replace it. Required: Specialize or supply the selected dictionary without changing runtime behavior. |\n",
+          "start": 82682
+        }
+      ],
+      "path": "docs/consume/python.md",
+      "previousSha256": "07ce40e61747c486285edfd6cb21f6a7655a237e7c53adfe0859358dd2ff3b8e"
+    },
+    {
+      "currentSha256": "e721a07da033b90c2cc207b7920e224bc793a6bcc44196a5d85f046c5140472a",
+      "edits": [
+        {
+          "current": "| `Polymorphic exports` | `Concrete Ruby module method for each configured specialization` (signature); `A concrete exported function over the selected named record, List or Option specialization` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Each configured type application becomes a distinct monomorphic host function. The unspecialized Lean declaration is absent. Name a closed generic structure application with an abbrev to get a host record with instantiated fields. Configured functions over these records, List aliases and Option aliases use ordinary concrete signatures. Array-valued fields and arrays of alias-named records use the host's ordinary array representation with recursive element checks. Call the concrete export with its selected value; Lean fixes the configured type before compilation and no runtime type token crosses the host boundary. Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |\n| `Implicit arguments {α}` | `Concrete host signature with no runtime type argument` (signature); `A concrete exported host signature whose implicit Lean type argument was fixed before compilation` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Lean elaboration supplies configured type arguments before native compilation; the host passes no placeholder value. Call the concrete export with its selected value; Lean fixes the configured type before compilation and no runtime type token crosses the host boundary. Required: Separate erased type arguments from implicit runtime values; resolve them from elaborated information. |\n| `Instance arguments [C α]` | `Concrete host signature with the Lean-selected instance dictionary erased` (signature); `A concrete exported function whose selected type-class dictionary is compiled into the specialization` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Lean synthesizes the selected dictionary before native compilation. The host cannot provide or replace it. Call the concrete export normally; the configured dictionary is already selected and no dictionary token crosses the host boundary. Required: Specialize or supply the selected dictionary without changing runtime behavior. |\n",
+          "previous": "| `Polymorphic exports` | `Concrete Ruby module method for each configured specialization` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Generation rejected | Each configured type application becomes a distinct monomorphic host function. The unspecialized Lean declaration is absent. Name a closed generic structure application with an abbrev to get a host record with instantiated fields. Configured functions over these records, List aliases and Option aliases use ordinary concrete signatures. Array-valued fields and arrays of alias-named records use the host's ordinary array representation with recursive element checks. Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |\n| `Implicit arguments {α}` | `Concrete host signature with no runtime type argument` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Not audited | Lean elaboration supplies configured type arguments before native compilation; the host passes no placeholder value. Required: Separate erased type arguments from implicit runtime values; resolve them from elaborated information. |\n| `Instance arguments [C α]` | `Concrete host signature with the Lean-selected instance dictionary erased` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Not audited | Lean synthesizes the selected dictionary before native compilation. The host cannot provide or replace it. Required: Specialize or supply the selected dictionary without changing runtime behavior. |\n",
+          "start": 82267
+        }
+      ],
+      "path": "docs/consume/ruby.md",
+      "previousSha256": "7290c76d24e0e0873305154484f7941aa23381381c9f2b1bf9a5e2adb1b28905"
+    },
+    {
+      "currentSha256": "24a4e5f340365827ff7efb27fcf67f043069ecee5ee8eb2ba06020deb8de2a04",
+      "edits": [
+        {
+          "current": "| `Polymorphic exports` | `Concrete Rust function for each configured specialization` (signature); `A concrete exported function over the selected named record, List or Option specialization` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Each configured type application becomes a distinct monomorphic host function. The unspecialized Lean declaration is absent. Name a closed generic structure application with an abbrev to get a host record with instantiated fields. Configured functions over these records, List aliases and Option aliases use ordinary concrete signatures. Array-valued fields and arrays of alias-named records use the host's ordinary array representation with recursive element checks. Call the concrete export with its selected value; Lean fixes the configured type before compilation and no runtime type token crosses the host boundary. Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |\n| `Implicit arguments {α}` | `Concrete host signature with no runtime type argument` (signature); `A concrete exported host signature whose implicit Lean type argument was fixed before compilation` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Lean elaboration supplies configured type arguments before native compilation; the host passes no placeholder value. Call the concrete export with its selected value; Lean fixes the configured type before compilation and no runtime type token crosses the host boundary. Required: Separate erased type arguments from implicit runtime values; resolve them from elaborated information. |\n| `Instance arguments [C α]` | `Concrete host signature with the Lean-selected instance dictionary erased` (signature); `A concrete exported function whose selected type-class dictionary is compiled into the specialization` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Lean synthesizes the selected dictionary before native compilation. The host cannot provide or replace it. Call the concrete export normally; the configured dictionary is already selected and no dictionary token crosses the host boundary. Required: Specialize or supply the selected dictionary without changing runtime behavior. |\n",
+          "previous": "| `Polymorphic exports` | `Concrete Rust function for each configured specialization` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Not audited | Each configured type application becomes a distinct monomorphic host function. The unspecialized Lean declaration is absent. Name a closed generic structure application with an abbrev to get a host record with instantiated fields. Configured functions over these records, List aliases and Option aliases use ordinary concrete signatures. Array-valued fields and arrays of alias-named records use the host's ordinary array representation with recursive element checks. Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |\n| `Implicit arguments {α}` | `Concrete host signature with no runtime type argument` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Not audited | Lean elaboration supplies configured type arguments before native compilation; the host passes no placeholder value. Required: Separate erased type arguments from implicit runtime values; resolve them from elaborated information. |\n| `Instance arguments [C α]` | `Concrete host signature with the Lean-selected instance dictionary erased` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Not audited | Lean synthesizes the selected dictionary before native compilation. The host cannot provide or replace it. Required: Specialize or supply the selected dictionary without changing runtime behavior. |\n",
+          "start": 83070
+        }
+      ],
+      "path": "docs/consume/rust.md",
+      "previousSha256": "a225d5cd7fd1e5ba311faf82c150168a48e5d2173b9147ec3b6ecfd58539e5da"
+    },
+    {
+      "currentSha256": "da2dcef248e742fa8e39fb9cbabdea14bfbcbbdb3e055133553a0bb756e3b856",
+      "edits": [
+        {
+          "current": "| `Polymorphic exports` | `Concrete WIT export for each configured specialization` (signature); `A concrete exported function over the selected named record, List or Option specialization` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Each configured type application becomes a distinct monomorphic host function. The unspecialized Lean declaration is absent. Name a closed generic structure application with an abbrev to get a host record with instantiated fields. Configured functions over these records, List aliases and Option aliases use ordinary concrete signatures. Array-valued fields and arrays of alias-named records use the host's ordinary array representation with recursive element checks. Call the concrete export with its selected value; Lean fixes the configured type before compilation and no runtime type token crosses the host boundary. Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |\n| `Implicit arguments {α}` | `Concrete host signature with no runtime type argument` (signature); `A concrete exported host signature whose implicit Lean type argument was fixed before compilation` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Lean elaboration supplies configured type arguments before native compilation; the host passes no placeholder value. Call the concrete export with its selected value; Lean fixes the configured type before compilation and no runtime type token crosses the host boundary. Required: Separate erased type arguments from implicit runtime values; resolve them from elaborated information. |\n| `Instance arguments [C α]` | `Concrete host signature with the Lean-selected instance dictionary erased` (signature); `A concrete exported function whose selected type-class dictionary is compiled into the specialization` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Lean synthesizes the selected dictionary before native compilation. The host cannot provide or replace it. Call the concrete export normally; the configured dictionary is already selected and no dictionary token crosses the host boundary. Required: Specialize or supply the selected dictionary without changing runtime behavior. |\n",
+          "previous": "| `Polymorphic exports` | `Concrete WIT export for each configured specialization` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Generation rejected | Each configured type application becomes a distinct monomorphic host function. The unspecialized Lean declaration is absent. Name a closed generic structure application with an abbrev to get a host record with instantiated fields. Configured functions over these records, List aliases and Option aliases use ordinary concrete signatures. Array-valued fields and arrays of alias-named records use the host's ordinary array representation with recursive element checks. The Alpha executable adapter does not expose this type. Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |\n| `Implicit arguments {α}` | `Concrete host signature with no runtime type argument` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Not audited | Lean elaboration supplies configured type arguments before native compilation; the host passes no placeholder value. Required: Separate erased type arguments from implicit runtime values; resolve them from elaborated information. |\n| `Instance arguments [C α]` | `Concrete host signature with the Lean-selected instance dictionary erased` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Not audited | Lean synthesizes the selected dictionary before native compilation. The host cannot provide or replace it. Required: Specialize or supply the selected dictionary without changing runtime behavior. |\n",
+          "start": 98768
+        }
+      ],
+      "path": "docs/consume/wit-wasi.md",
+      "previousSha256": "94296e9bd5d5ed00a0eb0db560ebdcf6a39655a544a043ce4dee24dc884f4685"
+    },
+    {
+      "currentSha256": "0d477f8387b9e85e2b39a2b84ff10073801251b7af1244c833fff7924d58f650",
+      "edits": [
+        {
+          "current": "| `Polymorphic exports` | Node JavaScript / TypeScript: `Concrete function; named readonly interface per alias-named record` (signature); `Concrete reviewed function over named readonly interfaces and List/Option aliases` (signature); Browser / React / Worker: `Concrete function over named record, List and Option aliases` (signature); `A concrete exported function over the selected named record, List or Option specialization` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Node JavaScript / TypeScript: Each configured type application becomes a distinct monomorphic export. The unspecialized Lean declaration is absent from the package. An alias-named instantiation is one monomorphic host record type per alias; no type argument crosses at runtime. Name a closed generic structure application with an abbrev to get a host record with instantiated fields. Configured functions over these records, List aliases and Option aliases use ordinary concrete signatures. Reviewed packages select finite applications from the authored Binding IR. Reviewed generic records retain each alias's name and compiler-resolved origin. Call the generated concrete function with the named record, List or Option value; no runtime type argument crosses the boundary. Browser / React / Worker: Import a concrete export and pass the package's named record, List or Option value. Each alias keeps its descriptor identity; no runtime type argument crosses the boundary. Array fields keep their copied array representation. Call the concrete export with its selected value; Lean fixes the configured type before compilation and no runtime type token crosses the host boundary. Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |\n| `Implicit arguments {α}` | Node JavaScript / TypeScript: `Concrete host signature with no runtime type argument` (signature); Browser / React / Worker: `Concrete host signature with no runtime type argument` (signature); `A concrete exported host signature whose implicit Lean type argument was fixed before compilation` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Node JavaScript / TypeScript: Lean elaboration supplies configured type arguments. They have no host runtime representation and are not replaced with null or any. Reviewed record specializations fix the implicit type to a closed record or List/Option alias before compilation. Browser / React / Worker: Lean supplies the configured type argument before compilation. Call the concrete function with its value only, without a type token or placeholder. Call the concrete export with its selected value; Lean fixes the configured type before compilation and no runtime type token crosses the host boundary. Required: Separate erased type arguments from implicit runtime values; resolve them from elaborated information. |\n| `Instance arguments [C α]` | Node JavaScript / TypeScript: `Concrete host signature with the Lean-selected instance dictionary erased` (signature); Browser / React / Worker: `A concrete exported function whose selected type-class dictionary is compiled into the specialization` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Node JavaScript / TypeScript: Lean synthesizes the selected dictionary before compilation. The host receives the resulting concrete callable and cannot substitute a dictionary. Browser / React / Worker: Call the concrete export normally; the configured dictionary is already selected and no dictionary token crosses the host boundary. Required: Specialize or supply the selected dictionary without changing runtime behavior. |\n",
+          "previous": "| `Polymorphic exports` | Node JavaScript / TypeScript: `Concrete function; named readonly interface per alias-named record` (signature); `Concrete reviewed function over named readonly interfaces and List/Option aliases` (signature); Browser / React / Worker: `Concrete function over named record, List and Option aliases` (signature); `Named finite specializations` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Node JavaScript / TypeScript: Installed checks passed; Browser / React / Worker: Generator inspected | Node JavaScript / TypeScript: Each configured type application becomes a distinct monomorphic export. The unspecialized Lean declaration is absent from the package. An alias-named instantiation is one monomorphic host record type per alias; no type argument crosses at runtime. Name a closed generic structure application with an abbrev to get a host record with instantiated fields. Configured functions over these records, List aliases and Option aliases use ordinary concrete signatures. Reviewed packages select finite applications from the authored Binding IR. Reviewed generic records retain each alias's name and compiler-resolved origin. Call the generated concrete function with the named record, List or Option value; no runtime type argument crosses the boundary. Browser / React / Worker: Import a concrete export and pass the package's named record, List or Option value. Each alias keeps its descriptor identity; no runtime type argument crosses the boundary. Array fields keep their copied array representation. Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |\n| `Implicit arguments {α}` | `Concrete host signature with no runtime type argument` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Node JavaScript / TypeScript: Installed checks passed; Browser / React / Worker: Not audited | Node JavaScript / TypeScript: Lean elaboration supplies configured type arguments. They have no host runtime representation and are not replaced with null or any. Reviewed record specializations fix the implicit type to a closed record or List/Option alias before compilation. Browser / React / Worker: Lean supplies the configured type argument before compilation. Call the concrete function with its value only, without a type token or placeholder. Required: Separate erased type arguments from implicit runtime values; resolve them from elaborated information. |\n| `Instance arguments [C α]` | Node JavaScript / TypeScript: `Concrete host signature with the Lean-selected instance dictionary erased` (signature); Browser / React / Worker: No host mapping recorded | Ordinary source: Node JavaScript / TypeScript: Installed checks passed; Browser / React / Worker: Not audited. Reviewed IR: Node JavaScript / TypeScript: Installed checks passed; Browser / React / Worker: Not audited | Node JavaScript / TypeScript: Lean synthesizes the selected dictionary before compilation. The host receives the resulting concrete callable and cannot substitute a dictionary. Required: Specialize or supply the selected dictionary without changing runtime behavior. |\n",
+          "start": 80153
+        }
+      ],
+      "path": "docs/javascript-typescript.md",
+      "previousSha256": "ee9cb9cbb02f332bebfa6b84ca738eff2f5c2e57bbe9b4d9a7033aa2064a39e3"
+    },
+    {
+      "currentSha256": "944c44385c4117975418561951ea4c5a57c59c99d2c191468c01cc9da28573c0",
+      "edits": [
+        {
+          "current": "| `Polymorphic exports` | Native PHP: `Concrete namespaced PHP function for each configured specialization` (signature); `A concrete exported function over the selected named record, List or Option specialization` (signature); PHP-Wasm: `A concrete exported function over the selected named record, List or Option specialization` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Native PHP: Each configured type application becomes a distinct monomorphic host function. The unspecialized Lean declaration is absent. Name a closed generic structure application with an abbrev to get a host record with instantiated fields. Configured functions over these records, List aliases and Option aliases use ordinary concrete signatures. Array-valued fields and arrays of alias-named records use the host's ordinary array representation with recursive element checks. Call the concrete export with its selected value; Lean fixes the configured type before compilation and no runtime type token crosses the host boundary. PHP-Wasm: Call the concrete export with its selected value; Lean fixes the configured type before compilation and no runtime type token crosses the host boundary. Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |\n| `Implicit arguments {α}` | Native PHP: `Concrete host signature with no runtime type argument` (signature); `A concrete exported host signature whose implicit Lean type argument was fixed before compilation` (signature); PHP-Wasm: `A concrete exported host signature whose implicit Lean type argument was fixed before compilation` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Native PHP: Lean elaboration supplies configured type arguments before native compilation; the host passes no placeholder value. Call the concrete export with its selected value; Lean fixes the configured type before compilation and no runtime type token crosses the host boundary. PHP-Wasm: Call the concrete export with its selected value; Lean fixes the configured type before compilation and no runtime type token crosses the host boundary. Required: Separate erased type arguments from implicit runtime values; resolve them from elaborated information. |\n| `Instance arguments [C α]` | Native PHP: `Concrete host signature with the Lean-selected instance dictionary erased` (signature); `A concrete exported function whose selected type-class dictionary is compiled into the specialization` (signature); PHP-Wasm: `A concrete exported function whose selected type-class dictionary is compiled into the specialization` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Native PHP: Lean synthesizes the selected dictionary before native compilation. The host cannot provide or replace it. Call the concrete export normally; the configured dictionary is already selected and no dictionary token crosses the host boundary. PHP-Wasm: Call the concrete export normally; the configured dictionary is already selected and no dictionary token crosses the host boundary. Required: Specialize or supply the selected dictionary without changing runtime behavior. |\n",
+          "previous": "| `Polymorphic exports` | Native PHP: `Concrete namespaced PHP function for each configured specialization` (signature); `Named finite specializations` (signature); PHP-Wasm: `Named finite specializations` (signature) | Ordinary source: Native PHP: Installed checks passed; PHP-Wasm: Not audited. Reviewed IR: Generator inspected | Native PHP: Each configured type application becomes a distinct monomorphic host function. The unspecialized Lean declaration is absent. Name a closed generic structure application with an abbrev to get a host record with instantiated fields. Configured functions over these records, List aliases and Option aliases use ordinary concrete signatures. Array-valued fields and arrays of alias-named records use the host's ordinary array representation with recursive element checks. Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |\n| `Implicit arguments {α}` | Native PHP: `Concrete host signature with no runtime type argument` (signature); PHP-Wasm: No host mapping recorded | Ordinary source: Native PHP: Installed checks passed; PHP-Wasm: Not audited. Reviewed IR: Not audited | Native PHP: Lean elaboration supplies configured type arguments before native compilation; the host passes no placeholder value. Required: Separate erased type arguments from implicit runtime values; resolve them from elaborated information. |\n| `Instance arguments [C α]` | Native PHP: `Concrete host signature with the Lean-selected instance dictionary erased` (signature); PHP-Wasm: No host mapping recorded | Ordinary source: Native PHP: Installed checks passed; PHP-Wasm: Not audited. Reviewed IR: Not audited | Native PHP: Lean synthesizes the selected dictionary before native compilation. The host cannot provide or replace it. Required: Specialize or supply the selected dictionary without changing runtime behavior. |\n",
+          "start": 156517
+        }
+      ],
+      "path": "docs/php.md",
+      "previousSha256": "2cc50ebcbeeff5086591921ac8ec527efee6d9453af5e77c90161f002dce358d"
+    },
+    {
+      "currentSha256": "df2050dd6bc989294cb95e8077d2d4e2403b056dd1af01827e4e33f973c9d0fd",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"5c526f7741e919e1e3d64a36d1c67f8e485be3634979a03e40c1640dfa9b6b9c\"\n",
+          "previous": "          \"sha256\": \"935223b10673a9da3b22e59c5624142a995a2bc490fd584bcf732d16426fdb40\"\n",
+          "start": 47352
+        },
+        {
+          "current": "          \"sha256\": \"3ad100a688107168793238eda43eff8a633aa08bb1f30104213346675c95620b\"\n",
+          "previous": "          \"sha256\": \"701902b2ec26ab7fd68c09576d8e0200c03304bb08b2026af2654331b3cd48a1\"\n",
+          "start": 47502
+        },
+        {
+          "current": "          \"sha256\": \"9062d91209fe2d38e70dd5de74a56fae9ddc16ffa0213a1fcd440c9180e025cf\"\n",
+          "previous": "          \"sha256\": \"00e75754435a067d18abc3f0f1c786b8fbfe4c4b7c33d7f373a5df4fe552896b\"\n",
+          "start": 47654
+        },
+        {
+          "current": "          \"sha256\": \"944c44385c4117975418561951ea4c5a57c59c99d2c191468c01cc9da28573c0\"\n",
+          "previous": "          \"sha256\": \"2cc50ebcbeeff5086591921ac8ec527efee6d9453af5e77c90161f002dce358d\"\n",
+          "start": 49820
+        },
+        {
+          "current": "          \"sha256\": \"9062d91209fe2d38e70dd5de74a56fae9ddc16ffa0213a1fcd440c9180e025cf\"\n",
+          "previous": "          \"sha256\": \"00e75754435a067d18abc3f0f1c786b8fbfe4c4b7c33d7f373a5df4fe552896b\"\n",
+          "start": 145336
+        },
+        {
+          "current": "          \"sha256\": \"da2dcef248e742fa8e39fb9cbabdea14bfbcbbdb3e055133553a0bb756e3b856\"\n",
+          "previous": "          \"sha256\": \"94296e9bd5d5ed00a0eb0db560ebdcf6a39655a544a043ce4dee24dc884f4685\"\n",
+          "start": 168722
+        },
+        {
+          "current": "          \"sha256\": \"944c44385c4117975418561951ea4c5a57c59c99d2c191468c01cc9da28573c0\"\n",
+          "previous": "          \"sha256\": \"2cc50ebcbeeff5086591921ac8ec527efee6d9453af5e77c90161f002dce358d\"\n",
+          "start": 182032
+        },
+        {
+          "current": "          \"sha256\": \"944c44385c4117975418561951ea4c5a57c59c99d2c191468c01cc9da28573c0\"\n",
+          "previous": "          \"sha256\": \"2cc50ebcbeeff5086591921ac8ec527efee6d9453af5e77c90161f002dce358d\"\n",
+          "start": 196931
+        },
+        {
+          "current": "          \"sha256\": \"3ad100a688107168793238eda43eff8a633aa08bb1f30104213346675c95620b\"\n",
+          "previous": "          \"sha256\": \"701902b2ec26ab7fd68c09576d8e0200c03304bb08b2026af2654331b3cd48a1\"\n",
+          "start": 209366
+        },
+        {
+          "current": "          \"sha256\": \"9062d91209fe2d38e70dd5de74a56fae9ddc16ffa0213a1fcd440c9180e025cf\"\n",
+          "previous": "          \"sha256\": \"00e75754435a067d18abc3f0f1c786b8fbfe4c4b7c33d7f373a5df4fe552896b\"\n",
+          "start": 209518
+        },
+        {
+          "current": "          \"sha256\": \"24a4e5f340365827ff7efb27fcf67f043069ecee5ee8eb2ba06020deb8de2a04\"\n",
+          "previous": "          \"sha256\": \"a225d5cd7fd1e5ba311faf82c150168a48e5d2173b9147ec3b6ecfd58539e5da\"\n",
+          "start": 222586
+        },
+        {
+          "current": "          \"sha256\": \"2f640d97d3e70523e42f1b4cf357d8731f63eb09125027793e0ad15737ba19e3\"\n",
+          "previous": "          \"sha256\": \"07ce40e61747c486285edfd6cb21f6a7655a237e7c53adfe0859358dd2ff3b8e\"\n",
+          "start": 231121
+        },
+        {
+          "current": "          \"sha256\": \"5c526f7741e919e1e3d64a36d1c67f8e485be3634979a03e40c1640dfa9b6b9c\"\n",
+          "previous": "          \"sha256\": \"935223b10673a9da3b22e59c5624142a995a2bc490fd584bcf732d16426fdb40\"\n",
+          "start": 239551
+        },
+        {
+          "current": "          \"sha256\": \"e721a07da033b90c2cc207b7920e224bc793a6bcc44196a5d85f046c5140472a\"\n",
+          "previous": "          \"sha256\": \"7290c76d24e0e0873305154484f7941aa23381381c9f2b1bf9a5e2adb1b28905\"\n",
+          "start": 248566
+        },
+        {
+          "current": "          \"sha256\": \"7c9394cfd462d9484e93b9a5c56056443686386c611be7cbe47b65840d3d3d81\"\n",
+          "previous": "          \"sha256\": \"93c408d188ddfcb5c477fd01ec5c18b98fd7dd54448105324b0ce7ab7625a5fa\"\n",
+          "start": 266811
+        },
+        {
+          "current": "          \"sha256\": \"3ad100a688107168793238eda43eff8a633aa08bb1f30104213346675c95620b\"\n",
+          "previous": "          \"sha256\": \"701902b2ec26ab7fd68c09576d8e0200c03304bb08b2026af2654331b3cd48a1\"\n",
+          "start": 1325531
+        },
+        {
+          "current": "          \"sha256\": \"9062d91209fe2d38e70dd5de74a56fae9ddc16ffa0213a1fcd440c9180e025cf\"\n",
+          "previous": "          \"sha256\": \"00e75754435a067d18abc3f0f1c786b8fbfe4c4b7c33d7f373a5df4fe552896b\"\n",
+          "start": 1325683
+        },
+        {
+          "current": "          \"sha256\": \"944c44385c4117975418561951ea4c5a57c59c99d2c191468c01cc9da28573c0\"\n",
+          "previous": "          \"sha256\": \"2cc50ebcbeeff5086591921ac8ec527efee6d9453af5e77c90161f002dce358d\"\n",
+          "start": 1329810
+        },
+        {
+          "current": "          \"sha256\": \"5c526f7741e919e1e3d64a36d1c67f8e485be3634979a03e40c1640dfa9b6b9c\"\n",
+          "previous": "          \"sha256\": \"935223b10673a9da3b22e59c5624142a995a2bc490fd584bcf732d16426fdb40\"\n",
+          "start": 1352103
+        },
+        {
+          "current": "          \"sha256\": \"944c44385c4117975418561951ea4c5a57c59c99d2c191468c01cc9da28573c0\"\n",
+          "previous": "          \"sha256\": \"2cc50ebcbeeff5086591921ac8ec527efee6d9453af5e77c90161f002dce358d\"\n",
+          "start": 1355658
+        },
+        {
+          "current": "          \"sha256\": \"5c526f7741e919e1e3d64a36d1c67f8e485be3634979a03e40c1640dfa9b6b9c\"\n",
+          "previous": "          \"sha256\": \"935223b10673a9da3b22e59c5624142a995a2bc490fd584bcf732d16426fdb40\"\n",
+          "start": 1374481
+        },
+        {
+          "current": "          \"sha256\": \"3ad100a688107168793238eda43eff8a633aa08bb1f30104213346675c95620b\"\n",
+          "previous": "          \"sha256\": \"701902b2ec26ab7fd68c09576d8e0200c03304bb08b2026af2654331b3cd48a1\"\n",
+          "start": 1374631
+        },
+        {
+          "current": "          \"sha256\": \"9062d91209fe2d38e70dd5de74a56fae9ddc16ffa0213a1fcd440c9180e025cf\"\n",
+          "previous": "          \"sha256\": \"00e75754435a067d18abc3f0f1c786b8fbfe4c4b7c33d7f373a5df4fe552896b\"\n",
+          "start": 1374783
+        },
+        {
+          "current": "          \"sha256\": \"5c526f7741e919e1e3d64a36d1c67f8e485be3634979a03e40c1640dfa9b6b9c\"\n",
+          "previous": "          \"sha256\": \"935223b10673a9da3b22e59c5624142a995a2bc490fd584bcf732d16426fdb40\"\n",
+          "start": 1394148
+        },
+        {
+          "current": "          \"sha256\": \"3ad100a688107168793238eda43eff8a633aa08bb1f30104213346675c95620b\"\n",
+          "previous": "          \"sha256\": \"701902b2ec26ab7fd68c09576d8e0200c03304bb08b2026af2654331b3cd48a1\"\n",
+          "start": 1394298
+        },
+        {
+          "current": "          \"sha256\": \"9062d91209fe2d38e70dd5de74a56fae9ddc16ffa0213a1fcd440c9180e025cf\"\n",
+          "previous": "          \"sha256\": \"00e75754435a067d18abc3f0f1c786b8fbfe4c4b7c33d7f373a5df4fe552896b\"\n",
+          "start": 1394450
+        },
+        {
+          "current": "          \"sha256\": \"da2dcef248e742fa8e39fb9cbabdea14bfbcbbdb3e055133553a0bb756e3b856\"\n",
+          "previous": "          \"sha256\": \"94296e9bd5d5ed00a0eb0db560ebdcf6a39655a544a043ce4dee24dc884f4685\"\n",
+          "start": 1417538
+        },
+        {
+          "current": "          \"sha256\": \"944c44385c4117975418561951ea4c5a57c59c99d2c191468c01cc9da28573c0\"\n",
+          "previous": "          \"sha256\": \"2cc50ebcbeeff5086591921ac8ec527efee6d9453af5e77c90161f002dce358d\"\n",
+          "start": 1429038
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "223e7da59e70142084d0a2d0de299af4fc2639b30846202e7ff9f61eafb0b048"
+    }
+  ]
+}
