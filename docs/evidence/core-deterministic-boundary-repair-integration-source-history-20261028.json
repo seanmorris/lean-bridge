@@ -1,0 +1,61 @@
+{
+  "additions": [
+    {
+      "currentSha256": "76f853d4b976c8b82bc9231b3c7581910a5c2e5e60f35b5962f1fa9af35bbc54",
+      "path": "scripts/update-core-deterministic-boundary-repair-integration-source-history.mjs"
+    },
+    {
+      "currentSha256": "0a0b06b615cb200c1c8953688f7d4c639475415a6ff989add9f88947e89adbc0",
+      "path": "tests/helpers/core-deterministic-boundary-repair-integration-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "01c242902fe146182b5491e67b153ad5e161b6e6f9b33211e7c68c04d89ccb7b",
+      "path": "tests/helpers/core-deterministic-boundary-repair-integration-source-history.mjs"
+    }
+  ],
+  "baseCommit": "41d02c0b55bdb6f64628375633841db19a97e6e6",
+  "baseHistory": {
+    "path": "docs/evidence/core-deterministic-boundary-repair-source-history-20261028.json",
+    "sha256": "7c794f35e4a04d3ed047a7d4efd0a6af640c581c66ea72e6fc1b2090fe18f014"
+  },
+  "implementationCommit": "fecd6b8e924432d987ca902df8bec01c12d16ee9",
+  "milestone": "core-deterministic-boundary-repair-integration-v1",
+  "schemaVersion": 1,
+  "scope": "Register the independently authenticated deterministic Core sparse-prefix and exact historical-stop repairs in the reversible Fin source-history hub and one schedulable Core partition. Preserve every runtime behavior, type-surface support claim, observation and retained evidence identity.",
+  "updates": [
+    {
+      "currentSha256": "4fc504dffb5cdfe8aa825bcf3f89b687fdf085b5abbee1c5489cbf1e24191287",
+      "edits": [
+        {
+          "current": "import { beforeCoreDeterministicBoundaryRepairIntegrationSource, coreDeterministicBoundaryRepairIntegrationNormalizationPaths } from \"./core-deterministic-boundary-repair-integration-source-history.mjs\";\nimport { beforeCoreDeterministicBoundaryRepairSource, coreDeterministicBoundaryRepairNormalizationPaths } from \"./core-deterministic-boundary-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...coreDeterministicBoundaryRepairIntegrationNormalizationPaths\n\t, ...coreDeterministicBoundaryRepairNormalizationPaths\n\t, ...signatureSpecializationCompletionPinRepairIntegrationNormalizationPaths\n",
+          "previous": "\t...signatureSpecializationCompletionPinRepairIntegrationNormalizationPaths\n",
+          "start": 208317
+        },
+        {
+          "current": "\tlet stage = beforeCoreDeterministicBoundaryRepairIntegrationSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCoreDeterministicBoundaryRepairSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeSignatureSpecializationCompletionPinRepairIntegrationSource(\n",
+          "previous": "\tlet stage = beforeSignatureSpecializationCompletionPinRepairIntegrationSource(\n",
+          "start": 260043
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "343acfd5dddc020a324d4929d9aac0fb83bfe2db056f218c86e8185019ec8e42"
+    },
+    {
+      "currentSha256": "fa8580e41b4643590b55f98ea7d6ae8b45c2d02460211ac69aef541bcb2da0aa",
+      "edits": [
+        {
+          "current": "import \"./helpers/core-deterministic-boundary-repair-source-history-tests.mjs\";\nimport \"./helpers/core-deterministic-boundary-repair-integration-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-10.test.mjs",
+      "previousSha256": "84325b84f271973f7c0fd87cb0970bb9c434d477812e3132b7e0fe6c7e0743e5"
+    }
+  ]
+}
