@@ -1,0 +1,42 @@
+TAP version 13
+# Subtest: probe ordinary scalar Fin entry is accounted in installed npm packages
+ok 1 - probe ordinary scalar Fin entry is accounted in installed npm packages
+  ---
+  duration_ms: 135116.584991
+  type: 'test'
+  ...
+# probe ordinary scalar: WASM and npm build 1/2
+# probe ordinary scalar: WASM and npm build 2/2
+# Subtest: probe independently reviewed scalar Fin entry is accounted in installed npm packages
+ok 2 - probe independently reviewed scalar Fin entry is accounted in installed npm packages
+  ---
+  duration_ms: 123351.683508
+  type: 'test'
+  ...
+# probe reviewed scalar: WASM and npm build 1/2
+# probe reviewed scalar: WASM and npm build 2/2
+# Subtest: probe ordinary structural Fin entry is accounted in installed npm packages
+ok 3 - probe ordinary structural Fin entry is accounted in installed npm packages
+  ---
+  duration_ms: 144820.307993
+  type: 'test'
+  ...
+# probe ordinary structural: WASM and npm build 1/2
+# probe ordinary structural: WASM and npm build 2/2
+# Subtest: probe independently reviewed structural Fin entry is accounted in installed npm packages
+ok 4 - probe independently reviewed structural Fin entry is accounted in installed npm packages
+  ---
+  duration_ms: 140797.261109
+  type: 'test'
+  ...
+# probe reviewed structural: WASM and npm build 1/2
+# probe reviewed structural: WASM and npm build 2/2
+1..4
+# tests 4
+# suites 0
+# pass 4
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 544473.997114

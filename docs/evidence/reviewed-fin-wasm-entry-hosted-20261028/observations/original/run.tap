@@ -1,0 +1,42 @@
+TAP version 13
+# Subtest: original ordinary scalar Fin entry is accounted in installed npm packages
+ok 1 - original ordinary scalar Fin entry is accounted in installed npm packages
+  ---
+  duration_ms: 126856.63105
+  type: 'test'
+  ...
+# original ordinary scalar: WASM and npm build 1/2
+# original ordinary scalar: WASM and npm build 2/2
+# Subtest: original independently reviewed scalar Fin entry is accounted in installed npm packages
+ok 2 - original independently reviewed scalar Fin entry is accounted in installed npm packages
+  ---
+  duration_ms: 133533.133709
+  type: 'test'
+  ...
+# original reviewed scalar: WASM and npm build 1/2
+# original reviewed scalar: WASM and npm build 2/2
+# Subtest: original ordinary structural Fin entry is accounted in installed npm packages
+ok 3 - original ordinary structural Fin entry is accounted in installed npm packages
+  ---
+  duration_ms: 143779.567857
+  type: 'test'
+  ...
+# original ordinary structural: WASM and npm build 1/2
+# original ordinary structural: WASM and npm build 2/2
+# Subtest: original independently reviewed structural Fin entry is accounted in installed npm packages
+ok 4 - original independently reviewed structural Fin entry is accounted in installed npm packages
+  ---
+  duration_ms: 142604.533241
+  type: 'test'
+  ...
+# original reviewed structural: WASM and npm build 1/2
+# original reviewed structural: WASM and npm build 2/2
+1..4
+# tests 4
+# suites 0
+# pass 4
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 547261.768953
