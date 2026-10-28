@@ -1,0 +1,61 @@
+{
+  "additions": [
+    {
+      "currentSha256": "c9446982e1cf8983b9b1f9d44f71c1a66affafd95d971f7119aad003d6d3cf3b",
+      "path": "scripts/update-wit-callback-frozen-closure-integration-source-history.mjs"
+    },
+    {
+      "currentSha256": "26ab8e0fe2a7e98a6eb01cee240b081b5a42ef83ed86f525ae7ecbc9b96342db",
+      "path": "tests/helpers/wit-callback-frozen-closure-integration-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "5dc5678ebe60510f36b923e2a33456ead0bb3684e6c59b6f8d3c7a0a2d079b46",
+      "path": "tests/helpers/wit-callback-frozen-closure-integration-source-history.mjs"
+    }
+  ],
+  "baseCommit": "e04324030832f0c1eda020f49e23cafd037a7efb",
+  "baseHistory": {
+    "path": "docs/evidence/wit-callback-frozen-closure-source-history-20261028.json",
+    "sha256": "f570487bc389225caebaf8d7a7ce4c3552c92ad8f60681ef89d7fc580cf6547e"
+  },
+  "implementationCommit": "908ef1ae10c41b71778a2fd0023e8bae7c8dcb62",
+  "milestone": "wit-callback-frozen-closure-integration-v1",
+  "schemaVersion": 1,
+  "scope": "Register the authenticated WIT callback frozen-source closure repair newest-first in the reversible Fin history hub and one schedulable Core partition. Preserve all support claims and evidence identities.",
+  "updates": [
+    {
+      "currentSha256": "ba5d110b28ca764cb9acee4e066401040f6bf125f61e16ee7303dc155d60c6a0",
+      "edits": [
+        {
+          "current": "import { beforeWitCallbackFrozenClosureSource, witCallbackFrozenClosureChangedPaths } from \"./wit-callback-frozen-closure-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...witCallbackFrozenClosureChangedPaths\n\t, ...coreDeterministicBoundaryRepairIntegrationNormalizationPaths\n",
+          "previous": "\t...coreDeterministicBoundaryRepairIntegrationNormalizationPaths\n",
+          "start": 208460
+        },
+        {
+          "current": "\tlet stage = beforeWitCallbackFrozenClosureSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCoreDeterministicBoundaryRepairIntegrationSource(\n",
+          "previous": "\tlet stage = beforeCoreDeterministicBoundaryRepairIntegrationSource(\n",
+          "start": 260229
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "4fc504dffb5cdfe8aa825bcf3f89b687fdf085b5abbee1c5489cbf1e24191287"
+    },
+    {
+      "currentSha256": "df716f8e243070abcb26cb649277ae60df7547644fd5094b8c134f4672685630",
+      "edits": [
+        {
+          "current": "import \"./helpers/wit-callback-frozen-closure-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-10.test.mjs",
+      "previousSha256": "fa8580e41b4643590b55f98ea7d6ae8b45c2d02460211ac69aef541bcb2da0aa"
+    }
+  ]
+}
