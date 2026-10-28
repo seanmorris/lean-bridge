@@ -8,33 +8,9 @@ import test from "node:test";
 import { generateCopiedDotnetPackage } from "../src/backends/dotnet/copied-values.mjs";
 import { generateCopiedJvmPackage } from "../src/backends/jvm/copied-values.mjs";
 import { generateCopiedJvmKotlinPackage } from "../src/backends/jvm/copied-kotlin.mjs";
-import { corpusReviewedIr } from "./helpers/type-corpus-reviewed-ir.mjs";
+import { optionalParameterIr } from "./helpers/optional-parameter-ir.mjs";
 
-const optionalIr = () => {
-	const signatures = [
-		{ name: "Defaults.word", parameters: ["uint32"], result: "uint32" }
-		, { name: "Defaults.natural", parameters: ["nat"], result: "nat" }
-		, { name: "Defaults.text", parameters: ["string"], result: "string" }
-		, { name: "Defaults.character", parameters: ["char"], result: "char" }
-		, { name: "Defaults.maybe", parameters: [{ option: "uint32" }], result: { option: "uint32" } }
-		, { name: "Defaults.present", parameters: [{ option: "uint32" }], result: { option: "uint32" } }
-	];
-	const ir = corpusReviewedIr({ id: "defaults" }, signatures);
-	const defaults = [
-		{ kind: "integer", value: "7" }
-		, { kind: "integer", value: "184467440737095516160" }
-		, { kind: "string", value: "Lean\nBridge" }
-		, { kind: "char", value: "λ" }
-		, { kind: "option-none" }
-		, { kind: "option-some", value: { kind: "integer", value: "9" } }
-	];
-	for(const [index, declaration] of ir.declarations.entries())
-	{
-		declaration.parameters[0].optional = true;
-		declaration.parameters[0].default = defaults[index];
-	}
-	return ir;
-};
+const optionalIr = optionalParameterIr;
 
 test("C# exposes omission as overloads while preserving its full-arity methods", () => {
 	const files = generateCopiedDotnetPackage(optionalIr());
