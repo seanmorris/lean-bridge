@@ -1,0 +1,382 @@
+{
+  "additions": [
+    {
+      "currentSha256": "e81886fc6abeefe488c19cb715eb74ff3f5940562a7a9da04fbe08b88dd41035",
+      "path": "scripts/update-native-fin-callback-role-source-history.mjs"
+    },
+    {
+      "currentSha256": "698259e5482e7b8584c2a21546759896bdb7a94c96b67e2696eabfc317c90118",
+      "path": "tests/helpers/native-fin-callback-role-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "7b24641cdb0e3c5e35cd22ba5d12a6a636e8494672b355215cd1dd419ea71d40",
+      "path": "tests/helpers/native-fin-callback-role-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "54426ddd2279def91639a32c8ad74826ba6fbf94",
+  "milestone": "native-fin-callback-role-source-v1",
+  "predecessorCommit": "9001c1b2a3cdc6aa6f900d9bff8540cc6fd14e29",
+  "schemaVersion": 1,
+  "scope": "Record the 22 source transitions of 54426dd (Enable Fin callback roles in native packages), which changed the native C, .NET, JVM, Perl, PHP, Python, Ruby, Rust and WIT callable-graph models and packages, the native component, graph model and graph source builders, the native C-family release and two native callable tests without any reversible history. Producer-era verifiers can then reconstruct the exact earlier sources through the Fin history hub. No source, claim, observation, evidence payload or pin changes. Hub and registration integration are recorded by the integrating seal.",
+  "updates": [
+    {
+      "currentSha256": "b12365f66fd1e161776e3d73a309629e624284094a9c8effe3ed6479abe0aa3a",
+      "edits": [
+        {
+          "current": "import { componentStructuredCallbackDirection } from \"../../abi/component-structured-callables.mjs\";\n",
+          "previous": "import { callbackSubtypeDirection } from \"../../abi/refinements.mjs\";\n",
+          "start": 232
+        },
+        {
+          "current": "\t\tconst recovery = descriptor.callbacks.some(signature => componentStructuredCallbackDirection(descriptor, signature, true) === \"host\");\n",
+          "previous": "\t\tconst recovery = descriptor.callbacks.some(signature => callbackSubtypeDirection(signature, signature.refinements, descriptor.types) === \"host\");\n",
+          "start": 1807
+        },
+        {
+          "current": "\t\t\t, direction: componentStructuredCallbackDirection(descriptor, signature, true)\n",
+          "previous": "\t\t\t, direction: callbackSubtypeDirection(signature, signature.refinements, descriptor.types)\n",
+          "start": 2760
+        }
+      ],
+      "path": "src/backends/c/callable-graph-model.mjs",
+      "previousSha256": "be7d4820cc751b85a3365d54225aef92a285d47be3e7f8df2ebf7d497d81f259"
+    },
+    {
+      "currentSha256": "be215a3b16304c8c340189a678ed91bf99797dc58a3d6dd092685f244b5f75e0",
+      "edits": [
+        {
+          "current": "import { componentStructuredCallbackDirection } from \"../../abi/component-structured-callables.mjs\";\n",
+          "previous": "import { callbackSubtypeDirection } from \"../../abi/refinements.mjs\";\n",
+          "start": 159
+        },
+        {
+          "current": "\t\tconst direction = componentStructuredCallbackDirection(descriptor, signature, true);\n",
+          "previous": "\t\tconst direction = callbackSubtypeDirection(signature, signature.refinements, descriptor.types);\n",
+          "start": 1442
+        }
+      ],
+      "path": "src/backends/dotnet/callable-graph-model.mjs",
+      "previousSha256": "e0e59938c98ec4a70b39eaf7840b1931683a4be2b61d95f6a677e20ac680566c"
+    },
+    {
+      "currentSha256": "d89b728da4002e6de003f8cc8223647f4d6e37a56e0582e7cbba79a94ead2fba",
+      "edits": [
+        {
+          "current": "${recovery ? `A host callback with checked Lean Fin, Subtype or checked-record semantics is passed as a typed\n",
+          "previous": "${recovery ? `A host callback whose result contains a checked Lean Subtype or checked record is passed as a typed\n",
+          "start": 3358
+        },
+        {
+          "current": "returned as successful output. Returned Lean closures validate Fin, selected\n",
+          "previous": "returned as successful output. Returned Lean closures validate selected\n",
+          "start": 3617
+        }
+      ],
+      "path": "src/backends/dotnet/callable-graph-package.mjs",
+      "previousSha256": "ec9dee9f47dbcc071d3008df24841d5ec70c951bdbf1b04a64d8c0723667980e"
+    },
+    {
+      "currentSha256": "4e2223f274130fdfd71588c9ce1853627dee3399f41b7dd829371f2e53c9fe94",
+      "edits": [
+        {
+          "current": "import { componentStructuredCallbackDirection } from '../../abi/component-structured-callables.mjs';\n",
+          "previous": "import { callbackSubtypeDirection } from '../../abi/refinements.mjs';\n",
+          "start": 205
+        },
+        {
+          "current": "\t\treturn { base, direction: componentStructuredCallbackDirection(descriptor, signature, true) };\n",
+          "previous": "\t\treturn { base, direction: callbackSubtypeDirection(signature, signature.refinements, descriptor.types) };\n",
+          "start": 3061
+        }
+      ],
+      "path": "src/backends/jvm/callable-graph-model.mjs",
+      "previousSha256": "23461f73cd214d08a4d60470babd3b0caa471fc14118bb0e9e67e3047f721253"
+    },
+    {
+      "currentSha256": "09456a6311c4c5c0775e360a9293378cd6da9069aae24b556317a1aa067f6612",
+      "edits": [
+        {
+          "current": "${recovery ? `A host callback with checked Lean Fin, Subtype or checked-record semantics uses a typed WithRecovery\n",
+          "previous": "${recovery ? `A host callback whose result contains a checked Lean Subtype or checked record uses a typed WithRecovery\n",
+          "start": 2515
+        },
+        {
+          "current": "values validate Fin, selected Subtype and checked-record inputs before their body runs and remain open\n",
+          "previous": "values validate selected Subtype and checked-record inputs before their body runs and remain open\n",
+          "start": 2862
+        }
+      ],
+      "path": "src/backends/jvm/callable-graph-package.mjs",
+      "previousSha256": "87a2567e024c97ac7a3bf90fd2ac0f279f76ffaf650f03115d45288d81d5b718"
+    },
+    {
+      "currentSha256": "aa4c8c249700e75ce572169d1cd1673350802b571f5ecb4dcd17314723ee192b",
+      "edits": [
+        {
+          "current": "import { componentStructuredCallbackDirection } from \"../../abi/component-structured-callables.mjs\";\n",
+          "previous": "import { callbackSubtypeDirection } from \"../../abi/refinements.mjs\";\n",
+          "start": 144
+        },
+        {
+          "current": "\t\t\t, direction: componentStructuredCallbackDirection(descriptor, signature, true)\n",
+          "previous": "\t\t\t, direction: callbackSubtypeDirection(signature, signature.refinements, descriptor.types)\n",
+          "start": 1534
+        }
+      ],
+      "path": "src/backends/perl/callable-graph-model.mjs",
+      "previousSha256": "3d4c77e56fe2ab7bfa167f00fe86254c408dba7cc83348b8f89d581ad626c260"
+    },
+    {
+      "currentSha256": "e876d9ab89efaa5c453457f83c9519f40b6cf0b13ecb23d82301561e802a267f",
+      "edits": [
+        {
+          "current": "\tconst native = generateNativeCallableGraphCalls(ir, model.copiedGraph, {\n\t\tinitializer: receipt.initializer, finDirections: true\n\t});\n",
+          "previous": "\tconst native = generateNativeCallableGraphCalls(ir, model.copiedGraph, { initializer: receipt.initializer });\n",
+          "start": 941
+        },
+        {
+          "current": "callback.${checkedHostCallbacks ? ` A host callback with checked Lean Fin, Subtype or checked-record semantics must use\n",
+          "previous": "callback.${checkedHostCallbacks ? ` A host callback whose result contains a checked Lean Subtype or checked record must use\n",
+          "start": 3139
+        },
+        {
+          "current": "before Lean or the callback runs. Lean checks Fin bounds and applies the selected\nconstructor to the callback's actual reply, nested checked fields before their record.\nBound or constructor rejection, or a callback exception, fails the enclosing call; the\n",
+          "previous": "before Lean or the callback runs. Lean applies the selected constructor to the\ncallback's actual reply, nested checked fields before their record.\nConstructor rejection or a callback exception fails the enclosing call; the\n",
+          "start": 3501
+        },
+        {
+          "current": "successful result. A returned Lean closure checks Fin, Subtype and checked-record\narguments before its body runs and projects checked records without proof fields.` : \"\"} Returned Lean closures provide call, close and closed. Close each\n",
+          "previous": "successful result. A returned Lean closure constructs its checked record\narguments the same way before its body runs and projects a checked record\nresult without proof fields.` : \"\"} Returned Lean closures provide call, close and closed. Close each\n",
+          "start": 3836
+        }
+      ],
+      "path": "src/backends/perl/callable-graph-package.mjs",
+      "previousSha256": "43a54a342011d513e49a3885fba7a6171608b98774857a81b53476b0764cbc19"
+    },
+    {
+      "currentSha256": "0878a1a79ba05f7a82587959d36b699c1f507ef5cd9f92c6b867ff984b6860fa",
+      "edits": [
+        {
+          "current": "import { componentStructuredCallbackDirection } from '../../abi/component-structured-callables.mjs';\n",
+          "previous": "import { callbackSubtypeDirection } from '../../abi/refinements.mjs';\n",
+          "start": 158
+        },
+        {
+          "current": "\t\tconst direction = componentStructuredCallbackDirection(descriptor, signature, true);\n",
+          "previous": "\t\tconst direction = callbackSubtypeDirection(signature, signature.refinements, descriptor.types);\n",
+          "start": 1427
+        }
+      ],
+      "path": "src/backends/php/callable-graph-model.mjs",
+      "previousSha256": "f767934700e597b3e05bf1ca527edcf0dd8a1b8745176d4f67d579a4960246ac"
+    },
+    {
+      "currentSha256": "7a58a5dc0af68fc8d2a941ace278cad8c6b5608ab3f26a72bc694a7038da8efa",
+      "edits": [
+        {
+          "current": "\tfiles['README.md'] = '# ' + model.namespace + '\\n\\nInstall this package with Composer and load vendor/autoload.php. The package\\nloads its bundled native libraries automatically. Native execution requires\\nPHP 8.2+ NTS CLI on Linux x86-64 with FFI enabled.\\n\\nSynchronous callbacks accept finite copied values, including recursive records\\nand variants. ' + (recovery ? 'A host callback with checked Lean Fin, Subtype or checked-record semantics must be wrapped with with_recovery(function, value); the typed recovery value is validated before native libraries load and is used only if Lean rejects the callback reply. ' : '') + 'Returned LeanClosure objects are invokable; close them in a\\nfinally block. Destruction provides cleanup for abandoned closures. Callback\\nexceptions retain their Throwable identity.\\n\\nCopied conversion is bounded to 128 levels, 262144 visited values and separate\\n16 MiB host/native budgets per call. Lean working memory is not included.\\nCallback reply buffers remain alive through native copying. Malformed native\\noutput retires the shared runtime. Calls must use the main PHP execution\\ncontext in the originating process; start a fresh PHP process after fork.\\n';\n",
+          "previous": "\tfiles['README.md'] = '# ' + model.namespace + '\\n\\nInstall this package with Composer and load vendor/autoload.php. The package\\nloads its bundled native libraries automatically. Native execution requires\\nPHP 8.2+ NTS CLI on Linux x86-64 with FFI enabled.\\n\\nSynchronous callbacks accept finite copied values, including recursive records\\nand variants. ' + (recovery ? 'A host callback whose result contains a checked Lean Subtype or checked record must be wrapped with with_recovery(function, value); the typed recovery value is validated before native libraries load and is used only if Lean rejects the callback reply. ' : '') + 'Returned LeanClosure objects are invokable; close them in a\\nfinally block. Destruction provides cleanup for abandoned closures. Callback\\nexceptions retain their Throwable identity.\\n\\nCopied conversion is bounded to 128 levels, 262144 visited values and separate\\n16 MiB host/native budgets per call. Lean working memory is not included.\\nCallback reply buffers remain alive through native copying. Malformed native\\noutput retires the shared runtime. Calls must use the main PHP execution\\ncontext in the originating process; start a fresh PHP process after fork.\\n';\n",
+          "start": 3539
+        }
+      ],
+      "path": "src/backends/php/callable-graph-package.mjs",
+      "previousSha256": "ba0b06e10faf6527b4ae0d113bcff49e42e11b736182566255b95920d1bf17d9"
+    },
+    {
+      "currentSha256": "89f5929b4071faa37cf5671c1f9865fd6229ee7bc86b75865b5e3577aaa0a8f4",
+      "edits": [
+        {
+          "current": "import { componentStructuredCallbackDirection } from \"../../abi/component-structured-callables.mjs\";\n",
+          "previous": "import { callbackSubtypeDirection } from \"../../abi/refinements.mjs\";\n",
+          "start": 224
+        },
+        {
+          "current": "\t\tconst direction = componentStructuredCallbackDirection(descriptor, signature, true);\n",
+          "previous": "\t\tconst direction = callbackSubtypeDirection(signature, signature.refinements, descriptor.types);\n",
+          "start": 2680
+        }
+      ],
+      "path": "src/backends/python/callable-graph-model.mjs",
+      "previousSha256": "34e52d5b435163e22d265a5a11328f3486b74ef6609f2376ccb2b0dd6906d76b"
+    },
+    {
+      "currentSha256": "6ce78e0026137983154a9ed1b73b4fa1388c917e7a51375b4883558ee63a7862",
+      "edits": [
+        {
+          "current": "${[...model.callbacks.values()].some(callback => callback.direction === \"host\") ? \"A host callback with checked Lean Fin, Subtype or checked-record semantics must use with_recovery(callback, value). The recovery has the callback's exact erased result type, is checked before Lean or the callback runs, and is never returned as success.\\n\\n\" : \"\"}\\\n",
+          "previous": "${[...model.callbacks.values()].some(callback => callback.direction === \"host\") ? \"A host callback whose result contains a checked Lean Subtype or checked record must use with_recovery(callback, value). The recovery has the callback's exact erased result type, is checked before Lean or the callback runs, and is never returned as success.\\n\\n\" : \"\"}\\\n",
+          "start": 3959
+        }
+      ],
+      "path": "src/backends/python/callable-graph-package.mjs",
+      "previousSha256": "3bd53ea4a96cd490969ccdd0f93351880fdfa4f138f5626e2a37d9f38bb6bdbd"
+    },
+    {
+      "currentSha256": "1282d0700817823423d50c626c5518d7d07c65ae1c08f812844c789edf80c68e",
+      "edits": [
+        {
+          "current": "import { componentStructuredCallbackDirection } from \"../../abi/component-structured-callables.mjs\";\n",
+          "previous": "import { callbackSubtypeDirection } from \"../../abi/refinements.mjs\";\n",
+          "start": 232
+        },
+        {
+          "current": "\t\t\t, direction: componentStructuredCallbackDirection(descriptor, signature, true)\n",
+          "previous": "\t\t\t, direction: callbackSubtypeDirection(signature, signature.refinements, descriptor.types)\n",
+          "start": 1905
+        }
+      ],
+      "path": "src/backends/ruby/callable-graph-model.mjs",
+      "previousSha256": "951014f9501669bbeb876411f2ac9fe8d0a1bc62b48a21bb0128bdef09a065cf"
+    },
+    {
+      "currentSha256": "1e5c1660c5c1dac63fcd5c656489aba16171826eb81214a40ad306078c839d88",
+      "edits": [
+        {
+          "current": "\t${callbackRecovery ? `A host callback with checked Lean Fin, Subtype or checked-record semantics must be wrapped with ${model.namespace}.with_recovery(callback, value). The recovery has the callback's exact erased result type and is validated before Lean or the callback runs. It is used only to finish Lean's failure path and is never returned as a successful result.\n",
+          "previous": "\t${callbackRecovery ? `A host callback whose result contains a checked Lean Subtype or checked record must be wrapped with ${model.namespace}.with_recovery(callback, value). The recovery has the callback's exact erased result type and is validated before Lean or the callback runs. It is used only to finish Lean's failure path and is never returned as a successful result.\n",
+          "start": 4505
+        }
+      ],
+      "path": "src/backends/ruby/callable-graph-package.mjs",
+      "previousSha256": "6a9097c11695ee238ec2fe8801a5b127582249ad6acb544b3b2e09b4f63e4dbb"
+    },
+    {
+      "currentSha256": "dd86c88b770fe343f42cd2580bc1122c2afbc273049ceb1d825f8ab0b78ee9fb",
+      "edits": [
+        {
+          "current": "import { componentStructuredCallbackDirection } from \"../../abi/component-structured-callables.mjs\";\n",
+          "previous": "import { callbackSubtypeDirection } from \"../../abi/refinements.mjs\";\n",
+          "start": 222
+        },
+        {
+          "current": "\t\tconst direction = componentStructuredCallbackDirection(descriptor, callback, true);\n",
+          "previous": "\t\tconst direction = callbackSubtypeDirection(callback, callback.refinements, descriptor.types);\n",
+          "start": 3688
+        }
+      ],
+      "path": "src/backends/rust/callable-graph-model.mjs",
+      "previousSha256": "d4afa87744e83bed18c699b286ac30d09da8a46e56a42534070baed123facd07"
+    },
+    {
+      "currentSha256": "e765ca297a43b6585d5ac0baebf6ddf38502f5f4b60eb20afac1414210efe400",
+      "edits": [
+        {
+          "current": "${callbackRecovery ? \"A host callback with checked Lean Fin, Subtype or checked-record semantics must use with_recovery(callback, value). The recovery has the callback's exact erased result type, is checked before Lean or the callback runs, and is never returned as success.\\n\\n\" : \"\"}\\\n",
+          "previous": "${callbackRecovery ? \"A host callback whose result contains a checked Lean Subtype or checked record must use with_recovery(callback, value). The recovery has the callback's exact erased result type, is checked before Lean or the callback runs, and is never returned as success.\\n\\n\" : \"\"}\\\n",
+          "start": 8413
+        }
+      ],
+      "path": "src/backends/rust/callable-graph-package.mjs",
+      "previousSha256": "cf21e0dae31a3658f07b59c9a16de3005cbfd82f083ab19cd3871d0eabd1a408"
+    },
+    {
+      "currentSha256": "3e011d92f5f0cf00925fb66726e7bd4f0a30e84bdd7e51545191def90f8a4563",
+      "edits": [
+        {
+          "current": "\t\t? \"A host callback with checked Lean Fin, Subtype or checked-record semantics must be registered with its typed create helper's recovery argument. Registration makes an owned checked copy before application execution; Lean uses it only to finish a rejected callback's failure path.\\n\\n\"\n",
+          "previous": "\t\t? \"A callback whose result contains a checked Lean Subtype or checked record must be registered with its typed create helper's recovery argument. Registration makes an owned checked copy before application execution; Lean uses it only when the callback reply fails the selected constructor.\\n\\n\"\n",
+          "start": 5794
+        }
+      ],
+      "path": "src/backends/wit/callable-graph-package.mjs",
+      "previousSha256": "df8cf54a81ff8ece89f3eb81416c8c6bdd04be5a88e18b0d4e0be1c4117e5b9e"
+    },
+    {
+      "currentSha256": "e41520bbdafae5c90f4ff1db727aaf2d3866f19bb6bf0772f646f59abb8851b5",
+      "edits": [
+        {
+          "current": "\t\treturn generateNativeCallableGraphTrampolines(nativeGraphCarrierAbi(model), { finDirections: true });\n",
+          "previous": "\t\treturn generateNativeCallableGraphTrampolines(nativeGraphCarrierAbi(model));\n",
+          "start": 5341
+        }
+      ],
+      "path": "src/build/native-component.mjs",
+      "previousSha256": "2798e4cad749111193445a470704201c350819241a293a155c4baff59f135867"
+    },
+    {
+      "currentSha256": "9037a61e56622ecccfbd25627a2e2d9e4b181792549c36fe5a3d2e1fd329e1c3",
+      "edits": [
+        {
+          "current": "\t\t, ...(abi.callbacks ? componentStructuredCallableLeanSource(abi, exports, { finDirections: true })\n",
+          "previous": "\t\t, ...(abi.callbacks ? componentStructuredCallableLeanSource(abi, exports)\n",
+          "start": 12016
+        },
+        {
+          "current": "\t\t? carrierHeader(componentStructuredCopiedView(abi), false) + nativeCallableGraphHeader(abi, { finDirections: true })\n",
+          "previous": "\t\t? carrierHeader(componentStructuredCopiedView(abi), false) + nativeCallableGraphHeader(abi)\n",
+          "start": 12281
+        }
+      ],
+      "path": "src/build/native-graph-model.mjs",
+      "previousSha256": "96732da027eb1b75c7e860cf520c451fc2b0156e1fd30d6f92702e7cb0bbd155"
+    },
+    {
+      "currentSha256": "27bf2b859edd097ec165a6016d9bb742b629a847fa90af714f63ce826d64d09e",
+      "edits": [
+        {
+          "current": "\t\t? generateNativeCallableGraphCalls(model.bindingIr, model.copiedGraph, {\n\t\t\tinitializer: receipt.initializer, finDirections: true\n\t\t})\n",
+          "previous": "\t\t? generateNativeCallableGraphCalls(model.bindingIr, model.copiedGraph, { initializer: receipt.initializer })\n",
+          "start": 1536
+        }
+      ],
+      "path": "src/build/native-graph-sources.mjs",
+      "previousSha256": "ea817dabee44a8c964f61419b5f4454fe1bb32a4f83f7c696ab03c72efec92fd"
+    },
+    {
+      "currentSha256": "6fc9446b8e9ed4d43dd18c4dc478083bb5c2a77884e6454d29bd4e35f29f92a2",
+      "edits": [
+        {
+          "current": "\t\t? \"\\n\\nA host callback with checked Lean Fin, Subtype or checked-record semantics must be passed through with_recovery(callback, value). The recovery has the callback's exact erased result type, a generated value record carrying only payload fields for a checked record, and is validated before Lean or the callback runs. Lean checks every host-produced Fin bound and applies the selected checked constructor to every Subtype leaf and checked record, nested checked fields before their record. Bound or constructor rejection, a thrown exception or another callback failure fails the enclosing call, suppresses later callbacks and leaves its output unchanged; the recovery is used only inside Lean's failure path and is never returned as a successful result. Fin, Subtype and checked-record arguments to returned LeanClosure values are checked before the closure body runs; checked records Lean produces for the host carry payload fields only.\"\n\t\t: \"\\n\\nEach callback declaration exposes a PREFIX_CALLBACK_REQUIRES_RECOVERY macro. When it is 1, initialize the descriptor's typed recovery pointer before calling Lean and keep that value alive for the call; for a checked record it points at an initialized generated record carrying only payload fields. The adapter validates and copies it before Lean or the callback runs. Lean checks every host-produced Fin bound and applies the selected checked constructor to every Subtype leaf and checked record, nested checked fields before their record. Bound or constructor rejection, a non-OK callback status or another callback failure fails the enclosing call, suppresses later callbacks and leaves its output unchanged; the recovery is used only inside Lean's failure path and is never written as successful output. Fin, Subtype and checked-record arguments to returned Lean closures are checked before the closure body runs; checked records Lean produces for the host carry payload fields only.\";\n",
+          "previous": "\t\t? \"\\n\\nA host callback whose result contains a checked Lean Subtype or checked record must be passed through with_recovery(callback, value). The recovery has the callback's exact erased result type, a generated value record carrying only payload fields for a checked record, and is validated before Lean or the callback runs. Lean applies the selected checked constructor to every host-produced Subtype leaf and checked record, nested checked fields before their record. Constructor rejection, a thrown exception or another callback failure fails the enclosing call, suppresses later callbacks and leaves its output unchanged; the recovery is used only inside Lean's failure path and is never returned as a successful result. Subtype and checked-record arguments to returned LeanClosure values are checked before the closure body runs; checked records Lean produces for the host carry payload fields only.\"\n\t\t: \"\\n\\nEach callback declaration exposes a PREFIX_CALLBACK_REQUIRES_RECOVERY macro. When it is 1, initialize the descriptor's typed recovery pointer before calling Lean and keep that value alive for the call; for a checked record it points at an initialized generated record carrying only payload fields. The adapter validates and copies it before Lean or the callback runs. Lean applies the selected checked constructor to every host-produced Subtype leaf and checked record, nested checked fields before their record. Constructor rejection, a non-OK callback status or another callback failure fails the enclosing call, suppresses later callbacks and leaves its output unchanged; the recovery is used only inside Lean's failure path and is never written as successful output. Subtype and checked-record arguments to returned Lean closures are checked before the closure body runs; checked records Lean produces for the host carry payload fields only.\";\n",
+          "start": 3511
+        }
+      ],
+      "path": "src/release/native-c-family.mjs",
+      "previousSha256": "6f4322b0cd88ac435e233fbdfeddcc5efa6d20d447c562ac73a7373fa7c24e81"
+    },
+    {
+      "currentSha256": "2949a42ffc6cf2a281ad308dac29336119fd8761d0a53a3b7f725d6bcdd50f30",
+      "edits": [
+        {
+          "current": "\tassert.match(files[\"lib/LeanBridge/Structured.pm\"], /checked Lean Fin, Subtype or checked-record semantics must use/u);\n",
+          "previous": "\tassert.match(files[\"lib/LeanBridge/Structured.pm\"], /checked Lean Subtype or checked record must use/u);\n",
+          "start": 18067
+        },
+        {
+          "current": "\tassert.match(dotnet[\"README.md\"], /checked Lean Fin, Subtype or checked-record/u);\n",
+          "previous": "\tassert.match(dotnet[\"README.md\"], /checked Lean Subtype or checked record/u);\n",
+          "start": 19557
+        },
+        {
+          "current": "\tassert.match(jvm[\"README.md\"], /checked Lean Fin, Subtype or checked-record/u);\n",
+          "previous": "\tassert.match(jvm[\"README.md\"], /checked Lean Subtype or checked record/u);\n",
+          "start": 20053
+        },
+        {
+          "current": "\tassert.match(php[\"README.md\"], /checked Lean Fin, Subtype or checked-record/u);\n",
+          "previous": "\tassert.match(php[\"README.md\"], /checked Lean Subtype or checked record/u);\n",
+          "start": 20464
+        },
+        {
+          "current": "\t\t, /checked Lean Fin, Subtype or checked-record/u);\n",
+          "previous": "\t\t, /checked Lean Subtype or checked record/u);\n",
+          "start": 20782
+        }
+      ],
+      "path": "tests/callback-checked-record-native.test.mjs",
+      "previousSha256": "cad48dcd8ebf3cddba6e3795eccae942739bad53b6901982e33ad7161c477064"
+    },
+    {
+      "currentSha256": "bc8b7f9413fa038b4d91d00b0970d4211ee1187592b0c61b7a5213df03a8251f",
+      "edits": [
+        {
+          "current": "test(\"every native package model recovers Fin callback roles from the exact export sites\", () => {\n\tconst ir = reviewedCallbackFinReview(), descriptor = createNativeCallableGraphDescriptor(ir);\n\tconst callbackId = (name, result = false) => {\n\t\tconst declaration = ir.declarations.find(item => item.id === `lean:ReviewedCallbacks.${name}`);\n\t\treturn (result ? declaration.result : declaration.parameters[0]).type.id;\n\t};\n\tconst expected = new Map([\n\t\t[callbackId(\"visit\"), \"host\"]\n\t\t, [callbackId(\"scaler\", true), \"closure\"]\n\t\t, [callbackId(\"counter\", true), \"closure\"]\n\t\t, [callbackId(\"digits\", true), \"closure\"]\n\t\t, [callbackId(\"apply\"), null]\n\t]);\n\tfor(const target of [\"c\", \"cpp\", \"pypi\", \"cargo\", \"rubygems\", \"cpan\", \"nuget\", \"maven\", \"php-native\", \"wit-wasi\"])\n\t{\n\t\tconst model = compileNativeGraphProjection(ir, [target], target === \"cpan\" ? \"LeanBridge::Reviewed\" : undefined);\n\t\tfor(const [id, direction] of expected)\n\t\t\tassert.equal(model.callbacks.get(id).direction, direction, `${target}: ${id}`);\n\t}\n\tconst model = {\n\t\tschemaVersion: 4\n\t\t, profile: \"native-library-v1\", pointerBits: 64, byteOrder: \"little\"\n\t\t, component: ir.component, bindingIr: ir, copiedGraph: descriptor\n\t};\n\tconst abi = nativeCallableGraphCarrierAbi(descriptor, ir);\n\tconst generated = generateCompiledCallbacks(model);\n\tfor(const [id, direction] of expected)\n\t{\n\t\tconst signature = abi.callbacks.find(item => item.id === id);\n\t\tconst prefix = `${abi.exports[0].symbol}_structured_${signature.key}`;\n\t\tassert.equal(generated.includes(`${prefix}_invoke`), direction !== \"closure\", `${id}: invoke`);\n\t\tassert.equal(generated.includes(`${prefix}_recovery`), direction === \"host\", `${id}: recovery`);\n\t}\n});\n\n",
+          "previous": "",
+          "start": 8220
+        }
+      ],
+      "path": "tests/native-recursive-callable-model.test.mjs",
+      "previousSha256": "6ae412d749b70e57f0e33a50f668298981c6ab8f8c8ea9b61d47fc3c2a1620dd"
+    }
+  ]
+}
