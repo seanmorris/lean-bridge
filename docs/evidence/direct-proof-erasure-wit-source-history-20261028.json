@@ -1,0 +1,121 @@
+{
+  "additions": [
+    {
+      "currentSha256": "e3a3073db4a7155b9731b06a79f88208c2ab6f8cb0ec0d28c30d6697e14c3290",
+      "path": "scripts/check-direct-proof-erasure-wit-ci.mjs"
+    },
+    {
+      "currentSha256": "094d01904c379f1cc19a943cb320831e0477ef3771ebd4dba23bae15218e228e",
+      "path": "scripts/run-direct-proof-erasure-wit-ci.sh"
+    },
+    {
+      "currentSha256": "80704a31a6f6567afd6ac948c1174a3732c19ba254690fb18e0c1e51742e285a",
+      "path": "tests/direct-proof-erasure-wit-installed.test.mjs"
+    },
+    {
+      "currentSha256": "3c2cffedb3ee71523f1dba11d4e15e90c4909bd423fdd78cb49c1a1803c0d156",
+      "path": "tests/fixtures/direct-proof-erasure-consumers/wit-wasi.c"
+    },
+    {
+      "currentSha256": "6874a9886281796006cecab05faab3c4c55349c7fa4429d854ff09518b4fb1b4",
+      "path": "tests/helpers/direct-proof-erasure-wit-report.mjs"
+    },
+    {
+      "currentSha256": "efe347913a888b5ae6f7541934aa08d2e3e62e516701861cf456de398323ad21",
+      "path": "tests/helpers/direct-proof-erasure-wit-tests.mjs"
+    },
+    {
+      "currentSha256": "db2b0cb92e169ed13e970e4a22d94fccaad25afa244b182301bd4cd06ad0afed",
+      "path": "scripts/update-direct-proof-erasure-wit-source-history.mjs"
+    },
+    {
+      "currentSha256": "514c8a5261c389b000fe7c50486ee01521edb9644e271650a2db79755e79001b",
+      "path": "tests/helpers/direct-proof-erasure-wit-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "04476a53582998e15416bb88c7f2a39f0d5085b479ba66b6691283052c5325f4",
+      "path": "tests/helpers/direct-proof-erasure-wit-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "eb134f3ea9d291af7c8d940083b994eb1a59196b",
+  "integrationUpdates": [
+    {
+      "currentSha256": "99236d1eb3d3ace9ce5e64138db7ee808ebfb42b49f986fe6ff8020a0116b314",
+      "edits": [
+        {
+          "current": "import \"./helpers/direct-proof-erasure-wit-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "eee8133b9f320a5a7faa1d57def29eccd5f6d08591ef31d10070567aee470b9e"
+    },
+    {
+      "currentSha256": "6385067c646f1769ed23ef300e8bdd670c08b4d12509abd4f38ee6ab5671aefc",
+      "edits": [
+        {
+          "current": "import { beforeDirectProofErasureWitSource, directProofErasureWitNormalizationPaths } from \"./direct-proof-erasure-wit-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...directProofErasureWitNormalizationPaths\n\t, ...directProofErasureLanguageNormalizationPaths\n",
+          "previous": "\t...directProofErasureLanguageNormalizationPaths\n",
+          "start": 211578
+        },
+        {
+          "current": "\tlet stage = beforeDirectProofErasureWitSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeDirectProofErasureLanguageSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeDirectProofErasureLanguageSource(path, text, expected);\n",
+          "start": 264371
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "9c249ca90a94465b7c3bb06bd89a12890cabc135688b5c3d93d7aba0e06f01d7"
+    }
+  ],
+  "milestone": "direct-proof-erasure-wit-source-v1",
+  "predecessorCommit": "b066c9f95e84808a384c51d5e53099154a70eea4",
+  "schemaVersion": 1,
+  "scope": "Build ordinary and independently reviewed direct-proof WIT/WASI packages twice; retain receipt-closed offline archives; prove the component interface exposes one UInt32 payload and no proof slot; execute and relocate the installed Wasmtime host; and require the real component boundary to reject three attempted arguments while leaving output unchanged.",
+  "updates": [
+    {
+      "commit": "eb134f3ea9d291af7c8d940083b994eb1a59196b",
+      "currentSha256": "f0ee22bb3bb53b730f9a869801aa8adf79d059cf90f3d6adbe8cfcae9c4673f1",
+      "edits": [
+        {
+          "current": "      - name: Qualify direct proof erasure in the prepared WIT package\n        id: direct_proof_wit\n        continue-on-error: true\n        timeout-minutes: 100\n        run: |\n          export LEAN_BRIDGE_WASMTIME_C_API=\"$PWD/build/wasmtime-c-api\"\n          source scripts/env.sh\n          bash scripts/run-direct-proof-erasure-wit-ci.sh\n      - name: Preserve direct proof-erasure WIT acceptance\n        if: always()\n        uses: actions/upload-artifact@v7\n        with:\n          name: direct-proof-erasure-wit-${{ github.sha }}\n          path: build/direct-proof-erasure-wit-ci/\n          if-no-files-found: error\n          overwrite: true\n          retention-days: 30\n",
+          "previous": "",
+          "start": 349407
+        },
+        {
+          "current": "          test_result=\"${{ steps.consumer.outcome == 'success' && steps.ordinary_wit.outcome == 'success' && steps.structured_wit.outcome == 'success' && steps.recursive_wit.outcome == 'success' && steps.type_corpus_wit.outcome == 'success' && steps.owned_wit_projection.outcome == 'success' && steps.owned_wit_native.outcome == 'success' && steps.owned_wit_session.outcome == 'success' && steps.owned_wit_package.outcome == 'success' && steps.owned_wit_callback_packages.outcome == 'success' && steps.owned_wit_transfers.outcome == 'success' && steps.owned_wit_borrows.outcome == 'success' && steps.nominal_wit.outcome == 'success' && steps.direct_proof_wit.outcome == 'success' && 'passed' || 'failed' }}\"\n          executed=\"${{ steps.consumer.outcome == 'success' && steps.ordinary_wit.outcome == 'success' && steps.structured_wit.outcome == 'success' && steps.recursive_wit.outcome == 'success' && steps.type_corpus_wit.outcome == 'success' && steps.owned_wit_projection.outcome == 'success' && steps.owned_wit_native.outcome == 'success' && steps.owned_wit_session.outcome == 'success' && steps.owned_wit_package.outcome == 'success' && steps.owned_wit_callback_packages.outcome == 'success' && steps.owned_wit_transfers.outcome == 'success' && steps.owned_wit_borrows.outcome == 'success' && steps.nominal_wit.outcome == 'success' && steps.direct_proof_wit.outcome == 'success' && 'true' || 'false' }}\"\n          node scripts/consumer-ci.mjs record --consumer wit-wasi --output build/consumer-ci/results/wit-wasi.json --performance build/consumer-ci/performance/wit-wasi.json --test-result \"$test_result\" --package-installation \"$executed\" --real-lean-execution \"$executed\" --command \"npm run test:consumer:wasi && LEAN_BRIDGE_NATIVE_WIT_TEST=1 node --test tests/native-wit.test.mjs && LEAN_BRIDGE_WIT_CALLABLE_COMPONENT_TEST=1 node --test tests/wit-callable-contract.test.mjs && LEAN_BRIDGE_WIT_CALLABLE_TEST=1 node --test tests/wit-callables.test.mjs && LEAN_BRIDGE_WIT_COMPOUND_TEST=1 node --test tests/wit-compounds.test.mjs tests/wit-compound-contract.test.mjs tests/wit-compound-conversions.test.mjs && LEAN_BRIDGE_WIT_LIST_TEST=1 node --test tests/wit-lists.test.mjs tests/wit-list-contract.test.mjs tests/wit-list-conversions.test.mjs && LEAN_BRIDGE_WIT_ALIAS_TEST=1 node --test --test-concurrency=1 tests/wit-aliases.test.mjs tests/wit-alias-contract.test.mjs tests/wit-alias-conversions.test.mjs && LEAN_BRIDGE_WIT_FIN_TEST=1 node --test tests/wit-fin.test.mjs && LEAN_BRIDGE_SPECIALIZATION_PROFILES=wit-wasi node --test tests/native-specializations.test.mjs && LEAN_BRIDGE_GENERIC_RECORD_PROFILES=wit-wasi node --test --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs && LEAN_BRIDGE_GENERIC_RECORD_ARRAY_PROFILES=wit-wasi node --test --test-concurrency=1 tests/generic-record-arrays.test.mjs && LEAN_BRIDGE_DEPENDENT_FIN_PROFILES=wit-wasi LEAN_BRIDGE_REVIEWED_DEPENDENT_FIN_PROFILES=wit-wasi node --test tests/managed-dependent-fin.test.mjs && LEAN_BRIDGE_FIN_CONTAINER_ENTRY_COUNTERS=1 LEAN_BRIDGE_FIN_CONTAINER_PROFILES=wit-wasi LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=wit-wasi node --test tests/native-fin-containers.test.mjs && LEAN_BRIDGE_FIN_CONTAINER_EDGE_PROFILES=wit-wasi LEAN_BRIDGE_FIN_CONTAINER_EDGE_DISPATCH=1 LEAN_BRIDGE_FIN_CONTAINER_EDGE_REPORT=build/native-fin-container-edges/edges-wit-wasi.json node --test --test-concurrency=1 --test-name-pattern='^installed source-free native packages execute zero-bound and nested-position Fin edge cases$' tests/fin-container-edges.test.mjs && node scripts/check-fin-container-foreign-report.mjs wit-wasi build/native-fin-container-edges/edges-wit-wasi.json && LEAN_BRIDGE_FIN_PRODUCT_PROFILES=wit-wasi LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_PROFILES=wit-wasi node --test tests/native-fin-products.test.mjs && bash scripts/run-fin-late-wit-ci.sh && LEAN_BRIDGE_FIN_PRODUCT_ARRAY_PROFILES=wit-wasi LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_ARRAY_PROFILES=wit-wasi node --test tests/native-fin-product-arrays.test.mjs && LEAN_BRIDGE_FIN_RECORD_PROFILES=wit-wasi LEAN_BRIDGE_REVIEWED_FIN_RECORD_PROFILES=wit-wasi node --test tests/native-fin-records.test.mjs && LEAN_BRIDGE_FIN_RECORD_ZERO_PROFILES=wit-wasi LEAN_BRIDGE_REVIEWED_FIN_RECORD_ZERO_PROFILES=wit-wasi LEAN_BRIDGE_FIN_RECORD_ZERO_REPORT=build/native-fin-record-zero/wit-wasi.json LEAN_BRIDGE_REVIEWED_FIN_RECORD_ZERO_REPORT=build/native-fin-record-zero/reviewed-wit-wasi.json node --test --test-concurrency=1 tests/native-fin-record-zero.test.mjs && node scripts/check-fin-record-zero-report.mjs wit-wasi build/native-fin-record-zero/wit-wasi.json build/native-fin-record-zero/reviewed-wit-wasi.json && LEAN_BRIDGE_SUBTYPE_PROFILES=wit-wasi node --test tests/native-subtype.test.mjs && bash scripts/run-reviewed-subtype-host-ci.sh wit-wasi && bash scripts/run-checked-record-host-ci.sh wit-wasi && bash scripts/run-structural-subtype-ci.sh wit-wasi && LEAN_BRIDGE_WIT_VARIANT_TEST=1 node --test --test-concurrency=1 tests/wit-variants.test.mjs tests/wit-variant-contract.test.mjs tests/wit-variant-conversions.test.mjs && LEAN_BRIDGE_WIT_COLLECTION_TEST=1 node --test --test-concurrency=1 tests/wit-collections.test.mjs tests/wit-collection-contract.test.mjs tests/wit-collection-conversions.test.mjs && LEAN_BRIDGE_WIT_GRAPH_TEST=1 node --test tests/wit-copied-graph-conversions.test.mjs && LEAN_BRIDGE_WIT_GRAPH_NATIVE_TEST=1 node --test tests/wit-copied-graph-native.test.mjs && LEAN_BRIDGE_WIT_GRAPH_INSTALLED_TEST=1 node --test tests/wit-copied-graph-package.test.mjs && LEAN_BRIDGE_WIT_GRAPH_REPRO_TEST=1 node --test tests/wit-copied-graph-package.test.mjs && LEAN_BRIDGE_WIT_HOST_TEST=1 node --test tests/wit-host-evidence.test.mjs && LEAN_BRIDGE_WIT_HOST_PACKAGES_TEST=1 node --test tests/wit-host-packages.test.mjs && LEAN_BRIDGE_WIT_GRAPH_COMPOSITION_TEST=1 LEAN_BRIDGE_WIT_MIXED_PACKAGES_TEST=1 node --test tests/wit-graph-composition.test.mjs && npm run test:type-corpus:wit-wasi && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=wit-wasi node --test tests/type-corpus-reviewed-native.test.mjs && LEAN_BRIDGE_WIT_STRUCTURED_CALLABLE_TEST=1 node --test --test-concurrency=1 tests/native-callback-alias-contract.test.mjs tests/wit-structured-callable-contract.test.mjs tests/wit-structured-callable-faults.test.mjs tests/wit-structured-callables.test.mjs tests/wit-structured-aliases.test.mjs tests/wit-structured-documentation.test.mjs && npm run test:wit-recursive-generated && npm run test:wit-recursive-packages && npm run test:owned-wit-transfers && npm run test:owned-wit-borrows && npm run test:owned-wit-callback-packages && bash scripts/run-nominal-subtype-wit-ci.sh \\\"/usr/bin/cc\\\" \\\"$PWD/.toolchains/wasm-tools/bin/wasm-tools\\\" \\\"$PWD/build/wasmtime-c-api\\\" && bash scripts/run-direct-proof-erasure-wit-ci.sh\"\n",
+          "previous": "          test_result=\"${{ steps.consumer.outcome == 'success' && steps.ordinary_wit.outcome == 'success' && steps.structured_wit.outcome == 'success' && steps.recursive_wit.outcome == 'success' && steps.type_corpus_wit.outcome == 'success' && steps.owned_wit_projection.outcome == 'success' && steps.owned_wit_native.outcome == 'success' && steps.owned_wit_session.outcome == 'success' && steps.owned_wit_package.outcome == 'success' && steps.owned_wit_callback_packages.outcome == 'success' && steps.owned_wit_transfers.outcome == 'success' && steps.owned_wit_borrows.outcome == 'success' && steps.nominal_wit.outcome == 'success' && 'passed' || 'failed' }}\"\n          executed=\"${{ steps.consumer.outcome == 'success' && steps.ordinary_wit.outcome == 'success' && steps.structured_wit.outcome == 'success' && steps.recursive_wit.outcome == 'success' && steps.type_corpus_wit.outcome == 'success' && steps.owned_wit_projection.outcome == 'success' && steps.owned_wit_native.outcome == 'success' && steps.owned_wit_session.outcome == 'success' && steps.owned_wit_package.outcome == 'success' && steps.owned_wit_callback_packages.outcome == 'success' && steps.owned_wit_transfers.outcome == 'success' && steps.owned_wit_borrows.outcome == 'success' && steps.nominal_wit.outcome == 'success' && 'true' || 'false' }}\"\n          node scripts/consumer-ci.mjs record --consumer wit-wasi --output build/consumer-ci/results/wit-wasi.json --performance build/consumer-ci/performance/wit-wasi.json --test-result \"$test_result\" --package-installation \"$executed\" --real-lean-execution \"$executed\" --command \"npm run test:consumer:wasi && LEAN_BRIDGE_NATIVE_WIT_TEST=1 node --test tests/native-wit.test.mjs && LEAN_BRIDGE_WIT_CALLABLE_COMPONENT_TEST=1 node --test tests/wit-callable-contract.test.mjs && LEAN_BRIDGE_WIT_CALLABLE_TEST=1 node --test tests/wit-callables.test.mjs && LEAN_BRIDGE_WIT_COMPOUND_TEST=1 node --test tests/wit-compounds.test.mjs tests/wit-compound-contract.test.mjs tests/wit-compound-conversions.test.mjs && LEAN_BRIDGE_WIT_LIST_TEST=1 node --test tests/wit-lists.test.mjs tests/wit-list-contract.test.mjs tests/wit-list-conversions.test.mjs && LEAN_BRIDGE_WIT_ALIAS_TEST=1 node --test --test-concurrency=1 tests/wit-aliases.test.mjs tests/wit-alias-contract.test.mjs tests/wit-alias-conversions.test.mjs && LEAN_BRIDGE_WIT_FIN_TEST=1 node --test tests/wit-fin.test.mjs && LEAN_BRIDGE_SPECIALIZATION_PROFILES=wit-wasi node --test tests/native-specializations.test.mjs && LEAN_BRIDGE_GENERIC_RECORD_PROFILES=wit-wasi node --test --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs && LEAN_BRIDGE_GENERIC_RECORD_ARRAY_PROFILES=wit-wasi node --test --test-concurrency=1 tests/generic-record-arrays.test.mjs && LEAN_BRIDGE_DEPENDENT_FIN_PROFILES=wit-wasi LEAN_BRIDGE_REVIEWED_DEPENDENT_FIN_PROFILES=wit-wasi node --test tests/managed-dependent-fin.test.mjs && LEAN_BRIDGE_FIN_CONTAINER_ENTRY_COUNTERS=1 LEAN_BRIDGE_FIN_CONTAINER_PROFILES=wit-wasi LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=wit-wasi node --test tests/native-fin-containers.test.mjs && LEAN_BRIDGE_FIN_CONTAINER_EDGE_PROFILES=wit-wasi LEAN_BRIDGE_FIN_CONTAINER_EDGE_DISPATCH=1 LEAN_BRIDGE_FIN_CONTAINER_EDGE_REPORT=build/native-fin-container-edges/edges-wit-wasi.json node --test --test-concurrency=1 --test-name-pattern='^installed source-free native packages execute zero-bound and nested-position Fin edge cases$' tests/fin-container-edges.test.mjs && node scripts/check-fin-container-foreign-report.mjs wit-wasi build/native-fin-container-edges/edges-wit-wasi.json && LEAN_BRIDGE_FIN_PRODUCT_PROFILES=wit-wasi LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_PROFILES=wit-wasi node --test tests/native-fin-products.test.mjs && bash scripts/run-fin-late-wit-ci.sh && LEAN_BRIDGE_FIN_PRODUCT_ARRAY_PROFILES=wit-wasi LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_ARRAY_PROFILES=wit-wasi node --test tests/native-fin-product-arrays.test.mjs && LEAN_BRIDGE_FIN_RECORD_PROFILES=wit-wasi LEAN_BRIDGE_REVIEWED_FIN_RECORD_PROFILES=wit-wasi node --test tests/native-fin-records.test.mjs && LEAN_BRIDGE_FIN_RECORD_ZERO_PROFILES=wit-wasi LEAN_BRIDGE_REVIEWED_FIN_RECORD_ZERO_PROFILES=wit-wasi LEAN_BRIDGE_FIN_RECORD_ZERO_REPORT=build/native-fin-record-zero/wit-wasi.json LEAN_BRIDGE_REVIEWED_FIN_RECORD_ZERO_REPORT=build/native-fin-record-zero/reviewed-wit-wasi.json node --test --test-concurrency=1 tests/native-fin-record-zero.test.mjs && node scripts/check-fin-record-zero-report.mjs wit-wasi build/native-fin-record-zero/wit-wasi.json build/native-fin-record-zero/reviewed-wit-wasi.json && LEAN_BRIDGE_SUBTYPE_PROFILES=wit-wasi node --test tests/native-subtype.test.mjs && bash scripts/run-reviewed-subtype-host-ci.sh wit-wasi && bash scripts/run-checked-record-host-ci.sh wit-wasi && bash scripts/run-structural-subtype-ci.sh wit-wasi && LEAN_BRIDGE_WIT_VARIANT_TEST=1 node --test --test-concurrency=1 tests/wit-variants.test.mjs tests/wit-variant-contract.test.mjs tests/wit-variant-conversions.test.mjs && LEAN_BRIDGE_WIT_COLLECTION_TEST=1 node --test --test-concurrency=1 tests/wit-collections.test.mjs tests/wit-collection-contract.test.mjs tests/wit-collection-conversions.test.mjs && LEAN_BRIDGE_WIT_GRAPH_TEST=1 node --test tests/wit-copied-graph-conversions.test.mjs && LEAN_BRIDGE_WIT_GRAPH_NATIVE_TEST=1 node --test tests/wit-copied-graph-native.test.mjs && LEAN_BRIDGE_WIT_GRAPH_INSTALLED_TEST=1 node --test tests/wit-copied-graph-package.test.mjs && LEAN_BRIDGE_WIT_GRAPH_REPRO_TEST=1 node --test tests/wit-copied-graph-package.test.mjs && LEAN_BRIDGE_WIT_HOST_TEST=1 node --test tests/wit-host-evidence.test.mjs && LEAN_BRIDGE_WIT_HOST_PACKAGES_TEST=1 node --test tests/wit-host-packages.test.mjs && LEAN_BRIDGE_WIT_GRAPH_COMPOSITION_TEST=1 LEAN_BRIDGE_WIT_MIXED_PACKAGES_TEST=1 node --test tests/wit-graph-composition.test.mjs && npm run test:type-corpus:wit-wasi && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=wit-wasi node --test tests/type-corpus-reviewed-native.test.mjs && LEAN_BRIDGE_WIT_STRUCTURED_CALLABLE_TEST=1 node --test --test-concurrency=1 tests/native-callback-alias-contract.test.mjs tests/wit-structured-callable-contract.test.mjs tests/wit-structured-callable-faults.test.mjs tests/wit-structured-callables.test.mjs tests/wit-structured-aliases.test.mjs tests/wit-structured-documentation.test.mjs && npm run test:wit-recursive-generated && npm run test:wit-recursive-packages && npm run test:owned-wit-transfers && npm run test:owned-wit-borrows && npm run test:owned-wit-callback-packages && bash scripts/run-nominal-subtype-wit-ci.sh \\\"/usr/bin/cc\\\" \\\"$PWD/.toolchains/wasm-tools/bin/wasm-tools\\\" \\\"$PWD/build/wasmtime-c-api\\\"\"\n",
+          "start": 350183
+        },
+        {
+          "current": "        if: always() && (steps.consumer.outcome != 'success' || steps.ordinary_wit.outcome != 'success' || steps.structured_wit.outcome != 'success' || steps.recursive_wit.outcome != 'success' || steps.type_corpus_wit.outcome != 'success' || steps.owned_wit_projection.outcome != 'success' || steps.owned_wit_native.outcome != 'success' || steps.owned_wit_session.outcome != 'success' || steps.owned_wit_package.outcome != 'success' || steps.owned_wit_callback_packages.outcome != 'success' || steps.owned_wit_transfers.outcome != 'success' || steps.owned_wit_borrows.outcome != 'success' || steps.nominal_wit.outcome != 'success' || steps.direct_proof_wit.outcome != 'success')\n",
+          "previous": "        if: always() && (steps.consumer.outcome != 'success' || steps.ordinary_wit.outcome != 'success' || steps.structured_wit.outcome != 'success' || steps.recursive_wit.outcome != 'success' || steps.type_corpus_wit.outcome != 'success' || steps.owned_wit_projection.outcome != 'success' || steps.owned_wit_native.outcome != 'success' || steps.owned_wit_session.outcome != 'success' || steps.owned_wit_package.outcome != 'success' || steps.owned_wit_callback_packages.outcome != 'success' || steps.owned_wit_transfers.outcome != 'success' || steps.owned_wit_borrows.outcome != 'success' || steps.nominal_wit.outcome != 'success')\n",
+          "start": 360709
+        }
+      ],
+      "parent": "b066c9f95e84808a384c51d5e53099154a70eea4",
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previousSha256": "38c5a749e6cf66d4cd83378f849fbd3d7ba7b7ac703a9eb9e2adcb43379a6ded"
+    },
+    {
+      "commit": "eb134f3ea9d291af7c8d940083b994eb1a59196b",
+      "currentSha256": "eee8133b9f320a5a7faa1d57def29eccd5f6d08591ef31d10070567aee470b9e",
+      "edits": [
+        {
+          "current": "import \"./helpers/direct-proof-erasure-wit-tests.mjs\";\n",
+          "previous": "",
+          "start": 691
+        }
+      ],
+      "parent": "b066c9f95e84808a384c51d5e53099154a70eea4",
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "4c342c7551afa96744c3366e744fe415d87911611eb9a2953ab2fbfef6f922c1"
+    }
+  ]
+}
