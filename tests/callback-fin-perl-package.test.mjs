@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { generatePerlBindingPackage, validatePerlModel } from "../src/backends/perl/generate.mjs";
+import { nativeTypeKey } from "../src/build/native-model.mjs";
 import { finCallbackCompilerModel } from "./helpers/fin-callback-model.mjs";
 
 const receipt = {
@@ -35,9 +36,15 @@ test("Perl leaves outer callback refinements to the generated callable adapters"
 	const files = generatePerlBindingPackage(model, receipt);
 	const xs = files["Component.xs"];
 	const visit = model.exports.find(item => item.name === "Sample.visit");
+	const digits = model.exports.find(item => item.name === "Sample.digits");
+	const visitKey = nativeTypeKey(visit.parameters[0].type);
+	const digitsKey = nativeTypeKey(digits.result);
 	assert.match(xs, /lb_callback_[a-f0-9]+\(void \*context,/u);
 	assert.match(xs, /lbp_callback_invoke\(\(lbp_callback \*\)context, &frame\)/u);
 	assert.match(xs, new RegExp(`\\nvisit\\(\\.\\.\\.\\)[\\s\\S]+${visit.symbol}\\(`, "u"));
+	assert.ok(xs.includes(`lb_t${visitKey}_wrap(token)`));
+	assert.ok(!xs.includes(`lb_t${digitsKey}_wrap(token)`));
+	assert.ok(xs.includes(`lb_t${digitsKey}_call`));
 	assert.ok(model.types.some(type => type.kind === "callback" && type.checked?.some(Boolean)));
 	const pod = files["lib/LeanBridge/FinCallbacks.pm"];
 	assert.match(pod, /Checked Lean Fin bounds: arg0\.arg0 < 5\./u);

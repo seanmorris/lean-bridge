@@ -219,7 +219,13 @@ const conversion = (model, type) => {
 	if(type.kind === "resource" || type.kind === "callback")
 	{
 		from = `return lbp_borrow(aTHX_ scope, value, ${q(kind(model, type))});`;
-		if(type.kind === "callback") from = `
+		// The native component exports `wrap` only for callback types accepted from
+		// the host. Returned-closure-only types export `call` but no `wrap`; their
+		// converter must therefore accept generated resource objects only.
+		const acceptsHostCode = type.kind === "callback" && model.exports.some(item =>
+			item.parameters.some(parameter => parameter.type.kind === "callback"
+				&& nativeTypeKey(parameter.type) === type.key));
+		if(acceptsHostCode) from = `
       if (SvROK(value) && SvTYPE(SvRV(value)) == SVt_PVCV) {
         uint64_t token = lbp_callback_new(aTHX_ scope, value, get_cv(${q(`${model.moduleName}::_callback_${type.key}`)}, 0), (void (*)(void))lb_callback_${type.key});
         return ${keep(`lb_t${type.key}_wrap(token)`)};
