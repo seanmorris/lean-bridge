@@ -63,3 +63,5 @@ import "./helpers/callback-fin-perl-milestone-read-integration-source-history-te
 import "./helpers/inherited-checked-record-lane-memory-source-history-tests.mjs";
 import "./helpers/inherited-checked-record-lane-memory-integration-source-history-tests.mjs";
 import "./helpers/inherited-checked-record-lane-memory-local-join-source-history-tests.mjs";
+import "./helpers/signature-specialization-completion-preparation-source-history-tests.mjs";
+import "./helpers/signature-specialization-completion-preparation-integration-source-history-tests.mjs";
