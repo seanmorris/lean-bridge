@@ -18,9 +18,23 @@ import { constructorRefinementLeaves } from "../../build/component-refinements.m
 const q = JSON.stringify;
 const read = type => `lb_read_${nativeTypeKey(type)}`;
 const write = type => `lb_write_${nativeTypeKey(type)}`;
+const callbackHostClass = model => `${model.moduleName}::Runtime::Callback`;
 const typeClass = (model, type) => type.kind === "callback"
 	? `${model.moduleName}::Closure${nativeTypeKey(type)}`
 	: `${model.moduleName}::${type.name.split(".").at(-1)}`;
+const callbackNeedsRecovery = (model, type) => type.kind === "callback" && model.exports.some(item =>
+	item.parameters.some((parameter, index) => parameter.type.kind === "callback"
+		&& nativeTypeKey(parameter.type) === type.key
+		&& item.refinements?.parameters[index]?.kind === "callback"));
+const callbackClass = model => {
+	const name = callbackHostClass(model);
+	return [`package ${name};`, "sub new {"
+		, `  die "${name}->new expects code and recovery\\n" unless @_ == 5 && defined($_[0]) && !ref($_[0]) && $_[0] eq '${name}';`
+		, "  shift; my %fields = @_;"
+		, '  die "expected code and recovery fields\\n" unless keys(%fields) == 2 && exists($fields{code}) && exists($fields{recovery});'
+		, '  die "expected an unblessed CODE reference\\n" unless ref($fields{code}) eq "CODE";'
+		, `  return bless \\%fields, '${name}';`, "}", "sub CLONE_SKIP { 1 }", ""];
+};
 const kind = (model, type) => {
 	if(type.kind !== "resource") return `callback:${nativeTypeKey(type)}`;
 	const source = model.sourceIdentity.modules.find(item => item.module === type.module);
@@ -102,6 +116,41 @@ const toPrimitive = type => {
     size_t length = lean_sarray_size(value); lbp_budget(scope, length);
     return lbp_mortal(newSVpvn((const char *)lean_sarray_cptr(value), length));`;
 	throw new TypeError(`unsupported Perl scalar ${name}`);
+};
+
+// Refined callbacks share erased callback representations with unrefined ones. Keep the
+// recovery beside the runtime callback context, not in the shared type or runtime, so an
+// unrefined export can still accept a plain CODE reference while a refined site requires
+// the exact descriptor. SAVEDESTRUCTOR_X bounds every record to the initiating call.
+const callbackRecovery = type => {
+	const name = `lb_callback_recovery_${type.key}`, cType = nativeCType(type.result);
+	return `typedef struct ${name} {
+  lbp_callback *callback;
+  ${cType} value;
+  struct ${name} *next;
+} ${name};
+static _Thread_local ${name} *${name}_head;
+static void ${name}_drop(pTHX_ void *data) {
+  ${name} *item = data, **cursor = &${name}_head;
+  while (*cursor && *cursor != item) cursor = &(*cursor)->next;
+  if (*cursor == item) *cursor = item->next;
+  Safefree(item);
+}
+static void ${name}_install(pTHX_ uint64_t token, ${cType} value) {
+  lb_native_callback native = lb_native_callback_lookup(token);
+  if (!native.context) croak("registered callback recovery has no native context");
+  ${name} *item; Newxz(item, 1, ${name});
+  item->callback = (lbp_callback *)native.context; item->value = value;
+  item->next = ${name}_head; ${name}_head = item;
+  SAVEDESTRUCTOR_X(${name}_drop, item);
+}
+static ${cType} ${name}_get(lbp_callback *callback) {
+  for (${name} *item = ${name}_head; item; item = item->next) if (item->callback == callback) {
+    ${nativeObjectType(type.result) ? "lean_inc(item->value);" : ""}
+    return item->value;
+  }
+  return ${nativeCallbackDefault(type.result)};
+}`;
 };
 
 const conversion = (model, type) => {
@@ -225,15 +274,35 @@ const conversion = (model, type) => {
 		const acceptsHostCode = type.kind === "callback" && model.exports.some(item =>
 			item.parameters.some(parameter => parameter.type.kind === "callback"
 				&& nativeTypeKey(parameter.type) === type.key));
+		const recovered = callbackNeedsRecovery(model, type);
 		if(acceptsHostCode) from = `
-      if (SvROK(value) && SvTYPE(SvRV(value)) == SVt_PVCV) {
-        uint64_t token = lbp_callback_new(aTHX_ scope, value, get_cv(${q(`${model.moduleName}::_callback_${type.key}`)}, 0), (void (*)(void))lb_callback_${type.key});
-        return ${keep(`lb_t${type.key}_wrap(token)`)};
-      }
-      ${from}`;
+	      SvGETMAGIC(value);
+	      ${recovered ? `if (lbp_is_branch(value, ${q(callbackHostClass(model))})) {
+	        HV *descriptor = (HV *)sv_2mortal(SvREFCNT_inc(SvRV(value)));
+	        if (HvUSEDKEYS(descriptor) != 2) croak("callback descriptor requires exactly code and recovery fields");
+	        /* Pin both fields before recovery conversion can invoke Perl code. */
+	        SV *code = lbp_field(aTHX_ descriptor, "code", 4);
+	        SV *recovery_value = lbp_field(aTHX_ descriptor, "recovery", 8);
+	        if (!SvROK(code) || SvTYPE(SvRV(code)) != SVt_PVCV || SvOBJECT(SvRV(code))) croak("callback descriptor code requires an unblessed CODE reference");
+	        ${nativeCType(type.result)} recovery = ${read(type.result)}(aTHX_ scope, recovery_value);
+	        uint64_t token = lbp_callback_new(aTHX_ scope, code, get_cv(${q(`${model.moduleName}::_callback_${type.key}`)}, 0), (void (*)(void))lb_callback_${type.key});
+	        lb_callback_recovery_${type.key}_install(aTHX_ token, recovery);
+	        return ${keep(`lb_t${type.key}_wrap(token)`)};
+	      }` : ""}
+	      if (SvROK(value) && SvTYPE(SvRV(value)) == SVt_PVCV) {
+	        uint64_t token = lbp_callback_new(aTHX_ scope, value, get_cv(${q(`${model.moduleName}::_callback_${type.key}`)}, 0), (void (*)(void))lb_callback_${type.key});
+	        return ${keep(`lb_t${type.key}_wrap(token)`)};
+	      }
+	      ${from}`;
 		to = `return lbp_resource(aTHX_ value, ${q(kind(model, type))}, ${q(typeClass(model, type))});`;
 	}
-	return `static ${nativeCType(type)} ${read(type)}(pTHX_ lbp_scope *scope, SV *value) {\n${from}\n}\nstatic SV *${write(type)}(pTHX_ lbp_scope *scope, ${nativeCType(type)} value) {\n${to}\n}\n`;
+	const recovered = callbackNeedsRecovery(model, type) ? `static ${nativeCType(type)} ${read(type)}_recovered(pTHX_ lbp_scope *scope, SV *value) {
+	  SvGETMAGIC(value);
+	  if (!lbp_is_branch(value, ${q(callbackHostClass(model))}))
+	    croak("checked callback requires ${callbackHostClass(model)}->new(code => ..., recovery => ...)");
+	  return ${read(type)}(aTHX_ scope, value);
+	}\n` : "";
+	return `static ${nativeCType(type)} ${read(type)}(pTHX_ lbp_scope *scope, SV *value) {\n${from}\n}\nstatic SV *${write(type)}(pTHX_ lbp_scope *scope, ${nativeCType(type)} value) {\n${to}\n}\n${recovered}`;
 };
 
 // Bounds come from the compiler-checked native model, never from the erased Nat type.
@@ -452,7 +521,7 @@ ${name}(...)
     lbp_check_interpreter(aTHX);
     lbp_component_ready(aTHX);
     LBP_ENTER();
-    ${[...parameters.map((type, i) => `${nativeCType(type)} a${i} = ${read(type)}(aTHX_ scope, ST(${i}));`), ...guards].join("\n    ")}
+	    ${[...parameters.map((type, i) => `${nativeCType(type)} a${i} = ${refinements?.parameters?.[i]?.kind === "callback" ? `${read(type)}_recovered` : read(type)}(aTHX_ scope, ST(${i}));`), ...guards].join("\n    ")}
     ${parameters.map((type, i) => retain(type, `a${i}`)).join(" ")}
     ${call}
     ${nativeObjectType(result) ? "lbp_keep(scope, result);" : ""}
@@ -516,6 +585,7 @@ export const generatePerlBindingPackage = (model, receipt) => {
 	if(model.copiedGraph) return (model.copiedGraph.callbacks ? generateCallablePerlGraphPackage : generateCopiedPerlGraphPackage)(model, receipt);
 	const branches = validatePerlModel(model);
 	const aliases = perlCopiedAliases(model);
+	const recoveredCallbacks = model.types.some(type => callbackNeedsRecovery(model, type));
 	const structuredCallables = model.types.some(type => type.kind === "callback"
 		&& [...type.parameters, type.result].some(value =>
 			["array", "list", "option", "result", "tuple", "record", "variant"].includes(value.kind)));
@@ -529,12 +599,16 @@ export const generatePerlBindingPackage = (model, receipt) => {
 		lines.push(`typedef struct { ${type.parameters.map((p, i) => `${nativeCType(p)} argument${i};`).join(" ")} ${nativeCType(type.result)} result; int returned; } lb_callback_frame_${type.key};`);
 		lines.push(`static ${nativeCType(type.result)} lb_callback_${type.key}(void *context, ${type.parameters.map((p, i) => `${nativeCType(p)} argument${i}`).join(", ")});`);
 	}
+	for(const type of model.types.filter(type => callbackNeedsRecovery(model, type)))
+		lines.push(callbackRecovery(type));
 	for(const type of model.types) lines.push(conversion(model, type));
 	for(const type of model.types.filter(t => t.kind === "callback"))
 	{
 		// Default return values are created by Lean's generated representation-safe helpers.
 		// Failure remains pending until the initiating exported call returns.
-		const fallback = nativeCallbackDefault(type.result);
+		const fallback = callbackNeedsRecovery(model, type)
+			? `lb_callback_recovery_${type.key}_get((lbp_callback *)context)`
+			: nativeCallbackDefault(type.result);
 		lines.push(`static ${nativeCType(type.result)} lb_callback_${type.key}(void *context, ${type.parameters.map((p, i) => `${nativeCType(p)} argument${i}`).join(", ")}) {
       lb_callback_frame_${type.key} frame = { ${type.parameters.map((_, i) => `.argument${i} = argument${i}`).join(", ")} };
       int ok = lbp_callback_invoke((lbp_callback *)context, &frame);
@@ -575,7 +649,13 @@ _callback_${type.key}(...)
 	}
 	for(const type of model.types.filter(t => t.kind === "callback"))
 	{
-		lines.push(`MODULE = ${model.moduleName}    PACKAGE = ${typeClass(model, type)}`, publicXsub("call", `lb_t${type.key}_call`, [type, ...type.parameters], type.result));
+		const refinements = type.checked ? {
+			parameters: [null, ...type.checked], result: null
+		} : null;
+		lines.push(`MODULE = ${model.moduleName}    PACKAGE = ${typeClass(model, type)}`
+			, publicXsub("call", `lb_t${type.key}_call`, [type, ...type.parameters]
+				, type.result, refinements
+				, ["closure", ...type.parameters.map((_, index) => `arg${index}`)]));
 	}
 	lines.push(`BOOT:\n  lbp_check_interpreter(aTHX);\n  extern lean_object *${receipt.initializer}(uint8_t);\n  if (!lean_bridge_native_component_initialize(${q(`${model.component.id}:${receipt.nativeLibrary.sha256}`)}, (lean_bridge_native_initializer)${receipt.initializer})) croak("Lean component initialization failed");\n`);
 	const pm = [`package ${model.moduleName};`
@@ -591,6 +671,7 @@ _callback_${type.key}(...)
 		, "sub false () { !!0 }"
 		, "sub CLONE_SKIP { 1 }"
 		, ""];
+	if(recoveredCallbacks) pm.push(...callbackClass(model));
 	for(const branch of branches)
 	{
 		const name = `${model.moduleName}::${branch}`;
@@ -637,8 +718,10 @@ _callback_${type.key}(...)
 		, "", "Array slots and record fields are pinned before conversion can invoke Perl code. Returned arrays, records, octet strings and Math::BigInt payloads own independent copied storage. Reference equality is not deep value equality. Nested copied values share a 16 MiB conversion budget and a 32-level schema limit; these are not limits on all Perl allocations or Lean working memory. Recursive copied types remain unsupported.", "");
 	if(structuredCallables) pm.push("=head1 STRUCTURED CALLBACKS", ""
 		, "Synchronous callbacks accept and return acyclic copied arrays, Lists, options, results, products, records, variants and aliases. Use the same generated classes and plain containers as ordinary arguments and results. Callback arguments, results and returned Lean closure captures own independent copied storage."
-		, "", "Pass host callbacks as CODE references. Lean may not retain them after the exported call returns. Returned Lean closures provide call, close and closed; close each closure when finished. Original Perl exception objects are rethrown after native cleanup. Closing a closure during argument conversion does not invalidate the borrow held by its active call."
+		, "", (recoveredCallbacks ? `Pass unrefined host callbacks as CODE references. A checked host callback requires ${callbackHostClass(model)}->new(code => $callback, recovery => $value); the generated adapter validates and copies the typed recovery before Lean or the callback runs. ` : "Pass host callbacks as CODE references. ") + "Lean may not retain them after the exported call returns. Returned Lean closures provide call, close and closed; close each closure when finished. Original Perl exception objects are rethrown after native cleanup. Closing a closure during argument conversion does not invalidate the borrow held by its active call."
 		, "", "Copied-value conversion uses the existing 16 MiB scope budget and 32-level schema bound. Recursive callback payloads, resource-containing aggregates and asynchronous callbacks remain unsupported.", "");
+	else if(recoveredCallbacks) pm.push("=head1 CHECKED CALLBACKS", ""
+		, `Pass unrefined host callbacks as CODE references. A checked host callback requires ${callbackHostClass(model)}->new(code => $callback, recovery => $value). The generated adapter validates and copies the typed recovery before Lean or the callback runs. Recovery is used only while an exception is pending; the original Perl exception is rethrown after native cleanup. Lean may not retain host callbacks after the exported call returns.`, "");
 	const subtype = tree => tree?.kind === "subtype" || (tree?.arguments ?? []).some(subtype)
 		|| (tree?.cases ?? []).some(branch => branch.arguments.some(subtype));
 	if(model.exports.some(item => item.refinements && [...item.refinements.parameters, item.refinements.result].some(subtype)))
