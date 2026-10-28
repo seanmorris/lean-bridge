@@ -1,0 +1,172 @@
+{
+  "additions": [
+    {
+      "currentSha256": "4625cf85d003c99cc21633973530a9aa4084a86b3076afa947bf3e73a73998d2",
+      "path": "scripts/check-direct-proof-erasure-language-ci.mjs"
+    },
+    {
+      "currentSha256": "d55a7c425996b8b4184e68a22349e43d0f6fd6157a8a84c9c27c0e9eb43cadeb",
+      "path": "scripts/run-direct-proof-erasure-language-ci.sh"
+    },
+    {
+      "currentSha256": "4f1ecb037fb59383090d56414bced5a4d4aa21a7f7383284f80e834cca36e7ec",
+      "path": "tests/direct-proof-erasure-language-installed.test.mjs"
+    },
+    {
+      "currentSha256": "082d5d3c9c31faf3b851af167c6eb684d17e17c80346cf6e0eda20e26c50d348",
+      "path": "tests/fixtures/direct-proof-erasure-consumers/perl.pl"
+    },
+    {
+      "currentSha256": "a96a793038794bedc6fb9727f95081894b17177643fdea51a75c17aad65d30b9",
+      "path": "tests/fixtures/direct-proof-erasure-consumers/python.py"
+    },
+    {
+      "currentSha256": "7d063f4f5bc0cd24006aa08b955bedfc8fc33aa612694f98f4283823fadaeb09",
+      "path": "tests/fixtures/direct-proof-erasure-consumers/ruby.rb"
+    },
+    {
+      "currentSha256": "2e50e8d9209f86d0ecc3cb7fa020ed4a8007fe614e00832a106db67af76207d0",
+      "path": "tests/fixtures/direct-proof-erasure-consumers/rust.rs"
+    },
+    {
+      "currentSha256": "c03053c37c4070c829d8c283a89b5ff2577f9be7d11db8c62effa3802aeed6de",
+      "path": "tests/helpers/direct-proof-erasure-language-report.mjs"
+    },
+    {
+      "currentSha256": "54978d781dd9fd5b7e94ad40cf9d1cda3231ab5722cb9f0639a4442a67260e16",
+      "path": "tests/helpers/direct-proof-erasure-language-tests.mjs"
+    },
+    {
+      "currentSha256": "4a9d793ec37de07842c7cc78276a3894b47dbab5a819f48afb2641452e5c7b69",
+      "path": "scripts/update-direct-proof-erasure-language-source-history.mjs"
+    },
+    {
+      "currentSha256": "a8a14a910ca87c5c570e994a1d4b6f82c723f34a2518c4b68cfc2d622b378cd0",
+      "path": "tests/helpers/direct-proof-erasure-language-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "10419cf59bb104a743d4a1a5b0794083c019c7970cd06336780845e272f0983d",
+      "path": "tests/helpers/direct-proof-erasure-language-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "f4413cc2fdb2bd68ea9df5cbfcade65dd63f0b93",
+  "integrationUpdates": [
+    {
+      "currentSha256": "4c342c7551afa96744c3366e744fe415d87911611eb9a2953ab2fbfef6f922c1",
+      "edits": [
+        {
+          "current": "import \"./helpers/direct-proof-erasure-language-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "f46f03ea28182a6f0d8c011cc9c045910df0f912bcf705ed6fc9c81dda13b2eb"
+    },
+    {
+      "currentSha256": "9c249ca90a94465b7c3bb06bd89a12890cabc135688b5c3d93d7aba0e06f01d7",
+      "edits": [
+        {
+          "current": "import { beforeDirectProofErasureLanguageSource, directProofErasureLanguageNormalizationPaths } from \"./direct-proof-erasure-language-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...directProofErasureLanguageNormalizationPaths\n\t, ...directProofErasureManagedNormalizationPaths\n",
+          "previous": "\t...directProofErasureManagedNormalizationPaths\n",
+          "start": 211438
+        },
+        {
+          "current": "\tlet stage = beforeDirectProofErasureLanguageSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeDirectProofErasureManagedSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeDirectProofErasureManagedSource(path, text, expected);\n",
+          "start": 264185
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "d00371a11a7f128f54b0773091792b310bf7619b6bc0daede81431f9e67f1809"
+    }
+  ],
+  "milestone": "direct-proof-erasure-language-source-v1",
+  "predecessorCommit": "b3dbf400a3d50b1173b0233e689af0fc5138a27b",
+  "schemaVersion": 1,
+  "scope": "Build ordinary and independently reviewed direct-proof Perl, Python, Ruby and Rust packages twice; retain receipt-closed offline archives and Rust dependencies; prove every generated API exposes one UInt32 payload and no proof slot; execute each installed caller; relocate complete installations; and reject attempted proof arguments in the host interpreter or compiler.",
+  "updates": [
+    {
+      "commit": "f4413cc2fdb2bd68ea9df5cbfcade65dd63f0b93",
+      "currentSha256": "38c5a749e6cf66d4cd83378f849fbd3d7ba7b7ac703a9eb9e2adcb43379a6ded",
+      "edits": [
+        {
+          "current": "      - name: Qualify direct proof erasure in prepared language packages\n        if: matrix.profile == 'python' || matrix.profile == 'rust'\n        id: direct_proof_language\n        continue-on-error: true\n        timeout-minutes: 100\n        run: bash scripts/run-direct-proof-erasure-language-ci.sh \"${{ matrix.profile }}\"\n      - name: Preserve direct proof-erasure language acceptance\n        if: always() && (matrix.profile == 'python' || matrix.profile == 'rust')\n        uses: actions/upload-artifact@v7\n        with:\n          name: direct-proof-erasure-language-${{ matrix.profile }}-${{ github.sha }}\n          path: build/direct-proof-erasure-language-ci/${{ matrix.profile }}/\n          if-no-files-found: error\n          overwrite: true\n          retention-days: 30\n",
+          "previous": "",
+          "start": 222221
+        },
+        {
+          "current": "              consumer_command=\"$consumer_command && bash scripts/run-direct-proof-erasure-language-ci.sh python\"\n              if [ \"${{ steps.ordinary_python.outcome }}\" != success ] || [ \"${{ steps.type_corpus_python.outcome }}\" != success ] || [ \"${{ steps.direct_proof_language.outcome }}\" != success ]; then\n",
+          "previous": "              if [ \"${{ steps.ordinary_python.outcome }}\" != success ] || [ \"${{ steps.type_corpus_python.outcome }}\" != success ]; then\n",
+          "start": 238086
+        },
+        {
+          "current": "              consumer_command=\"$consumer_command && bash scripts/run-direct-proof-erasure-language-ci.sh rust\"\n              if [ \"${{ steps.ordinary_rust.outcome }}\" != success ] || [ \"${{ steps.type_corpus_rust.outcome }}\" != success ] || [ \"${{ steps.direct_proof_language.outcome }}\" != success ]; then\n",
+          "previous": "              if [ \"${{ steps.ordinary_rust.outcome }}\" != success ] || [ \"${{ steps.type_corpus_rust.outcome }}\" != success ]; then\n",
+          "start": 244125
+        },
+        {
+          "current": "        if: always() && (steps.consumer.outcome != 'success' || (matrix.profile == 'c-family' && (steps.ordinary_c.outcome != 'success' || steps.type_corpus_c_family.outcome != 'success' || steps.direct_proof_native.outcome != 'success')) || (matrix.profile == 'python' && (steps.ordinary_python.outcome != 'success' || steps.type_corpus_python.outcome != 'success' || steps.direct_proof_language.outcome != 'success')) || (matrix.profile == 'rust' && (steps.ordinary_rust.outcome != 'success' || steps.type_corpus_rust.outcome != 'success' || steps.direct_proof_language.outcome != 'success')))\n",
+          "previous": "        if: always() && (steps.consumer.outcome != 'success' || (matrix.profile == 'c-family' && (steps.ordinary_c.outcome != 'success' || steps.type_corpus_c_family.outcome != 'success' || steps.direct_proof_native.outcome != 'success')) || (matrix.profile == 'python' && (steps.ordinary_python.outcome != 'success' || steps.type_corpus_python.outcome != 'success')) || (matrix.profile == 'rust' && (steps.ordinary_rust.outcome != 'success' || steps.type_corpus_rust.outcome != 'success')))\n",
+          "start": 245300
+        },
+        {
+          "current": "      - name: Qualify direct proof erasure in the prepared Ruby package\n        if: matrix.profile == 'ruby'\n        id: direct_proof_language\n        continue-on-error: true\n        timeout-minutes: 100\n        run: bash scripts/run-direct-proof-erasure-language-ci.sh \"${{ matrix.profile }}\"\n      - name: Preserve direct proof-erasure Ruby acceptance\n        if: always() && matrix.profile == 'ruby'\n        uses: actions/upload-artifact@v7\n        with:\n          name: direct-proof-erasure-language-${{ matrix.profile }}-${{ github.sha }}\n          path: build/direct-proof-erasure-language-ci/${{ matrix.profile }}/\n          if-no-files-found: error\n          overwrite: true\n          retention-days: 30\n",
+          "previous": "",
+          "start": 291586
+        },
+        {
+          "current": "              consumer_command=\"$consumer_command && bash scripts/run-direct-proof-erasure-language-ci.sh ruby\"\n              if [ \"${{ steps.ordinary_ruby.outcome }}\" != success ] || [ \"${{ steps.type_corpus_ruby.outcome }}\" != success ] || [ \"${{ steps.direct_proof_language.outcome }}\" != success ]; then\n",
+          "previous": "              if [ \"${{ steps.ordinary_ruby.outcome }}\" != success ] || [ \"${{ steps.type_corpus_ruby.outcome }}\" != success ]; then\n",
+          "start": 312698
+        },
+        {
+          "current": "        if: always() && (steps.consumer.outcome != 'success' || (matrix.profile == 'dotnet' && (steps.ordinary_dotnet.outcome != 'success' || steps.type_corpus_dotnet.outcome != 'success' || steps.direct_proof_managed.outcome != 'success')) || (matrix.profile == 'jvm' && (steps.ordinary_jvm.outcome != 'success' || steps.type_corpus_jvm.outcome != 'success' || steps.nominal_jvm.outcome != 'success' || steps.direct_proof_managed.outcome != 'success')) || (matrix.profile == 'ruby' && (steps.ordinary_ruby.outcome != 'success' || steps.type_corpus_ruby.outcome != 'success' || steps.direct_proof_language.outcome != 'success')))\n",
+          "previous": "        if: always() && (steps.consumer.outcome != 'success' || (matrix.profile == 'dotnet' && (steps.ordinary_dotnet.outcome != 'success' || steps.type_corpus_dotnet.outcome != 'success' || steps.direct_proof_managed.outcome != 'success')) || (matrix.profile == 'jvm' && (steps.ordinary_jvm.outcome != 'success' || steps.type_corpus_jvm.outcome != 'success' || steps.nominal_jvm.outcome != 'success' || steps.direct_proof_managed.outcome != 'success')) || (matrix.profile == 'ruby' && (steps.ordinary_ruby.outcome != 'success' || steps.type_corpus_ruby.outcome != 'success')))\n",
+          "start": 313845
+        }
+      ],
+      "parent": "b3dbf400a3d50b1173b0233e689af0fc5138a27b",
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previousSha256": "c697fef81f214ba5ab86f23d8574880c231d23e97e33dd096f0ed6acf079b487"
+    },
+    {
+      "commit": "f4413cc2fdb2bd68ea9df5cbfcade65dd63f0b93",
+      "currentSha256": "f4668a70ff2184c55ad4e5205ddabc33306caf57e4229a226c8a8dcc2da84d5a",
+      "edits": [
+        {
+          "current": "      - name: Qualify direct proof erasure in the prepared Perl package\n        if: matrix.configuration == '5.38.2-threaded'\n        id: direct_proof_language\n        continue-on-error: true\n        timeout-minutes: 100\n        env:\n          DIRECT_PROOF_PERL_CONFIGURATION: ${{ matrix.configuration }}\n        run: |\n          export LEAN_BRIDGE_CORPUS_PERL=\"$PWD/.toolchains/perl/$DIRECT_PROOF_PERL_CONFIGURATION/bin/perl\"\n          bash scripts/run-direct-proof-erasure-language-ci.sh perl\n      - name: Preserve direct proof-erasure Perl acceptance\n        if: always() && matrix.configuration == '5.38.2-threaded'\n        uses: actions/upload-artifact@v7\n        with:\n          name: direct-proof-erasure-language-perl-${{ github.sha }}\n          path: build/direct-proof-erasure-language-ci/perl/\n          if-no-files-found: error\n          overwrite: true\n          retention-days: 30\n",
+          "previous": "",
+          "start": 9788
+        },
+        {
+          "current": "      - name: Enforce direct proof-erasure Perl support\n        if: always() && matrix.configuration == '5.38.2-threaded' && steps.direct_proof_language.outcome != 'success'\n        run: exit 1\n",
+          "previous": "",
+          "start": 22161
+        }
+      ],
+      "parent": "b3dbf400a3d50b1173b0233e689af0fc5138a27b",
+      "path": ".github/workflows/perl-consumer.yml",
+      "previousSha256": "d4c87a26890445d38db9b5642fce7e934b43dc835dbddc136948debb0138aaec"
+    },
+    {
+      "commit": "f4413cc2fdb2bd68ea9df5cbfcade65dd63f0b93",
+      "currentSha256": "f46f03ea28182a6f0d8c011cc9c045910df0f912bcf705ed6fc9c81dda13b2eb",
+      "edits": [
+        {
+          "current": "import \"./helpers/direct-proof-erasure-language-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "parent": "b3dbf400a3d50b1173b0233e689af0fc5138a27b",
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "19a82a33ec776f82b32b4176a9b0ed0d253c79e0601c2cb2a72092045b22484b"
+    }
+  ]
+}
