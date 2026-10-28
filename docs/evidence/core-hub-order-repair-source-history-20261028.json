@@ -1,0 +1,129 @@
+{
+  "additions": [
+    {
+      "currentSha256": "df74897408b27c29a447f68b30429828628ae656c436d07513af4fc8ad71bfb6",
+      "path": "scripts/update-core-hub-order-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "3312feddca4cfea5a97a5ffb731e94f57d177ad4626f4a0df061f4b9879e5950",
+      "path": "tests/helpers/core-hub-order-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "1c0e85c67fde0c2565c85ad69d907970608a34f611e5b425840c05316279fb9d",
+      "path": "tests/helpers/core-hub-order-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "a77708424aa329a78a3e897c0bd9aeae76ce7c33",
+  "implementationCommits": [
+    "a77708424aa329a78a3e897c0bd9aeae76ce7c33"
+  ],
+  "milestone": "core-hub-order-repair-source-v1",
+  "predecessorCommit": "6e0d941e796db8813ee58bc8fda00e126e0a232c",
+  "schemaVersion": 1,
+  "scope": "Restore newest-first order in the reversible Fin source-history hub: reverse the callback Fin diagnostic-contract layer (recorded above the Core memory-bound integration) before the memory-bound layers, and hook the authenticated replay-chain memory layer directly under its integration. Read the Perl callback Fin runtime integration sources and additions and the reviewed Fin Wasm Lean and JavaScript fixtures at their authenticated milestones instead of the live tree. Exactly the four type-surface pins of the edited reviewed Fin Wasm evidence helper are refreshed. No claim, observation, evidence payload or other pin changes. Hub and registration integration of this layer are recorded by the integrating seal.",
+  "updates": [
+    {
+      "currentSha256": "354a0bd0d4db6c34886224476888f1f70b114213501e619e7e6dc39f0eae886a",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"867c9f69e4b73f70d2305778d9570c1171179d5ca51ec6b0564cd938dee5d606\"\n",
+          "previous": "          \"sha256\": \"472b9ba2f878466f17b0892e3b0f923f2661cc148e26360b8130b539d6bee46d\"\n",
+          "start": 1669291
+        },
+        {
+          "current": "          \"sha256\": \"867c9f69e4b73f70d2305778d9570c1171179d5ca51ec6b0564cd938dee5d606\"\n",
+          "previous": "          \"sha256\": \"472b9ba2f878466f17b0892e3b0f923f2661cc148e26360b8130b539d6bee46d\"\n",
+          "start": 1673636
+        },
+        {
+          "current": "          \"sha256\": \"867c9f69e4b73f70d2305778d9570c1171179d5ca51ec6b0564cd938dee5d606\"\n",
+          "previous": "          \"sha256\": \"472b9ba2f878466f17b0892e3b0f923f2661cc148e26360b8130b539d6bee46d\"\n",
+          "start": 1677993
+        },
+        {
+          "current": "          \"sha256\": \"867c9f69e4b73f70d2305778d9570c1171179d5ca51ec6b0564cd938dee5d606\"\n",
+          "previous": "          \"sha256\": \"472b9ba2f878466f17b0892e3b0f923f2661cc148e26360b8130b539d6bee46d\"\n",
+          "start": 1682358
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "3bdfd20854f6e021791c8d41ba073354d6b93dfd145985552ec556a3f7f75e6c"
+    },
+    {
+      "currentSha256": "2fbe20ff437124c78c2d432240ee37eb2f3c6f8c338e7755f357b464f2d74a9e",
+      "edits": [
+        {
+          "current": "import { sourceAtFinHistoryMilestone } from \"./source-at-fin-history-milestone.mjs\";\n",
+          "previous": "",
+          "start": 743
+        },
+        {
+          "current": "\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256)), addition.currentSha256);\n",
+          "previous": "\t\tassert.equal(addition.currentSha256, sha256(await readFile(addition.path)));\n",
+          "start": 1912
+        },
+        {
+          "current": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256);\n",
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 2595
+        }
+      ],
+      "path": "tests/helpers/callback-fin-perl-runtime-source-history-tests.mjs",
+      "previousSha256": "048b3a42264d9eb4a86436bf8363e7c6b43b9023eca9e23009e6732120b9b28d"
+    },
+    {
+      "currentSha256": "8cfd6c48427d8ffa85e4c7d9d6f295cb982621990a6391a2968a661bdcf2ea68",
+      "edits": [
+        {
+          "current": "import { beforeReplayChainMemorySource, replayChainMemoryNormalizationPaths } from \"./replay-chain-memory-source-history.mjs\";\n",
+          "previous": "",
+          "start": 3468
+        },
+        {
+          "current": "\t, ...replayChainMemoryNormalizationPaths\n\t, ...callbackFinDiagnosticContractNormalizationPaths\n",
+          "previous": "",
+          "start": 202216
+        },
+        {
+          "current": "",
+          "previous": "\t, ...callbackFinDiagnosticContractNormalizationPaths\n",
+          "start": 202403
+        },
+        {
+          "current": "\tstage = beforeReplayChainMemorySource(path, text, expected);\n",
+          "previous": "\tstage = beforeCoreMemoryBoundIntegrationSource(path, text, expected);\n",
+          "start": 253619
+        },
+        {
+          "current": "\tstage = beforeCallbackFinDiagnosticContractSource(path, text, expected);\n",
+          "previous": "\tstage = beforeCoreMemoryBoundSource(path, text, expected);\n",
+          "start": 253770
+        },
+        {
+          "current": "\tstage = beforeCoreMemoryBoundIntegrationSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCoreMemoryBoundSource(path, text, expected);\n",
+          "previous": "\tstage = beforeCallbackFinDiagnosticContractSource(path, text, expected);\n",
+          "start": 253933
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "56217c1369586d70323e8af12299c7902d69dc110382a27b18be48ded3e30e60"
+    },
+    {
+      "currentSha256": "867c9f69e4b73f70d2305778d9570c1171179d5ca51ec6b0564cd938dee5d606",
+      "edits": [
+        {
+          "current": "import { sourceAtFinHistoryMilestone } from \"./source-at-fin-history-milestone.mjs\";\n",
+          "previous": "",
+          "start": 444
+        },
+        {
+          "current": "\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\"tests/fixtures/onboarding/reviewed-fin-wasm/ReviewedFin.lean\", report.sourceSha256)), report.sourceSha256);\n\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\"tests/fixtures/reviewed-fin-wasm/javascript.mjs\", report.consumerSha256)), report.consumerSha256);\n",
+          "previous": "\t\tassert.equal(report.sourceSha256, sha256(await read(\"tests/fixtures/onboarding/reviewed-fin-wasm/ReviewedFin.lean\")));\n\t\tassert.equal(report.consumerSha256, sha256(await read(\"tests/fixtures/reviewed-fin-wasm/javascript.mjs\")));\n",
+          "start": 2570
+        }
+      ],
+      "path": "tests/helpers/reviewed-fin-wasm-evidence-tests.mjs",
+      "previousSha256": "472b9ba2f878466f17b0892e3b0f923f2661cc148e26360b8130b539d6bee46d"
+    }
+  ]
+}
