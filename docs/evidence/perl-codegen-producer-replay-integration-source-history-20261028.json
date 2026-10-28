@@ -1,0 +1,61 @@
+{
+  "additions": [
+    {
+      "currentSha256": "1e6e216d7b62e4be92251d11c4bde51f28e2878ad341ca72348ca8db9365f0c3",
+      "path": "scripts/update-perl-codegen-producer-replay-integration-source-history.mjs"
+    },
+    {
+      "currentSha256": "6d284dfd6477b9a778b1816e8a2043a3e5a69334e1e182f0f0e7977792996571",
+      "path": "tests/helpers/perl-codegen-producer-replay-integration-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "aefadec0ae28b0e438dbcbe1d55f702320b9dfdb0128538c1d908c80d057b7e6",
+      "path": "tests/helpers/perl-codegen-producer-replay-integration-source-history.mjs"
+    }
+  ],
+  "baseCommit": "2361a8121b1b3c264272eb89e353e74452535857",
+  "baseHistory": {
+    "path": "docs/evidence/perl-codegen-producer-replay-source-history-20261028.json",
+    "sha256": "f7aeeb75cf862f0e89068c3a702fa5063254fc04b6da87dfaf4ce9e102f54fbc"
+  },
+  "implementationCommit": "6e08b1e0bc3fe1fd1d0da3d07196ab6c99fe2438",
+  "milestone": "perl-codegen-producer-replay-integration-v1",
+  "schemaVersion": 1,
+  "scope": "Register the independently authenticated Perl codegen producer replay newest-first in the reversible Fin source-history hub and checked-JavaScript partition 10. Preserve all runtime behavior, type-surface claims, observations and evidence identities.",
+  "updates": [
+    {
+      "currentSha256": "f21ec65cc33a5a7706a52b6afca5455a27a456c9be9480527496cce1b3504f8d",
+      "edits": [
+        {
+          "current": "import { beforePerlCodegenProducerReplayIntegrationSource, perlCodegenProducerReplayIntegrationNormalizationPaths } from \"./perl-codegen-producer-replay-integration-source-history.mjs\";\nimport { beforePerlCodegenProducerReplaySource, perlCodegenProducerReplayNormalizationPaths } from \"./perl-codegen-producer-replay-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...perlCodegenProducerReplayIntegrationNormalizationPaths\n\t, ...perlCodegenProducerReplayNormalizationPaths\n\t, ...nativeFinCallbackRoleIntegrationNormalizationPaths\n",
+          "previous": "\t...nativeFinCallbackRoleIntegrationNormalizationPaths\n",
+          "start": 202239
+        },
+        {
+          "current": "\tlet stage = beforePerlCodegenProducerReplayIntegrationSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforePerlCodegenProducerReplaySource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeNativeFinCallbackRoleIntegrationSource(\n",
+          "previous": "\tlet stage = beforeNativeFinCallbackRoleIntegrationSource(\n",
+          "start": 251970
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "797b3044592eacaa43646e7a1d63b64632124d9f2188550a1b6cb6d0e79f2eb3"
+    },
+    {
+      "currentSha256": "2e297918a7ed6ec0e6710b233c70bb0a163445ee7157e369ef6584a2d50fdd49",
+      "edits": [
+        {
+          "current": "import \"./helpers/perl-codegen-producer-replay-source-history-tests.mjs\";\nimport \"./helpers/perl-codegen-producer-replay-integration-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 2749
+        }
+      ],
+      "path": "tests/checked-javascript-partition-10.test.mjs",
+      "previousSha256": "6fb116b952200b9e974f1bb1f7611d379c49bd9ab7660c7d5bddcb380d6053cd"
+    }
+  ]
+}
