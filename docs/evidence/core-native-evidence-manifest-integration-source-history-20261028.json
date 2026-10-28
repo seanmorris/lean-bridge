@@ -1,0 +1,61 @@
+{
+  "additions": [
+    {
+      "currentSha256": "c0da39bd9493599c29332090e0ba655ae1bc1fa4b8ee061223cf006aa36a036d",
+      "path": "scripts/update-core-native-evidence-manifest-integration-source-history.mjs"
+    },
+    {
+      "currentSha256": "1c33637c23af137248250ace917f35c946702961635cbb04fa263a854a7e2fb4",
+      "path": "tests/helpers/core-native-evidence-manifest-integration-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "af866c007e8c05c387b993972c047832ee12cb09af2b97bc552b0ef1baeec7f5",
+      "path": "tests/helpers/core-native-evidence-manifest-integration-source-history.mjs"
+    }
+  ],
+  "baseCommit": "b43b2d1e8b1d1597643bc766842ec881aefb67ac",
+  "baseHistory": {
+    "path": "docs/evidence/core-native-evidence-manifest-source-history-20261028.json",
+    "sha256": "65c7d6906e3eccd636bf8718bba732392a84edf25cddc20efe6a6632d076f8f6"
+  },
+  "implementationCommit": "6cbc45393cea3807fe12c5bbb446a7a7c59ce915",
+  "milestone": "core-native-evidence-manifest-integration-v1",
+  "schemaVersion": 1,
+  "scope": "Register the native-specialization evidence-manifest repair newest-first in the reversible Fin history hub and checked-JavaScript partition 10.",
+  "updates": [
+    {
+      "currentSha256": "a71262dfd68736b7e87754ec65427cedcdb041e0aa2826500b5448dda7305377",
+      "edits": [
+        {
+          "current": "import { beforeCoreNativeEvidenceManifestIntegrationSource, coreNativeEvidenceManifestIntegrationNormalizationPaths } from \"./core-native-evidence-manifest-integration-source-history.mjs\";\nimport { beforeCoreNativeEvidenceManifestSource, coreNativeEvidenceManifestNormalizationPaths } from \"./core-native-evidence-manifest-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...coreNativeEvidenceManifestIntegrationNormalizationPaths\n\t, ...coreNativeEvidenceManifestNormalizationPaths\n\t, ...perlCodegenMergedIntegrationNormalizationPaths\n",
+          "previous": "\t...perlCodegenMergedIntegrationNormalizationPaths\n",
+          "start": 203227
+        },
+        {
+          "current": "\tlet stage = beforeCoreNativeEvidenceManifestIntegrationSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCoreNativeEvidenceManifestSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforePerlCodegenMergedIntegrationSource(\n",
+          "previous": "\tlet stage = beforePerlCodegenMergedIntegrationSource(\n",
+          "start": 253283
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "7994fed59f146c7678ad6a1b5a31a3e11ad6b490a983bb06fb40da0229404f37"
+    },
+    {
+      "currentSha256": "6d5b3bb574907a8ae7fe6477aead73f683adc788f201470449676de4d10c0ab8",
+      "edits": [
+        {
+          "current": "import \"./helpers/core-native-evidence-manifest-source-history-tests.mjs\";\nimport \"./helpers/core-native-evidence-manifest-integration-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 3217
+        }
+      ],
+      "path": "tests/checked-javascript-partition-10.test.mjs",
+      "previousSha256": "c2b7d83b03a963d43fba25aa9d07bb405ac57aa3c8bb7b582539f68143c54f5a"
+    }
+  ]
+}
