@@ -14,7 +14,7 @@ export const reviewedFinWasmSourceControl = "traceNat";
 export const reviewedFinWasmSourceInstrumentation = "probe build: dbgTrace markers in the fixture source and an unrefined control export; not the unmodified packages whose adapter entry is observed";
 // Out-of-range numbers for every refined export, which the unrefined control must still accept and enter.
 export const reviewedFinWasmSourceControls = Object.freeze([[reviewedFinWasmSourceControl, Object.freeze([10n, 11n, 2n ** 128n, 184467440737095516170n, 184467440737095516171n])]]);
-const exported = ["mirror", "never", "only", "huge", "tenth", "label", "rows", "empty", "nested"];
+const exported = ["mirror", "never", "only", "huge", "tenth", "label", "rows", "empty", "nested", "box"];
 
 /**
  * Wrap each export body of the fixture in a source-entry marker and add the control export. Signatures and every

@@ -7,14 +7,9 @@ import assert from "node:assert/strict";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { hashBindingIr } from "../../src/binding-ir/canonical.mjs";
 import { reviewedContractDifference, validateReviewedSource } from "../../src/analyze/reviewed-source.mjs";
-import { reviewedFinWasmIr, reviewedFinWasmSelections, reviewedFinWasmWide } from "./reviewed-fin-wasm-fixture.mjs";
+import { reviewedFinWasmIr, reviewedFinWasmPreFieldIr, reviewedFinWasmSelections, reviewedFinWasmWide } from "./reviewed-fin-wasm-fixture.mjs";
 
-/**
- * Keep the erased transport unchanged while changing bounds or their semantic positions.
- *
- * @param selection - The actual scalar or structural build selection.
- */
-export const reviewedFinWasmMismatches = (selection = "structural") => {
+const mismatches = (selection, reviewed) => {
 	assert.ok(reviewedFinWasmSelections.includes(selection), "Unknown Wasm Fin mismatch selection");
 	const tree = (ir, name) => ir.declarations.find(item => item.name === name).source.extensions["lean-lang.org/refinements"];
 	const cases = [
@@ -43,15 +38,32 @@ export const reviewedFinWasmMismatches = (selection = "structural") => {
 		, ["omitted declaration constraints", ir => { delete ir.declarations.find(item => item.name === "mirror").source.extensions["lean-lang.org/refinements"]; }]
 	);
 	return cases.map(([label, mutate]) => {
-		const ir = reviewedFinWasmIr(selection); mutate(ir);
+		const ir = reviewed(selection); mutate(ir);
 		const source = canonicalJson(ir);
 		validateReviewedSource({ schemaVersion: 1, path: "api.binding-ir.json", source
 			, sourceSha256: sha256(source), semanticSha256: hashBindingIr(ir) });
-		const expectedField = reviewedContractDifference(ir, reviewedFinWasmIr(selection));
+		const expectedField = reviewedContractDifference(ir, reviewed(selection));
 		assert.match(expectedField, /source\.extensions\.lean-lang\.org\/refinements/u, label);
 		return { label, ir, expectedField };
 	});
 };
+
+/**
+ * Keep the erased transport unchanged while changing bounds or their semantic positions.
+ *
+ * @param selection - The actual scalar or structural build selection.
+ */
+export const reviewedFinWasmMismatches = (selection = "structural") => {
+	return mismatches(selection, reviewedFinWasmIr);
+};
+
+/**
+ * Reconstruct the mismatch inputs retained by the pre-field archive.
+ *
+ * @param selection - Scalar or structural source selection.
+ */
+export const reviewedFinWasmPreFieldMismatches = (selection = "structural") =>
+	mismatches(selection, reviewedFinWasmPreFieldIr);
 
 /**
  * Keep the expected difference separate from fields retained by the engine transport.

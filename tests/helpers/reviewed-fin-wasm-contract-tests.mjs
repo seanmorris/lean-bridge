@@ -16,8 +16,9 @@ import { executeCorpus } from "../fixtures/reviewed-fin-wasm/javascript.mjs";
 import { reviewedFinWasmBuildFacts, reviewedFinWasmExpected } from "./reviewed-fin-wasm-install.mjs";
 import { reviewedFinWasmTypeScript } from "./reviewed-fin-wasm-typescript.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
-import { reviewedFinWasmMismatches, reviewedFinWasmRefusal } from "./reviewed-fin-wasm-mismatches.mjs";
+import { reviewedFinWasmMismatches, reviewedFinWasmPreFieldMismatches, reviewedFinWasmRefusal } from "./reviewed-fin-wasm-mismatches.mjs";
 import { reviewedFinBrowserProfiles, validateReviewedFinBrowserObservation } from "./reviewed-fin-wasm-browser.mjs";
+import { nominalRefinementEntries } from "../../src/abi/refinements.mjs";
 
 const input = document => {
 	const source = canonicalJson(document);
@@ -30,10 +31,16 @@ test("the independent reviewed Wasm Fin selections keep scalar and structural si
 	{
 		const document = reviewedFinWasmIr(selection), review = input(document);
 		validateReviewedSource(review);
-		assert.equal(document.declarations.length, selection === "scalar" ? 6 : 9);
+		assert.equal(document.declarations.length, selection === "scalar" ? 6 : 10);
 		assert.deepEqual(reviewedSourceSelection(review).exports, document.declarations.map(item => item.source.declaration).sort());
 		assert.deepEqual(reviewedSourceSelection(review).arities, []);
-		assert.deepEqual(document.types, [], "bare Fin aliases fold into their uses");
+		if(selection === "scalar") assert.deepEqual(document.types, [], "bare Fin aliases fold into their uses");
+		else
+		{
+			assert.equal(document.types.length, 1);
+			assert.deepEqual(document.types[0].source.extensions["lean-lang.org/nominal-refinements"]
+				, { kind: "record", fields: [{ kind: "fin", bound: "10" }, null] });
+		}
 		assert.ok(!review.source.includes('"kind":"subtype"'));
 		const declaration = name => document.declarations.find(item => item.name === name);
 		const refinements = name => declaration(name).source.extensions["lean-lang.org/refinements"];
@@ -56,6 +63,12 @@ test("the independent reviewed Wasm Fin selections keep scalar and structural si
 		const changed = reviewedFinWasmIr(selection);
 		changed.declarations.find(item => item.name === "huge").source.extensions["lean-lang.org/refinements"].parameters[0].bound = "10";
 		assert.match(reviewedContractDifference(changed, document), /source\.extensions\.lean-lang\.org\/refinements/u);
+		if(selection === "structural")
+		{
+			const nominal = reviewedFinWasmIr(selection);
+			nominal.types[0].source.extensions["lean-lang.org/nominal-refinements"].fields[0].bound = "11";
+			assert.match(reviewedContractDifference(nominal, document), /nominal-refinements/u);
+		}
 	}
 	assert.throws(() => reviewedFinWasmIr("all"), /Unknown reviewed Wasm Fin selection/u);
 	const modified = reviewedFinWasmIr("scalar");
@@ -88,6 +101,7 @@ const faithfulApi = (selection = "structural") => {
 			else fin(2n)(item.value[1].error);
 			return item;
 		})(values).reverse()
+		, box: value => ({ digit: fin(10n)(value.digit), label: value.label })
 	};
 	return { ...api, raw: (name, args) => {
 		try
@@ -143,8 +157,9 @@ test("Fin Wasm receipt checks reject changed review, source, private ABI and low
 		const metadata = {
 			reviewedBindingIr: review, leanCompilerSha256: "a".repeat(64)
 			, metadata: { modules: [{ name: "ReviewedFin", sourceSha256: sha256(source) }] } };
-		const plan = { privateAbi: { version: selection === "scalar" ? 2 : 6 }
-			, exports: ir.declarations.map(item => ({ sourceDeclaration: item.source.declaration, refinements: item.source.extensions["lean-lang.org/refinements"] })) };
+		const plan = { privateAbi: { version: selection === "scalar" ? 2 : 8 }
+			, exports: ir.declarations.map(item => ({ sourceDeclaration: item.source.declaration, refinements: item.source.extensions["lean-lang.org/refinements"] }))
+			, ...selection === "structural" ? { nominalRefinements: nominalRefinementEntries(ir.types) } : {} };
 		const save = async (document = ir, compiled = metadata, lowered = plan) => {
 			await saveLakeFile(root, "binding/binding-ir.json", canonicalJson(document));
 			await saveLakeFile(root, "metadata/lake-entry-exports.json", canonicalJson(compiled));
@@ -187,6 +202,7 @@ test("Fin TypeScript consumers state exact public signatures and reject erased n
 		assert.match(source, /api\.label\("prefix", 9, "suffix"\)/u);
 		assert.match(source, /executeCorpus\(request, await loadApi\(\)\)/u);
 		assert.equal(source.includes("type Items ="), selection === "structural");
+		assert.equal(source.includes("type Box ="), selection === "structural");
 	}
 	assert.throws(() => reviewedFinWasmTypeScript("missing"), /Unknown Fin selection/u);
 });
@@ -242,7 +258,7 @@ test("the eight earlier structural Wasm refusal inputs remain byte-identical to 
 	const bytes = await readFile("docs/evidence/reviewed-fin-npm-20261007/reviewed-structural.json");
 	assert.equal(sha256(bytes), "eb908163d52e8dfc3d24a7327eec6e7e9c366715030ab6284fe33b7c22d4af19");
 	const report = JSON.parse(bytes);
-	assert.deepEqual(reviewedFinWasmMismatches("structural").map(({ label, ir }) => ({ label, reviewedSourceSha256: sha256(canonicalJson(ir)) }))
+	assert.deepEqual(reviewedFinWasmPreFieldMismatches("structural").map(({ label, ir }) => ({ label, reviewedSourceSha256: sha256(canonicalJson(ir)) }))
 		, report.mismatches.map(({ label, reviewedSourceSha256 }) => ({ label, reviewedSourceSha256 })));
 });
 

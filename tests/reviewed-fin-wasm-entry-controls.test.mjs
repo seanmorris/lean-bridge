@@ -29,7 +29,7 @@ const tally = calls => calls.reduce((counts, call) => {
 test("the expectation reproduces the pinned corpus and follows the generated validators and real encoders", async () => {
 	const pinned = {
 		scalar: { calls: 226, tally: { "public 11 1": 50, "raw 11 1": 50, "public 00 0": 63, "raw 10 0": 42, "raw 00 0": 21 } }
-		, structural: { calls: 520, tally: { "public 11 1": 125, "raw 11 1": 125, "public 00 0": 135, "raw 10 0": 114, "raw 00 0": 21 } }
+		, structural: { calls: 586, tally: { "public 11 1": 142, "raw 11 1": 142, "public 00 0": 151, "raw 10 0": 130, "raw 00 0": 21 } }
 	};
 	for(const selection of ["scalar", "structural"])
 	{
@@ -50,7 +50,7 @@ test("the expectation reproduces the pinned corpus and follows the generated val
 		// mirror(3n) and raw mirror(9n) for scalar exports, and a valid call on both routes for label and structures.
 		const bound = calls.filter(call => call[2] === "raw" && !call[4] && (call[5] === 1 || call[3] === typeInvalid[0]));
 		// Bound inputs: mirror 4, never 2, only 2, huge 3 and 32 late label rounds; structures add 8 rounds of 4 + 2 + 3.
-		assert.equal(bound.length, selection === "scalar" ? 11 + 32 : 11 + 32 + 8 * 9);
+		assert.equal(bound.length, selection === "scalar" ? 11 + 32 : 11 + 32 + 8 * 11);
 		for(const call of bound)
 		{
 			const next = calls.slice(call[0] + 1, call[0] + 3);
@@ -70,7 +70,7 @@ test("the expectation reproduces the pinned corpus and follows the generated val
 test("the selection authenticates the installed bytes, contract and private ABI of its mode before any observation", () => {
 	const bytes = Buffer.from("\0asm\x01\0\0\0component bytes");
 	const descriptorOf = bindingIr => ({ integrity: sha256(bytes), bindingIr, privateAbi: createComponentPrivateAbi(bindingIr) });
-	for(const [selection, mode, ir, columns] of [["structural", "original", reviewedFinWasmIr("structural"), 9], ["scalar", "probe", instrumentReviewedFinWasmIr("scalar"), 7]])
+	for(const [selection, mode, ir, columns] of [["structural", "original", reviewedFinWasmIr("structural"), 10], ["scalar", "probe", instrumentReviewedFinWasmIr("scalar"), 7]])
 	{
 		const selected = reviewedFinWasmEntrySelection({ descriptor: descriptorOf(ir), bytes, selection, mode });
 		assert.deepEqual(selected.symbols, reviewedFinWasmEntrySymbols(selection, mode).map(item => item.symbol));
@@ -103,6 +103,7 @@ test("the selection authenticates the installed bytes, contract and private ABI 
 		, ["bound 10 to 11", changed("structural", "original", ir => { refinement(ir, "mirror").parameters[0].bound = "11"; })]
 		, ["result-only bound", changed("scalar", "original", ir => { refinement(ir, "tenth").result.bound = "11"; })]
 		, ["nested bound", changed("structural", "original", ir => { refinement(ir, "nested").parameters[0].arguments[0].arguments[0].arguments[0].bound = "4"; })]
+		, ["nominal field bound", changed("structural", "original", ir => { ir.types[0].source.extensions["lean-lang.org/nominal-refinements"].fields[0].bound = "11"; })]
 		, ["probe control omitted", changed("scalar", "probe", ir => { ir.declarations.pop(); })]
 		, ["probe control refined", changed("scalar", "probe", ir => { ir.declarations.at(-1).source.extensions["lean-lang.org/refinements"] = { parameters: [{ kind: "fin", bound: "10" }], result: null }; })]
 		, ["probe control substituted", changed("scalar", "probe", ir => { ir.declarations.at(-1).parameters[0].type = { kind: "primitive", name: "int" }; })]
@@ -127,7 +128,7 @@ test("the selection authenticates the installed bytes, contract and private ABI 
 
 test("probe inputs add only the markers and the unrefined control", async () => {
 	const lean = await readFile("tests/fixtures/onboarding/reviewed-fin-wasm/ReviewedFin.lean", "utf8"), probe = instrumentReviewedFinWasmLean(lean);
-	assert.equal(probe.split(`dbgTrace "${reviewedFinWasmEntryMarker} `).length - 1, 10);
+	assert.equal(probe.split(`dbgTrace "${reviewedFinWasmEntryMarker} `).length - 1, 11);
 	assert.match(probe, new RegExp(`^def ${reviewedFinWasmSourceControl} \\(value : Nat\\) : Nat := dbgTrace`, "mu"));
 	assert.throws(() => instrumentReviewedFinWasmLean(lean.replace("def only", "def alone")), assert.AssertionError);
 	assert.throws(() => instrumentReviewedFinWasmLean(lean.replace("end ReviewedFin\n", "")), assert.AssertionError);
@@ -166,7 +167,7 @@ test("the accountant refuses altered adapter or source entry and names the faili
 	const symbols = reviewedFinWasmEntrySymbols("structural", "probe").map(item => item.name);
 	assert.equal(symbols.at(-1), reviewedFinWasmSourceControl);
 	const original = synthetic(expected, symbols);
-	assert.deepEqual(accountReviewedFinWasmEntry(expected, original.observed, original.lines), { mode: "probe", calls: 530, columns: symbols, source: true });
+	assert.deepEqual(accountReviewedFinWasmEntry(expected, original.observed, original.lines), { mode: "probe", calls: 596, columns: symbols, source: true });
 	const find = predicate => expected.calls.findIndex(predicate);
 	const fin0 = find(call => call[1] === "never" && call[2] === "raw" && call[5] === 1);
 	const late = find(call => call[1] === "label" && call[2] === "raw" && call[5] === 1 && call[6] === 0);

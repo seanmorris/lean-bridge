@@ -15,6 +15,7 @@ const nestedType = { list: { option: { tuple: ["nat", { result: ["nat", "nat"] }
 const nestedRefinement = unary("list", unary("option", binary("tuple", fin("3"), binary("result", fin("5"), fin("2")))));
 const rowRefinement = unary("array", unary("array", fin("10")));
 const emptyRefinement = unary("array", fin("0"));
+const boxType = { record: "ReviewedFin.Box", fields: { digit: "nat", label: "string" } };
 const scalar = [
 	["mirror", ["nat"], "nat", [fin("10")], fin("10")]
 	, ["never", ["nat"], "nat", [fin("0")], null]
@@ -27,7 +28,8 @@ const structural = [
 		, [rowRefinement], rowRefinement]
 	, ["empty", [{ array: "nat" }], { array: "nat" }
 		, [emptyRefinement], emptyRefinement]
-	, ["nested", [nestedType], nestedType, [nestedRefinement], nestedRefinement]];
+	, ["nested", [nestedType], nestedType, [nestedRefinement], nestedRefinement]
+	, ["box", [boxType], boxType, [null], null]];
 
 /**
  * Author the expected transport and bounds before invoking the compiler.
@@ -44,7 +46,26 @@ export const reviewedFinWasmIr = selection => {
 	{
 		declaration.parameters.forEach((parameter, position) => { parameter.name = `arg${position}`; });
 		const [, , , parameters, result] = signatures[index];
-		declaration.source.extensions["lean-lang.org/refinements"] = structuredClone({ parameters, result });
+		if(result !== null || parameters.some(item => item !== null))
+			declaration.source.extensions["lean-lang.org/refinements"] = structuredClone({ parameters, result });
+	}
+	const box = document.types.find(type => type.id === "lean:ReviewedFin.Box");
+	if(box) box.source.extensions["lean-lang.org/nominal-refinements"]
+		= { kind: "record", fields: [fin("10"), null] };
+	return document;
+};
+
+/**
+ * The exact pre-field reviewed document retained only for old archive authentication.
+ *
+ * @param selection - Scalar or structural source selection.
+ */
+export const reviewedFinWasmPreFieldIr = selection => {
+	const document = reviewedFinWasmIr(selection);
+	if(selection === "structural")
+	{
+		document.declarations = document.declarations.filter(item => item.name !== "box");
+		document.types = [];
 	}
 	return document;
 };

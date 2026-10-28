@@ -45,6 +45,8 @@ const boundStatus = selection => (selection === "scalar" ? 6 : 5);
 const fin = (value, bound) => typeof value === "bigint" && value >= 0n && value < bound;
 const nested = value => value?.tag === "none" || value?.tag === "some" && fin(value.value[0], 3n)
 	&& (Object.hasOwn(value.value[1], "ok") ? fin(value.value[1].ok, 5n) : fin(value.value[1].error, 2n));
+const box = value => value !== null && typeof value === "object"
+	&& fin(value.digit, 10n) && typeof value.label === "string";
 /** Each Lean export's adapter bound check and its result, on runtime-accepted arguments. */
 const leanExports = {
 	mirror: { accepts: ([value]) => fin(value, 10n), run: ([value]) => 9n - value }
@@ -56,6 +58,7 @@ const leanExports = {
 	, rows: { accepts: ([rows]) => rows.every(row => row.every(value => fin(value, 10n))), run: ([rows]) => [...rows].reverse() }
 	, empty: { accepts: ([values]) => values.length === 0, run: () => [] }
 	, nested: { accepts: ([values]) => values.every(nested), run: ([values]) => [...values].reverse() }
+	, box: { accepts: ([value]) => box(value), run: ([value]) => ({ ...value }) }
 };
 
 const byBindingId = (left, right) => (left.bindingId < right.bindingId ? -1 : left.bindingId > right.bindingId ? 1 : 0);
@@ -133,7 +136,8 @@ const encoderEnters = (abi, signature, args) => {
 	try
 	{
 		if(abi.version === 2) callComponentScalar(scratch(), operation, signature, args);
-		else compileComponentCopiedCall(scratch(), operation, signature, () => {}, abi.version, abi.records ?? [])(args);
+		else compileComponentCopiedCall(scratch(), operation, signature, () => {}
+			, abi.version, abi.types ?? abi.records ?? [])(args);
 	}
 	catch
 	{ /* The stub adapter never succeeds; only entry matters. */ }

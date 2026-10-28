@@ -39,17 +39,22 @@ if (false) {
 ${selection === "structural" ? `type Rows = ReadonlyArray<ReadonlyArray<bigint>>;
 type Item = Readonly<{ tag: "none" }> | Readonly<{ tag: "some"; value: readonly [bigint, Readonly<{ ok: bigint }> | Readonly<{ error: bigint }>] }>;
 type Items = ReadonlyArray<Item>;
+type Box = Readonly<{ digit: bigint; label: string }>;
 export type RowSignature = Expect<Equal<typeof api.rows, (values: Rows) => Rows>>;
 export type EmptySignature = Expect<Equal<typeof api.empty, (values: ReadonlyArray<bigint>) => ReadonlyArray<bigint>>>;
 export type NestedSignature = Expect<Equal<typeof api.nested, (values: Items) => Items>>;
+export type BoxSignature = Expect<Equal<typeof api.box, (value: Box) => Box>>;
 const rows: Rows = api.rows([[0n, 9n]]);
 const nested: Items = api.nested([{ tag: "some", value: [2n, { error: 1n }] }]);
-void rows; void nested;
+const box: Box = api.box({ digit: 9n, label: "nine" });
+void rows; void nested; void box;
 if (false) {
   // @ts-expect-error Nested Fin cannot be passed as a number.
   api.rows([[1]]);
   // @ts-expect-error Active error branch retains its bounded Nat representation.
   api.nested([{ tag: "some", value: [2n, { error: 1 }] }]);
+  // @ts-expect-error A Fin field retains Nat's bigint representation.
+  api.box({ digit: 9, label: "nine" });
 }
 ` : ""}
 console.log(JSON.stringify(executeCorpus(request, await loadApi())));

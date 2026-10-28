@@ -67,7 +67,9 @@ export const executeCorpus = (request, api) => {
 			["rows", [[0n, 9n], []], [[], [0n, 9n]], [[[10n]], [[0n, 10n, 9n]], [[0n, 9n, 10n]], [[0n], [10n]]]]
 			, ["empty", [], [], [[0n], [1n]]]
 			, ["nested", values, [...values].reverse()
-				, [[some([3n, { ok: 4n }])], [some([2n, { ok: 5n }])], [some([0n, { error: 2n }])]]]];
+				, [[some([3n, { ok: 4n }])], [some([2n, { ok: 5n }])], [some([0n, { error: 2n }])]]]
+			, ["box", { digit: 9n, label: "λ🙂" }, { digit: 9n, label: "λ🙂" }
+				, [{ digit: 10n, label: "high" }, { digit: 11n, label: "higher" }]]];
 		for(const [name, input, expected, invalid] of inputs)
 		{
 			const before = encode(input);

@@ -3,6 +3,10 @@ namespace ReviewedFin
 abbrev Digit := Fin 10
 abbrev Wide := Fin 184467440737095516170
 
+structure Box where
+  digit : Digit
+  label : String
+
 def mirror (value : Digit) : Digit := ⟨9 - value.val, by omega⟩
 def never (value : Fin 0) : Nat := value.elim0
 def only (value : Fin 1) : Nat := value.val + 7
@@ -15,5 +19,6 @@ def rows (values : Array (Array Digit)) : Array (Array Digit) := values.reverse
 def empty (values : Array (Fin 0)) : Array (Fin 0) := values
 def nested (values : List (Option (Fin 3 × Except (Fin 2) (Fin 5)))) :
     List (Option (Fin 3 × Except (Fin 2) (Fin 5))) := values.reverse
+def box (value : Box) : Box := value
 
 end ReviewedFin

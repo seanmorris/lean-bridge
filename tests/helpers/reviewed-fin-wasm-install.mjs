@@ -17,6 +17,7 @@ import { verifyComponentPackageReceipt } from "../../src/release/component-packa
 import { lakeInputState, saveLakeFile } from "./lake-workspace.mjs";
 import { refinementEngineTransport } from "./refinement-engine.mjs";
 import { reviewedFinWasmIr, reviewedFinWasmSelections } from "./reviewed-fin-wasm-fixture.mjs";
+import { nominalRefinementEntries } from "../../src/abi/refinements.mjs";
 import { reviewedFinWasmTypeScript } from "./reviewed-fin-wasm-typescript.mjs";
 import { reviewedFinWasmMismatches, reviewedFinWasmRefusal } from "./reviewed-fin-wasm-mismatches.mjs";
 import { checkReviewedFinWasmBrowsers } from "./reviewed-fin-wasm-browser.mjs";
@@ -35,7 +36,7 @@ const run = (command, args, cwd, env = clean) => processBuildRunner.capture({ co
 /** Exact shared-consumer counts, including direct runtime calls and recovery. */
 export const reviewedFinWasmExpected = Object.freeze({
 	scalar: Object.freeze({ checks: 50, rejections: 126 })
-	, structural: Object.freeze({ checks: 200, rejections: 270 })
+	, structural: Object.freeze({ checks: 234, rejections: 302 })
 });
 const configuration = (selection, reviewed) => ({
 	schemaVersion: 1
@@ -61,9 +62,11 @@ export const reviewedFinWasmBuildFacts = async (bundle, selection, reviewed) => 
 	const metadata = JSON.parse(metadataBytes), expected = reviewedFinWasmIr(selection);
 	assert.equal(reviewedContractDifference(expected, ir), null);
 	const plan = await json(join(bundle, "locks/compiler-adapters.json"));
-	assert.equal(plan.privateAbi.version, selection === "scalar" ? 2 : 6);
+	assert.equal(plan.privateAbi.version, selection === "scalar" ? 2 : 8);
 	const refinements = Object.fromEntries(expected.declarations.map(item => [item.source.declaration, item.source.extensions["lean-lang.org/refinements"]]));
 	assert.deepEqual(Object.fromEntries(plan.exports.map(item => [item.sourceDeclaration, item.refinements])), refinements);
+	const nominalRefinements = nominalRefinementEntries(expected.types);
+	assert.deepEqual(plan.nominalRefinements ?? [], nominalRefinements);
 	if(reviewed)
 	{
 		assert.deepEqual(validateReviewedSource(metadata.reviewedBindingIr), expected);
@@ -78,7 +81,7 @@ export const reviewedFinWasmBuildFacts = async (bundle, selection, reviewed) => 
 		, metadataSha256: sha256(metadataBytes)
 		, sourceSha256
 		, compilerSha256: metadata.leanCompilerSha256
-		, privateAbi: plan.privateAbi.version
+		, privateAbi: plan.privateAbi.version, nominalRefinements
 		, refinements, ...reviewed ? { reviewedSourceSha256: metadata.reviewedBindingIr.sourceSha256 } : {} };
 };
 
