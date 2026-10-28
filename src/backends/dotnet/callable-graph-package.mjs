@@ -52,10 +52,10 @@ call returns. A new thread cannot acquire a departed thread's closure. Callbacks
 expire when their call finishes. Callback errors retain their exception objects
 and return after conversion storage and native outputs are released.
 
-${recovery ? `A host callback whose result contains a checked Lean Subtype or checked record is passed as a typed
+${recovery ? `A host callback with checked Lean Fin, Subtype or checked-record semantics is passed as a typed
 WithRecovery<TDelegate,TResult>. Recovery is validated before Lean or the
 delegate runs, is used only to finish a rejected native call, and is never
-returned as successful output. Returned Lean closures validate selected
+returned as successful output. Returned Lean closures validate Fin, selected
 Subtype and checked-record inputs before their body runs and remain usable after rejection.
 
 ` : ""}

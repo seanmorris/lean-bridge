@@ -137,6 +137,41 @@ test("native Fin callback validators derive carrier types from the authenticated
 	}
 });
 
+test("every native package model recovers Fin callback roles from the exact export sites", () => {
+	const ir = reviewedCallbackFinReview(), descriptor = createNativeCallableGraphDescriptor(ir);
+	const callbackId = (name, result = false) => {
+		const declaration = ir.declarations.find(item => item.id === `lean:ReviewedCallbacks.${name}`);
+		return (result ? declaration.result : declaration.parameters[0]).type.id;
+	};
+	const expected = new Map([
+		[callbackId("visit"), "host"]
+		, [callbackId("scaler", true), "closure"]
+		, [callbackId("counter", true), "closure"]
+		, [callbackId("digits", true), "closure"]
+		, [callbackId("apply"), null]
+	]);
+	for(const target of ["c", "cpp", "pypi", "cargo", "rubygems", "cpan", "nuget", "maven", "php-native", "wit-wasi"])
+	{
+		const model = compileNativeGraphProjection(ir, [target], target === "cpan" ? "LeanBridge::Reviewed" : undefined);
+		for(const [id, direction] of expected)
+			assert.equal(model.callbacks.get(id).direction, direction, `${target}: ${id}`);
+	}
+	const model = {
+		schemaVersion: 4
+		, profile: "native-library-v1", pointerBits: 64, byteOrder: "little"
+		, component: ir.component, bindingIr: ir, copiedGraph: descriptor
+	};
+	const abi = nativeCallableGraphCarrierAbi(descriptor, ir);
+	const generated = generateCompiledCallbacks(model);
+	for(const [id, direction] of expected)
+	{
+		const signature = abi.callbacks.find(item => item.id === id);
+		const prefix = `${abi.exports[0].symbol}_structured_${signature.key}`;
+		assert.equal(generated.includes(`${prefix}_invoke`), direction !== "closure", `${id}: invoke`);
+		assert.equal(generated.includes(`${prefix}_recovery`), direction === "host", `${id}: recovery`);
+	}
+});
+
 test("nominal callback bounds make returned closure refusals recoverable without changing reusable direction", () => {
 	const ir = reviewedCallbackFinReview({ hostReply: true });
 	const copiedGraph = createNativeCallableGraphDescriptor(ir);

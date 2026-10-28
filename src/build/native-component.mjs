@@ -103,7 +103,7 @@ const callbackDefault = nativeCallbackDefault;
 export const generateCompiledCallbacks = model => {
 	if(model.ownedGraph?.hostCallbacks) return generateCompiledNativeLeanAdapters(model).callbackSource;
 	if(model.copiedGraph?.callbacks)
-		return generateNativeCallableGraphTrampolines(nativeGraphCarrierAbi(model));
+		return generateNativeCallableGraphTrampolines(nativeGraphCarrierAbi(model), { finDirections: true });
 	let callbacks = '#include "component.h"\n#include "lean_bridge_native_runtime.h"\n';
 	// Lean reaches a reply's reject only after its own decidable check fails. The reject consumes
 	// the reply, flags the call for the package frame and returns the Fin-free failure value that

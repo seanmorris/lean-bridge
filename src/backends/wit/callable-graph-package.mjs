@@ -112,7 +112,7 @@ ${publicApi.headers.join("\n")}
 export const witCallableGraphPackageReadme = (model, glibc) => {
 	const { name, version, prefix: p } = model;
 	const recovery = [...model.callbacks.values()].some(callback => callback.direction === "host")
-		? "A callback whose result contains a checked Lean Subtype or checked record must be registered with its typed create helper's recovery argument. Registration makes an owned checked copy before application execution; Lean uses it only when the callback reply fails the selected constructor.\n\n"
+		? "A host callback with checked Lean Fin, Subtype or checked-record semantics must be registered with its typed create helper's recovery argument. Registration makes an owned checked copy before application execution; Lean uses it only to finish a rejected callback's failure path.\n\n"
 		: "";
 	return `# ${name} ${version}
 

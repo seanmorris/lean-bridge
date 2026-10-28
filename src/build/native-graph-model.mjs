@@ -187,11 +187,11 @@ export const generateCompiledNativeLeanAdapters = model => {
 		, ...(item.specialization ? { sourceApplication: item.specialization.application } : {}) }));
 	const lines = [...new Set(model.exports.map(item => `import ${item.module}`))
 		, "set_option maxRecDepth 10000", `namespace ${module}`
-		, ...(abi.callbacks ? componentStructuredCallableLeanSource(abi, exports)
+		, ...(abi.callbacks ? componentStructuredCallableLeanSource(abi, exports, { finDirections: true })
 			: componentRecursiveLeanSource(abi, exports, leanType, nominalRefinementEntries(model.bindingIr.types)))
 		, `end ${module}`, ""];
 	const header = abi.callbacks
-		? carrierHeader(componentStructuredCopiedView(abi), false) + nativeCallableGraphHeader(abi)
+		? carrierHeader(componentStructuredCopiedView(abi), false) + nativeCallableGraphHeader(abi, { finDirections: true })
 		: carrierHeader(abi);
 	return { module, leanSource: lines.join("\n"), header };
 };

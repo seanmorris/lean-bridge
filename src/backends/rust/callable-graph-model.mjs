@@ -5,7 +5,7 @@
  * @file
  */
 import { canonicalJson, sha256 } from "../../capsule/node.mjs";
-import { callbackSubtypeDirection } from "../../abi/refinements.mjs";
+import { componentStructuredCallbackDirection } from "../../abi/component-structured-callables.mjs";
 import { createNativeCallableGraphDescriptor } from "../../build/native-callable-graph.mjs";
 import { compileNativeCallableGraphPayloads } from "../c/native-callable-graph-payloads.mjs";
 import { compileCopiedRustGraphPackageModel } from "./copied-graph-package.mjs";
@@ -53,7 +53,7 @@ export const compileCallableRustGraphPackageModel = ir => {
 	const callbacks = new Map(descriptor.callbacks.map((callback, index) => {
 		const parameters = callback.parameters.map(copy), result = copy(callback.result);
 		const signature = `fn(${parameters.map(node => node.inputType).join(", ")}) -> ${result.publicType}`;
-		const direction = callbackSubtypeDirection(callback, callback.refinements, descriptor.types);
+		const direction = componentStructuredCallbackDirection(descriptor, callback, true);
 		const functionType = `impl FnMut(${callback.parameters.map(ref => annotated(ref).publicType).join(", ")}) -> Result<${annotated(callback.result).publicType}, Error>`;
 		const value = { ...callback, index, parameters, result, signature, direction
 			, publicType: `LeanClosure<${signature}>`

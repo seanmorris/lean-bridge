@@ -34,7 +34,9 @@ export const nativeGraphProjectionSources = (model, receipt) => {
 		, ...(item.refinements ? { refinements: item.refinements } : {})
 	}));
 	const native = abi.callbacks
-		? generateNativeCallableGraphCalls(model.bindingIr, model.copiedGraph, { initializer: receipt.initializer })
+		? generateNativeCallableGraphCalls(model.bindingIr, model.copiedGraph, {
+			initializer: receipt.initializer, finDirections: true
+		})
 		: generateNativeCopiedGraphAdapters(model.bindingIr, abi, {
 			initializer: receipt.initializer, refinementExports
 			, nominalRefinements: nominalRefinementEntries(model.bindingIr.types)

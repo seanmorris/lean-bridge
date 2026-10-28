@@ -76,7 +76,7 @@ Records and variant constructors are frozen classes with required keyword fields
 
 	Pass a synchronous callable, method object or block to a callback parameter. Each invocation receives independently copied values. Ruby exceptions return after native cleanup. Non-local throw, break and return are contained and reported as LocalJumpError. Borrowed callbacks expire when the exporting call returns. Another Fiber cannot enter Lean while a native call is suspended on the same thread.
 
-	${callbackRecovery ? `A host callback whose result contains a checked Lean Subtype or checked record must be wrapped with ${model.namespace}.with_recovery(callback, value). The recovery has the callback's exact erased result type and is validated before Lean or the callback runs. It is used only to finish Lean's failure path and is never returned as a successful result.
+	${callbackRecovery ? `A host callback with checked Lean Fin, Subtype or checked-record semantics must be wrapped with ${model.namespace}.with_recovery(callback, value). The recovery has the callback's exact erased result type and is validated before Lean or the callback runs. It is used only to finish Lean's failure path and is never returned as a successful result.
 
 ` : ""}\
 	Returned LeanClosure values own their captures. Use with { |closure| ... } or close; repeated close is safe. Invocation belongs to the creating Ruby thread lifetime, not a reusable native thread ID. Closing during an active call defers disposal until that call finishes. Copying and serialization are rejected. Finalization provides fallback cleanup.

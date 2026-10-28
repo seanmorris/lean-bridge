@@ -61,7 +61,7 @@ Records and variant constructors are frozen dataclasses. Arrays and Lists accept
 
 Pass a synchronous Python callable to a callback parameter. Each invocation receives independently copied values. Exceptions and invalid callback results unwind the active Lean call and reach the original Python caller. Async functions and awaitable results are rejected. Borrowed callbacks expire when the exporting call returns; a Lean closure cannot extend that borrow.
 
-${[...model.callbacks.values()].some(callback => callback.direction === "host") ? "A host callback whose result contains a checked Lean Subtype or checked record must use with_recovery(callback, value). The recovery has the callback's exact erased result type, is checked before Lean or the callback runs, and is never returned as success.\n\n" : ""}\
+${[...model.callbacks.values()].some(callback => callback.direction === "host") ? "A host callback with checked Lean Fin, Subtype or checked-record semantics must use with_recovery(callback, value). The recovery has the callback's exact erased result type, is checked before Lean or the callback runs, and is never returned as success.\n\n" : ""}\
 
 Returned LeanClosure values own their captured Lean values. Use them in a with block or call close(). Repeated close is safe. Invocation belongs to the creating thread's lifetime, not a reusable OS thread ID. Closing during a reentrant invocation releases the capture after the active call finishes. Copying and serialization are rejected. Finalization provides fallback cleanup.
 

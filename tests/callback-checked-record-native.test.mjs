@@ -245,7 +245,7 @@ test("Perl callback checked records copy a typed record recovery and keep the pr
 		, nativeLibrary: { sha256: "b".repeat(64) }
 		, runtimeIdentity: "c".repeat(64) };
 	const files = generateCallablePerlGraphPackage(model, receipt);
-	assert.match(files["lib/LeanBridge/Structured.pm"], /checked Lean Subtype or checked record must use/u);
+	assert.match(files["lib/LeanBridge/Structured.pm"], /checked Lean Fin, Subtype or checked-record semantics must use/u);
 	const directory = await mkdtemp(join(tmpdir(), "lean-perl-callback-checked-record-xs-"));
 	t.after(() => rm(directory, { recursive: true, force: true }));
 	await saveLakeFile(directory, "Component.xs", files["Component.xs"]);
@@ -267,7 +267,7 @@ test("managed, PHP and WIT callable packages expose proof-free checked-record re
 		, /public sealed record Interval\([^)]*BigInteger Lo, [^)]*BigInteger Hi\)/u);
 	assert.doesNotMatch(dotnet["src/LeanBridge.Structured/Values.cs"], /Ordered/u);
 	assert.match(dotnetSource, /WithRecovery<[^\n]+Interval[^\n]+Interval>/u);
-	assert.match(dotnet["README.md"], /checked Lean Subtype or checked record/u);
+	assert.match(dotnet["README.md"], /checked Lean Fin, Subtype or checked-record/u);
 
 	const jvm = generateCallableJvmGraphPackage(ir);
 	const jvmSource = Object.values(jvm).join("\n");
@@ -275,19 +275,19 @@ test("managed, PHP and WIT callable packages expose proof-free checked-record re
 		, /record Interval\(java\.math\.BigInteger lo, java\.math\.BigInteger hi\)/u);
 	assert.doesNotMatch(jvm["src/main/java/org/leanbridge/structured/Interval.java"], /ordered/iu);
 	assert.match(jvmSource, /WithRecovery<[^\n]+Interval/u);
-	assert.match(jvm["README.md"], /checked Lean Subtype or checked record/u);
+	assert.match(jvm["README.md"], /checked Lean Fin, Subtype or checked-record/u);
 
 	const php = generateCallablePhpGraphPackage(ir);
 	assert.match(php["src/Api.php"], /final readonly class Interval[\s\S]+public \\Brick\\Math\\BigInteger \$lo;[\s\S]+public \\Brick\\Math\\BigInteger \$hi;/u);
 	assert.doesNotMatch(php["src/Api.php"], /\$ordered/u);
 	assert.match(php["src/Api.php"], /function with_recovery\(/u);
-	assert.match(php["README.md"], /checked Lean Subtype or checked record/u);
+	assert.match(php["README.md"], /checked Lean Fin, Subtype or checked-record/u);
 
 	const wit = compileCallableWitGraphPackageModel(ir);
 	assert.match(wit.hostHeader, /const structured_interval_t \*recovery/u);
 	assert.doesNotMatch(wit.hostHeader, /ordered/iu);
 	assert.match(witCallableGraphPackageReadme(wit, "2.38")
-		, /checked Lean Subtype or checked record/u);
+		, /checked Lean Fin, Subtype or checked-record/u);
 });
 
 test("the WIT consumer expects exact returned-closure constructor diagnostics", async () => {

@@ -19,7 +19,9 @@ export const generateCallablePerlGraphPackage = (model, receipt) => {
 	const ir = model.bindingIr, moduleName = model.moduleName;
 	const generated = generateCallablePerlGraphXs(ir, moduleName);
 	const checkedHostCallbacks = [...generated.callbacks.values()].some(callback => callback.direction === "host");
-	const native = generateNativeCallableGraphCalls(ir, model.copiedGraph, { initializer: receipt.initializer });
+	const native = generateNativeCallableGraphCalls(ir, model.copiedGraph, {
+		initializer: receipt.initializer, finDirections: true
+	});
 	if(canonicalJson(generated.layout) !== canonicalJson(native.layout)) throw new TypeError("Perl and native callable layouts differ");
 	const prefix = native.layout.prefix, publicModule = `lib/${moduleName.replaceAll("::", "/")}.pm`;
 	const header = native.header.replace(/^(uint32_t|void) ([a-zA-Z_][a-zA-Z0-9_]*\()/gm, '__attribute__((visibility("hidden"))) $1 $2');
@@ -60,17 +62,16 @@ returned captures and ordinary results own independent copied storage.
 =head1 CALLBACKS AND OWNERSHIP
 
 Pass a CODE reference or a matching generated Lean closure as a synchronous
-callback.${checkedHostCallbacks ? ` A host callback whose result contains a checked Lean Subtype or checked record must use
+callback.${checkedHostCallbacks ? ` A host callback with checked Lean Fin, Subtype or checked-record semantics must use
 C<${moduleName}::Runtime::Callback-E<gt>new(code =E<gt> $callback, recovery =E<gt> $value)>.
 The recovery has the callback's declared erased result shape, a generated
 record carrying only payload fields for a checked record, and is validated
-before Lean or the callback runs. Lean applies the selected constructor to the
-callback's actual reply, nested checked fields before their record.
-Constructor rejection or a callback exception fails the enclosing call; the
+before Lean or the callback runs. Lean checks Fin bounds and applies the selected
+constructor to the callback's actual reply, nested checked fields before their record.
+Bound or constructor rejection, or a callback exception, fails the enclosing call; the
 recovery is used only to finish Lean's failure path and is never returned as a
-successful result. A returned Lean closure constructs its checked record
-arguments the same way before its body runs and projects a checked record
-result without proof fields.` : ""} Returned Lean closures provide call, close and closed. Close each
+successful result. A returned Lean closure checks Fin, Subtype and checked-record
+arguments before its body runs and projects checked records without proof fields.` : ""} Returned Lean closures provide call, close and closed. Close each
 closure when finished. Close is idempotent and an active call retains its
 borrow until native cleanup finishes. Automatic finalization also releases
 the native lease. Closures cannot be serialized or used by another interpreter

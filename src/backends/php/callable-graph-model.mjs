@@ -4,7 +4,7 @@
  * @file
  */
 import { canonicalJson, sha256 } from '../../capsule/node.mjs';
-import { callbackSubtypeDirection } from '../../abi/refinements.mjs';
+import { componentStructuredCallbackDirection } from '../../abi/component-structured-callables.mjs';
 import { createNativeCallableGraphDescriptor } from '../../build/native-callable-graph.mjs';
 import { compileNativeCallableGraphPayloads } from '../c/native-callable-graph-payloads.mjs';
 import { compileCopiedPhpGraphPackageModel } from './copied-graph-package.mjs';
@@ -28,7 +28,7 @@ export const compileCallablePhpGraphPackageModel = ir => {
 	};
 	const callbacks = new Map(descriptor.callbacks.map((signature, index) => {
 		const parameters = signature.parameters.map(copy), result = copy(signature.result);
-		const direction = callbackSubtypeDirection(signature, signature.refinements, descriptor.types);
+		const direction = componentStructuredCallbackDirection(descriptor, signature, true);
 		const projected = {
 			...signature
 			, index

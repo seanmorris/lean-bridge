@@ -5,7 +5,7 @@
  */
 import { basename } from 'node:path';
 import { canonicalJson, sha256 } from '../../capsule/node.mjs';
-import { callbackSubtypeDirection } from '../../abi/refinements.mjs';
+import { componentStructuredCallbackDirection } from '../../abi/component-structured-callables.mjs';
 import { createNativeCallableGraphDescriptor } from '../../build/native-callable-graph.mjs';
 import { compileNativeCallableGraphPayloads } from '../c/native-callable-graph-payloads.mjs';
 import { compileCopiedJvmGraphPackageModel } from './copied-graph-package.mjs';
@@ -37,7 +37,7 @@ export const compileCallableJvmGraphPackageModel = ir => {
 		const structured = [...signature.parameters, signature.result].some(ref => ref.kind !== 'primitive');
 		const base = structured ? 'Fn' + pascal(cIdentifier(definitions.get(signature.id).name))
 			: 'Fn' + signature.parameters.map(ref => primitiveName(ref.name)).join('') + 'To' + primitiveName(signature.result.name);
-		return { base, direction: callbackSubtypeDirection(signature, signature.refinements, descriptor.types) };
+		return { base, direction: componentStructuredCallbackDirection(descriptor, signature, true) };
 	});
 	const duplicateBases = new Set(callbackNames.filter((value, index, values) =>
 		values.some((other, otherIndex) => otherIndex !== index && other.base === value.base)).map(value => value.base));

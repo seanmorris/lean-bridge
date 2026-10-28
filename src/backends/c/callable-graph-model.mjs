@@ -5,7 +5,7 @@
  * @file
  */
 import { canonicalJson, sha256 } from "../../capsule/node.mjs";
-import { callbackSubtypeDirection } from "../../abi/refinements.mjs";
+import { componentStructuredCallbackDirection } from "../../abi/component-structured-callables.mjs";
 import { createNativeCallableGraphDescriptor } from "../../build/native-callable-graph.mjs";
 import { compileNativeCallableGraphPayloads } from "./native-callable-graph-payloads.mjs";
 import { compileCopiedGraphPackageModel, copiedGraphCAliases } from "./graph-package.mjs";
@@ -28,7 +28,7 @@ export const compileCallableGraphPackageModel = (ir, targets) => {
 	const occupied = new Set(["initialize", "status", "error", "error_code", "graph_finish", "graph_ready", "graph_retire", "graph_initialize", "runtime", "runtime_v1"]);
 	if(targets.includes("cpp"))
 	{
-		const recovery = descriptor.callbacks.some(signature => callbackSubtypeDirection(signature, signature.refinements, descriptor.types) === "host");
+		const recovery = descriptor.callbacks.some(signature => componentStructuredCallbackDirection(descriptor, signature, true) === "host");
 		for(const name of ["Box", "Ok", "Err", "Result", "Nat", "Int", "detail", "std", "boost", "LeanClosure", "Error", ...recovery ? ["with_recovery"] : []]) occupied.add(name);
 		for(const type of ir.types.filter(type => type.kind !== "callback"))
 		{
@@ -41,7 +41,7 @@ export const compileCallableGraphPackageModel = (ir, targets) => {
 		if(targets.includes("c") && (!/^[a-z][a-z0-9_]*$/.test(field) || field.includes("__") || cKeywords.has(field)))
 			rejectPrimitiveSurface(null, `Invalid C callback name: ${field}`);
 		const entry = { kind: "callback", ...signature, index
-			, direction: callbackSubtypeDirection(signature, signature.refinements, descriptor.types)
+			, direction: componentStructuredCallbackDirection(descriptor, signature, true)
 			, name: `${p}_callback_${signature.key}`
 			, publicName: `${p}_${field}`, gmpName: `${p}_gmp_${field}`
 			, publicOwnedName: `${p}_owned_${field}`

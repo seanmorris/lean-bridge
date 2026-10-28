@@ -5,7 +5,7 @@
  * @file
  */
 import { canonicalJson, sha256 } from "../../capsule/node.mjs";
-import { callbackSubtypeDirection } from "../../abi/refinements.mjs";
+import { componentStructuredCallbackDirection } from "../../abi/component-structured-callables.mjs";
 import { createNativeCallableGraphDescriptor } from "../../build/native-callable-graph.mjs";
 import { compileNativeCallableGraphPayloads } from "../c/native-callable-graph-payloads.mjs";
 import { compileCopiedPythonGraphPackageModel } from "./copied-graph-package.mjs";
@@ -39,7 +39,7 @@ export const compileCallablePythonGraphPackageModel = ir => {
 	};
 	const callbacks = new Map(descriptor.callbacks.map((signature, index) => {
 		const name = claim(ir.types.find(type => type.id === signature.id).name);
-		const direction = callbackSubtypeDirection(signature, signature.refinements, descriptor.types);
+		const direction = componentStructuredCallbackDirection(descriptor, signature, true);
 		const callable = `[${signature.parameters.map(ref => copiedType(ref)).join(", ")}], ${copiedType(signature.result, true)}`;
 		return [signature.id, { ...signature, index, publicName: name
 			, direction

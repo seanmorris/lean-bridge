@@ -5,7 +5,7 @@
  * @file
  */
 import { canonicalJson, sha256 } from "../../capsule/node.mjs";
-import { callbackSubtypeDirection } from "../../abi/refinements.mjs";
+import { componentStructuredCallbackDirection } from "../../abi/component-structured-callables.mjs";
 import { createNativeCallableGraphDescriptor } from "../../build/native-callable-graph.mjs";
 import { compileNativeCallableGraphPayloads } from "../c/native-callable-graph-payloads.mjs";
 import { compileCopiedRubyGraphPackageModel } from "./copied-graph-package.mjs";
@@ -27,7 +27,7 @@ export const compileCallableRubyGraphPackageModel = ir => {
 	const copy = ref => nodes.get(payloads.copy(ref).id);
 	const callbacks = new Map(descriptor.callbacks.map((signature, index) => {
 		const callback = { ...signature, index
-			, direction: callbackSubtypeDirection(signature, signature.refinements, descriptor.types)
+			, direction: componentStructuredCallbackDirection(descriptor, signature, true)
 			, parameters: signature.parameters.map(copy)
 			, result: copy(signature.result)
 			, call: `${values.prefix}_callback_${signature.key}_lease_call`
