@@ -2619,7 +2619,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        profile: [values, refinements]
+        # Values stop after the owned wasm32 transport so no lane carries the full serial corpus on one runner;
+        # the Lean graph builds and the remaining value families run on a fresh values-graph runner.
+        profile: [values, values-graph, refinements]
     steps:
       - name: Check out the exact revision
         uses: actions/checkout@v6
@@ -2683,13 +2685,19 @@ jobs:
         run: |
           set -euo pipefail
           source scripts/env.sh
+          mkdir -p build
+          sampler() { while sleep 30; do date -u +%T; free -m | sed -n 2p; ps -eo rss,etimes,comm --sort=-rss | head -3; df -h / | tail -1; done; }
+          sampler >> build/php-wasm-corpus-samples.log 2>&1 &
+          LEAN_BRIDGE_CORPUS_SAMPLER=$!
+          trap 'kill "$LEAN_BRIDGE_CORPUS_SAMPLER" 2>/dev/null || true' EXIT
+          trap 'printf "%s %s\n" "$(date -u +%T)" "$BASH_COMMAND" >> build/php-wasm-corpus-samples.log' DEBUG
           npm run test:type-corpus:php-wasm
           npm run test:type-corpus:reviewed-php-wasm
           LEAN_BRIDGE_PHP_WASM_GRAPH_VALUES_TEST=1 node --test tests/php-copied-graph-values.test.mjs
           test -s build/recursive/php-wasm-values.json
           LEAN_BRIDGE_CHAR_PROFILES=php-wasm node --test tests/native-char.test.mjs
           LEAN_BRIDGE_WORD_PROFILES=php-wasm node --test tests/native-words.test.mjs
-          LEAN_BRIDGE_PHP_WASM_CALLABLE_TEST=1 node --test tests/php-wasm-callables.test.mjs tests/php-wasm-callable-contract.test.mjs
+          LEAN_BRIDGE_PHP_WASM_CALLABLE_TEST=1 node --test --test-concurrency=1 tests/php-wasm-callables.test.mjs tests/php-wasm-callable-contract.test.mjs
           LEAN_BRIDGE_PHP_WASM_STRUCTURED_CALLABLE_TEST=1 node --test --test-concurrency=1 tests/php-wasm-structured-callables.test.mjs tests/php-wasm-structured-callable-zend.test.mjs
           test -s build/structured-callables/php-wasm.json
           test -s build/structured-callables/php-wasm-zend-faults.json
@@ -2703,6 +2711,21 @@ jobs:
           LEAN_BRIDGE_OWNED_WASM32_TEST=1 node --test --test-concurrency=1 tests/owned-wasm32-transport.test.mjs
           test -s build/owned-wasm32/owned-scalars.json
           test -s build/owned-wasm32/owned-aggregates.json
+          test -s build/type-corpus/php-wasm.json
+          test -s build/type-corpus/reviewed-wasm-php-wasm.json
+      - name: Compare installed PHP-Wasm graph packages with the shared Lean corpus
+        id: type_corpus_php_wasm_graph
+        if: matrix.profile == 'values-graph'
+        continue-on-error: true
+        run: |
+          set -euo pipefail
+          source scripts/env.sh
+          mkdir -p build
+          sampler() { while sleep 30; do date -u +%T; free -m | sed -n 2p; ps -eo rss,etimes,comm --sort=-rss | head -3; df -h / | tail -1; done; }
+          sampler >> build/php-wasm-corpus-samples.log 2>&1 &
+          LEAN_BRIDGE_CORPUS_SAMPLER=$!
+          trap 'kill "$LEAN_BRIDGE_CORPUS_SAMPLER" 2>/dev/null || true' EXIT
+          trap 'printf "%s %s\n" "$(date -u +%T)" "$BASH_COMMAND" >> build/php-wasm-corpus-samples.log' DEBUG
           LEAN_BRIDGE_PHP_WASM_GRAPH_ZEND_TEST=1 LEAN_BRIDGE_PHP_WASM_GRAPH_LEAN_TEST=1 node --test tests/php-copied-graph-zend.test.mjs
           test -s build/recursive/php-wasm-zend.json
           test -s build/recursive/php-wasm-zend-lean.json
@@ -2712,10 +2735,10 @@ jobs:
           test -s build/recursive/php-wasm-graph-reproduction.json
           LEAN_BRIDGE_PHP_WASM_GRAPH_LOADING_TEST=1 node --test tests/php-wasm-graph-loading.test.mjs
           test -s build/recursive/php-wasm-graph-loading.json
-          LEAN_BRIDGE_PHP_WASM_COMPOUND_TEST=1 node --test tests/php-wasm-compounds.test.mjs tests/php-wasm-compound-contract.test.mjs tests/php-wasm-compound-zend.test.mjs
+          LEAN_BRIDGE_PHP_WASM_COMPOUND_TEST=1 node --test --test-concurrency=1 tests/php-wasm-compounds.test.mjs tests/php-wasm-compound-contract.test.mjs tests/php-wasm-compound-zend.test.mjs
           test -s build/compounds/php-wasm.json
           test -s build/compounds/php-wasm-zend-faults.json
-          LEAN_BRIDGE_PHP_WASM_LIST_TEST=1 node --test tests/php-wasm-lists.test.mjs tests/php-wasm-list-contract.test.mjs tests/php-wasm-list-zend.test.mjs
+          LEAN_BRIDGE_PHP_WASM_LIST_TEST=1 node --test --test-concurrency=1 tests/php-wasm-lists.test.mjs tests/php-wasm-list-contract.test.mjs tests/php-wasm-list-zend.test.mjs
           test -s build/lists/php-wasm.json
           test -s build/lists/php-wasm-zend-faults.json
           LEAN_BRIDGE_PHP_WASM_ALIAS_TEST=1 node --test --test-concurrency=1 tests/php-wasm-aliases.test.mjs tests/php-wasm-alias-contract.test.mjs tests/php-wasm-alias-zend.test.mjs
@@ -2727,8 +2750,6 @@ jobs:
           LEAN_BRIDGE_PHP_WASM_COLLECTION_TEST=1 node --test --test-concurrency=1 tests/php-wasm-collections.test.mjs tests/php-wasm-collection-contract.test.mjs tests/php-wasm-collection-zend.test.mjs
           test -s build/collections/php-wasm.json
           test -s build/collections/php-wasm-zend-faults.json
-          test -s build/type-corpus/php-wasm.json
-          test -s build/type-corpus/reviewed-wasm-php-wasm.json
       - name: Compare installed PHP-Wasm refinements with the shared Lean corpus
         id: refinements_php_wasm
         if: matrix.profile == 'refinements'
@@ -2736,6 +2757,12 @@ jobs:
         run: |
           set -euo pipefail
           source scripts/env.sh
+          mkdir -p build
+          sampler() { while sleep 30; do date -u +%T; free -m | sed -n 2p; ps -eo rss,etimes,comm --sort=-rss | head -3; df -h / | tail -1; done; }
+          sampler >> build/php-wasm-corpus-samples.log 2>&1 &
+          LEAN_BRIDGE_CORPUS_SAMPLER=$!
+          trap 'kill "$LEAN_BRIDGE_CORPUS_SAMPLER" 2>/dev/null || true' EXIT
+          trap 'printf "%s %s\n" "$(date -u +%T)" "$BASH_COMMAND" >> build/php-wasm-corpus-samples.log' DEBUG
           LEAN_BRIDGE_PHP_WASM_FIN_TEST=1 node --test --test-concurrency=1 tests/php-wasm-fin.test.mjs
           test -s build/php-wasm-fin/ordinary.json
           LEAN_BRIDGE_PHP_WASM_REVIEWED_FIN_LEAN_TEST=1 LEAN_BRIDGE_PHP_WASM_REVIEWED_FIN_TEST=1 node --test --test-concurrency=1 --test-name-pattern='independent Fin reviews reconcile|independently reviewed PHP-Wasm packages' tests/php-wasm-fin.test.mjs
@@ -2763,11 +2790,6 @@ jobs:
           path: |
             build/recursive/php-wasm-values.json
             build/recursive/wasm32-transport.json
-            build/recursive/php-wasm-zend.json
-            build/recursive/php-wasm-zend-lean.json
-            build/recursive/php-wasm-graph-packages.json
-            build/recursive/php-wasm-graph-reproduction.json
-            build/recursive/php-wasm-graph-loading.json
             build/type-corpus/php-wasm.json
             build/type-corpus/reviewed-wasm-php-wasm.json
             build/char-native/php-wasm.json
@@ -2779,6 +2801,20 @@ jobs:
             build/recursive-callables/php-wasm-generated-failure-*/
             build/recursive-callables/php-wasm-packages.json
             build/recursive-callables/php-wasm-mixed-packages.json
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
+      - name: Upload PHP-Wasm graph corpus evidence
+        if: always() && matrix.profile == 'values-graph'
+        uses: actions/upload-artifact@v7
+        with:
+          name: type-corpus-php-wasm-values-graph-${{ github.sha }}
+          path: |
+            build/recursive/php-wasm-zend.json
+            build/recursive/php-wasm-zend-lean.json
+            build/recursive/php-wasm-graph-packages.json
+            build/recursive/php-wasm-graph-reproduction.json
+            build/recursive/php-wasm-graph-loading.json
             build/compounds/php-wasm.json
             build/compounds/php-wasm-zend-faults.json
             build/lists/php-wasm.json
@@ -2830,10 +2866,11 @@ jobs:
           path: |
             build/php-wasm-corpus-host.log
             build/php-wasm-corpus-runtime.log
+            build/php-wasm-corpus-samples.log
           if-no-files-found: error
           retention-days: 30
       - name: Enforce PHP-Wasm corpus
-        if: always() && ((matrix.profile == 'values' && steps.type_corpus_php_wasm.outcome != 'success') || (matrix.profile == 'refinements' && steps.refinements_php_wasm.outcome != 'success'))
+        if: always() && ((matrix.profile == 'values' && steps.type_corpus_php_wasm.outcome != 'success') || (matrix.profile == 'values-graph' && steps.type_corpus_php_wasm_graph.outcome != 'success') || (matrix.profile == 'refinements' && steps.refinements_php_wasm.outcome != 'success'))
         run: exit 1
 
   php-wasm-observations:
