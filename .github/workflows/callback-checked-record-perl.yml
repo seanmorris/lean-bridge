@@ -24,6 +24,29 @@ jobs:
         with:
           fetch-depth: 1
           persist-credentials: false
+          # The producer uses current source/package bytes only. Exclude the
+          # 41+ GiB immutable evidence corpus and publication inventory.
+          sparse-checkout: |
+            /*
+            !/*/
+            /.github/
+            /acceptance/
+            /config/
+            /containers/
+            /demos/
+            /nix/
+            /notices/
+            /patches/
+            /poc/
+            /schema/
+            /scripts/
+            /site/
+            /src/
+            /tests/
+            /docs/
+            !/docs/*
+            /docs/consumer-support.v1.json
+          sparse-checkout-cone-mode: false
       - name: Install Node.js
         uses: actions/setup-node@v6
         with:
@@ -91,6 +114,29 @@ jobs:
         with:
           fetch-depth: 1
           persist-credentials: false
+          # Match the established job's complete executable checkout without
+          # materializing publication-only evidence or the type-surface index.
+          sparse-checkout: |
+            /*
+            !/*/
+            /.github/
+            /acceptance/
+            /config/
+            /containers/
+            /demos/
+            /nix/
+            /notices/
+            /patches/
+            /poc/
+            /schema/
+            /scripts/
+            /site/
+            /src/
+            /tests/
+            /docs/
+            !/docs/*
+            /docs/consumer-support.v1.json
+          sparse-checkout-cone-mode: false
       - name: Install Node.js
         uses: actions/setup-node@v6
         with:
