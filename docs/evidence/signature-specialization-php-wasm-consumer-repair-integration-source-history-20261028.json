@@ -1,0 +1,61 @@
+{
+  "additions": [
+    {
+      "currentSha256": "c1e3fcb6292a4013fe1b0d3d175435f41613f25167a036a20934c16b1b034b8f",
+      "path": "scripts/update-signature-specialization-php-wasm-consumer-repair-integration-source-history.mjs"
+    },
+    {
+      "currentSha256": "d37cecc9ef1c29a18487cd1a0b4ae305d868b0ff1df104267369896113b5efd4",
+      "path": "tests/helpers/signature-specialization-php-wasm-consumer-repair-integration-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "622cea84cfe3b09c3c0e01b8041ea182be4e52faf2d7201218b2cca41dbc6146",
+      "path": "tests/helpers/signature-specialization-php-wasm-consumer-repair-integration-source-history.mjs"
+    }
+  ],
+  "baseCommit": "b0e7fad96796b8334e0595f95d6be333be85af77",
+  "baseHistory": {
+    "path": "docs/evidence/signature-specialization-php-wasm-consumer-repair-source-history-20261028.json",
+    "sha256": "34e1b319f5ade3328ed7056e44e3101f97e13d0f77defee351e1c7cd4a2d026b"
+  },
+  "implementationCommit": "1a3b0346ec501a8ccb2cc106d241a847f4646c1e",
+  "milestone": "signature-specialization-php-wasm-consumer-repair-integration-v1",
+  "schemaVersion": 1,
+  "scope": "Register the PHP-Wasm specialization consumer repair newest-first in the reversible Fin history hub and checked-JavaScript partition 10.",
+  "updates": [
+    {
+      "currentSha256": "4347972706e2c1b03414a9376c842f5f779cd6bde10380fccfaefb2c6a76bae0",
+      "edits": [
+        {
+          "current": "import { beforeSignatureSpecializationPhpWasmConsumerRepairIntegrationSource, signatureSpecializationPhpWasmConsumerRepairIntegrationNormalizationPaths } from \"./signature-specialization-php-wasm-consumer-repair-integration-source-history.mjs\";\nimport { beforeSignatureSpecializationPhpWasmConsumerRepairSource, signatureSpecializationPhpWasmConsumerRepairNormalizationPaths } from \"./signature-specialization-php-wasm-consumer-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...signatureSpecializationPhpWasmConsumerRepairIntegrationNormalizationPaths\n\t, ...signatureSpecializationPhpWasmConsumerRepairNormalizationPaths\n\t, ...coreNativeEvidenceManifestIntegrationNormalizationPaths\n",
+          "previous": "\t...coreNativeEvidenceManifestIntegrationNormalizationPaths\n",
+          "start": 203683
+        },
+        {
+          "current": "\tlet stage = beforeSignatureSpecializationPhpWasmConsumerRepairIntegrationSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeSignatureSpecializationPhpWasmConsumerRepairSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCoreNativeEvidenceManifestIntegrationSource(\n",
+          "previous": "\tlet stage = beforeCoreNativeEvidenceManifestIntegrationSource(\n",
+          "start": 253888
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "a71262dfd68736b7e87754ec65427cedcdb041e0aa2826500b5448dda7305377"
+    },
+    {
+      "currentSha256": "005a4a1aef06ea8f6c6fbadea3511fb1b500b4913d49005aef6f5564ff6c04ca",
+      "edits": [
+        {
+          "current": "import \"./helpers/signature-specialization-php-wasm-consumer-repair-source-history-tests.mjs\";\nimport \"./helpers/signature-specialization-php-wasm-consumer-repair-integration-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 3379
+        }
+      ],
+      "path": "tests/checked-javascript-partition-10.test.mjs",
+      "previousSha256": "6d5b3bb574907a8ae7fe6477aead73f683adc788f201470449676de4d10c0ab8"
+    }
+  ]
+}
