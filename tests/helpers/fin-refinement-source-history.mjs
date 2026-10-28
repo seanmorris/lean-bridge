@@ -12,6 +12,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeDirectProofErasureMatrixSource, directProofErasureMatrixNormalizationPaths } from "./direct-proof-erasure-matrix-source-history.mjs";
 import { beforeDirectProofErasureTestRegistrationSource, directProofErasureTestRegistrationNormalizationPaths } from "./direct-proof-erasure-test-registration-source-history.mjs";
 import { beforeProofErasureWitLintJoinSource, proofErasureWitLintJoinNormalizationPaths } from "./proof-erasure-wit-lint-join-source-history.mjs";
 import { beforeProofErasureLintPinRepairSource, proofErasureLintPinRepairNormalizationPaths } from "./proof-erasure-lint-pin-repair-source-history.mjs";
@@ -2341,7 +2342,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...directProofErasureTestRegistrationNormalizationPaths
+	...directProofErasureMatrixNormalizationPaths
+	, ...directProofErasureTestRegistrationNormalizationPaths
 	, ...proofErasureWitLintJoinNormalizationPaths
 	, ...proofErasureLintPinRepairNormalizationPaths
 	, ...directProofErasureWitNormalizationPaths
@@ -3421,7 +3423,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeDirectProofErasureTestRegistrationSource(
+	let stage = beforeDirectProofErasureMatrixSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeDirectProofErasureTestRegistrationSource(
 		path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;

@@ -1,0 +1,79 @@
+{
+  "additions": [
+    {
+      "currentSha256": "8a9ec3a3d3d1c17c92f9a9efd859ae3af04f488e07b3f433a8a2f37de17cbf58",
+      "path": "tests/helpers/direct-proof-erasure-matrix-tests.mjs"
+    },
+    {
+      "currentSha256": "f9dc6e909b6275ec44d584fd8a761c55de75c1d3a602e6997b1b9eae3fdd84d6",
+      "path": "tests/helpers/direct-proof-erasure-matrix.mjs"
+    },
+    {
+      "currentSha256": "2f8042ec120408f20e8fb47ea024206691cbed0e30a4501d003beb1e0addcc44",
+      "path": "scripts/update-direct-proof-erasure-matrix-source-history.mjs"
+    },
+    {
+      "currentSha256": "ffb9e45383df1f06b95ffed39fad9ceab27a90b84fec932c6be144e9ad786304",
+      "path": "tests/helpers/direct-proof-erasure-matrix-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "8b05ad1421ff443b5478f2fcf1501b4e8e5577aacfc640ce35a438c27f96cb29",
+      "path": "tests/helpers/direct-proof-erasure-matrix-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "302358adb130f7ecfda82932f66026773eec1179",
+  "integrationUpdates": [
+    {
+      "currentSha256": "f06043d60a1ab914b465ab6bb57535dca281585f5cca842c373bc7f600ff951f",
+      "edits": [
+        {
+          "current": "import \"./helpers/direct-proof-erasure-matrix-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "e21c0ebbd065242ed756127cfca686d79238017e5e311d8d137f9d6cf6bf39e3"
+    },
+    {
+      "currentSha256": "5b6f08d2aa24cfd140f4ab9fe022627687732fde8b7896133341617cc52384f5",
+      "edits": [
+        {
+          "current": "import { beforeDirectProofErasureMatrixSource, directProofErasureMatrixNormalizationPaths } from \"./direct-proof-erasure-matrix-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...directProofErasureMatrixNormalizationPaths\n\t, ...directProofErasureTestRegistrationNormalizationPaths\n",
+          "previous": "\t...directProofErasureTestRegistrationNormalizationPaths\n",
+          "start": 212207
+        },
+        {
+          "current": "\tlet stage = beforeDirectProofErasureMatrixSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeDirectProofErasureTestRegistrationSource(\n",
+          "previous": "\tlet stage = beforeDirectProofErasureTestRegistrationSource(\n",
+          "start": 265206
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "992a68fee1fdb40e4a7016b5cdbaad9bff71677abf00073b93f129737ff9b67c"
+    }
+  ],
+  "milestone": "direct-proof-erasure-matrix-source-v1",
+  "predecessorCommit": "abcbf4ec22f873985d3e7c7341092b2650e0a011",
+  "schemaVersion": 1,
+  "scope": "Close all 204 proof-erasure type-surface cells conservatively: retain 102 exact installed bindings, bind 68 parameter and signature cells to the new direct installed matrix, keep 34 proof-valued result cells as explicit compiler refusals, and register the transition newest-first without promoting support.",
+  "updates": [
+    {
+      "currentSha256": "e21c0ebbd065242ed756127cfca686d79238017e5e311d8d137f9d6cf6bf39e3",
+      "edits": [
+        {
+          "current": "import \"./helpers/direct-proof-erasure-matrix-tests.mjs\";\n",
+          "previous": "",
+          "start": 181
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "c1437178eb0d201e9145e41b1942a6ff5fb6dc23d9d5b73593abda59302b86f3"
+    }
+  ]
+}
