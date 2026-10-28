@@ -31,6 +31,7 @@ import { sha256 } from "./source-history-digest.mjs";
 import {
 	authenticateSourceHistoryReverse, gitSourceBytes
 } from "./source-history-stream.mjs";
+import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
 
 const git = arguments_ => execFileSync("git", arguments_, {
 	encoding: "utf8", maxBuffer: 256 * 1024 * 1024
@@ -69,9 +70,10 @@ test("WIT/lint local join reverses live integration to either parent", async () 
 	const value = await record();
 	for(const path of proofErasureWitLintJoinChangedPaths)
 	{
-		const live = await readFile(path, "utf8");
 		const integration = value.integrationUpdates.find(
 			update => update.path === path);
+		const live = beforeFinRefinementSource(
+			path, await readFile(path, "utf8"), integration.currentSha256);
 		const merged = reverseProofErasureWitLintJoinUpdate(
 			live, integration
 		);
@@ -133,7 +135,8 @@ test("WIT/lint local join refreshes exactly the merged workflow pins", async () 
 test("WIT/lint local join additions and refusals remain exact", async () => {
 	const value = await record();
 	for(const addition of value.additions)
-		assert.equal(sha256(await readFile(addition.path))
+		assert.equal(sha256(await sourceAtFinHistoryMilestone(
+			addition.path, addition.currentSha256))
 			, addition.currentSha256, addition.path);
 	const update = value.leftUpdates[0];
 	const current = git(["show"
