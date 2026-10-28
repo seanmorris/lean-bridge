@@ -3,6 +3,7 @@
  *
  * @file
  */
+import "./helpers/dependent-signature-completion-source-history-tests.mjs";
 import "./helpers/wit-callback-frozen-closure-source-history-tests.mjs";
 import "./helpers/core-deterministic-boundary-repair-source-history-tests.mjs";
 import "./helpers/core-deterministic-boundary-repair-integration-source-history-tests.mjs";
