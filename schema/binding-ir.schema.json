@@ -385,6 +385,52 @@
         "mutability": { "enum": ["immutable", "read", "write"] }
       }
     },
+    "defaultValue": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind"],
+          "properties": { "kind": { "enum": ["unit", "option-none"] } }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "value"],
+          "properties": {
+            "kind": { "const": "boolean" },
+            "value": { "type": "boolean" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "value"],
+          "properties": {
+            "kind": { "const": "integer" },
+            "value": { "type": "string", "pattern": "^-?(0|[1-9][0-9]*)$" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "value"],
+          "properties": {
+            "kind": { "enum": ["string", "char"] },
+            "value": { "type": "string" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "value"],
+          "properties": {
+            "kind": { "const": "option-some" },
+            "value": { "$ref": "#/$defs/defaultValue" }
+          }
+        }
+      ]
+    },
     "parameter": {
       "type": "object",
       "additionalProperties": false,
@@ -404,7 +450,12 @@
         "lifetime": { "$ref": "#/$defs/lifetime" },
         "mutability": { "enum": ["immutable", "read", "write"] },
         "optional": { "type": "boolean" },
-        "default": true
+        "default": {
+          "oneOf": [
+            { "type": "null" },
+            { "$ref": "#/$defs/defaultValue" }
+          ]
+        }
       }
     },
     "declaration": {

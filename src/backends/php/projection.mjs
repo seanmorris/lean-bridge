@@ -251,6 +251,7 @@ const projectTypeRef = (typeRef, typeMap, namespace, integerBits) => {
 };
 
 const identityType = (namespace, projectedType, role, ownership) => {
+	if(projectedType.binding === "unit" && role === "parameter") return "null";
 	if(!new Set(["resource", "callback"]).has(projectedType.kind)) return projectedType.phpType;
 	if(projectedType.kind === "callback" && role === "parameter") return "callable";
 	if(role === "result" && ownership !== "copy") return `\\${projectedType.class}`;
@@ -258,6 +259,7 @@ const identityType = (namespace, projectedType, role, ownership) => {
 };
 
 const transportType = (namespace, projectedType, role) => {
+	if(projectedType.binding === "unit" && role === "parameter") return "null";
 	if(projectedType.kind === "resource") return `\\${fqcn(namespace, "Internal\\Identity")}`;
 	if(projectedType.kind === "callback")
 	{

@@ -9,6 +9,7 @@ import { componentScalarTypes, isClosedValueIndex } from "../abi/component-scala
 import { validateNativeType, validateOwnedNativeType } from "./native-types.mjs";
 import { validateCopiedMetadataGraph } from "./copied-metadata-graph.mjs";
 import { exportContractFor, exportContractProblem, validateExportConfiguration } from "./export-configuration.mjs";
+import { defaultValueTypeProblem } from "../binding-ir/default-value.mjs";
 
 const fail = message => { throw Object.assign(new Error(message), { code: "invalid-elaborated-metadata" }); };
 const checkedRecordDefinition = (value, references) => {
@@ -403,9 +404,15 @@ export const validateElaboratedMetadata = (report, request) => {
 				};
 				const validateType = native ? nativeType : component;
 				projection.parameters.forEach((parameter, index) => {
-					closed(parameter, ["name", "type"]);
+					const optional = parameter.optional === true;
+					closed(parameter, ["name", "type", ...optional ? ["optional", "default"] : []]);
 					if(parameter.name !== declaration.parameters[runtimeSources[index]].name) fail("Runtime binder differs from the elaborated binder");
 					validateType(parameter.type, "parameter", index);
+					if(optional)
+					{
+						const problem = defaultValueTypeProblem(parameter.default, parameter.type);
+						if(problem) fail(`Invalid optional parameter default: ${problem}`);
+					}
 				});
 				validateType(projection.result, "result");
 				// Every record provenance reference must name a nominal definition this declaration carries:

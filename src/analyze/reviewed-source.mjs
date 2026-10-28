@@ -170,8 +170,8 @@ const checkReview = document => {
 		}
 		type(value.type, `${path}.type`, false);
 	};
-	const parameter = (value, path) => {
-		reject(value.optional || value.default !== null || value.mutability !== "immutable", path);
+	const parameter = (value, path, optional = false) => {
+		reject((!optional && (value.optional || value.default !== null)) || value.mutability !== "immutable", path);
 		site(value, path);
 	};
 	for(const definition of document.types)
@@ -300,7 +300,7 @@ const checkReview = document => {
 			|| declaration.typeParameters.length || !same(declaration.effects.toSorted(), hasCallback ? ["fails", "host-call"] : []) || declaration.capabilities.length
 			|| declaration.mutability !== "immutable" || declaration.resultMode !== "value"
 			|| !same(declaration.failure, hasCallback ? callbackFailure : pureFailure), declaration.id);
-		for(const [index, value] of declaration.parameters.entries()) parameter(value, `${declaration.id}.parameters[${index}]`);
+		for(const [index, value] of declaration.parameters.entries()) parameter(value, `${declaration.id}.parameters[${index}]`, true);
 		site(declaration.result, `${declaration.id}.result`, true);
 	}
 	reviewedSpecializations(document);

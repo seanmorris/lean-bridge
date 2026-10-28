@@ -70,6 +70,15 @@ const isIdentity = (ir, ref) => {
 	return resolved.kind === "named" && namedType(ir, resolved.id)?.representation === "identity";
 };
 
+const validateOptionalOrder = (parameters, path) => {
+	parameters.forEach((parameter, index) => {
+		if(parameter.optional && parameters.slice(index + 1).some(item => !item.optional))
+			fail("unsupported-nontrailing-optional-parameter", `${path}.${parameter.name} precedes a required positional argument`, {
+				path, parameter: parameter.name
+			});
+	});
+};
+
 const validateTypeRefCoverage = (ir, ref, path) => {
 	const resolved = resolveAlias(ir, ref);
 	if(resolved.kind !== "apply") return;
@@ -127,6 +136,7 @@ const validateCoverage = ir => {
 		if(type.kind === "alias") validateTypeRefCoverage(ir, type.target, type.id);
 		if(type.kind === "callback")
 		{
+			validateOptionalOrder(type.callable.parameters, type.id);
 			type.callable.parameters.forEach(parameter => validateTypeRefCoverage(ir, parameter.type, `${type.id}.${parameter.name}`));
 			validateTypeRefCoverage(ir, type.callable.result.type, `${type.id}.result`);
 		}
@@ -134,6 +144,9 @@ const validateCoverage = ir => {
 	const publicNames = new Map();
 	for(const declaration of ir.declarations)
 	{
+		validateOptionalOrder(declaration.parameters, declaration.id);
+		if(declaration.kind === "property" && declaration.parameters.some(parameter => parameter.optional))
+			fail("unsupported-property-optional", `${declaration.id} cannot omit a property assignment`);
 		if(declaration.typeParameters.length > 0)
 		{
 			fail("unsupported-generic-declaration", `${declaration.id} requires PHP generic specialization`, {
@@ -212,14 +225,23 @@ const collectTypeRefs = ir => {
 	return [...refs.values()];
 };
 
+const projectedTypeMatches = (projected, ref) => {
+	if(ref.kind === "primitive") return projected.binding === ref.name;
+	if(ref.kind === "named") return projected.binding === ref.id;
+	if(ref.kind === "parameter") return projected.binding === ref.id;
+	return projected.binding === ref.constructor
+		&& projected.arguments?.length === ref.arguments.length
+		&& ref.arguments.every((argument, index) => projectedTypeMatches(projected.arguments[index], argument));
+};
+
 const projectionForRef = (projection, ref) => {
 	const operationSites = projection.operations.flatMap(operation => [
 		operation.receiver
 		, ...operation.parameters
 		, operation.result
 	]).filter(Boolean);
-	const matching = operationSites.find(site => JSON.stringify(site.type.binding) === JSON.stringify(ref.id ?? ref.name));
-	if(matching && ref.kind !== "apply") return matching.type;
+	const matching = operationSites.find(site => projectedTypeMatches(site.type, ref));
+	if(matching) return matching.type;
 	const type = ref.kind === "named" ? projection.types.find(item => item.id === ref.id) : null;
 	if(type?.projection === "value-object" || type?.projection === "resource-object")
 	{
@@ -238,7 +260,7 @@ const projectionForRef = (projection, ref) => {
 	}
 	if(ref.kind === "apply")
 	{
-		const field = projection.types.flatMap(item => item.fields ?? []).find(item => item.type.binding === ref.constructor);
+		const field = projection.types.flatMap(item => item.fields ?? []).find(item => projectedTypeMatches(item.type, ref));
 		if(field) return field.type;
 	}
 	fail("missing-type-projection", "PHP generator cannot resolve a projected type", { ref });
@@ -246,6 +268,7 @@ const projectionForRef = (projection, ref) => {
 
 const phpType = (projection, ref, { role = "parameter", ownership = "copy" } = {}) => {
 	const resolved = projectionForRef(projection, ref);
+	if(role === "parameter" && resolved.phpType === "void") return "null";
 	if(resolved.kind === "callback" || ref.kind === "named" && projection.types.find(type => type.id === ref.id)?.projection === "invokable-object")
 	{
 		return role === "result" && ownership !== "copy" ? `\\${resolved.class ?? projection.types.find(type => type.id === ref.id).fqcn}` : "callable";
@@ -256,17 +279,46 @@ const phpType = (projection, ref, { role = "parameter", ownership = "copy" } = {
 const phpDocType = (projection, ref) => projectionForRef(projection, ref).phpDocType;
 const validatorName = ref => `assert${typeKey(ref)}`;
 
-const phpDefault = value => {
-	if(value === null) return "null";
-	if(typeof value === "boolean") return value ? "true" : "false";
-	if(typeof value === "number") return String(value);
-	if(typeof value === "string") return phpString(value);
-	fail("unsupported-default", "PHP generator supports scalar defaults", { value });
+const nullable = type => type === "null" || type.split("|").includes("null") ? type : `${type}|null`;
+
+const phpDefault = (ir, projection, value, type) => {
+	const resolved = resolveAlias(ir, type);
+	if(value.kind === "unit") return { signature: "null" };
+	if(value.kind === "boolean") return { signature: value.value ? "true" : "false" };
+	if(value.kind === "string" || value.kind === "char") return { signature: phpString(value.value) };
+	if(value.kind === "integer")
+	{
+		const projected = projectionForRef(projection, resolved);
+		return projected.phpType === "\\Brick\\Math\\BigInteger"
+			? { signature: "null", omitted: `\\Brick\\Math\\BigInteger::of(${phpString(value.value)})` }
+			: { signature: value.value };
+	}
+	if(value.kind === "option-none") return { signature: "null" };
+	if(value.kind === "option-some")
+	{
+		if(resolved.kind !== "apply" || resolved.constructor !== "option")
+			fail("unsupported-default", "PHP Option.some default has no Option type", { value, type });
+		const child = phpDefault(ir, projection, value.value, resolved.arguments[0]);
+		return child.omitted ? { signature: "null", omitted: child.omitted } : child;
+	}
+	fail("unsupported-default", "PHP generator cannot lower the canonical default", { value, type });
 };
 
-const parameterCode = (projection, parameter) => {
+const parameterDefault = (ir, projection, parameter) => parameter.optional
+	? phpDefault(ir, projection, parameter.default, parameter.type) : null;
+
+const parameterCode = (ir, projection, parameter) => {
 	const type = phpType(projection, parameter.type, { role: "parameter", ownership: parameter.ownership });
-	return `${type} $${parameter.name}${parameter.optional ? ` = ${phpDefault(parameter.default)}` : ""}`;
+	const value = parameterDefault(ir, projection, parameter);
+	return `${value?.omitted ? nullable(type) : type} $${parameter.name}${value ? ` = ${value.signature}` : ""}`;
+};
+
+const emitPhpDefaults = (lines, ir, projection, parameters, indent) => {
+	parameters.forEach((parameter, index) => {
+		const value = parameterDefault(ir, projection, parameter);
+		if(value?.omitted)
+			lines.push(`${indent}if (\\func_num_args() <= ${index}) { $${parameter.name} = ${value.omitted}; }`);
+	});
 };
 
 const resultType = (projection, operation) => operation.delivery.phpType;
@@ -301,7 +353,11 @@ const emitValidators = (ir, projection) => {
 		const method = validatorName(ref);
 		if(ref.kind === "primitive")
 		{
-			if(ref.name === "unit") continue;
+			if(ref.name === "unit")
+			{
+				lines.push(`    public static function ${method}(null $value, string $path): void`, "    {", "    }", "");
+				continue;
+			}
 			lines.push(`    public static function ${method}(${projected.phpType} $value, string $path): void`, "    {");
 			if(projected.validation?.kind === "decimal-integer-range")
 			{
@@ -788,7 +844,8 @@ const emitResource = (ir, projection, type, projected) => {
 	lines.push(...docBlock(type.documentation, propertyTags), `final class ${type.name}`, "{", "    private Identity $identity;", "    private bool $closed;", "");
 	if(!constructor) fail("missing-constructor", `${type.id} has no generated PHP constructor`);
 	const declaration = ir.declarations.find(item => item.id === constructor.id);
-	lines.push(`    public function __construct(${declaration.parameters.map(parameter => parameterCode(projection, parameter)).join(", ")})`, "    {");
+	lines.push(`    public function __construct(${declaration.parameters.map(parameter => parameterCode(ir, projection, parameter)).join(", ")})`, "    {");
+	emitPhpDefaults(lines, ir, projection, declaration.parameters, "        ");
 	for(const parameter of declaration.parameters)
 	{
 		lines.push(`        Validators::${validatorName(resolveAlias(ir, parameter.type))}($${parameter.name}, ${phpString(`${declaration.name}.${parameter.name}`)});`);
@@ -806,7 +863,8 @@ const emitResource = (ir, projection, type, projected) => {
 	for(const operation of operations.filter(item => item.public.kind === "method"))
 	{
 		const method = ir.declarations.find(item => item.id === operation.id);
-		lines.push(...docBlock(method.documentation), `    public function ${method.name}(${method.parameters.map(parameter => parameterCode(projection, parameter)).join(", ")}): ${resultType(projection, operation)}`, "    {", "        $this->requireOpen();");
+		lines.push(...docBlock(method.documentation), `    public function ${method.name}(${method.parameters.map(parameter => parameterCode(ir, projection, parameter)).join(", ")}): ${resultType(projection, operation)}`, "    {", "        $this->requireOpen();");
+		emitPhpDefaults(lines, ir, projection, method.parameters, "        ");
 		for(const parameter of method.parameters) lines.push(`        Validators::${validatorName(resolveAlias(ir, parameter.type))}($${parameter.name}, ${phpString(`${method.name}.${parameter.name}`)});`);
 		const args = ["$this->identity", ...method.parameters.map(parameter => transportArgument(ir, parameter))];
 		lines.push(...operationBody(ir, projection, operation, `Runtime::transport()->${operation.transportMethod}(${args.join(", ")})`), "    }", "");
@@ -896,7 +954,8 @@ const emitCallback = (ir, projection, type) => {
 	const lines = fileHeader(projection.package.namespace, projection.bindingIrSha256, imports);
 	const call = projection.lifecycle.find(operation => operation.kind === "callable-call" && operation.type === type.id);
 	const close = projection.lifecycle.find(operation => operation.kind === "callable-close" && operation.type === type.id);
-	lines.push(...docBlock(type.documentation), `final class ${type.name}`, "{", "    private Identity $identity;", "    private bool $closed;", "", "    private function __construct()", "    {", "    }", "", `    public function __invoke(${type.callable.parameters.map(parameter => parameterCode(projection, parameter)).join(", ")}): ${call.delivery.phpType}`, "    {", "        $this->requireOpen();");
+	lines.push(...docBlock(type.documentation), `final class ${type.name}`, "{", "    private Identity $identity;", "    private bool $closed;", "", "    private function __construct()", "    {", "    }", "", `    public function __invoke(${type.callable.parameters.map(parameter => parameterCode(ir, projection, parameter)).join(", ")}): ${call.delivery.phpType}`, "    {", "        $this->requireOpen();");
+	emitPhpDefaults(lines, ir, projection, type.callable.parameters, "        ");
 	for(const parameter of type.callable.parameters) lines.push(`        Validators::${validatorName(resolveAlias(ir, parameter.type))}($${parameter.name}, ${phpString(`${type.name}.${parameter.name}`)});`);
 	const expression = `Runtime::transport()->${call.transportMethod}($this->identity${type.callable.parameters.length ? ", " : ""}${type.callable.parameters.map(parameter => `$${parameter.name}`).join(", ")})`;
 	lines.push(
@@ -952,14 +1011,15 @@ const emitFunctions = (ir, projection) => {
 	for(const operation of projection.operations.filter(item => item.public.kind === "function"))
 	{
 		const declaration = ir.declarations.find(item => item.id === operation.id);
-		lines.push(...docBlock(declaration.documentation), `function ${declaration.name}(${declaration.parameters.map(parameter => parameterCode(projection, parameter)).join(", ")}): ${resultType(projection, operation)}`, "{");
+		lines.push(...docBlock(declaration.documentation), `function ${declaration.name}(${declaration.parameters.map(parameter => parameterCode(ir, projection, parameter)).join(", ")}): ${resultType(projection, operation)}`, "{");
+		emitPhpDefaults(lines, ir, projection, declaration.parameters, "    ");
 		for(const parameter of declaration.parameters) lines.push(`    Validators::${validatorName(resolveAlias(ir, parameter.type))}($${parameter.name}, ${phpString(`${declaration.name}.${parameter.name}`)});`);
 		lines.push(...operationBody(ir, projection, operation, `Runtime::transport()->${operation.transportMethod}(${declaration.parameters.map(parameter => transportArgument(ir, parameter)).join(", ")})`, ""), "}", "");
 	}
 	return lines.join("\n");
 };
 
-const stubParameter = (projection, parameter) => parameterCode(projection, parameter);
+const stubParameter = (ir, projection, parameter) => parameterCode(ir, projection, parameter);
 
 const emitStub = (ir, projection, support) => {
 	const lines = ["<?php", `// Generated from Binding IR SHA-256 ${projection.bindingIrSha256}.`, `namespace ${projection.package.namespace};`, ""];
@@ -991,23 +1051,23 @@ const emitStub = (ir, projection, support) => {
       const typeName = group.getter?.result.type.phpDocType ?? group.setter.parameters[0].type.phpDocType;
       return `@property${group.setter ? "" : "-read"} ${typeName} $${name}`;
 		});
-		lines.push(...docBlock(type.documentation, propertyTags), `final class ${type.name}`, "{", `    public function __construct(${constructorDeclaration.parameters.map(parameter => stubParameter(projection, parameter)).join(", ")}) {}`);
+		lines.push(...docBlock(type.documentation, propertyTags), `final class ${type.name}`, "{", `    public function __construct(${constructorDeclaration.parameters.map(parameter => stubParameter(ir, projection, parameter)).join(", ")}) {}`);
 		for(const operation of operations.filter(item => item.public.kind === "method"))
 		{
 			const declaration = ir.declarations.find(item => item.id === operation.id);
-			lines.push(`    public function ${declaration.name}(${declaration.parameters.map(parameter => stubParameter(projection, parameter)).join(", ")}): ${resultType(projection, operation)} {}`);
+			lines.push(`    public function ${declaration.name}(${declaration.parameters.map(parameter => stubParameter(ir, projection, parameter)).join(", ")}): ${resultType(projection, operation)} {}`);
 		}
 		lines.push("    public function close(): void {}", "}", "");
 	}
 	for(const type of ir.types.filter(item => item.kind === "callback"))
 	{
 		const projected = projection.types.find(item => item.id === type.id);
-		lines.push(...docBlock(type.documentation), `final class ${type.name}`, "{", "    private function __construct() {}", `    public function __invoke(${type.callable.parameters.map(parameter => stubParameter(projection, parameter)).join(", ")}): ${projected.delivery.phpType} {}`, "    public function close(): void {}", "}", "");
+		lines.push(...docBlock(type.documentation), `final class ${type.name}`, "{", "    private function __construct() {}", `    public function __invoke(${type.callable.parameters.map(parameter => stubParameter(ir, projection, parameter)).join(", ")}): ${projected.delivery.phpType} {}`, "    public function close(): void {}", "}", "");
 	}
 	for(const operation of projection.operations.filter(item => item.public.kind === "function"))
 	{
 		const declaration = ir.declarations.find(item => item.id === operation.id);
-		lines.push(...docBlock(declaration.documentation), `function ${declaration.name}(${declaration.parameters.map(parameter => stubParameter(projection, parameter)).join(", ")}): ${resultType(projection, operation)} {}`, "");
+		lines.push(...docBlock(declaration.documentation), `function ${declaration.name}(${declaration.parameters.map(parameter => stubParameter(ir, projection, parameter)).join(", ")}): ${resultType(projection, operation)} {}`, "");
 	}
 	return lines.join("\n");
 };

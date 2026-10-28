@@ -186,11 +186,69 @@ test("every generated PHP source file and the public stub pass the PHP parser", 
 }
 });
 
+test("canonical optional defaults remain parseable across PHP value projections", async () => {
+	const cases = [
+		{
+			name: "uint64"
+			, type: { kind: "primitive", name: "uint64" }
+			, default: { kind: "integer", value: "7" }
+			, signature: /__construct\(\\Brick\\Math\\BigInteger\|null \$value = null\)/u
+			, lowering: /func_num_args\(\) <= 0[^\n]+BigInteger::of\('7'\)/u
+		}
+		, {
+			name: "option-some"
+			, type: { kind: "apply", constructor: "option", arguments: [{ kind: "primitive", name: "uint32" }] }
+			, default: { kind: "option-some", value: { kind: "integer", value: "9" } }
+			, signature: /__construct\(int\|null \$value = 9\)/u
+		}
+		, {
+			name: "option-none"
+			, type: { kind: "apply", constructor: "option", arguments: [{ kind: "primitive", name: "uint32" }] }
+			, default: { kind: "option-none" }
+			, signature: /__construct\(int\|null \$value = null\)/u
+		}
+		, {
+			name: "unit"
+			, type: { kind: "primitive", name: "unit" }
+			, default: { kind: "unit" }
+			, signature: /__construct\(null \$value = null\)/u
+		}
+	];
+	const directory = await mkdtemp(join(tmpdir(), "lean-bridge-php-defaults-"));
+	try
+	{
+		for(const item of cases)
+		{
+			const ir = clone(alpha.bindingIr);
+			const constructor = ir.declarations.find(declaration => declaration.id === "lean:Alpha.box");
+			const read = ir.declarations.find(declaration => declaration.id === "lean:Alpha.Box.read");
+			constructor.parameters[0].type = item.type;
+			constructor.parameters[0].optional = true;
+			constructor.parameters[0].default = item.default;
+			read.result.type = item.type;
+			const files = generatePhpBindingPackage(ir);
+			assert.match(files["src/Box.php"], item.signature);
+			if(item.lowering) assert.match(files["src/Box.php"], item.lowering);
+			const root = join(directory, item.name);
+			await writePackage(root, files);
+			for(const path of await phpFiles(root)) await run("php", ["-l", path]);
+		}
+	}
+	finally
+	{ await rm(directory, { recursive: true, force: true }); }
+});
+
 test("generated PHP executes through ordinary values, functions, resources, and callables", async () => {
   const directory = await mkdtemp(join(tmpdir(), "lean-bridge-php-run-"));
   try
 {
-    await writePackage(directory, generatePhpBindingPackage(alpha.bindingIr));
+	const ir = clone(alpha.bindingIr);
+	const boxValue = ir.declarations.find(declaration => declaration.id === "lean:Alpha.box").parameters[0];
+	boxValue.optional = true;
+	boxValue.default = { kind: "integer", value: "7" };
+	const generated = generatePhpBindingPackage(ir);
+	assert.match(generated["src/Box.php"], /function __construct\(int \$value = 7\)/u);
+	await writePackage(directory, generated);
     await run("composer", ["dump-autoload", "--quiet", "--no-interaction"], { cwd: directory });
     await writeFile(join(directory, "FakeTransport.php"), `<?php
 declare(strict_types=1);
@@ -246,11 +304,16 @@ use function LeanAlpha\\withCallback;
 $transport = new FakeTransport();
 Runtime::install($transport);
 $box = new Box(41);
+$defaultBox = new Box();
+$nullRejected = false;
+try { new Box(null); } catch (\\TypeError) { $nullRejected = true; }
 $same = $box->identity();
 $payload = roundTrip(new Payload(false, 8, 'typed', Bytes::fromString("\\x00\\x7f\\xff"), [1, 5, 13]));
 $adder = makeAdder(2);
 $trace = [
     'read' => $box->read(),
+    'default' => $defaultBox->read(),
+    'nullRejected' => $nullRejected,
     'identity' => $same === $box,
     'payload' => [
         'enabled' => $payload->enabled,
@@ -264,6 +327,7 @@ $trace = [
 ];
 $adder->close();
 $box->close();
+$defaultBox->close();
 try {
     $box->read();
     $trace['disposed'] = false;
@@ -280,12 +344,14 @@ echo json_encode($trace, JSON_THROW_ON_ERROR);
     const { stdout } = await run("php", ["consumer.php"], { cwd: directory });
     assert.deepEqual(JSON.parse(stdout), {
       read: 41
+      , default: 7
+      , nullRejected: true
       , identity: true
       , payload: { enabled: true, count: 9, label: "typed", bytes: "007fff", values: [1, 5, 13] }
       , callback: 42
       , closure: 42
       , disposed: true
-      , runtime: { initializations: 1, boxDisposals: 1, transformDisposals: 1 }
+      , runtime: { initializations: 1, boxDisposals: 2, transformDisposals: 1 }
     });
     await writeFile(join(directory, "poison.php"), `<?php
 declare(strict_types=1);

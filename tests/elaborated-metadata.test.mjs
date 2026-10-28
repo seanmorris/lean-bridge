@@ -20,7 +20,10 @@ import { assertJsonSchema } from "./helpers/json-schema.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_ELABORATED_METADATA_TEST === "1";
 const engineRoot = process.cwd();
-const leanPrefix = async () => (await processBuildRunner.capture({ command: join(engineRoot, ".toolchains/elan/bin/lean"), args: ["--print-prefix"], cwd: engineRoot })).stdout.trim();
+const leanCommand = process.env.LEAN_BRIDGE_LEAN
+	?? (process.env.LEAN_BRIDGE_LEAN_PREFIX ? join(process.env.LEAN_BRIDGE_LEAN_PREFIX, "bin/lean")
+		: join(engineRoot, ".toolchains/elan/bin/lean"));
+const leanPrefix = async () => (await processBuildRunner.capture({ command: leanCommand, args: ["--print-prefix"], cwd: engineRoot })).stdout.trim();
 const sample = () => {
 	const selection = { modules: ["Sample"], exportModules: ["Sample"], exports: ["Sample.keep"], resources: [], arities: [] };
 	const source = { name: "Sample", sourcePath: "root/Sample.lean", sourceSha256: "a".repeat(64), interfaceSha256: "b".repeat(64) };
@@ -107,6 +110,37 @@ test("compiler metadata erases an exact closed True proof parameter without chan
 		change(invalid.modules[0].declarations[0].projection.erasedProofs[0]);
 		assert.throws(() => validateElaboratedMetadata(invalid, request)
 			, { code: "invalid-elaborated-metadata" });
+	}
+});
+
+test("compiler-owned optional defaults remain typed and distinct from no default", async () => {
+	const { request, report } = sample();
+	const parameter = report.modules[0].declarations[0].projection.parameters[0];
+	parameter.optional = true;
+	parameter.default = { kind: "integer", value: "7" };
+	assert.equal(validateElaboratedMetadata(report, request), true);
+	await assertJsonSchema("elaborated-export-metadata", report);
+	const project = { name: "sample", version: "1.0.0", toolchain: request.metadata.toolchain };
+	const analysis = projectElaboratedMetadata({ project, inputs: [], sourceTreeSha256: "e".repeat(64) }
+		, [{ module: "Sample", path: "Sample.lean" }], { request, metadata: report });
+	assert.deepEqual(analysis.bindingIr.document.declarations[0].parameters[0], {
+		name: "arg0"
+		, type: { kind: "primitive", name: "uint32" }
+		, ownership: "copy"
+		, lifetime: null
+		, mutability: "immutable"
+		, optional: true
+		, default: { kind: "integer", value: "7" }
+	});
+	for(const change of [
+		value => { value.default = null; }
+		, value => { value.default = { kind: "integer", value: "-1" }; }
+		, value => { value.default = { kind: "option-none" }; }
+		, value => { delete value.optional; }
+	]) {
+		const invalid = structuredClone(report);
+		change(invalid.modules[0].declarations[0].projection.parameters[0]);
+		assert.throws(() => validateElaboratedMetadata(invalid, request), { code: "invalid-elaborated-metadata" });
 	}
 });
 
@@ -590,6 +624,41 @@ end Shop
 	assert.equal(declarations.find(item => item.identity === "Shop.proofValue").projection.reason
 		, "proof-only");
 	await assertJsonSchema("elaborated-export-metadata", report.elaboration.metadata);
+});
+
+test("fresh Lean preserves literal defaults and distinguishes Option.none", { skip: !enabled }, async t => {
+	const context = await lakeWorkspaceFixture(t);
+	await saveLakeFile(context.root, "Shop.lean", `namespace Shop
+def add (base : UInt32) (increment : UInt32 := 7) : UInt32 := base + increment
+def choose (value : Option UInt32 := none) : UInt32 := value.getD 11
+def chooseSome (value : Option UInt32 := some 5) : UInt32 := value.getD 11
+def unitDefault (value : Unit := ()) : UInt32 := if value == () then 1 else 0
+def namedStep : UInt32 := 7
+def refused (value : UInt32 := namedStep) : UInt32 := value
+end Shop
+`);
+	await saveLakeFile(context.root, "lean-bridge.exports.json", canonicalJson({
+		schemaVersion: 1, modules: ["Shop"]
+		, exports: ["add", "choose", "chooseSome", "unitDefault", "refused"].map(name => `Shop.${name}`)
+	}));
+	const report = await inspect(context);
+	const declarations = report.elaboration.metadata.modules[0].declarations;
+	const parameter = name => declarations.find(item => item.identity === `Shop.${name}`).projection.parameters.at(-1);
+	assert.deepEqual(parameter("add").default, { kind: "integer", value: "7" });
+	assert.deepEqual(parameter("choose").default, { kind: "option-none" });
+	assert.deepEqual(parameter("chooseSome").default, { kind: "option-some", value: { kind: "integer", value: "5" } });
+	assert.deepEqual(parameter("unitDefault").default, { kind: "unit" });
+	for(const name of ["add", "choose", "chooseSome", "unitDefault"])
+		assert.equal(parameter(name).optional, true, name);
+	assert.equal(declarations.find(item => item.identity === "Shop.refused").projection.status, "unsupported");
+	assert.match(declarations.find(item => item.identity === "Shop.refused").projection.expression, /closed nonnegative literals/u);
+	const binding = new Map(report.bindingIr.document.declarations.map(item => [item.name, item]));
+	assert.deepEqual(binding.get("add").parameters[1].default, { kind: "integer", value: "7" });
+	assert.deepEqual(binding.get("choose").parameters[0].default, { kind: "option-none" });
+	assert.deepEqual(binding.get("chooseSome").parameters[0].default, { kind: "option-some", value: { kind: "integer", value: "5" } });
+	assert.deepEqual(binding.get("unitDefault").parameters[0].default, { kind: "unit" });
+	await assertJsonSchema("elaborated-export-metadata", report.elaboration.metadata);
+	await assertJsonSchema("binding-ir", report.bindingIr.document);
 });
 
 test("namespace collisions remain explicit adapter decisions instead of merged host exports", { skip: !enabled }, async t => {

@@ -75,12 +75,19 @@ test("generic values fail without runtime specialization; options are projected"
   assert.doesNotThrow(() => generateJavaScriptPackage(option));
 });
 
-test("optional arguments and ambiguous overload groups fail before generation", () => {
+test("trailing optional arguments generate while nontrailing and ambiguous overloads fail", () => {
   const optional = clone(alpha.bindingIr);
-  const parameter = roundTrip(optional).parameters[0];
+  const parameter = optional.declarations.find(declaration => declaration.id === "lean:Alpha.box").parameters[0];
   parameter.optional = true;
-  parameter.default = null;
-  expectGap(optional, "unsupported-optional-parameter");
+  parameter.default = { kind: "integer", value: "7" };
+  assert.equal(analyzeJavaScriptCoverage(optional).supported, true);
+  assert.doesNotThrow(() => generateJavaScriptPackage(optional));
+
+  const nontrailing = clone(alpha.bindingIr);
+  const first = nontrailing.declarations.find(declaration => declaration.id === "lean:Alpha.withCallback").parameters[0];
+  first.optional = true;
+  first.default = { kind: "integer", value: "7" };
+  expectGap(nontrailing, "unsupported-nontrailing-optional-parameter");
 
   const overloaded = clone(alpha.bindingIr);
   const declaration = structuredClone(roundTrip(overloaded));

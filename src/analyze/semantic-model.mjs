@@ -120,7 +120,10 @@ const lowerSemanticModel = ({ metadata, request, component, elaborationSha256, i
 	const callbackFailure = { mode: "declared", errors: ["error:native-callback"], unexpected: "poison-runtime" };
 	const site = (type, result = false, decision) => ({ type: reference(type, decision?.callable, result), ...exportContractOwnership(type, result)
 		, ...decision ? { ownership: decision.ownership, lifetime: structuredClone(decision.lifetime) } : {} });
-	const parameter = (type, index, decision) => ({ name: `arg${index}`, ...site(type, false, decision), mutability: "immutable", optional: false, default: null });
+	const parameter = (type, index, decision, optional = false, defaultValue = null) => ({
+		name: `arg${index}`, ...site(type, false, decision), mutability: "immutable"
+		, optional, default: defaultValue
+	});
 	// A callback at a parameter site is the host's: Lean produces its arguments and the
 	// host its reply. A callback at a result site is a leased closure with the opposite
 	// direction. Checked-record trees record that direction; Subtype leaves carry it.
@@ -290,7 +293,9 @@ const lowerSemanticModel = ({ metadata, request, component, elaborationSha256, i
 			, result: refinement(projection.result, hasSubtype(projection.result), false, new Map(), new Set(), 0, true) };
 		const hasRefinements = refinements.result !== null || refinements.parameters.some(value => value !== null);
 		const hasCallback = projection.parameters.some(parameter => parameter.type.kind === "callback");
-		const parameters = projection.parameters.map((p, i) => parameter(p.type, i, contract?.parameters?.[i]));
+		const parameters = projection.parameters.map((p, i) => parameter(
+			p.type, i, contract?.parameters?.[i], p.optional === true, p.default ?? null
+		));
 		const receiver = contract?.receiver ? (({ type, ownership, lifetime, mutability }) =>
 			({ type, ownership, lifetime, mutability }))(parameters.shift()) : null;
 		return { id: `lean:${item.identity}`, name: item.identity.split(".").at(-1)

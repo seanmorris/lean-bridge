@@ -18,6 +18,7 @@ import { analyzeJavaScriptCoverage } from "./coverage.mjs";
 import { sha256 } from "../../capsule/node.mjs";
 import { emitCopiedValidators } from "./copied-validators.mjs";
 import { compileOwnedJavaScriptPackageModel, renderOwnedJavaScriptPackageLayout } from "./owned-package.mjs";
+import { emitJavaScriptDefaults } from "./default-value.mjs";
 
 const fail = (code, message, details = {}) => {
 	throw new JavaScriptProjectionError(code, message, details);
@@ -381,6 +382,7 @@ const emitDeclarations = (ir, typeMap) => {
 		output.push(docComment(type.documentation));
 		output.push(`export class ${type.name} {`);
 		output.push(`  constructor(${constructor.parameters.map(parameter => parameter.name).join(", ")}) {`);
+		emitJavaScriptDefaults(output, constructor.parameters, typeMap, "    ");
 		constructor.parameters.forEach(parameter => {
       output.push(
         `    validate.${validatorName(parameter.type, typeMap)}(${parameter.name}, ${quote(`${constructor.name}.${parameter.name}`)});`,
@@ -395,6 +397,7 @@ const emitDeclarations = (ir, typeMap) => {
 		{
 			const asyncPrefix = method.resultMode === "promise" ? "async " : "";
 			output.push(`  static ${asyncPrefix}${method.name}(${method.parameters.map(parameter => parameter.name).join(", ")}) {`);
+			emitJavaScriptDefaults(output, method.parameters, typeMap, "    ");
 			method.parameters.forEach(parameter => {
         output.push(
           `    validate.${validatorName(parameter.type, typeMap)}(${parameter.name}, ${quote(`${method.name}.${parameter.name}`)});`,
@@ -419,6 +422,7 @@ const emitDeclarations = (ir, typeMap) => {
 		{
 			const asyncPrefix = method.resultMode === "promise" ? "async " : "";
 			output.push(`  ${asyncPrefix}${method.name}(${method.parameters.map(parameter => parameter.name).join(", ")}) {`);
+			emitJavaScriptDefaults(output, method.parameters, typeMap, "    ");
 			method.parameters.forEach(parameter => {
         output.push(
           `    validate.${validatorName(parameter.type, typeMap)}(${parameter.name}, ${quote(`${method.name}.${parameter.name}`)});`,
@@ -590,6 +594,7 @@ const emitDeclarations = (ir, typeMap) => {
 		output.push(
 			`export ${asyncPrefix}function ${declaration.name}(${declaration.parameters.map(parameter => parameter.name).join(", ")}) {`,
 		);
+		emitJavaScriptDefaults(output, declaration.parameters, typeMap, "  ");
 		declaration.parameters.forEach((parameter, index) => {
       output.push(
         `  validate.${validatorName(parameter.type, typeMap)}(${parameter.name}, ${quote(`${declaration.name}.${parameter.name}`)});`,
