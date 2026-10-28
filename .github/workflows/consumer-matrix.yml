@@ -4684,6 +4684,21 @@ jobs:
           if-no-files-found: error
           overwrite: true
           retention-days: 30
+      - name: Qualify direct proof erasure in prepared managed packages
+        if: matrix.profile == 'dotnet' || matrix.profile == 'jvm'
+        id: direct_proof_managed
+        continue-on-error: true
+        timeout-minutes: 100
+        run: bash scripts/run-direct-proof-erasure-managed-ci.sh "${{ matrix.profile }}"
+      - name: Preserve direct proof-erasure managed acceptance
+        if: always() && (matrix.profile == 'dotnet' || matrix.profile == 'jvm')
+        uses: actions/upload-artifact@v7
+        with:
+          name: direct-proof-erasure-managed-${{ matrix.profile }}-${{ github.sha }}
+          path: build/direct-proof-erasure-managed-ci/${{ matrix.profile }}/
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
       - name: Record managed consumer observations
         if: always()
         shell: bash
@@ -4723,7 +4738,8 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_GRAPH_COMPOSITION_TEST=1 node --test tests/dotnet-graph-package.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_GRAPH_REPRODUCIBILITY_TEST=1 node --test tests/dotnet-graph-package.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_GRAPH_CONFLICT_TEST=1 node --test tests/dotnet-graph-package.test.mjs"
-              if [ "${{ steps.ordinary_dotnet.outcome }}" != success ] || [ "${{ steps.type_corpus_dotnet.outcome }}" != success ]; then
+              consumer_command="$consumer_command && bash scripts/run-direct-proof-erasure-managed-ci.sh dotnet"
+              if [ "${{ steps.ordinary_dotnet.outcome }}" != success ] || [ "${{ steps.type_corpus_dotnet.outcome }}" != success ] || [ "${{ steps.direct_proof_managed.outcome }}" != success ]; then
                 test_result=failed
                 executed=false
               fi
@@ -4755,7 +4771,8 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_JVM_COLLECTION_PREFLIGHT=1 LEAN_BRIDGE_JVM_COLLECTION_PROFILES=java,kotlin node --test tests/jvm-collection-callers.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_JVM_COLLECTION_TEST=1 LEAN_BRIDGE_JVM_COLLECTION_PROFILES=java,kotlin node --test tests/jvm-collections.test.mjs"
               consumer_command="$consumer_command && bash scripts/run-nominal-subtype-jvm-ci.sh \"$JAVA_HOME/bin/java\" \"$JAVA_HOME/bin/javac\" \"$PWD/build/kotlin-tools/kotlinc/bin/kotlinc\""
-              if [ "${{ steps.ordinary_jvm.outcome }}" != success ] || [ "${{ steps.type_corpus_jvm.outcome }}" != success ] || [ "${{ steps.nominal_jvm.outcome }}" != success ]; then
+              consumer_command="$consumer_command && bash scripts/run-direct-proof-erasure-managed-ci.sh jvm"
+              if [ "${{ steps.ordinary_jvm.outcome }}" != success ] || [ "${{ steps.type_corpus_jvm.outcome }}" != success ] || [ "${{ steps.nominal_jvm.outcome }}" != success ] || [ "${{ steps.direct_proof_managed.outcome }}" != success ]; then
                 test_result=failed
                 executed=false
               fi
@@ -4803,7 +4820,7 @@ jobs:
           overwrite: true
           retention-days: 30
       - name: Enforce managed consumer support
-        if: always() && (steps.consumer.outcome != 'success' || (matrix.profile == 'dotnet' && (steps.ordinary_dotnet.outcome != 'success' || steps.type_corpus_dotnet.outcome != 'success')) || (matrix.profile == 'jvm' && (steps.ordinary_jvm.outcome != 'success' || steps.type_corpus_jvm.outcome != 'success' || steps.nominal_jvm.outcome != 'success')) || (matrix.profile == 'ruby' && (steps.ordinary_ruby.outcome != 'success' || steps.type_corpus_ruby.outcome != 'success')))
+        if: always() && (steps.consumer.outcome != 'success' || (matrix.profile == 'dotnet' && (steps.ordinary_dotnet.outcome != 'success' || steps.type_corpus_dotnet.outcome != 'success' || steps.direct_proof_managed.outcome != 'success')) || (matrix.profile == 'jvm' && (steps.ordinary_jvm.outcome != 'success' || steps.type_corpus_jvm.outcome != 'success' || steps.nominal_jvm.outcome != 'success' || steps.direct_proof_managed.outcome != 'success')) || (matrix.profile == 'ruby' && (steps.ordinary_ruby.outcome != 'success' || steps.type_corpus_ruby.outcome != 'success')))
         run: exit 1
 
   owned-jvm-values:
