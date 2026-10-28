@@ -1,0 +1,164 @@
+{
+  "id": 122722313971,
+  "run_id": 40660579136,
+  "workflow_name": "Generic Subtypes in Python, Ruby and Rust",
+  "head_branch": "codex/vo2167-signature-completion",
+  "run_url": "https://api.github.com/repos/seanmorris/lean-bridge/actions/runs/40660579136",
+  "run_attempt": 1,
+  "node_id": "CR_kwDOTyhIvM8AAAAcktHm8w",
+  "head_sha": "6e0d941e796db8813ee58bc8fda00e126e0a232c",
+  "url": "https://api.github.com/repos/seanmorris/lean-bridge/actions/jobs/122722313971",
+  "html_url": "https://github.com/seanmorris/lean-bridge/actions/runs/40660579136/job/122722313971",
+  "status": "completed",
+  "conclusion": "success",
+  "created_at": "2026-10-28T08:57:53Z",
+  "started_at": "2026-10-28T08:57:55Z",
+  "completed_at": "2026-10-28T09:14:56Z",
+  "name": "Ordinary and reviewed generic Subtypes on Python 3.11 and 3.12",
+  "steps": [
+    {
+      "name": "Set up job",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 1,
+      "started_at": "2026-10-28T08:57:56Z",
+      "completed_at": "2026-10-28T08:57:57Z"
+    },
+    {
+      "name": "Free hosted runner disk before checkout",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 2,
+      "started_at": "2026-10-28T08:57:57Z",
+      "completed_at": "2026-10-28T08:59:28Z"
+    },
+    {
+      "name": "Check out the exact revision",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 3,
+      "started_at": "2026-10-28T08:59:28Z",
+      "completed_at": "2026-10-28T09:07:43Z"
+    },
+    {
+      "name": "Install Node.js",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 4,
+      "started_at": "2026-10-28T09:07:43Z",
+      "completed_at": "2026-10-28T09:07:44Z"
+    },
+    {
+      "name": "Select Python 3.11",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 5,
+      "started_at": "2026-10-28T09:07:44Z",
+      "completed_at": "2026-10-28T09:07:45Z"
+    },
+    {
+      "name": "Select Python 3.12",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 6,
+      "started_at": "2026-10-28T09:07:45Z",
+      "completed_at": "2026-10-28T09:07:45Z"
+    },
+    {
+      "name": "Bound apt network waits",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 7,
+      "started_at": "2026-10-28T09:07:45Z",
+      "completed_at": "2026-10-28T09:07:45Z"
+    },
+    {
+      "name": "Install compiler and package dependencies",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 8,
+      "started_at": "2026-10-28T09:07:45Z",
+      "completed_at": "2026-10-28T09:07:54Z"
+    },
+    {
+      "name": "Install dependencies and the pinned Lean compiler",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 9,
+      "started_at": "2026-10-28T09:07:54Z",
+      "completed_at": "2026-10-28T09:08:11Z"
+    },
+    {
+      "name": "Execute installed Python acceptance",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 10,
+      "started_at": "2026-10-28T09:08:11Z",
+      "completed_at": "2026-10-28T09:14:49Z"
+    },
+    {
+      "name": "Preserve complete and partial Python records",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 11,
+      "started_at": "2026-10-28T09:14:49Z",
+      "completed_at": "2026-10-28T09:14:54Z"
+    },
+    {
+      "name": "Enforce installed Python acceptance",
+      "status": "completed",
+      "conclusion": "skipped",
+      "number": 12,
+      "started_at": "2026-10-28T09:14:54Z",
+      "completed_at": "2026-10-28T09:14:54Z"
+    },
+    {
+      "name": "Post Select Python 3.12",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 21,
+      "started_at": "2026-10-28T09:14:54Z",
+      "completed_at": "2026-10-28T09:14:54Z"
+    },
+    {
+      "name": "Post Select Python 3.11",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 22,
+      "started_at": "2026-10-28T09:14:54Z",
+      "completed_at": "2026-10-28T09:14:54Z"
+    },
+    {
+      "name": "Post Install Node.js",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 23,
+      "started_at": "2026-10-28T09:14:54Z",
+      "completed_at": "2026-10-28T09:14:54Z"
+    },
+    {
+      "name": "Post Check out the exact revision",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 24,
+      "started_at": "2026-10-28T09:14:54Z",
+      "completed_at": "2026-10-28T09:14:55Z"
+    },
+    {
+      "name": "Complete job",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 25,
+      "started_at": "2026-10-28T09:14:55Z",
+      "completed_at": "2026-10-28T09:14:55Z"
+    }
+  ],
+  "check_run_url": "https://api.github.com/repos/seanmorris/lean-bridge/check-runs/122722313971",
+  "labels": [
+    "ubuntu-24.04"
+  ],
+  "runner_id": 1000069314,
+  "runner_name": "GitHub Actions 1000069314",
+  "runner_group_id": 0,
+  "runner_group_name": "GitHub Actions"
+}

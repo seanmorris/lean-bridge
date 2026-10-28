@@ -1,0 +1,177 @@
+/**
+ * Generate ordinary C# APIs backed by the checked native copied-value ABI.
+ *
+ * @file
+ */
+import { hashBindingIr } from "../../binding-ir/canonical.mjs";
+import { verifiedDotnetAssets } from "./verified-assets.mjs";
+import { compileCopiedDotnetModel } from "./copied-model.mjs";
+import { copiedConversions, copiedNativeTypes, copiedScope, copiedCompoundTypes } from "./copied-conversions.mjs";
+import { dotnetValue, dotnetResult, dotnetNativeCall, dotnetCallableTypes, dotnetCallableState, dotnetCallableSupport, dotnetCallableImports, dotnetClosurePublic } from "./callables.mjs";
+import { dotnetCopiedAliases, dotnetAliasCatalogDocs, dotnetAliasSiteDocs, dotnetAliasReadme } from "./copied-aliases.mjs";
+import { nativeFinSummary, nativeFinContainerNote, nativeRefinementReadme } from "../native/fin-refinements.mjs";
+
+const finBounds = (fn, types) => nativeFinSummary(fn.declaration, fn.parameters.map(parameter => parameter.name), types);
+const finRemarks = (fn, types) => {
+	const bounds = finBounds(fn, types);
+	return bounds ? `    /// <remarks>Checked Lean Fin bounds: ${bounds.replaceAll("<", "&lt;")}.</remarks>\n` : "";
+};
+const parameters = (model, fn) => fn.declaration.parameters.map((site, index) => `${model.publicType(dotnetValue(model, site.type))} @${fn.parameters[index].name}`).join(", ");
+const args = fn => fn.parameters.map(parameter => `@${parameter.name}`).join(", ");
+const returnsUnit = fn => fn.resultType === "void";
+const resultType = (model, fn) => dotnetResult(model, dotnetValue(model, fn.declaration.result.type));
+const recordEquality = (name, fields) => `
+{
+    public bool Equals(${name}? other) => other is not null${fields.map(field => `
+        && global::System.Collections.StructuralComparisons.StructuralEqualityComparer.Equals(${field.publicName}, other.${field.publicName})`).join("")};
+    public override int GetHashCode()
+    {
+        var hash = new global::System.HashCode();
+        hash.Add(typeof(${name}));
+${fields.map(field => `        hash.Add(global::System.Collections.StructuralComparisons.StructuralEqualityComparer.GetHashCode(${field.publicName}!));`).join("\n")}
+        return hash.ToHashCode();
+    }
+}`;
+
+const loader = evidence => `    static Native() => NativeLibrary.SetDllImportResolver(typeof(Native).Assembly, (name, assembly, searchPath) => name == Library ? Assets.Handle : 0);
+    internal static void EnsureProcess() => Assets.EnsureProcess();
+    private static class Assets
+    {
+${verifiedDotnetAssets(evidence)}
+    }`;
+
+const runtimeSource = (model, evidence) => {
+	const { surface } = model;
+	return `using System;
+using System.IO;
+using System.Runtime.InteropServices;
+using System.Text;
+
+namespace ${model.namespace}.Interop;
+
+${copiedNativeTypes(model)}
+[StructLayout(LayoutKind.Sequential)]
+internal struct NativeError
+{
+    internal int Code;
+    internal nint Message;
+    internal nuint Length;
+}
+
+${copiedScope}
+${surface.callbacks.size ? dotnetCallableState : ""}
+${dotnetCallableTypes(model)}
+
+internal static unsafe class Runtime
+{
+    private static readonly UTF8Encoding Utf8 = new(false, true);
+    private static void Check(int status, NativeError error)
+    {
+        if (status == 0) return;
+        var message = error.Message == 0 ? "Lean call failed" : Utf8.GetString(new ReadOnlySpan<byte>((void*)error.Message, checked((int)error.Length)));
+        if (status == 1) throw new ArgumentException(message);
+        throw new LeanBridgeException(status, message);
+    }
+${copiedConversions(model)}
+${dotnetCallableSupport(model)}
+${surface.functions.map((fn, index) => dotnetNativeCall(model, { name: `Call${index}`, native: `Call${index}`, parameters: fn.declaration.parameters, result: fn.declaration.result })).join("\n")}
+}
+
+internal static class Native
+{
+    private const string Library = ${JSON.stringify(evidence?.library ?? `lib${surface.prefix}.so`)};
+${loader(evidence)}
+${surface.functions.map((fn, index) => `    [DllImport(Library, EntryPoint = "${fn.name}", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+    internal static extern int Call${index}(${fn.declaration.parameters.map((site, n) => { const copy = dotnetValue(model, site.type); return `${copy.aggregate || copy.type?.callable ? "in " : ""}${model.nativeType(copy)} input${n}`; }).concat(returnsUnit(fn) ? [] : [`ref ${dotnetValue(model, fn.declaration.result.type).type?.callable ? "nint" : model.nativeType(dotnetValue(model, fn.declaration.result.type))} output`]).concat("out NativeError error").join(", ")});`).join("\n")}
+${dotnetCallableImports(model)}
+${surface.copies.filter(copy => copy.aggregate).map(copy => `    [DllImport(Library, EntryPoint = "${copy.name}_clear", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+    internal static extern void Clear${copy.index}(ref ${model.nativeType(copy)} value);`).join("\n")}
+}
+`;
+};
+
+/**
+ * Render the copied-value model and optional compiled-native loading evidence.
+ *
+ * @param model - Closed C# model.
+ * @param evidence - Private native library names and hashes, supplied after compilation.
+ */
+export const renderCopiedDotnetPackage = (model, evidence = null) => {
+	const path = `src/${model.assembly}`, publicFiles = [`${path}/Api.cs`], internalFiles = [`${path}/Runtime.cs`], packageFiles = [`${path}/${model.assembly}.csproj`, "NuGet.Config"];
+	const files = {
+		[publicFiles[0]]: `namespace ${model.namespace};
+
+/// <summary>The sole runtime value of Lean Unit.</summary>
+public readonly record struct Unit;
+${model.surface.copies.some(copy => copy.compound) ? copiedCompoundTypes : ""}
+/// <summary>A failure reported by a compiled Lean call.</summary>
+public sealed class LeanBridgeException : global::System.Exception
+{
+    public int Status { get; }
+    internal LeanBridgeException(int status, string message) : base(message) => Status = status;
+}
+${model.surface.copies.filter(copy => copy.record || copy.variant).map(copy => copy.variant ? `/// <summary>A copied Lean variant. Construct a named case.</summary>
+public abstract record ${copy.publicName}
+{
+    private protected ${copy.publicName}() { }
+}
+${copy.cases.map((branch, i) => `/// <summary>A named ${copy.publicName} constructor.</summary>\n${dotnetAliasSiteDocs(model, branch.fields.map((field, j) => ({ name: field.publicName, type: copy.variant.cases[i].fields[j].type })))}public sealed record ${branch.publicName}(${branch.fields.map(field => `${model.publicType(field.type)} ${field.publicName}`).join(", ")}) : ${copy.publicName}${recordEquality(branch.publicName, branch.fields)}`).join("\n")}` : `/// <summary>A copied Lean record.</summary>\n${dotnetAliasSiteDocs(model, copy.fields.map((field, index) => ({ name: field.publicName, type: copy.record.fields[index].type })))}public sealed record ${copy.publicName}(${copy.fields.map(field => `${model.publicType(field.type)} ${field.publicName}`).join(", ")})${recordEquality(copy.publicName, copy.fields)}`).join("\n")}
+${model.surface.callbacks.size ? dotnetClosurePublic : ""}
+/// <summary>The functions selected by the Lean package author.</summary>
+${dotnetAliasCatalogDocs(model)}public static class Api
+{
+${model.surface.functions.map((fn, index) => `${dotnetAliasSiteDocs(model, fn.declaration.parameters.map((site, index) => ({ name: fn.parameters[index].name, type: site.type })), fn.declaration.result.type, returnsUnit(fn)).replace(/^\/\/\//gm, "    ///")}${finRemarks(fn, model.ir.types)}    public static ${resultType(model, fn)} ${fn.publicName}(${parameters(model, fn)}) => Interop.Runtime.Call${index}(${args(fn)});`).join("\n")}
+}
+`
+		, [internalFiles[0]]: runtimeSource(model, evidence)
+		, [packageFiles[0]]: `<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>1591</NoWarn>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <Deterministic>true</Deterministic>
+    <AssemblyName>${model.assembly}</AssemblyName>
+    <Version>${model.ir.component.version}</Version>
+    <DebugType>none</DebugType>
+    <EnableNETAnalyzers>false</EnableNETAnalyzers>
+  </PropertyGroup>
+</Project>
+`
+		, "NuGet.Config": '<configuration><packageSources><clear /></packageSources></configuration>\n'
+		, "README.md": `# ${model.assembly}\n\nGenerated C# API: ${model.namespace}.Api. Nat and Int use System.Numerics.BigInteger; arrays and byte arrays own copied managed storage. Strings use strict UTF-8 and preserve embedded NUL. Unit parameters use default(Unit); Unit results return void. Native conversions share a 16 MiB per-call copy budget and accept nested arrays/acyclic records up to 32 types deep. Null records, strings and arrays, negative Nat values and invalid UTF-16 fail before invoking Lean. Callbacks use typed Func/Action delegates and borrow the synchronous call. Async delegates are rejected; callback arguments are independent managed copies. Callback exceptions retain identity and their original stack after native cleanup. Returned LeanClosure<TDelegate> values expose Invoke and IsClosed; use using/Dispose to release them. Invocation requires the creating thread; disposal can run on another thread and defers until active invocation finishes. Finalization is a fallback. Retaining Invoke retains the same lease, and all aliases reject after disposal. Calls after fork require a fresh process. The compiled NuGet release includes its runtime and checks native library hashes when loading.\n`
+	};
+	const finFunctions = model.surface.functions.filter(fn => finBounds(fn, model.ir.types));
+	if(finFunctions.length) files["README.md"] += `\n${nativeRefinementReadme(finFunctions.map(fn => fn.declaration), `Lean Fin n parameters and results are System.Numerics.BigInteger values below n. The bundled native library compares each argument with its exact bound, including bounds wider than 64 bits, before any Lean code runs. A negative value throws ArgumentOutOfRangeException, as for Nat; a value at or above its bound throws ArgumentException whose message names the Lean parameter and bound. Fin 0 has no values, so every call to a method taking one is rejected. Results are BigInteger values below their declared bound. ${nativeFinContainerNote(finFunctions.map(fn => fn.declaration), "NuGet packages", model.ir.types)}`, "NuGet packages", model.ir.types)}\n\n${finFunctions.map(fn => `- ${model.namespace}.Api.${fn.publicName}: ${finBounds(fn, model.ir.types)}`).join("\n")}\n`;
+	files["README.md"] += "\nLean Option uses Option<T>.None or Option<T>.Some(value); default(Option<T>) is None. Except E T uses Result<T, E>.Ok(value) or .Err(error); default(Result<T, E>) is invalid. Branches expose IsSome/Value or IsOk/IsError/Value/Error, and accessing an inactive payload throws. Domain errors return Err; bridge failures throw exceptions. Binary products use C# (A, B) tuples and retain their nesting. These values can nest with arrays and copied records. Active null reference payloads reject; a missing option never reads its inactive payload. Returned arrays own independent storage. Compound callable values and resource-containing copies remain unsupported.\n";
+	files["README.md"] += "\nGenerated records, named cases, Option and Result compare copied payloads structurally, including nested arrays and tuples. Equality retains record type and branch identity; equal values have equal hash codes. Floating equality follows .NET, including equal NaNs and signed zeros. Direct arrays and tuples keep C# equality rules; use System.Collections.StructuralComparisons.StructuralEqualityComparer for a deep comparison. Contained arrays remain mutable. Do not mutate a value while it is a dictionary key or hash-set member.\n";
+	if(model.surface.copies.some(copy => copy.ref.kind === "apply" && copy.ref.constructor === "list"))
+		files["README.md"] += "\nLean List inputs, results and record fields use typed C# arrays. Returned arrays own independent storage; empty Lists, order, duplicates and nesting are preserved. List and Array retain distinct contract identities. Native sequence lengths, missing buffers and alignment are checked before allocation or reads. List callback payloads remain unsupported.\n";
+	files["README.md"] += dotnetAliasReadme(model);
+	if(model.surface.copies.some(copy => copy.variant))
+		files["README.md"] += "\nConcrete copied Lean variants export an abstract record and one sealed record per constructor. Construct and pattern-match named cases without numeric tags or unmanaged layouts. Names use PascalCase and retain trailing underscores that distinguish source members. Only the active payload crosses the boundary. Empty constructors and Unit fields stay distinct. Null cases, active null payloads and unrecognized derived records reject. Results contain independent copied arrays; record properties are init-only, while array elements remain mutable. Conversion failures release native outputs and scoped scratch storage. Recursive, callable and identity-bearing payloads remain unsupported.\n";
+	files["binding-manifest.json"] = `${JSON.stringify({ schemaVersion: 1, generator: "dotnet-copied-v1", target: "dotnet", component: model.ir.component.id, bindingIrSha256: hashBindingIr(model.ir), namespace: model.namespace, assembly: model.assembly, files: Object.keys(files), publicFiles, internalFiles, packageFiles, ...model.surface.aliases.length ? { aliases: dotnetCopiedAliases(model) } : {}, supportedFeatures: ["direct-functions", "copied-values", "deterministic-close", ...model.surface.callbacks.size ? ["primitive-callbacks", "owned-closures"] : []], capabilityGaps: [{ feature: "identity-and-effects", reason: "Ordinary packages admit copied values and synchronous primitive callables, not resources, compound callables or async delivery." }, { feature: "additional-platforms", reason: "Compiled releases target .NET 8 on Linux x86-64 with glibc." }] }, null, 2)}\n`;
+	const structured = [...model.surface.callbacks.values()].some(callback => [...callback.type.callable.parameters, callback.type.callable.result].some(site => model.surface.copy(site.type).ref.kind !== "primitive"));
+	if(structured)
+	{
+		files["README.md"] = files["README.md"]
+			.replace("Compound callable values and resource-containing copies remain unsupported.", "Acyclic copied compounds work in callback arguments and results. Recursive callable payloads and resource-containing copies remain unsupported.")
+			.replace("List callback payloads remain unsupported.", "List callback arguments and results use independent typed C# arrays.")
+			.replace("Recursive values, identity-bearing targets and compound callable payloads remain unsupported.", "Copied alias targets work in callback and closure payloads. Recursive callable payloads and identity-bearing alias targets remain unsupported.")
+			.replace("Recursive, callable and identity-bearing payloads remain unsupported.", "Recursive callable payloads remain unsupported. Callback identities and resources cannot be copied fields.");
+		files["README.md"] += "\nCallback arguments and results use typed arrays, Lists, Option, Result, nested binary tuples, copied records, named variants and aliases. These values also work in returned closure arguments, results and captures. Nested mutable storage is copied independently. Scoped buffers retain callback results until native copying completes; exceptions preserve identity after cleanup. Recursive callable payloads, resource-containing aggregates and asynchronous operations remain unsupported.\n";
+		files["binding-manifest.json"] = files["binding-manifest.json"].replace("Ordinary packages admit copied values and synchronous primitive callables, not resources, compound callables or async delivery.", "Ordinary packages admit copied values and synchronous primitive or acyclic structured callables; recursive callable payloads, resource-containing aggregates and asynchronous operations remain unsupported.");
+	}
+	return Object.freeze(files);
+};
+
+/**
+ * Generate a closed copied-value package from an ordinary source model.
+ *
+ * @param ir - Canonical Binding IR.
+ * @param evidence - Optional compiled-native loading evidence.
+ */
+export const generateCopiedDotnetPackage = (ir, evidence = null) => renderCopiedDotnetPackage(compileCopiedDotnetModel(ir), evidence);

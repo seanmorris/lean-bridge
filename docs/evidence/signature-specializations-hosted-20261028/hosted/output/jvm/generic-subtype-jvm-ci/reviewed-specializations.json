@@ -1,0 +1,86 @@
+{
+  "archives": {
+    "archives/specialized-1.0.0.jar": "bcbbe67c3e7290f62877eb615fa7977d900640141f09d7d393bdeab2a5a91585",
+    "archives/specialized-1.0.0.pom": "c2b4b0b373bc733d9bdac5f445110e5aef842cd770fe5be4ef8a514a32db6dec"
+  },
+  "reports": [
+    {
+      "bindingIrSha256": "69a47f1fd9203f5d89935323341c1cf5719374fb47881ffcdea1a7775a2ba595",
+      "checks": 2070,
+      "compilerFreePath": true,
+      "consumerSha256": "ea480a4537a2c3bb903e76791c1ac7e8def6b5b8299926cdd513449892b97e21",
+      "modelSha256": "5ddecc87b48f52c0d070eb8b6f930ff24add44355298517ff50f9a86d94f45d9",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51396085,
+              "path": "archives/specialized-1.0.0.jar",
+              "sha256": "bcbbe67c3e7290f62877eb615fa7977d900640141f09d7d393bdeab2a5a91585"
+            },
+            {
+              "bytes": 621,
+              "path": "archives/specialized-1.0.0.pom",
+              "sha256": "c2b4b0b373bc733d9bdac5f445110e5aef842cd770fe5be4ef8a514a32db6dec"
+            }
+          ],
+          "ecosystem": "maven",
+          "name": "org.leanbridge:specialized",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+          "target": "maven",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-source",
+      "profile": "java",
+      "receiptSha256": "27a40c2a1ebb0d37d0047adc9e2753a136d8d621ac85ddf1d2cf830bdd46f5b9",
+      "reviewedBindingIrSha256": "16a78ebbd13c85c07d3c56024efd63aa7091a440ea1c1f96466d454bd531a1c5",
+      "sourceRemovedBeforeInstallation": true
+    },
+    {
+      "bindingIrSha256": "69a47f1fd9203f5d89935323341c1cf5719374fb47881ffcdea1a7775a2ba595",
+      "checks": 2036,
+      "compilerFreePath": true,
+      "consumerSha256": "92d46b0957df6c6c2537ed1245a2b65c65225ac35a22284e066f3155e133f81c",
+      "modelSha256": "5ddecc87b48f52c0d070eb8b6f930ff24add44355298517ff50f9a86d94f45d9",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51396085,
+              "path": "archives/specialized-1.0.0.jar",
+              "sha256": "bcbbe67c3e7290f62877eb615fa7977d900640141f09d7d393bdeab2a5a91585"
+            },
+            {
+              "bytes": 621,
+              "path": "archives/specialized-1.0.0.pom",
+              "sha256": "c2b4b0b373bc733d9bdac5f445110e5aef842cd770fe5be4ef8a514a32db6dec"
+            }
+          ],
+          "ecosystem": "maven",
+          "name": "org.leanbridge:specialized",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+          "target": "maven",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-source",
+      "profile": "kotlin",
+      "receiptSha256": "27a40c2a1ebb0d37d0047adc9e2753a136d8d621ac85ddf1d2cf830bdd46f5b9",
+      "reviewedBindingIrSha256": "16a78ebbd13c85c07d3c56024efd63aa7091a440ea1c1f96466d454bd531a1c5",
+      "sourceRemovedBeforeInstallation": true
+    }
+  ],
+  "reproducible": true,
+  "schemaVersion": 1
+}

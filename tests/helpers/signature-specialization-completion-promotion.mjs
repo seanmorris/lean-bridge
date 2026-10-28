@@ -65,8 +65,8 @@ export const signatureSpecializationCompletionReference = async () => {
 	assert.equal(index.kind, "signature-specializations-hosted-installed-v1");
 	assert.match(index.checkerCommit, /^[a-f0-9]{40}$/u);
 	assert.match(index.archiveCommit, /^[a-f0-9]{40}$/u);
-	assert.deepEqual(Object.keys(index.producerCommits)
-		, signatureSpecializationHostedLanes.map(lane => lane.id));
+	assert.deepEqual(Object.keys(index.producerCommits).sort()
+		, signatureSpecializationHostedLanes.map(lane => lane.id).sort());
 	assert.deepEqual(index.producerCommits, Object.fromEntries(
 		signatureSpecializationHostedLanes.map(lane => [
 			lane.id, lane.producerCommit

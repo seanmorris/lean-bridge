@@ -1,0 +1,42 @@
+{
+  "archives": {
+    "archives/specialized-1.0.0-wit-wasi.tar.gz": "8c3fdf0edd9cd4813dad8901e146ab4d1f0b05579cdd1a0a0352847d1ed7ab37"
+  },
+  "reports": [
+    {
+      "bindingIrSha256": "81ff8fb495a1e8256dbb9c6c721fc26300ea38bbd0c3221798cc350e3cf13760",
+      "checks": 2021,
+      "compilerFreePath": true,
+      "consumerSha256": "b0f7868d0faaf1de3e550c35293f50c3a8da0d9db8390c683a54d7ba22f08b15",
+      "modelSha256": "517bd45f7e609e2576cc172498413f5e21474b833305b765fd9df005cd5602a1",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 59227934,
+              "path": "archives/specialized-1.0.0-wit-wasi.tar.gz",
+              "sha256": "8c3fdf0edd9cd4813dad8901e146ab4d1f0b05579cdd1a0a0352847d1ed7ab37"
+            }
+          ],
+          "ecosystem": "wit-wasi",
+          "name": "specialized",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+          "target": "wit-wasi",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-source",
+      "profile": "wit-wasi",
+      "receiptSha256": "d1c4b75e114fd75a60a6f817af9a187ddb5e02b0076986540d4433d8aac0463e",
+      "reviewedBindingIrSha256": "16a78ebbd13c85c07d3c56024efd63aa7091a440ea1c1f96466d454bd531a1c5",
+      "sourceRemovedBeforeInstallation": true
+    }
+  ],
+  "reproducible": true,
+  "schemaVersion": 1
+}

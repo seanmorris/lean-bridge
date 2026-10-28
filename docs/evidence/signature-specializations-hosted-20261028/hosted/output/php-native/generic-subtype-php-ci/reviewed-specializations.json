@@ -1,0 +1,42 @@
+{
+  "archives": {
+    "archives/example-specialized-1.0.0-linux-x86_64.zip": "1024eb2c9226c701ed8ae99f409204b5a579a76de3887b4b7bc7efa8e8153bea"
+  },
+  "reports": [
+    {
+      "bindingIrSha256": "bb065316be781297aa000bdff86769827d652e94ce3ddebfcd1e4e39511f73eb",
+      "checks": 2020,
+      "compilerFreePath": true,
+      "consumerSha256": "576f2343ef6f1d74fd36af79627124739d33094b30c15cc112eface72cc7212b",
+      "modelSha256": "28047246dee13bd2cb30347ca09de92775625dbd57b8eafb0a0552e8da788065",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51357191,
+              "path": "archives/example-specialized-1.0.0-linux-x86_64.zip",
+              "sha256": "1024eb2c9226c701ed8ae99f409204b5a579a76de3887b4b7bc7efa8e8153bea"
+            }
+          ],
+          "ecosystem": "composer",
+          "name": "example/specialized",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+          "target": "php-native",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-source",
+      "profile": "php-native",
+      "receiptSha256": "8a7f4f208e5b1af29628d3a2a72c80ba1a0eb03d469ad658e7748eca48d0aaed",
+      "reviewedBindingIrSha256": "16a78ebbd13c85c07d3c56024efd63aa7091a440ea1c1f96466d454bd531a1c5",
+      "sourceRemovedBeforeInstallation": true
+    }
+  ],
+  "reproducible": true,
+  "schemaVersion": 1
+}

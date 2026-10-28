@@ -1,0 +1,1621 @@
+﻿2026-10-28T08:57:58.8879863Z Current runner version: '2.338.0'
+2026-10-28T08:57:58.8904069Z ##[group]Runner Image Provisioner
+2026-10-28T08:57:58.8904923Z Hosted Compute Agent
+2026-10-28T08:57:58.8905459Z Version: 20261021.618
+2026-10-28T08:57:58.8905993Z Commit: 21505ad2541d5be6135ed84fc33697146cf75b8e
+2026-10-28T08:57:58.8906596Z Build Date: 2026-10-21T00:45:21Z
+2026-10-28T08:57:58.8907225Z Worker ID: {f71b1cf9-8c06-40ed-99cb-7a6812f54dc1}
+2026-10-28T08:57:58.8907799Z Region: westus3
+2026-10-28T08:57:58.8908323Z Cloud: Azure
+2026-10-28T08:57:58.8908780Z ##[endgroup]
+2026-10-28T08:57:58.8909895Z ##[group]Operating System
+2026-10-28T08:57:58.8910484Z Ubuntu
+2026-10-28T08:57:58.8910945Z 24.04.5
+2026-10-28T08:57:58.8911351Z LTS
+2026-10-28T08:57:58.8911835Z ##[endgroup]
+2026-10-28T08:57:58.8912287Z ##[group]Runner Image
+2026-10-28T08:57:58.8913309Z Image: ubuntu-24.04
+2026-10-28T08:57:58.8913804Z Version: 20261012.334.1
+2026-10-28T08:57:58.8914887Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261012.334/images/ubuntu/Ubuntu2404-Readme.md
+2026-10-28T08:57:58.8916108Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261012.334
+2026-10-28T08:57:58.8916939Z ##[endgroup]
+2026-10-28T08:57:58.8917887Z ##[group]GITHUB_TOKEN Permissions
+2026-10-28T08:57:58.8919821Z Contents: read
+2026-10-28T08:57:58.8920316Z Metadata: read
+2026-10-28T08:57:58.8920796Z ##[endgroup]
+2026-10-28T08:57:58.8922663Z Secret source: Actions
+2026-10-28T08:57:58.8923599Z Cache mode: write
+2026-10-28T08:57:58.8924294Z Prepare workflow directory
+2026-10-28T08:57:58.9200551Z Prepare all required actions
+2026-10-28T08:57:58.9257776Z Getting action download info
+2026-10-28T08:57:59.2454908Z Download action repository 'actions/checkout@v6' (SHA:d23441a48e516b6c34aea4fa41551a30e30af803)
+2026-10-28T08:57:59.3252020Z Download action repository 'actions/setup-node@v6' (SHA:249970729cb0ef3589644e2896645e5dc5ba9c38)
+2026-10-28T08:57:59.4468640Z Download action repository 'actions/upload-artifact@v7' (SHA:cf430e030ddbb5b0abf93d22962f4752f3646cd9)
+2026-10-28T08:58:00.3924918Z Complete job name: Generic Subtypes in WIT and WASI components
+2026-10-28T08:58:00.5837526Z ##[group]Run actions/checkout@v6
+2026-10-28T08:58:00.5838265Z with:
+2026-10-28T08:58:00.5838637Z   fetch-depth: 0
+2026-10-28T08:58:00.5839042Z   persist-credentials: false
+2026-10-28T08:58:00.5839504Z   repository: seanmorris/lean-bridge
+2026-10-28T08:58:00.5842986Z   token: ***
+2026-10-28T08:58:00.5843368Z   ssh-strict: true
+2026-10-28T08:58:00.5843747Z   ssh-user: git
+2026-10-28T08:58:00.5844125Z   clean: true
+2026-10-28T08:58:00.5844566Z   sparse-checkout-cone-mode: true
+2026-10-28T08:58:00.5845022Z   fetch-tags: false
+2026-10-28T08:58:00.5845412Z   show-progress: true
+2026-10-28T08:58:00.5845799Z   lfs: false
+2026-10-28T08:58:00.5846168Z   submodules: false
+2026-10-28T08:58:00.5846574Z   set-safe-directory: true
+2026-10-28T08:58:00.5847013Z   allow-unsafe-pr-checkout: false
+2026-10-28T08:58:00.5847655Z ##[endgroup]
+2026-10-28T08:58:00.8764291Z Syncing repository: seanmorris/lean-bridge
+2026-10-28T08:58:00.8766501Z ##[group]Getting Git version info
+2026-10-28T08:58:00.8767493Z Working directory is '/home/runner/work/lean-bridge/lean-bridge'
+2026-10-28T08:58:00.8768764Z [command]/usr/bin/git version
+2026-10-28T08:58:00.8820746Z git version 2.55.0
+2026-10-28T08:58:00.8838747Z ##[endgroup]
+2026-10-28T08:58:00.8850976Z Temporarily overriding HOME='/home/runner/work/_temp/b68d0bf3-2ff0-4c0a-851b-04683ed6543a' before making global git config changes
+2026-10-28T08:58:00.8852740Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-28T08:58:00.8855834Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/lean-bridge/lean-bridge
+2026-10-28T08:58:00.8927512Z Deleting the contents of '/home/runner/work/lean-bridge/lean-bridge'
+2026-10-28T08:58:00.8932287Z ##[group]Determining repository object format
+2026-10-28T08:58:00.8940983Z ##[endgroup]
+2026-10-28T08:58:00.8942269Z ##[group]Initializing the repository
+2026-10-28T08:58:00.8944175Z [command]/usr/bin/git init /home/runner/work/lean-bridge/lean-bridge
+2026-10-28T08:58:00.9383519Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-28T08:58:00.9386468Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-28T08:58:00.9397916Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-28T08:58:00.9399031Z hint: call:
+2026-10-28T08:58:00.9399667Z hint:
+2026-10-28T08:58:00.9400429Z hint: 	git config --global init.defaultBranch <name>
+2026-10-28T08:58:00.9401306Z hint:
+2026-10-28T08:58:00.9402142Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-28T08:58:00.9403581Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-28T08:58:00.9404640Z hint:
+2026-10-28T08:58:00.9405266Z hint: 	git branch -m <name>
+2026-10-28T08:58:00.9405948Z hint:
+2026-10-28T08:58:00.9406842Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-28T08:58:00.9411485Z Initialized empty Git repository in /home/runner/work/lean-bridge/lean-bridge/.git/
+2026-10-28T08:58:00.9414217Z [command]/usr/bin/git remote add origin https://github.com/seanmorris/lean-bridge
+2026-10-28T08:58:01.0150208Z ##[endgroup]
+2026-10-28T08:58:01.0150915Z ##[group]Disabling automatic garbage collection
+2026-10-28T08:58:01.0153983Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-28T08:58:01.0465304Z ##[endgroup]
+2026-10-28T08:58:01.0466302Z ##[group]Setting up auth
+2026-10-28T08:58:01.0466985Z Removing SSH command configuration
+2026-10-28T08:58:01.0472367Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-28T08:58:01.0508654Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-28T08:58:01.1485803Z Removing HTTP extra header
+2026-10-28T08:58:01.1491909Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-28T08:58:01.1527986Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-28T08:58:01.1729234Z Removing includeIf entries pointing to credentials config files
+2026-10-28T08:58:01.1730182Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-28T08:58:01.1764763Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-28T08:58:01.1975755Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-e9619f4d-9a82-44d8-b46b-73ea7b79df9d.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-28T08:58:01.2404063Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/lean-bridge/lean-bridge/.git.path /home/runner/work/_temp/git-credentials-e9619f4d-9a82-44d8-b46b-73ea7b79df9d.config
+2026-10-28T08:58:01.3011564Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/lean-bridge/lean-bridge/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-e9619f4d-9a82-44d8-b46b-73ea7b79df9d.config
+2026-10-28T08:58:01.3571280Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-e9619f4d-9a82-44d8-b46b-73ea7b79df9d.config
+2026-10-28T08:58:01.3821394Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-e9619f4d-9a82-44d8-b46b-73ea7b79df9d.config
+2026-10-28T08:58:01.4399518Z ##[endgroup]
+2026-10-28T08:58:01.4400521Z ##[group]Fetching the repository
+2026-10-28T08:58:01.4406354Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules origin +refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/*
+2026-10-28T09:02:27.5217456Z From https://github.com/seanmorris/lean-bridge
+2026-10-28T09:02:27.5218397Z  * [new branch]          agent/authenticate-release-archives -> origin/agent/authenticate-release-archives
+2026-10-28T09:02:27.5219236Z  * [new branch]          agent/callback-fin-vo1220 -> origin/agent/callback-fin-vo1220
+2026-10-28T09:02:27.5220131Z  * [new branch]          agent/generic-record-arrays-integration-vo1439 -> origin/agent/generic-record-arrays-integration-vo1439
+2026-10-28T09:02:27.5221098Z  * [new branch]          agent/generic-refinements-vo1220 -> origin/agent/generic-refinements-vo1220
+2026-10-28T09:02:27.5221781Z  * [new branch]          agent/nominal-fin-vo1220 -> origin/agent/nominal-fin-vo1220
+2026-10-28T09:02:27.5222785Z  * [new branch]          agent/value-index-hosted-archives-vo1480 -> origin/agent/value-index-hosted-archives-vo1480
+2026-10-28T09:02:27.5223769Z  * [new branch]          agent/value-index-jvm-vo1624 -> origin/agent/value-index-jvm-vo1624
+2026-10-28T09:02:27.5224475Z  * [new branch]          agent/wp14-target-expansion -> origin/agent/wp14-target-expansion
+2026-10-28T09:02:27.5225240Z  * [new branch]          agent/zero-payload-close-vo1220 -> origin/agent/zero-payload-close-vo1220
+2026-10-28T09:02:27.5225920Z  * [new branch]          backup/20261002-dotnet-callback-results -> origin/backup/20261002-dotnet-callback-results
+2026-10-28T09:02:27.5226760Z  * [new branch]          backup/20261002-historical-closure-fix -> origin/backup/20261002-historical-closure-fix
+2026-10-28T09:02:27.5227285Z  * [new branch]          backup/20261002-historical-jvm-repair -> origin/backup/20261002-historical-jvm-repair
+2026-10-28T09:02:27.5315875Z  * [new branch]          backup/20261002-historical-jvm-worktree -> origin/backup/20261002-historical-jvm-worktree
+2026-10-28T09:02:27.5316873Z  * [new branch]          backup/20261002-jvm-callback-results -> origin/backup/20261002-jvm-callback-results
+2026-10-28T09:02:27.5317470Z  * [new branch]          backup/20261002-ruby-callback-results -> origin/backup/20261002-ruby-callback-results
+2026-10-28T09:02:27.5318437Z  * [new branch]          backup/20261003-perl-callback-acceptance -> origin/backup/20261003-perl-callback-acceptance
+2026-10-28T09:02:27.5319017Z  * [new branch]          backup/20261003-perl-callback-results -> origin/backup/20261003-perl-callback-results
+2026-10-28T09:02:27.5319559Z  * [new branch]          backup/20261003-perl-callback-runtime -> origin/backup/20261003-perl-callback-runtime
+2026-10-28T09:02:27.5320166Z  * [new branch]          backup/20261003-perl-callback-safety -> origin/backup/20261003-perl-callback-safety
+2026-10-28T09:02:27.5320769Z  * [new branch]          backup/20261003-perl-callback-variant-freeze -> origin/backup/20261003-perl-callback-variant-freeze
+2026-10-28T09:02:27.5321342Z  * [new branch]          backup/20261003-perl-callback-variants -> origin/backup/20261003-perl-callback-variants
+2026-10-28T09:02:27.5322014Z  * [new branch]          backup/20261003-php-callback-acceptance-history -> origin/backup/20261003-php-callback-acceptance-history
+2026-10-28T09:02:27.5323821Z  * [new branch]          backup/20261003-php-callback-generator -> origin/backup/20261003-php-callback-generator
+2026-10-28T09:02:27.5325424Z  * [new branch]          backup/20261003-php-callback-installed-staging -> origin/backup/20261003-php-callback-installed-staging
+2026-10-28T09:02:27.5326251Z  * [new branch]          backup/20261003-php-callback-runtime -> origin/backup/20261003-php-callback-runtime
+2026-10-28T09:02:27.5326798Z  * [new branch]          backup/20261003-php-wasm-callback-results -> origin/backup/20261003-php-wasm-callback-results
+2026-10-28T09:02:27.5327353Z  * [new branch]          backup/20261003-wit-callback-acceptance -> origin/backup/20261003-wit-callback-acceptance
+2026-10-28T09:02:27.5327893Z  * [new branch]          backup/20261003-wit-callback-generator -> origin/backup/20261003-wit-callback-generator
+2026-10-28T09:02:27.5328508Z  * [new branch]          backup/20261003-wit-callback-installed -> origin/backup/20261003-wit-callback-installed
+2026-10-28T09:02:27.5329333Z  * [new branch]          backup/20261003-wit-callback-installed-acceptance -> origin/backup/20261003-wit-callback-installed-acceptance
+2026-10-28T09:02:27.5329908Z  * [new branch]          backup/20261003-wit-callback-runtime -> origin/backup/20261003-wit-callback-runtime
+2026-10-28T09:02:27.5330365Z  * [new branch]          chore/enforce-js-style   -> origin/chore/enforce-js-style
+2026-10-28T09:02:27.5330786Z  * [new branch]          ci/core-freeze-7f155ee   -> origin/ci/core-freeze-7f155ee
+2026-10-28T09:02:27.5331201Z  * [new branch]          ci/core-freeze-9bf2c5e   -> origin/ci/core-freeze-9bf2c5e
+2026-10-28T09:02:27.5331641Z  * [new branch]          ci/vo1524-recursive-native-0f09e41 -> origin/ci/vo1524-recursive-native-0f09e41
+2026-10-28T09:02:27.5332125Z  * [new branch]          ci/vo1524-recursive-native-378095e -> origin/ci/vo1524-recursive-native-378095e
+2026-10-28T09:02:27.5332615Z  * [new branch]          ci/vo1524-recursive-native-9d95e09 -> origin/ci/vo1524-recursive-native-9d95e09
+2026-10-28T09:02:27.5333294Z  * [new branch]          ci/vo1524-recursive-native-f01857b -> origin/ci/vo1524-recursive-native-f01857b
+2026-10-28T09:02:27.5334120Z  * [new branch]          ci/vo1524-recursive-promotion-b44234a -> origin/ci/vo1524-recursive-promotion-b44234a
+2026-10-28T09:02:27.5335126Z  * [new branch]          claude/vo1220-core-memory-e18a9a3 -> origin/claude/vo1220-core-memory-e18a9a3
+2026-10-28T09:02:27.5335936Z  * [new branch]          claude/vo1220-shard5-fixes-b3db2f7 -> origin/claude/vo1220-shard5-fixes-b3db2f7
+2026-10-28T09:02:27.5336713Z  * [new branch]          claude/vo1220-ts-pins-fa11188 -> origin/claude/vo1220-ts-pins-fa11188
+2026-10-28T09:02:27.5337510Z  * [new branch]          claude/vo1483-callback-checked-records -> origin/claude/vo1483-callback-checked-records
+2026-10-28T09:02:27.5338487Z  * [new branch]          claude/vo1723-owned-checked-records-62f2979 -> origin/claude/vo1723-owned-checked-records-62f2979
+2026-10-28T09:02:27.5339714Z  * [new branch]          codex/vo1459-php-wasm-owned-checked -> origin/codex/vo1459-php-wasm-owned-checked
+2026-10-28T09:02:27.5340466Z  * [new branch]          codex/vo1460-hardening   -> origin/codex/vo1460-hardening
+2026-10-28T09:02:27.5341266Z  * [new branch]          codex/vo1460-php-wasm-callback-subtype -> origin/codex/vo1460-php-wasm-callback-subtype
+2026-10-28T09:02:27.5342155Z  * [new branch]          codex/vo1724-owned-checked-javascript -> origin/codex/vo1724-owned-checked-javascript
+2026-10-28T09:02:27.5342773Z  * [new branch]          codex/vo1725-owned-checked-native-perl -> origin/codex/vo1725-owned-checked-native-perl
+2026-10-28T09:02:27.5343533Z  * [new branch]          codex/vo1726-owned-checked-languages -> origin/codex/vo1726-owned-checked-languages
+2026-10-28T09:02:27.5344377Z  * [new branch]          codex/vo1727-owned-checked-managed -> origin/codex/vo1727-owned-checked-managed
+2026-10-28T09:02:27.5345123Z  * [new branch]          codex/vo1824-dispatch    -> origin/codex/vo1824-dispatch
+2026-10-28T09:02:27.5345845Z  * [new branch]          codex/vo1824-dispatch-ordered -> origin/codex/vo1824-dispatch-ordered
+2026-10-28T09:02:27.5346581Z  * [new branch]          codex/vo2166-fin-completion -> origin/codex/vo2166-fin-completion
+2026-10-28T09:02:27.5347340Z  * [new branch]          codex/vo2167-signature-completion -> origin/codex/vo2167-signature-completion
+2026-10-28T09:02:27.5347990Z  * [new branch]          master                   -> origin/master
+2026-10-28T09:02:27.5348998Z  * [new tag]             ci/owned-checked-record-npm/10cc8859e6ef7124c52b147aebcdae92e69a2957 -> ci/owned-checked-record-npm/10cc8859e6ef7124c52b147aebcdae92e69a2957
+2026-10-28T09:02:27.5350474Z  * [new tag]             ci/owned-checked-record-npm/4ac1f5cddaec9d476f3a6dc554b5a69db33d067a -> ci/owned-checked-record-npm/4ac1f5cddaec9d476f3a6dc554b5a69db33d067a
+2026-10-28T09:02:27.5351919Z  * [new tag]             ci/owned-checked-record-npm/fa50708c91bfafe7c42a871aec232c10a4edb123 -> ci/owned-checked-record-npm/fa50708c91bfafe7c42a871aec232c10a4edb123
+2026-10-28T09:02:27.5353658Z  * [new tag]             ci/php-wasm-refinement-entry/a003269808c43a2a3a509a23c8a8ab8def07b610 -> ci/php-wasm-refinement-entry/a003269808c43a2a3a509a23c8a8ab8def07b610
+2026-10-28T09:02:27.5354259Z  * [new tag]             evidence-anchor/20261018 -> evidence-anchor/20261018
+2026-10-28T09:02:27.5355337Z [command]/usr/bin/git branch --list --remote origin/codex/vo2167-signature-completion
+2026-10-28T09:02:27.5355784Z   origin/codex/vo2167-signature-completion
+2026-10-28T09:02:27.5356416Z [command]/usr/bin/git rev-parse refs/remotes/origin/codex/vo2167-signature-completion
+2026-10-28T09:02:27.5356759Z 6e0d941e796db8813ee58bc8fda00e126e0a232c
+2026-10-28T09:02:27.5357324Z ##[endgroup]
+2026-10-28T09:02:27.5357617Z ##[group]Determining the checkout info
+2026-10-28T09:02:27.5357935Z ##[endgroup]
+2026-10-28T09:02:27.5358135Z [command]/usr/bin/git sparse-checkout disable
+2026-10-28T09:02:27.5358692Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-28T09:02:27.5378295Z ##[group]Checking out the ref
+2026-10-28T09:02:27.5379217Z [command]/usr/bin/git checkout --progress --force -B codex/vo2167-signature-completion refs/remotes/origin/codex/vo2167-signature-completion
+2026-10-28T09:02:29.7871311Z Updating files:   2% (5120/218560)
+2026-10-28T09:02:30.7031632Z Updating files:   2% (6397/218560)
+2026-10-28T09:02:32.1177906Z Updating files:   2% (6399/218560)
+2026-10-28T09:02:32.6685388Z Updating files:   2% (6404/218560)
+2026-10-28T09:02:32.6771881Z Updating files:   3% (6557/218560)
+2026-10-28T09:02:33.8677270Z Updating files:   3% (6663/218560)
+2026-10-28T09:02:34.2610931Z Updating files:   3% (7680/218560)
+2026-10-28T09:02:35.0421907Z Updating files:   4% (8743/218560)
+2026-10-28T09:02:35.6969436Z Updating files:   4% (8941/218560)
+2026-10-28T09:02:36.6017784Z Updating files:   4% (8949/218560)
+2026-10-28T09:02:37.4593320Z Updating files:   5% (10928/218560)
+2026-10-28T09:02:39.0466234Z Updating files:   5% (11499/218560)
+2026-10-28T09:02:41.2273847Z Updating files:   5% (11500/218560)
+2026-10-28T09:02:43.8983147Z Updating files:   5% (11502/218560)
+2026-10-28T09:02:44.7274141Z Updating files:   5% (11505/218560)
+2026-10-28T09:02:45.6642405Z Updating files:   5% (12174/218560)
+2026-10-28T09:02:45.6774301Z Updating files:   6% (13114/218560)
+2026-10-28T09:02:45.9429427Z Updating files:   6% (13272/218560)
+2026-10-28T09:02:46.6458260Z Updating files:   7% (15300/218560)
+2026-10-28T09:02:46.6773062Z Updating files:   8% (17485/218560)
+2026-10-28T09:02:48.1620492Z Updating files:   8% (17941/218560)
+2026-10-28T09:02:49.7753197Z Updating files:   8% (17977/218560)
+2026-10-28T09:02:51.8304925Z Updating files:   8% (17978/218560)
+2026-10-28T09:02:52.8288134Z Updating files:   8% (17979/218560)
+2026-10-28T09:02:53.8850007Z Updating files:   8% (17980/218560)
+2026-10-28T09:02:55.3948959Z Updating files:   8% (17989/218560)
+2026-10-28T09:02:55.9232599Z Updating files:   8% (18642/218560)
+2026-10-28T09:02:56.8054473Z Updating files:   8% (18644/218560)
+2026-10-28T09:02:57.5017029Z Updating files:   8% (18650/218560)
+2026-10-28T09:02:57.7767130Z Updating files:   9% (19671/218560)
+2026-10-28T09:03:00.8349990Z Updating files:   9% (19952/218560)
+2026-10-28T09:03:01.8564854Z Updating files:   9% (20614/218560)
+2026-10-28T09:03:02.3900954Z Updating files:   9% (20617/218560)
+2026-10-28T09:03:02.6772480Z Updating files:  10% (21856/218560)
+2026-10-28T09:03:02.7443077Z Updating files:  10% (23104/218560)
+2026-10-28T09:03:03.3999987Z Updating files:  11% (24042/218560)
+2026-10-28T09:03:03.7001783Z Updating files:  12% (26228/218560)
+2026-10-28T09:03:06.0444316Z Updating files:  12% (26299/218560)
+2026-10-28T09:03:07.4236300Z Updating files:  12% (28083/218560)
+2026-10-28T09:03:07.7147617Z Updating files:  12% (28084/218560)
+2026-10-28T09:03:09.4583609Z Updating files:  12% (28086/218560)
+2026-10-28T09:03:11.3340226Z Updating files:  12% (28088/218560)
+2026-10-28T09:03:13.5553535Z Updating files:  12% (28117/218560)
+2026-10-28T09:03:15.2083402Z Updating files:  12% (28118/218560)
+2026-10-28T09:03:16.1561983Z Updating files:  12% (28151/218560)
+2026-10-28T09:03:16.5112492Z Updating files:  12% (28152/218560)
+2026-10-28T09:03:16.9161383Z Updating files:  13% (28413/218560)
+2026-10-28T09:03:17.5224483Z Updating files:  13% (29796/218560)
+2026-10-28T09:03:17.7805002Z Updating files:  14% (30599/218560)
+2026-10-28T09:03:18.6786861Z Updating files:  14% (31972/218560)
+2026-10-28T09:03:18.8046236Z Updating files:  14% (32136/218560)
+2026-10-28T09:03:19.5452327Z Updating files:  15% (32784/218560)
+2026-10-28T09:03:19.8295349Z Updating files:  16% (34970/218560)
+2026-10-28T09:03:21.9620856Z Updating files:  16% (36254/218560)
+2026-10-28T09:03:22.6771820Z Updating files:  16% (36259/218560)
+2026-10-28T09:03:22.7017756Z Updating files:  16% (36768/218560)
+2026-10-28T09:03:24.0667534Z Updating files:  17% (37156/218560)
+2026-10-28T09:03:26.0726272Z Updating files:  17% (37679/218560)
+2026-10-28T09:03:27.5580983Z Updating files:  17% (37680/218560)
+2026-10-28T09:03:29.1309581Z Updating files:  17% (37681/218560)
+2026-10-28T09:03:29.6929052Z Updating files:  17% (37699/218560)
+2026-10-28T09:03:29.7760109Z Updating files:  17% (37853/218560)
+2026-10-28T09:03:30.9921823Z Updating files:  18% (39341/218560)
+2026-10-28T09:03:31.8938418Z Updating files:  18% (39478/218560)
+2026-10-28T09:03:32.8526516Z Updating files:  18% (39674/218560)
+2026-10-28T09:03:33.6949422Z Updating files:  18% (39752/218560)
+2026-10-28T09:03:34.7285238Z Updating files:  18% (41421/218560)
+2026-10-28T09:03:35.5917221Z Updating files:  18% (41423/218560)
+2026-10-28T09:03:35.6843621Z Updating files:  19% (41527/218560)
+2026-10-28T09:03:36.5140953Z Updating files:  19% (41533/218560)
+2026-10-28T09:03:37.8235555Z Updating files:  20% (43712/218560)
+2026-10-28T09:03:38.6906951Z Updating files:  20% (44893/218560)
+2026-10-28T09:03:39.9861134Z Updating files:  20% (44964/218560)
+2026-10-28T09:03:40.5721949Z Updating files:  20% (45709/218560)
+2026-10-28T09:03:42.4403361Z Updating files:  21% (45898/218560)
+2026-10-28T09:03:42.9153780Z Updating files:  21% (46649/218560)
+2026-10-28T09:03:43.9060460Z Updating files:  21% (46650/218560)
+2026-10-28T09:03:45.5475398Z Updating files:  21% (46653/218560)
+2026-10-28T09:03:47.1319803Z Updating files:  21% (46654/218560)
+2026-10-28T09:03:49.4222766Z Updating files:  21% (46655/218560)
+2026-10-28T09:03:50.3539884Z Updating files:  21% (46674/218560)
+2026-10-28T09:03:50.6908274Z Updating files:  21% (46675/218560)
+2026-10-28T09:03:51.7173711Z Updating files:  21% (46697/218560)
+2026-10-28T09:03:51.9810736Z Updating files:  21% (47601/218560)
+2026-10-28T09:03:52.7214593Z Updating files:  22% (48084/218560)
+2026-10-28T09:03:52.8505924Z Updating files:  22% (49194/218560)
+2026-10-28T09:03:55.0420876Z Updating files:  23% (50269/218560)
+2026-10-28T09:03:55.6070595Z Updating files:  23% (52395/218560)
+2026-10-28T09:03:55.6796746Z Updating files:  24% (52455/218560)
+2026-10-28T09:03:56.8079205Z Updating files:  24% (52567/218560)
+2026-10-28T09:03:59.0070641Z Updating files:  24% (53873/218560)
+2026-10-28T09:04:00.5140397Z Updating files:  24% (53893/218560)
+2026-10-28T09:04:01.3930260Z Updating files:  24% (53943/218560)
+2026-10-28T09:04:01.5635168Z Updating files:  24% (53995/218560)
+2026-10-28T09:04:01.7699788Z Updating files:  25% (54640/218560)
+2026-10-28T09:04:02.7033363Z Updating files:  25% (55307/218560)
+2026-10-28T09:04:02.9240972Z Updating files:  25% (55505/218560)
+2026-10-28T09:04:03.9036568Z Updating files:  26% (56826/218560)
+2026-10-28T09:04:05.1696097Z Updating files:  26% (56860/218560)
+2026-10-28T09:04:06.8163937Z Updating files:  26% (56862/218560)
+2026-10-28T09:04:07.6162526Z Updating files:  26% (56863/218560)
+2026-10-28T09:04:07.6773109Z Updating files:  27% (59012/218560)
+2026-10-28T09:04:08.4047328Z Updating files:  27% (59768/218560)
+2026-10-28T09:04:08.7125667Z Updating files:  28% (61197/218560)
+2026-10-28T09:04:10.8976610Z Updating files:  28% (61649/218560)
+2026-10-28T09:04:12.2004085Z Updating files:  28% (61953/218560)
+2026-10-28T09:04:12.4656384Z Updating files:  28% (61954/218560)
+2026-10-28T09:04:12.5927943Z Updating files:  29% (63383/218560)
+2026-10-28T09:04:12.7552032Z Updating files:  30% (65568/218560)
+2026-10-28T09:04:13.1951624Z Updating files:  30% (65838/218560)
+2026-10-28T09:04:13.3291126Z Updating files:  31% (67754/218560)
+2026-10-28T09:04:13.4637002Z Updating files:  32% (69940/218560)
+2026-10-28T09:04:13.5909560Z Updating files:  33% (72125/218560)
+2026-10-28T09:04:14.2837457Z Updating files:  34% (74311/218560)
+2026-10-28T09:04:14.5887821Z Updating files:  34% (74868/218560)
+2026-10-28T09:04:15.2831634Z Updating files:  35% (76496/218560)
+2026-10-28T09:04:15.7168292Z Updating files:  35% (76726/218560)
+2026-10-28T09:04:17.0297989Z Updating files:  35% (76761/218560)
+2026-10-28T09:04:17.6491535Z Updating files:  35% (78592/218560)
+2026-10-28T09:04:17.6771581Z Updating files:  36% (78682/218560)
+2026-10-28T09:04:19.2143403Z Updating files:  36% (79132/218560)
+2026-10-28T09:04:19.3827382Z Updating files:  36% (80412/218560)
+2026-10-28T09:04:21.0937698Z Updating files:  37% (80868/218560)
+2026-10-28T09:04:22.3513049Z Updating files:  37% (82226/218560)
+2026-10-28T09:04:23.6076275Z Updating files:  37% (82243/218560)
+2026-10-28T09:04:23.6625214Z Updating files:  37% (82339/218560)
+2026-10-28T09:04:23.6772197Z Updating files:  38% (83053/218560)
+2026-10-28T09:04:24.0514576Z Updating files:  38% (83274/218560)
+2026-10-28T09:04:24.6779139Z Updating files:  39% (85239/218560)
+2026-10-28T09:04:24.9319557Z Updating files:  39% (86181/218560)
+2026-10-28T09:04:26.2189949Z Updating files:  40% (87424/218560)
+2026-10-28T09:04:26.8730451Z Updating files:  40% (88549/218560)
+2026-10-28T09:04:27.8583334Z Updating files:  40% (88583/218560)
+2026-10-28T09:04:28.7528596Z Updating files:  40% (88619/218560)
+2026-10-28T09:04:29.4724421Z Updating files:  40% (88620/218560)
+2026-10-28T09:04:29.6853176Z Updating files:  41% (89610/218560)
+2026-10-28T09:04:30.2575424Z Updating files:  41% (90193/218560)
+2026-10-28T09:04:30.4094535Z Updating files:  42% (91796/218560)
+2026-10-28T09:04:30.6896647Z Updating files:  43% (93981/218560)
+2026-10-28T09:04:32.0783041Z Updating files:  43% (94068/218560)
+2026-10-28T09:04:33.4907874Z Updating files:  43% (95108/218560)
+2026-10-28T09:04:34.9847922Z Updating files:  43% (95158/218560)
+2026-10-28T09:04:35.5206701Z Updating files:  43% (95210/218560)
+2026-10-28T09:04:35.8702596Z Updating files:  44% (96167/218560)
+2026-10-28T09:04:36.6800053Z Updating files:  44% (96243/218560)
+2026-10-28T09:04:38.3487422Z Updating files:  44% (97126/218560)
+2026-10-28T09:04:38.4071834Z Updating files:  44% (97406/218560)
+2026-10-28T09:04:38.6797177Z Updating files:  45% (98352/218560)
+2026-10-28T09:04:40.6887802Z Updating files:  45% (98520/218560)
+2026-10-28T09:04:41.5203872Z Updating files:  45% (99836/218560)
+2026-10-28T09:04:41.8060895Z Updating files:  46% (100538/218560)
+2026-10-28T09:04:42.6859407Z Updating files:  46% (100751/218560)
+2026-10-28T09:04:42.7195652Z Updating files:  46% (102297/218560)
+2026-10-28T09:04:44.5995541Z Updating files:  47% (102724/218560)
+2026-10-28T09:04:45.9077309Z Updating files:  47% (103422/218560)
+2026-10-28T09:04:46.7221596Z Updating files:  47% (103423/218560)
+2026-10-28T09:04:47.1113905Z Updating files:  47% (103489/218560)
+2026-10-28T09:04:47.8401992Z Updating files:  48% (104909/218560)
+2026-10-28T09:04:48.3344550Z Updating files:  48% (105965/218560)
+2026-10-28T09:04:49.9927933Z Updating files:  49% (107095/218560)
+2026-10-28T09:04:51.0157955Z Updating files:  49% (107679/218560)
+2026-10-28T09:04:51.8439254Z Updating files:  49% (107727/218560)
+2026-10-28T09:04:52.5516531Z Updating files:  49% (108701/218560)
+2026-10-28T09:04:54.7423111Z Updating files:  50% (109280/218560)
+2026-10-28T09:04:55.7402472Z Updating files:  50% (109392/218560)
+2026-10-28T09:04:56.7515753Z Updating files:  50% (109483/218560)
+2026-10-28T09:04:57.0685430Z Updating files:  50% (111031/218560)
+2026-10-28T09:04:58.2136515Z Updating files:  51% (111466/218560)
+2026-10-28T09:04:59.2660461Z Updating files:  51% (112568/218560)
+2026-10-28T09:05:00.6028604Z Updating files:  51% (112608/218560)
+2026-10-28T09:05:00.7710726Z Updating files:  51% (112652/218560)
+2026-10-28T09:05:02.0889075Z Updating files:  51% (112693/218560)
+2026-10-28T09:05:02.4586245Z Updating files:  51% (113131/218560)
+2026-10-28T09:05:02.6832116Z Updating files:  52% (113652/218560)
+2026-10-28T09:05:03.7093571Z Updating files:  52% (113895/218560)
+2026-10-28T09:05:05.6194275Z Updating files:  52% (115648/218560)
+2026-10-28T09:05:06.2344377Z Updating files:  52% (115756/218560)
+2026-10-28T09:05:06.2364890Z Updating files:  52% (115809/218560)
+2026-10-28T09:05:07.6198132Z Updating files:  53% (115837/218560)
+2026-10-28T09:05:07.7564271Z Updating files:  53% (115870/218560)
+2026-10-28T09:05:09.3598823Z Updating files:  53% (115925/218560)
+2026-10-28T09:05:10.2480385Z Updating files:  53% (116124/218560)
+2026-10-28T09:05:11.2110831Z Updating files:  53% (116239/218560)
+2026-10-28T09:05:11.3735577Z Updating files:  53% (116316/218560)
+2026-10-28T09:05:11.9607977Z Updating files:  54% (118023/218560)
+2026-10-28T09:05:12.1233766Z Updating files:  54% (118405/218560)
+2026-10-28T09:05:12.2665367Z Updating files:  55% (120208/218560)
+2026-10-28T09:05:12.4709335Z Updating files:  56% (122394/218560)
+2026-10-28T09:05:12.6773190Z Updating files:  57% (124580/218560)
+2026-10-28T09:05:14.0468253Z Updating files:  57% (125898/218560)
+2026-10-28T09:05:14.7121709Z Updating files:  57% (126342/218560)
+2026-10-28T09:05:14.8845798Z Updating files:  57% (126348/218560)
+2026-10-28T09:05:16.9923024Z Updating files:  58% (126765/218560)
+2026-10-28T09:05:17.7530430Z Updating files:  58% (127000/218560)
+2026-10-28T09:05:18.0088063Z Updating files:  58% (127007/218560)
+2026-10-28T09:05:18.2077563Z Updating files:  59% (128951/218560)
+2026-10-28T09:05:19.4672476Z Updating files:  60% (131136/218560)
+2026-10-28T09:05:20.3152537Z Updating files:  60% (131224/218560)
+2026-10-28T09:05:21.9337101Z Updating files:  60% (131225/218560)
+2026-10-28T09:05:22.8174837Z Updating files:  60% (131226/218560)
+2026-10-28T09:05:24.8862304Z Updating files:  60% (131246/218560)
+2026-10-28T09:05:25.7772095Z Updating files:  60% (131890/218560)
+2026-10-28T09:05:26.3341782Z Updating files:  60% (131896/218560)
+2026-10-28T09:05:26.9394892Z Updating files:  61% (133322/218560)
+2026-10-28T09:05:28.2842149Z Updating files:  61% (133578/218560)
+2026-10-28T09:05:28.7681697Z Updating files:  61% (133587/218560)
+2026-10-28T09:05:30.8831525Z Updating files:  61% (133588/218560)
+2026-10-28T09:05:32.6814467Z Updating files:  61% (133589/218560)
+2026-10-28T09:05:33.7670007Z Updating files:  61% (133590/218560)
+2026-10-28T09:05:34.7375502Z Updating files:  61% (133596/218560)
+2026-10-28T09:05:35.7314111Z Updating files:  61% (133609/218560)
+2026-10-28T09:05:36.6981831Z Updating files:  61% (134257/218560)
+2026-10-28T09:05:37.6772713Z Updating files:  61% (134276/218560)
+2026-10-28T09:05:39.0783099Z Updating files:  61% (134406/218560)
+2026-10-28T09:05:39.6817142Z Updating files:  61% (134921/218560)
+2026-10-28T09:05:41.0154554Z Updating files:  61% (134924/218560)
+2026-10-28T09:05:42.9912578Z Updating files:  61% (134927/218560)
+2026-10-28T09:05:44.9750920Z Updating files:  61% (134930/218560)
+2026-10-28T09:05:46.6648590Z Updating files:  61% (134931/218560)
+2026-10-28T09:05:48.4354689Z Updating files:  61% (134934/218560)
+2026-10-28T09:05:48.8259922Z Updating files:  61% (134935/218560)
+2026-10-28T09:05:49.3729980Z Updating files:  61% (134938/218560)
+2026-10-28T09:05:49.6873878Z Updating files:  62% (135508/218560)
+2026-10-28T09:05:50.7282134Z Updating files:  62% (136607/218560)
+2026-10-28T09:05:53.2774122Z Updating files:  62% (136623/218560)
+2026-10-28T09:05:55.2824065Z Updating files:  62% (137282/218560)
+2026-10-28T09:05:55.9248104Z Updating files:  62% (137284/218560)
+2026-10-28T09:05:57.3671474Z Updating files:  62% (137285/218560)
+2026-10-28T09:05:57.7357769Z Updating files:  62% (137288/218560)
+2026-10-28T09:05:57.9860601Z Updating files:  62% (137293/218560)
+2026-10-28T09:05:58.7366951Z Updating files:  63% (137693/218560)
+2026-10-28T09:05:59.6780189Z Updating files:  63% (137970/218560)
+2026-10-28T09:05:59.7181579Z Updating files:  63% (139283/218560)
+2026-10-28T09:06:00.6774556Z Updating files:  64% (139879/218560)
+2026-10-28T09:06:01.6931036Z Updating files:  64% (140768/218560)
+2026-10-28T09:06:02.8233695Z Updating files:  64% (140994/218560)
+2026-10-28T09:06:04.1088139Z Updating files:  64% (141000/218560)
+2026-10-28T09:06:05.2493090Z Updating files:  64% (141006/218560)
+2026-10-28T09:06:05.7411114Z Updating files:  64% (141653/218560)
+2026-10-28T09:06:06.7589926Z Updating files:  64% (141654/218560)
+2026-10-28T09:06:07.0413615Z Updating files:  64% (141659/218560)
+2026-10-28T09:06:07.7204083Z Updating files:  65% (142064/218560)
+2026-10-28T09:06:08.4039422Z Updating files:  65% (143329/218560)
+2026-10-28T09:06:08.6728546Z Updating files:  66% (144250/218560)
+2026-10-28T09:06:08.6773175Z Updating files:  67% (146436/218560)
+2026-10-28T09:06:11.0725800Z Updating files:  67% (146484/218560)
+2026-10-28T09:06:11.7607188Z Updating files:  67% (148196/218560)
+2026-10-28T09:06:11.9183483Z Updating files:  67% (148202/218560)
+2026-10-28T09:06:14.8270453Z Updating files:  68% (148621/218560)
+2026-10-28T09:06:16.9931042Z Updating files:  68% (149875/218560)
+2026-10-28T09:06:18.1668131Z Updating files:  68% (149877/218560)
+2026-10-28T09:06:19.2170193Z Updating files:  68% (149881/218560)
+2026-10-28T09:06:19.7583504Z Updating files:  68% (149884/218560)
+2026-10-28T09:06:20.7640221Z Updating files:  68% (150538/218560)
+2026-10-28T09:06:21.0653046Z Updating files:  68% (150547/218560)
+2026-10-28T09:06:21.9384387Z Updating files:  69% (150807/218560)
+2026-10-28T09:06:22.9120886Z Updating files:  69% (152218/218560)
+2026-10-28T09:06:23.7625925Z Updating files:  69% (152223/218560)
+2026-10-28T09:06:25.2760885Z Updating files:  69% (152229/218560)
+2026-10-28T09:06:25.9090066Z Updating files:  69% (152883/218560)
+2026-10-28T09:06:26.7014158Z Updating files:  69% (152885/218560)
+2026-10-28T09:06:28.4425928Z Updating files:  69% (152891/218560)
+2026-10-28T09:06:28.4806665Z Updating files:  69% (152897/218560)
+2026-10-28T09:06:30.3564692Z Updating files:  70% (152992/218560)
+2026-10-28T09:06:31.2460905Z Updating files:  70% (154565/218560)
+2026-10-28T09:06:31.8901954Z Updating files:  70% (154566/218560)
+2026-10-28T09:06:32.8578132Z Updating files:  70% (154568/218560)
+2026-10-28T09:06:32.8685422Z Updating files:  70% (154580/218560)
+2026-10-28T09:06:34.0202570Z Updating files:  71% (155178/218560)
+2026-10-28T09:06:34.9244719Z Updating files:  71% (155230/218560)
+2026-10-28T09:06:36.0352560Z Updating files:  71% (155236/218560)
+2026-10-28T09:06:37.9588888Z Updating files:  71% (155242/218560)
+2026-10-28T09:06:38.5431873Z Updating files:  71% (156908/218560)
+2026-10-28T09:06:38.6772491Z Updating files:  72% (157364/218560)
+2026-10-28T09:06:39.6472502Z Updating files:  72% (158306/218560)
+2026-10-28T09:06:39.7056953Z Updating files:  73% (159549/218560)
+2026-10-28T09:06:41.1383509Z Updating files:  73% (159770/218560)
+2026-10-28T09:06:41.6781895Z Updating files:  73% (160279/218560)
+2026-10-28T09:06:42.7294157Z Updating files:  73% (160291/218560)
+2026-10-28T09:06:43.6970257Z Updating files:  73% (160334/218560)
+2026-10-28T09:06:45.5312566Z Updating files:  73% (160346/218560)
+2026-10-28T09:06:45.8372399Z Updating files:  73% (160495/218560)
+2026-10-28T09:06:46.1513278Z Updating files:  73% (160500/218560)
+2026-10-28T09:06:46.6712696Z Updating files:  74% (161735/218560)
+2026-10-28T09:06:46.6892231Z Updating files:  75% (163920/218560)
+2026-10-28T09:06:47.6772503Z Updating files:  75% (163924/218560)
+2026-10-28T09:06:50.0785238Z Updating files:  75% (164536/218560)
+2026-10-28T09:06:52.7202600Z Updating files:  75% (165813/218560)
+2026-10-28T09:06:54.3096953Z Updating files:  75% (165814/218560)
+2026-10-28T09:06:54.8977539Z Updating files:  75% (165818/218560)
+2026-10-28T09:06:55.8315902Z Updating files:  75% (165820/218560)
+2026-10-28T09:06:56.7894305Z Updating files:  75% (165823/218560)
+2026-10-28T09:06:56.9926379Z Updating files:  75% (165825/218560)
+2026-10-28T09:06:59.0337273Z Updating files:  76% (166106/218560)
+2026-10-28T09:07:01.0075462Z Updating files:  76% (166482/218560)
+2026-10-28T09:07:01.6898482Z Updating files:  76% (166483/218560)
+2026-10-28T09:07:04.0033413Z Updating files:  76% (166484/218560)
+2026-10-28T09:07:04.8039586Z Updating files:  76% (166492/218560)
+2026-10-28T09:07:05.7844172Z Updating files:  76% (167143/218560)
+2026-10-28T09:07:06.1128704Z Updating files:  76% (167415/218560)
+2026-10-28T09:07:07.8893373Z Updating files:  77% (168292/218560)
+2026-10-28T09:07:11.3407435Z Updating files:  77% (169113/218560)
+2026-10-28T09:07:12.0713590Z Updating files:  77% (169114/218560)
+2026-10-28T09:07:13.0317600Z Updating files:  77% (169115/218560)
+2026-10-28T09:07:13.3081933Z Updating files:  77% (169119/218560)
+2026-10-28T09:07:13.6825968Z Updating files:  78% (170477/218560)
+2026-10-28T09:07:14.2652400Z Updating files:  78% (171030/218560)
+2026-10-28T09:07:14.6846101Z Updating files:  79% (172663/218560)
+2026-10-28T09:07:15.4079710Z Updating files:  79% (172897/218560)
+2026-10-28T09:07:15.9788743Z Updating files:  80% (174848/218560)
+2026-10-28T09:07:16.6095319Z Updating files:  80% (176599/218560)
+2026-10-28T09:07:16.8299158Z Updating files:  81% (177034/218560)
+2026-10-28T09:07:18.0634194Z Updating files:  81% (177369/218560)
+2026-10-28T09:07:19.7412617Z Updating files:  81% (177553/218560)
+2026-10-28T09:07:22.4869446Z Updating files:  81% (177604/218560)
+2026-10-28T09:07:23.3148754Z Updating files:  81% (178432/218560)
+2026-10-28T09:07:24.6580499Z Updating files:  81% (178507/218560)
+2026-10-28T09:07:26.0115270Z Updating files:  81% (178584/218560)
+2026-10-28T09:07:26.0425012Z Updating files:  81% (178661/218560)
+2026-10-28T09:07:26.8179797Z Updating files:  82% (179220/218560)
+2026-10-28T09:07:27.6298817Z Updating files:  82% (179582/218560)
+2026-10-28T09:07:27.6774815Z Updating files:  83% (181405/218560)
+2026-10-28T09:07:28.4541123Z Updating files:  83% (182189/218560)
+2026-10-28T09:07:28.6990029Z Updating files:  84% (183591/218560)
+2026-10-28T09:07:29.2899693Z Updating files:  84% (184308/218560)
+2026-10-28T09:07:29.8064501Z Updating files:  85% (185776/218560)
+2026-10-28T09:07:30.5615110Z Updating files:  85% (187665/218560)
+2026-10-28T09:07:30.6772149Z Updating files:  86% (187962/218560)
+2026-10-28T09:07:32.1903957Z Updating files:  86% (189232/218560)
+2026-10-28T09:07:32.7606688Z Updating files:  86% (189438/218560)
+2026-10-28T09:07:33.3069268Z Updating files:  86% (189439/218560)
+2026-10-28T09:07:35.2960507Z Updating files:  87% (190148/218560)
+2026-10-28T09:07:37.5837827Z Updating files:  87% (191330/218560)
+2026-10-28T09:07:38.7381204Z Updating files:  87% (191331/218560)
+2026-10-28T09:07:40.3887132Z Updating files:  87% (191332/218560)
+2026-10-28T09:07:40.8910426Z Updating files:  87% (191333/218560)
+2026-10-28T09:07:42.4582465Z Updating files:  87% (191334/218560)
+2026-10-28T09:07:44.1696797Z Updating files:  87% (191336/218560)
+2026-10-28T09:07:44.7883443Z Updating files:  87% (191364/218560)
+2026-10-28T09:07:45.6046954Z Updating files:  87% (191365/218560)
+2026-10-28T09:07:46.3442743Z Updating files:  88% (192333/218560)
+2026-10-28T09:07:46.7737426Z Updating files:  88% (193170/218560)
+2026-10-28T09:07:47.3173937Z Updating files:  88% (193173/218560)
+2026-10-28T09:07:48.2492502Z Updating files:  89% (194519/218560)
+2026-10-28T09:07:49.1550008Z Updating files:  89% (195447/218560)
+2026-10-28T09:07:49.6960733Z Updating files:  89% (195448/218560)
+2026-10-28T09:07:49.9252127Z Updating files:  89% (195606/218560)
+2026-10-28T09:07:50.2663075Z Updating files:  90% (196704/218560)
+2026-10-28T09:07:51.2550243Z Updating files:  91% (198890/218560)
+2026-10-28T09:07:51.8201435Z Updating files:  91% (200333/218560)
+2026-10-28T09:07:52.6229494Z Updating files:  91% (200334/218560)
+2026-10-28T09:07:52.6772235Z Updating files:  92% (201076/218560)
+2026-10-28T09:07:54.2962968Z Updating files:  92% (202052/218560)
+2026-10-28T09:07:55.4480831Z Updating files:  92% (202267/218560)
+2026-10-28T09:07:58.3943172Z Updating files:  92% (202268/218560)
+2026-10-28T09:08:00.3929630Z Updating files:  92% (202269/218560)
+2026-10-28T09:08:01.3011407Z Updating files:  92% (202287/218560)
+2026-10-28T09:08:02.0490319Z Updating files:  92% (202337/218560)
+2026-10-28T09:08:03.9545560Z Updating files:  92% (202389/218560)
+2026-10-28T09:08:04.1244854Z Updating files:  92% (202441/218560)
+2026-10-28T09:08:04.7826503Z Updating files:  93% (203261/218560)
+2026-10-28T09:08:05.7322999Z Updating files:  93% (204153/218560)
+2026-10-28T09:08:05.7842027Z Updating files:  93% (204429/218560)
+2026-10-28T09:08:06.7089631Z Updating files:  94% (205447/218560)
+2026-10-28T09:08:08.1497283Z Updating files:  94% (206161/218560)
+2026-10-28T09:08:08.8822331Z Updating files:  94% (206182/218560)
+2026-10-28T09:08:09.1677602Z Updating files:  94% (206462/218560)
+2026-10-28T09:08:09.7788711Z Updating files:  95% (207632/218560)
+2026-10-28T09:08:11.0392132Z Updating files:  95% (208280/218560)
+2026-10-28T09:08:12.8665219Z Updating files:  95% (208305/218560)
+2026-10-28T09:08:13.0314395Z Updating files:  95% (208355/218560)
+2026-10-28T09:08:13.6820290Z Updating files:  96% (209818/218560)
+2026-10-28T09:08:13.8569070Z Updating files:  96% (211732/218560)
+2026-10-28T09:08:14.4644744Z Updating files:  97% (212004/218560)
+2026-10-28T09:08:14.7023106Z Updating files:  98% (214189/218560)
+2026-10-28T09:08:14.8302044Z Updating files:  98% (214550/218560)
+2026-10-28T09:08:15.0158743Z Updating files:  99% (216375/218560)
+2026-10-28T09:08:15.0159044Z Updating files: 100% (218560/218560)
+2026-10-28T09:08:15.0159290Z Updating files: 100% (218560/218560), done.
+2026-10-28T09:08:16.9686138Z Switched to a new branch 'codex/vo2167-signature-completion'
+2026-10-28T09:08:16.9698991Z branch 'codex/vo2167-signature-completion' set up to track 'origin/codex/vo2167-signature-completion'.
+2026-10-28T09:08:17.5730062Z ##[endgroup]
+2026-10-28T09:08:17.5903330Z [command]/usr/bin/git log -1 --format=%H
+2026-10-28T09:08:17.5927230Z 6e0d941e796db8813ee58bc8fda00e126e0a232c
+2026-10-28T09:08:17.6008804Z ##[group]Removing auth
+2026-10-28T09:08:17.6009187Z Removing SSH command configuration
+2026-10-28T09:08:17.6015629Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-28T09:08:17.6049407Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-28T09:08:17.6672170Z Removing HTTP extra header
+2026-10-28T09:08:17.6677463Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-28T09:08:17.6724618Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-28T09:08:17.7266785Z Removing includeIf entries pointing to credentials config files
+2026-10-28T09:08:17.7271585Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-28T09:08:17.7310465Z includeif.gitdir:/home/runner/work/lean-bridge/lean-bridge/.git.path
+2026-10-28T09:08:17.7310982Z includeif.gitdir:/home/runner/work/lean-bridge/lean-bridge/.git/worktrees/*.path
+2026-10-28T09:08:17.7311354Z includeif.gitdir:/github/workspace/.git.path
+2026-10-28T09:08:17.7311638Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-28T09:08:17.7318183Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/lean-bridge/lean-bridge/.git.path
+2026-10-28T09:08:17.7341462Z /home/runner/work/_temp/git-credentials-e9619f4d-9a82-44d8-b46b-73ea7b79df9d.config
+2026-10-28T09:08:17.7365384Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/lean-bridge/lean-bridge/.git.path /home/runner/work/_temp/git-credentials-e9619f4d-9a82-44d8-b46b-73ea7b79df9d.config
+2026-10-28T09:08:17.7402786Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/lean-bridge/lean-bridge/.git/worktrees/*.path
+2026-10-28T09:08:17.7427643Z /home/runner/work/_temp/git-credentials-e9619f4d-9a82-44d8-b46b-73ea7b79df9d.config
+2026-10-28T09:08:17.7441354Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/lean-bridge/lean-bridge/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-e9619f4d-9a82-44d8-b46b-73ea7b79df9d.config
+2026-10-28T09:08:17.7477189Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-10-28T09:08:17.7500801Z /github/runner_temp/git-credentials-e9619f4d-9a82-44d8-b46b-73ea7b79df9d.config
+2026-10-28T09:08:17.7507117Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-e9619f4d-9a82-44d8-b46b-73ea7b79df9d.config
+2026-10-28T09:08:17.7538652Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-28T09:08:17.7560095Z /github/runner_temp/git-credentials-e9619f4d-9a82-44d8-b46b-73ea7b79df9d.config
+2026-10-28T09:08:17.7566066Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-e9619f4d-9a82-44d8-b46b-73ea7b79df9d.config
+2026-10-28T09:08:17.7603803Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-28T09:08:17.9138491Z Removing credentials config '/home/runner/work/_temp/git-credentials-e9619f4d-9a82-44d8-b46b-73ea7b79df9d.config'
+2026-10-28T09:08:17.9184203Z ##[endgroup]
+2026-10-28T09:08:18.0781159Z ##[group]Run actions/setup-node@v6
+2026-10-28T09:08:18.0781403Z with:
+2026-10-28T09:08:18.0781583Z   node-version: 22
+2026-10-28T09:08:18.0781752Z   cache: npm
+2026-10-28T09:08:18.0781912Z   check-latest: false
+2026-10-28T09:08:18.0784073Z   token: ***
+2026-10-28T09:08:18.0784262Z   package-manager-cache: true
+2026-10-28T09:08:18.0784464Z ##[endgroup]
+2026-10-28T09:08:18.2604176Z Found in cache @ /opt/hostedtoolcache/node/22.23.3/x64
+2026-10-28T09:08:18.2604756Z ##[group]Environment details
+2026-10-28T09:08:18.5667186Z node: v22.23.3
+2026-10-28T09:08:18.5667538Z npm: 10.9.9
+2026-10-28T09:08:18.5667776Z yarn: 1.22.22
+2026-10-28T09:08:18.5668399Z ##[endgroup]
+2026-10-28T09:08:18.5683842Z [command]/opt/hostedtoolcache/node/22.23.3/x64/bin/npm config get cache
+2026-10-28T09:08:18.6571293Z /home/runner/.npm
+2026-10-28T09:08:18.8734794Z Cache hit for: node-cache-Linux-x64-npm-26a2ea32ff9fbdbc806907cf3b846fc9f2d906ee6b040e7c2c0e2b49f755b41e
+2026-10-28T09:08:20.1614871Z Received 25165824 of 55090959 (45.7%), 24.0 MBs/sec
+2026-10-28T09:08:20.4047638Z Received 55090959 of 55090959 (100.0%), 42.2 MBs/sec
+2026-10-28T09:08:20.4048434Z Cache Size: ~53 MB (55090959 B)
+2026-10-28T09:08:20.4133156Z [command]/usr/bin/tar -xf /home/runner/work/_temp/60435b6e-ea41-4a63-855f-ba69632d4e6d/cache.tzst -P -C /home/runner/work/lean-bridge/lean-bridge --use-compress-program unzstd
+2026-10-28T09:08:20.5598059Z Cache restored successfully
+2026-10-28T09:08:20.5629784Z Cache restored from key: node-cache-Linux-x64-npm-26a2ea32ff9fbdbc806907cf3b846fc9f2d906ee6b040e7c2c0e2b49f755b41e
+2026-10-28T09:08:20.7201226Z Prepare all required actions
+2026-10-28T09:08:20.7243510Z ##[group]Run ./.github/actions/bounded-apt
+2026-10-28T09:08:20.7243758Z ##[endgroup]
+2026-10-28T09:08:20.7291525Z ##[start-action display=Configure apt network limits;id=__self.__run]
+2026-10-28T09:08:20.7347987Z ##[group]Run sudo install -m 0644 "/home/runner/work/lean-bridge/lean-bridge/./.github/actions/bounded-apt/apt-network.conf" /etc/apt/apt.conf.d/99lean-bridge-network
+2026-10-28T09:08:20.7348975Z [36;1msudo install -m 0644 "/home/runner/work/lean-bridge/lean-bridge/./.github/actions/bounded-apt/apt-network.conf" /etc/apt/apt.conf.d/99lean-bridge-network[0m
+2026-10-28T09:08:20.7349522Z [36;1mapt-config dump[0m
+2026-10-28T09:08:20.9133732Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-28T09:08:20.9134064Z ##[endgroup]
+2026-10-28T09:08:20.9759761Z APT "";
+2026-10-28T09:08:20.9760311Z APT::Architecture "amd64";
+2026-10-28T09:08:20.9761087Z APT::Build-Essential "";
+2026-10-28T09:08:20.9761580Z APT::Build-Essential:: "build-essential";
+2026-10-28T09:08:20.9762006Z APT::Install-Recommends "1";
+2026-10-28T09:08:20.9762369Z APT::Install-Suggests "0";
+2026-10-28T09:08:20.9762685Z APT::Key "";
+2026-10-28T09:08:20.9764149Z APT::Key::Assert-Pubkey-Algo ">=rsa1024,ed25519,ed448,nistp256,nistp384,nistp512,brainpoolP256r1,brainpoolP320r1,brainpoolP384r1,brainpoolP512r1,secp256k1";
+2026-10-28T09:08:20.9765155Z APT::Key::Assert-Pubkey-Algo::Next ">=rsa2048,ed25519,ed448,nistp256,nistp384,nistp512";
+2026-10-28T09:08:20.9765613Z APT::Key::Assert-Pubkey-Algo::Future ">=rsa3072,ed25519,ed448";
+2026-10-28T09:08:20.9765887Z APT::Sandbox "";
+2026-10-28T09:08:20.9766079Z APT::Sandbox::User "_apt";
+2026-10-28T09:08:20.9766292Z APT::NeverAutoRemove "";
+2026-10-28T09:08:20.9766549Z APT::NeverAutoRemove:: "^firmware-linux.*";
+2026-10-28T09:08:20.9766855Z APT::NeverAutoRemove:: "^linux-firmware$";
+2026-10-28T09:08:20.9767180Z APT::NeverAutoRemove:: "^linux-image-[a-z0-9]*$";
+2026-10-28T09:08:20.9767565Z APT::NeverAutoRemove:: "^linux-image-[a-z0-9]*-[a-z0-9]*$";
+2026-10-28T09:08:20.9767898Z APT::NeverAutoRemove:: "^postgresql.*-16";
+2026-10-28T09:08:20.9768187Z APT::VersionedKernelPackages "";
+2026-10-28T09:08:20.9768458Z APT::VersionedKernelPackages:: "linux-.*";
+2026-10-28T09:08:20.9768789Z APT::VersionedKernelPackages:: "kfreebsd-.*";
+2026-10-28T09:08:20.9769083Z APT::VersionedKernelPackages:: "gnumach-.*";
+2026-10-28T09:08:20.9769369Z APT::VersionedKernelPackages:: ".*-modules";
+2026-10-28T09:08:20.9769642Z APT::VersionedKernelPackages:: ".*-kernel";
+2026-10-28T09:08:20.9769910Z APT::Never-MarkAuto-Sections "";
+2026-10-28T09:08:20.9770190Z APT::Never-MarkAuto-Sections:: "metapackages";
+2026-10-28T09:08:20.9770470Z APT::Never-MarkAuto-Sections:: "tasks";
+2026-10-28T09:08:20.9770734Z APT::Move-Autobit-Sections "";
+2026-10-28T09:08:20.9770986Z APT::Move-Autobit-Sections:: "oldlibs";
+2026-10-28T09:08:20.9771194Z APT::Get "";
+2026-10-28T09:08:20.9771400Z APT::Get::AutomaticRemove "0";
+2026-10-28T09:08:20.9771628Z APT::Get::HideAutoRemove "1";
+2026-10-28T09:08:20.9771843Z APT::Get::Assume-Yes "true";
+2026-10-28T09:08:20.9772106Z APT::Get::Always-Include-Phased-Updates "true";
+2026-10-28T09:08:20.9772355Z APT::Periodic "";
+2026-10-28T09:08:20.9772586Z APT::Periodic::Update-Package-Lists "1";
+2026-10-28T09:08:20.9773052Z APT::Periodic::Download-Upgradeable-Packages "0";
+2026-10-28T09:08:20.9773354Z APT::Periodic::AutocleanInterval "0";
+2026-10-28T09:08:20.9773572Z APT::Update "";
+2026-10-28T09:08:20.9773783Z APT::Update::Post-Invoke-Success "";
+2026-10-28T09:08:20.9774257Z APT::Update::Post-Invoke-Success:: "touch /var/lib/apt/periodic/update-success-stamp 2>/dev/null || true";
+2026-10-28T09:08:20.9776120Z APT::Update::Post-Invoke-Success:: "/usr/bin/test -e /usr/share/dbus-1/system-services/org.freedesktop.PackageKit.service && /usr/bin/test -S /var/run/dbus/system_bus_socket && /usr/bin/gdbus call --system --dest org.freedesktop.PackageKit --object-path /org/freedesktop/PackageKit --timeout 4 --method org.freedesktop.PackageKit.StateHasChanged cache-update > /dev/null; /bin/echo > /dev/null";
+2026-10-28T09:08:20.9777732Z APT::Update::Post-Invoke-Success:: "if /usr/bin/test -w /var/cache/swcatalog -a -e /usr/bin/appstreamcli; then appstreamcli refresh --source=os > /dev/null || true; fi";
+2026-10-28T09:08:20.9778649Z APT::Update::Post-Invoke-Success:: "if /usr/bin/test -w /var/lib/command-not-found/ -a -e /usr/lib/cnf-update-db; then /usr/lib/cnf-update-db > /dev/null; fi";
+2026-10-28T09:08:20.9779399Z APT::Update::Post-Invoke-Success:: "/usr/lib/update-notifier/update-motd-updates-available 2>/dev/null || true";
+2026-10-28T09:08:20.9779809Z APT::Update::Pre-Invoke "";
+2026-10-28T09:08:20.9780428Z APT::Update::Pre-Invoke:: "[ ! -e /run/systemd/system ] || [ $(id -u) -ne 0 ] || systemctl start --no-block apt-news.service esm-cache.service >/dev/null 2>&1 || true";
+2026-10-28T09:08:20.9780963Z APT::Update::Error-Mode "any";
+2026-10-28T09:08:20.9781177Z APT::Archives "";
+2026-10-28T09:08:20.9781490Z APT::Archives::MaxAge "30";
+2026-10-28T09:08:20.9781700Z APT::Archives::MinAge "2";
+2026-10-28T09:08:20.9781906Z APT::Archives::MaxSize "500";
+2026-10-28T09:08:20.9782113Z APT::Architectures "";
+2026-10-28T09:08:20.9782318Z APT::Architectures:: "amd64";
+2026-10-28T09:08:20.9782546Z APT::Compressor "";
+2026-10-28T09:08:20.9782745Z APT::Compressor::. "";
+2026-10-28T09:08:20.9783741Z APT::Compressor::.::Name ".";
+2026-10-28T09:08:20.9784132Z APT::Compressor::.::Extension "";
+2026-10-28T09:08:20.9784518Z APT::Compressor::.::Binary "";
+2026-10-28T09:08:20.9784828Z APT::Compressor::.::Cost "0";
+2026-10-28T09:08:20.9785052Z APT::Compressor::zstd "";
+2026-10-28T09:08:20.9785288Z APT::Compressor::zstd::Name "zstd";
+2026-10-28T09:08:20.9785561Z APT::Compressor::zstd::Extension ".zst";
+2026-10-28T09:08:20.9785826Z APT::Compressor::zstd::Binary "zstd";
+2026-10-28T09:08:20.9786069Z APT::Compressor::zstd::Cost "60";
+2026-10-28T09:08:20.9786322Z APT::Compressor::zstd::CompressArg "";
+2026-10-28T09:08:20.9786607Z APT::Compressor::zstd::CompressArg:: "-19";
+2026-10-28T09:08:20.9786890Z APT::Compressor::zstd::UncompressArg "";
+2026-10-28T09:08:20.9787177Z APT::Compressor::zstd::UncompressArg:: "-d";
+2026-10-28T09:08:20.9787419Z APT::Compressor::lz4 "";
+2026-10-28T09:08:20.9787645Z APT::Compressor::lz4::Name "lz4";
+2026-10-28T09:08:20.9787894Z APT::Compressor::lz4::Extension ".lz4";
+2026-10-28T09:08:20.9788150Z APT::Compressor::lz4::Binary "lz4";
+2026-10-28T09:08:20.9788389Z APT::Compressor::lz4::Cost "50";
+2026-10-28T09:08:20.9788628Z APT::Compressor::lz4::CompressArg "";
+2026-10-28T09:08:20.9788890Z APT::Compressor::lz4::CompressArg:: "-1";
+2026-10-28T09:08:20.9789152Z APT::Compressor::lz4::UncompressArg "";
+2026-10-28T09:08:20.9789415Z APT::Compressor::lz4::UncompressArg:: "-d";
+2026-10-28T09:08:20.9789761Z APT::Compressor::gzip "";
+2026-10-28T09:08:20.9790098Z APT::Compressor::gzip::Name "gzip";
+2026-10-28T09:08:20.9816682Z APT::Compressor::gzip::Extension ".gz";
+2026-10-28T09:08:20.9817124Z APT::Compressor::gzip::Binary "gzip";
+2026-10-28T09:08:20.9817416Z APT::Compressor::gzip::Cost "100";
+2026-10-28T09:08:20.9817686Z APT::Compressor::gzip::CompressArg "";
+2026-10-28T09:08:20.9817968Z APT::Compressor::gzip::CompressArg:: "-6n";
+2026-10-28T09:08:20.9818248Z APT::Compressor::gzip::UncompressArg "";
+2026-10-28T09:08:20.9818530Z APT::Compressor::gzip::UncompressArg:: "-d";
+2026-10-28T09:08:20.9818788Z APT::Compressor::xz "";
+2026-10-28T09:08:20.9819018Z APT::Compressor::xz::Name "xz";
+2026-10-28T09:08:20.9819271Z APT::Compressor::xz::Extension ".xz";
+2026-10-28T09:08:20.9819524Z APT::Compressor::xz::Binary "xz";
+2026-10-28T09:08:20.9819758Z APT::Compressor::xz::Cost "200";
+2026-10-28T09:08:20.9819993Z APT::Compressor::xz::CompressArg "";
+2026-10-28T09:08:20.9820247Z APT::Compressor::xz::CompressArg:: "-6";
+2026-10-28T09:08:20.9820512Z APT::Compressor::xz::UncompressArg "";
+2026-10-28T09:08:20.9820775Z APT::Compressor::xz::UncompressArg:: "-d";
+2026-10-28T09:08:20.9821018Z APT::Compressor::bzip2 "";
+2026-10-28T09:08:20.9821275Z APT::Compressor::bzip2::Name "bzip2";
+2026-10-28T09:08:20.9821784Z APT::Compressor::bzip2::Extension ".bz2";
+2026-10-28T09:08:20.9822065Z APT::Compressor::bzip2::Binary "bzip2";
+2026-10-28T09:08:20.9822328Z APT::Compressor::bzip2::Cost "300";
+2026-10-28T09:08:20.9822587Z APT::Compressor::bzip2::CompressArg "";
+2026-10-28T09:08:20.9823037Z APT::Compressor::bzip2::CompressArg:: "-6";
+2026-10-28T09:08:20.9823456Z APT::Compressor::bzip2::UncompressArg "";
+2026-10-28T09:08:20.9823747Z APT::Compressor::bzip2::UncompressArg:: "-d";
+2026-10-28T09:08:20.9823994Z APT::Compressor::lzma "";
+2026-10-28T09:08:20.9824221Z APT::Compressor::lzma::Name "lzma";
+2026-10-28T09:08:20.9824481Z APT::Compressor::lzma::Extension ".lzma";
+2026-10-28T09:08:20.9824731Z APT::Compressor::lzma::Binary "xz";
+2026-10-28T09:08:20.9824975Z APT::Compressor::lzma::Cost "400";
+2026-10-28T09:08:20.9825235Z APT::Compressor::lzma::CompressArg "";
+2026-10-28T09:08:20.9825536Z APT::Compressor::lzma::CompressArg:: "--format=lzma";
+2026-10-28T09:08:20.9825986Z APT::Compressor::lzma::CompressArg:: "-6";
+2026-10-28T09:08:20.9826264Z APT::Compressor::lzma::UncompressArg "";
+2026-10-28T09:08:20.9826571Z APT::Compressor::lzma::UncompressArg:: "--format=lzma";
+2026-10-28T09:08:20.9826882Z APT::Compressor::lzma::UncompressArg:: "-d";
+2026-10-28T09:08:20.9827107Z Dir "/";
+2026-10-28T09:08:20.9827294Z Dir::State "var/lib/apt";
+2026-10-28T09:08:20.9827501Z Dir::State::lists "lists/";
+2026-10-28T09:08:20.9827737Z Dir::State::cdroms "cdroms.list";
+2026-10-28T09:08:20.9828023Z Dir::State::extended_states "extended_states";
+2026-10-28T09:08:20.9828313Z Dir::State::status "/var/lib/dpkg/status";
+2026-10-28T09:08:20.9828547Z Dir::Cache "var/cache/apt";
+2026-10-28T09:08:20.9828781Z Dir::Cache::archives "archives/";
+2026-10-28T09:08:20.9829040Z Dir::Cache::srcpkgcache "srcpkgcache.bin";
+2026-10-28T09:08:20.9829304Z Dir::Cache::pkgcache "pkgcache.bin";
+2026-10-28T09:08:20.9829519Z Dir::Etc "etc/apt";
+2026-10-28T09:08:20.9829739Z Dir::Etc::sourcelist "sources.list";
+2026-10-28T09:08:20.9830003Z Dir::Etc::sourceparts "sources.list.d";
+2026-10-28T09:08:20.9830235Z Dir::Etc::main "apt.conf";
+2026-10-28T09:08:20.9830447Z Dir::Etc::netrc "auth.conf";
+2026-10-28T09:08:20.9830685Z Dir::Etc::netrcparts "auth.conf.d";
+2026-10-28T09:08:20.9830908Z Dir::Etc::parts "apt.conf.d";
+2026-10-28T09:08:20.9831155Z Dir::Etc::preferences "preferences";
+2026-10-28T09:08:20.9831420Z Dir::Etc::preferencesparts "preferences.d";
+2026-10-28T09:08:20.9831682Z Dir::Etc::trusted "trusted.gpg";
+2026-10-28T09:08:20.9831927Z Dir::Etc::trustedparts "trusted.gpg.d";
+2026-10-28T09:08:20.9832134Z Dir::Bin "";
+2026-10-28T09:08:20.9832346Z Dir::Bin::methods "/usr/lib/apt/methods";
+2026-10-28T09:08:20.9832571Z Dir::Bin::solvers "";
+2026-10-28T09:08:20.9832952Z Dir::Bin::solvers:: "/usr/lib/apt/solvers";
+2026-10-28T09:08:20.9833239Z Dir::Bin::planners "";
+2026-10-28T09:08:20.9833489Z Dir::Bin::planners:: "/usr/lib/apt/planners";
+2026-10-28T09:08:20.9833763Z Dir::Bin::dpkg "/usr/bin/dpkg";
+2026-10-28T09:08:20.9833986Z Dir::Bin::gzip "/bin/gzip";
+2026-10-28T09:08:20.9834201Z Dir::Bin::bzip2 "/bin/bzip2";
+2026-10-28T09:08:20.9834407Z Dir::Bin::xz "/usr/bin/xz";
+2026-10-28T09:08:20.9834608Z Dir::Bin::lz4 "/usr/bin/lz4";
+2026-10-28T09:08:20.9834828Z Dir::Bin::zstd "/usr/bin/zstd";
+2026-10-28T09:08:20.9835031Z Dir::Bin::lzma "/usr/bin/xz";
+2026-10-28T09:08:20.9835220Z Dir::Media "";
+2026-10-28T09:08:20.9835428Z Dir::Media::MountPath "/media/apt";
+2026-10-28T09:08:20.9835647Z Dir::Log "var/log/apt";
+2026-10-28T09:08:20.9835870Z Dir::Log::Terminal "term.log";
+2026-10-28T09:08:20.9836098Z Dir::Log::History "history.log";
+2026-10-28T09:08:20.9836331Z Dir::Log::Planner "eipp.log.xz";
+2026-10-28T09:08:20.9836563Z Dir::Ignore-Files-Silently "";
+2026-10-28T09:08:20.9836808Z Dir::Ignore-Files-Silently:: "~$";
+2026-10-28T09:08:20.9837075Z Dir::Ignore-Files-Silently:: "\.disabled$";
+2026-10-28T09:08:20.9837343Z Dir::Ignore-Files-Silently:: "\.bak$";
+2026-10-28T09:08:20.9837639Z Dir::Ignore-Files-Silently:: "\.dpkg-[a-z]+$";
+2026-10-28T09:08:20.9838123Z Dir::Ignore-Files-Silently:: "\.ucf-[a-z]+$";
+2026-10-28T09:08:20.9838436Z Dir::Ignore-Files-Silently:: "\.save$";
+2026-10-28T09:08:20.9838704Z Dir::Ignore-Files-Silently:: "\.orig$";
+2026-10-28T09:08:20.9838979Z Dir::Ignore-Files-Silently:: "\.distUpgrade$";
+2026-10-28T09:08:20.9839198Z Acquire "";
+2026-10-28T09:08:20.9839412Z Acquire::AllowInsecureRepositories "0";
+2026-10-28T09:08:20.9839672Z Acquire::AllowWeakRepositories "0";
+2026-10-28T09:08:20.9839969Z Acquire::AllowDowngradeToInsecureRepositories "0";
+2026-10-28T09:08:20.9840226Z Acquire::cdrom "";
+2026-10-28T09:08:20.9840449Z Acquire::cdrom::mount "/media/cdrom/";
+2026-10-28T09:08:20.9840676Z Acquire::IndexTargets "";
+2026-10-28T09:08:20.9840902Z Acquire::IndexTargets::deb "";
+2026-10-28T09:08:20.9841158Z Acquire::IndexTargets::deb::Packages "";
+2026-10-28T09:08:20.9841600Z Acquire::IndexTargets::deb::Packages::MetaKey "$(COMPONENT)/binary-$(ARCHITECTURE)/Packages";
+2026-10-28T09:08:20.9842062Z Acquire::IndexTargets::deb::Packages::flatMetaKey "Packages";
+2026-10-28T09:08:20.9842582Z Acquire::IndexTargets::deb::Packages::ShortDescription "Packages";
+2026-10-28T09:08:20.9843196Z Acquire::IndexTargets::deb::Packages::Description "$(RELEASE)/$(COMPONENT) $(ARCHITECTURE) Packages";
+2026-10-28T09:08:20.9843725Z Acquire::IndexTargets::deb::Packages::flatDescription "$(RELEASE) Packages";
+2026-10-28T09:08:20.9844117Z Acquire::IndexTargets::deb::Packages::Optional "0";
+2026-10-28T09:08:20.9844427Z Acquire::IndexTargets::deb::Translations "";
+2026-10-28T09:08:20.9844872Z Acquire::IndexTargets::deb::Translations::MetaKey "$(COMPONENT)/i18n/Translation-$(LANGUAGE)";
+2026-10-28T09:08:20.9845396Z Acquire::IndexTargets::deb::Translations::flatMetaKey "$(LANGUAGE)";
+2026-10-28T09:08:20.9845868Z Acquire::IndexTargets::deb::Translations::ShortDescription "Translation-$(LANGUAGE)";
+2026-10-28T09:08:20.9846449Z Acquire::IndexTargets::deb::Translations::Description "$(RELEASE)/$(COMPONENT) Translation-$(LANGUAGE)";
+2026-10-28T09:08:20.9847047Z Acquire::IndexTargets::deb::Translations::flatDescription "$(RELEASE) Translation-$(LANGUAGE)";
+2026-10-28T09:08:20.9847453Z Acquire::IndexTargets::deb::DEP-11 "";
+2026-10-28T09:08:20.9847921Z Acquire::IndexTargets::deb::DEP-11::MetaKey "$(COMPONENT)/dep11/Components-$(NATIVE_ARCHITECTURE).yml";
+2026-10-28T09:08:20.9848476Z Acquire::IndexTargets::deb::DEP-11::ShortDescription "Components-$(NATIVE_ARCHITECTURE)";
+2026-10-28T09:08:20.9849059Z Acquire::IndexTargets::deb::DEP-11::Description "$(RELEASE)/$(COMPONENT) $(NATIVE_ARCHITECTURE) Components";
+2026-10-28T09:08:20.9849536Z Acquire::IndexTargets::deb::DEP-11::KeepCompressed "true";
+2026-10-28T09:08:20.9849896Z Acquire::IndexTargets::deb::DEP-11::KeepCompressedAs "gz";
+2026-10-28T09:08:20.9850250Z Acquire::IndexTargets::deb::DEP-11::DefaultEnabled "false";
+2026-10-28T09:08:20.9850590Z Acquire::IndexTargets::deb::DEP-11-icons-small "";
+2026-10-28T09:08:20.9851042Z Acquire::IndexTargets::deb::DEP-11-icons-small::MetaKey "$(COMPONENT)/dep11/icons-48x48.tar";
+2026-10-28T09:08:20.9851556Z Acquire::IndexTargets::deb::DEP-11-icons-small::ShortDescription "icons-48x48";
+2026-10-28T09:08:20.9852116Z Acquire::IndexTargets::deb::DEP-11-icons-small::Description "$(RELEASE)/$(COMPONENT) Icons (48x48)";
+2026-10-28T09:08:20.9852617Z Acquire::IndexTargets::deb::DEP-11-icons-small::KeepCompressed "true";
+2026-10-28T09:08:20.9853129Z Acquire::IndexTargets::deb::DEP-11-icons-small::KeepCompressedAs "gz";
+2026-10-28T09:08:20.9853558Z Acquire::IndexTargets::deb::DEP-11-icons-small::DefaultEnabled "false";
+2026-10-28T09:08:20.9853909Z Acquire::IndexTargets::deb::DEP-11-icons "";
+2026-10-28T09:08:20.9854324Z Acquire::IndexTargets::deb::DEP-11-icons::MetaKey "$(COMPONENT)/dep11/icons-64x64.tar";
+2026-10-28T09:08:20.9854798Z Acquire::IndexTargets::deb::DEP-11-icons::ShortDescription "icons-64x64";
+2026-10-28T09:08:20.9855298Z Acquire::IndexTargets::deb::DEP-11-icons::Description "$(RELEASE)/$(COMPONENT) Icons (64x64)";
+2026-10-28T09:08:20.9855766Z Acquire::IndexTargets::deb::DEP-11-icons::KeepCompressed "true";
+2026-10-28T09:08:20.9856297Z Acquire::IndexTargets::deb::DEP-11-icons::KeepCompressedAs "gz";
+2026-10-28T09:08:20.9856689Z Acquire::IndexTargets::deb::DEP-11-icons::DefaultEnabled "false";
+2026-10-28T09:08:20.9857042Z Acquire::IndexTargets::deb::DEP-11-icons-hidpi "";
+2026-10-28T09:08:20.9857509Z Acquire::IndexTargets::deb::DEP-11-icons-hidpi::MetaKey "$(COMPONENT)/dep11/icons-64x64@2.tar";
+2026-10-28T09:08:20.9858036Z Acquire::IndexTargets::deb::DEP-11-icons-hidpi::ShortDescription "icons-64x64@2";
+2026-10-28T09:08:20.9858587Z Acquire::IndexTargets::deb::DEP-11-icons-hidpi::Description "$(RELEASE)/$(COMPONENT) Icons (64x64@2)";
+2026-10-28T09:08:20.9859086Z Acquire::IndexTargets::deb::DEP-11-icons-hidpi::KeepCompressed "true";
+2026-10-28T09:08:20.9859504Z Acquire::IndexTargets::deb::DEP-11-icons-hidpi::KeepCompressedAs "gz";
+2026-10-28T09:08:20.9859932Z Acquire::IndexTargets::deb::DEP-11-icons-hidpi::DefaultEnabled "false";
+2026-10-28T09:08:20.9860295Z Acquire::IndexTargets::deb::DEP-11-icons-large "";
+2026-10-28T09:08:20.9860853Z Acquire::IndexTargets::deb::DEP-11-icons-large::MetaKey "$(COMPONENT)/dep11/icons-128x128.tar";
+2026-10-28T09:08:20.9861357Z Acquire::IndexTargets::deb::DEP-11-icons-large::ShortDescription "icons-128x128";
+2026-10-28T09:08:20.9861906Z Acquire::IndexTargets::deb::DEP-11-icons-large::Description "$(RELEASE)/$(COMPONENT) Icons (128x128)";
+2026-10-28T09:08:20.9862393Z Acquire::IndexTargets::deb::DEP-11-icons-large::KeepCompressed "true";
+2026-10-28T09:08:20.9862886Z Acquire::IndexTargets::deb::DEP-11-icons-large::KeepCompressedAs "gz";
+2026-10-28T09:08:20.9863329Z Acquire::IndexTargets::deb::DEP-11-icons-large::DefaultEnabled "false";
+2026-10-28T09:08:20.9863720Z Acquire::IndexTargets::deb::DEP-11-icons-large-hidpi "";
+2026-10-28T09:08:20.9864209Z Acquire::IndexTargets::deb::DEP-11-icons-large-hidpi::MetaKey "$(COMPONENT)/dep11/icons-128x128@2.tar";
+2026-10-28T09:08:20.9864768Z Acquire::IndexTargets::deb::DEP-11-icons-large-hidpi::ShortDescription "icons-128x128@2";
+2026-10-28T09:08:20.9865373Z Acquire::IndexTargets::deb::DEP-11-icons-large-hidpi::Description "$(RELEASE)/$(COMPONENT) Icons (128x128@2)";
+2026-10-28T09:08:20.9865907Z Acquire::IndexTargets::deb::DEP-11-icons-large-hidpi::KeepCompressed "true";
+2026-10-28T09:08:20.9866364Z Acquire::IndexTargets::deb::DEP-11-icons-large-hidpi::KeepCompressedAs "gz";
+2026-10-28T09:08:20.9866816Z Acquire::IndexTargets::deb::DEP-11-icons-large-hidpi::DefaultEnabled "false";
+2026-10-28T09:08:20.9867161Z Acquire::IndexTargets::deb::CNF "";
+2026-10-28T09:08:20.9867573Z Acquire::IndexTargets::deb::CNF::MetaKey "$(COMPONENT)/cnf/Commands-$(NATIVE_ARCHITECTURE)";
+2026-10-28T09:08:20.9868087Z Acquire::IndexTargets::deb::CNF::ShortDescription "Commands-$(NATIVE_ARCHITECTURE)";
+2026-10-28T09:08:20.9868665Z Acquire::IndexTargets::deb::CNF::Description "$(RELEASE)/$(COMPONENT) $(NATIVE_ARCHITECTURE) c-n-f Metadata";
+2026-10-28T09:08:20.9869087Z Acquire::IndexTargets::deb-src "";
+2026-10-28T09:08:20.9869359Z Acquire::IndexTargets::deb-src::Sources "";
+2026-10-28T09:08:20.9869755Z Acquire::IndexTargets::deb-src::Sources::MetaKey "$(COMPONENT)/source/Sources";
+2026-10-28T09:08:20.9870179Z Acquire::IndexTargets::deb-src::Sources::flatMetaKey "Sources";
+2026-10-28T09:08:20.9870579Z Acquire::IndexTargets::deb-src::Sources::ShortDescription "Sources";
+2026-10-28T09:08:20.9871042Z Acquire::IndexTargets::deb-src::Sources::Description "$(RELEASE)/$(COMPONENT) Sources";
+2026-10-28T09:08:20.9871524Z Acquire::IndexTargets::deb-src::Sources::flatDescription "$(RELEASE) Sources";
+2026-10-28T09:08:20.9871909Z Acquire::IndexTargets::deb-src::Sources::Optional "0";
+2026-10-28T09:08:20.9872167Z Acquire::Changelogs "";
+2026-10-28T09:08:20.9872375Z Acquire::Changelogs::URI "";
+2026-10-28T09:08:20.9872616Z Acquire::Changelogs::URI::Origin "";
+2026-10-28T09:08:20.9873218Z Acquire::Changelogs::URI::Origin::Debian "https://metadata.ftp-master.debian.org/changelogs/@CHANGEPATH@_changelog";
+2026-10-28T09:08:20.9873911Z Acquire::Changelogs::URI::Origin::Ubuntu "https://changelogs.ubuntu.com/changelogs/pool/@CHANGEPATH@/changelog";
+2026-10-28T09:08:20.9874500Z Acquire::Changelogs::AlwaysOnline "true";
+2026-10-28T09:08:20.9874794Z Acquire::Changelogs::AlwaysOnline::Origin "";
+2026-10-28T09:08:20.9875117Z Acquire::Changelogs::AlwaysOnline::Origin::Ubuntu "1";
+2026-10-28T09:08:20.9875372Z Acquire::Snapshots "";
+2026-10-28T09:08:20.9875566Z Acquire::Snapshots::URI "";
+2026-10-28T09:08:20.9875803Z Acquire::Snapshots::URI::Origin "";
+2026-10-28T09:08:20.9876246Z Acquire::Snapshots::URI::Origin::Debian "https://snapshot.debian.org/archive/debian/@SNAPSHOTID@/";
+2026-10-28T09:08:20.9876806Z Acquire::Snapshots::URI::Origin::Ubuntu "https://snapshot.ubuntu.com/ubuntu/@SNAPSHOTID@/";
+2026-10-28T09:08:20.9877188Z Acquire::Snapshots::URI::Override "";
+2026-10-28T09:08:20.9877467Z Acquire::Snapshots::URI::Override::Label "";
+2026-10-28T09:08:20.9878020Z Acquire::Snapshots::URI::Override::Label::Debian-Security "https://snapshot.debian.org/archive/debian-security/@SNAPSHOTID@/";
+2026-10-28T09:08:20.9878590Z Acquire::Snapshots::URI::Host "";
+2026-10-28T09:08:20.9879040Z Acquire::Snapshots::URI::Host::archive.ubuntu.com "https://snapshot.ubuntu.com/@PATH@/@SNAPSHOTID@/";
+2026-10-28T09:08:20.9879644Z Acquire::Snapshots::URI::Host::deb.debian.org "https://snapshot.debian.org/archive/@PATH@/@SNAPSHOTID@/";
+2026-10-28T09:08:20.9880233Z Acquire::Snapshots::URI::Host::.archive.ubuntu.com "https://snapshot.ubuntu.com/@PATH@/@SNAPSHOTID@/";
+2026-10-28T09:08:20.9880820Z Acquire::Snapshots::URI::Host::security.ubuntu.com "https://snapshot.ubuntu.com/@PATH@/@SNAPSHOTID@/";
+2026-10-28T09:08:20.9881494Z Acquire::Snapshots::URI::Host::ppa.launchpadcontent.net "https://snapshot.ppa.launchpadcontent.net/@PATH@/@SNAPSHOTID@/";
+2026-10-28T09:08:20.9882199Z Acquire::Snapshots::URI::Host::ppa.launchpad.net "https://snapshot.ppa.launchpadcontent.net/@PATH@/@SNAPSHOTID@/";
+2026-10-28T09:08:20.9882597Z Acquire::http "";
+2026-10-28T09:08:20.9883030Z Acquire::http::User-Agent-Non-Interactive "true";
+2026-10-28T09:08:20.9883325Z Acquire::http::Timeout "15";
+2026-10-28T09:08:20.9883582Z Acquire::http::Pipeline-Depth "0";
+2026-10-28T09:08:20.9883832Z Acquire::http::No-Cache "true";
+2026-10-28T09:08:20.9884042Z Acquire::Retries "1";
+2026-10-28T09:08:20.9884236Z Acquire::https "";
+2026-10-28T09:08:20.9884426Z Acquire::https::Timeout "15";
+2026-10-28T09:08:20.9884666Z Acquire::https::Pipeline-Depth "0";
+2026-10-28T09:08:20.9884920Z Acquire::https::No-Cache "true";
+2026-10-28T09:08:20.9885137Z Acquire::BrokenProxy "true";
+2026-10-28T09:08:20.9885339Z Acquire::Languages "";
+2026-10-28T09:08:20.9885532Z Acquire::Languages:: "en";
+2026-10-28T09:08:20.9885738Z Acquire::Languages:: "none";
+2026-10-28T09:08:20.9885948Z Acquire::CompressionTypes "";
+2026-10-28T09:08:20.9886187Z Acquire::CompressionTypes::xz "xz";
+2026-10-28T09:08:20.9886449Z Acquire::CompressionTypes::bz2 "bzip2";
+2026-10-28T09:08:20.9886717Z Acquire::CompressionTypes::lzma "lzma";
+2026-10-28T09:08:20.9886972Z Acquire::CompressionTypes::gz "gzip";
+2026-10-28T09:08:20.9887235Z Acquire::CompressionTypes::lz4 "lz4";
+2026-10-28T09:08:20.9887494Z Acquire::CompressionTypes::zst "zstd";
+2026-10-28T09:08:20.9887697Z DPkg "";
+2026-10-28T09:08:20.9887911Z DPkg::Path "/usr/sbin:/usr/bin:/sbin:/bin";
+2026-10-28T09:08:20.9888149Z DPkg::Options "";
+2026-10-28T09:08:20.9888361Z DPkg::Options:: "--force-confdef";
+2026-10-28T09:08:20.9888600Z DPkg::Options:: "--force-confold";
+2026-10-28T09:08:20.9888848Z DPkg::Options:: "--force-unsafe-io";
+2026-10-28T09:08:20.9889092Z DPkg::Options:: "--force-confdef";
+2026-10-28T09:08:20.9889322Z DPkg::Options:: "--force-confold";
+2026-10-28T09:08:20.9889531Z DPkg::Post-Invoke "";
+2026-10-28T09:08:20.9890951Z DPkg::Post-Invoke:: "/usr/bin/test -e /usr/share/dbus-1/system-services/org.freedesktop.PackageKit.service && /usr/bin/test -S /var/run/dbus/system_bus_socket && /usr/bin/gdbus call --system --dest org.freedesktop.PackageKit --object-path /org/freedesktop/PackageKit --timeout 4 --method org.freedesktop.PackageKit.StateHasChanged cache-update > /dev/null; /bin/echo > /dev/null";
+2026-10-28T09:08:20.9892569Z DPkg::Post-Invoke:: "test -x /usr/lib/needrestart/apt-pinvoke && /usr/lib/needrestart/apt-pinvoke -m u || true";
+2026-10-28T09:08:20.9893630Z DPkg::Post-Invoke:: "if [ -d /var/lib/update-notifier ]; then touch /var/lib/update-notifier/dpkg-run-stamp; fi; /usr/lib/update-notifier/update-motd-updates-available 2>/dev/null || true";
+2026-10-28T09:08:20.9894231Z DPkg::Pre-Install-Pkgs "";
+2026-10-28T09:08:20.9894575Z DPkg::Pre-Install-Pkgs:: "/usr/sbin/dpkg-preconfigure --apt || true";
+2026-10-28T09:08:20.9894876Z binary "apt-config";
+2026-10-28T09:08:20.9895056Z binary::apt "";
+2026-10-28T09:08:20.9895238Z binary::apt::AptCli "";
+2026-10-28T09:08:20.9895463Z binary::apt::AptCli::Hooks "";
+2026-10-28T09:08:20.9895710Z binary::apt::AptCli::Hooks::Upgrade "";
+2026-10-28T09:08:20.9896522Z binary::apt::AptCli::Hooks::Upgrade:: "[ ! -f /usr/lib/ubuntu-advantage/apt-esm-json-hook ] || [ $(id -u) -ne 0 ] || /usr/lib/ubuntu-advantage/apt-esm-json-hook 2>> /var/log/ubuntu-advantage-apt-hook.log || true";
+2026-10-28T09:08:20.9897304Z binary::apt::AptCli::Hooks::Install "";
+2026-10-28T09:08:20.9897804Z binary::apt::AptCli::Hooks::Install:: "[ ! -f /usr/bin/snap ] || /usr/bin/snap advise-snap --from-apt 2>/dev/null || true";
+2026-10-28T09:08:20.9898195Z binary::apt::APT "";
+2026-10-28T09:08:20.9898395Z binary::apt::APT::Color "1";
+2026-10-28T09:08:20.9898605Z binary::apt::APT::Cache "";
+2026-10-28T09:08:20.9898833Z binary::apt::APT::Cache::Show "";
+2026-10-28T09:08:20.9899099Z binary::apt::APT::Cache::Show::Version "2";
+2026-10-28T09:08:20.9899374Z binary::apt::APT::Cache::AllVersions "0";
+2026-10-28T09:08:20.9899647Z binary::apt::APT::Cache::ShowVirtuals "1";
+2026-10-28T09:08:20.9899911Z binary::apt::APT::Cache::Search "";
+2026-10-28T09:08:20.9900180Z binary::apt::APT::Cache::Search::Version "2";
+2026-10-28T09:08:20.9900483Z binary::apt::APT::Cache::ShowDependencyType "1";
+2026-10-28T09:08:20.9900772Z binary::apt::APT::Cache::ShowVersion "1";
+2026-10-28T09:08:20.9901010Z binary::apt::APT::Get "";
+2026-10-28T09:08:20.9901266Z binary::apt::APT::Get::Upgrade-Allow-New "1";
+2026-10-28T09:08:20.9901526Z binary::apt::APT::Get::Update "";
+2026-10-28T09:08:20.9901854Z binary::apt::APT::Get::Update::InteractiveReleaseInfoChanges "1";
+2026-10-28T09:08:20.9902143Z binary::apt::APT::Cmd "";
+2026-10-28T09:08:20.9902384Z binary::apt::APT::Cmd::Show-Update-Stats "1";
+2026-10-28T09:08:20.9902662Z binary::apt::APT::Cmd::Pattern-Only "1";
+2026-10-28T09:08:20.9903046Z binary::apt::APT::Keep-Downloaded-Packages "0";
+2026-10-28T09:08:20.9903295Z binary::apt::DPkg "";
+2026-10-28T09:08:20.9903527Z binary::apt::DPkg::Progress-Fancy "1";
+2026-10-28T09:08:20.9903757Z binary::apt::DPkg::Lock "";
+2026-10-28T09:08:20.9903991Z binary::apt::DPkg::Lock::Timeout "120";
+2026-10-28T09:08:20.9904206Z CommandLine "";
+2026-10-28T09:08:20.9904432Z CommandLine::AsString "apt-config dump";
+2026-10-28T09:08:20.9921174Z ##[end-action id=__self.__run;outcome=success;conclusion=success;duration_ms=262]
+2026-10-28T09:08:20.9953905Z ##[group]Run sudo apt-get update
+2026-10-28T09:08:20.9954174Z [36;1msudo apt-get update[0m
+2026-10-28T09:08:20.9954593Z [36;1msudo apt-get install -y build-essential cmake git jq libgmp-dev libuv1-dev m4 pkg-config ripgrep xz-utils zstd[0m
+2026-10-28T09:08:21.0012118Z shell: /usr/bin/bash -e {0}
+2026-10-28T09:08:21.0012371Z ##[endgroup]
+2026-10-28T09:08:21.2094802Z Get:1 file:/etc/apt/apt-mirrors.txt Mirrorlist [144 B]
+2026-10-28T09:08:21.2514493Z Hit:2 http://azure.archive.ubuntu.com/ubuntu noble InRelease
+2026-10-28T09:08:21.2524065Z Get:6 https://packages.microsoft.com/ubuntu/24.04/prod noble InRelease [3600 B]
+2026-10-28T09:08:21.2544069Z Get:3 http://azure.archive.ubuntu.com/ubuntu noble-updates InRelease [126 kB]
+2026-10-28T09:08:21.2575824Z Get:4 http://azure.archive.ubuntu.com/ubuntu noble-backports InRelease [126 kB]
+2026-10-28T09:08:21.2661516Z Get:5 http://azure.archive.ubuntu.com/ubuntu noble-security InRelease [126 kB]
+2026-10-28T09:08:21.3809013Z Get:7 https://packages.microsoft.com/ubuntu/24.04/prod noble/main amd64 Packages [666 kB]
+2026-10-28T09:08:21.3997415Z Get:8 https://packages.microsoft.com/ubuntu/24.04/prod noble/main armhf Packages [12.4 kB]
+2026-10-28T09:08:21.4051063Z Get:9 https://packages.microsoft.com/ubuntu/24.04/prod noble/main arm64 Packages [602 kB]
+2026-10-28T09:08:21.4322621Z Get:10 http://azure.archive.ubuntu.com/ubuntu noble-updates/main amd64 Packages [1406 kB]
+2026-10-28T09:08:21.4410518Z Get:11 http://azure.archive.ubuntu.com/ubuntu noble-updates/main Translation-en [310 kB]
+2026-10-28T09:08:21.4450581Z Get:12 http://azure.archive.ubuntu.com/ubuntu noble-updates/universe amd64 Packages [1707 kB]
+2026-10-28T09:08:21.4510944Z Get:13 http://azure.archive.ubuntu.com/ubuntu noble-updates/universe Translation-en [343 kB]
+2026-10-28T09:08:21.4532348Z Get:14 http://azure.archive.ubuntu.com/ubuntu noble-updates/restricted amd64 Packages [1809 kB]
+2026-10-28T09:08:21.4610031Z Get:15 http://azure.archive.ubuntu.com/ubuntu noble-updates/restricted Translation-en [411 kB]
+2026-10-28T09:08:21.4647223Z Get:16 http://azure.archive.ubuntu.com/ubuntu noble-updates/multiverse Translation-en [14.3 kB]
+2026-10-28T09:08:21.5305796Z Get:17 http://azure.archive.ubuntu.com/ubuntu noble-security/main amd64 Packages [1146 kB]
+2026-10-28T09:08:21.5352628Z Get:18 http://azure.archive.ubuntu.com/ubuntu noble-security/main Translation-en [231 kB]
+2026-10-28T09:08:21.5365008Z Get:19 http://azure.archive.ubuntu.com/ubuntu noble-security/universe amd64 Packages [1223 kB]
+2026-10-28T09:08:21.5830388Z Get:20 http://azure.archive.ubuntu.com/ubuntu noble-security/universe Translation-en [246 kB]
+2026-10-28T09:08:21.5874307Z Get:21 http://azure.archive.ubuntu.com/ubuntu noble-security/restricted amd64 Packages [1713 kB]
+2026-10-28T09:08:21.5937636Z Get:22 http://azure.archive.ubuntu.com/ubuntu noble-security/restricted Translation-en [392 kB]
+2026-10-28T09:08:30.4219074Z Fetched 12.6 MB in 1s (11.4 MB/s)
+2026-10-28T09:08:31.2995054Z Reading package lists...
+2026-10-28T09:08:31.3271542Z Reading package lists...
+2026-10-28T09:08:31.5718288Z Building dependency tree...
+2026-10-28T09:08:31.5725392Z Reading state information...
+2026-10-28T09:08:31.7889799Z git is already the newest version (1:2.55.0-0ppa1~ubuntu24.04.2).
+2026-10-28T09:08:31.7890416Z git set to manually installed.
+2026-10-28T09:08:31.7891065Z jq is already the newest version (1.7.1-3ubuntu0.24.04.2).
+2026-10-28T09:08:31.7891732Z libgmp-dev is already the newest version (2:6.3.0+dfsg-2ubuntu6.1).
+2026-10-28T09:08:31.7892337Z m4 is already the newest version (1.4.19-4build1).
+2026-10-28T09:08:31.7893059Z pkg-config is already the newest version (1.8.1-2build1).
+2026-10-28T09:08:31.7893616Z zstd is already the newest version (1.5.5+dfsg2-2build1.1).
+2026-10-28T09:08:31.7894113Z zstd set to manually installed.
+2026-10-28T09:08:31.7894552Z The following additional packages will be installed:
+2026-10-28T09:08:31.7897602Z   cmake-data libjsoncpp25 liblzma5 librhash0
+2026-10-28T09:08:31.7904415Z Suggested packages:
+2026-10-28T09:08:31.7905393Z   cmake-doc cmake-format elpa-cmake-mode ninja-build
+2026-10-28T09:08:31.8112094Z The following NEW packages will be installed:
+2026-10-28T09:08:31.8121729Z   build-essential cmake cmake-data libjsoncpp25 librhash0 libuv1-dev ripgrep
+2026-10-28T09:08:31.8127718Z The following packages will be upgraded:
+2026-10-28T09:08:31.8131995Z   liblzma5 xz-utils
+2026-10-28T09:08:31.8293971Z 2 upgraded, 7 newly installed, 0 to remove and 102 not upgraded.
+2026-10-28T09:08:31.8294549Z Need to get 15.6 MB of archives.
+2026-10-28T09:08:31.8295110Z After this operation, 55.1 MB of additional disk space will be used.
+2026-10-28T09:08:31.8295621Z Get:1 file:/etc/apt/apt-mirrors.txt Mirrorlist [144 B]
+2026-10-28T09:08:31.8962326Z Get:2 http://azure.archive.ubuntu.com/ubuntu noble-updates/main amd64 liblzma5 amd64 5.6.1+really5.4.5-1ubuntu0.4 [128 kB]
+2026-10-28T09:08:31.9445231Z Get:3 http://azure.archive.ubuntu.com/ubuntu noble-updates/main amd64 xz-utils amd64 5.6.1+really5.4.5-1ubuntu0.4 [267 kB]
+2026-10-28T09:08:31.9930453Z Get:4 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 build-essential amd64 12.10ubuntu1 [4928 B]
+2026-10-28T09:08:32.0391911Z Get:5 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 libjsoncpp25 amd64 1.9.5-6build1 [82.8 kB]
+2026-10-28T09:08:32.0860061Z Get:6 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 librhash0 amd64 1.4.3-3build1 [129 kB]
+2026-10-28T09:08:32.1331080Z Get:7 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 cmake-data all 3.28.3-1build7 [2155 kB]
+2026-10-28T09:08:32.2378879Z Get:8 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 cmake amd64 3.28.3-1build7 [11.2 MB]
+2026-10-28T09:08:32.6513113Z Get:9 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 libuv1-dev amd64 1.48.0-1.1build1 [136 kB]
+2026-10-28T09:08:32.6979785Z Get:10 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 ripgrep amd64 14.1.0-1 [1551 kB]
+2026-10-28T09:08:33.3658716Z Fetched 15.6 MB in 1s (16.9 MB/s)
+2026-10-28T09:08:33.4193458Z (Reading database ... 
+2026-10-28T09:08:33.4194385Z (Reading database ... 5%
+2026-10-28T09:08:33.4194826Z (Reading database ... 10%
+2026-10-28T09:08:33.4195172Z (Reading database ... 15%
+2026-10-28T09:08:33.4195487Z (Reading database ... 20%
+2026-10-28T09:08:33.4195784Z (Reading database ... 25%
+2026-10-28T09:08:33.4196065Z (Reading database ... 30%
+2026-10-28T09:08:33.4196275Z (Reading database ... 35%
+2026-10-28T09:08:33.4196612Z (Reading database ... 40%
+2026-10-28T09:08:33.4196828Z (Reading database ... 45%
+2026-10-28T09:08:33.4197036Z (Reading database ... 50%
+2026-10-28T09:08:33.4242592Z (Reading database ... 55%
+2026-10-28T09:08:33.5121510Z (Reading database ... 60%
+2026-10-28T09:08:33.6720178Z (Reading database ... 65%
+2026-10-28T09:08:33.8596603Z (Reading database ... 70%
+2026-10-28T09:08:34.0777288Z (Reading database ... 75%
+2026-10-28T09:08:34.2650554Z (Reading database ... 80%
+2026-10-28T09:08:34.4124560Z (Reading database ... 85%
+2026-10-28T09:08:34.5918126Z (Reading database ... 90%
+2026-10-28T09:08:34.7665577Z (Reading database ... 95%
+2026-10-28T09:08:34.7665990Z (Reading database ... 100%
+2026-10-28T09:08:34.7711649Z (Reading database ... 203540 files and directories currently installed.)
+2026-10-28T09:08:34.7712189Z Preparing to unpack .../liblzma5_5.6.1+really5.4.5-1ubuntu0.4_amd64.deb ...
+2026-10-28T09:08:34.7858213Z Unpacking liblzma5:amd64 (5.6.1+really5.4.5-1ubuntu0.4) over (5.6.1+really5.4.5-1ubuntu0.3) ...
+2026-10-28T09:08:34.8271506Z Setting up liblzma5:amd64 (5.6.1+really5.4.5-1ubuntu0.4) ...
+2026-10-28T09:08:34.8592089Z (Reading database ... 
+2026-10-28T09:08:34.8592476Z (Reading database ... 5%
+2026-10-28T09:08:34.8592789Z (Reading database ... 10%
+2026-10-28T09:08:34.8593591Z (Reading database ... 15%
+2026-10-28T09:08:34.8593901Z (Reading database ... 20%
+2026-10-28T09:08:34.8594180Z (Reading database ... 25%
+2026-10-28T09:08:34.8594464Z (Reading database ... 30%
+2026-10-28T09:08:34.8594746Z (Reading database ... 35%
+2026-10-28T09:08:34.8595029Z (Reading database ... 40%
+2026-10-28T09:08:34.8595631Z (Reading database ... 45%
+2026-10-28T09:08:34.8595937Z (Reading database ... 50%
+2026-10-28T09:08:34.8604404Z (Reading database ... 55%
+2026-10-28T09:08:34.8715164Z (Reading database ... 60%
+2026-10-28T09:08:34.8743361Z (Reading database ... 65%
+2026-10-28T09:08:34.8763761Z (Reading database ... 70%
+2026-10-28T09:08:34.8798870Z (Reading database ... 75%
+2026-10-28T09:08:34.8826984Z (Reading database ... 80%
+2026-10-28T09:08:34.8959602Z (Reading database ... 85%
+2026-10-28T09:08:34.9204903Z (Reading database ... 90%
+2026-10-28T09:08:34.9311313Z (Reading database ... 95%
+2026-10-28T09:08:34.9311524Z (Reading database ... 100%
+2026-10-28T09:08:34.9311893Z (Reading database ... 203540 files and directories currently installed.)
+2026-10-28T09:08:34.9355251Z Preparing to unpack .../0-xz-utils_5.6.1+really5.4.5-1ubuntu0.4_amd64.deb ...
+2026-10-28T09:08:34.9412955Z Unpacking xz-utils (5.6.1+really5.4.5-1ubuntu0.4) over (5.6.1+really5.4.5-1ubuntu0.3) ...
+2026-10-28T09:08:35.0003255Z Selecting previously unselected package build-essential.
+2026-10-28T09:08:35.0122660Z Preparing to unpack .../1-build-essential_12.10ubuntu1_amd64.deb ...
+2026-10-28T09:08:35.0128722Z Unpacking build-essential (12.10ubuntu1) ...
+2026-10-28T09:08:35.0318446Z Selecting previously unselected package libjsoncpp25:amd64.
+2026-10-28T09:08:35.0434678Z Preparing to unpack .../2-libjsoncpp25_1.9.5-6build1_amd64.deb ...
+2026-10-28T09:08:35.0440752Z Unpacking libjsoncpp25:amd64 (1.9.5-6build1) ...
+2026-10-28T09:08:35.0761268Z Selecting previously unselected package librhash0:amd64.
+2026-10-28T09:08:35.0879285Z Preparing to unpack .../3-librhash0_1.4.3-3build1_amd64.deb ...
+2026-10-28T09:08:35.0885873Z Unpacking librhash0:amd64 (1.4.3-3build1) ...
+2026-10-28T09:08:35.1091980Z Selecting previously unselected package cmake-data.
+2026-10-28T09:08:35.1208235Z Preparing to unpack .../4-cmake-data_3.28.3-1build7_all.deb ...
+2026-10-28T09:08:35.1276279Z Unpacking cmake-data (3.28.3-1build7) ...
+2026-10-28T09:08:35.5528916Z Selecting previously unselected package cmake.
+2026-10-28T09:08:35.5657411Z Preparing to unpack .../5-cmake_3.28.3-1build7_amd64.deb ...
+2026-10-28T09:08:35.5663064Z Unpacking cmake (3.28.3-1build7) ...
+2026-10-28T09:08:35.7565497Z Selecting previously unselected package libuv1-dev:amd64.
+2026-10-28T09:08:35.7684491Z Preparing to unpack .../6-libuv1-dev_1.48.0-1.1build1_amd64.deb ...
+2026-10-28T09:08:35.7691221Z Unpacking libuv1-dev:amd64 (1.48.0-1.1build1) ...
+2026-10-28T09:08:35.7919263Z Selecting previously unselected package ripgrep.
+2026-10-28T09:08:35.8038006Z Preparing to unpack .../7-ripgrep_14.1.0-1_amd64.deb ...
+2026-10-28T09:08:35.8044348Z Unpacking ripgrep (14.1.0-1) ...
+2026-10-28T09:08:35.8752562Z Setting up libuv1-dev:amd64 (1.48.0-1.1build1) ...
+2026-10-28T09:08:35.8769200Z Setting up xz-utils (5.6.1+really5.4.5-1ubuntu0.4) ...
+2026-10-28T09:08:35.9187706Z Setting up libjsoncpp25:amd64 (1.9.5-6build1) ...
+2026-10-28T09:08:35.9201001Z Setting up ripgrep (14.1.0-1) ...
+2026-10-28T09:08:35.9214626Z Setting up librhash0:amd64 (1.4.3-3build1) ...
+2026-10-28T09:08:35.9227987Z Setting up build-essential (12.10ubuntu1) ...
+2026-10-28T09:08:35.9242090Z Setting up cmake-data (3.28.3-1build7) ...
+2026-10-28T09:08:35.9296211Z Setting up cmake (3.28.3-1build7) ...
+2026-10-28T09:08:35.9314207Z Processing triggers for man-db (2.12.0-4build2) ...
+2026-10-28T09:08:35.9330692Z Not building database; man-db/auto-update is not 'true'.
+2026-10-28T09:08:35.9342158Z Processing triggers for libc-bin (2.39-0ubuntu8.9) ...
+2026-10-28T09:08:36.5470880Z 
+2026-10-28T09:08:36.5471510Z Running kernel seems to be up-to-date.
+2026-10-28T09:08:36.5471823Z 
+2026-10-28T09:08:36.5471974Z Restarting services...
+2026-10-28T09:08:36.6348157Z  /etc/needrestart/restart.d/systemd-manager
+2026-10-28T09:08:36.9605924Z  systemctl restart multipathd.service packagekit.service php8.3-fpm.service polkit.service rsyslog.service systemd-journald.service systemd-networkd.service systemd-resolved.service systemd-udevd.service udisks2.service
+2026-10-28T09:08:37.3335878Z 
+2026-10-28T09:08:37.3336864Z Service restarts being deferred:
+2026-10-28T09:08:37.3337424Z  systemctl restart ModemManager.service
+2026-10-28T09:08:37.3337916Z  /etc/needrestart/restart.d/dbus.service
+2026-10-28T09:08:37.3338357Z  systemctl restart docker.service
+2026-10-28T09:08:37.3338853Z  systemctl restart networkd-dispatcher.service
+2026-10-28T09:08:37.3339348Z  systemctl restart systemd-logind.service
+2026-10-28T09:08:37.3339785Z  systemctl restart walinuxagent.service
+2026-10-28T09:08:37.3340062Z 
+2026-10-28T09:08:37.3340385Z No containers need to be restarted.
+2026-10-28T09:08:37.3340621Z 
+2026-10-28T09:08:37.3340794Z User sessions running outdated binaries:
+2026-10-28T09:08:37.3341087Z  runner @ user manager service: systemd[1083]
+2026-10-28T09:08:37.3409841Z 
+2026-10-28T09:08:37.3410664Z No VM guests are running outdated hypervisor (qemu) binaries on this host.
+2026-10-28T09:08:38.6453424Z ##[group]Run set -euo pipefail
+2026-10-28T09:08:38.6453723Z [36;1mset -euo pipefail[0m
+2026-10-28T09:08:38.6453964Z [36;1mnpm ci --ignore-scripts --no-audit --no-fund[0m
+2026-10-28T09:08:38.6454237Z [36;1mmkdir -p build[0m
+2026-10-28T09:08:38.6454607Z [36;1mbash scripts/bootstrap-toolchains.sh --lean-only 2>&1 | tee build/generic-subtype-wit-toolchain.log[0m
+2026-10-28T09:08:38.6455183Z [36;1mbash scripts/bootstrap-toolchains.sh --wasm-tools-only 2>&1 | tee -a build/generic-subtype-wit-toolchain.log[0m
+2026-10-28T09:08:38.6511871Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-28T09:08:38.6512150Z ##[endgroup]
+2026-10-28T09:08:41.9896908Z 
+2026-10-28T09:08:41.9897466Z added 422 packages in 3s
+2026-10-28T09:08:42.6739874Z /home/runner/work/lean-bridge/lean-bridge/.toolchains/downloads/elan-x86_64-unknown-linux-gnu.tar.gz: OK
+2026-10-28T09:08:42.8806163Z Installing leanprover/lean4:v4.32.2 (attempt 1 of 2)
+2026-10-28T09:08:43.5243908Z info: Version 4.2.4 of elan is available! Use `elan self update` to update.
+2026-10-28T09:08:44.0452686Z info: downloading https://releases.lean-lang.org/lean4/v4.32.2/lean-4.32.2-linux.tar.zst
+2026-10-28T09:09:07.1146004Z info: installing /home/runner/work/lean-bridge/lean-bridge/.toolchains/elan/toolchains/leanprover--lean4---v4.32.2
+2026-10-28T09:09:14.3604551Z 
+2026-10-28T09:09:14.3933004Z leanprover/lean4:v4.32.2 installed - Lean (version 4.32.2, x86_64-unknown-linux-gnu, commit f3b06c705e6c85f5314019d5d3baab0fec5b580c, Release)
+2026-10-28T09:09:14.3933859Z 
+2026-10-28T09:09:14.4680576Z info: default toolchain set to 'leanprover/lean4:v4.32.2'
+2026-10-28T09:09:15.3015913Z /home/runner/work/lean-bridge/lean-bridge/.toolchains/downloads/wasm-tools-1.245.1-x86_64-linux.tar.gz: OK
+2026-10-28T09:09:15.4067820Z wasm-tools 1.245.1 (76927bf4b 2026-02-12)
+2026-10-28T09:09:15.4226130Z ##[group]Run set -euo pipefail
+2026-10-28T09:09:15.4226429Z [36;1mset -euo pipefail[0m
+2026-10-28T09:09:15.4226626Z [36;1m([0m
+2026-10-28T09:09:15.4226796Z [36;1m  set -euo pipefail[0m
+2026-10-28T09:09:15.4227012Z [36;1m  test "$(uname -sm)" = 'Linux x86_64'[0m
+2026-10-28T09:09:15.4227259Z [36;1m  mkdir -p build[0m
+2026-10-28T09:09:15.4227559Z [36;1m  test ! -e build/wasmtime-c-api && test ! -L build/wasmtime-c-api[0m
+2026-10-28T09:09:15.4227943Z [36;1m  WASMTIME_CAPI_STAGING=$(mktemp -d build/wasmtime-c-api.XXXXXX)[0m
+2026-10-28T09:09:15.4228270Z [36;1m  trap 'rm -rf -- "$WASMTIME_CAPI_STAGING"' EXIT[0m
+2026-10-28T09:09:15.4228645Z [36;1m  curl --fail --location --retry 3 --retry-delay 2 --connect-timeout 20 --max-time 300 \[0m
+2026-10-28T09:09:15.4229063Z [36;1m    --output "$WASMTIME_CAPI_STAGING/wasmtime.tar.xz" \[0m
+2026-10-28T09:09:15.4229619Z [36;1m    'https://github.com/bytecodealliance/wasmtime/releases/download/v42.0.1/wasmtime-v42.0.1-x86_64-linux-c-api.tar.xz'[0m
+2026-10-28T09:09:15.4230346Z [36;1m  echo '2097a47351918a446b26c7e65f487278f63bc947591b71897db547cd90c05082'"  $WASMTIME_CAPI_STAGING/wasmtime.tar.xz" | sha256sum --check --status[0m
+2026-10-28T09:09:15.4230888Z [36;1m  mkdir "$WASMTIME_CAPI_STAGING/unpacked"[0m
+2026-10-28T09:09:15.4231311Z [36;1m  tar -xJf "$WASMTIME_CAPI_STAGING/wasmtime.tar.xz" --strip-components=1 -C "$WASMTIME_CAPI_STAGING/unpacked"[0m
+2026-10-28T09:09:15.4231773Z [36;1m  test -s "$WASMTIME_CAPI_STAGING/unpacked/include/wasmtime.h"[0m
+2026-10-28T09:09:15.4232104Z [36;1m  test -s "$WASMTIME_CAPI_STAGING/unpacked/include/wasm.h"[0m
+2026-10-28T09:09:15.4232422Z [36;1m  test -s "$WASMTIME_CAPI_STAGING/unpacked/lib/libwasmtime.so"[0m
+2026-10-28T09:09:15.4232750Z [36;1m  test -s "$WASMTIME_CAPI_STAGING/unpacked/lib/libwasmtime.a"[0m
+2026-10-28T09:09:15.4233257Z [36;1m  mv -T "$WASMTIME_CAPI_STAGING/unpacked" build/wasmtime-c-api[0m
+2026-10-28T09:09:15.4233521Z [36;1m)[0m
+2026-10-28T09:09:15.4297080Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-28T09:09:15.4297376Z ##[endgroup]
+2026-10-28T09:09:15.4467042Z   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+2026-10-28T09:09:15.4467795Z                                  Dload  Upload   Total   Spent    Left  Speed
+2026-10-28T09:09:15.4468156Z 
+2026-10-28T09:09:15.7113441Z   0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+2026-10-28T09:09:15.7113881Z   0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+2026-10-28T09:09:15.9673334Z 
+2026-10-28T09:09:15.9674149Z 100 12.5M  100 12.5M    0     0  24.0M      0 --:--:-- --:--:-- --:--:-- 24.0M
+2026-10-28T09:09:16.7204579Z ##[group]Run set -euo pipefail
+2026-10-28T09:09:16.7278497Z [36;1mset -euo pipefail[0m
+2026-10-28T09:09:16.7278717Z [36;1msource scripts/env.sh[0m
+2026-10-28T09:09:16.7279195Z [36;1mbash scripts/run-generic-subtype-wit-ci.sh "/usr/bin/cc" "$PWD/.toolchains/wasm-tools/bin/wasm-tools" "$PWD/build/wasmtime-c-api"[0m
+2026-10-28T09:09:16.7336362Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-28T09:09:16.7336656Z ##[endgroup]
+2026-10-28T09:09:16.9936964Z {
+2026-10-28T09:09:16.9937263Z   "commands": {
+2026-10-28T09:09:16.9937547Z     "assembler": {
+2026-10-28T09:09:16.9937796Z       "bytes": 745768,
+2026-10-28T09:09:16.9938474Z       "command": "/usr/bin/x86_64-linux-gnu-as",
+2026-10-28T09:09:16.9938856Z       "selected": "/usr/bin/as",
+2026-10-28T09:09:16.9939379Z       "sha256": "21aff249b692b5c31a44007491f922dcb49f41323e362c57d2ada3f52eddb7f0"
+2026-10-28T09:09:16.9939850Z     },
+2026-10-28T09:09:16.9940066Z     "cc": {
+2026-10-28T09:09:16.9940341Z       "bytes": 1023032,
+2026-10-28T09:09:16.9940586Z       "command": "/usr/bin/x86_64-linux-gnu-gcc-13",
+2026-10-28T09:09:16.9941040Z       "selected": "/usr/bin/x86_64-linux-gnu-gcc-13",
+2026-10-28T09:09:16.9941614Z       "sha256": "1b99826121ae6682a634e5efe09bd3e3df58ce58e0b28f849114ab5b89139c26"
+2026-10-28T09:09:16.9942046Z     },
+2026-10-28T09:09:16.9942205Z     "getconf": {
+2026-10-28T09:09:16.9942490Z       "bytes": 26992,
+2026-10-28T09:09:16.9942790Z       "command": "/usr/bin/getconf",
+2026-10-28T09:09:16.9943289Z       "selected": "/usr/bin/getconf",
+2026-10-28T09:09:16.9943734Z       "sha256": "6f04d25de4c614629c807207723c33ae826ef26cf8519b9da7902d0f355141b8"
+2026-10-28T09:09:16.9944053Z     },
+2026-10-28T09:09:16.9944208Z     "gzip": {
+2026-10-28T09:09:16.9944369Z       "bytes": 93424,
+2026-10-28T09:09:16.9944572Z       "command": "/usr/bin/gzip",
+2026-10-28T09:09:16.9944793Z       "selected": "/usr/bin/gzip",
+2026-10-28T09:09:16.9945207Z       "sha256": "afea077ce127d4fa9ad410d3066ba2b54dea19c0b44f04adf56c72d5f7b7a9bb"
+2026-10-28T09:09:16.9945665Z     },
+2026-10-28T09:09:16.9945868Z     "linker": {
+2026-10-28T09:09:16.9946088Z       "bytes": 1359128,
+2026-10-28T09:09:16.9946417Z       "command": "/usr/bin/x86_64-linux-gnu-ld.bfd",
+2026-10-28T09:09:16.9946866Z       "selected": "/usr/bin/ld",
+2026-10-28T09:09:16.9947376Z       "sha256": "e9ceb054c12207970f2726dfc07e9a66b411602748628baf27399f02a9bbb31b"
+2026-10-28T09:09:16.9947880Z     },
+2026-10-28T09:09:16.9948188Z     "pkgConfig": {
+2026-10-28T09:09:16.9948444Z       "bytes": 45168,
+2026-10-28T09:09:16.9948750Z       "command": "/usr/bin/pkgconf",
+2026-10-28T09:09:16.9949126Z       "selected": "/usr/bin/pkg-config",
+2026-10-28T09:09:16.9949657Z       "sha256": "7e8152db1b0c7e49d47b4b82a70dc9997b557951c5d4d938b0e7f208ce9eb10b"
+2026-10-28T09:09:16.9950117Z     },
+2026-10-28T09:09:16.9950372Z     "readelf": {
+2026-10-28T09:09:16.9950621Z       "bytes": 789280,
+2026-10-28T09:09:16.9950978Z       "command": "/usr/bin/x86_64-linux-gnu-readelf",
+2026-10-28T09:09:16.9951411Z       "selected": "/usr/bin/readelf",
+2026-10-28T09:09:16.9951960Z       "sha256": "64c58e15274bbbb5153f31078e455e9e77ee5f51489e709bba5bb788ce9df2b0"
+2026-10-28T09:09:16.9952451Z     },
+2026-10-28T09:09:16.9952667Z     "tar": {
+2026-10-28T09:09:16.9953028Z       "bytes": 440264,
+2026-10-28T09:09:16.9953317Z       "command": "/usr/bin/tar",
+2026-10-28T09:09:16.9953649Z       "selected": "/usr/bin/tar",
+2026-10-28T09:09:16.9954182Z       "sha256": "3ee2c3c0b4dd9aacebfd2f0fbae44bad36348203acff78a44888dd58c05f811c"
+2026-10-28T09:09:16.9954666Z     },
+2026-10-28T09:09:16.9954887Z     "wasmTools": {
+2026-10-28T09:09:16.9955141Z       "bytes": 18674392,
+2026-10-28T09:09:16.9955766Z       "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/wasm-tools/bin/wasm-tools",
+2026-10-28T09:09:16.9956661Z       "selected": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/wasm-tools/bin/wasm-tools",
+2026-10-28T09:09:16.9957725Z       "sha256": "ab280f26f95e2769d36a2f0bd8d5fa46f35a2b699010c00dd0214118cf7dc30f"
+2026-10-28T09:09:16.9958228Z     }
+2026-10-28T09:09:16.9958448Z   },
+2026-10-28T09:09:16.9958670Z   "selected": {
+2026-10-28T09:09:16.9958992Z     "cc": "/usr/bin/x86_64-linux-gnu-gcc-13",
+2026-10-28T09:09:16.9959660Z     "wasmTools": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/wasm-tools/bin/wasm-tools",
+2026-10-28T09:09:16.9960428Z     "wasmtimeCapi": "/home/runner/work/lean-bridge/lean-bridge/build/wasmtime-c-api"
+2026-10-28T09:09:16.9960915Z   },
+2026-10-28T09:09:16.9961132Z   "versions": {
+2026-10-28T09:09:16.9961361Z     "assembler": {
+2026-10-28T09:09:16.9961575Z       "args": [
+2026-10-28T09:09:16.9961787Z         "--version"
+2026-10-28T09:09:16.9962228Z       ],
+2026-10-28T09:09:16.9962543Z       "command": "/usr/bin/x86_64-linux-gnu-as",
+2026-10-28T09:09:16.9963021Z       "run": {
+2026-10-28T09:09:16.9963277Z         "code": 0,
+2026-10-28T09:09:16.9963501Z         "stderr": "",
+2026-10-28T09:09:16.9965349Z         "stdout": "GNU assembler (GNU Binutils for Ubuntu) 2.42\nCopyright (C) 2024 Free Software Foundation, Inc.\nThis program is free software; you may redistribute it under the terms of\nthe GNU General Public License version 3 or later.\nThis program has absolutely no warranty.\nThis assembler was configured for a target of `x86_64-linux-gnu'.\n"
+2026-10-28T09:09:16.9967044Z       }
+2026-10-28T09:09:16.9967253Z     },
+2026-10-28T09:09:16.9967492Z     "cc": {
+2026-10-28T09:09:16.9967746Z       "args": [
+2026-10-28T09:09:16.9967999Z         "--version"
+2026-10-28T09:09:16.9968230Z       ],
+2026-10-28T09:09:16.9968599Z       "command": "/usr/bin/x86_64-linux-gnu-gcc-13",
+2026-10-28T09:09:16.9968973Z       "run": {
+2026-10-28T09:09:16.9969243Z         "code": 0,
+2026-10-28T09:09:16.9969510Z         "stderr": "",
+2026-10-28T09:09:16.9971036Z         "stdout": "x86_64-linux-gnu-gcc-13 (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0\nCopyright (C) 2023 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n"
+2026-10-28T09:09:16.9972377Z       }
+2026-10-28T09:09:16.9972651Z     },
+2026-10-28T09:09:16.9973005Z     "gzip": {
+2026-10-28T09:09:16.9973225Z       "args": [
+2026-10-28T09:09:16.9973483Z         "--version"
+2026-10-28T09:09:16.9973739Z       ],
+2026-10-28T09:09:16.9974020Z       "command": "/usr/bin/gzip",
+2026-10-28T09:09:16.9974359Z       "run": {
+2026-10-28T09:09:16.9974583Z         "code": 0,
+2026-10-28T09:09:16.9974870Z         "stderr": "",
+2026-10-28T09:09:16.9976789Z         "stdout": "gzip 1.12\nCopyright (C) 2018 Free Software Foundation, Inc.\nCopyright (C) 1993 Jean-loup Gailly.\nThis is free software.  You may redistribute copies of it under the terms of\nthe GNU General Public License <https://www.gnu.org/licenses/gpl.html>.\nThere is NO WARRANTY, to the extent permitted by law.\n\nWritten by Jean-loup Gailly.\n"
+2026-10-28T09:09:16.9978564Z       }
+2026-10-28T09:09:16.9978809Z     },
+2026-10-28T09:09:16.9979046Z     "linker": {
+2026-10-28T09:09:16.9979285Z       "args": [
+2026-10-28T09:09:16.9979579Z         "--version"
+2026-10-28T09:09:16.9979842Z       ],
+2026-10-28T09:09:16.9980176Z       "command": "/usr/bin/x86_64-linux-gnu-ld.bfd",
+2026-10-28T09:09:16.9980559Z       "run": {
+2026-10-28T09:09:16.9980823Z         "code": 0,
+2026-10-28T09:09:16.9981112Z         "stderr": "",
+2026-10-28T09:09:16.9982585Z         "stdout": "GNU ld (GNU Binutils for Ubuntu) 2.42\nCopyright (C) 2024 Free Software Foundation, Inc.\nThis program is free software; you may redistribute it under the terms of\nthe GNU General Public License version 3 or (at your option) a later version.\nThis program has absolutely no warranty.\n"
+2026-10-28T09:09:16.9983673Z       }
+2026-10-28T09:09:16.9983885Z     },
+2026-10-28T09:09:16.9984122Z     "pkgConfig": {
+2026-10-28T09:09:16.9984356Z       "args": [
+2026-10-28T09:09:16.9984614Z         "--version"
+2026-10-28T09:09:16.9984854Z       ],
+2026-10-28T09:09:16.9985131Z       "command": "/usr/bin/pkgconf",
+2026-10-28T09:09:16.9985669Z       "run": {
+2026-10-28T09:09:16.9985906Z         "code": 0,
+2026-10-28T09:09:16.9986155Z         "stderr": "",
+2026-10-28T09:09:16.9986422Z         "stdout": "1.8.1\n"
+2026-10-28T09:09:16.9986687Z       }
+2026-10-28T09:09:16.9987100Z     },
+2026-10-28T09:09:16.9987431Z     "readelf": {
+2026-10-28T09:09:16.9987596Z       "args": [
+2026-10-28T09:09:16.9987758Z         "--version"
+2026-10-28T09:09:16.9987962Z       ],
+2026-10-28T09:09:16.9988180Z       "command": "/usr/bin/x86_64-linux-gnu-readelf",
+2026-10-28T09:09:16.9988490Z       "run": {
+2026-10-28T09:09:16.9988752Z         "code": 0,
+2026-10-28T09:09:16.9988921Z         "stderr": "",
+2026-10-28T09:09:16.9989995Z         "stdout": "GNU readelf (GNU Binutils for Ubuntu) 2.42\nCopyright (C) 2024 Free Software Foundation, Inc.\nThis program is free software; you may redistribute it under the terms of\nthe GNU General Public License version 3 or (at your option) any later version.\nThis program has absolutely no warranty.\n"
+2026-10-28T09:09:16.9990815Z       }
+2026-10-28T09:09:16.9990965Z     },
+2026-10-28T09:09:16.9991118Z     "tar": {
+2026-10-28T09:09:16.9991284Z       "args": [
+2026-10-28T09:09:16.9991451Z         "--version"
+2026-10-28T09:09:16.9991612Z       ],
+2026-10-28T09:09:16.9991787Z       "command": "/usr/bin/tar",
+2026-10-28T09:09:16.9991989Z       "run": {
+2026-10-28T09:09:16.9992150Z         "code": 0,
+2026-10-28T09:09:16.9992311Z         "stderr": "",
+2026-10-28T09:09:16.9993691Z         "stdout": "tar (GNU tar) 1.35\nCopyright (C) 2023 Free Software Foundation, Inc.\nLicense GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>.\nThis is free software: you are free to change and redistribute it.\nThere is NO WARRANTY, to the extent permitted by law.\n\nWritten by John Gilmore and Jay Fenlason.\n"
+2026-10-28T09:09:16.9995124Z       }
+2026-10-28T09:09:16.9995344Z     },
+2026-10-28T09:09:16.9995556Z     "wasmTools": {
+2026-10-28T09:09:16.9995783Z       "args": [
+2026-10-28T09:09:16.9996011Z         "--version"
+2026-10-28T09:09:16.9996262Z       ],
+2026-10-28T09:09:16.9996788Z       "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/wasm-tools/bin/wasm-tools",
+2026-10-28T09:09:16.9997320Z       "run": {
+2026-10-28T09:09:16.9997561Z         "code": 0,
+2026-10-28T09:09:16.9997817Z         "stderr": "",
+2026-10-28T09:09:16.9998165Z         "stdout": "wasm-tools 1.245.1 (76927bf4b 2026-02-12)\n"
+2026-10-28T09:09:16.9998497Z       }
+2026-10-28T09:09:16.9998694Z     }
+2026-10-28T09:09:16.9998903Z   },
+2026-10-28T09:09:16.9999117Z   "wasmtime": {
+2026-10-28T09:09:16.9999618Z     "archiveSha256": "2097a47351918a446b26c7e65f487278f63bc947591b71897db547cd90c05082",
+2026-10-28T09:09:17.0000106Z     "files": {
+2026-10-28T09:09:17.0000330Z       "LICENSE": {
+2026-10-28T09:09:17.0000567Z         "bytes": 12243,
+2026-10-28T09:09:17.0001031Z         "sha256": "268872b9816f90fd8e85db5a28d33f8150ebb8dd016653fb39ef1f94f2686bc5"
+2026-10-28T09:09:17.0001471Z       },
+2026-10-28T09:09:17.0001709Z       "include/doc-wasm.h": {
+2026-10-28T09:09:17.0001997Z         "bytes": 79667,
+2026-10-28T09:09:17.0002573Z         "sha256": "7b66bccb05c26f62d73880f9db1b5dadd55ab9e93555bc80d2d38434336dfcea"
+2026-10-28T09:09:17.0003243Z       },
+2026-10-28T09:09:17.0003426Z       "include/wasi.h": {
+2026-10-28T09:09:17.0003661Z         "bytes": 9235,
+2026-10-28T09:09:17.0004151Z         "sha256": "06278fe344c9fb668439033b6fbdd11e53fe6065600dcc3a567f427331edd215"
+2026-10-28T09:09:17.0004619Z       },
+2026-10-28T09:09:17.0004843Z       "include/wasm.h": {
+2026-10-28T09:09:17.0005096Z         "bytes": 23219,
+2026-10-28T09:09:17.0005571Z         "sha256": "371ffb914950ebf5374555939dbeecbde35fd52b1c39b06ae9c84df6c8d431d6"
+2026-10-28T09:09:17.0006039Z       },
+2026-10-28T09:09:17.0006264Z       "include/wasmtime.h": {
+2026-10-28T09:09:17.0006575Z         "bytes": 9380,
+2026-10-28T09:09:17.0007046Z         "sha256": "c4a0b95cdd1d46b79e6e06eca71e436163ea226f8d8b15fa6d86a07da8a41ac2"
+2026-10-28T09:09:17.0007514Z       },
+2026-10-28T09:09:17.0007976Z       "include/wasmtime/async.h": {
+2026-10-28T09:09:17.0008280Z         "bytes": 13954,
+2026-10-28T09:09:17.0008747Z         "sha256": "414023002bf027fdcf1f32f97cb24241c9393ff272525f1d390de19100b027d8"
+2026-10-28T09:09:17.0009202Z       },
+2026-10-28T09:09:17.0009468Z       "include/wasmtime/component.h": {
+2026-10-28T09:09:17.0009790Z         "bytes": 324,
+2026-10-28T09:09:17.0010249Z         "sha256": "7230a0a2ef79976c079225a193006289d5538b2d6cb7e6180649c4526b9dd898"
+2026-10-28T09:09:17.0010691Z       },
+2026-10-28T09:09:17.0011000Z       "include/wasmtime/component/component.h": {
+2026-10-28T09:09:17.0011359Z         "bytes": 5709,
+2026-10-28T09:09:17.0011812Z         "sha256": "10508561342b18de23858dcb74945c395c8932bfbaf94ac00ff5d72b80e82e25"
+2026-10-28T09:09:17.0012413Z       },
+2026-10-28T09:09:17.0012688Z       "include/wasmtime/component/func.h": {
+2026-10-28T09:09:17.0013129Z         "bytes": 2856,
+2026-10-28T09:09:17.0013589Z         "sha256": "4129fe2706381e94b14d165f9f143faad30bafe135f46b26d857e729f1d9b3c9"
+2026-10-28T09:09:17.0014057Z       },
+2026-10-28T09:09:17.0014364Z       "include/wasmtime/component/instance.h": {
+2026-10-28T09:09:17.0014717Z         "bytes": 2428,
+2026-10-28T09:09:17.0015179Z         "sha256": "5f2928c0fa8a5b016560d2582b489ddeca28a1200227a7cd351ab4b16d2c8c3f"
+2026-10-28T09:09:17.0015652Z       },
+2026-10-28T09:09:17.0015936Z       "include/wasmtime/component/linker.h": {
+2026-10-28T09:09:17.0016262Z         "bytes": 7678,
+2026-10-28T09:09:17.0016751Z         "sha256": "f6cf1eb863c3d4bdc5743cb8b5fd8f7cba613d64c1c5daa6d685a7314772360c"
+2026-10-28T09:09:17.0017232Z       },
+2026-10-28T09:09:17.0017503Z       "include/wasmtime/component/types.h": {
+2026-10-28T09:09:17.0017849Z         "bytes": 419,
+2026-10-28T09:09:17.0018294Z         "sha256": "178795777a58f5ec7138a5932498904ed37fd37a1935b58f739fbd9e48a16614"
+2026-10-28T09:09:17.0018741Z       },
+2026-10-28T09:09:17.0019069Z       "include/wasmtime/component/types/component.h": {
+2026-10-28T09:09:17.0019445Z         "bytes": 6411,
+2026-10-28T09:09:17.0019906Z         "sha256": "92384d95d3f49c47c094e4da0f5fa2a4396c2ed012d46621171b02f446fdc7bc"
+2026-10-28T09:09:17.0020403Z       },
+2026-10-28T09:09:17.0020688Z       "include/wasmtime/component/types/func.h": {
+2026-10-28T09:09:17.0021020Z         "bytes": 2021,
+2026-10-28T09:09:17.0021459Z         "sha256": "217cb6fc6e86685dd5dc49604a47eb4b9b83e18ba3fd9dee11de54fc2f4d0e3d"
+2026-10-28T09:09:17.0021913Z       },
+2026-10-28T09:09:17.0022215Z       "include/wasmtime/component/types/instance.h": {
+2026-10-28T09:09:17.0022563Z         "bytes": 2065,
+2026-10-28T09:09:17.0023157Z         "sha256": "c1297d66711bfc896a969f8fed5f70c4ba1d8b43075b7ac19cf74a3aa1c3faba"
+2026-10-28T09:09:17.0023639Z       },
+2026-10-28T09:09:17.0023947Z       "include/wasmtime/component/types/module.h": {
+2026-10-28T09:09:17.0024305Z         "bytes": 1930,
+2026-10-28T09:09:17.0024779Z         "sha256": "705554a35f8fa35154e32b28d4c508a26739a594cbc38a3720193b5cdae2a48b"
+2026-10-28T09:09:17.0025227Z       },
+2026-10-28T09:09:17.0025546Z       "include/wasmtime/component/types/resource.h": {
+2026-10-28T09:09:17.0025903Z         "bytes": 2363,
+2026-10-28T09:09:17.0026377Z         "sha256": "29e8ea2ef512969f9bf82700d932d89cd78437c31c2a9c4b9919f2b0581fcdd9"
+2026-10-28T09:09:17.0026853Z       },
+2026-10-28T09:09:17.0027133Z       "include/wasmtime/component/types/val.h": {
+2026-10-28T09:09:17.0027469Z         "bytes": 21121,
+2026-10-28T09:09:17.0027962Z         "sha256": "a4e15d61ac405f5d08aa5d6fe7b69815a194d8b1f96496409d680a8cff64d706"
+2026-10-28T09:09:17.0028415Z       },
+2026-10-28T09:09:17.0028732Z       "include/wasmtime/component/val.h": {
+2026-10-28T09:09:17.0029069Z         "bytes": 19882,
+2026-10-28T09:09:17.0029572Z         "sha256": "c1080a34feea3711fb21c184e661376f76ac83853568b883ed734d69454353f3"
+2026-10-28T09:09:17.0030029Z       },
+2026-10-28T09:09:17.0030298Z       "include/wasmtime/conf.h": {
+2026-10-28T09:09:17.0030622Z         "bytes": 1190,
+2026-10-28T09:09:17.0031279Z         "sha256": "b63a6236773a02d4acc7d1b85433a3f90a65ed50ccbd4ff6c7a8c83a909d1da6"
+2026-10-28T09:09:17.0031780Z       },
+2026-10-28T09:09:17.0032057Z       "include/wasmtime/config.h": {
+2026-10-28T09:09:17.0032380Z         "bytes": 28137,
+2026-10-28T09:09:17.0033015Z         "sha256": "2bada4fe74d4d48b592a29c33462c2c2f22d00e7ece8eb3d9a73901c5ef06009"
+2026-10-28T09:09:17.0033529Z       },
+2026-10-28T09:09:17.0033822Z       "include/wasmtime/engine.h": {
+2026-10-28T09:09:17.0034148Z         "bytes": 1222,
+2026-10-28T09:09:17.0034649Z         "sha256": "026633dbd9328db187ccb86097479c02a7278de9eef59ae6d0eeb11d5b2868fa"
+2026-10-28T09:09:17.0035127Z       },
+2026-10-28T09:09:17.0035393Z       "include/wasmtime/error.h": {
+2026-10-28T09:09:17.0035809Z         "bytes": 2420,
+2026-10-28T09:09:17.0036119Z         "sha256": "6905acdfe81f5a7d31c49ac1af8221b3d98b61d5341b91a4a8232f2466dce8f0"
+2026-10-28T09:09:17.0036424Z       },
+2026-10-28T09:09:17.0036606Z       "include/wasmtime/extern.h": {
+2026-10-28T09:09:17.0036826Z         "bytes": 6028,
+2026-10-28T09:09:17.0037128Z         "sha256": "37e5062f8672ee07a9334f6e193a1875f194b9e2ea5a67dee75b708f28259d7c"
+2026-10-28T09:09:17.0037420Z       },
+2026-10-28T09:09:17.0037768Z       "include/wasmtime/func.h": {
+2026-10-28T09:09:17.0037977Z         "bytes": 12787,
+2026-10-28T09:09:17.0038290Z         "sha256": "9a4fee4a295a2b19a141cf84be4ceb9355bfc25394ae761d7f780ac49f2d65ad"
+2026-10-28T09:09:17.0038587Z       },
+2026-10-28T09:09:17.0038759Z       "include/wasmtime/global.h": {
+2026-10-28T09:09:17.0038965Z         "bytes": 2521,
+2026-10-28T09:09:17.0039263Z         "sha256": "0a328daecce4090157e99fbbf8398fce0ed78b30c9b7dbdfeb10f247a51e543d"
+2026-10-28T09:09:17.0039557Z       },
+2026-10-28T09:09:17.0039747Z       "include/wasmtime/instance.h": {
+2026-10-28T09:09:17.0039951Z         "bytes": 6356,
+2026-10-28T09:09:17.0040248Z         "sha256": "c476b65bee52ebf7bcbdd291e0c8c036496cff3c09e9ea61c7f4577fa7c736d2"
+2026-10-28T09:09:17.0040549Z       },
+2026-10-28T09:09:17.0040721Z       "include/wasmtime/linker.h": {
+2026-10-28T09:09:17.0040924Z         "bytes": 12873,
+2026-10-28T09:09:17.0041224Z         "sha256": "6549b3ee8d7264d4c8119682dc09e702ba2e0979fadff74f66b70c5d294159f3"
+2026-10-28T09:09:17.0041514Z       },
+2026-10-28T09:09:17.0041685Z       "include/wasmtime/memory.h": {
+2026-10-28T09:09:17.0041889Z         "bytes": 6005,
+2026-10-28T09:09:17.0042194Z         "sha256": "ebd6c718c6e9d2ee5beb1c32bdca401e281773586e43e5df8d2e02b7980f4ad2"
+2026-10-28T09:09:17.0042487Z       },
+2026-10-28T09:09:17.0042660Z       "include/wasmtime/module.h": {
+2026-10-28T09:09:17.0043058Z         "bytes": 5729,
+2026-10-28T09:09:17.0043362Z         "sha256": "b7ba6f0a0b15c5f252f63697707dbb9c0c854a65694b4b134bec13e7c43864e4"
+2026-10-28T09:09:17.0043662Z       },
+2026-10-28T09:09:17.0043848Z       "include/wasmtime/profiling.h": {
+2026-10-28T09:09:17.0044060Z         "bytes": 4400,
+2026-10-28T09:09:17.0044346Z         "sha256": "92ac5516a561bd062aaf302051373512970a0ea9641836a47993d32b1ab8b205"
+2026-10-28T09:09:17.0044644Z       },
+2026-10-28T09:09:17.0044838Z       "include/wasmtime/sharedmemory.h": {
+2026-10-28T09:09:17.0045053Z         "bytes": 3027,
+2026-10-28T09:09:17.0045365Z         "sha256": "521d632a5f5ee3e28125b22fdf4f517edb2965a49ebd838278d620368377a1fe"
+2026-10-28T09:09:17.0045659Z       },
+2026-10-28T09:09:17.0045835Z       "include/wasmtime/store.h": {
+2026-10-28T09:09:17.0046043Z         "bytes": 9653,
+2026-10-28T09:09:17.0046338Z         "sha256": "f96ef6fb062e8358d0a46a780283a8f7dc1733a14998b41d8aa8c536f45e5b51"
+2026-10-28T09:09:17.0046633Z       },
+2026-10-28T09:09:17.0046810Z       "include/wasmtime/table.h": {
+2026-10-28T09:09:17.0047008Z         "bytes": 3924,
+2026-10-28T09:09:17.0047304Z         "sha256": "1d4313d41a85989ae00c8c744c2e2415ac0694ea3bc3fb15d51cddf5fd74d1ba"
+2026-10-28T09:09:17.0047599Z       },
+2026-10-28T09:09:17.0047781Z       "include/wasmtime/trap.h": {
+2026-10-28T09:09:17.0047986Z         "bytes": 6726,
+2026-10-28T09:09:17.0048280Z         "sha256": "b786bf286f69b11c6b4e91ec9c40eb700b1791422d1bf501fa666c057e369106"
+2026-10-28T09:09:17.0048710Z       },
+2026-10-28T09:09:17.0048891Z       "include/wasmtime/val.h": {
+2026-10-28T09:09:17.0049092Z         "bytes": 18939,
+2026-10-28T09:09:17.0049402Z         "sha256": "4db26e438a8b66f237f19fc9e669f1d7f3f3a0a93cf49ca4fce977f3e16d7cd1"
+2026-10-28T09:09:17.0049697Z       },
+2026-10-28T09:09:17.0049868Z       "include/wasmtime/wat.h": {
+2026-10-28T09:09:17.0050069Z         "bytes": 1153,
+2026-10-28T09:09:17.0050358Z         "sha256": "7533f9c25ee267c88ea64e21a7550bf28585183184a29c575ceb419eb711fe9f"
+2026-10-28T09:09:17.0050642Z       },
+2026-10-28T09:09:17.0050808Z       "lib/libwasmtime.so": {
+2026-10-28T09:09:17.0051009Z         "bytes": 22277728,
+2026-10-28T09:09:17.0051437Z         "sha256": "566e57cfeabafd6d44fab1b5e6660b4569a71aae4cff2e4d89563a424ee799f3"
+2026-10-28T09:09:17.0051742Z       }
+2026-10-28T09:09:17.0051892Z     },
+2026-10-28T09:09:17.0052196Z     "filesSha256": "ec43764474c7f9cedf469659d0c5cc9401f65b79f5df88acda772280ae81fe01",
+2026-10-28T09:09:17.0052640Z     "root": "/home/runner/work/lean-bridge/lean-bridge/build/wasmtime-c-api",
+2026-10-28T09:09:17.0053132Z     "version": "42.0.1"
+2026-10-28T09:09:17.0053309Z   }
+2026-10-28T09:09:17.0053463Z }
+2026-10-28T09:09:17.0588579Z TAP version 13
+2026-10-28T09:11:00.4658013Z # Subtest: installed generic Subtype WIT compositions reproduce and relocate ordinary full
+2026-10-28T09:11:00.4669864Z ok 1 - installed generic Subtype WIT compositions reproduce and relocate ordinary full
+2026-10-28T09:11:00.4670299Z   ---
+2026-10-28T09:11:00.4670483Z   duration_ms: 103156.693017
+2026-10-28T09:11:00.4670690Z   type: 'test'
+2026-10-28T09:11:00.4670867Z   ...
+2026-10-28T09:11:00.4671122Z # ordinary full author 0: reproducible WIT package
+2026-10-28T09:11:00.4671497Z # ordinary full author 1: reproducible WIT package
+2026-10-28T09:11:00.4817088Z 1..1
+2026-10-28T09:11:00.4817290Z # tests 1
+2026-10-28T09:11:00.4817849Z # suites 0
+2026-10-28T09:11:00.4818386Z # pass 1
+2026-10-28T09:11:00.4818790Z # fail 0
+2026-10-28T09:11:00.4819608Z # cancelled 0
+2026-10-28T09:11:00.4819999Z # skipped 0
+2026-10-28T09:11:00.4820352Z # todo 0
+2026-10-28T09:11:00.4820727Z # duration_ms 103435.883706
+2026-10-28T09:11:00.6141653Z {
+2026-10-28T09:11:00.6141881Z   "counts": {
+2026-10-28T09:11:00.6142083Z     "checks": 18,
+2026-10-28T09:11:00.6142277Z     "rejections": 3
+2026-10-28T09:11:00.6142457Z   },
+2026-10-28T09:11:00.6142624Z   "executions": 2,
+2026-10-28T09:11:00.6142909Z   "host": "wit",
+2026-10-28T09:11:00.6143158Z   "kind": "generic-subtype-wit-installed-v1",
+2026-10-28T09:11:00.6143515Z   "producerCommit": "6e0d941e796db8813ee58bc8fda00e126e0a232c",
+2026-10-28T09:11:00.6143801Z   "route": "ordinary"
+2026-10-28T09:11:00.6143976Z }
+2026-10-28T09:11:00.6777856Z TAP version 13
+2026-10-28T09:12:41.4033411Z # Subtest: installed generic Subtype WIT compositions reproduce and relocate reviewed full
+2026-10-28T09:12:41.4044845Z ok 1 - installed generic Subtype WIT compositions reproduce and relocate reviewed full
+2026-10-28T09:12:41.4045520Z   ---
+2026-10-28T09:12:41.4045838Z   duration_ms: 100480.503559
+2026-10-28T09:12:41.4046135Z   type: 'test'
+2026-10-28T09:12:41.4046369Z   ...
+2026-10-28T09:12:41.4046754Z # reviewed full author 0: reproducible WIT package
+2026-10-28T09:12:41.4047229Z # reviewed full author 1: reproducible WIT package
+2026-10-28T09:12:41.4183284Z 1..1
+2026-10-28T09:12:41.4183569Z # tests 1
+2026-10-28T09:12:41.4184394Z # suites 0
+2026-10-28T09:12:41.4185144Z # pass 1
+2026-10-28T09:12:41.4185473Z # fail 0
+2026-10-28T09:12:41.4186333Z # cancelled 0
+2026-10-28T09:12:41.4186683Z # skipped 0
+2026-10-28T09:12:41.4187046Z # todo 0
+2026-10-28T09:12:41.4187453Z # duration_ms 100751.004794
+2026-10-28T09:12:41.5457489Z {
+2026-10-28T09:12:41.5457865Z   "counts": {
+2026-10-28T09:12:41.5458077Z     "checks": 18,
+2026-10-28T09:12:41.5458271Z     "rejections": 3
+2026-10-28T09:12:41.5458492Z   },
+2026-10-28T09:12:41.5458673Z   "executions": 2,
+2026-10-28T09:12:41.5458849Z   "host": "wit",
+2026-10-28T09:12:41.5459138Z   "kind": "generic-subtype-wit-installed-v1",
+2026-10-28T09:12:41.5459783Z   "producerCommit": "6e0d941e796db8813ee58bc8fda00e126e0a232c",
+2026-10-28T09:12:41.5460108Z   "route": "reviewed"
+2026-10-28T09:12:41.5460294Z }
+2026-10-28T09:12:41.6098542Z TAP version 13
+2026-10-28T09:14:12.7892113Z # Subtest: independently reviewed native packages install every chosen specialization without its generic
+2026-10-28T09:14:12.7904139Z ok 1 - independently reviewed native packages install every chosen specialization without its generic
+2026-10-28T09:14:12.7904740Z   ---
+2026-10-28T09:14:12.7904950Z   duration_ms: 89625.41321
+2026-10-28T09:14:12.7905161Z   type: 'test'
+2026-10-28T09:14:12.7905330Z   ...
+2026-10-28T09:14:12.7905644Z # reviewed build 0: wit-wasi
+2026-10-28T09:14:12.7906409Z # installing and checking reviewed wit-wasi
+2026-10-28T09:14:12.7906797Z # reviewed build 1: wit-wasi
+2026-10-28T09:14:12.9654364Z 1..1
+2026-10-28T09:14:12.9654650Z # tests 1
+2026-10-28T09:14:12.9655158Z # suites 0
+2026-10-28T09:14:12.9655960Z # pass 1
+2026-10-28T09:14:12.9656427Z # fail 0
+2026-10-28T09:14:12.9656846Z # cancelled 0
+2026-10-28T09:14:12.9657290Z # skipped 0
+2026-10-28T09:14:12.9657645Z # todo 0
+2026-10-28T09:14:12.9658129Z # duration_ms 91365.971242
+2026-10-28T09:14:12.9772551Z ##[group]Run actions/upload-artifact@v7
+2026-10-28T09:14:12.9772947Z with:
+2026-10-28T09:14:12.9773222Z   name: generic-subtype-wit-6e0d941e796db8813ee58bc8fda00e126e0a232c
+2026-10-28T09:14:12.9773628Z   path: build/generic-subtype-wit-ci/
+build/generic-subtype-wit-toolchain.log
+
+2026-10-28T09:14:12.9773956Z   if-no-files-found: error
+2026-10-28T09:14:12.9774147Z   retention-days: 30
+2026-10-28T09:14:12.9774339Z   compression-level: 6
+2026-10-28T09:14:12.9774514Z   overwrite: false
+2026-10-28T09:14:12.9774707Z   include-hidden-files: false
+2026-10-28T09:14:12.9774903Z   archive: true
+2026-10-28T09:14:12.9775067Z ##[endgroup]
+2026-10-28T09:14:13.4927862Z Multiple search paths detected. Calculating the least common ancestor of all paths
+2026-10-28T09:14:13.4928889Z The least common ancestor is /home/runner/work/lean-bridge/lean-bridge/build. This will be the root directory of the artifact
+2026-10-28T09:14:13.4929523Z With the provided path, there will be 194 files uploaded
+2026-10-28T09:14:13.4930052Z Artifact name is valid!
+2026-10-28T09:14:13.4930284Z Root directory input is valid!
+2026-10-28T09:14:14.0006116Z Uploading artifact: generic-subtype-wit-6e0d941e796db8813ee58bc8fda00e126e0a232c.zip
+2026-10-28T09:14:14.0048005Z Beginning upload of artifact content to blob storage
+2026-10-28T09:14:15.1026201Z Uploaded bytes 8388608
+2026-10-28T09:14:15.2432135Z Uploaded bytes 16777216
+2026-10-28T09:14:15.3880861Z Uploaded bytes 25165824
+2026-10-28T09:14:15.4660749Z Uploaded bytes 33554432
+2026-10-28T09:14:15.5628985Z Uploaded bytes 41943040
+2026-10-28T09:14:15.7071016Z Uploaded bytes 50331648
+2026-10-28T09:14:15.8553597Z Uploaded bytes 58720256
+2026-10-28T09:14:16.0752724Z Uploaded bytes 67108864
+2026-10-28T09:14:16.4542067Z Uploaded bytes 75497472
+2026-10-28T09:14:16.5250991Z Uploaded bytes 83886080
+2026-10-28T09:14:16.6999158Z Uploaded bytes 92274688
+2026-10-28T09:14:16.8884144Z Uploaded bytes 100663296
+2026-10-28T09:14:17.1261231Z Uploaded bytes 109051904
+2026-10-28T09:14:17.2861526Z Uploaded bytes 117440512
+2026-10-28T09:14:17.3959398Z Uploaded bytes 119158309
+2026-10-28T09:14:17.4583809Z Finished uploading artifact content to blob storage!
+2026-10-28T09:14:17.4585971Z SHA256 digest of uploaded artifact is ff05c572d521d8038907bb8b5edcd0d378e1a49ea16454ed726750b535c2bf89
+2026-10-28T09:14:17.4587733Z Finalizing artifact upload
+2026-10-28T09:14:18.0657061Z Artifact generic-subtype-wit-6e0d941e796db8813ee58bc8fda00e126e0a232c successfully finalized. Artifact ID 12805110179
+2026-10-28T09:14:18.0658264Z Artifact generic-subtype-wit-6e0d941e796db8813ee58bc8fda00e126e0a232c has been successfully uploaded! Final size is 119158309 bytes. Artifact ID is 12805110179
+2026-10-28T09:14:18.0660900Z Artifact download URL: https://github.com/seanmorris/lean-bridge/actions/runs/40660583267/artifacts/12805110179
+2026-10-28T09:14:18.0859383Z Post job cleanup.
+2026-10-28T09:14:18.1870059Z Cache hit occurred on the primary key node-cache-Linux-x64-npm-26a2ea32ff9fbdbc806907cf3b846fc9f2d906ee6b040e7c2c0e2b49f755b41e, not saving cache.
+2026-10-28T09:14:18.2063677Z Post job cleanup.
+2026-10-28T09:14:18.2829493Z [command]/usr/bin/git version
+2026-10-28T09:14:18.2870887Z git version 2.55.0
+2026-10-28T09:14:18.2907865Z Temporarily overriding HOME='/home/runner/work/_temp/d41c5272-63ed-4824-9a96-f103f8543c15' before making global git config changes
+2026-10-28T09:14:18.2908957Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-28T09:14:18.2913354Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/lean-bridge/lean-bridge
+2026-10-28T09:14:18.2945852Z Removing SSH command configuration
+2026-10-28T09:14:18.2952131Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-28T09:14:18.2984188Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-28T09:14:18.3355419Z Removing HTTP extra header
+2026-10-28T09:14:18.3361087Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-28T09:14:18.3397753Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-28T09:14:18.3799911Z Removing includeIf entries pointing to credentials config files
+2026-10-28T09:14:18.3808337Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-28T09:14:18.3847943Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-28T09:14:18.4367218Z Cleaning up orphan processes

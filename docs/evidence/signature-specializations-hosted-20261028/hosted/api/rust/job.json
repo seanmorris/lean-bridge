@@ -1,0 +1,132 @@
+{
+  "id": 122722314143,
+  "run_id": 40660579136,
+  "workflow_name": "Generic Subtypes in Python, Ruby and Rust",
+  "head_branch": "codex/vo2167-signature-completion",
+  "run_url": "https://api.github.com/repos/seanmorris/lean-bridge/actions/runs/40660579136",
+  "run_attempt": 1,
+  "node_id": "CR_kwDOTyhIvM8AAAAcktHnnw",
+  "head_sha": "6e0d941e796db8813ee58bc8fda00e126e0a232c",
+  "url": "https://api.github.com/repos/seanmorris/lean-bridge/actions/jobs/122722314143",
+  "html_url": "https://github.com/seanmorris/lean-bridge/actions/runs/40660579136/job/122722314143",
+  "status": "completed",
+  "conclusion": "success",
+  "created_at": "2026-10-28T08:57:53Z",
+  "started_at": "2026-10-28T08:57:56Z",
+  "completed_at": "2026-10-28T09:18:21Z",
+  "name": "Ordinary and reviewed generic Subtypes on Rust 1.90",
+  "steps": [
+    {
+      "name": "Set up job",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 1,
+      "started_at": "2026-10-28T08:57:57Z",
+      "completed_at": "2026-10-28T08:57:58Z"
+    },
+    {
+      "name": "Free hosted runner disk before checkout",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 2,
+      "started_at": "2026-10-28T08:57:58Z",
+      "completed_at": "2026-10-28T08:59:46Z"
+    },
+    {
+      "name": "Check out the exact revision",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 3,
+      "started_at": "2026-10-28T08:59:46Z",
+      "completed_at": "2026-10-28T09:09:50Z"
+    },
+    {
+      "name": "Install Node.js",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 4,
+      "started_at": "2026-10-28T09:09:50Z",
+      "completed_at": "2026-10-28T09:09:54Z"
+    },
+    {
+      "name": "Bound apt network waits",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 5,
+      "started_at": "2026-10-28T09:09:54Z",
+      "completed_at": "2026-10-28T09:09:54Z"
+    },
+    {
+      "name": "Install compiler and package dependencies",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 6,
+      "started_at": "2026-10-28T09:09:54Z",
+      "completed_at": "2026-10-28T09:10:24Z"
+    },
+    {
+      "name": "Install dependencies and pinned Lean and Rust toolchains",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 7,
+      "started_at": "2026-10-28T09:10:24Z",
+      "completed_at": "2026-10-28T09:11:00Z"
+    },
+    {
+      "name": "Execute source-free Rust acceptance",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 8,
+      "started_at": "2026-10-28T09:11:00Z",
+      "completed_at": "2026-10-28T09:18:12Z"
+    },
+    {
+      "name": "Preserve complete and partial Rust records",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 9,
+      "started_at": "2026-10-28T09:18:12Z",
+      "completed_at": "2026-10-28T09:18:17Z"
+    },
+    {
+      "name": "Enforce installed Rust acceptance",
+      "status": "completed",
+      "conclusion": "skipped",
+      "number": 10,
+      "started_at": "2026-10-28T09:18:17Z",
+      "completed_at": "2026-10-28T09:18:17Z"
+    },
+    {
+      "name": "Post Install Node.js",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 19,
+      "started_at": "2026-10-28T09:18:17Z",
+      "completed_at": "2026-10-28T09:18:17Z"
+    },
+    {
+      "name": "Post Check out the exact revision",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 20,
+      "started_at": "2026-10-28T09:18:17Z",
+      "completed_at": "2026-10-28T09:18:18Z"
+    },
+    {
+      "name": "Complete job",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 21,
+      "started_at": "2026-10-28T09:18:18Z",
+      "completed_at": "2026-10-28T09:18:18Z"
+    }
+  ],
+  "check_run_url": "https://api.github.com/repos/seanmorris/lean-bridge/check-runs/122722314143",
+  "labels": [
+    "ubuntu-24.04"
+  ],
+  "runner_id": 1000069315,
+  "runner_name": "GitHub Actions 1000069315",
+  "runner_group_id": 0,
+  "runner_group_name": "GitHub Actions"
+}

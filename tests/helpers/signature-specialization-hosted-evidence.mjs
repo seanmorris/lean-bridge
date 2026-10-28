@@ -227,8 +227,8 @@ export const checkSignatureSpecializationHostedEvidence = async (
 	]);
 	assert.equal(index.schemaVersion, 1);
 	assert.equal(index.kind, "signature-specializations-hosted-installed-v1");
-	assert.deepEqual(Object.keys(index.producerCommits)
-		, signatureSpecializationHostedLanes.map(lane => lane.id));
+	assert.deepEqual(Object.keys(index.producerCommits).sort()
+		, signatureSpecializationHostedLanes.map(lane => lane.id).sort());
 	assert.deepEqual(index.producerCommits, Object.fromEntries(
 		signatureSpecializationHostedLanes.map(lane => [
 			lane.id, lane.producerCommit

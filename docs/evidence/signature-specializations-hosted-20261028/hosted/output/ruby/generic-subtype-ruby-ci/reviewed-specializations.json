@@ -1,0 +1,42 @@
+{
+  "archives": {
+    "archives/specialized-1.0.0-x86_64-linux.gem": "cbf961e9cc554b4bf070f975af4873146ddbd2d53ca416bd8f6b0c5b540cee33"
+  },
+  "reports": [
+    {
+      "bindingIrSha256": "66b234dcc09ce7b71a4bfb8624286880b3076f053d8e8ab7b742fea1674af796",
+      "checks": 2020,
+      "compilerFreePath": true,
+      "consumerSha256": "7c63325b609b6f217059e97fd0a390fe6570323c15f039c723101dd174da19ad",
+      "modelSha256": "d2205ba86dcc4d6a23ae0eecaac9cd3ec56cf21a54c7985390f2ff93add9c143",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 50091008,
+              "path": "archives/specialized-1.0.0-x86_64-linux.gem",
+              "sha256": "cbf961e9cc554b4bf070f975af4873146ddbd2d53ca416bd8f6b0c5b540cee33"
+            }
+          ],
+          "ecosystem": "rubygems",
+          "name": "specialized",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+          "target": "rubygems",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-source",
+      "profile": "ruby",
+      "receiptSha256": "6a1b75bc1aea343ddf385d98579b2e314463306af13d4bd15d38fae3f453a5ee",
+      "reviewedBindingIrSha256": "16a78ebbd13c85c07d3c56024efd63aa7091a440ea1c1f96466d454bd531a1c5",
+      "sourceRemovedBeforeInstallation": true
+    }
+  ],
+  "reproducible": true,
+  "schemaVersion": 1
+}
