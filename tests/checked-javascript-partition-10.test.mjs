@@ -35,3 +35,5 @@ import "./helpers/fin-contract-test-registration-source-history-tests.mjs";
 import "./helpers/fin-contract-test-registration-integration-source-history-tests.mjs";
 import "./helpers/signature-specialization-completion-source-history-tests.mjs";
 import "./helpers/signature-specialization-completion-integration-source-history-tests.mjs";
+import "./helpers/core-hub-order-repair-source-history-tests.mjs";
+import "./helpers/core-hub-order-repair-integration-source-history-tests.mjs";
