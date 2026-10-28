@@ -220,6 +220,25 @@ jobs:
           key: perl-abi-v2-${{ runner.os }}-${{ matrix.configuration }}-${{ hashFiles('scripts/build-perl-toolchains.mjs') }}
       - name: Test both install paths on this Perl configuration
         run: npm run test:consumer:perl -- --configuration "${{ matrix.configuration }}"
+      - name: Qualify direct proof erasure in the prepared Perl package
+        if: matrix.configuration == '5.38.2-threaded'
+        id: direct_proof_language
+        continue-on-error: true
+        timeout-minutes: 100
+        env:
+          DIRECT_PROOF_PERL_CONFIGURATION: ${{ matrix.configuration }}
+        run: |
+          export LEAN_BRIDGE_CORPUS_PERL="$PWD/.toolchains/perl/$DIRECT_PROOF_PERL_CONFIGURATION/bin/perl"
+          bash scripts/run-direct-proof-erasure-language-ci.sh perl
+      - name: Preserve direct proof-erasure Perl acceptance
+        if: always() && matrix.configuration == '5.38.2-threaded'
+        uses: actions/upload-artifact@v7
+        with:
+          name: direct-proof-erasure-language-perl-${{ github.sha }}
+          path: build/direct-proof-erasure-language-ci/perl/
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
       - name: Compare installed Perl corpus packages with fresh Lean results
         env:
           CORPUS_PERL_CONFIGURATION: ${{ matrix.configuration }}
@@ -398,6 +417,9 @@ jobs:
             build/consumer-ci/perl/*/perl.json
           if-no-files-found: error
           overwrite: true
+      - name: Enforce direct proof-erasure Perl support
+        if: always() && matrix.configuration == '5.38.2-threaded' && steps.direct_proof_language.outcome != 'success'
+        run: exit 1
 
   perl-receivers:
     name: Perl receiver packages (${{ matrix.configuration }})

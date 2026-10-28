@@ -3815,6 +3815,21 @@ jobs:
             build/collections/rust.json
           if-no-files-found: error
           retention-days: 30
+      - name: Qualify direct proof erasure in prepared language packages
+        if: matrix.profile == 'python' || matrix.profile == 'rust'
+        id: direct_proof_language
+        continue-on-error: true
+        timeout-minutes: 100
+        run: bash scripts/run-direct-proof-erasure-language-ci.sh "${{ matrix.profile }}"
+      - name: Preserve direct proof-erasure language acceptance
+        if: always() && (matrix.profile == 'python' || matrix.profile == 'rust')
+        uses: actions/upload-artifact@v7
+        with:
+          name: direct-proof-erasure-language-${{ matrix.profile }}-${{ github.sha }}
+          path: build/direct-proof-erasure-language-ci/${{ matrix.profile }}/
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
       - name: Record native consumer observations
         if: always() && matrix.profile == 'c-family'
         shell: bash
@@ -3887,7 +3902,8 @@ jobs:
               consumer_command="$consumer_command && npm run test:owned-python-transfers"
               consumer_command="$consumer_command && npm run test:owned-python-borrows"
               consumer_command="$consumer_command && npm run test:owned-python-receivers"
-              if [ "${{ steps.ordinary_python.outcome }}" != success ] || [ "${{ steps.type_corpus_python.outcome }}" != success ]; then
+              consumer_command="$consumer_command && bash scripts/run-direct-proof-erasure-language-ci.sh python"
+              if [ "${{ steps.ordinary_python.outcome }}" != success ] || [ "${{ steps.type_corpus_python.outcome }}" != success ] || [ "${{ steps.direct_proof_language.outcome }}" != success ]; then
                 result=failed
                 installed=false
               fi
@@ -3920,7 +3936,8 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_RUST_GRAPH_NATIVE_TEST=1 node --test --test-name-pattern='ordinary and reviewed Lean graphs' tests/rust-copied-graph-conversions.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_RUST_GRAPH_TEST=1 LEAN_BRIDGE_RUST_GRAPH_PACKAGE_TEST=1 node --test tests/rust-graph-package.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_RUST_COLLECTION_TEST=1 node --test tests/rust-collections.test.mjs"
-              if [ "${{ steps.ordinary_rust.outcome }}" != success ] || [ "${{ steps.type_corpus_rust.outcome }}" != success ]; then
+              consumer_command="$consumer_command && bash scripts/run-direct-proof-erasure-language-ci.sh rust"
+              if [ "${{ steps.ordinary_rust.outcome }}" != success ] || [ "${{ steps.type_corpus_rust.outcome }}" != success ] || [ "${{ steps.direct_proof_language.outcome }}" != success ]; then
                 result=failed
                 installed=false
               fi
@@ -3937,7 +3954,7 @@ jobs:
           overwrite: true
           retention-days: 30
       - name: Enforce native consumer support
-        if: always() && (steps.consumer.outcome != 'success' || (matrix.profile == 'c-family' && (steps.ordinary_c.outcome != 'success' || steps.type_corpus_c_family.outcome != 'success' || steps.direct_proof_native.outcome != 'success')) || (matrix.profile == 'python' && (steps.ordinary_python.outcome != 'success' || steps.type_corpus_python.outcome != 'success')) || (matrix.profile == 'rust' && (steps.ordinary_rust.outcome != 'success' || steps.type_corpus_rust.outcome != 'success')))
+        if: always() && (steps.consumer.outcome != 'success' || (matrix.profile == 'c-family' && (steps.ordinary_c.outcome != 'success' || steps.type_corpus_c_family.outcome != 'success' || steps.direct_proof_native.outcome != 'success')) || (matrix.profile == 'python' && (steps.ordinary_python.outcome != 'success' || steps.type_corpus_python.outcome != 'success' || steps.direct_proof_language.outcome != 'success')) || (matrix.profile == 'rust' && (steps.ordinary_rust.outcome != 'success' || steps.type_corpus_rust.outcome != 'success' || steps.direct_proof_language.outcome != 'success')))
         run: exit 1
 
   managed-consumers:
@@ -4684,6 +4701,21 @@ jobs:
           if-no-files-found: error
           overwrite: true
           retention-days: 30
+      - name: Qualify direct proof erasure in the prepared Ruby package
+        if: matrix.profile == 'ruby'
+        id: direct_proof_language
+        continue-on-error: true
+        timeout-minutes: 100
+        run: bash scripts/run-direct-proof-erasure-language-ci.sh "${{ matrix.profile }}"
+      - name: Preserve direct proof-erasure Ruby acceptance
+        if: always() && matrix.profile == 'ruby'
+        uses: actions/upload-artifact@v7
+        with:
+          name: direct-proof-erasure-language-${{ matrix.profile }}-${{ github.sha }}
+          path: build/direct-proof-erasure-language-ci/${{ matrix.profile }}/
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
       - name: Qualify direct proof erasure in prepared managed packages
         if: matrix.profile == 'dotnet' || matrix.profile == 'jvm'
         id: direct_proof_managed
@@ -4803,7 +4835,8 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_RUBY_GRAPH_TEST=1 node --test tests/ruby-copied-graph-values.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_RUBY_GRAPH_TEST=1 LEAN_BRIDGE_RUBY_GRAPH_NATIVE_TEST=1 node --test tests/ruby-copied-graph-conversions.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_RUBY_GRAPH_PACKAGE_TEST=1 node --test tests/ruby-graph-package.test.mjs"
-              if [ "${{ steps.ordinary_ruby.outcome }}" != success ] || [ "${{ steps.type_corpus_ruby.outcome }}" != success ]; then
+              consumer_command="$consumer_command && bash scripts/run-direct-proof-erasure-language-ci.sh ruby"
+              if [ "${{ steps.ordinary_ruby.outcome }}" != success ] || [ "${{ steps.type_corpus_ruby.outcome }}" != success ] || [ "${{ steps.direct_proof_language.outcome }}" != success ]; then
                 test_result=failed
                 executed=false
               fi
@@ -4820,7 +4853,7 @@ jobs:
           overwrite: true
           retention-days: 30
       - name: Enforce managed consumer support
-        if: always() && (steps.consumer.outcome != 'success' || (matrix.profile == 'dotnet' && (steps.ordinary_dotnet.outcome != 'success' || steps.type_corpus_dotnet.outcome != 'success' || steps.direct_proof_managed.outcome != 'success')) || (matrix.profile == 'jvm' && (steps.ordinary_jvm.outcome != 'success' || steps.type_corpus_jvm.outcome != 'success' || steps.nominal_jvm.outcome != 'success' || steps.direct_proof_managed.outcome != 'success')) || (matrix.profile == 'ruby' && (steps.ordinary_ruby.outcome != 'success' || steps.type_corpus_ruby.outcome != 'success')))
+        if: always() && (steps.consumer.outcome != 'success' || (matrix.profile == 'dotnet' && (steps.ordinary_dotnet.outcome != 'success' || steps.type_corpus_dotnet.outcome != 'success' || steps.direct_proof_managed.outcome != 'success')) || (matrix.profile == 'jvm' && (steps.ordinary_jvm.outcome != 'success' || steps.type_corpus_jvm.outcome != 'success' || steps.nominal_jvm.outcome != 'success' || steps.direct_proof_managed.outcome != 'success')) || (matrix.profile == 'ruby' && (steps.ordinary_ruby.outcome != 'success' || steps.type_corpus_ruby.outcome != 'success' || steps.direct_proof_language.outcome != 'success')))
         run: exit 1
 
   owned-jvm-values:
