@@ -4,6 +4,7 @@
  * @file
  */
 import "./helpers/direct-proof-erasure-npm-archive-source-history-tests.mjs";
+import "./helpers/downstream-reporter-sparse-checkout-source-history-tests.mjs";
 import "./helpers/direct-proof-erasure-matrix-source-history-tests.mjs";
 import "./helpers/direct-proof-erasure-test-registration-source-history-tests.mjs";
 import "./helpers/direct-proof-erasure-matrix-tests.mjs";
