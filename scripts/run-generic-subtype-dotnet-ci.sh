@@ -10,6 +10,7 @@ for name in LEAN_BRIDGE_GENERIC_SUBTYPE_DOTNET_TEST LEAN_BRIDGE_GENERIC_SUBTYPE_
   LEAN_BRIDGE_GENERIC_SUBTYPE_DOTNET_OUTPUT LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR; do
   if [[ -v $name ]]; then printf '%s\n' 'Hosted generic Subtype C# acceptance requires its fixed matrix.' >&2; exit 2; fi
 done
+
 LEAN_BRIDGE_DOTNET=$(readlink -e -- "$1"); test -x "$LEAN_BRIDGE_DOTNET"; export LEAN_BRIDGE_DOTNET
 revision=$(git rev-parse HEAD)
 output_root=build/generic-subtype-dotnet-ci
@@ -28,3 +29,12 @@ for route in ordinary reviewed; do
     --producer "$revision" --directory "$output/records/$route/full" --tap "$output/run.tap" \
     | tee "$output/verification.json"
 done
+
+LEAN_BRIDGE_REVIEWED_SPECIALIZATION_TEST=1 \
+LEAN_BRIDGE_REVIEWED_SPECIALIZATION_PROFILES=dotnet \
+LEAN_BRIDGE_REVIEWED_SPECIALIZATION_REPORT="$output_root/reviewed-specializations.json" \
+  node --test --test-concurrency=1 --test-reporter=tap \
+    --test-name-pattern='^independently reviewed native packages install every chosen specialization without its generic$' \
+    tests/reviewed-specializations.test.mjs 2>&1 | tee "$output_root/reviewed-specializations.tap"
+test -s "$output_root/reviewed-specializations.json"
+test "$(git rev-parse HEAD)" = "$revision"

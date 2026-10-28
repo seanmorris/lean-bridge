@@ -10,6 +10,7 @@ for name in LEAN_BRIDGE_GENERIC_SUBTYPE_JVM_TEST LEAN_BRIDGE_GENERIC_SUBTYPE_JVM
   LEAN_BRIDGE_GENERIC_SUBTYPE_JVM_OUTPUT LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR; do
   if [[ -v $name ]]; then printf '%s\n' 'Hosted generic Subtype JVM acceptance requires its fixed matrix.' >&2; exit 2; fi
 done
+
 LEAN_BRIDGE_JAVA=$(readlink -e -- "$1"); LEAN_BRIDGE_JAVAC=$(readlink -e -- "$2"); LEAN_BRIDGE_KOTLINC=$(readlink -e -- "$3")
 for command in "$LEAN_BRIDGE_JAVA" "$LEAN_BRIDGE_JAVAC" "$LEAN_BRIDGE_KOTLINC"; do test -x "$command"; done
 export LEAN_BRIDGE_JAVA LEAN_BRIDGE_JAVAC LEAN_BRIDGE_KOTLINC
@@ -34,3 +35,12 @@ for route in ordinary reviewed; do
     --producer "$revision" --directory "$output/records/$route/full" --tap "$output/run.tap" \
     | tee "$output/verification.json"
 done
+
+LEAN_BRIDGE_REVIEWED_SPECIALIZATION_TEST=1 \
+LEAN_BRIDGE_REVIEWED_SPECIALIZATION_PROFILES=java,kotlin \
+LEAN_BRIDGE_REVIEWED_SPECIALIZATION_REPORT="$output_root/reviewed-specializations.json" \
+  node --test --test-concurrency=1 --test-reporter=tap \
+    --test-name-pattern='^independently reviewed native packages install every chosen specialization without its generic$' \
+    tests/reviewed-specializations.test.mjs 2>&1 | tee "$output_root/reviewed-specializations.tap"
+test -s "$output_root/reviewed-specializations.json"
+test "$(git rev-parse HEAD)" = "$revision"

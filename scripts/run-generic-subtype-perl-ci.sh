@@ -33,3 +33,13 @@ for route in ordinary reviewed; do
   node scripts/check-generic-subtype-native-perl-ci.mjs --kind perl --route "$route" \
     --producer "$revision" --directory "$output/records/$route/full" | tee "$output/verification.json"
 done
+
+LEAN_BRIDGE_CORPUS_PERL=/usr/bin/perl \
+LEAN_BRIDGE_REVIEWED_SPECIALIZATION_TEST=1 \
+LEAN_BRIDGE_REVIEWED_SPECIALIZATION_PROFILES=perl \
+LEAN_BRIDGE_REVIEWED_SPECIALIZATION_REPORT="$output_root/reviewed-specializations.json" \
+  node --test --test-concurrency=1 --test-reporter=tap \
+    --test-name-pattern='^independently reviewed native packages install every chosen specialization without its generic$' \
+    tests/reviewed-specializations.test.mjs 2>&1 | tee "$output_root/reviewed-specializations.tap"
+test -s "$output_root/reviewed-specializations.json"
+test "$(git rev-parse HEAD)" = "$revision"

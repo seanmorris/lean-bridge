@@ -30,7 +30,10 @@ import { nativeFinReviewedIr } from "./helpers/reviewed-fin-fixture.mjs";
 import { lakeWorkspaceFixture, lakeInputState, saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { shopSpecializationReview, shopSpecializations } from "./helpers/reviewed-specialization-fixture.mjs";
 import { reviewedNativeSpecializationIr, reviewedNativeSpecializations } from "./helpers/reviewed-native-specialization-fixture.mjs";
+import { checkSignatureSpecializationBrowserRoute, validateSignatureSpecializationBrowserReport } from "./helpers/signature-specialization-browser.mjs";
+import { checkSignatureSpecializationPhpWasmRoute, validateSignatureSpecializationPhpWasmReport } from "./helpers/signature-specialization-php-wasm.mjs";
 import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
+import { prepareRustCorpusDependencies } from "./helpers/type-corpus-rust.mjs";
 import { refinementEngineTransport } from "./helpers/refinement-engine.mjs";
 import { installSpecializationConsumer, nativeSpecializationEnvironment, nativeSpecializationSignatures, nativeSpecializationTargets } from "./helpers/native-specialization-install.mjs";
 
@@ -310,7 +313,8 @@ test("fresh Lean contradictions stop a reviewed specialization at the exact deci
 });
 
 const profiles = process.env.LEAN_BRIDGE_REVIEWED_SPECIALIZATION_PROFILES?.split(",").sort() ?? [];
-assert.ok(profiles.every(profile => ["c", "cpp"].includes(profile)), "Reviewed specialization acceptance covers C and C++ first");
+assert.equal(new Set(profiles).size, profiles.length, "Duplicate reviewed specialization profile");
+assert.ok(profiles.every(profile => Object.hasOwn(nativeSpecializationTargets, profile)), "Unknown or empty reviewed specialization profile");
 const fixture = "tests/fixtures/onboarding/native-specializations";
 const reviewedDecisions = () => Object.fromEntries(reviewedNativeSpecializations.map(([name, declaration, types, application]) => [name, { name, declaration, types, application }]));
 const type = value => value.kind === "primitive" ? value.name : value.kind === "array" ? { array: type(value.element) } : value.kind;
@@ -330,10 +334,15 @@ test("the independent native review reconciles with fresh Lean and leaves no con
 	assert.deepEqual(result.elaboration.request.exports, Object.keys(nativeSpecializationSignatures).sort());
 });
 
-test("independently reviewed C and C++ packages install every chosen specialization without its generic", { skip: !profiles.length, timeout: 2_400_000 }, async t => {
+test("independently reviewed native packages install every chosen specialization without its generic", { skip: !profiles.length, timeout: 2_400_000 }, async t => {
 	const reports = [], archives = [];
 	const targets = Object.fromEntries(profiles.map(profile => nativeSpecializationTargets[profile]));
 	const environment = nativeSpecializationEnvironment(profiles);
+	if(profiles.includes("ruby"))
+	{
+		environment.LEAN_BRIDGE_RUBY ??= resolve(".toolchains/ruby33/bin/ruby");
+		environment.LEAN_BRIDGE_GEM ??= join(dirname(environment.LEAN_BRIDGE_RUBY), "gem");
+	}
 	for(const attempt of [0, 1])
 	{
 		const directory = await mkdtemp(join(tmpdir(), "lean-bridge-reviewed-specialization-author-"));
@@ -357,6 +366,8 @@ test("independently reviewed C and C++ packages install every chosen specializat
 		const receipt = await copyPackageSetHandoff(outputRoot, handoff);
 		await verifyPackageSetReceipt({ receiptPath: join(handoff, "package-set-receipt.json") });
 		archives.push(Object.fromEntries(receipt.packages.flatMap(pkg => pkg.artifacts.map(artifact => [artifact.path, artifact.sha256]))));
+		const dependencies = attempt === 0 && profiles.includes("rust")
+			? await prepareRustCorpusDependencies({ rustRoot: join(outputRoot, "native/rust"), directory, handoff: join(consumer, "dependencies"), environment }) : undefined;
 		await rm(directory, { recursive: true, force: true });
 		if(attempt === 1) break;
 		for(const profile of profiles)
@@ -364,7 +375,7 @@ test("independently reviewed C and C++ packages install every chosen specializat
 			t.diagnostic(`installing and checking reviewed ${profile}`);
 			const packages = receipt.packages.filter(pkg => pkg.target === nativeSpecializationTargets[profile][0]);
 			// The same public consumers as the configured specializations: the review changes no public name.
-			const observation = await installSpecializationConsumer({ profile, consumer, handoff, packages, environment });
+			const observation = await installSpecializationConsumer({ profile, consumer, handoff, packages, dependencies, environment });
 			delete observation.command;
 			const identities = { bindingIrSha256: built.bindingIrSha256, reviewedBindingIrSha256: hashBindingIr(reviewedNativeSpecializationIr()), modelSha256: sha256(canonicalJson(model)) };
 			const receiptSha256 = sha256(await readFile(join(handoff, "package-set-receipt.json")));
@@ -475,7 +486,31 @@ test("an independently reviewed npm package installs the chosen specializations 
 	await saveLakeFile(dirname(reportPath), reportPath.split("/").at(-1), canonicalJson({ schemaVersion: 1, profile: "npm", path: "reviewed-source", ...identities, ...flags, ...result, typescript: typescriptFacts }));
 });
 
-test("CI runs the reviewed C/C++ and npm specialization gates against fresh Lean and keeps both reports", async () => {
+const browser = process.env.LEAN_BRIDGE_SIGNATURE_SPECIALIZATION_BROWSER_TEST === "1";
+test("installed ordinary and reviewed specialization packages execute selected instances in every browser realm", { skip: !browser, timeout: 4_800_000 }, async t => {
+	const routes = [];
+	for(const route of ["ordinary", "reviewed"])
+		routes.push(await checkSignatureSpecializationBrowserRoute(t, route));
+	const report = validateSignatureSpecializationBrowserReport({ schemaVersion: 1
+		, kind: "signature-specialization-browser-installed-v1", routes });
+	const reportPath = resolve(process.env.LEAN_BRIDGE_SIGNATURE_SPECIALIZATION_BROWSER_REPORT
+		?? "build/signature-specializations/browser.json");
+	await saveLakeFile(dirname(reportPath), reportPath.split("/").at(-1), canonicalJson(report));
+});
+
+const phpWasm = process.env.LEAN_BRIDGE_SIGNATURE_SPECIALIZATION_PHP_WASM_TEST === "1";
+test("installed ordinary and reviewed PHP-Wasm packages execute selected instances in every loading arrangement", { skip: !phpWasm, timeout: 4_800_000 }, async t => {
+	const reports = [];
+	for(const path of ["ordinary-source", "reviewed-ir"])
+		reports.push(await checkSignatureSpecializationPhpWasmRoute(t, path));
+	const report = validateSignatureSpecializationPhpWasmReport({ schemaVersion: 1
+		, kind: "signature-specialization-php-wasm-installed-v1", reports });
+	const reportPath = resolve(process.env.LEAN_BRIDGE_SIGNATURE_SPECIALIZATION_PHP_WASM_REPORT
+		?? "build/signature-specializations/php-wasm.json");
+	await saveLakeFile(dirname(reportPath), reportPath.split("/").at(-1), canonicalJson(report));
+});
+
+test("CI runs every reviewed specialization host gate against fresh Lean and retains its report", async () => {
 	const workflow = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
 	const native = "          LEAN_BRIDGE_REVIEWED_SPECIALIZATION_TEST=1 LEAN_BRIDGE_REVIEWED_SPECIALIZATION_PROFILES=c,cpp node --test --test-concurrency=1 tests/reviewed-specializations.test.mjs\n          test -s build/reviewed-specializations/c-cpp.json\n";
 	const npmGate = "          LEAN_BRIDGE_REVIEWED_SPECIALIZATION_NPM_TEST=1 node --test --test-name-pattern='independently reviewed npm package' tests/reviewed-specializations.test.mjs\n          test -s build/reviewed-specializations/npm.json\n";
@@ -485,4 +520,28 @@ test("CI runs the reviewed C/C++ and npm specialization gates against fresh Lean
 	assert.ok(workflow.indexOf(npmGate) > workflow.indexOf("          test -s build/generic-records/specialized-npm.json\n"));
 	assert.ok(workflow.includes("            build/native-specializations/c-cpp.json\n            build/reviewed-specializations/c-cpp.json\n"));
 	assert.ok(workflow.includes("          name: reviewed-specializations-npm-${{ github.sha }}\n          path: build/reviewed-specializations/npm.json\n          if-no-files-found: error\n"));
+	const scripts = {
+		python: ["python"]
+		, ruby: ["ruby"]
+		, rust: ["rust"]
+		, dotnet: ["dotnet"]
+		, jvm: ["java,kotlin"]
+		, php: ["php-native"]
+		, wit: ["wit-wasi"]
+		, perl: ["perl"]
+	};
+	for(const [host, [selected]] of Object.entries(scripts))
+	{
+		const source = await readFile(`scripts/run-generic-subtype-${host}-ci.sh`, "utf8");
+		assert.match(source, new RegExp(`LEAN_BRIDGE_REVIEWED_SPECIALIZATION_PROFILES=${selected}`, "u"), host);
+		assert.equal(source.split("LEAN_BRIDGE_REVIEWED_SPECIALIZATION_TEST=1").length, 2, host);
+		assert.match(source, /reviewed-specializations\.json/u, host);
+		assert.match(source, /independently reviewed native packages install every chosen specialization without its generic/u, host);
+	}
+	const browserWorkflow = await readFile(".github/workflows/generic-subtype-npm-browser.yml", "utf8");
+	assert.match(browserWorkflow, /LEAN_BRIDGE_SIGNATURE_SPECIALIZATION_BROWSER_TEST: "1"/u);
+	assert.match(browserWorkflow, /signature-specializations-browser-\$\{\{ github\.sha \}\}/u);
+	const phpWasmWorkflow = await readFile(".github/workflows/nominal-subtype-php-wasm.yml", "utf8");
+	assert.match(phpWasmWorkflow, /LEAN_BRIDGE_SIGNATURE_SPECIALIZATION_PHP_WASM_TEST=1/u);
+	assert.match(phpWasmWorkflow, /nominal-subtype-php-wasm-ci\/signature-specializations\.json/u);
 });

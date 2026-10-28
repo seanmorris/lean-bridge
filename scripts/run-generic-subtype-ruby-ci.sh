@@ -36,3 +36,12 @@ for route in ordinary reviewed; do
     --producer "$revision" --directory "$output/records/$route/full" --tap "$output/run.tap" \
     | tee "$output/verification.json"
 done
+
+LEAN_BRIDGE_REVIEWED_SPECIALIZATION_TEST=1 \
+LEAN_BRIDGE_REVIEWED_SPECIALIZATION_PROFILES=ruby \
+LEAN_BRIDGE_REVIEWED_SPECIALIZATION_REPORT="$output_root/reviewed-specializations.json" \
+  node --test --test-concurrency=1 --test-reporter=tap \
+    --test-name-pattern='^independently reviewed native packages install every chosen specialization without its generic$' \
+    tests/reviewed-specializations.test.mjs 2>&1 | tee "$output_root/reviewed-specializations.tap"
+test -s "$output_root/reviewed-specializations.json"
+test "$(git rev-parse HEAD)" = "$revision"

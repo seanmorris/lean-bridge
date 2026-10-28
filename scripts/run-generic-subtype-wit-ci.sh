@@ -10,6 +10,7 @@ for name in LEAN_BRIDGE_GENERIC_SUBTYPE_WIT_TEST LEAN_BRIDGE_GENERIC_SUBTYPE_WIT
   LEAN_BRIDGE_GENERIC_SUBTYPE_WIT_OUTPUT LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR; do
   if [[ -v $name ]]; then printf '%s\n' 'Hosted generic Subtype WIT acceptance requires its fixed matrix.' >&2; exit 2; fi
 done
+
 CC=$(readlink -e -- "$1"); LEAN_BRIDGE_WASM_TOOLS=$(readlink -e -- "$2"); LEAN_BRIDGE_WASMTIME_C_API=$(readlink -e -- "$3")
 test -x "$CC"; test -x "$LEAN_BRIDGE_WASM_TOOLS"; test -d "$LEAN_BRIDGE_WASMTIME_C_API"
 export CC LEAN_BRIDGE_WASM_TOOLS LEAN_BRIDGE_WASMTIME_C_API
@@ -31,3 +32,12 @@ for route in ordinary reviewed; do
     --producer "$revision" --directory "$output/records/$route/full" --tap "$output/run.tap" \
     | tee "$output/verification.json"
 done
+
+LEAN_BRIDGE_REVIEWED_SPECIALIZATION_TEST=1 \
+LEAN_BRIDGE_REVIEWED_SPECIALIZATION_PROFILES=wit-wasi \
+LEAN_BRIDGE_REVIEWED_SPECIALIZATION_REPORT="$output_root/reviewed-specializations.json" \
+  node --max-old-space-size=3072 --test --test-concurrency=1 --test-reporter=tap \
+    --test-name-pattern='^independently reviewed native packages install every chosen specialization without its generic$' \
+    tests/reviewed-specializations.test.mjs 2>&1 | tee "$output_root/reviewed-specializations.tap"
+test -s "$output_root/reviewed-specializations.json"
+test "$(git rev-parse HEAD)" = "$revision"

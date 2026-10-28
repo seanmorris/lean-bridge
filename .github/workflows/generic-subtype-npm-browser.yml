@@ -17,7 +17,7 @@ jobs:
   installed:
     name: ${{ matrix.route }} generic Subtypes in Node and browsers
     runs-on: ubuntu-24.04
-    timeout-minutes: 180
+    timeout-minutes: 300
     strategy:
       fail-fast: false
       matrix:
@@ -98,6 +98,27 @@ jobs:
             build/generic-subtype-npm-browser/${{ matrix.route }}.json
             build/generic-subtype-engine-${{ matrix.route }}.log
             build/generic-subtype-runtime-${{ matrix.route }}.log
+          if-no-files-found: error
+          retention-days: 30
+      - name: Exercise ordinary and reviewed finite specializations in every browser realm
+        if: matrix.route == 'reviewed'
+        timeout-minutes: 120
+        env:
+          LEAN_BRIDGE_SIGNATURE_SPECIALIZATION_BROWSER_TEST: "1"
+          LEAN_BRIDGE_SIGNATURE_SPECIALIZATION_BROWSER_REPORT: build/signature-specializations/browser.json
+          LEAN_BRIDGE_TYPE_CORPUS_BROWSERS: chromium,firefox,webkit
+        run: |
+          source scripts/env.sh
+          node --test --test-concurrency=1 \
+            --test-name-pattern='^installed ordinary and reviewed specialization packages execute selected instances in every browser realm$' \
+            tests/reviewed-specializations.test.mjs
+          test -s build/signature-specializations/browser.json
+      - name: Preserve finite-specialization browser observations
+        if: always() && matrix.route == 'reviewed'
+        uses: actions/upload-artifact@v7
+        with:
+          name: signature-specializations-browser-${{ github.sha }}
+          path: build/signature-specializations/browser.json
           if-no-files-found: error
           retention-days: 30
       - name: Enforce generic Subtype acceptance
