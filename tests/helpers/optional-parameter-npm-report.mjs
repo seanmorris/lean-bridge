@@ -23,6 +23,9 @@ import {
 import {
 	optionalParameterTargetConfiguration
 } from "./optional-parameter-packages.mjs";
+import {
+	optionalParameterMatrixCases
+} from "./optional-parameter-matrix.mjs";
 
 const digest = value => assert.match(value, /^[a-f0-9]{64}$/u);
 const profiles = [
@@ -121,7 +124,8 @@ export const validateOptionalParameterNpmReport = (report, {
 	}
 	else assert.equal(report.browser, null);
 	return {
-		route, producerCommit, profiles: report.profiles
+		lane: "npm", route, producerCommit, profiles: report.profiles
+		, cases: optionalParameterMatrixCases
 		, checks: 27, rejections: 7, executions: 2
 		, browserProfiles: report.browser?.reports.length ?? 0
 	};
