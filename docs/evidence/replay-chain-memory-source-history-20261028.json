@@ -1,0 +1,221 @@
+{
+  "additions": [
+    {
+      "currentSha256": "47f837f9e2b4b56c1bd89459ac817fa54c7f5eea300d40d89ab75e510f7584c9",
+      "path": "scripts/update-replay-chain-memory-source-history.mjs"
+    },
+    {
+      "currentSha256": "5b6597a0e6f8844c6d39427410ac42380275e97a628cd69ccb3b07985f6b7d97",
+      "path": "tests/helpers/replay-chain-memory-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "0d90b04926729f9061b25808f45fda7986980963f4183586c6bdf280d9b367de",
+      "path": "tests/helpers/replay-chain-memory-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "bfcac4f5c8c7346503c11b930662c69fb1ac6b5b",
+  "implementationCommits": [
+    "bfcac4f5c8c7346503c11b930662c69fb1ac6b5b"
+  ],
+  "milestone": "replay-chain-memory-source-v1",
+  "predecessorCommit": "812fe4fdc8b9c160869d77e201265e2d072a90d9",
+  "schemaVersion": 1,
+  "scope": "Bound the memory of the owned JVM package, managed CI isolation, native fork and .NET process verifiers: each predecessor receipt stays pinned by exact path and SHA-256 and is verified by its own registered evidence test instead of being replayed in-process, the producer-era .NET process replay runs only in the native fork evidence test, and the .NET process, managed CI and JVM package verifiers reuse the inventories their source loops already authenticated and read only the IR schema and consumer contracts. No evidence, observation, receipt or support claim changes. Hub and registration integration are recorded by the integrating seal.",
+  "updates": [
+    {
+      "currentSha256": "7cf064beb2cee0307a98db5cb9d22fdb7e3d0c13ca961e6c4e11428eb88571fe",
+      "edits": [
+        {
+          "current": "import { readTypeSurfaceContracts } from \"./type-surface-contracts.mjs\";\n",
+          "previous": "import { readTypeSurface } from \"../../src/adoption/type-surface.mjs\";\n",
+          "start": 239
+        },
+        {
+          "current": "",
+          "previous": "import { assertNativeForkRepair } from \"./native-fork-repair-evidence.mjs\";\n",
+          "start": 414
+        },
+        {
+          "current": "",
+          "previous": " * @param replay - Also validate the complete predecessor evidence chain.\n",
+          "start": 1358
+        },
+        {
+          "current": "export const assertManagedCiIsolationEvidence = async record => {\n",
+          "previous": "export const assertManagedCiIsolationEvidence = async (record, replay = true) => {\n",
+          "start": 1362
+        },
+        {
+          "current": "\tlet inventory, oldInventory;\n",
+          "previous": "",
+          "start": 2387
+        },
+        {
+          "current": "\t\t\tconst restored = reverseManagedCiIsolation(bytes.toString(\"utf8\"), update);\n\t\t\tassert.equal(sha256(restored), previous.sources[path], path);\n\t\t\tif(path === \"docs/type-surface.v1.json\")\n\t\t\t\t[inventory, oldInventory] = [bytes.toString(\"utf8\"), restored];\n",
+          "previous": "\t\t\tassert.equal(sha256(reverseManagedCiIsolation(bytes.toString(\"utf8\"), update)), previous.sources[path], path);\n",
+          "start": 2719
+        },
+        {
+          "current": "\tconst contracts = await readTypeSurfaceContracts();\n\t// The loop above already authenticated both inventories.\n\tconst document = JSON.parse(inventory);\n\tconst old = JSON.parse(oldInventory);\n",
+          "previous": "\tconst { irSchema, consumers } = await readTypeSurface();\n\tconst contracts = { irSchema, consumers };\n\tconst document = JSON.parse(beforeOwnedJvmPackages(\"docs/type-surface.v1.json\", await readFile(\"docs/type-surface.v1.json\", \"utf8\"), record.sources[\"docs/type-surface.v1.json\"]));\n\tconst old = JSON.parse(reverseManagedCiIsolation(await readFile(\"docs/type-surface.v1.json\", \"utf8\"), updates.get(\"docs/type-surface.v1.json\")));\n",
+          "start": 3902
+        },
+        {
+          "current": "\t// The exact fork-status receipt is pinned above by path and SHA-256 and\n\t// verified independently by tests/native-fork-repair-evidence.test.mjs.\n",
+          "previous": "\tif(replay) await assertNativeForkRepair(previous);\n",
+          "start": 4493
+        }
+      ],
+      "path": "tests/helpers/managed-ci-isolation-evidence.mjs",
+      "previousSha256": "0d11aac244e00e7bfc9c189c70b14b98a6f904276cc843f64bce995317bdeee2"
+    },
+    {
+      "currentSha256": "75d059a0284a7a9cbf89c956184bd7eacce59ad9a9b549205763b375df838c8f",
+      "edits": [
+        {
+          "current": "const nativeForkRepairPrevious = Object.freeze({ path: ownedDotnetProcessPath\n\t, sha256: \"0001d8090edbd9fcb9e0f3772bfcefecc863dba6010f3313563ea7f95cc5412d\" });\n",
+          "previous": "",
+          "start": 1368
+        },
+        {
+          "current": "",
+          "previous": " * @param replay - Also validate the complete previous evidence chain.\n",
+          "start": 2065
+        },
+        {
+          "current": "export const assertNativeForkRepair = async record => {\n",
+          "previous": "export const assertNativeForkRepair = async (record, replay = true) => {\n",
+          "start": 2069
+        },
+        {
+          "current": "\tassert.deepEqual(record.previous, nativeForkRepairPrevious);\n",
+          "previous": "\tassert.deepEqual(record.previous, { path: ownedDotnetProcessPath\n\t\t, sha256: \"0001d8090edbd9fcb9e0f3772bfcefecc863dba6010f3313563ea7f95cc5412d\" });\n",
+          "start": 2384
+        },
+        {
+          "current": "\t// The exact process-origin receipt is pinned above by path and SHA-256 and\n\t// verified independently by tests/owned-dotnet-process-evidence.test.mjs;\n\t// its producer-era replay runs only in tests/native-fork-repair-evidence.test.mjs.\n};\n\n/**\n * Replay the pinned process-origin receipt with its producer-era verifier.\n *\n * @param record - Fork-status correction receipt.\n */\nexport const assertNativeForkRepairPredecessorReplay = async record => {\n\tassert.deepEqual(record.previous, nativeForkRepairPrevious);\n\tconst previousBytes = await readFile(record.previous.path);\n\tassert.equal(sha256(previousBytes), record.previous.sha256);\n\tconst { assertOwnedDotnetProcess } = await moduleAtProducerWithSourceReads(\n\t\tnativeForkRepairProducer, \"tests/helpers/owned-dotnet-process-evidence.mjs\");\n\tawait assertOwnedDotnetProcess(JSON.parse(previousBytes.toString(\"utf8\")));\n",
+          "previous": "\tif(replay)\n\t{\n\t\tconst { assertOwnedDotnetProcess } = await moduleAtProducerWithSourceReads(\n\t\t\tnativeForkRepairProducer, \"tests/helpers/owned-dotnet-process-evidence.mjs\");\n\t\tawait assertOwnedDotnetProcess(previous);\n\t}\n",
+          "start": 7124
+        }
+      ],
+      "path": "tests/helpers/native-fork-repair-evidence.mjs",
+      "previousSha256": "4612700521832781c05760285f1661ddbe7c9ab68e036f47f7246ab107145a75"
+    },
+    {
+      "currentSha256": "994ed78a3e5d3625dfe9a55fc0c73343c21f2a2370f755e1b86836a97ab2159e",
+      "edits": [
+        {
+          "current": "import { readTypeSurfaceContracts } from \"./type-surface-contracts.mjs\";\n",
+          "previous": "import { readTypeSurface } from \"../../src/adoption/type-surface.mjs\";\n",
+          "start": 254
+        },
+        {
+          "current": "import { assertOwnedDotnetReports } from \"./owned-dotnet-evidence.mjs\";\n",
+          "previous": "import { assertOwnedDotnetReports, assertOwnedDotnetIntegration } from \"./owned-dotnet-evidence.mjs\";\n",
+          "start": 1039
+        },
+        {
+          "current": "import { nativeForkRepairHistoricalBytes } from \"./native-fork-repair-history.mjs\";\n",
+          "previous": "import { beforeNativeForkRepair, nativeForkRepairHistoricalBytes } from \"./native-fork-repair-history.mjs\";\n",
+          "start": 1383
+        },
+        {
+          "current": "",
+          "previous": " * @param replay - Also replay the full predecessor evidence chain.\n",
+          "start": 8318
+        },
+        {
+          "current": "export const assertOwnedDotnetProcess = async record => {\n",
+          "previous": "export const assertOwnedDotnetProcess = async (record, replay = true) => {\n",
+          "start": 8322
+        },
+        {
+          "current": "\tlet inventory, oldInventory;\n",
+          "previous": "",
+          "start": 9438
+        },
+        {
+          "current": "\t\t\tconst restored = reverseOwnedDotnetProcess(bytes.toString(\"utf8\"), update);\n\t\t\tassert.equal(sha256(restored), previous.sourceHashes[path], path);\n\t\t\tif(path === \"docs/type-surface.v1.json\")\n\t\t\t\t[inventory, oldInventory] = [bytes.toString(\"utf8\"), restored];\n",
+          "previous": "\t\t\tassert.equal(sha256(reverseOwnedDotnetProcess(bytes.toString(\"utf8\"), update)), previous.sourceHashes[path], path);\n",
+          "start": 9777
+        },
+        {
+          "current": "\tconst contracts = await readTypeSurfaceContracts();\n\t// The loop above already authenticated both inventories.\n",
+          "previous": "\tconst { irSchema, consumers } = await readTypeSurface(), contracts = { irSchema, consumers };\n\tconst inventory = beforeNativeForkRepair(\"docs/type-surface.v1.json\", await readFile(\"docs/type-surface.v1.json\", \"utf8\"), record.sources[\"docs/type-surface.v1.json\"]);\n",
+          "start": 11433
+        },
+        {
+          "current": "\tconst old = JSON.parse(oldInventory);\n",
+          "previous": "\tconst old = JSON.parse(reverseOwnedDotnetProcess(inventory, updates.get(\"docs/type-surface.v1.json\")));\n",
+          "start": 11586
+        },
+        {
+          "current": "\t// The exact .NET integration receipt is pinned above by path and SHA-256\n\t// and verified independently by tests/owned-dotnet-evidence.test.mjs.\n",
+          "previous": "\tif(replay) await assertOwnedDotnetIntegration(previous);\n",
+          "start": 12024
+        }
+      ],
+      "path": "tests/helpers/owned-dotnet-process-evidence.mjs",
+      "previousSha256": "47a9c5dc39f683ead12c3276d05c1b5d36cee88a5708a041cb6a4d9b2858102f"
+    },
+    {
+      "currentSha256": "b548c965831356f2f4a47fe02b611ef80fe672ced701daee4e5c396545efa1fa",
+      "edits": [
+        {
+          "current": "import { readTypeSurfaceContracts } from \"./type-surface-contracts.mjs\";\n",
+          "previous": "import { readTypeSurface } from \"../../src/adoption/type-surface.mjs\";\n",
+          "start": 405
+        },
+        {
+          "current": "",
+          "previous": "import { assertManagedCiIsolationEvidence } from \"./managed-ci-isolation-evidence.mjs\";\n",
+          "start": 1472
+        },
+        {
+          "current": "\tlet source, oldSource;\n",
+          "previous": "",
+          "start": 27639
+        },
+        {
+          "current": "\t\t\tif(path === \"docs/type-surface.v1.json\") [source, oldSource] = [bytes.toString(\"utf8\"), restored];\n",
+          "previous": "",
+          "start": 28058
+        },
+        {
+          "current": "\tconst contracts = await readTypeSurfaceContracts();\n\t// The loop above already authenticated both inventories.\n",
+          "previous": "\tconst { irSchema, consumers } = await readTypeSurface(), contracts = { irSchema, consumers };\n\tconst source = jvmProbeRepairBytes(\"docs/type-surface.v1.json\", await readFile(\"docs/type-surface.v1.json\"), record.sources[\"docs/type-surface.v1.json\"]).toString(\"utf8\");\n",
+          "start": 28267
+        },
+        {
+          "current": "\tconst old = JSON.parse(oldSource);\n",
+          "previous": "\tconst old = JSON.parse(reverseOwnedJvmUpdate(source, updates.get(\"docs/type-surface.v1.json\")));\n",
+          "start": 28417
+        },
+        {
+          "current": "\t// The exact managed CI receipt is pinned above by path and SHA-256 and\n\t// verified independently by tests/managed-ci-isolation-evidence.test.mjs.\n",
+          "previous": "\tawait assertManagedCiIsolationEvidence(previous);\n",
+          "start": 29240
+        }
+      ],
+      "path": "tests/helpers/owned-jvm-package-evidence.mjs",
+      "previousSha256": "7ca581c4ca7f4f149d0d31110bdfe2edc0bd5e5ecdb2edb94bfd396211f67904"
+    },
+    {
+      "currentSha256": "2d787c9f3406a59b6995ed81706eaa4636bb291c1d8badcefbf736ac6ddce7fc",
+      "edits": [
+        {
+          "current": "import { assertNativeForkRepair, assertNativeForkRepairPredecessorReplay, nativeForkRepairProducer } from \"./helpers/native-fork-repair-evidence.mjs\";\n",
+          "previous": "import { assertNativeForkRepair, nativeForkRepairProducer } from \"./helpers/native-fork-repair-evidence.mjs\";\n",
+          "start": 261
+        },
+        {
+          "current": "\tconst record = await receipt();\n\tawait assertNativeForkRepair(record);\n\t// Only this independent test replays the predecessor with its producer-era verifier.\n\tawait assertNativeForkRepairPredecessorReplay(record);\n",
+          "previous": "\tawait assertNativeForkRepair(await receipt());\n",
+          "start": 1039
+        }
+      ],
+      "path": "tests/native-fork-repair-evidence.test.mjs",
+      "previousSha256": "a14c85e3e1345c09fe240d1a6ba0d4c058876a17fad5b5307f47227e87a0a64e"
+    }
+  ]
+}
