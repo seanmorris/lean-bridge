@@ -61,6 +61,28 @@ const structuralSubtypeEvidence = (profile, route) => {
 				: profile.startsWith("node-") || profile.startsWith("browser-") ? "node-browser" : profile];
 	return lanes.map(lane => `structural-subtype-${lane}-${route}-installed`);
 };
+const genericSubtypeFieldEvidence = (profile, route) => {
+	if(profile === "php-wasm") return [];
+	const lane = ["node-javascript", "node-typescript", "browser-javascript", "browser-react", "browser-worker"].includes(profile)
+		? `npm-${route}` : ["c", "cpp"].includes(profile) ? "native"
+			: ["java", "kotlin"].includes(profile) ? "jvm" : profile;
+	return ["generic-subtype-foundation-hosted-installed", `generic-subtype-${lane}-hosted-installed`];
+};
+const ownedSubtypeFieldEvidence = (profile, route) => {
+	if(profile === "php-wasm") return [`owned-subtype-php-wasm-${route}-installed`];
+	const lane = ["node-javascript", "node-typescript", "browser-javascript", "browser-react", "browser-worker"].includes(profile)
+		? "javascript" : ["c", "cpp"].includes(profile) ? "native"
+			: ["java", "kotlin"].includes(profile) ? "jvm"
+				: ["python", "ruby", "rust"].includes(profile) ? "languages" : profile;
+	return [`owned-subtype-${lane}-hosted-installed`];
+};
+const subtypeFieldEvidence = (profile, route) => [
+	...genericSubtypeFieldEvidence(profile, route)
+	, ...ownedSubtypeFieldEvidence(profile, route)
+];
+const subtypeFieldHostSupplement = profile => profile === "php-wasm"
+	? "; selected Subtype fields are checked at their declared public site before a transfer consumes any resource"
+	: "; the closed GenericNat record carries its proof-erased Positive value beside a retained Nat marker; the tested acyclic owned Bundle preserves this checked field beside explicit resource identities";
 const stage = (state = "unreviewed") => ({ state, evidence: state === "unreviewed" ? [] : ["test-evidence"], note: "Scope of this test observation." });
 const observationFixture = () => {
 	const candidate = clone(document);
@@ -444,7 +466,8 @@ for(const [profile, evidence] of [["php-native", "native-php-installed-copied"],
 	const hostedFinEvidence = family => finHostedSuffixes.map(suffix => `fin-hosted-${finHostedGroup}-${suffix}-${family}-ordinary-installed`);
 	// Finite specializations are signature-only cells, one receipt per build group.
 	const specializationEvidence = { python: "python", rust: "rust", ruby: "ruby", dotnet: "dotnet", java: "java-kotlin", kotlin: "java-kotlin", "php-native": "php-native", "wit-wasi": "wit-wasi" }[profile];
-	const specialized = specializationEvidence ? ["generic", "implicit", "instance"] : [];
+	const hostedSignatureSpecialized = profile === "php-wasm";
+	const specialized = specializationEvidence || hostedSignatureSpecialized ? ["generic", "implicit", "instance"] : [];
 	const genericRecordReports = {
 		python: ["c-cpp-python", "python312-rust"], rust: ["python312-rust"]
 		, dotnet: ["dotnet-java-kotlin"], java: ["dotnet-java-kotlin"]
@@ -586,18 +609,21 @@ for(const [profile, evidence] of [["php-native", "native-php-installed-copied"],
 			}
 				if(cell.shape === "subtype")
 				{
-					assert.deepEqual(stage.evidence, [...(cell.position === "field" ? []
+				assert.deepEqual(stage.evidence, [...(cell.position === "field" ? []
 						: [profile === "php-wasm" ? "php-wasm-subtype-ordinary-installed" : `native-subtype-${specializationEvidence}-installed`
 							, ...structuralSubtypeEvidence(profile, "ordinary")])
 						, ...nominalSubtypeEvidence, ...primitiveSubtypeEvidence
-						, ...(profile === "php-wasm" ? ["recursive-subtype-php-wasm-ordinary-installed"] : [])]);
+						, ...(profile === "php-wasm" ? ["recursive-subtype-php-wasm-ordinary-installed"] : [])
+						, ...(cell.position === "field" ? subtypeFieldEvidence(profile, "ordinary") : [])]);
 				continue;
 				}
 			if(specialized.includes(cell.shape))
 			{
-				assert.deepEqual(stage.evidence, [`native-specializations-${specializationEvidence}-installed`
-					, ...genericRecordReports.map(group => `generic-record-specialized-${group}-installed`)
-					, ...(stageName === "installedExecution" ? (profile === "python" ? ["python311", "python312"] : [["java", "kotlin"].includes(profile) ? "java-kotlin" : profile]).map(group => `generic-record-array-${group}-local`) : [])]);
+				assert.deepEqual(stage.evidence, hostedSignatureSpecialized
+					? ["hosted-signature-specializations-installed"]
+					: [`native-specializations-${specializationEvidence}-installed`
+						, ...genericRecordReports.map(group => `generic-record-specialized-${group}-installed`)
+						, ...(stageName === "installedExecution" ? (profile === "python" ? ["python311", "python312"] : [["java", "kotlin"].includes(profile) ? "java-kotlin" : profile]).map(group => `generic-record-array-${group}-local`) : [])]);
 				continue;
 			}
 			assert.deepEqual(stage.evidence, [specialized.includes(cell.shape) ? `native-specializations-${specializationEvidence}-installed` : recursive.includes(cell.shape) ? recursiveEvidence : variants.includes(cell.shape) ? variantEvidence : aliases.includes(cell.shape) ? aliasEvidence : lists.includes(cell.shape) ? ["java", "kotlin"].includes(profile) ? "jvm-lists-installed" : profile === "php-native" ? "php-native-lists-ffi-installed" : `${profile}-lists-installed` : compounds.includes(cell.shape) ? compoundEvidence : cell.shape === "char" ? "native-installed-char" : ["usize", "isize"].includes(cell.shape) ? "platform-words-installed" : evidence]);
@@ -672,23 +698,25 @@ test("checked Subtype evidence preserves copied values and scopes native callbac
 	assert.deepEqual(fields.map(cell => cell.id).sort(), nominalProfiles.flatMap(profile => ["ordinary-source", "reviewed-ir"].map(path => `${profile}/subtype/${path}/field`)).sort());
 	for(const cell of fields)
 	{
-		if(nominalPrimitiveSubtypeNpmProfiles.includes(cell.profile)) assert.equal(cell.hostType, nominalPrimitiveSubtypeNpmField);
-		if(nominalPrimitiveSubtypePythonProfiles.includes(cell.profile)) assert.equal(cell.hostType, nominalPrimitiveSubtypePythonField);
-		if(nominalPrimitiveSubtypeBrowserProfiles.includes(cell.profile)) assert.equal(cell.hostType, nominalPrimitiveSubtypeBrowserField);
-		if(nominalPrimitiveSubtypeNativeProfiles.includes(cell.profile)) assert.equal(cell.hostType, nominalPrimitiveSubtypeNativeField);
-		if(nominalPrimitiveSubtypePerlProfiles.includes(cell.profile)) assert.equal(cell.hostType, nominalPrimitiveSubtypePerlField);
-		if(nominalPrimitiveSubtypeRubyProfiles.includes(cell.profile)) assert.equal(cell.hostType, nominalPrimitiveSubtypeRubyField);
-		if(nominalPrimitiveSubtypeRustProfiles.includes(cell.profile)) assert.equal(cell.hostType, nominalPrimitiveSubtypeRustField);
-		if(nominalPrimitiveSubtypeDotnetProfiles.includes(cell.profile)) assert.equal(cell.hostType, nominalPrimitiveSubtypeDotnetField);
-		if(nominalPrimitiveSubtypePhpProfiles.includes(cell.profile)) assert.equal(cell.hostType, nominalPrimitiveSubtypePhpField);
-		if(nominalPrimitiveSubtypePhpWasmProfiles.includes(cell.profile)) assert.equal(cell.hostType, recursiveSubtypePhpWasmField);
-		if(nominalPrimitiveSubtypeWitProfiles.includes(cell.profile)) assert.equal(cell.hostType, nominalPrimitiveSubtypeWitField);
-		if(nominalPrimitiveSubtypeJvmProfiles.includes(cell.profile)) assert.equal(cell.hostType, nominalPrimitiveSubtypeJvmField);
+		const supplement = subtypeFieldHostSupplement(cell.profile);
+		if(nominalPrimitiveSubtypeNpmProfiles.includes(cell.profile)) assert.equal(cell.hostType, nominalPrimitiveSubtypeNpmField + supplement);
+		if(nominalPrimitiveSubtypePythonProfiles.includes(cell.profile)) assert.equal(cell.hostType, nominalPrimitiveSubtypePythonField + supplement);
+		if(nominalPrimitiveSubtypeBrowserProfiles.includes(cell.profile)) assert.equal(cell.hostType, nominalPrimitiveSubtypeBrowserField + supplement);
+		if(nominalPrimitiveSubtypeNativeProfiles.includes(cell.profile)) assert.equal(cell.hostType, nominalPrimitiveSubtypeNativeField + supplement);
+		if(nominalPrimitiveSubtypePerlProfiles.includes(cell.profile)) assert.equal(cell.hostType, nominalPrimitiveSubtypePerlField + supplement);
+		if(nominalPrimitiveSubtypeRubyProfiles.includes(cell.profile)) assert.equal(cell.hostType, nominalPrimitiveSubtypeRubyField + supplement);
+		if(nominalPrimitiveSubtypeRustProfiles.includes(cell.profile)) assert.equal(cell.hostType, nominalPrimitiveSubtypeRustField + supplement);
+		if(nominalPrimitiveSubtypeDotnetProfiles.includes(cell.profile)) assert.equal(cell.hostType, nominalPrimitiveSubtypeDotnetField + supplement);
+		if(nominalPrimitiveSubtypePhpProfiles.includes(cell.profile)) assert.equal(cell.hostType, nominalPrimitiveSubtypePhpField + supplement);
+		if(nominalPrimitiveSubtypePhpWasmProfiles.includes(cell.profile)) assert.equal(cell.hostType, recursiveSubtypePhpWasmField + supplement);
+		if(nominalPrimitiveSubtypeWitProfiles.includes(cell.profile)) assert.equal(cell.hostType, nominalPrimitiveSubtypeWitField + supplement);
+		if(nominalPrimitiveSubtypeJvmProfiles.includes(cell.profile)) assert.equal(cell.hostType, nominalPrimitiveSubtypeJvmField + supplement);
 		for(const stage of Object.values(cell.stages))
 			assert.deepEqual(stage.evidence, [
 				...["full", "result-only"].map(mode => `nominal-subtype-${nominalLane(cell.profile)}-${cell.path === "ordinary-source" ? "ordinary" : "reviewed"}-${mode}-installed`)
 				, ...primitiveNominal(cell)
-				, ...(cell.profile === "php-wasm" ? [`recursive-subtype-php-wasm-${cell.path === "ordinary-source" ? "ordinary" : "reviewed"}-installed`] : [])]);
+				, ...(cell.profile === "php-wasm" ? [`recursive-subtype-php-wasm-${cell.path === "ordinary-source" ? "ordinary" : "reviewed"}-installed`] : [])
+				, ...subtypeFieldEvidence(cell.profile, cell.path === "ordinary-source" ? "ordinary" : "reviewed")]);
 	}
 	const installed = allInstalled.filter(cell => ["parameter", "result"].includes(cell.position));
 	const callbacks = allInstalled.filter(cell => ["callback-parameter", "callback-result"].includes(cell.position));
