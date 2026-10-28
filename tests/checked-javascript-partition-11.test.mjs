@@ -3,6 +3,7 @@
  *
  * @file
  */
+import "./helpers/proof-erasure-lint-pin-repair-source-history-tests.mjs";
 import "./helpers/direct-proof-erasure-language-source-history-tests.mjs";
 import "./helpers/direct-proof-erasure-language-tests.mjs";
 import "./helpers/direct-proof-erasure-managed-source-history-tests.mjs";
