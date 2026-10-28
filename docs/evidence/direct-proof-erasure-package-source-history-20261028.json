@@ -1,0 +1,116 @@
+{
+  "additions": [
+    {
+      "currentSha256": "de9ef3a9e1575b8a13ba456568d68830426668c936800c17083ec1f33a9e2e2a",
+      "path": "tests/helpers/direct-proof-erasure-packages.mjs"
+    },
+    {
+      "currentSha256": "984a47dbe3c499a5fc77acaf07815d3681e8876b651d67cee65adbdf99789c51",
+      "path": "scripts/update-direct-proof-erasure-package-source-history.mjs"
+    },
+    {
+      "currentSha256": "68832f073355ae909ccd53d134a0cfd8bc89bd558b86ecbd4a660bcec5e0f102",
+      "path": "tests/helpers/direct-proof-erasure-package-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "050b51fce2090803f7b948e9d862d130c23bdf4cca158e188a9d73dd5640d662",
+      "path": "tests/helpers/direct-proof-erasure-package-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "963afb4a7db4ba3894ae4e9c5bbe28cb15d2024d",
+  "integrationUpdates": [
+    {
+      "currentSha256": "c47fcaf558562977d64f639f7971d280700e34ee6bfc2a0d5045ab54bbd554f4",
+      "edits": [
+        {
+          "current": "import \"./helpers/direct-proof-erasure-package-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 171
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "003ee26d243f3494b9cfb745b6e2700ec7b83c125a0c1343f90f710ed1bc5137"
+    },
+    {
+      "currentSha256": "4e9064ad825107e06b8f00d57db940a71c9060662b5655b20150862923e04f2f",
+      "edits": [
+        {
+          "current": "import { beforeDirectProofErasurePackageSource, directProofErasurePackageNormalizationPaths } from \"./direct-proof-erasure-package-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...directProofErasurePackageNormalizationPaths\n\t, ...directProofErasureFixtureNormalizationPaths\n",
+          "previous": "\t...directProofErasureFixtureNormalizationPaths\n",
+          "start": 209206
+        },
+        {
+          "current": "\tlet stage = beforeDirectProofErasurePackageSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeDirectProofErasureFixtureSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeDirectProofErasureFixtureSource(path, text, expected);\n",
+          "start": 261221
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "5b11d997291128615ff4eb0b0f82842b15e7210b06f2c0b3527e81b2f12fd47f"
+    }
+  ],
+  "milestone": "direct-proof-erasure-package-source-v1",
+  "predecessorCommit": "45ee20f7bcad3afca2018146d09e276b960d2f5b",
+  "schemaVersion": 1,
+  "scope": "Prepare one immutable ordinary and independently reviewed author fixture for all seventeen consumer profiles, collapse shared profiles to twelve exact package targets, retain one UInt32 runtime parameter and reconstruct two closed True witnesses only inside the generated Lean adapter, with reusable bundle acceptance controls.",
+  "updates": [
+    {
+      "commit": "963afb4a7db4ba3894ae4e9c5bbe28cb15d2024d",
+      "currentSha256": "c6483f2230fa72bcedc683a248cad9e281b2cedf5d1c44c5807b3a7e368ea262",
+      "edits": [
+        {
+          "current": "import { access, readFile, readdir } from \"node:fs/promises\";\n",
+          "previous": "import { readFile, readdir } from \"node:fs/promises\";\n",
+          "start": 144
+        },
+        {
+          "current": "import {\n\tdirectProofErasureTargetConfiguration, prepareDirectProofErasureProject\n} from \"./helpers/direct-proof-erasure-packages.mjs\";\n",
+          "previous": "",
+          "start": 753
+        },
+        {
+          "current": "\tassert.deepEqual(Object.keys(directProofErasureTargets).sort()\n\t\t, directProofErasureProfiles);\n});\n\ntest(\"seventeen consumer profiles collapse to twelve exact package targets\", () => {\n\tconst targets = directProofErasureTargetConfiguration(directProofErasureProfiles);\n\tassert.deepEqual(Object.keys(targets).sort(), [\n\t\t\"c\", \"cargo\", \"cpan\", \"cpp\", \"maven\", \"npm\", \"nuget\", \"php-native\"\n\t\t, \"php-wasm\", \"pypi\", \"rubygems\", \"wit-wasi\"\n",
+          "previous": "\tassert.deepEqual(Object.keys(directProofErasureTargets).sort(), [\n\t\t\"c\", \"cpp\", \"dotnet\", \"java\", \"kotlin\", \"perl\", \"php-native\"\n\t\t, \"php-wasm\", \"python\", \"ruby\", \"rust\", \"wit-wasi\"\n",
+          "start": 2678
+        },
+        {
+          "current": "\tassert.deepEqual(targets.npm\n\t\t, { name: \"direct-proof-erasure\", version: \"1.0.0\" });\n\tassert.deepEqual(targets.maven\n\t\t, { name: \"org.leanbridge:directprooferasure\", version: \"1.0.0\" });\n\tassert.throws(() => directProofErasureTargetConfiguration([]), TypeError);\n\tassert.throws(() => directProofErasureTargetConfiguration([\"unknown\"]), TypeError);\n\tassert.throws(() => directProofErasureTargetConfiguration([\"c\", \"c\"]), TypeError);\n",
+          "previous": "",
+          "start": 3119
+        },
+        {
+          "current": "for(const route of [\"ordinary\", \"reviewed\"]) test(\n\t`${route} package preparation keeps one shared source and exact route inputs`, async t => {\n\t\tconst prepared = await prepareDirectProofErasureProject(t, {\n\t\t\troute, profiles: directProofErasureProfiles\n\t\t});\n\t\tassert.deepEqual(JSON.parse(await readFile(\n\t\t\t`${prepared.projectRoot}/lean-bridge.exports.json`, \"utf8\"\n\t\t)), prepared.configuration);\n\t\tassert.deepEqual(prepared.configuration.modules, [directProofErasureModule]);\n\t\tassert.deepEqual(prepared.configuration.exports\n\t\t\t, route === \"ordinary\" ? [`${directProofErasureModule}.keep`] : undefined);\n\t\tassert.equal(await readFile(\n\t\t\t`${prepared.projectRoot}/DirectProofErasure.lean`, \"utf8\"\n\t\t), await readFile(`${directProofErasureFixture}/DirectProofErasure.lean`, \"utf8\"));\n\t\tif(route === \"reviewed\")\n\t\t{\n\t\t\tassert.deepEqual(JSON.parse(await readFile(\n\t\t\t\t`${prepared.projectRoot}/api.binding-ir.json`, \"utf8\"\n\t\t\t)), directProofErasureReview());\n\t\t}\n\t\telse await assert.rejects(access(\n\t\t\t`${prepared.projectRoot}/api.binding-ir.json`\n\t\t), { code: \"ENOENT\" });\n\t}\n);\n\n",
+          "previous": "",
+          "start": 3558
+        }
+      ],
+      "parent": "45ee20f7bcad3afca2018146d09e276b960d2f5b",
+      "path": "tests/direct-proof-erasure.test.mjs",
+      "previousSha256": "0a3242d486f6d48f56dd37a5bff9f70325239110fe7df1e67b01c2c808451fcd"
+    },
+    {
+      "commit": "963afb4a7db4ba3894ae4e9c5bbe28cb15d2024d",
+      "currentSha256": "e4ea0a278ab47ee551c7bc5660f87a4ba01d4f7650fe8de98088f76e6e435e9f",
+      "edits": [
+        {
+          "current": "\t\"browser-javascript\": Object.freeze([\"npm\", Object.freeze({ name: \"direct-proof-erasure\", version: \"1.0.0\" })])\n\t, \"browser-react\": Object.freeze([\"npm\", Object.freeze({ name: \"direct-proof-erasure\", version: \"1.0.0\" })])\n\t, \"browser-worker\": Object.freeze([\"npm\", Object.freeze({ name: \"direct-proof-erasure\", version: \"1.0.0\" })])\n\t, c: Object.freeze([\"c\", Object.freeze({ name: \"directprooferasure\", version: \"1.0.0\" })])\n",
+          "previous": "\tc: Object.freeze([\"c\", Object.freeze({ name: \"directprooferasure\", version: \"1.0.0\" })])\n",
+          "start": 1092
+        },
+        {
+          "current": "\t, \"node-javascript\": Object.freeze([\"npm\", Object.freeze({ name: \"direct-proof-erasure\", version: \"1.0.0\" })])\n\t, \"node-typescript\": Object.freeze([\"npm\", Object.freeze({ name: \"direct-proof-erasure\", version: \"1.0.0\" })])\n",
+          "previous": "",
+          "start": 1949
+        }
+      ],
+      "parent": "45ee20f7bcad3afca2018146d09e276b960d2f5b",
+      "path": "tests/helpers/direct-proof-erasure-fixture.mjs",
+      "previousSha256": "2e9380c04e92fa633177e04e13003fd2f96ca23326ca0ca92bab7085d0c31026"
+    }
+  ]
+}

@@ -4,6 +4,7 @@
  * @file
  */
 import "./helpers/direct-proof-erasure-fixture-source-history-tests.mjs";
+import "./helpers/direct-proof-erasure-package-source-history-tests.mjs";
 import "./direct-proof-erasure.test.mjs";
 import "./helpers/direct-proof-erasure-source-history-tests.mjs";
 import "./helpers/proof-erasure-evidence-audit-source-history-tests.mjs";
