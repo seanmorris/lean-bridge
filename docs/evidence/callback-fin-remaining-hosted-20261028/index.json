@@ -1,0 +1,841 @@
+{
+  "archiveCommit": "9ea7eb60310acb2670481ac07894765823303c70",
+  "checkerCommit": "de06e09a6f3e521230db95d35577e0eb439a8cfe",
+  "files": [
+    {
+      "bytes": 768,
+      "path": "hosted/api/dotnet/artifact.json",
+      "sha256": "c9c7cfd12d6b27977fc43493975326eb789530822af4554ea9754ecebb1af720"
+    },
+    {
+      "bytes": 3929,
+      "path": "hosted/api/dotnet/job.json",
+      "sha256": "8523f15e11ab142a3808a18e9f2ae1315c6be11dc7fecc2d79e186c2c6547146"
+    },
+    {
+      "bytes": 765,
+      "path": "hosted/api/jvm/artifact.json",
+      "sha256": "d7ad68f4cb2a5014f87951229ce884e05c7127e92d95260e2aabc58821007e54"
+    },
+    {
+      "bytes": 3927,
+      "path": "hosted/api/jvm/job.json",
+      "sha256": "ec506ef8baf7b686239a04261fa1e52a31037071e418c40b903ed9ca7ef9ac68"
+    },
+    {
+      "bytes": 772,
+      "path": "hosted/api/php-native/artifact.json",
+      "sha256": "f4eacf9a07d4c5e18e2aa27677206ec5a61d987dfa178eafeee6832313bd2701"
+    },
+    {
+      "bytes": 3773,
+      "path": "hosted/api/php-native/job.json",
+      "sha256": "a6ac33e07358bb8194d5f1e734704c71b9e610010405e28930cae64440652750"
+    },
+    {
+      "bytes": 12496,
+      "path": "hosted/api/run.json",
+      "sha256": "0509893eda29befc985e8bd699d158294ed013f6eeca0fe4d7d1d882da289b18"
+    },
+    {
+      "bytes": 770,
+      "path": "hosted/api/wit-wasi/artifact.json",
+      "sha256": "e88b3f6e3c6556c875c399a2a5691c32247d442c35b58e1e459173a17757b3d9"
+    },
+    {
+      "bytes": 3771,
+      "path": "hosted/api/wit-wasi/job.json",
+      "sha256": "45a96f0486142d316d5133aa19986a6d4f1ed1f296a659e8afc9ea71dff5f494"
+    },
+    {
+      "bytes": 67108864,
+      "path": "hosted/dotnet/artifact.zip.parts/0000.part",
+      "sha256": "c25eaea25900f58791223e29aaa2bc68a2a44e857260562192d14ffc5e47bc8b"
+    },
+    {
+      "bytes": 35491479,
+      "path": "hosted/dotnet/artifact.zip.parts/0001.part",
+      "sha256": "911505c2dc857db9ae333f9f6fae5e837ef32407ef5941cd0156b4b088e08550"
+    },
+    {
+      "bytes": 588,
+      "path": "hosted/dotnet/toolchain.log",
+      "sha256": "7926b41a9740600f0a09dd86fc8c25997da414d88981a2fe93d35c2d5e65efe9"
+    },
+    {
+      "bytes": 67108864,
+      "path": "hosted/jvm/artifact.zip.parts/0000.part",
+      "sha256": "de84e0bf725ce325115b161f42d39688132ea769bf1d07a2a361941a132bdded"
+    },
+    {
+      "bytes": 35628795,
+      "path": "hosted/jvm/artifact.zip.parts/0001.part",
+      "sha256": "eeb69bc15449562574f774ed772dcfd96aa41524d8e743e6de9d655d8ad1bd25"
+    },
+    {
+      "bytes": 588,
+      "path": "hosted/jvm/toolchain.log",
+      "sha256": "7926b41a9740600f0a09dd86fc8c25997da414d88981a2fe93d35c2d5e65efe9"
+    },
+    {
+      "bytes": 67108864,
+      "path": "hosted/php-native/artifact.zip.parts/0000.part",
+      "sha256": "10a69dbf54742651080b96411edee5b0ed0f3c0d5d528510bf072046f3cf8aea"
+    },
+    {
+      "bytes": 35465229,
+      "path": "hosted/php-native/artifact.zip.parts/0001.part",
+      "sha256": "760e82386a4954449ccad4896eb53e0d3757ad2e3ba82721e5394a03a55d4501"
+    },
+    {
+      "bytes": 588,
+      "path": "hosted/php-native/toolchain.log",
+      "sha256": "7926b41a9740600f0a09dd86fc8c25997da414d88981a2fe93d35c2d5e65efe9"
+    },
+    {
+      "bytes": 67108864,
+      "path": "hosted/wit-wasi/artifact.zip.parts/0000.part",
+      "sha256": "791a5a739c6f8143d5e17bab04ca870b40210c33bbd974cce951d95a4ba898dc"
+    },
+    {
+      "bytes": 51197099,
+      "path": "hosted/wit-wasi/artifact.zip.parts/0001.part",
+      "sha256": "3ad6a82f83c5e396130e70ded5e835a835b71778514c2b6cf8a2054f8b446eb1"
+    },
+    {
+      "bytes": 737,
+      "path": "hosted/wit-wasi/toolchain.log",
+      "sha256": "8ad2e4dd97d31c887c28fc590e080011c2ec83c06d5a447606eb0e62488f3851"
+    },
+    {
+      "bytes": 426,
+      "path": "observations/dotnet/acceptance.tap",
+      "sha256": "59fae72e4b0ce6bbb09e4aa698aac17a4a6a2929696a6a762d25acd1bbd68977"
+    },
+    {
+      "bytes": 1448,
+      "path": "observations/dotnet/report.json",
+      "sha256": "9166f2e53b923a7614c8cd8f176bf06b9e9ae8e8aa9752ce31d98b7f43ad3521"
+    },
+    {
+      "bytes": 825,
+      "path": "observations/dotnet/retained-packages.json",
+      "sha256": "a26af55c0fc46623c296d0c1d173676e4f3ec80ac9ea4aece3b3b87ec25f5baf"
+    },
+    {
+      "bytes": 775,
+      "path": "observations/dotnet/verification.json",
+      "sha256": "b2c0382afb8b5f7a03ccafcdbba270840354833e34847f6de46d72af80dd592c"
+    },
+    {
+      "bytes": 438,
+      "path": "observations/jvm/acceptance.tap",
+      "sha256": "5f2bf241252b9f4c6c0b41ac566ee2f9500ee1d1ce6959aec5f02073aa8af26e"
+    },
+    {
+      "bytes": 3044,
+      "path": "observations/jvm/report.json",
+      "sha256": "5a9837508503c29a236c16555da2dc795076fa4d3551b0008453edfbc1d6cea3"
+    },
+    {
+      "bytes": 895,
+      "path": "observations/jvm/retained-packages.json",
+      "sha256": "500a01fc1f53f2395ec8b6f0e83ca427cfa7ec25744397ca3547c696240e994a"
+    },
+    {
+      "bytes": 787,
+      "path": "observations/jvm/verification.json",
+      "sha256": "3b2beaa021ed642fb8883963e2f600610e4f465fd046e7ceef7a81b3f17f6abe"
+    },
+    {
+      "bytes": 433,
+      "path": "observations/php-native/acceptance.tap",
+      "sha256": "d3fe793c7dceb4fc3f98bd4c67451368dd19f112b2a96cf06b3a76fd28463934"
+    },
+    {
+      "bytes": 1578,
+      "path": "observations/php-native/report.json",
+      "sha256": "183b356fde6e52092c10863b1562fe0ed21c7cded2d3ff17b205ac35481a6408"
+    },
+    {
+      "bytes": 849,
+      "path": "observations/php-native/retained-packages.json",
+      "sha256": "3854a60732e55b8cb4b18193847a75e3f1735f66e21bf87af764ba34ada8884d"
+    },
+    {
+      "bytes": 779,
+      "path": "observations/php-native/verification.json",
+      "sha256": "8c2e488b85272ab19b5179bcf12a5ad92e918f176978036f1436d585f500747f"
+    },
+    {
+      "bytes": 430,
+      "path": "observations/wit-wasi/acceptance.tap",
+      "sha256": "05512b167fcf9b3fd07b3ac122e55611329ba05ac153d3d77ea3c1e1c93dab76"
+    },
+    {
+      "bytes": 1714,
+      "path": "observations/wit-wasi/report.json",
+      "sha256": "77fac17368559b21a18c53912f2719c8fd8beabad528119ed597e06ade176e88"
+    },
+    {
+      "bytes": 825,
+      "path": "observations/wit-wasi/retained-packages.json",
+      "sha256": "6d1fdc6d6bffe86c43e5d7cf9aa337d75509d3efeb819fae67eccb144ac3ff79"
+    },
+    {
+      "bytes": 777,
+      "path": "observations/wit-wasi/verification.json",
+      "sha256": "b299f05571427ea640a02466ef5db1e66b243963efee415a11df037a4c60dad6"
+    },
+    {
+      "bytes": 9004,
+      "path": "sources/archiver/scripts/archive-callback-fin-remaining-evidence.mjs",
+      "sha256": "6470b951c57e004a22d43e4bd404f70c1759c5d54fdbcf8717dca340b1024913"
+    },
+    {
+      "bytes": 14796,
+      "path": "sources/archiver/src/build/native-artifacts.mjs",
+      "sha256": "097b666c9ff12e19f1c21cd5f9127194960ec49d6574a311b412d8d210944675"
+    },
+    {
+      "bytes": 3332,
+      "path": "sources/archiver/src/capsule/node.mjs",
+      "sha256": "2ffbff5c27dbdd89fac9dd6ce5a1a3082430c9bdfbdcc3908941eaf1d009fb1b"
+    },
+    {
+      "bytes": 6911,
+      "path": "sources/archiver/tests/helpers/callback-fin-remaining-ci.mjs",
+      "sha256": "b5685292b51985d617564282c6f251d0dd652a946886489bd35fad2a6341278f"
+    },
+    {
+      "bytes": 5472,
+      "path": "sources/archiver/tests/helpers/callback-fin-remaining-hosted-archive.mjs",
+      "sha256": "f002ab360adeda14b7f08c630502391945079988f43207c5022e6fd3d14d362a"
+    },
+    {
+      "bytes": 2826,
+      "path": "sources/archiver/tests/helpers/callback-fin-retained-packages.mjs",
+      "sha256": "b08adda740aa24c16718ae523bb86ff77e0317cf35c5901a221680f946c23c35"
+    },
+    {
+      "bytes": 9540,
+      "path": "sources/archiver/tests/helpers/checked-record-value-index-hosted-archive.mjs",
+      "sha256": "8b1a43464cf8da94faf262ff3ad6b7f59d81794e2382aab6a2bcae92ef317e91"
+    },
+    {
+      "bytes": 906,
+      "path": "sources/checker/scripts/check-callback-fin-remaining-ci.mjs",
+      "sha256": "406a6a6b558d1357a80f6c6db5b5f67f14cad11b513f8e99635bb605784514b3"
+    },
+    {
+      "bytes": 3332,
+      "path": "sources/checker/src/capsule/node.mjs",
+      "sha256": "2ffbff5c27dbdd89fac9dd6ce5a1a3082430c9bdfbdcc3908941eaf1d009fb1b"
+    },
+    {
+      "bytes": 7250,
+      "path": "sources/checker/tests/helpers/callback-checked-record-retained-packages.mjs",
+      "sha256": "438e7e96b9770f6a19320436fb8c0541cc4c054622f7408aaf3f42757651965a"
+    },
+    {
+      "bytes": 6911,
+      "path": "sources/checker/tests/helpers/callback-fin-remaining-ci.mjs",
+      "sha256": "b5685292b51985d617564282c6f251d0dd652a946886489bd35fad2a6341278f"
+    },
+    {
+      "bytes": 2826,
+      "path": "sources/checker/tests/helpers/callback-fin-retained-packages.mjs",
+      "sha256": "b08adda740aa24c16718ae523bb86ff77e0317cf35c5901a221680f946c23c35"
+    },
+    {
+      "bytes": 7826,
+      "path": "sources/checker/tests/helpers/package-set.mjs",
+      "sha256": "17cb58f535389b2eb23ca36de10430da3b98399a0723026c56250954ecafd1d0"
+    },
+    {
+      "bytes": 12342,
+      "path": "sources/producer/.github/workflows/callback-checked-record-remaining.yml",
+      "sha256": "e8a1c9db11008ba4e187576855b0517886512b5645f641b944a0c2410c103506"
+    },
+    {
+      "bytes": 2290,
+      "path": "sources/producer/scripts/run-callback-fin-remaining-ci.sh",
+      "sha256": "2654364bcc17ffd0d6cb27d5378a03d5219637562a74710a2bbb7917156e7f2b"
+    },
+    {
+      "bytes": 9323,
+      "path": "sources/producer/tests/callback-fin-remaining-installed.test.mjs",
+      "sha256": "b7b83fa15af94c0d8e6883545e7507fcf2bcb07b8d62f15c2fe6d8caef86a273"
+    },
+    {
+      "bytes": 1193,
+      "path": "sources/producer/tests/helpers/callback-fin-fixture.mjs",
+      "sha256": "9f77b39060a6adfac3482d1276c2e3822006eea9ae3f7e045ba9efb9d3cbd69f"
+    },
+    {
+      "bytes": 13362,
+      "path": "sources/producer/tests/helpers/callback-fin-packages.mjs",
+      "sha256": "6e062c3f22a8fd8375938f3bf07f6d6266beaf670f1cad1662f46ecd231cc4e9"
+    },
+    {
+      "bytes": 6911,
+      "path": "sources/producer/tests/helpers/callback-fin-remaining-ci.mjs",
+      "sha256": "b5685292b51985d617564282c6f251d0dd652a946886489bd35fad2a6341278f"
+    },
+    {
+      "bytes": 2826,
+      "path": "sources/producer/tests/helpers/callback-fin-retained-packages.mjs",
+      "sha256": "b08adda740aa24c16718ae523bb86ff77e0317cf35c5901a221680f946c23c35"
+    }
+  ],
+  "kind": "callback-fin-remaining-installed-v1",
+  "lanes": [
+    {
+      "accepted": {
+        "kind": "callback-fin-remaining",
+        "producerCommit": "de06e09a6f3e521230db95d35577e0eb439a8cfe",
+        "profiles": [
+          "dotnet"
+        ],
+        "reportSha256": "9166f2e53b923a7614c8cd8f176bf06b9e9ae8e8aa9752ce31d98b7f43ad3521",
+        "reports": 2,
+        "retainedPackages": {
+          "routes": [
+            {
+              "archiveBytes": 51392862,
+              "archives": 1,
+              "receiptSha256": "f12d0dca32078667e1b7f284dc10ba8eca8d60a9e25b38eac89891cd99f52500",
+              "route": "ordinary"
+            },
+            {
+              "archiveBytes": 51398131,
+              "archives": 1,
+              "receiptSha256": "3a9e8008ba0b0c1d3fce35d630c02fd2f55434772c3f87763ae968c4d4fc0ffa",
+              "route": "reviewed"
+            }
+          ],
+          "schemaVersion": 1
+        },
+        "routes": [
+          "ordinary",
+          "reviewed"
+        ],
+        "schemaVersion": 1
+      },
+      "hostedRun": {
+        "apiRecords": {
+          "artifact": {
+            "bytes": 768,
+            "sha256": "c9c7cfd12d6b27977fc43493975326eb789530822af4554ea9754ecebb1af720"
+          },
+          "job": {
+            "bytes": 3929,
+            "sha256": "8523f15e11ab142a3808a18e9f2ae1315c6be11dc7fecc2d79e186c2c6547146"
+          },
+          "run": {
+            "bytes": 12496,
+            "sha256": "0509893eda29befc985e8bd699d158294ed013f6eeca0fe4d7d1d882da289b18"
+          }
+        },
+        "artifact": {
+          "apiDigest": "sha256:73ac5381fd29f2340e9b0e24917bdb5001ec921f70227c7af6a413bd2e117e9f",
+          "bytes": 102600343,
+          "createdAt": "2026-10-28T03:10:58Z",
+          "expiresAt": "2026-11-27T03:10:54Z",
+          "id": 12788464119,
+          "members": [
+            "callback-fin-remaining-ci-dotnet/acceptance.tap",
+            "callback-fin-remaining-ci-dotnet/evidence/ordinary/handoff/package-set-receipt.json",
+            "callback-fin-remaining-ci-dotnet/evidence/ordinary/handoff/archives/LeanBridge.Reviewedcallbacks.1.0.0.nupkg",
+            "callback-fin-remaining-ci-dotnet/evidence/ordinary/handoff/package-set-receipt.json.sha256",
+            "callback-fin-remaining-ci-dotnet/evidence/reviewed/handoff/archives/LeanBridge.Reviewedcallbacks.1.0.0.nupkg",
+            "callback-fin-remaining-ci-dotnet/evidence/reviewed/handoff/package-set-receipt.json",
+            "callback-fin-remaining-ci-dotnet/evidence/reviewed/handoff/package-set-receipt.json.sha256",
+            "callback-fin-remaining-ci-dotnet/report.json",
+            "callback-fin-remaining-ci-dotnet/retained-packages.json",
+            "callback-fin-remaining-ci-dotnet/verification.json",
+            "callback-fin-remaining-dotnet-toolchain.log"
+          ],
+          "name": "callback-fin-remaining-dotnet-de06e09a6f3e521230db95d35577e0eb439a8cfe",
+          "parts": [
+            {
+              "bytes": 67108864,
+              "offset": 0,
+              "path": "hosted/dotnet/artifact.zip.parts/0000.part",
+              "sha256": "c25eaea25900f58791223e29aaa2bc68a2a44e857260562192d14ffc5e47bc8b"
+            },
+            {
+              "bytes": 35491479,
+              "offset": 67108864,
+              "path": "hosted/dotnet/artifact.zip.parts/0001.part",
+              "sha256": "911505c2dc857db9ae333f9f6fae5e837ef32407ef5941cd0156b4b088e08550"
+            }
+          ],
+          "sha256": "73ac5381fd29f2340e9b0e24917bdb5001ec921f70227c7af6a413bd2e117e9f"
+        },
+        "createdAt": "2026-10-28T02:58:29Z",
+        "event": "workflow_dispatch",
+        "job": {
+          "completedAt": "2026-10-28T03:11:01Z",
+          "id": 122604509292,
+          "labels": [
+            "ubuntu-24.04"
+          ],
+          "name": "Checked Fin callbacks in dotnet",
+          "runnerGroup": "GitHub Actions",
+          "runnerName": "GitHub Actions 1000069081",
+          "startedAt": "2026-10-28T02:58:32Z"
+        },
+        "repository": "seanmorris/lean-bridge",
+        "runAttempt": 1,
+        "runId": 40624009651,
+        "updatedAt": "2026-10-28T03:15:57Z",
+        "url": "https://github.com/seanmorris/lean-bridge/actions/runs/40624009651",
+        "workflow": ".github/workflows/callback-checked-record-remaining.yml"
+      },
+      "id": "dotnet",
+      "profiles": [
+        "dotnet"
+      ]
+    },
+    {
+      "accepted": {
+        "kind": "callback-fin-remaining",
+        "producerCommit": "de06e09a6f3e521230db95d35577e0eb439a8cfe",
+        "profiles": [
+          "java",
+          "kotlin"
+        ],
+        "reportSha256": "5a9837508503c29a236c16555da2dc795076fa4d3551b0008453edfbc1d6cea3",
+        "reports": 4,
+        "retainedPackages": {
+          "routes": [
+            {
+              "archiveBytes": 51477732,
+              "archives": 2,
+              "receiptSha256": "f3fcbb3d96a86e9ecd51388a8ccb17e928e7b941b3bdbec3b66688a59875dc0d",
+              "route": "ordinary"
+            },
+            {
+              "archiveBytes": 51483108,
+              "archives": 2,
+              "receiptSha256": "d43f1e070d05f42912ab458aaf6a751489b3cbb7d0bd8b60a094a455415d2c45",
+              "route": "reviewed"
+            }
+          ],
+          "schemaVersion": 1
+        },
+        "routes": [
+          "ordinary",
+          "reviewed"
+        ],
+        "schemaVersion": 1
+      },
+      "hostedRun": {
+        "apiRecords": {
+          "artifact": {
+            "bytes": 765,
+            "sha256": "d7ad68f4cb2a5014f87951229ce884e05c7127e92d95260e2aabc58821007e54"
+          },
+          "job": {
+            "bytes": 3927,
+            "sha256": "ec506ef8baf7b686239a04261fa1e52a31037071e418c40b903ed9ca7ef9ac68"
+          },
+          "run": {
+            "bytes": 12496,
+            "sha256": "0509893eda29befc985e8bd699d158294ed013f6eeca0fe4d7d1d882da289b18"
+          }
+        },
+        "artifact": {
+          "apiDigest": "sha256:9cd1675efc2391dfbc70b39becaf233ea6e6ea78fb1b4f26ae1bfb8fcf95d969",
+          "bytes": 102737659,
+          "createdAt": "2026-10-28T03:11:25Z",
+          "expiresAt": "2026-11-27T03:11:21Z",
+          "id": 12788798236,
+          "members": [
+            "callback-fin-remaining-ci-jvm/acceptance.tap",
+            "callback-fin-remaining-ci-jvm/evidence/ordinary/handoff/archives/reviewedcallbacks-1.0.0.pom",
+            "callback-fin-remaining-ci-jvm/evidence/ordinary/handoff/archives/reviewedcallbacks-1.0.0.jar",
+            "callback-fin-remaining-ci-jvm/evidence/ordinary/handoff/package-set-receipt.json",
+            "callback-fin-remaining-ci-jvm/evidence/ordinary/handoff/package-set-receipt.json.sha256",
+            "callback-fin-remaining-ci-jvm/evidence/reviewed/handoff/archives/reviewedcallbacks-1.0.0.jar",
+            "callback-fin-remaining-ci-jvm/evidence/reviewed/handoff/archives/reviewedcallbacks-1.0.0.pom",
+            "callback-fin-remaining-ci-jvm/evidence/reviewed/handoff/package-set-receipt.json",
+            "callback-fin-remaining-ci-jvm/evidence/reviewed/handoff/package-set-receipt.json.sha256",
+            "callback-fin-remaining-ci-jvm/report.json",
+            "callback-fin-remaining-ci-jvm/retained-packages.json",
+            "callback-fin-remaining-ci-jvm/verification.json",
+            "callback-fin-remaining-jvm-toolchain.log"
+          ],
+          "name": "callback-fin-remaining-jvm-de06e09a6f3e521230db95d35577e0eb439a8cfe",
+          "parts": [
+            {
+              "bytes": 67108864,
+              "offset": 0,
+              "path": "hosted/jvm/artifact.zip.parts/0000.part",
+              "sha256": "de84e0bf725ce325115b161f42d39688132ea769bf1d07a2a361941a132bdded"
+            },
+            {
+              "bytes": 35628795,
+              "offset": 67108864,
+              "path": "hosted/jvm/artifact.zip.parts/0001.part",
+              "sha256": "eeb69bc15449562574f774ed772dcfd96aa41524d8e743e6de9d655d8ad1bd25"
+            }
+          ],
+          "sha256": "9cd1675efc2391dfbc70b39becaf233ea6e6ea78fb1b4f26ae1bfb8fcf95d969"
+        },
+        "createdAt": "2026-10-28T02:58:29Z",
+        "event": "workflow_dispatch",
+        "job": {
+          "completedAt": "2026-10-28T03:11:28Z",
+          "id": 122604509636,
+          "labels": [
+            "ubuntu-24.04"
+          ],
+          "name": "Checked Fin callbacks in jvm",
+          "runnerGroup": "GitHub Actions",
+          "runnerName": "GitHub Actions 1000069085",
+          "startedAt": "2026-10-28T02:58:32Z"
+        },
+        "repository": "seanmorris/lean-bridge",
+        "runAttempt": 1,
+        "runId": 40624009651,
+        "updatedAt": "2026-10-28T03:15:57Z",
+        "url": "https://github.com/seanmorris/lean-bridge/actions/runs/40624009651",
+        "workflow": ".github/workflows/callback-checked-record-remaining.yml"
+      },
+      "id": "jvm",
+      "profiles": [
+        "java",
+        "kotlin"
+      ]
+    },
+    {
+      "accepted": {
+        "kind": "callback-fin-remaining",
+        "producerCommit": "de06e09a6f3e521230db95d35577e0eb439a8cfe",
+        "profiles": [
+          "php-native"
+        ],
+        "reportSha256": "183b356fde6e52092c10863b1562fe0ed21c7cded2d3ff17b205ac35481a6408",
+        "reports": 2,
+        "retainedPackages": {
+          "routes": [
+            {
+              "archiveBytes": 51378241,
+              "archives": 1,
+              "receiptSha256": "5c358db12f0834196f6f52f05d4e2e3b36409cf15e39cb1d368001271f87f540",
+              "route": "ordinary"
+            },
+            {
+              "archiveBytes": 51383496,
+              "archives": 1,
+              "receiptSha256": "ef1120317cfc6010350d2dba50e73c62fe9c9aaee7cbdbd74e956f3c78e5715a",
+              "route": "reviewed"
+            }
+          ],
+          "schemaVersion": 1
+        },
+        "routes": [
+          "ordinary",
+          "reviewed"
+        ],
+        "schemaVersion": 1
+      },
+      "hostedRun": {
+        "apiRecords": {
+          "artifact": {
+            "bytes": 772,
+            "sha256": "f4eacf9a07d4c5e18e2aa27677206ec5a61d987dfa178eafeee6832313bd2701"
+          },
+          "job": {
+            "bytes": 3773,
+            "sha256": "a6ac33e07358bb8194d5f1e734704c71b9e610010405e28930cae64440652750"
+          },
+          "run": {
+            "bytes": 12496,
+            "sha256": "0509893eda29befc985e8bd699d158294ed013f6eeca0fe4d7d1d882da289b18"
+          }
+        },
+        "artifact": {
+          "apiDigest": "sha256:b4138291c93d893e1c0814ca60dcc8ee58999064a5a30fb59bd51db991118c91",
+          "bytes": 102574093,
+          "createdAt": "2026-10-28T03:08:29Z",
+          "expiresAt": "2026-11-27T03:08:25Z",
+          "id": 12788423989,
+          "members": [
+            "callback-fin-remaining-ci-php-native/acceptance.tap",
+            "callback-fin-remaining-ci-php-native/evidence/ordinary/handoff/archives/lean-bridge-reviewedcallbacks-1.0.0-linux-x86_64.zip",
+            "callback-fin-remaining-ci-php-native/evidence/ordinary/handoff/package-set-receipt.json",
+            "callback-fin-remaining-ci-php-native/evidence/ordinary/handoff/package-set-receipt.json.sha256",
+            "callback-fin-remaining-ci-php-native/evidence/reviewed/handoff/archives/lean-bridge-reviewedcallbacks-1.0.0-linux-x86_64.zip",
+            "callback-fin-remaining-ci-php-native/evidence/reviewed/handoff/package-set-receipt.json",
+            "callback-fin-remaining-ci-php-native/evidence/reviewed/handoff/package-set-receipt.json.sha256",
+            "callback-fin-remaining-ci-php-native/report.json",
+            "callback-fin-remaining-ci-php-native/retained-packages.json",
+            "callback-fin-remaining-ci-php-native/verification.json",
+            "callback-fin-remaining-php-native-toolchain.log"
+          ],
+          "name": "callback-fin-remaining-php-native-de06e09a6f3e521230db95d35577e0eb439a8cfe",
+          "parts": [
+            {
+              "bytes": 67108864,
+              "offset": 0,
+              "path": "hosted/php-native/artifact.zip.parts/0000.part",
+              "sha256": "10a69dbf54742651080b96411edee5b0ed0f3c0d5d528510bf072046f3cf8aea"
+            },
+            {
+              "bytes": 35465229,
+              "offset": 67108864,
+              "path": "hosted/php-native/artifact.zip.parts/0001.part",
+              "sha256": "760e82386a4954449ccad4896eb53e0d3757ad2e3ba82721e5394a03a55d4501"
+            }
+          ],
+          "sha256": "b4138291c93d893e1c0814ca60dcc8ee58999064a5a30fb59bd51db991118c91"
+        },
+        "createdAt": "2026-10-28T02:58:29Z",
+        "event": "workflow_dispatch",
+        "job": {
+          "completedAt": "2026-10-28T03:08:31Z",
+          "id": 122604509740,
+          "labels": [
+            "ubuntu-24.04"
+          ],
+          "name": "Checked Fin callbacks in php-native",
+          "runnerGroup": "GitHub Actions",
+          "runnerName": "GitHub Actions 1000069086",
+          "startedAt": "2026-10-28T02:58:32Z"
+        },
+        "repository": "seanmorris/lean-bridge",
+        "runAttempt": 1,
+        "runId": 40624009651,
+        "updatedAt": "2026-10-28T03:15:57Z",
+        "url": "https://github.com/seanmorris/lean-bridge/actions/runs/40624009651",
+        "workflow": ".github/workflows/callback-checked-record-remaining.yml"
+      },
+      "id": "php-native",
+      "profiles": [
+        "php-native"
+      ]
+    },
+    {
+      "accepted": {
+        "kind": "callback-fin-remaining",
+        "producerCommit": "de06e09a6f3e521230db95d35577e0eb439a8cfe",
+        "profiles": [
+          "wit-wasi"
+        ],
+        "reportSha256": "77fac17368559b21a18c53912f2719c8fd8beabad528119ed597e06ade176e88",
+        "reports": 2,
+        "retainedPackages": {
+          "routes": [
+            {
+              "archiveBytes": 59260678,
+              "archives": 1,
+              "receiptSha256": "75c10cd82e1e859f360cee3d0623e8b3dbaeca3ba918427c6e0018677e5df0ee",
+              "route": "ordinary"
+            },
+            {
+              "archiveBytes": 59266035,
+              "archives": 1,
+              "receiptSha256": "ab6cde4d856874ba9b1836db3dd774e01b7a5ffc921aa8906841d28e73f0b9b3",
+              "route": "reviewed"
+            }
+          ],
+          "schemaVersion": 1
+        },
+        "routes": [
+          "ordinary",
+          "reviewed"
+        ],
+        "schemaVersion": 1
+      },
+      "hostedRun": {
+        "apiRecords": {
+          "artifact": {
+            "bytes": 770,
+            "sha256": "e88b3f6e3c6556c875c399a2a5691c32247d442c35b58e1e459173a17757b3d9"
+          },
+          "job": {
+            "bytes": 3771,
+            "sha256": "45a96f0486142d316d5133aa19986a6d4f1ed1f296a659e8afc9ea71dff5f494"
+          },
+          "run": {
+            "bytes": 12496,
+            "sha256": "0509893eda29befc985e8bd699d158294ed013f6eeca0fe4d7d1d882da289b18"
+          }
+        },
+        "artifact": {
+          "apiDigest": "sha256:51e4afb4fd277372c9ce0a625365f8d63390966248157779a3d90c68754eada6",
+          "bytes": 118305963,
+          "createdAt": "2026-10-28T03:09:24Z",
+          "expiresAt": "2026-11-27T03:09:19Z",
+          "id": 12789176579,
+          "members": [
+            "callback-fin-remaining-ci-wit-wasi/acceptance.tap",
+            "callback-fin-remaining-ci-wit-wasi/evidence/ordinary/handoff/package-set-receipt.json",
+            "callback-fin-remaining-ci-wit-wasi/evidence/ordinary/handoff/archives/reviewed-callbacks-1.0.0-wit-wasi.tar.gz",
+            "callback-fin-remaining-ci-wit-wasi/evidence/ordinary/handoff/package-set-receipt.json.sha256",
+            "callback-fin-remaining-ci-wit-wasi/evidence/reviewed/handoff/archives/reviewed-callbacks-1.0.0-wit-wasi.tar.gz",
+            "callback-fin-remaining-ci-wit-wasi/evidence/reviewed/handoff/package-set-receipt.json",
+            "callback-fin-remaining-ci-wit-wasi/evidence/reviewed/handoff/package-set-receipt.json.sha256",
+            "callback-fin-remaining-ci-wit-wasi/report.json",
+            "callback-fin-remaining-ci-wit-wasi/retained-packages.json",
+            "callback-fin-remaining-ci-wit-wasi/verification.json",
+            "callback-fin-remaining-wit-wasi-toolchain.log"
+          ],
+          "name": "callback-fin-remaining-wit-wasi-de06e09a6f3e521230db95d35577e0eb439a8cfe",
+          "parts": [
+            {
+              "bytes": 67108864,
+              "offset": 0,
+              "path": "hosted/wit-wasi/artifact.zip.parts/0000.part",
+              "sha256": "791a5a739c6f8143d5e17bab04ca870b40210c33bbd974cce951d95a4ba898dc"
+            },
+            {
+              "bytes": 51197099,
+              "offset": 67108864,
+              "path": "hosted/wit-wasi/artifact.zip.parts/0001.part",
+              "sha256": "3ad6a82f83c5e396130e70ded5e835a835b71778514c2b6cf8a2054f8b446eb1"
+            }
+          ],
+          "sha256": "51e4afb4fd277372c9ce0a625365f8d63390966248157779a3d90c68754eada6"
+        },
+        "createdAt": "2026-10-28T02:58:29Z",
+        "event": "workflow_dispatch",
+        "job": {
+          "completedAt": "2026-10-28T03:09:27Z",
+          "id": 122604509763,
+          "labels": [
+            "ubuntu-24.04"
+          ],
+          "name": "Checked Fin callbacks in wit-wasi",
+          "runnerGroup": "GitHub Actions",
+          "runnerName": "GitHub Actions 1000069087",
+          "startedAt": "2026-10-28T02:58:32Z"
+        },
+        "repository": "seanmorris/lean-bridge",
+        "runAttempt": 1,
+        "runId": 40624009651,
+        "updatedAt": "2026-10-28T03:15:57Z",
+        "url": "https://github.com/seanmorris/lean-bridge/actions/runs/40624009651",
+        "workflow": ".github/workflows/callback-checked-record-remaining.yml"
+      },
+      "id": "wit-wasi",
+      "profiles": [
+        "wit-wasi"
+      ]
+    }
+  ],
+  "limitations": [
+    "The four hosted lanes cover ordinary-source and independently reviewed Fin callback parameters and results in .NET, Java, Kotlin, native PHP and WIT/WASI installed packages.",
+    "Each lane retains receipt-closed package archives for both routes, performs source-free offline installation, and repeats execution where the host adapter supports a repeat contract.",
+    "The original GitHub artifact ZIPs, API identities, toolchain logs, reports, TAP, checker output and exact selected source snapshots are retained.",
+    "This evidence does not add Perl, Python, Ruby, Rust, browser, copied-field, Subtype or unmeasured dispatch claims.",
+    "External host runtimes, compiler toolchains, package managers and operating-system distributions remain trusted inputs represented by recorded identities rather than copied installations."
+  ],
+  "producerCommit": "de06e09a6f3e521230db95d35577e0eb439a8cfe",
+  "schemaVersion": 1,
+  "selectedSources": [
+    {
+      "path": ".github/workflows/callback-checked-record-remaining.yml",
+      "revision": "de06e09a6f3e521230db95d35577e0eb439a8cfe",
+      "role": "producer"
+    },
+    {
+      "path": "scripts/run-callback-fin-remaining-ci.sh",
+      "revision": "de06e09a6f3e521230db95d35577e0eb439a8cfe",
+      "role": "producer"
+    },
+    {
+      "path": "tests/callback-fin-remaining-installed.test.mjs",
+      "revision": "de06e09a6f3e521230db95d35577e0eb439a8cfe",
+      "role": "producer"
+    },
+    {
+      "path": "tests/helpers/callback-fin-fixture.mjs",
+      "revision": "de06e09a6f3e521230db95d35577e0eb439a8cfe",
+      "role": "producer"
+    },
+    {
+      "path": "tests/helpers/callback-fin-packages.mjs",
+      "revision": "de06e09a6f3e521230db95d35577e0eb439a8cfe",
+      "role": "producer"
+    },
+    {
+      "path": "tests/helpers/callback-fin-remaining-ci.mjs",
+      "revision": "de06e09a6f3e521230db95d35577e0eb439a8cfe",
+      "role": "producer"
+    },
+    {
+      "path": "tests/helpers/callback-fin-retained-packages.mjs",
+      "revision": "de06e09a6f3e521230db95d35577e0eb439a8cfe",
+      "role": "producer"
+    },
+    {
+      "path": "scripts/check-callback-fin-remaining-ci.mjs",
+      "revision": "de06e09a6f3e521230db95d35577e0eb439a8cfe",
+      "role": "checker"
+    },
+    {
+      "path": "tests/helpers/callback-fin-remaining-ci.mjs",
+      "revision": "de06e09a6f3e521230db95d35577e0eb439a8cfe",
+      "role": "checker"
+    },
+    {
+      "path": "tests/helpers/callback-fin-retained-packages.mjs",
+      "revision": "de06e09a6f3e521230db95d35577e0eb439a8cfe",
+      "role": "checker"
+    },
+    {
+      "path": "tests/helpers/callback-checked-record-retained-packages.mjs",
+      "revision": "de06e09a6f3e521230db95d35577e0eb439a8cfe",
+      "role": "checker"
+    },
+    {
+      "path": "tests/helpers/package-set.mjs",
+      "revision": "de06e09a6f3e521230db95d35577e0eb439a8cfe",
+      "role": "checker"
+    },
+    {
+      "path": "src/capsule/node.mjs",
+      "revision": "de06e09a6f3e521230db95d35577e0eb439a8cfe",
+      "role": "checker"
+    },
+    {
+      "path": "scripts/archive-callback-fin-remaining-evidence.mjs",
+      "revision": "9ea7eb60310acb2670481ac07894765823303c70",
+      "role": "archiver"
+    },
+    {
+      "path": "tests/helpers/callback-fin-remaining-hosted-archive.mjs",
+      "revision": "9ea7eb60310acb2670481ac07894765823303c70",
+      "role": "archiver"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-hosted-archive.mjs",
+      "revision": "9ea7eb60310acb2670481ac07894765823303c70",
+      "role": "archiver"
+    },
+    {
+      "path": "tests/helpers/callback-fin-remaining-ci.mjs",
+      "revision": "9ea7eb60310acb2670481ac07894765823303c70",
+      "role": "archiver"
+    },
+    {
+      "path": "tests/helpers/callback-fin-retained-packages.mjs",
+      "revision": "9ea7eb60310acb2670481ac07894765823303c70",
+      "role": "archiver"
+    },
+    {
+      "path": "src/build/native-artifacts.mjs",
+      "revision": "9ea7eb60310acb2670481ac07894765823303c70",
+      "role": "archiver"
+    },
+    {
+      "path": "src/capsule/node.mjs",
+      "revision": "9ea7eb60310acb2670481ac07894765823303c70",
+      "role": "archiver"
+    }
+  ]
+}

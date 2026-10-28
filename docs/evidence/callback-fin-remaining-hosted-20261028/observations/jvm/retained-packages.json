@@ -1,0 +1,31 @@
+{
+  "routes": [
+    {
+      "archiveBytes": 51477732,
+      "archives": 2,
+      "files": [
+        "archives/reviewedcallbacks-1.0.0.jar",
+        "archives/reviewedcallbacks-1.0.0.pom",
+        "package-set-receipt.json",
+        "package-set-receipt.json.sha256"
+      ],
+      "path": "evidence/ordinary/handoff",
+      "receiptSha256": "f3fcbb3d96a86e9ecd51388a8ccb17e928e7b941b3bdbec3b66688a59875dc0d",
+      "route": "ordinary"
+    },
+    {
+      "archiveBytes": 51483108,
+      "archives": 2,
+      "files": [
+        "archives/reviewedcallbacks-1.0.0.jar",
+        "archives/reviewedcallbacks-1.0.0.pom",
+        "package-set-receipt.json",
+        "package-set-receipt.json.sha256"
+      ],
+      "path": "evidence/reviewed/handoff",
+      "receiptSha256": "d43f1e070d05f42912ab458aaf6a751489b3cbb7d0bd8b60a094a455415d2c45",
+      "route": "reviewed"
+    }
+  ],
+  "schemaVersion": 1
+}

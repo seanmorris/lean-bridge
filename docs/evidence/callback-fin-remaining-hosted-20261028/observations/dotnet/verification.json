@@ -1,0 +1,31 @@
+{
+  "kind": "callback-fin-remaining",
+  "producerCommit": "de06e09a6f3e521230db95d35577e0eb439a8cfe",
+  "profiles": [
+    "dotnet"
+  ],
+  "reportSha256": "9166f2e53b923a7614c8cd8f176bf06b9e9ae8e8aa9752ce31d98b7f43ad3521",
+  "reports": 2,
+  "retainedPackages": {
+    "routes": [
+      {
+        "archiveBytes": 51392862,
+        "archives": 1,
+        "receiptSha256": "f12d0dca32078667e1b7f284dc10ba8eca8d60a9e25b38eac89891cd99f52500",
+        "route": "ordinary"
+      },
+      {
+        "archiveBytes": 51398131,
+        "archives": 1,
+        "receiptSha256": "3a9e8008ba0b0c1d3fce35d630c02fd2f55434772c3f87763ae968c4d4fc0ffa",
+        "route": "reviewed"
+      }
+    ],
+    "schemaVersion": 1
+  },
+  "routes": [
+    "ordinary",
+    "reviewed"
+  ],
+  "schemaVersion": 1
+}

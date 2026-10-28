@@ -1,0 +1,31 @@
+{
+  "kind": "callback-fin-remaining",
+  "producerCommit": "de06e09a6f3e521230db95d35577e0eb439a8cfe",
+  "profiles": [
+    "wit-wasi"
+  ],
+  "reportSha256": "77fac17368559b21a18c53912f2719c8fd8beabad528119ed597e06ade176e88",
+  "reports": 2,
+  "retainedPackages": {
+    "routes": [
+      {
+        "archiveBytes": 59260678,
+        "archives": 1,
+        "receiptSha256": "75c10cd82e1e859f360cee3d0623e8b3dbaeca3ba918427c6e0018677e5df0ee",
+        "route": "ordinary"
+      },
+      {
+        "archiveBytes": 59266035,
+        "archives": 1,
+        "receiptSha256": "ab6cde4d856874ba9b1836db3dd774e01b7a5ffc921aa8906841d28e73f0b9b3",
+        "route": "reviewed"
+      }
+    ],
+    "schemaVersion": 1
+  },
+  "routes": [
+    "ordinary",
+    "reviewed"
+  ],
+  "schemaVersion": 1
+}
