@@ -1,0 +1,61 @@
+{
+  "additions": [
+    {
+      "currentSha256": "48bfa3d28632f4e8c3b3f0da7e21a52c207b0871029c437d50cd5682d8d34f40",
+      "path": "scripts/update-inherited-checked-record-lane-memory-integration-source-history.mjs"
+    },
+    {
+      "currentSha256": "6c53efb04f4f25d65a1b577763af1548433071de7c6d0027c7e78072012153fe",
+      "path": "tests/helpers/inherited-checked-record-lane-memory-integration-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "063b8c432aa17bddd0a4563ed6f9f4ab14e37d601077a6544568feb0f9701c18",
+      "path": "tests/helpers/inherited-checked-record-lane-memory-integration-source-history.mjs"
+    }
+  ],
+  "baseCommit": "02f509b5accbd8cdff2a0bba06e3b3f63413e099",
+  "baseHistory": {
+    "path": "docs/evidence/inherited-checked-record-lane-memory-source-history-20261028.json",
+    "sha256": "5c2e2baac08604c519af0b30f3b3837ce092495856560bf10b03bdfdd7dfd99e"
+  },
+  "implementationCommit": "5ee05c3899bf04374ab6af2156d34aae35db0ff0",
+  "milestone": "inherited-checked-record-lane-memory-integration-v1",
+  "schemaVersion": 1,
+  "scope": "Register the independently authenticated inherited checked-record lane memory bound newest-first in the reversible Fin source-history hub and checked-JavaScript partition 10. Preserve all runtime behavior, type-surface claims, observations and evidence identities.",
+  "updates": [
+    {
+      "currentSha256": "1cd3cde7ed460a8093f21847782bf56d6e575b57b9a0a795ca89249eb7d69cf1",
+      "edits": [
+        {
+          "current": "import { beforeInheritedCheckedRecordLaneMemoryIntegrationSource, inheritedCheckedRecordLaneMemoryIntegrationNormalizationPaths } from \"./inherited-checked-record-lane-memory-integration-source-history.mjs\";\nimport { beforeInheritedCheckedRecordLaneMemorySource, inheritedCheckedRecordLaneMemoryNormalizationPaths } from \"./inherited-checked-record-lane-memory-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...inheritedCheckedRecordLaneMemoryIntegrationNormalizationPaths\n\t, ...inheritedCheckedRecordLaneMemoryNormalizationPaths\n\t, ...coreRubyPredecessorStopNormalizationPaths\n",
+          "previous": "\t...coreRubyPredecessorStopNormalizationPaths\n",
+          "start": 205456
+        },
+        {
+          "current": "\tlet stage = beforeInheritedCheckedRecordLaneMemoryIntegrationSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeInheritedCheckedRecordLaneMemorySource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCoreRubyPredecessorStopSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeCoreRubyPredecessorStopSource(path, text, expected);\n",
+          "start": 256243
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "66656f71f04882b7b910cbcae1e0e29a2139befdbcb318949b65a3ce7fc8e9b7"
+    },
+    {
+      "currentSha256": "4395c6530a2f0426917b5f9114a7b74764ded155a1c651e9daa302e39b67519b",
+      "edits": [
+        {
+          "current": "import \"./helpers/inherited-checked-record-lane-memory-source-history-tests.mjs\";\nimport \"./helpers/inherited-checked-record-lane-memory-integration-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 4234
+        }
+      ],
+      "path": "tests/checked-javascript-partition-10.test.mjs",
+      "previousSha256": "fa89db4f8322f884d27155e96ad0684ea6fe34394c62571fece3b82af548e387"
+    }
+  ]
+}
