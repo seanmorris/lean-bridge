@@ -1,0 +1,61 @@
+{
+  "additions": [
+    {
+      "currentSha256": "c36a60f51810e814e6334885e734250f76b905ac09b61f121b3f8a8ce91e279b",
+      "path": "scripts/update-core-hub-order-repair-integration-source-history.mjs"
+    },
+    {
+      "currentSha256": "4d9f2fd00d6f843b16f1cff3c1349433e9eb5ac4dc3dbef45e187ff908010a3d",
+      "path": "tests/helpers/core-hub-order-repair-integration-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "b10338a52ec9f834a1c1d497180697047cae81d3e11ee98ab579e56831f6027a",
+      "path": "tests/helpers/core-hub-order-repair-integration-source-history.mjs"
+    }
+  ],
+  "baseCommit": "df4ce4166b4576a88735a03a1a4baf6964b5d3c5",
+  "baseHistory": {
+    "path": "docs/evidence/core-hub-order-repair-source-history-20261028.json",
+    "sha256": "33b5b54fff51ba2453d761eb79d32e9fff0b6261beaf2e25dbde96093f2a50bc"
+  },
+  "implementationCommit": "d688b09102e0711488f3990a04646602aff4bd11",
+  "milestone": "core-hub-order-repair-integration-v1",
+  "schemaVersion": 1,
+  "scope": "Register the independently authenticated Fin hub order repair newest-first in the reversible Fin source-history hub and checked-JavaScript partition 10. Preserve all runtime behavior, type-surface claims, observations and evidence identities.",
+  "updates": [
+    {
+      "currentSha256": "fc7511181779702e2c012ae9ab1e98e61fb8b406f4ac0dde71869b98ad9dcdab",
+      "edits": [
+        {
+          "current": "import { beforeCoreHubOrderRepairIntegrationSource, coreHubOrderRepairIntegrationNormalizationPaths } from \"./core-hub-order-repair-integration-source-history.mjs\";\nimport { beforeCoreHubOrderRepairSource, coreHubOrderRepairNormalizationPaths } from \"./core-hub-order-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...coreHubOrderRepairIntegrationNormalizationPaths\n\t, ...coreHubOrderRepairNormalizationPaths\n\t, ...signatureSpecializationCompletionIntegrationNormalizationPaths\n",
+          "previous": "\t...signatureSpecializationCompletionIntegrationNormalizationPaths\n",
+          "start": 201587
+        },
+        {
+          "current": "\tlet stage = beforeCoreHubOrderRepairIntegrationSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCoreHubOrderRepairSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeSignatureSpecializationCompletionIntegrationSource(\n",
+          "previous": "\tlet stage = beforeSignatureSpecializationCompletionIntegrationSource(\n",
+          "start": 251104
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "8cfd6c48427d8ffa85e4c7d9d6f295cb982621990a6391a2968a661bdcf2ea68"
+    },
+    {
+      "currentSha256": "2eef92120fecf1824bf72fce93109afd0408a345b410de31249ef6b5823dc8d1",
+      "edits": [
+        {
+          "current": "import \"./helpers/core-hub-order-repair-source-history-tests.mjs\";\nimport \"./helpers/core-hub-order-repair-integration-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 2451
+        }
+      ],
+      "path": "tests/checked-javascript-partition-10.test.mjs",
+      "previousSha256": "b747a50270058058d6ca0d9cf0b7a2e3f756b975623448c28c3661d2aa4b00a8"
+    }
+  ]
+}
