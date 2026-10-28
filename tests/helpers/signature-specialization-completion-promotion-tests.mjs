@@ -4,9 +4,10 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 import test from "node:test";
 import {
-	readTypeSurface, typeSurfaceCells
+	typeSurfaceCells
 } from "../../src/adoption/type-surface.mjs";
 import {
 	signatureSpecializationCompletionEvidenceId
@@ -30,7 +31,11 @@ test("signature completion references one immutable ten-lane archive", async () 
 });
 
 test("signature completion closes exactly its 45 installed cells", async () => {
-	const { document, ...contracts } = await readTypeSurface();
+	const [document, irSchema, consumers] = await Promise.all([
+		"docs/type-surface.v1.json", "schema/binding-ir.schema.json"
+		, "docs/consumer-support.v1.json"
+	].map(async path => JSON.parse(await readFile(path, "utf8"))));
+	const contracts = { irSchema, consumers };
 	const cells = typeSurfaceCells(document, contracts);
 	const targets = new Map(cells.filter(cell =>
 		signatureSpecializationCompletionTargetCells.includes(cell.id))
