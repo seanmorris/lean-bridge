@@ -52,6 +52,28 @@ for (const [closure, argument] of [[scaler, 1n], [rawScaler, 1n], [counter, 1n],
 console.log(JSON.stringify({ checks, rejections }));
 `;
 
+const browserBody = hostReply => reviewedCallbackNodeConsumer(hostReply)
+	.split("\n").slice(3, -2).join("\n");
+const browserFunction = (name, hostReply) => `const ${name} = (api, raw) => {
+${browserBody(hostReply)}
+return { checks, rejections };
+};`;
+
+/** Browser-consumer module derived from the exact reviewed Node corpus body. */
+export const reviewedCallbackBrowserConsumer = `${browserFunction("r1", false)}
+${browserFunction("r2", true)}
+export const executeCorpus = (request, api) => (request.hostReply ? r2 : r1)(api, api.raw);
+`;
+
+/** Browser loader exposing both the public package and its private runtime route. */
+export const reviewedCallbackBrowserPackage = `import request from "./request.json";
+export { request };
+export const loadApi = async () => {
+	const [installed, { runtime }] = await Promise.all([import("reviewedcallbacks"), import("./node_modules/reviewedcallbacks/internal/runtime.mjs")]);
+	return { ...installed, raw: (name, args) => runtime.call("lean:ReviewedCallbacks." + name, args) };
+};
+`;
+
 export const reviewedCallbackTypescript = `import * as api from "reviewedcallbacks";
 const scaler = api.scaler(1n); const scaled: bigint = scaler(2n); scaler.dispose();
 const maker = api.tileMaker(1n); const tile = maker(2n); const digit: bigint = tile.digit; maker.dispose();

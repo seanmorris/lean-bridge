@@ -30,7 +30,9 @@ import { compilePrimitiveCSurface } from "../src/backends/c/primitive-surface.mj
 import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
 import { installCopiedConsumer, nativeFixtureEnvironment } from "./helpers/copied-fixture-install.mjs";
 import { reviewedCallbackFinExports, reviewedCallbackFinReview } from "./helpers/reviewed-callback-fin-fixture.mjs";
-import { reviewedCallbackMockPackage, reviewedCallbackNodeConsumer, reviewedCallbackNodeExpected, reviewedCallbackTypescript } from "./helpers/reviewed-callback-fin-consumer.mjs";
+import { reviewedCallbackBrowserConsumer, reviewedCallbackBrowserPackage, reviewedCallbackMockPackage, reviewedCallbackNodeConsumer, reviewedCallbackNodeExpected, reviewedCallbackTypescript } from "./helpers/reviewed-callback-fin-consumer.mjs";
+import { browserFrameworkArchives, installedBrowserCorpus } from "./helpers/type-corpus-browser.mjs";
+import { corpusBrowserSelection } from "./helpers/type-corpus.mjs";
 import "./helpers/reviewed-callback-harness-source-history-tests.mjs";
 
 const key = "lean-lang.org/refinements", nominalKey = "lean-lang.org/nominal-refinements";
@@ -224,13 +226,14 @@ test("a native build admits R1 and refuses R2 at the existing host-reply capabil
 	});
 });
 
-const npm = process.env.LEAN_BRIDGE_REVIEWED_CALLBACK_FIN_NPM_TEST === "1";
+const browser = process.env.LEAN_BRIDGE_REVIEWED_CALLBACK_FIN_BROWSER_TEST === "1";
+const npm = process.env.LEAN_BRIDGE_REVIEWED_CALLBACK_FIN_NPM_TEST === "1" || browser;
 const runtimeRoot = resolve(process.env.LEAN_BRIDGE_LAKE_RUNTIME_ROOT ?? "build/lean-link-spike/lazy");
 const clean = { PATH: "/unavailable", CC: "/unavailable/compiler", CXX: "/unavailable/compiler", LEAN_BRIDGE_LEAN: "/unavailable/lean", LEAN_BRIDGE_RUNTIME_ROOT: "/unavailable/runtime", NODE_PATH: "" };
 
 /**
  * Build a review in two roots, hand over only the release, remove every author root and run
- * the Node and strict TypeScript consumers.
+ * the Node and strict TypeScript consumers, plus every browser context when requested.
  *
  * @param t - Test context.
  * @param hostReply - Install R2 instead of R1.
@@ -281,6 +284,44 @@ const checkReviewedNpm = async (t, hostReply) => {
 	assert.deepEqual(observed, reviewedCallbackNodeExpected[hostReply ? "r2" : "r1"]);
 	await saveLakeFile(consumer, "index.mts", reviewedCallbackTypescript);
 	await run([join(engineRoot, "node_modules/typescript/lib/tsc.js"), "--strict", "--noEmit", "--skipLibCheck", "false", "--target", "ES2022", "--lib", "ES2022,ESNext.Disposable", "--module", "NodeNext", "--moduleResolution", "NodeNext", "index.mts"], "typescript");
+	const browsers = [];
+	if(browser)
+	{
+		const requestedEngines = corpusBrowserSelection(process.env.LEAN_BRIDGE_TYPE_CORPUS_BROWSERS);
+		assert.deepEqual(requestedEngines, ["chromium", "firefox", "webkit"]);
+		for(const profile of ["browser-javascript", "browser-react", "browser-worker"])
+		{
+			const root = join(directory, `${hostReply ? "r2" : "r1"}-${profile}`), browserBin = join(root, "bin");
+			await mkdir(browserBin, { recursive: true });
+			await symlink(process.execPath, join(browserBin, "node"));
+			await saveLakeFile(root, "package.json", canonicalJson({ private: true, type: "module" }));
+			for(const name of ["user.npmrc", "global.npmrc"]) await saveLakeFile(root, name, "");
+			const framework = profile === "browser-react" ? await browserFrameworkArchives(root) : [];
+			const browserConfiguration = ["--userconfig", join(root, "user.npmrc"), "--globalconfig", join(root, "global.npmrc"), "--cache", join(root, "empty-cache")];
+			await processBuildRunner.capture({ command: process.execPath
+				, args: [npmCli, "install", "--offline", "--ignore-scripts"
+					, "--no-audit", "--no-fund", ...browserConfiguration
+					, join(handoff, receipt.runtime.archive)
+					, join(handoff, receipt.package.archive)
+					, ...framework.map(item => join(root, item.archive))]
+				, cwd: root, env: { ...clean, PATH: browserBin }, timeoutMs: 300_000 });
+			await saveLakeFile(root, "request.json", canonicalJson({ module: "reviewedcallbacks", profile, hostReply }));
+			await saveLakeFile(root, "javascript.mjs", reviewedCallbackBrowserConsumer);
+			const expected = reviewedCallbackNodeExpected[hostReply ? "r2" : "r1"];
+			const result = await installedBrowserCorpus({ library: { npmModule: "reviewedcallbacks" }
+				, profile, root, framework, environment: { ...clean, PATH: browserBin }
+				, consumer: {
+					packageSource: reviewedCallbackBrowserPackage
+					, validateObservation: value => assert.deepEqual(value, {
+						schemaVersion: 1, profile, module: "reviewedcallbacks"
+						, realm: profile === "browser-worker" ? "dedicated-worker" : "window"
+						, results: expected, hostVersion: value.hostVersion
+					})
+				}
+			});
+			browsers.push({ profile, review: hostReply ? "R2" : "R1", ...result });
+		}
+	}
 	const reportPath = resolve(process.env[hostReply ? "LEAN_BRIDGE_REVIEWED_CALLBACK_FIN_R2_NPM_REPORT" : "LEAN_BRIDGE_REVIEWED_CALLBACK_FIN_NPM_REPORT"] ?? `build/reviewed-callback-fin/npm-${hostReply ? "r2" : "r1"}.json`);
 	const report = {
 		schemaVersion: 1
@@ -291,6 +332,9 @@ const checkReviewedNpm = async (t, hostReply) => {
 		, receipt
 		, receiptSha256: sha256(await readFile(join(handoff, "component-package-receipt.json")))
 		, observed
+		, browsers
+		, browserConsumerSha256: sha256(reviewedCallbackBrowserConsumer)
+		, browserPackageSha256: sha256(reviewedCallbackBrowserPackage)
 		, typescript: { strict: true, skipLibCheck: false }
 		, dispatch: "not measured"
 		, reproducible: true
@@ -299,8 +343,8 @@ const checkReviewedNpm = async (t, hostReply) => {
 	await saveLakeFile(dirname(reportPath), reportPath.split("/").at(-1), canonicalJson(report));
 };
 
-test("an independently reviewed npm package installs R1 callback bounds for Node and strict TypeScript", { skip: !npm, timeout: 3_600_000 }, t => checkReviewedNpm(t, false));
-test("an independently reviewed npm package installs R2 with the npm-only host-reply bound", { skip: !npm, timeout: 3_600_000 }, t => checkReviewedNpm(t, true));
+test("an independently reviewed npm package installs R1 callback bounds in every requested consumer", { skip: !npm, timeout: 3_600_000 }, t => checkReviewedNpm(t, false));
+test("an independently reviewed npm package installs R2 with the Wasm host-reply bound", { skip: !npm, timeout: 3_600_000 }, t => checkReviewedNpm(t, true));
 
 const profiles = process.env.LEAN_BRIDGE_REVIEWED_CALLBACK_FIN_PROFILES?.split(",").sort() ?? [];
 assert.ok(profiles.every(profile => ["c", "cpp"].includes(profile)), "Reviewed callback Fin acceptance covers C and C++ first");

@@ -182,7 +182,8 @@ test("callback checked-record browser workflow cannot narrow engines, routes or 
 	];
 	for(const [before, after] of mutations)
 	{
-		const changed = source.replace(before, after);
+		const changed = before === "run: exit 1"
+			? source.replaceAll(before, after) : source.replace(before, after);
 		assert.notEqual(changed, source);
 		const stillValid = required => changed.includes(required);
 		assert.equal([

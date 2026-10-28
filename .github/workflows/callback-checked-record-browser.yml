@@ -74,6 +74,14 @@ jobs:
           set -euo pipefail
           source scripts/env.sh
           bash scripts/run-callback-checked-record-browser-ci.sh "$PWD/build/lean-link-spike/lazy"
+      - name: Require both reviewed callback Fin routes in Node, pages, React and workers
+        id: callback_fin
+        timeout-minutes: 150
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/env.sh
+          bash scripts/run-reviewed-callback-fin-browser-ci.sh "$PWD/build/lean-link-spike/lazy"
       - name: Preserve original and partial acceptance output
         if: always()
         uses: actions/upload-artifact@v7
@@ -81,10 +89,14 @@ jobs:
           name: callback-checked-record-browser-${{ github.sha }}
           path: |
             build/callback-checked-record-browser-ci/
+            build/reviewed-callback-fin-browser-ci/
             build/callback-checked-record-browser-engine.log
             build/callback-checked-record-browser-runtime.log
           if-no-files-found: error
           retention-days: 30
       - name: Enforce callback checked-record browser acceptance
         if: always() && steps.acceptance.outcome != 'success'
+        run: exit 1
+      - name: Enforce reviewed callback Fin browser acceptance
+        if: always() && steps.callback_fin.outcome != 'success'
         run: exit 1
