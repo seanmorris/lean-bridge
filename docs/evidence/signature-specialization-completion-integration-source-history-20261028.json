@@ -1,0 +1,61 @@
+{
+  "additions": [
+    {
+      "currentSha256": "e325f9899261d5ab70e534ffc3fa7755ce932af1511e11c0395c9359ed3a1410",
+      "path": "scripts/update-signature-specialization-completion-integration-source-history.mjs"
+    },
+    {
+      "currentSha256": "f8da56c484e22f9626e62c933aa035bdbf6cbf4b10b2cdde2a124f50ced07dfa",
+      "path": "tests/helpers/signature-specialization-completion-integration-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "b4472e7d6eb36246a26665886aab398b50ec1d9869add9f9eed3264b06b89f8a",
+      "path": "tests/helpers/signature-specialization-completion-integration-source-history.mjs"
+    }
+  ],
+  "baseCommit": "d1f4a7a74a1ca63c173f8f2abf3eb25ea03c9e59",
+  "baseHistory": {
+    "path": "docs/evidence/signature-specialization-completion-source-history-20261028.json",
+    "sha256": "e61f752133417839df664571de55136c8b68f896a7495bd9ec54dd6b3a97cefc"
+  },
+  "implementationCommit": "e1d1439a8dced0e01e9ac935abcdc2854a83374c",
+  "milestone": "signature-specialization-completion-integration-v1",
+  "schemaVersion": 1,
+  "scope": "Register the independently authenticated 45-cell signature-completion source history newest-first in the reversible Fin history hub and checked-JavaScript partition 10. Preserve runtime behavior, support claims, observations, evidence identities and package surfaces.",
+  "updates": [
+    {
+      "currentSha256": "56217c1369586d70323e8af12299c7902d69dc110382a27b18be48ded3e30e60",
+      "edits": [
+        {
+          "current": "import { beforeSignatureSpecializationCompletionIntegrationSource, signatureSpecializationCompletionIntegrationNormalizationPaths } from \"./signature-specialization-completion-integration-source-history.mjs\";\nimport { beforeSignatureSpecializationCompletionSource, signatureSpecializationCompletionNormalizationPaths } from \"./signature-specialization-completion-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...signatureSpecializationCompletionIntegrationNormalizationPaths\n\t, ...signatureSpecializationCompletionNormalizationPaths\n\t, ...finContractTestRegistrationIntegrationNormalizationPaths\n",
+          "previous": "\t...finContractTestRegistrationIntegrationNormalizationPaths\n",
+          "start": 201164
+        },
+        {
+          "current": "\tlet stage = beforeSignatureSpecializationCompletionIntegrationSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeSignatureSpecializationCompletionSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeFinContractTestRegistrationIntegrationSource(\n",
+          "previous": "\tlet stage = beforeFinContractTestRegistrationIntegrationSource(\n",
+          "start": 250542
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "efd5d2cc12d8f9c66edc5c8063979a7533b568b05d999028e69db7e113732ca3"
+    },
+    {
+      "currentSha256": "b747a50270058058d6ca0d9cf0b7a2e3f756b975623448c28c3661d2aa4b00a8",
+      "edits": [
+        {
+          "current": "import \"./helpers/signature-specialization-completion-source-history-tests.mjs\";\nimport \"./helpers/signature-specialization-completion-integration-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 2277
+        }
+      ],
+      "path": "tests/checked-javascript-partition-10.test.mjs",
+      "previousSha256": "32f841eb46673d5bc98ab1eadf1398d8d568cd121f909f924213f3258e591bb3"
+    }
+  ]
+}
