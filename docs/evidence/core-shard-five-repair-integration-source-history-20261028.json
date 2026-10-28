@@ -1,0 +1,61 @@
+{
+  "additions": [
+    {
+      "currentSha256": "349ea71a74499e8254332801ec0f9b13d1f8a0e6d353fcfa1d6e715eb0b6c4e3",
+      "path": "scripts/update-core-shard-five-repair-integration-source-history.mjs"
+    },
+    {
+      "currentSha256": "8eaaef00dbf9025b615fe0993dfb08fb9d7e87e9d8b6c10e352f365f0d5436ee",
+      "path": "tests/helpers/core-shard-five-repair-integration-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "ed5589cd0bc46ead0262c806aab641d1a58e1272c87e19d4f1609952ffb4363c",
+      "path": "tests/helpers/core-shard-five-repair-integration-source-history.mjs"
+    }
+  ],
+  "baseCommit": "84bc83f3558eac96e32675dab9bbf7274e52ca77",
+  "baseHistory": {
+    "path": "docs/evidence/core-shard-five-repair-source-history-20261028.json",
+    "sha256": "4e34ef71ab02027910096fe3795e91c8a3f06eb58b0405d0047d2929a8b5781a"
+  },
+  "implementationCommit": "184e1fd74b1b8c7830c1f21270c2af2f4e1f3bcd",
+  "milestone": "core-shard-five-repair-integration-v1",
+  "schemaVersion": 1,
+  "scope": "Register the independently authenticated Core shard-5 promotion-prefix and receipt-mode repairs in the reversible Fin source-history hub and one schedulable Core partition. Preserve all runtime behavior, type-surface claims, observations and evidence identities.",
+  "updates": [
+    {
+      "currentSha256": "0e8a48d17da003982c443628189cfbd4d4babed19ff7be9a7270b4508c9ae360",
+      "edits": [
+        {
+          "current": "import { beforeCoreShardFiveRepairIntegrationSource, coreShardFiveRepairIntegrationNormalizationPaths } from \"./core-shard-five-repair-integration-source-history.mjs\";\nimport { beforeCoreShardFiveRepairSource, coreShardFiveRepairNormalizationPaths } from \"./core-shard-five-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...coreShardFiveRepairIntegrationNormalizationPaths\n\t, ...coreShardFiveRepairNormalizationPaths\n\t, ...coreCallbackFinLivePinRepairNormalizationPaths\n",
+          "previous": "\t...coreCallbackFinLivePinRepairNormalizationPaths\n",
+          "start": 199404
+        },
+        {
+          "current": "\tlet stage = beforeCoreShardFiveRepairIntegrationSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCoreShardFiveRepairSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCoreCallbackFinLivePinRepairSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeCoreCallbackFinLivePinRepairSource(path, text, expected);\n",
+          "start": 248202
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "19ae9479a4720d6b5b45277395dde09b3abcb0ae71b31cb8eeb3a1ea5cc87f53"
+    },
+    {
+      "currentSha256": "36216f322534753ff08ca93007c613f4defbe524b85903843f8e49c3c690e1b4",
+      "edits": [
+        {
+          "current": "import \"./helpers/core-shard-five-repair-source-history-tests.mjs\";\nimport \"./helpers/core-shard-five-repair-integration-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 1461
+        }
+      ],
+      "path": "tests/checked-javascript-partition-10.test.mjs",
+      "previousSha256": "15c001eef81e27e4ee8641ab3dbd6a3321cc911499733b972f206215f90b8f09"
+    }
+  ]
+}
