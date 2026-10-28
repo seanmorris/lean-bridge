@@ -100,6 +100,43 @@ for(const id of targets)
 	assert.notEqual(before.get(id)?.stages.installedExecution.state
 		, "passed", id);
 
+const targetSet = new Set(targets);
+const priorOwners = new Map([
+	["javascript-reviewed-browser-generic-unverified", 3]
+	, ["python-delivery", 1]
+	, ["php-delivery", 2]
+	, ["managed-delivery-rejection", 4]
+	, ["wit-delivery-rejection", 1]
+]);
+const reconciledOwners = [];
+const releasedCells = [];
+inventory.observations = inventory.observations.flatMap(observation => {
+	if(!priorOwners.has(observation.id)) return [observation];
+	const overlap = observation.profiles.flatMap(profile =>
+		observation.shapes.flatMap(shape =>
+			observation.positions.map(position =>
+				`${profile}/${shape}/${observation.path}/${position}`)))
+		.filter(id => targetSet.has(id));
+	assert.equal(overlap.length, priorOwners.get(observation.id)
+		, observation.id);
+	assert.ok(observation.shapes.includes("generic"), observation.id);
+	reconciledOwners.push(observation.id);
+	releasedCells.push(...overlap);
+	if(observation.id === "javascript-reviewed-browser-generic-unverified")
+	{
+		assert.deepEqual(observation.shapes, ["generic"]);
+		return [];
+	}
+	const shapes = observation.shapes.filter(shape => shape !== "generic");
+	assert.ok(shapes.length > 0, observation.id);
+	return [{ ...observation, shapes }];
+});
+assert.deepEqual(reconciledOwners.sort(), [...priorOwners.keys()].sort());
+assert.equal(releasedCells.length, 11);
+assert.equal(new Set(releasedCells).size, releasedCells.length);
+assert.ok(releasedCells.every(id => targetSet.has(id)));
+typeSurfaceCells(inventory, contracts);
+
 const stageNotes = {
 	analysis: "Lean elaborates each configured type, implicit argument or instance dictionary and records the exact closed specialization."
 	, generation: "The selected package exposes concrete functions and omits the unspecialized declaration; no runtime type argument crosses the boundary."
