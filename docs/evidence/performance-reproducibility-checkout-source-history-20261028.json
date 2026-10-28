@@ -1,0 +1,197 @@
+{
+  "additions": [
+    {
+      "currentSha256": "9c339a72e2cdd7e59b4f78bcd3ff8df90c7bc36a846131a8b02750910b9c570a",
+      "path": "scripts/update-performance-reproducibility-checkout-source-history.mjs"
+    },
+    {
+      "currentSha256": "0f60ad8ac220ac679993f685b41b645f498f21b22f07bc9c99c919e21158efdf",
+      "path": "tests/helpers/performance-reproducibility-checkout-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "65c198ca097fe89909f4c8f9e6b7afe30772c2396bdca07118fb906ae9cccf3a",
+      "path": "tests/helpers/performance-reproducibility-checkout-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "6b3d9df16d180ea46ea659e31d5637fc74456ead",
+  "integrationUpdates": [
+    {
+      "currentSha256": "d4a0f06f9d685ea36ee72c4fe44c5d66051be12249febb46fbb3f2333574908c",
+      "edits": [
+        {
+          "current": "import \"./helpers/performance-reproducibility-checkout-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "84f70ed07002ea2efc5c4fe8308632beb69de134cb02df158e962d69205d68e4"
+    },
+    {
+      "currentSha256": "723c09dcddc90d3b37d096f5f462119574e31106399779977acad056a888a98b",
+      "edits": [
+        {
+          "current": "import { beforePerformanceReproducibilityCheckoutSource, performanceReproducibilityCheckoutNormalizationPaths } from \"./performance-reproducibility-checkout-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...performanceReproducibilityCheckoutNormalizationPaths\n\t, ...phpWasmCorpusLaneSplitNormalizationPaths\n",
+          "previous": "\t...phpWasmCorpusLaneSplitNormalizationPaths\n",
+          "start": 214299
+        },
+        {
+          "current": "\tlet stage = beforePerformanceReproducibilityCheckoutSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforePhpWasmCorpusLaneSplitSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforePhpWasmCorpusLaneSplitSource(path, text, expected);\n",
+          "start": 267984
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "decab0d72adec830b25fb7211ba30c22f4f2eb86882ed642698d795cbee43e54"
+    }
+  ],
+  "milestone": "performance-reproducibility-checkout-source-v1",
+  "predecessorCommit": "05c397db4f1c838e983e4157226d9757bd981bb0",
+  "schemaVersion": 1,
+  "scope": "Replace the two full object-store copies and three retained-evidence checkouts of the performance clean-build reproducibility gate with shared-object clones whose sparse checkout excludes docs/evidence, refuse a shallow source because git downgrades --shared to full copies there, and report disk before and after the clean builds. Every Performance workflow job reads only the exact current tree, so each of the seven checkouts now excludes docs/evidence; the six jobs that never clone fetch depth 1 while the reproducibility job retains complete history and reports disk after its sparse checkout. The live reproducibility test pins the shared sparse clone, the shallow refusal, the disk controls and every job checkout. The single performance.yml type-surface pin is refreshed to the repaired workflow bytes. No record, support cell, evidence scope, benchmark or product source changes. Register the transition newest-first; hosted Performance remains the terminal acceptance gate.",
+  "updates": [
+    {
+      "currentSha256": "84c93d0b051bfe4591f3ee29247a645ef64b724954ec46b56a3776722463e5e3",
+      "edits": [
+        {
+          "current": "          # Benchmark builds, measurements and the report read only the exact\n          # current tree and never a retained docs/evidence payload, so the\n          # archives stay off the runner and history is not fetched.\n          fetch-depth: 1\n",
+          "previous": "          fetch-depth: 0\n",
+          "start": 477
+        },
+        {
+          "current": "          sparse-checkout: |\n            /*\n            !/docs/evidence/\n          sparse-checkout-cone-mode: false\n",
+          "previous": "",
+          "start": 762
+        },
+        {
+          "current": "          # Benchmark builds, measurements and the report read only the exact\n          # current tree and never a retained docs/evidence payload, so the\n          # archives stay off the runner and history is not fetched.\n          fetch-depth: 1\n",
+          "previous": "          fetch-depth: 0\n",
+          "start": 5663
+        },
+        {
+          "current": "          sparse-checkout: |\n            /*\n            !/docs/evidence/\n          sparse-checkout-cone-mode: false\n",
+          "previous": "",
+          "start": 5948
+        },
+        {
+          "current": "          # Benchmark builds, measurements and the report read only the exact\n          # current tree and never a retained docs/evidence payload, so the\n          # archives stay off the runner and history is not fetched.\n          fetch-depth: 1\n",
+          "previous": "          fetch-depth: 0\n",
+          "start": 8445
+        },
+        {
+          "current": "          sparse-checkout: |\n            /*\n            !/docs/evidence/\n          sparse-checkout-cone-mode: false\n",
+          "previous": "",
+          "start": 8730
+        },
+        {
+          "current": "          # Benchmark builds, measurements and the report read only the exact\n          # current tree and never a retained docs/evidence payload, so the\n          # archives stay off the runner and history is not fetched.\n          fetch-depth: 1\n",
+          "previous": "          fetch-depth: 0\n",
+          "start": 11094
+        },
+        {
+          "current": "          sparse-checkout: |\n            /*\n            !/docs/evidence/\n          sparse-checkout-cone-mode: false\n",
+          "previous": "",
+          "start": 11379
+        },
+        {
+          "current": "          # Benchmark builds, measurements and the report read only the exact\n          # current tree and never a retained docs/evidence payload, so the\n          # archives stay off the runner and history is not fetched.\n          fetch-depth: 1\n",
+          "previous": "          fetch-depth: 0\n",
+          "start": 13680
+        },
+        {
+          "current": "          sparse-checkout: |\n            /*\n            !/docs/evidence/\n          sparse-checkout-cone-mode: false\n",
+          "previous": "",
+          "start": 13965
+        },
+        {
+          "current": "          # The clean-build gate clones this checkout with shared objects, which\n          # git downgrades to full object copies from a shallow source. Retain\n          # complete history while keeping retained docs/evidence off the runner.\n",
+          "previous": "",
+          "start": 16293
+        },
+        {
+          "current": "          sparse-checkout: |\n            /*\n            !/docs/evidence/\n          sparse-checkout-cone-mode: false\n      - name: Report disk after the sparse checkout\n        run: df -h / \"$GITHUB_WORKSPACE\"\n",
+          "previous": "",
+          "start": 16597
+        },
+        {
+          "current": "          # Benchmark builds, measurements and the report read only the exact\n          # current tree and never a retained docs/evidence payload, so the\n          # archives stay off the runner and history is not fetched.\n          fetch-depth: 1\n",
+          "previous": "          fetch-depth: 0\n",
+          "start": 19890
+        },
+        {
+          "current": "          sparse-checkout: |\n            /*\n            !/docs/evidence/\n          sparse-checkout-cone-mode: false\n",
+          "previous": "",
+          "start": 20175
+        }
+      ],
+      "path": ".github/workflows/performance.yml",
+      "previousSha256": "360b4b992b1fc32cd85a026e98b75636151b6ac50ae393fb341dea2873715f32"
+    },
+    {
+      "currentSha256": "c4eb89f9e536030bed0c293c093b14d2c3246811183538d92f99e99d108a4dcf",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"84c93d0b051bfe4591f3ee29247a645ef64b724954ec46b56a3776722463e5e3\"\n",
+          "previous": "          \"sha256\": \"360b4b992b1fc32cd85a026e98b75636151b6ac50ae393fb341dea2873715f32\"\n",
+          "start": 1137663
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "f862461120e9f0dea5208f6ed5e14b9bcaaf49a05b96576b0cb4f6bfc3cb2007"
+    },
+    {
+      "currentSha256": "199ac86b890afdf87e09264b0473e065346690605d3ee43db9e980ff91ed8fb1",
+      "edits": [
+        {
+          "current": "if [[ $(git -C \"$PERFORMANCE_PROJECT_ROOT\" rev-parse --is-shallow-repository) == true ]]; then\n  printf 'Performance reproducibility requires complete committed history to share objects between clean builds.\\n' >&2\n  exit 1\nfi\n",
+          "previous": "",
+          "start": 728
+        },
+        {
+          "current": "report_disk() {\n  printf 'Performance reproducibility disk %s:\\n' \"$1\" >&2\n  df -h / \"$PERFORMANCE_SCRATCH\" >&2\n}\n\nreport_disk \"before the clean builds\"\n\n",
+          "previous": "",
+          "start": 1097
+        },
+        {
+          "current": "  git clone --quiet --shared --no-checkout \\\n",
+          "previous": "  git clone --quiet --no-local --no-hardlinks --no-checkout \\\n",
+          "start": 1318
+        },
+        {
+          "current": "  git -C \"$checkout\" sparse-checkout set --no-cone '/*' '!/docs/evidence/'\n",
+          "previous": "",
+          "start": 1407
+        },
+        {
+          "current": "report_disk \"after the clean builds\"\n\n",
+          "previous": "",
+          "start": 1821
+        }
+      ],
+      "path": "scripts/check-performance-build-reproducibility.sh",
+      "previousSha256": "3f52360ef12d6e27566231bd4b6db3d96a18edc46039a9f499e2e05e70c97481"
+    },
+    {
+      "currentSha256": "f706bbf7a383076771c8c9d7cf720e78c32cf5786ad8a2a26ee67ba03d34930e",
+      "edits": [
+        {
+          "current": "  assert.match(source, /rev-parse --is-shallow-repository\\) == true \\]\\]; then\\n\\s+printf .*\\n\\s+exit 1\\nfi\\n/);\n  assert.match(source, /git clone --quiet --shared --no-checkout/);\n  assert.doesNotMatch(source, /--no-local|--no-hardlinks/);\n  assert.match(source, /sparse-checkout set --no-cone '\\/\\*' '!\\/docs\\/evidence\\/'\\n\\s+git -C \"\\$checkout\" checkout --quiet --detach \"\\$PERFORMANCE_REVISION\"/);\n  assert.match(source, /df -h \\/ \"\\$PERFORMANCE_SCRATCH\" >&2/);\n  assert.match(source, /report_disk \"before the clean builds\"\\n\\nfor name in a b; do/);\n  assert.match(source, /^done\\n\\nreport_disk \"after the clean builds\"\\n/m);\n",
+          "previous": "  assert.match(source, /git clone --quiet --no-local --no-hardlinks --no-checkout/);\n",
+          "start": 4958
+        },
+        {
+          "current": "\ntest(\"performance jobs check out live source without the retained evidence tree\", async () => {\n  const workflow = await readFile(\".github/workflows/performance.yml\", \"utf8\");\n  const sparse = \"          sparse-checkout: |\\n            /*\\n            !/docs/evidence/\\n          sparse-checkout-cone-mode: false\\n\";\n  const jobs = new Map([\n    [\"build\", 1], [\"spatial\", 1], [\"scaling\", 1], [\"overhead\", 1]\n    , [\"lifecycle\", 1], [\"reproducibility\", 0], [\"report\", 1]\n  ]);\n  const bodies = workflow.slice(workflow.indexOf(\"\\njobs:\\n\")).split(/^ {2}(?=[a-z]+:\\n)/mu).slice(1);\n  assert.deepEqual(bodies.map(body => body.slice(0, body.indexOf(\":\"))), [...jobs.keys()]);\n  for(const body of bodies)\n  {\n    const job = body.slice(0, body.indexOf(\":\"));\n    const checkouts = [...body.matchAll(\n      /uses: actions\\/checkout@v6\\n {8}with:\\n((?: {10}.*\\n)+)/gu\n    )];\n    assert.equal(checkouts.length, 1, job);\n    const options = checkouts[0][1].replaceAll(/^ {10}#.*\\n/gmu, \"\");\n    assert.equal(options, `          fetch-depth: ${jobs.get(job)}\\n          persist-credentials: false\\n${sparse}`, job);\n  }\n  const uncommented = workflow.replaceAll(/^ *#.*\\n/gmu, \"\");\n  assert.equal(uncommented.split(\"docs/evidence\").length - 1, jobs.size);\n  assert.ok(workflow.includes(\"      - name: Report disk after the sparse checkout\\n        run: df -h / \\\"$GITHUB_WORKSPACE\\\"\\n\"));\n});\n",
+          "previous": "",
+          "start": 5834
+        }
+      ],
+      "path": "tests/performance-reproducibility.test.mjs",
+      "previousSha256": "fc6608b670211651beed08f77972dee2680a61bb690d26288eab060e5138b94f"
+    }
+  ]
+}

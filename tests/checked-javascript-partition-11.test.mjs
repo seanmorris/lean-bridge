@@ -3,6 +3,7 @@
  *
  * @file
  */
+import "./helpers/performance-reproducibility-checkout-source-history-tests.mjs";
 import "./helpers/php-wasm-corpus-lane-split-source-history-tests.mjs";
 import "./helpers/downstream-direct-proof-control-repair-source-history-tests.mjs";
 import "./helpers/direct-proof-erasure-downstream-repair-source-history-tests.mjs";
