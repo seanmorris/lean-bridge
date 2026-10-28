@@ -129,7 +129,14 @@ inventory.observations = inventory.observations.flatMap(observation => {
 	}
 	const shapes = observation.shapes.filter(shape => shape !== "generic");
 	assert.ok(shapes.length > 0, observation.id);
-	return [{ ...observation, shapes }];
+	const hostTypes = Object.fromEntries(Object.entries(observation.hostTypes)
+		.filter(([shape]) => shape !== "generic"));
+	const conversionNotes = Object.fromEntries(Object.entries(
+		observation.conversionNotes ?? {}
+	).filter(([shape]) => shape !== "generic"));
+	return [{ ...observation, shapes, hostTypes
+		, ...(observation.conversionNotes === undefined
+			? {} : { conversionNotes }) }];
 });
 assert.deepEqual(reconciledOwners.sort(), [...priorOwners.keys()].sort());
 assert.equal(releasedCells.length, 11);
