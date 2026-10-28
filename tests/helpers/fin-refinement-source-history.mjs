@@ -12,6 +12,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeCallbackFinPerlRuntimeSource, callbackFinPerlRuntimeNormalizationPaths } from "./callback-fin-perl-runtime-source-history.mjs";
 import { beforeCallbackFinPerlDirectionSource, callbackFinPerlDirectionNormalizationPaths } from "./callback-fin-perl-direction-source-history.mjs";
 import { beforeCallbackFinHostRepairSource, callbackFinHostRepairNormalizationPaths } from "./callback-fin-host-repair-source-history.mjs";
 import { beforeReplayChainMemoryIntegrationSource, replayChainMemoryIntegrationNormalizationPaths } from "./replay-chain-memory-integration-source-history.mjs";
@@ -2262,7 +2263,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...callbackFinPerlDirectionNormalizationPaths
+	...callbackFinPerlRuntimeNormalizationPaths
+	, ...callbackFinPerlDirectionNormalizationPaths
 	, ...callbackFinHostRepairNormalizationPaths
 	, ...replayChainMemoryIntegrationNormalizationPaths
 	, ...coreMemoryBoundIntegrationNormalizationPaths
@@ -3263,7 +3265,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeCallbackFinPerlDirectionSource(path, text, expected);
+	let stage = beforeCallbackFinPerlRuntimeSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeCallbackFinPerlDirectionSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;

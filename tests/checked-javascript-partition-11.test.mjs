@@ -4,6 +4,7 @@
  * @file
  */
 import "./helpers/native-fork-transfer-producer-repair-source-history-tests.mjs";
+import "./helpers/callback-fin-perl-runtime-source-history-tests.mjs";
 import "./helpers/wit-transfer-copy-gap-source-history-tests.mjs";
 import "./helpers/ruby-transfer-copy-gap-integration-source-history-tests.mjs";
 import "./helpers/zero-payload-rust-producer-replay-tests.mjs";

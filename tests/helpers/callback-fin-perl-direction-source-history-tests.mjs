@@ -18,6 +18,7 @@ import {
 	, callbackFinPerlDirectionPredecessor
 	, reverseCallbackFinPerlDirectionUpdate
 } from "./callback-fin-perl-direction-source-history.mjs";
+import { beforeCallbackFinPerlRuntimeSource } from "./callback-fin-perl-runtime-source-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 
 const git = arguments_ => execFileSync("git", arguments_
@@ -42,7 +43,13 @@ test("Perl callback direction repair retains its exact implementation and integr
 	assert.deepEqual(value.additions.map(item => item.path)
 		, callbackFinPerlDirectionAddedPaths);
 	for(const addition of value.additions)
-		assert.equal(addition.currentSha256, sha256(await readFile(addition.path)));
+	{
+		const live = await readFile(addition.path, "utf8");
+		const source = beforeCallbackFinPerlRuntimeSource(
+			addition.path, live, addition.currentSha256
+		);
+		assert.equal(addition.currentSha256, sha256(source));
+	}
 });
 
 test("Perl callback direction repair reverses every exact transition", async () => {
@@ -57,7 +64,10 @@ test("Perl callback direction repair reverses every exact transition", async () 
 	}
 	for(const update of value.integrationUpdates)
 	{
-		const current = await readFile(update.path, "utf8");
+		const live = await readFile(update.path, "utf8");
+		const current = beforeCallbackFinPerlRuntimeSource(
+			update.path, live, update.currentSha256
+		);
 		const previous = git(["show", `${value.implementationCommit}:${update.path}`]);
 		assert.equal(reverseCallbackFinPerlDirectionUpdate(current, update), previous);
 	}

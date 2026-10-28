@@ -1,0 +1,212 @@
+{
+  "additions": [
+    {
+      "currentSha256": "539bbabdc90fb0e9e36feacd69ecb99d2b25c179a0bdfa5674c586cbc50a99da",
+      "path": "scripts/update-callback-fin-perl-runtime-source-history.mjs"
+    },
+    {
+      "currentSha256": "048b3a42264d9eb4a86436bf8363e7c6b43b9023eca9e23009e6732120b9b28d",
+      "path": "tests/helpers/callback-fin-perl-runtime-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "79df20ebdeb72d87cf897c6231d347f00da9641ad0428cb2a6f11c122240d5c3",
+      "path": "tests/helpers/callback-fin-perl-runtime-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "c9bff3ec81fdcddd2aa0f39a2e617f17e8f76a46",
+  "integrationUpdates": [
+    {
+      "currentSha256": "ff93a58188db8f5da43eb512381997403eae7bda74c8717dd7cddf214c1d722b",
+      "edits": [
+        {
+          "current": "import \"./helpers/callback-fin-perl-runtime-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 179
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "9364f020567e5c0f0dd54ecd10b74161b761f3dec62e16c8b9300ded87f437bd"
+    },
+    {
+      "currentSha256": "522af8cc54f02675b58ac057683d0d95eec6770b572998e473f5bae6f9ca3912",
+      "edits": [
+        {
+          "current": "import { beforeCallbackFinPerlRuntimeSource } from \"./callback-fin-perl-runtime-source-history.mjs\";\n",
+          "previous": "",
+          "start": 788
+        },
+        {
+          "current": "\t\tconst afterRuntime = beforeCallbackFinPerlRuntimeSource(\n\t\t\taddition.path, live\n\t\t);\n",
+          "previous": "",
+          "start": 2074
+        },
+        {
+          "current": "\t\t\taddition.path, afterRuntime, addition.currentSha256\n",
+          "previous": "\t\t\taddition.path, live, addition.currentSha256\n",
+          "start": 2216
+        },
+        {
+          "current": "\t\tconst afterRuntime = beforeCallbackFinPerlRuntimeSource(\n\t\t\tupdate.path, live\n\t\t);\n",
+          "previous": "",
+          "start": 2941
+        },
+        {
+          "current": "\t\t\tupdate.path, afterRuntime, update.currentSha256\n",
+          "previous": "\t\t\tupdate.path, live, update.currentSha256\n",
+          "start": 3082
+        }
+      ],
+      "path": "tests/helpers/callback-fin-host-repair-source-history-tests.mjs",
+      "previousSha256": "7c3784a16f4a74187371185183ff587f4560c0a0e250bdb30365bd11bb885f9e"
+    },
+    {
+      "currentSha256": "d66707df2c1cd7cbaa0968e7a7220ba6af5c5f802305b14ca7a672c9d2473150",
+      "edits": [
+        {
+          "current": "import { beforeCallbackFinPerlRuntimeSource } from \"./callback-fin-perl-runtime-source-history.mjs\";\n",
+          "previous": "",
+          "start": 701
+        },
+        {
+          "current": "\t{\n\t\tconst live = await readFile(addition.path, \"utf8\");\n\t\tconst source = beforeCallbackFinPerlRuntimeSource(\n\t\t\taddition.path, live, addition.currentSha256\n\t\t);\n\t\tassert.equal(addition.currentSha256, sha256(source));\n\t}\n",
+          "previous": "\t\tassert.equal(addition.currentSha256, sha256(await readFile(addition.path)));\n",
+          "start": 1963
+        },
+        {
+          "current": "\t\tconst live = await readFile(update.path, \"utf8\");\n\t\tconst current = beforeCallbackFinPerlRuntimeSource(\n\t\t\tupdate.path, live, update.currentSha256\n\t\t);\n",
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 2750
+        }
+      ],
+      "path": "tests/helpers/callback-fin-perl-direction-source-history-tests.mjs",
+      "previousSha256": "9b367582e1e420b34a041f1f94e32c4531a232ebf5a9989ba3d36b17ed121642"
+    },
+    {
+      "currentSha256": "b35913c371c9645e127067e0341ac861813430a597bb1b11b289b33bb6f23412",
+      "edits": [
+        {
+          "current": "import { beforeCallbackFinPerlRuntimeSource, callbackFinPerlRuntimeNormalizationPaths } from \"./callback-fin-perl-runtime-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...callbackFinPerlRuntimeNormalizationPaths\n\t, ...callbackFinPerlDirectionNormalizationPaths\n",
+          "previous": "\t...callbackFinPerlDirectionNormalizationPaths\n",
+          "start": 198939
+        },
+        {
+          "current": "\tlet stage = beforeCallbackFinPerlRuntimeSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCallbackFinPerlDirectionSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeCallbackFinPerlDirectionSource(path, text, expected);\n",
+          "start": 247585
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "4ce80cfc6b60a7095e18b955d7559f29e231ed3c7d5e6950a94808e8e7e43019"
+    }
+  ],
+  "milestone": "callback-fin-perl-runtime-source-v1",
+  "predecessorCommit": "edb9dea662124fcb3918f394a2330ca2b590f5a9",
+  "schemaVersion": 1,
+  "scope": "Complete the installed Perl callback Fin runtime without changing the shared runtime ABI. Returned Lean closures enforce exact checked inputs and unbox guarded results. Refined host sites require an exact Runtime::Callback descriptor, copy typed recovery before callback entry and use that recovery only while an original Perl exception is pending. An erased callback type remains a plain CODE at unrefined sites. Directional native wrapper availability, exact Fin diagnostics, exception identity and installed ordinary/reviewed execution remain authenticated.",
+  "updates": [
+    {
+      "currentSha256": "919675947f474ab13fd96588369e4ac3188103180a649a6ca6fd360263f00328",
+      "edits": [
+        {
+          "current": "const callbackHostClass = model => `${model.moduleName}::Runtime::Callback`;\n",
+          "previous": "",
+          "start": 1192
+        },
+        {
+          "current": "const callbackNeedsRecovery = (model, type) => type.kind === \"callback\" && model.exports.some(item =>\n\titem.parameters.some((parameter, index) => parameter.type.kind === \"callback\"\n\t\t&& nativeTypeKey(parameter.type) === type.key\n\t\t&& item.refinements?.parameters[index]?.kind === \"callback\"));\nconst callbackClass = model => {\n\tconst name = callbackHostClass(model);\n\treturn [`package ${name};`, \"sub new {\"\n\t\t, `  die \"${name}->new expects code and recovery\\\\n\" unless @_ == 5 && defined($_[0]) && !ref($_[0]) && $_[0] eq '${name}';`\n\t\t, \"  shift; my %fields = @_;\"\n\t\t, '  die \"expected code and recovery fields\\\\n\" unless keys(%fields) == 2 && exists($fields{code}) && exists($fields{recovery});'\n\t\t, '  die \"expected an unblessed CODE reference\\\\n\" unless ref($fields{code}) eq \"CODE\";'\n\t\t, `  return bless \\\\%fields, '${name}';`, \"}\", \"sub CLONE_SKIP { 1 }\", \"\"];\n};\n",
+          "previous": "",
+          "start": 1443
+        },
+        {
+          "current": "// Refined callbacks share erased callback representations with unrefined ones. Keep the\n// recovery beside the runtime callback context, not in the shared type or runtime, so an\n// unrefined export can still accept a plain CODE reference while a refined site requires\n// the exact descriptor. SAVEDESTRUCTOR_X bounds every record to the initiating call.\nconst callbackRecovery = type => {\n\tconst name = `lb_callback_recovery_${type.key}`, cType = nativeCType(type.result);\n\treturn `typedef struct ${name} {\n  lbp_callback *callback;\n  ${cType} value;\n  struct ${name} *next;\n} ${name};\nstatic _Thread_local ${name} *${name}_head;\nstatic void ${name}_drop(pTHX_ void *data) {\n  ${name} *item = data, **cursor = &${name}_head;\n  while (*cursor && *cursor != item) cursor = &(*cursor)->next;\n  if (*cursor == item) *cursor = item->next;\n  Safefree(item);\n}\nstatic void ${name}_install(pTHX_ uint64_t token, ${cType} value) {\n  lb_native_callback native = lb_native_callback_lookup(token);\n  if (!native.context) croak(\"registered callback recovery has no native context\");\n  ${name} *item; Newxz(item, 1, ${name});\n  item->callback = (lbp_callback *)native.context; item->value = value;\n  item->next = ${name}_head; ${name}_head = item;\n  SAVEDESTRUCTOR_X(${name}_drop, item);\n}\nstatic ${cType} ${name}_get(lbp_callback *callback) {\n  for (${name} *item = ${name}_head; item; item = item->next) if (item->callback == callback) {\n    ${nativeObjectType(type.result) ? \"lean_inc(item->value);\" : \"\"}\n    return item->value;\n  }\n  return ${nativeCallbackDefault(type.result)};\n}`;\n};\n\n",
+          "previous": "",
+          "start": 7833
+        },
+        {
+          "current": "\t\tconst recovered = callbackNeedsRecovery(model, type);\n",
+          "previous": "",
+          "start": 17302
+        },
+        {
+          "current": "\t      SvGETMAGIC(value);\n\t      ${recovered ? `if (lbp_is_branch(value, ${q(callbackHostClass(model))})) {\n\t        HV *descriptor = (HV *)sv_2mortal(SvREFCNT_inc(SvRV(value)));\n\t        if (HvUSEDKEYS(descriptor) != 2) croak(\"callback descriptor requires exactly code and recovery fields\");\n\t        /* Pin both fields before recovery conversion can invoke Perl code. */\n\t        SV *code = lbp_field(aTHX_ descriptor, \"code\", 4);\n\t        SV *recovery_value = lbp_field(aTHX_ descriptor, \"recovery\", 8);\n\t        if (!SvROK(code) || SvTYPE(SvRV(code)) != SVt_PVCV || SvOBJECT(SvRV(code))) croak(\"callback descriptor code requires an unblessed CODE reference\");\n\t        ${nativeCType(type.result)} recovery = ${read(type.result)}(aTHX_ scope, recovery_value);\n\t        uint64_t token = lbp_callback_new(aTHX_ scope, code, get_cv(${q(`${model.moduleName}::_callback_${type.key}`)}, 0), (void (*)(void))lb_callback_${type.key});\n\t        lb_callback_recovery_${type.key}_install(aTHX_ token, recovery);\n\t        return ${keep(`lb_t${type.key}_wrap(token)`)};\n\t      }` : \"\"}\n\t      if (SvROK(value) && SvTYPE(SvRV(value)) == SVt_PVCV) {\n\t        uint64_t token = lbp_callback_new(aTHX_ scope, value, get_cv(${q(`${model.moduleName}::_callback_${type.key}`)}, 0), (void (*)(void))lb_callback_${type.key});\n\t        return ${keep(`lb_t${type.key}_wrap(token)`)};\n\t      }\n\t      ${from}`;\n",
+          "previous": "      if (SvROK(value) && SvTYPE(SvRV(value)) == SVt_PVCV) {\n        uint64_t token = lbp_callback_new(aTHX_ scope, value, get_cv(${q(`${model.moduleName}::_callback_${type.key}`)}, 0), (void (*)(void))lb_callback_${type.key});\n        return ${keep(`lb_t${type.key}_wrap(token)`)};\n      }\n      ${from}`;\n",
+          "start": 17389
+        },
+        {
+          "current": "\tconst recovered = callbackNeedsRecovery(model, type) ? `static ${nativeCType(type)} ${read(type)}_recovered(pTHX_ lbp_scope *scope, SV *value) {\n\t  SvGETMAGIC(value);\n\t  if (!lbp_is_branch(value, ${q(callbackHostClass(model))}))\n\t    croak(\"checked callback requires ${callbackHostClass(model)}->new(code => ..., recovery => ...)\");\n\t  return ${read(type)}(aTHX_ scope, value);\n\t}\\n` : \"\";\n\treturn `static ${nativeCType(type)} ${read(type)}(pTHX_ lbp_scope *scope, SV *value) {\\n${from}\\n}\\nstatic SV *${write(type)}(pTHX_ lbp_scope *scope, ${nativeCType(type)} value) {\\n${to}\\n}\\n${recovered}`;\n",
+          "previous": "\treturn `static ${nativeCType(type)} ${read(type)}(pTHX_ lbp_scope *scope, SV *value) {\\n${from}\\n}\\nstatic SV *${write(type)}(pTHX_ lbp_scope *scope, ${nativeCType(type)} value) {\\n${to}\\n}\\n`;\n",
+          "start": 18879
+        },
+        {
+          "current": "\t    ${[...parameters.map((type, i) => `${nativeCType(type)} a${i} = ${refinements?.parameters?.[i]?.kind === \"callback\" ? `${read(type)}_recovered` : read(type)}(aTHX_ scope, ST(${i}));`), ...guards].join(\"\\n    \")}\n",
+          "previous": "    ${[...parameters.map((type, i) => `${nativeCType(type)} a${i} = ${read(type)}(aTHX_ scope, ST(${i}));`), ...guards].join(\"\\n    \")}\n",
+          "start": 36544
+        },
+        {
+          "current": "\tconst recoveredCallbacks = model.types.some(type => callbackNeedsRecovery(model, type));\n",
+          "previous": "",
+          "start": 39793
+        },
+        {
+          "current": "\tfor(const type of model.types.filter(type => callbackNeedsRecovery(model, type)))\n\t\tlines.push(callbackRecovery(type));\n",
+          "previous": "",
+          "start": 40833
+        },
+        {
+          "current": "\t\tconst fallback = callbackNeedsRecovery(model, type)\n\t\t\t? `lb_callback_recovery_${type.key}_get((lbp_callback *)context)`\n\t\t\t: nativeCallbackDefault(type.result);\n",
+          "previous": "\t\tconst fallback = nativeCallbackDefault(type.result);\n",
+          "start": 41254
+        },
+        {
+          "current": "\t\tconst refinements = type.checked ? {\n\t\t\tparameters: [null, ...type.checked], result: null\n\t\t} : null;\n\t\tlines.push(`MODULE = ${model.moduleName}    PACKAGE = ${typeClass(model, type)}`\n\t\t\t, publicXsub(\"call\", `lb_t${type.key}_call`, [type, ...type.parameters]\n\t\t\t\t, type.result, refinements\n\t\t\t\t, [\"closure\", ...type.parameters.map((_, index) => `arg${index}`)]));\n",
+          "previous": "\t\tlines.push(`MODULE = ${model.moduleName}    PACKAGE = ${typeClass(model, type)}`, publicXsub(\"call\", `lb_t${type.key}_call`, [type, ...type.parameters], type.result));\n",
+          "start": 43365
+        },
+        {
+          "current": "\tif(recoveredCallbacks) pm.push(...callbackClass(model));\n",
+          "previous": "",
+          "start": 44758
+        },
+        {
+          "current": "\t\t, \"\", (recoveredCallbacks ? `Pass unrefined host callbacks as CODE references. A checked host callback requires ${callbackHostClass(model)}->new(code => $callback, recovery => $value); the generated adapter validates and copies the typed recovery before Lean or the callback runs. ` : \"Pass host callbacks as CODE references. \") + \"Lean may not retain them after the exported call returns. Returned Lean closures provide call, close and closed; close each closure when finished. Original Perl exception objects are rethrown after native cleanup. Closing a closure during argument conversion does not invalidate the borrow held by its active call.\"\n",
+          "previous": "\t\t, \"\", \"Pass host callbacks as CODE references. Lean may not retain them after the exported call returns. Returned Lean closures provide call, close and closed; close each closure when finished. Original Perl exception objects are rethrown after native cleanup. Closing a closure during argument conversion does not invalidate the borrow held by its active call.\"\n",
+          "start": 49995
+        },
+        {
+          "current": "\telse if(recoveredCallbacks) pm.push(\"=head1 CHECKED CALLBACKS\", \"\"\n\t\t, `Pass unrefined host callbacks as CODE references. A checked host callback requires ${callbackHostClass(model)}->new(code => $callback, recovery => $value). The generated adapter validates and copies the typed recovery before Lean or the callback runs. Recovery is used only while an exception is pending; the original Perl exception is rethrown after native cleanup. Lean may not retain host callbacks after the exported call returns.`, \"\");\n",
+          "previous": "",
+          "start": 50857
+        }
+      ],
+      "path": "src/backends/perl/generate.mjs",
+      "previousSha256": "b182d00f7cf86a9ec39edf5f6d9d61fef22e76ecd1089327dcf13026d258a247"
+    },
+    {
+      "currentSha256": "418cbe5cc4b25b0982c83699f4aeea577fba6ea88111aa45563ba097b3fb7a74",
+      "edits": [
+        {
+          "current": "\tassert.match(xs, new RegExp(`visit\\\\(\\\\.\\\\.\\\\.\\\\)[\\\\s\\\\S]+lb_read_${visitKey}_recovered\\\\(aTHX_ scope, ST\\\\(0\\\\)\\\\)`, \"u\"));\n\tconst visitReader = xs.slice(xs.indexOf(`static lean_object * lb_read_${visitKey}(`), xs.indexOf(`static SV *lb_write_${visitKey}(`));\n\tassert.match(visitReader, /if \\(SvROK\\(value\\) && SvTYPE\\(SvRV\\(value\\)\\) == SVt_PVCV\\)/u);\n\tassert.match(xs, new RegExp(`lb_callback_recovery_${visitKey}_install\\\\(aTHX_ token, recovery\\\\)`, \"u\"));\n\tassert.match(xs, new RegExp(`lb_callback_recovery_${visitKey}_get\\\\(\\\\(lbp_callback \\\\*\\\\)context\\\\)`, \"u\"));\n\tassert.match(xs, /checked callback requires LeanBridge::FinCallbacks::Runtime::Callback->new/u);\n",
+          "previous": "",
+          "start": 1989
+        },
+        {
+          "current": "\tconst scaler = model.exports.find(item => item.name === \"Sample.scaler\");\n\tconst scalerKey = nativeTypeKey(scaler.result);\n\tconst closureStart = xs.indexOf(`PACKAGE = LeanBridge::FinCallbacks::Closure${scalerKey}`);\n\tconst closureEnd = xs.indexOf(\"XSRETURN(1);\", closureStart);\n\tconst closure = xs.slice(closureStart, closureEnd);\n\tassert.match(closure, /if \\(!below\\) croak\\(\"%s\", \"arg0 is not below its Fin 10 bound\"\\)/u);\n\tassert.match(closure, /lean_object \\*checked = lb_t[a-f0-9]+_call\\(a0, a1\\)/u);\n\tassert.match(closure, /if \\(lean_is_scalar\\(checked\\)\\) croak\\(\"Lean rejected an argument outside its Fin bound\"\\)/u);\n\tassert.match(closure, /lean_object \\*boxed = lean_ctor_get\\(checked, 0\\)/u);\n",
+          "previous": "",
+          "start": 2768
+        },
+        {
+          "current": "\tassert.match(pod, /package LeanBridge::FinCallbacks::Runtime::Callback;/u);\n\tassert.match(pod, /new expects code and recovery/u);\n",
+          "previous": "",
+          "start": 3622
+        }
+      ],
+      "path": "tests/callback-fin-perl-package.test.mjs",
+      "previousSha256": "59efeec0290096ba75ff339834abc9abb2f288dd2d07b1ad0cf48acfa319fc9d"
+    }
+  ]
+}
