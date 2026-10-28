@@ -23,11 +23,17 @@ const wasmEntrySupplementTestPath = "tests/wasm-entry-supplement.test.mjs";
 const wasmEntrySupplementTestSha256
 	= "5647d6ffdc49b3c460550defade251f0d690cad23d588ce13690da6abf063a46";
 
-const readAtWasmEntrySupplement = async path => path === wasmEntrySupplementTestPath
-	? Buffer.from(await sourceAtFinHistoryMilestone(
-		path, wasmEntrySupplementTestSha256
-	))
-	: readFile(path);
+// Every source the supplement pinned is read as the supplement pinned it: unchanged bytes are read
+// directly, and a later edit is reversed through the hub to exactly the pinned digest.
+const readAtWasmEntrySupplement = pins => async path => {
+	if(path === wasmEntrySupplementTestPath)
+		return Buffer.from(await sourceAtFinHistoryMilestone(
+			path, wasmEntrySupplementTestSha256
+		));
+	const bytes = await readFile(path);
+	if(!pins.has(path) || sha256(bytes) === pins.get(path)) return bytes;
+	return Buffer.from(await sourceAtFinHistoryMilestone(path, pins.get(path)));
+};
 
 test("Wasm entry supplement history authenticates exact source transitions and refuses unknown edits", async () => {
 	const history = JSON.parse(await readFile(wasmEntrySupplementHistoryPath));
@@ -60,8 +66,10 @@ test("Wasm entry inventory adds sixteen reports, preserves older claims and auth
 	);
 	const current = JSON.parse(source), previous = JSON.parse(beforeWasmEntrySupplementSource(path, source));
 	const history = JSON.parse(await readFile(wasmEntrySupplementHistoryPath));
+	const pins = new Map(current.evidence.slice(previous.evidence.length)
+		.flatMap(entry => entry.files.map(file => [file.path, file.sha256])));
 	const expected = await supplementWasmEntryInventory(
-		previous, readAtWasmEntrySupplement
+		previous, readAtWasmEntrySupplement(pins)
 	);
 	let refreshed = 0;
 	for(const entry of expected.evidence.slice(0, previous.evidence.length)) for(const file of entry.files)

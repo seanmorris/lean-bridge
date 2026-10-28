@@ -30,9 +30,10 @@ test("Rust borrow evidence authenticates exact source transitions without rewrit
 		assert.equal(update.previousSha256, previous.sources[update.path]);
 		assert.equal(update.currentSha256, record.sources[update.path]);
 		const source = beforeOwnedPythonBorrow(update.path, await readFile(update.path, "utf8"), update.currentSha256);
-		const prior = beforeOwnedRustBorrow(update.path, source);
+		// Stop each reversal at its recorded predecessor; the hub otherwise walks past it.
+		const prior = beforeOwnedRustBorrow(update.path, source, update.previousSha256);
 		assert.equal(sha256(prior), update.previousSha256);
-		assert.equal(beforeOwnedRustBorrow(update.path, prior), prior);
+		assert.equal(beforeOwnedRustBorrow(update.path, prior, update.previousSha256), prior);
 		assert.equal(beforeOwnedRustBorrow(update.path, source, update.currentSha256), source);
 		const unknown = source + "\n/* unrecorded change */\n";
 		assert.equal(beforeOwnedRustBorrow(update.path, unknown), unknown);
@@ -42,9 +43,10 @@ test("Rust borrow evidence authenticates exact source transitions without rewrit
 			, { ...update, edits: [...update.edits, update.edits[0]] }])
 			assert.throws(() => reverseOwnedRustBorrowUpdate(source, changed));
 	}
-	const path = "docs/type-surface.v1.json", current = beforeOwnedPythonBorrow(path, await readFile(path, "utf8"));
-	const prior = JSON.parse(beforeOwnedRustBorrow(path, current));
-	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedPythonBorrowHistoricalBytes(file.path, await readFile(file.path)));
+	const path = "docs/type-surface.v1.json", current = beforeOwnedPythonBorrow(path, await readFile(path, "utf8"), record.sources[path]);
+	const prior = JSON.parse(beforeOwnedRustBorrow(path, current, previous.sources[path]));
+	const pins = new Map(JSON.parse(current).evidence.flatMap(evidence => evidence.files.map(file => [file.path, file.sha256])));
+	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedPythonBorrowHistoricalBytes(file.path, await readFile(file.path), record.sources[file.path] ?? pins.get(file.path)));
 	assert.deepEqual(JSON.parse(current), prior);
 	const files = JSON.parse(await readFile("config/cli-package.v1.json", "utf8")).files;
 	assert.deepEqual(JSON.parse(await readFile("package.json", "utf8")).files, files);

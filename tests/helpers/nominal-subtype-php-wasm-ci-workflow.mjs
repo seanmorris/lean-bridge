@@ -42,7 +42,7 @@ export const assertNominalSubtypePhpWasmWorkflow = source => {
 	assert.equal(step(names[2]), "        uses: cachix/install-nix-action@v31\n");
 	assert.equal(step(names[3]), "        uses: actions/cache@v5\n        with:\n          path: |\n            .toolchains\n            build/php-wasm-sdk\n            build/php-wasm-host\n          key: nominal-subtype-php-wasm-${{ runner.os }}-${{ hashFiles('flake.lock', 'lean-toolchain', 'scripts/bootstrap-toolchains.sh', 'scripts/bootstrap-php-wasm-ci.sh', 'poc/lean-link-spike/bindings/php-wasm.package.json') }}\n");
 	assert.equal(step(names[5]), "        uses: ./.github/actions/bounded-apt\n        timeout-minutes: 1\n");
-	assert.ok(step(names[10]).startsWith("        id: acceptance\n        timeout-minutes: 45\n        env:\n          LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME: build/nominal-subtype-php-wasm-input/php-wasm-runtime\n        shell: bash\n"));
+	assert.ok(step(names[10]).startsWith("        id: acceptance\n        timeout-minutes: 100\n        env:\n          LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME: build/nominal-subtype-php-wasm-input/php-wasm-runtime\n        shell: bash\n"));
 	assert.equal(step(names[11]), "        if: always()\n        uses: actions/upload-artifact@v7\n        with:\n          name: nominal-subtype-php-wasm-${{ github.sha }}\n          path: |\n            build/nominal-subtype-php-wasm-ci/\n            build/nominal-subtype-php-wasm-host.log\n            build/nominal-subtype-php-wasm-runtime.log\n            build/nominal-subtype-php-wasm-input/php-wasm-runtime/runtime.json\n          if-no-files-found: error\n          retention-days: 30\n");
 	const commands = workflowRunScalars(source).map(run => run.source.trim());
 	assert.deepEqual(commands, [
@@ -51,7 +51,13 @@ export const assertNominalSubtypePhpWasmWorkflow = source => {
 		, "if /usr/bin/php -r 'exit(extension_loaded(\"xdebug\") ? 0 : 1);'; then\n  sudo phpdismod -s cli xdebug\nfi\nenv -i PATH=/usr/bin:/bin /usr/bin/php -r 'if (extension_loaded(\"xdebug\")) { fwrite(STDERR, \"Consumer PHP must run without Xdebug.\\n\"); exit(1); }'"
 		, "bash scripts/install-playwright-browsers.sh chromium"
 		, "set -euo pipefail\nmkdir -p build\nbash scripts/bootstrap-php-wasm-ci.sh 2>&1 | tee build/nominal-subtype-php-wasm-host.log\nbash scripts/bootstrap-toolchains.sh\nexport LEAN_WASM_EMSDK=\"$GITHUB_WORKSPACE/.toolchains/emsdk-php-wasm\"\nbash scripts/build-lean-runtime.sh 2>&1 | tee build/nominal-subtype-php-wasm-runtime.log\nsource scripts/env.sh\nnode --input-type=module -e 'import {prepareOwnedPhpWasmRuntime} from \"./tests/helpers/owned-php-wasm-runtime.mjs\"; await prepareOwnedPhpWasmRuntime(\"build/nominal-subtype-php-wasm-input\");'\ntest -s build/nominal-subtype-php-wasm-input/php-wasm-runtime/runtime.json"
-		, "set -euo pipefail\nsource scripts/env.sh\nbash scripts/run-nominal-subtype-php-wasm-ci.sh"
+		, "set -euo pipefail\nsource scripts/env.sh\nbash scripts/run-nominal-subtype-php-wasm-ci.sh\n"
+			+ "LEAN_BRIDGE_SIGNATURE_SPECIALIZATION_PHP_WASM_TEST=1 \\\n"
+			+ "LEAN_BRIDGE_SIGNATURE_SPECIALIZATION_PHP_WASM_REPORT=build/nominal-subtype-php-wasm-ci/signature-specializations.json \\\n"
+			+ "  node --test --test-concurrency=1 \\\n"
+			+ "    --test-name-pattern='^installed ordinary and reviewed PHP-Wasm packages execute selected instances in every loading arrangement$' \\\n"
+			+ "    tests/reviewed-specializations.test.mjs\n"
+			+ "test -s build/nominal-subtype-php-wasm-ci/signature-specializations.json"
 		, "exit 1"
 	]);
 	assert.equal(assertWorkflowRunBudget(source), commands.length);

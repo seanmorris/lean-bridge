@@ -9,6 +9,7 @@ const callbackFinCoverage = [
 	[["node-javascript", "node-typescript"], "ordinary-source", ["npm-callback-fin-installed"]]
 	, [["node-javascript", "node-typescript"], "reviewed-ir", ["reviewed-callback-fin-npm-r1-installed", "reviewed-callback-fin-npm-r2-installed"]]
 	, [["browser-javascript", "browser-react", "browser-worker"], "ordinary-source", ["browser-callback-fin-ordinary-installed"]]
+	, [["browser-javascript", "browser-react", "browser-worker"], "reviewed-ir", ["hosted-reviewed-callback-fin-browser-installed"]]
 	, [["c", "cpp"], "ordinary-source", ["native-callback-fin-ordinary-installed", "native-callback-fin-host-replies-installed"]]
 	, [["c", "cpp"], "reviewed-ir", ["reviewed-callback-fin-c-cpp-installed"]]
 	, [["php-wasm"], "ordinary-source", ["callback-refinements-php-wasm-hosted-installed"]]
