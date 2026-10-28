@@ -1,0 +1,76 @@
+{
+  "additions": [
+    {
+      "currentSha256": "dab77b0143f07fc5a3b21393dcc3fc64df10439ebac2912a166457de8f659ccc",
+      "path": "scripts/update-native-fin-callback-role-integration-source-history.mjs"
+    },
+    {
+      "currentSha256": "6a76bef7c7e3b4e7714f10a6055f271e0fd94ed9d3fe36777936c8a762db586c",
+      "path": "tests/helpers/native-fin-callback-role-integration-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "b434a31e3ed1ac4313650e00a5fb15061579040dfb0fe2c8614dacf0dc4c30c2",
+      "path": "tests/helpers/native-fin-callback-role-integration-source-history.mjs"
+    }
+  ],
+  "baseCommit": "259856990af5be41f2bad2452ed4884c21737e23",
+  "baseHistory": {
+    "path": "docs/evidence/native-fin-callback-role-source-history-20261028.json",
+    "sha256": "3113fbee0acf8cbc4fcd6505875a5ad3bca5801293611f45107eab1a3448bf0b"
+  },
+  "implementationCommit": "4b1901e876c4cd57a197bf54ec8679c70979fb2e",
+  "milestone": "native-fin-callback-role-integration-v1",
+  "schemaVersion": 1,
+  "scope": "Register the independently authenticated native Fin callback-role history newest-first in the reversible Fin source-history hub and checked-JavaScript partition 10. Preserve all runtime behavior, type-surface claims, observations and evidence identities.",
+  "updates": [
+    {
+      "currentSha256": "797b3044592eacaa43646e7a1d63b64632124d9f2188550a1b6cb6d0e79f2eb3",
+      "edits": [
+        {
+          "current": "import { beforeNativeFinCallbackRoleIntegrationSource, nativeFinCallbackRoleIntegrationNormalizationPaths } from \"./native-fin-callback-role-integration-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "import { beforeNativeFinCallbackRoleSource, nativeFinCallbackRoleNormalizationPaths } from \"./native-fin-callback-role-source-history.mjs\";\n",
+          "previous": "",
+          "start": 28563
+        },
+        {
+          "current": "\t...nativeFinCallbackRoleIntegrationNormalizationPaths\n\t, ...coreHubOrderRepairIntegrationNormalizationPaths\n",
+          "previous": "\t...coreHubOrderRepairIntegrationNormalizationPaths\n",
+          "start": 201901
+        },
+        {
+          "current": "\t, ...nativeFinCallbackRoleNormalizationPaths\n",
+          "previous": "",
+          "start": 203416
+        },
+        {
+          "current": "\tlet stage = beforeNativeFinCallbackRoleIntegrationSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCoreHubOrderRepairIntegrationSource(\n",
+          "previous": "\tlet stage = beforeCoreHubOrderRepairIntegrationSource(\n",
+          "start": 251521
+        },
+        {
+          "current": "\tstage = beforeNativeFinCallbackRoleSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n",
+          "previous": "",
+          "start": 256333
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "fc7511181779702e2c012ae9ab1e98e61fb8b406f4ac0dde71869b98ad9dcdab"
+    },
+    {
+      "currentSha256": "6fb116b952200b9e974f1bb1f7611d379c49bd9ab7660c7d5bddcb380d6053cd",
+      "edits": [
+        {
+          "current": "import \"./helpers/native-fin-callback-role-source-history-tests.mjs\";\nimport \"./helpers/native-fin-callback-role-integration-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 2597
+        }
+      ],
+      "path": "tests/checked-javascript-partition-10.test.mjs",
+      "previousSha256": "2eef92120fecf1824bf72fce93109afd0408a345b410de31249ef6b5823dc8d1"
+    }
+  ]
+}
