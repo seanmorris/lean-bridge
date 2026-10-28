@@ -62,13 +62,15 @@ if(manifest)
 process.stderr.write(`test_profile=${requested}\ncontract_test_count=${complete.length}\ntest_count=${selected.length}\ntest_shard=${shard ?? "all"}\n`);
 
 const boundedHostedCore = requested === "contract" && process.env.CI === "true";
+// Shard 4 lost its hosted runner twice with two concurrent files; run it serially.
+const hostedCoreConcurrency = shard === "4/12" ? "--test-concurrency=1" : "--test-concurrency=2";
 const childEnvironment = boundedHostedCore ? {
 	...process.env
 	, NODE_OPTIONS: [process.env.NODE_OPTIONS, "--max-old-space-size=4096"]
 		.filter(Boolean).join(" ")
 } : process.env;
 const child = spawn(process.execPath, [
-	"--test", ...boundedHostedCore ? ["--test-concurrency=2"] : [], ...selected
+	"--test", ...boundedHostedCore ? [hostedCoreConcurrency] : [], ...selected
 ], { cwd: root, env: childEnvironment, stdio: "inherit" });
 child.once("error", error => {
 	process.stderr.write(`${error.stack ?? error.message}\n`);
