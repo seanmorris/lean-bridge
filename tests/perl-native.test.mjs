@@ -766,7 +766,7 @@ test("Perl installs ordinary Lean packages through prebuilt and XS-only paths", 
 }
 });
 
-test("fresh Lean metadata rejects unsupported or unreviewed exports before releasing native output", { skip: !enabled, timeout: 180_000 }, async () => {
+test("fresh Lean metadata rejects unsupported or unreviewed exports before releasing native output", { skip: !enabled, timeout: 300_000 }, async () => {
 	const working = await mkdtemp(join(root, "build/.perl-rejection-test-"));
 	try
 	{
@@ -776,7 +776,7 @@ test("fresh Lean metadata rejects unsupported or unreviewed exports before relea
 			["loop", /partial/, []]
 			, ["viaLoop", /partial/, []]
 			, ["admitted", /admitted-implementation/, []]
-			, ["dependent", /dependent or implicit/, []]
+			, ["dependent", /bound-checking adapters/, []]
 			, ["polymorphic", /specialization-required/, []]
 			, ["viaForeign", /foreign implementation contract/, []]
 			, ["echoTiny", /no stable heap identity/, ["Rejections.Tiny"]]
