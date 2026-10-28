@@ -1,0 +1,94 @@
+{
+  "additions": [
+    {
+      "currentSha256": "d8d4af1880feb4b5770bf21bf51ff49f8cc79ccc4195006b99a14c8d2413b709",
+      "path": "scripts/update-lean-toolchain-release-fallback-source-history.mjs"
+    },
+    {
+      "currentSha256": "12063fc6da3c441ca9c507005744b8ba545f9631775670bbfcdb5364959f40b4",
+      "path": "tests/helpers/lean-toolchain-release-fallback-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "2c16e779205cf611c053a472098b70ab795e4f18799c6a55267ccb062815bde3",
+      "path": "tests/helpers/lean-toolchain-release-fallback-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "5d5ffbc79ea9ca711b4f29622515791b2f7c82f1",
+  "integrationCommit": "a1c889fb282706315b760845e7f1149ee6b113cf",
+  "integrationUpdates": [
+    {
+      "currentSha256": "450cc1388fe1dfa6b7a5f7d1502157eb04efc3610d646e2d7697174742b1d5f3",
+      "edits": [
+        {
+          "current": "import \"./helpers/lean-toolchain-release-fallback-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 1823
+        }
+      ],
+      "path": "tests/checked-javascript-partition-10.test.mjs",
+      "previousSha256": "fe3a4ddedc0a1f1a7f6897743d23b4fbbcb7f8ce608e4fa8af95cab5c11001cb"
+    },
+    {
+      "currentSha256": "128651d7a70a6118dde6f190b6a01271e866f211b9ad643ef893f3423ab718e8",
+      "edits": [
+        {
+          "current": "import { beforeLeanToolchainReleaseFallbackSource, leanToolchainReleaseFallbackNormalizationPaths } from \"./lean-toolchain-release-fallback-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...leanToolchainReleaseFallbackNormalizationPaths\n\t, ...callbackFinSparseCheckoutNormalizationPaths\n",
+          "previous": "\t...callbackFinSparseCheckoutNormalizationPaths\n",
+          "start": 199999
+        },
+        {
+          "current": "\tlet stage = beforeLeanToolchainReleaseFallbackSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCallbackFinSparseCheckoutSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeCallbackFinSparseCheckoutSource(path, text, expected);\n",
+          "start": 248993
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "535e51cfc2a98e103e6e18307681a4d588782dbcc63550772dfba568792f6ec1"
+    }
+  ],
+  "milestone": "lean-toolchain-release-fallback-source-v1",
+  "predecessorCommit": "e3f88c89a4f9c6c6e6f2ad6b6acc708668a4e343",
+  "schemaVersion": 1,
+  "scope": "After two bounded elan attempts, download the identical Lean 4.32.2 Linux release from Lean's official GitHub release, authenticate the published SHA-256 digest and compiler commit, extract through a private staging directory, and refuse an unexpected destination. Preserve the primary elan path, exact compiler identity, every runtime/API/type-surface byte, and all existing acceptance behavior. Add a focused source contract; claim no installed consumer result from this source change alone.",
+  "updates": [
+    {
+      "currentSha256": "03d44c0192eb1c7a65d584749a9244fc4b4b7426cf854ac4d2f68d234b0fd435",
+      "edits": [
+        {
+          "current": "LEAN_ARCHIVE=lean-4.32.2-linux.tar.zst\nLEAN_ARCHIVE_URL=\"https://github.com/leanprover/lean4/releases/download/v4.32.2/$LEAN_ARCHIVE\"\nLEAN_ARCHIVE_SHA256=5f2069e6f5db73780f374ccb49ce8ea649aa20a0cebf0116816744c999ce72aa\n",
+          "previous": "",
+          "start": 558
+        },
+        {
+          "current": "\ninstall_lean_release_fallback() {\n  local archive=\"$LEAN_WASM_DOWNLOADS/$LEAN_ARCHIVE\"\n  local destination=\"$ELAN_HOME/toolchains/leanprover--lean4---v4.32.2\"\n  local staging\n  if [[ ! -f \"$archive\" ]]; then\n    download_archive \"$LEAN_ARCHIVE_URL\" \"$archive\"\n  fi\n  printf '%s  %s\\n' \"$LEAN_ARCHIVE_SHA256\" \"$archive\" | sha256sum -c -\n  mkdir -p \"$ELAN_HOME/toolchains\"\n  staging=$(mktemp -d \"$ELAN_HOME/toolchains/.lean-4.32.2.XXXXXXXX\")\n  if ! tar --use-compress-program=unzstd -xf \"$archive\" \\\n    --strip-components=1 -C \"$staging\"; then\n    rm -rf \"$staging\"\n    return 1\n  fi\n  if [[ ! -x \"$staging/bin/lean\" ]]; then\n    echo \"Lean release fallback does not contain bin/lean\" >&2\n    rm -rf \"$staging\"\n    return 1\n  fi\n  local staged_commit\n  staged_commit=$(\"$staging/bin/lean\" --version \\\n    | sed -n 's/.*commit \\([^,)]*\\).*/\\1/p')\n  if [[ \"$staged_commit\" != \"$LEAN_COMMIT\" ]]; then\n    echo \"Lean release fallback commit mismatch: expected $LEAN_COMMIT, got $staged_commit\" >&2\n    rm -rf \"$staging\"\n    return 1\n  fi\n  if [[ -e \"$destination\" ]]; then\n    echo \"Refusing to replace unexpected Lean toolchain path: $destination\" >&2\n    rm -rf \"$staging\"\n    return 1\n  fi\n  mv \"$staging\" \"$destination\"\n}\n\n",
+          "previous": "",
+          "start": 3332
+        },
+        {
+          "current": "    echo \"Elan failed to install $LEAN_TOOLCHAIN after 2 bounded attempts; using the checksummed GitHub release fallback\" >&2\n    install_lean_release_fallback\n",
+          "previous": "    echo \"Failed to install $LEAN_TOOLCHAIN after 2 bounded attempts\" >&2\n    exit 1\n",
+          "start": 5291
+        }
+      ],
+      "path": "scripts/bootstrap-toolchains.sh",
+      "previousSha256": "4c215ae779483ba8a847b41dff21b61c5be14620015f00df5d74a47e59d3e48c"
+    },
+    {
+      "currentSha256": "5c681cf838410e9c978918a14f36748ac4c5361cc66aee3c865451f3baeaa9aa",
+      "edits": [
+        {
+          "current": "test(\"bootstrap retains a checksummed Lean release fallback\", async () => {\n  const bootstrap = await readFile(\"scripts/bootstrap-toolchains.sh\", \"utf8\");\n  assert.match(bootstrap, /^LEAN_ARCHIVE=lean-4\\.32\\.2-linux\\.tar\\.zst$/m);\n  assert.match(bootstrap\n    , /^LEAN_ARCHIVE_URL=\"https:\\/\\/github\\.com\\/leanprover\\/lean4\\/releases\\/download\\/v4\\.32\\.2\\/\\$LEAN_ARCHIVE\"$/m);\n  assert.match(bootstrap\n    , /^LEAN_ARCHIVE_SHA256=5f2069e6f5db73780f374ccb49ce8ea649aa20a0cebf0116816744c999ce72aa$/m);\n  assert.match(bootstrap, /install_lean_release_fallback/u);\n  assert.match(bootstrap\n    , /tar --use-compress-program=unzstd -xf \"\\$archive\"/u);\n  assert.match(bootstrap\n    , /Lean release fallback commit mismatch: expected \\$LEAN_COMMIT/u);\n});\n\n",
+          "previous": "",
+          "start": 11339
+        }
+      ],
+      "path": "tests/performance-ci-report.test.mjs",
+      "previousSha256": "222e7d3766959fd58cb56d7a4910a056a703fa4dbe959b240d1d710058bd2d4a"
+    }
+  ]
+}
