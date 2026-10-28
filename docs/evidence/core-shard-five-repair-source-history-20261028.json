@@ -1,0 +1,134 @@
+{
+  "additions": [
+    {
+      "currentSha256": "7a7511244d2a45279da541e8528e6a884910d3cb7886dae77b0194152969d6b0",
+      "path": "scripts/update-core-shard-five-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "a2bcb19289e20021d0e94f75481e42453cb7db18426769c980cb0b788210752a",
+      "path": "tests/helpers/core-shard-five-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "901d869279be2cd64b421af506dce631475cbfe94cc0fb1335455e40eb07ba8d",
+      "path": "tests/helpers/core-shard-five-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "8193e794da98d5c6b8d86a94ddbb5d1f5ae99687",
+  "implementationCommits": [
+    "8193e794da98d5c6b8d86a94ddbb5d1f5ae99687"
+  ],
+  "milestone": "core-shard-five-repair-source-v1",
+  "predecessorCommit": "b3db2f702e368e9ff30947c5038b260d3531073d",
+  "schemaVersion": 1,
+  "scope": "Repair the deterministic Core shard-5 checks: the primitive PHP-Wasm and WIT promotion tests compare the predecessor prefix after restoring predecessor source pins and tie the full proposed inventory to the authenticated milestone, as the JVM promotion test does; the container integration history test proves each historical retained-evidence pin against its receipt-authenticated live pin in receipt mode and keeps direct byte hashing otherwise. Exactly the eight type-surface pins of the two edited promotion helpers are refreshed. No claim, observation, evidence payload or other pin changes. Hub and registration integration are recorded by the integrating seal.",
+  "updates": [
+    {
+      "currentSha256": "d59de3a1b73829e322bc614e9cba29c9d240c471b39aa97bf2ffe9d3e6c1eb5e",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"615d014eae984321c2a6733dfd113294dfb16f92fdf05ac7fab65d84605a63ba\"\n",
+          "previous": "          \"sha256\": \"efc610930dc669145148aee926236932ffcef854454d23a5cab273e83e452884\"\n",
+          "start": 9618754
+        },
+        {
+          "current": "          \"sha256\": \"615d014eae984321c2a6733dfd113294dfb16f92fdf05ac7fab65d84605a63ba\"\n",
+          "previous": "          \"sha256\": \"efc610930dc669145148aee926236932ffcef854454d23a5cab273e83e452884\"\n",
+          "start": 9764110
+        },
+        {
+          "current": "          \"sha256\": \"615d014eae984321c2a6733dfd113294dfb16f92fdf05ac7fab65d84605a63ba\"\n",
+          "previous": "          \"sha256\": \"efc610930dc669145148aee926236932ffcef854454d23a5cab273e83e452884\"\n",
+          "start": 9909869
+        },
+        {
+          "current": "          \"sha256\": \"615d014eae984321c2a6733dfd113294dfb16f92fdf05ac7fab65d84605a63ba\"\n",
+          "previous": "          \"sha256\": \"efc610930dc669145148aee926236932ffcef854454d23a5cab273e83e452884\"\n",
+          "start": 10055699
+        },
+        {
+          "current": "          \"sha256\": \"619c93b7f6ead5bda7cb2ebd2e46f45d868afe40d670378f1c091800b67c603f\"\n",
+          "previous": "          \"sha256\": \"8fe72670be8080662d0f52a6f8d494ce90fd59e8c81d192db88f0e11df28a052\"\n",
+          "start": 10384041
+        },
+        {
+          "current": "          \"sha256\": \"619c93b7f6ead5bda7cb2ebd2e46f45d868afe40d670378f1c091800b67c603f\"\n",
+          "previous": "          \"sha256\": \"8fe72670be8080662d0f52a6f8d494ce90fd59e8c81d192db88f0e11df28a052\"\n",
+          "start": 10430259
+        },
+        {
+          "current": "          \"sha256\": \"619c93b7f6ead5bda7cb2ebd2e46f45d868afe40d670378f1c091800b67c603f\"\n",
+          "previous": "          \"sha256\": \"8fe72670be8080662d0f52a6f8d494ce90fd59e8c81d192db88f0e11df28a052\"\n",
+          "start": 10477335
+        },
+        {
+          "current": "          \"sha256\": \"619c93b7f6ead5bda7cb2ebd2e46f45d868afe40d670378f1c091800b67c603f\"\n",
+          "previous": "          \"sha256\": \"8fe72670be8080662d0f52a6f8d494ce90fd59e8c81d192db88f0e11df28a052\"\n",
+          "start": 10524017
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "66d83281beeb842248e610b62b60539f2b0380f329eb1a5d6be63fc66a935ebd"
+    },
+    {
+      "currentSha256": "86d8fc1e7fc9f836c050d7343588a15f11b7032721da383a4787f38d66fd52f8",
+      "edits": [
+        {
+          "current": "import { authenticatedTypeSurfaceEvidence } from \"./helpers/type-surface-historical-evidence.mjs\";\n\n/**\n * Prove one historical retained-evidence pin against the receipt-authenticated\n * live inventory. Retained evidence is immutable, so the pins must be equal.\n *\n * @param live - Exact live path/digest pairs after the receipt pass.\n * @param file - Historical evidence citation.\n */\nconst receiptEvidenceDigest = (live, file) => {\n\tassert.ok(file.path.startsWith(\"docs/evidence/\"), file.path);\n\tassert.ok(live.has(file.path), file.path);\n\tassert.equal(live.get(file.path), file.sha256, file.path);\n\treturn live.get(file.path);\n};\n",
+          "previous": "",
+          "start": 1033
+        },
+        {
+          "current": "\t// Core shards exclude the retained corpus and authenticate it once by receipt.\n\tconst live = process.env.LEAN_BRIDGE_TYPE_SURFACE_EVIDENCE_RECEIPT\n\t\t? await authenticatedTypeSurfaceEvidence() : undefined;\n",
+          "previous": "",
+          "start": 4831
+        },
+        {
+          "current": "\t\tif(!digests.has(file.path) && live !== undefined\n\t\t\t&& file.path.startsWith(\"docs/evidence/\"))\n\t\t\tdigests.set(file.path, receiptEvidenceDigest(live, file));\n",
+          "previous": "",
+          "start": 5108
+        },
+        {
+          "current": "test(\"receipt-mode retained evidence pins must equal their authenticated live pins\", () => {\n\tconst path = \"docs/evidence/fin-container-edge-integration-source-history-20261010.json\";\n\tconst live = new Map([[path, \"a\".repeat(64)]]);\n\tassert.equal(receiptEvidenceDigest(live, { path, sha256: \"a\".repeat(64) }), \"a\".repeat(64));\n\tfor(const file of [{ path, sha256: \"b\".repeat(64) }\n\t\t, { path: `${path}.missing`, sha256: \"a\".repeat(64) }\n\t\t, { path: \"tests/fin-container-edge-integration-history.test.mjs\", sha256: \"a\".repeat(64) }])\n\t\tassert.throws(() => receiptEvidenceDigest(live, file), assert.AssertionError, file.path);\n});\n\n",
+          "previous": "",
+          "start": 5916
+        }
+      ],
+      "path": "tests/fin-container-edge-integration-history.test.mjs",
+      "previousSha256": "e7117770bb775f4ee5c49cced0d61f69e0b16ae61e35c1ce9b5e4660bf9fcc29"
+    },
+    {
+      "currentSha256": "615d014eae984321c2a6733dfd113294dfb16f92fdf05ac7fab65d84605a63ba",
+      "edits": [
+        {
+          "current": "\t, withHistorySourcePins\n",
+          "previous": "",
+          "start": 714
+        },
+        {
+          "current": "\tassert.deepEqual(withHistorySourcePins(\n\t\tnominalPrimitiveSubtypePhpWasmPromotionHistoryPath, proposed\n\t).evidence.slice(0, original.evidence.length), original.evidence);\n\tassert.deepEqual(document, proposed);\n",
+          "previous": "\tassert.deepEqual(proposed.evidence.slice(0, original.evidence.length), original.evidence);\n",
+          "start": 8001
+        }
+      ],
+      "path": "tests/helpers/nominal-primitive-subtype-php-wasm-promotion-tests.mjs",
+      "previousSha256": "efc610930dc669145148aee926236932ffcef854454d23a5cab273e83e452884"
+    },
+    {
+      "currentSha256": "619c93b7f6ead5bda7cb2ebd2e46f45d868afe40d670378f1c091800b67c603f",
+      "edits": [
+        {
+          "current": "\t, withHistorySourcePins\n",
+          "previous": "",
+          "start": 811
+        },
+        {
+          "current": "\tassert.deepEqual(withHistorySourcePins(\n\t\tnominalPrimitiveSubtypeWitPromotionHistoryPath, proposed\n\t).evidence.slice(0, original.evidence.length), original.evidence);\n\tassert.deepEqual(document, proposed);\n",
+          "previous": "\tassert.deepEqual(proposed.evidence.slice(0, original.evidence.length), original.evidence);\n",
+          "start": 7533
+        }
+      ],
+      "path": "tests/helpers/nominal-primitive-subtype-wit-promotion-tests.mjs",
+      "previousSha256": "8fe72670be8080662d0f52a6f8d494ce90fd59e8c81d192db88f0e11df28a052"
+    }
+  ]
+}
