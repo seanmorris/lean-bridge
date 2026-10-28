@@ -1495608,6 +1495608,198 @@
           "sha256": "c940b802217dfc637012e372991450e8f7cf1b818347e640fcc28cdb3a784cb5"
         }
       ]
+    },
+    {
+      "id": "hosted-reviewed-fin-wasm-fields-installed",
+      "kind": "installed",
+      "revision": "f12e40df7226d716573c4e86ba6f1e90ff3b797d",
+      "command": "LEAN_BRIDGE_REVIEWED_FIN_WASM_ENTRY_BROWSER_TEST=1 LEAN_BRIDGE_TYPE_CORPUS_BROWSERS=chromium,firefox,webkit node --test --test-concurrency=1 tests/reviewed-fin-wasm-entry.test.mjs",
+      "scope": "Hosted original and instrumented-probe packages execute ordinary-source and independently reviewed copied Fin fields through Node JavaScript, strict TypeScript, Chromium, Firefox and WebKit pages, React production/StrictMode lifecycles and dedicated workers. The immutable archive retains and independently replays the original GitHub artifact, API identities, reports, package receipts, checker output and selected exact source snapshots.",
+      "files": [
+        {
+          "path": "scripts/promote-fin-completion.mjs",
+          "sha256": "514261d4976cf45e325f6043850a92e7c9ab78cd36f0ca88414fad6d4d306eeb"
+        },
+        {
+          "path": "tests/helpers/fin-completion-promotion.mjs",
+          "sha256": "4894892bdb2022f78a4d67d7dbd175edd834d067319f38b9f6e36a33a6afe66d"
+        },
+        {
+          "path": "tests/helpers/fin-completion-promotion-tests.mjs",
+          "sha256": "cdb2a14f33088cd968ab1c56cefa0c464478eddfa1e74f8b3bc2091e3b47c1ae"
+        },
+        {
+          "path": "docs/evidence/reviewed-fin-wasm-entry-hosted-20261028/index.json",
+          "sha256": "1df82700ea77df97faf0711d0449a41439adc6ed5e30359eeb680c7db1132d7e"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-wasm-entry-hosted-archive.mjs",
+          "sha256": "dc893d6607c7a9e2f0d1242de600ddca1be9b3d65a8a7af651355833f8be16c6"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-wasm-entry-hosted-evidence.mjs",
+          "sha256": "fdf48bf629a2927705ae10e2ab7dcf1fdb69eb6a1fb5b0b004b2daaf5649d94a"
+        },
+        {
+          "path": "tests/reviewed-fin-wasm-entry-hosted-evidence.test.mjs",
+          "sha256": "b752c5ed32dd8b043635da5d8ea03d1fb8f562db73ccbc331398d58d055679fe"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "hosted-reviewed-fin-wasm-fields-installed/reviewed-fin-wasm-entry-original-f12e40df7226d716573c4e86ba6f1e90ff3b797d-1.zip",
+          "sha256": "59e7c01d09b0574b65f7dc8d51bd3ae217171299ec3d4bc9590bbbbf5f9ad782"
+        },
+        {
+          "path": "hosted-reviewed-fin-wasm-fields-installed/reviewed-fin-wasm-entry-probe-f12e40df7226d716573c4e86ba6f1e90ff3b797d-1.zip",
+          "sha256": "a565baf6a51341efa3755cebd83603cc83b02ee4ce94196c59e8d357fb752db4"
+        }
+      ]
+    },
+    {
+      "id": "hosted-reviewed-callback-fin-browser-installed",
+      "kind": "installed",
+      "revision": "4ac86a9e06c55c1e2f9e9112512008532706dbd1",
+      "command": "bash scripts/run-reviewed-callback-fin-browser-ci.sh",
+      "scope": "Hosted independently reviewed callback-Fin packages execute callback parameters and results through Chromium, Firefox and WebKit pages, React production/StrictMode lifecycles and dedicated workers. The immutable archive retains and independently replays the original GitHub artifact, API identities, reports, package receipts, checker output and selected exact source snapshots.",
+      "files": [
+        {
+          "path": "scripts/promote-fin-completion.mjs",
+          "sha256": "514261d4976cf45e325f6043850a92e7c9ab78cd36f0ca88414fad6d4d306eeb"
+        },
+        {
+          "path": "tests/helpers/fin-completion-promotion.mjs",
+          "sha256": "4894892bdb2022f78a4d67d7dbd175edd834d067319f38b9f6e36a33a6afe66d"
+        },
+        {
+          "path": "tests/helpers/fin-completion-promotion-tests.mjs",
+          "sha256": "cdb2a14f33088cd968ab1c56cefa0c464478eddfa1e74f8b3bc2091e3b47c1ae"
+        },
+        {
+          "path": "docs/evidence/reviewed-callback-fin-browser-hosted-20261028/index.json",
+          "sha256": "eb73f057f6b5f25ac77a9d6bcc10b9a8b455fa4c35ca9c61b8719af1971f86f7"
+        },
+        {
+          "path": "tests/helpers/reviewed-callback-fin-browser-hosted-archive.mjs",
+          "sha256": "eec7a6ad87eb2248f22176354e378d7be7c1eb1b8988cc566059e849a314ab03"
+        },
+        {
+          "path": "tests/helpers/reviewed-callback-fin-browser-hosted-evidence.mjs",
+          "sha256": "5cfed132e69a0f5521d0b9427dbe9b449251fb56ea111bb4c8413e066d0be064"
+        },
+        {
+          "path": "tests/reviewed-callback-fin-browser-hosted-evidence.test.mjs",
+          "sha256": "0493ee63f97c6f247705965d09d3cca69d4770c066953e95999094fbd1d87eaa"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "hosted-reviewed-callback-fin-browser-installed/callback-checked-record-browser-4ac86a9e06c55c1e2f9e9112512008532706dbd1.zip",
+          "sha256": "b8611c0f598e11ca7a6ec687ed78bdaafd9f66ff27bce45abc295c9c4c5f694e"
+        }
+      ]
+    },
+    {
+      "id": "hosted-callback-fin-managed-wit-installed",
+      "kind": "installed",
+      "revision": "de06e09a6f3e521230db95d35577e0eb439a8cfe",
+      "command": "bash scripts/run-callback-fin-remaining-ci.sh <dotnet|jvm|php-native|wit-wasi>",
+      "scope": "Hosted ordinary-source and independently reviewed callback-Fin packages execute callback parameters and results through .NET, Java, Kotlin, native PHP and WIT/WASI installed consumers. The immutable archive retains and independently replays the original GitHub artifact, API identities, reports, package receipts, checker output and selected exact source snapshots.",
+      "files": [
+        {
+          "path": "scripts/promote-fin-completion.mjs",
+          "sha256": "514261d4976cf45e325f6043850a92e7c9ab78cd36f0ca88414fad6d4d306eeb"
+        },
+        {
+          "path": "tests/helpers/fin-completion-promotion.mjs",
+          "sha256": "4894892bdb2022f78a4d67d7dbd175edd834d067319f38b9f6e36a33a6afe66d"
+        },
+        {
+          "path": "tests/helpers/fin-completion-promotion-tests.mjs",
+          "sha256": "cdb2a14f33088cd968ab1c56cefa0c464478eddfa1e74f8b3bc2091e3b47c1ae"
+        },
+        {
+          "path": "docs/evidence/callback-fin-remaining-hosted-20261028/index.json",
+          "sha256": "74d6dceb2f245fdba5ada1b8392c8e89c06560e113ac3c660d8bd2a12c1c7ee0"
+        },
+        {
+          "path": "tests/helpers/callback-fin-remaining-hosted-archive.mjs",
+          "sha256": "f002ab360adeda14b7f08c630502391945079988f43207c5022e6fd3d14d362a"
+        },
+        {
+          "path": "tests/helpers/callback-fin-remaining-hosted-evidence.mjs",
+          "sha256": "3eaca3eaf95b3a439816a368299dd3adcb930d2705a8ea3048f59ebd2fa6dbc2"
+        },
+        {
+          "path": "tests/callback-fin-remaining-hosted-evidence.test.mjs",
+          "sha256": "fa62bc6b59f0b998449da0b2fbc3359ac7b1a6a8d40181ba75e4174c7673c794"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "hosted-callback-fin-managed-wit-installed/callback-fin-remaining-dotnet-de06e09a6f3e521230db95d35577e0eb439a8cfe.zip",
+          "sha256": "73ac5381fd29f2340e9b0e24917bdb5001ec921f70227c7af6a413bd2e117e9f"
+        },
+        {
+          "path": "hosted-callback-fin-managed-wit-installed/callback-fin-remaining-jvm-de06e09a6f3e521230db95d35577e0eb439a8cfe.zip",
+          "sha256": "9cd1675efc2391dfbc70b39becaf233ea6e6ea78fb1b4f26ae1bfb8fcf95d969"
+        },
+        {
+          "path": "hosted-callback-fin-managed-wit-installed/callback-fin-remaining-php-native-de06e09a6f3e521230db95d35577e0eb439a8cfe.zip",
+          "sha256": "b4138291c93d893e1c0814ca60dcc8ee58999064a5a30fb59bd51db991118c91"
+        },
+        {
+          "path": "hosted-callback-fin-managed-wit-installed/callback-fin-remaining-wit-wasi-de06e09a6f3e521230db95d35577e0eb439a8cfe.zip",
+          "sha256": "51e4afb4fd277372c9ce0a625365f8d63390966248157779a3d90c68754eada6"
+        }
+      ]
+    },
+    {
+      "id": "hosted-callback-fin-native-languages-installed",
+      "kind": "installed",
+      "revision": "be95f599fe2b11c59bc03b4baa48a31eeacf1616",
+      "command": "bash scripts/run-callback-fin-languages-ci.sh <python> <ruby> <gem> <rustc> <cargo> && bash scripts/run-callback-fin-perl-ci.sh",
+      "scope": "Hosted ordinary-source and independently reviewed callback-Fin packages execute callback parameters and results through Python, Ruby, Rust and all four pinned Perl ABI configurations. The immutable archive retains and independently replays the original GitHub artifact, API identities, reports, package receipts, checker output and selected exact source snapshots.",
+      "files": [
+        {
+          "path": "scripts/promote-fin-completion.mjs",
+          "sha256": "514261d4976cf45e325f6043850a92e7c9ab78cd36f0ca88414fad6d4d306eeb"
+        },
+        {
+          "path": "tests/helpers/fin-completion-promotion.mjs",
+          "sha256": "4894892bdb2022f78a4d67d7dbd175edd834d067319f38b9f6e36a33a6afe66d"
+        },
+        {
+          "path": "tests/helpers/fin-completion-promotion-tests.mjs",
+          "sha256": "cdb2a14f33088cd968ab1c56cefa0c464478eddfa1e74f8b3bc2091e3b47c1ae"
+        },
+        {
+          "path": "docs/evidence/callback-fin-native-hosts-hosted-20261028/index.json",
+          "sha256": "d6dc788f93c535b70efc3da28edcc8a43f1da9862b846b393ede4410b086060f"
+        },
+        {
+          "path": "tests/helpers/callback-fin-native-hosted-archive.mjs",
+          "sha256": "5ead2ac8afef5639bacc4f4abd10a0696024b447f45d82b4434a375776c91977"
+        },
+        {
+          "path": "tests/helpers/callback-fin-native-hosted-evidence.mjs",
+          "sha256": "65719c1af4d6c7effa0ec93d82b981aa89b56910db6430bef0eb284cebc53743"
+        },
+        {
+          "path": "tests/callback-fin-native-hosted-evidence.test.mjs",
+          "sha256": "13e8da453e79e1ee4cbbf3c6196f96f1937fec082df8f1039144ad4ae93cb0fa"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "hosted-callback-fin-native-languages-installed/callback-fin-languages-be95f599fe2b11c59bc03b4baa48a31eeacf1616.zip",
+          "sha256": "ca3d14f90ac8f485b594ff031b57a32249bb32e11eb34cbfe7d402417b92a021"
+        },
+        {
+          "path": "hosted-callback-fin-native-languages-installed/callback-fin-perl-be95f599fe2b11c59bc03b4baa48a31eeacf1616.zip",
+          "sha256": "8c03e383a89c2d99e2b5598242c9b1e241952378e422e29191ffb494c71ac402"
+        }
+      ]
     }
   ],
   "observations": [
@@ -1553309,6 +1553501,514 @@
       "limitations": [
         "Hosted callback Subtype acceptance covers the fixture's selected Nat Subtypes, admitted copied containers, synchronous host callback replies and inputs to returned Lean closures. Retained or asynchronous callbacks, checked-record callback positions, owned Subtypes, arbitrary predicates, recursive or generic refined payloads, dispatch cost, peak memory and PHP-Wasm remain separate work. External runtimes, compilers, package managers and operating-system distributions remain trusted recorded inputs."
       ]
+    },
+    {
+      "id": "fin-completion-browser-fields-ordinary",
+      "profiles": [
+        "browser-javascript",
+        "browser-react",
+        "browser-worker"
+      ],
+      "shapes": [
+        "fin"
+      ],
+      "positions": [
+        "field"
+      ],
+      "path": "ordinary-source",
+      "scope": "Ordinary-source copied Fin fields execute through pages, React lifecycles and dedicated workers in all three declared browser engines.",
+      "hostTypes": {
+        "fin": {
+          "field": "The target's Nat representation, checked against the copied field's declared Fin bound"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "hosted-reviewed-fin-wasm-fields-installed"
+          ],
+          "note": "Compiler-derived bounds and independently reviewed decisions retain the exact Fin position and reject disagreement with fresh Lean metadata."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "hosted-reviewed-fin-wasm-fields-installed"
+          ],
+          "note": "Generated public and raw adapters keep the declared bound and use checked reconstruction for host-produced values."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "hosted-reviewed-fin-wasm-fields-installed"
+          ],
+          "note": "Invalid host values fail before the selected Lean body or callback continuation; no default Fin value or proof is synthesized."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "hosted-reviewed-fin-wasm-fields-installed"
+          ],
+          "note": "Independent author roots reproduce source-free packages whose receipt-closed archives install offline and retain exact runtime identities."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "hosted-reviewed-fin-wasm-fields-installed"
+          ],
+          "note": "Hosted installed consumers exercise in-range values, exact-bound and over-bound rejection, unchanged caller values, recovery and the archive-specific context matrix."
+        }
+      },
+      "limitations": [
+        "Only the named copied-field or synchronous callback positions, source route, installed profiles and fixture shapes are established by this observation.",
+        "Retained or asynchronous callbacks, arbitrary dependent bounds, recursive refined payloads, dispatch cost and peak memory remain separate.",
+        "The two hosted legs cover original and instrumented-probe ordinary-source and independently reviewed copied Fin entry positions in Node JavaScript, strict TypeScript, Chromium, Firefox and WebKit pages, React production and StrictMode lifecycles, and dedicated workers.",
+        "The promotion scope is limited to the eight previously unreviewed copied-field cells: reviewed Node JavaScript/TypeScript fields and ordinary plus reviewed browser JavaScript/React/worker fields. Existing parameter/result cells retain their earlier evidence.",
+        "Each report is independently recounted across 53 Node/browser context, engine and phase observations. The original artifact ZIPs, API identities, complete job logs, reports, TAP and selected exact source snapshots are retained.",
+        "The retained field job must complete successfully and match both exact artifacts even if the enclosing hosted run later fails or is cancelled. The enclosing run conclusion is retained per leg; no result from another job is claimed.",
+        "The retained selected sources are not a complete transitive source or toolchain closure. External browser, Node, Lean, Nix and operating-system distributions remain trusted recorded inputs."
+      ],
+      "conversionNotes": {
+        "fin": "Host-produced Nat carriers are checked against the compiler-derived bound before Lean reconstructs Fin. Lean-produced Fin values cross as their proof-erased Nat carriers. Rejection never synthesizes a default Fin value or proof."
+      }
+    },
+    {
+      "id": "fin-completion-wasm-fields-reviewed",
+      "profiles": [
+        "node-javascript",
+        "node-typescript",
+        "browser-javascript",
+        "browser-react",
+        "browser-worker"
+      ],
+      "shapes": [
+        "fin"
+      ],
+      "positions": [
+        "field"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Independently reviewed copied Fin fields execute through Node JavaScript, strict TypeScript and every declared browser context and engine.",
+      "hostTypes": {
+        "fin": {
+          "field": "The target's Nat representation, checked against the copied field's declared Fin bound"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "hosted-reviewed-fin-wasm-fields-installed"
+          ],
+          "note": "Compiler-derived bounds and independently reviewed decisions retain the exact Fin position and reject disagreement with fresh Lean metadata."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "hosted-reviewed-fin-wasm-fields-installed"
+          ],
+          "note": "Generated public and raw adapters keep the declared bound and use checked reconstruction for host-produced values."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "hosted-reviewed-fin-wasm-fields-installed"
+          ],
+          "note": "Invalid host values fail before the selected Lean body or callback continuation; no default Fin value or proof is synthesized."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "hosted-reviewed-fin-wasm-fields-installed"
+          ],
+          "note": "Independent author roots reproduce source-free packages whose receipt-closed archives install offline and retain exact runtime identities."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "hosted-reviewed-fin-wasm-fields-installed"
+          ],
+          "note": "Hosted installed consumers exercise in-range values, exact-bound and over-bound rejection, unchanged caller values, recovery and the archive-specific context matrix."
+        }
+      },
+      "limitations": [
+        "Only the named copied-field or synchronous callback positions, source route, installed profiles and fixture shapes are established by this observation.",
+        "Retained or asynchronous callbacks, arbitrary dependent bounds, recursive refined payloads, dispatch cost and peak memory remain separate.",
+        "The two hosted legs cover original and instrumented-probe ordinary-source and independently reviewed copied Fin entry positions in Node JavaScript, strict TypeScript, Chromium, Firefox and WebKit pages, React production and StrictMode lifecycles, and dedicated workers.",
+        "The promotion scope is limited to the eight previously unreviewed copied-field cells: reviewed Node JavaScript/TypeScript fields and ordinary plus reviewed browser JavaScript/React/worker fields. Existing parameter/result cells retain their earlier evidence.",
+        "Each report is independently recounted across 53 Node/browser context, engine and phase observations. The original artifact ZIPs, API identities, complete job logs, reports, TAP and selected exact source snapshots are retained.",
+        "The retained field job must complete successfully and match both exact artifacts even if the enclosing hosted run later fails or is cancelled. The enclosing run conclusion is retained per leg; no result from another job is claimed.",
+        "The retained selected sources are not a complete transitive source or toolchain closure. External browser, Node, Lean, Nix and operating-system distributions remain trusted recorded inputs."
+      ],
+      "conversionNotes": {
+        "fin": "Host-produced Nat carriers are checked against the compiler-derived bound before Lean reconstructs Fin. Lean-produced Fin values cross as their proof-erased Nat carriers. Rejection never synthesizes a default Fin value or proof."
+      }
+    },
+    {
+      "id": "fin-completion-browser-callbacks-reviewed",
+      "profiles": [
+        "browser-javascript",
+        "browser-react",
+        "browser-worker"
+      ],
+      "shapes": [
+        "fin"
+      ],
+      "positions": [
+        "callback-parameter",
+        "callback-result"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Independently reviewed Fin values cross synchronous callback arguments, replies and returned Lean closures in every declared browser context and engine.",
+      "hostTypes": {
+        "fin": {
+          "callback-parameter": "The target's Nat representation, checked against the declared bound before a returned Lean closure or host callback consumes it",
+          "callback-result": "The target's Nat representation, checked against the declared bound before a host reply is reconstructed or projected from Lean"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "hosted-reviewed-callback-fin-browser-installed"
+          ],
+          "note": "Compiler-derived bounds and independently reviewed decisions retain the exact Fin position and reject disagreement with fresh Lean metadata."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "hosted-reviewed-callback-fin-browser-installed"
+          ],
+          "note": "Generated public and raw adapters keep the declared bound and use checked reconstruction for host-produced values."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "hosted-reviewed-callback-fin-browser-installed"
+          ],
+          "note": "Invalid host values fail before the selected Lean body or callback continuation; no default Fin value or proof is synthesized."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "hosted-reviewed-callback-fin-browser-installed"
+          ],
+          "note": "Independent author roots reproduce source-free packages whose receipt-closed archives install offline and retain exact runtime identities."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "hosted-reviewed-callback-fin-browser-installed"
+          ],
+          "note": "Hosted installed consumers exercise in-range values, exact-bound and over-bound rejection, unchanged caller values, recovery and the archive-specific context matrix."
+        }
+      },
+      "limitations": [
+        "Only the named copied-field or synchronous callback positions, source route, installed profiles and fixture shapes are established by this observation.",
+        "Retained or asynchronous callbacks, arbitrary dependent bounds, recursive refined payloads, dispatch cost and peak memory remain separate.",
+        "This evidence covers independently reviewed R1 and R2 callback-Fin packages in Chromium, Firefox and WebKit pages, React production and StrictMode lifecycles, and dedicated workers.",
+        "The Node harness records the runtime identity; strict TypeScript validates declarations but is not a separate runtime execution.",
+        "The original GitHub artifact ZIP, API identities, workflow logs, reports, TAP, checker output and exact selected source snapshots are retained.",
+        "This lane establishes reviewed browser callback parameter/result cells only. Ordinary browser callbacks and copied fields retain their own evidence.",
+        "External browser, Node, compiler, Nix and operating-system distributions remain trusted inputs represented by recorded identities rather than copied toolchains."
+      ],
+      "conversionNotes": {
+        "fin": "Host-produced Nat carriers are checked against the compiler-derived bound before Lean reconstructs Fin. Lean-produced Fin values cross as their proof-erased Nat carriers. Rejection never synthesizes a default Fin value or proof."
+      }
+    },
+    {
+      "id": "fin-completion-managed-callbacks-ordinary-source",
+      "profiles": [
+        "dotnet",
+        "java",
+        "kotlin",
+        "php-native",
+        "wit-wasi"
+      ],
+      "shapes": [
+        "fin"
+      ],
+      "positions": [
+        "callback-parameter",
+        "callback-result"
+      ],
+      "path": "ordinary-source",
+      "scope": "Ordinary-source Fin values cross synchronous callback arguments, replies and returned Lean closures in installed .NET, Java, Kotlin, native PHP and WIT/WASI packages.",
+      "hostTypes": {
+        "fin": {
+          "callback-parameter": "The target's Nat representation, checked against the declared bound before a returned Lean closure or host callback consumes it",
+          "callback-result": "The target's Nat representation, checked against the declared bound before a host reply is reconstructed or projected from Lean"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "hosted-callback-fin-managed-wit-installed"
+          ],
+          "note": "Compiler-derived bounds and independently reviewed decisions retain the exact Fin position and reject disagreement with fresh Lean metadata."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "hosted-callback-fin-managed-wit-installed"
+          ],
+          "note": "Generated public and raw adapters keep the declared bound and use checked reconstruction for host-produced values."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "hosted-callback-fin-managed-wit-installed"
+          ],
+          "note": "Invalid host values fail before the selected Lean body or callback continuation; no default Fin value or proof is synthesized."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "hosted-callback-fin-managed-wit-installed"
+          ],
+          "note": "Independent author roots reproduce source-free packages whose receipt-closed archives install offline and retain exact runtime identities."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "hosted-callback-fin-managed-wit-installed"
+          ],
+          "note": "Hosted installed consumers exercise in-range values, exact-bound and over-bound rejection, unchanged caller values, recovery and the archive-specific context matrix."
+        }
+      },
+      "limitations": [
+        "Only the named copied-field or synchronous callback positions, source route, installed profiles and fixture shapes are established by this observation.",
+        "Retained or asynchronous callbacks, arbitrary dependent bounds, recursive refined payloads, dispatch cost and peak memory remain separate.",
+        "The four hosted lanes cover ordinary-source and independently reviewed Fin callback parameters and results in .NET, Java, Kotlin, native PHP and WIT/WASI installed packages.",
+        "Each lane retains receipt-closed package archives for both routes, performs source-free offline installation, and repeats execution where the host adapter supports a repeat contract.",
+        "The original GitHub artifact ZIPs, API identities, toolchain logs, reports, TAP, checker output and exact selected source snapshots are retained.",
+        "This evidence does not add Perl, Python, Ruby, Rust, browser, copied-field, Subtype or unmeasured dispatch claims.",
+        "External host runtimes, compiler toolchains, package managers and operating-system distributions remain trusted inputs represented by recorded identities rather than copied installations."
+      ],
+      "conversionNotes": {
+        "fin": "Host-produced Nat carriers are checked against the compiler-derived bound before Lean reconstructs Fin. Lean-produced Fin values cross as their proof-erased Nat carriers. Rejection never synthesizes a default Fin value or proof."
+      }
+    },
+    {
+      "id": "fin-completion-managed-callbacks-reviewed-ir",
+      "profiles": [
+        "dotnet",
+        "java",
+        "kotlin",
+        "php-native",
+        "wit-wasi"
+      ],
+      "shapes": [
+        "fin"
+      ],
+      "positions": [
+        "callback-parameter",
+        "callback-result"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Independently reviewed Fin values cross synchronous callback arguments, replies and returned Lean closures in installed .NET, Java, Kotlin, native PHP and WIT/WASI packages.",
+      "hostTypes": {
+        "fin": {
+          "callback-parameter": "The target's Nat representation, checked against the declared bound before a returned Lean closure or host callback consumes it",
+          "callback-result": "The target's Nat representation, checked against the declared bound before a host reply is reconstructed or projected from Lean"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "hosted-callback-fin-managed-wit-installed"
+          ],
+          "note": "Compiler-derived bounds and independently reviewed decisions retain the exact Fin position and reject disagreement with fresh Lean metadata."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "hosted-callback-fin-managed-wit-installed"
+          ],
+          "note": "Generated public and raw adapters keep the declared bound and use checked reconstruction for host-produced values."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "hosted-callback-fin-managed-wit-installed"
+          ],
+          "note": "Invalid host values fail before the selected Lean body or callback continuation; no default Fin value or proof is synthesized."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "hosted-callback-fin-managed-wit-installed"
+          ],
+          "note": "Independent author roots reproduce source-free packages whose receipt-closed archives install offline and retain exact runtime identities."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "hosted-callback-fin-managed-wit-installed"
+          ],
+          "note": "Hosted installed consumers exercise in-range values, exact-bound and over-bound rejection, unchanged caller values, recovery and the archive-specific context matrix."
+        }
+      },
+      "limitations": [
+        "Only the named copied-field or synchronous callback positions, source route, installed profiles and fixture shapes are established by this observation.",
+        "Retained or asynchronous callbacks, arbitrary dependent bounds, recursive refined payloads, dispatch cost and peak memory remain separate.",
+        "The four hosted lanes cover ordinary-source and independently reviewed Fin callback parameters and results in .NET, Java, Kotlin, native PHP and WIT/WASI installed packages.",
+        "Each lane retains receipt-closed package archives for both routes, performs source-free offline installation, and repeats execution where the host adapter supports a repeat contract.",
+        "The original GitHub artifact ZIPs, API identities, toolchain logs, reports, TAP, checker output and exact selected source snapshots are retained.",
+        "This evidence does not add Perl, Python, Ruby, Rust, browser, copied-field, Subtype or unmeasured dispatch claims.",
+        "External host runtimes, compiler toolchains, package managers and operating-system distributions remain trusted inputs represented by recorded identities rather than copied installations."
+      ],
+      "conversionNotes": {
+        "fin": "Host-produced Nat carriers are checked against the compiler-derived bound before Lean reconstructs Fin. Lean-produced Fin values cross as their proof-erased Nat carriers. Rejection never synthesizes a default Fin value or proof."
+      }
+    },
+    {
+      "id": "fin-completion-native-callbacks-ordinary-source",
+      "profiles": [
+        "python",
+        "ruby",
+        "rust",
+        "perl"
+      ],
+      "shapes": [
+        "fin"
+      ],
+      "positions": [
+        "callback-parameter",
+        "callback-result"
+      ],
+      "path": "ordinary-source",
+      "scope": "Ordinary-source Fin values cross synchronous callback arguments, replies and returned Lean closures in installed Python, Ruby, Rust and Perl packages.",
+      "hostTypes": {
+        "fin": {
+          "callback-parameter": "The target's Nat representation, checked against the declared bound before a returned Lean closure or host callback consumes it",
+          "callback-result": "The target's Nat representation, checked against the declared bound before a host reply is reconstructed or projected from Lean"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "hosted-callback-fin-native-languages-installed"
+          ],
+          "note": "Compiler-derived bounds and independently reviewed decisions retain the exact Fin position and reject disagreement with fresh Lean metadata."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "hosted-callback-fin-native-languages-installed"
+          ],
+          "note": "Generated public and raw adapters keep the declared bound and use checked reconstruction for host-produced values."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "hosted-callback-fin-native-languages-installed"
+          ],
+          "note": "Invalid host values fail before the selected Lean body or callback continuation; no default Fin value or proof is synthesized."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "hosted-callback-fin-native-languages-installed"
+          ],
+          "note": "Independent author roots reproduce source-free packages whose receipt-closed archives install offline and retain exact runtime identities."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "hosted-callback-fin-native-languages-installed"
+          ],
+          "note": "Hosted installed consumers exercise in-range values, exact-bound and over-bound rejection, unchanged caller values, recovery and the archive-specific context matrix."
+        }
+      },
+      "limitations": [
+        "Only the named copied-field or synchronous callback positions, source route, installed profiles and fixture shapes are established by this observation.",
+        "Retained or asynchronous callbacks, arbitrary dependent bounds, recursive refined payloads, dispatch cost and peak memory remain separate.",
+        "The hosted language lane covers ordinary-source and independently reviewed Fin callback parameters and results in Python, Ruby and Rust installed packages.",
+        "The hosted Perl lane covers both source routes through prebuilt-only and build-XS installation on all four pinned Perl ABI configurations.",
+        "Each lane retains receipt-closed package archives for both routes, source-free offline installation observations, the original GitHub artifact ZIP and API identities, complete job logs, TAP, checker output and selected exact source snapshots.",
+        "This evidence establishes exactly the sixteen remaining Python, Ruby, Rust and Perl callback-Fin cells. It does not add browser, copied-field, managed-host, WIT/WASI, Subtype or asynchronous callback claims.",
+        "The retained selected sources are not a complete transitive source or toolchain closure. External runtimes, compilers, package managers and operating-system distributions remain trusted recorded inputs."
+      ],
+      "conversionNotes": {
+        "fin": "Host-produced Nat carriers are checked against the compiler-derived bound before Lean reconstructs Fin. Lean-produced Fin values cross as their proof-erased Nat carriers. Rejection never synthesizes a default Fin value or proof."
+      }
+    },
+    {
+      "id": "fin-completion-native-callbacks-reviewed-ir",
+      "profiles": [
+        "python",
+        "ruby",
+        "rust",
+        "perl"
+      ],
+      "shapes": [
+        "fin"
+      ],
+      "positions": [
+        "callback-parameter",
+        "callback-result"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Independently reviewed Fin values cross synchronous callback arguments, replies and returned Lean closures in installed Python, Ruby, Rust and Perl packages.",
+      "hostTypes": {
+        "fin": {
+          "callback-parameter": "The target's Nat representation, checked against the declared bound before a returned Lean closure or host callback consumes it",
+          "callback-result": "The target's Nat representation, checked against the declared bound before a host reply is reconstructed or projected from Lean"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "hosted-callback-fin-native-languages-installed"
+          ],
+          "note": "Compiler-derived bounds and independently reviewed decisions retain the exact Fin position and reject disagreement with fresh Lean metadata."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "hosted-callback-fin-native-languages-installed"
+          ],
+          "note": "Generated public and raw adapters keep the declared bound and use checked reconstruction for host-produced values."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "hosted-callback-fin-native-languages-installed"
+          ],
+          "note": "Invalid host values fail before the selected Lean body or callback continuation; no default Fin value or proof is synthesized."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "hosted-callback-fin-native-languages-installed"
+          ],
+          "note": "Independent author roots reproduce source-free packages whose receipt-closed archives install offline and retain exact runtime identities."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "hosted-callback-fin-native-languages-installed"
+          ],
+          "note": "Hosted installed consumers exercise in-range values, exact-bound and over-bound rejection, unchanged caller values, recovery and the archive-specific context matrix."
+        }
+      },
+      "limitations": [
+        "Only the named copied-field or synchronous callback positions, source route, installed profiles and fixture shapes are established by this observation.",
+        "Retained or asynchronous callbacks, arbitrary dependent bounds, recursive refined payloads, dispatch cost and peak memory remain separate.",
+        "The hosted language lane covers ordinary-source and independently reviewed Fin callback parameters and results in Python, Ruby and Rust installed packages.",
+        "The hosted Perl lane covers both source routes through prebuilt-only and build-XS installation on all four pinned Perl ABI configurations.",
+        "Each lane retains receipt-closed package archives for both routes, source-free offline installation observations, the original GitHub artifact ZIP and API identities, complete job logs, TAP, checker output and selected exact source snapshots.",
+        "This evidence establishes exactly the sixteen remaining Python, Ruby, Rust and Perl callback-Fin cells. It does not add browser, copied-field, managed-host, WIT/WASI, Subtype or asynchronous callback claims.",
+        "The retained selected sources are not a complete transitive source or toolchain closure. External runtimes, compilers, package managers and operating-system distributions remain trusted recorded inputs."
+      ],
+      "conversionNotes": {
+        "fin": "Host-produced Nat carriers are checked against the compiler-derived bound before Lean reconstructs Fin. Lean-produced Fin values cross as their proof-erased Nat carriers. Rejection never synthesizes a default Fin value or proof."
+      }
     }
   ]
 }
