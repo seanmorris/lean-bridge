@@ -25,6 +25,8 @@ import { beforePerlCodegenProducerReplaySource, perlCodegenProducerReplayNormali
 import { beforeCoreHistoricalContractRepairIntegrationSource, coreHistoricalContractRepairIntegrationNormalizationPaths } from "./core-historical-contract-repair-integration-source-history.mjs";
 import { beforeCoreHistoricalContractRepairSource, coreHistoricalContractRepairNormalizationPaths } from "./core-historical-contract-repair-source-history.mjs";
 import { beforeNativeFinCallbackRoleIntegrationSource, nativeFinCallbackRoleIntegrationNormalizationPaths } from "./native-fin-callback-role-integration-source-history.mjs";
+import { beforeCoreHubOrderMergedIntegrationSource, coreHubOrderMergedIntegrationNormalizationPaths } from "./core-hub-order-merged-integration-source-history.mjs";
+import { beforeCoreHubOrderMergedSource, coreHubOrderMergedNormalizationPaths } from "./core-hub-order-merged-source-history.mjs";
 import { beforeCoreHubOrderRepairIntegrationSource, coreHubOrderRepairIntegrationNormalizationPaths } from "./core-hub-order-repair-integration-source-history.mjs";
 import { beforeCoreHubOrderRepairSource, coreHubOrderRepairNormalizationPaths } from "./core-hub-order-repair-source-history.mjs";
 import { beforeSignatureSpecializationHostedSource, signatureSpecializationHostedNormalizationPaths } from "./signature-specialization-hosted-source-history.mjs";
@@ -2308,6 +2310,8 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...coreHistoricalContractRepairIntegrationNormalizationPaths
 	, ...coreHistoricalContractRepairNormalizationPaths
 	, ...nativeFinCallbackRoleIntegrationNormalizationPaths
+	, ...coreHubOrderMergedIntegrationNormalizationPaths
+	, ...coreHubOrderMergedNormalizationPaths
 	, ...coreHubOrderRepairIntegrationNormalizationPaths
 	, ...coreHubOrderRepairNormalizationPaths
 	, ...signatureSpecializationHostedNormalizationPaths
@@ -3387,6 +3391,14 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	text = stage;
 	stage = beforeNativeFinCallbackRoleIntegrationSource(
 		path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeCoreHubOrderMergedIntegrationSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeCoreHubOrderMergedSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;
