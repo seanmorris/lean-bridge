@@ -1,0 +1,280 @@
+{
+  "additions": [
+    {
+      "currentSha256": "cbe87eac915a5db2f545e206c67badcc030020f7b8b819c680d81d60a4ff46e1",
+      "path": "docs/evidence/proof-erasure-retained-audit-20261028.json"
+    },
+    {
+      "currentSha256": "7cde1d2e10a1c9c8ac53472d1a7e2bbfde93cfc56ee9dc6244d0ed3276ee5d59",
+      "path": "scripts/update-proof-erasure-evidence-audit.mjs"
+    },
+    {
+      "currentSha256": "f6ab433e020769819c87b338c4bf3e59c55c7a60841662bf73c23e1c88b5d5cf",
+      "path": "tests/helpers/proof-erasure-evidence-audit-tests.mjs"
+    },
+    {
+      "currentSha256": "0d32a88799733bf718adb6a08505f8526a5205f779d9a34433457f167a60e354",
+      "path": "tests/helpers/proof-erasure-evidence-audit.mjs"
+    },
+    {
+      "currentSha256": "57504445d3162f47f7bbbb5ac0f6e5300613c3ec11b46715d0973445e4501029",
+      "path": "scripts/update-proof-erasure-evidence-audit-source-history.mjs"
+    },
+    {
+      "currentSha256": "9d8bb29209ce8757a5170e3f65bb3c479b6f2df2f3d48ec4c4f3592c01343337",
+      "path": "tests/helpers/proof-erasure-evidence-audit-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "1184a43da71f52ba8fc785e7f5e4bd7bf89183c4a37b1492693191dab518ea75",
+      "path": "tests/helpers/proof-erasure-evidence-audit-source-history.mjs"
+    }
+  ],
+  "commits": [
+    "8cdfe4b17d447417aeaff251fb58f9464ad65dcc",
+    "c66419ed5a659803d18c53d890d39df687b93b93",
+    "606b76c7591e9214f44f0ee73fe4d767804187c5"
+  ],
+  "implementationCommit": "606b76c7591e9214f44f0ee73fe4d767804187c5",
+  "integrationUpdates": [
+    {
+      "currentSha256": "47927c0988d9e9b362f66f57d9b2f39c366182046bb01ddf74e30aed94ea20a8",
+      "edits": [
+        {
+          "current": "import \"./helpers/proof-erasure-evidence-audit-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "f960610324a591cbe82e6dea4ae15d4975b8e8ec04e81f91db91dae09f2e617d"
+    },
+    {
+      "currentSha256": "bbcd98e4f8fb28880fcdf86f725118b1afca1a4c9c5bc0b2bbb8f0a5784793bd",
+      "edits": [
+        {
+          "current": "import { beforeProofErasureEvidenceAuditSource, proofErasureEvidenceAuditNormalizationPaths } from \"./proof-erasure-evidence-audit-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...proofErasureEvidenceAuditNormalizationPaths\n\t, ...dependentSignatureCompletionNormalizationPaths\n",
+          "previous": "\t...dependentSignatureCompletionNormalizationPaths\n",
+          "start": 208772
+        },
+        {
+          "current": "\tlet stage = beforeProofErasureEvidenceAuditSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeDependentSignatureCompletionSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeDependentSignatureCompletionSource(path, text, expected);\n",
+          "start": 260644
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "ffbd4f87f7048d3169efa0d21e1c1e21e63b3824a4a911bfa6ca2648c91d6563"
+    }
+  ],
+  "milestone": "proof-erasure-evidence-audit-source-v1",
+  "predecessorCommit": "4243a9dab1d2f411aaa91770839a6bbf79fabbb5",
+  "schemaVersion": 1,
+  "scope": "Classify every proof-erasure cell conservatively, bind only exact retained installed evidence, preserve every residual and register the audit newest-first without changing support.",
+  "updates": [
+    {
+      "commit": "8cdfe4b17d447417aeaff251fb58f9464ad65dcc",
+      "currentSha256": "f960610324a591cbe82e6dea4ae15d4975b8e8ec04e81f91db91dae09f2e617d",
+      "edits": [
+        {
+          "current": "import \"./helpers/proof-erasure-evidence-audit-tests.mjs\";\n",
+          "previous": "",
+          "start": 718
+        }
+      ],
+      "parent": "4243a9dab1d2f411aaa91770839a6bbf79fabbb5",
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "ff93a58188db8f5da43eb512381997403eae7bda74c8717dd7cddf214c1d722b"
+    },
+    {
+      "commit": "c66419ed5a659803d18c53d890d39df687b93b93",
+      "currentSha256": "c252ccb839388c6859f17309d1a0a7cf77ce8ef151932295f6d2edebc66053fb",
+      "edits": [
+        {
+          "current": "const inventoryPromise = readFile(\"docs/type-surface.v1.json\", \"utf8\")\n\t.then(JSON.parse);\nconst contractsPromise = readTypeSurfaceContracts();\nconst inventory = () => inventoryPromise;\nconst contracts = () => contractsPromise;\n",
+          "previous": "const inventory = async () => JSON.parse(await readFile(\n\t\"docs/type-surface.v1.json\", \"utf8\"\n));\n",
+          "start": 351
+        },
+        {
+          "current": "test(\"proof evidence audit binds 102 exact cells and preserves 102 gaps\", async () => {\n",
+          "previous": "test(\"proof evidence audit partitions all 204 cells without promoting candidates\", async () => {\n",
+          "start": 580
+        },
+        {
+          "current": "\t\tawait inventory(), await contracts());\n",
+          "previous": "\t\tawait inventory(), await readTypeSurfaceContracts());\n",
+          "start": 711
+        },
+        {
+          "current": "\tassert.equal(result.bindings.length, 102);\n\tassert.equal(result.residual.length, 102);\n\tassert.ok(result.bindings.every(item =>\n\t\titem.verification === \"exact-retained-replay\"));\n\tassert.ok(result.bindings.every(item =>\n\t\titem.retained.archiveIndex.path.endsWith(\"/index.json\")\n\t\t&& item.retained.fixtureSource.path.includes(\"/sources/\")));\n\tassert.deepEqual(Object.fromEntries([\n\t\t\"field\", \"callback-parameter\", \"callback-result\"\n\t].map(position => [position\n\t\t, result.bindings.filter(item =>\n\t\titem.cell.endsWith(`/${position}`)).length]\n\t)), {\n\t\tfield: 34, \"callback-parameter\": 34, \"callback-result\": 34\n\t});\n\tassert.deepEqual(Object.fromEntries([\n\t\t\"parameter\", \"result\", \"signature\"\n\t].map(position => [position\n\t\t, result.residual.filter(item =>\n\t\titem.cell.endsWith(`/${position}`)).length]\n\t)), {\n\t\tparameter: 34, result: 34, signature: 34\n\t});\n",
+          "previous": "\tassert.equal(result.candidates.length, 170);\n\tassert.equal(result.residual.length, 34);\n\tassert.ok(result.candidates.every(item =>\n\t\titem.verification === \"pending-exact-replay\"));\n\tassert.ok(result.residual.every(item =>\n\t\titem.cell.endsWith(\"/signature\")));\n",
+          "start": 793
+        },
+        {
+          "current": "\tconst original = await inventory(), currentContracts = await contracts();\n",
+          "previous": "\tconst original = await inventory(), contracts = await readTypeSurfaceContracts();\n",
+          "start": 2109
+        },
+        {
+          "current": "\tassert.throws(() => auditProofErasureEvidence(missing, currentContracts)\n",
+          "previous": "\tassert.throws(() => auditProofErasureEvidence(missing, contracts)\n",
+          "start": 2365
+        },
+        {
+          "current": "\tassert.throws(() => auditProofErasureEvidence(inspected, currentContracts));\n",
+          "previous": "\tassert.throws(() => auditProofErasureEvidence(inspected, contracts));\n",
+          "start": 2576
+        },
+        {
+          "current": "\tconst original = await inventory(), currentContracts = await contracts();\n",
+          "previous": "\tconst original = await inventory(), contracts = await readTypeSurfaceContracts();\n",
+          "start": 2749
+        },
+        {
+          "current": "\tassert.throws(() => auditProofErasureEvidence(changed, currentContracts)\n",
+          "previous": "\tassert.throws(() => auditProofErasureEvidence(changed, contracts)\n",
+          "start": 3047
+        },
+        {
+          "current": "\tconst result = auditProofErasureEvidence(original, currentContracts);\n\tassert.equal(result.bindings.some(item =>\n",
+          "previous": "\tconst result = auditProofErasureEvidence(original, contracts);\n\tassert.equal(result.candidates.some(item =>\n",
+          "start": 3142
+        },
+        {
+          "current": "\ntest(\"proof evidence audit refuses fixture or archive substitution\", async () => {\n\tconst original = await inventory(), currentContracts = await contracts();\n\tconst evidence = original.evidence.find(item =>\n\t\titem.id === \"nested-checked-record-native-ordinary-full-installed\");\n\tconst fixture = evidence.files.find(file =>\n\t\tfile.path.includes(\"/sources/\")\n\t\t&& file.path.endsWith(\"/NestedCheckedRecords.lean\"));\n\tconst changedFixture = structuredClone(original);\n\tchangedFixture.evidence.find(item => item.id === evidence.id).files.find(\n\t\tfile => file.path === fixture.path).sha256 = \"0\".repeat(64);\n\tassert.throws(() => auditProofErasureEvidence(changedFixture, currentContracts));\n\tconst changedIndex = structuredClone(original);\n\tchangedIndex.evidence.find(item => item.id === evidence.id).files.find(\n\t\tfile => file.path.endsWith(\"/index.json\")).path += \".moved\";\n\tassert.throws(() => auditProofErasureEvidence(changedIndex, currentContracts));\n});\n",
+          "previous": "",
+          "start": 3305
+        }
+      ],
+      "parent": "8cdfe4b17d447417aeaff251fb58f9464ad65dcc",
+      "path": "tests/helpers/proof-erasure-evidence-audit-tests.mjs",
+      "previousSha256": "a02b30cb9377269920cc1a3cfcb5f47cd37a43ac2f3563beb8126b9031e8c961"
+    },
+    {
+      "commit": "c66419ed5a659803d18c53d890d39df687b93b93",
+      "currentSha256": "9efbf2d5e4fc40924fc6c63931e7975dc39f7e1ba110ae5655e11d10247a1b18",
+      "edits": [
+        {
+          "current": " * Closed retained-evidence ledger for proof erasure. Exact bindings require an\n * immutable archive plus the authenticated Lean fixture that places the erased\n * proof at the named position. Adjacent checked-record evidence stays residual.\n",
+          "previous": " * Closed candidate ledger for proof-erasure evidence. A candidate is not a\n * promotion: its immutable archive still has to prove the exact proof position\n * before the corresponding cell may change state.\n",
+          "start": 4
+        },
+        {
+          "current": "const nestedFixtureSha256\n\t= \"31351649eecd9d596696e32350059f672d0ee42cd7604237e0966c5b664279e8\";\nconst callbackFixtureSha256\n\t= \"8e6babb2f13a48d39de6158814b75f54c59173780e1310f2fa521cdd110909b7\";\n",
+          "previous": "",
+          "start": 835
+        },
+        {
+          "current": "\t\t, basis: \"zero-payload-record-parameter\"\n\t\t, reason: \"proof-only-record-is-not-a-direct-proof-parameter\"\n",
+          "previous": "\t\t, basis: \"zero-payload-parameter\"\n",
+          "start": 2363
+        },
+        {
+          "current": "\t\t, basis: \"zero-payload-record-result\"\n\t\t, reason: \"proof-only-record-is-not-a-direct-proof-result\"\n",
+          "previous": "\t\t, basis: \"zero-payload-result\"\n",
+          "start": 2613
+        },
+        {
+          "current": "\t\t, basis: \"erased-record-field\", fixture: \"NestedCheckedRecords.lean\"\n\t\t, fixtureSha256: nestedFixtureSha256\n",
+          "previous": "\t\t, basis: \"erased-record-field\"\n",
+          "start": 2894
+        },
+        {
+          "current": "\t\t\t, fixture: \"CallbackCheckedRecords.lean\"\n\t\t\t, fixtureSha256: callbackFixtureSha256\n",
+          "previous": "",
+          "start": 3177
+        },
+        {
+          "current": "const retainedBinding = (evidence, candidate) => {\n\tassert.ok(candidate.fixture, evidence.id);\n\tassert.match(candidate.fixtureSha256, /^[a-f0-9]{64}$/u);\n\tconst indexes = evidence.files.filter(file =>\n\t\t/^docs\\/evidence\\/[^/]+\\/index\\.json$/u.test(file.path));\n\tassert.equal(indexes.length, 1, evidence.id);\n\tconst fixtures = evidence.files.filter(file =>\n\t\tfile.path.includes(\"/sources/\")\n\t\t&& file.path.endsWith(`/${candidate.fixture}`));\n\tassert.equal(fixtures.length, 1, evidence.id);\n\tassert.equal(fixtures[0].sha256, candidate.fixtureSha256, evidence.id);\n\treturn Object.freeze({\n\t\tarchiveIndex: Object.freeze({ ...indexes[0] })\n\t\t, fixtureSource: Object.freeze({ ...fixtures[0] })\n\t});\n};\n\n",
+          "previous": "",
+          "start": 3969
+        },
+        {
+          "current": " * Bind exact retained proof-erasure evidence and enumerate the deliberately\n * unbound direct-proof residual. This audit does not promote the inventory.\n",
+          "previous": " * Enumerate exact candidate bindings and the deliberately unbound residual.\n * The returned candidate records stay marked pending until archive-specific\n * replay proves the named proof position rather than a merely adjacent value.\n",
+          "start": 4670
+        },
+        {
+          "current": "\tconst bindings = [], residual = [];\n",
+          "previous": "\tconst candidates = [], residual = [];\n",
+          "start": 5147
+        },
+        {
+          "current": "\t\tconst evidence = installedEvidence(inventory, candidate.evidence);\n\t\tif(candidate.reason)\n\t\t{\n\t\t\tresidual.push(Object.freeze({ cell: cell.id\n\t\t\t\t, candidate: candidate.evidence, reason: candidate.reason }));\n\t\t\tcontinue;\n\t\t}\n\t\tbindings.push(Object.freeze({\n\t\t\tcell: cell.id, evidence: candidate.evidence, basis: candidate.basis\n\t\t\t, verification: \"exact-retained-replay\"\n\t\t\t, retained: retainedBinding(evidence, candidate)\n",
+          "previous": "\t\tinstalledEvidence(inventory, candidate.evidence);\n\t\tcandidates.push(Object.freeze({\n\t\t\tcell: cell.id, ...candidate, verification: \"pending-exact-replay\"\n",
+          "start": 5407
+        },
+        {
+          "current": "\tassert.equal(bindings.length, 102);\n\tassert.equal(residual.length, 102);\n\tassert.equal(new Set([...bindings, ...residual].map(item => item.cell)).size\n",
+          "previous": "\tassert.equal(candidates.length, 170);\n\tassert.equal(residual.length, 34);\n\tassert.equal(new Set([...candidates, ...residual].map(item => item.cell)).size\n",
+          "start": 5842
+        },
+        {
+          "current": "\t\t, bindings: Object.freeze(bindings)\n",
+          "previous": "\t\t, candidates: Object.freeze(candidates)\n",
+          "start": 6088
+        }
+      ],
+      "parent": "8cdfe4b17d447417aeaff251fb58f9464ad65dcc",
+      "path": "tests/helpers/proof-erasure-evidence-audit.mjs",
+      "previousSha256": "071b9abd5ae8653c9e586113a183d03f85077d9b276797d4e0bec27ae991546b"
+    },
+    {
+      "commit": "606b76c7591e9214f44f0ee73fe4d767804187c5",
+      "currentSha256": "f6ab433e020769819c87b338c4bf3e59c55c7a60841662bf73c23e1c88b5d5cf",
+      "edits": [
+        {
+          "current": "import {\n\tauditProofErasureEvidence\n\t, proofErasureEvidenceAuditReport\n\t, proofErasureEvidenceAuditReportPath\n} from \"./proof-erasure-evidence-audit.mjs\";\n",
+          "previous": "import { auditProofErasureEvidence } from \"./proof-erasure-evidence-audit.mjs\";\n",
+          "start": 197
+        },
+        {
+          "current": "\t\t&& item.retained.fixtureSource.path.includes(\"/sources/\")\n\t\t&& item.retained.replaySource.path.endsWith(\".mjs\")\n\t\t&& item.retained.replayCommand.includes(\"node --test\")));\n",
+          "previous": "\t\t&& item.retained.fixtureSource.path.includes(\"/sources/\")));\n",
+          "start": 1147
+        },
+        {
+          "current": "\tassert.deepEqual(JSON.parse(await readFile(\n\t\tproofErasureEvidenceAuditReportPath, \"utf8\"))\n\t, proofErasureEvidenceAuditReport(result));\n",
+          "previous": "",
+          "start": 2202
+        }
+      ],
+      "parent": "c66419ed5a659803d18c53d890d39df687b93b93",
+      "path": "tests/helpers/proof-erasure-evidence-audit-tests.mjs",
+      "previousSha256": "c252ccb839388c6859f17309d1a0a7cf77ce8ef151932295f6d2edebc66053fb"
+    },
+    {
+      "commit": "606b76c7591e9214f44f0ee73fe4d767804187c5",
+      "currentSha256": "0d32a88799733bf718adb6a08505f8526a5205f779d9a34433457f167a60e354",
+      "edits": [
+        {
+          "current": "export const proofErasureEvidenceAuditReportPath\n\t= \"docs/evidence/proof-erasure-retained-audit-20261028.json\";\n\n",
+          "previous": "",
+          "start": 375
+        },
+        {
+          "current": "\tlet replayPath, replayCommand;\n\tif(candidate.basis === \"erased-record-field\")\n\t{\n\t\tconst match = evidence.id.match(\n\t\t\t/^nested-checked-record-(.+)-(?:ordinary|reviewed)-full-installed$/u);\n\t\tassert.ok(match, evidence.id);\n\t\treplayPath\n\t\t\t= `tests/helpers/nested-checked-record-${match[1]}-promotion-tests.mjs`;\n\t\treplayCommand = `node --test ${replayPath}`;\n\t}\n\telse\n\t{\n\t\tlet paths = evidence.files.filter(file =>\n\t\t\tevidence.command.includes(file.path)\n\t\t\t&& /(?:test|tests)\\.mjs$/u.test(file.path));\n\t\tif(paths.length === 0) paths = evidence.files.filter(file =>\n\t\t\tfile.path === \"tests/helpers/callback-refinements-php-wasm-hosted-evidence.mjs\");\n\t\tassert.equal(paths.length, 1, evidence.id);\n\t\treplayPath = paths[0].path;\n\t\treplayCommand = evidence.command;\n\t}\n\tconst replaySources = evidence.files.filter(file => file.path === replayPath);\n\tassert.equal(replaySources.length, 1, evidence.id);\n",
+          "previous": "",
+          "start": 4644
+        },
+        {
+          "current": "\t\t, replaySource: Object.freeze({ ...replaySources[0] })\n\t\t, replayCommand\n",
+          "previous": "",
+          "start": 5670
+        },
+        {
+          "current": "\n/**\n * Render the deterministic retained-evidence audit without changing support.\n *\n * @param audit - Result of auditProofErasureEvidence.\n */\nexport const proofErasureEvidenceAuditReport = audit => Object.freeze({\n\tschemaVersion: 1, kind: \"proof-erasure-retained-evidence-audit-v1\"\n\t, planNode: 2173\n\t, counts: Object.freeze({ cells: audit.cells.length\n\t\t, exactBindings: audit.bindings.length, residual: audit.residual.length\n\t\t, adjacentRecordCandidatesRejected: audit.residual.filter(item =>\n\t\t\titem.candidate !== undefined).length\n\t\t, directSignaturesUnobserved: audit.residual.filter(item =>\n\t\t\titem.reason === \"direct-proof-signature-not-yet-observed\").length })\n\t, bindings: audit.bindings, residual: audit.residual\n\t, limitations: Object.freeze([\n\t\t\"This ledger reuses retained installed evidence only where the archive, replay source and authenticated Lean fixture prove an erased proof field at the named field or callback position.\"\n\t\t, \"Proof-only checked records at top-level parameter and result positions establish the checked-record shape, not direct Prop arguments or results; all sixty-eight such adjacent candidates remain unbound.\"\n\t\t, \"No retained record-field archive establishes a proof-only declaration signature; all thirty-four signature cells remain unbound.\"\n\t\t, \"The ledger does not promote type-surface support. Direct proof parameters, results and declaration signatures require implementation and new installed evidence.\"\n\t])\n});\n",
+          "previous": "",
+          "start": 7260
+        }
+      ],
+      "parent": "c66419ed5a659803d18c53d890d39df687b93b93",
+      "path": "tests/helpers/proof-erasure-evidence-audit.mjs",
+      "previousSha256": "9efbf2d5e4fc40924fc6c63931e7975dc39f7e1ba110ae5655e11d10247a1b18"
+    }
+  ]
+}
