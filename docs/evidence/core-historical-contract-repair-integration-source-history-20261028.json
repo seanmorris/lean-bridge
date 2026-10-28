@@ -1,0 +1,65 @@
+{
+  "additions": [
+    {
+      "currentSha256": "c037023d03a110466b12561f699126c2437a97d6b64663cb6bd0a37712f6b4cd",
+      "path": "scripts/update-core-historical-contract-repair-integration-source-history.mjs"
+    },
+    {
+      "currentSha256": "253c8f0006d633e957b926af6e0409ae1735c0a63d2c1bb394dec08f53d149ec",
+      "path": "tests/helpers/core-historical-contract-repair-integration-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "122601dd6d7805fb40844f7bda913760fc5b266dd6facf0b496114858852a106",
+      "path": "tests/helpers/core-historical-contract-repair-integration-source-history.mjs"
+    }
+  ],
+  "baseCommit": "8be7cedc605cd5eb516cc886b2d48c2fb8aa504c",
+  "baseHistory": {
+    "path": "docs/evidence/core-historical-contract-repair-source-history-20261028.json",
+    "sha256": "cadb793710ea1abcd04c53983b55e44fc6c57eda219023ddc96171d4d95b0ca1"
+  },
+  "implementationCommit": "f9e931a250c664fe5eef34ca1a503fca6e3117e6",
+  "implementationCommits": [
+    "09a34f86ca40e33102c2161fa68d62f52643cd8b",
+    "f9e931a250c664fe5eef34ca1a503fca6e3117e6"
+  ],
+  "milestone": "core-historical-contract-repair-integration-v1",
+  "schemaVersion": 1,
+  "scope": "Register the independently authenticated Core historical-contract repair newest-first in the reversible Fin source-history hub and checked-JavaScript partition 10. Preserve runtime behavior, type-surface claims, observations and evidence identities.",
+  "updates": [
+    {
+      "currentSha256": "0e73d75fc7f15516556f9cfcc9b2174fc43f2717ce81fc17d90bab61ea3b81d8",
+      "edits": [
+        {
+          "current": "import { beforeCoreHistoricalContractRepairIntegrationSource, coreHistoricalContractRepairIntegrationNormalizationPaths } from \"./core-historical-contract-repair-integration-source-history.mjs\";\nimport { beforeCoreHistoricalContractRepairSource, coreHistoricalContractRepairNormalizationPaths } from \"./core-historical-contract-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...coreHistoricalContractRepairIntegrationNormalizationPaths\n\t, ...coreHistoricalContractRepairNormalizationPaths\n\t, ...nativeFinCallbackRoleIntegrationNormalizationPaths\n",
+          "previous": "\t...nativeFinCallbackRoleIntegrationNormalizationPaths\n",
+          "start": 202257
+        },
+        {
+          "current": "\tlet stage = beforeCoreHistoricalContractRepairIntegrationSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCoreHistoricalContractRepairSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeNativeFinCallbackRoleIntegrationSource(\n",
+          "previous": "\tlet stage = beforeNativeFinCallbackRoleIntegrationSource(\n",
+          "start": 251994
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "797b3044592eacaa43646e7a1d63b64632124d9f2188550a1b6cb6d0e79f2eb3"
+    },
+    {
+      "currentSha256": "5b19f4c2217aef22adbd45dac016478e2346cab4db1edaedf52fee87193035e2",
+      "edits": [
+        {
+          "current": "import \"./helpers/core-historical-contract-repair-source-history-tests.mjs\";\nimport \"./helpers/core-historical-contract-repair-integration-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 2749
+        }
+      ],
+      "path": "tests/checked-javascript-partition-10.test.mjs",
+      "previousSha256": "6fb116b952200b9e974f1bb1f7611d379c49bd9ab7660c7d5bddcb380d6053cd"
+    }
+  ]
+}
