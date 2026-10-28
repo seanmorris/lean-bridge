@@ -1,0 +1,60 @@
+{
+  "additions": [
+    {
+      "currentSha256": "680d2309527eaaf76e14581277015dddf9d8ff437c38c580ea60ee85da2ee7ad",
+      "path": "scripts/update-core-memory-bound-integration-source-history.mjs"
+    },
+    {
+      "currentSha256": "de25323354fe98155fe3c5def24ad195843a738b2b2d076ef9d0a51dfbf8471a",
+      "path": "tests/helpers/core-memory-bound-integration-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "fdcd0334fbdcd6fec7db098be60fcef9859db558a78d7d3a3423f92456d3e6d1",
+      "path": "tests/helpers/core-memory-bound-integration-source-history.mjs"
+    }
+  ],
+  "baseHistory": {
+    "path": "docs/evidence/core-memory-bound-source-history-20261028.json",
+    "sha256": "a9c36c8fe4d2bca403715824471b1917db6830928e8a3ca01ccb9d133edf2357"
+  },
+  "integrationBaseCommit": "7a18bdc40a25ffbc03df26e133f6cf84359c9d5c",
+  "integrationUpdates": [
+    {
+      "currentSha256": "407d4a22e8cd04a85d93f8d64607d690403caa3a4ad5c245fac4cf1d73913f49",
+      "edits": [
+        {
+          "current": "import { beforeCoreMemoryBoundIntegrationSource, coreMemoryBoundIntegrationNormalizationPaths } from \"./core-memory-bound-integration-source-history.mjs\";\nimport { beforeCoreMemoryBoundSource, coreMemoryBoundNormalizationPaths } from \"./core-memory-bound-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...coreMemoryBoundIntegrationNormalizationPaths\n\t, ...coreMemoryBoundNormalizationPaths\n\t, ...callbackFinInstalledRepairNormalizationPaths\n",
+          "previous": "\t...callbackFinInstalledRepairNormalizationPaths\n",
+          "start": 198182
+        },
+        {
+          "current": "\tlet stage = beforeCoreMemoryBoundIntegrationSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCoreMemoryBoundSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCallbackFinInstalledRepairSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeCallbackFinInstalledRepairSource(path, text, expected);\n",
+          "start": 246579
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "9d9fe44e7730262436d8dfa3d9b251ce6bbee87c7619240b6a47f358b2f662c4"
+    },
+    {
+      "currentSha256": "0cf044b23495f24d00b0a2d2e943333fcb0e7b977c01b428953559c80cd2f7af",
+      "edits": [
+        {
+          "current": "import \"./helpers/core-memory-bound-source-history-tests.mjs\";\nimport \"./helpers/core-memory-bound-integration-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 959
+        }
+      ],
+      "path": "tests/checked-javascript-partition-10.test.mjs",
+      "previousSha256": "b4953c7b71e9ac569ef32a58e9817334ca635ac2bba916ec787a4c17e03de636"
+    }
+  ],
+  "milestone": "core-memory-bound-integration-source-v1",
+  "schemaVersion": 1,
+  "scope": "Register the independently authenticated Core-memory bound in the reversible source-history hub and one schedulable Core partition. Preserve all source, evidence and support claims; this seal records only the exact hub and registration transitions."
+}
