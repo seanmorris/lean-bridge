@@ -1,0 +1,40 @@
+{
+  "additions": [
+    {
+      "currentSha256": "175e433879f023246f511ae3339a0af86ac1226e56ee5f39ff0d130d6ab5ca12",
+      "path": "scripts/update-signature-specialization-completion-pin-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "cd42a9b7e740995e7656e40831c1d8d3a8578551a2007250ff4923b449e2bcf9",
+      "path": "tests/helpers/signature-specialization-completion-pin-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "e0ba80fad4fe6b45a51d5fc758d4a40fd381b2edca8c714e41c7ed40bf92bf2d",
+      "path": "tests/helpers/signature-specialization-completion-pin-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "377c622034ecbe9aaa4b16cae8b57a7dce220fb6",
+  "milestone": "signature-specialization-completion-pin-repair-source-v1",
+  "pin": {
+    "currentSha256": "41f741e8c80802d17d3982963ffbcf80f2b503f057207310dfd3fd363f68e3db",
+    "path": "tests/helpers/signature-specialization-completion-promotion-tests.mjs",
+    "previousSha256": "78c042aeab54f2ba78d4ef0a4571d56d252d56a4f613178b09c3d34c1f69a310"
+  },
+  "predecessorCommit": "f117411e09bc8f792ba7ed366e51c6eb65322f87",
+  "schemaVersion": 1,
+  "scope": "Refresh exactly one live pin for the final sparse-safe promotion regression after its implementation changed. Preserve every support cell, observation, evidence identity and unrelated inventory byte.",
+  "updates": [
+    {
+      "currentSha256": "519ef840d5ef3dbd7820ed36169f666f9dbc5fc3dd0a982ec5e827e331e90b2f",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"41f741e8c80802d17d3982963ffbcf80f2b503f057207310dfd3fd363f68e3db\"\n",
+          "previous": "          \"sha256\": \"78c042aeab54f2ba78d4ef0a4571d56d252d56a4f613178b09c3d34c1f69a310\"\n",
+          "start": 89691581
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "8f377675c53a7f8995b229e9da21225ce2b47d8d8e723bf3a04788793b68149b"
+    }
+  ]
+}
