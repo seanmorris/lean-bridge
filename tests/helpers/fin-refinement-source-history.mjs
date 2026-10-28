@@ -12,6 +12,8 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeCoreNativeEvidenceManifestIntegrationSource, coreNativeEvidenceManifestIntegrationNormalizationPaths } from "./core-native-evidence-manifest-integration-source-history.mjs";
+import { beforeCoreNativeEvidenceManifestSource, coreNativeEvidenceManifestNormalizationPaths } from "./core-native-evidence-manifest-source-history.mjs";
 import { beforePerlCodegenMergedIntegrationSource, perlCodegenMergedIntegrationNormalizationPaths } from "./perl-codegen-merged-integration-source-history.mjs";
 import { beforePerlCodegenMergedSource, perlCodegenMergedNormalizationPaths } from "./perl-codegen-merged-source-history.mjs";
 import { beforePerlCodegenProducerReplayIntegrationSource, perlCodegenProducerReplayIntegrationNormalizationPaths } from "./perl-codegen-producer-replay-integration-source-history.mjs";
@@ -2288,7 +2290,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...perlCodegenMergedIntegrationNormalizationPaths
+	...coreNativeEvidenceManifestIntegrationNormalizationPaths
+	, ...coreNativeEvidenceManifestNormalizationPaths
+	, ...perlCodegenMergedIntegrationNormalizationPaths
 	, ...perlCodegenMergedNormalizationPaths
 	, ...perlCodegenProducerReplayIntegrationNormalizationPaths
 	, ...perlCodegenProducerReplayNormalizationPaths
@@ -3315,7 +3319,16 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforePerlCodegenMergedIntegrationSource(
+	let stage = beforeCoreNativeEvidenceManifestIntegrationSource(
+		path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeCoreNativeEvidenceManifestSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforePerlCodegenMergedIntegrationSource(
 		path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;

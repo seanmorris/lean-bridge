@@ -45,3 +45,5 @@ import "./helpers/perl-codegen-producer-replay-source-history-tests.mjs";
 import "./helpers/perl-codegen-producer-replay-integration-source-history-tests.mjs";
 import "./helpers/perl-codegen-merged-source-history-tests.mjs";
 import "./helpers/perl-codegen-merged-integration-source-history-tests.mjs";
+import "./helpers/core-native-evidence-manifest-source-history-tests.mjs";
+import "./helpers/core-native-evidence-manifest-integration-source-history-tests.mjs";
