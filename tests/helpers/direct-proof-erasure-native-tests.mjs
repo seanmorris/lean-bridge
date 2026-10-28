@@ -8,11 +8,15 @@ import { mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
+import { createNativeModel } from "../../src/build/native-model.mjs";
+import { generateCopiedNativeCalls } from "../../src/backends/c/native-copied-values.mjs";
 import { generateCBindingPackage } from "../../src/backends/c/generate.mjs";
+import { compilePrimitiveCSurface } from "../../src/backends/c/primitive-surface.mjs";
 import { generateCppBindingPackage } from "../../src/backends/cpp/generate.mjs";
 import { copiedCleanEnvironment, runCopied } from "./copied-fixture-install.mjs";
 import { directProofErasureReview } from "./direct-proof-erasure-fixture.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
+import { nativeMetadataFixture } from "./native-metadata.mjs";
 
 const invalid = {
 	c: `#include "directprooferasure.h"
@@ -39,9 +43,23 @@ test("native direct proof callers expose one word and refuse proof arguments", a
 		c: files["include/directprooferasure.h"]
 		, cpp: files["include/directprooferasure.hpp"]
 	};
+	const model = structuredClone(createNativeModel({
+		...nativeMetadataFixture()
+		, component: { id: "directprooferasure@1.0.0"
+			, name: "directprooferasure", version: "1.0.0" }
+	}));
+	model.bindingIr = ir;
+	model.exports[0].name = "DirectProofErasure.keep";
+	const provider = generateCopiedNativeCalls(
+		model, compilePrimitiveCSurface(model.bindingIr));
 	assert.match(headers.c
 		, /directprooferasure_status directprooferasure_keep\(uint32_t value, uint32_t \*out, directprooferasure_error \*error\);/u);
 	assert.match(headers.cpp, /inline uint32_t keep\(uint32_t value\)/u);
+	assert.match(provider
+		, /uint32_t _lb_value = lb_[a-f0-9]+\(lb_copy_0_in\(&value\)\);/u);
+	assert.match(provider
+		, /int _lb_status = lb_copy_0_out\(_lb_value, &_lb_result, &_lb_budget\);/u);
+	assert.doesNotMatch(provider, /uint32_t value = lb_[a-f0-9]+/u);
 	for(const header of Object.values(headers))
 		assert.doesNotMatch(header, /(?:\bTrue\b|\bproof\b|_before|_after)/iu);
 	for(const profile of ["c", "cpp"])
@@ -78,6 +96,14 @@ test("native direct proof runner owns both routes and retained verification", as
 	]) assert.ok(source.includes(required), required);
 	assert.doesNotMatch(source, /continue-on-error/u);
 	const workflow = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
+	const nativeStart = workflow.indexOf("\n  native-consumers:");
+	const nativeJob = workflow.slice(nativeStart
+		, workflow.indexOf("\n  managed-consumers:", nativeStart));
+	assert.ok(nativeStart >= 0);
+	assert.ok(nativeJob.indexOf("Free hosted runner disk before native builds")
+		< nativeJob.indexOf("Check out the exact revision"));
+	assert.match(nativeJob
+		, /sudo rm -rf \/usr\/share\/dotnet .*\/opt\/hostedtoolcache\/CodeQL/u);
 	for(const required of [
 		"id: direct_proof_native"
 		, "bash scripts/run-direct-proof-erasure-native-ci.sh"

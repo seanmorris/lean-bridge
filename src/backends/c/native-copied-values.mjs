@@ -336,7 +336,11 @@ export const generateCopiedNativeCalls = (model, surface) => {
 	const exports = new Map(model.exports.map(item => [`lean:${item.name}`, item])), bounds = [];
 	const calls = surface.functions.filter(fn => ![...fn.declaration.parameters, fn.declaration.result].some(site => surface.callbacks.has(site.type.id))).map(fn => {
 		const native = exports.get(fn.declaration.id), lines = [`static ${p}_status lb_call_${fn.field}(${fn.signature}) {`
-			, "  (void)context; size_t budget = 16u * 1024u * 1024u;"
+			// Public C parameter names start with a lowercase letter. Keep every
+			// generator-owned local in the disjoint _lb_ namespace so an admitted
+			// Lean parameter such as `value`, `result`, `status` or `budget` cannot
+			// redeclare an implementation local in the same function scope.
+			, "  (void)context; size_t _lb_budget = 16u * 1024u * 1024u;"
 			, `  if (lb_ready(error) != ${macro}_STATUS_OK) return ${macro}_STATUS_UNEXPECTED_ERROR;`];
 		const refinements = native.refinements?.parameters ?? [];
 		const parameterBounds = fn.parameters.map(({ name }, index) => ({
@@ -345,7 +349,7 @@ export const generateCopiedNativeCalls = (model, surface) => {
 		}));
 		const args = fn.parameters.map(({ name }, i) => {
 			const type = native.parameters[i].type, value = copy(type).aggregate ? name : `&${name}`;
-			lines.push(`  if (!${id(type)}_check(${value}, &budget)) return lb_invalid(error, "Invalid copied input or 16 MiB call limit exceeded");`);
+			lines.push(`  if (!${id(type)}_check(${value}, &_lb_budget)) return lb_invalid(error, "Invalid copied input or 16 MiB call limit exceeded");`);
 			return `${id(type)}_in(${value})`;
 		});
 		// Every bound is checked on caller limbs before any Lean value is allocated,
@@ -374,23 +378,23 @@ export const generateCopiedNativeCalls = (model, surface) => {
 		{
 			const nestedConstructor = refinements.some((refinement, i) => refinement && !constructed(refinement) && constructorRefinementLeaves(refinement, native.parameters[i].type).length);
 			const checkedRejection = nestedConstructor || (refinements.some(constructed) && !refinements.some(refinement => refinement && !constructed(refinement)));
-			lines.push(`  lean_object *checked = ${native.symbol}(${args.join(", ") || "lean_box(0)"});`
-				, `  if (lean_is_scalar(checked)) return lb_invalid(error, ${JSON.stringify(checkedRejection ? "Lean rejected an argument outside its checked refinement" : "Lean rejected an argument outside its Fin bound")});`
-				, "  lean_object *boxed = lean_ctor_get(checked, 0);");
-			if(nativeObjectType(native.result)) lines.push("  lean_inc(boxed);");
-			lines.push(`  ${nativeCType(native.result)} value = ${unboxed(native.result, "boxed")};`, "  lean_dec(checked);");
+			lines.push(`  lean_object *_lb_checked = ${native.symbol}(${args.join(", ") || "lean_box(0)"});`
+				, `  if (lean_is_scalar(_lb_checked)) return lb_invalid(error, ${JSON.stringify(checkedRejection ? "Lean rejected an argument outside its checked refinement" : "Lean rejected an argument outside its Fin bound")});`
+				, "  lean_object *_lb_boxed = lean_ctor_get(_lb_checked, 0);");
+			if(nativeObjectType(native.result)) lines.push("  lean_inc(_lb_boxed);");
+			lines.push(`  ${nativeCType(native.result)} _lb_value = ${unboxed(native.result, "_lb_boxed")};`, "  lean_dec(_lb_checked);");
 		}
-		else lines.push(`  ${nativeCType(native.result)} value = ${native.symbol}(${args.join(", ") || "lean_box(0)"});`);
+		else lines.push(`  ${nativeCType(native.result)} _lb_value = ${native.symbol}(${args.join(", ") || "lean_box(0)"});`);
 		if(native.result.kind !== "primitive" || native.result.name !== "unit")
 		{
-			lines.push(`  ${copy(native.result).name} result = {0};`, `  int status = ${id(native.result)}_out(value, &result, &budget);`);
-			if(nativeObjectType(native.result)) lines.push("  lean_dec(value);");
-			lines.push('  if (status == 0) return lb_invalid(error, "16 MiB call limit exceeded");'
-				, '  if (status == -2) return lb_failure(error, "Invalid native Unicode scalar result");'
-				, ...(model.types.some(type => type.kind === "variant") ? ['  if (status == -3) return lb_failure(error, "Invalid native variant result");'] : [])
-				, '  if (status < 0) return lb_failure(error, "Cannot allocate copied result");'
-				, `  if (lb_ready(error) != ${macro}_STATUS_OK) { ${copy(native.result).aggregate ? `${copy(native.result).name}_clear(&result); ` : ""}return ${macro}_STATUS_UNEXPECTED_ERROR; }`, "  *out = result;");
-		} else lines.push("  lean_dec(value); (void)budget;", `  if (lb_ready(error) != ${macro}_STATUS_OK) return ${macro}_STATUS_UNEXPECTED_ERROR;`);
+			lines.push(`  ${copy(native.result).name} _lb_result = {0};`, `  int _lb_status = ${id(native.result)}_out(_lb_value, &_lb_result, &_lb_budget);`);
+			if(nativeObjectType(native.result)) lines.push("  lean_dec(_lb_value);");
+			lines.push('  if (_lb_status == 0) return lb_invalid(error, "16 MiB call limit exceeded");'
+				, '  if (_lb_status == -2) return lb_failure(error, "Invalid native Unicode scalar result");'
+				, ...(model.types.some(type => type.kind === "variant") ? ['  if (_lb_status == -3) return lb_failure(error, "Invalid native variant result");'] : [])
+				, '  if (_lb_status < 0) return lb_failure(error, "Cannot allocate copied result");'
+				, `  if (lb_ready(error) != ${macro}_STATUS_OK) { ${copy(native.result).aggregate ? `${copy(native.result).name}_clear(&_lb_result); ` : ""}return ${macro}_STATUS_UNEXPECTED_ERROR; }`, "  *out = _lb_result;");
+		} else lines.push("  lean_dec(_lb_value); (void)_lb_budget;", `  if (lb_ready(error) != ${macro}_STATUS_OK) return ${macro}_STATUS_UNEXPECTED_ERROR;`);
 		lines.push(`  if (error) *error = (${p}_error){0};`, `  return ${macro}_STATUS_OK;`, "}");
 		return lines.join("\n");
 	});
