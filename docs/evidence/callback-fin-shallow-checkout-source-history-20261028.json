@@ -1,0 +1,129 @@
+{
+  "additions": [
+    {
+      "currentSha256": "4762d3632088a899761a7f458c547cbc73bc96271f724ea199660b21b5105af0",
+      "path": "scripts/update-callback-fin-shallow-checkout-source-history.mjs"
+    },
+    {
+      "currentSha256": "e8b6eb8b44f97ab15b33918eb148e7eeffd9cfc3263d07478b81e7b544564d8a",
+      "path": "tests/helpers/callback-fin-shallow-checkout-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "692bf22f994917c9a8b4cc1f4c8824df087e34d407b25f4f61bb89da0ce0e9ae",
+      "path": "tests/helpers/callback-fin-shallow-checkout-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "e27672fe00a106be982bd0cbd7bfeb75d38b0032",
+  "integrationUpdates": [
+    {
+      "currentSha256": "b193e19ab51963a4f330d45e62fcbafe688fda2b02fbc9bd8b919a79d32085c0",
+      "edits": [
+        {
+          "current": "import \"./helpers/callback-fin-shallow-checkout-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 1674
+        }
+      ],
+      "path": "tests/checked-javascript-partition-10.test.mjs",
+      "previousSha256": "8bf664b4db58210f9b3906bdbe9fad235ab23a33ce0077b0b1cf36ce4adbf40f"
+    },
+    {
+      "currentSha256": "b7a7723cc82fa3d2fba3ff050eb11692ed7b096bd68ae834ded08e826c4795a5",
+      "edits": [
+        {
+          "current": "import { beforeCallbackFinShallowCheckoutSource, callbackFinShallowCheckoutNormalizationPaths } from \"./callback-fin-shallow-checkout-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...callbackFinShallowCheckoutNormalizationPaths\n\t, ...coreCiReliabilityNormalizationPaths\n",
+          "previous": "\t...coreCiReliabilityNormalizationPaths\n",
+          "start": 199686
+        },
+        {
+          "current": "\tlet stage = beforeCallbackFinShallowCheckoutSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCoreCiReliabilitySource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeCoreCiReliabilitySource(path, text, expected);\n",
+          "start": 248577
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "df1d1774144c4679cba4d2a0f8fe874ad7236840385a7dc7120dd80fe51bae0e"
+    }
+  ],
+  "livePinRefreshes": 1,
+  "milestone": "callback-fin-shallow-checkout-source-v1",
+  "pinRepairCommit": "cbfd1596e8d81f749da750983247d6109a2f283b",
+  "pinUpdates": [
+    {
+      "currentSha256": "48d6b23844ff38227d76c07a394b9fc296ffd2b679b7356cdaf40dc501997bca",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"aaec6ee5695b8741dce4800eed7e8823ab4347abbcc16d30e451a3483830d8a6\"\n",
+          "previous": "          \"sha256\": \"7b195e22f60a63348bd3a960058b471fe1a0ba22fc17c419446cf15e554ad4cf\"\n",
+          "start": 74240620
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "c005e32bc3b063c8603ce757c2f3c078204c2d1c3034f5b74d0320f889a03c42"
+    }
+  ],
+  "predecessorCommit": "b7bf5bdc596166d9761612a0c260605cbbfd3e93",
+  "schemaVersion": 1,
+  "scope": "Replace four unnecessary full-history checkouts in the Python/Ruby/Rust and four-ABI Perl callback acceptance workflows with exact depth-one checkouts. The targeted producers consume only the current commit and current package bytes. Refresh the one live source pin affected by this transition; change no type-surface claim, observation, evidence inventory or runtime contract.",
+  "updates": [
+    {
+      "currentSha256": "aaec6ee5695b8741dce4800eed7e8823ab4347abbcc16d30e451a3483830d8a6",
+      "edits": [
+        {
+          "current": "      - name: Check out the exact revision\n",
+          "previous": "      - name: Check out the exact revision and original evidence history\n",
+          "start": 520
+        },
+        {
+          "current": "          fetch-depth: 1\n",
+          "previous": "          fetch-depth: 0\n",
+          "start": 611
+        },
+        {
+          "current": "      - name: Check out the exact revision\n",
+          "previous": "      - name: Check out the exact revision and original evidence history\n",
+          "start": 3800
+        },
+        {
+          "current": "          fetch-depth: 1\n",
+          "previous": "          fetch-depth: 0\n",
+          "start": 3891
+        }
+      ],
+      "path": ".github/workflows/callback-checked-record-languages.yml",
+      "previousSha256": "7b195e22f60a63348bd3a960058b471fe1a0ba22fc17c419446cf15e554ad4cf"
+    },
+    {
+      "currentSha256": "b302553c7e42f6ffbff26a8f9616da72b9a4dd4bf4cc3940212edeb04d8d187b",
+      "edits": [
+        {
+          "current": "      - name: Check out the exact revision\n",
+          "previous": "      - name: Check out the exact revision and original evidence history\n",
+          "start": 478
+        },
+        {
+          "current": "          fetch-depth: 1\n",
+          "previous": "          fetch-depth: 0\n",
+          "start": 569
+        },
+        {
+          "current": "      - name: Check out the exact revision\n",
+          "previous": "      - name: Check out the exact revision and original evidence history\n",
+          "start": 3265
+        },
+        {
+          "current": "          fetch-depth: 1\n",
+          "previous": "          fetch-depth: 0\n",
+          "start": 3356
+        }
+      ],
+      "path": ".github/workflows/callback-checked-record-perl.yml",
+      "previousSha256": "ca8e00a220610e15a0e57d49e9fc2d3769242d4d63ff22e6f2deffb455912a0d"
+    }
+  ]
+}

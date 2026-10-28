@@ -25,3 +25,4 @@ import "./helpers/core-callback-fin-live-pin-repair-source-history-tests.mjs";
 import "./helpers/core-shard-five-repair-source-history-tests.mjs";
 import "./helpers/core-shard-five-repair-integration-source-history-tests.mjs";
 import "./helpers/core-ci-reliability-source-history-tests.mjs";
+import "./helpers/callback-fin-shallow-checkout-source-history-tests.mjs";
