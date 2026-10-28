@@ -18,15 +18,16 @@ final class Consumer {
         }
         throw new AssertionError("expected " + kind.getName());
     }
-    private static boolean refuses(Runnable operation) {
+    private static boolean refuses(Runnable operation, String message) {
         return reject(IllegalArgumentException.class, operation)
-            .getMessage().equals("Invalid native copied input");
+            .getMessage().equals(message);
     }
 
     public static void main(String[] arguments) {
         var scaler = Api.scaler(n(3));
         check(scaler.invoke(n(4)).equals(n(12)), "bounded closure argument");
-        check(refuses(() -> scaler.invoke(n(10))), "Fin 10 is refused");
+        check(refuses(() -> scaler.invoke(n(10)),
+            "arg0 is not below its Fin 10 bound"), "Fin 10 is refused");
         check(scaler.invoke(n(9)).equals(n(27)), "closure remains usable");
 
         var counter = Api.counter(n(8));
@@ -50,7 +51,8 @@ final class Consumer {
         var digits = Api.digits(Unit.INSTANCE);
         check(digits.invoke(new BigInteger[] { n(1), n(2) }).equals(n(5)),
             "nested Fin callback argument");
-        check(refuses(() -> digits.invoke(new BigInteger[] { n(3) })),
+        check(refuses(() -> digits.invoke(new BigInteger[] { n(3) }),
+            "arg0[0] is not below its Fin 3 bound"),
             "nested bound is refused");
         check(digits.invoke(new BigInteger[0]).equals(BigInteger.ZERO),
             "nested closure remains usable");
@@ -58,7 +60,8 @@ final class Consumer {
         var tiles = Api.tiles(Unit.INSTANCE);
         check(tiles.invoke(new Tile[] { new Tile(n(4), n(2)) }).equals(n(402)),
             "nominal Fin callback field");
-        check(refuses(() -> tiles.invoke(new Tile[] { new Tile(n(5), n(2)) })),
+        check(refuses(() -> tiles.invoke(new Tile[] { new Tile(n(5), n(2)) }),
+            "arg0[0].digit is not below its Fin 5 bound"),
             "nominal Fin field is refused");
 
         var tileMaker = Api.tileMaker(n(3));

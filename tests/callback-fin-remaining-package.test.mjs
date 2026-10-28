@@ -43,6 +43,11 @@ test("callback Fin remaining consumers name generated public package surfaces", 
 		const source = await readFile(
 			`tests/fixtures/callback-fin-consumers/${profile}.${extension}`, "utf8");
 		assert.match(source, /callback-fin-remaining-ok/u);
+		if(["dotnet", "java", "kotlin"].includes(profile))
+			for(const diagnostic of ["arg0 is not below its Fin 10 bound"
+				, "arg0[0] is not below its Fin 3 bound"
+				, "arg0[0].digit is not below its Fin 5 bound"])
+				assert.ok(source.includes(diagnostic), `${profile}: ${diagnostic}`);
 	}
 	const witSource = await readFile(
 		"tests/fixtures/callback-fin-consumers/wit-wasi.c", "utf8");

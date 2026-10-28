@@ -19,13 +19,14 @@ private inline fun <reified T : Throwable> reject(operation: () -> Unit): T {
     }
     throw AssertionError("expected ${T::class.java.name}")
 }
-private fun refuses(operation: () -> Unit) =
-    reject<IllegalArgumentException>(operation).message == "Invalid native copied input"
+private fun refuses(operation: () -> Unit, message: String) =
+    reject<IllegalArgumentException>(operation).message == message
 
 fun main() {
     val scaler = Api.scaler(n(3))
     check(scaler.invoke(n(4)) == n(12), "bounded closure argument")
-    check(refuses { scaler.invoke(n(10)) }, "Fin 10 is refused")
+    check(refuses({ scaler.invoke(n(10)) },
+        "arg0 is not below its Fin 10 bound"), "Fin 10 is refused")
     check(scaler.invoke(n(9)) == n(27), "closure remains usable")
 
     val counter = Api.counter(n(8))
@@ -49,12 +50,14 @@ fun main() {
 
     val digits = Api.digits(LeanUnit.INSTANCE)
     check(digits.invoke(arrayOf(n(1), n(2))) == n(5), "nested Fin callback argument")
-    check(refuses { digits.invoke(arrayOf(n(3))) }, "nested bound is refused")
+    check(refuses({ digits.invoke(arrayOf(n(3))) },
+        "arg0[0] is not below its Fin 3 bound"), "nested bound is refused")
     check(digits.invoke(emptyArray()) == BigInteger.ZERO, "nested closure remains usable")
 
     val tiles = Api.tiles(LeanUnit.INSTANCE)
     check(tiles.invoke(arrayOf(Tile(n(4), n(2)))) == n(402), "nominal Fin callback field")
-    check(refuses { tiles.invoke(arrayOf(Tile(n(5), n(2)))) },
+    check(refuses({ tiles.invoke(arrayOf(Tile(n(5), n(2)))) },
+        "arg0[0].digit is not below its Fin 5 bound"),
         "nominal Fin field is refused")
 
     val tileMaker = Api.tileMaker(n(3))

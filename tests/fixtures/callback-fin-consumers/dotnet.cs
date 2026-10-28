@@ -19,14 +19,15 @@ static class Consumer
         catch (T error) { return error; }
         throw new InvalidOperationException("expected " + typeof(T).Name);
     }
-    private static bool Refuses(Action operation) =>
-        Reject<ArgumentException>(operation).Message == "Invalid native copied input";
+    private static bool Refuses(Action operation, string message) =>
+        Reject<ArgumentException>(operation).Message == message;
 
     public static void Main()
     {
         var scaler = Api.Scaler(N(3));
         Check(scaler.Invoke(N(4)) == N(12), "bounded closure argument");
-        Check(Refuses(() => scaler.Invoke(N(10))), "Fin 10 is refused");
+        Check(Refuses(() => scaler.Invoke(N(10)),
+            "arg0 is not below its Fin 10 bound"), "Fin 10 is refused");
         Check(scaler.Invoke(N(9)) == N(27), "closure remains usable");
 
         var counter = Api.Counter(N(8));
@@ -50,14 +51,16 @@ static class Consumer
         var digits = Api.Digits(new Unit());
         Check(digits.Invoke(new[] { N(1), N(2) }) == N(5),
             "nested Fin callback argument");
-        Check(Refuses(() => digits.Invoke(new[] { N(3) })), "nested bound is refused");
+        Check(Refuses(() => digits.Invoke(new[] { N(3) }),
+            "arg0[0] is not below its Fin 3 bound"), "nested bound is refused");
         Check(digits.Invoke(Array.Empty<BigInteger>()) == BigInteger.Zero,
             "nested closure remains usable");
 
         var tiles = Api.Tiles(new Unit());
         Check(tiles.Invoke(new[] { new Tile(N(4), N(2)) }) == N(402),
             "nominal Fin callback field");
-        Check(Refuses(() => tiles.Invoke(new[] { new Tile(N(5), N(2)) })),
+        Check(Refuses(() => tiles.Invoke(new[] { new Tile(N(5), N(2)) }),
+            "arg0[0].digit is not below its Fin 5 bound"),
             "nominal Fin field is refused");
 
         var tileMaker = Api.TileMaker(N(3));
