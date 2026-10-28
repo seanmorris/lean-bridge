@@ -1,0 +1,597 @@
+{
+  "additions": [
+    {
+      "currentSha256": "b1bf2c8f7691b3a905431bff3acb49760c9cfbeb5ee7079e7261e8f4f75715e9",
+      "path": "scripts/update-downstream-direct-proof-control-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "f7a4f4bea9074b6fd96e4f2a7eebf0977901f49c2064ec8c19ca93024c572c26",
+      "path": "tests/helpers/downstream-direct-proof-control-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "27d7e5f2a62c04bd077c900040de85b3bcc335002da681a0235e8938c9775f8b",
+      "path": "tests/helpers/downstream-direct-proof-control-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "fe8bc7b85cbdccf76ba456894272b0eb217a02f7",
+  "integrationUpdates": [
+    {
+      "currentSha256": "29ade34421ba3d05a109ab4b62bfaa846d0780ac0dd67484a1818ce99ee50443",
+      "edits": [
+        {
+          "current": "import \"./helpers/downstream-direct-proof-control-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "16fab881f41982bd8cfb52bcc50cdd38458289f70b70e4d705886d7e1daa9b72"
+    },
+    {
+      "currentSha256": "c985e1d2bda79c0817d47ce987253064ba1bebaac057cc4922a8008ad35884dc",
+      "edits": [
+        {
+          "current": "import { beforeDownstreamDirectProofControlRepairSource, downstreamDirectProofControlRepairNormalizationPaths } from \"./downstream-direct-proof-control-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...downstreamDirectProofControlRepairNormalizationPaths\n\t, ...directProofErasureDownstreamRepairNormalizationPaths\n",
+          "previous": "\t...directProofErasureDownstreamRepairNormalizationPaths\n",
+          "start": 213977
+        },
+        {
+          "current": "\tlet stage = beforeDownstreamDirectProofControlRepairSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeDirectProofErasureDownstreamRepairSource(\n",
+          "previous": "\tlet stage = beforeDirectProofErasureDownstreamRepairSource(\n",
+          "start": 267556
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "84d12fa7b2623a7604ba7d802849375c717c3ae8d0087a92836ff1ecbc1be231"
+    }
+  ],
+  "milestone": "downstream-direct-proof-control-repair-source-v1",
+  "predecessorCommit": "39c9940d3a0b9b665627df9684dc203ddffd569e",
+  "schemaVersion": 1,
+  "scope": "Repair every downstream contract exposed by the direct-proof producer wave without weakening current acceptance: model shared managed proof steps and their intentional continue-on-error semantics, require proof outcomes in native and Perl gates, preserve current JVM, WIT and structural npm workflow ordering, authenticate producer-era reviewed Subtype requests independently of current constructors, retain historical documentation replay, and refresh exactly 37 exact current-source pins across two paths. Register every transition newest-first; hosted Core, Downstream and Performance remain terminal acceptance gates.",
+  "updates": [
+    {
+      "currentSha256": "b7c584509224642b965adc05fb75b9b3cd986aab21983037c764fa1bcdfbdf1f",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"994ac84d37aa8ba33375c439323c1a666a2a8f1a21a7eb935b7e537f6d821847\"\n",
+          "previous": "          \"sha256\": \"93e7b2534652bffc0008f66c7f6e17bb29cade36962046e795bea808fb8e2d5a\"\n",
+          "start": 813850
+        },
+        {
+          "current": "          \"sha256\": \"994ac84d37aa8ba33375c439323c1a666a2a8f1a21a7eb935b7e537f6d821847\"\n",
+          "previous": "          \"sha256\": \"93e7b2534652bffc0008f66c7f6e17bb29cade36962046e795bea808fb8e2d5a\"\n",
+          "start": 832225
+        },
+        {
+          "current": "          \"sha256\": \"994ac84d37aa8ba33375c439323c1a666a2a8f1a21a7eb935b7e537f6d821847\"\n",
+          "previous": "          \"sha256\": \"93e7b2534652bffc0008f66c7f6e17bb29cade36962046e795bea808fb8e2d5a\"\n",
+          "start": 1058432
+        },
+        {
+          "current": "          \"sha256\": \"994ac84d37aa8ba33375c439323c1a666a2a8f1a21a7eb935b7e537f6d821847\"\n",
+          "previous": "          \"sha256\": \"93e7b2534652bffc0008f66c7f6e17bb29cade36962046e795bea808fb8e2d5a\"\n",
+          "start": 1075549
+        },
+        {
+          "current": "          \"sha256\": \"994ac84d37aa8ba33375c439323c1a666a2a8f1a21a7eb935b7e537f6d821847\"\n",
+          "previous": "          \"sha256\": \"93e7b2534652bffc0008f66c7f6e17bb29cade36962046e795bea808fb8e2d5a\"\n",
+          "start": 1083323
+        },
+        {
+          "current": "          \"sha256\": \"994ac84d37aa8ba33375c439323c1a666a2a8f1a21a7eb935b7e537f6d821847\"\n",
+          "previous": "          \"sha256\": \"93e7b2534652bffc0008f66c7f6e17bb29cade36962046e795bea808fb8e2d5a\"\n",
+          "start": 1088755
+        },
+        {
+          "current": "          \"sha256\": \"994ac84d37aa8ba33375c439323c1a666a2a8f1a21a7eb935b7e537f6d821847\"\n",
+          "previous": "          \"sha256\": \"93e7b2534652bffc0008f66c7f6e17bb29cade36962046e795bea808fb8e2d5a\"\n",
+          "start": 1095856
+        },
+        {
+          "current": "          \"sha256\": \"994ac84d37aa8ba33375c439323c1a666a2a8f1a21a7eb935b7e537f6d821847\"\n",
+          "previous": "          \"sha256\": \"93e7b2534652bffc0008f66c7f6e17bb29cade36962046e795bea808fb8e2d5a\"\n",
+          "start": 1103022
+        },
+        {
+          "current": "          \"sha256\": \"994ac84d37aa8ba33375c439323c1a666a2a8f1a21a7eb935b7e537f6d821847\"\n",
+          "previous": "          \"sha256\": \"93e7b2534652bffc0008f66c7f6e17bb29cade36962046e795bea808fb8e2d5a\"\n",
+          "start": 1110079
+        },
+        {
+          "current": "          \"sha256\": \"994ac84d37aa8ba33375c439323c1a666a2a8f1a21a7eb935b7e537f6d821847\"\n",
+          "previous": "          \"sha256\": \"93e7b2534652bffc0008f66c7f6e17bb29cade36962046e795bea808fb8e2d5a\"\n",
+          "start": 1118331
+        },
+        {
+          "current": "          \"sha256\": \"994ac84d37aa8ba33375c439323c1a666a2a8f1a21a7eb935b7e537f6d821847\"\n",
+          "previous": "          \"sha256\": \"93e7b2534652bffc0008f66c7f6e17bb29cade36962046e795bea808fb8e2d5a\"\n",
+          "start": 1127794
+        },
+        {
+          "current": "          \"sha256\": \"994ac84d37aa8ba33375c439323c1a666a2a8f1a21a7eb935b7e537f6d821847\"\n",
+          "previous": "          \"sha256\": \"93e7b2534652bffc0008f66c7f6e17bb29cade36962046e795bea808fb8e2d5a\"\n",
+          "start": 1144805
+        },
+        {
+          "current": "          \"sha256\": \"994ac84d37aa8ba33375c439323c1a666a2a8f1a21a7eb935b7e537f6d821847\"\n",
+          "previous": "          \"sha256\": \"93e7b2534652bffc0008f66c7f6e17bb29cade36962046e795bea808fb8e2d5a\"\n",
+          "start": 1151880
+        },
+        {
+          "current": "          \"sha256\": \"994ac84d37aa8ba33375c439323c1a666a2a8f1a21a7eb935b7e537f6d821847\"\n",
+          "previous": "          \"sha256\": \"93e7b2534652bffc0008f66c7f6e17bb29cade36962046e795bea808fb8e2d5a\"\n",
+          "start": 1159777
+        },
+        {
+          "current": "          \"sha256\": \"994ac84d37aa8ba33375c439323c1a666a2a8f1a21a7eb935b7e537f6d821847\"\n",
+          "previous": "          \"sha256\": \"93e7b2534652bffc0008f66c7f6e17bb29cade36962046e795bea808fb8e2d5a\"\n",
+          "start": 1170657
+        },
+        {
+          "current": "          \"sha256\": \"994ac84d37aa8ba33375c439323c1a666a2a8f1a21a7eb935b7e537f6d821847\"\n",
+          "previous": "          \"sha256\": \"93e7b2534652bffc0008f66c7f6e17bb29cade36962046e795bea808fb8e2d5a\"\n",
+          "start": 1182819
+        },
+        {
+          "current": "          \"sha256\": \"994ac84d37aa8ba33375c439323c1a666a2a8f1a21a7eb935b7e537f6d821847\"\n",
+          "previous": "          \"sha256\": \"93e7b2534652bffc0008f66c7f6e17bb29cade36962046e795bea808fb8e2d5a\"\n",
+          "start": 1206345
+        },
+        {
+          "current": "          \"sha256\": \"994ac84d37aa8ba33375c439323c1a666a2a8f1a21a7eb935b7e537f6d821847\"\n",
+          "previous": "          \"sha256\": \"93e7b2534652bffc0008f66c7f6e17bb29cade36962046e795bea808fb8e2d5a\"\n",
+          "start": 1237700
+        },
+        {
+          "current": "          \"sha256\": \"994ac84d37aa8ba33375c439323c1a666a2a8f1a21a7eb935b7e537f6d821847\"\n",
+          "previous": "          \"sha256\": \"93e7b2534652bffc0008f66c7f6e17bb29cade36962046e795bea808fb8e2d5a\"\n",
+          "start": 1270500
+        },
+        {
+          "current": "          \"sha256\": \"994ac84d37aa8ba33375c439323c1a666a2a8f1a21a7eb935b7e537f6d821847\"\n",
+          "previous": "          \"sha256\": \"93e7b2534652bffc0008f66c7f6e17bb29cade36962046e795bea808fb8e2d5a\"\n",
+          "start": 1305600
+        },
+        {
+          "current": "          \"sha256\": \"994ac84d37aa8ba33375c439323c1a666a2a8f1a21a7eb935b7e537f6d821847\"\n",
+          "previous": "          \"sha256\": \"93e7b2534652bffc0008f66c7f6e17bb29cade36962046e795bea808fb8e2d5a\"\n",
+          "start": 1336446
+        },
+        {
+          "current": "          \"sha256\": \"994ac84d37aa8ba33375c439323c1a666a2a8f1a21a7eb935b7e537f6d821847\"\n",
+          "previous": "          \"sha256\": \"93e7b2534652bffc0008f66c7f6e17bb29cade36962046e795bea808fb8e2d5a\"\n",
+          "start": 1359743
+        },
+        {
+          "current": "          \"sha256\": \"994ac84d37aa8ba33375c439323c1a666a2a8f1a21a7eb935b7e537f6d821847\"\n",
+          "previous": "          \"sha256\": \"93e7b2534652bffc0008f66c7f6e17bb29cade36962046e795bea808fb8e2d5a\"\n",
+          "start": 1381634
+        },
+        {
+          "current": "          \"sha256\": \"994ac84d37aa8ba33375c439323c1a666a2a8f1a21a7eb935b7e537f6d821847\"\n",
+          "previous": "          \"sha256\": \"93e7b2534652bffc0008f66c7f6e17bb29cade36962046e795bea808fb8e2d5a\"\n",
+          "start": 1401707
+        },
+        {
+          "current": "          \"sha256\": \"994ac84d37aa8ba33375c439323c1a666a2a8f1a21a7eb935b7e537f6d821847\"\n",
+          "previous": "          \"sha256\": \"93e7b2534652bffc0008f66c7f6e17bb29cade36962046e795bea808fb8e2d5a\"\n",
+          "start": 1421487
+        },
+        {
+          "current": "          \"sha256\": \"eb9485eff80fab3e870072a830bf52ee55b70c8c20ddd5dca91f17b009513e18\"\n",
+          "previous": "          \"sha256\": \"567a2e983c751f3226a00a04fb08db20d5609fd6ccf78dc9b36d4ea834e58319\"\n",
+          "start": 3423903
+        },
+        {
+          "current": "          \"sha256\": \"eb9485eff80fab3e870072a830bf52ee55b70c8c20ddd5dca91f17b009513e18\"\n",
+          "previous": "          \"sha256\": \"567a2e983c751f3226a00a04fb08db20d5609fd6ccf78dc9b36d4ea834e58319\"\n",
+          "start": 3434530
+        },
+        {
+          "current": "          \"sha256\": \"eb9485eff80fab3e870072a830bf52ee55b70c8c20ddd5dca91f17b009513e18\"\n",
+          "previous": "          \"sha256\": \"567a2e983c751f3226a00a04fb08db20d5609fd6ccf78dc9b36d4ea834e58319\"\n",
+          "start": 3445131
+        },
+        {
+          "current": "          \"sha256\": \"eb9485eff80fab3e870072a830bf52ee55b70c8c20ddd5dca91f17b009513e18\"\n",
+          "previous": "          \"sha256\": \"567a2e983c751f3226a00a04fb08db20d5609fd6ccf78dc9b36d4ea834e58319\"\n",
+          "start": 3456999
+        },
+        {
+          "current": "          \"sha256\": \"eb9485eff80fab3e870072a830bf52ee55b70c8c20ddd5dca91f17b009513e18\"\n",
+          "previous": "          \"sha256\": \"567a2e983c751f3226a00a04fb08db20d5609fd6ccf78dc9b36d4ea834e58319\"\n",
+          "start": 3469195
+        },
+        {
+          "current": "          \"sha256\": \"eb9485eff80fab3e870072a830bf52ee55b70c8c20ddd5dca91f17b009513e18\"\n",
+          "previous": "          \"sha256\": \"567a2e983c751f3226a00a04fb08db20d5609fd6ccf78dc9b36d4ea834e58319\"\n",
+          "start": 3482913
+        },
+        {
+          "current": "          \"sha256\": \"eb9485eff80fab3e870072a830bf52ee55b70c8c20ddd5dca91f17b009513e18\"\n",
+          "previous": "          \"sha256\": \"567a2e983c751f3226a00a04fb08db20d5609fd6ccf78dc9b36d4ea834e58319\"\n",
+          "start": 3496763
+        },
+        {
+          "current": "          \"sha256\": \"eb9485eff80fab3e870072a830bf52ee55b70c8c20ddd5dca91f17b009513e18\"\n",
+          "previous": "          \"sha256\": \"567a2e983c751f3226a00a04fb08db20d5609fd6ccf78dc9b36d4ea834e58319\"\n",
+          "start": 3510618
+        },
+        {
+          "current": "          \"sha256\": \"eb9485eff80fab3e870072a830bf52ee55b70c8c20ddd5dca91f17b009513e18\"\n",
+          "previous": "          \"sha256\": \"567a2e983c751f3226a00a04fb08db20d5609fd6ccf78dc9b36d4ea834e58319\"\n",
+          "start": 3524629
+        },
+        {
+          "current": "          \"sha256\": \"eb9485eff80fab3e870072a830bf52ee55b70c8c20ddd5dca91f17b009513e18\"\n",
+          "previous": "          \"sha256\": \"567a2e983c751f3226a00a04fb08db20d5609fd6ccf78dc9b36d4ea834e58319\"\n",
+          "start": 3539381
+        },
+        {
+          "current": "          \"sha256\": \"eb9485eff80fab3e870072a830bf52ee55b70c8c20ddd5dca91f17b009513e18\"\n",
+          "previous": "          \"sha256\": \"567a2e983c751f3226a00a04fb08db20d5609fd6ccf78dc9b36d4ea834e58319\"\n",
+          "start": 3554163
+        },
+        {
+          "current": "          \"sha256\": \"eb9485eff80fab3e870072a830bf52ee55b70c8c20ddd5dca91f17b009513e18\"\n",
+          "previous": "          \"sha256\": \"567a2e983c751f3226a00a04fb08db20d5609fd6ccf78dc9b36d4ea834e58319\"\n",
+          "start": 3568915
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "eb5c583ce7672dee52b928afa7349835799b48eb7213cc1846b85527d82e671c"
+    },
+    {
+      "currentSha256": "994ac84d37aa8ba33375c439323c1a666a2a8f1a21a7eb935b7e537f6d821847",
+      "edits": [
+        {
+          "current": "  const budgetedPerlWorkflow = extendPerlCompilerBudget(structuralPerlWorkflow);\n  const perlPath = \".github/workflows/perl-consumer.yml\", budgetedPerlSha256 = sha256(budgetedPerlWorkflow);\n  assert.equal(beforeFinRefinementSource(perlPath, livePerlWorkflow, budgetedPerlSha256), budgetedPerlWorkflow);\n  const missingDirectProof = livePerlWorkflow.replace(\"bash scripts/run-direct-proof-erasure-language-ci.sh perl\", \"true\");\n  assert.notEqual(missingDirectProof, livePerlWorkflow);\n  assert.notEqual(beforeFinRefinementSource(perlPath, missingDirectProof, budgetedPerlSha256), budgetedPerlWorkflow);\n",
+          "previous": "  assert.equal(extendPerlCompilerBudget(structuralPerlWorkflow), livePerlWorkflow);\n",
+          "start": 38514
+        },
+        {
+          "current": "  const reviewedJob = liveWorkflow.split(\"  reviewed-ir-admission:\\n\")[1].split(\"  nix-cache:\\n\")[0];\n",
+          "previous": "  const reviewedJob = workflow.split(\"  reviewed-ir-admission:\\n\")[1].split(\"  nix-cache:\\n\")[0];\n",
+          "start": 49743
+        },
+        {
+          "current": "  const phpWasmObservations = liveWorkflow.split(\"  php-wasm-observations:\\n\")[1].split(\"  php-multi-profile:\\n\")[0];\n",
+          "previous": "  const phpWasmObservations = workflow.split(\"  php-wasm-observations:\\n\")[1].split(\"  php-multi-profile:\\n\")[0];\n",
+          "start": 50434
+        },
+        {
+          "current": "  assert.match(liveWorkflow, /needs:[\\s\\S]*- reviewed-ir-admission/);\n",
+          "previous": "  assert.match(workflow, /needs:[\\s\\S]*- reviewed-ir-admission/);\n",
+          "start": 51324
+        }
+      ],
+      "path": "tests/documentation.test.mjs",
+      "previousSha256": "93e7b2534652bffc0008f66c7f6e17bb29cade36962046e795bea808fb8e2d5a"
+    },
+    {
+      "currentSha256": "bdc328767873b814fc7ec2167baa4ab0ba6d399818b78c855fc4bcb2410b9e4e",
+      "edits": [
+        {
+          "current": "const additionalId = item => typeof item === \"string\" ? item : item.id;\nconst additionalOutcomes = (profile, additionalProfileSteps) => {\n\tconst ids = new Set(Object.values(additionalProfileSteps).flat().map(additionalId));\n\treturn Object.fromEntries([...ids].map(id => [\n\t\tid\n\t\t, Object.entries(additionalProfileSteps).some(([name, items]) =>\n\t\t\tname === profile && items.some(item => additionalId(item) === id)) ? \"success\" : \"skipped\"\n\t]));\n};\n",
+          "previous": "",
+          "start": 1123
+        },
+        {
+          "current": "\t\t, ...additionalOutcomes(profile, additionalProfileSteps)\n",
+          "previous": "\t\t, ...Object.fromEntries(Object.entries(additionalProfileSteps).flatMap(([name, ids]) =>\n\t\t\tids.map(id => [id, name === profile ? \"success\" : \"skipped\"])))\n",
+          "start": 1857
+        },
+        {
+          "current": "\tconst additional = new Map();\n",
+          "previous": "",
+          "start": 3080
+        },
+        {
+          "current": "\t\tfor(const item of ids)\n",
+          "previous": "\t\tfor(const id of ids)\n",
+          "start": 3273
+        },
+        {
+          "current": "\t\t\tconst id = additionalId(item), continueOnError = typeof item === \"object\" && item.continueOnError === true;\n\t\t\tassert.match(id, /^[a-z][a-z0-9_]*$/u); assert.ok(!registered.has(id));\n\t\t\tconst current = additional.get(id);\n\t\t\tif(current)\n\t\t\t{\n\t\t\t\tassert.equal(current.continueOnError, continueOnError);\n\t\t\t\tassert.ok(!current.profiles.includes(profile));\n\t\t\t\tcurrent.profiles.push(profile);\n\t\t\t}\n\t\t\telse\n\t\t\t{\n\t\t\t\tassert.equal(parsed.filter(step => step.id === id).length, 1, id + \" has one acceptance step\");\n\t\t\t\tadditional.set(id, { continueOnError, profiles: [profile] });\n\t\t\t}\n",
+          "previous": "\t\t\tassert.match(id, /^[a-z][a-z0-9_]*$/u); assert.ok(!registered.has(id)); registered.add(id);\n\t\t\tassert.equal(parsed.filter(step => step.id === id).length, 1, id + \" has one acceptance step\");\n",
+          "start": 3302
+        },
+        {
+          "current": "\t\tconst additionalSteps = (additionalProfileSteps[profile] ?? []).map(item => identified(additionalId(item)));\n",
+          "previous": "\t\tconst additional = (additionalProfileSteps[profile] ?? []).map(identified);\n",
+          "start": 5427
+        },
+        {
+          "current": "\t\tfor(const step of additionalSteps)\n",
+          "previous": "\t\tfor(const step of additional)\n",
+          "start": 5935
+        },
+        {
+          "current": "\t\t\tconst specification = additional.get(step.id);\n\t\t\tconst expectedCondition = specification.profiles\n\t\t\t\t.sort((left, right) => profiles.indexOf(left) - profiles.indexOf(right))\n\t\t\t\t.map(name => \"matrix.profile == '\" + name + \"'\").join(\" || \");\n\t\t\tassert.equal(step.condition, expectedCondition);\n\t\t\tif(specification.continueOnError) assert.match(step.text, /^ {8}continue-on-error: true$/mu);\n\t\t\telse assert.doesNotMatch(step.text, /continue-on-error/u);\n",
+          "previous": "\t\t\tassert.equal(step.condition, ordinary.condition); assert.doesNotMatch(step.text, /continue-on-error/u);\n",
+          "start": 5976
+        },
+        {
+          "current": "\t\t\tfor(const step of [ordinary, corpus, install, upload, ...additionalSteps])\n\t\t\t\tassert.equal(evaluateForProfile(step.condition, selected)\n\t\t\t\t\t, step.id && additional.has(step.id) ? additional.get(step.id).profiles.includes(selected) : selected === profile, step.name);\n",
+          "previous": "\t\t\tfor(const step of [ordinary, corpus, install, upload, ...additional])\n\t\t\t\tassert.equal(evaluateForProfile(step.condition, selected), selected === profile, step.name);\n",
+          "start": 6580
+        },
+        {
+          "current": "\t\t\tfor(const id of [\"consumer\", \"ordinary_\" + profile, \"type_corpus_\" + profile, ...additionalSteps.map(step => step.id)])\n",
+          "previous": "\t\t\tfor(const id of [\"consumer\", \"ordinary_\" + profile, \"type_corpus_\" + profile, ...additional.map(step => step.id)])\n",
+          "start": 7032
+        },
+        {
+          "current": "\t\t\tfor(const id of [\"ordinary_\" + other, \"type_corpus_\" + other\n\t\t\t\t, ...(additionalProfileSteps[other] ?? []).map(additionalId).filter(id => !additional.get(id).profiles.includes(profile))])\n",
+          "previous": "\t\t\tfor(const id of [\"ordinary_\" + other, \"type_corpus_\" + other, ...(additionalProfileSteps[other] ?? [])])\n",
+          "start": 7381
+        }
+      ],
+      "path": "tests/helpers/managed-ci-isolation.mjs",
+      "previousSha256": "9ae91ce902fa32a047cb9cd8590fc882769187c8ac8795a93068890abf35e239"
+    },
+    {
+      "currentSha256": "cb780429ebdd000d768fc177a5ad7b2b0dc5270a0dc7341ce0bcbcd88b5d773c",
+      "edits": [
+        {
+          "current": "\t\t, additional: [\"direct_proof_native\"]\n",
+          "previous": "",
+          "start": 621
+        },
+        {
+          "current": "\t\t, additional: [\"direct_proof_language\"]\n",
+          "previous": "",
+          "start": 824
+        },
+        {
+          "current": "\t\t, additional: [\"direct_proof_language\"]\n",
+          "previous": "",
+          "start": 1011
+        },
+        {
+          "current": "\t\t\t\t[spec.ordinary, spec.corpus, ...(spec.additional ?? [])]\n\t\t\t\t\t.map(id => [id, name === profile ? \"success\" : \"skipped\"])))\n",
+          "previous": "\t\t\t\t[spec.ordinary, spec.corpus].map(id => [id, name === profile ? \"success\" : \"skipped\"])))\n",
+          "start": 2561
+        }
+      ],
+      "path": "tests/helpers/native-ci-isolation.mjs",
+      "previousSha256": "a2ed3d3fd94e32942d0719064ac1862f1792bef109ba26eefdf653cfc4be1288"
+    },
+    {
+      "currentSha256": "af69f1218c4897a6e7330414e55f900f5a94462b3f07912508d0ee54bf3a6ff5",
+      "edits": [
+        {
+          "current": "\t\t\t[\"consumer\", spec.ordinary, spec.corpus, ...(spec.additional ?? [])]\n\t\t\t\t.map(id => ({ [id]: outcome })))];\n",
+          "previous": "\t\t\t[\"consumer\", spec.ordinary, spec.corpus].map(id => ({ [id]: outcome })))];\n",
+          "start": 3392
+        },
+        {
+          "current": "\tassert.equal(count, 39);\n",
+          "previous": "\tassert.equal(count, 30);\n",
+          "start": 4030
+        },
+        {
+          "current": "\t\t, workflow.replace(step.text, () => step.text.replace(step.condition\n\t\t\t, \"always() && matrix.profile == 'c-family'\"))];\n",
+          "previous": "\t\t, workflow.replace(step.condition, \"always() && matrix.profile == 'c-family'\")];\n",
+          "start": 4484
+        }
+      ],
+      "path": "tests/helpers/native-observation-split-tests.mjs",
+      "previousSha256": "29b3611c028f015424bec919862e851c9d1bd98723f3f61609ef0cbb75ef9332"
+    },
+    {
+      "currentSha256": "4830b1745ecb3773294f2fb8ecae48236f7551a5c879961ebd6c9996db536c0e",
+      "edits": [
+        {
+          "current": "const directProofCommand = '              consumer_command=\"$consumer_command && bash scripts/run-direct-proof-erasure-managed-ci.sh jvm\"\\n';\nconst variants = [\n\t{\n\t\tsummary: '              if [ \"${{ steps.ordinary_jvm.outcome }}\" != success ] || [ \"${{ steps.type_corpus_jvm.outcome }}\" != success ] || [ \"${{ steps.direct_proof_managed.outcome }}\" != success ]; then\\n'\n\t\t, updatedSummary: '              if [ \"${{ steps.ordinary_jvm.outcome }}\" != success ] || [ \"${{ steps.type_corpus_jvm.outcome }}\" != success ] || [ \"${{ steps.nominal_jvm.outcome }}\" != success ] || [ \"${{ steps.direct_proof_managed.outcome }}\" != success ]; then\\n'\n\t\t, gate: \"(matrix.profile == 'jvm' && (steps.ordinary_jvm.outcome != 'success' || steps.type_corpus_jvm.outcome != 'success' || steps.direct_proof_managed.outcome != 'success'))\"\n\t\t, updatedGate: \"(matrix.profile == 'jvm' && (steps.ordinary_jvm.outcome != 'success' || steps.type_corpus_jvm.outcome != 'success' || steps.nominal_jvm.outcome != 'success' || steps.direct_proof_managed.outcome != 'success'))\"\n\t\t, beforeSummary: directProofCommand\n\t\t, afterCommand: directProofCommand\n\t}\n\t, {\n\t\tsummary: '              if [ \"${{ steps.ordinary_jvm.outcome }}\" != success ] || [ \"${{ steps.type_corpus_jvm.outcome }}\" != success ]; then\\n'\n\t\t, updatedSummary: '              if [ \"${{ steps.ordinary_jvm.outcome }}\" != success ] || [ \"${{ steps.type_corpus_jvm.outcome }}\" != success ] || [ \"${{ steps.nominal_jvm.outcome }}\" != success ]; then\\n'\n\t\t, gate: \"(matrix.profile == 'jvm' && (steps.ordinary_jvm.outcome != 'success' || steps.type_corpus_jvm.outcome != 'success'))\"\n\t\t, updatedGate: \"(matrix.profile == 'jvm' && (steps.ordinary_jvm.outcome != 'success' || steps.type_corpus_jvm.outcome != 'success' || steps.nominal_jvm.outcome != 'success'))\"\n\t\t, beforeSummary: \"\"\n\t\t, afterCommand: \"\"\n\t}\n];\n",
+          "previous": "const summary = '              if [ \"${{ steps.ordinary_jvm.outcome }}\" != success ] || [ \"${{ steps.type_corpus_jvm.outcome }}\" != success ]; then\\n';\nconst updatedSummary = summary.replace(\"; then\", ' || [ \"${{ steps.nominal_jvm.outcome }}\" != success ]; then');\nconst gate = \"(matrix.profile == 'jvm' && (steps.ordinary_jvm.outcome != 'success' || steps.type_corpus_jvm.outcome != 'success'))\";\nconst updatedGate = gate.replace(/\\)\\)$/u, \" || steps.nominal_jvm.outcome != 'success'))\");\n",
+          "start": 1233
+        },
+        {
+          "current": "const variantFor = (source, enabled) => {\n\tconst matches = variants.filter(variant => source.includes(enabled\n\t\t? command + variant.afterCommand + variant.updatedSummary\n\t\t: variant.beforeSummary + variant.summary)\n\t\t&& source.includes(enabled ? variant.updatedGate : variant.gate));\n\tassert.equal(matches.length, 1, \"Expected one coherent JVM nominal-Subtype workflow epoch\");\n\treturn matches[0];\n};\n",
+          "previous": "",
+          "start": 3209
+        },
+        {
+          "current": "\tconst { summary, updatedSummary, gate, updatedGate, beforeSummary, afterCommand } = variantFor(source, false);\n",
+          "previous": "",
+          "start": 3873
+        },
+        {
+          "current": "\tsource = replaceOnce(source, beforeSummary + summary, command + afterCommand + updatedSummary);\n",
+          "previous": "\tsource = replaceOnce(source, summary, command + updatedSummary);\n",
+          "start": 4059
+        },
+        {
+          "current": "\tconst { summary, updatedSummary, gate, updatedGate, beforeSummary, afterCommand } = variantFor(source, true);\n",
+          "previous": "",
+          "start": 4395
+        },
+        {
+          "current": "\tsource = replaceOnce(source, command + afterCommand + updatedSummary, beforeSummary + summary);\n",
+          "previous": "\tsource = replaceOnce(source, command + updatedSummary, summary);\n",
+          "start": 4567
+        },
+        {
+          "current": "\tconst { updatedSummary, updatedGate, afterCommand } = variantFor(source, true);\n",
+          "previous": "",
+          "start": 5010
+        },
+        {
+          "current": "\tassert.ok(body.includes(command + afterCommand + updatedSummary)); assert.ok(body.includes(updatedGate));\n",
+          "previous": "\tassert.ok(body.includes(command + updatedSummary)); assert.ok(body.includes(updatedGate));\n",
+          "start": 6066
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-jvm-ci-workflow.mjs",
+      "previousSha256": "7917625eb568d4348d3e36d9d4818682ae535ed70aaa9064017b4156944facb4"
+    },
+    {
+      "currentSha256": "15ec3b945be948f05f8263fcfb819a15d40eb4e60b83cb3d88347fa5cfc3acae",
+      "edits": [
+        {
+          "current": "",
+          "previous": "const gate = \"        if: \" + condition + \"\\n\";\nconst updatedGate = \"        if: always() && (\" + condition + \" || steps.nominal_wit.outcome != 'success')\\n\";\n",
+          "start": 1437
+        },
+        {
+          "current": "",
+          "previous": "const updatedSuccess = success + \"steps.nominal_wit.outcome == 'success' && \";\n",
+          "start": 1505
+        },
+        {
+          "current": "const nominalCommand = ' && bash scripts/run-nominal-subtype-wit-ci.sh \\\\\"/usr/bin/cc\\\\\" \\\\\"$PWD/.toolchains/wasm-tools/bin/wasm-tools\\\\\" \\\\\"$PWD/build/wasmtime-c-api\\\\\"';\nconst directProofCommand = \" && bash scripts/run-direct-proof-erasure-wit-ci.sh\";\nconst variants = [\n\t{\n\t\tgate: \"        if: always() && (\" + condition + \" || steps.direct_proof_wit.outcome != 'success')\\n\"\n\t\t, updatedGate: \"        if: always() && (\" + condition + \" || steps.nominal_wit.outcome != 'success' || steps.direct_proof_wit.outcome != 'success')\\n\"\n\t\t, success: success + \"steps.direct_proof_wit.outcome == 'success' && \"\n\t\t, updatedSuccess: success + \"steps.nominal_wit.outcome == 'success' && steps.direct_proof_wit.outcome == 'success' && \"\n\t\t, command: command.replace('\"\\n', directProofCommand + '\"\\n')\n\t\t, updatedCommand: command.replace('\"\\n', nominalCommand + directProofCommand + '\"\\n')\n\t\t, anchor: \"      - name: Qualify direct proof erasure in the prepared WIT package\\n\"\n\t}\n\t, {\n\t\tgate: \"        if: \" + condition + \"\\n\"\n\t\t, updatedGate: \"        if: always() && (\" + condition + \" || steps.nominal_wit.outcome != 'success')\\n\"\n\t\t, success\n\t\t, updatedSuccess: success + \"steps.nominal_wit.outcome == 'success' && \"\n\t\t, command\n\t\t, updatedCommand: command.replace('\"\\n', nominalCommand + '\"\\n')\n\t\t, anchor\n\t}\n];\n",
+          "previous": "const updatedCommand = command.replace('\"\\n', ' && bash scripts/run-nominal-subtype-wit-ci.sh \\\\\"/usr/bin/cc\\\\\" \\\\\"$PWD/.toolchains/wasm-tools/bin/wasm-tools\\\\\" \\\\\"$PWD/build/wasmtime-c-api\\\\\"\"\\n');\n",
+          "start": 1572
+        },
+        {
+          "current": "const variantFor = (body, enabled) => {\n\tconst matches = variants.filter(variant => body.includes(enabled ? variant.updatedGate : variant.gate)\n\t\t&& body.includes(enabled ? variant.updatedCommand : variant.command)\n\t\t&& body.split(enabled ? variant.updatedSuccess : variant.success).length === 3);\n\tassert.equal(matches.length, 1, \"Expected one coherent WIT nominal-Subtype workflow epoch\");\n\treturn matches[0];\n};\n",
+          "previous": "",
+          "start": 3178
+        },
+        {
+          "current": "\tconst { gate, updatedGate, success, updatedSuccess, command, updatedCommand, anchor: insertion } = variantFor(body, false);\n\tlet updated = once(body, insertion, nominalSubtypeWitCiBlock + insertion);\n",
+          "previous": "\tlet updated = once(body, anchor, nominalSubtypeWitCiBlock + anchor);\n",
+          "start": 3887
+        },
+        {
+          "current": "\tconst body = bodyOf(source);\n\tconst { gate, updatedGate, success, updatedSuccess, command, updatedCommand } = variantFor(body, true);\n\tlet previous = once(body, nominalSubtypeWitCiBlock, \"\");\n",
+          "previous": "\tconst body = bodyOf(source); let previous = once(body, nominalSubtypeWitCiBlock, \"\");\n",
+          "start": 4532
+        },
+        {
+          "current": "\tconst { updatedGate, updatedCommand } = variantFor(body, true);\n",
+          "previous": "",
+          "start": 5363
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-wit-ci-workflow.mjs",
+      "previousSha256": "f88a28381cb7a80d8460d57afa3b0c0605c3f975ffe197bf3f8fb77e64e0791c"
+    },
+    {
+      "currentSha256": "c55dd00ec70f742841f0beb496b0576814b24130d0d3373d1b335f304b952f74",
+      "edits": [
+        {
+          "current": "\tassert.ok(workflow.includes('if [ \"${{ steps.ordinary_c.outcome }}\" != success ] || [ \"${{ steps.type_corpus_c_family.outcome }}\" != success ] || [ \"${{ steps.direct_proof_native.outcome }}\" != success ]; then'));\n",
+          "previous": "\tassert.ok(workflow.includes('if [ \"${{ steps.ordinary_c.outcome }}\" != success ] || [ \"${{ steps.type_corpus_c_family.outcome }}\" != success ]; then'));\n",
+          "start": 11082
+        }
+      ],
+      "path": "tests/helpers/owned-borrow-evidence.mjs",
+      "previousSha256": "92bf829b605fd67253007a96945b513865f7fee7fd56d1ea3da49e61a8dbe872"
+    },
+    {
+      "currentSha256": "82fef821a5047de51be93bee5c1c81309d7ecefa85fd5c10b6036ee445a6d6ea",
+      "edits": [
+        {
+          "current": "/** Reconstruct the exact result-constructor annotations retained by the 2026-10-10 producer. */\nexport const reviewedSubtypeHistoricalHostIr = () => {\n\tconst review = reviewedSubtypeHostIr();\n\tconst constructors = {\n\t\tshout: \"Subtypes.checkedWord\"\n\t\t, pad: \"Subtypes.checkedEven\"\n\t\t, join: \"Subtypes.checkedWord\"\n\t\t, byteValue: \"Subtypes.checkedByte\"\n\t\t, firstEven: \"Subtypes.checkedEven\"\n\t\t, secondEven: \"Subtypes.checkedEven\"\n\t\t, zeroEven: \"Subtypes.checkedEven\"\n\t};\n\tfor(const [name, constructor] of Object.entries(constructors))\n\t{\n\t\tconst declaration = review.declarations.find(item => item.id === `lean:Subtypes.${name}`);\n\t\tassert.ok(declaration, `Missing historical reviewed declaration: ${name}`);\n\t\tconst result = declaration.source.extensions[\"lean-lang.org/refinements\"].result;\n\t\tassert.deepEqual(result, { kind: \"subtype\", constructor: null });\n\t\tresult.constructor = constructor;\n\t}\n\treturn review;\n};\n\n",
+          "previous": "",
+          "start": 1483
+        }
+      ],
+      "path": "tests/helpers/reviewed-subtype-host-fixture.mjs",
+      "previousSha256": "78c96d389cd75577ef6a40d5c24b3a607f2e7fb1371c9e187dd51e004c7b3302"
+    },
+    {
+      "currentSha256": "eb9485eff80fab3e870072a830bf52ee55b70c8c20ddd5dca91f17b009513e18",
+      "edits": [
+        {
+          "current": "import { reviewedContractDifference } from \"../../src/analyze/reviewed-source.mjs\";\n",
+          "previous": "import { reviewedContractDifference, reviewedSourceSelection } from \"../../src/analyze/reviewed-source.mjs\";\n",
+          "start": 437
+        },
+        {
+          "current": "import { reviewedSubtypeHistoricalHostIr, reviewedSubtypeHostConsumer, reviewedSubtypeHostProfiles, reviewedSubtypeHostSource } from \"./reviewed-subtype-host-fixture.mjs\";\n",
+          "previous": "import { reviewedSubtypeHostConsumer, reviewedSubtypeHostIr, reviewedSubtypeHostProfiles, reviewedSubtypeHostSource } from \"./reviewed-subtype-host-fixture.mjs\";\n",
+          "start": 677
+        },
+        {
+          "current": "const historicalReviewedSelection = (identity, review) => {\n\tconst source = canonicalJson(review);\n\tassert.deepEqual(identity, {\n\t\tpath: \"api.binding-ir.json\", schemaVersion: 1\n\t\t, semanticSha256: hashBindingIr(review)\n\t\t, source, sourceSha256: sha256(source)\n\t});\n\tconst contractSite = (site, refinement) => ({\n\t\townership: site.ownership, lifetime: site.lifetime\n\t\t, ...refinement?.kind === \"subtype\" && refinement.constructor !== null\n\t\t\t? { refinement: { constructor: refinement.constructor } } : {}\n\t});\n\tconst contracts = {}, exports = [], specializations = [];\n\tfor(const declaration of review.declarations)\n\t{\n\t\tconst extensions = declaration.source.extensions;\n\t\tconst specialization = extensions[\"lean-lang.org/specialization\"];\n\t\tconst name = specialization?.name ?? declaration.source.declaration;\n\t\tconst refinements = extensions[\"lean-lang.org/refinements\"];\n\t\texports.push(name);\n\t\tcontracts[name] = {\n\t\t\tparameters: declaration.parameters.map((parameter, index) =>\n\t\t\t\tcontractSite(parameter, refinements.parameters[index]))\n\t\t\t, result: contractSite(declaration.result, refinements.result)\n\t\t};\n\t\tif(specialization) specializations.push({\n\t\t\tname: specialization.name, declaration: specialization.declaration\n\t\t\t, types: specialization.types\n\t\t});\n\t}\n\treturn { contracts, exports: exports.sort(), specializations };\n};\n",
+          "previous": "",
+          "start": 1095
+        },
+        {
+          "current": "\tconst report = await json(\"report.json\"), review = reviewedSubtypeHistoricalHostIr();\n",
+          "previous": "\tconst report = await json(\"report.json\"), review = reviewedSubtypeHostIr();\n",
+          "start": 3457
+        },
+        {
+          "current": "\t\tconst selection = historicalReviewedSelection(identity.reviewedBindingIr, review);\n",
+          "previous": "\t\tconst selection = reviewedSourceSelection(identity.reviewedBindingIr);\n",
+          "start": 5217
+        }
+      ],
+      "path": "tests/helpers/reviewed-subtype-host-report.mjs",
+      "previousSha256": "567a2e983c751f3226a00a04fb08db20d5609fd6ccf78dc9b36d4ea834e58319"
+    },
+    {
+      "currentSha256": "cd2563ce5f4e941b19c0c53a0329cd0e9440cfa2c2ee25c53db55fbbc22f3a52",
+      "edits": [
+        {
+          "current": "\t\t, source.replace(\"node scripts/prepare-php-wasm-subtype-entry-runtime.mjs --output build/php-wasm-subtype-entry-input/php-wasm-runtime\"\n\t\t\t, \"true missing-runtime --output build/php-wasm-subtype-entry-input/php-wasm-runtime\")]){ checkMutation(source, changed, name, \"enforcement and prepared runtime\"); controls++; }\n",
+          "previous": "\t\t, source.replace(\"node scripts/prepare-php-wasm-subtype-entry-runtime.mjs\", \"true missing-runtime\")]){ checkMutation(source, changed, name, \"enforcement and prepared runtime\"); controls++; }\n",
+          "start": 5695
+        }
+      ],
+      "path": "tests/helpers/structural-subtype-ci-workflow-tests.mjs",
+      "previousSha256": "705e9d447cb23fdd5f339328323db89227049e73d9a743c6c42e9f92a4639b53"
+    },
+    {
+      "currentSha256": "35513716b92df355c62c57f20dc879e915833f3aa5fa76e8b2fc0500af15d61f",
+      "edits": [
+        {
+          "current": "\tconst anchor = source.includes(\"      - name: Require direct proof erasure in Node, TypeScript and three browsers\\n\")\n\t\t? \"      - name: Require direct proof erasure in Node, TypeScript and three browsers\\n\"\n\t\t: \"      - name: Check independently reviewed Subtype npm packages and strict TypeScript\\n\";\n",
+          "previous": "\tconst anchor = \"      - name: Check independently reviewed Subtype npm packages and strict TypeScript\\n\";\n",
+          "start": 6600
+        },
+        {
+          "current": "\tsource = enabled ? once(source, nodeFailure, nodeFailure + structuralFailure) : once(source, structuralFailure, \"\");\n",
+          "previous": "\tsource = enabled ? once(source, nodeFailure + \"\\n\", nodeFailure + structuralFailure + \"\\n\") : once(source, structuralFailure, \"\");\n",
+          "start": 7247
+        }
+      ],
+      "path": "tests/helpers/structural-subtype-ci-workflow.mjs",
+      "previousSha256": "6ae8a787418829455fb676911d8971c5dbfb249fe9f0eb752f88afee80e52938"
+    },
+    {
+      "currentSha256": "8b0fee5879ff9f3dbfcead3d8e3d927a4124499127d9b54af3ed4587ace5eb7c",
+      "edits": [
+        {
+          "current": "const directProof = { id: \"direct_proof_managed\", continueOnError: true };\nconst checkDirectProof = source => assertManagedCiIsolation(source, null, {\n\tdotnet: [directProof]\n\t, jvm: [directProof]\n\t, ruby: [{ id: \"direct_proof_language\", continueOnError: true }]\n});\nconst checkCurrent = source => assertManagedCiIsolation(source, null, {\n\tdotnet: [directProof], jvm: [\"nominal_jvm\", directProof]\n\t, ruby: [{ id: \"direct_proof_language\", continueOnError: true }]\n});\n",
+          "previous": "const checkCurrent = source => assertManagedCiIsolation(source, null, { jvm: [\"nominal_jvm\"] });\n",
+          "start": 762
+        },
+        {
+          "current": "\t\t, failFast: false, selectedOutcomeCases: 39\n",
+          "previous": "\t\t, failFast: false, selectedOutcomeCases: 30\n",
+          "start": 2823
+        },
+        {
+          "current": "\tassert.equal(checkDirectProof(previous).selectedOutcomeCases, 36);\n",
+          "previous": "\tassert.equal(assertManagedCiIsolation(previous).selectedOutcomeCases, 27);\n",
+          "start": 5111
+        }
+      ],
+      "path": "tests/managed-ci-isolation.test.mjs",
+      "previousSha256": "0077925c229b19ec89b87f674c60dba4b3b8b93d1a2c705cd3c251fd5ad98538"
+    },
+    {
+      "currentSha256": "87bdd1f0835edcc8c2739fd9baf6597f248e14ff7086c0983ce705cbca3d4505",
+      "edits": [
+        {
+          "current": "\tassert.doesNotMatch(matrix, /needs:|lake-workspace\\.test/);\n\tassert.equal([...matrix.matchAll(/^ {8}continue-on-error: true$/gmu)].length, 1);\n\tassert.match(matrix, /id: direct_proof_language\\n {8}continue-on-error: true/u);\n\tassert.match(matrix, /steps\\.direct_proof_language\\.outcome != 'success'/u);\n",
+          "previous": "\tassert.doesNotMatch(matrix, /continue-on-error|needs:|lake-workspace\\.test/);\n",
+          "start": 11810
+        }
+      ],
+      "path": "tests/perl-contract.test.mjs",
+      "previousSha256": "5c602d38e98733d1d78dc389f21517612c13384d51d0429c68a6d0396276098e"
+    }
+  ]
+}
