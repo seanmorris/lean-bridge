@@ -27,3 +27,4 @@ import "./helpers/core-shard-five-repair-integration-source-history-tests.mjs";
 import "./helpers/core-ci-reliability-source-history-tests.mjs";
 import "./helpers/callback-fin-shallow-checkout-source-history-tests.mjs";
 import "./helpers/callback-fin-sparse-checkout-source-history-tests.mjs";
+import "./helpers/lean-toolchain-release-fallback-source-history-tests.mjs";

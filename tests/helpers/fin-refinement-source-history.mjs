@@ -12,6 +12,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeLeanToolchainReleaseFallbackSource, leanToolchainReleaseFallbackNormalizationPaths } from "./lean-toolchain-release-fallback-source-history.mjs";
 import { beforeCallbackFinSparseCheckoutSource, callbackFinSparseCheckoutNormalizationPaths } from "./callback-fin-sparse-checkout-source-history.mjs";
 import { beforeCallbackFinShallowCheckoutSource, callbackFinShallowCheckoutNormalizationPaths } from "./callback-fin-shallow-checkout-source-history.mjs";
 import { beforeCoreCiReliabilitySource, coreCiReliabilityNormalizationPaths } from "./core-ci-reliability-source-history.mjs";
@@ -2269,7 +2270,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...callbackFinSparseCheckoutNormalizationPaths
+	...leanToolchainReleaseFallbackNormalizationPaths
+	, ...callbackFinSparseCheckoutNormalizationPaths
 	, ...callbackFinShallowCheckoutNormalizationPaths
 	, ...coreCiReliabilityNormalizationPaths
 	, ...coreShardFiveRepairIntegrationNormalizationPaths
@@ -3277,7 +3279,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeCallbackFinSparseCheckoutSource(path, text, expected);
+	let stage = beforeLeanToolchainReleaseFallbackSource(
+		path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeCallbackFinSparseCheckoutSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;
