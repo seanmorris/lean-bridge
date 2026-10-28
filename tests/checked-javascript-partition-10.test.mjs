@@ -28,3 +28,4 @@ import "./helpers/core-ci-reliability-source-history-tests.mjs";
 import "./helpers/callback-fin-shallow-checkout-source-history-tests.mjs";
 import "./helpers/callback-fin-sparse-checkout-source-history-tests.mjs";
 import "./helpers/lean-toolchain-release-fallback-source-history-tests.mjs";
+import "./helpers/reviewed-fin-job-scope-source-history-tests.mjs";
