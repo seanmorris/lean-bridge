@@ -1,0 +1,173 @@
+{
+  "additions": [
+    {
+      "currentSha256": "5d994e8ab7f095a772239438ff86a51a3483cd7f36a9eebe314e0defc859626c",
+      "path": "scripts/update-signature-specialization-completion-preparation-source-history.mjs"
+    },
+    {
+      "currentSha256": "c90e86be35f8fbeb721b3ed45dc359725dc4a1ba47ec4c0a2d89942b39417def",
+      "path": "tests/helpers/signature-specialization-completion-preparation-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "3e2930b03035361dfc1240f1dba6b744a6d2af792947fc7c393019702a8a611a",
+      "path": "tests/helpers/signature-specialization-completion-preparation-source-history.mjs"
+    }
+  ],
+  "implementationAdditions": [
+    {
+      "currentSha256": "23552503481288e8dc901cb5ab96a768822d00c5012ac02d4dee2753eb5cfd8e",
+      "path": "scripts/promote-signature-specialization-completion.mjs"
+    },
+    {
+      "currentSha256": "78c042aeab54f2ba78d4ef0a4571d56d252d56a4f613178b09c3d34c1f69a310",
+      "path": "tests/helpers/signature-specialization-completion-promotion-tests.mjs"
+    },
+    {
+      "currentSha256": "1a08775e73b1fe71a6c138abfdddcdbc43f24302e09f16f6b745661688f1f8da",
+      "path": "tests/helpers/signature-specialization-completion-promotion.mjs"
+    },
+    {
+      "currentSha256": "2b9a7c8c3e398527d0904d9dd0d04fffc512937a5718825236acbc7a99a068ab",
+      "path": "tests/signature-specialization-hosted-evidence.test.mjs"
+    }
+  ],
+  "implementationCommit": "928525c2f2438069a974d6694af83877f9e11321",
+  "milestone": "signature-specialization-completion-preparation-source-v1",
+  "predecessorCommit": "df304731903299d14fde5b16bb2db86942b2a487",
+  "schemaVersion": 1,
+  "scope": "Prepare the exact terminal-green Perl and PHP-Wasm producer bindings, all ten hosted input closures, a replay gate, and an exact 45-cell promotion transaction. Authenticate the PHP-Wasm caller after its installed adapter removes the separately supplied Composer autoload line. Make no support claim until the immutable archive is generated, replayed and promoted.",
+  "updates": [
+    {
+      "currentSha256": "427f8d3231a1186e628f0f7eb5dc6e395b9b3b0f36e82cdfe3ff86512c5ba033",
+      "edits": [
+        {
+          "current": "\t\t, \"signature-specialization-hosted-evidence\"\n",
+          "previous": "",
+          "start": 12749
+        }
+      ],
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "8af9263e368364e33fa012c1bc82c01a666f18598b63060641ee0cd29739287b"
+    },
+    {
+      "currentSha256": "b2afddfd73f0120d6906b80ee7fd600623fb086a8c7179f1661cb150ba69a0e9",
+      "edits": [
+        {
+          "current": "\t= \"50bd783fd9ec4a7a2d3eec4a807e788891d09446\";\nexport const signatureSpecializationHostedPerlProducer\n\t= \"60f6c69a5a9de9969715e0333d72d0a73588c876\";\n",
+          "previous": "\t= \"d37bcc0c33694dc048cc2bd4ce6843064e0beff2\";\n",
+          "start": 686
+        },
+        {
+          "current": "\t, native({ id: \"perl\", profiles: [\"perl\"], runId: 40674033403\n",
+          "previous": "\t, native({ id: \"perl\", profiles: [\"perl\"], runId: 40668752235\n",
+          "start": 4804
+        },
+        {
+          "current": "\t\t, producerCommit: signatureSpecializationHostedPerlProducer })\n",
+          "previous": "\t\t, producerCommit: signatureSpecializationHostedRepairProducer })\n",
+          "start": 5057
+        },
+        {
+          "current": "\t\t, runId: 40673140281, kind: \"php-wasm\"\n",
+          "previous": "\t\t, runId: 40668748649, kind: \"php-wasm\"\n",
+          "start": 5855
+        },
+        {
+          "current": "\n/**\n * Hash the exact PHP-Wasm caller after its installed-package adapter removes\n * the Composer autoload line supplied separately by the copied runtime.\n *\n * @param revision - Exact producer revision.\n */\nexport const signatureSpecializationHostedPhpWasmConsumerSha256 = revision => {\n\tconst source = signatureSpecializationHostedOriginal(revision\n\t\t, \"tests/fixtures/specialization-consumers/php-wasm.php\").toString();\n\tconst consumer = source.replace(\"require 'vendor/autoload.php';\", \"\");\n\tassert.notEqual(consumer, source);\n\treturn sha256(consumer);\n};\n",
+          "previous": "",
+          "start": 14253
+        }
+      ],
+      "path": "tests/helpers/signature-specialization-hosted-archive.mjs",
+      "previousSha256": "6f491e84e32ab91f55c13bfce978fc26763c60a5488ee115d451d2d6bccdc5f9"
+    },
+    {
+      "currentSha256": "fe5e1b62815df027699cc717e231fb66281d54adf1a00d8da9d5627880b5b7f4",
+      "edits": [
+        {
+          "current": "\t, signatureSpecializationHostedPhpWasmConsumerSha256\n",
+          "previous": "",
+          "start": 895
+        },
+        {
+          "current": "\tconst consumer = signatureSpecializationHostedPhpWasmConsumerSha256(\n\t\tlane.producerCommit);\n",
+          "previous": "\tconst consumer = signatureSpecializationHostedConsumerSha256(\n\t\tlane.producerCommit\n\t\t, \"tests/fixtures/specialization-consumers/php-wasm.php\");\n",
+          "start": 7105
+        }
+      ],
+      "path": "tests/helpers/signature-specialization-hosted-evidence.mjs",
+      "previousSha256": "a3d0ecdf09c5d1b43d33166aa6088cb769e7c42edad513d8f9cd29bea92fc56b"
+    },
+    {
+      "currentSha256": "846a80e06c4122464cdeebf572dcb2a830e0a2bb9b44fe7c8d798a2351d932d4",
+      "edits": [
+        {
+          "current": "\tsignatureSpecializationHostedPerlProducer\n\t, signatureSpecializationHostedProducer\n",
+          "previous": "\tsignatureSpecializationHostedProducer\n",
+          "start": 821
+        },
+        {
+          "current": "\t\tproducers: [...new Set([\n",
+          "previous": "\t\tproducers: [\n",
+          "start": 3625
+        },
+        {
+          "current": "\t\t\t, signatureSpecializationHostedPerlProducer\n\t\t])].sort()\n",
+          "previous": "\t\t].sort()\n",
+          "start": 3742
+        },
+        {
+          "current": "\t\t, [signatureSpecializationHostedPerlProducer\n\t\t\t, \"tests/fixtures/specialization-consumers/perl.pl\"]\n",
+          "previous": "",
+          "start": 4516
+        }
+      ],
+      "path": "tests/helpers/signature-specialization-hosted-source-history-tests.mjs",
+      "previousSha256": "468ad2a800abb658d783e502340642df012ac3ff7caeff3f66333c7f9b5d6b95"
+    },
+    {
+      "currentSha256": "0beeaa424a3bba9c83087ffc27175c6c9e1cec2655a64948d561be19d694f4f5",
+      "edits": [
+        {
+          "current": "\t, signatureSpecializationHostedPerlProducer\n\t, signatureSpecializationHostedPhpWasmConsumerSha256\n",
+          "previous": "",
+          "start": 358
+        },
+        {
+          "current": "\t\t, consumerSha256: signatureSpecializationHostedPhpWasmConsumerSha256(\n\t\t\tlane.producerCommit)\n",
+          "previous": "\t\t, consumerSha256: signatureSpecializationHostedConsumerSha256(\n\t\t\tlane.producerCommit\n\t\t\t, \"tests/fixtures/specialization-consumers/php-wasm.php\")\n",
+          "start": 4934
+        },
+        {
+          "current": "\t\t, perl: signatureSpecializationHostedPerlProducer\n",
+          "previous": "\t\t, perl: signatureSpecializationHostedRepairProducer\n",
+          "start": 6799
+        },
+        {
+          "current": "\tassert.equal(report.reports[0].consumerSha256\n\t\t, \"161f5c16fbb05d4b928f306f70c93145a06189ad6081e6c59713f61352e13016\");\n",
+          "previous": "",
+          "start": 8826
+        },
+        {
+          "current": "\tconst unadapted = clone(report);\n\tunadapted.reports[0].consumerSha256\n\t\t= signatureSpecializationHostedConsumerSha256(lane.producerCommit\n\t\t\t, \"tests/fixtures/specialization-consumers/php-wasm.php\");\n\tassert.throws(() => validateSignatureSpecializationHostedReport(\n\t\tlane, bytes(unadapted)));\n",
+          "previous": "",
+          "start": 9045
+        }
+      ],
+      "path": "tests/helpers/signature-specialization-hosted-tests.mjs",
+      "previousSha256": "56545f8cc9072fb825abd9b28eb5dfe00b6ec344bce2ddc9de2d59c6a20f0894"
+    },
+    {
+      "currentSha256": "eb92f7b76fce5d9b339b0cbaa5af1d4454006b56390dc80e5e8c7d9ba4df643c",
+      "edits": [
+        {
+          "current": "\t\t, \"signature-specialization-hosted-evidence\"\n",
+          "previous": "",
+          "start": 4167
+        }
+      ],
+      "path": "tests/test-profiles.test.mjs",
+      "previousSha256": "4916e1072efd034ded360b5564c268b2c4eb043b5a3f356b444a8fa336560da2"
+    }
+  ]
+}
