@@ -4,6 +4,7 @@
  * @file
  */
 import "./helpers/wit-callback-frozen-closure-source-history-tests.mjs";
+import "./helpers/core-owned-callback-pic-repair-source-history-tests.mjs";
 import "./helpers/core-pre-box-recount-repair-source-history-tests.mjs";
 import "./helpers/core-reviewed-fin-box-harness-repair-source-history-tests.mjs";
 import "./helpers/core-shard-four-serial-source-history-tests.mjs";
