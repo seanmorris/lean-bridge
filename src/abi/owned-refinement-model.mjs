@@ -115,7 +115,7 @@ export const compileOwnedRefinementModel = model => {
 				}))
 			};
 		}
-		if(!["array", "list", "option", "tuple", "result"].includes(refinement.kind)
+		if(!["array", "host-null", "list", "option", "tuple", "result"].includes(refinement.kind)
 			|| type.kind !== refinement.kind
 			|| type.arguments.length !== refinement.arguments.length)
 			fail(`${refinement.kind} transport mismatch`);

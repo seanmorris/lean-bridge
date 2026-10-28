@@ -64,6 +64,7 @@
     ],
     "constructor": [
       "array",
+      "host-null",
       "list",
       "option",
       "result",
@@ -597,7 +598,7 @@
       "id": "host-null",
       "lean": "Explicit nullable host value",
       "family": "checked-value",
-      "ir": null,
+      "ir": "constructor:host-null",
       "meaning": "Null from a declared host API.",
       "bounds": "Select an explicit host projection; null does not stand for every missing, erased or unsupported value."
     },

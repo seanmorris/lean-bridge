@@ -9,7 +9,7 @@ import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { hashBindingIr, parseBindingIr } from "../binding-ir/canonical.mjs";
-import { validateExportConfiguration } from "./export-configuration.mjs";
+import { compilerExportSelection, validateExportConfiguration } from "./export-configuration.mjs";
 import { createMetadataRequest } from "./elaborated-metadata.mjs";
 import { assertReviewedRefinements, assertReviewedFinCallback, assertReviewedFinNominal } from "./reviewed-refinements.mjs";
 import { reviewedSubtypeContracts } from "./reviewed-subtypes.mjs";
@@ -148,7 +148,7 @@ const checkReview = document => {
 	const type = (value, path, copied = true) => {
 		reject(copied && isCallback(value), path);
 		if(value.kind === "primitive" || value.kind === "named") return;
-		const arity = { array: 1, list: 1, option: 1, result: 2, tuple: 2 }[value.constructor];
+		const arity = { array: 1, "host-null": 1, list: 1, option: 1, result: 2, tuple: 2 }[value.constructor];
 		reject(value.kind !== "apply" || !arity || value.arguments.length !== arity, path);
 		value.arguments.forEach((argument, index) => type(argument, `${path}.arguments[${index}]`));
 	};
@@ -444,11 +444,13 @@ export const reconcileReviewedSource = (review, compiled, sourceIdentity) => {
 	assertReviewedSourceConfiguration(config);
 	const request = sourceIdentity.request;
 	const selection = reviewedSourceSelection(review);
+	const configured = compilerExportSelection(config);
 	if(!config.modules?.length || sha256(canonicalJson(config)) !== sourceIdentity.exportConfigurationSha256
 		|| !same(ordered(config.modules), ordered(request.exportModules))
 		|| !same(ordered(request.exports), selection.exports)
 		|| request.resources.length || !same(request.arities, selection.arities)
 		|| !same(request.specializations ?? null, selection.specializations ?? null)
+		|| !same(request.hostProjections ?? null, configured.hostProjections ?? null)
 		|| !same(request.contracts ?? null, selection.contracts ?? null))
 		mismatch("Reviewed contract differs from the authorized compiler selection");
 	const field = reviewedContractDifference(document, compiled);

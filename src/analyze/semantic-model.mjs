@@ -98,7 +98,7 @@ const lowerSemanticModel = ({ metadata, request, component, elaborationSha256, i
 			value.base = remember(type.base);
 		}
 		if(type.kind === "alias") value.target = remember(type.target);
-		if(["array", "list", "option"].includes(type.kind)) value.element = remember(type.element);
+		if(["array", "host-null", "list", "option"].includes(type.kind)) value.element = remember(type.element);
 		if(["result", "tuple"].includes(type.kind)) value.arguments = type.arguments.map(remember);
 		if(type.kind === "record") value.fields = type.fields.map(field => ({ ...field, type: remember(field.type) }));
 		// An instantiated generic record keeps the structure and the resolved type arguments it came from.
@@ -134,7 +134,7 @@ const lowerSemanticModel = ({ metadata, request, component, elaborationSha256, i
 		}
 		if(type.kind === "primitive") return { kind: "primitive", name: type.name };
 		if(type.kind === "refinement") return reference(type.base);
-		if(["array", "list", "option"].includes(type.kind)) return { kind: "apply", constructor: type.kind, arguments: [reference(type.element)] };
+		if(["array", "host-null", "list", "option"].includes(type.kind)) return { kind: "apply", constructor: type.kind, arguments: [reference(type.element)] };
 		if(["result", "tuple"].includes(type.kind)) return { kind: "apply", constructor: type.kind, arguments: type.arguments.map(value => reference(value)) };
 		// Callback identity describes its semantic signature, not native boxing or C layout.
 		const callable = type.kind === "callback" ? {
@@ -202,7 +202,7 @@ const lowerSemanticModel = ({ metadata, request, component, elaborationSha256, i
 				: type.kind === "record" ? Object.hasOwn(type, "erased")
 					|| type.fields.some(field => hasSubtype(field.type, references, seen))
 					: type.kind === "variant" ? type.cases.some(branch => branch.fields.some(field => hasSubtype(field.type, references, seen)))
-						: ["array", "list", "option"].includes(type.kind) ? hasSubtype(type.element, references, seen)
+						: ["array", "host-null", "list", "option"].includes(type.kind) ? hasSubtype(type.element, references, seen)
 							: ["tuple", "result"].includes(type.kind) && type.arguments.some(child => hasSubtype(child, references, seen));
 	};
 	const checkedRecordDefinition = (value, references) => {
@@ -278,7 +278,7 @@ const lowerSemanticModel = ({ metadata, request, component, elaborationSha256, i
 				: { kind: type.kind, name: type.name, cases: type.cases.map(branch => ({ name: branch.name, fields: fields(branch.fields) })) };
 			return constrained ? value : null;
 		}
-		const children = ["array", "list", "option"].includes(type.kind) ? [type.element]
+		const children = ["array", "host-null", "list", "option"].includes(type.kind) ? [type.element]
 			: ["tuple", "result"].includes(type.kind) ? type.arguments : [];
 		const arguments_ = children.map(child => refinement(child, nominal, shared, references, seen, depth + 1, produced));
 		return arguments_.some(value => value !== null) ? { kind: type.kind, arguments: arguments_ } : null;

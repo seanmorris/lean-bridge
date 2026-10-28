@@ -239,6 +239,44 @@ test("finite specialization choices are closed, ordered and rejected by unsuppor
 	await assert.rejects(() => analyzeLeanProject(directory), { code: "specialization-requires-elaboration" });
 });
 
+test("host-null projections name one exact Lean wrapper and its two constructors", async () => {
+	const text = { name: "Host.HostNull", nullConstructor: "Host.HostNull.null", valueConstructor: "Host.HostNull.value" };
+	const count = { name: "Host.MaybeCount", nullConstructor: "Host.MaybeCount.absent", valueConstructor: "Host.MaybeCount.present" };
+	for(const value of [
+		{ schemaVersion: 1, hostProjections: [] }
+		, { schemaVersion: 1, hostProjections: [text] }
+		, { schemaVersion: 1, hostProjections: [text, count] }
+	]) {
+		assert.equal(validateExportConfiguration(value), value);
+		await assertJsonSchema("lean-export-configuration", value);
+	}
+	assert.deepEqual(compilerExportSelection({ hostProjections: [text, count] }), {
+		hostProjections: [text, count].toSorted((left, right) => left.name.localeCompare(right.name))
+	});
+	const schemaInvalid = [
+		null, {}, [null], [{ ...text, ignored: true }]
+		, [{ ...text, name: "Host.Bad\n" }]
+		, [text, text]
+		, Array(33).fill(null).map((_, index) => ({
+			name: `Host.Null${index}`, nullConstructor: `Host.Null${index}.null`
+			, valueConstructor: `Host.Null${index}.value`
+		}))
+	];
+	for(const hostProjections of [
+		...schemaInvalid
+		, [{ ...text, nullConstructor: "Other.null" }]
+		, [{ ...text, valueConstructor: text.nullConstructor }]
+	]) {
+		const value = { schemaVersion: 1, hostProjections };
+		assert.throws(() => validateExportConfiguration(value), { code: "invalid-export-configuration" });
+	}
+	for(const hostProjections of schemaInvalid)
+	{
+		const value = { schemaVersion: 1, hostProjections };
+		await assert.rejects(() => assertJsonSchema("lean-export-configuration", value));
+	}
+});
+
 test("absent configuration preserves defaults without creating a file", async t => {
 	const directory = await workspace(t);
 	await rm(join(directory, exportConfigurationFile));

@@ -576,6 +576,8 @@ export const analyzeLeanProject = async (projectRoot, { signal = undefined } = {
 		fail("arity-requires-elaboration", "Explicit function arities require compiler-backed analysis; source discovery cannot distinguish returned functions");
 	if(configuration.specializations?.length)
 		fail("specialization-requires-elaboration", "Finite specializations require compiler-backed analysis; source discovery cannot assign their types");
+	if(configuration.hostProjections?.length)
+		fail("host-projection-requires-elaboration", "Host-null projections require compiler-backed analysis; source discovery cannot authenticate their wrapper constructors");
 	if(Object.keys(configuration.contracts ?? {}).length)
 		fail("contracts-require-elaboration", "Export contracts require compiler-backed analysis; source discovery cannot authorize ownership, refinements or effects");
 	const environment = await compiledEnvironment(root, { signal });

@@ -101,11 +101,17 @@ export const validateElaboratedMetadata = (report, request) => {
 	const specializations = request.specializations ?? [];
 	try
 	{ validateExportConfiguration({ schemaVersion: 1, specializations
+		, ...(request.hostProjections === undefined ? {} : { hostProjections: request.hostProjections })
 		, ...(request.ownedAggregates === undefined ? {} : { ownedAggregates: request.ownedAggregates })
 		, ...(request.contracts === undefined ? {} : { contracts: request.contracts }), ...(request.exports.length ? { exports: request.exports } : {}) }); }
 	catch
-	{ fail("Invalid specialization, aggregate ownership or export contract selection"); }
+	{ fail("Invalid specialization, host projection, aggregate ownership or export contract selection"); }
 	const selections = new Map(specializations.map(item => [item.name, item]));
+	const hostProjectionKey = value => `${value.nullConstructor}\0${value.valueConstructor}`;
+	const hostProjections = new Map((request.hostProjections ?? []).map(value => [hostProjectionKey(value), value]));
+	const authorizeHostNull = value => {
+		if(!hostProjections.has(hostProjectionKey(value))) fail("Host-null metadata differs from the authorized projection");
+	};
 	if(report.schemaVersion !== 2 || report.kind !== "lean-bridge-elaborated-exports" || report.profile !== profile
 		|| !["component-scalars-v1", "native-library-v1"].includes(profile)) fail("Unsupported elaborated metadata profile");
 	closed(report.producer, ["adapter", "adapterVersion", "tool", "toolVersion", "toolchain", "invocationIdentitySha256"]);
@@ -348,6 +354,13 @@ export const validateElaboratedMetadata = (report, request) => {
 						}
 						return;
 					}
+					if(type?.kind === "host-null")
+					{
+						closed(type, ["kind", "element", "nullConstructor", "valueConstructor"]);
+						authorizeHostNull(type);
+						recurse(type.element);
+						return;
+					}
 					if(!["array", "list", "option"].includes(type?.kind)) return scalar(type);
 					closed(type, ["kind", "element"]);
 					recurse(type.element);
@@ -393,7 +406,8 @@ export const validateElaboratedMetadata = (report, request) => {
 						{ value.types.forEach(check); check(value.root); }
 						if(value.kind === "alias") check(value.target);
 						if(value.kind === "resource" && (!request.resources.includes(value.name) || !request.modules.includes(value.module))) fail("Native resource lacks its configured source identity");
-						if(["array", "list", "option"].includes(value.kind)) check(value.element);
+						if(value.kind === "host-null") authorizeHostNull(value);
+						if(["array", "host-null", "list", "option"].includes(value.kind)) check(value.element);
 						if(["result", "tuple"].includes(value.kind)) value.arguments.forEach(check);
 						if(value.kind === "record") value.fields.forEach(field => check(field.type));
 						if(value.kind === "variant") value.cases.forEach(item => item.fields.forEach(field => check(field.type)));
@@ -427,7 +441,7 @@ export const validateElaboratedMetadata = (report, request) => {
 					}
 					if(value.kind === "alias") survey(value.target);
 					if(value.kind === "refinement") survey(value.base);
-					if(["array", "list", "option"].includes(value.kind)) survey(value.element);
+					if(["array", "host-null", "list", "option"].includes(value.kind)) survey(value.element);
 					if(["result", "tuple"].includes(value.kind)) value.arguments.forEach(survey);
 					if(value.kind === "record") value.fields.forEach(field => survey(field.type));
 					if(value.kind === "variant") value.cases.forEach(item => item.fields.forEach(field => survey(field.type)));
@@ -440,7 +454,7 @@ export const validateElaboratedMetadata = (report, request) => {
 				[...projection.parameters.map(parameter => parameter.type), projection.result].forEach(survey);
 				const resolve = argument => {
 					if(argument.kind === "reference" && !defined.has(argument.name)) fail(`Record provenance references an undefined nominal type: ${argument.name}`);
-					if(["array", "list", "option"].includes(argument.kind)) resolve(argument.element);
+					if(["array", "host-null", "list", "option"].includes(argument.kind)) resolve(argument.element);
 					if(["result", "tuple"].includes(argument.kind)) argument.arguments.forEach(resolve);
 				};
 				provenance.forEach(resolve);

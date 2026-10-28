@@ -407,6 +407,14 @@
           }
         },
         { "$ref": "#/$defs/scalarType" },
+        { "type": "object", "additionalProperties": false, "required": ["kind", "element", "nullConstructor", "valueConstructor"],
+          "properties": {
+            "kind": { "const": "host-null" },
+            "element": { "$ref": "#/$defs/copiedType" },
+            "nullConstructor": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_]*(?:\\.[A-Za-z][A-Za-z0-9_]*)*$" },
+            "valueConstructor": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_]*(?:\\.[A-Za-z][A-Za-z0-9_]*)*$" }
+          }
+        },
         { "type": "object", "additionalProperties": false, "required": ["kind", "element"],
           "properties": { "kind": { "enum": ["array", "list", "option"] }, "element": { "$ref": "#/$defs/copiedType" } }
         },

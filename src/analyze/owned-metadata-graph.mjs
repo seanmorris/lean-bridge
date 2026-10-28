@@ -69,9 +69,10 @@ export const validateOwnedMetadataGraph = (graph, policy, validate) => {
 			}
 			return;
 		}
-		if(["array", "list", "option"].includes(kind))
+		if(["array", "host-null", "list", "option"].includes(kind))
 		{
-			keys(value, ["kind", "element"]); edge(value.element, references, depth + 1); return;
+			keys(value, ["kind", "element", ...(kind === "host-null" ? ["nullConstructor", "valueConstructor"] : [])]);
+			edge(value.element, references, depth + 1); return;
 		}
 		if(kind === "refinement")
 		{

@@ -24,6 +24,12 @@ structure Specialization where
   types : Array String
   deriving FromJson
 
+structure HostProjection where
+  name : String
+  nullConstructor : String
+  valueConstructor : String
+  deriving FromJson
+
 structure OwnedAggregatePolicy where
   ownership : String
   disposal : String
@@ -40,6 +46,7 @@ structure Request where
   ownedAggregates : Option OwnedAggregatePolicy := none
   arities : Array (String × Nat) := #[]
   specializations : Option (Array Specialization) := none
+  hostProjections : Option (Array HostProjection) := none
   contracts : Option Json := none
   metadata : Option MetadataContext := none
   deriving FromJson
@@ -437,7 +444,7 @@ partial def checkedSelectionProblem (value : Json) (depth : Nat := 0) : StateM N
     return if selected then none else some "empty checked nominal selection"
   let some arguments := (value.getObjValAs? (Array Json) "arguments").toOption
     | return some "checked structural selection requires ordered arguments"
-  if fields.size != 2 || !["array", "list", "option", "tuple", "result"].contains kind ||
+  if fields.size != 2 || !["array", "host-null", "list", "option", "tuple", "result"].contains kind ||
       arguments.size != (if ["tuple", "result"].contains kind then 2 else 1) ||
       arguments.all (· == Json.null) then return some "invalid checked structural selection"
   for child in arguments do
@@ -545,7 +552,7 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
               let target ← shapeTree request definition.value (name :: seen) (if directFin then depth else 0) copied checked containerFin structural (if instantiation then some name else none) callbackSite hostReply subtypeStructural subtypeResult callableDecision recordSite
               -- A constructor selection belongs to this export site, never to a cached alias.
               -- Expand its structural transport, just as a direct Subtype alias expands below.
-              if (checked.isSome || (subtypeResult && containsKind (← get).types target "subtype")) && ["array", "list", "option", "tuple", "result"].contains
+              if (checked.isSome || (subtypeResult && containsKind (← get).types target "subtype")) && ["array", "host-null", "list", "option", "tuple", "result"].contains
                   ((target.getObjValAs? String "kind").toOption.getD "") then return target
               -- A checked-record alias keeps its nominal identity without caching the
               -- site-local constructor. Store only the alias-to-record edge, then put
@@ -574,6 +581,51 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
   if (← isDefEq e (mkConst ``Unit)) then
     return obj [("kind", str "primitive"), ("name", str "unit"), ("lean", str "Unit"), ("abi", ← abi e)]
   -- Established structural constructors keep their mappings ahead of generic-record admission.
+  if let .const name levels := e.getAppFn then
+    if let some projection := (request.hostProjections.getD #[]).find? (·.name == name.toString) then
+      let arguments := e.getAppArgs
+      let .inductInfo induct ← getConstInfo name
+        | reject e "host-null projection must name an inductive type"
+      unless arguments.size == 1 && induct.numParams == 1 && induct.numIndices == 0 && induct.ctors.length == 2 do
+        reject e "host-null projection must be a unary two-constructor inductive"
+      unless levels.length == induct.levelParams.length do
+        reject e "host-null projection universe instantiation is incomplete"
+      let argument := arguments[0]!
+      unless (← whnf (← inferType argument)).isSort && !(← isProp argument) do
+        reject e "host-null projection payload must be a closed runtime type"
+      let nullConstructor := projection.nullConstructor.toName
+      let valueConstructor := projection.valueConstructor.toName
+      unless nullConstructor != valueConstructor && induct.ctors.contains nullConstructor && induct.ctors.contains valueConstructor do
+        reject e "host-null projection constructors do not match the selected inductive"
+      let env ← getEnv
+      for declaration in #[name, nullConstructor, valueConstructor] do
+        let some moduleIndex := env.getModuleIdxFor? declaration
+          | reject e "host-null projection declaration module is unavailable"
+        unless request.modules.contains env.header.moduleNames[moduleIndex.toNat]!.toString do
+          reject e "host-null projection declarations must belong to selected modules"
+      for constructor in #[nullConstructor, valueConstructor] do
+        let .str owner _ := constructor
+          | reject e "host-null projection constructor has no owner"
+        unless owner == name do
+          reject e "host-null projection constructor belongs to another type"
+      let validateConstructor (constructor : Name) (payload : Bool) : MetaM Unit := do
+        let constructorType ← inferType (mkApp (mkConst constructor levels) argument)
+        discard <| forallTelescopeReducing constructorType fun fields result => do
+          unless fields.size == (if payload then 1 else 0) && (← isDefEq result e) do
+            reject e "host-null projection constructor has the wrong result or payload count"
+          if payload then
+            let field ← fields[0]!.fvarId!.getDecl
+            unless field.binderInfo == .default && (← isDefEq field.type argument) do
+              reject e "host-null value constructor must take exactly the projected payload"
+      validateConstructor nullConstructor false
+      validateConstructor valueConstructor true
+      return obj [("kind", str "host-null"),
+        ("element", ← shapeTree request argument seen (depth + 1) true
+          (selectedChild checked "host-null" 0) containerFin structural
+          (callbackSite := callbackSite) (hostReply := hostReply) (recordSite := recordSite)
+          (subtypeStructural := subtypeStructural) (subtypeResult := subtypeResult)),
+        ("nullConstructor", str projection.nullConstructor),
+        ("valueConstructor", str projection.valueConstructor), ("abi", ← abi e)]
   if e.isAppOfArity ``Array 1 then
     return obj [("kind", str "array"), ("element", ← shapeTree request e.appArg! seen (depth + 1) true (selectedChild checked "array" 0) containerFin structural (callbackSite := callbackSite) (hostReply := hostReply) (recordSite := recordSite) (subtypeStructural := subtypeStructural) (subtypeResult := subtypeResult)), ("abi", ← abi e)]
   if e.isAppOfArity ``List 1 then
@@ -951,7 +1003,7 @@ partial def inlineCopiedType (types : Array Json) (value : Json)
     let some type := types.find? (fun item => (item.getObjValAs? String "name").toOption == some name)
       | throwError "missing copied type definition: {name}"
     return ← inlineCopiedType types type (name :: seen) depth
-  if kind == "alias" || kind == "array" || kind == "list" || kind == "option" then
+  if kind == "alias" || kind == "array" || kind == "host-null" || kind == "list" || kind == "option" then
     let key := if kind == "alias" then "target" else "element"
     return value.setObjVal! key (← inlineCopiedType types (← ofExcept <| value.getObjVal? key) seen (depth + 1))
   if kind == "result" || kind == "tuple" then
@@ -1259,9 +1311,13 @@ partial def componentCopiedType (value : Json) : MetaM Json := do
   if kind == "alias" then
     return obj [("kind", str kind), ("name", ← ofExcept <| value.getObjVal? "name"),
       ("target", ← componentCopiedType (← ofExcept <| value.getObjVal? "target"))]
-  if kind == "array" || kind == "list" || kind == "option" then
-    return obj [("kind", str kind),
-      ("element", ← componentCopiedType (← ofExcept <| value.getObjVal? "element"))]
+  if kind == "array" || kind == "host-null" || kind == "list" || kind == "option" then
+    let projectionFields ← if kind == "host-null" then do
+        pure [("nullConstructor", ← ofExcept <| value.getObjVal? "nullConstructor"),
+          ("valueConstructor", ← ofExcept <| value.getObjVal? "valueConstructor")]
+      else pure []
+    return obj <| [("kind", str kind),
+      ("element", ← componentCopiedType (← ofExcept <| value.getObjVal? "element"))] ++ projectionFields
   if kind == "result" || kind == "tuple" then
     let args ← ofExcept <| value.getObjValAs? (Array Json) "arguments"
     return obj [("kind", str kind), ("arguments", toJson (← args.mapM componentCopiedType))]
@@ -1350,7 +1406,7 @@ partial def containsRefinement (type : Json) : Bool :=
   else if kind == "callback" then
     ((type.getObjValAs? (Array Json) "parameters").toOption.getD #[]).any containsRefinement ||
       containsRefinement ((type.getObjVal? "result").toOption.getD Json.null)
-  else if ["array", "list", "option"].contains kind then
+  else if ["array", "host-null", "list", "option"].contains kind then
     containsRefinement ((type.getObjVal? "element").toOption.getD Json.null)
   else if ["tuple", "result"].contains kind then
     ((type.getObjValAs? (Array Json) "arguments").toOption.getD #[]).any containsRefinement
@@ -1440,7 +1496,7 @@ partial def projectionCheckedSelectionWith (type : Json) (types : Array Json := 
     if cases.any (fun branch => selected ((branch.getObjValAs? (Array Json) "fields").toOption.getD #[])) then
       return obj (identity ++ [("cases", toJson cases)])
     return Json.null
-  let children := if ["array", "list", "option"].contains kind then
+  let children := if ["array", "host-null", "list", "option"].contains kind then
       #[(type.getObjVal? "element").toOption.getD Json.null]
     else if ["tuple", "result"].contains kind then (type.getObjValAs? (Array Json) "arguments").toOption.getD #[]
     else #[]

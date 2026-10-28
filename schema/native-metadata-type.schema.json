@@ -121,6 +121,18 @@
     {
       "type": "object",
       "additionalProperties": false,
+      "required": ["kind", "element", "nullConstructor", "valueConstructor", "abi"],
+      "properties": {
+        "kind": {"const": "host-null"},
+        "element": {"$ref": "#"},
+        "nullConstructor": {"type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_]*(?:\\.[A-Za-z][A-Za-z0-9_]*)*$"},
+        "valueConstructor": {"type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_]*(?:\\.[A-Za-z][A-Za-z0-9_]*)*$"},
+        "abi": {"$ref": "#/$defs/abi"}
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
       "required": [
         "kind",
         "element",

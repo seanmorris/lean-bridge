@@ -45,7 +45,7 @@ export const resolveComponentRecordType = (type, records, compounds = false, nom
 		{
 			closed(value, ["kind", "constructor", "arguments"]);
 			dense(value.arguments, 2);
-			const allowed = compounds ? ["array", "list", "option", "result", "tuple"] : ["array"];
+			const allowed = compounds ? ["array", "host-null", "list", "option", "result", "tuple"] : ["array"];
 			const count = ["tuple", "result"].includes(value.constructor) ? 2 : 1;
 			if(!allowed.includes(value.constructor) || value.arguments.length !== count) invalid("unsupported copied constructor or arity");
 			return { kind: "apply", constructor: value.constructor, arguments: value.arguments.map(argument => visit(argument, depth + 1)) };

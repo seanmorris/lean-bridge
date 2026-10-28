@@ -14,7 +14,7 @@ import {
 	callbackDefinitionRefinement, callbackSubtypeDirection
 	, declarationRefinements
 } from "../abi/refinements.mjs";
-import { validateExportConfiguration } from "./export-configuration.mjs";
+import { compilerExportSelection, validateExportConfiguration } from "./export-configuration.mjs";
 import { callbackSemanticSignature } from "./callback-signature.mjs";
 import { checkedRefinementSelection } from "./checked-refinement-selection.mjs";
 import { createMetadataRequest } from "./elaborated-metadata.mjs";
@@ -119,7 +119,7 @@ const checkReview = document => {
 	const reference = (type, path, nested = false) => {
 		reject(nested && isCallback(type), path);
 		if(type.kind === "primitive" || type.kind === "named") return;
-		const arity = { array: 1, list: 1, option: 1, result: 2, tuple: 2 }[type.constructor];
+		const arity = { array: 1, "host-null": 1, list: 1, option: 1, result: 2, tuple: 2 }[type.constructor];
 		reject(type.kind !== "apply" || !arity || type.arguments.length !== arity, path);
 		type.arguments.forEach((item, index) => reference(item, `${path}.arguments[${index}]`, true));
 	};
@@ -476,12 +476,15 @@ export const reconcileReviewedOwnedSource = (review, compiled, sourceIdentity) =
 	const config = JSON.parse(sourceIdentity.exportConfigurationSource ?? "null");
 	validateExportConfiguration(config); assertReviewedSourceConfiguration(config);
 	const request = sourceIdentity.request, selection = reviewedOwnedSourceSelection(review);
+	const configured = compilerExportSelection(config);
 	if(!config.modules?.length || sha256(canonicalJson(config)) !== sourceIdentity.exportConfigurationSha256
 		|| !same(sourceIdentity.reviewedBindingIr, review)
 		|| !same(config.modules.toSorted(), request.exportModules.toSorted())
 		|| !same(request.exports.toSorted(), selection.exports) || !same(request.resources.toSorted(), selection.resources)
 		|| !same(request.arities, selection.arities) || !same(request.ownedAggregates, selection.ownedAggregates)
-		|| request.specializations !== undefined || !same(request.contracts ?? null, selection.contracts ?? null))
+		|| request.specializations !== undefined
+		|| !same(request.hostProjections ?? null, configured.hostProjections ?? null)
+		|| !same(request.contracts ?? null, selection.contracts ?? null))
 		mismatch("Reviewed contract differs from the authorized compiler selection");
 	const field = reviewedContractDifference(normalizeEffects(document), normalizeEffects(compiled));
 	if(field) mismatch("Reviewed contract does not match the freshly compiled Lean API", {
