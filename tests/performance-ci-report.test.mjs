@@ -285,6 +285,20 @@ test("bootstrap pins the Wasm audit tools absent from clean GitHub runners", asy
   assert.match(environment, /\.toolchains\/wabt\/bin/);
 });
 
+test("bootstrap retains a checksummed Lean release fallback", async () => {
+  const bootstrap = await readFile("scripts/bootstrap-toolchains.sh", "utf8");
+  assert.match(bootstrap, /^LEAN_ARCHIVE=lean-4\.32\.2-linux\.tar\.zst$/m);
+  assert.match(bootstrap
+    , /^LEAN_ARCHIVE_URL="https:\/\/github\.com\/leanprover\/lean4\/releases\/download\/v4\.32\.2\/\$LEAN_ARCHIVE"$/m);
+  assert.match(bootstrap
+    , /^LEAN_ARCHIVE_SHA256=5f2069e6f5db73780f374ccb49ce8ea649aa20a0cebf0116816744c999ce72aa$/m);
+  assert.match(bootstrap, /install_lean_release_fallback/u);
+  assert.match(bootstrap
+    , /tar --use-compress-program=unzstd -xf "\$archive"/u);
+  assert.match(bootstrap
+    , /Lean release fallback commit mismatch: expected \$LEAN_COMMIT/u);
+});
+
 test("accepts one complete, artifact-bound record from every performance family", () => {
   const report = structuredClone(acceptedReport());
   assert.equal(report.accepted, true, JSON.stringify(report.validation.issues));

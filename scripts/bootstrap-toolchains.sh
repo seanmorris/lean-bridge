@@ -12,6 +12,9 @@ ELAN_URL="https://github.com/leanprover/elan/releases/download/$ELAN_VERSION/$EL
 ELAN_SHA256=df0b2b3a439961ffcbb3985214365ffe40f49bc871df04dff268c7d8e21ca8b2
 LEAN_TOOLCHAIN=leanprover/lean4:v4.32.2
 LEAN_COMMIT=f3b06c705e6c85f5314019d5d3baab0fec5b580c
+LEAN_ARCHIVE=lean-4.32.2-linux.tar.zst
+LEAN_ARCHIVE_URL="https://github.com/leanprover/lean4/releases/download/v4.32.2/$LEAN_ARCHIVE"
+LEAN_ARCHIVE_SHA256=5f2069e6f5db73780f374ccb49ce8ea649aa20a0cebf0116816744c999ce72aa
 EMSDK_VERSION=6.0.6
 EMSDK_COMMIT=9981799f744be74ac67b1c1813ff172f63be0630
 WASM_TOOLS_VERSION=1.245.1
@@ -72,6 +75,43 @@ export ELAN_HOME="$LEAN_WASM_TOOLCHAINS/elan"
 if [[ ! -x "$ELAN_HOME/bin/elan" ]]; then
   "$LEAN_WASM_TOOLCHAINS/elan-installer/elan-init" -y --no-modify-path --default-toolchain none
 fi
+
+install_lean_release_fallback() {
+  local archive="$LEAN_WASM_DOWNLOADS/$LEAN_ARCHIVE"
+  local destination="$ELAN_HOME/toolchains/leanprover--lean4---v4.32.2"
+  local staging
+  if [[ ! -f "$archive" ]]; then
+    download_archive "$LEAN_ARCHIVE_URL" "$archive"
+  fi
+  printf '%s  %s\n' "$LEAN_ARCHIVE_SHA256" "$archive" | sha256sum -c -
+  mkdir -p "$ELAN_HOME/toolchains"
+  staging=$(mktemp -d "$ELAN_HOME/toolchains/.lean-4.32.2.XXXXXXXX")
+  if ! tar --use-compress-program=unzstd -xf "$archive" \
+    --strip-components=1 -C "$staging"; then
+    rm -rf "$staging"
+    return 1
+  fi
+  if [[ ! -x "$staging/bin/lean" ]]; then
+    echo "Lean release fallback does not contain bin/lean" >&2
+    rm -rf "$staging"
+    return 1
+  fi
+  local staged_commit
+  staged_commit=$("$staging/bin/lean" --version \
+    | sed -n 's/.*commit \([^,)]*\).*/\1/p')
+  if [[ "$staged_commit" != "$LEAN_COMMIT" ]]; then
+    echo "Lean release fallback commit mismatch: expected $LEAN_COMMIT, got $staged_commit" >&2
+    rm -rf "$staging"
+    return 1
+  fi
+  if [[ -e "$destination" ]]; then
+    echo "Refusing to replace unexpected Lean toolchain path: $destination" >&2
+    rm -rf "$staging"
+    return 1
+  fi
+  mv "$staging" "$destination"
+}
+
 if ! "$ELAN_HOME/bin/elan" toolchain list | cut -d' ' -f1 | grep -Fxq "$LEAN_TOOLCHAIN"; then
   lean_install_succeeded=0
   for lean_install_attempt in 1 2; do
@@ -88,8 +128,8 @@ if ! "$ELAN_HOME/bin/elan" toolchain list | cut -d' ' -f1 | grep -Fxq "$LEAN_TOO
     fi
   done
   if [[ "$lean_install_succeeded" -ne 1 ]]; then
-    echo "Failed to install $LEAN_TOOLCHAIN after 2 bounded attempts" >&2
-    exit 1
+    echo "Elan failed to install $LEAN_TOOLCHAIN after 2 bounded attempts; using the checksummed GitHub release fallback" >&2
+    install_lean_release_fallback
   fi
 fi
 "$ELAN_HOME/bin/elan" default "$LEAN_TOOLCHAIN"
