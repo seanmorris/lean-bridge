@@ -6,7 +6,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { execFileSync } from "node:child_process";
-import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { generateCBindingPackage } from "../src/backends/c/generate.mjs";
@@ -114,4 +114,31 @@ void calls() {
 	const options = { cwd: root, encoding: "utf8", stdio: "pipe" };
 	execFileSync("cc", ["-std=c11", "-Wall", "-Wextra", "-Werror", "-Iinclude", "-Iinternal", "-fsyntax-only", "src/defaults.c", "consumer.c"], options);
 	execFileSync("c++", ["-std=c++20", "-Wall", "-Wextra", "-Werror", "-Iinclude", "-fsyntax-only", "consumer.cpp"], options);
+});
+
+test("C11 matrix caller compiles and C++ caller names every optional case", async t => {
+	const root = await mkdtemp(join(tmpdir(), "lean-bridge-native-default-callers-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
+	await mkdir(join(root, "include"));
+	await mkdir(join(root, "internal"));
+	await mkdir(join(root, "src"));
+	const ir = optionalParameterIr();
+	const c = generateCBindingPackage(ir);
+	const cpp = generateCppBindingPackage(ir);
+	for(const [path, source] of Object.entries(c))
+		if(path.endsWith(".h") || path.endsWith(".c"))
+			await writeFile(join(root, path), source);
+	await writeFile(join(root, "include/defaults.hpp"), cpp["include/defaults.hpp"]);
+	await writeFile(join(root, "consumer.c"), await readFile(
+		"tests/fixtures/optional-parameter-consumers/c.c"));
+	const options = { cwd: root, encoding: "utf8", stdio: "pipe" };
+	execFileSync("cc", ["-std=c11", "-Wall", "-Wextra", "-Werror"
+		, "-Iinclude", "-Iinternal", "-fsyntax-only", "src/defaults.c"
+		, "consumer.c"], options);
+	const cppSource = await readFile(
+		"tests/fixtures/optional-parameter-consumers/cpp.cpp", "utf8");
+	for(const name of [
+		"word", "natural", "text", "character", "maybe", "present"
+		, "unit_value"
+	]) assert.match(cppSource, new RegExp(`api::${name}\\(`, "u"));
 });

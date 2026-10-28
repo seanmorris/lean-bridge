@@ -1,0 +1,8 @@
+/**
+ * Fast controls for the closed optional-parameter installed matrix.
+ *
+ * @file
+ */
+import "./helpers/optional-parameter-browser-tests.mjs";
+import "./helpers/optional-parameter-matrix-tests.mjs";
+import "./helpers/optional-parameter-native-tests.mjs";
