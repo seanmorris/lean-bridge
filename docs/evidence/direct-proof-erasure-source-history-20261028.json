@@ -1,0 +1,444 @@
+{
+  "additions": [
+    {
+      "currentSha256": "bef272cdca77a252e491100a98120f537ddf17a3082148e849f9dae50a029c58",
+      "path": "scripts/update-direct-proof-erasure-source-history.mjs"
+    },
+    {
+      "currentSha256": "c47529e004539bd2c9afce22c3dca092d2636df5abc17ea4717c3e6767984a58",
+      "path": "tests/helpers/direct-proof-erasure-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "f33506c94ab9ab1c4eb05234bf998605a86686cc7ea131284183d0fad308d76b",
+      "path": "tests/helpers/direct-proof-erasure-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "f195e8dece1a00d68fea3647ec6046c1bc5ee8ed",
+  "integrationUpdates": [
+    {
+      "currentSha256": "fcced7346f4a1dab926db22ae3afe7b1f471b0a84e9f25c5985d59ba72a21e80",
+      "edits": [
+        {
+          "current": "import \"./helpers/direct-proof-erasure-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "47927c0988d9e9b362f66f57d9b2f39c366182046bb01ddf74e30aed94ea20a8"
+    },
+    {
+      "currentSha256": "bd8c2c7fbc44e5cb0fdafb47b7bf399ce5b9de96ae0a204cf10ed964f56a8ecf",
+      "edits": [
+        {
+          "current": "import { beforeDirectProofErasureSource, directProofErasureNormalizationPaths } from \"./direct-proof-erasure-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...directProofErasureNormalizationPaths\n\t, ...proofErasureEvidenceAuditNormalizationPaths\n",
+          "previous": "\t...proofErasureEvidenceAuditNormalizationPaths\n",
+          "start": 208902
+        },
+        {
+          "current": "\tlet stage = beforeDirectProofErasureSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeProofErasureEvidenceAuditSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeProofErasureEvidenceAuditSource(path, text, expected);\n",
+          "start": 260817
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "bbcd98e4f8fb28880fcdf86f725118b1afca1a4c9c5bc0b2bbb8f0a5784793bd"
+    }
+  ],
+  "milestone": "direct-proof-erasure-source-v1",
+  "predecessorCommit": "60b90ab5cfea41edd033ba70163614cd053dfff5",
+  "schemaVersion": 1,
+  "scope": "Erase only explicit closed True proof binders, preserve exact proposition and source identity, reconstruct the compiler-owned witness without any host ABI slot, retain proof-only result refusal, and register the reversible implementation newest-first.",
+  "updates": [
+    {
+      "commit": "f195e8dece1a00d68fea3647ec6046c1bc5ee8ed",
+      "currentSha256": "df6ef2093c540f3e407e1b0b3886bcedcefa7eb85b2998a92f9a6634e9d5b606",
+      "edits": [
+        {
+          "current": "        \"erasedProofs\": { \"$ref\": \"#/$defs/erasedProofs\" },\n",
+          "previous": "",
+          "start": 3416
+        },
+        {
+          "current": "    \"erasedProofs\": {\n      \"type\": \"array\", \"minItems\": 1, \"maxItems\": 1024,\n      \"items\": {\n        \"type\": \"object\", \"additionalProperties\": false,\n        \"required\": [\"sourceIndex\", \"name\", \"proposition\", \"witness\"],\n        \"properties\": {\n          \"sourceIndex\": { \"type\": \"integer\", \"minimum\": 0, \"maximum\": 1023 },\n          \"name\": { \"type\": \"string\", \"minLength\": 1 },\n          \"proposition\": { \"type\": \"string\", \"minLength\": 1 },\n          \"witness\": { \"const\": \"True.intro\" }\n        }\n      }\n    },\n",
+          "previous": "",
+          "start": 3630
+        }
+      ],
+      "parent": "60b90ab5cfea41edd033ba70163614cd053dfff5",
+      "path": "schema/compiler-adapter-plan.schema.json",
+      "previousSha256": "a2ffef929195b0fa90f3992635fd6f7dfc371a05485a75c93fc1ba440f5b232a"
+    },
+    {
+      "commit": "f195e8dece1a00d68fea3647ec6046c1bc5ee8ed",
+      "currentSha256": "a3dc0b2f58b6cc118590801d34139e629d734165eaf1943afc8605e2989e00c6",
+      "edits": [
+        {
+          "current": "    \"erasedProofs\": {\n      \"type\": \"array\",\n      \"minItems\": 1,\n      \"maxItems\": 1024,\n      \"items\": {\n        \"type\": \"object\",\n        \"additionalProperties\": false,\n        \"required\": [\"sourceIndex\", \"name\", \"proposition\", \"witness\"],\n        \"properties\": {\n          \"sourceIndex\": { \"type\": \"integer\", \"minimum\": 0, \"maximum\": 1023 },\n          \"name\": { \"type\": \"string\", \"minLength\": 1 },\n          \"proposition\": { \"type\": \"string\", \"minLength\": 1 },\n          \"witness\": { \"const\": \"True.intro\" }\n        }\n      }\n    },\n",
+          "previous": "",
+          "start": 5119
+        },
+        {
+          "current": "            },\n            \"erasedProofs\": {\n              \"$ref\": \"#/$defs/erasedProofs\"\n",
+          "previous": "",
+          "start": 6754
+        },
+        {
+          "current": "            },\n            \"erasedProofs\": {\n              \"$ref\": \"#/$defs/erasedProofs\"\n",
+          "previous": "",
+          "start": 7972
+        },
+        {
+          "current": "                \"unsupported-proof-obligation\",\n",
+          "previous": "",
+          "start": 8671
+        }
+      ],
+      "parent": "60b90ab5cfea41edd033ba70163614cd053dfff5",
+      "path": "schema/elaborated-export-metadata.schema.json",
+      "previousSha256": "6a410d459863159565dfb09282129de87f3bf088f11f1e18411562d7987cec63"
+    },
+    {
+      "commit": "f195e8dece1a00d68fea3647ec6046c1bc5ee8ed",
+      "currentSha256": "7da23f808bde5eb6402e3b49a5805f15386fefffbacf425bb8f7663990d4c1ed",
+      "edits": [
+        {
+          "current": "def expression (e : Expr) : MetaM String := do\n  withOptions (fun opts => opts.setBool `pp.fullNames true |>.setBool `pp.universes true) do\n    return (← ppExpr e).pretty\n\n",
+          "previous": "",
+          "start": 74149
+        },
+        {
+          "current": "    (index : Nat := 0) (sourceIndex : Nat := 0)\n    (parentAliases : Option (IO.Ref ParentAliasCache) := none)\n    (previous : Array (Expr × Json) := #[]) : MetaM (Array Json × Json × Array Json) := do\n",
+          "previous": "    (index : Nat := 0) (parentAliases : Option (IO.Ref ParentAliasCache) := none)\n    (previous : Array (Expr × Json) := #[]) : MetaM (Array Json × Json) := do\n",
+          "start": 74473
+        },
+        {
+          "current": "        if ← isProp argument then\n          unless ← isDefEq (← whnf argument) (mkConst ``True) do\n            reject argument \"proof parameters currently require the closed proposition True\"\n          let (rest, result, proofs) ← signature request result limit parameterSites resultSite\n            index (sourceIndex + 1) parentAliases previous\n          let proposition ← expression argument\n          let proof := obj [\n            (\"sourceIndex\", toJson sourceIndex),\n            (\"name\", str name.toString),\n            (\"proposition\", str proposition),\n            (\"witness\", str \"True.intro\")]\n          return (rest, result, #[proof] ++ proofs)\n",
+          "previous": "",
+          "start": 74992
+        },
+        {
+          "current": "        let (rest, result, proofs) ← signature request result limit parameterSites resultSite\n          (index + 1) (sourceIndex + 1) parentAliases (previous.push (boundVariable, parameter))\n        return (#[obj [(\"name\", str s!\"arg{index}\"), (\"type\", parameter),\n          (\"sourceIndex\", toJson sourceIndex)]] ++ rest, result, proofs)\n",
+          "previous": "        let (rest, result) ← signature request result limit parameterSites resultSite\n          (index + 1) parentAliases (previous.push (boundVariable, parameter))\n        return (#[obj [(\"name\", str s!\"arg{index}\"), (\"type\", parameter)]] ++ rest, result)\n",
+          "start": 77089
+        },
+        {
+          "current": "    (parentAliases := parentAliases) (callableDecision := callable), #[])\n",
+          "previous": "    (parentAliases := parentAliases) (callableDecision := callable))\n\ndef expression (e : Expr) : MetaM String := do\n  withOptions (fun opts => opts.setBool `pp.fullNames true |>.setBool `pp.universes true) do\n    return (← ppExpr e).pretty\n",
+          "start": 77758
+        },
+        {
+          "current": "      let proof ← isProp binder.type\n",
+          "previous": "",
+          "start": 83644
+        },
+        {
+          "current": "        else if proof then some \"unsupported-proof-obligation\"\n",
+          "previous": "",
+          "start": 83847
+        },
+        {
+          "current": "    let (nativeParameters, result, erasedProofs) ← signature request type arity parameterSites resultSite\n      (parentAliases := parentAliases)\n",
+          "previous": "    let (nativeParameters, result) ← signature request type arity parameterSites resultSite (parentAliases := parentAliases)\n",
+          "start": 102796
+        },
+        {
+          "current": "      let sourceIndex := (parameter.getObjValAs? Nat \"sourceIndex\").toOption.getD index\n      obj [(\"name\", (parameters[sourceIndex]?.bind fun value =>\n          (value.getObjVal? \"name\").toOption).getD (str s!\"arg{index}\")),\n",
+          "previous": "      obj [(\"name\", (parameters[index]?.bind fun value => (value.getObjVal? \"name\").toOption).getD (str s!\"arg{index}\")),\n",
+          "start": 103460
+        },
+        {
+          "current": "    return (parameters, resultText, obj ([\n      (\"status\", str \"supported\"),\n      (\"bindingShape\", str (if native then \"native-function\" else \"pure-function\")),\n      (\"parameters\", toJson nativeParameters), (\"result\", result)] ++\n      if erasedProofs.isEmpty then [] else [(\"erasedProofs\", toJson erasedProofs)]))\n",
+          "previous": "    return (parameters, resultText, obj [(\"status\", str \"supported\"),\n      (\"bindingShape\", str (if native then \"native-function\" else \"pure-function\")), (\"parameters\", toJson nativeParameters), (\"result\", result)])\n",
+          "start": 103759
+        },
+        {
+          "current": "    let reason := if [\"implicit-parameter\", \"instance-parameter\", \"dependent-type\",\n        \"unsupported-proof-obligation\"].contains reason then reason else \"unsupported-native-type\"\n",
+          "previous": "    let reason := if [\"implicit-parameter\", \"instance-parameter\", \"dependent-type\"].contains reason then reason else \"unsupported-native-type\"\n",
+          "start": 104552
+        }
+      ],
+      "parent": "60b90ab5cfea41edd033ba70163614cd053dfff5",
+      "path": "src/analyze/NativeExports.lean",
+      "previousSha256": "5fd36108bd25fa27185ea4584cb09779a919edbd9ed79697ffe755df70dcb038"
+    },
+    {
+      "commit": "f195e8dece1a00d68fea3647ec6046c1bc5ee8ed",
+      "currentSha256": "27e26927403d6d32ea99c086db497e6f961a50da88015cf493b67ccc458ea270",
+      "edits": [
+        {
+          "current": "const reasons = [\"implicit-parameter\", \"instance-parameter\", \"dependent-type\", \"unsupported-effect\", \"unsupported-parameter-type\", \"unsupported-result-type\", \"unsupported-native-type\", \"unsupported-proof-obligation\", \"visibility\", \"specialization-required\", \"invalid-specialization\", \"type-declaration\", \"proof-only\", \"admitted-implementation\", \"unreviewed-implementation\", \"arity-limit\", \"export-contract-mismatch\"];\n",
+          "previous": "const reasons = [\"implicit-parameter\", \"instance-parameter\", \"dependent-type\", \"unsupported-effect\", \"unsupported-parameter-type\", \"unsupported-result-type\", \"unsupported-native-type\", \"visibility\", \"specialization-required\", \"invalid-specialization\", \"type-declaration\", \"proof-only\", \"admitted-implementation\", \"unreviewed-implementation\", \"arity-limit\", \"export-contract-mismatch\"];\n",
+          "start": 1821
+        },
+        {
+          "current": "\t\t\t\tconst erasedProofs = projection.erasedProofs ?? [];\n\t\t\t\tclosed(projection, [\"status\", \"bindingShape\", \"parameters\", \"result\"\n\t\t\t\t\t, ...(erasedProofs.length ? [\"erasedProofs\"] : [])]);\n",
+          "previous": "\t\t\t\tclosed(projection, [\"status\", \"bindingShape\", \"parameters\", \"result\"]);\n",
+          "start": 11236
+        },
+        {
+          "current": "\t\t\t\tif(!Array.isArray(erasedProofs) || erasedProofs.length > 1024) fail(\"Invalid erased proof parameters\");\n\t\t\t\tlet previousProof = -1;\n\t\t\t\tfor(const proof of erasedProofs)\n\t\t\t\t{\n\t\t\t\t\tclosed(proof, [\"sourceIndex\", \"name\", \"proposition\", \"witness\"]);\n\t\t\t\t\tconst source = declaration.parameters[proof.sourceIndex];\n\t\t\t\t\tif(!Number.isSafeInteger(proof.sourceIndex) || proof.sourceIndex <= previousProof || !source\n\t\t\t\t\t\t|| source.binderInfo !== \"explicit\" || proof.name !== source.name\n\t\t\t\t\t\t|| proof.proposition !== source.typeExpression || proof.witness !== \"True.intro\")\n\t\t\t\t\t\tfail(\"Invalid erased proof parameter\");\n\t\t\t\t\tpreviousProof = proof.sourceIndex;\n\t\t\t\t}\n\t\t\t\tconst proofIndexes = new Set(erasedProofs.map(proof => proof.sourceIndex));\n\t\t\t\tconst runtimeSources = declaration.parameters.map((_, index) => index).filter(index => !proofIndexes.has(index));\n",
+          "previous": "",
+          "start": 11518
+        },
+        {
+          "current": "\t\t\t\t\t|| projection.parameters.length > (native ? 1024 : 32)\n\t\t\t\t\t|| (erasedProofs.length ? projection.parameters.length !== runtimeSources.length || projection.parameters.length > arity\n\t\t\t\t\t\t: projection.parameters.length !== Math.min(arity, declaration.parameters.length))\n",
+          "previous": "\t\t\t\t\t|| projection.parameters.length > (native ? 1024 : 32) || projection.parameters.length !== Math.min(arity, declaration.parameters.length)\n",
+          "start": 12539
+        },
+        {
+          "current": "\t\t\t\t\tif(parameter.name !== declaration.parameters[runtimeSources[index]].name) fail(\"Runtime binder differs from the elaborated binder\");\n",
+          "previous": "\t\t\t\t\tif(parameter.name !== declaration.parameters[index].name) fail(\"Runtime binder differs from the elaborated binder\");\n",
+          "start": 25284
+        }
+      ],
+      "parent": "60b90ab5cfea41edd033ba70163614cd053dfff5",
+      "path": "src/analyze/elaborated-metadata.mjs",
+      "previousSha256": "b1f2ac5c2fa22c7619c003584b3ed888821281d2f3e175621ce7f2daddbe683f"
+    },
+    {
+      "commit": "f195e8dece1a00d68fea3647ec6046c1bc5ee8ed",
+      "currentSha256": "4170c363ef06056975b32afe6adaca477390e0be8eeebadcabb928e68bbd3ca5",
+      "edits": [
+        {
+          "current": "\t\t\t, ...(item.projection.erasedProofs ? { erasedProofs: structuredClone(item.projection.erasedProofs) } : {})\n",
+          "previous": "",
+          "start": 6444
+        }
+      ],
+      "parent": "60b90ab5cfea41edd033ba70163614cd053dfff5",
+      "path": "src/analyze/native-metadata.mjs",
+      "previousSha256": "dae540c8c48bd6146e2dbeb28a62399faaa87dfbd67111a6c0947107976f314d"
+    },
+    {
+      "commit": "f195e8dece1a00d68fea3647ec6046c1bc5ee8ed",
+      "currentSha256": "e474146d5d410c08c45099b020228b815658bc3f4dff8ca41965d11b10fcb284",
+      "edits": [
+        {
+          "current": "const validErasedProofs = (item, value) => {\n\tif(value === null || typeof value !== \"object\" || Array.isArray(value)\n\t\t|| !same(Object.keys(value), [\"parameters\"]) || !Array.isArray(value.parameters)\n\t\t|| !value.parameters.length || value.parameters.length > 1024) return false;\n\tconst sourceArity = item.parameters.length + value.parameters.length;\n\tlet previous = -1;\n\tfor(const proof of value.parameters)\n\t{\n\t\tif(proof === null || typeof proof !== \"object\" || Array.isArray(proof)\n\t\t\t|| !same(Object.keys(proof).sort(), [\"name\", \"proposition\", \"sourceIndex\", \"witness\"])\n\t\t\t|| !Number.isSafeInteger(proof.sourceIndex) || proof.sourceIndex <= previous\n\t\t\t|| proof.sourceIndex >= sourceArity || typeof proof.name !== \"string\" || !proof.name.length\n\t\t\t|| typeof proof.proposition !== \"string\" || !proof.proposition.length\n\t\t\t|| proof.witness !== \"True.intro\") return false;\n\t\tprevious = proof.sourceIndex;\n\t}\n\treturn true;\n};\n\n",
+          "previous": "",
+          "start": 1776
+        },
+        {
+          "current": "\t\tlet allowed = [];\n\t\tif(declaration) allowed = [refinementKey, erasedProofsKey];\n\t\telse if(callbackName) allowed = [refinementKey];\n\t\telse if(record) allowed = [erasedProofsKey];\n",
+          "previous": "\t\tconst allowed = declaration || callbackName ? [refinementKey]\n\t\t\t: record ? [erasedProofsKey] : [];\n",
+          "start": 4822
+        },
+        {
+          "current": "\t\tif(declaration && Object.hasOwn(item.source.extensions, erasedProofsKey))\n\t\t\treject(!validErasedProofs(item, item.source.extensions[erasedProofsKey])\n\t\t\t\t, `${item.id}.source.extensions.${erasedProofsKey}`);\n",
+          "previous": "",
+          "start": 5735
+        }
+      ],
+      "parent": "60b90ab5cfea41edd033ba70163614cd053dfff5",
+      "path": "src/analyze/reviewed-owned-source.mjs",
+      "previousSha256": "03f78e24f4531ead6747c34a56b04a1defe7a5aab34f7c2f7c1b66d71fbbbc3f"
+    },
+    {
+      "commit": "f195e8dece1a00d68fea3647ec6046c1bc5ee8ed",
+      "currentSha256": "5f1fb3c29633fd1cf119ba703db8b5ec0def2f2bdd80c5c0804286808f7552e5",
+      "edits": [
+        {
+          "current": "const checkErasedProofs = (item, value) => {\n\tif(value === null || typeof value !== \"object\" || Array.isArray(value)\n\t\t|| !same(Object.keys(value), [\"parameters\"])) return false;\n\tconst parameters = value?.parameters;\n\tif(!Array.isArray(parameters) || !parameters.length || parameters.length > 1024) return false;\n\tconst sourceArity = item.parameters.length + parameters.length;\n\tlet previous = -1;\n\tfor(const proof of parameters)\n\t{\n\t\tif(proof === null || typeof proof !== \"object\" || Array.isArray(proof)\n\t\t\t|| !same(Object.keys(proof).sort(), [\"name\", \"proposition\", \"sourceIndex\", \"witness\"])\n\t\t\t|| !Number.isSafeInteger(proof.sourceIndex) || proof.sourceIndex <= previous\n\t\t\t|| proof.sourceIndex >= sourceArity || typeof proof.name !== \"string\" || !proof.name.length\n\t\t\t|| typeof proof.proposition !== \"string\" || !proof.proposition.length\n\t\t\t|| proof.witness !== \"True.intro\") return false;\n\t\tprevious = proof.sourceIndex;\n\t}\n\treturn true;\n};\n\n",
+          "previous": "",
+          "start": 2669
+        },
+        {
+          "current": "\t\tconst allowed = [\n\t\t\trefinementKey\n\t\t\t, declaration ? specializationKey : record ? instantiationKey : null\n\t\t\t, declaration || record ? erasedProofsKey : null\n\t\t];\n",
+          "previous": "\t\tconst allowed = [refinementKey, declaration ? specializationKey : record ? instantiationKey : null, record ? erasedProofsKey : null];\n",
+          "start": 7604
+        },
+        {
+          "current": "\t\tif(declaration && Object.hasOwn(item.source.extensions, erasedProofsKey))\n\t\t\treject(!checkErasedProofs(item, item.source.extensions[erasedProofsKey])\n\t\t\t\t, `${item.id}.source.extensions.${erasedProofsKey}`);\n",
+          "previous": "",
+          "start": 7885
+        }
+      ],
+      "parent": "60b90ab5cfea41edd033ba70163614cd053dfff5",
+      "path": "src/analyze/reviewed-source.mjs",
+      "previousSha256": "ffed63ecf341924e93ee928592f3d091abecf3a4d669cea4f04c207b8999a297"
+    },
+    {
+      "commit": "f195e8dece1a00d68fea3647ec6046c1bc5ee8ed",
+      "currentSha256": "51c816228d18f79c99c2ec815aaf5ec8d32bc0b6d0f62891ccb2a803bc4e9f20",
+      "edits": [
+        {
+          "current": "\t\t\t\t\t, ...(projection.erasedProofs ? { \"lean-lang.org/erased-proofs\": {\n\t\t\t\t\t\tparameters: structuredClone(projection.erasedProofs) } } : {})\n",
+          "previous": "",
+          "start": 20358
+        }
+      ],
+      "parent": "60b90ab5cfea41edd033ba70163614cd053dfff5",
+      "path": "src/analyze/semantic-model.mjs",
+      "previousSha256": "e0178e6d2b9ebbbcc56f4bac1633216b114129bb61b664fc5af788da9a84bbef"
+    },
+    {
+      "commit": "f195e8dece1a00d68fea3647ec6046c1bc5ee8ed",
+      "currentSha256": "e944c9ad496183f6e12dffbe1b0035629a8cff0294f855ba0a82db0e33732e68",
+      "edits": [
+        {
+          "current": "const validateErasedProofs = (value, runtimeArity) => {\n\tif(!Array.isArray(value) || !value.length || value.length > 1024)\n\t\tfail(\"invalid-compiler-adapter-plan\", \"Compiler erased proofs must be a nonempty bounded array\");\n\tconst sourceArity = runtimeArity + value.length;\n\tlet previous = -1;\n\tfor(const proof of value)\n\t{\n\t\texactKeys(proof, [\"sourceIndex\", \"name\", \"proposition\", \"witness\"], \"compiler erased proof\");\n\t\tif(!Number.isSafeInteger(proof.sourceIndex) || proof.sourceIndex <= previous\n\t\t\t|| proof.sourceIndex >= sourceArity\n\t\t\t|| typeof proof.name !== \"string\" || !proof.name.length\n\t\t\t|| typeof proof.proposition !== \"string\" || !proof.proposition.length\n\t\t\t|| proof.witness !== \"True.intro\")\n\t\t\tfail(\"invalid-compiler-adapter-plan\", \"Compiler erased proof metadata is invalid\");\n\t\tprevious = proof.sourceIndex;\n\t}\n};\n\n",
+          "previous": "",
+          "start": 5560
+        },
+        {
+          "current": "\t\texactKeys(item, [\"bindingId\", \"sourceDeclaration\", \"sourceModule\", \"wrapper\", \"symbol\", \"parameters\", \"leanResultType\", \"resultMode\", \"leanEffect\", ...(item.sourceApplication === undefined ? [] : [\"sourceApplication\"]), ...(item.refinements === undefined ? [] : [\"refinements\"]), ...(item.erasedProofs === undefined ? [] : [\"erasedProofs\"])], \"compiler export\");\n",
+          "previous": "\t\texactKeys(item, [\"bindingId\", \"sourceDeclaration\", \"sourceModule\", \"wrapper\", \"symbol\", \"parameters\", \"leanResultType\", \"resultMode\", \"leanEffect\", ...(item.sourceApplication === undefined ? [] : [\"sourceApplication\"]), ...(item.refinements === undefined ? [] : [\"refinements\"])], \"compiler export\");\n",
+          "start": 13546
+        },
+        {
+          "current": "\t\tif(item.erasedProofs !== undefined)\n\t\t\tvalidateErasedProofs(item.erasedProofs, item.parameters.length);\n",
+          "previous": "",
+          "start": 14889
+        },
+        {
+          "current": "    const erasedProofs = declaration.source.extensions[\"lean-lang.org/erased-proofs\"]?.parameters;\n",
+          "previous": "",
+          "start": 26387
+        },
+        {
+          "current": "      , ...(erasedProofs === undefined ? {} : { erasedProofs: structuredClone(erasedProofs) })\n",
+          "previous": "",
+          "start": 27209
+        }
+      ],
+      "parent": "60b90ab5cfea41edd033ba70163614cd053dfff5",
+      "path": "src/build/compiler-adapters.mjs",
+      "previousSha256": "918076115b82027a87a49101f5500de696b817bb77cdce2ff01ac069b8f960e9"
+    },
+    {
+      "commit": "f195e8dece1a00d68fea3647ec6046c1bc5ee8ed",
+      "currentSha256": "70b359723efd9338e7620793496417882b03adf2bc6eaca989a245225802e05c",
+      "edits": [
+        {
+          "current": "\tconst sourceParameters = erasedProofApplicationArguments(item, parameters);\n\tconst application = `${item.sourceApplication ? `(${item.sourceApplication})` : `_root_.${item.sourceDeclaration}`}${sourceParameters.length ? ` ${sourceParameters.join(\" \")}` : emptyArgumentSpace ? \" \" : \"\"}`;\n",
+          "previous": "\tconst application = `${item.sourceApplication ? `(${item.sourceApplication})` : `_root_.${item.sourceDeclaration}`}${parameters.length ? ` ${parameters.join(\" \")}` : emptyArgumentSpace ? \" \" : \"\"}`;\n",
+          "start": 12763
+        },
+        {
+          "current": "/**\n * Restore compiler-approved proof arguments in source order without exposing a\n * host argument. Only the closed True witness is currently admitted upstream.\n *\n * @param item - Compiler-owned export with optional erased proof metadata.\n * @param runtimeArguments - Runtime arguments in Binding IR order.\n */\nexport const erasedProofApplicationArguments = (item, runtimeArguments) => {\n\tconst proofs = item.erasedProofs ?? [];\n\tif(!proofs.length) return runtimeArguments;\n\tconst byIndex = new Map(proofs.map(proof => [proof.sourceIndex, proof]));\n\tconst result = [];\n\tlet runtime = 0;\n\tfor(let sourceIndex = 0; sourceIndex < runtimeArguments.length + proofs.length; sourceIndex++)\n\t{\n\t\tconst proof = byIndex.get(sourceIndex);\n\t\tif(proof)\n\t\t{\n\t\t\tif(proof.witness !== \"True.intro\") throw new TypeError(\"Unsupported erased proof witness\");\n\t\t\tresult.push(\"_root_.True.intro\");\n\t\t}\n\t\telse result.push(runtimeArguments[runtime++]);\n\t}\n\tif(runtime !== runtimeArguments.length || result.some(value => value === undefined))\n\t\tthrow new TypeError(\"Erased proof parameters do not match the runtime signature\");\n\treturn result;\n};\n\n",
+          "previous": "",
+          "start": 13822
+        }
+      ],
+      "parent": "60b90ab5cfea41edd033ba70163614cd053dfff5",
+      "path": "src/build/component-refinements.mjs",
+      "previousSha256": "c5d606fa4b861d3c7920a872e6f0968f335b9eb8370c1bb9ef470de754cd053f"
+    },
+    {
+      "commit": "f195e8dece1a00d68fea3647ec6046c1bc5ee8ed",
+      "currentSha256": "9c4941864f5dad66ea9f604bff9edb7d9538e9a2e65b9911f18f9255848171b5",
+      "edits": [
+        {
+          "current": "import { componentRefinedCall, componentRefinementConversion, componentRefinementGuards, constructorRefinementLeaves, erasedProofApplicationArguments } from \"./component-refinements.mjs\";\n",
+          "previous": "import { componentRefinedCall, componentRefinementConversion, componentRefinementGuards, constructorRefinementLeaves } from \"./component-refinements.mjs\";\n",
+          "start": 623
+        },
+        {
+          "current": "\tconst sourceArguments = erasedProofApplicationArguments(item, args);\n\tconst call = `${application} ${sourceArguments.join(\" \")}`;\n",
+          "previous": "\tconst call = `${application} ${args.join(\" \")}`;\n",
+          "start": 29271
+        },
+        {
+          "current": "\t\t\tconst arguments_ = erasedProofApplicationArguments(item\n\t\t\t\t, item.parameters.map((_, i) => `a${i}`));\n\t\t\temit(item.symbol, parameters, item.result, `${application} ${arguments_.join(\" \")}`);\n",
+          "previous": "\t\t\temit(item.symbol, parameters, item.result, `${application} ${item.parameters.map((_, i) => `a${i}`).join(\" \")}`);\n",
+          "start": 33096
+        },
+        {
+          "current": "\t\tconst source = { refinements: item.refinements, sourceDeclaration: item.name\n\t\t\t, ...(item.erasedProofs ? { erasedProofs: item.erasedProofs } : {})\n\t\t\t, ...(item.specialization ? { sourceApplication: item.specialization.application } : {}) };\n",
+          "previous": "\t\tconst source = { refinements: item.refinements, sourceDeclaration: item.name, ...(item.specialization ? { sourceApplication: item.specialization.application } : {}) };\n",
+          "start": 33716
+        }
+      ],
+      "parent": "60b90ab5cfea41edd033ba70163614cd053dfff5",
+      "path": "src/build/native-model.mjs",
+      "previousSha256": "ef48dc034fbdd8c865e6b5831428d5bc69e40bcd28ddfc9e5aa9f86ac1f75bce"
+    },
+    {
+      "commit": "f195e8dece1a00d68fea3647ec6046c1bc5ee8ed",
+      "currentSha256": "b9458771823f08c2887aae69ea18676ab7510eba658da45b7085dbe39671f355",
+      "edits": [
+        {
+          "current": "import { componentRefinedCall, erasedProofApplicationArguments } from \"../src/build/component-refinements.mjs\";\n",
+          "previous": "",
+          "start": 608
+        },
+        {
+          "current": "test(\"generated calls restore closed proof witnesses without host arguments\", () => {\n\tconst item = { sourceDeclaration: \"Proofs.keep\"\n\t\t, erasedProofs: [\n\t\t\t{ sourceIndex: 0, name: \"first\", proposition: \"True\", witness: \"True.intro\" }\n\t\t\t, { sourceIndex: 2, name: \"second\", proposition: \"True\", witness: \"True.intro\" }\n\t\t]\n\t};\n\tassert.deepEqual(erasedProofApplicationArguments(item, [\"a0\", \"a1\"])\n\t\t, [\"_root_.True.intro\", \"a0\", \"_root_.True.intro\", \"a1\"]);\n\tassert.equal(componentRefinedCall(item, [\"a0\", \"a1\"]).call\n\t\t, \"_root_.Proofs.keep _root_.True.intro a0 _root_.True.intro a1\");\n\tconst altered = structuredClone(item);\n\taltered.erasedProofs[0].witness = \"False.elim\";\n\tassert.throws(() => erasedProofApplicationArguments(altered, [\"a0\", \"a1\"])\n\t\t, /Unsupported erased proof witness/u);\n});\n\n",
+          "previous": "",
+          "start": 2277
+        },
+        {
+          "current": "\tconst proof = structuredClone(generated.plan);\n\tproof.exports[0].erasedProofs = [{ sourceIndex: proof.exports[0].parameters.length + 1\n\t\t, name: \"_proof\", proposition: \"True\", witness: \"True.intro\" }];\n\tassert.throws(() => validateCompilerAdapterPlan(proof)\n\t\t, error => error instanceof CompilerAdapterError\n\t\t\t&& error.code === \"invalid-compiler-adapter-plan\");\n",
+          "previous": "",
+          "start": 5440
+        }
+      ],
+      "parent": "60b90ab5cfea41edd033ba70163614cd053dfff5",
+      "path": "tests/compiler-adapters.test.mjs",
+      "previousSha256": "2c6491f237449bbac8abf61d4eac3d98ff6cf843ca664cddc631b921c983b774"
+    },
+    {
+      "commit": "f195e8dece1a00d68fea3647ec6046c1bc5ee8ed",
+      "currentSha256": "385a94456e0e6f1d1ad57eeec94933ac8482d88c2169b1a2c185311f1c60a16b",
+      "edits": [
+        {
+          "current": "test(\"compiler metadata erases an exact closed True proof parameter without changing runtime arity\", async () => {\n\tconst { request, report } = sample();\n\tconst declaration = report.modules[0].declarations[0];\n\tdeclaration.typeExpression = \"(value : UInt32) → (_proof : True) → UInt32\";\n\tdeclaration.parameters.push({ name: \"_proof\", binderInfo: \"explicit\", typeExpression: \"True\" });\n\tdeclaration.projection.erasedProofs = [{ sourceIndex: 1, name: \"_proof\"\n\t\t, proposition: \"True\", witness: \"True.intro\" }];\n\tassert.equal(validateElaboratedMetadata(report, request), true);\n\tawait assertJsonSchema(\"elaborated-export-metadata\", report);\n\tconst project = { name: \"sample\", version: \"1.0.0\", toolchain: request.metadata.toolchain };\n\tconst analysis = projectElaboratedMetadata({ project, inputs: [], sourceTreeSha256: \"e\".repeat(64) }\n\t\t, [{ module: \"Sample\", path: \"Sample.lean\" }], { request, metadata: report });\n\tconst runtime = analysis.bindingIr.document.declarations[0];\n\tassert.equal(runtime.parameters.length, 1);\n\tassert.deepEqual(runtime.source.extensions[\"lean-lang.org/erased-proofs\"], {\n\t\tparameters: declaration.projection.erasedProofs\n\t});\n\tfor(const change of [\n\t\tvalue => { value.sourceIndex = 0; }\n\t\t, value => { value.sourceIndex = 2; }\n\t\t, value => { value.name = \"other\"; }\n\t\t, value => { value.proposition = \"False\"; }\n\t\t, value => { value.witness = \"fabricated\"; }\n\t]) {\n\t\tconst invalid = structuredClone(report);\n\t\tchange(invalid.modules[0].declarations[0].projection.erasedProofs[0]);\n\t\tassert.throws(() => validateElaboratedMetadata(invalid, request)\n\t\t\t, { code: \"invalid-elaborated-metadata\" });\n\t}\n});\n\n",
+          "previous": "",
+          "start": 5020
+        },
+        {
+          "current": "test(\"fresh Lean erases a closed proof binder and refuses conditional or proof-result APIs\", { skip: !enabled }, async t => {\n\tconst context = await lakeWorkspaceFixture(t);\n\tawait saveLakeFile(context.root, \"Shop.lean\", `namespace Shop\ndef keep (value : UInt32) (_proof : True) : UInt32 := value\ntheorem keep_eq (value : UInt32) (proof : True) : keep value proof = value := rfl\ndef conditional (value : UInt32) (_proof : value = 0) : UInt32 := value\ndef proofValue : True := True.intro\nend Shop\n`);\n\tawait saveLakeFile(context.root, \"lean-bridge.exports.json\", canonicalJson({\n\t\tschemaVersion: 1, modules: [\"Shop\"]\n\t\t, exports: [\"Shop.keep\", \"Shop.conditional\", \"Shop.proofValue\"]\n\t}));\n\tconst report = await inspect(context);\n\tconst declarations = report.elaboration.metadata.modules[0].declarations;\n\tconst keep = declarations.find(item => item.identity === \"Shop.keep\");\n\tassert.equal(keep.projection.status, \"supported\");\n\tassert.equal(keep.projection.parameters.length, 1);\n\tassert.deepEqual(keep.projection.erasedProofs, [{ sourceIndex: 1\n\t\t, name: \"_proof\"\n\t\t, proposition: \"True\", witness: \"True.intro\" }]);\n\tassert.deepEqual(keep.theoremReferences, [\"Shop.keep_eq\"]);\n\tconst runtime = report.bindingIr.document.declarations.find(item => item.id === \"lean:Shop.keep\");\n\tassert.equal(runtime.parameters.length, 1);\n\tassert.deepEqual(runtime.source.extensions[\"lean-lang.org/erased-proofs\"], {\n\t\tparameters: keep.projection.erasedProofs\n\t});\n\tassert.deepEqual(report.elaboration.metadata.diagnostics.map(item => item.code).sort()\n\t\t, [\"proof-only\", \"unsupported-proof-obligation\"]);\n\tassert.equal(declarations.find(item => item.identity === \"Shop.conditional\").projection.reason\n\t\t, \"unsupported-proof-obligation\");\n\tassert.equal(declarations.find(item => item.identity === \"Shop.proofValue\").projection.reason\n\t\t, \"proof-only\");\n\tawait assertJsonSchema(\"elaborated-export-metadata\", report.elaboration.metadata);\n});\n\n",
+          "previous": "",
+          "start": 32942
+        }
+      ],
+      "parent": "60b90ab5cfea41edd033ba70163614cd053dfff5",
+      "path": "tests/elaborated-metadata.test.mjs",
+      "previousSha256": "a4addd03f32134102b254c0c17746ae686460f99c6ca5154a7c194fbd5ba982c"
+    },
+    {
+      "commit": "f195e8dece1a00d68fea3647ec6046c1bc5ee8ed",
+      "currentSha256": "0ccc19817191392cb47784b66da06d83c5e674875276e0e2a3b359ad922a538f",
+      "edits": [
+        {
+          "current": "import { createNativeModel, generateNativeLeanAdapters } from \"../../src/build/native-model.mjs\";\n",
+          "previous": "import { createNativeModel } from \"../../src/build/native-model.mjs\";\n",
+          "start": 516
+        },
+        {
+          "current": "const erasedProofsKey = \"lean-lang.org/erased-proofs\";\n",
+          "previous": "",
+          "start": 1260
+        },
+        {
+          "current": "test(\"an independently reviewed closed proof binder preserves one runtime slot and exact compiler evidence\", () => {\n\tconst fixture = nativeMetadataFixture();\n\tconst declaration = fixture.metadata.modules[0].declarations[0];\n\tdeclaration.typeExpression = \"(value : UInt32) → (_proof : True) → UInt32\";\n\tdeclaration.parameters.push({ name: \"_proof\", binderInfo: \"explicit\"\n\t\t, typeExpression: \"True\" });\n\tdeclaration.projection.erasedProofs = [{ sourceIndex: 1, name: \"_proof\"\n\t\t, proposition: \"True\", witness: \"True.intro\" }];\n\tconst model = createNativeModel({ ...fixture\n\t\t, component: { id: \"sample@1.0.0\", name: \"sample\", version: \"1.0.0\" } });\n\tassert.equal(model.exports[0].parameters.length, 1);\n\tassert.deepEqual(model.exports[0].erasedProofs\n\t\t, declaration.projection.erasedProofs);\n\tconst generated = generateNativeLeanAdapters(model);\n\tassert.match(generated.leanSource\n\t\t, /_root_\\.Sample\\.increment a0 _root_\\.True\\.intro/u);\n\tassert.match(generated.header\n\t\t, new RegExp(`uint32_t ${model.exports[0].symbol}\\\\(uint32_t a0\\\\);`, \"u\"));\n\tassert.doesNotMatch(generated.header, /proof/iu);\n\tconst refinedModel = structuredClone(model);\n\trefinedModel.exports[0].refinements = { parameters: [null], result: null };\n\tassert.match(generateNativeLeanAdapters(refinedModel).leanSource\n\t\t, /_root_\\.Sample\\.increment a0 _root_\\.True\\.intro/u);\n\n\tconst compiled = model.bindingIr;\n\tconst reviewed = structuredClone(compiled);\n\tfor(const producer of reviewed.producers) producer.extensions = {};\n\tfor(const item of reviewed.declarations)\n\t\titem.source.extensions = { [erasedProofsKey]: structuredClone(\n\t\t\titem.source.extensions[erasedProofsKey]) };\n\tconst review = reviewInput(reviewed);\n\tvalidateReviewedSource(review);\n\tconst configuration = { schemaVersion: 1, modules: [\"Sample\"] };\n\tconst exportConfigurationSource = canonicalJson(configuration);\n\tconst identity = { ...fixture.sourceIdentity, exportConfigurationSource\n\t\t, exportConfigurationSha256: sha256(exportConfigurationSource) };\n\tassert.deepEqual(reconcileReviewedSource(review, compiled, identity), compiled);\n\n\tfor(const mutate of [\n\t\tproof => { proof.sourceIndex = 0; }\n\t\t, proof => { proof.name = \"other\"; }\n\t\t, proof => { proof.proposition = \"False\"; }\n\t]) {\n\t\tconst changed = structuredClone(reviewed);\n\t\tmutate(changed.declarations[0].source.extensions[erasedProofsKey].parameters[0]);\n\t\tassert.throws(() => reconcileReviewedSource(reviewInput(changed), compiled, identity)\n\t\t\t, { code: \"reviewed-ir-source-mismatch\" });\n\t}\n\tconst changedSource = structuredClone(compiled);\n\tchangedSource.declarations[0].source.declaration = \"Sample.other\";\n\tassert.throws(() => reconcileReviewedSource(review, changedSource, identity)\n\t\t, { code: \"reviewed-ir-source-mismatch\" });\n\tconst forgedTheorem = structuredClone(reviewed);\n\tforgedTheorem.declarations[0].source.extensions[\"lean-lang.org/theorem-references\"]\n\t\t= [\"Sample.fabricated\"];\n\tassert.throws(() => validateReviewedSource(reviewInput(forgedTheorem))\n\t\t, { code: \"reviewed-ir-build-unsupported\" });\n});\n\n",
+          "previous": "",
+          "start": 6147
+        }
+      ],
+      "parent": "60b90ab5cfea41edd033ba70163614cd053dfff5",
+      "path": "tests/helpers/reviewed-semantic-decisions-tests.mjs",
+      "previousSha256": "f03df51574a54e3af8584ed3947c250f22be99e05ae68876d634855669e090c4"
+    },
+    {
+      "commit": "f195e8dece1a00d68fea3647ec6046c1bc5ee8ed",
+      "currentSha256": "6cda0a99e8c500d160a2226664f667f6060f0ff5255638473cd9233870bd3e97",
+      "edits": [
+        {
+          "current": "test(\"owned review preserves exact direct proof erasure without adding a payload field\", () => {\n\tconst { document, compiled, sourceIdentity } = fixture();\n\tconst declaration = document.declarations[0];\n\tconst proof = { sourceIndex: declaration.parameters.length, name: \"_proof\"\n\t\t, proposition: \"True\", witness: \"True.intro\" };\n\tdeclaration.source.extensions[\"lean-lang.org/erased-proofs\"]\n\t\t= { parameters: [proof] };\n\tcompiled.declarations[0].source.extensions[\"lean-lang.org/erased-proofs\"]\n\t\t= { parameters: [structuredClone(proof)] };\n\tconst review = capture(document);\n\tsourceIdentity.reviewedBindingIr = review;\n\tassert.deepEqual(reconcileReviewedOwnedSource(review, compiled, sourceIdentity)\n\t\t.declarations[0].parameters, compiled.declarations[0].parameters);\n\tconst changed = structuredClone(document);\n\tchanged.declarations[0].source.extensions[\"lean-lang.org/erased-proofs\"]\n\t\t.parameters[0].proposition = \"False\";\n\tassert.throws(() => reconcileReviewedOwnedSource(\n\t\tcapture(changed), compiled, { ...sourceIdentity, reviewedBindingIr: capture(changed) }\n\t), { code: \"reviewed-ir-source-mismatch\" });\n});\n\n",
+          "previous": "",
+          "start": 6997
+        }
+      ],
+      "parent": "60b90ab5cfea41edd033ba70163614cd053dfff5",
+      "path": "tests/reviewed-owned-source.test.mjs",
+      "previousSha256": "dde9fc46a8382e40013fbe7045ea3f6f282154e444d2381b61f3179b4c521e6d"
+    }
+  ]
+}

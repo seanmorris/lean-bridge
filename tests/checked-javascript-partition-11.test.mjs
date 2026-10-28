@@ -3,6 +3,7 @@
  *
  * @file
  */
+import "./helpers/direct-proof-erasure-source-history-tests.mjs";
 import "./helpers/proof-erasure-evidence-audit-source-history-tests.mjs";
 import "./helpers/native-fork-transfer-producer-repair-source-history-tests.mjs";
 import "./helpers/callback-fin-perl-runtime-source-history-tests.mjs";
