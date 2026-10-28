@@ -1,0 +1,57 @@
+{
+  "additions": [
+    {
+      "currentSha256": "5dde16db3fb3d090a392442016f0279aa9b04038f7da901e969c4c73e520f7be",
+      "path": "scripts/update-signature-specialization-hosted-archive-replay-integration-source-history.mjs"
+    },
+    {
+      "currentSha256": "853ee8f575862ea2ce01af4abefb5c75d85e4d2f7f59e35915f7cc50f56d05a1",
+      "path": "tests/helpers/signature-specialization-hosted-archive-replay-integration-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "a262ed0c3309528f4c0157f41f6717e582302d068124aace442dedad283c97d2",
+      "path": "tests/helpers/signature-specialization-hosted-archive-replay-integration-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "c2a06791d0515691557b643a86caa127fdb143da",
+  "milestone": "signature-specialization-hosted-archive-replay-integration-source-v1",
+  "predecessorCommit": "10fd34fd10a1f4b3dc692af129f26f651bedd2be",
+  "schemaVersion": 1,
+  "scope": "Integrate the authenticated hosted-signature archive and canonical replay repair into the central Fin history and partition newest-first. Preserve exact reconstruction before the archive is promoted into the type-surface inventory.",
+  "updates": [
+    {
+      "currentSha256": "7c099d57d25799ca7ace95973369257b0a9808a9232805d29099f3853d3bc8a3",
+      "edits": [
+        {
+          "current": "import \"./helpers/signature-specialization-hosted-archive-replay-source-history-tests.mjs\";\nimport \"./helpers/signature-specialization-hosted-archive-replay-integration-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 4943
+        }
+      ],
+      "path": "tests/checked-javascript-partition-10.test.mjs",
+      "previousSha256": "53f55205add76c10b7fe027699414edba69e15fdf439751dfe5b6def845d7380"
+    },
+    {
+      "currentSha256": "8ddfdcd12f2d6bac48d17a6358d183473b3e5ae4af4797cae025ffbdf039b3c1",
+      "edits": [
+        {
+          "current": "import { beforeSignatureSpecializationHostedArchiveReplayIntegrationSource, signatureSpecializationHostedArchiveReplayIntegrationNormalizationPaths } from \"./signature-specialization-hosted-archive-replay-integration-source-history.mjs\";\nimport { beforeSignatureSpecializationHostedArchiveReplaySource, signatureSpecializationHostedArchiveReplayNormalizationPaths } from \"./signature-specialization-hosted-archive-replay-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...signatureSpecializationHostedArchiveReplayIntegrationNormalizationPaths\n\t, ...signatureSpecializationHostedArchiveReplayNormalizationPaths\n\t, ...signatureSpecializationCompletionPreparationIntegrationNormalizationPaths\n",
+          "previous": "\t...signatureSpecializationCompletionPreparationIntegrationNormalizationPaths\n",
+          "start": 207061
+        },
+        {
+          "current": "\tlet stage = beforeSignatureSpecializationHostedArchiveReplayIntegrationSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeSignatureSpecializationHostedArchiveReplaySource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeSignatureSpecializationCompletionPreparationIntegrationSource(\n",
+          "previous": "\tlet stage = beforeSignatureSpecializationCompletionPreparationIntegrationSource(\n",
+          "start": 258374
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "6c23ba0029215c63744865987c9b354f5cf8d8b2091031b5deceb7ceffa4eb44"
+    }
+  ]
+}
