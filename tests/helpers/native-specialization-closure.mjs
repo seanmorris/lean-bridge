@@ -14,6 +14,7 @@ import { assertHostedSpecializationArchive, assertHostedSpecializationReport, ho
 // evidence entries rather than a literal path in executable source.
 // core-evidence-prefix: generic-record-specializations-
 // core-evidence-prefix: generic-record-arrays-
+// core-evidence-prefix: generic-record-array-hosts-
 export const specializationClosureDirectory = "docs/evidence/native-specialization-closure-20261010";
 export const specializationClosureSha256 = "2aba48bbfbd00fc3bd885e0ec5c450d16bd3e09e1eecdf5bfce72041c1ca3ce8";
 const title = "relocated source-free native packages install concrete specializations without the generic declaration";

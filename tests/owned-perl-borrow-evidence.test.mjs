@@ -31,7 +31,7 @@ test("Perl borrowed-result evidence preserves complete authenticated predecessor
 		assert.equal(update.previousSha256, previous.sources[update.path]);
 		assert.equal(update.currentSha256, record.sources[update.path]);
 		const source = beforeOwnedPhpBorrow(update.path, await readFile(update.path, "utf8"), update.currentSha256);
-		const prior = beforeOwnedPerlBorrow(update.path, source);
+		const prior = beforeOwnedPerlBorrow(update.path, source, update.previousSha256);
 		assert.equal(sha256(prior), update.previousSha256);
 		assert.equal(beforeOwnedPerlBorrow(update.path, prior), prior);
 		assert.equal(beforeOwnedPerlBorrow(update.path, source, update.currentSha256), source);

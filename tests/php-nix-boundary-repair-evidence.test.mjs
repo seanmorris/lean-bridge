@@ -35,7 +35,7 @@ test("PHP Nix boundary repair preserves the exact JVM and earlier receipts", asy
 		assert.equal(update.previousSha256, previous.sources[update.path], update.path);
 		assert.equal(update.currentSha256, record.sources[update.path], update.path);
 		const current = (await source(update.path, update.currentSha256)).toString();
-		const prior = beforePhpNixBoundaryRepair(update.path, current);
+		const prior = beforePhpNixBoundaryRepair(update.path, current, update.previousSha256);
 		assert.equal(sha256(prior), update.previousSha256, update.path);
 		assert.equal(beforePhpNixBoundaryRepair(update.path, prior), prior);
 		assert.equal(beforePhpNixBoundaryRepair(update.path, current, update.currentSha256), current);
