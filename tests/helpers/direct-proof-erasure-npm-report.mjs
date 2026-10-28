@@ -188,5 +188,13 @@ export const checkDirectProofErasureNpmRecords = async (read, options) => {
 	assert.equal(report.declarationsSha256, sha256(await read("index.d.ts")));
 	assert.doesNotMatch((await read("index.d.ts")).toString()
 		, /True|proof|_before|_after/u);
+	const handoff = await json("handoff/component-package-receipt.json");
+	assert.deepEqual(handoff, report.receipt);
+	for(const item of [handoff.runtime, handoff.package])
+		assert.equal(sha256(await read(`handoff/${item.archive}`))
+			, item.sha256, item.archive);
+	assert.match((await read(
+		"handoff/verify-component-package-receipt.mjs"
+	)).toString(), /verifyComponentPackageReceipt/u);
 	return result;
 };

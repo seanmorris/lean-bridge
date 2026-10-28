@@ -91,6 +91,8 @@ test("the installed lane cannot pass proofs through JavaScript or TypeScript", a
 	assert.match(installed, /assertDirectProofErasureBundle/u);
 	assert.match(installed, /sourceRemovedBeforeInstallation: true/u);
 	assert.match(installed, /relocatedInstallation: true/u);
+	assert.match(installed
+		, /cp\(handoff, join\(records, "handoff"\)/u);
 	assert.match(installed, /"--strict", "--noEmit", "--skipLibCheck", "false"/u);
 	assert.ok(installed.indexOf("await rm(prepared.directory")
 		< installed.indexOf("const nodeRoot"));
@@ -98,6 +100,11 @@ test("the installed lane cannot pass proofs through JavaScript or TypeScript", a
 	assert.match(runner
 		, /LEAN_BRIDGE_TYPE_CORPUS_BROWSERS=chromium,firefox,webkit/u);
 	assert.match(runner, /check-direct-proof-erasure-npm-ci\.mjs/u);
+	const checker = await readFile(
+		"tests/helpers/direct-proof-erasure-npm-report.mjs", "utf8"
+	);
+	assert.match(checker, /handoff\/component-package-receipt\.json/u);
+	assert.match(checker, /handoff\/\$\{item\.archive\}/u);
 	assert.match(workflow, /id: direct_proof_npm/u);
 	assert.match(workflow, /run: bash scripts\/run-direct-proof-erasure-npm-ci\.sh/u);
 	assert.match(workflow, /name: direct-proof-erasure-node-browser-/u);

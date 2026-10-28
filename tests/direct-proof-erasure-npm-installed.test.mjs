@@ -217,6 +217,9 @@ for(const route of routes) test(
 		const browser = browsers ? await checkDirectProofErasureBrowsers({
 			directory: join(suite, "browser"), handoff, receipt, records, route
 		}) : null;
+		await cp(handoff, join(records, "handoff"), {
+			recursive: true, errorOnExist: true, force: false
+		});
 		const producerCommit = execFileSync("git", ["rev-parse", "HEAD"]
 			, { encoding: "utf8" }).trim();
 		const report = {
