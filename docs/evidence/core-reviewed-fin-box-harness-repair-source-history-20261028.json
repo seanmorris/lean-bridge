@@ -1,0 +1,81 @@
+{
+  "additions": [
+    {
+      "currentSha256": "c9569c39cb139e0fdec03fece0cf4a5c3f43e27b2c1e448fb2b4265fe0d70c2f",
+      "path": "scripts/update-core-reviewed-fin-box-harness-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "b84f3558af65f633ca1fb114b0b34dd557479cb7378de1c8f1c7cbd42c5b6c9e",
+      "path": "tests/helpers/core-reviewed-fin-box-harness-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "0aa278293a452fc80010b23541b07f72ad37a5bf5e824c51e5ff17f432211868",
+      "path": "tests/helpers/core-reviewed-fin-box-harness-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "34d7c60c46c2ec6be8d745f2b832ad450780f325",
+  "integrationUpdates": [
+    {
+      "currentSha256": "254bb5bb2e1ec58db897f13e2d6b53b5b75e63b511ecffce28e6bf8b605379f7",
+      "edits": [
+        {
+          "current": "import \"./helpers/core-reviewed-fin-box-harness-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 170
+        }
+      ],
+      "path": "tests/checked-javascript-partition-10.test.mjs",
+      "previousSha256": "7ec0428be3e2e94a0aa8ff4a49856266cb440732c34661e50a0c0e510cd0bede"
+    },
+    {
+      "currentSha256": "3392d02880d632fbc75d6d96245c2cb7924d7f6be42ccb363ec00c2865f5803e",
+      "edits": [
+        {
+          "current": "import { beforeCoreReviewedFinBoxHarnessRepairSource, coreReviewedFinBoxHarnessRepairNormalizationPaths } from \"./core-reviewed-fin-box-harness-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...coreReviewedFinBoxHarnessRepairNormalizationPaths\n\t, ...coreShardFourSerialNormalizationPaths\n",
+          "previous": "\t...coreShardFourSerialNormalizationPaths\n",
+          "start": 209230
+        },
+        {
+          "current": "\tlet stage = beforeCoreReviewedFinBoxHarnessRepairSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCoreShardFourSerialSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeCoreShardFourSerialSource(path, text, expected);\n",
+          "start": 261251
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "a36c4d2a678b60876d1fb4b3674c99c4d28e0a1191393ebb6b5e0409a81c5451"
+    }
+  ],
+  "milestone": "core-reviewed-fin-box-harness-repair-source-v1",
+  "predecessorCommit": "fd494e477bb212309c895f2f656b0ade3874d559",
+  "schemaVersion": 1,
+  "scope": "Account every current scalar and structural reviewed Fin entry from the producer symbol inventory, include the Box call in the retained strict TypeScript prelude, and keep the historical archive boundary unchanged. Register the complete transition newest-first; hosted Core remains the terminal acceptance gate.",
+  "updates": [
+    {
+      "currentSha256": "55f437bad80c1f9fdd5bc4c8b1fef7102b03c6621343fbf2c4549587e8ab1263",
+      "edits": [
+        {
+          "current": "\t\tassert.deepEqual([accounted.mode, accounted.source, accounted.columns.length]\n\t\t\t, [mode, mode === \"probe\"\n\t\t\t\t, reviewedFinWasmEntrySymbols(selection, mode).length]);\n",
+          "previous": "\t\tassert.deepEqual([accounted.mode, accounted.source, accounted.columns.length], [mode, mode === \"probe\", { scalar: 6, structural: 9 }[selection] + (mode === \"probe\" ? 1 : 0)]);\n",
+          "start": 7554
+        },
+        {
+          "current": "\tawait writeFile(join(root, \"typed.mjs\"), `import * as api from \"reviewed-fin\";\\nvoid api.mirror(9n);\\nvoid api.label(\"prefix\", 0n, \"suffix\");\\nvoid api.rows([[0n, 9n]]);\\nvoid api.nested([{ tag: \"some\", value: [2n, { error: 1n }] }]);\\nvoid api.box({ digit: 9n, label: \"nine\" });\\n${reviewedFinWasmEntryNodeIndex}`);\n",
+          "previous": "\tawait writeFile(join(root, \"typed.mjs\"), `import * as api from \"reviewed-fin\";\\nvoid api.mirror(9n);\\nvoid api.label(\"prefix\", 0n, \"suffix\");\\nvoid api.rows([[0n, 9n]]);\\nvoid api.nested([{ tag: \"some\", value: [2n, { error: 1n }] }]);\\n${reviewedFinWasmEntryNodeIndex}`);\n",
+          "start": 17006
+        },
+        {
+          "current": "\tconst prelude = [\"mirror\", \"label\", \"rows\", \"nested\", \"box\"];\n",
+          "previous": "\tconst prelude = [\"mirror\", \"label\", \"rows\", \"nested\"];\n",
+          "start": 17440
+        }
+      ],
+      "path": "tests/reviewed-fin-wasm-entry-harness.test.mjs",
+      "previousSha256": "a180ebd7f76ecb34dc8eb40fee21455f2afc8f7efe2d4b47c8c4f7210d5f0888"
+    }
+  ]
+}
