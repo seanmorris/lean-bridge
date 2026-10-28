@@ -7,11 +7,12 @@
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { readFile, realpath, stat } from "node:fs/promises";
-import { isAbsolute, resolve } from "node:path";
+import { extname, isAbsolute, posix, resolve } from "node:path";
 import { sha256 } from "../../src/capsule/node.mjs";
 import {
 	checkedRecordValueIndexHostedDigest
 } from "./checked-record-value-index-hosted-archive.mjs";
+import { moduleSpecifiers } from "./module-closure.mjs";
 
 export const reviewedFinWasmEntryHostedEvidenceDirectory
 	= "docs/evidence/reviewed-fin-wasm-entry-hosted-20261028";
@@ -19,7 +20,7 @@ export const reviewedFinWasmEntryHostedModes = Object.freeze([
 	"original", "probe"
 ]);
 
-const sourceRoles = Object.freeze({
+const sourceEntries = Object.freeze({
 	producer: Object.freeze([
 		".github/workflows/consumer-matrix.yml"
 		, "tests/reviewed-fin-wasm-entry.test.mjs"
@@ -51,6 +52,34 @@ const sourceRoles = Object.freeze({
 		, "src/capsule/node.mjs"
 	])
 });
+
+const sourceCache = new Map();
+
+const original = (revision, path) => {
+	const key = `${revision}:${path}`;
+	if(!sourceCache.has(key)) sourceCache.set(key, execFileSync(
+		"git", ["show", key], { maxBuffer: 256 * 1024 ** 2 }
+	));
+	return sourceCache.get(key);
+};
+
+const closure = (revision, entries) => {
+	const paths = new Set();
+	const visit = path => {
+		if(paths.has(path)) return;
+		const bytes = original(revision, path);
+		paths.add(path);
+		if(!/\.[cm]?js$/u.test(path)) return;
+		for(const specifier of moduleSpecifiers(bytes.toString(), path))
+		{
+			const joined = posix.normalize(posix.join(
+				posix.dirname(path), specifier));
+			visit(extname(joined) === "" ? `${joined}.mjs` : joined);
+		}
+	};
+	for(const entry of entries) visit(entry);
+	return [...paths].sort();
+};
 
 const jsonObject = (bytes, label) => {
 	const value = JSON.parse(bytes);
@@ -177,9 +206,10 @@ export const reviewedFinWasmEntryHostedSources = revisions => {
 		, ["archiver", "checker", "producer"].sort());
 	for(const revision of Object.values(revisions))
 		assert.match(revision, /^[a-f0-9]{40}$/u);
-	return Object.entries(sourceRoles).flatMap(([role, paths]) => paths.map(
-		path => Object.freeze({ role, path, revision: revisions[role] })
-	));
+	return Object.entries(sourceEntries).flatMap(
+		([role, entries]) => closure(revisions[role], entries).map(path =>
+			Object.freeze({ role, path, revision: revisions[role] }))
+	);
 };
 
 /**
@@ -193,9 +223,7 @@ export const reviewedFinWasmEntryHostedOriginal = (revision, path) => {
 	assert.ok(typeof path === "string" && path.length > 0
 		&& !path.startsWith("/") && !path.includes("\\")
 		&& path.split("/").every(part => part && part !== "." && part !== ".."));
-	return execFileSync("git", ["show", `${revision}:${path}`], {
-		maxBuffer: 64 * 1024 ** 2
-	});
+	return original(revision, path);
 };
 
 /**
@@ -204,7 +232,7 @@ export const reviewedFinWasmEntryHostedOriginal = (revision, path) => {
  * @param revision - Exact hosted producer/checker commit.
  */
 export const assertReviewedFinWasmEntryHostedChecker = async revision => {
-	for(const path of sourceRoles.checker)
+	for(const path of closure(revision, sourceEntries.checker))
 		assert.deepEqual(await readFile(path)
 			, reviewedFinWasmEntryHostedOriginal(revision, path)
 			, `Current checker differs from hosted checker: ${path}`);
