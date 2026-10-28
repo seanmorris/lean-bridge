@@ -161,11 +161,13 @@ test("Core evidence planning closes native specialization inventory files", asyn
 		"tests/helpers/native-specialization-closure.mjs", "utf8");
 	const available = [
 		"generic-record-specializations-20990101"
+		, "generic-record-arrays-20990101"
 		, "unrelated-specializations-20990101"
 	];
 	assert.deepEqual([...coreContractEvidenceDirectoryReferences(
 		source, "tests/helpers/native-specialization-closure.mjs", available)]
-		, ["generic-record-specializations-20990101"]);
+		, ["generic-record-specializations-20990101"
+			, "generic-record-arrays-20990101"]);
 });
 
 test("Core evidence planning closes the original reviewed Fin archive", async () => {
