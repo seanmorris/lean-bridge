@@ -12,6 +12,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforePhpWasmCorpusLaneSplitSource, phpWasmCorpusLaneSplitNormalizationPaths } from "./php-wasm-corpus-lane-split-source-history.mjs";
 import { beforeDirectProofErasureNativeEvidenceCorrectionSource, directProofErasureNativeEvidenceCorrectionNormalizationPaths } from "./direct-proof-erasure-native-evidence-correction-source-history.mjs";
 import { beforePerlDependentRefinementRejectionSource, perlDependentRefinementRejectionNormalizationPaths } from "./perl-dependent-refinement-rejection-source-history.mjs";
 import { beforeWitFrozenClosureHubHookSource, witFrozenClosureHubHookNormalizationPaths } from "./wit-frozen-closure-hub-hook-source-history.mjs";
@@ -2348,7 +2349,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...directProofErasureNativeEvidenceCorrectionNormalizationPaths
+	...phpWasmCorpusLaneSplitNormalizationPaths
+	, ...directProofErasureNativeEvidenceCorrectionNormalizationPaths
 	, ...perlDependentRefinementRejectionNormalizationPaths
 	, ...witFrozenClosureHubHookNormalizationPaths
 	, ...downstreamReporterSparseCheckoutNormalizationPaths
@@ -3435,7 +3437,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeDirectProofErasureNativeEvidenceCorrectionSource(
+	let stage = beforePhpWasmCorpusLaneSplitSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeDirectProofErasureNativeEvidenceCorrectionSource(
 		path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
