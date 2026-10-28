@@ -34,7 +34,7 @@ test("independent Subtype reviews select typed constructors, authenticate specia
 		["all primitive sites and two generic specializations", () => {}, null]
 		, ["alternate normalizing constructor", ir => { half(ir).source.extensions[key].parameters[0].constructor = "Subtypes.normalizedEven"; }, null]
 		, ["wrong input base", ir => { half(ir).source.extensions[key].parameters[0].constructor = "Subtypes.checkedWord"; }, /input must equal the subtype base/u]
-		, ["wrong output subtype", ir => { half(ir).source.extensions[key].parameters[0].constructor = "Subtypes.wrongEven"; }, /return Option of the exact subtype/u]
+		, ["output constructor selection", ir => { half(ir).source.extensions[key].result = { kind: "subtype", constructor: "Subtypes.wrongEven" }; }, /transport signature/u]
 		, ["unsafe constructor", ir => { half(ir).source.extensions[key].parameters[0].constructor = "Subtypes.unsafeEven"; }, /unsafe, partial or foreign implementation contract/u]
 		, ["partial constructor", ir => { half(ir).source.extensions[key].parameters[0].constructor = "Subtypes.partialEven"; }, /unsafe, partial or foreign implementation contract/u]
 		, ["foreign constructor", ir => { half(ir).source.extensions[key].parameters[0].constructor = "Subtypes.foreignEven"; }, /unsafe, partial or foreign implementation contract/u]

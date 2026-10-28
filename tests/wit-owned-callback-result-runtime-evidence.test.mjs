@@ -57,6 +57,10 @@ test("WIT callback runtime evidence rejects altered contracts, sources, masks an
 			, item => { item.input.sourceIdentity.extra = true; }
 			, item => { item.native.schemaVersion--; }
 			, item => { item.native.ownedGraph.schemaVersion--; }
+			, ...original.native.ownedGraph.hostCallbacks ? [
+				item => { item.native.ownedGraph.hostCallbacks.trampolineSha256 = zero; }
+				, item => { item.ownedValues.hostCallbacks.trampolineSha256 = zero; }
+			] : []
 			, item => { delete item.native.ownedGraph.callbackResultAnchors; }
 			, item => { item.manifest.graph.schemaVersion--; }
 			, item => { delete item.manifest.graph.callbackResultAnchors; }
@@ -112,7 +116,7 @@ test("WIT callback runtime evidence rejects altered contracts, sources, masks an
 			await assert.rejects(assertOwnedWitCallbackRuntime(name, altered), `${name}: ${change}`); rejected++;
 		}
 	}
-	assert.equal(rejected, 756);
+	assert.equal(rejected, 764);
 	t.diagnostic(JSON.stringify({ reports: 6, rejected }));
 });
 

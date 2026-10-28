@@ -6,7 +6,10 @@
  */
 import { corpusReviewedIr } from "./type-corpus-reviewed-ir.mjs";
 
-const subtype = constructor => constructor === null ? null : { kind: "subtype", constructor: `Subtypes.${constructor}` };
+const inputSubtype = constructor => constructor === null ? null
+	: { kind: "subtype", constructor: `Subtypes.${constructor}` };
+const outputSubtype = predicate => predicate === null ? null
+	: { kind: "subtype", constructor: null };
 
 /**
  * Describe the native Subtypes fixture, optionally with scalar and generic controls.
@@ -32,7 +35,9 @@ export const reviewedSubtypeIr = (extended = false) => {
 	for(const declaration of ir.declarations)
 	{
 		const [, , , parameters, result] = signatures.find(([name]) => declaration.name === name);
-		declaration.source.extensions["lean-lang.org/refinements"] = { parameters: parameters.map(subtype), result: subtype(result) };
+		declaration.source.extensions["lean-lang.org/refinements"] = {
+			parameters: parameters.map(inputSubtype), result: outputSubtype(result)
+		};
 		if(declaration.name === "mix") declaration.source.extensions["lean-lang.org/refinements"].parameters[1] = { kind: "fin", bound: "10" };
 		if(["firstEven", "secondEven"].includes(declaration.name))
 		{

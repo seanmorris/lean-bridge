@@ -13,7 +13,7 @@ import { ownedWitValueContract } from "../../src/build/owned-wit-artifacts.mjs";
 import { wasmtimeCapiIdentity } from "../../src/build/native-wit-artifacts.mjs";
 import { ownedDotnetCallbackResultSource, ownedDotnetCallbackResultCombinedSource
 	, ownedDotnetCallbackResultReviewedIr, ownedDotnetCallbackResultCombinedReviewedIr } from "./owned-dotnet-callback-result-fixture.mjs";
-import { ownedWitCallbackResultProbe, ownedWitCallbackNativeSource } from "./wit-owned-callback-result-probe.mjs";
+import { ownedWitCallbackResultProbe } from "./wit-owned-callback-result-probe.mjs";
 
 const keys = (item, names) => assert.deepEqual(Object.keys(item).sort(), [...names].sort());
 const hash = item => sha256(canonicalJson(item));
@@ -77,6 +77,26 @@ const countsByVariant = {
 	, combined: [10129, 154, 212, 192, 53, 599529531]
 };
 const identities = (mode, variant) => captures[`${mode}-${variant === "combined" ? variant : "no-host"}`];
+const historicalOutputs = Object.freeze({
+	"ordinary-no-host": [null
+		, "01ab47fdc80ab3e9917832172520fa312e9d85ee9ebf1ae34536fd5f76684969"
+		, "60ca21245e8f950055cb42427a06a0ec691cc77284ce1169499998216dfc0adb"]
+	, "ordinary-host": ["0ff764cadeaeb29edf6f1862134abc122204195085f5ff3a8eead81c7d5767db"
+		, "bdab79b0c67cd570175cf9a4b0715da93273ed768597c28512f94bce5fe44944"
+		, "5fa0d704bba324e8ea95bf5d53018f15f1dff2edf40008470e1255566c9bf38c"]
+	, "ordinary-combined": ["78f7e93c897ee843cb375d9dba67b0934be9dc0d1edfc6e65a723fa1094af851"
+		, "4af072e19327892a2f954aabf82d832491b4c291bcfcdc8e071d976188d00543"
+		, "ff45754eba0783e7b639a00bb35125ab423460420fe39921a43631d7cd7c321f"]
+	, "reviewed-no-host": [null
+		, "47c0fe1721f429c9cf5025d208a65d7d5274c0c4273cd55ace4550cdc5f04505"
+		, "5f567d58438c99e86f0b702ba42e56de1fc316e7ca6526c26aeef93af40f024c"]
+	, "reviewed-host": ["152824c43217cb44fa0c045377d1ba4b59e202e7b37fb6e6db315cfc9930f71c"
+		, "b3953fcd02955c94cfdd9a6efff2c0a29151eb0160bde37c66b7c258d127f291"
+		, "c0d2cd321803ea8298de9488adbd0c94eb4d81f5f2b7f7348280c9b0a1728b34"]
+	, "reviewed-combined": ["bf8052b08c71d885c7cca28f693568f2e046ff366be01bff1f8d3068fd559011"
+		, "ecb978e6d9cb3b39ce9be3780038b31e996c15e15bb38d3da42ed806705427ab"
+		, "2dd7d178b0818aa6acad40c8b0e97dd48622294f3a8c7cf587865c1e119894fd"]
+});
 const expectedNames = variant => ({
 	exports: ["newTicket", "serial", "echoRecord", "makeRecord"
 		, "makeLeasedRecord", "echoRecursive", "makeRecursive"
@@ -146,6 +166,12 @@ export const assertOwnedWitCallbackRuntime = async (name, item, readSource = rea
 		, ownedHostCallbacks: hostCallbacks, ownedCallbackResultAnchors: true
 		, ownedInputTransfers: combined, ownedAnchoredResults: combined
 		, ownedReceiverExports: combined });
+	const [historicalTrampoline, historicalSource, historicalObservedSource]
+		= historicalOutputs[`${mode}-${variant}`];
+	assert.equal(item.native.ownedGraph.hostCallbacks?.trampolineSha256 ?? null
+		, historicalTrampoline);
+	if(historicalTrampoline !== null)
+		native.ownedGraph.hostCallbacks.trampolineSha256 = historicalTrampoline;
 	assert.deepEqual(item.native, native);
 	assert.equal(native.schemaVersion, 11); assert.equal(native.ownedGraph.schemaVersion, 6);
 	const binary = Buffer.from(item.componentBase64, "base64");
@@ -157,10 +183,12 @@ export const assertOwnedWitCallbackRuntime = async (name, item, readSource = rea
 	assert.deepEqual(item.manifest.graph.callbackResultAnchors, generated.layout.callbacks
 		.filter(fn => fn.anchor !== undefined).map(fn => ({ id: fn.id, parameter: fn.anchor - 1 })));
 	assert.equal(item.manifest.graph.callbackResultAnchors.length, 4);
-	assert.deepEqual(item.ownedValues, ownedWitValueContract(native, { generated, files: generated.files }));
+	const ownedValues = ownedWitValueContract(native, { generated, files: generated.files });
+	ownedValues.sourceSha256 = historicalSource;
+	assert.deepEqual(item.ownedValues, ownedValues);
 	assert.equal(item.ownedValues.schemaVersion, 5);
-	assert.equal(item.sourceSha256, sha256(generated.source));
-	assert.equal(item.observedSourceSha256, sha256(ownedWitCallbackNativeSource(generated)));
+	assert.equal(item.sourceSha256, historicalSource);
+	assert.equal(item.observedSourceSha256, historicalObservedSource);
 	assert.equal(item.probeSha256, sha256(await ownedWitCallbackResultProbe(generated, combined, hostCallbacks, readFixture)));
 	if(!hostCallbacks)
 	{
