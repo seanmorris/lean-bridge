@@ -4,7 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { readFile, readdir } from "node:fs/promises";
+import { access, readFile, readdir } from "node:fs/promises";
 import test from "node:test";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { hashBindingIr } from "../src/binding-ir/canonical.mjs";
@@ -20,6 +20,9 @@ import {
 	, directProofErasureReview
 	, directProofErasureTargets
 } from "./helpers/direct-proof-erasure-fixture.mjs";
+import {
+	directProofErasureTargetConfiguration, prepareDirectProofErasureProject
+} from "./helpers/direct-proof-erasure-packages.mjs";
 
 const capture = document => {
 	const source = canonicalJson(document);
@@ -62,11 +65,50 @@ test("the independent review exposes one runtime word and two exact erased proof
 	});
 	assert.equal(directProofErasureProfiles.length, 17);
 	assert.equal(new Set(directProofErasureProfiles).size, 17);
-	assert.deepEqual(Object.keys(directProofErasureTargets).sort(), [
-		"c", "cpp", "dotnet", "java", "kotlin", "perl", "php-native"
-		, "php-wasm", "python", "ruby", "rust", "wit-wasi"
-	]);
+	assert.deepEqual(Object.keys(directProofErasureTargets).sort()
+		, directProofErasureProfiles);
 });
+
+test("seventeen consumer profiles collapse to twelve exact package targets", () => {
+	const targets = directProofErasureTargetConfiguration(directProofErasureProfiles);
+	assert.deepEqual(Object.keys(targets).sort(), [
+		"c", "cargo", "cpan", "cpp", "maven", "npm", "nuget", "php-native"
+		, "php-wasm", "pypi", "rubygems", "wit-wasi"
+	]);
+	assert.deepEqual(targets.npm
+		, { name: "direct-proof-erasure", version: "1.0.0" });
+	assert.deepEqual(targets.maven
+		, { name: "org.leanbridge:directprooferasure", version: "1.0.0" });
+	assert.throws(() => directProofErasureTargetConfiguration([]), TypeError);
+	assert.throws(() => directProofErasureTargetConfiguration(["unknown"]), TypeError);
+	assert.throws(() => directProofErasureTargetConfiguration(["c", "c"]), TypeError);
+});
+
+for(const route of ["ordinary", "reviewed"]) test(
+	`${route} package preparation keeps one shared source and exact route inputs`, async t => {
+		const prepared = await prepareDirectProofErasureProject(t, {
+			route, profiles: directProofErasureProfiles
+		});
+		assert.deepEqual(JSON.parse(await readFile(
+			`${prepared.projectRoot}/lean-bridge.exports.json`, "utf8"
+		)), prepared.configuration);
+		assert.deepEqual(prepared.configuration.modules, [directProofErasureModule]);
+		assert.deepEqual(prepared.configuration.exports
+			, route === "ordinary" ? [`${directProofErasureModule}.keep`] : undefined);
+		assert.equal(await readFile(
+			`${prepared.projectRoot}/DirectProofErasure.lean`, "utf8"
+		), await readFile(`${directProofErasureFixture}/DirectProofErasure.lean`, "utf8"));
+		if(route === "reviewed")
+		{
+			assert.deepEqual(JSON.parse(await readFile(
+				`${prepared.projectRoot}/api.binding-ir.json`, "utf8"
+			)), directProofErasureReview());
+		}
+		else await assert.rejects(access(
+			`${prepared.projectRoot}/api.binding-ir.json`
+		), { code: "ENOENT" });
+	}
+);
 
 test("review reconciliation refuses changed proof, source and theorem claims", () => {
 	const reviewed = directProofErasureReview();

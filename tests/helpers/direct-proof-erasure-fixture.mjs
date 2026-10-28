@@ -23,11 +23,16 @@ export const directProofErasureProfiles = Object.freeze([
 	, "perl", "php-native", "php-wasm", "python", "ruby", "rust", "wit-wasi"
 ]);
 export const directProofErasureTargets = Object.freeze({
-	c: Object.freeze(["c", Object.freeze({ name: "directprooferasure", version: "1.0.0" })])
+	"browser-javascript": Object.freeze(["npm", Object.freeze({ name: "direct-proof-erasure", version: "1.0.0" })])
+	, "browser-react": Object.freeze(["npm", Object.freeze({ name: "direct-proof-erasure", version: "1.0.0" })])
+	, "browser-worker": Object.freeze(["npm", Object.freeze({ name: "direct-proof-erasure", version: "1.0.0" })])
+	, c: Object.freeze(["c", Object.freeze({ name: "directprooferasure", version: "1.0.0" })])
 	, cpp: Object.freeze(["cpp", Object.freeze({ name: "directprooferasure", version: "1.0.0" })])
 	, dotnet: Object.freeze(["nuget", Object.freeze({ name: "DirectProofErasure.Api", version: "1.0.0" })])
 	, java: Object.freeze(["maven", Object.freeze({ name: "org.leanbridge:directprooferasure", version: "1.0.0" })])
 	, kotlin: Object.freeze(["maven", Object.freeze({ name: "org.leanbridge:directprooferasure", version: "1.0.0" })])
+	, "node-javascript": Object.freeze(["npm", Object.freeze({ name: "direct-proof-erasure", version: "1.0.0" })])
+	, "node-typescript": Object.freeze(["npm", Object.freeze({ name: "direct-proof-erasure", version: "1.0.0" })])
 	, perl: Object.freeze(["cpan", Object.freeze({ module: "LeanBridge::DirectProofErasure", version: "1.000" })])
 	, "php-native": Object.freeze(["php-native", Object.freeze({ name: "example/directprooferasure", version: "1.0.0" })])
 	, "php-wasm": Object.freeze(["php-wasm", Object.freeze({ name: "example/directprooferasure", version: "1.0.0" })])
