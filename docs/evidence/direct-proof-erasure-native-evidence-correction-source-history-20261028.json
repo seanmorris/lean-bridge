@@ -1,0 +1,454 @@
+{
+  "additions": [
+    {
+      "currentSha256": "90977e68c7eaca750aff161a939e0073f2e7d7a84122ce8bc1bdabd5705ef3c5",
+      "path": "scripts/update-direct-proof-erasure-native-evidence-correction-source-history.mjs"
+    },
+    {
+      "currentSha256": "04e19b4f432c69415f8c5467be2dcf5d9fb9772e160eab015648ed9f1957cbcf",
+      "path": "tests/helpers/direct-proof-erasure-native-evidence-correction-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "bb04aa7b134f86747e0a292ba118b82969fb65264c6fc3200b8c047c923e8911",
+      "path": "tests/helpers/direct-proof-erasure-native-evidence-correction-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "45e3f7b6138ece05505af9b578c933dd4a79a45f",
+  "integrationUpdates": [
+    {
+      "currentSha256": "2912bf2d971303dcae0c5db00d1d4365845d90c8b9297b7692755cd8d9e269aa",
+      "edits": [
+        {
+          "current": "import \"./helpers/direct-proof-erasure-native-evidence-correction-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "cec19288f444d69f3aface849f5a7efb6a849827f001299b979a6759e81b0c51"
+    },
+    {
+      "currentSha256": "b3a0e5008490db2a5634ee3fa20e5507fcfca1aaceacf01d81d9bd04f096ab5f",
+      "edits": [
+        {
+          "current": "import { beforeDirectProofErasureNativeEvidenceCorrectionSource, directProofErasureNativeEvidenceCorrectionNormalizationPaths } from \"./direct-proof-erasure-native-evidence-correction-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...directProofErasureNativeEvidenceCorrectionNormalizationPaths\n\t, ...perlDependentRefinementRejectionNormalizationPaths\n",
+          "previous": "\t...perlDependentRefinementRejectionNormalizationPaths\n",
+          "start": 213250
+        },
+        {
+          "current": "\tlet stage = beforeDirectProofErasureNativeEvidenceCorrectionSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforePerlDependentRefinementRejectionSource(\n",
+          "previous": "\tlet stage = beforePerlDependentRefinementRejectionSource(\n",
+          "start": 266591
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "24f0feab7b7b3fe8ffa05b1bfbc1dc6242111c8bd8135d96098ecf97b6a94945"
+    }
+  ],
+  "milestone": "direct-proof-erasure-native-evidence-correction-source-v1",
+  "predecessorCommit": "ddc31428d44e92eeabcf8d301bf765c826b8bc0b",
+  "schemaVersion": 1,
+  "scope": "Correct every native-backed direct proof-erasure lane to authenticate the native component model, metadata, Binding IR, generated Lean adapter, component receipt and closed artifact inventory that prepared native packages actually consume. Preserve canonical-bundle checks for npm and PHP-Wasm, distinguish compiler-derived arg0 from reviewed value names, retain two-build reproducibility and installed relocation/refusal checks, and register the transition newest-first. Hosted Core and the complete downstream matrix remain terminal gates.",
+  "updates": [
+    {
+      "currentSha256": "14d65c677352e12a4d0ad5db0c14748e1bbb3754b583bff89d54bf61e3f9b239",
+      "edits": [
+        {
+          "current": "\tassertDirectProofErasureNativeComponent, prepareDirectProofErasureProject\n\t, retainDirectProofErasureNativeComponent\n",
+          "previous": "\tassertDirectProofErasureBundle, prepareDirectProofErasureProject\n",
+          "start": 856
+        },
+        {
+          "current": "\t\t\tconst component = await assertDirectProofErasureNativeComponent(outputRoot);\n",
+          "previous": "\t\t\tconst bundleRoot = join(outputRoot, \"bundle\");\n\t\t\tconst bundle = await assertDirectProofErasureBundle(bundleRoot);\n",
+          "start": 4941
+        },
+        {
+          "current": "\t\t\t\t...component, bindingIrSha256: built.bindingIrSha256\n",
+          "previous": "\t\t\t\t...bundle, bindingIrSha256: built.bindingIrSha256\n",
+          "start": 5541
+        },
+        {
+          "current": "\t\t\tawait retainDirectProofErasureNativeComponent(records, attempt, outputRoot);\n",
+          "previous": "\t\t\tfor(const [name, path] of [\n\t\t\t\t[\"binding-ir.json\", \"binding/binding-ir.json\"]\n\t\t\t\t, [\"compiler-adapters.json\", \"locks/compiler-adapters.json\"]\n\t\t\t\t, [\"component-build-plan.json\", \"locks/component-build-plan.json\"]\n\t\t\t\t, [\"LeanBridgeGenerated.lean\", \"generated/LeanBridgeGenerated.lean\"]\n\t\t\t\t, [\"provenance.json\", \"metadata/provenance.json\"]\n\t\t\t]) await saveLakeFile(records, `build-${attempt}/${name}`\n\t\t\t\t, await readFile(join(bundleRoot, path)));\n",
+          "start": 5666
+        }
+      ],
+      "path": "tests/direct-proof-erasure-language-installed.test.mjs",
+      "previousSha256": "4f1ecb037fb59383090d56414bced5a4d4aa21a7f7383284f80e834cca36e7ec"
+    },
+    {
+      "currentSha256": "ae8177af1da703b5124e2aa26a78439bae7a1db8cb3beb65d55ca2e44e538fe6",
+      "edits": [
+        {
+          "current": "\tassertDirectProofErasureNativeComponent, prepareDirectProofErasureProject\n\t, retainDirectProofErasureNativeComponent\n",
+          "previous": "\tassertDirectProofErasureBundle, prepareDirectProofErasureProject\n",
+          "start": 737
+        },
+        {
+          "current": "\t\t\tconst component = await assertDirectProofErasureNativeComponent(outputRoot);\n",
+          "previous": "\t\t\tconst bundleRoot = join(outputRoot, \"bundle\");\n\t\t\tconst bundle = await assertDirectProofErasureBundle(bundleRoot);\n",
+          "start": 4547
+        },
+        {
+          "current": "\t\t\t\t...component, bindingIrSha256: built.bindingIrSha256\n",
+          "previous": "\t\t\t\t...bundle, bindingIrSha256: built.bindingIrSha256\n",
+          "start": 5147
+        },
+        {
+          "current": "\t\t\tawait retainDirectProofErasureNativeComponent(records, attempt, outputRoot);\n",
+          "previous": "\t\t\tfor(const [name, path] of [\n\t\t\t\t[\"binding-ir.json\", \"binding/binding-ir.json\"]\n\t\t\t\t, [\"compiler-adapters.json\", \"locks/compiler-adapters.json\"]\n\t\t\t\t, [\"component-build-plan.json\", \"locks/component-build-plan.json\"]\n\t\t\t\t, [\"LeanBridgeGenerated.lean\", \"generated/LeanBridgeGenerated.lean\"]\n\t\t\t\t, [\"provenance.json\", \"metadata/provenance.json\"]\n\t\t\t]) await saveLakeFile(records, `build-${attempt}/${name}`\n\t\t\t\t, await readFile(join(bundleRoot, path)));\n",
+          "start": 5272
+        }
+      ],
+      "path": "tests/direct-proof-erasure-managed-installed.test.mjs",
+      "previousSha256": "b27eadfe1697bad76ed23663364a14eef282baa9e2bdb4c1f7477754b76ac2a3"
+    },
+    {
+      "currentSha256": "49b74ce0fb8d8a0e2f0425aa3ea5261745a39a9549b1eac4b109f9a9a8e9e962",
+      "edits": [
+        {
+          "current": "\tassertDirectProofErasureNativeComponent, prepareDirectProofErasureProject\n\t, retainDirectProofErasureNativeComponent\n",
+          "previous": "\tassertDirectProofErasureBundle, prepareDirectProofErasureProject\n",
+          "start": 855
+        },
+        {
+          "current": "\t\t\tconst component = await assertDirectProofErasureNativeComponent(outputRoot);\n",
+          "previous": "\t\t\tconst bundleRoot = join(outputRoot, \"bundle\");\n\t\t\tconst bundle = await assertDirectProofErasureBundle(bundleRoot);\n",
+          "start": 3687
+        },
+        {
+          "current": "\t\t\t\t...component, bindingIrSha256: built.bindingIrSha256\n",
+          "previous": "\t\t\t\t...bundle, bindingIrSha256: built.bindingIrSha256\n",
+          "start": 4287
+        },
+        {
+          "current": "\t\t\tawait retainDirectProofErasureNativeComponent(records, attempt, outputRoot);\n",
+          "previous": "\t\t\tfor(const [name, path] of [\n\t\t\t\t[\"binding-ir.json\", \"binding/binding-ir.json\"]\n\t\t\t\t, [\"compiler-adapters.json\", \"locks/compiler-adapters.json\"]\n\t\t\t\t, [\"component-build-plan.json\", \"locks/component-build-plan.json\"]\n\t\t\t\t, [\"LeanBridgeGenerated.lean\", \"generated/LeanBridgeGenerated.lean\"]\n\t\t\t\t, [\"provenance.json\", \"metadata/provenance.json\"]\n\t\t\t]) await saveLakeFile(records, `build-${attempt}/${name}`\n\t\t\t\t, await readFile(join(bundleRoot, path)));\n",
+          "start": 4412
+        },
+        {
+          "current": "\t\t\tconst parameter = route === \"ordinary\" ? \"arg0\" : \"value\";\n",
+          "previous": "",
+          "start": 6838
+        },
+        {
+          "current": "\t\t\t\t? new RegExp(`directprooferasure_status directprooferasure_keep\\\\(uint32_t ${parameter}, uint32_t \\\\*out, directprooferasure_error \\\\*error\\\\);`, \"u\")\n\t\t\t\t: new RegExp(`inline uint32_t keep\\\\(uint32_t ${parameter}\\\\)`, \"u\");\n",
+          "previous": "\t\t\t\t? /directprooferasure_status directprooferasure_keep\\(uint32_t value, uint32_t \\*out, directprooferasure_error \\*error\\);/u\n\t\t\t\t: /inline uint32_t keep\\(uint32_t value\\)/u;\n",
+          "start": 6942
+        }
+      ],
+      "path": "tests/direct-proof-erasure-native-installed.test.mjs",
+      "previousSha256": "311ff039b89b763be199dc6821319ccc4793ddee20e21747d71cf0561c0d2871"
+    },
+    {
+      "currentSha256": "eb49f059f0959959c45dfed83dcd06f0392bc3528c6c9d3874c9cb74430ecc6d",
+      "edits": [
+        {
+          "current": "\tassertDirectProofErasureNativeComponent, prepareDirectProofErasureProject\n\t, retainDirectProofErasureNativeComponent\n",
+          "previous": "\tassertDirectProofErasureBundle, prepareDirectProofErasureProject\n",
+          "start": 860
+        },
+        {
+          "current": "\t\t\tconst component = await assertDirectProofErasureNativeComponent(outputRoot);\n",
+          "previous": "\t\t\tconst bundleRoot = join(outputRoot, \"bundle\");\n\t\t\tconst bundle = await assertDirectProofErasureBundle(bundleRoot);\n",
+          "start": 4195
+        },
+        {
+          "current": "\t\t\t\t...component, bindingIrSha256: built.bindingIrSha256\n",
+          "previous": "\t\t\t\t...bundle, bindingIrSha256: built.bindingIrSha256\n",
+          "start": 4795
+        },
+        {
+          "current": "\t\t\tawait retainDirectProofErasureNativeComponent(records, attempt, outputRoot);\n",
+          "previous": "\t\t\tfor(const [name, path] of [\n\t\t\t\t[\"binding-ir.json\", \"binding/binding-ir.json\"]\n\t\t\t\t, [\"compiler-adapters.json\", \"locks/compiler-adapters.json\"]\n\t\t\t\t, [\"component-build-plan.json\", \"locks/component-build-plan.json\"]\n\t\t\t\t, [\"LeanBridgeGenerated.lean\", \"generated/LeanBridgeGenerated.lean\"]\n\t\t\t\t, [\"provenance.json\", \"metadata/provenance.json\"]\n\t\t\t]) await saveLakeFile(records, `build-${attempt}/${name}`\n\t\t\t\t, await readFile(join(bundleRoot, path)));\n",
+          "start": 4920
+        },
+        {
+          "current": "\t\tconst parameter = route === \"ordinary\" ? \"arg0\" : \"value\";\n\t\tconst witSignature = new RegExp(\n\t\t\t`keep: func\\\\(${parameter}: u32\\\\) -> u32;`, \"gu\"\n\t\t);\n",
+          "previous": "",
+          "start": 5987
+        },
+        {
+          "current": "\t\t\t\t, wit: [new RegExp(witSignature.source, \"u\")]\n",
+          "previous": "\t\t\t\t, wit: [/keep: func\\(value: u32\\) -> u32;/u]\n",
+          "start": 6474
+        },
+        {
+          "current": "\t\tassert.equal((wit.toString().match(witSignature)\n",
+          "previous": "\t\tassert.equal((wit.toString().match(/keep: func\\(value: u32\\) -> u32;/gu)\n",
+          "start": 7920
+        },
+        {
+          "current": "\t\tassert.match(componentWit, new RegExp(witSignature.source, \"u\"));\n",
+          "previous": "\t\tassert.match(componentWit, /keep: func\\(value: u32\\) -> u32;/u);\n",
+          "start": 8169
+        }
+      ],
+      "path": "tests/direct-proof-erasure-wit-installed.test.mjs",
+      "previousSha256": "80704a31a6f6567afd6ac948c1174a3732c19ba254690fb18e0c1e51742e285a"
+    },
+    {
+      "currentSha256": "09d9c7574c38fb94ac8fc8e38522a3f0c8ff82ab195d2b4be25ef2e477b86a31",
+      "edits": [
+        {
+          "current": " * @param parameterNames - Admitted compiler or reviewed runtime parameter names.\n",
+          "previous": "",
+          "start": 4020
+        },
+        {
+          "current": "\tdocument, module = directProofErasureModule, parameterNames = [\"value\"]\n",
+          "previous": "\tdocument, module = directProofErasureModule\n",
+          "start": 4150
+        },
+        {
+          "current": "\tassert.ok(Array.isArray(parameterNames) && parameterNames.length\n\t\t&& parameterNames.every(name => typeof name === \"string\"));\n",
+          "previous": "",
+          "start": 4230
+        },
+        {
+          "current": "\tassert.ok(parameterNames.includes(declaration.parameters[0].name));\n",
+          "previous": "\tassert.equal(declaration.parameters[0].name, \"value\");\n",
+          "start": 4529
+        }
+      ],
+      "path": "tests/helpers/direct-proof-erasure-fixture.mjs",
+      "previousSha256": "bb946994a3a6841ecf9a5ea97626b1ba42c72f6295ab333ae9ba3f334e04459e"
+    },
+    {
+      "currentSha256": "063ac8b09332e21615c0493ad95aeca9c43fbf69b7c3cdd1e08eb3e327d428a9",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { validateCompilerAdapterPlan } from \"../../src/build/compiler-adapters.mjs\";\nimport { validateComponentBuildPlan } from \"../../src/build/component-plan.mjs\";\n",
+          "start": 288
+        },
+        {
+          "current": "import { directProofErasureModule } from \"./direct-proof-erasure-fixture.mjs\";\n",
+          "previous": "",
+          "start": 375
+        },
+        {
+          "current": "\tcheckDirectProofErasureNativeComponentRecords\n\t, directProofErasureNativeComponentFactKeys\n\t, directProofErasureNativeRecordNames\n\t, directProofErasureTargetConfiguration\n",
+          "previous": "\tassertDirectProofErasureIr, directProofErasureModule\n\t, directProofErasureProofs\n} from \"./direct-proof-erasure-fixture.mjs\";\nimport {\n\tdirectProofErasureTargetConfiguration\n",
+          "start": 463
+        },
+        {
+          "current": "\t\"archives\", ...directProofErasureNativeComponentFactKeys.slice(0, -1)\n",
+          "previous": "\t\"archives\", \"bindingIrFileSha256\", \"bindingIrSha256\"\n\t, \"compilerAdaptersSha256\", \"erasedProofs\", \"generatedLeanSha256\"\n",
+          "start": 1298
+        },
+        {
+          "current": "\t\tconst component = await checkDirectProofErasureNativeComponentRecords(\n\t\t\tread, prefix\n\t\t);\n",
+          "previous": "\t\tconst irBytes = await read(prefix + \"binding-ir.json\");\n\t\tconst ir = JSON.parse(irBytes); assertDirectProofErasureIr(ir);\n\t\tconst adaptersBytes = await read(prefix + \"compiler-adapters.json\");\n\t\tconst adapters = JSON.parse(adaptersBytes);\n\t\tvalidateCompilerAdapterPlan(adapters);\n\t\tassert.equal(adapters.exports.length, 1);\n\t\tassert.equal(adapters.exports[0].parameters.length, 1);\n\t\tassert.deepEqual(adapters.exports[0].erasedProofs\n\t\t\t, directProofErasureProofs);\n\t\tvalidateComponentBuildPlan(await json(prefix + \"component-build-plan.json\"));\n",
+          "start": 6253
+        },
+        {
+          "current": "",
+          "previous": "\t\tconst leanBytes = await read(prefix + \"LeanBridgeGenerated.lean\");\n\t\tconst lean = leanBytes.toString();\n\t\tassert.match(lean, /keep _root_\\.True\\.intro value _root_\\.True\\.intro/u);\n\t\tassert.doesNotMatch(lean, /(?:sorry|unsafeCast|\\baxiom\\b)/u);\n",
+          "start": 6501
+        },
+        {
+          "current": "\t\tfor(const key of directProofErasureNativeComponentFactKeys)\n\t\t\tassert.equal(fact[key], component[key], key);\n",
+          "previous": "\t\tassert.equal(fact.bindingIrFileSha256, sha256(irBytes));\n\t\tassert.equal(fact.compilerAdaptersSha256, sha256(adaptersBytes));\n\t\tassert.equal(fact.generatedLeanSha256, sha256(leanBytes));\n",
+          "start": 6540
+        },
+        {
+          "current": "\t\t...directProofErasureNativeRecordNames\n",
+          "previous": "\t\t\"binding-ir.json\", \"compiler-adapters.json\", \"component-build-plan.json\"\n\t\t, \"LeanBridgeGenerated.lean\", \"provenance.json\"\n",
+          "start": 6788
+        }
+      ],
+      "path": "tests/helpers/direct-proof-erasure-language-report.mjs",
+      "previousSha256": "c03053c37c4070c829d8c283a89b5ff2577f9be7d11db8c62effa3802aeed6de"
+    },
+    {
+      "currentSha256": "b1ff5768e01011cfb691c1b83764f4704046f30475c57cb81a57178f173b500e",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { validateCompilerAdapterPlan } from \"../../src/build/compiler-adapters.mjs\";\nimport { validateComponentBuildPlan } from \"../../src/build/component-plan.mjs\";\n",
+          "start": 268
+        },
+        {
+          "current": "import { directProofErasureModule } from \"./direct-proof-erasure-fixture.mjs\";\n",
+          "previous": "",
+          "start": 355
+        },
+        {
+          "current": "\tcheckDirectProofErasureNativeComponentRecords\n\t, directProofErasureNativeComponentFactKeys\n\t, directProofErasureNativeRecordNames\n\t, directProofErasureTargetConfiguration\n",
+          "previous": "\tassertDirectProofErasureIr\n\t, directProofErasureModule\n\t, directProofErasureProofs\n} from \"./direct-proof-erasure-fixture.mjs\";\nimport {\n\tdirectProofErasureTargetConfiguration\n",
+          "start": 443
+        },
+        {
+          "current": "\t\"archives\", ...directProofErasureNativeComponentFactKeys.slice(0, -1)\n",
+          "previous": "\t\"archives\", \"bindingIrFileSha256\", \"bindingIrSha256\"\n\t, \"compilerAdaptersSha256\", \"erasedProofs\", \"generatedLeanSha256\"\n",
+          "start": 825
+        },
+        {
+          "current": "\t\tconst component = await checkDirectProofErasureNativeComponentRecords(\n\t\t\tread, prefix\n\t\t);\n",
+          "previous": "\t\tconst irBytes = await read(prefix + \"binding-ir.json\");\n\t\tconst ir = JSON.parse(irBytes); assertDirectProofErasureIr(ir);\n\t\tconst adaptersBytes = await read(prefix + \"compiler-adapters.json\");\n\t\tconst adapters = JSON.parse(adaptersBytes);\n\t\tvalidateCompilerAdapterPlan(adapters);\n\t\tassert.equal(adapters.exports.length, 1);\n\t\tassert.equal(adapters.exports[0].parameters.length, 1);\n\t\tassert.deepEqual(adapters.exports[0].erasedProofs\n\t\t\t, directProofErasureProofs);\n\t\tvalidateComponentBuildPlan(await json(prefix + \"component-build-plan.json\"));\n",
+          "start": 6075
+        },
+        {
+          "current": "",
+          "previous": "\t\tconst leanBytes = await read(prefix + \"LeanBridgeGenerated.lean\");\n\t\tconst lean = leanBytes.toString();\n\t\tassert.match(lean, /keep _root_\\.True\\.intro value _root_\\.True\\.intro/u);\n\t\tassert.doesNotMatch(lean, /(?:sorry|unsafeCast|\\baxiom\\b)/u);\n",
+          "start": 6323
+        },
+        {
+          "current": "\t\tfor(const key of directProofErasureNativeComponentFactKeys)\n\t\t\tassert.equal(fact[key], component[key], key);\n",
+          "previous": "\t\tassert.equal(fact.bindingIrFileSha256, sha256(irBytes));\n\t\tassert.equal(fact.compilerAdaptersSha256, sha256(adaptersBytes));\n\t\tassert.equal(fact.generatedLeanSha256, sha256(leanBytes));\n",
+          "start": 6362
+        },
+        {
+          "current": "\t\t...directProofErasureNativeRecordNames\n",
+          "previous": "\t\t\"binding-ir.json\", \"compiler-adapters.json\", \"component-build-plan.json\"\n\t\t, \"LeanBridgeGenerated.lean\", \"provenance.json\"\n",
+          "start": 6610
+        }
+      ],
+      "path": "tests/helpers/direct-proof-erasure-managed-report.mjs",
+      "previousSha256": "856d8be041acc7d4482c69470d686d76aa808458cf1064938cad7399375b75db"
+    },
+    {
+      "currentSha256": "78a7336e2b0de463a33774ec6a1277280f2d008e7331ecb2e9d993ba60f9f1a9",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { validateCompilerAdapterPlan } from \"../../src/build/compiler-adapters.mjs\";\nimport { validateComponentBuildPlan } from \"../../src/build/component-plan.mjs\";\n",
+          "start": 254
+        },
+        {
+          "current": "import { directProofErasureModule } from \"./direct-proof-erasure-fixture.mjs\";\n",
+          "previous": "",
+          "start": 341
+        },
+        {
+          "current": "\tcheckDirectProofErasureNativeComponentRecords\n\t, directProofErasureNativeComponentFactKeys\n\t, directProofErasureNativeRecordNames\n\t, directProofErasureTargetConfiguration\n",
+          "previous": "\tassertDirectProofErasureIr\n\t, directProofErasureModule\n\t, directProofErasureProofs\n} from \"./direct-proof-erasure-fixture.mjs\";\nimport {\n\tdirectProofErasureTargetConfiguration\n",
+          "start": 429
+        },
+        {
+          "current": "\t\"archives\", ...directProofErasureNativeComponentFactKeys.slice(0, -1)\n",
+          "previous": "\t\"archives\", \"bindingIrFileSha256\", \"bindingIrSha256\"\n\t, \"compilerAdaptersSha256\", \"erasedProofs\", \"generatedLeanSha256\"\n",
+          "start": 744
+        },
+        {
+          "current": "\t\tconst component = await checkDirectProofErasureNativeComponentRecords(\n\t\t\tread, prefix\n\t\t);\n",
+          "previous": "\t\tconst irBytes = await read(prefix + \"binding-ir.json\");\n\t\tconst ir = JSON.parse(irBytes); assertDirectProofErasureIr(ir);\n\t\tconst adaptersBytes = await read(prefix + \"compiler-adapters.json\");\n\t\tconst adapters = JSON.parse(adaptersBytes);\n\t\tvalidateCompilerAdapterPlan(adapters);\n\t\tassert.equal(adapters.exports.length, 1);\n\t\tassert.equal(adapters.exports[0].parameters.length, 1);\n\t\tassert.deepEqual(adapters.exports[0].erasedProofs\n\t\t\t, directProofErasureProofs);\n\t\tvalidateComponentBuildPlan(await json(prefix + \"component-build-plan.json\"));\n",
+          "start": 5245
+        },
+        {
+          "current": "",
+          "previous": "\t\tconst leanBytes = await read(prefix + \"LeanBridgeGenerated.lean\");\n\t\tconst lean = leanBytes.toString();\n\t\tassert.match(lean, /keep _root_\\.True\\.intro value _root_\\.True\\.intro/u);\n\t\tassert.doesNotMatch(lean, /(?:sorry|unsafeCast|\\baxiom\\b)/u);\n",
+          "start": 5493
+        },
+        {
+          "current": "\t\tfor(const key of directProofErasureNativeComponentFactKeys)\n\t\t\tassert.equal(fact[key], component[key], key);\n",
+          "previous": "\t\tassert.equal(fact.bindingIrFileSha256, sha256(irBytes));\n\t\tassert.equal(fact.compilerAdaptersSha256, sha256(adaptersBytes));\n\t\tassert.equal(fact.generatedLeanSha256, sha256(leanBytes));\n",
+          "start": 5532
+        },
+        {
+          "current": "\t\t...directProofErasureNativeRecordNames\n",
+          "previous": "\t\t\"binding-ir.json\", \"compiler-adapters.json\", \"component-build-plan.json\"\n\t\t, \"LeanBridgeGenerated.lean\", \"provenance.json\"\n",
+          "start": 5780
+        },
+        {
+          "current": "\t\t\theader: new RegExp(`directprooferasure_status directprooferasure_keep\\\\(uint32_t ${options.route === \"ordinary\" ? \"arg0\" : \"value\"}, uint32_t \\\\*out, directprooferasure_error \\\\*error\\\\);`, \"u\")\n",
+          "previous": "\t\t\theader: /directprooferasure_status directprooferasure_keep\\(uint32_t value, uint32_t \\*out, directprooferasure_error \\*error\\);/u\n",
+          "start": 6024
+        },
+        {
+          "current": "\t\t\theader: new RegExp(`inline uint32_t keep\\\\(uint32_t ${options.route === \"ordinary\" ? \"arg0\" : \"value\"}\\\\)`, \"u\")\n",
+          "previous": "\t\t\theader: /inline uint32_t keep\\(uint32_t value\\)/u\n",
+          "start": 6302
+        }
+      ],
+      "path": "tests/helpers/direct-proof-erasure-native-report.mjs",
+      "previousSha256": "624b4fc8eef4464e813fad2a56decbcaf8751a1e7afcba7b028d1a1126ddf2d0"
+    },
+    {
+      "currentSha256": "f60786e7a0cd44a213ba0bd64dbc94d58dac2d55d7ae3fab3da718ed222c46db",
+      "edits": [
+        {
+          "current": "import {\n\treadVerifiedNativeComponent, readVerifiedNativeRuntime\n} from \"../../src/build/native-artifacts.mjs\";\n",
+          "previous": "",
+          "start": 416
+        },
+        {
+          "current": "\nexport const directProofErasureNativeRecordNames = Object.freeze([\n\t\"artifacts.json\", \"binding-ir.json\", \"generated.lean\", \"metadata.json\"\n\t, \"model.json\", \"native-component.json\"\n]);\nexport const directProofErasureNativeComponentFactKeys = Object.freeze([\n\t\"artifactsSha256\", \"bindingIrFileSha256\", \"bindingIrSha256\", \"erasedProofs\"\n\t, \"generatedLeanSha256\", \"metadataSha256\", \"modelSha256\"\n\t, \"nativeComponentReceiptSha256\", \"runtimeParameters\"\n]);\n\nconst canonicalDocument = (bytes, label) => {\n\tconst value = JSON.parse(bytes);\n\tassert.equal(bytes.toString(), canonicalJson(value), label);\n\treturn value;\n};\n\nconst assertNativeDirectProofErasureDocuments = ({\n\tartifactsBytes, irBytes, leanBytes, metadataBytes, modelBytes, receiptBytes\n}) => {\n\tconst artifacts = canonicalDocument(artifactsBytes, \"artifacts.json\");\n\tconst ir = canonicalDocument(irBytes, \"binding-ir.json\");\n\tcanonicalDocument(metadataBytes, \"metadata.json\");\n\tconst model = canonicalDocument(modelBytes, \"model.json\");\n\tconst receipt = canonicalDocument(receiptBytes, \"native-component.json\");\n\tassertDirectProofErasureIr(ir, directProofErasureModule, [\"arg0\", \"value\"]);\n\tassert.deepEqual(model.bindingIr, ir);\n\tassert.equal(model.bindingIrSha256, hashBindingIr(ir));\n\tassert.equal(model.exports.length, 1);\n\tconst item = model.exports[0];\n\tassert.equal(item.name, directProofErasureExport);\n\tassert.equal(item.parameters.length, 1);\n\tassert.deepEqual(item.erasedProofs, directProofErasureProofs);\n\tassert.equal(receipt.bindingIrSha256, model.bindingIrSha256);\n\tassert.equal(receipt.metadataSha256, sha256(metadataBytes));\n\tassert.equal(receipt.modelSha256, sha256(modelBytes));\n\tassert.equal(receipt.adaptersSha256, sha256(leanBytes));\n\tassert.equal(receipt.exports.length, 1);\n\tassert.equal(receipt.exports[0].declaration, directProofErasureExport);\n\tconst lean = leanBytes.toString(\"utf8\");\n\tassert.match(lean\n\t\t, /_root_\\.DirectProofErasure\\.keep _root_\\.True\\.intro a0 _root_\\.True\\.intro/u);\n\tassert.doesNotMatch(lean, /(?:sorry|unsafeCast|\\baxiom\\b)/u);\n\tassert.equal(artifacts.schemaVersion, 1);\n\tassert.equal(artifacts.profile, \"native-library-v1\");\n\tfor(const [name, bytes] of [\n\t\t[\"binding-ir.json\", irBytes], [\"generated.lean\", leanBytes]\n\t\t, [\"metadata.json\", metadataBytes], [\"model.json\", modelBytes]\n\t\t, [\"native-component.json\", receiptBytes]\n\t]) assert.deepEqual(artifacts.files[name]\n\t\t, { bytes: bytes.length, sha256: sha256(bytes) }, name);\n\treturn {\n\t\tartifactsSha256: sha256(artifactsBytes)\n\t\t, bindingIrFileSha256: sha256(irBytes)\n\t\t, bindingIrSha256: model.bindingIrSha256\n\t\t, erasedProofs: item.erasedProofs.length\n\t\t, generatedLeanSha256: sha256(leanBytes)\n\t\t, metadataSha256: sha256(metadataBytes)\n\t\t, modelSha256: sha256(modelBytes)\n\t\t, nativeComponentReceiptSha256: sha256(receiptBytes)\n\t\t, runtimeParameters: item.parameters.length\n\t};\n};\n\n/**\n * Verify the authenticated native build products that package projections consume.\n *\n * @param outputRoot - Completed ordinary native release root.\n */\nexport const assertDirectProofErasureNativeComponent = async outputRoot => {\n\tconst nativeRoot = join(outputRoot, \"native/component\");\n\tconst runtime = await readVerifiedNativeRuntime(join(outputRoot, \"native/runtime\"));\n\tawait readVerifiedNativeComponent(nativeRoot, runtime.identity);\n\tconst [\n\t\tartifactsBytes, irBytes, leanBytes, metadataBytes, modelBytes, receiptBytes\n\t] = await Promise.all(directProofErasureNativeRecordNames.map(name =>\n\t\treadFile(join(nativeRoot, name))));\n\treturn assertNativeDirectProofErasureDocuments({\n\t\tartifactsBytes, irBytes, leanBytes, metadataBytes, modelBytes, receiptBytes\n\t});\n};\n\n/**\n * Retain the exact authenticated native component inputs beside route evidence.\n *\n * @param records - Route evidence directory.\n * @param attempt - Independent build index.\n * @param outputRoot - Completed ordinary native release root.\n */\nexport const retainDirectProofErasureNativeComponent = async (\n\trecords, attempt, outputRoot\n) => {\n\tfor(const name of directProofErasureNativeRecordNames)\n\t\tawait saveLakeFile(records, `build-${attempt}/${name}`\n\t\t\t, await readFile(join(outputRoot, \"native/component\", name)));\n};\n\n/**\n * Recheck retained native component documents without trusting the producer report.\n *\n * @param read - Safe reader rooted at one route's evidence directory.\n * @param prefix - Independent build record prefix.\n */\nexport const checkDirectProofErasureNativeComponentRecords = async (\n\tread, prefix\n) => {\n\tconst [\n\t\tartifactsBytes, irBytes, leanBytes, metadataBytes, modelBytes, receiptBytes\n\t] = await Promise.all(directProofErasureNativeRecordNames.map(name =>\n\t\tread(prefix + name)));\n\treturn assertNativeDirectProofErasureDocuments({\n\t\tartifactsBytes, irBytes, leanBytes, metadataBytes, modelBytes, receiptBytes\n\t});\n};\n",
+          "previous": "",
+          "start": 5201
+        }
+      ],
+      "path": "tests/helpers/direct-proof-erasure-packages.mjs",
+      "previousSha256": "de9ef3a9e1575b8a13ba456568d68830426668c936800c17083ec1f33a9e2e2a"
+    },
+    {
+      "currentSha256": "09d7ea3d850b77dda4a5699d3f38c9c87b64cfb0f9a32acf3f18a7d0afb955b7",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { validateCompilerAdapterPlan } from \"../../src/build/compiler-adapters.mjs\";\nimport { validateComponentBuildPlan } from \"../../src/build/component-plan.mjs\";\n",
+          "start": 257
+        },
+        {
+          "current": "import { directProofErasureModule } from \"./direct-proof-erasure-fixture.mjs\";\n",
+          "previous": "",
+          "start": 344
+        },
+        {
+          "current": "\tcheckDirectProofErasureNativeComponentRecords\n\t, directProofErasureNativeComponentFactKeys\n\t, directProofErasureNativeRecordNames\n\t, directProofErasureTargetConfiguration\n",
+          "previous": "\tassertDirectProofErasureIr, directProofErasureModule\n\t, directProofErasureProofs\n} from \"./direct-proof-erasure-fixture.mjs\";\nimport {\n\tdirectProofErasureTargetConfiguration\n",
+          "start": 432
+        },
+        {
+          "current": "\t\"archives\", ...directProofErasureNativeComponentFactKeys.slice(0, -1)\n",
+          "previous": "\t\"archives\", \"bindingIrFileSha256\", \"bindingIrSha256\"\n\t, \"compilerAdaptersSha256\", \"erasedProofs\", \"generatedLeanSha256\"\n",
+          "start": 670
+        },
+        {
+          "current": "const witSignature = route => new RegExp(\n\t`keep: func\\\\(${route === \"ordinary\" ? \"arg0\" : \"value\"}: u32\\\\) -> u32;`\n\t, \"gu\"\n);\n",
+          "previous": "const witSignature = /keep: func\\(value: u32\\) -> u32;/gu;\n",
+          "start": 922
+        },
+        {
+          "current": "\t\tconst component = await checkDirectProofErasureNativeComponentRecords(\n\t\t\tread, prefix\n\t\t);\n",
+          "previous": "\t\tconst irBytes = await read(prefix + \"binding-ir.json\");\n\t\tconst ir = JSON.parse(irBytes); assertDirectProofErasureIr(ir);\n\t\tconst adaptersBytes = await read(prefix + \"compiler-adapters.json\");\n\t\tconst adapters = JSON.parse(adaptersBytes);\n\t\tvalidateCompilerAdapterPlan(adapters);\n\t\tassert.equal(adapters.exports.length, 1);\n\t\tassert.equal(adapters.exports[0].parameters.length, 1);\n\t\tassert.deepEqual(adapters.exports[0].erasedProofs\n\t\t\t, directProofErasureProofs);\n\t\tvalidateComponentBuildPlan(await json(prefix + \"component-build-plan.json\"));\n",
+          "start": 5269
+        },
+        {
+          "current": "",
+          "previous": "\t\tconst leanBytes = await read(prefix + \"LeanBridgeGenerated.lean\");\n\t\tconst lean = leanBytes.toString();\n\t\tassert.match(lean, /keep _root_\\.True\\.intro value _root_\\.True\\.intro/u);\n\t\tassert.doesNotMatch(lean, /(?:sorry|unsafeCast|\\baxiom\\b)/u);\n",
+          "start": 5517
+        },
+        {
+          "current": "\t\tfor(const key of directProofErasureNativeComponentFactKeys)\n\t\t\tassert.equal(fact[key], component[key], key);\n",
+          "previous": "\t\tassert.equal(fact.bindingIrFileSha256, sha256(irBytes));\n\t\tassert.equal(fact.compilerAdaptersSha256, sha256(adaptersBytes));\n\t\tassert.equal(fact.generatedLeanSha256, sha256(leanBytes));\n",
+          "start": 5556
+        },
+        {
+          "current": "\t\t...directProofErasureNativeRecordNames\n",
+          "previous": "\t\t\"binding-ir.json\", \"compiler-adapters.json\", \"component-build-plan.json\"\n\t\t, \"LeanBridgeGenerated.lean\", \"provenance.json\"\n",
+          "start": 5804
+        },
+        {
+          "current": "\tassert.equal((wit.toString().match(witSignature(options.route)) ?? []).length, 2);\n",
+          "previous": "\tassert.equal((wit.toString().match(witSignature) ?? []).length, 2);\n",
+          "start": 6665
+        },
+        {
+          "current": "\tassert.match(componentWit.toString()\n\t\t, new RegExp(witSignature(options.route).source, \"u\"));\n",
+          "previous": "\tassert.match(componentWit.toString(), witSignature);\n",
+          "start": 6919
+        }
+      ],
+      "path": "tests/helpers/direct-proof-erasure-wit-report.mjs",
+      "previousSha256": "6874a9886281796006cecab05faab3c4c55349c7fa4429d854ff09518b4fb1b4"
+    }
+  ]
+}
