@@ -529,6 +529,7 @@ const profileManifest = Object.freeze({
 		, "optional-parameter-controls"
 		, "optional-parameter-foundation"
 		, "optional-parameter-language-installed"
+		, "optional-parameter-managed-installed"
 		, "optional-parameter-native-installed"
 		, "optional-parameter-npm-contract"
 		, "optional-parameter-npm-installed"
