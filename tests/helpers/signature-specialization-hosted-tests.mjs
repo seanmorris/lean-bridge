@@ -11,6 +11,7 @@ import {
 	, signatureSpecializationHostedConsumerSha256
 	, signatureSpecializationHostedLanes
 	, signatureSpecializationHostedProducer
+	, signatureSpecializationHostedRepairProducer
 } from "./signature-specialization-hosted-archive.mjs";
 import {
 	validateSignatureSpecializationHostedReport
@@ -45,7 +46,7 @@ const nativeReport = lane => {
 		return {
 			profile, path: "reviewed-source", checks: nativeChecks[profile]
 			, consumerSha256: signatureSpecializationHostedConsumerSha256(
-				signatureSpecializationHostedProducer
+				lane.producerCommit
 				, `tests/fixtures/specialization-consumers/${profile}.${nativeExtensions[profile]}`)
 			, bindingIrSha256: hash, reviewedBindingIrSha256: hash
 			, modelSha256: hash, receiptSha256: hash
@@ -99,10 +100,10 @@ const browserProfile = (route, profile) => {
 				, externalNetworkBlocked: true, executions } }
 	};
 };
-const browserReport = () => ({
+const browserReport = lane => ({
 	schemaVersion: 1, kind: "signature-specialization-browser-installed-v1"
 	, routes: ["ordinary", "reviewed"].map(route => ({
-		route, producerCommit: signatureSpecializationHostedProducer
+		route, producerCommit: lane.producerCommit
 		, reviewedBindingIrSha256: hash
 		, builds: [{ receipt: hash }, { receipt: hash }]
 		, independentBuilds: 2, reproducible: true
@@ -128,15 +129,15 @@ for(const loading of ["startup", "lazy"])
 			realm: "chromium", arrangement: "bundled", loading, mode
 			, checks: 2020
 		});
-const phpReport = () => ({
+const phpReport = lane => ({
 	schemaVersion: 1, kind: "signature-specialization-php-wasm-installed-v1"
 	, reports: ["ordinary-source", "reviewed-ir"].map(path => ({
 		path, profile: "php-wasm"
-		, producerCommit: signatureSpecializationHostedProducer
+		, producerCommit: lane.producerCommit
 		, reviewedBindingIrSha256: hash, driverSha256: hash
 		, consumerSha256: signatureSpecializationHostedConsumerSha256(
-			signatureSpecializationHostedProducer
-			, "tests/fixtures/specialization-consumers/php-native.php")
+			lane.producerCommit
+			, "tests/fixtures/specialization-consumers/php-wasm.php")
 		, builds: [{ receipt: hash }, { receipt: hash }]
 		, independentBuilds: 2, reproducible: true
 		, sourceRemovedBeforeInstallation: true
@@ -169,6 +170,20 @@ test("the ten closed lanes retain all nine native profiles plus browser and PHP-
 		"python", "ruby", "rust", "dotnet", "java", "kotlin"
 		, "php-native", "wit-wasi", "perl"
 	]);
+	const producers = {
+		python: signatureSpecializationHostedProducer
+		, ruby: signatureSpecializationHostedProducer
+		, rust: signatureSpecializationHostedProducer
+		, dotnet: signatureSpecializationHostedProducer
+		, jvm: signatureSpecializationHostedProducer
+		, "php-native": signatureSpecializationHostedProducer
+		, "wit-wasi": signatureSpecializationHostedProducer
+		, perl: signatureSpecializationHostedRepairProducer
+		, browser: signatureSpecializationHostedProducer
+		, "php-wasm": signatureSpecializationHostedRepairProducer
+	};
+	assert.deepEqual(Object.fromEntries(signatureSpecializationHostedLanes.map(
+		lane => [lane.id, lane.producerCommit])), producers);
 });
 
 test("native reports require every exact profile result, source and terminal TAP pass", () => {
@@ -192,7 +207,7 @@ test("native reports require every exact profile result, source and terminal TAP
 test("browser reports require every engine, variant and lifecycle recovery", () => {
 	const lane = signatureSpecializationHostedLanes.find(
 		item => item.kind === "browser");
-	const report = browserReport();
+	const report = browserReport(lane);
 	assert.equal(validateSignatureSpecializationHostedReport(
 		lane, bytes(report)).executions, 24);
 	const missing = clone(report);
@@ -209,7 +224,7 @@ test("browser reports require every engine, variant and lifecycle recovery", () 
 test("PHP-Wasm reports require the exact twelve arrangements and 2020 checks", () => {
 	const lane = signatureSpecializationHostedLanes.find(
 		item => item.kind === "php-wasm");
-	const report = phpReport();
+	const report = phpReport(lane);
 	assert.equal(validateSignatureSpecializationHostedReport(
 		lane, bytes(report)).executions, 24);
 	const missing = clone(report); missing.reports[0].executions.pop();

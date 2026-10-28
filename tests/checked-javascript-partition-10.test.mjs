@@ -37,6 +37,7 @@ import "./helpers/signature-specialization-completion-source-history-tests.mjs";
 import "./helpers/signature-specialization-completion-integration-source-history-tests.mjs";
 import "./helpers/core-hub-order-repair-source-history-tests.mjs";
 import "./helpers/core-hub-order-repair-integration-source-history-tests.mjs";
+import "./helpers/signature-specialization-hosted-source-history-tests.mjs";
 import "./helpers/native-fin-callback-role-source-history-tests.mjs";
 import "./helpers/native-fin-callback-role-integration-source-history-tests.mjs";
 import "./helpers/core-historical-contract-repair-source-history-tests.mjs";

@@ -25,6 +25,7 @@ import { beforeCoreHistoricalContractRepairSource, coreHistoricalContractRepairN
 import { beforeNativeFinCallbackRoleIntegrationSource, nativeFinCallbackRoleIntegrationNormalizationPaths } from "./native-fin-callback-role-integration-source-history.mjs";
 import { beforeCoreHubOrderRepairIntegrationSource, coreHubOrderRepairIntegrationNormalizationPaths } from "./core-hub-order-repair-integration-source-history.mjs";
 import { beforeCoreHubOrderRepairSource, coreHubOrderRepairNormalizationPaths } from "./core-hub-order-repair-source-history.mjs";
+import { beforeSignatureSpecializationHostedSource, signatureSpecializationHostedNormalizationPaths } from "./signature-specialization-hosted-source-history.mjs";
 import { beforeSignatureSpecializationCompletionIntegrationSource, signatureSpecializationCompletionIntegrationNormalizationPaths } from "./signature-specialization-completion-integration-source-history.mjs";
 import { beforeSignatureSpecializationCompletionSource, signatureSpecializationCompletionNormalizationPaths } from "./signature-specialization-completion-source-history.mjs";
 import { beforeFinContractTestRegistrationIntegrationSource, finContractTestRegistrationIntegrationNormalizationPaths } from "./fin-contract-test-registration-integration-source-history.mjs";
@@ -2305,6 +2306,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...nativeFinCallbackRoleIntegrationNormalizationPaths
 	, ...coreHubOrderRepairIntegrationNormalizationPaths
 	, ...coreHubOrderRepairNormalizationPaths
+	, ...signatureSpecializationHostedNormalizationPaths
 	, ...signatureSpecializationCompletionIntegrationNormalizationPaths
 	, ...signatureSpecializationCompletionNormalizationPaths
 	, ...finContractTestRegistrationIntegrationNormalizationPaths
@@ -3380,6 +3382,10 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 		return stage;
 	text = stage;
 	stage = beforeCoreHubOrderRepairSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeSignatureSpecializationHostedSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;

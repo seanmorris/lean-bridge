@@ -28,7 +28,7 @@ import {
 	, signatureSpecializationHostedInputs
 	, signatureSpecializationHostedLanes
 	, signatureSpecializationHostedOriginal
-	, signatureSpecializationHostedProducer
+	, signatureSpecializationHostedSourcePath
 	, signatureSpecializationHostedSources
 } from "../tests/helpers/signature-specialization-hosted-archive.mjs";
 import {
@@ -63,7 +63,8 @@ const archiveCommit = execFileSync("git", ["rev-parse", "HEAD"], {
 }).trim();
 assert.match(archiveCommit, /^[a-f0-9]{40}$/u);
 const revisions = {
-	producer: signatureSpecializationHostedProducer
+	producers: [...new Set(signatureSpecializationHostedLanes.map(
+		lane => lane.producerCommit))].sort()
 	, checker: archiveCommit, archiver: archiveCommit
 };
 await assertSignatureSpecializationHostedLocalSources(revisions);
@@ -100,7 +101,6 @@ try
 		const selected = signatureSpecializationHostedInputs(inputRoot, lane);
 		const hosted = await inspectSignatureSpecializationHostedArtifact(
 			selected, lane);
-		assert.equal(hosted.revision, signatureSpecializationHostedProducer);
 		assertSignatureSpecializationHostedSteps(lane, hosted.api.job.bytes);
 		const extracted = await extractCheckedRecordValueIndexHostedArtifact(
 			selected["artifact-zip"]);
@@ -155,7 +155,7 @@ try
 	}
 	const selectedSources = signatureSpecializationHostedSources(revisions);
 	for(const source of selectedSources)
-		putBytes(`sources/${source.role}/${source.path}`
+		putBytes(signatureSpecializationHostedSourcePath(source)
 			, signatureSpecializationHostedOriginal(source.revision, source.path));
 	const files = [...descriptors].sort(([left], [right]) =>
 		left.localeCompare(right)).map(([path, descriptor]) => ({
@@ -163,7 +163,11 @@ try
 		}));
 	const index = {
 		schemaVersion: 1, kind: "signature-specializations-hosted-installed-v1"
-		, producerCommit: signatureSpecializationHostedProducer
+		, producerCommits: Object.fromEntries(
+			signatureSpecializationHostedLanes.map(lane => [
+				lane.id, lane.producerCommit
+			])
+		)
 		, checkerCommit: archiveCommit, archiveCommit
 		, lanes, selectedSources, files
 		, limitations: [

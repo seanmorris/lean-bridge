@@ -21,7 +21,7 @@ import {
 	, signatureSpecializationHostedEvidenceDirectory
 	, signatureSpecializationHostedLanes
 	, signatureSpecializationHostedOriginal
-	, signatureSpecializationHostedProducer
+	, signatureSpecializationHostedSourcePath
 	, signatureSpecializationHostedSources
 } from "./signature-specialization-hosted-archive.mjs";
 import {
@@ -58,7 +58,7 @@ const object = (value, label) => assert.ok(value && typeof value === "object"
  * @param revision - Exact producer revision.
  */
 export const validateSignatureSpecializationNativeReport = (
-	lane, reportBytes, tapBytes, revision = signatureSpecializationHostedProducer
+	lane, reportBytes, tapBytes, revision = lane.producerCommit
 ) => {
 	assert.equal(lane.kind, "native");
 	const report = JSON.parse(reportBytes);
@@ -149,7 +149,7 @@ export const validateSignatureSpecializationHostedReport = (
 	{
 		validateSignatureSpecializationBrowserReport(report);
 		assert.ok(report.routes.every(item =>
-			item.producerCommit === signatureSpecializationHostedProducer));
+			item.producerCommit === lane.producerCommit));
 		for(const item of report.routes)
 		{
 			digest(item.reviewedBindingIrSha256);
@@ -168,10 +168,10 @@ export const validateSignatureSpecializationHostedReport = (
 	assert.equal(lane.kind, "php-wasm");
 	validateSignatureSpecializationPhpWasmReport(report);
 	assert.ok(report.reports.every(item =>
-		item.producerCommit === signatureSpecializationHostedProducer));
+		item.producerCommit === lane.producerCommit));
 	const consumer = signatureSpecializationHostedConsumerSha256(
-		signatureSpecializationHostedProducer
-		, "tests/fixtures/specialization-consumers/php-native.php");
+		lane.producerCommit
+		, "tests/fixtures/specialization-consumers/php-wasm.php");
 	for(const item of report.reports)
 	{
 		assert.equal(item.consumerSha256, consumer);
@@ -223,13 +223,21 @@ export const checkSignatureSpecializationHostedEvidence = async (
 	assert.equal(indexBytes.toString(), canonicalJson(index));
 	assert.deepEqual(Object.keys(index).sort(), [
 		"archiveCommit", "checkerCommit", "files", "kind", "lanes"
-		, "limitations", "producerCommit", "schemaVersion", "selectedSources"
+		, "limitations", "producerCommits", "schemaVersion", "selectedSources"
 	]);
 	assert.equal(index.schemaVersion, 1);
 	assert.equal(index.kind, "signature-specializations-hosted-installed-v1");
-	assert.equal(index.producerCommit, signatureSpecializationHostedProducer);
-	for(const key of ["producerCommit", "checkerCommit", "archiveCommit"])
+	assert.deepEqual(Object.keys(index.producerCommits)
+		, signatureSpecializationHostedLanes.map(lane => lane.id));
+	assert.deepEqual(index.producerCommits, Object.fromEntries(
+		signatureSpecializationHostedLanes.map(lane => [
+			lane.id, lane.producerCommit
+		])
+	));
+	for(const key of ["checkerCommit", "archiveCommit"])
 		assert.match(index[key], /^[a-f0-9]{40}$/u, key);
+	for(const [lane, revision] of Object.entries(index.producerCommits))
+		assert.match(revision, /^[a-f0-9]{40}$/u, lane);
 	assert.deepEqual(index.lanes.map(lane => lane.id)
 		, signatureSpecializationHostedLanes.map(lane => lane.id));
 	assert.deepEqual(index.files, [...index.files].sort((left, right) =>
@@ -248,14 +256,16 @@ export const checkSignatureSpecializationHostedEvidence = async (
 			, file.sha256, file.path);
 	}
 	const revisions = {
-		producer: index.producerCommit, checker: index.checkerCommit
+		producers: [...new Set(Object.values(index.producerCommits))].sort()
+		, checker: index.checkerCommit
 		, archiver: index.archiveCommit
 	};
 	assert.deepEqual(index.selectedSources
 		, signatureSpecializationHostedSources(revisions));
 	for(const source of index.selectedSources)
 		assert.deepEqual(
-			await readFile(join(root, `sources/${source.role}/${source.path}`))
+			await readFile(join(root
+				, signatureSpecializationHostedSourcePath(source)))
 			, signatureSpecializationHostedOriginal(source.revision, source.path)
 			, `${source.role}/${source.path}`);
 
@@ -282,7 +292,7 @@ export const checkSignatureSpecializationHostedEvidence = async (
 				, "artifact-json": join(apiRoot, "artifact.json")
 				, "job-log": join(root, `hosted/${lane.id}/job.log`)
 			}, lane);
-			assert.equal(hosted.revision, index.producerCommit);
+			assert.equal(hosted.revision, index.producerCommits[lane.id]);
 			assertSignatureSpecializationHostedSteps(lane, hosted.api.job.bytes);
 			const expectedHosted = {
 				...hosted.hostedRun

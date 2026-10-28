@@ -15,6 +15,8 @@ import { moduleSpecifiers } from "./module-closure.mjs";
 
 export const signatureSpecializationHostedProducer
 	= "6e0d941e796db8813ee58bc8fda00e126e0a232c";
+export const signatureSpecializationHostedRepairProducer
+	= "d37bcc0c33694dc048cc2bd4ce6843064e0beff2";
 export const signatureSpecializationHostedEvidenceDirectory
 	= "docs/evidence/signature-specializations-hosted-20261028";
 
@@ -27,9 +29,10 @@ const workflows = {
 };
 const native = ({
 	id, profiles, runId, workflow, jobName, artifactPrefix, outputRoot
+	, producerCommit = signatureSpecializationHostedProducer
 }) => Object.freeze({
 	id, profiles: Object.freeze(profiles), runId, kind: "native"
-	, workflow, jobName, artifactPrefix
+	, workflow, jobName, artifactPrefix, producerCommit
 	, reportPath: `${outputRoot}/reviewed-specializations.json`
 	, tapPath: `${outputRoot}/reviewed-specializations.tap`
 	, acceptanceStep: {
@@ -99,11 +102,12 @@ export const signatureSpecializationHostedLanes = Object.freeze([
 		, jobName: "Generic Subtypes in WIT and WASI components"
 		, artifactPrefix: "generic-subtype-wit"
 		, outputRoot: "generic-subtype-wit-ci" })
-	, native({ id: "perl", profiles: ["perl"], runId: 40660586942
+	, native({ id: "perl", profiles: ["perl"], runId: 40668752235
 		, workflow: workflows.perl
 		, jobName: "Ordinary and reviewed generic Subtypes across four Perl ABIs"
 		, artifactPrefix: "generic-subtype-perl"
-		, outputRoot: "generic-subtype-perl-ci" })
+		, outputRoot: "generic-subtype-perl-ci"
+		, producerCommit: signatureSpecializationHostedRepairProducer })
 	, Object.freeze({
 		id: "browser"
 		, profiles: Object.freeze([
@@ -112,6 +116,7 @@ export const signatureSpecializationHostedLanes = Object.freeze([
 			, "browser-worker"
 		])
 		, runId: 40660590469, kind: "browser"
+		, producerCommit: signatureSpecializationHostedProducer
 		, workflow: workflows.browser
 		, jobName: "reviewed generic Subtypes in Node and browsers"
 		, artifactPrefix: "signature-specializations-browser"
@@ -122,7 +127,8 @@ export const signatureSpecializationHostedLanes = Object.freeze([
 	})
 	, Object.freeze({
 		id: "php-wasm", profiles: Object.freeze(["php-wasm"])
-		, runId: 40660594472, kind: "php-wasm"
+		, runId: 40668748649, kind: "php-wasm"
+		, producerCommit: signatureSpecializationHostedRepairProducer
 		, workflow: workflows.phpWasm
 		, jobName: "Four nominal Subtype selections in PHP-Wasm"
 		, artifactPrefix: "nominal-subtype-php-wasm"
@@ -229,7 +235,7 @@ export const inspectSignatureSpecializationHostedArtifact = async (
 		, artifactPrefix: lane.artifactPrefix
 	});
 	assert.equal(hosted.hostedRun.runId, lane.runId, lane.id);
-	assert.equal(hosted.revision, signatureSpecializationHostedProducer, lane.id);
+	assert.equal(hosted.revision, lane.producerCommit, lane.id);
 	return hosted;
 };
 
@@ -263,18 +269,27 @@ export const assertSignatureSpecializationHostedSteps = (lane, jobBytes) => {
  */
 export const signatureSpecializationHostedSources = revisions => {
 	assert.deepEqual(Object.keys(revisions).sort()
-		, ["archiver", "checker", "producer"]);
-	for(const revision of Object.values(revisions))
+		, ["archiver", "checker", "producers"]);
+	assert.ok(Array.isArray(revisions.producers)
+		&& revisions.producers.length > 0);
+	assert.deepEqual(revisions.producers
+		, [...new Set(revisions.producers)].sort());
+	for(const revision of [
+		...revisions.producers, revisions.checker, revisions.archiver
+	])
 		assert.match(revision, /^[a-f0-9]{40}$/u);
-	const producer = [
-		...closure(revisions.producer, producerEntries)
-		, ...tree(revisions.producer
-			, "tests/fixtures/onboarding/native-specializations")
-		, ...tree(revisions.producer
-			, "tests/fixtures/specialization-consumers")
-	];
+	const producers = revisions.producers.map(revision => [
+		revision
+		, [
+			...closure(revision, producerEntries)
+			, ...tree(revision
+				, "tests/fixtures/onboarding/native-specializations")
+			, ...tree(revision
+				, "tests/fixtures/specialization-consumers")
+		]
+	]);
 	const roles = [
-		["producer", revisions.producer, producer]
+		...producers.map(([revision, paths]) => ["producer", revision, paths])
 		, [
 			"checker"
 			, revisions.checker
@@ -293,6 +308,20 @@ export const signatureSpecializationHostedSources = revisions => {
 	return roles.flatMap(([role, revision, paths]) =>
 		[...new Set(paths)].sort().map(path =>
 			Object.freeze({ role, revision, path })));
+};
+
+/**
+ * Return the collision-free retained path for one selected source.
+ *
+ * @param source - Selected source identity.
+ */
+export const signatureSpecializationHostedSourcePath = source => {
+	assert.ok(source && typeof source === "object");
+	assert.ok(["producer", "checker", "archiver"].includes(source.role));
+	assert.match(source.revision, /^[a-f0-9]{40}$/u);
+	return source.role === "producer"
+		? `sources/producer/${source.revision}/${source.path}`
+		: `sources/${source.role}/${source.path}`;
 };
 
 /**

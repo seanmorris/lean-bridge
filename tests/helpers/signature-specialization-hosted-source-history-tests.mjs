@@ -21,6 +21,8 @@ import {
 } from "./signature-specialization-hosted-source-history.mjs";
 import {
 	signatureSpecializationHostedProducer
+	, signatureSpecializationHostedRepairProducer
+	, signatureSpecializationHostedSourcePath
 	, signatureSpecializationHostedSources
 } from "./signature-specialization-hosted-archive.mjs";
 import { sha256 } from "./source-history-digest.mjs";
@@ -82,7 +84,10 @@ test("hosted specialization retention additions and source roles restore exactly
 			addition.path, addition.currentSha256))
 			, addition.currentSha256, addition.path);
 	const sources = signatureSpecializationHostedSources({
-		producer: signatureSpecializationHostedProducer
+		producers: [
+			signatureSpecializationHostedProducer
+			, signatureSpecializationHostedRepairProducer
+		].sort()
 		, checker: signatureSpecializationHostedImplementation
 		, archiver: signatureSpecializationHostedImplementation
 	});
@@ -92,6 +97,16 @@ test("hosted specialization retention additions and source roles restore exactly
 		, ["archiver", "scripts/archive-signature-specialization-hosted.mjs"]
 	]) assert.ok(sources.some(source =>
 		source.role === role && source.path === entry), `${role}:${entry}`);
+	for(const [revision, entry] of [
+		[signatureSpecializationHostedProducer
+			, "tests/fixtures/specialization-consumers/php-native.php"]
+		, [signatureSpecializationHostedRepairProducer
+			, "tests/fixtures/specialization-consumers/php-wasm.php"]
+	]) assert.ok(sources.some(source => source.role === "producer"
+		&& source.revision === revision && source.path === entry)
+	, `${revision}:${entry}`);
+	assert.equal(new Set(sources.map(signatureSpecializationHostedSourcePath)).size
+		, sources.length);
 });
 
 test("hosted specialization retention rejects altered transitions", async () => {
