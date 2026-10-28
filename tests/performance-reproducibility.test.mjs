@@ -119,10 +119,40 @@ test("performance reproducibility clients never reach private dispatch", async (
 test("the clean build gate isolates two committed source and build roots", async () => {
   const source = await readFile("scripts/check-performance-build-reproducibility.sh", "utf8");
   assert.match(source, /status --porcelain=v1 --untracked-files=all/);
-  assert.match(source, /git clone --quiet --no-local --no-hardlinks --no-checkout/);
+  assert.match(source, /rev-parse --is-shallow-repository\) == true \]\]; then\n\s+printf .*\n\s+exit 1\nfi\n/);
+  assert.match(source, /git clone --quiet --shared --no-checkout/);
+  assert.doesNotMatch(source, /--no-local|--no-hardlinks/);
+  assert.match(source, /sparse-checkout set --no-cone '\/\*' '!\/docs\/evidence\/'\n\s+git -C "\$checkout" checkout --quiet --detach "\$PERFORMANCE_REVISION"/);
+  assert.match(source, /df -h \/ "\$PERFORMANCE_SCRATCH" >&2/);
+  assert.match(source, /report_disk "before the clean builds"\n\nfor name in a b; do/);
+  assert.match(source, /^done\n\nreport_disk "after the clean builds"\n/m);
   assert.match(source, /source-a/);
   assert.match(source, /source-b/);
   assert.match(source, /build-performance-wasm\.sh/);
   assert.match(source, /build-performance-scaling\.sh/);
   assert.match(source, /compare-performance-builds\.mjs/);
+});
+
+test("performance jobs check out live source without the retained evidence tree", async () => {
+  const workflow = await readFile(".github/workflows/performance.yml", "utf8");
+  const sparse = "          sparse-checkout: |\n            /*\n            !/docs/evidence/\n          sparse-checkout-cone-mode: false\n";
+  const jobs = new Map([
+    ["build", 1], ["spatial", 1], ["scaling", 1], ["overhead", 1]
+    , ["lifecycle", 1], ["reproducibility", 0], ["report", 1]
+  ]);
+  const bodies = workflow.slice(workflow.indexOf("\njobs:\n")).split(/^ {2}(?=[a-z]+:\n)/mu).slice(1);
+  assert.deepEqual(bodies.map(body => body.slice(0, body.indexOf(":"))), [...jobs.keys()]);
+  for(const body of bodies)
+  {
+    const job = body.slice(0, body.indexOf(":"));
+    const checkouts = [...body.matchAll(
+      /uses: actions\/checkout@v6\n {8}with:\n((?: {10}.*\n)+)/gu
+    )];
+    assert.equal(checkouts.length, 1, job);
+    const options = checkouts[0][1].replaceAll(/^ {10}#.*\n/gmu, "");
+    assert.equal(options, `          fetch-depth: ${jobs.get(job)}\n          persist-credentials: false\n${sparse}`, job);
+  }
+  const uncommented = workflow.replaceAll(/^ *#.*\n/gmu, "");
+  assert.equal(uncommented.split("docs/evidence").length - 1, jobs.size);
+  assert.ok(workflow.includes("      - name: Report disk after the sparse checkout\n        run: df -h / \"$GITHUB_WORKSPACE\"\n"));
 });

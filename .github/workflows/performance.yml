@@ -25,8 +25,15 @@ jobs:
       - name: Check out the exact revision
         uses: actions/checkout@v6
         with:
-          fetch-depth: 0
+          # Benchmark builds, measurements and the report read only the exact
+          # current tree and never a retained docs/evidence payload, so the
+          # archives stay off the runner and history is not fetched.
+          fetch-depth: 1
           persist-credentials: false
+          sparse-checkout: |
+            /*
+            !/docs/evidence/
+          sparse-checkout-cone-mode: false
       - name: Install Node.js
         uses: actions/setup-node@v6
         with:
@@ -140,8 +147,15 @@ jobs:
     steps:
       - uses: actions/checkout@v6
         with:
-          fetch-depth: 0
+          # Benchmark builds, measurements and the report read only the exact
+          # current tree and never a retained docs/evidence payload, so the
+          # archives stay off the runner and history is not fetched.
+          fetch-depth: 1
           persist-credentials: false
+          sparse-checkout: |
+            /*
+            !/docs/evidence/
+          sparse-checkout-cone-mode: false
       - uses: actions/setup-node@v6
         with:
           node-version: ${{ env.NODE_VERSION }}
@@ -195,8 +209,15 @@ jobs:
     steps:
       - uses: actions/checkout@v6
         with:
-          fetch-depth: 0
+          # Benchmark builds, measurements and the report read only the exact
+          # current tree and never a retained docs/evidence payload, so the
+          # archives stay off the runner and history is not fetched.
+          fetch-depth: 1
           persist-credentials: false
+          sparse-checkout: |
+            /*
+            !/docs/evidence/
+          sparse-checkout-cone-mode: false
       - uses: actions/setup-node@v6
         with:
           node-version: ${{ env.NODE_VERSION }}
@@ -246,8 +267,15 @@ jobs:
     steps:
       - uses: actions/checkout@v6
         with:
-          fetch-depth: 0
+          # Benchmark builds, measurements and the report read only the exact
+          # current tree and never a retained docs/evidence payload, so the
+          # archives stay off the runner and history is not fetched.
+          fetch-depth: 1
           persist-credentials: false
+          sparse-checkout: |
+            /*
+            !/docs/evidence/
+          sparse-checkout-cone-mode: false
       - uses: actions/setup-node@v6
         with:
           node-version: ${{ env.NODE_VERSION }}
@@ -297,8 +325,15 @@ jobs:
     steps:
       - uses: actions/checkout@v6
         with:
-          fetch-depth: 0
+          # Benchmark builds, measurements and the report read only the exact
+          # current tree and never a retained docs/evidence payload, so the
+          # archives stay off the runner and history is not fetched.
+          fetch-depth: 1
           persist-credentials: false
+          sparse-checkout: |
+            /*
+            !/docs/evidence/
+          sparse-checkout-cone-mode: false
       - uses: actions/setup-node@v6
         with:
           node-version: ${{ env.NODE_VERSION }}
@@ -348,8 +383,17 @@ jobs:
     steps:
       - uses: actions/checkout@v6
         with:
+          # The clean-build gate clones this checkout with shared objects, which
+          # git downgrades to full object copies from a shallow source. Retain
+          # complete history while keeping retained docs/evidence off the runner.
           fetch-depth: 0
           persist-credentials: false
+          sparse-checkout: |
+            /*
+            !/docs/evidence/
+          sparse-checkout-cone-mode: false
+      - name: Report disk after the sparse checkout
+        run: df -h / "$GITHUB_WORKSPACE"
       - uses: actions/setup-node@v6
         with:
           node-version: ${{ env.NODE_VERSION }}
@@ -413,8 +457,15 @@ jobs:
     steps:
       - uses: actions/checkout@v6
         with:
-          fetch-depth: 0
+          # Benchmark builds, measurements and the report read only the exact
+          # current tree and never a retained docs/evidence payload, so the
+          # archives stay off the runner and history is not fetched.
+          fetch-depth: 1
           persist-credentials: false
+          sparse-checkout: |
+            /*
+            !/docs/evidence/
+          sparse-checkout-cone-mode: false
       - uses: actions/setup-node@v6
         with:
           node-version: ${{ env.NODE_VERSION }}
